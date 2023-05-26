@@ -35,6 +35,8 @@ import java.util.function.Supplier;
 
 public abstract class TypeDBStub {
 
+    ConnectionProto
+
     public CoreDatabaseProto.CoreDatabaseManager.Contains.Res databasesContains(CoreDatabaseProto.CoreDatabaseManager.Contains.Req request) {
         return resilientCall(() -> blockingStub().databasesContains(request));
     }

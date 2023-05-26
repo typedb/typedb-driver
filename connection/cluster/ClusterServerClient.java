@@ -51,11 +51,13 @@ class ClusterServerClient extends TypeDBClientImpl {
         this.address = address;
         channel = createManagedChannel(address, credential);
         stub = new ClusterServerStub(channel, credential);
-    }
-
-    @Override
-    public void validateConnectionOrThrow() throws TypeDBClientException {
-        super.validateConnectionOrThrow();
+        try {
+            stub.
+            // TODO: call open connection
+        } catch (Exception e){
+            close();
+            throw e;
+        }
     }
 
     private ManagedChannel createManagedChannel(String address, TypeDBCredential credential) {

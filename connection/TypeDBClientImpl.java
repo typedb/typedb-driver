@@ -61,19 +61,6 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
         else return (int) Math.ceil(cores / 4.0);
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    protected void validateConnectionOrThrow() throws TypeDBClientException { // TODO: we should throw checked exception
-        try {
-            // TODO: This is hacky patch. We know that databaseMgr.all() will throw an exception if connection has not been
-            //       established. But we should replace this code to perform the check in a more meaningful way. This method
-            //       should naturally be replaced once we implement a new client pulse architecture.
-            databaseMgr.all();
-        } catch (Exception e){
-            close();
-            throw e;
-        }
-    }
-
     @Override
     public boolean isOpen() {
         return !channel().isShutdown();

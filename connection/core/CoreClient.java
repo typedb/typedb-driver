@@ -39,7 +39,13 @@ public class CoreClient extends TypeDBClientImpl {
         super(parallelisation);
         channel = NettyChannelBuilder.forTarget(address).usePlaintext().build();
         stub = CoreStub.create(channel);
-        validateConnectionOrThrow();
+        try {
+            stub.
+            // TODO: call open connection
+        } catch (Exception e) {
+            close();
+            throw e;
+        }
     }
 
     @Override
