@@ -34,6 +34,7 @@ import { TypeDBTransaction } from "../api/connection/TypeDBTransaction";
 import { ErrorMessage } from "../common/errors/ErrorMessage";
 import { TypeDBClientError } from "../common/errors/TypeDBClientError";
 import INVALID_CONCEPT_CASTING = ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import {Value} from "../api/concept/value/Value";
 
 export abstract class ConceptImpl implements Concept {
 
@@ -85,6 +86,10 @@ export abstract class ConceptImpl implements Concept {
         return false;
     }
 
+    isValue(): boolean {
+        return false;
+    }
+
     asAttribute(): Attribute {
         throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "Attribute"));
     }
@@ -103,6 +108,10 @@ export abstract class ConceptImpl implements Concept {
 
     asRelation(): Relation {
         throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "Relation"));
+    }
+
+    asValue(): Value {
+        throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "Value"));
     }
 
     asRelationType(): RelationType {

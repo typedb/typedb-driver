@@ -23,6 +23,7 @@
 import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 import {Stream} from "../../../common/util/Stream";
 import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
+import {Concept} from "../Concept";
 import {Attribute} from "../thing/Attribute";
 import {Entity} from "../thing/Entity";
 import {Relation} from "../thing/Relation";
@@ -136,19 +137,19 @@ export namespace ThingType {
 
         getOwns(): Stream<AttributeType>;
 
-        getOwns(valueType: AttributeType.ValueType): Stream<AttributeType>;
+        getOwns(valueType: Concept.ValueType): Stream<AttributeType>;
 
         getOwns(annotations: Annotation[]): Stream<AttributeType>;
 
-        getOwns(valueType: AttributeType.ValueType, annotations: Annotation[]): Stream<AttributeType>;
+        getOwns(valueType: Concept.ValueType, annotations: Annotation[]): Stream<AttributeType>;
 
         getOwnsExplicit(): Stream<AttributeType>;
 
-        getOwnsExplicit(valueType: AttributeType.ValueType): Stream<AttributeType>;
+        getOwnsExplicit(valueType: Concept.ValueType): Stream<AttributeType>;
 
         getOwnsExplicit(annotations: Annotation[]): Stream<AttributeType>;
 
-        getOwnsExplicit(valueType: AttributeType.ValueType, annotations: Annotation[]): Stream<AttributeType>;
+        getOwnsExplicit(valueType: Concept.ValueType, annotations: Annotation[]): Stream<AttributeType>;
 
         getOwnsOverridden(attributeType: AttributeType): Promise<AttributeType>;
 

@@ -19,22 +19,23 @@
  * under the License.
  */
 
-import { AttributeType as AttributeTypeProto } from "typedb-protocol/common/concept_pb";
-import { Stream } from "../../../common/util/Stream";
-import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
-import { Attribute } from "../thing/Attribute";
-import { Entity } from "../thing/Entity";
-import { Relation } from "../thing/Relation";
-import { Thing } from "../thing/Thing";
-import { EntityType } from "./EntityType";
-import { RelationType } from "./RelationType";
-import { RoleType } from "./RoleType";
-import { ThingType } from "./ThingType";
-import { Type } from "./Type";
+import {Stream} from "../../../common/util/Stream";
+import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
+import {Attribute} from "../thing/Attribute";
+import {Entity} from "../thing/Entity";
+import {Relation} from "../thing/Relation";
+import {Thing} from "../thing/Thing";
+import {EntityType} from "./EntityType";
+import {RelationType} from "./RelationType";
+import {RoleType} from "./RoleType";
+import {ThingType} from "./ThingType";
+import {Type} from "./Type";
+import {Concept} from "../Concept";
+import Annotation = ThingType.Annotation;
 
 export interface AttributeType extends ThingType {
 
-    readonly valueType: AttributeType.ValueType;
+    readonly valueType: Concept.ValueType;
 
     isBoolean(): boolean;
 
@@ -61,8 +62,6 @@ export interface AttributeType extends ThingType {
 
 /* eslint @typescript-eslint/ban-types: "off" */
 export namespace AttributeType {
-
-    import Annotation = ThingType.Annotation;
 
     export interface Remote extends AttributeType, ThingType.Remote {
 
@@ -380,57 +379,5 @@ export namespace AttributeType {
 
             get(value: Date): Promise<Attribute.DateTime>;
         }
-    }
-
-    export interface ValueType {
-
-        isKeyable(): boolean;
-
-        isWritable(): boolean;
-
-        proto(): AttributeTypeProto.ValueType;
-
-        name(): string;
-    }
-
-    export namespace ValueType {
-
-        class Impl implements ValueType {
-
-            private readonly _attrTypeProto: AttributeTypeProto.ValueType;
-            private readonly _name: string;
-
-            constructor(type: AttributeTypeProto.ValueType, name: string) {
-                this._attrTypeProto = type;
-                this._name = name;
-            }
-
-            proto(): AttributeTypeProto.ValueType {
-                return this._attrTypeProto;
-            }
-
-            name(): string {
-                return this._name.toLowerCase();
-            }
-
-            isKeyable(): boolean {
-                return [AttributeTypeProto.ValueType.LONG, AttributeTypeProto.ValueType.STRING, AttributeTypeProto.ValueType.DATETIME].includes(this._attrTypeProto);
-            }
-
-            isWritable(): boolean {
-                return this._attrTypeProto !== AttributeTypeProto.ValueType.OBJECT;
-            }
-
-            toString() {
-                return "ValueType[" + this._name + "]";
-            }
-        }
-
-        export const OBJECT = new Impl(AttributeTypeProto.ValueType.OBJECT, "OBJECT");
-        export const BOOLEAN = new Impl(AttributeTypeProto.ValueType.BOOLEAN, "BOOLEAN");
-        export const LONG = new Impl(AttributeTypeProto.ValueType.LONG, "LONG");
-        export const DOUBLE = new Impl(AttributeTypeProto.ValueType.DOUBLE, "DOUBLE");
-        export const STRING = new Impl(AttributeTypeProto.ValueType.STRING, "STRING");
-        export const DATETIME = new Impl(AttributeTypeProto.ValueType.DATETIME, "DATETIME");
     }
 }

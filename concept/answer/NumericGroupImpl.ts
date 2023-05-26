@@ -19,12 +19,13 @@
  * under the License.
  */
 
-import { NumericGroup as NumericGroupProto } from "typedb-protocol/common/answer_pb";
-import { Numeric } from "../../api/answer/Numeric";
-import { NumericGroup } from "../../api/answer/NumericGroup";
-import { Concept } from "../../api/concept/Concept";
-import { ThingImpl, TypeImpl } from "../../dependencies_internal";
-import { NumericImpl } from "./NumericImpl";
+import {NumericGroup as NumericGroupProto} from "typedb-protocol/common/answer_pb";
+import {Numeric} from "../../api/answer/Numeric";
+import {NumericGroup} from "../../api/answer/NumericGroup";
+import {Concept} from "../../api/concept/Concept";
+import {ThingImpl, TypeImpl} from "../../dependencies_internal";
+import {NumericImpl} from "./NumericImpl";
+import {ValueImpl} from "../value/ValueImpl";
 
 export class NumericGroupImpl implements NumericGroup {
 
@@ -50,7 +51,8 @@ export namespace NumericGroupImpl {
     export function of(numericGroupProto: NumericGroupProto) {
         let concept: Concept;
         if (numericGroupProto.getOwner().hasThing()) concept = ThingImpl.of(numericGroupProto.getOwner().getThing());
-        else concept = TypeImpl.of(numericGroupProto.getOwner().getType());
+        else if (numericGroupProto.getOwner().hasType()) concept = TypeImpl.of(numericGroupProto.getOwner().getType());
+        else concept = ValueImpl.of(numericGroupProto.getOwner().getValue());
         return new NumericGroupImpl(concept, NumericImpl.of(numericGroupProto.getNumber()))
     }
 }

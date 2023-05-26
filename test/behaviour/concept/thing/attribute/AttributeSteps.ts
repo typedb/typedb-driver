@@ -19,13 +19,13 @@
  * under the License.
  */
 
-import { When } from "@cucumber/cucumber";
-import { Attribute, AttributeType } from "../../../../../dist";
-import { tx } from "../../../connection/ConnectionStepsBase";
-import { assertThrows } from "../../../util/Util";
-import { get, put } from "../ThingSteps";
+import {When} from "@cucumber/cucumber";
+import {Concept} from "../../../../../dist";
+import {tx} from "../../../connection/ConnectionStepsBase";
+import {assertThrows} from "../../../util/Util";
+import {get, put} from "../ThingSteps";
 import assert = require("assert");
-import ValueType = AttributeType.ValueType;
+import ValueType = Concept.ValueType;
 
 When("attribute\\({type_label}) get instances contain: {var}", async (typeLabel: string, var0: string) => {
     assert(await (await tx().concepts.getAttributeType(typeLabel)).asRemote(tx()).getInstances().some(x => x.equals(get(var0))));

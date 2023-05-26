@@ -22,7 +22,7 @@
 import {Then, When} from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import {fail} from "assert";
-import {Attribute, Concept, ConceptMap, ConceptMapGroup, Numeric, NumericGroup, ThingType} from "../../../dist";
+import {Attribute, Concept, ConceptMap, ConceptMapGroup, Numeric, NumericGroup, ThingType, Value} from "../../../dist";
 import {parseBool} from "../config/Parameters";
 import {tx} from "../connection/ConnectionStepsBase";
 import {assertThrows, assertThrowsWithMessage, splitString} from "../util/Util";
@@ -118,6 +118,10 @@ When("get answers of typeql match", async (query: string) => {
 
 Then("typeql match; throws exception", async (query: string) => {
     await assertThrows(async () => await tx().query.match(query).first());
+});
+
+Then("typeql match; throws exception containing {string}", async (error: string, query: string) => {
+    await assertThrowsWithMessage(async () => await tx().query.match(query).first(), error);
 });
 
 When("get answer of typeql match aggregate", async (query: string) => {
@@ -242,6 +246,42 @@ class ThingKeyMatcher extends AttributeMatcher {
     }
 }
 
+class ValueMatcher implements ConceptMatcher {
+
+    private readonly _valueType: string;
+    private readonly _value: string;
+
+    constructor(typeAndValue: string) {
+        const s = typeAndValue.split(":");
+        assert.strictEqual(s.length, 2, `[${typeAndValue}] is not a valid attribute identifier. It should have format "valueType:value".`);
+        [this._valueType, this._value] = s;
+    }
+
+    protected get valueType(): string {
+        return this._valueType;
+    }
+
+    protected get value(): string {
+        return this._value;
+    }
+
+    check(value: Value) {
+        if (value.isBoolean()) return value.asBoolean().value === parseBool(this.value);
+        else if (value.isLong()) return value.asLong().value === parseInt(this.value);
+        else if (value.isDouble()) return value.asDouble().value === parseFloat(this.value);
+        else if (value.isString()) return value.asString().value === this.value;
+        else if (value.isDateTime()) return value.asDateTime().value.getTime() === new Date(this.value).getTime();
+        else throw new Error(`Unrecognised value type ${value.valueType}`);
+    }
+
+    async matches(concept: Concept): Promise<boolean> {
+        if (!concept.isValue()) return false;
+        const value = concept.asValue();
+        if (this.valueType !== value.valueType.name()) return false;
+        return this.check(value);
+    }
+}
+
 function parseConceptIdentifier(value: string): ConceptMatcher {
     const [identifierType, identifierBody] = splitString(value, ":", 1);
     switch (identifierType) {
@@ -249,8 +289,10 @@ function parseConceptIdentifier(value: string): ConceptMatcher {
             return new TypeLabelMatcher(identifierBody);
         case "key":
             return new ThingKeyMatcher(identifierBody);
-        case "value":
+        case "attr":
             return new AttributeValueMatcher(identifierBody);
+        case "value":
+            return new ValueMatcher(identifierBody);
         default:
             throw new Error(`Failed to parse concept identifier: ${value}`);
     }

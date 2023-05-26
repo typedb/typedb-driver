@@ -227,7 +227,6 @@ checkstyle_test(
 filegroup(
     name = "ci",
     data = [
-        "@vaticle_dependencies//tool/bazelrun:rbe",
         "@vaticle_dependencies//distribution/artifact:create-netrc",
         "@vaticle_dependencies//tool/release/notes:create",
     ],

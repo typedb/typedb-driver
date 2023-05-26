@@ -26,6 +26,7 @@ import { Concept } from "../../api/concept/Concept";
 import { ErrorMessage } from "../../common/errors/ErrorMessage";
 import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
 import { ThingImpl, TypeImpl } from "../../dependencies_internal";
+import {ValueImpl} from "../value/ValueImpl";
 
 export class ConceptMapImpl implements ConceptMap {
 
@@ -74,7 +75,8 @@ export namespace ConceptMapImpl {
         proto.getMapMap().forEach((protoConcept: ConceptProto, resLabel: string) => {
             let concept;
             if (protoConcept.hasThing()) concept = ThingImpl.of(protoConcept.getThing());
-            else concept = TypeImpl.of(protoConcept.getType());
+            else if (protoConcept.hasType()) concept = TypeImpl.of(protoConcept.getType());
+            else concept = ValueImpl.of(protoConcept.getValue());
             variableMap.set(resLabel, concept);
         });
         const explainables = proto.hasExplainables() ? ofExplainables(proto.getExplainables()) : emptyExplainables();

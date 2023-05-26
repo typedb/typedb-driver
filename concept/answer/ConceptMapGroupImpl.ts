@@ -19,12 +19,13 @@
  * under the License.
  */
 
-import { ConceptMapGroup as MapGroupProto } from "typedb-protocol/common/answer_pb";
-import { ConceptMap } from "../../api/answer/ConceptMap";
-import { ConceptMapGroup } from "../../api/answer/ConceptMapGroup";
-import { Concept } from "../../api/concept/Concept";
-import { ThingImpl, TypeImpl } from "../../dependencies_internal";
-import { ConceptMapImpl } from "./ConceptMapImpl";
+import {ConceptMapGroup as MapGroupProto} from "typedb-protocol/common/answer_pb";
+import {ConceptMap} from "../../api/answer/ConceptMap";
+import {ConceptMapGroup} from "../../api/answer/ConceptMapGroup";
+import {Concept} from "../../api/concept/Concept";
+import {ThingImpl, TypeImpl} from "../../dependencies_internal";
+import {ConceptMapImpl} from "./ConceptMapImpl";
+import {ValueImpl} from "../value/ValueImpl";
 
 export class ConceptMapGroupImpl implements ConceptMapGroup {
 
@@ -50,7 +51,8 @@ export namespace ConceptMapGroupImpl {
     export function of(mapGroupProto: MapGroupProto): ConceptMapGroup {
         let owner: Concept;
         if (mapGroupProto.getOwner().hasThing()) owner = ThingImpl.of(mapGroupProto.getOwner().getThing());
-        else owner = TypeImpl.of(mapGroupProto.getOwner().getType());
+        else if (mapGroupProto.getOwner().hasType()) owner = TypeImpl.of(mapGroupProto.getOwner().getType());
+        else owner = ValueImpl.of(mapGroupProto.getOwner().getValue());
         return new ConceptMapGroupImpl(owner, mapGroupProto.getConceptMapsList()
             .map((conceptMapProto) => ConceptMapImpl.of(conceptMapProto)));
     }

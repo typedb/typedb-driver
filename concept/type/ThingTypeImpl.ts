@@ -40,6 +40,7 @@ import {
 } from "../../dependencies_internal";
 import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 import Annotation = ThingType.Annotation;
+import {Concept} from "../../api/concept/Concept";
 
 export class ThingTypeImpl extends TypeImpl implements ThingType {
 
@@ -125,10 +126,10 @@ export namespace ThingTypeImpl {
         }
 
         getOwns(): Stream<AttributeType>;
-        getOwns(valueType: AttributeType.ValueType): Stream<AttributeType>;
+        getOwns(valueType: Concept.ValueType): Stream<AttributeType>;
         getOwns(annotations: Annotation[]): Stream<AttributeType>;
-        getOwns(valueType: AttributeType.ValueType, annotations: Annotation[]): Stream<AttributeType>;
-        getOwns(valueTypeOrAnnotationsOnly?: AttributeType.ValueType | Annotation[], annotations?: Annotation[]): Stream<AttributeType> {
+        getOwns(valueType: Concept.ValueType, annotations: Annotation[]): Stream<AttributeType>;
+        getOwns(valueTypeOrAnnotationsOnly?: Concept.ValueType | Annotation[], annotations?: Annotation[]): Stream<AttributeType> {
             let request;
             if (!valueTypeOrAnnotationsOnly) {
                 request = RequestBuilder.Type.ThingType.getOwnsReq(this.label, []);
@@ -138,11 +139,11 @@ export namespace ThingTypeImpl {
                 );
             } else if (!annotations) {
                 request = RequestBuilder.Type.ThingType.getOwnsByTypeReq(
-                    this.label, (valueTypeOrAnnotationsOnly as AttributeType.ValueType).proto(), []
+                    this.label, (valueTypeOrAnnotationsOnly as Concept.ValueType).proto(), []
                 );
             } else {
                 request = RequestBuilder.Type.ThingType.getOwnsByTypeReq(
-                    this.label, (valueTypeOrAnnotationsOnly as AttributeType.ValueType).proto(),
+                    this.label, (valueTypeOrAnnotationsOnly as Concept.ValueType).proto(),
                     annotations.map(a => ThingType.Annotation.proto(a))
                 );
             }
@@ -153,10 +154,10 @@ export namespace ThingTypeImpl {
 
 
         getOwnsExplicit(): Stream<AttributeType>;
-        getOwnsExplicit(valueType: AttributeType.ValueType): Stream<AttributeType>;
+        getOwnsExplicit(valueType: Concept.ValueType): Stream<AttributeType>;
         getOwnsExplicit(annotations: Annotation[]): Stream<AttributeType>;
-        getOwnsExplicit(valueType: AttributeType.ValueType, annotations: Annotation[]): Stream<AttributeType>;
-        getOwnsExplicit(valueTypeOrAnnotationsOnly?: AttributeType.ValueType | Annotation[], annotations?: Annotation[]): Stream<AttributeType> {
+        getOwnsExplicit(valueType: Concept.ValueType, annotations: Annotation[]): Stream<AttributeType>;
+        getOwnsExplicit(valueTypeOrAnnotationsOnly?: Concept.ValueType | Annotation[], annotations?: Annotation[]): Stream<AttributeType> {
             let request;
             if (!valueTypeOrAnnotationsOnly) {
                 request = RequestBuilder.Type.ThingType.getOwnsExplicitReq(this.label, []);
@@ -166,11 +167,11 @@ export namespace ThingTypeImpl {
                 );
             } else if (!annotations) {
                 request = RequestBuilder.Type.ThingType.getOwnsExplicitByTypeReq(
-                    this.label, (valueTypeOrAnnotationsOnly as AttributeType.ValueType).proto(), []
+                    this.label, (valueTypeOrAnnotationsOnly as Concept.ValueType).proto(), []
                 );
             } else {
                 request = RequestBuilder.Type.ThingType.getOwnsExplicitByTypeReq(
-                    this.label, (valueTypeOrAnnotationsOnly as AttributeType.ValueType).proto(),
+                    this.label, (valueTypeOrAnnotationsOnly as Concept.ValueType).proto(),
                     annotations.map(a => ThingType.Annotation.proto(a))
                 );
             }

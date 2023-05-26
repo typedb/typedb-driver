@@ -22,10 +22,10 @@
 import {Then, When} from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import assert, {equal} from "assert";
-import {AttributeType, ErrorMessage, ThingType, TypeDBClientError} from "../../../../../dist";
+import {Concept, ErrorMessage, ThingType, TypeDBClientError} from "../../../../../dist";
 import {parseList} from "../../../config/Parameters";
 import {tx} from "../../../connection/ConnectionStepsBase";
-import ValueType = AttributeType.ValueType;
+import ValueType = Concept.ValueType;
 import Annotation = ThingType.Annotation;
 
 When("put attribute type: {type_label}, with value type: {value_type}", async (typeLabel: string, valueType: ValueType) => {

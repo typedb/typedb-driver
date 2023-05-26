@@ -22,7 +22,7 @@
 import {defineParameterType} from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import {TransactionType} from "../../../dist/api/connection/TypeDBTransaction";
-import {AttributeType, ThingType} from "../../../dist";
+import {Concept, ThingType} from "../../../dist";
 import Annotation = ThingType.Annotation;
 
 export function parseBool(value: string): boolean {
@@ -111,15 +111,15 @@ defineParameterType({
     transformer: s => {
         switch (s) {
             case "long":
-                return AttributeType.ValueType.LONG
+                return Concept.ValueType.LONG
             case "double":
-                return AttributeType.ValueType.DOUBLE
+                return Concept.ValueType.DOUBLE
             case "string":
-                return AttributeType.ValueType.STRING
+                return Concept.ValueType.STRING
             case "boolean":
-                return AttributeType.ValueType.BOOLEAN
+                return Concept.ValueType.BOOLEAN
             case "datetime":
-                return AttributeType.ValueType.DATETIME
+                return Concept.ValueType.DATETIME
             default:
                 throw "Unrecognised value type in step definition"
         }

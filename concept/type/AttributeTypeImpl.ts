@@ -21,9 +21,9 @@
 
 
 import {
-    Attribute as AttributeProto,
-    AttributeType as AttributeTypeProto,
-    Type as TypeProto
+    ConceptValue as ConceptValueProto,
+    Type as TypeProto,
+    ValueType as ValueTypeProto
 } from "typedb-protocol/common/concept_pb";
 import {Attribute} from "../../api/concept/thing/Attribute";
 import {AttributeType} from "../../api/concept/type/AttributeType";
@@ -35,6 +35,7 @@ import {Label} from "../../common/Label";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {Stream} from "../../common/util/Stream";
 import {AttributeImpl, ThingTypeImpl} from "../../dependencies_internal";
+import {Concept} from "../../api/concept/Concept";
 import Annotation = ThingType.Annotation;
 import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
 import INVALID_CONCEPT_CASTING = ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
@@ -53,8 +54,8 @@ export class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         return new AttributeTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
     }
 
-    get valueType(): AttributeType.ValueType {
-        return AttributeType.ValueType.OBJECT;
+    get valueType(): Concept.ValueType {
+        return Concept.ValueType.OBJECT;
     }
 
     isAttributeType(): boolean {
@@ -126,17 +127,17 @@ export namespace AttributeTypeImpl {
     export function of(attributeTypeProto: TypeProto): AttributeType {
         if (!attributeTypeProto) return null;
         switch (attributeTypeProto.getValueType()) {
-            case AttributeTypeProto.ValueType.BOOLEAN:
+            case ValueTypeProto.BOOLEAN:
                 return new AttributeTypeImpl.Boolean(attributeTypeProto.getLabel(), attributeTypeProto.getIsRoot(), attributeTypeProto.getIsAbstract());
-            case AttributeTypeProto.ValueType.LONG:
+            case ValueTypeProto.LONG:
                 return new AttributeTypeImpl.Long(attributeTypeProto.getLabel(), attributeTypeProto.getIsRoot(), attributeTypeProto.getIsAbstract());
-            case AttributeTypeProto.ValueType.DOUBLE:
+            case ValueTypeProto.DOUBLE:
                 return new AttributeTypeImpl.Double(attributeTypeProto.getLabel(), attributeTypeProto.getIsRoot(), attributeTypeProto.getIsAbstract());
-            case AttributeTypeProto.ValueType.STRING:
+            case ValueTypeProto.STRING:
                 return new AttributeTypeImpl.String(attributeTypeProto.getLabel(), attributeTypeProto.getIsRoot(), attributeTypeProto.getIsAbstract());
-            case AttributeTypeProto.ValueType.DATETIME:
+            case ValueTypeProto.DATETIME:
                 return new AttributeTypeImpl.DateTime(attributeTypeProto.getLabel(), attributeTypeProto.getIsRoot(), attributeTypeProto.getIsAbstract());
-            case AttributeTypeProto.ValueType.OBJECT:
+            case ValueTypeProto.OBJECT:
                 return new AttributeTypeImpl(attributeTypeProto.getLabel(), attributeTypeProto.getIsRoot(), attributeTypeProto.getIsAbstract());
             default:
                 throw new TypeDBClientError(BAD_VALUE_TYPE.message(attributeTypeProto.getValueType()));
@@ -157,8 +158,8 @@ export namespace AttributeTypeImpl {
             return new AttributeTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
         }
 
-        get valueType(): AttributeType.ValueType {
-            return AttributeType.ValueType.OBJECT;
+        get valueType(): Concept.ValueType {
+            return Concept.ValueType.OBJECT;
         }
 
         isAttributeType(): boolean {
@@ -256,8 +257,8 @@ export namespace AttributeTypeImpl {
                 .map((thingTypeProto) => ThingTypeImpl.of(thingTypeProto));
         }
 
-        protected getImpl(valueProto: AttributeProto.Value): Promise<Attribute> {
-            const request = RequestBuilder.Type.AttributeType.getReq(this.label, valueProto);
+        protected getImpl(conceptValueProto: ConceptValueProto): Promise<Attribute> {
+            const request = RequestBuilder.Type.AttributeType.getReq(this.label, conceptValueProto);
             return this.execute(request)
                 .then((attrProto) => AttributeImpl.of(attrProto.getAttributeTypeGetRes().getAttribute()));
         }
@@ -277,8 +278,8 @@ export namespace AttributeTypeImpl {
             return new AttributeTypeImpl.Boolean.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
         }
 
-        get valueType(): AttributeType.ValueType {
-            return AttributeType.ValueType.BOOLEAN;
+        get valueType(): Concept.ValueType {
+            return Concept.ValueType.BOOLEAN;
         }
 
         isBoolean(): boolean {
@@ -306,8 +307,8 @@ export namespace AttributeTypeImpl {
                 return new AttributeTypeImpl.Boolean.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
             }
 
-            get valueType(): AttributeType.ValueType {
-                return AttributeType.ValueType.BOOLEAN;
+            get valueType(): Concept.ValueType {
+                return Concept.ValueType.BOOLEAN;
             }
 
             isBoolean(): boolean {
@@ -319,7 +320,7 @@ export namespace AttributeTypeImpl {
             }
 
             async get(value: boolean): Promise<Attribute.Boolean> {
-                return await (super.getImpl(RequestBuilder.Thing.Attribute.attributeValueBooleanReq(value)) as Promise<Attribute.Boolean>);
+                return await (super.getImpl(RequestBuilder.Concept.conceptValueBooleanProto(value)) as Promise<Attribute.Boolean>);
             }
 
             getInstances(): Stream<Attribute.Boolean> {
@@ -331,7 +332,7 @@ export namespace AttributeTypeImpl {
             }
 
             async put(value: boolean): Promise<Attribute.Boolean> {
-                const request = RequestBuilder.Type.AttributeType.putReq(this.label, RequestBuilder.Thing.Attribute.attributeValueBooleanReq(value));
+                const request = RequestBuilder.Type.AttributeType.putReq(this.label, RequestBuilder.Concept.conceptValueBooleanProto(value));
                 return await (this.execute(request).then((res) => AttributeImpl.of(res.getAttributeTypePutRes().getAttribute())) as Promise<Attribute.Boolean>);
             }
         }
@@ -351,8 +352,8 @@ export namespace AttributeTypeImpl {
             return new AttributeTypeImpl.Long.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
         }
 
-        get valueType(): AttributeType.ValueType {
-            return AttributeType.ValueType.LONG;
+        get valueType(): Concept.ValueType {
+            return Concept.ValueType.LONG;
         }
 
         isLong(): boolean {
@@ -380,8 +381,8 @@ export namespace AttributeTypeImpl {
                 return new AttributeTypeImpl.Long.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
             }
 
-            get valueType(): AttributeType.ValueType {
-                return AttributeType.ValueType.LONG;
+            get valueType(): Concept.ValueType {
+                return Concept.ValueType.LONG;
             }
 
             isLong(): boolean {
@@ -401,11 +402,11 @@ export namespace AttributeTypeImpl {
             }
 
             async get(value: number): Promise<Attribute.Long> {
-                return await (super.getImpl(RequestBuilder.Thing.Attribute.attributeValueLongReq(value)) as Promise<Attribute.Long>);
+                return await (super.getImpl(RequestBuilder.Concept.conceptValueLongProto(value)) as Promise<Attribute.Long>);
             }
 
             async put(value: number): Promise<Attribute.Long> {
-                const request = RequestBuilder.Type.AttributeType.putReq(this.label, RequestBuilder.Thing.Attribute.attributeValueLongReq(value));
+                const request = RequestBuilder.Type.AttributeType.putReq(this.label, RequestBuilder.Concept.conceptValueLongProto(value));
                 return await (this.execute(request).then((res) => AttributeImpl.of(res.getAttributeTypePutRes().getAttribute())) as Promise<Attribute.Long>);
             }
         }
@@ -425,8 +426,8 @@ export namespace AttributeTypeImpl {
             return new AttributeTypeImpl.Double.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
         }
 
-        get valueType(): AttributeType.ValueType {
-            return AttributeType.ValueType.DOUBLE;
+        get valueType(): Concept.ValueType {
+            return Concept.ValueType.DOUBLE;
         }
 
         isDouble(): boolean {
@@ -454,8 +455,8 @@ export namespace AttributeTypeImpl {
                 return new AttributeTypeImpl.Double.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
             }
 
-            get valueType(): AttributeType.ValueType {
-                return AttributeType.ValueType.DOUBLE;
+            get valueType(): Concept.ValueType {
+                return Concept.ValueType.DOUBLE;
             }
 
             isDouble(): boolean {
@@ -475,11 +476,11 @@ export namespace AttributeTypeImpl {
             }
 
             async get(value: number): Promise<Attribute.Double> {
-                return await (super.getImpl(RequestBuilder.Thing.Attribute.attributeValueDoubleReq(value)) as Promise<Attribute.Double>);
+                return await (super.getImpl(RequestBuilder.Concept.conceptValueDoubleProto(value)) as Promise<Attribute.Double>);
             }
 
             async put(value: number): Promise<Attribute.Double> {
-                const request = RequestBuilder.Type.AttributeType.putReq(this.label, RequestBuilder.Thing.Attribute.attributeValueDoubleReq(value));
+                const request = RequestBuilder.Type.AttributeType.putReq(this.label, RequestBuilder.Concept.conceptValueDoubleProto(value));
                 return await (this.execute(request).then((res) => AttributeImpl.of(res.getAttributeTypePutRes().getAttribute())) as Promise<Attribute.Double>);
             }
         }
@@ -499,8 +500,8 @@ export namespace AttributeTypeImpl {
             return new AttributeTypeImpl.String.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract)
         }
 
-        get valueType(): AttributeType.ValueType {
-            return AttributeType.ValueType.STRING;
+        get valueType(): Concept.ValueType {
+            return Concept.ValueType.STRING;
         }
 
         isString(): boolean {
@@ -528,8 +529,8 @@ export namespace AttributeTypeImpl {
                 return new AttributeTypeImpl.String.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract)
             }
 
-            get valueType(): AttributeType.ValueType {
-                return AttributeType.ValueType.STRING;
+            get valueType(): Concept.ValueType {
+                return Concept.ValueType.STRING;
             }
 
             isString(): boolean {
@@ -549,11 +550,11 @@ export namespace AttributeTypeImpl {
             }
 
             async get(value: string): Promise<Attribute.String> {
-                return await (super.getImpl(RequestBuilder.Thing.Attribute.attributeValueStringReq(value)) as Promise<Attribute.String>);
+                return await (super.getImpl(RequestBuilder.Concept.conceptValueStringProto(value)) as Promise<Attribute.String>);
             }
 
             async put(value: string): Promise<Attribute.String> {
-                const request = RequestBuilder.Type.AttributeType.putReq(this.label, RequestBuilder.Thing.Attribute.attributeValueStringReq(value));
+                const request = RequestBuilder.Type.AttributeType.putReq(this.label, RequestBuilder.Concept.conceptValueStringProto(value));
                 return await (this.execute(request).then((res) => AttributeImpl.of(res.getAttributeTypePutRes().getAttribute())) as Promise<Attribute.String>);
             }
 
@@ -583,8 +584,8 @@ export namespace AttributeTypeImpl {
             return new AttributeTypeImpl.DateTime.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
         }
 
-        get valueType(): AttributeType.ValueType {
-            return AttributeType.ValueType.DATETIME;
+        get valueType(): Concept.ValueType {
+            return Concept.ValueType.DATETIME;
         }
 
         isDateTime(): boolean {
@@ -612,8 +613,8 @@ export namespace AttributeTypeImpl {
                 return new AttributeTypeImpl.DateTime.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
             }
 
-            get valueType(): AttributeType.ValueType {
-                return AttributeType.ValueType.DATETIME;
+            get valueType(): Concept.ValueType {
+                return Concept.ValueType.DATETIME;
             }
 
             isDateTime(): boolean {
@@ -633,11 +634,11 @@ export namespace AttributeTypeImpl {
             }
 
             async get(value: Date): Promise<Attribute.DateTime> {
-                return await (super.getImpl(RequestBuilder.Thing.Attribute.attributeValueDateTimeReq(value)) as Promise<Attribute.DateTime>);
+                return await (super.getImpl(RequestBuilder.Concept.conceptValueDateTimeProto(value)) as Promise<Attribute.DateTime>);
             }
 
             async put(value: Date): Promise<Attribute.DateTime> {
-                const request = RequestBuilder.Type.AttributeType.putReq(this.label, RequestBuilder.Thing.Attribute.attributeValueDateTimeReq(value));
+                const request = RequestBuilder.Type.AttributeType.putReq(this.label, RequestBuilder.Concept.conceptValueDateTimeProto(value));
                 return await (this.execute(request).then((res) => AttributeImpl.of(res.getAttributeTypePutRes().getAttribute())) as Promise<Attribute.DateTime>);
             }
         }

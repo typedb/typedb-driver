@@ -30,6 +30,7 @@ import { ThingType } from "../api/concept/type/ThingType";
 import { TypeDBTransaction } from "../api/connection/TypeDBTransaction";
 import { RequestBuilder } from "../common/rpc/RequestBuilder";
 import { AttributeTypeImpl, EntityTypeImpl, RelationTypeImpl, ThingImpl, ThingTypeImpl, } from "../dependencies_internal";
+import {Concept} from "../api/concept/Concept";
 
 export class ConceptManagerImpl implements ConceptManager {
 
@@ -105,7 +106,7 @@ export class ConceptManagerImpl implements ConceptManager {
         return RelationTypeImpl.of(response.getPutRelationTypeRes().getRelationType());
     }
 
-    async putAttributeType(label: string, valueType: AttributeType.ValueType): Promise<AttributeType> {
+    async putAttributeType(label: string, valueType: Concept.ValueType): Promise<AttributeType> {
         const request = RequestBuilder.ConceptManager.putAttributeTypeReq(label, valueType.proto());
         const response = await this.execute(request);
         return AttributeTypeImpl.of(response.getPutAttributeTypeRes().getAttributeType());

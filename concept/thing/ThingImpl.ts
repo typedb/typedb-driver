@@ -59,7 +59,7 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
     abstract asRemote(transaction: TypeDBTransaction): Thing.Remote;
 
     equals(concept: Concept): boolean {
-        if (concept.isType()) return false;
+        if (!concept.isThing()) return false;
         else return concept.asThing().iid === this._iid;
     }
 

@@ -31,6 +31,8 @@ import { RelationType } from "./type/RelationType";
 import { RoleType } from "./type/RoleType";
 import { ThingType } from "./type/ThingType";
 import { Type } from "./type/Type";
+import {ValueType as ValueTypeProto} from "typedb-protocol/common/concept_pb";
+import {Value} from "./value/Value";
 
 export interface Concept {
 
@@ -58,6 +60,8 @@ export interface Concept {
 
     isRelation(): boolean;
 
+    isValue(): boolean;
+
     asType(): Type;
 
     asThingType(): ThingType;
@@ -77,6 +81,8 @@ export interface Concept {
     asAttribute(): Attribute;
 
     asRelation(): Relation;
+
+    asValue(): Value;
 
     equals(concept: Concept): boolean;
 
@@ -110,5 +116,46 @@ export namespace Concept {
         asAttribute(): Attribute.Remote;
 
         asRelation(): Relation.Remote;
+    }
+
+
+    export interface ValueType {
+
+        proto(): ValueTypeProto;
+
+        name(): string;
+    }
+
+    export namespace ValueType {
+
+        class Impl implements ValueType {
+
+            private readonly _proto: ValueTypeProto;
+            private readonly _name: string;
+
+            constructor(type: ValueTypeProto, name: string) {
+                this._proto = type;
+                this._name = name;
+            }
+
+            proto(): ValueTypeProto {
+                return this._proto;
+            }
+
+            name(): string {
+                return this._name.toLowerCase();
+            }
+
+            toString() {
+                return "ValueType[" + this._name + "]";
+            }
+        }
+
+        export const OBJECT = new Impl(ValueTypeProto.OBJECT, "OBJECT");
+        export const BOOLEAN = new Impl(ValueTypeProto.BOOLEAN, "BOOLEAN");
+        export const LONG = new Impl(ValueTypeProto.LONG, "LONG");
+        export const DOUBLE = new Impl(ValueTypeProto.DOUBLE, "DOUBLE");
+        export const STRING = new Impl(ValueTypeProto.STRING, "STRING");
+        export const DATETIME = new Impl(ValueTypeProto.DATETIME, "DATETIME");
     }
 }

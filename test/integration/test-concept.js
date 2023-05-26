@@ -19,7 +19,7 @@
  * under the License.
  */
 
-const { TypeDB, SessionType, TransactionType, AttributeType, ThingType  } = require("../../dist");
+const { TypeDB, SessionType, TransactionType, Concept, ThingType  } = require("../../dist");
 const assert = require("assert");
 const Annotation = ThingType.Annotation;
 
@@ -78,7 +78,7 @@ async function run() {
 
     try {
         tx = await session.transaction(TransactionType.WRITE);
-        maneSize = await tx.concepts.putAttributeType("mane-size", AttributeType.ValueType.LONG);
+        maneSize = await tx.concepts.putAttributeType("mane-size", Concept.ValueType.LONG);
         await lion.asRemote(tx).setOwns(maneSize);
         await tx.commit();
         await tx.close();
@@ -203,11 +203,11 @@ async function run() {
     let email, workEmail, customer, age;
     try {
         tx = await session.transaction(TransactionType.WRITE);
-        email = await tx.concepts.putAttributeType("email", AttributeType.ValueType.STRING);
+        email = await tx.concepts.putAttributeType("email", Concept.ValueType.STRING);
         await email.asRemote(tx).setAbstract();
-        workEmail = await tx.concepts.putAttributeType("work-email", AttributeType.ValueType.STRING);
+        workEmail = await tx.concepts.putAttributeType("work-email", Concept.ValueType.STRING);
         await workEmail.asRemote(tx).setSupertype(email);
-        age = await tx.concepts.putAttributeType("age", AttributeType.ValueType.LONG);
+        age = await tx.concepts.putAttributeType("age", Concept.ValueType.LONG);
         await person.asRemote(tx).setAbstract();
         await person.asRemote(tx).setOwns(email, [Annotation.KEY]);
         man = await tx.concepts.getEntityType("man");
@@ -219,7 +219,7 @@ async function run() {
         await customer.asRemote(tx).setOwns(workEmail, email);
         const ownedAttributes = await customer.asRemote(tx).getOwns().collect();
         const ownedKeys = await customer.asRemote(tx).getOwns([Annotation.KEY]).collect();
-        const ownedDateTimes = await customer.asRemote(tx).getOwns(AttributeType.ValueType.DATETIME, []).collect();
+        const ownedDateTimes = await customer.asRemote(tx).getOwns(Concept.ValueType.DATETIME, []).collect();
         await tx.commit();
         await tx.close();
         assert(ownedAttributes.length === 2);
@@ -257,11 +257,11 @@ async function run() {
     let password, shoeSize, volume, isAlive, startDate;
     try {
         tx = await session.transaction(TransactionType.WRITE);
-        password = await tx.concepts.putAttributeType("password", AttributeType.ValueType.STRING);
-        shoeSize = await tx.concepts.putAttributeType("shoe-size", AttributeType.ValueType.LONG);
-        volume = await tx.concepts.putAttributeType("volume", AttributeType.ValueType.DOUBLE);
-        isAlive = await tx.concepts.putAttributeType("is-alive", AttributeType.ValueType.BOOLEAN);
-        startDate = await tx.concepts.putAttributeType("start-date", AttributeType.ValueType.DATETIME);
+        password = await tx.concepts.putAttributeType("password", Concept.ValueType.STRING);
+        shoeSize = await tx.concepts.putAttributeType("shoe-size", Concept.ValueType.LONG);
+        volume = await tx.concepts.putAttributeType("volume", Concept.ValueType.DOUBLE);
+        isAlive = await tx.concepts.putAttributeType("is-alive", Concept.ValueType.BOOLEAN);
+        startDate = await tx.concepts.putAttributeType("start-date", Concept.ValueType.DATETIME);
         await tx.commit();
         await tx.close();
         console.log(`put all 5 attribute value types - SUCCESS - password is a ${password.valueType}, shoe-size is a ${shoeSize.valueType}, `

@@ -19,19 +19,37 @@
  * under the License.
  */
 
-import { ClusterDatabaseManager } from "typedb-protocol/cluster/cluster_database_pb";
-import { ServerManager as ServerManagerProto } from "typedb-protocol/cluster/cluster_server_pb";
-import { ClusterUser as ClusterUserProto, ClusterUserManager as ClusterUserManagerProto } from "typedb-protocol/cluster/cluster_user_pb";
-import { Attribute as AttributeProto, AttributeType as AttributeTypeProto, ConceptManager as ConceptMgrProto, EntityType as EntityTypeProto, Relation as RelationProto, RelationType as RelationTypeProto, RoleType as RoleTypeProto, Thing as ThingProto, ThingType as ThingTypeProto, Type as TypeProto } from "typedb-protocol/common/concept_pb";
-import { LogicManager as LogicProto, Rule as RuleProto } from "typedb-protocol/common/logic_pb";
-import { Options } from "typedb-protocol/common/options_pb";
-import { QueryManager as QueryProto } from "typedb-protocol/common/query_pb";
-import { Session as SessionProto } from "typedb-protocol/common/session_pb";
-import { Transaction as TransactionProto } from "typedb-protocol/common/transaction_pb";
-import { CoreDatabase, CoreDatabaseManager } from "typedb-protocol/core/core_database_pb";
+import {ClusterDatabaseManager} from "typedb-protocol/cluster/cluster_database_pb";
+import {ServerManager as ServerManagerProto} from "typedb-protocol/cluster/cluster_server_pb";
+import {
+    ClusterUser as ClusterUserProto,
+    ClusterUserManager as ClusterUserManagerProto
+} from "typedb-protocol/cluster/cluster_user_pb";
+import {
+    Attribute as AttributeProto,
+    AttributeType as AttributeTypeProto,
+    ConceptManager as ConceptMgrProto,
+    ConceptValue as ConceptValueProto,
+    ConceptValue,
+    EntityType as EntityTypeProto,
+    Relation as RelationProto,
+    RelationType as RelationTypeProto,
+    RoleType as RoleTypeProto,
+    Thing as ThingProto,
+    ThingType as ThingTypeProto,
+    Type as TypeProto,
+    ValueType as ValueTypeProto
+} from "typedb-protocol/common/concept_pb";
+import {LogicManager as LogicProto, Rule as RuleProto} from "typedb-protocol/common/logic_pb";
+import {Options} from "typedb-protocol/common/options_pb";
+import {QueryManager as QueryProto} from "typedb-protocol/common/query_pb";
+import {Session as SessionProto} from "typedb-protocol/common/session_pb";
+import {Transaction as TransactionProto} from "typedb-protocol/common/transaction_pb";
+import {CoreDatabase, CoreDatabaseManager} from "typedb-protocol/core/core_database_pb";
 import * as uuid from "uuid";
-import { Label } from "../Label";
-import { Bytes } from "../util/Bytes";
+import {Label} from "../Label";
+import {Bytes} from "../util/Bytes";
+
 
 /* eslint no-inner-declarations: "off" */
 export namespace RequestBuilder {
@@ -95,7 +113,7 @@ export namespace RequestBuilder {
             export function passwordSetReq(name: string, password: string): ClusterUserManagerProto.PasswordSet.Req {
                 return new ClusterUserManagerProto.PasswordSet.Req().setUsername(name).setPassword(password);
             }
-            
+
             export function getReq(name: string): ClusterUserManagerProto.Get.Req {
                 return new ClusterUserManagerProto.Get.Req().setUsername(name);
             }
@@ -125,7 +143,6 @@ export namespace RequestBuilder {
 
         }
     }
-
 
     export namespace Session {
 
@@ -211,7 +228,6 @@ export namespace RequestBuilder {
         }
     }
 
-
     export namespace QueryManager {
 
         function queryManagerReq(queryReq: QueryProto.Req, options: Options) {
@@ -279,7 +295,6 @@ export namespace RequestBuilder {
         }
     }
 
-
     export namespace ConceptManager {
 
         function conceptManagerReq(req: ConceptMgrProto.Req): TransactionProto.Req {
@@ -298,7 +313,7 @@ export namespace RequestBuilder {
             );
         }
 
-        export function putAttributeTypeReq(label: string, valueType: AttributeTypeProto.ValueType) {
+        export function putAttributeTypeReq(label: string, valueType: ValueTypeProto) {
             return conceptManagerReq(new ConceptMgrProto.Req().setPutAttributeTypeReq(
                 new ConceptMgrProto.PutAttributeType.Req().setLabel(label).setValueType(valueType)
             ));
@@ -315,6 +330,30 @@ export namespace RequestBuilder {
                 new ConceptMgrProto.GetThing.Req().setIid(Bytes.hexStringToBytes(iid))
             ));
         }
+    }
+
+    export namespace Concept {
+
+        export function conceptValueBooleanProto(value: boolean): ConceptValue {
+            return new ConceptValue().setBoolean(value);
+        }
+
+        export function conceptValueLongProto(value: number): ConceptValueProto {
+            return new ConceptValue().setLong(value);
+        }
+
+        export function conceptValueDoubleProto(value: number): ConceptValueProto {
+            return new ConceptValue().setDouble(value);
+        }
+
+        export function conceptValueStringProto(value: string): ConceptValueProto {
+            return new ConceptValue().setString(value);
+        }
+
+        export function conceptValueDateTimeProto(value: Date): ConceptValueProto {
+            return new ConceptValue().setDateTime(value.getTime());
+        }
+
     }
 
     export namespace Type {
@@ -475,7 +514,7 @@ export namespace RequestBuilder {
                 ));
             }
 
-            export function getOwnsByTypeReq(label: Label, valueType: AttributeTypeProto.ValueType, annotations: TypeProto.Annotation[]) {
+            export function getOwnsByTypeReq(label: Label, valueType: ValueTypeProto, annotations: TypeProto.Annotation[]) {
                 return typeReq(newReqBuilder(label).setThingTypeGetOwnsReq(
                     new ThingTypeProto.GetOwns.Req().setAnnotationsList(annotations)
                         .setValueType(valueType)
@@ -488,7 +527,7 @@ export namespace RequestBuilder {
                 ));
             }
 
-            export function getOwnsExplicitByTypeReq(label: Label, valueType: AttributeTypeProto.ValueType, annotations: TypeProto.Annotation[]) {
+            export function getOwnsExplicitByTypeReq(label: Label, valueType: ValueTypeProto, annotations: TypeProto.Annotation[]) {
                 return typeReq(newReqBuilder(label).setThingTypeGetOwnsExplicitReq(
                     new ThingTypeProto.GetOwnsExplicit.Req().setAnnotationsList(annotations)
                         .setValueType(valueType)
@@ -610,13 +649,13 @@ export namespace RequestBuilder {
                 ));
             }
 
-            export function putReq(label: Label, value: AttributeProto.Value) {
+            export function putReq(label: Label, value: ConceptValueProto) {
                 return typeReq(newReqBuilder(label).setAttributeTypePutReq(
                     new AttributeTypeProto.Put.Req().setValue(value)
                 ));
             }
 
-            export function getReq(label: Label, value: AttributeProto.Value) {
+            export function getReq(label: Label, value: ConceptValueProto) {
                 return typeReq(newReqBuilder(label).setAttributeTypeGetReq(
                     new AttributeTypeProto.Get.Req().setValue(value)
                 ));
@@ -745,26 +784,6 @@ export namespace RequestBuilder {
                 return thingReq(new ThingProto.Req().setIid(Bytes.hexStringToBytes(iid)).setAttributeGetOwnersReq(
                     new AttributeProto.GetOwners.Req().setThingType(ownerType)
                 ));
-            }
-
-            export function attributeValueBooleanReq(value: boolean): AttributeProto.Value {
-                return new AttributeProto.Value().setBoolean(value);
-            }
-
-            export function attributeValueLongReq(value: number): AttributeProto.Value {
-                return new AttributeProto.Value().setLong(value);
-            }
-
-            export function attributeValueDoubleReq(value: number): AttributeProto.Value {
-                return new AttributeProto.Value().setDouble(value);
-            }
-
-            export function attributeValueStringReq(value: string): AttributeProto.Value {
-                return new AttributeProto.Value().setString(value);
-            }
-
-            export function attributeValueDateTimeReq(value: Date): AttributeProto.Value {
-                return new AttributeProto.Value().setDateTime(value.getTime());
             }
         }
     }

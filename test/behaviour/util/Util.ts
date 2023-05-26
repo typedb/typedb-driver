@@ -35,7 +35,7 @@ export async function assertThrowsWithMessage(testfunc: () => Promise<unknown>, 
     try {
         await testfunc();
     } catch (error) {
-        assert(error.toString().includes(message));
+        assert(error.toString().toLowerCase().includes(message.toLowerCase()));
         return
     }
     assert.fail();

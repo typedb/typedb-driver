@@ -31,6 +31,8 @@ export * from "./api/concept/thing/Entity";
 export * from "./api/concept/thing/Relation";
 export * from "./api/concept/thing/Thing";
 
+export * from "./api/concept/value/Value";
+
 export * from "./api/concept/type/AttributeType";
 export * from "./api/concept/type/EntityType";
 export * from "./api/concept/type/RelationType";

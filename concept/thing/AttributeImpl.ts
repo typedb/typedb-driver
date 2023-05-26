@@ -19,18 +19,18 @@
  * under the License.
  */
 
-import { AttributeType as AttributeTypeProto, Thing as ThingProto } from "typedb-protocol/common/concept_pb";
-import { Attribute } from "../../api/concept/thing/Attribute";
-import { Thing } from "../../api/concept/thing/Thing";
-import { AttributeType } from "../../api/concept/type/AttributeType";
-import { ThingType } from "../../api/concept/type/ThingType";
-import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
-import { ErrorMessage } from "../../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
-import { RequestBuilder } from "../../common/rpc/RequestBuilder";
-import { Bytes } from "../../common/util/Bytes";
-import { Stream } from "../../common/util/Stream";
-import { AttributeTypeImpl, ThingImpl } from "../../dependencies_internal";
+import {Thing as ThingProto, ValueType as ValueTypeProto} from "typedb-protocol/common/concept_pb";
+import {Attribute} from "../../api/concept/thing/Attribute";
+import {Thing} from "../../api/concept/thing/Thing";
+import {AttributeType} from "../../api/concept/type/AttributeType";
+import {ThingType} from "../../api/concept/type/ThingType";
+import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
+import {Bytes} from "../../common/util/Bytes";
+import {Stream} from "../../common/util/Stream";
+import {AttributeTypeImpl, ThingImpl} from "../../dependencies_internal";
 import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
 import INVALID_CONCEPT_CASTING = ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 
@@ -55,6 +55,17 @@ export abstract class AttributeImpl extends ThingImpl implements Attribute {
 
     abstract get value(): boolean | string | number | Date;
 
+    toJSONRecord(): Record<string, boolean | string | number> {
+        let value;
+        if (this.value instanceof Date) value = this.value.toISOString().slice(0, -1);
+        else value = this.value;
+        return {
+            type: this.type.label.name,
+            value_type: this.type.valueType.name(),
+            value: value
+        };
+    }
+
     isBoolean(): boolean {
         return false;
     }
@@ -77,17 +88,6 @@ export abstract class AttributeImpl extends ThingImpl implements Attribute {
 
     asAttribute(): Attribute {
         return this;
-    }
-
-    toJSONRecord(): Record<string, boolean | string | number> {
-        let value;
-        if (this.value instanceof Date) value = this.value.toISOString().slice(0, -1);
-        else value = this.value;
-        return {
-            type: this.type.label.name,
-            value_type: this.type.valueType.name(),
-            value: value
-        };
     }
 
     asBoolean(): Attribute.Boolean {
@@ -119,15 +119,15 @@ export namespace AttributeImpl {
         const iid = Bytes.bytesToHexString(thingProto.getIid_asU8());
         const inferred = thingProto.getInferred();
         switch (thingProto.getType().getValueType()) {
-            case AttributeTypeProto.ValueType.BOOLEAN:
+            case ValueTypeProto.BOOLEAN:
                 return new AttributeImpl.Boolean(iid, inferred, attrType.asBoolean(), thingProto.getValue().getBoolean());
-            case AttributeTypeProto.ValueType.LONG:
+            case ValueTypeProto.LONG:
                 return new AttributeImpl.Long(iid, inferred, attrType.asLong(), thingProto.getValue().getLong());
-            case AttributeTypeProto.ValueType.DOUBLE:
+            case ValueTypeProto.DOUBLE:
                 return new AttributeImpl.Double(iid, inferred, attrType.asDouble(), thingProto.getValue().getDouble());
-            case AttributeTypeProto.ValueType.STRING:
+            case ValueTypeProto.STRING:
                 return new AttributeImpl.String(iid, inferred, attrType.asString(), thingProto.getValue().getString());
-            case AttributeTypeProto.ValueType.DATETIME:
+            case ValueTypeProto.DATETIME:
                 return new AttributeImpl.DateTime(iid, inferred, attrType.asDateTime(), new Date(thingProto.getValue().getDateTime()));
             default:
                 throw new TypeDBClientError(BAD_VALUE_TYPE.message(thingProto.getType().getValueType()));

@@ -19,11 +19,12 @@
  * under the License.
  */
 
-import { Thing } from "./thing/Thing";
-import { AttributeType } from "./type/AttributeType";
-import { EntityType } from "./type/EntityType";
-import { RelationType } from "./type/RelationType";
-import { ThingType } from "./type/ThingType";
+import {Thing} from "./thing/Thing";
+import {AttributeType} from "./type/AttributeType";
+import {EntityType} from "./type/EntityType";
+import {RelationType} from "./type/RelationType";
+import {ThingType} from "./type/ThingType";
+import {Concept} from "./Concept";
 
 export interface ConceptManager {
 
@@ -49,5 +50,5 @@ export interface ConceptManager {
 
     getAttributeType(label: string): Promise<AttributeType>;
 
-    putAttributeType(label: string, valueType: AttributeType.ValueType): Promise<AttributeType>;
+    putAttributeType(label: string, valueType: Concept.ValueType): Promise<AttributeType>;
 }
