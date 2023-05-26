@@ -27,9 +27,9 @@ import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.common.Label;
 
-import java.util.stream.Stream;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
+import java.util.stream.Stream;
 
 public interface Type extends Concept {
 

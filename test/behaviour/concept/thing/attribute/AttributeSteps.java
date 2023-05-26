@@ -21,7 +21,7 @@
 
 package com.vaticle.typedb.client.test.behaviour.concept.thing.attribute;
 
-import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
+import com.vaticle.typedb.client.api.concept.Concept.ValueType;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 

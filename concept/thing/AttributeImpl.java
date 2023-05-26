@@ -459,11 +459,12 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
         }
 
         public static AttributeImpl.DateTime of(ConceptProto.Thing thingProto) {
+            long rpcDatetime = thingProto.getValue().getDateTime();
             return new AttributeImpl.DateTime(
                     bytesToHexString(thingProto.getIid().toByteArray()),
                     thingProto.getInferred(),
                     AttributeTypeImpl.DateTime.of(thingProto.getType()),
-                    toLocalDateTime(thingProto.getValue().getDateTime())
+                    LocalDateTime.ofInstant(Instant.ofEpochMilli(rpcDatetime), ZoneOffset.UTC)
             );
         }
 
@@ -485,10 +486,6 @@ public abstract class AttributeImpl<VALUE> extends ThingImpl implements Attribut
         @Override
         public AttributeImpl.DateTime.Remote asRemote(TypeDBTransaction transaction) {
             return new AttributeImpl.DateTime.Remote(transaction, getIID(), isInferred(), type, value);
-        }
-
-        private static LocalDateTime toLocalDateTime(long rpcDatetime) {
-            return LocalDateTime.ofInstant(Instant.ofEpochMilli(rpcDatetime), ZoneOffset.UTC);
         }
 
         public static class Remote extends AttributeImpl.Remote<LocalDateTime> implements Attribute.DateTime.Remote {

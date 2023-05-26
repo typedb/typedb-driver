@@ -314,7 +314,7 @@ public class RequestBuilder {
         }
 
         public static TransactionProto.Transaction.Req.Builder putAttributeTypeReq(
-                String label, ConceptProto.AttributeType.ValueType valueType) {
+                String label, ConceptProto.ValueType valueType) {
             return conceptManagerReq(ConceptProto.ConceptManager.Req.newBuilder().setPutAttributeTypeReq(
                     ConceptProto.ConceptManager.PutAttributeType.Req.newBuilder().setLabel(label).setValueType(valueType)
             ));
@@ -364,6 +364,30 @@ public class RequestBuilder {
             return logicManagerReq(LogicProto.LogicManager.Req.newBuilder().setGetRulesReq(
                     LogicProto.LogicManager.GetRules.Req.getDefaultInstance()
             ));
+        }
+    }
+
+    public static class Concept {
+
+        public static ConceptProto.ConceptValue protoBooleanConceptValue(boolean value) {
+            return ConceptProto.ConceptValue.newBuilder().setBoolean(value).build();
+        }
+
+        public static ConceptProto.ConceptValue protoLongConceptValue(long value) {
+            return ConceptProto.ConceptValue.newBuilder().setLong(value).build();
+        }
+
+        public static ConceptProto.ConceptValue protoDoubleConceptValue(double value) {
+            return ConceptProto.ConceptValue.newBuilder().setDouble(value).build();
+        }
+
+        public static ConceptProto.ConceptValue protoStringConceptValue(String value) {
+            return ConceptProto.ConceptValue.newBuilder().setString(value).build();
+        }
+
+        public static ConceptProto.ConceptValue protoDateTimeConceptValue(LocalDateTime value) {
+            long epochMillis = value.atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
+            return ConceptProto.ConceptValue.newBuilder().setDateTime(epochMillis).build();
         }
     }
 
@@ -536,7 +560,7 @@ public class RequestBuilder {
             }
 
             public static TransactionProto.Transaction.Req.Builder getOwnsReq(
-                    Label label, ConceptProto.AttributeType.ValueType valueType, Set<ConceptProto.Type.Annotation> annotations) {
+                    Label label, ConceptProto.ValueType valueType, Set<ConceptProto.Type.Annotation> annotations) {
                 return typeReq(newReqBuilder(label).setThingTypeGetOwnsReq(
                         ConceptProto.ThingType.GetOwns.Req.newBuilder().addAllAnnotations(annotations)
                                 .setValueType(valueType)
@@ -550,7 +574,7 @@ public class RequestBuilder {
             }
 
             public static TransactionProto.Transaction.Req.Builder getOwnsExplicitReq(
-                    Label label, ConceptProto.AttributeType.ValueType valueType, Set<ConceptProto.Type.Annotation> annotations) {
+                    Label label, ConceptProto.ValueType valueType, Set<ConceptProto.Type.Annotation> annotations) {
                 return typeReq(newReqBuilder(label).setThingTypeGetOwnsExplicitReq(
                         ConceptProto.ThingType.GetOwnsExplicit.Req.newBuilder().addAllAnnotations(annotations)
                                 .setValueType(valueType)
@@ -686,13 +710,13 @@ public class RequestBuilder {
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder putReq(Label label, ConceptProto.Attribute.Value value) {
+            public static TransactionProto.Transaction.Req.Builder putReq(Label label, ConceptProto.ConceptValue value) {
                 return typeReq(newReqBuilder(label).setAttributeTypePutReq(
                         ConceptProto.AttributeType.Put.Req.newBuilder().setValue(value)
                 ));
             }
 
-            public static TransactionProto.Transaction.Req.Builder getReq(Label label, ConceptProto.Attribute.Value value) {
+            public static TransactionProto.Transaction.Req.Builder getReq(Label label, ConceptProto.ConceptValue value) {
                 return typeReq(newReqBuilder(label).setAttributeTypeGetReq(
                         ConceptProto.AttributeType.Get.Req.newBuilder().setValue(value)
                 ));
@@ -818,27 +842,6 @@ public class RequestBuilder {
                 return thingReq(ConceptProto.Thing.Req.newBuilder().setIid(byteString(iid)).setAttributeGetOwnersReq(
                         ConceptProto.Attribute.GetOwners.Req.newBuilder().setThingType(ownerType)
                 ));
-            }
-
-            public static ConceptProto.Attribute.Value protoBooleanAttributeValue(boolean value) {
-                return ConceptProto.Attribute.Value.newBuilder().setBoolean(value).build();
-            }
-
-            public static ConceptProto.Attribute.Value protoLongAttributeValue(long value) {
-                return ConceptProto.Attribute.Value.newBuilder().setLong(value).build();
-            }
-
-            public static ConceptProto.Attribute.Value protoDoubleAttributeValue(double value) {
-                return ConceptProto.Attribute.Value.newBuilder().setDouble(value).build();
-            }
-
-            public static ConceptProto.Attribute.Value protoStringAttributeValue(String value) {
-                return ConceptProto.Attribute.Value.newBuilder().setString(value).build();
-            }
-
-            public static ConceptProto.Attribute.Value protoDateTimeAttributeValue(LocalDateTime value) {
-                long epochMillis = value.atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
-                return ConceptProto.Attribute.Value.newBuilder().setDateTime(epochMillis).build();
             }
         }
     }

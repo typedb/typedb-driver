@@ -21,8 +21,9 @@
 
 package com.vaticle.typedb.client.test.behaviour.concept.type.attributetype;
 
+import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
-import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
+import com.vaticle.typedb.client.api.concept.Concept.ValueType;
 import com.vaticle.typedb.client.api.concept.type.Type;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typeql.lang.common.TypeQLToken;
@@ -98,28 +99,28 @@ public class AttributeTypeSteps {
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) set regex: {}")
     public void attribute_type_as_value_type_set_regex(String typeLabel, ValueType valueType, String regex) {
-        if (!valueType.equals(ValueType.STRING)) fail();
+        if (!valueType.equals(Concept.ValueType.STRING)) fail();
         AttributeType attributeType = attribute_type_as_value_type(typeLabel, valueType);
         attributeType.asString().asRemote(tx()).setRegex(regex);
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) unset regex")
     public void attribute_type_as_value_type_unset_regex(String typeLabel, AttributeType.ValueType valueType) {
-        if (!valueType.equals(AttributeType.ValueType.STRING)) fail();
+        if (!valueType.equals(Concept.ValueType.STRING)) fail();
         AttributeType attributeType = attribute_type_as_value_type(typeLabel, valueType);
         attributeType.asString().asRemote(tx()).setRegex(null);
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get regex: {}")
     public void attribute_type_as_value_type_get_regex(String typeLabel, ValueType valueType, String regex) {
-        if (!valueType.equals(ValueType.STRING)) fail();
+        if (!valueType.equals(Concept.ValueType.STRING)) fail();
         AttributeType attributeType = attribute_type_as_value_type(typeLabel, valueType);
         assertEquals(regex, attributeType.asString().asRemote(tx()).getRegex());
     }
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) does not have any regex")
     public void attribute_type_as_value_type_does_not_have_any_regex(String typeLabel, AttributeType.ValueType valueType) {
-        if (!valueType.equals(AttributeType.ValueType.STRING)) fail();
+        if (!valueType.equals(Concept.ValueType.STRING)) fail();
         AttributeType attributeType = attribute_type_as_value_type(typeLabel, valueType);
         assertNull(attributeType.asString().asRemote(tx()).getRegex());
     }

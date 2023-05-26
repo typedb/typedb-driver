@@ -23,8 +23,6 @@ package com.vaticle.typedb.client.api.concept.type;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.thing.Attribute;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.protocol.ConceptProto;
 import com.vaticle.typeql.lang.common.TypeQLToken;
 
 import javax.annotation.CheckReturnValue;
@@ -32,8 +30,6 @@ import javax.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Stream;
-
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 
 public interface AttributeType extends ThingType {
 
@@ -91,71 +87,6 @@ public interface AttributeType extends ThingType {
 
     @CheckReturnValue
     AttributeType.DateTime asDateTime();
-
-    enum ValueType {
-
-        OBJECT(Object.class, false, false),
-        BOOLEAN(Boolean.class, true, false),
-        LONG(Long.class, true, true),
-        DOUBLE(Double.class, true, false),
-        STRING(String.class, true, true),
-        DATETIME(LocalDateTime.class, true, true);
-
-        private final Class<?> valueClass;
-        private final boolean isWritable;
-        private final boolean isKeyable;
-
-        ValueType(Class<?> valueClass, boolean isWritable, boolean isKeyable) {
-            this.valueClass = valueClass;
-            this.isWritable = isWritable;
-            this.isKeyable = isKeyable;
-        }
-
-        @CheckReturnValue
-        public static ValueType of(Class<?> valueClass) {
-            for (ValueType t : ValueType.values()) {
-                if (t.valueClass == valueClass) {
-                    return t;
-                }
-            }
-            throw new TypeDBClientException(BAD_VALUE_TYPE);
-        }
-
-        @CheckReturnValue
-        public Class<?> valueClass() {
-            return valueClass;
-        }
-
-        @CheckReturnValue
-        public boolean isWritable() {
-            return isWritable;
-        }
-
-        @CheckReturnValue
-        public boolean isKeyable() {
-            return isKeyable;
-        }
-
-        @CheckReturnValue
-        public ConceptProto.AttributeType.ValueType proto() {
-            switch (this) {
-                case OBJECT:
-                    return ConceptProto.AttributeType.ValueType.OBJECT;
-                case BOOLEAN:
-                    return ConceptProto.AttributeType.ValueType.BOOLEAN;
-                case LONG:
-                    return ConceptProto.AttributeType.ValueType.LONG;
-                case DOUBLE:
-                    return ConceptProto.AttributeType.ValueType.DOUBLE;
-                case STRING:
-                    return ConceptProto.AttributeType.ValueType.STRING;
-                case DATETIME:
-                    return ConceptProto.AttributeType.ValueType.DATETIME;
-                default:
-                    return ConceptProto.AttributeType.ValueType.UNRECOGNIZED;
-            }
-        }
-    }
 
     interface Remote extends ThingType.Remote, AttributeType {
 

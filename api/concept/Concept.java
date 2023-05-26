@@ -23,6 +23,7 @@ package com.vaticle.typedb.client.api.concept;
 
 import com.eclipsesource.json.JsonObject;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.concept.value.Value;
 import com.vaticle.typedb.client.api.concept.thing.Attribute;
 import com.vaticle.typedb.client.api.concept.thing.Entity;
 import com.vaticle.typedb.client.api.concept.thing.Relation;
@@ -33,8 +34,13 @@ import com.vaticle.typedb.client.api.concept.type.RelationType;
 import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
 import com.vaticle.typedb.client.api.concept.type.Type;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.protocol.ConceptProto;
 
 import javax.annotation.CheckReturnValue;
+import java.time.LocalDateTime;
+
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 
 public interface Concept {
 
@@ -89,6 +95,11 @@ public interface Concept {
     }
 
     @CheckReturnValue
+    default boolean isValue() {
+        return false;
+    }
+
+    @CheckReturnValue
     Type asType();
 
     @CheckReturnValue
@@ -117,6 +128,9 @@ public interface Concept {
 
     @CheckReturnValue
     Relation asRelation();
+
+    @CheckReturnValue
+    Value<?> asValue();
 
     @CheckReturnValue
     Remote asRemote(TypeDBTransaction transaction);
@@ -173,5 +187,74 @@ public interface Concept {
         @Override
         @CheckReturnValue
         Attribute.Remote<?> asAttribute();
+    }
+
+    enum ValueType {
+
+        OBJECT(Object.class),
+        BOOLEAN(AttributeType.Boolean.class),
+        LONG(AttributeType.Long.class),
+        DOUBLE(AttributeType.Double.class),
+        STRING(AttributeType.String.class),
+        DATETIME(LocalDateTime.class);
+
+        private final Class<?> valueClass;
+
+        ValueType(Class<?> valueClass) {
+            this.valueClass = valueClass;
+        }
+
+        @CheckReturnValue
+        public static ValueType of(ConceptProto.ValueType valueType) {
+            switch (valueType) {
+                case BOOLEAN:
+                    return BOOLEAN;
+                case LONG:
+                    return LONG;
+                case DOUBLE:
+                    return DOUBLE;
+                case STRING:
+                    return STRING;
+                case DATETIME:
+                    return DATETIME;
+                default:
+                    throw new TypeDBClientException(BAD_VALUE_TYPE, valueType);
+            }
+        }
+
+        @CheckReturnValue
+        public static ValueType of(Class<?> valueClass) {
+            for (ValueType t : ValueType.values()) {
+                if (t.valueClass == valueClass) {
+                    return t;
+                }
+            }
+            throw new TypeDBClientException(BAD_VALUE_TYPE);
+        }
+
+        @CheckReturnValue
+        public Class<?> valueClass() {
+            return valueClass;
+        }
+
+        @CheckReturnValue
+        public ConceptProto.ValueType proto() {
+            switch (this) {
+                case OBJECT:
+                    return ConceptProto.ValueType.OBJECT;
+                case BOOLEAN:
+                    return ConceptProto.ValueType.BOOLEAN;
+                case LONG:
+                    return ConceptProto.ValueType.LONG;
+                case DOUBLE:
+                    return ConceptProto.ValueType.DOUBLE;
+                case STRING:
+                    return ConceptProto.ValueType.STRING;
+                case DATETIME:
+                    return ConceptProto.ValueType.DATETIME;
+                default:
+                    return ConceptProto.ValueType.UNRECOGNIZED;
+            }
+        }
     }
 }

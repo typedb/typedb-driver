@@ -92,6 +92,8 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
                 new Concept(9, "The ownership by owner '%s' of attribute '%s' is not explainable.");
         public static final Concept UNRECOGNISED_ANNOTATION =
                 new Concept(10, "The annotation '%s' is not recognised");
+        public static final Concept VALUE_HAS_NO_REMOTE =
+                new Concept(11, "A 'value' has no remote concept.");
 
         private static final String codePrefix = "CON";
         private static final String messagePrefix = "Concept Error";

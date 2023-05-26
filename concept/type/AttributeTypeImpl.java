@@ -37,11 +37,11 @@ import java.util.stream.Stream;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Attribute.protoBooleanAttributeValue;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Attribute.protoDateTimeAttributeValue;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Attribute.protoDoubleAttributeValue;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Attribute.protoLongAttributeValue;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Attribute.protoStringAttributeValue;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Concept.protoBooleanConceptValue;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Concept.protoDateTimeConceptValue;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Concept.protoDoubleConceptValue;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Concept.protoLongConceptValue;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Concept.protoStringConceptValue;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.AttributeType.getOwnersExplicitReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.AttributeType.getOwnersReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.AttributeType.getRegexReq;
@@ -207,13 +207,13 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
                     .map(ThingTypeImpl::of);
         }
 
-        protected final AttributeImpl<?> put(ConceptProto.Attribute.Value protoValue) {
+        protected final AttributeImpl<?> put(ConceptProto.ConceptValue protoValue) {
             ConceptProto.Type.Res res = execute(putReq(getLabel(), protoValue));
             return AttributeImpl.of(res.getAttributeTypePutRes().getAttribute());
         }
 
         @Nullable
-        protected final AttributeImpl<?> get(ConceptProto.Attribute.Value value) {
+        protected final AttributeImpl<?> get(ConceptProto.ConceptValue value) {
             ConceptProto.Type.Res res = execute(getReq(getLabel(), value));
             switch (res.getAttributeTypeGetRes().getResCase()) {
                 case ATTRIBUTE:
@@ -331,13 +331,13 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             @Override
             public final AttributeImpl.Boolean put(boolean value) {
-                return super.put(protoBooleanAttributeValue(value)).asBoolean();
+                return super.put(protoBooleanConceptValue(value)).asBoolean();
             }
 
             @Nullable
             @Override
             public final AttributeImpl.Boolean get(boolean value) {
-                AttributeImpl<?> attr = super.get(protoBooleanAttributeValue(value));
+                AttributeImpl<?> attr = super.get(protoBooleanConceptValue(value));
                 return attr != null ? attr.asBoolean() : null;
             }
 
@@ -406,13 +406,13 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             @Override
             public final AttributeImpl.Long put(long value) {
-                return super.put(protoLongAttributeValue(value)).asLong();
+                return super.put(protoLongConceptValue(value)).asLong();
             }
 
             @Nullable
             @Override
             public final AttributeImpl.Long get(long value) {
-                AttributeImpl<?> attr = super.get(protoLongAttributeValue(value));
+                AttributeImpl<?> attr = super.get(protoLongConceptValue(value));
                 return attr != null ? attr.asLong() : null;
             }
 
@@ -481,13 +481,13 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             @Override
             public final AttributeImpl.Double put(double value) {
-                return super.put(protoDoubleAttributeValue(value)).asDouble();
+                return super.put(protoDoubleConceptValue(value)).asDouble();
             }
 
             @Nullable
             @Override
             public final AttributeImpl.Double get(double value) {
-                AttributeImpl<?> attr = super.get(protoDoubleAttributeValue(value));
+                AttributeImpl<?> attr = super.get(protoDoubleConceptValue(value));
                 return attr != null ? attr.asDouble() : null;
             }
 
@@ -556,13 +556,13 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             @Override
             public final AttributeImpl.String put(java.lang.String value) {
-                return super.put(protoStringAttributeValue(value)).asString();
+                return super.put(protoStringConceptValue(value)).asString();
             }
 
             @Nullable
             @Override
             public final AttributeImpl.String get(java.lang.String value) {
-                AttributeImpl<?> attr = super.get(protoStringAttributeValue(value));
+                AttributeImpl<?> attr = super.get(protoStringConceptValue(value));
                 return attr != null ? attr.asString() : null;
             }
 
@@ -645,13 +645,13 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
             @Override
             public final AttributeImpl.DateTime put(LocalDateTime value) {
-                return super.put(protoDateTimeAttributeValue(value)).asDateTime();
+                return super.put(protoDateTimeConceptValue(value)).asDateTime();
             }
 
             @Nullable
             @Override
             public final AttributeImpl.DateTime get(LocalDateTime value) {
-                AttributeImpl<?> attr = super.get(protoDateTimeAttributeValue(value));
+                AttributeImpl<?> attr = super.get(protoDateTimeConceptValue(value));
                 return attr != null ? attr.asDateTime() : null;
             }
 
