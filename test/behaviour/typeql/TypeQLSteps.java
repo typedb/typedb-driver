@@ -203,7 +203,7 @@ public class TypeQLSteps {
     }
 
     @When("typeql match; throws exception containing {string}")
-    public void typeql_match_throws_exception_containing(String typeQLQueryStatements, String error) {
+    public void typeql_match_throws_exception_containing(String error, String typeQLQueryStatements) {
         assertThrowsWithMessage(() -> typeql_match(typeQLQueryStatements), error);
     }
 
