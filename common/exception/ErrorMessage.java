@@ -29,7 +29,7 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
 
     public static class Client extends ErrorMessage {
         public static final Client RPC_METHOD_UNAVAILABLE =
-                new Client(1, "The server does not support this method, please check the client-server compatibility.\n'%s'.");
+                new Client(1, "The server does not support this method, please check the client-server compatibility:\n'%s'.");
         public static final Client CLIENT_CLOSED =
                 new Client(2, "The client has been closed and no further operation is allowed.");
         public static final Client SESSION_CLOSED =
