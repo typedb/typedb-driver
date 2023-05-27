@@ -54,7 +54,7 @@ class ClusterServerClient extends TypeDBClientImpl {
         stub = new ClusterServerStub(channel, credential);
         try {
             stub.connectionOpen(openReq());
-        } catch (Exception e){
+        } catch (Exception e) {
             close();
             throw e;
         }
