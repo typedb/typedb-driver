@@ -179,7 +179,9 @@ public class RequestBuilder {
     public static class Connection {
 
         public static ConnectionProto.Connection.Open.Req openReq() {
-            return ConnectionProto.Connection.Open.Req.newBuilder().setVersion(VersionProto.Version.VERSION).build();
+            return ConnectionProto.Connection.Open.Req.newBuilder()
+                    .setVersion(VersionProto.Version.VERSION)
+                    .build();
         }
     }
 
