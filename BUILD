@@ -104,7 +104,7 @@ deploy_github(
     name = "deploy-github",
     draft = False,
     title = "TypeDB Client Java",
-    release_description = "//:LATEST_RELEASE_NOTES.md",
+    release_description = "//:RELEASE_NOTES_LATEST.md",
     organisation = github_deployment["github.organisation"],
     repository = github_deployment["github.repository"],
     title_append_version = True,
