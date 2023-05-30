@@ -93,17 +93,15 @@ public class ClusterClient implements TypeDBClient.Cluster {
         Map<String, ClusterServerClient> clients = new HashMap<>();
         boolean available = false;
         for (String address : addresses) {
-            ClusterServerClient client = new ClusterServerClient(address, credential, parallelisation);
             try {
-                client.validateConnectionOrThrow();
+                ClusterServerClient client = new ClusterServerClient(address, credential, parallelisation);
+                clients.put(address, client);
                 available = true;
             } catch (TypeDBClientException e) {
                 // do nothing
             }
-            clients.put(address, client);
         }
         if (!available) throw new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", addresses));
-
         return clients;
     }
 

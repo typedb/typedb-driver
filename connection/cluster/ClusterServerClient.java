@@ -36,6 +36,7 @@ import javax.net.ssl.SSLException;
 import java.util.Set;
 
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.ServerManager.allReq;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Connection.openReq;
 import static java.util.stream.Collectors.toSet;
 
 class ClusterServerClient extends TypeDBClientImpl {
@@ -51,11 +52,12 @@ class ClusterServerClient extends TypeDBClientImpl {
         this.address = address;
         channel = createManagedChannel(address, credential);
         stub = new ClusterServerStub(channel, credential);
-    }
-
-    @Override
-    public void validateConnectionOrThrow() throws TypeDBClientException {
-        super.validateConnectionOrThrow();
+        try {
+            stub.connectionOpen(openReq());
+        } catch (Exception e) {
+            close();
+            throw e;
+        }
     }
 
     private ManagedChannel createManagedChannel(String address, TypeDBCredential credential) {

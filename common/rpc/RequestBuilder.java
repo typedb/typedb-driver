@@ -28,12 +28,14 @@ import com.vaticle.typedb.protocol.ClusterDatabaseProto;
 import com.vaticle.typedb.protocol.ClusterServerProto;
 import com.vaticle.typedb.protocol.ClusterUserProto;
 import com.vaticle.typedb.protocol.ConceptProto;
+import com.vaticle.typedb.protocol.ConnectionProto;
 import com.vaticle.typedb.protocol.CoreDatabaseProto;
 import com.vaticle.typedb.protocol.LogicProto;
 import com.vaticle.typedb.protocol.OptionsProto;
 import com.vaticle.typedb.protocol.QueryProto;
 import com.vaticle.typedb.protocol.SessionProto;
 import com.vaticle.typedb.protocol.TransactionProto;
+import com.vaticle.typedb.protocol.VersionProto;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -171,6 +173,15 @@ public class RequestBuilder {
 
         public static class Database {
 
+        }
+    }
+
+    public static class Connection {
+
+        public static ConnectionProto.Connection.Open.Req openReq() {
+            return ConnectionProto.Connection.Open.Req.newBuilder()
+                    .setVersion(VersionProto.Version.VERSION)
+                    .build();
         }
     }
 
