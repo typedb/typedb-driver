@@ -73,7 +73,7 @@ export namespace ErrorMessage {
     }
 
     export namespace Client {
-        export const RPC_METHOD_UNAVAILABLE = new Client(1, (args: Stringable[]) => `The server does not support this method, please check the client-server compatibility:\n'${args[0]}'.`);
+        export const RPC_METHOD_UNAVAILABLE = new Client(1, (args: Stringable[]) => `The server does not support this method. Please ensure that the TypeDB Client and TypeDB Server versions are compatible:\n'${args[0]}'.`);
         export const CLIENT_NOT_OPEN = new Client(2, (args: Stringable[]) => `The client is not open.`);
         export const SESSION_ID_EXISTS = new Client(3, (args: Stringable[]) => `The newly opened session id '${args[0]}' already exists`);
         export const SESSION_CLOSED = new Client(4, () => `Session is closed.`);
