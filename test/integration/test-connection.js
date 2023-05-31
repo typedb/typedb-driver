@@ -22,7 +22,7 @@
 const { TypeDB, SessionType, TransactionType } = require("../../dist");
 
 async function run() {
-    const client = TypeDB.coreClient();
+    const client = await TypeDB.coreClient();
 
     try {
         const dbs = await client.databases.all();

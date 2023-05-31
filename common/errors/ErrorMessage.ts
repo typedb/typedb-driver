@@ -73,25 +73,27 @@ export namespace ErrorMessage {
     }
 
     export namespace Client {
-        export const SESSION_ID_EXISTS = new Client(1, (args: Stringable[]) => `The newly opened session id '${args[0]}' already exists`);
-        export const SESSION_CLOSED = new Client(2, () => `Session is closed.`);
-        export const TRANSACTION_CLOSED = new Client(3, () => `The transaction has been closed and no further operation is allowed.`);
-        export const TRANSACTION_CLOSED_WITH_ERRORS = new Client(4, (args: Stringable[]) => `The transaction has been closed with error(s): \n${args[0]}.`)
-        export const UNABLE_TO_CONNECT = new Client(5, () => `Unable to connect to TypeDB server.`);
-        export const NEGATIVE_VALUE_NOT_ALLOWED = new Client(6, (args: Stringable[]) => `Value cannot be less than 1, was: '${args[0]}'.`);
-        export const MISSING_DB_NAME = new Client(7, () => `Database name cannot be null.`);
-        export const DB_DOES_NOT_EXIST = new Client(8, (args: Stringable[]) => `The database '${args[0]}' does not exist.`);
-        export const UNKNOWN_STREAM_STATE = new Client(9, (args: Stringable[]) => `RPC transaction stream response '${args[0]}' is unknown.`);
-        export const MISSING_RESPONSE = new Client(10, (args: Stringable[]) => `The required field 'res' of type '${args[0]}' was not set.`);
-        export const UNKNOWN_REQUEST_ID = new Client(11, (args: Stringable[]) => `Received a response with unknown request id '${args[0]}'.`);
-        export const CLUSTER_NO_PRIMARY_REPLICA_YET = new Client(12, (args: Stringable[]) => `No replica has been marked as the primary replica for latest known term '${args[0]}'.`);
-        export const CLUSTER_UNABLE_TO_CONNECT = new Client(13, (args: Stringable[]) => `Unable to connect to TypeDB Cluster. Attempted connecting to the cluster members, but none are available: '${args[1]}'.`);
-        export const CLUSTER_REPLICA_NOT_PRIMARY = new Client(14, () => `The replica is not the primary replica.`);
-        export const CLUSTER_ALL_NODES_FAILED = new Client(15, (args: Stringable[]) => `Attempted connecting to all cluster members, but the following errors occurred: \n'${args[0]}'`);
-        export const CLUSTER_USER_DOES_NOT_EXIST = new Client(16, (args: Stringable[]) => `The user '${args[0]}' does not exist.`);
-        export const CLUSTER_TOKEN_CREDENTIAL_INVALID = new Client(17, (args: Stringable[]) => `Invalid token credential.`);
-        export const CLUSTER_INVALID_ROOT_CA_PATH = new Client(18, (args: Stringable[]) => `The provided Root CA path '${args[0]}' does not exist`);
-        export const UNRECOGNISED_SESSION_TYPE = new Client(19, (args: Stringable[]) => `Session type '${args[0]}' was not recognised.`);
+        export const RPC_METHOD_UNAVAILABLE = new Client(1, (args: Stringable[]) => `The server does not support this method, please check the client-server compatibility:\n'${args[0]}'.`);
+        export const CLIENT_NOT_OPEN = new Client(2, (args: Stringable[]) => `The client is not open.`);
+        export const SESSION_ID_EXISTS = new Client(3, (args: Stringable[]) => `The newly opened session id '${args[0]}' already exists`);
+        export const SESSION_CLOSED = new Client(4, () => `Session is closed.`);
+        export const TRANSACTION_CLOSED = new Client(5, () => `The transaction has been closed and no further operation is allowed.`);
+        export const TRANSACTION_CLOSED_WITH_ERRORS = new Client(6, (args: Stringable[]) => `The transaction has been closed with error(s): \n${args[0]}.`)
+        export const UNABLE_TO_CONNECT = new Client(7, () => `Unable to connect to TypeDB server.`);
+        export const NEGATIVE_VALUE_NOT_ALLOWED = new Client(8, (args: Stringable[]) => `Value cannot be less than 1, was: '${args[0]}'.`);
+        export const MISSING_DB_NAME = new Client(9, () => `Database name cannot be null.`);
+        export const DB_DOES_NOT_EXIST = new Client(10, (args: Stringable[]) => `The database '${args[0]}' does not exist.`);
+        export const UNKNOWN_STREAM_STATE = new Client(11, (args: Stringable[]) => `RPC transaction stream response '${args[0]}' is unknown.`);
+        export const MISSING_RESPONSE = new Client(12, (args: Stringable[]) => `The required field 'res' of type '${args[0]}' was not set.`);
+        export const UNKNOWN_REQUEST_ID = new Client(13, (args: Stringable[]) => `Received a response with unknown request id '${args[0]}'.`);
+        export const CLUSTER_NO_PRIMARY_REPLICA_YET = new Client(14, (args: Stringable[]) => `No replica has been marked as the primary replica for latest known term '${args[0]}'.`);
+        export const CLUSTER_UNABLE_TO_CONNECT = new Client(15, (args: Stringable[]) => `Unable to connect to TypeDB Cluster. Attempted connecting to the cluster members, but none are available: '${args[1]}'.`);
+        export const CLUSTER_REPLICA_NOT_PRIMARY = new Client(16, () => `The replica is not the primary replica.`);
+        export const CLUSTER_ALL_NODES_FAILED = new Client(17, (args: Stringable[]) => `Attempted connecting to all cluster members, but the following errors occurred: \n'${args[0]}'`);
+        export const CLUSTER_USER_DOES_NOT_EXIST = new Client(18, (args: Stringable[]) => `The user '${args[0]}' does not exist.`);
+        export const CLUSTER_TOKEN_CREDENTIAL_INVALID = new Client(19, (args: Stringable[]) => `Invalid token credential.`);
+        export const CLUSTER_INVALID_ROOT_CA_PATH = new Client(20, (args: Stringable[]) => `The provided Root CA path '${args[0]}' does not exist`);
+        export const UNRECOGNISED_SESSION_TYPE = new Client(21, (args: Stringable[]) => `Session type '${args[1]}' was not recognised.`);
     }
 
     export class Concept extends ErrorMessage {

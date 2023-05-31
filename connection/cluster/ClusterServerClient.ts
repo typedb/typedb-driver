@@ -23,20 +23,36 @@ import {TypeDBCredential} from "../../api/connection/TypeDBCredential";
 import {TypeDBClientImpl} from "../TypeDBClientImpl";
 import {ClusterServerStub} from "./ClusterServerStub";
 import {TypeDBDatabaseManagerImpl} from "../TypeDBDatabaseManagerImpl";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import CLIENT_NOT_OPEN = ErrorMessage.Client.CLIENT_NOT_OPEN;
 
 export class ClusterServerClient extends TypeDBClientImpl {
 
-    private readonly _stub: ClusterServerStub;
-    private readonly _databases: TypeDBDatabaseManagerImpl;
+    private readonly _address: string;
+    private readonly _credential: TypeDBCredential;
+    private _stub: ClusterServerStub;
+    private _databases: TypeDBDatabaseManagerImpl;
+    private _isOpen: boolean;
 
     constructor(address: string, credential: TypeDBCredential) {
         super();
-        this._stub = new ClusterServerStub(address, credential);
-        this._databases = new TypeDBDatabaseManagerImpl(this._stub);
+        this._address = address;
+        this._credential = credential;
+        this._isOpen = false
     }
 
-    async open(): Promise<void> {
+    async open(): Promise<ClusterServerClient> {
+        await super.open();
+        this._stub = new ClusterServerStub(this._address, this._credential);
         await this._stub.open();
+        this._databases = new TypeDBDatabaseManagerImpl(this._stub);
+        this._isOpen = true;
+        return this;
+    }
+
+    isOpen(): boolean {
+        return this._isOpen;
     }
 
     stub(): ClusterServerStub {
@@ -44,11 +60,15 @@ export class ClusterServerClient extends TypeDBClientImpl {
     }
 
     get databases(): TypeDBDatabaseManagerImpl {
+        if (!this.isOpen()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
         return this._databases;
     }
 
     async close(): Promise<void> {
-        await super.close();
-        this._stub.close();
+        if (this.isOpen()) {
+            this._isOpen = false;
+            await super.close();
+            this._stub.close();
+        }
     }
 }

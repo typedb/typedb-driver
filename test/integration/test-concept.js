@@ -24,7 +24,7 @@ const assert = require("assert");
 const Annotation = ThingType.Annotation;
 
 async function run() {
-    const client = TypeDB.coreClient();
+    const client = await TypeDB.coreClient();
 
     try {
         const dbs = await client.databases.all();

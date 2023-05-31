@@ -19,12 +19,13 @@
  * under the License.
  */
 
-import { ServiceError } from "@grpc/grpc-js";
-import { Status } from "@grpc/grpc-js/build/src/constants";
+import {ServiceError} from "@grpc/grpc-js";
+import {Status} from "@grpc/grpc-js/build/src/constants";
 import {ErrorMessage} from "./ErrorMessage";
 import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 import CLUSTER_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID;
 import UNABLE_TO_CONNECT = ErrorMessage.Client.UNABLE_TO_CONNECT;
+import RPC_METHOD_UNAVAILABLE = ErrorMessage.Client.RPC_METHOD_UNAVAILABLE;
 
 function isReplicaNotPrimaryError(e: ServiceError): boolean {
     return e.message.includes("[RPL01]");
@@ -49,7 +50,10 @@ export class TypeDBClientError extends Error {
         }
         // TODO: clean this up once we have our own error protocol
         else if (isServiceError(error)) {
-            if ([Status.UNAVAILABLE, Status.UNKNOWN, Status.CANCELLED].includes(error.code) || error.message.includes("Received RST_STREAM")) {
+            if (error.code == Status.UNIMPLEMENTED) {
+                super(RPC_METHOD_UNAVAILABLE.message(error.details))
+                this._messageTemplate = RPC_METHOD_UNAVAILABLE;
+            } else if ([Status.UNAVAILABLE, Status.UNKNOWN, Status.CANCELLED].includes(error.code) || error.message.includes("Received RST_STREAM")) {
                 super(UNABLE_TO_CONNECT.message());
                 this._messageTemplate = UNABLE_TO_CONNECT;
             } else if (isReplicaNotPrimaryError(error)) {
@@ -60,8 +64,7 @@ export class TypeDBClientError extends Error {
                 this._messageTemplate = CLUSTER_TOKEN_CREDENTIAL_INVALID;
             } else if (error.code === Status.INTERNAL) super(error.details)
             else super(error.toString());
-        }
-        else super(error.toString());
+        } else super(error.toString());
 
         this.name = "TypeDBClientError"; // Required to correctly report error type in default throw
     }

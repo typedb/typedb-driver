@@ -30,6 +30,7 @@ import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {TypeDBDatabaseImpl} from "../TypeDBDatabaseImpl";
 import {Session} from "typedb-protocol/common/session_pb";
 import * as common_transaction_pb from "typedb-protocol/common/transaction_pb";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 
 export class CoreStub extends TypeDBStub {
 
@@ -38,6 +39,10 @@ export class CoreStub extends TypeDBStub {
     constructor(address: string) {
         super();
         this._stub = new TypeDBClient(address, ChannelCredentials.createInsecure());
+    }
+
+    async open(): Promise<void> {
+        await this.connectionOpen(RequestBuilder.Connection.openReq());
     }
 
     stub(): TypeDBClient {

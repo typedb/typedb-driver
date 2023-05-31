@@ -23,7 +23,7 @@ const { TypeDB, SessionType, TransactionType, TypeDBOptions } = require("../../d
 const assert = require("assert");
 
 async function run() {
-    const client = TypeDB.coreClient();
+    const client = await TypeDB.coreClient();
     try {
         const dbs = await client.databases.all();
         console.log(`get databases - SUCCESS - the databases are [${dbs}]`);

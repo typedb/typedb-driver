@@ -19,23 +19,42 @@
  * under the License.
  */
 
-import { TypeDBClientImpl } from "../TypeDBClientImpl";
+import {TypeDBClientImpl} from "../TypeDBClientImpl";
 import {TypeDBStub} from "../../common/rpc/TypeDBStub";
 import {CoreStub} from "./CoreStub";
 import {TypeDBDatabaseManagerImpl} from "../TypeDBDatabaseManagerImpl";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import CLIENT_NOT_OPEN = ErrorMessage.Client.CLIENT_NOT_OPEN;
 
 export class CoreClient extends TypeDBClientImpl {
 
-    private readonly _stub: CoreStub;
-    private readonly _databases: TypeDBDatabaseManagerImpl;
+    private readonly _address: string;
+    private _stub: CoreStub;
+    private _databases: TypeDBDatabaseManagerImpl;
+    private _isOpen: boolean;
 
     constructor(address: string) {
         super();
-        this._stub = new CoreStub(address);
+        this._address = address;
+        this._isOpen = false
+    }
+
+    async open(): Promise<CoreClient> {
+        await super.open();
+        this._stub = new CoreStub(this._address);
+        await this._stub.open();
         this._databases = new TypeDBDatabaseManagerImpl(this._stub);
+        this._isOpen = true;
+        return this;
+    }
+
+    isOpen(): boolean {
+        return this._isOpen;
     }
 
     get databases(): TypeDBDatabaseManagerImpl {
+        if (!this.isOpen()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
         return this._databases;
     }
 
@@ -44,7 +63,10 @@ export class CoreClient extends TypeDBClientImpl {
     }
 
     async close(): Promise<void> {
-        await super.close();
-        this._stub.close();
+        if (this.isOpen()) {
+            this._isOpen = false;
+            await super.close();
+            this._stub.close();
+        }
     }
 }

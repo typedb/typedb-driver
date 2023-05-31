@@ -22,6 +22,7 @@
 
 import {ClientDuplexStream} from "@grpc/grpc-js";
 import {Session} from "typedb-protocol/common/session_pb";
+import {Connection as ConnectionProto} from "typedb-protocol/common/connection_pb";
 import {
     CoreDatabase as CoreDatabaseProto,
     CoreDatabaseManager as CoreDatabaseMgrProto
@@ -35,6 +36,15 @@ import {TypeDBClientError} from "../errors/TypeDBClientError";
 TODO implement ResilientCall
  */
 export abstract class TypeDBStub {
+
+    connectionOpen(req: ConnectionProto.Open.Req): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.stub().connection_open(req, (err) => {
+                if (err) reject(new TypeDBClientError(err));
+                else resolve();
+            })
+        });
+    }
 
     databasesCreate(req: CoreDatabaseMgrProto.Create.Req): Promise<void> {
         return new Promise((resolve, reject) => {

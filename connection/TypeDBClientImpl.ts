@@ -19,35 +19,37 @@
  * under the License.
  */
 
-import { TypeDBClient } from "../api/connection/TypeDBClient";
-import { TypeDBOptions } from "../api/connection/TypeDBOptions";
-import { SessionType } from "../api/connection/TypeDBSession";
-import { ErrorMessage } from "../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../common/errors/TypeDBClientError";
-import { TypeDBStub } from "../common/rpc/TypeDBStub";
-import { RequestTransmitter } from "../stream/RequestTransmitter";
-import { TypeDBDatabaseManagerImpl } from "./TypeDBDatabaseManagerImpl";
-import { TypeDBSessionImpl } from "./TypeDBSessionImpl";
+import {TypeDBClient} from "../api/connection/TypeDBClient";
+import {TypeDBOptions} from "../api/connection/TypeDBOptions";
+import {SessionType} from "../api/connection/TypeDBSession";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {TypeDBStub} from "../common/rpc/TypeDBStub";
+import {RequestTransmitter} from "../stream/RequestTransmitter";
+import {TypeDBDatabaseManagerImpl} from "./TypeDBDatabaseManagerImpl";
+import {TypeDBSessionImpl} from "./TypeDBSessionImpl";
 import SESSION_ID_EXISTS = ErrorMessage.Client.SESSION_ID_EXISTS;
 import ILLEGAL_CAST = ErrorMessage.Internal.ILLEGAL_CAST;
+import CLIENT_NOT_OPEN = ErrorMessage.Client.CLIENT_NOT_OPEN;
 
 export abstract class TypeDBClientImpl implements TypeDBClient {
 
-    private readonly _requestTransmitter: RequestTransmitter;
     private readonly _sessions: { [id: string]: TypeDBSessionImpl };
-    private _isOpen: boolean;
+    private _requestTransmitter: RequestTransmitter;
 
     protected constructor() {
-        this._requestTransmitter = new RequestTransmitter();
         this._sessions = {};
-        this._isOpen = true;
     }
 
-    isOpen(): boolean {
-        return this._isOpen;
+    protected async open(): Promise<TypeDBClient> {
+        this._requestTransmitter = new RequestTransmitter();
+        return this;
     }
+
+    abstract isOpen(): boolean;
 
     async session(database: string, type: SessionType, options?: TypeDBOptions): Promise<TypeDBSessionImpl> {
+        if (!this.isOpen()) throw new TypeDBClientError(CLIENT_NOT_OPEN);
         if (!options) options = TypeDBOptions.core();
         const session = new TypeDBSessionImpl(database, type, options, this);
         await session.open();
@@ -73,13 +75,10 @@ export abstract class TypeDBClientImpl implements TypeDBClient {
     }
 
     async close(): Promise<void> {
-        if (this._isOpen) {
-            this._isOpen = false;
-            for (const session of Object.values(Object.values(this._sessions))) {
-                await session.close();
-            }
-            this._requestTransmitter.close();
+        for (const session of Object.values(Object.values(this._sessions))) {
+            await session.close();
         }
+        this._requestTransmitter.close();
     }
 
     closeSession(session: TypeDBSessionImpl): void {

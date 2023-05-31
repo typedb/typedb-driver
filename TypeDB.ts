@@ -28,8 +28,8 @@ export namespace TypeDB {
 
     export const DEFAULT_ADDRESS = "127.0.0.1:1729";
 
-    export function coreClient(address: string = DEFAULT_ADDRESS): TypeDBClient {
-        return new CoreClient(address);
+    export function coreClient(address: string = DEFAULT_ADDRESS): Promise<TypeDBClient> {
+        return new CoreClient(address).open();
     }
 
     export function clusterClient(addresses: string | string[], credential: TypeDBCredential): Promise<TypeDBClient.Cluster> {
