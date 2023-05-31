@@ -26,7 +26,7 @@ jest.setTimeout(15000);
 let client;
 
 beforeEach(async () => {
-    client = TypeDB.coreClient();
+    client = await TypeDB.coreClient();
     await client.databases.create("typedb");
 })
 
