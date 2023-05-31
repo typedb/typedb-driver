@@ -223,7 +223,7 @@ release:
     deploy-npm-release:
       image: vaticle-ubuntu-22.04
       command: |
-        curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
+        wget -q -O - https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
         wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
         sudo apt update -y
         sudo apt install -y expect
