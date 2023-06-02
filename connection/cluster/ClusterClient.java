@@ -234,7 +234,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
             while (true) {
                 try {
                     FailsafeTaskParams parameter = new FailsafeTaskParams(
-                            clusterServerClient(replica.address()), replica
+                            fetchOpenServerClient(replica.address()), replica
                     );
                     return retries == 0 ? run(parameter) : rerun(parameter);
                 } catch (TypeDBClientException e) {
@@ -263,7 +263,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
             int retries = 0;
             for (ClusterDatabase.Replica replica : replicas) {
                 try {
-                    FailsafeTaskParams parameter = new FailsafeTaskParams(clusterServerClient(replica.address()), replica);
+                    FailsafeTaskParams parameter = new FailsafeTaskParams(fetchOpenServerClient(replica.address()), replica);
                     return retries == 0 ? run(parameter) : rerun(parameter);
                 } catch (TypeDBClientException e) {
                     if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
@@ -296,7 +296,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
             for (String serverAddress : clusterServerClients.keySet()) {
                 try {
                     LOG.debug("Fetching replica info from {}", serverAddress);
-                    ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = clusterServerClient(serverAddress)
+                    ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = fetchOpenServerClient(serverAddress)
                             .stub().databasesGet(getReq(database));
                     ClusterDatabase clusterDatabase = ClusterDatabase.of(res.getDatabase(), ClusterClient.this);
                     clusterDatabases.put(database, clusterDatabase);
@@ -319,6 +319,12 @@ public class ClusterClient implements TypeDBClient.Cluster {
             } catch (InterruptedException e) {
                 throw new TypeDBClientException(UNEXPECTED_INTERRUPTION);
             }
+        }
+
+        private ClusterServerClient fetchOpenServerClient(String address) {
+            ClusterServerClient serverClient = clusterServerClient(address);
+            if (!serverClient.isOpen()) serverClient.open(); // may throw exception
+            return serverClient;
         }
 
         private TypeDBClientException clusterNotAvailableException() {

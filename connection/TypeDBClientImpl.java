@@ -58,17 +58,17 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
 
     protected abstract void open();
 
+    @Override
+    public boolean isOpen() {
+        return isOpen;
+    }
+
     public static int calculateParallelisation() {
         int cores = Runtime.getRuntime().availableProcessors();
         if (cores <= 4) return 2;
         else if (cores <= 9) return 3;
         else if (cores <= 16) return 4;
         else return (int) Math.ceil(cores / 4.0);
-    }
-
-    @Override
-    public boolean isOpen() {
-        return isOpen;
     }
 
     @Override
