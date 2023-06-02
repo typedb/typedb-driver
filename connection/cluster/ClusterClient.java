@@ -95,7 +95,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
         for (String address : addresses) {
             ClusterServerClient client = new ClusterServerClient(address, credential, parallelisation);
             try {
-                client.open();
+                client.validateConnection();
                 available = true;
             } catch (TypeDBClientException e) {
                 // do nothing
@@ -323,7 +323,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
 
         private ClusterServerClient fetchOpenServerClient(String address) {
             ClusterServerClient serverClient = clusterServerClient(address);
-            if (!serverClient.isOpen()) serverClient.open(); // may throw exception
+            if (!serverClient.isOpen()) serverClient.validateConnection(); // may throw exception
             return serverClient;
         }
 

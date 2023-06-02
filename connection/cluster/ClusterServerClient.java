@@ -55,7 +55,7 @@ class ClusterServerClient extends TypeDBClientImpl {
         isOpen = false;
     }
 
-    protected void open() {
+    protected void validateConnection() {
         try {
             stub.connectionOpen(openReq());
         } catch (Exception e) {

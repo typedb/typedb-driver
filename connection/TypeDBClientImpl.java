@@ -56,7 +56,7 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
         this.isOpen = false;
     }
 
-    protected abstract void open();
+    protected abstract void validateConnection();
 
     @Override
     public boolean isOpen() {
