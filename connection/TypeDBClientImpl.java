@@ -46,21 +46,21 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
     private final RequestTransmitter transmitter;
     private final TypeDBDatabaseManagerImpl databaseMgr;
     private final ConcurrentMap<ByteString, TypeDBSessionImpl> sessions;
-    protected boolean isOpen;
+    protected boolean connectionValidated;
 
     protected TypeDBClientImpl(int parallelisation) {
         NamedThreadFactory threadFactory = NamedThreadFactory.create(TYPEDB_CLIENT_RPC_THREAD_NAME);
         transmitter = new RequestTransmitter(parallelisation, threadFactory);
         databaseMgr = new TypeDBDatabaseManagerImpl(this);
         sessions = new ConcurrentHashMap<>();
-        this.isOpen = false;
+        connectionValidated = false;
     }
 
     protected abstract void validateConnection();
 
     @Override
     public boolean isOpen() {
-        return isOpen;
+        return !channel().isShutdown() && connectionValidated;
     }
 
     public static int calculateParallelisation() {
@@ -114,8 +114,7 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
 
     @Override
     public void close() {
-        if (isOpen) {
-            isOpen = false;
+        if (isOpen()) {
             try {
                 sessions.values().forEach(TypeDBSessionImpl::close);
                 channel().shutdown().awaitTermination(10, TimeUnit.SECONDS);
@@ -125,5 +124,4 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
             }
         }
     }
-
 }

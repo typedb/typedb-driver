@@ -77,6 +77,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
     private Set<String> fetchCurrentAddresses(Set<String> servers) {
         for (String server : servers) {
             try (ClusterServerClient client = new ClusterServerClient(server, credential, parallelisation)) {
+                client.validateConnection();
                 return client.servers();
             } catch (TypeDBClientException e) {
                 if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {

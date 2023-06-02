@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import javax.net.ssl.SSLException;
 import java.util.Set;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLIENT_NOT_OPEN;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.ServerManager.allReq;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Connection.openReq;
 import static java.util.stream.Collectors.toSet;
@@ -52,17 +53,11 @@ class ClusterServerClient extends TypeDBClientImpl {
         this.address = address;
         channel = createManagedChannel(address, credential);
         stub = new ClusterServerStub(channel, credential);
-        isOpen = false;
     }
 
     protected void validateConnection() {
-        try {
-            stub.connectionOpen(openReq());
-        } catch (Exception e) {
-            close();
-            throw e;
-        }
-        isOpen = true;
+        stub.connectionOpen(openReq());
+        connectionValidated = true;
     }
 
     private ManagedChannel createManagedChannel(String address, TypeDBCredential credential) {
@@ -96,6 +91,7 @@ class ClusterServerClient extends TypeDBClientImpl {
     }
 
     public Set<String> servers() {
+        if (!isOpen()) throw new TypeDBClientException(CLIENT_NOT_OPEN);
         LOG.debug("Fetching list of all servers from server {}...", address);
         ClusterServerProto.ServerManager.All.Res res = stub.serversAll(allReq());
         Set<String> addresses = res.getServersList().stream().map(ClusterServerProto.Server::getAddress).collect(toSet());

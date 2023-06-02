@@ -46,13 +46,8 @@ public class CoreClient extends TypeDBClientImpl {
 
     @Override
     protected void validateConnection() {
-        try {
-            stub.connectionOpen(openReq());
-        } catch (Exception e) {
-            close();
-            throw e;
-        }
-        isOpen = true;
+        stub.connectionOpen(openReq());
+        connectionValidated = true;
     }
 
     @Override
