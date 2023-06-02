@@ -86,7 +86,7 @@ class ClusterServerClient extends TypeDBClientImpl {
     }
 
     public Set<String> servers() {
-        if (!isOpen()) throw new TypeDBClientException(CLIENT_NOT_OPEN);
+        if (!isConnectionValidated()) throw new TypeDBClientException(CLIENT_NOT_OPEN); // TODO
         LOG.debug("Fetching list of all servers from server {}...", address);
         ClusterServerProto.ServerManager.All.Res res = stub.serversAll(allReq());
         Set<String> addresses = res.getServersList().stream().map(ClusterServerProto.Server::getAddress).collect(toSet());

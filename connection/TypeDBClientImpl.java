@@ -47,24 +47,32 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
     private final RequestTransmitter transmitter;
     private final TypeDBDatabaseManagerImpl databaseMgr;
     private final ConcurrentMap<ByteString, TypeDBSessionImpl> sessions;
-    private boolean connectionValidated;
+    private boolean isConnectionValidated;
 
     protected TypeDBClientImpl(int parallelisation) {
         NamedThreadFactory threadFactory = NamedThreadFactory.create(TYPEDB_CLIENT_RPC_THREAD_NAME);
         transmitter = new RequestTransmitter(parallelisation, threadFactory);
         databaseMgr = new TypeDBDatabaseManagerImpl(this);
         sessions = new ConcurrentHashMap<>();
-        connectionValidated = false;
-    }
-
-    public void validateConnection() {
-        stub().connectionOpen(openReq());
-        connectionValidated = true;
+        isConnectionValidated = false;
     }
 
     @Override
     public boolean isOpen() {
-        return !channel().isShutdown() && connectionValidated;
+        return isChannelOpen() && isConnectionValidated();
+    }
+
+    public void validateConnection() {
+        stub().connectionOpen(openReq());
+        isConnectionValidated = true;
+    }
+
+    public boolean isConnectionValidated() {
+        return isConnectionValidated;
+    }
+
+    protected boolean isChannelOpen() {
+        return !channel().isShutdown();
     }
 
     public static int calculateParallelisation() {
@@ -82,7 +90,7 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
 
     @Override
     public TypeDBSessionImpl session(String database, TypeDBSession.Type type, TypeDBOptions options) {
-        if (!isOpen()) throw new TypeDBClientException(CLIENT_NOT_OPEN);
+        if (!isConnectionValidated()) throw new TypeDBClientException(CLIENT_NOT_OPEN);// TODO
         TypeDBSessionImpl session = new TypeDBSessionImpl(this, database, type, options);
         assert !sessions.containsKey(session.id());
         sessions.put(session.id(), session);
@@ -118,7 +126,7 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
 
     @Override
     public void close() {
-        if (isOpen()) {
+        if (isChannelOpen()) {
             try {
                 sessions.values().forEach(TypeDBSessionImpl::close);
                 channel().shutdown().awaitTermination(10, TimeUnit.SECONDS);

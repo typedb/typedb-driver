@@ -324,7 +324,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
 
         private ClusterServerClient fetchValidatedServerClient(String address) {
             ClusterServerClient serverClient = clusterServerClient(address);
-            if (!serverClient.isOpen()) serverClient.validateConnection(); // may throw exception
+            if (!serverClient.isConnectionValidated()) serverClient.validateConnection(); // may throw exception
             return serverClient;
         }
 
