@@ -37,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLIENT_NOT_OPEN;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
+import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Connection.openReq;
 import static com.vaticle.typedb.common.util.Objects.className;
 
 public abstract class TypeDBClientImpl implements TypeDBClient {
@@ -46,7 +47,7 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
     private final RequestTransmitter transmitter;
     private final TypeDBDatabaseManagerImpl databaseMgr;
     private final ConcurrentMap<ByteString, TypeDBSessionImpl> sessions;
-    protected boolean connectionValidated;
+    private boolean connectionValidated;
 
     protected TypeDBClientImpl(int parallelisation) {
         NamedThreadFactory threadFactory = NamedThreadFactory.create(TYPEDB_CLIENT_RPC_THREAD_NAME);
@@ -56,7 +57,10 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
         connectionValidated = false;
     }
 
-    protected abstract void validateConnection();
+    public void validateConnection() {
+        stub().connectionOpen(openReq());
+        connectionValidated = true;
+    }
 
     @Override
     public boolean isOpen() {

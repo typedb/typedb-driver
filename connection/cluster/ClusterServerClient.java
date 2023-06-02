@@ -55,11 +55,6 @@ class ClusterServerClient extends TypeDBClientImpl {
         stub = new ClusterServerStub(channel, credential);
     }
 
-    protected void validateConnection() {
-        stub.connectionOpen(openReq());
-        connectionValidated = true;
-    }
-
     private ManagedChannel createManagedChannel(String address, TypeDBCredential credential) {
         if (!credential.tlsEnabled()) {
             return NettyChannelBuilder.forTarget(address)

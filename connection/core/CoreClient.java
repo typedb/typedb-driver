@@ -45,12 +45,6 @@ public class CoreClient extends TypeDBClientImpl {
     }
 
     @Override
-    protected void validateConnection() {
-        stub.connectionOpen(openReq());
-        connectionValidated = true;
-    }
-
-    @Override
     public ManagedChannel channel() {
         return channel;
     }
