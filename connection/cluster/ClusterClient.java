@@ -93,13 +93,14 @@ public class ClusterClient implements TypeDBClient.Cluster {
         Map<String, ClusterServerClient> clients = new HashMap<>();
         boolean available = false;
         for (String address : addresses) {
+            ClusterServerClient client = new ClusterServerClient(address, credential, parallelisation);
             try {
-                ClusterServerClient client = new ClusterServerClient(address, credential, parallelisation);
-                clients.put(address, client);
+                client.open();
                 available = true;
             } catch (TypeDBClientException e) {
                 // do nothing
             }
+            clients.put(address, client);
         }
         if (!available) throw new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", addresses));
         return clients;
@@ -173,7 +174,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
             Function<FailsafeTaskParams, RESULT> run,
             Function<FailsafeTaskParams, RESULT> rerun
     ) {
-        return new FailsafeTask<RESULT>(database) {
+        return new FailsafeTask<>(database) {
             @Override
             RESULT run(FailsafeTaskParams parameter) {
                 return run.apply(parameter);

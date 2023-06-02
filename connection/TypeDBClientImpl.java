@@ -35,6 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLIENT_NOT_OPEN;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 import static com.vaticle.typedb.common.util.Objects.className;
 
@@ -45,13 +46,17 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
     private final RequestTransmitter transmitter;
     private final TypeDBDatabaseManagerImpl databaseMgr;
     private final ConcurrentMap<ByteString, TypeDBSessionImpl> sessions;
+    protected boolean isOpen;
 
     protected TypeDBClientImpl(int parallelisation) {
         NamedThreadFactory threadFactory = NamedThreadFactory.create(TYPEDB_CLIENT_RPC_THREAD_NAME);
         transmitter = new RequestTransmitter(parallelisation, threadFactory);
         databaseMgr = new TypeDBDatabaseManagerImpl(this);
         sessions = new ConcurrentHashMap<>();
+        this.isOpen = false;
     }
+
+    protected abstract void open();
 
     public static int calculateParallelisation() {
         int cores = Runtime.getRuntime().availableProcessors();
@@ -63,7 +68,7 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
 
     @Override
     public boolean isOpen() {
-        return !channel().isShutdown();
+        return isOpen;
     }
 
     @Override
@@ -73,6 +78,7 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
 
     @Override
     public TypeDBSessionImpl session(String database, TypeDBSession.Type type, TypeDBOptions options) {
+        if (!isOpen()) throw new TypeDBClientException(CLIENT_NOT_OPEN);
         TypeDBSessionImpl session = new TypeDBSessionImpl(this, database, type, options);
         assert !sessions.containsKey(session.id());
         sessions.put(session.id(), session);
@@ -108,12 +114,15 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
 
     @Override
     public void close() {
-        try {
-            sessions.values().forEach(TypeDBSessionImpl::close);
-            channel().shutdown().awaitTermination(10, TimeUnit.SECONDS);
-            transmitter.close();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        if (isOpen) {
+            isOpen = false;
+            try {
+                sessions.values().forEach(TypeDBSessionImpl::close);
+                channel().shutdown().awaitTermination(10, TimeUnit.SECONDS);
+                transmitter.close();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 

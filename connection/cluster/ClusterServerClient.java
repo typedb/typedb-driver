@@ -52,12 +52,16 @@ class ClusterServerClient extends TypeDBClientImpl {
         this.address = address;
         channel = createManagedChannel(address, credential);
         stub = new ClusterServerStub(channel, credential);
+    }
+
+    protected void open() {
         try {
             stub.connectionOpen(openReq());
         } catch (Exception e) {
             close();
             throw e;
         }
+        isOpen = true;
     }
 
     private ManagedChannel createManagedChannel(String address, TypeDBCredential credential) {
