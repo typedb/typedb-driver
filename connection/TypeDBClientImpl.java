@@ -35,7 +35,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLIENT_NOT_OPEN;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLIENT_CLOSED;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLIENT_CONNECTION_NOT_VALIDATED;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Connection.openReq;
 import static com.vaticle.typedb.common.util.Objects.className;
@@ -90,7 +91,7 @@ public abstract class TypeDBClientImpl implements TypeDBClient {
 
     @Override
     public TypeDBSessionImpl session(String database, TypeDBSession.Type type, TypeDBOptions options) {
-        if (!isConnectionValidated()) throw new TypeDBClientException(CLIENT_NOT_OPEN);// TODO
+        if (!isConnectionValidated()) throw new TypeDBClientException(CLIENT_CONNECTION_NOT_VALIDATED);
         TypeDBSessionImpl session = new TypeDBSessionImpl(this, database, type, options);
         assert !sessions.containsKey(session.id());
         sessions.put(session.id(), session);

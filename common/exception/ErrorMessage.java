@@ -30,8 +30,10 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
     public static class Client extends ErrorMessage {
         public static final Client RPC_METHOD_UNAVAILABLE =
                 new Client(1, "The server does not support this method. Please ensure that the TypeDB Client and TypeDB Server versions are compatible:\n'%s'.");
-        public static final Client CLIENT_NOT_OPEN =
-                new Client(2, "The client is not open, no operations are allowed.");
+        public static final Client CLIENT_CLOSED =
+                new Client(2, "The client has been closed and no further operation is allowed.");
+        public static final Client CLIENT_CONNECTION_NOT_VALIDATED =
+                new Client(2, "The client connection has not been validated and cannot be used.");
         public static final Client SESSION_CLOSED =
                 new Client(3, "The session has been closed and no further operation is allowed.");
         public static final Client TRANSACTION_CLOSED =

@@ -39,7 +39,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.StampedLock;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLIENT_NOT_OPEN;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLIENT_CLOSED;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
 
 public class RequestTransmitter implements AutoCloseable {
@@ -72,7 +72,7 @@ public class RequestTransmitter implements AutoCloseable {
     public Dispatcher dispatcher(StreamObserver<TransactionProto.Transaction.Client> requestObserver) {
         try {
             accessLock.readLock().lock();
-            if (!isOpen) throw new TypeDBClientException(CLIENT_NOT_OPEN);
+            if (!isOpen) throw new TypeDBClientException(CLIENT_CLOSED);
             Executor executor = nextExecutor();
             Dispatcher dispatcher = new Dispatcher(executor, requestObserver);
             executor.dispatchers.add(dispatcher);

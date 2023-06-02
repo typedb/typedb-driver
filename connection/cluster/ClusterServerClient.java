@@ -35,9 +35,8 @@ import org.slf4j.LoggerFactory;
 import javax.net.ssl.SSLException;
 import java.util.Set;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLIENT_NOT_OPEN;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLIENT_CONNECTION_NOT_VALIDATED;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.ServerManager.allReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Connection.openReq;
 import static java.util.stream.Collectors.toSet;
 
 class ClusterServerClient extends TypeDBClientImpl {
@@ -86,7 +85,7 @@ class ClusterServerClient extends TypeDBClientImpl {
     }
 
     public Set<String> servers() {
-        if (!isConnectionValidated()) throw new TypeDBClientException(CLIENT_NOT_OPEN); // TODO
+        if (!isConnectionValidated()) throw new TypeDBClientException(CLIENT_CONNECTION_NOT_VALIDATED);
         LOG.debug("Fetching list of all servers from server {}...", address);
         ClusterServerProto.ServerManager.All.Res res = stub.serversAll(allReq());
         Set<String> addresses = res.getServersList().stream().map(ClusterServerProto.Server::getAddress).collect(toSet());
