@@ -22,6 +22,7 @@
 artifacts = [
   "ch.qos.logback:logback-classic",
   "ch.qos.logback:logback-core",
+  "com.eclipsesource.minimal-json:minimal-json",
   "com.google.code.findbugs:annotations",
   "com.google.code.findbugs:jsr305",
   "commons-io:commons-io",
