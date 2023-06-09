@@ -24,6 +24,12 @@ use cucumber::{given, then, when};
 use crate::{behaviour::Context, generic_step_impl};
 
 generic_step_impl! {
+    #[step("typedb starts")]
+    async fn typedb_starts(_: &mut Context) {}
+
+    #[step("connection opens with default authentication")]
+    async fn connection_opens_with_default_authentication(_: &mut Context) {}
+
     #[step("connection has been opened")]
     async fn connection_has_been_opened(_: &mut Context) {}
 

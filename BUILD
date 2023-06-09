@@ -47,6 +47,9 @@ rust_library(
         "@vaticle_typedb_protocol//grpc/rust:typedb_protocol",
         "@vaticle_typeql//rust:typeql_lang",
     ],
+    proc_macro_deps = [
+        "@crates//:async-trait",
+    ]
 )
 
 assemble_crate(

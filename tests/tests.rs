@@ -19,5 +19,7 @@
  * under the License.
  */
 
+#![deny(unused_must_use)]
+
 mod behaviour;
 mod integration;

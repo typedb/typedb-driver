@@ -82,9 +82,9 @@ pub enum Error {
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Error::Connection(error) => write!(f, "{error}"),
-            Error::Internal(error) => write!(f, "{error}"),
-            Error::Other(message) => write!(f, "{message}"),
+            Self::Connection(error) => write!(f, "{error}"),
+            Self::Internal(error) => write!(f, "{error}"),
+            Self::Other(message) => write!(f, "{message}"),
         }
     }
 }
@@ -92,22 +92,22 @@ impl fmt::Display for Error {
 impl StdError for Error {
     fn source(&self) -> Option<&(dyn StdError + 'static)> {
         match self {
-            Error::Connection(error) => Some(error),
-            Error::Internal(error) => Some(error),
-            Error::Other(_) => None,
+            Self::Connection(error) => Some(error),
+            Self::Internal(error) => Some(error),
+            Self::Other(_) => None,
         }
     }
 }
 
 impl From<ConnectionError> for Error {
     fn from(error: ConnectionError) -> Self {
-        Error::Connection(error)
+        Self::Connection(error)
     }
 }
 
 impl From<InternalError> for Error {
     fn from(error: InternalError) -> Self {
-        Error::Internal(error)
+        Self::Internal(error)
     }
 }
 
@@ -142,48 +142,48 @@ fn is_token_credential_invalid(status: &Status) -> bool {
 
 impl From<http::uri::InvalidUri> for Error {
     fn from(err: http::uri::InvalidUri) -> Self {
-        Error::Other(err.to_string())
+        Self::Other(err.to_string())
     }
 }
 
 impl From<tonic::transport::Error> for Error {
     fn from(err: tonic::transport::Error) -> Self {
-        Error::Other(err.to_string())
+        Self::Other(err.to_string())
     }
 }
 
 impl<T> From<tokio::sync::mpsc::error::SendError<T>> for Error {
     fn from(err: tokio::sync::mpsc::error::SendError<T>) -> Self {
-        Error::Other(err.to_string())
+        Self::Other(err.to_string())
     }
 }
 
 impl From<tokio::sync::oneshot::error::RecvError> for Error {
     fn from(_err: tokio::sync::oneshot::error::RecvError) -> Self {
-        Error::Internal(InternalError::RecvError())
+        Self::Internal(InternalError::RecvError())
     }
 }
 
 impl From<crossbeam::channel::RecvError> for Error {
     fn from(_err: crossbeam::channel::RecvError) -> Self {
-        Error::Internal(InternalError::RecvError())
+        Self::Internal(InternalError::RecvError())
     }
 }
 
 impl<T> From<crossbeam::channel::SendError<T>> for Error {
     fn from(_err: crossbeam::channel::SendError<T>) -> Self {
-        Error::Internal(InternalError::SendError())
+        Self::Internal(InternalError::SendError())
     }
 }
 
 impl From<String> for Error {
     fn from(err: String) -> Self {
-        Error::Other(err)
+        Self::Other(err)
     }
 }
 
 impl From<std::io::Error> for Error {
     fn from(err: std::io::Error) -> Self {
-        Error::Other(err.to_string())
+        Self::Other(err.to_string())
     }
 }

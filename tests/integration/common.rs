@@ -29,7 +29,7 @@ use typedb_client::{
 pub const TEST_DATABASE: &str = "test";
 
 pub fn new_core_connection() -> typedb_client::Result<Connection> {
-    Connection::new_plaintext("127.0.0.1:1729")
+    Connection::new_plaintext("0.0.0.0:1729")
 }
 
 pub fn new_cluster_connection() -> typedb_client::Result<Connection> {

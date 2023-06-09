@@ -27,7 +27,11 @@ use typedb_protocol::transaction;
 
 use crate::{
     answer::{ConceptMap, Numeric},
-    common::{address::Address, info::DatabaseInfo, RequestID, SessionID},
+    common::{address::Address, info::DatabaseInfo, RequestID, SessionID, IID},
+    concept::{
+        Annotation, Attribute, AttributeType, Entity, EntityType, Relation, RelationType, RoleType, SchemaException,
+        Thing, ThingType, Transitivity, Value, ValueType,
+    },
     Options, SessionType, TransactionType,
 };
 
@@ -99,6 +103,10 @@ pub(super) enum TransactionRequest {
     Commit,
     Rollback,
     Query(QueryRequest),
+    Concept(ConceptRequest),
+    ThingType(ThingTypeRequest),
+    RoleType(RoleTypeRequest),
+    Thing(ThingRequest),
     Stream { request_id: RequestID },
 }
 
@@ -108,6 +116,10 @@ pub(super) enum TransactionResponse {
     Commit,
     Rollback,
     Query(QueryResponse),
+    Concept(ConceptResponse),
+    ThingType(ThingTypeResponse),
+    RoleType(RoleTypeResponse),
+    Thing(ThingResponse),
 }
 
 #[derive(Debug)]
@@ -144,4 +156,304 @@ pub(super) enum QueryResponse {
 
     MatchGroup {},          // TODO: ConceptMapGroup
     MatchGroupAggregate {}, // TODO: NumericGroup
+}
+
+#[derive(Debug)]
+pub(super) enum ConceptRequest {
+    GetEntityType { label: String },
+    GetRelationType { label: String },
+    GetAttributeType { label: String },
+    PutEntityType { label: String },
+    PutRelationType { label: String },
+    PutAttributeType { label: String, value_type: ValueType },
+    GetEntity { iid: IID },
+    GetRelation { iid: IID },
+    GetAttribute { iid: IID },
+    GetSchemaExceptions,
+}
+
+#[derive(Debug)]
+pub(super) enum ConceptResponse {
+    GetEntityType { entity_type: Option<EntityType> },
+    GetRelationType { relation_type: Option<RelationType> },
+    GetAttributeType { attribute_type: Option<AttributeType> },
+    PutEntityType { entity_type: EntityType },
+    PutRelationType { relation_type: RelationType },
+    PutAttributeType { attribute_type: AttributeType },
+    GetEntity { entity: Option<Entity> },
+    GetRelation { relation: Option<Relation> },
+    GetAttribute { attribute: Option<Attribute> },
+    GetSchemaExceptions { exceptions: Vec<SchemaException> },
+}
+
+#[derive(Debug)]
+pub(super) enum ThingTypeRequest {
+    ThingTypeDelete {
+        thing_type: ThingType,
+    },
+    ThingTypeSetLabel {
+        thing_type: ThingType,
+        new_label: String,
+    },
+    ThingTypeSetAbstract {
+        thing_type: ThingType,
+    },
+    ThingTypeUnsetAbstract {
+        thing_type: ThingType,
+    },
+    ThingTypeGetOwns {
+        thing_type: ThingType,
+        value_type: Option<ValueType>,
+        transitivity: Transitivity,
+        annotations: Vec<Annotation>,
+    },
+    ThingTypeGetOwnsOverridden {
+        thing_type: ThingType,
+        overridden_attribute_type: AttributeType,
+    },
+    ThingTypeSetOwns {
+        thing_type: ThingType,
+        attribute_type: AttributeType,
+        overridden_attribute_type: Option<AttributeType>,
+        annotations: Vec<Annotation>,
+    },
+    ThingTypeUnsetOwns {
+        thing_type: ThingType,
+        attribute_type: AttributeType,
+    },
+    ThingTypeGetPlays {
+        thing_type: ThingType,
+        transitivity: Transitivity,
+    },
+    ThingTypeGetPlaysOverridden {
+        thing_type: ThingType,
+        overridden_role_type: RoleType,
+    },
+    ThingTypeSetPlays {
+        thing_type: ThingType,
+        role_type: RoleType,
+        overridden_role_type: Option<RoleType>,
+    },
+    ThingTypeUnsetPlays {
+        thing_type: ThingType,
+        role_type: RoleType,
+    },
+    ThingTypeGetSyntax {
+        thing_type: ThingType,
+    },
+
+    EntityTypeCreate {
+        entity_type: EntityType,
+    },
+    EntityTypeGetSupertype {
+        entity_type: EntityType,
+    },
+    EntityTypeSetSupertype {
+        entity_type: EntityType,
+        supertype: EntityType,
+    },
+    EntityTypeGetSupertypes {
+        entity_type: EntityType,
+    },
+    EntityTypeGetSubtypes {
+        entity_type: EntityType,
+        transitivity: Transitivity,
+    },
+    EntityTypeGetInstances {
+        entity_type: EntityType,
+        transitivity: Transitivity,
+    },
+
+    RelationTypeCreate {
+        relation_type: RelationType,
+    },
+    RelationTypeGetSupertype {
+        relation_type: RelationType,
+    },
+    RelationTypeSetSupertype {
+        relation_type: RelationType,
+        supertype: RelationType,
+    },
+    RelationTypeGetSupertypes {
+        relation_type: RelationType,
+    },
+    RelationTypeGetSubtypes {
+        relation_type: RelationType,
+        transitivity: Transitivity,
+    },
+    RelationTypeGetInstances {
+        relation_type: RelationType,
+        transitivity: Transitivity,
+    },
+    RelationTypeGetRelates {
+        relation_type: RelationType,
+        transitivity: Transitivity,
+    },
+    RelationTypeGetRelatesForRoleLabel {
+        relation_type: RelationType,
+        role_label: String,
+    },
+    RelationTypeGetRelatesOverridden {
+        relation_type: RelationType,
+        role_label: String,
+    },
+    RelationTypeSetRelates {
+        relation_type: RelationType,
+        role_label: String,
+        overridden_role_label: Option<String>,
+    },
+    RelationTypeUnsetRelates {
+        relation_type: RelationType,
+        role_label: String,
+    },
+
+    AttributeTypePut {
+        attribute_type: AttributeType,
+        value: Value,
+    },
+    AttributeTypeGet {
+        attribute_type: AttributeType,
+        value: Value,
+    },
+    AttributeTypeGetSupertype {
+        attribute_type: AttributeType,
+    },
+    AttributeTypeSetSupertype {
+        attribute_type: AttributeType,
+        supertype: AttributeType,
+    },
+    AttributeTypeGetSupertypes {
+        attribute_type: AttributeType,
+    },
+    AttributeTypeGetSubtypes {
+        attribute_type: AttributeType,
+        transitivity: Transitivity,
+        value_type: Option<ValueType>,
+    },
+    AttributeTypeGetInstances {
+        attribute_type: AttributeType,
+        transitivity: Transitivity,
+        value_type: Option<ValueType>,
+    },
+    AttributeTypeGetRegex {
+        attribute_type: AttributeType,
+    },
+    AttributeTypeSetRegex {
+        attribute_type: AttributeType,
+        regex: String,
+    },
+    AttributeTypeGetOwners {
+        attribute_type: AttributeType,
+        transitivity: Transitivity,
+        annotations: Vec<Annotation>,
+    },
+}
+
+#[derive(Debug)]
+pub(super) enum ThingTypeResponse {
+    ThingTypeDelete,
+    ThingTypeSetLabel,
+    ThingTypeSetAbstract,
+    ThingTypeUnsetAbstract,
+    ThingTypeGetOwns { attribute_types: Vec<AttributeType> },
+    ThingTypeGetOwnsOverridden { attribute_type: Option<AttributeType> },
+    ThingTypeSetOwns,
+    ThingTypeUnsetOwns,
+    ThingTypeGetPlays { role_types: Vec<RoleType> },
+    ThingTypeGetPlaysOverridden { role_type: Option<RoleType> },
+    ThingTypeSetPlays,
+    ThingTypeUnsetPlays,
+    ThingTypeGetSyntax { syntax: String },
+
+    EntityTypeCreate { entity: Entity },
+    EntityTypeGetSupertype { entity_type: EntityType },
+    EntityTypeSetSupertype,
+    EntityTypeGetSupertypes { entity_types: Vec<EntityType> },
+    EntityTypeGetSubtypes { entity_types: Vec<EntityType> },
+    EntityTypeGetInstances { entities: Vec<Entity> },
+
+    RelationTypeCreate { relation: Relation },
+    RelationTypeGetSupertype { relation_type: RelationType },
+    RelationTypeSetSupertype,
+    RelationTypeGetSupertypes { relation_types: Vec<RelationType> },
+    RelationTypeGetSubtypes { relation_types: Vec<RelationType> },
+    RelationTypeGetInstances { relations: Vec<Relation> },
+    RelationTypeGetRelates { role_types: Vec<RoleType> },
+    RelationTypeGetRelatesForRoleLabel { role_type: Option<RoleType> },
+    RelationTypeGetRelatesOverridden { role_type: Option<RoleType> },
+    RelationTypeSetRelates,
+    RelationTypeUnsetRelates,
+
+    AttributeTypePut { attribute: Attribute },
+    AttributeTypeGet { attribute: Option<Attribute> },
+    AttributeTypeGetSupertype { attribute_type: AttributeType },
+    AttributeTypeSetSupertype,
+    AttributeTypeGetSupertypes { attribute_types: Vec<AttributeType> },
+    AttributeTypeGetSubtypes { attribute_types: Vec<AttributeType> },
+    AttributeTypeGetInstances { attributes: Vec<Attribute> },
+    AttributeTypeGetRegex { regex: String },
+    AttributeTypeSetRegex,
+    AttributeTypeGetOwners { thing_types: Vec<ThingType> },
+}
+
+#[derive(Debug)]
+pub(super) enum RoleTypeRequest {
+    Delete { role_type: RoleType },
+    SetLabel { role_type: RoleType, new_label: String },
+    GetSupertype { role_type: RoleType },
+    GetSupertypes { role_type: RoleType },
+    GetSubtypes { role_type: RoleType, transitivity: Transitivity },
+    GetRelationTypes { role_type: RoleType },
+    GetPlayerTypes { role_type: RoleType, transitivity: Transitivity },
+    GetRelationInstances { role_type: RoleType, transitivity: Transitivity },
+    GetPlayerInstances { role_type: RoleType, transitivity: Transitivity },
+}
+
+#[derive(Debug)]
+pub(super) enum RoleTypeResponse {
+    Delete,
+    SetLabel,
+    GetSupertype { role_type: RoleType },
+    GetSupertypes { role_types: Vec<RoleType> },
+    GetSubtypes { role_types: Vec<RoleType> },
+    GetRelationTypes { relation_types: Vec<RelationType> },
+    GetPlayerTypes { thing_types: Vec<ThingType> },
+    GetRelationInstances { relations: Vec<Relation> },
+    GetPlayerInstances { things: Vec<Thing> },
+}
+
+#[derive(Debug)]
+pub(super) enum ThingRequest {
+    ThingDelete { thing: Thing },
+    ThingGetHas { thing: Thing, attribute_types: Vec<AttributeType>, annotations: Vec<Annotation> },
+    ThingSetHas { thing: Thing, attribute: Attribute },
+    ThingUnsetHas { thing: Thing, attribute: Attribute },
+    ThingGetRelations { thing: Thing, role_types: Vec<RoleType> },
+    ThingGetPlaying { thing: Thing },
+
+    RelationAddRolePlayer { relation: Relation, role_type: RoleType, player: Thing },
+    RelationRemoveRolePlayer { relation: Relation, role_type: RoleType, player: Thing },
+    RelationGetPlayersByRoleType { relation: Relation, role_types: Vec<RoleType> },
+    RelationGetRolePlayers { relation: Relation },
+    RelationGetRelating { relation: Relation },
+
+    AttributeGetOwners { attribute: Attribute, thing_type: Option<ThingType> },
+}
+
+#[derive(Debug)]
+pub(super) enum ThingResponse {
+    ThingDelete,
+    ThingGetHas { attributes: Vec<Attribute> },
+    ThingSetHas,
+    ThingUnsetHas,
+    ThingGetRelations { relations: Vec<Relation> },
+    ThingGetPlaying { role_types: Vec<RoleType> },
+
+    RelationAddRolePlayer,
+    RelationRemoveRolePlayer,
+    RelationGetPlayersByRoleType { things: Vec<Thing> },
+    RelationGetRolePlayers { role_players: Vec<(RoleType, Thing)> }, // TODO tuple => struct
+    RelationGetRelating { role_types: Vec<RoleType> },
+
+    AttributeGetOwners { owners: Vec<Thing> },
 }

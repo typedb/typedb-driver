@@ -36,8 +36,8 @@ pub struct QueryManager {
 }
 
 impl QueryManager {
-    pub(super) fn new(transaction_stream: Arc<TransactionStream>) -> QueryManager {
-        QueryManager { transaction_stream }
+    pub(super) fn new(transaction_stream: Arc<TransactionStream>) -> Self {
+        Self { transaction_stream }
     }
 
     pub async fn define(&self, query: &str) -> Result {

@@ -37,8 +37,8 @@ kt_register_toolchains()
 # Load //builder/grpc (required by @vaticle_typedb_protocol)
 load("@vaticle_dependencies//builder/grpc:deps.bzl", grpc_deps = "deps")
 grpc_deps()
-load("@com_github_grpc_grpc//bazel:grpc_deps.bzl",
-com_github_grpc_grpc_deps = "grpc_deps")
+
+load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", com_github_grpc_grpc_deps = "grpc_deps")
 com_github_grpc_grpc_deps()
 
 # Load //builder/rust
@@ -72,6 +72,12 @@ vaticle_dependencies_ci_pip()
 
 load("@vaticle_dependencies//distribution:deps.bzl", "vaticle_bazel_distribution")
 vaticle_bazel_distribution()
+
+# Load //common (required by @vaticle_typedb_protocol)
+load("@vaticle_bazel_distribution//common:deps.bzl", "rules_pkg")
+rules_pkg()
+load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
+rules_pkg_dependencies()
 
 # Load //github
 load("@vaticle_bazel_distribution//github:deps.bzl", github_deps = "deps")

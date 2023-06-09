@@ -204,7 +204,7 @@ impl Replica {
             .into_iter()
             .map(|replica| {
                 let server_connection = connection.connection(&replica.address)?.clone();
-                Ok(Replica::new(database_info.name.clone(), replica, server_connection))
+                Ok(Self::new(database_info.name.clone(), replica, server_connection))
             })
             .try_collect()
     }
@@ -214,7 +214,7 @@ impl Replica {
             let res = server_connection.get_database_replicas(name.clone()).await;
             match res {
                 Ok(res) => {
-                    return Replica::try_from_info(res, &connection);
+                    return Self::try_from_info(res, &connection);
                 }
                 Err(Error::Connection(ConnectionError::UnableToConnect())) => {
                     error!(
@@ -250,7 +250,7 @@ pub(super) struct ServerDatabase {
 
 impl ServerDatabase {
     fn new(name: String, connection: ServerConnection) -> Self {
-        ServerDatabase { name, connection }
+        Self { name, connection }
     }
 
     pub(super) fn name(&self) -> &str {

@@ -19,14 +19,18 @@
  * under the License.
  */
 
+#![deny(unused_must_use)]
+
 mod answer;
 mod common;
 pub mod concept;
 mod connection;
 mod database;
+pub mod transaction;
 
 pub use self::{
     common::{error, Credential, Error, Options, Result, SessionType, TransactionType},
     connection::Connection,
-    database::{Database, DatabaseManager, Session, Transaction},
+    database::{Database, DatabaseManager, Session},
+    transaction::Transaction,
 };

@@ -41,21 +41,11 @@ impl Credential {
             ClientTlsConfig::new()
         });
 
-        Ok(Credential {
-            username: username.to_owned(),
-            password: password.to_owned(),
-            is_tls_enabled: true,
-            tls_config,
-        })
+        Ok(Self { username: username.to_owned(), password: password.to_owned(), is_tls_enabled: true, tls_config })
     }
 
     pub fn without_tls(username: &str, password: &str) -> Self {
-        Credential {
-            username: username.to_owned(),
-            password: password.to_owned(),
-            is_tls_enabled: false,
-            tls_config: None,
-        }
+        Self { username: username.to_owned(), password: password.to_owned(), is_tls_enabled: false, tls_config: None }
     }
 
     pub fn username(&self) -> &str {

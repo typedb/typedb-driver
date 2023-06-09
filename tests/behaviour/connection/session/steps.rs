@@ -72,6 +72,11 @@ generic_step_impl! {
         context.session_trackers.extend(new_sessions.into_iter().map(|session| session.into()));
     }
 
+    #[step("connection close all sessions")]
+    async fn connection_close_all_sessions(context: &mut Context) {
+        context.session_trackers.clear();
+    }
+
     #[step(expr = "session(s) is/are null: {word}")]
     #[step(expr = "sessions in parallel are null: {word}")]
     async fn sessions_are_null(_context: &mut Context, is_null: bool) {

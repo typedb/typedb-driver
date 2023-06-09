@@ -20,7 +20,7 @@
  */
 
 use itertools::Itertools;
-use typedb_protocol::{cluster_database::Replica as ReplicaProto, ClusterDatabase as DatabaseProto};
+use typedb_protocol::{database_replicas::Replica as ReplicaProto, DatabaseReplicas as DatabaseProto};
 
 use super::TryFromProto;
 use crate::{
@@ -40,7 +40,7 @@ impl TryFromProto<DatabaseProto> for DatabaseInfo {
 impl TryFromProto<ReplicaProto> for ReplicaInfo {
     fn try_from_proto(proto: ReplicaProto) -> Result<Self> {
         Ok(Self {
-            address: proto.address.as_str().parse()?,
+            address: proto.address.parse()?,
             is_primary: proto.primary,
             is_preferred: proto.preferred,
             term: proto.term,
