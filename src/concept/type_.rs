@@ -47,7 +47,7 @@ impl ThingType {
 pub struct RootThingType;
 
 impl RootThingType {
-    const LABEL: &'static str = "thing";
+    pub(crate) const LABEL: &'static str = "thing";
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

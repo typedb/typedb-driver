@@ -19,18 +19,15 @@
  * under the License.
  */
 
-#![deny(unused_must_use)]
+use serial_test::serial;
 
-pub mod answer;
-mod common;
-pub mod concept;
-mod connection;
-mod database;
-pub mod transaction;
+use crate::behaviour::Context;
 
-pub use self::{
-    common::{error, Credential, Error, Options, Result, SessionType, TransactionType},
-    connection::Connection,
-    database::{Database, DatabaseManager, Session},
-    transaction::Transaction,
-};
+#[tokio::test]
+#[serial]
+async fn test() {
+    // Bazel specific path: when running the test in bazel, the external data from
+    // @vaticle_typedb_behaviour is stored in a directory that is a sibling to
+    // the working directory.
+    assert!(Context::test("../vaticle_typedb_behaviour/typeql/language/delete.feature").await);
+}

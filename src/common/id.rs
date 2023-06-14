@@ -27,6 +27,8 @@ use uuid::Uuid;
 pub struct ID(Vec<u8>);
 
 impl ID {
+    const PREFIX: &'static str = "0x";
+
     pub(crate) fn generate() -> Self {
         Uuid::new_v4().as_bytes().to_vec().into()
     }
@@ -52,6 +54,7 @@ impl fmt::Debug for ID {
 
 impl fmt::Display for ID {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", Self::PREFIX)?;
         self.0.iter().try_for_each(|byte| write!(f, "{byte:02x}"))
     }
 }

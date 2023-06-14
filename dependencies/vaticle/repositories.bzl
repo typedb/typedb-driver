@@ -46,12 +46,12 @@ def vaticle_typedb_behaviour():
     git_repository(
         name = "vaticle_typedb_behaviour",
         remote = "https://github.com/vaticle/typedb-behaviour",
-        commit = "bf0f6bc2327ac907d41d7dfc723a6ba58e2a1c56", # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_behaviour
+        commit = "d4947828f570853b71f0eb8aefd34af7b5a485fb",
     )
 
 def vaticle_typeql():
     git_repository(
         name = "vaticle_typeql",
         remote = "https://github.com/vaticle/typeql",
-        commit = "74781df2365cbf8aa2e4b3af2cb2c20fb5a2e09b", # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_dependencies
+        commit = "f6e0b84d3bd5370c0e5db4ba186a182d7e8e78b8", # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_dependencies
     )

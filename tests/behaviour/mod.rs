@@ -31,6 +31,7 @@ use std::collections::HashMap;
 use cucumber::{StatsWriter, World};
 use futures::future::try_join_all;
 use typedb_client::{
+    answer::{ConceptMap, Numeric},
     concept::{Attribute, AttributeType, Entity, EntityType, Relation, RelationType, Thing},
     Connection, Database, DatabaseManager, Result as TypeDBResult, Transaction,
 };
@@ -43,6 +44,8 @@ pub struct Context {
     pub databases: DatabaseManager,
     pub session_trackers: Vec<SessionTracker>,
     pub things: HashMap<String, Option<Thing>>,
+    pub answer: Vec<ConceptMap>,
+    pub numeric_answer: Option<Numeric>,
 }
 
 impl Context {
@@ -153,7 +156,14 @@ impl Default for Context {
     fn default() -> Self {
         let connection = Connection::new_plaintext("0.0.0.0:1729").unwrap();
         let databases = DatabaseManager::new(connection.clone());
-        Self { connection, databases, session_trackers: Vec::new(), things: HashMap::new() }
+        Self {
+            connection,
+            databases,
+            session_trackers: Vec::new(),
+            things: HashMap::new(),
+            answer: Vec::new(),
+            numeric_answer: None,
+        }
     }
 }
 

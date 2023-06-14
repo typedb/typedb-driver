@@ -76,6 +76,7 @@ error_messages! { InternalError
 pub enum Error {
     Connection(ConnectionError),
     Internal(InternalError),
+    TypeQL(typeql_lang::common::Error),
     Other(String),
 }
 
@@ -84,6 +85,7 @@ impl fmt::Display for Error {
         match self {
             Self::Connection(error) => write!(f, "{error}"),
             Self::Internal(error) => write!(f, "{error}"),
+            Self::TypeQL(error) => write!(f, "{error}"),
             Self::Other(message) => write!(f, "{message}"),
         }
     }
@@ -94,6 +96,7 @@ impl StdError for Error {
         match self {
             Self::Connection(error) => Some(error),
             Self::Internal(error) => Some(error),
+            Self::TypeQL(error) => Some(error),
             Self::Other(_) => None,
         }
     }
@@ -108,6 +111,12 @@ impl From<ConnectionError> for Error {
 impl From<InternalError> for Error {
     fn from(error: InternalError) -> Self {
         Self::Internal(error)
+    }
+}
+
+impl From<typeql_lang::common::Error> for Error {
+    fn from(err: typeql_lang::common::Error) -> Self {
+        Self::TypeQL(err)
     }
 }
 

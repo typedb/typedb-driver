@@ -36,6 +36,7 @@ rust_test(
         "@crates//:chrono",
         "@crates//:cucumber",
         "@crates//:futures",
+        "@crates//:regex",
         "@crates//:serial_test",
         "@crates//:smol",
         "@crates//:tokio",
@@ -50,6 +51,14 @@ rust_test(
         "@vaticle_typedb_behaviour//connection:database.feature",
         "@vaticle_typedb_behaviour//connection:session.feature",
         "@vaticle_typedb_behaviour//connection:transaction.feature",
+        "@vaticle_typedb_behaviour//typeql/language:define.feature",
+        "@vaticle_typedb_behaviour//typeql/language:undefine.feature",
+        "@vaticle_typedb_behaviour//typeql/language:insert.feature",
+        "@vaticle_typedb_behaviour//typeql/language:delete.feature",
+        "@vaticle_typedb_behaviour//typeql/language:update.feature",
+        "@vaticle_typedb_behaviour//typeql/language:match.feature",
+        "@vaticle_typedb_behaviour//typeql/language:get.feature",
+        "@vaticle_typedb_behaviour//typeql/language:rule-validation.feature",
     ],
 )
 

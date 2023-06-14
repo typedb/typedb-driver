@@ -21,7 +21,7 @@
 
 use std::fmt;
 
-use typedb_client::{Session, Transaction, TransactionType};
+use typedb_client::{Options, Session, Transaction, TransactionType};
 
 pub struct SessionTracker {
     session: Session,
@@ -52,17 +52,17 @@ impl SessionTracker {
     }
 
     pub async fn open_transaction(&mut self, transaction_type: TransactionType) -> typedb_client::Result {
+        let options = match transaction_type {
+            TransactionType::Write => Options::new(),
+            TransactionType::Read => Options::new().infer(true),
+        };
         unsafe {
             // SAFETY: the transactions tracked by the SessionTracker instance borrow SessionTracker::session.
             // As long as SessionTracker is alive, the transactions are valid.
-            let transaction = self.session.transaction(transaction_type).await?;
+            let transaction = self.session.transaction_with_options(transaction_type, options).await?;
             self.transactions.push(std::mem::transmute(transaction));
         }
         Ok(())
-    }
-
-    pub fn has_transactions(&self) -> bool {
-        !self.transactions.is_empty()
     }
 
     pub fn transaction(&self) -> &Transaction {
