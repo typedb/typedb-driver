@@ -29,7 +29,7 @@ use typedb_protocol::{
 
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
 use crate::{
-    answer::{ConceptMap, Numeric},
+    answer::{ConceptMap, ConceptMapGroup, Numeric, NumericGroup},
     common::{info::DatabaseInfo, RequestID, Result},
     concept::{
         Annotation, Attribute, AttributeType, Entity, EntityType, Relation, RelationType, RoleType, SchemaException,
@@ -349,6 +349,14 @@ impl IntoProto<query_manager::Req> for QueryRequest {
                 (query_manager::req::Req::MatchAggregateReq(query_manager::match_aggregate::Req { query }), options)
             }
 
+            Self::MatchGroup { query, options } => {
+                (query_manager::req::Req::MatchGroupReq(query_manager::match_group::Req { query }), options)
+            }
+            Self::MatchGroupAggregate { query, options } => (
+                query_manager::req::Req::MatchGroupAggregateReq(query_manager::match_group_aggregate::Req { query }),
+                options,
+            ),
+
             _ => todo!(),
         };
         query_manager::Req { req: Some(req), options: Some(options.into_proto()) }
@@ -381,6 +389,12 @@ impl TryFromProto<query_manager::ResPart> for QueryResponse {
             Some(query_manager::res_part::Res::UpdateResPart(res)) => {
                 Ok(Self::Update { answers: res.answers.into_iter().map(ConceptMap::try_from_proto).try_collect()? })
             }
+            Some(query_manager::res_part::Res::MatchGroupResPart(res)) => Ok(Self::MatchGroup {
+                answers: res.answers.into_iter().map(ConceptMapGroup::try_from_proto).try_collect()?,
+            }),
+            Some(query_manager::res_part::Res::MatchGroupAggregateResPart(res)) => Ok(Self::MatchGroupAggregate {
+                answers: res.answers.into_iter().map(NumericGroup::try_from_proto).try_collect()?,
+            }),
             Some(_) => todo!(),
             None => Err(ConnectionError::MissingResponseField("res").into()),
         }

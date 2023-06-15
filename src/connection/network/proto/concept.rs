@@ -22,6 +22,7 @@
 use std::collections::HashMap;
 
 use chrono::NaiveDateTime;
+use itertools::Itertools;
 use typedb_protocol::{
     attribute::{value::Value as ValueProtoInner, Value as ValueProto},
     attribute_type::ValueType as ValueTypeProto,
@@ -29,14 +30,15 @@ use typedb_protocol::{
     numeric::Value as NumericValue,
     r#type::{annotation, Annotation as AnnotationProto, Transitivity as TransitivityProto},
     thing, thing_type, Attribute as AttributeProto, AttributeType as AttributeTypeProto, Concept as ConceptProto,
-    ConceptMap as ConceptMapProto, Entity as EntityProto, EntityType as EntityTypeProto, Numeric as NumericProto,
+    ConceptMap as ConceptMapProto, ConceptMapGroup as ConceptMapGroupProto, Entity as EntityProto,
+    EntityType as EntityTypeProto, Numeric as NumericProto, NumericGroup as NumericGroupProto,
     Relation as RelationProto, RelationType as RelationTypeProto, RoleType as RoleTypeProto, Thing as ThingProto,
     ThingType as ThingTypeProto,
 };
 
 use super::{FromProto, IntoProto, TryFromProto};
 use crate::{
-    answer::{ConceptMap, Numeric},
+    answer::{ConceptMap, ConceptMapGroup, Numeric, NumericGroup},
     concept::{
         Annotation, Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType,
         RootThingType, ScopedLabel, Thing, ThingType, Transitivity, Value, ValueType,
@@ -63,14 +65,33 @@ impl IntoProto<AnnotationProto> for Annotation {
     }
 }
 
+impl TryFromProto<NumericGroupProto> for NumericGroup {
+    fn try_from_proto(proto: NumericGroupProto) -> Result<Self> {
+        let NumericGroupProto { owner: owner_proto, number: number_proto } = proto;
+        let owner = Concept::try_from_proto(owner_proto.ok_or(ConnectionError::MissingResponseField("owner"))?)?;
+        let numeric = Numeric::try_from_proto(number_proto.ok_or(ConnectionError::MissingResponseField("number"))?)?;
+        Ok(Self { owner, numeric })
+    }
+}
+
 impl TryFromProto<NumericProto> for Numeric {
     fn try_from_proto(proto: NumericProto) -> Result<Self> {
-        match proto.value {
+        let NumericProto { value: value_proto } = proto;
+        match value_proto {
             Some(NumericValue::LongValue(long)) => Ok(Self::Long(long)),
             Some(NumericValue::DoubleValue(double)) => Ok(Self::Double(double)),
             Some(NumericValue::Nan(_)) => Ok(Self::NaN),
             None => Err(ConnectionError::MissingResponseField("value").into()),
         }
+    }
+}
+
+impl TryFromProto<ConceptMapGroupProto> for ConceptMapGroup {
+    fn try_from_proto(proto: ConceptMapGroupProto) -> Result<Self> {
+        let ConceptMapGroupProto { owner: owner_proto, concept_maps: concept_maps_proto } = proto;
+        let owner = Concept::try_from_proto(owner_proto.ok_or(ConnectionError::MissingResponseField("owner"))?)?;
+        let concept_maps = concept_maps_proto.into_iter().map(ConceptMap::try_from_proto).try_collect()?;
+        Ok(Self { owner, concept_maps })
     }
 }
 
@@ -86,7 +107,8 @@ impl TryFromProto<ConceptMapProto> for ConceptMap {
 
 impl TryFromProto<ConceptProto> for Concept {
     fn try_from_proto(proto: ConceptProto) -> Result<Self> {
-        match proto.concept {
+        let ConceptProto { concept: concept_proto } = proto;
+        match concept_proto {
             Some(concept::Concept::EntityType(entity_type_proto)) => {
                 Ok(Self::EntityType(EntityType::from_proto(entity_type_proto)))
             }

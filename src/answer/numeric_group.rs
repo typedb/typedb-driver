@@ -19,11 +19,10 @@
  * under the License.
  */
 
-mod concept_map;
-mod concept_map_group;
-mod numeric;
-mod numeric_group;
+use crate::{answer::Numeric, concept::Concept};
 
-pub use self::{
-    concept_map::ConceptMap, concept_map_group::ConceptMapGroup, numeric::Numeric, numeric_group::NumericGroup,
-};
+#[derive(Clone, Debug)]
+pub struct NumericGroup {
+    pub owner: Concept,
+    pub numeric: Numeric,
+}

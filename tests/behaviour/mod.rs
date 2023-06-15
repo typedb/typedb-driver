@@ -31,7 +31,7 @@ use std::collections::HashMap;
 use cucumber::{StatsWriter, World};
 use futures::future::try_join_all;
 use typedb_client::{
-    answer::{ConceptMap, Numeric},
+    answer::{ConceptMap, ConceptMapGroup, Numeric, NumericGroup},
     concept::{Attribute, AttributeType, Entity, EntityType, Relation, RelationType, Thing},
     Connection, Database, DatabaseManager, Result as TypeDBResult, Transaction,
 };
@@ -45,10 +45,15 @@ pub struct Context {
     pub session_trackers: Vec<SessionTracker>,
     pub things: HashMap<String, Option<Thing>>,
     pub answer: Vec<ConceptMap>,
+    pub answer_group: Vec<ConceptMapGroup>,
     pub numeric_answer: Option<Numeric>,
+    pub numeric_answer_group: Vec<NumericGroup>,
 }
 
 impl Context {
+    const GROUP_COLUMN_NAME: &'static str = "owner";
+    const VALUE_COLUMN_NAME: &'static str = "value";
+
     async fn test(glob: &'static str) -> bool {
         let default_panic = std::panic::take_hook();
         std::panic::set_hook(Box::new(move |info| {
@@ -162,7 +167,9 @@ impl Default for Context {
             session_trackers: Vec::new(),
             things: HashMap::new(),
             answer: Vec::new(),
+            answer_group: Vec::new(),
             numeric_answer: None,
+            numeric_answer_group: Vec::new(),
         }
     }
 }

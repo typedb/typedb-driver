@@ -19,9 +19,9 @@
  * under the License.
  */
 
-// mod get;
 mod define;
 mod delete;
+mod get;
 mod insert;
 mod match_;
 mod rule_validation;
