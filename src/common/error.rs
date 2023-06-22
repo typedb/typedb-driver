@@ -44,6 +44,8 @@ error_messages! { ConnectionError
         9: "Missing field in message received from server: '{}'.",
     UnknownRequestId(RequestID) =
         10: "Received a response with unknown request id '{}'",
+    InvalidResponseField(&'static str) =
+        11: "Invalid field in message received from server: '{}'.",
     ClusterUnableToConnect(String) =
         12: "Unable to connect to TypeDB Cluster. Attempted connecting to the cluster members, but none are available: '{}'.",
     ClusterReplicaNotPrimary() =

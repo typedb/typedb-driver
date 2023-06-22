@@ -23,8 +23,8 @@ use std::time::Duration;
 
 use itertools::Itertools;
 use typedb_protocol::{
-    attribute, attribute_type, concept_manager, database, database_manager, entity_type, query_manager, r#type,
-    relation, relation_type, role_type, server_manager, session, thing, thing_type, transaction,
+    attribute, attribute_type, concept_manager, database, database_manager, entity_type, logic_manager, query_manager,
+    r#type, relation, relation_type, role_type, rule, server_manager, session, thing, thing_type, transaction,
 };
 
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
@@ -36,11 +36,12 @@ use crate::{
         Thing, ThingType, ValueType,
     },
     connection::message::{
-        ConceptRequest, ConceptResponse, QueryRequest, QueryResponse, Request, Response, RoleTypeRequest,
-        RoleTypeResponse, ThingRequest, ThingResponse, ThingTypeRequest, ThingTypeResponse, TransactionRequest,
-        TransactionResponse,
+        ConceptRequest, ConceptResponse, LogicRequest, LogicResponse, QueryRequest, QueryResponse, Request, Response,
+        RoleTypeRequest, RoleTypeResponse, RuleRequest, RuleResponse, ThingRequest, ThingResponse, ThingTypeRequest,
+        ThingTypeResponse, TransactionRequest, TransactionResponse,
     },
     error::{ConnectionError, InternalError},
+    logic::{Explanation, Rule},
 };
 
 impl TryIntoProto<server_manager::all::Req> for Request {
@@ -266,6 +267,8 @@ impl IntoProto<transaction::Req> for TransactionRequest {
             Self::ThingType(thing_type_request) => transaction::req::Req::TypeReq(thing_type_request.into_proto()),
             Self::RoleType(role_type_request) => transaction::req::Req::TypeReq(role_type_request.into_proto()),
             Self::Thing(thing_request) => transaction::req::Req::ThingReq(thing_request.into_proto()),
+            Self::Rule(rule_request) => transaction::req::Req::RuleReq(rule_request.into_proto()),
+            Self::Logic(logic_request) => transaction::req::Req::LogicManagerReq(logic_request.into_proto()),
             Self::Stream { request_id: req_id } => {
                 request_id = Some(req_id);
                 transaction::req::Req::StreamReq(transaction::stream::Req {})
@@ -296,8 +299,12 @@ impl TryFromProto<transaction::Res> for TransactionResponse {
             Some(transaction::res::Res::TypeRes(r#type::Res { res: Some(r#type::res::Res::RoleTypeRes(res)) })) => {
                 Ok(Self::RoleType(RoleTypeResponse::try_from_proto(res)?))
             }
+            Some(transaction::res::Res::TypeRes(r#type::Res { res: None })) => {
+                Err(ConnectionError::MissingResponseField("res").into())
+            }
             Some(transaction::res::Res::ThingRes(res)) => Ok(Self::Thing(ThingResponse::try_from_proto(res)?)),
-            Some(_) => todo!(),
+            Some(transaction::res::Res::RuleRes(res)) => Ok(Self::Rule(RuleResponse::try_from_proto(res)?)),
+            Some(transaction::res::Res::LogicManagerRes(res)) => Ok(Self::Logic(LogicResponse::try_from_proto(res)?)),
             None => Err(ConnectionError::MissingResponseField("res").into()),
         }
     }
@@ -315,8 +322,14 @@ impl TryFromProto<transaction::ResPart> for TransactionResponse {
             Some(transaction::res_part::Res::TypeResPart(r#type::ResPart {
                 res: Some(r#type::res_part::Res::RoleTypeResPart(res)),
             })) => Ok(Self::RoleType(RoleTypeResponse::try_from_proto(res)?)),
+            Some(transaction::res_part::Res::TypeResPart(r#type::ResPart { res: None })) => {
+                Err(ConnectionError::MissingResponseField("res").into())
+            }
             Some(transaction::res_part::Res::ThingResPart(res)) => Ok(Self::Thing(ThingResponse::try_from_proto(res)?)),
-            Some(_) => todo!(),
+            Some(transaction::res_part::Res::LogicManagerResPart(res)) => {
+                Ok(Self::Logic(LogicResponse::try_from_proto(res)?))
+            }
+            Some(transaction::res_part::Res::StreamResPart(_)) => unreachable!(),
             None => Err(ConnectionError::MissingResponseField("res").into()),
         }
     }
@@ -357,7 +370,9 @@ impl IntoProto<query_manager::Req> for QueryRequest {
                 options,
             ),
 
-            _ => todo!(),
+            Self::Explain { explainable_id, options } => {
+                (query_manager::req::Req::ExplainReq(query_manager::explain::Req { explainable_id }), options)
+            }
         };
         query_manager::Req { req: Some(req), options: Some(options.into_proto()) }
     }
@@ -395,7 +410,9 @@ impl TryFromProto<query_manager::ResPart> for QueryResponse {
             Some(query_manager::res_part::Res::MatchGroupAggregateResPart(res)) => Ok(Self::MatchGroupAggregate {
                 answers: res.answers.into_iter().map(NumericGroup::try_from_proto).try_collect()?,
             }),
-            Some(_) => todo!(),
+            Some(query_manager::res_part::Res::ExplainResPart(res)) => Ok(Self::Explain {
+                answers: res.explanations.into_iter().map(Explanation::try_from_proto).try_collect()?,
+            }),
             None => Err(ConnectionError::MissingResponseField("res").into()),
         }
     }
@@ -1102,5 +1119,64 @@ impl TryFromProto<thing::ResPart> for ThingResponse {
             }
             None => Err(ConnectionError::MissingResponseField("res").into()),
         }
+    }
+}
+
+impl IntoProto<rule::Req> for RuleRequest {
+    fn into_proto(self) -> rule::Req {
+        let (req, label) = match self {
+            Self::Delete { label } => (rule::req::Req::RuleDeleteReq(rule::delete::Req {}), label),
+            Self::SetLabel { current_label, new_label } => {
+                (rule::req::Req::RuleSetLabelReq(rule::set_label::Req { label: new_label }), current_label)
+            }
+        };
+        rule::Req { label, req: Some(req) }
+    }
+}
+
+impl TryFromProto<rule::Res> for RuleResponse {
+    fn try_from_proto(proto: rule::Res) -> Result<Self> {
+        match proto.res {
+            Some(rule::res::Res::RuleDeleteRes(_)) => Ok(Self::Delete),
+            Some(rule::res::Res::RuleSetLabelRes(_)) => Ok(Self::SetLabel),
+            None => Err(ConnectionError::MissingResponseField("res").into()),
+        }
+    }
+}
+
+impl IntoProto<logic_manager::Req> for LogicRequest {
+    fn into_proto(self) -> logic_manager::Req {
+        let req = match self {
+            Self::PutRule { label, when, then } => logic_manager::req::Req::PutRuleReq(logic_manager::put_rule::Req {
+                label,
+                when: when.to_string(),
+                then: then.to_string(),
+            }),
+            Self::GetRule { label } => logic_manager::req::Req::GetRuleReq(logic_manager::get_rule::Req { label }),
+            Self::GetRules => logic_manager::req::Req::GetRulesReq(logic_manager::get_rules::Req {}),
+        };
+        logic_manager::Req { req: Some(req) }
+    }
+}
+
+impl TryFromProto<logic_manager::Res> for LogicResponse {
+    fn try_from_proto(proto: logic_manager::Res) -> Result<Self> {
+        match proto.res {
+            Some(logic_manager::res::Res::PutRuleRes(logic_manager::put_rule::Res { rule })) => {
+                Ok(Self::PutRule { rule: Rule::try_from_proto(rule.unwrap()).unwrap() })
+            }
+            Some(logic_manager::res::Res::GetRuleRes(logic_manager::get_rule::Res { rule })) => {
+                Ok(Self::GetRule { rule: Rule::try_from_proto(rule.unwrap()).unwrap() })
+            }
+            None => Err(ConnectionError::MissingResponseField("res").into()),
+        }
+    }
+}
+
+impl TryFromProto<logic_manager::ResPart> for LogicResponse {
+    fn try_from_proto(proto: logic_manager::ResPart) -> Result<Self> {
+        Ok(Self::GetRules {
+            rules: proto.get_rules_res_part.unwrap().rules.into_iter().map(Rule::try_from_proto).try_collect()?,
+        })
     }
 }

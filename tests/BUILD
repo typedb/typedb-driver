@@ -42,6 +42,7 @@ rust_test(
         "@crates//:tokio",
     ],
     data = [
+        "@vaticle_typedb_behaviour//concept/rule:rule.feature",
         "@vaticle_typedb_behaviour//concept/thing:entity.feature",
         "@vaticle_typedb_behaviour//concept/thing:relation.feature",
         "@vaticle_typedb_behaviour//concept/thing:attribute.feature",
@@ -59,6 +60,17 @@ rust_test(
         "@vaticle_typedb_behaviour//typeql/language:match.feature",
         "@vaticle_typedb_behaviour//typeql/language:get.feature",
         "@vaticle_typedb_behaviour//typeql/language:rule-validation.feature",
+        "@vaticle_typedb_behaviour//typeql/reasoner:attribute-attachment.feature",
+        "@vaticle_typedb_behaviour//typeql/reasoner:compound-queries.feature",
+        "@vaticle_typedb_behaviour//typeql/reasoner:concept-inequality.feature",
+        "@vaticle_typedb_behaviour//typeql/reasoner:negation.feature",
+        "@vaticle_typedb_behaviour//typeql/reasoner:recursion.feature",
+        "@vaticle_typedb_behaviour//typeql/reasoner:relation-inference.feature",
+        "@vaticle_typedb_behaviour//typeql/reasoner:rule-interaction.feature",
+        "@vaticle_typedb_behaviour//typeql/reasoner:schema-queries.feature",
+        "@vaticle_typedb_behaviour//typeql/reasoner:type-hierarchy.feature",
+        "@vaticle_typedb_behaviour//typeql/reasoner:value-predicate.feature",
+        "@vaticle_typedb_behaviour//typeql/reasoner:variable-roles.feature",
     ],
 )
 

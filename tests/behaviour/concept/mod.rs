@@ -19,5 +19,6 @@
  * under the License.
  */
 
+mod rule;
 mod thing;
 mod type_;

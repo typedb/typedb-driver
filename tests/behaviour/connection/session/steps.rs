@@ -30,14 +30,14 @@ use crate::{
 
 generic_step_impl! {
     #[step(expr = "connection open schema session for database: {word}")]
-    async fn connection_open_schema_session_for_database(context: &mut Context, name: String) {
+    pub async fn connection_open_schema_session_for_database(context: &mut Context, name: String) {
         context
             .session_trackers
             .push(Session::new(context.databases.get(name).await.unwrap(), SessionType::Schema).await.unwrap().into());
     }
 
     #[step(expr = "connection open (data )session for database: {word}")]
-    async fn connection_open_data_session_for_database(context: &mut Context, name: String) {
+    pub async fn connection_open_data_session_for_database(context: &mut Context, name: String) {
         context
             .session_trackers
             .push(Session::new(context.databases.get(name).await.unwrap(), SessionType::Data).await.unwrap().into());
@@ -73,7 +73,7 @@ generic_step_impl! {
     }
 
     #[step("connection close all sessions")]
-    async fn connection_close_all_sessions(context: &mut Context) {
+    pub async fn connection_close_all_sessions(context: &mut Context) {
         context.session_trackers.clear();
     }
 

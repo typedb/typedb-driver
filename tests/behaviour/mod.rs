@@ -33,6 +33,7 @@ use futures::future::try_join_all;
 use typedb_client::{
     answer::{ConceptMap, ConceptMapGroup, Numeric, NumericGroup},
     concept::{Attribute, AttributeType, Entity, EntityType, Relation, RelationType, Thing},
+    logic::Rule,
     Connection, Database, DatabaseManager, Result as TypeDBResult, Transaction,
 };
 
@@ -53,6 +54,7 @@ pub struct Context {
 impl Context {
     const GROUP_COLUMN_NAME: &'static str = "owner";
     const VALUE_COLUMN_NAME: &'static str = "value";
+    const DEFAULT_DATABASE: &'static str = "test";
 
     async fn test(glob: &'static str) -> bool {
         let default_panic = std::panic::take_hook();
@@ -155,6 +157,10 @@ impl Context {
     pub fn insert_attribute(&mut self, var_name: String, attribute: Option<Attribute>) {
         self.insert_thing(var_name, attribute.map(Thing::Attribute));
     }
+
+    pub async fn get_rule(&self, label: String) -> TypeDBResult<Rule> {
+        self.transaction().logic().get_rule(label).await
+    }
 }
 
 impl Default for Context {
@@ -176,13 +182,13 @@ impl Default for Context {
 
 #[macro_export]
 macro_rules! generic_step_impl {
-    {$($(#[step($pattern:expr)])+ $async:ident fn $fn_name:ident $args:tt $(-> $res:ty)? $body:block)+} => {
+    {$($(#[step($pattern:expr)])+ $vis:vis $async:ident fn $fn_name:ident $args:tt $(-> $res:ty)? $body:block)+} => {
         $($(
         #[given($pattern)]
         #[when($pattern)]
         #[then($pattern)]
         )*
-        $async fn $fn_name $args $(-> $res)? $body
+        $vis $async fn $fn_name $args $(-> $res)? $body
         )*
     };
 }

@@ -22,6 +22,7 @@
 mod common;
 mod concept;
 mod database;
+mod logic;
 mod message;
 
 use crate::Result;

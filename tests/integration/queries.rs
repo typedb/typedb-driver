@@ -34,41 +34,7 @@ use typedb_client::{
 };
 
 use super::common;
-
-macro_rules! test_for_each_arg {
-    {
-        $perm_args:tt
-        $( $( #[ $extra_anno:meta ] )* $async:ident fn $test:ident $args:tt -> $ret:ty $test_impl:block )+
-    } => {
-        test_for_each_arg!{ @impl $( $async fn $test $args $ret $test_impl )+ }
-        test_for_each_arg!{ @impl_per $perm_args  { $( $( #[ $extra_anno ] )* $async fn $test )+ } }
-    };
-
-    { @impl $( $async:ident fn $test:ident $args:tt $ret:ty $test_impl:block )+ } => {
-        mod _impl {
-            use super::*;
-            $( pub $async fn $test $args -> $ret $test_impl )+
-        }
-    };
-
-    { @impl_per { $($mod:ident => $arg:expr),+ $(,)? } $fns:tt } => {
-        $(test_for_each_arg!{ @impl_mod { $mod => $arg } $fns })+
-    };
-
-    { @impl_mod { $mod:ident => $arg:expr } { $( $( #[ $extra_anno:meta ] )* async fn $test:ident )+ } } => {
-        mod $mod {
-            use super::*;
-        $(
-            #[tokio::test]
-            #[serial($mod)]
-            $( #[ $extra_anno ] )*
-            pub async fn $test() {
-                _impl::$test($arg).await.unwrap();
-            }
-        )+
-        }
-    };
-}
+use crate::test_for_each_arg;
 
 test_for_each_arg! {
     {

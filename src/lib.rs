@@ -26,6 +26,7 @@ mod common;
 pub mod concept;
 mod connection;
 mod database;
+pub mod logic;
 pub mod transaction;
 
 pub use self::{

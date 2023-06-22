@@ -24,18 +24,19 @@ use futures::TryStreamExt;
 use typedb_client::{answer::Numeric, Result as TypeDBResult};
 use typeql_lang::parse_query;
 use util::{
-    equals_approximate, iter_table_map, match_answer_concept, match_answer_concept_map, match_templated_answer,
+    equals_approximate, iter_table_map, match_answer_concept, match_answer_concept_map, match_answer_rule,
+    match_templated_answer,
 };
 
 use crate::{
     assert_err,
-    behaviour::{util, Context},
+    behaviour::{parameter::LabelParam, util, Context},
     generic_step_impl,
 };
 
 generic_step_impl! {
     #[step(expr = "typeql define")]
-    async fn typeql_define(context: &mut Context, step: &Step) -> TypeDBResult {
+    pub async fn typeql_define(context: &mut Context, step: &Step) -> TypeDBResult {
         let parsed = parse_query(step.docstring().unwrap())?;
         context.transaction().query().define(&parsed.to_string()).await
     }
@@ -62,7 +63,7 @@ generic_step_impl! {
     }
 
     #[step(expr = "typeql insert")]
-    async fn typeql_insert(context: &mut Context, step: &Step) -> TypeDBResult {
+    pub async fn typeql_insert(context: &mut Context, step: &Step) -> TypeDBResult {
         let parsed = parse_query(step.docstring().unwrap())?;
         context.transaction().query().insert(&parsed.to_string())?.try_collect::<Vec<_>>().await?;
         Ok(())
@@ -102,7 +103,7 @@ generic_step_impl! {
     }
 
     #[step(expr = "get answers of typeql match")]
-    async fn get_answers_typeql_match(context: &mut Context, step: &Step) -> TypeDBResult {
+    pub async fn get_answers_typeql_match(context: &mut Context, step: &Step) -> TypeDBResult {
         let parsed = parse_query(step.docstring().unwrap())?;
         context.answer = context.transaction().query().match_(&parsed.to_string())?.try_collect::<Vec<_>>().await?;
         Ok(())
@@ -116,7 +117,7 @@ generic_step_impl! {
     }
 
     #[step(expr = "answer size is: {int}")]
-    async fn answer_size(context: &mut Context, expected_answers: usize) {
+    pub async fn answer_size(context: &mut Context, expected_answers: usize) {
         let actual_answers = context.answer.len();
         assert_eq!(
             actual_answers, expected_answers,
@@ -286,13 +287,13 @@ generic_step_impl! {
                 for table_row in &step_table {
                     if match_answer_concept(
                         context,
-                        table_row.get(&Context::GROUP_COLUMN_NAME.to_string()).unwrap(),
+                        table_row.get(Context::GROUP_COLUMN_NAME).unwrap(),
                         &group.owner,
                     )
                     .await
                     {
                         let mut table_row_wo_owner = table_row.clone();
-                        table_row_wo_owner.remove(&Context::GROUP_COLUMN_NAME.to_string());
+                        table_row_wo_owner.remove(Context::GROUP_COLUMN_NAME);
                         if match_answer_concept_map(context, &table_row_wo_owner, &ans_row).await {
                             matched_rows += 1;
                             break;
@@ -331,7 +332,7 @@ generic_step_impl! {
             for table_row in &step_table {
                 if match_answer_concept(
                     context,
-                    table_row.get(&Context::GROUP_COLUMN_NAME.to_string()).unwrap(),
+                    table_row.get(Context::GROUP_COLUMN_NAME).unwrap(),
                     &group.owner,
                 )
                 .await
@@ -342,7 +343,7 @@ generic_step_impl! {
                         Numeric::NaN => panic!("Last answer in NaN while expected answer is not."),
                     };
                     let expected_value: f64 =
-                        table_row.get(&Context::VALUE_COLUMN_NAME.to_string()).unwrap().parse().unwrap();
+                        table_row.get(Context::VALUE_COLUMN_NAME).unwrap().parse().unwrap();
                     if equals_approximate(answer, expected_value) {
                         matched_rows += 1;
                         break;
@@ -352,6 +353,49 @@ generic_step_impl! {
         }
         assert_eq!(
             matched_rows, expected_answers,
+            "An identifier entry (row) should match 1-to-1 to an answer, but there are only {matched_rows} \
+            matched entries of given {actual_answers}."
+        );
+    }
+
+    #[step(expr = "rules contain: {label}")]
+    async fn rules_contain(context: &mut Context, rule_label: LabelParam) {
+        let res = context.transaction().logic().get_rule(rule_label.name).await;
+        assert!(res.is_ok(), "{res:?}");
+    }
+
+    #[step(expr = "rules do not contain: {label}")]
+    async fn rules_do_not_contain(context: &mut Context, rule_label: LabelParam) {
+        let res = context.transaction().logic().get_rule(rule_label.name).await;
+        assert!(res.is_err(), "{res:?}");
+    }
+
+    #[step(expr = "rules are")]
+    async fn rules_are(context: &mut Context, step: &Step) {
+        let stream = context.transaction().logic().get_rules();
+        assert!(stream.is_ok(), "{:?}", stream.err());
+        let res = stream.unwrap().try_collect::<Vec<_>>().await;
+        assert!(res.is_ok(), "{:?}", res.err());
+        let answers = res.unwrap();
+        let step_table = iter_table_map(step).collect::<Vec<_>>();
+        let expected_answers = step_table.len();
+        let actual_answers = answers.len();
+        assert_eq!(
+            actual_answers, expected_answers,
+            "The number of identifier entries (rows) should match the number of answers, \
+            but found {expected_answers} identifier entries and {actual_answers} answers."
+        );
+        let mut matched_rows = 0;
+        for ans_row in &answers {
+            for table_row in &step_table {
+                if match_answer_rule(table_row, ans_row).await {
+                    matched_rows += 1;
+                    break;
+                }
+            }
+        }
+        assert_eq!(
+            matched_rows, actual_answers,
             "An identifier entry (row) should match 1-to-1 to an answer, but there are only {matched_rows} \
             matched entries of given {actual_answers}."
         );

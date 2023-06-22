@@ -29,7 +29,7 @@ pub use self::{
     },
 };
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Concept {
     RootThingType(RootThingType),
 

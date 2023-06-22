@@ -33,7 +33,7 @@ generic_step_impl! {
     // =============================================//
 
     #[step(expr = "(for each )session(,) open(s) transaction(s) of type: {transaction_type}")]
-    async fn session_opens_transaction_of_type(context: &mut Context, type_: TransactionTypeParam) {
+    pub async fn session_opens_transaction_of_type(context: &mut Context, type_: TransactionTypeParam) {
         for session_tracker in &mut context.session_trackers {
             session_tracker.open_transaction(type_.transaction_type).await.unwrap();
         }
@@ -88,7 +88,7 @@ generic_step_impl! {
     }
 
     #[step(expr = "transaction commits")]
-    async fn transaction_commits(context: &mut Context) {
+    pub async fn transaction_commits(context: &mut Context) {
         context.take_transaction().commit().await.unwrap();
     }
 

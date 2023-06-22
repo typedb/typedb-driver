@@ -26,9 +26,10 @@ use std::{
 
 use crate::concept::Concept;
 
-#[derive(Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct ConceptMap {
     pub map: HashMap<String, Concept>,
+    pub explainables: Explainables,
 }
 
 impl ConceptMap {
@@ -38,20 +39,6 @@ impl ConceptMap {
 
     pub fn concepts(&self) -> impl Iterator<Item = &Concept> {
         self.map.values()
-    }
-
-    pub fn concepts_to_vec(&self) -> Vec<&Concept> {
-        self.concepts().collect::<Vec<&Concept>>()
-    }
-}
-
-impl Clone for ConceptMap {
-    fn clone(&self) -> Self {
-        let mut map = HashMap::with_capacity(self.map.len());
-        for (k, v) in &self.map {
-            map.insert(k.clone(), v.clone());
-        }
-        Self { map }
     }
 }
 
@@ -75,5 +62,30 @@ impl IntoIterator for ConceptMap {
 
     fn into_iter(self) -> Self::IntoIter {
         self.map.into_iter()
+    }
+}
+
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct Explainables {
+    pub relations: HashMap<String, Explainable>,
+    pub attributes: HashMap<String, Explainable>,
+    pub ownerships: HashMap<(String, String), Explainable>,
+}
+
+impl Explainables {
+    pub fn is_empty(&self) -> bool {
+        self.relations.is_empty() && self.attributes.is_empty() && self.ownerships.is_empty()
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct Explainable {
+    pub conjunction: String,
+    pub id: i64,
+}
+
+impl Explainable {
+    pub(crate) fn new(conjunction: String, id: i64) -> Self {
+        Self { conjunction, id }
     }
 }

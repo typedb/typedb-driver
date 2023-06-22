@@ -31,19 +31,21 @@ use typedb_protocol::{
     r#type::{annotation, Annotation as AnnotationProto, Transitivity as TransitivityProto},
     thing, thing_type, Attribute as AttributeProto, AttributeType as AttributeTypeProto, Concept as ConceptProto,
     ConceptMap as ConceptMapProto, ConceptMapGroup as ConceptMapGroupProto, Entity as EntityProto,
-    EntityType as EntityTypeProto, Numeric as NumericProto, NumericGroup as NumericGroupProto,
+    EntityType as EntityTypeProto, Explainable as ExplainableProto, Explainables as ExplainablesProto,
+    Explanation as ExplanationProto, Numeric as NumericProto, NumericGroup as NumericGroupProto,
     Relation as RelationProto, RelationType as RelationTypeProto, RoleType as RoleTypeProto, Thing as ThingProto,
     ThingType as ThingTypeProto,
 };
 
 use super::{FromProto, IntoProto, TryFromProto};
 use crate::{
-    answer::{ConceptMap, ConceptMapGroup, Numeric, NumericGroup},
+    answer::{ConceptMap, ConceptMapGroup, Explainable, Explainables, Numeric, NumericGroup},
     concept::{
         Annotation, Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType,
         RootThingType, ScopedLabel, Thing, ThingType, Transitivity, Value, ValueType,
     },
     error::{ConnectionError, InternalError},
+    logic::{Explanation, Rule},
     Result,
 };
 
@@ -97,11 +99,11 @@ impl TryFromProto<ConceptMapGroupProto> for ConceptMapGroup {
 
 impl TryFromProto<ConceptMapProto> for ConceptMap {
     fn try_from_proto(proto: ConceptMapProto) -> Result<Self> {
-        let mut map = HashMap::with_capacity(proto.map.len());
-        for (k, v) in proto.map {
-            map.insert(k, Concept::try_from_proto(v)?);
-        }
-        Ok(Self { map })
+        let ConceptMapProto { map: map_proto, explainables: explainables_proto } = proto;
+        let map = map_proto.into_iter().map(|(k, v)| Concept::try_from_proto(v).map(|v| (k, v))).try_collect()?;
+        let explainables =
+            explainables_proto.ok_or::<ConnectionError>(ConnectionError::MissingResponseField("explainables"))?;
+        Ok(Self { map, explainables: Explainables::from_proto(explainables) })
     }
 }
 
@@ -277,66 +279,64 @@ impl IntoProto<ThingProto> for Thing {
 
 impl TryFromProto<EntityProto> for Entity {
     fn try_from_proto(proto: EntityProto) -> Result<Self> {
-        let EntityProto { iid, entity_type, inferred: _ } = proto;
+        let EntityProto { iid, entity_type, inferred } = proto;
         Ok(Self {
             iid: iid.into(),
             type_: EntityType::from_proto(entity_type.ok_or(ConnectionError::MissingResponseField("entity_type"))?),
+            is_inferred: inferred,
         })
     }
 }
 
 impl IntoProto<EntityProto> for Entity {
     fn into_proto(self) -> EntityProto {
-        EntityProto {
-            iid: self.iid.into(),
-            entity_type: Some(self.type_.into_proto()),
-            inferred: false, // FIXME
-        }
+        let Self { iid, type_, is_inferred } = self;
+        EntityProto { iid: iid.into(), entity_type: Some(type_.into_proto()), inferred: is_inferred }
     }
 }
 
 impl TryFromProto<RelationProto> for Relation {
     fn try_from_proto(proto: RelationProto) -> Result<Self> {
-        let RelationProto { iid, relation_type, inferred: _ } = proto;
+        let RelationProto { iid, relation_type, inferred } = proto;
         Ok(Self {
             iid: iid.into(),
             type_: RelationType::from_proto(
                 relation_type.ok_or(ConnectionError::MissingResponseField("relation_type"))?,
             ),
+            is_inferred: inferred,
         })
     }
 }
 
 impl IntoProto<RelationProto> for Relation {
     fn into_proto(self) -> RelationProto {
-        RelationProto {
-            iid: self.iid.into(),
-            relation_type: Some(self.type_.into_proto()),
-            inferred: false, // FIXME
-        }
+        let Self { iid, type_, is_inferred } = self;
+        RelationProto { iid: iid.into(), relation_type: Some(type_.into_proto()), inferred: is_inferred }
     }
 }
 
 impl TryFromProto<AttributeProto> for Attribute {
     fn try_from_proto(proto: AttributeProto) -> Result<Self> {
-        let AttributeProto { iid, attribute_type, value, inferred: _ } = proto;
+        let AttributeProto { iid, attribute_type, value, inferred } = proto;
         Ok(Self {
             iid: iid.into(),
             type_: AttributeType::try_from_proto(
                 attribute_type.ok_or(ConnectionError::MissingResponseField("attribute_type"))?,
             )?,
             value: Value::try_from_proto(value.ok_or(ConnectionError::MissingResponseField("value"))?)?,
+            is_inferred: inferred,
         })
     }
 }
 
 impl IntoProto<AttributeProto> for Attribute {
     fn into_proto(self) -> AttributeProto {
+        let Self { iid, type_, value, is_inferred } = self;
         AttributeProto {
-            iid: self.iid.into(),
-            attribute_type: Some(self.type_.into_proto()),
-            value: Some(self.value.into_proto()),
-            inferred: false, // FIXME
+            iid: iid.into(),
+            attribute_type: Some(type_.into_proto()),
+            value: Some(value.into_proto()),
+            inferred: is_inferred,
         }
     }
 }
@@ -367,5 +367,49 @@ impl IntoProto<ValueProto> for Value {
                 Self::DateTime(date_time) => ValueProtoInner::DateTime(date_time.timestamp_millis()),
             }),
         }
+    }
+}
+
+impl FromProto<ExplainablesProto> for Explainables {
+    fn from_proto(proto: ExplainablesProto) -> Self {
+        let ExplainablesProto {
+            relations: relations_proto,
+            attributes: attributes_proto,
+            ownerships: ownerships_proto,
+        } = proto;
+        let relations = relations_proto.into_iter().map(|(k, v)| (k, Explainable::from_proto(v))).collect();
+        let attributes = attributes_proto.into_iter().map(|(k, v)| (k, Explainable::from_proto(v))).collect();
+        let mut ownerships = HashMap::new();
+        for (k1, owned) in ownerships_proto {
+            for (k2, v) in owned.owned {
+                ownerships.insert((k1.clone(), k2), Explainable::from_proto(v));
+            }
+        }
+
+        Self { relations, attributes, ownerships }
+    }
+}
+
+impl FromProto<ExplainableProto> for Explainable {
+    fn from_proto(proto: ExplainableProto) -> Self {
+        let ExplainableProto { conjunction, id } = proto;
+        Self::new(conjunction, id)
+    }
+}
+
+impl TryFromProto<ExplanationProto> for Explanation {
+    fn try_from_proto(proto: ExplanationProto) -> Result<Self> {
+        let ExplanationProto { rule, conclusion, condition, var_mapping } = proto;
+        let variable_mapping = var_mapping.iter().map(|(k, v)| (k.clone(), v.clone().vars)).collect();
+        Ok(Self {
+            rule: Rule::try_from_proto(rule.ok_or(ConnectionError::MissingResponseField("rule"))?)?,
+            conclusion: ConceptMap::try_from_proto(
+                conclusion.ok_or(ConnectionError::MissingResponseField("conclusion"))?,
+            )?,
+            condition: ConceptMap::try_from_proto(
+                condition.ok_or(ConnectionError::MissingResponseField("condition"))?,
+            )?,
+            variable_mapping,
+        })
     }
 }

@@ -20,11 +20,12 @@
  */
 
 pub mod concept;
+pub mod logic;
 mod query;
 
 use std::{fmt, marker::PhantomData, sync::Arc};
 
-use self::{concept::ConceptManager, query::QueryManager};
+use self::{concept::ConceptManager, logic::LogicManager, query::QueryManager};
 use crate::{
     common::{Result, TransactionType},
     connection::TransactionStream,
@@ -37,6 +38,7 @@ pub struct Transaction<'a> {
 
     query: QueryManager,
     concept: ConceptManager,
+    logic: LogicManager,
     transaction_stream: Arc<TransactionStream>,
 
     _lifetime_guard: PhantomData<&'a ()>,
@@ -50,6 +52,7 @@ impl Transaction<'_> {
             options: transaction_stream.options().clone(),
             query: QueryManager::new(transaction_stream.clone()),
             concept: ConceptManager::new(transaction_stream.clone()),
+            logic: LogicManager::new(transaction_stream.clone()),
             transaction_stream,
             _lifetime_guard: PhantomData::default(),
         }
@@ -69,6 +72,10 @@ impl Transaction<'_> {
 
     pub fn concept(&self) -> &ConceptManager {
         &self.concept
+    }
+
+    pub fn logic(&self) -> &LogicManager {
+        &self.logic
     }
 
     pub async fn commit(self) -> Result {

@@ -19,7 +19,7 @@
  * under the License.
  */
 
-mod database;
-mod session;
-mod steps;
-mod transaction;
+pub(crate) mod database;
+pub(crate) mod session;
+pub(crate) mod steps;
+pub(crate) mod transaction;

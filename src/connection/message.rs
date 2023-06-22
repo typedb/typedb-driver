@@ -24,6 +24,7 @@ use std::time::Duration;
 use tokio::sync::mpsc::UnboundedSender;
 use tonic::Streaming;
 use typedb_protocol::transaction;
+use typeql_lang::pattern::{Conjunction, Variable};
 
 use crate::{
     answer::{ConceptMap, ConceptMapGroup, Numeric, NumericGroup},
@@ -32,6 +33,7 @@ use crate::{
         Annotation, Attribute, AttributeType, Entity, EntityType, Relation, RelationType, RoleType, SchemaException,
         Thing, ThingType, Transitivity, Value, ValueType,
     },
+    logic::{Explanation, Rule},
     Options, SessionType, TransactionType,
 };
 
@@ -107,6 +109,8 @@ pub(super) enum TransactionRequest {
     ThingType(ThingTypeRequest),
     RoleType(RoleTypeRequest),
     Thing(ThingRequest),
+    Rule(RuleRequest),
+    Logic(LogicRequest),
     Stream { request_id: RequestID },
 }
 
@@ -120,6 +124,8 @@ pub(super) enum TransactionResponse {
     ThingType(ThingTypeResponse),
     RoleType(RoleTypeResponse),
     Thing(ThingResponse),
+    Rule(RuleResponse),
+    Logic(LogicResponse),
 }
 
 #[derive(Debug)]
@@ -152,7 +158,7 @@ pub(super) enum QueryResponse {
 
     MatchAggregate { answer: Numeric },
 
-    Explain {}, // TODO: explanations
+    Explain { answers: Vec<Explanation> },
 
     MatchGroup { answers: Vec<ConceptMapGroup> },
     MatchGroupAggregate { answers: Vec<NumericGroup> },
@@ -456,4 +462,30 @@ pub(super) enum ThingResponse {
     RelationGetRelating { role_types: Vec<RoleType> },
 
     AttributeGetOwners { owners: Vec<Thing> },
+}
+
+#[derive(Debug)]
+pub(super) enum RuleRequest {
+    Delete { label: String },
+    SetLabel { current_label: String, new_label: String },
+}
+
+#[derive(Debug)]
+pub(super) enum RuleResponse {
+    Delete,
+    SetLabel,
+}
+
+#[derive(Debug)]
+pub(super) enum LogicRequest {
+    PutRule { label: String, when: Conjunction, then: Variable },
+    GetRule { label: String },
+    GetRules,
+}
+
+#[derive(Debug)]
+pub(super) enum LogicResponse {
+    PutRule { rule: Rule },
+    GetRule { rule: Rule },
+    GetRules { rules: Vec<Rule> },
 }

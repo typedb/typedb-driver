@@ -31,10 +31,11 @@ use regex::{Captures, Regex};
 use typedb_client::{
     answer::ConceptMap,
     concept::{Annotation, Attribute, Concept, Entity, Relation, Value},
+    logic::Rule,
     transaction::concept::api::ThingAPI,
     Result as TypeDBResult,
 };
-use typeql_lang::parse_query;
+use typeql_lang::{parse_patterns, parse_query, pattern::Variable};
 
 use crate::behaviour::Context;
 
@@ -42,14 +43,14 @@ pub fn iter_table(step: &Step) -> impl Iterator<Item = &str> {
     step.table().unwrap().rows.iter().flatten().map(String::as_str)
 }
 
-pub fn iter_table_map(step: &Step) -> impl Iterator<Item = HashMap<&String, &String>> {
+pub fn iter_table_map(step: &Step) -> impl Iterator<Item = HashMap<&str, &str>> {
     let (keys, rows) = step.table().unwrap().rows.split_first().unwrap();
-    rows.iter().map(|row| keys.iter().zip(row).collect())
+    rows.iter().map(|row| keys.iter().zip(row).map(|(k, v)| (k.as_str(), v.as_str())).collect())
 }
 
 pub async fn match_answer_concept_map(
     context: &Context,
-    answer_identifiers: &HashMap<&String, &String>,
+    answer_identifiers: &HashMap<&str, &str>,
     answer: &ConceptMap,
 ) -> bool {
     stream::iter(answer_identifiers.keys())
@@ -60,7 +61,7 @@ pub async fn match_answer_concept_map(
         .await
 }
 
-pub async fn match_answer_concept(context: &Context, answer_identifier: &String, answer: &Concept) -> bool {
+pub async fn match_answer_concept(context: &Context, answer_identifier: &str, answer: &Concept) -> bool {
     let identifiers: Vec<&str> = answer_identifier.splitn(2, ":").collect();
     match identifiers[0] {
         "key" => key_values_equal(context, identifiers[1], answer).await,
@@ -173,4 +174,14 @@ fn get_iid(concept: &Concept) -> String {
         _ => unreachable!("Unexpected Concept type: {concept:?}"),
     };
     iid.to_string()
+}
+
+pub async fn match_answer_rule(answer_identifiers: &HashMap<&str, &str>, answer: &Rule) -> bool {
+    let when_clause = answer_identifiers.get("when").unwrap().to_string();
+    let when = parse_patterns(when_clause.as_str()).unwrap()[0].clone().into_conjunction();
+    let then_clause = answer_identifiers.get("then").unwrap().to_string();
+    let then = parse_patterns(then_clause.as_str()).unwrap()[0].clone().into_variable();
+    answer_identifiers.get("label").unwrap().to_string() == answer.label
+        && when == answer.when
+        && then == Variable::Thing(answer.then.clone())
 }

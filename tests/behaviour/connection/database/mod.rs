@@ -19,7 +19,7 @@
  * under the License.
  */
 
-mod steps;
+pub(crate) mod steps;
 
 use serial_test::serial;
 
