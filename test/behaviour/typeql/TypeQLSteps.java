@@ -42,16 +42,19 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
 import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
 import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrowsWithMessage;
