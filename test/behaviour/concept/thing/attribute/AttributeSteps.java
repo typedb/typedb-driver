@@ -25,7 +25,9 @@ import com.vaticle.typedb.client.api.concept.Concept.ValueType;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 
 import static com.vaticle.typedb.client.test.behaviour.concept.thing.ThingSteps.get;
 import static com.vaticle.typedb.client.test.behaviour.concept.thing.ThingSteps.put;
@@ -129,6 +131,10 @@ public class AttributeSteps {
     @When("{var} = attribute\\( ?{type_label} ?) as\\( ?datetime ?) get: {datetime}")
     public void attribute_type_as_datetime_get(String var, String typeLabel, LocalDateTime value) {
         put(var, tx().concepts().getAttributeType(typeLabel).asDateTime().asRemote(tx()).get(value));
+    }
+    @When("set time-zone is: {word}")
+    public void set_timezone(String value){
+        System.setProperty("user.timezone", value);
     }
 
     @Then("attribute {var} has boolean value: {bool}")

@@ -42,15 +42,11 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -230,6 +226,12 @@ public class TypeQLSteps {
     public void typeql_match_group_throws_exception(String typeQLQueryStatements) {
         assertThrows(() -> typeql_match_group(typeQLQueryStatements));
     }
+
+    @When("set time-zone is: {word}")
+    public void set_timezone(String value){
+        System.setProperty("user.timezone", value);
+    }
+
 
     @When("get answers of typeql match group aggregate")
     public void typeql_match_group_aggregate(String typeQLQueryStatements) {
@@ -645,13 +647,13 @@ public class TypeQLSteps {
         }
     }
 
-    public static class AttributeUniquenessCheck {
+    public static abstract class AttributeUniquenessCheck {
 
         protected final Label type;
         protected final String value;
 
         AttributeUniquenessCheck(String typeAndValue) {
-            String[] s = typeAndValue.split(":");
+            String[] s = typeAndValue.split(":", 2);
             assertEquals(
                     String.format("A check for attribute uniqueness should be given in the format \"type:value\", but received %s.", typeAndValue),
                     2, s.length
@@ -745,7 +747,7 @@ public class TypeQLSteps {
         private final String value;
 
         ValueUniquenessCheck(String valueTypeAndValue) {
-            String[] s = valueTypeAndValue.split(":");
+            String[] s = valueTypeAndValue.split(":", 2);
             this.valueType = s[0].toLowerCase().strip();
             this.value = s[1].strip();
         }
