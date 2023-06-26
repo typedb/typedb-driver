@@ -25,9 +25,7 @@ import com.vaticle.typedb.client.api.concept.Concept.ValueType;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 
 import static com.vaticle.typedb.client.test.behaviour.concept.thing.ThingSteps.get;
 import static com.vaticle.typedb.client.test.behaviour.concept.thing.ThingSteps.put;
