@@ -41,6 +41,7 @@ typedb_behaviour_java_test(
     connection_steps_core = "//test/behaviour/connection:steps-core",
     connection_steps_cluster = "//test/behaviour/connection:steps-cluster",
     steps = [
+        "//test/behaviour/util:steps",
         "//test/behaviour/typeql:steps",
         "//test/behaviour/connection/session:steps",
     ],

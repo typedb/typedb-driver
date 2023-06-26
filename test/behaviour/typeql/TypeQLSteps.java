@@ -230,12 +230,6 @@ public class TypeQLSteps {
         assertThrows(() -> typeql_match_group(typeQLQueryStatements));
     }
 
-    @When("set time-zone is: {word}")
-    public void set_timezone(String value){
-        System.setProperty("user.timezone", value);
-    }
-
-
     @When("get answers of typeql match group aggregate")
     public void typeql_match_group_aggregate(String typeQLQueryStatements) {
         TypeQLMatch.Group.Aggregate typeQLQuery = TypeQL.parseQuery(String.join("\n", typeQLQueryStatements)).asMatchGroupAggregate();

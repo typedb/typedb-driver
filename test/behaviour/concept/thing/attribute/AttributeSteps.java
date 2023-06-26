@@ -132,10 +132,6 @@ public class AttributeSteps {
     public void attribute_type_as_datetime_get(String var, String typeLabel, LocalDateTime value) {
         put(var, tx().concepts().getAttributeType(typeLabel).asDateTime().asRemote(tx()).get(value));
     }
-    @When("set time-zone is: {word}")
-    public void set_timezone(String value){
-        System.setProperty("user.timezone", value);
-    }
 
     @Then("attribute {var} has boolean value: {bool}")
     public void attribute_has_boolean_value(String var, boolean value) {
