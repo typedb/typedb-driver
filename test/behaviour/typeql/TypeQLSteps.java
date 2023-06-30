@@ -55,6 +55,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
 import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
 import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrowsWithMessage;
