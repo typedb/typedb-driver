@@ -191,7 +191,7 @@ abstract class AttributeMatcher implements ConceptMatcher {
     private readonly _value: string;
 
     constructor(typeAndValue: string) {
-        const s = typeAndValue.split(":");
+        const s = typeAndValue.match(/([\w|-]+):(.+)/).slice(1);
         assert.strictEqual(s.length, 2, `[${typeAndValue}] is not a valid attribute identifier. It should have format "typeLabel:value".`);
         [this._typeLabel, this._value] = s;
     }
@@ -209,7 +209,11 @@ abstract class AttributeMatcher implements ConceptMatcher {
         else if (attribute.isLong()) return attribute.asLong().value === parseInt(this.value);
         else if (attribute.isDouble()) return attribute.asDouble().value === parseFloat(this.value);
         else if (attribute.isString()) return attribute.asString().value === this.value;
-        else if (attribute.isDateTime()) return attribute.asDateTime().value.getTime() === new Date(this.value).getTime();
+        else if (attribute.isDateTime()){
+            const date = new Date(this.value)
+            const userTimezoneOffset = date.getTimezoneOffset() * 60000;
+            return attribute.asDateTime().value.getTime() === new Date(date.getTime() - userTimezoneOffset).getTime();
+        }
         else throw new Error(`Unrecognised value type ${attribute.constructor.name}`);
     }
 
@@ -252,7 +256,7 @@ class ValueMatcher implements ConceptMatcher {
     private readonly _value: string;
 
     constructor(typeAndValue: string) {
-        const s = typeAndValue.split(":");
+        const s = typeAndValue.match(/([\w|-]+):(.+)/).slice(1);
         assert.strictEqual(s.length, 2, `[${typeAndValue}] is not a valid attribute identifier. It should have format "valueType:value".`);
         [this._valueType, this._value] = s;
     }
@@ -312,7 +316,6 @@ Then("uniquely identify answer concepts", async (answerIdentifiersTable: DataTab
     const answerIdentifiers: AnswerIdentifier[] = answerIdentifiersTable.hashes();
     assert.strictEqual(answers.length, answerIdentifiers.length,
         `The number of answers [${answers.length}] should match the number of answer identifiers [${answerIdentifiers.length}`);
-
     const resultSet: [AnswerIdentifier, ConceptMap[]][] = answerIdentifiers.map(ai => [ai, []]);
     for (const answer of answers) {
         for (const [answerIdentifier, matchedAnswers] of resultSet) {
