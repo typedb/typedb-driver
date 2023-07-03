@@ -41,8 +41,9 @@ typedb_behaviour_java_test(
     connection_steps_core = "//java/test/behaviour/connection:steps-core",
     connection_steps_cluster = "//java/test/behaviour/connection:steps-cluster",
     steps = [
-        "//java/test/behaviour/typeql:steps",
         "//java/test/behaviour/connection/session:steps",
+        "//java/test/behaviour/typeql:steps",
+        "//java/test/behaviour/util:steps",
     ],
     deps = [
         # Internal Package Dependencies

@@ -22,8 +22,16 @@
 package com.vaticle.typedb.client.test.behaviour.util;
 
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+
+import java.util.TimeZone;
 
 public class UtilSteps {
+
+    @When("set time-zone is: {word}")
+    public void set_timezone(String value){
+        TimeZone.setDefault(TimeZone.getTimeZone(value));
+    }
 
     @Then("wait {int} seconds")
     public void wait_seconds(int seconds) throws InterruptedException {
