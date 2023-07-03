@@ -645,13 +645,13 @@ public class TypeQLSteps {
         }
     }
 
-    public static class AttributeUniquenessCheck {
+    public static abstract class AttributeUniquenessCheck {
 
         protected final Label type;
         protected final String value;
 
         AttributeUniquenessCheck(String typeAndValue) {
-            String[] s = typeAndValue.split(":");
+            String[] s = typeAndValue.split(":", 2);
             assertEquals(
                     String.format("A check for attribute uniqueness should be given in the format \"type:value\", but received %s.", typeAndValue),
                     2, s.length
@@ -745,7 +745,7 @@ public class TypeQLSteps {
         private final String value;
 
         ValueUniquenessCheck(String valueTypeAndValue) {
-            String[] s = valueTypeAndValue.split(":");
+            String[] s = valueTypeAndValue.split(":", 2);
             this.valueType = s[0].toLowerCase().strip();
             this.value = s[1].strip();
         }
