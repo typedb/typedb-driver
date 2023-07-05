@@ -35,6 +35,7 @@ typedb_java_test(
         "//api:api",
 
         # External dependencies from @vaticle
+        "@vaticle_typedb_common//:common",
         "@vaticle_typeql//java:typeql-lang",
         "@vaticle_typeql//java/common",
         "@vaticle_typeql//java/query",
