@@ -96,20 +96,18 @@ public class AttributeTypeSteps {
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) does not have any regex")
     public void attribute_type_as_value_type_does_not_have_any_regex(String typeLabel, ValueType valueType) {
-        if (!valueType.equals(ValueType.STRING)) fail();
-        AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
-        assertEquals(attributeType.getRegex(tx()), "");
+        attribute_type_as_value_type_get_regex(typeLabel, valueType, "");
     }
 
     @Then("attribute\\( ?{type_label} ?) get owners, with annotations: {annotations}; contain:")
-    public void attribute_type_get_owners_as_key_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
+    public void attribute_type_get_owners_with_annotations_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
         Set<String> actuals = attributeType.getOwners(tx(), set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(ownerLabels));
     }
 
     @Then("attribute\\( ?{type_label} ?) get owners, with annotations: {annotations}; do not contain:")
-    public void attribute_type_get_owners_as_key_do_not_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
+    public void attribute_type_get_owners_with_annotations_do_not_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
         Set<String> actuals = attributeType.getOwners(tx(), set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
         for (String ownerLabel : ownerLabels) {
@@ -118,14 +116,14 @@ public class AttributeTypeSteps {
     }
 
     @Then("attribute\\( ?{type_label} ?) get owners explicit, with annotations: {annotations}; contain:")
-    public void attribute_type_get_owners_explicit_as_key_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
+    public void attribute_type_get_owners_explicit_with_annotations_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
         Set<String> actuals = attributeType.getOwnersExplicit(tx(), set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(ownerLabels));
     }
 
     @Then("attribute\\( ?{type_label} ?) get owners explicit, with annotations: {annotations}; do not contain:")
-    public void attribute_type_get_owners_explicit_as_key_do_not_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
+    public void attribute_type_get_owners_explicit_with_annotations_do_not_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
         Set<String> actuals = attributeType.getOwnersExplicit(tx(), set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
         for (String ownerLabel : ownerLabels) {
@@ -134,14 +132,14 @@ public class AttributeTypeSteps {
     }
 
     @Then("attribute\\( ?{type_label} ?) get owners contain:")
-    public void attribute_type_get_owners_as_attribute_contain(String typeLabel, List<String> ownerLabels) {
+    public void attribute_type_get_owners_contain(String typeLabel, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
         Set<String> actuals = attributeType.getOwners(tx(), emptySet()).map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(ownerLabels));
     }
 
     @Then("attribute\\( ?{type_label} ?) get owners do not contain:")
-    public void attribute_type_get_owners_as_attribute_do_not_contain(String typeLabel, List<String> ownerLabels) {
+    public void attribute_type_get_owners_do_not_contain(String typeLabel, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
         Set<String> actuals = attributeType.getOwners(tx(), emptySet()).map(t -> t.getLabel().name()).collect(toSet());
         for (String ownerLabel : ownerLabels) {
@@ -150,14 +148,14 @@ public class AttributeTypeSteps {
     }
 
     @Then("attribute\\( ?{type_label} ?) get owners explicit contain:")
-    public void attribute_type_get_owners_explicit_as_attribute_contain(String typeLabel, List<String> ownerLabels) {
+    public void attribute_type_get_owners_explicit_contain(String typeLabel, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
         Set<String> actuals = attributeType.getOwnersExplicit(tx(), emptySet()).map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(ownerLabels));
     }
 
     @Then("attribute\\( ?{type_label} ?) get owners explicit do not contain:")
-    public void attribute_type_get_owners_explicit_as_attribute_do_not_contain(String typeLabel, List<String> ownerLabels) {
+    public void attribute_type_get_owners_explicit_do_not_contain(String typeLabel, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
         Set<String> actuals = attributeType.getOwnersExplicit(tx(), emptySet()).map(t -> t.getLabel().name()).collect(toSet());
         for (String ownerLabel : ownerLabels) {

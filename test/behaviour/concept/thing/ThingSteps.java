@@ -86,7 +86,7 @@ public class ThingSteps {
     }
 
     @When("entity/attribute/relation {var} unset has: {var}")
-    public void thing_remove_has(String var1, String var2) {
+    public void thing_unset_has(String var1, String var2) {
         get(var1).unsetHas(tx(), get(var2).asAttribute());
     }
 

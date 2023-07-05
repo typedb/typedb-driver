@@ -51,7 +51,6 @@ public class TypeDBTransactionImpl extends NativeObject implements TypeDBTransac
         this.type = type;
         this.options = options;
         transaction = transaction_new(session.session, com.vaticle.typedb.client.jni.TransactionType.swigToEnum(type.id()), options.options);
-        this.onClose(e -> this.close());
     }
 
     @Override

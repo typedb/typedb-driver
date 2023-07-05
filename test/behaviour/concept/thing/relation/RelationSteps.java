@@ -42,7 +42,6 @@ import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("CheckReturnValue")
 public class RelationSteps {
-
     @When("{var} = relation\\( ?{type_label} ?) create new instance")
     public void relation_type_create_new_instance(String var, String typeLabel) {
         put(var, tx().concepts().getRelationType(typeLabel).create(tx()));
@@ -150,12 +149,12 @@ public class RelationSteps {
     }
 
     @Then("relation {var} get players for role\\( ?{type_label} ?) contain: {var}")
-    public void relation_get_player_for_role_contain(String var1, String roleTypeLabel, String var2) {
+    public void relation_get_players_for_role_contain(String var1, String roleTypeLabel, String var2) {
         assertTrue(get(var1).asRelation().getPlayers(tx(), get(var1).asRelation().getType().getRelates(tx(), roleTypeLabel)).anyMatch(p -> p.equals(get(var2))));
     }
 
     @Then("relation {var} get players for role\\( ?{type_label} ?) do not contain: {var}")
-    public void relation_get_player_for_role_do_not_contain(String var1, String roleTypeLabel, String var2) {
+    public void relation_get_players_for_role_do_not_contain(String var1, String roleTypeLabel, String var2) {
         assertTrue(get(var1).asRelation().getPlayers(tx(), get(var1).asRelation().getType().getRelates(tx(), roleTypeLabel)).noneMatch(p -> p.equals(get(var2))));
     }
 }

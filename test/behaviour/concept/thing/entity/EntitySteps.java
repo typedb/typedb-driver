@@ -38,7 +38,6 @@ import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("CheckReturnValue")
 public class EntitySteps {
-
     @When("{var} = entity\\( ?{type_label} ?) create new instance")
     public void entity_type_create_new_instance(String var, String typeLabel) {
         put(var, tx().concepts().getEntityType(typeLabel).create(tx()));

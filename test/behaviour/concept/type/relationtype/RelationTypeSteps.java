@@ -41,23 +41,23 @@ import static org.junit.Assert.assertTrue;
 public class RelationTypeSteps {
 
     @When("relation\\( ?{type_label} ?) set relates role: {type_label}")
-    public void relation_type_set_relates_role(String relationLabel, String roleLabel) {
+    public void relation_type_set_relates_role_type(String relationLabel, String roleLabel) {
         tx().concepts().getRelationType(relationLabel).setRelates(tx(), roleLabel);
     }
 
     @When("relation\\( ?{type_label} ?) set relates role: {type_label}; throws exception")
-    public void thing_set_relates_role_throws_exception(String relationLabel, String roleLabel) {
-        assertThrows(() -> tx().concepts().getRelationType(relationLabel).setRelates(tx(), roleLabel));
+    public void relation_type_set_relates_role_type_throws_exception(String relationLabel, String roleLabel) {
+        assertThrows(() -> relation_type_set_relates_role_type(relationLabel, roleLabel));
     }
 
     @When("relation\\( ?{type_label} ?) unset related role: {type_label}")
-    public void relation_type_unset_related_role(String relationLabel, String roleLabel) {
+    public void relation_type_unset_related_role_type(String relationLabel, String roleLabel) {
         tx().concepts().getRelationType(relationLabel).unsetRelates(tx(), roleLabel);
     }
 
     @When("relation\\( ?{type_label} ?) unset related role: {type_label}; throws exception")
-    public void relation_type_unset_related_role_throws_exception(String relationLabel, String roleLabel) {
-        assertThrows(() -> relation_type_unset_related_role(relationLabel, roleLabel));
+    public void relation_type_unset_related_role_type_throws_exception(String relationLabel, String roleLabel) {
+        assertThrows(() -> relation_type_unset_related_role_type(relationLabel, roleLabel));
     }
 
     @When("relation\\( ?{type_label} ?) set relates role: {type_label} as {type_label}")
@@ -66,8 +66,8 @@ public class RelationTypeSteps {
     }
 
     @When("relation\\( ?{type_label} ?) set relates role: {type_label} as {type_label}; throws exception")
-    public void thing_set_relates_role_type_as_throws_exception(String relationLabel, String roleLabel, String superRole) {
-        assertThrows(() -> tx().concepts().getRelationType(relationLabel).setRelates(tx(), roleLabel, superRole));
+    public void relation_type_set_relates_role_type_as_throws_exception(String relationLabel, String roleLabel, String superRole) {
+        assertThrows(() -> relation_type_set_relates_role_type_as(relationLabel, roleLabel, superRole));
     }
 
     @When("relation\\( ?{type_label} ?) remove related role: {type_label}")
@@ -105,35 +105,35 @@ public class RelationTypeSteps {
         assertEquals(isAbstract, tx().concepts().getRelationType(relationLabel).getRelates(tx(), roleLabel).isAbstract());
     }
 
-    private Set<Label> relation_type_get_related_roles_actuals(String relationLabel) {
+    private Set<Label> relation_type_get_related_role_types(String relationLabel) {
         return tx().concepts().getRelationType(relationLabel).getRelates(tx()).map(Type::getLabel).collect(toSet());
     }
 
     @Then("relation\\( ?{type_label} ?) get related roles contain:")
-    public void relation_type_get_related_roles_contain(String relationLabel, List<Label> roleLabels) {
-        Set<Label> actuals = relation_type_get_related_roles_actuals(relationLabel);
+    public void relation_type_get_related_role_types_contain(String relationLabel, List<Label> roleLabels) {
+        Set<Label> actuals = relation_type_get_related_role_types(relationLabel);
         assertTrue(actuals.containsAll(roleLabels));
     }
 
     @Then("relation\\( ?{type_label} ?) get related roles do not contain:")
-    public void relation_type_get_related_roles_do_not_contain(String relationLabel, List<Label> roleLabels) {
-        Set<Label> actuals = relation_type_get_related_roles_actuals(relationLabel);
+    public void relation_type_get_related_role_types_do_not_contain(String relationLabel, List<Label> roleLabels) {
+        Set<Label> actuals = relation_type_get_related_role_types(relationLabel);
         for (Label label : roleLabels) assertFalse(actuals.contains(label));
     }
 
-    private Set<Label> relation_type_get_related_explicit_roles_actuals(String relationLabel) {
+    private Set<Label> relation_type_get_related_explicit_role_types(String relationLabel) {
         return tx().concepts().getRelationType(relationLabel).getRelatesExplicit(tx()).map(Type::getLabel).collect(toSet());
     }
 
     @Then("relation\\( ?{type_label} ?) get related explicit roles contain:")
-    public void relation_type_get_related_explicit_roles_contain(String relationLabel, List<Label> roleLabels) {
-        Set<Label> actuals = relation_type_get_related_explicit_roles_actuals(relationLabel);
+    public void relation_type_get_related_explicit_role_types_contain(String relationLabel, List<Label> roleLabels) {
+        Set<Label> actuals = relation_type_get_related_explicit_role_types(relationLabel);
         assertTrue(actuals.containsAll(roleLabels));
     }
 
     @Then("relation\\( ?{type_label} ?) get related explicit roles do not contain:")
-    public void relation_type_get_related_explicit_roles_do_not_contain(String relationLabel, List<Label> roleLabels) {
-        Set<Label> actuals = relation_type_get_related_explicit_roles_actuals(relationLabel);
+    public void relation_type_get_related_explicit_role_types_do_not_contain(String relationLabel, List<Label> roleLabels) {
+        Set<Label> actuals = relation_type_get_related_explicit_role_types(relationLabel);
         for (Label label : roleLabels) {
             assertFalse(actuals.contains(label));
         }
@@ -145,53 +145,53 @@ public class RelationTypeSteps {
         assertEquals(superType, tx().concepts().getRelationType(relationLabel).getRelates(tx(), roleLabel).getSupertype(tx()));
     }
 
-    private Set<Label> relation_type_get_role_type_supertypes_actuals(String relationLabel, String roleLabel) {
+    private Set<Label> relation_type_get_role_type_get_supertypes(String relationLabel, String roleLabel) {
         return tx().concepts().getRelationType(relationLabel).getRelates(tx(), roleLabel).getSupertypes(tx()).map(Type::getLabel).collect(toSet());
     }
 
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get supertypes contain:")
     public void relation_type_get_role_type_get_supertypes_contain(String relationLabel, String roleLabel, List<Label> superLabels) {
-        Set<Label> actuals = relation_type_get_role_type_supertypes_actuals(relationLabel, roleLabel);
+        Set<Label> actuals = relation_type_get_role_type_get_supertypes(relationLabel, roleLabel);
         assertTrue(actuals.containsAll(superLabels));
     }
 
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get supertypes do not contain:")
     public void relation_type_get_role_type_get_supertypes_do_not_contain(String relationLabel, String roleLabel, List<Label> superLabels) {
-        Set<Label> actuals = relation_type_get_role_type_supertypes_actuals(relationLabel, roleLabel);
+        Set<Label> actuals = relation_type_get_role_type_get_supertypes(relationLabel, roleLabel);
         for (Label superLabel : superLabels) {
             assertFalse(actuals.contains(superLabel));
         }
     }
 
-    private Set<String> relation_type_get_role_type_players_actuals(String relationLabel, String roleLabel) {
+    private Set<String> relation_type_get_role_type_get_players(String relationLabel, String roleLabel) {
         return tx().concepts().getRelationType(relationLabel).getRelates(tx(), roleLabel).getPlayerTypes(tx()).map(t -> t.getLabel().name()).collect(toSet());
     }
 
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get players contain:")
     public void relation_type_get_role_type_get_players_contain(String relationLabel, String roleLabel, List<String> playerLabels) {
-        Set<String> actuals = relation_type_get_role_type_players_actuals(relationLabel, roleLabel);
+        Set<String> actuals = relation_type_get_role_type_get_players(relationLabel, roleLabel);
         assertTrue(actuals.containsAll(playerLabels));
     }
 
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get players do not contain:")
-    public void relation_type_get_role_type_get_plays_do_not_contain(String relationLabel, String roleLabel, List<String> playerLabels) {
-        Set<String> actuals = relation_type_get_role_type_players_actuals(relationLabel, roleLabel);
+    public void relation_type_get_role_type_get_players_do_not_contain(String relationLabel, String roleLabel, List<String> playerLabels) {
+        Set<String> actuals = relation_type_get_role_type_get_players(relationLabel, roleLabel);
         for (String superLabel : playerLabels) assertFalse(actuals.contains(superLabel));
     }
 
-    private Set<Label> relation_type_get_role_type_subtypes_actuals(String relationLabel, String roleLabel) {
+    private Set<Label> relation_type_get_role_type_get_subtypes(String relationLabel, String roleLabel) {
         return tx().concepts().getRelationType(relationLabel).getRelates(tx(), roleLabel).getSubtypes(tx()).map(Type::getLabel).collect(toSet());
     }
 
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get subtypes contain:")
     public void relation_type_get_role_type_get_subtypes_contain(String relationLabel, String roleLabel, List<Label> subLabels) {
-        Set<Label> actuals = relation_type_get_role_type_subtypes_actuals(relationLabel, roleLabel);
+        Set<Label> actuals = relation_type_get_role_type_get_subtypes(relationLabel, roleLabel);
         assertTrue(actuals.containsAll(subLabels));
     }
 
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get subtypes do not contain:")
     public void relation_type_get_role_type_get_subtypes_do_not_contain(String relationLabel, String roleLabel, List<Label> subLabels) {
-        Set<Label> actuals = relation_type_get_role_type_subtypes_actuals(relationLabel, roleLabel);
+        Set<Label> actuals = relation_type_get_role_type_get_subtypes(relationLabel, roleLabel);
         System.out.println(actuals);
         for (Label subLabel : subLabels) {
             assertFalse(actuals.contains(subLabel));
