@@ -35,7 +35,6 @@ java_library(
     deps = [
         # External dependencies from @vaticle
         "@vaticle_typedb_common//:common",
-        "@vaticle_factory_tracing//client",
 
         # External dependencies from Maven
         "@maven//:com_google_code_findbugs_jsr305",

@@ -28,7 +28,6 @@ java_library(
     deps = [
         # Package dependencies
         "//api:api",
-        "//:client-java",
         "@vaticle_typedb_common//test:typedb-runner",
         "@vaticle_typedb_common//:common",
 
