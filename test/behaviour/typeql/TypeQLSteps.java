@@ -47,7 +47,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Optional;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -586,33 +585,8 @@ public class TypeQLSteps {
 
         @Override
         public boolean check(Concept concept) {
-            if (!concept.isThing()) return false;
-
-            Optional<? extends Attribute<?>> keyOpt = concept.asThing().asRemote(tx()).getHas(set(KEY))
-                    .filter(attr -> attr.getType().getLabel().equals(type)).findFirst();
-            if (keyOpt.isEmpty()) return false;
-
-            Attribute<?> key = keyOpt.get().asAttribute();
-            switch (key.getType().getValueType()) {
-                case BOOLEAN:
-                    return Boolean.valueOf(value).equals(key.asBoolean().getValue());
-                case LONG:
-                    return Long.valueOf(value).equals(key.asLong().getValue());
-                case DOUBLE:
-                    return equalsApproximate(Double.parseDouble(value), key.asDouble().getValue());
-                case STRING:
-                    return value.equals(key.asString().getValue());
-                case DATETIME:
-                    LocalDateTime dateTime;
-                    try {
-                        dateTime = LocalDateTime.parse(value);
-                    } catch (DateTimeParseException e) {
-                        dateTime = LocalDate.parse(value).atStartOfDay();
-                    }
-                    return dateTime.equals(key.asDateTime().getValue());
-                case OBJECT:
-                default:
-                    throw new ScenarioDefinitionException("Unrecognised value type " + key.getType().getValueType());
+            if (!concept.isThing()) {
+                return false;
             }
 
             Set<Attribute> keys = concept.asThing().getHas(tx(), set(KEY)).collect(Collectors.toSet());
@@ -624,5 +598,4 @@ public class TypeQLSteps {
             return value.equals(keyMap.get(type));
         }
     }
-
 }

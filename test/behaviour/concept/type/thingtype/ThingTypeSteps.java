@@ -225,12 +225,6 @@ public class ThingTypeSteps {
         assertThrows(() -> get_thing_type(rootLabel, typeLabel).setOwns(tx(), attributeType, overriddenType, set(annotations)));
     }
 
-    @When("{root_label}\\( ?{type_label} ?) unset owns attribute type: {type_label}")
-    public void thing_type_unset_owns_attribute_type(RootLabel rootLabel, String typeLabel, String attributeLabel) {
-        AttributeType attributeType = tx().concepts().getAttributeType(attributeLabel);
-        get_thing_type(rootLabel, typeLabel).unsetOwns(tx(), attributeType);
-    }
-
     @Then("{root_label}\\( ?{type_label} ?) get owns attribute types, with annotations: {annotations}; contain:")
     public void thing_type_get_owns_key_types_contain(RootLabel rootLabel, String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> attributeLabels) {
         Set<String> actuals = get_thing_type(rootLabel, typeLabel).getOwns(tx(), set(annotations)).map(t -> t.getLabel().name()).collect(toSet());

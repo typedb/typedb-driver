@@ -25,8 +25,6 @@ import com.vaticle.typedb.client.api.concept.thing.Thing;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
 import com.vaticle.typedb.client.common.Label;
 import com.vaticle.typedb.client.test.behaviour.config.Parameters.RootLabel;
-import com.vaticle.typedb.common.collection.Collections;
-import com.vaticle.typeql.lang.common.TypeQLToken;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
