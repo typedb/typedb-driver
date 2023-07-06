@@ -24,7 +24,6 @@ package com.vaticle.typedb.client.api.database;
 import javax.annotation.CheckReturnValue;
 
 public interface Database {
-
     @CheckReturnValue
     String name();
 

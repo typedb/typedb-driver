@@ -24,7 +24,6 @@ package com.vaticle.typedb.client.api;
 import javax.annotation.CheckReturnValue;
 
 public interface TypeDBSession extends AutoCloseable {
-
     @CheckReturnValue
     boolean isOpen();
 

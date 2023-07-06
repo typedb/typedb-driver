@@ -29,10 +29,16 @@ import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 public interface RelationType extends ThingType {
-
     @Override
+    @CheckReturnValue
     default boolean isRelationType() {
         return true;
+    }
+
+    @Override
+    @CheckReturnValue
+    default RelationType asRelationType() {
+        return this;
     }
 
     @CheckReturnValue

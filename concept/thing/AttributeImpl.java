@@ -41,11 +41,6 @@ public class AttributeImpl extends ThingImpl implements Attribute {
     }
 
     @Override
-    public AttributeImpl asAttribute() {
-        return this;
-    }
-
-    @Override
     public AttributeTypeImpl getType() {
         return new AttributeTypeImpl(attribute_get_type(concept));
     }

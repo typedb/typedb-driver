@@ -58,11 +58,6 @@ public class RelationImpl extends ThingImpl implements Relation {
     }
 
     @Override
-    public final RelationImpl asRelation() {
-        return this;
-    }
-
-    @Override
     public void addPlayer(TypeDBTransaction transaction, RoleType roleType, Thing player) {
         relation_add_role_player(((ConceptManagerImpl) transaction.concepts()).transaction, concept, ((RoleTypeImpl) roleType).concept, ((ThingImpl) player).concept);
     }

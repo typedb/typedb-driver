@@ -27,7 +27,6 @@ import com.vaticle.typeql.lang.pattern.Pattern;
 import javax.annotation.CheckReturnValue;
 
 public interface Rule {
-
     @CheckReturnValue
     String getLabel();
 

@@ -34,7 +34,6 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 
 public interface ConceptManager {
-
     @CheckReturnValue
     EntityType getRootEntityType();
 

@@ -33,21 +33,6 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
         super(concept);
     }
 
-    @Override
-    public final boolean isRoot() {
-        return false;  // TODO
-    }
-
-    @Override
-    public TypeImpl asType() {
-        return this;
-    }
-
-    @Override
-    public String toString() {
-        return ""; // TODO
-    }
-
     @Nullable
     @Override
     public abstract TypeImpl getSupertype(TypeDBTransaction transaction);

@@ -42,8 +42,15 @@ public interface Type extends Concept {
     boolean isAbstract();
 
     @Override
+    @CheckReturnValue
     default boolean isType() {
         return true;
+    }
+
+    @Override
+    @CheckReturnValue
+    default Type asType() {
+        return this;
     }
 
     @Override

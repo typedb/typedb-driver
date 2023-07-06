@@ -73,8 +73,9 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     @Override
-    public final ThingTypeImpl asThingType() {
-        return this;
+    public final boolean isRoot() {
+        return false; // FIXME
+//        return thing_type_is_root(concept);
     }
 
     @Override

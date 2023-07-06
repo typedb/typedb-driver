@@ -36,7 +36,6 @@ import java.util.stream.Stream;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 
 public interface AttributeType extends ThingType {
-
     @CheckReturnValue
     ValueType getValueType();
 
@@ -44,6 +43,12 @@ public interface AttributeType extends ThingType {
     @CheckReturnValue
     default boolean isAttributeType() {
         return true;
+    }
+
+    @Override
+    @CheckReturnValue
+    default AttributeType asAttributeType() {
+        return this;
     }
 
     Attribute put(TypeDBTransaction transaction, Value value);
@@ -104,31 +109,30 @@ public interface AttributeType extends ThingType {
 
     @CheckReturnValue
     default boolean isBoolean() {
-        return false;
+        return getValueType() == ValueType.BOOLEAN;
     }
 
     @CheckReturnValue
     default boolean isLong() {
-        return false;
+        return getValueType() == ValueType.LONG;
     }
 
     @CheckReturnValue
     default boolean isDouble() {
-        return false;
+        return getValueType() == ValueType.DOUBLE;
     }
 
     @CheckReturnValue
     default boolean isString() {
-        return false;
+        return getValueType() == ValueType.STRING;
     }
 
     @CheckReturnValue
     default boolean isDateTime() {
-        return false;
+        return getValueType() == ValueType.DATETIME;
     }
 
     enum ValueType {
-
         OBJECT(Object.class, false, false),
         BOOLEAN(Boolean.class, true, false),
         LONG(Long.class, true, true),
@@ -149,18 +153,12 @@ public interface AttributeType extends ThingType {
         @CheckReturnValue
         public static ValueType of(com.vaticle.typedb.client.jni.ValueType valueType) {
             switch (valueType) {
-                case Boolean:
-                    return BOOLEAN;
-                case Long:
-                    return LONG;
-                case Double:
-                    return DOUBLE;
-                case String:
-                    return STRING;
-                case DateTime:
-                    return DATETIME;
-                case Object:
-                    return OBJECT;
+                case Boolean: return BOOLEAN;
+                case Long: return LONG;
+                case Double: return DOUBLE;
+                case String: return STRING;
+                case DateTime: return DATETIME;
+                case Object: return OBJECT;
             }
             throw new TypeDBClientException(BAD_VALUE_TYPE);
         }
@@ -168,18 +166,12 @@ public interface AttributeType extends ThingType {
         @CheckReturnValue
         public com.vaticle.typedb.client.jni.ValueType asJNI(){
             switch (this) {
-                case BOOLEAN:
-                    return com.vaticle.typedb.client.jni.ValueType.Boolean;
-                case LONG:
-                    return com.vaticle.typedb.client.jni.ValueType.Long;
-                case DOUBLE:
-                    return com.vaticle.typedb.client.jni.ValueType.Double;
-                case STRING:
-                    return com.vaticle.typedb.client.jni.ValueType.String;
-                case DATETIME:
-                    return com.vaticle.typedb.client.jni.ValueType.DateTime;
-                case OBJECT:
-                    return com.vaticle.typedb.client.jni.ValueType.Object;
+                case BOOLEAN: return com.vaticle.typedb.client.jni.ValueType.Boolean;
+                case LONG: return com.vaticle.typedb.client.jni.ValueType.Long;
+                case DOUBLE: return com.vaticle.typedb.client.jni.ValueType.Double;
+                case STRING: return com.vaticle.typedb.client.jni.ValueType.String;
+                case DATETIME: return com.vaticle.typedb.client.jni.ValueType.DateTime;
+                case OBJECT: return com.vaticle.typedb.client.jni.ValueType.Object;
             }
             throw new TypeDBClientException(BAD_VALUE_TYPE);
         }

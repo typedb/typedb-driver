@@ -30,7 +30,6 @@ import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 public interface ConceptMap {
-
     @CheckReturnValue
     Stream<String> variables();
 
@@ -50,7 +49,6 @@ public interface ConceptMap {
     Explainables explainables();
 
     interface Explainables {
-
         Explainable relation(String variable);
 
         Explainable attribute(String variable);
@@ -62,14 +60,11 @@ public interface ConceptMap {
         Stream<Pair<String, Explainable>> attributes();
 
         Stream<Pair<Pair<String, String>, Explainable>> ownerships();
-
     }
 
     interface Explainable {
-
         String conjunction();
 
         long id();
-
     }
 }

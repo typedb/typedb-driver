@@ -21,47 +21,27 @@
 
 package com.vaticle.typedb.client.api;
 
+import com.vaticle.typedb.client.common.NativeObject;
+
 import javax.annotation.Nullable;
 import java.nio.file.Path;
 import java.util.Optional;
 
-public class TypeDBCredential {
+import static com.vaticle.typedb.client.jni.typedb_client_jni.credential_new;
 
-    private final String username;
-    private final String password;
-    private final boolean tlsEnabled;
-    @Nullable
-    private final Path tlsRootCA;
+public class TypeDBCredential extends NativeObject {
+    public final com.vaticle.typedb.client.jni.Credential credential;
 
     public TypeDBCredential(String username, String password, boolean tlsEnabled) {
         this(username, password, tlsEnabled, null);
     }
 
     public TypeDBCredential(String username, String password, Path tlsRootCA) {
-        this(username, password, true, tlsRootCA);
+        this(username, password, true, tlsRootCA.toString());
     }
 
-    private TypeDBCredential(String username, String password, boolean tlsEnabled, @Nullable Path tlsRootCA) {
-        this.username = username;
-        this.password = password;
-        this.tlsEnabled = tlsEnabled;
-        this.tlsRootCA = tlsRootCA;
+    private TypeDBCredential(String username, String password, boolean tlsEnabled, @Nullable String tlsRootCA) {
         assert tlsEnabled || tlsRootCA == null;
-    }
-
-    public String username() {
-        return username;
-    }
-
-    public String password() {
-        return password;
-    }
-
-    public boolean tlsEnabled() {
-        return tlsEnabled;
-    }
-
-    public Optional<Path> tlsRootCA() {
-        return Optional.ofNullable(tlsRootCA);
+        this.credential = credential_new(username, password, tlsRootCA, tlsEnabled);
     }
 }

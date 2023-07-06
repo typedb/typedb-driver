@@ -43,11 +43,6 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     }
 
     @Override
-    public EntityTypeImpl asEntityType() {
-        return this;
-    }
-
-    @Override
     public final EntityImpl create(TypeDBTransaction transaction) {
         return new EntityImpl(entity_type_create(((ConceptManagerImpl) transaction.concepts()).transaction, concept));
     }

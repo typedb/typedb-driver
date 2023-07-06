@@ -49,11 +49,6 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     }
 
     @Override
-    public RelationTypeImpl asRelationType() {
-        return this;
-    }
-
-    @Override
     public final RelationImpl create(TypeDBTransaction transaction) {
         return new RelationImpl(relation_type_create(((ConceptManagerImpl) transaction.concepts()).transaction, concept));
     }

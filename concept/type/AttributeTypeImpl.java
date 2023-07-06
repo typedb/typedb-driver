@@ -55,11 +55,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     }
 
     @Override
-    public AttributeTypeImpl asAttributeType() {
-        return this;
-    }
-
-    @Override
     public ValueType getValueType() {
         return ValueType.of(attribute_type_get_value_type(concept));
     }

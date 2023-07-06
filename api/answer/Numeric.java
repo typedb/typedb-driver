@@ -24,7 +24,6 @@ package com.vaticle.typedb.client.api.answer;
 import javax.annotation.CheckReturnValue;
 
 public interface Numeric {
-
     @CheckReturnValue
     boolean isLong();
 

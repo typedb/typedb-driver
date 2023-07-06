@@ -27,7 +27,6 @@ import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 public interface ConceptMapGroup {
-
     @CheckReturnValue
     Concept owner();
 

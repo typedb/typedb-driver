@@ -35,25 +35,22 @@ import static com.vaticle.typedb.client.jni.typedb_client_jni.connection_open_en
 import static com.vaticle.typedb.client.jni.typedb_client_jni.connection_open_plaintext;
 
 public class TypeDBConnectionImpl extends NativeObject implements TypeDBConnection {
-
     private final com.vaticle.typedb.client.jni.Connection connection;
 
-    private final TypeDBCredential credential;
     //private final UserManager userMgr;
     private final DatabaseManager databaseMgr;
     private boolean isOpen;
 
     public TypeDBConnectionImpl(String address) throws Error {
-        this(connection_open_plaintext(address), null);
+        this(connection_open_plaintext(address));
     }
 
     public TypeDBConnectionImpl(Set<String> initAddresses, TypeDBCredential credential) throws Error {
-        this(connection_open_encrypted(initAddresses.toArray(new String[0])), credential);
+        this(connection_open_encrypted(initAddresses.toArray(new String[0]), credential.credential));
     }
 
-    private TypeDBConnectionImpl(com.vaticle.typedb.client.jni.Connection connection, TypeDBCredential credential) {
+    private TypeDBConnectionImpl(com.vaticle.typedb.client.jni.Connection connection) {
         this.connection = connection;
-        this.credential = credential;
         databaseMgr = new TypeDBDatabaseManagerImpl(this.connection);
         //userMgr = new UserManagerImpl(this.connection);
         isOpen = true;

@@ -34,5 +34,11 @@ public interface Entity extends Thing {
 
     @Override
     @CheckReturnValue
+    default Entity asEntity() {
+        return this;
+    }
+
+    @Override
+    @CheckReturnValue
     EntityType getType();
 }

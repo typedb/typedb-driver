@@ -28,11 +28,16 @@ import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 public interface EntityType extends ThingType {
-
     @Override
     @CheckReturnValue
     default boolean isEntityType() {
         return true;
+    }
+
+    @Override
+    @CheckReturnValue
+    default EntityType asEntityType() {
+        return this;
     }
 
     @CheckReturnValue

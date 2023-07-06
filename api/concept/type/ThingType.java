@@ -31,11 +31,16 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public interface ThingType extends Type {
-
     @Override
     @CheckReturnValue
     default boolean isThingType() {
         return true;
+    }
+
+    @Override
+    @CheckReturnValue
+    default ThingType asThingType() {
+        return this;
     }
 
     @Override

@@ -49,6 +49,12 @@ public interface Attribute extends Thing {
         return true;
     }
 
+    @Override
+    @CheckReturnValue
+    default Attribute asAttribute() {
+        return this;
+    }
+
     @CheckReturnValue
     default boolean isBoolean() {
         return getValue().isBoolean();
@@ -80,25 +86,17 @@ public interface Attribute extends Thing {
     default JsonObject toJSON() {
         JsonValue value;
         switch (getType().getValueType()) {
-            case BOOLEAN:
-                value = Json.value(getValue().asBoolean());
-                break;
-            case LONG:
-                value = Json.value(getValue().asLong());
-                break;
-            case DOUBLE:
-                value = Json.value(getValue().asDouble());
-                break;
-            case STRING:
-                value = Json.value(getValue().asString());
-                break;
-            case DATETIME:
-                value = Json.value(getValue().asDateTime().format(ISO_LOCAL_DATE_TIME_MILLIS));
-                break;
-            default:
-                throw new TypeDBClientException(ILLEGAL_STATE);
+            case BOOLEAN: value = Json.value(getValue().asBoolean()); break;
+            case LONG: value = Json.value(getValue().asLong()); break;
+            case DOUBLE: value = Json.value(getValue().asDouble()); break;
+            case STRING: value = Json.value(getValue().asString()); break;
+            case DATETIME: value = Json.value(getValue().asDateTime().format(ISO_LOCAL_DATE_TIME_MILLIS)); break;
+            default: throw new TypeDBClientException(ILLEGAL_STATE);
         }
-        return Json.object().add("type", getType().getLabel().scopedName()).add("value_type", getType().getValueType().name().toLowerCase()).add("value", value);
+        return Json.object()
+                .add("type", getType().getLabel().scopedName())
+                .add("value_type", getType().getValueType().name().toLowerCase())
+                .add("value", value);
     }
 
     @CheckReturnValue

@@ -23,6 +23,7 @@ package com.vaticle.typedb.client.concept.answer;
 
 import com.vaticle.typedb.client.api.answer.ConceptMap;
 import com.vaticle.typedb.client.api.concept.Concept;
+import com.vaticle.typedb.client.common.NativeObject;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.concept.ConceptImpl;
 import com.vaticle.typedb.common.collection.Pair;
@@ -36,6 +37,7 @@ import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_map_get;
 import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_map_get_explainables;
 import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_map_get_values;
 import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_map_get_variables;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_map_to_string;
 import static com.vaticle.typedb.client.jni.typedb_client_jni.explainable_get_conjunction;
 import static com.vaticle.typedb.client.jni.typedb_client_jni.explainable_get_id;
 import static com.vaticle.typedb.client.jni.typedb_client_jni.explainables_get_attribute;
@@ -76,8 +78,7 @@ public class ConceptMapImpl implements ConceptMap {
 
     @Override
     public String toString() {
-        return ""; //FIXME
-        //return concept_map_to_string(concept_map);
+        return concept_map_to_string(concept_map);
     }
 
     @Override
@@ -94,8 +95,7 @@ public class ConceptMapImpl implements ConceptMap {
         return concept_map.hashCode();
     }
 
-    public static class ExplainablesImpl implements Explainables {
-
+    public static class ExplainablesImpl extends NativeObject implements Explainables {
         com.vaticle.typedb.client.jni.Explainables explainables;
 
         ExplainablesImpl(com.vaticle.typedb.client.jni.Explainables explainables) {
@@ -157,8 +157,7 @@ public class ConceptMapImpl implements ConceptMap {
         }
     }
 
-    static class ExplainableImpl implements Explainable {
-
+    static class ExplainableImpl extends NativeObject implements Explainable {
         com.vaticle.typedb.client.jni.Explainable explainable;
 
         public ExplainableImpl(com.vaticle.typedb.client.jni.Explainable explainable) {

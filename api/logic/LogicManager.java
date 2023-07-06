@@ -28,7 +28,6 @@ import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 public interface LogicManager {
-
     @Nullable
     @CheckReturnValue
     Rule getRule(String label);

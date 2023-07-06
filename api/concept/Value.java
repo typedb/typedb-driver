@@ -21,6 +21,7 @@
 
 package com.vaticle.typedb.client.api.concept;
 
+import com.vaticle.typedb.client.common.NativeObject;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 import java.time.Instant;
@@ -44,7 +45,7 @@ import static com.vaticle.typedb.client.jni.typedb_client_jni.value_new_double;
 import static com.vaticle.typedb.client.jni.typedb_client_jni.value_new_long;
 import static com.vaticle.typedb.client.jni.typedb_client_jni.value_new_string;
 
-public class Value {
+public class Value extends NativeObject {
     public com.vaticle.typedb.client.jni.Value value;
 
     public Value(com.vaticle.typedb.client.jni.Value value) {

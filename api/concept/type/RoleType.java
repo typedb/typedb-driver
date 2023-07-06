@@ -25,13 +25,20 @@ import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.thing.Relation;
 import com.vaticle.typedb.client.api.concept.thing.Thing;
 
+import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 public interface RoleType extends Type {
-
     @Override
+    @CheckReturnValue
     default boolean isRoleType() {
         return true;
+    }
+
+    @Override
+    @CheckReturnValue
+    default RoleType asRoleType() {
+        return this;
     }
 
     @Override

@@ -39,6 +39,12 @@ public interface Relation extends Thing {
 
     @Override
     @CheckReturnValue
+    default Relation asRelation() {
+        return this;
+    }
+
+    @Override
+    @CheckReturnValue
     RelationType getType();
 
     void addPlayer(TypeDBTransaction transaction, RoleType roleType, Thing player);

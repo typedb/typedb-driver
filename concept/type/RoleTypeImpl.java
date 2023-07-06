@@ -54,8 +54,9 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
     }
 
     @Override
-    public RoleTypeImpl asRoleType() {
-        return this;
+    public final boolean isRoot() {
+        return false; // FIXME
+//        return role_type_is_root(concept);
     }
 
     @Override

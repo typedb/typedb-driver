@@ -25,7 +25,6 @@ import javax.annotation.CheckReturnValue;
 import java.util.Set;
 
 public interface UserManager {
-
     @CheckReturnValue
     boolean contains(String username);
 

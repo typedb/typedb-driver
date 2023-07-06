@@ -38,7 +38,6 @@ import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 public interface QueryManager {
-
     @CheckReturnValue
     Stream<ConceptMap> match(TypeQLMatch query);
 

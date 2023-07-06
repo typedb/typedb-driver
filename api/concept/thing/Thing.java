@@ -51,6 +51,12 @@ public interface Thing extends Concept {
     }
 
     @Override
+    @CheckReturnValue
+    default Thing asThing() {
+        return this;
+    }
+
+    @Override
     default JsonObject toJSON() {
         return Json.object().add("type", getType().getLabel().scopedName());
     }
