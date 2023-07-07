@@ -33,16 +33,6 @@ java_library(
 
         # External dependencies from @vaticle
         "@vaticle_typedb_client_rust//:typedb_client_jni",
-
-        # External dependencies from Maven
-        "@maven//:com_google_code_findbugs_jsr305",
-        "@maven//:com_google_protobuf_protobuf_java",
-        "@maven//:io_grpc_grpc_api",
-        "@maven//:io_grpc_grpc_netty",
-        "@maven//:io_grpc_grpc_stub",
-        "@maven//:io_netty_netty_all",
-        "@maven//:io_netty_netty_handler",
-        "@maven//:org_slf4j_slf4j_api",
     ],
     runtime_deps = [
         "@maven//:ch_qos_logback_logback_classic",
