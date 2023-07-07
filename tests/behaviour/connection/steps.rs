@@ -20,8 +20,10 @@
  */
 
 use cucumber::{given, then, when};
+use tokio::time::sleep;
+use typedb_client::{Connection, Credential, Result as TypeDBResult};
 
-use crate::{behaviour::Context, generic_step_impl};
+use crate::{assert_with_timeout, behaviour::Context, generic_step_impl};
 
 generic_step_impl! {
     #[step("typedb starts")]
@@ -30,11 +32,39 @@ generic_step_impl! {
     #[step("connection opens with default authentication")]
     async fn connection_opens_with_default_authentication(_: &mut Context) {}
 
+    #[step(expr = "connection opens with authentication: {word}, {word}")]
+    async fn connection_opens_with_authentication(context: &mut Context, login: String, password: String) {
+        let connection = Connection::new_encrypted(
+            &["localhost:11729", "localhost:21729", "localhost:31729"],
+            Credential::with_tls(
+                &login.as_str(),
+                &password.as_str(),
+                Some(&context.tls_root_ca),
+            ).unwrap(),
+        );
+        context.set_connection(connection.unwrap());
+    }
+
     #[step("connection has been opened")]
     async fn connection_has_been_opened(_: &mut Context) {}
 
     #[step("connection does not have any database")]
-    async fn connection_does_not_have_any_database(context: &mut Context) {
-        assert!(context.databases.all().await.unwrap().is_empty());
+    async fn connection_does_not_have_any_database(context: &mut Context) -> TypeDBResult {
+        if context.databases.all().await?.is_empty() {
+            assert_with_timeout!(
+                {
+                    context.cleanup_databases().await;
+                    context.cleanup_users().await;
+                    context.databases.all().await?.is_empty()
+                },
+                "Connection has at least one database.",
+            );
+        }
+        Ok(())
+    }
+
+    #[step("connection closes")]
+    async fn connection_closes(context: &mut Context) {
+        assert!(context.connection.clone().force_close().is_ok());
     }
 }

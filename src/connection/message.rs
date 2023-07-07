@@ -34,6 +34,7 @@ use crate::{
         Thing, ThingType, Transitivity, Value, ValueType,
     },
     logic::{Explanation, Rule},
+    user::User,
     Options, SessionType, TransactionType,
 };
 
@@ -56,6 +57,15 @@ pub(super) enum Request {
     SessionPulse { session_id: SessionID },
 
     Transaction(TransactionRequest),
+
+    UsersAll,
+    UsersContain { username: String },
+    UsersCreate { username: String, password: String },
+    UsersDelete { username: String },
+    UsersGet { username: String },
+    UsersPasswordSet { username: String, password: String },
+
+    UserPasswordUpdate { username: String, password_old: String, password_new: String },
 }
 
 #[derive(Debug)]
@@ -97,6 +107,21 @@ pub(super) enum Response {
         request_sink: UnboundedSender<transaction::Client>,
         response_source: Streaming<transaction::Server>,
     },
+
+    UsersAll {
+        users: Vec<User>,
+    },
+    UsersContain {
+        contains: bool,
+    },
+    UsersCreate,
+    UsersDelete,
+    UsersGet {
+        user: Option<User>,
+    },
+    UsersPasswordSet,
+
+    UserPasswordUpdate,
 }
 
 #[derive(Debug)]

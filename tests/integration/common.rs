@@ -87,7 +87,7 @@ macro_rules! test_for_each_arg {
             use super::*;
         $(
             #[tokio::test]
-            #[serial($mod)]
+            #[serial]
             $( #[ $extra_anno ] )*
             pub async fn $test() {
                 _impl::$test($arg).await.unwrap();

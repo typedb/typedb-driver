@@ -24,6 +24,7 @@ mod concept;
 mod database;
 mod logic;
 mod message;
+mod user;
 
 use crate::Result;
 

@@ -28,10 +28,12 @@ mod connection;
 mod database;
 pub mod logic;
 pub mod transaction;
+mod user;
 
 pub use self::{
     common::{error, Credential, Error, Options, Result, SessionType, TransactionType},
     connection::Connection,
     database::{Database, DatabaseManager, Session},
     transaction::Transaction,
+    user::{User, UserManager},
 };

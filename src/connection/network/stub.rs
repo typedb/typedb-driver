@@ -22,12 +22,13 @@
 use std::sync::Arc;
 
 use futures::{future::BoxFuture, FutureExt, TryFutureExt};
-use log::{debug, trace};
+use log::{debug, trace, warn};
 use tokio::sync::mpsc::{unbounded_channel as unbounded_async, UnboundedSender};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tonic::{Response, Status, Streaming};
 use typedb_protocol::{
     database, database_manager, server_manager, session, transaction, type_db_client::TypeDbClient as GRPC, user,
+    user_manager,
 };
 
 use super::channel::{CallCredentials, GRPCChannel};
@@ -42,16 +43,12 @@ pub(super) struct RPCStub<Channel: GRPCChannel> {
 }
 
 impl<Channel: GRPCChannel> RPCStub<Channel> {
-    pub(super) async fn new(channel: Channel, call_credentials: Option<Arc<CallCredentials>>) -> Result<Self> {
-        let this = Self { grpc: GRPC::new(channel), call_credentials };
-        let mut this = this.validated().await?;
-        this.renew_token().await?;
-        Ok(this)
-    }
-
-    pub(super) async fn validated(mut self) -> Result<Self> {
-        self.databases_all(database_manager::all::Req {}).await?;
-        Ok(self)
+    pub(super) async fn new(channel: Channel, call_credentials: Option<Arc<CallCredentials>>) -> Self {
+        let mut this = Self { grpc: GRPC::new(channel), call_credentials };
+        if let Err(err) = this.renew_token().await {
+            warn!("{err:?}");
+        }
+        this
     }
 
     async fn call_with_auto_renew_token<F, R>(&mut self, call: F) -> Result<R>
@@ -164,6 +161,43 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
             })
         })
         .await
+    }
+
+    pub(super) async fn users_all(&mut self, req: user_manager::all::Req) -> Result<user_manager::all::Res> {
+        self.single(|this| Box::pin(this.grpc.users_all(req.clone()))).await
+    }
+
+    pub(super) async fn users_contain(
+        &mut self,
+        req: user_manager::contains::Req,
+    ) -> Result<user_manager::contains::Res> {
+        self.single(|this| Box::pin(this.grpc.users_contains(req.clone()))).await
+    }
+
+    pub(super) async fn users_create(&mut self, req: user_manager::create::Req) -> Result<user_manager::create::Res> {
+        self.single(|this| Box::pin(this.grpc.users_create(req.clone()))).await
+    }
+
+    pub(super) async fn users_delete(&mut self, req: user_manager::delete::Req) -> Result<user_manager::delete::Res> {
+        self.single(|this| Box::pin(this.grpc.users_delete(req.clone()))).await
+    }
+
+    pub(super) async fn users_get(&mut self, req: user_manager::get::Req) -> Result<user_manager::get::Res> {
+        self.single(|this| Box::pin(this.grpc.users_get(req.clone()))).await
+    }
+
+    pub(super) async fn users_password_set(
+        &mut self,
+        req: user_manager::password_set::Req,
+    ) -> Result<user_manager::password_set::Res> {
+        self.single(|this| Box::pin(this.grpc.users_password_set(req.clone()))).await
+    }
+
+    pub(super) async fn user_password_update(
+        &mut self,
+        req: user::password_update::Req,
+    ) -> Result<user::password_update::Res> {
+        self.single(|this| Box::pin(this.grpc.user_password_update(req.clone()))).await
     }
 
     async fn single<F, R>(&mut self, call: F) -> Result<R>

@@ -22,30 +22,40 @@
 use std::collections::HashSet;
 
 use cucumber::{gherkin::Step, given, then, when};
-use futures::{future::try_join_all, TryFutureExt};
+use futures::{
+    future::{join_all, try_join_all},
+    stream, StreamExt, TryFutureExt,
+};
+use tokio::time::sleep;
 use typedb_client::Database;
 
 use crate::{
-    behaviour::{util, Context},
+    assert_with_timeout,
+    behaviour::{
+        util,
+        util::{create_database_with_timeout, iter_table},
+        Context,
+    },
     generic_step_impl,
 };
 
 generic_step_impl! {
     #[step(expr = "connection create database: {word}")]
     pub async fn connection_create_database(context: &mut Context, name: String) {
-        context.databases.create(name).await.unwrap();
+        create_database_with_timeout(&context.databases, name).await;
     }
 
     #[step(expr = "connection create database(s):")]
     async fn connection_create_databases(context: &mut Context, step: &Step) {
         for name in util::iter_table(step) {
-            context.databases.create(name).await.unwrap();
+            connection_create_database(context, name.into()).await;
         }
     }
 
-    #[step("connection create databases in parallel:")]
+    #[step(expr = "connection create databases in parallel:")]
     async fn connection_create_databases_in_parallel(context: &mut Context, step: &Step) {
-        try_join_all(util::iter_table(step).map(|name| context.databases.create(name))).await.unwrap();
+        join_all(util::iter_table(step).map(|name| create_database_with_timeout(&context.databases, name.to_string())))
+            .await;
     }
 
     #[step(expr = "connection delete database: {word}")]
@@ -81,27 +91,38 @@ generic_step_impl! {
 
     #[step(expr = "connection has database: {word}")]
     async fn connection_has_database(context: &mut Context, name: String) {
-        assert!(context.databases.contains(name).await.unwrap());
+        assert_with_timeout!(
+            context.databases.contains(name.clone()).await.unwrap(),
+            "Connection doesn't contain database {name}.",
+        );
     }
 
     #[step(expr = "connection has database(s):")]
     async fn connection_has_databases(context: &mut Context, step: &Step) {
         let names: HashSet<String> = util::iter_table(step).map(|name| name.to_owned()).collect();
-        let all_databases = context.databases.all().await.unwrap().into_iter().map(|db| db.name().to_owned()).collect();
-        assert_eq!(names, all_databases);
+        assert_with_timeout!(
+            context.all_databases().await == names,
+            "Connection doesn't contain at least one of the databases.",
+        );
     }
 
     #[step(expr = "connection does not have database: {word}")]
     async fn connection_does_not_have_database(context: &mut Context, name: String) {
-        assert!(!context.databases.contains(name).await.unwrap());
+        assert_with_timeout!(
+            !context.databases.contains(name.clone()).await.unwrap(),
+            "Connection contains database {name}.",
+        );
     }
 
     #[step(expr = "connection does not have database(s):")]
     async fn connection_does_not_have_databases(context: &mut Context, step: &Step) {
-        let all_databases: HashSet<String> =
-            context.databases.all().await.unwrap().into_iter().map(|db| db.name().to_owned()).collect();
-        for name in util::iter_table(step) {
-            assert!(!all_databases.contains(name));
-        }
+        assert_with_timeout!(
+            stream::iter(iter_table(step))
+                .all(|name| async {
+                    !context.all_databases().await.contains(name)
+                })
+                .await,
+            "Connection contains at least one of the databases.",
+        )
     }
 }

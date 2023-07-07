@@ -58,7 +58,7 @@ impl RPCTransmitter {
         let (shutdown_sink, shutdown_source) = unbounded_async();
         runtime.run_blocking(async move {
             let channel = open_plaintext_channel(address);
-            let rpc = RPCStub::new(channel, None).await?;
+            let rpc = RPCStub::new(channel, None).await;
             tokio::spawn(Self::dispatcher_loop(rpc, request_source, shutdown_source));
             Ok::<(), Error>(())
         })?;
@@ -74,7 +74,7 @@ impl RPCTransmitter {
         let (shutdown_sink, shutdown_source) = unbounded_async();
         runtime.run_blocking(async move {
             let (channel, call_credentials) = open_encrypted_channel(address, credential)?;
-            let rpc = RPCStub::new(channel, Some(call_credentials)).await?;
+            let rpc = RPCStub::new(channel, Some(call_credentials)).await;
             tokio::spawn(Self::dispatcher_loop(rpc, request_source, shutdown_source));
             Ok::<(), Error>(())
         })?;
@@ -155,6 +155,21 @@ impl RPCTransmitter {
             Request::Transaction(transaction_request) => {
                 let (request_sink, response_source) = rpc.transaction(transaction_request.into_proto()).await?;
                 Ok(Response::TransactionOpen { request_sink, response_source })
+            }
+
+            Request::UsersAll => rpc.users_all(request.try_into_proto()?).await.map(Response::from_proto),
+            Request::UsersContain { .. } => {
+                rpc.users_contain(request.try_into_proto()?).await.map(Response::from_proto)
+            }
+            Request::UsersCreate { .. } => rpc.users_create(request.try_into_proto()?).await.map(Response::from_proto),
+            Request::UsersDelete { .. } => rpc.users_delete(request.try_into_proto()?).await.map(Response::from_proto),
+            Request::UsersGet { .. } => rpc.users_get(request.try_into_proto()?).await.map(Response::from_proto),
+            Request::UsersPasswordSet { .. } => {
+                rpc.users_password_set(request.try_into_proto()?).await.map(Response::from_proto)
+            }
+
+            Request::UserPasswordUpdate { .. } => {
+                rpc.user_password_update(request.try_into_proto()?).await.map(Response::from_proto)
             }
         }
     }

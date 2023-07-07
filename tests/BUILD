@@ -29,6 +29,7 @@ load("@vaticle_typedb_common//runner:rules.bzl", "native_typedb_artifact")
 rust_test(
     name = "tests",
     srcs = glob(["**/*.rs"]),
+    timeout = "eternal",
     deps = [
         "//:typedb_client",
         "@vaticle_typeql//rust:typeql_lang",
@@ -52,6 +53,7 @@ rust_test(
         "@vaticle_typedb_behaviour//connection:database.feature",
         "@vaticle_typedb_behaviour//connection:session.feature",
         "@vaticle_typedb_behaviour//connection:transaction.feature",
+        "@vaticle_typedb_behaviour//connection:user.feature",
         "@vaticle_typedb_behaviour//typeql/language:define.feature",
         "@vaticle_typedb_behaviour//typeql/language:undefine.feature",
         "@vaticle_typedb_behaviour//typeql/language:insert.feature",

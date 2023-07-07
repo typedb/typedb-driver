@@ -47,6 +47,7 @@ use crate::{
     },
     connection::message::{Request, Response, TransactionRequest},
     error::InternalError,
+    user::User,
     Credential, Options,
 };
 
@@ -54,6 +55,7 @@ use crate::{
 pub struct Connection {
     server_connections: HashMap<Address, ServerConnection>,
     background_runtime: Arc<BackgroundRuntime>,
+    username: Option<String>,
 }
 
 impl Connection {
@@ -61,7 +63,7 @@ impl Connection {
         let address: Address = address.as_ref().parse()?;
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
         let server_connection = ServerConnection::new_plaintext(background_runtime.clone(), address.clone())?;
-        Ok(Self { server_connections: [(address, server_connection)].into(), background_runtime })
+        Ok(Self { server_connections: [(address, server_connection)].into(), background_runtime, username: None })
     }
 
     pub fn new_encrypted<T: AsRef<str> + Sync>(init_addresses: &[T], credential: Credential) -> Result<Self> {
@@ -70,14 +72,23 @@ impl Connection {
         let init_addresses = init_addresses.iter().map(|addr| addr.as_ref().parse()).try_collect()?;
         let addresses = Self::fetch_current_addresses(background_runtime.clone(), init_addresses, credential.clone())?;
 
-        let mut server_connections = HashMap::with_capacity(addresses.len());
-        for address in addresses {
-            let server_connection =
-                ServerConnection::new_encrypted(background_runtime.clone(), address.clone(), credential.clone())?;
-            server_connections.insert(address, server_connection);
-        }
+        let server_connections: HashMap<Address, ServerConnection> = addresses
+            .into_iter()
+            .map(|address| {
+                ServerConnection::new_encrypted(background_runtime.clone(), address.clone(), credential.clone())
+                    .map(|server_connection| (address, server_connection))
+            })
+            .try_collect()?;
 
-        Ok(Self { server_connections, background_runtime })
+        let errors: Vec<Error> =
+            server_connections.values().map(|conn| conn.validate()).filter_map(Result::err).collect();
+        if errors.len() == server_connections.len() {
+            Err(ConnectionError::ClusterAllNodesFailed(
+                errors.into_iter().map(|err| err.to_string()).collect::<Vec<_>>().join("\n"),
+            ))?
+        } else {
+            Ok(Self { server_connections, background_runtime, username: Some(credential.username().to_string()) })
+        }
     }
 
     fn fetch_current_addresses(
@@ -122,6 +133,10 @@ impl Connection {
 
     pub(crate) fn connections(&self) -> impl Iterator<Item = &ServerConnection> + '_ {
         self.server_connections.values()
+    }
+
+    pub(crate) fn username(&self) -> Option<&str> {
+        self.username.as_ref().map(|s| s.as_ref())
     }
 
     pub(crate) fn unable_to_connect_error(&self) -> Error {
@@ -191,6 +206,13 @@ impl ServerConnection {
         match self.request_blocking(Request::ServersAll)? {
             Response::ServersAll { servers } => Ok(servers),
             other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+        }
+    }
+
+    pub(crate) fn validate(&self) -> Result {
+        match self.request_blocking(Request::DatabasesAll)? {
+            Response::DatabasesAll { databases: _ } => Ok(()),
+            _other => Err(ConnectionError::UnableToConnect().into()),
         }
     }
 
@@ -300,6 +322,60 @@ impl ServerConnection {
                 let transmitter = TransactionTransmitter::new(&self.background_runtime, request_sink, response_source);
                 Ok(TransactionStream::new(transaction_type, options, transmitter))
             }
+            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+        }
+    }
+
+    pub(crate) async fn all_users(&self) -> Result<Vec<User>> {
+        match self.request_async(Request::UsersAll).await? {
+            Response::UsersAll { users } => Ok(users),
+            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+        }
+    }
+
+    pub(crate) async fn contains_user(&self, username: String) -> Result<bool> {
+        match self.request_async(Request::UsersContain { username }).await? {
+            Response::UsersContain { contains } => Ok(contains),
+            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+        }
+    }
+
+    pub(crate) async fn create_user(&self, username: String, password: String) -> Result {
+        match self.request_async(Request::UsersCreate { username, password }).await? {
+            Response::UsersCreate => Ok(()),
+            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+        }
+    }
+
+    pub(crate) async fn delete_user(&self, username: String) -> Result {
+        match self.request_async(Request::UsersDelete { username }).await? {
+            Response::UsersDelete => Ok(()),
+            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+        }
+    }
+
+    pub(crate) async fn get_user(&self, username: String) -> Result<Option<User>> {
+        match self.request_async(Request::UsersGet { username }).await? {
+            Response::UsersGet { user } => Ok(user),
+            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+        }
+    }
+
+    pub(crate) async fn set_user_password(&self, username: String, password: String) -> Result {
+        match self.request_async(Request::UsersPasswordSet { username, password }).await? {
+            Response::UsersPasswordSet => Ok(()),
+            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+        }
+    }
+
+    pub(crate) async fn update_user_password(
+        &self,
+        username: String,
+        password_old: String,
+        password_new: String,
+    ) -> Result {
+        match self.request_async(Request::UserPasswordUpdate { username, password_old, password_new }).await? {
+            Response::UserPasswordUpdate => Ok(()),
             other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
         }
     }

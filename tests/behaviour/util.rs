@@ -28,16 +28,17 @@ use futures::{
     TryFutureExt, TryStreamExt,
 };
 use regex::{Captures, Regex};
+use tokio::time::sleep;
 use typedb_client::{
     answer::ConceptMap,
     concept::{Annotation, Attribute, Concept, Entity, Relation, Value},
     logic::Rule,
     transaction::concept::api::ThingAPI,
-    Result as TypeDBResult,
+    DatabaseManager, Result as TypeDBResult,
 };
 use typeql_lang::{parse_patterns, parse_query, pattern::Variable};
 
-use crate::behaviour::Context;
+use crate::{assert_with_timeout, behaviour::Context};
 
 pub fn iter_table(step: &Step) -> impl Iterator<Item = &str> {
     step.table().unwrap().rows.iter().flatten().map(String::as_str)
@@ -184,4 +185,23 @@ pub async fn match_answer_rule(answer_identifiers: &HashMap<&str, &str>, answer:
     answer_identifiers.get("label").unwrap().to_string() == answer.label
         && when == answer.when
         && then == Variable::Thing(answer.then.clone())
+}
+
+pub async fn create_database_with_timeout(databases: &DatabaseManager, name: String) {
+    assert_with_timeout!(databases.create(name.clone()).await.is_ok(), "Database {name} couldn't be created.");
+}
+
+#[macro_export]
+macro_rules! assert_with_timeout {
+    ($expr:expr, $message:expr $(, $arg:expr)* $(,)?) => {{
+        't: {
+            for _ in 0..Context::STEP_REATTEMPT_LIMIT {
+                if $expr {
+                    break 't;
+                }
+                sleep(Context::STEP_REATTEMPT_SLEEP).await;
+            }
+            panic!($message $(, $arg)*);
+        }
+    }};
 }

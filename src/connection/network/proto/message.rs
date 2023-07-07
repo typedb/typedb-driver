@@ -24,7 +24,8 @@ use std::time::Duration;
 use itertools::Itertools;
 use typedb_protocol::{
     attribute, attribute_type, concept_manager, database, database_manager, entity_type, logic_manager, query_manager,
-    r#type, relation, relation_type, role_type, rule, server_manager, session, thing, thing_type, transaction,
+    r#type, relation, relation_type, role_type, rule, server_manager, session, thing, thing_type, transaction, user,
+    user_manager,
 };
 
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
@@ -42,6 +43,7 @@ use crate::{
     },
     error::{ConnectionError, InternalError},
     logic::{Explanation, Rule},
+    user::User,
 };
 
 impl TryIntoProto<server_manager::all::Req> for Request {
@@ -160,6 +162,71 @@ impl TryIntoProto<transaction::Client> for Request {
     fn try_into_proto(self) -> Result<transaction::Client> {
         match self {
             Self::Transaction(transaction_req) => Ok(transaction::Client { reqs: vec![transaction_req.into_proto()] }),
+            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+        }
+    }
+}
+
+impl TryIntoProto<user_manager::all::Req> for Request {
+    fn try_into_proto(self) -> Result<user_manager::all::Req> {
+        match self {
+            Self::UsersAll => Ok(user_manager::all::Req {}),
+            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+        }
+    }
+}
+
+impl TryIntoProto<user_manager::contains::Req> for Request {
+    fn try_into_proto(self) -> Result<user_manager::contains::Req> {
+        match self {
+            Self::UsersContain { username } => Ok(user_manager::contains::Req { username }),
+            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+        }
+    }
+}
+
+impl TryIntoProto<user_manager::create::Req> for Request {
+    fn try_into_proto(self) -> Result<user_manager::create::Req> {
+        match self {
+            Self::UsersCreate { username, password } => Ok(user_manager::create::Req { username, password }),
+            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+        }
+    }
+}
+
+impl TryIntoProto<user_manager::delete::Req> for Request {
+    fn try_into_proto(self) -> Result<user_manager::delete::Req> {
+        match self {
+            Self::UsersDelete { username } => Ok(user_manager::delete::Req { username }),
+            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+        }
+    }
+}
+
+impl TryIntoProto<user_manager::get::Req> for Request {
+    fn try_into_proto(self) -> Result<user_manager::get::Req> {
+        match self {
+            Self::UsersGet { username } => Ok(user_manager::get::Req { username }),
+            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+        }
+    }
+}
+
+impl TryIntoProto<user_manager::password_set::Req> for Request {
+    fn try_into_proto(self) -> Result<user_manager::password_set::Req> {
+        match self {
+            Self::UsersPasswordSet { username, password } => Ok(user_manager::password_set::Req { username, password }),
+            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+        }
+    }
+}
+
+impl TryIntoProto<user::password_update::Req> for Request {
+    fn try_into_proto(self) -> Result<user::password_update::Req> {
+        match self {
+            Self::UserPasswordUpdate { username, password_old, password_new } => {
+                Ok(user::password_update::Req { username, password_old, password_new })
+            }
             other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
         }
     }
@@ -332,6 +399,48 @@ impl TryFromProto<transaction::ResPart> for TransactionResponse {
             Some(transaction::res_part::Res::StreamResPart(_)) => unreachable!(),
             None => Err(ConnectionError::MissingResponseField("res").into()),
         }
+    }
+}
+
+impl FromProto<user_manager::all::Res> for Response {
+    fn from_proto(proto: user_manager::all::Res) -> Self {
+        Self::UsersAll { users: proto.users.into_iter().map(User::from_proto).collect() }
+    }
+}
+
+impl FromProto<user_manager::contains::Res> for Response {
+    fn from_proto(proto: user_manager::contains::Res) -> Self {
+        Self::UsersContain { contains: proto.contains }
+    }
+}
+
+impl FromProto<user_manager::create::Res> for Response {
+    fn from_proto(_proto: user_manager::create::Res) -> Self {
+        Self::UsersCreate
+    }
+}
+
+impl FromProto<user_manager::delete::Res> for Response {
+    fn from_proto(_proto: user_manager::delete::Res) -> Self {
+        Self::UsersDelete
+    }
+}
+
+impl FromProto<user_manager::get::Res> for Response {
+    fn from_proto(proto: user_manager::get::Res) -> Self {
+        Self::UsersGet { user: proto.user.map(User::from_proto) }
+    }
+}
+
+impl FromProto<user_manager::password_set::Res> for Response {
+    fn from_proto(_proto: user_manager::password_set::Res) -> Self {
+        Self::UsersPasswordSet
+    }
+}
+
+impl FromProto<user::password_update::Res> for Response {
+    fn from_proto(_proto: user::password_update::Res) -> Self {
+        Self::UserPasswordUpdate
     }
 }
 

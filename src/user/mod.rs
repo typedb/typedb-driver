@@ -19,8 +19,7 @@
  * under the License.
  */
 
-pub(crate) mod database;
-pub(crate) mod session;
-pub(crate) mod steps;
-pub(crate) mod transaction;
 mod user;
+mod user_manager;
+
+pub use self::{user::User, user_manager::UserManager};

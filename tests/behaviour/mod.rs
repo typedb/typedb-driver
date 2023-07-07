@@ -26,23 +26,29 @@ mod session_tracker;
 mod typeql;
 mod util;
 
-use std::collections::HashMap;
+use std::{
+    collections::{HashMap, HashSet},
+    path::PathBuf,
+};
 
 use cucumber::{StatsWriter, World};
 use futures::future::try_join_all;
+use tokio::time::{sleep, Duration};
 use typedb_client::{
     answer::{ConceptMap, ConceptMapGroup, Numeric, NumericGroup},
     concept::{Attribute, AttributeType, Entity, EntityType, Relation, RelationType, Thing},
     logic::Rule,
-    Connection, Database, DatabaseManager, Result as TypeDBResult, Transaction,
+    Connection, Credential, Database, DatabaseManager, Result as TypeDBResult, Transaction, UserManager,
 };
 
 use self::session_tracker::SessionTracker;
 
 #[derive(Debug, World)]
 pub struct Context {
+    pub tls_root_ca: PathBuf,
     pub connection: Connection,
     pub databases: DatabaseManager,
+    pub users: UserManager,
     pub session_trackers: Vec<SessionTracker>,
     pub things: HashMap<String, Option<Thing>>,
     pub answer: Vec<ConceptMap>,
@@ -55,6 +61,10 @@ impl Context {
     const GROUP_COLUMN_NAME: &'static str = "owner";
     const VALUE_COLUMN_NAME: &'static str = "value";
     const DEFAULT_DATABASE: &'static str = "test";
+    const ADMIN_USERNAME: &'static str = "admin";
+    const ADMIN_PASSWORD: &'static str = "password";
+    const STEP_REATTEMPT_SLEEP: Duration = Duration::from_millis(250);
+    const STEP_REATTEMPT_LIMIT: u32 = 20;
 
     async fn test(glob: &'static str) -> bool {
         let default_panic = std::panic::take_hook();
@@ -82,9 +92,37 @@ impl Context {
         t == "ignore" || t == "ignore-typedb" || t == "ignore-client-rust" || t == "ignore-typedb-client-rust"
     }
 
-    async fn after_scenario(&self) -> TypeDBResult {
-        try_join_all(self.databases.all().await.unwrap().into_iter().map(Database::delete)).await?;
+    pub async fn after_scenario(&mut self) -> TypeDBResult {
+        sleep(Context::STEP_REATTEMPT_SLEEP).await;
+        self.set_connection(Connection::new_encrypted(
+            &["localhost:11729", "localhost:21729", "localhost:31729"],
+            Credential::with_tls(&Context::ADMIN_USERNAME, &Context::ADMIN_PASSWORD, Some(&self.tls_root_ca))?,
+        )?);
+        self.cleanup_databases().await;
+        self.cleanup_users().await;
         Ok(())
+    }
+
+    pub async fn all_databases(&self) -> HashSet<String> {
+        self.databases.all().await.unwrap().into_iter().map(|db| db.name().to_owned()).collect::<HashSet<_>>()
+    }
+
+    pub async fn cleanup_databases(&mut self) {
+        try_join_all(self.databases.all().await.unwrap().into_iter().map(Database::delete)).await.ok();
+    }
+
+    pub async fn cleanup_users(&mut self) {
+        try_join_all(
+            self.users
+                .all()
+                .await
+                .unwrap()
+                .into_iter()
+                .filter(|user| user.username != Context::ADMIN_USERNAME)
+                .map(|user| self.users.delete(user.username)),
+        )
+        .await
+        .ok();
     }
 
     pub fn transaction(&self) -> &Transaction {
@@ -161,15 +199,36 @@ impl Context {
     pub async fn get_rule(&self, label: String) -> TypeDBResult<Rule> {
         self.transaction().logic().get_rule(label).await
     }
+
+    pub fn set_connection(&mut self, new_connection: Connection) {
+        self.connection = new_connection;
+        self.databases = DatabaseManager::new(self.connection.clone());
+        self.users = UserManager::new(self.connection.clone());
+        self.session_trackers.clear();
+        self.answer.clear();
+        self.answer_group.clear();
+        self.numeric_answer = None;
+        self.numeric_answer_group.clear();
+    }
 }
 
 impl Default for Context {
     fn default() -> Self {
-        let connection = Connection::new_plaintext("0.0.0.0:1729").unwrap();
+        let tls_root_ca = PathBuf::from(
+            std::env::var("ROOT_CA").expect("ROOT_CA environment variable needs to be set for cluster tests to run"),
+        );
+        let connection = Connection::new_encrypted(
+            &["localhost:11729", "localhost:21729", "localhost:31729"],
+            Credential::with_tls(&Context::ADMIN_USERNAME, &Context::ADMIN_PASSWORD, Some(&tls_root_ca)).unwrap(),
+        )
+        .unwrap();
         let databases = DatabaseManager::new(connection.clone());
+        let users = UserManager::new(connection.clone());
         Self {
+            tls_root_ca,
             connection,
             databases,
+            users,
             session_trackers: Vec::new(),
             things: HashMap::new(),
             answer: Vec::new(),
