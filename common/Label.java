@@ -26,7 +26,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class Label {
-
     private final String scope;
     private final String name;
     private final int hash;

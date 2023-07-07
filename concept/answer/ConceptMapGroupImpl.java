@@ -29,13 +29,16 @@ import com.vaticle.typedb.client.concept.ConceptImpl;
 import java.util.stream.Stream;
 
 import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_map_group_get_concept_maps;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_map_group_equals;
 import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_map_group_get_owner;
 
 public class ConceptMapGroupImpl implements ConceptMapGroup {
     private final com.vaticle.typedb.client.jni.ConceptMapGroup concept_map_group;
+    private final int hash;
 
     public ConceptMapGroupImpl(com.vaticle.typedb.client.jni.ConceptMapGroup concept_map_group) {
         this.concept_map_group = concept_map_group;
+        this.hash = toString().hashCode();
     }
 
     @Override
@@ -53,12 +56,11 @@ public class ConceptMapGroupImpl implements ConceptMapGroup {
         if (obj == this) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         ConceptMapGroupImpl that = (ConceptMapGroupImpl) obj;
-        return this.concept_map_group == that.concept_map_group;  // TODO
-//        return concept_map_group_equals(this.concept_map_group, that.concept_map_group);
+        return concept_map_group_equals(this.concept_map_group, that.concept_map_group);
     }
 
     @Override
     public int hashCode() {
-        return concept_map_group.hashCode();
+        return hash;
     }
 }

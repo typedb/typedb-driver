@@ -25,7 +25,6 @@ import com.vaticle.typedb.client.common.NativeObject;
 
 import javax.annotation.Nullable;
 import java.nio.file.Path;
-import java.util.Optional;
 
 import static com.vaticle.typedb.client.jni.typedb_client_jni.credential_new;
 

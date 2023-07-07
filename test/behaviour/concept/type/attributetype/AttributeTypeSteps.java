@@ -96,7 +96,7 @@ public class AttributeTypeSteps {
 
     @Then("attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) does not have any regex")
     public void attribute_type_as_value_type_does_not_have_any_regex(String typeLabel, ValueType valueType) {
-        attribute_type_as_value_type_get_regex(typeLabel, valueType, "");
+        attribute_type_as_value_type_get_regex(typeLabel, valueType, null);
     }
 
     @Then("attribute\\( ?{type_label} ?) get owners, with annotations: {annotations}; contain:")

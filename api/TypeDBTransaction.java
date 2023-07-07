@@ -29,7 +29,6 @@ import java.util.function.Consumer;
 import javax.annotation.CheckReturnValue;
 
 public interface TypeDBTransaction extends AutoCloseable {
-
     @CheckReturnValue
     boolean isOpen();
 

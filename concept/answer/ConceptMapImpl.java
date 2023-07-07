@@ -33,6 +33,7 @@ import java.util.stream.Stream;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.NONEXISTENT_EXPLAINABLE_CONCEPT;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.NONEXISTENT_EXPLAINABLE_OWNERSHIP;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_map_equals;
 import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_map_get;
 import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_map_get_explainables;
 import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_map_get_values;
@@ -49,9 +50,11 @@ import static com.vaticle.typedb.client.jni.typedb_client_jni.explainables_get_r
 
 public class ConceptMapImpl implements ConceptMap {
     private final com.vaticle.typedb.client.jni.ConceptMap concept_map;
+    private final int hash;
 
     public ConceptMapImpl(com.vaticle.typedb.client.jni.ConceptMap concept_map) {
         this.concept_map = concept_map;
+        this.hash = toString().hashCode();
     }
 
     @Override
@@ -86,20 +89,21 @@ public class ConceptMapImpl implements ConceptMap {
         if (obj == this) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         ConceptMapImpl that = (ConceptMapImpl) obj;
-        return this.concept_map == that.concept_map;
-        //return concept_map_equals(this.concept_map, that.concept_map);
+        return concept_map_equals(this.concept_map, that.concept_map);
     }
 
     @Override
     public int hashCode() {
-        return concept_map.hashCode();
+        return hash;
     }
 
     public static class ExplainablesImpl extends NativeObject implements Explainables {
         com.vaticle.typedb.client.jni.Explainables explainables;
+        private final int hash;
 
         ExplainablesImpl(com.vaticle.typedb.client.jni.Explainables explainables) {
             this.explainables = explainables;
+            this.hash = toString().hashCode();
         }
 
         @Override
@@ -144,16 +148,16 @@ public class ConceptMapImpl implements ConceptMap {
         }
 
         @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            ExplainablesImpl that = (ExplainablesImpl) o;
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            ExplainablesImpl that = (ExplainablesImpl) obj;
             return this.explainables == that.explainables;  // FIXME
         }
 
         @Override
         public int hashCode() {
-            return this.explainables.hashCode(); // FIXME
+            return hash;
         }
     }
 
@@ -175,11 +179,11 @@ public class ConceptMapImpl implements ConceptMap {
         }
 
         @Override
-        public boolean equals(final Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            final ExplainableImpl that = (ExplainableImpl) o;
-            return id() == that.id();
+        public boolean equals(final Object obj) {
+            if (this == obj) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            final ExplainableImpl that = (ExplainableImpl) obj;
+            return this.id() == that.id();
         }
 
         @Override
