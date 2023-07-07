@@ -34,7 +34,6 @@ import static com.vaticle.typedb.client.jni.typedb_client_jni.databases_get;
 import static java.util.stream.Collectors.toList;
 
 public class TypeDBDatabaseManagerImpl implements DatabaseManager {
-
     private final com.vaticle.typedb.client.jni.DatabaseManager databaseManager;
 
     public TypeDBDatabaseManagerImpl(com.vaticle.typedb.client.jni.Connection connection) {

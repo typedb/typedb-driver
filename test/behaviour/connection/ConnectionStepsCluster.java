@@ -73,17 +73,17 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     @Override
     @When("connection opens with default authentication")
     public void connection_opens_with_default_authentication() {
-        client = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address());
+        connection = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address());
     }
 
     @When("connection opens with authentication: {word}, {word}")
     public void connection_opens_with_authentication(String username, String password) {
-        if (client != null) {
-            client.close();
-            client = null;
+        if (connection != null) {
+            connection.close();
+            connection = null;
         }
 
-        client = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address(), username, password, false);
+        connection = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address(), username, password, false);
     }
 
     @When("connection opens with authentication: {word}, {word}; throws exception")

@@ -31,7 +31,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.client;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.connection;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.threadPool;
 import static com.vaticle.typedb.common.collection.Collections.list;
 import static com.vaticle.typedb.common.collection.Collections.set;
@@ -49,7 +49,7 @@ public class DatabaseSteps {
     @When("connection create database(s):")
     public void connection_create_databases(List<String> names) {
         for (String name : names) {
-            client.databases().create(name);
+            connection.databases().create(name);
         }
     }
 
@@ -58,7 +58,7 @@ public class DatabaseSteps {
         assertTrue(THREAD_POOL_SIZE >= names.size());
 
         CompletableFuture[] creations = names.stream()
-                .map(name -> CompletableFuture.runAsync(() -> client.databases().create(name), threadPool))
+                .map(name -> CompletableFuture.runAsync(() -> connection.databases().create(name), threadPool))
                 .toArray(CompletableFuture[]::new);
 
         CompletableFuture.allOf(creations).join();
@@ -72,7 +72,7 @@ public class DatabaseSteps {
     @When("connection delete database(s):")
     public void connection_delete_databases(List<String> names) {
         for (String databaseName : names) {
-            client.databases().get(databaseName).delete();
+            connection.databases().get(databaseName).delete();
         }
     }
 
@@ -85,7 +85,7 @@ public class DatabaseSteps {
     public void connection_delete_databases_throws_exception(List<String> names) {
         for (String databaseName : names) {
             try {
-                client.databases().get(databaseName).delete();
+                connection.databases().get(databaseName).delete();
                 fail();
             } catch (Exception e) {
                 // successfully failed
@@ -98,7 +98,7 @@ public class DatabaseSteps {
         assertTrue(THREAD_POOL_SIZE >= names.size());
 
         CompletableFuture[] deletions = names.stream()
-                .map(name -> CompletableFuture.runAsync(() -> client.databases().get(name).delete(), threadPool))
+                .map(name -> CompletableFuture.runAsync(() -> connection.databases().get(name).delete(), threadPool))
                 .toArray(CompletableFuture[]::new);
 
         CompletableFuture.allOf(deletions).join();
@@ -111,7 +111,7 @@ public class DatabaseSteps {
 
     @Then("connection has database(s):")
     public void connection_has_databases(List<String> names) {
-        assertEquals(set(names), client.databases().all().stream().map(Database::name).collect(Collectors.toSet()));
+        assertEquals(set(names), connection.databases().all().stream().map(Database::name).collect(Collectors.toSet()));
     }
 
     @Then("connection does not have database: {word}")
@@ -122,7 +122,7 @@ public class DatabaseSteps {
 
     @Then("connection does not have database(s):")
     public void connection_does_not_have_databases(List<String> names) {
-        Set<String> databases = client.databases().all().stream().map(Database::name).collect(Collectors.toSet());
+        Set<String> databases = connection.databases().all().stream().map(Database::name).collect(Collectors.toSet());
         for (String databaseName : names) {
             assertFalse(databases.contains(databaseName));
         }

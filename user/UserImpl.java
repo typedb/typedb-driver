@@ -22,21 +22,37 @@
 package com.vaticle.typedb.client.user;
 
 import com.vaticle.typedb.client.api.user.User;
+import com.vaticle.typedb.client.common.NativeObject;
 
-public class UserImpl implements User {
+import java.util.Optional;
 
-    private final String username;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.user_get_password_expiry_seconds;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.user_get_username;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.user_password_update;
 
-    public UserImpl(String username) {
-        this.username = username;
+public class UserImpl extends NativeObject implements User {
+    private final com.vaticle.typedb.client.jni.User user;
+    private final com.vaticle.typedb.client.jni.Connection connection;
+
+    public UserImpl(com.vaticle.typedb.client.jni.User user, com.vaticle.typedb.client.jni.Connection connection) {
+        this.user = user;
+        this.connection = connection;
     }
 
     @Override
     public String username() {
-        return username;
+        return user_get_username(user);
+    }
+
+    @Override
+    public Optional<Long> passwordExpirySeconds() {
+        var res = user_get_password_expiry_seconds(user);
+        if (res >= 0) return Optional.of(res);
+        else return Optional.empty();
     }
 
     @Override
     public void passwordUpdate(String passwordOld, String passwordNew) {
+        user_password_update(user, connection, passwordOld, passwordNew);
     }
 }

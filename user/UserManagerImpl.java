@@ -23,41 +23,56 @@ package com.vaticle.typedb.client.user;
 
 import com.vaticle.typedb.client.api.user.User;
 import com.vaticle.typedb.client.api.user.UserManager;
+import com.vaticle.typedb.client.common.NativeObject;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
-public class UserManagerImpl implements UserManager {
+import static com.vaticle.typedb.client.jni.typedb_client_jni.*;
 
-    static final String SYSTEM_DB = "_system";
+public class UserManagerImpl extends NativeObject implements UserManager {
+    private final com.vaticle.typedb.client.jni.UserManager userManager;
+    private final com.vaticle.typedb.client.jni.Connection connection;
 
     public UserManagerImpl(com.vaticle.typedb.client.jni.Connection connection) {
-        // TODO
+        this.userManager = user_manager_new(connection);
+        this.connection = connection;
     }
 
     @Override
     public boolean contains(String username) {
-        return false; // TODO
+        return users_contains(userManager, username);
     }
 
     @Override
     public void create(String username, String password) {
+        users_create(userManager, username, password);
     }
 
     @Override
     public void delete(String username) {
+        users_delete(userManager, username);
     }
 
     @Override
     public Set<User> all() {
-        return null; // TODO
+        return users_all(userManager).stream().map(user -> new UserImpl(user, connection)).collect(Collectors.toSet());
     }
 
     @Override
     public User get(String username) {
-        return null; // TODO
+        var user = users_get(userManager, username);
+        if (user != null) return new UserImpl(user, connection);
+        else return null;
+    }
+
+    @Override
+    public User getCurrentUser() {
+        return new UserImpl(users_current_user(userManager), connection);
     }
 
     @Override
     public void passwordSet(String username, String password) {
+        users_set_password(userManager, username, password);
     }
 }

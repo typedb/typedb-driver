@@ -33,7 +33,7 @@ java_library(
         "//concept:concept",
         "//logic:logic",
         "//query:query",
-#        "//user:user",
+        "//user:user",
 
         # External dependencies from @vaticle
         "@vaticle_typedb_client_rust//:typedb_client_jni",

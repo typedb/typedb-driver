@@ -26,8 +26,11 @@ import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.database.DatabaseManager;
+import com.vaticle.typedb.client.api.user.User;
+import com.vaticle.typedb.client.api.user.UserManager;
 import com.vaticle.typedb.client.common.NativeObject;
 import com.vaticle.typedb.client.jni.Error;
+import com.vaticle.typedb.client.user.UserManagerImpl;
 
 import java.util.Set;
 
@@ -37,7 +40,7 @@ import static com.vaticle.typedb.client.jni.typedb_client_jni.connection_open_pl
 public class TypeDBConnectionImpl extends NativeObject implements TypeDBConnection {
     private final com.vaticle.typedb.client.jni.Connection connection;
 
-    //private final UserManager userMgr;
+    private final UserManager userMgr;
     private final DatabaseManager databaseMgr;
     private boolean isOpen;
 
@@ -52,7 +55,7 @@ public class TypeDBConnectionImpl extends NativeObject implements TypeDBConnecti
     private TypeDBConnectionImpl(com.vaticle.typedb.client.jni.Connection connection) {
         this.connection = connection;
         databaseMgr = new TypeDBDatabaseManagerImpl(this.connection);
-        //userMgr = new UserManagerImpl(this.connection);
+        userMgr = new UserManagerImpl(this.connection);
         isOpen = true;
     }
 
@@ -61,15 +64,15 @@ public class TypeDBConnectionImpl extends NativeObject implements TypeDBConnecti
         return isOpen;
     }
 
-//    @Override
-//    public User user() {
-//        return users().get(credential.username());
-//    }
+    @Override
+    public User user() {
+        return users().getCurrentUser();
+    }
 
-//    @Override
-//    public UserManager users() {
-//        return userMgr;
-//    }
+    @Override
+    public UserManager users() {
+        return userMgr;
+    }
 
     @Override
     public DatabaseManager databases() {

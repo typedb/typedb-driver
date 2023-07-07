@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 import static com.vaticle.typedb.client.api.TypeDBSession.Type.DATA;
 import static com.vaticle.typedb.client.api.TypeDBSession.Type.SCHEMA;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.client;
+import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.connection;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.optionSetters;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessionOptions;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessions;
@@ -60,14 +60,14 @@ public class SessionSteps {
     @When("connection open schema session(s) for database(s):")
     public void connection_open_schema_sessions_for_databases(List<String> names) {
         for (String name : names) {
-            sessions.add(client.session(name, SCHEMA, sessionOptions));
+            sessions.add(connection.session(name, SCHEMA, sessionOptions));
         }
     }
 
     @When("connection open (data )session(s) for database(s):")
     public void connection_open_data_sessions_for_databases(List<String> names) {
         for (String name : names) {
-            sessions.add(client.session(name, DATA, sessionOptions));
+            sessions.add(connection.session(name, DATA, sessionOptions));
         }
     }
 
@@ -76,7 +76,7 @@ public class SessionSteps {
         assertTrue(THREAD_POOL_SIZE >= names.size());
 
         for (String name : names) {
-            sessionsParallel.add(CompletableFuture.supplyAsync(() -> client.session(name, DATA, sessionOptions), threadPool));
+            sessionsParallel.add(CompletableFuture.supplyAsync(() -> connection.session(name, DATA, sessionOptions), threadPool));
         }
     }
 
