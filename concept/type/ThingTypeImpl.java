@@ -68,7 +68,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
         if (concept_is_entity_type(concept)) return new EntityTypeImpl(concept);
         else if (concept_is_relation_type(concept)) return new RelationTypeImpl(concept);
         else if (concept_is_attribute_type(concept)) return new AttributeTypeImpl(concept);
-        else if (concept_is_root_thing_type(concept)) return new Root();
+        else if (concept_is_root_thing_type(concept)) return new Root(concept);
         return null; // FIXME throw
     }
 
@@ -253,8 +253,8 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     public static class Root extends ThingTypeImpl {
-        public Root() {
-            super(null);
+        public Root(com.vaticle.typedb.client.jni.Concept concept) {
+            super(concept);
         }
 
         @Override

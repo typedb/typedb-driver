@@ -56,7 +56,7 @@ public abstract class ConceptImpl extends NativeObject implements Concept {
         if (concept_is_entity_type(concept)) return new EntityTypeImpl(concept);
         else if (concept_is_relation_type(concept)) return new RelationTypeImpl(concept);
         else if (concept_is_attribute_type(concept)) return new AttributeTypeImpl(concept);
-        else if (concept_is_root_thing_type(concept)) return new ThingTypeImpl.Root();
+        else if (concept_is_root_thing_type(concept)) return new ThingTypeImpl.Root(concept);
         else if (concept_is_entity(concept)) return new EntityImpl(concept);
         else if (concept_is_relation(concept)) return new RelationImpl(concept);
         else if (concept_is_attribute(concept)) return new AttributeImpl(concept);
