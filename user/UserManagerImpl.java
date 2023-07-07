@@ -28,7 +28,14 @@ import com.vaticle.typedb.client.common.NativeObject;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.vaticle.typedb.client.jni.typedb_client_jni.*;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.user_manager_new;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.users_all;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.users_contains;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.users_create;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.users_current_user;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.users_delete;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.users_get;
+import static com.vaticle.typedb.client.jni.typedb_client_jni.users_set_password;
 
 public class UserManagerImpl extends NativeObject implements UserManager {
     private final com.vaticle.typedb.client.jni.UserManager userManager;
