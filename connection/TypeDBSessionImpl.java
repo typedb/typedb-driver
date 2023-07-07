@@ -29,9 +29,9 @@ import com.vaticle.typedb.client.jni.SessionType;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.vaticle.typedb.client.jni.typedb_client_jni.session_get_database_name;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.session_new;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.session_on_close;
+import static com.vaticle.typedb.client.jni.typedb_client.session_get_database_name;
+import static com.vaticle.typedb.client.jni.typedb_client.session_new;
+import static com.vaticle.typedb.client.jni.typedb_client.session_on_close;
 
 public class TypeDBSessionImpl implements TypeDBSession {
 

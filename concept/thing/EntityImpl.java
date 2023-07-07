@@ -24,7 +24,7 @@ package com.vaticle.typedb.client.concept.thing;
 import com.vaticle.typedb.client.api.concept.thing.Entity;
 import com.vaticle.typedb.client.concept.type.EntityTypeImpl;
 
-import static com.vaticle.typedb.client.jni.typedb_client_jni.entity_get_type;
+import static com.vaticle.typedb.client.jni.typedb_client.entity_get_type;
 
 public class EntityImpl extends ThingImpl implements Entity {
 

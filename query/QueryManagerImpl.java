@@ -44,16 +44,16 @@ import com.vaticle.typeql.lang.query.TypeQLUpdate;
 import java.util.stream.Stream;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.query_define;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.query_delete;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.query_explain;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.query_insert;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.query_match;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.query_match_aggregate;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.query_match_group;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.query_match_group_aggregate;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.query_undefine;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.query_update;
+import static com.vaticle.typedb.client.jni.typedb_client.query_define;
+import static com.vaticle.typedb.client.jni.typedb_client.query_delete;
+import static com.vaticle.typedb.client.jni.typedb_client.query_explain;
+import static com.vaticle.typedb.client.jni.typedb_client.query_insert;
+import static com.vaticle.typedb.client.jni.typedb_client.query_match;
+import static com.vaticle.typedb.client.jni.typedb_client.query_match_aggregate;
+import static com.vaticle.typedb.client.jni.typedb_client.query_match_group;
+import static com.vaticle.typedb.client.jni.typedb_client.query_match_group_aggregate;
+import static com.vaticle.typedb.client.jni.typedb_client.query_undefine;
+import static com.vaticle.typedb.client.jni.typedb_client.query_update;
 
 public final class QueryManagerImpl implements QueryManager {
 

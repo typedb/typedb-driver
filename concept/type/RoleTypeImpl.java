@@ -33,20 +33,20 @@ import com.vaticle.typedb.client.jni.Transitivity;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_delete;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_get_name;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_get_player_instances;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_get_player_types;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_get_relation_instances;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_get_relation_type;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_get_relation_types;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_get_scope;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_get_subtypes;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_get_supertype;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_get_supertypes;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_is_abstract;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_is_deleted;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.role_type_set_label;
+import static com.vaticle.typedb.client.jni.typedb_client.role_type_delete;
+import static com.vaticle.typedb.client.jni.typedb_client.role_type_get_name;
+import static com.vaticle.typedb.client.jni.typedb_client.role_type_get_player_instances;
+import static com.vaticle.typedb.client.jni.typedb_client.role_type_get_player_types;
+import static com.vaticle.typedb.client.jni.typedb_client.role_type_get_relation_instances;
+import static com.vaticle.typedb.client.jni.typedb_client.role_type_get_relation_type;
+import static com.vaticle.typedb.client.jni.typedb_client.role_type_get_relation_types;
+import static com.vaticle.typedb.client.jni.typedb_client.role_type_get_scope;
+import static com.vaticle.typedb.client.jni.typedb_client.role_type_get_subtypes;
+import static com.vaticle.typedb.client.jni.typedb_client.role_type_get_supertype;
+import static com.vaticle.typedb.client.jni.typedb_client.role_type_get_supertypes;
+import static com.vaticle.typedb.client.jni.typedb_client.role_type_is_abstract;
+import static com.vaticle.typedb.client.jni.typedb_client.role_type_is_deleted;
+import static com.vaticle.typedb.client.jni.typedb_client.role_type_set_label;
 
 public class RoleTypeImpl extends TypeImpl implements RoleType {
     public RoleTypeImpl(com.vaticle.typedb.client.jni.Concept concept) {

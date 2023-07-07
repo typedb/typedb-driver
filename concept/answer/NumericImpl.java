@@ -25,12 +25,12 @@ import com.vaticle.typedb.client.api.answer.Numeric;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.numeric_get_double;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.numeric_get_long;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.numeric_is_double;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.numeric_is_long;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.numeric_is_nan;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.numeric_to_string;
+import static com.vaticle.typedb.client.jni.typedb_client.numeric_get_double;
+import static com.vaticle.typedb.client.jni.typedb_client.numeric_get_long;
+import static com.vaticle.typedb.client.jni.typedb_client.numeric_is_double;
+import static com.vaticle.typedb.client.jni.typedb_client.numeric_is_long;
+import static com.vaticle.typedb.client.jni.typedb_client.numeric_is_nan;
+import static com.vaticle.typedb.client.jni.typedb_client.numeric_to_string;
 
 public class NumericImpl implements Numeric {
     private final com.vaticle.typedb.client.jni.Numeric numeric;

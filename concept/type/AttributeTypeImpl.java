@@ -34,19 +34,19 @@ import javax.annotation.Nullable;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.jni.typedb_client_jni.attribute_type_get;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.attribute_type_get_instances;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.attribute_type_get_owners;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.attribute_type_get_regex;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.attribute_type_get_subtypes;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.attribute_type_get_subtypes_with_value_type;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.attribute_type_get_supertype;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.attribute_type_get_supertypes;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.attribute_type_get_value_type;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.attribute_type_put;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.attribute_type_set_regex;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.attribute_type_set_supertype;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.attribute_type_unset_regex;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_get;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_get_instances;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_get_owners;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_get_regex;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_get_subtypes;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_get_subtypes_with_value_type;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_get_supertype;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_get_supertypes;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_get_value_type;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_put;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_set_regex;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_set_supertype;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_unset_regex;
 import static java.util.Collections.emptySet;
 
 public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {

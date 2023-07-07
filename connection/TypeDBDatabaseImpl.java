@@ -23,11 +23,11 @@ package com.vaticle.typedb.client.connection;
 
 import com.vaticle.typedb.client.api.database.Database;
 
-import static com.vaticle.typedb.client.jni.typedb_client_jni.database_delete;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.database_get_name;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.database_rule_schema;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.database_schema;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.database_type_schema;
+import static com.vaticle.typedb.client.jni.typedb_client.database_delete;
+import static com.vaticle.typedb.client.jni.typedb_client.database_get_name;
+import static com.vaticle.typedb.client.jni.typedb_client.database_rule_schema;
+import static com.vaticle.typedb.client.jni.typedb_client.database_schema;
+import static com.vaticle.typedb.client.jni.typedb_client.database_type_schema;
 
 public class TypeDBDatabaseImpl implements Database {
 

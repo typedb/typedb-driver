@@ -34,8 +34,8 @@ import com.vaticle.typedb.client.user.UserManagerImpl;
 
 import java.util.Set;
 
-import static com.vaticle.typedb.client.jni.typedb_client_jni.connection_open_encrypted;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.connection_open_plaintext;
+import static com.vaticle.typedb.client.jni.typedb_client.connection_open_encrypted;
+import static com.vaticle.typedb.client.jni.typedb_client.connection_open_plaintext;
 
 public class TypeDBConnectionImpl extends NativeObject implements TypeDBConnection {
     private final com.vaticle.typedb.client.jni.Connection connection;

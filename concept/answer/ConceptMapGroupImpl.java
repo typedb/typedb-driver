@@ -28,9 +28,9 @@ import com.vaticle.typedb.client.concept.ConceptImpl;
 
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_map_group_get_concept_maps;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_map_group_equals;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_map_group_get_owner;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_map_group_get_concept_maps;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_map_group_equals;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_map_group_get_owner;
 
 public class ConceptMapGroupImpl implements ConceptMapGroup {
     private final com.vaticle.typedb.client.jni.ConceptMapGroup concept_map_group;

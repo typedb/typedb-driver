@@ -28,12 +28,12 @@ import com.vaticle.typeql.lang.pattern.Conjunction;
 import com.vaticle.typeql.lang.pattern.Pattern;
 import com.vaticle.typeql.lang.pattern.variable.ThingVariable;
 
-import static com.vaticle.typedb.client.jni.typedb_client_jni.rule_delete;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.rule_get_label;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.rule_get_then;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.rule_get_when;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.rule_is_deleted;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.rule_set_label;
+import static com.vaticle.typedb.client.jni.typedb_client.rule_delete;
+import static com.vaticle.typedb.client.jni.typedb_client.rule_get_label;
+import static com.vaticle.typedb.client.jni.typedb_client.rule_get_then;
+import static com.vaticle.typedb.client.jni.typedb_client.rule_get_when;
+import static com.vaticle.typedb.client.jni.typedb_client.rule_is_deleted;
+import static com.vaticle.typedb.client.jni.typedb_client.rule_set_label;
 
 public class RuleImpl implements Rule {
     com.vaticle.typedb.client.jni.Rule rule;

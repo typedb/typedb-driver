@@ -30,12 +30,12 @@ import com.vaticle.typedb.client.jni.Transitivity;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.jni.typedb_client_jni.entity_type_create;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.entity_type_get_instances;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.entity_type_get_subtypes;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.entity_type_get_supertype;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.entity_type_get_supertypes;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.entity_type_set_supertype;
+import static com.vaticle.typedb.client.jni.typedb_client.entity_type_create;
+import static com.vaticle.typedb.client.jni.typedb_client.entity_type_get_instances;
+import static com.vaticle.typedb.client.jni.typedb_client.entity_type_get_subtypes;
+import static com.vaticle.typedb.client.jni.typedb_client.entity_type_get_supertype;
+import static com.vaticle.typedb.client.jni.typedb_client.entity_type_get_supertypes;
+import static com.vaticle.typedb.client.jni.typedb_client.entity_type_set_supertype;
 
 public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     public EntityTypeImpl(com.vaticle.typedb.client.jni.Concept concept) {

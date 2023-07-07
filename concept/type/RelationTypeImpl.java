@@ -31,17 +31,17 @@ import com.vaticle.typedb.client.jni.Transitivity;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.jni.typedb_client_jni.relation_type_create;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.relation_type_get_instances;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.relation_type_get_relates;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.relation_type_get_relates_for_role_label;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.relation_type_get_relates_overridden;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.relation_type_get_subtypes;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.relation_type_get_supertype;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.relation_type_get_supertypes;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.relation_type_set_relates;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.relation_type_set_supertype;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.relation_type_unset_relates;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_type_create;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_type_get_instances;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_type_get_relates;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_type_get_relates_for_role_label;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_type_get_relates_overridden;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_type_get_subtypes;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_type_get_supertype;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_type_get_supertypes;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_type_set_relates;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_type_set_supertype;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_type_unset_relates;
 
 public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     public RelationTypeImpl(com.vaticle.typedb.client.jni.Concept concept) {

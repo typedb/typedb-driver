@@ -41,15 +41,15 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concepts_get_attribute;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concepts_get_attribute_type;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concepts_get_entity;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concepts_get_entity_type;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concepts_get_relation;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concepts_get_relation_type;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concepts_put_attribute_type;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concepts_put_entity_type;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concepts_put_relation_type;
+import static com.vaticle.typedb.client.jni.typedb_client.concepts_get_attribute;
+import static com.vaticle.typedb.client.jni.typedb_client.concepts_get_attribute_type;
+import static com.vaticle.typedb.client.jni.typedb_client.concepts_get_entity;
+import static com.vaticle.typedb.client.jni.typedb_client.concepts_get_entity_type;
+import static com.vaticle.typedb.client.jni.typedb_client.concepts_get_relation;
+import static com.vaticle.typedb.client.jni.typedb_client.concepts_get_relation_type;
+import static com.vaticle.typedb.client.jni.typedb_client.concepts_put_attribute_type;
+import static com.vaticle.typedb.client.jni.typedb_client.concepts_put_entity_type;
+import static com.vaticle.typedb.client.jni.typedb_client.concepts_put_relation_type;
 
 public final class ConceptManagerImpl implements ConceptManager {
 

@@ -35,12 +35,12 @@ import com.vaticle.typedb.client.query.QueryManagerImpl;
 import java.util.function.Consumer;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.transaction_commit;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.transaction_is_open;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.transaction_new;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.transaction_on_close;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.transaction_force_close;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.transaction_rollback;
+import static com.vaticle.typedb.client.jni.typedb_client.transaction_commit;
+import static com.vaticle.typedb.client.jni.typedb_client.transaction_is_open;
+import static com.vaticle.typedb.client.jni.typedb_client.transaction_new;
+import static com.vaticle.typedb.client.jni.typedb_client.transaction_on_close;
+import static com.vaticle.typedb.client.jni.typedb_client.transaction_force_close;
+import static com.vaticle.typedb.client.jni.typedb_client.transaction_rollback;
 
 public class TypeDBTransactionImpl extends NativeObject implements TypeDBTransaction {
     public final com.vaticle.typedb.client.jni.Transaction transaction;

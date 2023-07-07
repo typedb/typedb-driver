@@ -26,8 +26,8 @@ import com.vaticle.typedb.client.api.answer.NumericGroup;
 import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.concept.ConceptImpl;
 
-import static com.vaticle.typedb.client.jni.typedb_client_jni.numeric_group_get_numeric;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.numeric_group_get_owner;
+import static com.vaticle.typedb.client.jni.typedb_client.numeric_group_get_numeric;
+import static com.vaticle.typedb.client.jni.typedb_client.numeric_group_get_owner;
 
 public class NumericGroupImpl implements NumericGroup {
     private final com.vaticle.typedb.client.jni.NumericGroup numericGroup;

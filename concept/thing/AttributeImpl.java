@@ -31,9 +31,9 @@ import com.vaticle.typedb.client.concept.type.ThingTypeImpl;
 
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.jni.typedb_client_jni.attribute_get_owners;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.attribute_get_type;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.attribute_get_value;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_get_owners;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_get_type;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_get_value;
 
 public class AttributeImpl extends ThingImpl implements Attribute {
     public AttributeImpl(com.vaticle.typedb.client.jni.Concept concept) {

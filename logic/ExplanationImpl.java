@@ -26,9 +26,9 @@ import com.vaticle.typedb.client.api.logic.Explanation;
 import com.vaticle.typedb.client.api.logic.Rule;
 import com.vaticle.typedb.client.concept.answer.ConceptMapImpl;
 
-import static com.vaticle.typedb.client.jni.typedb_client_jni.explanation_get_conclusion;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.explanation_get_condition;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.explanation_get_rule;
+import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_conclusion;
+import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_condition;
+import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_rule;
 
 public class ExplanationImpl implements Explanation {
     private final com.vaticle.typedb.client.jni.Explanation explanation;

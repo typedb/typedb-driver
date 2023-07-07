@@ -28,9 +28,9 @@ import com.vaticle.typeql.lang.pattern.Pattern;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.jni.typedb_client_jni.logic_manager_get_rule;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.logic_manager_get_rules;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.logic_manager_put_rule;
+import static com.vaticle.typedb.client.jni.typedb_client.logic_manager_get_rule;
+import static com.vaticle.typedb.client.jni.typedb_client.logic_manager_get_rules;
+import static com.vaticle.typedb.client.jni.typedb_client.logic_manager_put_rule;
 
 public final class LogicManagerImpl implements LogicManager {
 

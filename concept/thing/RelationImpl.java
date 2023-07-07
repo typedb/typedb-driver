@@ -37,14 +37,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.jni.typedb_client_jni.relation_add_role_player;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.relation_get_players_by_role_type;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.relation_get_relating;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.relation_get_role_players;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.relation_get_type;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.relation_remove_role_player;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.role_player_get_player;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.role_player_get_role_type;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_add_role_player;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_get_players_by_role_type;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_get_relating;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_get_role_players;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_get_type;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_remove_role_player;
+import static com.vaticle.typedb.client.jni.typedb_client.role_player_get_player;
+import static com.vaticle.typedb.client.jni.typedb_client.role_player_get_role_type;
 
 public class RelationImpl extends ThingImpl implements Relation {
 

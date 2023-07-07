@@ -29,21 +29,21 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.value_get_boolean;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.value_get_date_time_as_millis;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.value_get_double;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.value_get_long;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.value_get_string;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.value_is_boolean;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.value_is_date_time;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.value_is_double;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.value_is_long;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.value_is_string;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.value_new_boolean;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.value_new_date_time_from_millis;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.value_new_double;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.value_new_long;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.value_new_string;
+import static com.vaticle.typedb.client.jni.typedb_client.value_get_boolean;
+import static com.vaticle.typedb.client.jni.typedb_client.value_get_date_time_as_millis;
+import static com.vaticle.typedb.client.jni.typedb_client.value_get_double;
+import static com.vaticle.typedb.client.jni.typedb_client.value_get_long;
+import static com.vaticle.typedb.client.jni.typedb_client.value_get_string;
+import static com.vaticle.typedb.client.jni.typedb_client.value_is_boolean;
+import static com.vaticle.typedb.client.jni.typedb_client.value_is_date_time;
+import static com.vaticle.typedb.client.jni.typedb_client.value_is_double;
+import static com.vaticle.typedb.client.jni.typedb_client.value_is_long;
+import static com.vaticle.typedb.client.jni.typedb_client.value_is_string;
+import static com.vaticle.typedb.client.jni.typedb_client.value_new_boolean;
+import static com.vaticle.typedb.client.jni.typedb_client.value_new_date_time_from_millis;
+import static com.vaticle.typedb.client.jni.typedb_client.value_new_double;
+import static com.vaticle.typedb.client.jni.typedb_client.value_new_long;
+import static com.vaticle.typedb.client.jni.typedb_client.value_new_string;
 
 public class Value extends NativeObject {
     public com.vaticle.typedb.client.jni.Value value;

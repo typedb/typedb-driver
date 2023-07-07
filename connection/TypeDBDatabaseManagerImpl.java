@@ -26,11 +26,11 @@ import com.vaticle.typedb.client.api.database.DatabaseManager;
 
 import java.util.List;
 
-import static com.vaticle.typedb.client.jni.typedb_client_jni.database_manager_new;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.databases_all;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.databases_contains;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.databases_create;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.databases_get;
+import static com.vaticle.typedb.client.jni.typedb_client.database_manager_new;
+import static com.vaticle.typedb.client.jni.typedb_client.databases_all;
+import static com.vaticle.typedb.client.jni.typedb_client.databases_contains;
+import static com.vaticle.typedb.client.jni.typedb_client.databases_create;
+import static com.vaticle.typedb.client.jni.typedb_client.databases_get;
 import static java.util.stream.Collectors.toList;
 
 public class TypeDBDatabaseManagerImpl implements DatabaseManager {

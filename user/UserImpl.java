@@ -26,9 +26,9 @@ import com.vaticle.typedb.client.common.NativeObject;
 
 import java.util.Optional;
 
-import static com.vaticle.typedb.client.jni.typedb_client_jni.user_get_password_expiry_seconds;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.user_get_username;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.user_password_update;
+import static com.vaticle.typedb.client.jni.typedb_client.user_get_password_expiry_seconds;
+import static com.vaticle.typedb.client.jni.typedb_client.user_get_username;
+import static com.vaticle.typedb.client.jni.typedb_client.user_password_update;
 
 public class UserImpl extends NativeObject implements User {
     private final com.vaticle.typedb.client.jni.User user;

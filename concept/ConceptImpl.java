@@ -32,16 +32,16 @@ import com.vaticle.typedb.client.concept.type.RelationTypeImpl;
 import com.vaticle.typedb.client.concept.type.RoleTypeImpl;
 import com.vaticle.typedb.client.concept.type.ThingTypeImpl;
 
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_equals;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_to_string;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_is_attribute;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_is_attribute_type;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_is_entity;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_is_entity_type;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_is_relation;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_is_relation_type;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_is_role_type;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_is_root_thing_type;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_equals;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_to_string;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_is_attribute;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_is_attribute_type;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_is_entity;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_is_entity_type;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_is_relation;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_is_relation_type;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_is_role_type;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_is_root_thing_type;
 
 public abstract class ConceptImpl extends NativeObject implements Concept {
     public com.vaticle.typedb.client.jni.Concept concept;

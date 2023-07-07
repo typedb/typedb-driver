@@ -37,18 +37,18 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_is_attribute;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_is_entity;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.concept_is_relation;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.thing_delete;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.thing_get_has;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.thing_get_iid;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.thing_get_is_inferred;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.thing_get_playing;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.thing_get_relations;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.thing_is_deleted;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.thing_set_has;
-import static com.vaticle.typedb.client.jni.typedb_client_jni.thing_unset_has;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_is_attribute;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_is_entity;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_is_relation;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_delete;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_get_has;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_get_iid;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_get_is_inferred;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_get_playing;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_get_relations;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_is_deleted;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_set_has;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_unset_has;
 
 public abstract class ThingImpl extends ConceptImpl implements Thing {
 
