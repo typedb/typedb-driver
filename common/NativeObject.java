@@ -23,6 +23,6 @@ package com.vaticle.typedb.client.common;
 
 public abstract class NativeObject {
     static {
-        System.loadLibrary("typedb_client");
+        System.loadLibrary("typedb_client_jni");
     }
 }
