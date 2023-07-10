@@ -34,6 +34,7 @@ import static com.vaticle.typedb.client.jni.typedb_client.numeric_group_to_strin
 
 public class NumericGroupImpl extends NativeObject<com.vaticle.typedb.client.jni.NumericGroup> implements NumericGroup {
     private final int hash;
+
     public NumericGroupImpl(com.vaticle.typedb.client.jni.NumericGroup numericGroup) {
         super(numericGroup);
         this.hash = toString().hashCode();

@@ -28,7 +28,6 @@ import com.vaticle.typedb.client.api.concept.type.AttributeType;
 import com.vaticle.typedb.client.concept.ConceptManagerImpl;
 import com.vaticle.typedb.client.concept.thing.AttributeImpl;
 import com.vaticle.typedb.client.jni.Transitivity;
-import com.vaticle.typeql.lang.common.TypeQLToken;
 
 import javax.annotation.Nullable;
 import java.util.Set;
@@ -113,9 +112,9 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     }
 
     @Override
-    public Stream<ThingTypeImpl> getOwners(TypeDBTransaction transaction, Set<TypeQLToken.Annotation> annotations) {
-        return attribute_type_get_owners(((ConceptManagerImpl) transaction.concepts()).transaction,
-                nativeObject, Transitivity.Transitive, annotations.stream().map(TypeQLToken.Annotation::toString).toArray(String[]::new)).stream().map(ThingTypeImpl::of);
+    public Stream<ThingTypeImpl> getOwners(TypeDBTransaction transaction, Set<Annotation> annotations) {
+        com.vaticle.typedb.client.jni.Annotation[] annotationsArray = annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.client.jni.Annotation[]::new);
+        return attribute_type_get_owners(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, Transitivity.Transitive, annotationsArray).stream().map(ThingTypeImpl::of);
     }
 
     @Override
@@ -124,9 +123,9 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     }
 
     @Override
-    public Stream<ThingTypeImpl> getOwnersExplicit(TypeDBTransaction transaction, Set<TypeQLToken.Annotation> annotations) {
-        return attribute_type_get_owners(((ConceptManagerImpl) transaction.concepts()).transaction,
-                nativeObject, Transitivity.Explicit, annotations.stream().map(TypeQLToken.Annotation::toString).toArray(String[]::new)).stream().map(ThingTypeImpl::of);
+    public Stream<ThingTypeImpl> getOwnersExplicit(TypeDBTransaction transaction, Set<Annotation> annotations) {
+        com.vaticle.typedb.client.jni.Annotation[] annotationsArray = annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.client.jni.Annotation[]::new);
+        return attribute_type_get_owners(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, Transitivity.Explicit, annotationsArray).stream().map(ThingTypeImpl::of);
     }
 
     @Override

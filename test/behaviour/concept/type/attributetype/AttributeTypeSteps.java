@@ -23,7 +23,7 @@ package com.vaticle.typedb.client.test.behaviour.concept.type.attributetype;
 
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
 import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
-import com.vaticle.typeql.lang.common.TypeQLToken;
+import com.vaticle.typedb.client.api.concept.type.ThingType.Annotation;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -100,14 +100,14 @@ public class AttributeTypeSteps {
     }
 
     @Then("attribute\\( ?{type_label} ?) get owners, with annotations: {annotations}; contain:")
-    public void attribute_type_get_owners_with_annotations_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
+    public void attribute_type_get_owners_with_annotations_contain(String typeLabel, List<Annotation> annotations, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
         Set<String> actuals = attributeType.getOwners(tx(), set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(ownerLabels));
     }
 
     @Then("attribute\\( ?{type_label} ?) get owners, with annotations: {annotations}; do not contain:")
-    public void attribute_type_get_owners_with_annotations_do_not_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
+    public void attribute_type_get_owners_with_annotations_do_not_contain(String typeLabel, List<Annotation> annotations, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
         Set<String> actuals = attributeType.getOwners(tx(), set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
         for (String ownerLabel : ownerLabels) {
@@ -116,14 +116,14 @@ public class AttributeTypeSteps {
     }
 
     @Then("attribute\\( ?{type_label} ?) get owners explicit, with annotations: {annotations}; contain:")
-    public void attribute_type_get_owners_explicit_with_annotations_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
+    public void attribute_type_get_owners_explicit_with_annotations_contain(String typeLabel, List<Annotation> annotations, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
         Set<String> actuals = attributeType.getOwnersExplicit(tx(), set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
         assertTrue(actuals.containsAll(ownerLabels));
     }
 
     @Then("attribute\\( ?{type_label} ?) get owners explicit, with annotations: {annotations}; do not contain:")
-    public void attribute_type_get_owners_explicit_with_annotations_do_not_contain(String typeLabel, List<TypeQLToken.Annotation> annotations, List<String> ownerLabels) {
+    public void attribute_type_get_owners_explicit_with_annotations_do_not_contain(String typeLabel, List<Annotation> annotations, List<String> ownerLabels) {
         AttributeType attributeType = tx().concepts().getAttributeType(typeLabel);
         Set<String> actuals = attributeType.getOwnersExplicit(tx(), set(annotations)).map(t -> t.getLabel().name()).collect(toSet());
         for (String ownerLabel : ownerLabels) {

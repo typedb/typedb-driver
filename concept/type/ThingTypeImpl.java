@@ -23,13 +23,13 @@ package com.vaticle.typedb.client.concept.type;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
+import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
 import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
 import com.vaticle.typedb.client.common.Label;
 import com.vaticle.typedb.client.concept.ConceptManagerImpl;
 import com.vaticle.typedb.client.concept.thing.ThingImpl;
 import com.vaticle.typedb.client.jni.Transitivity;
-import com.vaticle.typedb.client.jni.ValueType;
 import com.vaticle.typeql.lang.common.TypeQLToken;
 
 import java.util.Set;
@@ -148,7 +148,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     @Override
-    public void setOwns(TypeDBTransaction transaction, AttributeType attributeType, Set<TypeQLToken.Annotation> annotations) {
+    public void setOwns(TypeDBTransaction transaction, AttributeType attributeType, Set<Annotation> annotations) {
         setOwns(transaction, attributeType, null, annotations);
     }
 
@@ -158,8 +158,10 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     @Override
-    public final void setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType, Set<TypeQLToken.Annotation> annotations) {
-        thing_type_set_owns(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, ((AttributeTypeImpl) attributeType).nativeObject, overriddenType != null ? ((AttributeTypeImpl) overriddenType).nativeObject : null, annotations.stream().map(TypeQLToken.Annotation::toString).toArray(String[]::new));
+    public final void setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType, Set<Annotation> annotations) {
+        com.vaticle.typedb.client.jni.Concept overriddenTypeNative = overriddenType != null ? ((AttributeTypeImpl) overriddenType).nativeObject : null;
+        com.vaticle.typedb.client.jni.Annotation[] annotationsArray = annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.client.jni.Annotation[]::new);
+        thing_type_set_owns(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, ((AttributeTypeImpl) attributeType).nativeObject, overriddenTypeNative, annotationsArray);
     }
 
     @Override
@@ -195,12 +197,12 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     @Override
-    public Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, Set<TypeQLToken.Annotation> annotations) {
+    public Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, Set<Annotation> annotations) {
         return getOwns(transaction, Transitivity.Transitive, annotations);
     }
 
     @Override
-    public final Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, ValueType valueType, Set<TypeQLToken.Annotation> annotations) {
+    public final Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, ValueType valueType, Set<Annotation> annotations) {
         return getOwns(transaction, valueType, Transitivity.Transitive, annotations);
     }
 
@@ -215,22 +217,23 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     @Override
-    public Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, Set<TypeQLToken.Annotation> annotations) {
+    public Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, Set<Annotation> annotations) {
         return getOwns(transaction, Transitivity.Explicit, annotations);
     }
 
     @Override
-    public Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, ValueType valueType, Set<TypeQLToken.Annotation> annotations) {
+    public Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, ValueType valueType, Set<Annotation> annotations) {
         return getOwns(transaction, valueType, Transitivity.Explicit, annotations);
     }
 
-    private Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, Transitivity transitivity, Set<TypeQLToken.Annotation> annotations) {
+    private Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, Transitivity transitivity, Set<Annotation> annotations) {
         return getOwns(transaction, null, transitivity, annotations);
     }
 
-    private Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, ValueType valueType, Transitivity transitivity, Set<TypeQLToken.Annotation> annotations) {
-        return thing_type_get_owns(((ConceptManagerImpl) transaction.concepts()).transaction,
-                nativeObject, valueType, transitivity, annotations.stream().map(TypeQLToken.Annotation::toString).toArray(String[]::new)).stream().map(AttributeTypeImpl::new);
+    private Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, ValueType valueType, Transitivity transitivity, Set<Annotation> annotations) {
+        return thing_type_get_owns(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, valueType == null ? null : valueType.asJNI(), transitivity,
+                annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.client.jni.Annotation[]::new)
+        ).stream().map(AttributeTypeImpl::new);
     }
 
     @Override

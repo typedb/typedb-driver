@@ -28,7 +28,7 @@ import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
 import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
-import com.vaticle.typeql.lang.common.TypeQLToken;
+import com.vaticle.typedb.client.api.concept.type.ThingType.Annotation;
 
 import javax.annotation.CheckReturnValue;
 import java.util.Set;
@@ -62,7 +62,7 @@ public interface Thing extends Concept {
     }
 
     @CheckReturnValue
-    Stream<? extends Attribute> getHas(TypeDBTransaction transaction, Set<TypeQLToken.Annotation> annotations);
+    Stream<? extends Attribute> getHas(TypeDBTransaction transaction, Set<Annotation> annotations);
 
     void setHas(TypeDBTransaction transaction, Attribute attribute);
 

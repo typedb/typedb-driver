@@ -23,12 +23,17 @@ package com.vaticle.typedb.client.api.concept.type;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.thing.Thing;
-import com.vaticle.typedb.client.jni.ValueType;
-import com.vaticle.typeql.lang.common.TypeQLToken;
+import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
+import com.vaticle.typedb.client.common.NativeObject;
 
 import javax.annotation.CheckReturnValue;
 import java.util.Set;
 import java.util.stream.Stream;
+
+import static com.vaticle.typedb.client.jni.typedb_client.annotation_equals;
+import static com.vaticle.typedb.client.jni.typedb_client.annotation_new_key;
+import static com.vaticle.typedb.client.jni.typedb_client.annotation_new_unique;
+import static com.vaticle.typedb.client.jni.typedb_client.annotation_to_string;
 
 public interface ThingType extends Type {
     @Override
@@ -73,11 +78,11 @@ public interface ThingType extends Type {
 
     void setPlays(TypeDBTransaction transaction, RoleType roleType, RoleType overriddenType);
 
-    void setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType, Set<TypeQLToken.Annotation> annotations);
+    void setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType, Set<Annotation> annotations);
 
     void setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType);
 
-    void setOwns(TypeDBTransaction transaction, AttributeType attributeType, Set<TypeQLToken.Annotation> annotations);
+    void setOwns(TypeDBTransaction transaction, AttributeType attributeType, Set<Annotation> annotations);
 
     void setOwns(TypeDBTransaction transaction, AttributeType attributeType);
 
@@ -97,10 +102,10 @@ public interface ThingType extends Type {
     Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, ValueType valueType);
 
     @CheckReturnValue
-    Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Set<TypeQLToken.Annotation> annotations);
+    Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Set<Annotation> annotations);
 
     @CheckReturnValue
-    Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, ValueType valueType, Set<TypeQLToken.Annotation> annotations);
+    Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, ValueType valueType, Set<Annotation> annotations);
 
     @CheckReturnValue
     Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction);
@@ -109,10 +114,10 @@ public interface ThingType extends Type {
     Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, ValueType valueType);
 
     @CheckReturnValue
-    Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, Set<TypeQLToken.Annotation> annotations);
+    Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, Set<Annotation> annotations);
 
     @CheckReturnValue
-    Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, ValueType valueType, Set<TypeQLToken.Annotation> annotations);
+    Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, ValueType valueType, Set<Annotation> annotations);
 
     @CheckReturnValue
     AttributeType getOwnsOverridden(TypeDBTransaction transaction, AttributeType attributeType);
@@ -123,4 +128,39 @@ public interface ThingType extends Type {
 
     @CheckReturnValue
     String getSyntax(TypeDBTransaction transaction);
+
+    public class Annotation extends NativeObject<com.vaticle.typedb.client.jni.Annotation> {
+        private final int hash;
+
+        private Annotation(com.vaticle.typedb.client.jni.Annotation annotation) {
+            super(annotation);
+            this.hash = toString().hashCode();
+        }
+
+        public static Annotation key() {
+            return new Annotation(annotation_new_key());
+        }
+
+        public static Annotation unique() {
+            return new Annotation(annotation_new_unique());
+        }
+
+        @Override
+        public String toString() {
+            return annotation_to_string(nativeObject);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            Annotation that = (Annotation) obj;
+            return annotation_equals(this.nativeObject, that.nativeObject);
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
+        }
+    }
 }

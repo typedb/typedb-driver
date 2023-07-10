@@ -60,7 +60,7 @@ import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStep
 import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
 import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrowsWithMessage;
 import static com.vaticle.typedb.common.collection.Collections.set;
-import static com.vaticle.typeql.lang.common.TypeQLToken.Annotation.KEY;
+import static com.vaticle.typedb.client.api.concept.type.ThingType.Annotation.key;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -588,7 +588,7 @@ public class TypeQLSteps {
                 return false;
             }
 
-            Set<Attribute> keys = concept.asThing().getHas(tx(), set(KEY)).collect(Collectors.toSet());
+            Set<Attribute> keys = concept.asThing().getHas(tx(), set(key())).collect(Collectors.toSet());
             HashMap<Label, String> keyMap = new HashMap<>();
 
             for (Attribute key : keys) {

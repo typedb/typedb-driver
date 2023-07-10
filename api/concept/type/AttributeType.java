@@ -25,7 +25,6 @@ import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.Value;
 import com.vaticle.typedb.client.api.concept.thing.Attribute;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typeql.lang.common.TypeQLToken;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -217,11 +216,11 @@ public interface AttributeType extends ThingType {
     Stream<? extends ThingType> getOwners(TypeDBTransaction transaction);
 
     @CheckReturnValue
-    Stream<? extends ThingType> getOwners(TypeDBTransaction transaction, Set<TypeQLToken.Annotation> annotations);
+    Stream<? extends ThingType> getOwners(TypeDBTransaction transaction, Set<Annotation> annotations);
 
     @CheckReturnValue
     Stream<? extends ThingType> getOwnersExplicit(TypeDBTransaction transaction);
 
     @CheckReturnValue
-    Stream<? extends ThingType> getOwnersExplicit(TypeDBTransaction transaction, Set<TypeQLToken.Annotation> annotations);
+    Stream<? extends ThingType> getOwnersExplicit(TypeDBTransaction transaction, Set<Annotation> annotations);
 }

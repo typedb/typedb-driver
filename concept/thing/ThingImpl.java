@@ -26,12 +26,12 @@ import com.vaticle.typedb.client.api.concept.thing.Attribute;
 import com.vaticle.typedb.client.api.concept.thing.Thing;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
 import com.vaticle.typedb.client.api.concept.type.RoleType;
+import com.vaticle.typedb.client.api.concept.type.ThingType.Annotation;
 import com.vaticle.typedb.client.concept.ConceptImpl;
 import com.vaticle.typedb.client.concept.ConceptManagerImpl;
 import com.vaticle.typedb.client.concept.type.AttributeTypeImpl;
 import com.vaticle.typedb.client.concept.type.RoleTypeImpl;
 import com.vaticle.typedb.client.concept.type.ThingTypeImpl;
-import com.vaticle.typeql.lang.common.TypeQLToken;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -82,25 +82,21 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
     }
 
     @Override
-    public String toString() {
-        return ""; // TODO
-    }
-
-    @Override
     public final Stream<AttributeImpl> getHas(TypeDBTransaction transaction, AttributeType... attributeTypes) {
-        return thing_get_has(((ConceptManagerImpl) transaction.concepts()).transaction,
-                nativeObject, Arrays.stream(attributeTypes).map(at -> ((AttributeTypeImpl) at).nativeObject).toArray(com.vaticle.typedb.client.jni.Concept[]::new), new String[0]).stream().map(AttributeImpl::new);
+        com.vaticle.typedb.client.jni.Concept[] attributeTypesArray = Arrays.stream(attributeTypes).map(at -> ((AttributeTypeImpl) at).nativeObject).toArray(com.vaticle.typedb.client.jni.Concept[]::new);
+        return thing_get_has(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, attributeTypesArray, new com.vaticle.typedb.client.jni.Annotation[0]).stream().map(AttributeImpl::new);
     }
 
     @Override
-    public final Stream<AttributeImpl> getHas(TypeDBTransaction transaction, Set<TypeQLToken.Annotation> annotations) {
-        return thing_get_has(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, new com.vaticle.typedb.client.jni.Concept[0], annotations.stream().map(TypeQLToken.Annotation::toString).toArray(String[]::new)).stream().map(AttributeImpl::new);
+    public final Stream<AttributeImpl> getHas(TypeDBTransaction transaction, Set<Annotation> annotations) {
+        com.vaticle.typedb.client.jni.Annotation[] annotationsArray = annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.client.jni.Annotation[]::new);
+        return thing_get_has(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, new com.vaticle.typedb.client.jni.Concept[0], annotationsArray).stream().map(AttributeImpl::new);
     }
 
     @Override
     public final Stream<RelationImpl> getRelations(TypeDBTransaction transaction, RoleType... roleTypes) {
-        return thing_get_relations(((ConceptManagerImpl) transaction.concepts()).transaction,
-                nativeObject, Arrays.stream(roleTypes).map(rt -> ((RoleTypeImpl) rt).nativeObject).toArray(com.vaticle.typedb.client.jni.Concept[]::new)).stream().map(RelationImpl::new);
+        com.vaticle.typedb.client.jni.Concept[] roleTypesArray = Arrays.stream(roleTypes).map(rt -> ((RoleTypeImpl) rt).nativeObject).toArray(com.vaticle.typedb.client.jni.Concept[]::new);
+        return thing_get_relations(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, roleTypesArray).stream().map(RelationImpl::new);
     }
 
     @Override
