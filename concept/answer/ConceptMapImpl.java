@@ -41,47 +41,48 @@ import static com.vaticle.typedb.client.jni.typedb_client.concept_map_get_variab
 import static com.vaticle.typedb.client.jni.typedb_client.concept_map_to_string;
 import static com.vaticle.typedb.client.jni.typedb_client.explainable_get_conjunction;
 import static com.vaticle.typedb.client.jni.typedb_client.explainable_get_id;
+import static com.vaticle.typedb.client.jni.typedb_client.explainables_equals;
 import static com.vaticle.typedb.client.jni.typedb_client.explainables_get_attribute;
 import static com.vaticle.typedb.client.jni.typedb_client.explainables_get_attributes_keys;
 import static com.vaticle.typedb.client.jni.typedb_client.explainables_get_ownership;
 import static com.vaticle.typedb.client.jni.typedb_client.explainables_get_ownerships_keys;
 import static com.vaticle.typedb.client.jni.typedb_client.explainables_get_relation;
 import static com.vaticle.typedb.client.jni.typedb_client.explainables_get_relations_keys;
+import static com.vaticle.typedb.client.jni.typedb_client.explainables_to_string;
 
-public class ConceptMapImpl implements ConceptMap {
-    private final com.vaticle.typedb.client.jni.ConceptMap concept_map;
+public class ConceptMapImpl extends NativeObject<com.vaticle.typedb.client.jni.ConceptMap> implements ConceptMap {
     private final int hash;
 
     public ConceptMapImpl(com.vaticle.typedb.client.jni.ConceptMap concept_map) {
-        this.concept_map = concept_map;
+        super(concept_map);
         this.hash = toString().hashCode();
     }
 
     @Override
     public Stream<String> variables() {
-        return concept_map_get_variables(concept_map).stream();
+        return concept_map_get_variables(nativeObject).stream();
     }
 
     @Override
     public Stream<Concept> concepts() {
-        return concept_map_get_values(concept_map).stream().map(ConceptImpl::of);
+        return concept_map_get_values(nativeObject).stream().map(ConceptImpl::of);
     }
 
     @Override
     public Concept get(String variable) {
-        com.vaticle.typedb.client.jni.Concept concept = concept_map_get(concept_map, variable);
+        com.vaticle.typedb.client.jni.Concept concept = concept_map_get(nativeObject, variable);
         if (concept == null) throw new TypeDBClientException(VARIABLE_DOES_NOT_EXIST, variable);
         return ConceptImpl.of(concept);
     }
 
     @Override
     public Explainables explainables() {
-        return new ExplainablesImpl(concept_map_get_explainables(concept_map));
+        return new ExplainablesImpl(concept_map_get_explainables(nativeObject));
     }
 
     @Override
     public String toString() {
-        return concept_map_to_string(concept_map);
+        return concept_map_to_string(nativeObject);
     }
 
     @Override
@@ -89,7 +90,7 @@ public class ConceptMapImpl implements ConceptMap {
         if (obj == this) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         ConceptMapImpl that = (ConceptMapImpl) obj;
-        return concept_map_equals(this.concept_map, that.concept_map);
+        return concept_map_equals(this.nativeObject, that.nativeObject);
     }
 
     @Override
@@ -97,32 +98,31 @@ public class ConceptMapImpl implements ConceptMap {
         return hash;
     }
 
-    public static class ExplainablesImpl extends NativeObject implements Explainables {
-        com.vaticle.typedb.client.jni.Explainables explainables;
+    public static class ExplainablesImpl extends NativeObject<com.vaticle.typedb.client.jni.Explainables> implements Explainables {
         private final int hash;
 
         ExplainablesImpl(com.vaticle.typedb.client.jni.Explainables explainables) {
-            this.explainables = explainables;
+            super(explainables);
             this.hash = toString().hashCode();
         }
 
         @Override
         public Explainable relation(String variable) {
-            com.vaticle.typedb.client.jni.Explainable explainable = explainables_get_relation(explainables, variable);
+            com.vaticle.typedb.client.jni.Explainable explainable = explainables_get_relation(nativeObject, variable);
             if (explainable == null) throw new TypeDBClientException(NONEXISTENT_EXPLAINABLE_CONCEPT, variable);
             return new ExplainableImpl(explainable);
         }
 
         @Override
         public Explainable attribute(String variable) {
-            com.vaticle.typedb.client.jni.Explainable explainable = explainables_get_attribute(explainables, variable);
+            com.vaticle.typedb.client.jni.Explainable explainable = explainables_get_attribute(nativeObject, variable);
             if (explainable == null) throw new TypeDBClientException(NONEXISTENT_EXPLAINABLE_CONCEPT, variable);
             return new ExplainableImpl(explainable);
         }
 
         @Override
         public Explainable ownership(String owner, String attribute) {
-            com.vaticle.typedb.client.jni.Explainable explainable = explainables_get_ownership(explainables, owner, attribute);
+            com.vaticle.typedb.client.jni.Explainable explainable = explainables_get_ownership(nativeObject, owner, attribute);
             if (explainable == null)
                 throw new TypeDBClientException(NONEXISTENT_EXPLAINABLE_OWNERSHIP, owner, attribute);
             return new ExplainableImpl(explainable);
@@ -130,17 +130,17 @@ public class ConceptMapImpl implements ConceptMap {
 
         @Override
         public Stream<Pair<String, Explainable>> relations() {
-            return explainables_get_relations_keys(explainables).stream().map(k -> new Pair<>(k, relation(k)));
+            return explainables_get_relations_keys(nativeObject).stream().map(k -> new Pair<>(k, relation(k)));
         }
 
         @Override
         public Stream<Pair<String, Explainable>> attributes() {
-            return explainables_get_attributes_keys(explainables).stream().map(k -> new Pair<>(k, attribute(k)));
+            return explainables_get_attributes_keys(nativeObject).stream().map(k -> new Pair<>(k, attribute(k)));
         }
 
         @Override
         public Stream<Pair<Pair<String, String>, Explainable>> ownerships() {
-            return explainables_get_ownerships_keys(explainables).stream().map(pair -> {
+            return explainables_get_ownerships_keys(nativeObject).stream().map(pair -> {
                 String owner = pair.get_0();
                 String attribute = pair.get_1();
                 return new Pair<>(new Pair<>(owner, attribute), ownership(owner, attribute));
@@ -148,11 +148,16 @@ public class ConceptMapImpl implements ConceptMap {
         }
 
         @Override
+        public String toString() {
+            return explainables_to_string(nativeObject);
+        }
+
+        @Override
         public boolean equals(Object obj) {
             if (this == obj) return true;
             if (obj == null || getClass() != obj.getClass()) return false;
             ExplainablesImpl that = (ExplainablesImpl) obj;
-            return this.explainables == that.explainables;  // FIXME
+            return explainables_equals(this.nativeObject, that.nativeObject);
         }
 
         @Override
@@ -161,21 +166,19 @@ public class ConceptMapImpl implements ConceptMap {
         }
     }
 
-    static class ExplainableImpl extends NativeObject implements Explainable {
-        com.vaticle.typedb.client.jni.Explainable explainable;
-
+    static class ExplainableImpl extends NativeObject<com.vaticle.typedb.client.jni.Explainable> implements Explainable {
         public ExplainableImpl(com.vaticle.typedb.client.jni.Explainable explainable) {
-            this.explainable = explainable;
+            super(explainable);
         }
 
         @Override
         public String conjunction() {
-            return explainable_get_conjunction(explainable);
+            return explainable_get_conjunction(nativeObject);
         }
 
         @Override
         public long id() {
-            return explainable_get_id(explainable);
+            return explainable_get_id(nativeObject);
         }
 
         @Override

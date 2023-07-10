@@ -24,31 +24,37 @@ package com.vaticle.typedb.client.concept.answer;
 import com.vaticle.typedb.client.api.answer.ConceptMap;
 import com.vaticle.typedb.client.api.answer.ConceptMapGroup;
 import com.vaticle.typedb.client.api.concept.Concept;
+import com.vaticle.typedb.client.common.NativeObject;
 import com.vaticle.typedb.client.concept.ConceptImpl;
 
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.jni.typedb_client.concept_map_group_get_concept_maps;
 import static com.vaticle.typedb.client.jni.typedb_client.concept_map_group_equals;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_map_group_get_concept_maps;
 import static com.vaticle.typedb.client.jni.typedb_client.concept_map_group_get_owner;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_map_group_to_string;
 
-public class ConceptMapGroupImpl implements ConceptMapGroup {
-    private final com.vaticle.typedb.client.jni.ConceptMapGroup concept_map_group;
+public class ConceptMapGroupImpl extends NativeObject<com.vaticle.typedb.client.jni.ConceptMapGroup> implements ConceptMapGroup {
     private final int hash;
 
     public ConceptMapGroupImpl(com.vaticle.typedb.client.jni.ConceptMapGroup concept_map_group) {
-        this.concept_map_group = concept_map_group;
+        super(concept_map_group);
         this.hash = toString().hashCode();
     }
 
     @Override
     public Concept owner() {
-        return ConceptImpl.of(concept_map_group_get_owner(concept_map_group));
+        return ConceptImpl.of(concept_map_group_get_owner(nativeObject));
     }
 
     @Override
     public Stream<ConceptMap> conceptMaps() {
-        return concept_map_group_get_concept_maps(concept_map_group).stream().map(ConceptMapImpl::new);
+        return concept_map_group_get_concept_maps(nativeObject).stream().map(ConceptMapImpl::new);
+    }
+
+    @Override
+    public String toString() {
+        return concept_map_group_to_string(nativeObject);
     }
 
     @Override
@@ -56,7 +62,7 @@ public class ConceptMapGroupImpl implements ConceptMapGroup {
         if (obj == this) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         ConceptMapGroupImpl that = (ConceptMapGroupImpl) obj;
-        return concept_map_group_equals(this.concept_map_group, that.concept_map_group);
+        return concept_map_group_equals(this.nativeObject, that.nativeObject);
     }
 
     @Override

@@ -24,9 +24,12 @@ package com.vaticle.typedb.client.api;
 import com.vaticle.typedb.client.api.concept.ConceptManager;
 import com.vaticle.typedb.client.api.logic.LogicManager;
 import com.vaticle.typedb.client.api.query.QueryManager;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 import java.util.function.Consumer;
 import javax.annotation.CheckReturnValue;
+
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 
 public interface TypeDBTransaction extends AutoCloseable {
     @CheckReturnValue
@@ -67,11 +70,20 @@ public interface TypeDBTransaction extends AutoCloseable {
             this.isWrite = id == 1;
         }
 
-        public static Type of(int value) {
-            for (Type t : values()) {
-                if (t.id == value) return t;
+        public static Type of(com.vaticle.typedb.client.jni.TransactionType transactionType) {
+            switch (transactionType) {
+                case Read: return READ;
+                case Write: return WRITE;
             }
-            return null;
+            throw new TypeDBClientException(BAD_VALUE_TYPE);
+        }
+
+        public com.vaticle.typedb.client.jni.TransactionType asJNI() {
+            switch (this) {
+                case READ: return com.vaticle.typedb.client.jni.TransactionType.Read;
+                case WRITE: return com.vaticle.typedb.client.jni.TransactionType.Write;
+            }
+            throw new TypeDBClientException(BAD_VALUE_TYPE);
         }
 
         public int id() {

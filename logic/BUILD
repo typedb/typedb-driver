@@ -29,6 +29,7 @@ java_library(
     deps = [
         # Internal dependencies
         "//api:api",
+        "//common:common",
         "//concept:concept",
 
         # External dependencies from @vaticle

@@ -24,6 +24,7 @@ package com.vaticle.typedb.client.logic;
 import com.vaticle.typedb.client.api.answer.ConceptMap;
 import com.vaticle.typedb.client.api.logic.Explanation;
 import com.vaticle.typedb.client.api.logic.Rule;
+import com.vaticle.typedb.client.common.NativeObject;
 import com.vaticle.typedb.client.concept.answer.ConceptMapImpl;
 
 import static com.vaticle.typedb.client.jni.typedb_client.explanation_equals;
@@ -32,28 +33,27 @@ import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_condit
 import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_rule;
 import static com.vaticle.typedb.client.jni.typedb_client.explanation_to_string;
 
-public class ExplanationImpl implements Explanation {
-    private final com.vaticle.typedb.client.jni.Explanation explanation;
+public class ExplanationImpl extends NativeObject<com.vaticle.typedb.client.jni.Explanation> implements Explanation {
     private final int hash;
 
     public ExplanationImpl(com.vaticle.typedb.client.jni.Explanation explanation) {
-        this.explanation = explanation;
+        super(explanation);
         this.hash = toString().hashCode();
     }
 
     @Override
     public Rule rule() {
-        return new RuleImpl(explanation_get_rule(explanation));
+        return new RuleImpl(explanation_get_rule(nativeObject));
     }
 
     @Override
     public ConceptMap conclusion() {
-        return new ConceptMapImpl(explanation_get_conclusion(explanation));
+        return new ConceptMapImpl(explanation_get_conclusion(nativeObject));
     }
 
     @Override
     public ConceptMap condition() {
-        return new ConceptMapImpl(explanation_get_condition(explanation));
+        return new ConceptMapImpl(explanation_get_condition(nativeObject));
     }
 
     @Override
@@ -61,12 +61,12 @@ public class ExplanationImpl implements Explanation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final ExplanationImpl that = (ExplanationImpl) o;
-        return explanation_equals(this.explanation, that.explanation);
+        return explanation_equals(this.nativeObject, that.nativeObject);
     }
 
     @Override
     public String toString() {
-        return explanation_to_string(explanation);
+        return explanation_to_string(nativeObject);
     }
 
     @Override

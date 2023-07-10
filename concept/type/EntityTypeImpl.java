@@ -44,44 +44,44 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
     @Override
     public final EntityImpl create(TypeDBTransaction transaction) {
-        return new EntityImpl(entity_type_create(((ConceptManagerImpl) transaction.concepts()).transaction, concept));
+        return new EntityImpl(entity_type_create(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject));
     }
 
     @Override
     public final void setSupertype(TypeDBTransaction transaction, EntityType entityType) {
-        entity_type_set_supertype(((ConceptManagerImpl) transaction.concepts()).transaction, concept, ((EntityTypeImpl) entityType).concept);
+        entity_type_set_supertype(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, ((EntityTypeImpl) entityType).nativeObject);
     }
 
     @Nullable
     @Override
     public EntityTypeImpl getSupertype(TypeDBTransaction transaction) {
-        com.vaticle.typedb.client.jni.Concept res = entity_type_get_supertype(((ConceptManagerImpl) transaction.concepts()).transaction, concept);
+        com.vaticle.typedb.client.jni.Concept res = entity_type_get_supertype(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject);
         if (res != null) return new EntityTypeImpl(res);
         else return null;
     }
 
     @Override
     public final Stream<EntityTypeImpl> getSupertypes(TypeDBTransaction transaction) {
-        return entity_type_get_supertypes(((ConceptManagerImpl) transaction.concepts()).transaction, concept).stream().map(EntityTypeImpl::new);
+        return entity_type_get_supertypes(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject).stream().map(EntityTypeImpl::new);
     }
 
     @Override
     public final Stream<EntityTypeImpl> getSubtypes(TypeDBTransaction transaction) {
-        return entity_type_get_subtypes(((ConceptManagerImpl) transaction.concepts()).transaction, concept, Transitivity.Transitive).stream().map(EntityTypeImpl::new);
+        return entity_type_get_subtypes(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, Transitivity.Transitive).stream().map(EntityTypeImpl::new);
     }
 
     @Override
     public final Stream<EntityTypeImpl> getSubtypesExplicit(TypeDBTransaction transaction) {
-        return entity_type_get_subtypes(((ConceptManagerImpl) transaction.concepts()).transaction, concept, Transitivity.Explicit).stream().map(EntityTypeImpl::new);
+        return entity_type_get_subtypes(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, Transitivity.Explicit).stream().map(EntityTypeImpl::new);
     }
 
     @Override
     public final Stream<EntityImpl> getInstances(TypeDBTransaction transaction) {
-        return entity_type_get_instances(((ConceptManagerImpl) transaction.concepts()).transaction, concept, Transitivity.Transitive).stream().map(EntityImpl::new);
+        return entity_type_get_instances(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, Transitivity.Transitive).stream().map(EntityImpl::new);
     }
 
     @Override
     public final Stream<EntityImpl> getInstancesExplicit(TypeDBTransaction transaction) {
-        return entity_type_get_instances(((ConceptManagerImpl) transaction.concepts()).transaction, concept, Transitivity.Explicit).stream().map(EntityImpl::new);
+        return entity_type_get_instances(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, Transitivity.Explicit).stream().map(EntityImpl::new);
     }
 }

@@ -29,6 +29,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
+import static com.vaticle.typedb.client.jni.typedb_client.value_equals;
 import static com.vaticle.typedb.client.jni.typedb_client.value_get_boolean;
 import static com.vaticle.typedb.client.jni.typedb_client.value_get_date_time_as_millis;
 import static com.vaticle.typedb.client.jni.typedb_client.value_get_double;
@@ -45,11 +46,12 @@ import static com.vaticle.typedb.client.jni.typedb_client.value_new_double;
 import static com.vaticle.typedb.client.jni.typedb_client.value_new_long;
 import static com.vaticle.typedb.client.jni.typedb_client.value_new_string;
 
-public class Value extends NativeObject {
-    public com.vaticle.typedb.client.jni.Value value;
+public class Value extends NativeObject<com.vaticle.typedb.client.jni.Value> {
+    private final int hash;
 
     public Value(com.vaticle.typedb.client.jni.Value value) {
-        this.value = value;
+        super(value);
+        this.hash = toString().hashCode();
     }
 
     public static Value of(boolean value) {
@@ -73,43 +75,43 @@ public class Value extends NativeObject {
     }
 
     public boolean isBoolean() {
-        return value_is_boolean(value);
+        return value_is_boolean(nativeObject);
     }
 
     public boolean isLong() {
-        return value_is_long(value);
+        return value_is_long(nativeObject);
     }
 
     public boolean isDouble() {
-        return value_is_double(value);
+        return value_is_double(nativeObject);
     }
 
     public boolean isString() {
-        return value_is_string(value);
+        return value_is_string(nativeObject);
     }
 
     public boolean isDateTime() {
-        return value_is_date_time(value);
+        return value_is_date_time(nativeObject);
     }
 
     public boolean asBoolean() {
-        return value_get_boolean(value);
+        return value_get_boolean(nativeObject);
     }
 
     public long asLong() {
-        return value_get_long(value);
+        return value_get_long(nativeObject);
     }
 
     public double asDouble() {
-        return value_get_double(value);
+        return value_get_double(nativeObject);
     }
 
     public String asString() {
-        return value_get_string(value);
+        return value_get_string(nativeObject);
     }
 
     public LocalDateTime asDateTime() {
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(value_get_date_time_as_millis(value)), ZoneOffset.UTC);
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(value_get_date_time_as_millis(nativeObject)), ZoneOffset.UTC);
     }
 
     @Override
@@ -120,5 +122,18 @@ public class Value extends NativeObject {
         else if (isString()) return asString();
         else if (isDateTime()) return asDateTime().toString();
         throw new TypeDBClientException(BAD_VALUE_TYPE, "");
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Value that = (Value) obj;
+        return value_equals(this.nativeObject, that.nativeObject);
+    }
+
+    @Override
+    public int hashCode() {
+        return hash;
     }
 }

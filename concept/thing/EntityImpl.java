@@ -34,7 +34,7 @@ public class EntityImpl extends ThingImpl implements Entity {
 
     @Override
     public EntityTypeImpl getType() {
-        return new EntityTypeImpl(entity_get_type(concept));
+        return new EntityTypeImpl(entity_get_type(nativeObject));
     }
 
     @Override

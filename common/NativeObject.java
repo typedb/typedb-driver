@@ -21,8 +21,14 @@
 
 package com.vaticle.typedb.client.common;
 
-public abstract class NativeObject {
+public abstract class NativeObject<T> {
     static {
         System.loadLibrary("typedb_client_jni");
+    }
+
+    public T nativeObject;
+
+    protected NativeObject(T nativeObject) {
+        this.nativeObject = nativeObject;
     }
 }

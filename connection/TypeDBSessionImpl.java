@@ -25,6 +25,7 @@ import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.database.Database;
+import com.vaticle.typedb.client.common.NativeObject;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -32,14 +33,13 @@ import static com.vaticle.typedb.client.jni.typedb_client.session_get_database_n
 import static com.vaticle.typedb.client.jni.typedb_client.session_new;
 import static com.vaticle.typedb.client.jni.typedb_client.session_on_close;
 
-public class TypeDBSessionImpl implements TypeDBSession {
-    public com.vaticle.typedb.client.jni.Session session;
+public class TypeDBSessionImpl extends NativeObject<com.vaticle.typedb.client.jni.Session> implements TypeDBSession {
     private final Type type;
     private final TypeDBOptions options;
     private final AtomicBoolean isOpen;
 
     TypeDBSessionImpl(Database database, Type type, TypeDBOptions options) {
-        this.session = session_new(((TypeDBDatabaseImpl) database).database.released(), type.asJNI(), options.options);
+        super(session_new(((TypeDBDatabaseImpl) database).nativeObject.released(), type.asJNI(), options.nativeObject));
         this.type = type;
         this.options = options;
         isOpen = new AtomicBoolean(true);
@@ -57,7 +57,7 @@ public class TypeDBSessionImpl implements TypeDBSession {
 
     @Override
     public String database_name() {
-        return session_get_database_name(session);
+        return session_get_database_name(nativeObject);
     }
 
     @Override
@@ -77,14 +77,14 @@ public class TypeDBSessionImpl implements TypeDBSession {
 
     @Override
     public void onClose(Runnable function) {
-        session_on_close(session, new Callback(function).released());
+        session_on_close(nativeObject, new Callback(function).released());
     }
 
     @Override
     public void close() {
         if (isOpen.compareAndSet(true, false)) {
-            session.delete();
-            session = null;
+            nativeObject.delete();
+            nativeObject = null;
         }
     }
 

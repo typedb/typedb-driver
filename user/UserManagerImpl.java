@@ -37,49 +37,48 @@ import static com.vaticle.typedb.client.jni.typedb_client.users_delete;
 import static com.vaticle.typedb.client.jni.typedb_client.users_get;
 import static com.vaticle.typedb.client.jni.typedb_client.users_set_password;
 
-public class UserManagerImpl extends NativeObject implements UserManager {
-    private final com.vaticle.typedb.client.jni.UserManager userManager;
+public class UserManagerImpl extends NativeObject<com.vaticle.typedb.client.jni.UserManager> implements UserManager {
     private final com.vaticle.typedb.client.jni.Connection connection;
 
     public UserManagerImpl(com.vaticle.typedb.client.jni.Connection connection) {
-        this.userManager = user_manager_new(connection);
+        super(user_manager_new(connection));
         this.connection = connection;
     }
 
     @Override
     public boolean contains(String username) {
-        return users_contains(userManager, username);
+        return users_contains(nativeObject, username);
     }
 
     @Override
     public void create(String username, String password) {
-        users_create(userManager, username, password);
+        users_create(nativeObject, username, password);
     }
 
     @Override
     public void delete(String username) {
-        users_delete(userManager, username);
+        users_delete(nativeObject, username);
     }
 
     @Override
     public Set<User> all() {
-        return users_all(userManager).stream().map(user -> new UserImpl(user, connection)).collect(Collectors.toSet());
+        return users_all(nativeObject).stream().map(user -> new UserImpl(user, connection)).collect(Collectors.toSet());
     }
 
     @Override
     public User get(String username) {
-        var user = users_get(userManager, username);
+        var user = users_get(nativeObject, username);
         if (user != null) return new UserImpl(user, connection);
         else return null;
     }
 
     @Override
     public User getCurrentUser() {
-        return new UserImpl(users_current_user(userManager), connection);
+        return new UserImpl(users_current_user(nativeObject), connection);
     }
 
     @Override
     public void passwordSet(String username, String password) {
-        users_set_password(userManager, username, password);
+        users_set_password(nativeObject, username, password);
     }
 }

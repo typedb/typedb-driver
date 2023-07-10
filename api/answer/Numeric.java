@@ -37,7 +37,7 @@ public interface Numeric {
     long asLong();
 
     @CheckReturnValue
-    Double asDouble();
+    double asDouble();
 
     @CheckReturnValue
     Number asNumber();

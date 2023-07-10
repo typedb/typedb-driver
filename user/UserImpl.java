@@ -30,29 +30,28 @@ import static com.vaticle.typedb.client.jni.typedb_client.user_get_password_expi
 import static com.vaticle.typedb.client.jni.typedb_client.user_get_username;
 import static com.vaticle.typedb.client.jni.typedb_client.user_password_update;
 
-public class UserImpl extends NativeObject implements User {
-    private final com.vaticle.typedb.client.jni.User user;
+public class UserImpl extends NativeObject<com.vaticle.typedb.client.jni.User> implements User {
     private final com.vaticle.typedb.client.jni.Connection connection;
 
     public UserImpl(com.vaticle.typedb.client.jni.User user, com.vaticle.typedb.client.jni.Connection connection) {
-        this.user = user;
+        super(user);
         this.connection = connection;
     }
 
     @Override
     public String username() {
-        return user_get_username(user);
+        return user_get_username(nativeObject);
     }
 
     @Override
     public Optional<Long> passwordExpirySeconds() {
-        var res = user_get_password_expiry_seconds(user);
+        var res = user_get_password_expiry_seconds(nativeObject);
         if (res >= 0) return Optional.of(res);
         else return Optional.empty();
     }
 
     @Override
     public void passwordUpdate(String passwordOld, String passwordNew) {
-        user_password_update(user, connection, passwordOld, passwordNew);
+        user_password_update(nativeObject, connection, passwordOld, passwordNew);
     }
 }

@@ -42,21 +42,21 @@ public class AttributeImpl extends ThingImpl implements Attribute {
 
     @Override
     public AttributeTypeImpl getType() {
-        return new AttributeTypeImpl(attribute_get_type(concept));
+        return new AttributeTypeImpl(attribute_get_type(nativeObject));
     }
 
     @Override
     public Value getValue() {
-        return new Value(attribute_get_value(concept));
+        return new Value(attribute_get_value(nativeObject));
     }
 
     @Override
     public final Stream<ThingImpl> getOwners(TypeDBTransaction transaction) {
-        return attribute_get_owners(((ConceptManagerImpl) transaction.concepts()).transaction, concept, null).stream().map(ThingImpl::of);
+        return attribute_get_owners(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, null).stream().map(ThingImpl::of);
     }
 
     @Override
     public Stream<ThingImpl> getOwners(TypeDBTransaction transaction, ThingType ownerType) {
-        return attribute_get_owners(((ConceptManagerImpl) transaction.concepts()).transaction, concept, ((ThingTypeImpl) ownerType).concept).stream().map(ThingImpl::of);
+        return attribute_get_owners(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, ((ThingTypeImpl) ownerType).nativeObject).stream().map(ThingImpl::of);
     }
 }

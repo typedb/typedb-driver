@@ -50,27 +50,29 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
     @Override
     public final RelationImpl create(TypeDBTransaction transaction) {
-        return new RelationImpl(relation_type_create(((ConceptManagerImpl) transaction.concepts()).transaction, concept));
+        return new RelationImpl(relation_type_create(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject));
     }
 
     @Override
     public final void setSupertype(TypeDBTransaction transaction, RelationType relationType) {
-        relation_type_set_supertype(((ConceptManagerImpl) transaction.concepts()).transaction, concept, ((RelationTypeImpl) relationType).concept);
+        relation_type_set_supertype(((ConceptManagerImpl) transaction.concepts()).transaction,
+                nativeObject, ((RelationTypeImpl) relationType).nativeObject);
     }
 
     @Override
     public final Stream<RoleTypeImpl> getRelates(TypeDBTransaction transaction) {
-        return relation_type_get_relates(((ConceptManagerImpl) transaction.concepts()).transaction, concept, Transitivity.Transitive).stream().map(RoleTypeImpl::new);
+        return relation_type_get_relates(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, Transitivity.Transitive).stream().map(RoleTypeImpl::new);
     }
 
     @Override
     public final Stream<RoleTypeImpl> getRelatesExplicit(TypeDBTransaction transaction) {
-        return relation_type_get_relates(((ConceptManagerImpl) transaction.concepts()).transaction, concept, Transitivity.Explicit).stream().map(RoleTypeImpl::new);
+        return relation_type_get_relates(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, Transitivity.Explicit).stream().map(RoleTypeImpl::new);
     }
 
     @Override
     public final RoleTypeImpl getRelates(TypeDBTransaction transaction, String roleLabel) {
-        com.vaticle.typedb.client.jni.Concept res = relation_type_get_relates_for_role_label(((ConceptManagerImpl) transaction.concepts()).transaction, concept, roleLabel);
+        com.vaticle.typedb.client.jni.Concept res = relation_type_get_relates_for_role_label(((ConceptManagerImpl) transaction.concepts()).transaction,
+                nativeObject, roleLabel);
         if (res != null) return new RoleTypeImpl(res);
         else return null;
     }
@@ -83,7 +85,8 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
     @Override
     public final RoleTypeImpl getRelatesOverridden(TypeDBTransaction transaction, String roleLabel) {
-        com.vaticle.typedb.client.jni.Concept res = relation_type_get_relates_overridden(((ConceptManagerImpl) transaction.concepts()).transaction, concept, roleLabel);
+        com.vaticle.typedb.client.jni.Concept res = relation_type_get_relates_overridden(((ConceptManagerImpl) transaction.concepts()).transaction,
+                nativeObject, roleLabel);
         if (res != null) return new RoleTypeImpl(res);
         else return null;
     }
@@ -100,49 +103,50 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
     @Override
     public final void setRelates(TypeDBTransaction transaction, String roleLabel, String overriddenLabel) {
-        relation_type_set_relates(((ConceptManagerImpl) transaction.concepts()).transaction, concept, roleLabel, overriddenLabel);
+        relation_type_set_relates(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, roleLabel, overriddenLabel);
     }
 
     @Override
     public void unsetRelates(TypeDBTransaction transaction, RoleType roleType) {
-        relation_type_unset_relates(((ConceptManagerImpl) transaction.concepts()).transaction, concept, roleType.getLabel().name());
+        relation_type_unset_relates(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, roleType.getLabel().name());
     }
 
     @Override
     public final void unsetRelates(TypeDBTransaction transaction, String roleLabel) {
-        relation_type_unset_relates(((ConceptManagerImpl) transaction.concepts()).transaction, concept, roleLabel);
+        relation_type_unset_relates(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, roleLabel);
     }
 
     @Nullable
     @Override
     public RelationTypeImpl getSupertype(TypeDBTransaction transaction) {
-        com.vaticle.typedb.client.jni.Concept res = relation_type_get_supertype(((ConceptManagerImpl) transaction.concepts()).transaction, concept);
+        com.vaticle.typedb.client.jni.Concept res = relation_type_get_supertype(((ConceptManagerImpl) transaction.concepts()).transaction,
+                nativeObject);
         if (res != null) return new RelationTypeImpl(res);
         else return null;
     }
 
     @Override
     public final Stream<RelationTypeImpl> getSupertypes(TypeDBTransaction transaction) {
-        return relation_type_get_supertypes(((ConceptManagerImpl) transaction.concepts()).transaction, concept).stream().map(RelationTypeImpl::new);
+        return relation_type_get_supertypes(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject).stream().map(RelationTypeImpl::new);
     }
 
     @Override
     public final Stream<RelationTypeImpl> getSubtypes(TypeDBTransaction transaction) {
-        return relation_type_get_subtypes(((ConceptManagerImpl) transaction.concepts()).transaction, concept, Transitivity.Transitive).stream().map(RelationTypeImpl::new);
+        return relation_type_get_subtypes(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, Transitivity.Transitive).stream().map(RelationTypeImpl::new);
     }
 
     @Override
     public final Stream<RelationTypeImpl> getSubtypesExplicit(TypeDBTransaction transaction) {
-        return relation_type_get_subtypes(((ConceptManagerImpl) transaction.concepts()).transaction, concept, Transitivity.Explicit).stream().map(RelationTypeImpl::new);
+        return relation_type_get_subtypes(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, Transitivity.Explicit).stream().map(RelationTypeImpl::new);
     }
 
     @Override
     public final Stream<RelationImpl> getInstances(TypeDBTransaction transaction) {
-        return relation_type_get_instances(((ConceptManagerImpl) transaction.concepts()).transaction, concept, Transitivity.Transitive).stream().map(RelationImpl::new);
+        return relation_type_get_instances(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, Transitivity.Transitive).stream().map(RelationImpl::new);
     }
 
     @Override
     public final Stream<RelationImpl> getInstancesExplicit(TypeDBTransaction transaction) {
-        return relation_type_get_instances(((ConceptManagerImpl) transaction.concepts()).transaction, concept, Transitivity.Explicit).stream().map(RelationImpl::new);
+        return relation_type_get_instances(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, Transitivity.Explicit).stream().map(RelationImpl::new);
     }
 }

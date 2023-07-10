@@ -54,28 +54,31 @@ public class RelationImpl extends ThingImpl implements Relation {
 
     @Override
     public RelationTypeImpl getType() {
-        return new RelationTypeImpl(relation_get_type(concept));
+        return new RelationTypeImpl(relation_get_type(nativeObject));
     }
 
     @Override
     public void addPlayer(TypeDBTransaction transaction, RoleType roleType, Thing player) {
-        relation_add_role_player(((ConceptManagerImpl) transaction.concepts()).transaction, concept, ((RoleTypeImpl) roleType).concept, ((ThingImpl) player).concept);
+        relation_add_role_player(((ConceptManagerImpl) transaction.concepts()).transaction,
+                nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((ThingImpl) player).nativeObject);
     }
 
     @Override
     public void removePlayer(TypeDBTransaction transaction, RoleType roleType, Thing player) {
-        relation_remove_role_player(((ConceptManagerImpl) transaction.concepts()).transaction, concept, ((RoleTypeImpl) roleType).concept, ((ThingImpl) player).concept);
+        relation_remove_role_player(((ConceptManagerImpl) transaction.concepts()).transaction,
+                nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((ThingImpl) player).nativeObject);
     }
 
     @Override
     public Stream<ThingImpl> getPlayers(TypeDBTransaction transaction, RoleType... roleTypes) {
-        return relation_get_players_by_role_type(((ConceptManagerImpl) transaction.concepts()).transaction, concept, Arrays.stream(roleTypes).map(rt -> ((RoleTypeImpl) rt).concept).toArray(com.vaticle.typedb.client.jni.Concept[]::new)).stream().map(ThingImpl::of);
+        return relation_get_players_by_role_type(((ConceptManagerImpl) transaction.concepts()).transaction,
+                nativeObject, Arrays.stream(roleTypes).map(rt -> ((RoleTypeImpl) rt).nativeObject).toArray(com.vaticle.typedb.client.jni.Concept[]::new)).stream().map(ThingImpl::of);
     }
 
     @Override
     public Map<RoleTypeImpl, List<ThingImpl>> getPlayersByRoleType(TypeDBTransaction transaction) {
         Map<RoleTypeImpl, List<ThingImpl>> rolePlayerMap = new HashMap<>();
-        relation_get_role_players(((ConceptManagerImpl) transaction.concepts()).transaction, concept).stream().forEach(rolePlayer -> {
+        relation_get_role_players(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject).stream().forEach(rolePlayer -> {
             RoleTypeImpl role = new RoleTypeImpl(role_player_get_role_type(rolePlayer));
             ThingImpl player = ThingImpl.of(role_player_get_player(rolePlayer));
             if (rolePlayerMap.containsKey(role)) rolePlayerMap.get(role).add(player);
@@ -86,6 +89,6 @@ public class RelationImpl extends ThingImpl implements Relation {
 
     @Override
     public Stream<? extends RoleType> getRelating(TypeDBTransaction transaction) {
-        return relation_get_relating(((ConceptManagerImpl) transaction.concepts()).transaction, concept).stream().map(RoleTypeImpl::new);
+        return relation_get_relating(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject).stream().map(RoleTypeImpl::new);
     }
 }

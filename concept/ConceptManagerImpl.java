@@ -38,7 +38,6 @@ import com.vaticle.typedb.client.concept.type.RelationTypeImpl;
 import com.vaticle.typeql.lang.common.TypeQLToken;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,7 +55,6 @@ import static com.vaticle.typedb.client.jni.typedb_client.schema_exception_code;
 import static com.vaticle.typedb.client.jni.typedb_client.schema_exception_message;
 
 public final class ConceptManagerImpl implements ConceptManager {
-
     public final com.vaticle.typedb.client.jni.Transaction transaction;
 
     public ConceptManagerImpl(com.vaticle.typedb.client.jni.Transaction transaction) {

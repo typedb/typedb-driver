@@ -43,12 +43,11 @@ import static com.vaticle.typedb.client.jni.typedb_client.concept_is_relation_ty
 import static com.vaticle.typedb.client.jni.typedb_client.concept_is_role_type;
 import static com.vaticle.typedb.client.jni.typedb_client.concept_is_root_thing_type;
 
-public abstract class ConceptImpl extends NativeObject implements Concept {
-    public com.vaticle.typedb.client.jni.Concept concept;
+public abstract class ConceptImpl extends NativeObject<com.vaticle.typedb.client.jni.Concept> implements Concept {
     private final int hash;
 
     protected ConceptImpl(com.vaticle.typedb.client.jni.Concept concept) {
-        this.concept = concept;
+        super(concept);
         this.hash = toString().hashCode();
     }
 
@@ -66,7 +65,7 @@ public abstract class ConceptImpl extends NativeObject implements Concept {
 
     @Override
     public String toString() {
-        return concept_to_string(concept);
+        return concept_to_string(nativeObject);
     }
 
     @Override
@@ -74,7 +73,7 @@ public abstract class ConceptImpl extends NativeObject implements Concept {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         ConceptImpl that = (ConceptImpl) obj;
-        return concept_equals(this.concept, that.concept);
+        return concept_equals(this.nativeObject, that.nativeObject);
     }
 
     @Override

@@ -37,9 +37,7 @@ import java.util.Set;
 import static com.vaticle.typedb.client.jni.typedb_client.connection_open_encrypted;
 import static com.vaticle.typedb.client.jni.typedb_client.connection_open_plaintext;
 
-public class TypeDBConnectionImpl extends NativeObject implements TypeDBConnection {
-    private final com.vaticle.typedb.client.jni.Connection connection;
-
+public class TypeDBConnectionImpl extends NativeObject<com.vaticle.typedb.client.jni.Connection> implements TypeDBConnection {
     private final UserManager userMgr;
     private final DatabaseManager databaseMgr;
     private boolean isOpen;
@@ -49,13 +47,13 @@ public class TypeDBConnectionImpl extends NativeObject implements TypeDBConnecti
     }
 
     public TypeDBConnectionImpl(Set<String> initAddresses, TypeDBCredential credential) throws Error {
-        this(connection_open_encrypted(initAddresses.toArray(new String[0]), credential.credential));
+        this(connection_open_encrypted(initAddresses.toArray(new String[0]), credential.nativeObject));
     }
 
     private TypeDBConnectionImpl(com.vaticle.typedb.client.jni.Connection connection) {
-        this.connection = connection;
-        databaseMgr = new TypeDBDatabaseManagerImpl(this.connection);
-        userMgr = new UserManagerImpl(this.connection);
+        super(connection);
+        databaseMgr = new TypeDBDatabaseManagerImpl(this.nativeObject);
+        userMgr = new UserManagerImpl(this.nativeObject);
         isOpen = true;
     }
 
@@ -92,6 +90,6 @@ public class TypeDBConnectionImpl extends NativeObject implements TypeDBConnecti
     @Override
     public void close() {
         isOpen = false;
-        connection.delete();
+        nativeObject.delete();
     }
 }

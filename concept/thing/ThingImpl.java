@@ -65,7 +65,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
 
     @Override
     public final String getIID() {
-        return thing_get_iid(concept);
+        return thing_get_iid(nativeObject);
     }
 
     @Override
@@ -73,7 +73,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
 
     @Override
     public boolean isInferred() {
-        return thing_get_is_inferred(concept);
+        return thing_get_is_inferred(nativeObject);
     }
 
     @Override
@@ -88,41 +88,43 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
 
     @Override
     public final Stream<AttributeImpl> getHas(TypeDBTransaction transaction, AttributeType... attributeTypes) {
-        return thing_get_has(((ConceptManagerImpl) transaction.concepts()).transaction, concept, Arrays.stream(attributeTypes).map(at -> ((AttributeTypeImpl) at).concept).toArray(com.vaticle.typedb.client.jni.Concept[]::new), new String[0]).stream().map(AttributeImpl::new);
+        return thing_get_has(((ConceptManagerImpl) transaction.concepts()).transaction,
+                nativeObject, Arrays.stream(attributeTypes).map(at -> ((AttributeTypeImpl) at).nativeObject).toArray(com.vaticle.typedb.client.jni.Concept[]::new), new String[0]).stream().map(AttributeImpl::new);
     }
 
     @Override
     public final Stream<AttributeImpl> getHas(TypeDBTransaction transaction, Set<TypeQLToken.Annotation> annotations) {
-        return thing_get_has(((ConceptManagerImpl) transaction.concepts()).transaction, concept, new com.vaticle.typedb.client.jni.Concept[0], annotations.stream().map(TypeQLToken.Annotation::toString).toArray(String[]::new)).stream().map(AttributeImpl::new);
+        return thing_get_has(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, new com.vaticle.typedb.client.jni.Concept[0], annotations.stream().map(TypeQLToken.Annotation::toString).toArray(String[]::new)).stream().map(AttributeImpl::new);
     }
 
     @Override
     public final Stream<RelationImpl> getRelations(TypeDBTransaction transaction, RoleType... roleTypes) {
-        return thing_get_relations(((ConceptManagerImpl) transaction.concepts()).transaction, concept, Arrays.stream(roleTypes).map(rt -> ((RoleTypeImpl) rt).concept).toArray(com.vaticle.typedb.client.jni.Concept[]::new)).stream().map(RelationImpl::new);
+        return thing_get_relations(((ConceptManagerImpl) transaction.concepts()).transaction,
+                nativeObject, Arrays.stream(roleTypes).map(rt -> ((RoleTypeImpl) rt).nativeObject).toArray(com.vaticle.typedb.client.jni.Concept[]::new)).stream().map(RelationImpl::new);
     }
 
     @Override
     public final Stream<RoleTypeImpl> getPlaying(TypeDBTransaction transaction) {
-        return thing_get_playing(((ConceptManagerImpl) transaction.concepts()).transaction, concept).stream().map(RoleTypeImpl::new);
+        return thing_get_playing(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject).stream().map(RoleTypeImpl::new);
     }
 
     @Override
     public final void setHas(TypeDBTransaction transaction, Attribute attribute) {
-        thing_set_has(((ConceptManagerImpl) transaction.concepts()).transaction, concept, ((AttributeImpl) attribute).concept);
+        thing_set_has(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, ((AttributeImpl) attribute).nativeObject);
     }
 
     @Override
     public final void unsetHas(TypeDBTransaction transaction, Attribute attribute) {
-        thing_unset_has(((ConceptManagerImpl) transaction.concepts()).transaction, concept, ((AttributeImpl) attribute).concept);
+        thing_unset_has(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, ((AttributeImpl) attribute).nativeObject);
     }
 
     @Override
     public final void delete(TypeDBTransaction transaction) {
-        thing_delete(((ConceptManagerImpl) transaction.concepts()).transaction, concept);
+        thing_delete(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject);
     }
 
     @Override
     public final boolean isDeleted(TypeDBTransaction transaction) {
-        return thing_is_deleted(((ConceptManagerImpl) transaction.concepts()).transaction, concept);
+        return thing_is_deleted(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject);
     }
 }

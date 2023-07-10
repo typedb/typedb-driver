@@ -60,71 +60,69 @@ import static com.vaticle.typedb.client.jni.typedb_client.options_set_session_id
 import static com.vaticle.typedb.client.jni.typedb_client.options_set_trace_inference;
 import static com.vaticle.typedb.client.jni.typedb_client.options_set_transaction_timeout_millis;
 
-public class TypeDBOptions extends NativeObject {
-    public final com.vaticle.typedb.client.jni.Options options;
-
+public class TypeDBOptions extends NativeObject<com.vaticle.typedb.client.jni.Options> {
     public TypeDBOptions() {
-        options = options_new();
+        super(options_new());
     }
 
     @CheckReturnValue
     public Optional<Boolean> infer() {
-        if (options_has_infer(options)) return Optional.of(options_get_infer(options));
+        if (options_has_infer(nativeObject)) return Optional.of(options_get_infer(nativeObject));
         return Optional.empty();
     }
 
     public TypeDBOptions infer(boolean infer) {
-        options_set_infer(options, infer);
+        options_set_infer(nativeObject, infer);
         return this;
     }
 
     @CheckReturnValue
     public Optional<Boolean> traceInference() {
-        if (options_has_trace_inference(options)) return Optional.of(options_get_trace_inference(options));
+        if (options_has_trace_inference(nativeObject)) return Optional.of(options_get_trace_inference(nativeObject));
         return Optional.empty();
     }
 
     public TypeDBOptions traceInference(boolean traceInference) {
-        options_set_trace_inference(options, traceInference);
+        options_set_trace_inference(nativeObject, traceInference);
         return this;
     }
 
     @CheckReturnValue
     public Optional<Boolean> explain() {
-        if (options_has_explain(options)) return Optional.of(options_get_explain(options));
+        if (options_has_explain(nativeObject)) return Optional.of(options_get_explain(nativeObject));
         return Optional.empty();
     }
 
     public TypeDBOptions explain(boolean explain) {
-        options_set_explain(options, explain);
+        options_set_explain(nativeObject, explain);
         return this;
     }
 
     @CheckReturnValue
     public Optional<Boolean> parallel() {
-        if (options_has_parallel(options)) return Optional.of(options_get_parallel(options));
+        if (options_has_parallel(nativeObject)) return Optional.of(options_get_parallel(nativeObject));
         return Optional.empty();
     }
 
     public TypeDBOptions parallel(boolean parallel) {
-        options_set_parallel(options, parallel);
+        options_set_parallel(nativeObject, parallel);
         return this;
     }
 
     @CheckReturnValue
     public Optional<Boolean> prefetch() {
-        if (options_has_prefetch(options)) return Optional.of(options_get_prefetch(options));
+        if (options_has_prefetch(nativeObject)) return Optional.of(options_get_prefetch(nativeObject));
         else return Optional.empty();
     }
 
     public TypeDBOptions prefetch(boolean prefetch) {
-        options_set_prefetch(options, prefetch);
+        options_set_prefetch(nativeObject, prefetch);
         return this;
     }
 
     @CheckReturnValue
     public Optional<Integer> prefetchSize() {
-        if (options_has_prefetch_size(options)) return Optional.of(options_get_prefetch_size(options));
+        if (options_has_prefetch_size(nativeObject)) return Optional.of(options_get_prefetch_size(nativeObject));
         return Optional.empty();
     }
 
@@ -132,14 +130,14 @@ public class TypeDBOptions extends NativeObject {
         if (prefetchSize < 1) {
             throw new TypeDBClientException(NEGATIVE_VALUE_NOT_ALLOWED, prefetchSize);
         }
-        options_set_prefetch_size(options, prefetchSize);
+        options_set_prefetch_size(nativeObject, prefetchSize);
         return this;
     }
 
     @CheckReturnValue
     public Optional<Integer> sessionIdleTimeoutMillis() {
-        if (options_has_session_idle_timeout_millis(options))
-            return Optional.of((int) options_get_session_idle_timeout_millis(options));
+        if (options_has_session_idle_timeout_millis(nativeObject))
+            return Optional.of((int) options_get_session_idle_timeout_millis(nativeObject));
         return Optional.empty();
     }
 
@@ -147,14 +145,14 @@ public class TypeDBOptions extends NativeObject {
         if (sessionIdleTimeoutMillis < 1) {
             throw new TypeDBClientException(NEGATIVE_VALUE_NOT_ALLOWED, sessionIdleTimeoutMillis);
         }
-        options_set_session_idle_timeout_millis(options, sessionIdleTimeoutMillis);
+        options_set_session_idle_timeout_millis(nativeObject, sessionIdleTimeoutMillis);
         return this;
     }
 
     @CheckReturnValue
     public Optional<Integer> schemaLockAcquireTimeoutMillis() {
-        if (options_has_transaction_timeout_millis(options))
-            return Optional.of((int) options_get_transaction_timeout_millis(options));
+        if (options_has_transaction_timeout_millis(nativeObject))
+            return Optional.of((int) options_get_transaction_timeout_millis(nativeObject));
         return Optional.empty();
     }
 
@@ -162,13 +160,13 @@ public class TypeDBOptions extends NativeObject {
         if (transactionTimeoutMillis < 1) {
             throw new TypeDBClientException(NEGATIVE_VALUE_NOT_ALLOWED, transactionTimeoutMillis);
         }
-        options_set_transaction_timeout_millis(options, transactionTimeoutMillis);
+        options_set_transaction_timeout_millis(nativeObject, transactionTimeoutMillis);
         return this;
     }
 
     public Optional<Integer> transactionTimeoutMillis() {
-        if (options_has_schema_lock_acquire_timeout_millis(options))
-            return Optional.of((int) options_get_schema_lock_acquire_timeout_millis(options));
+        if (options_has_schema_lock_acquire_timeout_millis(nativeObject))
+            return Optional.of((int) options_get_schema_lock_acquire_timeout_millis(nativeObject));
         return Optional.empty();
     }
 
@@ -176,18 +174,18 @@ public class TypeDBOptions extends NativeObject {
         if (schemaLockAcquireTimeoutMillis < 1) {
             throw new TypeDBClientException(NEGATIVE_VALUE_NOT_ALLOWED, schemaLockAcquireTimeoutMillis);
         }
-        options_set_schema_lock_acquire_timeout_millis(options, schemaLockAcquireTimeoutMillis);
+        options_set_schema_lock_acquire_timeout_millis(nativeObject, schemaLockAcquireTimeoutMillis);
         return this;
     }
 
     @CheckReturnValue
     public Optional<Boolean> readAnyReplica() {
-        if (options_has_read_any_replica(options)) return Optional.of(options_get_read_any_replica(options));
+        if (options_has_read_any_replica(nativeObject)) return Optional.of(options_get_read_any_replica(nativeObject));
         return Optional.empty();
     }
 
     public TypeDBOptions readAnyReplica(boolean readAnyReplica) {
-        options_set_read_any_replica(options, readAnyReplica);
+        options_set_read_any_replica(nativeObject, readAnyReplica);
         return this;
     }
 }

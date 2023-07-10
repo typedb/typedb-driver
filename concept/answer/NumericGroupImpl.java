@@ -24,26 +24,34 @@ package com.vaticle.typedb.client.concept.answer;
 import com.vaticle.typedb.client.api.answer.Numeric;
 import com.vaticle.typedb.client.api.answer.NumericGroup;
 import com.vaticle.typedb.client.api.concept.Concept;
+import com.vaticle.typedb.client.common.NativeObject;
 import com.vaticle.typedb.client.concept.ConceptImpl;
 
+import static com.vaticle.typedb.client.jni.typedb_client.numeric_group_equals;
 import static com.vaticle.typedb.client.jni.typedb_client.numeric_group_get_numeric;
 import static com.vaticle.typedb.client.jni.typedb_client.numeric_group_get_owner;
+import static com.vaticle.typedb.client.jni.typedb_client.numeric_group_to_string;
 
-public class NumericGroupImpl implements NumericGroup {
-    private final com.vaticle.typedb.client.jni.NumericGroup numericGroup;
-
+public class NumericGroupImpl extends NativeObject<com.vaticle.typedb.client.jni.NumericGroup> implements NumericGroup {
+    private final int hash;
     public NumericGroupImpl(com.vaticle.typedb.client.jni.NumericGroup numericGroup) {
-        this.numericGroup = numericGroup;
+        super(numericGroup);
+        this.hash = toString().hashCode();
     }
 
     @Override
     public Concept owner() {
-        return ConceptImpl.of(numeric_group_get_owner(numericGroup));
+        return ConceptImpl.of(numeric_group_get_owner(nativeObject));
     }
 
     @Override
     public Numeric numeric() {
-        return new NumericImpl(numeric_group_get_numeric(numericGroup));
+        return new NumericImpl(numeric_group_get_numeric(nativeObject));
+    }
+
+    @Override
+    public String toString() {
+        return numeric_group_to_string(nativeObject);
     }
 
     @Override
@@ -51,11 +59,11 @@ public class NumericGroupImpl implements NumericGroup {
         if (obj == this) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         NumericGroupImpl that = (NumericGroupImpl) obj;
-        return this.numericGroup == that.numericGroup; // FIXME
+        return numeric_group_equals(this.nativeObject, that.nativeObject);
     }
 
     @Override
     public int hashCode() {
-        return numericGroup.hashCode(); // FIXME
+        return hash;
     }
 }

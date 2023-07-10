@@ -42,15 +42,14 @@ import static com.vaticle.typedb.client.jni.typedb_client.transaction_on_close;
 import static com.vaticle.typedb.client.jni.typedb_client.transaction_force_close;
 import static com.vaticle.typedb.client.jni.typedb_client.transaction_rollback;
 
-public class TypeDBTransactionImpl extends NativeObject implements TypeDBTransaction {
-    public final com.vaticle.typedb.client.jni.Transaction transaction;
+public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.client.jni.Transaction> implements TypeDBTransaction {
     private final TypeDBTransaction.Type type;
     private final TypeDBOptions options;
 
     TypeDBTransactionImpl(TypeDBSessionImpl session, Type type, TypeDBOptions options) {
+        super(transaction_new(session.nativeObject, type.asJNI(), options.nativeObject));
         this.type = type;
         this.options = options;
-        transaction = transaction_new(session.session, com.vaticle.typedb.client.jni.TransactionType.swigToEnum(type.id()), options.options);
     }
 
     @Override
@@ -65,47 +64,47 @@ public class TypeDBTransactionImpl extends NativeObject implements TypeDBTransac
 
     @Override
     public boolean isOpen() {
-        if (!transaction.isOwned()) return false;
-        else return transaction_is_open(transaction);
+        if (!nativeObject.isOwned()) return false;
+        else return transaction_is_open(nativeObject);
     }
 
     @Override
     public ConceptManager concepts() {
-        return new ConceptManagerImpl(transaction);
+        return new ConceptManagerImpl(nativeObject);
     }
 
     @Override
     public LogicManager logic() {
-        return new LogicManagerImpl(transaction);
+        return new LogicManagerImpl(nativeObject);
     }
 
     @Override
     public QueryManager query() {
-        return new QueryManagerImpl(transaction);
+        return new QueryManagerImpl(nativeObject);
     }
 
     @Override
     public void onClose(Consumer<Throwable> function) {
-        if (!transaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
-        transaction_on_close(transaction, new TransactionOnClose(function).released());
+        if (!nativeObject.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        transaction_on_close(nativeObject, new TransactionOnClose(function).released());
     }
 
     @Override
     public void commit() {
-        if (!transaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
-        transaction_commit(transaction.released());
+        if (!nativeObject.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        transaction_commit(nativeObject.released());
     }
 
     @Override
     public void rollback() {
-        if (!transaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
-        transaction_rollback(transaction);
+        if (!nativeObject.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        transaction_rollback(nativeObject);
     }
 
     @Override
     public void close() {
-        if (transaction.isOwned()) {
-            transaction_force_close(transaction);
+        if (nativeObject.isOwned()) {
+            transaction_force_close(nativeObject);
         }
     }
 

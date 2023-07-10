@@ -75,32 +75,32 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
     @Override
     public final boolean isRoot() {
-        return thing_type_is_root(concept);
+        return thing_type_is_root(nativeObject);
     }
 
     @Override
     public final boolean isAbstract() {
-        return thing_type_is_abstract(concept);
+        return thing_type_is_abstract(nativeObject);
     }
 
     @Override
     public Label getLabel() {
-        return Label.of(thing_type_get_label(concept));
+        return Label.of(thing_type_get_label(nativeObject));
     }
 
     @Override
     public void delete(TypeDBTransaction transaction) {
-        thing_type_delete(((ConceptManagerImpl) transaction.concepts()).transaction, concept);
+        thing_type_delete(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject);
     }
 
     @Override
     public boolean isDeleted(TypeDBTransaction transaction) {
-        return thing_type_is_deleted(((ConceptManagerImpl) transaction.concepts()).transaction, concept);
+        return thing_type_is_deleted(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject);
     }
 
     @Override
     public final void setLabel(TypeDBTransaction transaction, String newLabel) {
-        thing_type_set_label(((ConceptManagerImpl) transaction.concepts()).transaction, concept, newLabel);
+        thing_type_set_label(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, newLabel);
     }
 
     @Override
@@ -123,22 +123,23 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
     @Override
     public final void setAbstract(TypeDBTransaction transaction) {
-        thing_type_set_abstract(((ConceptManagerImpl) transaction.concepts()).transaction, concept);
+        thing_type_set_abstract(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject);
     }
 
     @Override
     public final void unsetAbstract(TypeDBTransaction transaction) {
-        thing_type_unset_abstract(((ConceptManagerImpl) transaction.concepts()).transaction, concept);
+        thing_type_unset_abstract(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject);
     }
 
     @Override
     public final void setPlays(TypeDBTransaction transaction, RoleType roleType) {
-        thing_type_set_plays(((ConceptManagerImpl) transaction.concepts()).transaction, concept, ((RoleTypeImpl) roleType).concept, null);
+        thing_type_set_plays(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, ((RoleTypeImpl) roleType).nativeObject, null);
     }
 
     @Override
     public final void setPlays(TypeDBTransaction transaction, RoleType roleType, RoleType overriddenRoleType) {
-        thing_type_set_plays(((ConceptManagerImpl) transaction.concepts()).transaction, concept, ((RoleTypeImpl) roleType).concept, ((RoleTypeImpl) overriddenRoleType).concept);
+        thing_type_set_plays(((ConceptManagerImpl) transaction.concepts()).transaction,
+                nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((RoleTypeImpl) overriddenRoleType).nativeObject);
     }
 
     @Override
@@ -158,7 +159,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
     @Override
     public final void setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType, Set<TypeQLToken.Annotation> annotations) {
-        thing_type_set_owns(((ConceptManagerImpl) transaction.concepts()).transaction, concept, ((AttributeTypeImpl) attributeType).concept, overriddenType != null ? ((AttributeTypeImpl) overriddenType).concept : null, annotations.stream().map(TypeQLToken.Annotation::toString).toArray(String[]::new));
+        thing_type_set_owns(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, ((AttributeTypeImpl) attributeType).nativeObject, overriddenType != null ? ((AttributeTypeImpl) overriddenType).nativeObject : null, annotations.stream().map(TypeQLToken.Annotation::toString).toArray(String[]::new));
     }
 
     @Override
@@ -172,12 +173,13 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     private Stream<RoleTypeImpl> getPlays(TypeDBTransaction transaction, Transitivity transitivity) {
-        return thing_type_get_plays(((ConceptManagerImpl) transaction.concepts()).transaction, concept, transitivity).stream().map(RoleTypeImpl::new);
+        return thing_type_get_plays(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, transitivity).stream().map(RoleTypeImpl::new);
     }
 
     @Override
     public RoleTypeImpl getPlaysOverridden(TypeDBTransaction transaction, RoleType roleType) {
-        com.vaticle.typedb.client.jni.Concept res = thing_type_get_plays_overridden(((ConceptManagerImpl) transaction.concepts()).transaction, concept, ((RoleTypeImpl) roleType).concept);
+        com.vaticle.typedb.client.jni.Concept res = thing_type_get_plays_overridden(((ConceptManagerImpl) transaction.concepts()).transaction,
+                nativeObject, ((RoleTypeImpl) roleType).nativeObject);
         if (res != null) return new RoleTypeImpl(res);
         else return null;
     }
@@ -227,29 +229,32 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     private Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, ValueType valueType, Transitivity transitivity, Set<TypeQLToken.Annotation> annotations) {
-        return thing_type_get_owns(((ConceptManagerImpl) transaction.concepts()).transaction, concept, valueType, transitivity, annotations.stream().map(TypeQLToken.Annotation::toString).toArray(String[]::new)).stream().map(AttributeTypeImpl::new);
+        return thing_type_get_owns(((ConceptManagerImpl) transaction.concepts()).transaction,
+                nativeObject, valueType, transitivity, annotations.stream().map(TypeQLToken.Annotation::toString).toArray(String[]::new)).stream().map(AttributeTypeImpl::new);
     }
 
     @Override
     public AttributeTypeImpl getOwnsOverridden(TypeDBTransaction transaction, AttributeType attributeType) {
-        com.vaticle.typedb.client.jni.Concept res = thing_type_get_owns_overridden(((ConceptManagerImpl) transaction.concepts()).transaction, concept, ((AttributeTypeImpl) attributeType).concept);
+        com.vaticle.typedb.client.jni.Concept res = thing_type_get_owns_overridden(((ConceptManagerImpl) transaction.concepts()).transaction,
+                nativeObject, ((AttributeTypeImpl) attributeType).nativeObject);
         if (res != null) return new AttributeTypeImpl(res);
         else return null;
     }
 
     @Override
     public final void unsetOwns(TypeDBTransaction transaction, AttributeType attributeType) {
-        thing_type_unset_owns(((ConceptManagerImpl) transaction.concepts()).transaction, concept, ((AttributeTypeImpl) attributeType).concept);
+        thing_type_unset_owns(((ConceptManagerImpl) transaction.concepts()).transaction,
+                nativeObject, ((AttributeTypeImpl) attributeType).nativeObject);
     }
 
     @Override
     public final void unsetPlays(TypeDBTransaction transaction, RoleType roleType) {
-        thing_type_unset_plays(((ConceptManagerImpl) transaction.concepts()).transaction, concept, ((RoleTypeImpl) roleType).concept);
+        thing_type_unset_plays(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, ((RoleTypeImpl) roleType).nativeObject);
     }
 
     @Override
     public final String getSyntax(TypeDBTransaction transaction) {
-        return thing_type_get_syntax(((ConceptManagerImpl) transaction.concepts()).transaction, concept);
+        return thing_type_get_syntax(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject);
     }
 
     public static class Root extends ThingTypeImpl {

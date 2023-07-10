@@ -22,6 +22,7 @@
 package com.vaticle.typedb.client.concept.answer;
 
 import com.vaticle.typedb.client.api.answer.Numeric;
+import com.vaticle.typedb.client.common.NativeObject;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
@@ -32,37 +33,35 @@ import static com.vaticle.typedb.client.jni.typedb_client.numeric_is_long;
 import static com.vaticle.typedb.client.jni.typedb_client.numeric_is_nan;
 import static com.vaticle.typedb.client.jni.typedb_client.numeric_to_string;
 
-public class NumericImpl implements Numeric {
-    private final com.vaticle.typedb.client.jni.Numeric numeric;
-
+public class NumericImpl extends NativeObject<com.vaticle.typedb.client.jni.Numeric> implements Numeric {
     public NumericImpl(com.vaticle.typedb.client.jni.Numeric numeric) {
-        this.numeric = numeric;
+        super(numeric);
     }
 
     @Override
     public boolean isLong() {
-        return numeric_is_long(numeric);
+        return numeric_is_long(nativeObject);
     }
 
     @Override
     public boolean isDouble() {
-        return numeric_is_double(numeric);
+        return numeric_is_double(nativeObject);
     }
 
     @Override
     public boolean isNaN() {
-        return numeric_is_nan(numeric);
+        return numeric_is_nan(nativeObject);
     }
 
     @Override
     public long asLong() {
-        if (isLong()) return numeric_get_long(numeric);
+        if (isLong()) return numeric_get_long(nativeObject);
         else throw new TypeDBClientException(ILLEGAL_CAST, Long.class);
     }
 
     @Override
-    public Double asDouble() {
-        if (isDouble()) return numeric_get_double(numeric);
+    public double asDouble() {
+        if (isDouble()) return numeric_get_double(nativeObject);
         else throw new TypeDBClientException(ILLEGAL_CAST, Double.class);
     }
 
@@ -75,6 +74,6 @@ public class NumericImpl implements Numeric {
 
     @Override
     public String toString() {
-        return numeric_to_string(numeric);
+        return numeric_to_string(nativeObject);
     }
 }

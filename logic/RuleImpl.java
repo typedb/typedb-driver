@@ -23,6 +23,7 @@ package com.vaticle.typedb.client.logic;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.logic.Rule;
+import com.vaticle.typedb.client.common.NativeObject;
 import com.vaticle.typeql.lang.TypeQL;
 import com.vaticle.typeql.lang.pattern.Conjunction;
 import com.vaticle.typeql.lang.pattern.Pattern;
@@ -34,60 +35,61 @@ import static com.vaticle.typedb.client.jni.typedb_client.rule_get_then;
 import static com.vaticle.typedb.client.jni.typedb_client.rule_get_when;
 import static com.vaticle.typedb.client.jni.typedb_client.rule_is_deleted;
 import static com.vaticle.typedb.client.jni.typedb_client.rule_set_label;
+import static com.vaticle.typedb.client.jni.typedb_client.rule_to_string;
 
-public class RuleImpl implements Rule {
-    com.vaticle.typedb.client.jni.Rule rule;
+public class RuleImpl extends NativeObject<com.vaticle.typedb.client.jni.Rule> implements Rule {
+    private final int hash;
 
     RuleImpl(com.vaticle.typedb.client.jni.Rule rule) {
-        this.rule = rule;
+        super(rule);
+        this.hash = toString().hashCode();
     }
 
     @Override
     public String getLabel() {
-        return rule_get_label(rule);
+        return rule_get_label(nativeObject);
     }
 
     @Override
     public Conjunction<? extends Pattern> getWhen() {
-        return TypeQL.parsePattern(rule_get_when(rule)).asConjunction();
+        return TypeQL.parsePattern(rule_get_when(nativeObject)).asConjunction();
     }
 
     @Override
     public ThingVariable<?> getThen() {
-        return TypeQL.parseVariable(rule_get_then(rule)).asThing();
+        return TypeQL.parseVariable(rule_get_then(nativeObject)).asThing();
     }
 
     @Override
     public void setLabel(TypeDBTransaction transaction, String newLabel) {
-        rule_set_label(((LogicManagerImpl) transaction.logic()).transaction, rule, newLabel);
+        rule_set_label(((LogicManagerImpl) transaction.logic()).transaction, nativeObject, newLabel);
     }
 
     @Override
     public void delete(TypeDBTransaction transaction) {
-        rule_delete(((LogicManagerImpl) transaction.logic()).transaction, rule);
+        rule_delete(((LogicManagerImpl) transaction.logic()).transaction, nativeObject);
     }
 
     @Override
     public final boolean isDeleted(TypeDBTransaction transaction) {
-        return rule_is_deleted(((LogicManagerImpl) transaction.logic()).transaction, rule);
+        return rule_is_deleted(((LogicManagerImpl) transaction.logic()).transaction, nativeObject);
     }
 
     @Override
     public String toString() {
-        return rule_to_string(rule);
+        return rule_to_string(nativeObject);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        RuleImpl that = (RuleImpl) o;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        RuleImpl that = (RuleImpl) obj;
         return this.getLabel().equals(that.getLabel());
     }
 
     @Override
     public int hashCode() {
-        return rule.hashCode(); // FIXME
+        return hash;
     }
 }

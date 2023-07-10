@@ -28,9 +28,7 @@ import java.nio.file.Path;
 
 import static com.vaticle.typedb.client.jni.typedb_client.credential_new;
 
-public class TypeDBCredential extends NativeObject {
-    public final com.vaticle.typedb.client.jni.Credential credential;
-
+public class TypeDBCredential extends NativeObject<com.vaticle.typedb.client.jni.Credential> {
     public TypeDBCredential(String username, String password, boolean tlsEnabled) {
         this(username, password, tlsEnabled, null);
     }
@@ -40,7 +38,7 @@ public class TypeDBCredential extends NativeObject {
     }
 
     private TypeDBCredential(String username, String password, boolean tlsEnabled, @Nullable String tlsRootCA) {
+        super(credential_new(username, password, tlsRootCA, tlsEnabled));
         assert tlsEnabled || tlsRootCA == null;
-        this.credential = credential_new(username, password, tlsRootCA, tlsEnabled);
     }
 }

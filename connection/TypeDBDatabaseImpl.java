@@ -22,6 +22,7 @@
 package com.vaticle.typedb.client.connection;
 
 import com.vaticle.typedb.client.api.database.Database;
+import com.vaticle.typedb.client.common.NativeObject;
 
 import static com.vaticle.typedb.client.jni.typedb_client.database_delete;
 import static com.vaticle.typedb.client.jni.typedb_client.database_get_name;
@@ -29,43 +30,38 @@ import static com.vaticle.typedb.client.jni.typedb_client.database_rule_schema;
 import static com.vaticle.typedb.client.jni.typedb_client.database_schema;
 import static com.vaticle.typedb.client.jni.typedb_client.database_type_schema;
 
-public class TypeDBDatabaseImpl implements Database {
-
-    private final String name;
-    final com.vaticle.typedb.client.jni.Database database;
-
+public class TypeDBDatabaseImpl extends NativeObject<com.vaticle.typedb.client.jni.Database> implements Database {
     public TypeDBDatabaseImpl(com.vaticle.typedb.client.jni.Database database) {
-        this.database = database;
-        this.name = database_get_name(database);
+        super(database);
     }
 
     @Override
     public String name() {
-        return name;
+        return database_get_name(nativeObject);
     }
 
     @Override
     public String schema() {
-        return database_schema(database);
+        return database_schema(nativeObject);
     }
 
     @Override
     public String typeSchema() {
-        return database_type_schema(database);
+        return database_type_schema(nativeObject);
     }
 
     @Override
     public String ruleSchema() {
-        return database_rule_schema(database);
+        return database_rule_schema(nativeObject);
     }
 
     @Override
     public void delete() {
-        database_delete(database);
+        database_delete(nativeObject);
     }
 
     @Override
     public String toString() {
-        return name;
+        return name();
     }
 }
