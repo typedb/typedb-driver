@@ -40,6 +40,7 @@ import com.vaticle.typeql.lang.common.TypeQLToken;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.vaticle.typedb.client.jni.typedb_client.concepts_get_attribute;
 import static com.vaticle.typedb.client.jni.typedb_client.concepts_get_attribute_type;
@@ -47,9 +48,12 @@ import static com.vaticle.typedb.client.jni.typedb_client.concepts_get_entity;
 import static com.vaticle.typedb.client.jni.typedb_client.concepts_get_entity_type;
 import static com.vaticle.typedb.client.jni.typedb_client.concepts_get_relation;
 import static com.vaticle.typedb.client.jni.typedb_client.concepts_get_relation_type;
+import static com.vaticle.typedb.client.jni.typedb_client.concepts_get_schema_exceptions;
 import static com.vaticle.typedb.client.jni.typedb_client.concepts_put_attribute_type;
 import static com.vaticle.typedb.client.jni.typedb_client.concepts_put_entity_type;
 import static com.vaticle.typedb.client.jni.typedb_client.concepts_put_relation_type;
+import static com.vaticle.typedb.client.jni.typedb_client.schema_exception_code;
+import static com.vaticle.typedb.client.jni.typedb_client.schema_exception_message;
 
 public final class ConceptManagerImpl implements ConceptManager {
 
@@ -109,8 +113,8 @@ public final class ConceptManagerImpl implements ConceptManager {
     }
 
     @Override
-    public AttributeType putAttributeType(String label, AttributeType.ValueType valueType) { // FIXME
-        return new AttributeTypeImpl(concepts_put_attribute_type(transaction, label, com.vaticle.typedb.client.jni.ValueType.swigToEnum(valueType.ordinal())));
+    public AttributeType putAttributeType(String label, AttributeType.ValueType valueType) {
+        return new AttributeTypeImpl(concepts_put_attribute_type(transaction, label, valueType.asJNI()));
     }
 
     @Override
@@ -139,6 +143,8 @@ public final class ConceptManagerImpl implements ConceptManager {
 
     @Override
     public List<TypeDBException> getSchemaExceptions() {
-        return new ArrayList<>(); // FIXME
+        return concepts_get_schema_exceptions(transaction).stream()
+                .map(e -> new TypeDBException(schema_exception_code(e), schema_exception_message(e)))
+                .collect(Collectors.toList());
     }
 }
