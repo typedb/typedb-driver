@@ -45,6 +45,7 @@ import static com.vaticle.typedb.client.jni.typedb_client.role_type_get_subtypes
 import static com.vaticle.typedb.client.jni.typedb_client.role_type_get_supertype;
 import static com.vaticle.typedb.client.jni.typedb_client.role_type_get_supertypes;
 import static com.vaticle.typedb.client.jni.typedb_client.role_type_is_abstract;
+import static com.vaticle.typedb.client.jni.typedb_client.role_type_is_root;
 import static com.vaticle.typedb.client.jni.typedb_client.role_type_is_deleted;
 import static com.vaticle.typedb.client.jni.typedb_client.role_type_set_label;
 
@@ -55,8 +56,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
 
     @Override
     public final boolean isRoot() {
-        return false; // FIXME
-//        return role_type_is_root(concept);
+        return role_type_is_root(concept);
     }
 
     @Override

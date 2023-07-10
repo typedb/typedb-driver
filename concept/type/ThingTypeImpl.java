@@ -47,6 +47,7 @@ import static com.vaticle.typedb.client.jni.typedb_client.thing_type_get_plays;
 import static com.vaticle.typedb.client.jni.typedb_client.thing_type_get_plays_overridden;
 import static com.vaticle.typedb.client.jni.typedb_client.thing_type_get_syntax;
 import static com.vaticle.typedb.client.jni.typedb_client.thing_type_is_abstract;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_type_is_root;
 import static com.vaticle.typedb.client.jni.typedb_client.thing_type_is_deleted;
 import static com.vaticle.typedb.client.jni.typedb_client.thing_type_set_abstract;
 import static com.vaticle.typedb.client.jni.typedb_client.thing_type_set_label;
@@ -74,8 +75,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
     @Override
     public final boolean isRoot() {
-        return false; // FIXME
-//        return thing_type_is_root(concept);
+        return thing_type_is_root(concept);
     }
 
     @Override
@@ -260,11 +260,6 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
         @Override
         public final Label getLabel() {
             return Label.of(TypeQLToken.Type.THING.toString());
-        }
-
-        @Override
-        public boolean isDeleted(TypeDBTransaction transaction) {
-            return false;
         }
 
         @Override
