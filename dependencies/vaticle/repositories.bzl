@@ -43,10 +43,14 @@ def vaticle_typeql():
     )
 
 def vaticle_typedb_client_rust():
-    git_repository(
+#    git_repository(
+#        name = "vaticle_typedb_client_rust",
+#        remote = "https://github.com/dmitrii-ubskii/typedb-client-rust",
+#        branch = "ffi",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_protocol
+#    )
+    native.local_repository(
         name = "vaticle_typedb_client_rust",
-        remote = "https://github.com/dmitrii-ubskii/typedb-client-rust",
-        branch = "ffi",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_protocol
+        path = "../typedb-client-rust",
     )
 
 def vaticle_typedb_protocol():

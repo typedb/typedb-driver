@@ -27,6 +27,7 @@ import com.vaticle.typedb.client.api.concept.thing.Thing;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
 import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.api.concept.type.ThingType.Annotation;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.concept.ConceptImpl;
 import com.vaticle.typedb.client.concept.ConceptManagerImpl;
 import com.vaticle.typedb.client.concept.type.AttributeTypeImpl;
@@ -37,6 +38,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 import static com.vaticle.typedb.client.jni.typedb_client.concept_is_attribute;
 import static com.vaticle.typedb.client.jni.typedb_client.concept_is_entity;
 import static com.vaticle.typedb.client.jni.typedb_client.concept_is_relation;
@@ -60,7 +62,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
         if (concept_is_entity(concept)) return new EntityImpl(concept);
         else if (concept_is_relation(concept)) return new RelationImpl(concept);
         else if (concept_is_attribute(concept)) return new AttributeImpl(concept);
-        return null; // FIXME throw
+        throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
     }
 
     @Override

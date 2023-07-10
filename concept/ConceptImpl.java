@@ -23,6 +23,7 @@ package com.vaticle.typedb.client.concept;
 
 import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.common.NativeObject;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.concept.thing.AttributeImpl;
 import com.vaticle.typedb.client.concept.thing.EntityImpl;
 import com.vaticle.typedb.client.concept.thing.RelationImpl;
@@ -32,6 +33,7 @@ import com.vaticle.typedb.client.concept.type.RelationTypeImpl;
 import com.vaticle.typedb.client.concept.type.RoleTypeImpl;
 import com.vaticle.typedb.client.concept.type.ThingTypeImpl;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 import static com.vaticle.typedb.client.jni.typedb_client.concept_equals;
 import static com.vaticle.typedb.client.jni.typedb_client.concept_to_string;
 import static com.vaticle.typedb.client.jni.typedb_client.concept_is_attribute;
@@ -60,7 +62,7 @@ public abstract class ConceptImpl extends NativeObject<com.vaticle.typedb.client
         else if (concept_is_relation(concept)) return new RelationImpl(concept);
         else if (concept_is_attribute(concept)) return new AttributeImpl(concept);
         else if (concept_is_role_type(concept)) return new RoleTypeImpl(concept);
-        return null; // FIXME throw
+        throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
     }
 
     @Override

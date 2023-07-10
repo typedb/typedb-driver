@@ -25,7 +25,7 @@ import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 import javax.annotation.CheckReturnValue;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_ENUM_VALUE;
 
 public interface TypeDBSession extends AutoCloseable {
     @CheckReturnValue
@@ -67,7 +67,7 @@ public interface TypeDBSession extends AutoCloseable {
                 case Data: return DATA;
                 case Schema: return SCHEMA;
             }
-            throw new TypeDBClientException(BAD_VALUE_TYPE);
+            throw new TypeDBClientException(BAD_ENUM_VALUE);
         }
 
         public com.vaticle.typedb.client.jni.SessionType asJNI() {
@@ -75,7 +75,7 @@ public interface TypeDBSession extends AutoCloseable {
                 case DATA: return com.vaticle.typedb.client.jni.SessionType.Data;
                 case SCHEMA: return com.vaticle.typedb.client.jni.SessionType.Schema;
             }
-            throw new TypeDBClientException(BAD_VALUE_TYPE);
+            throw new TypeDBClientException(BAD_ENUM_VALUE);
         }
 
         public int id() {

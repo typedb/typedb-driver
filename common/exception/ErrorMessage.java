@@ -82,8 +82,8 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
                 new Concept(4, "Label cannot be null or empty.");
         public static final Concept BAD_ENCODING =
                 new Concept(5, "The encoding '%s' was not recognised.");
-        public static final Concept BAD_VALUE_TYPE =
-                new Concept(6, "The value type '%s' was not recognised.");
+        public static final Concept BAD_ENUM_VALUE =
+                new Concept(6, "The enum value was not recognised.");
         public static final Concept BAD_ATTRIBUTE_VALUE =
                 new Concept(7, "The attribute value '%s' was not recognised.");
         public static final Concept NONEXISTENT_EXPLAINABLE_CONCEPT =
@@ -120,16 +120,16 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
     }
 
     public static class Internal extends ErrorMessage {
-        public static final Internal UNEXPECTED_INTERRUPTION =
-                new Internal(1, "Unexpected thread interruption!");
+        public static final Internal UNEXPECTED_NATIVE_VALUE =
+                new Internal(7, "Unexpected native value encountered!");
         public static final Internal ILLEGAL_STATE =
-                new Internal(2, "Illegal state has been reached!");
+                new Internal(8, "Illegal state has been reached!");
         public static final Internal ILLEGAL_ARGUMENT =
-                new Internal(3, "Illegal argument provided: '%s'");
+                new Internal(9, "Illegal argument provided: '%s'");
         public static final Internal ILLEGAL_CAST =
-                new Internal(4, "Illegal casting operation to '%s'.");
+                new Internal(10, "Illegal casting operation to '%s'.");
         public static final Internal ILLEGAL_ARGUMENT_COMBINATION =
-                new Internal(5, "Illegal argument combination provided: '%s'");
+                new Internal(11, "Illegal argument combination provided: '%s'");
 
         private static final String codePrefix = "INT";
         private static final String messagePrefix = "Internal Error";
