@@ -33,7 +33,6 @@ import static com.vaticle.typedb.client.jni.typedb_client.logic_manager_get_rule
 import static com.vaticle.typedb.client.jni.typedb_client.logic_manager_put_rule;
 
 public final class LogicManagerImpl implements LogicManager {
-
     final com.vaticle.typedb.client.jni.Transaction transaction;
 
     public LogicManagerImpl(com.vaticle.typedb.client.jni.Transaction transaction) {

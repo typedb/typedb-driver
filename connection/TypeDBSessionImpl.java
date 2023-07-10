@@ -25,7 +25,6 @@ import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.database.Database;
-import com.vaticle.typedb.client.jni.SessionType;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -34,14 +33,13 @@ import static com.vaticle.typedb.client.jni.typedb_client.session_new;
 import static com.vaticle.typedb.client.jni.typedb_client.session_on_close;
 
 public class TypeDBSessionImpl implements TypeDBSession {
-
     public com.vaticle.typedb.client.jni.Session session;
     private final Type type;
     private final TypeDBOptions options;
     private final AtomicBoolean isOpen;
 
     TypeDBSessionImpl(Database database, Type type, TypeDBOptions options) {
-        this.session = session_new(((TypeDBDatabaseImpl) database).database.released(), SessionType.swigToEnum(type.id()), options.options);
+        this.session = session_new(((TypeDBDatabaseImpl) database).database.released(), type.asJNI(), options.options);
         this.type = type;
         this.options = options;
         isOpen = new AtomicBoolean(true);

@@ -56,7 +56,6 @@ import static com.vaticle.typedb.client.jni.typedb_client.query_undefine;
 import static com.vaticle.typedb.client.jni.typedb_client.query_update;
 
 public final class QueryManagerImpl implements QueryManager {
-
     private final com.vaticle.typedb.client.jni.Transaction transaction;
 
     public QueryManagerImpl(com.vaticle.typedb.client.jni.Transaction transaction) {

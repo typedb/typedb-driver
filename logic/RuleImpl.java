@@ -74,8 +74,7 @@ public class RuleImpl implements Rule {
 
     @Override
     public String toString() {
-        return ""; //className(this.getClass()) + "[label: " + label + "]";
-        // FIXME
+        return rule_to_string(rule);
     }
 
     @Override

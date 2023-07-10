@@ -21,7 +21,11 @@
 
 package com.vaticle.typedb.client.api;
 
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+
 import javax.annotation.CheckReturnValue;
+
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
 
 public interface TypeDBSession extends AutoCloseable {
     @CheckReturnValue
@@ -58,11 +62,20 @@ public interface TypeDBSession extends AutoCloseable {
             this.isSchema = id == 1;
         }
 
-        public static Type of(int value) {
-            for (Type t : values()) {
-                if (t.id == value) return t;
+        public static Type of(com.vaticle.typedb.client.jni.SessionType sessionType) {
+            switch (sessionType) {
+                case Data: return DATA;
+                case Schema: return SCHEMA;
             }
-            return null;
+            throw new TypeDBClientException(BAD_VALUE_TYPE);
+        }
+
+        public com.vaticle.typedb.client.jni.SessionType asJNI() {
+            switch (this) {
+                case DATA: return com.vaticle.typedb.client.jni.SessionType.Data;
+                case SCHEMA: return com.vaticle.typedb.client.jni.SessionType.Schema;
+            }
+            throw new TypeDBClientException(BAD_VALUE_TYPE);
         }
 
         public int id() {

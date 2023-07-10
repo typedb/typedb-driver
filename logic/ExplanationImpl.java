@@ -26,15 +26,19 @@ import com.vaticle.typedb.client.api.logic.Explanation;
 import com.vaticle.typedb.client.api.logic.Rule;
 import com.vaticle.typedb.client.concept.answer.ConceptMapImpl;
 
+import static com.vaticle.typedb.client.jni.typedb_client.explanation_equals;
 import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_conclusion;
 import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_condition;
 import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_rule;
+import static com.vaticle.typedb.client.jni.typedb_client.explanation_to_string;
 
 public class ExplanationImpl implements Explanation {
     private final com.vaticle.typedb.client.jni.Explanation explanation;
+    private final int hash;
 
     public ExplanationImpl(com.vaticle.typedb.client.jni.Explanation explanation) {
         this.explanation = explanation;
+        this.hash = toString().hashCode();
     }
 
     @Override
@@ -57,11 +61,16 @@ public class ExplanationImpl implements Explanation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final ExplanationImpl that = (ExplanationImpl) o;
-        return this.explanation == that.explanation; // FIXME
+        return explanation_equals(this.explanation, that.explanation);
+    }
+
+    @Override
+    public String toString() {
+        return explanation_to_string(explanation);
     }
 
     @Override
     public int hashCode() {
-        return this.explanation.hashCode();
+        return hash;
     }
 }
