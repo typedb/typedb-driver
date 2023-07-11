@@ -58,7 +58,6 @@ import static com.vaticle.typedb.client.jni.typedb_client.thing_type_set_plays;
 import static com.vaticle.typedb.client.jni.typedb_client.thing_type_unset_abstract;
 import static com.vaticle.typedb.client.jni.typedb_client.thing_type_unset_owns;
 import static com.vaticle.typedb.client.jni.typedb_client.thing_type_unset_plays;
-import static com.vaticle.typedb.common.collection.Collections.set;
 import static java.util.Collections.emptySet;
 
 public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
@@ -190,12 +189,12 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
     @Override
     public Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction) {
-        return getOwns(transaction, Transitivity.Transitive, set());
+        return getOwns(transaction, Transitivity.Transitive, emptySet());
     }
 
     @Override
     public Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, ValueType valueType) {
-        return getOwns(transaction, valueType, Transitivity.Transitive, set());
+        return getOwns(transaction, valueType, Transitivity.Transitive, emptySet());
     }
 
     @Override
@@ -210,12 +209,12 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
     @Override
     public Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction) {
-        return getOwns(transaction, Transitivity.Explicit, set());
+        return getOwns(transaction, Transitivity.Explicit, emptySet());
     }
 
     @Override
     public Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, ValueType valueType) {
-        return getOwns(transaction, valueType, Transitivity.Explicit, set());
+        return getOwns(transaction, valueType, Transitivity.Explicit, emptySet());
     }
 
     @Override
