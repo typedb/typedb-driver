@@ -66,16 +66,16 @@ public interface TypeDBSession extends AutoCloseable {
             switch (sessionType) {
                 case Data: return DATA;
                 case Schema: return SCHEMA;
+                default: throw new TypeDBClientException(BAD_ENUM_VALUE);
             }
-            throw new TypeDBClientException(BAD_ENUM_VALUE);
         }
 
         public com.vaticle.typedb.client.jni.SessionType asJNI() {
             switch (this) {
                 case DATA: return com.vaticle.typedb.client.jni.SessionType.Data;
                 case SCHEMA: return com.vaticle.typedb.client.jni.SessionType.Schema;
+                default: throw new TypeDBClientException(BAD_ENUM_VALUE);
             }
-            throw new TypeDBClientException(BAD_ENUM_VALUE);
         }
 
         public int id() {
