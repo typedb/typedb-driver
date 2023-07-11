@@ -46,10 +46,18 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.clien
     private final TypeDBTransaction.Type type;
     private final TypeDBOptions options;
 
+    private final ConceptManager conceptManager;
+    private final LogicManager logicManager;
+    private final QueryManager queryManager;
+
     TypeDBTransactionImpl(TypeDBSessionImpl session, Type type, TypeDBOptions options) {
         super(transaction_new(session.nativeObject, type.nativeObject, options.nativeObject));
         this.type = type;
         this.options = options;
+
+        conceptManager = new ConceptManagerImpl(nativeObject);
+        logicManager = new LogicManagerImpl(nativeObject);
+        queryManager = new QueryManagerImpl(nativeObject);
     }
 
     @Override
@@ -70,17 +78,17 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.clien
 
     @Override
     public ConceptManager concepts() {
-        return new ConceptManagerImpl(nativeObject);
+        return conceptManager;
     }
 
     @Override
     public LogicManager logic() {
-        return new LogicManagerImpl(nativeObject);
+        return logicManager;
     }
 
     @Override
     public QueryManager query() {
-        return new QueryManagerImpl(nativeObject);
+        return queryManager;
     }
 
     @Override
