@@ -28,10 +28,13 @@ import com.vaticle.typedb.client.common.NativeObject;
 import com.vaticle.typedb.client.concept.answer.ConceptMapImpl;
 
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.vaticle.typedb.client.jni.typedb_client.explanation_equals;
 import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_conclusion;
 import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_condition;
+import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_mapping;
 import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_rule;
 import static com.vaticle.typedb.client.jni.typedb_client.explanation_to_string;
 
@@ -55,6 +58,11 @@ public class ExplanationImpl extends NativeObject<com.vaticle.typedb.client.jni.
     @Override
     public ConceptMap condition() {
         return new ConceptMapImpl(explanation_get_condition(nativeObject));
+    }
+
+    @Override
+    public Set<String> getMapping(String var) {
+        return explanation_get_mapping(nativeObject, var).stream().collect(Collectors.toSet());
     }
 
     @Override

@@ -23,10 +23,14 @@ package com.vaticle.typedb.client.api.logic;
 
 import com.vaticle.typedb.client.api.answer.ConceptMap;
 
+import java.util.Set;
+
 public interface Explanation {
     Rule rule();
 
     ConceptMap conclusion();
 
     ConceptMap condition();
+
+    Set<String> getMapping(String var);
 }
