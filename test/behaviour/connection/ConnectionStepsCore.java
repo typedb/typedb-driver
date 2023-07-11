@@ -82,7 +82,7 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     @Override
     @When("connection opens with default authentication")
     public void connection_opens_with_default_authentication() {
-        connection = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address());
+        client = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address());
     }
 
     @Override

@@ -46,7 +46,7 @@ public abstract class ConnectionStepsBase {
     public static int THREAD_POOL_SIZE = 32;
     public static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
-    public static TypeDBClient connection;
+    public static TypeDBClient client;
     public static List<TypeDBSession> sessions = new ArrayList<>();
     public static List<CompletableFuture<TypeDBSession>> sessionsParallel = new ArrayList<>();
     public static Map<TypeDBSession, List<TypeDBTransaction>> sessionsToTransactions = new HashMap<>();
@@ -116,18 +116,18 @@ public abstract class ConnectionStepsBase {
     abstract void connection_opens_with_default_authentication();
 
     void connection_closes() {
-        connection.close();
-        connection = null;
+        client.close();
+        client = null;
     }
 
     void connection_has_been_opened() {
-        assertNotNull(connection);
-        assertTrue(connection.isOpen());
+        assertNotNull(client);
+        assertTrue(client.isOpen());
     }
 
     void connection_does_not_have_any_database() {
-        assertNotNull(connection);
-        assertTrue(connection.isOpen());
-        assertTrue(connection.databases().all().isEmpty());
+        assertNotNull(client);
+        assertTrue(client.isOpen());
+        assertTrue(client.databases().all().isEmpty());
     }
 }
