@@ -66,10 +66,10 @@ public class ExplanationImpl extends NativeObject<com.vaticle.typedb.client.jni.
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        final ExplanationImpl that = (ExplanationImpl) o;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        final ExplanationImpl that = (ExplanationImpl) obj;
         return explanation_equals(this.nativeObject, that.nativeObject);
     }
 
