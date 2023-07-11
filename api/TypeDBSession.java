@@ -25,7 +25,8 @@ import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 import javax.annotation.CheckReturnValue;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_ENUM_VALUE;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 
 public interface TypeDBSession extends AutoCloseable {
     @CheckReturnValue
@@ -66,7 +67,7 @@ public interface TypeDBSession extends AutoCloseable {
             switch (sessionType) {
                 case Data: return DATA;
                 case Schema: return SCHEMA;
-                default: throw new TypeDBClientException(BAD_ENUM_VALUE);
+                default: throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
             }
         }
 
@@ -74,7 +75,7 @@ public interface TypeDBSession extends AutoCloseable {
             switch (this) {
                 case DATA: return com.vaticle.typedb.client.jni.SessionType.Data;
                 case SCHEMA: return com.vaticle.typedb.client.jni.SessionType.Schema;
-                default: throw new TypeDBClientException(BAD_ENUM_VALUE);
+                default: throw new TypeDBClientException(ILLEGAL_STATE);
             }
         }
 

@@ -36,8 +36,6 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
                 new Client(3, "The transaction has been closed and no further operation is allowed.");
         public static final Client TRANSACTION_CLOSED_WITH_ERRORS =
                 new Client(4, "The transaction has been closed with error(s): \n%s.");
-        public static final Client UNABLE_TO_CONNECT =
-                new Client(5, "Unable to connect to TypeDB server.");
         public static final Client NEGATIVE_VALUE_NOT_ALLOWED =
                 new Client(6, "Value cannot be less than 1, was: '%d'.");
         public static final Client MISSING_DB_NAME =
@@ -80,12 +78,8 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
                 new Concept(3, "IID cannot be null or empty.");
         public static final Concept MISSING_LABEL =
                 new Concept(4, "Label cannot be null or empty.");
-        public static final Concept BAD_ENCODING =
-                new Concept(5, "The encoding '%s' was not recognised.");
-        public static final Concept BAD_ENUM_VALUE =
-                new Concept(6, "The enum value was not recognised.");
-        public static final Concept BAD_ATTRIBUTE_VALUE =
-                new Concept(7, "The attribute value '%s' was not recognised.");
+        public static final Concept MISSING_VARIABLE =
+                new Concept(5, "Variable name cannot be null or empty.");
         public static final Concept NONEXISTENT_EXPLAINABLE_CONCEPT =
                 new Concept(8, "The concept identified by '%s' is not explainable.");
         public static final Concept NONEXISTENT_EXPLAINABLE_OWNERSHIP =
@@ -104,14 +98,10 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
     public static class Query extends ErrorMessage {
         public static final Query VARIABLE_DOES_NOT_EXIST =
                 new Query(1, "The variable '%s' does not exist.");
-        public static final Query NO_EXPLANATION =
-                new Query(2, "No explanation was found.");
-        public static final Query BAD_ANSWER_TYPE =
-                new Query(3, "The answer type '%s' was not recognised.");
-        public static final Query MISSING_ANSWER =
-                new Query(4, "The required field 'answer' of type '%s' was not set.");
+        public static final Query MISSING_QUERY =
+                new Query(2, "Query cannot be null or empty");
 
-        private static final String codePrefix = "QRY";
+        private static final String codePrefix = "JQY";
         private static final String messagePrefix = "Query Error";
 
         Query(int number, String message) {

@@ -28,6 +28,7 @@ import com.vaticle.typedb.client.api.concept.thing.Relation;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
 import com.vaticle.typedb.client.api.concept.type.EntityType;
 import com.vaticle.typedb.client.api.concept.type.RelationType;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.exception.TypeDBException;
 import com.vaticle.typedb.client.concept.thing.AttributeImpl;
 import com.vaticle.typedb.client.concept.thing.EntityImpl;
@@ -41,6 +42,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_IID;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_LABEL;
 import static com.vaticle.typedb.client.jni.typedb_client.concepts_get_attribute;
 import static com.vaticle.typedb.client.jni.typedb_client.concepts_get_attribute_type;
 import static com.vaticle.typedb.client.jni.typedb_client.concepts_get_entity;
@@ -79,6 +82,7 @@ public final class ConceptManagerImpl implements ConceptManager {
     @Override
     @Nullable
     public EntityType getEntityType(String label) {
+        if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
         com.vaticle.typedb.client.jni.Concept res = concepts_get_entity_type(transaction, label);
         if (res != null) return new EntityTypeImpl(res);
         else return null;
@@ -87,6 +91,7 @@ public final class ConceptManagerImpl implements ConceptManager {
     @Override
     @Nullable
     public RelationType getRelationType(String label) {
+        if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
         com.vaticle.typedb.client.jni.Concept res = concepts_get_relation_type(transaction, label);
         if (res != null) return new RelationTypeImpl(res);
         else return null;
@@ -95,6 +100,7 @@ public final class ConceptManagerImpl implements ConceptManager {
     @Override
     @Nullable
     public AttributeType getAttributeType(String label) {
+        if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
         com.vaticle.typedb.client.jni.Concept res = concepts_get_attribute_type(transaction, label);
         if (res != null) return new AttributeTypeImpl(res);
         else return null;
@@ -102,22 +108,26 @@ public final class ConceptManagerImpl implements ConceptManager {
 
     @Override
     public EntityType putEntityType(String label) {
+        if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
         return new EntityTypeImpl(concepts_put_entity_type(transaction, label));
     }
 
     @Override
     public RelationType putRelationType(String label) {
+        if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
         return new RelationTypeImpl(concepts_put_relation_type(transaction, label));
     }
 
     @Override
     public AttributeType putAttributeType(String label, AttributeType.ValueType valueType) {
+        if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
         return new AttributeTypeImpl(concepts_put_attribute_type(transaction, label, valueType.asJNI()));
     }
 
     @Override
     @Nullable
     public Entity getEntity(String iid) {
+        if (iid == null || iid.isEmpty()) throw new TypeDBClientException(MISSING_IID);
         com.vaticle.typedb.client.jni.Concept res = concepts_get_entity(transaction, iid);
         if (res != null) return new EntityImpl(res);
         else return null;
@@ -126,6 +136,7 @@ public final class ConceptManagerImpl implements ConceptManager {
     @Override
     @Nullable
     public Relation getRelation(String iid) {
+        if (iid == null || iid.isEmpty()) throw new TypeDBClientException(MISSING_IID);
         com.vaticle.typedb.client.jni.Concept res = concepts_get_relation(transaction, iid);
         if (res != null) return new RelationImpl(res);
         else return null;
@@ -134,6 +145,7 @@ public final class ConceptManagerImpl implements ConceptManager {
     @Override
     @Nullable
     public Attribute getAttribute(String iid) {
+        if (iid == null || iid.isEmpty()) throw new TypeDBClientException(MISSING_IID);
         com.vaticle.typedb.client.jni.Concept res = concepts_get_attribute(transaction, iid);
         if (res != null) return new AttributeImpl(res);
         else return null;

@@ -28,7 +28,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_ENUM_VALUE;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 import static com.vaticle.typedb.client.jni.typedb_client.value_equals;
 import static com.vaticle.typedb.client.jni.typedb_client.value_get_boolean;
 import static com.vaticle.typedb.client.jni.typedb_client.value_get_date_time_as_millis;
@@ -120,7 +120,7 @@ public class Value extends NativeObject<com.vaticle.typedb.client.jni.Value> {
         else if (isDouble()) return Double.toString(asDouble());
         else if (isString()) return asString();
         else if (isDateTime()) return asDateTime().toString();
-        throw new TypeDBClientException(BAD_ENUM_VALUE);
+        throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
     }
 
     @Override

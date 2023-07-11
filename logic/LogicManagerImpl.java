@@ -23,11 +23,13 @@ package com.vaticle.typedb.client.logic;
 
 import com.vaticle.typedb.client.api.logic.LogicManager;
 import com.vaticle.typedb.client.api.logic.Rule;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typeql.lang.pattern.Pattern;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_LABEL;
 import static com.vaticle.typedb.client.jni.typedb_client.logic_manager_get_rule;
 import static com.vaticle.typedb.client.jni.typedb_client.logic_manager_get_rules;
 import static com.vaticle.typedb.client.jni.typedb_client.logic_manager_put_rule;
@@ -42,6 +44,7 @@ public final class LogicManagerImpl implements LogicManager {
     @Override
     @Nullable
     public Rule getRule(String label) {
+        if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
         com.vaticle.typedb.client.jni.Rule res = logic_manager_get_rule(transaction, label);
         if (res != null) return new RuleImpl(res);
         else return null;
@@ -54,6 +57,7 @@ public final class LogicManagerImpl implements LogicManager {
 
     @Override
     public Rule putRule(String label, Pattern when, Pattern then) {
+        if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
         return new RuleImpl(logic_manager_put_rule(transaction, label, when.toString(), then.toString()));
     }
 }

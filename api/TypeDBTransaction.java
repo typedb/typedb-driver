@@ -29,7 +29,8 @@ import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import java.util.function.Consumer;
 import javax.annotation.CheckReturnValue;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_ENUM_VALUE;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 
 public interface TypeDBTransaction extends AutoCloseable {
     @CheckReturnValue
@@ -74,16 +75,16 @@ public interface TypeDBTransaction extends AutoCloseable {
             switch (transactionType) {
                 case Read: return READ;
                 case Write: return WRITE;
+                default: throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
             }
-            throw new TypeDBClientException(BAD_ENUM_VALUE);
         }
 
         public com.vaticle.typedb.client.jni.TransactionType asJNI() {
             switch (this) {
                 case READ: return com.vaticle.typedb.client.jni.TransactionType.Read;
                 case WRITE: return com.vaticle.typedb.client.jni.TransactionType.Write;
+                default: throw new TypeDBClientException(ILLEGAL_STATE);
             }
-            throw new TypeDBClientException(BAD_ENUM_VALUE);
         }
 
         public int id() {

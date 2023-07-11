@@ -32,7 +32,8 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_ENUM_VALUE;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 
 public interface AttributeType extends ThingType {
     @CheckReturnValue
@@ -158,8 +159,8 @@ public interface AttributeType extends ThingType {
                 case String: return STRING;
                 case DateTime: return DATETIME;
                 case Object: return OBJECT;
+                default: throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
             }
-            throw new TypeDBClientException(BAD_ENUM_VALUE);
         }
 
         @CheckReturnValue
@@ -171,8 +172,8 @@ public interface AttributeType extends ThingType {
                 case STRING: return com.vaticle.typedb.client.jni.ValueType.String;
                 case DATETIME: return com.vaticle.typedb.client.jni.ValueType.DateTime;
                 case OBJECT: return com.vaticle.typedb.client.jni.ValueType.Object;
+                default: throw new TypeDBClientException(ILLEGAL_STATE);
             }
-            throw new TypeDBClientException(BAD_ENUM_VALUE);
         }
 
         @CheckReturnValue

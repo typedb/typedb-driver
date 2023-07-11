@@ -25,12 +25,14 @@ import com.vaticle.typedb.client.api.answer.ConceptMap;
 import com.vaticle.typedb.client.api.logic.Explanation;
 import com.vaticle.typedb.client.api.logic.Rule;
 import com.vaticle.typedb.client.common.NativeObject;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.concept.answer.ConceptMapImpl;
 
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_VARIABLE;
 import static com.vaticle.typedb.client.jni.typedb_client.explanation_equals;
 import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_conclusion;
 import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_condition;
@@ -62,6 +64,7 @@ public class ExplanationImpl extends NativeObject<com.vaticle.typedb.client.jni.
 
     @Override
     public Set<String> getMapping(String var) {
+        if (var == null || var.isEmpty()) throw new TypeDBClientException(MISSING_VARIABLE);
         return explanation_get_mapping(nativeObject, var).stream().collect(Collectors.toSet());
     }
 

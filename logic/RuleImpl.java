@@ -24,11 +24,13 @@ package com.vaticle.typedb.client.logic;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.logic.Rule;
 import com.vaticle.typedb.client.common.NativeObject;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typeql.lang.TypeQL;
 import com.vaticle.typeql.lang.pattern.Conjunction;
 import com.vaticle.typeql.lang.pattern.Pattern;
 import com.vaticle.typeql.lang.pattern.variable.ThingVariable;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_LABEL;
 import static com.vaticle.typedb.client.jni.typedb_client.rule_delete;
 import static com.vaticle.typedb.client.jni.typedb_client.rule_get_label;
 import static com.vaticle.typedb.client.jni.typedb_client.rule_get_then;
@@ -61,6 +63,7 @@ public class RuleImpl extends NativeObject<com.vaticle.typedb.client.jni.Rule> i
 
     @Override
     public void setLabel(TypeDBTransaction transaction, String newLabel) {
+        if (newLabel == null || newLabel.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
         rule_set_label(((LogicManagerImpl) transaction.logic()).transaction, nativeObject, newLabel);
     }
 
