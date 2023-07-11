@@ -232,7 +232,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     private Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, ValueType valueType, Transitivity transitivity, Set<Annotation> annotations) {
-        return thing_type_get_owns(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, valueType == null ? null : valueType.asJNI(), transitivity,
+        return thing_type_get_owns(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, valueType == null ? null : valueType.nativeObject, transitivity,
                 annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.client.jni.Annotation[]::new)
         ).stream().map(AttributeTypeImpl::new);
     }

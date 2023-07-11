@@ -52,15 +52,18 @@ public interface TypeDBSession extends AutoCloseable {
     void close();
 
     enum Type {
-        DATA(0),
-        SCHEMA(1);
+        DATA(0, com.vaticle.typedb.client.jni.SessionType.Data),
+        SCHEMA(1, com.vaticle.typedb.client.jni.SessionType.Schema);
 
         private final int id;
         private final boolean isSchema;
+        public final com.vaticle.typedb.client.jni.SessionType nativeObject;
 
-        Type(int id) {
+        Type(int id, com.vaticle.typedb.client.jni.SessionType nativeObject) {
             this.id = id;
-            this.isSchema = id == 1;
+            this.nativeObject = nativeObject;
+
+            this.isSchema = nativeObject == com.vaticle.typedb.client.jni.SessionType.Schema;
         }
 
         public static Type of(com.vaticle.typedb.client.jni.SessionType sessionType) {
@@ -68,14 +71,6 @@ public interface TypeDBSession extends AutoCloseable {
                 case Data: return DATA;
                 case Schema: return SCHEMA;
                 default: throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
-            }
-        }
-
-        public com.vaticle.typedb.client.jni.SessionType asJNI() {
-            switch (this) {
-                case DATA: return com.vaticle.typedb.client.jni.SessionType.Data;
-                case SCHEMA: return com.vaticle.typedb.client.jni.SessionType.Schema;
-                default: throw new TypeDBClientException(ILLEGAL_STATE);
             }
         }
 

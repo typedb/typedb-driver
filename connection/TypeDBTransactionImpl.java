@@ -47,7 +47,7 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.clien
     private final TypeDBOptions options;
 
     TypeDBTransactionImpl(TypeDBSessionImpl session, Type type, TypeDBOptions options) {
-        super(transaction_new(session.nativeObject, type.asJNI(), options.nativeObject));
+        super(transaction_new(session.nativeObject, type.nativeObject, options.nativeObject));
         this.type = type;
         this.options = options;
     }

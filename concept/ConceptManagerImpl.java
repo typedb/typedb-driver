@@ -121,7 +121,7 @@ public final class ConceptManagerImpl implements ConceptManager {
     @Override
     public AttributeType putAttributeType(String label, AttributeType.ValueType valueType) {
         if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
-        return new AttributeTypeImpl(concepts_put_attribute_type(transaction, label, valueType.asJNI()));
+        return new AttributeTypeImpl(concepts_put_attribute_type(transaction, label, valueType.nativeObject));
     }
 
     @Override

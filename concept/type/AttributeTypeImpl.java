@@ -87,7 +87,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     public final Stream<AttributeTypeImpl> getSubtypes(TypeDBTransaction transaction, ValueType valueType) {
         return attribute_type_get_subtypes_with_value_type(
                 ((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject,
-                valueType.asJNI(), Transitivity.Transitive
+                valueType.nativeObject, Transitivity.Transitive
         ).stream().map(AttributeTypeImpl::new);
     }
 

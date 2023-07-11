@@ -32,7 +32,6 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 
 public interface AttributeType extends ThingType {
@@ -133,21 +132,23 @@ public interface AttributeType extends ThingType {
     }
 
     enum ValueType {
-        OBJECT(Object.class, false, false),
-        BOOLEAN(Boolean.class, true, false),
-        LONG(Long.class, true, true),
-        DOUBLE(Double.class, true, false),
-        STRING(String.class, true, true),
-        DATETIME(LocalDateTime.class, true, true);
+        OBJECT(Object.class, false, false, com.vaticle.typedb.client.jni.ValueType.Object),
+        BOOLEAN(Boolean.class, true, false, com.vaticle.typedb.client.jni.ValueType.Boolean),
+        LONG(Long.class, true, true, com.vaticle.typedb.client.jni.ValueType.Long),
+        DOUBLE(Double.class, true, false, com.vaticle.typedb.client.jni.ValueType.Double),
+        STRING(String.class, true, true, com.vaticle.typedb.client.jni.ValueType.String),
+        DATETIME(LocalDateTime.class, true, true, com.vaticle.typedb.client.jni.ValueType.DateTime);
 
         private final Class<?> valueClass;
         private final boolean isWritable;
         private final boolean isKeyable;
+        public final com.vaticle.typedb.client.jni.ValueType nativeObject;
 
-        ValueType(Class<?> valueClass, boolean isWritable, boolean isKeyable) {
+        ValueType(Class<?> valueClass, boolean isWritable, boolean isKeyable, com.vaticle.typedb.client.jni.ValueType nativeObject) {
             this.valueClass = valueClass;
             this.isWritable = isWritable;
             this.isKeyable = isKeyable;
+            this.nativeObject = nativeObject;
         }
 
         @CheckReturnValue
@@ -160,19 +161,6 @@ public interface AttributeType extends ThingType {
                 case DateTime: return DATETIME;
                 case Object: return OBJECT;
                 default: throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
-            }
-        }
-
-        @CheckReturnValue
-        public com.vaticle.typedb.client.jni.ValueType asJNI(){
-            switch (this) {
-                case BOOLEAN: return com.vaticle.typedb.client.jni.ValueType.Boolean;
-                case LONG: return com.vaticle.typedb.client.jni.ValueType.Long;
-                case DOUBLE: return com.vaticle.typedb.client.jni.ValueType.Double;
-                case STRING: return com.vaticle.typedb.client.jni.ValueType.String;
-                case DATETIME: return com.vaticle.typedb.client.jni.ValueType.DateTime;
-                case OBJECT: return com.vaticle.typedb.client.jni.ValueType.Object;
-                default: throw new TypeDBClientException(ILLEGAL_STATE);
             }
         }
 

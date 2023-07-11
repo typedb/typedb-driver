@@ -39,7 +39,7 @@ public class TypeDBSessionImpl extends NativeObject<com.vaticle.typedb.client.jn
     private final AtomicBoolean isOpen;
 
     TypeDBSessionImpl(Database database, Type type, TypeDBOptions options) {
-        super(session_new(((TypeDBDatabaseImpl) database).nativeObject.released(), type.asJNI(), options.nativeObject));
+        super(session_new(((TypeDBDatabaseImpl) database).nativeObject.released(), type.nativeObject, options.nativeObject));
         this.type = type;
         this.options = options;
         isOpen = new AtomicBoolean(true);

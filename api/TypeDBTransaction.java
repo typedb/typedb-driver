@@ -26,10 +26,9 @@ import com.vaticle.typedb.client.api.logic.LogicManager;
 import com.vaticle.typedb.client.api.query.QueryManager;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
-import java.util.function.Consumer;
 import javax.annotation.CheckReturnValue;
+import java.util.function.Consumer;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 
 public interface TypeDBTransaction extends AutoCloseable {
@@ -60,15 +59,18 @@ public interface TypeDBTransaction extends AutoCloseable {
     void close();
 
     enum Type {
-        READ(0),
-        WRITE(1);
+        READ(0, com.vaticle.typedb.client.jni.TransactionType.Read),
+        WRITE(1, com.vaticle.typedb.client.jni.TransactionType.Write);
 
         private final int id;
         private final boolean isWrite;
+        public final com.vaticle.typedb.client.jni.TransactionType nativeObject;
 
-        Type(int id) {
+        Type(int id, com.vaticle.typedb.client.jni.TransactionType nativeObject) {
             this.id = id;
-            this.isWrite = id == 1;
+            this.nativeObject = nativeObject;
+
+            this.isWrite = nativeObject == com.vaticle.typedb.client.jni.TransactionType.Write;
         }
 
         public static Type of(com.vaticle.typedb.client.jni.TransactionType transactionType) {
@@ -76,14 +78,6 @@ public interface TypeDBTransaction extends AutoCloseable {
                 case Read: return READ;
                 case Write: return WRITE;
                 default: throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
-            }
-        }
-
-        public com.vaticle.typedb.client.jni.TransactionType asJNI() {
-            switch (this) {
-                case READ: return com.vaticle.typedb.client.jni.TransactionType.Read;
-                case WRITE: return com.vaticle.typedb.client.jni.TransactionType.Write;
-                default: throw new TypeDBClientException(ILLEGAL_STATE);
             }
         }
 
