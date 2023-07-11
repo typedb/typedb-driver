@@ -36,32 +36,12 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
                 new Client(3, "The transaction has been closed and no further operation is allowed.");
         public static final Client TRANSACTION_CLOSED_WITH_ERRORS =
                 new Client(4, "The transaction has been closed with error(s): \n%s.");
-        public static final Client NEGATIVE_VALUE_NOT_ALLOWED =
-                new Client(6, "Value cannot be less than 1, was: '%d'.");
+        public static final Client POSITIVE_VALUE_REQUIRED =
+                new Client(5, "Value cannot be less than 1, was: '%d'.");
         public static final Client MISSING_DB_NAME =
-                new Client(7, "Database name cannot be null.");
-        public static final Client DB_DOES_NOT_EXIST =
-                new Client(8, "The database '%s' does not exist.");
-        public static final Client MISSING_RESPONSE =
-                new Client(9, "Unexpected empty response for request ID '%s'.");
-        public static final Client UNKNOWN_REQUEST_ID =
-                new Client(10, "Received a response with unknown request id '%s':\n%s");
-        public static final Client CLUSTER_NO_PRIMARY_REPLICA_YET =
-                new Client(11, "No replica has been marked as the primary replica for latest known term '%d'.");
-        public static final Client CLUSTER_UNABLE_TO_CONNECT =
-                new Client(12, "Unable to connect to TypeDB Cluster. Attempted connecting to the cluster members, but none are available: '%s'.");
-        public static final Client CLUSTER_REPLICA_NOT_PRIMARY =
-                new Client(13, "The replica is not the primary replica.");
-        public static final Client CLUSTER_ALL_NODES_FAILED =
-                new Client(14, "Attempted connecting to all cluster members, but the following errors occurred: \n%s.");
-        public static final Client CLUSTER_USER_DOES_NOT_EXIST =
-                new Client(15, "The user '%s' does not exist.");
-        public static final ErrorMessage CLUSTER_TOKEN_CREDENTIAL_INVALID =
-                new Client(16, "Invalid token credential.");
-        public static final ErrorMessage CLUSTER_PASSWORD_CREDENTIAL_EXPIRED =
-                new Client(17, "Expired password credential.");
+                new Client(6, "Database name cannot be null.");
 
-        private static final String codePrefix = "CLI";
+        private static final String codePrefix = "JCL";
         private static final String messagePrefix = "Client Error";
 
         Client(int number, String message) {
@@ -80,14 +60,16 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
                 new Concept(4, "Label cannot be null or empty.");
         public static final Concept MISSING_VARIABLE =
                 new Concept(5, "Variable name cannot be null or empty.");
+        public static final Concept MISSING_VALUE =
+                new Concept(6, "Value cannot be null.");
         public static final Concept NONEXISTENT_EXPLAINABLE_CONCEPT =
-                new Concept(8, "The concept identified by '%s' is not explainable.");
+                new Concept(7, "The concept identified by '%s' is not explainable.");
         public static final Concept NONEXISTENT_EXPLAINABLE_OWNERSHIP =
-                new Concept(9, "The ownership by owner '%s' of attribute '%s' is not explainable.");
+                new Concept(8, "The ownership by owner '%s' of attribute '%s' is not explainable.");
         public static final Concept UNRECOGNISED_ANNOTATION =
-                new Concept(10, "The annotation '%s' is not recognised");
+                new Concept(9, "The annotation '%s' is not recognised");
 
-        private static final String codePrefix = "CON";
+        private static final String codePrefix = "JCO";
         private static final String messagePrefix = "Concept Error";
 
         Concept(int number, String message) {
@@ -114,16 +96,12 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
                 new Internal(1, "Unexpected native value encountered!");
         public static final Internal ILLEGAL_STATE =
                 new Internal(2, "Illegal state has been reached!");
-        public static final Internal ILLEGAL_ARGUMENT =
-                new Internal(3, "Illegal argument provided: '%s'");
         public static final Internal ILLEGAL_CAST =
-                new Internal(4, "Illegal casting operation to '%s'.");
-        public static final Internal ILLEGAL_ARGUMENT_COMBINATION =
-                new Internal(5, "Illegal argument combination provided: '%s'");
+                new Internal(3, "Illegal casting operation to '%s'.");
         public static final Internal NULL_NATIVE_VALUE =
-                new Internal(6, "Unhandled null pointer to a native object encountered!");
+                new Internal(4, "Unhandled null pointer to a native object encountered!");
 
-        private static final String codePrefix = "JNI";
+        private static final String codePrefix = "JIN";
         private static final String messagePrefix = "Java Internal Error";
 
         Internal(int number, String message) {

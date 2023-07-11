@@ -27,7 +27,7 @@ import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import javax.annotation.CheckReturnValue;
 import java.util.Optional;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.NEGATIVE_VALUE_NOT_ALLOWED;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.POSITIVE_VALUE_REQUIRED;
 import static com.vaticle.typedb.client.jni.typedb_client.options_get_explain;
 import static com.vaticle.typedb.client.jni.typedb_client.options_get_infer;
 import static com.vaticle.typedb.client.jni.typedb_client.options_get_parallel;
@@ -128,7 +128,7 @@ public class TypeDBOptions extends NativeObject<com.vaticle.typedb.client.jni.Op
 
     public TypeDBOptions prefetchSize(int prefetchSize) {
         if (prefetchSize < 1) {
-            throw new TypeDBClientException(NEGATIVE_VALUE_NOT_ALLOWED, prefetchSize);
+            throw new TypeDBClientException(POSITIVE_VALUE_REQUIRED, prefetchSize);
         }
         options_set_prefetch_size(nativeObject, prefetchSize);
         return this;
@@ -143,7 +143,7 @@ public class TypeDBOptions extends NativeObject<com.vaticle.typedb.client.jni.Op
 
     public TypeDBOptions sessionIdleTimeoutMillis(int sessionIdleTimeoutMillis) {
         if (sessionIdleTimeoutMillis < 1) {
-            throw new TypeDBClientException(NEGATIVE_VALUE_NOT_ALLOWED, sessionIdleTimeoutMillis);
+            throw new TypeDBClientException(POSITIVE_VALUE_REQUIRED, sessionIdleTimeoutMillis);
         }
         options_set_session_idle_timeout_millis(nativeObject, sessionIdleTimeoutMillis);
         return this;
@@ -158,7 +158,7 @@ public class TypeDBOptions extends NativeObject<com.vaticle.typedb.client.jni.Op
 
     public TypeDBOptions transactionTimeoutMillis(int transactionTimeoutMillis) {
         if (transactionTimeoutMillis < 1) {
-            throw new TypeDBClientException(NEGATIVE_VALUE_NOT_ALLOWED, transactionTimeoutMillis);
+            throw new TypeDBClientException(POSITIVE_VALUE_REQUIRED, transactionTimeoutMillis);
         }
         options_set_transaction_timeout_millis(nativeObject, transactionTimeoutMillis);
         return this;
@@ -172,7 +172,7 @@ public class TypeDBOptions extends NativeObject<com.vaticle.typedb.client.jni.Op
 
     public TypeDBOptions schemaLockAcquireTimeoutMillis(int schemaLockAcquireTimeoutMillis) {
         if (schemaLockAcquireTimeoutMillis < 1) {
-            throw new TypeDBClientException(NEGATIVE_VALUE_NOT_ALLOWED, schemaLockAcquireTimeoutMillis);
+            throw new TypeDBClientException(POSITIVE_VALUE_REQUIRED, schemaLockAcquireTimeoutMillis);
         }
         options_set_schema_lock_acquire_timeout_millis(nativeObject, schemaLockAcquireTimeoutMillis);
         return this;

@@ -28,6 +28,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_VALUE;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 import static com.vaticle.typedb.client.jni.typedb_client.value_equals;
 import static com.vaticle.typedb.client.jni.typedb_client.value_get_boolean;
@@ -66,10 +67,12 @@ public class Value extends NativeObject<com.vaticle.typedb.client.jni.Value> {
     }
 
     public static Value of(String value) {
+        if (value == null) throw new TypeDBClientException(MISSING_VALUE);
         return new Value(value_new_string(value));
     }
 
     public static Value of(LocalDateTime value) {
+        if (value == null) throw new TypeDBClientException(MISSING_VALUE);
         return new Value(value_new_date_time_from_millis(value.atZone(ZoneOffset.UTC).toInstant().toEpochMilli()));
     }
 

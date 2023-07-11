@@ -23,9 +23,11 @@ package com.vaticle.typedb.client.connection;
 
 import com.vaticle.typedb.client.api.database.Database;
 import com.vaticle.typedb.client.api.database.DatabaseManager;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 import java.util.List;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.MISSING_DB_NAME;
 import static com.vaticle.typedb.client.jni.typedb_client.database_manager_new;
 import static com.vaticle.typedb.client.jni.typedb_client.databases_all;
 import static com.vaticle.typedb.client.jni.typedb_client.databases_contains;
@@ -42,16 +44,19 @@ public class TypeDBDatabaseManagerImpl implements DatabaseManager {
 
     @Override
     public Database get(String name) throws Error {
+        if (name == null || name.isEmpty()) throw new TypeDBClientException(MISSING_DB_NAME);
         return new TypeDBDatabaseImpl(databases_get(databaseManager, name));
     }
 
     @Override
     public boolean contains(String name) throws Error {
+        if (name == null || name.isEmpty()) throw new TypeDBClientException(MISSING_DB_NAME);
         return databases_contains(databaseManager, name);
     }
 
     @Override
     public void create(String name) throws Error {
+        if (name == null || name.isEmpty()) throw new TypeDBClientException(MISSING_DB_NAME);
         databases_create(databaseManager, name);
     }
 

@@ -25,7 +25,6 @@ import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 import javax.annotation.CheckReturnValue;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 
 public interface TypeDBSession extends AutoCloseable {

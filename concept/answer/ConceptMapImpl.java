@@ -32,6 +32,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_VARIABLE;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.NONEXISTENT_EXPLAINABLE_CONCEPT;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.NONEXISTENT_EXPLAINABLE_OWNERSHIP;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
@@ -71,6 +72,7 @@ public class ConceptMapImpl extends NativeObject<com.vaticle.typedb.client.jni.C
 
     @Override
     public Concept get(String variable) {
+        if (variable == null || variable.isEmpty()) throw new TypeDBClientException(MISSING_VARIABLE);
         com.vaticle.typedb.client.jni.Concept concept = concept_map_get(nativeObject, variable);
         if (concept == null) throw new TypeDBClientException(VARIABLE_DOES_NOT_EXIST, variable);
         return ConceptImpl.of(concept);
@@ -113,6 +115,7 @@ public class ConceptMapImpl extends NativeObject<com.vaticle.typedb.client.jni.C
 
         @Override
         public Explainable relation(String variable) {
+            if (variable == null || variable.isEmpty()) throw new TypeDBClientException(MISSING_VARIABLE);
             com.vaticle.typedb.client.jni.Explainable explainable = explainables_get_relation(nativeObject, variable);
             if (explainable == null) throw new TypeDBClientException(NONEXISTENT_EXPLAINABLE_CONCEPT, variable);
             return new ExplainableImpl(explainable);
@@ -120,6 +123,7 @@ public class ConceptMapImpl extends NativeObject<com.vaticle.typedb.client.jni.C
 
         @Override
         public Explainable attribute(String variable) {
+            if (variable == null || variable.isEmpty()) throw new TypeDBClientException(MISSING_VARIABLE);
             com.vaticle.typedb.client.jni.Explainable explainable = explainables_get_attribute(nativeObject, variable);
             if (explainable == null) throw new TypeDBClientException(NONEXISTENT_EXPLAINABLE_CONCEPT, variable);
             return new ExplainableImpl(explainable);
@@ -127,9 +131,10 @@ public class ConceptMapImpl extends NativeObject<com.vaticle.typedb.client.jni.C
 
         @Override
         public Explainable ownership(String owner, String attribute) {
+            if (owner == null || owner.isEmpty()) throw new TypeDBClientException(MISSING_VARIABLE);
+            if (attribute == null || attribute.isEmpty()) throw new TypeDBClientException(MISSING_VARIABLE);
             com.vaticle.typedb.client.jni.Explainable explainable = explainables_get_ownership(nativeObject, owner, attribute);
-            if (explainable == null)
-                throw new TypeDBClientException(NONEXISTENT_EXPLAINABLE_OWNERSHIP, owner, attribute);
+            if (explainable == null) throw new TypeDBClientException(NONEXISTENT_EXPLAINABLE_OWNERSHIP, owner, attribute);
             return new ExplainableImpl(explainable);
         }
 
