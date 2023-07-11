@@ -84,7 +84,6 @@ public class TypeDBSessionImpl extends NativeObject<com.vaticle.typedb.client.jn
     public void close() {
         if (isOpen.compareAndSet(true, false)) {
             nativeObject.delete();
-            nativeObject = null;
         }
     }
 

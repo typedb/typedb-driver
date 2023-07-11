@@ -21,14 +21,18 @@
 
 package com.vaticle.typedb.client.common;
 
+import com.vaticle.typedb.client.common.exception.ErrorMessage;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+
 public abstract class NativeObject<T> {
     static {
         System.loadLibrary("typedb_client_jni");
     }
 
-    public T nativeObject;
+    public final T nativeObject;
 
     protected NativeObject(T nativeObject) {
+        if (nativeObject == null) throw new TypeDBClientException(ErrorMessage.Internal.NULL_NATIVE_VALUE);
         this.nativeObject = nativeObject;
     }
 }

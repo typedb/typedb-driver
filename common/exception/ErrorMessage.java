@@ -121,18 +121,20 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
 
     public static class Internal extends ErrorMessage {
         public static final Internal UNEXPECTED_NATIVE_VALUE =
-                new Internal(7, "Unexpected native value encountered!");
+                new Internal(1, "Unexpected native value encountered!");
         public static final Internal ILLEGAL_STATE =
-                new Internal(8, "Illegal state has been reached!");
+                new Internal(2, "Illegal state has been reached!");
         public static final Internal ILLEGAL_ARGUMENT =
-                new Internal(9, "Illegal argument provided: '%s'");
+                new Internal(3, "Illegal argument provided: '%s'");
         public static final Internal ILLEGAL_CAST =
-                new Internal(10, "Illegal casting operation to '%s'.");
+                new Internal(4, "Illegal casting operation to '%s'.");
         public static final Internal ILLEGAL_ARGUMENT_COMBINATION =
-                new Internal(11, "Illegal argument combination provided: '%s'");
+                new Internal(5, "Illegal argument combination provided: '%s'");
+        public static final Internal NULL_NATIVE_VALUE =
+                new Internal(6, "Unhandled null pointer to a native object encountered!");
 
-        private static final String codePrefix = "INT";
-        private static final String messagePrefix = "Internal Error";
+        private static final String codePrefix = "JNI";
+        private static final String messagePrefix = "Java Internal Error";
 
         Internal(int number, String message) {
             super(codePrefix, number, messagePrefix, message);
