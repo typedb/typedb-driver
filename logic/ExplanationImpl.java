@@ -27,6 +27,8 @@ import com.vaticle.typedb.client.api.logic.Rule;
 import com.vaticle.typedb.client.common.NativeObject;
 import com.vaticle.typedb.client.concept.answer.ConceptMapImpl;
 
+import java.util.Objects;
+
 import static com.vaticle.typedb.client.jni.typedb_client.explanation_equals;
 import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_conclusion;
 import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_condition;
@@ -34,11 +36,10 @@ import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_rule;
 import static com.vaticle.typedb.client.jni.typedb_client.explanation_to_string;
 
 public class ExplanationImpl extends NativeObject<com.vaticle.typedb.client.jni.Explanation> implements Explanation {
-    private final int hash;
+    private int hash = 0;
 
     public ExplanationImpl(com.vaticle.typedb.client.jni.Explanation explanation) {
         super(explanation);
-        this.hash = toString().hashCode();
     }
 
     @Override
@@ -71,6 +72,11 @@ public class ExplanationImpl extends NativeObject<com.vaticle.typedb.client.jni.
 
     @Override
     public int hashCode() {
+        if (hash == 0) hash = computeHash();
         return hash;
+    }
+
+    private int computeHash() {
+        return Objects.hash(rule(), conclusion(), condition());
     }
 }

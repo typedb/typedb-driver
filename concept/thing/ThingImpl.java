@@ -53,6 +53,7 @@ import static com.vaticle.typedb.client.jni.typedb_client.thing_set_has;
 import static com.vaticle.typedb.client.jni.typedb_client.thing_unset_has;
 
 public abstract class ThingImpl extends ConceptImpl implements Thing {
+    private int hash = 0;
 
     ThingImpl(com.vaticle.typedb.client.jni.Concept concept) {
         super(concept);
@@ -124,5 +125,11 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
     @Override
     public final boolean isDeleted(TypeDBTransaction transaction) {
         return thing_is_deleted(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject);
+    }
+
+    @Override
+    public int hashCode() {
+        if (hash == 0) hash = getIID().hashCode();
+        return hash;
     }
 }

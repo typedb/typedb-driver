@@ -46,11 +46,8 @@ import static com.vaticle.typedb.client.jni.typedb_client.concept_is_role_type;
 import static com.vaticle.typedb.client.jni.typedb_client.concept_is_root_thing_type;
 
 public abstract class ConceptImpl extends NativeObject<com.vaticle.typedb.client.jni.Concept> implements Concept {
-    private final int hash;
-
     protected ConceptImpl(com.vaticle.typedb.client.jni.Concept concept) {
         super(concept);
-        this.hash = toString().hashCode();
     }
 
     public static ConceptImpl of(com.vaticle.typedb.client.jni.Concept concept) {
@@ -79,7 +76,5 @@ public abstract class ConceptImpl extends NativeObject<com.vaticle.typedb.client
     }
 
     @Override
-    public int hashCode() {
-        return hash;
-    }
+    public abstract int hashCode();
 }

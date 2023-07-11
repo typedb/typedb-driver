@@ -76,4 +76,18 @@ public class NumericImpl extends NativeObject<com.vaticle.typedb.client.jni.Nume
     public String toString() {
         return numeric_to_string(nativeObject);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        NumericImpl that = (NumericImpl) obj;
+        return (this.isNaN() && that.isNaN()) || (this.asNumber().equals(that.asNumber()));
+    }
+
+    @Override
+    public int hashCode() {
+        if (isNaN()) return 0;
+        return asNumber().hashCode();
+    }
 }

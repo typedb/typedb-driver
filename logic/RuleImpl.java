@@ -38,11 +38,10 @@ import static com.vaticle.typedb.client.jni.typedb_client.rule_set_label;
 import static com.vaticle.typedb.client.jni.typedb_client.rule_to_string;
 
 public class RuleImpl extends NativeObject<com.vaticle.typedb.client.jni.Rule> implements Rule {
-    private final int hash;
+    private int hash = 0;
 
     RuleImpl(com.vaticle.typedb.client.jni.Rule rule) {
         super(rule);
-        this.hash = toString().hashCode();
     }
 
     @Override
@@ -90,6 +89,7 @@ public class RuleImpl extends NativeObject<com.vaticle.typedb.client.jni.Rule> i
 
     @Override
     public int hashCode() {
+        if (hash == 0) hash = getLabel().hashCode();
         return hash;
     }
 }

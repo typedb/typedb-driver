@@ -31,6 +31,8 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.vaticle.typedb.client.jni.typedb_client.annotation_equals;
+import static com.vaticle.typedb.client.jni.typedb_client.annotation_is_key;
+import static com.vaticle.typedb.client.jni.typedb_client.annotation_is_unique;
 import static com.vaticle.typedb.client.jni.typedb_client.annotation_new_key;
 import static com.vaticle.typedb.client.jni.typedb_client.annotation_new_unique;
 import static com.vaticle.typedb.client.jni.typedb_client.annotation_to_string;
@@ -129,12 +131,12 @@ public interface ThingType extends Type {
     @CheckReturnValue
     String getSyntax(TypeDBTransaction transaction);
 
-    public class Annotation extends NativeObject<com.vaticle.typedb.client.jni.Annotation> {
+    class Annotation extends NativeObject<com.vaticle.typedb.client.jni.Annotation> {
         private final int hash;
 
         private Annotation(com.vaticle.typedb.client.jni.Annotation annotation) {
             super(annotation);
-            this.hash = toString().hashCode();
+            this.hash = Boolean.hashCode(isKey());
         }
 
         public static Annotation key() {
@@ -143,6 +145,14 @@ public interface ThingType extends Type {
 
         public static Annotation unique() {
             return new Annotation(annotation_new_unique());
+        }
+
+        public boolean isKey() {
+            return annotation_is_key(nativeObject);
+        }
+
+        public boolean isUnique() {
+            return annotation_is_unique(nativeObject);
         }
 
         @Override

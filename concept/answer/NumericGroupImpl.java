@@ -27,17 +27,18 @@ import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.common.NativeObject;
 import com.vaticle.typedb.client.concept.ConceptImpl;
 
+import java.util.Objects;
+
 import static com.vaticle.typedb.client.jni.typedb_client.numeric_group_equals;
 import static com.vaticle.typedb.client.jni.typedb_client.numeric_group_get_numeric;
 import static com.vaticle.typedb.client.jni.typedb_client.numeric_group_get_owner;
 import static com.vaticle.typedb.client.jni.typedb_client.numeric_group_to_string;
 
 public class NumericGroupImpl extends NativeObject<com.vaticle.typedb.client.jni.NumericGroup> implements NumericGroup {
-    private final int hash;
+    private int hash = 0;
 
     public NumericGroupImpl(com.vaticle.typedb.client.jni.NumericGroup numericGroup) {
         super(numericGroup);
-        this.hash = toString().hashCode();
     }
 
     @Override
@@ -65,6 +66,11 @@ public class NumericGroupImpl extends NativeObject<com.vaticle.typedb.client.jni
 
     @Override
     public int hashCode() {
+        if (hash == 0) hash = computeHash();
         return hash;
+    }
+
+    private int computeHash() {
+        return Objects.hash(owner(), numeric());
     }
 }

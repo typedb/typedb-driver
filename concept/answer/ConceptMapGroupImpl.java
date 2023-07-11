@@ -27,6 +27,8 @@ import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.common.NativeObject;
 import com.vaticle.typedb.client.concept.ConceptImpl;
 
+import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.vaticle.typedb.client.jni.typedb_client.concept_map_group_equals;
@@ -35,11 +37,10 @@ import static com.vaticle.typedb.client.jni.typedb_client.concept_map_group_get_
 import static com.vaticle.typedb.client.jni.typedb_client.concept_map_group_to_string;
 
 public class ConceptMapGroupImpl extends NativeObject<com.vaticle.typedb.client.jni.ConceptMapGroup> implements ConceptMapGroup {
-    private final int hash;
+    private int hash = 0;
 
     public ConceptMapGroupImpl(com.vaticle.typedb.client.jni.ConceptMapGroup concept_map_group) {
         super(concept_map_group);
-        this.hash = toString().hashCode();
     }
 
     @Override
@@ -67,6 +68,11 @@ public class ConceptMapGroupImpl extends NativeObject<com.vaticle.typedb.client.
 
     @Override
     public int hashCode() {
+        if (hash == 0) hash = computeHash();
         return hash;
+    }
+
+    private int computeHash() {
+        return Objects.hash(owner(), conceptMaps().collect(Collectors.toList()));
     }
 }

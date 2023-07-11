@@ -28,6 +28,8 @@ import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.concept.ConceptImpl;
 import com.vaticle.typedb.common.collection.Pair;
 
+import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.NONEXISTENT_EXPLAINABLE_CONCEPT;
@@ -51,11 +53,10 @@ import static com.vaticle.typedb.client.jni.typedb_client.explainables_get_relat
 import static com.vaticle.typedb.client.jni.typedb_client.explainables_to_string;
 
 public class ConceptMapImpl extends NativeObject<com.vaticle.typedb.client.jni.ConceptMap> implements ConceptMap {
-    private final int hash;
+    private int hash = 0;
 
     public ConceptMapImpl(com.vaticle.typedb.client.jni.ConceptMap concept_map) {
         super(concept_map);
-        this.hash = toString().hashCode();
     }
 
     @Override
@@ -95,15 +96,19 @@ public class ConceptMapImpl extends NativeObject<com.vaticle.typedb.client.jni.C
 
     @Override
     public int hashCode() {
+        if (hash == 0) hash = computeHash();
         return hash;
     }
 
+    private int computeHash() {
+        return Objects.hash(variables().collect(Collectors.toList()), concepts().collect(Collectors.toList()));
+    }
+
     public static class ExplainablesImpl extends NativeObject<com.vaticle.typedb.client.jni.Explainables> implements Explainables {
-        private final int hash;
+        private int hash = 0;
 
         ExplainablesImpl(com.vaticle.typedb.client.jni.Explainables explainables) {
             super(explainables);
-            this.hash = toString().hashCode();
         }
 
         @Override
@@ -162,7 +167,16 @@ public class ConceptMapImpl extends NativeObject<com.vaticle.typedb.client.jni.C
 
         @Override
         public int hashCode() {
+            if (hash == 0) hash = computeHash();
             return hash;
+        }
+
+        private int computeHash() {
+            return Objects.hash(
+                    relations().collect(Collectors.toList()),
+                    attributes().collect(Collectors.toList()),
+                    ownerships().collect(Collectors.toList())
+            );
         }
     }
 

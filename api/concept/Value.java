@@ -47,11 +47,10 @@ import static com.vaticle.typedb.client.jni.typedb_client.value_new_long;
 import static com.vaticle.typedb.client.jni.typedb_client.value_new_string;
 
 public class Value extends NativeObject<com.vaticle.typedb.client.jni.Value> {
-    private final int hash;
+    private int hash = 0;
 
     public Value(com.vaticle.typedb.client.jni.Value value) {
         super(value);
-        this.hash = toString().hashCode();
     }
 
     public static Value of(boolean value) {
@@ -134,6 +133,16 @@ public class Value extends NativeObject<com.vaticle.typedb.client.jni.Value> {
 
     @Override
     public int hashCode() {
+        if (hash == 0) hash = computeHash();
         return hash;
+    }
+
+    private int computeHash() {
+        if (isBoolean()) return Boolean.hashCode(asBoolean());
+        else if (isLong()) return Long.hashCode(asLong());
+        else if (isDouble()) return Double.hashCode(asDouble());
+        else if (isString()) return asString().hashCode();
+        else if (isDateTime()) return asDateTime().hashCode();
+        return -1;
     }
 }

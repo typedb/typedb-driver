@@ -29,6 +29,8 @@ import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 public abstract class TypeImpl extends ConceptImpl implements Type {
+    private int hash = 0;
+
     TypeImpl(com.vaticle.typedb.client.jni.Concept concept) {
         super(concept);
     }
@@ -45,4 +47,10 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
 
     @Override
     public abstract Stream<? extends TypeImpl> getSubtypesExplicit(TypeDBTransaction transaction);
+
+    @Override
+    public int hashCode() {
+        if (hash == 0) hash = getLabel().hashCode();
+        return hash;
+    }
 }
