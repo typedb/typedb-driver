@@ -30,14 +30,14 @@ import static com.vaticle.typedb.client.jni.typedb_client.credential_new;
 
 public class TypeDBCredential extends NativeObject<com.vaticle.typedb.client.jni.Credential> {
     public TypeDBCredential(String username, String password, boolean tlsEnabled) {
-        this(username, password, tlsEnabled, null);
+        this(username, password, null, tlsEnabled);
     }
 
     public TypeDBCredential(String username, String password, Path tlsRootCAPath) {
-        this(username, password, true, tlsRootCAPath.toString());
+        this(username, password, tlsRootCAPath.toString(), true);
     }
 
-    private TypeDBCredential(String username, String password, boolean tlsEnabled, @Nullable String tlsRootCAPath) {
+    private TypeDBCredential(String username, String password, @Nullable String tlsRootCAPath, boolean tlsEnabled) {
         super(credential_new(username, password, tlsRootCAPath, tlsEnabled));
         assert tlsEnabled || tlsRootCAPath == null;
     }
