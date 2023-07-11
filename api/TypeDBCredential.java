@@ -33,12 +33,12 @@ public class TypeDBCredential extends NativeObject<com.vaticle.typedb.client.jni
         this(username, password, tlsEnabled, null);
     }
 
-    public TypeDBCredential(String username, String password, Path tlsRootCA) {
-        this(username, password, true, tlsRootCA.toString());
+    public TypeDBCredential(String username, String password, Path tlsRootCAPath) {
+        this(username, password, true, tlsRootCAPath.toString());
     }
 
-    private TypeDBCredential(String username, String password, boolean tlsEnabled, @Nullable String tlsRootCA) {
-        super(credential_new(username, password, tlsRootCA, tlsEnabled));
-        assert tlsEnabled || tlsRootCA == null;
+    private TypeDBCredential(String username, String password, boolean tlsEnabled, @Nullable String tlsRootCAPath) {
+        super(credential_new(username, password, tlsRootCAPath, tlsEnabled));
+        assert tlsEnabled || tlsRootCAPath == null;
     }
 }

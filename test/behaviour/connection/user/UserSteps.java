@@ -21,7 +21,7 @@
 
 package com.vaticle.typedb.client.test.behaviour.connection.user;
 
-import com.vaticle.typedb.client.api.TypeDBConnection;
+import com.vaticle.typedb.client.api.TypeDBClient;
 import com.vaticle.typedb.client.api.user.User;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -35,7 +35,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class UserSteps {
-    private TypeDBConnection getConnection() {
+    private TypeDBClient getConnection() {
         return connection;
     }
 

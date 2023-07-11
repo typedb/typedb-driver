@@ -22,7 +22,7 @@
 package application;
 
 import com.vaticle.typedb.client.TypeDB;
-import com.vaticle.typedb.client.api.TypeDBConnection;
+import com.vaticle.typedb.client.api.TypeDBClient;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
@@ -37,7 +37,7 @@ public class MavenApplicationTest {
 
     @Test
     public void test() {
-        TypeDBConnection client = TypeDB.coreClient(TypeDB.DEFAULT_ADDRESS);
+        TypeDBClient client = TypeDB.coreClient(TypeDB.DEFAULT_ADDRESS);
         client.databases().create("typedb");
         TypeDBSession session = client.session("typedb", TypeDBSession.Type.DATA);
         TypeDBTransaction tx = session.transaction(TypeDBTransaction.Type.WRITE);

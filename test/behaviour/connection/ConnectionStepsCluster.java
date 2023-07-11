@@ -22,7 +22,7 @@
 package com.vaticle.typedb.client.test.behaviour.connection;
 
 import com.vaticle.typedb.client.TypeDB;
-import com.vaticle.typedb.client.api.TypeDBConnection;
+import com.vaticle.typedb.client.api.TypeDBClient;
 import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.common.test.TypeDBRunner;
@@ -57,11 +57,11 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     }
 
     @Override
-    TypeDBConnection createTypeDBClient(String address) {
+    TypeDBClient createTypeDBClient(String address) {
         return createTypeDBClient(address, "admin", "password", false);
     }
 
-    TypeDBConnection createTypeDBClient(String address, String username, String password, boolean tlsEnabled) {
+    TypeDBClient createTypeDBClient(String address, String username, String password, boolean tlsEnabled) {
         return TypeDB.clusterClient(address, new TypeDBCredential(username, password, tlsEnabled));
     }
 

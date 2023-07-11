@@ -22,7 +22,7 @@
 package com.vaticle.typedb.client.test.integration;
 
 import com.vaticle.typedb.client.TypeDB;
-import com.vaticle.typedb.client.api.TypeDBConnection;
+import com.vaticle.typedb.client.api.TypeDBClient;
 import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
@@ -66,7 +66,7 @@ import static org.junit.Assert.assertEquals;
 public class ClientQueryTest {
     private static final Logger LOG = LoggerFactory.getLogger(ClientQueryTest.class);
     private static TypeDBCoreRunner typedb;
-    private static TypeDBConnection typedbClient;
+    private static TypeDBClient typedbClient;
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {

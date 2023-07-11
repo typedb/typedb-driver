@@ -21,7 +21,7 @@
 
 package com.vaticle.typedb.client.connection;
 
-import com.vaticle.typedb.client.api.TypeDBConnection;
+import com.vaticle.typedb.client.api.TypeDBClient;
 import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
@@ -37,20 +37,20 @@ import java.util.Set;
 import static com.vaticle.typedb.client.jni.typedb_client.connection_open_encrypted;
 import static com.vaticle.typedb.client.jni.typedb_client.connection_open_plaintext;
 
-public class TypeDBConnectionImpl extends NativeObject<com.vaticle.typedb.client.jni.Connection> implements TypeDBConnection {
+public class TypeDBClientImpl extends NativeObject<com.vaticle.typedb.client.jni.Connection> implements TypeDBClient {
     private final UserManager userMgr;
     private final DatabaseManager databaseMgr;
     private boolean isOpen;
 
-    public TypeDBConnectionImpl(String address) throws Error {
+    public TypeDBClientImpl(String address) throws Error {
         this(connection_open_plaintext(address));
     }
 
-    public TypeDBConnectionImpl(Set<String> initAddresses, TypeDBCredential credential) throws Error {
+    public TypeDBClientImpl(Set<String> initAddresses, TypeDBCredential credential) throws Error {
         this(connection_open_encrypted(initAddresses.toArray(new String[0]), credential.nativeObject));
     }
 
-    private TypeDBConnectionImpl(com.vaticle.typedb.client.jni.Connection connection) {
+    private TypeDBClientImpl(com.vaticle.typedb.client.jni.Connection connection) {
         super(connection);
         databaseMgr = new TypeDBDatabaseManagerImpl(this.nativeObject);
         userMgr = new UserManagerImpl(this.nativeObject);
