@@ -25,6 +25,7 @@ import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.Value;
 import com.vaticle.typedb.client.api.concept.thing.Attribute;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
+import com.vaticle.typedb.client.concept.ValueImpl;
 import com.vaticle.typedb.client.concept.type.AttributeTypeImpl;
 import com.vaticle.typedb.client.concept.type.ThingTypeImpl;
 
@@ -46,7 +47,7 @@ public class AttributeImpl extends ThingImpl implements Attribute {
 
     @Override
     public Value getValue() {
-        return new Value(attribute_get_value(nativeObject));
+        return new ValueImpl(attribute_get_value(nativeObject));
     }
 
     @Override

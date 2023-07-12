@@ -25,10 +25,12 @@ import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.Value;
 import com.vaticle.typedb.client.api.concept.thing.Attribute;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
+import com.vaticle.typedb.client.concept.ValueImpl;
 import com.vaticle.typedb.client.concept.thing.AttributeImpl;
 import com.vaticle.typedb.client.jni.Transitivity;
 
 import javax.annotation.Nullable;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -128,14 +130,69 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     }
 
     @Override
+    public Attribute put(TypeDBTransaction transaction, String value) {
+        return put(transaction, ValueImpl.of(value));
+    }
+
+    @Override
+    public Attribute put(TypeDBTransaction transaction, long value) {
+        return put(transaction, ValueImpl.of(value));
+    }
+
+    @Override
+    public Attribute put(TypeDBTransaction transaction, double value) {
+        return put(transaction, ValueImpl.of(value));
+    }
+
+    @Override
+    public Attribute put(TypeDBTransaction transaction, boolean value) {
+        return put(transaction, ValueImpl.of(value));
+    }
+
+    @Override
+    public Attribute put(TypeDBTransaction transaction, LocalDateTime value) {
+        return put(transaction, ValueImpl.of(value));
+    }
+
+    @Override
     public final Attribute put(TypeDBTransaction transaction, Value value) {
-        return new AttributeImpl(attribute_type_put(nativeTransaction(transaction), nativeObject, value.nativeObject));
+        return new AttributeImpl(attribute_type_put(nativeTransaction(transaction), nativeObject, ((ValueImpl) value).nativeObject));
+    }
+
+    @Nullable
+    @Override
+    public Attribute get(TypeDBTransaction transaction, String value) {
+        return get(transaction, ValueImpl.of(value));
+    }
+
+    @Nullable
+    @Override
+    public Attribute get(TypeDBTransaction transaction, long value) {
+        return get(transaction, ValueImpl.of(value));
+    }
+
+    @Nullable
+    @Override
+    public Attribute get(TypeDBTransaction transaction, double value) {
+        return get(transaction, ValueImpl.of(value));
+    }
+
+    @Nullable
+    @Override
+    public Attribute get(TypeDBTransaction transaction, boolean value) {
+        return get(transaction, ValueImpl.of(value));
+    }
+
+    @Nullable
+    @Override
+    public Attribute get(TypeDBTransaction transaction, LocalDateTime value) {
+        return get(transaction, ValueImpl.of(value));
     }
 
     @Nullable
     @Override
     public final Attribute get(TypeDBTransaction transaction, Value value) {
-        com.vaticle.typedb.client.jni.Concept res = attribute_type_get(nativeTransaction(transaction), nativeObject, value.nativeObject);
+        com.vaticle.typedb.client.jni.Concept res = attribute_type_get(nativeTransaction(transaction), nativeObject, ((ValueImpl) value).nativeObject);
         if (res != null) return new AttributeImpl(res);
         else return null;
     }

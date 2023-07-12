@@ -52,53 +52,33 @@ public interface AttributeType extends ThingType {
 
     Attribute put(TypeDBTransaction transaction, Value value);
 
-    default Attribute put(TypeDBTransaction transaction, String value) {
-        return put(transaction, Value.of(value));
-    }
+    Attribute put(TypeDBTransaction transaction, String value);
 
-    default Attribute put(TypeDBTransaction transaction, long value) {
-        return put(transaction, Value.of(value));
-    }
+    Attribute put(TypeDBTransaction transaction, long value);
 
-    default Attribute put(TypeDBTransaction transaction, double value) {
-        return put(transaction, Value.of(value));
-    }
+    Attribute put(TypeDBTransaction transaction, double value);
 
-    default Attribute put(TypeDBTransaction transaction, boolean value) {
-        return put(transaction, Value.of(value));
-    }
+    Attribute put(TypeDBTransaction transaction, boolean value);
 
-    default Attribute put(TypeDBTransaction transaction, LocalDateTime value) {
-        return put(transaction, Value.of(value));
-    }
+    Attribute put(TypeDBTransaction transaction, LocalDateTime value);
 
     @Nullable
     Attribute get(TypeDBTransaction transaction, Value value);
 
     @Nullable
-    default Attribute get(TypeDBTransaction transaction, String value) {
-        return get(transaction, Value.of(value));
-    }
+    Attribute get(TypeDBTransaction transaction, String value);
 
     @Nullable
-    default Attribute get(TypeDBTransaction transaction, long value) {
-        return get(transaction, Value.of(value));
-    }
+    Attribute get(TypeDBTransaction transaction, long value);
 
     @Nullable
-    default Attribute get(TypeDBTransaction transaction, double value) {
-        return get(transaction, Value.of(value));
-    }
+    Attribute get(TypeDBTransaction transaction, double value);
 
     @Nullable
-    default Attribute get(TypeDBTransaction transaction, boolean value) {
-        return get(transaction, Value.of(value));
-    }
+    Attribute get(TypeDBTransaction transaction, boolean value);
 
     @Nullable
-    default Attribute get(TypeDBTransaction transaction, LocalDateTime value) {
-        return get(transaction, Value.of(value));
-    }
+    Attribute get(TypeDBTransaction transaction, LocalDateTime value);
 
     String getRegex(TypeDBTransaction transaction);
 
