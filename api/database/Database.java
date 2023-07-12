@@ -22,6 +22,8 @@
 package com.vaticle.typedb.client.api.database;
 
 import javax.annotation.CheckReturnValue;
+import java.util.Optional;
+import java.util.Set;
 
 public interface Database {
     @CheckReturnValue
@@ -37,4 +39,27 @@ public interface Database {
     String ruleSchema();
 
     void delete();
+
+    @CheckReturnValue
+    Set<? extends Replica> replicas();
+
+    @CheckReturnValue
+    Optional<? extends Replica> primaryReplica();
+
+    @CheckReturnValue
+    Optional<? extends Replica> preferredReplica();
+
+    interface Replica {
+        @CheckReturnValue
+        String address();
+
+        @CheckReturnValue
+        boolean isPrimary();
+
+        @CheckReturnValue
+        boolean isPreferred();
+
+        @CheckReturnValue
+        long term();
+    }
 }
