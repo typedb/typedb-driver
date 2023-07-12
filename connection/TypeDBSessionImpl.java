@@ -27,27 +27,25 @@ import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.database.Database;
 import com.vaticle.typedb.client.common.NativeObject;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
+import static com.vaticle.typedb.client.jni.typedb_client.session_force_close;
 import static com.vaticle.typedb.client.jni.typedb_client.session_get_database_name;
+import static com.vaticle.typedb.client.jni.typedb_client.session_is_open;
 import static com.vaticle.typedb.client.jni.typedb_client.session_new;
 import static com.vaticle.typedb.client.jni.typedb_client.session_on_close;
 
 public class TypeDBSessionImpl extends NativeObject<com.vaticle.typedb.client.jni.Session> implements TypeDBSession {
     private final Type type;
     private final TypeDBOptions options;
-    private final AtomicBoolean isOpen;
 
     TypeDBSessionImpl(Database database, Type type, TypeDBOptions options) {
         super(session_new(((TypeDBDatabaseImpl) database).nativeObject.released(), type.nativeObject, options.nativeObject));
         this.type = type;
         this.options = options;
-        isOpen = new AtomicBoolean(true);
     }
 
     @Override
     public boolean isOpen() {
-        return isOpen.get();
+        return session_is_open(nativeObject);
     }
 
     @Override
@@ -82,9 +80,7 @@ public class TypeDBSessionImpl extends NativeObject<com.vaticle.typedb.client.jn
 
     @Override
     public void close() {
-        if (isOpen.compareAndSet(true, false)) {
-            nativeObject.delete();
-        }
+        session_force_close(nativeObject);
     }
 
     static class Callback extends com.vaticle.typedb.client.jni.SessionCallbackDirector {

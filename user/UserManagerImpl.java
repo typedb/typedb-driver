@@ -73,12 +73,11 @@ public class UserManagerImpl extends NativeObject<com.vaticle.typedb.client.jni.
     }
 
     @Override
-    public User getCurrentUser() {
-        return new UserImpl(users_current_user(nativeObject), connection);
-    }
-
-    @Override
     public void passwordSet(String username, String password) {
         users_set_password(nativeObject, username, password);
+    }
+
+    public User getCurrentUser() {
+        return new UserImpl(users_current_user(nativeObject), connection);
     }
 }

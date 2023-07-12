@@ -34,13 +34,14 @@ import com.vaticle.typedb.client.user.UserManagerImpl;
 
 import java.util.Set;
 
+import static com.vaticle.typedb.client.jni.typedb_client.connection_force_close;
+import static com.vaticle.typedb.client.jni.typedb_client.connection_is_open;
 import static com.vaticle.typedb.client.jni.typedb_client.connection_open_encrypted;
 import static com.vaticle.typedb.client.jni.typedb_client.connection_open_plaintext;
 
 public class TypeDBClientImpl extends NativeObject<com.vaticle.typedb.client.jni.Connection> implements TypeDBClient {
-    private final UserManager userMgr;
+    private final UserManagerImpl userMgr;
     private final DatabaseManager databaseMgr;
-    private boolean isOpen;
 
     public TypeDBClientImpl(String address) throws Error {
         this(connection_open_plaintext(address));
@@ -54,17 +55,16 @@ public class TypeDBClientImpl extends NativeObject<com.vaticle.typedb.client.jni
         super(connection);
         databaseMgr = new TypeDBDatabaseManagerImpl(this.nativeObject);
         userMgr = new UserManagerImpl(this.nativeObject);
-        isOpen = true;
     }
 
     @Override
     public boolean isOpen() {
-        return isOpen;
+        return connection_is_open(nativeObject);
     }
 
     @Override
     public User user() {
-        return users().getCurrentUser();
+        return userMgr.getCurrentUser();
     }
 
     @Override
@@ -89,7 +89,6 @@ public class TypeDBClientImpl extends NativeObject<com.vaticle.typedb.client.jni
 
     @Override
     public void close() {
-        isOpen = false;
-        nativeObject.delete();
+        connection_force_close(nativeObject);
     }
 }

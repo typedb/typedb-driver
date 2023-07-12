@@ -38,6 +38,4 @@ public interface UserManager {
     Set<User> all();
 
     void passwordSet(String username, String password);
-
-    User getCurrentUser();
 }
