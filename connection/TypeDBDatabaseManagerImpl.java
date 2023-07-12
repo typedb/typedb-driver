@@ -23,6 +23,7 @@ package com.vaticle.typedb.client.connection;
 
 import com.vaticle.typedb.client.api.database.Database;
 import com.vaticle.typedb.client.api.database.DatabaseManager;
+import com.vaticle.typedb.client.common.NativeObject;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 import java.util.List;
@@ -35,33 +36,31 @@ import static com.vaticle.typedb.client.jni.typedb_client.databases_create;
 import static com.vaticle.typedb.client.jni.typedb_client.databases_get;
 import static java.util.stream.Collectors.toList;
 
-public class TypeDBDatabaseManagerImpl implements DatabaseManager {
-    private final com.vaticle.typedb.client.jni.DatabaseManager databaseManager;
-
+public class TypeDBDatabaseManagerImpl extends NativeObject<com.vaticle.typedb.client.jni.DatabaseManager> implements DatabaseManager {
     public TypeDBDatabaseManagerImpl(com.vaticle.typedb.client.jni.Connection connection) {
-        databaseManager = database_manager_new(connection);
+        super(database_manager_new(connection));
     }
 
     @Override
     public Database get(String name) throws Error {
         if (name == null || name.isEmpty()) throw new TypeDBClientException(MISSING_DB_NAME);
-        return new TypeDBDatabaseImpl(databases_get(databaseManager, name));
+        return new TypeDBDatabaseImpl(databases_get(nativeObject, name));
     }
 
     @Override
     public boolean contains(String name) throws Error {
         if (name == null || name.isEmpty()) throw new TypeDBClientException(MISSING_DB_NAME);
-        return databases_contains(databaseManager, name);
+        return databases_contains(nativeObject, name);
     }
 
     @Override
     public void create(String name) throws Error {
         if (name == null || name.isEmpty()) throw new TypeDBClientException(MISSING_DB_NAME);
-        databases_create(databaseManager, name);
+        databases_create(nativeObject, name);
     }
 
     @Override
     public List<Database> all() {
-        return databases_all(databaseManager).stream().map(TypeDBDatabaseImpl::new).collect(toList());
+        return databases_all(nativeObject).stream().map(TypeDBDatabaseImpl::new).collect(toList());
     }
 }
