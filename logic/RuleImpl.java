@@ -42,8 +42,13 @@ import static com.vaticle.typedb.client.jni.typedb_client.rule_to_string;
 public class RuleImpl extends NativeObject<com.vaticle.typedb.client.jni.Rule> implements Rule {
     private int hash = 0;
 
+    private final Conjunction<? extends Pattern> when;
+    private final ThingVariable<?> then;
+
     RuleImpl(com.vaticle.typedb.client.jni.Rule rule) {
         super(rule);
+        when = TypeQL.parsePattern(rule_get_when(nativeObject)).asConjunction();
+        then = TypeQL.parseVariable(rule_get_then(nativeObject)).asThing();
     }
 
     @Override
@@ -53,12 +58,12 @@ public class RuleImpl extends NativeObject<com.vaticle.typedb.client.jni.Rule> i
 
     @Override
     public Conjunction<? extends Pattern> getWhen() {
-        return TypeQL.parsePattern(rule_get_when(nativeObject)).asConjunction();
+        return when;
     }
 
     @Override
     public ThingVariable<?> getThen() {
-        return TypeQL.parseVariable(rule_get_then(nativeObject)).asThing();
+        return then;
     }
 
     @Override
