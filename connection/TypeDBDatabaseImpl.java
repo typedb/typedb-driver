@@ -30,10 +30,16 @@ import java.util.stream.Collectors;
 
 import static com.vaticle.typedb.client.jni.typedb_client.database_delete;
 import static com.vaticle.typedb.client.jni.typedb_client.database_get_name;
-import static com.vaticle.typedb.client.jni.typedb_client.*;
+import static com.vaticle.typedb.client.jni.typedb_client.database_get_preferred_replica_info;
+import static com.vaticle.typedb.client.jni.typedb_client.database_get_primary_replica_info;
+import static com.vaticle.typedb.client.jni.typedb_client.database_get_replicas_info;
 import static com.vaticle.typedb.client.jni.typedb_client.database_rule_schema;
 import static com.vaticle.typedb.client.jni.typedb_client.database_schema;
 import static com.vaticle.typedb.client.jni.typedb_client.database_type_schema;
+import static com.vaticle.typedb.client.jni.typedb_client.replica_info_get_address;
+import static com.vaticle.typedb.client.jni.typedb_client.replica_info_get_term;
+import static com.vaticle.typedb.client.jni.typedb_client.replica_info_is_preferred;
+import static com.vaticle.typedb.client.jni.typedb_client.replica_info_is_primary;
 
 public class TypeDBDatabaseImpl extends NativeObject<com.vaticle.typedb.client.jni.Database> implements Database {
     public TypeDBDatabaseImpl(com.vaticle.typedb.client.jni.Database database) {
