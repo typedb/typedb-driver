@@ -58,7 +58,7 @@ import static com.vaticle.typedb.client.jni.typedb_client.schema_exception_code;
 import static com.vaticle.typedb.client.jni.typedb_client.schema_exception_message;
 
 public final class ConceptManagerImpl implements ConceptManager {
-    public final com.vaticle.typedb.client.jni.Transaction transaction;
+    final com.vaticle.typedb.client.jni.Transaction transaction;
 
     public ConceptManagerImpl(com.vaticle.typedb.client.jni.Transaction transaction) {
         this.transaction = transaction;

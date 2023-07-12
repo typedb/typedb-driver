@@ -25,7 +25,6 @@ import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.Value;
 import com.vaticle.typedb.client.api.concept.thing.Attribute;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
-import com.vaticle.typedb.client.concept.ConceptManagerImpl;
 import com.vaticle.typedb.client.concept.type.AttributeTypeImpl;
 import com.vaticle.typedb.client.concept.type.ThingTypeImpl;
 
@@ -52,11 +51,11 @@ public class AttributeImpl extends ThingImpl implements Attribute {
 
     @Override
     public final Stream<ThingImpl> getOwners(TypeDBTransaction transaction) {
-        return attribute_get_owners(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, null).stream().map(ThingImpl::of);
+        return attribute_get_owners(nativeTransaction(transaction), nativeObject, null).stream().map(ThingImpl::of);
     }
 
     @Override
     public Stream<ThingImpl> getOwners(TypeDBTransaction transaction, ThingType ownerType) {
-        return attribute_get_owners(((ConceptManagerImpl) transaction.concepts()).transaction, nativeObject, ((ThingTypeImpl) ownerType).nativeObject).stream().map(ThingImpl::of);
+        return attribute_get_owners(nativeTransaction(transaction), nativeObject, ((ThingTypeImpl) ownerType).nativeObject).stream().map(ThingImpl::of);
     }
 }

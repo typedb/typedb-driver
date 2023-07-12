@@ -21,6 +21,7 @@
 
 package com.vaticle.typedb.client.concept;
 
+import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.common.NativeObject;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
@@ -48,6 +49,10 @@ import static com.vaticle.typedb.client.jni.typedb_client.concept_is_root_thing_
 public abstract class ConceptImpl extends NativeObject<com.vaticle.typedb.client.jni.Concept> implements Concept {
     protected ConceptImpl(com.vaticle.typedb.client.jni.Concept concept) {
         super(concept);
+    }
+
+    protected static com.vaticle.typedb.client.jni.Transaction nativeTransaction(TypeDBTransaction transaction) {
+        return ((ConceptManagerImpl) transaction.concepts()).transaction;
     }
 
     public static ConceptImpl of(com.vaticle.typedb.client.jni.Concept concept) {
