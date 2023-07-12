@@ -52,7 +52,7 @@ public abstract class ConceptImpl extends NativeObject<com.vaticle.typedb.client
     }
 
     protected static com.vaticle.typedb.client.jni.Transaction nativeTransaction(TypeDBTransaction transaction) {
-        return ((ConceptManagerImpl) transaction.concepts()).transaction;
+        return ((ConceptManagerImpl) transaction.concepts()).nativeTransaction;
     }
 
     public static ConceptImpl of(com.vaticle.typedb.client.jni.Concept concept) {

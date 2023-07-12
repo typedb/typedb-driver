@@ -69,17 +69,17 @@ public class RuleImpl extends NativeObject<com.vaticle.typedb.client.jni.Rule> i
     @Override
     public void setLabel(TypeDBTransaction transaction, String newLabel) {
         if (newLabel == null || newLabel.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
-        rule_set_label(((LogicManagerImpl) transaction.logic()).transaction, nativeObject, newLabel);
+        rule_set_label(((LogicManagerImpl) transaction.logic()).nativeTransaction, nativeObject, newLabel);
     }
 
     @Override
     public void delete(TypeDBTransaction transaction) {
-        rule_delete(((LogicManagerImpl) transaction.logic()).transaction, nativeObject);
+        rule_delete(((LogicManagerImpl) transaction.logic()).nativeTransaction, nativeObject);
     }
 
     @Override
     public final boolean isDeleted(TypeDBTransaction transaction) {
-        return rule_is_deleted(((LogicManagerImpl) transaction.logic()).transaction, nativeObject);
+        return rule_is_deleted(((LogicManagerImpl) transaction.logic()).nativeTransaction, nativeObject);
     }
 
     @Override

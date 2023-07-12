@@ -57,10 +57,10 @@ import static com.vaticle.typedb.client.jni.typedb_client.query_undefine;
 import static com.vaticle.typedb.client.jni.typedb_client.query_update;
 
 public final class QueryManagerImpl implements QueryManager {
-    private final com.vaticle.typedb.client.jni.Transaction transaction;
+    private final com.vaticle.typedb.client.jni.Transaction nativeTransaction;
 
-    public QueryManagerImpl(com.vaticle.typedb.client.jni.Transaction transaction) {
-        this.transaction = transaction;
+    public QueryManagerImpl(com.vaticle.typedb.client.jni.Transaction nativeTransaction) {
+        this.nativeTransaction = nativeTransaction;
     }
 
     @Override
@@ -80,9 +80,9 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<ConceptMap> match(String query, TypeDBOptions options) {
-        if (!transaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
-        return query_match(transaction, query, options.nativeObject).stream().map(ConceptMapImpl::new);
+        return query_match(nativeTransaction, query, options.nativeObject).stream().map(ConceptMapImpl::new);
     }
 
     @Override
@@ -102,9 +102,9 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Numeric matchAggregate(String query, TypeDBOptions options) {
-        if (!transaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
-        return new NumericImpl(query_match_aggregate(transaction, query, options.nativeObject));
+        return new NumericImpl(query_match_aggregate(nativeTransaction, query, options.nativeObject));
     }
 
     @Override
@@ -124,9 +124,9 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<ConceptMapGroup> matchGroup(String query, TypeDBOptions options) {
-        if (!transaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
-        return query_match_group(transaction, query, options.nativeObject).stream().map(ConceptMapGroupImpl::new);
+        return query_match_group(nativeTransaction, query, options.nativeObject).stream().map(ConceptMapGroupImpl::new);
     }
 
     @Override
@@ -146,9 +146,9 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<NumericGroup> matchGroupAggregate(String query, TypeDBOptions options) {
-        if (!transaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
-        return query_match_group_aggregate(transaction, query, options.nativeObject).stream().map(NumericGroupImpl::new);
+        return query_match_group_aggregate(nativeTransaction, query, options.nativeObject).stream().map(NumericGroupImpl::new);
     }
 
     @Override
@@ -168,9 +168,9 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<ConceptMap> insert(String query, TypeDBOptions options) {
-        if (!transaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
-        return query_insert(transaction, query, options.nativeObject).stream().map(ConceptMapImpl::new);
+        return query_insert(nativeTransaction, query, options.nativeObject).stream().map(ConceptMapImpl::new);
     }
 
     @Override
@@ -190,9 +190,9 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public void delete(String query, TypeDBOptions options) {
-        if (!transaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
-        query_delete(transaction, query, options.nativeObject);
+        query_delete(nativeTransaction, query, options.nativeObject);
     }
 
     @Override
@@ -212,9 +212,9 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<ConceptMap> update(String query, TypeDBOptions options) {
-        if (!transaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
-        return query_update(transaction, query, options.nativeObject).stream().map(ConceptMapImpl::new);
+        return query_update(nativeTransaction, query, options.nativeObject).stream().map(ConceptMapImpl::new);
     }
 
     @Override
@@ -234,9 +234,9 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public void define(String query, TypeDBOptions options) {
-        if (!transaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
-        query_define(transaction, query, options.nativeObject);
+        query_define(nativeTransaction, query, options.nativeObject);
     }
 
     @Override
@@ -256,9 +256,9 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public void undefine(String query, TypeDBOptions options) {
-        if (!transaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
-        query_undefine(transaction, query, options.nativeObject);
+        query_undefine(nativeTransaction, query, options.nativeObject);
     }
 
     @Override
@@ -268,7 +268,7 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<Explanation> explain(ConceptMap.Explainable explainable, TypeDBOptions options) {
-        if (!transaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
-        return query_explain(transaction, explainable.id(), options.nativeObject).stream().map(ExplanationImpl::new);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        return query_explain(nativeTransaction, explainable.id(), options.nativeObject).stream().map(ExplanationImpl::new);
     }
 }

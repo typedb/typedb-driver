@@ -38,11 +38,11 @@ import static com.vaticle.typedb.client.jni.typedb_client.users_get;
 import static com.vaticle.typedb.client.jni.typedb_client.users_set_password;
 
 public class UserManagerImpl extends NativeObject<com.vaticle.typedb.client.jni.UserManager> implements UserManager {
-    private final com.vaticle.typedb.client.jni.Connection connection;
+    private final com.vaticle.typedb.client.jni.Connection nativeConnection;
 
-    public UserManagerImpl(com.vaticle.typedb.client.jni.Connection connection) {
-        super(user_manager_new(connection));
-        this.connection = connection;
+    public UserManagerImpl(com.vaticle.typedb.client.jni.Connection nativeConnection) {
+        super(user_manager_new(nativeConnection));
+        this.nativeConnection = nativeConnection;
     }
 
     @Override
@@ -62,13 +62,13 @@ public class UserManagerImpl extends NativeObject<com.vaticle.typedb.client.jni.
 
     @Override
     public Set<User> all() {
-        return users_all(nativeObject).stream().map(user -> new UserImpl(user, connection)).collect(Collectors.toSet());
+        return users_all(nativeObject).stream().map(user -> new UserImpl(user, nativeConnection)).collect(Collectors.toSet());
     }
 
     @Override
     public User get(String username) {
         var user = users_get(nativeObject, username);
-        if (user != null) return new UserImpl(user, connection);
+        if (user != null) return new UserImpl(user, nativeConnection);
         else return null;
     }
 
@@ -78,6 +78,6 @@ public class UserManagerImpl extends NativeObject<com.vaticle.typedb.client.jni.
     }
 
     public User getCurrentUser() {
-        return new UserImpl(users_current_user(nativeObject), connection);
+        return new UserImpl(users_current_user(nativeObject), nativeConnection);
     }
 }

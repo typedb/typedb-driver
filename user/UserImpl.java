@@ -31,11 +31,11 @@ import static com.vaticle.typedb.client.jni.typedb_client.user_get_username;
 import static com.vaticle.typedb.client.jni.typedb_client.user_password_update;
 
 public class UserImpl extends NativeObject<com.vaticle.typedb.client.jni.User> implements User {
-    private final com.vaticle.typedb.client.jni.Connection connection;
+    private final com.vaticle.typedb.client.jni.Connection nativeConnection;
 
-    public UserImpl(com.vaticle.typedb.client.jni.User user, com.vaticle.typedb.client.jni.Connection connection) {
+    public UserImpl(com.vaticle.typedb.client.jni.User user, com.vaticle.typedb.client.jni.Connection nativeConnection) {
         super(user);
-        this.connection = connection;
+        this.nativeConnection = nativeConnection;
     }
 
     @Override
@@ -52,6 +52,6 @@ public class UserImpl extends NativeObject<com.vaticle.typedb.client.jni.User> i
 
     @Override
     public void passwordUpdate(String passwordOld, String passwordNew) {
-        user_password_update(nativeObject, connection, passwordOld, passwordNew);
+        user_password_update(nativeObject, nativeConnection, passwordOld, passwordNew);
     }
 }

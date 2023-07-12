@@ -35,29 +35,29 @@ import static com.vaticle.typedb.client.jni.typedb_client.logic_manager_get_rule
 import static com.vaticle.typedb.client.jni.typedb_client.logic_manager_put_rule;
 
 public final class LogicManagerImpl implements LogicManager {
-    final com.vaticle.typedb.client.jni.Transaction transaction;
+    final com.vaticle.typedb.client.jni.Transaction nativeTransaction;
 
-    public LogicManagerImpl(com.vaticle.typedb.client.jni.Transaction transaction) {
-        this.transaction = transaction;
+    public LogicManagerImpl(com.vaticle.typedb.client.jni.Transaction nativeTransaction) {
+        this.nativeTransaction = nativeTransaction;
     }
 
     @Override
     @Nullable
     public Rule getRule(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
-        com.vaticle.typedb.client.jni.Rule res = logic_manager_get_rule(transaction, label);
+        com.vaticle.typedb.client.jni.Rule res = logic_manager_get_rule(nativeTransaction, label);
         if (res != null) return new RuleImpl(res);
         else return null;
     }
 
     @Override
     public Stream<RuleImpl> getRules() {
-        return logic_manager_get_rules(transaction).stream().map(RuleImpl::new);
+        return logic_manager_get_rules(nativeTransaction).stream().map(RuleImpl::new);
     }
 
     @Override
     public Rule putRule(String label, Pattern when, Pattern then) {
         if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
-        return new RuleImpl(logic_manager_put_rule(transaction, label, when.toString(), then.toString()));
+        return new RuleImpl(logic_manager_put_rule(nativeTransaction, label, when.toString(), then.toString()));
     }
 }
