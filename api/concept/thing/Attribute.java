@@ -55,31 +55,6 @@ public interface Attribute extends Thing {
         return this;
     }
 
-    @CheckReturnValue
-    default boolean isBoolean() {
-        return getValue().isBoolean();
-    }
-
-    @CheckReturnValue
-    default boolean isLong() {
-        return getValue().isLong();
-    }
-
-    @CheckReturnValue
-    default boolean isDouble() {
-        return getValue().isDouble();
-    }
-
-    @CheckReturnValue
-    default boolean isString() {
-        return getValue().isString();
-    }
-
-    @CheckReturnValue
-    default boolean isDateTime() {
-        return getValue().isDateTime();
-    }
-
     Value getValue();
 
     @Override

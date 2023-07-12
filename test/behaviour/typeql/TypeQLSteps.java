@@ -565,7 +565,7 @@ public class TypeQLSteps {
             }
             Attribute attribute = concept.asAttribute();
             AttributeType attributeType = attribute.getType();
-            if (attribute.isDateTime()) {
+            if (attribute.getValue().isDateTime()) {
                 LocalDateTime dateTime;
                 try {
                     dateTime = LocalDateTime.parse(value);
