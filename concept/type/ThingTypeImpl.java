@@ -277,27 +277,45 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
         @Override
         public Stream<? extends ThingTypeImpl> getSupertypes(TypeDBTransaction transaction) {
-            return null;
+            return Stream.empty();
         }
 
         @Override
         public Stream<? extends ThingTypeImpl> getSubtypes(TypeDBTransaction transaction) {
-            return null;
+            return Stream.concat(
+                    Stream.concat(
+                            transaction.concepts().getRootEntityType().getSubtypes(transaction),
+                            transaction.concepts().getRootRelationType().getSubtypes(transaction)),
+                    transaction.concepts().getRootAttributeType().getSubtypes(transaction)).map(tt -> (ThingTypeImpl) tt);
         }
 
         @Override
         public Stream<? extends ThingTypeImpl> getSubtypesExplicit(TypeDBTransaction transaction) {
-            return null;
+            return Stream.concat(
+                    Stream.of(transaction.concepts().getRootEntityType(), transaction.concepts().getRootRelationType(), transaction.concepts().getRootAttributeType()),
+                    Stream.concat(
+                        Stream.concat(
+                                transaction.concepts().getRootEntityType().getSubtypesExplicit(transaction),
+                                transaction.concepts().getRootRelationType().getSubtypesExplicit(transaction)),
+                        transaction.concepts().getRootAttributeType().getSubtypesExplicit(transaction))).map(tt -> (ThingTypeImpl) tt);
         }
 
         @Override
         public Stream<? extends ThingImpl> getInstances(TypeDBTransaction transaction) {
-            return null;
+            return Stream.concat(
+                    Stream.concat(
+                            transaction.concepts().getRootEntityType().getInstances(transaction),
+                            transaction.concepts().getRootRelationType().getInstances(transaction)),
+                    transaction.concepts().getRootAttributeType().getInstances(transaction)).map(t -> (ThingImpl) t);
         }
 
         @Override
         public Stream<? extends ThingImpl> getInstancesExplicit(TypeDBTransaction transaction) {
-            return null;
+            return Stream.concat(
+                    Stream.concat(
+                            transaction.concepts().getRootEntityType().getInstancesExplicit(transaction),
+                            transaction.concepts().getRootRelationType().getInstancesExplicit(transaction)),
+                    transaction.concepts().getRootAttributeType().getInstancesExplicit(transaction)).map(t -> (ThingImpl) t);
         }
     }
 }
