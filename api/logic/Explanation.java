@@ -32,7 +32,7 @@ public interface Explanation {
 
     ConceptMap condition();
 
-    Set<String> mappedVariables();
+    Set<String> queryVariables();
 
-    Set<String> conclusionMapping(String var);
+    Set<String> queryVariableMapping(String var);
 }

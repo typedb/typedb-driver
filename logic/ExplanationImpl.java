@@ -64,12 +64,12 @@ public class ExplanationImpl extends NativeObject<com.vaticle.typedb.client.jni.
     }
 
     @Override
-    public Set<String> mappedVariables() {
+    public Set<String> queryVariables() {
         return explanation_get_mapped_variables(nativeObject).stream().collect(Collectors.toSet());
     }
 
     @Override
-    public Set<String> conclusionMapping(String var) {
+    public Set<String> queryVariableMapping(String var) {
         if (var == null || var.isEmpty()) throw new TypeDBClientException(MISSING_VARIABLE);
         return explanation_get_mapping(nativeObject, var).stream().collect(Collectors.toSet());
     }
