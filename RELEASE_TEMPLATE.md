@@ -1,14 +1,23 @@
-Documentation: https://github.com/vaticle/typedb-client-rust/blob/master/README.md
-
-## Project Status
-This is a **work in progress** and is not yet suitable for production usage.
-
-It can connect to TypeDB, run read and write queries, and return answers. Concept API methods are not available yet.
+Documentation: http://docs.vaticle.com/docs/client-api/java
 
 ## Distribution
-Import [`typedb-client`](https://crates.io/crates/typedb-client) through Cargo:
-```toml
-typedb-client = "{version}"
+
+Available through https://repo.vaticle.com
+
+```xml
+<repositories>
+    <repository>
+        <id>repo.vaticle.com</id>
+        <url>https://repo.vaticle.com/repository/maven/</url>
+    </repository>
+</repositories>
+<dependencies>
+    <dependency>
+        <groupid>com.vaticle.typedb</groupid>
+        <artifactid>typedb-client</artifactid>
+        <version>{version}</version>
+    </dependency>
+</dependencies>
 ```
 
 { release notes }
