@@ -19,7 +19,24 @@
 # under the License.
 #
 
-deployment = {
-    "github.organisation": "vaticle",
-    "github.repository": "typedb-driver-java"
-}
+package(default_visibility = ["//java/test/behaviour:__subpackages__"])
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+
+java_library(
+    name = "parameters",
+    srcs = ["Parameters.java"],
+    deps = [
+        "//api:api",
+        "//common:common",
+
+        "@maven//:junit_junit",
+        "@maven//:io_cucumber_cucumber_java"
+    ],
+    visibility = ["//visibility:public"],
+)
+
+checkstyle_test(
+    name = "checkstyle",
+    include = glob(["*"]),
+    license_type = "apache-header",
+)
