@@ -33,8 +33,9 @@ java_library(
         "//java/concept:concept",
         "//java/logic:logic",
 
+        "//rust:typedb_client_jni",
+
         # External dependencies from @vaticle
-        "@vaticle_typedb_client_rust//:typedb_client_jni",
         "@vaticle_typeql//java/query",
 
         # External dependencies from Maven
