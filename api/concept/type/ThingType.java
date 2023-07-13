@@ -27,6 +27,7 @@ import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
 import com.vaticle.typedb.client.common.NativeObject;
 
 import javax.annotation.CheckReturnValue;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -136,7 +137,7 @@ public interface ThingType extends Type {
 
         private Annotation(com.vaticle.typedb.client.jni.Annotation annotation) {
             super(annotation);
-            this.hash = Boolean.hashCode(isKey());
+            this.hash = Objects.hash(isKey(), isUnique());
         }
 
         public static Annotation key() {
