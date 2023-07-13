@@ -127,7 +127,6 @@ checkstyle_test(
         "*",
         "src/**/*",
         "swig/*",
-        "tools/*",
     ]),
     license_type = "apache-header",
 )
