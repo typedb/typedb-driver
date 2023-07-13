@@ -133,15 +133,12 @@ public interface AttributeType extends ThingType {
 
         @CheckReturnValue
         public static ValueType of(com.vaticle.typedb.client.jni.ValueType valueType) {
-            switch (valueType) {
-                case Boolean: return BOOLEAN;
-                case Long: return LONG;
-                case Double: return DOUBLE;
-                case String: return STRING;
-                case DateTime: return DATETIME;
-                case Object: return OBJECT;
-                default: throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
+            for (ValueType type : ValueType.values()) {
+                if (type.nativeObject == valueType) {
+                    return type;
+                }
             }
+            throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
         }
 
         @CheckReturnValue

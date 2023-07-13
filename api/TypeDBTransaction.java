@@ -74,11 +74,12 @@ public interface TypeDBTransaction extends AutoCloseable {
         }
 
         public static Type of(com.vaticle.typedb.client.jni.TransactionType transactionType) {
-            switch (transactionType) {
-                case Read: return READ;
-                case Write: return WRITE;
-                default: throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
+            for (Type type : Type.values()) {
+                if (type.nativeObject == transactionType) {
+                    return type;
+                }
             }
+            throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
         }
 
         public int id() {

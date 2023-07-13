@@ -66,11 +66,12 @@ public interface TypeDBSession extends AutoCloseable {
         }
 
         public static Type of(com.vaticle.typedb.client.jni.SessionType sessionType) {
-            switch (sessionType) {
-                case Data: return DATA;
-                case Schema: return SCHEMA;
-                default: throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
+            for (Type type : Type.values()) {
+                if (type.nativeObject == sessionType) {
+                    return type;
+                }
             }
+            throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
         }
 
         public int id() {
