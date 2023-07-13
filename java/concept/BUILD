@@ -28,8 +28,8 @@ java_library(
     srcs = glob(["*.java", "*/*.java"], exclude=["test/**"]),
     deps = [
         # Internal dependencies
-        "//api:api",
-        "//common:common",
+        "//java/api:api",
+        "//java/common:common",
 
         # External dependencies from @vaticle
         "@vaticle_typedb_client_rust//:typedb_client_jni",

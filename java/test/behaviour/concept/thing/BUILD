@@ -31,8 +31,8 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         # Internal Package Dependencies
-        "//api:api",
-        "//common:common",
+        "//java/api:api",
+        "//java/common:common",
         "//java/test/behaviour/config:parameters",
         "//java/test/behaviour/concept/type/thingtype:steps",
         "//java/test/behaviour/util:util",

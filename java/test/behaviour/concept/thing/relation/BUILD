@@ -32,8 +32,8 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         # Internal Package Dependencies
-        "//api:api",
-        "//common:common",
+        "//java/api:api",
+        "//java/common:common",
         "//java/test/behaviour/concept/thing:steps",
         "//java/test/behaviour/util:util",
         "//java/test/behaviour/connection:steps-base",
@@ -74,7 +74,7 @@ typedb_behaviour_java_test(
     ],
     deps = [
         # Internal Package Dependencies
-        "//api:api",
+        "//java/api:api",
         "//java/test/behaviour:behaviour",
 
         # External Maven Dependencies

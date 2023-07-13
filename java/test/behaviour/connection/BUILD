@@ -27,7 +27,7 @@ java_library(
     srcs = ["ConnectionStepsBase.java"],
     deps = [
         # Package dependencies
-        "//api:api",
+        "//java/api:api",
         "@vaticle_typedb_common//test:typedb-runner",
         "@vaticle_typedb_common//:common",
 
@@ -45,8 +45,8 @@ java_library(
     deps = [
         # Package dependencies
         ":steps-base",
-        "//:client-java",
-        "//api:api",
+        "//java:client-java",
+        "//java/api:api",
         "@vaticle_typedb_common//test:typedb-runner",
 
         # External dependencies from Maven
@@ -64,8 +64,8 @@ java_library(
     deps = [
         # Package dependencies
         ":steps-base",
-        "//:client-java",
-        "//api:api",
+        "//java:client-java",
+        "//java/api:api",
         "//java/test/behaviour/util:util",
         "@vaticle_typedb_common//test:typedb-runner",
 

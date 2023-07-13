@@ -31,8 +31,8 @@ typedb_java_test(
     test_class = "com.vaticle.typedb.client.test.integration.ClientQueryTest",
     deps = [
         # Internal dependencies
-        "//:client-java",
-        "//api:api",
+        "//java:client-java",
+        "//java/api:api",
 
         # External dependencies from @vaticle
         "@vaticle_typedb_common//:common",

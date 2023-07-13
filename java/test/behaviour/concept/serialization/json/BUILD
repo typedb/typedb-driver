@@ -32,7 +32,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         # Internal Package Dependencies
-        "//api:api",
+        "//java/api:api",
         "//java/test/behaviour/typeql:steps",
 
         # External Maven Dependencies
