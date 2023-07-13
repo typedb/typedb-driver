@@ -19,7 +19,31 @@
 # under the License.
 #
 
-deployment = {
-    "github.organisation": "vaticle",
-    "github.repository": "typedb-driver-java"
-}
+package(default_visibility = ["//visibility:public"])
+
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+
+java_library(
+    name = "concept",
+    srcs = glob(["*.java", "*/*.java"], exclude=["test/**"]),
+    deps = [
+        # Internal dependencies
+        "//java/api:api",
+        "//java/common:common",
+
+        # External dependencies from @vaticle
+        "@vaticle_typedb_client_rust//:typedb_client_jni",
+        "@vaticle_typedb_common//:common",
+        "@vaticle_typeql//java/common",
+
+        # External dependencies from Maven
+        "@maven//:com_google_code_findbugs_jsr305",
+    ],
+)
+
+checkstyle_test(
+    name = "checkstyle",
+    include = glob(["*", "*/*"]),
+    license_type = "apache-header",
+    size = "small",
+)
