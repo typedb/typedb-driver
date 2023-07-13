@@ -32,8 +32,9 @@ java_library(
         "//java/common:common",
         "//java/concept:concept",
 
+        "//rust:typedb_client_jni",
+
         # External dependencies from @vaticle
-        "@vaticle_typedb_client_rust//:typedb_client_jni",
         "@vaticle_typeql//java:typeql-lang",
         "@vaticle_typeql//java/pattern",
 

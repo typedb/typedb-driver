@@ -24,7 +24,7 @@ package(default_visibility = ["//visibility:public"])
 load("@rules_rust//rust:defs.bzl", "rust_test", "rustfmt_test")
 load("@vaticle_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_typedb_common//runner:rules.bzl", "native_typedb_artifact")
+load("@vaticle_typedb_common//test:rules.bzl", "native_typedb_artifact")
 
 rust_test(
     name = "tests",

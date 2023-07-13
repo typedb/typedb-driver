@@ -35,8 +35,7 @@ java_library(
         "//java/query:query",
         "//java/user:user",
 
-        # External dependencies from @vaticle
-        "@vaticle_typedb_client_rust//:typedb_client_jni",
+        "//rust:typedb_client_jni",
 
         # External dependencies from Maven
         "@maven//:com_google_code_findbugs_jsr305",

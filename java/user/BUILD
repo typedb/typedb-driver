@@ -31,8 +31,7 @@ java_library(
         "//java/api:api",
         "//java/common:common",
 
-        # External dependencies from @vaticle
-        "@vaticle_typedb_client_rust//:typedb_client_jni",
+        "//rust:typedb_client_jni",
     ],
     runtime_deps = [
         "@maven//:ch_qos_logback_logback_classic",

@@ -120,13 +120,12 @@ pip_deps()
 ################################
 
 # Load repositories
-load("//dependencies/vaticle:repositories.bzl", "vaticle_typedb_common", "vaticle_typeql", "vaticle_typedb_behaviour", "vaticle_factory_tracing", "vaticle_typedb_protocol", "vaticle_typedb_client_rust")
+load("//dependencies/vaticle:repositories.bzl", "vaticle_typedb_common", "vaticle_typeql", "vaticle_typedb_behaviour", "vaticle_factory_tracing", "vaticle_typedb_protocol")
 vaticle_typedb_common()
 vaticle_typeql()
 vaticle_typedb_behaviour()
 vaticle_factory_tracing()
 vaticle_typedb_protocol()
-vaticle_typedb_client_rust()
 
 # Load artifacts
 load("//dependencies/vaticle:artifacts.bzl", "vaticle_typedb_artifact", "vaticle_typedb_cluster_artifact")
