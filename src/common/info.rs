@@ -21,6 +21,8 @@
 
 use std::time::Duration;
 
+use tokio::sync::mpsc::UnboundedSender;
+
 use super::{address::Address, SessionID};
 
 #[derive(Clone, Debug)]
@@ -28,6 +30,7 @@ pub(crate) struct SessionInfo {
     pub(crate) address: Address,
     pub(crate) session_id: SessionID,
     pub(crate) network_latency: Duration,
+    pub(crate) on_close_register_sink: UnboundedSender<Box<dyn FnOnce() + Send>>,
 }
 
 #[derive(Debug)]
@@ -37,9 +40,9 @@ pub(crate) struct DatabaseInfo {
 }
 
 #[derive(Debug)]
-pub(crate) struct ReplicaInfo {
-    pub(crate) address: Address,
-    pub(crate) is_primary: bool,
-    pub(crate) is_preferred: bool,
-    pub(crate) term: i64,
+pub struct ReplicaInfo {
+    pub address: Address,
+    pub is_primary: bool,
+    pub is_preferred: bool,
+    pub term: i64,
 }

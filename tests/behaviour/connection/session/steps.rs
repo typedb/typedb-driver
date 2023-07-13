@@ -55,9 +55,9 @@ generic_step_impl! {
     #[step(expr = "connection open (data )session(s) for database(s):")]
     async fn connection_open_data_sessions_for_databases(context: &mut Context, step: &Step) {
         for name in util::iter_table(step) {
-            context
-                .session_trackers
-                .push(Session::new(context.databases.get(name).await.unwrap(), SessionType::Data).await.unwrap().into());
+            context.session_trackers.push(
+                Session::new(context.databases.get(name).await.unwrap(), SessionType::Data).await.unwrap().into(),
+            );
         }
     }
 

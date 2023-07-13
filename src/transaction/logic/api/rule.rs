@@ -19,27 +19,42 @@
  * under the License.
  */
 
-use async_trait::async_trait;
-
 use crate::{logic::Rule, Result, Transaction};
 
-#[async_trait]
+#[cfg_attr(not(feature = "sync"), async_trait::async_trait)]
 pub trait RuleAPI: Clone + Sync + Send {
     fn label(&self) -> &String;
+
+    #[cfg(not(feature = "sync"))]
     async fn delete(&mut self, transaction: &Transaction<'_>) -> Result;
+
+    #[cfg(feature = "sync")]
+    fn delete(&mut self, transaction: &Transaction<'_>) -> Result;
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    async fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool> {
+        transaction.logic().get_rule(self.label().to_owned()).await.map(|rule| rule.is_none())
+    }
+
+    #[cfg(not(feature = "sync"))]
     async fn set_label(&mut self, transaction: &Transaction<'_>, new_label: String) -> Result;
+
+    #[cfg(feature = "sync")]
+    fn set_label(&mut self, transaction: &Transaction<'_>, new_label: String) -> Result;
 }
 
-#[async_trait]
+#[cfg_attr(not(feature = "sync"), async_trait::async_trait)]
 impl RuleAPI for Rule {
     fn label(&self) -> &String {
         &self.label
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn delete(&mut self, transaction: &Transaction<'_>) -> Result {
         transaction.logic().transaction_stream.rule_delete(self.clone()).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn set_label(&mut self, transaction: &Transaction<'_>, new_label: String) -> Result {
         transaction.logic().transaction_stream.rule_set_label(self.clone(), new_label).await
     }

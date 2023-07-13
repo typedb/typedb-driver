@@ -22,6 +22,8 @@
 #![deny(unused_must_use)]
 
 pub mod answer;
+#[cfg(feature = "sync")]
+mod bindings;
 mod common;
 pub mod concept;
 mod connection;

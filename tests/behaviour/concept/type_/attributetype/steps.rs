@@ -22,7 +22,7 @@
 use cucumber::{gherkin::Step, given, then, when};
 use futures::TryStreamExt;
 use typedb_client::{
-    concept::ScopedLabel,
+    concept::{ScopedLabel, Transitivity},
     transaction::concept::api::{AttributeTypeAPI, RelationTypeAPI, ThingTypeAPI},
     Result as TypeDBResult,
 };
@@ -170,7 +170,11 @@ generic_step_impl! {
     ) -> TypeDBResult {
         let tx = context.transaction();
         let attribute_type = context.get_attribute_type(type_label.name).await?;
-        let actuals = attribute_type.get_subtypes(tx)?.map_ok(|at| at.label).try_collect::<Vec<_>>().await?;
+        let actuals = attribute_type
+            .get_subtypes(tx, Transitivity::Transitive)?
+            .map_ok(|at| at.label)
+            .try_collect::<Vec<_>>()
+            .await?;
         for subtype in iter_table(step) {
             containment.assert(&actuals, subtype);
         }
@@ -379,7 +383,7 @@ generic_step_impl! {
         let tx = context.transaction();
         let attribute_type = context.get_attribute_type(type_label.name).await?;
         let actuals: Vec<String> = attribute_type
-            .get_subtypes_with_value_type(tx, value_type.value_type)?
+            .get_subtypes_with_value_type(tx, value_type.value_type, Transitivity::Transitive)?
             .map_ok(|at| at.label)
             .try_collect()
             .await?;
@@ -434,7 +438,7 @@ generic_step_impl! {
         let tx = context.transaction();
         let attribute_type = context.get_attribute_type(type_label.name).await?;
         assert_eq!(attribute_type.value_type, value_type.value_type);
-        assert_eq!(attribute_type.get_regex(tx).await?, regex);
+        assert_eq!(attribute_type.get_regex(tx).await?, Some(regex));
         Ok(())
     }
 
@@ -447,7 +451,7 @@ generic_step_impl! {
         let tx = context.transaction();
         let attribute_type = context.get_attribute_type(type_label.name).await?;
         assert_eq!(attribute_type.value_type, value_type.value_type);
-        assert!(attribute_type.get_regex(tx).await?.is_empty());
+        assert!(attribute_type.get_regex(tx).await?.is_none());
         Ok(())
     }
 

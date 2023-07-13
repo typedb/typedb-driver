@@ -21,35 +21,77 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@rules_rust//rust:defs.bzl", "rust_library", "rustfmt_test")
+load("@rules_rust//rust:defs.bzl", "rust_library", "rust_static_library", "rustfmt_test")
 load("@vaticle_bazel_distribution//crates:rules.bzl", "assemble_crate", "deploy_crate")
 load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
+load("@vaticle_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
+load("@vaticle_dependencies//builder/swig:java.bzl", "swig_java")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//:deployment.bzl", deployment_github = "deployment")
 
+typedb_client_srcs = glob(["src/**/*.rs"])
+typedb_client_tags = ["crate-name=typedb-client"]
+typedb_client_deps = [
+    "@crates//:chrono",
+    "@crates//:crossbeam",
+    "@crates//:futures",
+    "@crates//:http",
+    "@crates//:itertools",
+    "@crates//:log",
+    "@crates//:prost",
+    "@crates//:tokio",
+    "@crates//:tokio-stream",
+    "@crates//:tonic",
+    "@crates//:uuid",
+    "@vaticle_typedb_protocol//grpc/rust:typedb_protocol",
+    "@vaticle_typeql//rust:typeql_lang",
+]
+typedb_client_proc_macro_deps = [
+    "@crates//:async-trait",
+    "@crates//:maybe-async",
+]
+
 rust_library(
     name = "typedb_client",
-    srcs = glob(["src/**/*.rs"]),
-    tags = ["crate-name=typedb-client"],
-    deps = [
-        "@crates//:chrono",
-        "@crates//:crossbeam",
-        "@crates//:futures",
-        "@crates//:http",
-        "@crates//:itertools",
-        "@crates//:log",
-        "@crates//:prost",
-        "@crates//:tokio",
-        "@crates//:tokio-stream",
-        "@crates//:tonic",
-        "@crates//:uuid",
-        "@vaticle_typedb_protocol//grpc/rust:typedb_protocol",
-        "@vaticle_typeql//rust:typeql_lang",
-    ],
-    proc_macro_deps = [
-        "@crates//:async-trait",
-    ]
+    srcs = typedb_client_srcs,
+    deps = typedb_client_deps,
+    proc_macro_deps = typedb_client_proc_macro_deps,
+    tags = typedb_client_tags,
+)
+
+rust_library(
+    name = "typedb_client_sync",
+    srcs = typedb_client_srcs,
+    deps = typedb_client_deps,
+    proc_macro_deps = typedb_client_proc_macro_deps,
+    tags = typedb_client_tags,
+    crate_features = ["sync"],
+)
+
+rust_static_library(
+    name = "typedb_client_clib",
+    srcs = typedb_client_srcs,
+    deps = typedb_client_deps,
+    proc_macro_deps = typedb_client_proc_macro_deps,
+    tags = typedb_client_tags,
+    crate_features = ["sync"],
+)
+
+rust_cbindgen(
+    name = "typedb_client_clib_headers",
+    lib = ":typedb_client_clib",
+    header_name = "typedb_client.h",
+    config = "cbindgen.toml",
+)
+
+swig_java(
+    name = "typedb_client_jni",
+    lib = ":typedb_client_clib_headers",
+    package = "com.vaticle.typedb.client.jni",
+    interface = "typedb_client.i",
+    includes = ["swig/typedb_client_java.swg"],
+    enable_cxx = True,
 )
 
 assemble_crate(
@@ -84,6 +126,7 @@ checkstyle_test(
     include = glob([
         "*",
         "src/**/*",
+        "swig/*",
         "tools/*",
         ".factory/*",
     ]),
@@ -120,6 +163,6 @@ filegroup(
     name = "ci",
     data = [
         "@vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh",
-        "@vaticle_dependencies//tool/cargo:sync",
+        "@vaticle_dependencies//tool/ide:rust_sync",
     ],
 )

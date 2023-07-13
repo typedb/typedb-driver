@@ -22,7 +22,7 @@
 use cucumber::{given, then, when};
 use futures::{StreamExt, TryStreamExt};
 use typedb_client::{
-    concept::{Annotation, Attribute, Entity, Relation, Thing, ThingType},
+    concept::{Annotation, Attribute, Entity, Relation, Thing, ThingType, Transitivity},
     transaction::concept::api::{AttributeAPI, AttributeTypeAPI, EntityTypeAPI, RelationTypeAPI, ThingAPI},
     Result as TypeDBResult,
 };
@@ -129,7 +129,7 @@ generic_step_impl! {
     async fn entity_type_get_instances_is_empty(context: &mut Context, type_label: LabelParam) -> TypeDBResult {
         let tx = context.transaction();
         let entity_type = context.get_entity_type(type_label.name).await?;
-        assert!(entity_type.get_instances(tx)?.next().await.is_none());
+        assert!(entity_type.get_instances(tx, Transitivity::Transitive)?.next().await.is_none());
         Ok(())
     }
 
@@ -142,14 +142,18 @@ generic_step_impl! {
     ) -> TypeDBResult {
         let tx = context.transaction();
         let entity_type = context.get_entity_type(type_label.name).await?;
-        let actuals: Vec<Entity> = entity_type.get_instances(tx)?.try_collect().await?;
+        let actuals: Vec<Entity> = entity_type.get_instances(tx, Transitivity::Transitive)?.try_collect().await?;
         let entity = context.get_entity(var.name);
         containment.assert(&actuals, entity);
         Ok(())
     }
 
     #[step(expr = r"{var} = entity\(( ){label}( )\) create new instance")]
-    async fn entity_type_create_new_instance(context: &mut Context, var: VarParam, type_label: LabelParam) -> TypeDBResult {
+    async fn entity_type_create_new_instance(
+        context: &mut Context,
+        var: VarParam,
+        type_label: LabelParam,
+    ) -> TypeDBResult {
         let tx = context.transaction();
         let entity = context.get_entity_type(type_label.name).await?.create(tx).await?;
         context.insert_entity(var.name, Some(entity));

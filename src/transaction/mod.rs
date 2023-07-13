@@ -29,6 +29,7 @@ use self::{concept::ConceptManager, logic::LogicManager, query::QueryManager};
 use crate::{
     common::{Result, TransactionType},
     connection::TransactionStream,
+    error::ConnectionError,
     Options,
 };
 
@@ -78,10 +79,20 @@ impl Transaction<'_> {
         &self.logic
     }
 
+    pub fn on_close(&self, callback: impl FnOnce(ConnectionError) + Send + Sync + 'static) {
+        self.transaction_stream.on_close(callback)
+    }
+
+    pub fn force_close(&self) {
+        self.transaction_stream.force_close();
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn commit(self) -> Result {
         self.transaction_stream.commit().await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn rollback(&self) -> Result {
         self.transaction_stream.rollback().await
     }

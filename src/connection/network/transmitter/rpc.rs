@@ -19,7 +19,6 @@
  * under the License.
  */
 
-use crossbeam::channel::{bounded as bounded_blocking, Receiver as SyncReceiver, Sender as SyncSender};
 use tokio::{
     select,
     sync::{
@@ -28,7 +27,7 @@ use tokio::{
     },
 };
 
-use super::response_sink::ResponseSink;
+use super::{oneshot_blocking, response_sink::ResponseSink};
 use crate::{
     common::{address::Address, Result},
     connection::{
@@ -42,10 +41,6 @@ use crate::{
     },
     Credential, Error,
 };
-
-fn oneshot_blocking<T>() -> (SyncSender<T>, SyncReceiver<T>) {
-    bounded_blocking::<T>(0)
-}
 
 pub(in crate::connection) struct RPCTransmitter {
     request_sink: UnboundedSender<(Request, ResponseSink<Response>)>,
@@ -79,6 +74,16 @@ impl RPCTransmitter {
             Ok::<(), Error>(())
         })?;
         Ok(Self { request_sink, shutdown_sink })
+    }
+
+    #[cfg(not(feature = "sync"))]
+    pub(in crate::connection) async fn request(&self, request: Request) -> Result<Response> {
+        self.request_async(request).await
+    }
+
+    #[cfg(feature = "sync")]
+    pub(in crate::connection) fn request(&self, request: Request) -> Result<Response> {
+        self.request_blocking(request)
     }
 
     pub(in crate::connection) async fn request_async(&self, request: Request) -> Result<Response> {

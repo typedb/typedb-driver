@@ -107,3 +107,6 @@ load("@vaticle_bazel_distribution//maven:deps.bzl", vaticle_bazel_distribution_m
 
 load("@vaticle_dependencies//library/maven:rules.bzl", "maven")
 maven(vaticle_dependencies_tool_maven_artifacts + vaticle_bazel_distribution_maven_artifacts)
+
+load("@vaticle_dependencies//tool/swig:deps.bzl", swig_deps = "deps")
+swig_deps()

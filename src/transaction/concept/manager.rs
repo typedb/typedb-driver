@@ -21,10 +21,8 @@
 
 use std::sync::Arc;
 
-use futures::Stream;
-
 use crate::{
-    common::IID,
+    common::{stream::Stream, IID},
     concept::{Attribute, AttributeType, Entity, EntityType, Relation, RelationType, SchemaException, ValueType},
     connection::TransactionStream,
     Result,
@@ -40,38 +38,47 @@ impl ConceptManager {
         Self { transaction_stream }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get_entity_type(&self, label: String) -> Result<Option<EntityType>> {
         self.transaction_stream.get_entity_type(label).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get_relation_type(&self, label: String) -> Result<Option<RelationType>> {
         self.transaction_stream.get_relation_type(label).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get_attribute_type(&self, label: String) -> Result<Option<AttributeType>> {
         self.transaction_stream.get_attribute_type(label).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn put_entity_type(&self, label: String) -> Result<EntityType> {
         self.transaction_stream.put_entity_type(label).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn put_relation_type(&self, label: String) -> Result<RelationType> {
         self.transaction_stream.put_relation_type(label).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn put_attribute_type(&self, label: String, value_type: ValueType) -> Result<AttributeType> {
         self.transaction_stream.put_attribute_type(label, value_type).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get_entity(&self, iid: IID) -> Result<Option<Entity>> {
         self.transaction_stream.get_entity(iid).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get_relation(&self, iid: IID) -> Result<Option<Relation>> {
         self.transaction_stream.get_relation(iid).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get_attribute(&self, iid: IID) -> Result<Option<Attribute>> {
         self.transaction_stream.get_attribute(iid).await
     }

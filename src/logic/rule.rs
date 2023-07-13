@@ -21,7 +21,7 @@
 
 use typeql_lang::pattern::{Conjunction, ThingVariable};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Rule {
     pub label: String,
     pub when: Conjunction,

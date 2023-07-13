@@ -23,7 +23,7 @@ use std::collections::HashMap;
 
 use crate::{answer::ConceptMap, logic::Rule};
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Explanation {
     pub rule: Rule,
     pub conclusion: ConceptMap,

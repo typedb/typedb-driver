@@ -19,6 +19,7 @@
  * under the License.
  */
 
+#[cfg(not(feature = "sync"))]
 use std::future::Future;
 
 use super::{database::ServerDatabase, Database};
@@ -38,10 +39,12 @@ impl DatabaseManager {
         Self { connection }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get(&self, name: impl Into<String>) -> Result<Database> {
         Database::get(name.into(), self.connection.clone()).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn contains(&self, name: impl Into<String>) -> Result<bool> {
         self.run_failsafe(name.into(), move |database, server_connection, _| async move {
             server_connection.database_exists(database.name().to_owned()).await
@@ -49,6 +52,7 @@ impl DatabaseManager {
         .await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn create(&self, name: impl Into<String>) -> Result {
         self.run_failsafe(name.into(), |database, server_connection, _| async move {
             server_connection.create_database(database.name().to_owned()).await
@@ -56,6 +60,7 @@ impl DatabaseManager {
         .await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn all(&self) -> Result<Vec<Database>> {
         let mut error_buffer = Vec::with_capacity(self.connection.server_count());
         for server_connection in self.connection.connections() {
@@ -69,11 +74,20 @@ impl DatabaseManager {
         Err(ConnectionError::ClusterAllNodesFailed(error_buffer.join("\n")))?
     }
 
+    #[cfg(not(feature = "sync"))]
     async fn run_failsafe<F, P, R>(&self, name: String, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> P,
         P: Future<Output = Result<R>>,
     {
         Database::get(name, self.connection.clone()).await?.run_failsafe(&task).await
+    }
+
+    #[cfg(feature = "sync")]
+    fn run_failsafe<F, R>(&self, name: String, task: F) -> Result<R>
+    where
+        F: Fn(ServerDatabase, ServerConnection, bool) -> Result<R>,
+    {
+        Database::get(name, self.connection.clone())?.run_failsafe(&task)
     }
 }

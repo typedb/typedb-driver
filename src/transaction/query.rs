@@ -21,11 +21,9 @@
 
 use std::sync::Arc;
 
-use futures::Stream;
-
 use crate::{
     answer::{ConceptMap, ConceptMapGroup, Numeric, NumericGroup},
-    common::Result,
+    common::{stream::Stream, Result},
     connection::TransactionStream,
     logic::Explanation,
     Options,
@@ -41,26 +39,32 @@ impl QueryManager {
         Self { transaction_stream }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn define(&self, query: &str) -> Result {
         self.define_with_options(query, Options::new()).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn define_with_options(&self, query: &str, options: Options) -> Result {
         self.transaction_stream.define(query.to_string(), options).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn undefine(&self, query: &str) -> Result {
         self.undefine_with_options(query, Options::new()).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn undefine_with_options(&self, query: &str, options: Options) -> Result {
         self.transaction_stream.undefine(query.to_string(), options).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn delete(&self, query: &str) -> Result {
         self.delete_with_options(query, Options::new()).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn delete_with_options(&self, query: &str, options: Options) -> Result {
         self.transaction_stream.delete(query.to_string(), options).await
     }
@@ -89,10 +93,12 @@ impl QueryManager {
         self.transaction_stream.update(query.to_string(), options)
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn match_aggregate(&self, query: &str) -> Result<Numeric> {
         self.match_aggregate_with_options(query, Options::new()).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn match_aggregate_with_options(&self, query: &str, options: Options) -> Result<Numeric> {
         self.transaction_stream.match_aggregate(query.to_string(), options).await
     }

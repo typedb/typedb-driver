@@ -22,7 +22,7 @@
 use cucumber::{gherkin::Step, given, then, when};
 use futures::TryStreamExt;
 use typedb_client::{
-    concept::{EntityType, ScopedLabel},
+    concept::{EntityType, ScopedLabel, Transitivity},
     transaction::concept::api::{EntityTypeAPI, RelationTypeAPI, ThingTypeAPI},
     Result as TypeDBResult,
 };
@@ -166,7 +166,11 @@ generic_step_impl! {
     ) -> TypeDBResult {
         let tx = context.transaction();
         let entity_type = context.get_entity_type(type_label.name).await?;
-        let actuals = entity_type.get_subtypes(tx)?.map_ok(|et| et.label).try_collect::<Vec<_>>().await?;
+        let actuals = entity_type
+            .get_subtypes(tx, Transitivity::Transitive)?
+            .map_ok(|et| et.label)
+            .try_collect::<Vec<_>>()
+            .await?;
         for subtype in iter_table(step) {
             containment.assert(&actuals, subtype);
         }

@@ -25,7 +25,9 @@ pub mod error;
 mod id;
 pub(crate) mod info;
 mod options;
-mod stream;
+#[cfg_attr(not(feature = "sync"), path = "stream_async.rs")]
+#[cfg_attr(feature = "sync", path = "stream_sync.rs")]
+pub mod stream;
 
 pub(crate) use self::stream::box_stream;
 pub use self::{credential::Credential, error::Error, options::Options};
@@ -37,12 +39,14 @@ pub(crate) type IID = id::ID;
 pub(crate) type RequestID = id::ID;
 pub(crate) type SessionID = id::ID;
 
+#[repr(C)]
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum SessionType {
     Data = 0,
     Schema = 1,
 }
 
+#[repr(C)]
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum TransactionType {
     Read = 0,

@@ -21,7 +21,7 @@
 
 use crate::{answer::ConceptMap, concept::Concept};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct ConceptMapGroup {
     pub owner: Concept,
     pub concept_maps: Vec<ConceptMap>,

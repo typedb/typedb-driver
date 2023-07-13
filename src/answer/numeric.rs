@@ -19,39 +19,21 @@
  * under the License.
  */
 
-#[derive(Clone, Debug)]
+use std::fmt;
+
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Numeric {
     Long(i64),
     Double(f64),
     NaN,
 }
 
-impl Numeric {
-    pub fn into_i64(self) -> i64 {
-        if let Self::Long(value) = self {
-            value
-        } else {
-            panic!()
+impl fmt::Display for Numeric {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Long(long) => write!(f, "{long}"),
+            Self::Double(double) => write!(f, "{double}"),
+            Self::NaN => write!(f, "NaN"),
         }
-    }
-
-    pub fn into_f64(self) -> f64 {
-        if let Self::Double(value) = self {
-            value
-        } else {
-            panic!()
-        }
-    }
-}
-
-impl From<Numeric> for i64 {
-    fn from(n: Numeric) -> Self {
-        n.into_i64()
-    }
-}
-
-impl From<Numeric> for f64 {
-    fn from(n: Numeric) -> Self {
-        n.into_f64()
     }
 }

@@ -24,7 +24,7 @@ use std::{error::Error as StdError, fmt};
 use tonic::{Code, Status};
 use typeql_lang::error_messages;
 
-use crate::common::RequestID;
+use super::{address::Address, RequestID};
 
 error_messages! { ConnectionError
     code: "CXN", type: "Connection Error",
@@ -68,7 +68,7 @@ error_messages! { InternalError
         3: "Unexpected request type for remote procedure call: {}.",
     UnexpectedResponseType(String) =
         4: "Unexpected response type for remote procedure call: {}.",
-    UnknownConnectionAddress(String) =
+    UnknownConnectionAddress(Address) =
         5: "Received unrecognized address from the server: {}.",
     EnumOutOfBounds(i32, &'static str) =
         6: "Value '{}' is out of bounds for enum '{}'.",
@@ -80,6 +80,26 @@ pub enum Error {
     Internal(InternalError),
     TypeQL(typeql_lang::common::Error),
     Other(String),
+}
+
+impl Error {
+    pub fn code(&self) -> String {
+        match self {
+            Self::Connection(error) => error.format_code(),
+            Self::Internal(error) => error.format_code(),
+            Self::TypeQL(_error) => String::new(),
+            Self::Other(_error) => String::new(),
+        }
+    }
+
+    pub fn message(&self) -> String {
+        match self {
+            Self::Connection(error) => error.message(),
+            Self::Internal(error) => error.message(),
+            Self::TypeQL(error) => error.to_string(),
+            Self::Other(error) => error.clone(),
+        }
+    }
 }
 
 impl fmt::Display for Error {

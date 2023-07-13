@@ -26,12 +26,12 @@ use http::Uri;
 use crate::common::{Error, Result};
 
 #[derive(Clone, Debug, Hash, PartialEq, Eq)]
-pub(crate) struct Address {
+pub struct Address {
     uri: Uri,
 }
 
 impl Address {
-    pub fn into_uri(self) -> Uri {
+    pub(crate) fn into_uri(self) -> Uri {
         self.uri
     }
 }

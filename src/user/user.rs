@@ -28,16 +28,22 @@ pub struct User {
 }
 
 impl User {
-    pub async fn password_update(&self, connection: &Connection, password_old: String, password_new: String) -> Result {
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn password_update(
+        &self,
+        connection: &Connection,
+        password_old: impl Into<String>,
+        password_new: impl Into<String>,
+    ) -> Result {
+        let password_old = password_old.into();
+        let password_new = password_new.into();
         let mut error_buffer = Vec::with_capacity(connection.server_count());
         for server_connection in connection.connections() {
             match server_connection
                 .update_user_password(self.username.clone(), password_old.clone(), password_new.clone())
                 .await
             {
-                Ok(()) => {
-                    return Ok(());
-                }
+                Ok(()) => return Ok(()),
                 Err(err) => error_buffer.push(format!("- {}: {}", server_connection.address(), err)),
             }
         }

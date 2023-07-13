@@ -26,6 +26,7 @@ use futures::StreamExt;
 use serial_test::serial;
 use tokio::sync::mpsc;
 use typedb_client::{
+    answer::Numeric,
     concept::{Attribute, Concept, Value},
     error::ConnectionError,
     Connection, DatabaseManager, Error, Options, Session,
@@ -124,12 +125,12 @@ test_for_each_arg! {
 
         let transaction = session.transaction(Read).await?;
         let age_count = transaction.query().match_aggregate("match $x isa age; count;").await?;
-        assert_eq!(age_count.into_i64(), 0);
+        assert_eq!(age_count, Numeric::Long(0));
 
         let with_inference = Options::new().infer(true);
         let transaction = session.transaction_with_options(Read, with_inference).await?;
         let age_count = transaction.query().match_aggregate("match $x isa age; count;").await?;
-        assert_eq!(age_count.into_i64(), 1);
+        assert_eq!(age_count, Numeric::Long(1));
 
         Ok(())
     }
@@ -167,7 +168,7 @@ test_for_each_arg! {
 
         let transaction = session.transaction(Read).await?;
         let age_count = transaction.query().match_aggregate("match $age isa age; count;").await?;
-        assert_eq!(age_count.into_i64(), 1);
+        assert_eq!(age_count, Numeric::Long(1));
         drop(transaction);
 
         let transaction = session.transaction(Write).await?;

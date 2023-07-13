@@ -46,14 +46,20 @@ impl Drop for Session {
 }
 
 impl Session {
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn new(database: Database, session_type: SessionType) -> Result<Self> {
+        Self::new_with_options(database, session_type, Options::new()).await
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub async fn new_with_options(database: Database, session_type: SessionType, options: Options) -> Result<Self> {
         let server_session_info = RwLock::new(
             database
-                .run_failsafe(|database, _, _| async move {
-                    database
-                        .connection()
-                        .open_session(database.name().to_owned(), session_type, Options::default())
-                        .await
+                .run_failsafe(|database, _, _| {
+                    let options = options.clone();
+                    async move {
+                        database.connection().open_session(database.name().to_owned(), session_type, options).await
+                    }
                 })
                 .await?,
         );
@@ -82,10 +88,17 @@ impl Session {
         Ok(())
     }
 
+    pub fn on_close(&self, callback: impl FnOnce() + Send + 'static) {
+        let session_info = self.server_session_info.write().unwrap();
+        session_info.on_close_register_sink.send(Box::new(callback)).ok();
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn transaction(&self, transaction_type: TransactionType) -> Result<Transaction> {
         self.transaction_with_options(transaction_type, Options::new()).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn transaction_with_options(
         &self,
         transaction_type: TransactionType,
@@ -95,7 +108,7 @@ impl Session {
             return Err(ConnectionError::SessionIsClosed().into());
         }
 
-        let (session_info, transaction_stream) = self
+        let (session_info, (transaction_stream, shutdown_sink)) = self
             .database
             .run_failsafe(|database, _, is_first_run| {
                 let session_info = self.server_session_info.read().unwrap().clone();
@@ -124,6 +137,10 @@ impl Session {
             .await?;
 
         *self.server_session_info.write().unwrap() = session_info;
+
+        self.on_close(move || {
+            shutdown_sink.send(()).ok();
+        });
         Ok(Transaction::new(transaction_stream))
     }
 }

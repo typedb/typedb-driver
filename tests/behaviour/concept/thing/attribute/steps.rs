@@ -22,7 +22,7 @@
 use cucumber::{given, then, when};
 use futures::TryStreamExt;
 use typedb_client::{
-    concept::{Attribute, Thing},
+    concept::{Attribute, Thing, Transitivity},
     transaction::concept::api::{AttributeAPI, AttributeTypeAPI, ThingAPI},
     Result as TypeDBResult,
 };
@@ -62,7 +62,7 @@ generic_step_impl! {
     ) -> TypeDBResult {
         let tx = context.transaction();
         let attribute_type = context.get_attribute_type(type_label.name).await?;
-        let actuals: Vec<Attribute> = attribute_type.get_instances(tx)?.try_collect().await?;
+        let actuals: Vec<Attribute> = attribute_type.get_instances(tx, Transitivity::Transitive)?.try_collect().await?;
         let attribute = context.get_attribute(var.name);
         containment.assert(&actuals, attribute);
         Ok(())

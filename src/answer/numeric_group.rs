@@ -21,7 +21,7 @@
 
 use crate::{answer::Numeric, concept::Concept};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct NumericGroup {
     pub owner: Concept,
     pub numeric: Numeric,

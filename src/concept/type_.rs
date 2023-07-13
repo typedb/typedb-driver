@@ -21,8 +21,11 @@
 
 use std::fmt;
 
-//TODO cleanup
-pub use typeql_lang::pattern::Annotation;
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub enum Annotation {
+    Key,
+    Unique,
+}
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum ThingType {
@@ -72,6 +75,7 @@ pub struct AttributeType {
     pub value_type: ValueType,
 }
 
+#[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ValueType {
     Object,

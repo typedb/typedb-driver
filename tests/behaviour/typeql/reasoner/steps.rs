@@ -46,7 +46,8 @@ generic_step_impl! {
             connection_create_database(context, Context::DEFAULT_DATABASE.to_string()).await;
         }
         connection_open_schema_session_for_database(context, Context::DEFAULT_DATABASE.to_string()).await;
-        session_opens_transaction_of_type(context, TransactionTypeParam { transaction_type: TransactionType::Write }).await;
+        session_opens_transaction_of_type(context, TransactionTypeParam { transaction_type: TransactionType::Write })
+            .await;
         assert!(typeql_define(context, step).await.is_ok());
         transaction_commits(context).await;
         connection_close_all_sessions(context).await;
@@ -55,7 +56,8 @@ generic_step_impl! {
     #[step(expr = "reasoning data")]
     async fn reasoning_data(context: &mut Context, step: &Step) {
         connection_open_data_session_for_database(context, Context::DEFAULT_DATABASE.to_string()).await;
-        session_opens_transaction_of_type(context, TransactionTypeParam { transaction_type: TransactionType::Write }).await;
+        session_opens_transaction_of_type(context, TransactionTypeParam { transaction_type: TransactionType::Write })
+            .await;
         assert!(typeql_insert(context, step).await.is_ok());
         transaction_commits(context).await;
         connection_close_all_sessions(context).await;
@@ -64,7 +66,8 @@ generic_step_impl! {
     #[step(expr = "reasoning query")]
     async fn reasoning_query(context: &mut Context, step: &Step) {
         connection_open_data_session_for_database(context, Context::DEFAULT_DATABASE.to_string()).await;
-        session_opens_transaction_of_type(context, TransactionTypeParam { transaction_type: TransactionType::Read }).await;
+        session_opens_transaction_of_type(context, TransactionTypeParam { transaction_type: TransactionType::Read })
+            .await;
         assert!(get_answers_typeql_match(context, step).await.is_ok());
         connection_close_all_sessions(context).await;
     }
@@ -88,21 +91,18 @@ generic_step_impl! {
                 }
             }
         }
-        assert_eq!(
-            matched_rows, total_rows,
-            "There are only {matched_rows} matched entries of given {total_rows}."
-        );
+        assert_eq!(matched_rows, total_rows, "There are only {matched_rows} matched entries of given {total_rows}.");
     }
 
     #[step(expr = "verifier is initialised")]
     #[step(expr = "verify answers are sound")]
     #[step(expr = "verify answers are complete")]
     async fn do_nothing(_context: &mut Context) {
-    //     We don't have a verifier
+        //     We don't have a verifier
     }
 
     #[step(expr = "verify answers are consistent across {int} executions")]
     async fn verify_answers_are_consistent_across_executions(_context: &mut Context, _executions: usize) {
-    //     We can't execute previous query again because don't remember the query
+        //     We can't execute previous query again because don't remember the query
     }
 }

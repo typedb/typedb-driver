@@ -22,7 +22,7 @@
 use cucumber::{gherkin::Step, given, then, when};
 use futures::{future::try_join_all, StreamExt, TryStreamExt};
 use typedb_client::{
-    concept::{Relation, Thing, ThingType},
+    concept::{Relation, Thing, ThingType, Transitivity},
     transaction::concept::api::{AttributeAPI, AttributeTypeAPI, RelationAPI, RelationTypeAPI, ThingAPI},
     Result as TypeDBResult,
 };
@@ -57,7 +57,7 @@ generic_step_impl! {
     async fn relation_type_get_instances_is_empty(context: &mut Context, type_label: LabelParam) -> TypeDBResult {
         let tx = context.transaction();
         let relation_type = context.get_relation_type(type_label.name).await?;
-        assert!(relation_type.get_instances(tx)?.next().await.is_none());
+        assert!(relation_type.get_instances(tx, Transitivity::Transitive)?.next().await.is_none());
         Ok(())
     }
 
@@ -70,14 +70,18 @@ generic_step_impl! {
     ) -> TypeDBResult {
         let tx = context.transaction();
         let relation_type = context.get_relation_type(type_label.name).await?;
-        let actuals: Vec<Relation> = relation_type.get_instances(tx)?.try_collect().await?;
+        let actuals: Vec<Relation> = relation_type.get_instances(tx, Transitivity::Transitive)?.try_collect().await?;
         let relation = context.get_relation(var.name);
         containment.assert(&actuals, relation);
         Ok(())
     }
 
     #[step(expr = r"{var} = relation\(( ){label}( )\) create new instance")]
-    async fn relation_type_create_new_instance(context: &mut Context, var: VarParam, type_label: LabelParam) -> TypeDBResult {
+    async fn relation_type_create_new_instance(
+        context: &mut Context,
+        var: VarParam,
+        type_label: LabelParam,
+    ) -> TypeDBResult {
         let tx = context.transaction();
         let relation = context.get_relation_type(type_label.name).await?.create(tx).await?;
         context.insert_relation(var.name, Some(relation));

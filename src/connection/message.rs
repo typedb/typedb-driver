@@ -422,7 +422,7 @@ pub(super) enum ThingTypeResponse {
     AttributeTypeGetSupertypes { attribute_types: Vec<AttributeType> },
     AttributeTypeGetSubtypes { attribute_types: Vec<AttributeType> },
     AttributeTypeGetInstances { attributes: Vec<Attribute> },
-    AttributeTypeGetRegex { regex: String },
+    AttributeTypeGetRegex { regex: Option<String> },
     AttributeTypeSetRegex,
     AttributeTypeGetOwners { thing_types: Vec<ThingType> },
 }
@@ -511,6 +511,6 @@ pub(super) enum LogicRequest {
 #[derive(Debug)]
 pub(super) enum LogicResponse {
     PutRule { rule: Rule },
-    GetRule { rule: Rule },
+    GetRule { rule: Option<Rule> },
     GetRules { rules: Vec<Rule> },
 }

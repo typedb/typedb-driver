@@ -19,7 +19,9 @@
  * under the License.
  */
 
-use std::{fmt, future::Future, sync::RwLock, thread::sleep, time::Duration};
+#[cfg(not(feature = "sync"))]
+use std::future::Future;
+use std::{fmt, sync::RwLock, thread::sleep, time::Duration};
 
 use itertools::Itertools;
 use log::{debug, error};
@@ -52,6 +54,7 @@ impl Database {
         Ok(Self { name, replicas, connection })
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(super) async fn get(name: String, connection: Connection) -> Result<Self> {
         Ok(Self {
             name: name.to_string(),
@@ -64,26 +67,43 @@ impl Database {
         self.name.as_str()
     }
 
+    pub fn replicas_info(&self) -> Vec<ReplicaInfo> {
+        self.replicas.read().unwrap().iter().map(Replica::to_info).collect()
+    }
+
+    pub fn primary_replica_info(&self) -> Option<ReplicaInfo> {
+        self.primary_replica().map(|replica| replica.to_info())
+    }
+
+    pub fn preferred_replica_info(&self) -> Option<ReplicaInfo> {
+        self.preferred_replica().map(|replica| replica.to_info())
+    }
+
     pub(super) fn connection(&self) -> &Connection {
         &self.connection
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn delete(self) -> Result {
         self.run_on_primary_replica(|database, _, _| database.delete()).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn schema(&self) -> Result<String> {
         self.run_failsafe(|database, _, _| async move { database.schema().await }).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn type_schema(&self) -> Result<String> {
         self.run_failsafe(|database, _, _| async move { database.type_schema().await }).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn rule_schema(&self) -> Result<String> {
         self.run_failsafe(|database, _, _| async move { database.rule_schema().await }).await
     }
 
+    #[cfg(not(feature = "sync"))]
     pub(super) async fn run_failsafe<F, P, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> P,
@@ -98,6 +118,7 @@ impl Database {
         }
     }
 
+    #[cfg(not(feature = "sync"))]
     async fn run_on_any_replica<F, P, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> P,
@@ -119,6 +140,7 @@ impl Database {
         Err(self.connection.unable_to_connect_error())
     }
 
+    #[cfg(not(feature = "sync"))]
     async fn run_on_primary_replica<F, P, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> P,
@@ -148,6 +170,67 @@ impl Database {
         Err(self.connection.unable_to_connect_error())
     }
 
+    #[cfg(feature = "sync")]
+    pub(super) fn run_failsafe<F, R>(&self, task: F) -> Result<R>
+    where
+        F: Fn(ServerDatabase, ServerConnection, bool) -> Result<R>,
+    {
+        match self.run_on_any_replica(&task) {
+            Err(Error::Connection(ConnectionError::ClusterReplicaNotPrimary())) => {
+                debug!("Attempted to run on a non-primary replica, retrying on primary...");
+                self.run_on_primary_replica(&task)
+            }
+            res => res,
+        }
+    }
+
+    #[cfg(feature = "sync")]
+    fn run_on_any_replica<F, R>(&self, task: F) -> Result<R>
+    where
+        F: Fn(ServerDatabase, ServerConnection, bool) -> Result<R>,
+    {
+        let mut is_first_run = true;
+        let replicas = self.replicas.read().unwrap().clone();
+        for replica in replicas {
+            match task(replica.database.clone(), self.connection.connection(&replica.address)?.clone(), is_first_run) {
+                Err(Error::Connection(ConnectionError::UnableToConnect())) => {
+                    debug!("Unable to connect to {}. Attempting next server.", replica.address);
+                }
+                res => return res,
+            }
+            is_first_run = false;
+        }
+        Err(self.connection.unable_to_connect_error())
+    }
+
+    #[cfg(feature = "sync")]
+    fn run_on_primary_replica<F, R>(&self, task: F) -> Result<R>
+    where
+        F: Fn(ServerDatabase, ServerConnection, bool) -> Result<R>,
+    {
+        let mut primary_replica =
+            if let Some(replica) = self.primary_replica() { replica } else { self.seek_primary_replica()? };
+
+        for retry in 0..Self::PRIMARY_REPLICA_TASK_MAX_RETRIES {
+            match task(
+                primary_replica.database.clone(),
+                self.connection.connection(&primary_replica.address)?.clone(),
+                retry == 0,
+            ) {
+                Err(Error::Connection(
+                    ConnectionError::ClusterReplicaNotPrimary() | ConnectionError::UnableToConnect(),
+                )) => {
+                    debug!("Primary replica error, waiting...");
+                    Self::wait_for_primary_replica_selection();
+                    primary_replica = self.seek_primary_replica()?;
+                }
+                res => return res,
+            }
+        }
+        Err(self.connection.unable_to_connect_error())
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn seek_primary_replica(&self) -> Result<Replica> {
         for _ in 0..Self::FETCH_REPLICAS_MAX_RETRIES {
             let replicas = Replica::fetch_all(self.name.clone(), self.connection.clone()).await?;
@@ -164,6 +247,11 @@ impl Database {
         self.replicas.read().unwrap().iter().filter(|r| r.is_primary).max_by_key(|r| r.term).cloned()
     }
 
+    fn preferred_replica(&self) -> Option<Replica> {
+        self.replicas.read().unwrap().iter().filter(|r| r.is_preferred).max_by_key(|r| r.term).cloned()
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn wait_for_primary_replica_selection() {
         // FIXME: blocking sleep! Can't do agnostic async sleep.
         sleep(Self::WAIT_FOR_PRIMARY_REPLICA_SELECTION);
@@ -209,6 +297,16 @@ impl Replica {
             .try_collect()
     }
 
+    fn to_info(&self) -> ReplicaInfo {
+        ReplicaInfo {
+            address: self.address.clone(),
+            is_primary: self.is_primary,
+            is_preferred: self.is_preferred,
+            term: self.term,
+        }
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn fetch_all(name: String, connection: Connection) -> Result<Vec<Self>> {
         for server_connection in connection.connections() {
             let res = server_connection.get_database_replicas(name.clone()).await;
@@ -261,18 +359,22 @@ impl ServerDatabase {
         &self.connection
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn delete(self) -> Result {
         self.connection.delete_database(self.name).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn schema(&self) -> Result<String> {
         self.connection.database_schema(self.name.clone()).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn type_schema(&self) -> Result<String> {
         self.connection.database_type_schema(self.name.clone()).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn rule_schema(&self) -> Result<String> {
         self.connection.database_rule_schema(self.name.clone()).await
     }

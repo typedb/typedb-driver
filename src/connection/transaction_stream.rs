@@ -21,7 +21,8 @@
 
 use std::{fmt, iter};
 
-use futures::{stream, Stream, StreamExt};
+#[cfg(not(feature = "sync"))]
+use futures::{stream, StreamExt};
 use typeql_lang::pattern::{Conjunction, Variable};
 
 use super::{
@@ -30,7 +31,10 @@ use super::{
 };
 use crate::{
     answer::{ConceptMap, ConceptMapGroup, Numeric, NumericGroup},
-    common::{Result, IID},
+    common::{
+        stream::{BoxStream, Stream},
+        Result, IID,
+    },
     concept::{
         Annotation, Attribute, AttributeType, Entity, EntityType, Relation, RelationType, RoleType, SchemaException,
         Thing, ThingType, Transitivity, Value, ValueType,
@@ -39,7 +43,7 @@ use crate::{
         ConceptRequest, ConceptResponse, LogicRequest, LogicResponse, QueryRequest, QueryResponse, RuleRequest,
         RuleResponse, ThingTypeRequest, ThingTypeResponse, TransactionRequest, TransactionResponse,
     },
-    error::InternalError,
+    error::{ConnectionError, InternalError},
     logic::{Explanation, Rule},
     Options, TransactionType,
 };
@@ -63,6 +67,10 @@ impl TransactionStream {
         self.transaction_transmitter.is_open()
     }
 
+    pub(crate) fn force_close(&self) {
+        self.transaction_transmitter.force_close();
+    }
+
     pub(crate) fn type_(&self) -> TransactionType {
         self.type_
     }
@@ -71,26 +79,35 @@ impl TransactionStream {
         &self.options
     }
 
+    pub(crate) fn on_close(&self, callback: impl FnOnce(ConnectionError) + Send + Sync + 'static) {
+        self.transaction_transmitter.on_close(callback)
+    }
+
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn commit(&self) -> Result {
         self.single(TransactionRequest::Commit).await?;
         Ok(())
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn rollback(&self) -> Result {
         self.single(TransactionRequest::Rollback).await?;
         Ok(())
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn define(&self, query: String, options: Options) -> Result {
         self.query_single(QueryRequest::Define { query, options }).await?;
         Ok(())
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn undefine(&self, query: String, options: Options) -> Result {
         self.query_single(QueryRequest::Undefine { query, options }).await?;
         Ok(())
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn delete(&self, query: String, options: Options) -> Result {
         self.query_single(QueryRequest::Delete { query, options }).await?;
         Ok(())
@@ -123,6 +140,7 @@ impl TransactionStream {
         }))
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn match_aggregate(&self, query: String, options: Options) -> Result<Numeric> {
         match self.query_single(QueryRequest::MatchAggregate { query, options }).await? {
             QueryResponse::MatchAggregate { answer } => Ok(answer),
@@ -156,6 +174,7 @@ impl TransactionStream {
         }))
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn get_entity_type(&self, label: String) -> Result<Option<EntityType>> {
         match self.concept_single(ConceptRequest::GetEntityType { label }).await? {
             ConceptResponse::GetEntityType { entity_type } => Ok(entity_type),
@@ -163,6 +182,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn get_relation_type(&self, label: String) -> Result<Option<RelationType>> {
         match self.concept_single(ConceptRequest::GetRelationType { label }).await? {
             ConceptResponse::GetRelationType { relation_type } => Ok(relation_type),
@@ -170,6 +190,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn get_attribute_type(&self, label: String) -> Result<Option<AttributeType>> {
         match self.concept_single(ConceptRequest::GetAttributeType { label }).await? {
             ConceptResponse::GetAttributeType { attribute_type } => Ok(attribute_type),
@@ -177,6 +198,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn put_entity_type(&self, label: String) -> Result<EntityType> {
         match self.concept_single(ConceptRequest::PutEntityType { label }).await? {
             ConceptResponse::PutEntityType { entity_type } => Ok(entity_type),
@@ -184,6 +206,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn put_relation_type(&self, label: String) -> Result<RelationType> {
         match self.concept_single(ConceptRequest::PutRelationType { label }).await? {
             ConceptResponse::PutRelationType { relation_type } => Ok(relation_type),
@@ -191,6 +214,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn put_attribute_type(&self, label: String, value_type: ValueType) -> Result<AttributeType> {
         match self.concept_single(ConceptRequest::PutAttributeType { label, value_type }).await? {
             ConceptResponse::PutAttributeType { attribute_type } => Ok(attribute_type),
@@ -198,6 +222,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn get_entity(&self, iid: IID) -> Result<Option<Entity>> {
         match self.concept_single(ConceptRequest::GetEntity { iid }).await? {
             ConceptResponse::GetEntity { entity } => Ok(entity),
@@ -205,6 +230,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn get_relation(&self, iid: IID) -> Result<Option<Relation>> {
         match self.concept_single(ConceptRequest::GetRelation { iid }).await? {
             ConceptResponse::GetRelation { relation } => Ok(relation),
@@ -212,6 +238,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn get_attribute(&self, iid: IID) -> Result<Option<Attribute>> {
         match self.concept_single(ConceptRequest::GetAttribute { iid }).await? {
             ConceptResponse::GetAttribute { attribute } => Ok(attribute),
@@ -228,6 +255,7 @@ impl TransactionStream {
         }))
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn thing_type_delete(&self, thing_type: ThingType) -> Result {
         match self.thing_type_single(ThingTypeRequest::ThingTypeDelete { thing_type }).await? {
             ThingTypeResponse::ThingTypeDelete => Ok(()),
@@ -235,6 +263,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn thing_type_set_label(&self, thing_type: ThingType, new_label: String) -> Result {
         match self.thing_type_single(ThingTypeRequest::ThingTypeSetLabel { thing_type, new_label }).await? {
             ThingTypeResponse::ThingTypeSetLabel => Ok(()),
@@ -242,6 +271,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn thing_type_set_abstract(&self, thing_type: ThingType) -> Result {
         match self.thing_type_single(ThingTypeRequest::ThingTypeSetAbstract { thing_type }).await? {
             ThingTypeResponse::ThingTypeSetAbstract => Ok(()),
@@ -249,6 +279,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn thing_type_unset_abstract(&self, thing_type: ThingType) -> Result {
         match self.thing_type_single(ThingTypeRequest::ThingTypeUnsetAbstract { thing_type }).await? {
             ThingTypeResponse::ThingTypeUnsetAbstract => Ok(()),
@@ -278,6 +309,7 @@ impl TransactionStream {
         }))
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn thing_type_get_owns_overridden(
         &self,
         thing_type: ThingType,
@@ -292,6 +324,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn thing_type_set_owns(
         &self,
         thing_type: ThingType,
@@ -313,6 +346,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn thing_type_unset_owns(&self, thing_type: ThingType, attribute_type: AttributeType) -> Result {
         match self.thing_type_single(ThingTypeRequest::ThingTypeUnsetOwns { thing_type, attribute_type }).await? {
             ThingTypeResponse::ThingTypeUnsetOwns => Ok(()),
@@ -333,6 +367,7 @@ impl TransactionStream {
         }))
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn thing_type_get_plays_overridden(
         &self,
         thing_type: ThingType,
@@ -347,6 +382,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn thing_type_set_plays(
         &self,
         thing_type: ThingType,
@@ -362,6 +398,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn thing_type_unset_plays(&self, thing_type: ThingType, role_type: RoleType) -> Result {
         match self.thing_type_single(ThingTypeRequest::ThingTypeUnsetPlays { thing_type, role_type }).await? {
             ThingTypeResponse::ThingTypeUnsetPlays => Ok(()),
@@ -369,6 +406,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn thing_type_get_syntax(&self, thing_type: ThingType) -> Result<String> {
         match self.thing_type_single(ThingTypeRequest::ThingTypeGetSyntax { thing_type }).await? {
             ThingTypeResponse::ThingTypeGetSyntax { syntax } => Ok(syntax),
@@ -376,6 +414,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn entity_type_create(&self, entity_type: EntityType) -> Result<Entity> {
         match self.thing_type_single(ThingTypeRequest::EntityTypeCreate { entity_type }).await? {
             ThingTypeResponse::EntityTypeCreate { entity } => Ok(entity),
@@ -383,6 +422,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn entity_type_get_supertype(&self, entity_type: EntityType) -> Result<EntityType> {
         match self.thing_type_single(ThingTypeRequest::EntityTypeGetSupertype { entity_type }).await? {
             ThingTypeResponse::EntityTypeGetSupertype { entity_type } => Ok(entity_type),
@@ -390,6 +430,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn entity_type_set_supertype(&self, entity_type: EntityType, supertype: EntityType) -> Result {
         match self.thing_type_single(ThingTypeRequest::EntityTypeSetSupertype { entity_type, supertype }).await? {
             ThingTypeResponse::EntityTypeSetSupertype => Ok(()),
@@ -439,6 +480,7 @@ impl TransactionStream {
         }))
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn relation_type_create(&self, relation_type: RelationType) -> Result<Relation> {
         match self.thing_type_single(ThingTypeRequest::RelationTypeCreate { relation_type }).await? {
             ThingTypeResponse::RelationTypeCreate { relation } => Ok(relation),
@@ -446,6 +488,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn relation_type_get_supertype(&self, relation_type: RelationType) -> Result<RelationType> {
         match self.thing_type_single(ThingTypeRequest::RelationTypeGetSupertype { relation_type }).await? {
             ThingTypeResponse::RelationTypeGetSupertype { relation_type } => Ok(relation_type),
@@ -453,6 +496,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn relation_type_set_supertype(
         &self,
         relation_type: RelationType,
@@ -522,6 +566,7 @@ impl TransactionStream {
         }))
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn relation_type_get_relates_for_role_label(
         &self,
         relation_type: RelationType,
@@ -536,6 +581,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn relation_type_get_relates_overridden(
         &self,
         relation_type: RelationType,
@@ -553,6 +599,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn relation_type_set_relates(
         &self,
         relation_type: RelationType,
@@ -572,6 +619,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn relation_type_unset_relates(&self, relation_type: RelationType, role_label: String) -> Result {
         match self.thing_type_single(ThingTypeRequest::RelationTypeUnsetRelates { relation_type, role_label }).await? {
             ThingTypeResponse::RelationTypeUnsetRelates => Ok(()),
@@ -579,6 +627,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn attribute_type_put(&self, attribute_type: AttributeType, value: Value) -> Result<Attribute> {
         match self.thing_type_single(ThingTypeRequest::AttributeTypePut { attribute_type, value }).await? {
             ThingTypeResponse::AttributeTypePut { attribute } => Ok(attribute),
@@ -586,6 +635,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn attribute_type_get(
         &self,
         attribute_type: AttributeType,
@@ -597,6 +647,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn attribute_type_get_supertype(&self, attribute_type: AttributeType) -> Result<AttributeType> {
         match self.thing_type_single(ThingTypeRequest::AttributeTypeGetSupertype { attribute_type }).await? {
             ThingTypeResponse::AttributeTypeGetSupertype { attribute_type } => Ok(attribute_type),
@@ -604,6 +655,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn attribute_type_set_supertype(
         &self,
         attribute_type: AttributeType,
@@ -669,13 +721,15 @@ impl TransactionStream {
         }))
     }
 
-    pub(crate) async fn attribute_type_get_regex(&self, attribute_type: AttributeType) -> Result<String> {
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub(crate) async fn attribute_type_get_regex(&self, attribute_type: AttributeType) -> Result<Option<String>> {
         match self.thing_type_single(ThingTypeRequest::AttributeTypeGetRegex { attribute_type }).await? {
             ThingTypeResponse::AttributeTypeGetRegex { regex } => Ok(regex),
             other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn attribute_type_set_regex(&self, attribute_type: AttributeType, regex: String) -> Result {
         match self.thing_type_single(ThingTypeRequest::AttributeTypeSetRegex { attribute_type, regex }).await? {
             ThingTypeResponse::AttributeTypeSetRegex => Ok(()),
@@ -703,6 +757,7 @@ impl TransactionStream {
         }))
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn role_type_delete(&self, role_type: RoleType) -> Result {
         match self.role_type_single(RoleTypeRequest::Delete { role_type }).await? {
             RoleTypeResponse::Delete => Ok(()),
@@ -710,6 +765,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn role_type_set_label(&self, role_type: RoleType, new_label: String) -> Result {
         match self.role_type_single(RoleTypeRequest::SetLabel { role_type, new_label }).await? {
             RoleTypeResponse::SetLabel => Ok(()),
@@ -717,6 +773,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn role_type_get_supertype(&self, role_type: RoleType) -> Result<RoleType> {
         match self.role_type_single(RoleTypeRequest::GetSupertype { role_type }).await? {
             RoleTypeResponse::GetSupertype { role_type } => Ok(role_type),
@@ -799,6 +856,7 @@ impl TransactionStream {
         }))
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn thing_delete(&self, thing: Thing) -> Result {
         match self.thing_single(ThingRequest::ThingDelete { thing }).await? {
             ThingResponse::ThingDelete {} => Ok(()),
@@ -820,6 +878,7 @@ impl TransactionStream {
         }))
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn thing_set_has(&self, thing: Thing, attribute: Attribute) -> Result {
         match self.thing_single(ThingRequest::ThingSetHas { thing, attribute }).await? {
             ThingResponse::ThingSetHas {} => Ok(()),
@@ -827,6 +886,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn thing_unset_has(&self, thing: Thing, attribute: Attribute) -> Result {
         match self.thing_single(ThingRequest::ThingUnsetHas { thing, attribute }).await? {
             ThingResponse::ThingUnsetHas {} => Ok(()),
@@ -856,6 +916,7 @@ impl TransactionStream {
         }))
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn relation_add_role_player(
         &self,
         relation: Relation,
@@ -868,6 +929,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn relation_remove_role_player(
         &self,
         relation: Relation,
@@ -931,6 +993,7 @@ impl TransactionStream {
         }))
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn rule_delete(&self, rule: Rule) -> Result {
         match self.rule_single(RuleRequest::Delete { label: rule.label }).await? {
             RuleResponse::Delete => Ok(()),
@@ -938,6 +1001,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn rule_set_label(&self, rule: Rule, new_label: String) -> Result {
         match self.rule_single(RuleRequest::SetLabel { current_label: rule.label, new_label }).await? {
             RuleResponse::SetLabel => Ok(()),
@@ -945,6 +1009,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn put_rule(&self, label: String, when: Conjunction, then: Variable) -> Result<Rule> {
         match self.logic_single(LogicRequest::PutRule { label, when, then }).await? {
             LogicResponse::PutRule { rule } => Ok(rule),
@@ -952,7 +1017,8 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) async fn get_rule(&self, label: String) -> Result<Rule> {
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub(crate) async fn get_rule(&self, label: String) -> Result<Option<Rule>> {
         match self.logic_single(LogicRequest::GetRule { label }).await? {
             LogicResponse::GetRule { rule } => Ok(rule),
             other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
@@ -981,10 +1047,12 @@ impl TransactionStream {
         }))
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn single(&self, req: TransactionRequest) -> Result<TransactionResponse> {
         self.transaction_transmitter.single(req).await
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn query_single(&self, req: QueryRequest) -> Result<QueryResponse> {
         match self.single(TransactionRequest::Query(req)).await? {
             TransactionResponse::Query(res) => Ok(res),
@@ -992,6 +1060,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn concept_single(&self, req: ConceptRequest) -> Result<ConceptResponse> {
         match self.single(TransactionRequest::Concept(req)).await? {
             TransactionResponse::Concept(res) => Ok(res),
@@ -999,6 +1068,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn thing_type_single(&self, req: ThingTypeRequest) -> Result<ThingTypeResponse> {
         match self.single(TransactionRequest::ThingType(req)).await? {
             TransactionResponse::ThingType(res) => Ok(res),
@@ -1006,6 +1076,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn role_type_single(&self, req: RoleTypeRequest) -> Result<RoleTypeResponse> {
         match self.single(TransactionRequest::RoleType(req)).await? {
             TransactionResponse::RoleType(res) => Ok(res),
@@ -1013,6 +1084,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn thing_single(&self, req: ThingRequest) -> Result<ThingResponse> {
         match self.single(TransactionRequest::Thing(req)).await? {
             TransactionResponse::Thing(res) => Ok(res),
@@ -1020,6 +1092,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn rule_single(&self, req: RuleRequest) -> Result<RuleResponse> {
         match self.single(TransactionRequest::Rule(req)).await? {
             TransactionResponse::Rule(res) => Ok(res),
@@ -1027,6 +1100,7 @@ impl TransactionStream {
         }
     }
 
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn logic_single(&self, req: LogicRequest) -> Result<LogicResponse> {
         match self.single(TransactionRequest::Logic(req)).await? {
             TransactionResponse::Logic(res) => Ok(res),
@@ -1093,10 +1167,16 @@ impl fmt::Debug for TransactionStream {
     }
 }
 
-fn stream_once<'a, T: Send + 'a>(value: T) -> stream::BoxStream<'a, T> {
+fn stream_once<'a, T: Send + 'a>(value: T) -> BoxStream<'a, T> {
     stream_iter(iter::once(value))
 }
 
-fn stream_iter<'a, T: Send + 'a>(iter: impl Iterator<Item = T> + Send + 'a) -> stream::BoxStream<'a, T> {
+#[cfg(feature = "sync")]
+fn stream_iter<'a, T: Send + 'a>(iter: impl Iterator<Item = T> + Send + 'a) -> BoxStream<'a, T> {
+    Box::new(iter)
+}
+
+#[cfg(not(feature = "sync"))]
+fn stream_iter<'a, T: Send + 'a>(iter: impl Iterator<Item = T> + Send + 'a) -> BoxStream<'a, T> {
     Box::pin(stream::iter(iter))
 }

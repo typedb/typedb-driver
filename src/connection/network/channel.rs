@@ -25,10 +25,10 @@ use tonic::{
     body::BoxBody,
     client::GrpcService,
     service::{
-        interceptor::{self, InterceptedService},
+        interceptor::{InterceptedService, ResponseFuture as InterceptorResponseFuture},
         Interceptor,
     },
-    transport::{channel, Channel, Error as TonicError},
+    transport::{channel::ResponseFuture as ChannelResponseFuture, Channel, Error as TonicError},
     Request, Status,
 };
 
@@ -37,7 +37,7 @@ use crate::{
     Credential,
 };
 
-type ResponseFuture = interceptor::ResponseFuture<channel::ResponseFuture>;
+type ResponseFuture = InterceptorResponseFuture<ChannelResponseFuture>;
 
 pub(super) type PlainTextChannel = InterceptedService<Channel, PlainTextFacade>;
 pub(super) type CallCredChannel = InterceptedService<Channel, CredentialInjector>;

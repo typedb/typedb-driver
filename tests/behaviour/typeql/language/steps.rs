@@ -285,12 +285,8 @@ generic_step_impl! {
         for group in &context.answer_group {
             for ans_row in &group.concept_maps {
                 for table_row in &step_table {
-                    if match_answer_concept(
-                        context,
-                        table_row.get(Context::GROUP_COLUMN_NAME).unwrap(),
-                        &group.owner,
-                    )
-                    .await
+                    if match_answer_concept(context, table_row.get(Context::GROUP_COLUMN_NAME).unwrap(), &group.owner)
+                        .await
                     {
                         let mut table_row_wo_owner = table_row.clone();
                         table_row_wo_owner.remove(Context::GROUP_COLUMN_NAME);
@@ -330,20 +326,14 @@ generic_step_impl! {
         let mut matched_rows = 0;
         for group in &context.numeric_answer_group {
             for table_row in &step_table {
-                if match_answer_concept(
-                    context,
-                    table_row.get(Context::GROUP_COLUMN_NAME).unwrap(),
-                    &group.owner,
-                )
-                .await
+                if match_answer_concept(context, table_row.get(Context::GROUP_COLUMN_NAME).unwrap(), &group.owner).await
                 {
                     let answer: f64 = match group.numeric {
                         Numeric::Long(value) => value as f64,
                         Numeric::Double(value) => value,
                         Numeric::NaN => panic!("Last answer in NaN while expected answer is not."),
                     };
-                    let expected_value: f64 =
-                        table_row.get(Context::VALUE_COLUMN_NAME).unwrap().parse().unwrap();
+                    let expected_value: f64 = table_row.get(Context::VALUE_COLUMN_NAME).unwrap().parse().unwrap();
                     if equals_approximate(answer, expected_value) {
                         matched_rows += 1;
                         break;
@@ -362,12 +352,13 @@ generic_step_impl! {
     async fn rules_contain(context: &mut Context, rule_label: LabelParam) {
         let res = context.transaction().logic().get_rule(rule_label.name).await;
         assert!(res.is_ok(), "{res:?}");
+        assert!(res.as_ref().unwrap().is_some(), "{res:?}");
     }
 
     #[step(expr = "rules do not contain: {label}")]
     async fn rules_do_not_contain(context: &mut Context, rule_label: LabelParam) {
         let res = context.transaction().logic().get_rule(rule_label.name).await;
-        assert!(res.is_err(), "{res:?}");
+        assert_eq!(res, Ok(None), "{res:?}");
     }
 
     #[step(expr = "rules are")]

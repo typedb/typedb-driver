@@ -59,6 +59,7 @@ impl Concept {
     }
 }
 
+#[repr(C)]
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum Transitivity {
     Explicit,

@@ -32,7 +32,7 @@ generic_step_impl! {
     #[step(expr = "delete rule: {label}")]
     async fn delete_rule(context: &mut Context, label: LabelParam) -> TypeDBResult {
         let tx = context.transaction();
-        context.get_rule(label.name).await?.delete(tx).await
+        context.get_rule(label.name).await?.unwrap().delete(tx).await
     }
 
     #[step(expr = "delete rule: {label}; throws exception")]
@@ -41,12 +41,8 @@ generic_step_impl! {
     }
 
     #[step(expr = r"rule\(( ){label}( )\) set label: {label}")]
-    async fn rule_set_label(
-        context: &mut Context,
-        current_label: LabelParam,
-        new_label: LabelParam,
-    ) -> TypeDBResult {
+    async fn rule_set_label(context: &mut Context, current_label: LabelParam, new_label: LabelParam) -> TypeDBResult {
         let tx = context.transaction();
-        context.get_rule(current_label.name).await?.set_label(tx, new_label.name).await
+        context.get_rule(current_label.name).await?.unwrap().set_label(tx, new_label.name).await
     }
 }

@@ -170,7 +170,8 @@ generic_step_impl! {
     ) -> TypeDBResult {
         let tx = context.transaction();
         let relation_type = context.get_relation_type(type_label.name).await?;
-        let actuals: Vec<String> = relation_type.get_subtypes(tx)?.map_ok(|rt| rt.label).try_collect().await?;
+        let actuals: Vec<String> =
+            relation_type.get_subtypes(tx, Transitivity::Transitive)?.map_ok(|rt| rt.label).try_collect().await?;
         for subtype in iter_table(step) {
             containment.assert(&actuals, subtype);
         }

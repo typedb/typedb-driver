@@ -19,8 +19,18 @@
  * under the License.
  */
 
-use futures::{stream::BoxStream, Stream};
+use super::{
+    error::try_release_optional,
+    memory::{borrow_mut, release_optional},
+};
+use crate::{common::stream::BoxStream, Result};
 
-pub(crate) fn box_stream<'a, T>(stream: impl Stream<Item = T> + Send + 'a) -> BoxStream<'a, T> {
-    Box::pin(stream) as futures::stream::BoxStream<_>
+pub struct CIterator<T: 'static>(pub(super) BoxStream<'static, T>);
+
+pub(super) fn iterator_next<T: 'static>(it: *mut CIterator<T>) -> *mut T {
+    release_optional(borrow_mut(it).0.next())
+}
+
+pub(super) fn iterator_try_next<T: 'static>(it: *mut CIterator<Result<T>>) -> *mut T {
+    try_release_optional(borrow_mut(it).0.next())
 }

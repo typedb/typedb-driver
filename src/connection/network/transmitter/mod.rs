@@ -23,4 +23,10 @@ mod response_sink;
 mod rpc;
 mod transaction;
 
+use crossbeam::channel::{bounded as bounded_blocking, Receiver as SyncReceiver, Sender as SyncSender};
+
 pub(in crate::connection) use self::{rpc::RPCTransmitter, transaction::TransactionTransmitter};
+
+fn oneshot_blocking<T>() -> (SyncSender<T>, SyncReceiver<T>) {
+    bounded_blocking::<T>(0)
+}

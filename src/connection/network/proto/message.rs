@@ -918,7 +918,7 @@ impl TryFromProto<thing_type::Res> for ThingTypeResponse {
             }),
             Some(thing_type::res::Res::AttributeTypeSetSupertypeRes(_)) => Ok(Self::AttributeTypeSetSupertype),
             Some(thing_type::res::Res::AttributeTypeGetRegexRes(attribute_type::get_regex::Res { regex })) => {
-                Ok(Self::AttributeTypeGetRegex { regex })
+                Ok(Self::AttributeTypeGetRegex { regex: Some(regex).filter(|s| !s.is_empty()) })
             }
             Some(thing_type::res::Res::AttributeTypeSetRegexRes(_)) => Ok(Self::AttributeTypeSetRegex),
             None => Err(ConnectionError::MissingResponseField("res").into()),
@@ -1271,11 +1271,11 @@ impl IntoProto<logic_manager::Req> for LogicRequest {
 impl TryFromProto<logic_manager::Res> for LogicResponse {
     fn try_from_proto(proto: logic_manager::Res) -> Result<Self> {
         match proto.res {
-            Some(logic_manager::res::Res::PutRuleRes(logic_manager::put_rule::Res { rule })) => {
-                Ok(Self::PutRule { rule: Rule::try_from_proto(rule.unwrap()).unwrap() })
-            }
+            Some(logic_manager::res::Res::PutRuleRes(logic_manager::put_rule::Res { rule })) => Ok(Self::PutRule {
+                rule: Rule::try_from_proto(rule.ok_or(ConnectionError::MissingResponseField("rule"))?)?,
+            }),
             Some(logic_manager::res::Res::GetRuleRes(logic_manager::get_rule::Res { rule })) => {
-                Ok(Self::GetRule { rule: Rule::try_from_proto(rule.unwrap()).unwrap() })
+                Ok(Self::GetRule { rule: rule.map(Rule::try_from_proto).transpose()? })
             }
             None => Err(ConnectionError::MissingResponseField("res").into()),
         }
@@ -1284,8 +1284,11 @@ impl TryFromProto<logic_manager::Res> for LogicResponse {
 
 impl TryFromProto<logic_manager::ResPart> for LogicResponse {
     fn try_from_proto(proto: logic_manager::ResPart) -> Result<Self> {
-        Ok(Self::GetRules {
-            rules: proto.get_rules_res_part.unwrap().rules.into_iter().map(Rule::try_from_proto).try_collect()?,
-        })
+        match proto.get_rules_res_part {
+            Some(logic_manager::get_rules::ResPart { rules }) => {
+                Ok(Self::GetRules { rules: rules.into_iter().map(Rule::try_from_proto).try_collect()? })
+            }
+            None => Err(ConnectionError::MissingResponseField("get_rules_res_part").into()),
+        }
     }
 }
