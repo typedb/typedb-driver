@@ -30,6 +30,7 @@ import com.vaticle.typedb.client.api.answer.ConceptMap;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
 import com.vaticle.typedb.client.api.concept.type.EntityType;
 import com.vaticle.typedb.client.api.logic.Explanation;
+import com.vaticle.typedb.common.collection.Pair;
 import com.vaticle.typedb.common.test.core.TypeDBCoreRunner;
 import com.vaticle.typeql.lang.TypeQL;
 import com.vaticle.typeql.lang.common.TypeQLArg;
@@ -54,10 +55,10 @@ import static com.vaticle.typedb.client.api.TypeDBSession.Type.DATA;
 import static com.vaticle.typedb.client.api.TypeDBTransaction.Type.READ;
 import static com.vaticle.typedb.client.api.TypeDBTransaction.Type.WRITE;
 import static com.vaticle.typeql.lang.TypeQL.and;
+import static com.vaticle.typeql.lang.TypeQL.cVar;
 import static com.vaticle.typeql.lang.TypeQL.rel;
 import static com.vaticle.typeql.lang.TypeQL.rule;
 import static com.vaticle.typeql.lang.TypeQL.type;
-import static com.vaticle.typeql.lang.TypeQL.var;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 
@@ -87,21 +88,16 @@ public class ClientQueryTest {
         LOG.info("clientJavaE2E() - starting client-java E2E...");
 
         localhostTypeDBTX(tx -> {
-            TypeQLDefine defineQuery = TypeQL.define(
-                    type("child-bearing").sub("relation").relates("offspring").relates("child-bearer"),
+            TypeQLDefine defineQuery = TypeQL.define(type("child-bearing").sub("relation").relates("offspring").relates("child-bearer"),
                     type("mating").sub("relation").relates("male-partner").relates("female-partner").plays("child-bearing", "child-bearer"),
                     type("parentship").sub("relation").relates("parent").relates("child"),
-
                     type("name").sub("attribute").value(TypeQLArg.ValueType.STRING),
-                    type("lion").sub("entity").owns("name").plays("mating", "male-partner").plays("mating", "female-partner").plays("child-bearing", "offspring").plays("parentship", "parent").plays("parentship", "child")
-            );
-            TypeQLDefine ruleQuery = TypeQL.define(rule("infer-parentship-from-mating-and-child-bearing")
-                    .when(and(
-                            rel("male-partner", var("male")).rel("female-partner", var("female")).isa("mating"),
-                            var("childbearing").rel("child-bearer").rel("offspring", var("offspring")).isa("child-bearing")))
-                    .then(rel("parent", var("male"))
-                            .rel("parent", var("female"))
-                            .rel("child", var("offspring")).isa("parentship")));
+                    type("lion").sub("entity").owns("name").plays("mating", "male-partner").plays("mating", "female-partner")
+                            .plays("child-bearing", "offspring").plays("parentship", "parent").plays("parentship", "child"));
+            TypeQLDefine ruleQuery = TypeQL.define(rule("infer-parentship-from-mating-and-child-bearing").when(
+                            and(rel("male-partner", cVar("male")).rel("female-partner", cVar("female")).isa("mating"),
+                                    cVar("childbearing").rel("child-bearer", cVar()).rel("offspring", cVar("offspring")).isa("child-bearing")))
+                    .then(rel("parent", cVar("male")).rel("parent", cVar("female")).rel("child", cVar("offspring")).isa("parentship")));
             LOG.info("clientJavaE2E() - define a schema...");
             LOG.info("clientJavaE2E() - '" + defineQuery + "'");
             tx.query().define(defineQuery);
@@ -110,129 +106,15 @@ public class ClientQueryTest {
             LOG.info("clientJavaE2E() - done.");
         }, TypeDBSession.Type.SCHEMA);
 
-        // TODO: re-enable when match is implemented
-//        localhostTypeDBTX(tx -> {
-//            final TypeQLMatch getThingQuery = TypeQL.match(var("t").sub("thing"));
-//            LOG.info("clientJavaE2E() - assert if schema defined...");
-//            LOG.info("clientJavaE2E() - '" + getThingQuery + "'");
-//            final List<String> definedSchema = tx.query().match(getThingQuery).get()
-//                    .map(answer -> answer.get("t").asType().asThingType().getLabel()).collect(Collectors.toList());
-//            final String[] correctSchema = new String[]{"thing", "entity", "relation", "attribute",
-//                    "lion", "mating", "parentship", "child-bearing", "name"};
-//            assertThat(definedSchema, hasItems(correctSchema));
-//            LOG.info("clientJavaE2E() - done.");
-//        });
-
         localhostTypeDBTX(tx -> {
             String[] names = lionNames();
-            TypeQLInsert insertLionQuery = TypeQL.insert(
-                    var().isa("lion").has("name", names[0]),
-                    var().isa("lion").has("name", names[1]),
-                    var().isa("lion").has("name", names[2])
-            );
+            TypeQLInsert insertLionQuery = TypeQL.insert(cVar().isa("lion").has("name", names[0]), cVar().isa("lion").has("name", names[1]), cVar().isa("lion").has("name", names[2]));
             LOG.info("clientJavaE2E() - insert some data...");
             LOG.info("clientJavaE2E() - '" + insertLionQuery + "'");
             tx.query().insert(insertLionQuery);
             tx.commit();
             LOG.info("clientJavaE2E() - done.");
         }, WRITE);
-
-        // TODO: uncomment when match is implemented
-//        localhostTypeDBTX(tx -> {
-//            final String[] familyMembers = lionNames();
-//            LOG.info("clientJavaE2E() - inserting mating relations...");
-//            final TypeQLInsert insertMatingQuery = TypeQL.match(
-//                    var("lion").isa("lion").has("name", familyMembers[0]),
-//                    var("lioness").isa("lion").has("name", familyMembers[1]))
-//                    .insert(rel("male-partner", "lion").rel("female-partner", var("lioness")).isa("mating"));
-//            LOG.info("clientJavaE2E() - '" + insertMatingQuery + "'");
-//            final long insertedMating = tx.query().insert(insertMatingQuery).get().count();
-//
-//            LOG.info("clientJavaE2E() - inserting child-bearing relations...");
-//            final TypeQLInsert insertChildBearingQuery = TypeQL.match(
-//                    var("lion").isa("lion").has("name", familyMembers[0]),
-//                    var("lioness").isa("lion").has("name", familyMembers[1]),
-//                    var("offspring").isa("lion").has("name", familyMembers[2]),
-//                    var("mating").rel("male-partner", var("lion")).rel("female-partner", var("lioness")).isa("mating")
-//            )
-//                    .insert(var("childbearing").rel("child-bearer", var("mating")).rel("offspring", var("offspring")).isa("child-bearing"));
-//            LOG.info("clientJavaE2E() - '" + insertChildBearingQuery + "'");
-//            final long insertedChildBearing = tx.query().insert(insertChildBearingQuery).get().count();
-//
-//            tx.commit();
-//
-//            assertEquals(1, insertedMating);
-//            assertEquals(1, insertedChildBearing);
-//            LOG.info("clientJavaE2E() - done.");
-//        });
-//
-//
-//        localhostTypeDBTX(tx -> {
-//            LOG.info("clientJavaE2E() - execute match get on the lion instances...");
-//            final TypeQLMatch getLionQuery = TypeQL.match(var("p").isa("lion").has("name", var("n")));
-//            LOG.info("clientJavaE2E() - '" + getLionQuery + "'");
-//            final Stream<ConceptMap> insertedLions = tx.query().match(getLionQuery).get();
-//            final List<String> insertedNames = insertedLions.map(answer -> answer.get("n").asThing().asAttribute().asString().getValue()).collect(Collectors.toList());
-//            assertThat(insertedNames, containsInAnyOrder(lionNames()));
-//
-//            LOG.info("clientJavaE2E() - execute match get on the mating relations...");
-//            final TypeQLMatch getMatingQuery = TypeQL.match(var("m").isa("mating"));
-//            LOG.info("clientJavaE2E() - '" + getMatingQuery + "'");
-//            final long insertedMating = tx.query().match(getMatingQuery).get().count();
-//            assertEquals(1, insertedMating);
-//
-//            LOG.info("clientJavaE2E() - execute match get on the child-bearing...");
-//            final TypeQLMatch getChildBearingQuery = TypeQL.match(var("cb").isa("child-bearing"));
-//            LOG.info("clientJavaE2E() - '" + getChildBearingQuery + "'");
-//            final long insertedChildBearing = tx.query().match(getChildBearingQuery).get().count();
-//            assertEquals(1, insertedChildBearing);
-//            LOG.info("clientJavaE2E() - done.");
-//        });
-//
-//        localhostTypeDBTX(tx -> {
-//            LOG.info("clientJavaE2E() - match get inferred relations...");
-//            final TypeQLMatch getParentship = TypeQL.match(
-//                    var("parentship")
-//                            .rel("parent", var("parent"))
-//                            .rel("child", var("child"))
-//                            .isa("parentship"));
-//            LOG.info("clientJavaE2E() - '" + getParentship + "'");
-//            final long parentship = tx.query().match(getParentship).get().count();
-//            //2 answers - single answer for each parent
-//            assertEquals(2, parentship);
-//            LOG.info("clientJavaE2E() - done.");
-//        });
-
-        // TODO: uncomment when aggregate is implemented
-//        localhostTypeDBTX(tx -> {
-//            LOG.info("clientJavaE2E() - match aggregate...");
-//            TypeQLMatch.Aggregate aggregateQuery = TypeQL.match(var("p").isa("lion")).count();
-//            LOG.info("clientJavaE2E() - '" + aggregateQuery + "'");
-//            int aggregateCount = tx.query().aggregate(aggregateQuery).get().get(0).number().intValue();
-//            assertThat(aggregateCount, equalTo(lionNames().length));
-//            LOG.info("clientJavaE2E() - done.");
-//        });
-
-        // TODO: uncomment when compute is implemented
-//        localhostTypeDBTX(tx -> {
-//            LOG.info("clientJavaE2E() - compute count...");
-//            final TypeQLCompute.Statistics computeQuery = TypeQL.compute().count().in("lion");
-//            LOG.info("clientJavaE2E() - '" + computeQuery + "'");
-//            int computeCount = tx.execute(computeQuery).get().get(0).number().intValue();
-//            assertThat(computeCount, equalTo(lionNames().length));
-//            LOG.info("clientJavaE2E() - done.");
-//        });
-
-        // TODO: uncomment when match is implemented
-//        localhostTypeDBTX(tx -> {
-//            LOG.info("clientJavaE2E() - match delete...");
-//            TypeQLDelete deleteQuery = TypeQL.match(var("m").isa("mating")).delete(var("m").isa("mating"));
-//            LOG.info("clientJavaE2E() - '" + deleteQuery + "'");
-//            tx.query().delete(deleteQuery).get();
-//            final long matings = tx.query().match(TypeQL.match(var("m").isa("mating"))).get().count();
-//            assertEquals(0, matings);
-//            LOG.info("clientJavaE2E() - done.");
-//        });
 
         LOG.info("clientJavaE2E() - client-java E2E test done.");
     }
@@ -293,17 +175,11 @@ public class ClientQueryTest {
 
         localhostTypeDBTX(tx -> {
             String[] commits = commitSHAs();
-            TypeQLInsert insertCommitQuery = TypeQL.insert(
-                    var().isa("commit").has("symbol", commits[0]),
-                    var().isa("commit").has("symbol", commits[1]),
-                    var().isa("commit").has("symbol", commits[3]),
-                    var().isa("commit").has("symbol", commits[4]),
-                    var().isa("commit").has("symbol", commits[5]),
-                    var().isa("commit").has("symbol", commits[6]),
-                    var().isa("commit").has("symbol", commits[7]),
-                    var().isa("commit").has("symbol", commits[8]),
-                    var().isa("commit").has("symbol", commits[9])
-            );
+            TypeQLInsert insertCommitQuery = TypeQL.insert(cVar().isa("commit").has("symbol", commits[0]),
+                    cVar().isa("commit").has("symbol", commits[1]), cVar().isa("commit").has("symbol", commits[3]),
+                    cVar().isa("commit").has("symbol", commits[4]), cVar().isa("commit").has("symbol", commits[5]),
+                    cVar().isa("commit").has("symbol", commits[6]), cVar().isa("commit").has("symbol", commits[7]),
+                    cVar().isa("commit").has("symbol", commits[8]), cVar().isa("commit").has("symbol", commits[9]));
 
             LOG.info("clientJavaE2E() - insert commit data...");
             LOG.info("clientJavaE2E() - '" + insertCommitQuery + "'");
@@ -313,12 +189,10 @@ public class ClientQueryTest {
         }, WRITE);
 
         localhostTypeDBTX(tx -> {
-            TypeQLInsert insertWorkflowQuery = TypeQL.insert(
-                    var().isa("workflow")
+            TypeQLInsert insertWorkflowQuery = TypeQL.insert(cVar().isa("workflow")
                             .has("name", "workflow-A")
                             .has("status", "running")
-                            .has("latest", true),
-                    var().isa("workflow")
+                            .has("latest", true), cVar().isa("workflow")
                             .has("name", "workflow-B")
                             .has("status", "finished")
                             .has("latest", false)
@@ -332,11 +206,9 @@ public class ClientQueryTest {
         }, WRITE);
 
         localhostTypeDBTX(tx -> {
-            TypeQLInsert insertPipelineQuery = TypeQL.insert(
-                    var().isa("pipeline")
+            TypeQLInsert insertPipelineQuery = TypeQL.insert(cVar().isa("pipeline")
                             .has("name", "pipeline-A")
-                            .has("latest", true),
-                    var().isa("pipeline")
+                            .has("latest", true), cVar().isa("pipeline")
                             .has("name", "pipeline-B")
                             .has("latest", false)
             );
@@ -353,12 +225,8 @@ public class ClientQueryTest {
             LOG.info("clientJavaE2E() - inserting pipeline-automation relations...");
 
             for (int i = 0; i < commitShas.length / 2; i++) {
-                TypeQLInsert insertPipelineAutomationQuery = TypeQL.match(
-                                var("commit").isa("commit").has("symbol", commitShas[i]),
-                                var("pipeline").isa("pipeline").has("name", "pipeline-A")
-                        )
-                        .insert(
-                                rel("pipeline", "pipeline").rel("trigger", "commit").isa("pipeline-automation")
+                TypeQLInsert insertPipelineAutomationQuery = TypeQL.match(cVar("commit").isa("commit").has("symbol", commitShas[i]), cVar("pipeline").isa("pipeline").has("name", "pipeline-A"))
+                        .insert(rel("pipeline", cVar("pipeline")).rel("trigger", cVar("commit")).isa("pipeline-automation")
                         );
                 LOG.info("clientJavaE2E() - '" + insertPipelineAutomationQuery + "'");
                 List<ConceptMap> x = tx.query().insert(insertPipelineAutomationQuery).collect(toList());
@@ -366,12 +234,8 @@ public class ClientQueryTest {
 
 
             for (int i = commitShas.length / 2; i < commitShas.length; i++) {
-                TypeQLInsert insertPipelineAutomationQuery = TypeQL.match(
-                                var("commit").isa("commit").has("symbol", commitShas[i]),
-                                var("pipeline").isa("pipeline").has("name", "pipeline-B")
-                        )
-                        .insert(
-                                rel("pipeline", "pipeline").rel("trigger", "commit").isa("pipeline-automation")
+                TypeQLInsert insertPipelineAutomationQuery = TypeQL.match(cVar("commit").isa("commit").has("symbol", commitShas[i]), cVar("pipeline").isa("pipeline").has("name", "pipeline-B"))
+                        .insert(rel("pipeline", cVar("pipeline")).rel("trigger", cVar("commit")).isa("pipeline-automation")
                         );
                 LOG.info("clientJavaE2E() - '" + insertPipelineAutomationQuery + "'");
                 List<ConceptMap> x = tx.query().insert(insertPipelineAutomationQuery).collect(toList());
@@ -385,16 +249,11 @@ public class ClientQueryTest {
         localhostTypeDBTX(tx -> {
             LOG.info("clientJavaE2E() - inserting pipeline-automation relations...");
 
-            TypeQLInsert insertPipelineWorkflowQuery = TypeQL.match(
-                            var("pipelineA").isa("pipeline").has("name", "pipeline-A"),
-                            var("workflowA").isa("workflow").has("name", "workflow-A"),
-                            var("pipelineB").isa("pipeline").has("name", "pipeline-B"),
-                            var("workflowB").isa("workflow").has("name", "workflow-B")
-                    )
-                    .insert(
-                            rel("pipeline", "pipelineA").rel("workflow", "workflowA").isa("pipeline-workflow"),
-                            rel("pipeline", "pipelineB").rel("workflow", "workflowB").isa("pipeline-workflow")
-                    );
+            TypeQLInsert insertPipelineWorkflowQuery = TypeQL.match(cVar("pipelineA").isa("pipeline").has("name", "pipeline-A"),
+                            cVar("workflowA").isa("workflow").has("name", "workflow-A"), cVar("pipelineB").isa("pipeline").has("name", "pipeline-B"),
+                            cVar("workflowB").isa("workflow").has("name", "workflow-B"))
+                    .insert(rel("pipeline", cVar("pipelineA")).rel("workflow", cVar("workflowA")).isa("pipeline-workflow"),
+                            rel("pipeline", cVar("pipelineB")).rel("workflow", cVar("workflowB")).isa("pipeline-workflow"));
             LOG.info("clientJavaE2E() - '" + insertPipelineWorkflowQuery + "'");
             List<ConceptMap> x = tx.query().insert(insertPipelineWorkflowQuery).collect(toList());
 
@@ -508,17 +367,15 @@ public class ClientQueryTest {
                             "$y isa person, has name 'Yasmin'; " +
                             "(husband: $x, wife: $y) isa marriage;"
             ).asInsert();
-            List<ConceptMap> answers = tx.query().match(TypeQL.parseQuery(
-                    "match (friend: $p1, friend: $p2) isa friendship; $p1 has name $na;"
-            ).asMatch()).collect(toList());
+            List<ConceptMap> answers = tx.query().match(TypeQL.parseQuery("match (friend: $p1, friend: $p2) isa friendship; $p1 has name $na;").asMatch()).collect(toList());
 
-            assertEquals(1, answers.get(0).explainables().relations().size());
-            assertEquals(1, answers.get(1).explainables().relations().size());
-            List<Explanation> explanations = tx.query().explain(answers.get(0).explainables().relations().values().iterator().next()).collect(Collectors.toList());
+            assertEquals(1, answers.get(0).explainables().relations().count());
+            assertEquals(1, answers.get(1).explainables().relations().count());
+            List<Explanation> explanations = tx.query().explain(answers.get(0).explainables().relations().map(Pair::second).iterator().next()).collect(Collectors.toList());
             assertEquals(3, explanations.size());
-            List<Explanation> explanations2 = tx.query().explain(answers.get(1).explainables().relations().values().iterator().next()).collect(Collectors.toList());
+            List<Explanation> explanations2 = tx.query().explain(answers.get(1).explainables().relations().map(Pair::second).iterator().next()).collect(Collectors.toList());
             assertEquals(3, explanations2.size());
-        }, READ, TypeDBOptions.core().infer(true).explain(true));
+        }, READ, new TypeDBOptions().infer(true).explain(true));
     }
 
     @Test
@@ -531,11 +388,11 @@ public class ClientQueryTest {
         }, TypeDBSession.Type.SCHEMA);
         localhostTypeDBTX(tx -> {
             for (int i = 0; i < 50; i++) {
-                EntityType.Remote concept = tx.concepts().getEntityType("person").asRemote(tx);
-                List<? extends AttributeType> attributeTypes = concept.getOwns().collect(toList());
+                EntityType concept = tx.concepts().getEntityType("person");
+                List<? extends AttributeType> attributeTypes = concept.getOwns(tx).collect(toList());
                 Optional<ConceptMap> conceptMap = tx.query().match("match $x sub thing; limit 1;").findFirst();
             }
-        }, READ, TypeDBOptions.core().prefetch(true).prefetchSize(50));
+        }, READ, new TypeDBOptions().prefetch(true).prefetchSize(50));
     }
 
     private String[] lionNames() {
@@ -543,7 +400,7 @@ public class ClientQueryTest {
     }
 
     private void localhostTypeDBTX(Consumer<TypeDBTransaction> fn, TypeDBTransaction.Type type) {
-        localhostTypeDBTX(fn, type, TypeDBOptions.core());
+        localhostTypeDBTX(fn, type, new TypeDBOptions());
     }
 
     private void localhostTypeDBTX(Consumer<TypeDBTransaction> fn, TypeDBTransaction.Type type, TypeDBOptions options) {

@@ -34,12 +34,9 @@ import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-
 public class UserSteps {
-
-    private TypeDBClient.Cluster getClient() {
-        assert client.isCluster();
-        return (TypeDBClient.Cluster) client;
+    private TypeDBClient getClient() {
+        return client;
     }
 
     public boolean user_is_in_users(String username) {
@@ -133,7 +130,7 @@ public class UserSteps {
 
     @When("user password update: {word}, {word}; throws exception")
     public void user_password_update_throws_exception(String passwordOld, String passwordNew) {
-        assertThrows(() -> getClient().users().get(client.asCluster().user().username()).passwordUpdate(passwordOld, passwordNew));
+        assertThrows(() -> getClient().users().get(client.user().username()).passwordUpdate(passwordOld, passwordNew));
     }
 
     @When("users password set: {word}, {word}; throws exception")

@@ -19,31 +19,20 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.query;
+package com.vaticle.typedb.client.common;
 
-import java.util.function.Function;
+import com.vaticle.typedb.client.common.exception.ErrorMessage;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
-public interface QueryFuture<T> {
-
-    T get();
-
-    default <U> QueryFuture<U> map(Function<T, U> function) {
-        return new Mapped<>(this, function);
+public abstract class NativeObject<T> {
+    static {
+        System.loadLibrary("typedb_client_jni");
     }
 
-    class Mapped<T, U> implements QueryFuture<U> {
+    public final T nativeObject;
 
-        private final QueryFuture<T> queryFuture;
-        private final Function<T, U> function;
-
-        public Mapped(QueryFuture<T> queryFuture, Function<T, U> function) {
-            this.queryFuture = queryFuture;
-            this.function = function;
-        }
-
-        @Override
-        public U get() {
-            return function.apply(queryFuture.get());
-        }
+    protected NativeObject(T nativeObject) {
+        if (nativeObject == null) throw new TypeDBClientException(ErrorMessage.Internal.NULL_NATIVE_VALUE);
+        this.nativeObject = nativeObject;
     }
 }

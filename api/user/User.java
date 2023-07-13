@@ -25,7 +25,6 @@ import javax.annotation.CheckReturnValue;
 import java.util.Optional;
 
 public interface User {
-
     @CheckReturnValue
     String username();
 

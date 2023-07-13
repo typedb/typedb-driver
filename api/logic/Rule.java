@@ -27,7 +27,6 @@ import com.vaticle.typeql.lang.pattern.Pattern;
 import javax.annotation.CheckReturnValue;
 
 public interface Rule {
-
     @CheckReturnValue
     String getLabel();
 
@@ -37,19 +36,10 @@ public interface Rule {
     @CheckReturnValue
     Pattern getThen();
 
-    @CheckReturnValue
-    Rule.Remote asRemote(TypeDBTransaction transaction);
+    void setLabel(TypeDBTransaction transaction, String label);
+
+    void delete(TypeDBTransaction transaction);
 
     @CheckReturnValue
-    boolean isRemote();
-
-    interface Remote extends Rule {
-
-        void setLabel(String label);
-
-        void delete();
-
-        @CheckReturnValue
-        boolean isDeleted();
-    }
+    boolean isDeleted(TypeDBTransaction transaction);
 }

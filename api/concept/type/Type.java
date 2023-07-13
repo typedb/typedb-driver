@@ -27,12 +27,11 @@ import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.common.Label;
 
-import java.util.stream.Stream;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
+import java.util.stream.Stream;
 
 public interface Type extends Concept {
-
     @CheckReturnValue
     Label getLabel();
 
@@ -43,33 +42,34 @@ public interface Type extends Concept {
     boolean isAbstract();
 
     @Override
+    @CheckReturnValue
     default boolean isType() {
         return true;
     }
 
     @Override
-    Remote asRemote(TypeDBTransaction transaction);
+    @CheckReturnValue
+    default Type asType() {
+        return this;
+    }
 
     @Override
     default JsonObject toJSON() {
         return Json.object().add("label", getLabel().scopedName());
     }
 
-    interface Remote extends Type, Concept.Remote {
+    void setLabel(TypeDBTransaction transaction, String label);
 
-        void setLabel(String label);
+    @Nullable
+    @CheckReturnValue
+    Type getSupertype(TypeDBTransaction transaction);
 
-        @Nullable
-        @CheckReturnValue
-        Type getSupertype();
+    @CheckReturnValue
+    Stream<? extends Type> getSupertypes(TypeDBTransaction transaction);
 
-        @CheckReturnValue
-        Stream<? extends Type> getSupertypes();
+    @CheckReturnValue
+    Stream<? extends Type> getSubtypes(TypeDBTransaction transaction);
 
-        @CheckReturnValue
-        Stream<? extends Type> getSubtypes();
-
-        @CheckReturnValue
-        Stream<? extends Type> getSubtypesExplicit();
-    }
+    @CheckReturnValue
+    Stream<? extends Type> getSubtypesExplicit(TypeDBTransaction transaction);
 }

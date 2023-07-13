@@ -19,32 +19,28 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api;
+package com.vaticle.typedb.client.api.concept;
 
-import com.vaticle.typedb.client.api.database.DatabaseManager;
-import com.vaticle.typedb.client.api.user.User;
-import com.vaticle.typedb.client.api.user.UserManager;
+import java.time.LocalDateTime;
 
-import javax.annotation.CheckReturnValue;
+public interface Value {
+    boolean isBoolean();
 
-public interface TypeDBClient extends AutoCloseable {
-    @CheckReturnValue
-    boolean isOpen();
+    boolean isLong();
 
-    @CheckReturnValue
-    DatabaseManager databases();
+    boolean isDouble();
 
-    @CheckReturnValue
-    TypeDBSession session(String database, TypeDBSession.Type type);
+    boolean isString();
 
-    @CheckReturnValue
-    TypeDBSession session(String database, TypeDBSession.Type type, TypeDBOptions options);
+    boolean isDateTime();
 
-    void close();
+    boolean asBoolean();
 
-    @CheckReturnValue
-    User user();
+    long asLong();
 
-    @CheckReturnValue
-    UserManager users();
+    double asDouble();
+
+    String asString();
+
+    LocalDateTime asDateTime();
 }

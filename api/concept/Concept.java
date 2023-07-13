@@ -33,11 +33,14 @@ import com.vaticle.typedb.client.api.concept.type.RelationType;
 import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
 import com.vaticle.typedb.client.api.concept.type.Type;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 import javax.annotation.CheckReturnValue;
 
-public interface Concept {
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import static com.vaticle.typedb.common.util.Objects.className;
 
+public interface Concept {
     @CheckReturnValue
     default boolean isType() {
         return false;
@@ -88,90 +91,51 @@ public interface Concept {
         return false;
     }
 
-    @CheckReturnValue
-    Type asType();
+    default Type asType() {
+        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Type.class));
+    }
 
-    @CheckReturnValue
-    ThingType asThingType();
+    default ThingType asThingType() {
+        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(ThingType.class));
+    }
 
-    @CheckReturnValue
-    EntityType asEntityType();
+    default EntityType asEntityType() {
+        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(EntityType.class));
+    }
 
-    @CheckReturnValue
-    AttributeType asAttributeType();
+    default RelationType asRelationType() {
+        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(RelationType.class));
+    }
 
-    @CheckReturnValue
-    RelationType asRelationType();
+    default AttributeType asAttributeType() {
+        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.class));
+    }
 
-    @CheckReturnValue
-    RoleType asRoleType();
+    default RoleType asRoleType() {
+        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(RoleType.class));
+    }
 
-    @CheckReturnValue
-    Thing asThing();
+    default Thing asThing() {
+        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Thing.class));
+    }
 
-    @CheckReturnValue
-    Entity asEntity();
+    default Entity asEntity() {
+        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Entity.class));
+    }
 
-    @CheckReturnValue
-    Attribute<?> asAttribute();
+    default Relation asRelation() {
+        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Relation.class));
+    }
 
-    @CheckReturnValue
-    Relation asRelation();
-
-    @CheckReturnValue
-    Remote asRemote(TypeDBTransaction transaction);
-
-    @CheckReturnValue
-    boolean isRemote();
+    default Attribute asAttribute() {
+        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.class));
+    }
 
     @CheckReturnValue
     JsonObject toJSON();
 
-    interface Remote extends Concept {
+    void delete(TypeDBTransaction transaction);
 
-        void delete();
-
-        @CheckReturnValue
-        boolean isDeleted();
-
-        @Override
-        @CheckReturnValue
-        Type.Remote asType();
-
-        @Override
-        @CheckReturnValue
-        ThingType.Remote asThingType();
-
-        @Override
-        @CheckReturnValue
-        EntityType.Remote asEntityType();
-
-        @Override
-        @CheckReturnValue
-        RelationType.Remote asRelationType();
-
-        @Override
-        @CheckReturnValue
-        AttributeType.Remote asAttributeType();
-
-        @Override
-        @CheckReturnValue
-        RoleType.Remote asRoleType();
-
-        @Override
-        @CheckReturnValue
-        Thing.Remote asThing();
-
-        @Override
-        @CheckReturnValue
-        Entity.Remote asEntity();
-
-        @Override
-        @CheckReturnValue
-        Relation.Remote asRelation();
-
-        @Override
-        @CheckReturnValue
-        Attribute.Remote<?> asAttribute();
-    }
+    @CheckReturnValue
+    boolean isDeleted(TypeDBTransaction transaction);
 }

@@ -22,10 +22,9 @@
 package com.vaticle.typedb.client.api.concept.type;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.concept.Value;
 import com.vaticle.typedb.client.api.concept.thing.Attribute;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.protocol.ConceptProto;
-import com.vaticle.typeql.lang.common.TypeQLToken;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -33,14 +32,11 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 
 public interface AttributeType extends ThingType {
-
     @CheckReturnValue
-    default ValueType getValueType() {
-        return ValueType.OBJECT;
-    }
+    ValueType getValueType();
 
     @Override
     @CheckReturnValue
@@ -48,77 +44,101 @@ public interface AttributeType extends ThingType {
         return true;
     }
 
+    @Override
+    @CheckReturnValue
+    default AttributeType asAttributeType() {
+        return this;
+    }
+
+    Attribute put(TypeDBTransaction transaction, Value value);
+
+    Attribute put(TypeDBTransaction transaction, String value);
+
+    Attribute put(TypeDBTransaction transaction, long value);
+
+    Attribute put(TypeDBTransaction transaction, double value);
+
+    Attribute put(TypeDBTransaction transaction, boolean value);
+
+    Attribute put(TypeDBTransaction transaction, LocalDateTime value);
+
+    @Nullable
+    Attribute get(TypeDBTransaction transaction, Value value);
+
+    @Nullable
+    Attribute get(TypeDBTransaction transaction, String value);
+
+    @Nullable
+    Attribute get(TypeDBTransaction transaction, long value);
+
+    @Nullable
+    Attribute get(TypeDBTransaction transaction, double value);
+
+    @Nullable
+    Attribute get(TypeDBTransaction transaction, boolean value);
+
+    @Nullable
+    Attribute get(TypeDBTransaction transaction, LocalDateTime value);
+
+    String getRegex(TypeDBTransaction transaction);
+
+    void setRegex(TypeDBTransaction transaction, String regex);
+
+    void unsetRegex(TypeDBTransaction transaction);
+
     @CheckReturnValue
     default boolean isBoolean() {
-        return false;
+        return getValueType() == ValueType.BOOLEAN;
     }
 
     @CheckReturnValue
     default boolean isLong() {
-        return false;
+        return getValueType() == ValueType.LONG;
     }
 
     @CheckReturnValue
     default boolean isDouble() {
-        return false;
+        return getValueType() == ValueType.DOUBLE;
     }
 
     @CheckReturnValue
     default boolean isString() {
-        return false;
+        return getValueType() == ValueType.STRING;
     }
 
     @CheckReturnValue
     default boolean isDateTime() {
-        return false;
+        return getValueType() == ValueType.DATETIME;
     }
 
-    @Override
-    @CheckReturnValue
-    AttributeType.Remote asRemote(TypeDBTransaction transaction);
-
-    @CheckReturnValue
-    AttributeType.Boolean asBoolean();
-
-    @CheckReturnValue
-    AttributeType.Long asLong();
-
-    @CheckReturnValue
-    AttributeType.Double asDouble();
-
-    @CheckReturnValue
-    AttributeType.String asString();
-
-    @CheckReturnValue
-    AttributeType.DateTime asDateTime();
-
     enum ValueType {
-
-        OBJECT(Object.class, false, false),
-        BOOLEAN(Boolean.class, true, false),
-        LONG(Long.class, true, true),
-        DOUBLE(Double.class, true, false),
-        STRING(String.class, true, true),
-        DATETIME(LocalDateTime.class, true, true);
+        OBJECT(Object.class, false, false, com.vaticle.typedb.client.jni.ValueType.Object),
+        BOOLEAN(Boolean.class, true, false, com.vaticle.typedb.client.jni.ValueType.Boolean),
+        LONG(Long.class, true, true, com.vaticle.typedb.client.jni.ValueType.Long),
+        DOUBLE(Double.class, true, false, com.vaticle.typedb.client.jni.ValueType.Double),
+        STRING(String.class, true, true, com.vaticle.typedb.client.jni.ValueType.String),
+        DATETIME(LocalDateTime.class, true, true, com.vaticle.typedb.client.jni.ValueType.DateTime);
 
         private final Class<?> valueClass;
         private final boolean isWritable;
         private final boolean isKeyable;
+        public final com.vaticle.typedb.client.jni.ValueType nativeObject;
 
-        ValueType(Class<?> valueClass, boolean isWritable, boolean isKeyable) {
+        ValueType(Class<?> valueClass, boolean isWritable, boolean isKeyable, com.vaticle.typedb.client.jni.ValueType nativeObject) {
             this.valueClass = valueClass;
             this.isWritable = isWritable;
             this.isKeyable = isKeyable;
+            this.nativeObject = nativeObject;
         }
 
         @CheckReturnValue
-        public static ValueType of(Class<?> valueClass) {
-            for (ValueType t : ValueType.values()) {
-                if (t.valueClass == valueClass) {
-                    return t;
+        public static ValueType of(com.vaticle.typedb.client.jni.ValueType valueType) {
+            for (ValueType type : ValueType.values()) {
+                if (type.nativeObject == valueType) {
+                    return type;
                 }
             }
-            throw new TypeDBClientException(BAD_VALUE_TYPE);
+            throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
         }
 
         @CheckReturnValue
@@ -135,318 +155,38 @@ public interface AttributeType extends ThingType {
         public boolean isKeyable() {
             return isKeyable;
         }
-
-        @CheckReturnValue
-        public ConceptProto.AttributeType.ValueType proto() {
-            switch (this) {
-                case OBJECT:
-                    return ConceptProto.AttributeType.ValueType.OBJECT;
-                case BOOLEAN:
-                    return ConceptProto.AttributeType.ValueType.BOOLEAN;
-                case LONG:
-                    return ConceptProto.AttributeType.ValueType.LONG;
-                case DOUBLE:
-                    return ConceptProto.AttributeType.ValueType.DOUBLE;
-                case STRING:
-                    return ConceptProto.AttributeType.ValueType.STRING;
-                case DATETIME:
-                    return ConceptProto.AttributeType.ValueType.DATETIME;
-                default:
-                    return ConceptProto.AttributeType.ValueType.UNRECOGNIZED;
-            }
-        }
     }
 
-    interface Remote extends ThingType.Remote, AttributeType {
+    void setSupertype(TypeDBTransaction transaction, AttributeType attributeType);
 
-        void setSupertype(AttributeType attributeType);
+    @Override
+    @CheckReturnValue
+    Stream<? extends AttributeType> getSubtypes(TypeDBTransaction transaction);
 
-        @Override
-        @CheckReturnValue
-        Stream<? extends AttributeType> getSubtypes();
+    @CheckReturnValue
+    Stream<? extends AttributeType> getSubtypes(TypeDBTransaction transaction, ValueType valueType);
 
-        @Override
-        @CheckReturnValue
-        Stream<? extends AttributeType> getSubtypesExplicit();
+    @Override
+    @CheckReturnValue
+    Stream<? extends AttributeType> getSubtypesExplicit(TypeDBTransaction transaction);
 
-        @Override
-        @CheckReturnValue
-        Stream<? extends Attribute<?>> getInstances();
+    @Override
+    @CheckReturnValue
+    Stream<? extends Attribute> getInstances(TypeDBTransaction transaction);
 
-        @Override
-        @CheckReturnValue
-        Stream<? extends Attribute<?>> getInstancesExplicit();
+    @Override
+    @CheckReturnValue
+    Stream<? extends Attribute> getInstancesExplicit(TypeDBTransaction transaction);
 
-        @CheckReturnValue
-        Stream<? extends ThingType> getOwners();
+    @CheckReturnValue
+    Stream<? extends ThingType> getOwners(TypeDBTransaction transaction);
 
-        @CheckReturnValue
-        Stream<? extends ThingType> getOwners(Set<TypeQLToken.Annotation> annotations);
+    @CheckReturnValue
+    Stream<? extends ThingType> getOwners(TypeDBTransaction transaction, Set<Annotation> annotations);
 
-        @CheckReturnValue
-        Stream<? extends ThingType> getOwnersExplicit();
+    @CheckReturnValue
+    Stream<? extends ThingType> getOwnersExplicit(TypeDBTransaction transaction);
 
-        @CheckReturnValue
-        Stream<? extends ThingType> getOwnersExplicit(Set<TypeQLToken.Annotation> annotations);
-
-        @Override
-        @CheckReturnValue
-        AttributeType.Remote asAttributeType();
-
-        @Override
-        @CheckReturnValue
-        AttributeType.Boolean.Remote asBoolean();
-
-        @Override
-        @CheckReturnValue
-        AttributeType.Long.Remote asLong();
-
-        @Override
-        @CheckReturnValue
-        AttributeType.Double.Remote asDouble();
-
-        @Override
-        @CheckReturnValue
-        AttributeType.String.Remote asString();
-
-        @Override
-        @CheckReturnValue
-        AttributeType.DateTime.Remote asDateTime();
-    }
-
-    interface Boolean extends AttributeType {
-
-        @Override
-        @CheckReturnValue
-        default ValueType getValueType() {
-            return ValueType.BOOLEAN;
-        }
-
-        @Override
-        @CheckReturnValue
-        default boolean isBoolean() {
-            return true;
-        }
-
-        @Override
-        @CheckReturnValue
-        AttributeType.Boolean.Remote asRemote(TypeDBTransaction transaction);
-
-        interface Remote extends AttributeType.Boolean, AttributeType.Remote {
-
-            Attribute.Boolean put(boolean value);
-
-            @Nullable
-            @CheckReturnValue
-            Attribute.Boolean get(boolean value);
-
-            @Override
-            @CheckReturnValue
-            Stream<? extends Attribute.Boolean> getInstances();
-
-            @Override
-            @CheckReturnValue
-            Stream<? extends Attribute.Boolean> getInstancesExplicit();
-
-            @Override
-            @CheckReturnValue
-            Stream<? extends AttributeType.Boolean> getSubtypes();
-
-            @Override
-            @CheckReturnValue
-            Stream<? extends AttributeType.Boolean> getSubtypesExplicit();
-
-            void setSupertype(AttributeType.Boolean booleanAttributeType);
-        }
-    }
-
-    interface Long extends AttributeType {
-
-        @Override
-        @CheckReturnValue
-        default ValueType getValueType() {
-            return ValueType.LONG;
-        }
-
-        @Override
-        @CheckReturnValue
-        default boolean isLong() {
-            return true;
-        }
-
-        @Override
-        @CheckReturnValue
-        AttributeType.Long.Remote asRemote(TypeDBTransaction transaction);
-
-        interface Remote extends AttributeType.Long, AttributeType.Remote {
-
-            Attribute.Long put(long value);
-
-            @Nullable
-            @CheckReturnValue
-            Attribute.Long get(long value);
-
-            @Override
-            @CheckReturnValue
-            Stream<? extends Attribute.Long> getInstances();
-
-            @Override
-            @CheckReturnValue
-            Stream<? extends Attribute.Long> getInstancesExplicit();
-
-            @Override
-            @CheckReturnValue
-            Stream<? extends AttributeType.Long> getSubtypes();
-
-            @Override
-            @CheckReturnValue
-            Stream<? extends AttributeType.Long> getSubtypesExplicit();
-
-            void setSupertype(AttributeType.Long longAttributeType);
-        }
-    }
-
-    interface Double extends AttributeType {
-
-        @Override
-        @CheckReturnValue
-        default ValueType getValueType() {
-            return ValueType.DOUBLE;
-        }
-
-        @Override
-        @CheckReturnValue
-        default boolean isDouble() {
-            return true;
-        }
-
-        @Override
-        @CheckReturnValue
-        AttributeType.Double.Remote asRemote(TypeDBTransaction transaction);
-
-        interface Remote extends AttributeType.Double, AttributeType.Remote {
-
-            Attribute.Double put(double value);
-
-            @Nullable
-            @CheckReturnValue
-            Attribute.Double get(double value);
-
-            @Override
-            @CheckReturnValue
-            Stream<? extends Attribute.Double> getInstances();
-
-            @Override
-            @CheckReturnValue
-            Stream<? extends Attribute.Double> getInstancesExplicit();
-
-            @Override
-            @CheckReturnValue
-            Stream<? extends AttributeType.Double> getSubtypes();
-
-            @Override
-            @CheckReturnValue
-            Stream<? extends AttributeType.Double> getSubtypesExplicit();
-
-            void setSupertype(AttributeType.Double doubleAttributeType);
-        }
-    }
-
-    interface String extends AttributeType {
-
-        @Override
-        @CheckReturnValue
-        default ValueType getValueType() {
-            return ValueType.STRING;
-        }
-
-        @Override
-        @CheckReturnValue
-        default boolean isString() {
-            return true;
-        }
-
-        @Override
-        @CheckReturnValue
-        AttributeType.String.Remote asRemote(TypeDBTransaction transaction);
-
-        interface Remote extends AttributeType.String, AttributeType.Remote {
-
-            Attribute.String put(java.lang.String value);
-
-            @Nullable
-            @CheckReturnValue
-            Attribute.String get(java.lang.String value);
-
-            @Override
-            @CheckReturnValue
-            Stream<? extends Attribute.String> getInstances();
-
-            @Override
-            @CheckReturnValue
-            Stream<? extends Attribute.String> getInstancesExplicit();
-
-            @Nullable
-            @CheckReturnValue
-            java.lang.String getRegex();
-
-            void setRegex(java.lang.String regex);
-
-            @Override
-            @CheckReturnValue
-            Stream<? extends AttributeType.String> getSubtypes();
-
-            @Override
-            @CheckReturnValue
-            Stream<? extends AttributeType.String> getSubtypesExplicit();
-
-            void setSupertype(AttributeType.String stringAttributeType);
-        }
-    }
-
-    interface DateTime extends AttributeType {
-
-        @Override
-        @CheckReturnValue
-        default ValueType getValueType() {
-            return ValueType.DATETIME;
-        }
-
-        @Override
-        @CheckReturnValue
-        default boolean isDateTime() {
-            return true;
-        }
-
-        @Override
-        @CheckReturnValue
-        AttributeType.DateTime.Remote asRemote(TypeDBTransaction transaction);
-
-        interface Remote extends AttributeType.DateTime, AttributeType.Remote {
-
-            Attribute.DateTime put(LocalDateTime value);
-
-            @Nullable
-            @CheckReturnValue
-            Attribute.DateTime get(LocalDateTime value);
-
-            @Override
-            @CheckReturnValue
-            Stream<? extends Attribute.DateTime> getInstances();
-
-            @Override
-            @CheckReturnValue
-            Stream<? extends Attribute.DateTime> getInstancesExplicit();
-
-            @Override
-            @CheckReturnValue
-            Stream<? extends AttributeType.DateTime> getSubtypes();
-
-            @Override
-            @CheckReturnValue
-            Stream<? extends AttributeType.DateTime> getSubtypesExplicit();
-
-            void setSupertype(AttributeType.DateTime dateTimeAttributeType);
-        }
-    }
+    @CheckReturnValue
+    Stream<? extends ThingType> getOwnersExplicit(TypeDBTransaction transaction, Set<Annotation> annotations);
 }

@@ -26,63 +26,48 @@ import com.vaticle.typedb.client.api.concept.thing.Attribute;
 import com.vaticle.typedb.client.api.concept.thing.Thing;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
 import com.vaticle.typedb.client.api.concept.type.RoleType;
+import com.vaticle.typedb.client.api.concept.type.ThingType.Annotation;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.concept.ConceptImpl;
+import com.vaticle.typedb.client.concept.type.AttributeTypeImpl;
 import com.vaticle.typedb.client.concept.type.RoleTypeImpl;
 import com.vaticle.typedb.client.concept.type.ThingTypeImpl;
-import com.vaticle.typedb.protocol.ConceptProto;
-import com.vaticle.typedb.protocol.TransactionProto;
-import com.vaticle.typeql.lang.common.TypeQLToken;
 
-import java.util.Collections;
-import java.util.Objects;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_IID;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_TRANSACTION;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.deleteReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.getHasReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.getPlayingReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.getRelationsReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.protoThing;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.setHasReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.unsetHasReq;
-import static com.vaticle.typedb.client.concept.type.TypeImpl.protoAnnotations;
-import static com.vaticle.typedb.client.concept.type.TypeImpl.protoTypes;
-import static com.vaticle.typedb.common.util.Objects.className;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptySet;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_is_attribute;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_is_entity;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_is_relation;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_delete;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_get_has;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_get_iid;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_get_is_inferred;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_get_playing;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_get_relations;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_is_deleted;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_set_has;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_unset_has;
 
 public abstract class ThingImpl extends ConceptImpl implements Thing {
+    private int hash = 0;
 
-    private final String iid;
-    private final boolean isInferred;
-
-    ThingImpl(String iid, boolean isInferred) {
-        if (iid == null || iid.isEmpty()) throw new TypeDBClientException(MISSING_IID);
-        this.iid = iid;
-        this.isInferred = isInferred;
+    ThingImpl(com.vaticle.typedb.client.jni.Concept concept) {
+        super(concept);
     }
 
-    public static ThingImpl of(ConceptProto.Thing thingProto) {
-        switch (thingProto.getType().getEncoding()) {
-            case ENTITY_TYPE:
-                return EntityImpl.of(thingProto);
-            case RELATION_TYPE:
-                return RelationImpl.of(thingProto);
-            case ATTRIBUTE_TYPE:
-                return AttributeImpl.of(thingProto);
-            case UNRECOGNIZED:
-            default:
-                throw new TypeDBClientException(BAD_ENCODING, thingProto.getType().getEncoding());
-        }
+    public static ThingImpl of(com.vaticle.typedb.client.jni.Concept concept) {
+        if (concept_is_entity(concept)) return new EntityImpl(concept);
+        else if (concept_is_relation(concept)) return new RelationImpl(concept);
+        else if (concept_is_attribute(concept)) return new AttributeImpl(concept);
+        throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
     }
 
     @Override
     public final String getIID() {
-        return iid;
+        return thing_get_iid(nativeObject);
     }
 
     @Override
@@ -90,7 +75,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
 
     @Override
     public boolean isInferred() {
-        return isInferred;
+        return thing_get_is_inferred(nativeObject);
     }
 
     @Override
@@ -99,161 +84,51 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
     }
 
     @Override
-    public String toString() {
-        return className(this.getClass()) + "[" + getType().getLabel() + ":" + iid + "]";
+    public final Stream<AttributeImpl> getHas(TypeDBTransaction transaction, AttributeType... attributeTypes) {
+        com.vaticle.typedb.client.jni.Concept[] attributeTypesArray = Arrays.stream(attributeTypes).map(at -> ((AttributeTypeImpl) at).nativeObject).toArray(com.vaticle.typedb.client.jni.Concept[]::new);
+        return thing_get_has(nativeTransaction(transaction), nativeObject, attributeTypesArray, new com.vaticle.typedb.client.jni.Annotation[0]).stream().map(AttributeImpl::new);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public final Stream<AttributeImpl> getHas(TypeDBTransaction transaction, Set<Annotation> annotations) {
+        com.vaticle.typedb.client.jni.Annotation[] annotationsArray = annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.client.jni.Annotation[]::new);
+        return thing_get_has(nativeTransaction(transaction), nativeObject, new com.vaticle.typedb.client.jni.Concept[0], annotationsArray).stream().map(AttributeImpl::new);
+    }
 
-        ThingImpl that = (ThingImpl) o;
-        return (this.iid.equals(that.iid));
+    @Override
+    public final Stream<RelationImpl> getRelations(TypeDBTransaction transaction, RoleType... roleTypes) {
+        com.vaticle.typedb.client.jni.Concept[] roleTypesArray = Arrays.stream(roleTypes).map(rt -> ((RoleTypeImpl) rt).nativeObject).toArray(com.vaticle.typedb.client.jni.Concept[]::new);
+        return thing_get_relations(nativeTransaction(transaction), nativeObject, roleTypesArray).stream().map(RelationImpl::new);
+    }
+
+    @Override
+    public final Stream<RoleTypeImpl> getPlaying(TypeDBTransaction transaction) {
+        return thing_get_playing(nativeTransaction(transaction), nativeObject).stream().map(RoleTypeImpl::new);
+    }
+
+    @Override
+    public final void setHas(TypeDBTransaction transaction, Attribute attribute) {
+        thing_set_has(nativeTransaction(transaction), nativeObject, ((AttributeImpl) attribute).nativeObject);
+    }
+
+    @Override
+    public final void unsetHas(TypeDBTransaction transaction, Attribute attribute) {
+        thing_unset_has(nativeTransaction(transaction), nativeObject, ((AttributeImpl) attribute).nativeObject);
+    }
+
+    @Override
+    public final void delete(TypeDBTransaction transaction) {
+        thing_delete(nativeTransaction(transaction), nativeObject);
+    }
+
+    @Override
+    public final boolean isDeleted(TypeDBTransaction transaction) {
+        return thing_is_deleted(nativeTransaction(transaction), nativeObject);
     }
 
     @Override
     public int hashCode() {
-        return iid.hashCode();
-    }
-
-    public abstract static class Remote extends ConceptImpl.Remote implements Thing.Remote {
-
-        final TypeDBTransaction.Extended transactionRPC;
-        private final String iid;
-        private final boolean isInferred;
-        private final int hash;
-
-        Remote(TypeDBTransaction transaction, String iid, boolean isInferred) {
-            if (transaction == null) throw new TypeDBClientException(MISSING_TRANSACTION);
-            this.transactionRPC = (TypeDBTransaction.Extended) transaction;
-            if (iid == null || iid.isEmpty()) throw new TypeDBClientException(MISSING_IID);
-            this.iid = iid;
-            this.isInferred = isInferred;
-            this.hash = Objects.hash(this.transactionRPC, this.getIID());
-        }
-
-        @Override
-        public final String getIID() {
-            return iid;
-        }
-
-        @Override
-        public abstract ThingTypeImpl getType();
-
-        @Override
-        public boolean isInferred() {
-            return isInferred;
-        }
-
-        @Override
-        public final Stream<AttributeImpl<?>> getHas(AttributeType... attributeTypes) {
-            return stream(getHasReq(getIID(), protoTypes(asList(attributeTypes))))
-                    .flatMap(rp -> rp.getThingGetHasResPart().getAttributesList().stream())
-                    .map(AttributeImpl::of);
-        }
-
-        @Override
-        public final Stream<AttributeImpl.Boolean> getHas(AttributeType.Boolean attributeType) {
-            return getHas((AttributeType) attributeType).map(AttributeImpl::asBoolean);
-        }
-
-        @Override
-        public final Stream<AttributeImpl.Long> getHas(AttributeType.Long attributeType) {
-            return getHas((AttributeType) attributeType).map(AttributeImpl::asLong);
-        }
-
-        @Override
-        public final Stream<AttributeImpl.Double> getHas(AttributeType.Double attributeType) {
-            return getHas((AttributeType) attributeType).map(AttributeImpl::asDouble);
-        }
-
-        @Override
-        public final Stream<AttributeImpl.String> getHas(AttributeType.String attributeType) {
-            return getHas((AttributeType) attributeType).map(AttributeImpl::asString);
-        }
-
-        @Override
-        public final Stream<AttributeImpl.DateTime> getHas(AttributeType.DateTime attributeType) {
-            return getHas((AttributeType) attributeType).map(AttributeImpl::asDateTime);
-        }
-
-        @Override
-        public Stream<? extends Attribute<?>> getHas() {
-            return getHas(emptySet());
-        }
-
-        @Override
-        public final Stream<AttributeImpl<?>> getHas(Set<TypeQLToken.Annotation> annotations) {
-            return stream(getHasReq(getIID(), protoAnnotations(annotations)))
-                    .flatMap(rp -> rp.getThingGetHasResPart().getAttributesList().stream())
-                    .map(AttributeImpl::of);
-        }
-
-        @Override
-        public final Stream<RelationImpl> getRelations(RoleType... roleTypes) {
-            return stream(getRelationsReq(getIID(), protoTypes(asList(roleTypes))))
-                    .flatMap(rp -> rp.getThingGetRelationsResPart().getRelationsList().stream())
-                    .map(RelationImpl::of);
-        }
-
-        @Override
-        public final Stream<RoleTypeImpl> getPlaying() {
-            return stream(getPlayingReq(getIID()))
-                    .flatMap(rp -> rp.getThingGetPlayingResPart().getRoleTypesList().stream())
-                    .map(RoleTypeImpl::of);
-        }
-
-        @Override
-        public final void setHas(Attribute<?> attribute) {
-            execute(setHasReq(getIID(), protoThing(attribute.getIID())));
-        }
-
-        @Override
-        public final void unsetHas(Attribute<?> attribute) {
-            execute(unsetHasReq(getIID(), protoThing(attribute.getIID())));
-        }
-
-        @Override
-        public final void delete() {
-            execute(deleteReq(getIID()));
-        }
-
-        @Override
-        public final boolean isDeleted() {
-            return transactionRPC.concepts().getThing(getIID()) == null;
-        }
-
-        @Override
-        public final ThingImpl.Remote asThing() {
-            return this;
-        }
-
-        protected ConceptProto.Thing.Res execute(TransactionProto.Transaction.Req.Builder request) {
-            return transactionRPC.execute(request).getThingRes();
-        }
-
-        protected Stream<ConceptProto.Thing.ResPart> stream(TransactionProto.Transaction.Req.Builder request) {
-            return transactionRPC.stream(request).map(TransactionProto.Transaction.ResPart::getThingResPart);
-        }
-
-        @Override
-        public String toString() {
-            return className(this.getClass()) + "[iid:" + iid + "]";
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            ThingImpl.Remote that = (ThingImpl.Remote) o;
-            return this.transactionRPC.equals(that.transactionRPC) && this.iid.equals(that.iid);
-        }
-
-        @Override
-        public int hashCode() {
-            return hash;
-        }
+        if (hash == 0) hash = getIID().hashCode();
+        return hash;
     }
 }

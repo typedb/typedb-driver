@@ -22,21 +22,18 @@
 package com.vaticle.typedb.client.query;
 
 import com.vaticle.typedb.client.api.TypeDBOptions;
-import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.answer.ConceptMap;
 import com.vaticle.typedb.client.api.answer.ConceptMapGroup;
 import com.vaticle.typedb.client.api.answer.Numeric;
 import com.vaticle.typedb.client.api.answer.NumericGroup;
 import com.vaticle.typedb.client.api.logic.Explanation;
-import com.vaticle.typedb.client.api.query.QueryFuture;
 import com.vaticle.typedb.client.api.query.QueryManager;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.concept.answer.ConceptMapGroupImpl;
 import com.vaticle.typedb.client.concept.answer.ConceptMapImpl;
 import com.vaticle.typedb.client.concept.answer.NumericGroupImpl;
 import com.vaticle.typedb.client.concept.answer.NumericImpl;
 import com.vaticle.typedb.client.logic.ExplanationImpl;
-import com.vaticle.typedb.protocol.QueryProto;
-import com.vaticle.typedb.protocol.TransactionProto;
 import com.vaticle.typeql.lang.query.TypeQLDefine;
 import com.vaticle.typeql.lang.query.TypeQLDelete;
 import com.vaticle.typeql.lang.query.TypeQLInsert;
@@ -46,23 +43,24 @@ import com.vaticle.typeql.lang.query.TypeQLUpdate;
 
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.QueryManager.defineReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.QueryManager.deleteReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.QueryManager.explainReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.QueryManager.insertReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.QueryManager.matchAggregateReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.QueryManager.matchGroupAggregateReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.QueryManager.matchGroupReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.QueryManager.matchReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.QueryManager.undefineReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.QueryManager.updateReq;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Query.MISSING_QUERY;
+import static com.vaticle.typedb.client.jni.typedb_client.query_define;
+import static com.vaticle.typedb.client.jni.typedb_client.query_delete;
+import static com.vaticle.typedb.client.jni.typedb_client.query_explain;
+import static com.vaticle.typedb.client.jni.typedb_client.query_insert;
+import static com.vaticle.typedb.client.jni.typedb_client.query_match;
+import static com.vaticle.typedb.client.jni.typedb_client.query_match_aggregate;
+import static com.vaticle.typedb.client.jni.typedb_client.query_match_group;
+import static com.vaticle.typedb.client.jni.typedb_client.query_match_group_aggregate;
+import static com.vaticle.typedb.client.jni.typedb_client.query_undefine;
+import static com.vaticle.typedb.client.jni.typedb_client.query_update;
 
 public final class QueryManagerImpl implements QueryManager {
+    private final com.vaticle.typedb.client.jni.Transaction nativeTransaction;
 
-    private final TypeDBTransaction.Extended transactionExt;
-
-    public QueryManagerImpl(TypeDBTransaction.Extended transactionExt) {
-        this.transactionExt = transactionExt;
+    public QueryManagerImpl(com.vaticle.typedb.client.jni.Transaction nativeTransaction) {
+        this.nativeTransaction = nativeTransaction;
     }
 
     @Override
@@ -77,36 +75,36 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<ConceptMap> match(String query) {
-        return match(query, TypeDBOptions.core());
+        return match(query, new TypeDBOptions());
     }
 
     @Override
     public Stream<ConceptMap> match(String query, TypeDBOptions options) {
-        return stream(matchReq(query, options.proto()))
-                .flatMap(rp -> rp.getMatchResPart().getAnswersList().stream())
-                .map(ConceptMapImpl::of);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
+        return query_match(nativeTransaction, query, options.nativeObject).stream().map(ConceptMapImpl::new);
     }
 
     @Override
-    public QueryFuture<Numeric> match(TypeQLMatch.Aggregate query) {
+    public Numeric match(TypeQLMatch.Aggregate query) {
         return matchAggregate(query.toString(false));
     }
 
     @Override
-    public QueryFuture<Numeric> match(TypeQLMatch.Aggregate query, TypeDBOptions options) {
+    public Numeric match(TypeQLMatch.Aggregate query, TypeDBOptions options) {
         return matchAggregate(query.toString(false), options);
     }
 
     @Override
-    public QueryFuture<Numeric> matchAggregate(String query) {
-        return matchAggregate(query, TypeDBOptions.core());
+    public Numeric matchAggregate(String query) {
+        return matchAggregate(query, new TypeDBOptions());
     }
 
     @Override
-    public QueryFuture<Numeric> matchAggregate(String query, TypeDBOptions options) {
-        return query(matchAggregateReq(query, options.proto()))
-                .map(r -> r.getMatchAggregateRes().getAnswer())
-                .map(NumericImpl::of);
+    public Numeric matchAggregate(String query, TypeDBOptions options) {
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
+        return new NumericImpl(query_match_aggregate(nativeTransaction, query, options.nativeObject));
     }
 
     @Override
@@ -121,14 +119,14 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<ConceptMapGroup> matchGroup(String query) {
-        return matchGroup(query, TypeDBOptions.core());
+        return matchGroup(query, new TypeDBOptions());
     }
 
     @Override
     public Stream<ConceptMapGroup> matchGroup(String query, TypeDBOptions options) {
-        return stream(matchGroupReq(query, options.proto()))
-                .flatMap(rp -> rp.getMatchGroupResPart().getAnswersList().stream())
-                .map(ConceptMapGroupImpl::of);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
+        return query_match_group(nativeTransaction, query, options.nativeObject).stream().map(ConceptMapGroupImpl::new);
     }
 
     @Override
@@ -143,14 +141,14 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<NumericGroup> matchGroupAggregate(String query) {
-        return matchGroupAggregate(query, TypeDBOptions.core());
+        return matchGroupAggregate(query, new TypeDBOptions());
     }
 
     @Override
     public Stream<NumericGroup> matchGroupAggregate(String query, TypeDBOptions options) {
-        return stream(matchGroupAggregateReq(query, options.proto()))
-                .flatMap(rp -> rp.getMatchGroupAggregateResPart().getAnswersList().stream())
-                .map(NumericGroupImpl::of);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
+        return query_match_group_aggregate(nativeTransaction, query, options.nativeObject).stream().map(NumericGroupImpl::new);
     }
 
     @Override
@@ -165,34 +163,36 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<ConceptMap> insert(String query) {
-        return insert(query, TypeDBOptions.core());
+        return insert(query, new TypeDBOptions());
     }
 
     @Override
     public Stream<ConceptMap> insert(String query, TypeDBOptions options) {
-        return stream(insertReq(query, options.proto()))
-                .flatMap(rp -> rp.getInsertResPart().getAnswersList().stream())
-                .map(ConceptMapImpl::of);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
+        return query_insert(nativeTransaction, query, options.nativeObject).stream().map(ConceptMapImpl::new);
     }
 
     @Override
-    public QueryFuture<Void> delete(TypeQLDelete query) {
-        return delete(query.toString(false));
+    public void delete(TypeQLDelete query) {
+        delete(query.toString(false));
     }
 
     @Override
-    public QueryFuture<Void> delete(TypeQLDelete query, TypeDBOptions options) {
-        return delete(query.toString(false), options);
+    public void delete(TypeQLDelete query, TypeDBOptions options) {
+        delete(query.toString(false), options);
     }
 
     @Override
-    public QueryFuture<Void> delete(String query) {
-        return delete(query, TypeDBOptions.core());
+    public void delete(String query) {
+        delete(query, new TypeDBOptions());
     }
 
     @Override
-    public QueryFuture<Void> delete(String query, TypeDBOptions options) {
-        return queryVoid(deleteReq(query, options.proto()));
+    public void delete(String query, TypeDBOptions options) {
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
+        query_delete(nativeTransaction, query, options.nativeObject);
     }
 
     @Override
@@ -207,77 +207,68 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     public Stream<ConceptMap> update(String query) {
-        return update(query, TypeDBOptions.core());
+        return update(query, new TypeDBOptions());
     }
 
     @Override
     public Stream<ConceptMap> update(String query, TypeDBOptions options) {
-        return stream(updateReq(query, options.proto()))
-                .flatMap(rp -> rp.getUpdateResPart().getAnswersList().stream())
-                .map(ConceptMapImpl::of);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
+        return query_update(nativeTransaction, query, options.nativeObject).stream().map(ConceptMapImpl::new);
     }
 
     @Override
-    public QueryFuture<Void> define(TypeQLDefine query) {
-        return define(query.toString(false));
+    public void define(TypeQLDefine query) {
+        define(query.toString(false));
     }
 
     @Override
-    public QueryFuture<Void> define(TypeQLDefine query, TypeDBOptions options) {
-        return define(query.toString(false), options);
+    public void define(TypeQLDefine query, TypeDBOptions options) {
+        define(query.toString(false), options);
     }
 
     @Override
-    public QueryFuture<Void> define(String query) {
-        return define(query, TypeDBOptions.core());
+    public void define(String query) {
+        define(query, new TypeDBOptions());
     }
 
     @Override
-    public QueryFuture<Void> define(String query, TypeDBOptions options) {
-        return queryVoid(defineReq(query, options.proto()));
+    public void define(String query, TypeDBOptions options) {
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
+        query_define(nativeTransaction, query, options.nativeObject);
     }
 
     @Override
-    public QueryFuture<Void> undefine(TypeQLUndefine query) {
-        return undefine(query.toString(false));
+    public void undefine(TypeQLUndefine query) {
+        undefine(query.toString(false));
     }
 
     @Override
-    public QueryFuture<Void> undefine(TypeQLUndefine query, TypeDBOptions options) {
-        return define(query.toString(false), options);
+    public void undefine(TypeQLUndefine query, TypeDBOptions options) {
+        undefine(query.toString(false), options);
     }
 
     @Override
-    public QueryFuture<Void> undefine(String query) {
-        return undefine(query, TypeDBOptions.core());
+    public void undefine(String query) {
+        undefine(query, new TypeDBOptions());
     }
 
     @Override
-    public QueryFuture<Void> undefine(String query, TypeDBOptions options) {
-        return queryVoid(undefineReq(query, options.proto()));
+    public void undefine(String query, TypeDBOptions options) {
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
+        query_undefine(nativeTransaction, query, options.nativeObject);
     }
 
     @Override
     public Stream<Explanation> explain(ConceptMap.Explainable explainable) {
-        return explain(explainable, TypeDBOptions.core());
+        return explain(explainable, new TypeDBOptions());
     }
 
     @Override
     public Stream<Explanation> explain(ConceptMap.Explainable explainable, TypeDBOptions options) {
-        return stream(explainReq(explainable.id(), options.proto()))
-                .flatMap(rp -> rp.getExplainResPart().getExplanationsList().stream())
-                .map(ExplanationImpl::of);
-    }
-
-    private QueryFuture<Void> queryVoid(TransactionProto.Transaction.Req.Builder req) {
-        return transactionExt.query(req).map(res -> null);
-    }
-
-    private QueryFuture<QueryProto.QueryManager.Res> query(TransactionProto.Transaction.Req.Builder req) {
-        return transactionExt.query(req).map(TransactionProto.Transaction.Res::getQueryManagerRes);
-    }
-
-    private Stream<QueryProto.QueryManager.ResPart> stream(TransactionProto.Transaction.Req.Builder req) {
-        return transactionExt.stream(req).map(TransactionProto.Transaction.ResPart::getQueryManagerResPart);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        return query_explain(nativeTransaction, explainable.id(), options.nativeObject).stream().map(ExplanationImpl::new);
     }
 }

@@ -28,275 +28,288 @@ import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
 import com.vaticle.typedb.client.common.Label;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.client.common.rpc.RequestBuilder;
 import com.vaticle.typedb.client.concept.thing.ThingImpl;
-import com.vaticle.typedb.protocol.ConceptProto;
+import com.vaticle.typedb.client.jni.Transitivity;
 import com.vaticle.typeql.lang.common.TypeQLToken;
 
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_ENCODING;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getInstancesExplicitReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getInstancesReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getOwnsExplicitReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getOwnsOverriddenReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getOwnsReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getPlaysExplicitReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getPlaysOverriddenReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getPlaysReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.getSyntaxReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.setAbstractReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.setOwnsReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.setPlaysReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.setSupertypeReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.unsetAbstractReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.unsetOwnsReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.ThingType.unsetPlaysReq;
-import static com.vaticle.typedb.client.concept.type.RoleTypeImpl.protoRoleType;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_is_attribute_type;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_is_entity_type;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_is_relation_type;
+import static com.vaticle.typedb.client.jni.typedb_client.concept_is_root_thing_type;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_type_delete;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_type_get_label;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_type_get_owns;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_type_get_owns_overridden;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_type_get_plays;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_type_get_plays_overridden;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_type_get_syntax;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_type_is_abstract;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_type_is_root;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_type_is_deleted;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_type_set_abstract;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_type_set_label;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_type_set_owns;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_type_set_plays;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_type_unset_abstract;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_type_unset_owns;
+import static com.vaticle.typedb.client.jni.typedb_client.thing_type_unset_plays;
 import static java.util.Collections.emptySet;
 
-public class ThingTypeImpl extends TypeImpl implements ThingType {
+public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
-    ThingTypeImpl(Label label, boolean isRoot, boolean isAbstract) {
-        super(label, isRoot, isAbstract);
+    ThingTypeImpl(com.vaticle.typedb.client.jni.Concept concept) {
+        super(concept);
     }
 
-    public static ThingTypeImpl of(ConceptProto.Type proto) {
-        switch (proto.getEncoding()) {
-            case ENTITY_TYPE:
-                return EntityTypeImpl.of(proto);
-            case RELATION_TYPE:
-                return RelationTypeImpl.of(proto);
-            case ATTRIBUTE_TYPE:
-                return AttributeTypeImpl.of(proto);
-            case THING_TYPE:
-                assert proto.getIsRoot();
-                return new ThingTypeImpl(Label.of(proto.getLabel()), proto.getIsRoot(), proto.getIsAbstract());
-            case UNRECOGNIZED:
-            default:
-                throw new TypeDBClientException(BAD_ENCODING, proto.getEncoding());
-        }
-    }
-
-    public static ConceptProto.Type protoThingType(ThingType thingType) {
-        return RequestBuilder.Type.ThingType.protoThingType(thingType.getLabel(), TypeImpl.encoding(thingType));
+    public static ThingTypeImpl of(com.vaticle.typedb.client.jni.Concept concept) {
+        if (concept_is_entity_type(concept)) return new EntityTypeImpl(concept);
+        else if (concept_is_relation_type(concept)) return new RelationTypeImpl(concept);
+        else if (concept_is_attribute_type(concept)) return new AttributeTypeImpl(concept);
+        else if (concept_is_root_thing_type(concept)) return new Root(concept);
+        throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
     }
 
     @Override
-    public ThingTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
-        return new ThingTypeImpl.Remote(transaction, getLabel(), isRoot(), isAbstract());
+    public final boolean isRoot() {
+        return thing_type_is_root(nativeObject);
     }
 
     @Override
-    public final ThingTypeImpl asThingType() {
-        return this;
+    public final boolean isAbstract() {
+        return thing_type_is_abstract(nativeObject);
     }
 
-    public static class Remote extends TypeImpl.Remote implements ThingType.Remote {
+    @Override
+    public Label getLabel() {
+        return Label.of(thing_type_get_label(nativeObject));
+    }
 
-        Remote(TypeDBTransaction transaction, Label label, boolean isRoot, boolean isAbstract) {
-            super(transaction, label, isRoot, isAbstract);
-        }
+    @Override
+    public void delete(TypeDBTransaction transaction) {
+        thing_type_delete(nativeTransaction(transaction), nativeObject);
+    }
 
-        void setSupertype(ThingType thingType) {
-            execute(setSupertypeReq(getLabel(), protoThingType(thingType)));
-        }
+    @Override
+    public boolean isDeleted(TypeDBTransaction transaction) {
+        return thing_type_is_deleted(nativeTransaction(transaction), nativeObject);
+    }
 
-        @Override
-        public ThingTypeImpl getSupertype() {
-            TypeImpl supertype = super.getSupertype();
-            return supertype != null ? supertype.asThingType() : null;
-        }
+    @Override
+    public final void setLabel(TypeDBTransaction transaction, String newLabel) {
+        thing_type_set_label(nativeTransaction(transaction), nativeObject, newLabel);
+    }
 
-        @Override
-        public Stream<? extends ThingTypeImpl> getSupertypes() {
-            Stream<? extends TypeImpl> supertypes = super.getSupertypes();
-            return supertypes.map(TypeImpl::asThingType);
-        }
+    @Override
+    public abstract ThingTypeImpl getSupertype(TypeDBTransaction transaction);
 
-        @Override
-        public Stream<? extends ThingTypeImpl> getSubtypes() {
-            return super.getSubtypes().map(TypeImpl::asThingType);
-        }
+    @Override
+    public abstract Stream<? extends ThingTypeImpl> getSupertypes(TypeDBTransaction transaction);
 
-        @Override
-        public Stream<? extends ThingTypeImpl> getSubtypesExplicit() {
-            return super.getSubtypesExplicit().map(TypeImpl::asThingType);
-        }
+    @Override
+    public abstract Stream<? extends ThingTypeImpl> getSubtypes(TypeDBTransaction transaction);
 
-        @Override
-        public Stream<? extends ThingImpl> getInstances() {
-            return stream(getInstancesReq(getLabel()))
-                    .flatMap(rp -> rp.getThingTypeGetInstancesResPart().getThingsList().stream())
-                    .map(ThingImpl::of);
-        }
+    @Override
+    public abstract Stream<? extends ThingTypeImpl> getSubtypesExplicit(TypeDBTransaction transaction);
 
-        @Override
-        public Stream<? extends ThingImpl> getInstancesExplicit() {
-            return stream(getInstancesExplicitReq(getLabel()))
-                    .flatMap(rp -> rp.getThingTypeGetInstancesExplicitResPart().getThingsList().stream())
-                    .map(ThingImpl::of);
-        }
+    @Override
+    public abstract Stream<? extends ThingImpl> getInstances(TypeDBTransaction transaction);
 
-        @Override
-        public final void setAbstract() {
-            execute(setAbstractReq(getLabel()));
-        }
+    @Override
+    public abstract Stream<? extends ThingImpl> getInstancesExplicit(TypeDBTransaction transaction);
 
-        @Override
-        public final void unsetAbstract() {
-            execute(unsetAbstractReq(getLabel()));
-        }
+    @Override
+    public final void setAbstract(TypeDBTransaction transaction) {
+        thing_type_set_abstract(nativeTransaction(transaction), nativeObject);
+    }
 
-        @Override
-        public final void setPlays(RoleType roleType) {
-            execute(setPlaysReq(getLabel(), protoRoleType(roleType)));
-        }
+    @Override
+    public final void unsetAbstract(TypeDBTransaction transaction) {
+        thing_type_unset_abstract(nativeTransaction(transaction), nativeObject);
+    }
 
-        @Override
-        public final void setPlays(RoleType roleType, RoleType overriddenRoleType) {
-            execute(setPlaysReq(getLabel(), protoRoleType(roleType), protoRoleType(overriddenRoleType)));
-        }
+    @Override
+    public final void setPlays(TypeDBTransaction transaction, RoleType roleType) {
+        thing_type_set_plays(nativeTransaction(transaction), nativeObject, ((RoleTypeImpl) roleType).nativeObject, null);
+    }
 
-        @Override
-        public void setOwns(AttributeType attributeType) {
-            setOwns(attributeType, emptySet());
-        }
+    @Override
+    public final void setPlays(TypeDBTransaction transaction, RoleType roleType, RoleType overriddenRoleType) {
+        thing_type_set_plays(nativeTransaction(transaction),
+                nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((RoleTypeImpl) overriddenRoleType).nativeObject);
+    }
 
-        @Override
-        public void setOwns(AttributeType attributeType, Set<TypeQLToken.Annotation> annotations) {
-            execute(setOwnsReq(getLabel(), protoThingType(attributeType), protoAnnotations(annotations)));
-        }
+    @Override
+    public void setOwns(TypeDBTransaction transaction, AttributeType attributeType) {
+        setOwns(transaction, attributeType, null, emptySet());
+    }
 
-        @Override
-        public void setOwns(AttributeType attributeType, AttributeType overriddenType) {
-            setOwns(attributeType, overriddenType, emptySet());
-        }
+    @Override
+    public void setOwns(TypeDBTransaction transaction, AttributeType attributeType, Set<Annotation> annotations) {
+        setOwns(transaction, attributeType, null, annotations);
+    }
 
-        @Override
-        public final void setOwns(AttributeType attributeType, AttributeType overriddenType, Set<TypeQLToken.Annotation> annotations) {
-            execute(setOwnsReq(getLabel(), protoThingType(attributeType), protoThingType(overriddenType), protoAnnotations(annotations)));
-        }
+    @Override
+    public void setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType) {
+        setOwns(transaction, attributeType, overriddenType, emptySet());
+    }
 
-        @Override
-        public final Stream<RoleTypeImpl> getPlays() {
-            return stream(getPlaysReq(getLabel()))
-                    .flatMap(rp -> rp.getThingTypeGetPlaysResPart().getRoleTypesList().stream())
-                    .map(RoleTypeImpl::of);
-        }
+    @Override
+    public final void setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType, Set<Annotation> annotations) {
+        com.vaticle.typedb.client.jni.Concept overriddenTypeNative = overriddenType != null ? ((AttributeTypeImpl) overriddenType).nativeObject : null;
+        com.vaticle.typedb.client.jni.Annotation[] annotationsArray = annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.client.jni.Annotation[]::new);
+        thing_type_set_owns(nativeTransaction(transaction), nativeObject, ((AttributeTypeImpl) attributeType).nativeObject, overriddenTypeNative, annotationsArray);
+    }
 
-        @Override
-        public final Stream<RoleTypeImpl> getPlaysExplicit() {
-            return stream(getPlaysExplicitReq(getLabel()))
-                    .flatMap(rp -> rp.getThingTypeGetPlaysExplicitResPart().getRoleTypesList().stream())
-                    .map(RoleTypeImpl::of);
-        }
+    @Override
+    public final Stream<RoleTypeImpl> getPlays(TypeDBTransaction transaction) {
+        return getPlays(transaction, Transitivity.Transitive);
+    }
 
-        @Override
-        public RoleTypeImpl getPlaysOverridden(RoleType roleType) {
-            ConceptProto.ThingType.GetPlaysOverridden.Res res = execute(
-                    getPlaysOverriddenReq(getLabel(), protoRoleType(roleType))
-            ).getThingTypeGetPlaysOverriddenRes();
-            switch (res.getResCase()) {
-                case ROLE_TYPE:
-                    return RoleTypeImpl.of(res.getRoleType());
-                default:
-                case RES_NOT_SET:
-                    return null;
-            }
-        }
+    @Override
+    public final Stream<RoleTypeImpl> getPlaysExplicit(TypeDBTransaction transaction) {
+        return getPlays(transaction, Transitivity.Explicit);
+    }
 
-        @Override
-        public Stream<AttributeTypeImpl> getOwns() {
-            return getOwns(emptySet());
-        }
+    private Stream<RoleTypeImpl> getPlays(TypeDBTransaction transaction, Transitivity transitivity) {
+        return thing_type_get_plays(nativeTransaction(transaction), nativeObject, transitivity).stream().map(RoleTypeImpl::new);
+    }
 
-        @Override
-        public Stream<AttributeTypeImpl> getOwns(ValueType valueType) {
-            return getOwns(valueType, emptySet());
-        }
+    @Override
+    public RoleTypeImpl getPlaysOverridden(TypeDBTransaction transaction, RoleType roleType) {
+        com.vaticle.typedb.client.jni.Concept res = thing_type_get_plays_overridden(nativeTransaction(transaction),
+                nativeObject, ((RoleTypeImpl) roleType).nativeObject);
+        if (res != null) return new RoleTypeImpl(res);
+        else return null;
+    }
 
-        @Override
-        public Stream<AttributeTypeImpl> getOwns(Set<TypeQLToken.Annotation> annotations) {
-            return stream(getOwnsReq(getLabel(), protoAnnotations(annotations)))
-                    .flatMap(rp -> rp.getThingTypeGetOwnsResPart().getAttributeTypesList().stream())
-                    .map(AttributeTypeImpl::of);
-        }
+    @Override
+    public Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction) {
+        return getOwns(transaction, Transitivity.Transitive, emptySet());
+    }
 
-        @Override
-        public final Stream<AttributeTypeImpl> getOwns(ValueType valueType, Set<TypeQLToken.Annotation> annotations) {
-            return stream(getOwnsReq(getLabel(), valueType.proto(), protoAnnotations(annotations)))
-                    .flatMap(rp -> rp.getThingTypeGetOwnsResPart().getAttributeTypesList().stream())
-                    .map(AttributeTypeImpl::of);
-        }
+    @Override
+    public Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, ValueType valueType) {
+        return getOwns(transaction, valueType, Transitivity.Transitive, emptySet());
+    }
 
-        @Override
-        public Stream<? extends AttributeType> getOwnsExplicit() {
-            return getOwnsExplicit(emptySet());
-        }
+    @Override
+    public Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, Set<Annotation> annotations) {
+        return getOwns(transaction, Transitivity.Transitive, annotations);
+    }
 
-        @Override
-        public Stream<? extends AttributeType> getOwnsExplicit(ValueType valueType) {
-            return getOwnsExplicit(valueType, emptySet());
-        }
+    @Override
+    public final Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, ValueType valueType, Set<Annotation> annotations) {
+        return getOwns(transaction, valueType, Transitivity.Transitive, annotations);
+    }
 
-        @Override
-        public Stream<? extends AttributeType> getOwnsExplicit(Set<TypeQLToken.Annotation> annotations) {
-            return stream(getOwnsExplicitReq(getLabel(), protoAnnotations(annotations)))
-                    .flatMap(rp -> rp.getThingTypeGetOwnsExplicitResPart().getAttributeTypesList().stream())
-                    .map(AttributeTypeImpl::of);
-        }
+    @Override
+    public Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction) {
+        return getOwns(transaction, Transitivity.Explicit, emptySet());
+    }
 
-        @Override
-        public Stream<? extends AttributeType> getOwnsExplicit(ValueType valueType, Set<TypeQLToken.Annotation> annotations) {
-            return stream(getOwnsExplicitReq(getLabel(), valueType.proto(), protoAnnotations(annotations)))
-                    .flatMap(rp -> rp.getThingTypeGetOwnsExplicitResPart().getAttributeTypesList().stream())
-                    .map(AttributeTypeImpl::of);
-        }
+    @Override
+    public Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, ValueType valueType) {
+        return getOwns(transaction, valueType, Transitivity.Explicit, emptySet());
+    }
 
-        @Override
-        public AttributeTypeImpl getOwnsOverridden(AttributeType attributeType) {
-            ConceptProto.ThingType.GetOwnsOverridden.Res res = execute(
-                    getOwnsOverriddenReq(getLabel(), protoThingType(attributeType))
-            ).getThingTypeGetOwnsOverriddenRes();
-            switch (res.getResCase()) {
-                case ATTRIBUTE_TYPE:
-                    return AttributeTypeImpl.of(res.getAttributeType());
-                default:
-                case RES_NOT_SET:
-                    return null;
-            }
-        }
+    @Override
+    public Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, Set<Annotation> annotations) {
+        return getOwns(transaction, Transitivity.Explicit, annotations);
+    }
 
-        @Override
-        public final void unsetPlays(RoleType roleType) {
-            execute(unsetPlaysReq(getLabel(), protoRoleType(roleType)));
-        }
+    @Override
+    public Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, ValueType valueType, Set<Annotation> annotations) {
+        return getOwns(transaction, valueType, Transitivity.Explicit, annotations);
+    }
 
-        @Override
-        public final void unsetOwns(AttributeType attributeType) {
-            execute(unsetOwnsReq(getLabel(), protoThingType(attributeType)));
+    private Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, Transitivity transitivity, Set<Annotation> annotations) {
+        return getOwns(transaction, null, transitivity, annotations);
+    }
+
+    private Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, ValueType valueType, Transitivity transitivity, Set<Annotation> annotations) {
+        return thing_type_get_owns(nativeTransaction(transaction), nativeObject, valueType == null ? null : valueType.nativeObject, transitivity,
+                annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.client.jni.Annotation[]::new)
+        ).stream().map(AttributeTypeImpl::new);
+    }
+
+    @Override
+    public AttributeTypeImpl getOwnsOverridden(TypeDBTransaction transaction, AttributeType attributeType) {
+        com.vaticle.typedb.client.jni.Concept res = thing_type_get_owns_overridden(nativeTransaction(transaction),
+                nativeObject, ((AttributeTypeImpl) attributeType).nativeObject);
+        if (res != null) return new AttributeTypeImpl(res);
+        else return null;
+    }
+
+    @Override
+    public final void unsetOwns(TypeDBTransaction transaction, AttributeType attributeType) {
+        thing_type_unset_owns(nativeTransaction(transaction),
+                nativeObject, ((AttributeTypeImpl) attributeType).nativeObject);
+    }
+
+    @Override
+    public final void unsetPlays(TypeDBTransaction transaction, RoleType roleType) {
+        thing_type_unset_plays(nativeTransaction(transaction), nativeObject, ((RoleTypeImpl) roleType).nativeObject);
+    }
+
+    @Override
+    public final String getSyntax(TypeDBTransaction transaction) {
+        return thing_type_get_syntax(nativeTransaction(transaction), nativeObject);
+    }
+
+    public static class Root extends ThingTypeImpl {
+        public Root(com.vaticle.typedb.client.jni.Concept concept) {
+            super(concept);
         }
 
         @Override
-        public ThingTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
-            return new ThingTypeImpl.Remote(transaction, getLabel(), isRoot(), isAbstract());
+        public final Label getLabel() {
+            return Label.of(TypeQLToken.Type.THING.toString());
         }
 
         @Override
-        public final ThingTypeImpl.Remote asThingType() {
-            return this;
+        public ThingTypeImpl getSupertype(TypeDBTransaction transaction) {
+            return null;
         }
 
         @Override
-        public final boolean isDeleted() {
-            return transactionExt.concepts().getThingType(getLabel().name()) == null;
+        public Stream<? extends ThingTypeImpl> getSupertypes(TypeDBTransaction transaction) {
+            return Stream.of(this);
         }
 
         @Override
-        public final String getSyntax() {
-            return execute(getSyntaxReq(getLabel())).getThingTypeGetSyntaxRes().getSyntax();
+        public Stream<? extends ThingTypeImpl> getSubtypes(TypeDBTransaction transaction) {
+            return Stream.concat(
+                    Stream.concat(
+                        Stream.of(this),
+                        Stream.concat(
+                            transaction.concepts().getRootEntityType().getSubtypes(transaction),
+                            transaction.concepts().getRootRelationType().getSubtypes(transaction))),
+                    transaction.concepts().getRootAttributeType().getSubtypes(transaction)).map(tt -> (ThingTypeImpl) tt);
+        }
+
+        @Override
+        public Stream<? extends ThingTypeImpl> getSubtypesExplicit(TypeDBTransaction transaction) {
+            return Stream.of(
+                    transaction.concepts().getRootEntityType(), transaction.concepts().getRootRelationType(), transaction.concepts().getRootAttributeType()
+                ).map(tt -> (ThingTypeImpl) tt);
+        }
+
+        @Override
+        public Stream<? extends ThingImpl> getInstances(TypeDBTransaction transaction) {
+            return Stream.concat(
+                    Stream.concat(
+                            transaction.concepts().getRootEntityType().getInstances(transaction),
+                            transaction.concepts().getRootRelationType().getInstances(transaction)),
+                    transaction.concepts().getRootAttributeType().getInstances(transaction)).map(t -> (ThingImpl) t);
+        }
+
+        @Override
+        public Stream<? extends ThingImpl> getInstancesExplicit(TypeDBTransaction transaction) {
+            return Stream.empty();
         }
     }
 }

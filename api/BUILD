@@ -31,11 +31,10 @@ java_library(
         "//common:common",
 
         # External dependencies from @vaticle
+        "@vaticle_typedb_client_rust//:typedb_client_jni",
         "@vaticle_typedb_common//:common",
-        "@vaticle_typeql//java/common",
         "@vaticle_typeql//java/pattern",
         "@vaticle_typeql//java/query",
-        "@vaticle_typedb_protocol//grpc/java:typedb-protocol",
 
         # External dependencies from Maven
         "@maven//:com_eclipsesource_minimal_json_minimal_json",

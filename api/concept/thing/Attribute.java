@@ -25,26 +25,23 @@ import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.concept.Value;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 import javax.annotation.CheckReturnValue;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
 
-public interface Attribute<VALUE> extends Thing {
+public interface Attribute extends Thing {
     DateTimeFormatter ISO_LOCAL_DATE_TIME_MILLIS = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
     @Override
     @CheckReturnValue
     AttributeType getType();
-
-    @CheckReturnValue
-    VALUE getValue();
 
     @Override
     @CheckReturnValue
@@ -52,59 +49,23 @@ public interface Attribute<VALUE> extends Thing {
         return true;
     }
 
-    @CheckReturnValue
-    default boolean isBoolean() {
-        return false;
-    }
-
-    @CheckReturnValue
-    default boolean isLong() {
-        return false;
-    }
-
-    @CheckReturnValue
-    default boolean isDouble() {
-        return false;
-    }
-
-    @CheckReturnValue
-    default boolean isString() {
-        return false;
-    }
-
-    @CheckReturnValue
-    default boolean isDateTime() {
-        return false;
-    }
-
-    @CheckReturnValue
-    Attribute.Boolean asBoolean();
-
-    @CheckReturnValue
-    Attribute.Long asLong();
-
-    @CheckReturnValue
-    Attribute.Double asDouble();
-
-    @CheckReturnValue
-    Attribute.String asString();
-
-    @CheckReturnValue
-    Attribute.DateTime asDateTime();
-
     @Override
     @CheckReturnValue
-    Attribute.Remote<VALUE> asRemote(TypeDBTransaction transaction);
+    default Attribute asAttribute() {
+        return this;
+    }
+
+    Value getValue();
 
     @Override
     default JsonObject toJSON() {
         JsonValue value;
         switch (getType().getValueType()) {
-            case BOOLEAN: value = Json.value(asBoolean().getValue()); break;
-            case LONG: value = Json.value(asLong().getValue()); break;
-            case DOUBLE: value = Json.value(asDouble().getValue()); break;
-            case STRING: value = Json.value(asString().getValue()); break;
-            case DATETIME: value = Json.value(asDateTime().getValue().format(ISO_LOCAL_DATE_TIME_MILLIS)); break;
+            case BOOLEAN: value = Json.value(getValue().asBoolean()); break;
+            case LONG: value = Json.value(getValue().asLong()); break;
+            case DOUBLE: value = Json.value(getValue().asDouble()); break;
+            case STRING: value = Json.value(getValue().asString()); break;
+            case DATETIME: value = Json.value(getValue().asDateTime().format(ISO_LOCAL_DATE_TIME_MILLIS)); break;
             default: throw new TypeDBClientException(ILLEGAL_STATE);
         }
         return Json.object()
@@ -113,136 +74,9 @@ public interface Attribute<VALUE> extends Thing {
                 .add("value", value);
     }
 
-    interface Remote<VALUE> extends Thing.Remote, Attribute<VALUE> {
+    @CheckReturnValue
+    Stream<? extends Thing> getOwners(TypeDBTransaction transaction);
 
-        @CheckReturnValue
-        Stream<? extends Thing> getOwners();
-
-        @CheckReturnValue
-        Stream<? extends Thing> getOwners(ThingType ownerType);
-
-        @Override
-        @CheckReturnValue
-        Attribute.Remote<VALUE> asAttribute();
-
-        @Override
-        @CheckReturnValue
-        Attribute.Boolean.Remote asBoolean();
-
-        @Override
-        @CheckReturnValue
-        Attribute.Long.Remote asLong();
-
-        @Override
-        @CheckReturnValue
-        Attribute.Double.Remote asDouble();
-
-        @Override
-        @CheckReturnValue
-        Attribute.String.Remote asString();
-
-        @Override
-        @CheckReturnValue
-        Attribute.DateTime.Remote asDateTime();
-    }
-
-    interface Boolean extends Attribute<java.lang.Boolean> {
-
-        @Override
-        @CheckReturnValue
-        default boolean isBoolean() {
-            return true;
-        }
-
-        @Override
-        @CheckReturnValue
-        AttributeType.Boolean getType();
-
-        @Override
-        @CheckReturnValue
-        Attribute.Boolean.Remote asRemote(TypeDBTransaction transaction);
-
-        interface Remote extends Attribute.Boolean, Attribute.Remote<java.lang.Boolean> {
-        }
-    }
-
-    interface Long extends Attribute<java.lang.Long> {
-
-        @Override
-        @CheckReturnValue
-        default boolean isLong() {
-            return true;
-        }
-
-        @Override
-        @CheckReturnValue
-        AttributeType.Long getType();
-
-        @Override
-        @CheckReturnValue
-        Attribute.Long.Remote asRemote(TypeDBTransaction transaction);
-
-        interface Remote extends Attribute.Long, Attribute.Remote<java.lang.Long> {
-        }
-    }
-
-    interface Double extends Attribute<java.lang.Double> {
-
-        @Override
-        @CheckReturnValue
-        default boolean isDouble() {
-            return true;
-        }
-
-        @Override
-        @CheckReturnValue
-        AttributeType.Double getType();
-
-        @Override
-        @CheckReturnValue
-        Attribute.Double.Remote asRemote(TypeDBTransaction transaction);
-
-        interface Remote extends Attribute.Double, Attribute.Remote<java.lang.Double> {
-        }
-    }
-
-    interface String extends Attribute<java.lang.String> {
-
-        @Override
-        @CheckReturnValue
-        default boolean isString() {
-            return true;
-        }
-
-        @Override
-        @CheckReturnValue
-        AttributeType.String getType();
-
-        @Override
-        @CheckReturnValue
-        Attribute.String.Remote asRemote(TypeDBTransaction transaction);
-
-        interface Remote extends Attribute.String, Attribute.Remote<java.lang.String> {
-        }
-    }
-
-    interface DateTime extends Attribute<LocalDateTime> {
-
-        @Override
-        @CheckReturnValue
-        default boolean isDateTime() {
-            return true;
-        }
-
-        @Override
-        @CheckReturnValue
-        AttributeType.DateTime getType();
-
-        @Override
-        @CheckReturnValue
-        Attribute.DateTime.Remote asRemote(TypeDBTransaction transaction);
-
-        interface Remote extends Attribute.DateTime, Attribute.Remote<LocalDateTime> {
-        }
-    }
+    @CheckReturnValue
+    Stream<? extends Thing> getOwners(TypeDBTransaction transaction, ThingType ownerType);
 }

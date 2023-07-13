@@ -26,7 +26,6 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface Database {
-
     @CheckReturnValue
     String name();
 
@@ -41,23 +40,16 @@ public interface Database {
 
     void delete();
 
-    interface Cluster extends Database {
+    @CheckReturnValue
+    Set<? extends Replica> replicas();
 
-        @CheckReturnValue
-        Set<? extends Replica> replicas();
+    @CheckReturnValue
+    Optional<? extends Replica> primaryReplica();
 
-        @CheckReturnValue
-        Optional<? extends Replica> primaryReplica();
-
-        @CheckReturnValue
-        Replica preferredReplica();
-    }
+    @CheckReturnValue
+    Optional<? extends Replica> preferredReplica();
 
     interface Replica {
-
-        @CheckReturnValue
-        Cluster database();
-
         @CheckReturnValue
         String address();
 

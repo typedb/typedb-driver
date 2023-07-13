@@ -27,117 +27,67 @@ import com.vaticle.typedb.client.api.concept.thing.Thing;
 import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.concept.type.RelationTypeImpl;
 import com.vaticle.typedb.client.concept.type.RoleTypeImpl;
-import com.vaticle.typedb.client.concept.type.TypeImpl;
-import com.vaticle.typedb.common.collection.Bytes;
-import com.vaticle.typedb.protocol.ConceptProto;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Relation.addPlayerReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Relation.getPlayersByRoleTypeReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Relation.getPlayersReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Relation.getRelatingReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Relation.removePlayerReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.protoThing;
-import static com.vaticle.typedb.client.concept.type.RoleTypeImpl.protoRoleType;
-import static com.vaticle.typedb.client.concept.type.TypeImpl.protoTypes;
-import static java.util.Arrays.asList;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_add_role_player;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_get_players_by_role_type;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_get_relating;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_get_role_players;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_get_type;
+import static com.vaticle.typedb.client.jni.typedb_client.relation_remove_role_player;
+import static com.vaticle.typedb.client.jni.typedb_client.role_player_get_player;
+import static com.vaticle.typedb.client.jni.typedb_client.role_player_get_role_type;
 
 public class RelationImpl extends ThingImpl implements Relation {
 
-    private final RelationTypeImpl type;
-
-    RelationImpl(String iid, boolean isInferred, RelationTypeImpl type) {
-        super(iid, isInferred);
-        this.type = type;
-    }
-
-    public static RelationImpl of(ConceptProto.Thing protoThing) {
-        return new RelationImpl(Bytes.bytesToHexString(protoThing.getIid().toByteArray()),
-                protoThing.getInferred(),
-                RelationTypeImpl.of(protoThing.getType()));
-    }
-
-    @Override
-    public RelationImpl.Remote asRemote(TypeDBTransaction transaction) {
-        return new RelationImpl.Remote(transaction, getIID(), isInferred(), type);
+    public RelationImpl(com.vaticle.typedb.client.jni.Concept concept) {
+        super(concept);
     }
 
     @Override
     public RelationTypeImpl getType() {
-        return type;
+        return new RelationTypeImpl(relation_get_type(nativeObject));
     }
 
     @Override
-    public final RelationImpl asRelation() {
-        return this;
+    public void addPlayer(TypeDBTransaction transaction, RoleType roleType, Thing player) {
+        relation_add_role_player(nativeTransaction(transaction),
+                nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((ThingImpl) player).nativeObject);
     }
 
-    public static class Remote extends ThingImpl.Remote implements Relation.Remote {
+    @Override
+    public void removePlayer(TypeDBTransaction transaction, RoleType roleType, Thing player) {
+        relation_remove_role_player(nativeTransaction(transaction),
+                nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((ThingImpl) player).nativeObject);
+    }
 
-        private final RelationTypeImpl type;
+    @Override
+    public Stream<ThingImpl> getPlayers(TypeDBTransaction transaction, RoleType... roleTypes) {
+        return relation_get_players_by_role_type(nativeTransaction(transaction),
+                nativeObject, Arrays.stream(roleTypes).map(rt -> ((RoleTypeImpl) rt).nativeObject).toArray(com.vaticle.typedb.client.jni.Concept[]::new)).stream().map(ThingImpl::of);
+    }
 
-        public Remote(TypeDBTransaction transaction, String iid, boolean isInferred, RelationTypeImpl type) {
-            super(transaction, iid, isInferred);
-            this.type = type;
-        }
+    @Override
+    public Map<RoleTypeImpl, List<ThingImpl>> getPlayersByRoleType(TypeDBTransaction transaction) {
+        Map<RoleTypeImpl, List<ThingImpl>> rolePlayerMap = new HashMap<>();
+        relation_get_role_players(nativeTransaction(transaction), nativeObject).stream().forEach(rolePlayer -> {
+            RoleTypeImpl role = new RoleTypeImpl(role_player_get_role_type(rolePlayer));
+            ThingImpl player = ThingImpl.of(role_player_get_player(rolePlayer));
+            if (rolePlayerMap.containsKey(role)) rolePlayerMap.get(role).add(player);
+            else rolePlayerMap.put(role, new ArrayList<>(Collections.singletonList(player)));
+        });
+        return rolePlayerMap;
+    }
 
-        @Override
-        public RelationImpl.Remote asRemote(TypeDBTransaction transaction) {
-            return new RelationImpl.Remote(transaction, getIID(), isInferred(), type);
-        }
-
-        @Override
-        public RelationTypeImpl getType() {
-            return type;
-        }
-
-        @Override
-        public void addPlayer(RoleType roleType, Thing player) {
-            execute(addPlayerReq(getIID(), protoRoleType(roleType), protoThing(player.getIID())));
-        }
-
-        @Override
-        public void removePlayer(RoleType roleType, Thing player) {
-            execute(removePlayerReq(getIID(), protoRoleType(roleType), protoThing(player.getIID())));
-        }
-
-        @Override
-        public Stream<ThingImpl> getPlayers(RoleType... roleTypes) {
-            return stream(getPlayersReq(getIID(), protoTypes(asList(roleTypes))))
-                    .flatMap(rp -> rp.getRelationGetPlayersResPart().getThingsList().stream())
-                    .map(ThingImpl::of);
-        }
-
-        @Override
-        public Map<RoleTypeImpl, List<ThingImpl>> getPlayersByRoleType() {
-            Map<RoleTypeImpl, List<ThingImpl>> rolePlayerMap = new HashMap<>();
-            stream(getPlayersByRoleTypeReq(getIID()))
-                    .flatMap(rp -> rp.getRelationGetPlayersByRoleTypeResPart().getRoleTypesWithPlayersList().stream())
-                    .forEach(rolePlayer -> {
-                        RoleTypeImpl role = TypeImpl.of(rolePlayer.getRoleType()).asRoleType();
-                        ThingImpl player = ThingImpl.of(rolePlayer.getPlayer());
-                        if (rolePlayerMap.containsKey(role)) rolePlayerMap.get(role).add(player);
-                        else rolePlayerMap.put(role, new ArrayList<>(Collections.singletonList(player)));
-                    });
-            return rolePlayerMap;
-        }
-
-        @Override
-        public Stream<? extends RoleType> getRelating() {
-            return stream(getRelatingReq(getIID()))
-                    .flatMap(rp -> rp.getRelationGetRelatingResPart().getRoleTypesList().stream())
-                    .map(RoleTypeImpl::of);
-        }
-
-        @Override
-        public final RelationImpl.Remote asRelation() {
-            return this;
-        }
+    @Override
+    public Stream<? extends RoleType> getRelating(TypeDBTransaction transaction) {
+        return relation_get_relating(nativeTransaction(transaction), nativeObject).stream().map(RoleTypeImpl::new);
     }
 }

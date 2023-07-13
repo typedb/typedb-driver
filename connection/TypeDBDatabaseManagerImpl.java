@@ -23,54 +23,44 @@ package com.vaticle.typedb.client.connection;
 
 import com.vaticle.typedb.client.api.database.Database;
 import com.vaticle.typedb.client.api.database.DatabaseManager;
+import com.vaticle.typedb.client.common.NativeObject;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.client.common.rpc.TypeDBStub;
 
 import java.util.List;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.DB_DOES_NOT_EXIST;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.MISSING_DB_NAME;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.DatabaseManager.allReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.DatabaseManager.containsReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.DatabaseManager.createReq;
+import static com.vaticle.typedb.client.jni.typedb_client.database_manager_new;
+import static com.vaticle.typedb.client.jni.typedb_client.databases_all;
+import static com.vaticle.typedb.client.jni.typedb_client.databases_contains;
+import static com.vaticle.typedb.client.jni.typedb_client.databases_create;
+import static com.vaticle.typedb.client.jni.typedb_client.databases_get;
 import static java.util.stream.Collectors.toList;
 
-public class TypeDBDatabaseManagerImpl implements DatabaseManager {
-
-    private final TypeDBClientImpl client;
-
-    public TypeDBDatabaseManagerImpl(TypeDBClientImpl client) {
-        this.client = client;
+public class TypeDBDatabaseManagerImpl extends NativeObject<com.vaticle.typedb.client.jni.DatabaseManager> implements DatabaseManager {
+    public TypeDBDatabaseManagerImpl(com.vaticle.typedb.client.jni.Connection connection) {
+        super(database_manager_new(connection));
     }
 
     @Override
-    public Database get(String name) {
-        if (contains(name)) return new TypeDBDatabaseImpl(this, name);
-        else throw new TypeDBClientException(DB_DOES_NOT_EXIST, name);
+    public Database get(String name) throws Error {
+        if (name == null || name.isEmpty()) throw new TypeDBClientException(MISSING_DB_NAME);
+        return new TypeDBDatabaseImpl(databases_get(nativeObject, name));
     }
 
     @Override
-    public boolean contains(String name) {
-        return stub().databasesContains(containsReq(nonNull(name))).getContains();
+    public boolean contains(String name) throws Error {
+        if (name == null || name.isEmpty()) throw new TypeDBClientException(MISSING_DB_NAME);
+        return databases_contains(nativeObject, name);
     }
 
     @Override
-    public void create(String name) {
-        stub().databasesCreate(createReq(nonNull(name)));
+    public void create(String name) throws Error {
+        if (name == null || name.isEmpty()) throw new TypeDBClientException(MISSING_DB_NAME);
+        databases_create(nativeObject, name);
     }
 
     @Override
-    public List<TypeDBDatabaseImpl> all() {
-        List<String> databases = stub().databasesAll(allReq()).getNamesList();
-        return databases.stream().map(name -> new TypeDBDatabaseImpl(this, name)).collect(toList());
-    }
-
-    TypeDBStub stub() {
-        return client.stub();
-    }
-
-    static String nonNull(String name) {
-        if (name == null) throw new TypeDBClientException(MISSING_DB_NAME);
-        return name;
+    public List<Database> all() {
+        return databases_all(nativeObject).stream().map(TypeDBDatabaseImpl::new).collect(toList());
     }
 }

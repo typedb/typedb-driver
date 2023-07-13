@@ -24,28 +24,26 @@ package(default_visibility = ["//visibility:public"])
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
-    name = "stream",
+    name = "user",
     srcs = glob(["*.java"], exclude=["test/**"]),
     deps = [
         # Internal dependencies
+        "//api:api",
         "//common:common",
 
         # External dependencies from @vaticle
-        "@vaticle_typedb_common//:common",
-        "@vaticle_typedb_protocol//grpc/java:typedb-protocol",
-
-        # External dependencies from Maven
-        "@maven//:com_google_code_findbugs_jsr305",
-        "@maven//:com_google_protobuf_protobuf_java",
-        "@maven//:io_grpc_grpc_stub",
-        "@maven//:io_grpc_grpc_api",
-        "@maven//:org_slf4j_slf4j_api"
+        "@vaticle_typedb_client_rust//:typedb_client_jni",
+    ],
+    runtime_deps = [
+        "@maven//:ch_qos_logback_logback_classic",
+        "@maven//:ch_qos_logback_logback_core",
+        "@maven//:io_netty_netty_tcnative_boringssl_static",
     ],
 )
 
 checkstyle_test(
     name = "checkstyle",
-    include = glob(["*"]),
+    include = glob(["*", "*/*"]),
     license_type = "apache-header",
     size = "small",
 )

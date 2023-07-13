@@ -26,7 +26,6 @@ import com.vaticle.typedb.client.api.concept.Concept;
 import javax.annotation.CheckReturnValue;
 
 public interface NumericGroup {
-
     @CheckReturnValue
     Concept owner();
 

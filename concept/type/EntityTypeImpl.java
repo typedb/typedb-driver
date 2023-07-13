@@ -23,79 +23,64 @@ package com.vaticle.typedb.client.concept.type;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.type.EntityType;
-import com.vaticle.typedb.client.common.Label;
 import com.vaticle.typedb.client.concept.thing.EntityImpl;
-import com.vaticle.typedb.client.concept.thing.ThingImpl;
-import com.vaticle.typedb.protocol.ConceptProto;
+import com.vaticle.typedb.client.jni.Transitivity;
 
+import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.EntityType.createReq;
+import static com.vaticle.typedb.client.jni.typedb_client.entity_type_create;
+import static com.vaticle.typedb.client.jni.typedb_client.entity_type_get_instances;
+import static com.vaticle.typedb.client.jni.typedb_client.entity_type_get_subtypes;
+import static com.vaticle.typedb.client.jni.typedb_client.entity_type_get_supertype;
+import static com.vaticle.typedb.client.jni.typedb_client.entity_type_get_supertypes;
+import static com.vaticle.typedb.client.jni.typedb_client.entity_type_set_supertype;
 
 public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
-
-    EntityTypeImpl(Label label, boolean isRoot, boolean isAbstract) {
-        super(label, isRoot, isAbstract);
-    }
-
-    public static EntityTypeImpl of(ConceptProto.Type proto) {
-        return new EntityTypeImpl(Label.of(proto.getLabel()), proto.getIsRoot(), proto.getIsAbstract());
+    public EntityTypeImpl(com.vaticle.typedb.client.jni.Concept concept) {
+        super(concept);
     }
 
     @Override
-    public EntityTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
-        return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot(), isAbstract());
+    public final EntityImpl create(TypeDBTransaction transaction) {
+        return new EntityImpl(entity_type_create(nativeTransaction(transaction), nativeObject));
     }
 
     @Override
-    public EntityTypeImpl asEntityType() {
-        return this;
+    public final void setSupertype(TypeDBTransaction transaction, EntityType entityType) {
+        entity_type_set_supertype(nativeTransaction(transaction), nativeObject, ((EntityTypeImpl) entityType).nativeObject);
     }
 
-    public static class Remote extends ThingTypeImpl.Remote implements EntityType.Remote {
+    @Nullable
+    @Override
+    public EntityTypeImpl getSupertype(TypeDBTransaction transaction) {
+        com.vaticle.typedb.client.jni.Concept res = entity_type_get_supertype(nativeTransaction(transaction), nativeObject);
+        if (res != null) return new EntityTypeImpl(res);
+        else return null;
+    }
 
-        Remote(TypeDBTransaction transaction, Label label, boolean isRoot, boolean isAbstract) {
-            super(transaction, label, isRoot, isAbstract);
-        }
+    @Override
+    public final Stream<EntityTypeImpl> getSupertypes(TypeDBTransaction transaction) {
+        return entity_type_get_supertypes(nativeTransaction(transaction), nativeObject).stream().map(EntityTypeImpl::new);
+    }
 
-        @Override
-        public EntityTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
-            return new EntityTypeImpl.Remote(transaction, getLabel(), isRoot(), isAbstract());
-        }
+    @Override
+    public final Stream<EntityTypeImpl> getSubtypes(TypeDBTransaction transaction) {
+        return entity_type_get_subtypes(nativeTransaction(transaction), nativeObject, Transitivity.Transitive).stream().map(EntityTypeImpl::new);
+    }
 
-        @Override
-        public final EntityImpl create() {
-            return EntityImpl.of(execute(createReq(getLabel())).getEntityTypeCreateRes().getEntity());
-        }
+    @Override
+    public final Stream<EntityTypeImpl> getSubtypesExplicit(TypeDBTransaction transaction) {
+        return entity_type_get_subtypes(nativeTransaction(transaction), nativeObject, Transitivity.Explicit).stream().map(EntityTypeImpl::new);
+    }
 
-        @Override
-        public final void setSupertype(EntityType entityType) {
-            super.setSupertype(entityType);
-        }
+    @Override
+    public final Stream<EntityImpl> getInstances(TypeDBTransaction transaction) {
+        return entity_type_get_instances(nativeTransaction(transaction), nativeObject, Transitivity.Transitive).stream().map(EntityImpl::new);
+    }
 
-        @Override
-        public final Stream<EntityTypeImpl> getSubtypes() {
-            return super.getSubtypes().map(ThingTypeImpl::asEntityType);
-        }
-
-        @Override
-        public final Stream<EntityTypeImpl> getSubtypesExplicit() {
-            return super.getSubtypesExplicit().map(ThingTypeImpl::asEntityType);
-        }
-
-        @Override
-        public final Stream<EntityImpl> getInstances() {
-            return super.getInstances().map(ThingImpl::asEntity);
-        }
-
-        @Override
-        public final Stream<EntityImpl> getInstancesExplicit() {
-            return super.getInstancesExplicit().map(ThingImpl::asEntity);
-        }
-
-        @Override
-        public EntityTypeImpl.Remote asEntityType() {
-            return this;
-        }
+    @Override
+    public final Stream<EntityImpl> getInstancesExplicit(TypeDBTransaction transaction) {
+        return entity_type_get_instances(nativeTransaction(transaction), nativeObject, Transitivity.Explicit).stream().map(EntityImpl::new);
     }
 }

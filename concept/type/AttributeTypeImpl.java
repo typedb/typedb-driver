@@ -22,643 +22,193 @@
 package com.vaticle.typedb.client.concept.type;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.client.api.concept.Value;
+import com.vaticle.typedb.client.api.concept.thing.Attribute;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
-import com.vaticle.typedb.client.common.Label;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.client.concept.ValueImpl;
 import com.vaticle.typedb.client.concept.thing.AttributeImpl;
-import com.vaticle.typedb.client.concept.thing.ThingImpl;
-import com.vaticle.typedb.protocol.ConceptProto;
-import com.vaticle.typeql.lang.common.TypeQLToken;
+import com.vaticle.typedb.client.jni.Transitivity;
 
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.BAD_VALUE_TYPE;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Attribute.protoBooleanAttributeValue;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Attribute.protoDateTimeAttributeValue;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Attribute.protoDoubleAttributeValue;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Attribute.protoLongAttributeValue;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Thing.Attribute.protoStringAttributeValue;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.AttributeType.getOwnersExplicitReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.AttributeType.getOwnersReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.AttributeType.getRegexReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.AttributeType.getReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.AttributeType.putReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Type.AttributeType.setRegexReq;
-import static com.vaticle.typedb.common.util.Objects.className;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_get;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_get_instances;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_get_owners;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_get_regex;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_get_subtypes;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_get_subtypes_with_value_type;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_get_supertype;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_get_supertypes;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_get_value_type;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_put;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_set_regex;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_set_supertype;
+import static com.vaticle.typedb.client.jni.typedb_client.attribute_type_unset_regex;
 import static java.util.Collections.emptySet;
 
 public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
-
-    private static final Label ROOT_LABEL = Label.of("attribute");
-
-    AttributeTypeImpl(Label label, boolean isRoot, boolean isAbstract) {
-        super(label, isRoot, isAbstract);
-    }
-
-    public static AttributeTypeImpl of(ConceptProto.Type proto) {
-        Label label = Label.of(proto.getLabel());
-        boolean isRoot = proto.getIsRoot();
-        boolean isAbstract = proto.getIsAbstract();
-        switch (proto.getValueType()) {
-            case BOOLEAN:
-                return new AttributeTypeImpl.Boolean(label, isRoot, isAbstract);
-            case LONG:
-                return new AttributeTypeImpl.Long(label, isRoot, isAbstract);
-            case DOUBLE:
-                return new AttributeTypeImpl.Double(label, isRoot, isAbstract);
-            case STRING:
-                return new AttributeTypeImpl.String(label, isRoot, isAbstract);
-            case DATETIME:
-                return new AttributeTypeImpl.DateTime(label, isRoot, isAbstract);
-            case OBJECT:
-                assert isRoot;
-                return new AttributeTypeImpl(label, isRoot, isAbstract);
-            case UNRECOGNIZED:
-            default:
-                throw new TypeDBClientException(BAD_VALUE_TYPE, proto.getValueType());
-        }
+    public AttributeTypeImpl(com.vaticle.typedb.client.jni.Concept concept) {
+        super(concept);
     }
 
     @Override
-    public AttributeTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
-        return new AttributeTypeImpl.Remote(transaction, getLabel(), isRoot(), isAbstract());
+    public ValueType getValueType() {
+        return ValueType.of(attribute_type_get_value_type(nativeObject));
     }
 
     @Override
-    public AttributeTypeImpl asAttributeType() {
-        return this;
+    public final void setSupertype(TypeDBTransaction transaction, AttributeType attributeType) {
+        attribute_type_set_supertype(nativeTransaction(transaction),
+                nativeObject, ((AttributeTypeImpl) attributeType).nativeObject);
+    }
+
+    @Nullable
+    @Override
+    public AttributeTypeImpl getSupertype(TypeDBTransaction transaction) {
+        com.vaticle.typedb.client.jni.Concept res = attribute_type_get_supertype(nativeTransaction(transaction),
+                nativeObject);
+        if (res != null) return new AttributeTypeImpl(res);
+        else return null;
     }
 
     @Override
-    public AttributeTypeImpl.Boolean asBoolean() {
-        if (isRoot()) return new Boolean(ROOT_LABEL, true, isAbstract());
-        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.Boolean.class));
+    public final Stream<AttributeTypeImpl> getSupertypes(TypeDBTransaction transaction) {
+        return attribute_type_get_supertypes(nativeTransaction(transaction), nativeObject).stream().map(AttributeTypeImpl::new);
     }
 
     @Override
-    public AttributeTypeImpl.Long asLong() {
-        if (isRoot()) return new Long(ROOT_LABEL, true, isAbstract());
-        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.Long.class));
+    public final Stream<AttributeTypeImpl> getSubtypes(TypeDBTransaction transaction) {
+        return attribute_type_get_subtypes(nativeTransaction(transaction), nativeObject, Transitivity.Transitive).stream().map(AttributeTypeImpl::new);
     }
 
     @Override
-    public AttributeTypeImpl.Double asDouble() {
-        if (isRoot()) return new Double(ROOT_LABEL, true, isAbstract());
-        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.Double.class));
+    public final Stream<AttributeTypeImpl> getSubtypes(TypeDBTransaction transaction, ValueType valueType) {
+        return attribute_type_get_subtypes_with_value_type(
+                nativeTransaction(transaction), nativeObject,
+                valueType.nativeObject, Transitivity.Transitive
+        ).stream().map(AttributeTypeImpl::new);
     }
 
     @Override
-    public AttributeTypeImpl.String asString() {
-        if (isRoot()) return new String(ROOT_LABEL, true, isAbstract());
-        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.String.class));
+    public final Stream<AttributeTypeImpl> getSubtypesExplicit(TypeDBTransaction transaction) {
+        return attribute_type_get_subtypes(nativeTransaction(transaction), nativeObject, Transitivity.Explicit).stream().map(AttributeTypeImpl::new);
     }
 
     @Override
-    public AttributeTypeImpl.DateTime asDateTime() {
-        if (isRoot()) return new DateTime(ROOT_LABEL, true, isAbstract());
-        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.DateTime.class));
+    public final Stream<AttributeImpl> getInstances(TypeDBTransaction transaction) {
+        return attribute_type_get_instances(nativeTransaction(transaction), nativeObject, Transitivity.Transitive).stream().map(AttributeImpl::new);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AttributeTypeImpl)) return false;
-        // We do the above, as opposed to checking if (object == null || getClass() != object.getClass())
-        // because it is possible to compare attribute root types wrapped in different type classes
-        // such as: root type wrapped in AttributeTypeImpl.Root and in AttributeTypeImpl.Boolean.Root
-        // We only override equals(), but not hash(), in this class, as hash() the logic from TypeImpl still applies.
-
-        AttributeTypeImpl that = (AttributeTypeImpl) o;
-        return this.getLabel().equals(that.getLabel());
+    public final Stream<AttributeImpl> getInstancesExplicit(TypeDBTransaction transaction) {
+        return attribute_type_get_instances(nativeTransaction(transaction), nativeObject, Transitivity.Explicit).stream().map(AttributeImpl::new);
     }
 
-    public static class Remote extends ThingTypeImpl.Remote implements AttributeType.Remote {
-
-        Remote(TypeDBTransaction transaction, Label label, boolean isRoot, boolean isAbstract) {
-            super(transaction, label, isRoot, isAbstract);
-        }
-
-        @Override
-        public AttributeTypeImpl.Remote asRemote(TypeDBTransaction transaction) {
-            return new AttributeTypeImpl.Remote(transaction, getLabel(), isRoot(), isAbstract());
-        }
-
-        @Override
-        public final void setSupertype(AttributeType attributeType) {
-            super.setSupertype(attributeType);
-        }
-
-        @Override
-        public Stream<? extends AttributeTypeImpl> getSubtypes() {
-            return getSubTypesBase(super.getSubtypes());
-        }
-
-        @Override
-        public Stream<? extends AttributeTypeImpl> getSubtypesExplicit() {
-            return getSubTypesBase(super.getSubtypesExplicit());
-        }
-
-        private Stream<? extends AttributeTypeImpl> getSubTypesBase(Stream<? extends ThingTypeImpl> subtypes) {
-            Stream<AttributeTypeImpl> stream = subtypes.map(TypeImpl::asAttributeType);
-
-            if (isRoot() && getValueType() != ValueType.OBJECT) {
-                // Get all attribute types of this value type
-                return stream.filter(x -> x.getValueType() == this.getValueType() || x.getLabel().equals(this.getLabel()));
-            }
-
-            return stream;
-        }
-
-        @Override
-        public Stream<? extends AttributeImpl<?>> getInstances() {
-            return super.getInstances().map(ThingImpl::asAttribute);
-        }
-
-        @Override
-        public Stream<? extends AttributeImpl<?>> getInstancesExplicit() {
-            return super.getInstancesExplicit().map(ThingImpl::asAttribute);
-        }
-
-        @Override
-        public Stream<ThingTypeImpl> getOwners() {
-            return getOwners(emptySet());
-        }
-
-        @Override
-        public Stream<ThingTypeImpl> getOwners(Set<TypeQLToken.Annotation> annotations) {
-            return stream(getOwnersReq(getLabel(), protoAnnotations(annotations)))
-                    .flatMap(rp -> rp.getAttributeTypeGetOwnersResPart().getThingTypesList().stream())
-                    .map(ThingTypeImpl::of);
-        }
-
-        @Override
-        public Stream<ThingTypeImpl> getOwnersExplicit() {
-            return getOwnersExplicit(emptySet());
-        }
-
-        @Override
-        public Stream<ThingTypeImpl> getOwnersExplicit(Set<TypeQLToken.Annotation> annotations) {
-            return stream(getOwnersExplicitReq(getLabel(), protoAnnotations(annotations)))
-                    .flatMap(rp -> rp.getAttributeTypeGetOwnersExplicitResPart().getThingTypesList().stream())
-                    .map(ThingTypeImpl::of);
-        }
-
-        protected final AttributeImpl<?> put(ConceptProto.Attribute.Value protoValue) {
-            ConceptProto.Type.Res res = execute(putReq(getLabel(), protoValue));
-            return AttributeImpl.of(res.getAttributeTypePutRes().getAttribute());
-        }
-
-        @Nullable
-        protected final AttributeImpl<?> get(ConceptProto.Attribute.Value value) {
-            ConceptProto.Type.Res res = execute(getReq(getLabel(), value));
-            switch (res.getAttributeTypeGetRes().getResCase()) {
-                case ATTRIBUTE:
-                    return AttributeImpl.of(res.getAttributeTypeGetRes().getAttribute());
-                default:
-                case RES_NOT_SET:
-                    return null;
-            }
-        }
-
-        @Override
-        public AttributeTypeImpl.Remote asAttributeType() {
-            return this;
-        }
-
-        @Override
-        public AttributeTypeImpl.Boolean.Remote asBoolean() {
-            if (isRoot()) return new AttributeTypeImpl.Boolean.Remote(tx(), ROOT_LABEL, true, isAbstract());
-            throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.Boolean.class));
-        }
-
-        @Override
-        public AttributeTypeImpl.Long.Remote asLong() {
-            if (isRoot()) return new AttributeTypeImpl.Long.Remote(tx(), ROOT_LABEL, true, isAbstract());
-            throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.Long.class));
-        }
-
-        @Override
-        public AttributeTypeImpl.Double.Remote asDouble() {
-            if (isRoot()) return new AttributeTypeImpl.Double.Remote(tx(), ROOT_LABEL, true, isAbstract());
-            throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.Double.class));
-        }
-
-        @Override
-        public AttributeTypeImpl.String.Remote asString() {
-            if (isRoot()) return new AttributeTypeImpl.String.Remote(tx(), ROOT_LABEL, true, isAbstract());
-            throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.String.class));
-        }
-
-        @Override
-        public AttributeTypeImpl.DateTime.Remote asDateTime() {
-            if (isRoot()) return new AttributeTypeImpl.DateTime.Remote(tx(), ROOT_LABEL, true, isAbstract());
-            throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.DateTime.class));
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof AttributeTypeImpl.Remote)) return false;
-            // We do the above, as opposed to checking if (object == null || getClass() != object.getClass())
-            // because it is possible to compare a attribute root types wrapped in different type classes
-            // such as: root type wrapped in AttributeTypeImpl.Root and as in AttributeType.Boolean.Root
-            // We only override equals(), but not hash(), in this class, as hash() the logic from TypeImpl still applies.
-
-            AttributeTypeImpl.Remote that = (AttributeTypeImpl.Remote) o;
-            return (this.tx().equals(that.tx()) && this.getLabel().equals(that.getLabel()));
-        }
+    @Override
+    public Stream<ThingTypeImpl> getOwners(TypeDBTransaction transaction) {
+        return getOwners(transaction, emptySet());
     }
 
-    public static class Boolean extends AttributeTypeImpl implements AttributeType.Boolean {
-
-        Boolean(Label label, boolean isRoot, boolean isAbstract) {
-            super(label, isRoot, isAbstract);
-        }
-
-        public static AttributeTypeImpl.Boolean of(ConceptProto.Type proto) {
-            return new AttributeTypeImpl.Boolean(Label.of(proto.getLabel()), proto.getIsRoot(), proto.getIsAbstract());
-        }
-
-        @Override
-        public AttributeTypeImpl.Boolean.Remote asRemote(TypeDBTransaction transaction) {
-            return new AttributeTypeImpl.Boolean.Remote(transaction, getLabel(), isRoot(), isAbstract());
-        }
-
-        @Override
-        public AttributeTypeImpl.Boolean asBoolean() {
-            return this;
-        }
-
-        public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Boolean.Remote {
-
-            public Remote(TypeDBTransaction transaction, Label label, boolean isRoot, boolean isAbstract) {
-                super(transaction, label, isRoot, isAbstract);
-            }
-
-            @Override
-            public AttributeTypeImpl.Boolean.Remote asRemote(TypeDBTransaction transaction) {
-                return new AttributeTypeImpl.Boolean.Remote(transaction, getLabel(), isRoot(), isAbstract());
-            }
-
-            @Override
-            public final Stream<AttributeTypeImpl.Boolean> getSubtypes() {
-                return super.getSubtypes().map(AttributeTypeImpl::asBoolean);
-            }
-
-            @Override
-            public final Stream<AttributeTypeImpl.Boolean> getSubtypesExplicit() {
-                return super.getSubtypesExplicit().map(AttributeTypeImpl::asBoolean);
-            }
-
-            @Override
-            public final Stream<AttributeImpl.Boolean> getInstances() {
-                return super.getInstances().map(AttributeImpl::asBoolean);
-            }
-
-            @Override
-            public final Stream<AttributeImpl.Boolean> getInstancesExplicit() {
-                return super.getInstancesExplicit().map(AttributeImpl::asBoolean);
-            }
-
-            @Override
-            public final void setSupertype(AttributeType.Boolean booleanAttributeType) {
-                super.setSupertype(booleanAttributeType);
-            }
-
-            @Override
-            public final AttributeImpl.Boolean put(boolean value) {
-                return super.put(protoBooleanAttributeValue(value)).asBoolean();
-            }
-
-            @Nullable
-            @Override
-            public final AttributeImpl.Boolean get(boolean value) {
-                AttributeImpl<?> attr = super.get(protoBooleanAttributeValue(value));
-                return attr != null ? attr.asBoolean() : null;
-            }
-
-            @Override
-            public AttributeTypeImpl.Boolean.Remote asBoolean() {
-                return this;
-            }
-        }
+    @Override
+    public Stream<ThingTypeImpl> getOwners(TypeDBTransaction transaction, Set<Annotation> annotations) {
+        com.vaticle.typedb.client.jni.Annotation[] annotationsArray = annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.client.jni.Annotation[]::new);
+        return attribute_type_get_owners(nativeTransaction(transaction), nativeObject, Transitivity.Transitive, annotationsArray).stream().map(ThingTypeImpl::of);
     }
 
-    public static class Long extends AttributeTypeImpl implements AttributeType.Long {
-
-        Long(Label label, boolean isRoot, boolean isAbstract) {
-            super(label, isRoot, isAbstract);
-        }
-
-        public static AttributeTypeImpl.Long of(ConceptProto.Type proto) {
-            return new AttributeTypeImpl.Long(Label.of(proto.getLabel()), proto.getIsRoot(), proto.getIsAbstract());
-        }
-
-        @Override
-        public AttributeTypeImpl.Long.Remote asRemote(TypeDBTransaction transaction) {
-            return new AttributeTypeImpl.Long.Remote(transaction, getLabel(), isRoot(), isAbstract());
-        }
-
-        @Override
-        public AttributeTypeImpl.Long asLong() {
-            return this;
-        }
-
-        public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Long.Remote {
-
-            public Remote(TypeDBTransaction transaction, Label label, boolean isRoot, boolean isAbstract) {
-                super(transaction, label, isRoot, isAbstract);
-            }
-
-            @Override
-            public AttributeTypeImpl.Long.Remote asRemote(TypeDBTransaction transaction) {
-                return new AttributeTypeImpl.Long.Remote(transaction, getLabel(), isRoot(), isAbstract());
-            }
-
-            @Override
-            public final Stream<AttributeTypeImpl.Long> getSubtypes() {
-                return super.getSubtypes().map(AttributeTypeImpl::asLong);
-            }
-
-            @Override
-            public final Stream<AttributeTypeImpl.Long> getSubtypesExplicit() {
-                return super.getSubtypesExplicit().map(AttributeTypeImpl::asLong);
-            }
-
-            @Override
-            public final Stream<AttributeImpl.Long> getInstances() {
-                return super.getInstances().map(AttributeImpl::asLong);
-            }
-
-            @Override
-            public final Stream<AttributeImpl.Long> getInstancesExplicit() {
-                return super.getInstancesExplicit().map(AttributeImpl::asLong);
-            }
-
-            @Override
-            public final void setSupertype(AttributeType.Long longAttributeType) {
-                super.setSupertype(longAttributeType);
-            }
-
-            @Override
-            public final AttributeImpl.Long put(long value) {
-                return super.put(protoLongAttributeValue(value)).asLong();
-            }
-
-            @Nullable
-            @Override
-            public final AttributeImpl.Long get(long value) {
-                AttributeImpl<?> attr = super.get(protoLongAttributeValue(value));
-                return attr != null ? attr.asLong() : null;
-            }
-
-            @Override
-            public AttributeTypeImpl.Long.Remote asLong() {
-                return this;
-            }
-        }
+    @Override
+    public Stream<ThingTypeImpl> getOwnersExplicit(TypeDBTransaction transaction) {
+        return getOwnersExplicit(transaction, emptySet());
     }
 
-    public static class Double extends AttributeTypeImpl implements AttributeType.Double {
-
-        Double(Label label, boolean isRoot, boolean isAbstract) {
-            super(label, isRoot, isAbstract);
-        }
-
-        public static AttributeTypeImpl.Double of(ConceptProto.Type proto) {
-            return new AttributeTypeImpl.Double(Label.of(proto.getLabel()), proto.getIsRoot(), proto.getIsAbstract());
-        }
-
-        @Override
-        public AttributeTypeImpl.Double.Remote asRemote(TypeDBTransaction transaction) {
-            return new AttributeTypeImpl.Double.Remote(transaction, getLabel(), isRoot(), isAbstract());
-        }
-
-        @Override
-        public AttributeTypeImpl.Double asDouble() {
-            return this;
-        }
-
-        public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.Double.Remote {
-
-            public Remote(TypeDBTransaction transaction, Label label, boolean isRoot, boolean isAbstract) {
-                super(transaction, label, isRoot, isAbstract);
-            }
-
-            @Override
-            public AttributeTypeImpl.Double.Remote asRemote(TypeDBTransaction transaction) {
-                return new AttributeTypeImpl.Double.Remote(transaction, getLabel(), isRoot(), isAbstract());
-            }
-
-            @Override
-            public final Stream<AttributeTypeImpl.Double> getSubtypes() {
-                return super.getSubtypes().map(AttributeTypeImpl::asDouble);
-            }
-
-            @Override
-            public final Stream<AttributeTypeImpl.Double> getSubtypesExplicit() {
-                return super.getSubtypesExplicit().map(AttributeTypeImpl::asDouble);
-            }
-
-            @Override
-            public final Stream<AttributeImpl.Double> getInstances() {
-                return super.getInstances().map(AttributeImpl::asDouble);
-            }
-
-            @Override
-            public final Stream<AttributeImpl.Double> getInstancesExplicit() {
-                return super.getInstancesExplicit().map(AttributeImpl::asDouble);
-            }
-
-            @Override
-            public final void setSupertype(AttributeType.Double doubleAttributeType) {
-                super.setSupertype(doubleAttributeType);
-            }
-
-            @Override
-            public final AttributeImpl.Double put(double value) {
-                return super.put(protoDoubleAttributeValue(value)).asDouble();
-            }
-
-            @Nullable
-            @Override
-            public final AttributeImpl.Double get(double value) {
-                AttributeImpl<?> attr = super.get(protoDoubleAttributeValue(value));
-                return attr != null ? attr.asDouble() : null;
-            }
-
-            @Override
-            public AttributeTypeImpl.Double.Remote asDouble() {
-                return this;
-            }
-        }
+    @Override
+    public Stream<ThingTypeImpl> getOwnersExplicit(TypeDBTransaction transaction, Set<Annotation> annotations) {
+        com.vaticle.typedb.client.jni.Annotation[] annotationsArray = annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.client.jni.Annotation[]::new);
+        return attribute_type_get_owners(nativeTransaction(transaction), nativeObject, Transitivity.Explicit, annotationsArray).stream().map(ThingTypeImpl::of);
     }
 
-    public static class String extends AttributeTypeImpl implements AttributeType.String {
-
-        String(Label label, boolean isRoot, boolean isAbstract) {
-            super(label, isRoot, isAbstract);
-        }
-
-        public static AttributeTypeImpl.String of(ConceptProto.Type proto) {
-            return new AttributeTypeImpl.String(Label.of(proto.getLabel()), proto.getIsRoot(), proto.getIsAbstract());
-        }
-
-        @Override
-        public AttributeTypeImpl.String.Remote asRemote(TypeDBTransaction transaction) {
-            return new AttributeTypeImpl.String.Remote(transaction, getLabel(), isRoot(), isAbstract());
-        }
-
-        @Override
-        public AttributeTypeImpl.String asString() {
-            return this;
-        }
-
-        public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.String.Remote {
-
-            public Remote(TypeDBTransaction transaction, Label label, boolean isRoot, boolean isAbstract) {
-                super(transaction, label, isRoot, isAbstract);
-            }
-
-            @Override
-            public AttributeTypeImpl.String.Remote asRemote(TypeDBTransaction transaction) {
-                return new AttributeTypeImpl.String.Remote(transaction, getLabel(), isRoot(), isAbstract());
-            }
-
-            @Override
-            public final Stream<AttributeTypeImpl.String> getSubtypes() {
-                return super.getSubtypes().map(AttributeTypeImpl::asString);
-            }
-
-            @Override
-            public final Stream<AttributeTypeImpl.String> getSubtypesExplicit() {
-                return super.getSubtypesExplicit().map(AttributeTypeImpl::asString);
-            }
-
-            @Override
-            public final Stream<AttributeImpl.String> getInstances() {
-                return super.getInstances().map(AttributeImpl::asString);
-            }
-
-            @Override
-            public final Stream<AttributeImpl.String> getInstancesExplicit() {
-                return super.getInstancesExplicit().map(AttributeImpl::asString);
-            }
-
-            @Override
-            public final void setSupertype(AttributeType.String stringAttributeType) {
-                super.setSupertype(stringAttributeType);
-            }
-
-            @Override
-            public final AttributeImpl.String put(java.lang.String value) {
-                return super.put(protoStringAttributeValue(value)).asString();
-            }
-
-            @Nullable
-            @Override
-            public final AttributeImpl.String get(java.lang.String value) {
-                AttributeImpl<?> attr = super.get(protoStringAttributeValue(value));
-                return attr != null ? attr.asString() : null;
-            }
-
-            @Nullable
-            @Override
-            public final java.lang.String getRegex() {
-                ConceptProto.Type.Res res = execute(getRegexReq(getLabel()));
-                java.lang.String regex = res.getAttributeTypeGetRegexRes().getRegex();
-                return regex.isEmpty() ? null : regex;
-            }
-
-            @Override
-            public final void setRegex(java.lang.String regex) {
-                if (regex == null) regex = "";
-                execute(setRegexReq(getLabel(), regex));
-            }
-
-            @Override
-            public AttributeTypeImpl.String.Remote asString() {
-                return this;
-            }
-        }
+    @Override
+    public Attribute put(TypeDBTransaction transaction, String value) {
+        return put(transaction, ValueImpl.of(value));
     }
 
-    public static class DateTime extends AttributeTypeImpl implements AttributeType.DateTime {
+    @Override
+    public Attribute put(TypeDBTransaction transaction, long value) {
+        return put(transaction, ValueImpl.of(value));
+    }
 
-        DateTime(Label label, boolean isRoot, boolean isAbstract) {
-            super(label, isRoot, isAbstract);
-        }
+    @Override
+    public Attribute put(TypeDBTransaction transaction, double value) {
+        return put(transaction, ValueImpl.of(value));
+    }
 
-        public static AttributeTypeImpl.DateTime of(ConceptProto.Type proto) {
-            return new AttributeTypeImpl.DateTime(Label.of(proto.getLabel()), proto.getIsRoot(), proto.getIsAbstract());
-        }
+    @Override
+    public Attribute put(TypeDBTransaction transaction, boolean value) {
+        return put(transaction, ValueImpl.of(value));
+    }
 
-        @Override
-        public AttributeTypeImpl.DateTime.Remote asRemote(TypeDBTransaction transaction) {
-            return new AttributeTypeImpl.DateTime.Remote(transaction, getLabel(), isRoot(), isAbstract());
-        }
+    @Override
+    public Attribute put(TypeDBTransaction transaction, LocalDateTime value) {
+        return put(transaction, ValueImpl.of(value));
+    }
 
-        @Override
-        public AttributeTypeImpl.DateTime asDateTime() {
-            return this;
-        }
+    @Override
+    public final Attribute put(TypeDBTransaction transaction, Value value) {
+        return new AttributeImpl(attribute_type_put(nativeTransaction(transaction), nativeObject, ((ValueImpl) value).nativeObject));
+    }
 
-        public static class Remote extends AttributeTypeImpl.Remote implements AttributeType.DateTime.Remote {
+    @Nullable
+    @Override
+    public Attribute get(TypeDBTransaction transaction, String value) {
+        return get(transaction, ValueImpl.of(value));
+    }
 
-            public Remote(TypeDBTransaction transaction, Label label, boolean isRoot, boolean isAbstract) {
-                super(transaction, label, isRoot, isAbstract);
-            }
+    @Nullable
+    @Override
+    public Attribute get(TypeDBTransaction transaction, long value) {
+        return get(transaction, ValueImpl.of(value));
+    }
 
-            @Override
-            public AttributeTypeImpl.DateTime.Remote asRemote(TypeDBTransaction transaction) {
-                return new AttributeTypeImpl.DateTime.Remote(transaction, getLabel(), isRoot(), isAbstract());
-            }
+    @Nullable
+    @Override
+    public Attribute get(TypeDBTransaction transaction, double value) {
+        return get(transaction, ValueImpl.of(value));
+    }
 
-            @Override
-            public final Stream<AttributeTypeImpl.DateTime> getSubtypes() {
-                return super.getSubtypes().map(AttributeTypeImpl::asDateTime);
-            }
+    @Nullable
+    @Override
+    public Attribute get(TypeDBTransaction transaction, boolean value) {
+        return get(transaction, ValueImpl.of(value));
+    }
 
-            @Override
-            public final Stream<AttributeTypeImpl.DateTime> getSubtypesExplicit() {
-                return super.getSubtypesExplicit().map(AttributeTypeImpl::asDateTime);
-            }
+    @Nullable
+    @Override
+    public Attribute get(TypeDBTransaction transaction, LocalDateTime value) {
+        return get(transaction, ValueImpl.of(value));
+    }
 
-            @Override
-            public final Stream<AttributeImpl.DateTime> getInstances() {
-                return super.getInstances().map(AttributeImpl::asDateTime);
-            }
+    @Nullable
+    @Override
+    public final Attribute get(TypeDBTransaction transaction, Value value) {
+        com.vaticle.typedb.client.jni.Concept res = attribute_type_get(nativeTransaction(transaction), nativeObject, ((ValueImpl) value).nativeObject);
+        if (res != null) return new AttributeImpl(res);
+        else return null;
+    }
 
-            @Override
-            public final Stream<AttributeImpl.DateTime> getInstancesExplicit() {
-                return super.getInstancesExplicit().map(AttributeImpl::asDateTime);
-            }
+    @Override
+    public String getRegex(TypeDBTransaction transaction) {
+        return attribute_type_get_regex(nativeTransaction(transaction), nativeObject);
+    }
 
-            @Override
-            public final void setSupertype(AttributeType.DateTime dateTimeAttributeType) {
-                super.setSupertype(dateTimeAttributeType);
-            }
+    @Override
+    public void setRegex(TypeDBTransaction transaction, String regex) {
+        attribute_type_set_regex(nativeTransaction(transaction), nativeObject, regex);
+    }
 
-            @Override
-            public final AttributeImpl.DateTime put(LocalDateTime value) {
-                return super.put(protoDateTimeAttributeValue(value)).asDateTime();
-            }
-
-            @Nullable
-            @Override
-            public final AttributeImpl.DateTime get(LocalDateTime value) {
-                AttributeImpl<?> attr = super.get(protoDateTimeAttributeValue(value));
-                return attr != null ? attr.asDateTime() : null;
-            }
-
-            @Override
-            public AttributeTypeImpl.DateTime.Remote asDateTime() {
-                return this;
-            }
-        }
+    @Override
+    public void unsetRegex(TypeDBTransaction transaction) {
+        attribute_type_unset_regex(nativeTransaction(transaction), nativeObject);
     }
 }

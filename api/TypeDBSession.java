@@ -21,13 +21,13 @@
 
 package com.vaticle.typedb.client.api;
 
-import com.vaticle.typedb.client.api.database.Database;
-import com.vaticle.typedb.protocol.SessionProto;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 import javax.annotation.CheckReturnValue;
 
-public interface TypeDBSession extends AutoCloseable {
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 
+public interface TypeDBSession extends AutoCloseable {
     @CheckReturnValue
     boolean isOpen();
 
@@ -35,7 +35,7 @@ public interface TypeDBSession extends AutoCloseable {
     Type type();
 
     @CheckReturnValue
-    Database database();
+    String database_name();
 
     @CheckReturnValue
     TypeDBOptions options();
@@ -51,22 +51,27 @@ public interface TypeDBSession extends AutoCloseable {
     void close();
 
     enum Type {
-        DATA(0),
-        SCHEMA(1);
+        DATA(0, com.vaticle.typedb.client.jni.SessionType.Data),
+        SCHEMA(1, com.vaticle.typedb.client.jni.SessionType.Schema);
 
         private final int id;
         private final boolean isSchema;
+        public final com.vaticle.typedb.client.jni.SessionType nativeObject;
 
-        Type(int id) {
+        Type(int id, com.vaticle.typedb.client.jni.SessionType nativeObject) {
             this.id = id;
-            this.isSchema = id == 1;
+            this.nativeObject = nativeObject;
+
+            this.isSchema = nativeObject == com.vaticle.typedb.client.jni.SessionType.Schema;
         }
 
-        public static Type of(int value) {
-            for (Type t : values()) {
-                if (t.id == value) return t;
+        public static Type of(com.vaticle.typedb.client.jni.SessionType sessionType) {
+            for (Type type : Type.values()) {
+                if (type.nativeObject == sessionType) {
+                    return type;
+                }
             }
-            return null;
+            throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
         }
 
         public int id() {
@@ -79,10 +84,6 @@ public interface TypeDBSession extends AutoCloseable {
 
         public boolean isSchema() {
             return isSchema;
-        }
-
-        public SessionProto.Session.Type proto() {
-            return SessionProto.Session.Type.forNumber(id);
         }
     }
 }

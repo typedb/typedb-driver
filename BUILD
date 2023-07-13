@@ -83,41 +83,40 @@ checkstyle_test(
     license_type = "apache-fulltext",
 )
 
-assemble_maven(
-    name = "assemble-maven",
-    project_description = "TypeDB Client API for Java",
-    project_name = "TypeDB Client Java",
-    project_url = "https://github.com/vaticle/typedb-client-java",
-    scm_url = "https://github.com/vaticle/typedb-client-java",
-    target = ":client-java",
-    version_overrides = version(artifacts_org, artifacts_repo),
-    workspace_refs = "@vaticle_typedb_client_java_workspace_refs//:refs.json",
-)
-
-deploy_maven(
-    name = "deploy-maven",
-    release = deployment["maven.release"],
-    snapshot = deployment["maven.snapshot"],
-    target = ":assemble-maven",
-)
-
-deploy_github(
-    name = "deploy-github",
-    draft = False,
-    title = "TypeDB Client Java",
-    release_description = "//:RELEASE_TEMPLATE.md",
-    organisation = github_deployment["github.organisation"],
-    repository = github_deployment["github.repository"],
-    title_append_version = True,
-)
-
+#assemble_maven(
+#    name = "assemble-maven",
+#    project_description = "TypeDB Client API for Java",
+#    project_name = "TypeDB Client Java",
+#    project_url = "https://github.com/vaticle/typedb-client-java",
+#    scm_url = "https://github.com/vaticle/typedb-client-java",
+#    target = ":client-java",
+#    version_overrides = version(artifacts_org, artifacts_repo),
+#    workspace_refs = "@vaticle_typedb_client_java_workspace_refs//:refs.json",
+#)
+#
+#deploy_maven(
+#    name = "deploy-maven",
+#    release = deployment["maven.release"],
+#    snapshot = deployment["maven.snapshot"],
+#    target = ":assemble-maven",
+#)
+#
+#deploy_github(
+#    name = "deploy-github",
+#    draft = False,
+#    title = "TypeDB Client Java",
+#    release_description = "//:RELEASE_TEMPLATE.md",
+#    organisation = github_deployment["github.organisation"],
+#    repository = github_deployment["github.repository"],
+#    title_append_version = True,
+#)
+#
 release_validate_deps(
     name = "release-validate-deps",
     refs = "@vaticle_typedb_client_java_workspace_refs//:refs.json",
     tagged_deps = [
         "@vaticle_typedb_common",
         "@vaticle_typeql",
-        "@vaticle_typedb_protocol",
         "@vaticle_factory_tracing",
     ],
     tags = ["manual"],  # in order for bazel test //... to not fail

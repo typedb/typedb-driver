@@ -33,11 +33,10 @@ java_library(
         "//concept:concept",
         "//logic:logic",
         "//query:query",
-        "//stream:stream",
+        "//user:user",
 
         # External dependencies from @vaticle
-        "@vaticle_typedb_common//:common",
-        "@vaticle_typedb_protocol//grpc/java:typedb-protocol",
+        "@vaticle_typedb_client_rust//:typedb_client_jni",
 
         # External dependencies from Maven
         "@maven//:com_google_code_findbugs_jsr305",

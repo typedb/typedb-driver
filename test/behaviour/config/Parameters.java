@@ -23,9 +23,9 @@ package com.vaticle.typedb.client.test.behaviour.config;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
+import com.vaticle.typedb.client.api.concept.type.ThingType.Annotation;
 import com.vaticle.typedb.client.common.Label;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typeql.lang.common.TypeQLToken;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.ParameterType;
 
@@ -38,9 +38,11 @@ import java.util.List;
 
 import static com.vaticle.typedb.client.api.TypeDBTransaction.Type.READ;
 import static com.vaticle.typedb.client.api.TypeDBTransaction.Type.WRITE;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.UNRECOGNISED_ANNOTATION;
+import static com.vaticle.typedb.client.api.concept.type.ThingType.Annotation.key;
+import static com.vaticle.typedb.client.api.concept.type.ThingType.Annotation.unique;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.UNRECOGNISED_ANNOTATION;
 
 public class Parameters {
 
@@ -136,13 +138,13 @@ public class Parameters {
     }
 
     @ParameterType("(\\s*([\\w\\-_]+,\\s*)*[\\w\\-_]*\\s*)")
-    public List<TypeQLToken.Annotation> annotations(String stringList) {
+    public List<Annotation> annotations(String stringList) {
         List<String> strings = Arrays.asList(stringList.split(",\\s?"));
-        List<TypeQLToken.Annotation> annotations = new ArrayList<>();
+        List<Annotation> annotations = new ArrayList<>();
         strings.forEach(string -> {
-            TypeQLToken.Annotation annotation = TypeQLToken.Annotation.of(string);
-            if (annotation == null) throw new TypeDBClientException(UNRECOGNISED_ANNOTATION, string);
-            else annotations.add(annotation);
+            if (string.equals("key")) annotations.add(key());
+            else if (string.equals("unique")) annotations.add(unique());
+            else throw new TypeDBClientException(UNRECOGNISED_ANNOTATION, string);
         });
         return annotations;
     }

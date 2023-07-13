@@ -21,72 +21,31 @@
 
 package com.vaticle.typedb.client.connection;
 
-import com.google.protobuf.ByteString;
 import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.client.common.rpc.TypeDBStub;
-import com.vaticle.typedb.client.stream.RequestTransmitter;
-import com.vaticle.typedb.common.collection.ConcurrentSet;
-import com.vaticle.typedb.protocol.SessionProto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.vaticle.typedb.client.api.database.Database;
+import com.vaticle.typedb.client.common.NativeObject;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.StampedLock;
+import static com.vaticle.typedb.client.jni.typedb_client.session_force_close;
+import static com.vaticle.typedb.client.jni.typedb_client.session_get_database_name;
+import static com.vaticle.typedb.client.jni.typedb_client.session_is_open;
+import static com.vaticle.typedb.client.jni.typedb_client.session_new;
+import static com.vaticle.typedb.client.jni.typedb_client.session_on_close;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.SESSION_CLOSED;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Session.closeReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Session.openReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Session.pulseReq;
-
-public class TypeDBSessionImpl implements TypeDBSession {
-
-    private static final int PULSE_INTERVAL_MILLIS = 5_000;
-
-    private static final Logger LOG = LoggerFactory.getLogger(TypeDBSessionImpl.class);
-    private final TypeDBClientImpl client;
-    private final TypeDBDatabaseImpl database;
-    private final ByteString sessionID;
-    private final ConcurrentSet<TypeDBTransaction.Extended> transactions;
+public class TypeDBSessionImpl extends NativeObject<com.vaticle.typedb.client.jni.Session> implements TypeDBSession {
     private final Type type;
     private final TypeDBOptions options;
-    private final Timer pulse;
-    private final ReadWriteLock accessLock;
-    private final AtomicBoolean isOpen;
-    private final int networkLatencyMillis;
-    private Runnable onClose;
 
-    public TypeDBSessionImpl(TypeDBClientImpl client, String database, Type type, TypeDBOptions options) {
-        this.client = client;
+    TypeDBSessionImpl(Database database, Type type, TypeDBOptions options) {
+        super(session_new(((TypeDBDatabaseImpl) database).nativeObject.released(), type.nativeObject, options.nativeObject));
         this.type = type;
         this.options = options;
-        Instant startTime = Instant.now();
-        SessionProto.Session.Open.Res res = client.stub().sessionOpen(
-                openReq(database, type.proto(), options.proto())
-        );
-        Instant endTime = Instant.now();
-        this.database = new TypeDBDatabaseImpl(client.databases(), database);
-        networkLatencyMillis = Math.max(
-                (int) (Duration.between(startTime, endTime).toMillis() - res.getServerDurationMillis()), 1
-        );
-        sessionID = res.getSessionId();
-        transactions = new ConcurrentSet<>();
-        accessLock = new StampedLock().asReadWriteLock();
-        isOpen = new AtomicBoolean(true);
-        pulse = new Timer();
-        pulse.scheduleAtFixedRate(this.new PulseTask(), 0, PULSE_INTERVAL_MILLIS);
     }
 
     @Override
     public boolean isOpen() {
-        return isOpen.get();
+        return session_is_open(nativeObject);
     }
 
     @Override
@@ -95,8 +54,8 @@ public class TypeDBSessionImpl implements TypeDBSession {
     }
 
     @Override
-    public TypeDBDatabaseImpl database() {
-        return database;
+    public String database_name() {
+        return session_get_database_name(nativeObject);
     }
 
     @Override
@@ -106,78 +65,34 @@ public class TypeDBSessionImpl implements TypeDBSession {
 
     @Override
     public TypeDBTransaction transaction(TypeDBTransaction.Type type) {
-        return transaction(type, TypeDBOptions.core());
+        return transaction(type, new TypeDBOptions());
     }
 
     @Override
     public TypeDBTransaction transaction(TypeDBTransaction.Type type, TypeDBOptions options) {
-        try {
-            accessLock.readLock().lock();
-            if (!isOpen.get()) throw new TypeDBClientException(SESSION_CLOSED);
-            TypeDBTransaction.Extended transactionRPC = new TypeDBTransactionImpl(this, sessionID, type, options);
-            transactions.add(transactionRPC);
-            return transactionRPC;
-        } finally {
-            accessLock.readLock().unlock();
-        }
-    }
-
-    ByteString id() {
-        return sessionID;
-    }
-
-    TypeDBStub stub() {
-        return client.stub();
-    }
-
-    RequestTransmitter transmitter() {
-        return client.transmitter();
-    }
-
-    int networkLatencyMillis() {
-        return networkLatencyMillis;
+        return new TypeDBTransactionImpl(this, type, options);
     }
 
     @Override
     public void onClose(Runnable function) {
-        onClose = function;
+        session_on_close(nativeObject, new Callback(function).released());
     }
 
     @Override
     public void close() {
-        if (isOpen.compareAndSet(true, false)) {
-            try {
-                accessLock.writeLock().lock();
-                if (onClose != null) onClose.run();
-                transactions.forEach(TypeDBTransaction.Extended::close);
-                client.removeSession(this);
-                pulse.cancel();
-                stub().sessionClose(closeReq(sessionID));
-            } catch (TypeDBClientException e) {
-                // Most likely the session is already closed or the server is no longer running.
-            } finally {
-                accessLock.writeLock().unlock();
-            }
+        session_force_close(nativeObject);
+    }
+
+    static class Callback extends com.vaticle.typedb.client.jni.SessionCallbackDirector {
+        private final Runnable function;
+
+        Callback(Runnable function) {
+            this.function = function;
         }
-    }
-
-    void closed(TypeDBTransaction.Extended typeDBTransaction) {
-        transactions.remove(typeDBTransaction);
-    }
-
-    private class PulseTask extends TimerTask {
 
         @Override
-        public void run() {
-            if (!isOpen()) return;
-            boolean alive = false;
-            try {
-                alive = stub().sessionPulse(pulseReq(sessionID)).getAlive();
-            } catch (TypeDBClientException e) {
-                LOG.debug("Unable to send session pulse", e);
-            } finally {
-                if (!alive) close();
-            }
+        public void callback() {
+            function.run();
         }
     }
 }

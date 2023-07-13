@@ -22,55 +22,113 @@
 package com.vaticle.typedb.client.connection;
 
 import com.vaticle.typedb.client.api.database.Database;
-import com.vaticle.typedb.client.common.rpc.TypeDBStub;
+import com.vaticle.typedb.client.common.NativeObject;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.Database.deleteReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.Database.ruleSchemaReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.Database.schemaReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Core.Database.typeSchemaReq;
-import static com.vaticle.typedb.client.connection.TypeDBDatabaseManagerImpl.nonNull;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-public class TypeDBDatabaseImpl implements Database {
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.DATABASE_DELETED;
+import static com.vaticle.typedb.client.jni.typedb_client.database_delete;
+import static com.vaticle.typedb.client.jni.typedb_client.database_get_name;
+import static com.vaticle.typedb.client.jni.typedb_client.database_get_preferred_replica_info;
+import static com.vaticle.typedb.client.jni.typedb_client.database_get_primary_replica_info;
+import static com.vaticle.typedb.client.jni.typedb_client.database_get_replicas_info;
+import static com.vaticle.typedb.client.jni.typedb_client.database_rule_schema;
+import static com.vaticle.typedb.client.jni.typedb_client.database_schema;
+import static com.vaticle.typedb.client.jni.typedb_client.database_type_schema;
+import static com.vaticle.typedb.client.jni.typedb_client.replica_info_get_address;
+import static com.vaticle.typedb.client.jni.typedb_client.replica_info_get_term;
+import static com.vaticle.typedb.client.jni.typedb_client.replica_info_is_preferred;
+import static com.vaticle.typedb.client.jni.typedb_client.replica_info_is_primary;
 
-    private final String name;
-    private final TypeDBDatabaseManagerImpl databaseMgr;
-
-    public TypeDBDatabaseImpl(TypeDBDatabaseManagerImpl databaseMgr, String name) {
-        this.databaseMgr = databaseMgr;
-        this.name = nonNull((name));
-    }
-
-    private TypeDBStub stub() {
-        return databaseMgr.stub();
+public class TypeDBDatabaseImpl extends NativeObject<com.vaticle.typedb.client.jni.Database> implements Database {
+    public TypeDBDatabaseImpl(com.vaticle.typedb.client.jni.Database database) {
+        super(database);
     }
 
     @Override
     public String name() {
-        return name;
+        if (!nativeObject.isOwned()) throw new TypeDBClientException(DATABASE_DELETED);
+        return database_get_name(nativeObject);
     }
 
     @Override
     public String schema() {
-        return stub().databaseSchema(schemaReq(name)).getSchema();
+        if (!nativeObject.isOwned()) throw new TypeDBClientException(DATABASE_DELETED);
+        return database_schema(nativeObject);
     }
 
     @Override
     public String typeSchema() {
-        return stub().databaseTypeSchema(typeSchemaReq(name)).getSchema();
+        if (!nativeObject.isOwned()) throw new TypeDBClientException(DATABASE_DELETED);
+        return database_type_schema(nativeObject);
     }
 
     @Override
     public String ruleSchema() {
-        return stub().databaseRuleSchema(ruleSchemaReq(name)).getSchema();
+        if (!nativeObject.isOwned()) throw new TypeDBClientException(DATABASE_DELETED);
+        return database_rule_schema(nativeObject);
     }
 
     @Override
     public void delete() {
-        stub().databaseDelete(deleteReq(name));
+        if (!nativeObject.isOwned()) throw new TypeDBClientException(DATABASE_DELETED);
+        // NOTE: .released() relinquishes ownership of the native object to the Rust side
+        database_delete(nativeObject.released());
     }
 
     @Override
     public String toString() {
-        return name;
+        return name();
+    }
+
+    @Override
+    public Set<? extends Database.Replica> replicas() {
+        if (!nativeObject.isOwned()) throw new TypeDBClientException(DATABASE_DELETED);
+        return database_get_replicas_info(nativeObject).stream().map(Replica::new).collect(Collectors.toSet());
+    }
+
+    @Override
+    public Optional<? extends Database.Replica> primaryReplica() {
+        if (!nativeObject.isOwned()) throw new TypeDBClientException(DATABASE_DELETED);
+        com.vaticle.typedb.client.jni.ReplicaInfo res = database_get_primary_replica_info(nativeObject);
+        if (res != null) return Optional.of(new Replica(res));
+        else return Optional.empty();
+    }
+
+    @Override
+    public Optional<? extends Database.Replica> preferredReplica() {
+        if (!nativeObject.isOwned()) throw new TypeDBClientException(DATABASE_DELETED);
+        com.vaticle.typedb.client.jni.ReplicaInfo res = database_get_preferred_replica_info(nativeObject);
+        if (res != null) return Optional.of(new Replica(res));
+        else return Optional.empty();
+    }
+
+    public static class Replica extends NativeObject<com.vaticle.typedb.client.jni.ReplicaInfo> implements Database.Replica {
+        Replica(com.vaticle.typedb.client.jni.ReplicaInfo replicaInfo) {
+            super(replicaInfo);
+        }
+
+        @Override
+        public String address() {
+            return replica_info_get_address(nativeObject);
+        }
+
+        @Override
+        public boolean isPrimary() {
+            return replica_info_is_primary(nativeObject);
+        }
+
+        @Override
+        public boolean isPreferred(){
+            return replica_info_is_preferred(nativeObject);
+        }
+
+        @Override
+        public long term() {
+            return replica_info_get_term(nativeObject);
+        }
     }
 }

@@ -23,16 +23,15 @@ package com.vaticle.typedb.client.api;
 
 import com.vaticle.typedb.client.api.concept.ConceptManager;
 import com.vaticle.typedb.client.api.logic.LogicManager;
-import com.vaticle.typedb.client.api.query.QueryFuture;
 import com.vaticle.typedb.client.api.query.QueryManager;
-import com.vaticle.typedb.protocol.TransactionProto;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
-import java.util.function.Consumer;
 import javax.annotation.CheckReturnValue;
-import java.util.stream.Stream;
+import java.util.function.Consumer;
+
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 
 public interface TypeDBTransaction extends AutoCloseable {
-
     @CheckReturnValue
     boolean isOpen();
 
@@ -60,22 +59,27 @@ public interface TypeDBTransaction extends AutoCloseable {
     void close();
 
     enum Type {
-        READ(0),
-        WRITE(1);
+        READ(0, com.vaticle.typedb.client.jni.TransactionType.Read),
+        WRITE(1, com.vaticle.typedb.client.jni.TransactionType.Write);
 
         private final int id;
         private final boolean isWrite;
+        public final com.vaticle.typedb.client.jni.TransactionType nativeObject;
 
-        Type(int id) {
+        Type(int id, com.vaticle.typedb.client.jni.TransactionType nativeObject) {
             this.id = id;
-            this.isWrite = id == 1;
+            this.nativeObject = nativeObject;
+
+            this.isWrite = nativeObject == com.vaticle.typedb.client.jni.TransactionType.Write;
         }
 
-        public static Type of(int value) {
-            for (Type t : values()) {
-                if (t.id == value) return t;
+        public static Type of(com.vaticle.typedb.client.jni.TransactionType transactionType) {
+            for (Type type : Type.values()) {
+                if (type.nativeObject == transactionType) {
+                    return type;
+                }
             }
-            return null;
+            throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
         }
 
         public int id() {
@@ -89,18 +93,5 @@ public interface TypeDBTransaction extends AutoCloseable {
         public boolean isWrite() {
             return isWrite;
         }
-
-        public TransactionProto.Transaction.Type proto() {
-            return TransactionProto.Transaction.Type.forNumber(id);
-        }
-    }
-
-    interface Extended extends TypeDBTransaction {
-
-        TransactionProto.Transaction.Res execute(TransactionProto.Transaction.Req.Builder request);
-
-        QueryFuture<TransactionProto.Transaction.Res> query(TransactionProto.Transaction.Req.Builder request);
-
-        Stream<TransactionProto.Transaction.ResPart> stream(TransactionProto.Transaction.Req.Builder request);
     }
 }

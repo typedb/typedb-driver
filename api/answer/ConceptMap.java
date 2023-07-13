@@ -27,16 +27,14 @@ import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.common.collection.Pair;
 
 import javax.annotation.CheckReturnValue;
-import java.util.Collection;
-import java.util.Map;
+import java.util.stream.Stream;
 
 public interface ConceptMap {
+    @CheckReturnValue
+    Stream<String> variables();
 
     @CheckReturnValue
-    Map<String, Concept> map();
-
-    @CheckReturnValue
-    Collection<Concept> concepts();
+    Stream<Concept> concepts();
 
     @CheckReturnValue
     Concept get(String variable);
@@ -44,33 +42,29 @@ public interface ConceptMap {
     @CheckReturnValue
     default JsonObject toJSON() {
         JsonObject object = Json.object();
-        map().forEach((resVar, resConcept) -> object.add(resVar, resConcept.toJSON()));
+        variables().forEach(resVar -> object.add(resVar, get(resVar).toJSON()));
         return object;
     }
 
     Explainables explainables();
 
     interface Explainables {
-
         Explainable relation(String variable);
 
         Explainable attribute(String variable);
 
         Explainable ownership(String owner, String attribute);
 
-        Map<String, Explainable> relations();
+        Stream<Pair<String, Explainable>> relations();
 
-        Map<String, Explainable> attributes();
+        Stream<Pair<String, Explainable>> attributes();
 
-        Map<Pair<String, String>, Explainable> ownerships();
-
+        Stream<Pair<Pair<String, String>, Explainable>> ownerships();
     }
 
     interface Explainable {
-
         String conjunction();
 
         long id();
-
     }
 }

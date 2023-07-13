@@ -72,7 +72,6 @@ typedb_behaviour_java_test(
     ],
     deps = [
         # Internal Package Dependencies
-        "//api:api",
         "//test/behaviour:behaviour",
 
         # External Maven Dependencies

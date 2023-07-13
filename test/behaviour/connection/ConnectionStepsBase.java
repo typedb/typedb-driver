@@ -26,7 +26,6 @@ import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
-import io.cucumber.java.en.When;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -107,6 +106,10 @@ public abstract class ConnectionStepsBase {
         sessionsParallelToTransactionsParallel.clear();
 
         TypeDBSingleton.resetTypeDBRunner();
+
+        // This will segfault if a double free happens in finalize() for whatever reason.
+        System.gc();
+
         System.out.println("ConnectionSteps.after");
     }
 

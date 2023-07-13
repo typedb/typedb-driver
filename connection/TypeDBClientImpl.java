@@ -21,113 +21,74 @@
 
 package com.vaticle.typedb.client.connection;
 
-import com.google.protobuf.ByteString;
 import com.vaticle.typedb.client.api.TypeDBClient;
+import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBSession;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.client.common.rpc.TypeDBStub;
-import com.vaticle.typedb.client.stream.RequestTransmitter;
-import com.vaticle.typedb.common.concurrent.NamedThreadFactory;
-import io.grpc.ManagedChannel;
+import com.vaticle.typedb.client.api.database.DatabaseManager;
+import com.vaticle.typedb.client.api.user.User;
+import com.vaticle.typedb.client.api.user.UserManager;
+import com.vaticle.typedb.client.common.NativeObject;
+import com.vaticle.typedb.client.jni.Error;
+import com.vaticle.typedb.client.user.UserManagerImpl;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.TimeUnit;
+import java.util.Set;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
-import static com.vaticle.typedb.common.util.Objects.className;
+import static com.vaticle.typedb.client.jni.typedb_client.connection_force_close;
+import static com.vaticle.typedb.client.jni.typedb_client.connection_is_open;
+import static com.vaticle.typedb.client.jni.typedb_client.connection_open_encrypted;
+import static com.vaticle.typedb.client.jni.typedb_client.connection_open_plaintext;
 
-public abstract class TypeDBClientImpl implements TypeDBClient {
+public class TypeDBClientImpl extends NativeObject<com.vaticle.typedb.client.jni.Connection> implements TypeDBClient {
+    private final UserManagerImpl userMgr;
+    private final DatabaseManager databaseMgr;
 
-    private static final String TYPEDB_CLIENT_RPC_THREAD_NAME = "typedb-client-rpc";
-
-    private final RequestTransmitter transmitter;
-    private final TypeDBDatabaseManagerImpl databaseMgr;
-    private final ConcurrentMap<ByteString, TypeDBSessionImpl> sessions;
-
-    protected TypeDBClientImpl(int parallelisation) {
-        NamedThreadFactory threadFactory = NamedThreadFactory.create(TYPEDB_CLIENT_RPC_THREAD_NAME);
-        transmitter = new RequestTransmitter(parallelisation, threadFactory);
-        databaseMgr = new TypeDBDatabaseManagerImpl(this);
-        sessions = new ConcurrentHashMap<>();
+    public TypeDBClientImpl(String address) throws Error {
+        this(connection_open_plaintext(address));
     }
 
-    public static int calculateParallelisation() {
-        int cores = Runtime.getRuntime().availableProcessors();
-        if (cores <= 4) return 2;
-        else if (cores <= 9) return 3;
-        else if (cores <= 16) return 4;
-        else return (int) Math.ceil(cores / 4.0);
+    public TypeDBClientImpl(Set<String> initAddresses, TypeDBCredential credential) throws Error {
+        this(connection_open_encrypted(initAddresses.toArray(new String[0]), credential.nativeObject));
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    protected void validateConnectionOrThrow() throws TypeDBClientException { // TODO: we should throw checked exception
-        try {
-            // TODO: This is hacky patch. We know that databaseMgr.all() will throw an exception if connection has not been
-            //       established. But we should replace this code to perform the check in a more meaningful way. This method
-            //       should naturally be replaced once we implement a new client pulse architecture.
-            databaseMgr.all();
-        } catch (Exception e){
-            close();
-            throw e;
-        }
+    private TypeDBClientImpl(com.vaticle.typedb.client.jni.Connection connection) {
+        super(connection);
+        databaseMgr = new TypeDBDatabaseManagerImpl(this.nativeObject);
+        userMgr = new UserManagerImpl(this.nativeObject);
     }
 
     @Override
     public boolean isOpen() {
-        return !channel().isShutdown();
+        return connection_is_open(nativeObject);
     }
 
     @Override
-    public TypeDBSessionImpl session(String database, TypeDBSession.Type type) {
-        return session(database, type, TypeDBOptions.core());
+    public User user() {
+        return userMgr.getCurrentUser();
     }
 
     @Override
-    public TypeDBSessionImpl session(String database, TypeDBSession.Type type, TypeDBOptions options) {
-        TypeDBSessionImpl session = new TypeDBSessionImpl(this, database, type, options);
-        assert !sessions.containsKey(session.id());
-        sessions.put(session.id(), session);
-        return session;
+    public UserManager users() {
+        return userMgr;
     }
 
     @Override
-    public TypeDBDatabaseManagerImpl databases() {
+    public DatabaseManager databases() {
         return databaseMgr;
     }
 
     @Override
-    public boolean isCluster() {
-        return false;
+    public TypeDBSession session(String database, TypeDBSession.Type type) {
+        return session(database, type, new TypeDBOptions());
     }
 
     @Override
-    public Cluster asCluster() {
-        throw new TypeDBClientException(ILLEGAL_CAST, className(TypeDBClient.Cluster.class));
-    }
-
-    public abstract ManagedChannel channel();
-
-    public abstract TypeDBStub stub();
-
-    RequestTransmitter transmitter() {
-        return transmitter;
-    }
-
-    void removeSession(TypeDBSessionImpl session) {
-        sessions.remove(session.id());
+    public TypeDBSession session(String database, TypeDBSession.Type type, TypeDBOptions options) {
+        return new TypeDBSessionImpl(databases().get(database), type, options);
     }
 
     @Override
     public void close() {
-        try {
-            sessions.values().forEach(TypeDBSessionImpl::close);
-            channel().shutdown().awaitTermination(10, TimeUnit.SECONDS);
-            transmitter.close();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+        connection_force_close(nativeObject);
     }
-
 }

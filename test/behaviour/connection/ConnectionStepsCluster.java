@@ -26,8 +26,8 @@ import com.vaticle.typedb.client.api.TypeDBClient;
 import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.common.test.TypeDBRunner;
-import com.vaticle.typedb.common.test.cluster.TypeDBClusterRunner;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
+import com.vaticle.typedb.common.test.cluster.TypeDBClusterRunner;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
@@ -67,7 +67,7 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
 
     @Override
     TypeDBOptions createOptions() {
-        return TypeDBOptions.cluster();
+        return new TypeDBOptions();
     }
 
     @Override

@@ -33,12 +33,10 @@ java_library(
     deps = [
         # Internal Package Dependencies
         "//api:api",
-        "//common:common",
         "//test/behaviour/connection:steps-base",
 
-        # External dependencies from @vaticle
+        # Internal Repository Dependencies
         "@vaticle_typedb_common//:common",
-        "@vaticle_typeql//java/common",
 
         # External Maven Dependencies
         "@maven//:junit_junit",

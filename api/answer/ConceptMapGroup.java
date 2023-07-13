@@ -24,13 +24,12 @@ package com.vaticle.typedb.client.api.answer;
 import com.vaticle.typedb.client.api.concept.Concept;
 
 import javax.annotation.CheckReturnValue;
-import java.util.List;
+import java.util.stream.Stream;
 
 public interface ConceptMapGroup {
-
     @CheckReturnValue
     Concept owner();
 
     @CheckReturnValue
-    List<ConceptMap> conceptMaps();
+    Stream<ConceptMap> conceptMaps();
 }

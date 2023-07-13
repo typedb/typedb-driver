@@ -21,52 +21,43 @@
 
 package com.vaticle.typedb.client.connection;
 
-import com.google.protobuf.ByteString;
 import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.ConceptManager;
 import com.vaticle.typedb.client.api.logic.LogicManager;
-import com.vaticle.typedb.client.api.query.QueryFuture;
 import com.vaticle.typedb.client.api.query.QueryManager;
+import com.vaticle.typedb.client.common.NativeObject;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.concept.ConceptManagerImpl;
 import com.vaticle.typedb.client.logic.LogicManagerImpl;
 import com.vaticle.typedb.client.query.QueryManagerImpl;
-import com.vaticle.typedb.client.stream.BidirectionalStream;
-import com.vaticle.typedb.protocol.TransactionProto.Transaction.Req;
-import com.vaticle.typedb.protocol.TransactionProto.Transaction.Res;
-import com.vaticle.typedb.protocol.TransactionProto.Transaction.ResPart;
-import io.grpc.StatusRuntimeException;
 
-import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED_WITH_ERRORS;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Transaction.commitReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Transaction.openReq;
-import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Transaction.rollbackReq;
+import static com.vaticle.typedb.client.jni.typedb_client.transaction_commit;
+import static com.vaticle.typedb.client.jni.typedb_client.transaction_is_open;
+import static com.vaticle.typedb.client.jni.typedb_client.transaction_new;
+import static com.vaticle.typedb.client.jni.typedb_client.transaction_on_close;
+import static com.vaticle.typedb.client.jni.typedb_client.transaction_force_close;
+import static com.vaticle.typedb.client.jni.typedb_client.transaction_rollback;
 
-public class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
-
-    private final TypeDBSessionImpl session;
+public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.client.jni.Transaction> implements TypeDBTransaction {
     private final TypeDBTransaction.Type type;
     private final TypeDBOptions options;
-    private final ConceptManager conceptMgr;
-    private final LogicManager logicMgr;
-    private final QueryManager queryMgr;
 
-    private final BidirectionalStream bidirectionalStream;
-    TypeDBTransactionImpl(TypeDBSessionImpl session, ByteString sessionId, Type type, TypeDBOptions options) {
-        this.session = session;
+    private final ConceptManager conceptManager;
+    private final LogicManager logicManager;
+    private final QueryManager queryManager;
+
+    TypeDBTransactionImpl(TypeDBSessionImpl session, Type type, TypeDBOptions options) {
+        super(transaction_new(session.nativeObject, type.nativeObject, options.nativeObject));
         this.type = type;
         this.options = options;
-        conceptMgr = new ConceptManagerImpl(this);
-        logicMgr = new LogicManagerImpl(this);
-        queryMgr = new QueryManagerImpl(this);
-        bidirectionalStream = new BidirectionalStream(session.stub(), session.transmitter());
-        execute(openReq(sessionId, type.proto(), options.proto(), session.networkLatencyMillis()), false);
+
+        conceptManager = new ConceptManagerImpl(nativeObject);
+        logicManager = new LogicManagerImpl(nativeObject);
+        queryManager = new QueryManagerImpl(nativeObject);
     }
 
     @Override
@@ -81,78 +72,61 @@ public class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
 
     @Override
     public boolean isOpen() {
-        return bidirectionalStream.isOpen();
+        if (!nativeObject.isOwned()) return false;
+        else return transaction_is_open(nativeObject);
     }
 
     @Override
     public ConceptManager concepts() {
-        return conceptMgr;
+        return conceptManager;
     }
 
     @Override
     public LogicManager logic() {
-        return logicMgr;
+        return logicManager;
     }
 
     @Override
     public QueryManager query() {
-        return queryMgr;
+        return queryManager;
     }
 
     @Override
     public void onClose(Consumer<Throwable> function) {
-        bidirectionalStream.onClose(function);
-    }
-
-    @Override
-    public Res execute(Req.Builder request) {
-        return execute(request, true);
-    }
-
-    private Res execute(Req.Builder request, boolean batch) {
-        return query(request, batch).get();
-    }
-
-    @Override
-    public QueryFuture<Res> query(Req.Builder request) {
-        return query(request, true);
-    }
-
-    private QueryFuture<Res> query(Req.Builder request, boolean batch) {
-        if (!isOpen()) throwTransactionClosed();
-        BidirectionalStream.Single<Res> single = bidirectionalStream.single(request, batch);
-        return single::get;
-    }
-
-    @Override
-    public Stream<ResPart> stream(Req.Builder request) {
-        if (!isOpen()) throwTransactionClosed();
-        return bidirectionalStream.stream(request);
-    }
-
-    private void throwTransactionClosed() {
-        Optional<StatusRuntimeException> error = bidirectionalStream.getError();
-        if (error.isPresent()) throw new TypeDBClientException(TRANSACTION_CLOSED_WITH_ERRORS, error.get());
-        else throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (!nativeObject.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        transaction_on_close(nativeObject, new TransactionOnClose(function).released());
     }
 
     @Override
     public void commit() {
-        try {
-            execute(commitReq());
-        } finally {
-            close();
-        }
+        if (!nativeObject.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        // NOTE: .released() relinquishes ownership of the native object to the Rust side
+        transaction_commit(nativeObject.released());
     }
 
     @Override
     public void rollback() {
-        execute(rollbackReq());
+        if (!nativeObject.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        transaction_rollback(nativeObject);
     }
 
     @Override
     public void close() {
-        bidirectionalStream.close();
-        session.closed(this);
+        if (nativeObject.isOwned()) {
+            transaction_force_close(nativeObject);
+        }
+    }
+
+    static class TransactionOnClose extends com.vaticle.typedb.client.jni.TransactionCallbackDirector {
+        private final Consumer<Throwable> function;
+
+        public TransactionOnClose(Consumer<Throwable> function) {
+            this.function = function;
+        }
+
+        @Override
+        public void callback(com.vaticle.typedb.client.jni.Error e) {
+            function.accept(e);
+        }
     }
 }

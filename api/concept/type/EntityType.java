@@ -28,7 +28,6 @@ import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 public interface EntityType extends ThingType {
-
     @Override
     @CheckReturnValue
     default boolean isEntityType() {
@@ -37,29 +36,28 @@ public interface EntityType extends ThingType {
 
     @Override
     @CheckReturnValue
-    EntityType.Remote asRemote(TypeDBTransaction transaction);
-
-    interface Remote extends ThingType.Remote, EntityType {
-
-        @CheckReturnValue
-        Entity create();
-
-        @Override
-        @CheckReturnValue
-        Stream<? extends Entity> getInstances();
-
-        @Override
-        @CheckReturnValue
-        Stream<? extends Entity> getInstancesExplicit();
-
-        @Override
-        @CheckReturnValue
-        Stream<? extends EntityType> getSubtypes();
-
-        @Override
-        @CheckReturnValue
-        Stream<? extends EntityType> getSubtypesExplicit();
-
-        void setSupertype(EntityType superEntityType);
+    default EntityType asEntityType() {
+        return this;
     }
+
+    @CheckReturnValue
+    Entity create(TypeDBTransaction transaction);
+
+    @Override
+    @CheckReturnValue
+    Stream<? extends Entity> getInstances(TypeDBTransaction transaction);
+
+    @Override
+    @CheckReturnValue
+    Stream<? extends Entity> getInstancesExplicit(TypeDBTransaction transaction);
+
+    @Override
+    @CheckReturnValue
+    Stream<? extends EntityType> getSubtypes(TypeDBTransaction transaction);
+
+    @Override
+    @CheckReturnValue
+    Stream<? extends EntityType> getSubtypesExplicit(TypeDBTransaction transaction);
+
+    void setSupertype(TypeDBTransaction transaction, EntityType superEntityType);
 }
