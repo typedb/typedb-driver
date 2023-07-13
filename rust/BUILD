@@ -19,6 +19,8 @@
 # under the License.
 #
 
+package(default_visibility = ["//visibility:public"])
+
 load("@rules_rust//rust:defs.bzl", "rust_library", "rust_static_library", "rustfmt_test")
 load("@vaticle_bazel_distribution//crates:rules.bzl", "assemble_crate", "deploy_crate")
 load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
