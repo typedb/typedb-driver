@@ -36,10 +36,12 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
                 new Client(3, "The transaction has been closed and no further operation is allowed.");
         public static final Client TRANSACTION_CLOSED_WITH_ERRORS =
                 new Client(4, "The transaction has been closed with error(s): \n%s.");
+        public static final Client DATABASE_DELETED =
+                new Client(5, "The database has been deleted and no further operation is allowed.");
         public static final Client POSITIVE_VALUE_REQUIRED =
-                new Client(5, "Value cannot be less than 1, was: '%d'.");
+                new Client(6, "Value cannot be less than 1, was: '%d'.");
         public static final Client MISSING_DB_NAME =
-                new Client(6, "Database name cannot be null.");
+                new Client(7, "Database name cannot be null.");
 
         private static final String codePrefix = "JCL";
         private static final String messagePrefix = "Client Error";

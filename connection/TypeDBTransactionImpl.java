@@ -94,13 +94,13 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.clien
     @Override
     public void onClose(Consumer<Throwable> function) {
         if (!nativeObject.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
-        // NOTE: .released() relinquishes ownership of the native object to the Rust side
         transaction_on_close(nativeObject, new TransactionOnClose(function).released());
     }
 
     @Override
     public void commit() {
         if (!nativeObject.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        // NOTE: .released() relinquishes ownership of the native object to the Rust side
         transaction_commit(nativeObject.released());
     }
 
