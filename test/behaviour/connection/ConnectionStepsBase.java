@@ -106,6 +106,10 @@ public abstract class ConnectionStepsBase {
         sessionsParallelToTransactionsParallel.clear();
 
         TypeDBSingleton.resetTypeDBRunner();
+
+        // This will segfault if a double free happens in finalize() for whatever reason.
+        System.gc();
+
         System.out.println("ConnectionSteps.after");
     }
 
