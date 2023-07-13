@@ -20,10 +20,21 @@
 #
 
 .DS_Store
-.ijwb
+
+# Bazel files #
 bazel-*
 .bazel-remote-cache.rc
 .bazel-cache-credential.json
+
+# Idea files #
+.ijwb
+.idea
+*.iml
+
+# Output directories
 target
+dist
+
+# Cargo files
 Cargo.lock
 Cargo.toml

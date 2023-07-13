@@ -21,7 +21,26 @@
 
 package(default_visibility = ["//visibility:public"])
 
+exports_files(
+    ["VERSION"],
+    visibility = ["//visibility:public"],
+)
+
+load("@vaticle_dependencies//tool/release/deps:rules.bzl", "release_validate_deps")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@vaticle_dependencies//distribution/maven:version.bzl", "version")
+load("@vaticle_dependencies//library/maven:artifacts.bzl", artifacts_org = "artifacts")
+load("//dependencies/maven:artifacts.bzl", artifacts_repo = "overrides")
+load("@vaticle_bazel_distribution//maven:rules.bzl", "assemble_maven", "deploy_maven")
+load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
+load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
+load("//:deployment.bzl", github_deployment = "deployment")
+
+exports_files([
+    "VERSION",
+    "RELEASE_TEMPLATE.md",
+    "deployment.bzl",
+])
 
 checkstyle_test(
     name = "checkstyle",
@@ -38,6 +57,7 @@ checkstyle_test(
         ".bazel-cache-credential.json",
         "LICENSE",
         "VERSION",
+        "docs/*",
     ]),
     license_type = "apache-header",
 )
@@ -49,11 +69,26 @@ checkstyle_test(
     license_type = "apache-fulltext",
 )
 
+release_validate_deps(
+    name = "release-validate-deps",
+    refs = "@vaticle_typedb_client_java_workspace_refs//:refs.json",
+    tagged_deps = [
+        "@vaticle_typedb_common",
+        "@vaticle_typeql",
+        "@vaticle_factory_tracing",
+    ],
+    tags = ["manual"],  # in order for bazel test //... to not fail
+)
+
 # CI targets that are not declared in any BUILD file, but are called externally
 filegroup(
     name = "ci",
     data = [
+        "@vaticle_dependencies//tool/checkstyle:test-coverage",
         "@vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh",
+        "@vaticle_dependencies//tool/release/notes:create",
         "@vaticle_dependencies//tool/ide:rust_sync",
+        "@vaticle_dependencies//tool/sonarcloud:code-analysis",
+        "@vaticle_dependencies//tool/unuseddeps:unused-deps",
     ],
 )
