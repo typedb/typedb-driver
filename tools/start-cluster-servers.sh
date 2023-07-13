@@ -42,7 +42,7 @@ function server_start() {
 
 rm -rf 1 2 3 typedb-cluster-all
 
-bazel run //tests:typedb-cluster-extractor -- typedb-cluster-all
+bazel run //rust/tests:typedb-cluster-extractor -- typedb-cluster-all
 echo Successfully unarchived TypeDB distribution. Creating 3 copies.
 cp -r typedb-cluster-all 1 && cp -r typedb-cluster-all 2 && cp -r typedb-cluster-all 3
 echo Starting a cluster consisting of 3 servers...
