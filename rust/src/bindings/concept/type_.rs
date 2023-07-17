@@ -37,10 +37,11 @@ use crate::{
         },
         memory::{array_view, borrow, borrow_optional, release_string, string_view},
     },
-    concept::{Annotation, Concept, Transitivity, Value, ValueType},
+    concept::{Annotation, Concept, Transitivity, ValueType},
     transaction::concept::api::{AttributeTypeAPI, EntityTypeAPI, RelationTypeAPI, RoleTypeAPI},
     Transaction,
 };
+use crate::bindings::concept::concept::borrow_as_value;
 
 #[no_mangle]
 pub extern "C" fn thing_type_is_root(thing_type: *const Concept) -> bool {
@@ -409,11 +410,11 @@ pub extern "C" fn attribute_type_get_value_type(attribute_type: *const Concept) 
 pub extern "C" fn attribute_type_put(
     transaction: *mut Transaction<'static>,
     attribute_type: *const Concept,
-    value: *const Value,
+    value: *const Concept,
 ) -> *mut Concept {
     try_release(
         borrow_as_attribute_type(attribute_type)
-            .put(borrow(transaction), borrow(value).clone())
+            .put(borrow(transaction), borrow_as_value(value).clone())
             .map(Concept::Attribute),
     )
 }
@@ -422,10 +423,10 @@ pub extern "C" fn attribute_type_put(
 pub extern "C" fn attribute_type_get(
     transaction: *mut Transaction<'static>,
     attribute_type: *const Concept,
-    value: *const Value,
+    value: *const Concept,
 ) -> *mut Concept {
     try_release_map_optional(
-        borrow_as_attribute_type(attribute_type).get(borrow(transaction), borrow(value).clone()).transpose(),
+        borrow_as_attribute_type(attribute_type).get(borrow(transaction), borrow_as_value(value).clone()).transpose(),
         Concept::Attribute,
     )
 }

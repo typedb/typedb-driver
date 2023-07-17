@@ -22,8 +22,8 @@
 package com.vaticle.typedb.client.test.behaviour.config;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
-import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
 import com.vaticle.typedb.client.api.concept.type.ThingType.Annotation;
+import com.vaticle.typedb.client.api.concept.value.Value;
 import com.vaticle.typedb.client.common.Label;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import io.cucumber.java.DataTableType;
@@ -93,18 +93,18 @@ public class Parameters {
     }
 
     @ParameterType("long|double|string|boolean|datetime")
-    public ValueType value_type(String type) {
+    public Value.Type value_type(String type) {
         switch (type) {
             case "long":
-                return ValueType.LONG;
+                return Value.Type.LONG;
             case "double":
-                return ValueType.DOUBLE;
+                return Value.Type.DOUBLE;
             case "string":
-                return ValueType.STRING;
+                return Value.Type.STRING;
             case "boolean":
-                return ValueType.BOOLEAN;
+                return Value.Type.BOOLEAN;
             case "datetime":
-                return ValueType.DATETIME;
+                return Value.Type.DATETIME;
             default:
                 return null;
         }

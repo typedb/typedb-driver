@@ -41,20 +41,23 @@ pub enum Concept {
     Entity(Entity),
     Relation(Relation),
     Attribute(Attribute),
+
+    Value(Value),
 }
 
 impl Concept {
     pub fn type_label_cloned(&self) -> String {
         // FIXME: Add a Label type to simplify this function
         match self {
-            Concept::RootThingType(_) => RootThingType::LABEL.to_owned(),
-            Concept::EntityType(type_) => type_.label.clone(),
-            Concept::RelationType(RelationType { label, .. }) => label.clone(),
-            Concept::RoleType(RoleType { label, .. }) => format!("{label}"),
-            Concept::AttributeType(AttributeType { label, .. }) => label.clone(),
-            Concept::Entity(Entity { type_: EntityType { label, .. }, .. }) => label.clone(),
-            Concept::Relation(Relation { type_: RelationType { label, .. }, .. }) => label.clone(),
-            Concept::Attribute(Attribute { type_: AttributeType { label, .. }, .. }) => label.clone(),
+            Self::RootThingType(_) => RootThingType::LABEL.to_owned(),
+            Self::EntityType(type_) => type_.label.clone(),
+            Self::RelationType(RelationType { label, .. }) => label.clone(),
+            Self::RoleType(RoleType { label, .. }) => format!("{label}"),
+            Self::AttributeType(AttributeType { label, .. }) => label.clone(),
+            Self::Entity(Entity { type_: EntityType { label, .. }, .. }) => label.clone(),
+            Self::Relation(Relation { type_: RelationType { label, .. }, .. }) => label.clone(),
+            Self::Attribute(Attribute { type_: AttributeType { label, .. }, .. }) => label.clone(),
+            Self::Value(_) => todo!(),
         }
     }
 }

@@ -23,9 +23,9 @@ package com.vaticle.typedb.client.concept.type;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
-import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
 import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
+import com.vaticle.typedb.client.api.concept.value.Value;
 import com.vaticle.typedb.client.common.Label;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.concept.thing.ThingImpl;
@@ -192,7 +192,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     @Override
-    public Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, ValueType valueType) {
+    public Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, Value.Type valueType) {
         return getOwns(transaction, valueType, Transitivity.Transitive, emptySet());
     }
 
@@ -202,7 +202,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     @Override
-    public final Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, ValueType valueType, Set<Annotation> annotations) {
+    public final Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, Value.Type valueType, Set<Annotation> annotations) {
         return getOwns(transaction, valueType, Transitivity.Transitive, annotations);
     }
 
@@ -212,7 +212,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     @Override
-    public Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, ValueType valueType) {
+    public Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, Value.Type valueType) {
         return getOwns(transaction, valueType, Transitivity.Explicit, emptySet());
     }
 
@@ -222,7 +222,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     @Override
-    public Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, ValueType valueType, Set<Annotation> annotations) {
+    public Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, Value.Type valueType, Set<Annotation> annotations) {
         return getOwns(transaction, valueType, Transitivity.Explicit, annotations);
     }
 
@@ -230,7 +230,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
         return getOwns(transaction, null, transitivity, annotations);
     }
 
-    private Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, ValueType valueType, Transitivity transitivity, Set<Annotation> annotations) {
+    private Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, Value.Type valueType, Transitivity transitivity, Set<Annotation> annotations) {
         return thing_type_get_owns(nativeTransaction(transaction), nativeObject, valueType == null ? null : valueType.nativeObject, transitivity,
                 annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.client.jni.Annotation[]::new)
         ).stream().map(AttributeTypeImpl::new);

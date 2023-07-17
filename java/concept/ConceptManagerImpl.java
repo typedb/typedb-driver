@@ -28,6 +28,7 @@ import com.vaticle.typedb.client.api.concept.thing.Relation;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
 import com.vaticle.typedb.client.api.concept.type.EntityType;
 import com.vaticle.typedb.client.api.concept.type.RelationType;
+import com.vaticle.typedb.client.api.concept.value.Value;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.common.exception.TypeDBException;
 import com.vaticle.typedb.client.concept.thing.AttributeImpl;
@@ -119,7 +120,7 @@ public final class ConceptManagerImpl implements ConceptManager {
     }
 
     @Override
-    public AttributeType putAttributeType(String label, AttributeType.ValueType valueType) {
+    public AttributeType putAttributeType(String label, Value.Type valueType) {
         if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
         return new AttributeTypeImpl(concepts_put_attribute_type(nativeTransaction, label, valueType.nativeObject));
     }

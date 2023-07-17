@@ -78,6 +78,9 @@ fetch_crates()
 load("@crates//:defs.bzl", "crate_repositories")
 crate_repositories()
 
+load("@vaticle_dependencies//tool/swig:deps.bzl", swig_deps = "deps")
+swig_deps()
+
 # Load //tool/common
 load("@vaticle_dependencies//tool/common:deps.bzl", "vaticle_dependencies_ci_pip")
 vaticle_dependencies_ci_pip()
@@ -154,9 +157,6 @@ maven(
     vaticle_bazel_distribution_maven_artifacts,
     vaticle_typedb_client_java_maven_overrides
 )
-
-load("@vaticle_dependencies//tool/swig:deps.bzl", swig_deps = "deps")
-swig_deps()
 
 ############################################
 # Create @vaticle_typedb_client_java_workspace_refs #

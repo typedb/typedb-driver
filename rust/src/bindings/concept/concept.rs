@@ -32,63 +32,58 @@ use crate::{
 };
 
 #[no_mangle]
-pub extern "C" fn value_new_boolean(bool: bool) -> *mut Value {
-    release(Value::Boolean(bool))
+pub extern "C" fn value_new_boolean(bool: bool) -> *mut Concept {
+    release(Concept::Value(Value::Boolean(bool)))
 }
 
 #[no_mangle]
-pub extern "C" fn value_new_long(long: i64) -> *mut Value {
-    release(Value::Long(long))
+pub extern "C" fn value_new_long(long: i64) -> *mut Concept {
+    release(Concept::Value(Value::Long(long)))
 }
 
 #[no_mangle]
-pub extern "C" fn value_new_double(double: f64) -> *mut Value {
-    release(Value::Double(double))
+pub extern "C" fn value_new_double(double: f64) -> *mut Concept {
+    release(Concept::Value(Value::Double(double)))
 }
 
 #[no_mangle]
-pub extern "C" fn value_new_string(string: *const c_char) -> *mut Value {
-    release(Value::String(string_view(string).to_owned()))
+pub extern "C" fn value_new_string(string: *const c_char) -> *mut Concept {
+    release(Concept::Value(Value::String(string_view(string).to_owned())))
 }
 
 #[no_mangle]
-pub extern "C" fn value_new_date_time_from_millis(millis: i64) -> *mut Value {
-    release(Value::DateTime(NaiveDateTime::from_timestamp_millis(millis).unwrap()))
+pub extern "C" fn value_new_date_time_from_millis(millis: i64) -> *mut Concept {
+    release(Concept::Value(Value::DateTime(NaiveDateTime::from_timestamp_millis(millis).unwrap())))
 }
 
 #[no_mangle]
-pub extern "C" fn value_drop(value: *mut Value) {
-    free(value);
+pub extern "C" fn value_is_boolean(value: *const Concept) -> bool {
+    matches!(borrow_as_value(value), Value::Boolean(_))
 }
 
 #[no_mangle]
-pub extern "C" fn value_is_boolean(value: *const Value) -> bool {
-    matches!(borrow(value), Value::Boolean(_))
+pub extern "C" fn value_is_long(value: *const Concept) -> bool {
+    matches!(borrow_as_value(value), Value::Long(_))
 }
 
 #[no_mangle]
-pub extern "C" fn value_is_long(value: *const Value) -> bool {
-    matches!(borrow(value), Value::Long(_))
+pub extern "C" fn value_is_double(value: *const Concept) -> bool {
+    matches!(borrow_as_value(value), Value::Double(_))
 }
 
 #[no_mangle]
-pub extern "C" fn value_is_double(value: *const Value) -> bool {
-    matches!(borrow(value), Value::Double(_))
+pub extern "C" fn value_is_string(value: *const Concept) -> bool {
+    matches!(borrow_as_value(value), Value::String(_))
 }
 
 #[no_mangle]
-pub extern "C" fn value_is_string(value: *const Value) -> bool {
-    matches!(borrow(value), Value::String(_))
+pub extern "C" fn value_is_date_time(value: *const Concept) -> bool {
+    matches!(borrow_as_value(value), Value::DateTime(_))
 }
 
 #[no_mangle]
-pub extern "C" fn value_is_date_time(value: *const Value) -> bool {
-    matches!(borrow(value), Value::DateTime(_))
-}
-
-#[no_mangle]
-pub extern "C" fn value_get_boolean(value: *const Value) -> bool {
-    if let Value::Boolean(bool) = borrow(value) {
+pub extern "C" fn value_get_boolean(value: *const Concept) -> bool {
+    if let Value::Boolean(bool) = borrow_as_value(value) {
         *bool
     } else {
         unreachable!()
@@ -96,8 +91,8 @@ pub extern "C" fn value_get_boolean(value: *const Value) -> bool {
 }
 
 #[no_mangle]
-pub extern "C" fn value_get_long(value: *const Value) -> i64 {
-    if let Value::Long(long) = borrow(value) {
+pub extern "C" fn value_get_long(value: *const Concept) -> i64 {
+    if let Value::Long(long) = borrow_as_value(value) {
         *long
     } else {
         unreachable!()
@@ -105,8 +100,8 @@ pub extern "C" fn value_get_long(value: *const Value) -> i64 {
 }
 
 #[no_mangle]
-pub extern "C" fn value_get_double(value: *const Value) -> f64 {
-    if let Value::Double(double) = borrow(value) {
+pub extern "C" fn value_get_double(value: *const Concept) -> f64 {
+    if let Value::Double(double) = borrow_as_value(value) {
         *double
     } else {
         unreachable!()
@@ -114,8 +109,8 @@ pub extern "C" fn value_get_double(value: *const Value) -> f64 {
 }
 
 #[no_mangle]
-pub extern "C" fn value_get_string(value: *const Value) -> *mut c_char {
-    if let Value::String(string) = borrow(value) {
+pub extern "C" fn value_get_string(value: *const Concept) -> *mut c_char {
+    if let Value::String(string) = borrow_as_value(value) {
         release_string(string.clone())
     } else {
         unreachable!()
@@ -123,17 +118,12 @@ pub extern "C" fn value_get_string(value: *const Value) -> *mut c_char {
 }
 
 #[no_mangle]
-pub extern "C" fn value_get_date_time_as_millis(value: *const Value) -> i64 {
-    if let Value::DateTime(date_time) = borrow(value) {
+pub extern "C" fn value_get_date_time_as_millis(value: *const Concept) -> i64 {
+    if let Value::DateTime(date_time) = borrow_as_value(value) {
         date_time.timestamp_millis()
     } else {
         unreachable!()
     }
-}
-
-#[no_mangle]
-pub extern "C" fn value_equals(lhs: *const Value, rhs: *const Value) -> bool {
-    borrow(lhs) == borrow(rhs)
 }
 
 #[no_mangle]
@@ -197,6 +187,11 @@ pub extern "C" fn concept_is_attribute(concept: *const Concept) -> bool {
 }
 
 #[no_mangle]
+pub extern "C" fn concept_is_value(concept: *const Concept) -> bool {
+    matches!(borrow(concept), Concept::Value(_))
+}
+
+#[no_mangle]
 pub extern "C" fn concept_is_root_thing_type(concept: *const Concept) -> bool {
     matches!(borrow(concept), Concept::RootThingType(_))
 }
@@ -252,6 +247,13 @@ pub(super) fn borrow_as_relation(concept: *const Concept) -> &'static Relation {
 pub(super) fn borrow_as_attribute(concept: *const Concept) -> &'static Attribute {
     match borrow(concept) {
         Concept::Attribute(attribute) => attribute,
+        _ => unreachable!(),
+    }
+}
+
+pub(super) fn borrow_as_value(concept: *const Concept) -> &'static Value {
+    match borrow(concept) {
+        Concept::Value(value) => value,
         _ => unreachable!(),
     }
 }

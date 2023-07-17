@@ -23,7 +23,7 @@ package com.vaticle.typedb.client.api.concept.type;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.thing.Thing;
-import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
+import com.vaticle.typedb.client.api.concept.value.Value;
 import com.vaticle.typedb.client.common.NativeObject;
 
 import javax.annotation.CheckReturnValue;
@@ -102,25 +102,25 @@ public interface ThingType extends Type {
     Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction);
 
     @CheckReturnValue
-    Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, ValueType valueType);
+    Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Value.Type valueType);
 
     @CheckReturnValue
     Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Set<Annotation> annotations);
 
     @CheckReturnValue
-    Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, ValueType valueType, Set<Annotation> annotations);
+    Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Value.Type valueType, Set<Annotation> annotations);
 
     @CheckReturnValue
     Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction);
 
     @CheckReturnValue
-    Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, ValueType valueType);
+    Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, Value.Type valueType);
 
     @CheckReturnValue
     Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, Set<Annotation> annotations);
 
     @CheckReturnValue
-    Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, ValueType valueType, Set<Annotation> annotations);
+    Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, Value.Type valueType, Set<Annotation> annotations);
 
     @CheckReturnValue
     AttributeType getOwnsOverridden(TypeDBTransaction transaction, AttributeType attributeType);

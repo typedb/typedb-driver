@@ -33,7 +33,7 @@ use crate::{
         error::{try_release, unwrap_or_default, unwrap_void},
         memory::{array_view, borrow, release, release_string},
     },
-    concept::{Annotation, Concept, Value},
+    concept::{Annotation, Concept},
     transaction::concept::api::{AttributeAPI, RelationAPI},
     Transaction,
 };
@@ -64,8 +64,8 @@ pub extern "C" fn attribute_get_type(attribute: *const Concept) -> *mut Concept 
 }
 
 #[no_mangle]
-pub extern "C" fn attribute_get_value(attribute: *const Concept) -> *mut Value {
-    release(borrow_as_attribute(attribute).value.clone())
+pub extern "C" fn attribute_get_value(attribute: *const Concept) -> *mut Concept {
+    release(Concept::Value(borrow_as_attribute(attribute).value.clone()))
 }
 
 #[no_mangle]

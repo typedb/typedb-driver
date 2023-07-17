@@ -67,7 +67,6 @@ struct Type {};
 %dropproxy(Concept, concept)
 %dropproxy(ConceptIterator, concept_iterator)
 
-%dropproxy(Value, value)
 %dropproxy(Annotation, annotation)
 
 %dropproxy(RolePlayer, role_player)

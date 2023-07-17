@@ -22,10 +22,10 @@
 package com.vaticle.typedb.client.concept.thing;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
-import com.vaticle.typedb.client.api.concept.Value;
+import com.vaticle.typedb.client.api.concept.value.Value;
 import com.vaticle.typedb.client.api.concept.thing.Attribute;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
-import com.vaticle.typedb.client.concept.ValueImpl;
+import com.vaticle.typedb.client.concept.value.ValueImpl;
 import com.vaticle.typedb.client.concept.type.AttributeTypeImpl;
 import com.vaticle.typedb.client.concept.type.ThingTypeImpl;
 

@@ -33,6 +33,7 @@ import com.vaticle.typedb.client.api.concept.type.RelationType;
 import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
 import com.vaticle.typedb.client.api.concept.type.Type;
+import com.vaticle.typedb.client.api.concept.value.Value;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 import javax.annotation.CheckReturnValue;
@@ -82,12 +83,17 @@ public interface Concept {
     }
 
     @CheckReturnValue
+    default boolean isRelation() {
+        return false;
+    }
+
+    @CheckReturnValue
     default boolean isAttribute() {
         return false;
     }
 
     @CheckReturnValue
-    default boolean isRelation() {
+    default boolean isValue() {
         return false;
     }
 
@@ -131,11 +137,10 @@ public interface Concept {
         throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.class));
     }
 
+    default Value asValue() {
+        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Value.class));
+    }
+
     @CheckReturnValue
     JsonObject toJSON();
-
-    void delete(TypeDBTransaction transaction);
-
-    @CheckReturnValue
-    boolean isDeleted(TypeDBTransaction transaction);
 }

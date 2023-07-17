@@ -62,12 +62,13 @@ impl Connection {
     pub fn new_plaintext(address: impl AsRef<str>) -> Result<Self> {
         let address: Address = address.as_ref().parse()?;
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
-        let server_connection = ServerConnection::new_plaintext(background_runtime.clone(), address)?;
+        let mut server_connection = ServerConnection::new_plaintext(background_runtime.clone(), address)?;
         let address = server_connection
             .servers_all()?
             .into_iter()
             .exactly_one()
             .map_err(|_| ConnectionError::UnableToConnect())?;
+        server_connection.set_address(address.clone());
         Ok(Self { server_connections: [(address, server_connection)].into(), background_runtime, username: None })
     }
 
@@ -187,10 +188,14 @@ impl ServerConnection {
     }
 
     pub(crate) fn validate(&self) -> Result {
-        match self.request_blocking(Request::DatabasesAll)? {
-            Response::DatabasesAll { databases: _ } => Ok(()),
+        match self.request_blocking(Request::ConnectionOpen)? {
+            Response::ConnectionOpen => Ok(()),
             _other => Err(ConnectionError::UnableToConnect().into()),
         }
+    }
+
+    fn set_address(&mut self, address: Address) {
+        self.address = address;
     }
 
     pub(crate) fn address(&self) -> &Address {

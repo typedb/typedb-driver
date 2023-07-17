@@ -22,10 +22,10 @@
 package com.vaticle.typedb.client.concept.type;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
-import com.vaticle.typedb.client.api.concept.Value;
+import com.vaticle.typedb.client.api.concept.value.Value;
 import com.vaticle.typedb.client.api.concept.thing.Attribute;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
-import com.vaticle.typedb.client.concept.ValueImpl;
+import com.vaticle.typedb.client.concept.value.ValueImpl;
 import com.vaticle.typedb.client.concept.thing.AttributeImpl;
 import com.vaticle.typedb.client.jni.Transitivity;
 
@@ -55,8 +55,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     }
 
     @Override
-    public ValueType getValueType() {
-        return ValueType.of(attribute_type_get_value_type(nativeObject));
+    public Value.Type getValueType() {
+        return Value.Type.of(attribute_type_get_value_type(nativeObject));
     }
 
     @Override
@@ -85,7 +85,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     }
 
     @Override
-    public final Stream<AttributeTypeImpl> getSubtypes(TypeDBTransaction transaction, ValueType valueType) {
+    public final Stream<AttributeTypeImpl> getSubtypes(TypeDBTransaction transaction, Value.Type valueType) {
         return attribute_type_get_subtypes_with_value_type(
                 nativeTransaction(transaction), nativeObject,
                 valueType.nativeObject, Transitivity.Transitive

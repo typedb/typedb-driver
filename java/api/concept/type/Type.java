@@ -72,4 +72,9 @@ public interface Type extends Concept {
 
     @CheckReturnValue
     Stream<? extends Type> getSubtypesExplicit(TypeDBTransaction transaction);
+
+    void delete(TypeDBTransaction transaction);
+
+    @CheckReturnValue
+    boolean isDeleted(TypeDBTransaction transaction);
 }
