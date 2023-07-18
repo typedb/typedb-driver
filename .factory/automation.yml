@@ -207,7 +207,7 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         .factory/test-core.sh //java/test/behaviour/typeql/language/match/... --test_output=errors
         .factory/test-core.sh //java/test/behaviour/typeql/language/get/... --test_output=errors
-        .factory/test-core.sh //test/behaviour/typeql/language/expression/... --test_output=errors
+        .factory/test-core.sh //java/test/behaviour/typeql/language/expression/... --test_output=errors
     test-java-behaviour-match-cluster:
       image: vaticle-ubuntu-22.04
       dependencies:
@@ -219,7 +219,7 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         .factory/test-cluster.sh //java/test/behaviour/typeql/language/match/... --test_output=errors
         .factory/test-cluster.sh //java/test/behaviour/typeql/language/get/... --test_output=errors
-        .factory/test-cluster.sh //test/behaviour/typeql/language/expression/... --test_output=errors
+        .factory/test-cluster.sh //java/test/behaviour/typeql/language/expression/... --test_output=errors
     test-java-behaviour-writable-core:
       image: vaticle-ubuntu-22.04
       dependencies:
