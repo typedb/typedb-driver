@@ -37,6 +37,16 @@ import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.U
 public interface Value extends Concept {
     DateTimeFormatter ISO_LOCAL_DATE_TIME_MILLIS = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
+    @Override
+    default boolean isValue() {
+        return true;
+    }
+
+    @Override
+    default Value asValue() {
+        return this;
+    }
+
     Type getType();
 
     boolean isBoolean();
