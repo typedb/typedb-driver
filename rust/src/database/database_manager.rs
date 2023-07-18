@@ -41,7 +41,11 @@ impl DatabaseManager {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get(&self, name: impl Into<String>) -> Result<Database> {
-        Database::get(name.into(), self.connection.clone()).await
+        let name = name.into();
+        if !self.contains(name.clone()).await? {
+            return Err(ConnectionError::DatabaseDoesNotExist(name).into());
+        }
+        Database::get(name, self.connection.clone()).await
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
