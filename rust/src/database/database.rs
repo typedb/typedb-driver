@@ -104,7 +104,7 @@ impl Database {
     }
 
     #[cfg(not(feature = "sync"))]
-    pub(super) async fn run_failsafe<F, P, R>(&self, task: F) -> Result<R>
+    pub(crate) async fn run_failsafe<F, P, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> P,
         P: Future<Output = Result<R>>,
@@ -171,7 +171,7 @@ impl Database {
     }
 
     #[cfg(feature = "sync")]
-    pub(super) fn run_failsafe<F, R>(&self, task: F) -> Result<R>
+    pub(crate) fn run_failsafe<F, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> Result<R>,
     {
@@ -341,7 +341,7 @@ impl fmt::Debug for Replica {
 }
 
 #[derive(Clone, Debug)]
-pub(super) struct ServerDatabase {
+pub(crate) struct ServerDatabase {
     name: String,
     connection: ServerConnection,
 }

@@ -22,7 +22,7 @@
 #[cfg(not(feature = "sync"))]
 use std::future::Future;
 
-use crate::{common::Result, connection::ServerConnection, error::ConnectionError, Connection, User};
+use crate::{common::Result, connection::ServerConnection, Connection, DatabaseManager, User};
 
 #[derive(Clone, Debug)]
 pub struct UserManager {
@@ -30,6 +30,8 @@ pub struct UserManager {
 }
 
 impl UserManager {
+    const SYSTEM_DB: &'static str = "_system";
+
     pub fn new(connection: Connection) -> Self {
         Self { connection }
     }
@@ -108,16 +110,11 @@ impl UserManager {
         F: Fn(ServerConnection) -> P,
         P: Future<Output = Result<R>>,
     {
-        let mut error_buffer = Vec::with_capacity(self.connection.server_count());
-        for server_connection in self.connection.connections() {
-            match task(server_connection.clone()).await {
-                Ok(res) => {
-                    return Ok(res);
-                }
-                Err(err) => error_buffer.push(format!("- {}: {}", server_connection.address(), err)),
-            }
-        }
-        Err(ConnectionError::ClusterAllNodesFailed(error_buffer.join("\n")))?
+        DatabaseManager::new(self.connection.clone())
+            .get(Self::SYSTEM_DB)
+            .await?
+            .run_failsafe(|_, server_connection, _| task(server_connection))
+            .await
     }
 
     #[cfg(feature = "sync")]
@@ -125,15 +122,8 @@ impl UserManager {
     where
         F: Fn(ServerConnection) -> Result<R>,
     {
-        let mut error_buffer = Vec::with_capacity(self.connection.server_count());
-        for server_connection in self.connection.connections() {
-            match task(server_connection.clone()) {
-                Ok(res) => {
-                    return Ok(res);
-                }
-                Err(err) => error_buffer.push(format!("- {}: {}", server_connection.address(), err)),
-            }
-        }
-        Err(ConnectionError::ClusterAllNodesFailed(error_buffer.join("\n")))?
+        DatabaseManager::new(self.connection.clone())
+            .get(Self::SYSTEM_DB)?
+            .run_failsafe(|_, server_connection, _| task(server_connection))
     }
 }
