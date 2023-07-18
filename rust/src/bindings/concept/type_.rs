@@ -31,6 +31,7 @@ use super::{
 };
 use crate::{
     bindings::{
+        concept::concept::borrow_as_value,
         error::{
             try_release, try_release_map_optional, try_release_optional_string, try_release_string, unwrap_or_default,
             unwrap_void,
@@ -41,7 +42,6 @@ use crate::{
     transaction::concept::api::{AttributeTypeAPI, EntityTypeAPI, RelationTypeAPI, RoleTypeAPI},
     Transaction,
 };
-use crate::bindings::concept::concept::borrow_as_value;
 
 #[no_mangle]
 pub extern "C" fn thing_type_is_root(thing_type: *const Concept) -> bool {
