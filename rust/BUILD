@@ -94,6 +94,15 @@ swig_java(
     enable_cxx = True,
 )
 
+swig_python(
+    name = "typedb_client_python",
+    lib = ":typedb_client_clib_headers",
+    package = "com.vaticle.typedb.client.python",
+    interface = "typedb_client.i",
+    includes = ["swig/typedb_client_python.swg"],
+    enable_cxx = True,
+)
+
 assemble_crate(
     name = "assemble_crate",
     description = "TypeDB Client API for Rust",
