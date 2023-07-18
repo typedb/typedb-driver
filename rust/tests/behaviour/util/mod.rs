@@ -70,7 +70,7 @@ pub async fn match_answer_concept(context: &Context, answer_identifier: &str, an
         "key" => key_values_equal(context, identifiers[1], answer).await,
         "label" => labels_equal(identifiers[1], answer),
         "value" => values_equal(identifiers[1], answer),
-        "attr" => values_equal(identifiers[1], answer),
+        "attr" => attribute_values_equal(identifiers[1], answer),
         _ => unreachable!(),
     }
 }
@@ -119,10 +119,17 @@ fn labels_equal(expected_label: &str, answer: &Concept) -> bool {
     answer.type_label_cloned() == expected_label
 }
 
-fn values_equal(expected_label_and_value: &str, answer: &Concept) -> bool {
+fn attribute_values_equal(expected_label_and_value: &str, answer: &Concept) -> bool {
     let identifiers: Vec<&str> = expected_label_and_value.splitn(2, ":").collect();
     assert_eq!(identifiers.len(), 2, "Unexpected table cell format: {expected_label_and_value}.");
     let Concept::Attribute(Attribute { value, .. }) = answer else { unreachable!() };
+    value_equals_str(value, identifiers[1])
+}
+
+fn values_equal(expected_label_and_value: &str, answer: &Concept) -> bool {
+    let identifiers: Vec<&str> = expected_label_and_value.splitn(2, ":").collect();
+    assert_eq!(identifiers.len(), 2, "Unexpected table cell format: {expected_label_and_value}.");
+    let Concept::Value(value) = answer else { unreachable!() };
     value_equals_str(value, identifiers[1])
 }
 
