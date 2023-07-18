@@ -116,4 +116,14 @@ impl UserManager {
             .run_failsafe(|_, server_connection, _| task(server_connection))
             .await
     }
+
+    #[cfg(feature = "sync")]
+    fn run_any_node<F, R>(&self, task: F) -> Result<R>
+    where
+        F: Fn(ServerConnection) -> Result<R>,
+    {
+        DatabaseManager::new(self.connection.clone())
+            .get(Self::SYSTEM_DB)?
+            .run_failsafe(|_, server_connection, _| task(server_connection))
+    }
 }
