@@ -54,7 +54,7 @@ public class UserImpl extends NativeObject<com.vaticle.typedb.client.jni.User> i
     @Override
     public void passwordUpdate(String passwordOld, String passwordNew) {
         try {
-            user_password_update(nativeObject, users.nativeObject, passwordOld, passwordNew);
+            user_password_update(nativeObject, nativeConnection, passwordOld, passwordNew);
         } catch (com.vaticle.typedb.client.jni.Error e) {
             throw new TypeDBClientException(e);
         }
