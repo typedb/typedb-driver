@@ -84,78 +84,117 @@ public final class ConceptManagerImpl implements ConceptManager {
     @Nullable
     public EntityType getEntityType(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
-        com.vaticle.typedb.client.jni.Concept res = concepts_get_entity_type(nativeTransaction, label);
-        if (res != null) return new EntityTypeImpl(res);
-        else return null;
+        try {
+            com.vaticle.typedb.client.jni.Concept res = concepts_get_entity_type(nativeTransaction, label);
+            if (res != null) return new EntityTypeImpl(res);
+            else return null;
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     @Nullable
     public RelationType getRelationType(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
-        com.vaticle.typedb.client.jni.Concept res = concepts_get_relation_type(nativeTransaction, label);
-        if (res != null) return new RelationTypeImpl(res);
-        else return null;
+        try {
+            com.vaticle.typedb.client.jni.Concept res = concepts_get_relation_type(nativeTransaction, label);
+            if (res != null) return new RelationTypeImpl(res);
+            else return null;
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     @Nullable
     public AttributeType getAttributeType(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
-        com.vaticle.typedb.client.jni.Concept res = concepts_get_attribute_type(nativeTransaction, label);
-        if (res != null) return new AttributeTypeImpl(res);
-        else return null;
+        try {
+            com.vaticle.typedb.client.jni.Concept res = concepts_get_attribute_type(nativeTransaction, label);
+            if (res != null) return new AttributeTypeImpl(res);
+            else return null;
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public EntityType putEntityType(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
-        return new EntityTypeImpl(concepts_put_entity_type(nativeTransaction, label));
+        try {
+            return new EntityTypeImpl(concepts_put_entity_type(nativeTransaction, label));
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public RelationType putRelationType(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
-        return new RelationTypeImpl(concepts_put_relation_type(nativeTransaction, label));
+        try {
+            return new RelationTypeImpl(concepts_put_relation_type(nativeTransaction, label));
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public AttributeType putAttributeType(String label, Value.Type valueType) {
         if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
-        return new AttributeTypeImpl(concepts_put_attribute_type(nativeTransaction, label, valueType.nativeObject));
+        try {
+            return new AttributeTypeImpl(concepts_put_attribute_type(nativeTransaction, label, valueType.nativeObject));
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     @Nullable
     public Entity getEntity(String iid) {
         if (iid == null || iid.isEmpty()) throw new TypeDBClientException(MISSING_IID);
-        com.vaticle.typedb.client.jni.Concept res = concepts_get_entity(nativeTransaction, iid);
-        if (res != null) return new EntityImpl(res);
-        else return null;
+        try {
+            com.vaticle.typedb.client.jni.Concept res = concepts_get_entity(nativeTransaction, iid);
+            if (res != null) return new EntityImpl(res);
+            else return null;
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     @Nullable
     public Relation getRelation(String iid) {
         if (iid == null || iid.isEmpty()) throw new TypeDBClientException(MISSING_IID);
-        com.vaticle.typedb.client.jni.Concept res = concepts_get_relation(nativeTransaction, iid);
-        if (res != null) return new RelationImpl(res);
-        else return null;
+        try {
+            com.vaticle.typedb.client.jni.Concept res = concepts_get_relation(nativeTransaction, iid);
+            if (res != null) return new RelationImpl(res);
+            else return null;
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     @Nullable
     public Attribute getAttribute(String iid) {
         if (iid == null || iid.isEmpty()) throw new TypeDBClientException(MISSING_IID);
-        com.vaticle.typedb.client.jni.Concept res = concepts_get_attribute(nativeTransaction, iid);
-        if (res != null) return new AttributeImpl(res);
-        else return null;
+        try {
+            com.vaticle.typedb.client.jni.Concept res = concepts_get_attribute(nativeTransaction, iid);
+            if (res != null) return new AttributeImpl(res);
+            else return null;
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public List<TypeDBException> getSchemaExceptions() {
-        return concepts_get_schema_exceptions(nativeTransaction).stream()
-                .map(e -> new TypeDBException(schema_exception_code(e), schema_exception_message(e)))
-                .collect(Collectors.toList());
+        try {
+            return concepts_get_schema_exceptions(nativeTransaction).stream()
+                    .map(e -> new TypeDBException(schema_exception_code(e), schema_exception_message(e))).collect(Collectors.toList());
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 }

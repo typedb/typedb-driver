@@ -29,7 +29,7 @@ import com.vaticle.typedb.client.api.database.DatabaseManager;
 import com.vaticle.typedb.client.api.user.User;
 import com.vaticle.typedb.client.api.user.UserManager;
 import com.vaticle.typedb.client.common.NativeObject;
-import com.vaticle.typedb.client.jni.Error;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.user.UserManagerImpl;
 
 import java.util.Set;
@@ -43,18 +43,34 @@ public class TypeDBClientImpl extends NativeObject<com.vaticle.typedb.client.jni
     private final UserManagerImpl userMgr;
     private final DatabaseManager databaseMgr;
 
-    public TypeDBClientImpl(String address) throws Error {
-        this(connection_open_plaintext(address));
+    public TypeDBClientImpl(String address) throws TypeDBClientException {
+        this(openPlaintext(address));
     }
 
-    public TypeDBClientImpl(Set<String> initAddresses, TypeDBCredential credential) throws Error {
-        this(connection_open_encrypted(initAddresses.toArray(new String[0]), credential.nativeObject));
+    public TypeDBClientImpl(Set<String> initAddresses, TypeDBCredential credential) throws TypeDBClientException {
+        this(openEncrypted(initAddresses, credential));
     }
 
     private TypeDBClientImpl(com.vaticle.typedb.client.jni.Connection connection) {
         super(connection);
         databaseMgr = new TypeDBDatabaseManagerImpl(this.nativeObject);
         userMgr = new UserManagerImpl(this.nativeObject);
+    }
+
+    private static com.vaticle.typedb.client.jni.Connection openPlaintext(String address) {
+        try {
+            return connection_open_plaintext(address);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
+    }
+
+    private static com.vaticle.typedb.client.jni.Connection openEncrypted(Set<String> initAddresses, TypeDBCredential credential) {
+        try {
+            return connection_open_encrypted(initAddresses.toArray(new String[0]), credential.nativeObject);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override

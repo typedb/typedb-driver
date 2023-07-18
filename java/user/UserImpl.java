@@ -23,6 +23,7 @@ package com.vaticle.typedb.client.user;
 
 import com.vaticle.typedb.client.api.user.User;
 import com.vaticle.typedb.client.common.NativeObject;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 import java.util.Optional;
 
@@ -52,6 +53,10 @@ public class UserImpl extends NativeObject<com.vaticle.typedb.client.jni.User> i
 
     @Override
     public void passwordUpdate(String passwordOld, String passwordNew) {
-        user_password_update(nativeObject, nativeConnection, passwordOld, passwordNew);
+        try {
+            user_password_update(nativeObject, nativeConnection, passwordOld, passwordNew);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 }

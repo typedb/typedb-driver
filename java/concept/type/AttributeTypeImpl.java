@@ -25,6 +25,7 @@ import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.value.Value;
 import com.vaticle.typedb.client.api.concept.thing.Attribute;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.concept.value.ValueImpl;
 import com.vaticle.typedb.client.concept.thing.AttributeImpl;
 import com.vaticle.typedb.client.jni.Transitivity;
@@ -61,50 +62,82 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     @Override
     public final void setSupertype(TypeDBTransaction transaction, AttributeType attributeType) {
-        attribute_type_set_supertype(nativeTransaction(transaction),
+        try {
+            attribute_type_set_supertype(nativeTransaction(transaction),
                 nativeObject, ((AttributeTypeImpl) attributeType).nativeObject);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Nullable
     @Override
     public AttributeTypeImpl getSupertype(TypeDBTransaction transaction) {
-        com.vaticle.typedb.client.jni.Concept res = attribute_type_get_supertype(nativeTransaction(transaction),
-                nativeObject);
-        if (res != null) return new AttributeTypeImpl(res);
-        else return null;
+        try {
+            com.vaticle.typedb.client.jni.Concept res = attribute_type_get_supertype(nativeTransaction(transaction),
+                    nativeObject);
+            if (res != null) return new AttributeTypeImpl(res);
+            else return null;
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public final Stream<AttributeTypeImpl> getSupertypes(TypeDBTransaction transaction) {
-        return attribute_type_get_supertypes(nativeTransaction(transaction), nativeObject).stream().map(AttributeTypeImpl::new);
+        try {
+            return attribute_type_get_supertypes(nativeTransaction(transaction), nativeObject).stream().map(AttributeTypeImpl::new);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public final Stream<AttributeTypeImpl> getSubtypes(TypeDBTransaction transaction) {
-        return attribute_type_get_subtypes(nativeTransaction(transaction), nativeObject, Transitivity.Transitive).stream().map(AttributeTypeImpl::new);
+        try {
+            return attribute_type_get_subtypes(nativeTransaction(transaction), nativeObject, Transitivity.Transitive).stream().map(AttributeTypeImpl::new);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public final Stream<AttributeTypeImpl> getSubtypes(TypeDBTransaction transaction, Value.Type valueType) {
-        return attribute_type_get_subtypes_with_value_type(
-                nativeTransaction(transaction), nativeObject,
-                valueType.nativeObject, Transitivity.Transitive
-        ).stream().map(AttributeTypeImpl::new);
+        try {
+            return attribute_type_get_subtypes_with_value_type(
+                    nativeTransaction(transaction), nativeObject,
+                    valueType.nativeObject, Transitivity.Transitive
+            ).stream().map(AttributeTypeImpl::new);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public final Stream<AttributeTypeImpl> getSubtypesExplicit(TypeDBTransaction transaction) {
-        return attribute_type_get_subtypes(nativeTransaction(transaction), nativeObject, Transitivity.Explicit).stream().map(AttributeTypeImpl::new);
+        try {
+            return attribute_type_get_subtypes(nativeTransaction(transaction), nativeObject, Transitivity.Explicit).stream().map(AttributeTypeImpl::new);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public final Stream<AttributeImpl> getInstances(TypeDBTransaction transaction) {
-        return attribute_type_get_instances(nativeTransaction(transaction), nativeObject, Transitivity.Transitive).stream().map(AttributeImpl::new);
+        try {
+            return attribute_type_get_instances(nativeTransaction(transaction), nativeObject, Transitivity.Transitive).stream().map(AttributeImpl::new);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public final Stream<AttributeImpl> getInstancesExplicit(TypeDBTransaction transaction) {
-        return attribute_type_get_instances(nativeTransaction(transaction), nativeObject, Transitivity.Explicit).stream().map(AttributeImpl::new);
+        try {
+            return attribute_type_get_instances(nativeTransaction(transaction), nativeObject, Transitivity.Explicit).stream().map(AttributeImpl::new);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
@@ -115,7 +148,11 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     @Override
     public Stream<ThingTypeImpl> getOwners(TypeDBTransaction transaction, Set<Annotation> annotations) {
         com.vaticle.typedb.client.jni.Annotation[] annotationsArray = annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.client.jni.Annotation[]::new);
-        return attribute_type_get_owners(nativeTransaction(transaction), nativeObject, Transitivity.Transitive, annotationsArray).stream().map(ThingTypeImpl::of);
+        try {
+            return attribute_type_get_owners(nativeTransaction(transaction), nativeObject, Transitivity.Transitive, annotationsArray).stream().map(ThingTypeImpl::of);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
@@ -126,7 +163,11 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     @Override
     public Stream<ThingTypeImpl> getOwnersExplicit(TypeDBTransaction transaction, Set<Annotation> annotations) {
         com.vaticle.typedb.client.jni.Annotation[] annotationsArray = annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.client.jni.Annotation[]::new);
-        return attribute_type_get_owners(nativeTransaction(transaction), nativeObject, Transitivity.Explicit, annotationsArray).stream().map(ThingTypeImpl::of);
+        try {
+            return attribute_type_get_owners(nativeTransaction(transaction), nativeObject, Transitivity.Explicit, annotationsArray).stream().map(ThingTypeImpl::of);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
@@ -156,7 +197,11 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     @Override
     public final Attribute put(TypeDBTransaction transaction, Value value) {
-        return new AttributeImpl(attribute_type_put(nativeTransaction(transaction), nativeObject, ((ValueImpl) value).nativeObject));
+        try {
+            return new AttributeImpl(attribute_type_put(nativeTransaction(transaction), nativeObject, ((ValueImpl) value).nativeObject));
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Nullable
@@ -192,23 +237,39 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     @Nullable
     @Override
     public final Attribute get(TypeDBTransaction transaction, Value value) {
-        com.vaticle.typedb.client.jni.Concept res = attribute_type_get(nativeTransaction(transaction), nativeObject, ((ValueImpl) value).nativeObject);
-        if (res != null) return new AttributeImpl(res);
-        else return null;
+        try {
+            com.vaticle.typedb.client.jni.Concept res = attribute_type_get(nativeTransaction(transaction), nativeObject, ((ValueImpl) value).nativeObject);
+            if (res != null) return new AttributeImpl(res);
+            else return null;
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public String getRegex(TypeDBTransaction transaction) {
-        return attribute_type_get_regex(nativeTransaction(transaction), nativeObject);
+        try {
+            return attribute_type_get_regex(nativeTransaction(transaction), nativeObject);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public void setRegex(TypeDBTransaction transaction, String regex) {
-        attribute_type_set_regex(nativeTransaction(transaction), nativeObject, regex);
+        try {
+            attribute_type_set_regex(nativeTransaction(transaction), nativeObject, regex);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public void unsetRegex(TypeDBTransaction transaction) {
-        attribute_type_unset_regex(nativeTransaction(transaction), nativeObject);
+        try {
+            attribute_type_unset_regex(nativeTransaction(transaction), nativeObject);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 }

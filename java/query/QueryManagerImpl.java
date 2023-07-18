@@ -82,7 +82,11 @@ public final class QueryManagerImpl implements QueryManager {
     public Stream<ConceptMap> match(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
-        return query_match(nativeTransaction, query, options.nativeObject).stream().map(ConceptMapImpl::new);
+        try {
+            return query_match(nativeTransaction, query, options.nativeObject).stream().map(ConceptMapImpl::new);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
@@ -104,7 +108,11 @@ public final class QueryManagerImpl implements QueryManager {
     public Numeric matchAggregate(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
-        return new NumericImpl(query_match_aggregate(nativeTransaction, query, options.nativeObject));
+        try {
+            return new NumericImpl(query_match_aggregate(nativeTransaction, query, options.nativeObject));
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
@@ -126,7 +134,11 @@ public final class QueryManagerImpl implements QueryManager {
     public Stream<ConceptMapGroup> matchGroup(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
-        return query_match_group(nativeTransaction, query, options.nativeObject).stream().map(ConceptMapGroupImpl::new);
+        try {
+            return query_match_group(nativeTransaction, query, options.nativeObject).stream().map(ConceptMapGroupImpl::new);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
@@ -148,7 +160,11 @@ public final class QueryManagerImpl implements QueryManager {
     public Stream<NumericGroup> matchGroupAggregate(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
-        return query_match_group_aggregate(nativeTransaction, query, options.nativeObject).stream().map(NumericGroupImpl::new);
+        try {
+            return query_match_group_aggregate(nativeTransaction, query, options.nativeObject).stream().map(NumericGroupImpl::new);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
@@ -170,7 +186,11 @@ public final class QueryManagerImpl implements QueryManager {
     public Stream<ConceptMap> insert(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
-        return query_insert(nativeTransaction, query, options.nativeObject).stream().map(ConceptMapImpl::new);
+        try {
+            return query_insert(nativeTransaction, query, options.nativeObject).stream().map(ConceptMapImpl::new);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
@@ -192,7 +212,11 @@ public final class QueryManagerImpl implements QueryManager {
     public void delete(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
-        query_delete(nativeTransaction, query, options.nativeObject);
+        try {
+            query_delete(nativeTransaction, query, options.nativeObject);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
@@ -214,7 +238,11 @@ public final class QueryManagerImpl implements QueryManager {
     public Stream<ConceptMap> update(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
-        return query_update(nativeTransaction, query, options.nativeObject).stream().map(ConceptMapImpl::new);
+        try {
+            return query_update(nativeTransaction, query, options.nativeObject).stream().map(ConceptMapImpl::new);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
@@ -236,7 +264,11 @@ public final class QueryManagerImpl implements QueryManager {
     public void define(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
-        query_define(nativeTransaction, query, options.nativeObject);
+        try {
+            query_define(nativeTransaction, query, options.nativeObject);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
@@ -258,7 +290,11 @@ public final class QueryManagerImpl implements QueryManager {
     public void undefine(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBClientException(MISSING_QUERY);
-        query_undefine(nativeTransaction, query, options.nativeObject);
+        try {
+            query_undefine(nativeTransaction, query, options.nativeObject);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
@@ -269,6 +305,10 @@ public final class QueryManagerImpl implements QueryManager {
     @Override
     public Stream<Explanation> explain(ConceptMap.Explainable explainable, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
-        return query_explain(nativeTransaction, explainable.id(), options.nativeObject).stream().map(ExplanationImpl::new);
+        try {
+            return query_explain(nativeTransaction, explainable.id(), options.nativeObject).stream().map(ExplanationImpl::new);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 }

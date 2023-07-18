@@ -26,6 +26,7 @@ import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.database.Database;
 import com.vaticle.typedb.client.common.NativeObject;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 import static com.vaticle.typedb.client.jni.typedb_client.session_force_close;
 import static com.vaticle.typedb.client.jni.typedb_client.session_get_database_name;
@@ -38,9 +39,17 @@ public class TypeDBSessionImpl extends NativeObject<com.vaticle.typedb.client.jn
     private final TypeDBOptions options;
 
     TypeDBSessionImpl(Database database, Type type, TypeDBOptions options) {
-        super(session_new(((TypeDBDatabaseImpl) database).nativeObject.released(), type.nativeObject, options.nativeObject));
+        super(newNative(database, type, options));
         this.type = type;
         this.options = options;
+    }
+
+    private static com.vaticle.typedb.client.jni.Session newNative(Database database, Type type, TypeDBOptions options) {
+        try {
+            return session_new(((TypeDBDatabaseImpl) database).nativeObject.released(), type.nativeObject, options.nativeObject);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
