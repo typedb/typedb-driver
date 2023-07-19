@@ -61,6 +61,7 @@ rust_test(
         "@vaticle_typedb_behaviour//typeql/language:update.feature",
         "@vaticle_typedb_behaviour//typeql/language:match.feature",
         "@vaticle_typedb_behaviour//typeql/language:get.feature",
+        "@vaticle_typedb_behaviour//typeql/language:expression.feature",
         "@vaticle_typedb_behaviour//typeql/language:rule-validation.feature",
         "@vaticle_typedb_behaviour//typeql/reasoner:attribute-attachment.feature",
         "@vaticle_typedb_behaviour//typeql/reasoner:compound-queries.feature",

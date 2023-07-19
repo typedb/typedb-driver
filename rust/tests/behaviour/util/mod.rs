@@ -130,7 +130,7 @@ fn values_equal(expected_label_and_value: &str, answer: &Concept) -> bool {
     let identifiers: Vec<&str> = expected_label_and_value.splitn(2, ":").collect();
     assert_eq!(identifiers.len(), 2, "Unexpected table cell format: {expected_label_and_value}.");
     let Concept::Value(value) = answer else { unreachable!() };
-    value_equals_str(value, identifiers[1])
+    value_equals_str(value, identifiers[1].trim())
 }
 
 fn value_equals_str(value: &Value, expected: &str) -> bool {
