@@ -26,6 +26,7 @@ load("@vaticle_bazel_distribution//crates:rules.bzl", "assemble_crate", "deploy_
 load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
 load("@vaticle_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
 load("@vaticle_dependencies//builder/swig:java.bzl", "swig_java")
+load("@vaticle_dependencies//builder/swig:python.bzl", "swig_python")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//:deployment.bzl", deployment_github = "deployment")
@@ -97,10 +98,9 @@ swig_java(
 swig_python(
     name = "typedb_client_python",
     lib = ":typedb_client_clib_headers",
-    package = "com.vaticle.typedb.client.python",
     interface = "typedb_client.i",
-    includes = ["swig/typedb_client_python.swg"],
     enable_cxx = True,
+    class_name = "typedb_client",
 )
 
 assemble_crate(
