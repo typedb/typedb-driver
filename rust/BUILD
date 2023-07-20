@@ -100,7 +100,7 @@ swig_python(
     lib = ":typedb_client_clib_headers",
     interface = "typedb_client.i",
     enable_cxx = True,
-    class_name = "typedb_client",
+#    class_name = "typedb_client",
 )
 
 assemble_crate(
