@@ -115,7 +115,7 @@ public class TypeDBClientException extends RuntimeException {
             } else if (sre.getCause() instanceof io.netty.handler.ssl.NotSslRecordException) {
                 return new TypeDBClientException(sre.getCause(), CLUSTER_SERVER_NOT_ENCRYPTED);
             } else if (sre.getStatus().getDescription().contains("Network closed for unknown reason")) {
-                // Too vague a reason to not try other nodes
+                // Too generic a reason to throw. Wrap it in UNABLE_TO_CONNECT so the client tries other nodes.
                 return new TypeDBClientException(new TypeDBClientException(sre.getCause(), CLUSTER_CONNECTION_CLOSED_UKNOWN), UNABLE_TO_CONNECT);
             }
         }
