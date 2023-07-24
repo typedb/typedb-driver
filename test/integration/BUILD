@@ -56,6 +56,7 @@ typedb_java_test(
         # Internal dependencies
         "//:client-java",
         "//api:api",
+        "//common",
 
         # External dependencies from @vaticle
         "@vaticle_typeql//java:typeql-lang",

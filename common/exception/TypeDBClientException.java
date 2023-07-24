@@ -26,6 +26,7 @@ import io.grpc.StatusRuntimeException;
 
 import javax.annotation.Nullable;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_CONNECTION_CLOSED_UKNOWN;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_PASSWORD_CREDENTIAL_EXPIRED;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_SERVER_NOT_ENCRYPTED;
@@ -114,7 +115,8 @@ public class TypeDBClientException extends RuntimeException {
             } else if (sre.getCause() instanceof io.netty.handler.ssl.NotSslRecordException) {
                 return new TypeDBClientException(sre.getCause(), CLUSTER_SERVER_NOT_ENCRYPTED);
             } else if (sre.getStatus().getDescription().contains("Network closed for unknown reason")) {
-                return new TypeDBClientException(sre.getCause(), "Network closed for unknown reason. Try checking if the cluster requires encryption and the client is unencrypted.");
+                // Too vague a reason to not try other nodes
+                return new TypeDBClientException(new TypeDBClientException(sre.getCause(), CLUSTER_CONNECTION_CLOSED_UKNOWN), UNABLE_TO_CONNECT);
             }
         }
         return new TypeDBClientException(sre, UNABLE_TO_CONNECT);
