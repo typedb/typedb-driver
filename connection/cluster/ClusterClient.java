@@ -81,7 +81,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
                 return client.servers();
             } catch (TypeDBClientException e) {
                 if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
-                    LOG.warn("Unable to fetching list of all servers from server {}.", server);
+                    LOG.warn("Unable to fetch list of all servers from server {}.", server);
                 } else {
                     throw e;
                 }
