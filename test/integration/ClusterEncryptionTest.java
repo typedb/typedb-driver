@@ -69,6 +69,7 @@ public class ClusterEncryptionTest {
             } catch (TypeDBClientException e) {
                 // Best we can do given the grpc message
                 Assert.assertEquals(e.getErrorMessage(), CLUSTER_UNABLE_TO_CONNECT);
+                Assert.assertTrue(e.getMessage().contains(CLUSTER_CONNECTION_CLOSED_UKNOWN.message()));
             }
         } finally {
             shutDownCluster();

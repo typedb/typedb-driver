@@ -61,7 +61,7 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
         public static final ErrorMessage CLUSTER_SERVER_NOT_ENCRYPTED =
                 new Client(-2, "Unable to connect to TypeDB Cluster: attempting an encrypted connection to an unencrypted server.");
         public static final ErrorMessage CLUSTER_CONNECTION_CLOSED_UKNOWN =
-                new Client(-3, "Network closed for unknown reason. Verify client version and encryption settings.");
+                new Client(-3, "Network closed for unknown reason. May be caused by client-server version or encryption settings being incompatible.");
         public static final Client CLUSTER_REPLICA_NOT_PRIMARY =
                 new Client(15, "The replica is not the primary replica.");
         public static final Client CLUSTER_ALL_NODES_FAILED =

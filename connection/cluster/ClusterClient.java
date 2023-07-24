@@ -75,6 +75,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
     }
 
     private Set<String> fetchCurrentAddresses(Set<String> servers) {
+        String causes = "";
         for (String server : servers) {
             try (ClusterServerClient client = new ClusterServerClient(server, credential, parallelisation)) {
                 client.validateConnection();
@@ -82,12 +83,14 @@ public class ClusterClient implements TypeDBClient.Cluster {
             } catch (TypeDBClientException e) {
                 if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
                     LOG.warn("Unable to fetch list of all servers from server {}.", server);
+                    if (e.getCause() != null) causes += "\t* " + server + ": " + e.getCause().getMessage() + "\n";
                 } else {
                     throw e;
                 }
             }
         }
-        throw new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", servers));
+        String description = causes.isBlank() ? String.join(",", servers) : "Reasons:[\n" + causes + "]";
+        throw new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, description);
     }
 
     private Map<String, ClusterServerClient> createClients(TypeDBCredential credential, int parallelisation, Set<String> addresses) {
