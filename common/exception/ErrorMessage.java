@@ -56,12 +56,6 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
                 new Client(13, "No replica has been marked as the primary replica for latest known term '%d'.");
         public static final Client CLUSTER_UNABLE_TO_CONNECT =
                 new Client(14, "Unable to connect to TypeDB Cluster. Attempted connecting to the cluster members, but none are available: '%s'.");
-        public static final ErrorMessage CLUSTER_SSL_HANDSHAKE_FAILED =
-                new Client(-1, "Unable to connect to TypeDB Cluster: SSL handshake failed.");
-        public static final ErrorMessage CLUSTER_SERVER_NOT_ENCRYPTED =
-                new Client(-2, "Unable to connect to TypeDB Cluster: attempting an encrypted connection to an unencrypted server.");
-        public static final ErrorMessage CLUSTER_CONNECTION_CLOSED_UKNOWN =
-                new Client(-3, "Network closed for unknown reason. May be caused by client-server version or encryption settings being incompatible.");
         public static final Client CLUSTER_REPLICA_NOT_PRIMARY =
                 new Client(15, "The replica is not the primary replica.");
         public static final Client CLUSTER_ALL_NODES_FAILED =
@@ -72,6 +66,12 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
                 new Client(18, "Invalid token credential.");
         public static final ErrorMessage CLUSTER_PASSWORD_CREDENTIAL_EXPIRED =
                 new Client(19, "Expired password credential.");
+        public static final ErrorMessage CLUSTER_SSL_HANDSHAKE_FAILED =
+                new Client(20, "Unable to connect to TypeDB Cluster: SSL handshake failed.");
+        public static final ErrorMessage CLUSTER_SERVER_NOT_ENCRYPTED =
+                new Client(21, "Unable to connect to TypeDB Cluster: attempting an encrypted connection to an unencrypted server.");
+        public static final ErrorMessage CLUSTER_CONNECTION_CLOSED_UKNOWN =
+                new Client(22, "Network closed for unknown reason. May be caused by client-server version or encryption settings being incompatible.");
 
         private static final String codePrefix = "CLI";
         private static final String messagePrefix = "Client Error";
