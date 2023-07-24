@@ -76,5 +76,6 @@ typedb_java_test(
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
+    exclude = glob(["resources/*"]),
     license_type = "apache-header",
 )
