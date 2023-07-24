@@ -58,11 +58,6 @@ typedb_java_test(
         "//api:api",
         "//common",
 
-        # External dependencies from @vaticle
-        "@vaticle_typeql//java:typeql-lang",
-        "@vaticle_typeql//java/common",
-        "@vaticle_typeql//java/query",
-
         # External dependencies from Maven
         "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_slf4j_slf4j_api",
