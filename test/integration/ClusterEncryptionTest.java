@@ -66,14 +66,14 @@ public class ClusterEncryptionTest {
         }
     }
 
-    private void createCluster(Map<String, String> serverOpts) {
+    private void createCluster(int nodes, Map<String, String> serverOpts) {
         if (clusterRunner == null) shutDownCluster();
-        clusterRunner = TypeDBClusterRunner.create(Paths.get("."), 1, serverOpts);
+        clusterRunner = TypeDBClusterRunner.create(Paths.get("."), nodes, serverOpts);
     }
 
     @Test
-    public void encrypted_server_tests() {
-        createCluster(Collections.singletonMap("--server.encryption.enable", "true"));
+    public void encrypted_server_connection_tests() {
+        createCluster(1, Collections.singletonMap("--server.encryption.enable", "true"));
         clusterRunner.start();
         try {
             try (TypeDBClient.Cluster client = TypeDB.clusterClient(clusterRunner.externalAddresses(), ENCRYPTED_CREDENTIALS)) {
@@ -102,13 +102,14 @@ public class ClusterEncryptionTest {
     }
 
     @Test
-    public void unencrypted_server_tests() {
-        createCluster(Collections.singletonMap("--server.encryption.enable", "false"));
+    public void unencrypted_server_connection_tests() {
+        createCluster(1, Collections.singletonMap("--server.encryption.enable", "false"));
         clusterRunner.start();
         try {
             try (TypeDBClient.Cluster client = TypeDB.clusterClient(clusterRunner.externalAddresses(), UNENCRYPTED_CREDENTIALS)) {
                 LOG.info("Unencrypted client connected successfully!");
             } catch (Exception e) {
+                LOG.error("The unencrypted client failed to connect to unencrypted server: ", e);
                 fail("The unencrypted client failed to connect to unencrypted server.");
             }
 
