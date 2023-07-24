@@ -71,7 +71,7 @@ public class TypeDBClientException extends RuntimeException {
             return new TypeDBClientException(CLUSTER_REPLICA_NOT_PRIMARY);
         } else if (isTokenCredentialInvalid(sre)) {
             return new TypeDBClientException(CLUSTER_TOKEN_CREDENTIAL_INVALID);
-         } else if (isPasswordCredentialExpired(sre)) {
+        } else if (isPasswordCredentialExpired(sre)) {
             return new TypeDBClientException(CLUSTER_PASSWORD_CREDENTIAL_EXPIRED);
         } else {
             return new TypeDBClientException(sre, sre.getStatus().getDescription());

@@ -67,7 +67,10 @@ typedb_java_test(
         "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_slf4j_slf4j_api",
     ],
-    data = ["resources/dev-root-ca.pem", "resources/wrong-root-ca.pem"],
+    data = [
+        "resources/dev-root-ca.pem",
+        "resources/wrong-root-ca.pem"
+    ],
 )
 
 checkstyle_test(
