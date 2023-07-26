@@ -110,7 +110,6 @@ public class TypeDBClientException extends RuntimeException {
     }
 
     private static TypeDBClientException tryGetRstStreamCause(StatusRuntimeException sre) {
-        Throwable cause = null;
         if (sre.getStatus().getCode() == Status.Code.UNAVAILABLE) {
             if (sre.getCause() instanceof javax.net.ssl.SSLHandshakeException) {
                 if (sre.getCause().getMessage().contains("PKIX path building failed")) {
@@ -120,7 +119,8 @@ public class TypeDBClientException extends RuntimeException {
                 } else return new TypeDBClientException(sre.getCause(), CLUSTER_SSL_HANDSHAKE_FAILED, sre.getMessage());
             } else if (sre.getCause() instanceof io.netty.handler.ssl.NotSslRecordException) {
                 return new TypeDBClientException(sre.getCause(), CLUSTER_SERVER_NOT_ENCRYPTED);
-            } else if (sre.getStatus().getDescription().contains("Network closed for unknown reason")) {
+            } else if (sre.getStatus().getDescription() != null &&
+                    sre.getStatus().getDescription().contains("Network closed for unknown reason")) {
                 // Too generic a reason to throw. Wrap it in UNABLE_TO_CONNECT so the client tries other nodes.
                 return new TypeDBClientException(new TypeDBClientException(sre.getCause(), CLUSTER_CONNECTION_CLOSED_UKNOWN), UNABLE_TO_CONNECT);
             }

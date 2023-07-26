@@ -40,7 +40,6 @@ import java.util.Map;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_CONNECTION_CLOSED_UKNOWN;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_SERVER_NOT_ENCRYPTED;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_SSL_CERTIFICATE_NOT_VALIDATED;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_SSL_HANDSHAKE_FAILED;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import static org.junit.Assert.fail;
 
