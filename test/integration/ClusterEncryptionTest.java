@@ -39,6 +39,7 @@ import java.util.Map;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_CONNECTION_CLOSED_UKNOWN;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_SERVER_NOT_ENCRYPTED;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_SSL_CERTIFICATE_NOT_VALIDATED;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_SSL_HANDSHAKE_FAILED;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
 import static org.junit.Assert.fail;
@@ -85,7 +86,7 @@ public class ClusterEncryptionTest {
             try (TypeDBClient.Cluster client = TypeDB.clusterClient(clusterRunner.externalAddresses(), MISCONFIGURED_CREDENTIALS)) {
                 fail("The encrypted client with wrong CA connected (should have failed).");
             } catch (TypeDBClientException e) {
-                Assert.assertEquals(e.getErrorMessage(), CLUSTER_SSL_HANDSHAKE_FAILED);
+                Assert.assertEquals(CLUSTER_SSL_CERTIFICATE_NOT_VALIDATED, e.getErrorMessage());
                 LOG.info("Expected exception was thrown: {}", e.getMessage());
             }
 
@@ -93,7 +94,7 @@ public class ClusterEncryptionTest {
                 fail("The encrypted client with wrong CA connected (should have failed).");
             } catch (TypeDBClientException e) {
                 // Best we can do given the grpc message
-                Assert.assertEquals(e.getErrorMessage(), CLUSTER_UNABLE_TO_CONNECT);
+                Assert.assertEquals(CLUSTER_UNABLE_TO_CONNECT, e.getErrorMessage());
                 Assert.assertTrue(e.getMessage().contains(CLUSTER_CONNECTION_CLOSED_UKNOWN.message()));
             }
         } finally {
@@ -116,7 +117,7 @@ public class ClusterEncryptionTest {
             try (TypeDBClient.Cluster client = TypeDB.clusterClient(clusterRunner.externalAddresses(), ENCRYPTED_CREDENTIALS)) {
                 fail("The encrypted client connected to an unencrypted server (should have failed).");
             } catch (TypeDBClientException e) {
-                Assert.assertEquals(e.getErrorMessage(), CLUSTER_SERVER_NOT_ENCRYPTED);
+                Assert.assertEquals(CLUSTER_SERVER_NOT_ENCRYPTED, e.getErrorMessage());
                 LOG.info("Expected exception was thrown: {}", e.getMessage());
             }
         } finally {

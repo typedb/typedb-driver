@@ -30,6 +30,8 @@ import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLU
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_PASSWORD_CREDENTIAL_EXPIRED;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_SERVER_NOT_ENCRYPTED;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_SSL_CERTIFICATE_INVALID_FOR_HOSTNAME;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_SSL_CERTIFICATE_NOT_VALIDATED;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_SSL_HANDSHAKE_FAILED;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.RPC_METHOD_UNAVAILABLE;
@@ -111,7 +113,11 @@ public class TypeDBClientException extends RuntimeException {
         Throwable cause = null;
         if (sre.getStatus().getCode() == Status.Code.UNAVAILABLE) {
             if (sre.getCause() instanceof javax.net.ssl.SSLHandshakeException) {
-                return new TypeDBClientException(sre.getCause(), CLUSTER_SSL_HANDSHAKE_FAILED);
+                if (sre.getCause().getMessage().contains("PKIX path building failed")) {
+                    return new TypeDBClientException(sre.getCause(), CLUSTER_SSL_CERTIFICATE_NOT_VALIDATED);
+                } else if (sre.getCause().getMessage().contains("No subject alternative DNS name")) {
+                    return new TypeDBClientException(sre.getCause(), CLUSTER_SSL_CERTIFICATE_INVALID_FOR_HOSTNAME);
+                } else return new TypeDBClientException(sre.getCause(), CLUSTER_SSL_HANDSHAKE_FAILED, sre.getMessage());
             } else if (sre.getCause() instanceof io.netty.handler.ssl.NotSslRecordException) {
                 return new TypeDBClientException(sre.getCause(), CLUSTER_SERVER_NOT_ENCRYPTED);
             } else if (sre.getStatus().getDescription().contains("Network closed for unknown reason")) {
