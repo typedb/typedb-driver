@@ -32,16 +32,16 @@ vaticle_dependencies()
 load("@vaticle_dependencies//builder/bazel:deps.bzl", "bazel_toolchain")
 bazel_toolchain()
 
-# Load //builder/java
-load("@vaticle_dependencies//builder/java:deps.bzl", java_deps = "deps")
-java_deps()
-
 # Load //builder/python
 load("@vaticle_dependencies//builder/python:deps.bzl", python_deps = "deps")
 python_deps()
 load("@rules_python//python:repositories.bzl", "py_repositories", "python_register_toolchains")
 py_repositories()
 python_register_toolchains(name = "python39", python_version = "3.9")
+
+# Load //builder/java
+load("@vaticle_dependencies//builder/java:deps.bzl", java_deps = "deps")
+java_deps()
 
 # Load //builder/kotlin
 load("@vaticle_dependencies//builder/kotlin:deps.bzl", kotlin_deps = "deps")
