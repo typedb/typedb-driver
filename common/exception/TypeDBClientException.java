@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_CONNECTION_CLOSED_UKNOWN;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_PASSWORD_CREDENTIAL_EXPIRED;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_SERVER_NOT_ENCRYPTED;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_ENDPOINT_NOT_ENCRYPTED;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_SSL_CERTIFICATE_INVALID_FOR_HOSTNAME;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_SSL_CERTIFICATE_NOT_VALIDATED;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_SSL_HANDSHAKE_FAILED;
@@ -118,7 +118,7 @@ public class TypeDBClientException extends RuntimeException {
                     return new TypeDBClientException(sre.getCause(), CLUSTER_SSL_CERTIFICATE_INVALID_FOR_HOSTNAME);
                 } else return new TypeDBClientException(sre.getCause(), CLUSTER_SSL_HANDSHAKE_FAILED, sre.getMessage());
             } else if (sre.getCause() instanceof io.netty.handler.ssl.NotSslRecordException) {
-                return new TypeDBClientException(sre.getCause(), CLUSTER_SERVER_NOT_ENCRYPTED);
+                return new TypeDBClientException(sre.getCause(), CLUSTER_ENDPOINT_NOT_ENCRYPTED);
             } else if (sre.getStatus().getDescription() != null &&
                     sre.getStatus().getDescription().contains("Network closed for unknown reason")) {
                 // Too generic a reason to throw. Wrap it in UNABLE_TO_CONNECT so the client tries other nodes.
