@@ -33,6 +33,10 @@ extern "C" {
 %include "swig/typedb_client_java.swg"
 #endif
 
+#ifdef SWIGPYTHON
+%include "swig/typedb_client_python.swg"
+#endif
+
 %nodefaultctor;
 
 %define %dropproxy(Type, function_prefix)
