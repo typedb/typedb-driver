@@ -39,6 +39,8 @@ import io.grpc.Metadata;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
@@ -47,6 +49,8 @@ import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.User.t
 import static io.grpc.Metadata.ASCII_STRING_MARSHALLER;
 
 public class ClusterServerStub extends TypeDBStub {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ClusterServerStub.class);
 
     private final TypeDBCredential credential;
     private String token;
@@ -205,6 +209,7 @@ public class ClusterServerStub extends TypeDBStub {
         } catch (TypeDBClientException e) {
             if (e.getErrorMessage() != null && e.getErrorMessage().equals(ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID)) {
                 token = null;
+                LOG.debug("Request rejected because token credential was invalid. Renewing token...");
                 ClusterUserProto.ClusterUser.Token.Res res = clusterBlockingStub.userToken(tokenReq(credential.username()));
                 token = res.getToken();
                 try {
