@@ -24,8 +24,8 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 def vaticle_dependencies():
     git_repository(
         name = "vaticle_dependencies",
-        remote = "https://github.com/vaticle/dependencies",
-        commit = "51fdda8c935d5f9fc34bfdf41b0a6ac1ca77e2ee", # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_dependencies
+        remote = "https://github.com/flyingsilverfin/dependencies",
+        commit = "703e75f2b8bc5ec4c8d427c0dcc96313e950d36a", # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_dependencies
     )
 
 def vaticle_typedb_common():
@@ -45,9 +45,13 @@ def vaticle_typeql():
 def vaticle_typedb_protocol():
     git_repository(
         name = "vaticle_typedb_protocol",
-        remote = "https://github.com/vaticle/typedb-protocol",
-        tag = "2.18.0", # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_protocol
+        remote = "https://github.com/flyingsilverfin/typedb-protocol",
+        commit = "f12e0e8f6ce761bfee3070d6b705212b70137ca1", # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_protocol
     )
+#    native.local_repository(
+#        name = "vaticle_typedb_protocol",
+#        path = "../typedb-protocol",
+#    )
 
 def vaticle_typedb_behaviour():
     git_repository(
@@ -59,6 +63,10 @@ def vaticle_typedb_behaviour():
 def vaticle_factory_tracing():
     git_repository(
         name = "vaticle_factory_tracing",
-        remote = "https://github.com/vaticle/factory-tracing",
-        tag = "2.12.0"  # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_factory_tracing
+        remote = "https://github.com/flyingsilverfin/factory-tracing",
+        commit = "1b9213a246f81a5817f3037608c5de7bede5b4cb"  # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_factory_tracing
     )
+#    native.local_repository(
+#        name = "vaticle_factory_tracing",
+#        path = "../factory-tracing",
+#    )
