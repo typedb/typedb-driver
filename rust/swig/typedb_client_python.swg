@@ -19,7 +19,29 @@
  * under the License.
  */
 
-#include "string.h"
+%define %array(Type)
+%typemap(in) Type ** (int size) {
+    size = PyList_Size($input);
+    $1 = (Type **) malloc((size + 1) * sizeof(Type *));U
+    int i = 0;
+    for (i = 0; i < size; ++i) {
+        void *argp = 0;
+        int res = SWIG_ConvertPtr(PyList_GetItem($input, i), &argp, SWIGTYPE_p_##Type, 0 |  0 );
+        if (!SWIG_IsOK(res)) {
+            SWIG_exception_fail(SWIG_ArgError(res), "array item is not of type 'Type const *'");
+          }
+        $1[i] = reinterpret_cast< Type * >(argp);
+    }
+    $1[i] = 0;
+}
+
+%typemap(freearg) Type ** { free($1); }
+%enddef
+
+%array(Annotation)
+%array(Concept)
+%array(Thing)
+
 
 %typemap(in) char ** (int size) {
     if (PyList_Check($input)) {
@@ -52,4 +74,13 @@
     for (int i = 0; i < size$argnum - 1; ++i)
         free($1[i]);
     free((char *) $1);
+}
+
+
+%exception {
+    $action
+    if (check_error()) {
+        PyErr_SetString(PyExc_RuntimeError, error_message(get_last_error()));
+        SWIG_fail;
+    }
 }
