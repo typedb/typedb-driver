@@ -21,5 +21,5 @@
 
 deployment = {
     "github.organisation": "vaticle",
-    "github.repository": "typedb-client-java"
+    "github.repository": "typedb-driver-java"
 }

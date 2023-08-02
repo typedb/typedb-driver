@@ -42,27 +42,13 @@ exports_files([
     "deployment.bzl",
 ])
 
-java_library(
-    name = "client-java",
-    srcs = glob(["*.java"]),
-    resources = ["LICENSE"],
-    tags = ["maven_coordinates=com.vaticle.typedb:typedb-client:{pom_version}"],
-    deps = [
-        # Internal dependencies
-        "//api",
-        "//connection",
-
-        # External dependencies from @vaticle
-        "@vaticle_typedb_common//:common",
-    ],
-)
-
 checkstyle_test(
     name = "checkstyle",
     size = "small",
     include = glob([
         "*",
         ".factory/*",
+        "tools/*",
     ]),
     exclude = glob([
         "*.md",
@@ -83,34 +69,6 @@ checkstyle_test(
     license_type = "apache-fulltext",
 )
 
-#assemble_maven(
-#    name = "assemble-maven",
-#    project_description = "TypeDB Client API for Java",
-#    project_name = "TypeDB Client Java",
-#    project_url = "https://github.com/vaticle/typedb-client-java",
-#    scm_url = "https://github.com/vaticle/typedb-client-java",
-#    target = ":client-java",
-#    version_overrides = version(artifacts_org, artifacts_repo),
-#    workspace_refs = "@vaticle_typedb_client_java_workspace_refs//:refs.json",
-#)
-#
-#deploy_maven(
-#    name = "deploy-maven",
-#    release = deployment["maven.release"],
-#    snapshot = deployment["maven.snapshot"],
-#    target = ":assemble-maven",
-#)
-#
-#deploy_github(
-#    name = "deploy-github",
-#    draft = False,
-#    title = "TypeDB Client Java",
-#    release_description = "//:RELEASE_TEMPLATE.md",
-#    organisation = github_deployment["github.organisation"],
-#    repository = github_deployment["github.repository"],
-#    title_append_version = True,
-#)
-#
 release_validate_deps(
     name = "release-validate-deps",
     refs = "@vaticle_typedb_client_java_workspace_refs//:refs.json",
@@ -129,6 +87,7 @@ filegroup(
         "@vaticle_dependencies//tool/checkstyle:test-coverage",
         "@vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh",
         "@vaticle_dependencies//tool/release/notes:create",
+        "@vaticle_dependencies//tool/ide:rust_sync",
         "@vaticle_dependencies//tool/sonarcloud:code-analysis",
         "@vaticle_dependencies//tool/unuseddeps:unused-deps",
     ],

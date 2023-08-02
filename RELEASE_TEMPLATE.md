@@ -21,4 +21,3 @@ Available through https://repo.vaticle.com
 ```
 
 { release notes }
-

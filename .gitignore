@@ -1,4 +1,4 @@
-# 
+#
 # Copyright (C) 2022 Vaticle
 #
 # Licensed to the Apache Software Foundation (ASF) under one
@@ -34,3 +34,7 @@ bazel-*
 # Output directories
 target
 dist
+
+# Cargo files
+Cargo.lock
+Cargo.toml
