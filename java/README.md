@@ -1,19 +1,10 @@
 # TypeDB Client for Java
 
-[![Factory](https://factory.vaticle.com/api/status/vaticle/typedb-client-java/badge.svg)](https://factory.vaticle.com/vaticle/typedb-client-java)
-[![Discord](https://img.shields.io/discord/665254494820368395?color=7389D8&label=chat&logo=discord&logoColor=ffffff)](https://vaticle.com/discord)
-[![Discussion Forum](https://img.shields.io/discourse/https/forum.vaticle.com/topics.svg)](https://forum.vaticle.com)
-[![Stack Overflow](https://img.shields.io/badge/stackoverflow-typedb-796de3.svg)](https://stackoverflow.com/questions/tagged/typedb)
-[![Stack Overflow](https://img.shields.io/badge/stackoverflow-typeql-3dce8c.svg)](https://stackoverflow.com/questions/tagged/typeql)
-
 ## Client Architecture
-To learn about the mechanism that a TypeDB Client uses to set up communication with databases running on the TypeDB Server, refer to [TypeDB > Client API > Overview](http://docs.vaticle.com/docs/client-api/overview).
+To learn about the mechanism that a TypeDB Client uses to set up communication with databases running on the TypeDB Server, refer to [TypeDB > Development > TypeDB Driver API](https://typedb.com/docs/typedb/2.x/development/api.html).
 
 ## API Reference
-To learn about the methods available for executing queries and retrieving their answers using Client Java, refer to [TypeDB > Client API > Java > API Reference](http://docs.vaticle.com/docs/client-api/java#api-reference).
-
-## Concept API
-To learn about the methods available on the concepts retrieved as the answers to TypeQL queries, refer to [TypeDB > Concept API > Overview](http://docs.vaticle.com/docs/concept-api/overview)
+To learn about the methods available for executing queries and retrieving their answers using Client Java, refer to [TypeDB Clients > Java Driver > Java Driver API reference](https://typedb.com/docs/clients/2.x/java/java-api-ref.html).
 
 ## Import TypeDB Client for Java through Maven
 
@@ -34,7 +25,7 @@ To learn about the methods available on the concepts retrieved as the answers to
 </dependencies>
 ```
 
-Further documentation: https://docs.vaticle.com/docs/client-api/java
+Further documentation: https://typedb.com/docs/clients/2.x/java/java-install.html
 
 ## Build TypeDB Client for Java from Source
 
@@ -48,18 +39,18 @@ Further documentation: https://docs.vaticle.com/docs/client-api/java
 
    a) to build the native/raw JAR:
    ```
-   bazel build //:client-java
+   bazel build //java:client-java
    ```
-   The Java library JAR will be produced at: `bazel-bin/libclient-java.jar`
+   The Java library JAR will be produced at: `bazel-bin/java/libclient-java.jar`
 
    b) to build the JAR for a Maven application:
    ```
-   bazel build //:assemble-maven
+   bazel build //java/:assemble-maven
    ```
    The Maven JAR and POM will be produced at: 
    ```
-   bazel-bin/com.vaticle.typedb:api.jar
-   bazel-bin/pom.xml
+   bazel-bin/java/com.vaticle.typedb:api.jar
+   bazel-bin/java/pom.xml
    ```
 
 ## FAQs
