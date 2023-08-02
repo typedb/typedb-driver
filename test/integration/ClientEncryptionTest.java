@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_CONNECTION_CLOSED_UKNOWN;
@@ -44,13 +45,23 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class ClusterEncryptionTest {
+public class ClientEncryptionTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ClusterEncryptionTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ClientEncryptionTest.class);
     private static final String USERNAME = "admin";
     private static final String PASSWORD = "password";
-    private static final Path CLUSTER_CA = Path.of("test/integration/resources/dev-root-ca.pem");
+
     private static final Path WRONG_CA = Path.of("test/integration/resources/wrong-root-ca.pem");
+    private static final Path CLUSTER_CERTIFICATE = Path.of("test/integration/resources/dev-certificate.pem");
+    private static final Path CLUSTER_PRIVATE_KEY = Path.of("test/integration/resources/dev-private-key.pem");
+    private static final Path CLUSTER_CA = Path.of("test/integration/resources/dev-root-ca.pem");
+    private static final Map<String, String> CLUSTER_ENCRYPTION_OPTIONS = Map.ofEntries(
+            Map.entry("--server.encryption.enable", "true"),
+            Map.entry("--server.encryption.certificate", CLUSTER_CERTIFICATE.toAbsolutePath().toString()),
+            Map.entry("--server.encryption.private-key", CLUSTER_PRIVATE_KEY.toAbsolutePath().toString()),
+            Map.entry("--server.encryption.root-ca", CLUSTER_CA.toAbsolutePath().toString())
+    );
+
 
     private static final TypeDBCredential ENCRYPTED_CREDENTIALS = new TypeDBCredential(USERNAME, PASSWORD, CLUSTER_CA);
     private static final TypeDBCredential MISCONFIGURED_CREDENTIALS = new TypeDBCredential(USERNAME, PASSWORD, WRONG_CA);
@@ -74,7 +85,7 @@ public class ClusterEncryptionTest {
 
     @Test
     public void encrypted_server_connection_tests() {
-        createCluster(1, Collections.singletonMap("--server.encryption.enable", "true"));
+        createCluster(1, CLUSTER_ENCRYPTION_OPTIONS);
         clusterRunner.start();
         try {
             try (TypeDBClient.Cluster client = TypeDB.clusterClient(clusterRunner.externalAddresses(), ENCRYPTED_CREDENTIALS)) {

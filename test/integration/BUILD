@@ -47,11 +47,11 @@ typedb_java_test(
 
 typedb_java_test(
     name = "test-client-encryption",
-    srcs = ["ClusterEncryptionTest.java"],
+    srcs = ["ClientEncryptionTest.java"],
     server_mac_artifact = "@vaticle_typedb_cluster_artifact_mac//file",
     server_linux_artifact = "@vaticle_typedb_cluster_artifact_linux//file",
     server_windows_artifact = "@vaticle_typedb_cluster_artifact_windows//file",
-    test_class = "com.vaticle.typedb.client.test.integration.ClusterEncryptionTest",
+    test_class = "com.vaticle.typedb.client.test.integration.ClientEncryptionTest",
     deps = [
         # Internal dependencies
         "//:client-java",
@@ -62,10 +62,7 @@ typedb_java_test(
         "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_slf4j_slf4j_api",
     ],
-    data = [
-        "resources/dev-root-ca.pem",
-        "resources/wrong-root-ca.pem"
-    ],
+    data = glob(["resources/*.pem"]),
 )
 
 checkstyle_test(
