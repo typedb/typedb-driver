@@ -42,6 +42,7 @@ checkstyle_test(
     name = "checkstyle",
     size = "small",
     include = glob(["*"]),
+    exclude = ["README.md"],
     license_type = "apache-header",
 )
 
