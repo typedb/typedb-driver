@@ -22,7 +22,7 @@
 %define %array(Type)
 %typemap(in) Type ** (int size) {
     size = PyList_Size($input);
-    $1 = (Type **) malloc((size + 1) * sizeof(Type *));U
+    $1 = (Type **) malloc((size + 1) * sizeof(Type *));
     int i = 0;
     for (i = 0; i < size; ++i) {
         void *argp = 0;
