@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_CONNECTION_CLOSED_UKNOWN;
@@ -61,7 +60,6 @@ public class ClientEncryptionTest {
             Map.entry("--server.encryption.private-key", CLUSTER_PRIVATE_KEY.toAbsolutePath().toString()),
             Map.entry("--server.encryption.root-ca", CLUSTER_CA.toAbsolutePath().toString())
     );
-
 
     private static final TypeDBCredential ENCRYPTED_CREDENTIALS = new TypeDBCredential(USERNAME, PASSWORD, CLUSTER_CA);
     private static final TypeDBCredential MISCONFIGURED_CREDENTIALS = new TypeDBCredential(USERNAME, PASSWORD, WRONG_CA);

@@ -41,10 +41,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.DB_DOES_NOT_EXIST;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_INTERRUPTION;
 import static com.vaticle.typedb.client.common.rpc.RequestBuilder.Cluster.DatabaseManager.getReq;
@@ -77,7 +77,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
     }
 
     private Set<String> fetchCurrentAddresses(Set<String> servers) {
-        List<Pair<String, Throwable>> perServerExceptions = new ArrayList<>();
+        Map<String, Throwable> perServerExceptions = new HashMap<>();
         for (String server : servers) {
             try (ClusterServerClient client = new ClusterServerClient(server, credential, parallelisation)) {
                 client.validateConnection();
@@ -85,7 +85,7 @@ public class ClusterClient implements TypeDBClient.Cluster {
             } catch (TypeDBClientException e) {
                 if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
                     LOG.warn("Unable to fetch list of all servers from server {}.", server);
-                    if (e.getCause() != null) perServerExceptions.add(new Pair<>(server, e));
+                    if (e.getCause() != null) perServerExceptions.put(server, e);
                 } else {
                     throw e;
                 }
@@ -94,10 +94,11 @@ public class ClusterClient implements TypeDBClient.Cluster {
 
         String description;
         if (!perServerExceptions.isEmpty()) {
-            List<String> reasons = perServerExceptions.stream()
-                    .map(cause -> String.format("\t- %s: %s", cause.first(), cause.second().getCause().getMessage()))
-                    .collect(Collectors.toList());
-            description = "Reasons:[\n" + String.join("\n", reasons) + "\n]";
+            StringBuilder reasons = new StringBuilder("Reasons:[\n");
+            perServerExceptions.entrySet().stream()
+                    .map(entry -> String.format("\t- %s: %s\n", entry.getKey(), entry.getValue().getCause().getMessage()))
+                    .forEach(reasons::append);
+            description = reasons.append("]").toString();
         } else description = String.join(",", servers);
         throw new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, description);
     }
@@ -222,7 +223,6 @@ public class ClusterClient implements TypeDBClient.Cluster {
         private final int PRIMARY_REPLICA_TASK_MAX_RETRIES = 10;
         private final int FETCH_REPLICAS_MAX_RETRIES = 10;
         private final int WAIT_FOR_PRIMARY_REPLICA_SELECTION_MS = 2000;
-
         private final String database;
 
         private FailsafeTask(String database) {
@@ -297,6 +297,8 @@ public class ClusterClient implements TypeDBClient.Cluster {
                 ClusterDatabase clusterDatabase = fetchDatabaseReplicas();
                 if (clusterDatabase.primaryReplica().isPresent()) {
                     return clusterDatabase.primaryReplica().get();
+                } else if (isNonExistentRaftClusterInfo(clusterDatabase)) {
+                    throw new TypeDBClientException(DB_DOES_NOT_EXIST, this.database);
                 } else {
                     waitForPrimaryReplicaSelection();
                     retries++;
@@ -312,7 +314,9 @@ public class ClusterClient implements TypeDBClient.Cluster {
                     ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = fetchValidatedServerClient(serverAddress)
                             .stub().databasesGet(getReq(database));
                     ClusterDatabase clusterDatabase = ClusterDatabase.of(res.getDatabase(), ClusterClient.this);
-                    clusterDatabases.put(database, clusterDatabase);
+                    if (!isNonExistentRaftClusterInfo(clusterDatabase)) {
+                        clusterDatabases.put(database, clusterDatabase);
+                    }
                     return clusterDatabase;
                 } catch (TypeDBClientException e) {
                     if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
@@ -332,6 +336,11 @@ public class ClusterClient implements TypeDBClient.Cluster {
             } catch (InterruptedException e) {
                 throw new TypeDBClientException(UNEXPECTED_INTERRUPTION);
             }
+        }
+
+        private boolean isNonExistentRaftClusterInfo(ClusterDatabase clusterDatabase) {
+            return clusterDatabase.primaryReplica().isEmpty() &&
+                    clusterDatabase.replicas().stream().allMatch(replica -> replica.term() == -1);
         }
 
         private ClusterServerClient fetchValidatedServerClient(String address) {

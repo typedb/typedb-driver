@@ -49,13 +49,11 @@ public class TypeDBClientException extends RuntimeException {
 
     public TypeDBClientException(ErrorMessage error, Object... parameters) {
         super(error.message(parameters));
-        assert !getMessage().contains("%s");
         this.errorMessage = error;
     }
 
     public TypeDBClientException(Throwable cause, ErrorMessage error, Object... parameters) {
         super(error.message(parameters), cause);
-        assert !getMessage().contains("%s");
         this.errorMessage = error;
     }
 

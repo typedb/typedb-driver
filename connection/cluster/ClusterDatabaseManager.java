@@ -59,15 +59,27 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
 
     @Override
     public boolean contains(String name) {
-        return failsafeTask(name, (stub, dbMgr) -> dbMgr.contains(name));
+        try {
+            return failsafeTask(name, ((stub, dbMgr) -> dbMgr.contains(name))).runPrimaryReplica();
+        } catch (TypeDBClientException e) {
+            if (e.getErrorMessage().equals(DB_DOES_NOT_EXIST)) return false;
+            else throw e;
+        }
     }
 
     @Override
     public void create(String name) {
-        failsafeTask(name, (stub, dbMgr) -> {
+        ClusterClient.FailsafeTask<Void> failsafeTask = failsafeTask(name, (stub, dbMgr) -> {
             dbMgr.create(name);
             return null;
         });
+        try {
+            failsafeTask.runAnyReplica();
+        } catch (TypeDBClientException e) {
+            if (CLUSTER_REPLICA_NOT_PRIMARY.equals(e.getErrorMessage())) {
+                failsafeTask.runPrimaryReplica();
+            } else throw e;
+        }
     }
 
     @Override
@@ -77,7 +89,7 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
                 ClusterDatabaseProto.ClusterDatabaseManager.Get.Res res = stub.databasesGet(getReq(name));
                 return ClusterDatabase.of(res.getDatabase(), client);
             } else throw new TypeDBClientException(DB_DOES_NOT_EXIST, name);
-        });
+        }).runPrimaryReplica();
     }
 
     @Override
@@ -99,21 +111,13 @@ public class ClusterDatabaseManager implements DatabaseManager.Cluster {
         return databaseMgrs;
     }
 
-    private <RESULT> RESULT failsafeTask(String name, BiFunction<ClusterServerStub, TypeDBDatabaseManagerImpl, RESULT> task) {
-        ClusterClient.FailsafeTask<RESULT> failsafeTask = client.createFailsafeTask(
+    private <RESULT> ClusterClient.FailsafeTask<RESULT> failsafeTask(String name, BiFunction<ClusterServerStub, TypeDBDatabaseManagerImpl, RESULT> task) {
+        return client.createFailsafeTask(
                 name,
                 parameter -> task.apply(
                         parameter.client().stub(),
                         parameter.client().databases()
                 )
         );
-
-        try {
-            return failsafeTask.runAnyReplica();
-        } catch (TypeDBClientException e) {
-            if (CLUSTER_REPLICA_NOT_PRIMARY.equals(e.getErrorMessage())) {
-                return failsafeTask.runPrimaryReplica();
-            } else throw e;
-        }
     }
 }
