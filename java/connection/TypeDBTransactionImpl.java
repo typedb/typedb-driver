@@ -22,10 +22,8 @@
 package com.vaticle.typedb.client.connection;
 
 import com.vaticle.typedb.client.api.TypeDBOptions;
-import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.ConceptManager;
-import com.vaticle.typedb.client.api.database.Database;
 import com.vaticle.typedb.client.api.logic.LogicManager;
 import com.vaticle.typedb.client.api.query.QueryManager;
 import com.vaticle.typedb.client.common.NativeObject;
@@ -37,12 +35,11 @@ import com.vaticle.typedb.client.query.QueryManagerImpl;
 import java.util.function.Consumer;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
-import static com.vaticle.typedb.client.jni.typedb_client.session_new;
 import static com.vaticle.typedb.client.jni.typedb_client.transaction_commit;
+import static com.vaticle.typedb.client.jni.typedb_client.transaction_force_close;
 import static com.vaticle.typedb.client.jni.typedb_client.transaction_is_open;
 import static com.vaticle.typedb.client.jni.typedb_client.transaction_new;
 import static com.vaticle.typedb.client.jni.typedb_client.transaction_on_close;
-import static com.vaticle.typedb.client.jni.typedb_client.transaction_force_close;
 import static com.vaticle.typedb.client.jni.typedb_client.transaction_rollback;
 
 public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.client.jni.Transaction> implements TypeDBTransaction {
