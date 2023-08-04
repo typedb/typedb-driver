@@ -19,9 +19,7 @@
  * under the License.
  */
 
-use chrono::NaiveDateTime;
-
-use super::{AttributeType, EntityType, RelationType};
+use super::{AttributeType, EntityType, RelationType, Value};
 use crate::common::IID;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -63,13 +61,4 @@ pub struct Attribute {
     pub type_: AttributeType,
     pub value: Value,
     pub is_inferred: bool,
-}
-
-#[derive(Clone, Debug, PartialEq)]
-pub enum Value {
-    Boolean(bool),
-    Long(i64),
-    Double(f64),
-    String(String),
-    DateTime(NaiveDateTime),
 }

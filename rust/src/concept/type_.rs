@@ -21,6 +21,8 @@
 
 use std::fmt;
 
+use super::ValueType;
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum Annotation {
     Key,
@@ -73,17 +75,6 @@ pub struct AttributeType {
     pub is_root: bool,
     pub is_abstract: bool,
     pub value_type: ValueType,
-}
-
-#[repr(C)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum ValueType {
-    Object,
-    Boolean,
-    Long,
-    Double,
-    String,
-    DateTime,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

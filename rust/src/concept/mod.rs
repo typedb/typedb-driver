@@ -21,12 +21,12 @@
 
 mod thing;
 mod type_;
+mod value;
 
 pub use self::{
-    thing::{Attribute, Entity, Relation, Thing, Value},
-    type_::{
-        Annotation, AttributeType, EntityType, RelationType, RoleType, RootThingType, ScopedLabel, ThingType, ValueType,
-    },
+    thing::{Attribute, Entity, Relation, Thing},
+    type_::{Annotation, AttributeType, EntityType, RelationType, RoleType, RootThingType, ScopedLabel, ThingType},
+    value::{Value, ValueType},
 };
 
 #[derive(Clone, Debug, PartialEq)]
