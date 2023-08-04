@@ -33,7 +33,10 @@ use regex::{Captures, Regex};
 use tokio::time::sleep;
 use typedb_client::{
     answer::ConceptMap,
-    concept::{Annotation, Attribute, Concept, Entity, Relation, Value},
+    concept::{
+        Annotation, Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType,
+        Value,
+    },
     logic::Rule,
     transaction::concept::api::ThingAPI,
     DatabaseManager, Result as TypeDBResult,
@@ -116,7 +119,14 @@ async fn key_values_equal(context: &Context, expected_label_and_value: &str, ans
 }
 
 fn labels_equal(expected_label: &str, answer: &Concept) -> bool {
-    answer.type_label_cloned() == expected_label
+    match answer {
+        Concept::RootThingType(_) => expected_label == "thing",
+        Concept::EntityType(EntityType { label, .. }) => expected_label == label,
+        Concept::RelationType(RelationType { label, .. }) => expected_label == label,
+        Concept::RoleType(RoleType { label, .. }) => expected_label == format!("{label}"),
+        Concept::AttributeType(AttributeType { label, .. }) => expected_label == label,
+        _ => unreachable!(),
+    }
 }
 
 fn attribute_values_equal(expected_label_and_value: &str, answer: &Concept) -> bool {

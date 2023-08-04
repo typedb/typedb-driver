@@ -45,23 +45,6 @@ pub enum Concept {
     Value(Value),
 }
 
-impl Concept {
-    pub fn type_label_cloned(&self) -> String {
-        // FIXME: Add a Label type to simplify this function
-        match self {
-            Self::RootThingType(_) => RootThingType::LABEL.to_owned(),
-            Self::EntityType(type_) => type_.label.clone(),
-            Self::RelationType(RelationType { label, .. }) => label.clone(),
-            Self::RoleType(RoleType { label, .. }) => format!("{label}"),
-            Self::AttributeType(AttributeType { label, .. }) => label.clone(),
-            Self::Entity(Entity { type_: EntityType { label, .. }, .. }) => label.clone(),
-            Self::Relation(Relation { type_: RelationType { label, .. }, .. }) => label.clone(),
-            Self::Attribute(Attribute { type_: AttributeType { label, .. }, .. }) => label.clone(),
-            Self::Value(_) => todo!(),
-        }
-    }
-}
-
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum Transitivity {
