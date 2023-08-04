@@ -34,7 +34,8 @@ use tokio::time::sleep;
 use typedb_client::{
     answer::ConceptMap,
     concept::{
-        Annotation, Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,
+        Annotation, Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType,
+        Value,
     },
     logic::Rule,
     transaction::concept::api::ThingAPI,
@@ -114,7 +115,7 @@ fn labels_equal(expected_label: &str, answer: &Concept) -> bool {
         Concept::RootThingType(_) => expected_label == "thing",
         Concept::EntityType(EntityType { label, .. }) => expected_label == label,
         Concept::RelationType(RelationType { label, .. }) => expected_label == label,
-        Concept::RoleType(RoleType { label, .. }) => expected_label == label.to_string(),
+        Concept::RoleType(RoleType { label, .. }) => expected_label == format!("{label}"),
         Concept::AttributeType(AttributeType { label, .. }) => expected_label == label,
         _ => unreachable!(),
     }
