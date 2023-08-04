@@ -26,8 +26,13 @@ import io.grpc.StatusRuntimeException;
 
 import javax.annotation.Nullable;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_CONNECTION_CLOSED_UKNOWN;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_PASSWORD_CREDENTIAL_EXPIRED;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_ENDPOINT_NOT_ENCRYPTED;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_SSL_CERTIFICATE_INVALID_FOR_HOSTNAME;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_SSL_CERTIFICATE_NOT_VALIDATED;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_SSL_HANDSHAKE_FAILED;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.RPC_METHOD_UNAVAILABLE;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.UNABLE_TO_CONNECT;
@@ -48,7 +53,13 @@ public class TypeDBClientException extends RuntimeException {
         this.errorMessage = error;
     }
 
-    public TypeDBClientException(String message, Throwable cause) {
+    public TypeDBClientException(Throwable cause, ErrorMessage error, Object... parameters) {
+        super(error.message(parameters), cause);
+        assert !getMessage().contains("%s");
+        this.errorMessage = error;
+    }
+
+    public TypeDBClientException(Throwable cause, String message) {
         super(message, cause);
         this.errorMessage = null;
     }
@@ -57,15 +68,15 @@ public class TypeDBClientException extends RuntimeException {
         if (isUnimplementedMethod(sre)) {
             return new TypeDBClientException(RPC_METHOD_UNAVAILABLE, sre.getStatus().getDescription());
         } else if (isRstStream(sre)) {
-            return new TypeDBClientException(UNABLE_TO_CONNECT);
+            return tryGetRstStreamCause(sre);
         } else if (isReplicaNotPrimary(sre)) {
             return new TypeDBClientException(CLUSTER_REPLICA_NOT_PRIMARY);
         } else if (isTokenCredentialInvalid(sre)) {
             return new TypeDBClientException(CLUSTER_TOKEN_CREDENTIAL_INVALID);
-         } else if (isPasswordCredentialExpired(sre)) {
+        } else if (isPasswordCredentialExpired(sre)) {
             return new TypeDBClientException(CLUSTER_PASSWORD_CREDENTIAL_EXPIRED);
         } else {
-            return new TypeDBClientException(sre.getStatus().getDescription(), sre);
+            return new TypeDBClientException(sre, sre.getStatus().getDescription());
         }
     }
 
@@ -96,6 +107,25 @@ public class TypeDBClientException extends RuntimeException {
 
     private static boolean isUnimplementedMethod(StatusRuntimeException statusRuntimeException) {
         return statusRuntimeException.getStatus().getCode() == Status.Code.UNIMPLEMENTED;
+    }
+
+    private static TypeDBClientException tryGetRstStreamCause(StatusRuntimeException sre) {
+        if (sre.getStatus().getCode() == Status.Code.UNAVAILABLE) {
+            if (sre.getCause() instanceof javax.net.ssl.SSLHandshakeException) {
+                if (sre.getCause().getMessage().contains("PKIX path building failed")) {
+                    return new TypeDBClientException(sre.getCause(), CLUSTER_SSL_CERTIFICATE_NOT_VALIDATED);
+                } else if (sre.getCause().getMessage().contains("No subject alternative DNS name")) {
+                    return new TypeDBClientException(sre.getCause(), CLUSTER_SSL_CERTIFICATE_INVALID_FOR_HOSTNAME);
+                } else return new TypeDBClientException(sre.getCause(), CLUSTER_SSL_HANDSHAKE_FAILED, sre.getMessage());
+            } else if (sre.getCause() instanceof io.netty.handler.ssl.NotSslRecordException) {
+                return new TypeDBClientException(sre.getCause(), CLUSTER_ENDPOINT_NOT_ENCRYPTED);
+            } else if (sre.getStatus().getDescription() != null &&
+                    sre.getStatus().getDescription().contains("Network closed for unknown reason")) {
+                // Too generic a reason to throw. Wrap it in UNABLE_TO_CONNECT so the client tries other nodes.
+                return new TypeDBClientException(new TypeDBClientException(sre.getCause(), CLUSTER_CONNECTION_CLOSED_UKNOWN), UNABLE_TO_CONNECT);
+            }
+        }
+        return new TypeDBClientException(sre, UNABLE_TO_CONNECT);
     }
 
     public String getName() {

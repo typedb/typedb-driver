@@ -69,7 +69,7 @@ class ClusterServerClient extends TypeDBClientImpl {
                 }
                 return NettyChannelBuilder.forTarget(address).useTransportSecurity().sslContext(sslContext).build();
             } catch (SSLException e) {
-                throw new TypeDBClientException(e.getMessage(), e);
+                throw new TypeDBClientException(e, e.getMessage());
             }
         }
     }

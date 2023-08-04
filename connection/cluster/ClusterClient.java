@@ -28,6 +28,7 @@ import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.user.User;
 import com.vaticle.typedb.client.api.user.UserManager;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.common.collection.Pair;
 import com.vaticle.typedb.protocol.ClusterDatabaseProto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
@@ -75,19 +77,29 @@ public class ClusterClient implements TypeDBClient.Cluster {
     }
 
     private Set<String> fetchCurrentAddresses(Set<String> servers) {
+        List<Pair<String, Throwable>> perServerExceptions = new ArrayList<>();
         for (String server : servers) {
             try (ClusterServerClient client = new ClusterServerClient(server, credential, parallelisation)) {
                 client.validateConnection();
                 return client.servers();
             } catch (TypeDBClientException e) {
                 if (UNABLE_TO_CONNECT.equals(e.getErrorMessage())) {
-                    LOG.warn("Unable to fetching list of all servers from server {}.", server);
+                    LOG.warn("Unable to fetch list of all servers from server {}.", server);
+                    if (e.getCause() != null) perServerExceptions.add(new Pair<>(server, e));
                 } else {
                     throw e;
                 }
             }
         }
-        throw new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, String.join(",", servers));
+
+        String description;
+        if (!perServerExceptions.isEmpty()) {
+            List<String> reasons = perServerExceptions.stream()
+                    .map(cause -> String.format("\t- %s: %s", cause.first(), cause.second().getCause().getMessage()))
+                    .collect(Collectors.toList());
+            description = "Reasons:[\n" + String.join("\n", reasons) + "\n]";
+        } else description = String.join(",", servers);
+        throw new TypeDBClientException(CLUSTER_UNABLE_TO_CONNECT, description);
     }
 
     private Map<String, ClusterServerClient> createClients(TypeDBCredential credential, int parallelisation, Set<String> addresses) {

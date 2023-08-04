@@ -66,6 +66,16 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
                 new Client(18, "Invalid token credential.");
         public static final ErrorMessage CLUSTER_PASSWORD_CREDENTIAL_EXPIRED =
                 new Client(19, "Expired password credential.");
+        public static final ErrorMessage CLUSTER_ENDPOINT_NOT_ENCRYPTED =
+                new Client(20, "Unable to connect to TypeDB Cluster: attempting an encrypted connection to an unencrypted endpoint.");
+        public static final ErrorMessage CLUSTER_SSL_HANDSHAKE_FAILED =
+                new Client(21, "SSL handshake with TypeDB Cluster failed: %s.");
+        public static final ErrorMessage CLUSTER_SSL_CERTIFICATE_NOT_VALIDATED =
+                new Client(22, "SSL handshake with TypeDB Cluster failed: the server's identity could not be verified.");
+        public static final ErrorMessage CLUSTER_SSL_CERTIFICATE_INVALID_FOR_HOSTNAME =
+                new Client(23, "SSL handshake with TypeDB Cluster failed: the server's certificate is not valid for the provided hostname.");
+        public static final ErrorMessage CLUSTER_CONNECTION_CLOSED_UKNOWN =
+                new Client(24, "Network closed for unknown reason. This may be caused by a client-server version mismatch or incompatible encryption settings.");
 
         private static final String codePrefix = "CLI";
         private static final String messagePrefix = "Client Error";
