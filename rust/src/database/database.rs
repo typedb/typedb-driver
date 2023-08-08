@@ -118,7 +118,7 @@ impl Database {
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    #[cfg(not(feature = "sync"))]
     pub(super) async fn run_on_any_replica<F, P, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> P,
@@ -140,7 +140,7 @@ impl Database {
         Err(self.connection.unable_to_connect_error())
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    #[cfg(not(feature = "sync"))]
     pub(super) async fn run_on_primary_replica<F, P, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> P,
@@ -187,7 +187,7 @@ impl Database {
     }
 
     #[cfg(feature = "sync")]
-    fn run_on_any_replica<F, R>(&self, task: F) -> Result<R>
+    pub(super) fn run_on_any_replica<F, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> Result<R>,
     {
@@ -206,7 +206,7 @@ impl Database {
     }
 
     #[cfg(feature = "sync")]
-    fn run_on_primary_replica<F, R>(&self, task: F) -> Result<R>
+    pub(super) fn run_on_primary_replica<F, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> Result<R>,
     {
@@ -289,6 +289,9 @@ impl Replica {
     }
 
     fn try_from_info(database_info: DatabaseInfo, connection: &Connection) -> Result<Vec<Self>> {
+        if database_info.is_dummy() {
+            return Err(ConnectionError::DatabaseDoesNotExist(database_info.name).into());
+        }
         database_info
             .replicas
             .into_iter()
