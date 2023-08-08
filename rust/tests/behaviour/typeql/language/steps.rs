@@ -312,7 +312,7 @@ generic_step_impl! {
                     {
                         let mut table_row_wo_owner = table_row.clone();
                         table_row_wo_owner.remove(Context::GROUP_COLUMN_NAME);
-                        if match_answer_concept_map(context, &table_row_wo_owner, &ans_row).await {
+                        if match_answer_concept_map(context, &table_row_wo_owner, ans_row).await {
                             matched_rows += 1;
                             break;
                         }

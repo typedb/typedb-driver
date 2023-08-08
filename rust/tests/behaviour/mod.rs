@@ -96,7 +96,7 @@ impl Context {
         sleep(Context::STEP_REATTEMPT_SLEEP).await;
         self.set_connection(Connection::new_encrypted(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
-            Credential::with_tls(&Context::ADMIN_USERNAME, &Context::ADMIN_PASSWORD, Some(&self.tls_root_ca))?,
+            Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&self.tls_root_ca))?,
         )?);
         self.cleanup_databases().await;
         self.cleanup_users().await;
@@ -219,7 +219,7 @@ impl Default for Context {
         );
         let connection = Connection::new_encrypted(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
-            Credential::with_tls(&Context::ADMIN_USERNAME, &Context::ADMIN_PASSWORD, Some(&tls_root_ca)).unwrap(),
+            Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&tls_root_ca)).unwrap(),
         )
         .unwrap();
         let databases = DatabaseManager::new(connection.clone());

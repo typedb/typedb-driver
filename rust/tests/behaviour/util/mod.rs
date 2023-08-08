@@ -60,14 +60,14 @@ pub async fn match_answer_concept_map(
 ) -> bool {
     stream::iter(answer_identifiers.keys())
         .all(|key| async {
-            answer.map.contains_key(key.clone())
+            answer.map.contains_key(*key)
                 && match_answer_concept(context, answer_identifiers.get(key).unwrap(), answer.get(key).unwrap()).await
         })
         .await
 }
 
 pub async fn match_answer_concept(context: &Context, answer_identifier: &str, answer: &Concept) -> bool {
-    let identifiers: Vec<&str> = answer_identifier.splitn(2, ":").collect();
+    let identifiers: Vec<&str> = answer_identifier.splitn(2, ':').collect();
     match identifiers[0] {
         "key" => key_values_equal(context, identifiers[1], answer).await,
         "label" => labels_equal(identifiers[1], answer),
@@ -78,7 +78,7 @@ pub async fn match_answer_concept(context: &Context, answer_identifier: &str, an
 }
 
 async fn key_values_equal(context: &Context, expected_label_and_value: &str, answer: &Concept) -> bool {
-    let identifiers: Vec<&str> = expected_label_and_value.splitn(2, ":").collect();
+    let identifiers: Vec<&str> = expected_label_and_value.splitn(2, ':').collect();
     assert_eq!(identifiers.len(), 2, "Unexpected table cell format: {expected_label_and_value}.");
 
     let res = match answer {
@@ -100,19 +100,11 @@ async fn key_values_equal(context: &Context, expected_label_and_value: &str, ans
         _ => unreachable!("Unexpected Concept type: {answer:?}"),
     };
     match res {
-        Ok(_) => {
-            let equals = res
-                .unwrap()
-                .into_iter()
-                .filter(|attr| attr.type_.label == identifiers[0])
-                .collect::<Vec<_>>()
-                .first()
-                .and_then(|attr| Some(value_equals_str(&attr.value, identifiers[1])));
-            match equals {
-                Some(val) => val,
-                None => false,
-            }
-        }
+        Ok(keys) => keys
+            .into_iter()
+            .find(|key| key.type_.label == identifiers[0])
+            .map(|attr| value_equals_str(&attr.value, identifiers[1]))
+            .unwrap_or(false),
         Err(_) => false,
     }
 }
@@ -129,14 +121,14 @@ fn labels_equal(expected_label: &str, answer: &Concept) -> bool {
 }
 
 fn attribute_values_equal(expected_label_and_value: &str, answer: &Concept) -> bool {
-    let identifiers: Vec<&str> = expected_label_and_value.splitn(2, ":").collect();
+    let identifiers: Vec<&str> = expected_label_and_value.splitn(2, ':').collect();
     assert_eq!(identifiers.len(), 2, "Unexpected table cell format: {expected_label_and_value}.");
     let Concept::Attribute(Attribute { value, .. }) = answer else { unreachable!() };
     value_equals_str(value, identifiers[1])
 }
 
 fn values_equal(expected_label_and_value: &str, answer: &Concept) -> bool {
-    let identifiers: Vec<&str> = expected_label_and_value.splitn(2, ":").collect();
+    let identifiers: Vec<&str> = expected_label_and_value.splitn(2, ':').collect();
     assert_eq!(identifiers.len(), 2, "Unexpected table cell format: {expected_label_and_value}.");
     let Concept::Value(value) = answer else { unreachable!() };
     value_equals_str(value, identifiers[1].trim())
@@ -145,16 +137,13 @@ fn values_equal(expected_label_and_value: &str, answer: &Concept) -> bool {
 fn value_equals_str(value: &Value, expected: &str) -> bool {
     match value {
         Value::String(val) => val == expected,
-        Value::Long(val) => expected.parse::<i64>().and_then(|expected| Ok(expected.eq(val))).unwrap_or_else(|_| false),
-        Value::Double(val) => expected
-            .parse::<f64>()
-            .and_then(|expected| Ok(equals_approximate(expected, *val)))
-            .unwrap_or_else(|_| false),
-        Value::Boolean(val) => {
-            expected.parse::<bool>().and_then(|expected| Ok(expected.eq(val))).unwrap_or_else(|_| false)
+        Value::Long(val) => expected.parse::<i64>().map(|expected| expected.eq(val)).unwrap_or(false),
+        Value::Double(val) => {
+            expected.parse::<f64>().map(|expected| equals_approximate(expected, *val)).unwrap_or(false)
         }
+        Value::Boolean(val) => expected.parse::<bool>().map(|expected| expected.eq(val)).unwrap_or(false),
         Value::DateTime(val) => {
-            if expected.contains(":") {
+            if expected.contains(':') {
                 val == &NaiveDateTime::parse_from_str(expected, "%Y-%m-%dT%H:%M:%S").unwrap()
             } else {
                 let my_date = NaiveDate::parse_from_str(expected, "%Y-%m-%d").unwrap();
@@ -167,7 +156,7 @@ fn value_equals_str(value: &Value, expected: &str) -> bool {
 
 pub fn equals_approximate(first: f64, second: f64) -> bool {
     const EPS: f64 = 1e-4;
-    return (first - second).abs() < EPS;
+    (first - second).abs() < EPS
 }
 
 pub async fn match_templated_answer(
@@ -177,13 +166,12 @@ pub async fn match_templated_answer(
 ) -> TypeDBResult<Vec<ConceptMap>> {
     let query = apply_query_template(step.docstring().unwrap(), answer);
     let parsed = parse_query(&query)?;
-    Ok(context.transaction().query().match_(&parsed.to_string())?.try_collect::<Vec<_>>().await?)
+    context.transaction().query().match_(&parsed.to_string())?.try_collect::<Vec<_>>().await
 }
 
-fn apply_query_template(query_template: &String, answer: &ConceptMap) -> String {
+fn apply_query_template(query_template: &str, answer: &ConceptMap) -> String {
     let re = Regex::new(r"<answer\.(.+?)\.iid>").unwrap();
-    re.replace_all(query_template, |caps: &Captures| format!("{}", get_iid(&answer.map.get(&caps[1]).unwrap())))
-        .to_string()
+    re.replace_all(query_template, |caps: &Captures| get_iid(answer.map.get(&caps[1]).unwrap())).to_string()
 }
 
 fn get_iid(concept: &Concept) -> String {
@@ -201,7 +189,7 @@ pub async fn match_answer_rule(answer_identifiers: &HashMap<&str, &str>, answer:
     let when = parse_patterns(when_clause.as_str()).unwrap()[0].clone().into_conjunction();
     let then_clause = answer_identifiers.get("then").unwrap().to_string();
     let then = parse_patterns(then_clause.as_str()).unwrap()[0].clone().into_variable();
-    answer_identifiers.get("label").unwrap().to_string() == answer.label
+    *answer_identifiers.get("label").unwrap() == answer.label
         && when == answer.when
         && then == Variable::Thing(answer.then.clone())
 }
