@@ -46,30 +46,16 @@ impl DatabaseManager {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn contains(&self, name: impl Into<String>) -> Result<bool> {
-        self.run_on_primary_replica(name.into(), move |database, server_connection, _| async move {
-            server_connection.database_exists(database.name().to_owned()).await
-        })
-        .await
+        let name = name.into();
+        self.run_failsafe(name, |server_connection, name| async move { server_connection.database_exists(name).await })
+            .await
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn create(&self, name: impl Into<String>) -> Result {
         let name = name.into();
-        let mut error_buffer = Vec::with_capacity(self.connection.server_count());
-        for server_connection in self.connection.connections() {
-            match server_connection.create_database(name.clone()).await {
-                Ok(()) => return Ok(()),
-                Err(Error::Connection(ConnectionError::ClusterReplicaNotPrimary())) => {
-                    return self
-                        .run_on_primary_replica(name, |database, server_connection, _| async move {
-                            server_connection.create_database(database.name().to_owned()).await
-                        })
-                        .await
-                }
-                Err(err) => error_buffer.push(format!("- {}: {}", server_connection.address(), err)),
-            }
-        }
-        Err(ConnectionError::ClusterAllNodesFailed(error_buffer.join("\n")))?
+        self.run_failsafe(name, |server_connection, name| async move { server_connection.create_database(name).await })
+            .await
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -87,11 +73,28 @@ impl DatabaseManager {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn run_on_primary_replica<F, P, R>(&self, name: String, task: F) -> Result<R>
+    async fn run_failsafe<F, P, R>(&self, name: String, task: F) -> Result<R>
     where
-        F: Fn(ServerDatabase, ServerConnection, bool) -> P,
+        F: Fn(ServerConnection, String) -> P,
         P: Future<Output = Result<R>>,
     {
-        Database::get(name, self.connection.clone()).await?.run_on_primary_replica(&task).await
+        let mut error_buffer = Vec::with_capacity(self.connection.server_count());
+        for server_connection in self.connection.connections() {
+            match task(server_connection.clone(), name.clone()).await {
+                Ok(res) => return Ok(res),
+                Err(Error::Connection(ConnectionError::ClusterReplicaNotPrimary())) => {
+                    return self
+                        .get(name)
+                        .await?
+                        .run_on_primary_replica(|database: ServerDatabase, server_connection, _| {
+                            let task = &task;
+                            async move { task(server_connection, database.name().to_owned()).await }
+                        })
+                        .await
+                }
+                Err(err) => error_buffer.push(format!("- {}: {}", server_connection.address(), err)),
+            }
+        }
+        Err(ConnectionError::ClusterAllNodesFailed(error_buffer.join("\n")))?
     }
 }
