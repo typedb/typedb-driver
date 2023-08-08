@@ -103,7 +103,7 @@ impl Database {
         self.run_failsafe(|database, _, _| async move { database.rule_schema().await }).await
     }
 
-    #[cfg(not(feature = "sync"))]
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn run_failsafe<F, P, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> P,
@@ -118,7 +118,7 @@ impl Database {
         }
     }
 
-    #[cfg(not(feature = "sync"))]
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(super) async fn run_on_any_replica<F, P, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> P,
@@ -140,7 +140,7 @@ impl Database {
         Err(self.connection.unable_to_connect_error())
     }
 
-    #[cfg(not(feature = "sync"))]
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(super) async fn run_on_primary_replica<F, P, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> P,
@@ -163,66 +163,6 @@ impl Database {
                     debug!("Primary replica error, waiting...");
                     Self::wait_for_primary_replica_selection().await;
                     primary_replica = self.seek_primary_replica().await?;
-                }
-                res => return res,
-            }
-        }
-        Err(self.connection.unable_to_connect_error())
-    }
-
-    #[cfg(feature = "sync")]
-    pub(crate) fn run_failsafe<F, R>(&self, task: F) -> Result<R>
-    where
-        F: Fn(ServerDatabase, ServerConnection, bool) -> Result<R>,
-    {
-        match self.run_on_any_replica(&task) {
-            Err(Error::Connection(ConnectionError::ClusterReplicaNotPrimary())) => {
-                debug!("Attempted to run on a non-primary replica, retrying on primary...");
-                self.run_on_primary_replica(&task)
-            }
-            res => res,
-        }
-    }
-
-    #[cfg(feature = "sync")]
-    pub(super) fn run_on_any_replica<F, R>(&self, task: F) -> Result<R>
-    where
-        F: Fn(ServerDatabase, ServerConnection, bool) -> Result<R>,
-    {
-        let mut is_first_run = true;
-        let replicas = self.replicas.read().unwrap().clone();
-        for replica in replicas {
-            match task(replica.database.clone(), self.connection.connection(&replica.address)?.clone(), is_first_run) {
-                Err(Error::Connection(ConnectionError::UnableToConnect())) => {
-                    debug!("Unable to connect to {}. Attempting next server.", replica.address);
-                }
-                res => return res,
-            }
-            is_first_run = false;
-        }
-        Err(self.connection.unable_to_connect_error())
-    }
-
-    #[cfg(feature = "sync")]
-    pub(super) fn run_on_primary_replica<F, R>(&self, task: F) -> Result<R>
-    where
-        F: Fn(ServerDatabase, ServerConnection, bool) -> Result<R>,
-    {
-        let mut primary_replica =
-            if let Some(replica) = self.primary_replica() { replica } else { self.seek_primary_replica()? };
-
-        for retry in 0..Self::PRIMARY_REPLICA_TASK_MAX_RETRIES {
-            match task(
-                primary_replica.database.clone(),
-                self.connection.connection(&primary_replica.address)?.clone(),
-                retry == 0,
-            ) {
-                Err(Error::Connection(
-                    ConnectionError::ClusterReplicaNotPrimary() | ConnectionError::UnableToConnect(),
-                )) => {
-                    debug!("Primary replica error, waiting...");
-                    Self::wait_for_primary_replica_selection();
-                    primary_replica = self.seek_primary_replica()?;
                 }
                 res => return res,
             }

@@ -86,20 +86,12 @@ impl DatabaseManager {
         Err(ConnectionError::ClusterAllNodesFailed(error_buffer.join("\n")))?
     }
 
-    #[cfg(not(feature = "sync"))]
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn run_on_primary_replica<F, P, R>(&self, name: String, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> P,
         P: Future<Output = Result<R>>,
     {
         Database::get(name, self.connection.clone()).await?.run_on_primary_replica(&task).await
-    }
-
-    #[cfg(feature = "sync")]
-    fn run_on_primary_replica<F, R>(&self, name: String, task: F) -> Result<R>
-    where
-        F: Fn(ServerDatabase, ServerConnection, bool) -> Result<R>,
-    {
-        Database::get(name, self.connection.clone())?.run_on_primary_replica(&task)
     }
 }
