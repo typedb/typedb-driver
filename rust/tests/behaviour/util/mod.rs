@@ -34,8 +34,7 @@ use tokio::time::sleep;
 use typedb_client::{
     answer::ConceptMap,
     concept::{
-        Annotation, Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType,
-        Value,
+        Annotation, Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,
     },
     logic::Rule,
     transaction::concept::api::ThingAPI,
