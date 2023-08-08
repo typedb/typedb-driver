@@ -119,7 +119,7 @@ impl Database {
     }
 
     #[cfg(not(feature = "sync"))]
-    async fn run_on_any_replica<F, P, R>(&self, task: F) -> Result<R>
+    pub(super) async fn run_on_any_replica<F, P, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> P,
         P: Future<Output = Result<R>>,
@@ -141,7 +141,7 @@ impl Database {
     }
 
     #[cfg(not(feature = "sync"))]
-    async fn run_on_primary_replica<F, P, R>(&self, task: F) -> Result<R>
+    pub(super) async fn run_on_primary_replica<F, P, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> P,
         P: Future<Output = Result<R>>,
@@ -185,7 +185,7 @@ impl Database {
     }
 
     #[cfg(feature = "sync")]
-    fn run_on_any_replica<F, R>(&self, task: F) -> Result<R>
+    pub(super) fn run_on_any_replica<F, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> Result<R>,
     {
@@ -204,7 +204,7 @@ impl Database {
     }
 
     #[cfg(feature = "sync")]
-    fn run_on_primary_replica<F, R>(&self, task: F) -> Result<R>
+    pub(super) fn run_on_primary_replica<F, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> Result<R>,
     {
@@ -287,6 +287,9 @@ impl Replica {
     }
 
     fn try_from_info(database_info: DatabaseInfo, connection: &Connection) -> Result<Vec<Self>> {
+        if database_info.is_dummy() {
+            return Err(ConnectionError::DatabaseDoesNotExist(database_info.name).into());
+        }
         database_info
             .replicas
             .into_iter()
@@ -311,8 +314,8 @@ impl Replica {
         for server_connection in connection.connections() {
             let res = server_connection.get_database_replicas(name.clone()).await;
             match res {
-                Ok(res) => {
-                    return Self::try_from_info(res, &connection);
+                Ok(info) => {
+                    return Self::try_from_info(info, &connection);
                 }
                 Err(Error::Connection(ConnectionError::UnableToConnect())) => {
                     error!(

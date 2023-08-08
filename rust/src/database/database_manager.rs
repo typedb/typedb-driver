@@ -26,7 +26,7 @@ use super::{database::ServerDatabase, Database};
 use crate::{
     common::{error::ConnectionError, Result},
     connection::ServerConnection,
-    Connection,
+    Connection, Error,
 };
 
 #[derive(Clone, Debug)]
@@ -41,16 +41,12 @@ impl DatabaseManager {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get(&self, name: impl Into<String>) -> Result<Database> {
-        let name = name.into();
-        if !self.contains(name.clone()).await? {
-            return Err(ConnectionError::DatabaseDoesNotExist(name).into());
-        }
-        Database::get(name, self.connection.clone()).await
+        Database::get(name.into(), self.connection.clone()).await
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn contains(&self, name: impl Into<String>) -> Result<bool> {
-        self.run_failsafe(name.into(), move |database, server_connection, _| async move {
+        self.run_on_primary_replica(name.into(), move |database, server_connection, _| async move {
             server_connection.database_exists(database.name().to_owned()).await
         })
         .await
@@ -58,10 +54,22 @@ impl DatabaseManager {
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn create(&self, name: impl Into<String>) -> Result {
-        self.run_failsafe(name.into(), |database, server_connection, _| async move {
-            server_connection.create_database(database.name().to_owned()).await
-        })
-        .await
+        let name = name.into();
+        let mut error_buffer = Vec::with_capacity(self.connection.server_count());
+        for server_connection in self.connection.connections() {
+            match server_connection.create_database(name.clone()).await {
+                Ok(()) => return Ok(()),
+                Err(Error::Connection(ConnectionError::ClusterReplicaNotPrimary())) => {
+                    return self
+                        .run_on_primary_replica(name, |database, server_connection, _| async move {
+                            server_connection.create_database(database.name().to_owned()).await
+                        })
+                        .await
+                }
+                Err(err) => error_buffer.push(format!("- {}: {}", server_connection.address(), err)),
+            }
+        }
+        Err(ConnectionError::ClusterAllNodesFailed(error_buffer.join("\n")))?
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -79,19 +87,19 @@ impl DatabaseManager {
     }
 
     #[cfg(not(feature = "sync"))]
-    async fn run_failsafe<F, P, R>(&self, name: String, task: F) -> Result<R>
+    async fn run_on_primary_replica<F, P, R>(&self, name: String, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> P,
         P: Future<Output = Result<R>>,
     {
-        Database::get(name, self.connection.clone()).await?.run_failsafe(&task).await
+        Database::get(name, self.connection.clone()).await?.run_on_primary_replica(&task).await
     }
 
     #[cfg(feature = "sync")]
-    fn run_failsafe<F, R>(&self, name: String, task: F) -> Result<R>
+    fn run_on_primary_replica<F, R>(&self, name: String, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> Result<R>,
     {
-        Database::get(name, self.connection.clone())?.run_failsafe(&task)
+        Database::get(name, self.connection.clone())?.run_on_primary_replica(&task)
     }
 }
