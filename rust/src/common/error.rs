@@ -19,7 +19,7 @@
  * under the License.
  */
 
-use std::{error::Error as StdError, fmt};
+use std::{error::Error as StdError, fmt, os::macos::raw::stat};
 
 use tonic::{Code, Status};
 use typeql_lang::error_messages;
@@ -146,12 +146,15 @@ impl From<Status> for Error {
     fn from(status: Status) -> Self {
         if is_rst_stream(&status) {
             Self::Connection(ConnectionError::UnableToConnect())
-        } else if is_replica_not_primary(&status) {
-            Self::Connection(ConnectionError::ClusterReplicaNotPrimary())
-        } else if is_token_credential_invalid(&status) {
-            Self::Connection(ConnectionError::ClusterTokenCredentialInvalid())
         } else {
-            Self::Other(status.message().to_string())
+            match status.message().split_ascii_whitespace().next() {
+                Some("[RPL01]") => Self::Connection(ConnectionError::ClusterReplicaNotPrimary()),
+                Some("[CLS08]") => Self::Connection(ConnectionError::ClusterTokenCredentialInvalid()),
+                Some("[DBS06]") => Self::Connection(ConnectionError::DatabaseDoesNotExist(
+                    status.message().split('\'').nth(1).unwrap_or("{unknown}").to_owned(),
+                )),
+                _ => Self::Other(status.message().to_owned()),
+            }
         }
     }
 }
@@ -161,14 +164,6 @@ fn is_rst_stream(status: &Status) -> bool {
     status.code() == Code::Unavailable
         || status.code() == Code::Unknown
         || status.message().contains("Received Rst Stream")
-}
-
-fn is_replica_not_primary(status: &Status) -> bool {
-    status.code() == Code::Internal && status.message().contains("[RPL01]")
-}
-
-fn is_token_credential_invalid(status: &Status) -> bool {
-    status.code() == Code::Unauthenticated && status.message().contains("[CLS08]")
 }
 
 impl From<http::uri::InvalidUri> for Error {
