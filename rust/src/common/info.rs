@@ -39,12 +39,6 @@ pub(crate) struct DatabaseInfo {
     pub(crate) replicas: Vec<ReplicaInfo>,
 }
 
-impl DatabaseInfo {
-    pub(crate) fn is_dummy(&self) -> bool {
-        self.replicas.iter().all(|replica_info| !replica_info.is_primary && replica_info.term == -1)
-    }
-}
-
 #[derive(Debug)]
 pub struct ReplicaInfo {
     pub address: Address,

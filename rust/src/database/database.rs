@@ -57,7 +57,7 @@ impl Database {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(super) async fn get(name: String, connection: Connection) -> Result<Self> {
         Ok(Self {
-            name: name.to_string(),
+            name: name.clone(),
             replicas: RwLock::new(Replica::fetch_all(name, connection.clone()).await?),
             connection,
         })
@@ -227,9 +227,6 @@ impl Replica {
     }
 
     fn try_from_info(database_info: DatabaseInfo, connection: &Connection) -> Result<Vec<Self>> {
-        if database_info.is_dummy() {
-            return Err(ConnectionError::DatabaseDoesNotExist(database_info.name).into());
-        }
         database_info
             .replicas
             .into_iter()

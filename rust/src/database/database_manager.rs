@@ -22,7 +22,7 @@
 #[cfg(not(feature = "sync"))]
 use std::future::Future;
 
-use super::{database::ServerDatabase, Database};
+use super::Database;
 use crate::{
     common::{error::ConnectionError, Result},
     connection::ServerConnection,
@@ -86,7 +86,7 @@ impl DatabaseManager {
                     return self
                         .get(name)
                         .await?
-                        .run_on_primary_replica(|database: ServerDatabase, server_connection, _| {
+                        .run_on_primary_replica(|database, server_connection, _| {
                             let task = &task;
                             async move { task(server_connection, database.name().to_owned()).await }
                         })
