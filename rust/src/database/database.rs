@@ -254,7 +254,9 @@ impl Replica {
                 Ok(info) => {
                     return Self::try_from_info(info, &connection);
                 }
-                Err(Error::Connection(ConnectionError::UnableToConnect())) => {
+                Err(Error::Connection(
+                    ConnectionError::DatabaseDoesNotExist(_) | ConnectionError::UnableToConnect(),
+                )) => {
                     error!(
                         "Failed to fetch replica info for database '{}' from {}. Attempting next server.",
                         name,
