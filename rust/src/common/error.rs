@@ -28,34 +28,36 @@ use super::{address::Address, RequestID};
 
 error_messages! { ConnectionError
     code: "CXN", type: "Connection Error",
+    RPCMethodUnavailable(String) =
+        1: "The server does not support this method, please check the client-server compatibility:\n'{}'.",
     ConnectionIsClosed() =
-        1: "The connection has been closed and no further operation is allowed.",
+        2: "The connection has been closed and no further operation is allowed.",
     SessionIsClosed() =
-        2: "The session is closed and no further operation is allowed.",
+        3: "The session is closed and no further operation is allowed.",
     TransactionIsClosed() =
-        3: "The transaction is closed and no further operation is allowed.",
+        4: "The transaction is closed and no further operation is allowed.",
     TransactionIsClosedWithErrors(String) =
-        4: "The transaction is closed because of the error(s):\n{}",
+        5: "The transaction is closed because of the error(s):\n{}",
     UnableToConnect() =
-        5: "Unable to connect to TypeDB server.",
+        6: "Unable to connect to TypeDB server.",
     DatabaseDoesNotExist(String) =
-        8: "The database '{}' does not exist.",
+        9: "The database '{}' does not exist.",
     MissingResponseField(&'static str) =
-        9: "Missing field in message received from server: '{}'.",
+        10: "Missing field in message received from server: '{}'.",
     UnknownRequestId(RequestID) =
-        10: "Received a response with unknown request id '{}'",
+        11: "Received a response with unknown request id '{}'",
     InvalidResponseField(&'static str) =
-        11: "Invalid field in message received from server: '{}'.",
+        12: "Invalid field in message received from server: '{}'.",
     ClusterUnableToConnect(String) =
-        12: "Unable to connect to TypeDB Cluster. Attempted connecting to the cluster members, but none are available: '{}'.",
+        13: "Unable to connect to TypeDB Cluster. Attempted connecting to the cluster members, but none are available: '{}'.",
     ClusterReplicaNotPrimary() =
-        13: "The replica is not the primary replica.",
+        14: "The replica is not the primary replica.",
     ClusterAllNodesFailed(String) =
-        14: "Attempted connecting to all cluster members, but the following errors occurred: \n{}.",
+        15: "Attempted connecting to all cluster members, but the following errors occurred: \n{}.",
     ClusterTokenCredentialInvalid() =
-        16: "Invalid token credential.",
+        17: "Invalid token credential.",
     SessionCloseFailed() =
-        17: "Failed to close session. It may still be open on the server: or it may already have been closed previously.",
+        18: "Failed to close session. It may still be open on the server: or it may already have been closed previously.",
 }
 
 error_messages! { InternalError
@@ -146,6 +148,8 @@ impl From<Status> for Error {
     fn from(status: Status) -> Self {
         if is_rst_stream(&status) {
             Self::Connection(ConnectionError::UnableToConnect())
+        } else if is_unimplemented_method(&status) {
+            Self::Connection(ConnectionError::RPCMethodUnavailable(status.message().to_owned()))
         } else {
             match status.message().split_ascii_whitespace().next() {
                 Some("[RPL01]") => Self::Connection(ConnectionError::ClusterReplicaNotPrimary()),
@@ -157,6 +161,10 @@ impl From<Status> for Error {
             }
         }
     }
+}
+
+fn is_unimplemented_method(status: &Status) -> bool {
+    status.code() == Code::Unimplemented
 }
 
 fn is_rst_stream(status: &Status) -> bool {
