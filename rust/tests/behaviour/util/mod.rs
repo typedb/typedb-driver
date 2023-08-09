@@ -114,7 +114,7 @@ fn labels_equal(expected_label: &str, answer: &Concept) -> bool {
         Concept::RootThingType(_) => expected_label == "thing",
         Concept::EntityType(EntityType { label, .. }) => expected_label == label,
         Concept::RelationType(RelationType { label, .. }) => expected_label == label,
-        Concept::RoleType(RoleType { label, .. }) => expected_label == format!("{label}"),
+        Concept::RoleType(RoleType { label, .. }) => expected_label == label.to_string(),
         Concept::AttributeType(AttributeType { label, .. }) => expected_label == label,
         _ => unreachable!(),
     }
