@@ -57,6 +57,7 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
     {
         match call(self).await {
             Err(Error::Connection(ConnectionError::ClusterTokenCredentialInvalid())) => {
+                debug!("Request rejected because token credential was invalid. Renewing token...");
                 self.renew_token().await?;
                 call(self).await
             }
