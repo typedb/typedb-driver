@@ -19,7 +19,7 @@
  * under the License.
  */
 
-use std::{error::Error as StdError, fmt};
+use std::{error::Error as StdError, fmt, os::macos::raw::stat};
 
 use tonic::{Code, Status};
 use typeql_lang::error_messages;
@@ -183,17 +183,24 @@ impl From<Status> for Error {
             Self::parse_unavailable(status.message())
         } else if status.code() == Code::Unknown || is_rst_stream(&status) {
             Self::Connection(ConnectionError::UnableToConnect())
-        } else if status.code() == Code::Unimplemented {
-            Self::Connection(ConnectionError::RPCMethodUnavailable(status.message().to_owned()))
         } else {
-            Self::from_message(status.message())
+            match status.message().split_ascii_whitespace().next() {
+                Some("[RPL01]") => Self::Connection(ConnectionError::ClusterReplicaNotPrimary()),
+                Some("[CLS08]") => Self::Connection(ConnectionError::ClusterTokenCredentialInvalid()),
+                Some("[DBS06]") => Self::Connection(ConnectionError::DatabaseDoesNotExist(
+                    status.message().split('\'').nth(1).unwrap_or("{unknown}").to_owned(),
+                )),
+                _ => Self::Other(status.message().to_owned()),
+            }
         }
     }
 }
 
 fn is_rst_stream(status: &Status) -> bool {
     // "Received Rst Stream" occurs if the server is in the process of shutting down.
-    status.message().contains("Received Rst Stream")
+    status.code() == Code::Unavailable
+        || status.code() == Code::Unknown
+        || status.message().contains("Received Rst Stream")
 }
 
 impl From<http::uri::InvalidUri> for Error {
