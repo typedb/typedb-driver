@@ -58,14 +58,6 @@ error_messages! { ConnectionError
         17: "Invalid token credential.",
     SessionCloseFailed() =
         18: "Failed to close session. It may still be open on the server: or it may already have been closed previously.",
-    ClusterEndpointEncrypted() =
-        19: "Unable to connect to TypeDB Cluster: attempting an unencrypted connection to an encrypted endpoint.",
-    ClusterSSLCertificateNotValidated() =
-        20: "SSL handshake with TypeDB Cluster failed: the server's identity could not be verified. Possible CA mismatch.",
-    BrokenPipe() =
-        21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted cluster instance using a TLS-enabled credential.",
-    ConnectionRefused() =
-        22: "Connection refused. This could happen because of a misconfigured server SSL certificate, or network failures.",
 }
 
 error_messages! { InternalError
@@ -183,6 +175,8 @@ impl From<Status> for Error {
             Self::parse_unavailable(status.message())
         } else if status.code() == Code::Unknown || is_rst_stream(&status) {
             Self::Connection(ConnectionError::UnableToConnect())
+        } else if is_unimplemented_method(&status) {
+            Self::Connection(ConnectionError::RPCMethodUnavailable(status.message().to_owned()))
         } else {
             match status.message().split_ascii_whitespace().next() {
                 Some("[RPL01]") => Self::Connection(ConnectionError::ClusterReplicaNotPrimary()),
@@ -194,6 +188,10 @@ impl From<Status> for Error {
             }
         }
     }
+}
+
+fn is_unimplemented_method(status: &Status) -> bool {
+    status.code() == Code::Unimplemented
 }
 
 fn is_rst_stream(status: &Status) -> bool {
