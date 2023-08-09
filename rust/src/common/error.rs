@@ -19,7 +19,7 @@
  * under the License.
  */
 
-use std::{error::Error as StdError, fmt, os::macos::raw::stat};
+use std::{error::Error as StdError, fmt};
 
 use tonic::{Code, Status};
 use typeql_lang::error_messages;
