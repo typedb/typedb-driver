@@ -229,9 +229,6 @@ impl Replica {
     }
 
     fn try_from_info(database_info: DatabaseInfo, connection: &Connection) -> Result<Vec<Self>> {
-        if database_info.is_dummy() {
-            return Err(ConnectionError::DatabaseDoesNotExist(database_info.name).into());
-        }
         database_info
             .replicas
             .into_iter()
