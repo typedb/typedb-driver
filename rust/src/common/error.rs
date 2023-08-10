@@ -58,6 +58,12 @@ error_messages! { ConnectionError
         17: "Invalid token credential.",
     SessionCloseFailed() =
         18: "Failed to close session. It may still be open on the server: or it may already have been closed previously.",
+    ClusterEndpointNotEncrypted() =
+        19: "Unable to connect to TypeDB Cluster: attempting an encrypted connection to an unencrypted endpoint.",
+    ClusterEndpointEncrypted() =
+        20: "Unable to connect to TypeDB Cluster: attempting an unencrypted connection to an encrypted endpoint.",
+    ClusterSSLCertificateNotValidated() =
+        21: "SSL handshake with TypeDB Cluster failed: the server's identity could not be verified.",
 }
 
 error_messages! { InternalError
@@ -147,7 +153,7 @@ impl From<typeql_lang::common::Error> for Error {
 impl From<Status> for Error {
     fn from(status: Status) -> Self {
         if is_rst_stream(&status) {
-            Self::Connection(ConnectionError::UnableToConnect())
+            reset_stream_error(status)
         } else if is_unimplemented_method(&status) {
             Self::Connection(ConnectionError::RPCMethodUnavailable(status.message().to_owned()))
         } else {
@@ -172,6 +178,18 @@ fn is_rst_stream(status: &Status) -> bool {
     status.code() == Code::Unavailable
         || status.code() == Code::Unknown
         || status.message().contains("Received Rst Stream")
+}
+
+fn reset_stream_error(status: Status) -> Error {
+	if status.message() == "broken pipe" {
+		Error::Connection(ConnectionError::ClusterEndpointNotEncrypted())
+	} else if status.message().contains("received corrupt message") {
+		Error::Connection(ConnectionError::ClusterEndpointEncrypted())
+	} else if status.message().contains("UnknownIssuer") {
+        Error::Connection(ConnectionError::ClusterSSLCertificateNotValidated())
+    } else {
+        Error::Connection(ConnectionError::UnableToConnect())
+    }
 }
 
 impl From<http::uri::InvalidUri> for Error {
