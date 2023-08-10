@@ -122,13 +122,11 @@ impl Error {
 
     fn parse_unavailable(status_message: &str) -> Error {
         if status_message == "broken pipe" {
-            Error::Connection(ConnectionError::BrokenPipe())
+            Error::Connection(ConnectionError::ClusterEndpointNotEncrypted())
         } else if status_message.contains("received corrupt message") {
             Error::Connection(ConnectionError::ClusterEndpointEncrypted())
         } else if status_message.contains("UnknownIssuer") {
             Error::Connection(ConnectionError::ClusterSSLCertificateNotValidated())
-        } else if status_message.contains("Connection refused") {
-            Error::Connection(ConnectionError::ConnectionRefused())
         } else {
             Error::Connection(ConnectionError::UnableToConnect())
         }
@@ -177,44 +175,21 @@ impl From<typeql_lang::common::Error> for Error {
 
 impl From<Status> for Error {
     fn from(status: Status) -> Self {
-        if is_rst_stream(&status) {
-            reset_stream_error(status)
-        } else if is_unimplemented_method(&status) {
+        if status.code() == Code::Unavailable {
+            Self::parse_unavailable(status.message())
+        } else if status.code() == Code::Unknown || is_rst_stream(&status) {
+            Self::Connection(ConnectionError::UnableToConnect())
+        } else if status.code() == Code::Unimplemented {
             Self::Connection(ConnectionError::RPCMethodUnavailable(status.message().to_owned()))
         } else {
-            match status.message().split_ascii_whitespace().next() {
-                Some("[RPL01]") => Self::Connection(ConnectionError::ClusterReplicaNotPrimary()),
-                Some("[CLS08]") => Self::Connection(ConnectionError::ClusterTokenCredentialInvalid()),
-                Some("[DBS06]") => Self::Connection(ConnectionError::DatabaseDoesNotExist(
-                    status.message().split('\'').nth(1).unwrap_or("{unknown}").to_owned(),
-                )),
-                _ => Self::Other(status.message().to_owned()),
-            }
+            Self::from_message(status.message())
         }
     }
 }
 
-fn is_unimplemented_method(status: &Status) -> bool {
-    status.code() == Code::Unimplemented
-}
-
 fn is_rst_stream(status: &Status) -> bool {
     // "Received Rst Stream" occurs if the server is in the process of shutting down.
-    status.code() == Code::Unavailable
-        || status.code() == Code::Unknown
-        || status.message().contains("Received Rst Stream")
-}
-
-fn reset_stream_error(status: Status) -> Error {
-	if status.message() == "broken pipe" {
-		Error::Connection(ConnectionError::ClusterEndpointNotEncrypted())
-	} else if status.message().contains("received corrupt message") {
-		Error::Connection(ConnectionError::ClusterEndpointEncrypted())
-	} else if status.message().contains("UnknownIssuer") {
-        Error::Connection(ConnectionError::ClusterSSLCertificateNotValidated())
-    } else {
-        Error::Connection(ConnectionError::UnableToConnect())
-    }
+    status.message().contains("Received Rst Stream")
 }
 
 impl From<http::uri::InvalidUri> for Error {
