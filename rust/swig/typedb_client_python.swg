@@ -19,6 +19,7 @@
  * under the License.
  */
 
+/* Arrays handling */
 %define %array(Type)
 %typemap(in) Type ** (int size) {
     size = PyList_Size($input);
@@ -30,7 +31,7 @@
         if (!SWIG_IsOK(res)) {
             SWIG_exception_fail(SWIG_ArgError(res), "array item is not of type 'Type const *'");
           }
-        $1[i] = reinterpret_cast< Type * >(argp);
+        $1[i] = reinterpret_cast<Type *>(argp);
     }
     $1[i] = 0;
 }
@@ -42,7 +43,7 @@
 %array(Concept)
 %array(Thing)
 
-
+/* char** needs special handling */
 %typemap(in) char ** (int size) {
     if (PyList_Check($input)) {
         size = PyList_Size($input);
@@ -76,11 +77,25 @@
     free((char *) $1);
 }
 
+/* Introduce TypeDBClientException and use it to wrap all native exceptions */
+%{
+static PyObject* PyExc_TypeDBClientError;
+%}
+
+%init %{
+    PyExc_TypeDBClientError = PyErr_NewException("_typedb_client_python.TypeDBClientException", NULL, NULL);
+    Py_INCREF(PyExc_TypeDBClientError);
+    PyModule_AddObject(m, "TypeDBClientException", PyExc_TypeDBClientError);
+%}
 
 %exception {
     $action
     if (check_error()) {
-        PyErr_SetString(PyExc_RuntimeError, error_message(get_last_error()));
+        PyErr_SetString(PyExc_TypeDBClientError, error_message(get_last_error()));
         SWIG_fail;
     }
 }
+
+%pythoncode %{
+    TypeDBClientException = _typedb_client_python.TypeDBClientException
+%}
