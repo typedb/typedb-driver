@@ -50,13 +50,13 @@ public interface RelationType extends ThingType {
 
     @Override
     @CheckReturnValue
-    Stream<? extends Relation> getInstancesExplicit(TypeDBTransaction transaction);
+    Stream<? extends Relation> getInstances(TypeDBTransaction transaction, Transitivity transitivity);
 
     @CheckReturnValue
     Stream<? extends RoleType> getRelates(TypeDBTransaction transaction);
 
     @CheckReturnValue
-    Stream<? extends RoleType> getRelatesExplicit(TypeDBTransaction transaction);
+    Stream<? extends RoleType> getRelates(TypeDBTransaction transaction, Transitivity transitivity);
 
     @Nullable
     @CheckReturnValue
@@ -86,7 +86,7 @@ public interface RelationType extends ThingType {
 
     @Override
     @CheckReturnValue
-    Stream<? extends RelationType> getSubtypesExplicit(TypeDBTransaction transaction);
+    Stream<? extends RelationType> getSubtypes(TypeDBTransaction transaction, Transitivity transitivity);
 
     void setSupertype(TypeDBTransaction transaction, RelationType superRelationType);
 }

@@ -46,7 +46,7 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
     public abstract Stream<? extends TypeImpl> getSubtypes(TypeDBTransaction transaction);
 
     @Override
-    public abstract Stream<? extends TypeImpl> getSubtypesExplicit(TypeDBTransaction transaction);
+    public abstract Stream<? extends TypeImpl> getSubtypes(TypeDBTransaction transaction, Transitivity transitivity);
 
     @Override
     public int hashCode() {

@@ -71,7 +71,7 @@ public interface Type extends Concept {
     Stream<? extends Type> getSubtypes(TypeDBTransaction transaction);
 
     @CheckReturnValue
-    Stream<? extends Type> getSubtypesExplicit(TypeDBTransaction transaction);
+    Stream<? extends Type> getSubtypes(TypeDBTransaction transaction, Transitivity transitivity);
 
     void delete(TypeDBTransaction transaction);
 

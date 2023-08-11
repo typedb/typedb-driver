@@ -49,7 +49,7 @@ public interface EntityType extends ThingType {
 
     @Override
     @CheckReturnValue
-    Stream<? extends Entity> getInstancesExplicit(TypeDBTransaction transaction);
+    Stream<? extends Entity> getInstances(TypeDBTransaction transaction, Transitivity transitivity);
 
     @Override
     @CheckReturnValue
@@ -57,7 +57,7 @@ public interface EntityType extends ThingType {
 
     @Override
     @CheckReturnValue
-    Stream<? extends EntityType> getSubtypesExplicit(TypeDBTransaction transaction);
+    Stream<? extends EntityType> getSubtypes(TypeDBTransaction transaction, Transitivity transitivity);
 
     void setSupertype(TypeDBTransaction transaction, EntityType superEntityType);
 }

@@ -21,6 +21,7 @@
 
 package com.vaticle.typedb.client.test.behaviour.concept.type.relationtype;
 
+import com.vaticle.typedb.client.api.concept.Concept;
 import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.api.concept.type.Type;
 import com.vaticle.typedb.client.common.Label;
@@ -30,6 +31,7 @@ import io.cucumber.java.en.When;
 import java.util.List;
 import java.util.Set;
 
+import static com.vaticle.typedb.client.api.concept.Concept.Transitivity.EXPLICIT;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
 import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
 import static java.util.Objects.isNull;
@@ -122,7 +124,7 @@ public class RelationTypeSteps {
     }
 
     private Set<Label> relation_type_get_related_explicit_role_types(String relationLabel) {
-        return tx().concepts().getRelationType(relationLabel).getRelatesExplicit(tx()).map(Type::getLabel).collect(toSet());
+        return tx().concepts().getRelationType(relationLabel).getRelates(tx(), EXPLICIT).map(Type::getLabel).collect(toSet());
     }
 
     @Then("relation\\( ?{type_label} ?) get related explicit roles contain:")

@@ -117,9 +117,12 @@ public interface AttributeType extends ThingType {
     @CheckReturnValue
     Stream<? extends AttributeType> getSubtypes(TypeDBTransaction transaction, Value.Type valueType);
 
+    @CheckReturnValue
+    Stream<? extends AttributeType> getSubtypes(TypeDBTransaction transaction, Value.Type valueType, Transitivity transitivity);
+
     @Override
     @CheckReturnValue
-    Stream<? extends AttributeType> getSubtypesExplicit(TypeDBTransaction transaction);
+    Stream<? extends AttributeType> getSubtypes(TypeDBTransaction transaction, Transitivity transitivity);
 
     @Override
     @CheckReturnValue
@@ -127,7 +130,7 @@ public interface AttributeType extends ThingType {
 
     @Override
     @CheckReturnValue
-    Stream<? extends Attribute> getInstancesExplicit(TypeDBTransaction transaction);
+    Stream<? extends Attribute> getInstances(TypeDBTransaction transaction, Transitivity transitivity);
 
     @CheckReturnValue
     Stream<? extends ThingType> getOwners(TypeDBTransaction transaction);
@@ -136,8 +139,8 @@ public interface AttributeType extends ThingType {
     Stream<? extends ThingType> getOwners(TypeDBTransaction transaction, Set<Annotation> annotations);
 
     @CheckReturnValue
-    Stream<? extends ThingType> getOwnersExplicit(TypeDBTransaction transaction);
+    Stream<? extends ThingType> getOwners(TypeDBTransaction transaction, Transitivity transitivity);
 
     @CheckReturnValue
-    Stream<? extends ThingType> getOwnersExplicit(TypeDBTransaction transaction, Set<Annotation> annotations);
+    Stream<? extends ThingType> getOwners(TypeDBTransaction transaction, Set<Annotation> annotations, Transitivity transitivity);
 }
