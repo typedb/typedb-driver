@@ -58,12 +58,10 @@ error_messages! { ConnectionError
         17: "Invalid token credential.",
     SessionCloseFailed() =
         18: "Failed to close session. It may still be open on the server: or it may already have been closed previously.",
-    ClusterEndpointNotEncrypted() =
-        19: "Unable to connect to TypeDB Cluster: attempting an encrypted connection to an unencrypted endpoint.",
     ClusterEndpointEncrypted() =
-        20: "Unable to connect to TypeDB Cluster: attempting an unencrypted connection to an encrypted endpoint.",
+        19: "Unable to connect to TypeDB Cluster: attempting an unencrypted connection to an encrypted endpoint.",
     ClusterSSLCertificateNotValidated() =
-        21: "SSL handshake with TypeDB Cluster failed: the server's identity could not be verified.",
+        20: "SSL handshake with TypeDB Cluster failed: the server's identity could not be verified.",
 }
 
 error_messages! { InternalError
@@ -121,9 +119,7 @@ impl Error {
     }
 
     fn parse_unavailable(status_message: &str) -> Error {
-        if status_message == "broken pipe" {
-            Error::Connection(ConnectionError::ClusterEndpointNotEncrypted())
-        } else if status_message.contains("received corrupt message") {
+        if status_message.contains("received corrupt message") {
             Error::Connection(ConnectionError::ClusterEndpointEncrypted())
         } else if status_message.contains("UnknownIssuer") {
             Error::Connection(ConnectionError::ClusterSSLCertificateNotValidated())
