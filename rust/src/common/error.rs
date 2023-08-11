@@ -62,6 +62,10 @@ error_messages! { ConnectionError
         19: "Unable to connect to TypeDB Cluster: attempting an unencrypted connection to an encrypted endpoint.",
     ClusterSSLCertificateNotValidated() =
         20: "SSL handshake with TypeDB Cluster failed: the server's identity could not be verified.",
+	BrokenPipe() =
+		21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted cluster instance using a TLS-enabled credential.",
+	ConnectionRefused() =
+		22: "Connection refused. This could happen because of a misconfigured server SSL certificate, or network failures.",
 }
 
 error_messages! { InternalError
@@ -119,10 +123,14 @@ impl Error {
     }
 
     fn parse_unavailable(status_message: &str) -> Error {
-        if status_message.contains("received corrupt message") {
+        if status_message == "broken pipe" {
+            Error::Connection(ConnectionError::BrokenPipe())
+        } else if status_message.contains("received corrupt message") {
             Error::Connection(ConnectionError::ClusterEndpointEncrypted())
         } else if status_message.contains("UnknownIssuer") {
             Error::Connection(ConnectionError::ClusterSSLCertificateNotValidated())
+        } else if status_message.contains("Connection refused") {
+            Error::Connection(ConnectionError::ConnectionRefused())
         } else {
             Error::Connection(ConnectionError::UnableToConnect())
         }
