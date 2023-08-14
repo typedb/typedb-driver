@@ -35,6 +35,7 @@ import com.vaticle.typedb.client.concept.type.RoleTypeImpl;
 import com.vaticle.typedb.client.concept.type.ThingTypeImpl;
 import com.vaticle.typedb.client.concept.value.ValueImpl;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 import static com.vaticle.typedb.client.jni.typedb_client.concept_equals;
 import static com.vaticle.typedb.client.jni.typedb_client.concept_is_value;
@@ -54,7 +55,9 @@ public abstract class ConceptImpl extends NativeObject<com.vaticle.typedb.client
     }
 
     protected static com.vaticle.typedb.client.jni.Transaction nativeTransaction(TypeDBTransaction transaction) {
-        return ((ConceptManagerImpl) transaction.concepts()).nativeTransaction;
+        com.vaticle.typedb.client.jni.Transaction nativeTransaction = ((ConceptManagerImpl) transaction.concepts()).nativeTransaction;
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        return nativeTransaction;
     }
 
     public static ConceptImpl of(com.vaticle.typedb.client.jni.Concept concept) {

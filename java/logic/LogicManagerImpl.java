@@ -29,6 +29,7 @@ import com.vaticle.typeql.lang.pattern.Pattern;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_LABEL;
 import static com.vaticle.typedb.client.jni.typedb_client.logic_manager_get_rule;
 import static com.vaticle.typedb.client.jni.typedb_client.logic_manager_get_rules;
@@ -45,6 +46,7 @@ public final class LogicManagerImpl implements LogicManager {
     @Nullable
     public Rule getRule(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         try {
             com.vaticle.typedb.client.jni.Rule res = logic_manager_get_rule(nativeTransaction, label);
             if (res != null) return new RuleImpl(res);
@@ -56,6 +58,7 @@ public final class LogicManagerImpl implements LogicManager {
 
     @Override
     public Stream<RuleImpl> getRules() {
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         try {
             return logic_manager_get_rules(nativeTransaction).stream().map(RuleImpl::new);
         } catch (com.vaticle.typedb.client.jni.Error e) {
@@ -66,6 +69,7 @@ public final class LogicManagerImpl implements LogicManager {
     @Override
     public Rule putRule(String label, Pattern when, Pattern then) {
         if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         try {
             return new RuleImpl(logic_manager_put_rule(nativeTransaction, label, when.toString(), then.toString()));
         } catch (com.vaticle.typedb.client.jni.Error e) {

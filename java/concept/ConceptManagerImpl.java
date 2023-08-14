@@ -43,6 +43,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_IID;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_LABEL;
 import static com.vaticle.typedb.client.jni.typedb_client.concepts_get_attribute;
@@ -84,6 +85,7 @@ public final class ConceptManagerImpl implements ConceptManager {
     @Nullable
     public EntityType getEntityType(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         try {
             com.vaticle.typedb.client.jni.Concept res = concepts_get_entity_type(nativeTransaction, label);
             if (res != null) return new EntityTypeImpl(res);
@@ -97,6 +99,7 @@ public final class ConceptManagerImpl implements ConceptManager {
     @Nullable
     public RelationType getRelationType(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         try {
             com.vaticle.typedb.client.jni.Concept res = concepts_get_relation_type(nativeTransaction, label);
             if (res != null) return new RelationTypeImpl(res);
@@ -110,6 +113,7 @@ public final class ConceptManagerImpl implements ConceptManager {
     @Nullable
     public AttributeType getAttributeType(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         try {
             com.vaticle.typedb.client.jni.Concept res = concepts_get_attribute_type(nativeTransaction, label);
             if (res != null) return new AttributeTypeImpl(res);
@@ -122,6 +126,7 @@ public final class ConceptManagerImpl implements ConceptManager {
     @Override
     public EntityType putEntityType(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         try {
             return new EntityTypeImpl(concepts_put_entity_type(nativeTransaction, label));
         } catch (com.vaticle.typedb.client.jni.Error e) {
@@ -132,6 +137,7 @@ public final class ConceptManagerImpl implements ConceptManager {
     @Override
     public RelationType putRelationType(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         try {
             return new RelationTypeImpl(concepts_put_relation_type(nativeTransaction, label));
         } catch (com.vaticle.typedb.client.jni.Error e) {
@@ -142,6 +148,7 @@ public final class ConceptManagerImpl implements ConceptManager {
     @Override
     public AttributeType putAttributeType(String label, Value.Type valueType) {
         if (label == null || label.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         try {
             return new AttributeTypeImpl(concepts_put_attribute_type(nativeTransaction, label, valueType.nativeObject));
         } catch (com.vaticle.typedb.client.jni.Error e) {
@@ -153,6 +160,7 @@ public final class ConceptManagerImpl implements ConceptManager {
     @Nullable
     public Entity getEntity(String iid) {
         if (iid == null || iid.isEmpty()) throw new TypeDBClientException(MISSING_IID);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         try {
             com.vaticle.typedb.client.jni.Concept res = concepts_get_entity(nativeTransaction, iid);
             if (res != null) return new EntityImpl(res);
@@ -166,6 +174,7 @@ public final class ConceptManagerImpl implements ConceptManager {
     @Nullable
     public Relation getRelation(String iid) {
         if (iid == null || iid.isEmpty()) throw new TypeDBClientException(MISSING_IID);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         try {
             com.vaticle.typedb.client.jni.Concept res = concepts_get_relation(nativeTransaction, iid);
             if (res != null) return new RelationImpl(res);
@@ -179,6 +188,7 @@ public final class ConceptManagerImpl implements ConceptManager {
     @Nullable
     public Attribute getAttribute(String iid) {
         if (iid == null || iid.isEmpty()) throw new TypeDBClientException(MISSING_IID);
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         try {
             com.vaticle.typedb.client.jni.Concept res = concepts_get_attribute(nativeTransaction, iid);
             if (res != null) return new AttributeImpl(res);
@@ -190,6 +200,7 @@ public final class ConceptManagerImpl implements ConceptManager {
 
     @Override
     public List<TypeDBException> getSchemaExceptions() {
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
         try {
             return concepts_get_schema_exceptions(nativeTransaction).stream()
                     .map(e -> new TypeDBException(schema_exception_code(e), schema_exception_message(e))).collect(Collectors.toList());

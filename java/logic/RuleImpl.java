@@ -25,11 +25,13 @@ import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.logic.Rule;
 import com.vaticle.typedb.client.common.NativeObject;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.client.concept.ConceptManagerImpl;
 import com.vaticle.typeql.lang.TypeQL;
 import com.vaticle.typeql.lang.pattern.Conjunction;
 import com.vaticle.typeql.lang.pattern.Pattern;
 import com.vaticle.typeql.lang.pattern.variable.ThingVariable;
 
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_LABEL;
 import static com.vaticle.typedb.client.jni.typedb_client.rule_delete;
 import static com.vaticle.typedb.client.jni.typedb_client.rule_get_label;
@@ -70,7 +72,7 @@ public class RuleImpl extends NativeObject<com.vaticle.typedb.client.jni.Rule> i
     public void setLabel(TypeDBTransaction transaction, String newLabel) {
         if (newLabel == null || newLabel.isEmpty()) throw new TypeDBClientException(MISSING_LABEL);
         try {
-            rule_set_label(((LogicManagerImpl) transaction.logic()).nativeTransaction, nativeObject, newLabel);
+            rule_set_label(nativeTransaction(transaction), nativeObject, newLabel);
         } catch (com.vaticle.typedb.client.jni.Error e) {
             throw new TypeDBClientException(e);
         }
@@ -79,7 +81,7 @@ public class RuleImpl extends NativeObject<com.vaticle.typedb.client.jni.Rule> i
     @Override
     public void delete(TypeDBTransaction transaction) {
         try {
-            rule_delete(((LogicManagerImpl) transaction.logic()).nativeTransaction, nativeObject);
+            rule_delete(nativeTransaction(transaction), nativeObject);
         } catch (com.vaticle.typedb.client.jni.Error e) {
             throw new TypeDBClientException(e);
         }
@@ -88,10 +90,16 @@ public class RuleImpl extends NativeObject<com.vaticle.typedb.client.jni.Rule> i
     @Override
     public final boolean isDeleted(TypeDBTransaction transaction) {
         try {
-            return rule_is_deleted(((LogicManagerImpl) transaction.logic()).nativeTransaction, nativeObject);
+            return rule_is_deleted(nativeTransaction(transaction), nativeObject);
         } catch (com.vaticle.typedb.client.jni.Error e) {
             throw new TypeDBClientException(e);
         }
+    }
+
+    private static com.vaticle.typedb.client.jni.Transaction nativeTransaction(TypeDBTransaction transaction) {
+        com.vaticle.typedb.client.jni.Transaction nativeTransaction = ((LogicManagerImpl) transaction.logic()).nativeTransaction;
+        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        return nativeTransaction;
     }
 
     @Override
