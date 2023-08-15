@@ -62,10 +62,10 @@ error_messages! { ConnectionError
         19: "Unable to connect to TypeDB Cluster: attempting an unencrypted connection to an encrypted endpoint.",
     ClusterSSLCertificateNotValidated() =
         20: "SSL handshake with TypeDB Cluster failed: the server's identity could not be verified.",
-	BrokenPipe() =
-		21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted cluster instance using a TLS-enabled credential.",
-	ConnectionRefused() =
-		22: "Connection refused. This could happen because of a misconfigured server SSL certificate, or network failures.",
+    BrokenPipe() =
+        21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted cluster instance using a TLS-enabled credential.",
+    ConnectionRefused() =
+        22: "Connection refused. This could happen because of a misconfigured server SSL certificate, or network failures.",
 }
 
 error_messages! { InternalError

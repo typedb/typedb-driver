@@ -49,5 +49,9 @@ pub extern "C" fn user_password_update(
     password_old: *const c_char,
     password_new: *const c_char,
 ) {
-    unwrap_void(borrow(user).password_update(&borrow(user_manager).connection, string_view(password_old), string_view(password_new)));
+    unwrap_void(borrow(user).password_update(
+        &borrow(user_manager).connection,
+        string_view(password_old),
+        string_view(password_new),
+    ));
 }
