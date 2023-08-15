@@ -39,11 +39,8 @@ import static com.vaticle.typedb.client.jni.typedb_client.users_get;
 import static com.vaticle.typedb.client.jni.typedb_client.users_set_password;
 
 public class UserManagerImpl extends NativeObject<com.vaticle.typedb.client.jni.UserManager> implements UserManager {
-    private final com.vaticle.typedb.client.jni.Connection nativeConnection;
-
     public UserManagerImpl(com.vaticle.typedb.client.jni.Connection nativeConnection) {
         super(user_manager_new(nativeConnection));
-        this.nativeConnection = nativeConnection;
     }
 
     @Override
@@ -76,7 +73,7 @@ public class UserManagerImpl extends NativeObject<com.vaticle.typedb.client.jni.
     @Override
     public Set<User> all() {
         try {
-            return users_all(nativeObject).stream().map(user -> new UserImpl(user, nativeConnection)).collect(Collectors.toSet());
+            return users_all(nativeObject).stream().map(user -> new UserImpl(user, this)).collect(Collectors.toSet());
         } catch (com.vaticle.typedb.client.jni.Error e) {
             throw new TypeDBClientException(e);
         }
@@ -86,7 +83,7 @@ public class UserManagerImpl extends NativeObject<com.vaticle.typedb.client.jni.
     public User get(String username) {
         try {
             com.vaticle.typedb.client.jni.User user = users_get(nativeObject, username);
-            if (user != null) return new UserImpl(user, nativeConnection);
+            if (user != null) return new UserImpl(user, this);
             else return null;
         } catch (com.vaticle.typedb.client.jni.Error e) {
             throw new TypeDBClientException(e);
@@ -104,7 +101,7 @@ public class UserManagerImpl extends NativeObject<com.vaticle.typedb.client.jni.
 
     public User getCurrentUser() {
         try {
-            return new UserImpl(users_current_user(nativeObject), nativeConnection);
+            return new UserImpl(users_current_user(nativeObject), this);
         } catch (com.vaticle.typedb.client.jni.Error e) {
             throw new TypeDBClientException(e);
         }
