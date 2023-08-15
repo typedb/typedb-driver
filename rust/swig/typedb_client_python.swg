@@ -27,7 +27,7 @@
     int i = 0;
     for (i = 0; i < size; ++i) {
         void *argp = 0;
-        int res = SWIG_ConvertPtr(PyList_GetItem($input, i), &argp, SWIGTYPE_p_##Type, 0 |  0 );
+        int res = SWIG_ConvertPtr(PyList_GetItem($input, i), &argp, SWIGTYPE_p_##Type, 0);
         if (!SWIG_IsOK(res)) {
             SWIG_exception_fail(SWIG_ArgError(res), "array item is not of type 'Type const *'");
           }
@@ -99,3 +99,14 @@ static PyObject* PyExc_TypeDBClientError;
 %pythoncode %{
     TypeDBClientException = _native_client_python.TypeDBClientException
 %}
+
+/* ValueType* needs special handling */
+%typemap(in) enum ValueType * {
+    if ($input != Py_None) {
+        long value = PyInt_AsLong($input);
+        $1 = (enum ValueType *) malloc(sizeof(enum ValueType));
+        *$1 = (enum ValueType) value;
+    }
+}
+
+%typemap(freearg) enum ValueType * { free($1); }
