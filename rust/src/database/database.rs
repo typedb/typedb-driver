@@ -130,7 +130,7 @@ impl Database {
             match task(replica.database.clone(), self.connection.connection(&replica.address)?.clone(), is_first_run)
                 .await
             {
-                Err(Error::Connection(ConnectionError::UnableToConnect())) => {
+                Err(Error::Connection(ConnectionError::UnableToConnect() | ConnectionError::ConnectionRefused())) => {
                     debug!("Unable to connect to {}. Attempting next server.", replica.address);
                 }
                 res => return res,
@@ -158,7 +158,9 @@ impl Database {
             .await
             {
                 Err(Error::Connection(
-                    ConnectionError::ClusterReplicaNotPrimary() | ConnectionError::UnableToConnect(),
+                    ConnectionError::ClusterReplicaNotPrimary()
+                    | ConnectionError::UnableToConnect()
+                    | ConnectionError::ConnectionRefused(),
                 )) => {
                     debug!("Primary replica error, waiting...");
                     Self::wait_for_primary_replica_selection().await;
@@ -255,7 +257,9 @@ impl Replica {
                     return Self::try_from_info(info, &connection);
                 }
                 Err(Error::Connection(
-                    ConnectionError::DatabaseDoesNotExist(_) | ConnectionError::UnableToConnect(),
+                    ConnectionError::DatabaseDoesNotExist(_)
+                    | ConnectionError::UnableToConnect()
+                    | ConnectionError::ConnectionRefused(),
                 )) => {
                     error!(
                         "Failed to fetch replica info for database '{}' from {}. Attempting next server.",

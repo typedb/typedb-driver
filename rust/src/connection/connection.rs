@@ -108,14 +108,16 @@ impl Connection {
             match server_connection {
                 Ok(server_connection) => match server_connection.servers_all() {
                     Ok(servers) => return Ok(servers.into_iter().collect()),
-                    Err(Error::Connection(ConnectionError::UnableToConnect())) => (),
+                    Err(Error::Connection(
+                        ConnectionError::UnableToConnect() | ConnectionError::ConnectionRefused(),
+                    )) => (),
                     Err(err) => Err(err)?,
                 },
-                Err(Error::Connection(ConnectionError::UnableToConnect())) => (),
+                Err(Error::Connection(ConnectionError::UnableToConnect() | ConnectionError::ConnectionRefused())) => (),
                 Err(err) => Err(err)?,
             }
         }
-        Err(ConnectionError::UnableToConnect())?
+        Err(ConnectionError::UnableToConnect().into())
     }
 
     pub fn is_open(&self) -> bool {
