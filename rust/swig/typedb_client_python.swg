@@ -83,7 +83,7 @@ static PyObject* PyExc_TypeDBClientError;
 %}
 
 %init %{
-    PyExc_TypeDBClientError = PyErr_NewException("_native_client_python.TypeDBClientException", NULL, NULL);
+    PyExc_TypeDBClientError = PyErr_NewException("native_client_python.TypeDBClientException", NULL, NULL);
     Py_INCREF(PyExc_TypeDBClientError);
     PyModule_AddObject(m, "TypeDBClientException", PyExc_TypeDBClientError);
 %}
@@ -97,7 +97,7 @@ static PyObject* PyExc_TypeDBClientError;
 }
 
 %pythoncode %{
-    TypeDBClientException = _native_client_python.TypeDBClientException
+    TypeDBClientException = native_client_python.TypeDBClientException
 %}
 
 /* ValueType* needs special handling */

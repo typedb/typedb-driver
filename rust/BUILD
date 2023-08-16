@@ -96,8 +96,8 @@ swig_java(
 )
 
 swig_python(
-    name = "typedb_client_python",
-    shared_lib_name = "_native_client_python",
+    name = "native_client_python_wrapper",
+    shared_lib_name = "native_client_python",
     lib = ":typedb_client_clib_headers",
     interface = "typedb_client.i",
     includes = ["swig/typedb_client_python.swg"],
