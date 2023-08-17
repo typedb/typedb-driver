@@ -74,7 +74,16 @@ rust_deps()
 
 load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_register_toolchains")
 rules_rust_dependencies()
-rust_register_toolchains(edition = "2021", include_rustc_srcs = True)
+rust_register_toolchains(
+    edition = "2021",
+    include_rustc_srcs = True,
+    extra_target_triples = [
+        "aarch64-apple-darwin",
+        "x86_64-apple-darwin",
+        "x86_64-pc-windows-msvc",
+        "x86_64-unknown-linux-gnu",
+    ]
+)
 
 load("@vaticle_dependencies//library/crates:crates.bzl", "fetch_crates")
 fetch_crates()
