@@ -55,7 +55,7 @@ typedb_behaviour_java_test(
     runtime_deps = [
         "//java/test/behaviour/config:parameters",
     ],
-    size = "large",
+    size = "enormous",
     visibility = ["//visibility:public"]
 )
 
