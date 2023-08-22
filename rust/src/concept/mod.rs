@@ -21,12 +21,12 @@
 
 mod thing;
 mod type_;
+mod value;
 
 pub use self::{
-    thing::{Attribute, Entity, Relation, Thing, Value},
-    type_::{
-        Annotation, AttributeType, EntityType, RelationType, RoleType, RootThingType, ScopedLabel, ThingType, ValueType,
-    },
+    thing::{Attribute, Entity, Relation, Thing},
+    type_::{Annotation, AttributeType, EntityType, RelationType, RoleType, RootThingType, ScopedLabel, ThingType},
+    value::{Value, ValueType},
 };
 
 #[derive(Clone, Debug, PartialEq)]
@@ -41,22 +41,8 @@ pub enum Concept {
     Entity(Entity),
     Relation(Relation),
     Attribute(Attribute),
-}
 
-impl Concept {
-    pub fn type_label_cloned(&self) -> String {
-        // FIXME: Add a Label type to simplify this function
-        match self {
-            Concept::RootThingType(_) => RootThingType::LABEL.to_owned(),
-            Concept::EntityType(type_) => type_.label.clone(),
-            Concept::RelationType(RelationType { label, .. }) => label.clone(),
-            Concept::RoleType(RoleType { label, .. }) => format!("{label}"),
-            Concept::AttributeType(AttributeType { label, .. }) => label.clone(),
-            Concept::Entity(Entity { type_: EntityType { label, .. }, .. }) => label.clone(),
-            Concept::Relation(Relation { type_: RelationType { label, .. }, .. }) => label.clone(),
-            Concept::Attribute(Attribute { type_: AttributeType { label, .. }, .. }) => label.clone(),
-        }
-    }
+    Value(Value),
 }
 
 #[repr(C)]

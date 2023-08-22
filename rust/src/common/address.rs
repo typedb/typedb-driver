@@ -51,6 +51,6 @@ impl FromStr for Address {
 
 impl fmt::Display for Address {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.uri)
+        write!(f, "{}", self.uri.authority().unwrap())
     }
 }

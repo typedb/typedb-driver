@@ -22,14 +22,16 @@
 #[cfg(not(feature = "sync"))]
 use std::future::Future;
 
-use crate::{common::Result, connection::ServerConnection, error::ConnectionError, Connection, User};
+use crate::{common::Result, connection::ServerConnection, Connection, DatabaseManager, User};
 
 #[derive(Clone, Debug)]
 pub struct UserManager {
-    connection: Connection,
+    pub(crate) connection: Connection,
 }
 
 impl UserManager {
+    const SYSTEM_DB: &'static str = "_system";
+
     pub fn new(connection: Connection) -> Self {
         Self { connection }
     }
@@ -102,38 +104,16 @@ impl UserManager {
         .await
     }
 
-    #[cfg(not(feature = "sync"))]
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn run_any_node<F, P, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerConnection) -> P,
         P: Future<Output = Result<R>>,
     {
-        let mut error_buffer = Vec::with_capacity(self.connection.server_count());
-        for server_connection in self.connection.connections() {
-            match task(server_connection.clone()).await {
-                Ok(res) => {
-                    return Ok(res);
-                }
-                Err(err) => error_buffer.push(format!("- {}: {}", server_connection.address(), err)),
-            }
-        }
-        Err(ConnectionError::ClusterAllNodesFailed(error_buffer.join("\n")))?
-    }
-
-    #[cfg(feature = "sync")]
-    fn run_any_node<F, R>(&self, task: F) -> Result<R>
-    where
-        F: Fn(ServerConnection) -> Result<R>,
-    {
-        let mut error_buffer = Vec::with_capacity(self.connection.server_count());
-        for server_connection in self.connection.connections() {
-            match task(server_connection.clone()) {
-                Ok(res) => {
-                    return Ok(res);
-                }
-                Err(err) => error_buffer.push(format!("- {}: {}", server_connection.address(), err)),
-            }
-        }
-        Err(ConnectionError::ClusterAllNodesFailed(error_buffer.join("\n")))?
+        DatabaseManager::new(self.connection.clone())
+            .get(Self::SYSTEM_DB)
+            .await?
+            .run_failsafe(|_, server_connection, _| task(server_connection))
+            .await
     }
 }

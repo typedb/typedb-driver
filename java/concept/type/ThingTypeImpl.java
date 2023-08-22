@@ -23,13 +23,12 @@ package com.vaticle.typedb.client.concept.type;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
-import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
 import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
+import com.vaticle.typedb.client.api.concept.value.Value;
 import com.vaticle.typedb.client.common.Label;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.concept.thing.ThingImpl;
-import com.vaticle.typedb.client.jni.Transitivity;
 import com.vaticle.typeql.lang.common.TypeQLToken;
 
 import java.util.Set;
@@ -60,7 +59,6 @@ import static com.vaticle.typedb.client.jni.typedb_client.thing_type_unset_plays
 import static java.util.Collections.emptySet;
 
 public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
-
     ThingTypeImpl(com.vaticle.typedb.client.jni.Concept concept) {
         super(concept);
     }
@@ -113,13 +111,13 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     public abstract Stream<? extends ThingTypeImpl> getSubtypes(TypeDBTransaction transaction);
 
     @Override
-    public abstract Stream<? extends ThingTypeImpl> getSubtypesExplicit(TypeDBTransaction transaction);
+    public abstract Stream<? extends ThingTypeImpl> getSubtypes(TypeDBTransaction transaction, Transitivity transitivity);
 
     @Override
     public abstract Stream<? extends ThingImpl> getInstances(TypeDBTransaction transaction);
 
     @Override
-    public abstract Stream<? extends ThingImpl> getInstancesExplicit(TypeDBTransaction transaction);
+    public abstract Stream<? extends ThingImpl> getInstances(TypeDBTransaction transaction, Transitivity transitivity);
 
     @Override
     public final void setAbstract(TypeDBTransaction transaction) {
@@ -166,16 +164,12 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
     @Override
     public final Stream<RoleTypeImpl> getPlays(TypeDBTransaction transaction) {
-        return getPlays(transaction, Transitivity.Transitive);
+        return getPlays(transaction, Transitivity.TRANSITIVE);
     }
 
     @Override
-    public final Stream<RoleTypeImpl> getPlaysExplicit(TypeDBTransaction transaction) {
-        return getPlays(transaction, Transitivity.Explicit);
-    }
-
-    private Stream<RoleTypeImpl> getPlays(TypeDBTransaction transaction, Transitivity transitivity) {
-        return thing_type_get_plays(nativeTransaction(transaction), nativeObject, transitivity).stream().map(RoleTypeImpl::new);
+    public final Stream<RoleTypeImpl> getPlays(TypeDBTransaction transaction, Transitivity transitivity) {
+        return thing_type_get_plays(nativeTransaction(transaction), nativeObject, transitivity.nativeObject).stream().map(RoleTypeImpl::new);
     }
 
     @Override
@@ -188,50 +182,50 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
     @Override
     public Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction) {
-        return getOwns(transaction, Transitivity.Transitive, emptySet());
+        return getOwns(transaction, Transitivity.TRANSITIVE, emptySet());
     }
 
     @Override
-    public Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, ValueType valueType) {
-        return getOwns(transaction, valueType, Transitivity.Transitive, emptySet());
+    public Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, Value.Type valueType) {
+        return getOwns(transaction, valueType, Transitivity.TRANSITIVE, emptySet());
     }
 
     @Override
     public Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, Set<Annotation> annotations) {
-        return getOwns(transaction, Transitivity.Transitive, annotations);
+        return getOwns(transaction, Transitivity.TRANSITIVE, annotations);
     }
 
     @Override
-    public final Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, ValueType valueType, Set<Annotation> annotations) {
-        return getOwns(transaction, valueType, Transitivity.Transitive, annotations);
+    public final Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, Value.Type valueType, Set<Annotation> annotations) {
+        return getOwns(transaction, valueType, Transitivity.TRANSITIVE, annotations);
     }
 
     @Override
-    public Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction) {
-        return getOwns(transaction, Transitivity.Explicit, emptySet());
+    public Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Transitivity transitivity) {
+        return getOwns(transaction, transitivity, emptySet());
     }
 
     @Override
-    public Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, ValueType valueType) {
-        return getOwns(transaction, valueType, Transitivity.Explicit, emptySet());
+    public Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Value.Type valueType, Transitivity transitivity) {
+        return getOwns(transaction, valueType, transitivity, emptySet());
     }
 
     @Override
-    public Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, Set<Annotation> annotations) {
-        return getOwns(transaction, Transitivity.Explicit, annotations);
+    public Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Set<Annotation> annotations, Transitivity transitivity) {
+        return getOwns(transaction, transitivity, annotations);
     }
 
     @Override
-    public Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, ValueType valueType, Set<Annotation> annotations) {
-        return getOwns(transaction, valueType, Transitivity.Explicit, annotations);
+    public Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Value.Type valueType, Set<Annotation> annotations, Transitivity transitivity) {
+        return getOwns(transaction, valueType, transitivity, annotations);
     }
 
     private Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, Transitivity transitivity, Set<Annotation> annotations) {
         return getOwns(transaction, null, transitivity, annotations);
     }
 
-    private Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, ValueType valueType, Transitivity transitivity, Set<Annotation> annotations) {
-        return thing_type_get_owns(nativeTransaction(transaction), nativeObject, valueType == null ? null : valueType.nativeObject, transitivity,
+    private Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, Value.Type valueType, Transitivity transitivity, Set<Annotation> annotations) {
+        return thing_type_get_owns(nativeTransaction(transaction), nativeObject, valueType == null ? null : valueType.nativeObject, transitivity.nativeObject,
                 annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.client.jni.Annotation[]::new)
         ).stream().map(AttributeTypeImpl::new);
     }
@@ -292,7 +286,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
         }
 
         @Override
-        public Stream<? extends ThingTypeImpl> getSubtypesExplicit(TypeDBTransaction transaction) {
+        public Stream<? extends ThingTypeImpl> getSubtypes(TypeDBTransaction transaction, Transitivity transitivity) {
             return Stream.of(
                     transaction.concepts().getRootEntityType(), transaction.concepts().getRootRelationType(), transaction.concepts().getRootAttributeType()
                 ).map(tt -> (ThingTypeImpl) tt);
@@ -308,7 +302,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
         }
 
         @Override
-        public Stream<? extends ThingImpl> getInstancesExplicit(TypeDBTransaction transaction) {
+        public Stream<? extends ThingImpl> getInstances(TypeDBTransaction transaction, Transitivity transitivity) {
             return Stream.empty();
         }
     }

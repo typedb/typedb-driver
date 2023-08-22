@@ -55,12 +55,13 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.vaticle.typedb.client.api.concept.type.ThingType.Annotation.key;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
 import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
 import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
 import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrowsWithMessage;
 import static com.vaticle.typedb.common.collection.Collections.set;
-import static com.vaticle.typedb.client.api.concept.type.ThingType.Annotation.key;
+import static com.vaticle.typedb.common.util.Double.equalsApproximate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -200,6 +201,11 @@ public class TypeQLSteps {
         assertThrows(() -> typeql_match(typeQLQueryStatements));
     }
 
+    @When("typeql match; throws exception containing {string}")
+    public void typeql_match_throws_exception_containing(String error, String typeQLQueryStatements) {
+        assertThrowsWithMessage(() -> typeql_match(typeQLQueryStatements), error);
+    }
+
     @When("get answer of typeql match aggregate")
     public void typeql_match_aggregate(String typeQLQueryStatements) {
         TypeQLMatch.Aggregate typeQLQuery = TypeQL.parseQuery(String.join("\n", typeQLQueryStatements)).asMatchAggregate();
@@ -311,6 +317,9 @@ public class TypeQLSteps {
                 case "key":
                     checker = new KeyUniquenessCheck(identifier[1]);
                     break;
+                case "attr":
+                    checker = new AttributeValueUniquenessCheck(identifier[1]);
+                    break;
                 case "value":
                     checker = new ValueUniquenessCheck(identifier[1]);
                     break;
@@ -360,6 +369,9 @@ public class TypeQLSteps {
                     break;
                 case "key":
                     checker = new KeyUniquenessCheck(identifier[1]);
+                    break;
+                case "attr":
+                    checker = new AttributeValueUniquenessCheck(identifier[1]);
                     break;
                 case "value":
                     checker = new ValueUniquenessCheck(identifier[1]);
@@ -417,6 +429,11 @@ public class TypeQLSteps {
                     break;
                 case "key":
                     if (!new KeyUniquenessCheck(identifier[1]).check(answer.get(var))) {
+                        return false;
+                    }
+                    break;
+                case "attr":
+                    if (!new AttributeValueUniquenessCheck(identifier[1]).check(answer.get(var))) {
                         return false;
                     }
                     break;
@@ -538,13 +555,13 @@ public class TypeQLSteps {
         }
     }
 
-    public static class AttributeUniquenessCheck {
+    public static abstract class AttributeUniquenessCheck {
 
         protected final Label type;
         protected final String value;
 
         AttributeUniquenessCheck(String typeAndValue) {
-            String[] s = typeAndValue.split(":");
+            String[] s = typeAndValue.split(":", 2);
             assertEquals(
                     String.format("A check for attribute uniqueness should be given in the format \"type:value\", but received %s.", typeAndValue),
                     2, s.length
@@ -554,8 +571,8 @@ public class TypeQLSteps {
         }
     }
 
-    public static class ValueUniquenessCheck extends AttributeUniquenessCheck implements UniquenessCheck {
-        ValueUniquenessCheck(String typeAndValue) {
+    public static class AttributeValueUniquenessCheck extends AttributeUniquenessCheck implements UniquenessCheck {
+        AttributeValueUniquenessCheck(String typeAndValue) {
             super(typeAndValue);
         }
 
@@ -595,6 +612,44 @@ public class TypeQLSteps {
                 keyMap.put(key.getType().getLabel(), key.getValue().toString());
             }
             return value.equals(keyMap.get(type));
+        }
+    }
+
+    public static class ValueUniquenessCheck implements UniquenessCheck {
+        private final String valueType;
+        private final String value;
+
+        ValueUniquenessCheck(String valueTypeAndValue) {
+            String[] s = valueTypeAndValue.split(":", 2);
+            this.valueType = s[0].toLowerCase().strip();
+            this.value = s[1].strip();
+        }
+
+        public boolean check(Concept concept) {
+            if (!concept.isValue()) {
+                return false;
+            }
+
+            switch (concept.asValue().getType()) {
+                case BOOLEAN:
+                    return Boolean.valueOf(value).equals(concept.asValue().asBoolean());
+                case LONG:
+                    return Long.valueOf(value).equals(concept.asValue().asLong());
+                case DOUBLE:
+                    return equalsApproximate(Double.parseDouble(value), concept.asValue().asDouble());
+                case STRING:
+                    return value.equals(concept.asValue().asString());
+                case DATETIME:
+                    LocalDateTime dateTime;
+                    try {
+                        dateTime = LocalDateTime.parse(value);
+                    } catch (DateTimeParseException e) {
+                        dateTime = LocalDate.parse(value).atStartOfDay();
+                    }
+                    return dateTime.equals(concept.asValue().asDateTime());
+                default:
+                    throw new ScenarioDefinitionException("Unrecognised value type specified in test " + this.valueType);
+            }
         }
     }
 }

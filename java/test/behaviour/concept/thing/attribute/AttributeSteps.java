@@ -21,7 +21,7 @@
 
 package com.vaticle.typedb.client.test.behaviour.concept.thing.attribute;
 
-import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
+import com.vaticle.typedb.client.api.concept.value.Value;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -52,7 +52,7 @@ public class AttributeSteps {
     }
 
     @Then("attribute {var} has value type: {value_type}")
-    public void attribute_has_value_type(String var, ValueType valueType) {
+    public void attribute_has_value_type(String var, Value.Type valueType) {
         assertEquals(valueType, get(var).asAttribute().getType().getValueType());
     }
 

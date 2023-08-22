@@ -57,26 +57,42 @@ public class TypeDBDatabaseImpl extends NativeObject<com.vaticle.typedb.client.j
     @Override
     public String schema() {
         if (!nativeObject.isOwned()) throw new TypeDBClientException(DATABASE_DELETED);
-        return database_schema(nativeObject);
+        try {
+            return database_schema(nativeObject);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public String typeSchema() {
         if (!nativeObject.isOwned()) throw new TypeDBClientException(DATABASE_DELETED);
-        return database_type_schema(nativeObject);
+        try {
+            return database_type_schema(nativeObject);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public String ruleSchema() {
         if (!nativeObject.isOwned()) throw new TypeDBClientException(DATABASE_DELETED);
-        return database_rule_schema(nativeObject);
+        try {
+            return database_rule_schema(nativeObject);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public void delete() {
         if (!nativeObject.isOwned()) throw new TypeDBClientException(DATABASE_DELETED);
-        // NOTE: .released() relinquishes ownership of the native object to the Rust side
-        database_delete(nativeObject.released());
+        try {
+            // NOTE: .released() relinquishes ownership of the native object to the Rust side
+            database_delete(nativeObject.released());
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
@@ -87,7 +103,11 @@ public class TypeDBDatabaseImpl extends NativeObject<com.vaticle.typedb.client.j
     @Override
     public Set<? extends Database.Replica> replicas() {
         if (!nativeObject.isOwned()) throw new TypeDBClientException(DATABASE_DELETED);
-        return database_get_replicas_info(nativeObject).stream().map(Replica::new).collect(Collectors.toSet());
+        try {
+            return database_get_replicas_info(nativeObject).stream().map(Replica::new).collect(Collectors.toSet());
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override

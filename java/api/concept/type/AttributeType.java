@@ -22,9 +22,8 @@
 package com.vaticle.typedb.client.api.concept.type;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
-import com.vaticle.typedb.client.api.concept.Value;
+import com.vaticle.typedb.client.api.concept.value.Value;
 import com.vaticle.typedb.client.api.concept.thing.Attribute;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -32,11 +31,9 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
-
 public interface AttributeType extends ThingType {
     @CheckReturnValue
-    ValueType getValueType();
+    Value.Type getValueType();
 
     @Override
     @CheckReturnValue
@@ -88,73 +85,27 @@ public interface AttributeType extends ThingType {
 
     @CheckReturnValue
     default boolean isBoolean() {
-        return getValueType() == ValueType.BOOLEAN;
+        return getValueType() == Value.Type.BOOLEAN;
     }
 
     @CheckReturnValue
     default boolean isLong() {
-        return getValueType() == ValueType.LONG;
+        return getValueType() == Value.Type.LONG;
     }
 
     @CheckReturnValue
     default boolean isDouble() {
-        return getValueType() == ValueType.DOUBLE;
+        return getValueType() == Value.Type.DOUBLE;
     }
 
     @CheckReturnValue
     default boolean isString() {
-        return getValueType() == ValueType.STRING;
+        return getValueType() == Value.Type.STRING;
     }
 
     @CheckReturnValue
     default boolean isDateTime() {
-        return getValueType() == ValueType.DATETIME;
-    }
-
-    enum ValueType {
-        OBJECT(Object.class, false, false, com.vaticle.typedb.client.jni.ValueType.Object),
-        BOOLEAN(Boolean.class, true, false, com.vaticle.typedb.client.jni.ValueType.Boolean),
-        LONG(Long.class, true, true, com.vaticle.typedb.client.jni.ValueType.Long),
-        DOUBLE(Double.class, true, false, com.vaticle.typedb.client.jni.ValueType.Double),
-        STRING(String.class, true, true, com.vaticle.typedb.client.jni.ValueType.String),
-        DATETIME(LocalDateTime.class, true, true, com.vaticle.typedb.client.jni.ValueType.DateTime);
-
-        private final Class<?> valueClass;
-        private final boolean isWritable;
-        private final boolean isKeyable;
-        public final com.vaticle.typedb.client.jni.ValueType nativeObject;
-
-        ValueType(Class<?> valueClass, boolean isWritable, boolean isKeyable, com.vaticle.typedb.client.jni.ValueType nativeObject) {
-            this.valueClass = valueClass;
-            this.isWritable = isWritable;
-            this.isKeyable = isKeyable;
-            this.nativeObject = nativeObject;
-        }
-
-        @CheckReturnValue
-        public static ValueType of(com.vaticle.typedb.client.jni.ValueType valueType) {
-            for (ValueType type : ValueType.values()) {
-                if (type.nativeObject == valueType) {
-                    return type;
-                }
-            }
-            throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
-        }
-
-        @CheckReturnValue
-        public Class<?> valueClass() {
-            return valueClass;
-        }
-
-        @CheckReturnValue
-        public boolean isWritable() {
-            return isWritable;
-        }
-
-        @CheckReturnValue
-        public boolean isKeyable() {
-            return isKeyable;
-        }
+        return getValueType() == Value.Type.DATETIME;
     }
 
     void setSupertype(TypeDBTransaction transaction, AttributeType attributeType);
@@ -164,11 +115,14 @@ public interface AttributeType extends ThingType {
     Stream<? extends AttributeType> getSubtypes(TypeDBTransaction transaction);
 
     @CheckReturnValue
-    Stream<? extends AttributeType> getSubtypes(TypeDBTransaction transaction, ValueType valueType);
+    Stream<? extends AttributeType> getSubtypes(TypeDBTransaction transaction, Value.Type valueType);
+
+    @CheckReturnValue
+    Stream<? extends AttributeType> getSubtypes(TypeDBTransaction transaction, Value.Type valueType, Transitivity transitivity);
 
     @Override
     @CheckReturnValue
-    Stream<? extends AttributeType> getSubtypesExplicit(TypeDBTransaction transaction);
+    Stream<? extends AttributeType> getSubtypes(TypeDBTransaction transaction, Transitivity transitivity);
 
     @Override
     @CheckReturnValue
@@ -176,7 +130,7 @@ public interface AttributeType extends ThingType {
 
     @Override
     @CheckReturnValue
-    Stream<? extends Attribute> getInstancesExplicit(TypeDBTransaction transaction);
+    Stream<? extends Attribute> getInstances(TypeDBTransaction transaction, Transitivity transitivity);
 
     @CheckReturnValue
     Stream<? extends ThingType> getOwners(TypeDBTransaction transaction);
@@ -185,8 +139,8 @@ public interface AttributeType extends ThingType {
     Stream<? extends ThingType> getOwners(TypeDBTransaction transaction, Set<Annotation> annotations);
 
     @CheckReturnValue
-    Stream<? extends ThingType> getOwnersExplicit(TypeDBTransaction transaction);
+    Stream<? extends ThingType> getOwners(TypeDBTransaction transaction, Transitivity transitivity);
 
     @CheckReturnValue
-    Stream<? extends ThingType> getOwnersExplicit(TypeDBTransaction transaction, Set<Annotation> annotations);
+    Stream<? extends ThingType> getOwners(TypeDBTransaction transaction, Set<Annotation> annotations, Transitivity transitivity);
 }

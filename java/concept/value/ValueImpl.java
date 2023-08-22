@@ -19,19 +19,19 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.concept;
+package com.vaticle.typedb.client.concept.value;
 
-import com.vaticle.typedb.client.api.concept.Value;
-import com.vaticle.typedb.client.common.NativeObject;
+import com.vaticle.typedb.client.api.concept.value.Value;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.client.concept.ConceptImpl;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_VALUE;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
-import static com.vaticle.typedb.client.jni.typedb_client.value_equals;
 import static com.vaticle.typedb.client.jni.typedb_client.value_get_boolean;
 import static com.vaticle.typedb.client.jni.typedb_client.value_get_date_time_as_millis;
 import static com.vaticle.typedb.client.jni.typedb_client.value_get_double;
@@ -48,11 +48,11 @@ import static com.vaticle.typedb.client.jni.typedb_client.value_new_double;
 import static com.vaticle.typedb.client.jni.typedb_client.value_new_long;
 import static com.vaticle.typedb.client.jni.typedb_client.value_new_string;
 
-public class ValueImpl extends NativeObject<com.vaticle.typedb.client.jni.Value> implements Value {
-  private int hash = 0;
+public class ValueImpl extends ConceptImpl implements Value {
+    private int hash = 0;
 
-    public ValueImpl(com.vaticle.typedb.client.jni.Value value) {
-        super(value);
+    public ValueImpl(com.vaticle.typedb.client.jni.Concept concept) {
+        super(concept);
     }
 
     public static Value of(boolean value) {
@@ -77,42 +77,62 @@ public class ValueImpl extends NativeObject<com.vaticle.typedb.client.jni.Value>
         return new ValueImpl(value_new_date_time_from_millis(value.atZone(ZoneOffset.UTC).toInstant().toEpochMilli()));
     }
 
+    @Override
+    public Type getType() {
+        if (isBoolean()) return Type.BOOLEAN;
+        else if (isLong()) return Type.LONG;
+        else if (isDouble()) return Type.DOUBLE;
+        else if (isString()) return Type.STRING;
+        else if (isDateTime()) return Type.DATETIME;
+        else throw new TypeDBClientException(ILLEGAL_STATE);
+    }
+
+    @Override
     public boolean isBoolean() {
         return value_is_boolean(nativeObject);
     }
 
+    @Override
     public boolean isLong() {
         return value_is_long(nativeObject);
     }
 
+    @Override
     public boolean isDouble() {
         return value_is_double(nativeObject);
     }
 
+    @Override
     public boolean isString() {
         return value_is_string(nativeObject);
     }
 
+    @Override
     public boolean isDateTime() {
         return value_is_date_time(nativeObject);
     }
 
+    @Override
     public boolean asBoolean() {
         return value_get_boolean(nativeObject);
     }
 
+    @Override
     public long asLong() {
         return value_get_long(nativeObject);
     }
 
+    @Override
     public double asDouble() {
         return value_get_double(nativeObject);
     }
 
+    @Override
     public String asString() {
         return value_get_string(nativeObject);
     }
 
+    @Override
     public LocalDateTime asDateTime() {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(value_get_date_time_as_millis(nativeObject)), ZoneOffset.UTC);
     }
@@ -125,14 +145,6 @@ public class ValueImpl extends NativeObject<com.vaticle.typedb.client.jni.Value>
         else if (isString()) return asString();
         else if (isDateTime()) return asDateTime().toString();
         throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        ValueImpl that = (ValueImpl) obj;
-        return value_equals(this.nativeObject, that.nativeObject);
     }
 
     @Override

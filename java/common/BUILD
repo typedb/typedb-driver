@@ -33,6 +33,8 @@ java_library(
         exclude = ["test/**"],
     ),
     deps = [
+        "//rust:typedb_client_jni",
+
         # External dependencies from @vaticle
         "@vaticle_typedb_common//:common",
 

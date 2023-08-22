@@ -322,7 +322,7 @@ test_for_each_arg! {
                         panic!("An error occurred fetching answers of a Match query: {err}")
                     }
                 }
-                idx = idx + 1;
+                idx += 1;
                 if idx == 100_000 {
                     println!("iteration {i}: retrieved and summed 100k attrs in {}ms", start_time.elapsed().as_millis());
                     start_time = Instant::now();

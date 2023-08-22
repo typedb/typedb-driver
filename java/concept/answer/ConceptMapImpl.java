@@ -201,6 +201,12 @@ public class ConceptMapImpl extends NativeObject<com.vaticle.typedb.client.jni.C
         }
 
         @Override
+        public String toString() {
+            return "Explainable { id: " + id() + ", conjunction: " + conjunction() + " }";
+        }
+
+
+        @Override
         public boolean equals(final Object obj) {
             if (this == obj) return true;
             if (obj == null || getClass() != obj.getClass()) return false;

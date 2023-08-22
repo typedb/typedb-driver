@@ -150,7 +150,7 @@ public class TypeDBOptions extends NativeObject<com.vaticle.typedb.client.jni.Op
     }
 
     @CheckReturnValue
-    public Optional<Integer> schemaLockAcquireTimeoutMillis() {
+    public Optional<Integer> transactionTimeoutMillis() {
         if (options_has_transaction_timeout_millis(nativeObject))
             return Optional.of((int) options_get_transaction_timeout_millis(nativeObject));
         return Optional.empty();
@@ -164,7 +164,7 @@ public class TypeDBOptions extends NativeObject<com.vaticle.typedb.client.jni.Op
         return this;
     }
 
-    public Optional<Integer> transactionTimeoutMillis() {
+    public Optional<Integer> schemaLockAcquireTimeoutMillis() {
         if (options_has_schema_lock_acquire_timeout_millis(nativeObject))
             return Optional.of((int) options_get_schema_lock_acquire_timeout_millis(nativeObject));
         return Optional.empty();

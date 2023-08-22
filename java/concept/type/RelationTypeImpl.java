@@ -24,8 +24,8 @@ package com.vaticle.typedb.client.concept.type;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.type.RelationType;
 import com.vaticle.typedb.client.api.concept.type.RoleType;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.concept.thing.RelationImpl;
-import com.vaticle.typedb.client.jni.Transitivity;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
@@ -49,29 +49,45 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
     @Override
     public final RelationImpl create(TypeDBTransaction transaction) {
-        return new RelationImpl(relation_type_create(nativeTransaction(transaction), nativeObject));
+        try {
+            return new RelationImpl(relation_type_create(nativeTransaction(transaction), nativeObject));
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public final void setSupertype(TypeDBTransaction transaction, RelationType relationType) {
-        relation_type_set_supertype(nativeTransaction(transaction), nativeObject, ((RelationTypeImpl) relationType).nativeObject);
+        try {
+            relation_type_set_supertype(nativeTransaction(transaction), nativeObject, ((RelationTypeImpl) relationType).nativeObject);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public final Stream<RoleTypeImpl> getRelates(TypeDBTransaction transaction) {
-        return relation_type_get_relates(nativeTransaction(transaction), nativeObject, Transitivity.Transitive).stream().map(RoleTypeImpl::new);
+        return getRelates(transaction, Transitivity.TRANSITIVE);
     }
 
     @Override
-    public final Stream<RoleTypeImpl> getRelatesExplicit(TypeDBTransaction transaction) {
-        return relation_type_get_relates(nativeTransaction(transaction), nativeObject, Transitivity.Explicit).stream().map(RoleTypeImpl::new);
+    public final Stream<RoleTypeImpl> getRelates(TypeDBTransaction transaction, Transitivity transitivity) {
+        try {
+            return relation_type_get_relates(nativeTransaction(transaction), nativeObject, transitivity.nativeObject).stream().map(RoleTypeImpl::new);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public final RoleTypeImpl getRelates(TypeDBTransaction transaction, String roleLabel) {
-        com.vaticle.typedb.client.jni.Concept res = relation_type_get_relates_for_role_label(nativeTransaction(transaction), nativeObject, roleLabel);
-        if (res != null) return new RoleTypeImpl(res);
-        else return null;
+        try {
+            com.vaticle.typedb.client.jni.Concept res = relation_type_get_relates_for_role_label(nativeTransaction(transaction), nativeObject, roleLabel);
+            if (res != null) return new RoleTypeImpl(res);
+            else return null;
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Nullable
@@ -82,9 +98,13 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
     @Override
     public final RoleTypeImpl getRelatesOverridden(TypeDBTransaction transaction, String roleLabel) {
-        com.vaticle.typedb.client.jni.Concept res = relation_type_get_relates_overridden(nativeTransaction(transaction), nativeObject, roleLabel);
-        if (res != null) return new RoleTypeImpl(res);
-        else return null;
+        try {
+            com.vaticle.typedb.client.jni.Concept res = relation_type_get_relates_overridden(nativeTransaction(transaction), nativeObject, roleLabel);
+            if (res != null) return new RoleTypeImpl(res);
+            else return null;
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
@@ -99,49 +119,77 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
     @Override
     public final void setRelates(TypeDBTransaction transaction, String roleLabel, String overriddenLabel) {
-        relation_type_set_relates(nativeTransaction(transaction), nativeObject, roleLabel, overriddenLabel);
+        try {
+            relation_type_set_relates(nativeTransaction(transaction), nativeObject, roleLabel, overriddenLabel);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public void unsetRelates(TypeDBTransaction transaction, RoleType roleType) {
-        relation_type_unset_relates(nativeTransaction(transaction), nativeObject, roleType.getLabel().name());
+        try {
+            relation_type_unset_relates(nativeTransaction(transaction), nativeObject, roleType.getLabel().name());
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public final void unsetRelates(TypeDBTransaction transaction, String roleLabel) {
-        relation_type_unset_relates(nativeTransaction(transaction), nativeObject, roleLabel);
+        try {
+            relation_type_unset_relates(nativeTransaction(transaction), nativeObject, roleLabel);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Nullable
     @Override
     public RelationTypeImpl getSupertype(TypeDBTransaction transaction) {
-        com.vaticle.typedb.client.jni.Concept res = relation_type_get_supertype(nativeTransaction(transaction), nativeObject);
-        if (res != null) return new RelationTypeImpl(res);
-        else return null;
+        try {
+            com.vaticle.typedb.client.jni.Concept res = relation_type_get_supertype(nativeTransaction(transaction), nativeObject);
+            if (res != null) return new RelationTypeImpl(res);
+            else return null;
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public final Stream<RelationTypeImpl> getSupertypes(TypeDBTransaction transaction) {
-        return relation_type_get_supertypes(nativeTransaction(transaction), nativeObject).stream().map(RelationTypeImpl::new);
+        try {
+            return relation_type_get_supertypes(nativeTransaction(transaction), nativeObject).stream().map(RelationTypeImpl::new);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public final Stream<RelationTypeImpl> getSubtypes(TypeDBTransaction transaction) {
-        return relation_type_get_subtypes(nativeTransaction(transaction), nativeObject, Transitivity.Transitive).stream().map(RelationTypeImpl::new);
+        return getSubtypes(transaction, Transitivity.TRANSITIVE);
     }
 
     @Override
-    public final Stream<RelationTypeImpl> getSubtypesExplicit(TypeDBTransaction transaction) {
-        return relation_type_get_subtypes(nativeTransaction(transaction), nativeObject, Transitivity.Explicit).stream().map(RelationTypeImpl::new);
+    public final Stream<RelationTypeImpl> getSubtypes(TypeDBTransaction transaction, Transitivity transitivity) {
+        try {
+            return relation_type_get_subtypes(nativeTransaction(transaction), nativeObject, transitivity.nativeObject).stream().map(RelationTypeImpl::new);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public final Stream<RelationImpl> getInstances(TypeDBTransaction transaction) {
-        return relation_type_get_instances(nativeTransaction(transaction), nativeObject, Transitivity.Transitive).stream().map(RelationImpl::new);
+        return getInstances(transaction, Transitivity.TRANSITIVE);
     }
 
     @Override
-    public final Stream<RelationImpl> getInstancesExplicit(TypeDBTransaction transaction) {
-        return relation_type_get_instances(nativeTransaction(transaction), nativeObject, Transitivity.Explicit).stream().map(RelationImpl::new);
+    public final Stream<RelationImpl> getInstances(TypeDBTransaction transaction, Transitivity transitivity) {
+        try {
+            return relation_type_get_instances(nativeTransaction(transaction), nativeObject, transitivity.nativeObject).stream().map(RelationImpl::new);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 }

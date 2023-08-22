@@ -26,16 +26,28 @@ import javax.annotation.Nullable;
 public class TypeDBClientException extends RuntimeException {
 
     @Nullable
+    private final com.vaticle.typedb.client.jni.Error nativeError;
+
+    @Nullable
     private final ErrorMessage errorMessage;
 
     public TypeDBClientException(ErrorMessage error, Object... parameters) {
         super(error.message(parameters));
         assert !getMessage().contains("%s");
+        this.nativeError = null;
         this.errorMessage = error;
     }
 
     public TypeDBClientException(String message, Throwable cause) {
         super(message, cause);
+        this.nativeError = null;
+        this.errorMessage = null;
+    }
+
+    public TypeDBClientException(com.vaticle.typedb.client.jni.Error error) {
+        super(error.getMessage());
+        assert !getMessage().contains("%s");
+        this.nativeError = error;
         this.errorMessage = null;
     }
 

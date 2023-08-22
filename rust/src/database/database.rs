@@ -57,7 +57,7 @@ impl Database {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(super) async fn get(name: String, connection: Connection) -> Result<Self> {
         Ok(Self {
-            name: name.to_string(),
+            name: name.clone(),
             replicas: RwLock::new(Replica::fetch_all(name, connection.clone()).await?),
             connection,
         })
@@ -103,8 +103,8 @@ impl Database {
         self.run_failsafe(|database, _, _| async move { database.rule_schema().await }).await
     }
 
-    #[cfg(not(feature = "sync"))]
-    pub(super) async fn run_failsafe<F, P, R>(&self, task: F) -> Result<R>
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub(crate) async fn run_failsafe<F, P, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> P,
         P: Future<Output = Result<R>>,
@@ -118,8 +118,8 @@ impl Database {
         }
     }
 
-    #[cfg(not(feature = "sync"))]
-    async fn run_on_any_replica<F, P, R>(&self, task: F) -> Result<R>
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub(super) async fn run_on_any_replica<F, P, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> P,
         P: Future<Output = Result<R>>,
@@ -130,7 +130,7 @@ impl Database {
             match task(replica.database.clone(), self.connection.connection(&replica.address)?.clone(), is_first_run)
                 .await
             {
-                Err(Error::Connection(ConnectionError::UnableToConnect())) => {
+                Err(Error::Connection(ConnectionError::UnableToConnect() | ConnectionError::ConnectionRefused())) => {
                     debug!("Unable to connect to {}. Attempting next server.", replica.address);
                 }
                 res => return res,
@@ -140,8 +140,8 @@ impl Database {
         Err(self.connection.unable_to_connect_error())
     }
 
-    #[cfg(not(feature = "sync"))]
-    async fn run_on_primary_replica<F, P, R>(&self, task: F) -> Result<R>
+    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
+    pub(super) async fn run_on_primary_replica<F, P, R>(&self, task: F) -> Result<R>
     where
         F: Fn(ServerDatabase, ServerConnection, bool) -> P,
         P: Future<Output = Result<R>>,
@@ -158,71 +158,13 @@ impl Database {
             .await
             {
                 Err(Error::Connection(
-                    ConnectionError::ClusterReplicaNotPrimary() | ConnectionError::UnableToConnect(),
+                    ConnectionError::ClusterReplicaNotPrimary()
+                    | ConnectionError::UnableToConnect()
+                    | ConnectionError::ConnectionRefused(),
                 )) => {
                     debug!("Primary replica error, waiting...");
                     Self::wait_for_primary_replica_selection().await;
                     primary_replica = self.seek_primary_replica().await?;
-                }
-                res => return res,
-            }
-        }
-        Err(self.connection.unable_to_connect_error())
-    }
-
-    #[cfg(feature = "sync")]
-    pub(super) fn run_failsafe<F, R>(&self, task: F) -> Result<R>
-    where
-        F: Fn(ServerDatabase, ServerConnection, bool) -> Result<R>,
-    {
-        match self.run_on_any_replica(&task) {
-            Err(Error::Connection(ConnectionError::ClusterReplicaNotPrimary())) => {
-                debug!("Attempted to run on a non-primary replica, retrying on primary...");
-                self.run_on_primary_replica(&task)
-            }
-            res => res,
-        }
-    }
-
-    #[cfg(feature = "sync")]
-    fn run_on_any_replica<F, R>(&self, task: F) -> Result<R>
-    where
-        F: Fn(ServerDatabase, ServerConnection, bool) -> Result<R>,
-    {
-        let mut is_first_run = true;
-        let replicas = self.replicas.read().unwrap().clone();
-        for replica in replicas {
-            match task(replica.database.clone(), self.connection.connection(&replica.address)?.clone(), is_first_run) {
-                Err(Error::Connection(ConnectionError::UnableToConnect())) => {
-                    debug!("Unable to connect to {}. Attempting next server.", replica.address);
-                }
-                res => return res,
-            }
-            is_first_run = false;
-        }
-        Err(self.connection.unable_to_connect_error())
-    }
-
-    #[cfg(feature = "sync")]
-    fn run_on_primary_replica<F, R>(&self, task: F) -> Result<R>
-    where
-        F: Fn(ServerDatabase, ServerConnection, bool) -> Result<R>,
-    {
-        let mut primary_replica =
-            if let Some(replica) = self.primary_replica() { replica } else { self.seek_primary_replica()? };
-
-        for retry in 0..Self::PRIMARY_REPLICA_TASK_MAX_RETRIES {
-            match task(
-                primary_replica.database.clone(),
-                self.connection.connection(&primary_replica.address)?.clone(),
-                retry == 0,
-            ) {
-                Err(Error::Connection(
-                    ConnectionError::ClusterReplicaNotPrimary() | ConnectionError::UnableToConnect(),
-                )) => {
-                    debug!("Primary replica error, waiting...");
-                    Self::wait_for_primary_replica_selection();
-                    primary_replica = self.seek_primary_replica()?;
                 }
                 res => return res,
             }
@@ -311,10 +253,14 @@ impl Replica {
         for server_connection in connection.connections() {
             let res = server_connection.get_database_replicas(name.clone()).await;
             match res {
-                Ok(res) => {
-                    return Self::try_from_info(res, &connection);
+                Ok(info) => {
+                    return Self::try_from_info(info, &connection);
                 }
-                Err(Error::Connection(ConnectionError::UnableToConnect())) => {
+                Err(Error::Connection(
+                    ConnectionError::DatabaseDoesNotExist(_)
+                    | ConnectionError::UnableToConnect()
+                    | ConnectionError::ConnectionRefused(),
+                )) => {
                     error!(
                         "Failed to fetch replica info for database '{}' from {}. Attempting next server.",
                         name,
@@ -341,7 +287,7 @@ impl fmt::Debug for Replica {
 }
 
 #[derive(Clone, Debug)]
-pub(super) struct ServerDatabase {
+pub(crate) struct ServerDatabase {
     name: String,
     connection: ServerConnection,
 }

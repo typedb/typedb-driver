@@ -76,7 +76,7 @@
     protected transient boolean swigCMemOwn;
 
     protected $javaclassname(long cPtr, boolean cMemoryOwn) {
-        super(typedb_clientJNI.error_code(cPtr, null) + " " + typedb_clientJNI.error_message(cPtr, null));
+        super((typedb_clientJNI.error_code(cPtr, null) + " " + typedb_clientJNI.error_message(cPtr, null)).strip());
         swigCMemOwn = cMemoryOwn;
         swigCPtr = cPtr;
     }
@@ -234,4 +234,3 @@ import static java.util.Spliterators.spliteratorUnknownSize;
 %typemap(javaout) enum ValueType * {
     return $jnicall;
 }
-

@@ -27,8 +27,8 @@ use tokio::sync::mpsc::{unbounded_channel as unbounded_async, UnboundedSender};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tonic::{Response, Status, Streaming};
 use typedb_protocol::{
-    database, database_manager, server_manager, session, transaction, type_db_client::TypeDbClient as GRPC, user,
-    user_manager,
+    connection, database, database_manager, server_manager, session, transaction, type_db_client::TypeDbClient as GRPC,
+    user, user_manager,
 };
 
 use super::channel::{CallCredentials, GRPCChannel};
@@ -57,6 +57,7 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
     {
         match call(self).await {
             Err(Error::Connection(ConnectionError::ClusterTokenCredentialInvalid())) => {
+                debug!("Request rejected because token credential was invalid. Renewing token...");
                 self.renew_token().await?;
                 call(self).await
             }
@@ -75,6 +76,10 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
             trace!("renewed token");
         }
         Ok(())
+    }
+
+    pub(super) async fn connection_open(&mut self, req: connection::open::Req) -> Result<connection::open::Res> {
+        self.single(|this| Box::pin(this.grpc.connection_open(req.clone()))).await
     }
 
     pub(super) async fn servers_all(&mut self, req: server_manager::all::Req) -> Result<server_manager::all::Res> {

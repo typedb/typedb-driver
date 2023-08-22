@@ -40,6 +40,8 @@ use crate::{
 
 #[derive(Debug)]
 pub(super) enum Request {
+    ConnectionOpen,
+
     ServersAll,
 
     DatabasesContains { database_name: String },
@@ -70,6 +72,8 @@ pub(super) enum Request {
 
 #[derive(Debug)]
 pub(super) enum Response {
+    ConnectionOpen,
+
     ServersAll {
         servers: Vec<Address>,
     },

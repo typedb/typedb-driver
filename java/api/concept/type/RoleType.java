@@ -51,7 +51,7 @@ public interface RoleType extends Type {
     Stream<? extends RoleType> getSubtypes(TypeDBTransaction transaction);
 
     @Override
-    Stream<? extends RoleType> getSubtypesExplicit(TypeDBTransaction transaction);
+    Stream<? extends RoleType> getSubtypes(TypeDBTransaction transaction, Transitivity transitivity);
 
     RelationType getRelationType(TypeDBTransaction transaction);
 
@@ -59,13 +59,13 @@ public interface RoleType extends Type {
 
     Stream<? extends ThingType> getPlayerTypes(TypeDBTransaction transaction);
 
-    Stream<? extends ThingType> getPlayerTypesExplicit(TypeDBTransaction transaction);
+    Stream<? extends ThingType> getPlayerTypes(TypeDBTransaction transaction, Transitivity transitivity);
 
     Stream<? extends Relation> getRelationInstances(TypeDBTransaction transaction);
 
-    Stream<? extends Relation> getRelationInstancesExplicit(TypeDBTransaction transaction);
+    Stream<? extends Relation> getRelationInstances(TypeDBTransaction transaction, Transitivity transitivity);
 
     Stream<? extends Thing> getPlayerInstances(TypeDBTransaction transaction);
 
-    Stream<? extends Thing> getPlayerInstancesExplicit(TypeDBTransaction transaction);
+    Stream<? extends Thing> getPlayerInstances(TypeDBTransaction transaction, Transitivity transitivity);
 }

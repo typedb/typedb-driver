@@ -68,7 +68,7 @@ checkstyle_test(
 #     name = "deploy-github",
 #     draft = False,
 #     title = "TypeDB Client Java",
-#     release_description = "//:RELEASE_TEMPLATE.md",
+#     release_description = "//:RELEASE_NOTES_LATEST.md",
 #     organisation = github_deployment["github.organisation"],
 #     repository = github_deployment["github.repository"],
 #     title_append_version = True,

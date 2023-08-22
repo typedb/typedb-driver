@@ -36,10 +36,10 @@ import java.util.function.Consumer;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
 import static com.vaticle.typedb.client.jni.typedb_client.transaction_commit;
+import static com.vaticle.typedb.client.jni.typedb_client.transaction_force_close;
 import static com.vaticle.typedb.client.jni.typedb_client.transaction_is_open;
 import static com.vaticle.typedb.client.jni.typedb_client.transaction_new;
 import static com.vaticle.typedb.client.jni.typedb_client.transaction_on_close;
-import static com.vaticle.typedb.client.jni.typedb_client.transaction_force_close;
 import static com.vaticle.typedb.client.jni.typedb_client.transaction_rollback;
 
 public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.client.jni.Transaction> implements TypeDBTransaction {
@@ -51,13 +51,21 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.clien
     private final QueryManager queryManager;
 
     TypeDBTransactionImpl(TypeDBSessionImpl session, Type type, TypeDBOptions options) {
-        super(transaction_new(session.nativeObject, type.nativeObject, options.nativeObject));
+        super(newNative(session, type, options));
         this.type = type;
         this.options = options;
 
         conceptManager = new ConceptManagerImpl(nativeObject);
         logicManager = new LogicManagerImpl(nativeObject);
         queryManager = new QueryManagerImpl(nativeObject);
+    }
+
+    private static com.vaticle.typedb.client.jni.Transaction newNative(TypeDBSessionImpl session, Type type, TypeDBOptions options) {
+        try {
+            return transaction_new(session.nativeObject, type.nativeObject, options.nativeObject);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
@@ -100,14 +108,22 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.clien
     @Override
     public void commit() {
         if (!nativeObject.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
-        // NOTE: .released() relinquishes ownership of the native object to the Rust side
-        transaction_commit(nativeObject.released());
+        try {
+            // NOTE: .released() relinquishes ownership of the native object to the Rust side
+            transaction_commit(nativeObject.released());
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public void rollback() {
         if (!nativeObject.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
-        transaction_rollback(nativeObject);
+        try {
+            transaction_rollback(nativeObject);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override

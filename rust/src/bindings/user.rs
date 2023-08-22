@@ -25,7 +25,7 @@ use super::{
     error::unwrap_void,
     memory::{borrow, free, release_string, string_view},
 };
-use crate::{Connection, User};
+use crate::{User, UserManager};
 
 #[no_mangle]
 pub extern "C" fn user_drop(user: *mut User) {
@@ -45,9 +45,13 @@ pub extern "C" fn user_get_password_expiry_seconds(user: *mut User) -> i64 {
 #[no_mangle]
 pub extern "C" fn user_password_update(
     user: *mut User,
-    connection: *const Connection,
+    user_manager: *const UserManager,
     password_old: *const c_char,
     password_new: *const c_char,
 ) {
-    unwrap_void(borrow(user).password_update(borrow(connection), string_view(password_old), string_view(password_new)));
+    unwrap_void(borrow(user).password_update(
+        &borrow(user_manager).connection,
+        string_view(password_old),
+        string_view(password_new),
+    ));
 }

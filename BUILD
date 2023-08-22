@@ -38,7 +38,6 @@ load("//:deployment.bzl", github_deployment = "deployment")
 
 exports_files([
     "VERSION",
-    "RELEASE_TEMPLATE.md",
     "deployment.bzl",
 ])
 

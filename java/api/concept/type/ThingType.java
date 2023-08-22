@@ -23,7 +23,7 @@ package com.vaticle.typedb.client.api.concept.type;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.thing.Thing;
-import com.vaticle.typedb.client.api.concept.type.AttributeType.ValueType;
+import com.vaticle.typedb.client.api.concept.value.Value;
 import com.vaticle.typedb.client.common.NativeObject;
 
 import javax.annotation.CheckReturnValue;
@@ -65,13 +65,13 @@ public interface ThingType extends Type {
 
     @Override
     @CheckReturnValue
-    Stream<? extends ThingType> getSubtypesExplicit(TypeDBTransaction transaction);
+    Stream<? extends ThingType> getSubtypes(TypeDBTransaction transaction, Transitivity transitivity);
 
     @CheckReturnValue
     Stream<? extends Thing> getInstances(TypeDBTransaction transaction);
 
     @CheckReturnValue
-    Stream<? extends Thing> getInstancesExplicit(TypeDBTransaction transaction);
+    Stream<? extends Thing> getInstances(TypeDBTransaction transaction, Transitivity transitivity);
 
     void setAbstract(TypeDBTransaction transaction);
 
@@ -93,7 +93,7 @@ public interface ThingType extends Type {
     Stream<? extends RoleType> getPlays(TypeDBTransaction transaction);
 
     @CheckReturnValue
-    Stream<? extends RoleType> getPlaysExplicit(TypeDBTransaction transaction);
+    Stream<? extends RoleType> getPlays(TypeDBTransaction transaction, Transitivity transitivity);
 
     @CheckReturnValue
     RoleType getPlaysOverridden(TypeDBTransaction transaction, RoleType roleType);
@@ -102,25 +102,25 @@ public interface ThingType extends Type {
     Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction);
 
     @CheckReturnValue
-    Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, ValueType valueType);
+    Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Value.Type valueType);
 
     @CheckReturnValue
     Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Set<Annotation> annotations);
 
     @CheckReturnValue
-    Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, ValueType valueType, Set<Annotation> annotations);
+    Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Value.Type valueType, Set<Annotation> annotations);
 
     @CheckReturnValue
-    Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction);
+    Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Transitivity transitivity);
 
     @CheckReturnValue
-    Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, ValueType valueType);
+    Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Value.Type valueType, Transitivity transitivity);
 
     @CheckReturnValue
-    Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, Set<Annotation> annotations);
+    Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Set<Annotation> annotations, Transitivity transitivity);
 
     @CheckReturnValue
-    Stream<? extends AttributeType> getOwnsExplicit(TypeDBTransaction transaction, ValueType valueType, Set<Annotation> annotations);
+    Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Value.Type valueType, Set<Annotation> annotations, Transitivity transitivity);
 
     @CheckReturnValue
     AttributeType getOwnsOverridden(TypeDBTransaction transaction, AttributeType attributeType);

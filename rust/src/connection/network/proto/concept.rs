@@ -24,17 +24,17 @@ use std::collections::HashMap;
 use chrono::NaiveDateTime;
 use itertools::Itertools;
 use typedb_protocol::{
-    attribute::{value::Value as ValueProtoInner, Value as ValueProto},
-    attribute_type::ValueType as ValueTypeProto,
     concept,
     numeric::Value as NumericValue,
     r#type::{annotation, Annotation as AnnotationProto, Transitivity as TransitivityProto},
-    thing, thing_type, Attribute as AttributeProto, AttributeType as AttributeTypeProto, Concept as ConceptProto,
+    thing, thing_type,
+    value::Value as ValueProtoInner,
+    Attribute as AttributeProto, AttributeType as AttributeTypeProto, Concept as ConceptProto,
     ConceptMap as ConceptMapProto, ConceptMapGroup as ConceptMapGroupProto, Entity as EntityProto,
     EntityType as EntityTypeProto, Explainable as ExplainableProto, Explainables as ExplainablesProto,
     Explanation as ExplanationProto, Numeric as NumericProto, NumericGroup as NumericGroupProto,
     Relation as RelationProto, RelationType as RelationTypeProto, RoleType as RoleTypeProto, Thing as ThingProto,
-    ThingType as ThingTypeProto,
+    ThingType as ThingTypeProto, Value as ValueProto, ValueType as ValueTypeProto,
 };
 
 use super::{FromProto, IntoProto, TryFromProto};
@@ -132,6 +132,8 @@ impl TryFromProto<ConceptProto> for Concept {
             Some(concept::Concept::Attribute(attribute_proto)) => {
                 Attribute::try_from_proto(attribute_proto).map(Self::Attribute)
             }
+
+            Some(concept::Concept::Value(value_proto)) => Value::try_from_proto(value_proto).map(Self::Value),
 
             Some(concept::Concept::ThingTypeRoot(_)) => Ok(Self::RootThingType(RootThingType)),
             None => Err(ConnectionError::MissingResponseField("concept").into()),

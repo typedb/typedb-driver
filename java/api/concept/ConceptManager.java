@@ -27,6 +27,7 @@ import com.vaticle.typedb.client.api.concept.thing.Relation;
 import com.vaticle.typedb.client.api.concept.type.AttributeType;
 import com.vaticle.typedb.client.api.concept.type.EntityType;
 import com.vaticle.typedb.client.api.concept.type.RelationType;
+import com.vaticle.typedb.client.api.concept.value.Value;
 import com.vaticle.typedb.client.common.exception.TypeDBException;
 
 import java.util.List;
@@ -59,7 +60,7 @@ public interface ConceptManager {
 
     RelationType putRelationType(String label);
 
-    AttributeType putAttributeType(String label, AttributeType.ValueType valueType);
+    AttributeType putAttributeType(String label, Value.Type valueType);
 
     @Nullable
     @CheckReturnValue

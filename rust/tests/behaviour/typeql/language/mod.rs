@@ -21,6 +21,7 @@
 
 mod define;
 mod delete;
+mod expression;
 mod get;
 mod insert;
 mod match_;

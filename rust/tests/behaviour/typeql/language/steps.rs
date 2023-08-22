@@ -173,6 +173,28 @@ generic_step_impl! {
         }
     }
 
+    #[step(expr = "typeql match; throws exception containing {string}")]
+    async fn typeql_match_throws_containing(context: &mut Context, step: &Step, message: String) {
+        let parsed = parse_query(step.docstring().unwrap());
+        match parsed {
+            Ok(_) => {
+                let matched = context.transaction().query().match_(&parsed.unwrap().to_string());
+                if matched.is_ok() {
+                    let res = matched.unwrap().try_collect::<Vec<_>>().await;
+                    assert!(res.is_err());
+                    assert!(res.unwrap_err().to_string().contains(&message));
+                }
+            }
+            // NOTE: We manually close transaction here, because we want to align with all non-rust and non-java clients,
+            // where parsing happens at server-side which closes transaction if they fail
+            Err(_) => {
+                for session_tracker in &mut context.session_trackers {
+                    session_tracker.transactions_mut().clear();
+                }
+            }
+        }
+    }
+
     #[step(expr = "each answer satisfies")]
     async fn each_answer_satisfies(context: &mut Context, step: &Step) -> TypeDBResult {
         for answer in context.answer.clone() {
@@ -290,7 +312,7 @@ generic_step_impl! {
                     {
                         let mut table_row_wo_owner = table_row.clone();
                         table_row_wo_owner.remove(Context::GROUP_COLUMN_NAME);
-                        if match_answer_concept_map(context, &table_row_wo_owner, &ans_row).await {
+                        if match_answer_concept_map(context, &table_row_wo_owner, ans_row).await {
                             matched_rows += 1;
                             break;
                         }

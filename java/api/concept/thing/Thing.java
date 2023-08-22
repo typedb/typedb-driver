@@ -76,4 +76,9 @@ public interface Thing extends Concept {
 
     @CheckReturnValue
     Stream<? extends RoleType> getPlaying(TypeDBTransaction transaction);
+
+    void delete(TypeDBTransaction transaction);
+
+    @CheckReturnValue
+    boolean isDeleted(TypeDBTransaction transaction);
 }

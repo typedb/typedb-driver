@@ -19,28 +19,36 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.concept;
+use chrono::NaiveDateTime;
 
-import java.time.LocalDateTime;
+#[derive(Clone, Debug, PartialEq)]
+pub enum Value {
+    Boolean(bool),
+    Long(i64),
+    Double(f64),
+    String(String),
+    DateTime(NaiveDateTime),
+}
 
-public interface Value {
-    boolean isBoolean();
+impl Value {
+    pub fn get_type(&self) -> ValueType {
+        match self {
+            Self::Boolean(_) => ValueType::Boolean,
+            Self::Long(_) => ValueType::Long,
+            Self::Double(_) => ValueType::Double,
+            Self::String(_) => ValueType::String,
+            Self::DateTime(_) => ValueType::DateTime,
+        }
+    }
+}
 
-    boolean isLong();
-
-    boolean isDouble();
-
-    boolean isString();
-
-    boolean isDateTime();
-
-    boolean asBoolean();
-
-    long asLong();
-
-    double asDouble();
-
-    String asString();
-
-    LocalDateTime asDateTime();
+#[repr(C)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ValueType {
+    Object,
+    Boolean,
+    Long,
+    Double,
+    String,
+    DateTime,
 }

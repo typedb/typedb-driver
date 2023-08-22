@@ -23,9 +23,9 @@ use std::time::Duration;
 
 use itertools::Itertools;
 use typedb_protocol::{
-    attribute, attribute_type, concept_manager, database, database_manager, entity_type, logic_manager, query_manager,
-    r#type, relation, relation_type, role_type, rule, server_manager, session, thing, thing_type, transaction, user,
-    user_manager,
+    attribute, attribute_type, concept_manager, connection, database, database_manager, entity_type, logic_manager,
+    query_manager, r#type, relation, relation_type, role_type, rule, server_manager, session, thing, thing_type,
+    transaction, user, user_manager, Version::Version,
 };
 
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
@@ -45,6 +45,15 @@ use crate::{
     logic::{Explanation, Rule},
     user::User,
 };
+
+impl TryIntoProto<connection::open::Req> for Request {
+    fn try_into_proto(self) -> Result<connection::open::Req> {
+        match self {
+            Self::ConnectionOpen => Ok(connection::open::Req { version: Version.into() }),
+            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+        }
+    }
+}
 
 impl TryIntoProto<server_manager::all::Req> for Request {
     fn try_into_proto(self) -> Result<server_manager::all::Req> {
@@ -229,6 +238,12 @@ impl TryIntoProto<user::password_update::Req> for Request {
             }
             other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
         }
+    }
+}
+
+impl FromProto<connection::open::Res> for Response {
+    fn from_proto(_proto: connection::open::Res) -> Self {
+        Self::ConnectionOpen
     }
 }
 

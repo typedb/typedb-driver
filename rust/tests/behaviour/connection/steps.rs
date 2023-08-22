@@ -37,8 +37,8 @@ generic_step_impl! {
         let connection = Connection::new_encrypted(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
             Credential::with_tls(
-                &login.as_str(),
-                &password.as_str(),
+                &login,
+                &password,
                 Some(&context.tls_root_ca),
             ).unwrap(),
         );

@@ -22,6 +22,7 @@
 package com.vaticle.typedb.client.api.concept;
 
 import com.eclipsesource.json.JsonObject;
+import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.thing.Attribute;
 import com.vaticle.typedb.client.api.concept.thing.Entity;
@@ -33,11 +34,14 @@ import com.vaticle.typedb.client.api.concept.type.RelationType;
 import com.vaticle.typedb.client.api.concept.type.RoleType;
 import com.vaticle.typedb.client.api.concept.type.ThingType;
 import com.vaticle.typedb.client.api.concept.type.Type;
+import com.vaticle.typedb.client.api.concept.value.Value;
 import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.client.jni.Transitivity;
 
 import javax.annotation.CheckReturnValue;
 
 import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 import static com.vaticle.typedb.common.util.Objects.className;
 
 public interface Concept {
@@ -82,12 +86,17 @@ public interface Concept {
     }
 
     @CheckReturnValue
+    default boolean isRelation() {
+        return false;
+    }
+
+    @CheckReturnValue
     default boolean isAttribute() {
         return false;
     }
 
     @CheckReturnValue
-    default boolean isRelation() {
+    default boolean isValue() {
         return false;
     }
 
@@ -131,11 +140,30 @@ public interface Concept {
         throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.class));
     }
 
+    default Value asValue() {
+        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Value.class));
+    }
+
     @CheckReturnValue
     JsonObject toJSON();
 
-    void delete(TypeDBTransaction transaction);
+    enum Transitivity {
+        TRANSITIVE(com.vaticle.typedb.client.jni.Transitivity.Transitive),
+        EXPLICIT(com.vaticle.typedb.client.jni.Transitivity.Explicit);
 
-    @CheckReturnValue
-    boolean isDeleted(TypeDBTransaction transaction);
+        public final com.vaticle.typedb.client.jni.Transitivity nativeObject;
+
+        Transitivity(com.vaticle.typedb.client.jni.Transitivity nativeObject) {
+            this.nativeObject = nativeObject;
+        }
+
+        public static Transitivity of(com.vaticle.typedb.client.jni.Transitivity transitivity) {
+            for (Transitivity value : Transitivity.values()) {
+                if (value.nativeObject == transitivity) {
+                    return value;
+                }
+            }
+            throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
+        }
+    }
 }

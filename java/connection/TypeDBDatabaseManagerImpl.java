@@ -44,23 +44,39 @@ public class TypeDBDatabaseManagerImpl extends NativeObject<com.vaticle.typedb.c
     @Override
     public Database get(String name) throws Error {
         if (name == null || name.isEmpty()) throw new TypeDBClientException(MISSING_DB_NAME);
-        return new TypeDBDatabaseImpl(databases_get(nativeObject, name));
+        try {
+            return new TypeDBDatabaseImpl(databases_get(nativeObject, name));
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public boolean contains(String name) throws Error {
         if (name == null || name.isEmpty()) throw new TypeDBClientException(MISSING_DB_NAME);
-        return databases_contains(nativeObject, name);
+        try {
+            return databases_contains(nativeObject, name);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public void create(String name) throws Error {
         if (name == null || name.isEmpty()) throw new TypeDBClientException(MISSING_DB_NAME);
-        databases_create(nativeObject, name);
+        try {
+            databases_create(nativeObject, name);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public List<Database> all() {
-        return databases_all(nativeObject).stream().map(TypeDBDatabaseImpl::new).collect(toList());
+        try {
+            return databases_all(nativeObject).stream().map(TypeDBDatabaseImpl::new).collect(toList());
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 }

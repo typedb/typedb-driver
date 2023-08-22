@@ -23,8 +23,8 @@ package com.vaticle.typedb.client.concept.type;
 
 import com.vaticle.typedb.client.api.TypeDBTransaction;
 import com.vaticle.typedb.client.api.concept.type.EntityType;
+import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 import com.vaticle.typedb.client.concept.thing.EntityImpl;
-import com.vaticle.typedb.client.jni.Transitivity;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
@@ -43,44 +43,68 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
     @Override
     public final EntityImpl create(TypeDBTransaction transaction) {
-        return new EntityImpl(entity_type_create(nativeTransaction(transaction), nativeObject));
+        try {
+            return new EntityImpl(entity_type_create(nativeTransaction(transaction), nativeObject));
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public final void setSupertype(TypeDBTransaction transaction, EntityType entityType) {
-        entity_type_set_supertype(nativeTransaction(transaction), nativeObject, ((EntityTypeImpl) entityType).nativeObject);
+        try {
+            entity_type_set_supertype(nativeTransaction(transaction), nativeObject, ((EntityTypeImpl) entityType).nativeObject);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Nullable
     @Override
     public EntityTypeImpl getSupertype(TypeDBTransaction transaction) {
-        com.vaticle.typedb.client.jni.Concept res = entity_type_get_supertype(nativeTransaction(transaction), nativeObject);
-        if (res != null) return new EntityTypeImpl(res);
-        else return null;
+        try {
+            com.vaticle.typedb.client.jni.Concept res = entity_type_get_supertype(nativeTransaction(transaction), nativeObject);
+            if (res != null) return new EntityTypeImpl(res);
+            else return null;
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public final Stream<EntityTypeImpl> getSupertypes(TypeDBTransaction transaction) {
-        return entity_type_get_supertypes(nativeTransaction(transaction), nativeObject).stream().map(EntityTypeImpl::new);
+        try {
+            return entity_type_get_supertypes(nativeTransaction(transaction), nativeObject).stream().map(EntityTypeImpl::new);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public final Stream<EntityTypeImpl> getSubtypes(TypeDBTransaction transaction) {
-        return entity_type_get_subtypes(nativeTransaction(transaction), nativeObject, Transitivity.Transitive).stream().map(EntityTypeImpl::new);
+        return getSubtypes(transaction, Transitivity.TRANSITIVE);
     }
 
     @Override
-    public final Stream<EntityTypeImpl> getSubtypesExplicit(TypeDBTransaction transaction) {
-        return entity_type_get_subtypes(nativeTransaction(transaction), nativeObject, Transitivity.Explicit).stream().map(EntityTypeImpl::new);
+    public final Stream<EntityTypeImpl> getSubtypes(TypeDBTransaction transaction, Transitivity transitivity) {
+        try {
+            return entity_type_get_subtypes(nativeTransaction(transaction), nativeObject, transitivity.nativeObject).stream().map(EntityTypeImpl::new);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 
     @Override
     public final Stream<EntityImpl> getInstances(TypeDBTransaction transaction) {
-        return entity_type_get_instances(nativeTransaction(transaction), nativeObject, Transitivity.Transitive).stream().map(EntityImpl::new);
+        return getInstances(transaction, Transitivity.TRANSITIVE);
     }
 
     @Override
-    public final Stream<EntityImpl> getInstancesExplicit(TypeDBTransaction transaction) {
-        return entity_type_get_instances(nativeTransaction(transaction), nativeObject, Transitivity.Explicit).stream().map(EntityImpl::new);
+    public final Stream<EntityImpl> getInstances(TypeDBTransaction transaction, Transitivity transitivity) {
+        try {
+            return entity_type_get_instances(nativeTransaction(transaction), nativeObject, transitivity.nativeObject).stream().map(EntityImpl::new);
+        } catch (com.vaticle.typedb.client.jni.Error e) {
+            throw new TypeDBClientException(e);
+        }
     }
 }
