@@ -32,6 +32,13 @@ vaticle_dependencies()
 load("@vaticle_dependencies//builder/bazel:deps.bzl", "bazel_toolchain")
 bazel_toolchain()
 
+# Load //builder/python
+load("@vaticle_dependencies//builder/python:deps.bzl", python_deps = "deps")
+python_deps()
+load("@rules_python//python:repositories.bzl", "py_repositories", "python_register_toolchains")
+py_repositories()
+python_register_toolchains(name = "python39", python_version = "3.9")
+
 # Load //builder/java
 load("@vaticle_dependencies//builder/java:deps.bzl", java_deps = "deps")
 java_deps()
@@ -43,10 +50,6 @@ load("@io_bazel_rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories")
 kotlin_repositories()
 load("@io_bazel_rules_kotlin//kotlin:core.bzl", "kt_register_toolchains")
 kt_register_toolchains()
-
-# Load //builder/python
-load("@vaticle_dependencies//builder/python:deps.bzl", python_deps = "deps")
-python_deps()
 
 # Load //builder/antlr
 load("@vaticle_dependencies//builder/antlr:deps.bzl", antlr_deps = "deps", "antlr_version")
@@ -71,7 +74,16 @@ rust_deps()
 
 load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_register_toolchains")
 rules_rust_dependencies()
-rust_register_toolchains(edition = "2021", include_rustc_srcs = True)
+rust_register_toolchains(
+    edition = "2021",
+    include_rustc_srcs = True,
+    extra_target_triples = [
+        "aarch64-apple-darwin",
+        "x86_64-apple-darwin",
+        "x86_64-pc-windows-msvc",
+        "x86_64-unknown-linux-gnu",
+    ]
+)
 
 load("@vaticle_dependencies//library/crates:crates.bzl", "fetch_crates")
 fetch_crates()
