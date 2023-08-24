@@ -45,7 +45,7 @@ class TestClusterFailover(TestCase):
     @staticmethod
     def server_start(index):
         subprocess.Popen([
-            "./%s/typedb" % index, "cluster",
+            "../%s/typedb" % index, "cluster",
             "--storage.data", "server/data",
             "--server.address", "localhost:%s1729" % index,
             "--server.internal-address.zeromq", "localhost:%s1730" % index,

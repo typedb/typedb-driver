@@ -42,7 +42,7 @@ def _rule_implementation(ctx):
 
     typedb_distro = str(ctx.files.native_typedb_artifact[0].short_path)
 
-    cmd = "set -e && TYPEDB_DISTRO=%s" % typedb_distro
+    cmd = "set -xe && TYPEDB_DISTRO=%s" % typedb_distro
     cmd += """
             if test -d typedb_distribution; then
              echo Existing distribution detected. Cleaning.
@@ -118,7 +118,8 @@ def _rule_implementation(ctx):
     cmd += " && rm -rf " + steps_out_dir
     cmd += " && mkdir " + steps_out_dir + " && "
     cmd += " && ".join(["cp %s %s" % (step_file.path, steps_out_dir) for step_file in ctx.files.steps])
-    cmd += " && python3 -m behave %s --no-capture -D port=$PORT && export RESULT=0 || export RESULT=1" % feats_dir
+    cmd += " && cd python"
+    cmd += " && python3 -m behave ../%s --no-capture -D port=$PORT && export RESULT=0 || export RESULT=1" % feats_dir
     cmd += """
            echo Tests concluded with exit value $RESULT
            echo Stopping server.

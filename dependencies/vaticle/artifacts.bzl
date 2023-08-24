@@ -22,7 +22,7 @@
 load("@vaticle_dependencies//distribution/artifact:rules.bzl", "native_artifact_files")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment", "deployment_private")
 
-def vaticle_typedb_artifacts():
+def vaticle_typedb_artifact():
     native_artifact_files(
         name = "vaticle_typedb_artifact",
         group_name = "vaticle_typedb",
@@ -32,12 +32,12 @@ def vaticle_typedb_artifacts():
         commit = "7de728a6cc51273299a041608fd589bb1f1ff0ff",
     )
 
-def vaticle_typedb_cluster_artifacts():
+def vaticle_typedb_cluster_artifact():
     native_artifact_files(
         name = "vaticle_typedb_cluster_artifact",
         group_name = "vaticle_typedb_cluster",
         artifact_name = "typedb-cluster-all-{platform}-{version}.{ext}",
         tag_source = deployment_private["artifact.release"],
         commit_source = deployment_private["artifact.snapshot"],
-        commit = "9f26c8967c2e1a7fcbd72b819b48c1f7f67c78e8",
+        commit = "a8eef75e538ee644e1c2d63a27192470952c71c2",
     )

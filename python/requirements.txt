@@ -26,13 +26,6 @@
 #  pip install -r requirements_dev.txt
 
 
-## Configuration options
-
-
-# Allow importing of snapshots
---extra-index-url https://repo.vaticle.com/repository/pypi-snapshot/simple
-
-
 ## Dependencies
 
 parse==1.18.0

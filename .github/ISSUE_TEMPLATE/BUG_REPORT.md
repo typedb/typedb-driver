@@ -12,10 +12,9 @@ Please replace every line in curly brackets { like this } with an appropriate de
 
 ## Environment
 
-1. OS (where TypeDB server runs): { e.g. Mac OS 10, Windows 10, Ubuntu 16.4, etc. }
-2. TypeDB version (and platform): { e.g. TypeDB 1.4, or TypeDB KGMS 1.4.3 on Google Cloud }
-3. TypeDB client-python version: { e.g. client-python 1.3 }
-4. Python version: { e.g 2.7, 3.6, etc. }
+1. OS (where TypeDB Client runs): { e.g. MacOS 10, Windows 10, Ubuntu 16.4, etc. }
+2. TypeDB version (and platform): { e.g. TypeDB 2.11.1, or TypeDB Cluster 2.11.1 on Google Cloud }
+3. TypeDB Client version: { e.g. typedb-client 2.11.1 }
 4. Other environment details:
 
 ## Reproducible Steps

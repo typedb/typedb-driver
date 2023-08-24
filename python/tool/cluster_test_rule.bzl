@@ -33,7 +33,7 @@ def _rule_implementation(ctx):
     typedb_cluster_distro = str(ctx.files.native_typedb_cluster_artifact[0].short_path)
 
     # TODO: This code is, mostly, copied from our TypeDB behave test
-    cmd = "set -e && TYPEDB_ARCHIVE=%s" % typedb_cluster_distro
+    cmd = "set -xe && TYPEDB_ARCHIVE=%s" % typedb_cluster_distro
     cmd += """
             function server_start() {
               ./${1}/typedb cluster \
@@ -103,7 +103,7 @@ def _rule_implementation(ctx):
 
            """
 
-    cmd += "python3 -m unittest %s && export RESULT=0 || export RESULT=1" % test_src
+    cmd += "cd python && python3 -m unittest %s && export RESULT=0 || export RESULT=1" % test_src.split("/", 1)[1]
     cmd += """
             echo Tests concluded with exit value $RESULT
             echo Stopping servers.

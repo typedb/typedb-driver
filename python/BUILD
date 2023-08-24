@@ -28,16 +28,15 @@ load("@vaticle_bazel_distribution//pip:rules.bzl", "assemble_pip", "deploy_pip")
 load("@vaticle_bazel_distribution_pip//:requirements.bzl", vaticle_bazel_distribution_requirement = "requirement")
 load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
 
-load("@vaticle_dependencies//tool/release/deps:rules.bzl", "release_validate_python_deps")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
-load(":deployment.bzl", github_deployment = "deployment")
+load("//:deployment.bzl", github_deployment = "deployment")
 
 
 genrule(
     name = "native-client-wrapper",
     outs = ["typedb/native_client_wrapper.py"],
-    srcs = ["@vaticle_typedb_driver_java//rust:native_client_python_wrapper"],
+    srcs = ["//rust:native_client_python_wrapper"],
     cmd = "cp $< $@",
     visibility = ["//visibility:public"]
 )
@@ -45,7 +44,7 @@ genrule(
 genrule(
     name = "native-client-binary",
     outs = ["typedb/native_client_python.so"],
-    srcs = ["@vaticle_typedb_driver_java//rust:native_client_python"],
+    srcs = ["//rust:native_client_python"],
     cmd = "cp $< $@",
     visibility = ["//visibility:public"]
 )
@@ -54,7 +53,7 @@ py_library(
     name = "client_python",
     srcs = glob(["typedb/**/*.py"]) + [":native-client-wrapper"],
     data = [":native-client-binary"],
-    deps = ["@vaticle_typedb_driver_java//rust:native_client_python_wrapper"],
+    deps = ["//rust:native_client_python_wrapper"],
     visibility = ["//visibility:public"]
 )
 
@@ -112,27 +111,12 @@ deploy_pip(
 
 deploy_github(
     name = "deploy-github",
-    release_description = "//python:RELEASE_NOTES_LATEST.md",
+    release_description = "//:RELEASE_NOTES_LATEST.md",
     title = "TypeDB Client Python",
     title_append_version = True,
     organisation = github_deployment["github.organisation"],
     repository = github_deployment["github.repository"],
     draft = False
-)
-
-release_validate_python_deps(
-    name = "release-validate-python-deps",
-    requirements = "//python:requirements.txt",
-    tagged_deps = [
-        "typedb-protocol",
-    ],
-)
-
-checkstyle_test(
-    name = "checkstyle-license",
-    include = ["LICENSE"],
-    license_type = "apache-fulltext",
-    size = "small",
 )
 
 # CI targets that are not declared in any BUILD file, but are called externally
