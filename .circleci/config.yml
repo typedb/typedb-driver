@@ -142,13 +142,25 @@ workflows:
               only:
                 - master
                 - development
+                - api-rearchitecture
+                - multiplatform-deploy-pip
       - deploy-mac-arm64:
           filters:
             branches:
               only:
                 - master
                 - development
+                - api-rearchitecture
+                - multiplatform-deploy-pip
       - deploy-linux-arm64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - api-rearchitecture
+                - multiplatform-deploy-pip
+      - deploy-linux-x86_64:
           filters:
             branches:
               only:
