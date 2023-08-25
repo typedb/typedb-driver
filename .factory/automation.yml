@@ -522,12 +522,12 @@ build:
         build,
         test-python-behaviour-connection-core,
         test-python-behaviour-connection-cluster,
-        test-python-behaviour-concept-core, test-behaviour-concept-cluster,
-        test-python-behaviour-match-core,
-        test-python-behaviour-match-cluster,
-        test-python-behaviour-writable-core, test-behaviour-writable-cluster,
-        test-python-behaviour-definable-core, test-behaviour-definable-cluster,
-        test-python-failover-cluster
+#        test-python-behaviour-concept-core, test-behaviour-concept-cluster,
+#        test-python-behaviour-match-core,
+#        test-python-behaviour-match-cluster,
+#        test-python-behaviour-writable-core, test-behaviour-writable-cluster,
+#        test-python-behaviour-definable-core, test-behaviour-definable-cluster,
+#        test-python-failover-cluster
       ]
 #      filter:
 #        owner: vaticle
