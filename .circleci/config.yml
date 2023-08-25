@@ -34,7 +34,7 @@ commands:
     steps:
       - run: brew install bazelisk
 
-  install-python-linux:
+  install-pip-linux:
     steps:
       - run: |
           export PATH="$HOME/.local/bin:$PATH"
@@ -83,11 +83,10 @@ jobs:
       - install-python-linux
       - run: |
           export PYENV_ROOT="/opt/pyenv"
-          pyenv install 3.9.17
-          pyenv global 3.9.17
+          pyenv install 3.9.6
+          pyenv global 3.9.6
           sudo unlink /usr/bin/python3
           sudo ln -s $(which python3) /usr/bin/python3
-          sudo ln -s /usr/share/pyshared/lsb_release.py /opt/pyenv/versions/3.9.17/lib/python3.9/site-packages/lsb_release.py
           export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip -- snapshot
