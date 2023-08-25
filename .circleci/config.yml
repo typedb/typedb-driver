@@ -36,7 +36,7 @@ commands:
 
   install-python-linux:
     steps:
-      -run |
+      - run: |
           export PATH="$HOME/.local/bin:$PATH"
           sudo apt-get update
           sudo apt install python3-pip -y
