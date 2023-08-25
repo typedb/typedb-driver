@@ -464,18 +464,18 @@ build:
 #        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
 #        bazel test //python/tests/integration:test_cluster_failover --test_output=errors
     deploy-crate-snapshot:
-#      filter:
-#        owner: vaticle
-#        branch: master
+      filter:
+        owner: vaticle
+        branch: master
       image: vaticle-ubuntu-22.04
       dependencies:
         - build
-#        - test-integration-core
-#        - test-integration-cluster
-#        - test-integration-runtimes
-#        - test-behaviour-concept
+        - test-integration-core
+        - test-integration-cluster
+        - test-integration-runtimes
+        - test-behaviour-concept
         - test-behaviour-connection
-#        - test-behaviour-typeql
+        - test-behaviour-typeql
       command: |
         export DEPLOY_CRATE_TOKEN=$REPO_VATICLE_CRATES_TOKEN
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
@@ -521,7 +521,7 @@ build:
       dependencies: [
         build,
         test-python-behaviour-connection-core,
-         test-python-behaviour-connection-cluster,
+        test-python-behaviour-connection-cluster,
         test-python-behaviour-concept-core, test-behaviour-concept-cluster,
         test-python-behaviour-match-core,
         test-python-behaviour-match-cluster,
