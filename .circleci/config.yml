@@ -55,7 +55,7 @@ jobs:
 #          export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
 #          export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
 #          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip -- snapshot
-  #      - TODO: deploy maven artifacts
+  #       - TODO: deploy maven artifacts
 
 
   deploy-mac-arm64:
