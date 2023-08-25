@@ -30,6 +30,15 @@ commands:
     steps:
       - run: brew install bazelisk
 
+  install-python-linux:
+    steps:
+      -run |
+          export PATH="$HOME/.local/bin:$PATH"
+          sudo apt-get update
+          sudo apt install python3-pip -y
+          python3 -m pip install -U pip
+          python3 -m pip install -r python/requirements_dev.txt
+
 jobs:
   deploy-mac-x86_64:
     macos:
@@ -38,7 +47,11 @@ jobs:
     steps:
       - checkout
       - install-bazel-mac
-#      - TODO: deploy pip and maven artifacts
+#      - run: |
+#          export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
+#          export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
+#          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip -- snapshot
+  #      - TODO: deploy maven artifacts
 
 
   deploy-mac-arm64:
@@ -49,7 +62,11 @@ jobs:
     steps:
       - checkout
       - install-bazel-mac
-#      - TODO: deploy pip and maven artifacts
+#      - run: |
+#          export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
+#          export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
+#          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip -- snapshot
+  #      - TODO: deploy maven artifacts
 
   deploy-linux-arm64:
     machine:
@@ -59,7 +76,18 @@ jobs:
     steps:
       - checkout
       - install-bazel-linux-arm64
-  #      - TODO: deploy pip and maven artifacts
+      - install-python-linux
+      - run: |
+          export PYENV_ROOT="/opt/pyenv"
+          pyenv install 3.9.17
+          pyenv global 3.9.17
+          sudo unlink /usr/bin/python3
+          sudo ln -s $(which python3) /usr/bin/python3
+          sudo ln -s /usr/share/pyshared/lsb_release.py /opt/pyenv/versions/3.9.17/lib/python3.9/site-packages/lsb_release.py
+          export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
+          export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
+          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip -- snapshot
+  #      - TODO: deploy maven artifacts
 
   deploy-windows-x86_64:
     executor:
