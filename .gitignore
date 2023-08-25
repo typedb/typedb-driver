@@ -19,6 +19,7 @@
 # under the License.
 #
 
+# Mac files #
 .DS_Store
 
 # Bazel files #
@@ -26,14 +27,61 @@ bazel-*
 .bazel-remote-cache.rc
 .bazel-cache-credential.json
 
-# Idea files #
-.ijwb
-.idea
+# IDE files #
+.ijwb/
+.idea/
 *.iml
+*.geany
 
-# Output directories
-target
-dist
+# VS Code files #
+.vscode/
+.settings/
+.project
+.classpath
+
+# Compiled files #
+target/
+dist/
+out/
+*.class
+
+# Mobile Tools for Java (J2ME) files #
+.mtj.tmp/
+
+# Package Files #
+*.jarg
+*.war
+*.ear
+
+# Debug files #
+dep.tree
+
+# Databases #
+db/
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml #
+hs_err_pid*
+
+# Log files #
+logs/
+*.log
+
+# Sample Date Files #
+typedb-test/test-biomed/data/*
+
+# Benchmark Files #
+typedb-test/test-integration/benchmarks/
+
+# VIM swap files #
+*.swp
+*.swo
+
+# Python cache #
+__pycache__
+
+# Other #
+**.pyc
+venv
 
 # Cargo files
 Cargo.lock

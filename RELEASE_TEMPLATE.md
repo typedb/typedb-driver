@@ -2,6 +2,8 @@ Documentation: http://docs.vaticle.com/docs/client-api/java
 
 ## Distribution
 
+### Java driver
+
 Available through https://repo.vaticle.com
 
 ```xml
@@ -18,6 +20,17 @@ Available through https://repo.vaticle.com
         <version>{version}</version>
     </dependency>
 </dependencies>
+```
+
+### Python driver
+
+PyPI package: https://pypi.org/project/typedb-client
+Documentation: https://docs.vaticle.com/docs/client-api/python
+
+Available through https://pypi.org
+
+```
+pip install typedb-client=={version}
 ```
 
 { release notes }

@@ -96,6 +96,8 @@ swig_deps()
 # Load //tool/common
 load("@vaticle_dependencies//tool/common:deps.bzl", "vaticle_dependencies_ci_pip")
 vaticle_dependencies_ci_pip()
+load("@vaticle_dependencies_ci_pip//:requirements.bzl", "install_deps")
+install_deps()
 
 # Load //tool/checkstyle
 load("@vaticle_dependencies//tool/checkstyle:deps.bzl", checkstyle_deps = "deps")
@@ -129,6 +131,28 @@ github_deps()
 # Load //pip
 load("@vaticle_bazel_distribution//pip:deps.bzl", pip_deps = "deps")
 pip_deps()
+load("@vaticle_bazel_distribution_pip//:requirements.bzl", "install_deps")
+install_deps()
+
+######################################
+# Load @vaticle_typedb_client_python #
+######################################
+
+load("@rules_python//python:pip.bzl", "pip_parse")
+pip_parse(
+    name = "vaticle_typedb_client_python_pip",
+    requirements_lock = "//python:requirements_dev.txt",
+)
+load("@vaticle_typedb_client_python_pip//:requirements.bzl", "install_deps")
+install_deps()
+
+#######################################################
+# Create @vaticle_typedb_client_python_workspace_refs #
+#######################################################
+load("@vaticle_bazel_distribution//common:rules.bzl", "workspace_refs")
+workspace_refs(
+    name = "vaticle_typedb_client_python_workspace_refs"
+)
 
 ################################
 # Load @vaticle dependencies #
