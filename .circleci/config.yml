@@ -30,6 +30,12 @@ commands:
       - run: sudo mv bazelisk-linux-arm64 /usr/local/bin/bazel
       - run: chmod a+x /usr/local/bin/bazel
 
+  install-bazel-linux-x86_64:
+    steps:
+      - run: curl -OL https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-amd64
+      - run: sudo mv bazelisk-linux-arm64 /usr/local/bin/bazel
+      - run: chmod a+x /usr/local/bin/bazel
+
   install-bazel-mac:
     steps:
       - run: brew install bazelisk
@@ -43,6 +49,12 @@ commands:
           python3 -m pip install -U pip
           python3 -m pip install -r python/requirements_dev.txt
 
+  install-pip-mac:
+    steps:
+      - run: |
+          python3 -m pip install -U pip
+          python3 -m pip install -r python/requirements_dev.txt
+
 jobs:
   deploy-mac-x86_64:
     macos:
@@ -51,12 +63,12 @@ jobs:
     steps:
       - checkout
       - install-bazel-mac
-#      - run: |
-#          export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
-#          export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
-#          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip -- snapshot
+      - install-pip-mac
+      - run: |
+          export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
+          export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
+          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip -- snapshot
   #       - TODO: deploy maven artifacts
-
 
   deploy-mac-arm64:
     macos:
@@ -66,10 +78,11 @@ jobs:
     steps:
       - checkout
       - install-bazel-mac
-#      - run: |
-#          export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
-#          export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
-#          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip -- snapshot
+      - install-pip-mac
+      - run: |
+          export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
+          export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
+          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip -- snapshot
   #      - TODO: deploy maven artifacts
 
   deploy-linux-arm64:
@@ -80,6 +93,24 @@ jobs:
     steps:
       - checkout
       - install-bazel-linux-arm64
+      - install-pip-linux
+      - run: |
+          pyenv install 3.9.6
+          pyenv global 3.9.6
+          sudo unlink /usr/bin/python3
+          sudo ln -s $(which python3) /usr/bin/python3
+          export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
+          export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
+          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip -- snapshot
+  #      - TODO: deploy maven artifacts
+
+  deploy-linux-x86_64:
+    machine:
+      image: ubuntu-2204:2023.07.2
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-linux-x86_64
       - install-pip-linux
       - run: |
           pyenv install 3.9.6
