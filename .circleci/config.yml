@@ -120,11 +120,11 @@ workflows:
                 - master
                 - development
       - deploy-linux-arm64:
-          filters:
-            branches:
-              only:
-                - master
-                - development
+#          filters:
+#            branches:
+#              only:
+#                - master
+#                - development
       - deploy-windows-x86_64:
           filters:
             branches:
