@@ -690,7 +690,7 @@ build:
         cat test/deployment/pom.xml
         cd test/deployment && mvn test
     deploy-pip-snapshot:
-      image: vaticle-ubuntu-20.04
+      image: vaticle-ubuntu-22.04
       dependencies: [
         build,
         test-python-behaviour-connection-core,
@@ -717,7 +717,7 @@ build:
         export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip -- snapshot
     test-python-deployment-pip:
-      image: vaticle-ubuntu-20.04
+      image: vaticle-ubuntu-22.04
       dependencies: [deploy-pip-snapshot]
 #      filter:
 #        owner: vaticle
