@@ -22,5 +22,7 @@ CALL refreshenv
 ECHO Building and deploying windows package...
 SET DEPLOY_PIP_USERNAME=%REPO_VATICLE_USERNAME%
 SET DEPLOY_PIP_PASSWORD=%REPO_VATICLE_PASSWORD%
-git rev-parse HEAD > bazel run --define version=%1 //python:deploy-pip -- snapshot
+git rev-parse HEAD > version_temp.txt
+set /p VER=<version_temp.txt
+bazel run --define version=%VER% //python:deploy-pip -- snapshot
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
