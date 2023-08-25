@@ -46,6 +46,7 @@ checkstyle_test(
     size = "small",
     include = glob([
         "*",
+        ".circleci/**",
         ".factory/*",
         "tools/*",
     ]),
@@ -54,6 +55,7 @@ checkstyle_test(
         ".bazelversion",
         ".bazel-remote-cache.rc",
         ".bazel-cache-credential.json",
+        ".circleci/windows/*",
         "LICENSE",
         "VERSION",
         "docs/*",
