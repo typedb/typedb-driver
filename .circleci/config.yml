@@ -40,16 +40,7 @@ commands:
     steps:
       - run: brew install bazelisk
 
-  install-requirements-linux:
-    steps:
-      - run: |
-          python3 -m pip install -U pip
-          python3 -m pip install -r python/requirements_dev.txt
-  #          export PATH="$HOME/.local/bin:$PATH"
-  #          sudo apt-get update
-  #          sudo apt install python3-pip -y
-
-  install-requirements-mac:
+  install-requirements:
     steps:
       - run: |
           python3 -m pip install -U pip
@@ -63,7 +54,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-mac
-      - install-requirements-mac
+      - install-requirements
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -78,7 +69,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-mac
-      - install-requirements-mac
+      - install-requirements
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -93,7 +84,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-linux-arm64
-      - install-requirements-linux
+      - install-requirements
       - run: |
           pyenv install 3.9.6
           pyenv global 3.9.6
@@ -111,7 +102,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-linux-x86_64
-      - install-requirements-linux
+      - install-requirements
       - run: |
           pyenv install 3.9.6
           pyenv global 3.9.6
@@ -130,6 +121,7 @@ jobs:
     steps:
       - checkout
       - run: .circleci\windows\prepare.bat
+      - run: .circleci\windows\deploy.bat
 #      - TODO: deploy pip and maven artifacts
 
 
@@ -174,3 +166,5 @@ workflows:
               only:
                 - master
                 - development
+                - api-rearchitecture
+                - multiplatform-deploy-pip
