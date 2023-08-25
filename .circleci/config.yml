@@ -82,7 +82,6 @@ jobs:
       - install-bazel-linux-arm64
       - install-pip-linux
       - run: |
-          export PYENV_ROOT="/opt/pyenv"
           pyenv install 3.9.6
           pyenv global 3.9.6
           sudo unlink /usr/bin/python3
