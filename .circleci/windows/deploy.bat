@@ -1,6 +1,5 @@
-@echo off
 REM
-REM Copyright (C) 2022 Vaticle
+REM Copyright (C) 2021 Vaticle
 REM
 REM This program is free software: you can redistribute it and/or modify
 REM it under the terms of the GNU Affero General Public License as
@@ -16,19 +15,12 @@ REM You should have received a copy of the GNU Affero General Public License
 REM along with this program.  If not, see <https://www.gnu.org/licenses/>.
 REM
 
-REM uninstall Java 12 installed by CircleCI
-choco uninstall openjdk --limit-output --yes --no-progress
+REM needs to be called such that software installed
+REM by Chocolatey in prepare.bat is accessible
+CALL refreshenv
 
-REM install dependencies needed for build
-choco install .circleci\windows\dependencies.config  --limit-output --yes --no-progress
-
-REM create a symlink python3.exe and make it available in %PATH%
-mklink C:\Python39\python3.exe C:\Python39\python.exe
-set PATH=%PATH%;C:\Python39
-
-REM install runtime dependency for the build
-C:\Python39\python.exe -m pip install wheel
-
-REM permanently set variables for Bazel build
-SETX BAZEL_SH "C:\Program Files\Git\usr\bin\bash.exe"
-SETX BAZEL_PYTHON C:\Python39\python.exe
+ECHO Building and deploying windows package...
+SET DEPLOY_PIP_USERNAME=%REPO_VATICLE_USERNAME%
+SET DEPLOY_PIP_PASSWORD=%REPO_VATICLE_PASSWORD%
+git rev-parse HEAD > bazel run --define version=%1 //python:deploy-pip -- snapshot
+IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
