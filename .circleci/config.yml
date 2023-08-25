@@ -40,16 +40,16 @@ commands:
     steps:
       - run: brew install bazelisk
 
-  install-pip-linux:
+  install-requirements-linux:
     steps:
       - run: |
-          export PATH="$HOME/.local/bin:$PATH"
-          sudo apt-get update
-          sudo apt install python3-pip -y
+#          export PATH="$HOME/.local/bin:$PATH"
+#          sudo apt-get update
+#          sudo apt install python3-pip -y
           python3 -m pip install -U pip
           python3 -m pip install -r python/requirements_dev.txt
 
-  install-pip-mac:
+  install-requirements-mac:
     steps:
       - run: |
           python3 -m pip install -U pip
@@ -63,7 +63,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-mac
-      - install-pip-mac
+      - install-requirements-mac
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -78,7 +78,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-mac
-      - install-pip-mac
+      - install-requirements-mac
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -93,7 +93,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-linux-arm64
-      - install-pip-linux
+      - install-requirements-linux
       - run: |
           pyenv install 3.9.6
           pyenv global 3.9.6
@@ -111,7 +111,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-linux-x86_64
-      - install-pip-linux
+      - install-requirements-linux
       - run: |
           pyenv install 3.9.6
           pyenv global 3.9.6
