@@ -80,7 +80,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-linux-arm64
-      - install-python-linux
+      - install-pip-linux
       - run: |
           export PYENV_ROOT="/opt/pyenv"
           pyenv install 3.9.6
