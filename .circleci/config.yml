@@ -87,7 +87,7 @@ jobs:
 
   deploy-linux-arm64:
     machine:
-      image: ubuntu-2204:2023.07.2
+      image: ubuntu-2204:current
       resource_class: arm.medium
     working_directory: ~/typedb-driver-java
     steps:
@@ -106,7 +106,7 @@ jobs:
 
   deploy-linux-x86_64:
     machine:
-      image: ubuntu-2204:2023.07.2
+      image: ubuntu-2204:current
     working_directory: ~/typedb-driver-java
     steps:
       - checkout
