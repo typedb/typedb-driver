@@ -1,0 +1,101 @@
+#
+# Copyright (C) 2022 Vaticle
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+
+version: 2.1
+orbs:
+  win: circleci/windows@2.0.0
+commands:
+
+  install-bazel-linux-arm64:
+    steps:
+      - run: curl -OL https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-arm64
+      - run: sudo mv bazelisk-linux-arm64 /usr/local/bin/bazel
+      - run: chmod a+x /usr/local/bin/bazel
+
+  install-bazel-mac:
+    steps:
+      - run: brew install bazelisk
+
+jobs:
+  deploy-mac-x86_64:
+    macos:
+      xcode: "14.2.0"
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-mac
+#      - TODO: deploy pip and maven artifacts
+
+
+  deploy-mac-arm64:
+    macos:
+      xcode: "14.2.0"
+    resource_class: macos.m1.medium.gen1
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-mac
+#      - TODO: deploy pip and maven artifacts
+
+  deploy-linux-arm64:
+    machine:
+      image: ubuntu-2004:current
+      resource_class: arm.medium
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-linux-arm64
+  #      - TODO: deploy pip and maven artifacts
+
+  deploy-windows-x86_64:
+    executor:
+      name: win/default
+      shell: cmd.exe
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - run: .circleci\windows\prepare.bat
+#      - TODO: deploy pip and maven artifacts
+
+
+workflows:
+  typedb-client-java:
+    jobs:
+      - deploy-mac-x86_64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+      - deploy-mac-arm64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+      - deploy-linux-arm64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+      - deploy-windows-x86_64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
