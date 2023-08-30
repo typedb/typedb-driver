@@ -25,8 +25,12 @@ def vaticle_dependencies():
     git_repository(
         name = "vaticle_dependencies",
         remote = "https://github.com/vaticle/dependencies",
-        commit = "0ff80ea1508dcdcc5f5a23f7e969091cbb5f9350", # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_dependencies
+        commit = "8d3b55de0ec1353e900c41a0dbfe1bc0e4aa4fb1", # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_dependencies
     )
+#    native.local_repository(
+#        name = "vaticle_dependencies",
+#        path = "/Users/dmitry/Vaticle/dependencies",
+#    )
 
 def vaticle_typedb_common():
     git_repository(
