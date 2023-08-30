@@ -74,7 +74,7 @@ load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_regi
 rules_rust_dependencies()
 rust_register_toolchains(
     edition = "2021",
-    include_rustc_srcs = True,
+#    include_rustc_srcs = True,
     extra_target_triples = [
         "aarch64-apple-darwin",
         "aarch64-unknown-linux-gnu",
