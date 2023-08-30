@@ -86,10 +86,6 @@ jobs:
       - install-bazel-linux-arm64
       - install-requirements
       - run: |
-          pyenv install 3.9.6
-          pyenv global 3.9.6
-          sudo unlink /usr/bin/python3
-          sudo ln -s $(which python3) /usr/bin/python3
           export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip -- snapshot
@@ -104,10 +100,6 @@ jobs:
       - install-bazel-linux-x86_64
       - install-requirements
       - run: |
-          pyenv install 3.9.6
-          pyenv global 3.9.6
-          sudo unlink /usr/bin/python3
-          sudo ln -s $(which python3) /usr/bin/python3
           export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip -- snapshot
@@ -122,7 +114,7 @@ jobs:
       - checkout
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\deploy.bat
-#      - TODO: deploy pip and maven artifacts
+#      - TODO: deploy maven artifacts
 
 
 workflows:
