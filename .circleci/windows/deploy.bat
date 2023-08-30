@@ -24,5 +24,5 @@ SET DEPLOY_PIP_USERNAME=%REPO_VATICLE_USERNAME%
 SET DEPLOY_PIP_PASSWORD=%REPO_VATICLE_PASSWORD%
 git rev-parse HEAD > version_temp.txt
 set /p VER=<version_temp.txt
-bazel run --define version=%VER% //python:deploy-pip -- snapshot
+bazel --output_user_root=C:/tmp run --define version=%VER% //python:deploy-pip -- snapshot
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
