@@ -19,7 +19,7 @@
 # under the License.
 #
 
-workspace(name = "vaticle_typedb_client_java")
+workspace(name = "cl")
 
 ################################
 # Load @vaticle_dependencies #
