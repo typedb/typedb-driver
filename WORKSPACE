@@ -50,37 +50,9 @@ kt_register_toolchains()
 load("@vaticle_dependencies//builder/python:deps.bzl", python_deps = "deps")
 python_deps()
 
-# Load //builder/nodejs
-load("@vaticle_dependencies//builder/nodejs:deps.bzl", nodejs_deps = "deps")
-nodejs_deps()
-load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "yarn_install")
-
 # Load //tool/checkstyle
 load("@vaticle_dependencies//tool/checkstyle:deps.bzl", checkstyle_deps = "deps")
 checkstyle_deps()
-
-####################
-# Load npm modules #
-####################
-
-# Load package.json
-node_repositories(package_json = ["//:package.json"])
-yarn_install(
-    name = "npm",
-    package_json = "//:package.json",
-    yarn_lock = "//:yarn.lock",
-)
-load("@npm//:install_bazel_dependencies.bzl", "install_bazel_dependencies")
-install_bazel_dependencies()
-
-# Load //builder/grpc
-load("@vaticle_dependencies//builder/grpc:deps.bzl", grpc_deps = "deps")
-grpc_deps()
-load("@com_github_grpc_grpc//bazel:grpc_deps.bzl",
-com_github_grpc_grpc_deps = "grpc_deps")
-com_github_grpc_grpc_deps()
-load("@stackb_rules_proto//node:deps.bzl", "node_grpc_compile")
-node_grpc_compile()
 
 # Load //tool/common
 load("@vaticle_dependencies//tool/common:deps.bzl", "vaticle_dependencies_ci_pip",
@@ -90,6 +62,21 @@ vaticle_dependencies_ci_pip()
 # Load Unused Deps
 load("@vaticle_dependencies//tool/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
 unuseddeps_deps()
+
+####################################
+# Load @com_google_protobuf #
+####################################
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
+git_repository(
+    name = "com_google_protobuf",
+    remote = "https://github.com/protocolbuffers/protobuf",
+    commit = "ab840345966d0fa8e7100d771c92a73bfbadd25c",
+)
+
+# Load protoc binary dependencies
+load("@com_google_protobuf//:protobuf_deps.bzl", "PROTOBUF_MAVEN_ARTIFACTS", "protobuf_deps")
+protobuf_deps()
 
 ######################################
 # Load @vaticle_bazel_distribution #
@@ -123,10 +110,65 @@ vaticle_typedb_behaviour()
 load("//dependencies/vaticle:repositories.bzl", "vaticle_typedb_common")
 vaticle_typedb_common()
 
+load("//dependencies/vaticle:repositories.bzl", "vaticle_typedb_protocol")
+vaticle_typedb_protocol()
+
 # Load artifacts
 load("//dependencies/vaticle:artifacts.bzl", "vaticle_typedb_artifacts", "vaticle_typedb_cluster_artifacts")
 vaticle_typedb_artifacts()
 vaticle_typedb_cluster_artifacts()
+
+####################
+# Load npm modules #
+####################
+
+# Load //builder/nodejs
+load("@vaticle_dependencies//builder/nodejs:deps.bzl", nodejs_deps = "deps")
+nodejs_deps()
+
+load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
+rules_js_dependencies()
+
+load("@rules_nodejs//nodejs:repositories.bzl", "DEFAULT_NODE_VERSION", "nodejs_register_toolchains")
+nodejs_register_toolchains(
+    name = "nodejs",
+    node_version = DEFAULT_NODE_VERSION,
+)
+
+load("@aspect_rules_js//npm:repositories.bzl", "npm_translate_lock")
+
+npm_translate_lock(
+    name = "vaticle_typedb_protocol_npm",
+    bins = {
+        "protoc-gen-ts": {
+            "protoc-gen-ts-js": "./bin/protoc-gen-ts.js",
+        },
+    },
+    pnpm_lock = "@vaticle_typedb_protocol//grpc/nodejs:pnpm-lock.yaml",
+)
+
+npm_translate_lock(
+    name = "npm",
+    bins = {
+        "@cucumber/cucumber": {
+            "cucumber-js": "./bin/cucumber-js",
+        },
+    },
+    pnpm_lock = "//:pnpm-lock.yaml",
+)
+
+load("@npm//:repositories.bzl", "npm_repositories")
+npm_repositories()
+
+load("@vaticle_typedb_protocol_npm//:repositories.bzl", vaticle_typedb_protocol_npm_repositories = "npm_repositories")
+vaticle_typedb_protocol_npm_repositories()
+
+# Setup rules_ts
+load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
+
+rules_ts_dependencies(
+    ts_version_from = "//:package.json",
+)
 
 ############################
 # Load @maven dependencies #

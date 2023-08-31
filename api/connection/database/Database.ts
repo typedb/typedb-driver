@@ -19,9 +19,16 @@
  * under the License.
  */
 
-export interface Database {
+import Replica = Database.Replica;
 
+export interface Database {
     readonly name: string;
+
+    readonly replicas: Replica[];
+
+    readonly primaryReplica: Replica;
+
+    readonly preferredReplica: Replica;
 
     delete(): Promise<void>;
 
@@ -29,19 +36,8 @@ export interface Database {
 }
 
 export namespace Database {
-
-    export interface Cluster extends Database {
-
-        readonly replicas: Replica[];
-
-        readonly primaryReplica: Replica;
-
-        readonly preferredReplica: Replica;
-    }
-
-    export interface Replica extends Database {
-
-        readonly database: Cluster;
+    export interface Replica {
+        readonly databaseName: string;
 
         readonly term: number;
 

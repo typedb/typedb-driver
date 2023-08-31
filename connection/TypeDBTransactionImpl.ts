@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import {Transaction} from "typedb-protocol/common/transaction_pb";
+import {TransactionReq, TransactionRes, TransactionResPart} from "typedb-protocol/proto/transaction";
 import {ConceptManager} from "../api/concept/ConceptManager";
 import {TypeDBOptions} from "../api/connection/TypeDBOptions";
 import {TransactionType, TypeDBTransaction} from "../api/connection/TypeDBTransaction";
@@ -107,13 +107,13 @@ export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
         return this._bidirectionalStream.isOpen();
     }
 
-    public async rpcExecute(request: Transaction.Req, batch?: boolean): Promise<Transaction.Res> {
+    public async rpcExecute(request: TransactionReq, batch?: boolean): Promise<TransactionRes> {
         if (!this.isOpen()) this.throwTransactionClosed()
         const useBatch = batch !== false;
         return this._bidirectionalStream.single(request, useBatch);
     }
 
-    public rpcStream(request: Transaction.Req): Stream<Transaction.ResPart> {
+    public rpcStream(request: TransactionReq): Stream<TransactionResPart> {
         if (!this.isOpen()) this.throwTransactionClosed();
         return this._bidirectionalStream.stream(request);
     }

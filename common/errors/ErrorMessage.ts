@@ -82,7 +82,7 @@ export namespace ErrorMessage {
         export const UNABLE_TO_CONNECT = new Client(7, () => `Unable to connect to TypeDB server.`);
         export const NEGATIVE_VALUE_NOT_ALLOWED = new Client(8, (args: Stringable[]) => `Value cannot be less than 1, was: '${args[0]}'.`);
         export const MISSING_DB_NAME = new Client(9, () => `Database name cannot be null.`);
-        export const DB_DOES_NOT_EXIST = new Client(10, (args: Stringable[]) => `The database '${args[0]}' does not exist.`);
+        export const DATABASE_DOES_NOT_EXIST = new Client(10, (args: Stringable[]) => `The database '${args[0]}' does not exist.`);
         export const UNKNOWN_STREAM_STATE = new Client(11, (args: Stringable[]) => `RPC transaction stream response '${args[0]}' is unknown.`);
         export const MISSING_RESPONSE = new Client(12, (args: Stringable[]) => `The required field 'res' of type '${args[0]}' was not set.`);
         export const UNKNOWN_REQUEST_ID = new Client(13, (args: Stringable[]) => `Received a response with unknown request id '${args[0]}'.`);

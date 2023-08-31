@@ -19,74 +19,39 @@
  * under the License.
  */
 
-import { RequestBuilder } from "../../../common/rpc/RequestBuilder";
-import { Stream } from "../../../common/util/Stream";
-import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
-import { Attribute } from "../thing/Attribute";
-import { Entity } from "../thing/Entity";
-import { Relation } from "../thing/Relation";
-import { Thing } from "../thing/Thing";
-import { AttributeType } from "./AttributeType";
-import { EntityType } from "./EntityType";
-import { RelationType } from "./RelationType";
-import { ThingType } from "./ThingType";
-import { Type } from "./Type";
+import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
+import {Stream} from "../../../common/util/Stream";
+import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
+import {Relation} from "../thing/Relation";
+import {Thing} from "../thing/Thing";
+import {RelationType} from "./RelationType";
+import {ThingType} from "./ThingType";
+import {Type} from "./Type";
+import {Concept} from "../Concept";
+import Transitivity = Concept.Transitivity;
 
 export interface RoleType extends Type {
+    getSupertype(transaction: TypeDBTransaction): Promise<RoleType | null>;
 
-    asRemote(transaction: TypeDBTransaction): RoleType.Remote;
+    getSupertypes(transaction: TypeDBTransaction): Stream<RoleType>;
+
+    getSubtypes(transaction: TypeDBTransaction): Stream<RoleType>;
+
+    getRelationType(transaction: TypeDBTransaction): Promise<RelationType>;
+    getRelationTypes(transaction: TypeDBTransaction): Stream<RelationType>;
+
+    getPlayerTypes(transaction: TypeDBTransaction): Stream<ThingType>;
+    getPlayerTypes(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<ThingType>;
+
+    getRelationInstances(transaction: TypeDBTransaction): Stream<Relation>;
+    getRelationInstances(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<Relation>;
+
+    getPlayerInstances(transaction: TypeDBTransaction): Stream<Thing>;
+    getPlayerInstances(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<Thing>;
 }
 
 export namespace RoleType {
-
-    export interface Remote extends RoleType, Type.Remote {
-
-        asRemote(transaction: TypeDBTransaction): RoleType.Remote;
-
-        asType(): Type.Remote;
-
-        asThingType(): ThingType.Remote;
-
-        asEntityType(): EntityType.Remote;
-
-        asAttributeType(): AttributeType.Remote;
-
-        asRelationType(): RelationType.Remote;
-
-        asRoleType(): RoleType.Remote;
-
-        asThing(): Thing.Remote;
-
-        asEntity(): Entity.Remote;
-
-        asAttribute(): Attribute.Remote;
-
-        asRelation(): Relation.Remote;
-
-        getSupertype(): Promise<RoleType>;
-
-        getSupertypes(): Stream<RoleType>;
-
-        getSubtypes(): Stream<RoleType>;
-
-        getRelationType(): Promise<RelationType>;
-
-        getRelationTypes(): Stream<RelationType>;
-
-        getPlayerTypes(): Stream<ThingType>;
-
-        getPlayerTypesExplicit(): Stream<ThingType>;
-
-        getRelationInstances(): Stream<Relation>;
-
-        getRelationInstancesExplicit(): Stream<Relation>;
-
-        getPlayerInstances(): Stream<Thing>;
-
-        getPlayerInstancesExplicit(): Stream<Thing>;
-    }
-
     export function proto(roleType: RoleType) {
-        return RequestBuilder.Type.RoleType.protoRoleType(roleType.label, Type.encoding(roleType));
+        return RequestBuilder.Type.RoleType.protoRoleType(roleType.label);
     }
 }

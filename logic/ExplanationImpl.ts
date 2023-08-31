@@ -19,15 +19,14 @@
  * under the License.
  */
 
-import { Explanation as ExplanationProto } from "typedb-protocol/common/logic_pb";
-import { ConceptMap } from "../api/answer/ConceptMap";
-import { Explanation } from "../api/logic/Explanation";
-import { Rule } from "../api/logic/Rule";
-import { ConceptMapImpl } from "../concept/answer/ConceptMapImpl";
-import { RuleImpl } from "./RuleImpl";
+import {Explanation as ExplanationProto, ExplanationVarList} from "typedb-protocol/proto/logic";
+import {ConceptMap} from "../api/answer/ConceptMap";
+import {Explanation} from "../api/logic/Explanation";
+import {Rule} from "../api/logic/Rule";
+import {ConceptMapImpl} from "../concept/answer/ConceptMapImpl";
+import {RuleImpl} from "./RuleImpl";
 
 export class ExplanationImpl implements Explanation {
-
     private readonly _rule: Rule;
     private readonly _condition: ConceptMap;
     private readonly _conclusion: ConceptMap;
@@ -58,14 +57,13 @@ export class ExplanationImpl implements Explanation {
 }
 
 export namespace ExplanationImpl {
-
     export function of(proto: ExplanationProto) {
         const varMapping = new Map<string, Set<string>>();
-        proto.getVarMappingMap().forEach((vars: ExplanationProto.VarList, key: string) => varMapping.set(key, new Set(vars.getVarsList())));
+        proto.var_mapping.forEach((vars: ExplanationVarList, key: string) => varMapping.set(key, new Set(vars.vars)));
         return new ExplanationImpl(
-            RuleImpl.of(proto.getRule()),
-            ConceptMapImpl.of(proto.getCondition()),
-            ConceptMapImpl.of(proto.getConclusion()),
+            RuleImpl.of(proto.rule),
+            ConceptMapImpl.of(proto.condition),
+            ConceptMapImpl.of(proto.conclusion),
             varMapping
         );
     }

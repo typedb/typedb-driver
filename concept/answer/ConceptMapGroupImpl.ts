@@ -19,16 +19,14 @@
  * under the License.
  */
 
-import {ConceptMapGroup as MapGroupProto} from "typedb-protocol/common/answer_pb";
+import {ConceptMapGroup as MapGroupProto} from "typedb-protocol/proto/answer";
 import {ConceptMap} from "../../api/answer/ConceptMap";
 import {ConceptMapGroup} from "../../api/answer/ConceptMapGroup";
 import {Concept} from "../../api/concept/Concept";
-import {ThingImpl, TypeImpl} from "../../dependencies_internal";
 import {ConceptMapImpl} from "./ConceptMapImpl";
-import {ValueImpl} from "../value/ValueImpl";
+import {ResponseReader} from "../../common/rpc/ResponseReader";
 
 export class ConceptMapGroupImpl implements ConceptMapGroup {
-
     private readonly _owner: Concept;
     private readonly _conceptMaps: ConceptMap[];
 
@@ -47,13 +45,10 @@ export class ConceptMapGroupImpl implements ConceptMapGroup {
 }
 
 export namespace ConceptMapGroupImpl {
-
     export function of(mapGroupProto: MapGroupProto): ConceptMapGroup {
-        let owner: Concept;
-        if (mapGroupProto.getOwner().hasThing()) owner = ThingImpl.of(mapGroupProto.getOwner().getThing());
-        else if (mapGroupProto.getOwner().hasType()) owner = TypeImpl.of(mapGroupProto.getOwner().getType());
-        else owner = ValueImpl.of(mapGroupProto.getOwner().getValue());
-        return new ConceptMapGroupImpl(owner, mapGroupProto.getConceptMapsList()
-            .map((conceptMapProto) => ConceptMapImpl.of(conceptMapProto)));
+        return new ConceptMapGroupImpl(
+            ResponseReader.Concept.of(mapGroupProto.owner),
+            mapGroupProto.concept_maps.map((conceptMapProto) => ConceptMapImpl.of(conceptMapProto))
+        );
     }
 }

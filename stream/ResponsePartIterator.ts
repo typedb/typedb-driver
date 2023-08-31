@@ -19,30 +19,28 @@
  * under the License.
  */
 
-import {Transaction} from "typedb-protocol/common/transaction_pb";
+import {TransactionResPart, TransactionStreamState} from "typedb-protocol/proto/transaction";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 import {TypeDBClientError} from "../common/errors/TypeDBClientError";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {BatchDispatcher} from "./RequestTransmitter";
 import {ResponseCollector} from "./ResponseCollector";
-import MISSING_RESPONSE = ErrorMessage.Client.MISSING_RESPONSE;
 import UNKNOWN_STREAM_STATE = ErrorMessage.Client.UNKNOWN_STREAM_STATE;
-import ResCase = Transaction.ResPart.ResCase;
 
-export class ResponsePartIterator implements AsyncIterable<Transaction.ResPart> {
+export class ResponsePartIterator implements AsyncIterable<TransactionResPart> {
 
     private readonly _requestId: string;
-    private readonly _responseCollector: ResponseCollector.ResponseQueue<Transaction.ResPart>;
+    private readonly _responseCollector: ResponseCollector.ResponseQueue<TransactionResPart>;
     private readonly _dispatcher: BatchDispatcher;
 
-    constructor(requestId: string, responseCollector: ResponseCollector.ResponseQueue<Transaction.ResPart>,
+    constructor(requestId: string, responseCollector: ResponseCollector.ResponseQueue<TransactionResPart>,
                 dispatcher: BatchDispatcher) {
         this._requestId = requestId;
         this._responseCollector = responseCollector;
         this._dispatcher = dispatcher;
     }
 
-    async* [Symbol.asyncIterator](): AsyncIterator<Transaction.ResPart, any, undefined> {
+    async* [Symbol.asyncIterator](): AsyncIterator<TransactionResPart, any, undefined> {
         while (true) {
             const next = await this.next()
             if (next != null) yield next;
@@ -50,23 +48,18 @@ export class ResponsePartIterator implements AsyncIterable<Transaction.ResPart> 
         }
     }
 
-    async next(): Promise<Transaction.ResPart> {
+    async next(): Promise<TransactionResPart> {
         const res = await this._responseCollector.take();
-        switch (res.getResCase()) {
-            case ResCase.RES_NOT_SET:
-                throw new TypeDBClientError(MISSING_RESPONSE.message(this._requestId));
-            case ResCase.STREAM_RES_PART :
-                switch (res.getStreamResPart().getState()) {
-                    case Transaction.Stream.State.DONE:
-                        return null;
-                    case Transaction.Stream.State.CONTINUE:
-                        this._dispatcher.dispatch(RequestBuilder.Transaction.streamReq(this._requestId))
-                        return this.next();
-                    default:
-                        throw new TypeDBClientError(UNKNOWN_STREAM_STATE.message(res.getStreamResPart()));
-                }
-            default:
-                return res;
-        }
+        if (res.has_stream_res_part) {
+            switch (res.stream_res_part.state) {
+                case TransactionStreamState.DONE:
+                    return null;
+                case TransactionStreamState.CONTINUE:
+                    this._dispatcher.dispatch(RequestBuilder.Transaction.streamReq(this._requestId))
+                    return this.next();
+                default:
+                    throw new TypeDBClientError(UNKNOWN_STREAM_STATE.message(res.stream_res_part));
+            }
+        } else return res;
     }
 }

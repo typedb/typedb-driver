@@ -20,7 +20,6 @@
  */
 
 export interface Numeric {
-
     isNumber(): boolean;
 
     isNaN(): boolean;

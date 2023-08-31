@@ -21,34 +21,6 @@
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-exports_files([
-    "cucumber_test.sh",
-])
-
-genrule(
-    name = "steps-core-targz",
-    outs = ["behaviour-steps-core.tar.gz"],
-    cmd = "tar -xf $(location //:client-nodejs-targz); npx tsc --build test/tsconfig.json; tar -cf $(@D)/behaviour-steps-core.tar.gz dist-test;",
-    tools = [
-        "//:behaviour-steps-core",
-        "//:client-nodejs-targz",
-        "//:package.json",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-genrule(
-    name = "steps-cluster-targz",
-    outs = ["behaviour-steps-cluster.tar.gz"],
-    cmd = "tar -xf $(location //:client-nodejs-targz); npx tsc --build test/tsconfig.json; tar -cf $(@D)/behaviour-steps-cluster.tar.gz dist-test;",
-    tools = [
-        "//:behaviour-steps-cluster",
-        "//:client-nodejs-targz",
-        "//:package.json",
-    ],
-    visibility = ["//visibility:public"],
-)
-
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),

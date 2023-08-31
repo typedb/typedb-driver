@@ -20,7 +20,7 @@
  */
 
 import {ClientDuplexStream} from "@grpc/grpc-js";
-import {Transaction as TransactionProto} from "typedb-protocol/common/transaction_pb";
+import {TransactionClient, TransactionReq, TransactionServer} from "typedb-protocol/proto/transaction";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 
 export class BatchDispatcher {
@@ -29,23 +29,23 @@ export class BatchDispatcher {
     private static BATCH_WINDOW_LARGE_MILLIS = 3;
 
     private readonly _transmitter: RequestTransmitter;
-    private readonly _transactionStream: ClientDuplexStream<TransactionProto.Client, TransactionProto.Server>;
-    private _bufferedRequests: TransactionProto.Req[];
+    private readonly _transactionStream: ClientDuplexStream<TransactionClient, TransactionServer>;
+    private _bufferedRequests: TransactionReq[];
     private _isRunning: boolean;
 
-    constructor(transmitter: RequestTransmitter, transactionStream: ClientDuplexStream<TransactionProto.Client, TransactionProto.Server>) {
+    constructor(transmitter: RequestTransmitter, transactionStream: ClientDuplexStream<TransactionClient, TransactionServer>) {
         this._transmitter = transmitter;
         this._transactionStream = transactionStream;
-        this._bufferedRequests = new Array<TransactionProto.Req>();
+        this._bufferedRequests = new Array<TransactionReq>();
         this._isRunning = false;
     }
 
-    dispatch(req: TransactionProto.Req): void {
+    dispatch(req: TransactionReq): void {
         this._bufferedRequests.push(req);
         this.sendScheduledBatch();
     }
 
-    dispatchNow(req: TransactionProto.Req): void {
+    dispatchNow(req: TransactionReq): void {
         this._bufferedRequests.push(req);
         this.sendNow();
     }
@@ -97,7 +97,7 @@ export class RequestTransmitter {
         }
     }
 
-    dispatcher(transactionStream: ClientDuplexStream<TransactionProto.Client, TransactionProto.Server>): BatchDispatcher {
+    dispatcher(transactionStream: ClientDuplexStream<TransactionClient, TransactionServer>): BatchDispatcher {
         const dispatcher = new BatchDispatcher(this, transactionStream);
         this._dispatchers.add(dispatcher);
         return dispatcher;

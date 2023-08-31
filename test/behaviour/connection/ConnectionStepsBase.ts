@@ -19,10 +19,10 @@
  * under the License.
  */
 
-import {Given, setDefaultTimeout, Then} from "@cucumber/cucumber";
-import {TypeDBClient, TypeDBSession, TypeDBTransaction, TypeDBOptions} from "../../../dist";
-import assert = require("assert");
+import {Given, setDefaultTimeout} from "@cucumber/cucumber";
+import {TypeDBClient, TypeDBOptions, TypeDBSession, TypeDBTransaction} from "../../../dist";
 import {assertThrows} from "../util/Util";
+import assert = require("assert");
 
 interface OptionSetters {
     [index: string]: (options: TypeDBOptions, value: string) => void

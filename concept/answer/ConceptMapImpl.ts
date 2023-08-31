@@ -19,17 +19,20 @@
  * under the License.
  */
 
-import { ConceptMap as ConceptMapProto, Explainable as ExplainableProto, Explainables, Explainables as ExplainablesProto } from "typedb-protocol/common/answer_pb";
-import { Concept as ConceptProto } from "typedb-protocol/common/concept_pb";
-import { ConceptMap } from "../../api/answer/ConceptMap";
-import { Concept } from "../../api/concept/Concept";
-import { ErrorMessage } from "../../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
-import { ThingImpl, TypeImpl } from "../../dependencies_internal";
-import {ValueImpl} from "../value/ValueImpl";
+import {
+    ConceptMap as ConceptMapProto,
+    Explainable as ExplainableProto,
+    Explainables as ExplainablesProto,
+    ExplainablesOwned as ExplainablesOwnedProto
+} from "typedb-protocol/proto/answer";
+import {Concept as ConceptProto} from "typedb-protocol/proto/concept";
+import {ConceptMap} from "../../api/answer/ConceptMap";
+import {Concept} from "../../api/concept/Concept";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {ResponseReader} from "../../common/rpc/ResponseReader";
 
 export class ConceptMapImpl implements ConceptMap {
-
     private readonly _concepts: Map<string, Concept>;
     private readonly _explainables: ConceptMap.Explainables;
 
@@ -38,16 +41,16 @@ export class ConceptMapImpl implements ConceptMap {
         this._explainables = explainables;
     }
 
+    variables(): IterableIterator<string> {
+        return this._concepts.keys();
+    }
+
     concepts(): IterableIterator<Concept> {
         return this._concepts.values();
     }
 
     get(variable: string): Concept {
         return this._concepts.get(variable);
-    }
-
-    get map(): Map<string, Concept> {
-        return this._concepts;
     }
 
     get explainables(): ConceptMap.Explainables {
@@ -65,36 +68,28 @@ export class ConceptMapImpl implements ConceptMap {
 
 /* eslint no-inner-declarations: "off" */
 export namespace ConceptMapImpl {
-
     import NONEXISTENT_EXPLAINABLE_CONCEPT = ErrorMessage.Query.NONEXISTENT_EXPLAINABLE_CONCEPT;
     import NONEXISTENT_EXPLAINABLE_OWNERSHIP = ErrorMessage.Query.NONEXISTENT_EXPLAINABLE_OWNERSHIP;
-    import Owned = Explainables.Owned;
 
     export function of(proto: ConceptMapProto): ConceptMap {
         const variableMap = new Map<string, Concept>();
-        proto.getMapMap().forEach((protoConcept: ConceptProto, resLabel: string) => {
-            let concept;
-            if (protoConcept.hasThing()) concept = ThingImpl.of(protoConcept.getThing());
-            else if (protoConcept.hasType()) concept = TypeImpl.of(protoConcept.getType());
-            else concept = ValueImpl.of(protoConcept.getValue());
-            variableMap.set(resLabel, concept);
-        });
-        const explainables = proto.hasExplainables() ? ofExplainables(proto.getExplainables()) : emptyExplainables();
+        proto.map.forEach((proto: ConceptProto, resLabel: string) => variableMap.set(resLabel, ResponseReader.Concept.of(proto)));
+        const explainables = proto.has_explainables ? ofExplainables(proto.explainables) : emptyExplainables();
         return new ConceptMapImpl(variableMap, explainables);
     }
 
     function ofExplainables(proto: ExplainablesProto): ConceptMap.Explainables {
         const relations = new Map<string, ConceptMap.Explainable>();
-        proto.getRelationsMap().forEach((explainable: ExplainableProto, variable: string) =>
+        proto.relations.forEach((explainable: ExplainableProto, variable: string) =>
             relations.set(variable, ofExplainable(explainable))
         );
         const attributes = new Map<string, ConceptMap.Explainable>();
-        proto.getAttributesMap().forEach((explainable: ExplainableProto, variable: string) =>
+        proto.attributes.forEach((explainable: ExplainableProto, variable: string) =>
             relations.set(variable, ofExplainable(explainable))
         );
         const ownerships = new Map<[string, string], ConceptMap.Explainable>();
-        proto.getOwnershipsMap().forEach((owned: Owned, owner: string) =>
-            owned.getOwnedMap().forEach((explainable: ExplainableProto, attribute: string) => {
+        proto.ownerships.forEach((owned: ExplainablesOwnedProto, owner: string) =>
+            owned.owned.forEach((explainable: ExplainableProto, attribute: string) => {
                 ownerships.set([owner, attribute], ofExplainable(explainable))
             })
         );
@@ -110,7 +105,7 @@ export namespace ConceptMapImpl {
     }
 
     function ofExplainable(proto: ExplainableProto): ConceptMap.Explainable {
-        return new ExplainableImpl(proto.getConjunction(), proto.getId());
+        return new ExplainableImpl(proto.conjunction, proto.id);
     }
 
     export class ExplainablesImpl implements ConceptMap.Explainables {

@@ -19,21 +19,17 @@
  * under the License.
  */
 
-import { Type as TypeProto } from "typedb-protocol/common/concept_pb";
-import { Transaction as TransactionProto } from "typedb-protocol/common/transaction_pb";
-import { Concept } from "../../api/concept/Concept";
-import { Type } from "../../api/concept/type/Type";
-import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
-import { ErrorMessage } from "../../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
-import { Label } from "../../common/Label";
-import { RequestBuilder } from "../../common/rpc/RequestBuilder";
-import { Stream } from "../../common/util/Stream";
-import { ConceptImpl, RoleTypeImpl, ThingTypeImpl } from "../../dependencies_internal";
+import {Concept} from "../../api/concept/Concept";
+import {Type} from "../../api/concept/type/Type";
+import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {Label} from "../../common/Label";
+import {Stream} from "../../common/util/Stream";
+import {ConceptImpl} from "../../dependencies_internal";
 import MISSING_LABEL = ErrorMessage.Concept.MISSING_LABEL;
 
 export abstract class TypeImpl extends ConceptImpl implements Type {
-
     private readonly _label: Label;
     private readonly _root: boolean;
     private readonly _abstract: boolean;
@@ -45,8 +41,6 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
         this._root = root;
         this._abstract = abstract;
     }
-
-    abstract asRemote(transaction: TypeDBTransaction): Type.Remote;
 
     get root(): boolean {
         return this._root;
@@ -68,6 +62,18 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
         return this;
     }
 
+    abstract delete(transaction: TypeDBTransaction): Promise<void>;
+
+    abstract isDeleted(transaction: TypeDBTransaction): Promise<boolean>;
+
+    abstract setLabel(transaction: TypeDBTransaction, label: string): Promise<void>;
+
+    abstract getSupertype(transaction: TypeDBTransaction): Promise<Type>;
+
+    abstract getSupertypes(transaction: TypeDBTransaction): Stream<Type>;
+
+    abstract getSubtypes(transaction: TypeDBTransaction): Stream<Type>;
+
     toJSONRecord(): Record<string, string> {
         return {label: this.label.scopedName};
     }
@@ -79,106 +85,5 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
 
     toString(): string {
         return `${this.className}[label:${this._label}]`;
-    }
-}
-
-export namespace TypeImpl {
-    export function of(typeProto: TypeProto) {
-        if (!typeProto) return null;
-        switch (typeProto.getEncoding()) {
-            case TypeProto.Encoding.ROLE_TYPE:
-                return RoleTypeImpl.of(typeProto);
-            default:
-                return ThingTypeImpl.of(typeProto);
-        }
-    }
-
-    export abstract class Remote extends ConceptImpl.Remote implements Type.Remote {
-
-        private _label: Label;
-        private readonly _root: boolean;
-        private readonly _abstract: boolean;
-
-        protected constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean, abstract: boolean) {
-            super(transaction);
-            if (!label) throw new TypeDBClientError(ErrorMessage.Concept.MISSING_LABEL);
-            this._label = label;
-            this._root = root;
-            this._abstract = abstract;
-        }
-
-        abstract asRemote(transaction: TypeDBTransaction): Type.Remote;
-
-        get root(): boolean {
-            return this._root;
-        }
-
-        get abstract(): boolean {
-            return this._abstract;
-        }
-
-        get label(): Label {
-            return this._label;
-        }
-
-        isType(): boolean {
-            return true;
-        }
-
-        asType(): Type.Remote {
-            return this;
-        }
-
-        toJSONRecord(): Record<string, string> {
-            return {label: this.label.scopedName};
-        }
-
-        equals(concept: Concept): boolean {
-            if (!concept.isType()) return false;
-            return concept.asType().label.equals(this.label);
-        }
-
-        toString(): string {
-            return `${this.className}[label:${this._label}]`;
-        }
-
-        async delete(): Promise<void> {
-            const request = RequestBuilder.Type.deleteReq(this._label);
-            await this.execute(request);
-        }
-
-        getSubtypes(): Stream<Type> {
-            const request = RequestBuilder.Type.getSubtypesReq(this._label);
-            return this.stream(request)
-                .flatMap((resPart) => Stream.array(resPart.getTypeGetSubtypesResPart().getTypesList()))
-                .map((typeProto) => of(typeProto));
-        }
-
-        getSupertype(): Promise<Type> {
-            const request = RequestBuilder.Type.getSupertypeReq(this._label);
-            return this.execute(request).then((res) => of(res.getTypeGetSupertypeRes().getType()));
-        }
-
-        getSupertypes(): Stream<Type> {
-            const request = RequestBuilder.Type.getSupertypesReq(this._label);
-            return this.stream(request)
-                .flatMap((resPart) => Stream.array(resPart.getTypeGetSupertypesResPart().getTypesList()))
-                .map((typeProto) => of(typeProto));
-        }
-
-        async setLabel(label: string): Promise<void> {
-            const request = RequestBuilder.Type.setLabelReq(this._label, label);
-            await this.execute(request);
-            this._label = new Label(this.label.scope, label);
-        }
-
-        protected async execute(request: TransactionProto.Req): Promise<TypeProto.Res> {
-            return (await this.transaction.rpcExecute(request, false)).getTypeRes();
-        }
-
-        protected stream(request: TransactionProto.Req): Stream<TypeProto.ResPart> {
-            const resPartStream = this.transaction.rpcStream(request);
-            return resPartStream.map((res) => res.getTypeResPart());
-        }
     }
 }

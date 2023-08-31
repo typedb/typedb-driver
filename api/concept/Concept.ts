@@ -19,68 +19,51 @@
  * under the License.
  */
 
-
-import { TypeDBTransaction } from "../connection/TypeDBTransaction";
-import { Attribute } from "./thing/Attribute";
-import { Entity } from "./thing/Entity";
-import { Relation } from "./thing/Relation";
-import { Thing } from "./thing/Thing";
-import { AttributeType } from "./type/AttributeType";
-import { EntityType } from "./type/EntityType";
-import { RelationType } from "./type/RelationType";
-import { RoleType } from "./type/RoleType";
-import { ThingType } from "./type/ThingType";
-import { Type } from "./type/Type";
-import {ValueType as ValueTypeProto} from "typedb-protocol/common/concept_pb";
+import {Attribute} from "./thing/Attribute";
+import {Entity} from "./thing/Entity";
+import {Relation} from "./thing/Relation";
+import {Thing} from "./thing/Thing";
+import {AttributeType} from "./type/AttributeType";
+import {EntityType} from "./type/EntityType";
+import {RelationType} from "./type/RelationType";
+import {RoleType} from "./type/RoleType";
+import {ThingType} from "./type/ThingType";
+import {Type} from "./type/Type";
+import {TypeTransitivity as TransitivityProto, ValueType as ValueTypeProto} from "typedb-protocol/proto/concept";
 import {Value} from "./value/Value";
 
 export interface Concept {
-
-    asRemote(transaction: TypeDBTransaction): Concept.Remote;
-
-    isRemote(): boolean;
-
     isType(): boolean;
 
     isRoleType(): boolean;
-
     isThingType(): boolean;
 
     isEntityType(): boolean;
-
-    isAttributeType(): boolean;
-
     isRelationType(): boolean;
+    isAttributeType(): boolean;
 
     isThing(): boolean;
 
     isEntity(): boolean;
-
-    isAttribute(): boolean;
-
     isRelation(): boolean;
+    isAttribute(): boolean;
 
     isValue(): boolean;
 
     asType(): Type;
 
     asThingType(): ThingType;
+    asRoleType(): RoleType;
 
     asEntityType(): EntityType;
-
-    asAttributeType(): AttributeType;
-
     asRelationType(): RelationType;
-
-    asRoleType(): RoleType;
+    asAttributeType(): AttributeType;
 
     asThing(): Thing;
 
     asEntity(): Entity;
-
-    asAttribute(): Attribute;
-
     asRelation(): Relation;
+    asAttribute(): Attribute;
 
     asValue(): Value;
 
@@ -90,72 +73,62 @@ export interface Concept {
 }
 
 export namespace Concept {
+    export class ValueType {
+        private readonly _proto: ValueTypeProto;
+        private readonly _name: string;
 
-    export interface Remote extends Concept {
+        constructor(type: ValueTypeProto, name: string) {
+            this._proto = type;
+            this._name = name;
+        }
 
-        delete(): Promise<void>;
+        proto(): ValueTypeProto {
+            return this._proto;
+        }
 
-        isDeleted(): Promise<boolean>;
+        name(): string {
+            return this._name.toLowerCase();
+        }
 
-        asType(): Type.Remote;
-
-        asThingType(): ThingType.Remote;
-
-        asEntityType(): EntityType.Remote;
-
-        asAttributeType(): AttributeType.Remote;
-
-        asRelationType(): RelationType.Remote;
-
-        asRoleType(): RoleType.Remote;
-
-        asThing(): Thing.Remote;
-
-        asEntity(): Entity.Remote;
-
-        asAttribute(): Attribute.Remote;
-
-        asRelation(): Relation.Remote;
-    }
-
-
-    export interface ValueType {
-
-        proto(): ValueTypeProto;
-
-        name(): string;
+        toString() {
+            return "ValueType[" + this._name + "]";
+        }
     }
 
     export namespace ValueType {
+        export const OBJECT = new ValueType(ValueTypeProto.OBJECT, "OBJECT");
+        export const BOOLEAN = new ValueType(ValueTypeProto.BOOLEAN, "BOOLEAN");
+        export const LONG = new ValueType(ValueTypeProto.LONG, "LONG");
+        export const DOUBLE = new ValueType(ValueTypeProto.DOUBLE, "DOUBLE");
+        export const STRING = new ValueType(ValueTypeProto.STRING, "STRING");
+        export const DATETIME = new ValueType(ValueTypeProto.DATETIME, "DATETIME");
 
-        class Impl implements ValueType {
-
-            private readonly _proto: ValueTypeProto;
-            private readonly _name: string;
-
-            constructor(type: ValueTypeProto, name: string) {
-                this._proto = type;
-                this._name = name;
-            }
-
-            proto(): ValueTypeProto {
-                return this._proto;
-            }
-
-            name(): string {
-                return this._name.toLowerCase();
-            }
-
-            toString() {
-                return "ValueType[" + this._name + "]";
+        export function of(proto: ValueTypeProto): ValueType {
+            switch (proto) {
+                case ValueTypeProto.OBJECT: return OBJECT;
+                case ValueTypeProto.BOOLEAN: return BOOLEAN;
+                case ValueTypeProto.LONG: return LONG;
+                case ValueTypeProto.DOUBLE: return DOUBLE;
+                case ValueTypeProto.STRING: return STRING;
+                case ValueTypeProto.DATETIME: return DATETIME;
             }
         }
+    }
 
-        export const OBJECT = new Impl(ValueTypeProto.OBJECT, "OBJECT");
-        export const BOOLEAN = new Impl(ValueTypeProto.BOOLEAN, "BOOLEAN");
-        export const LONG = new Impl(ValueTypeProto.LONG, "LONG");
-        export const DOUBLE = new Impl(ValueTypeProto.DOUBLE, "DOUBLE");
-        export const STRING = new Impl(ValueTypeProto.STRING, "STRING");
-        export const DATETIME = new Impl(ValueTypeProto.DATETIME, "DATETIME");
+    export class Transitivity {
+        private readonly _transitivity: TransitivityProto;
+
+        constructor(transitivity: TransitivityProto) {
+            this._transitivity = transitivity;
+        }
+
+        proto(): TransitivityProto {
+            return this._transitivity;
+        }
+    }
+
+    export namespace Transitivity {
+        export const TRANSITIVE = new Transitivity(TransitivityProto.TRANSITIVE);
+        export const EXPLICIT = new Transitivity(TransitivityProto.EXPLICIT);
     }
 }

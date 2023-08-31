@@ -19,10 +19,9 @@
 # under the License.
 #
 
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//test/behaviour:rules.bzl", "typedb_behaviour_node_test")
-
-exports_files(["TransactionSteps.ts"])
+load("//test/behaviour:rules.bzl", "typedb_behaviour_node_test", "behaviour_test_ts_config")
 
 checkstyle_test(
     name = "checkstyle",
@@ -30,14 +29,27 @@ checkstyle_test(
     license_type = "apache-header",
 )
 
+ts_project(
+    name = "steps",
+    srcs = ["TransactionSteps.ts"],
+    tsconfig = behaviour_test_ts_config(),
+    deps = [
+        "//:client-nodejs",
+        "//:node_modules/@cucumber/cucumber",
+        "//test/behaviour/util:util",
+        "//test/behaviour/connection:steps-base",
+    ],
+    resolve_json_module = True,
+    visibility = ["//visibility:public"],
+)
+
 typedb_behaviour_node_test(
     name = "test",
     features = ["@vaticle_typedb_behaviour//connection:transaction.feature"],
-    node_modules = "//:node_modules",
-    package_json = "//:package.json",
-    native_typedb_artifact_core = "//test:native-typedb-artifact",
-    native_typedb_artifact_cluster = "//test:native-typedb-cluster-artifact",
-    client = "//:client-nodejs-targz",
-    steps_core = "//test/behaviour:steps-core-targz",
-    steps_cluster = "//test/behaviour:steps-cluster-targz",
+    data = [
+        ":steps",
+        "//test/behaviour/connection/database:steps",
+        "//test/behaviour/connection/session:steps",
+        "//test/behaviour/typeql:steps",
+    ],
 )

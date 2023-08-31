@@ -19,15 +19,14 @@
  * under the License.
  */
 
-import { Thing as ThingProto } from "typedb-protocol/common/concept_pb";
-import { Entity } from "../../api/concept/thing/Entity";
-import { EntityType } from "../../api/concept/type/EntityType";
-import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
-import { Bytes } from "../../common/util/Bytes";
-import { EntityTypeImpl, ThingImpl } from "../../dependencies_internal";
+import {Entity} from "../../api/concept/thing/Entity";
+import {EntityType} from "../../api/concept/type/EntityType";
+import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
+import {Bytes} from "../../common/util/Bytes";
+import {EntityTypeImpl, ThingImpl} from "../../dependencies_internal";
+import {Entity as EntityProto} from "typedb-protocol/proto/concept";
 
 export class EntityImpl extends ThingImpl implements Entity {
-
     private readonly _type: EntityType;
 
     constructor(iid: string, inferred: boolean, type: EntityType) {
@@ -37,10 +36,6 @@ export class EntityImpl extends ThingImpl implements Entity {
 
     protected get className(): string {
         return "Entity";
-    }
-
-    asRemote(transaction: TypeDBTransaction): Entity.Remote {
-        return new EntityImpl.Remote(transaction as TypeDBTransaction.Extended, this.iid, this.inferred, this.type);
     }
 
     get type(): EntityType {
@@ -54,43 +49,16 @@ export class EntityImpl extends ThingImpl implements Entity {
     asEntity(): Entity {
         return this;
     }
+
+    async isDeleted(transaction: TypeDBTransaction): Promise<boolean> {
+        return !(await transaction.concepts.getEntity(this.iid));
+    }
 }
 
 export namespace EntityImpl {
-
-    export function of(thingProto: ThingProto): Entity {
-        if (!thingProto) return null;
-        const iid = Bytes.bytesToHexString(thingProto.getIid_asU8());
-        return new EntityImpl(iid, thingProto.getInferred(), EntityTypeImpl.of(thingProto.getType()));
-    }
-
-    export class Remote extends ThingImpl.Remote implements Entity.Remote {
-
-        private readonly _type: EntityType;
-
-        constructor(transaction: TypeDBTransaction.Extended, iid: string, inferred: boolean, type: EntityType) {
-            super(transaction, iid, inferred);
-            this._type = type;
-        }
-
-        protected get className(): string {
-            return "Entity";
-        }
-
-        asRemote(transaction: TypeDBTransaction): Entity.Remote {
-            return new EntityImpl.Remote(transaction as TypeDBTransaction.Extended, this.iid, this.inferred, this.type);
-        }
-
-        get type(): EntityType {
-            return this._type;
-        }
-
-        isEntity(): boolean {
-            return true;
-        }
-
-        asEntity(): Entity.Remote {
-            return this;
-        }
+    export function ofEntityProto(proto: EntityProto): Entity {
+        if (!proto) return null;
+        const iid = Bytes.bytesToHexString(proto.iid);
+        return new EntityImpl(iid, proto.inferred, EntityTypeImpl.ofEntityTypeProto(proto.entity_type));
     }
 }

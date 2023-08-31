@@ -19,21 +19,31 @@
  * under the License.
  */
 
-import { ConceptManager as ConceptProto } from "typedb-protocol/common/concept_pb";
-import { Transaction as TransactionProto } from "typedb-protocol/common/transaction_pb";
-import { ConceptManager } from "../api/concept/ConceptManager";
-import { Thing } from "../api/concept/thing/Thing";
-import { AttributeType } from "../api/concept/type/AttributeType";
-import { EntityType } from "../api/concept/type/EntityType";
-import { RelationType } from "../api/concept/type/RelationType";
-import { ThingType } from "../api/concept/type/ThingType";
-import { TypeDBTransaction } from "../api/connection/TypeDBTransaction";
-import { RequestBuilder } from "../common/rpc/RequestBuilder";
-import { AttributeTypeImpl, EntityTypeImpl, RelationTypeImpl, ThingImpl, ThingTypeImpl, } from "../dependencies_internal";
+import {ConceptManager} from "../api/concept/ConceptManager";
+import {AttributeType} from "../api/concept/type/AttributeType";
+import {EntityType} from "../api/concept/type/EntityType";
+import {RelationType} from "../api/concept/type/RelationType";
+import {ThingType} from "../api/concept/type/ThingType";
+import {TypeDBTransaction} from "../api/connection/TypeDBTransaction";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import {
+    AttributeImpl,
+    AttributeTypeImpl,
+    EntityImpl,
+    EntityTypeImpl,
+    RelationImpl,
+    RelationTypeImpl,
+    ThingTypeImpl,
+} from "../dependencies_internal";
 import {Concept} from "../api/concept/Concept";
+import {ConceptManagerRes} from "typedb-protocol/proto/concept";
+import {TransactionReq} from "typedb-protocol/proto/transaction";
+import {Entity} from "../api/concept/thing/Entity";
+import {Attribute} from "../api/concept/thing/Attribute";
+import {Relation} from "../api/concept/thing/Relation";
+import {TypeDBClientError} from "../common/errors/TypeDBClientError";
 
 export class ConceptManagerImpl implements ConceptManager {
-
     private _transaction: TypeDBTransaction.Extended;
 
     constructor(client: TypeDBTransaction.Extended) {
@@ -41,7 +51,7 @@ export class ConceptManagerImpl implements ConceptManager {
     }
 
     async getRootThingType(): Promise<ThingType> {
-        return this.getThingType("thing");
+        return new ThingTypeImpl.Root();
     }
 
     async getRootEntityType(): Promise<EntityType> {
@@ -56,64 +66,71 @@ export class ConceptManagerImpl implements ConceptManager {
         return this.getAttributeType("attribute");
     }
 
-    async getThingType(label: string): Promise<ThingType> {
-        const request = RequestBuilder.ConceptManager.getThingTypeReq(label);
-        const response = await this.execute(request);
-        if (response.getGetThingTypeRes().getResCase() == ConceptProto.GetThingType.Res.ResCase.THING_TYPE) {
-            return ThingTypeImpl.of(response.getGetThingTypeRes().getThingType());
-        } else {
-            return null;
-        }
-    }
-
     async getEntityType(label: string): Promise<EntityType> {
-        const type = await this.getThingType(label);
-        if (type?.isEntityType()) return type.asEntityType();
-        else return null;
+        const response = await this.execute(RequestBuilder.ConceptManager.getEntityTypeReq(label));
+        if (response.has_get_entity_type_res) {
+            return EntityTypeImpl.ofEntityTypeProto(response.get_entity_type_res.entity_type);
+        } else return null;
     }
 
     async getRelationType(label: string): Promise<RelationType> {
-        const type = await this.getThingType(label);
-        if (type?.isRelationType()) return type.asRelationType();
-        else return null;
+        const response = await this.execute(RequestBuilder.ConceptManager.getRelationTypeReq(label));
+        if (response.has_get_relation_type_res) {
+            return RelationTypeImpl.ofRelationTypeProto(response.get_relation_type_res.relation_type);
+        } else return null;
     }
 
     async getAttributeType(label: string): Promise<AttributeType> {
-        const type = await this.getThingType(label);
-        if (type?.isAttributeType()) return type.asAttributeType();
-        else return null;
+        const response = await this.execute(RequestBuilder.ConceptManager.getAttributeTypeReq(label));
+        if (response.has_get_attribute_type_res) {
+            return AttributeTypeImpl.ofAttributeTypeProto(response.get_attribute_type_res.attribute_type);
+        } else return null;
     }
 
-    async getThing(iid: string): Promise<Thing> {
-        const request = RequestBuilder.ConceptManager.getThingReq(iid);
-        const response = await this.execute(request);
-        if (response.getGetThingRes().getResCase() === ConceptProto.GetThing.Res.ResCase.THING) {
-            return ThingImpl.of(response.getGetThingRes().getThing());
-        } else {
-            return null;
-        }
+    async getEntity(iid: string): Promise<Entity> {
+        const response = await this.execute(RequestBuilder.ConceptManager.getEntityReq(iid));
+        if (response.has_get_entity_res) {
+            return EntityImpl.ofEntityProto(response.get_entity_res.entity);
+        } else return null;
+    }
+
+    async getRelation(iid: string): Promise<Relation> {
+        const response = await this.execute(RequestBuilder.ConceptManager.getRelationReq(iid));
+        if (response.has_get_relation_res) {
+            return RelationImpl.ofRelationProto(response.get_relation_res.relation);
+        } else return null;
+    }
+
+    async getAttribute(iid: string): Promise<Attribute> {
+        const response = await this.execute(RequestBuilder.ConceptManager.getAttributeReq(iid));
+        if (response.has_get_attribute_res) {
+            return AttributeImpl.ofAttributeProto(response.get_attribute_res.attribute);
+        } else return null;
     }
 
     async putEntityType(label: string): Promise<EntityType> {
-        const request = RequestBuilder.ConceptManager.putEntityTypeReq(label);
-        const response = await this.execute(request);
-        return EntityTypeImpl.of(response.getPutEntityTypeRes().getEntityType());
+        const response = await this.execute(RequestBuilder.ConceptManager.putEntityTypeReq(label));
+        return EntityTypeImpl.ofEntityTypeProto(response.put_entity_type_res.entity_type);
     }
 
     async putRelationType(label: string): Promise<RelationType> {
-        const request = RequestBuilder.ConceptManager.putRelationTypeReq(label);
-        const response = await this.execute(request);
-        return RelationTypeImpl.of(response.getPutRelationTypeRes().getRelationType());
+        const response = await this.execute(RequestBuilder.ConceptManager.putRelationTypeReq(label));
+        return RelationTypeImpl.ofRelationTypeProto(response.put_relation_type_res.relation_type);
     }
 
     async putAttributeType(label: string, valueType: Concept.ValueType): Promise<AttributeType> {
-        const request = RequestBuilder.ConceptManager.putAttributeTypeReq(label, valueType.proto());
-        const response = await this.execute(request);
-        return AttributeTypeImpl.of(response.getPutAttributeTypeRes().getAttributeType());
+        const response = await this.execute(RequestBuilder.ConceptManager.putAttributeTypeReq(label, valueType.proto()));
+        return AttributeTypeImpl.ofAttributeTypeProto(response.put_attribute_type_res.attribute_type);
     }
 
-    private execute(request: TransactionProto.Req): Promise<ConceptProto.Res> {
-        return this._transaction.rpcExecute(request).then((res) => res.getConceptManagerRes());
+    async getSchemaExceptions(): Promise<TypeDBClientError[]> {
+        const response = await this.execute(RequestBuilder.ConceptManager.getSchemaExceptions());
+        return response.get_schema_exceptions_res.exceptions.map(schemaException =>
+            new TypeDBClientError(`${schemaException.code} ${schemaException.message}`)
+        );
     }
 
+    private execute(request: TransactionReq): Promise<ConceptManagerRes> {
+        return this._transaction.rpcExecute(request).then((res) => res.concept_manager_res);
+    }
 }

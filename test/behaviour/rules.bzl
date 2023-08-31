@@ -19,42 +19,46 @@
 # under the License.
 #
 
-def node_cucumber_test(name, features, node_modules, package_json, native_typedb_artifact, client, steps):
-    native.sh_test (
+load("@npm//:@cucumber/cucumber/package_json.bzl", cucumber_bin = "bin")
+
+def behaviour_test_ts_config():
+    return {
+        "compilerOptions": {
+            "target": "es2019",
+            "module": "commonjs",
+            "moduleResolution": "node",
+            "esModuleInterop": True,
+            "skipLibCheck": True,
+            "forceConsistentCasingInFileNames": True,
+        }
+    }
+
+def node_cucumber_test(name, features, data, steps, **kwargs):
+    cucumber_bin.cucumber_js_test(
         name = name,
         data = [
-            node_modules,
-            package_json,
-            native_typedb_artifact,
-            client,
-            steps,
-        ] + features,
-        srcs = [
-            "//test/behaviour:cucumber_test.sh",
-        ],
-        args = [
-            "$(rootpath " + native_typedb_artifact + ")",
-        ],
+            "//:node_modules/@cucumber/cucumber",
+            "//:typedb-protocol-override",
+            "@//test/behaviour/config:parameters",
+        ] + data + features + [steps],
+        no_copy_to_bin = features,
+        fixed_args = [
+            "--publish-quiet", "--strict",
+            "--tags 'not @ignore and not @ignore-typedb and not @ignore-typedb-client-nodejs and not @ignore-client-nodejs'",
+            "--require", "test/**/*.js",
+        ] + ["$(location {})".format(feature) for feature in features],
+        **kwargs,
     )
 
-def typedb_behaviour_node_test(
-        name,
-        native_typedb_artifact_core,
-        native_typedb_artifact_cluster,
-        steps_core,
-        steps_cluster,
-        **kwargs):
-
+def typedb_behaviour_node_test(name, **kwargs):
     node_cucumber_test(
         name = name + "-core",
-        steps = steps_core,
-        native_typedb_artifact = native_typedb_artifact_core,
+        steps = "@//test/behaviour/connection:steps-core",
         **kwargs,
     )
 
     node_cucumber_test(
         name = name + "-cluster",
-        steps = steps_cluster,
-        native_typedb_artifact = native_typedb_artifact_cluster,
+        steps = "@//test/behaviour/connection:steps-cluster",
         **kwargs,
     )

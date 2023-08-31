@@ -19,11 +19,10 @@
  * under the License.
  */
 
-import { Concept } from "../concept/Concept";
-import { Numeric } from "./Numeric";
+import {Concept} from "../concept/Concept";
+import {Numeric} from "./Numeric";
 
 export interface NumericGroup {
-
     readonly owner: Concept;
 
     readonly numeric: Numeric;

@@ -22,7 +22,7 @@
 
 set -e
 
-procs=$(jps | awk '/TypeDBClusterServer/ {print $1}' | paste -sd " " -)
+procs=$(ps aux | awk '/TypeDBClusterServe[r]/ {print $2}' | paste -sd " " -)
 echo $procs
 if [ -n "$procs" ]; then
     kill $procs

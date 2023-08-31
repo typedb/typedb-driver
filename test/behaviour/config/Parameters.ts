@@ -21,8 +21,7 @@
 
 import {defineParameterType} from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import {TransactionType} from "../../../dist/api/connection/TypeDBTransaction";
-import {Concept, ThingType} from "../../../dist";
+import {Concept, ThingType, TransactionType} from "../../../dist";
 import Annotation = ThingType.Annotation;
 
 export function parseBool(value: string): boolean {

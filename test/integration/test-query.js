@@ -19,7 +19,7 @@
  * under the License.
  */
 
-const { TypeDB, SessionType, TransactionType, TypeDBOptions } = require("../../dist");
+const {TypeDB, SessionType, TransactionType, TypeDBOptions} = require("../../dist");
 const assert = require("assert");
 
 async function run() {
@@ -140,7 +140,7 @@ async function run() {
         process.exit(1);
     }
     try {
-        session = await client.session("typedb", SessionType.DATA, TypeDBOptions.core({
+        session = await client.session("typedb", SessionType.DATA, new TypeDBOptions({
             sessionIdleTimeoutMillis: 3600000,
         }));
         console.log("open data session - SUCCESS");
@@ -170,8 +170,8 @@ async function run() {
         let lionType = await tx.concepts.getEntityType("lion");
         let nameType = await tx.concepts.getAttributeType("name");
         let lionNames = [];
-        for await (let lion of lionType.asRemote(tx).getInstances()) {
-            for await (let lionName of lion.asRemote(tx).getHas(nameType)) {
+        for await (let lion of lionType.getInstances(tx)) {
+            for await (let lionName of lion.getHas(tx, nameType)) {
                 lionNames.push(lionName.value);
             }
         }
@@ -200,7 +200,7 @@ async function run() {
     }
 
     try {
-        tx = await session.transaction(TransactionType.READ, TypeDBOptions.core({infer: true, explain: true}));
+        tx = await session.transaction(TransactionType.READ, new TypeDBOptions({infer: true, explain: true}));
         const answers = await tx.query.match("match $x has inferred-age $a;").collect();
         const ans = answers[0];
         assert(ans.explainables.ownerships.size > 0);

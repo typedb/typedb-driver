@@ -21,8 +21,8 @@
 
 import {Then} from "@cucumber/cucumber";
 import {answers} from "../../../typeql/TypeQLSteps"
-import assert = require("assert");
 import {isDeepStrictEqual} from "util";
+import assert = require("assert");
 
 Then("JSON serialization of answers matches", async (expectedJSON: string) => {
     const expected = JSON.parse(expectedJSON);

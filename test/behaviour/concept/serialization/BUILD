@@ -20,7 +20,6 @@
 #
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//test/behaviour:rules.bzl", "typedb_behaviour_node_test")
 
 checkstyle_test(
     name = "checkstyle",

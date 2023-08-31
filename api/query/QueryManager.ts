@@ -19,16 +19,15 @@
  * under the License.
  */
 
-import { Stream } from "../../common/util/Stream";
-import { ConceptMap } from "../answer/ConceptMap";
-import { ConceptMapGroup } from "../answer/ConceptMapGroup";
-import { Numeric } from "../answer/Numeric";
-import { NumericGroup } from "../answer/NumericGroup";
-import { TypeDBOptions } from "../connection/TypeDBOptions";
-import { Explanation } from "../logic/Explanation";
+import {Stream} from "../../common/util/Stream";
+import {ConceptMap} from "../answer/ConceptMap";
+import {ConceptMapGroup} from "../answer/ConceptMapGroup";
+import {Numeric} from "../answer/Numeric";
+import {NumericGroup} from "../answer/NumericGroup";
+import {TypeDBOptions} from "../connection/TypeDBOptions";
+import {Explanation} from "../logic/Explanation";
 
 export interface QueryManager {
-
     match(query: string, options?: TypeDBOptions): Stream<ConceptMap>;
 
     matchAggregate(query: string, options?: TypeDBOptions): Promise<Numeric>;

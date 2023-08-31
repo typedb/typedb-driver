@@ -31,11 +31,11 @@ checkstyle_test(
 typedb_behaviour_node_test(
     name = "test",
     features = ["@vaticle_typedb_behaviour//typeql/language:insert.feature"],
-    node_modules = "//:node_modules",
-    package_json = "//:package.json",
-    native_typedb_artifact_core = "//test:native-typedb-artifact",
-    native_typedb_artifact_cluster = "//test:native-typedb-cluster-artifact",
-    client = "//:client-nodejs-targz",
-    steps_core = "//test/behaviour:steps-core-targz",
-    steps_cluster = "//test/behaviour:steps-cluster-targz",
+    data = [
+        "//test/behaviour/connection/database:steps",
+        "//test/behaviour/connection/session:steps",
+        "//test/behaviour/connection/transaction:steps",
+        "//test/behaviour/typeql:steps",
+        "//test/behaviour/util:steps",
+    ],
 )

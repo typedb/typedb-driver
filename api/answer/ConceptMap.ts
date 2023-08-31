@@ -19,11 +19,10 @@
  * under the License.
  */
 
-import { Concept } from "../concept/Concept";
+import {Concept} from "../concept/Concept";
 
 export interface ConceptMap {
-
-    readonly map: Map<string, Concept>;
+    variables(): IterableIterator<string>;
 
     concepts(): IterableIterator<Concept>
 
@@ -35,9 +34,7 @@ export interface ConceptMap {
 }
 
 export namespace ConceptMap {
-
     export interface Explainables {
-
         relation(variable: string): Explainable;
 
         attribute(variable: string): Explainable;
@@ -52,7 +49,6 @@ export namespace ConceptMap {
     }
 
     export interface Explainable {
-
         readonly conjunction: string;
 
         readonly id: number;

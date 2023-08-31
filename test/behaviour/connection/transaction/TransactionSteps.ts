@@ -21,8 +21,8 @@
 
 import {Given, Then} from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { TransactionType, TypeDBSession, TypeDBTransaction } from "../../../../dist";
-import { assertThrows, assertThrowsWithMessage } from "../../util/Util";
+import {TransactionType, TypeDBSession, TypeDBTransaction} from "../../../../dist";
+import {assertThrows, assertThrowsWithMessage} from "../../util/Util";
 import {optionSetters, sessions, sessionsToTransactions, transactionOptions} from "../ConnectionStepsBase";
 import assert = require("assert");
 

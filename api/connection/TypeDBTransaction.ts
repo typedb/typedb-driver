@@ -19,15 +19,19 @@
  * under the License.
  */
 
-import { Transaction } from "typedb-protocol/common/transaction_pb";
-import { Stream } from "../../common/util/Stream";
-import { ConceptManager } from "../concept/ConceptManager";
-import { LogicManager } from "../logic/LogicManager";
-import { QueryManager } from "../query/QueryManager";
-import { TypeDBOptions } from "./TypeDBOptions";
+import {
+    TransactionReq,
+    TransactionRes,
+    TransactionResPart,
+    TransactionType as TransactionTypeProto
+} from "typedb-protocol/proto/transaction";
+import {Stream} from "../../common/util/Stream";
+import {ConceptManager} from "../concept/ConceptManager";
+import {LogicManager} from "../logic/LogicManager";
+import {QueryManager} from "../query/QueryManager";
+import {TypeDBOptions} from "./TypeDBOptions";
 
 export interface TypeDBTransaction {
-
     isOpen(): boolean;
 
     readonly type: TransactionType;
@@ -48,8 +52,7 @@ export interface TypeDBTransaction {
 }
 
 export interface TransactionType {
-
-    proto(): Transaction.Type;
+    proto(): TransactionTypeProto;
 
     isRead(): boolean;
 
@@ -57,16 +60,14 @@ export interface TransactionType {
 }
 
 export namespace TransactionType {
-
     class TransactionTypeImpl implements TransactionType {
+        private readonly _type: TransactionTypeProto;
 
-        private readonly _type: Transaction.Type;
-
-        constructor(type: Transaction.Type) {
+        constructor(type: TransactionTypeProto) {
             this._type = type;
         }
 
-        proto(): Transaction.Type {
+        proto(): TransactionTypeProto {
             return this._type;
         }
 
@@ -79,16 +80,14 @@ export namespace TransactionType {
         }
     }
 
-    export const READ = new TransactionTypeImpl(Transaction.Type.READ);
-    export const WRITE = new TransactionTypeImpl(Transaction.Type.WRITE);
+    export const READ = new TransactionTypeImpl(TransactionTypeProto.READ);
+    export const WRITE = new TransactionTypeImpl(TransactionTypeProto.WRITE);
 }
 
 export namespace TypeDBTransaction {
-
     export interface Extended extends TypeDBTransaction {
+        rpcExecute(request: TransactionReq, batch?: boolean): Promise<TransactionRes>;
 
-        rpcExecute(request: Transaction.Req, batch?: boolean): Promise<Transaction.Res>;
-
-        rpcStream(request: Transaction.Req): Stream<Transaction.ResPart>;
+        rpcStream(request: TransactionReq): Stream<TransactionResPart>;
     }
 }

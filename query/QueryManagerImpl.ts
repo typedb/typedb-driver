@@ -19,8 +19,8 @@
  * under the License.
  */
 
-import {QueryManager as QueryProto} from "typedb-protocol/common/query_pb";
-import {Transaction as TransactionProto} from "typedb-protocol/common/transaction_pb";
+import {QueryManagerRes, QueryManagerResPart} from "typedb-protocol/proto/query";
+import {TransactionReq} from "typedb-protocol/proto/transaction";
 import {ConceptMap} from "../api/answer/ConceptMap";
 import {ConceptMapGroup} from "../api/answer/ConceptMapGroup";
 import {Numeric} from "../api/answer/Numeric";
@@ -31,15 +31,13 @@ import {Explanation} from "../api/logic/Explanation";
 import {QueryManager} from "../api/query/QueryManager";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {Stream} from "../common/util/Stream";
-import {ConceptMapGroupImpl} from "../concept/answer/ConceptMapGroupImpl";
 import {ConceptMapImpl} from "../concept/answer/ConceptMapImpl";
 import {NumericGroupImpl} from "../concept/answer/NumericGroupImpl";
+import {ConceptMapGroupImpl} from "../concept/answer/ConceptMapGroupImpl";
 import {NumericImpl} from "../concept/answer/NumericImpl";
 import {ExplanationImpl} from "../logic/ExplanationImpl";
 
-
 export class QueryManagerImpl implements QueryManager {
-
     private _transaction: TypeDBTransaction.Extended;
 
     constructor(transaction: TypeDBTransaction.Extended) {
@@ -47,89 +45,87 @@ export class QueryManagerImpl implements QueryManager {
     }
 
     match(query: string, options?: TypeDBOptions): Stream<ConceptMap> {
-        if (!options) options = TypeDBOptions.core();
+        if (!options) options = new TypeDBOptions();
         const request = RequestBuilder.QueryManager.matchReq(query, options.proto());
         return this.stream(request).flatMap((queryResPart) =>
-            Stream.array(queryResPart.getMatchResPart().getAnswersList())
+            Stream.array(queryResPart.match_res_part.answers)
                 .map((conceptMapProto) => ConceptMapImpl.of(conceptMapProto))
         );
     }
 
     matchAggregate(query: string, options?: TypeDBOptions): Promise<Numeric> {
-        if (!options) options = TypeDBOptions.core();
+        if (!options) options = new TypeDBOptions();
         const request = RequestBuilder.QueryManager.matchAggregateReq(query, options.proto());
-        return this.query(request).then((res) => NumericImpl.of(res.getMatchAggregateRes().getAnswer()));
+        return this.query(request).then((res) => NumericImpl.of(res.match_aggregate_res.answer));
     }
 
     matchGroup(query: string, options?: TypeDBOptions): Stream<ConceptMapGroup> {
-        if (!options) options = TypeDBOptions.core();
+        if (!options) options = new TypeDBOptions();
         const request = RequestBuilder.QueryManager.matchGroupReq(query, options.proto());
         return this.stream(request).flatMap((queryResPart) =>
-            Stream.array(queryResPart.getMatchGroupResPart().getAnswersList())
+            Stream.array(queryResPart.match_group_res_part.answers)
                 .map((conceptMapGroupProto) => ConceptMapGroupImpl.of(conceptMapGroupProto))
         );
     }
 
     matchGroupAggregate(query: string, options?: TypeDBOptions): Stream<NumericGroup> {
-        if (!options) options = TypeDBOptions.core();
+        if (!options) options = new TypeDBOptions();
         const request = RequestBuilder.QueryManager.matchGroupAggregateReq(query, options.proto());
         return this.stream(request).flatMap((queryResPart) =>
-            Stream.array(queryResPart.getMatchGroupAggregateResPart().getAnswersList())
+            Stream.array(queryResPart.match_group_aggregate_res_part.answers)
                 .map((numericGroupArray) => NumericGroupImpl.of(numericGroupArray))
         );
     }
 
     insert(query: string, options?: TypeDBOptions): Stream<ConceptMap> {
-        if (!options) options = TypeDBOptions.core();
+        if (!options) options = new TypeDBOptions();
         const request = RequestBuilder.QueryManager.insertReq(query, options.proto());
         return this.stream(request).flatMap((queryResPart) =>
-            Stream.array(queryResPart.getInsertResPart().getAnswersList())
+            Stream.array(queryResPart.insert_res_part.answers)
                 .map((conceptMapProto) => ConceptMapImpl.of(conceptMapProto))
         );
     }
 
     delete(query: string, options?: TypeDBOptions): Promise<void> {
-        if (!options) options = TypeDBOptions.core();
+        if (!options) options = new TypeDBOptions();
         const request = RequestBuilder.QueryManager.deleteReq(query, options.proto());
         return this.query(request).then(() => null);
     }
 
     update(query: string, options?: TypeDBOptions): Stream<ConceptMap> {
-        if (!options) options = TypeDBOptions.core();
+        if (!options) options = new TypeDBOptions();
         const request = RequestBuilder.QueryManager.updateReq(query, options.proto());
         return this.stream(request).flatMap((queryResPart) =>
-            Stream.array(queryResPart.getUpdateResPart().getAnswersList())
+            Stream.array(queryResPart.update_res_part.answers)
                 .map((conceptMapProto) => ConceptMapImpl.of(conceptMapProto))
         );
     }
 
     define(query: string, options?: TypeDBOptions): Promise<void> {
-        if (!options) options = TypeDBOptions.core();
+        if (!options) options = new TypeDBOptions();
         const request = RequestBuilder.QueryManager.defineReq(query, options.proto());
         return this.query(request).then(() => null);
     }
 
     undefine(query: string, options?: TypeDBOptions): Promise<void> {
-        if (!options) options = TypeDBOptions.core();
+        if (!options) options = new TypeDBOptions();
         const request = RequestBuilder.QueryManager.undefineReq(query, options.proto());
         return this.query(request).then(() => null);
     }
 
     explain(explainable: ConceptMap.Explainable, options?: TypeDBOptions): Stream<Explanation> {
-        if (!options) options = TypeDBOptions.core();
+        if (!options) options = new TypeDBOptions();
         const request = RequestBuilder.QueryManager.explainReq(explainable.id, options.proto());
         return this.stream(request)
-            .flatMap((resPart) => Stream.array(resPart.getExplainResPart().getExplanationsList()))
+            .flatMap((resPart) => Stream.array(resPart.explain_res_part.explanations))
             .map((explanationProto) => ExplanationImpl.of(explanationProto));
     }
 
-    private query(req: TransactionProto.Req): Promise<QueryProto.Res> {
-        return this._transaction.rpcExecute(req).then((res) => res.getQueryManagerRes());
+    private query(req: TransactionReq): Promise<QueryManagerRes> {
+        return this._transaction.rpcExecute(req).then((res) => res.query_manager_res);
     }
 
-    private stream(req: TransactionProto.Req): Stream<QueryProto.ResPart> {
-        return this._transaction.rpcStream(req).map((res) => {
-            return res.getQueryManagerResPart()
-        });
+    private stream(req: TransactionReq): Stream<QueryManagerResPart> {
+        return this._transaction.rpcStream(req).map((res) => res.query_manager_res_part);
     }
 }

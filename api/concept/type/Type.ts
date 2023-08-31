@@ -20,83 +20,28 @@
  */
 
 
-import {Type as TypeProto} from "typedb-protocol/common/concept_pb";
-import {ErrorMessage} from "../../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../../common/errors/TypeDBClientError";
 import {Label} from "../../../common/Label";
 import {Stream} from "../../../common/util/Stream";
 import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
 import {Concept} from "../Concept";
-import {Attribute} from "../thing/Attribute";
-import {Entity} from "../thing/Entity";
-import {Relation} from "../thing/Relation";
-import {Thing} from "../thing/Thing";
-import {AttributeType} from "./AttributeType";
-import {EntityType} from "./EntityType";
-import {RelationType} from "./RelationType";
-import {RoleType} from "./RoleType";
-import {ThingType} from "./ThingType";
-import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
+import Transitivity = Concept.Transitivity;
 
 export interface Type extends Concept {
-
     readonly label: Label;
 
     readonly root: boolean;
 
     readonly abstract: boolean;
 
-    asRemote(transaction: TypeDBTransaction): Type.Remote;
-}
+    delete(transaction: TypeDBTransaction): Promise<void>;
+    isDeleted(transaction: TypeDBTransaction): Promise<boolean>;
 
-export namespace Type {
+    setLabel(transaction: TypeDBTransaction, label: string): Promise<void>;
 
-    export interface Remote extends Type, Concept.Remote {
+    getSupertype(transaction: TypeDBTransaction): Promise<Type>;
 
-        asRemote(transaction: TypeDBTransaction): Type.Remote;
+    getSupertypes(transaction: TypeDBTransaction): Stream<Type>;
 
-        asType(): Type.Remote;
-
-        asThingType(): ThingType.Remote;
-
-        asEntityType(): EntityType.Remote;
-
-        asAttributeType(): AttributeType.Remote;
-
-        asRelationType(): RelationType.Remote;
-
-        asRoleType(): RoleType.Remote;
-
-        asThing(): Thing.Remote;
-
-        asEntity(): Entity.Remote;
-
-        asAttribute(): Attribute.Remote;
-
-        asRelation(): Relation.Remote;
-
-        setLabel(label: string): Promise<void>;
-
-        getSupertype(): Promise<Type>;
-
-        getSupertypes(): Stream<Type>;
-
-        getSubtypes(): Stream<Type>;
-    }
-
-    export function encoding(type: Type): TypeProto.Encoding {
-        if (type.isEntityType()) {
-            return TypeProto.Encoding.ENTITY_TYPE;
-        } else if (type.isRelationType()) {
-            return TypeProto.Encoding.RELATION_TYPE;
-        } else if (type.isAttributeType()) {
-            return TypeProto.Encoding.ATTRIBUTE_TYPE;
-        } else if (type.isRoleType()) {
-            return TypeProto.Encoding.ROLE_TYPE;
-        } else if (type.isThingType()) {
-            return TypeProto.Encoding.THING_TYPE;
-        } else {
-            throw new TypeDBClientError(BAD_ENCODING);
-        }
-    }
+    getSubtypes(transaction: TypeDBTransaction): Stream<Type>;
+    getSubtypes(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<Type>;
 }

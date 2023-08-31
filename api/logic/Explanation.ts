@@ -19,11 +19,10 @@
  * under the License.
  */
 
-import { ConceptMap } from "../answer/ConceptMap";
-import { Rule } from "./Rule";
+import {ConceptMap} from "../answer/ConceptMap";
+import {Rule} from "./Rule";
 
 export interface Explanation {
-
     readonly rule: Rule;
 
     readonly condition: ConceptMap;

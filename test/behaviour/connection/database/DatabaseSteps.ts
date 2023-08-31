@@ -19,10 +19,10 @@
  * under the License.
  */
 
-import { Given, Then, When } from "@cucumber/cucumber";
+import {Given, Then, When} from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { assertThrows } from "../../util/Util";
-import { client, THREAD_POOL_SIZE } from "../ConnectionStepsBase";
+import {assertThrows} from "../../util/Util";
+import {client, THREAD_POOL_SIZE} from "../ConnectionStepsBase";
 import * as assert from "assert";
 
 When("connection create database: {word}", async (name: string) => {

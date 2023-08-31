@@ -19,13 +19,61 @@
 # under the License.
 #
 
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//test/behaviour:rules.bzl", "behaviour_test_ts_config")
 
-exports_files([
-    "ConnectionStepsBase.ts",
-    "ConnectionStepsCluster.ts",
-    "ConnectionStepsCore.ts"
-])
+ts_project(
+    name = "steps-base",
+    srcs = ["ConnectionStepsBase.ts"],
+    tsconfig = behaviour_test_ts_config(),
+    declaration = True,
+    deps = [
+        "//:client-nodejs",
+
+        "//test/behaviour/util:util",
+
+        "//:node_modules/@cucumber/cucumber",
+        "//:node_modules/@types/node",
+        "//:node_modules/google-protobuf",
+        "//:node_modules/@types/google-protobuf",
+    ],
+    resolve_json_module = True,
+    visibility = ["//visibility:public"],
+)
+
+ts_project(
+    name = "steps-core",
+    srcs = ["ConnectionStepsCore.ts"],
+    tsconfig = behaviour_test_ts_config(),
+    declaration = True,
+    deps = [
+        ":steps-base",
+        "//:client-nodejs",
+        "//:node_modules/@types/node",
+        "//:node_modules/@cucumber/cucumber",
+        "//test/behaviour/util:util",
+    ],
+    resolve_json_module = True,
+    visibility = ["//visibility:public"],
+)
+
+ts_project(
+    name = "steps-cluster",
+    srcs = ["ConnectionStepsCluster.ts"],
+    tsconfig = behaviour_test_ts_config(),
+    declaration = True,
+    deps = [
+        ":steps-base",
+        "//:client-nodejs",
+        "//:node_modules/@types/node",
+        "//:node_modules/@cucumber/cucumber",
+        "//test/behaviour/util:util",
+    ],
+    resolve_json_module = True,
+    visibility = ["//visibility:public"],
+)
+
 
 checkstyle_test(
     name = "checkstyle",

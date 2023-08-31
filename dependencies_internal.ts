@@ -30,7 +30,6 @@
  * Then reduce multi-hop circular dependencies one by one by pointing both circular dependents at each other via this file.
  */
 
-
 /* concept.impl */
 export * from "./concept/ConceptImpl";
 
@@ -48,8 +47,9 @@ export * from "./concept/type/EntityTypeImpl";
 export * from "./concept/type/RelationTypeImpl";
 export * from "./concept/type/RoleTypeImpl";
 
-/* cluster components */
-export * from "./connection/cluster/FailsafeTask";
-export * from "./connection/cluster/ClusterDatabase";
-export * from "./connection/cluster/ClusterUser";
-export * from "./connection/cluster/ClusterUserManager";
+/* concept.value */
+export * from "./concept/value/ValueImpl";
+
+/* user management */
+export * from "./user/UserImpl";
+export * from "./user/UserManagerImpl";

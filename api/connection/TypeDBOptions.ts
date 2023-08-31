@@ -19,51 +19,44 @@
  * under the License.
  */
 
-import {Options} from "typedb-protocol/common/options_pb";
+import {Options} from "typedb-protocol/proto/options";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import NEGATIVE_VALUE_NOT_ALLOWED = ErrorMessage.Client.NEGATIVE_VALUE_NOT_ALLOWED;
 
+export interface Opts {
+    infer?: boolean;
+    traceInference?: boolean;
+    explain?: boolean;
+    parallel?: boolean;
+    prefetchSize?: number;
+    prefetch?: boolean;
+    sessionIdleTimeoutMillis?: number;
+    transactionTimeoutMillis?: number;
+    schemaLockAcquireTimeoutMillis?: number;
+    readAnyReplica?: boolean;
+}
+
 namespace Opts {
-    export interface Core {
-        infer?: boolean;
-        traceInference?: boolean;
-        explain?: boolean;
-        parallel?: boolean;
-        prefetchSize?: number;
-        prefetch?: boolean;
-        sessionIdleTimeoutMillis?: number;
-        transactionTimeoutMillis?: number;
-        schemaLockAcquireTimeoutMillis?: number;
-    }
-
-    export interface Cluster extends Core {
-        readAnyReplica?: boolean;
-    }
-
     export function proto(options: TypeDBOptions): Options {
         const optionsProto = new Options();
         if (options) {
-            if (options.infer != null) optionsProto.setInfer(options.infer);
-            if (options.traceInference != null) optionsProto.setTraceInference(options.traceInference);
-            if (options.explain != null) optionsProto.setExplain(options.explain);
-            if (options.parallel != null) optionsProto.setParallel(options.parallel);
-            if (options.prefetchSize != null) optionsProto.setPrefetchSize(options.prefetchSize);
-            if (options.prefetch != null) optionsProto.setPrefetch(options.prefetch);
-            if (options.sessionIdleTimeoutMillis != null) optionsProto.setSessionIdleTimeoutMillis(options.sessionIdleTimeoutMillis);
-            if (options.transactionTimeoutMillis != null) optionsProto.setTransactionTimeoutMillis(options.transactionTimeoutMillis);
-            if (options.schemaLockAcquireTimeoutMillis != null) optionsProto.setSchemaLockAcquireTimeoutMillis(options.schemaLockAcquireTimeoutMillis);
-            if (options.isCluster()) {
-                const clusterOptions = options as Opts.Cluster;
-                if (clusterOptions.readAnyReplica != null) optionsProto.setReadAnyReplica(clusterOptions.readAnyReplica);
-            }
+            if (options.infer != null) optionsProto.infer = options.infer;
+            if (options.traceInference != null) optionsProto.trace_inference = options.traceInference;
+            if (options.explain != null) optionsProto.explain = options.explain;
+            if (options.parallel != null) optionsProto.parallel = options.parallel;
+            if (options.prefetchSize != null) optionsProto.prefetch_size = options.prefetchSize;
+            if (options.prefetch != null) optionsProto.prefetch = options.prefetch;
+            if (options.sessionIdleTimeoutMillis != null) optionsProto.session_idle_timeout_millis = options.sessionIdleTimeoutMillis;
+            if (options.transactionTimeoutMillis != null) optionsProto.transaction_timeout_millis = options.transactionTimeoutMillis;
+            if (options.schemaLockAcquireTimeoutMillis != null) optionsProto.schema_lock_acquire_timeout_millis = options.schemaLockAcquireTimeoutMillis;
+            if (options.readAnyReplica != null) optionsProto.read_any_replica = options.readAnyReplica;
         }
         return optionsProto;
     }
 }
 
-export class TypeDBOptions implements Opts.Core {
-
+export class TypeDBOptions implements Opts {
     private _infer: boolean;
     private _traceInference: boolean;
     private _explain: boolean;
@@ -73,13 +66,10 @@ export class TypeDBOptions implements Opts.Core {
     private _sessionIdleTimeoutMillis: number;
     private _transactionTimeoutMillis: number;
     private _schemaLockAcquireTimeoutMillis: number;
+    private _readAnyReplica: boolean;
 
-    constructor(obj: { [K in keyof Opts.Core]: Opts.Core[K] } = {}) {
+    constructor(obj: { [K in keyof Opts]: Opts[K] } = {}) {
         Object.assign(this, obj);
-    }
-
-    isCluster(): boolean {
-        return false;
     }
 
     proto(): Options {
@@ -169,19 +159,6 @@ export class TypeDBOptions implements Opts.Core {
         }
         this._schemaLockAcquireTimeoutMillis = value;
     }
-}
-
-export class TypeDBClusterOptions extends TypeDBOptions implements Opts.Cluster {
-
-    private _readAnyReplica: boolean;
-
-    constructor(obj: { [K in keyof Opts.Cluster]: Opts.Cluster[K] } = {}) {
-        super(obj);
-    }
-
-    isCluster(): boolean {
-        return true;
-    }
 
     get readAnyReplica() {
         return this._readAnyReplica;
@@ -189,16 +166,5 @@ export class TypeDBClusterOptions extends TypeDBOptions implements Opts.Cluster 
 
     set readAnyReplica(value: boolean) {
         this._readAnyReplica = value;
-    }
-}
-
-export namespace TypeDBOptions {
-
-    export function core(options: { [K in keyof Opts.Core]: Opts.Core[K] } = {}) {
-        return new TypeDBOptions(options);
-    }
-
-    export function cluster(options: { [K in keyof Opts.Cluster]: Opts.Cluster[K] } = {}) {
-        return new TypeDBClusterOptions(options);
     }
 }

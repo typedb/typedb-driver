@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import { TypeDBClientError } from "../errors/TypeDBClientError";
+import {TypeDBClientError} from "../errors/TypeDBClientError";
 
 export abstract class Stream<T> implements AsyncIterable<T> {
 
@@ -87,6 +87,10 @@ export namespace Stream {
         return new Iterable<T>(iterable);
     }
 
+    export function promises<T>(items: Promise<T>[]) {
+        return new PromiseArray<T>(items);
+    }
+
     export function array<T>(items: T[]) {
         return new Array<T>(items);
     }
@@ -109,10 +113,25 @@ export namespace Stream {
     }
 
     class Array<T> extends Stream<T> {
-
-        private _array: T[];
+        private readonly _array: T[];
 
         public constructor(array: T[]) {
+            super();
+            this._array = array;
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        async* [Symbol.asyncIterator](): AsyncIterator<T, any, undefined> {
+            for await (const val of this._array) {
+                yield val;
+            }
+        }
+    }
+
+    class PromiseArray<T> extends Stream<T> {
+        private readonly _array: Promise<T>[];
+
+        public constructor(array: Promise<T>[]) {
             super();
             this._array = array;
         }

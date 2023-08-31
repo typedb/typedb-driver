@@ -26,10 +26,12 @@ const assert = require("assert");
 async function seekPrimaryReplica(databases) {
     for (let retryNum = 0; retryNum < 10; retryNum++) {
         console.info("Discovering replicas for database 'typedb'...");
-        const db = await databases.get("typedb");
-        console.info(`Discovered ${db.replicas}`);
-        if (db.primaryReplica) return db.primaryReplica;
-        retryNum++;
+        try {
+            const db = await databases.get("typedb");
+            console.info(`Discovered ${db.replicas}`);
+            if (db.primaryReplica) return db.primaryReplica;
+            retryNum++;
+        } catch (e) { }
         console.info("There is no primary replica yet. Retrying in 2s...");
         await new Promise(resolve => setTimeout(resolve, 2000));
     }
@@ -97,6 +99,10 @@ async function run() {
         await session.close();
 
         for (let iteration = 1; iteration <= 10; iteration++) {
+            const client = await TypeDB.clusterClient(
+                ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"],
+                new TypeDBCredential("admin", "password", process.env.ROOT_CA)
+            );
             primaryReplica = await seekPrimaryReplica(client.databases);
             console.info(`Stopping primary replica (test ${iteration}/10)...`);
             const port = primaryReplica.address.substring(10,15);
@@ -105,11 +111,14 @@ async function run() {
             spawnSync("kill", ["-9", primaryReplicaServerPID]);
             console.info("Primary replica stopped successfully.");
             await new Promise(resolve => setTimeout(resolve, 1000));
+            console.info("Opening a schema session...");
             session = await client.session("typedb", SessionType.SCHEMA);
+            console.info("Opening a read txn...");
             tx = await session.transaction(TransactionType.READ);
-            person = await tx.concepts.putEntityType("person");
+            person = await tx.concepts.getEntityType("person");
             console.info(`Retrieved entity type with label '${person.label.scopedName}' from new primary replica`);
             assert(person.label.scopedName === "person");
+            await session.close();
             const idx = primaryReplica.address[10];
             serverStart(idx);
             await new Promise(resolve => setTimeout(resolve, 20000));

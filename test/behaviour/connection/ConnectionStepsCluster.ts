@@ -20,7 +20,7 @@
  */
 
 import {After, Before, BeforeAll} from "@cucumber/cucumber";
-import {TypeDB, TypeDBClient, TypeDBCredential, TypeDBOptions} from "../../../dist";
+import {TypeDB, TypeDBCredential, TypeDBOptions} from "../../../dist";
 import {
     afterBase,
     beforeBase,
@@ -31,17 +31,16 @@ import {
     setSessionOptions,
     setTransactionOptions
 } from "./ConnectionStepsBase";
-import assert from "assert";
 
 BeforeAll(async () => {
     setDefaultClientFn(async () =>
-        TypeDB.clusterClient([TypeDB.DEFAULT_ADDRESS], new TypeDBCredential("admin", "password", process.env.ROOT_CA))
+        TypeDB.clusterClient("127.0.0.1:11729", new TypeDBCredential("admin", "password", process.env.ROOT_CA))
     )
     setClientFn(async (username, password) => {
-        return TypeDB.clusterClient([TypeDB.DEFAULT_ADDRESS], new TypeDBCredential(username, password, process.env.ROOT_CA))
+        return TypeDB.clusterClient("127.0.0.1:11729", new TypeDBCredential(username, password, process.env.ROOT_CA))
     });
-    setSessionOptions(TypeDBOptions.cluster({"infer": true}));
-    setTransactionOptions(TypeDBOptions.cluster({"infer": true}));
+    setSessionOptions(new TypeDBOptions({"infer": true}));
+    setTransactionOptions(new TypeDBOptions({"infer": true}));
 });
 
 Before(async () => {
@@ -61,11 +60,10 @@ async function clearDB() {
     for (const db of databases) {
         await db.delete();
     }
-    assert(client.isCluster());
-    const users = await (client as TypeDBClient.Cluster).users.all();
+    const users = await client.users.all();
     for (const user of users) {
         if (user.username != "admin") {
-            await (client as TypeDBClient.Cluster).users.delete(user.username);
+            await client.users.delete(user.username);
         }
     }
     await client.close();

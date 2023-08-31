@@ -19,14 +19,13 @@
  * under the License.
  */
 
-import { LogicManager as LogicProto } from "typedb-protocol/common/logic_pb";
-import { Transaction } from "typedb-protocol/common/transaction_pb";
-import { TypeDBTransaction } from "../api/connection/TypeDBTransaction";
-import { LogicManager } from "../api/logic/LogicManager";
-import { Rule } from "../api/logic/Rule";
-import { RequestBuilder } from "../common/rpc/RequestBuilder";
-import { Stream } from "../common/util/Stream";
-import { RuleImpl } from "./RuleImpl";
+import {TransactionReq} from "typedb-protocol/proto/transaction";
+import {TypeDBTransaction} from "../api/connection/TypeDBTransaction";
+import {LogicManager} from "../api/logic/LogicManager";
+import {Rule} from "../api/logic/Rule";
+import {RequestBuilder} from "../common/rpc/RequestBuilder";
+import {Stream} from "../common/util/Stream";
+import {RuleImpl} from "./RuleImpl";
 
 export class LogicManagerImpl implements LogicManager {
     private _transaction: TypeDBTransaction.Extended;
@@ -38,35 +37,30 @@ export class LogicManagerImpl implements LogicManager {
     public async getRule(label: string): Promise<Rule | undefined> {
         const request = RequestBuilder.LogicManager.getRuleReq(label);
         const response = await this.execute(request);
-        const ruleResponse = response.getGetRuleRes();
-        switch (ruleResponse.getResCase()) {
-            case LogicProto.GetRule.Res.ResCase.RULE:
-                return RuleImpl.of(ruleResponse.getRule());
-            case LogicProto.GetRule.Res.ResCase.RES_NOT_SET:
-            default:
-                return null;
-        }
+        const ruleResponse = response.get_rule_res;
+        if (ruleResponse.has_rule) return RuleImpl.of(ruleResponse.rule);
+        else return null;
     }
 
     public getRules(): Stream<Rule> {
         const request = RequestBuilder.LogicManager.getRulesReq();
         return this.stream(request).flatMap((resPart) =>
-            Stream.array(resPart.getGetRulesResPart().getRulesList()).map((ruleProto) => RuleImpl.of(ruleProto))
+            Stream.array(resPart.get_rules_res_part.rules).map((ruleProto) => RuleImpl.of(ruleProto))
         );
     }
 
     public async putRule(label: string, when: string, then: string): Promise<Rule> {
         const request = RequestBuilder.LogicManager.putRuleReq(label, when, then);
         const response = await this.execute(request);
-        const ruleResponse = response.getPutRuleRes();
-        return RuleImpl.of(ruleResponse.getRule());
+        const ruleResponse = response.put_rule_res;
+        return RuleImpl.of(ruleResponse.rule);
     }
 
-    private execute(request: Transaction.Req) {
-        return this._transaction.rpcExecute(request).then((res) => res.getLogicManagerRes());
+    private execute(request: TransactionReq) {
+        return this._transaction.rpcExecute(request).then((res) => res.logic_manager_res);
     }
 
-    private stream(request: Transaction.Req) {
-        return this._transaction.rpcStream(request).map((res) => res.getLogicManagerResPart());
+    private stream(request: TransactionReq) {
+        return this._transaction.rpcStream(request).map((res) => res.logic_manager_res_part);
     }
 }

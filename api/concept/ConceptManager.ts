@@ -19,36 +19,34 @@
  * under the License.
  */
 
-import {Thing} from "./thing/Thing";
+import {Attribute} from "./thing/Attribute";
+import {Entity} from "./thing/Entity";
+import {Relation} from "./thing/Relation";
 import {AttributeType} from "./type/AttributeType";
 import {EntityType} from "./type/EntityType";
 import {RelationType} from "./type/RelationType";
 import {ThingType} from "./type/ThingType";
 import {Concept} from "./Concept";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 
 export interface ConceptManager {
-
     getRootThingType(): Promise<ThingType>;
 
     getRootEntityType(): Promise<EntityType>;
-
     getRootRelationType(): Promise<RelationType>;
-
     getRootAttributeType(): Promise<AttributeType>;
 
-    getThingType(label: string): Promise<ThingType>;
-
-    getThing(iid: string): Promise<Thing>;
-
     getEntityType(label: string): Promise<EntityType>;
-
-    putEntityType(label: string): Promise<EntityType>;
-
     getRelationType(label: string): Promise<RelationType>;
-
-    putRelationType(label: string): Promise<RelationType>;
-
     getAttributeType(label: string): Promise<AttributeType>;
 
+    putEntityType(label: string): Promise<EntityType>;
+    putRelationType(label: string): Promise<RelationType>;
     putAttributeType(label: string, valueType: Concept.ValueType): Promise<AttributeType>;
+
+    getEntity(iid: string): Promise<Entity>;
+    getRelation(iid: string): Promise<Relation>;
+    getAttribute(iid: string): Promise<Attribute>;
+
+    getSchemaExceptions(): Promise<TypeDBClientError[]>
 }

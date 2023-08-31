@@ -22,33 +22,36 @@
 
 set -e
 
+NODE_COUNT=${1:-1}
+
+peers=
+for i in $(seq 1 $NODE_COUNT); do
+  peers="${peers} --server.peers.peer-${i}.address=127.0.0.1:${i}1729"
+  peers="${peers} --server.peers.peer-${i}.internal-address.zeromq=127.0.0.1:${i}1730"
+  peers="${peers} --server.peers.peer-${i}.internal-address.grpc=127.0.0.1:${i}1731"
+done
+
 function server_start() {
   ./${1}/typedb cluster \
     --storage.data=server/data \
     --server.address=127.0.0.1:${1}1729 \
     --server.internal-address.zeromq=127.0.0.1:${1}1730 \
     --server.internal-address.grpc=127.0.0.1:${1}1731 \
-    --server.peers.peer-1.address=127.0.0.1:11729 \
-    --server.peers.peer-1.internal-address.zeromq=127.0.0.1:11730 \
-    --server.peers.peer-1.internal-address.grpc=127.0.0.1:11731 \
-    --server.peers.peer-2.address=127.0.0.1:21729 \
-    --server.peers.peer-2.internal-address.zeromq=127.0.0.1:21730 \
-    --server.peers.peer-2.internal-address.grpc=127.0.0.1:21731 \
-    --server.peers.peer-3.address=127.0.0.1:31729 \
-    --server.peers.peer-3.internal-address.zeromq=127.0.0.1:31730 \
-    --server.peers.peer-3.internal-address.grpc=127.0.0.1:31731 \
+    $peers \
     --server.encryption.enable=true
 }
 
-rm -rf 1 2 3 typedb-cluster-all
+rm -rf $(seq 1 $NODE_COUNT) typedb-cluster-all
 
 bazel run //test:typedb-cluster-extractor -- typedb-cluster-all
-echo Successfully unarchived TypeDB distribution. Creating 3 copies.
-cp -r typedb-cluster-all 1 && cp -r typedb-cluster-all 2 && cp -r typedb-cluster-all 3
-echo Starting a cluster consisting of 3 servers...
-server_start 1 &
-server_start 2 &
-server_start 3 &
+echo Successfully unarchived TypeDB distribution. Creating $NODE_COUNT copies.
+for i in $(seq 1 $NODE_COUNT); do
+  cp -r typedb-cluster-all $i || exit 1
+done
+echo Starting a cluster consisting of $NODE_COUNT servers...
+for i in $(seq 1 $NODE_COUNT); do
+  server_start $i &
+done
 
 ROOT_CA=`realpath typedb-cluster-all/server/conf/encryption/ext-root-ca.pem`
 export ROOT_CA
@@ -61,16 +64,17 @@ while [[ $RETRY_NUM -lt $MAX_RETRIES ]]; do
   if [[ $(($RETRY_NUM % 4)) -eq 0 ]]; then
     echo Waiting for TypeDB Cluster servers to start \($(($RETRY_NUM / 2))s\)...
   fi
-  lsof -i :11729 && STARTED1=1 || STARTED1=0
-  lsof -i :21729 && STARTED2=1 || STARTED2=0
-  lsof -i :31729 && STARTED3=1 || STARTED3=0
-  if [[ $STARTED1 -eq 1 && $STARTED2 -eq 1 && $STARTED3 -eq 1 ]]; then
+  ALL_STARTED=1
+  for i in $(seq 1 $NODE_COUNT); do
+    lsof -i :${i}1729 || ALL_STARTED=0
+  done
+  if (( $ALL_STARTED )); then
     break
   fi
   sleep $POLL_INTERVAL_SECS
 done
-if [[ $STARTED1 -eq 0 || $STARTED2 -eq 0 || $STARTED3 -eq 0 ]]; then
+if (( ! $ALL_STARTED )); then
   echo Failed to start one or more TypeDB Cluster servers
   exit 1
 fi
-echo 3 TypeDB Cluster database servers started
+echo $NODE_COUNT TypeDB Cluster database servers started

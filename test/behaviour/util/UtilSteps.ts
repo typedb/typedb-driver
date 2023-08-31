@@ -19,8 +19,7 @@
  * under the License.
  */
 
-import {Then} from "@cucumber/cucumber";
-import {Given} from "@cucumber/cucumber";
+import {Given, Then} from "@cucumber/cucumber";
 
 Given('set time-zone is: {Timezone}', async (timezone: string) => {
     process.env.TZ = timezone;

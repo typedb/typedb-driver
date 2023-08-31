@@ -19,7 +19,7 @@
  * under the License.
  */
 
-const { TypeDB, SessionType, TransactionType, Concept, ThingType  } = require("../../dist");
+const {TypeDB, SessionType, TransactionType, Concept, ThingType} = require("../../dist");
 const assert = require("assert");
 const Annotation = ThingType.Annotation;
 
@@ -64,9 +64,9 @@ async function run() {
     try {
         tx = await session.transaction(TransactionType.WRITE);
         lionFamily = await tx.concepts.putRelationType("lion-family");
-        await lionFamily.asRemote(tx).setRelates("lion-cub");
-        lionCub = await lionFamily.asRemote(tx).getRelates().collect().then(roles => roles[0]);
-        await lion.asRemote(tx).setPlays(lionCub);
+        await lionFamily.setRelates(tx, "lion-cub");
+        lionCub = await lionFamily.getRelates(tx).collect().then(roles => roles[0]);
+        await lion.setPlays(tx, lionCub);
         await tx.commit();
         await tx.close();
         console.log("putRelationType / setRelates / setPlays - SUCCESS");
@@ -79,7 +79,7 @@ async function run() {
     try {
         tx = await session.transaction(TransactionType.WRITE);
         maneSize = await tx.concepts.putAttributeType("mane-size", Concept.ValueType.LONG);
-        await lion.asRemote(tx).setOwns(maneSize);
+        await lion.setOwns(tx, maneSize);
         await tx.commit();
         await tx.close();
         console.log("commit attribute type + owns - SUCCESS");
@@ -93,7 +93,7 @@ async function run() {
     try {
         tx = await session.transaction(TransactionType.WRITE);
         stoneLion = await tx.concepts.putEntityType("stone-lion");
-        await stoneLion.asRemote(tx).setSupertype(lion);
+        await stoneLion.setSupertype(tx, lion);
         await tx.commit();
         await tx.close();
         console.log("set supertype - SUCCESS");
@@ -105,7 +105,7 @@ async function run() {
 
     try {
         tx = await session.transaction(TransactionType.READ);
-        const supertypeOfLion = await lion.asRemote(tx).getSupertype();
+        const supertypeOfLion = await lion.getSupertype(tx);
         await tx.close();
         console.log(`get supertype - SUCCESS - the supertype of 'lion' is '${supertypeOfLion.label}'.`);
     } catch (err) {
@@ -116,7 +116,7 @@ async function run() {
 
     try {
         tx = await session.transaction(TransactionType.READ);
-        const supertypesOfStoneLion = await stoneLion.asRemote(tx).getSupertypes().collect();
+        const supertypesOfStoneLion = await stoneLion.getSupertypes(tx).collect();
         await tx.close();
         console.log(`get supertypes - SUCCESS - the supertypes of 'stone-lion' are [${supertypesOfStoneLion.map(x => x.label)}].`);
     } catch (err) {
@@ -127,7 +127,7 @@ async function run() {
 
     try {
         tx = await session.transaction(TransactionType.READ);
-        const subtypesOfLion = await lion.asRemote(tx).getSubtypes().collect();
+        const subtypesOfLion = await lion.getSubtypes(tx).collect();
         await tx.close();
         console.log(`get subtypes - SUCCESS - the subtypes of 'lion' are [${subtypesOfLion.map(x => x.label)}].`);
     } catch (err) {
@@ -139,7 +139,7 @@ async function run() {
     try {
         tx = await session.transaction(TransactionType.WRITE);
         const monkey = await tx.concepts.putEntityType("monkey");
-        await monkey.asRemote(tx).setLabel("orangutan");
+        await monkey.setLabel(tx, "orangutan");
         const newLabel = await tx.concepts.getEntityType("orangutan").then(entityType => entityType.label.scopedName);
         await tx.rollback();
         await tx.close();
@@ -154,12 +154,12 @@ async function run() {
     try {
         tx = await session.transaction(TransactionType.WRITE);
         let whale = await tx.concepts.putEntityType("whale");
-        await whale.asRemote(tx).setAbstract();
+        await whale.setAbstract(tx);
         whale = await tx.concepts.getEntityType("whale");
         const isAbstractAfterSet = whale.abstract;
         assert(isAbstractAfterSet);
         console.log(`set abstract - SUCCESS - 'whale' ${isAbstractAfterSet ? "is" : "is not"} abstract.`);
-        await whale.asRemote(tx).unsetAbstract();
+        await whale.unsetAbstract(tx);
         whale = await tx.concepts.getEntityType("whale");
         const isAbstractAfterUnset = whale.abstract;
         assert(!isAbstractAfterUnset);
@@ -176,19 +176,19 @@ async function run() {
     try {
         tx = await session.transaction(TransactionType.WRITE);
         parentship = await tx.concepts.putRelationType("parentship");
-        await parentship.asRemote(tx).setRelates("parent");
+        await parentship.setRelates(tx, "parent");
         fathership = await tx.concepts.putRelationType("fathership");
-        await fathership.asRemote(tx).setSupertype(parentship);
-        await fathership.asRemote(tx).setRelates("father", "parent");
+        await fathership.setSupertype(tx, parentship);
+        await fathership.setRelates(tx, "father", "parent");
         person = await tx.concepts.putEntityType("person");
-        parent = await parentship.asRemote(tx).getRelates("parent");
-        await person.asRemote(tx).setPlays(parent);
+        parent = await parentship.getRelatesForRoleLabel(tx, "parent");
+        await person.setPlays(tx, parent);
         man = await tx.concepts.putEntityType("man");
-        await man.asRemote(tx).setSupertype(person);
-        father = await fathership.asRemote(tx).getRelates("father");
-        await man.asRemote(tx).setPlays(father, parent);
-        const playingRoles = (await man.asRemote(tx).getPlays().collect()).map(role => role.label.scopedName);
-        const roleplayers = (await father.asRemote(tx).getPlayerTypes().collect()).map(player => player.label.scopedName);
+        await man.setSupertype(tx, person);
+        father = await fathership.getRelatesForRoleLabel(tx, "father");
+        await man.setPlays(tx, father, parent);
+        const playingRoles = (await man.getPlays(tx).collect()).map(role => role.label.scopedName);
+        const roleplayers = (await father.getPlayerTypes(tx).collect()).map(player => player.label.scopedName);
         await tx.commit();
         await tx.close();
         assert(playingRoles.includes("fathership:father"));
@@ -204,22 +204,22 @@ async function run() {
     try {
         tx = await session.transaction(TransactionType.WRITE);
         email = await tx.concepts.putAttributeType("email", Concept.ValueType.STRING);
-        await email.asRemote(tx).setAbstract();
+        await email.setAbstract(tx);
         workEmail = await tx.concepts.putAttributeType("work-email", Concept.ValueType.STRING);
-        await workEmail.asRemote(tx).setSupertype(email);
+        await workEmail.setSupertype(tx, email);
         age = await tx.concepts.putAttributeType("age", Concept.ValueType.LONG);
-        await person.asRemote(tx).setAbstract();
-        await person.asRemote(tx).setOwns(email, [Annotation.KEY]);
+        await person.setAbstract(tx);
+        await person.setOwns(tx, email, [Annotation.KEY]);
         man = await tx.concepts.getEntityType("man");
-        await man.asRemote(tx).setSupertype(await tx.concepts.getRootEntityType());
-        await person.asRemote(tx).setOwns(age);
-        await lion.asRemote(tx).setOwns(age);
+        await man.setSupertype(tx, await tx.concepts.getRootEntityType());
+        await person.setOwns(tx, age);
+        await lion.setOwns(tx, age);
         customer = await tx.concepts.putEntityType("customer");
-        await customer.asRemote(tx).setSupertype(person);
-        await customer.asRemote(tx).setOwns(workEmail, email);
-        const ownedAttributes = await customer.asRemote(tx).getOwns().collect();
-        const ownedKeys = await customer.asRemote(tx).getOwns([Annotation.KEY]).collect();
-        const ownedDateTimes = await customer.asRemote(tx).getOwns(Concept.ValueType.DATETIME, []).collect();
+        await customer.setSupertype(tx, person);
+        await customer.setOwns(tx, workEmail, email);
+        const ownedAttributes = await customer.getOwns(tx).collect();
+        const ownedKeys = await customer.getOwns(tx, [Annotation.KEY]).collect();
+        const ownedDateTimes = await customer.getOwns(tx, Concept.ValueType.DATETIME, []).collect();
         await tx.commit();
         await tx.close();
         assert(ownedAttributes.length === 2);
@@ -235,12 +235,12 @@ async function run() {
 
     try {
         tx = await session.transaction(TransactionType.WRITE);
-        await person.asRemote(tx).unsetOwns(age);
-        await person.asRemote(tx).unsetPlays(parent);
-        await fathership.asRemote(tx).unsetRelates("father");
-        const personOwns = (await person.asRemote(tx).getOwns().collect()).map(x => x.label.scopedName);
-        const personPlays = (await person.asRemote(tx).getPlays().collect()).map(x => x.label.scopedName);
-        const fathershipRelates = (await fathership.asRemote(tx).getRelates().collect()).map(x => x.label.scopedName);
+        await person.unsetOwns(tx, age);
+        await person.unsetPlays(tx, parent);
+        await fathership.unsetRelates(tx, "father");
+        const personOwns = (await person.getOwns(tx).collect()).map(x => x.label.scopedName);
+        const personPlays = (await person.getPlays(tx).collect()).map(x => x.label.scopedName);
+        const fathershipRelates = (await fathership.getRelates(tx).collect()).map(x => x.label.scopedName);
         await tx.rollback();
         await tx.close();
         assert(!personOwns.includes("age"));
@@ -300,29 +300,29 @@ async function run() {
     try {
         session = await client.session("typedb", SessionType.DATA);
         tx = await session.transaction(TransactionType.WRITE);
-        for (let i = 0; i < 10; i++)  stoneLion.asRemote(tx).create();
-        const lions = await lion.asRemote(tx).getInstances().collect();
+        for (let i = 0; i < 10; i++) stoneLion.create(tx);
+        const lions = await lion.getInstances(tx).collect();
         const firstLion = lions[0];
         const inferred = firstLion.inferred;
-        const lionType = await firstLion.asRemote(tx).type;
-        const age42 = await age.asRemote(tx).put(42);
-        await firstLion.asRemote(tx).setHas(age42);
-        const firstLionAttrs = (await firstLion.asRemote(tx).getHas().collect()).map(x => x.value);
+        const lionType = await firstLion.type;
+        const age42 = await age.putLong(tx, 42);
+        await firstLion.setHas(tx, age42);
+        const firstLionAttrs = (await firstLion.getHas(tx).collect()).map(x => x.value);
         assert(firstLionAttrs.length === 1);
         assert(firstLionAttrs[0] === 42);
-        const firstLionAges = (await firstLion.asRemote(tx).getHas(age).collect()).map(x => x.value);
+        const firstLionAges = (await firstLion.getHas(tx, age).collect()).map(x => x.value);
         assert(firstLionAges.length === 1)
         assert(firstLionAges[0] === 42);
-        const firstLionWorkEmails = (await firstLion.asRemote(tx).getHas(workEmail).collect()).map(x => x.value);
+        const firstLionWorkEmails = (await firstLion.getHas(tx, workEmail).collect()).map(x => x.value);
         assert(!firstLionWorkEmails.length);
-        const firstFamily = await lionFamily.asRemote(tx).create();
-        await firstFamily.asRemote(tx).addPlayer(lionCub, firstLion);
-        const firstLionPlaying = (await firstLion.asRemote(tx).getPlaying().collect()).map(x => x.label.scopedName);
+        const firstFamily = await lionFamily.create(tx);
+        await firstFamily.addRolePlayer(tx, lionCub, firstLion);
+        const firstLionPlaying = (await firstLion.getPlaying(tx).collect()).map(x => x.label.scopedName);
         assert(firstLionPlaying.length === 1);
         assert(firstLionPlaying[0] === "lion-family:lion-cub");
-        const firstLionRelations = await firstLion.asRemote(tx).getRelations().collect();
+        const firstLionRelations = await firstLion.getRelations(tx).collect();
         assert(firstLionRelations.length === 1);
-        const firstLionFatherRelations = await firstLion.asRemote(tx).getRelations([father]).collect();
+        const firstLionFatherRelations = await firstLion.getRelations(tx, [father]).collect();
         assert(!firstLionFatherRelations.length);
         await tx.commit();
         await tx.close();
@@ -339,19 +339,19 @@ async function run() {
 
     try {
         tx = await session.transaction(TransactionType.WRITE);
-        const firstLionFamily = (await lionFamily.asRemote(tx).getInstances().collect())[0];
-        const firstLion = (await firstLionFamily.asRemote(tx).getPlayers().collect())[0];
-        const firstLionFamily2 = (await firstLion.asRemote(tx).getRelations().collect())[0];
+        const firstLionFamily = (await lionFamily.getInstances(tx).collect())[0];
+        const firstLion = (await firstLionFamily.getPlayersByRoleType(tx).collect())[0];
+        const firstLionFamily2 = (await firstLion.getRelations(tx).collect())[0];
         assert(firstLionFamily2);
-        let players = await firstLionFamily.asRemote(tx).getPlayers().collect();
+        let players = await firstLionFamily.getPlayersByRoleType(tx).collect();
         assert(players.length === 1);
-        const lionCubPlayers = await firstLionFamily.asRemote(tx).getPlayers([lionCub]).collect();
+        const lionCubPlayers = await firstLionFamily.getPlayersByRoleType(tx, [lionCub]).collect();
         assert(lionCubPlayers.length === 1);
-        const playersByRoleType = (await firstLionFamily.asRemote(tx).getPlayersByRoleType()).keys();
+        const playersByRoleType = (await firstLionFamily.getRolePlayers(tx)).keys();
         const firstPlayer = playersByRoleType.next().value;
         assert(firstPlayer.label.scopedName === "lion-family:lion-cub");
-        await firstLionFamily.asRemote(tx).removePlayer(lionCub, firstLion);
-        const lionFamilyCleanedUp = await firstLionFamily.asRemote(tx).isDeleted();
+        await firstLionFamily.removeRolePlayer(tx, lionCub, firstLion);
+        const lionFamilyCleanedUp = await firstLionFamily.isDeleted(tx);
         assert(lionFamilyCleanedUp);
         await tx.rollback();
         await tx.close();
@@ -364,11 +364,11 @@ async function run() {
 
     try {
         tx = await session.transaction(TransactionType.WRITE);
-        const passwordAttr = await password.asRemote(tx).put("rosebud");
-        const shoeSizeAttr = await shoeSize.asRemote(tx).put(9);
-        const volumeAttr = await volume.asRemote(tx).put(1.618);
-        const isAliveAttr = await isAlive.asRemote(tx).put(!!"hopefully");
-        const startDateAttr = await startDate.asRemote(tx).put(new Date());
+        const passwordAttr = await password.putString(tx, "rosebud");
+        const shoeSizeAttr = await shoeSize.putLong(tx, 9);
+        const volumeAttr = await volume.putDouble(tx, 1.618);
+        const isAliveAttr = await isAlive.putBoolean(tx, !!"hopefully");
+        const startDateAttr = await startDate.putDateTime(tx, new Date());
         await tx.commit();
         await tx.close();
         console.log(`put 5 different types of attributes - SUCCESS - password is ${passwordAttr.value}, shoe-size is ${shoeSizeAttr.value}, `

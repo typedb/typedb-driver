@@ -19,76 +19,70 @@
  * under the License.
  */
 
-import {Given, Then} from "@cucumber/cucumber";
-import {TypeDB, TypeDBClient, TypeDBCredential, User} from "../../../../dist"
+import {Then} from "@cucumber/cucumber";
+import {User} from "../../../../dist"
 import {client} from "../ConnectionStepsBase";
-import assert = require("assert");
 import {assertThrows} from "../../util/Util";
 
 Then("get connected user", async () => {
-    await getClient().user();
+    await client.user();
 });
 
 Then("users contains: {words}", async (username: string) => {
-    const users = await getClient().users.all();
+    const users = await client.users.all();
     users.map((user: User) => user.username).includes(username);
 });
 
 Then("users contains: {words}; throws exception", async (username: string) => {
-    await assertThrows(() => getClient().users.all());
+    await assertThrows(() => client.users.all());
 });
 
 Then("users not contains: {words}", async (username: string) => {
-    const users = await getClient().users.all();
+    const users = await client.users.all();
     !users.map((user: User) => user.username).includes(username);
 });
 
 Then("users create: {words}, {words}", async (username: string, password: string) => {
-    await getClient().users.create(username, password);
+    await client.users.create(username, password);
 });
 
 Then("users create: {words}, {words}; throws exception", async (username: string, password: string) => {
-    await assertThrows(() => getClient().users.create(username, password));
+    await assertThrows(() => client.users.create(username, password));
 });
 
 Then('users get all', async () => {
-    await getClient().users.all();
+    await client.users.all();
 });
 
 Then('users get all; throws exception', async () => {
-    await assertThrows(() => getClient().users.all());
+    await assertThrows(() => client.users.all());
 });
 
 Then('users get user: {words}', async (username: string) => {
-    await getClient().users.get(username);
+    await client.users.get(username);
 });
 
 Then('users get user: {words}; throws exception', async (username: string) => {
-    await assertThrows(() => getClient().users.get(username));
+    await assertThrows(() => client.users.get(username));
 });
 
 Then("users delete: {words}", async (username: string) => {
-    await getClient().users.delete(username);
+    await client.users.delete(username);
 });
 
 Then("users delete: {words}; throws exception", async (username: string) => {
-    await assertThrows(() => getClient().users.delete(username));
+    await assertThrows(() => client.users.delete(username));
 });
 
 Then("users password set: {words}, {words}", async (username: string, password: string) => {
-    await getClient().users.passwordSet(username, password);
+    await client.users.passwordSet(username, password);
 });
 
 Then("users password set: {words}, {words}; throws exception", async (username: string, password: string) => {
-    await assertThrows(() => getClient().users.passwordSet(username, password));
+    await assertThrows(() => client.users.passwordSet(username, password));
 });
 
 Then("user password update: {word}, {word}, {word}", async (username: string, passwordOld: string, passwordNew: string) => {
-    const user = await getClient().users.get(username);
+    const user = await client.users.get(username);
     await user.passwordUpdate(passwordOld, passwordNew);
 });
-
-function getClient(): TypeDBClient.Cluster {
-    assert(client.isCluster());
-    return client as TypeDBClient.Cluster;
-}

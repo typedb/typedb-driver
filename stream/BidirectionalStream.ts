@@ -20,7 +20,13 @@
  */
 
 import {ClientDuplexStream} from "@grpc/grpc-js";
-import {Transaction} from "typedb-protocol/common/transaction_pb";
+import {
+    TransactionClient,
+    TransactionReq,
+    TransactionRes,
+    TransactionResPart,
+    TransactionServer
+} from "typedb-protocol/proto/transaction";
 import * as uuid from "uuid";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 import {TypeDBClientError} from "../common/errors/TypeDBClientError";
@@ -37,8 +43,8 @@ export class BidirectionalStream {
 
     private readonly _requestTransmitter: RequestTransmitter;
     private _dispatcher: BatchDispatcher;
-    private readonly _responseCollector: ResponseCollector<Transaction.Res>;
-    private readonly _responsePartCollector: ResponseCollector<Transaction.ResPart>;
+    private readonly _responseCollector: ResponseCollector<TransactionRes>;
+    private readonly _responsePartCollector: ResponseCollector<TransactionResPart>;
     private _stub: TypeDBStub;
     private _isOpen: boolean;
     private _error: Error | string;
@@ -57,19 +63,19 @@ export class BidirectionalStream {
         this._isOpen = true;
     }
 
-    async single(request: Transaction.Req, batch: boolean): Promise<Transaction.Res> {
+    async single(request: TransactionReq, batch: boolean): Promise<TransactionRes> {
         const requestId = uuid.v4();
-        request.setReqId(uuid.parse(requestId) as Uint8Array);
+        request.req_id = uuid.parse(requestId) as Uint8Array;
         const responseQueue = this._responseCollector.queue(requestId);
         if (batch) this._dispatcher.dispatch(request);
         else this._dispatcher.dispatchNow(request);
         return await responseQueue.take();
     }
 
-    stream(request: Transaction.Req): Stream<Transaction.ResPart> {
+    stream(request: TransactionReq): Stream<TransactionResPart> {
         const requestId = uuid.v4();
-        request.setReqId(uuid.parse(requestId) as Uint8Array);
-        const responseQueue = this._responsePartCollector.queue(requestId) as ResponseQueue<Transaction.ResPart>;
+        request.req_id = uuid.parse(requestId) as Uint8Array;
+        const responseQueue = this._responsePartCollector.queue(requestId) as ResponseQueue<TransactionResPart>;
         const responseIterator = new ResponsePartIterator(requestId, responseQueue, this._dispatcher);
         this._dispatcher.dispatch(request);
         return Stream.iterable(responseIterator);
@@ -87,44 +93,35 @@ export class BidirectionalStream {
         this._dispatcher.close();
     }
 
-    registerObserver(transactionStream: ClientDuplexStream<Transaction.Client, Transaction.Server>): void {
-        transactionStream.on("data", (res: Transaction.Server) => {
+    registerObserver(transactionStream: ClientDuplexStream<TransactionClient, TransactionServer>): void {
+        transactionStream.on("data", (res: TransactionServer) => {
             if (!this.isOpen()) {
                 return;
             }
 
-            switch (res.getServerCase()) {
-                case Transaction.Server.ServerCase.RES:
-                    this.collectRes(res.getRes());
-                    return;
-                case Transaction.Server.ServerCase.RES_PART:
-                    this.collectResPart(res.getResPart());
-                    return;
-                case Transaction.Server.ServerCase.SERVER_NOT_SET:
-                default:
-                    throw new TypeDBClientError(MISSING_RESPONSE.message(res));
-            }
-
+            if (res.has_res) this.collectRes(res.res);
+            else if (res.has_res_part) this.collectResPart(res.res_part);
+            else throw new TypeDBClientError(MISSING_RESPONSE.message(res));
         });
 
-        transactionStream.on("error", (err) => {
-            this.close(err);
+        transactionStream.on("error", async (err) => {
+            await this.close(err);
         });
 
-        transactionStream.on("done", () => {
-            this.close();
+        transactionStream.on("done", async () => {
+            await this.close();
         });
     }
 
-    private collectRes(res: Transaction.Res): void {
-        const requestId = res.getReqId();
+    private collectRes(res: TransactionRes): void {
+        const requestId = res.req_id;
         const queue = this._responseCollector.get(uuid.stringify(requestId as Uint8Array));
         if (!queue) throw new TypeDBClientError(UNKNOWN_REQUEST_ID.message(requestId));
         queue.put(res);
     }
 
-    private collectResPart(res: Transaction.ResPart): void {
-        const requestId = res.getReqId();
+    private collectResPart(res: TransactionResPart): void {
+        const requestId = res.req_id;
         const queue = this._responsePartCollector.get(uuid.stringify(requestId as Uint8Array));
         if (!queue) throw new TypeDBClientError(UNKNOWN_REQUEST_ID.message(requestId));
         queue.put(res);

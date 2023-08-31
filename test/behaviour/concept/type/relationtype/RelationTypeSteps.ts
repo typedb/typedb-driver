@@ -19,73 +19,75 @@
  * under the License.
  */
 
-import { Then, When } from "@cucumber/cucumber";
+import {Then, When} from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
-import { parseList, ScopedLabel } from "../../../config/Parameters";
-import { tx } from "../../../connection/ConnectionStepsBase";
-import { assertThrows } from "../../../util/Util";
+import {parseList, ScopedLabel} from "../../../config/Parameters";
+import {tx} from "../../../connection/ConnectionStepsBase";
+import {assertThrows} from "../../../util/Util";
+import {Concept} from "../../../../../dist";
 import assert = require("assert");
+import EXPLICIT = Concept.Transitivity.EXPLICIT;
 
 
 When("relation\\({type_label}) set relates role: {type_label}", async (relationLabel: string, roleLabel: string) => {
-    await (await tx().concepts.getRelationType(relationLabel)).asRemote(tx()).setRelates(roleLabel);
+    await (await tx().concepts.getRelationType(relationLabel)).setRelates(tx(), roleLabel);
 });
 
 When("relation\\({type_label}) set relates role: {type_label}; throws exception", async (relationLabel: string, roleLabel: string) => {
-    await assertThrows(async () => await (await tx().concepts.getRelationType(relationLabel)).asRemote(tx()).setRelates(roleLabel));
+    await assertThrows(async () => await (await tx().concepts.getRelationType(relationLabel)).setRelates(tx(), roleLabel));
 });
 
 When("relation\\({type_label}) unset related role: {type_label}", async (relationLabel: string, roleLabel: string) => {
-    await (await tx().concepts.getRelationType(relationLabel)).asRemote(tx()).unsetRelates(roleLabel);
+    await (await tx().concepts.getRelationType(relationLabel)).unsetRelates(tx(), roleLabel);
 });
 
 When("relation\\({type_label}) unset related role: {type_label}; throws exception", async (relationLabel: string, roleLabel: string) => {
-    await assertThrows(async () => await (await tx().concepts.getRelationType(relationLabel)).asRemote(tx()).unsetRelates(roleLabel));
+    await assertThrows(async () => await (await tx().concepts.getRelationType(relationLabel)).unsetRelates(tx(), roleLabel));
 });
 
 When("relation\\({type_label}) set relates role: {type_label} as {type_label}", async (relationLabel: string, roleLabel: string, superRole: string) => {
-    await (await tx().concepts.getRelationType(relationLabel)).asRemote(tx()).setRelates(roleLabel, superRole);
+    await (await tx().concepts.getRelationType(relationLabel)).setRelates(tx(), roleLabel, superRole);
 });
 
 When("relation\\({type_label}) set relates role: {type_label} as {type_label}; throws exception", async (relationLabel: string, roleLabel: string, superRole: string) => {
-    await assertThrows(async () => await (await tx().concepts.getRelationType(relationLabel)).asRemote(tx()).setRelates(roleLabel, superRole));
+    await assertThrows(async () => await (await tx().concepts.getRelationType(relationLabel)).setRelates(tx(), roleLabel, superRole));
 });
 
 When("relation\\({type_label}) remove related role: {type_label}", async (relationLabel: string, roleLabel: string) => {
-    const relatedRole = await (await tx().concepts.getRelationType(relationLabel)).asRemote(tx()).getRelates(roleLabel);
-    await relatedRole.asRemote(tx()).delete();
+    const relatedRole = await (await tx().concepts.getRelationType(relationLabel)).getRelatesForRoleLabel(tx(), roleLabel);
+    await relatedRole.delete(tx());
 });
 
 Then("relation\\({type_label}) get role\\({type_label}) is null: {bool}", async (relationLabel: string, roleLabel: string, isNull: boolean) => {
-    assert.strictEqual(!(await (await tx().concepts.getRelationType(relationLabel)).asRemote(tx()).getRelates(roleLabel)), isNull);
+    assert.strictEqual(!(await (await tx().concepts.getRelationType(relationLabel)).getRelatesForRoleLabel(tx(), roleLabel)), isNull);
 });
 
 Then("relation\\({type_label}) get overridden role\\({type_label}) is null: {bool}", async (relationLabel: string, roleLabel: string, isNull: boolean) => {
-    assert.strictEqual(!(await (await tx().concepts.getRelationType(relationLabel)).asRemote(tx()).getRelatesOverridden(roleLabel)), isNull);
+    assert.strictEqual(!(await (await tx().concepts.getRelationType(relationLabel)).getRelatesOverridden(tx(), roleLabel)), isNull);
 });
 
 When("relation\\({type_label}) get role\\({type_label}) set label: {type_label}", async (relationLabel: string, roleLabel: string, newLabel: string) => {
-    const roleType = await (await tx().concepts.getRelationType(relationLabel)).asRemote(tx()).getRelates(roleLabel);
-    await roleType.asRemote(tx()).setLabel(newLabel);
+    const roleType = await (await tx().concepts.getRelationType(relationLabel)).getRelatesForRoleLabel(tx(), roleLabel);
+    await roleType.setLabel(tx(), newLabel);
 });
 
 Then("relation\\({type_label}) get role\\({type_label}) get label: {type_label}", async (relationLabel: string, roleLabel: string, getLabel: string) => {
-    const roleType = await (await tx().concepts.getRelationType(relationLabel)).asRemote(tx()).getRelates(roleLabel);
+    const roleType = await (await tx().concepts.getRelationType(relationLabel)).getRelatesForRoleLabel(tx(), roleLabel);
     assert.strictEqual(roleType.label.name, getLabel);
 });
 
 Then("relation\\({type_label}) get overridden role\\({type_label}) get label: {type_label}", async (relationLabel: string, roleLabel: string, getLabel: string) => {
-    const roleType = await (await tx().concepts.getRelationType(relationLabel)).asRemote(tx()).getRelatesOverridden(roleLabel);
+    const roleType = await (await tx().concepts.getRelationType(relationLabel)).getRelatesOverridden(tx(), roleLabel);
     assert.strictEqual(roleType.label.name, getLabel);
 });
 
 When("relation\\({type_label}) get role\\({type_label}) is abstract: {bool}", async (relationLabel: string, roleLabel: string, isAbstract: boolean) => {
-    const roleType = await (await tx().concepts.getRelationType(relationLabel)).asRemote(tx()).getRelates(roleLabel);
+    const roleType = await (await tx().concepts.getRelationType(relationLabel)).getRelatesForRoleLabel(tx(), roleLabel);
     assert.strictEqual(roleType.abstract, isAbstract);
 });
 
 async function getActualRelatedRoles(relationLabel: string) {
-    return ((await tx().concepts.getRelationType(relationLabel)).asRemote(tx()).getRelates()).map(role => role.label.scopedName).collect();
+    return ((await tx().concepts.getRelationType(relationLabel)).getRelates(tx())).map(role => role.label.scopedName).collect();
 }
 
 Then("relation\\({type_label}) get related roles contain:", async (relationLabel: string, roleLabelsTable: DataTable) => {
@@ -101,7 +103,7 @@ Then("relation\\({type_label}) get related roles do not contain:", async (relati
 });
 
 async function getActualRelatedRolesExplicit(relationLabel: string) {
-    return ((await tx().concepts.getRelationType(relationLabel)).asRemote(tx()).getRelatesExplicit()).map(role => role.label.scopedName).collect();
+    return ((await tx().concepts.getRelationType(relationLabel)).getRelates(tx(), EXPLICIT)).map(role => role.label.scopedName).collect();
 }
 
 Then("relation\\({type_label}) get related explicit roles contain:", async (relationLabel: string, roleLabelsTable: DataTable) => {
@@ -117,14 +119,14 @@ Then("relation\\({type_label}) get related explicit roles do not contain:", asyn
 });
 
 Then("relation\\({type_label}) get role\\({type_label}) get supertype: {scoped_label}", async (relationLabel: string, roleLabel: string, superLabel: ScopedLabel) => {
-    const roleType = await (await tx().concepts.getRelationType(relationLabel)).asRemote(tx()).getRelates(roleLabel);
-    const superType = await (await tx().concepts.getRelationType(superLabel.scope)).asRemote(tx()).getRelates(superLabel.role);
-    assert((await roleType.asRemote(tx()).getSupertype()).equals(superType));
+    const roleType = await (await tx().concepts.getRelationType(relationLabel)).getRelatesForRoleLabel(tx(), roleLabel);
+    const superType = await (await tx().concepts.getRelationType(superLabel.scope)).getRelatesForRoleLabel(tx(), superLabel.role);
+    assert((await roleType.getSupertype(tx())).equals(superType));
 });
 
 async function getActualSupertypesForRelatedRole(relationLabel: string, roleLabel: string) {
-    const roleType = await (await tx().concepts.getRelationType(relationLabel)).asRemote(tx()).getRelates(roleLabel);
-    return roleType.asRemote(tx()).getSupertypes().map(role => role.label.scopedName).collect();
+    const roleType = await (await tx().concepts.getRelationType(relationLabel)).getRelatesForRoleLabel(tx(), roleLabel);
+    return roleType.getSupertypes(tx()).map(role => role.label.scopedName).collect();
 }
 
 Then("relation\\({type_label}) get role\\({type_label}) get supertypes contain:", async (relationLabel: string, roleLabel: string, superLabelsTable: DataTable) => {
@@ -140,8 +142,8 @@ Then("relation\\({type_label}) get role\\({type_label}) get supertypes do not co
 });
 
 async function getActualPlayersForRelatedRole(relationLabel: string, roleLabel: string) {
-    const roleType = await (await tx().concepts.getRelationType(relationLabel)).asRemote(tx()).getRelates(roleLabel);
-    return await roleType.asRemote(tx()).getPlayerTypes().map(tt => tt.label.scopedName).collect();
+    const roleType = await (await tx().concepts.getRelationType(relationLabel)).getRelatesForRoleLabel(tx(), roleLabel);
+    return await roleType.getPlayerTypes(tx()).map(tt => tt.label.scopedName).collect();
 }
 
 Then("relation\\({type_label}) get role\\({type_label}) get players contain:", async (relationLabel: string, roleLabel: string, playerLabelsTable: DataTable) => {
@@ -157,8 +159,8 @@ Then("relation\\({type_label}) get role\\({type_label}) get players do not conta
 });
 
 async function getActualSubtypesForRelatedRole(relationLabel: string, roleLabel: string) {
-    const roleType = await (await tx().concepts.getRelationType(relationLabel)).asRemote(tx()).getRelates(roleLabel);
-    return roleType.asRemote(tx()).getSubtypes().map(role => role.label.scopedName).collect();
+    const roleType = await (await tx().concepts.getRelationType(relationLabel)).getRelatesForRoleLabel(tx(), roleLabel);
+    return roleType.getSubtypes(tx()).map(role => role.label.scopedName).collect();
 }
 
 Then("relation\\({type_label}) get role\\({type_label}) get subtypes contain:", async (relationLabel: string, roleLabel: string, subLabelsTable: DataTable) => {

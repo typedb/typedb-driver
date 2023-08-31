@@ -20,10 +20,10 @@
  */
 
 
-import { Numeric as NumericProto } from "typedb-protocol/common/answer_pb";
-import { Numeric } from "../../api/answer/Numeric";
-import { ErrorMessage } from "../../common/errors/ErrorMessage";
-import { TypeDBClientError } from "../../common/errors/TypeDBClientError";
+import {Numeric as NumericProto} from "typedb-protocol/proto/answer";
+import {Numeric} from "../../api/answer/Numeric";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import ILLEGAL_CAST = ErrorMessage.Internal.ILLEGAL_CAST;
 import BAD_ANSWER_TYPE = ErrorMessage.Query.BAD_ANSWER_TYPE;
 
@@ -54,18 +54,10 @@ export class NumericImpl implements Numeric {
 }
 
 export namespace NumericImpl {
-
     export function of(numericProto: NumericProto) {
-        switch (numericProto.getValueCase()) {
-            case NumericProto.ValueCase.NAN:
-                return new NumericImpl(null);
-            case NumericProto.ValueCase.DOUBLE_VALUE:
-                return new NumericImpl(numericProto.getDoubleValue());
-            case NumericProto.ValueCase.LONG_VALUE:
-                return new NumericImpl(numericProto.getLongValue());
-            case NumericProto.ValueCase.VALUE_NOT_SET:
-            default:
-                throw new TypeDBClientError(BAD_ANSWER_TYPE.message(numericProto.getValueCase()));
-        }
+        if (numericProto.has_nan) return new NumericImpl(null);
+        else if (numericProto.has_double_value) return new NumericImpl(numericProto.double_value);
+        else if (numericProto.has_long_value) return new NumericImpl(numericProto.long_value);
+        else throw new TypeDBClientError(BAD_ANSWER_TYPE.message(numericProto));
     }
 }

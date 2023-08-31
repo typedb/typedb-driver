@@ -19,8 +19,6 @@
  * under the License.
  */
 
-import {Type as TypeProto} from "typedb-protocol/common/concept_pb";
-import {Thing} from "../../api/concept/thing/Thing";
 import {AttributeType} from "../../api/concept/type/AttributeType";
 import {RoleType} from "../../api/concept/type/RoleType";
 import {ThingType} from "../../api/concept/type/ThingType";
@@ -30,30 +28,33 @@ import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
 import {Label} from "../../common/Label";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {Stream} from "../../common/util/Stream";
+import {AttributeTypeImpl, EntityTypeImpl, RelationTypeImpl, RoleTypeImpl, TypeImpl} from "../../dependencies_internal";
+import {Concept} from "../../api/concept/Concept";
 import {
-    AttributeTypeImpl,
-    EntityTypeImpl,
-    RelationTypeImpl,
-    RoleTypeImpl,
-    ThingImpl,
-    TypeImpl
-} from "../../dependencies_internal";
+    AttributeType as AttributeTypeProto,
+    ThingType as ThingTypeProto,
+    ThingTypeRes,
+    ThingTypeResPart,
+    ThingTypeRoot as ThingTypeRootProto,
+    TypeAnnotation,
+    TypeTransitivity,
+    ValueType as ValueTypeProto,
+} from "typedb-protocol/proto/concept";
+import {TransactionReq} from "typedb-protocol/proto/transaction";
+import assert from "assert";
+import {Thing} from "../../api/concept/thing/Thing";
 import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 import Annotation = ThingType.Annotation;
-import {Concept} from "../../api/concept/Concept";
+import Transitivity = Concept.Transitivity;
+import ValueType = Concept.ValueType;
 
-export class ThingTypeImpl extends TypeImpl implements ThingType {
-
-    constructor(name: string, root: boolean, abstract: boolean) {
+export abstract class ThingTypeImpl extends TypeImpl implements ThingType {
+    protected constructor(name: string, root: boolean, abstract: boolean) {
         super(Label.of(name), root, abstract);
     }
 
     protected get className(): string {
         return "ThingType";
-    }
-
-    asRemote(transaction: TypeDBTransaction): ThingType.Remote {
-        return new ThingTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
     }
 
     isThingType(): boolean {
@@ -63,219 +64,225 @@ export class ThingTypeImpl extends TypeImpl implements ThingType {
     asThingType(): ThingType {
         return this;
     }
+
+    abstract getSupertype(transaction: TypeDBTransaction): Promise<ThingType>;
+
+    abstract getSupertypes(transaction: TypeDBTransaction): Stream<ThingType>;
+
+    abstract getSubtypes(transaction: TypeDBTransaction): Stream<ThingType>;
+    abstract getSubtypes(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<ThingType>;
+
+    abstract getInstances(transaction: TypeDBTransaction): Stream<Thing>;
+    abstract getInstances(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<Thing>;
+
+    async delete(transaction: TypeDBTransaction): Promise<void> {
+        await this.execute(transaction, RequestBuilder.Type.ThingType.deleteReq(this.label));
+    }
+
+    async setLabel(transaction: TypeDBTransaction, newLabel: string): Promise<void> {
+        await this.execute(transaction, RequestBuilder.Type.ThingType.setLabelReq(this.label, newLabel));
+    }
+
+    async setAbstract(transaction: TypeDBTransaction): Promise<void> {
+        await this.execute(transaction, RequestBuilder.Type.ThingType.setAbstractReq(this.label));
+    }
+
+    async unsetAbstract(transaction: TypeDBTransaction): Promise<void> {
+        await this.execute(transaction, RequestBuilder.Type.ThingType.unsetAbstractReq(this.label));
+    }
+
+    getOwns(transaction: TypeDBTransaction): Stream<AttributeType>;
+    getOwns(transaction: TypeDBTransaction, valueType: Concept.ValueType): Stream<AttributeType>;
+    getOwns(transaction: TypeDBTransaction, annotations: Annotation[]): Stream<AttributeType>;
+    getOwns(transaction: TypeDBTransaction, valueType: Concept.ValueType, annotations: Annotation[]): Stream<AttributeType>;
+    getOwns(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<AttributeType>;
+    getOwns(transaction: TypeDBTransaction, valueType: Concept.ValueType, transitivity: Transitivity): Stream<AttributeType>;
+    getOwns(transaction: TypeDBTransaction, annotations: Annotation[], transitivity: Transitivity): Stream<AttributeType>;
+    getOwns(transaction: TypeDBTransaction, valueType: Concept.ValueType, annotations: Annotation[], transitivity: Transitivity): Stream<AttributeType>
+    getOwns(
+        transaction: TypeDBTransaction,
+        valueTypeOrAnnotationsOrTransitivity?: ValueType | Annotation[] | Transitivity,
+        annotationsOrTransitivity?: Annotation[] | Transitivity,
+        maybeTransitivity?: Transitivity,
+    ): Stream<AttributeType> {
+        let valueType: ValueTypeProto;
+        let annotations: TypeAnnotation[] = [];
+        let transitivity: TypeTransitivity;
+
+        if (valueTypeOrAnnotationsOrTransitivity instanceof ValueType) {
+            valueType = valueTypeOrAnnotationsOrTransitivity.proto();
+
+            valueTypeOrAnnotationsOrTransitivity = annotationsOrTransitivity;
+            annotationsOrTransitivity = maybeTransitivity;
+            maybeTransitivity = undefined;
+        }
+
+        if (Array.isArray(valueTypeOrAnnotationsOrTransitivity)) {
+            assert(typeof maybeTransitivity === "undefined");
+
+            annotations = (valueTypeOrAnnotationsOrTransitivity as Annotation[]).map(Annotation.proto);
+
+            valueTypeOrAnnotationsOrTransitivity = annotationsOrTransitivity;
+            annotationsOrTransitivity = undefined;
+        }
+
+        if (valueTypeOrAnnotationsOrTransitivity instanceof Transitivity) {
+            assert(typeof annotationsOrTransitivity === "undefined");
+            assert(typeof maybeTransitivity === "undefined");
+
+            transitivity = valueTypeOrAnnotationsOrTransitivity.proto();
+        }
+
+        const request = RequestBuilder.Type.ThingType.getOwnsReq(this.label, valueType, annotations, transitivity);
+        return this.stream(transaction, request).flatMap(
+            resPart => Stream.array(resPart.thing_type_get_owns_res_part.attribute_types)
+        ).map(AttributeTypeImpl.ofAttributeTypeProto);
+    }
+
+    async getOwnsOverridden(transaction: TypeDBTransaction, attributeType: AttributeType): Promise<AttributeType> {
+        const res = await this.execute(transaction, RequestBuilder.Type.ThingType.getOwnsOverriddenReq(this.label, AttributeType.proto(attributeType)));
+        return AttributeTypeImpl.ofAttributeTypeProto(res.thing_type_get_owns_overridden_res.attribute_type);
+    }
+
+    setOwns(transaction: TypeDBTransaction, attributeType: AttributeType): Promise<void>;
+    setOwns(transaction: TypeDBTransaction, attributeType: AttributeType, annotations: Annotation[]): Promise<void>;
+    setOwns(transaction: TypeDBTransaction, attributeType: AttributeType, overriddenType: AttributeType): Promise<void>;
+    setOwns(transaction: TypeDBTransaction, attributeType: AttributeType, overriddenType: AttributeType, annotations: Annotation[]): Promise<void>;
+    async setOwns(
+        transaction: TypeDBTransaction,
+        attributeType: AttributeType,
+        overriddenTypeOrAnnotations?: AttributeType | Annotation[],
+        maybeAnnotations?: Annotation[],
+    ): Promise<void> {
+        let overriddenType: AttributeTypeProto = null;
+        let annotations: TypeAnnotation[] = [];
+
+        if (typeof overriddenTypeOrAnnotations === "undefined") {
+            assert(typeof maybeAnnotations === "undefined");
+        } else {
+            if (Array.isArray(overriddenTypeOrAnnotations)) {
+                assert(typeof maybeAnnotations === "undefined");
+                annotations = overriddenTypeOrAnnotations.map(Annotation.proto);
+            } else {
+                overriddenType = AttributeType.proto(overriddenTypeOrAnnotations);
+                if (Array.isArray(maybeAnnotations)) {
+                    annotations = maybeAnnotations.map(Annotation.proto);
+                }
+            }
+        }
+
+        await this.execute(transaction, RequestBuilder.Type.ThingType.setOwnsReq(
+            this.label,
+            AttributeType.proto(attributeType),
+            overriddenType,
+            annotations,
+        ));
+    }
+
+    async unsetOwns(transaction: TypeDBTransaction, attributeType: AttributeType): Promise<void> {
+        await this.execute(transaction, RequestBuilder.Type.ThingType.unsetOwnsReq(this.label, AttributeType.proto(attributeType)));
+    }
+
+    getPlays(transaction: TypeDBTransaction): Stream<RoleType>;
+    getPlays(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<RoleType>;
+    getPlays(transaction: TypeDBTransaction, transitivity?: Transitivity): Stream<RoleType> {
+        if (!transitivity) transitivity = Transitivity.TRANSITIVE;
+        return this.stream(transaction, RequestBuilder.Type.ThingType.getPlaysReq(this.label, transitivity.proto())).flatMap(
+            resPart => Stream.array(resPart.thing_type_get_plays_res_part.role_types)
+        ).map(RoleTypeImpl.ofRoleTypeProto);
+    }
+
+    async getPlaysOverridden(transaction: TypeDBTransaction, role: RoleType): Promise<RoleType> {
+        const res = await this.execute(transaction, RequestBuilder.Type.ThingType.getPlaysOverriddenReq(this.label, RoleType.proto(role)));
+        return RoleTypeImpl.ofRoleTypeProto(res.thing_type_get_plays_overridden_res.role_type);
+    }
+
+    setPlays(transaction: TypeDBTransaction, role: RoleType): Promise<void>;
+    setPlays(transaction: TypeDBTransaction, role: RoleType, overriddenRole: RoleType): Promise<void>;
+    async setPlays(transaction: TypeDBTransaction, role: RoleType, overriddenRole?: RoleType): Promise<void> {
+        let overriddenProto;
+        if (typeof overriddenRole !== "undefined") overriddenProto = RoleType.proto(overriddenRole);
+        await this.execute(transaction, RequestBuilder.Type.ThingType.setPlaysReq(this.label, RoleType.proto(role), overriddenProto));
+    }
+
+    async unsetPlays(transaction: TypeDBTransaction, role: RoleType): Promise<void> {
+        await this.execute(transaction, RequestBuilder.Type.ThingType.unsetPlaysReq(this.label, RoleType.proto(role)));
+    }
+
+    async getSyntax(transaction: TypeDBTransaction): Promise<string> {
+        const res = await this.execute(transaction, RequestBuilder.Type.ThingType.getSyntaxReq(this.label));
+        return res.thing_type_get_syntax_res.syntax;
+    }
+
+    protected async execute(transaction: TypeDBTransaction, request: TransactionReq): Promise<ThingTypeRes> {
+        const ext = transaction as TypeDBTransaction.Extended;
+        return (await ext.rpcExecute(request, false)).type_res.thing_type_res;
+    }
+
+    protected stream(transaction: TypeDBTransaction, request: TransactionReq): Stream<ThingTypeResPart> {
+        const ext = transaction as TypeDBTransaction.Extended;
+        return ext.rpcStream(request).map((res) => res.type_res_part.thing_type_res_part);
+    }
 }
 
 export namespace ThingTypeImpl {
+    export class Root extends ThingTypeImpl {
+        constructor() {
+            super("thing", true, true);
+        }
 
+        async isDeleted(transaction: TypeDBTransaction): Promise<boolean> {
+            return false;
+        }
 
-    export function of(thingTypeProto: TypeProto) {
-        if (!thingTypeProto) return null;
-        switch (thingTypeProto.getEncoding()) {
-            case TypeProto.Encoding.ENTITY_TYPE:
-                return EntityTypeImpl.of(thingTypeProto);
-            case TypeProto.Encoding.RELATION_TYPE:
-                return RelationTypeImpl.of(thingTypeProto);
-            case TypeProto.Encoding.ATTRIBUTE_TYPE:
-                return AttributeTypeImpl.of(thingTypeProto);
-            case TypeProto.Encoding.THING_TYPE:
-                return new ThingTypeImpl(thingTypeProto.getLabel(), thingTypeProto.getIsRoot(), thingTypeProto.getIsAbstract());
-            default:
-                throw new TypeDBClientError(BAD_ENCODING.message(thingTypeProto.getEncoding()));
+        async getSupertype(transaction: TypeDBTransaction): Promise<ThingType> {
+            return null;
+        }
+
+        getSupertypes(transaction: TypeDBTransaction): Stream<ThingType> {
+            return Stream.array([this])
+        }
+
+        getSubtypes(transaction: TypeDBTransaction): Stream<ThingType>;
+        getSubtypes(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<ThingType>;
+        getSubtypes(transaction: TypeDBTransaction, transitivity?: Transitivity): Stream<ThingType> {
+            if (!transitivity) transitivity = Transitivity.TRANSITIVE;
+            const roots: Stream<ThingType> = Stream.promises([
+                transaction.concepts.getRootEntityType() as Promise<ThingType>,
+                transaction.concepts.getRootRelationType() as Promise<ThingType>,
+                transaction.concepts.getRootAttributeType() as Promise<ThingType>,
+            ]);
+            if (transitivity == Transitivity.EXPLICIT) return roots;
+            else return roots.flatMap(tt => tt.getSubtypes(transaction, transitivity).map(t => t as ThingType));
+        }
+
+        getInstances(transaction: TypeDBTransaction): Stream<Thing>;
+        getInstances(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<Thing>;
+        getInstances(transaction: TypeDBTransaction, transitivity?: Transitivity): Stream<Thing> {
+            if (!transitivity) transitivity = Transitivity.TRANSITIVE;
+            if (transitivity == Transitivity.EXPLICIT) return Stream.array([]);
+            else {
+                const roots: Stream<ThingType> = Stream.promises([
+                    transaction.concepts.getRootEntityType() as Promise<ThingType>,
+                    transaction.concepts.getRootRelationType() as Promise<ThingType>,
+                    transaction.concepts.getRootAttributeType() as Promise<ThingType>,
+                ]);
+                return roots.flatMap(tt => tt.getInstances(transaction, transitivity).map(t => t as Thing));
+            }
         }
     }
 
-    export class Remote extends TypeImpl.Remote implements ThingType.Remote {
-
-        constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean, abstract: boolean) {
-            super(transaction, label, root, abstract);
+    export namespace Root {
+        export function ofThingTypeRootProto(_: ThingTypeRootProto): Root {
+            return new Root();
         }
+    }
 
-        protected get className(): string {
-            return "ThingType";
-        }
-
-        asRemote(transaction: TypeDBTransaction): ThingType.Remote {
-            return new ThingTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
-        }
-
-        isThingType(): boolean {
-            return true;
-        }
-
-        asThingType(): ThingType.Remote {
-            return this;
-        }
-
-        getSubtypes(): Stream<ThingType> {
-            return super.getSubtypes() as Stream<ThingType>;
-        }
-
-        getSupertype(): Promise<ThingType> {
-            return super.getSupertype() as Promise<ThingType>;
-        }
-
-        getSupertypes(): Stream<ThingType> {
-            return super.getSupertypes() as Stream<ThingType>;
-        }
-
-        getInstances(): Stream<Thing> {
-            const request = RequestBuilder.Type.ThingType.getInstancesReq(this.label);
-            return this.stream(request)
-                .flatMap((resPart) => Stream.array(resPart.getThingTypeGetInstancesResPart().getThingsList()))
-                .map((thingProto) => ThingImpl.of(thingProto));
-        }
-
-        getOwns(): Stream<AttributeType>;
-        getOwns(valueType: Concept.ValueType): Stream<AttributeType>;
-        getOwns(annotations: Annotation[]): Stream<AttributeType>;
-        getOwns(valueType: Concept.ValueType, annotations: Annotation[]): Stream<AttributeType>;
-        getOwns(valueTypeOrAnnotationsOnly?: Concept.ValueType | Annotation[], annotations?: Annotation[]): Stream<AttributeType> {
-            let request;
-            if (!valueTypeOrAnnotationsOnly) {
-                request = RequestBuilder.Type.ThingType.getOwnsReq(this.label, []);
-            } else if (Array.isArray(valueTypeOrAnnotationsOnly)) {
-                request = RequestBuilder.Type.ThingType.getOwnsReq(
-                    this.label, (valueTypeOrAnnotationsOnly as Annotation[]).map(a => ThingType.Annotation.proto(a))
-                );
-            } else if (!annotations) {
-                request = RequestBuilder.Type.ThingType.getOwnsByTypeReq(
-                    this.label, (valueTypeOrAnnotationsOnly as Concept.ValueType).proto(), []
-                );
-            } else {
-                request = RequestBuilder.Type.ThingType.getOwnsByTypeReq(
-                    this.label, (valueTypeOrAnnotationsOnly as Concept.ValueType).proto(),
-                    annotations.map(a => ThingType.Annotation.proto(a))
-                );
-            }
-            return this.stream(request)
-                .flatMap((resPart) => Stream.array(resPart.getThingTypeGetOwnsResPart().getAttributeTypesList()))
-                .map((attributeTypeProto) => AttributeTypeImpl.of(attributeTypeProto));
-        }
-
-
-        getOwnsExplicit(): Stream<AttributeType>;
-        getOwnsExplicit(valueType: Concept.ValueType): Stream<AttributeType>;
-        getOwnsExplicit(annotations: Annotation[]): Stream<AttributeType>;
-        getOwnsExplicit(valueType: Concept.ValueType, annotations: Annotation[]): Stream<AttributeType>;
-        getOwnsExplicit(valueTypeOrAnnotationsOnly?: Concept.ValueType | Annotation[], annotations?: Annotation[]): Stream<AttributeType> {
-            let request;
-            if (!valueTypeOrAnnotationsOnly) {
-                request = RequestBuilder.Type.ThingType.getOwnsExplicitReq(this.label, []);
-            } else if (Array.isArray(valueTypeOrAnnotationsOnly)) {
-                request = RequestBuilder.Type.ThingType.getOwnsExplicitReq(
-                    this.label, (valueTypeOrAnnotationsOnly as Annotation[]).map(a => ThingType.Annotation.proto(a))
-                );
-            } else if (!annotations) {
-                request = RequestBuilder.Type.ThingType.getOwnsExplicitByTypeReq(
-                    this.label, (valueTypeOrAnnotationsOnly as Concept.ValueType).proto(), []
-                );
-            } else {
-                request = RequestBuilder.Type.ThingType.getOwnsExplicitByTypeReq(
-                    this.label, (valueTypeOrAnnotationsOnly as Concept.ValueType).proto(),
-                    annotations.map(a => ThingType.Annotation.proto(a))
-                );
-            }
-            return this.stream(request)
-                .flatMap((resPart) => Stream.array(resPart.getThingTypeGetOwnsExplicitResPart().getAttributeTypesList()))
-                .map((attributeTypeProto) => AttributeTypeImpl.of(attributeTypeProto));
-        }
-
-        async getOwnsOverridden(attributeType: AttributeType): Promise<AttributeType> {
-            const req = RequestBuilder.Type.ThingType.getOwnsOverriddenReq(this.label, ThingType.proto(attributeType));
-            return this.execute(req)
-                .then((res) => AttributeTypeImpl.of(res.getThingTypeGetOwnsOverriddenRes().getAttributeType()));
-        }
-
-        async setOwns(attributeType: AttributeType): Promise<void>;
-        async setOwns(attributeType: AttributeType, annotations: Annotation[]): Promise<void>;
-        async setOwns(attributeType: AttributeType, overriddenType: AttributeType): Promise<void>;
-        async setOwns(attributeType: AttributeType, overriddenTypeOrAnnotations?: AttributeType | Annotation[], annotations?: Annotation[]): Promise<void> {
-            let request;
-            if (!overriddenTypeOrAnnotations) {
-                request = RequestBuilder.Type.ThingType.setOwnsReq(this.label, ThingType.proto(attributeType), []);
-            } else if (Array.isArray(overriddenTypeOrAnnotations)) {
-                request = RequestBuilder.Type.ThingType.setOwnsReq(this.label, ThingType.proto(attributeType),
-                    (overriddenTypeOrAnnotations as Annotation[]).map(a => ThingType.Annotation.proto(a))
-                );
-            } else if (!annotations) {
-                request = RequestBuilder.Type.ThingType.setOwnsOverriddenReq(
-                    this.label, ThingType.proto(attributeType),
-                    ThingType.proto((overriddenTypeOrAnnotations as AttributeType)),
-                    []
-                );
-            } else {
-                request = RequestBuilder.Type.ThingType.setOwnsOverriddenReq(
-                    this.label, ThingType.proto(attributeType),
-                    ThingType.proto(overriddenTypeOrAnnotations as AttributeType),
-                    annotations.map(a => ThingType.Annotation.proto(a))
-                );
-            }
-            await this.execute(request);
-        }
-
-        async unsetOwns(attributeType: AttributeType): Promise<void> {
-            const request = RequestBuilder.Type.ThingType.unsetOwnsReq(this.label, ThingType.proto(attributeType));
-            await this.execute(request);
-        }
-
-        getPlays(): Stream<RoleType> {
-            const request = RequestBuilder.Type.ThingType.getPlaysReq(this.label);
-            return this.stream(request)
-                .flatMap((resPart) => Stream.array(resPart.getThingTypeGetPlaysResPart().getRoleTypesList()))
-                .map((roleProto) => RoleTypeImpl.of(roleProto));
-        }
-
-        getPlaysExplicit(): Stream<RoleType> {
-            const request = RequestBuilder.Type.ThingType.getPlaysExplicitReq(this.label);
-            return this.stream(request)
-                .flatMap((resPart) => Stream.array(resPart.getThingTypeGetPlaysExplicitResPart().getRoleTypesList()))
-                .map((roleProto) => RoleTypeImpl.of(roleProto));
-        }
-
-        async getPlaysOverridden(role: RoleType): Promise<RoleType> {
-            const request = RequestBuilder.Type.ThingType.getPlaysOverriddenReq(this.label);
-            return this.execute(request)
-                .then((res) => RoleTypeImpl.of(res.getThingTypeGetPlaysOverriddenRes().getRoleType()));
-        }
-
-        async setPlays(role: RoleType): Promise<void>;
-        async setPlays(role: RoleType, overriddenType?: RoleType): Promise<void> {
-            let request;
-            if (!overriddenType) {
-                request = RequestBuilder.Type.ThingType.setPlaysReq(this.label, RoleType.proto(role));
-            } else {
-                request = RequestBuilder.Type.ThingType.setPlaysOverriddenReq(this.label, RoleType.proto(role), RoleType.proto(overriddenType));
-            }
-            await this.execute(request);
-        }
-
-        async unsetPlays(role: RoleType): Promise<void> {
-            const request = RequestBuilder.Type.ThingType.unsetPlaysReq(this.label, RoleType.proto(role));
-            await this.execute(request);
-        }
-
-        async setAbstract(): Promise<void> {
-            const request = RequestBuilder.Type.ThingType.setAbstractReq(this.label);
-            await this.execute(request);
-        }
-
-        async unsetAbstract(): Promise<void> {
-            const request = RequestBuilder.Type.ThingType.unsetAbstractReq(this.label);
-            await this.execute(request);
-        }
-
-        async isDeleted(): Promise<boolean> {
-            return (await this.transaction.concepts.getThingType(this.label.name)) != null;
-        }
-
-        protected async setSupertype(thingType: ThingType): Promise<void> {
-            const request = RequestBuilder.Type.ThingType.setSupertypeReq(this.label, ThingType.proto(thingType));
-            await this.execute(request);
-        }
-
-        async getSyntax(): Promise<string> {
-            const request = RequestBuilder.Type.ThingType.getSyntaxReq(this.label);
-            return (await this.execute(request)).getThingTypeGetSyntaxRes().getSyntax();
-        }
+    export function ofThingTypeProto(proto: ThingTypeProto): ThingType {
+        if (proto.has_entity_type) return EntityTypeImpl.ofEntityTypeProto(proto.entity_type);
+        else if (proto.has_relation_type) return RelationTypeImpl.ofRelationTypeProto(proto.relation_type);
+        else if (proto.has_attribute_type) return AttributeTypeImpl.ofAttributeTypeProto(proto.attribute_type);
+        else if (proto.has_thing_type_root) return ThingTypeImpl.Root.ofThingTypeRootProto(proto.thing_type_root);
+        else throw new TypeDBClientError(BAD_ENCODING.message(proto));
     }
 }

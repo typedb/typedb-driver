@@ -19,28 +19,24 @@
  * under the License.
  */
 
-import { Type as TypeProto } from "typedb-protocol/common/concept_pb";
-import { Relation } from "../../api/concept/thing/Relation";
-import { RelationType } from "../../api/concept/type/RelationType";
-import { RoleType } from "../../api/concept/type/RoleType";
-import { TypeDBTransaction } from "../../api/connection/TypeDBTransaction";
-import { Label } from "../../common/Label";
-import { RequestBuilder } from "../../common/rpc/RequestBuilder";
-import { Stream } from "../../common/util/Stream";
-import { RelationImpl, RoleTypeImpl, ThingTypeImpl } from "../../dependencies_internal";
+import {RelationType as RelationTypeProto} from "typedb-protocol/proto/concept";
+import {Relation} from "../../api/concept/thing/Relation";
+import {RelationType} from "../../api/concept/type/RelationType";
+import {RoleType} from "../../api/concept/type/RoleType";
+import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
+import {RequestBuilder} from "../../common/rpc/RequestBuilder";
+import {Stream} from "../../common/util/Stream";
+import {RelationImpl, RoleTypeImpl, ThingTypeImpl} from "../../dependencies_internal";
+import {Concept} from "../../api/concept/Concept";
+import Transitivity = Concept.Transitivity;
 
 export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
-
     constructor(label: string, root: boolean, abstract: boolean) {
         super(label, root, abstract);
     }
 
     protected get className(): string {
         return "RelationType";
-    }
-
-    asRemote(transaction: TypeDBTransaction): RelationType.Remote {
-        return new RelationTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
     }
 
     isRelationType(): boolean {
@@ -50,103 +46,80 @@ export class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     asRelationType(): RelationType {
         return this;
     }
+
+    async isDeleted(transaction: TypeDBTransaction): Promise<boolean> {
+        return !(await transaction.concepts.getRelationType(this.label.name));
+    }
+
+    async create(transaction: TypeDBTransaction): Promise<Relation> {
+        const res = await this.execute(transaction, RequestBuilder.Type.RelationType.createReq(this.label));
+        return RelationImpl.ofRelationProto(res.relation_type_create_res.relation);
+    }
+
+    async getSupertype(transaction: TypeDBTransaction): Promise<RelationType> {
+        const res = await this.execute(transaction, RequestBuilder.Type.RelationType.getSupertypeReq(this.label));
+        return RelationTypeImpl.ofRelationTypeProto(res.relation_type_get_supertype_res.relation_type);
+    }
+
+    async setSupertype(transaction: TypeDBTransaction, superRelationType: RelationType): Promise<void> {
+        await this.execute(transaction, RequestBuilder.Type.RelationType.setSupertypeReq(this.label, RelationType.proto(superRelationType)));
+    }
+
+    getSupertypes(transaction: TypeDBTransaction): Stream<RelationType> {
+        return this.stream(transaction, RequestBuilder.Type.RelationType.getSupertypesReq(this.label)).flatMap(
+            resPart => Stream.array(resPart.relation_type_get_supertypes_res_part.relation_types)
+        ).map(RelationTypeImpl.ofRelationTypeProto);
+    }
+
+    getSubtypes(transaction: TypeDBTransaction): Stream<RelationType>;
+    getSubtypes(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<RelationType>;
+    getSubtypes(transaction: TypeDBTransaction, transitivity?: Transitivity): Stream<RelationType> {
+        if (!transitivity) transitivity = Transitivity.TRANSITIVE;
+        return this.stream(transaction, RequestBuilder.Type.RelationType.getSubtypesReq(this.label, transitivity.proto())).flatMap(
+            resPart => Stream.array(resPart.relation_type_get_subtypes_res_part.relation_types)
+        ).map(RelationTypeImpl.ofRelationTypeProto);
+    }
+
+    getInstances(transaction: TypeDBTransaction): Stream<Relation>;
+    getInstances(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<Relation>;
+    getInstances(transaction: TypeDBTransaction, transitivity?: Transitivity): Stream<Relation> {
+        if (!transitivity) transitivity = Transitivity.TRANSITIVE;
+        return this.stream(transaction, RequestBuilder.Type.RelationType.getInstancesReq(this.label, transitivity.proto())).flatMap(
+            resPart => Stream.array(resPart.relation_type_get_instances_res_part.relations)
+        ).map(RelationImpl.ofRelationProto);
+    }
+
+    getRelates(transaction: TypeDBTransaction): Stream<RoleType>;
+    getRelates(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<RoleType>;
+    getRelates(transaction: TypeDBTransaction, transitivity?: Transitivity): Stream<RoleType> {
+        if (!transitivity) transitivity = Transitivity.TRANSITIVE;
+        return this.stream(transaction, RequestBuilder.Type.RelationType.getRelatesReq(this.label, transitivity.proto())).flatMap(
+            resPart => Stream.array(resPart.relation_type_get_relates_res_part.role_types)
+        ).map(RoleTypeImpl.ofRoleTypeProto);
+    }
+
+    async getRelatesForRoleLabel(transaction: TypeDBTransaction, roleLabel: string): Promise<RoleType | null> {
+        const res = await this.execute(transaction, RequestBuilder.Type.RelationType.getRelatesForRoleLabel(this.label, roleLabel));
+        return RoleTypeImpl.ofRoleTypeProto(res.relation_type_get_relates_for_role_label_res.role_type);
+    }
+
+    async getRelatesOverridden(transaction: TypeDBTransaction, roleLabel: string): Promise<RoleType | null> {
+        const res = await this.execute(transaction, RequestBuilder.Type.RelationType.getRelatesOverriddenReq(this.label, roleLabel));
+        return RoleTypeImpl.ofRoleTypeProto(res.relation_type_get_relates_overridden_res.role_type);
+    }
+
+    async setRelates(transaction: TypeDBTransaction, roleLabel: string, overriddenLabel?: string): Promise<void> {
+        await this.execute(transaction, RequestBuilder.Type.RelationType.setRelatesReq(this.label, roleLabel, overriddenLabel));
+    }
+
+    async unsetRelates(transaction: TypeDBTransaction, roleLabel: string): Promise<void> {
+        await this.execute(transaction, RequestBuilder.Type.RelationType.unsetRelatesReq(this.label, roleLabel));
+    }
 }
 
 export namespace RelationTypeImpl {
-
-    export function of(relationTypeProto: TypeProto) {
-        if (!relationTypeProto) return null;
-        return new RelationTypeImpl(relationTypeProto.getLabel(), relationTypeProto.getIsRoot(), relationTypeProto.getIsAbstract());
-    }
-
-    export class Remote extends ThingTypeImpl.Remote implements RelationType.Remote {
-
-        constructor(transaction: TypeDBTransaction.Extended, label: Label, root: boolean, abstract: boolean) {
-            super(transaction, label, root, abstract);
-        }
-
-        protected get className(): string {
-            return "RelationType";
-        }
-
-        asRemote(transaction: TypeDBTransaction): RelationType.Remote {
-            return new RelationTypeImpl.Remote(transaction as TypeDBTransaction.Extended, this.label, this.root, this.abstract);
-        }
-
-        isRelationType(): boolean {
-            return true;
-        }
-
-        asRelationType(): RelationType.Remote {
-            return this;
-        }
-
-        async create(): Promise<Relation> {
-            const request = RequestBuilder.Type.RelationType.createReq(this.label);
-            return this.execute(request).then((res) => RelationImpl.of(res.getRelationTypeCreateRes().getRelation()));
-        }
-
-        getSubtypes(): Stream<RelationType> {
-            return super.getSubtypes() as Stream<RelationType>;
-        }
-
-        setSupertype(relationType: RelationType): Promise<void> {
-            return super.setSupertype(relationType);
-        }
-
-        getInstances(): Stream<Relation> {
-            return super.getInstances() as Stream<Relation>;
-        }
-
-        getRelates(): Stream<RoleType>;
-        getRelates(roleLabel: string): Promise<RoleType>;
-        getRelates(roleLabel?: string): Promise<RoleType> | Stream<RoleType> {
-            if (roleLabel) {
-                const request = RequestBuilder.Type.RelationType.getRelatesByRoleReq(this.label, roleLabel);
-                return this.execute(request)
-                    .then((res) => RoleTypeImpl.of(res.getRelationTypeGetRelatesForRoleLabelRes().getRoleType()));
-            } else {
-                const request = RequestBuilder.Type.RelationType.getRelatesReq(this.label);
-                return this.stream(request)
-                    .flatMap((resPart) => {
-                        return Stream.array(resPart.getRelationTypeGetRelatesResPart().getRoleTypesList())
-                    })
-                    .map((roleProto) => {
-                        return RoleTypeImpl.of(roleProto)
-                    });
-            }
-        }
-
-        getRelatesExplicit(): Stream<RoleType> {
-            const request = RequestBuilder.Type.RelationType.getRelatesExplicitReq(this.label);
-            return this.stream(request)
-                .flatMap((resPart) => {
-                    return Stream.array(resPart.getRelationTypeGetRelatesExplicitResPart().getRoleTypesList())
-                })
-                .map((roleProto) => {
-                    return RoleTypeImpl.of(roleProto)
-                });
-        }
-
-        async getRelatesOverridden(roleLabel: string): Promise<RoleType> {
-            const request = RequestBuilder.Type.RelationType.getRelatesOverridden(this.label, roleLabel);
-            return this.execute(request)
-                .then((res) => RoleTypeImpl.of(res.getRelationTypeGetRelatesOverriddenRes().getRoleType()));
-        }
-
-        async setRelates(roleLabel: string, overriddenLabel?: string): Promise<void> {
-            let request;
-            if (overriddenLabel) {
-                request = RequestBuilder.Type.RelationType.setRelatesOverriddenReq(this.label, roleLabel, overriddenLabel);
-            } else {
-                request = RequestBuilder.Type.RelationType.setRelatesReq(this.label, roleLabel);
-            }
-            await this.execute(request);
-        }
-
-        async unsetRelates(roleLabel: string): Promise<void> {
-            const request = RequestBuilder.Type.RelationType.unsetRelatesReq(this.label, roleLabel);
-            await this.execute(request);
-        }
+    export function ofRelationTypeProto(proto: RelationTypeProto): RelationType {
+        if (!proto) return null;
+        return new RelationTypeImpl(proto.label, proto.is_root, proto.is_abstract);
     }
 }

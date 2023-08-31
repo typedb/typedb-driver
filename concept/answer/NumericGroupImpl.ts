@@ -19,16 +19,14 @@
  * under the License.
  */
 
-import {NumericGroup as NumericGroupProto} from "typedb-protocol/common/answer_pb";
+import {NumericGroup as NumericGroupProto} from "typedb-protocol/proto/answer";
 import {Numeric} from "../../api/answer/Numeric";
 import {NumericGroup} from "../../api/answer/NumericGroup";
 import {Concept} from "../../api/concept/Concept";
-import {ThingImpl, TypeImpl} from "../../dependencies_internal";
 import {NumericImpl} from "./NumericImpl";
-import {ValueImpl} from "../value/ValueImpl";
+import {ResponseReader} from "../../common/rpc/ResponseReader";
 
 export class NumericGroupImpl implements NumericGroup {
-
     private readonly _owner: Concept;
     private readonly _numeric: Numeric;
 
@@ -47,12 +45,7 @@ export class NumericGroupImpl implements NumericGroup {
 }
 
 export namespace NumericGroupImpl {
-
     export function of(numericGroupProto: NumericGroupProto) {
-        let concept: Concept;
-        if (numericGroupProto.getOwner().hasThing()) concept = ThingImpl.of(numericGroupProto.getOwner().getThing());
-        else if (numericGroupProto.getOwner().hasType()) concept = TypeImpl.of(numericGroupProto.getOwner().getType());
-        else concept = ValueImpl.of(numericGroupProto.getOwner().getValue());
-        return new NumericGroupImpl(concept, NumericImpl.of(numericGroupProto.getNumber()))
+        return new NumericGroupImpl(ResponseReader.Concept.of(numericGroupProto.owner), NumericImpl.of(numericGroupProto.number))
     }
 }

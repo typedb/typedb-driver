@@ -22,362 +22,56 @@
 import {Stream} from "../../../common/util/Stream";
 import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
 import {Attribute} from "../thing/Attribute";
-import {Entity} from "../thing/Entity";
-import {Relation} from "../thing/Relation";
-import {Thing} from "../thing/Thing";
-import {EntityType} from "./EntityType";
-import {RelationType} from "./RelationType";
-import {RoleType} from "./RoleType";
 import {ThingType} from "./ThingType";
-import {Type} from "./Type";
 import {Concept} from "../Concept";
+import {Value} from "../value/Value";
+import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 import Annotation = ThingType.Annotation;
+import Transitivity = Concept.Transitivity;
+import ValueType = Concept.ValueType;
 
 export interface AttributeType extends ThingType {
+    readonly valueType: ValueType;
 
-    readonly valueType: Concept.ValueType;
+    put(transaction: TypeDBTransaction, value: Value): Promise<Attribute>;
+    putBoolean(transaction: TypeDBTransaction, value: boolean): Promise<Attribute>;
+    putLong(transaction: TypeDBTransaction, value: number): Promise<Attribute>;
+    putDouble(transaction: TypeDBTransaction, value: number): Promise<Attribute>;
+    putString(transaction: TypeDBTransaction, value: string): Promise<Attribute>;
+    putDateTime(transaction: TypeDBTransaction, value: Date): Promise<Attribute>;
 
-    isBoolean(): boolean;
+    get(transaction: TypeDBTransaction, value: Value): Promise<Attribute>;
+    getBoolean(transaction: TypeDBTransaction, value: boolean): Promise<Attribute>;
+    getLong(transaction: TypeDBTransaction, value: number): Promise<Attribute>;
+    getDouble(transaction: TypeDBTransaction, value: number): Promise<Attribute>;
+    getString(transaction: TypeDBTransaction, value: string): Promise<Attribute>;
+    getDateTime(transaction: TypeDBTransaction, value: Date): Promise<Attribute>;
 
-    isLong(): boolean;
+    getSupertype(transaction: TypeDBTransaction): Promise<AttributeType>;
+    setSupertype(transaction: TypeDBTransaction, type: AttributeType): Promise<void>;
 
-    isDouble(): boolean;
+    getSupertypes(transaction: TypeDBTransaction): Stream<AttributeType>;
 
-    isString(): boolean;
+    getSubtypes(transaction: TypeDBTransaction): Stream<AttributeType>;
+    getSubtypes(transaction: TypeDBTransaction, valueType: ValueType): Stream<AttributeType>;
+    getSubtypes(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<AttributeType>;
+    getSubtypes(transaction: TypeDBTransaction, valueType: ValueType, transitivity: Transitivity): Stream<AttributeType>;
 
-    isDateTime(): boolean;
+    getInstances(transaction: TypeDBTransaction): Stream<Attribute>;
+    getInstances(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<Attribute>;
 
-    asBoolean(): AttributeType.Boolean;
+    getOwners(transaction: TypeDBTransaction): Stream<ThingType>;
+    getOwners(transaction: TypeDBTransaction, annotations: Annotation[]): Stream<ThingType>;
+    getOwners(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<ThingType>;
+    getOwners(transaction: TypeDBTransaction, annotations: Annotation[], transitivity: Transitivity): Stream<ThingType>;
 
-    asLong(): AttributeType.Long;
-
-    asDouble(): AttributeType.Double;
-
-    asString(): AttributeType.String;
-
-    asDateTime(): AttributeType.DateTime;
-
-    asRemote(transaction: TypeDBTransaction): AttributeType.Remote;
+    getRegex(transaction: TypeDBTransaction): Promise<string>;
+    setRegex(transaction: TypeDBTransaction, regex: string): Promise<void>;
+    unsetRegex(transaction: TypeDBTransaction): Promise<void>;
 }
 
-/* eslint @typescript-eslint/ban-types: "off" */
 export namespace AttributeType {
-
-    export interface Remote extends AttributeType, ThingType.Remote {
-
-        setSupertype(type: AttributeType): Promise<void>;
-
-        getSubtypes(): Stream<AttributeType>;
-
-        getInstances(): Stream<Attribute>;
-
-        getOwners(): Stream<ThingType>;
-
-        getOwners(annotations: Annotation[]): Stream<ThingType>;
-
-        getOwnersExplicit(): Stream<ThingType>;
-
-        getOwnersExplicit(annotations: Annotation[]): Stream<ThingType>;
-
-        asType(): Type.Remote;
-
-        asThingType(): ThingType.Remote;
-
-        asEntityType(): EntityType.Remote;
-
-        asAttributeType(): AttributeType.Remote;
-
-        asRelationType(): RelationType.Remote;
-
-        asRoleType(): RoleType.Remote;
-
-        asThing(): Thing.Remote;
-
-        asEntity(): Entity.Remote;
-
-        asAttribute(): Attribute.Remote;
-
-        asRelation(): Relation.Remote;
-
-        asBoolean(): AttributeType.Boolean.Remote;
-
-        asLong(): AttributeType.Long.Remote;
-
-        asDouble(): AttributeType.Double.Remote;
-
-        asString(): AttributeType.String.Remote;
-
-        asDateTime(): AttributeType.DateTime.Remote;
-
-        asRemote(transaction: TypeDBTransaction): AttributeType.Remote;
-    }
-
-    export interface Boolean extends AttributeType {
-
-        asRemote(transaction: TypeDBTransaction): AttributeType.Boolean.Remote;
-    }
-
-    export namespace Boolean {
-
-        export interface Remote extends AttributeType.Boolean, AttributeType.Remote {
-
-            asRemote(transaction: TypeDBTransaction): AttributeType.Boolean.Remote;
-
-            asType(): Type.Remote;
-
-            asThingType(): ThingType.Remote;
-
-            asEntityType(): EntityType.Remote;
-
-            asAttributeType(): AttributeType.Remote;
-
-            asRelationType(): RelationType.Remote;
-
-            asRoleType(): RoleType.Remote;
-
-            asThing(): Thing.Remote;
-
-            asEntity(): Entity.Remote;
-
-            asAttribute(): Attribute.Remote;
-
-            asRelation(): Relation.Remote;
-
-            asBoolean(): AttributeType.Boolean.Remote;
-
-            asLong(): AttributeType.Long.Remote;
-
-            asDouble(): AttributeType.Double.Remote;
-
-            asString(): AttributeType.String.Remote;
-
-            asDateTime(): AttributeType.DateTime.Remote;
-
-            setSupertype(type: Boolean): Promise<void>;
-
-            getSubtypes(): Stream<Boolean>;
-
-            getInstances(): Stream<Attribute.Boolean>;
-
-            put(value: boolean): Promise<Attribute.Boolean>;
-
-            get(value: boolean): Promise<Attribute.Boolean>;
-        }
-    }
-
-    export interface Long extends AttributeType {
-
-        asRemote(transaction: TypeDBTransaction): AttributeType.Long.Remote;
-    }
-
-    export namespace Long {
-
-        export interface Remote extends AttributeType.Long, AttributeType.Remote {
-
-            asRemote(transaction: TypeDBTransaction): AttributeType.Long.Remote;
-
-            asType(): Type.Remote;
-
-            asThingType(): ThingType.Remote;
-
-            asEntityType(): EntityType.Remote;
-
-            asAttributeType(): AttributeType.Remote;
-
-            asRelationType(): RelationType.Remote;
-
-            asRoleType(): RoleType.Remote;
-
-            asThing(): Thing.Remote;
-
-            asEntity(): Entity.Remote;
-
-            asAttribute(): Attribute.Remote;
-
-            asRelation(): Relation.Remote;
-
-            asBoolean(): AttributeType.Boolean.Remote;
-
-            asLong(): AttributeType.Long.Remote;
-
-            asDouble(): AttributeType.Double.Remote;
-
-            asString(): AttributeType.String.Remote;
-
-            asDateTime(): AttributeType.DateTime.Remote;
-
-            setSupertype(type: Long): Promise<void>;
-
-            getSubtypes(): Stream<Long>;
-
-            getInstances(): Stream<Attribute.Long>;
-
-            put(value: number): Promise<Attribute.Long>;
-
-            get(value: number): Promise<Attribute.Long>;
-        }
-    }
-
-    export interface Double extends AttributeType {
-
-        asRemote(transaction: TypeDBTransaction): AttributeType.Double.Remote;
-    }
-
-    export namespace Double {
-
-        export interface Remote extends AttributeType.Double, AttributeType.Remote {
-
-            asRemote(transaction: TypeDBTransaction): AttributeType.Double.Remote;
-
-            asType(): Type.Remote;
-
-            asThingType(): ThingType.Remote;
-
-            asEntityType(): EntityType.Remote;
-
-            asAttributeType(): AttributeType.Remote;
-
-            asRelationType(): RelationType.Remote;
-
-            asRoleType(): RoleType.Remote;
-
-            asThing(): Thing.Remote;
-
-            asEntity(): Entity.Remote;
-
-            asAttribute(): Attribute.Remote;
-
-            asRelation(): Relation.Remote;
-
-            asBoolean(): AttributeType.Boolean.Remote;
-
-            asLong(): AttributeType.Long.Remote;
-
-            asDouble(): AttributeType.Double.Remote;
-
-            asString(): AttributeType.String.Remote;
-
-            asDateTime(): AttributeType.DateTime.Remote;
-
-            setSupertype(type: Double): Promise<void>;
-
-            getSubtypes(): Stream<Double>;
-
-            getInstances(): Stream<Attribute.Double>;
-
-            put(value: number): Promise<Attribute.Double>;
-
-            get(value: number): Promise<Attribute.Double>;
-        }
-    }
-
-    export interface String extends AttributeType {
-
-        asRemote(transaction: TypeDBTransaction): AttributeType.String.Remote;
-    }
-
-    export namespace String {
-
-        export interface Remote extends AttributeType.String, AttributeType.Remote {
-
-            asRemote(transaction: TypeDBTransaction): AttributeType.String.Remote;
-
-            asType(): Type.Remote;
-
-            asThingType(): ThingType.Remote;
-
-            asEntityType(): EntityType.Remote;
-
-            asAttributeType(): AttributeType.Remote;
-
-            asRelationType(): RelationType.Remote;
-
-            asRoleType(): RoleType.Remote;
-
-            asThing(): Thing.Remote;
-
-            asEntity(): Entity.Remote;
-
-            asAttribute(): Attribute.Remote;
-
-            asRelation(): Relation.Remote;
-
-            asBoolean(): AttributeType.Boolean.Remote;
-
-            asLong(): AttributeType.Long.Remote;
-
-            asDouble(): AttributeType.Double.Remote;
-
-            asString(): AttributeType.String.Remote;
-
-            asDateTime(): AttributeType.DateTime.Remote;
-
-            setSupertype(type: String): Promise<void>;
-
-            getSubtypes(): Stream<String>;
-
-            getInstances(): Stream<Attribute.String>;
-
-            put(value: string): Promise<Attribute.String>;
-
-            get(value: string): Promise<Attribute.String>;
-
-            getRegex(): Promise<string>;
-
-            setRegex(regex: string): Promise<void>;
-        }
-    }
-
-    export interface DateTime extends AttributeType {
-
-        asRemote(transaction: TypeDBTransaction): AttributeType.DateTime.Remote;
-    }
-
-    export namespace DateTime {
-
-        export interface Remote extends AttributeType.DateTime, AttributeType.Remote {
-
-            asRemote(transaction: TypeDBTransaction): AttributeType.DateTime.Remote;
-
-            asType(): Type.Remote;
-
-            asThingType(): ThingType.Remote;
-
-            asEntityType(): EntityType.Remote;
-
-            asAttributeType(): AttributeType.Remote;
-
-            asRelationType(): RelationType.Remote;
-
-            asRoleType(): RoleType.Remote;
-
-            asThing(): Thing.Remote;
-
-            asEntity(): Entity.Remote;
-
-            asAttribute(): Attribute.Remote;
-
-            asRelation(): Relation.Remote;
-
-            asBoolean(): AttributeType.Boolean.Remote;
-
-            asLong(): AttributeType.Long.Remote;
-
-            asDouble(): AttributeType.Double.Remote;
-
-            asString(): AttributeType.String.Remote;
-
-            asDateTime(): AttributeType.DateTime.Remote;
-
-            setSupertype(type: DateTime): Promise<void>;
-
-            getSubtypes(): Stream<DateTime>;
-
-            getInstances(): Stream<Attribute.DateTime>;
-
-            put(value: Date): Promise<Attribute.DateTime>;
-
-            get(value: Date): Promise<Attribute.DateTime>;
-        }
+    export function proto(attributeType: AttributeType) {
+        return RequestBuilder.Type.AttributeType.protoAttributeType(attributeType.label);
     }
 }

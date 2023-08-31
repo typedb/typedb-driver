@@ -19,50 +19,16 @@
  * under the License.
  */
 
-import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
-import { AttributeType } from "../type/AttributeType";
-import { EntityType } from "../type/EntityType";
-import { RelationType } from "../type/RelationType";
-import { RoleType } from "../type/RoleType";
-import { ThingType } from "../type/ThingType";
-import { Type } from "../type/Type";
-import { Attribute } from "./Attribute";
-import { Relation } from "./Relation";
-import { Thing } from "./Thing";
+import {EntityType} from "../type/EntityType";
+import {Thing} from "./Thing";
+import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface Entity extends Thing {
-
-    asRemote(transaction: TypeDBTransaction): Entity.Remote;
-
     readonly type: EntityType;
 }
 
 export namespace Entity {
-
-    export interface Remote extends Entity, Thing.Remote {
-
-        asRemote(transaction: TypeDBTransaction): Entity.Remote;
-
-        readonly type: EntityType;
-
-        asType(): Type.Remote;
-
-        asThingType(): ThingType.Remote;
-
-        asEntityType(): EntityType.Remote;
-
-        asAttributeType(): AttributeType.Remote;
-
-        asRelationType(): RelationType.Remote;
-
-        asRoleType(): RoleType.Remote;
-
-        asThing(): Thing.Remote;
-
-        asEntity(): Entity.Remote;
-
-        asAttribute(): Attribute.Remote;
-
-        asRelation(): Relation.Remote;
+    export function proto(relation: Entity) {
+        return RequestBuilder.Thing.Entity.protoEntity(relation.iid);
     }
 }

@@ -19,10 +19,9 @@
 # under the License.
 #
 
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//test/behaviour:rules.bzl", "node_cucumber_test")
-
-exports_files(["UserSteps.ts"])
+load("//test/behaviour:rules.bzl", "node_cucumber_test", "behaviour_test_ts_config")
 
 checkstyle_test(
     name = "checkstyle",
@@ -30,12 +29,23 @@ checkstyle_test(
     license_type = "apache-header",
 )
 
+ts_project(
+    name = "steps",
+    srcs = ["UserSteps.ts"],
+    tsconfig = behaviour_test_ts_config(),
+    deps = [
+        "//:client-nodejs",
+        "//:node_modules/@cucumber/cucumber",
+        "//test/behaviour/util:util",
+        "//test/behaviour/connection:steps-base",
+    ],
+    resolve_json_module = True,
+    visibility = ["//visibility:public"],
+)
+
 node_cucumber_test(
     name = "test-cluster",
-    steps = "//test/behaviour:steps-cluster-targz",
-    native_typedb_artifact = "//test:native-typedb-cluster-artifact",
+    steps = "@//test/behaviour/connection:steps-cluster",
     features = ["@vaticle_typedb_behaviour//connection:user.feature"],
-    node_modules = "//:node_modules",
-    package_json = "//:package.json",
-    client = "//:client-nodejs-targz",
+    data = [":steps"],
 )

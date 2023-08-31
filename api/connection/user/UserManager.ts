@@ -19,19 +19,18 @@
  * under the License.
  */
 
-import { User } from "./User";
+import {User} from "./User";
 
 export interface UserManager {
-
     contains(name: string): Promise<boolean>;
 
     create(name: string, password: string): Promise<void>;
 
     delete(name: string): Promise<void>;
 
-    get(name: string): Promise<User>;
-
     all(): Promise<User[]>;
 
     passwordSet(name: string, password: string): Promise<void>;
+
+    get(name: string): Promise<User>;
 }

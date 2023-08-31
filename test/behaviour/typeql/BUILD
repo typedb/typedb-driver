@@ -19,13 +19,30 @@
 # under the License.
 #
 
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//test/behaviour:rules.bzl", "typedb_behaviour_node_test")
-
-exports_files(["TypeQLSteps.ts"])
+load("//test/behaviour:rules.bzl", "behaviour_test_ts_config")
 
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
     license_type = "apache-header",
+)
+
+ts_project(
+    name = "steps",
+    srcs = ["TypeQLSteps.ts"],
+    tsconfig = behaviour_test_ts_config(),
+    deps = [
+        "//:client-nodejs",
+
+        "//:node_modules/@cucumber/cucumber",
+
+        "//test/behaviour/config:parameters",
+        "//test/behaviour/connection:steps-base",
+        "//test/behaviour/util:util",
+    ],
+    declaration = True,
+    resolve_json_module = True,
+    visibility = ["//visibility:public"],
 )

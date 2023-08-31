@@ -19,62 +19,30 @@
  * under the License.
  */
 
-import { Stream } from "../../../common/util/Stream";
-import { TypeDBTransaction } from "../../connection/TypeDBTransaction";
-import { AttributeType } from "../type/AttributeType";
-import { EntityType } from "../type/EntityType";
-import { RelationType } from "../type/RelationType";
-import { RoleType } from "../type/RoleType";
-import { ThingType } from "../type/ThingType";
-import { Type } from "../type/Type";
-import { Attribute } from "./Attribute";
-import { Entity } from "./Entity";
-import { Thing } from "./Thing";
+import {Stream} from "../../../common/util/Stream";
+import {TypeDBTransaction} from "../../connection/TypeDBTransaction";
+import {RelationType} from "../type/RelationType";
+import {RoleType} from "../type/RoleType";
+import {Thing} from "./Thing";
+import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface Relation extends Thing {
-
-    asRemote(transaction: TypeDBTransaction): Relation.Remote;
-
     readonly type: RelationType;
+
+    addRolePlayer(transaction: TypeDBTransaction, roleType: RoleType, player: Thing): Promise<void>;
+
+    removeRolePlayer(transaction: TypeDBTransaction, roleType: RoleType, player: Thing): Promise<void>;
+
+    getPlayersByRoleType(transaction: TypeDBTransaction): Stream<Thing>;
+    getPlayersByRoleType(transaction: TypeDBTransaction, roleTypes: RoleType[]): Stream<Thing>;
+
+    getRolePlayers(transaction: TypeDBTransaction): Promise<Map<RoleType, Thing[]>>;
+
+    getRelating(transaction: TypeDBTransaction): Stream<RoleType>;
 }
 
 export namespace Relation {
-
-    export interface Remote extends Relation, Thing.Remote {
-
-        asRemote(transaction: TypeDBTransaction): Relation.Remote;
-
-        readonly type: RelationType;
-
-        asType(): Type.Remote;
-
-        asThingType(): ThingType.Remote;
-
-        asEntityType(): EntityType.Remote;
-
-        asAttributeType(): AttributeType.Remote;
-
-        asRelationType(): RelationType.Remote;
-
-        asRoleType(): RoleType.Remote;
-
-        asThing(): Thing.Remote;
-
-        asEntity(): Entity.Remote;
-
-        asAttribute(): Attribute.Remote;
-
-        asRelation(): Relation.Remote;
-
-        addPlayer(roleType: RoleType, player: Thing): Promise<void>;
-
-        removePlayer(roleType: RoleType, player: Thing): Promise<void>;
-
-        getPlayers(roleTypes?: RoleType[]): Stream<Thing>;
-
-        getPlayersByRoleType(): Promise<Map<RoleType, Thing[]>>;
-
-        getRelating(): Stream<RoleType>;
+    export function proto(relation: Relation) {
+        return RequestBuilder.Thing.Relation.protoRelation(relation.iid);
     }
 }
-

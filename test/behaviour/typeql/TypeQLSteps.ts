@@ -28,6 +28,7 @@ import {tx} from "../connection/ConnectionStepsBase";
 import {assertThrows, assertThrowsWithMessage, splitString} from "../util/Util";
 import assert = require("assert");
 import Annotation = ThingType.Annotation;
+import ValueType = Concept.ValueType;
 
 export let answers: ConceptMap[] = [];
 let numericAnswer: Numeric;
@@ -205,16 +206,23 @@ abstract class AttributeMatcher implements ConceptMatcher {
     }
 
     check(attribute: Attribute) {
-        if (attribute.isBoolean()) return attribute.asBoolean().value === parseBool(this.value);
-        else if (attribute.isLong()) return attribute.asLong().value === parseInt(this.value);
-        else if (attribute.isDouble()) return attribute.asDouble().value === parseFloat(this.value);
-        else if (attribute.isString()) return attribute.asString().value === this.value;
-        else if (attribute.isDateTime()){
-            const date = new Date(this.value)
-            const userTimezoneOffset = date.getTimezoneOffset() * 60000;
-            return attribute.asDateTime().value.getTime() === new Date(date.getTime() - userTimezoneOffset).getTime();
+        switch (attribute.valueType) {
+            case ValueType.BOOLEAN:
+                return attribute.value === parseBool(this.value);
+            case ValueType.LONG:
+                return attribute.value === parseInt(this.value);
+            case ValueType.DOUBLE:
+                return attribute.value === parseFloat(this.value);
+            case ValueType.STRING:
+                return attribute.value === this.value;
+            case ValueType.DATETIME: {
+                const date = new Date(this.value)
+                const userTimezoneOffset = date.getTimezoneOffset() * 60000;
+                return (attribute.value as Date).getTime() === new Date(date.getTime() - userTimezoneOffset).getTime();
+            }
+            default:
+                throw new Error(`Unrecognised value type ${attribute.constructor.name}`);
         }
-        else throw new Error(`Unrecognised value type ${attribute.constructor.name}`);
     }
 
     abstract matches(concept: Concept): Promise<boolean>;
@@ -234,11 +242,10 @@ class AttributeValueMatcher extends AttributeMatcher {
 }
 
 class ThingKeyMatcher extends AttributeMatcher {
-
     async matches(concept: Concept): Promise<boolean> {
         if (!concept.isThing()) return false;
 
-        const keys = await concept.asThing().asRemote(tx()).getHas([Annotation.KEY]).collect();
+        const keys = await concept.asThing().getHas(tx(), [Annotation.KEY]).collect();
 
         for (const key of keys) {
             if (key.type.label.scopedName === this.typeLabel) {
@@ -251,7 +258,6 @@ class ThingKeyMatcher extends AttributeMatcher {
 }
 
 class ValueMatcher implements ConceptMatcher {
-
     private readonly _valueType: string;
     private readonly _value: string;
 
@@ -270,11 +276,11 @@ class ValueMatcher implements ConceptMatcher {
     }
 
     check(value: Value) {
-        if (value.isBoolean()) return value.asBoolean().value === parseBool(this.value);
-        else if (value.isLong()) return value.asLong().value === parseInt(this.value);
-        else if (value.isDouble()) return value.asDouble().value === parseFloat(this.value);
-        else if (value.isString()) return value.asString().value === this.value;
-        else if (value.isDateTime()) return value.asDateTime().value.getTime() === new Date(this.value).getTime();
+        if (value.isBoolean()) return value.asBoolean() === parseBool(this.value);
+        else if (value.isLong()) return value.asLong() === parseInt(this.value);
+        else if (value.isDouble()) return value.asDouble() === parseFloat(this.value);
+        else if (value.isString()) return value.asString() === this.value;
+        else if (value.isDateTime()) return value.asDateTime().getTime() === new Date(this.value).getTime();
         else throw new Error(`Unrecognised value type ${value.valueType}`);
     }
 
@@ -467,7 +473,7 @@ function applyQueryTemplate(template: string, answer: ConceptMap): string {
     while ((match = pattern.exec(template))) {
         const requiredVariable = variableFromTemplatePlaceholder(match[1]);
         query += template.substring(i, match.index);
-        if (answer.map.has(requiredVariable)) {
+        if (Array.from(answer.variables()).includes(requiredVariable)) {
             const concept = answer.get(requiredVariable);
             if (!concept.isThing()) throw new TypeError("Cannot apply IID templating to Types");
             query += concept.asThing().iid;
