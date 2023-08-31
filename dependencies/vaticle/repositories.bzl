@@ -28,7 +28,6 @@ def vaticle_dependencies():
         commit = "7655b70f16b048099167d14bae1140b260b90e7a", # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_dependencies
     )
 
-#TODO: MOVE NATIVE_TYPEDB_ARTIFACT INTO DEPENDENCIES, THEN REMOVE THIS DEPENDENCY
 def vaticle_typedb_common():
     git_repository(
         name = "vaticle_typedb_common",
@@ -36,11 +35,11 @@ def vaticle_typedb_common():
         tag = "2.18.0" # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_common
     )
 
-def vaticle_typedb_behaviour():
+def vaticle_typeql():
     git_repository(
-        name = "vaticle_typedb_behaviour",
-        remote = "https://github.com/vaticle/typedb-behaviour",
-        commit = "26f4a19a797203c2eeb0682b6f7d25e238b97345" # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_behaviour
+        name = "vaticle_typeql",
+        remote = "https://github.com/vaticle/typeql",
+        commit = "848532c3dc9bddeae0ea5dd5111d0bffd41799ac",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typeql
     )
 
 def vaticle_typedb_protocol():
@@ -48,4 +47,18 @@ def vaticle_typedb_protocol():
         name = "vaticle_typedb_protocol",
         remote = "https://github.com/dmitrii-ubskii/typedb-protocol",
         commit = "f91e33ccdc9a8e9e897a78c9955e763d3d0d4e46" # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_protocol
+    )
+
+def vaticle_typedb_behaviour():
+    git_repository(
+        name = "vaticle_typedb_behaviour",
+        remote = "https://github.com/vaticle/typedb-behaviour",
+        commit = "26f4a19a797203c2eeb0682b6f7d25e238b97345",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_behaviour
+    )
+
+def vaticle_factory_tracing():
+    git_repository(
+        name = "vaticle_factory_tracing",
+        remote = "https://github.com/vaticle/factory-tracing",
+        tag = "2.12.0"  # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_factory_tracing
     )

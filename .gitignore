@@ -24,12 +24,14 @@
 
 # Bazel files #
 bazel-*
+.bazel-remote-cache.rc
+.bazel-cache-credential.json
 
 # IDE files #
+.ijwb/
 .idea/
 *.iml
 *.geany
-.ijwb/
 
 # VS Code files #
 .vscode/
@@ -38,6 +40,7 @@ bazel-*
 .classpath
 
 # Compiled files #
+target/
 dist/
 out/
 *.class
@@ -79,11 +82,19 @@ typedb-test/test-integration/benchmarks/
 *.swo
 
 
-# Python cache #
-__pycache__
-
 # Downloaded node modules #
 node_modules
 
 # Compiled typescript #
 dist
+
+# Python cache #
+__pycache__
+
+# Other #
+**.pyc
+venv
+
+# Cargo files
+Cargo.lock
+Cargo.toml

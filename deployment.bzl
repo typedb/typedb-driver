@@ -20,6 +20,6 @@
 #
 
 deployment = {
-    "github.organisation" : "vaticle",
-    "github.repository" : "typedb-client-nodejs",
+    "github.organisation": "vaticle",
+    "github.repository": "typedb-driver-java"
 }
