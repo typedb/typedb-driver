@@ -19,30 +19,26 @@
 # under the License.
 #
 
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//nodejs/test/behaviour:rules.bzl", "behaviour_test_ts_config")
+
+ts_project(
+    name = "parameters",
+    srcs = ["Parameters.ts"],
+    tsconfig = behaviour_test_ts_config(),
+    declaration = True,
+    deps = [
+        "//nodejs:client-nodejs",
+        "//nodejs:node_modules/@types/node",
+        "//nodejs:node_modules/@cucumber/cucumber",
+    ],
+    resolve_json_module = True,
+    visibility = ["//visibility:public"],
+)
 
 checkstyle_test(
     name = "checkstyle",
-    include = glob([
-        "*",
-        ".factory/*",
-    ]),
-    exclude = glob([
-        "*.json",
-        "*.md",
-        ".bazelversion",
-        "LICENSE",
-        "VERSION",
-        "dist/**/*.*",
-        "pnpm-lock.yaml",
-    ]),
+    include = glob(["*"]),
     license_type = "apache-header",
 )
-
-checkstyle_test(
-    name = "checkstyle-license",
-    size = "small",
-    include = ["LICENSE"],
-    license_type = "apache-fulltext",
-)
-

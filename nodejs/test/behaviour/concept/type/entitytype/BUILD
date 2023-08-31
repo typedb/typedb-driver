@@ -19,30 +19,28 @@
 # under the License.
 #
 
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//nodejs/test/behaviour:rules.bzl", "typedb_behaviour_node_test", "behaviour_test_ts_config")
 
 checkstyle_test(
     name = "checkstyle",
-    include = glob([
-        "*",
-        ".factory/*",
-    ]),
-    exclude = glob([
-        "*.json",
-        "*.md",
-        ".bazelversion",
-        "LICENSE",
-        "VERSION",
-        "dist/**/*.*",
-        "pnpm-lock.yaml",
-    ]),
+    include = glob(["*"]),
     license_type = "apache-header",
 )
 
-checkstyle_test(
-    name = "checkstyle-license",
-    size = "small",
-    include = ["LICENSE"],
-    license_type = "apache-fulltext",
+typedb_behaviour_node_test(
+    name = "test",
+    features = ["@vaticle_typedb_behaviour//concept/type:entitytype.feature"],
+    data = [
+        "//nodejs/test/behaviour/concept/thing/attribute:steps",
+        "//nodejs/test/behaviour/concept/thing/entity:steps",
+        "//nodejs/test/behaviour/concept/thing/relation:steps",
+        "//nodejs/test/behaviour/concept/type/attributetype:steps",
+        "//nodejs/test/behaviour/concept/type/relationtype:steps",
+        "//nodejs/test/behaviour/concept/type/thingtype:steps",
+        "//nodejs/test/behaviour/connection/database:steps",
+        "//nodejs/test/behaviour/connection/session:steps",
+        "//nodejs/test/behaviour/connection/transaction:steps",
+    ],
 )
-

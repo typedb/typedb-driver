@@ -154,7 +154,7 @@ npm_translate_lock(
             "cucumber-js": "./bin/cucumber-js",
         },
     },
-    pnpm_lock = "//:pnpm-lock.yaml",
+    pnpm_lock = "//nodejs:pnpm-lock.yaml",
 )
 
 load("@npm//:repositories.bzl", "npm_repositories")
@@ -167,7 +167,7 @@ vaticle_typedb_protocol_npm_repositories()
 load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
 
 rules_ts_dependencies(
-    ts_version_from = "//:package.json",
+    ts_version_from = "//nodejs:package.json",
 )
 
 ############################
