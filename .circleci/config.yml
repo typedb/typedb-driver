@@ -108,7 +108,7 @@ jobs:
     steps:
       - checkout
       - run: .circleci\windows\prepare.bat
-      - run: .circleci\windows\deploy.bat
+#      - run: .circleci\windows\deploy.bat
       - run: timeout 10000
 #      - TODO: deploy maven artifacts
 
