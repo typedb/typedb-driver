@@ -25,5 +25,5 @@ SET DEPLOY_PIP_PASSWORD=%REPO_VATICLE_PASSWORD%
 SET RUST_BACKTRACE=1
 git rev-parse HEAD > version_temp.txt
 set /p VER=<version_temp.txt
-bazel --output_user_root=C:/tmp run --verbose_failures --enable_runfiles --define version=%VER% //python:deploy-pip -- snapshot
+bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip -- snapshot
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
