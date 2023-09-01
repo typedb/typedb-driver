@@ -40,15 +40,7 @@ java_library(
 java_library(
     name = "steps",
     srcs = ["UtilSteps.java"],
-    deps = [
-
-        # Internal Repository Dependencies
-        # "@vaticle_typedb_common//:common",
-
-        # External Maven Dependencies
-        "@maven//:junit_junit",
-        "@maven//:io_cucumber_cucumber_java",
-    ],
+    deps = ["@maven//:io_cucumber_cucumber_java"],
 )
 
 checkstyle_test(

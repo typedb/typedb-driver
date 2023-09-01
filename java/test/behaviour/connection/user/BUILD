@@ -32,48 +32,45 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         # Internal Package Dependencies
-        "//java/api:api",
+        "//java/api",
         "//java/test/behaviour/connection:steps-base",
-        "//java/test/behaviour/util:util",
+        "//java/test/behaviour/util",
 
         # External Maven Dependencies
         "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java",
-        "@maven//:org_hamcrest_hamcrest_library",
     ],
 )
 
 typedb_java_test(
     name = "test-cluster",
+    size = "large",
     srcs = [
         "UserTestCluster.java",
     ],
-    test_class = "com.vaticle.typedb.client.test.behaviour.connection.user.UserTestCluster",
     data = [
         "@vaticle_typedb_behaviour//connection:user.feature",
     ],
-    server_mac_artifact = "@vaticle_typedb_cluster_artifact_mac//file",
     server_linux_artifact = "@vaticle_typedb_cluster_artifact_linux//file",
+    server_mac_artifact = "@vaticle_typedb_cluster_artifact_mac//file",
     server_windows_artifact = "@vaticle_typedb_cluster_artifact_windows//file",
+    test_class = "com.vaticle.typedb.client.test.behaviour.connection.user.UserTestCluster",
     runtime_deps = [
         ":steps",
-
+        "//java/test/behaviour/config:parameters",
         "//java/test/behaviour/connection:steps-cluster",
         "//java/test/behaviour/connection/session:steps",
         "//java/test/behaviour/connection/transaction:steps",
         "//java/test/behaviour/typeql:steps",
         "//java/test/behaviour/util:steps",
-
-        "//java/test/behaviour/config:parameters",
     ],
     deps = [
         # Internal Package Dependencies
-        "//java/test/behaviour:behaviour",
+        "//java/test/behaviour",
 
         # External dependencies from Maven
         "@maven//:io_cucumber_cucumber_junit",
     ],
-    size = "large",
 )
 
 checkstyle_test(

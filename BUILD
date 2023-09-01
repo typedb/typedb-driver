@@ -21,11 +21,6 @@
 
 package(default_visibility = ["//visibility:public"])
 
-exports_files(
-    ["VERSION"],
-    visibility = ["//visibility:public"],
-)
-
 load("@vaticle_dependencies//tool/release/deps:rules.bzl", "release_validate_deps")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_dependencies//distribution/maven:version.bzl", "version")
@@ -46,6 +41,7 @@ checkstyle_test(
     size = "small",
     include = glob([
         "*",
+        ".circleci/**/*",
         ".factory/*",
         "tools/*",
     ]),
@@ -70,7 +66,7 @@ checkstyle_test(
 
 release_validate_deps(
     name = "release-validate-deps",
-    refs = "@vaticle_typedb_client_java_workspace_refs//:refs.json",
+    refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
     tagged_deps = [
         "@vaticle_typedb_common",
         "@vaticle_typeql",

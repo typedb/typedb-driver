@@ -36,21 +36,20 @@ java_library(
     ],
     deps = [
         # Package dependencies
-        "//java/api:api",
-        "//java/common:common",
+        "//java/api",
+        "//java/common",
         "//java/test/behaviour/connection:steps-base",
-        "//java/test/behaviour/util:util",
+        "//java/test/behaviour/util",
 
         # Vaticle dependencies
         "@vaticle_typedb_common//:common",
         "@vaticle_typeql//java:typeql-lang",
-        "@vaticle_typeql//java/common:common",
-        "@vaticle_typeql//java/query:query",
+        "@vaticle_typeql//java/common",
+        "@vaticle_typeql//java/query",
 
         # External dependencies from Maven
         "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java",
-        "@maven//:com_google_guava_guava",
     ],
 )
 

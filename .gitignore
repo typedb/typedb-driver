@@ -66,6 +66,11 @@ hs_err_pid*
 logs/
 *.log
 
+# Analytics files #
+typedb-test/db/
+typedb-test/output/
+typedb-test/*.txt
+
 # Sample Date Files #
 typedb-test/test-biomed/data/*
 
@@ -75,6 +80,13 @@ typedb-test/test-integration/benchmarks/
 # VIM swap files #
 *.swp
 *.swo
+
+
+# Downloaded node modules #
+node_modules
+
+# Compiled typescript #
+dist
 
 # Python cache #
 __pycache__

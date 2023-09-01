@@ -1,0 +1,46 @@
+{
+  "name": "typedb-client",
+  "version": "2.11.1",
+  "description": "TypeDB Client for Node.js",
+  "author": "Vaticle",
+  "license": "Apache-2.0",
+  "homepage": "https://vaticle.com",
+  "type": "commonjs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vaticle/typedb-client-nodejs"
+  },
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "npm run clean && tsc",
+    "test": "npm run test-concept && npm run test-connection && npm run test-query",
+    "test-concept": "node test/integration/test-concept.js",
+    "test-connection": "node test/integration/test-connection.js",
+    "test-query": "node test/integration/test-query.js",
+    "test-cluster-failover": "npm run build && node test/integration/test-cluster-failover.js",
+    "test-stream": "node test/integration/test-stream.js",
+    "lint": "eslint . --ext .ts"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "1.9.0",
+    "google-protobuf": "3.19.3",
+    "typedb-protocol": "2.18.1",
+    "uuid": "8.3.2"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "9.0.0",
+    "@cucumber/pretty-formatter": "1.0.0-alpha.0",
+    "@types/google-protobuf": "3.15.5",
+    "@types/node": "20.0.0",
+    "@types/uuid": "9.0.2",
+    "@typescript-eslint/eslint-plugin": "4.9.0",
+    "@typescript-eslint/parser": "4.9.0",
+    "eslint": "7.14.0",
+    "fs-extra": "7.0.1",
+    "jest": "^28.0.0",
+    "properties-reader": "2.2.0",
+    "rimraf": "3.0.2",
+    "tmp": "0.1.0",
+    "typescript": "4.9.5"
+  }
+}

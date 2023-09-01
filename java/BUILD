@@ -54,7 +54,7 @@ checkstyle_test(
 #     scm_url = "https://github.com/vaticle/typedb-client-java",
 #     target = ":client-java",
 #     version_overrides = version(artifacts_org, artifacts_repo),
-#     workspace_refs = "@vaticle_typedb_client_java_workspace_refs//:refs.json",
+#     workspace_refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
 # )
 
 # deploy_maven(

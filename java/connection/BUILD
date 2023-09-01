@@ -25,38 +25,36 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
     name = "connection",
-    srcs = glob(["*.java", "*/*.java"], exclude=["test/**"]),
-    deps = [
-        # Internal dependencies
-        "//java/api:api",
-        "//java/common:common",
-        "//java/concept:concept",
-        "//java/logic:logic",
-        "//java/query:query",
-        "//java/user:user",
-
-        "//rust:typedb_client_jni",
-
-        # External dependencies from Maven
-        "@maven//:com_google_code_findbugs_jsr305",
-        "@maven//:com_google_protobuf_protobuf_java",
-        "@maven//:io_grpc_grpc_api",
-        "@maven//:io_grpc_grpc_netty",
-        "@maven//:io_grpc_grpc_stub",
-        "@maven//:io_netty_netty_all",
-        "@maven//:io_netty_netty_handler",
-        "@maven//:org_slf4j_slf4j_api",
-    ],
+    srcs = glob(
+        [
+            "*.java",
+            "*/*.java",
+        ],
+        exclude = ["test/**"],
+    ),
     runtime_deps = [
         "@maven//:ch_qos_logback_logback_classic",
         "@maven//:ch_qos_logback_logback_core",
         "@maven//:io_netty_netty_tcnative_boringssl_static",
     ],
+    deps = [
+        # Internal dependencies
+        "//java/api",
+        "//java/common",
+        "//java/concept",
+        "//java/logic",
+        "//java/query",
+        "//java/user",
+        "//rust:typedb_client_jni",
+    ],
 )
 
 checkstyle_test(
     name = "checkstyle",
-    include = glob(["*", "*/*"]),
-    license_type = "apache-header",
     size = "small",
+    include = glob([
+        "*",
+        "*/*",
+    ]),
+    license_type = "apache-header",
 )

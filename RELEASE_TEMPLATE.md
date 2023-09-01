@@ -33,4 +33,12 @@ Available through https://pypi.org
 pip install typedb-client=={version}
 ```
 
+### NodeJS driver
+
+NPM package: https://www.npmjs.com/package/typedb-client
+
+```
+npm install typedb-client@{version}
+```
+
 { release notes }

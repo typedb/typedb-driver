@@ -20,6 +20,7 @@
 #
 
 package(default_visibility = ["//java/test/behaviour:__subpackages__"])
+
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
@@ -27,13 +28,12 @@ java_library(
     srcs = ["ConnectionStepsBase.java"],
     deps = [
         # Package dependencies
-        "//java/api:api",
+        "//java/api",
         "@vaticle_typedb_common//test:typedb-runner",
         "@vaticle_typedb_common//:common",
 
         # External dependencies from Maven
         "@maven//:junit_junit",
-        "@maven//:io_cucumber_cucumber_java",
     ],
 )
 
@@ -42,18 +42,15 @@ java_library(
     srcs = [
         "ConnectionStepsCore.java",
     ],
+    visibility = ["//visibility:public"],
     deps = [
         # Package dependencies
         ":steps-base",
         "//java:client-java",
-        "//java/api:api",
+        "//java/api",
         "@vaticle_typedb_common//test:typedb-runner",
-
-        # External dependencies from Maven
-        "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java",
     ],
-    visibility = ["//visibility:public"],
 )
 
 java_library(
@@ -61,19 +58,16 @@ java_library(
     srcs = [
         "ConnectionStepsCluster.java",
     ],
+    visibility = ["//visibility:public"],
     deps = [
         # Package dependencies
         ":steps-base",
         "//java:client-java",
-        "//java/api:api",
-        "//java/test/behaviour/util:util",
+        "//java/api",
+        "//java/test/behaviour/util",
         "@vaticle_typedb_common//test:typedb-runner",
-
-        # External dependencies from Maven
-        "@maven//:junit_junit",
         "@maven//:io_cucumber_cucumber_java",
     ],
-    visibility = ["//visibility:public"],
 )
 
 checkstyle_test(

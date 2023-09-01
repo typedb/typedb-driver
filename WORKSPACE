@@ -19,7 +19,7 @@
 # under the License.
 #
 
-workspace(name = "vaticle_typedb_client_java")
+workspace(name = "vaticle_typedb_driver")
 
 ################################
 # Load @vaticle_dependencies #
@@ -65,8 +65,6 @@ grpc_deps()
 
 load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", com_github_grpc_grpc_deps = "grpc_deps")
 com_github_grpc_grpc_deps()
-load("@stackb_rules_proto//java:deps.bzl", "java_grpc_compile")
-java_grpc_compile()
 
 # Load //builder/rust
 load("@vaticle_dependencies//builder/rust:deps.bzl", rust_deps = "deps")
@@ -111,6 +109,21 @@ sonarcloud_dependencies()
 load("@vaticle_dependencies//tool/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
 unuseddeps_deps()
 
+####################################
+# Load @com_google_protobuf #
+####################################
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
+git_repository(
+    name = "com_google_protobuf",
+    remote = "https://github.com/protocolbuffers/protobuf",
+    commit = "ab840345966d0fa8e7100d771c92a73bfbadd25c",
+)
+
+# Load protoc binary dependencies
+load("@com_google_protobuf//:protobuf_deps.bzl", "PROTOBUF_MAVEN_ARTIFACTS", "protobuf_deps")
+protobuf_deps()
+
 ######################################
 # Load @vaticle_bazel_distribution #
 ######################################
@@ -146,14 +159,6 @@ pip_parse(
 load("@vaticle_typedb_client_python_pip//:requirements.bzl", "install_deps")
 install_deps()
 
-#######################################################
-# Create @vaticle_typedb_client_python_workspace_refs #
-#######################################################
-load("@vaticle_bazel_distribution//common:rules.bzl", "workspace_refs")
-workspace_refs(
-    name = "vaticle_typedb_client_python_workspace_refs"
-)
-
 ################################
 # Load @vaticle dependencies #
 ################################
@@ -170,6 +175,58 @@ vaticle_typedb_protocol()
 load("//dependencies/vaticle:artifacts.bzl", "vaticle_typedb_artifact", "vaticle_typedb_cluster_artifact")
 vaticle_typedb_artifact()
 vaticle_typedb_cluster_artifact()
+
+####################
+# Load npm modules #
+####################
+
+# Load //builder/nodejs
+load("@vaticle_dependencies//builder/nodejs:deps.bzl", nodejs_deps = "deps")
+nodejs_deps()
+
+load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
+rules_js_dependencies()
+
+load("@rules_nodejs//nodejs:repositories.bzl", "DEFAULT_NODE_VERSION", "nodejs_register_toolchains")
+nodejs_register_toolchains(
+    name = "nodejs",
+    node_version = DEFAULT_NODE_VERSION,
+)
+
+load("@aspect_rules_js//npm:repositories.bzl", "npm_translate_lock")
+
+npm_translate_lock(
+    name = "vaticle_typedb_protocol_npm",
+    bins = {
+        "protoc-gen-ts": {
+            "protoc-gen-ts-js": "./bin/protoc-gen-ts.js",
+        },
+    },
+    pnpm_lock = "@vaticle_typedb_protocol//grpc/nodejs:pnpm-lock.yaml",
+)
+
+npm_translate_lock(
+    name = "npm",
+    bins = {
+        "@cucumber/cucumber": {
+            "cucumber-js": "./bin/cucumber-js",
+        },
+    },
+    pnpm_lock = "//nodejs:pnpm-lock.yaml",
+)
+
+load("@npm//:repositories.bzl", "npm_repositories")
+npm_repositories()
+
+load("@vaticle_typedb_protocol_npm//:repositories.bzl", vaticle_typedb_protocol_npm_repositories = "npm_repositories")
+vaticle_typedb_protocol_npm_repositories()
+
+# Setup rules_ts
+load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
+
+rules_ts_dependencies(
+    ts_version_from = "//nodejs:package.json",
+)
 
 ###############
 # Load @maven #
@@ -195,9 +252,9 @@ maven(
 )
 
 ############################################
-# Create @vaticle_typedb_client_java_workspace_refs #
+# Create @vaticle_typedb_driver_workspace_refs #
 ############################################
 load("@vaticle_bazel_distribution//common:rules.bzl", "workspace_refs")
 workspace_refs(
-    name = "vaticle_typedb_client_java_workspace_refs"
+    name = "vaticle_typedb_driver_workspace_refs"
 )

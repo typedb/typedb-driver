@@ -1,6 +1,8 @@
+## Java driver
+
 Documentation: http://docs.vaticle.com/docs/client-api/java
 
-## Distribution
+### Distribution
 
 Available through https://repo.vaticle.com
 
@@ -20,22 +22,24 @@ Available through https://repo.vaticle.com
 </dependencies>
 ```
 
+## NodeJS driver
+
+NPM package: https://www.npmjs.com/package/typedb-client
+Documentation: https://docs.vaticle.com/docs/client-api/nodejs
+
+### Installation
+
+```
+npm install typedb-client@{version}
+```
 
 ## New Features
 
 
 ## Bugs Fixed
-- **Split client construction and connection validation**
-  
-  To prevent null pointer errors during failover tasks being executed, we go back to the previous model of first creating a client, then opening and validating the connection.
-  
-  
-  
 
 ## Code Refactors
 
 
 ## Other Improvements
-
-    
 

@@ -25,23 +25,20 @@ load("@vaticle_typedb_common//test:rules.bzl", "typedb_java_test")
 typedb_java_test(
     name = "test-client-query",
     srcs = ["ClientQueryTest.java"],
-    server_mac_artifact = "@vaticle_typedb_artifact_mac//file",
     server_linux_artifact = "@vaticle_typedb_artifact_linux//file",
+    server_mac_artifact = "@vaticle_typedb_artifact_mac//file",
     server_windows_artifact = "@vaticle_typedb_artifact_windows//file",
     test_class = "com.vaticle.typedb.client.test.integration.ClientQueryTest",
     deps = [
         # Internal dependencies
         "//java:client-java",
-        "//java/api:api",
+        "//java/api",
 
         # External dependencies from @vaticle
         "@vaticle_typedb_common//:common",
         "@vaticle_typeql//java:typeql-lang",
         "@vaticle_typeql//java/common",
         "@vaticle_typeql//java/query",
-
-        # External dependencies from Maven
-        "@maven//:org_hamcrest_hamcrest_library",
         "@maven//:org_slf4j_slf4j_api",
     ],
 )
