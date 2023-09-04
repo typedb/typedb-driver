@@ -28,6 +28,7 @@ load("@vaticle_bazel_distribution//pip:rules.bzl", "assemble_pip", "deploy_pip")
 load("@vaticle_bazel_distribution_pip//:requirements.bzl", vaticle_bazel_distribution_requirement = "requirement")
 load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
 
+load("@vaticle_dependencies//builder/swig:python.bzl", "dyn_lib")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("//:deployment.bzl", github_deployment = "deployment")
@@ -41,11 +42,18 @@ genrule(
     visibility = ["//visibility:public"]
 )
 
-genrule(
+#genrule(
+#    name = "native-client-binary",
+#    outs = ["typedb/native_client_python.so"],
+#    srcs = ["//rust:native_client_python"],
+#    cmd = "cp $< $@",
+#    visibility = ["//visibility:public"]
+#)
+
+dyn_lib(
     name = "native-client-binary",
-    outs = ["typedb/native_client_python.so"],
-    srcs = ["//rust:native_client_python"],
-    cmd = "cp $< $@",
+    out = "typedb/native_client_python",
+    src = "//rust:native_client_python",
     visibility = ["//visibility:public"]
 )
 
