@@ -102,6 +102,10 @@ swig_python(
     interface = "typedb_client.i",
     includes = ["swig/typedb_client_python.swg"],
     enable_cxx = True,
+    linkopts = select({
+        "@vaticle_dependencies//util/platform:is_windows": ["ntdll.lib"],
+        "//conditions:default": [],
+    })
 )
 
 assemble_crate(
