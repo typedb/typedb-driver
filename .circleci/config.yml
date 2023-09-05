@@ -43,7 +43,7 @@ commands:
   install-requirements:
     steps:
       - run: |
-          python3 -m pip install -U pip
+          python3 -m pip install pip==23.2.1
           python3 -m pip install -r python/requirements_dev.txt
 
   deploy-pip-linux-and-mac:
