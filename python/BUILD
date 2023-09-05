@@ -22,7 +22,7 @@
 exports_files(["requirements.txt", "deployment.bzl"])
 
 load("@vaticle_typedb_client_python_pip//:requirements.bzl",
-       vaticle_typedb_client_python_requirement = "requirement")
+       vaticle_typedb_client_python_requirement = "requirement", "entry_point")
 
 load("@vaticle_bazel_distribution//pip:rules.bzl", "assemble_pip", "deploy_pip")
 load("@vaticle_bazel_distribution_pip//:requirements.bzl", vaticle_bazel_distribution_requirement = "requirement")
@@ -42,14 +42,6 @@ genrule(
     visibility = ["//visibility:public"]
 )
 
-#genrule(
-#    name = "native-client-binary",
-#    outs = ["typedb/native_client_python.so"],
-#    srcs = ["//rust:native_client_python"],
-#    cmd = "cp $< $@",
-#    visibility = ["//visibility:public"]
-#)
-
 dyn_lib(
     name = "native-client-binary",
     out = "typedb/native_client_python",
@@ -57,11 +49,21 @@ dyn_lib(
     visibility = ["//visibility:public"]
 )
 
+alias(
+    name = "behave-exec",
+    actual = entry_point(
+        pkg = "behave",
+        script = "behave",
+    ),
+    visibility = ["//visibility:public"],
+)
+
 py_library(
     name = "client_python",
     srcs = glob(["typedb/**/*.py"]) + [":native-client-wrapper"],
     data = [":native-client-binary"],
     deps = ["//rust:native_client_python_wrapper"],
+    imports = ["."],
     visibility = ["//visibility:public"]
 )
 

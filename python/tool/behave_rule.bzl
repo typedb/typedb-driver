@@ -28,6 +28,9 @@
 # * http://pythonhosted.org/behave/gherkin.html
 # =============================================================================
 
+load("@vaticle_typedb_client_python_pip//:requirements.bzl", "requirement")
+
+
 # TODO: We should split this rule up into typedb_py_behave_test and py_behave_test.
 def _rule_implementation(ctx):
     """
@@ -160,18 +163,53 @@ Args:
   deps:
     System to test.
 """
-py_behave_test = rule(
+py_behave_old_test = rule(
     implementation=_rule_implementation,
     attrs={
         # Do not declare "name": It is added automatically.
-        "feats": attr.label_list(mandatory=True,allow_empty=False,allow_files=True),
-        "steps": attr.label_list(mandatory=True,allow_empty=False),
-        "background": attr.label_list(mandatory=True,allow_empty=False),
-        "deps": attr.label_list(mandatory=True,allow_empty=False),
-        "native_typedb_artifact": attr.label(mandatory=True)
+        "feats": attr.label_list(mandatory=True, allow_empty=False, allow_files=True),
+        "steps": attr.label_list(mandatory=True, allow_empty=False),
+        "background": attr.label_list(mandatory=True, allow_empty=False),
+        "deps": attr.label_list(mandatory=True, allow_empty=False),
+        "native_typedb_artifact": attr.label(mandatory=True),
     },
     test=True,
 )
+
+
+def py_behave_test(*,
+                    name,
+                    background = None,
+                    native_typedb_artifact,
+                    steps,
+                    feats,
+                    deps,
+                    data=[],
+                    typedb_port,
+                    **kwargs):
+
+    feats_dir = "features-" + name
+    steps_out_dir = feats_dir + "/steps"
+
+    native.genrule(
+        name = name + "_features",
+        cmd = "mkdir $(@D)/" + feats_dir
+                + " && cp $(location %s) $(@D)/%s" % (feats[0], feats_dir)
+                + " && cp $(location %s) $(@D)/%s" % (background[0], feats_dir)
+                + " && mkdir $(@D)/" + steps_out_dir + " && "
+                + " && ".join(["cp $(location %s) $(@D)/%s" % (step_file, steps_out_dir) for step_file in steps]),
+        srcs = steps + background + feats,
+        outs = [feats_dir],
+    ) # create directory structure as above
+
+    native.py_test( # run behave with the above as data
+        name = name,
+        data = data + [name + "_features"],
+        deps = deps + [requirement("behave"), requirement("PyHamcrest")],
+        srcs = ["//python/tests/behaviour:entry_point_behave.py"],
+        args = ["$(location :" + name + "_features" + ")", "--no-capture", "-D", "port=" + typedb_port],
+        main = "//python/tests/behaviour:entry_point_behave.py",
+    )
 
 
 def typedb_behaviour_py_test(
@@ -188,6 +226,8 @@ def typedb_behaviour_py_test(
             name = name + "-core",
             background = background_core,
             native_typedb_artifact = native_typedb_artifact,
+            toolchains = ["@rules_python//python:current_py_toolchain"],
+            typedb_port = "1729",
             **kwargs,
         )
 
@@ -196,5 +236,7 @@ def typedb_behaviour_py_test(
             name = name + "-cluster",
             background = background_cluster,
             native_typedb_artifact = native_typedb_cluster_artifact,
+            toolchains = ["@rules_python//python:current_py_toolchain"],
+            typedb_port = "11729",
             **kwargs,
         )
