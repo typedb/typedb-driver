@@ -19,11 +19,12 @@
  * under the License.
  */
 
+use typedb_client::{Error, Options, Session, Transaction, TransactionType};
+
 use super::{
     error::{try_release, unwrap_void},
     memory::{borrow, borrow_mut, free, release, take_ownership},
 };
-use crate::{Error, Options, Session, Transaction, TransactionType};
 
 #[no_mangle]
 pub extern "C" fn transaction_new(

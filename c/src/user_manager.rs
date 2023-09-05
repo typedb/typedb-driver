@@ -21,12 +21,13 @@
 
 use std::{ffi::c_char, ptr::addr_of_mut};
 
+use typedb_client::{box_stream, Connection, User, UserManager};
+
 use super::{
     error::{try_release, try_release_optional, unwrap_or_default, unwrap_void},
     iterator::{iterator_next, CIterator},
     memory::{borrow, free, release, string_view},
 };
-use crate::{common::box_stream, Connection, User, UserManager};
 
 #[no_mangle]
 pub extern "C" fn user_manager_new(connection: *mut Connection) -> *mut UserManager {

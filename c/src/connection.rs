@@ -21,11 +21,12 @@
 
 use std::{ffi::c_char, path::Path};
 
+use typedb_client::{Connection, Credential};
+
 use super::{
     error::{try_release, unwrap_void},
     memory::{borrow, free, release, string_array_view, string_view},
 };
-use crate::{Connection, Credential};
 
 #[no_mangle]
 pub extern "C" fn connection_open_plaintext(address: *const c_char) -> *mut Connection {

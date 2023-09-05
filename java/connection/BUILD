@@ -45,7 +45,7 @@ java_library(
         "//java/logic",
         "//java/query",
         "//java/user",
-        "//rust:typedb_client_jni",
+        "//c:typedb_client_jni",
     ],
 )
 

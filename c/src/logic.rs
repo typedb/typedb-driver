@@ -21,12 +21,13 @@
 
 use std::{ffi::c_char, ptr::addr_of_mut};
 
+use typedb_client::{box_stream, logic::Rule, transaction::logic::api::RuleAPI, Result, Transaction};
+
 use super::{
     error::{try_release, try_release_optional, unwrap_or_default, unwrap_void},
     iterator::{iterator_try_next, CIterator},
     memory::{borrow, borrow_mut, free, release_string, string_view},
 };
-use crate::{common::box_stream, logic::Rule, transaction::logic::api::RuleAPI, Result, Transaction};
 
 #[no_mangle]
 pub extern "C" fn rule_drop(rule: *mut Rule) {
@@ -55,7 +56,7 @@ pub extern "C" fn rule_get_then(rule: *const Rule) -> *mut c_char {
 
 #[no_mangle]
 pub extern "C" fn rule_set_label(
-    transaction: *const crate::Transaction<'static>,
+    transaction: *const Transaction<'static>,
     rule: *mut Rule,
     new_label: *const c_char,
 ) {
@@ -63,12 +64,12 @@ pub extern "C" fn rule_set_label(
 }
 
 #[no_mangle]
-pub extern "C" fn rule_delete(transaction: *const crate::Transaction<'static>, rule: *mut Rule) {
+pub extern "C" fn rule_delete(transaction: *const Transaction<'static>, rule: *mut Rule) {
     unwrap_void(borrow_mut(rule).delete(borrow(transaction)));
 }
 
 #[no_mangle]
-pub extern "C" fn rule_is_deleted(transaction: *const crate::Transaction<'static>, rule: *mut Rule) -> bool {
+pub extern "C" fn rule_is_deleted(transaction: *const Transaction<'static>, rule: *mut Rule) -> bool {
     unwrap_or_default(borrow_mut(rule).is_deleted(borrow(transaction)))
 }
 

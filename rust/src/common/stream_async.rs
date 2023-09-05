@@ -21,7 +21,7 @@
 
 pub use futures::{stream::BoxStream, Stream};
 
-pub(crate) fn box_stream<'a, T>(stream: impl Stream<Item = T> + Send + 'a) -> BoxStream<'a, T> {
+pub fn box_stream<'a, T>(stream: impl Stream<Item = T> + Send + 'a) -> BoxStream<'a, T> {
     Box::pin(stream) as futures::stream::BoxStream<_>
 }
 

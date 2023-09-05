@@ -21,6 +21,12 @@
 
 use std::ffi::c_char;
 
+use typedb_client::{
+    concept::{Annotation, Concept},
+    transaction::concept::api::{AttributeAPI, RelationAPI},
+    Transaction,
+};
+
 use super::{
     concept::{
         borrow_as_attribute, borrow_as_attribute_type, borrow_as_entity, borrow_as_relation, borrow_as_role_type,
@@ -29,13 +35,8 @@ use super::{
     ConceptIterator, RolePlayerIterator,
 };
 use crate::{
-    bindings::{
-        error::{try_release, unwrap_or_default, unwrap_void},
-        memory::{array_view, borrow, release, release_string},
-    },
-    concept::{Annotation, Concept},
-    transaction::concept::api::{AttributeAPI, RelationAPI},
-    Transaction,
+    error::{try_release, unwrap_or_default, unwrap_void},
+    memory::{array_view, borrow, release, release_string},
 };
 
 #[no_mangle]

@@ -28,18 +28,19 @@ use std::ptr::addr_of_mut;
 
 use itertools::Itertools;
 
-use super::{
-    iterator::iterator_try_next,
-    memory::{borrow, free, release},
-};
-use crate::{
-    bindings::iterator::CIterator,
-    common::{box_stream, stream::BoxStream},
+use typedb_client::{
+    box_stream, BoxStream,
     concept::{
         Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Thing, ThingType,
     },
     Result,
 };
+
+use super::{
+    iterator::iterator_try_next,
+    memory::{borrow, free, release},
+};
+use crate::iterator::CIterator;
 
 pub struct ConceptIterator(pub CIterator<Result<Concept>>);
 

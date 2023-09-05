@@ -21,18 +21,19 @@
 
 use std::ffi::c_char;
 
+use typedb_client::{
+    answer::{ConceptMap, ConceptMapGroup, Explainable, Explainables, Numeric, NumericGroup},
+    box_stream,
+    concept::Concept,
+    logic::{Explanation, Rule},
+};
+
 use super::{
     common::{StringIterator, StringPairIterator},
     concept::ConceptIterator,
     iterator::CIterator,
     memory::{borrow, free, release, release_optional, release_string, string_view},
     query::ConceptMapIterator,
-};
-use crate::{
-    answer::{ConceptMap, ConceptMapGroup, Explainable, Explainables, Numeric, NumericGroup},
-    common::box_stream,
-    concept::Concept,
-    logic::{Explanation, Rule},
 };
 
 #[no_mangle]

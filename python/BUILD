@@ -36,7 +36,7 @@ load("//:deployment.bzl", github_deployment = "deployment")
 genrule(
     name = "native-client-wrapper",
     outs = ["typedb/native_client_wrapper.py"],
-    srcs = ["//rust:native_client_python_wrapper"],
+    srcs = ["//c:native_client_python_wrapper"],
     cmd = "cp $< $@",
     visibility = ["//visibility:public"]
 )
@@ -44,7 +44,7 @@ genrule(
 genrule(
     name = "native-client-binary",
     outs = ["typedb/native_client_python.so"],
-    srcs = ["//rust:native_client_python"],
+    srcs = ["//c:native_client_python"],
     cmd = "cp $< $@",
     visibility = ["//visibility:public"]
 )
@@ -53,7 +53,7 @@ py_library(
     name = "client_python",
     srcs = glob(["typedb/**/*.py"]) + [":native-client-wrapper"],
     data = [":native-client-binary"],
-    deps = ["//rust:native_client_python_wrapper"],
+    deps = ["//c:native_client_python_wrapper"],
     visibility = ["//visibility:public"]
 )
 

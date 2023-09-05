@@ -22,14 +22,14 @@
 use std::ffi::c_char;
 
 use chrono::NaiveDateTime;
-
-use crate::{
-    bindings::memory::{borrow, borrow_mut, free, release, release_string, string_view},
+use typedb_client::{
     concept::{
         Annotation, Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,
     },
     transaction::concept::api::{ThingAPI, ThingTypeAPI},
 };
+
+use crate::memory::{borrow, borrow_mut, free, release, release_string, string_view};
 
 #[no_mangle]
 pub extern "C" fn value_new_boolean(bool: bool) -> *mut Concept {

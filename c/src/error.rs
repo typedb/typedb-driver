@@ -22,9 +22,9 @@
 use std::{cell::RefCell, ffi::c_char, ptr::null_mut};
 
 use log::trace;
+use typedb_client::{Error, Result};
 
 use super::memory::{free, release_optional, release_string};
-use crate::{Error, Result};
 
 thread_local! {
     static LAST_ERROR: RefCell<Option<Error>> = RefCell::new(None);
