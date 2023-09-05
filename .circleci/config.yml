@@ -68,6 +68,10 @@ commands:
           python3 -m pip install pip==23.2.1
           python3 -m pip install -r python/requirements_dev.txt
 
+  install-maven-mac:
+    steps:
+      - run: brew install maven
+
   deploy-pip-release-unix:
     steps:
       - run: |
@@ -152,6 +156,36 @@ commands:
           arch: "<<parameters.arch>>"
       - install-pip-requirements
       - test-pip-snapshot-unix
+
+  deploy-maven-jni-unix:
+    steps:
+      - run: |
+          export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
+          export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
+          bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+          bazel run --define version=$(git rev-parse HEAD) //java:deploy-maven-jni -- snapshot
+
+  deploy-maven-central-unix:
+    steps:
+      - run: |
+          export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
+          export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
+          bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+          bazel run --define version=$(git rev-parse HEAD) //java:deploy-maven -- snapshot
+
+  test-maven-deployment-unix:
+    steps:
+      - run: |
+          export REPO_DIR="/home/factory/$CIRCLE_PROJECT_REPONAME/"
+          export TYPEDB_DIST_DIR="dist/typedb-all-linux/"
+          bazel run //java/test:typedb-extractor-linux -- $TYPEDB_DIST_DIR
+          $TYPEDB_DIST_DIR/typedb server &
+          PID=$!
+          
+          sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$CIRCLE_SHA1/g" java/test/deployment/pom.xml
+          cat java/test/deployment/pom.xml
+          cd java/test/deployment && mvn test
+          kill $PID
 
 jobs:
   deploy-pip-snapshot-linux-aarch64:
@@ -314,6 +348,122 @@ jobs:
               -r ${CIRCLE_PROJECT_REPONAME} -n "TypeDB Driver $(cat VERSION)" -b "$(cat ./RELEASE_TEMPLATE.md)" \
               -c ${CIRCLE_SHA1} -delete -draft $(cat VERSION) ~/dist/
 
+  deploy-maven-central:
+    machine:
+      image: ubuntu-2204:current
+      resource_class: medium
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-linux:
+          arch: amd64
+      - deploy-maven-central-unix
+
+  deploy-maven-mac-x86_64:
+    macos:
+      xcode: "14.2.0"
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-mac
+      - deploy-maven-jni-unix
+
+  deploy-maven-mac-arm64:
+    macos:
+      xcode: "14.2.0"
+    resource_class: macos.m1.medium.gen1
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-mac
+      - deploy-maven-jni-unix
+
+  deploy-maven-linux-x86_64:
+    machine:
+      image: ubuntu-2204:current
+      resource_class: medium
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-linux:
+          arch: amd64
+      - deploy-maven-jni-unix
+
+  deploy-maven-linux-arm64:
+    machine:
+      image: ubuntu-2204:current
+      resource_class: arm.medium
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-linux:
+          arch: arm64
+      - deploy-maven-jni-unix
+
+  deploy-maven-windows-x86_64:
+    executor:
+      name: win/default
+      shell: cmd.exe
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - run: .circleci\windows\prepare.bat
+      - run: .circleci\windows\deploy_jni_maven.bat
+
+  test-maven-deployment-mac-x86_64:
+    macos:
+      xcode: "14.2.0"
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-mac
+      - install-maven-mac
+      - test-maven-deployment-unix
+
+  test-maven-deployment-mac-arm64:
+    macos:
+      xcode: "14.2.0"
+    resource_class: macos.m1.medium.gen1
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-mac
+      - install-maven-mac
+      - test-maven-deployment-unix
+
+  test-maven-deployment-linux-x86_64:
+    machine:
+      image: ubuntu-2204:current
+      resource_class: medium
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-linux:
+          arch: amd64
+      - test-maven-deployment-unix
+
+  test-maven-deployment-linux-arm64:
+    machine:
+      image: ubuntu-2204:current
+      resource_class: arm.medium
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-linux:
+          arch: arm64
+      - test-maven-deployment-unix
+
+
+  test-maven-deployment-windows-x86_64:
+    executor:
+      name: win/default
+      shell: cmd.exe
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - run: .circleci\windows\prepare.bat
+      - run: .circleci\windows\deployment_test.bat
+
 workflows:
   typedb-driver-python:
     jobs:
@@ -368,6 +518,103 @@ workflows:
               only: [master, development]
           requires:
             - deploy-pip-snapshot-windows-x86_64
+
+  typedb-driver-java:
+    jobs:
+      - deploy-maven-mac-x86_64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - maven
+      - deploy-maven-mac-arm64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - maven
+      - deploy-maven-linux-x86_64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - maven
+      - deploy-maven-linux-arm64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - maven
+      - deploy-maven-windows-x86_64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - maven
+      - deploy-maven-central:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - maven
+          requires:
+            - deploy-maven-mac-x86_64
+            - deploy-maven-mac-arm64
+            - deploy-maven-linux-x86_64
+            - deploy-maven-linux-arm64
+            - deploy-maven-windows-x86_64
+
+      - test-maven-deployment-mac-x86_64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - maven
+          requires:
+            - deploy-maven-central
+      - test-maven-deployment-mac-arm64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - maven
+          requires:
+            - deploy-maven-central
+      - test-maven-deployment-linux-x86_64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - maven
+          requires:
+            - deploy-maven-central
+      - test-maven-deployment-linux-arm64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - maven
+          requires:
+            - deploy-maven-central
+      - test-maven-deployment-windows-x86_64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - maven
+          requires:
+            - deploy-maven-central
 
   release:
     jobs:

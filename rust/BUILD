@@ -58,6 +58,7 @@ rust_library(
     deps = typedb_client_deps,
     proc_macro_deps = typedb_client_proc_macro_deps,
     tags = typedb_client_tags,
+    visibility = ["//visibility:public"]
 )
 
 rust_library(
@@ -67,31 +68,7 @@ rust_library(
     proc_macro_deps = typedb_client_proc_macro_deps,
     tags = typedb_client_tags,
     crate_features = ["sync"],
-)
-
-rust_static_library(
-    name = "typedb_client_clib",
-    srcs = typedb_client_srcs,
-    deps = typedb_client_deps,
-    proc_macro_deps = typedb_client_proc_macro_deps,
-    tags = typedb_client_tags,
-    crate_features = ["sync"],
-)
-
-rust_cbindgen(
-    name = "typedb_client_clib_headers",
-    lib = ":typedb_client_clib",
-    header_name = "typedb_client.h",
-    config = "cbindgen.toml",
-)
-
-swig_java(
-    name = "typedb_client_jni",
-    lib = ":typedb_client_clib_headers",
-    package = "com.vaticle.typedb.client.jni",
-    interface = "typedb_client.i",
-    includes = ["swig/typedb_client_java.swg"],
-    enable_cxx = True,
+    visibility = ["//visibility:public"]
 )
 
 assemble_crate(
@@ -100,7 +77,9 @@ assemble_crate(
     homepage = "https://github.com/vaticle/typedb-client-rust",
     license = "Apache-2.0",
     repository = "https://github.com/vaticle/typedb-client-rust",
-    target = "typedb_client",
+    target = ":typedb_client",
+    universe_manifests = ["@vaticle_dependencies//library/crates:Cargo.toml"],
+    crate_features = { "sync": [] },
 )
 
 deploy_crate(
@@ -126,7 +105,6 @@ checkstyle_test(
     include = glob([
         "*",
         "src/**/*",
-        "swig/*",
     ]),
     license_type = "apache-header",
 )

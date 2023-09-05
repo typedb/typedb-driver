@@ -25,12 +25,13 @@ import com.vaticle.typedb.client.TypeDB;
 import com.vaticle.typedb.client.api.TypeDBClient;
 import com.vaticle.typedb.client.api.TypeDBSession;
 import com.vaticle.typedb.client.api.TypeDBTransaction;
-import com.vaticle.typedb.client.api.concept.type.ThingType;
+import com.vaticle.typedb.client.api.concept.type.EntityType;
 import org.junit.Test;
 
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 // TODO: implement more advanced tests using TypeQL queries once TypeDB 2.0 supports them
 public class MavenApplicationTest {
@@ -41,9 +42,9 @@ public class MavenApplicationTest {
         client.databases().create("typedb");
         TypeDBSession session = client.session("typedb", TypeDBSession.Type.DATA);
         TypeDBTransaction tx = session.transaction(TypeDBTransaction.Type.WRITE);
-        ThingType root = tx.concepts().getRootThingType();
+        EntityType root = tx.concepts().getRootEntityType();
         assertNotNull(root);
-        assertEquals(4, root.asRemote(tx).getSubtypes().collect(Collectors.toList()).size());
+        assertEquals(1, root.getSubtypes(tx).collect(Collectors.toList()).size());
         tx.close();
         session.close();
         client.close();

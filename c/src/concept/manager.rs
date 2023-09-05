@@ -21,15 +21,16 @@
 
 use std::{ffi::c_char, ptr::addr_of_mut};
 
-use crate::{
-    bindings::{
-        error::{try_release, try_release_map_optional},
-        iterator::{iterator_try_next, CIterator},
-        memory::{borrow, free, release_string, string_view},
-    },
-    common::{box_stream, IID},
+use typedb_client::{
+    box_stream, IID,
     concept::{Concept, SchemaException, ValueType},
     Result, Transaction,
+};
+
+use crate::{
+    error::{try_release, try_release_map_optional},
+    iterator::{iterator_try_next, CIterator},
+    memory::{borrow, free, release_string, string_view},
 };
 
 #[no_mangle]

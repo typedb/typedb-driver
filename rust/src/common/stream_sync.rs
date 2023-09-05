@@ -25,7 +25,7 @@ use tokio::sync::mpsc::UnboundedReceiver;
 
 pub type BoxStream<'a, T> = Box<dyn Stream<Item = T> + Send + 'a>;
 
-pub(crate) fn box_stream<'a, T>(stream: impl Iterator<Item = T> + Send + 'a) -> BoxStream<'a, T> {
+pub fn box_stream<'a, T>(stream: impl Iterator<Item = T> + Send + 'a) -> BoxStream<'a, T> {
     Box::new(stream) as BoxStream<'a, T>
 }
 

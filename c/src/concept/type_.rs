@@ -21,6 +21,12 @@
 
 use std::ffi::c_char;
 
+use typedb_client::{
+    concept::{Annotation, Concept, Transitivity, ValueType},
+    transaction::concept::api::{AttributeTypeAPI, EntityTypeAPI, RelationTypeAPI, RoleTypeAPI},
+    Transaction,
+};
+
 use super::{
     concept::{
         borrow_as_attribute_type, borrow_as_attribute_type_mut, borrow_as_entity_type, borrow_as_entity_type_mut,
@@ -30,17 +36,12 @@ use super::{
     ConceptIterator,
 };
 use crate::{
-    bindings::{
-        concept::concept::borrow_as_value,
-        error::{
-            try_release, try_release_map_optional, try_release_optional_string, try_release_string, unwrap_or_default,
-            unwrap_void,
-        },
-        memory::{array_view, borrow, borrow_optional, release_string, string_view},
+    concept::concept::borrow_as_value,
+    error::{
+        try_release, try_release_map_optional, try_release_optional_string, try_release_string, unwrap_or_default,
+        unwrap_void,
     },
-    concept::{Annotation, Concept, Transitivity, ValueType},
-    transaction::concept::api::{AttributeTypeAPI, EntityTypeAPI, RelationTypeAPI, RoleTypeAPI},
-    Transaction,
+    memory::{array_view, borrow, borrow_optional, release_string, string_view},
 };
 
 #[no_mangle]
