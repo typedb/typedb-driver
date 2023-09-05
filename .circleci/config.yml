@@ -53,6 +53,16 @@ commands:
           export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip -- snapshot
 
+  test-deploy-linux-and-mac:
+    steps:
+      - run: |
+          bazel run //python/tests:typedb-extractor -- typedb-core
+          ./typedb-core/typedb server &
+          python3 -m pip install --extra-index-url https://repo.vaticle.com/repository/pypi-snapshot/simple typedb-client==0.0.0-$FACTORY_COMMIT
+          cd python/tests/deployment/ && python3 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+          kill $(jps | awk '/TypeDBServer/ {print $1}')
+          exit $TEST_SUCCESS
+
 jobs:
   deploy-mac-x86_64:
     macos:
@@ -63,6 +73,7 @@ jobs:
       - install-bazel-mac
       - install-requirements
       - deploy-pip-linux-and-mac
+      - test-deploy-linux-and-mac
   #       - TODO: deploy maven artifacts
 
   deploy-mac-arm64:
@@ -75,6 +86,7 @@ jobs:
       - install-bazel-mac
       - install-requirements
       - deploy-pip-linux-and-mac
+      - test-deploy-linux-and-mac
   #      - TODO: deploy maven artifacts
 
   deploy-linux-arm64:
@@ -87,6 +99,7 @@ jobs:
       - install-bazel-linux-arm64
       - install-requirements
       - deploy-pip-linux-and-mac
+      - test-deploy-linux-and-mac
   #      - TODO: deploy maven artifacts
 
   deploy-linux-x86_64:
@@ -98,6 +111,7 @@ jobs:
       - install-bazel-linux-x86_64
       - install-requirements
       - deploy-pip-linux-and-mac
+      - test-deploy-linux-and-mac
   #      - TODO: deploy maven artifacts
 
   deploy-windows-x86_64:
@@ -113,7 +127,7 @@ jobs:
 
 
 workflows:
-  typedb-client-java:
+  typedb-driver-python:
     jobs:
       - deploy-mac-x86_64:
           filters:
