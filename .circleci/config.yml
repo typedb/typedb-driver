@@ -43,8 +43,8 @@ commands:
   python-version-linux:
     steps:
       - run: |
-          pyenv install 3.9.0
-          pyenv global 3.9.0
+          pyenv install 3.9.6
+          pyenv global 3.9.6
 
   install-requirements:
     steps:
