@@ -67,6 +67,8 @@ jobs:
   deploy-mac-x86_64:
     macos:
       xcode: "14.2.0"
+      python:
+        version: 3.9.6
     working_directory: ~/typedb-driver-java
     steps:
       - checkout
@@ -79,6 +81,8 @@ jobs:
   deploy-mac-arm64:
     macos:
       xcode: "14.2.0"
+      python:
+        version: 3.9.6
     resource_class: macos.m1.medium.gen1
     working_directory: ~/typedb-driver-java
     steps:
@@ -93,6 +97,8 @@ jobs:
     machine:
       image: ubuntu-2204:current
       resource_class: arm.medium
+      python:
+        version: 3.9.6
     working_directory: ~/typedb-driver-java
     steps:
       - checkout
@@ -105,6 +111,8 @@ jobs:
   deploy-linux-x86_64:
     machine:
       image: ubuntu-2204:current
+      python:
+        version: 3.9.6
     working_directory: ~/typedb-driver-java
     steps:
       - checkout
