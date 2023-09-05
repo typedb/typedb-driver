@@ -291,13 +291,13 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
                  
         source tool/test/start-core-server.sh # use source to receive export vars
-        bazel test //python/tests/behaviour/connection/database:test-core --test_env=ROOT_CA=$ROOT_CA --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        bazel test //python/tests/behaviour/connection/database:test-core --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-        .factory/test-core.sh //python/tests/behaviour/connection/database/... --test_output=errors --jobs=1
-        .factory/test-core.sh //python/tests/behaviour/connection/session/... --test_output=errors --jobs=1
-        .factory/test-core.sh //python/tests/behaviour/connection/transaction/... --test_output=errors --jobs=1
+#        .factory/test-core.sh //python/tests/behaviour/connection/database/... --test_output=errors --jobs=1
+#        .factory/test-core.sh //python/tests/behaviour/connection/session/... --test_output=errors --jobs=1
+#        .factory/test-core.sh //python/tests/behaviour/connection/transaction/... --test_output=errors --jobs=1
     test-python-behaviour-connection-cluster:
       image: vaticle-ubuntu-22.04
       dependencies:
