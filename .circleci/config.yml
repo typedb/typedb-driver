@@ -64,6 +64,7 @@ commands:
       - run: |
           bazel run //python/tests:typedb-extractor -- typedb-all
           ./typedb-all/typedb server &
+          python3 -m pip install wheel
           python3 -m pip install --extra-index-url https://repo.vaticle.com/repository/pypi-snapshot/simple typedb-client==0.0.0+$(git rev-parse HEAD)
           cd python/tests/deployment/ && python3 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           kill $(jps | awk '/TypeDBServer/ {print $1}')

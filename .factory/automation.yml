@@ -309,6 +309,7 @@ build:
         sudo apt install python3-pip -y
         python3 -m pip install -U pip
         python3 -m pip install -r python/requirements_dev.txt
+        python3 -m pip install wheel
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
