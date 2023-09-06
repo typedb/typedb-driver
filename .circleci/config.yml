@@ -40,7 +40,7 @@ commands:
     steps:
       - run: brew install bazelisk
 
-  python-version-linux:
+  python-version-linux-and-mac:
     steps:
       - run: |
           pyenv install 3.9.6
@@ -78,6 +78,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-mac
+      - python-version-linux-and-mac
       - install-requirements
       - deploy-pip-linux-and-mac
       - test-deploy-snapshot-linux-and-mac
@@ -91,6 +92,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-mac
+      - python-version-linux-and-mac
       - install-requirements
       - deploy-pip-linux-and-mac
       - test-deploy-snapshot-linux-and-mac
@@ -104,7 +106,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-linux-arm64
-      - python-version-linux
+      - python-version-linux-and-mac
       - install-requirements
       - deploy-pip-linux-and-mac
       - test-deploy-snapshot-linux-and-mac
@@ -117,7 +119,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-linux-x86_64
-      - python-version-linux
+      - python-version-linux-and-mac
       - install-requirements
       - deploy-pip-linux-and-mac
       - test-deploy-snapshot-linux-and-mac
