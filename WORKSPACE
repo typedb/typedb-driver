@@ -37,8 +37,11 @@ load("@vaticle_dependencies//builder/python:deps.bzl", python_deps = "deps")
 python_deps()
 load("@rules_python//python:repositories.bzl", "py_repositories", "python_register_toolchains")
 py_repositories()
-python_register_toolchains(name = "python39", python_version = "3.9")
-load("@python39//:defs.bzl", python_interpreter = "interpreter")
+load("//python:python_versions.bzl", "register_all_toolchains")
+register_all_toolchains()
+#python_register_toolchains(name = "python39", python_version = "3.9")
+#python_register_toolchains(name = "python310", python_version = "3.10")
+#python_register_toolchains(name = "python311", python_version = "3.11")
 
 # Load //builder/java
 load("@vaticle_dependencies//builder/java:deps.bzl", java_deps = "deps")

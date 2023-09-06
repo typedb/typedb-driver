@@ -28,16 +28,21 @@ load("@vaticle_bazel_distribution//pip:rules.bzl", "assemble_pip", "deploy_pip")
 load("@vaticle_bazel_distribution_pip//:requirements.bzl", vaticle_bazel_distribution_requirement = "requirement")
 load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
 
-load("@vaticle_dependencies//builder/swig:python.bzl", "dyn_lib")
+load("@vaticle_dependencies//builder/swig:python.bzl", "swig_python", "dyn_lib")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("//:deployment.bzl", github_deployment = "deployment")
 
+load("//python/tool:multiversion.bzl", "build_and_deploy")
+load("//python:python_versions.bzl", "python_versions")
+
+
+build_and_deploy(python_versions = python_versions)
 
 genrule(
     name = "native-client-wrapper",
     outs = ["typedb/native_client_wrapper.py"],
-    srcs = ["//rust:native_client_python_wrapper"],
+    srcs = [":native-client-wrapper39"],
     cmd = "cp $< $@",
     visibility = ["//visibility:public"]
 )
@@ -45,9 +50,37 @@ genrule(
 dyn_lib(
     name = "native-client-binary",
     out = "typedb/native_client_python",
-    src = "//rust:native_client_python",
+    src = ":native_client_python39",
     visibility = ["//visibility:public"]
 )
+
+#swig_python(
+#    name = "native_client_python_wrapper",
+#    shared_lib_name = "native_client_python",
+#    lib = "//rust:typedb_client_clib_headers",
+#    interface = "//rust:typedb_client.i",
+#    includes = ["//rust:swig/typedb_client_python.swg"],
+#    enable_cxx = True,
+#    linkopts = select({
+#        "@vaticle_dependencies//util/platform:is_windows": ["ntdll.lib"],
+#        "//conditions:default": [],
+#    })
+#)
+#
+#genrule(
+#    name = "native-client-wrapper",
+#    outs = ["typedb/native_client_wrapper.py"],
+#    srcs = [":native_client_python_wrapper"],
+#    cmd = "cp $< $@",
+#    visibility = ["//visibility:public"]
+#)
+#
+#dyn_lib(
+#    name = "native-client-binary",
+#    out = "typedb/native_client_python",
+#    src = ":native_client_python",
+#    visibility = ["//visibility:public"]
+#)
 
 alias(
     name = "behave-exec",
@@ -58,14 +91,14 @@ alias(
     visibility = ["//visibility:public"],
 )
 
-py_library(
-    name = "client_python",
-    srcs = glob(["typedb/**/*.py"]) + [":native-client-wrapper"],
-    data = [":native-client-binary"],
-    deps = ["//rust:native_client_python_wrapper"],
-    imports = ["."],
-    visibility = ["//visibility:public"]
-)
+#py_library(
+#    name = "client_python",
+#    srcs = glob(["typedb/**/*.py"]) + [":native-client-wrapper"],
+#    data = [":native-client-binary"],
+#    deps = [":native_client_python_wrapper"],
+#    imports = ["."],
+#    visibility = ["//visibility:public"]
+#)
 
 checkstyle_test(
     name = "checkstyle",
@@ -83,48 +116,48 @@ checkstyle_test(
     size = "small",
 )
 
-assemble_pip(
-    name = "assemble-pip",
-    target = ":client_python",
-    package_name = "typedb-client",
-    classifiers = [
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "License :: OSI Approved :: Apache Software License",
-        "Operating System :: OS Independent",
-        "Intended Audience :: Developers",
-        "Intended Audience :: Science/Research",
-        "Environment :: Console",
-        "Topic :: Database :: Front-Ends"
-    ],
-    url = "https://github.com/vaticle/typedb-driver-python/",
-    author = "Vaticle",
-    author_email = "community@vaticle.com",
-    license = "Apache-2.0",
-    requirements_file = "//python:requirements.txt",
-    keywords = ["typedb", "database", "graph", "knowledgebase", "knowledge-engineering"],
-    description = "TypeDB Client for Python",
-    long_description_file = "//python:README.md",
-)
-
-deploy_pip(
-    name = "deploy-pip",
-    target = ":assemble-pip",
-    snapshot = deployment["pypi.snapshot"],
-    release = deployment["pypi.release"],
-    distribution_tag = select({
-        "@vaticle_dependencies//util/platform:is_mac_arm64": "py3-none-macosx_11_0_arm64",
-        "@vaticle_dependencies//util/platform:is_mac_x86_64": "py3-none-macosx_11_0_x86_64",
-        "@vaticle_dependencies//util/platform:is_linux_arm64": "py3-none-linux_aarch64",
-        "@vaticle_dependencies//util/platform:is_linux_x86_64": "py3-none-linux_x86_64",
-        "@vaticle_dependencies//util/platform:is_windows": "py3-none-win_amd64",
-    })
-)
+#assemble_pip(
+#    name = "assemble-pip",
+#    target = ":client_python",
+#    package_name = "typedb-client",
+#    classifiers = [
+#        "Programming Language :: Python",
+#        "Programming Language :: Python :: 3",
+#        "Programming Language :: Python :: 3.5",
+#        "Programming Language :: Python :: 3.6",
+#        "Programming Language :: Python :: 3.7",
+#        "Programming Language :: Python :: 3.8",
+#        "Programming Language :: Python :: 3.9",
+#        "License :: OSI Approved :: Apache Software License",
+#        "Operating System :: OS Independent",
+#        "Intended Audience :: Developers",
+#        "Intended Audience :: Science/Research",
+#        "Environment :: Console",
+#        "Topic :: Database :: Front-Ends"
+#    ],
+#    url = "https://github.com/vaticle/typedb-driver-python/",
+#    author = "Vaticle",
+#    author_email = "community@vaticle.com",
+#    license = "Apache-2.0",
+#    requirements_file = "//python:requirements.txt",
+#    keywords = ["typedb", "database", "graph", "knowledgebase", "knowledge-engineering"],
+#    description = "TypeDB Client for Python",
+#    long_description_file = "//python:README.md",
+#)
+#
+#deploy_pip(
+#    name = "deploy-pip",
+#    target = ":assemble-pip",
+#    snapshot = deployment["pypi.snapshot"],
+#    release = deployment["pypi.release"],
+#    distribution_tag = select({
+#        "@vaticle_dependencies//util/platform:is_mac_arm64": "py3-none-macosx_11_0_arm64",
+#        "@vaticle_dependencies//util/platform:is_mac_x86_64": "py3-none-macosx_11_0_x86_64",
+#        "@vaticle_dependencies//util/platform:is_linux_arm64": "py3-none-linux_aarch64",
+#        "@vaticle_dependencies//util/platform:is_linux_x86_64": "py3-none-linux_x86_64",
+#        "@vaticle_dependencies//util/platform:is_windows": "py3-none-win_amd64",
+#    })
+#)
 
 deploy_github(
     name = "deploy-github",
@@ -136,7 +169,7 @@ deploy_github(
     draft = False
 )
 
-# CI targets that are not declared in any BUILD file, but are called externally
+# CI targets that are not declared in any BUILD_ file, but are called externally
 filegroup(
     name = "ci",
     data = [

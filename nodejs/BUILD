@@ -179,7 +179,7 @@ checkstyle_test(
     license_type = "apache-header",
 )
 
-# CI targets that are not declared in any BUILD file, but are called externally
+# CI targets that are not declared in any BUILD_ file, but are called externally
 filegroup(
     name = "ci",
     data = [
