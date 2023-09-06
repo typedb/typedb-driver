@@ -78,7 +78,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-mac
-      - python-version-linux-and-mac
+#      - python-version-linux-and-mac
       - install-requirements
       - deploy-pip-linux-and-mac
       - test-deploy-snapshot-linux-and-mac
@@ -92,7 +92,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-mac
-      - python-version-linux-and-mac
+#      - python-version-linux-and-mac
       - install-requirements
       - deploy-pip-linux-and-mac
       - test-deploy-snapshot-linux-and-mac
@@ -106,7 +106,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-linux-arm64
-      - python-version-linux-and-mac
+#      - python-version-linux-and-mac
       - install-requirements
       - deploy-pip-linux-and-mac
       - test-deploy-snapshot-linux-and-mac
@@ -119,7 +119,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-linux-x86_64
-      - python-version-linux-and-mac
+#      - python-version-linux-and-mac
       - install-requirements
       - deploy-pip-linux-and-mac
       - test-deploy-snapshot-linux-and-mac
