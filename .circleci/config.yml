@@ -42,7 +42,8 @@ jobs:
     steps:
       - checkout
       - install-bazel-mac
-#      - TODO: deploy pip and maven artifacts
+      - run: |
+         bazel build --define version=$(git rev-parse HEAD) //c:assemble-maven
 
 
   deploy-mac-arm64:
@@ -53,7 +54,8 @@ jobs:
     steps:
       - checkout
       - install-bazel-mac
-#      - TODO: deploy pip and maven artifacts
+      - run: |
+         bazel build --define version=$(git rev-parse HEAD) //c:assemble-maven
 
   deploy-linux-arm64:
     machine:
@@ -63,7 +65,8 @@ jobs:
     steps:
       - checkout
       - install-bazel-linux-arm64
-  #      - TODO: deploy pip and maven artifacts
+      - run: |
+         bazel build --define version=$(git rev-parse HEAD) //c:assemble-maven
 
   deploy-windows-x86_64:
     executor:
@@ -85,21 +88,25 @@ workflows:
               only:
                 - master
                 - development
+                - maven
       - deploy-mac-arm64:
           filters:
             branches:
               only:
                 - master
                 - development
+                - maven
       - deploy-linux-arm64:
           filters:
             branches:
               only:
                 - master
                 - development
+                - maven
       - deploy-windows-x86_64:
           filters:
             branches:
               only:
                 - master
                 - development
+                - maven

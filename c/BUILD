@@ -29,6 +29,7 @@ load("@vaticle_dependencies//builder/swig:java.bzl", "swig_java")
 load("@vaticle_dependencies//builder/swig:python.bzl", "swig_python")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@vaticle_bazel_distribution//maven:rules.bzl", "assemble_maven", "deploy_maven")
 
 rust_static_library(
     name = "typedb_client_clib",
@@ -62,6 +63,17 @@ swig_java(
     maven_coordinates = "com.vaticle.typedb:typedb-client-jni-{platform}:{pom_version}",
     includes = ["swig/typedb_client_java.swg"],
     enable_cxx = True,
+)
+
+assemble_maven(
+    name = "assemble-maven",
+    project_description = "TypeDB Client JNI",
+    project_name = "TypeDB Client Java",
+    project_url = "https://github.com/vaticle/typedb-driver-java",
+    scm_url = "https://github.com/vaticle/typedb-driver-java",
+    target = ":typedb_client_jni",
+    version_overrides = version(artifacts_org, artifacts_repo),
+    workspace_refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
 )
 
 swig_python(
