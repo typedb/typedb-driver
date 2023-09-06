@@ -120,7 +120,7 @@ deploy_pip(
     distribution_tag = select({
         "@vaticle_dependencies//util/platform:is_mac_arm64": "py3-none-macosx_11_0_arm64",
         "@vaticle_dependencies//util/platform:is_mac_x86_64": "py3-none-macosx_11_0_x86_64",
-        "@vaticle_dependencies//util/platform:is_linux_arm64": "py3-none-linux_arm64",
+        "@vaticle_dependencies//util/platform:is_linux_arm64": "py3-none-linux_aarch64",
         "@vaticle_dependencies//util/platform:is_linux_x86_64": "py3-none-linux_x86_64",
         "@vaticle_dependencies//util/platform:is_windows": "py3-none-win_amd64",
     })
