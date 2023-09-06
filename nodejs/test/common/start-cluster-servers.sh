@@ -26,17 +26,17 @@ NODE_COUNT=${1:-1}
 
 peers=
 for i in $(seq 1 $NODE_COUNT); do
-  peers="${peers} --server.peers.peer-${i}.address=127.0.0.1:${i}1729"
-  peers="${peers} --server.peers.peer-${i}.internal-address.zeromq=127.0.0.1:${i}1730"
-  peers="${peers} --server.peers.peer-${i}.internal-address.grpc=127.0.0.1:${i}1731"
+  peers="${peers} --server.peers.peer-${i}.address=localhost:${i}1729"
+  peers="${peers} --server.peers.peer-${i}.internal-address.zeromq=localhost:${i}1730"
+  peers="${peers} --server.peers.peer-${i}.internal-address.grpc=localhost:${i}1731"
 done
 
 function server_start() {
   ./${1}/typedb cluster \
     --storage.data=server/data \
-    --server.address=127.0.0.1:${1}1729 \
-    --server.internal-address.zeromq=127.0.0.1:${1}1730 \
-    --server.internal-address.grpc=127.0.0.1:${1}1731 \
+    --server.address=localhost:${1}1729 \
+    --server.internal-address.zeromq=localhost:${1}1730 \
+    --server.internal-address.grpc=localhost:${1}1731 \
     $peers \
     --server.encryption.enable=true
 }
