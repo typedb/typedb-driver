@@ -26,7 +26,7 @@ import com.vaticle.typedb.client.common.exception.TypeDBClientException;
 
 public abstract class NativeObject<T> {
     static {
-        System.loadLibrary("typedb_client_jni");
+        Loader.loadNativeLibraries();
     }
 
     public final T nativeObject;
