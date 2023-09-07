@@ -31,7 +31,9 @@ pub mod transaction;
 mod user;
 
 pub use self::{
-    common::{box_stream, error, BoxStream, info, Credential, Error, IID, Options, Result, SessionType, TransactionType},
+    common::{
+        box_stream, error, info, BoxStream, Credential, Error, Options, Result, SessionType, TransactionType, IID,
+    },
     connection::Connection,
     database::{Database, DatabaseManager, Session},
     transaction::Transaction,
