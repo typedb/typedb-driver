@@ -653,24 +653,6 @@ build:
         export DEPLOY_CRATE_TOKEN=$REPO_VATICLE_CRATES_TOKEN
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run --define version=$(git rev-parse HEAD) //rust:deploy_crate -- snapshot
-    test-deployment-maven:
-      image: vaticle-ubuntu-22.04
-      dependencies: [deploy-maven-snapshot]
-      filter:
-        owner: vaticle
-        branch: [master, development]
-      command: |
-        export REPO_DIR="/home/factory/$FACTORY_REPO/"
-        export TYPEDB_DIST_DIR="dist/typedb-all-linux/"
-        bazel run //java/test:typedb-extractor-linux -- $TYPEDB_DIST_DIR
-        export TYPEDB_SVC_PATH="${REPO_DIR//\//\\/}${TYPEDB_DIST_DIR//\//\\/}"
-        bazel run @vaticle_dependencies//tool/util:create-systemd-service -- typedb "${TYPEDB_SVC_PATH}typedb server"
-        sudo systemctl daemon-reload
-        sudo systemctl start typedb
-
-        sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$FACTORY_COMMIT/g" test/deployment/pom.xml
-        cat test/deployment/pom.xml
-        cd test/deployment && mvn test
     deploy-pip-snapshot:
       image: vaticle-ubuntu-20.04
       dependencies: [

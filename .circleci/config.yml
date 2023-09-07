@@ -55,6 +55,21 @@ commands:
           bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
           bazel run --define version=$(git rev-parse HEAD) //java:deploy-maven -- snapshot
 
+  test-deployment-linux:
+    steps:
+      - run: |
+          export REPO_DIR="/home/factory/$FACTORY_REPO/"
+          export TYPEDB_DIST_DIR="dist/typedb-all-linux/"
+          bazel run //java/test:typedb-extractor-linux -- $TYPEDB_DIST_DIR
+          export TYPEDB_SVC_PATH="${REPO_DIR//\//\\/}${TYPEDB_DIST_DIR//\//\\/}"
+          bazel run @vaticle_dependencies//tool/util:create-systemd-service -- typedb "${TYPEDB_SVC_PATH}typedb server"
+          sudo systemctl daemon-reload
+          sudo systemctl start typedb
+
+          sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$FACTORY_COMMIT/g" test/deployment/pom.xml
+          cat test/deployment/pom.xml
+          cd test/deployment && mvn test
+
 jobs:
   deploy-central-linux-x86_64:
     machine:
@@ -115,6 +130,26 @@ jobs:
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\deploy_jni_maven.bat
 
+  test-deployment-linux-x86_64:
+    machine:
+      image: ubuntu-2204:current
+      resource_class: medium
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-linux-x86_64
+      - test-deployment-linux
+
+  test-deployment-linux-arm64:
+    machine:
+      image: ubuntu-2204:current
+      resource_class: arm.medium
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-linux-arm64
+      - test-deployment-linux
+
 
 workflows:
   typedb-client-java:
@@ -161,3 +196,23 @@ workflows:
                 - master
                 - development
                 - maven
+      - test-deployment-linux-x86_64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - maven
+          requires:
+            - deploy-central-linux-x86_64
+            - deploy-linux-x86_64
+      - test-deployment-linux-arm64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - maven
+          requires:
+            - deploy-central-linux-x86_64
+            - deploy-linux-arm64
