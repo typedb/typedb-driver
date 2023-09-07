@@ -21,12 +21,13 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_dependencies//distribution/maven:version.bzl", "version")
-load("@vaticle_dependencies//library/maven:artifacts.bzl", artifacts_org = "artifacts")
-load("@vaticle_dependencies//builder/swig:java.bzl", "swig_java")
 load("//dependencies/maven:artifacts.bzl", artifacts_repo = "overrides")
 load("@vaticle_bazel_distribution//maven:rules.bzl", "assemble_maven", "deploy_maven")
+load("@vaticle_dependencies//builder/swig:java.bzl", "swig_java")
+load("@vaticle_dependencies//distribution/maven:version.bzl", "version")
+load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
+load("@vaticle_dependencies//library/maven:artifacts.bzl", artifacts_org = "artifacts")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 java_library(
     name = "client-java",
@@ -71,12 +72,12 @@ assemble_maven(
     }
 )
 
-# deploy_maven(
-#     name = "deploy-maven",
-#     release = deployment["maven.release"],
-#     snapshot = deployment["maven.snapshot"],
-#     target = ":assemble-maven",
-# )
+deploy_maven(
+    name = "deploy-maven",
+    release = deployment["maven.release"],
+    snapshot = deployment["maven.snapshot"],
+    target = ":assemble-maven",
+)
 
 # deploy_github(
 #     name = "deploy-github",
@@ -107,4 +108,11 @@ assemble_maven(
     target = ":typedb_client_jni",
     version_overrides = version(artifacts_org, artifacts_repo),
     workspace_refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
+)
+
+deploy_maven(
+    name = "deploy-maven-jni",
+    release = deployment["maven.release"],
+    snapshot = deployment["maven.snapshot"],
+    target = ":assemble-maven",
 )

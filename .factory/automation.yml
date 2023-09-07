@@ -665,11 +665,12 @@ build:
       ]
       filter:
         owner: vaticle
-        branch: [master, development]
+        branch: [master, development, maven]
       command: |
         export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
         export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run --define version=$(git rev-parse HEAD) //java:deploy-maven-jni -- snapshot
         bazel run --define version=$(git rev-parse HEAD) //java:deploy-maven -- snapshot
     test-deployment-maven:
       image: vaticle-ubuntu-22.04

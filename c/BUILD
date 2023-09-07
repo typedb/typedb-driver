@@ -22,16 +22,9 @@
 package(default_visibility = ["//visibility:public"])
 
 load("@rules_rust//rust:defs.bzl", "rust_library", "rust_static_library", "rustfmt_test")
-load("@vaticle_bazel_distribution//crates:rules.bzl", "assemble_crate", "deploy_crate")
-load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
 load("@vaticle_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
 load("@vaticle_dependencies//builder/swig:python.bzl", "swig_python")
-load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_dependencies//distribution/maven:version.bzl", "version")
-load("@vaticle_dependencies//library/maven:artifacts.bzl", artifacts_org = "artifacts")
-load("//dependencies/maven:artifacts.bzl", artifacts_repo = "overrides")
-load("@vaticle_bazel_distribution//maven:rules.bzl", "assemble_maven", "deploy_maven")
 
 rust_static_library(
     name = "typedb_client_clib",
