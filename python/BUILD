@@ -110,6 +110,7 @@ checkstyle_test(
         "WORKSPACE",
         "deployment.bzl",
         "requirements*.txt",
+        "python_versions.bzl",
         "typedb/**/*",
     ]),
     license_type = "apache-header",
