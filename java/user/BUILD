@@ -31,7 +31,7 @@ java_library(
         "//java/api:api",
         "//java/common:common",
 
-        "//c:typedb_client_jni",
+        "//java:typedb_client_jni",
     ],
     runtime_deps = [
         "@maven//:ch_qos_logback_logback_classic",

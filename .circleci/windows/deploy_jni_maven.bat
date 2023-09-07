@@ -29,5 +29,5 @@ SET DEPLOY_PIP_PASSWORD=%REPO_VATICLE_PASSWORD%
 SET RUST_BACKTRACE=1
 git rev-parse HEAD > version_snapshot.txt
 set /p VER=<version_snapshot.txt
-bazel --output_user_root=C:/bazel build --verbose_failures --define version=%VER% //c:assemble-maven
+bazel --output_user_root=C:/bazel build --verbose_failures --define version=%VER% //java:assemble-maven-jni
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%

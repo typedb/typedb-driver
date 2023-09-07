@@ -43,7 +43,7 @@ jobs:
       - checkout
       - install-bazel-mac
       - run: |
-         bazel build --define version=$(git rev-parse HEAD) //c:assemble-maven
+         bazel build --define version=$(git rev-parse HEAD) //java:assemble-maven-jni
 
   deploy-mac-arm64:
     macos:
@@ -54,7 +54,7 @@ jobs:
       - checkout
       - install-bazel-mac
       - run: |
-         bazel build --define version=$(git rev-parse HEAD) //c:assemble-maven
+         bazel build --define version=$(git rev-parse HEAD) //java:assemble-maven-jni
 
   deploy-linux-arm64:
     machine:
@@ -65,7 +65,7 @@ jobs:
       - checkout
       - install-bazel-linux-arm64
       - run: |
-         bazel build --define version=$(git rev-parse HEAD) //c:assemble-maven
+         bazel build --define version=$(git rev-parse HEAD) //java:assemble-maven-jni
 
   deploy-windows-x86_64:
     executor:

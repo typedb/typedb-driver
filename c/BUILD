@@ -25,7 +25,6 @@ load("@rules_rust//rust:defs.bzl", "rust_library", "rust_static_library", "rustf
 load("@vaticle_bazel_distribution//crates:rules.bzl", "assemble_crate", "deploy_crate")
 load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
 load("@vaticle_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
-load("@vaticle_dependencies//builder/swig:java.bzl", "swig_java")
 load("@vaticle_dependencies//builder/swig:python.bzl", "swig_python")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
@@ -56,27 +55,6 @@ rust_cbindgen(
     lib = ":typedb_client_clib",
     header_name = "typedb_client.h",
     config = "cbindgen.toml",
-)
-
-swig_java(
-    name = "typedb_client_jni",
-    lib = ":typedb_client_clib_headers",
-    package = "com.vaticle.typedb.client.jni",
-    interface = "typedb_client.i",
-    maven_coordinates = "com.vaticle.typedb:typedb-client-jni-{platform}:{pom_version}",
-    includes = ["swig/typedb_client_java.swg"],
-    enable_cxx = True,
-)
-
-assemble_maven(
-    name = "assemble-maven",
-    project_description = "TypeDB Client JNI",
-    project_name = "TypeDB Client Java",
-    project_url = "https://github.com/vaticle/typedb-driver-java",
-    scm_url = "https://github.com/vaticle/typedb-driver-java",
-    target = ":typedb_client_jni",
-    version_overrides = version(artifacts_org, artifacts_repo),
-    workspace_refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
 )
 
 swig_python(

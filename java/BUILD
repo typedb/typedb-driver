@@ -24,6 +24,7 @@ package(default_visibility = ["//visibility:public"])
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_dependencies//distribution/maven:version.bzl", "version")
 load("@vaticle_dependencies//library/maven:artifacts.bzl", artifacts_org = "artifacts")
+load("@vaticle_dependencies//builder/swig:java.bzl", "swig_java")
 load("//dependencies/maven:artifacts.bzl", artifacts_repo = "overrides")
 load("@vaticle_bazel_distribution//maven:rules.bzl", "assemble_maven", "deploy_maven")
 
@@ -60,7 +61,7 @@ assemble_maven(
     version_overrides = version(artifacts_org, artifacts_repo),
     workspace_refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
     profile_overrides = {
-        "//c:typedb_client_jni": json.encode({
+        ":typedb_client_jni": json.encode({
             "windows-x86_64": "com.vaticle.typedb:typedb-client-jni-windows-x86_64:{pom_version}",
             "linux-aarch64": "com.vaticle.typedb:typedb-client-jni-linux-aarch64:{pom_version}",
             "linux-x86_64": "com.vaticle.typedb:typedb-client-jni-linux-x86_64:{pom_version}",
@@ -86,3 +87,24 @@ assemble_maven(
 #     repository = github_deployment["github.repository"],
 #     title_append_version = True,
 # )
+
+swig_java(
+    name = "typedb_client_jni",
+    lib = "//c:typedb_client_clib_headers",
+    package = "com.vaticle.typedb.client.jni",
+    interface = "//c:typedb_client.i",
+    maven_coordinates = "com.vaticle.typedb:typedb-client-jni-{platform}:{pom_version}",
+    includes = ["//c:swig/typedb_client_java.swg"],
+    enable_cxx = True,
+)
+
+assemble_maven(
+    name = "assemble-maven-jni",
+    project_description = "TypeDB Client JNI",
+    project_name = "TypeDB Client Java",
+    project_url = "https://github.com/vaticle/typedb-driver-java",
+    scm_url = "https://github.com/vaticle/typedb-driver-java",
+    target = ":typedb_client_jni",
+    version_overrides = version(artifacts_org, artifacts_repo),
+    workspace_refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
+)
