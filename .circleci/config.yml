@@ -66,9 +66,9 @@ commands:
           sudo systemctl daemon-reload
           sudo systemctl start typedb
 
-          sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$FACTORY_COMMIT/g" test/deployment/pom.xml
-          cat test/deployment/pom.xml
-          cd test/deployment && mvn test
+          sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$FACTORY_COMMIT/g" java/test/deployment/pom.xml
+          cat java/test/deployment/pom.xml
+          cd java/test/deployment && mvn test
 
 jobs:
   deploy-central-linux-x86_64:
