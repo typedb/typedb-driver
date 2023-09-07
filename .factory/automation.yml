@@ -728,7 +728,9 @@ build:
         sudo ln -s /usr/share/pyshared/lsb_release.py /opt/pyenv/versions/3.9.6/lib/python3.9/site-packages/lsb_release.py
         export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
         export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
-        bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip -- snapshot
+        bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip39 -- snapshot
+        bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip310 -- snapshot
+        bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip311 -- snapshot
     test-python-deployment-pip:
       image: vaticle-ubuntu-22.04
       dependencies: [deploy-pip-snapshot]

@@ -57,7 +57,9 @@ commands:
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip -- snapshot
+          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip39 -- snapshot
+          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip310 -- snapshot
+          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip311 -- snapshot
 
   test-deploy-snapshot-linux-and-mac:
     steps:
