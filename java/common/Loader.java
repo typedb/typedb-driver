@@ -66,7 +66,7 @@ public class Loader {
         if (!loaded) {
             try {
                 Path tempPath = getNativeResourceURI();
-                System.load(tempPath.resolve("c").resolve(System.mapLibraryName("typedb_client_jni")).toString());
+                System.load(tempPath.resolve(System.mapLibraryName("typedb_client_jni")).toString());
                 loaded = true;
             } catch (IOException e) {
                 throw new RuntimeException(e);
