@@ -114,5 +114,5 @@ deploy_maven(
     name = "deploy-maven-jni",
     release = deployment["maven.release"],
     snapshot = deployment["maven.snapshot"],
-    target = ":assemble-maven",
+    target = ":assemble-maven-jni",
 )
