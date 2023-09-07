@@ -59,7 +59,7 @@ jobs:
 
   deploy-linux-arm64:
     machine:
-      image: ubuntu-2004:current
+      image: ubuntu-2204:current
       resource_class: arm.medium
     working_directory: ~/typedb-driver-java
     steps:
