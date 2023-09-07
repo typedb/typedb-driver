@@ -23,6 +23,12 @@ version: 2.1
 orbs:
   win: circleci/windows@2.0.0
 commands:
+  install-bazel-linux-x86_64:
+    steps:
+      - run: curl -OL https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-amd64
+      - run: sudo mv bazelisk-linux-amd64 /usr/local/bin/bazel
+      - run: chmod a+x /usr/local/bin/bazel
+
   install-bazel-linux-arm64:
     steps:
       - run: curl -OL https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-arm64
@@ -38,9 +44,28 @@ commands:
       - run: |
           export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
+          bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
           bazel run --define version=$(git rev-parse HEAD) //java:deploy-maven-jni -- snapshot
 
+  deploy-central-unix:
+    steps:
+      - run: |
+          export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
+          export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
+          bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+          bazel run --define version=$(git rev-parse HEAD) //java:deploy-maven -- snapshot
+
 jobs:
+  deploy-central-linux-x86_64:
+    machine:
+      image: ubuntu-2204:current
+      resource_class: medium
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-linux-x86_64
+      - deploy-central-unix
+
   deploy-mac-x86_64:
     macos:
       xcode: "14.2.0"
@@ -58,6 +83,16 @@ jobs:
     steps:
       - checkout
       - install-bazel-mac
+      - deploy-jni-unix
+
+  deploy-linux-x86_64:
+    machine:
+      image: ubuntu-2204:current
+      resource_class: medium
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-linux-x86_64
       - deploy-jni-unix
 
   deploy-linux-arm64:
@@ -84,6 +119,13 @@ jobs:
 workflows:
   typedb-client-java:
     jobs:
+      - deploy-central-linux-x86_64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - maven
       - deploy-mac-x86_64:
           filters:
             branches:
@@ -92,6 +134,13 @@ workflows:
                 - development
                 - maven
       - deploy-mac-arm64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - maven
+      - deploy-linux-x86_64:
           filters:
             branches:
               only:

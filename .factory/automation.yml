@@ -653,25 +653,6 @@ build:
         export DEPLOY_CRATE_TOKEN=$REPO_VATICLE_CRATES_TOKEN
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run --define version=$(git rev-parse HEAD) //rust:deploy_crate -- snapshot
-    deploy-maven-snapshot:
-      image: vaticle-ubuntu-22.04
-      dependencies: [
-        build, build-dependency,
-        test-java-behaviour-connection-core, test-java-behaviour-connection-cluster,
-        test-java-behaviour-concept-core, test-java-behaviour-concept-cluster,
-        test-java-behaviour-match-core, test-java-behaviour-match-cluster,
-        test-java-behaviour-writable-core, test-java-behaviour-writable-cluster,
-        test-java-behaviour-definable-core, test-java-behaviour-definable-cluster
-      ]
-      filter:
-        owner: vaticle
-        branch: [master, development, maven]
-      command: |
-        export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
-        export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
-        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run --define version=$(git rev-parse HEAD) //java:deploy-maven-jni -- snapshot
-        bazel run --define version=$(git rev-parse HEAD) //java:deploy-maven -- snapshot
     test-deployment-maven:
       image: vaticle-ubuntu-22.04
       dependencies: [deploy-maven-snapshot]
