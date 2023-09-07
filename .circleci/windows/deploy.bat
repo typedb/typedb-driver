@@ -28,6 +28,7 @@ bazel --output_user_root=C:/tmp build --verbose_failures --define version=%VER% 
 bazel --output_user_root=C:/tmp build --verbose_failures --define version=%VER% //python:deploy-pip310
 bazel --output_user_root=C:/tmp build --verbose_failures --define version=%VER% //python:deploy-pip311
 cd bazel-bin
+C:\Python39\python.exe -m pip install twine
 python3 python/deploy-pip39_deploy.py snapshot
 python3 python/deploy-pip310_deploy.py snapshot
 python3 python/deploy-pip311_deploy.py snapshot
