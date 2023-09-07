@@ -116,6 +116,7 @@ def build_and_deploy(python_versions):
             target = ":assemble-pip" + version["suffix"],
             snapshot = deployment["pypi.snapshot"],
             release = deployment["pypi.release"],
+            suffix = version["suffix"],
             distribution_tag = select({
                 "@vaticle_dependencies//util/platform:is_mac_arm64": "py" + version["suffix"] + "-none-macosx_11_0_arm64",
                 "@vaticle_dependencies//util/platform:is_mac_x86_64": "py" + version["suffix"] + "-none-macosx_11_0_x86_64",
