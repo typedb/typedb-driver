@@ -19,12 +19,16 @@ REM needs to be called such that software installed
 REM by Chocolatey in prepare.bat is accessible
 CALL refreshenv
 
-ECHO Building and deploying windows package...
+ECHO Testing deployed pip package...
 SET DEPLOY_PIP_USERNAME=%REPO_VATICLE_USERNAME%
 SET DEPLOY_PIP_PASSWORD=%REPO_VATICLE_PASSWORD%
+SET RUST_BACKTRACE=1
 git rev-parse HEAD > version_temp.txt
 set /p VER=<version_temp.txt
-bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip39 -- snapshot
-bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip310 -- snapshot
-bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip311 -- snapshot
+bazel --output_user_root=C:/tmp run --verbose_failures //python/tests:typedb-extractor -- typedb-all
+call START /B typedb-all/typedb server
+python3 -m pip install --extra-index-url https://repo.vaticle.com/repository/pypi-snapshot/simple typedb-client==0.0.0+%VER%
+cd python/tests/deployment
+python3 -m unittest test
+taskkill "typedb.exe"
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
