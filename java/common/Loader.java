@@ -36,7 +36,7 @@ import java.util.Objects;
 public class Loader {
     private static Path getNativeResourceURI() throws IOException {
         ClassLoader loader = Loader.class.getClassLoader();
-        String resource = "c/" + System.mapLibraryName("typedb_client_jni");
+        String resource = "java/" + System.mapLibraryName("typedb_client_jni");
         URL resourceURL = loader.getResource(resource);
         Objects.requireNonNull(resourceURL,
                 String.format("Resource %s was not found in ClassLoader %s", resource, loader));
@@ -49,7 +49,7 @@ public class Loader {
     }
 
     private static Path unpackNativeResources(URI resourceURI) throws IOException {
-        Path tempPath = Files.createTempDirectory("pom-test");
+        Path tempPath = Files.createTempDirectory("typedb-driver");
         tempPath.toFile().deleteOnExit();
 
         FileSystem fs = FileSystems.newFileSystem(resourceURI, Collections.emptyMap());
