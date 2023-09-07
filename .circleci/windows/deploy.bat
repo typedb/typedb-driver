@@ -24,9 +24,9 @@ SET DEPLOY_PIP_USERNAME=%REPO_VATICLE_USERNAME%
 SET DEPLOY_PIP_PASSWORD=%REPO_VATICLE_PASSWORD%
 git rev-parse HEAD > version_temp.txt
 set /p VER=<version_temp.txt
-bazel --output_user_root=C:/tmp build --verbose_failures --define version=%VER% //python:deploy-pip39 -- snapshot
-bazel --output_user_root=C:/tmp build --verbose_failures --define version=%VER% //python:deploy-pip310 -- snapshot
-bazel --output_user_root=C:/tmp build --verbose_failures --define version=%VER% //python:deploy-pip311 -- snapshot
+bazel --output_user_root=C:/tmp build --verbose_failures --define version=%VER% //python:deploy-pip39
+bazel --output_user_root=C:/tmp build --verbose_failures --define version=%VER% //python:deploy-pip310
+bazel --output_user_root=C:/tmp build --verbose_failures --define version=%VER% //python:deploy-pip311
 cd bazel-bin
 python3 python/deploy-pip39_deploy.py snapshot
 python3 python/deploy-pip310_deploy.py snapshot
