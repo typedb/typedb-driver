@@ -93,9 +93,7 @@ def build_and_deploy(python_versions):
             suffix = version["suffix"],
             classifiers = [
                 "Programming Language :: Python",
-                "Programming Language :: Python :: 3.9",
-                "Programming Language :: Python :: 3.10",
-                "Programming Language :: Python :: 3.11",
+                "Programming Language :: Python :: " + version["python_version"],
                 "License :: OSI Approved :: Apache Software License",
                 "Operating System :: OS Independent",
                 "Intended Audience :: Developers",
