@@ -657,11 +657,11 @@ build:
       image: vaticle-ubuntu-22.04
       dependencies: [
         build, build-dependency,
-        test-behaviour-connection-core, test-behaviour-connection-cluster,
-        test-behaviour-concept-core, test-behaviour-concept-cluster,
-        test-behaviour-match-core, test-behaviour-match-cluster,
-        test-behaviour-writable-core, test-behaviour-writable-cluster,
-        test-behaviour-definable-core, test-behaviour-definable-cluster
+        test-java-behaviour-connection-core, test-java-behaviour-connection-cluster,
+        test-java-behaviour-concept-core, test-java-behaviour-concept-cluster,
+        test-java-behaviour-match-core, test-java-behaviour-match-cluster,
+        test-java-behaviour-writable-core, test-java-behaviour-writable-cluster,
+        test-java-behaviour-definable-core, test-java-behaviour-definable-cluster
       ]
       filter:
         owner: vaticle
