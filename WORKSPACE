@@ -19,7 +19,7 @@
 # under the License.
 #
 
-workspace(name = "vaticle_typedb_driver")
+workspace(name = "vtdbd")
 
 ################################
 # Load @vaticle_dependencies #
