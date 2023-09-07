@@ -23,7 +23,6 @@ version: 2.1
 orbs:
   win: circleci/windows@2.0.0
 commands:
-
   install-bazel-linux-arm64:
     steps:
       - run: curl -OL https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-arm64
@@ -34,6 +33,13 @@ commands:
     steps:
       - run: brew install bazelisk
 
+  deploy-jni-unix:
+    steps:
+      - run: |
+          export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
+          export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
+          bazel run --define version=$(git rev-parse HEAD) //java:deploy-maven-jni -- snapshot
+
 jobs:
   deploy-mac-x86_64:
     macos:
@@ -42,10 +48,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-mac
-      - run: |
-          export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
-          export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --define version=$(git rev-parse HEAD) //java:deploy-maven-jni -- snapshot
+      - deploy-jni-unix
 
   deploy-mac-arm64:
     macos:
@@ -55,10 +58,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-mac
-      - run: |
-          export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
-          export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --define version=$(git rev-parse HEAD) //java:deploy-maven-jni -- snapshot
+      - deploy-jni-unix
 
   deploy-linux-arm64:
     machine:
@@ -68,10 +68,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-linux-arm64
-      - run: |
-         export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
-         export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
-         bazel run --define version=$(git rev-parse HEAD) //java:deploy-maven-jni -- snapshot
+      - deploy-jni-unix
 
   deploy-windows-x86_64:
     executor:
