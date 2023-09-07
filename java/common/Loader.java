@@ -36,7 +36,7 @@ import java.util.Objects;
 public class Loader {
     private static Path getNativeResourceURI() throws IOException {
         ClassLoader loader = Loader.class.getClassLoader();
-        String resource = "java/" + System.mapLibraryName("typedb_client_jni");
+        String resource = System.mapLibraryName("typedb_client_jni");
         URL resourceURL = loader.getResource(resource);
         Objects.requireNonNull(resourceURL,
                 String.format("Resource %s was not found in ClassLoader %s", resource, loader));
