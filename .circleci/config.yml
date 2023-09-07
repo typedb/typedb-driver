@@ -55,20 +55,19 @@ commands:
           bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
           bazel run --define version=$(git rev-parse HEAD) //java:deploy-maven -- snapshot
 
-  test-deployment-linux:
+  test-deployment-unix:
     steps:
       - run: |
           export REPO_DIR="/home/factory/$CIRCLE_PROJECT_REPONAME/"
           export TYPEDB_DIST_DIR="dist/typedb-all-linux/"
           bazel run //java/test:typedb-extractor-linux -- $TYPEDB_DIST_DIR
-          export TYPEDB_SVC_PATH="${REPO_DIR//\//\\/}${TYPEDB_DIST_DIR//\//\\/}"
-          bazel run @vaticle_dependencies//tool/util:create-systemd-service -- typedb "${TYPEDB_SVC_PATH}typedb server"
-          sudo systemctl daemon-reload
-          sudo systemctl start typedb
-
+          $TYPEDB_DIST_DIR/typedb server &
+          PID=$!
+          
           sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$CIRCLE_SHA1/g" java/test/deployment/pom.xml
           cat java/test/deployment/pom.xml
           cd java/test/deployment && mvn test
+          kill $PID
 
 jobs:
   deploy-central-linux-x86_64:
@@ -130,6 +129,25 @@ jobs:
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\deploy_jni_maven.bat
 
+  test-deployment-mac-x86_64:
+    macos:
+      xcode: "14.2.0"
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-mac
+      - test-deployment-unix
+
+  test-deployment-mac-arm64:
+    macos:
+      xcode: "14.2.0"
+    resource_class: macos.m1.medium.gen1
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-mac
+      - test-deployment-unix
+
   test-deployment-linux-x86_64:
     machine:
       image: ubuntu-2204:current
@@ -138,7 +156,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-linux-x86_64
-      - test-deployment-linux
+      - test-deployment-unix
 
   test-deployment-linux-arm64:
     machine:
@@ -148,7 +166,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-linux-arm64
-      - test-deployment-linux
+      - test-deployment-unix
 
 
 workflows:
@@ -196,6 +214,26 @@ workflows:
                 - master
                 - development
                 - maven
+      - test-deployment-mac-x86_64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - maven
+          requires:
+            - deploy-central-linux-x86_64
+            - deploy-mac-x86_64
+      - test-deployment-mac-arm64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - maven
+          requires:
+            - deploy-central-linux-x86_64
+            - deploy-mac-arm64
       - test-deployment-linux-x86_64:
           filters:
             branches:
