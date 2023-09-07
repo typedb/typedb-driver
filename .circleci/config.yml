@@ -58,7 +58,7 @@ commands:
   test-deployment-linux:
     steps:
       - run: |
-          export REPO_DIR="/home/factory/$FACTORY_REPO/"
+          export REPO_DIR="/home/factory/$CIRCLE_PROJECT_REPONAME/"
           export TYPEDB_DIST_DIR="dist/typedb-all-linux/"
           bazel run //java/test:typedb-extractor-linux -- $TYPEDB_DIST_DIR
           export TYPEDB_SVC_PATH="${REPO_DIR//\//\\/}${TYPEDB_DIST_DIR//\//\\/}"
@@ -66,7 +66,7 @@ commands:
           sudo systemctl daemon-reload
           sudo systemctl start typedb
 
-          sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$FACTORY_COMMIT/g" java/test/deployment/pom.xml
+          sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$CIRCLE_SHA1/g" java/test/deployment/pom.xml
           cat java/test/deployment/pom.xml
           cd java/test/deployment && mvn test
 
