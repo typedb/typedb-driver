@@ -29,4 +29,3 @@
 ## Dependencies
 
 parse==1.18.0
-behave==1.2.6

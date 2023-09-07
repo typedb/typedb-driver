@@ -281,17 +281,15 @@ build:
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
-        sudo apt-get update
-        sudo apt install python3-pip -y
-        python3 -m pip install -U pip
-        python3 -m pip install -r python/requirements_dev.txt
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
                  
         source tool/test/start-core-server.sh # use source to receive export vars
-        bazel test //python/tests/behaviour/connection/database:test-core --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-core.sh //python/tests/behaviour/connection/database/.. --test_output=streamed --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-core.sh //python/tests/behaviour/connection/session/.. --test_output=streamed --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-core.sh //python/tests/behaviour/connection/transaction/.. --test_output=streamed --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
@@ -305,11 +303,6 @@ build:
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
-        sudo apt-get update
-        sudo apt install python3-pip -y
-        python3 -m pip install -U pip
-        python3 -m pip install -r python/requirements_dev.txt
-        python3 -m pip install wheel
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
@@ -317,8 +310,18 @@ build:
 
         source nodejs/test/common/start-cluster-servers.sh # use source to receive export vars
         .factory/test-cluster.sh //python/tests/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //python/tests/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //python/tests/behaviour/connection/transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //python/tests/behaviour/connection/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         ./nodejs/test/common/stop-cluster-servers.sh
         exit $TEST_SUCCESS
+
+#        sudo apt-get update
+#        sudo apt install python3-pip -y
+#        python3 -m pip install -U pip
+#        python3 -m pip install -r python/requirements_dev.txt
+#        python3 -m pip install wheel
+
 
 #        .factory/test-cluster.sh //python/tests/behaviour/connection/database/... --test_output=errors --jobs=1
 #        .factory/test-cluster.sh //python/tests/behaviour/connection/session/... --test_output=errors --jobs=1
