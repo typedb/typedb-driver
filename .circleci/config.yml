@@ -45,7 +45,6 @@ jobs:
       - run: |
          bazel build --define version=$(git rev-parse HEAD) //c:assemble-maven
 
-
   deploy-mac-arm64:
     macos:
       xcode: "14.2.0"
@@ -76,7 +75,7 @@ jobs:
     steps:
       - checkout
       - run: .circleci\windows\prepare.bat
-#      - TODO: deploy pip and maven artifacts
+      - run: .circleci\windows\deploy_jni_maven.bat
 
 
 workflows:
