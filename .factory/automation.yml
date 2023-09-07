@@ -287,9 +287,9 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
                  
         source tool/test/start-core-server.sh # use source to receive export vars
-        .factory/test-core.sh //python/tests/behaviour/connection/database/.. --test_output=streamed --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        .factory/test-core.sh //python/tests/behaviour/connection/session/.. --test_output=streamed --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        .factory/test-core.sh //python/tests/behaviour/connection/transaction/.. --test_output=streamed --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-core.sh //python/tests/behaviour/connection/database/... --test_output=streamed --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-core.sh //python/tests/behaviour/connection/session/... --test_output=streamed --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-core.sh //python/tests/behaviour/connection/transaction/... --test_output=streamed --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
