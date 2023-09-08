@@ -66,8 +66,8 @@ assemble_maven(
             "windows-x86_64": "com.vaticle.typedb:typedb-client-jni-windows-x86_64:{pom_version}",
             "linux-aarch64": "com.vaticle.typedb:typedb-client-jni-linux-aarch64:{pom_version}",
             "linux-x86_64": "com.vaticle.typedb:typedb-client-jni-linux-x86_64:{pom_version}",
-            "macosx-aarch64": "com.vaticle.typedb:typedb-client-jni-macosx-aarch64:{pom_version}",
-            "macosx-x86_64": "com.vaticle.typedb:typedb-client-jni-macosx-x86_64:{pom_version}",
+            "mac-aarch64": "com.vaticle.typedb:typedb-client-jni-macosx-aarch64:{pom_version}",
+            "mac-x86_64": "com.vaticle.typedb:typedb-client-jni-macosx-x86_64:{pom_version}",
         })
     }
 )
