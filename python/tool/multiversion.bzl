@@ -54,15 +54,7 @@ def build_and_deploy(python_versions):
             includes = ["//rust:swig/typedb_client_python.swg"],
             enable_cxx = True,
             python_headers = version["python_headers"],
-            libpython = select({
-                "@vaticle_dependencies//util/platform:is_linux": version["libpython"],
-                "@vaticle_dependencies//util/platform:is_mac": None,
-                "@vaticle_dependencies//util/platform:is_windows": version["libpython"],
-            }),
-            linkopts = select({
-                "@vaticle_dependencies//util/platform:is_windows": ["ntdll.lib"],
-                "//conditions:default": [],
-            }),
+            libpython = version["libpython"],
             visibility = ["//visibility:public"]
         )
 
