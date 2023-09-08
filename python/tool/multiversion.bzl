@@ -33,7 +33,7 @@
 load("@vaticle_typedb_client_python_pip//:requirements.bzl",
        vaticle_typedb_client_python_requirement = "requirement", "entry_point")
 
-load("@vaticle_bazel_distribution//pip:rules.bzl", "assemble_pip", "deploy_pip")
+load("@vaticle_bazel_distribution//pip:rules.bzl", "assemble_pip", "deploy_pip", "deploy_pip_with_script")
 load("@vaticle_bazel_distribution_pip//:requirements.bzl", vaticle_bazel_distribution_requirement = "requirement")
 load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
 
@@ -115,7 +115,7 @@ def build_and_deploy(python_versions):
             long_description_file = "//python:README.md",
         )
 
-        deploy_pip(
+        deploy_pip_with_script(
             name = "deploy-pip" + version["suffix"],
             target = ":assemble-pip" + version["suffix"],
             snapshot = deployment["pypi.snapshot"],
@@ -127,5 +127,9 @@ def build_and_deploy(python_versions):
                 "@vaticle_dependencies//util/platform:is_linux_arm64": "py" + version["suffix"] + "-none-linux_aarch64",
                 "@vaticle_dependencies//util/platform:is_linux_x86_64": "py" + version["suffix"] + "-none-linux_x86_64",
                 "@vaticle_dependencies//util/platform:is_windows": "py" + version["suffix"] + "-none-win_amd64",
-            })
+            }),
+            create_batch = select({
+                "@vaticle_dependencies//util/platform:is_windows": "true",
+                "//conditions:default": "false",
+            }),
         )
