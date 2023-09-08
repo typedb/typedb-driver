@@ -22,12 +22,10 @@ CALL refreshenv
 ECHO Building and deploying windows package...
 SET DEPLOY_PIP_USERNAME=%REPO_VATICLE_USERNAME%
 SET DEPLOY_PIP_PASSWORD=%REPO_VATICLE_PASSWORD%
-echo %REPO_VATICLE_USERNAME%
-echo %REPO_VATICLE_PASSWORD%
 python.exe -m pip install twine
 git rev-parse HEAD > version_temp.txt
 set /p VER=<version_temp.txt
-bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip39_py -- snapshot
-bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip310_py -- snapshot
-bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip311_py -- snapshot
+bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip39 -- snapshot
+bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip310 -- snapshot
+bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip311 -- snapshot
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%

@@ -19,19 +19,10 @@
 # under the License.
 #
 
-# =============================================================================
-# Description: Adds a test rule for the BDD tool behave to the bazel rule set.
-# Knowledge:
-# * https://bazel.build/versions/master/docs/skylark/cookbook.html
-# * https://bazel.build/versions/master/docs/skylark/rules.html
-# * https://bazel.build/versions/master/docs/skylark/lib/ctx.html
-# * http://pythonhosted.org/behave/gherkin.html
-# =============================================================================
-
 load("@vaticle_typedb_client_python_pip//:requirements.bzl",
-       vaticle_typedb_client_python_requirement = "requirement", "entry_point")
+       vaticle_typedb_client_python_requirement = "requirement")
 
-load("@vaticle_bazel_distribution//pip:rules.bzl", "assemble_pip", "deploy_pip", "deploy_pip_with_script")
+load("@vaticle_bazel_distribution//pip:rules.bzl", "assemble_pip", "deploy_pip")
 load("@vaticle_bazel_distribution_pip//:requirements.bzl", vaticle_bazel_distribution_requirement = "requirement")
 load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
 
@@ -105,7 +96,7 @@ def build_and_deploy(python_versions):
             long_description_file = "//python:README.md",
         )
 
-        deploy_pip_with_script(
+        deploy_pip(
             name = "deploy-pip" + version["suffix"],
             target = ":assemble-pip" + version["suffix"],
             snapshot = deployment["pypi.snapshot"],
