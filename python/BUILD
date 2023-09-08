@@ -27,7 +27,7 @@ load("@vaticle_typedb_client_python_pip//:requirements.bzl",
 load("@vaticle_bazel_distribution_pip//:requirements.bzl", vaticle_bazel_distribution_requirement = "requirement")
 load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
 
-load("@vaticle_dependencies//builder/swig:python.bzl", "dyn_lib")
+load("@vaticle_dependencies//builder/swig:python.bzl", "dyn_lib_copy")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//:deployment.bzl", github_deployment = "deployment")
 
@@ -45,21 +45,12 @@ genrule(
     cmd = "cp $< $@",
     visibility = ["//visibility:public"]
 )
-dyn_lib(
+dyn_lib_copy(
     name = "native-client-binary",
     out = "typedb/native_client_python",
     src = ":native_client_python39",
     visibility = ["//visibility:public"]
 )
-
-#alias(
-#    name = "behave-exec",
-#    actual = entry_point(
-#        pkg = "behave",
-#        script = "behave",
-#    ),
-#    visibility = ["//visibility:public"],
-#)
 
 checkstyle_test(
     name = "checkstyle",

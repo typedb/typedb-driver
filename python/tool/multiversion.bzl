@@ -28,8 +28,6 @@
 # * http://pythonhosted.org/behave/gherkin.html
 # =============================================================================
 
-#exports_files(["requirements.txt", "deployment.bzl"])
-
 load("@vaticle_typedb_client_python_pip//:requirements.bzl",
        vaticle_typedb_client_python_requirement = "requirement", "entry_point")
 
@@ -37,7 +35,7 @@ load("@vaticle_bazel_distribution//pip:rules.bzl", "assemble_pip", "deploy_pip",
 load("@vaticle_bazel_distribution_pip//:requirements.bzl", vaticle_bazel_distribution_requirement = "requirement")
 load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
 
-load("@vaticle_dependencies//builder/swig:python.bzl", "swig_python", "dyn_lib")
+load("@vaticle_dependencies//builder/swig:python.bzl", "swig_python", "dyn_lib_copy")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("//:deployment.bzl", github_deployment = "deployment")
@@ -66,7 +64,7 @@ def build_and_deploy(python_versions):
             visibility = ["//visibility:public"]
         )
 
-        dyn_lib(
+        dyn_lib_copy(
             name = "native-client-binary" + version["suffix"],
             out = "typedb/native_client_python" + version["suffix"],
             src = ":native_client_python" + version["suffix"],
