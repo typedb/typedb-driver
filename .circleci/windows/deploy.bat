@@ -22,6 +22,8 @@ CALL refreshenv
 ECHO Building and deploying windows package...
 SET DEPLOY_PIP_USERNAME=%REPO_VATICLE_USERNAME%
 SET DEPLOY_PIP_PASSWORD=%REPO_VATICLE_PASSWORD%
+echo %REPO_VATICLE_USERNAME%
+echo %REPO_VATICLE_PASSWORD%
 python.exe -m pip install twine
 git rev-parse HEAD > version_temp.txt
 set /p VER=<version_temp.txt
