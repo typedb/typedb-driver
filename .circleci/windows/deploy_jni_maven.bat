@@ -29,6 +29,5 @@ SET DEPLOY_MAVEN_PASSWORD=%REPO_VATICLE_PASSWORD%
 SET RUST_BACKTRACE=1
 git rev-parse HEAD > version_snapshot.txt
 set /p VER=<version_snapshot.txt
-bazel --output_user_root=C:/bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
 bazel --output_user_root=C:/bazel run --verbose_failures --define version=%VER% //java:deploy-maven-jni -- snapshot
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
