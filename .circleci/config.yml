@@ -39,6 +39,10 @@ commands:
     steps:
       - run: brew install bazelisk
 
+  install-maven-mac:
+    steps:
+      - run: brew install maven
+
   deploy-jni-unix:
     steps:
       - run: |
@@ -136,6 +140,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-mac
+      - install-maven-mac
       - test-deployment-unix
 
   test-deployment-mac-arm64:
@@ -146,6 +151,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-mac
+      - install-maven-mac
       - test-deployment-unix
 
   test-deployment-linux-x86_64:
