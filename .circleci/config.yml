@@ -175,6 +175,17 @@ jobs:
       - test-deployment-unix
 
 
+  test-deployment-windows-x86_64:
+    executor:
+      name: win/default
+      shell: cmd.exe
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - run: .circleci\windows\prepare.bat
+      - run: .circleci\windows\deployment_test.bat
+
+
 workflows:
   typedb-client-java:
     jobs:
@@ -260,3 +271,13 @@ workflows:
           requires:
             - deploy-central-linux-x86_64
             - deploy-linux-arm64
+      - test-deployment-windows-x86_64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - maven
+          requires:
+            - deploy-central-linux-x86_64
+            - deploy-windows-x86_64
