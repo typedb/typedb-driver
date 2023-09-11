@@ -31,3 +31,5 @@ powershell -Command "(gc java\test\deployment\pom.xml) -replace 'CLIENT_JAVA_VER
 type java\test\deployment\pom.xml
 cd java\test\deployment
 mvn test
+
+wmic process where "commandline like '%%server%%'" delete
