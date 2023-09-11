@@ -316,7 +316,7 @@ impl ServerConnection {
                 Ok(SessionInfo {
                     address: self.address.clone(),
                     session_id,
-                    network_latency: start.elapsed() - server_duration,
+                    network_latency: start.elapsed().saturating_sub(server_duration),
                     on_close_register_sink,
                 })
             }
