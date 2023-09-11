@@ -70,19 +70,26 @@ com_github_grpc_grpc_deps()
 load("@vaticle_dependencies//builder/rust:deps.bzl", rust_deps = "deps")
 rust_deps()
 
-load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_register_toolchains")
+load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_register_toolchains", "rust_analyzer_toolchain_repository")
+load("@rules_rust//tools/rust_analyzer:deps.bzl", "rust_analyzer_dependencies")
+load("@rules_rust//rust:defs.bzl", "rust_common")
 rules_rust_dependencies()
 rust_register_toolchains(
     edition = "2021",
-    include_rustc_srcs = True,
     extra_target_triples = [
         "aarch64-apple-darwin",
         "aarch64-unknown-linux-gnu",
         "x86_64-apple-darwin",
         "x86_64-pc-windows-msvc",
         "x86_64-unknown-linux-gnu",
-    ]
+    ],
+    rust_analyzer_version = "nightly",
 )
+rust_analyzer_dependencies()
+register_toolchains(rust_analyzer_toolchain_repository(
+    name = "rust_analyzer_toolchain",
+    version = rust_common.default_version,
+))
 
 load("@vaticle_dependencies//library/crates:crates.bzl", "fetch_crates")
 fetch_crates()
