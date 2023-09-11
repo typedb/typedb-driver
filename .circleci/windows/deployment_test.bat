@@ -20,11 +20,11 @@ REM under the License.
 REM
 
 choco install maven --limit-output --yes --no-progress
+choco install 7zip.portable --limit-output --yes --no-progress
 
-SET TYPEDB_DIST_DIR="dist\typedb-all-linux\"
 bazel --output_user_root=C:\bazel build @vaticle_typedb_artifact_windows//file
-powershell -Command "Expand-Archive -Force 'bazel-typedb-driver/external/vaticle_typedb_artifact_windows/file/typedb-server-windows-1409dac6c21a9d6eda5f35734ad51ddaab2a4e3c.zip' '%TYPEDB_DIST_DIR%'"
-START /B "" %TYPEDB_DIST_DIR%\typedb server
+7z x bazel-typedb-driver\external\vaticle_typedb_artifact_windows\file\typedb-server-windows-1409dac6c21a9d6eda5f35734ad51ddaab2a4e3c.zip
+START /B "" typedb-server-windows-1409dac6c21a9d6eda5f35734ad51ddaab2a4e3c\typedb server
 
 REM sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$CIRCLE_SHA1/g" java/test/deployment/pom.xml
 powershell -Command "(gc java\test\deployment\pom.xml) -replace 'CLIENT_JAVA_VERSION_MARKER', '%CIRCLE_SHA1%' | Out-File -encoding ASCII java\test\deployment\pom.xml"
