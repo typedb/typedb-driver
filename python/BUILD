@@ -27,7 +27,7 @@ load("@vaticle_typedb_client_python_pip//:requirements.bzl",
 load("@vaticle_bazel_distribution_pip//:requirements.bzl", vaticle_bazel_distribution_requirement = "requirement")
 load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
 
-load("@vaticle_dependencies//builder/swig:python.bzl", "dyn_lib_copy")
+load("@vaticle_dependencies//builder/swig:python.bzl", "py_native_lib_rename")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//:deployment.bzl", github_deployment = "deployment")
 
@@ -45,7 +45,8 @@ genrule(
     cmd = "cp $< $@",
     visibility = ["//visibility:public"]
 )
-dyn_lib_copy(
+
+py_native_lib_rename(
     name = "native-client-binary",
     out = "typedb/native_client_python",
     src = ":native_client_python39",

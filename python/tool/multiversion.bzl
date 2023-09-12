@@ -26,7 +26,7 @@ load("@vaticle_bazel_distribution//pip:rules.bzl", "assemble_pip", "deploy_pip")
 load("@vaticle_bazel_distribution_pip//:requirements.bzl", vaticle_bazel_distribution_requirement = "requirement")
 load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
 
-load("@vaticle_dependencies//builder/swig:python.bzl", "swig_python", "dyn_lib_copy")
+load("@vaticle_dependencies//builder/swig:python.bzl", "swig_python", "py_native_lib_rename")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("//:deployment.bzl", github_deployment = "deployment")
@@ -37,7 +37,6 @@ def build_and_deploy(python_versions):
         swig_python(
             name = "native_client_python_wrapper" + version["suffix"],
             shared_lib_name = "native_client_python" + version["suffix"],
-            interface_name = "native_client_python",
             lib = "//rust:typedb_client_clib_headers",
             interface = "//rust:typedb_client.i",
             includes = ["//rust:swig/typedb_client_python.swg"],
@@ -55,7 +54,7 @@ def build_and_deploy(python_versions):
             visibility = ["//visibility:public"]
         )
 
-        dyn_lib_copy(
+        py_native_lib_rename(
             name = "native-client-binary" + version["suffix"],
             out = "typedb/native_client_python" + version["suffix"],
             src = ":native_client_python" + version["suffix"],
