@@ -29,6 +29,6 @@ START /B "" typedb-server-windows-1409dac6c21a9d6eda5f35734ad51ddaab2a4e3c\typed
 
 powershell -Command "(gc java\test\deployment\pom.xml) -replace 'CLIENT_JAVA_VERSION_MARKER', '%CIRCLE_SHA1%' | Out-File -encoding ASCII java\test\deployment\pom.xml"
 type java\test\deployment\pom.xml
-START /B "" .circleci\windows\typedb_kill_deferred.bat
 cd java\test\deployment
-mvn test
+CALL mvn test
+wmic process where "commandline like '%%server%%'" delete
