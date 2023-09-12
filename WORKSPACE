@@ -83,13 +83,8 @@ rust_register_toolchains(
         "x86_64-pc-windows-msvc",
         "x86_64-unknown-linux-gnu",
     ],
-    rust_analyzer_version = "nightly",
+    rust_analyzer_version = rust_common.default_version,
 )
-rust_analyzer_dependencies()
-register_toolchains(rust_analyzer_toolchain_repository(
-    name = "rust_analyzer_toolchain",
-    version = rust_common.default_version,
-))
 
 load("@vaticle_dependencies//library/crates:crates.bzl", "fetch_crates")
 fetch_crates()
