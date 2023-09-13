@@ -36,6 +36,6 @@ CALL mvn test
 SET IS_ERROR=%ERRORLEVEL%
 
 REM kill typedb server
-wmic process where "commandline like '%%server%%'" delete
+wmic process where "commandline like '%%typedb%%'" delete
 
 EXIT %IS_ERROR%
