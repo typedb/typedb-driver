@@ -21,7 +21,7 @@
 
 /* Arrays handling */
 %define %array(Type)
-%typemap(in) Type ** (int size) {
+%typemap(in) Type ** (int size = 0) {
     size = PyList_Size($input);
     $1 = (Type **) malloc((size + 1) * sizeof(Type *));
     int i = 0;
@@ -44,7 +44,7 @@
 %array(Thing)
 
 /* char** needs special handling */
-%typemap(in) char ** (int size) {
+%typemap(in) char ** (int size = 0) {
     if (PyList_Check($input)) {
         size = PyList_Size($input);
         int i = 0;
