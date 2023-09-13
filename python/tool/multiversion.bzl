@@ -109,8 +109,4 @@ def build_and_deploy(python_versions):
                 "@vaticle_dependencies//util/platform:is_linux_x86_64": "py" + version["suffix"] + "-none-linux_x86_64",
                 "@vaticle_dependencies//util/platform:is_windows": "py" + version["suffix"] + "-none-win_amd64",
             }),
-            create_batch = select({
-                "@vaticle_dependencies//util/platform:is_windows": "true",
-                "//conditions:default": "false",
-            }),
         )
