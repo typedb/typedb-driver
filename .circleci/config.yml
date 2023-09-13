@@ -74,7 +74,7 @@ commands:
           kill $PID
 
 jobs:
-  deploy-central-linux-x86_64:
+  deploy-central:
     machine:
       image: ubuntu-2204:current
       resource_class: medium
@@ -189,7 +189,7 @@ jobs:
 workflows:
   typedb-client-java:
     jobs:
-      - deploy-central-linux-x86_64:
+      - deploy-central:
           filters:
             branches:
               only:
@@ -203,6 +203,8 @@ workflows:
                 - master
                 - development
                 - maven
+          requires:
+            - deploy-central
       - deploy-mac-arm64:
           filters:
             branches:
@@ -210,6 +212,8 @@ workflows:
                 - master
                 - development
                 - maven
+          requires:
+            - deploy-central
       - deploy-linux-x86_64:
           filters:
             branches:
@@ -217,6 +221,8 @@ workflows:
                 - master
                 - development
                 - maven
+          requires:
+            - deploy-central
       - deploy-linux-arm64:
           filters:
             branches:
@@ -224,6 +230,8 @@ workflows:
                 - master
                 - development
                 - maven
+          requires:
+            - deploy-central
       - deploy-windows-x86_64:
           filters:
             branches:
@@ -231,6 +239,8 @@ workflows:
                 - master
                 - development
                 - maven
+          requires:
+            - deploy-central
       - test-deployment-mac-x86_64:
           filters:
             branches:
@@ -239,7 +249,7 @@ workflows:
                 - development
                 - maven
           requires:
-            - deploy-central-linux-x86_64
+            - deploy-central
             - deploy-mac-x86_64
       - test-deployment-mac-arm64:
           filters:
@@ -249,7 +259,7 @@ workflows:
                 - development
                 - maven
           requires:
-            - deploy-central-linux-x86_64
+            - deploy-central
             - deploy-mac-arm64
       - test-deployment-linux-x86_64:
           filters:
@@ -259,7 +269,7 @@ workflows:
                 - development
                 - maven
           requires:
-            - deploy-central-linux-x86_64
+            - deploy-central
             - deploy-linux-x86_64
       - test-deployment-linux-arm64:
           filters:
@@ -269,7 +279,7 @@ workflows:
                 - development
                 - maven
           requires:
-            - deploy-central-linux-x86_64
+            - deploy-central
             - deploy-linux-arm64
       - test-deployment-windows-x86_64:
           filters:
@@ -279,5 +289,5 @@ workflows:
                 - development
                 - maven
           requires:
-            - deploy-central-linux-x86_64
+            - deploy-central
             - deploy-windows-x86_64
