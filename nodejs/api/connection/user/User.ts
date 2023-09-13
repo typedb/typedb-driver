@@ -19,10 +19,25 @@
  * under the License.
  */
 
+/**
+ * `User` class
+ */
 export interface User {
     readonly username: string;
 
     readonly passwordExpirySeconds: number;
 
+    /**
+     * Updates the user's password.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * user.passwordUpdate("oldpassword", "nEwp@ssw0rd");
+     * ```
+     *
+     * @param oldPassword - Old password
+     * @param newPassword - New password
+     */
     passwordUpdate(oldPassword: string, newPassword: string): Promise<void>;
 }
