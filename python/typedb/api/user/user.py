@@ -24,9 +24,11 @@ from typing import Optional
 
 
 class User(ABC):
+    """User information"""
 
     @abstractmethod
     def username(self) -> str:
+        """Returns the name of the user"""
         pass
 
     @abstractmethod
@@ -62,4 +64,18 @@ class UserManager(ABC):
 
     @abstractmethod
     def password_set(self, username: str, password: str) -> None:
+        """
+        Sets a new password for a user. Is permitted for administrators only.
+
+        :param username: User's name
+        :param password: New password
+        :return:
+
+        Examples:
+        ---------
+
+        .. code:: python
+
+           user_manager.password_set("alice", "nEwp@ssw0rd")
+        """
         pass
