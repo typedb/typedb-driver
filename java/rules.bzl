@@ -22,12 +22,21 @@
 load("@vaticle_dependencies//builder/swig:java.bzl", "swig_java")
 
 def platform_specific_swig_java(name, platforms, maven_coordinates, tags=[], **kwargs):
+    swig_java(
+        name = "__" + name,
+        shared_lib_name = name,
+        tags = tags,
+        **kwargs,
+    )
+
     for platform in platforms.values():
-        swig_java(
+        native.java_library(
             name = name + "-" + platform,
+            srcs = ["__" + name + "__swig"],
+            resources = ["lib" + name],
             tags = tags + ["maven_coordinates=" + maven_coordinates.replace("{platform}", platform)],
-            **kwargs,
         )
+
     native.alias(
         name = name,
         actual = select({config: name + "-" + platform for config, platform in platforms.items()})
