@@ -50,14 +50,14 @@ rust_cbindgen(
     config = "cbindgen.toml",
 )
 
-swig_python(
-    name = "native_client_python_wrapper",
-    shared_lib_name = "native_client_python",
-    lib = ":typedb_client_clib_headers",
-    interface = "typedb_client.i",
-    includes = ["swig/typedb_client_python.swg"],
-    enable_cxx = True,
-)
+#swig_python(
+#    name = "native_client_python_wrapper",
+#    shared_lib_name = "native_client_python",
+#    lib = ":typedb_client_clib_headers",
+#    interface = "typedb_client.i",
+#    includes = ["swig/typedb_client_python.swg"],
+#    enable_cxx = True,
+#)
 
 checkstyle_test(
     name = "checkstyle",
