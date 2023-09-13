@@ -21,12 +21,13 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@rules_rust//rust:defs.bzl", "rust_library", "rust_static_library", "rustfmt_test")
+load("@rules_rust//rust:defs.bzl", "rust_library", "rust_static_library", "rustfmt_test", "rust_doc")
 load("@vaticle_bazel_distribution//crates:rules.bzl", "assemble_crate", "deploy_crate")
 load("@vaticle_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
 load("@vaticle_dependencies//builder/swig:java.bzl", "swig_java")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@vaticle_dependencies//tool/doc:rules.bzl", "parse_rust_doc")
 
 typedb_driver_srcs = glob(["src/**/*.rs"])
 typedb_driver_tags = ["crate-name=typedb-driver"]
@@ -88,6 +89,16 @@ deploy_crate(
     release = deployment["crate.release"],
     snapshot = deployment["crate.snapshot"],
     target = ":assemble_crate",
+)
+
+rust_doc(
+    name = "typedb_client_doc",
+    crate = ":typedb_driver",
+)
+
+parse_rust_doc(
+    name = "typedb_client_doc_parsed",
+    crate = ":typedb_client_doc",
 )
 
 checkstyle_test(
