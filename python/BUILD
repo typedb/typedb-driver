@@ -107,6 +107,8 @@ deploy_pip(
     target = ":assemble-pip",
     snapshot = deployment["pypi.snapshot"],
     release = deployment["pypi.release"],
+    suffix = "",
+    distribution_tag = "none-any",
 )
 
 deploy_github(
