@@ -37,6 +37,7 @@ def build_and_deploy(python_versions):
         swig_python(
             name = "native_client_python_wrapper" + version["suffix"],
             shared_lib_name = "native_client_python" + version["suffix"],
+            import_name = "native_client_python",
             lib = "//rust:typedb_client_clib_headers",
             interface = "//rust:typedb_client.i",
             includes = ["//rust:swig/typedb_client_python.swg"],
