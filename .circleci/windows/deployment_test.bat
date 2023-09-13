@@ -31,4 +31,9 @@ powershell -Command "(gc java\test\deployment\pom.xml) -replace 'CLIENT_JAVA_VER
 type java\test\deployment\pom.xml
 cd java\test\deployment
 CALL mvn test
+SET IS_ERROR=%ERRORLEVEL%
+
+REM kill typedb server
 wmic process where "commandline like '%%server%%'" delete
+
+EXIT %IS_ERROR%
