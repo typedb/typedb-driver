@@ -24,11 +24,25 @@ package com.vaticle.typedb.driver.api.user;
 import javax.annotation.CheckReturnValue;
 import java.util.Optional;
 
+/**
+ *  `User` class
+ */
 public interface User {
     @CheckReturnValue
     String username();
 
     Optional<Long> passwordExpirySeconds();
 
+    /**
+     * Updates the user's password.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * user.passwordUpdate("oldpassword", "nEwp@ssw0rd");
+     * </pre>
+     *
+     * @param passwordOld   Old password
+     * @param passwordNew   New password
+     */
     void passwordUpdate(String passwordOld, String passwordNew);
 }
