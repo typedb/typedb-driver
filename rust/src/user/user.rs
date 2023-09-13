@@ -22,12 +22,26 @@
 use crate::{common::Result, error::ConnectionError, Connection};
 
 #[derive(Clone, Debug)]
+/// `User` class
 pub struct User {
     pub username: String,
     pub password_expiry_seconds: Option<i64>,
 }
 
 impl User {
+    /// Updates user password.
+    ///
+    /// # Arguments
+    ///
+    /// * `connection` -- an opened `Connection`
+    /// * `password_old` -- an old password
+    /// * `password_new` -- a new password
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// user.password_update(connection, "oldpassword", "nEwp@ssw0rd");
+    ///```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn password_update(
         &self,
