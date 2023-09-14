@@ -19,20 +19,26 @@ REM specific language governing permissions and limitations
 REM under the License.
 REM
 
-REM needs to be called such that software installed
-REM by Chocolatey in prepare.bat is accessible
+choco install 7zip.portable --limit-output --yes --no-progress
 CALL refreshenv
 
-ECHO Testing deployed pip package...
 SET DEPLOY_PIP_USERNAME=%REPO_VATICLE_USERNAME%
 SET DEPLOY_PIP_PASSWORD=%REPO_VATICLE_PASSWORD%
-SET RUST_BACKTRACE=1
+
 git rev-parse HEAD > version_temp.txt
 set /p VER=<version_temp.txt
-bazel --output_user_root=C:/tmp run --verbose_failures //tool/test:typedb-extractor -- typedb-all
-call START /B typedb-all/typedb server
+
+bazel --output_user_root=C:\bazel build @vaticle_typedb_artifact_windows//file
+powershell -Command "Move-Item -Path bazel-typedb-driver-java\external\vaticle_typedb_artifact_windows\file\typedb-server-windows* -Destination typedb-server-windows.zip"
+7z x typedb-server-windows.zip
+powershell -Command "Move-Item -Path typedb-server-windows-* -Destination typedb-server-windows"
+START /B "" typedb-server-windows\typedb server
+
 python3 -m pip install --extra-index-url https://repo.vaticle.com/repository/pypi-snapshot/simple typedb-client==0.0.0+%VER%
 cd python/tests/deployment
 python3 -m unittest test
-taskkill "typedb.exe"
-IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
+
+REM kill typedb server
+wmic process where "commandline like '%%typedb%%'" delete
+
+EXIT %IS_ERROR%

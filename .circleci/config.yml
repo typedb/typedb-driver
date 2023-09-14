@@ -126,8 +126,7 @@ jobs:
       - checkout
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\deploy.bat
-#        TODO: Fix tests
-#      - run: .circleci\windows\test_deploy.bat
+      - run: .circleci\windows\test_deploy.bat
 #      - TODO: deploy maven artifacts
 
 
