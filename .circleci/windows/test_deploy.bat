@@ -22,9 +22,6 @@ REM
 choco install 7zip.portable --limit-output --yes --no-progress
 CALL refreshenv
 
-SET DEPLOY_PIP_USERNAME=%REPO_VATICLE_USERNAME%
-SET DEPLOY_PIP_PASSWORD=%REPO_VATICLE_PASSWORD%
-
 git rev-parse HEAD > version_temp.txt
 set /p VER=<version_temp.txt
 
