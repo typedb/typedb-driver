@@ -31,7 +31,6 @@ exports_files([
 #load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm", "nodejs_binary")
 #load("@vaticle_bazel_distribution//npm:rules.bzl", "assemble_npm", "deploy_npm")
 #load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
-#load("@vaticle_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 #load("@vaticle_dependencies//tool/release/deps:rules.bzl", "release_validate_nodejs_deps")
 #load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
@@ -143,11 +142,6 @@ ts_project(
 #    srcs = ["@vaticle_typedb_artifact_mac//file"],
 #    outs = ["typedb-artifact-path.txt"],
 #    cmd = "echo $(location @vaticle_typedb_artifact_mac//file) > \"$@\"",
-#)
-#
-#artifact_extractor(
-#    name = "typedb-extractor",
-#    artifact = "@vaticle_typedb_artifact_linux//file",
 #)
 #
 #release_validate_nodejs_deps(
