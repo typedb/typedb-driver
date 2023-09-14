@@ -351,7 +351,7 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         tool/test/start-core-server.sh
-        .factory/test-core.sh //python/tests/behaviour/concept/... --test_output=errors && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-core.sh //python/tests/behaviour/concept/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
@@ -371,7 +371,7 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //python/tests/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //python/tests/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
@@ -520,7 +520,8 @@ build:
       command: |
         export PATH="$HOME/.local/bin:$PATH"
         sudo apt-get update
-        sudo apt install python3-pip -y
+        sudo apt uninstall python3
+        sudo apt install python3.9 python3.9-pip -y
         python3 -m pip install -U pip
         python3 -m pip install -r python/requirements_dev.txt
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
