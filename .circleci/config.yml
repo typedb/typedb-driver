@@ -46,7 +46,7 @@ commands:
           python3 -m pip install pip==23.2.1
           python3 -m pip install -r python/requirements_dev.txt
 
-  deploy-pip-linux-and-mac:
+  deploy-pip-unix:
     steps:
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
@@ -55,7 +55,7 @@ commands:
           bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip310 -- snapshot
           bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip311 -- snapshot
 
-  test-deploy-snapshot-linux-and-mac:
+  test-deployment-unix:
     steps:
       - run: |
           bazel run //tool/test:typedb-extractor -- typedb-all
@@ -75,9 +75,8 @@ jobs:
       - checkout
       - install-bazel-mac
       - install-requirements
-      - deploy-pip-linux-and-mac
-      - test-deploy-snapshot-linux-and-mac
-  #       - TODO: deploy maven artifacts
+      - deploy-pip-unix
+      - test-deployment-unix
 
   deploy-mac-arm64:
     macos:
@@ -88,9 +87,8 @@ jobs:
       - checkout
       - install-bazel-mac
       - install-requirements
-      - deploy-pip-linux-and-mac
-      - test-deploy-snapshot-linux-and-mac
-  #      - TODO: deploy maven artifacts
+      - deploy-pip-unix
+      - test-deployment-unix
 
   deploy-linux-arm64:
     machine:
@@ -101,9 +99,8 @@ jobs:
       - checkout
       - install-bazel-linux-arm64
       - install-requirements
-      - deploy-pip-linux-and-mac
-      - test-deploy-snapshot-linux-and-mac
-  #      - TODO: deploy maven artifacts
+      - deploy-pip-unix
+      - test-deployment-unix
 
   deploy-linux-x86_64:
     machine:
@@ -113,9 +110,8 @@ jobs:
       - checkout
       - install-bazel-linux-x86_64
       - install-requirements
-      - deploy-pip-linux-and-mac
-      - test-deploy-snapshot-linux-and-mac
-  #      - TODO: deploy maven artifacts
+      - deploy-pip-unix
+      - test-deployment-unix
 
   deploy-windows-x86_64:
     executor:
@@ -127,7 +123,58 @@ jobs:
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\deploy.bat
       - run: .circleci\windows\test_deploy.bat
-#      - TODO: deploy maven artifacts
+
+  test-deployment-mac-x86_64:
+    macos:
+      xcode: "14.2.0"
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-mac
+      - install-requirements
+      - test-deployment-unix
+
+  test-deployment-mac-arm64:
+    macos:
+      xcode: "14.2.0"
+    resource_class: macos.m1.medium.gen1
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-mac
+      - install-requirements
+      - test-deployment-unix
+
+  test-deployment-linux-arm64:
+    machine:
+      image: ubuntu-2204:current
+      resource_class: arm.medium
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-linux-arm64
+      - install-requirements
+      - test-deployment-unix
+
+  test-deployment-linux-x86_64:
+    machine:
+      image: ubuntu-2204:current
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - install-bazel-linux-x86_64
+      - install-requirements
+      - test-deployment-unix
+
+  test-deployment-windows-x86_64:
+    executor:
+      name: win/default
+      shell: cmd.exe
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - run: .circleci\windows\prepare.bat
+      - run: .circleci\windows\test_deploy.bat
 
 
 workflows:
@@ -168,3 +215,48 @@ workflows:
                 - master
                 - development
                 - multiplatform-deploy-pip
+      - test-deployment-mac-x86_64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - multiplatform-deploy-pip
+          requires:
+            - deploy-mac-x86_64
+      - test-deployment-mac-arm64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - multiplatform-deploy-pip
+          requires:
+            - deploy-mac-arm64
+      - test-deployment-linux-arm64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - multiplatform-deploy-pip
+          requires:
+            - deploy-linux-arm64
+      - test-deployment-linux-x86_64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - multiplatform-deploy-pip
+          requires:
+            - deploy-linux-x86_64
+      - test-deployment-windows-x86_64:
+          filters:
+            branches:
+              only:
+                - master
+                - development
+                - multiplatform-deploy-pip
+          requires:
+            - deploy-windows-x86_64
