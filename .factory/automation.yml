@@ -521,7 +521,7 @@ build:
         export PATH="$HOME/.local/bin:$PATH"
         sudo add-apt-repository ppa:deadsnakes/ppa
         sudo apt-get update
-        sudo apt install python3.9 python3.9-pip -y
+        sudo apt install python3.9 python3-pip -y
         python3.9 -m pip install -U pip
         python3.9 -m pip install -r python/requirements_dev.txt
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
