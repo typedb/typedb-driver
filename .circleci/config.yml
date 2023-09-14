@@ -58,7 +58,7 @@ commands:
   test-deploy-snapshot-linux-and-mac:
     steps:
       - run: |
-          bazel run //python/tests:typedb-extractor -- typedb-all
+          bazel run //tool/test:typedb-extractor -- typedb-all
           ./typedb-all/typedb server &
           python3 -m pip install wheel
           python3 -m pip install --extra-index-url https://repo.vaticle.com/repository/pypi-snapshot/simple typedb-client==0.0.0+$(git rev-parse HEAD)
