@@ -520,7 +520,7 @@ build:
       command: |
         export PATH="$HOME/.local/bin:$PATH"
         sudo apt-get update
-        sudo apt uninstall python3
+        sudo apt remove python3
         sudo apt install python3.9 python3.9-pip -y
         python3 -m pip install -U pip
         python3 -m pip install -r python/requirements_dev.txt
