@@ -305,7 +305,7 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
 
-        source tool/test/common/start-cluster-servers.sh # use source to receive export vars
+        source tool/test/start-cluster-servers.sh # use source to receive export vars
         .factory/test-cluster.sh //python/tests/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         .factory/test-cluster.sh //python/tests/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         .factory/test-cluster.sh //python/tests/behaviour/connection/transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
