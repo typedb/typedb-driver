@@ -25,10 +25,11 @@ load("@rules_python//python:defs.bzl", "py_test")
 
 typedb_cluster_py_test(
     name = "test_cluster_failover",
-    srcs = ["test_cluster_failover.py", "//python:native-client-binary", "//python:native-client-wrapper"],
+    srcs = ["test_cluster_failover.py"],
     deps = [
         "//python:client_python",
         ],
+    data = ["//python:native-client-binary", "//python:native-client-wrapper"],
     size = "medium",
     native_typedb_cluster_artifact = "//python/tests:native-typedb-cluster-artifact",
 )
