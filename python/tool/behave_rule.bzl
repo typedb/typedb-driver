@@ -22,7 +22,7 @@
 load("@vaticle_typedb_driver_pip//:requirements.bzl", "requirement")
 
 
-def py_behave_test(*, name, background = None, native_typedb_artifact, steps, feats, deps, data=[], typedb_port, **kwargs):
+def py_behave_test(*, name, background, native_typedb_artifact, steps, feats, deps, data=[], typedb_port, **kwargs):
     feats_dir = "features-" + name
     steps_out_dir = feats_dir + "/steps"
 
@@ -30,10 +30,10 @@ def py_behave_test(*, name, background = None, native_typedb_artifact, steps, fe
         name = name + "_features",
         cmd = "mkdir $(@D)/" + feats_dir
                 + " && cp $(location %s) $(@D)/%s" % (feats[0], feats_dir)
-                + " && cp $(location %s) $(@D)/%s" % (background[0], feats_dir)
+                + " && cp $(location %s) $(@D)/%s" % (background, feats_dir)
                 + " && mkdir $(@D)/" + steps_out_dir + " && "
                 + " && ".join(["cp $(location %s) $(@D)/%s" % (step_file, steps_out_dir) for step_file in steps]),
-        srcs = steps + background + feats,
+        srcs = steps + [background] + feats,
         outs = [feats_dir],
     ) # create directory structure as above
 
@@ -42,28 +42,31 @@ def py_behave_test(*, name, background = None, native_typedb_artifact, steps, fe
         data = data + [name + "_features"],
         deps = deps + [requirement("behave"), requirement("PyHamcrest")],
         srcs = ["//python/tests/behaviour:entry_point_behave.py"],
-        args = ["$(location :" + name + "_features" + ")", "--no-capture", "-D", "port=" + typedb_port],
+        args = ["$(location :" + name + "_features)", "--no-capture", "-D", "port=" + typedb_port],
         main = "//python/tests/behaviour:entry_point_behave.py",
     )
 
 
-def typedb_behaviour_py_test(*, name, background_core = None, background_cluster = None, **kwargs):
-    if background_core:
-        py_behave_test(
-            name = name + "-core",
-            background = background_core,
-            native_typedb_artifact = "@//tool/test:native-typedb-artifact",
-            toolchains = ["@rules_python//python:current_py_toolchain"],
-            typedb_port = "1729",
-            **kwargs,
-        )
+def typedb_behaviour_py_test_core(name, **kwargs):
+    py_behave_test(
+        name = name + "-core",
+        background = "@//python/tests/behaviour/background:core",
+        native_typedb_artifact = "@//tool/test:native-typedb-artifact",
+        toolchains = ["@rules_python//python:current_py_toolchain"],
+        typedb_port = "1729",
+        **kwargs,
+    )
 
-    if background_cluster:
-        py_behave_test(
-            name = name + "-cluster",
-            background = background_cluster,
-            native_typedb_artifact = "@//tool/test:native-typedb-cluster-artifact",
-            toolchains = ["@rules_python//python:current_py_toolchain"],
-            typedb_port = "11729",
-            **kwargs,
-        )
+def typedb_behaviour_py_test_cluster(name, **kwargs):
+    py_behave_test(
+        name = name + "-cluster",
+        background = "@//python/tests/behaviour/background:cluster",
+        native_typedb_artifact = "@//tool/test:native-typedb-cluster-artifact",
+        toolchains = ["@rules_python//python:current_py_toolchain"],
+        typedb_port = "11729",
+        **kwargs,
+    )
+
+def typedb_behaviour_py_test(name, **kwargs):
+    typedb_behaviour_py_test_core(name, **kwargs)
+    typedb_behaviour_py_test_cluster(name, **kwargs)

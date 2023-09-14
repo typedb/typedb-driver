@@ -26,8 +26,6 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 typedb_behaviour_py_test(
     name = "test",
     feats = ["@vaticle_typedb_behaviour//typeql/language:update.feature"],
-    background_core = ["//python/tests/behaviour/background:core"],
-    background_cluster = ["//python/tests/behaviour/background:cluster"],
     steps = [
         "//python/tests/behaviour/connection:steps",
         "//python/tests/behaviour/connection/database:steps",

@@ -371,7 +371,7 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //python/tests/behaviour/concept/... --test_output=errors && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //python/tests/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
@@ -414,9 +414,9 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //python/tests/behaviour/typeql/language/match/... --test_output=errors &&
-          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/get/... --test_output=errors &&
-          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/expression/... --test_output=errors &&
+        .factory/test-cluster.sh //python/tests/behaviour/typeql/language/match/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/get/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/expression/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
@@ -460,9 +460,9 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //python/tests/behaviour/typeql/language/insert/... --test_output=errors &&
-          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/delete/... --test_output=errors &&
-          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/update/... --test_output=errors &&
+        .factory/test-cluster.sh //python/tests/behaviour/typeql/language/insert/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/delete/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/update/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
@@ -505,8 +505,8 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //python/tests/behaviour/typeql/language/define/... --test_output=errors &&
-          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/undefine/... --test_output=errors &&
+        .factory/test-cluster.sh //python/tests/behaviour/typeql/language/define/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/undefine/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS

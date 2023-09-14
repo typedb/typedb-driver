@@ -20,7 +20,7 @@
 #
 
 package(default_visibility = ["//python/tests/behaviour:__subpackages__"])
-load("//python/tool:behave_rule.bzl", "typedb_behaviour_py_test")
+load("//python/tool:behave_rule.bzl", "typedb_behaviour_py_test_cluster")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 py_library(
@@ -29,10 +29,9 @@ py_library(
     deps = [],
 )
 
-typedb_behaviour_py_test(
+typedb_behaviour_py_test_cluster(
     name = "test",
     feats = ["@vaticle_typedb_behaviour//connection:user.feature"],
-    background_cluster = ["//python/tests/behaviour/background:cluster"],
     steps = [
         ":steps",
         "//python/tests/behaviour/connection:steps",

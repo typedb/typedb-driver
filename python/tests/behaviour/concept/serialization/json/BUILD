@@ -32,8 +32,6 @@ py_library(
 typedb_behaviour_py_test(
     name = "test",
     feats = ["@vaticle_typedb_behaviour//concept/serialization:json.feature"],
-    background_core = ["//python/tests/behaviour/background:core"],
-    background_cluster = ["//python/tests/behaviour/background:cluster"],
     steps = [
         ":steps",
         "//python/tests/behaviour/typeql:steps",
