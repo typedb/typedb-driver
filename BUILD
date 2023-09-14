@@ -50,7 +50,7 @@ checkstyle_test(
         ".bazelversion",
         ".bazel-remote-cache.rc",
         ".bazel-cache-credential.json",
-        ".circleci/windows/*",
+        ".circleci/windows/git.patch",
         "LICENSE",
         "VERSION",
         "docs/*",
@@ -76,7 +76,7 @@ release_validate_deps(
     tags = ["manual"],  # in order for bazel test //... to not fail
 )
 
-# CI targets that are not declared in any BUILD_ file, but are called externally
+# CI targets that are not declared in any BUILD file, but are called externally
 filegroup(
     name = "ci",
     data = [
