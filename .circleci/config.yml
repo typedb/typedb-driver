@@ -140,7 +140,6 @@ workflows:
               only:
                 - master
                 - development
-                - api-rearchitecture
                 - multiplatform-deploy-pip
       - deploy-mac-arm64:
           filters:
@@ -148,7 +147,6 @@ workflows:
               only:
                 - master
                 - development
-                - api-rearchitecture
                 - multiplatform-deploy-pip
       - deploy-linux-arm64:
           filters:
@@ -156,7 +154,6 @@ workflows:
               only:
                 - master
                 - development
-                - api-rearchitecture
                 - multiplatform-deploy-pip
       - deploy-linux-x86_64:
           filters:
@@ -164,7 +161,6 @@ workflows:
               only:
                 - master
                 - development
-                - api-rearchitecture
                 - multiplatform-deploy-pip
       - deploy-windows-x86_64:
           filters:
@@ -172,5 +168,4 @@ workflows:
               only:
                 - master
                 - development
-                - api-rearchitecture
                 - multiplatform-deploy-pip
