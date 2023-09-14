@@ -19,6 +19,8 @@ REM specific language governing permissions and limitations
 REM under the License.
 REM
 
+git apply .circleci\windows\git.patch
+
 REM uninstall Java 12 installed by CircleCI
 choco uninstall openjdk --limit-output --yes --no-progress
 
