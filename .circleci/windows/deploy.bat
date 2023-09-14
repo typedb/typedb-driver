@@ -29,7 +29,12 @@ SET DEPLOY_PIP_PASSWORD=%REPO_VATICLE_PASSWORD%
 python.exe -m pip install twine
 git rev-parse HEAD > version_temp.txt
 set /p VER=<version_temp.txt
+
 bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip39 -- snapshot
+IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
+
 bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip310 -- snapshot
+IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
+
 bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip311 -- snapshot
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
