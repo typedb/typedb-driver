@@ -25,7 +25,4 @@
 ## To install ALL (including dev) dependencies, run:
 #  pip install -r requirements_dev.txt
 
-
-## Dependencies
-
 parse==1.18.0
