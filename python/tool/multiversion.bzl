@@ -19,9 +19,6 @@
 # under the License.
 #
 
-load("@vaticle_typedb_client_python_pip//:requirements.bzl",
-       vaticle_typedb_client_python_requirement = "requirement")
-
 load("@vaticle_bazel_distribution//pip:rules.bzl", "assemble_pip", "deploy_pip")
 load("@vaticle_bazel_distribution_pip//:requirements.bzl", vaticle_bazel_distribution_requirement = "requirement")
 load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")

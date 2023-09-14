@@ -31,7 +31,7 @@ typedb_cluster_py_test(
         ],
     data = ["//python:native-client-binary", "//python:native-client-wrapper"],
     size = "medium",
-    native_typedb_cluster_artifact = "//python/tests:native-typedb-cluster-artifact",
+    native_typedb_cluster_artifact = "//tool/test:native-typedb-cluster-artifact",
 )
 
 py_test(

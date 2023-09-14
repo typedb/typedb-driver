@@ -20,8 +20,6 @@
 #
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_typedb_common//test:rules.bzl", "native_typedb_artifact")
-load("@vaticle_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
 
 package(default_visibility = ["//nodejs/test/behaviour:__subpackages__"])
 
@@ -43,30 +41,4 @@ checkstyle_test(
         "tsconfig.json",
     ]),
     license_type = "apache-header",
-)
-
-native_typedb_artifact(
-    name = "native-typedb-artifact",
-    mac_artifact = "@vaticle_typedb_artifact_mac//file",
-    linux_artifact = "@vaticle_typedb_artifact_linux//file",
-    windows_artifact = "@vaticle_typedb_artifact_windows//file",
-    output = "typedb-artifact.tar.gz"
-)
-
-native_typedb_artifact(
-    name = "native-typedb-cluster-artifact",
-    mac_artifact = "@vaticle_typedb_cluster_artifact_mac//file",
-    linux_artifact = "@vaticle_typedb_cluster_artifact_linux//file",
-    windows_artifact = "@vaticle_typedb_cluster_artifact_windows//file",
-    output = "typedb-cluster-artifact.tar.gz"
-)
-
-artifact_extractor(
-    name = "typedb-extractor",
-    artifact = ":native-typedb-artifact",
-)
-
-artifact_extractor(
-    name = "typedb-cluster-extractor",
-    artifact = ":native-typedb-cluster-artifact",
 )

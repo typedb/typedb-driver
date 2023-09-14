@@ -154,10 +154,10 @@ install_deps()
 
 load("@rules_python//python:pip.bzl", "pip_parse")
 pip_parse(
-    name = "vaticle_typedb_client_python_pip",
+    name = "vaticle_typedb_driver_pip",
     requirements_lock = "//python:requirements_dev.txt",
 )
-load("@vaticle_typedb_client_python_pip//:requirements.bzl", "install_deps")
+load("@vaticle_typedb_driver_pip//:requirements.bzl", "install_deps")
 install_deps()
 
 ################################

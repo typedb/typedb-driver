@@ -28,20 +28,10 @@
 # * http://pythonhosted.org/behave/gherkin.html
 # =============================================================================
 
-load("@vaticle_typedb_client_python_pip//:requirements.bzl", "requirement")
+load("@vaticle_typedb_driver_pip//:requirements.bzl", "requirement")
 
 
-def py_behave_test(*,
-                    name,
-                    background = None,
-                    native_typedb_artifact,
-                    steps,
-                    feats,
-                    deps,
-                    data=[],
-                    typedb_port,
-                    **kwargs):
-
+def py_behave_test(*, name, background = None, native_typedb_artifact, steps, feats, deps, data=[], typedb_port, **kwargs):
     feats_dir = "features-" + name
     steps_out_dir = feats_dir + "/steps"
 
@@ -66,20 +56,12 @@ def py_behave_test(*,
     )
 
 
-def typedb_behaviour_py_test(
-        *,
-        name,
-        background_core = None,
-        background_cluster = None,
-        native_typedb_artifact,
-        native_typedb_cluster_artifact,
-        **kwargs):
-
+def typedb_behaviour_py_test(*, name, background_core = None, background_cluster = None, **kwargs):
     if background_core:
         py_behave_test(
             name = name + "-core",
             background = background_core,
-            native_typedb_artifact = native_typedb_artifact,
+            native_typedb_artifact = "@//tool/test:native-typedb-artifact",
             toolchains = ["@rules_python//python:current_py_toolchain"],
             typedb_port = "1729",
             **kwargs,
@@ -89,7 +71,7 @@ def typedb_behaviour_py_test(
         py_behave_test(
             name = name + "-cluster",
             background = background_cluster,
-            native_typedb_artifact = native_typedb_cluster_artifact,
+            native_typedb_artifact = "@//tool/test:native-typedb-cluster-artifact",
             toolchains = ["@rules_python//python:current_py_toolchain"],
             typedb_port = "11729",
             **kwargs,

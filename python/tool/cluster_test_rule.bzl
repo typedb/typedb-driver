@@ -129,7 +129,7 @@ def _rule_implementation(ctx):
     # https://bazel.build/versions/master/docs/skylark/rules.html#runfiles
     return [DefaultInfo(
         # The shell executable - the output of this rule - can use these files at runtime.
-        runfiles = ctx.runfiles(files = ctx.files.srcs + ctx.files.deps + ctx.files.native_typedb_cluster_artifact)
+        runfiles = ctx.runfiles(files = ctx.files.srcs + ctx.files.deps + ctx.files.data + ctx.files.native_typedb_cluster_artifact)
     )]
 
 """
@@ -152,6 +152,7 @@ typedb_cluster_py_test = rule(
     attrs={
         "srcs": attr.label_list(mandatory=True,allow_empty=False,allow_files=True),
         "deps": attr.label_list(mandatory=True,allow_empty=False),
+        "data": attr.label_list(),
         "native_typedb_cluster_artifact": attr.label(mandatory=True)
     },
     test=True,

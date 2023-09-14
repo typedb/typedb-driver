@@ -35,6 +35,7 @@ build_and_deploy(python_versions = python_versions)
 alias(
     name = "client_python",
     actual = ":client_python39",
+    visibility = ["//visibility:public"],
 )
 
 # Rename swig-generated files for local running (local python version should be specified)

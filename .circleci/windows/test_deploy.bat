@@ -29,7 +29,7 @@ SET DEPLOY_PIP_PASSWORD=%REPO_VATICLE_PASSWORD%
 SET RUST_BACKTRACE=1
 git rev-parse HEAD > version_temp.txt
 set /p VER=<version_temp.txt
-bazel --output_user_root=C:/tmp run --verbose_failures //python/tests:typedb-extractor -- typedb-all
+bazel --output_user_root=C:/tmp run --verbose_failures //tool/test:typedb-extractor -- typedb-all
 call START /B typedb-all/typedb server
 python3 -m pip install --extra-index-url https://repo.vaticle.com/repository/pypi-snapshot/simple typedb-client==0.0.0+%VER%
 cd python/tests/deployment

@@ -43,8 +43,6 @@ typedb_behaviour_py_test(
         "//python/tests/behaviour/background",
     ],
     data = ["//python:native-client-binary", "//python:native-client-wrapper"],
-    native_typedb_artifact = "//python/tests:native-typedb-artifact",
-    native_typedb_cluster_artifact = "//python/tests:native-typedb-cluster-artifact",
     size = "medium",
 )
 
