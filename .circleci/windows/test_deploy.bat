@@ -34,8 +34,9 @@ START /B "" typedb-server-windows\typedb server
 python3 -m pip install --extra-index-url https://repo.vaticle.com/repository/pypi-snapshot/simple typedb-client==0.0.0+%VER%
 cd python/tests/deployment
 python3 -m unittest test
+SET IS_ERROR=%ERRORLEVEL%
 
 REM kill typedb server
 wmic process where "commandline like '%%typedb%%'" delete
 
-EXIT %IS_ERROR%
+EXIT /B %IS_ERROR%
