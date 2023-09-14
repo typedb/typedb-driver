@@ -19,15 +19,6 @@
 # under the License.
 #
 
-# =============================================================================
-# Description: Adds a test rule for the BDD tool behave to the bazel rule set.
-# Knowledge:
-# * https://bazel.build/versions/master/docs/skylark/cookbook.html
-# * https://bazel.build/versions/master/docs/skylark/rules.html
-# * https://bazel.build/versions/master/docs/skylark/lib/ctx.html
-# * http://pythonhosted.org/behave/gherkin.html
-# =============================================================================
-
 load("@vaticle_typedb_driver_pip//:requirements.bzl", "requirement")
 
 
