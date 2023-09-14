@@ -27,7 +27,7 @@ typedb_cluster_py_test(
     name = "test_cluster_failover",
     srcs = ["test_cluster_failover.py", "//python:native-client-binary", "//python:native-client-wrapper"],
     deps = [
-        "//python:client_python39",
+        "//python:client_python",
         ],
     size = "medium",
     native_typedb_cluster_artifact = "//python/tests:native-typedb-cluster-artifact",
@@ -37,7 +37,7 @@ py_test(
     name = "test_debug",
     srcs = ["test_debug.py"],
     deps = [
-        "//python:client_python39",
+        "//python:client_python",
         ],
     data = ["//python:native-client-binary", "//python:native-client-wrapper"],
     python_version = "PY3"
@@ -47,7 +47,7 @@ py_test(
     name = "test_stream",
     srcs = ["test_stream.py"],
     deps = [
-        "//python:client_python39",
+        "//python:client_python",
         ],
     data = ["//python:native-client-binary", "//python:native-client-wrapper"],
     python_version = "PY3"

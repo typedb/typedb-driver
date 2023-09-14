@@ -19,11 +19,6 @@
 # under the License.
 #
 
-#exports_files(["requirements.txt", "deployment.bzl"])
-
-load("@vaticle_typedb_client_python_pip//:requirements.bzl",
-       vaticle_typedb_client_python_requirement = "requirement", "entry_point")
-
 load("@vaticle_bazel_distribution_pip//:requirements.bzl", vaticle_bazel_distribution_requirement = "requirement")
 load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
 
@@ -36,6 +31,11 @@ load("//python:python_versions.bzl", "python_versions")
 
 
 build_and_deploy(python_versions = python_versions)
+
+alias(
+    name = "client_python",
+    actual = ":client_python39",
+)
 
 # Rename swig-generated files for local running (local python version should be specified)
 genrule(

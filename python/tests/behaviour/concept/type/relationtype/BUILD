@@ -46,7 +46,7 @@ typedb_behaviour_py_test(
         "//python/tests/behaviour/connection/transaction:steps",
     ],
     deps = [
-        "//python:client_python39",
+        "//python:client_python",
         "//python/tests/behaviour:context",
         "//python/tests/behaviour/util:util",
         "//python/tests/behaviour/config:parameters",
