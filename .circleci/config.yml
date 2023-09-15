@@ -229,7 +229,7 @@ jobs:
               fname=$(basename $f)
               base=${fname%.*}
               pyversion=${base#typedb-client}
-              cp $f ~/dist/typedb_client-py${pyversion}-none-linux_aarch64
+              cp $f ~/dist/typedb_client-py${pyversion}-none-linux_aarch64.whl
           done
       - persist_to_workspace:
           root: ~/dist
@@ -246,7 +246,7 @@ jobs:
               fname=$(basename $f)
               base=${fname%.*}
               pyversion=${base#typedb-client}
-              cp $f ~/dist/typedb_client-py${pyversion}-none-linux_x86_64
+              cp $f ~/dist/typedb_client-py${pyversion}-none-linux_x86_64.whl
           done
       - persist_to_workspace:
           root: ~/dist
@@ -262,7 +262,7 @@ jobs:
               fname=$(basename $f)
               base=${fname%.*}
               pyversion=${base#typedb-client}
-              cp $f ~/dist/typedb_client-py${pyversion}-none-macosx_11_0_arm64
+              cp $f ~/dist/typedb_client-py${pyversion}-none-macosx_11_0_arm64.whl
           done
       - persist_to_workspace:
           root: ~/dist
@@ -278,7 +278,7 @@ jobs:
               fname=$(basename $f)
               base=${fname%.*}
               pyversion=${base#typedb-client}
-              cp $f ~/dist/typedb_client-py${pyversion}-none-macosx_11_0_x86_64
+              cp $f ~/dist/typedb_client-py${pyversion}-none-macosx_11_0_x86_64.whl
           done
       - persist_to_workspace:
           root: ~/dist
