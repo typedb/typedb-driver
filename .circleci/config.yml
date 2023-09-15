@@ -178,7 +178,7 @@ commands:
       - run: |
           export REPO_DIR="/home/factory/$CIRCLE_PROJECT_REPONAME/"
           export TYPEDB_DIST_DIR="dist/typedb-all-linux/"
-          bazel run //java/test:typedb-extractor-linux -- $TYPEDB_DIST_DIR
+          bazel run //tool/test:typedb-extractor -- $TYPEDB_DIST_DIR
           $TYPEDB_DIST_DIR/typedb server &
           PID=$!
           
