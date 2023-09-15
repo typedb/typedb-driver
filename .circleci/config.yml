@@ -290,52 +290,52 @@ workflows:
       - deploy-pip-snapshot-linux-arm64:
           filters:
             branches:
-              only: [master, development, multiplatform-deploy-pip]
+              only: [master, development]
       - deploy-pip-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master, development, multiplatform-deploy-pip]
+              only: [master, development]
       - deploy-pip-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master, development, multiplatform-deploy-pip]
+              only: [master, development]
       - deploy-pip-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, development, multiplatform-deploy-pip]
+              only: [master, development]
       - deploy-pip-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, development, multiplatform-deploy-pip]
+              only: [master, development]
 
       - test-pip-deployment-linux-arm64:
           filters:
             branches:
-              only: [master, development, multiplatform-deploy-pip]
+              only: [master, development]
           requires:
             - deploy-pip-snapshot-linux-arm64
       - test-pip-deployment-linux-x86_64:
           filters:
             branches:
-              only: [master, development, multiplatform-deploy-pip]
+              only: [master, development]
           requires:
             - deploy-pip-snapshot-linux-x86_64
       - test-pip-deployment-mac-arm64:
           filters:
             branches:
-              only: [master, development, multiplatform-deploy-pip]
+              only: [master, development]
           requires:
             - deploy-pip-snapshot-mac-arm64
       - test-pip-deployment-mac-x86_64:
           filters:
             branches:
-              only: [master, development, multiplatform-deploy-pip]
+              only: [master, development]
           requires:
             - deploy-pip-snapshot-mac-x86_64
       - test-pip-deployment-windows-x86_64:
           filters:
             branches:
-              only: [master, development, multiplatform-deploy-pip]
+              only: [master, development]
           requires:
             - deploy-pip-snapshot-windows-x86_64
 
