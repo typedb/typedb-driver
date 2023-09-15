@@ -20,21 +20,43 @@
 #
 
 version: 2.1
+
 orbs:
   win: circleci/windows@2.0.0
+
+executors:
+  linux-arm64:
+    machine:
+      image: ubuntu-2204:current
+      resource_class: arm.medium
+    working_directory: ~/typedb-driver-java
+
+  linux-x86_64:
+    machine:
+      image: ubuntu-2204:current
+    working_directory: ~/typedb-driver-java
+
+  mac-arm64:
+    macos:
+      xcode: "14.2.0"
+    resource_class: macos.m1.medium.gen1
+    working_directory: ~/typedb-driver-java
+
+  mac-x86_64:
+    macos:
+      xcode: "14.2.0"
+    working_directory: ~/typedb-driver-java
+
 commands:
-
-  install-bazel-linux-arm64:
+  install-bazel-linux:
+    parameters:
+      arch:
+        type: string
     steps:
-      - run: curl -OL https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-arm64
-      - run: sudo mv bazelisk-linux-arm64 /usr/local/bin/bazel
-      - run: chmod a+x /usr/local/bin/bazel
-
-  install-bazel-linux-x86_64:
-    steps:
-      - run: curl -OL https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-amd64
-      - run: sudo mv bazelisk-linux-amd64 /usr/local/bin/bazel
-      - run: chmod a+x /usr/local/bin/bazel
+      - run: |
+          curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.arch>>"
+          sudo mv "bazelisk-linux-<<parameters.arch>>" /usr/local/bin/bazel
+          chmod a+x /usr/local/bin/bazel
 
   install-bazel-mac:
     steps:
@@ -46,7 +68,34 @@ commands:
           python3 -m pip install pip==23.2.1
           python3 -m pip install -r python/requirements_dev.txt
 
-  deploy-pip-unix:
+  deploy-pip-release-unix:
+    steps:
+      - run: |
+          export DEPLOY_PIP_USERNAME=$REPO_PYPI_USERNAME
+          export DEPLOY_PIP_PASSWORD=$REPO_PYPI_PASSWORD
+          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip39 -- release
+          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip310 -- release
+          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip311 -- release
+
+  deploy-pip-release-mac:
+    steps:
+      - checkout
+      - install-bazel-mac
+      - install-requirements
+      - deploy-pip-release-unix
+
+  deploy-pip-release-linux:
+    parameters:
+      arch:
+        type: string
+    steps:
+      - checkout
+      - install-bazel-linux:
+          arch: "<<parameters.arch>>"
+      - install-requirements
+      - deploy-pip-release-unix
+
+  deploy-pip-snapshot-unix:
     steps:
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
@@ -55,7 +104,25 @@ commands:
           bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip310 -- snapshot
           bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip311 -- snapshot
 
-  test-deployment-unix:
+  deploy-pip-snapshot-mac:
+    steps:
+      - checkout
+      - install-bazel-mac
+      - install-requirements
+      - deploy-pip-snapshot-unix
+
+  deploy-pip-snapshot-linux:
+    parameters:
+      arch:
+        type: string
+    steps:
+      - checkout
+      - install-bazel-linux:
+          arch: "<<parameters.arch>>"
+      - install-requirements
+      - deploy-pip-snapshot-unix
+
+  test-pip-deployment-snapshot-unix:
     steps:
       - run: |
           bazel run //tool/test:typedb-extractor -- typedb-all
@@ -66,54 +133,48 @@ commands:
           kill $(jps | awk '/TypeDBServer/ {print $1}')
           exit $TEST_SUCCESS
 
+  test-pip-deployment-snapshot-mac:
+    steps:
+      - checkout
+      - install-bazel-mac
+      - install-requirements
+      - test-pip-deployment-snapshot-unix
+
+  test-pip-deployment-snapshot-linux:
+    parameters:
+      arch:
+        type: string
+    steps:
+      - checkout
+      - install-bazel-linux:
+          arch: "<<parameters.arch>>"
+      - install-requirements
+      - test-pip-deployment-snapshot-unix
+
 jobs:
-  deploy-mac-x86_64:
-    macos:
-      xcode: "14.2.0"
-    working_directory: ~/typedb-driver-java
+  deploy-pip-snapshot-linux-arm64:
+    executor: linux-arm64
     steps:
-      - checkout
-      - install-bazel-mac
-      - install-requirements
-      - deploy-pip-unix
-      - test-deployment-unix
+      - deploy-pip-snapshot-linux:
+          arch: arm64
 
-  deploy-mac-arm64:
-    macos:
-      xcode: "14.2.0"
-    resource_class: macos.m1.medium.gen1
-    working_directory: ~/typedb-driver-java
+  deploy-pip-snapshot-linux-x86_64:
+    executor: linux-x86_64
     steps:
-      - checkout
-      - install-bazel-mac
-      - install-requirements
-      - deploy-pip-unix
-      - test-deployment-unix
+      - deploy-pip-snapshot-linux:
+          arch: amd64
 
-  deploy-linux-arm64:
-    machine:
-      image: ubuntu-2204:current
-      resource_class: arm.medium
-    working_directory: ~/typedb-driver-java
+  deploy-pip-snapshot-mac-arm64:
+    executor: mac-arm64
     steps:
-      - checkout
-      - install-bazel-linux-arm64
-      - install-requirements
-      - deploy-pip-unix
-      - test-deployment-unix
+      - deploy-pip-snapshot-mac
 
-  deploy-linux-x86_64:
-    machine:
-      image: ubuntu-2204:current
-    working_directory: ~/typedb-driver-java
+  deploy-pip-snapshot-mac-x86_64:
+    executor: mac-x86_64
     steps:
-      - checkout
-      - install-bazel-linux-x86_64
-      - install-requirements
-      - deploy-pip-unix
-      - test-deployment-unix
+      - deploy-pip-snapshot-mac
 
-  deploy-windows-x86_64:
+  deploy-pip-snapshot-windows-x86_64:
     executor:
       name: win/default
       shell: cmd.exe
@@ -122,51 +183,30 @@ jobs:
       - checkout
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\deploy.bat
-      - run: .circleci\windows\test_deploy.bat
 
-  test-deployment-mac-x86_64:
-    macos:
-      xcode: "14.2.0"
-    working_directory: ~/typedb-driver-java
+  test-pip-deployment-linux-arm64:
+    executor: linux-arm64
     steps:
-      - checkout
-      - install-bazel-mac
-      - install-requirements
-      - test-deployment-unix
+      - test-pip-deployment-snapshot-linux:
+          arch: arm64
 
-  test-deployment-mac-arm64:
-    macos:
-      xcode: "14.2.0"
-    resource_class: macos.m1.medium.gen1
-    working_directory: ~/typedb-driver-java
+  test-pip-deployment-linux-x86_64:
+    executor: linux-x86_64
     steps:
-      - checkout
-      - install-bazel-mac
-      - install-requirements
-      - test-deployment-unix
+      - test-pip-deployment-snapshot-linux:
+          arch: amd64
 
-  test-deployment-linux-arm64:
-    machine:
-      image: ubuntu-2204:current
-      resource_class: arm.medium
-    working_directory: ~/typedb-driver-java
+  test-pip-deployment-mac-arm64:
+    executor: mac-arm64
     steps:
-      - checkout
-      - install-bazel-linux-arm64
-      - install-requirements
-      - test-deployment-unix
+      - test-pip-deployment-snapshot-mac
 
-  test-deployment-linux-x86_64:
-    machine:
-      image: ubuntu-2204:current
-    working_directory: ~/typedb-driver-java
+  test-pip-deployment-mac-x86_64:
+    executor: mac-x86_64
     steps:
-      - checkout
-      - install-bazel-linux-x86_64
-      - install-requirements
-      - test-deployment-unix
+      - test-pip-deployment-snapshot-mac
 
-  test-deployment-windows-x86_64:
+  test-pip-deployment-windows-x86_64:
     executor:
       name: win/default
       shell: cmd.exe
@@ -176,87 +216,113 @@ jobs:
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\test_deploy.bat
 
+  deploy-pip-release-linux-arm64:
+    executor: linux-arm64
+    steps:
+      - deploy-pip-release-linux:
+          arch: arm64
+
+  deploy-pip-release-linux-x86_64:
+    executor: linux-x86_64
+    steps:
+      - deploy-pip-release-linux:
+          arch: amd64
+
+  deploy-pip-release-mac-arm64:
+    executor: mac-arm64
+    steps:
+      - deploy-pip-release-mac
+
+  deploy-pip-release-mac-x86_64:
+    executor: mac-x86_64
+    steps:
+      - deploy-pip-release-mac
+
+  deploy-pip-release-windows-x86_64:
+    executor:
+      name: win/default
+      shell: cmd.exe
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - run: .circleci\windows\prepare.bat
+      - run: .circleci\windows\deploy.bat  # TODO: release deploy
+
 
 workflows:
   typedb-driver-python:
     jobs:
-      - deploy-mac-x86_64:
+      - deploy-pip-snapshot-linux-arm64:
           filters:
             branches:
-              only:
-                - master
-                - development
-                - multiplatform-deploy-pip
-      - deploy-mac-arm64:
+              only: [master, development, multiplatform-deploy-pip]
+      - deploy-pip-snapshot-linux-x86_64:
           filters:
             branches:
-              only:
-                - master
-                - development
-                - multiplatform-deploy-pip
-      - deploy-linux-arm64:
+              only: [master, development, multiplatform-deploy-pip]
+      - deploy-pip-snapshot-mac-arm64:
           filters:
             branches:
-              only:
-                - master
-                - development
-                - multiplatform-deploy-pip
-      - deploy-linux-x86_64:
+              only: [master, development, multiplatform-deploy-pip]
+      - deploy-pip-snapshot-mac-x86_64:
           filters:
             branches:
-              only:
-                - master
-                - development
-                - multiplatform-deploy-pip
-      - deploy-windows-x86_64:
+              only: [master, development, multiplatform-deploy-pip]
+      - deploy-pip-snapshot-windows-x86_64:
           filters:
             branches:
-              only:
-                - master
-                - development
-                - multiplatform-deploy-pip
-      - test-deployment-mac-x86_64:
+              only: [master, development, multiplatform-deploy-pip]
+
+      - test-pip-deployment-linux-arm64:
           filters:
             branches:
-              only:
-                - master
-                - development
-                - multiplatform-deploy-pip
+              only: [master, development, multiplatform-deploy-pip]
           requires:
-            - deploy-mac-x86_64
-      - test-deployment-mac-arm64:
+            - deploy-pip-snapshot-linux-arm64
+      - test-pip-deployment-linux-x86_64:
           filters:
             branches:
-              only:
-                - master
-                - development
-                - multiplatform-deploy-pip
+              only: [master, development, multiplatform-deploy-pip]
           requires:
-            - deploy-mac-arm64
-      - test-deployment-linux-arm64:
+            - deploy-pip-snapshot-linux-x86_64
+      - test-pip-deployment-mac-arm64:
           filters:
             branches:
-              only:
-                - master
-                - development
-                - multiplatform-deploy-pip
+              only: [master, development, multiplatform-deploy-pip]
           requires:
-            - deploy-linux-arm64
-      - test-deployment-linux-x86_64:
+            - deploy-pip-snapshot-mac-arm64
+      - test-pip-deployment-mac-x86_64:
           filters:
             branches:
-              only:
-                - master
-                - development
-                - multiplatform-deploy-pip
+              only: [master, development, multiplatform-deploy-pip]
           requires:
-            - deploy-linux-x86_64
-      - test-deployment-windows-x86_64:
+            - deploy-pip-snapshot-mac-x86_64
+      - test-pip-deployment-windows-x86_64:
           filters:
             branches:
-              only:
-                - master
-                - development
-                - multiplatform-deploy-pip
+              only: [master, development, multiplatform-deploy-pip]
           requires:
-            - deploy-windows-x86_64
+            - deploy-pip-snapshot-windows-x86_64
+
+  typedb-driver-python-release:
+    jobs:
+      - deploy-pip-release-mac-x86_64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-pip-release-mac-arm64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-pip-release-linux-arm64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-pip-release-linux-x86_64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-pip-release-windows-x86_64:
+          filters:
+            branches:
+              only: [release]
