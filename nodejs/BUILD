@@ -157,7 +157,7 @@ checkstyle_test(
         "user/**/*.ts",
     ]),
     exclude = glob([
-        "*.json",
+        "*.json*",
         "*.md",
         ".eslintrc",
         "dist/**/*.*",

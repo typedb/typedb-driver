@@ -736,8 +736,8 @@ build:
 #        owner: vaticle
 #        branch: master
       image: vaticle-ubuntu-22.04
-      dependencies:
-        - build
+#      dependencies:
+#        - build
 #        - test-nodejs-integration
 #        - test-nodejs-cluster-failover
 #        - test-nodejs-behaviour-connection-core
