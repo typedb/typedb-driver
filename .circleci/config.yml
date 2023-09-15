@@ -165,7 +165,7 @@ commands:
           bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
           bazel run --define version=$(git rev-parse HEAD) //java:deploy-maven-jni -- snapshot
 
-  deploy-maven-central-unix:
+  deploy-maven-main-unix:
     steps:
       - run: |
           export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
@@ -348,56 +348,34 @@ jobs:
               -r ${CIRCLE_PROJECT_REPONAME} -n "TypeDB Driver $(cat VERSION)" -b "$(cat ./RELEASE_TEMPLATE.md)" \
               -c ${CIRCLE_SHA1} -delete -draft $(cat VERSION) ~/dist/
 
-  deploy-maven-central:
-    machine:
-      image: ubuntu-2204:current
-      resource_class: medium
-    working_directory: ~/typedb-driver-java
-    steps:
-      - checkout
-      - install-bazel-linux:
-          arch: amd64
-      - deploy-maven-central-unix
-
-  deploy-maven-mac-x86_64:
-    macos:
-      xcode: "14.2.0"
-    working_directory: ~/typedb-driver-java
-    steps:
-      - checkout
-      - install-bazel-mac
-      - deploy-maven-jni-unix
-
-  deploy-maven-mac-arm64:
-    macos:
-      xcode: "14.2.0"
-    resource_class: macos.m1.medium.gen1
-    working_directory: ~/typedb-driver-java
-    steps:
-      - checkout
-      - install-bazel-mac
-      - deploy-maven-jni-unix
-
-  deploy-maven-linux-x86_64:
-    machine:
-      image: ubuntu-2204:current
-      resource_class: medium
-    working_directory: ~/typedb-driver-java
-    steps:
-      - checkout
-      - install-bazel-linux:
-          arch: amd64
-      - deploy-maven-jni-unix
-
   deploy-maven-linux-arm64:
-    machine:
-      image: ubuntu-2204:current
-      resource_class: arm.medium
-    working_directory: ~/typedb-driver-java
+    executor: linux-arm64
     steps:
       - checkout
       - install-bazel-linux:
           arch: arm64
+      - deploy-maven-jni-unix
+
+  deploy-maven-linux-x86_64:
+    executor: linux-x86_64
+    steps:
+      - checkout
+      - install-bazel-linux:
+          arch: amd64
+      - deploy-maven-jni-unix
+
+  deploy-maven-mac-arm64:
+    executor: mac-arm64
+    steps:
+      - checkout
+      - install-bazel-mac
+      - deploy-maven-jni-unix
+
+  deploy-maven-mac-x86_64:
+    executor: mac-x86_64
+    steps:
+      - checkout
+      - install-bazel-mac
       - deploy-maven-jni-unix
 
   deploy-maven-windows-x86_64:
@@ -409,6 +387,14 @@ jobs:
       - checkout
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\deploy_jni_maven.bat
+
+  deploy-maven-main:
+    executor: linux-x86_64
+    steps:
+      - checkout
+      - install-bazel-linux:
+          arch: amd64
+      - deploy-maven-main-unix
 
   test-maven-deployment-mac-x86_64:
     macos:
@@ -524,45 +510,27 @@ workflows:
       - deploy-maven-mac-x86_64:
           filters:
             branches:
-              only:
-                - master
-                - development
-                - maven
+              only: [master, development, maven]
       - deploy-maven-mac-arm64:
           filters:
             branches:
-              only:
-                - master
-                - development
-                - maven
+              only: [master, development, maven]
       - deploy-maven-linux-x86_64:
           filters:
             branches:
-              only:
-                - master
-                - development
-                - maven
+              only: [master, development, maven]
       - deploy-maven-linux-arm64:
           filters:
             branches:
-              only:
-                - master
-                - development
-                - maven
+              only: [master, development, maven]
       - deploy-maven-windows-x86_64:
           filters:
             branches:
-              only:
-                - master
-                - development
-                - maven
-      - deploy-maven-central:
+              only: [master, development, maven]
+      - deploy-maven-main:
           filters:
             branches:
-              only:
-                - master
-                - development
-                - maven
+              only: [master, development, maven]
           requires:
             - deploy-maven-mac-x86_64
             - deploy-maven-mac-arm64
@@ -573,48 +541,33 @@ workflows:
       - test-maven-deployment-mac-x86_64:
           filters:
             branches:
-              only:
-                - master
-                - development
-                - maven
+              only: [master, development, maven]
           requires:
-            - deploy-maven-central
+            - deploy-maven-main
       - test-maven-deployment-mac-arm64:
           filters:
             branches:
-              only:
-                - master
-                - development
-                - maven
+              only: [master, development, maven]
           requires:
-            - deploy-maven-central
+            - deploy-maven-main
       - test-maven-deployment-linux-x86_64:
           filters:
             branches:
-              only:
-                - master
-                - development
-                - maven
+              only: [master, development, maven]
           requires:
-            - deploy-maven-central
+            - deploy-maven-main
       - test-maven-deployment-linux-arm64:
           filters:
             branches:
-              only:
-                - master
-                - development
-                - maven
+              only: [master, development, maven]
           requires:
-            - deploy-maven-central
+            - deploy-maven-main
       - test-maven-deployment-windows-x86_64:
           filters:
             branches:
-              only:
-                - master
-                - development
-                - maven
+              only: [master, development, maven]
           requires:
-            - deploy-maven-central
+            - deploy-maven-main
 
   release:
     jobs:
