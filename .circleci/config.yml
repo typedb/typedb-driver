@@ -76,6 +76,8 @@ commands:
           bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip39 -- release
           bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip310 -- release
           bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip311 -- release
+          mkdir -p ~/dist
+          cp bazel-bin/python/typedb-client*.whl ~/dist/.
 
   deploy-pip-release-mac:
     steps:
@@ -182,7 +184,7 @@ jobs:
     steps:
       - checkout
       - run: .circleci\windows\prepare.bat
-      - run: .circleci\windows\deploy.bat
+      - run: .circleci\windows\pip\deploy_snapshot.bat
 
   test-pip-deployment-linux-arm64:
     executor: linux-arm64
@@ -214,29 +216,43 @@ jobs:
     steps:
       - checkout
       - run: .circleci\windows\prepare.bat
-      - run: .circleci\windows\test_deploy.bat
+      - run: .circleci\windows\pip\test_deploy.bat
 
   deploy-pip-release-linux-arm64:
     executor: linux-arm64
     steps:
       - deploy-pip-release-linux:
           arch: arm64
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
 
   deploy-pip-release-linux-x86_64:
     executor: linux-x86_64
     steps:
       - deploy-pip-release-linux:
           arch: amd64
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
 
   deploy-pip-release-mac-arm64:
     executor: mac-arm64
     steps:
-      - deploy-pip-release-mac
+      - deploy-pip-release-mac:
+          arch: arm64
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
 
   deploy-pip-release-mac-x86_64:
     executor: mac-x86_64
     steps:
-      - deploy-pip-release-mac
+      - deploy-pip-release-mac:
+          arch: amd64
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
 
   deploy-pip-release-windows-x86_64:
     executor:
@@ -246,8 +262,27 @@ jobs:
     steps:
       - checkout
       - run: .circleci\windows\prepare.bat
-      - run: .circleci\windows\deploy.bat  # TODO: release deploy
+      - run: .circleci\windows\pip\deploy_release.bat
+      - persist_to_workspace:
+          root: dist
+          paths: ["./*"]
 
+  deploy-github:
+    executor: linux-x86_64
+    steps:
+      - attach_workspace:
+          at: ~/dist
+      - checkout
+      - install-bazel-linux:
+          arch: amd64
+      - run:
+          name: "Publish Draft Release on GitHub"
+          command: |
+            wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
+            tar -xf ghr_v0.12.1_linux_amd64.tar.gz
+            ghr_v0.12.1_linux_amd64/ghr -t ${REPO_GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} \
+              -r ${CIRCLE_PROJECT_REPONAME} -n "TypeDB Driver $(cat VERSION)" -b "$(cat ./RELEASE_TEMPLATE.md)" \
+              -c ${CIRCLE_SHA1} -delete -draft $(cat VERSION) ~/dist/
 
 workflows:
   typedb-driver-python:
@@ -304,7 +339,7 @@ workflows:
           requires:
             - deploy-pip-snapshot-windows-x86_64
 
-  typedb-driver-python-release:
+  release:
     jobs:
       - deploy-pip-release-mac-x86_64:
           filters:
@@ -326,3 +361,13 @@ workflows:
           filters:
             branches:
               only: [release]
+      - deploy-github:
+          filters:
+            branches:
+              only: [release]
+          requires:
+            - deploy-pip-release-mac-x86_64
+            - deploy-pip-release-mac-arm64
+            - deploy-pip-release-linux-arm64
+            - deploy-pip-release-linux-x86_64
+            - deploy-pip-release-windows-x86_64
