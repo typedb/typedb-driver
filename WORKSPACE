@@ -229,7 +229,7 @@ vaticle_typedb_protocol_npm_repositories()
 load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
 
 rules_ts_dependencies(
-    ts_version_from = "//nodejs:package.json",
+    ts_version_from = "//nodejs:package.json.template",
 )
 
 ###############

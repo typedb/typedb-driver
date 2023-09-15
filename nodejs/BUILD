@@ -21,7 +21,7 @@
 
 exports_files([
     "pnpm-lock.yaml",
-    "package.json",
+    "package.json.template",
     "tsconfig.json",
     "package-lock.json",
     "RELEASE_TEMPLATE.md",
@@ -33,9 +33,9 @@ exports_files([
 #load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 #load("@vaticle_dependencies//tool/release/deps:rules.bzl", "release_validate_nodejs_deps")
-#load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
+load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
-load("@aspect_rules_js//npm:defs.bzl", "npm_link_package")
+load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("//:deployment.bzl", github_deployment = "deployment")
 
@@ -89,28 +89,21 @@ ts_project(
     out_dir = "dist",
 )
 
-#pkg_npm(
-#    name = "client-nodejs-npm-package",
-#    package_name = "typedb-client",
-#    srcs = glob([
-#       "package.json",
-#       "README.md",
-#    ]),
-#    deps = [
-#        "@npm//typedb-protocol",
-#        "@npm//@grpc/grpc-js",
-#        "@npm//google-protobuf",
-#        ":client-nodejs",
-#    ],
-#    visibility = ["//visibility:public"],
-#    vendor_external = [],
-#)
-#
-#assemble_npm(
-#    name = "assemble-npm",
-#    target = ":client-nodejs-npm-package",
-#)
-#
+genrule(
+    name = "stamped_package_json",
+    outs = ["package.json"],
+    srcs = ["package.json.template", "//:VERSION"],
+    cmd = 'sed "s/{VERSION}/$$VERSION/" nodejs/package.json.template > $@',
+)
+
+npm_package(
+    name = "client-nodejs-npm-package",
+    srcs = [":client-nodejs", ":stamped_package_json"],
+    include_runfiles = False,
+    package = "typedb-client",
+    visibility = ["//visibility:public"],
+)
+
 #deploy_npm(
 #    name = "deploy-npm",
 #    target = ":assemble-npm",
