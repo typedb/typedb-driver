@@ -751,7 +751,7 @@ build:
 #        - test-nodejs-behaviour-definable-core
 #        - test-nodejs-behaviour-definable-cluster
       command: |
-        export AUTH=$(base64 "$REPO_VATICLE_USERNAME:$REPO_VATICLE_PASSWORD")
+        export AUTH=$(base64 <<< "$REPO_VATICLE_USERNAME:$REPO_VATICLE_PASSWORD")
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run //nodejs:client-nodejs-npm-package.publish --action_env=VERSION=0.0.0-$(git rev-parse HEAD) -- \
           --registry=https://repo.vaticle.com/repository/npm-snapshot/ \
