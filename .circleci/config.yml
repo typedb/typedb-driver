@@ -223,6 +223,14 @@ jobs:
     steps:
       - deploy-pip-release-linux:
           arch: arm64
+      - run: |
+          mkdir -p ~/dist
+          for f in bazel-bin/python/*.whl; do
+              fname=$(basename $f)
+              base=${fname%.*}
+              pyversion=${base#typedb-client}
+              cp $f ~/dist/typedb_client-py${pyversion}-none-linux_aarch64
+          done
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]
@@ -232,6 +240,14 @@ jobs:
     steps:
       - deploy-pip-release-linux:
           arch: amd64
+      - run: |
+          mkdir -p ~/dist
+          for f in bazel-bin/python/*.whl; do
+              fname=$(basename $f)
+              base=${fname%.*}
+              pyversion=${base#typedb-client}
+              cp $f ~/dist/typedb_client-py${pyversion}-none-linux_x86_64
+          done
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]
@@ -239,8 +255,15 @@ jobs:
   deploy-pip-release-mac-arm64:
     executor: mac-arm64
     steps:
-      - deploy-pip-release-mac:
-          arch: arm64
+      - deploy-pip-release-mac
+      - run: |
+          mkdir -p ~/dist
+          for f in bazel-bin/python/*.whl; do
+              fname=$(basename $f)
+              base=${fname%.*}
+              pyversion=${base#typedb-client}
+              cp $f ~/dist/typedb_client-py${pyversion}-none-macosx_11_0_arm64
+          done
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]
@@ -248,8 +271,15 @@ jobs:
   deploy-pip-release-mac-x86_64:
     executor: mac-x86_64
     steps:
-      - deploy-pip-release-mac:
-          arch: amd64
+      - deploy-pip-release-mac
+      - run: |
+          mkdir -p ~/dist
+          for f in bazel-bin/python/*.whl; do
+              fname=$(basename $f)
+              base=${fname%.*}
+              pyversion=${base#typedb-client}
+              cp $f ~/dist/typedb_client-py${pyversion}-none-macosx_11_0_x86_64
+          done
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]
