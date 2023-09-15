@@ -98,7 +98,7 @@ rust_doc(
 
 parse_rust_doc(
     name = "typedb_client_doc_parsed",
-    crate = ":typedb_client_doc",
+    data = ":typedb_client_doc",
 )
 
 checkstyle_test(

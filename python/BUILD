@@ -21,6 +21,7 @@
 
 load("@vaticle_dependencies//builder/swig:python.bzl", "py_native_lib_rename")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@vaticle_dependencies//tool/doc:rules.bzl", "python_doc")
 
 load("//python:rules.bzl", "native_driver_versioned")
 load("//python:python_versions.bzl", "python_versions")
@@ -64,6 +65,16 @@ checkstyle_test(
     license_type = "apache-header",
     size = "small",
 )
+
+#python_doc(
+#    name = "client_doc",
+#    data = ":assemble-pip39",
+#)
+
+#parse_rust_doc(
+#    name = "typedb_client_doc_parsed",
+#    crate = ":typedb_client_doc",
+#)
 
 # CI targets that are not declared in any BUILD_ file, but are called externally
 filegroup(
