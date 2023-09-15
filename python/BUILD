@@ -68,7 +68,13 @@ checkstyle_test(
 
 #python_doc(
 #    name = "client_doc",
-#    data = ":assemble-pip39",
+#    package = ":assemble-pip39",
+#    doc_srcs = [
+#        "../docs/python/source/conf.py",
+#        "../docs/python/source/index.rst",
+#        "../docs/python/make.bat",
+#        "../docs/python/makefile",
+#    ]
 #)
 
 #parse_rust_doc(
