@@ -25,7 +25,7 @@ orbs:
   win: circleci/windows@2.0.0
 
 executors:
-  linux-arm64:
+  linux-aarch64:
     machine:
       image: ubuntu-2204:current
       resource_class: arm.medium
@@ -36,7 +36,7 @@ executors:
       image: ubuntu-2204:current
     working_directory: ~/typedb-driver-java
 
-  mac-arm64:
+  mac-aarch64:
     macos:
       xcode: "14.2.0"
     resource_class: macos.m1.medium.gen1
@@ -154,8 +154,8 @@ commands:
       - test-pip-deployment-snapshot-unix
 
 jobs:
-  deploy-pip-snapshot-linux-arm64:
-    executor: linux-arm64
+  deploy-pip-snapshot-linux-aarch64:
+    executor: linux-aarch64
     steps:
       - deploy-pip-snapshot-linux:
           arch: arm64
@@ -166,8 +166,8 @@ jobs:
       - deploy-pip-snapshot-linux:
           arch: amd64
 
-  deploy-pip-snapshot-mac-arm64:
-    executor: mac-arm64
+  deploy-pip-snapshot-mac-aarch64:
+    executor: mac-aarch64
     steps:
       - deploy-pip-snapshot-mac
 
@@ -186,8 +186,8 @@ jobs:
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\pip\deploy_snapshot.bat
 
-  test-pip-deployment-linux-arm64:
-    executor: linux-arm64
+  test-pip-deployment-linux-aarch64:
+    executor: linux-aarch64
     steps:
       - test-pip-deployment-snapshot-linux:
           arch: arm64
@@ -198,8 +198,8 @@ jobs:
       - test-pip-deployment-snapshot-linux:
           arch: amd64
 
-  test-pip-deployment-mac-arm64:
-    executor: mac-arm64
+  test-pip-deployment-mac-aarch64:
+    executor: mac-aarch64
     steps:
       - test-pip-deployment-snapshot-mac
 
@@ -218,8 +218,8 @@ jobs:
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\pip\test_deploy.bat
 
-  deploy-pip-release-linux-arm64:
-    executor: linux-arm64
+  deploy-pip-release-linux-aarch64:
+    executor: linux-aarch64
     steps:
       - deploy-pip-release-linux:
           arch: arm64
@@ -252,8 +252,8 @@ jobs:
           root: ~/dist
           paths: ["./*"]
 
-  deploy-pip-release-mac-arm64:
-    executor: mac-arm64
+  deploy-pip-release-mac-aarch64:
+    executor: mac-aarch64
     steps:
       - deploy-pip-release-mac
       - run: |
@@ -317,7 +317,7 @@ jobs:
 workflows:
   typedb-driver-python:
     jobs:
-      - deploy-pip-snapshot-linux-arm64:
+      - deploy-pip-snapshot-linux-aarch64:
           filters:
             branches:
               only: [master, development]
@@ -325,7 +325,7 @@ workflows:
           filters:
             branches:
               only: [master, development]
-      - deploy-pip-snapshot-mac-arm64:
+      - deploy-pip-snapshot-mac-aarch64:
           filters:
             branches:
               only: [master, development]
@@ -338,24 +338,24 @@ workflows:
             branches:
               only: [master, development]
 
-      - test-pip-deployment-linux-arm64:
+      - test-pip-deployment-linux-aarch64:
           filters:
             branches:
               only: [master, development]
           requires:
-            - deploy-pip-snapshot-linux-arm64
+            - deploy-pip-snapshot-linux-aarch64
       - test-pip-deployment-linux-x86_64:
           filters:
             branches:
               only: [master, development]
           requires:
             - deploy-pip-snapshot-linux-x86_64
-      - test-pip-deployment-mac-arm64:
+      - test-pip-deployment-mac-aarch64:
           filters:
             branches:
               only: [master, development]
           requires:
-            - deploy-pip-snapshot-mac-arm64
+            - deploy-pip-snapshot-mac-aarch64
       - test-pip-deployment-mac-x86_64:
           filters:
             branches:
@@ -371,19 +371,19 @@ workflows:
 
   release:
     jobs:
-      - deploy-pip-release-mac-x86_64:
-          filters:
-            branches:
-              only: [release]
-      - deploy-pip-release-mac-arm64:
-          filters:
-            branches:
-              only: [release]
-      - deploy-pip-release-linux-arm64:
+      - deploy-pip-release-linux-aarch64:
           filters:
             branches:
               only: [release]
       - deploy-pip-release-linux-x86_64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-pip-release-mac-aarch64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-pip-release-mac-x86_64:
           filters:
             branches:
               only: [release]
@@ -396,8 +396,8 @@ workflows:
             branches:
               only: [release]
           requires:
+            - deploy-pip-release-mac-aarch64
             - deploy-pip-release-mac-x86_64
-            - deploy-pip-release-mac-arm64
-            - deploy-pip-release-linux-arm64
+            - deploy-pip-release-linux-aarch64
             - deploy-pip-release-linux-x86_64
             - deploy-pip-release-windows-x86_64
