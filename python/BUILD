@@ -56,14 +56,14 @@ py_native_lib_rename(
 checkstyle_test(
     name = "checkstyle",
     include = glob([
+        "*.bzl",
         ".bazelrc",
-        ".gitignore",
         ".factory/*",
+        ".gitignore",
         "BUILD",
         "WORKSPACE",
         "deployment.bzl",
         "requirements*.txt",
-        "python_versions.bzl",
         "typedb/**/*",
     ]),
     license_type = "apache-header",
