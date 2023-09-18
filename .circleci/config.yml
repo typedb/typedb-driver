@@ -62,7 +62,7 @@ commands:
     steps:
       - run: brew install bazelisk
 
-  install-requirements:
+  install-pip-requirements:
     steps:
       - run: |
           python3 -m pip install pip==23.2.1
@@ -83,7 +83,7 @@ commands:
     steps:
       - checkout
       - install-bazel-mac
-      - install-requirements
+      - install-pip-requirements
       - deploy-pip-release-unix
 
   deploy-pip-release-linux:
@@ -94,7 +94,7 @@ commands:
       - checkout
       - install-bazel-linux:
           arch: "<<parameters.arch>>"
-      - install-requirements
+      - install-pip-requirements
       - deploy-pip-release-unix
 
   deploy-pip-snapshot-unix:
@@ -110,7 +110,7 @@ commands:
     steps:
       - checkout
       - install-bazel-mac
-      - install-requirements
+      - install-pip-requirements
       - deploy-pip-snapshot-unix
 
   deploy-pip-snapshot-linux:
@@ -121,7 +121,7 @@ commands:
       - checkout
       - install-bazel-linux:
           arch: "<<parameters.arch>>"
-      - install-requirements
+      - install-pip-requirements
       - deploy-pip-snapshot-unix
 
   test-pip-deployment-snapshot-unix:
@@ -139,7 +139,7 @@ commands:
     steps:
       - checkout
       - install-bazel-mac
-      - install-requirements
+      - install-pip-requirements
       - test-pip-deployment-snapshot-unix
 
   test-pip-deployment-snapshot-linux:
@@ -150,7 +150,7 @@ commands:
       - checkout
       - install-bazel-linux:
           arch: "<<parameters.arch>>"
-      - install-requirements
+      - install-pip-requirements
       - test-pip-deployment-snapshot-unix
 
 jobs:
