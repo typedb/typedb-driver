@@ -29,7 +29,7 @@ load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("//:deployment.bzl", github_deployment = "deployment")
 
 
-def build_and_deploy(python_versions):
+def native_driver_versioned(python_versions):
     for version in python_versions:
         swig_python(
             name = "native_client_python_wrapper" + version["suffix"],

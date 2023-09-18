@@ -19,7 +19,7 @@
 # under the License.
 #
 
-load("//python/tool:cluster_test_rule.bzl", "typedb_cluster_py_test")
+load("//python/tests/integration:cluster_test_rule.bzl", "typedb_cluster_py_test")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@rules_python//python:defs.bzl", "py_test")
 

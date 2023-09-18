@@ -26,11 +26,11 @@ load("@vaticle_dependencies//builder/swig:python.bzl", "py_native_lib_rename")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//:deployment.bzl", github_deployment = "deployment")
 
-load("//python/tool:multiversion.bzl", "build_and_deploy")
+load("//python:rules.bzl", "native_driver_versioned")
 load("//python:python_versions.bzl", "python_versions")
 
 
-build_and_deploy(python_versions = python_versions)
+native_driver_versioned(python_versions = python_versions)
 
 alias(
     name = "client_python",
