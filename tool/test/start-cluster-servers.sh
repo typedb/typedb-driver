@@ -37,7 +37,7 @@ function server_start() {
     --server.address=localhost:${1}1729 \
     --server.internal-address.zeromq=localhost:${1}1730 \
     --server.internal-address.grpc=localhost:${1}1731 \
-    $peers \
+    $(echo $peers) \
     --server.encryption.enable=true
 }
 
