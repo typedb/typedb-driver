@@ -124,7 +124,7 @@ commands:
       - install-pip-requirements
       - deploy-pip-snapshot-unix
 
-  test-pip-deployment-snapshot-unix:
+  test-pip-snapshot-unix:
     steps:
       - run: |
           bazel run //tool/test:typedb-extractor -- typedb-all
@@ -135,14 +135,14 @@ commands:
           kill $(jps | awk '/TypeDBServer/ {print $1}')
           exit $TEST_SUCCESS
 
-  test-pip-deployment-snapshot-mac:
+  test-pip-snapshot-mac:
     steps:
       - checkout
       - install-bazel-mac
       - install-pip-requirements
-      - test-pip-deployment-snapshot-unix
+      - test-pip-snapshot-unix
 
-  test-pip-deployment-snapshot-linux:
+  test-pip-snapshot-linux:
     parameters:
       arch:
         type: string
@@ -151,7 +151,7 @@ commands:
       - install-bazel-linux:
           arch: "<<parameters.arch>>"
       - install-pip-requirements
-      - test-pip-deployment-snapshot-unix
+      - test-pip-snapshot-unix
 
 jobs:
   deploy-pip-snapshot-linux-aarch64:
@@ -186,29 +186,29 @@ jobs:
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\python\deploy_snapshot.bat
 
-  test-pip-deployment-linux-aarch64:
+  test-pip-snapshot-linux-aarch64:
     executor: linux-aarch64
     steps:
-      - test-pip-deployment-snapshot-linux:
+      - test-pip-snapshot-linux:
           arch: arm64
 
-  test-pip-deployment-linux-x86_64:
+  test-pip-snapshot-linux-x86_64:
     executor: linux-x86_64
     steps:
-      - test-pip-deployment-snapshot-linux:
+      - test-pip-snapshot-linux:
           arch: amd64
 
-  test-pip-deployment-mac-aarch64:
+  test-pip-snapshot-mac-aarch64:
     executor: mac-aarch64
     steps:
-      - test-pip-deployment-snapshot-mac
+      - test-pip-snapshot-mac
 
-  test-pip-deployment-mac-x86_64:
+  test-pip-snapshot-mac-x86_64:
     executor: mac-x86_64
     steps:
-      - test-pip-deployment-snapshot-mac
+      - test-pip-snapshot-mac
 
-  test-pip-deployment-windows-x86_64:
+  test-pip-snapshot-windows-x86_64:
     executor:
       name: win/default
       shell: cmd.exe
@@ -338,31 +338,31 @@ workflows:
             branches:
               only: [master, development]
 
-      - test-pip-deployment-linux-aarch64:
+      - test-pip-snapshot-linux-aarch64:
           filters:
             branches:
               only: [master, development]
           requires:
             - deploy-pip-snapshot-linux-aarch64
-      - test-pip-deployment-linux-x86_64:
+      - test-pip-snapshot-linux-x86_64:
           filters:
             branches:
               only: [master, development]
           requires:
             - deploy-pip-snapshot-linux-x86_64
-      - test-pip-deployment-mac-aarch64:
+      - test-pip-snapshot-mac-aarch64:
           filters:
             branches:
               only: [master, development]
           requires:
             - deploy-pip-snapshot-mac-aarch64
-      - test-pip-deployment-mac-x86_64:
+      - test-pip-snapshot-mac-x86_64:
           filters:
             branches:
               only: [master, development]
           requires:
             - deploy-pip-snapshot-mac-x86_64
-      - test-pip-deployment-windows-x86_64:
+      - test-pip-snapshot-windows-x86_64:
           filters:
             branches:
               only: [master, development]
