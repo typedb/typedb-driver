@@ -751,11 +751,9 @@ build:
 #        - test-nodejs-behaviour-definable-core
 #        - test-nodejs-behaviour-definable-cluster
       command: |
-        export AUTH=$(base64 <<< "$REPO_VATICLE_USERNAME:$REPO_VATICLE_PASSWORD")
-        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run //nodejs:client-nodejs-npm-package.publish --action_env=VERSION=0.0.0-$(git rev-parse HEAD) -- \
-          --registry=https://repo.vaticle.com/repository/npm-snapshot/ \
-          --//repo.vaticle.com/repository/npm-snapshot:_auth=$AUTH
+        export DEPLOY_NPM_USERNAME=$REPO_VATICLE_USERNAME
+        export DEPLOY_NPM_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run --define version=$(git rev-parse HEAD) //nodejs:deploy-npm -- snapshot
         
 # TODO: assembly tests for all drivers to run in factory
 

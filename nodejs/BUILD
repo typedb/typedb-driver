@@ -21,7 +21,7 @@
 
 exports_files([
     "pnpm-lock.yaml",
-    "package.json.template",
+    "package.json",
     "tsconfig.json",
     "package-lock.json",
     "RELEASE_TEMPLATE.md",
@@ -29,7 +29,7 @@ exports_files([
 ])
 
 #load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm", "nodejs_binary")
-#load("@vaticle_bazel_distribution//npm:rules.bzl", "assemble_npm", "deploy_npm")
+load("@vaticle_bazel_distribution//npm:rules.bzl", "assemble_npm", "deploy_npm")
 #load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 #load("@vaticle_dependencies//tool/release/deps:rules.bzl", "release_validate_nodejs_deps")
@@ -89,28 +89,26 @@ ts_project(
     out_dir = "dist",
 )
 
-genrule(
-    name = "stamped_package_json",
-    outs = ["package.json"],
-    srcs = ["package.json.template", "//:VERSION"],
-    cmd = 'sed "s/{VERSION}/$$VERSION/" nodejs/package.json.template > $@',
-)
-
 npm_package(
     name = "client-nodejs-npm-package",
-    srcs = [":client-nodejs", ":stamped_package_json"],
+    srcs = [":client-nodejs", "package.json"],
     include_runfiles = False,
     package = "typedb-client",
     visibility = ["//visibility:public"],
 )
 
-#deploy_npm(
-#    name = "deploy-npm",
-#    target = ":assemble-npm",
-#    snapshot = deployment["npm.snapshot"],
-#    release = deployment["npm.release"],
-#)
-#
+assemble_npm(
+    name= "assemble-npm",
+    target = ":client-nodejs-npm-package"
+)
+
+deploy_npm(
+    name = "deploy-npm",
+    target = ":assemble-npm",
+    snapshot = deployment["npm.snapshot"],
+    release = deployment["npm.release"],
+)
+
 #deploy_github(
 #    name = "deploy-github",
 #    release_description = "//:RELEASE_NOTES_LATEST.md",
@@ -157,7 +155,7 @@ checkstyle_test(
         "user/**/*.ts",
     ]),
     exclude = glob([
-        "*.json*",
+        "*.json",
         "*.md",
         ".eslintrc",
         "dist/**/*.*",

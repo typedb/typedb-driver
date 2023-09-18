@@ -1,6 +1,6 @@
 {
   "name": "typedb-client",
-  "version": "{VERSION}",
+  "version": "0.0.0",
   "description": "TypeDB Client for Node.js",
   "author": "Vaticle",
   "license": "Apache-2.0",
