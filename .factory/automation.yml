@@ -713,11 +713,11 @@ build:
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
-#    deploy-crate-snapshot:
-#      filter:
-#        owner: vaticle
+    deploy-crate-snapshot:
+      filter:
+        owner: vaticle
 #        branch: master
-#      image: vaticle-ubuntu-22.04
+      image: vaticle-ubuntu-22.04
 #      dependencies:
 #        - build
 #        - test-integration-core
@@ -726,11 +726,11 @@ build:
 #        - test-behaviour-concept
 #        - test-behaviour-connection
 #        - test-behaviour-typeql
-#      command: |
-#        export DEPLOY_CRATE_TOKEN=$REPO_VATICLE_CRATES_TOKEN
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run --define version=$(git rev-parse HEAD) //rust:deploy_crate -- snapshot
-#
+      command: |
+        export DEPLOY_CRATE_TOKEN=$REPO_VATICLE_CRATES_TOKEN
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run --define version=$(git rev-parse HEAD) //rust:deploy_crate -- snapshot
+
     deploy-npm-snapshot:
 #      filter:
 #        owner: vaticle
