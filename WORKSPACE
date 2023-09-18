@@ -119,6 +119,26 @@ sonarcloud_dependencies()
 load("@vaticle_dependencies//tool/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
 unuseddeps_deps()
 
+# Load //tool/doc
+load("@vaticle_dependencies//tool/doc:deps.bzl", doc_deps = "deps")
+doc_deps()
+load("@vaticle_dependencies_tool_doc//:requirements.bzl", install_doc_deps = "install_deps")
+install_doc_deps()
+
+# Load make rule
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "rules_foreign_cc",
+    sha256 = "2a4d07cd64b0719b39a7c12218a3e507672b82a97b98c6a89d38565894cf7c51",
+    strip_prefix = "rules_foreign_cc-0.9.0",
+    url = "https://github.com/bazelbuild/rules_foreign_cc/archive/refs/tags/0.9.0.tar.gz",
+)
+
+load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
+rules_foreign_cc_dependencies()
+
 ######################################
 # Load @vaticle_bazel_distribution #
 ######################################
@@ -139,8 +159,8 @@ github_deps()
 # Load //pip
 load("@vaticle_bazel_distribution//pip:deps.bzl", pip_deps = "deps")
 pip_deps()
-load("@vaticle_bazel_distribution_pip//:requirements.bzl", "install_deps")
-install_deps()
+load("@vaticle_bazel_distribution_pip//:requirements.bzl", install_pip_deps = "install_deps")
+install_pip_deps()
 
 ######################################
 # Load @vaticle_typedb_driver_python #

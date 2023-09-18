@@ -26,6 +26,9 @@ load("@vaticle_dependencies//tool/doc:rules.bzl", "python_doc")
 load("//python:rules.bzl", "native_driver_versioned")
 load("//python:python_versions.bzl", "python_versions")
 
+load("@vaticle_dependencies_tool_doc//:requirements.bzl", doc_requirement = "requirement")
+
+load("@rules_foreign_cc//foreign_cc:defs.bzl", "make")
 
 native_driver_versioned(python_versions = python_versions)
 
@@ -66,18 +69,28 @@ checkstyle_test(
     size = "small",
 )
 
-#python_doc(
-#    name = "client_doc",
-#    package = ":assemble-pip39",
-#    doc_srcs = [
-#        "../docs/python/source/conf.py",
-#        "../docs/python/source/index.rst",
-#        "../docs/python/make.bat",
-#        "../docs/python/makefile",
-#    ]
-#)
+# Documentation generation
+genrule(
+    name = "assemble_pip_unzip39",
+    srcs = [":assemble-pip39"],
+    outs = ["driver-package"],
+    cmd = 'mkdir $@ && PACKAGE=$$(find . -name "*.tar.gz") && tar -xf $${PACKAGE} && mv */typedb $@',
+)
 
-#parse_rust_doc(
+py_binary(
+    name = "driver_doc",
+    srcs = [
+        "doc/sphinx_html_builder_runner.py",
+    ],
+    main = "doc/sphinx_html_builder_runner.py",
+    data = [
+        ":assemble_pip_unzip39",
+    ] + glob(["doc/source/**/*"]),
+    deps = [doc_requirement("sphinx")],
+    imports = ["driver-package"],
+)
+
+#parse_python_doc(
 #    name = "typedb_client_doc_parsed",
 #    crate = ":typedb_client_doc",
 #)
