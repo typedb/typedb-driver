@@ -125,19 +125,10 @@ doc_deps()
 load("@vaticle_dependencies_tool_doc//:requirements.bzl", install_doc_deps = "install_deps")
 install_doc_deps()
 
-# Load make rule
-
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
-http_archive(
-    name = "rules_foreign_cc",
-    sha256 = "2a4d07cd64b0719b39a7c12218a3e507672b82a97b98c6a89d38565894cf7c51",
-    strip_prefix = "rules_foreign_cc-0.9.0",
-    url = "https://github.com/bazelbuild/rules_foreign_cc/archive/refs/tags/0.9.0.tar.gz",
-)
-
-load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
-rules_foreign_cc_dependencies()
+load("@vaticle_dependencies//tool/doc:java_deps.bzl", java_doc_deps = "deps")
+java_doc_deps()
+load("@google_bazel_common//:workspace_defs.bzl", "google_common_workspace_rules")
+google_common_workspace_rules()
 
 ######################################
 # Load @vaticle_bazel_distribution #

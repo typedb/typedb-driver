@@ -28,6 +28,7 @@ load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@vaticle_dependencies//library/maven:artifacts.bzl", artifacts_org = "artifacts")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":rules.bzl", "swig_native_java_library")
+load("@google_bazel_common//tools/javadoc:javadoc.bzl", "javadoc_library")
 
 java_library(
     name = "driver-java",
@@ -104,6 +105,17 @@ deploy_maven(
     release = deployment["maven.release"],
     snapshot = deployment["maven.snapshot"],
     target = ":assemble-maven-jni",
+)
+
+javadoc_library(
+    name = "driver_doc",
+    srcs = glob(["*.java"]) + ["api"],
+#    root_packages = ["com.vaticle.typedb.client"],
+    deps = [
+        "//java/api",
+        "//java/connection",
+        "@vaticle_typedb_common//:common",
+    ],
 )
 
 checkstyle_test(

@@ -34,6 +34,7 @@ load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
 load("@npm//:defs.bzl", "npm_link_all_packages")
+load(":typedoc.bzl", "typedoc")
 
 npm_link_all_packages(
     name = "node_modules",
@@ -91,6 +92,25 @@ npm_package(
     include_runfiles = False,
     package = "typedb-driver",
     visibility = ["//visibility:public"],
+)
+
+typedoc(
+    name = "driver_doc",
+    entry_points = ["index.ts"],
+    data = [
+        ":driver-nodejs",
+        "*.ts",
+        "api/**/*.ts",
+        "common/**/*.ts",
+        "connection/**/*.ts",
+        "concept/**/*.ts",
+        "logic/**/*.ts",
+        "query/**/*.ts",
+        "stream/**/*.ts",
+        "user/**/*.ts",
+    ],
+    output = ["docs.json"],
+    json = True,
 )
 
 assemble_npm(

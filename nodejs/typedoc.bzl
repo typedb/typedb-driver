@@ -1,4 +1,4 @@
-load("@build_bazel_rules_nodejs//:providers.bzl", "run_node")
+load("@rules_nodejs//:providers.bzl", "run_node")
 
 def _typedoc_impl(ctx):
     args = ctx.actions.args()
