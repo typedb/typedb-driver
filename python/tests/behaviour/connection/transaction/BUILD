@@ -47,7 +47,7 @@ typedb_behaviour_py_test(
         "//python/tests/behaviour/background",
         "//python/tests/behaviour/util:util",
     ],
-    data = ["//python:native-client-binary", "//python:native-client-wrapper"],
+    data = ["//python:native-client-binary-link", "//python:native-client-wrapper-link"],
     size = "medium",
 )
 

@@ -40,7 +40,7 @@ alias(
 
 # Rename swig-generated files for local running (local python version should be specified)
 genrule(
-    name = "native-client-wrapper",
+    name = "native-client-wrapper-link",
     outs = ["typedb/native_client_wrapper.py"],
     srcs = [":native-client-wrapper39"],
     cmd = "cp $< $@",
@@ -48,7 +48,7 @@ genrule(
 )
 
 py_native_lib_rename(
-    name = "native-client-binary",
+    name = "native-client-binary-link",
     out = "typedb/native_client_python",
     src = ":native_client_python39",
     visibility = ["//visibility:public"]

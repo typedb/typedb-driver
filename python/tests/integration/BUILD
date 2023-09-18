@@ -29,7 +29,7 @@ typedb_cluster_py_test(
     deps = [
         "//python:client_python",
         ],
-    data = ["//python:native-client-binary", "//python:native-client-wrapper"],
+    data = ["//python:native-client-binary-link", "//python:native-client-wrapper-link"],
     size = "medium",
     native_typedb_cluster_artifact = "//tool/test:native-typedb-cluster-artifact",
 )
@@ -40,7 +40,7 @@ py_test(
     deps = [
         "//python:client_python",
         ],
-    data = ["//python:native-client-binary", "//python:native-client-wrapper"],
+    data = ["//python:native-client-binary-link", "//python:native-client-wrapper-link"],
     python_version = "PY3"
 )
 
@@ -50,7 +50,7 @@ py_test(
     deps = [
         "//python:client_python",
         ],
-    data = ["//python:native-client-binary", "//python:native-client-wrapper"],
+    data = ["//python:native-client-binary-link", "//python:native-client-wrapper-link"],
     python_version = "PY3"
 )
 
