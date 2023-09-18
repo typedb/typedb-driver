@@ -38,7 +38,6 @@ alias(
     visibility = ["//visibility:public"],
 )
 
-# Rename swig-generated files for local running (local python version should be specified)
 genrule(
     name = "native-client-wrapper-link",
     outs = ["typedb/native_client_wrapper.py"],
