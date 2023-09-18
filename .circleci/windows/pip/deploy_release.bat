@@ -27,8 +27,7 @@ ECHO Building and deploying windows package...
 SET DEPLOY_PIP_USERNAME=%REPO_PYPI_USERNAME%
 SET DEPLOY_PIP_PASSWORD=%REPO_PYPI_PASSWORD%
 python.exe -m pip install twine
-git rev-parse HEAD > version_temp.txt
-set /p VER=<version_temp.txt
+SET /p VER=<VERSION
 
 bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip39 -- release
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
