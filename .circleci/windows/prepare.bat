@@ -19,6 +19,7 @@ REM specific language governing permissions and limitations
 REM under the License.
 REM
 
+REM shorten the workspace name so that we can avoid the long path restriction
 git apply .circleci\windows\git.patch
 
 REM uninstall Java 12 installed by CircleCI
