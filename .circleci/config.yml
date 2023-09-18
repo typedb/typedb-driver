@@ -216,7 +216,7 @@ jobs:
     steps:
       - checkout
       - run: .circleci\windows\prepare.bat
-      - run: .circleci\windows\pip\test_deploy.bat
+      - run: .circleci\windows\pip\test_deploy_snapshot.bat
 
   deploy-pip-release-linux-aarch64:
     executor: linux-aarch64
