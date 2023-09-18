@@ -184,7 +184,7 @@ jobs:
     steps:
       - checkout
       - run: .circleci\windows\prepare.bat
-      - run: .circleci\windows\pip\deploy_snapshot.bat
+      - run: .circleci\windows\python\deploy_snapshot.bat
 
   test-pip-deployment-linux-aarch64:
     executor: linux-aarch64
@@ -216,7 +216,7 @@ jobs:
     steps:
       - checkout
       - run: .circleci\windows\prepare.bat
-      - run: .circleci\windows\pip\test_deploy_snapshot.bat
+      - run: .circleci\windows\python\test_deploy_snapshot.bat
 
   deploy-pip-release-linux-aarch64:
     executor: linux-aarch64
@@ -292,7 +292,7 @@ jobs:
     steps:
       - checkout
       - run: .circleci\windows\prepare.bat
-      - run: .circleci\windows\pip\deploy_release.bat
+      - run: .circleci\windows\python\deploy_release.bat
       - persist_to_workspace:
           root: dist
           paths: ["./*"]
