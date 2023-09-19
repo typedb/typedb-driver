@@ -43,6 +43,11 @@ java_library(
     ],
 )
 
+filegroup(
+    name = "source_files",
+    srcs = glob(["**/*.java"]),
+)
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*", "*/*", "*/*/*"]),

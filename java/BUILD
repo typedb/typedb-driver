@@ -109,11 +109,9 @@ deploy_maven(
 
 javadoc_library(
     name = "driver_doc",
-    srcs = glob(["*.java"]) + ["api"],
-#    root_packages = ["com.vaticle.typedb.client"],
+    srcs = ["//java/api:source_files"],
     deps = [
         "//java/api",
-        "//java/connection",
         "@vaticle_typedb_common//:common",
     ],
 )
