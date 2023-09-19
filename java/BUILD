@@ -44,14 +44,6 @@ java_library(
     ],
 )
 
-checkstyle_test(
-    name = "checkstyle",
-    size = "small",
-    include = glob(["*"]),
-    exclude = ["README.md"],
-    license_type = "apache-header",
-)
-
 assemble_maven(
     name = "assemble-maven",
     project_description = "TypeDB Client API for Java",
@@ -78,16 +70,6 @@ deploy_maven(
     snapshot = deployment["maven.snapshot"],
     target = ":assemble-maven",
 )
-
-# deploy_github(
-#     name = "deploy-github",
-#     draft = False,
-#     title = "TypeDB Client Java",
-#     release_description = "//:RELEASE_NOTES_LATEST.md",
-#     organisation = github_deployment["github.organisation"],
-#     repository = github_deployment["github.repository"],
-#     title_append_version = True,
-# )
 
 platform_specific_swig_java(
     name = "typedb_client_jni",
@@ -122,4 +104,12 @@ deploy_maven(
     release = deployment["maven.release"],
     snapshot = deployment["maven.snapshot"],
     target = ":assemble-maven-jni",
+)
+
+checkstyle_test(
+    name = "checkstyle",
+    size = "small",
+    include = glob(["*"]),
+    exclude = ["README.md"],
+    license_type = "apache-header",
 )

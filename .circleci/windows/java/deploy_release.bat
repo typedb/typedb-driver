@@ -1,4 +1,4 @@
-REM
+@echo off
 REM Copyright (C) 2022 Vaticle
 REM
 REM Licensed to the Apache Software Foundation (ASF) under one
@@ -24,10 +24,13 @@ REM by Chocolatey in prepare.bat is accessible
 CALL refreshenv
 
 ECHO Building and deploying windows package...
-SET DEPLOY_MAVEN_USERNAME=%REPO_VATICLE_USERNAME%
-SET DEPLOY_MAVEN_PASSWORD=%REPO_VATICLE_PASSWORD%
+SET DEPLOY_PIP_USERNAME=%REPO_PYPI_USERNAME%
+SET DEPLOY_PIP_PASSWORD=%REPO_PYPI_PASSWORD%
+python.exe -m pip install twine
+SET /p VER=<VERSION
 
-git rev-parse HEAD > version_snapshot.txt
-set /p VER=<version_snapshot.txt
-bazel --output_user_root=C:/bazel run --verbose_failures --define version=%VER% //java:deploy-maven-jni -- snapshot
+bazel --output_user_root=C:/bazel run --verbose_failures --define version=%VER% //java:deploy-maven-jni -- release
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
+
+MD dist
+COPY bazel-bin\java\typedb_client_jni-windows-x86_64__do_not_reference.jar dist\typedb_client_jni-windows-x86_64.jar

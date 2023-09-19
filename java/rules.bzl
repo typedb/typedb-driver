@@ -31,7 +31,7 @@ def platform_specific_swig_java(name, platforms, maven_coordinates, tags=[], **k
 
     for platform in platforms.values():
         native.java_library(
-            name = name + "-" + platform,
+            name = name + "-" + platform + "__do_not_reference",
             srcs = ["__" + name + "__swig"],
             resources = ["lib" + name],
             tags = tags + ["maven_coordinates=" + maven_coordinates.replace("{platform}", platform)],
@@ -39,5 +39,8 @@ def platform_specific_swig_java(name, platforms, maven_coordinates, tags=[], **k
 
     native.alias(
         name = name,
-        actual = select({config: name + "-" + platform for config, platform in platforms.items()})
+        actual = select({
+            config: name + "-" + platform + "__do_not_reference"
+            for config, platform in platforms.items()
+        })
     )
