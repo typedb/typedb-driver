@@ -27,7 +27,7 @@ load("@vaticle_dependencies//distribution/maven:version.bzl", "version")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@vaticle_dependencies//library/maven:artifacts.bzl", artifacts_org = "artifacts")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load(":rules.bzl", "platform_specific_swig_java")
+load(":rules.bzl", "swig_native_java_library")
 
 java_library(
     name = "client-java",
@@ -71,7 +71,7 @@ deploy_maven(
     target = ":assemble-maven",
 )
 
-platform_specific_swig_java(
+swig_native_java_library(
     name = "typedb_client_jni",
     lib = "//c:typedb_client_clib_headers",
     package = "com.vaticle.typedb.client.jni",

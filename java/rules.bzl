@@ -21,7 +21,7 @@
 
 load("@vaticle_dependencies//builder/swig:java.bzl", "swig_java")
 
-def platform_specific_swig_java(name, platforms, maven_coordinates, tags=[], **kwargs):
+def swig_native_java_library(name, platforms, maven_coordinates, tags=[], **kwargs):
     swig_java(
         name = "__" + name,
         shared_lib_name = name,
