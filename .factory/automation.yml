@@ -305,7 +305,7 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-                 
+
         tool/test/start-core-server.sh
         .factory/test-core.sh //python/tests/behaviour/connection/database/... --test_output=streamed --jobs=1 &&
           .factory/test-core.sh //python/tests/behaviour/connection/session/... --test_output=streamed --jobs=1 &&
@@ -711,25 +711,25 @@ build:
           .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/undefine/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
-#
-#    deploy-crate-snapshot:
-#      filter:
-#        owner: vaticle
-#        branch: master
-#      image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
-#        - test-integration-core
-#        - test-integration-cluster
-#        - test-integration-runtimes
-#        - test-behaviour-concept
-#        - test-behaviour-connection
-#        - test-behaviour-typeql
-#      command: |
-#        export DEPLOY_CRATE_TOKEN=$REPO_VATICLE_CRATES_TOKEN
-#        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-#        bazel run --define version=$(git rev-parse HEAD) //rust:deploy_crate -- snapshot
-#
+
+    deploy-crate-snapshot:
+      filter:
+        owner: vaticle
+        branch: [master, development]
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+        - test-integration-core
+        - test-integration-cluster
+        - test-integration-runtimes
+        - test-behaviour-concept
+        - test-behaviour-connection
+        - test-behaviour-typeql
+      command: |
+        export DEPLOY_CRATE_TOKEN=$REPO_VATICLE_CRATES_TOKEN
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run --define version=$(git rev-parse HEAD) //rust:deploy_crate -- snapshot
+
 # TODO: assembly tests for all drivers to run in factory
 
 release:
@@ -755,13 +755,7 @@ release:
 #      command: |
 #        export DEPLOY_CRATE_TOKEN=$REPO_CRATES_TOKEN
 #        bazel run --define version=$(cat VERSION) //rust:deploy_crate -- release
-#    deploy-maven-release:
-#      image: vaticle-ubuntu-22.04
-#      dependencies: [deploy-github]
-#      command: |
-#        export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
-#        export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
-#        bazel run --define version=$(cat VERSION) //java:deploy-maven -- release
+#
 #    deploy-npm-release:
 #      image: vaticle-ubuntu-22.04
 #      dependencies: [deploy-github]

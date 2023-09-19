@@ -21,16 +21,17 @@
 
 use std::{ffi::c_char, ptr::addr_of_mut};
 
+use typedb_client::{
+    answer::{ConceptMap, ConceptMapGroup, Numeric, NumericGroup},
+    box_stream,
+    logic::Explanation,
+    Options, Result, Transaction,
+};
+
 use super::{
     error::{try_release, unwrap_void},
     iterator::{iterator_try_next, CIterator},
     memory::{borrow, free, string_view},
-};
-use crate::{
-    answer::{ConceptMap, ConceptMapGroup, Numeric, NumericGroup},
-    common::box_stream,
-    logic::Explanation,
-    Options, Result, Transaction,
 };
 
 #[no_mangle]

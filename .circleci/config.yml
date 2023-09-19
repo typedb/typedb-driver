@@ -47,7 +47,13 @@ executors:
       xcode: "14.2.0"
     working_directory: ~/typedb-driver-java
 
+
 commands:
+
+  ######################
+  # common setup steps #
+  ######################
+
   install-bazel-linux:
     parameters:
       arch:
@@ -62,40 +68,15 @@ commands:
     steps:
       - run: brew install bazelisk
 
+  ###########################
+  # Python deployment steps #
+  ###########################
+
   install-pip-requirements:
     steps:
       - run: |
           python3 -m pip install pip==23.2.1
           python3 -m pip install -r python/requirements_dev.txt
-
-  deploy-pip-release-unix:
-    steps:
-      - run: |
-          export DEPLOY_PIP_USERNAME=$REPO_PYPI_USERNAME
-          export DEPLOY_PIP_PASSWORD=$REPO_PYPI_PASSWORD
-          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip39 -- release
-          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip310 -- release
-          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip311 -- release
-          mkdir -p ~/dist
-          cp bazel-bin/python/typedb-client*.whl ~/dist/.
-
-  deploy-pip-release-mac:
-    steps:
-      - checkout
-      - install-bazel-mac
-      - install-pip-requirements
-      - deploy-pip-release-unix
-
-  deploy-pip-release-linux:
-    parameters:
-      arch:
-        type: string
-    steps:
-      - checkout
-      - install-bazel-linux:
-          arch: "<<parameters.arch>>"
-      - install-pip-requirements
-      - deploy-pip-release-unix
 
   deploy-pip-snapshot-unix:
     steps:
@@ -106,13 +87,6 @@ commands:
           bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip310 -- snapshot
           bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip311 -- snapshot
 
-  deploy-pip-snapshot-mac:
-    steps:
-      - checkout
-      - install-bazel-mac
-      - install-pip-requirements
-      - deploy-pip-snapshot-unix
-
   deploy-pip-snapshot-linux:
     parameters:
       arch:
@@ -121,6 +95,13 @@ commands:
       - checkout
       - install-bazel-linux:
           arch: "<<parameters.arch>>"
+      - install-pip-requirements
+      - deploy-pip-snapshot-unix
+
+  deploy-pip-snapshot-mac:
+    steps:
+      - checkout
+      - install-bazel-mac
       - install-pip-requirements
       - deploy-pip-snapshot-unix
 
@@ -135,13 +116,6 @@ commands:
           kill $(jps | awk '/TypeDBServer/ {print $1}')
           exit $TEST_SUCCESS
 
-  test-pip-snapshot-mac:
-    steps:
-      - checkout
-      - install-bazel-mac
-      - install-pip-requirements
-      - test-pip-snapshot-unix
-
   test-pip-snapshot-linux:
     parameters:
       arch:
@@ -153,7 +127,151 @@ commands:
       - install-pip-requirements
       - test-pip-snapshot-unix
 
+  test-pip-snapshot-mac:
+    steps:
+      - checkout
+      - install-bazel-mac
+      - install-pip-requirements
+      - test-pip-snapshot-unix
+
+  deploy-pip-release-unix:
+    steps:
+      - run: |
+          export DEPLOY_PIP_USERNAME=$REPO_PYPI_USERNAME
+          export DEPLOY_PIP_PASSWORD=$REPO_PYPI_PASSWORD
+          bazel run --define version=$(cat VERSION) //python:deploy-pip39 -- release
+          bazel run --define version=$(cat VERSION) //python:deploy-pip310 -- release
+          bazel run --define version=$(cat VERSION) //python:deploy-pip311 -- release
+
+  deploy-pip-release-linux:
+    parameters:
+      arch:
+        type: string
+    steps:
+      - checkout
+      - install-bazel-linux:
+          arch: "<<parameters.arch>>"
+      - install-pip-requirements
+      - deploy-pip-release-unix
+
+  deploy-pip-release-mac:
+    steps:
+      - checkout
+      - install-bazel-mac
+      - install-pip-requirements
+      - deploy-pip-release-unix
+
+  #########################
+  # Java deployment steps #
+  #########################
+
+  install-maven-mac:
+    steps:
+      - run: brew install maven
+
+  deploy-maven-jni-snapshot-unix:
+    steps:
+      - run: |
+          export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
+          export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
+          bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+          bazel run --define version=$(git rev-parse HEAD) //java:deploy-maven-jni -- snapshot
+
+  deploy-maven-jni-snapshot-linux:
+    parameters:
+      arch:
+        type: string
+    steps:
+      - checkout
+      - install-bazel-linux:
+          arch: "<<parameters.arch>>"
+      - deploy-maven-jni-snapshot-unix
+
+  deploy-maven-jni-snapshot-mac:
+    steps:
+      - checkout
+      - install-bazel-mac
+      - install-maven-mac
+      - deploy-maven-jni-snapshot-unix
+
+  deploy-maven-snapshot-unix:
+    steps:
+      - run: |
+          export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
+          export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
+          bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+          bazel run --define version=$(git rev-parse HEAD) //java:deploy-maven -- snapshot
+
+  test-maven-snapshot-unix:
+    steps:
+      - run: |
+          export TYPEDB_DIST_DIR="dist/typedb-all-linux/"
+          bazel run //tool/test:typedb-extractor -- $TYPEDB_DIST_DIR
+          $TYPEDB_DIST_DIR/typedb server &
+          PID=$!
+          
+          sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$CIRCLE_SHA1/g" java/test/deployment/pom.xml
+          cat java/test/deployment/pom.xml
+          cd java/test/deployment && mvn test
+          kill $PID
+
+  test-maven-snapshot-linux:
+    parameters:
+      arch:
+        type: string
+    steps:
+      - checkout
+      - install-bazel-linux:
+          arch: "<<parameters.arch>>"
+      - test-maven-snapshot-unix
+
+  test-maven-snapshot-mac:
+    steps:
+      - checkout
+      - install-bazel-mac
+      - install-maven-mac
+      - test-maven-snapshot-unix
+
+  deploy-maven-jni-release-unix:
+    steps:
+      - run: |
+          export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
+          export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
+          bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+          bazel run --define version=$(cat VERSION) //java:deploy-maven-jni -- release
+
+  deploy-maven-jni-release-linux:
+    parameters:
+      arch:
+        type: string
+    steps:
+      - checkout
+      - install-bazel-linux:
+          arch: "<<parameters.arch>>"
+      - deploy-maven-jni-release-unix
+
+  deploy-maven-jni-release-mac:
+    steps:
+      - checkout
+      - install-bazel-mac
+      - install-maven-mac
+      - deploy-maven-jni-release-unix
+
+  deploy-maven-release-unix:
+    steps:
+      - run: |
+          export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
+          export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
+          bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+          bazel run --define version=$(cat VERSION) //java:deploy-maven -- release
+
+
 jobs:
+
+  ###############
+  # Python jobs #
+  ###############
+
   deploy-pip-snapshot-linux-aarch64:
     executor: linux-aarch64
     steps:
@@ -297,6 +415,159 @@ jobs:
           root: dist
           paths: ["./*"]
 
+  #############
+  # Java jobs #
+  #############
+
+  deploy-maven-jni-snapshot-linux-aarch64:
+    executor: linux-aarch64
+    steps:
+      - deploy-maven-jni-snapshot-linux:
+          arch: arm64
+
+  deploy-maven-jni-snapshot-linux-x86_64:
+    executor: linux-x86_64
+    steps:
+      - deploy-maven-jni-snapshot-linux:
+          arch: amd64
+
+  deploy-maven-jni-snapshot-mac-aarch64:
+    executor: mac-aarch64
+    steps:
+      - deploy-maven-jni-snapshot-mac
+
+  deploy-maven-jni-snapshot-mac-x86_64:
+    executor: mac-x86_64
+    steps:
+      - deploy-maven-jni-snapshot-mac
+
+  deploy-maven-jni-snapshot-windows-x86_64:
+    executor:
+      name: win/default
+      shell: cmd.exe
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - run: .circleci\windows\prepare.bat
+      - run: .circleci\windows\java\deploy_snapshot.bat
+
+  deploy-maven-snapshot:
+    executor: linux-x86_64
+    steps:
+      - checkout
+      - install-bazel-linux:
+          arch: amd64
+      - deploy-maven-snapshot-unix
+
+  test-maven-snapshot-linux-aarch64:
+    executor: linux-aarch64
+    steps:
+      - test-maven-snapshot-linux:
+          arch: arm64
+
+  test-maven-snapshot-linux-x86_64:
+    executor: linux-x86_64
+    steps:
+      - test-maven-snapshot-linux:
+          arch: amd64
+
+  test-maven-snapshot-mac-aarch64:
+    executor: mac-aarch64
+    steps:
+      - test-maven-snapshot-mac
+
+  test-maven-snapshot-mac-x86_64:
+    executor: mac-x86_64
+    steps:
+      - test-maven-snapshot-mac
+
+  test-maven-snapshot-windows-x86_64:
+    executor:
+      name: win/default
+      shell: cmd.exe
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - run: .circleci\windows\prepare.bat
+      - run: .circleci\windows\java\test_deploy_snapshot.bat
+
+  deploy-maven-jni-release-linux-aarch64:
+    executor: linux-aarch64
+    steps:
+      - deploy-maven-jni-release-linux:
+          arch: arm64
+      - run: |
+          mkdir -p ~/dist
+          cp bazel-bin/java/com.vaticle.typedb-typedb-client-jni-linux-aarch64.jar ~/dist/typedb-driver-jni-linux-aarch64.jar
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
+
+  deploy-maven-jni-release-linux-x86_64:
+    executor: linux-x86_64
+    steps:
+      - deploy-maven-jni-release-linux:
+          arch: amd64
+      - run: |
+          mkdir -p ~/dist
+          cp bazel-bin/java/com.vaticle.typedb-typedb-client-jni-linux-x86_64.jar ~/dist/typedb-driver-jni-linux-x86_64.jar
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
+
+  deploy-maven-jni-release-mac-aarch64:
+    executor: mac-aarch64
+    steps:
+      - deploy-maven-jni-release-mac
+      - run: |
+          mkdir -p ~/dist
+          cp bazel-bin/java/com.vaticle.typedb-typedb-client-jni-macosx-aarch64.jar ~/dist/typedb-driver-jni-macosx-aarch64.jar
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
+
+  deploy-maven-jni-release-mac-x86_64:
+    executor: mac-x86_64
+    steps:
+      - deploy-maven-jni-release-mac
+      - run: |
+          mkdir -p ~/dist
+          cp bazel-bin/java/com.vaticle.typedb-typedb-client-jni-macosx-x86_64.jar ~/dist/typedb-driver-jni-macosx-x86_64.jar
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
+
+  deploy-maven-jni-release-windows-x86_64:
+    executor:
+      name: win/default
+      shell: cmd.exe
+    working_directory: ~/typedb-driver-java
+    steps:
+      - checkout
+      - run: .circleci\windows\prepare.bat
+      - run: .circleci\windows\java\deploy_release.bat
+      - persist_to_workspace:
+          root: dist
+          paths: ["./*"]
+
+  deploy-maven-release:
+    executor: linux-x86_64
+    steps:
+      - checkout
+      - install-bazel-linux:
+          arch: amd64
+      - deploy-maven-release-unix
+      - run: |
+          mkdir -p ~/dist
+          cp bazel-bin/java/libclient-java.jar ~/dist/typedb-driver.jar
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
+
+  ################################
+  # Final release deployment job #
+  ################################
+
   deploy-github:
     executor: linux-x86_64
     steps:
@@ -315,7 +586,7 @@ jobs:
               -c ${CIRCLE_SHA1} -delete -draft $(cat VERSION) ~/dist/
 
 workflows:
-  typedb-driver-python:
+  typedb-driver-python-snapshot:
     jobs:
       - deploy-pip-snapshot-linux-aarch64:
           filters:
@@ -369,6 +640,72 @@ workflows:
           requires:
             - deploy-pip-snapshot-windows-x86_64
 
+
+  typedb-driver-java-snapshot:
+    jobs:
+      - deploy-maven-jni-snapshot-linux-aarch64:
+          filters:
+            branches:
+              only: [master, development]
+      - deploy-maven-jni-snapshot-linux-x86_64:
+          filters:
+            branches:
+              only: [master, development]
+      - deploy-maven-jni-snapshot-mac-aarch64:
+          filters:
+            branches:
+              only: [master, development]
+      - deploy-maven-jni-snapshot-mac-x86_64:
+          filters:
+            branches:
+              only: [master, development]
+      - deploy-maven-jni-snapshot-windows-x86_64:
+          filters:
+            branches:
+              only: [master, development]
+      - deploy-maven-snapshot:
+          filters:
+            branches:
+              only: [master, development]
+          requires:
+            - deploy-maven-jni-snapshot-linux-aarch64
+            - deploy-maven-jni-snapshot-linux-x86_64
+            - deploy-maven-jni-snapshot-mac-aarch64
+            - deploy-maven-jni-snapshot-mac-x86_64
+            - deploy-maven-jni-snapshot-windows-x86_64
+
+      - test-maven-snapshot-linux-aarch64:
+          filters:
+            branches:
+              only: [master, development]
+          requires:
+            - deploy-maven-snapshot
+      - test-maven-snapshot-linux-x86_64:
+          filters:
+            branches:
+              only: [master, development]
+          requires:
+            - deploy-maven-snapshot
+      - test-maven-snapshot-mac-aarch64:
+          filters:
+            branches:
+              only: [master, development]
+          requires:
+            - deploy-maven-snapshot
+      - test-maven-snapshot-mac-x86_64:
+          filters:
+            branches:
+              only: [master, development]
+          requires:
+            - deploy-maven-snapshot
+      - test-maven-snapshot-windows-x86_64:
+          filters:
+            branches:
+              only: [master, development]
+          requires:
+            - deploy-maven-snapshot
+
+
   release:
     jobs:
       - deploy-pip-release-linux-aarch64:
@@ -391,6 +728,38 @@ workflows:
           filters:
             branches:
               only: [release]
+
+      - deploy-maven-jni-release-linux-aarch64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-maven-jni-release-linux-x86_64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-maven-jni-release-mac-aarch64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-maven-jni-release-mac-x86_64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-maven-jni-release-windows-x86_64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-maven-release:
+          filters:
+            branches:
+              only: [release]
+          requires:
+            - deploy-maven-jni-release-linux-aarch64
+            - deploy-maven-jni-release-linux-x86_64
+            - deploy-maven-jni-release-mac-aarch64
+            - deploy-maven-jni-release-mac-x86_64
+            - deploy-maven-jni-release-windows-x86_64
+
       - deploy-github:
           filters:
             branches:
@@ -401,3 +770,4 @@ workflows:
             - deploy-pip-release-linux-aarch64
             - deploy-pip-release-linux-x86_64
             - deploy-pip-release-windows-x86_64
+            - deploy-maven-release

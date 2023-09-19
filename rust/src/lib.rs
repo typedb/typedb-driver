@@ -22,8 +22,6 @@
 #![deny(unused_must_use)]
 
 pub mod answer;
-#[cfg(feature = "sync")]
-mod bindings;
 mod common;
 pub mod concept;
 mod connection;
@@ -33,7 +31,9 @@ pub mod transaction;
 mod user;
 
 pub use self::{
-    common::{error, Credential, Error, Options, Result, SessionType, TransactionType},
+    common::{
+        box_stream, error, info, BoxStream, Credential, Error, Options, Result, SessionType, TransactionType, IID,
+    },
     connection::Connection,
     database::{Database, DatabaseManager, Session},
     transaction::Transaction,

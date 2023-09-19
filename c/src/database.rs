@@ -21,14 +21,12 @@
 
 use std::{ffi::c_char, ptr::addr_of_mut};
 
+use typedb_client::{box_stream, info::ReplicaInfo, Database};
+
 use super::{
     error::{try_release_string, unwrap_void},
     iterator::{iterator_next, CIterator},
     memory::{borrow, borrow_mut, free, release, release_optional, release_string, take_ownership},
-};
-use crate::{
-    common::{box_stream, info::ReplicaInfo},
-    Database,
 };
 
 #[no_mangle]

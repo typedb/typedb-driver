@@ -21,11 +21,12 @@
 
 use std::ffi::c_char;
 
+use typedb_client::{Database, Options, Session, SessionType};
+
 use super::{
     error::{try_release, unwrap_void},
     memory::{borrow, borrow_mut, free, release_string, take_ownership},
 };
-use crate::{Database, Options, Session, SessionType};
 
 #[no_mangle]
 pub extern "C" fn session_new(

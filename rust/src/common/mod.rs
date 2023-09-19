@@ -23,19 +23,23 @@ pub(crate) mod address;
 mod credential;
 pub mod error;
 mod id;
-pub(crate) mod info;
+pub mod info;
 mod options;
 #[cfg_attr(not(feature = "sync"), path = "stream_async.rs")]
 #[cfg_attr(feature = "sync", path = "stream_sync.rs")]
 pub mod stream;
 
-pub(crate) use self::stream::box_stream;
-pub use self::{credential::Credential, error::Error, options::Options};
+pub use self::{
+    credential::Credential,
+    error::Error,
+    options::Options,
+    stream::{box_stream, BoxStream},
+};
 
 pub(crate) type StdResult<T, E> = std::result::Result<T, E>;
 pub type Result<T = ()> = StdResult<T, Error>;
 
-pub(crate) type IID = id::ID;
+pub type IID = id::ID;
 pub(crate) type RequestID = id::ID;
 pub(crate) type SessionID = id::ID;
 

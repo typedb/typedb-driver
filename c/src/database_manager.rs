@@ -21,12 +21,13 @@
 
 use std::{ffi::c_char, ptr::addr_of_mut};
 
+use typedb_client::{box_stream, Connection, Database, DatabaseManager};
+
 use super::{
     error::{try_release, unwrap_or_default, unwrap_void},
     iterator::{iterator_next, CIterator},
     memory::{borrow, borrow_mut, free, release, string_view},
 };
-use crate::{common::box_stream, Connection, Database, DatabaseManager};
 
 #[no_mangle]
 pub extern "C" fn database_manager_new(connection: *const Connection) -> *mut DatabaseManager {

@@ -21,31 +21,46 @@
 
 package(default_visibility = ["//visibility:public"])
 
+load("@rules_rust//rust:defs.bzl", "rust_static_library", "rustfmt_test")
+load("@vaticle_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-java_library(
-    name = "api",
-    srcs = glob(["*.java", "*/*.java", "*/*/*.java"], exclude=["test/**"]),
+rust_static_library(
+    name = "typedb_client_clib",
+    srcs = glob(["src/**/*.rs"]),
+    aliases = {
+        "//rust:typedb_client_sync": "typedb_client",
+    },
     deps = [
-        # Internal dependencies
-        "//java/common:common",
+        "//rust:typedb_client_sync",
 
-        "//java:typedb_client_jni",
+        "@vaticle_typeql//rust:typeql_lang",
 
-        # External dependencies from @vaticle
-        "@vaticle_typedb_common//:common",
-        "@vaticle_typeql//java/pattern",
-        "@vaticle_typeql//java/query",
-
-        # External dependencies from Maven
-        "@maven//:com_eclipsesource_minimal_json_minimal_json",
-        "@maven//:com_google_code_findbugs_jsr305",
+        "@crates//:chrono",
+        "@crates//:itertools",
+        "@crates//:log",
     ],
+)
+
+rust_cbindgen(
+    name = "typedb_client_clib_headers",
+    lib = ":typedb_client_clib",
+    header_name = "typedb_client.h",
+    config = "cbindgen.toml",
 )
 
 checkstyle_test(
     name = "checkstyle",
-    include = glob(["*", "*/*", "*/*/*"]),
-    license_type = "apache-header",
     size = "small",
+    include = glob([
+        "*",
+        "src/**/*",
+        "swig/*",
+    ]),
+    license_type = "apache-header",
+)
+
+rustfmt_test(
+    name = "client_rustfmt_test",
+    targets = ["typedb_client_clib"],
 )
