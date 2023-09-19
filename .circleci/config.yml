@@ -611,36 +611,36 @@ workflows:
             branches:
               only: [release]
 
-      - deploy-maven-jni-release-linux-aarch64:
-          filters:
-            branches:
-              only: [release]
-      - deploy-maven-jni-release-linux-x86_64:
-          filters:
-            branches:
-              only: [release]
-      - deploy-maven-jni-release-mac-aarch64:
-          filters:
-            branches:
-              only: [release]
-      - deploy-maven-jni-release-mac-x86_64:
-          filters:
-            branches:
-              only: [release]
-      - deploy-maven-jni-release-windows-x86_64:
-          filters:
-            branches:
-              only: [release]
-      - deploy-maven-release:
-          filters:
-            branches:
-              only: [release]
-          requires:
-            - deploy-maven-jni-release-linux-aarch64
-            - deploy-maven-jni-release-linux-x86_64
-            - deploy-maven-jni-release-mac-aarch64
-            - deploy-maven-jni-release-mac-x86_64
-            - deploy-maven-jni-release-windows-x86_64
+#      - deploy-maven-jni-release-linux-aarch64:
+#          filters:
+#            branches:
+#              only: [release]
+#      - deploy-maven-jni-release-linux-x86_64:
+#          filters:
+#            branches:
+#              only: [release]
+#      - deploy-maven-jni-release-mac-aarch64:
+#          filters:
+#            branches:
+#              only: [release]
+#      - deploy-maven-jni-release-mac-x86_64:
+#          filters:
+#            branches:
+#              only: [release]
+#      - deploy-maven-jni-release-windows-x86_64:
+#          filters:
+#            branches:
+#              only: [release]
+#      - deploy-maven-release:
+#          filters:
+#            branches:
+#              only: [release]
+#          requires:
+#            - deploy-maven-jni-release-linux-aarch64
+#            - deploy-maven-jni-release-linux-x86_64
+#            - deploy-maven-jni-release-mac-aarch64
+#            - deploy-maven-jni-release-mac-x86_64
+#            - deploy-maven-jni-release-windows-x86_64
 
       - deploy-github:
           filters:
@@ -652,4 +652,4 @@ workflows:
             - deploy-pip-release-linux-aarch64
             - deploy-pip-release-linux-x86_64
             - deploy-pip-release-windows-x86_64
-            - deploy-maven-release
+#            - deploy-maven-release
