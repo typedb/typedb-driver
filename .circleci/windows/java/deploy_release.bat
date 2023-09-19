@@ -24,11 +24,10 @@ REM by Chocolatey in prepare.bat is accessible
 CALL refreshenv
 
 ECHO Building and deploying windows package...
-SET DEPLOY_PIP_USERNAME=%REPO_PYPI_USERNAME%
-SET DEPLOY_PIP_PASSWORD=%REPO_PYPI_PASSWORD%
-python.exe -m pip install twine
-SET /p VER=<VERSION
+SET DEPLOY_MAVEN_USERNAME=%REPO_VATICLE_USERNAME%
+SET DEPLOY_MAVEN_PASSWORD=%REPO_VATICLE_PASSWORD%
 
+SET /p VER=<VERSION
 bazel --output_user_root=C:/bazel run --verbose_failures --define version=%VER% //java:deploy-maven-jni -- release
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
 
