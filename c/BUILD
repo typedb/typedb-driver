@@ -23,7 +23,6 @@ package(default_visibility = ["//visibility:public"])
 
 load("@rules_rust//rust:defs.bzl", "rust_static_library", "rustfmt_test")
 load("@vaticle_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
-load("@vaticle_dependencies//builder/swig:python.bzl", "swig_python")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 rust_static_library(
@@ -48,17 +47,6 @@ rust_cbindgen(
     lib = ":typedb_client_clib",
     header_name = "typedb_client.h",
     config = "cbindgen.toml",
-)
-
-swig_python(
-    name = "native_client_python_wrapper",
-    shared_lib_name = "native_client_python",
-    lib = ":typedb_client_clib_headers",
-    interface = "typedb_client.i",
-    includes = ["swig/typedb_client_python.swg"],
-    enable_cxx = True,
-    python_headers = "@python39//:python_headers",
-    libpython = "@python39//:libpython",
 )
 
 checkstyle_test(
