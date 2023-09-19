@@ -21,7 +21,7 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@rules_rust//rust:defs.bzl", "rust_library", "rust_static_library", "rustfmt_test")
+load("@rules_rust//rust:defs.bzl", "rust_static_library", "rustfmt_test")
 load("@vaticle_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
 load("@vaticle_dependencies//builder/swig:python.bzl", "swig_python")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
