@@ -33,4 +33,4 @@ bazel --output_user_root=C:/bazel run --verbose_failures --define version=%VER% 
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
 
 MD dist
-COPY bazel-bin\java\typedb_client_jni-windows-x86_64__do_not_reference.jar dist\typedb_client_jni-windows-x86_64.jar
+COPY bazel-bin\java\com.vaticle.typedb-typedb-client-jni-windows-x86_64.jar dist\typedb-driver-jni-windows-x86_64.jar
