@@ -22,9 +22,9 @@
 use std::{ffi::c_char, ptr::addr_of_mut};
 
 use typedb_client::{
-    box_stream, IID,
+    box_stream,
     concept::{Concept, SchemaException, ValueType},
-    Result, Transaction,
+    Result, Transaction, IID,
 };
 
 use crate::{

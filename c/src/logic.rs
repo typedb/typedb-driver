@@ -55,11 +55,7 @@ pub extern "C" fn rule_get_then(rule: *const Rule) -> *mut c_char {
 }
 
 #[no_mangle]
-pub extern "C" fn rule_set_label(
-    transaction: *const Transaction<'static>,
-    rule: *mut Rule,
-    new_label: *const c_char,
-) {
+pub extern "C" fn rule_set_label(transaction: *const Transaction<'static>, rule: *mut Rule, new_label: *const c_char) {
     unwrap_void(borrow_mut(rule).set_label(borrow(transaction), string_view(new_label).to_owned()));
 }
 

@@ -72,7 +72,7 @@ checkstyle_test(
     license_type = "apache-header",
 )
 
-#rustfmt_test(
-#    name = "client_rustfmt_test",
-#    targets = ["typedb_client_clib"],
-#)
+rustfmt_test(
+    name = "client_rustfmt_test",
+    targets = ["typedb_client_clib"],
+)

@@ -27,13 +27,12 @@ mod type_;
 use std::ptr::addr_of_mut;
 
 use itertools::Itertools;
-
 use typedb_client::{
-    box_stream, BoxStream,
+    box_stream,
     concept::{
         Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Thing, ThingType,
     },
-    Result,
+    BoxStream, Result,
 };
 
 use super::{
