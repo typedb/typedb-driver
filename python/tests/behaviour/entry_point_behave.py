@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 #
 # Copyright (C) 2022 Vaticle
 #
@@ -20,4 +19,7 @@
 # under the License.
 #
 
-bazel run @vaticle_dependencies//tool/release/notes:create -- vaticle typedb-client-python HEAD $(cat VERSION) ./RELEASE_TEMPLATE.md ./RELEASE_NOTES_LATEST.md
+import sys
+from behave.__main__ import main
+if __name__ == "__main__":
+    sys.exit(main())

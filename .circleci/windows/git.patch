@@ -1,0 +1,13 @@
+diff --git a/WORKSPACE b/WORKSPACE
+index 7b30ef2e..145bc0ce 100644
+--- a/WORKSPACE
++++ b/WORKSPACE
+@@ -19,7 +19,7 @@
+ # under the License.
+ #
+ 
+-workspace(name = "vaticle_typedb_driver")
++workspace(name = "v")
+ 
+ ################################
+ # Load @vaticle_dependencies #

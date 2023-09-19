@@ -21,13 +21,8 @@
 
 ## To install ALL dependencies, run: pip install -r requirements_dev.txt
 
-
-## Primary Dependencies
-
--r requirements.txt
-
-
-# Dev dependencies (not required to use the typedb-client package, but necessary for its development)
-
 behave==1.2.6
+parse==1.18.0
+parse-type==0.6.2
 PyHamcrest==2.0.2
+six==1.16.0

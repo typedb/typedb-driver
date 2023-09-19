@@ -20,14 +20,12 @@
 #
 
 package(default_visibility = ["//python/tests/behaviour:__subpackages__"])
-load("//python/tool:behave_rule.bzl", "typedb_behaviour_py_test")
+load("//python/tests/behaviour:behave_rule.bzl", "typedb_behaviour_py_test")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 typedb_behaviour_py_test(
     name = "test",
     feats = ["@vaticle_typedb_behaviour//typeql/language:match.feature"],
-    background_core = ["//python/tests/behaviour/background:core"],
-    background_cluster = ["//python/tests/behaviour/background:cluster"],
     steps = [
         "//python/tests/behaviour/connection:steps",
         "//python/tests/behaviour/connection/database:steps",
@@ -41,10 +39,8 @@ typedb_behaviour_py_test(
         "//python/tests/behaviour/util:util",
         "//python/tests/behaviour/config:parameters",
         "//python/tests/behaviour/background",
-        "//python:native-client-binary",
     ],
-    native_typedb_artifact = "//python/tests:native-typedb-artifact",
-    native_typedb_cluster_artifact = "//python/tests:native-typedb-cluster-artifact",
+    data = ["//python:native-client-binary-link", "//python:native-client-wrapper-link"],
     size = "medium",
 )
 

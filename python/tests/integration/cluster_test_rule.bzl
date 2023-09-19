@@ -26,9 +26,6 @@ def _rule_implementation(ctx):
 
     # Store the path of the test source file. It is recommended to only have one source file.
     test_src = ctx.files.srcs[0].path
-#
-#    # behave requires a 'steps' folder to exist in the test root directory.
-#    steps_out_dir = ctx.files.feats[0].dirname + "/steps"
 
     typedb_cluster_distro = str(ctx.files.native_typedb_cluster_artifact[0].short_path)
 
@@ -103,7 +100,7 @@ def _rule_implementation(ctx):
 
            """
 
-    cmd += "cd python && python3 -m unittest %s && export RESULT=0 || export RESULT=1" % test_src.split("/", 1)[1]
+    cmd += "cd python && python3.9 -m unittest %s && export RESULT=0 || export RESULT=1" % test_src.split("/", 1)[1]
     cmd += """
             echo Tests concluded with exit value $RESULT
             echo Stopping servers.
@@ -129,7 +126,7 @@ def _rule_implementation(ctx):
     # https://bazel.build/versions/master/docs/skylark/rules.html#runfiles
     return [DefaultInfo(
         # The shell executable - the output of this rule - can use these files at runtime.
-        runfiles = ctx.runfiles(files = ctx.files.srcs + ctx.files.deps + ctx.files.native_typedb_cluster_artifact)
+        runfiles = ctx.runfiles(files = ctx.files.srcs + ctx.files.deps + ctx.files.data + ctx.files.native_typedb_cluster_artifact)
     )]
 
 """
@@ -152,6 +149,7 @@ typedb_cluster_py_test = rule(
     attrs={
         "srcs": attr.label_list(mandatory=True,allow_empty=False,allow_files=True),
         "deps": attr.label_list(mandatory=True,allow_empty=False),
+        "data": attr.label_list(),
         "native_typedb_cluster_artifact": attr.label(mandatory=True)
     },
     test=True,

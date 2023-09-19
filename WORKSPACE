@@ -37,7 +37,8 @@ load("@vaticle_dependencies//builder/python:deps.bzl", python_deps = "deps")
 python_deps()
 load("@rules_python//python:repositories.bzl", "py_repositories", "python_register_toolchains")
 py_repositories()
-python_register_toolchains(name = "python39", python_version = "3.9")
+load("//python:python_versions.bzl", "register_all_toolchains")
+register_all_toolchains()
 
 # Load //builder/java
 load("@vaticle_dependencies//builder/java:deps.bzl", java_deps = "deps")
@@ -74,9 +75,9 @@ load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_regi
 rules_rust_dependencies()
 rust_register_toolchains(
     edition = "2021",
-    include_rustc_srcs = True,
     extra_target_triples = [
         "aarch64-apple-darwin",
+        "aarch64-unknown-linux-gnu",
         "x86_64-apple-darwin",
         "x86_64-pc-windows-msvc",
         "x86_64-unknown-linux-gnu",
@@ -153,10 +154,10 @@ install_deps()
 
 load("@rules_python//python:pip.bzl", "pip_parse")
 pip_parse(
-    name = "vaticle_typedb_client_python_pip",
+    name = "vaticle_typedb_driver_pip",
     requirements_lock = "//python:requirements_dev.txt",
 )
-load("@vaticle_typedb_client_python_pip//:requirements.bzl", "install_deps")
+load("@vaticle_typedb_driver_pip//:requirements.bzl", "install_deps")
 install_deps()
 
 ################################

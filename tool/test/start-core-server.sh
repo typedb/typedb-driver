@@ -24,6 +24,5 @@ set -e
 
 rm -rf typedb-all
 
-bazel run //rust/tests:typedb-extractor -- typedb-all
+bazel run //tool/test:typedb-extractor -- typedb-all
 ./typedb-all/typedb server &
-sleep 10

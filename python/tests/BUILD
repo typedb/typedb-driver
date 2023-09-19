@@ -20,28 +20,7 @@
 #
 
 # Note: Do NOT rename this folder to 'test' as it conflicts with a built-in Python package!
-load("//python/tool:cluster_test_rule.bzl", "typedb_cluster_py_test")
-load("@vaticle_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
-load("@vaticle_typedb_common//test:rules.bzl", "native_typedb_artifact")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-
-native_typedb_artifact(
-    name = "native-typedb-artifact",
-    mac_artifact = "@vaticle_typedb_artifact_mac//file",
-    linux_artifact = "@vaticle_typedb_artifact_linux//file",
-    windows_artifact = "@vaticle_typedb_artifact_windows//file",
-    output = "typedb-server-artifact.tar.gz",
-    visibility = ["//python/tests:__subpackages__"],
-)
-
-native_typedb_artifact(
-    name = "native-typedb-cluster-artifact",
-    mac_artifact = "@vaticle_typedb_cluster_artifact_mac//file",
-    linux_artifact = "@vaticle_typedb_cluster_artifact_linux//file",
-    windows_artifact = "@vaticle_typedb_cluster_artifact_windows//file",
-    output = "typedb-cluster-server-artifact.tar.gz",
-    visibility = ["//python/tests:__subpackages__"],
-)
 
 checkstyle_test(
     name = "checkstyle",
@@ -51,9 +30,4 @@ checkstyle_test(
     ]),
     license_type = "apache-header",
     size = "small",
-)
-
-artifact_extractor(
-    name = "typedb-extractor",
-    artifact = ":native-typedb-artifact",
 )

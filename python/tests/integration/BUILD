@@ -19,7 +19,7 @@
 # under the License.
 #
 
-load("//python/tool:cluster_test_rule.bzl", "typedb_cluster_py_test")
+load("//python/tests/integration:cluster_test_rule.bzl", "typedb_cluster_py_test")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@rules_python//python:defs.bzl", "py_test")
 
@@ -28,10 +28,10 @@ typedb_cluster_py_test(
     srcs = ["test_cluster_failover.py"],
     deps = [
         "//python:client_python",
-        "//python:native-client-binary",
         ],
+    data = ["//python:native-client-binary-link", "//python:native-client-wrapper-link"],
     size = "medium",
-    native_typedb_cluster_artifact = "//python/tests:native-typedb-cluster-artifact",
+    native_typedb_cluster_artifact = "//tool/test:native-typedb-cluster-artifact",
 )
 
 py_test(
@@ -40,7 +40,7 @@ py_test(
     deps = [
         "//python:client_python",
         ],
-    data = ["//python:native-client-binary"],
+    data = ["//python:native-client-binary-link", "//python:native-client-wrapper-link"],
     python_version = "PY3"
 )
 
@@ -50,7 +50,7 @@ py_test(
     deps = [
         "//python:client_python",
         ],
-    data = ["//python:native-client-binary"],
+    data = ["//python:native-client-binary-link", "//python:native-client-wrapper-link"],
     python_version = "PY3"
 )
 

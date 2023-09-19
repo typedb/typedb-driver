@@ -19,27 +19,7 @@
 # under the License.
 #
 
-load("@vaticle_typedb_common//test:rules.bzl", "native_typedb_artifact")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
-
-native_typedb_artifact(
-    name = "native-typedb-artifact",
-    mac_artifact = "@vaticle_typedb_artifact_mac//file",
-    linux_artifact = "@vaticle_typedb_artifact_linux//file",
-    windows_artifact = "@vaticle_typedb_artifact_windows//file",
-    output = "typedb-server-artifact.tar.gz",
-    visibility = ["//java/test:__subpackages__"],
-)
-
-native_typedb_artifact(
-    name = "native-grakn-cluster-artifact",
-    mac_artifact = "@vaticle_typedb_cluster_artifact_mac//file",
-    linux_artifact = "@vaticle_typedb_cluster_artifact_linux//file",
-    windows_artifact = "@vaticle_typedb_cluster_artifact_windows//file",
-    output = "grakn-cluster-server-artifact.tar.gz",
-    visibility = ["//java/test:__subpackages__"],
-)
 
 checkstyle_test(
     name = "checkstyle",
@@ -49,9 +29,4 @@ checkstyle_test(
         "deployment/src/test/**/*",
     ]),
     license_type = "apache-header",
-)
-
-artifact_extractor(
-    name = "typedb-extractor-linux",
-    artifact = "@vaticle_typedb_artifact_linux//file",
 )

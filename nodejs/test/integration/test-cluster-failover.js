@@ -49,18 +49,18 @@ function getServerPID(port) {
 function serverStart(idx) {
     let node = spawn(`./${idx}/typedb`, ["cluster",
         "--storage.data", "server/data",
-        "--server.address", `127.0.0.1:${idx}1729`,
-        "--server.internal-address.zeromq", `127.0.0.1:${idx}1730`,
-        "--server.internal-address.grpc", `127.0.0.1:${idx}1731`,
-        "--server.peers.peer-1.address", "127.0.0.1:11729",
-        "--server.peers.peer-1.internal-address.zeromq", "127.0.0.1:11730",
-        "--server.peers.peer-1.internal-address.grpc", "127.0.0.1:11731",
-        "--server.peers.peer-2.address", "127.0.0.1:21729",
-        "--server.peers.peer-2.internal-address.zeromq", "127.0.0.1:21730",
-        "--server.peers.peer-2.internal-address.grpc", "127.0.0.1:21731",
-        "--server.peers.peer-3.address", "127.0.0.1:31729",
-        "--server.peers.peer-3.internal-address.zeromq", "127.0.0.1:31730",
-        "--server.peers.peer-3.internal-address.grpc", "127.0.0.1:31731",
+        "--server.address", `localhost:${idx}1729`,
+        "--server.internal-address.zeromq", `localhost:${idx}1730`,
+        "--server.internal-address.grpc", `localhost:${idx}1731`,
+        "--server.peers.peer-1.address", "localhost:11729",
+        "--server.peers.peer-1.internal-address.zeromq", "localhost:11730",
+        "--server.peers.peer-1.internal-address.grpc", "localhost:11731",
+        "--server.peers.peer-2.address", "localhost:21729",
+        "--server.peers.peer-2.internal-address.zeromq", "localhost:21730",
+        "--server.peers.peer-2.internal-address.grpc", "localhost:21731",
+        "--server.peers.peer-3.address", "localhost:31729",
+        "--server.peers.peer-3.internal-address.zeromq", "localhost:31730",
+        "--server.peers.peer-3.internal-address.grpc", "localhost:31731",
         "--server.encryption.enable", "true"
     ]);
     node.stdout.on('data', (data) => {
@@ -77,7 +77,7 @@ function serverStart(idx) {
 async function run() {
     console.log("root ca path: ", process.env.ROOT_CA)
     const client = await TypeDB.clusterClient(
-        ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"],
+        ["localhost:11729", "localhost:21729", "localhost:31729"],
         new TypeDBCredential("admin", "password", process.env.ROOT_CA)
     );
     try {
@@ -100,7 +100,7 @@ async function run() {
 
         for (let iteration = 1; iteration <= 10; iteration++) {
             const client = await TypeDB.clusterClient(
-                ["127.0.0.1:11729", "127.0.0.1:21729", "127.0.0.1:31729"],
+                ["localhost:11729", "localhost:21729", "localhost:31729"],
                 new TypeDBCredential("admin", "password", process.env.ROOT_CA)
             );
             primaryReplica = await seekPrimaryReplica(client.databases);
