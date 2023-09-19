@@ -26,6 +26,7 @@ use crate::{common::Result, connection::ServerConnection, Connection, DatabaseMa
 
 #[derive(Clone, Debug)]
 pub struct UserManager {
+    // FIXME: currently required to be `pub` because we refer to it in bindings and over FFI
     pub connection: Connection,
 }
 
