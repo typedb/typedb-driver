@@ -28,16 +28,12 @@ exports_files([
     "VERSION",
 ])
 
-#load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm", "nodejs_binary")
 load("@vaticle_bazel_distribution//npm:rules.bzl", "assemble_npm", "deploy_npm")
-#load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-#load("@vaticle_dependencies//tool/release/deps:rules.bzl", "release_validate_nodejs_deps")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
 load("@npm//:defs.bzl", "npm_link_all_packages")
-load("//:deployment.bzl", github_deployment = "deployment")
 
 npm_link_all_packages(
     name = "node_modules",
@@ -108,38 +104,6 @@ deploy_npm(
     snapshot = deployment["npm.snapshot"],
     release = deployment["npm.release"],
 )
-
-#deploy_github(
-#    name = "deploy-github",
-#    release_description = "//:RELEASE_NOTES_LATEST.md",
-#    title = "TypeDB Client Node.js",
-#    title_append_version = True,
-#    organisation = github_deployment["github.organisation"],
-#    repository = github_deployment["github.repository"],
-#    draft = False
-#)
-#
-#NODEJS_TEST_DEPENDENCIES = [
-#    ":client-nodejs",
-#    "@npm//fs-extra",
-#    "@npm//google-protobuf",
-#    "@npm//grpc",
-#    "@npm//tmp",
-#    "@npm//properties-reader",
-#]
-#
-#genrule(
-#    name = "typedb-artifact-path",
-#    srcs = ["@vaticle_typedb_artifact_mac//file"],
-#    outs = ["typedb-artifact-path.txt"],
-#    cmd = "echo $(location @vaticle_typedb_artifact_mac//file) > \"$@\"",
-#)
-#
-#release_validate_nodejs_deps(
-#    name = "release-validate-nodejs-deps",
-#    package_json = "//nodejs:package.json",
-#    tagged_deps = ["typedb-protocol"]
-#)
 
 checkstyle_test(
     name = "checkstyle",
