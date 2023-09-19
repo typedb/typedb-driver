@@ -641,7 +641,7 @@ workflows:
             - deploy-pip-snapshot-windows-x86_64
 
 
-  typedb-driver-java:
+  typedb-driver-java-snapshot:
     jobs:
       - deploy-maven-jni-snapshot-linux-aarch64:
           filters:
