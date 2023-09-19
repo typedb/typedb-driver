@@ -34,11 +34,11 @@ rust_static_library(
     deps = [
         "//rust:typedb_client_sync",
 
+        "@vaticle_typeql//rust:typeql_lang",
+
         "@crates//:chrono",
         "@crates//:itertools",
         "@crates//:log",
-
-        "@vaticle_typeql//rust:typeql_lang",
     ],
 )
 
