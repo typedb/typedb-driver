@@ -646,27 +646,27 @@ workflows:
       - deploy-maven-jni-snapshot-linux-aarch64:
           filters:
             branches:
-              only: [master, development, maven]
+              only: [master, development]
       - deploy-maven-jni-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master, development, maven]
+              only: [master, development]
       - deploy-maven-jni-snapshot-mac-aarch64:
           filters:
             branches:
-              only: [master, development, maven]
+              only: [master, development]
       - deploy-maven-jni-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, development, maven]
+              only: [master, development]
       - deploy-maven-jni-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, development, maven]
+              only: [master, development]
       - deploy-maven-snapshot:
           filters:
             branches:
-              only: [master, development, maven]
+              only: [master, development]
           requires:
             - deploy-maven-jni-snapshot-linux-aarch64
             - deploy-maven-jni-snapshot-linux-x86_64
@@ -677,31 +677,31 @@ workflows:
       - test-maven-snapshot-linux-aarch64:
           filters:
             branches:
-              only: [master, development, maven]
+              only: [master, development]
           requires:
             - deploy-maven-snapshot
       - test-maven-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master, development, maven]
+              only: [master, development]
           requires:
             - deploy-maven-snapshot
       - test-maven-snapshot-mac-aarch64:
           filters:
             branches:
-              only: [master, development, maven]
+              only: [master, development]
           requires:
             - deploy-maven-snapshot
       - test-maven-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, development, maven]
+              only: [master, development]
           requires:
             - deploy-maven-snapshot
       - test-maven-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, development, maven]
+              only: [master, development]
           requires:
             - deploy-maven-snapshot
 
