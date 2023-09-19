@@ -21,7 +21,7 @@
 
 load("@vaticle_dependencies//builder/swig:python.bzl", "py_native_lib_rename")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_dependencies//tool/doc:rules.bzl", "python_doc")
+load("//python:doc/rules.bzl", "sphinx_doc")
 
 load("//python:rules.bzl", "native_driver_versioned")
 load("//python:python_versions.bzl", "python_versions")
@@ -70,24 +70,22 @@ checkstyle_test(
 )
 
 # Documentation generation
-genrule(
-    name = "assemble_pip_unzip39",
-    srcs = [":assemble-pip39"],
-    outs = ["driver-package"],
-    cmd = 'mkdir $@ && PACKAGE=$$(find . -name "*.tar.gz") && tar -xf $${PACKAGE} && mv */typedb $@',
-)
-
 py_binary(
-    name = "driver_doc",
+    name = "sphinx_runner",
     srcs = [
         "doc/sphinx_html_builder_runner.py",
     ],
     main = "doc/sphinx_html_builder_runner.py",
-    data = [
-        ":assemble_pip_unzip39",
-    ] + glob(["doc/source/**/*"]),
     deps = [doc_requirement("sphinx")],
-    imports = ["driver-package"],
+    visibility = ["//visibility:public"]
+)
+
+sphinx_doc(
+    name = "driver_doc",
+    script = ":sphinx_runner",
+    target = ":assemble-pip39",
+    srcs = glob(["doc/source/*"]),
+    out = "doc/build",
 )
 
 #parse_python_doc(
