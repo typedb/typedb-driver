@@ -32,14 +32,26 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Objects;
 
-
 public class Loader {
+    private static boolean loaded = false;
+
+    public static void loadNativeLibraries() {
+        if (!loaded) {
+            try {
+                Path tempPath = getNativeResourceURI();
+                System.load(tempPath.resolve(System.mapLibraryName("typedb_client_jni")).toString());
+                loaded = true;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     private static Path getNativeResourceURI() throws IOException {
         ClassLoader loader = Loader.class.getClassLoader();
         String resource = System.mapLibraryName("typedb_client_jni");
         URL resourceURL = loader.getResource(resource);
-        Objects.requireNonNull(resourceURL,
-                String.format("Resource %s was not found in ClassLoader %s", resource, loader));
+        Objects.requireNonNull(resourceURL, String.format("Resource %s was not found in ClassLoader %s", resource, loader));
 
         try {
             return unpackNativeResources(resourceURL.toURI());
@@ -59,18 +71,5 @@ public class Loader {
         newPath.toFile().deleteOnExit();
 
         return tempPath;
-    }
-
-    private static boolean loaded = false;
-    public static void loadNativeLibraries() {
-        if (!loaded) {
-            try {
-                Path tempPath = getNativeResourceURI();
-                System.load(tempPath.resolve(System.mapLibraryName("typedb_client_jni")).toString());
-                loaded = true;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
 }
