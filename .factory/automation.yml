@@ -715,7 +715,7 @@ build:
     deploy-crate-snapshot:
       filter:
         owner: vaticle
-        branch: master
+        branch: [master, development]
       image: vaticle-ubuntu-22.04
       dependencies:
         - build
@@ -755,13 +755,7 @@ release:
 #      command: |
 #        export DEPLOY_CRATE_TOKEN=$REPO_CRATES_TOKEN
 #        bazel run --define version=$(cat VERSION) //rust:deploy_crate -- release
-#    deploy-maven-release:
-#      image: vaticle-ubuntu-22.04
-#      dependencies: [deploy-github]
-#      command: |
-#        export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
-#        export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
-#        bazel run --define version=$(cat VERSION) //java:deploy-maven -- release
+#
 #    deploy-npm-release:
 #      image: vaticle-ubuntu-22.04
 #      dependencies: [deploy-github]
