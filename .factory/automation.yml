@@ -100,7 +100,7 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh 3 # use source to receive export vars
-        bazel test //rust/tests --test_env=ROOT_CA=$ROOT_CA --test_arg=-- --test_arg=integration::queries::cluster --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        bazel test //rust/tests --test_arg=-- --test_arg=integration::queries::cluster --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
@@ -114,7 +114,7 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh 3 # use source to receive export vars
-        bazel test //rust/tests --test_env=ROOT_CA=$ROOT_CA --test_arg=-- --test_arg=integration::runtimes --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        bazel test //rust/tests --test_arg=-- --test_arg=integration::runtimes --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
@@ -128,7 +128,7 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh 3 # use source to receive export vars
-        bazel test //rust/tests --test_env=ROOT_CA=$ROOT_CA --test_arg=-- --test_arg=behaviour::concept --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        bazel test //rust/tests --test_arg=-- --test_arg=behaviour::concept --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
@@ -142,7 +142,7 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh 3 # use source to receive export vars
-        bazel test //rust/tests --test_env=ROOT_CA=$ROOT_CA --test_arg=-- --test_arg=behaviour::connection --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        bazel test //rust/tests --test_arg=-- --test_arg=behaviour::connection --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
@@ -157,7 +157,7 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh 3 # use source to receive export vars
-        bazel test //rust/tests --test_env=ROOT_CA=$ROOT_CA --test_arg=-- --test_arg=behaviour::typeql --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        bazel test //rust/tests --test_arg=-- --test_arg=behaviour::typeql --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
@@ -327,10 +327,10 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
 
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //python/tests/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-          .factory/test-cluster.sh //python/tests/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-          .factory/test-cluster.sh //python/tests/behaviour/connection/transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-          .factory/test-cluster.sh //python/tests/behaviour/connection/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+        .factory/test-cluster.sh //python/tests/behaviour/connection/database/... --test_output=streamed --jobs=1 &&
+          .factory/test-cluster.sh //python/tests/behaviour/connection/session/... --test_output=streamed --jobs=1 &&
+          .factory/test-cluster.sh //python/tests/behaviour/connection/transaction/... --test_output=streamed --jobs=1 &&
+          .factory/test-cluster.sh //python/tests/behaviour/connection/user/... --test_output=streamed --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
@@ -371,7 +371,7 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //python/tests/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //python/tests/behaviour/concept/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
@@ -414,9 +414,9 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //python/tests/behaviour/typeql/language/match/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/get/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/expression/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+        .factory/test-cluster.sh //python/tests/behaviour/typeql/language/match/... --test_output=errors &&
+          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/get/... --test_output=errors &&
+          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/expression/... --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
@@ -460,9 +460,9 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //python/tests/behaviour/typeql/language/insert/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/delete/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/update/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+        .factory/test-cluster.sh //python/tests/behaviour/typeql/language/insert/... --test_output=errors &&
+          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/delete/... --test_output=errors &&
+          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/update/... --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
@@ -505,8 +505,8 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //python/tests/behaviour/typeql/language/define/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/undefine/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+        .factory/test-cluster.sh //python/tests/behaviour/typeql/language/define/... --test_output=errors &&
+          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/undefine/... --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
@@ -590,10 +590,10 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //nodejs/test/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //nodejs/test/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //nodejs/test/behaviour/connection/transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //nodejs/test/behaviour/connection/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //nodejs/test/behaviour/connection/database/... --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //nodejs/test/behaviour/connection/session/... --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //nodejs/test/behaviour/connection/transaction/... --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //nodejs/test/behaviour/connection/user/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
@@ -619,7 +619,7 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //nodejs/test/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //nodejs/test/behaviour/concept/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
     # TODO: Delete --jobs=1 once tests are parallelisable
@@ -648,9 +648,9 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/match/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/get/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/expression/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/match/... --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/get/... --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/expression/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
@@ -678,9 +678,9 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/insert/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/delete/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/update/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/insert/... --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/delete/... --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/update/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
@@ -707,8 +707,8 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/define/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/undefine/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/define/... --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/undefine/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
