@@ -41,7 +41,7 @@ def _sphinx_doc_impl(ctx):
         env = {"PYTHONPATH": driver_package.path},
     )
 
-    return DefaultInfo(files = [ctx.outputs.out])
+    return DefaultInfo(files = depset([ctx.outputs.out]))
 
 
 _sphinx_doc = rule(
