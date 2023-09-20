@@ -60,8 +60,7 @@ function serverStart(idx) {
         "--server.peers.peer-2.internal-address.grpc", "localhost:21731",
         "--server.peers.peer-3.address", "localhost:31729",
         "--server.peers.peer-3.internal-address.zeromq", "localhost:31730",
-        "--server.peers.peer-3.internal-address.grpc", "localhost:31731",
-        "--server.encryption.enable", "true"
+        "--server.peers.peer-3.internal-address.grpc", "localhost:31731"
     ]);
     node.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
