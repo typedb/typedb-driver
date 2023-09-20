@@ -30,7 +30,6 @@ IGNORE_TAGS = ["ignore", "ignore-client-python", "ignore-typedb-client-python", 
 
 def before_all(context: Context):
     environment_base.before_all(context)
-    context.credential_root_ca_path = os.environ["ROOT_CA"]
     context.setup_context_client_fn = lambda user="admin", password="password": \
         setup_context_client(context, user, password)
 
@@ -44,7 +43,7 @@ def before_scenario(context: Context, scenario):
 
 
 def setup_context_client(context, username, password):
-    credential = TypeDBCredential(username, password, tls_root_ca_path=context.credential_root_ca_path)
+    credential = TypeDBCredential(username, password)
     context.client = TypeDB.cluster_client(addresses=["localhost:" + context.config.userdata["port"]],
                                            credential=credential)
     context.session_options = TypeDBOptions(infer=True)

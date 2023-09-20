@@ -34,10 +34,10 @@ import {
 
 BeforeAll(async () => {
     setDefaultClientFn(async () =>
-        TypeDB.clusterClient("127.0.0.1:11729", new TypeDBCredential("admin", "password", process.env.ROOT_CA))
+        TypeDB.clusterClient("127.0.0.1:11729", new TypeDBCredential("admin", "password"))
     )
     setClientFn(async (username, password) => {
-        return TypeDB.clusterClient("127.0.0.1:11729", new TypeDBCredential(username, password, process.env.ROOT_CA))
+        return TypeDB.clusterClient("127.0.0.1:11729", new TypeDBCredential(username, password))
     });
     setSessionOptions(new TypeDBOptions({"infer": true}));
     setTransactionOptions(new TypeDBOptions({"infer": true}));

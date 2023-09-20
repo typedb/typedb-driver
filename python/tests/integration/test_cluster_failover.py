@@ -34,8 +34,7 @@ READ = TransactionType.READ
 class TestClusterFailover(TestCase):
 
     def setUp(self):
-        root_ca_path = os.environ["ROOT_CA"]
-        credential = TypeDBCredential("admin", "password", tls_root_ca_path=root_ca_path)
+        credential = TypeDBCredential("admin", "password")
         print("SetUp", flush=True)
         with TypeDB.cluster_client(["localhost:11729", "localhost:21729", "localhost:31729"], credential) as client:
             if client.databases.contains("typedb"):
@@ -78,8 +77,7 @@ class TestClusterFailover(TestCase):
         assert False, "Retry limit exceeded while seeking a primary replica."
 
     def test_put_entity_type_to_crashed_primary_replica(self):
-        root_ca_path = os.environ["ROOT_CA"]
-        credential = TypeDBCredential("admin", "password", tls_root_ca_path=root_ca_path)
+        credential = TypeDBCredential("admin", "password")
         with TypeDB.cluster_client(["localhost:11729", "localhost:21729", "localhost:31729"], credential) as client:
             assert client.databases.contains("typedb")
             primary_replica = self.get_primary_replica(client.databases)

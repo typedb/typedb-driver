@@ -36,11 +36,7 @@ generic_step_impl! {
     async fn connection_opens_with_authentication(context: &mut Context, login: String, password: String) {
         let connection = Connection::new_encrypted(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
-            Credential::with_tls(
-                &login,
-                &password,
-                Some(&context.tls_root_ca),
-            ).unwrap(),
+            Credential::without_tls(&login, &password),
         );
         context.set_connection(connection.unwrap());
     }

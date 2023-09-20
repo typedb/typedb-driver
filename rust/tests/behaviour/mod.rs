@@ -26,10 +26,7 @@ mod session_tracker;
 mod typeql;
 mod util;
 
-use std::{
-    collections::{HashMap, HashSet},
-    path::PathBuf,
-};
+use std::collections::{HashMap, HashSet};
 
 use cucumber::{StatsWriter, World};
 use futures::future::try_join_all;
@@ -45,7 +42,6 @@ use self::session_tracker::SessionTracker;
 
 #[derive(Debug, World)]
 pub struct Context {
-    pub tls_root_ca: PathBuf,
     pub connection: Connection,
     pub databases: DatabaseManager,
     pub users: UserManager,
@@ -96,7 +92,7 @@ impl Context {
         sleep(Context::STEP_REATTEMPT_SLEEP).await;
         self.set_connection(Connection::new_encrypted(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
-            Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&self.tls_root_ca))?,
+            Credential::without_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD),
         )?);
         self.cleanup_databases().await;
         self.cleanup_users().await;
@@ -214,18 +210,14 @@ impl Context {
 
 impl Default for Context {
     fn default() -> Self {
-        let tls_root_ca = PathBuf::from(
-            std::env::var("ROOT_CA").expect("ROOT_CA environment variable needs to be set for cluster tests to run"),
-        );
         let connection = Connection::new_encrypted(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
-            Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&tls_root_ca)).unwrap(),
+            Credential::without_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD),
         )
         .unwrap();
         let databases = DatabaseManager::new(connection.clone());
         let users = UserManager::new(connection.clone());
         Self {
-            tls_root_ca,
             connection,
             databases,
             users,
