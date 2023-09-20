@@ -34,7 +34,7 @@ READ = TransactionType.READ
 class TestClusterFailover(TestCase):
 
     def setUp(self):
-        credential = TypeDBCredential("admin", "password")
+        credential = TypeDBCredential("admin", "password", tls_enabled=False)
         print("SetUp", flush=True)
         with TypeDB.cluster_client(["localhost:11729", "localhost:21729", "localhost:31729"], credential) as client:
             if client.databases.contains("typedb"):

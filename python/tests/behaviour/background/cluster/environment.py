@@ -43,7 +43,7 @@ def before_scenario(context: Context, scenario):
 
 
 def setup_context_client(context, username, password):
-    credential = TypeDBCredential(username, password)
+    credential = TypeDBCredential(username, password, tls_enabled=False)
     context.client = TypeDB.cluster_client(addresses=["localhost:" + context.config.userdata["port"]],
                                            credential=credential)
     context.session_options = TypeDBOptions(infer=True)
