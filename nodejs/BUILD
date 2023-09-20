@@ -33,8 +33,9 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
+load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_run_binary")
 load("@npm//:defs.bzl", "npm_link_all_packages")
-load(":typedoc.bzl", "typedoc")
+#load(":typedoc.bzl", "typedoc")
 
 npm_link_all_packages(
     name = "node_modules",
@@ -109,8 +110,23 @@ typedoc(
         "stream/**/*.ts",
         "user/**/*.ts",
     ],
-    output = ["docs.json"],
-    json = True,
+    visibility = ["//visibility:public"],
+    out_dir = ".",
+)
+
+ts_project(
+    name = "typedoc_runner",
+    srcs = glob([
+        "doc/TypeDocRunner.ts",
+    ]),
+    tsconfig = "doc/tsconfig.json",
+    declaration = True,
+    deps = [
+        ":client-nodejs",
+        ":node_modules/typedoc",
+    ],
+    visibility = ["//visibility:public"],
+    out_dir = ".",
 )
 
 assemble_npm(
@@ -123,6 +139,19 @@ deploy_npm(
     target = ":assemble-npm",
     snapshot = deployment["npm.snapshot"],
     release = deployment["npm.release"],
+)
+
+js_binary(
+    name = "typedoc_runner_bin",
+    data = [":typedoc_runner", ":client-nodejs", "doc/tsconfig.json"],
+    entry_point = ":typedoc_runner",
+    chdir = "nodejs/dist",
+)
+
+js_run_binary(
+    name = "driver_doc",
+    tool = ":typedoc_runner_bin",
+    out_dirs = ["doc.build"],
 )
 
 checkstyle_test(

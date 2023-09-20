@@ -6,12 +6,12 @@
     // "incremental": true,                   /* Enable incremental compilation */
     "target": "es2021",                          /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
     "module": "commonjs",                     /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */
-     "lib": [],                             /* Specify library files to be included in the compilation. */
+    // "lib": [],                             /* Specify library files to be included in the compilation. */
     // "allowJs": true,                       /* Allow javascript files to be compiled. */
     // "checkJs": true,                       /* Report errors in .js files. */
     // "jsx": "preserve",                     /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
     "paths": {
-      "vaticle_typedb_driver_nodejs/*": ["typedb-driver/*"] /* ts_library rewrites imports to import from the WORKSPACE name, so we need to redirect it to the npm package name */
+      "vaticle_typedb_client_nodejs/*": ["typedb-client/*"] /* ts_library rewrites imports to import from the WORKSPACE name, so we need to redirect it to the npm package name */
     },
     "declaration": true,                   /* Generates corresponding '.d.ts' file. */
     // "declarationMap": true,                /* Generates a sourcemap for each corresponding '.d.ts' file. */
@@ -66,18 +66,32 @@
 
     /* Advanced Options */
     "skipLibCheck": true,                     /* Skip type checking of declaration files. */
-    "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
+    "forceConsistentCasingInFileNames": true, /* Disallow inconsistently-cased references to the same file. */
   },
   "include": [
-    "dependencies_internal.ts",
-    "index.ts",
-    "TypeDB.ts",
-    "api",
-    "common",
-    "connection",
-    "concept",
-    "logic",
-    "query",
-    "stream"
+    "**/*",
+    "../dependencies_internal.ts",
+    "../index.ts",
+    "../TypeDB.ts",
+    "../api",
+    "../common",
+    "../connection",
+    "../concept",
+    "../logic",
+    "../query",
+    "../stream",
+    "../TypeDocRunner.ts",
+    "../dist",
+    "dist",
+    "nodejs/dist",
+    ".",
+    "../dist/index.js",
+    "dist/index.js",
+    "nodejs/dist/index.js",
+    "./index.js"
   ]
+//  "typedocOptions": {
+//    "entryPoints": ["../dist/index.js"],
+//    "out": "docs"
+//  }
 }
