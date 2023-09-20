@@ -22,6 +22,7 @@
 load("@vaticle_dependencies//builder/swig:python.bzl", "py_native_lib_rename")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//python:doc/rules.bzl", "sphinx_doc")
+load("@vaticle_dependencies//tool/doc:rules.bzl", "python_doc_parser")
 
 load("//python:rules.bzl", "native_driver_versioned")
 load("//python:python_versions.bzl", "python_versions")
@@ -88,10 +89,10 @@ sphinx_doc(
     out = "doc/build",
 )
 
-#parse_python_doc(
-#    name = "typedb_client_doc_parsed",
-#    crate = ":typedb_client_doc",
-#)
+python_doc_parser(
+    name = "driver_doc_parsed",
+    data = ":driver_doc",
+)
 
 # CI targets that are not declared in any BUILD_ file, but are called externally
 filegroup(
