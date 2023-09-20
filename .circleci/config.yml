@@ -568,7 +568,7 @@ jobs:
   # Final release deployment job #
   ################################
 
-  deploy-crate:
+  deploy-crate-release:
     executor: linux-x86_64
     steps:
       - checkout
@@ -583,7 +583,7 @@ jobs:
           root: ~/dist
           paths: ["./*"]
 
-  deploy-npm:
+  deploy-npm-release:
     executor: linux-x86_64
     steps:
       - checkout
