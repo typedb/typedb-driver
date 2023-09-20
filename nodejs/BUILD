@@ -122,8 +122,9 @@ ts_project(
     tsconfig = "doc/tsconfig.json",
     declaration = True,
     deps = [
-        ":client-nodejs",
         ":node_modules/typedoc",
+        ":node_modules/@types/node",
+        ":node_modules/typescript",
     ],
     visibility = ["//visibility:public"],
     out_dir = ".",
@@ -143,15 +144,66 @@ deploy_npm(
 
 js_binary(
     name = "typedoc_runner_bin",
-    data = [":typedoc_runner", ":client-nodejs", "doc/tsconfig.json"],
+    data = [
+        ":typedoc_runner",
+        ":node_modules/typedoc",
+        ":typedb-protocol",
+        ":node_modules/google-protobuf",
+        ":node_modules/@types/google-protobuf",
+        ":node_modules/@grpc/grpc-js",
+        ":node_modules/@types/node",
+        ":node_modules/typescript",
+        ":node_modules/uuid",
+        ":node_modules/@types/uuid",
+    ] + glob([
+        "*.ts",
+        "api/**/*.ts",
+        "common/**/*.ts",
+        "connection/**/*.ts",
+        "concept/**/*.ts",
+        "logic/**/*.ts",
+        "query/**/*.ts",
+        "stream/**/*.ts",
+        "user/**/*.ts",
+        "tsconfig.json",
+    ]),
     entry_point = ":typedoc_runner",
-    chdir = "nodejs/dist",
+    chdir = "nodejs",
 )
 
-js_run_binary(
+#js_run_binary(
+#    name = "driver_doc",
+#    tool = ":typedoc_runner_bin",
+#    out_dirs = ["doc.build"],
+#)
+
+genrule(
     name = "driver_doc",
-    tool = ":typedoc_runner_bin",
-    out_dirs = ["doc.build"],
+    srcs = [
+        ":typedoc_runner_bin",
+        ":node_modules/typedoc",
+        ":typedb-protocol",
+        ":node_modules/google-protobuf",
+        ":node_modules/@types/google-protobuf",
+        ":node_modules/@grpc/grpc-js",
+        ":node_modules/@types/node",
+        ":node_modules/typescript",
+        ":node_modules/uuid",
+        ":node_modules/@types/uuid",
+    ] + glob([
+        "*.ts",
+        "api/**/*.ts",
+        "common/**/*.ts",
+        "connection/**/*.ts",
+        "concept/**/*.ts",
+        "logic/**/*.ts",
+        "query/**/*.ts",
+        "stream/**/*.ts",
+        "user/**/*.ts",
+        "tsconfig.json",
+    ]),
+    outs = ["doc.build"],
+    cmd = "$(location :typedoc_runner_bin)",
 )
 
 checkstyle_test(
