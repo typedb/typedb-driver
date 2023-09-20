@@ -33,7 +33,7 @@ import {
     DatabaseSchemaReq,
     DatabaseTypeSchemaReq
 } from "typedb-protocol/proto/database";
-import {TypeDBClient as GRPCStub} from "typedb-protocol/proto/service";
+import {TypeDBClient as GRPCStub} from "typedb-protocol/proto/typedb-service";
 import {TypeDBClientError} from "../errors/TypeDBClientError";
 import {ServerManagerAllReq, ServerManagerAllRes} from "typedb-protocol/proto/server";
 import {RequestBuilder} from "./RequestBuilder";

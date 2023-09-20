@@ -26,7 +26,7 @@ import {TypeDBClientError} from "../common/errors/TypeDBClientError";
 import {TypeDBStub} from "../common/rpc/TypeDBStub";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {TypeDBClient as GRPCStub} from "typedb-protocol/proto/service";
+import {TypeDBClient as GRPCStub} from "typedb-protocol/proto/typedb-service";
 import CLUSTER_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID;
 
 function isServiceError(e: any): e is ServiceError {
