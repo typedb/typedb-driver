@@ -568,6 +568,40 @@ jobs:
   # Final release deployment job #
   ################################
 
+  deploy-crate:
+    executor: linux-x86_64
+    steps:
+      - checkout
+      - install-bazel-linux:
+          arch: amd64
+      - run: |
+          export DEPLOY_CRATE_TOKEN=$REPO_CRATES_TOKEN
+          bazel run --define version=$(cat VERSION) //rust:deploy_crate -- release
+          mkdir -p ~/dist
+          cp bazel-bin/rust/assemble_crate.crate ~/dist/typedb-driver.crate
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
+
+  deploy-npm:
+    executor: linux-x86_64
+    steps:
+      - checkout
+      - install-bazel-linux:
+          arch: amd64
+      - run: |
+          wget -q -O - https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          sudo apt update -y
+          sudo apt install -y expect
+          export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN
+          bazel run --define version=$(cat VERSION) //nodejs:deploy-npm -- release
+          mkdir -p ~/dist
+          cp bazel-bin/nodejs/assemble-npm.tar.gz ~/dist/typedb-driver-node.tar.gz
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
+
   deploy-github:
     executor: linux-x86_64
     steps:
@@ -584,6 +618,13 @@ jobs:
             ghr_v0.12.1_linux_amd64/ghr -t ${REPO_GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} \
               -r ${CIRCLE_PROJECT_REPONAME} -n "TypeDB Driver $(cat VERSION)" -b "$(cat ./RELEASE_TEMPLATE.md)" \
               -c ${CIRCLE_SHA1} -delete -draft $(cat VERSION) ~/dist/
+
+  release-cleanup:
+    executor: linux-x86_64
+    steps:
+      - checkout
+      - run: git push --delete https://$REPO_GITHUB_TOKEN@github.com/vaticle/typedb-driver-java.git $CIRCLE_BRANCH
+
 
 workflows:
   typedb-driver-python-snapshot:
@@ -760,6 +801,16 @@ workflows:
             - deploy-maven-jni-release-mac-x86_64
             - deploy-maven-jni-release-windows-x86_64
 
+      - deploy-crate-release:
+          filters:
+            branches:
+              only: [release]
+
+      - deploy-npm-release:
+          filters:
+            branches:
+              only: [release]
+
       - deploy-github:
           filters:
             branches:
@@ -771,3 +822,12 @@ workflows:
             - deploy-pip-release-linux-x86_64
             - deploy-pip-release-windows-x86_64
             - deploy-maven-release
+            - deploy-crate-release
+            - deploy-npm-release
+
+      - release-cleanup:
+          filters:
+            branches:
+              only: [release]
+          requires:
+            - deploy-github
