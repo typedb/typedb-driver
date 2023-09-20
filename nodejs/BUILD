@@ -36,6 +36,7 @@ load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
 load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_run_binary")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 #load(":typedoc.bzl", "typedoc")
+load("//nodejs:doc/rules.bzl", "typedoc_doc")
 
 npm_link_all_packages(
     name = "node_modules",
@@ -155,32 +156,17 @@ js_binary(
         ":node_modules/typescript",
         ":node_modules/uuid",
         ":node_modules/@types/uuid",
-    ] + glob([
-        "*.ts",
-        "api/**/*.ts",
-        "common/**/*.ts",
-        "connection/**/*.ts",
-        "concept/**/*.ts",
-        "logic/**/*.ts",
-        "query/**/*.ts",
-        "stream/**/*.ts",
-        "user/**/*.ts",
-        "tsconfig.json",
-    ]),
+    ],
     entry_point = ":typedoc_runner",
     chdir = "nodejs",
 )
 
-#js_run_binary(
-#    name = "driver_doc",
-#    tool = ":typedoc_runner_bin",
-#    out_dirs = ["doc.build"],
-#)
-
-genrule(
+typedoc_doc(
     name = "driver_doc",
-    srcs = [
+    script = ":typedoc_runner_bin",
+    deps = [
         ":typedoc_runner_bin",
+        ":typedoc_runner",
         ":node_modules/typedoc",
         ":typedb-protocol",
         ":node_modules/google-protobuf",
@@ -190,7 +176,8 @@ genrule(
         ":node_modules/typescript",
         ":node_modules/uuid",
         ":node_modules/@types/uuid",
-    ] + glob([
+    ],
+    srcs = glob([
         "*.ts",
         "api/**/*.ts",
         "common/**/*.ts",
@@ -202,8 +189,7 @@ genrule(
         "user/**/*.ts",
         "tsconfig.json",
     ]),
-    outs = ["doc.build"],
-    cmd = "$(location :typedoc_runner_bin)",
+    out = "doc-build",
 )
 
 checkstyle_test(

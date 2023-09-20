@@ -22,16 +22,14 @@
 const TypeDoc = require("typedoc");
 
 async function main() {
-    console.log("Current directory:", process.cwd());
     const app = await TypeDoc.Application.bootstrapWithPlugins({
-        entryPoints: ["index.ts"],
+        entryPoints: ["nodejs"],
+        tsconfig: ["nodejs/tsconfig.json"],
     });
 
     const project = await app.convert();
-
     if (project) {
-        const outputDir = "docs";
-
+        const outputDir = process.argv[2];
         await app.generateDocs(project, outputDir);
         await app.generateJson(project, outputDir + "/documentation.json");
     }
