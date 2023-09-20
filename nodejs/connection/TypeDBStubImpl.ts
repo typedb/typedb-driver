@@ -68,7 +68,7 @@ export class TypeDBStubImpl extends TypeDBStub {
             const rootCert = fs.readFileSync(this._credential.tlsRootCAPath);
             return credentials.combineChannelCredentials(ChannelCredentials.createSsl(rootCert), callCreds);
         } else {
-            return credentials.combineChannelCredentials(ChannelCredentials.createSsl(), callCreds);
+            return credentials.combineChannelCredentials(ChannelCredentials.createInsecure(), callCreds);
         }
     }
 
