@@ -24,7 +24,7 @@ import unittest
 from time import sleep
 from unittest import TestCase
 
-from typedb.client import *
+from typedb.driver import *
 
 SCHEMA = SessionType.SCHEMA
 WRITE = TransactionType.WRITE
@@ -37,10 +37,10 @@ class TestEnterpriseFailover(TestCase):
         root_ca_path = os.environ["ROOT_CA"]
         credential = TypeDBCredential("admin", "password", tls_root_ca_path=root_ca_path)
         print("SetUp", flush=True)
-        with TypeDB.enterprise_client(["localhost:11729", "localhost:21729", "localhost:31729"], credential) as client:
-            if client.databases.contains("typedb"):
-                client.databases.get("typedb").delete()
-            client.databases.create("typedb")
+        with TypeDB.enterprise_driver(["localhost:11729", "localhost:21729", "localhost:31729"], credential) as driver:
+            if driver.databases.contains("typedb"):
+                driver.databases.get("typedb").delete()
+            driver.databases.create("typedb")
 
     @staticmethod
     def server_start(index):
@@ -80,22 +80,22 @@ class TestEnterpriseFailover(TestCase):
     def test_put_entity_type_to_crashed_primary_replica(self):
         root_ca_path = os.environ["ROOT_CA"]
         credential = TypeDBCredential("admin", "password", tls_root_ca_path=root_ca_path)
-        with TypeDB.enterprise_client(["localhost:11729", "localhost:21729", "localhost:31729"], credential) as client:
-            assert client.databases.contains("typedb")
-            primary_replica = self.get_primary_replica(client.databases)
+        with TypeDB.enterprise_driver(["localhost:11729", "localhost:21729", "localhost:31729"], credential) as driver:
+            assert driver.databases.contains("typedb")
+            primary_replica = self.get_primary_replica(driver.databases)
             print("Performing operations against the primary replica " + str(primary_replica))
-            with client.session("typedb", SCHEMA) as session, session.transaction(WRITE) as tx:
+            with driver.session("typedb", SCHEMA) as session, session.transaction(WRITE) as tx:
                 tx.concepts.put_entity_type("person")
                 print("Put the entity type 'person'.")
                 tx.commit()
-            with client.session("typedb", SCHEMA) as session, session.transaction(READ) as tx:
+            with driver.session("typedb", SCHEMA) as session, session.transaction(READ) as tx:
                 person = tx.concepts.get_entity_type("person")
                 print("Retrieved entity type with label '%s' from primary replica." % person.get_label())
                 assert person.get_label().name == "person"
             iteration = 0
             while iteration < 10:
                 iteration += 1
-                primary_replica = self.get_primary_replica(client.databases)
+                primary_replica = self.get_primary_replica(driver.databases)
                 print("Stopping primary replica (test %d/10)..." % iteration)
                 port = primary_replica.address()[10:15]
                 lsof = subprocess.check_output(["lsof", "-i", ":%s" % port])
@@ -104,7 +104,7 @@ class TestEnterpriseFailover(TestCase):
                 subprocess.check_call(["kill", "-9", primary_replica_server_pid])
                 print("Primary replica stopped successfully.")
                 sleep(5)  # TODO: This ensures the server is actually shut down, but it's odd that it needs to be so long
-                with client.session("typedb", SCHEMA) as session, session.transaction(READ) as tx:
+                with driver.session("typedb", SCHEMA) as session, session.transaction(READ) as tx:
                     person = tx.concepts.get_entity_type("person")
                     print("Retrieved entity type with label '%s' from new primary replica." % person.get_label())
                     assert person.get_label().name == "person"

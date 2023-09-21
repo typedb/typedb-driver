@@ -49,7 +49,7 @@ typedb_java_test(
     srcs = [
         "DatabaseTestCore.java",
     ],
-    test_class = "com.vaticle.typedb.client.test.behaviour.connection.database.DatabaseTestCore",
+    test_class = "com.vaticle.typedb.driver.test.behaviour.connection.database.DatabaseTestCore",
     data = [
         "@vaticle_typedb_behaviour//connection:database.feature",
     ],
@@ -81,7 +81,7 @@ typedb_java_test(
     srcs = [
         "DatabaseTestEnterprise.java",
     ],
-    test_class = "com.vaticle.typedb.client.test.behaviour.connection.database.DatabaseTestEnterprise",
+    test_class = "com.vaticle.typedb.driver.test.behaviour.connection.database.DatabaseTestEnterprise",
     data = [
         "@vaticle_typedb_behaviour//connection:database.feature",
     ],

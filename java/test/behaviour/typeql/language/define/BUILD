@@ -28,7 +28,7 @@ typedb_behaviour_java_test(
     srcs = [
         "DefineTest.java",
     ],
-    test_class = "com.vaticle.typedb.client.test.behaviour.typeql.language.define.DefineTest",
+    test_class = "com.vaticle.typedb.driver.test.behaviour.typeql.language.define.DefineTest",
     data = [
         "@vaticle_typedb_behaviour//typeql/language:define.feature",
     ],

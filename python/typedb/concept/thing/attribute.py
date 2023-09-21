@@ -23,7 +23,7 @@ from __future__ import annotations
 
 from typing import Any, Iterator, Mapping, Optional, TYPE_CHECKING, Union
 
-from typedb.native_client_wrapper import attribute_get_type, attribute_get_value, attribute_get_owners, \
+from typedb.native_driver_wrapper import attribute_get_type, attribute_get_value, attribute_get_owners, \
     concept_iterator_next
 
 from typedb.api.concept.thing.attribute import Attribute

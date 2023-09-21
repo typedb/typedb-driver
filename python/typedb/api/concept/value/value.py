@@ -26,10 +26,10 @@ from datetime import datetime
 from enum import Enum
 from typing import Mapping, Union
 
-from typedb.native_client_wrapper import Object, Boolean, Long, Double, String, DateTime
+from typedb.native_driver_wrapper import Object, Boolean, Long, Double, String, DateTime
 
 from typedb.api.concept.concept import Concept
-from typedb.common.exception import TypeDBClientExceptionExt, UNEXPECTED_NATIVE_VALUE
+from typedb.common.exception import TypeDBDriverExceptionExt, UNEXPECTED_NATIVE_VALUE
 
 
 class Value(Concept, ABC):
@@ -136,4 +136,4 @@ class ValueType(Enum):
         for type_ in ValueType:
             if type_.native_object == value_type:
                 return type_
-        raise TypeDBClientExceptionExt(UNEXPECTED_NATIVE_VALUE)
+        raise TypeDBDriverExceptionExt(UNEXPECTED_NATIVE_VALUE)

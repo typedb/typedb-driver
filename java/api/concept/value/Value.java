@@ -19,20 +19,20 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.concept.value;
+package com.vaticle.typedb.driver.api.concept.value;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.vaticle.typedb.client.api.concept.Concept;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.driver.api.concept.Concept;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 
 public interface Value extends Concept {
     DateTimeFormatter ISO_LOCAL_DATE_TIME_MILLIS = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
@@ -78,7 +78,7 @@ public interface Value extends Concept {
             case DOUBLE: value = Json.value(asDouble()); break;
             case STRING: value = Json.value(asString()); break;
             case DATETIME: value = Json.value(asDateTime().format(ISO_LOCAL_DATE_TIME_MILLIS)); break;
-            default: throw new TypeDBClientException(ILLEGAL_STATE);
+            default: throw new TypeDBDriverException(ILLEGAL_STATE);
         }
         return Json.object()
                 .add("value_type", getType().name().toLowerCase())
@@ -86,19 +86,19 @@ public interface Value extends Concept {
     }
 
     enum Type {
-        OBJECT(Object.class, false, false, com.vaticle.typedb.client.jni.ValueType.Object),
-        BOOLEAN(Boolean.class, true, false, com.vaticle.typedb.client.jni.ValueType.Boolean),
-        LONG(Long.class, true, true, com.vaticle.typedb.client.jni.ValueType.Long),
-        DOUBLE(Double.class, true, false, com.vaticle.typedb.client.jni.ValueType.Double),
-        STRING(String.class, true, true, com.vaticle.typedb.client.jni.ValueType.String),
-        DATETIME(LocalDateTime.class, true, true, com.vaticle.typedb.client.jni.ValueType.DateTime);
+        OBJECT(Object.class, false, false, com.vaticle.typedb.driver.jni.ValueType.Object),
+        BOOLEAN(Boolean.class, true, false, com.vaticle.typedb.driver.jni.ValueType.Boolean),
+        LONG(Long.class, true, true, com.vaticle.typedb.driver.jni.ValueType.Long),
+        DOUBLE(Double.class, true, false, com.vaticle.typedb.driver.jni.ValueType.Double),
+        STRING(String.class, true, true, com.vaticle.typedb.driver.jni.ValueType.String),
+        DATETIME(LocalDateTime.class, true, true, com.vaticle.typedb.driver.jni.ValueType.DateTime);
 
         private final Class<?> valueClass;
         private final boolean isWritable;
         private final boolean isKeyable;
-        public final com.vaticle.typedb.client.jni.ValueType nativeObject;
+        public final com.vaticle.typedb.driver.jni.ValueType nativeObject;
 
-        Type(Class<?> valueClass, boolean isWritable, boolean isKeyable, com.vaticle.typedb.client.jni.ValueType nativeObject) {
+        Type(Class<?> valueClass, boolean isWritable, boolean isKeyable, com.vaticle.typedb.driver.jni.ValueType nativeObject) {
             this.valueClass = valueClass;
             this.isWritable = isWritable;
             this.isKeyable = isKeyable;
@@ -106,13 +106,13 @@ public interface Value extends Concept {
         }
 
         @CheckReturnValue
-        public static Type of(com.vaticle.typedb.client.jni.ValueType valueType) {
+        public static Type of(com.vaticle.typedb.driver.jni.ValueType valueType) {
             for (Type type : Type.values()) {
                 if (type.nativeObject == valueType) {
                     return type;
                 }
             }
-            throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
+            throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
         }
 
         @CheckReturnValue

@@ -22,12 +22,12 @@
 import {CallCredentials, ChannelCredentials, credentials, Metadata, ServiceError} from "@grpc/grpc-js";
 import * as fs from "fs";
 import {TypeDBCredential} from "../api/connection/TypeDBCredential";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {TypeDBDriverError} from "../common/errors/TypeDBDriverError";
 import {TypeDBStub} from "../common/rpc/TypeDBStub";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {TypeDBClient as GRPCStub} from "typedb-protocol/proto/typedb-service";
-import ENTERPRISE_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Client.ENTPERPRISE_TOKEN_CREDENTIAL_INVALID;
+import {TypeDBDriver as GRPCStub} from "typedb-protocol/proto/typedb-service";
+import ENTERPRISE_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Driver.ENTPERPRISE_TOKEN_CREDENTIAL_INVALID;
 
 function isServiceError(e: any): e is ServiceError {
     return "code" in e;
@@ -91,7 +91,7 @@ export class TypeDBStubImpl extends TypeDBStub {
             return await fn();
         } catch (e) {
             if (!this._credential) throw e;  // core stub
-            if (e instanceof TypeDBClientError && ENTERPRISE_TOKEN_CREDENTIAL_INVALID === e.messageTemplate) {
+            if (e instanceof TypeDBDriverError && ENTERPRISE_TOKEN_CREDENTIAL_INVALID === e.messageTemplate) {
                 console.log(`token '${this._token}' expired. renewing...`);
                 this._token = null;
                 const req = RequestBuilder.User.tokenReq(this._credential.username);
@@ -101,7 +101,7 @@ export class TypeDBStubImpl extends TypeDBStub {
                     return await fn();
                 } catch (e2) {
                     if (isServiceError(e2)) {
-                        throw new TypeDBClientError(e2);
+                        throw new TypeDBDriverError(e2);
                     } else throw e2;
                 }
             } else throw e;

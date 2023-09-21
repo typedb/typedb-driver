@@ -28,7 +28,7 @@ typedb_behaviour_java_test(
     srcs = [
         "DeleteTest.java",
     ],
-    test_class = "com.vaticle.typedb.client.test.behaviour.typeql.language.delete.DeleteTest",
+    test_class = "com.vaticle.typedb.driver.test.behaviour.typeql.language.delete.DeleteTest",
     data = [
         "@vaticle_typedb_behaviour//typeql/language:delete.feature",
     ],

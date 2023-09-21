@@ -29,23 +29,23 @@ load("//python:python_versions.bzl", "python_versions")
 native_driver_versioned(python_versions = python_versions)
 
 alias(
-    name = "client_python",
-    actual = ":client_python39",
+    name = "driver_python",
+    actual = ":driver_python39",
     visibility = ["//visibility:public"],
 )
 
 genrule(
-    name = "native-client-wrapper-link",
-    outs = ["typedb/native_client_wrapper.py"],
-    srcs = [":native-client-wrapper39"],
+    name = "native-driver-wrapper-link",
+    outs = ["typedb/native_driver_wrapper.py"],
+    srcs = [":native-driver-wrapper39"],
     cmd = "cp $< $@",
     visibility = ["//visibility:public"]
 )
 
 py_native_lib_rename(
-    name = "native-client-binary-link",
-    out = "typedb/native_client_python",
-    src = ":native_client_python39",
+    name = "native-driver-binary-link",
+    out = "typedb/native_driver_python",
+    src = ":native_driver_python39",
     visibility = ["//visibility:public"]
 )
 

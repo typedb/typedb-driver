@@ -28,7 +28,7 @@ typedb_behaviour_java_test(
     srcs = [
         "ExpressionTest.java",
     ],
-    test_class = "com.vaticle.typedb.client.test.behaviour.typeql.language.expression.ExpressionTest",
+    test_class = "com.vaticle.typedb.driver.test.behaviour.typeql.language.expression.ExpressionTest",
     data = [
         "@vaticle_typedb_behaviour//typeql/language:expression.feature",
     ],

@@ -28,7 +28,7 @@ import {Thing} from "../thing/Thing";
 import {AttributeType} from "./AttributeType";
 import {RoleType} from "./RoleType";
 import {Type} from "./Type";
-import {TypeDBClientError} from "../../../common/errors/TypeDBClientError";
+import {TypeDBDriverError} from "../../../common/errors/TypeDBDriverError";
 import {ErrorMessage} from "../../../common/errors/ErrorMessage";
 import BAD_ANNOTATION = ErrorMessage.Concept.BAD_ANNOTATION;
 import ILLEGAL_STATE = ErrorMessage.Internal.ILLEGAL_STATE;
@@ -86,7 +86,7 @@ export namespace ThingType {
         if (thing_type.isEntity()) return RequestBuilder.Type.ThingType.protoThingTypeEntityType(thing_type.label);
         else if (thing_type.isRelation()) return RequestBuilder.Type.ThingType.protoThingTypeRelationType(thing_type.label);
         else if (thing_type.isAttribute()) return RequestBuilder.Type.ThingType.protoThingTypeAttributeType(thing_type.label);
-        else throw new TypeDBClientError(ILLEGAL_STATE.message());
+        else throw new TypeDBDriverError(ILLEGAL_STATE.message());
     }
 
     export class Annotation {
@@ -102,7 +102,7 @@ export namespace ThingType {
         public static parse(string: string): Annotation {
             if (string == Annotation.KEY.name) return Annotation.KEY;
             else if (string == Annotation.UNIQUE.name) return Annotation.KEY;
-            else throw new TypeDBClientError(BAD_ANNOTATION.message(string));
+            else throw new TypeDBDriverError(BAD_ANNOTATION.message(string));
         }
 
         public toString(): string {
@@ -117,7 +117,7 @@ export namespace ThingType {
             } else if (annotation == Annotation.UNIQUE) {
                 return RequestBuilder.Type.Annotation.annotationUnique();
             } else {
-                throw new TypeDBClientError((BAD_ANNOTATION.message(annotation)));
+                throw new TypeDBDriverError((BAD_ANNOTATION.message(annotation)));
             }
         }
     }

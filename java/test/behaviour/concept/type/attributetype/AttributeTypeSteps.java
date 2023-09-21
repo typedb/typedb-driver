@@ -19,20 +19,20 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.test.behaviour.concept.type.attributetype;
+package com.vaticle.typedb.driver.test.behaviour.concept.type.attributetype;
 
-import com.vaticle.typedb.client.api.concept.Concept;
-import com.vaticle.typedb.client.api.concept.type.AttributeType;
-import com.vaticle.typedb.client.api.concept.type.ThingType.Annotation;
-import com.vaticle.typedb.client.api.concept.value.Value;
+import com.vaticle.typedb.driver.api.concept.Concept;
+import com.vaticle.typedb.driver.api.concept.type.AttributeType;
+import com.vaticle.typedb.driver.api.concept.type.ThingType.Annotation;
+import com.vaticle.typedb.driver.api.concept.value.Value;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.util.List;
 import java.util.Set;
 
-import static com.vaticle.typedb.client.api.concept.Concept.Transitivity.EXPLICIT;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
+import static com.vaticle.typedb.driver.api.concept.Concept.Transitivity.EXPLICIT;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
 import static com.vaticle.typedb.common.collection.Collections.set;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toSet;

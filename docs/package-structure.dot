@@ -1,9 +1,9 @@
 digraph mygraph {
   node [shape=box];
-  "//:client-java"
-  "//:client-java" -> "//api:api"
-  "//:client-java" -> "//cluster:cluster"
-  "//:client-java" -> "//core:core"
+  "//:driver-java"
+  "//:driver-java" -> "//api:api"
+  "//:driver-java" -> "//cluster:cluster"
+  "//:driver-java" -> "//core:core"
   "//cluster:cluster"
   "//cluster:cluster" -> "//api:api"
   "//cluster:cluster" -> "//common:common"

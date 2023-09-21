@@ -30,10 +30,10 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":rules.bzl", "swig_native_java_library")
 
 java_library(
-    name = "client-java",
+    name = "driver-java",
     srcs = glob(["*.java"]),
     resources = ["//:LICENSE"],
-    tags = ["maven_coordinates=com.vaticle.typedb:typedb-client:{pom_version}"],
+    tags = ["maven_coordinates=com.vaticle.typedb:typedb-driver:{pom_version}"],
     deps = [
         # Internal dependencies
         "//java/api",
@@ -46,20 +46,20 @@ java_library(
 
 assemble_maven(
     name = "assemble-maven",
-    project_description = "TypeDB Client API for Java",
-    project_name = "TypeDB Client Java",
+    project_description = "TypeDB Driver API for Java",
+    project_name = "TypeDB Driver Java",
     project_url = "https://github.com/vaticle/typedb-driver-java",
     scm_url = "https://github.com/vaticle/typedb-driver-java",
-    target = ":client-java",
+    target = ":driver-java",
     version_overrides = version(artifacts_org, artifacts_repo),
     workspace_refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
     profile_overrides = {
-        ":typedb_client_jni": json.encode({
-            "linux-aarch64": "com.vaticle.typedb:typedb-client-jni-linux-aarch64:{pom_version}",
-            "linux-x86_64": "com.vaticle.typedb:typedb-client-jni-linux-x86_64:{pom_version}",
-            "mac-aarch64": "com.vaticle.typedb:typedb-client-jni-macosx-aarch64:{pom_version}",
-            "mac-x86_64": "com.vaticle.typedb:typedb-client-jni-macosx-x86_64:{pom_version}",
-            "windows-x86_64": "com.vaticle.typedb:typedb-client-jni-windows-x86_64:{pom_version}",
+        ":typedb_driver_jni": json.encode({
+            "linux-aarch64": "com.vaticle.typedb:typedb-driver-jni-linux-aarch64:{pom_version}",
+            "linux-x86_64": "com.vaticle.typedb:typedb-driver-jni-linux-x86_64:{pom_version}",
+            "mac-aarch64": "com.vaticle.typedb:typedb-driver-jni-macosx-aarch64:{pom_version}",
+            "mac-x86_64": "com.vaticle.typedb:typedb-driver-jni-macosx-x86_64:{pom_version}",
+            "windows-x86_64": "com.vaticle.typedb:typedb-driver-jni-windows-x86_64:{pom_version}",
         })
     }
 )
@@ -72,13 +72,13 @@ deploy_maven(
 )
 
 swig_native_java_library(
-    name = "typedb_client_jni",
-    lib = "//c:typedb_client_clib_headers",
-    package = "com.vaticle.typedb.client.jni",
-    interface = "//c:typedb_client.i",
-    includes = ["//c:swig/typedb_client_java.swg"],
+    name = "typedb_driver_jni",
+    lib = "//c:typedb_driver_clib_headers",
+    package = "com.vaticle.typedb.driver.jni",
+    interface = "//c:typedb_driver.i",
+    includes = ["//c:swig/typedb_driver_java.swg"],
     enable_cxx = True,
-    maven_coordinates = "com.vaticle.typedb:typedb-client-jni-{platform}:{pom_version}",
+    maven_coordinates = "com.vaticle.typedb:typedb-driver-jni-{platform}:{pom_version}",
     platforms = {
         "@vaticle_dependencies//util/platform:is_linux_aarch64": "linux-aarch64",
         "@vaticle_dependencies//util/platform:is_linux_x86_64": "linux-x86_64",
@@ -90,11 +90,11 @@ swig_native_java_library(
 
 assemble_maven(
     name = "assemble-maven-jni",
-    project_description = "TypeDB Client JNI",
-    project_name = "TypeDB Client Java",
+    project_description = "TypeDB Driver JNI",
+    project_name = "TypeDB Driver Java",
     project_url = "https://github.com/vaticle/typedb-driver-java",
     scm_url = "https://github.com/vaticle/typedb-driver-java",
-    target = ":typedb_client_jni",
+    target = ":typedb_driver_jni",
     version_overrides = version(artifacts_org, artifacts_repo),
     workspace_refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
 )

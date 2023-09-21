@@ -19,13 +19,13 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.concept.type;
+package com.vaticle.typedb.driver.api.concept.type;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
-import com.vaticle.typedb.client.api.TypeDBTransaction;
-import com.vaticle.typedb.client.api.concept.Concept;
-import com.vaticle.typedb.client.common.Label;
+import com.vaticle.typedb.driver.api.TypeDBTransaction;
+import com.vaticle.typedb.driver.api.concept.Concept;
+import com.vaticle.typedb.driver.common.Label;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;

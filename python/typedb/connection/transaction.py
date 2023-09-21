@@ -23,13 +23,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from typedb.native_client_wrapper import error_code, error_message, transaction_new, transaction_commit, \
+from typedb.native_driver_wrapper import error_code, error_message, transaction_new, transaction_commit, \
     transaction_rollback, transaction_is_open, transaction_on_close, transaction_force_close, \
     Transaction as NativeTransaction, TransactionCallbackDirector
 
 from typedb.api.connection.options import TypeDBOptions
 from typedb.api.connection.transaction import TypeDBTransaction
-from typedb.common.exception import TypeDBClientExceptionExt, TRANSACTION_CLOSED, TypeDBException
+from typedb.common.exception import TypeDBDriverExceptionExt, TRANSACTION_CLOSED, TypeDBException
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.concept.concept_manager import _ConceptManager
 from typedb.logic.logic_manager import _LogicManager
@@ -38,7 +38,7 @@ from typedb.query.query_manager import _QueryManager
 if TYPE_CHECKING:
     from typedb.connection.session import _Session
     from typedb.api.connection.transaction import TransactionType
-    from typedb.native_client_wrapper import Error as NativeError
+    from typedb.native_driver_wrapper import Error as NativeError
 
 
 class _Transaction(TypeDBTransaction, NativeWrapper[NativeTransaction]):
@@ -54,8 +54,8 @@ class _Transaction(TypeDBTransaction, NativeWrapper[NativeTransaction]):
         self._logic_manager = _LogicManager(self._native_object)
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBClientExceptionExt:
-        return TypeDBClientExceptionExt.of(TRANSACTION_CLOSED)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
+        return TypeDBDriverExceptionExt.of(TRANSACTION_CLOSED)
 
     @property
     def transaction_type(self) -> TransactionType:

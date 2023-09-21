@@ -29,7 +29,7 @@ import {EntityImpl} from "../../concept/thing/EntityImpl";
 import {RelationImpl} from "../../concept/thing/RelationImpl";
 import {AttributeImpl} from "../../concept/thing/AttributeImpl";
 import {ValueImpl} from "../../concept/value/ValueImpl";
-import {TypeDBClientError} from "../errors/TypeDBClientError";
+import {TypeDBDriverError} from "../errors/TypeDBDriverError";
 import {ErrorMessage} from "../errors/ErrorMessage";
 import BAD_ENCODING = ErrorMessage.Concept.BAD_ENCODING;
 
@@ -46,7 +46,7 @@ export namespace ResponseReader {
             else if (proto.has_relation) return RelationImpl.ofRelationProto(proto.relation);
             else if (proto.has_attribute) return AttributeImpl.ofAttributeProto(proto.attribute);
             else if (proto.has_value) return ValueImpl.ofValueProto(proto.value);
-            else throw new TypeDBClientError(BAD_ENCODING.message(proto));
+            else throw new TypeDBDriverError(BAD_ENCODING.message(proto));
         }
     }
 }

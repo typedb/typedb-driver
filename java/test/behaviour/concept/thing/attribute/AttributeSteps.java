@@ -19,18 +19,18 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.test.behaviour.concept.thing.attribute;
+package com.vaticle.typedb.driver.test.behaviour.concept.thing.attribute;
 
-import com.vaticle.typedb.client.api.concept.value.Value;
+import com.vaticle.typedb.driver.api.concept.value.Value;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.time.LocalDateTime;
 
-import static com.vaticle.typedb.client.test.behaviour.concept.thing.ThingSteps.get;
-import static com.vaticle.typedb.client.test.behaviour.concept.thing.ThingSteps.put;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
-import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
+import static com.vaticle.typedb.driver.test.behaviour.concept.thing.ThingSteps.get;
+import static com.vaticle.typedb.driver.test.behaviour.concept.thing.ThingSteps.put;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
+import static com.vaticle.typedb.driver.test.behaviour.util.Util.assertThrows;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

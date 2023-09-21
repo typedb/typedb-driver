@@ -19,7 +19,7 @@
  *  under the License.
  */
 
-package com.vaticle.typedb.client.test.behaviour.util;
+package com.vaticle.typedb.driver.test.behaviour.util;
 
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;

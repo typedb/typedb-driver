@@ -21,11 +21,11 @@
 
 import {TransactionResPart, TransactionStreamState} from "typedb-protocol/proto/transaction";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {TypeDBDriverError} from "../common/errors/TypeDBDriverError";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {BatchDispatcher} from "./RequestTransmitter";
 import {ResponseCollector} from "./ResponseCollector";
-import UNKNOWN_STREAM_STATE = ErrorMessage.Client.UNKNOWN_STREAM_STATE;
+import UNKNOWN_STREAM_STATE = ErrorMessage.Driver.UNKNOWN_STREAM_STATE;
 
 export class ResponsePartIterator implements AsyncIterable<TransactionResPart> {
 
@@ -58,7 +58,7 @@ export class ResponsePartIterator implements AsyncIterable<TransactionResPart> {
                     this._dispatcher.dispatch(RequestBuilder.Transaction.streamReq(this._requestId))
                     return this.next();
                 default:
-                    throw new TypeDBClientError(UNKNOWN_STREAM_STATE.message(res.stream_res_part));
+                    throw new TypeDBDriverError(UNKNOWN_STREAM_STATE.message(res.stream_res_part));
             }
         } else return res;
     }

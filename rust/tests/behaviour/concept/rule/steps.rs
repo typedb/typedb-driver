@@ -20,7 +20,7 @@
  */
 
 use cucumber::{given, then, when};
-use typedb_client::{transaction::logic::api::RuleAPI, Result as TypeDBResult};
+use typedb_driver::{transaction::logic::api::RuleAPI, Result as TypeDBResult};
 
 use crate::{
     assert_err,

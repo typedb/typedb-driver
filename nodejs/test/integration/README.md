@@ -1,4 +1,4 @@
-## TypeDB Client for Node.js: Integration Tests
+## TypeDB Driver for Node.js: Integration Tests
 
 These JavaScript tests verify the correctness of connection, Concept and Query methods.
 

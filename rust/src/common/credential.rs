@@ -21,7 +21,7 @@
 
 use std::{fmt, fs, path::Path};
 
-use tonic::transport::{Certificate, ClientTlsConfig};
+use tonic::transport::{Certificate, DriverTlsConfig};
 
 use crate::Result;
 
@@ -30,15 +30,15 @@ pub struct Credential {
     username: String,
     password: String,
     is_tls_enabled: bool,
-    tls_config: Option<ClientTlsConfig>,
+    tls_config: Option<DriverTlsConfig>,
 }
 
 impl Credential {
     pub fn with_tls(username: &str, password: &str, tls_root_ca: Option<&Path>) -> Result<Self> {
         let tls_config = Some(if let Some(tls_root_ca) = tls_root_ca {
-            ClientTlsConfig::new().ca_certificate(Certificate::from_pem(fs::read_to_string(tls_root_ca)?))
+            DriverTlsConfig::new().ca_certificate(Certificate::from_pem(fs::read_to_string(tls_root_ca)?))
         } else {
-            ClientTlsConfig::new()
+            DriverTlsConfig::new()
         });
 
         Ok(Self { username: username.to_owned(), password: password.to_owned(), is_tls_enabled: true, tls_config })
@@ -60,7 +60,7 @@ impl Credential {
         self.is_tls_enabled
     }
 
-    pub fn tls_config(&self) -> &Option<ClientTlsConfig> {
+    pub fn tls_config(&self) -> &Option<DriverTlsConfig> {
         &self.tls_config
     }
 }

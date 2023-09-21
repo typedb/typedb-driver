@@ -19,8 +19,8 @@
  * under the License.
  */
 
-import {ClientDuplexStream} from "@grpc/grpc-js";
-import {TransactionClient, TransactionReq, TransactionServer} from "typedb-protocol/proto/transaction";
+import {DriverDuplexStream} from "@grpc/grpc-js";
+import {TransactionDriver, TransactionReq, TransactionServer} from "typedb-protocol/proto/transaction";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 
 export class BatchDispatcher {
@@ -29,11 +29,11 @@ export class BatchDispatcher {
     private static BATCH_WINDOW_LARGE_MILLIS = 3;
 
     private readonly _transmitter: RequestTransmitter;
-    private readonly _transactionStream: ClientDuplexStream<TransactionClient, TransactionServer>;
+    private readonly _transactionStream: DriverDuplexStream<TransactionDriver, TransactionServer>;
     private _bufferedRequests: TransactionReq[];
     private _isRunning: boolean;
 
-    constructor(transmitter: RequestTransmitter, transactionStream: ClientDuplexStream<TransactionClient, TransactionServer>) {
+    constructor(transmitter: RequestTransmitter, transactionStream: DriverDuplexStream<TransactionDriver, TransactionServer>) {
         this._transmitter = transmitter;
         this._transactionStream = transactionStream;
         this._bufferedRequests = new Array<TransactionReq>();
@@ -56,8 +56,8 @@ export class BatchDispatcher {
     }
 
     private sendNow(): void {
-        const clientRequest = RequestBuilder.Transaction.clientReq(this._bufferedRequests);
-        this._transactionStream.write(clientRequest);
+        const driverRequest = RequestBuilder.Transaction.driverReq(this._bufferedRequests);
+        this._transactionStream.write(driverRequest);
         this._bufferedRequests = [];
     }
 
@@ -97,7 +97,7 @@ export class RequestTransmitter {
         }
     }
 
-    dispatcher(transactionStream: ClientDuplexStream<TransactionClient, TransactionServer>): BatchDispatcher {
+    dispatcher(transactionStream: DriverDuplexStream<TransactionDriver, TransactionServer>): BatchDispatcher {
         const dispatcher = new BatchDispatcher(this, transactionStream);
         this._dispatchers.add(dispatcher);
         return dispatcher;

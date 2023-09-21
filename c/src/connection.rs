@@ -21,7 +21,7 @@
 
 use std::{ffi::c_char, path::Path};
 
-use typedb_client::{Connection, Credential};
+use typedb_driver::{Connection, Credential};
 
 use super::{
     error::{try_release, unwrap_void},

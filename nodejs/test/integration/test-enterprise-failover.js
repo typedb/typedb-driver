@@ -86,19 +86,19 @@ function serverStart(idx) {
 
 async function run() {
     console.log("root ca path: ", process.env.ROOT_CA)
-    const client = await TypeDB.enterpriseClient(
+    const driver = await TypeDB.enterpriseDriver(
         ["localhost:11729", "localhost:21729", "localhost:31729"],
         new TypeDBCredential("admin", "password", process.env.ROOT_CA)
     );
     try {
-        if (await client.databases.contains("typedb")) {
-            await (await client.databases.get("typedb")).delete();
+        if (await driver.databases.contains("typedb")) {
+            await (await driver.databases.get("typedb")).delete();
         }
-        await client.databases.create("typedb");
-        let primaryReplica = await seekPrimaryReplica(client.databases);
+        await driver.databases.create("typedb");
+        let primaryReplica = await seekPrimaryReplica(driver.databases);
         console.info(`Performing operations against the primary replica ${primaryReplica}`);
 
-        let session = await client.session("typedb", SessionType.SCHEMA);
+        let session = await driver.session("typedb", SessionType.SCHEMA);
         let tx = await session.transaction(TransactionType.WRITE);
         let person = await tx.concepts.putEntityType("person");
         console.info(`Put the entity type '${person.label.scopedName}'.`);
@@ -109,11 +109,11 @@ async function run() {
         await session.close();
 
         for (let iteration = 1; iteration <= 10; iteration++) {
-            const client = await TypeDB.enterpriseClient(
+            const driver = await TypeDB.enterpriseDriver(
                 ["localhost:11729", "localhost:21729", "localhost:31729"],
                 new TypeDBCredential("admin", "password", process.env.ROOT_CA)
             );
-            primaryReplica = await seekPrimaryReplica(client.databases);
+            primaryReplica = await seekPrimaryReplica(driver.databases);
             console.info(`Stopping primary replica (test ${iteration}/10)...`);
             const port = primaryReplica.address.substring(10,15);
             const primaryReplicaServerPID = getServerPID(port);
@@ -122,7 +122,7 @@ async function run() {
             console.info("Primary replica stopped successfully.");
             await new Promise(resolve => setTimeout(resolve, 1000));
             console.info("Opening a schema session...");
-            session = await client.session("typedb", SessionType.SCHEMA);
+            session = await driver.session("typedb", SessionType.SCHEMA);
             console.info("Opening a read txn...");
             tx = await session.transaction(TransactionType.READ);
             person = await tx.concepts.getEntityType("person");
@@ -136,11 +136,11 @@ async function run() {
             if (spawned === undefined) throw new Error("Failed to spawn/wait for start of server at port: " + `${idx}1729`);
         }
         console.info("SUCCESS - completed 10 iterations");
-        await client.close();
+        await driver.close();
         process.exit(0);
     } catch (err) {
         console.error(`ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 }

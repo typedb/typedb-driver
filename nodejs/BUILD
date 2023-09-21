@@ -54,7 +54,7 @@ genrule(
 )
 
 ts_project(
-    name = "client-nodejs",
+    name = "driver-nodejs",
     srcs = glob([
         "*.ts",
         "api/**/*.ts",
@@ -86,16 +86,16 @@ ts_project(
 )
 
 npm_package(
-    name = "client-nodejs-npm-package",
-    srcs = [":client-nodejs", "package.json"],
+    name = "driver-nodejs-npm-package",
+    srcs = [":driver-nodejs", "package.json"],
     include_runfiles = False,
-    package = "typedb-client",
+    package = "typedb-driver",
     visibility = ["//visibility:public"],
 )
 
 assemble_npm(
     name= "assemble-npm",
-    target = ":client-nodejs-npm-package"
+    target = ":driver-nodejs-npm-package"
 )
 
 deploy_npm(

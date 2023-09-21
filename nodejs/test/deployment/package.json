@@ -1,4 +1,4 @@
 {
-  "name": "typedb-client-test-deployment",
+  "name": "typedb-driver-test-deployment",
   "main": "application.test.js"
 }

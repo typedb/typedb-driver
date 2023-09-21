@@ -19,7 +19,7 @@
  * under the License.
  */
 
-use typedb_client::{BoxStream, Result};
+use typedb_driver::{BoxStream, Result};
 
 use super::{
     error::try_release_optional,

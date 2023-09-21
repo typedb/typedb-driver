@@ -12,7 +12,7 @@
 @maven//:com_google_guava_failureaccess_1_0_1
 @maven//:com_google_guava_guava_30_1_jre
 @maven//:com_google_guava_listenablefuture_9999_0_empty_to_avoid_conflict_with_guava
-@maven//:com_google_http_client_google_http_client_1_34_2
+@maven//:com_google_http_driver_google_http_driver_1_34_2
 @maven//:com_google_j2objc_j2objc_annotations_1_3
 @maven//:com_google_protobuf_protobuf_java_3_21_1
 @maven//:commons_codec_commons_codec_1_11
@@ -88,7 +88,7 @@
 @maven//:net_jcip_jcip_annotations_1_0
 @maven//:org_antlr_antlr4_runtime_4_8
 @maven//:org_apache_commons_commons_compress_1_21
-@maven//:org_apache_httpcomponents_httpclient_4_5_11
+@maven//:org_apache_httpcomponents_httpdriver_4_5_11
 @maven//:org_apache_httpcomponents_httpcore_4_4_13
 @maven//:org_apiguardian_apiguardian_api_1_1_0
 @maven//:org_checkerframework_checker_qual_3_5_0

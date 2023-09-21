@@ -19,9 +19,9 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.test.behaviour.typeql.language.delete;
+package com.vaticle.typedb.driver.test.behaviour.typeql.language.delete;
 
-import com.vaticle.typedb.client.test.behaviour.BehaviourTest;
+import com.vaticle.typedb.driver.test.behaviour.BehaviourTest;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
@@ -30,9 +30,9 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         strict = true,
         plugin = "pretty",
-        glue = "com.vaticle.typedb.client.test.behaviour",
+        glue = "com.vaticle.typedb.driver.test.behaviour",
         features = "external/vaticle_typedb_behaviour/typeql/language/delete.feature",
-        tags = "not @ignore and not @ignore-typedb-client-java"
+        tags = "not @ignore and not @ignore-typedb-driver-java"
 )
 public class DeleteTest extends BehaviourTest {
     // ATTENTION:
@@ -48,7 +48,7 @@ public class DeleteTest extends BehaviourTest {
     //    b) Use '//<this>/<package>/<name>:test-enterprise' to test against typedb-enterprise
     //
     // 5) Update 'Bazel Flags':
-    //    a) Remove the line that says: '--test_filter=com.vaticle.typedb.client.*'
+    //    a) Remove the line that says: '--test_filter=com.vaticle.typedb.driver.*'
     //    b) Use the following Bazel flags:
     //       --cache_test_results=no : to make sure you're not using cache
     //       --test_output=streamed : to make sure all output is printed

@@ -19,17 +19,17 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.test.behaviour.typeql;
+package com.vaticle.typedb.driver.test.behaviour.typeql;
 
-import com.vaticle.typedb.client.api.answer.ConceptMap;
-import com.vaticle.typedb.client.api.answer.ConceptMapGroup;
-import com.vaticle.typedb.client.api.answer.Numeric;
-import com.vaticle.typedb.client.api.answer.NumericGroup;
-import com.vaticle.typedb.client.api.concept.Concept;
-import com.vaticle.typedb.client.api.concept.thing.Attribute;
-import com.vaticle.typedb.client.api.concept.type.AttributeType;
-import com.vaticle.typedb.client.common.Label;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.driver.api.answer.ConceptMap;
+import com.vaticle.typedb.driver.api.answer.ConceptMapGroup;
+import com.vaticle.typedb.driver.api.answer.Numeric;
+import com.vaticle.typedb.driver.api.answer.NumericGroup;
+import com.vaticle.typedb.driver.api.concept.Concept;
+import com.vaticle.typedb.driver.api.concept.thing.Attribute;
+import com.vaticle.typedb.driver.api.concept.type.AttributeType;
+import com.vaticle.typedb.driver.common.Label;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typeql.lang.TypeQL;
 import com.vaticle.typeql.lang.common.exception.TypeQLException;
 import com.vaticle.typeql.lang.query.TypeQLDefine;
@@ -55,11 +55,11 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.api.concept.type.ThingType.Annotation.key;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
-import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
-import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrowsWithMessage;
+import static com.vaticle.typedb.driver.api.concept.type.ThingType.Annotation.key;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
+import static com.vaticle.typedb.driver.test.behaviour.util.Util.assertThrows;
+import static com.vaticle.typedb.driver.test.behaviour.util.Util.assertThrowsWithMessage;
 import static com.vaticle.typedb.common.collection.Collections.set;
 import static com.vaticle.typedb.common.util.Double.equalsApproximate;
 import static org.junit.Assert.assertEquals;
@@ -189,7 +189,7 @@ public class TypeQLSteps {
             clearAnswers();
             answers = tx().query().match(String.join("\n", typeQLQueryStatements)).collect(Collectors.toList());
         } catch (TypeQLException e) {
-            // NOTE: We manually close transaction here, because we want to align with all non-java clients,
+            // NOTE: We manually close transaction here, because we want to align with all non-java drivers,
             // where parsing happens at server-side which closes transaction if they fail
             tx().close();
             throw e;
@@ -508,7 +508,7 @@ public class TypeQLSteps {
                     throw new ScenarioDefinitionException("Cannot apply IID templating to Type concepts");
                 String conceptId = concept.asThing().getIID();
                 builder.append(conceptId);
-            } catch (TypeDBClientException e) {
+            } catch (TypeDBDriverException e) {
                 if (e.getErrorMessage().equals(VARIABLE_DOES_NOT_EXIST)) {
                     throw new ScenarioDefinitionException(String.format("No IID available for template placeholder: %s.", matched));
                 } else throw e;

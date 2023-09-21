@@ -19,19 +19,19 @@
  * under the License.
  */
 
-import {TypeDBClient as TypeDBClient} from "./api/connection/TypeDBClient";
+import {TypeDBDriver as TypeDBDriver} from "./api/connection/TypeDBDriver";
 import {TypeDBCredential} from "./api/connection/TypeDBCredential";
-import {TypeDBClientImpl} from "./connection/TypeDBClientImpl";
+import {TypeDBDriverImpl} from "./connection/TypeDBDriverImpl";
 
 export namespace TypeDB {
     export const DEFAULT_ADDRESS = "127.0.0.1:1729";
 
-    export function coreClient(address: string = DEFAULT_ADDRESS): Promise<TypeDBClient> {
-        return new TypeDBClientImpl(address).open();
+    export function coreDriver(address: string = DEFAULT_ADDRESS): Promise<TypeDBDriver> {
+        return new TypeDBDriverImpl(address).open();
     }
 
-    export function enterpriseClient(addresses: string | string[], credential: TypeDBCredential): Promise<TypeDBClient> {
+    export function enterpriseDriver(addresses: string | string[], credential: TypeDBCredential): Promise<TypeDBDriver> {
         if (typeof addresses === 'string') addresses = [addresses];
-        return new TypeDBClientImpl(addresses, credential).open();
+        return new TypeDBDriverImpl(addresses, credential).open();
     }
 }

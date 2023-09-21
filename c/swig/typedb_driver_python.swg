@@ -77,27 +77,27 @@
     free((char *) $1);
 }
 
-/* Introduce TypeDBClientException and use it to wrap all native exceptions */
+/* Introduce TypeDBDriverException and use it to wrap all native exceptions */
 %{
-static PyObject* PyExc_TypeDBClientError;
+static PyObject* PyExc_TypeDBDriverError;
 %}
 
 %init %{
-    PyExc_TypeDBClientError = PyErr_NewException("native_client_python.TypeDBClientException", NULL, NULL);
-    Py_INCREF(PyExc_TypeDBClientError);
-    PyModule_AddObject(m, "TypeDBClientException", PyExc_TypeDBClientError);
+    PyExc_TypeDBDriverError = PyErr_NewException("native_driver_python.TypeDBDriverException", NULL, NULL);
+    Py_INCREF(PyExc_TypeDBDriverError);
+    PyModule_AddObject(m, "TypeDBDriverException", PyExc_TypeDBDriverError);
 %}
 
 %exception {
     $action
     if (check_error()) {
-        PyErr_SetString(PyExc_TypeDBClientError, error_message(get_last_error()));
+        PyErr_SetString(PyExc_TypeDBDriverError, error_message(get_last_error()));
         SWIG_fail;
     }
 }
 
 %pythoncode %{
-    TypeDBClientException = native_client_python.TypeDBClientException
+    TypeDBDriverException = native_driver_python.TypeDBDriverException
 %}
 
 /* ValueType* needs special handling */

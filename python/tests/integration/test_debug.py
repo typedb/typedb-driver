@@ -22,7 +22,7 @@
 import unittest
 from unittest import TestCase
 
-from typedb.client import *
+from typedb.driver import *
 
 TYPEDB = "typedb"
 SCHEMA = SessionType.SCHEMA
@@ -34,10 +34,10 @@ READ = TransactionType.READ
 class TestDebug(TestCase):
 
     def setUp(self):
-        with TypeDB.core_client(TypeDB.DEFAULT_ADDRESS) as client:
-            if client.databases.contains(TYPEDB):
-                client.databases.get(TYPEDB).delete()
-            client.databases.create(TYPEDB)
+        with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver:
+            if driver.databases.contains(TYPEDB):
+                driver.databases.get(TYPEDB).delete()
+            driver.databases.create(TYPEDB)
 
     # TODO: Write anything you want in this test for local debugging. A TypeDB server should be running in the background
     def test_debug(self):
@@ -45,8 +45,8 @@ class TestDebug(TestCase):
 
     # TODO: This test should be migrated, ideally to BDD if possible
     def test_explanations(self):
-        with TypeDB.core_client(TypeDB.DEFAULT_ADDRESS) as client:
-            with client.session(TYPEDB, SCHEMA) as session, session.transaction(WRITE) as tx:
+        with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver:
+            with driver.session(TYPEDB, SCHEMA) as session, session.transaction(WRITE) as tx:
                 schema = """
                 define
                 person sub entity, owns name, plays friendship:friend, plays marriage:husband, plays marriage:wife;
@@ -67,7 +67,7 @@ class TestDebug(TestCase):
                 tx.query.define(schema)
                 tx.commit()
 
-            with client.session(TYPEDB, DATA) as session, session.transaction(WRITE) as tx:
+            with driver.session(TYPEDB, DATA) as session, session.transaction(WRITE) as tx:
                 data = """
                 insert
                 $x isa person, has name "Zack";
@@ -78,7 +78,7 @@ class TestDebug(TestCase):
                 tx.commit()
 
             opts = TypeDBOptions(infer=True, explain=True)
-            with client.session(TYPEDB, DATA) as session, session.transaction(READ, opts) as tx:
+            with driver.session(TYPEDB, DATA) as session, session.transaction(READ, opts) as tx:
                 answers = list(tx.query.match("match (friend: $p1, friend: $p2) isa friendship; $p1 has name $na;"))
                 assert len(answers[0].explainables().relations()) == 1
                 assert len(answers[1].explainables().relations()) == 1
@@ -89,8 +89,8 @@ class TestDebug(TestCase):
                 print([str(e) for e in explanations])
 
     def test_value_type(self):
-        with TypeDB.core_client(TypeDB.DEFAULT_ADDRESS) as client:
-            with client.session(TYPEDB, SCHEMA) as session, session.transaction(WRITE) as tx:
+        with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver:
+            with driver.session(TYPEDB, SCHEMA) as session, session.transaction(WRITE) as tx:
                 schema = """
                 define
                 person sub entity, owns name, owns age, plays friendship:friend, plays marriage:husband, plays marriage:wife;
@@ -111,7 +111,7 @@ class TestDebug(TestCase):
                 """
                 tx.query.define(schema)
                 tx.commit()
-            with client.session(TYPEDB, SCHEMA) as session, session.transaction(WRITE) as tx:
+            with driver.session(TYPEDB, SCHEMA) as session, session.transaction(WRITE) as tx:
                 person = tx.concepts.get_entity_type("person")
                 assert(len(list(person.get_owns(tx, value_type=ValueType.STRING))) == 1)
                 assert(len(list(person.get_owns(tx, value_type=ValueType.LONG))) == 1)

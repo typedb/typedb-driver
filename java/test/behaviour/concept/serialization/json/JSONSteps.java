@@ -19,20 +19,20 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.test.behaviour.concept.serialization.json;
+package com.vaticle.typedb.driver.test.behaviour.concept.serialization.json;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
-import com.vaticle.typedb.client.api.answer.ConceptMap;
+import com.vaticle.typedb.driver.api.answer.ConceptMap;
 import io.cucumber.java.en.Then;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.vaticle.typedb.client.test.behaviour.typeql.TypeQLSteps;
+import com.vaticle.typedb.driver.test.behaviour.typeql.TypeQLSteps;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

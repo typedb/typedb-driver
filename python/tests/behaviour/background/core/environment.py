@@ -19,17 +19,17 @@
 # under the License.
 #
 
-from typedb.client import *
+from typedb.driver import *
 
 from tests.behaviour.background import environment_base
 from tests.behaviour.context import Context
 
-IGNORE_TAGS = ["ignore", "ignore-client-python", "ignore-typedb-client-python"]
+IGNORE_TAGS = ["ignore", "ignore-driver-python", "ignore-typedb-driver-python"]
 
 
 def before_all(context: Context):
     environment_base.before_all(context)
-    context.setup_context_client_fn = lambda user=None, password=None: setup_context_client(context, user, password)
+    context.setup_context_driver_fn = lambda user=None, password=None: setup_context_driver(context, user, password)
 
 
 def before_scenario(context: Context, scenario):
@@ -40,10 +40,10 @@ def before_scenario(context: Context, scenario):
     environment_base.before_scenario(context)
 
 
-def setup_context_client(context, username=None, password=None):
+def setup_context_driver(context, username=None, password=None):
     if username is not None or password is not None:
-        raise Exception("Core client does not support authentication")
-    context.client = TypeDB.core_client(address="localhost:%d" % int(context.config.userdata["port"]))
+        raise Exception("Core driver does not support authentication")
+    context.driver = TypeDB.core_driver(address="localhost:%d" % int(context.config.userdata["port"]))
     context.session_options = TypeDBOptions(infer=True)
     context.transaction_options = TypeDBOptions(infer=True)
 
@@ -52,10 +52,10 @@ def after_scenario(context: Context, scenario):
     environment_base.after_scenario(context, scenario)
 
     # TODO: reset the database through the TypeDB runner once it exists
-    context.setup_context_client_fn()
-    for database in context.client.databases.all():
+    context.setup_context_driver_fn()
+    for database in context.driver.databases.all():
         database.delete()
-    context.client.close()
+    context.driver.close()
 
 
 def after_all(context: Context):

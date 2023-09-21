@@ -27,48 +27,48 @@ from tests.integration.base import test_base, TypeDBServer
 import typedb
 from typedb import TypeDBError
 from typedb.api.concept.concept import ValueType
-from typedb.connection import TypeDBClient, Transaction
+from typedb.connection import TypeDBDriver, Transaction
 
 
 # TODO: we should ensure that all these tests are migrated to BDD
-class test_client_PreDbSetup(test_base):
+class test_driver_PreDbSetup(test_base):
     """ Tests Database interactions *before* anything needs to be inserted/created """
 
-    # --- Test typedb client instantiation for one URI ---
-    def test_client_init_valid(self):
+    # --- Test typedb driver instantiation for one URI ---
+    def test_driver_init_valid(self):
         """ Test valid URI """
-        a_inst = TypeDBClient('localhost:48555')
-        self.assertIsInstance(a_inst, TypeDBClient)
+        a_inst = TypeDBDriver('localhost:48555')
+        self.assertIsInstance(a_inst, TypeDBDriver)
         a_inst.close()
 
-    def test_client_with_statement(self):
-        """ Test that client is compatible with using `with` """
-        with TypeDBClient("localhost:48555") as client:
-            with client.session("testing") as session:
+    def test_driver_with_statement(self):
+        """ Test that driver is compatible with using `with` """
+        with TypeDBDriver("localhost:48555") as driver:
+            with driver.session("testing") as session:
                 with session.transaction().read() as tx:
                     tx.query("match $x sub thing; get;")
 
 
 
-    def test_client_init_invalid_uri(self):
+    def test_driver_init_invalid_uri(self):
         """ Test invalid URI """
         with self.assertRaises(TypeDBError):
-            a_inst = TypeDBClient('localhost:1000')
+            a_inst = TypeDBDriver('localhost:1000')
             a_session = a_inst.session('testkeyspace')
             a_session.transaction().read()
 
         with self.assertRaises(TypeDBError):
-            a_inst = TypeDBClient('localhost:1000')
+            a_inst = TypeDBDriver('localhost:1000')
             with a_inst.session("test") as s:
                 with s.transaction().read() as tx:
                     pass
             a_inst.close()
 
 
-    # --- Test client session for different keyspaces ---
-    def test_client_session_valid_keyspace(self):
+    # --- Test driver session for different keyspaces ---
+    def test_driver_session_valid_keyspace(self):
         """ Test OK uri and keyspace """
-        a_inst = TypeDBClient('localhost:48555')
+        a_inst = TypeDBDriver('localhost:48555')
         a_session = a_inst.session('test')
         self.assertIsInstance(a_session, typedb.rpc.Session)
         tx = a_session.transaction().read()
@@ -83,56 +83,56 @@ class test_client_PreDbSetup(test_base):
 
         a_inst.close()
 
-    def test_client_session_invalid_keyspace(self):
-        client = TypeDBClient('localhost:48555')
+    def test_driver_session_invalid_keyspace(self):
+        driver = TypeDBDriver('localhost:48555')
         with self.assertRaises(TypeError):
-            a_session = client.session(123)
+            a_session = driver.session(123)
             tx = a_session.transaction().read() # won't fail until opening a transaction
-        inst2 = TypeDBClient('localhost:48555')
+        inst2 = TypeDBDriver('localhost:48555')
         with self.assertRaises(TypeDBError):
             a_session = inst2.session('')
             tx = a_session.transaction().read() # won't fail until opening a transaction
-        client.close()
+        driver.close()
 
-    def test_client_session_close(self):
-        client = TypeDBClient('localhost:48555')
-        a_session = client.session('test')
+    def test_driver_session_close(self):
+        driver = TypeDBDriver('localhost:48555')
+        a_session = driver.session('test')
         a_session.close()
         with self.assertRaises(TypeDBError):
             a_session.transaction().read()
-        client.close()
+        driver.close()
 
     # --- Test typedb session transactions that are pre-DB setup ---
-    def test_client_tx_valid_enum(self):
-        client = TypeDBClient('localhost:48555')
-        a_session = client.session('test')
+    def test_driver_tx_valid_enum(self):
+        driver = TypeDBDriver('localhost:48555')
+        a_session = driver.session('test')
         tx = a_session.transaction().read()
         self.assertIsInstance(tx, typedb.rpc.Transaction)
-        client.close()
+        driver.close()
 
-    def test_client_tx_invalid_enum(self):
-        client = TypeDBClient('localhost:48555')
-        a_session = client.session('test')
+    def test_driver_tx_invalid_enum(self):
+        driver = TypeDBDriver('localhost:48555')
+        a_session = driver.session('test')
         with self.assertRaises(Exception):
             a_session.transaction('foo')
-        client.close()
+        driver.close()
 
 
-client = None
+driver = None
 session = None
 
-class test_client_base(test_base):
+class test_driver_base(test_base):
     """ Sets up DB for use in tests """
 
     @classmethod
     def setUpClass(cls):
         """ Make sure we have some sort of schema and data in DB, only done once """
-        super(test_client_base, cls).setUpClass()
+        super(test_driver_base, cls).setUpClass()
 
-        global client, session
-        client = TypeDBClient("localhost:48555")
+        global driver, session
+        driver = TypeDBDriver("localhost:48555")
         keyspace = "test_" + str(uuid.uuid4()).replace("-", "_")[:8]
-        session = client.session(keyspace)
+        session = driver.session(keyspace)
 
         # temp tx to set up DB, don't save it
         with session.transaction().write() as tx:
@@ -157,12 +157,12 @@ class test_client_base(test_base):
 
     @classmethod
     def tearDownClass(cls):
-        super(test_client_base, cls).tearDownClass()
+        super(test_driver_base, cls).tearDownClass()
 
-        global client, session
+        global driver, session
         session.close()
-        client.keyspaces().delete(session.keyspace)
-        client.close()
+        driver.keyspaces().delete(session.keyspace)
+        driver.close()
 
     def setUp(self):
         global session
@@ -175,7 +175,7 @@ class test_client_base(test_base):
 
 
 
-class test_Transaction(test_client_base):
+class test_Transaction(test_driver_base):
     """ Class for testing transaction methods, eg query, put attribute type... """
 
     # --- query tests ---
@@ -210,7 +210,7 @@ class test_Transaction(test_client_base):
 
     def test_query_infer_false(self):
         """ Test that when the infer flag is false, no inferred answers are returned """
-        local_session = client.session("query_flag_infer_false")
+        local_session = driver.session("query_flag_infer_false")
         local_tx = local_session.transaction().write()
         local_tx.query("define person sub entity, has name; name sub attribute, value string; naming sub rule, when {$x isa person; $a isa name;}, then {$x has name $a;};").get()
         local_tx.query("insert $x isa person; $a \"John\" isa name;").get()
@@ -222,7 +222,7 @@ class test_Transaction(test_client_base):
 
     def test_query_infer_true(self):
         """ Test that when the infer flag is true, inferred answers are returned """
-        local_session = client.session("query_flag_infer_true")
+        local_session = driver.session("query_flag_infer_true")
         local_tx = local_session.transaction().write()
         local_tx.query("define person sub entity, has name; name sub attribute, value string; naming sub rule, when {$x isa person; $a isa name;}, then {$x has name $a;};").get()
         local_tx.query("insert $x isa person; $a \"John\" isa name;").get()
@@ -234,7 +234,7 @@ class test_Transaction(test_client_base):
 
     def test_query_batch_all(self):
         """ Test that batch_size=ALL succeeds at retrieving all the answers """
-        local_session = client.session("query_batch_size_all")
+        local_session = driver.session("query_batch_size_all")
         local_tx = local_session.transaction().write()
         local_tx.query("define person sub entity, has name; name sub attribute, value string;")
         for i in range(100):
@@ -247,7 +247,7 @@ class test_Transaction(test_client_base):
 
     def test_query_batch_one(self):
         """ Test that batch_size=1 succeeds at retrieving all the answers """
-        local_session = client.session("query_batch_size_one")
+        local_session = driver.session("query_batch_size_one")
         local_tx = local_session.transaction().write()
         local_tx.query("define person sub entity, has name; name sub attribute, value string;")
         for i in range(100):
@@ -260,7 +260,7 @@ class test_Transaction(test_client_base):
 
     def test_query_batch_nonpositive_throws(self):
         """ Test that batch_size="Nonsense" succeeds at retrieving all the answers """
-        local_session = client.session("query_batch_size_nonpositive")
+        local_session = driver.session("query_batch_size_nonpositive")
         local_tx = local_session.transaction().write()
         local_tx.query("define person sub entity, has name; name sub attribute, value string;")
         for i in range(100):
@@ -275,7 +275,7 @@ class test_Transaction(test_client_base):
 
     def test_query_batch_nonsense_throws(self):
         """ Test that batch_size="Nonsense" succeeds at retrieving all the answers """
-        local_session = client.session("query_batch_size_nonsense")
+        local_session = driver.session("query_batch_size_nonsense")
         local_tx = local_session.transaction().write()
         local_tx.query("define person sub entity, has name; name sub attribute, value string;")
         for i in range(100):

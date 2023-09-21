@@ -19,30 +19,30 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.connection;
+package com.vaticle.typedb.driver.connection;
 
-import com.vaticle.typedb.client.api.TypeDBOptions;
-import com.vaticle.typedb.client.api.TypeDBTransaction;
-import com.vaticle.typedb.client.api.concept.ConceptManager;
-import com.vaticle.typedb.client.api.logic.LogicManager;
-import com.vaticle.typedb.client.api.query.QueryManager;
-import com.vaticle.typedb.client.common.NativeObject;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.client.concept.ConceptManagerImpl;
-import com.vaticle.typedb.client.logic.LogicManagerImpl;
-import com.vaticle.typedb.client.query.QueryManagerImpl;
+import com.vaticle.typedb.driver.api.TypeDBOptions;
+import com.vaticle.typedb.driver.api.TypeDBTransaction;
+import com.vaticle.typedb.driver.api.concept.ConceptManager;
+import com.vaticle.typedb.driver.api.logic.LogicManager;
+import com.vaticle.typedb.driver.api.query.QueryManager;
+import com.vaticle.typedb.driver.common.NativeObject;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.vaticle.typedb.driver.concept.ConceptManagerImpl;
+import com.vaticle.typedb.driver.logic.LogicManagerImpl;
+import com.vaticle.typedb.driver.query.QueryManagerImpl;
 
 import java.util.function.Consumer;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
-import static com.vaticle.typedb.client.jni.typedb_client.transaction_commit;
-import static com.vaticle.typedb.client.jni.typedb_client.transaction_force_close;
-import static com.vaticle.typedb.client.jni.typedb_client.transaction_is_open;
-import static com.vaticle.typedb.client.jni.typedb_client.transaction_new;
-import static com.vaticle.typedb.client.jni.typedb_client.transaction_on_close;
-import static com.vaticle.typedb.client.jni.typedb_client.transaction_rollback;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.TRANSACTION_CLOSED;
+import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_commit;
+import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_force_close;
+import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_is_open;
+import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_new;
+import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_on_close;
+import static com.vaticle.typedb.driver.jni.typedb_driver.transaction_rollback;
 
-public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.client.jni.Transaction> implements TypeDBTransaction {
+public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.driver.jni.Transaction> implements TypeDBTransaction {
     private final TypeDBTransaction.Type type;
     private final TypeDBOptions options;
 
@@ -60,11 +60,11 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.clien
         queryManager = new QueryManagerImpl(nativeObject);
     }
 
-    private static com.vaticle.typedb.client.jni.Transaction newNative(TypeDBSessionImpl session, Type type, TypeDBOptions options) {
+    private static com.vaticle.typedb.driver.jni.Transaction newNative(TypeDBSessionImpl session, Type type, TypeDBOptions options) {
         try {
             return transaction_new(session.nativeObject, type.nativeObject, options.nativeObject);
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 
@@ -101,28 +101,28 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.clien
 
     @Override
     public void onClose(Consumer<Throwable> function) {
-        if (!nativeObject.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (!nativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         transaction_on_close(nativeObject, new TransactionOnClose(function).released());
     }
 
     @Override
     public void commit() {
-        if (!nativeObject.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (!nativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         try {
             // NOTE: .released() relinquishes ownership of the native object to the Rust side
             transaction_commit(nativeObject.released());
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 
     @Override
     public void rollback() {
-        if (!nativeObject.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+        if (!nativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         try {
             transaction_rollback(nativeObject);
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 
@@ -133,7 +133,7 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.clien
         }
     }
 
-    static class TransactionOnClose extends com.vaticle.typedb.client.jni.TransactionCallbackDirector {
+    static class TransactionOnClose extends com.vaticle.typedb.driver.jni.TransactionCallbackDirector {
         private final Consumer<Throwable> function;
 
         public TransactionOnClose(Consumer<Throwable> function) {
@@ -141,7 +141,7 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.clien
         }
 
         @Override
-        public void callback(com.vaticle.typedb.client.jni.Error e) {
+        public void callback(com.vaticle.typedb.driver.jni.Error e) {
             function.accept(e);
         }
     }

@@ -28,7 +28,7 @@ typedb_behaviour_java_test(
     srcs = [
         "InsertTest.java",
     ],
-    test_class = "com.vaticle.typedb.client.test.behaviour.typeql.language.insert.InsertTest",
+    test_class = "com.vaticle.typedb.driver.test.behaviour.typeql.language.insert.InsertTest",
     data = [
         "@vaticle_typedb_behaviour//typeql/language:insert.feature",
     ],

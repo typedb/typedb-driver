@@ -21,7 +21,7 @@
 
 use std::ffi::c_char;
 
-use typedb_client::{
+use typedb_driver::{
     concept::{Annotation, Concept},
     transaction::concept::api::{AttributeAPI, RelationAPI},
     Transaction,

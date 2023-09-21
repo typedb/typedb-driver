@@ -23,7 +23,7 @@ from __future__ import annotations
 
 from typing import Iterator, Optional, Union, TYPE_CHECKING
 
-from typedb.native_client_wrapper import relation_type_create, relation_type_set_supertype, \
+from typedb.native_driver_wrapper import relation_type_create, relation_type_set_supertype, \
     relation_type_get_relates_for_role_label, relation_type_get_relates, relation_type_get_relates_overridden, \
     relation_type_set_relates, relation_type_unset_relates, relation_type_get_supertype, relation_type_get_supertypes, \
     relation_type_get_subtypes, relation_type_get_instances, concept_iterator_next

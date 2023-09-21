@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.common.collection;
+package com.vaticle.typedb.driver.common.collection;
 
 import java.nio.ByteBuffer;
 import java.util.UUID;

@@ -22,17 +22,17 @@
 use std::path::PathBuf;
 
 use futures::TryFutureExt;
-use typedb_client::{
+use typedb_driver::{
     Connection, Credential, Database, DatabaseManager, Session, SessionType::Schema, TransactionType::Write,
 };
 
 pub const TEST_DATABASE: &str = "test";
 
-pub fn new_core_connection() -> typedb_client::Result<Connection> {
+pub fn new_core_connection() -> typedb_driver::Result<Connection> {
     Connection::new_plaintext("0.0.0.0:1729")
 }
 
-pub fn new_enterprise_connection() -> typedb_client::Result<Connection> {
+pub fn new_enterprise_connection() -> typedb_driver::Result<Connection> {
     Connection::new_encrypted(
         &["localhost:11729", "localhost:21729", "localhost:31729"],
         Credential::with_tls(
@@ -46,7 +46,7 @@ pub fn new_enterprise_connection() -> typedb_client::Result<Connection> {
     )
 }
 
-pub async fn create_test_database_with_schema(connection: Connection, schema: &str) -> typedb_client::Result {
+pub async fn create_test_database_with_schema(connection: Connection, schema: &str) -> typedb_driver::Result {
     let databases = DatabaseManager::new(connection);
     if databases.contains(TEST_DATABASE).await? {
         databases.get(TEST_DATABASE).and_then(Database::delete).await?;

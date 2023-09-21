@@ -23,7 +23,7 @@ from __future__ import annotations
 
 from typing import Iterator, Optional, TYPE_CHECKING
 
-from typedb.native_client_wrapper import entity_type_create, entity_type_get_subtypes, entity_type_get_instances, \
+from typedb.native_driver_wrapper import entity_type_create, entity_type_get_subtypes, entity_type_get_instances, \
     entity_type_get_supertypes, entity_type_get_supertype, entity_type_set_supertype, concept_iterator_next
 
 from typedb.api.concept.type.entity_type import EntityType

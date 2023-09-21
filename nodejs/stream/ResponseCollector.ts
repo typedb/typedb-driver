@@ -20,7 +20,7 @@
  */
 
 import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {TypeDBDriverError} from "../common/errors/TypeDBDriverError";
 import {BlockingQueue} from "../common/util/BlockingQueue";
 
 export class ResponseCollector<T> {
@@ -52,7 +52,7 @@ export class ResponseCollector<T> {
 
 export namespace ResponseCollector {
 
-    import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
+    import TRANSACTION_CLOSED = ErrorMessage.Driver.TRANSACTION_CLOSED;
     import ILLEGAL_STATE = ErrorMessage.Internal.ILLEGAL_STATE;
 
     export class ResponseQueue<T> {
@@ -67,11 +67,11 @@ export namespace ResponseCollector {
             if (element.isValue()) return (element as Value<T>).value;
             else if (element.isDone()) {
                 if ((element as Done).hasError()) {
-                    throw new TypeDBClientError((element as Done).error);
+                    throw new TypeDBDriverError((element as Done).error);
                 } else {
-                    throw new TypeDBClientError(TRANSACTION_CLOSED);
+                    throw new TypeDBDriverError(TRANSACTION_CLOSED);
                 }
-            } else throw new TypeDBClientError(ILLEGAL_STATE);
+            } else throw new TypeDBDriverError(ILLEGAL_STATE);
         }
 
         put(element: T): void {

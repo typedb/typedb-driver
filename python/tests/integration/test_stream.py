@@ -22,7 +22,7 @@
 import unittest
 from unittest import TestCase
 
-from typedb.client import *
+from typedb.driver import *
 
 TYPEDB = "typedb"
 SCHEMA = SessionType.SCHEMA
@@ -34,23 +34,23 @@ WRITE = TransactionType.WRITE
 class TestStream(TestCase):
 
     def setUp(self):
-        with TypeDB.core_client(TypeDB.DEFAULT_ADDRESS) as client:
-            if TYPEDB not in [db.name for db in client.databases.all()]:
-                client.databases.create(TYPEDB)
+        with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver:
+            if TYPEDB not in [db.name for db in driver.databases.all()]:
+                driver.databases.create(TYPEDB)
 
     def test_multiple_done_response_handling(self):
-        with TypeDB.core_client(TypeDB.DEFAULT_ADDRESS) as client:
-            with client.session(TYPEDB, SCHEMA) as session, session.transaction(WRITE) as tx:
+        with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver:
+            with driver.session(TYPEDB, SCHEMA) as session, session.transaction(WRITE) as tx:
                 for i in range(51):
                     tx.query.define(f"define person sub entity, owns name{i}; name{i} sub attribute, value string;")
                 tx.commit()
             # With these options (the default in TypeDB at time of writing), the server may respond with:
-            # 50 answers -> CONTINUE -> 1 answer [compensating for latency] -> DONE. The client will respond to
+            # 50 answers -> CONTINUE -> 1 answer [compensating for latency] -> DONE. The driver will respond to
             # CONTINUE with STREAM to keep iterating, and the server responds to STREAM with a 2nd DONE message.
-            # This is expected and should be handled correctly (ie: ignored) by the client.
+            # This is expected and should be handled correctly (ie: ignored) by the driver.
             tx_options = TypeDBOptions(prefetch=True, prefetch_size=50)
             for i in range(50):
-                with client.session(TYPEDB, DATA) as session, session.transaction(READ, tx_options) as tx:
+                with driver.session(TYPEDB, DATA) as session, session.transaction(READ, tx_options) as tx:
                     person_type = tx.concepts.get_entity_type("person")
                     _attrs = list(person_type.get_owns(tx, annotations={Annotation.key()}))
                     next(tx.query.match("match $x sub thing; limit 1;"))

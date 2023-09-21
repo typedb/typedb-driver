@@ -21,7 +21,7 @@
 
 use std::ffi::c_char;
 
-use typedb_client::{Database, Options, Session, SessionType};
+use typedb_driver::{Database, Options, Session, SessionType};
 
 use super::{
     error::{try_release, unwrap_void},

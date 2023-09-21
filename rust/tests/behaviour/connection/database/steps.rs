@@ -27,7 +27,7 @@ use futures::{
     stream, StreamExt, TryFutureExt,
 };
 use tokio::time::sleep;
-use typedb_client::Database;
+use typedb_driver::Database;
 
 use crate::{
     assert_with_timeout,

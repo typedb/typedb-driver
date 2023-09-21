@@ -28,7 +28,7 @@ import {RoleType} from "../../api/concept/type/RoleType";
 import {ThingType} from "../../api/concept/type/ThingType";
 import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {TypeDBDriverError} from "../../common/errors/TypeDBDriverError";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {Stream} from "../../common/util/Stream";
 import {
@@ -57,7 +57,7 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
 
     protected constructor(iid: string, inferred: boolean) {
         super();
-        if (!iid) throw new TypeDBClientError(ErrorMessage.Concept.MISSING_IID);
+        if (!iid) throw new TypeDBDriverError(ErrorMessage.Concept.MISSING_IID);
         this._iid = iid;
         this._inferred = inferred;
     }
@@ -180,6 +180,6 @@ export namespace ThingImpl {
         if (proto.has_entity) return EntityImpl.ofEntityProto(proto.entity);
         else if (proto.has_relation) return RelationImpl.ofRelationProto(proto.relation);
         else if (proto.has_attribute) return AttributeImpl.ofAttributeProto(proto.attribute);
-        else throw new TypeDBClientError(BAD_ENCODING.message(proto));
+        else throw new TypeDBDriverError(BAD_ENCODING.message(proto));
     }
 }

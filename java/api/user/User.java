@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.user;
+package com.vaticle.typedb.driver.api.user;
 
 import javax.annotation.CheckReturnValue;
 import java.util.Optional;

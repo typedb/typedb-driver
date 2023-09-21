@@ -21,7 +21,7 @@
 
 use std::fmt;
 
-use typedb_client::{Options, Session, Transaction, TransactionType};
+use typedb_driver::{Options, Session, Transaction, TransactionType};
 
 pub struct SessionTracker {
     session: Session,
@@ -51,7 +51,7 @@ impl SessionTracker {
         &self.session
     }
 
-    pub async fn open_transaction(&mut self, transaction_type: TransactionType) -> typedb_client::Result {
+    pub async fn open_transaction(&mut self, transaction_type: TransactionType) -> typedb_driver::Result {
         let options = match transaction_type {
             TransactionType::Write => Options::new(),
             TransactionType::Read => Options::new().infer(true),

@@ -31,7 +31,7 @@ if TYPE_CHECKING:
     from typedb.api.user.user import UserManager, User
 
 
-class TypeDBClient(ABC):
+class TypeDBDriver(ABC):
 
     @abstractmethod
     def is_open(self) -> bool:

@@ -24,20 +24,20 @@ import {TypeDB, TypeDBCredential, TypeDBOptions} from "../../../dist";
 import {
     afterBase,
     beforeBase,
-    client,
-    createDefaultClient,
-    setClientFn,
-    setDefaultClientFn,
+    driver,
+    createDefaultDriver,
+    setDriverFn,
+    setDefaultDriverFn,
     setSessionOptions,
     setTransactionOptions
 } from "./ConnectionStepsBase";
 
 BeforeAll(async () => {
-    setDefaultClientFn(async () =>
-        TypeDB.enterpriseClient("127.0.0.1:11729", new TypeDBCredential("admin", "password", process.env.ROOT_CA))
+    setDefaultDriverFn(async () =>
+        TypeDB.enterpriseDriver("127.0.0.1:11729", new TypeDBCredential("admin", "password", process.env.ROOT_CA))
     )
-    setClientFn(async (username, password) => {
-        return TypeDB.enterpriseClient("127.0.0.1:11729", new TypeDBCredential(username, password, process.env.ROOT_CA))
+    setDriverFn(async (username, password) => {
+        return TypeDB.enterpriseDriver("127.0.0.1:11729", new TypeDBCredential(username, password, process.env.ROOT_CA))
     });
     setSessionOptions(new TypeDBOptions({"infer": true}));
     setTransactionOptions(new TypeDBOptions({"infer": true}));
@@ -55,16 +55,16 @@ After(async () => {
 
 async function clearDB() {
     // TODO: reset the database through the TypeDB runner once it exists
-    await createDefaultClient();
-    const databases = await client.databases.all();
+    await createDefaultDriver();
+    const databases = await driver.databases.all();
     for (const db of databases) {
         await db.delete();
     }
-    const users = await client.users.all();
+    const users = await driver.users.all();
     for (const user of users) {
         if (user.username != "admin") {
-            await client.users.delete(user.username);
+            await driver.users.delete(user.username);
         }
     }
-    await client.close();
+    await driver.close();
 }

@@ -167,7 +167,7 @@ function dataTableToTransactionTypes(transactionTypeTable: DataTable): Transacti
                 typeArray.push(TransactionType.READ);
                 break;
             default:
-                throw "Behaviour asked for unrecognised Transaction Type. This is a problem with the feature file, not the client or server."
+                throw "Behaviour asked for unrecognised Transaction Type. This is a problem with the feature file, not the driver or server."
         }
     }
     return typeArray;

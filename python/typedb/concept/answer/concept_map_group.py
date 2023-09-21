@@ -23,12 +23,12 @@ from __future__ import annotations
 
 from typing import Iterator, TYPE_CHECKING
 
-from typedb.native_client_wrapper import concept_map_group_get_owner, concept_map_group_get_concept_maps, \
+from typedb.native_driver_wrapper import concept_map_group_get_owner, concept_map_group_get_concept_maps, \
     concept_map_iterator_next, concept_map_group_to_string, concept_map_group_equals, \
     ConceptMapGroup as NativeConceptMapGroup
 
 from typedb.api.answer.concept_map_group import ConceptMapGroup
-from typedb.common.exception import TypeDBClientExceptionExt, ILLEGAL_STATE, NULL_NATIVE_OBJECT
+from typedb.common.exception import TypeDBDriverExceptionExt, ILLEGAL_STATE, NULL_NATIVE_OBJECT
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.concept import concept_factory
@@ -43,12 +43,12 @@ class _ConceptMapGroup(ConceptMapGroup, NativeWrapper[NativeConceptMapGroup]):
 
     def __init__(self, concept_map_group: NativeConceptMapGroup):
         if not concept_map_group:
-            raise TypeDBClientExceptionExt(NULL_NATIVE_OBJECT)
+            raise TypeDBDriverExceptionExt(NULL_NATIVE_OBJECT)
         super().__init__(concept_map_group)
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBClientExceptionExt:
-        return TypeDBClientExceptionExt.of(ILLEGAL_STATE)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
+        return TypeDBDriverExceptionExt.of(ILLEGAL_STATE)
 
     def owner(self) -> Concept:
         return concept_factory.wrap_concept(concept_map_group_get_owner(self.native_object))

@@ -21,4 +21,4 @@
 
 --extra-index-url https://repo.vaticle.com/repository/pypi-snapshot/simple
 
-typedb-client==CLIENT_PYTHON_VERSION_MARKER
+typedb-driver==CLIENT_PYTHON_VERSION_MARKER

@@ -19,14 +19,14 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.query;
+package com.vaticle.typedb.driver.api.query;
 
-import com.vaticle.typedb.client.api.TypeDBOptions;
-import com.vaticle.typedb.client.api.answer.ConceptMap;
-import com.vaticle.typedb.client.api.answer.ConceptMapGroup;
-import com.vaticle.typedb.client.api.answer.Numeric;
-import com.vaticle.typedb.client.api.answer.NumericGroup;
-import com.vaticle.typedb.client.api.logic.Explanation;
+import com.vaticle.typedb.driver.api.TypeDBOptions;
+import com.vaticle.typedb.driver.api.answer.ConceptMap;
+import com.vaticle.typedb.driver.api.answer.ConceptMapGroup;
+import com.vaticle.typedb.driver.api.answer.Numeric;
+import com.vaticle.typedb.driver.api.answer.NumericGroup;
+import com.vaticle.typedb.driver.api.logic.Explanation;
 import com.vaticle.typeql.lang.query.TypeQLDefine;
 import com.vaticle.typeql.lang.query.TypeQLDelete;
 import com.vaticle.typeql.lang.query.TypeQLInsert;

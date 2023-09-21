@@ -19,27 +19,27 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.test.behaviour.concept.type.thingtype;
+package com.vaticle.typedb.driver.test.behaviour.concept.type.thingtype;
 
-import com.vaticle.typedb.client.api.concept.Concept;
-import com.vaticle.typedb.client.api.concept.type.AttributeType;
-import com.vaticle.typedb.client.api.concept.type.EntityType;
-import com.vaticle.typedb.client.api.concept.type.RelationType;
-import com.vaticle.typedb.client.api.concept.type.RoleType;
-import com.vaticle.typedb.client.api.concept.type.ThingType;
-import com.vaticle.typedb.client.api.concept.type.ThingType.Annotation;
-import com.vaticle.typedb.client.api.concept.type.Type;
-import com.vaticle.typedb.client.common.Label;
+import com.vaticle.typedb.driver.api.concept.Concept;
+import com.vaticle.typedb.driver.api.concept.type.AttributeType;
+import com.vaticle.typedb.driver.api.concept.type.EntityType;
+import com.vaticle.typedb.driver.api.concept.type.RelationType;
+import com.vaticle.typedb.driver.api.concept.type.RoleType;
+import com.vaticle.typedb.driver.api.concept.type.ThingType;
+import com.vaticle.typedb.driver.api.concept.type.ThingType.Annotation;
+import com.vaticle.typedb.driver.api.concept.type.Type;
+import com.vaticle.typedb.driver.common.Label;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.util.List;
 import java.util.Set;
 
-import static com.vaticle.typedb.client.api.concept.Concept.Transitivity.EXPLICIT;
-import static com.vaticle.typedb.client.test.behaviour.config.Parameters.RootLabel;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
-import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
+import static com.vaticle.typedb.driver.api.concept.Concept.Transitivity.EXPLICIT;
+import static com.vaticle.typedb.driver.test.behaviour.config.Parameters.RootLabel;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
+import static com.vaticle.typedb.driver.test.behaviour.util.Util.assertThrows;
 import static com.vaticle.typedb.common.collection.Collections.set;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toSet;

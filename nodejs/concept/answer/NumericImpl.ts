@@ -23,7 +23,7 @@
 import {Numeric as NumericProto} from "typedb-protocol/proto/answer";
 import {Numeric} from "../../api/answer/Numeric";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {TypeDBDriverError} from "../../common/errors/TypeDBDriverError";
 import ILLEGAL_CAST = ErrorMessage.Internal.ILLEGAL_CAST;
 import BAD_ANSWER_TYPE = ErrorMessage.Query.BAD_ANSWER_TYPE;
 
@@ -37,7 +37,7 @@ export class NumericImpl implements Numeric {
 
     asNumber(): number {
         if (this.isNumber()) return this._value;
-        else throw new TypeDBClientError(ILLEGAL_CAST.message("NaN", "number"));
+        else throw new TypeDBDriverError(ILLEGAL_CAST.message("NaN", "number"));
     }
 
     isNaN(): boolean {
@@ -58,6 +58,6 @@ export namespace NumericImpl {
         if (numericProto.has_nan) return new NumericImpl(null);
         else if (numericProto.has_double_value) return new NumericImpl(numericProto.double_value);
         else if (numericProto.has_long_value) return new NumericImpl(numericProto.long_value);
-        else throw new TypeDBClientError(BAD_ANSWER_TYPE.message(numericProto));
+        else throw new TypeDBDriverError(BAD_ANSWER_TYPE.message(numericProto));
     }
 }

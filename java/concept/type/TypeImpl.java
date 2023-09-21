@@ -19,11 +19,11 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.concept.type;
+package com.vaticle.typedb.driver.concept.type;
 
-import com.vaticle.typedb.client.api.TypeDBTransaction;
-import com.vaticle.typedb.client.api.concept.type.Type;
-import com.vaticle.typedb.client.concept.ConceptImpl;
+import com.vaticle.typedb.driver.api.TypeDBTransaction;
+import com.vaticle.typedb.driver.api.concept.type.Type;
+import com.vaticle.typedb.driver.concept.ConceptImpl;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 public abstract class TypeImpl extends ConceptImpl implements Type {
     private int hash = 0;
 
-    TypeImpl(com.vaticle.typedb.client.jni.Concept concept) {
+    TypeImpl(com.vaticle.typedb.driver.jni.Concept concept) {
         super(concept);
     }
 

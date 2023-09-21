@@ -24,8 +24,8 @@
 %include "various.i"
 %include "enums.swg"
 
-#define PACKAGE_ "com.vaticle.typedb.client.jni"
-#define PACKAGE_PATH_ "com/vaticle/typedb/client/jni"
+#define PACKAGE_ "com.vaticle.typedb.driver.jni"
+#define PACKAGE_PATH_ "com/vaticle/typedb/driver/jni"
 
 %typemap(javacode) SWIGTYPE %{
     public $javaclassname released() {
@@ -76,7 +76,7 @@
     protected transient boolean swigCMemOwn;
 
     protected $javaclassname(long cPtr, boolean cMemoryOwn) {
-        super((typedb_clientJNI.error_code(cPtr, null) + " " + typedb_clientJNI.error_message(cPtr, null)).strip());
+        super((typedb_driverJNI.error_code(cPtr, null) + " " + typedb_driverJNI.error_message(cPtr, null)).strip());
         swigCMemOwn = cMemoryOwn;
         swigCPtr = cPtr;
     }
@@ -102,7 +102,7 @@ import static java.util.Spliterators.spliteratorUnknownSize;
     private Type next = null;
 
     private Type fetchNext() {
-        next = typedb_client.function_prefix ## _iterator_next(this);
+        next = typedb_driver.function_prefix ## _iterator_next(this);
         return next;
     }
 

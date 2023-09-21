@@ -25,7 +25,7 @@ use chrono::{NaiveDate, NaiveDateTime};
 use futures::StreamExt;
 use serial_test::serial;
 use tokio::sync::mpsc;
-use typedb_client::{
+use typedb_driver::{
     answer::Numeric,
     concept::{Attribute, Concept, Value},
     error::ConnectionError,
@@ -43,7 +43,7 @@ test_for_each_arg! {
         enterprise => common::new_enterprise_connection().unwrap(),
     }
 
-    async fn basic(connection: Connection) -> typedb_client::Result {
+    async fn basic(connection: Connection) -> typedb_driver::Result {
         common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
         let databases = DatabaseManager::new(connection);
         assert!(databases.contains(common::TEST_DATABASE).await?);
@@ -59,7 +59,7 @@ test_for_each_arg! {
         Ok(())
     }
 
-    async fn query_error(connection: Connection) -> typedb_client::Result {
+    async fn query_error(connection: Connection) -> typedb_driver::Result {
         common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
         let databases = DatabaseManager::new(connection);
 
@@ -73,7 +73,7 @@ test_for_each_arg! {
         Ok(())
     }
 
-    async fn concurrent_transactions(connection: Connection) -> typedb_client::Result {
+    async fn concurrent_transactions(connection: Connection) -> typedb_driver::Result {
         common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
         let databases = DatabaseManager::new(connection);
 
@@ -106,7 +106,7 @@ test_for_each_arg! {
         Ok(())
     }
 
-    async fn query_options(connection: Connection) -> typedb_client::Result {
+    async fn query_options(connection: Connection) -> typedb_driver::Result {
         let schema = r#"define
             person sub entity,
                 owns name,
@@ -135,7 +135,7 @@ test_for_each_arg! {
         Ok(())
     }
 
-    async fn query_coverage(connection: Connection) -> typedb_client::Result {
+    async fn query_coverage(connection: Connection) -> typedb_driver::Result {
         let schema = r#"define
             person sub entity,
                 owns name,
@@ -188,7 +188,7 @@ test_for_each_arg! {
         Ok(())
     }
 
-    async fn many_concept_types(connection: Connection) -> typedb_client::Result {
+    async fn many_concept_types(connection: Connection) -> typedb_driver::Result {
         let schema = r#"define
             person sub entity,
                 owns name,
@@ -232,7 +232,7 @@ test_for_each_arg! {
         Ok(())
     }
 
-    async fn force_close_connection(connection: Connection) -> typedb_client::Result {
+    async fn force_close_connection(connection: Connection) -> typedb_driver::Result {
         common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
         let databases = DatabaseManager::new(connection.clone());
 
@@ -261,7 +261,7 @@ test_for_each_arg! {
         Ok(())
     }
 
-    async fn force_close_session(connection: Connection) -> typedb_client::Result {
+    async fn force_close_session(connection: Connection) -> typedb_driver::Result {
         common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
         let databases = DatabaseManager::new(connection.clone());
 
@@ -285,7 +285,7 @@ test_for_each_arg! {
     }
 
     #[ignore]
-    async fn streaming_perf(connection: Connection) -> typedb_client::Result {
+    async fn streaming_perf(connection: Connection) -> typedb_driver::Result {
         for i in 0..5 {
             let schema = r#"define
                 person sub entity, owns name, owns age;

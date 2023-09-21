@@ -1,4 +1,4 @@
-Documentation: http://docs.vaticle.com/docs/client-api/java
+Documentation: http://docs.vaticle.com/docs/driver-api/java
 
 ## Distribution
 
@@ -16,7 +16,7 @@ Available through https://repo.vaticle.com
 <dependencies>
     <dependency>
         <groupid>com.vaticle.typedb</groupid>
-        <artifactid>typedb-client</artifactid>
+        <artifactid>typedb-driver</artifactid>
         <version>{version}</version>
     </dependency>
 </dependencies>
@@ -24,21 +24,21 @@ Available through https://repo.vaticle.com
 
 ### Python driver
 
-PyPI package: https://pypi.org/project/typedb-client
-Documentation: https://docs.vaticle.com/docs/client-api/python
+PyPI package: https://pypi.org/project/typedb-driver
+Documentation: https://docs.vaticle.com/docs/driver-api/python
 
 Available through https://pypi.org
 
 ```
-pip install typedb-client=={version}
+pip install typedb-driver=={version}
 ```
 
 ### NodeJS driver
 
-NPM package: https://www.npmjs.com/package/typedb-client
+NPM package: https://www.npmjs.com/package/typedb-driver
 
 ```
-npm install typedb-client@{version}
+npm install typedb-driver@{version}
 ```
 
 { release notes }

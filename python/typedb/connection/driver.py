@@ -23,12 +23,12 @@ from __future__ import annotations
 
 from typing import Optional, TYPE_CHECKING
 
-from typedb.native_client_wrapper import connection_open_plaintext, connection_open_encrypted, connection_is_open, \
+from typedb.native_driver_wrapper import connection_open_plaintext, connection_open_encrypted, connection_is_open, \
     connection_force_close, Connection as NativeConnection
 
-from typedb.api.connection.client import TypeDBClient
+from typedb.api.connection.driver import TypeDBDriver
 from typedb.api.connection.options import TypeDBOptions
-from typedb.common.exception import TypeDBClientExceptionExt, CLIENT_CLOSED
+from typedb.common.exception import TypeDBDriverExceptionExt, CLIENT_CLOSED
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.connection.database_manager import _DatabaseManager
 from typedb.connection.session import _Session
@@ -40,7 +40,7 @@ if TYPE_CHECKING:
     from typedb.api.user.user import UserManager, User
 
 
-class _Client(TypeDBClient, NativeWrapper[NativeConnection]):
+class _Driver(TypeDBDriver, NativeWrapper[NativeConnection]):
 
     def __init__(self, addresses: list[str], credential: Optional[TypeDBCredential] = None):
         if credential:
@@ -52,8 +52,8 @@ class _Client(TypeDBClient, NativeWrapper[NativeConnection]):
         self._user_manager = _UserManager(native_connection)
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBClientExceptionExt:
-        return TypeDBClientExceptionExt.of(CLIENT_CLOSED)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
+        return TypeDBDriverExceptionExt.of(CLIENT_CLOSED)
 
     @property
     def _native_connection(self) -> NativeConnection:

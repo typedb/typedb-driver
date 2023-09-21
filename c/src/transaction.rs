@@ -19,7 +19,7 @@
  * under the License.
  */
 
-use typedb_client::{Error, Options, Session, Transaction, TransactionType};
+use typedb_driver::{Error, Options, Session, Transaction, TransactionType};
 
 use super::{
     error::{try_release, unwrap_void},

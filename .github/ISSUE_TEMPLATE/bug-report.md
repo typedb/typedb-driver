@@ -14,7 +14,7 @@ Please replace every line in curly brackets ( { like this } ) with appropriate a
 
 1. OS (where TypeDB server runs): { e.g. Mac OS 10, Windows 10, Ubuntu 16.4, etc. }
 2. TypeDB version (and platform): { e.g. TypeDB Core 1.4, or TypeDB KGMS 1.4.3 on Google Cloud }
-3. TypeDB client-nodejs version: { e.g. client-nodejs 1.3 }
+3. TypeDB driver-nodejs version: { e.g. driver-nodejs 1.3 }
 4. Node.js version: { e.g. 6.5 }
 5. Other environment details:
 

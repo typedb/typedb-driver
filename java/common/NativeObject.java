@@ -19,10 +19,10 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.common;
+package com.vaticle.typedb.driver.common;
 
-import com.vaticle.typedb.client.common.exception.ErrorMessage;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.driver.common.exception.ErrorMessage;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
 public abstract class NativeObject<T> {
     static {
@@ -32,7 +32,7 @@ public abstract class NativeObject<T> {
     public final T nativeObject;
 
     protected NativeObject(T nativeObject) {
-        if (nativeObject == null) throw new TypeDBClientException(ErrorMessage.Internal.NULL_NATIVE_VALUE);
+        if (nativeObject == null) throw new TypeDBDriverException(ErrorMessage.Internal.NULL_NATIVE_VALUE);
         this.nativeObject = nativeObject;
     }
 }

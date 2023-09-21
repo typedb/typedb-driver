@@ -34,7 +34,7 @@ ts_project(
     srcs = ["TypeQLSteps.ts"],
     tsconfig = behaviour_test_ts_config(),
     deps = [
-        "//nodejs:client-nodejs",
+        "//nodejs:driver-nodejs",
 
         "//nodejs:node_modules/@cucumber/cucumber",
 

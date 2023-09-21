@@ -23,14 +23,14 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Iterator, Optional
 
-from typedb.native_client_wrapper import query_match, concept_map_iterator_next, query_match_group, \
+from typedb.native_driver_wrapper import query_match, concept_map_iterator_next, query_match_group, \
     concept_map_group_iterator_next, query_insert, query_update, query_explain, explanation_iterator_next, \
     query_match_aggregate, numeric_group_iterator_next, query_match_group_aggregate, query_delete, query_define, \
     query_undefine, Transaction as NativeTransaction
 
 from typedb.api.connection.options import TypeDBOptions
 from typedb.api.query.query_manager import QueryManager
-from typedb.common.exception import TypeDBClientExceptionExt, MISSING_QUERY, TRANSACTION_CLOSED
+from typedb.common.exception import TypeDBDriverExceptionExt, MISSING_QUERY, TRANSACTION_CLOSED
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.concept.answer.concept_map import _ConceptMap
@@ -53,8 +53,8 @@ class _QueryManager(QueryManager, NativeWrapper[NativeTransaction]):
         super().__init__(transaction)
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBClientExceptionExt:
-        return TypeDBClientExceptionExt.of(TRANSACTION_CLOSED)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
+        return TypeDBDriverExceptionExt.of(TRANSACTION_CLOSED)
 
     @property
     def _native_transaction(self) -> NativeTransaction:
@@ -62,7 +62,7 @@ class _QueryManager(QueryManager, NativeWrapper[NativeTransaction]):
 
     def match(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[ConceptMap]:
         if not query:
-            raise TypeDBClientExceptionExt(MISSING_QUERY)
+            raise TypeDBDriverExceptionExt(MISSING_QUERY)
         if not options:
             options = TypeDBOptions()
         return map(_ConceptMap, IteratorWrapper(query_match(self._native_transaction, query, options.native_object),
@@ -70,14 +70,14 @@ class _QueryManager(QueryManager, NativeWrapper[NativeTransaction]):
 
     def match_aggregate(self, query: str, options: Optional[TypeDBOptions] = None) -> Numeric:
         if not query:
-            raise TypeDBClientExceptionExt(MISSING_QUERY)
+            raise TypeDBDriverExceptionExt(MISSING_QUERY)
         if not options:
             options = TypeDBOptions()
         return _Numeric(query_match_aggregate(self._native_transaction, query, options.native_object))
 
     def match_group(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[ConceptMapGroup]:
         if not query:
-            raise TypeDBClientExceptionExt(MISSING_QUERY)
+            raise TypeDBDriverExceptionExt(MISSING_QUERY)
         if not options:
             options = TypeDBOptions()
         return map(_ConceptMapGroup, IteratorWrapper(query_match_group(self._native_transaction, query,
@@ -86,7 +86,7 @@ class _QueryManager(QueryManager, NativeWrapper[NativeTransaction]):
 
     def match_group_aggregate(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[NumericGroup]:
         if not query:
-            raise TypeDBClientExceptionExt(MISSING_QUERY)
+            raise TypeDBDriverExceptionExt(MISSING_QUERY)
         if not options:
             options = TypeDBOptions()
         return map(_NumericGroup, IteratorWrapper(query_match_group_aggregate(self._native_transaction, query,
@@ -95,7 +95,7 @@ class _QueryManager(QueryManager, NativeWrapper[NativeTransaction]):
 
     def insert(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[ConceptMap]:
         if not query:
-            raise TypeDBClientExceptionExt(MISSING_QUERY)
+            raise TypeDBDriverExceptionExt(MISSING_QUERY)
         if not options:
             options = TypeDBOptions()
         return map(_ConceptMap, IteratorWrapper(query_insert(self._native_transaction, query, options.native_object),
@@ -103,14 +103,14 @@ class _QueryManager(QueryManager, NativeWrapper[NativeTransaction]):
 
     def delete(self, query: str, options: Optional[TypeDBOptions] = None) -> None:
         if not query:
-            raise TypeDBClientExceptionExt(MISSING_QUERY)
+            raise TypeDBDriverExceptionExt(MISSING_QUERY)
         if not options:
             options = TypeDBOptions()
         return query_delete(self._native_transaction, query, options.native_object)
 
     def update(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[ConceptMap]:
         if not query:
-            raise TypeDBClientExceptionExt(MISSING_QUERY)
+            raise TypeDBDriverExceptionExt(MISSING_QUERY)
         if not options:
             options = TypeDBOptions()
         return map(_ConceptMap, IteratorWrapper(query_update(self._native_transaction, query, options.native_object),
@@ -118,14 +118,14 @@ class _QueryManager(QueryManager, NativeWrapper[NativeTransaction]):
 
     def define(self, query: str, options: TypeDBOptions = None) -> None:
         if not query:
-            raise TypeDBClientExceptionExt(MISSING_QUERY)
+            raise TypeDBDriverExceptionExt(MISSING_QUERY)
         if not options:
             options = TypeDBOptions()
         return query_define(self._native_transaction, query, options.native_object)
 
     def undefine(self, query: str, options: TypeDBOptions = None) -> None:
         if not query:
-            raise TypeDBClientExceptionExt(MISSING_QUERY)
+            raise TypeDBDriverExceptionExt(MISSING_QUERY)
         if not options:
             options = TypeDBOptions()
         return query_undefine(self._native_transaction, query, options.native_object)

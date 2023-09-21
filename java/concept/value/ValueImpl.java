@@ -19,39 +19,39 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.concept.value;
+package com.vaticle.typedb.driver.concept.value;
 
-import com.vaticle.typedb.client.api.concept.value.Value;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.client.concept.ConceptImpl;
+import com.vaticle.typedb.driver.api.concept.value.Value;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.vaticle.typedb.driver.concept.ConceptImpl;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_VALUE;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
-import static com.vaticle.typedb.client.jni.typedb_client.value_get_boolean;
-import static com.vaticle.typedb.client.jni.typedb_client.value_get_date_time_as_millis;
-import static com.vaticle.typedb.client.jni.typedb_client.value_get_double;
-import static com.vaticle.typedb.client.jni.typedb_client.value_get_long;
-import static com.vaticle.typedb.client.jni.typedb_client.value_get_string;
-import static com.vaticle.typedb.client.jni.typedb_client.value_is_boolean;
-import static com.vaticle.typedb.client.jni.typedb_client.value_is_date_time;
-import static com.vaticle.typedb.client.jni.typedb_client.value_is_double;
-import static com.vaticle.typedb.client.jni.typedb_client.value_is_long;
-import static com.vaticle.typedb.client.jni.typedb_client.value_is_string;
-import static com.vaticle.typedb.client.jni.typedb_client.value_new_boolean;
-import static com.vaticle.typedb.client.jni.typedb_client.value_new_date_time_from_millis;
-import static com.vaticle.typedb.client.jni.typedb_client.value_new_double;
-import static com.vaticle.typedb.client.jni.typedb_client.value_new_long;
-import static com.vaticle.typedb.client.jni.typedb_client.value_new_string;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Concept.MISSING_VALUE;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_boolean;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_date_time_as_millis;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_double;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_long;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_string;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_is_boolean;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_is_date_time;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_is_double;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_is_long;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_is_string;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_new_boolean;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_new_date_time_from_millis;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_new_double;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_new_long;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_new_string;
 
 public class ValueImpl extends ConceptImpl implements Value {
     private int hash = 0;
 
-    public ValueImpl(com.vaticle.typedb.client.jni.Concept concept) {
+    public ValueImpl(com.vaticle.typedb.driver.jni.Concept concept) {
         super(concept);
     }
 
@@ -68,12 +68,12 @@ public class ValueImpl extends ConceptImpl implements Value {
     }
 
     public static Value of(String value) {
-        if (value == null) throw new TypeDBClientException(MISSING_VALUE);
+        if (value == null) throw new TypeDBDriverException(MISSING_VALUE);
         return new ValueImpl(value_new_string(value));
     }
 
     public static Value of(LocalDateTime value) {
-        if (value == null) throw new TypeDBClientException(MISSING_VALUE);
+        if (value == null) throw new TypeDBDriverException(MISSING_VALUE);
         return new ValueImpl(value_new_date_time_from_millis(value.atZone(ZoneOffset.UTC).toInstant().toEpochMilli()));
     }
 
@@ -84,7 +84,7 @@ public class ValueImpl extends ConceptImpl implements Value {
         else if (isDouble()) return Type.DOUBLE;
         else if (isString()) return Type.STRING;
         else if (isDateTime()) return Type.DATETIME;
-        else throw new TypeDBClientException(ILLEGAL_STATE);
+        else throw new TypeDBDriverException(ILLEGAL_STATE);
     }
 
     @Override
@@ -144,7 +144,7 @@ public class ValueImpl extends ConceptImpl implements Value {
         else if (isDouble()) return Double.toString(asDouble());
         else if (isString()) return asString();
         else if (isDateTime()) return asDateTime().toString();
-        throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
+        throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
     }
 
     @Override

@@ -54,7 +54,7 @@ typedb_java_test(
     server_linux_artifact = "@vaticle_typedb_enterprise_artifact_linux//file",
     server_mac_artifact = "@vaticle_typedb_enterprise_artifact_mac//file",
     server_windows_artifact = "@vaticle_typedb_enterprise_artifact_windows//file",
-    test_class = "com.vaticle.typedb.client.test.behaviour.connection.user.UserTestEnterprise",
+    test_class = "com.vaticle.typedb.driver.test.behaviour.connection.user.UserTestEnterprise",
     runtime_deps = [
         ":steps",
         "//java/test/behaviour/config:parameters",

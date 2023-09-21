@@ -19,26 +19,26 @@
  * under the License.
  */
 
-const { TypeDB, SessionType, TransactionType } = require("typedb-client");
+const { TypeDB, SessionType, TransactionType } = require("typedb-driver");
 
 jest.setTimeout(15000);
 
-let client;
+let driver;
 
 beforeEach(async () => {
-    client = await TypeDB.coreClient();
-    await client.databases.create("typedb");
+    driver = await TypeDB.coreDriver();
+    await driver.databases.create("typedb");
 })
 
 afterEach(async () => {
-    const db = await client.databases.get("typedb");
+    const db = await driver.databases.get("typedb");
     await db.delete();
-    await client.close();
+    await driver.close();
 });
 
-describe("Basic TypeDBClient Tests", () => {
-    test("define with concepts client", async () => {
-        let session = await client.session("typedb", SessionType.SCHEMA);
+describe("Basic TypeDBDriver Tests", () => {
+    test("define with concepts driver", async () => {
+        let session = await driver.session("typedb", SessionType.SCHEMA);
         let tx = await session.transaction(TransactionType.WRITE);
         await tx.concepts.putEntityType("lion");
         await tx.commit();
@@ -46,7 +46,7 @@ describe("Basic TypeDBClient Tests", () => {
     });
 
     test("define by running query", async () => {
-        let session = await client.session("typedb", SessionType.SCHEMA);
+        let session = await driver.session("typedb", SessionType.SCHEMA);
         let tx = await session.transaction(TransactionType.WRITE);
         await tx.query.define("define person sub entity, owns name; name sub attribute, value string;");
         await tx.commit();
@@ -54,7 +54,7 @@ describe("Basic TypeDBClient Tests", () => {
     });
 
     test("match", async () => {
-        let session = await client.session("typedb", SessionType.DATA);
+        let session = await driver.session("typedb", SessionType.DATA);
         let tx = await session.transaction(TransactionType.WRITE);
         await tx.query.match("match $x sub thing;");
         await tx.close();

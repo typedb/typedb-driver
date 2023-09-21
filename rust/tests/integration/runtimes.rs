@@ -21,7 +21,7 @@
 
 use futures::StreamExt;
 use serial_test::serial;
-use typedb_client::{DatabaseManager, Session, SessionType::Data, TransactionType::Write};
+use typedb_driver::{DatabaseManager, Session, SessionType::Data, TransactionType::Write};
 
 use super::common;
 
@@ -41,7 +41,7 @@ fn basic_async_std() {
         transaction.commit().await?;
         assert_eq!(results.len(), 5);
         assert!(results.into_iter().all(|res| res.is_ok()));
-        Ok::<(), typedb_client::Error>(())
+        Ok::<(), typedb_driver::Error>(())
     })
     .unwrap();
 }
@@ -62,7 +62,7 @@ fn basic_smol() {
         transaction.commit().await?;
         assert_eq!(results.len(), 5);
         assert!(results.into_iter().all(|res| res.is_ok()));
-        Ok::<(), typedb_client::Error>(())
+        Ok::<(), typedb_driver::Error>(())
     })
     .unwrap();
 }
@@ -83,7 +83,7 @@ fn basic_futures() {
         transaction.commit().await?;
         assert_eq!(results.len(), 5);
         assert!(results.into_iter().all(|res| res.is_ok()));
-        Ok::<(), typedb_client::Error>(())
+        Ok::<(), typedb_driver::Error>(())
     })
     .unwrap();
 }

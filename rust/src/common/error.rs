@@ -29,7 +29,7 @@ use super::{address::Address, RequestID};
 error_messages! { ConnectionError
     code: "CXN", type: "Connection Error",
     RPCMethodUnavailable(String) =
-        1: "The server does not support this method, please check the client-server compatibility:\n'{}'.",
+        1: "The server does not support this method, please check the driver-server compatibility:\n'{}'.",
     ConnectionIsClosed() =
         2: "The connection has been closed and no further operation is allowed.",
     SessionIsClosed() =

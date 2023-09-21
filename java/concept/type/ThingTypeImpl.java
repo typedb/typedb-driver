@@ -19,56 +19,56 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.concept.type;
+package com.vaticle.typedb.driver.concept.type;
 
-import com.vaticle.typedb.client.api.TypeDBTransaction;
-import com.vaticle.typedb.client.api.concept.type.AttributeType;
-import com.vaticle.typedb.client.api.concept.type.RoleType;
-import com.vaticle.typedb.client.api.concept.type.ThingType;
-import com.vaticle.typedb.client.api.concept.value.Value;
-import com.vaticle.typedb.client.common.Label;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.client.concept.thing.ThingImpl;
+import com.vaticle.typedb.driver.api.TypeDBTransaction;
+import com.vaticle.typedb.driver.api.concept.type.AttributeType;
+import com.vaticle.typedb.driver.api.concept.type.RoleType;
+import com.vaticle.typedb.driver.api.concept.type.ThingType;
+import com.vaticle.typedb.driver.api.concept.value.Value;
+import com.vaticle.typedb.driver.common.Label;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.vaticle.typedb.driver.concept.thing.ThingImpl;
 import com.vaticle.typeql.lang.common.TypeQLToken;
 
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
-import static com.vaticle.typedb.client.jni.typedb_client.concept_is_attribute_type;
-import static com.vaticle.typedb.client.jni.typedb_client.concept_is_entity_type;
-import static com.vaticle.typedb.client.jni.typedb_client.concept_is_relation_type;
-import static com.vaticle.typedb.client.jni.typedb_client.concept_is_root_thing_type;
-import static com.vaticle.typedb.client.jni.typedb_client.thing_type_delete;
-import static com.vaticle.typedb.client.jni.typedb_client.thing_type_get_label;
-import static com.vaticle.typedb.client.jni.typedb_client.thing_type_get_owns;
-import static com.vaticle.typedb.client.jni.typedb_client.thing_type_get_owns_overridden;
-import static com.vaticle.typedb.client.jni.typedb_client.thing_type_get_plays;
-import static com.vaticle.typedb.client.jni.typedb_client.thing_type_get_plays_overridden;
-import static com.vaticle.typedb.client.jni.typedb_client.thing_type_get_syntax;
-import static com.vaticle.typedb.client.jni.typedb_client.thing_type_is_abstract;
-import static com.vaticle.typedb.client.jni.typedb_client.thing_type_is_root;
-import static com.vaticle.typedb.client.jni.typedb_client.thing_type_is_deleted;
-import static com.vaticle.typedb.client.jni.typedb_client.thing_type_set_abstract;
-import static com.vaticle.typedb.client.jni.typedb_client.thing_type_set_label;
-import static com.vaticle.typedb.client.jni.typedb_client.thing_type_set_owns;
-import static com.vaticle.typedb.client.jni.typedb_client.thing_type_set_plays;
-import static com.vaticle.typedb.client.jni.typedb_client.thing_type_unset_abstract;
-import static com.vaticle.typedb.client.jni.typedb_client.thing_type_unset_owns;
-import static com.vaticle.typedb.client.jni.typedb_client.thing_type_unset_plays;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_is_attribute_type;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_is_entity_type;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_is_relation_type;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_is_root_thing_type;
+import static com.vaticle.typedb.driver.jni.typedb_driver.thing_type_delete;
+import static com.vaticle.typedb.driver.jni.typedb_driver.thing_type_get_label;
+import static com.vaticle.typedb.driver.jni.typedb_driver.thing_type_get_owns;
+import static com.vaticle.typedb.driver.jni.typedb_driver.thing_type_get_owns_overridden;
+import static com.vaticle.typedb.driver.jni.typedb_driver.thing_type_get_plays;
+import static com.vaticle.typedb.driver.jni.typedb_driver.thing_type_get_plays_overridden;
+import static com.vaticle.typedb.driver.jni.typedb_driver.thing_type_get_syntax;
+import static com.vaticle.typedb.driver.jni.typedb_driver.thing_type_is_abstract;
+import static com.vaticle.typedb.driver.jni.typedb_driver.thing_type_is_root;
+import static com.vaticle.typedb.driver.jni.typedb_driver.thing_type_is_deleted;
+import static com.vaticle.typedb.driver.jni.typedb_driver.thing_type_set_abstract;
+import static com.vaticle.typedb.driver.jni.typedb_driver.thing_type_set_label;
+import static com.vaticle.typedb.driver.jni.typedb_driver.thing_type_set_owns;
+import static com.vaticle.typedb.driver.jni.typedb_driver.thing_type_set_plays;
+import static com.vaticle.typedb.driver.jni.typedb_driver.thing_type_unset_abstract;
+import static com.vaticle.typedb.driver.jni.typedb_driver.thing_type_unset_owns;
+import static com.vaticle.typedb.driver.jni.typedb_driver.thing_type_unset_plays;
 import static java.util.Collections.emptySet;
 
 public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
-    ThingTypeImpl(com.vaticle.typedb.client.jni.Concept concept) {
+    ThingTypeImpl(com.vaticle.typedb.driver.jni.Concept concept) {
         super(concept);
     }
 
-    public static ThingTypeImpl of(com.vaticle.typedb.client.jni.Concept concept) {
+    public static ThingTypeImpl of(com.vaticle.typedb.driver.jni.Concept concept) {
         if (concept_is_entity_type(concept)) return new EntityTypeImpl(concept);
         else if (concept_is_relation_type(concept)) return new RelationTypeImpl(concept);
         else if (concept_is_attribute_type(concept)) return new AttributeTypeImpl(concept);
         else if (concept_is_root_thing_type(concept)) return new Root(concept);
-        throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
+        throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
     }
 
     @Override
@@ -157,8 +157,8 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
     @Override
     public final void setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType, Set<Annotation> annotations) {
-        com.vaticle.typedb.client.jni.Concept overriddenTypeNative = overriddenType != null ? ((AttributeTypeImpl) overriddenType).nativeObject : null;
-        com.vaticle.typedb.client.jni.Annotation[] annotationsArray = annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.client.jni.Annotation[]::new);
+        com.vaticle.typedb.driver.jni.Concept overriddenTypeNative = overriddenType != null ? ((AttributeTypeImpl) overriddenType).nativeObject : null;
+        com.vaticle.typedb.driver.jni.Annotation[] annotationsArray = annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.driver.jni.Annotation[]::new);
         thing_type_set_owns(nativeTransaction(transaction), nativeObject, ((AttributeTypeImpl) attributeType).nativeObject, overriddenTypeNative, annotationsArray);
     }
 
@@ -174,7 +174,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
     @Override
     public RoleTypeImpl getPlaysOverridden(TypeDBTransaction transaction, RoleType roleType) {
-        com.vaticle.typedb.client.jni.Concept res = thing_type_get_plays_overridden(nativeTransaction(transaction),
+        com.vaticle.typedb.driver.jni.Concept res = thing_type_get_plays_overridden(nativeTransaction(transaction),
                 nativeObject, ((RoleTypeImpl) roleType).nativeObject);
         if (res != null) return new RoleTypeImpl(res);
         else return null;
@@ -226,13 +226,13 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
     private Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, Value.Type valueType, Transitivity transitivity, Set<Annotation> annotations) {
         return thing_type_get_owns(nativeTransaction(transaction), nativeObject, valueType == null ? null : valueType.nativeObject, transitivity.nativeObject,
-                annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.client.jni.Annotation[]::new)
+                annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.driver.jni.Annotation[]::new)
         ).stream().map(AttributeTypeImpl::new);
     }
 
     @Override
     public AttributeTypeImpl getOwnsOverridden(TypeDBTransaction transaction, AttributeType attributeType) {
-        com.vaticle.typedb.client.jni.Concept res = thing_type_get_owns_overridden(nativeTransaction(transaction),
+        com.vaticle.typedb.driver.jni.Concept res = thing_type_get_owns_overridden(nativeTransaction(transaction),
                 nativeObject, ((AttributeTypeImpl) attributeType).nativeObject);
         if (res != null) return new AttributeTypeImpl(res);
         else return null;
@@ -255,7 +255,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     public static class Root extends ThingTypeImpl {
-        public Root(com.vaticle.typedb.client.jni.Concept concept) {
+        public Root(com.vaticle.typedb.driver.jni.Concept concept) {
             super(concept);
         }
 

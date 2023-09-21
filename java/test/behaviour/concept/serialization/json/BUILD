@@ -47,7 +47,7 @@ typedb_behaviour_java_test(
     srcs = [
         "JSONTest.java",
     ],
-    test_class = "com.vaticle.typedb.client.test.behaviour.concept.serialization.json.JSONTest",
+    test_class = "com.vaticle.typedb.driver.test.behaviour.concept.serialization.json.JSONTest",
     data = [
         "@vaticle_typedb_behaviour//concept/serialization:json.feature",
     ],

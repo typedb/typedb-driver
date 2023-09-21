@@ -23,7 +23,7 @@ from __future__ import annotations
 
 from typing import Iterator, Any, TYPE_CHECKING
 
-from typedb.native_client_wrapper import relation_get_type, relation_add_role_player, relation_remove_role_player, \
+from typedb.native_driver_wrapper import relation_get_type, relation_add_role_player, relation_remove_role_player, \
     relation_get_players_by_role_type, relation_get_role_players, role_player_get_role_type, \
     role_player_get_player, relation_get_relating, concept_iterator_next, role_player_iterator_next
 

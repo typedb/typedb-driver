@@ -38,7 +38,7 @@ typedb_behaviour_java_test(
     srcs = [
         "EntityTypeTest.java"
     ],
-    test_class = "com.vaticle.typedb.client.test.behaviour.concept.type.entitytype.EntityTypeTest",
+    test_class = "com.vaticle.typedb.driver.test.behaviour.concept.type.entitytype.EntityTypeTest",
     data = [
         "@vaticle_typedb_behaviour//concept/type:entitytype.feature",
     ],

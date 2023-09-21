@@ -22,7 +22,7 @@
 use std::{cell::RefCell, ffi::c_char, ptr::null_mut};
 
 use log::trace;
-use typedb_client::{Error, Result};
+use typedb_driver::{Error, Result};
 
 use super::memory::{free, release_optional, release_string};
 
@@ -73,7 +73,7 @@ pub(super) fn unwrap_void(result: Result) {
 }
 
 fn record_error(err: Error) {
-    trace!("Encountered error {err} in typedb-client-rust");
+    trace!("Encountered error {err} in typedb-driver-rust");
     LAST_ERROR.with(|prev| *prev.borrow_mut() = Some(err));
 }
 

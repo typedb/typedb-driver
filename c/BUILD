@@ -26,13 +26,13 @@ load("@vaticle_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 rust_static_library(
-    name = "typedb_client_clib",
+    name = "typedb_driver_clib",
     srcs = glob(["src/**/*.rs"]),
     aliases = {
-        "//rust:typedb_client_sync": "typedb_client",
+        "//rust:typedb_driver_sync": "typedb_driver",
     },
     deps = [
-        "//rust:typedb_client_sync",
+        "//rust:typedb_driver_sync",
 
         "@vaticle_typeql//rust:typeql_lang",
 
@@ -43,9 +43,9 @@ rust_static_library(
 )
 
 rust_cbindgen(
-    name = "typedb_client_clib_headers",
-    lib = ":typedb_client_clib",
-    header_name = "typedb_client.h",
+    name = "typedb_driver_clib_headers",
+    lib = ":typedb_driver_clib",
+    header_name = "typedb_driver.h",
     config = "cbindgen.toml",
 )
 
@@ -61,6 +61,6 @@ checkstyle_test(
 )
 
 rustfmt_test(
-    name = "client_rustfmt_test",
-    targets = ["typedb_client_clib"],
+    name = "driver_rustfmt_test",
+    targets = ["typedb_driver_clib"],
 )

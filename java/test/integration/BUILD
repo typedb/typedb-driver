@@ -23,15 +23,15 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_typedb_common//test:rules.bzl", "typedb_java_test")
 
 typedb_java_test(
-    name = "test-client-query",
-    srcs = ["ClientQueryTest.java"],
+    name = "test-driver-query",
+    srcs = ["DriverQueryTest.java"],
     server_linux_artifact = "@vaticle_typedb_artifact_linux//file",
     server_mac_artifact = "@vaticle_typedb_artifact_mac//file",
     server_windows_artifact = "@vaticle_typedb_artifact_windows//file",
-    test_class = "com.vaticle.typedb.client.test.integration.ClientQueryTest",
+    test_class = "com.vaticle.typedb.driver.test.integration.DriverQueryTest",
     deps = [
         # Internal dependencies
-        "//java:client-java",
+        "//java:driver-java",
         "//java/api",
 
         # External dependencies from @vaticle

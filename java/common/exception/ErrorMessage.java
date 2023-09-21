@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.common.exception;
+package com.vaticle.typedb.driver.common.exception;
 
 public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.ErrorMessage {
 
@@ -27,26 +27,26 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
         super(codePrefix, codeNumber, messagePrefix, messageBody);
     }
 
-    public static class Client extends ErrorMessage {
-        public static final Client CLIENT_CLOSED =
-                new Client(1, "The client has been closed and no further operation is allowed.");
-        public static final Client SESSION_CLOSED =
-                new Client(2, "The session has been closed and no further operation is allowed.");
-        public static final Client TRANSACTION_CLOSED =
-                new Client(3, "The transaction has been closed and no further operation is allowed.");
-        public static final Client TRANSACTION_CLOSED_WITH_ERRORS =
-                new Client(4, "The transaction has been closed with error(s): \n%s.");
-        public static final Client DATABASE_DELETED =
-                new Client(5, "The database has been deleted and no further operation is allowed.");
-        public static final Client POSITIVE_VALUE_REQUIRED =
-                new Client(6, "Value cannot be less than 1, was: '%d'.");
-        public static final Client MISSING_DB_NAME =
-                new Client(7, "Database name cannot be null.");
+    public static class Driver extends ErrorMessage {
+        public static final Driver CLIENT_CLOSED =
+                new Driver(1, "The driver has been closed and no further operation is allowed.");
+        public static final Driver SESSION_CLOSED =
+                new Driver(2, "The session has been closed and no further operation is allowed.");
+        public static final Driver TRANSACTION_CLOSED =
+                new Driver(3, "The transaction has been closed and no further operation is allowed.");
+        public static final Driver TRANSACTION_CLOSED_WITH_ERRORS =
+                new Driver(4, "The transaction has been closed with error(s): \n%s.");
+        public static final Driver DATABASE_DELETED =
+                new Driver(5, "The database has been deleted and no further operation is allowed.");
+        public static final Driver POSITIVE_VALUE_REQUIRED =
+                new Driver(6, "Value cannot be less than 1, was: '%d'.");
+        public static final Driver MISSING_DB_NAME =
+                new Driver(7, "Database name cannot be null.");
 
         private static final String codePrefix = "JCL";
-        private static final String messagePrefix = "Client Error";
+        private static final String messagePrefix = "Driver Error";
 
-        Client(int number, String message) {
+        Driver(int number, String message) {
             super(codePrefix, number, messagePrefix, message);
         }
     }

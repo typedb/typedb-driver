@@ -25,7 +25,7 @@ from typing import Callable
 
 from behave import *
 from hamcrest import *
-from typedb.client import *
+from typedb.driver import *
 
 from tests.behaviour.config.parameters import parse_transaction_type, parse_list, parse_bool
 from tests.behaviour.context import Context
@@ -40,7 +40,7 @@ def for_each_session_open_transaction_of_type(context: Context, transaction_type
         context.sessions_to_transactions[session] = transactions
 
 
-# TODO: this is implemented as open(s) in some clients - get rid of that, simplify them
+# TODO: this is implemented as open(s) in some drivers - get rid of that, simplify them
 @step("session opens transaction of type: {transaction_type}")
 @step("for each session, open transaction of type: {transaction_type}")
 def step_impl(context: Context, transaction_type: str):
@@ -61,7 +61,7 @@ def open_transactions_of_type_throws_exception(context: Context, transaction_typ
             try:
                 session.transaction(transaction_type)
                 assert False
-            except TypeDBClientException:
+            except TypeDBDriverException:
                 pass
 
 
@@ -122,13 +122,13 @@ def step_impl(context: Context):
     try:
         context.tx().commit()
         assert False
-    except TypeDBClientException:
+    except TypeDBDriverException:
         pass
 
 
 @step("transaction commits; throws exception containing \"{exception}\"")
 def step_impl(context: Context, exception: str):
-    assert_that(calling(context.tx().commit), raises(TypeDBClientException, exception))
+    assert_that(calling(context.tx().commit), raises(TypeDBDriverException, exception))
 
 
 @step("for each session, transaction commits")
@@ -147,7 +147,7 @@ def step_impl(context: Context):
             try:
                 transaction.commit()
                 assert False
-            except TypeDBClientException:
+            except TypeDBDriverException:
                 pass
 
 
@@ -176,7 +176,7 @@ def step_impl(context: Context):
     for_each_session_transaction_has_type(context, transaction_types)
 
 
-# TODO: this is overcomplicated in some clients (has/have, transaction(s))
+# TODO: this is overcomplicated in some drivers (has/have, transaction(s))
 @step("for each session, transaction has type: {transaction_type}")
 @step("session transaction has type: {transaction_type}")
 def step_impl(context: Context, transaction_type):
@@ -273,5 +273,5 @@ def step_impl(context: Context, exception: str):
             try:
                 transaction.query.define(context.text)
                 assert False
-            except TypeDBClientException as e:
+            except TypeDBDriverException as e:
                 assert_that(exception, is_in(str(e)))

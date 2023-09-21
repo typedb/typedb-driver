@@ -24,7 +24,7 @@ import {RoleType} from "../../api/concept/type/RoleType";
 import {ThingType} from "../../api/concept/type/ThingType";
 import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {TypeDBDriverError} from "../../common/errors/TypeDBDriverError";
 import {Label} from "../../common/Label";
 import {RequestBuilder} from "../../common/rpc/RequestBuilder";
 import {Stream} from "../../common/util/Stream";
@@ -283,6 +283,6 @@ export namespace ThingTypeImpl {
         else if (proto.has_relation_type) return RelationTypeImpl.ofRelationTypeProto(proto.relation_type);
         else if (proto.has_attribute_type) return AttributeTypeImpl.ofAttributeTypeProto(proto.attribute_type);
         else if (proto.has_thing_type_root) return ThingTypeImpl.Root.ofThingTypeRootProto(proto.thing_type_root);
-        else throw new TypeDBClientError(BAD_ENCODING.message(proto));
+        else throw new TypeDBDriverError(BAD_ENCODING.message(proto));
     }
 }

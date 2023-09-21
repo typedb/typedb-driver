@@ -21,7 +21,7 @@
 
 use cucumber::{gherkin::Step, given, then, when};
 use futures::TryStreamExt;
-use typedb_client::{
+use typedb_driver::{
     concept::{ScopedLabel, Transitivity},
     transaction::concept::api::{AttributeTypeAPI, RelationTypeAPI, ThingTypeAPI},
     Result as TypeDBResult,

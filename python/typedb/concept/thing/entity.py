@@ -23,7 +23,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from typedb.native_client_wrapper import entity_get_type
+from typedb.native_driver_wrapper import entity_get_type
 
 from typedb.api.concept.thing.entity import Entity
 from typedb.concept.concept_factory import wrap_entity_type

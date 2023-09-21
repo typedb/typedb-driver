@@ -27,7 +27,7 @@ use tokio::sync::mpsc::{unbounded_channel as unbounded_async, UnboundedSender};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tonic::{Response, Status, Streaming};
 use typedb_protocol::{
-    connection, database, database_manager, server_manager, session, transaction, type_db_client::TypeDbClient as GRPC,
+    connection, database, database_manager, server_manager, session, transaction, type_db_driver::TypeDbDriver as GRPC,
     user, user_manager,
 };
 
@@ -152,9 +152,9 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
     pub(super) async fn transaction(
         &mut self,
         open_req: transaction::Req,
-    ) -> Result<(UnboundedSender<transaction::Client>, Streaming<transaction::Server>)> {
+    ) -> Result<(UnboundedSender<transaction::Driver>, Streaming<transaction::Server>)> {
         self.call_with_auto_renew_token(|this| {
-            let transaction_req = transaction::Client { reqs: vec![open_req.clone()] };
+            let transaction_req = transaction::Driver { reqs: vec![open_req.clone()] };
             Box::pin(async {
                 let (sender, receiver) = unbounded_async();
                 sender.send(transaction_req)?;

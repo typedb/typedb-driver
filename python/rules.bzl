@@ -28,12 +28,12 @@ load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 def native_driver_versioned(python_versions):
     for version in python_versions:
         swig_python(
-            name = "native_client_python_wrapper" + version["suffix"],
-            shared_lib_name = "native_client_python" + version["suffix"],
-            import_name = "native_client_python",
-            lib = "//c:typedb_client_clib_headers",
-            interface = "//c:typedb_client.i",
-            includes = ["//c:swig/typedb_client_python.swg"],
+            name = "native_driver_python_wrapper" + version["suffix"],
+            shared_lib_name = "native_driver_python" + version["suffix"],
+            import_name = "native_driver_python",
+            lib = "//c:typedb_driver_clib_headers",
+            interface = "//c:typedb_driver.i",
+            includes = ["//c:swig/typedb_driver_python.swg"],
             enable_cxx = True,
             python_headers = version["python_headers"],
             libpython = version["libpython"],
@@ -41,33 +41,33 @@ def native_driver_versioned(python_versions):
         )
 
         native.genrule(
-            name = "native-client-wrapper" + version["suffix"],
-            outs = ["typedb/native_client_wrapper" + version["suffix"] + ".py"],
-            srcs = [":native_client_python_wrapper" + version["suffix"]],
+            name = "native-driver-wrapper" + version["suffix"],
+            outs = ["typedb/native_driver_wrapper" + version["suffix"] + ".py"],
+            srcs = [":native_driver_python_wrapper" + version["suffix"]],
             cmd = "cp $< $@",
             visibility = ["//visibility:public"]
         )
 
         py_native_lib_rename(
-            name = "native-client-binary" + version["suffix"],
-            out = "typedb/native_client_python" + version["suffix"],
-            src = ":native_client_python" + version["suffix"],
+            name = "native-driver-binary" + version["suffix"],
+            out = "typedb/native_driver_python" + version["suffix"],
+            src = ":native_driver_python" + version["suffix"],
             visibility = ["//visibility:public"]
         )
 
         native.py_library(
-            name = "client_python" + version["suffix"],
-            srcs = native.glob(["typedb/**/*.py"]) + [":native-client-wrapper" + version["suffix"]],
-            data = [":native-client-binary" + version["suffix"]],
-            deps = [":native_client_python_wrapper" + version["suffix"]],
+            name = "driver_python" + version["suffix"],
+            srcs = native.glob(["typedb/**/*.py"]) + [":native-driver-wrapper" + version["suffix"]],
+            data = [":native-driver-binary" + version["suffix"]],
+            deps = [":native_driver_python_wrapper" + version["suffix"]],
             imports = ["."],
             visibility = ["//visibility:public"]
         )
 
         assemble_pip(
             name = "assemble-pip" + version["suffix"],
-            target = ":client_python" + version["suffix"],
-            package_name = "typedb-client",
+            target = ":driver_python" + version["suffix"],
+            package_name = "typedb-driver",
             suffix = version["suffix"],
             classifiers = [
                 "Programming Language :: Python",
@@ -85,7 +85,7 @@ def native_driver_versioned(python_versions):
             license = "Apache-2.0",
             requirements_file = "//python:requirements.txt",
             keywords = ["typedb", "database", "graph", "knowledgebase", "knowledge-engineering"],
-            description = "TypeDB Client for Python",
+            description = "TypeDB Driver for Python",
             long_description_file = "//python:README.md",
         )
 

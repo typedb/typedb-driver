@@ -19,12 +19,12 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.test.behaviour.connection;
+package com.vaticle.typedb.driver.test.behaviour.connection;
 
-import com.vaticle.typedb.client.api.TypeDBClient;
-import com.vaticle.typedb.client.api.TypeDBOptions;
-import com.vaticle.typedb.client.api.TypeDBSession;
-import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.driver.api.TypeDBDriver;
+import com.vaticle.typedb.driver.api.TypeDBOptions;
+import com.vaticle.typedb.driver.api.TypeDBSession;
+import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
 
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public abstract class ConnectionStepsBase {
     public static int THREAD_POOL_SIZE = 32;
     public static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
-    public static TypeDBClient client;
+    public static TypeDBDriver driver;
     public static List<TypeDBSession> sessions = new ArrayList<>();
     public static List<CompletableFuture<TypeDBSession>> sessionsParallel = new ArrayList<>();
     public static Map<TypeDBSession, List<TypeDBTransaction>> sessionsToTransactions = new HashMap<>();
@@ -113,25 +113,25 @@ public abstract class ConnectionStepsBase {
         System.out.println("ConnectionSteps.after");
     }
 
-    abstract TypeDBClient createTypeDBClient(String address);
+    abstract TypeDBDriver createTypeDBDriver(String address);
 
     abstract TypeDBOptions createOptions();
 
     abstract void connection_opens_with_default_authentication();
 
     void connection_closes() {
-        client.close();
-        client = null;
+        driver.close();
+        driver = null;
     }
 
     void connection_has_been_opened() {
-        assertNotNull(client);
-        assertTrue(client.isOpen());
+        assertNotNull(driver);
+        assertTrue(driver.isOpen());
     }
 
     void connection_does_not_have_any_database() {
-        assertNotNull(client);
-        assertTrue(client.isOpen());
-        assertTrue(client.databases().all().isEmpty());
+        assertNotNull(driver);
+        assertTrue(driver.isOpen());
+        assertTrue(driver.databases().all().isEmpty());
     }
 }

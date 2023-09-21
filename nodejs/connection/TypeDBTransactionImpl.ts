@@ -26,7 +26,7 @@ import {TransactionType, TypeDBTransaction} from "../api/connection/TypeDBTransa
 import {LogicManager} from "../api/logic/LogicManager";
 import {QueryManager} from "../api/query/QueryManager";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {TypeDBDriverError} from "../common/errors/TypeDBDriverError";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {Stream} from "../common/util/Stream";
 import {ConceptManagerImpl} from "../concept/ConceptManagerImpl";
@@ -34,8 +34,8 @@ import {LogicManagerImpl} from "../logic/LogicManagerImpl";
 import {QueryManagerImpl} from "../query/QueryManagerImpl";
 import {BidirectionalStream} from "../stream/BidirectionalStream";
 import {TypeDBSessionImpl} from "./TypeDBSessionImpl";
-import TRANSACTION_CLOSED = ErrorMessage.Client.TRANSACTION_CLOSED;
-import TRANSACTION_CLOSED_WITH_ERRORS = ErrorMessage.Client.TRANSACTION_CLOSED_WITH_ERRORS;
+import TRANSACTION_CLOSED = ErrorMessage.Driver.TRANSACTION_CLOSED;
+import TRANSACTION_CLOSED_WITH_ERRORS = ErrorMessage.Driver.TRANSACTION_CLOSED_WITH_ERRORS;
 import ILLEGAL_STATE = ErrorMessage.Internal.ILLEGAL_STATE;
 
 export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
@@ -54,8 +54,8 @@ export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
     }
 
     public async open(): Promise<void> {
-        const rpcClient = this._session.stub;
-        this._bidirectionalStream = new BidirectionalStream(rpcClient, this._session.requestTransmitter);
+        const rpcDriver = this._session.stub;
+        this._bidirectionalStream = new BidirectionalStream(rpcDriver, this._session.requestTransmitter);
         await this._bidirectionalStream.open();
         this._conceptManager = new ConceptManagerImpl(this);
         this._logicManager = new LogicManagerImpl(this);
@@ -119,9 +119,9 @@ export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
     }
 
     private throwTransactionClosed(): void {
-        if (this.isOpen()) throw new TypeDBClientError(ILLEGAL_STATE);
+        if (this.isOpen()) throw new TypeDBDriverError(ILLEGAL_STATE);
         const error = this._bidirectionalStream.getError();
-        if (!error) throw new TypeDBClientError(TRANSACTION_CLOSED);
-        else throw new TypeDBClientError(TRANSACTION_CLOSED_WITH_ERRORS.message(error));
+        if (!error) throw new TypeDBDriverError(TRANSACTION_CLOSED);
+        else throw new TypeDBDriverError(TRANSACTION_CLOSED_WITH_ERRORS.message(error));
     }
 }

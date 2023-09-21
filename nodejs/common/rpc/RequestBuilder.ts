@@ -162,7 +162,7 @@ import {
     DatabaseTypeSchemaReq
 } from "typedb-protocol/proto/database";
 import {
-    TransactionClient,
+    TransactionDriver,
     TransactionCommitReq,
     TransactionOpenReq,
     TransactionReq,
@@ -174,7 +174,7 @@ import {ServerManagerAllReq} from "typedb-protocol/proto/server";
 import {ConnectionOpenReq} from "typedb-protocol/proto/connection";
 import {SessionCloseReq, SessionOpenReq, SessionPulseReq, SessionType} from "typedb-protocol/proto/session";
 import {ErrorMessage} from "../errors/ErrorMessage";
-import {TypeDBClientError} from "../errors/TypeDBClientError";
+import {TypeDBDriverError} from "../errors/TypeDBDriverError";
 import BAD_VALUE_TYPE = ErrorMessage.Concept.BAD_VALUE_TYPE;
 
 
@@ -279,8 +279,8 @@ export namespace RequestBuilder {
     }
 
     export namespace Transaction {
-        export function clientReq(reqs: TransactionReq[]) {
-            return new TransactionClient({reqs: reqs});
+        export function driverReq(reqs: TransactionReq[]) {
+            return new TransactionDriver({reqs: reqs});
         }
 
         export function openReq(sessionId: string, type: TransactionType, options: Options, latencyMillis: number) {
@@ -1049,7 +1049,7 @@ export namespace RequestBuilder {
                 case ValueType.DOUBLE: return new ValueProto({double: value as number});
                 case ValueType.STRING: return new ValueProto({string: value as string});
                 case ValueType.DATETIME: return new ValueProto({date_time: (value as Date).getTime()});
-                default: throw new TypeDBClientError(BAD_VALUE_TYPE.message());
+                default: throw new TypeDBDriverError(BAD_VALUE_TYPE.message());
             }
         }
     }

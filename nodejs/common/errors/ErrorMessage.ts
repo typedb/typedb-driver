@@ -66,34 +66,34 @@ export abstract class ErrorMessage {
 }
 
 export namespace ErrorMessage {
-    export class Client extends ErrorMessage {
+    export class Driver extends ErrorMessage {
         constructor(code: number, message: (args?: Stringable[]) => string) {
-            super("CLI", code, "Client Error", message)
+            super("CLI", code, "Driver Error", message)
         }
     }
 
-    export namespace Client {
-        export const RPC_METHOD_UNAVAILABLE = new Client(1, (args: Stringable[]) => `The server does not support this method. Please ensure that the TypeDB Client and TypeDB Server versions are compatible:\n'${args[0]}'.`);
-        export const CLIENT_NOT_OPEN = new Client(2, (args: Stringable[]) => `The client is not open.`);
-        export const SESSION_ID_EXISTS = new Client(3, (args: Stringable[]) => `The newly opened session id '${args[0]}' already exists`);
-        export const SESSION_CLOSED = new Client(4, () => `Session is closed.`);
-        export const TRANSACTION_CLOSED = new Client(5, () => `The transaction has been closed and no further operation is allowed.`);
-        export const TRANSACTION_CLOSED_WITH_ERRORS = new Client(6, (args: Stringable[]) => `The transaction has been closed with error(s): \n${args[0]}.`)
-        export const UNABLE_TO_CONNECT = new Client(7, () => `Unable to connect to TypeDB server.`);
-        export const NEGATIVE_VALUE_NOT_ALLOWED = new Client(8, (args: Stringable[]) => `Value cannot be less than 1, was: '${args[0]}'.`);
-        export const MISSING_DB_NAME = new Client(9, () => `Database name cannot be null.`);
-        export const DATABASE_DOES_NOT_EXIST = new Client(10, (args: Stringable[]) => `The database '${args[0]}' does not exist.`);
-        export const UNKNOWN_STREAM_STATE = new Client(11, (args: Stringable[]) => `RPC transaction stream response '${args[0]}' is unknown.`);
-        export const MISSING_RESPONSE = new Client(12, (args: Stringable[]) => `The required field 'res' of type '${args[0]}' was not set.`);
-        export const UNKNOWN_REQUEST_ID = new Client(13, (args: Stringable[]) => `Received a response with unknown request id '${args[0]}'.`);
-        export const ENTPERPRISE_NO_PRIMARY_REPLICA_YET = new Client(14, (args: Stringable[]) => `No replica has been marked as the primary replica for latest known term '${args[0]}'.`);
-        export const ENTPERPRISE_UNABLE_TO_CONNECT = new Client(15, (args: Stringable[]) => `Unable to connect to TypeDB Enterprise. Attempted connecting to the enterprise nodes, but none are available: '${args[1]}'.`);
-        export const ENTPERPRISE_REPLICA_NOT_PRIMARY = new Client(16, () => `The replica is not the primary replica.`);
-        export const ENTPERPRISE_ALL_NODES_FAILED = new Client(17, (args: Stringable[]) => `Attempted connecting to all enterprise nodes, but the following errors occurred: \n'${args[0]}'`);
-        export const ENTPERPRISE_USER_DOES_NOT_EXIST = new Client(18, (args: Stringable[]) => `The user '${args[0]}' does not exist.`);
-        export const ENTPERPRISE_TOKEN_CREDENTIAL_INVALID = new Client(19, (args: Stringable[]) => `Invalid token credential.`);
-        export const ENTERPRISE_INVALID_ROOT_CA_PATH = new Client(20, (args: Stringable[]) => `The provided Root CA path '${args[0]}' does not exist`);
-        export const UNRECOGNISED_SESSION_TYPE = new Client(21, (args: Stringable[]) => `Session type '${args[1]}' was not recognised.`);
+    export namespace Driver {
+        export const RPC_METHOD_UNAVAILABLE = new Driver(1, (args: Stringable[]) => `The server does not support this method. Please ensure that the TypeDB Driver and TypeDB Server versions are compatible:\n'${args[0]}'.`);
+        export const CLIENT_NOT_OPEN = new Driver(2, (args: Stringable[]) => `The driver is not open.`);
+        export const SESSION_ID_EXISTS = new Driver(3, (args: Stringable[]) => `The newly opened session id '${args[0]}' already exists`);
+        export const SESSION_CLOSED = new Driver(4, () => `Session is closed.`);
+        export const TRANSACTION_CLOSED = new Driver(5, () => `The transaction has been closed and no further operation is allowed.`);
+        export const TRANSACTION_CLOSED_WITH_ERRORS = new Driver(6, (args: Stringable[]) => `The transaction has been closed with error(s): \n${args[0]}.`)
+        export const UNABLE_TO_CONNECT = new Driver(7, () => `Unable to connect to TypeDB server.`);
+        export const NEGATIVE_VALUE_NOT_ALLOWED = new Driver(8, (args: Stringable[]) => `Value cannot be less than 1, was: '${args[0]}'.`);
+        export const MISSING_DB_NAME = new Driver(9, () => `Database name cannot be null.`);
+        export const DATABASE_DOES_NOT_EXIST = new Driver(10, (args: Stringable[]) => `The database '${args[0]}' does not exist.`);
+        export const UNKNOWN_STREAM_STATE = new Driver(11, (args: Stringable[]) => `RPC transaction stream response '${args[0]}' is unknown.`);
+        export const MISSING_RESPONSE = new Driver(12, (args: Stringable[]) => `The required field 'res' of type '${args[0]}' was not set.`);
+        export const UNKNOWN_REQUEST_ID = new Driver(13, (args: Stringable[]) => `Received a response with unknown request id '${args[0]}'.`);
+        export const ENTPERPRISE_NO_PRIMARY_REPLICA_YET = new Driver(14, (args: Stringable[]) => `No replica has been marked as the primary replica for latest known term '${args[0]}'.`);
+        export const ENTPERPRISE_UNABLE_TO_CONNECT = new Driver(15, (args: Stringable[]) => `Unable to connect to TypeDB Enterprise. Attempted connecting to the enterprise nodes, but none are available: '${args[1]}'.`);
+        export const ENTPERPRISE_REPLICA_NOT_PRIMARY = new Driver(16, () => `The replica is not the primary replica.`);
+        export const ENTPERPRISE_ALL_NODES_FAILED = new Driver(17, (args: Stringable[]) => `Attempted connecting to all enterprise nodes, but the following errors occurred: \n'${args[0]}'`);
+        export const ENTPERPRISE_USER_DOES_NOT_EXIST = new Driver(18, (args: Stringable[]) => `The user '${args[0]}' does not exist.`);
+        export const ENTPERPRISE_TOKEN_CREDENTIAL_INVALID = new Driver(19, (args: Stringable[]) => `Invalid token credential.`);
+        export const ENTERPRISE_INVALID_ROOT_CA_PATH = new Driver(20, (args: Stringable[]) => `The provided Root CA path '${args[0]}' does not exist`);
+        export const UNRECOGNISED_SESSION_TYPE = new Driver(21, (args: Stringable[]) => `Session type '${args[1]}' was not recognised.`);
     }
 
     export class Concept extends ErrorMessage {

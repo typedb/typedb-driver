@@ -37,13 +37,13 @@ typedb_behaviour_py_test_enterprise(
         "//python/tests/behaviour/connection:steps",
     ],
     deps = [
-        "//python:client_python",
+        "//python:driver_python",
         "//python/tests/behaviour/config:parameters",
         "//python/tests/behaviour:context",
         "//python/tests/behaviour/util:util",
         "//python/tests/behaviour/background",
     ],
-    data = ["//python:native-client-binary-link", "//python:native-client-wrapper-link"],
+    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
     size = "small",
 )
 

@@ -31,7 +31,7 @@ powershell -Command "Move-Item -Path bazel-typedb-driver-java\external\vaticle_t
 powershell -Command "Move-Item -Path typedb-server-windows-* -Destination typedb-server-windows"
 START /B "" typedb-server-windows\typedb server
 
-python3 -m pip install --extra-index-url https://repo.vaticle.com/repository/pypi-snapshot/simple typedb-client==0.0.0+%VER%
+python3 -m pip install --extra-index-url https://repo.vaticle.com/repository/pypi-snapshot/simple typedb-driver==0.0.0+%VER%
 cd python/tests/deployment
 python3 -m unittest test
 SET IS_ERROR=%ERRORLEVEL%

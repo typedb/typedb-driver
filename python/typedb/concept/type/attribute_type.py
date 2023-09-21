@@ -24,7 +24,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Optional, Iterator, TYPE_CHECKING, Union, Any
 
-from typedb.native_client_wrapper import attribute_type_set_supertype, attribute_type_get_supertype, \
+from typedb.native_driver_wrapper import attribute_type_set_supertype, attribute_type_get_supertype, \
     attribute_type_get_supertypes, attribute_type_get_subtypes, attribute_type_get_subtypes_with_value_type, \
     attribute_type_get_instances, attribute_type_get_owners, attribute_type_put, attribute_type_get, \
     attribute_type_get_regex, attribute_type_set_regex, attribute_type_unset_regex, attribute_type_get_value_type, \

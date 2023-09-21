@@ -111,7 +111,7 @@ commands:
           bazel run //tool/test:typedb-extractor -- typedb-all
           ./typedb-all/typedb server &
           python3 -m pip install wheel
-          python3 -m pip install --extra-index-url https://repo.vaticle.com/repository/pypi-snapshot/simple typedb-client==0.0.0+$(git rev-parse HEAD)
+          python3 -m pip install --extra-index-url https://repo.vaticle.com/repository/pypi-snapshot/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
           cd python/tests/deployment/ && python3 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           kill $(jps | awk '/TypeDBServer/ {print $1}')
           exit $TEST_SUCCESS
@@ -346,8 +346,8 @@ jobs:
           for f in bazel-bin/python/*.whl; do
               fname=$(basename $f)
               base=${fname%.*}
-              pyversion=${base#typedb-client}
-              cp $f ~/dist/typedb_client-py${pyversion}-none-linux_aarch64.whl
+              pyversion=${base#typedb-driver}
+              cp $f ~/dist/typedb_driver-py${pyversion}-none-linux_aarch64.whl
           done
       - persist_to_workspace:
           root: ~/dist
@@ -363,8 +363,8 @@ jobs:
           for f in bazel-bin/python/*.whl; do
               fname=$(basename $f)
               base=${fname%.*}
-              pyversion=${base#typedb-client}
-              cp $f ~/dist/typedb_client-py${pyversion}-none-linux_x86_64.whl
+              pyversion=${base#typedb-driver}
+              cp $f ~/dist/typedb_driver-py${pyversion}-none-linux_x86_64.whl
           done
       - persist_to_workspace:
           root: ~/dist
@@ -379,8 +379,8 @@ jobs:
           for f in bazel-bin/python/*.whl; do
               fname=$(basename $f)
               base=${fname%.*}
-              pyversion=${base#typedb-client}
-              cp $f ~/dist/typedb_client-py${pyversion}-none-macosx_11_0_arm64.whl
+              pyversion=${base#typedb-driver}
+              cp $f ~/dist/typedb_driver-py${pyversion}-none-macosx_11_0_arm64.whl
           done
       - persist_to_workspace:
           root: ~/dist
@@ -395,8 +395,8 @@ jobs:
           for f in bazel-bin/python/*.whl; do
               fname=$(basename $f)
               base=${fname%.*}
-              pyversion=${base#typedb-client}
-              cp $f ~/dist/typedb_client-py${pyversion}-none-macosx_11_0_x86_64.whl
+              pyversion=${base#typedb-driver}
+              cp $f ~/dist/typedb_driver-py${pyversion}-none-macosx_11_0_x86_64.whl
           done
       - persist_to_workspace:
           root: ~/dist
@@ -498,7 +498,7 @@ jobs:
           arch: arm64
       - run: |
           mkdir -p ~/dist
-          cp bazel-bin/java/com.vaticle.typedb-typedb-client-jni-linux-aarch64.jar ~/dist/typedb-driver-jni-linux-aarch64.jar
+          cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-linux-aarch64.jar ~/dist/typedb-driver-jni-linux-aarch64.jar
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]
@@ -510,7 +510,7 @@ jobs:
           arch: amd64
       - run: |
           mkdir -p ~/dist
-          cp bazel-bin/java/com.vaticle.typedb-typedb-client-jni-linux-x86_64.jar ~/dist/typedb-driver-jni-linux-x86_64.jar
+          cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-linux-x86_64.jar ~/dist/typedb-driver-jni-linux-x86_64.jar
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]
@@ -521,7 +521,7 @@ jobs:
       - deploy-maven-jni-release-mac
       - run: |
           mkdir -p ~/dist
-          cp bazel-bin/java/com.vaticle.typedb-typedb-client-jni-macosx-aarch64.jar ~/dist/typedb-driver-jni-macosx-aarch64.jar
+          cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-macosx-aarch64.jar ~/dist/typedb-driver-jni-macosx-aarch64.jar
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]
@@ -532,7 +532,7 @@ jobs:
       - deploy-maven-jni-release-mac
       - run: |
           mkdir -p ~/dist
-          cp bazel-bin/java/com.vaticle.typedb-typedb-client-jni-macosx-x86_64.jar ~/dist/typedb-driver-jni-macosx-x86_64.jar
+          cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-macosx-x86_64.jar ~/dist/typedb-driver-jni-macosx-x86_64.jar
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]
@@ -559,7 +559,7 @@ jobs:
       - deploy-maven-release-unix
       - run: |
           mkdir -p ~/dist
-          cp bazel-bin/java/libclient-java.jar ~/dist/typedb-driver.jar
+          cp bazel-bin/java/libdriver-java.jar ~/dist/typedb-driver.jar
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]

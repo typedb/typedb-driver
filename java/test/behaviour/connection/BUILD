@@ -46,7 +46,7 @@ java_library(
     deps = [
         # Package dependencies
         ":steps-base",
-        "//java:client-java",
+        "//java:driver-java",
         "//java/api",
         "@vaticle_typedb_common//test:typedb-runner",
         "@maven//:io_cucumber_cucumber_java",
@@ -62,7 +62,7 @@ java_library(
     deps = [
         # Package dependencies
         ":steps-base",
-        "//java:client-java",
+        "//java:driver-java",
         "//java/api",
         "//java/test/behaviour/util",
         "@vaticle_typedb_common//test:typedb-runner",

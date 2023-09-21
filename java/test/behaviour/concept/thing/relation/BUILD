@@ -49,7 +49,7 @@ typedb_behaviour_java_test(
     srcs = [
         "RelationTest.java",
     ],
-    test_class = "com.vaticle.typedb.client.test.behaviour.concept.thing.relation.RelationTest",
+    test_class = "com.vaticle.typedb.driver.test.behaviour.concept.thing.relation.RelationTest",
     data = [
         "@vaticle_typedb_behaviour//concept/thing:relation.feature",
     ],

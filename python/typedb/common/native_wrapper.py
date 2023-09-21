@@ -24,7 +24,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Any, Generic, TypeVar
 
-from typedb.common.exception import TypeDBClientExceptionExt
+from typedb.common.exception import TypeDBDriverExceptionExt
 
 
 T = TypeVar("T")
@@ -37,7 +37,7 @@ class NativeWrapper(ABC, Generic[T]):
 
     @property
     @abstractmethod
-    def _native_object_not_owned_exception(self) -> TypeDBClientExceptionExt:
+    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
         pass
 
     @property

@@ -34,7 +34,7 @@ use std::{
 use cucumber::{StatsWriter, World};
 use futures::future::try_join_all;
 use tokio::time::{sleep, Duration};
-use typedb_client::{
+use typedb_driver::{
     answer::{ConceptMap, ConceptMapGroup, Numeric, NumericGroup},
     concept::{Attribute, AttributeType, Entity, EntityType, Relation, RelationType, Thing},
     logic::Rule,
@@ -89,7 +89,7 @@ impl Context {
     }
 
     fn is_ignore_tag(t: &String) -> bool {
-        t == "ignore" || t == "ignore-typedb" || t == "ignore-client-rust" || t == "ignore-typedb-client-rust"
+        t == "ignore" || t == "ignore-typedb" || t == "ignore-driver-rust" || t == "ignore-typedb-driver-rust"
     }
 
     pub async fn after_scenario(&mut self) -> TypeDBResult {

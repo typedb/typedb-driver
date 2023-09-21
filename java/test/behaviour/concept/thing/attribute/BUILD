@@ -47,7 +47,7 @@ typedb_behaviour_java_test(
     srcs = [
         "AttributeTest.java",
     ],
-    test_class = "com.vaticle.typedb.client.test.behaviour.concept.thing.attribute.AttributeTest",
+    test_class = "com.vaticle.typedb.driver.test.behaviour.concept.thing.attribute.AttributeTest",
     data = [
         "@vaticle_typedb_behaviour//concept/thing:attribute.feature",
     ],

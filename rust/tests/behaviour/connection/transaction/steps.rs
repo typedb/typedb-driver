@@ -20,7 +20,7 @@
  */
 
 use cucumber::{gherkin::Step, given, then, when};
-use typedb_client::TransactionType;
+use typedb_driver::TransactionType;
 
 use crate::{
     behaviour::{parameter::TransactionTypeParam, util::iter_table, Context},

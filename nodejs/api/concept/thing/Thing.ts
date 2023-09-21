@@ -29,7 +29,7 @@ import {ThingType} from "../type/ThingType";
 import {Attribute} from "./Attribute";
 import {Relation} from "./Relation";
 import {ErrorMessage} from "../../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../../common/errors/TypeDBClientError";
+import {TypeDBDriverError} from "../../../common/errors/TypeDBDriverError";
 import Annotation = ThingType.Annotation;
 import ILLEGAL_STATE = ErrorMessage.Internal.ILLEGAL_STATE;
 
@@ -70,6 +70,6 @@ export namespace Thing {
         if (thing.isEntity()) return RequestBuilder.Thing.protoThingEntity(thing.iid);
         else if (thing.isRelation()) return RequestBuilder.Thing.protoThingRelation(thing.iid);
         else if (thing.isAttribute()) return RequestBuilder.Thing.protoThingAttribute(thing.iid);
-        else throw new TypeDBClientError(ILLEGAL_STATE.message());
+        else throw new TypeDBDriverError(ILLEGAL_STATE.message());
     }
 }

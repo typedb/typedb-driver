@@ -27,9 +27,9 @@ typedb_enterprise_py_test(
     name = "test_enterprise_failover",
     srcs = ["test_enterprise_failover.py"],
     deps = [
-        "//python:client_python",
+        "//python:driver_python",
         ],
-    data = ["//python:native-client-binary-link", "//python:native-client-wrapper-link"],
+    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
     size = "medium",
     native_typedb_enterprise_artifact = "//tool/test:native-typedb-enterprise-artifact",
 )
@@ -38,9 +38,9 @@ py_test(
     name = "test_debug",
     srcs = ["test_debug.py"],
     deps = [
-        "//python:client_python",
+        "//python:driver_python",
         ],
-    data = ["//python:native-client-binary-link", "//python:native-client-wrapper-link"],
+    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
     python_version = "PY3"
 )
 
@@ -48,9 +48,9 @@ py_test(
     name = "test_stream",
     srcs = ["test_stream.py"],
     deps = [
-        "//python:client_python",
+        "//python:driver_python",
         ],
-    data = ["//python:native-client-binary-link", "//python:native-client-wrapper-link"],
+    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
     python_version = "PY3"
 )
 

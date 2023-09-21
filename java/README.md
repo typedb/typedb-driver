@@ -1,12 +1,12 @@
-# TypeDB Client for Java
+# TypeDB Driver for Java
 
-## Client Architecture
-To learn about the mechanism that a TypeDB Client uses to set up communication with databases running on the TypeDB Server, refer to [TypeDB > Development > TypeDB Driver API](https://typedb.com/docs/typedb/2.x/development/api.html).
+## Driver Architecture
+To learn about the mechanism that a TypeDB Driver uses to set up communication with databases running on the TypeDB Server, refer to [TypeDB > Development > TypeDB Driver API](https://typedb.com/docs/typedb/2.x/development/api.html).
 
 ## API Reference
-To learn about the methods available for executing queries and retrieving their answers using Client Java, refer to [TypeDB Clients > Java Driver > Java Driver API reference](https://typedb.com/docs/clients/2.x/java/java-api-ref.html).
+To learn about the methods available for executing queries and retrieving their answers using Driver Java, refer to [TypeDB Drivers > Java Driver > Java Driver API reference](https://typedb.com/docs/drivers/2.x/java/java-api-ref.html).
 
-## Import TypeDB Client for Java through Maven
+## Import TypeDB Driver for Java through Maven
 
 ```xml
 <repositories>
@@ -19,17 +19,17 @@ To learn about the methods available for executing queries and retrieving their 
 <dependencies>
     <dependency>
         <groupId>com.vaticle.typedb</groupId>
-        <artifactId>typedb-client</artifactId>
+        <artifactId>typedb-driver</artifactId>
         <version>{version}</version>
     </dependency>
 </dependencies>
 ```
 
-Further documentation: https://typedb.com/docs/clients/2.x/java/java-install.html
+Further documentation: https://typedb.com/docs/drivers/2.x/java/java-install.html
 
-## Build TypeDB Client for Java from Source
+## Build TypeDB Driver for Java from Source
 
-> Note: You don't need to compile TypeDB Client from source if you just want to use it in your code. See the _"Import TypeDB Client for Java"_ section above.
+> Note: You don't need to compile TypeDB Driver from source if you just want to use it in your code. See the _"Import TypeDB Driver for Java"_ section above.
 
 1. Make sure you have the following dependencies installed on your machine:
     - Java JDK 11 or higher
@@ -39,9 +39,9 @@ Further documentation: https://typedb.com/docs/clients/2.x/java/java-install.htm
 
    a) to build the native/raw JAR:
    ```
-   bazel build //java:client-java
+   bazel build //java:driver-java
    ```
-   The Java library JAR will be produced at: `bazel-bin/java/libclient-java.jar`
+   The Java library JAR will be produced at: `bazel-bin/java/libdriver-java.jar`
 
    b) to build the JAR for a Maven application:
    ```

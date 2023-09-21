@@ -21,7 +21,7 @@
 
 use cucumber::{gherkin::Step, given, then, when};
 use futures::{future::try_join_all, TryFutureExt};
-use typedb_client::{Session, SessionType};
+use typedb_driver::{Session, SessionType};
 
 use crate::{
     behaviour::{util, Context},

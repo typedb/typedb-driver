@@ -19,9 +19,9 @@
  * under the License.
  */
 
-import {ClientDuplexStream} from "@grpc/grpc-js";
+import {DriverDuplexStream} from "@grpc/grpc-js";
 import {
-    TransactionClient,
+    TransactionDriver,
     TransactionReq,
     TransactionRes,
     TransactionResPart,
@@ -29,14 +29,14 @@ import {
 } from "typedb-protocol/proto/transaction";
 import * as uuid from "uuid";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {TypeDBDriverError} from "../common/errors/TypeDBDriverError";
 import {TypeDBStub} from "../common/rpc/TypeDBStub";
 import {Stream} from "../common/util/Stream";
 import {BatchDispatcher, RequestTransmitter} from "./RequestTransmitter";
 import {ResponseCollector} from "./ResponseCollector";
 import {ResponsePartIterator} from "./ResponsePartIterator";
-import MISSING_RESPONSE = ErrorMessage.Client.MISSING_RESPONSE;
-import UNKNOWN_REQUEST_ID = ErrorMessage.Client.UNKNOWN_REQUEST_ID;
+import MISSING_RESPONSE = ErrorMessage.Driver.MISSING_RESPONSE;
+import UNKNOWN_REQUEST_ID = ErrorMessage.Driver.UNKNOWN_REQUEST_ID;
 import ResponseQueue = ResponseCollector.ResponseQueue;
 
 export class BidirectionalStream {
@@ -93,7 +93,7 @@ export class BidirectionalStream {
         this._dispatcher.close();
     }
 
-    registerObserver(transactionStream: ClientDuplexStream<TransactionClient, TransactionServer>): void {
+    registerObserver(transactionStream: DriverDuplexStream<TransactionDriver, TransactionServer>): void {
         transactionStream.on("data", (res: TransactionServer) => {
             if (!this.isOpen()) {
                 return;
@@ -101,7 +101,7 @@ export class BidirectionalStream {
 
             if (res.has_res) this.collectRes(res.res);
             else if (res.has_res_part) this.collectResPart(res.res_part);
-            else throw new TypeDBClientError(MISSING_RESPONSE.message(res));
+            else throw new TypeDBDriverError(MISSING_RESPONSE.message(res));
         });
 
         transactionStream.on("error", async (err) => {
@@ -116,14 +116,14 @@ export class BidirectionalStream {
     private collectRes(res: TransactionRes): void {
         const requestId = res.req_id;
         const queue = this._responseCollector.get(uuid.stringify(requestId as Uint8Array));
-        if (!queue) throw new TypeDBClientError(UNKNOWN_REQUEST_ID.message(requestId));
+        if (!queue) throw new TypeDBDriverError(UNKNOWN_REQUEST_ID.message(requestId));
         queue.put(res);
     }
 
     private collectResPart(res: TransactionResPart): void {
         const requestId = res.req_id;
         const queue = this._responsePartCollector.get(uuid.stringify(requestId as Uint8Array));
-        if (!queue) throw new TypeDBClientError(UNKNOWN_REQUEST_ID.message(requestId));
+        if (!queue) throw new TypeDBDriverError(UNKNOWN_REQUEST_ID.message(requestId));
         queue.put(res);
     }
 

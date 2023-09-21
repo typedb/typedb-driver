@@ -28,9 +28,9 @@ load("@vaticle_dependencies//builder/swig:java.bzl", "swig_java")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-typedb_client_srcs = glob(["src/**/*.rs"])
-typedb_client_tags = ["crate-name=typedb-client"]
-typedb_client_deps = [
+typedb_driver_srcs = glob(["src/**/*.rs"])
+typedb_driver_tags = ["crate-name=typedb-driver"]
+typedb_driver_deps = [
     "@crates//:chrono",
     "@crates//:crossbeam",
     "@crates//:futures",
@@ -45,37 +45,37 @@ typedb_client_deps = [
     "@vaticle_typedb_protocol//grpc/rust:typedb_protocol",
     "@vaticle_typeql//rust:typeql_lang",
 ]
-typedb_client_proc_macro_deps = [
+typedb_driver_proc_macro_deps = [
     "@crates//:async-trait",
     "@crates//:maybe-async",
 ]
 
 rust_library(
-    name = "typedb_client",
-    srcs = typedb_client_srcs,
-    deps = typedb_client_deps,
-    proc_macro_deps = typedb_client_proc_macro_deps,
-    tags = typedb_client_tags,
+    name = "typedb_driver",
+    srcs = typedb_driver_srcs,
+    deps = typedb_driver_deps,
+    proc_macro_deps = typedb_driver_proc_macro_deps,
+    tags = typedb_driver_tags,
     visibility = ["//visibility:public"]
 )
 
 rust_library(
-    name = "typedb_client_sync",
-    srcs = typedb_client_srcs,
-    deps = typedb_client_deps,
-    proc_macro_deps = typedb_client_proc_macro_deps,
-    tags = typedb_client_tags,
+    name = "typedb_driver_sync",
+    srcs = typedb_driver_srcs,
+    deps = typedb_driver_deps,
+    proc_macro_deps = typedb_driver_proc_macro_deps,
+    tags = typedb_driver_tags,
     crate_features = ["sync"],
     visibility = ["//visibility:public"]
 )
 
 assemble_crate(
     name = "assemble_crate",
-    description = "TypeDB Client API for Rust",
-    homepage = "https://github.com/vaticle/typedb-client-rust",
+    description = "TypeDB Driver API for Rust",
+    homepage = "https://github.com/vaticle/typedb-driver-rust",
     license = "Apache-2.0",
-    repository = "https://github.com/vaticle/typedb-client-rust",
-    target = ":typedb_client",
+    repository = "https://github.com/vaticle/typedb-driver-rust",
+    target = ":typedb_driver",
     universe_manifests = ["@vaticle_dependencies//library/crates:Cargo.toml"],
     crate_features = { "sync": [] },
 )
@@ -103,6 +103,6 @@ filegroup(
 )
 
 rustfmt_test(
-    name = "client_rustfmt_test",
-    targets = ["typedb_client"],
+    name = "driver_rustfmt_test",
+    targets = ["typedb_driver"],
 )

@@ -39,7 +39,7 @@ from typedb.api.concept.type.role_type import *  # noqa # pylint: disable=unused
 from typedb.api.concept.type.thing_type import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.type.type import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.value import *  # noqa # pylint: disable=unused-import
-from typedb.api.connection.client import *
+from typedb.api.connection.driver import *
 from typedb.api.connection.credential import *
 from typedb.api.connection.database import *  # noqa # pylint: disable=unused-import
 from typedb.api.connection.options import *  # noqa # pylint: disable=unused-import
@@ -53,22 +53,22 @@ from typedb.api.user.user import *  # noqa # pylint: disable=unused-import
 from typedb.common.exception import *  # noqa # pylint: disable=unused-import
 from typedb.common.label import *  # noqa # pylint: disable=unused-import
 from typedb.common.transitivity import *  # noqa # pylint: disable=unused-import
-from typedb.connection.client import _Client
+from typedb.connection.driver import _Driver
 
 
-# Repackaging these symbols allows them to be imported from "typedb.client"
+# Repackaging these symbols allows them to be imported from "typedb.driver"
 
 
 class TypeDB:
     DEFAULT_ADDRESS = "localhost:1729"
 
     @staticmethod
-    def core_client(address: str) -> TypeDBClient:
-        return _Client([address])
+    def core_driver(address: str) -> TypeDBDriver:
+        return _Driver([address])
 
     @staticmethod
-    def enterprise_client(addresses: Union[Iterable[str], str], credential: TypeDBCredential) -> TypeDBClient:
+    def enterprise_driver(addresses: Union[Iterable[str], str], credential: TypeDBCredential) -> TypeDBDriver:
         if isinstance(addresses, str):
-            return _Client([addresses], credential)
+            return _Driver([addresses], credential)
         else:
-            return _Client(list(addresses), credential)
+            return _Driver(list(addresses), credential)

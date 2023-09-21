@@ -25,13 +25,13 @@ from datetime import datetime, timezone
 from functools import singledispatchmethod
 from typing import Union
 
-from typedb.native_client_wrapper import value_new_boolean, value_new_long, value_new_double, value_new_string, \
+from typedb.native_driver_wrapper import value_new_boolean, value_new_long, value_new_double, value_new_string, \
     value_new_date_time_from_millis, value_is_boolean, value_is_long, value_is_double, value_is_string, \
     value_is_date_time, value_get_boolean, value_get_long, value_get_double, value_get_string, \
     value_get_date_time_as_millis
 
 from typedb.api.concept.value.value import Value, ValueType
-from typedb.common.exception import TypeDBClientExceptionExt, UNEXPECTED_NATIVE_VALUE, ILLEGAL_STATE, MISSING_VALUE
+from typedb.common.exception import TypeDBDriverExceptionExt, UNEXPECTED_NATIVE_VALUE, ILLEGAL_STATE, MISSING_VALUE
 from typedb.concept.concept import _Concept
 
 
@@ -39,7 +39,7 @@ class _Value(Value, _Concept):
 
     @singledispatchmethod
     def of(value):
-        raise TypeDBClientExceptionExt.of(UNEXPECTED_NATIVE_VALUE)
+        raise TypeDBDriverExceptionExt.of(UNEXPECTED_NATIVE_VALUE)
 
     @of.register
     def _(value: bool):
@@ -56,7 +56,7 @@ class _Value(Value, _Concept):
     @of.register
     def _(value: str):
         if not value:
-            raise TypeDBClientExceptionExt(MISSING_VALUE)
+            raise TypeDBDriverExceptionExt(MISSING_VALUE)
         return _Value(value_new_string(value))
 
     @of.register
@@ -79,7 +79,7 @@ class _Value(Value, _Concept):
         elif self.is_datetime():
             return ValueType.DATETIME
         else:
-            raise TypeDBClientExceptionExt(ILLEGAL_STATE)
+            raise TypeDBDriverExceptionExt(ILLEGAL_STATE)
 
     def get(self) -> Union[bool, int, float, str, datetime]:
         if self.is_boolean():
@@ -93,7 +93,7 @@ class _Value(Value, _Concept):
         elif self.is_datetime():
             return self.as_datetime()
         else:
-            raise TypeDBClientExceptionExt(ILLEGAL_STATE)
+            raise TypeDBDriverExceptionExt(ILLEGAL_STATE)
 
     def is_boolean(self) -> bool:
         return value_is_boolean(self.native_object)

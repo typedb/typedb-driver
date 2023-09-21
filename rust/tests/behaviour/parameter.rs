@@ -23,7 +23,7 @@ use std::{borrow::Borrow, convert::Infallible, fmt, ops::Not, str::FromStr};
 
 use chrono::NaiveDateTime;
 use cucumber::Parameter;
-use typedb_client::{
+use typedb_driver::{
     concept::{Annotation, ScopedLabel, Transitivity, Value, ValueType},
     TransactionType,
 };

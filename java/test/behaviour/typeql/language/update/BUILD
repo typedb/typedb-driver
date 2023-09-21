@@ -28,7 +28,7 @@ typedb_behaviour_java_test(
     srcs = [
         "UpdateTest.java",
     ],
-    test_class = "com.vaticle.typedb.client.test.behaviour.typeql.language.update.UpdateTest",
+    test_class = "com.vaticle.typedb.driver.test.behaviour.typeql.language.update.UpdateTest",
     data = [
         "@vaticle_typedb_behaviour//typeql/language:update.feature",
     ],

@@ -28,7 +28,7 @@ typedb_behaviour_java_test(
     srcs = [
         "UndefineTest.java",
     ],
-    test_class = "com.vaticle.typedb.client.test.behaviour.typeql.language.undefine.UndefineTest",
+    test_class = "com.vaticle.typedb.driver.test.behaviour.typeql.language.undefine.UndefineTest",
     data = [
         "@vaticle_typedb_behaviour//typeql/language:undefine.feature",
     ],

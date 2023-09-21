@@ -21,7 +21,7 @@
 
 use cucumber::{gherkin::Step, given, then, when};
 use futures::TryStreamExt;
-use typedb_client::{answer::Numeric, Result as TypeDBResult};
+use typedb_driver::{answer::Numeric, Result as TypeDBResult};
 use typeql_lang::parse_query;
 use util::{
     equals_approximate, iter_table_map, match_answer_concept, match_answer_concept_map, match_answer_rule,
@@ -163,7 +163,7 @@ generic_step_impl! {
                     assert!(res.is_err());
                 }
             }
-            // NOTE: We manually close transaction here, because we want to align with all non-rust and non-java clients,
+            // NOTE: We manually close transaction here, because we want to align with all non-rust and non-java drivers,
             // where parsing happens at server-side which closes transaction if they fail
             Err(_) => {
                 for session_tracker in &mut context.session_trackers {
@@ -185,7 +185,7 @@ generic_step_impl! {
                     assert!(res.unwrap_err().to_string().contains(&message));
                 }
             }
-            // NOTE: We manually close transaction here, because we want to align with all non-rust and non-java clients,
+            // NOTE: We manually close transaction here, because we want to align with all non-rust and non-java drivers,
             // where parsing happens at server-side which closes transaction if they fail
             Err(_) => {
                 for session_tracker in &mut context.session_trackers {
@@ -282,7 +282,7 @@ generic_step_impl! {
                     assert!(res.is_err(), "{res:?}");
                 }
             }
-            // NOTE: We manually close transaction here, because we want to align with all non-rust and non-java clients,
+            // NOTE: We manually close transaction here, because we want to align with all non-rust and non-java drivers,
             // where parsing happens at server-side which closes transaction if they fail
             Err(_) => {
                 for session_tracker in &mut context.session_trackers {

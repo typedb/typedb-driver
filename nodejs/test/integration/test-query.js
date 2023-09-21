@@ -23,32 +23,32 @@ const {TypeDB, SessionType, TransactionType, TypeDBOptions} = require("../../dis
 const assert = require("assert");
 
 async function run() {
-    const client = await TypeDB.coreClient();
+    const driver = await TypeDB.coreDriver();
     try {
-        const dbs = await client.databases.all();
+        const dbs = await driver.databases.all();
         console.log(`get databases - SUCCESS - the databases are [${dbs}]`);
         const typedb = dbs.find(x => x.name === "typedb");
         if (typedb) {
             await typedb.delete();
             console.log(`delete database - SUCCESS - 'typedb' has been deleted`);
         }
-        await client.databases.create("typedb");
+        await driver.databases.create("typedb");
         console.log("create database - SUCCESS - 'typedb' has been created");
     } catch (err) {
         console.error(`database operations - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
     let session;
     let tx;
     try {
-        session = await client.session("typedb", SessionType.SCHEMA);
+        session = await driver.session("typedb", SessionType.SCHEMA);
         tx = await session.transaction(TransactionType.WRITE);
         console.log("open schema write tx - SUCCESS");
     } catch (err) {
         console.error(`open schema write tx - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -60,7 +60,7 @@ async function run() {
         console.log("define attributes query - SUCCESS");
     } catch (err) {
         console.error(`define attributes query - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -69,7 +69,7 @@ async function run() {
         console.log("commit schema write tx - SUCCESS");
     } catch (err) {
         console.error(`commit schema write tx - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -78,7 +78,7 @@ async function run() {
         console.log("close data write tx - SUCCESS");
     } catch (err) {
         console.error(`close data write tx - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -90,7 +90,7 @@ async function run() {
         console.log("define relationship query - SUCCESS");
     } catch (err) {
         console.error(`define relationship query - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -102,7 +102,7 @@ async function run() {
         console.log("define entity query - SUCCESS");
     } catch (err) {
         console.error(`define entity query - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -114,7 +114,7 @@ async function run() {
         console.log("define rule query - SUCCESS");
     } catch (err) {
         console.error(`define rule query - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -127,7 +127,7 @@ async function run() {
         console.log("define/undefine entity query - SUCCESS");
     } catch (err) {
         console.error(`define/undefine entity query - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -136,17 +136,17 @@ async function run() {
         console.log("close schema session - SUCCESS");
     } catch (err) {
         console.error(`close schema session - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
     try {
-        session = await client.session("typedb", SessionType.DATA, new TypeDBOptions({
+        session = await driver.session("typedb", SessionType.DATA, new TypeDBOptions({
             sessionIdleTimeoutMillis: 3600000,
         }));
         console.log("open data session - SUCCESS");
     } catch (err) {
         console.error(`open data session - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -155,7 +155,7 @@ async function run() {
         console.log("open data transaction - SUCCESS");
     } catch (err) {
         console.error(`open data write transaction - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -186,7 +186,7 @@ async function run() {
         console.log("insert entity query - SUCCESS");
     } catch (err) {
         console.error(`insert entity query - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -195,7 +195,7 @@ async function run() {
         console.log("commit data write transaction - SUCCESS");
     } catch (err) {
         console.error(`commit data write transaction - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -211,7 +211,7 @@ async function run() {
         console.log("open data read transaction - SUCCESS");
     } catch (err) {
         console.error(`open data read transaction - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -220,7 +220,7 @@ async function run() {
         console.log("close data write transaction - SUCCESS");
     } catch (err) {
         console.error(`close data write transaction - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -229,15 +229,15 @@ async function run() {
         console.log("close data session - SUCCESS");
     } catch (err) {
         console.error(`close data session - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
     try {
-        await client.close();
-        console.log("client.close - SUCCESS");
+        await driver.close();
+        console.log("driver.close - SUCCESS");
     } catch (err) {
-        console.error(`client.close - ERROR: ${err.stack || err}`);
+        console.error(`driver.close - ERROR: ${err.stack || err}`);
         process.exit(1);
     }
 }

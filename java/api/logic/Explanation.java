@@ -19,9 +19,9 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.logic;
+package com.vaticle.typedb.driver.api.logic;
 
-import com.vaticle.typedb.client.api.answer.ConceptMap;
+import com.vaticle.typedb.driver.api.answer.ConceptMap;
 
 import java.util.Set;
 

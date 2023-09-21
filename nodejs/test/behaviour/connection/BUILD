@@ -29,7 +29,7 @@ ts_project(
     tsconfig = behaviour_test_ts_config(),
     declaration = True,
     deps = [
-        "//nodejs:client-nodejs",
+        "//nodejs:driver-nodejs",
 
         "//nodejs/test/behaviour/util:util",
 
@@ -49,7 +49,7 @@ ts_project(
     declaration = True,
     deps = [
         ":steps-base",
-        "//nodejs:client-nodejs",
+        "//nodejs:driver-nodejs",
         "//nodejs:node_modules/@types/node",
         "//nodejs:node_modules/@cucumber/cucumber",
         "//nodejs/test/behaviour/util:util",
@@ -65,7 +65,7 @@ ts_project(
     declaration = True,
     deps = [
         ":steps-base",
-        "//nodejs:client-nodejs",
+        "//nodejs:driver-nodejs",
         "//nodejs:node_modules/@types/node",
         "//nodejs:node_modules/@cucumber/cucumber",
         "//nodejs/test/behaviour/util:util",

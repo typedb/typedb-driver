@@ -23,7 +23,7 @@ use std::{collections::HashMap, default::Default};
 
 use futures::TryStreamExt;
 use serial_test::serial;
-use typedb_client::{
+use typedb_driver::{
     answer::{ConceptMap, Explainable},
     concept::{Attribute, Concept, Value},
     logic::Explanation,

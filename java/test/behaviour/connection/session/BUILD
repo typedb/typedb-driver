@@ -49,7 +49,7 @@ typedb_behaviour_java_test(
     srcs = [
         "SessionTest.java",
     ],
-    test_class = "com.vaticle.typedb.client.test.behaviour.connection.session.SessionTest",
+    test_class = "com.vaticle.typedb.driver.test.behaviour.connection.session.SessionTest",
     data = [
         "@vaticle_typedb_behaviour//connection:session.feature",
     ],

@@ -19,22 +19,22 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.concept.answer;
+package com.vaticle.typedb.driver.concept.answer;
 
-import com.vaticle.typedb.client.api.answer.Numeric;
-import com.vaticle.typedb.client.common.NativeObject;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.driver.api.answer.Numeric;
+import com.vaticle.typedb.driver.common.NativeObject;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
-import static com.vaticle.typedb.client.jni.typedb_client.numeric_get_double;
-import static com.vaticle.typedb.client.jni.typedb_client.numeric_get_long;
-import static com.vaticle.typedb.client.jni.typedb_client.numeric_is_double;
-import static com.vaticle.typedb.client.jni.typedb_client.numeric_is_long;
-import static com.vaticle.typedb.client.jni.typedb_client.numeric_is_nan;
-import static com.vaticle.typedb.client.jni.typedb_client.numeric_to_string;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
+import static com.vaticle.typedb.driver.jni.typedb_driver.numeric_get_double;
+import static com.vaticle.typedb.driver.jni.typedb_driver.numeric_get_long;
+import static com.vaticle.typedb.driver.jni.typedb_driver.numeric_is_double;
+import static com.vaticle.typedb.driver.jni.typedb_driver.numeric_is_long;
+import static com.vaticle.typedb.driver.jni.typedb_driver.numeric_is_nan;
+import static com.vaticle.typedb.driver.jni.typedb_driver.numeric_to_string;
 
-public class NumericImpl extends NativeObject<com.vaticle.typedb.client.jni.Numeric> implements Numeric {
-    public NumericImpl(com.vaticle.typedb.client.jni.Numeric numeric) {
+public class NumericImpl extends NativeObject<com.vaticle.typedb.driver.jni.Numeric> implements Numeric {
+    public NumericImpl(com.vaticle.typedb.driver.jni.Numeric numeric) {
         super(numeric);
     }
 
@@ -56,20 +56,20 @@ public class NumericImpl extends NativeObject<com.vaticle.typedb.client.jni.Nume
     @Override
     public long asLong() {
         if (isLong()) return numeric_get_long(nativeObject);
-        else throw new TypeDBClientException(ILLEGAL_CAST, Long.class);
+        else throw new TypeDBDriverException(ILLEGAL_CAST, Long.class);
     }
 
     @Override
     public double asDouble() {
         if (isDouble()) return numeric_get_double(nativeObject);
-        else throw new TypeDBClientException(ILLEGAL_CAST, Double.class);
+        else throw new TypeDBDriverException(ILLEGAL_CAST, Double.class);
     }
 
     @Override
     public Number asNumber() {
         if (isLong()) return asLong();
         else if (isDouble()) return asDouble();
-        else throw new TypeDBClientException(ILLEGAL_CAST, Number.class);
+        else throw new TypeDBDriverException(ILLEGAL_CAST, Number.class);
     }
 
     @Override

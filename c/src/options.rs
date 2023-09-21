@@ -21,7 +21,7 @@
 
 use std::time::Duration;
 
-use typedb_client::Options;
+use typedb_driver::Options;
 
 use super::memory::{borrow, borrow_mut, free, release};
 

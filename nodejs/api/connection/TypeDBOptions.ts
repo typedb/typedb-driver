@@ -21,8 +21,8 @@
 
 import {Options} from "typedb-protocol/proto/options";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import NEGATIVE_VALUE_NOT_ALLOWED = ErrorMessage.Client.NEGATIVE_VALUE_NOT_ALLOWED;
+import {TypeDBDriverError} from "../../common/errors/TypeDBDriverError";
+import NEGATIVE_VALUE_NOT_ALLOWED = ErrorMessage.Driver.NEGATIVE_VALUE_NOT_ALLOWED;
 
 export interface Opts {
     infer?: boolean;
@@ -122,7 +122,7 @@ export class TypeDBOptions implements Opts {
 
     set prefetchSize(value: number) {
         if (value < 1) {
-            throw new TypeDBClientError(NEGATIVE_VALUE_NOT_ALLOWED.message(value));
+            throw new TypeDBDriverError(NEGATIVE_VALUE_NOT_ALLOWED.message(value));
         }
         this._prefetchSize = value;
     }
@@ -133,7 +133,7 @@ export class TypeDBOptions implements Opts {
 
     set sessionIdleTimeoutMillis(millis: number) {
         if (millis < 1) {
-            throw new TypeDBClientError(NEGATIVE_VALUE_NOT_ALLOWED.message(millis));
+            throw new TypeDBDriverError(NEGATIVE_VALUE_NOT_ALLOWED.message(millis));
         }
         this._sessionIdleTimeoutMillis = millis;
     }
@@ -144,7 +144,7 @@ export class TypeDBOptions implements Opts {
 
     set transactionTimeoutMillis(millis: number) {
         if (millis < 1) {
-            throw new TypeDBClientError(NEGATIVE_VALUE_NOT_ALLOWED.message(millis));
+            throw new TypeDBDriverError(NEGATIVE_VALUE_NOT_ALLOWED.message(millis));
         }
         this._transactionTimeoutMillis = millis;
     }
@@ -155,7 +155,7 @@ export class TypeDBOptions implements Opts {
 
     set schemaLockAcquireTimeoutMillis(value: number) {
         if (value < 1) {
-            throw new TypeDBClientError(NEGATIVE_VALUE_NOT_ALLOWED.message(value));
+            throw new TypeDBDriverError(NEGATIVE_VALUE_NOT_ALLOWED.message(value));
         }
         this._schemaLockAcquireTimeoutMillis = value;
     }

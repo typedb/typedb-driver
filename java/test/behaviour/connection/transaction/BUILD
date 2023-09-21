@@ -52,7 +52,7 @@ typedb_behaviour_java_test(
     srcs = [
         "TransactionTest.java",
     ],
-    test_class = "com.vaticle.typedb.client.test.behaviour.connection.transaction.TransactionTest",
+    test_class = "com.vaticle.typedb.driver.test.behaviour.connection.transaction.TransactionTest",
     data = [
         "@vaticle_typedb_behaviour//connection:transaction.feature",
     ],

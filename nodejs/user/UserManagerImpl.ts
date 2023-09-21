@@ -23,56 +23,56 @@ import {User} from "../api/connection/user/User";
 import {UserManager} from "../api/connection/user/UserManager";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {UserImpl} from "../dependencies_internal";
-import {ServerClient, TypeDBClientImpl} from "../connection/TypeDBClientImpl";
+import {ServerDriver, TypeDBDriverImpl} from "../connection/TypeDBDriverImpl";
 import {TypeDBDatabaseImpl} from "../connection/TypeDBDatabaseImpl";
 
 export class UserManagerImpl implements UserManager {
     static _SYSTEM_DB = "_system";
-    private readonly _client: TypeDBClientImpl;
+    private readonly _driver: TypeDBDriverImpl;
 
-    constructor(client: TypeDBClientImpl) {
-        this._client = client;
+    constructor(driver: TypeDBDriverImpl) {
+        this._driver = driver;
     }
 
     async all(): Promise<User[]> {
-        return this.runFailsafe(client =>
-            client.stub.usersAll(RequestBuilder.UserManager.allReq())
-                .then((res) => res.users.map(user => UserImpl.of(user, this._client)))
+        return this.runFailsafe(driver =>
+            driver.stub.usersAll(RequestBuilder.UserManager.allReq())
+                .then((res) => res.users.map(user => UserImpl.of(user, this._driver)))
         );
     }
 
     async contains(username: string): Promise<boolean> {
-        return this.runFailsafe(client =>
-            client.stub.usersContains(RequestBuilder.UserManager.containsReq(username))
+        return this.runFailsafe(driver =>
+            driver.stub.usersContains(RequestBuilder.UserManager.containsReq(username))
         );
     }
 
     async create(username: string, password: string): Promise<void> {
-        return this.runFailsafe(client =>
-            client.stub.usersCreate(RequestBuilder.UserManager.createReq(username, password))
+        return this.runFailsafe(driver =>
+            driver.stub.usersCreate(RequestBuilder.UserManager.createReq(username, password))
         );
     }
 
     async delete(username: string): Promise<void> {
-        return this.runFailsafe(client =>
-            client.stub.usersDelete(RequestBuilder.UserManager.deleteReq(username))
+        return this.runFailsafe(driver =>
+            driver.stub.usersDelete(RequestBuilder.UserManager.deleteReq(username))
         );
     }
 
     async get(username: string): Promise<UserImpl> {
-        const user = (await this.runFailsafe((client) =>
-            client.stub.usersGet(RequestBuilder.UserManager.getReq(username))
+        const user = (await this.runFailsafe((driver) =>
+            driver.stub.usersGet(RequestBuilder.UserManager.getReq(username))
         )).user;
-        return UserImpl.of(user, this._client);
+        return UserImpl.of(user, this._driver);
     }
 
     async passwordSet(username: string, password: string): Promise<void> {
-        return this.runFailsafe((client) =>
-            client.stub.usersPasswordSet(RequestBuilder.UserManager.passwordSetReq(username, password))
+        return this.runFailsafe((driver) =>
+            driver.stub.usersPasswordSet(RequestBuilder.UserManager.passwordSetReq(username, password))
         );
     }
 
-    async runFailsafe<T>(task: (client: ServerClient) => Promise<T>): Promise<T> {
-        return await (await TypeDBDatabaseImpl.get(UserManagerImpl._SYSTEM_DB, this._client)).runOnPrimaryReplica(task);
+    async runFailsafe<T>(task: (driver: ServerDriver) => Promise<T>): Promise<T> {
+        return await (await TypeDBDatabaseImpl.get(UserManagerImpl._SYSTEM_DB, this._driver)).runOnPrimaryReplica(task);
     }
 }
