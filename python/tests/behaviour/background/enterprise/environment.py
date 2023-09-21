@@ -25,7 +25,7 @@ from typedb.client import *
 from tests.behaviour.background import environment_base
 from tests.behaviour.context import Context
 
-IGNORE_TAGS = ["ignore", "ignore-client-python", "ignore-typedb-client-python", "ignore-typedb-cluster-client-python"]
+IGNORE_TAGS = ["ignore", "ignore-client-python", "ignore-typedb-client-python", "ignore-typedb-enterprise-client-python"]
 
 
 def before_all(context: Context):
@@ -45,7 +45,7 @@ def before_scenario(context: Context, scenario):
 
 def setup_context_client(context, username, password):
     credential = TypeDBCredential(username, password, tls_root_ca_path=context.credential_root_ca_path)
-    context.client = TypeDB.cluster_client(addresses=["localhost:" + context.config.userdata["port"]],
+    context.client = TypeDB.enterprise_client(addresses=["localhost:" + context.config.userdata["port"]],
                                            credential=credential)
     context.session_options = TypeDBOptions(infer=True)
     context.transaction_options = TypeDBOptions(infer=True)

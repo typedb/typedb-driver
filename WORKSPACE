@@ -175,9 +175,9 @@ vaticle_typedb_behaviour()
 vaticle_typedb_protocol()
 
 # Load artifacts
-load("//dependencies/vaticle:artifacts.bzl", "vaticle_typedb_artifact", "vaticle_typedb_cluster_artifact")
+load("//dependencies/vaticle:artifacts.bzl", "vaticle_typedb_artifact", "vaticle_typedb_enterprise_artifact")
 vaticle_typedb_artifact()
-vaticle_typedb_cluster_artifact()
+vaticle_typedb_enterprise_artifact()
 
 ####################
 # Load npm modules #

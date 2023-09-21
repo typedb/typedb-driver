@@ -57,11 +57,11 @@ def typedb_behaviour_py_test_core(name, **kwargs):
         **kwargs,
     )
 
-def typedb_behaviour_py_test_cluster(name, **kwargs):
+def typedb_behaviour_py_test_enterprise(name, **kwargs):
     py_behave_test(
-        name = name + "-cluster",
-        background = "@//python/tests/behaviour/background:cluster",
-        native_typedb_artifact = "@//tool/test:native-typedb-cluster-artifact",
+        name = name + "-enterprise",
+        background = "@//python/tests/behaviour/background:enterprise",
+        native_typedb_artifact = "@//tool/test:native-typedb-enterprise-artifact",
         toolchains = ["@rules_python//python:current_py_toolchain"],
         typedb_port = "11729",
         **kwargs,
@@ -69,4 +69,4 @@ def typedb_behaviour_py_test_cluster(name, **kwargs):
 
 def typedb_behaviour_py_test(name, **kwargs):
     typedb_behaviour_py_test_core(name, **kwargs)
-    typedb_behaviour_py_test_cluster(name, **kwargs)
+    typedb_behaviour_py_test_enterprise(name, **kwargs)

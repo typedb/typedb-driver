@@ -21,19 +21,19 @@
 
 def _rule_implementation(ctx):
     """
-    Implementation of the rule typedb_cluster_py_test.
+    Implementation of the rule typedb_enterprise_py_test.
     """
 
     # Store the path of the test source file. It is recommended to only have one source file.
     test_src = ctx.files.srcs[0].path
 
-    typedb_cluster_distro = str(ctx.files.native_typedb_cluster_artifact[0].short_path)
+    typedb_enterprise_distro = str(ctx.files.native_typedb_enterprise_artifact[0].short_path)
 
     # TODO: This code is, mostly, copied from our TypeDB behave test
-    cmd = "set -xe && TYPEDB_ARCHIVE=%s" % typedb_cluster_distro
+    cmd = "set -xe && TYPEDB_ARCHIVE=%s" % typedb_enterprise_distro
     cmd += """
             function server_start() {
-              ./${1}/typedb cluster \
+              ./${1}/typedb enterprise \
                 --storage.data=server/data \
                 --server.address=localhost:${1}1729 \
                 --server.internal-address.zeromq=localhost:${1}1730 \
@@ -82,7 +82,7 @@ def _rule_implementation(ctx):
             while [[ $RETRY_NUM -lt $MAX_RETRIES ]]; do
              RETRY_NUM=$(($RETRY_NUM + 1))
              if [[ $(($RETRY_NUM % 4)) -eq 0 ]]; then
-               echo Waiting for TypeDB Cluster servers to start \\($(($RETRY_NUM / 2))s\\)...
+               echo Waiting for TypeDB Enterprise servers to start \\($(($RETRY_NUM / 2))s\\)...
              fi
              lsof -i :11729 && STARTED1=1 || STARTED1=0
              lsof -i :21729 && STARTED2=1 || STARTED2=0
@@ -93,10 +93,10 @@ def _rule_implementation(ctx):
              sleep $POLL_INTERVAL_SECS
             done
             if [[ $STARTED1 -eq 0 || $STARTED2 -eq 0 || $STARTED3 -eq 0 ]]; then
-             echo Failed to start one or more TypeDB Cluster servers
+             echo Failed to start one or more TypeDB Enterprise servers
              exit 1
             fi
-            echo 3 TypeDB Cluster database servers started
+            echo 3 TypeDB Enterprise database servers started
 
            """
 
@@ -126,7 +126,7 @@ def _rule_implementation(ctx):
     # https://bazel.build/versions/master/docs/skylark/rules.html#runfiles
     return [DefaultInfo(
         # The shell executable - the output of this rule - can use these files at runtime.
-        runfiles = ctx.runfiles(files = ctx.files.srcs + ctx.files.deps + ctx.files.data + ctx.files.native_typedb_cluster_artifact)
+        runfiles = ctx.runfiles(files = ctx.files.srcs + ctx.files.deps + ctx.files.data + ctx.files.native_typedb_enterprise_artifact)
     )]
 
 """
@@ -144,13 +144,13 @@ Args:
   deps:
     System to test.
 """
-typedb_cluster_py_test = rule(
+typedb_enterprise_py_test = rule(
     implementation=_rule_implementation,
     attrs={
         "srcs": attr.label_list(mandatory=True,allow_empty=False,allow_files=True),
         "deps": attr.label_list(mandatory=True,allow_empty=False),
         "data": attr.label_list(),
-        "native_typedb_cluster_artifact": attr.label(mandatory=True)
+        "native_typedb_enterprise_artifact": attr.label(mandatory=True)
     },
     test=True,
 )

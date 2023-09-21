@@ -27,7 +27,7 @@ import com.vaticle.typedb.client.api.TypeDBCredential;
 import com.vaticle.typedb.client.api.TypeDBOptions;
 import com.vaticle.typedb.common.test.TypeDBRunner;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
-import com.vaticle.typedb.common.test.cluster.TypeDBClusterRunner;
+import com.vaticle.typedb.common.test.enterprise.TypeDBEnterpriseRunner;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
@@ -39,7 +39,7 @@ import java.util.Map;
 
 import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
 
-public class ConnectionStepsCluster extends ConnectionStepsBase {
+public class ConnectionStepsEnterprise extends ConnectionStepsBase {
 
     @Override
     public void beforeAll() {
@@ -62,7 +62,7 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     }
 
     TypeDBClient createTypeDBClient(String address, String username, String password, boolean tlsEnabled) {
-        return TypeDB.clusterClient(address, new TypeDBCredential(username, password, tlsEnabled));
+        return TypeDB.enterpriseClient(address, new TypeDBCredential(username, password, tlsEnabled));
     }
 
     @Override
@@ -110,8 +110,8 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         for (Map.Entry<String, String> entry : map.entrySet()) {
             serverOpts.put("--" + entry.getKey(), entry.getValue());
         }
-        TypeDBClusterRunner clusterRunner = TypeDBClusterRunner.create(Paths.get("."), 1, serverOpts);
-        TypeDBSingleton.setTypeDBRunner(clusterRunner);
+        TypeDBEnterpriseRunner enterpriseRunner = TypeDBEnterpriseRunner.create(Paths.get("."), 1, serverOpts);
+        TypeDBSingleton.setTypeDBRunner(enterpriseRunner);
     }
 
     @When("typedb starts")
@@ -120,9 +120,9 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         if (runner != null && runner.isStopped()) {
             runner.start();
         } else {
-            TypeDBClusterRunner clusterRunner = TypeDBClusterRunner.create(Paths.get("."), 1);
-            TypeDBSingleton.setTypeDBRunner(clusterRunner);
-            clusterRunner.start();
+            TypeDBEnterpriseRunner enterpriseRunner = TypeDBEnterpriseRunner.create(Paths.get("."), 1);
+            TypeDBSingleton.setTypeDBRunner(enterpriseRunner);
+            enterpriseRunner.start();
         }
     }
 

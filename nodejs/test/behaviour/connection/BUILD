@@ -59,8 +59,8 @@ ts_project(
 )
 
 ts_project(
-    name = "steps-cluster",
-    srcs = ["ConnectionStepsCluster.ts"],
+    name = "steps-enterprise",
+    srcs = ["ConnectionStepsEnterprise.ts"],
     tsconfig = behaviour_test_ts_config(),
     declaration = True,
     deps = [

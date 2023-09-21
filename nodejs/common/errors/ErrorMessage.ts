@@ -86,13 +86,13 @@ export namespace ErrorMessage {
         export const UNKNOWN_STREAM_STATE = new Client(11, (args: Stringable[]) => `RPC transaction stream response '${args[0]}' is unknown.`);
         export const MISSING_RESPONSE = new Client(12, (args: Stringable[]) => `The required field 'res' of type '${args[0]}' was not set.`);
         export const UNKNOWN_REQUEST_ID = new Client(13, (args: Stringable[]) => `Received a response with unknown request id '${args[0]}'.`);
-        export const CLUSTER_NO_PRIMARY_REPLICA_YET = new Client(14, (args: Stringable[]) => `No replica has been marked as the primary replica for latest known term '${args[0]}'.`);
-        export const CLUSTER_UNABLE_TO_CONNECT = new Client(15, (args: Stringable[]) => `Unable to connect to TypeDB Cluster. Attempted connecting to the cluster members, but none are available: '${args[1]}'.`);
-        export const CLUSTER_REPLICA_NOT_PRIMARY = new Client(16, () => `The replica is not the primary replica.`);
-        export const CLUSTER_ALL_NODES_FAILED = new Client(17, (args: Stringable[]) => `Attempted connecting to all cluster members, but the following errors occurred: \n'${args[0]}'`);
-        export const CLUSTER_USER_DOES_NOT_EXIST = new Client(18, (args: Stringable[]) => `The user '${args[0]}' does not exist.`);
-        export const CLUSTER_TOKEN_CREDENTIAL_INVALID = new Client(19, (args: Stringable[]) => `Invalid token credential.`);
-        export const CLUSTER_INVALID_ROOT_CA_PATH = new Client(20, (args: Stringable[]) => `The provided Root CA path '${args[0]}' does not exist`);
+        export const ENTPERPRISE_NO_PRIMARY_REPLICA_YET = new Client(14, (args: Stringable[]) => `No replica has been marked as the primary replica for latest known term '${args[0]}'.`);
+        export const ENTPERPRISE_UNABLE_TO_CONNECT = new Client(15, (args: Stringable[]) => `Unable to connect to TypeDB Enterprise. Attempted connecting to the enterprise nodes, but none are available: '${args[1]}'.`);
+        export const ENTPERPRISE_REPLICA_NOT_PRIMARY = new Client(16, () => `The replica is not the primary replica.`);
+        export const ENTPERPRISE_ALL_NODES_FAILED = new Client(17, (args: Stringable[]) => `Attempted connecting to all enterprise nodes, but the following errors occurred: \n'${args[0]}'`);
+        export const ENTPERPRISE_USER_DOES_NOT_EXIST = new Client(18, (args: Stringable[]) => `The user '${args[0]}' does not exist.`);
+        export const ENTPERPRISE_TOKEN_CREDENTIAL_INVALID = new Client(19, (args: Stringable[]) => `Invalid token credential.`);
+        export const ENTERPRISE_INVALID_ROOT_CA_PATH = new Client(20, (args: Stringable[]) => `The provided Root CA path '${args[0]}' does not exist`);
         export const UNRECOGNISED_SESSION_TYPE = new Client(21, (args: Stringable[]) => `Session type '${args[1]}' was not recognised.`);
     }
 

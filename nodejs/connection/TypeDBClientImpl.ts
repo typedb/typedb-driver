@@ -35,7 +35,7 @@ import {TypeDBDatabaseManagerImpl} from "./TypeDBDatabaseManagerImpl";
 import {TypeDBSessionImpl} from "./TypeDBSessionImpl";
 import {TypeDBStubImpl} from "./TypeDBStubImpl";
 import CLIENT_NOT_OPEN = ErrorMessage.Client.CLIENT_NOT_OPEN;
-import CLUSTER_UNABLE_TO_CONNECT = ErrorMessage.Client.CLUSTER_UNABLE_TO_CONNECT;
+import ENTERPRISE_UNABLE_TO_CONNECT = ErrorMessage.Client.ENTPERPRISE_UNABLE_TO_CONNECT;
 import SESSION_ID_EXISTS = ErrorMessage.Client.SESSION_ID_EXISTS;
 
 export class TypeDBClientImpl implements TypeDBClient {
@@ -65,7 +65,7 @@ export class TypeDBClientImpl implements TypeDBClient {
     }
 
     async open(): Promise<TypeDBClient> {
-        const serverAddresses = await this.fetchClusterServers();
+        const serverAddresses = await this.fetchEnterpriseServers();
         const openReqs: Promise<void>[] = []
         for (const addr of serverAddresses) {
             const serverStub = new TypeDBStubImpl(addr, this._credential);
@@ -75,28 +75,28 @@ export class TypeDBClientImpl implements TypeDBClient {
         try {
             await Promise.any(openReqs);
         } catch (e) {
-            throw new TypeDBClientError(CLUSTER_UNABLE_TO_CONNECT.message(e));
+            throw new TypeDBClientError(ENTERPRISE_UNABLE_TO_CONNECT.message(e));
         }
         this._userManager = new UserManagerImpl(this);
         this._isOpen = true;
         return this;
     }
 
-    private async fetchClusterServers(): Promise<string[]> {
+    private async fetchEnterpriseServers(): Promise<string[]> {
         for (const address of this._initAddresses) {
             try {
-                console.info(`Fetching list of cluster servers from ${address}...`);
+                console.info(`Fetching list of enterprise servers from ${address}...`);
                 const stub = new TypeDBStubImpl(address, this._credential);
                 await stub.open();
                 const res = await stub.serversAll(RequestBuilder.ServerManager.allReq());
                 const members = res.servers.map(x => x.address);
-                console.info(`The cluster servers are ${members}`);
+                console.info(`The enterprise servers are ${members}`);
                 return members;
             } catch (e) {
-                console.error(`Fetching cluster servers from ${address} failed.`, e);
+                console.error(`Fetching enterprise servers from ${address} failed.`, e);
             }
         }
-        throw new TypeDBClientError(CLUSTER_UNABLE_TO_CONNECT.message(this._initAddresses.join(",")));
+        throw new TypeDBClientError(ENTERPRISE_UNABLE_TO_CONNECT.message(this._initAddresses.join(",")));
     }
 
     isOpen(): boolean {

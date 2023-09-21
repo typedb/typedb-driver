@@ -48,22 +48,22 @@ error_messages! { ConnectionError
         11: "Received a response with unknown request id '{}'",
     InvalidResponseField(&'static str) =
         12: "Invalid field in message received from server: '{}'.",
-    ClusterUnableToConnect(String) =
-        13: "Unable to connect to TypeDB Cluster. Attempted connecting to the cluster members, but none are available: '{}'.",
-    ClusterReplicaNotPrimary() =
+    EnterpriseUnableToConnect(String) =
+        13: "Unable to connect to TypeDB Enterprise. Attempted connecting to the enterprise members, but none are available: '{}'.",
+    EnterpriseReplicaNotPrimary() =
         14: "The replica is not the primary replica.",
-    ClusterAllNodesFailed(String) =
-        15: "Attempted connecting to all cluster members, but the following errors occurred: \n{}.",
-    ClusterTokenCredentialInvalid() =
+    EnterpriseAllNodesFailed(String) =
+        15: "Attempted connecting to all enterprise members, but the following errors occurred: \n{}.",
+    EnterpriseTokenCredentialInvalid() =
         17: "Invalid token credential.",
     SessionCloseFailed() =
         18: "Failed to close session. It may still be open on the server: or it may already have been closed previously.",
-    ClusterEndpointEncrypted() =
-        19: "Unable to connect to TypeDB Cluster: attempting an unencrypted connection to an encrypted endpoint.",
-    ClusterSSLCertificateNotValidated() =
-        20: "SSL handshake with TypeDB Cluster failed: the server's identity could not be verified. Possible CA mismatch.",
+    EnterpriseEndpointEncrypted() =
+        19: "Unable to connect to TypeDB Enterprise: attempting an unencrypted connection to an encrypted endpoint.",
+    EnterpriseSSLCertificateNotValidated() =
+        20: "SSL handshake with TypeDB Enterprise failed: the server's identity could not be verified. Possible CA mismatch.",
     BrokenPipe() =
-        21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted cluster instance using a TLS-enabled credential.",
+        21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted enterprise instance using a TLS-enabled credential.",
     ConnectionRefused() =
         22: "Connection refused. This could happen because of a misconfigured server SSL certificate, or network failures.",
 }
@@ -113,8 +113,8 @@ impl Error {
 
     fn from_message(message: &str) -> Self {
         match message.split_ascii_whitespace().next() {
-            Some("[RPL01]") => Self::Connection(ConnectionError::ClusterReplicaNotPrimary()),
-            Some("[CLS08]") => Self::Connection(ConnectionError::ClusterTokenCredentialInvalid()),
+            Some("[RPL01]") => Self::Connection(ConnectionError::EnterpriseReplicaNotPrimary()),
+            Some("[CLS08]") => Self::Connection(ConnectionError::EnterpriseTokenCredentialInvalid()),
             Some("[DBS06]") => Self::Connection(ConnectionError::DatabaseDoesNotExist(
                 message.split('\'').nth(1).unwrap_or("{unknown}").to_owned(),
             )),
@@ -126,9 +126,9 @@ impl Error {
         if status_message == "broken pipe" {
             Error::Connection(ConnectionError::BrokenPipe())
         } else if status_message.contains("received corrupt message") {
-            Error::Connection(ConnectionError::ClusterEndpointEncrypted())
+            Error::Connection(ConnectionError::EnterpriseEndpointEncrypted())
         } else if status_message.contains("UnknownIssuer") {
-            Error::Connection(ConnectionError::ClusterSSLCertificateNotValidated())
+            Error::Connection(ConnectionError::EnterpriseSSLCertificateNotValidated())
         } else if status_message.contains("Connection refused") {
             Error::Connection(ConnectionError::ConnectionRefused())
         } else {

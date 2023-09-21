@@ -48,7 +48,7 @@ function getServerPID(port) {
 
 function serverStart(idx) {
     const encryptionResourceDir = process.env.ROOT_CA.replace(/\/[^\/]*$/, "/");
-    let node = spawn(`./${idx}/typedb`, ["cluster",
+    let node = spawn(`./${idx}/typedb`, ["enterprise",
         "--storage.data", "server/data",
         "--server.address", `localhost:${idx}1729`,
         "--server.internal-address.zeromq", `localhost:${idx}1730`,
@@ -86,7 +86,7 @@ function serverStart(idx) {
 
 async function run() {
     console.log("root ca path: ", process.env.ROOT_CA)
-    const client = await TypeDB.clusterClient(
+    const client = await TypeDB.enterpriseClient(
         ["localhost:11729", "localhost:21729", "localhost:31729"],
         new TypeDBCredential("admin", "password", process.env.ROOT_CA)
     );
@@ -109,7 +109,7 @@ async function run() {
         await session.close();
 
         for (let iteration = 1; iteration <= 10; iteration++) {
-            const client = await TypeDB.clusterClient(
+            const client = await TypeDB.enterpriseClient(
                 ["localhost:11729", "localhost:21729", "localhost:31729"],
                 new TypeDBCredential("admin", "password", process.env.ROOT_CA)
             );

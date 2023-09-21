@@ -30,7 +30,7 @@ export namespace TypeDB {
         return new TypeDBClientImpl(address).open();
     }
 
-    export function clusterClient(addresses: string | string[], credential: TypeDBCredential): Promise<TypeDBClient> {
+    export function enterpriseClient(addresses: string | string[], credential: TypeDBCredential): Promise<TypeDBClient> {
         if (typeof addresses === 'string') addresses = [addresses];
         return new TypeDBClientImpl(addresses, credential).open();
     }

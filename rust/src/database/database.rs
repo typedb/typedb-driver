@@ -110,7 +110,7 @@ impl Database {
         P: Future<Output = Result<R>>,
     {
         match self.run_on_any_replica(&task).await {
-            Err(Error::Connection(ConnectionError::ClusterReplicaNotPrimary())) => {
+            Err(Error::Connection(ConnectionError::EnterpriseReplicaNotPrimary())) => {
                 debug!("Attempted to run on a non-primary replica, retrying on primary...");
                 self.run_on_primary_replica(&task).await
             }
@@ -158,7 +158,7 @@ impl Database {
             .await
             {
                 Err(Error::Connection(
-                    ConnectionError::ClusterReplicaNotPrimary()
+                    ConnectionError::EnterpriseReplicaNotPrimary()
                     | ConnectionError::UnableToConnect()
                     | ConnectionError::ConnectionRefused(),
                 )) => {

@@ -22,8 +22,8 @@
 import {ServiceError} from "@grpc/grpc-js";
 import {Status} from "@grpc/grpc-js/build/src/constants";
 import {ErrorMessage} from "./ErrorMessage";
-import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
-import CLUSTER_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID;
+import ENTERPRISE_REPLICA_NOT_PRIMARY = ErrorMessage.Client.ENTPERPRISE_REPLICA_NOT_PRIMARY;
+import ENTERPRISE_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Client.ENTPERPRISE_TOKEN_CREDENTIAL_INVALID;
 import UNABLE_TO_CONNECT = ErrorMessage.Client.UNABLE_TO_CONNECT;
 import RPC_METHOD_UNAVAILABLE = ErrorMessage.Client.RPC_METHOD_UNAVAILABLE;
 
@@ -57,11 +57,11 @@ export class TypeDBClientError extends Error {
                 super(UNABLE_TO_CONNECT.message());
                 this._messageTemplate = UNABLE_TO_CONNECT;
             } else if (isReplicaNotPrimaryError(error)) {
-                super(CLUSTER_REPLICA_NOT_PRIMARY.message());
-                this._messageTemplate = CLUSTER_REPLICA_NOT_PRIMARY;
+                super(ENTERPRISE_REPLICA_NOT_PRIMARY.message());
+                this._messageTemplate = ENTERPRISE_REPLICA_NOT_PRIMARY;
             } else if (isTokenCredentialInvalidError(error)) {
-                super(CLUSTER_TOKEN_CREDENTIAL_INVALID.message());
-                this._messageTemplate = CLUSTER_TOKEN_CREDENTIAL_INVALID;
+                super(ENTERPRISE_TOKEN_CREDENTIAL_INVALID.message());
+                this._messageTemplate = ENTERPRISE_TOKEN_CREDENTIAL_INVALID;
             } else if (error.code === Status.INTERNAL) super(error.details)
             else super(error.toString());
         } else super(error.toString());

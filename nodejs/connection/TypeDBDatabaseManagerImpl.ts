@@ -26,8 +26,8 @@ import {TypeDBClientError} from "../common/errors/TypeDBClientError";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {ServerClient, TypeDBClientImpl} from "./TypeDBClientImpl";
 import {TypeDBDatabaseImpl} from "./TypeDBDatabaseImpl";
-import CLUSTER_ALL_NODES_FAILED = ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
-import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
+import ENTERPRISE_ALL_NODES_FAILED = ErrorMessage.Client.ENTPERPRISE_ALL_NODES_FAILED;
+import ENTERPRISE_REPLICA_NOT_PRIMARY = ErrorMessage.Client.ENTPERPRISE_REPLICA_NOT_PRIMARY;
 import DB_DOES_NOT_EXIST = ErrorMessage.Client.DATABASE_DOES_NOT_EXIST;
 
 export class TypeDBDatabaseManagerImpl implements DatabaseManager {
@@ -70,7 +70,7 @@ export class TypeDBDatabaseManagerImpl implements DatabaseManager {
                 errors += `- ${serverClient.address}: ${e}\n`;
             }
         }
-        throw new TypeDBClientError(CLUSTER_ALL_NODES_FAILED.message(errors));
+        throw new TypeDBClientError(ENTERPRISE_ALL_NODES_FAILED.message(errors));
     }
 
     private async runFailsafe<T>(name: string, task: (client: ServerClient) => Promise<T>): Promise<T> {
@@ -79,11 +79,11 @@ export class TypeDBDatabaseManagerImpl implements DatabaseManager {
             try {
                 return await task(serverClient);
             } catch (e) {
-                if (e instanceof TypeDBClientError && CLUSTER_REPLICA_NOT_PRIMARY === e.messageTemplate) {
+                if (e instanceof TypeDBClientError && ENTERPRISE_REPLICA_NOT_PRIMARY === e.messageTemplate) {
                     return await (await TypeDBDatabaseImpl.get(name, this._client)).runOnPrimaryReplica(task);
                 } else errors += `- ${serverClient.address}: ${e}\n`;
             }
         }
-        throw new TypeDBClientError(CLUSTER_ALL_NODES_FAILED.message(errors));
+        throw new TypeDBClientError(ENTERPRISE_ALL_NODES_FAILED.message(errors));
     }
 }

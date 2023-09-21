@@ -67,7 +67,7 @@ class TypeDB:
         return _Client([address])
 
     @staticmethod
-    def cluster_client(addresses: Union[Iterable[str], str], credential: TypeDBCredential) -> TypeDBClient:
+    def enterprise_client(addresses: Union[Iterable[str], str], credential: TypeDBCredential) -> TypeDBClient:
         if isinstance(addresses, str):
             return _Client([addresses], credential)
         else:

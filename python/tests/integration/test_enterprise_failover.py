@@ -31,13 +31,13 @@ WRITE = TransactionType.WRITE
 READ = TransactionType.READ
 
 
-class TestClusterFailover(TestCase):
+class TestEnterpriseFailover(TestCase):
 
     def setUp(self):
         root_ca_path = os.environ["ROOT_CA"]
         credential = TypeDBCredential("admin", "password", tls_root_ca_path=root_ca_path)
         print("SetUp", flush=True)
-        with TypeDB.cluster_client(["localhost:11729", "localhost:21729", "localhost:31729"], credential) as client:
+        with TypeDB.enterprise_client(["localhost:11729", "localhost:21729", "localhost:31729"], credential) as client:
             if client.databases.contains("typedb"):
                 client.databases.get("typedb").delete()
             client.databases.create("typedb")
@@ -45,7 +45,7 @@ class TestClusterFailover(TestCase):
     @staticmethod
     def server_start(index):
         subprocess.Popen([
-            "../%s/typedb" % index, "cluster",
+            "../%s/typedb" % index, "enterprise",
             "--storage.data", "server/data",
             "--server.address", "localhost:%s1729" % index,
             "--server.internal-address.zeromq", "localhost:%s1730" % index,
@@ -80,7 +80,7 @@ class TestClusterFailover(TestCase):
     def test_put_entity_type_to_crashed_primary_replica(self):
         root_ca_path = os.environ["ROOT_CA"]
         credential = TypeDBCredential("admin", "password", tls_root_ca_path=root_ca_path)
-        with TypeDB.cluster_client(["localhost:11729", "localhost:21729", "localhost:31729"], credential) as client:
+        with TypeDB.enterprise_client(["localhost:11729", "localhost:21729", "localhost:31729"], credential) as client:
             assert client.databases.contains("typedb")
             primary_replica = self.get_primary_replica(client.databases)
             print("Performing operations against the primary replica " + str(primary_replica))

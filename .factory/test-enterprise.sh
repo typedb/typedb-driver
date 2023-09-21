@@ -20,10 +20,5 @@
 # under the License.
 #
 
-set -e
-
-procs=$(ps aux | awk '/TypeDBClusterServe[r]/ {print $2}' | paste -sd " " -)
-echo $procs
-if [ -n "$procs" ]; then
-    kill $procs
-fi
+set -ex
+bazel test $(bazel query "filter('^.*enterprise.*$', kind(.*_test, $1))") "${@:2}"

@@ -29,7 +29,7 @@ use super::common;
 #[serial]
 fn basic_async_std() {
     async_std::task::block_on(async {
-        let connection = common::new_cluster_connection()?;
+        let connection = common::new_enterprise_connection()?;
         common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
         let databases = DatabaseManager::new(connection);
         assert!(databases.contains(common::TEST_DATABASE).await?);
@@ -50,7 +50,7 @@ fn basic_async_std() {
 #[serial]
 fn basic_smol() {
     smol::block_on(async {
-        let connection = common::new_cluster_connection()?;
+        let connection = common::new_enterprise_connection()?;
         common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
         let databases = DatabaseManager::new(connection);
         assert!(databases.contains(common::TEST_DATABASE).await?);
@@ -71,7 +71,7 @@ fn basic_smol() {
 #[serial]
 fn basic_futures() {
     futures::executor::block_on(async {
-        let connection = common::new_cluster_connection()?;
+        let connection = common::new_enterprise_connection()?;
         common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
         let databases = DatabaseManager::new(connection);
         assert!(databases.contains(common::TEST_DATABASE).await?);

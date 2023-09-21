@@ -36,11 +36,11 @@ public class TypeDB {
         return new TypeDBClientImpl(address);
     }
 
-    public static TypeDBClient clusterClient(String address, TypeDBCredential credential) {
-        return clusterClient(set(address), credential);
+    public static TypeDBClient enterpriseClient(String address, TypeDBCredential credential) {
+        return enterpriseClient(set(address), credential);
     }
 
-    public static TypeDBClient clusterClient(Set<String> addresses, TypeDBCredential credential) {
+    public static TypeDBClient enterpriseClient(Set<String> addresses, TypeDBCredential credential) {
         return new TypeDBClientImpl(addresses, credential);
     }
 }

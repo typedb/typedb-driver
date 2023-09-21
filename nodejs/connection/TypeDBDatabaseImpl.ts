@@ -30,7 +30,7 @@ import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 import UNABLE_TO_CONNECT = ErrorMessage.Client.UNABLE_TO_CONNECT;
 import DATABASE_DOES_NOT_EXIST = ErrorMessage.Client.DATABASE_DOES_NOT_EXIST;
-import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
+import ENTERPRISE_REPLICA_NOT_PRIMARY = ErrorMessage.Client.ENTPERPRISE_REPLICA_NOT_PRIMARY;
 
 const PRIMARY_REPLICA_TASK_MAX_RETRIES = 10;
 const FETCH_REPLICAS_MAX_RETRIES = 10;
@@ -121,7 +121,7 @@ export class TypeDBDatabaseImpl implements Database {
         try {
             return await this.runOnAnyReplica(task);
         } catch (e) {
-            if (e instanceof TypeDBClientError && CLUSTER_REPLICA_NOT_PRIMARY === e.messageTemplate) {
+            if (e instanceof TypeDBClientError && ENTERPRISE_REPLICA_NOT_PRIMARY === e.messageTemplate) {
                 // debug!("Attempted to run on a non-primary replica, retrying on primary...");
                 return this.runOnPrimaryReplica(task);
             } else throw e;
@@ -153,7 +153,7 @@ export class TypeDBDatabaseImpl implements Database {
                 return await task(this._client.serverClients.get(this.primaryReplica.address), this.primaryReplica.database, isFirstRun);
             } catch (e) {
                 if (e instanceof TypeDBClientError &&
-                    (UNABLE_TO_CONNECT === e.messageTemplate || CLUSTER_REPLICA_NOT_PRIMARY === e.messageTemplate)
+                    (UNABLE_TO_CONNECT === e.messageTemplate || ENTERPRISE_REPLICA_NOT_PRIMARY === e.messageTemplate)
                 ) {
                     await this.waitForPrimaryReplicaSelection();
                     await this.seekPrimaryReplica();
