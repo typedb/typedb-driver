@@ -168,11 +168,10 @@ install_deps()
 ################################
 
 # Load repositories
-load("//dependencies/vaticle:repositories.bzl", "vaticle_typedb_common", "vaticle_typeql", "vaticle_typedb_behaviour", "vaticle_factory_tracing", "vaticle_typedb_protocol")
+load("//dependencies/vaticle:repositories.bzl", "vaticle_typedb_common", "vaticle_typeql", "vaticle_typedb_behaviour", "vaticle_typedb_protocol")
 vaticle_typedb_common()
 vaticle_typeql()
 vaticle_typedb_behaviour()
-vaticle_factory_tracing()
 vaticle_typedb_protocol()
 
 # Load artifacts
@@ -240,13 +239,11 @@ rules_ts_dependencies(
 load("@vaticle_dependencies//tool/common:deps.bzl", vaticle_dependencies_tool_maven_artifacts = "maven_artifacts")
 load("@vaticle_typedb_common//dependencies/maven:artifacts.bzl", vaticle_typedb_common_maven_artifacts = "artifacts")
 load("@vaticle_typeql//dependencies/maven:artifacts.bzl", vaticle_typeql_maven_artifacts = "artifacts")
-load("@vaticle_factory_tracing//dependencies/maven:artifacts.bzl", vaticle_factory_tracing_maven_artifacts = "artifacts")
 load("//dependencies/maven:artifacts.bzl", vaticle_typedb_client_java_maven_artifacts = "artifacts", vaticle_typedb_client_java_maven_overrides = "overrides")
 load("@vaticle_bazel_distribution//maven:deps.bzl", vaticle_bazel_distribution_maven_artifacts = "maven_artifacts")
 
 load("@vaticle_dependencies//library/maven:rules.bzl", "maven")
 maven(
-    vaticle_factory_tracing_maven_artifacts +
     vaticle_typedb_common_maven_artifacts +
     vaticle_typeql_maven_artifacts +
     vaticle_dependencies_tool_maven_artifacts +

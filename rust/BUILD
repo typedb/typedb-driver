@@ -23,12 +23,10 @@ package(default_visibility = ["//visibility:public"])
 
 load("@rules_rust//rust:defs.bzl", "rust_library", "rust_static_library", "rustfmt_test")
 load("@vaticle_bazel_distribution//crates:rules.bzl", "assemble_crate", "deploy_crate")
-load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
 load("@vaticle_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
 load("@vaticle_dependencies//builder/swig:java.bzl", "swig_java")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//:deployment.bzl", deployment_github = "deployment")
 
 typedb_client_srcs = glob(["src/**/*.rs"])
 typedb_client_tags = ["crate-name=typedb-client"]
@@ -87,16 +85,6 @@ deploy_crate(
     release = deployment["crate.release"],
     snapshot = deployment["crate.snapshot"],
     target = ":assemble_crate",
-)
-
-deploy_github(
-    name = "deploy_github",
-    draft = True,
-    organisation = deployment_github["github.organisation"],
-    release_description = "//:RELEASE_NOTES_LATEST.md",
-    repository = deployment_github["github.repository"],
-    title = "TypeDB Client Rust",
-    title_append_version = True,
 )
 
 checkstyle_test(

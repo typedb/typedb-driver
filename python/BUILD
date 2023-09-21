@@ -19,12 +19,8 @@
 # under the License.
 #
 
-load("@vaticle_bazel_distribution_pip//:requirements.bzl", vaticle_bazel_distribution_requirement = "requirement")
-load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
-
 load("@vaticle_dependencies//builder/swig:python.bzl", "py_native_lib_rename")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//:deployment.bzl", github_deployment = "deployment")
 
 load("//python:rules.bzl", "native_driver_versioned")
 load("//python:python_versions.bzl", "python_versions")
@@ -62,22 +58,11 @@ checkstyle_test(
         ".gitignore",
         "BUILD",
         "WORKSPACE",
-        "deployment.bzl",
         "requirements*.txt",
         "typedb/**/*",
     ]),
     license_type = "apache-header",
     size = "small",
-)
-
-deploy_github(
-    name = "deploy-github",
-    release_description = "//:RELEASE_NOTES_LATEST.md",
-    title = "TypeDB Client Python",
-    title_append_version = True,
-    organisation = github_deployment["github.organisation"],
-    repository = github_deployment["github.repository"],
-    draft = False
 )
 
 # CI targets that are not declared in any BUILD_ file, but are called externally

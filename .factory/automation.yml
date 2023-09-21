@@ -730,6 +730,30 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run --define version=$(git rev-parse HEAD) //rust:deploy_crate -- snapshot
 
+    deploy-npm-snapshot:
+      filter:
+        owner: vaticle
+        branch: [master, development]
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+        - test-nodejs-integration
+        - test-nodejs-cluster-failover
+        - test-nodejs-behaviour-connection-core
+        - test-nodejs-behaviour-connection-cluster
+        - test-nodejs-behaviour-concept-core
+        - test-nodejs-behaviour-concept-cluster
+        - test-nodejs-behaviour-match-core
+        - test-nodejs-behaviour-match-cluster
+        - test-nodejs-behaviour-writable-core
+        - test-nodejs-behaviour-writable-cluster
+        - test-nodejs-behaviour-definable-core
+        - test-nodejs-behaviour-definable-cluster
+      command: |
+        export DEPLOY_NPM_USERNAME=$REPO_VATICLE_USERNAME
+        export DEPLOY_NPM_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run --define version=$(git rev-parse HEAD) //nodejs:deploy-npm -- snapshot
+        
 # TODO: assembly tests for all drivers to run in factory
 
 release:
@@ -749,20 +773,10 @@ release:
         export NOTES_VALIDATE_TOKEN=$REPO_GITHUB_TOKEN
         bazel run @vaticle_dependencies//tool/release/notes:validate --test_output=streamed -- $FACTORY_OWNER $FACTORY_REPO RELEASE_NOTES_LATEST.md
 
-#  deployment:
-#    deploy-crate-release:
-#      image: vaticle-ubuntu-22.04
-#      command: |
-#        export DEPLOY_CRATE_TOKEN=$REPO_CRATES_TOKEN
-#        bazel run --define version=$(cat VERSION) //rust:deploy_crate -- release
-#
-#    deploy-npm-release:
-#      image: vaticle-ubuntu-22.04
-#      dependencies: [deploy-github]
-#      command: |
-#        wget -q -O - https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
-#        wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-#        sudo apt update -y
-#        sudo apt install -y expect
-#        export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN
-#        bazel run --define version=$(cat VERSION) //nodejs:deploy-npm -- release
+  deployment:
+    trigger-release-circleci:
+      image: vaticle-ubuntu-22.04
+      command: |
+        git checkout -b release
+        git push -f origin release
+        echo "Successfully pushed branch 'release', which triggers a release workflow in CircleCI. The progress of the release can be tracked there."

@@ -23,17 +23,9 @@ package(default_visibility = ["//visibility:public"])
 
 load("@vaticle_dependencies//tool/release/deps:rules.bzl", "release_validate_deps")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_dependencies//distribution/maven:version.bzl", "version")
-load("@vaticle_dependencies//library/maven:artifacts.bzl", artifacts_org = "artifacts")
-load("//dependencies/maven:artifacts.bzl", artifacts_repo = "overrides")
-load("@vaticle_bazel_distribution//maven:rules.bzl", "assemble_maven", "deploy_maven")
-load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
-load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
-load("//:deployment.bzl", github_deployment = "deployment")
 
 exports_files([
     "VERSION",
-    "deployment.bzl",
 ])
 
 checkstyle_test(

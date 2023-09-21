@@ -20,13 +20,9 @@
 #
 
 load("@vaticle_bazel_distribution//pip:rules.bzl", "assemble_pip", "deploy_pip")
-load("@vaticle_bazel_distribution_pip//:requirements.bzl", vaticle_bazel_distribution_requirement = "requirement")
-load("@vaticle_bazel_distribution//github:rules.bzl", "deploy_github")
 
 load("@vaticle_dependencies//builder/swig:python.bzl", "swig_python", "py_native_lib_rename")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
-load("//:deployment.bzl", github_deployment = "deployment")
 
 
 def native_driver_versioned(python_versions):

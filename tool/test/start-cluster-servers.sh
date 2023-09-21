@@ -37,8 +37,17 @@ function server_start() {
     --server.address=localhost:${1}1729 \
     --server.internal-address.zeromq=localhost:${1}1730 \
     --server.internal-address.grpc=localhost:${1}1731 \
-    $peers \
-    --server.encryption.enable=true
+    $(echo $peers) \
+    --server.encryption.enable=true \
+    --server.encryption.file.enable=true \
+    --server.encryption.file.external-grpc.private-key=`realpath tool/test/resources/encryption/ext-grpc-private-key.pem` \
+    --server.encryption.file.external-grpc.certificate=`realpath tool/test/resources/encryption/ext-grpc-certificate.pem` \
+    --server.encryption.file.external-grpc.root-ca=`realpath tool/test/resources/encryption/ext-grpc-root-ca.pem` \
+    --server.encryption.file.internal-grpc.private-key=`realpath tool/test/resources/encryption/int-grpc-private-key.pem` \
+    --server.encryption.file.internal-grpc.certificate=`realpath tool/test/resources/encryption/int-grpc-certificate.pem` \
+    --server.encryption.file.internal-grpc.root-ca=`realpath tool/test/resources/encryption/int-grpc-root-ca.pem` \
+    --server.encryption.file.internal-zmq.secret-key=`realpath tool/test/resources/encryption/int-zmq-private-key` \
+    --server.encryption.file.internal-zmq.public-key=`realpath tool/test/resources/encryption/int-zmq-public-key`
 }
 
 rm -rf $(seq 1 $NODE_COUNT) typedb-cluster-all
@@ -53,7 +62,7 @@ for i in $(seq 1 $NODE_COUNT); do
   server_start $i &
 done
 
-ROOT_CA=`realpath typedb-cluster-all/server/conf/encryption/ext-root-ca.pem`
+ROOT_CA=`realpath tool/test/resources/encryption/ext-grpc-root-ca.pem`
 export ROOT_CA
 
 POLL_INTERVAL_SECS=0.5
