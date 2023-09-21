@@ -19,15 +19,15 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.concept.thing;
+package com.vaticle.typedb.driver.concept.thing;
 
-import com.vaticle.typedb.client.api.TypeDBTransaction;
-import com.vaticle.typedb.client.api.concept.thing.Relation;
-import com.vaticle.typedb.client.api.concept.thing.Thing;
-import com.vaticle.typedb.client.api.concept.type.RoleType;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.client.concept.type.RelationTypeImpl;
-import com.vaticle.typedb.client.concept.type.RoleTypeImpl;
+import com.vaticle.typedb.driver.api.TypeDBTransaction;
+import com.vaticle.typedb.driver.api.concept.thing.Relation;
+import com.vaticle.typedb.driver.api.concept.thing.Thing;
+import com.vaticle.typedb.driver.api.concept.type.RoleType;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.vaticle.typedb.driver.concept.type.RelationTypeImpl;
+import com.vaticle.typedb.driver.concept.type.RoleTypeImpl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,18 +37,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.jni.typedb_client.relation_add_role_player;
-import static com.vaticle.typedb.client.jni.typedb_client.relation_get_players_by_role_type;
-import static com.vaticle.typedb.client.jni.typedb_client.relation_get_relating;
-import static com.vaticle.typedb.client.jni.typedb_client.relation_get_role_players;
-import static com.vaticle.typedb.client.jni.typedb_client.relation_get_type;
-import static com.vaticle.typedb.client.jni.typedb_client.relation_remove_role_player;
-import static com.vaticle.typedb.client.jni.typedb_client.role_player_get_player;
-import static com.vaticle.typedb.client.jni.typedb_client.role_player_get_role_type;
+import static com.vaticle.typedb.driver.jni.typedb_driver.relation_add_role_player;
+import static com.vaticle.typedb.driver.jni.typedb_driver.relation_get_players_by_role_type;
+import static com.vaticle.typedb.driver.jni.typedb_driver.relation_get_relating;
+import static com.vaticle.typedb.driver.jni.typedb_driver.relation_get_role_players;
+import static com.vaticle.typedb.driver.jni.typedb_driver.relation_get_type;
+import static com.vaticle.typedb.driver.jni.typedb_driver.relation_remove_role_player;
+import static com.vaticle.typedb.driver.jni.typedb_driver.role_player_get_player;
+import static com.vaticle.typedb.driver.jni.typedb_driver.role_player_get_role_type;
 
 public class RelationImpl extends ThingImpl implements Relation {
 
-    public RelationImpl(com.vaticle.typedb.client.jni.Concept concept) {
+    public RelationImpl(com.vaticle.typedb.driver.jni.Concept concept) {
         super(concept);
     }
 
@@ -62,8 +62,8 @@ public class RelationImpl extends ThingImpl implements Relation {
         try {
             relation_add_role_player(nativeTransaction(transaction),
                 nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((ThingImpl) player).nativeObject);
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 
@@ -72,8 +72,8 @@ public class RelationImpl extends ThingImpl implements Relation {
         try {
             relation_remove_role_player(nativeTransaction(transaction),
                 nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((ThingImpl) player).nativeObject);
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 
@@ -81,9 +81,9 @@ public class RelationImpl extends ThingImpl implements Relation {
     public Stream<ThingImpl> getPlayers(TypeDBTransaction transaction, RoleType... roleTypes) {
         try {
             return relation_get_players_by_role_type(nativeTransaction(transaction),
-                nativeObject, Arrays.stream(roleTypes).map(rt -> ((RoleTypeImpl) rt).nativeObject).toArray(com.vaticle.typedb.client.jni.Concept[]::new)).stream().map(ThingImpl::of);
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+                nativeObject, Arrays.stream(roleTypes).map(rt -> ((RoleTypeImpl) rt).nativeObject).toArray(com.vaticle.typedb.driver.jni.Concept[]::new)).stream().map(ThingImpl::of);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 
@@ -97,8 +97,8 @@ public class RelationImpl extends ThingImpl implements Relation {
                 if (rolePlayerMap.containsKey(role)) rolePlayerMap.get(role).add(player);
                 else rolePlayerMap.put(role, new ArrayList<>(Collections.singletonList(player)));
             });
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
         return rolePlayerMap;
     }
@@ -107,8 +107,8 @@ public class RelationImpl extends ThingImpl implements Relation {
     public Stream<? extends RoleType> getRelating(TypeDBTransaction transaction) {
         try {
             return relation_get_relating(nativeTransaction(transaction), nativeObject).stream().map(RoleTypeImpl::new);
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 }

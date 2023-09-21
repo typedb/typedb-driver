@@ -19,9 +19,9 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.test.behaviour.connection.session;
+package com.vaticle.typedb.driver.test.behaviour.connection.session;
 
-import com.vaticle.typedb.client.api.TypeDBSession;
+import com.vaticle.typedb.driver.api.TypeDBSession;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -31,15 +31,15 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.api.TypeDBSession.Type.DATA;
-import static com.vaticle.typedb.client.api.TypeDBSession.Type.SCHEMA;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.client;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.optionSetters;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessionOptions;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessions;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessionsParallel;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.threadPool;
+import static com.vaticle.typedb.driver.api.TypeDBSession.Type.DATA;
+import static com.vaticle.typedb.driver.api.TypeDBSession.Type.SCHEMA;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.driver;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.optionSetters;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.sessionOptions;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.sessions;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.sessionsParallel;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.threadPool;
 import static com.vaticle.typedb.common.collection.Collections.list;
 import static java.util.Objects.isNull;
 import static org.junit.Assert.assertEquals;
@@ -60,14 +60,14 @@ public class SessionSteps {
     @When("connection open schema session(s) for database(s):")
     public void connection_open_schema_sessions_for_databases(List<String> names) {
         for (String name : names) {
-            sessions.add(client.session(name, SCHEMA, sessionOptions));
+            sessions.add(driver.session(name, SCHEMA, sessionOptions));
         }
     }
 
     @When("connection open (data )session(s) for database(s):")
     public void connection_open_data_sessions_for_databases(List<String> names) {
         for (String name : names) {
-            sessions.add(client.session(name, DATA, sessionOptions));
+            sessions.add(driver.session(name, DATA, sessionOptions));
         }
     }
 
@@ -76,7 +76,7 @@ public class SessionSteps {
         assertTrue(THREAD_POOL_SIZE >= names.size());
 
         for (String name : names) {
-            sessionsParallel.add(CompletableFuture.supplyAsync(() -> client.session(name, DATA, sessionOptions), threadPool));
+            sessionsParallel.add(CompletableFuture.supplyAsync(() -> driver.session(name, DATA, sessionOptions), threadPool));
         }
     }
 

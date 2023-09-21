@@ -19,14 +19,14 @@
  * under the License.
  */
 
-import {TypeDBClientError} from "../errors/TypeDBClientError";
+import {TypeDBDriverError} from "../errors/TypeDBDriverError";
 
 export abstract class Stream<T> implements AsyncIterable<T> {
 
     // TODO why can't this be abstract?
     // eslint-disable-next-line require-yield
     async* [Symbol.asyncIterator](): AsyncIterator<T, any, undefined> {
-        throw new TypeDBClientError("ILLEGAL STATE");
+        throw new TypeDBDriverError("ILLEGAL STATE");
     }
 
     iterator(): AsyncIterator<T, any, undefined> {

@@ -19,9 +19,9 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.test.behaviour.connection.database;
+package com.vaticle.typedb.driver.test.behaviour.connection.database;
 
-import com.vaticle.typedb.client.test.behaviour.BehaviourTest;
+import com.vaticle.typedb.driver.test.behaviour.BehaviourTest;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
@@ -30,25 +30,25 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         strict = true,
         plugin = "pretty",
-        glue = "com.vaticle.typedb.client.test.behaviour",
+        glue = "com.vaticle.typedb.driver.test.behaviour",
         features = "external/vaticle_typedb_behaviour/connection/database.feature",
-        tags = "not @ignore and not @ignore-client-java and not @ignore-typedb-cluster-client-java"
+        tags = "not @ignore and not @ignore-driver-java and not @ignore-typedb-enterprise-driver-java"
 )
-public class DatabaseTestCluster extends BehaviourTest {
+public class DatabaseTestEnterprise extends BehaviourTest {
     // ATTENTION:
     // When you click RUN from within this class through Intellij IDE, it will fail.
     // You can fix it by doing:
     //
     // 1) Go to 'Run'
     // 2) Select 'Edit Configurations...'
-    // 3) Select 'Bazel test DatabaseTestCluster'
+    // 3) Select 'Bazel test DatabaseTestEnterprise'
     //
     // 4) Ensure 'Target Expression' is set correctly:
     //    a) Use '//<this>/<package>/<name>:test-core' to test against typedb
-    //    b) Use '//<this>/<package>/<name>:test-cluster' to test against typedb-cluster
+    //    b) Use '//<this>/<package>/<name>:test-enterprise' to test against typedb-enterprise
     //
     // 5) Update 'Bazel Flags':
-    //    a) Remove the line that says: '--test_filter=com.vaticle.typedb.client.*'
+    //    a) Remove the line that says: '--test_filter=com.vaticle.typedb.driver.*'
     //    b) Use the following Bazel flags:
     //       --cache_test_results=no : to make sure you're not using cache
     //       --test_output=streamed : to make sure all output is printed

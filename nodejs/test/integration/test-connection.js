@@ -22,31 +22,31 @@
 const { TypeDB, SessionType, TransactionType } = require("../../dist");
 
 async function run() {
-    const client = await TypeDB.coreClient();
+    const driver = await TypeDB.coreDriver();
 
     try {
-        const dbs = await client.databases.all();
+        const dbs = await driver.databases.all();
         console.log(`get databases - SUCCESS - the databases are [${dbs}]`);
         const typedb = dbs.find(x => x.name === "typedb");
         if (typedb) {
             await typedb.delete();
             console.log(`delete database - SUCCESS - 'typedb' has been deleted`);
         }
-        await client.databases.create("typedb");
+        await driver.databases.create("typedb");
         console.log("create database - SUCCESS - 'typedb' has been created");
     } catch (err) {
         console.error(`database operations - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
     let session;
     try {
-        session = await client.session("typedb", SessionType.SCHEMA);
+        session = await driver.session("typedb", SessionType.SCHEMA);
         console.log("open schema session - SUCCESS");
     } catch (err) {
         console.error(`open schema session - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -57,7 +57,7 @@ async function run() {
     } catch (err) {
         console.error(`open schema write tx - ERROR: ${err.stack || err}`);
         await session.close();
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -67,7 +67,7 @@ async function run() {
     } catch (err) {
         console.error(`close schema write tx - ERROR: ${err.stack || err}`);
         await session.close();
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -76,15 +76,15 @@ async function run() {
         console.log("close schema session - SUCCESS");
     } catch (err) {
         console.error(`close schema session - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
     try {
-        await client.close();
-        console.log("client.close - SUCCESS");
+        await driver.close();
+        console.log("driver.close - SUCCESS");
     } catch (err) {
-        console.error(`client.close - ERROR: ${err.stack || err}`);
+        console.error(`driver.close - ERROR: ${err.stack || err}`);
         process.exit(1);
     }
 }

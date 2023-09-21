@@ -19,16 +19,16 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.concept;
+package com.vaticle.typedb.driver.api.concept;
 
-import com.vaticle.typedb.client.api.concept.thing.Attribute;
-import com.vaticle.typedb.client.api.concept.thing.Entity;
-import com.vaticle.typedb.client.api.concept.thing.Relation;
-import com.vaticle.typedb.client.api.concept.type.AttributeType;
-import com.vaticle.typedb.client.api.concept.type.EntityType;
-import com.vaticle.typedb.client.api.concept.type.RelationType;
-import com.vaticle.typedb.client.api.concept.value.Value;
-import com.vaticle.typedb.client.common.exception.TypeDBException;
+import com.vaticle.typedb.driver.api.concept.thing.Attribute;
+import com.vaticle.typedb.driver.api.concept.thing.Entity;
+import com.vaticle.typedb.driver.api.concept.thing.Relation;
+import com.vaticle.typedb.driver.api.concept.type.AttributeType;
+import com.vaticle.typedb.driver.api.concept.type.EntityType;
+import com.vaticle.typedb.driver.api.concept.type.RelationType;
+import com.vaticle.typedb.driver.api.concept.value.Value;
+import com.vaticle.typedb.driver.common.exception.TypeDBException;
 
 import java.util.List;
 import javax.annotation.CheckReturnValue;

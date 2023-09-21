@@ -19,25 +19,25 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.concept.thing;
+package com.vaticle.typedb.driver.concept.thing;
 
-import com.vaticle.typedb.client.api.TypeDBTransaction;
-import com.vaticle.typedb.client.api.concept.value.Value;
-import com.vaticle.typedb.client.api.concept.thing.Attribute;
-import com.vaticle.typedb.client.api.concept.type.ThingType;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.client.concept.value.ValueImpl;
-import com.vaticle.typedb.client.concept.type.AttributeTypeImpl;
-import com.vaticle.typedb.client.concept.type.ThingTypeImpl;
+import com.vaticle.typedb.driver.api.TypeDBTransaction;
+import com.vaticle.typedb.driver.api.concept.value.Value;
+import com.vaticle.typedb.driver.api.concept.thing.Attribute;
+import com.vaticle.typedb.driver.api.concept.type.ThingType;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.vaticle.typedb.driver.concept.value.ValueImpl;
+import com.vaticle.typedb.driver.concept.type.AttributeTypeImpl;
+import com.vaticle.typedb.driver.concept.type.ThingTypeImpl;
 
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.jni.typedb_client.attribute_get_owners;
-import static com.vaticle.typedb.client.jni.typedb_client.attribute_get_type;
-import static com.vaticle.typedb.client.jni.typedb_client.attribute_get_value;
+import static com.vaticle.typedb.driver.jni.typedb_driver.attribute_get_owners;
+import static com.vaticle.typedb.driver.jni.typedb_driver.attribute_get_type;
+import static com.vaticle.typedb.driver.jni.typedb_driver.attribute_get_value;
 
 public class AttributeImpl extends ThingImpl implements Attribute {
-    public AttributeImpl(com.vaticle.typedb.client.jni.Concept concept) {
+    public AttributeImpl(com.vaticle.typedb.driver.jni.Concept concept) {
         super(concept);
     }
 
@@ -55,8 +55,8 @@ public class AttributeImpl extends ThingImpl implements Attribute {
     public final Stream<ThingImpl> getOwners(TypeDBTransaction transaction) {
         try {
             return attribute_get_owners(nativeTransaction(transaction), nativeObject, null).stream().map(ThingImpl::of);
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 
@@ -64,8 +64,8 @@ public class AttributeImpl extends ThingImpl implements Attribute {
     public Stream<ThingImpl> getOwners(TypeDBTransaction transaction, ThingType ownerType) {
         try {
             return attribute_get_owners(nativeTransaction(transaction), nativeObject, ((ThingTypeImpl) ownerType).nativeObject).stream().map(ThingImpl::of);
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 }

@@ -22,7 +22,7 @@
 from __future__ import annotations
 import behave.runner
 from behave.model import Table
-from typedb.client import *
+from typedb.driver import *
 
 from tests.behaviour.config.parameters import RootLabel
 
@@ -46,7 +46,7 @@ class Context(behave.runner.Context):
     def __init__(self):
         self.table: Optional[Table] = None
         self.THREAD_POOL_SIZE = 0
-        self.client: Optional[TypeDBClient] = None
+        self.driver: Optional[TypeDBDriver] = None
         self.sessions: list[TypeDBSession] = []
         self.sessions_to_transactions: dict[TypeDBSession, list[TypeDBTransaction]] = {}
         self.sessions_parallel: list[TypeDBSession] = []

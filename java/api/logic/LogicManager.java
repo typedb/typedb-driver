@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.logic;
+package com.vaticle.typedb.driver.api.logic;
 
 import com.vaticle.typeql.lang.pattern.Pattern;
 

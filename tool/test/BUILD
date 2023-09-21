@@ -40,11 +40,11 @@ native_typedb_artifact(
 )
 
 native_typedb_artifact(
-    name = "native-typedb-cluster-artifact",
-    mac_artifact = "@vaticle_typedb_cluster_artifact_mac//file",
-    linux_artifact = "@vaticle_typedb_cluster_artifact_linux//file",
-    windows_artifact = "@vaticle_typedb_cluster_artifact_windows//file",
-    output = "typedb-cluster-artifact.tar.gz",
+    name = "native-typedb-enterprise-artifact",
+    mac_artifact = "@vaticle_typedb_enterprise_artifact_mac//file",
+    linux_artifact = "@vaticle_typedb_enterprise_artifact_linux//file",
+    windows_artifact = "@vaticle_typedb_enterprise_artifact_windows//file",
+    output = "typedb-enterprise-artifact.tar.gz",
     visibility = ["//visibility:public"],
 )
 
@@ -54,6 +54,6 @@ artifact_extractor(
 )
 
 artifact_extractor(
-    name = "typedb-cluster-extractor",
-    artifact = ":native-typedb-cluster-artifact",
+    name = "typedb-enterprise-extractor",
+    artifact = ":native-typedb-enterprise-artifact",
 )

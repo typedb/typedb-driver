@@ -19,9 +19,9 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.logic;
+package com.vaticle.typedb.driver.api.logic;
 
-import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typeql.lang.pattern.Pattern;
 
 import javax.annotation.CheckReturnValue;

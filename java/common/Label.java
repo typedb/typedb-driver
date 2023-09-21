@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.common;
+package com.vaticle.typedb.driver.common;
 
 import javax.annotation.Nullable;
 import java.util.Objects;

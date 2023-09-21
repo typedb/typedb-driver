@@ -19,32 +19,32 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.logic;
+package com.vaticle.typedb.driver.logic;
 
-import com.vaticle.typedb.client.api.answer.ConceptMap;
-import com.vaticle.typedb.client.api.logic.Explanation;
-import com.vaticle.typedb.client.api.logic.Rule;
-import com.vaticle.typedb.client.common.NativeObject;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.client.concept.answer.ConceptMapImpl;
+import com.vaticle.typedb.driver.api.answer.ConceptMap;
+import com.vaticle.typedb.driver.api.logic.Explanation;
+import com.vaticle.typedb.driver.api.logic.Rule;
+import com.vaticle.typedb.driver.common.NativeObject;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.vaticle.typedb.driver.concept.answer.ConceptMapImpl;
 
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_VARIABLE;
-import static com.vaticle.typedb.client.jni.typedb_client.explanation_equals;
-import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_conclusion;
-import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_condition;
-import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_mapped_variables;
-import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_mapping;
-import static com.vaticle.typedb.client.jni.typedb_client.explanation_get_rule;
-import static com.vaticle.typedb.client.jni.typedb_client.explanation_to_string;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Concept.MISSING_VARIABLE;
+import static com.vaticle.typedb.driver.jni.typedb_driver.explanation_equals;
+import static com.vaticle.typedb.driver.jni.typedb_driver.explanation_get_conclusion;
+import static com.vaticle.typedb.driver.jni.typedb_driver.explanation_get_condition;
+import static com.vaticle.typedb.driver.jni.typedb_driver.explanation_get_mapped_variables;
+import static com.vaticle.typedb.driver.jni.typedb_driver.explanation_get_mapping;
+import static com.vaticle.typedb.driver.jni.typedb_driver.explanation_get_rule;
+import static com.vaticle.typedb.driver.jni.typedb_driver.explanation_to_string;
 
-public class ExplanationImpl extends NativeObject<com.vaticle.typedb.client.jni.Explanation> implements Explanation {
+public class ExplanationImpl extends NativeObject<com.vaticle.typedb.driver.jni.Explanation> implements Explanation {
     private int hash = 0;
 
-    public ExplanationImpl(com.vaticle.typedb.client.jni.Explanation explanation) {
+    public ExplanationImpl(com.vaticle.typedb.driver.jni.Explanation explanation) {
         super(explanation);
     }
 
@@ -70,7 +70,7 @@ public class ExplanationImpl extends NativeObject<com.vaticle.typedb.client.jni.
 
     @Override
     public Set<String> queryVariableMapping(String var) {
-        if (var == null || var.isEmpty()) throw new TypeDBClientException(MISSING_VARIABLE);
+        if (var == null || var.isEmpty()) throw new TypeDBDriverException(MISSING_VARIABLE);
         return explanation_get_mapping(nativeObject, var).stream().collect(Collectors.toSet());
     }
 

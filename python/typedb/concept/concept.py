@@ -23,10 +23,10 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
-from typedb.native_client_wrapper import concept_to_string, concept_equals, Concept as NativeConcept
+from typedb.native_driver_wrapper import concept_to_string, concept_equals, Concept as NativeConcept
 
 from typedb.api.concept.concept import Concept
-from typedb.common.exception import TypeDBClientExceptionExt, ILLEGAL_STATE, NULL_NATIVE_OBJECT
+from typedb.common.exception import TypeDBDriverExceptionExt, ILLEGAL_STATE, NULL_NATIVE_OBJECT
 from typedb.common.native_wrapper import NativeWrapper
 
 
@@ -34,12 +34,12 @@ class _Concept(Concept, NativeWrapper[NativeConcept], ABC):
 
     def __init__(self, concept: NativeConcept):
         if not concept:
-            raise TypeDBClientExceptionExt(NULL_NATIVE_OBJECT)
+            raise TypeDBDriverExceptionExt(NULL_NATIVE_OBJECT)
         super().__init__(concept)
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBClientExceptionExt:
-        return TypeDBClientExceptionExt.of(ILLEGAL_STATE)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
+        return TypeDBDriverExceptionExt.of(ILLEGAL_STATE)
 
     def __repr__(self):
         return concept_to_string(self.native_object)

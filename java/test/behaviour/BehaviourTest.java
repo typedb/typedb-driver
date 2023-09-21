@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.test.behaviour;
+package com.vaticle.typedb.driver.test.behaviour;
 
 import com.vaticle.typedb.common.test.TypeDBSingleton;
 import org.junit.AfterClass;
@@ -28,7 +28,7 @@ public abstract class BehaviourTest {
     // The following code is for running the TypeDB distribution imported as an artifact.
     // If you wish to debug locally against an instance of TypeDB that is already running in
     // the background, comment out all the code in this file that references 'runner'
-    // and update ConnectionSteps to connect to TypeDBClient.DEFAULT_URI.
+    // and update ConnectionSteps to connect to TypeDBDriver.DEFAULT_URI.
 
     @AfterClass
     public static void afterAll() {

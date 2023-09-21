@@ -19,16 +19,16 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api;
+package com.vaticle.typedb.driver.api;
 
-import com.vaticle.typedb.client.common.NativeObject;
+import com.vaticle.typedb.driver.common.NativeObject;
 
 import javax.annotation.Nullable;
 import java.nio.file.Path;
 
-import static com.vaticle.typedb.client.jni.typedb_client.credential_new;
+import static com.vaticle.typedb.driver.jni.typedb_driver.credential_new;
 
-public class TypeDBCredential extends NativeObject<com.vaticle.typedb.client.jni.Credential> {
+public class TypeDBCredential extends NativeObject<com.vaticle.typedb.driver.jni.Credential> {
     public TypeDBCredential(String username, String password, boolean tlsEnabled) {
         this(username, password, null, tlsEnabled);
     }

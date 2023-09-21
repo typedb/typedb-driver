@@ -19,7 +19,7 @@
  * under the License.
  */
 
-// Any symbols exported from here will be importable via `import { } from "typedb-client"`
+// Any symbols exported from here will be importable via `import { } from "typedb-driver"`
 
 export * from "./api/answer/ConceptMap";
 export * from "./api/answer/ConceptMapGroup";
@@ -49,7 +49,7 @@ export * from "./api/connection/database/DatabaseManager";
 export * from "./api/connection/user/User";
 export * from "./api/connection/user/UserManager";
 
-export * from "./api/connection/TypeDBClient";
+export * from "./api/connection/TypeDBDriver";
 export * from "./api/connection/TypeDBCredential";
 export * from "./api/connection/TypeDBOptions";
 export * from "./api/connection/TypeDBSession";
@@ -62,7 +62,7 @@ export * from "./api/logic/Rule";
 export * from "./api/query/QueryManager";
 
 export * from "./common/errors/ErrorMessage";
-export * from "./common/errors/TypeDBClientError";
+export * from "./common/errors/TypeDBDriverError";
 
 export * from "./common/util/Stream";
 

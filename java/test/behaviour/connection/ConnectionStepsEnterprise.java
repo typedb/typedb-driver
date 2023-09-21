@@ -19,15 +19,15 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.test.behaviour.connection;
+package com.vaticle.typedb.driver.test.behaviour.connection;
 
-import com.vaticle.typedb.client.TypeDB;
-import com.vaticle.typedb.client.api.TypeDBClient;
-import com.vaticle.typedb.client.api.TypeDBCredential;
-import com.vaticle.typedb.client.api.TypeDBOptions;
+import com.vaticle.typedb.driver.TypeDB;
+import com.vaticle.typedb.driver.api.TypeDBDriver;
+import com.vaticle.typedb.driver.api.TypeDBCredential;
+import com.vaticle.typedb.driver.api.TypeDBOptions;
 import com.vaticle.typedb.common.test.TypeDBRunner;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
-import com.vaticle.typedb.common.test.cluster.TypeDBClusterRunner;
+import com.vaticle.typedb.common.test.enterprise.TypeDBEnterpriseRunner;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
@@ -37,9 +37,9 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
+import static com.vaticle.typedb.driver.test.behaviour.util.Util.assertThrows;
 
-public class ConnectionStepsCluster extends ConnectionStepsBase {
+public class ConnectionStepsEnterprise extends ConnectionStepsBase {
 
     @Override
     public void beforeAll() {
@@ -57,12 +57,12 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     }
 
     @Override
-    TypeDBClient createTypeDBClient(String address) {
-        return createTypeDBClient(address, "admin", "password", false);
+    TypeDBDriver createTypeDBDriver(String address) {
+        return createTypeDBDriver(address, "admin", "password", false);
     }
 
-    TypeDBClient createTypeDBClient(String address, String username, String password, boolean tlsEnabled) {
-        return TypeDB.clusterClient(address, new TypeDBCredential(username, password, tlsEnabled));
+    TypeDBDriver createTypeDBDriver(String address, String username, String password, boolean tlsEnabled) {
+        return TypeDB.enterpriseDriver(address, new TypeDBCredential(username, password, tlsEnabled));
     }
 
     @Override
@@ -73,22 +73,22 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
     @Override
     @When("connection opens with default authentication")
     public void connection_opens_with_default_authentication() {
-        client = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address());
+        driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address());
     }
 
     @When("connection opens with authentication: {word}, {word}")
     public void connection_opens_with_authentication(String username, String password) {
-        if (client != null) {
-            client.close();
-            client = null;
+        if (driver != null) {
+            driver.close();
+            driver = null;
         }
 
-        client = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address(), username, password, false);
+        driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address(), username, password, false);
     }
 
     @When("connection opens with authentication: {word}, {word}; throws exception")
     public void connection_opens_with_authentication_throws_exception(String username, String password) {
-        assertThrows(() -> createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address(), username, password, false));
+        assertThrows(() -> createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address(), username, password, false));
     }
 
     @Override
@@ -110,8 +110,8 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         for (Map.Entry<String, String> entry : map.entrySet()) {
             serverOpts.put("--" + entry.getKey(), entry.getValue());
         }
-        TypeDBClusterRunner clusterRunner = TypeDBClusterRunner.create(Paths.get("."), 1, serverOpts);
-        TypeDBSingleton.setTypeDBRunner(clusterRunner);
+        TypeDBEnterpriseRunner enterpriseRunner = TypeDBEnterpriseRunner.create(Paths.get("."), 1, serverOpts);
+        TypeDBSingleton.setTypeDBRunner(enterpriseRunner);
     }
 
     @When("typedb starts")
@@ -120,9 +120,9 @@ public class ConnectionStepsCluster extends ConnectionStepsBase {
         if (runner != null && runner.isStopped()) {
             runner.start();
         } else {
-            TypeDBClusterRunner clusterRunner = TypeDBClusterRunner.create(Paths.get("."), 1);
-            TypeDBSingleton.setTypeDBRunner(clusterRunner);
-            clusterRunner.start();
+            TypeDBEnterpriseRunner enterpriseRunner = TypeDBEnterpriseRunner.create(Paths.get("."), 1);
+            TypeDBSingleton.setTypeDBRunner(enterpriseRunner);
+            enterpriseRunner.start();
         }
     }
 

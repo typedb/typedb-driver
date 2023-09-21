@@ -19,13 +19,13 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api;
+package com.vaticle.typedb.driver.api;
 
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.CheckReturnValue;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 
 public interface TypeDBSession extends AutoCloseable {
     @CheckReturnValue
@@ -51,27 +51,27 @@ public interface TypeDBSession extends AutoCloseable {
     void close();
 
     enum Type {
-        DATA(0, com.vaticle.typedb.client.jni.SessionType.Data),
-        SCHEMA(1, com.vaticle.typedb.client.jni.SessionType.Schema);
+        DATA(0, com.vaticle.typedb.driver.jni.SessionType.Data),
+        SCHEMA(1, com.vaticle.typedb.driver.jni.SessionType.Schema);
 
         private final int id;
         private final boolean isSchema;
-        public final com.vaticle.typedb.client.jni.SessionType nativeObject;
+        public final com.vaticle.typedb.driver.jni.SessionType nativeObject;
 
-        Type(int id, com.vaticle.typedb.client.jni.SessionType nativeObject) {
+        Type(int id, com.vaticle.typedb.driver.jni.SessionType nativeObject) {
             this.id = id;
             this.nativeObject = nativeObject;
 
-            this.isSchema = nativeObject == com.vaticle.typedb.client.jni.SessionType.Schema;
+            this.isSchema = nativeObject == com.vaticle.typedb.driver.jni.SessionType.Schema;
         }
 
-        public static Type of(com.vaticle.typedb.client.jni.SessionType sessionType) {
+        public static Type of(com.vaticle.typedb.driver.jni.SessionType sessionType) {
             for (Type type : Type.values()) {
                 if (type.nativeObject == sessionType) {
                     return type;
                 }
             }
-            throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
+            throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
         }
 
         public int id() {

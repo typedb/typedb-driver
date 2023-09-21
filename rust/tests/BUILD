@@ -29,7 +29,7 @@ rust_test(
     srcs = glob(["**/*.rs"]),
     timeout = "eternal",
     deps = [
-        "//rust:typedb_client",
+        "//rust:typedb_driver",
         "@vaticle_typeql//rust:typeql_lang",
         "@crates//:async-std",
         "@crates//:chrono",

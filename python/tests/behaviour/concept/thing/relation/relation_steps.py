@@ -21,7 +21,7 @@
 
 from behave import *
 from hamcrest import *
-from typedb.client import *
+from typedb.driver import *
 
 from tests.behaviour.config.parameters import parse_dict, parse_var
 from tests.behaviour.context import Context
@@ -30,7 +30,7 @@ from tests.behaviour.context import Context
 @step("relation({type_label}) create new instance; throws exception")
 def step_impl(context: Context, type_label: str):
     assert_that(calling(context.tx().concepts.get_relation_type(type_label).create).with_args(context.tx()),
-                raises(TypeDBClientException))
+                raises(TypeDBDriverException))
 
 
 @step("{var:Var} = relation({type_label}) create new instance")
@@ -92,7 +92,7 @@ def adding_player_throws_exception(context: Context, var1: str, role_label: str,
             relation.get_type().get_relates(context.tx(), role_label),
             context.get(var2))
         assert False;
-    except TypeDBClientException:
+    except TypeDBDriverException:
         pass
 
 

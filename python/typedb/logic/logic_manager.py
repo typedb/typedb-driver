@@ -23,12 +23,12 @@ from __future__ import annotations
 
 from typing import Optional
 
-from typedb.native_client_wrapper import logic_manager_get_rule, logic_manager_get_rules, rule_iterator_next, \
+from typedb.native_driver_wrapper import logic_manager_get_rule, logic_manager_get_rules, rule_iterator_next, \
     logic_manager_put_rule, Transaction as NativeTransaction
 
 from typedb.api.logic.logic_manager import LogicManager
 from typedb.api.logic.rule import Rule
-from typedb.common.exception import TypeDBClientExceptionExt, MISSING_LABEL, TRANSACTION_CLOSED
+from typedb.common.exception import TypeDBDriverExceptionExt, MISSING_LABEL, TRANSACTION_CLOSED
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.logic.rule import _Rule
@@ -36,7 +36,7 @@ from typedb.logic.rule import _Rule
 
 def _not_blank_label(label: str) -> str:
     if not label or label.isspace():
-        raise TypeDBClientExceptionExt.of(MISSING_LABEL)
+        raise TypeDBDriverExceptionExt.of(MISSING_LABEL)
     return label
 
 
@@ -46,8 +46,8 @@ class _LogicManager(LogicManager, NativeWrapper[NativeTransaction]):
         super().__init__(transaction)
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBClientExceptionExt:
-        return TypeDBClientExceptionExt.of(TRANSACTION_CLOSED)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
+        return TypeDBDriverExceptionExt.of(TRANSACTION_CLOSED)
 
     @property
     def _native_transaction(self) -> NativeTransaction:

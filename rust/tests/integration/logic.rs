@@ -23,7 +23,7 @@ use std::{collections::HashMap, default::Default};
 
 use futures::TryStreamExt;
 use serial_test::serial;
-use typedb_client::{
+use typedb_driver::{
     answer::{ConceptMap, Explainable},
     concept::{Attribute, Concept, Value},
     logic::Explanation,
@@ -40,7 +40,7 @@ use crate::test_for_each_arg;
 test_for_each_arg! {
     {
         core => common::new_core_connection().unwrap(),
-        cluster => common::new_cluster_connection().unwrap(),
+        enterprise => common::new_enterprise_connection().unwrap(),
     }
 
     async fn test_disjunction_explainable(connection: Connection) -> TypeDBResult {

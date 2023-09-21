@@ -19,57 +19,57 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.connection;
+package com.vaticle.typedb.driver.connection;
 
-import com.vaticle.typedb.client.api.TypeDBClient;
-import com.vaticle.typedb.client.api.TypeDBCredential;
-import com.vaticle.typedb.client.api.TypeDBOptions;
-import com.vaticle.typedb.client.api.TypeDBSession;
-import com.vaticle.typedb.client.api.database.DatabaseManager;
-import com.vaticle.typedb.client.api.user.User;
-import com.vaticle.typedb.client.api.user.UserManager;
-import com.vaticle.typedb.client.common.NativeObject;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.client.user.UserManagerImpl;
+import com.vaticle.typedb.driver.api.TypeDBDriver;
+import com.vaticle.typedb.driver.api.TypeDBCredential;
+import com.vaticle.typedb.driver.api.TypeDBOptions;
+import com.vaticle.typedb.driver.api.TypeDBSession;
+import com.vaticle.typedb.driver.api.database.DatabaseManager;
+import com.vaticle.typedb.driver.api.user.User;
+import com.vaticle.typedb.driver.api.user.UserManager;
+import com.vaticle.typedb.driver.common.NativeObject;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.vaticle.typedb.driver.user.UserManagerImpl;
 
 import java.util.Set;
 
-import static com.vaticle.typedb.client.jni.typedb_client.connection_force_close;
-import static com.vaticle.typedb.client.jni.typedb_client.connection_is_open;
-import static com.vaticle.typedb.client.jni.typedb_client.connection_open_encrypted;
-import static com.vaticle.typedb.client.jni.typedb_client.connection_open_plaintext;
+import static com.vaticle.typedb.driver.jni.typedb_driver.connection_force_close;
+import static com.vaticle.typedb.driver.jni.typedb_driver.connection_is_open;
+import static com.vaticle.typedb.driver.jni.typedb_driver.connection_open_encrypted;
+import static com.vaticle.typedb.driver.jni.typedb_driver.connection_open_plaintext;
 
-public class TypeDBClientImpl extends NativeObject<com.vaticle.typedb.client.jni.Connection> implements TypeDBClient {
+public class TypeDBDriverImpl extends NativeObject<com.vaticle.typedb.driver.jni.Connection> implements TypeDBDriver {
     private final UserManagerImpl userMgr;
     private final DatabaseManager databaseMgr;
 
-    public TypeDBClientImpl(String address) throws TypeDBClientException {
+    public TypeDBDriverImpl(String address) throws TypeDBDriverException {
         this(openPlaintext(address));
     }
 
-    public TypeDBClientImpl(Set<String> initAddresses, TypeDBCredential credential) throws TypeDBClientException {
+    public TypeDBDriverImpl(Set<String> initAddresses, TypeDBCredential credential) throws TypeDBDriverException {
         this(openEncrypted(initAddresses, credential));
     }
 
-    private TypeDBClientImpl(com.vaticle.typedb.client.jni.Connection connection) {
+    private TypeDBDriverImpl(com.vaticle.typedb.driver.jni.Connection connection) {
         super(connection);
         databaseMgr = new TypeDBDatabaseManagerImpl(this.nativeObject);
         userMgr = new UserManagerImpl(this.nativeObject);
     }
 
-    private static com.vaticle.typedb.client.jni.Connection openPlaintext(String address) {
+    private static com.vaticle.typedb.driver.jni.Connection openPlaintext(String address) {
         try {
             return connection_open_plaintext(address);
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 
-    private static com.vaticle.typedb.client.jni.Connection openEncrypted(Set<String> initAddresses, TypeDBCredential credential) {
+    private static com.vaticle.typedb.driver.jni.Connection openEncrypted(Set<String> initAddresses, TypeDBCredential credential) {
         try {
             return connection_open_encrypted(initAddresses.toArray(new String[0]), credential.nativeObject);
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 

@@ -73,7 +73,7 @@ impl DatabaseManager {
                 Err(err) => error_buffer.push(format!("- {}: {}", server_connection.address(), err)),
             }
         }
-        Err(ConnectionError::ClusterAllNodesFailed(error_buffer.join("\n")))?
+        Err(ConnectionError::EnterpriseAllNodesFailed(error_buffer.join("\n")))?
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -86,7 +86,7 @@ impl DatabaseManager {
         for server_connection in self.connection.connections() {
             match task(server_connection.clone(), name.clone()).await {
                 Ok(res) => return Ok(res),
-                Err(Error::Connection(ConnectionError::ClusterReplicaNotPrimary())) => {
+                Err(Error::Connection(ConnectionError::EnterpriseReplicaNotPrimary())) => {
                     return Database::get(name, self.connection.clone())
                         .await?
                         .run_on_primary_replica(|database, server_connection, _| {
@@ -99,6 +99,6 @@ impl DatabaseManager {
                 Err(err) => error_buffer.push(format!("- {}: {}", server_connection.address(), err)),
             }
         }
-        Err(ConnectionError::ClusterAllNodesFailed(error_buffer.join("\n")))?
+        Err(ConnectionError::EnterpriseAllNodesFailed(error_buffer.join("\n")))?
     }
 }

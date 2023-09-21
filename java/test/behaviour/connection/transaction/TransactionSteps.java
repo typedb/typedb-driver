@@ -19,10 +19,10 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.test.behaviour.connection.transaction;
+package com.vaticle.typedb.driver.test.behaviour.connection.transaction;
 
-import com.vaticle.typedb.client.api.TypeDBSession;
-import com.vaticle.typedb.client.api.TypeDBTransaction;
+import com.vaticle.typedb.driver.api.TypeDBSession;
+import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typeql.lang.TypeQL;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -35,17 +35,17 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.optionSetters;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessions;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessionsParallel;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessionsParallelToTransactionsParallel;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessionsToTransactions;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.sessionsToTransactionsParallel;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.threadPool;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.transactionOptions;
-import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
-import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrowsWithMessage;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.optionSetters;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.sessions;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.sessionsParallel;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.sessionsParallelToTransactionsParallel;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.sessionsToTransactions;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.sessionsToTransactionsParallel;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.threadPool;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.transactionOptions;
+import static com.vaticle.typedb.driver.test.behaviour.util.Util.assertThrows;
+import static com.vaticle.typedb.driver.test.behaviour.util.Util.assertThrowsWithMessage;
 import static com.vaticle.typedb.common.collection.Collections.list;
 import static java.util.Objects.isNull;
 import static org.junit.Assert.assertEquals;

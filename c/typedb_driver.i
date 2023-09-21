@@ -19,10 +19,10 @@
  * under the License.
  */
 
-%module(directors="1") typedb_client
+%module(directors="1") typedb_driver
 %{
 extern "C" {
-#include "typedb_client.h"
+#include "typedb_driver.h"
 }
 %}
 %include "stdint.i"
@@ -30,11 +30,11 @@ extern "C" {
 %include "typemaps.i"
 
 #ifdef SWIGJAVA
-%include "swig/typedb_client_java.swg"
+%include "swig/typedb_driver_java.swg"
 #endif
 
 #ifdef SWIGPYTHON
-%include "swig/typedb_client_python.swg"
+%include "swig/typedb_driver_python.swg"
 #endif
 
 %nodefaultctor;
@@ -361,4 +361,4 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject user_iterator_next;
 %newobject user_manager_new;
 
-%include "typedb_client.h"
+%include "typedb_driver.h"

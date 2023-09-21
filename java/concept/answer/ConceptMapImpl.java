@@ -19,44 +19,44 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.concept.answer;
+package com.vaticle.typedb.driver.concept.answer;
 
-import com.vaticle.typedb.client.api.answer.ConceptMap;
-import com.vaticle.typedb.client.api.concept.Concept;
-import com.vaticle.typedb.client.common.NativeObject;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.client.concept.ConceptImpl;
+import com.vaticle.typedb.driver.api.answer.ConceptMap;
+import com.vaticle.typedb.driver.api.concept.Concept;
+import com.vaticle.typedb.driver.common.NativeObject;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.vaticle.typedb.driver.concept.ConceptImpl;
 import com.vaticle.typedb.common.collection.Pair;
 
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.MISSING_VARIABLE;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.NONEXISTENT_EXPLAINABLE_CONCEPT;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.NONEXISTENT_EXPLAINABLE_OWNERSHIP;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
-import static com.vaticle.typedb.client.jni.typedb_client.concept_map_equals;
-import static com.vaticle.typedb.client.jni.typedb_client.concept_map_get;
-import static com.vaticle.typedb.client.jni.typedb_client.concept_map_get_explainables;
-import static com.vaticle.typedb.client.jni.typedb_client.concept_map_get_values;
-import static com.vaticle.typedb.client.jni.typedb_client.concept_map_get_variables;
-import static com.vaticle.typedb.client.jni.typedb_client.concept_map_to_string;
-import static com.vaticle.typedb.client.jni.typedb_client.explainable_get_conjunction;
-import static com.vaticle.typedb.client.jni.typedb_client.explainable_get_id;
-import static com.vaticle.typedb.client.jni.typedb_client.explainables_equals;
-import static com.vaticle.typedb.client.jni.typedb_client.explainables_get_attribute;
-import static com.vaticle.typedb.client.jni.typedb_client.explainables_get_attributes_keys;
-import static com.vaticle.typedb.client.jni.typedb_client.explainables_get_ownership;
-import static com.vaticle.typedb.client.jni.typedb_client.explainables_get_ownerships_keys;
-import static com.vaticle.typedb.client.jni.typedb_client.explainables_get_relation;
-import static com.vaticle.typedb.client.jni.typedb_client.explainables_get_relations_keys;
-import static com.vaticle.typedb.client.jni.typedb_client.explainables_to_string;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Concept.MISSING_VARIABLE;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Concept.NONEXISTENT_EXPLAINABLE_CONCEPT;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Concept.NONEXISTENT_EXPLAINABLE_OWNERSHIP;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_map_equals;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_map_get;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_map_get_explainables;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_map_get_values;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_map_get_variables;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_map_to_string;
+import static com.vaticle.typedb.driver.jni.typedb_driver.explainable_get_conjunction;
+import static com.vaticle.typedb.driver.jni.typedb_driver.explainable_get_id;
+import static com.vaticle.typedb.driver.jni.typedb_driver.explainables_equals;
+import static com.vaticle.typedb.driver.jni.typedb_driver.explainables_get_attribute;
+import static com.vaticle.typedb.driver.jni.typedb_driver.explainables_get_attributes_keys;
+import static com.vaticle.typedb.driver.jni.typedb_driver.explainables_get_ownership;
+import static com.vaticle.typedb.driver.jni.typedb_driver.explainables_get_ownerships_keys;
+import static com.vaticle.typedb.driver.jni.typedb_driver.explainables_get_relation;
+import static com.vaticle.typedb.driver.jni.typedb_driver.explainables_get_relations_keys;
+import static com.vaticle.typedb.driver.jni.typedb_driver.explainables_to_string;
 
-public class ConceptMapImpl extends NativeObject<com.vaticle.typedb.client.jni.ConceptMap> implements ConceptMap {
+public class ConceptMapImpl extends NativeObject<com.vaticle.typedb.driver.jni.ConceptMap> implements ConceptMap {
     private int hash = 0;
 
-    public ConceptMapImpl(com.vaticle.typedb.client.jni.ConceptMap concept_map) {
+    public ConceptMapImpl(com.vaticle.typedb.driver.jni.ConceptMap concept_map) {
         super(concept_map);
     }
 
@@ -72,9 +72,9 @@ public class ConceptMapImpl extends NativeObject<com.vaticle.typedb.client.jni.C
 
     @Override
     public Concept get(String variable) {
-        if (variable == null || variable.isEmpty()) throw new TypeDBClientException(MISSING_VARIABLE);
-        com.vaticle.typedb.client.jni.Concept concept = concept_map_get(nativeObject, variable);
-        if (concept == null) throw new TypeDBClientException(VARIABLE_DOES_NOT_EXIST, variable);
+        if (variable == null || variable.isEmpty()) throw new TypeDBDriverException(MISSING_VARIABLE);
+        com.vaticle.typedb.driver.jni.Concept concept = concept_map_get(nativeObject, variable);
+        if (concept == null) throw new TypeDBDriverException(VARIABLE_DOES_NOT_EXIST, variable);
         return ConceptImpl.of(concept);
     }
 
@@ -106,35 +106,35 @@ public class ConceptMapImpl extends NativeObject<com.vaticle.typedb.client.jni.C
         return Objects.hash(variables().collect(Collectors.toList()), concepts().collect(Collectors.toList()));
     }
 
-    public static class ExplainablesImpl extends NativeObject<com.vaticle.typedb.client.jni.Explainables> implements Explainables {
+    public static class ExplainablesImpl extends NativeObject<com.vaticle.typedb.driver.jni.Explainables> implements Explainables {
         private int hash = 0;
 
-        ExplainablesImpl(com.vaticle.typedb.client.jni.Explainables explainables) {
+        ExplainablesImpl(com.vaticle.typedb.driver.jni.Explainables explainables) {
             super(explainables);
         }
 
         @Override
         public Explainable relation(String variable) {
-            if (variable == null || variable.isEmpty()) throw new TypeDBClientException(MISSING_VARIABLE);
-            com.vaticle.typedb.client.jni.Explainable explainable = explainables_get_relation(nativeObject, variable);
-            if (explainable == null) throw new TypeDBClientException(NONEXISTENT_EXPLAINABLE_CONCEPT, variable);
+            if (variable == null || variable.isEmpty()) throw new TypeDBDriverException(MISSING_VARIABLE);
+            com.vaticle.typedb.driver.jni.Explainable explainable = explainables_get_relation(nativeObject, variable);
+            if (explainable == null) throw new TypeDBDriverException(NONEXISTENT_EXPLAINABLE_CONCEPT, variable);
             return new ExplainableImpl(explainable);
         }
 
         @Override
         public Explainable attribute(String variable) {
-            if (variable == null || variable.isEmpty()) throw new TypeDBClientException(MISSING_VARIABLE);
-            com.vaticle.typedb.client.jni.Explainable explainable = explainables_get_attribute(nativeObject, variable);
-            if (explainable == null) throw new TypeDBClientException(NONEXISTENT_EXPLAINABLE_CONCEPT, variable);
+            if (variable == null || variable.isEmpty()) throw new TypeDBDriverException(MISSING_VARIABLE);
+            com.vaticle.typedb.driver.jni.Explainable explainable = explainables_get_attribute(nativeObject, variable);
+            if (explainable == null) throw new TypeDBDriverException(NONEXISTENT_EXPLAINABLE_CONCEPT, variable);
             return new ExplainableImpl(explainable);
         }
 
         @Override
         public Explainable ownership(String owner, String attribute) {
-            if (owner == null || owner.isEmpty()) throw new TypeDBClientException(MISSING_VARIABLE);
-            if (attribute == null || attribute.isEmpty()) throw new TypeDBClientException(MISSING_VARIABLE);
-            com.vaticle.typedb.client.jni.Explainable explainable = explainables_get_ownership(nativeObject, owner, attribute);
-            if (explainable == null) throw new TypeDBClientException(NONEXISTENT_EXPLAINABLE_OWNERSHIP, owner, attribute);
+            if (owner == null || owner.isEmpty()) throw new TypeDBDriverException(MISSING_VARIABLE);
+            if (attribute == null || attribute.isEmpty()) throw new TypeDBDriverException(MISSING_VARIABLE);
+            com.vaticle.typedb.driver.jni.Explainable explainable = explainables_get_ownership(nativeObject, owner, attribute);
+            if (explainable == null) throw new TypeDBDriverException(NONEXISTENT_EXPLAINABLE_OWNERSHIP, owner, attribute);
             return new ExplainableImpl(explainable);
         }
 
@@ -185,8 +185,8 @@ public class ConceptMapImpl extends NativeObject<com.vaticle.typedb.client.jni.C
         }
     }
 
-    static class ExplainableImpl extends NativeObject<com.vaticle.typedb.client.jni.Explainable> implements Explainable {
-        public ExplainableImpl(com.vaticle.typedb.client.jni.Explainable explainable) {
+    static class ExplainableImpl extends NativeObject<com.vaticle.typedb.driver.jni.Explainable> implements Explainable {
+        public ExplainableImpl(com.vaticle.typedb.driver.jni.Explainable explainable) {
             super(explainable);
         }
 

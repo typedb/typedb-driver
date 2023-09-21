@@ -22,10 +22,10 @@
 import {ServiceError} from "@grpc/grpc-js";
 import {Status} from "@grpc/grpc-js/build/src/constants";
 import {ErrorMessage} from "./ErrorMessage";
-import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
-import CLUSTER_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Client.CLUSTER_TOKEN_CREDENTIAL_INVALID;
-import UNABLE_TO_CONNECT = ErrorMessage.Client.UNABLE_TO_CONNECT;
-import RPC_METHOD_UNAVAILABLE = ErrorMessage.Client.RPC_METHOD_UNAVAILABLE;
+import ENTERPRISE_REPLICA_NOT_PRIMARY = ErrorMessage.Driver.ENTPERPRISE_REPLICA_NOT_PRIMARY;
+import ENTERPRISE_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Driver.ENTPERPRISE_TOKEN_CREDENTIAL_INVALID;
+import UNABLE_TO_CONNECT = ErrorMessage.Driver.UNABLE_TO_CONNECT;
+import RPC_METHOD_UNAVAILABLE = ErrorMessage.Driver.RPC_METHOD_UNAVAILABLE;
 
 function isReplicaNotPrimaryError(e: ServiceError): boolean {
     return e.message.includes("[RPL01]");
@@ -39,7 +39,7 @@ function isServiceError(e: Error | ServiceError): e is ServiceError {
     return "code" in e;
 }
 
-export class TypeDBClientError extends Error {
+export class TypeDBDriverError extends Error {
     private readonly _messageTemplate: ErrorMessage;
 
     constructor(error: string | Error | ServiceError | ErrorMessage) {
@@ -57,16 +57,16 @@ export class TypeDBClientError extends Error {
                 super(UNABLE_TO_CONNECT.message());
                 this._messageTemplate = UNABLE_TO_CONNECT;
             } else if (isReplicaNotPrimaryError(error)) {
-                super(CLUSTER_REPLICA_NOT_PRIMARY.message());
-                this._messageTemplate = CLUSTER_REPLICA_NOT_PRIMARY;
+                super(ENTERPRISE_REPLICA_NOT_PRIMARY.message());
+                this._messageTemplate = ENTERPRISE_REPLICA_NOT_PRIMARY;
             } else if (isTokenCredentialInvalidError(error)) {
-                super(CLUSTER_TOKEN_CREDENTIAL_INVALID.message());
-                this._messageTemplate = CLUSTER_TOKEN_CREDENTIAL_INVALID;
+                super(ENTERPRISE_TOKEN_CREDENTIAL_INVALID.message());
+                this._messageTemplate = ENTERPRISE_TOKEN_CREDENTIAL_INVALID;
             } else if (error.code === Status.INTERNAL) super(error.details)
             else super(error.toString());
         } else super(error.toString());
 
-        this.name = "TypeDBClientError"; // Required to correctly report error type in default throw
+        this.name = "TypeDBDriverError"; // Required to correctly report error type in default throw
     }
 
     get messageTemplate(): ErrorMessage {

@@ -21,8 +21,8 @@
 
 import * as fs from "fs";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
-import CLUSTER_INVALID_ROOT_CA_PATH = ErrorMessage.Client.CLUSTER_INVALID_ROOT_CA_PATH;
+import {TypeDBDriverError} from "../../common/errors/TypeDBDriverError";
+import ENTERPRISE_INVALID_ROOT_CA_PATH = ErrorMessage.Driver.ENTERPRISE_INVALID_ROOT_CA_PATH;
 
 export class TypeDBCredential {
     private readonly _username: string;
@@ -34,7 +34,7 @@ export class TypeDBCredential {
         this._password = password;
 
         if (tlsRootCAPath != null && !fs.existsSync(tlsRootCAPath)) {
-            throw new TypeDBClientError(CLUSTER_INVALID_ROOT_CA_PATH.message(tlsRootCAPath));
+            throw new TypeDBDriverError(ENTERPRISE_INVALID_ROOT_CA_PATH.message(tlsRootCAPath));
         }
         this._tlsRootCAPath = tlsRootCAPath;
     }

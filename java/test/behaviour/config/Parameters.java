@@ -19,13 +19,13 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.test.behaviour.config;
+package com.vaticle.typedb.driver.test.behaviour.config;
 
-import com.vaticle.typedb.client.api.TypeDBTransaction;
-import com.vaticle.typedb.client.api.concept.type.ThingType.Annotation;
-import com.vaticle.typedb.client.api.concept.value.Value;
-import com.vaticle.typedb.client.common.Label;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.driver.api.TypeDBTransaction;
+import com.vaticle.typedb.driver.api.concept.type.ThingType.Annotation;
+import com.vaticle.typedb.driver.api.concept.value.Value;
+import com.vaticle.typedb.driver.common.Label;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.ParameterType;
 
@@ -36,13 +36,13 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.vaticle.typedb.client.api.TypeDBTransaction.Type.READ;
-import static com.vaticle.typedb.client.api.TypeDBTransaction.Type.WRITE;
-import static com.vaticle.typedb.client.api.concept.type.ThingType.Annotation.key;
-import static com.vaticle.typedb.client.api.concept.type.ThingType.Annotation.unique;
+import static com.vaticle.typedb.driver.api.TypeDBTransaction.Type.READ;
+import static com.vaticle.typedb.driver.api.TypeDBTransaction.Type.WRITE;
+import static com.vaticle.typedb.driver.api.concept.type.ThingType.Annotation.key;
+import static com.vaticle.typedb.driver.api.concept.type.ThingType.Annotation.unique;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.UNRECOGNISED_ANNOTATION;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Concept.UNRECOGNISED_ANNOTATION;
 
 public class Parameters {
 
@@ -144,7 +144,7 @@ public class Parameters {
         strings.forEach(string -> {
             if (string.equals("key")) annotations.add(key());
             else if (string.equals("unique")) annotations.add(unique());
-            else throw new TypeDBClientException(UNRECOGNISED_ANNOTATION, string);
+            else throw new TypeDBDriverException(UNRECOGNISED_ANNOTATION, string);
         });
         return annotations;
     }

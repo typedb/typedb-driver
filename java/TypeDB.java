@@ -19,11 +19,11 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client;
+package com.vaticle.typedb.driver;
 
-import com.vaticle.typedb.client.api.TypeDBClient;
-import com.vaticle.typedb.client.api.TypeDBCredential;
-import com.vaticle.typedb.client.connection.TypeDBClientImpl;
+import com.vaticle.typedb.driver.api.TypeDBDriver;
+import com.vaticle.typedb.driver.api.TypeDBCredential;
+import com.vaticle.typedb.driver.connection.TypeDBDriverImpl;
 
 import java.util.Set;
 
@@ -32,15 +32,15 @@ import static com.vaticle.typedb.common.collection.Collections.set;
 public class TypeDB {
     public static final String DEFAULT_ADDRESS = "localhost:1729";
 
-    public static TypeDBClient coreClient(String address) {
-        return new TypeDBClientImpl(address);
+    public static TypeDBDriver coreDriver(String address) {
+        return new TypeDBDriverImpl(address);
     }
 
-    public static TypeDBClient clusterClient(String address, TypeDBCredential credential) {
-        return clusterClient(set(address), credential);
+    public static TypeDBDriver enterpriseDriver(String address, TypeDBCredential credential) {
+        return enterpriseDriver(set(address), credential);
     }
 
-    public static TypeDBClient clusterClient(Set<String> addresses, TypeDBCredential credential) {
-        return new TypeDBClientImpl(addresses, credential);
+    public static TypeDBDriver enterpriseDriver(Set<String> addresses, TypeDBCredential credential) {
+        return new TypeDBDriverImpl(addresses, credential);
     }
 }

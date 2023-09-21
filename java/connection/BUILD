@@ -45,7 +45,7 @@ java_library(
         "//java/logic",
         "//java/query",
         "//java/user",
-        "//java:typedb_client_jni",
+        "//java:typedb_driver_jni",
     ],
 )
 

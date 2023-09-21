@@ -20,7 +20,7 @@
 #
 
 from behave import *
-from typedb.common.exception import TypeDBClientException
+from typedb.common.exception import TypeDBDriverException
 
 from tests.behaviour.context import Context
 
@@ -39,28 +39,28 @@ def step_impl(context):
 
 @step(u'connection opens with default authentication')
 def step_impl(context):
-    context.setup_context_client_fn()
-    for database in context.client.databases.all():
+    context.setup_context_driver_fn()
+    for database in context.driver.databases.all():
         database.delete()
 
 
 @step(u'connection opens with authentication: {username:Words}, {password:Words}')
 def step_impl(context, username: str, password: str):
-    context.setup_context_client_fn(username, password)
+    context.setup_context_driver_fn(username, password)
 
 
 @step(u'connection opens with authentication: {username:Words}, {password:Words}; throws exception')
 def step_impl(context, username: str, password: str):
     try:
-        context.setup_context_client_fn(username, password)
+        context.setup_context_driver_fn(username, password)
         assert False
-    except TypeDBClientException:
+    except TypeDBDriverException:
         pass
 
 
 @step(u'connection closes')
 def step_impl(context):
-    context.client.close()
+    context.driver.close()
 
 
 @step(u'typedb stops')
@@ -71,9 +71,9 @@ def step_impl(context):
 
 @step("connection has been opened")
 def step_impl(context: Context):
-    assert context.client and context.client.is_open()
+    assert context.driver and context.driver.is_open()
 
 
 @step("connection does not have any database")
 def step_impl(context: Context):
-    assert len(context.client.databases.all()) == 0
+    assert len(context.driver.databases.all()) == 0

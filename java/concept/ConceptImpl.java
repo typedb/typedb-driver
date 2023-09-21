@@ -19,48 +19,48 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.concept;
+package com.vaticle.typedb.driver.concept;
 
-import com.vaticle.typedb.client.api.TypeDBTransaction;
-import com.vaticle.typedb.client.api.concept.Concept;
-import com.vaticle.typedb.client.common.NativeObject;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.client.concept.thing.AttributeImpl;
-import com.vaticle.typedb.client.concept.thing.EntityImpl;
-import com.vaticle.typedb.client.concept.thing.RelationImpl;
-import com.vaticle.typedb.client.concept.type.AttributeTypeImpl;
-import com.vaticle.typedb.client.concept.type.EntityTypeImpl;
-import com.vaticle.typedb.client.concept.type.RelationTypeImpl;
-import com.vaticle.typedb.client.concept.type.RoleTypeImpl;
-import com.vaticle.typedb.client.concept.type.ThingTypeImpl;
-import com.vaticle.typedb.client.concept.value.ValueImpl;
+import com.vaticle.typedb.driver.api.TypeDBTransaction;
+import com.vaticle.typedb.driver.api.concept.Concept;
+import com.vaticle.typedb.driver.common.NativeObject;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.vaticle.typedb.driver.concept.thing.AttributeImpl;
+import com.vaticle.typedb.driver.concept.thing.EntityImpl;
+import com.vaticle.typedb.driver.concept.thing.RelationImpl;
+import com.vaticle.typedb.driver.concept.type.AttributeTypeImpl;
+import com.vaticle.typedb.driver.concept.type.EntityTypeImpl;
+import com.vaticle.typedb.driver.concept.type.RelationTypeImpl;
+import com.vaticle.typedb.driver.concept.type.RoleTypeImpl;
+import com.vaticle.typedb.driver.concept.type.ThingTypeImpl;
+import com.vaticle.typedb.driver.concept.value.ValueImpl;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.TRANSACTION_CLOSED;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
-import static com.vaticle.typedb.client.jni.typedb_client.concept_equals;
-import static com.vaticle.typedb.client.jni.typedb_client.concept_is_value;
-import static com.vaticle.typedb.client.jni.typedb_client.concept_to_string;
-import static com.vaticle.typedb.client.jni.typedb_client.concept_is_attribute;
-import static com.vaticle.typedb.client.jni.typedb_client.concept_is_attribute_type;
-import static com.vaticle.typedb.client.jni.typedb_client.concept_is_entity;
-import static com.vaticle.typedb.client.jni.typedb_client.concept_is_entity_type;
-import static com.vaticle.typedb.client.jni.typedb_client.concept_is_relation;
-import static com.vaticle.typedb.client.jni.typedb_client.concept_is_relation_type;
-import static com.vaticle.typedb.client.jni.typedb_client.concept_is_role_type;
-import static com.vaticle.typedb.client.jni.typedb_client.concept_is_root_thing_type;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.TRANSACTION_CLOSED;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_equals;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_is_value;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_to_string;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_is_attribute;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_is_attribute_type;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_is_entity;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_is_entity_type;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_is_relation;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_is_relation_type;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_is_role_type;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concept_is_root_thing_type;
 
-public abstract class ConceptImpl extends NativeObject<com.vaticle.typedb.client.jni.Concept> implements Concept {
-    protected ConceptImpl(com.vaticle.typedb.client.jni.Concept concept) {
+public abstract class ConceptImpl extends NativeObject<com.vaticle.typedb.driver.jni.Concept> implements Concept {
+    protected ConceptImpl(com.vaticle.typedb.driver.jni.Concept concept) {
         super(concept);
     }
 
-    protected static com.vaticle.typedb.client.jni.Transaction nativeTransaction(TypeDBTransaction transaction) {
-        com.vaticle.typedb.client.jni.Transaction nativeTransaction = ((ConceptManagerImpl) transaction.concepts()).nativeTransaction;
-        if (!nativeTransaction.isOwned()) throw new TypeDBClientException(TRANSACTION_CLOSED);
+    protected static com.vaticle.typedb.driver.jni.Transaction nativeTransaction(TypeDBTransaction transaction) {
+        com.vaticle.typedb.driver.jni.Transaction nativeTransaction = ((ConceptManagerImpl) transaction.concepts()).nativeTransaction;
+        if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         return nativeTransaction;
     }
 
-    public static ConceptImpl of(com.vaticle.typedb.client.jni.Concept concept) {
+    public static ConceptImpl of(com.vaticle.typedb.driver.jni.Concept concept) {
         if (concept_is_entity_type(concept)) return new EntityTypeImpl(concept);
         else if (concept_is_relation_type(concept)) return new RelationTypeImpl(concept);
         else if (concept_is_attribute_type(concept)) return new AttributeTypeImpl(concept);
@@ -70,7 +70,7 @@ public abstract class ConceptImpl extends NativeObject<com.vaticle.typedb.client
         else if (concept_is_attribute(concept)) return new AttributeImpl(concept);
         else if (concept_is_value(concept)) return new ValueImpl(concept);
         else if (concept_is_role_type(concept)) return new RoleTypeImpl(concept);
-        throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
+        throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
     }
 
     @Override

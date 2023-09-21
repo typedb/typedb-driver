@@ -41,13 +41,13 @@ import {TransactionReq} from "typedb-protocol/proto/transaction";
 import {Entity} from "../api/concept/thing/Entity";
 import {Attribute} from "../api/concept/thing/Attribute";
 import {Relation} from "../api/concept/thing/Relation";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {TypeDBDriverError} from "../common/errors/TypeDBDriverError";
 
 export class ConceptManagerImpl implements ConceptManager {
     private _transaction: TypeDBTransaction.Extended;
 
-    constructor(client: TypeDBTransaction.Extended) {
-        this._transaction = client;
+    constructor(transaction: TypeDBTransaction.Extended) {
+        this._transaction = transaction;
     }
 
     async getRootThingType(): Promise<ThingType> {
@@ -123,10 +123,10 @@ export class ConceptManagerImpl implements ConceptManager {
         return AttributeTypeImpl.ofAttributeTypeProto(response.put_attribute_type_res.attribute_type);
     }
 
-    async getSchemaExceptions(): Promise<TypeDBClientError[]> {
+    async getSchemaExceptions(): Promise<TypeDBDriverError[]> {
         const response = await this.execute(RequestBuilder.ConceptManager.getSchemaExceptions());
         return response.get_schema_exceptions_res.exceptions.map(schemaException =>
-            new TypeDBClientError(`${schemaException.code} ${schemaException.message}`)
+            new TypeDBDriverError(`${schemaException.code} ${schemaException.message}`)
         );
     }
 

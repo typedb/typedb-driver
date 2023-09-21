@@ -30,7 +30,7 @@ java_library(
         # Internal dependencies
         "//java/common:common",
 
-        "//java:typedb_client_jni",
+        "//java:typedb_driver_jni",
 
         # External dependencies from @vaticle
         "@vaticle_typedb_common//:common",

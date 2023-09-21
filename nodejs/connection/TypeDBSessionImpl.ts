@@ -24,52 +24,52 @@ import {TypeDBOptions} from "../api/connection/TypeDBOptions";
 import {SessionType, TypeDBSession} from "../api/connection/TypeDBSession";
 import {TransactionType, TypeDBTransaction} from "../api/connection/TypeDBTransaction";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {TypeDBDriverError} from "../common/errors/TypeDBDriverError";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {TypeDBStub} from "../common/rpc/TypeDBStub";
 import {RequestTransmitter} from "../stream/RequestTransmitter";
 import {TypeDBTransactionImpl} from "./TypeDBTransactionImpl";
-import {ServerClient, TypeDBClientImpl} from "./TypeDBClientImpl";
+import {ServerDriver, TypeDBDriverImpl} from "./TypeDBDriverImpl";
 import {TypeDBDatabaseImpl} from "./TypeDBDatabaseImpl";
-import SESSION_CLOSED = ErrorMessage.Client.SESSION_CLOSED;
+import SESSION_CLOSED = ErrorMessage.Driver.SESSION_CLOSED;
 
 export class TypeDBSessionImpl implements TypeDBSession {
-    private readonly _client: TypeDBClientImpl;
+    private readonly _driver: TypeDBDriverImpl;
     private readonly _databaseName: string;
     private readonly _type: SessionType;
     private readonly _options: TypeDBOptions;
     private _id: string;
     private _database: TypeDBDatabaseImpl;
     private _isOpen: boolean;
-    private _serverClient?: ServerClient;
+    private _serverDriver?: ServerDriver;
     private _pulse: NodeJS.Timeout;
     private _networkLatencyMillis: number;
     private _transactions: Set<TypeDBTransaction.Extended>;
 
-    constructor(databaseName: string, type: SessionType, options: TypeDBOptions, client: TypeDBClientImpl) {
+    constructor(databaseName: string, type: SessionType, options: TypeDBOptions, driver: TypeDBDriverImpl) {
         this._databaseName = databaseName;
         this._type = type;
         this._options = options;
-        this._client = client;
+        this._driver = driver;
         this._isOpen = false;
         this._transactions = new Set();
     }
 
     async open(): Promise<void> {
-        this._database = await this._client.databases.get(this._databaseName) as TypeDBDatabaseImpl;
-        await this._database.runFailsafe(serverClient => this.openAt(serverClient));
+        this._database = await this._driver.databases.get(this._databaseName) as TypeDBDatabaseImpl;
+        await this._database.runFailsafe(serverDriver => this.openAt(serverDriver));
     }
 
-    private async openAt(serverClient: ServerClient): Promise<void> {
+    private async openAt(serverDriver: ServerDriver): Promise<void> {
         const openReq = RequestBuilder.Session.openReq(this._databaseName, this._type.proto(), this._options.proto())
 
         const start = (new Date()).getMilliseconds();
-        const res = await serverClient.stub.sessionOpen(openReq);
+        const res = await serverDriver.stub.sessionOpen(openReq);
         const end = (new Date()).getMilliseconds();
         this._networkLatencyMillis = Math.max((end - start) - res.server_duration_millis, 1);
 
         this._id = "0x" + Buffer.from(res.session_id).toString("hex");
-        this._serverClient = serverClient;
+        this._serverDriver = serverDriver;
         this._isOpen = true;
         this._pulse = setTimeout(() => this.pulse(), 5000);
     }
@@ -80,10 +80,10 @@ export class TypeDBSessionImpl implements TypeDBSession {
             for (const tx of this._transactions) {
                 await tx.close();
             }
-            this._client.closeSession(this);
+            this._driver.closeSession(this);
             clearTimeout(this._pulse);
             const req = RequestBuilder.Session.closeReq(this._id);
-            await this._serverClient.stub.sessionClose(req);
+            await this._serverDriver.stub.sessionClose(req);
         }
     }
 
@@ -92,12 +92,12 @@ export class TypeDBSessionImpl implements TypeDBSession {
     }
 
     async transaction(type: TransactionType, options?: TypeDBOptions): Promise<TypeDBTransaction> {
-        if (!this.isOpen()) throw new TypeDBClientError(SESSION_CLOSED);
+        if (!this.isOpen()) throw new TypeDBDriverError(SESSION_CLOSED);
         if (!options) options = new TypeDBOptions();
-        return this._database.runFailsafe(async (serverClient, _db, isFirstRun) => {
+        return this._database.runFailsafe(async (serverDriver, _db, isFirstRun) => {
             if (!isFirstRun){
                 await this.close();
-                await this.openAt(serverClient);
+                await this.openAt(serverDriver);
             }
             const transaction = new TypeDBTransactionImpl(this, type, options);
             await transaction.open();
@@ -127,11 +127,11 @@ export class TypeDBSessionImpl implements TypeDBSession {
     }
 
     get stub(): TypeDBStub {
-        return this._serverClient.stub;
+        return this._serverDriver.stub;
     }
 
     get requestTransmitter(): RequestTransmitter {
-        return this._serverClient.transmitter;
+        return this._serverDriver.transmitter;
     }
 
     get networkLatency() {
@@ -142,7 +142,7 @@ export class TypeDBSessionImpl implements TypeDBSession {
         if (!this._isOpen) return;
         const pulse = RequestBuilder.Session.pulseReq(this._id);
         try {
-            const isAlive = await this._serverClient.stub.sessionPulse(pulse);
+            const isAlive = await this._serverDriver.stub.sessionPulse(pulse);
             if (!isAlive) this._isOpen = false;
             else this._pulse = setTimeout(() => this.pulse(), 5000);
         } catch (e) {

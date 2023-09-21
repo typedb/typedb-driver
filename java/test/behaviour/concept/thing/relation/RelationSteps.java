@@ -19,12 +19,12 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.test.behaviour.concept.thing.relation;
+package com.vaticle.typedb.driver.test.behaviour.concept.thing.relation;
 
-import com.vaticle.typedb.client.api.concept.thing.Attribute;
-import com.vaticle.typedb.client.api.concept.thing.Relation;
-import com.vaticle.typedb.client.api.concept.thing.Thing;
-import com.vaticle.typedb.client.common.Label;
+import com.vaticle.typedb.driver.api.concept.thing.Attribute;
+import com.vaticle.typedb.driver.api.concept.thing.Relation;
+import com.vaticle.typedb.driver.api.concept.thing.Thing;
+import com.vaticle.typedb.driver.common.Label;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -32,10 +32,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-import static com.vaticle.typedb.client.test.behaviour.concept.thing.ThingSteps.get;
-import static com.vaticle.typedb.client.test.behaviour.concept.thing.ThingSteps.put;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.tx;
-import static com.vaticle.typedb.client.test.behaviour.util.Util.assertThrows;
+import static com.vaticle.typedb.driver.test.behaviour.concept.thing.ThingSteps.get;
+import static com.vaticle.typedb.driver.test.behaviour.concept.thing.ThingSteps.put;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
+import static com.vaticle.typedb.driver.test.behaviour.util.Util.assertThrows;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

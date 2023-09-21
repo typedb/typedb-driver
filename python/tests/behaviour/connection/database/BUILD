@@ -40,13 +40,13 @@ typedb_behaviour_py_test(
         "//python/tests/behaviour/typeql:steps",
     ],
     deps = [
-        "//python:client_python",
+        "//python:driver_python",
         "//python/tests/behaviour/config:parameters",
         "//python/tests/behaviour:context",
         "//python/tests/behaviour/background",
         "//python/tests/behaviour/util:util",
     ],
-    data = ["//python:native-client-binary-link", "//python:native-client-wrapper-link"],
+    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
     size = "small",
 )
 

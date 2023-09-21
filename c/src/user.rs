@@ -21,7 +21,7 @@
 
 use std::ffi::c_char;
 
-use typedb_client::{User, UserManager};
+use typedb_driver::{User, UserManager};
 
 use super::{
     error::unwrap_void,

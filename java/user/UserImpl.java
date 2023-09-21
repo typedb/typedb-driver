@@ -19,22 +19,22 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.user;
+package com.vaticle.typedb.driver.user;
 
-import com.vaticle.typedb.client.api.user.User;
-import com.vaticle.typedb.client.common.NativeObject;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.driver.api.user.User;
+import com.vaticle.typedb.driver.common.NativeObject;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
 import java.util.Optional;
 
-import static com.vaticle.typedb.client.jni.typedb_client.user_get_password_expiry_seconds;
-import static com.vaticle.typedb.client.jni.typedb_client.user_get_username;
-import static com.vaticle.typedb.client.jni.typedb_client.user_password_update;
+import static com.vaticle.typedb.driver.jni.typedb_driver.user_get_password_expiry_seconds;
+import static com.vaticle.typedb.driver.jni.typedb_driver.user_get_username;
+import static com.vaticle.typedb.driver.jni.typedb_driver.user_password_update;
 
-public class UserImpl extends NativeObject<com.vaticle.typedb.client.jni.User> implements User {
+public class UserImpl extends NativeObject<com.vaticle.typedb.driver.jni.User> implements User {
     private final UserManagerImpl users;
 
-    UserImpl(com.vaticle.typedb.client.jni.User user, UserManagerImpl users) {
+    UserImpl(com.vaticle.typedb.driver.jni.User user, UserManagerImpl users) {
         super(user);
         this.users = users;
     }
@@ -55,8 +55,8 @@ public class UserImpl extends NativeObject<com.vaticle.typedb.client.jni.User> i
     public void passwordUpdate(String passwordOld, String passwordNew) {
         try {
             user_password_update(nativeObject, users.nativeObject, passwordOld, passwordNew);
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 }

@@ -25,7 +25,7 @@ from hamcrest import *
 
 from tests.behaviour.config.parameters import parse_list, parse_label
 from tests.behaviour.context import Context
-from typedb.client import *
+from typedb.driver import *
 
 
 @step("put attribute type: {type_label}, with value type: {value_type:ValueType}")

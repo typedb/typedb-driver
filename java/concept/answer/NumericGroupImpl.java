@@ -19,25 +19,25 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.concept.answer;
+package com.vaticle.typedb.driver.concept.answer;
 
-import com.vaticle.typedb.client.api.answer.Numeric;
-import com.vaticle.typedb.client.api.answer.NumericGroup;
-import com.vaticle.typedb.client.api.concept.Concept;
-import com.vaticle.typedb.client.common.NativeObject;
-import com.vaticle.typedb.client.concept.ConceptImpl;
+import com.vaticle.typedb.driver.api.answer.Numeric;
+import com.vaticle.typedb.driver.api.answer.NumericGroup;
+import com.vaticle.typedb.driver.api.concept.Concept;
+import com.vaticle.typedb.driver.common.NativeObject;
+import com.vaticle.typedb.driver.concept.ConceptImpl;
 
 import java.util.Objects;
 
-import static com.vaticle.typedb.client.jni.typedb_client.numeric_group_equals;
-import static com.vaticle.typedb.client.jni.typedb_client.numeric_group_get_numeric;
-import static com.vaticle.typedb.client.jni.typedb_client.numeric_group_get_owner;
-import static com.vaticle.typedb.client.jni.typedb_client.numeric_group_to_string;
+import static com.vaticle.typedb.driver.jni.typedb_driver.numeric_group_equals;
+import static com.vaticle.typedb.driver.jni.typedb_driver.numeric_group_get_numeric;
+import static com.vaticle.typedb.driver.jni.typedb_driver.numeric_group_get_owner;
+import static com.vaticle.typedb.driver.jni.typedb_driver.numeric_group_to_string;
 
-public class NumericGroupImpl extends NativeObject<com.vaticle.typedb.client.jni.NumericGroup> implements NumericGroup {
+public class NumericGroupImpl extends NativeObject<com.vaticle.typedb.driver.jni.NumericGroup> implements NumericGroup {
     private int hash = 0;
 
-    public NumericGroupImpl(com.vaticle.typedb.client.jni.NumericGroup numericGroup) {
+    public NumericGroupImpl(com.vaticle.typedb.driver.jni.NumericGroup numericGroup) {
         super(numericGroup);
     }
 

@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.common.exception;
+package com.vaticle.typedb.driver.common.exception;
 
 public class TypeDBException extends RuntimeException {
 

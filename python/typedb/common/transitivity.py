@@ -21,7 +21,7 @@
 
 from enum import Enum
 
-from typedb.native_client_wrapper import Transitive, Explicit
+from typedb.native_driver_wrapper import Transitive, Explicit
 
 
 class Transitivity(Enum):

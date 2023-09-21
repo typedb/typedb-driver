@@ -26,7 +26,7 @@ use std::{
 };
 
 use log::trace;
-use typedb_client::Error;
+use typedb_driver::Error;
 
 thread_local! {
     static LAST_ERROR: RefCell<Option<Error>> = RefCell::new(None);

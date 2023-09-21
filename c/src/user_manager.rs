@@ -21,7 +21,7 @@
 
 use std::{ffi::c_char, ptr::addr_of_mut};
 
-use typedb_client::{box_stream, Connection, User, UserManager};
+use typedb_driver::{box_stream, Connection, User, UserManager};
 
 use super::{
     error::{try_release, try_release_optional, unwrap_or_default, unwrap_void},

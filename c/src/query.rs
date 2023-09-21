@@ -21,7 +21,7 @@
 
 use std::{ffi::c_char, ptr::addr_of_mut};
 
-use typedb_client::{
+use typedb_driver::{
     answer::{ConceptMap, ConceptMapGroup, Numeric, NumericGroup},
     box_stream,
     logic::Explanation,

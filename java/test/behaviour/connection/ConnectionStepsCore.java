@@ -19,11 +19,11 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.test.behaviour.connection;
+package com.vaticle.typedb.driver.test.behaviour.connection;
 
-import com.vaticle.typedb.client.TypeDB;
-import com.vaticle.typedb.client.api.TypeDBClient;
-import com.vaticle.typedb.client.api.TypeDBOptions;
+import com.vaticle.typedb.driver.TypeDB;
+import com.vaticle.typedb.driver.api.TypeDBDriver;
+import com.vaticle.typedb.driver.api.TypeDBOptions;
 import com.vaticle.typedb.common.test.TypeDBRunner;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
 import com.vaticle.typedb.common.test.core.TypeDBCoreRunner;
@@ -49,8 +49,8 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     }
 
     @Override
-    TypeDBClient createTypeDBClient(String address) {
-        return TypeDB.coreClient(address);
+    TypeDBDriver createTypeDBDriver(String address) {
+        return TypeDB.coreDriver(address);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     @Override
     @When("connection opens with default authentication")
     public void connection_opens_with_default_authentication() {
-        client = createTypeDBClient(TypeDBSingleton.getTypeDBRunner().address());
+        driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address());
     }
 
     @Override

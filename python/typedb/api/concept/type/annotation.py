@@ -21,7 +21,7 @@
 
 from __future__ import annotations
 
-from typedb.native_client_wrapper import Annotation as NativeAnnotation, annotation_new_key, annotation_new_unique, \
+from typedb.native_driver_wrapper import Annotation as NativeAnnotation, annotation_new_key, annotation_new_unique, \
     annotation_is_key, annotation_is_unique, annotation_to_string, annotation_equals
 
 

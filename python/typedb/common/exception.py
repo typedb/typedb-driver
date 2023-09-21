@@ -23,10 +23,10 @@ from __future__ import annotations
 
 from typing import Union, Any
 
-from typedb.native_client_wrapper import TypeDBClientException
+from typedb.native_driver_wrapper import TypeDBDriverException
 
 
-class TypeDBClientExceptionExt(TypeDBClientException):
+class TypeDBDriverExceptionExt(TypeDBDriverException):
 
     def __init__(self, msg: Union[ErrorMessage, str], cause: BaseException = None, params: Any = None):
         if isinstance(msg, str):
@@ -37,11 +37,11 @@ class TypeDBClientExceptionExt(TypeDBClientException):
             self.error_message = msg
 
         self.__cause__ = cause
-        super(TypeDBClientException, self).__init__(self.message)
+        super(TypeDBDriverException, self).__init__(self.message)
 
     @staticmethod
     def of(error_message: ErrorMessage, params: Any = None):
-        return TypeDBClientExceptionExt(msg=error_message, cause=None, params=params)
+        return TypeDBDriverExceptionExt(msg=error_message, cause=None, params=params)
 
 
 class ErrorMessage:
@@ -61,20 +61,20 @@ class ErrorMessage:
         return "[%s] %s" % (self.code(), self._message)
 
 
-class ClientErrorMessage(ErrorMessage):
+class DriverErrorMessage(ErrorMessage):
 
     def __init__(self, code: int, message: str):
-        super(ClientErrorMessage, self).__init__(code_prefix="CLI", code_number=code, message_prefix="Client Error",
+        super(DriverErrorMessage, self).__init__(code_prefix="CLI", code_number=code, message_prefix="Driver Error",
                                                  message_body=message)
 
 
-CLIENT_CLOSED = ClientErrorMessage(1, "The client has been closed and no further operation is allowed.")
-SESSION_CLOSED = ClientErrorMessage(2, "The session has been closed and no further operation is allowed.")
-TRANSACTION_CLOSED = ClientErrorMessage(3, "The transaction has been closed and no further operation is allowed.")
-DATABASE_DELETED = ClientErrorMessage(4, "The database '%s' has been deleted and no further operation is allowed.")
-MISSING_DB_NAME = ClientErrorMessage(5, "Database name cannot be empty.")
-POSITIVE_VALUE_REQUIRED = ClientErrorMessage(6, "Value should be positive, was: '%d'.")
-CLUSTER_CREDENTIAL_INCONSISTENT = ClientErrorMessage(7, "TLS disabled but the Root CA path provided.")
+CLIENT_CLOSED = DriverErrorMessage(1, "The driver has been closed and no further operation is allowed.")
+SESSION_CLOSED = DriverErrorMessage(2, "The session has been closed and no further operation is allowed.")
+TRANSACTION_CLOSED = DriverErrorMessage(3, "The transaction has been closed and no further operation is allowed.")
+DATABASE_DELETED = DriverErrorMessage(4, "The database '%s' has been deleted and no further operation is allowed.")
+MISSING_DB_NAME = DriverErrorMessage(5, "Database name cannot be empty.")
+POSITIVE_VALUE_REQUIRED = DriverErrorMessage(6, "Value should be positive, was: '%d'.")
+ENTERPRISE_CREDENTIAL_INCONSISTENT = DriverErrorMessage(7, "TLS disabled but the Root CA path provided.")
 
 
 class ConceptErrorMessage(ErrorMessage):

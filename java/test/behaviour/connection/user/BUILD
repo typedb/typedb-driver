@@ -43,22 +43,22 @@ java_library(
 )
 
 typedb_java_test(
-    name = "test-cluster",
+    name = "test-enterprise",
     size = "large",
     srcs = [
-        "UserTestCluster.java",
+        "UserTestEnterprise.java",
     ],
     data = [
         "@vaticle_typedb_behaviour//connection:user.feature",
     ],
-    server_linux_artifact = "@vaticle_typedb_cluster_artifact_linux//file",
-    server_mac_artifact = "@vaticle_typedb_cluster_artifact_mac//file",
-    server_windows_artifact = "@vaticle_typedb_cluster_artifact_windows//file",
-    test_class = "com.vaticle.typedb.client.test.behaviour.connection.user.UserTestCluster",
+    server_linux_artifact = "@vaticle_typedb_enterprise_artifact_linux//file",
+    server_mac_artifact = "@vaticle_typedb_enterprise_artifact_mac//file",
+    server_windows_artifact = "@vaticle_typedb_enterprise_artifact_windows//file",
+    test_class = "com.vaticle.typedb.driver.test.behaviour.connection.user.UserTestEnterprise",
     runtime_deps = [
         ":steps",
         "//java/test/behaviour/config:parameters",
-        "//java/test/behaviour/connection:steps-cluster",
+        "//java/test/behaviour/connection:steps-enterprise",
         "//java/test/behaviour/connection/session:steps",
         "//java/test/behaviour/connection/transaction:steps",
         "//java/test/behaviour/typeql:steps",

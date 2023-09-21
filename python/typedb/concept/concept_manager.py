@@ -23,13 +23,13 @@ from __future__ import annotations
 
 from typing import Optional, TYPE_CHECKING
 
-from typedb.native_client_wrapper import concepts_get_entity_type, concepts_get_relation_type, \
+from typedb.native_driver_wrapper import concepts_get_entity_type, concepts_get_relation_type, \
     concepts_get_attribute_type, concepts_put_entity_type, concepts_put_relation_type, concepts_put_attribute_type, \
     concepts_get_entity, concepts_get_relation, concepts_get_attribute, concepts_get_schema_exceptions, \
     schema_exception_message, schema_exception_code, Transaction as NativeTransaction
 
 from typedb.api.concept.concept_manager import ConceptManager
-from typedb.common.exception import TypeDBClientExceptionExt, TypeDBException, MISSING_LABEL, MISSING_IID, \
+from typedb.common.exception import TypeDBDriverExceptionExt, TypeDBException, MISSING_LABEL, MISSING_IID, \
     TRANSACTION_CLOSED
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.concept.thing.attribute import _Attribute
@@ -45,13 +45,13 @@ if TYPE_CHECKING:
 
 def _not_blank_label(label: str) -> str:
     if not label or label.isspace():
-        raise TypeDBClientExceptionExt.of(MISSING_LABEL)
+        raise TypeDBDriverExceptionExt.of(MISSING_LABEL)
     return label
 
 
 def _not_blank_iid(iid: str) -> str:
     if not iid or iid.isspace():
-        raise TypeDBClientExceptionExt.of(MISSING_IID)
+        raise TypeDBDriverExceptionExt.of(MISSING_IID)
     return iid
 
 
@@ -61,8 +61,8 @@ class _ConceptManager(ConceptManager, NativeWrapper[NativeTransaction]):
         super().__init__(transaction)
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBClientExceptionExt:
-        return TypeDBClientExceptionExt.of(TRANSACTION_CLOSED)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
+        return TypeDBDriverExceptionExt.of(TRANSACTION_CLOSED)
 
     @property
     def native_transaction(self) -> NativeTransaction:

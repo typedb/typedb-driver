@@ -24,19 +24,19 @@ import {TypeDB, TypeDBOptions} from "../../../dist";
 import {
     afterBase,
     beforeBase,
-    client,
-    createDefaultClient,
-    setClientFn,
-    setDefaultClientFn,
+    driver,
+    createDefaultDriver,
+    setDriverFn,
+    setDefaultDriverFn,
     setSessionOptions,
     setTransactionOptions
 } from "./ConnectionStepsBase";
 
 BeforeAll(() => {
-    setClientFn(async (username, password) => {
-        throw new Error("Core client does not support authentication");
+    setDriverFn(async (username, password) => {
+        throw new Error("Core driver does not support authentication");
     });
-    setDefaultClientFn(async () => TypeDB.coreClient());
+    setDefaultDriverFn(async () => TypeDB.coreDriver());
     setSessionOptions(new TypeDBOptions({"infer": true}));
     setTransactionOptions(new TypeDBOptions({"infer": true}));
 });
@@ -53,10 +53,10 @@ After(async () => {
 
 async function clearDB() {
     // TODO: reset the database through the TypeDB runner once it exists
-    await createDefaultClient();
-    const databases = await client.databases.all();
+    await createDefaultDriver();
+    const databases = await driver.databases.all();
     for (const db of databases) {
         await db.delete();
     }
-    await client.close();
+    await driver.close();
 }

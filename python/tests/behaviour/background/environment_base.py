@@ -20,7 +20,7 @@
 #
 
 from behave.model_core import Status
-from typedb.client import *
+from typedb.driver import *
 
 from tests.behaviour.config.parameters import RootLabel
 from tests.behaviour.context import Context
@@ -75,8 +75,8 @@ def _clear_answers_impl(context: Context):
 def after_scenario(context: Context, scenario):
     if scenario.status == Status.skipped:
         return
-    if context.client.is_open():
-        context.client.close()
+    if context.driver.is_open():
+        context.driver.close()
 
 
 def after_all(context: Context):

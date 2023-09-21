@@ -24,21 +24,21 @@ const assert = require("assert");
 const Annotation = ThingType.Annotation;
 
 async function run() {
-    const client = await TypeDB.coreClient();
+    const driver = await TypeDB.coreDriver();
 
     try {
-        const dbs = await client.databases.all();
+        const dbs = await driver.databases.all();
         console.log(`get databases - SUCCESS - the databases are [${dbs}]`);
         const typedb = dbs.find(x => x.name === "typedb");
         if (typedb) {
             await typedb.delete();
             console.log(`delete database - SUCCESS - 'typedb' has been deleted`);
         }
-        await client.databases.create("typedb");
+        await driver.databases.create("typedb");
         console.log("create database - SUCCESS - 'typedb' has been created");
     } catch (err) {
         console.error(`database operations - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -49,7 +49,7 @@ async function run() {
     let session, tx;
     let lion, lionFamily, lionCub, maneSize;
     try {
-        session = await client.session("typedb", SessionType.SCHEMA);
+        session = await driver.session("typedb", SessionType.SCHEMA);
         tx = await session.transaction(TransactionType.WRITE);
         lion = await tx.concepts.putEntityType("lion");
         await tx.commit();
@@ -57,7 +57,7 @@ async function run() {
         console.log("putEntityType - SUCCESS");
     } catch (err) {
         console.error(`putEntityType - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -72,7 +72,7 @@ async function run() {
         console.log("putRelationType / setRelates / setPlays - SUCCESS");
     } catch (err) {
         console.error(`putRelationType / setRelates / setPlays - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -85,7 +85,7 @@ async function run() {
         console.log("commit attribute type + owns - SUCCESS");
     } catch (err) {
         console.error(`commit attribute type + owns - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -99,7 +99,7 @@ async function run() {
         console.log("set supertype - SUCCESS");
     } catch (err) {
         console.error(`set supertype - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -110,7 +110,7 @@ async function run() {
         console.log(`get supertype - SUCCESS - the supertype of 'lion' is '${supertypeOfLion.label}'.`);
     } catch (err) {
         console.error(`get supertype - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -121,7 +121,7 @@ async function run() {
         console.log(`get supertypes - SUCCESS - the supertypes of 'stone-lion' are [${supertypesOfStoneLion.map(x => x.label)}].`);
     } catch (err) {
         console.error(`get supertypes - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -132,7 +132,7 @@ async function run() {
         console.log(`get subtypes - SUCCESS - the subtypes of 'lion' are [${subtypesOfLion.map(x => x.label)}].`);
     } catch (err) {
         console.error(`get subtypes - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -147,7 +147,7 @@ async function run() {
         console.log(`set label - SUCCESS - 'monkey' has been renamed to '${newLabel}'.`);
     } catch (err) {
         console.error(`set label - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -168,7 +168,7 @@ async function run() {
         console.log(`unset abstract - SUCCESS - 'whale' ${isAbstractAfterUnset ? "is still" : "is no longer"} abstract.`);
     } catch (err) {
         console.error(`set label - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -196,7 +196,7 @@ async function run() {
         console.log(`get/set relates/plays/players, overriding a super-role - SUCCESS - 'man' plays [${playingRoles}]; 'fathership:father' is played by [${roleplayers}].`);
     } catch (err) {
         console.error(`get/set relates/plays/players, overriding a super-role - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -229,7 +229,7 @@ async function run() {
             `of which [${ownedKeys.map(x => x.label.scopedName)}] are keys, and [${ownedDateTimes.map((x => x.label))}] are datetimes`);
     } catch (err) {
         console.error(`get/set owns, overriding a super-attribute - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -250,7 +250,7 @@ async function run() {
             + `'person' plays [${personPlays}], 'fathership' relates [${fathershipRelates}]`);
     } catch (err) {
         console.error(`unset owns/plays/relates - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -268,7 +268,7 @@ async function run() {
             + `volume is a ${volume.valueType}, is-alive is a ${isAlive.valueType} and start-date is a ${startDate.valueType}`);
     } catch (err) {
         console.error(`put all 5 attribute value types - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -280,7 +280,7 @@ async function run() {
         console.log(`put rule - SUCCESS`);
     } catch (err) {
         console.error(`put rule - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -289,7 +289,7 @@ async function run() {
         console.log("close schema session - SUCCESS");
     } catch (err) {
         console.error(`close schema session - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -298,7 +298,7 @@ async function run() {
     /////////////////////
 
     try {
-        session = await client.session("typedb", SessionType.DATA);
+        session = await driver.session("typedb", SessionType.DATA);
         tx = await session.transaction(TransactionType.WRITE);
         for (let i = 0; i < 10; i++) stoneLion.create(tx);
         const lions = await lion.getInstances(tx).collect();
@@ -333,7 +333,7 @@ async function run() {
         console.log(`getType - SUCCESS - After looking more closely, it turns out that there are ${lions.length} stone lions.`);
     } catch (err) {
         console.error(`Thing methods - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -358,7 +358,7 @@ async function run() {
         console.log(`Relation methods - SUCCESS`);
     } catch (err) {
         console.error(`Relation methods - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
@@ -375,17 +375,17 @@ async function run() {
             + `volume is ${volumeAttr.value}, is-alive is ${isAliveAttr.value} and start-date is ${startDateAttr.value}`);
     } catch (err) {
         console.error(`put 5 different types of attributes - ERROR: ${err.stack || err}`);
-        await client.close();
+        await driver.close();
         process.exit(1);
     }
 
     try {
         await session.close();
-        await client.close();
-        console.log("close session and client - SUCCESS");
+        await driver.close();
+        console.log("close session and driver - SUCCESS");
     } catch (err) {
-        console.error(`close session and client - ERROR: ${err.stack || err}`);
-        await client.close();
+        console.error(`close session and driver - ERROR: ${err.stack || err}`);
+        await driver.close();
         process.exit(1);
     }
 }

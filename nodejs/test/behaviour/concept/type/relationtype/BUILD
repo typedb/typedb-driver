@@ -34,7 +34,7 @@ ts_project(
     srcs = ["RelationTypeSteps.ts"],
     tsconfig = behaviour_test_ts_config(),
     deps = [
-        "//nodejs:client-nodejs",
+        "//nodejs:driver-nodejs",
         "//nodejs:node_modules/@cucumber/cucumber",
         "//nodejs/test/behaviour/config:parameters",
         "//nodejs/test/behaviour/connection:steps-base",

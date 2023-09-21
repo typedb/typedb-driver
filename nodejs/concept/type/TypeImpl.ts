@@ -23,7 +23,7 @@ import {Concept} from "../../api/concept/Concept";
 import {Type} from "../../api/concept/type/Type";
 import {TypeDBTransaction} from "../../api/connection/TypeDBTransaction";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {TypeDBDriverError} from "../../common/errors/TypeDBDriverError";
 import {Label} from "../../common/Label";
 import {Stream} from "../../common/util/Stream";
 import {ConceptImpl} from "../../dependencies_internal";
@@ -36,7 +36,7 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
 
     protected constructor(label: Label, root: boolean, abstract: boolean) {
         super();
-        if (!label) throw new TypeDBClientError(MISSING_LABEL);
+        if (!label) throw new TypeDBDriverError(MISSING_LABEL);
         this._label = label;
         this._root = root;
         this._abstract = abstract;

@@ -49,7 +49,7 @@ typedb_java_test(
     srcs = [
         "DatabaseTestCore.java",
     ],
-    test_class = "com.vaticle.typedb.client.test.behaviour.connection.database.DatabaseTestCore",
+    test_class = "com.vaticle.typedb.driver.test.behaviour.connection.database.DatabaseTestCore",
     data = [
         "@vaticle_typedb_behaviour//connection:database.feature",
     ],
@@ -77,19 +77,19 @@ typedb_java_test(
 )
 
 typedb_java_test(
-    name = "test-cluster",
+    name = "test-enterprise",
     srcs = [
-        "DatabaseTestCluster.java",
+        "DatabaseTestEnterprise.java",
     ],
-    test_class = "com.vaticle.typedb.client.test.behaviour.connection.database.DatabaseTestCluster",
+    test_class = "com.vaticle.typedb.driver.test.behaviour.connection.database.DatabaseTestEnterprise",
     data = [
         "@vaticle_typedb_behaviour//connection:database.feature",
     ],
-    server_mac_artifact = "@vaticle_typedb_cluster_artifact_mac//file",
-    server_linux_artifact = "@vaticle_typedb_cluster_artifact_linux//file",
-    server_windows_artifact = "@vaticle_typedb_cluster_artifact_windows//file",
+    server_mac_artifact = "@vaticle_typedb_enterprise_artifact_mac//file",
+    server_linux_artifact = "@vaticle_typedb_enterprise_artifact_linux//file",
+    server_windows_artifact = "@vaticle_typedb_enterprise_artifact_windows//file",
     runtime_deps = [
-        "//java/test/behaviour/connection:steps-cluster",
+        "//java/test/behaviour/connection:steps-enterprise",
 
         ":steps",
         "//java/test/behaviour/connection/session:steps",

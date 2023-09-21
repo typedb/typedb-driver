@@ -21,7 +21,7 @@
 
 use futures::StreamExt;
 use serial_test::serial;
-use typedb_client::{DatabaseManager, Session, SessionType::Data, TransactionType::Write};
+use typedb_driver::{DatabaseManager, Session, SessionType::Data, TransactionType::Write};
 
 use super::common;
 
@@ -29,7 +29,7 @@ use super::common;
 #[serial]
 fn basic_async_std() {
     async_std::task::block_on(async {
-        let connection = common::new_cluster_connection()?;
+        let connection = common::new_enterprise_connection()?;
         common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
         let databases = DatabaseManager::new(connection);
         assert!(databases.contains(common::TEST_DATABASE).await?);
@@ -41,7 +41,7 @@ fn basic_async_std() {
         transaction.commit().await?;
         assert_eq!(results.len(), 5);
         assert!(results.into_iter().all(|res| res.is_ok()));
-        Ok::<(), typedb_client::Error>(())
+        Ok::<(), typedb_driver::Error>(())
     })
     .unwrap();
 }
@@ -50,7 +50,7 @@ fn basic_async_std() {
 #[serial]
 fn basic_smol() {
     smol::block_on(async {
-        let connection = common::new_cluster_connection()?;
+        let connection = common::new_enterprise_connection()?;
         common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
         let databases = DatabaseManager::new(connection);
         assert!(databases.contains(common::TEST_DATABASE).await?);
@@ -62,7 +62,7 @@ fn basic_smol() {
         transaction.commit().await?;
         assert_eq!(results.len(), 5);
         assert!(results.into_iter().all(|res| res.is_ok()));
-        Ok::<(), typedb_client::Error>(())
+        Ok::<(), typedb_driver::Error>(())
     })
     .unwrap();
 }
@@ -71,7 +71,7 @@ fn basic_smol() {
 #[serial]
 fn basic_futures() {
     futures::executor::block_on(async {
-        let connection = common::new_cluster_connection()?;
+        let connection = common::new_enterprise_connection()?;
         common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
         let databases = DatabaseManager::new(connection);
         assert!(databases.contains(common::TEST_DATABASE).await?);
@@ -83,7 +83,7 @@ fn basic_futures() {
         transaction.commit().await?;
         assert_eq!(results.len(), 5);
         assert!(results.into_iter().all(|res| res.is_ok()));
-        Ok::<(), typedb_client::Error>(())
+        Ok::<(), typedb_driver::Error>(())
     })
     .unwrap();
 }

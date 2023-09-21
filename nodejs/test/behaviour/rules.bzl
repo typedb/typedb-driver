@@ -44,7 +44,7 @@ def node_cucumber_test(name, features, data, steps, **kwargs):
         no_copy_to_bin = features,
         fixed_args = [
             "--publish-quiet", "--strict",
-            "--tags 'not @ignore and not @ignore-typedb and not @ignore-typedb-client-nodejs and not @ignore-client-nodejs'",
+            "--tags 'not @ignore and not @ignore-typedb and not @ignore-typedb-driver-nodejs and not @ignore-driver-nodejs'",
             "--require", "nodejs/test/**/*.js",
         ] + ["$(location {})".format(feature) for feature in features],
         **kwargs,
@@ -58,7 +58,7 @@ def typedb_behaviour_node_test(name, **kwargs):
     )
 
     node_cucumber_test(
-        name = name + "-cluster",
-        steps = "//nodejs/test/behaviour/connection:steps-cluster",
+        name = name + "-enterprise",
+        steps = "//nodejs/test/behaviour/connection:steps-enterprise",
         **kwargs,
     )

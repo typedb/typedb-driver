@@ -19,29 +19,29 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.concept;
+package com.vaticle.typedb.driver.api.concept;
 
 import com.eclipsesource.json.JsonObject;
-import com.vaticle.typedb.client.api.TypeDBSession;
-import com.vaticle.typedb.client.api.TypeDBTransaction;
-import com.vaticle.typedb.client.api.concept.thing.Attribute;
-import com.vaticle.typedb.client.api.concept.thing.Entity;
-import com.vaticle.typedb.client.api.concept.thing.Relation;
-import com.vaticle.typedb.client.api.concept.thing.Thing;
-import com.vaticle.typedb.client.api.concept.type.AttributeType;
-import com.vaticle.typedb.client.api.concept.type.EntityType;
-import com.vaticle.typedb.client.api.concept.type.RelationType;
-import com.vaticle.typedb.client.api.concept.type.RoleType;
-import com.vaticle.typedb.client.api.concept.type.ThingType;
-import com.vaticle.typedb.client.api.concept.type.Type;
-import com.vaticle.typedb.client.api.concept.value.Value;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.client.jni.Transitivity;
+import com.vaticle.typedb.driver.api.TypeDBSession;
+import com.vaticle.typedb.driver.api.TypeDBTransaction;
+import com.vaticle.typedb.driver.api.concept.thing.Attribute;
+import com.vaticle.typedb.driver.api.concept.thing.Entity;
+import com.vaticle.typedb.driver.api.concept.thing.Relation;
+import com.vaticle.typedb.driver.api.concept.thing.Thing;
+import com.vaticle.typedb.driver.api.concept.type.AttributeType;
+import com.vaticle.typedb.driver.api.concept.type.EntityType;
+import com.vaticle.typedb.driver.api.concept.type.RelationType;
+import com.vaticle.typedb.driver.api.concept.type.RoleType;
+import com.vaticle.typedb.driver.api.concept.type.ThingType;
+import com.vaticle.typedb.driver.api.concept.type.Type;
+import com.vaticle.typedb.driver.api.concept.value.Value;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.vaticle.typedb.driver.jni.Transitivity;
 
 import javax.annotation.CheckReturnValue;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 import static com.vaticle.typedb.common.util.Objects.className;
 
 public interface Concept {
@@ -101,69 +101,69 @@ public interface Concept {
     }
 
     default Type asType() {
-        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Type.class));
+        throw new TypeDBDriverException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Type.class));
     }
 
     default ThingType asThingType() {
-        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(ThingType.class));
+        throw new TypeDBDriverException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(ThingType.class));
     }
 
     default EntityType asEntityType() {
-        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(EntityType.class));
+        throw new TypeDBDriverException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(EntityType.class));
     }
 
     default RelationType asRelationType() {
-        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(RelationType.class));
+        throw new TypeDBDriverException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(RelationType.class));
     }
 
     default AttributeType asAttributeType() {
-        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.class));
+        throw new TypeDBDriverException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(AttributeType.class));
     }
 
     default RoleType asRoleType() {
-        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(RoleType.class));
+        throw new TypeDBDriverException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(RoleType.class));
     }
 
     default Thing asThing() {
-        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Thing.class));
+        throw new TypeDBDriverException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Thing.class));
     }
 
     default Entity asEntity() {
-        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Entity.class));
+        throw new TypeDBDriverException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Entity.class));
     }
 
     default Relation asRelation() {
-        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Relation.class));
+        throw new TypeDBDriverException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Relation.class));
     }
 
     default Attribute asAttribute() {
-        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.class));
+        throw new TypeDBDriverException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Attribute.class));
     }
 
     default Value asValue() {
-        throw new TypeDBClientException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Value.class));
+        throw new TypeDBDriverException(INVALID_CONCEPT_CASTING, className(this.getClass()), className(Value.class));
     }
 
     @CheckReturnValue
     JsonObject toJSON();
 
     enum Transitivity {
-        TRANSITIVE(com.vaticle.typedb.client.jni.Transitivity.Transitive),
-        EXPLICIT(com.vaticle.typedb.client.jni.Transitivity.Explicit);
+        TRANSITIVE(com.vaticle.typedb.driver.jni.Transitivity.Transitive),
+        EXPLICIT(com.vaticle.typedb.driver.jni.Transitivity.Explicit);
 
-        public final com.vaticle.typedb.client.jni.Transitivity nativeObject;
+        public final com.vaticle.typedb.driver.jni.Transitivity nativeObject;
 
-        Transitivity(com.vaticle.typedb.client.jni.Transitivity nativeObject) {
+        Transitivity(com.vaticle.typedb.driver.jni.Transitivity nativeObject) {
             this.nativeObject = nativeObject;
         }
 
-        public static Transitivity of(com.vaticle.typedb.client.jni.Transitivity transitivity) {
+        public static Transitivity of(com.vaticle.typedb.driver.jni.Transitivity transitivity) {
             for (Transitivity value : Transitivity.values()) {
                 if (value.nativeObject == transitivity) {
                     return value;
                 }
             }
-            throw new TypeDBClientException(UNEXPECTED_NATIVE_VALUE);
+            throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
         }
     }
 }

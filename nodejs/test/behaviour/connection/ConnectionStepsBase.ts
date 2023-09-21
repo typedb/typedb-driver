@@ -20,7 +20,7 @@
  */
 
 import {Given, setDefaultTimeout} from "@cucumber/cucumber";
-import {TypeDBClient, TypeDBOptions, TypeDBSession, TypeDBTransaction} from "../../../dist";
+import {TypeDBDriver, TypeDBOptions, TypeDBSession, TypeDBTransaction} from "../../../dist";
 import {assertThrows} from "../util/Util";
 import assert = require("assert");
 
@@ -30,10 +30,10 @@ interface OptionSetters {
 
 export const THREAD_POOL_SIZE = 32;
 
-export let clientFn: (username: string, password: string) => Promise<TypeDBClient>;
-export let defaultClientFn: () => Promise<TypeDBClient>;
+export let driverFn: (username: string, password: string) => Promise<TypeDBDriver>;
+export let defaultDriverFn: () => Promise<TypeDBDriver>;
 
-export let client: TypeDBClient;
+export let driver: TypeDBDriver;
 export const sessions: TypeDBSession[] = [];
 export const sessionsToTransactions: Map<TypeDBSession, TypeDBTransaction[]> = new Map<TypeDBSession, TypeDBTransaction[]>();
 export let sessionOptions: TypeDBOptions;
@@ -50,20 +50,20 @@ export function tx(): TypeDBTransaction {
     return sessionsToTransactions.get(sessions[0])[0];
 }
 
-export function setClientFn(constructor: (username: string, password: string) => Promise<TypeDBClient>) {
-    clientFn = constructor;
+export function setDriverFn(constructor: (username: string, password: string) => Promise<TypeDBDriver>) {
+    driverFn = constructor;
 }
 
-export function setDefaultClientFn(constructor: () => Promise<TypeDBClient>) {
-    defaultClientFn = constructor;
+export function setDefaultDriverFn(constructor: () => Promise<TypeDBDriver>) {
+    defaultDriverFn = constructor;
 }
 
-export async function createDefaultClient(): Promise<void> {
-    client = await defaultClientFn();
+export async function createDefaultDriver(): Promise<void> {
+    driver = await defaultDriverFn();
 }
 
-export async function createClient(username: string, password: string) {
-    client = await clientFn(username, password);
+export async function createDriver(username: string, password: string) {
+    driver = await driverFn(username, password);
 }
 
 export function setSessionOptions(options: TypeDBOptions) {
@@ -80,8 +80,8 @@ export async function beforeBase(): Promise<void> {
 }
 
 export async function afterBase() {
-    if (client.isOpen()) {
-        await client.close();
+    if (driver.isOpen()) {
+        await driver.close();
     }
 }
 
@@ -98,22 +98,22 @@ Given('typedb stops', async () => {
 })
 
 Given('connection opens with default authentication', async () => {
-    await createDefaultClient();
+    await createDefaultDriver();
 })
 
 Given('connection opens with authentication: {words}, {words}', async (username: string, password: string) => {
-    await createClient(username, password);
+    await createDriver(username, password);
 })
 
 Given('connection closes', async () => {
-    if (client && client.isOpen()) await client.close();
+    if (driver && driver.isOpen()) await driver.close();
 })
 
 Given('connection opens with authentication: {words}, {words}; throws exception', async (username: string, password: string) => {
-    await assertThrows(() => createClient(username, password));
+    await assertThrows(() => createDriver(username, password));
 })
 
 Given('connection has been opened', () => {
-    assert(client);
-    assert(client.isOpen());
+    assert(driver);
+    assert(driver.isOpen());
 });

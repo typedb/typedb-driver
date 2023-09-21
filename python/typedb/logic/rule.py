@@ -23,11 +23,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from typedb.native_client_wrapper import rule_get_when, rule_get_then, rule_get_label, rule_set_label, rule_delete, \
+from typedb.native_driver_wrapper import rule_get_when, rule_get_then, rule_get_label, rule_set_label, rule_delete, \
     rule_is_deleted, rule_to_string, Rule as NativeRule
 
 from typedb.api.logic.rule import Rule
-from typedb.common.exception import TypeDBClientExceptionExt, MISSING_LABEL, NULL_NATIVE_OBJECT, ILLEGAL_STATE
+from typedb.common.exception import TypeDBDriverExceptionExt, MISSING_LABEL, NULL_NATIVE_OBJECT, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
 
 if TYPE_CHECKING:
@@ -38,15 +38,15 @@ class _Rule(Rule, NativeWrapper[NativeRule]):
 
     def __init__(self, rule: NativeRule):
         if not rule:
-            raise TypeDBClientExceptionExt(NULL_NATIVE_OBJECT)
+            raise TypeDBDriverExceptionExt(NULL_NATIVE_OBJECT)
         super().__init__(rule)
         self._rule = rule
         self._when = rule_get_when(self._rule)
         self._then = rule_get_then(self._rule)
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBClientExceptionExt:
-        return TypeDBClientExceptionExt.of(ILLEGAL_STATE)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
+        return TypeDBDriverExceptionExt.of(ILLEGAL_STATE)
 
     @property
     def label(self) -> str:
@@ -54,7 +54,7 @@ class _Rule(Rule, NativeWrapper[NativeRule]):
 
     def set_label(self, transaction: _Transaction, new_label: str) -> None:
         if not new_label:
-            raise TypeDBClientExceptionExt(MISSING_LABEL)
+            raise TypeDBDriverExceptionExt(MISSING_LABEL)
         rule_set_label(transaction.logic, self.native_object, new_label)
 
     @property

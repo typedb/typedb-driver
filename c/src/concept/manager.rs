@@ -21,7 +21,7 @@
 
 use std::{ffi::c_char, ptr::addr_of_mut};
 
-use typedb_client::{
+use typedb_driver::{
     box_stream,
     concept::{Concept, SchemaException, ValueType},
     Result, Transaction, IID,

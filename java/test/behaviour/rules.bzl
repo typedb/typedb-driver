@@ -24,14 +24,14 @@ load("@vaticle_typedb_common//test:rules.bzl", "typedb_java_test")
 def typedb_behaviour_java_test(
         name,
         connection_steps_core,
-        connection_steps_cluster,
+        connection_steps_enterprise,
         steps,
         typedb_artifact_mac,
         typedb_artifact_linux,
         typedb_artifact_windows,
-        typedb_cluster_artifact_mac,
-        typedb_cluster_artifact_linux,
-        typedb_cluster_artifact_windows,
+        typedb_enterprise_artifact_mac,
+        typedb_enterprise_artifact_linux,
+        typedb_enterprise_artifact_windows,
         runtime_deps = [],
         **kwargs):
 
@@ -45,10 +45,10 @@ def typedb_behaviour_java_test(
     )
 
     typedb_java_test(
-        name = name + "-cluster",
-        server_mac_artifact = typedb_cluster_artifact_mac,
-        server_linux_artifact = typedb_cluster_artifact_linux,
-        server_windows_artifact = typedb_cluster_artifact_windows,
-        runtime_deps = runtime_deps + [connection_steps_cluster] + steps,
+        name = name + "-enterprise",
+        server_mac_artifact = typedb_enterprise_artifact_mac,
+        server_linux_artifact = typedb_enterprise_artifact_linux,
+        server_windows_artifact = typedb_enterprise_artifact_windows,
+        runtime_deps = runtime_deps + [connection_steps_enterprise] + steps,
         **kwargs,
     )

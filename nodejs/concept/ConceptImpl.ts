@@ -31,7 +31,7 @@ import {RoleType} from "../api/concept/type/RoleType";
 import {Thing} from "../api/concept/thing/Thing";
 import {ThingType} from "../api/concept/type/ThingType";
 import {Type} from "../api/concept/type/Type";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {TypeDBDriverError} from "../common/errors/TypeDBDriverError";
 import {Value} from "../api/concept/value/Value";
 import INVALID_CONCEPT_CASTING = ErrorMessage.Concept.INVALID_CONCEPT_CASTING;
 
@@ -83,47 +83,47 @@ export abstract class ConceptImpl implements Concept {
     }
 
     asAttribute(): Attribute {
-        throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "Attribute"));
+        throw new TypeDBDriverError(INVALID_CONCEPT_CASTING.message(this.className, "Attribute"));
     }
 
     asAttributeType(): AttributeType {
-        throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "AttributeType"));
+        throw new TypeDBDriverError(INVALID_CONCEPT_CASTING.message(this.className, "AttributeType"));
     }
 
     asEntity(): Entity {
-        throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "Entity"));
+        throw new TypeDBDriverError(INVALID_CONCEPT_CASTING.message(this.className, "Entity"));
     }
 
     asEntityType(): EntityType {
-        throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "EntityType"));
+        throw new TypeDBDriverError(INVALID_CONCEPT_CASTING.message(this.className, "EntityType"));
     }
 
     asRelation(): Relation {
-        throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "Relation"));
+        throw new TypeDBDriverError(INVALID_CONCEPT_CASTING.message(this.className, "Relation"));
     }
 
     asValue(): Value {
-        throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "Value"));
+        throw new TypeDBDriverError(INVALID_CONCEPT_CASTING.message(this.className, "Value"));
     }
 
     asRelationType(): RelationType {
-        throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "RelationType"));
+        throw new TypeDBDriverError(INVALID_CONCEPT_CASTING.message(this.className, "RelationType"));
     }
 
     asRoleType(): RoleType {
-        throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "RoleType"));
+        throw new TypeDBDriverError(INVALID_CONCEPT_CASTING.message(this.className, "RoleType"));
     }
 
     asThing(): Thing {
-        throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "Thing"));
+        throw new TypeDBDriverError(INVALID_CONCEPT_CASTING.message(this.className, "Thing"));
     }
 
     asThingType(): ThingType {
-        throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "ThingType"));
+        throw new TypeDBDriverError(INVALID_CONCEPT_CASTING.message(this.className, "ThingType"));
     }
 
     asType(): Type {
-        throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "Type"));
+        throw new TypeDBDriverError(INVALID_CONCEPT_CASTING.message(this.className, "Type"));
     }
 
     abstract equals(concept: Concept): boolean;

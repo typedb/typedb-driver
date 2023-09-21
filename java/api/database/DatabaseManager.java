@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.database;
+package com.vaticle.typedb.driver.api.database;
 
 import javax.annotation.CheckReturnValue;
 import java.util.List;
@@ -31,7 +31,7 @@ public interface DatabaseManager {
     @CheckReturnValue
     boolean contains(String name);
 
-    // TODO: Return type should be 'Database' but right now that would require 2 server calls in Cluster
+    // TODO: Return type should be 'Database' but right now that would require 2 server calls in Enterprise
     void create(String name);
 
     @CheckReturnValue

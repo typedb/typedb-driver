@@ -27,7 +27,7 @@ import {EntityType} from "./type/EntityType";
 import {RelationType} from "./type/RelationType";
 import {ThingType} from "./type/ThingType";
 import {Concept} from "./Concept";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {TypeDBDriverError} from "../../common/errors/TypeDBDriverError";
 
 export interface ConceptManager {
     getRootThingType(): Promise<ThingType>;
@@ -48,5 +48,5 @@ export interface ConceptManager {
     getRelation(iid: string): Promise<Relation>;
     getAttribute(iid: string): Promise<Attribute>;
 
-    getSchemaExceptions(): Promise<TypeDBClientError[]>
+    getSchemaExceptions(): Promise<TypeDBDriverError[]>
 }

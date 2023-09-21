@@ -22,7 +22,7 @@
 import {Value} from "../../api/concept/value/Value";
 import {ConceptImpl} from "../ConceptImpl";
 import {Concept} from "../../api/concept/Concept";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {TypeDBDriverError} from "../../common/errors/TypeDBDriverError";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {Value as ValueProto} from "typedb-protocol/proto/concept";
 import ValueType = Concept.ValueType;
@@ -98,27 +98,27 @@ export class ValueImpl extends ConceptImpl implements Value {
     }
 
     asBoolean(): boolean {
-        if (!this.isBoolean()) throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "Value.Boolean"));
+        if (!this.isBoolean()) throw new TypeDBDriverError(INVALID_CONCEPT_CASTING.message(this.className, "Value.Boolean"));
         return this.value as boolean;
     }
 
     asLong(): number {
-        if (!this.isLong()) throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "Value.Long"));
+        if (!this.isLong()) throw new TypeDBDriverError(INVALID_CONCEPT_CASTING.message(this.className, "Value.Long"));
         return this.value as number;
     }
 
     asDouble(): number {
-        if (!this.isDouble()) throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "Value.Double"));
+        if (!this.isDouble()) throw new TypeDBDriverError(INVALID_CONCEPT_CASTING.message(this.className, "Value.Double"));
         return this.value as number;
     }
 
     asString(): string {
-        if (!this.isString()) throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "Value.String"));
+        if (!this.isString()) throw new TypeDBDriverError(INVALID_CONCEPT_CASTING.message(this.className, "Value.String"));
         return this.value as string;
     }
 
     asDateTime(): Date {
-        if (!this.isDateTime()) throw new TypeDBClientError(INVALID_CONCEPT_CASTING.message(this.className, "Value.DateTime"));
+        if (!this.isDateTime()) throw new TypeDBDriverError(INVALID_CONCEPT_CASTING.message(this.className, "Value.DateTime"));
         return this.value as Date;
     }
 }
@@ -131,6 +131,6 @@ export namespace ValueImpl {
         else if (valueProto.has_double) return new ValueImpl(ValueType.DOUBLE, valueProto.double);
         else if (valueProto.has_string) return new ValueImpl(ValueType.STRING, valueProto.string);
         else if (valueProto.has_date_time) return new ValueImpl(ValueType.DATETIME, new Date(valueProto.date_time));
-        else throw new TypeDBClientError(BAD_VALUE_TYPE.message(valueProto));
+        else throw new TypeDBDriverError(BAD_VALUE_TYPE.message(valueProto));
     }
 }

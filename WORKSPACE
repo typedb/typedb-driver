@@ -152,7 +152,7 @@ load("@vaticle_bazel_distribution_pip//:requirements.bzl", "install_deps")
 install_deps()
 
 ######################################
-# Load @vaticle_typedb_client_python #
+# Load @vaticle_typedb_driver_python #
 ######################################
 
 load("@rules_python//python:pip.bzl", "pip_parse")
@@ -175,9 +175,9 @@ vaticle_typedb_behaviour()
 vaticle_typedb_protocol()
 
 # Load artifacts
-load("//dependencies/vaticle:artifacts.bzl", "vaticle_typedb_artifact", "vaticle_typedb_cluster_artifact")
+load("//dependencies/vaticle:artifacts.bzl", "vaticle_typedb_artifact", "vaticle_typedb_enterprise_artifact")
 vaticle_typedb_artifact()
-vaticle_typedb_cluster_artifact()
+vaticle_typedb_enterprise_artifact()
 
 ####################
 # Load npm modules #
@@ -239,7 +239,7 @@ rules_ts_dependencies(
 load("@vaticle_dependencies//tool/common:deps.bzl", vaticle_dependencies_tool_maven_artifacts = "maven_artifacts")
 load("@vaticle_typedb_common//dependencies/maven:artifacts.bzl", vaticle_typedb_common_maven_artifacts = "artifacts")
 load("@vaticle_typeql//dependencies/maven:artifacts.bzl", vaticle_typeql_maven_artifacts = "artifacts")
-load("//dependencies/maven:artifacts.bzl", vaticle_typedb_client_java_maven_artifacts = "artifacts", vaticle_typedb_client_java_maven_overrides = "overrides")
+load("//dependencies/maven:artifacts.bzl", vaticle_typedb_driver_java_maven_artifacts = "artifacts", vaticle_typedb_driver_java_maven_overrides = "overrides")
 load("@vaticle_bazel_distribution//maven:deps.bzl", vaticle_bazel_distribution_maven_artifacts = "maven_artifacts")
 
 load("@vaticle_dependencies//library/maven:rules.bzl", "maven")
@@ -247,9 +247,9 @@ maven(
     vaticle_typedb_common_maven_artifacts +
     vaticle_typeql_maven_artifacts +
     vaticle_dependencies_tool_maven_artifacts +
-    vaticle_typedb_client_java_maven_artifacts +
+    vaticle_typedb_driver_java_maven_artifacts +
     vaticle_bazel_distribution_maven_artifacts,
-    vaticle_typedb_client_java_maven_overrides
+    vaticle_typedb_driver_java_maven_overrides
 )
 
 ############################################

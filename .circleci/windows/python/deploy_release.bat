@@ -39,6 +39,6 @@ bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
 
 MD dist
-COPY bazel-bin\python\typedb-client39.whl dist\typedb_client-py39-none-win_amd64.whl
-COPY bazel-bin\python\typedb-client310.whl dist\typedb_client-py310-none-win_amd64.whl
-COPY bazel-bin\python\typedb-client311.whl dist\typedb_client-py311-none-win_amd64.whl
+COPY bazel-bin\python\typedb-driver39.whl dist\typedb_driver-py39-none-win_amd64.whl
+COPY bazel-bin\python\typedb-driver310.whl dist\typedb_driver-py310-none-win_amd64.whl
+COPY bazel-bin\python\typedb-driver311.whl dist\typedb_driver-py311-none-win_amd64.whl

@@ -20,5 +20,10 @@
 # under the License.
 #
 
-set -ex
-bazel test $(bazel query "filter('^.*cluster.*$', kind(.*_test, $1))") "${@:2}"
+set -e
+
+procs=$(ps aux | awk '/TypeDBEnterpriseServe[r]/ {print $2}' | paste -sd " " -)
+echo $procs
+if [ -n "$procs" ]; then
+    kill $procs
+fi

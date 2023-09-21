@@ -19,28 +19,28 @@
 # under the License.
 #
 
-load("//python/tests/integration:cluster_test_rule.bzl", "typedb_cluster_py_test")
+load("//python/tests/integration:enterprise_test_rule.bzl", "typedb_enterprise_py_test")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@rules_python//python:defs.bzl", "py_test")
 
-typedb_cluster_py_test(
-    name = "test_cluster_failover",
-    srcs = ["test_cluster_failover.py"],
+typedb_enterprise_py_test(
+    name = "test_enterprise_failover",
+    srcs = ["test_enterprise_failover.py"],
     deps = [
-        "//python:client_python",
+        "//python:driver_python",
         ],
-    data = ["//python:native-client-binary-link", "//python:native-client-wrapper-link"],
+    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
     size = "medium",
-    native_typedb_cluster_artifact = "//tool/test:native-typedb-cluster-artifact",
+    native_typedb_enterprise_artifact = "//tool/test:native-typedb-enterprise-artifact",
 )
 
 py_test(
     name = "test_debug",
     srcs = ["test_debug.py"],
     deps = [
-        "//python:client_python",
+        "//python:driver_python",
         ],
-    data = ["//python:native-client-binary-link", "//python:native-client-wrapper-link"],
+    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
     python_version = "PY3"
 )
 
@@ -48,9 +48,9 @@ py_test(
     name = "test_stream",
     srcs = ["test_stream.py"],
     deps = [
-        "//python:client_python",
+        "//python:driver_python",
         ],
-    data = ["//python:native-client-binary-link", "//python:native-client-wrapper-link"],
+    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
     python_version = "PY3"
 )
 

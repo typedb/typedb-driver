@@ -21,7 +21,7 @@
 
 from behave import *
 from hamcrest import *
-from typedb.client import *
+from typedb.driver import *
 
 from tests.behaviour.config.parameters import parse_bool, RootLabel
 from tests.behaviour.context import Context
@@ -63,7 +63,7 @@ def step_impl(context: Context, var1: str, var2: str):
     try:
         context.get(var1).set_has(context.tx(), context.get(var2).as_attribute())
         assert False
-    except TypeDBClientException:
+    except TypeDBDriverException:
         pass
 
 

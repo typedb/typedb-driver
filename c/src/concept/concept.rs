@@ -22,7 +22,7 @@
 use std::ffi::c_char;
 
 use chrono::NaiveDateTime;
-use typedb_client::{
+use typedb_driver::{
     concept::{
         Annotation, Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,
     },

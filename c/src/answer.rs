@@ -21,7 +21,7 @@
 
 use std::ffi::c_char;
 
-use typedb_client::{
+use typedb_driver::{
     answer::{ConceptMap, ConceptMapGroup, Explainable, Explainables, Numeric, NumericGroup},
     box_stream,
     concept::Concept,

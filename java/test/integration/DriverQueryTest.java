@@ -19,17 +19,17 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.test.integration;
+package com.vaticle.typedb.driver.test.integration;
 
-import com.vaticle.typedb.client.TypeDB;
-import com.vaticle.typedb.client.api.TypeDBClient;
-import com.vaticle.typedb.client.api.TypeDBOptions;
-import com.vaticle.typedb.client.api.TypeDBSession;
-import com.vaticle.typedb.client.api.TypeDBTransaction;
-import com.vaticle.typedb.client.api.answer.ConceptMap;
-import com.vaticle.typedb.client.api.concept.type.AttributeType;
-import com.vaticle.typedb.client.api.concept.type.EntityType;
-import com.vaticle.typedb.client.api.logic.Explanation;
+import com.vaticle.typedb.driver.TypeDB;
+import com.vaticle.typedb.driver.api.TypeDBDriver;
+import com.vaticle.typedb.driver.api.TypeDBOptions;
+import com.vaticle.typedb.driver.api.TypeDBSession;
+import com.vaticle.typedb.driver.api.TypeDBTransaction;
+import com.vaticle.typedb.driver.api.answer.ConceptMap;
+import com.vaticle.typedb.driver.api.concept.type.AttributeType;
+import com.vaticle.typedb.driver.api.concept.type.EntityType;
+import com.vaticle.typedb.driver.api.logic.Explanation;
 import com.vaticle.typedb.common.collection.Pair;
 import com.vaticle.typedb.common.test.core.TypeDBCoreRunner;
 import com.vaticle.typeql.lang.TypeQL;
@@ -51,9 +51,9 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.api.TypeDBSession.Type.DATA;
-import static com.vaticle.typedb.client.api.TypeDBTransaction.Type.READ;
-import static com.vaticle.typedb.client.api.TypeDBTransaction.Type.WRITE;
+import static com.vaticle.typedb.driver.api.TypeDBSession.Type.DATA;
+import static com.vaticle.typedb.driver.api.TypeDBTransaction.Type.READ;
+import static com.vaticle.typedb.driver.api.TypeDBTransaction.Type.WRITE;
 import static com.vaticle.typeql.lang.TypeQL.and;
 import static com.vaticle.typeql.lang.TypeQL.cVar;
 import static com.vaticle.typeql.lang.TypeQL.rel;
@@ -63,29 +63,29 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings("Duplicates")
-public class ClientQueryTest {
-    private static final Logger LOG = LoggerFactory.getLogger(ClientQueryTest.class);
+public class DriverQueryTest {
+    private static final Logger LOG = LoggerFactory.getLogger(DriverQueryTest.class);
     private static TypeDBCoreRunner typedb;
-    private static TypeDBClient typedbClient;
+    private static TypeDBDriver typedbDriver;
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
         typedb = new TypeDBCoreRunner();
         typedb.start();
-        typedbClient = TypeDB.coreClient(typedb.address());
-        if (typedbClient.databases().contains("typedb")) typedbClient.databases().get("typedb").delete();
-        typedbClient.databases().create("typedb");
+        typedbDriver = TypeDB.coreDriver(typedb.address());
+        if (typedbDriver.databases().contains("typedb")) typedbDriver.databases().get("typedb").delete();
+        typedbDriver.databases().create("typedb");
     }
 
     @AfterClass
     public static void closeSession() {
-        typedbClient.close();
+        typedbDriver.close();
         typedb.stop();
     }
 
     @Test
     public void applicationTest() {
-        LOG.info("clientJavaE2E() - starting client-java E2E...");
+        LOG.info("driverJavaE2E() - starting driver-java E2E...");
 
         localhostTypeDBTX(tx -> {
             TypeQLDefine defineQuery = TypeQL.define(type("child-bearing").sub("relation").relates("offspring").relates("child-bearer"),
@@ -98,25 +98,25 @@ public class ClientQueryTest {
                             and(rel("male-partner", cVar("male")).rel("female-partner", cVar("female")).isa("mating"),
                                     cVar("childbearing").rel("child-bearer", cVar()).rel("offspring", cVar("offspring")).isa("child-bearing")))
                     .then(rel("parent", cVar("male")).rel("parent", cVar("female")).rel("child", cVar("offspring")).isa("parentship")));
-            LOG.info("clientJavaE2E() - define a schema...");
-            LOG.info("clientJavaE2E() - '" + defineQuery + "'");
+            LOG.info("driverJavaE2E() - define a schema...");
+            LOG.info("driverJavaE2E() - '" + defineQuery + "'");
             tx.query().define(defineQuery);
             tx.query().define(ruleQuery);
             tx.commit();
-            LOG.info("clientJavaE2E() - done.");
+            LOG.info("driverJavaE2E() - done.");
         }, TypeDBSession.Type.SCHEMA);
 
         localhostTypeDBTX(tx -> {
             String[] names = lionNames();
             TypeQLInsert insertLionQuery = TypeQL.insert(cVar().isa("lion").has("name", names[0]), cVar().isa("lion").has("name", names[1]), cVar().isa("lion").has("name", names[2]));
-            LOG.info("clientJavaE2E() - insert some data...");
-            LOG.info("clientJavaE2E() - '" + insertLionQuery + "'");
+            LOG.info("driverJavaE2E() - insert some data...");
+            LOG.info("driverJavaE2E() - '" + insertLionQuery + "'");
             tx.query().insert(insertLionQuery);
             tx.commit();
-            LOG.info("clientJavaE2E() - done.");
+            LOG.info("driverJavaE2E() - done.");
         }, WRITE);
 
-        LOG.info("clientJavaE2E() - client-java E2E test done.");
+        LOG.info("driverJavaE2E() - driver-java E2E test done.");
     }
 
     private String[] commitSHAs() {
@@ -165,11 +165,11 @@ public class ClientQueryTest {
                             .relates("pipeline").relates("trigger")
             );
 
-            LOG.info("clientJavaE2E() - define a schema...");
-            LOG.info("clientJavaE2E() - '" + defineQuery + "'");
+            LOG.info("driverJavaE2E() - define a schema...");
+            LOG.info("driverJavaE2E() - '" + defineQuery + "'");
             tx.query().define(defineQuery);
             tx.commit();
-            LOG.info("clientJavaE2E() - done.");
+            LOG.info("driverJavaE2E() - done.");
         }, TypeDBSession.Type.SCHEMA);
 
 
@@ -181,11 +181,11 @@ public class ClientQueryTest {
                     cVar().isa("commit").has("symbol", commits[6]), cVar().isa("commit").has("symbol", commits[7]),
                     cVar().isa("commit").has("symbol", commits[8]), cVar().isa("commit").has("symbol", commits[9]));
 
-            LOG.info("clientJavaE2E() - insert commit data...");
-            LOG.info("clientJavaE2E() - '" + insertCommitQuery + "'");
+            LOG.info("driverJavaE2E() - insert commit data...");
+            LOG.info("driverJavaE2E() - '" + insertCommitQuery + "'");
             tx.query().insert(insertCommitQuery);
             tx.commit();
-            LOG.info("clientJavaE2E() - done.");
+            LOG.info("driverJavaE2E() - done.");
         }, WRITE);
 
         localhostTypeDBTX(tx -> {
@@ -198,11 +198,11 @@ public class ClientQueryTest {
                             .has("latest", false)
             );
 
-            LOG.info("clientJavaE2E() - insert workflow data...");
-            LOG.info("clientJavaE2E() - '" + insertWorkflowQuery + "'");
+            LOG.info("driverJavaE2E() - insert workflow data...");
+            LOG.info("driverJavaE2E() - '" + insertWorkflowQuery + "'");
             tx.query().insert(insertWorkflowQuery);
             tx.commit();
-            LOG.info("clientJavaE2E() - done.");
+            LOG.info("driverJavaE2E() - done.");
         }, WRITE);
 
         localhostTypeDBTX(tx -> {
@@ -213,22 +213,22 @@ public class ClientQueryTest {
                             .has("latest", false)
             );
 
-            LOG.info("clientJavaE2E() - insert pipeline data...");
-            LOG.info("clientJavaE2E() - '" + insertPipelineQuery + "'");
+            LOG.info("driverJavaE2E() - insert pipeline data...");
+            LOG.info("driverJavaE2E() - '" + insertPipelineQuery + "'");
             tx.query().insert(insertPipelineQuery);
             tx.commit();
-            LOG.info("clientJavaE2E() - done.");
+            LOG.info("driverJavaE2E() - done.");
         }, WRITE);
 
         localhostTypeDBTX(tx -> {
             String[] commitShas = commitSHAs();
-            LOG.info("clientJavaE2E() - inserting pipeline-automation relations...");
+            LOG.info("driverJavaE2E() - inserting pipeline-automation relations...");
 
             for (int i = 0; i < commitShas.length / 2; i++) {
                 TypeQLInsert insertPipelineAutomationQuery = TypeQL.match(cVar("commit").isa("commit").has("symbol", commitShas[i]), cVar("pipeline").isa("pipeline").has("name", "pipeline-A"))
                         .insert(rel("pipeline", cVar("pipeline")).rel("trigger", cVar("commit")).isa("pipeline-automation")
                         );
-                LOG.info("clientJavaE2E() - '" + insertPipelineAutomationQuery + "'");
+                LOG.info("driverJavaE2E() - '" + insertPipelineAutomationQuery + "'");
                 List<ConceptMap> x = tx.query().insert(insertPipelineAutomationQuery).collect(toList());
             }
 
@@ -237,29 +237,29 @@ public class ClientQueryTest {
                 TypeQLInsert insertPipelineAutomationQuery = TypeQL.match(cVar("commit").isa("commit").has("symbol", commitShas[i]), cVar("pipeline").isa("pipeline").has("name", "pipeline-B"))
                         .insert(rel("pipeline", cVar("pipeline")).rel("trigger", cVar("commit")).isa("pipeline-automation")
                         );
-                LOG.info("clientJavaE2E() - '" + insertPipelineAutomationQuery + "'");
+                LOG.info("driverJavaE2E() - '" + insertPipelineAutomationQuery + "'");
                 List<ConceptMap> x = tx.query().insert(insertPipelineAutomationQuery).collect(toList());
             }
 
             tx.commit();
 
-            LOG.info("clientJavaE2E() - done.");
+            LOG.info("driverJavaE2E() - done.");
         }, WRITE);
 
         localhostTypeDBTX(tx -> {
-            LOG.info("clientJavaE2E() - inserting pipeline-automation relations...");
+            LOG.info("driverJavaE2E() - inserting pipeline-automation relations...");
 
             TypeQLInsert insertPipelineWorkflowQuery = TypeQL.match(cVar("pipelineA").isa("pipeline").has("name", "pipeline-A"),
                             cVar("workflowA").isa("workflow").has("name", "workflow-A"), cVar("pipelineB").isa("pipeline").has("name", "pipeline-B"),
                             cVar("workflowB").isa("workflow").has("name", "workflow-B"))
                     .insert(rel("pipeline", cVar("pipelineA")).rel("workflow", cVar("workflowA")).isa("pipeline-workflow"),
                             rel("pipeline", cVar("pipelineB")).rel("workflow", cVar("workflowB")).isa("pipeline-workflow"));
-            LOG.info("clientJavaE2E() - '" + insertPipelineWorkflowQuery + "'");
+            LOG.info("driverJavaE2E() - '" + insertPipelineWorkflowQuery + "'");
             List<ConceptMap> x = tx.query().insert(insertPipelineWorkflowQuery).collect(toList());
 
             tx.commit();
 
-            LOG.info("clientJavaE2E() - done.");
+            LOG.info("driverJavaE2E() - done.");
         }, WRITE);
 
         String[] queries = {
@@ -315,14 +315,14 @@ public class ClientQueryTest {
         };
 
         localhostTypeDBTX(tx -> {
-            LOG.info("clientJavaE2E() - inserting pipeline-automation relations...");
+            LOG.info("driverJavaE2E() - inserting pipeline-automation relations...");
 
             Stream.of(queries).parallel().forEach(x -> {
                 TypeQLMatch q = TypeQL.parseQuery(x).asMatch();
                 List<ConceptMap> res = tx.query().match(q).collect(toList());
             });
 
-            LOG.info("clientJavaE2E() - done.");
+            LOG.info("driverJavaE2E() - done.");
         }, READ);
     }
 
@@ -405,7 +405,7 @@ public class ClientQueryTest {
 
     private void localhostTypeDBTX(Consumer<TypeDBTransaction> fn, TypeDBTransaction.Type type, TypeDBOptions options) {
         String database = "typedb";
-        try (TypeDBSession session = typedbClient.session(database, DATA)) {
+        try (TypeDBSession session = typedbDriver.session(database, DATA)) {
             try (TypeDBTransaction transaction = session.transaction(type, options)) {
                 fn.accept(transaction);
             }
@@ -414,7 +414,7 @@ public class ClientQueryTest {
 
     private void localhostTypeDBTX(Consumer<TypeDBTransaction> fn, TypeDBSession.Type sessionType) {
         String database = "typedb";
-        try (TypeDBSession session = typedbClient.session(database, sessionType)) {
+        try (TypeDBSession session = typedbDriver.session(database, sessionType)) {
             try (TypeDBTransaction transaction = session.transaction(WRITE)) {
                 fn.accept(transaction);
             }

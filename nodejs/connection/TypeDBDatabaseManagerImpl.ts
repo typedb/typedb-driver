@@ -22,68 +22,68 @@
 import {Database} from "../api/connection/database/Database";
 import {DatabaseManager} from "../api/connection/database/DatabaseManager";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../common/errors/TypeDBClientError";
+import {TypeDBDriverError} from "../common/errors/TypeDBDriverError";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
-import {ServerClient, TypeDBClientImpl} from "./TypeDBClientImpl";
+import {ServerDriver, TypeDBDriverImpl} from "./TypeDBDriverImpl";
 import {TypeDBDatabaseImpl} from "./TypeDBDatabaseImpl";
-import CLUSTER_ALL_NODES_FAILED = ErrorMessage.Client.CLUSTER_ALL_NODES_FAILED;
-import CLUSTER_REPLICA_NOT_PRIMARY = ErrorMessage.Client.CLUSTER_REPLICA_NOT_PRIMARY;
-import DB_DOES_NOT_EXIST = ErrorMessage.Client.DATABASE_DOES_NOT_EXIST;
+import ENTERPRISE_ALL_NODES_FAILED = ErrorMessage.Driver.ENTPERPRISE_ALL_NODES_FAILED;
+import ENTERPRISE_REPLICA_NOT_PRIMARY = ErrorMessage.Driver.ENTPERPRISE_REPLICA_NOT_PRIMARY;
+import DB_DOES_NOT_EXIST = ErrorMessage.Driver.DATABASE_DOES_NOT_EXIST;
 
 export class TypeDBDatabaseManagerImpl implements DatabaseManager {
-    private readonly _client: TypeDBClientImpl;
+    private readonly _driver: TypeDBDriverImpl;
 
-    constructor(client: TypeDBClientImpl) {
-        this._client = client;
+    constructor(driver: TypeDBDriverImpl) {
+        this._driver = driver;
     }
 
     async get(name: string): Promise<Database> {
         if (!await this.contains(name)) {
-            throw new TypeDBClientError(DB_DOES_NOT_EXIST.message(name));
+            throw new TypeDBDriverError(DB_DOES_NOT_EXIST.message(name));
         }
-        if (name in this._client._database_cache) {
-            return this._client._database_cache[name];
+        if (name in this._driver._database_cache) {
+            return this._driver._database_cache[name];
         } else {
-            return await TypeDBDatabaseImpl.get(name, this._client);
+            return await TypeDBDatabaseImpl.get(name, this._driver);
         }
     }
 
     async contains(name: string): Promise<boolean> {
-        return await this.runFailsafe(name, client =>
-            client.stub.databasesContains(RequestBuilder.DatabaseManager.containsReq(name))
+        return await this.runFailsafe(name, driver =>
+            driver.stub.databasesContains(RequestBuilder.DatabaseManager.containsReq(name))
         );
     }
 
     async create(name: string): Promise<void> {
-        return await this.runFailsafe(name, client =>
-            client.stub.databasesCreate(RequestBuilder.DatabaseManager.createReq(name))
+        return await this.runFailsafe(name, driver =>
+            driver.stub.databasesCreate(RequestBuilder.DatabaseManager.createReq(name))
         );
     }
 
     async all(): Promise<Database[]> {
         let errors = "";
-        for (const serverClient of this._client.serverClients.values()) {
+        for (const serverDriver of this._driver.serverDrivers.values()) {
             try {
-                const dbs = await serverClient.stub.databasesAll(RequestBuilder.DatabaseManager.allReq());
-                return dbs.databases.map(db => TypeDBDatabaseImpl.of(db, this._client));
+                const dbs = await serverDriver.stub.databasesAll(RequestBuilder.DatabaseManager.allReq());
+                return dbs.databases.map(db => TypeDBDatabaseImpl.of(db, this._driver));
             } catch (e) {
-                errors += `- ${serverClient.address}: ${e}\n`;
+                errors += `- ${serverDriver.address}: ${e}\n`;
             }
         }
-        throw new TypeDBClientError(CLUSTER_ALL_NODES_FAILED.message(errors));
+        throw new TypeDBDriverError(ENTERPRISE_ALL_NODES_FAILED.message(errors));
     }
 
-    private async runFailsafe<T>(name: string, task: (client: ServerClient) => Promise<T>): Promise<T> {
+    private async runFailsafe<T>(name: string, task: (driver: ServerDriver) => Promise<T>): Promise<T> {
         let errors = "";
-        for (const serverClient of this._client.serverClients.values()) {
+        for (const serverDriver of this._driver.serverDrivers.values()) {
             try {
-                return await task(serverClient);
+                return await task(serverDriver);
             } catch (e) {
-                if (e instanceof TypeDBClientError && CLUSTER_REPLICA_NOT_PRIMARY === e.messageTemplate) {
-                    return await (await TypeDBDatabaseImpl.get(name, this._client)).runOnPrimaryReplica(task);
-                } else errors += `- ${serverClient.address}: ${e}\n`;
+                if (e instanceof TypeDBDriverError && ENTERPRISE_REPLICA_NOT_PRIMARY === e.messageTemplate) {
+                    return await (await TypeDBDatabaseImpl.get(name, this._driver)).runOnPrimaryReplica(task);
+                } else errors += `- ${serverDriver.address}: ${e}\n`;
             }
         }
-        throw new TypeDBClientError(CLUSTER_ALL_NODES_FAILED.message(errors));
+        throw new TypeDBDriverError(ENTERPRISE_ALL_NODES_FAILED.message(errors));
     }
 }

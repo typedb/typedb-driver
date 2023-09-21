@@ -19,9 +19,9 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.test.behaviour.connection.database;
+package com.vaticle.typedb.driver.test.behaviour.connection.database;
 
-import com.vaticle.typedb.client.api.database.Database;
+import com.vaticle.typedb.driver.api.database.Database;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -30,9 +30,9 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.client;
-import static com.vaticle.typedb.client.test.behaviour.connection.ConnectionStepsBase.threadPool;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.THREAD_POOL_SIZE;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.driver;
+import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.threadPool;
 import static com.vaticle.typedb.common.collection.Collections.list;
 import static com.vaticle.typedb.common.collection.Collections.set;
 import static org.junit.Assert.assertEquals;
@@ -49,7 +49,7 @@ public class DatabaseSteps {
     @When("connection create database(s):")
     public void connection_create_databases(List<String> names) {
         for (String name : names) {
-            client.databases().create(name);
+            driver.databases().create(name);
         }
     }
 
@@ -58,7 +58,7 @@ public class DatabaseSteps {
         assertTrue(THREAD_POOL_SIZE >= names.size());
 
         CompletableFuture[] creations = names.stream()
-                .map(name -> CompletableFuture.runAsync(() -> client.databases().create(name), threadPool))
+                .map(name -> CompletableFuture.runAsync(() -> driver.databases().create(name), threadPool))
                 .toArray(CompletableFuture[]::new);
 
         CompletableFuture.allOf(creations).join();
@@ -72,7 +72,7 @@ public class DatabaseSteps {
     @When("connection delete database(s):")
     public void connection_delete_databases(List<String> names) {
         for (String databaseName : names) {
-            client.databases().get(databaseName).delete();
+            driver.databases().get(databaseName).delete();
         }
     }
 
@@ -85,7 +85,7 @@ public class DatabaseSteps {
     public void connection_delete_databases_throws_exception(List<String> names) {
         for (String databaseName : names) {
             try {
-                client.databases().get(databaseName).delete();
+                driver.databases().get(databaseName).delete();
                 fail();
             } catch (Exception e) {
                 // successfully failed
@@ -98,7 +98,7 @@ public class DatabaseSteps {
         assertTrue(THREAD_POOL_SIZE >= names.size());
 
         CompletableFuture[] deletions = names.stream()
-                .map(name -> CompletableFuture.runAsync(() -> client.databases().get(name).delete(), threadPool))
+                .map(name -> CompletableFuture.runAsync(() -> driver.databases().get(name).delete(), threadPool))
                 .toArray(CompletableFuture[]::new);
 
         CompletableFuture.allOf(deletions).join();
@@ -111,7 +111,7 @@ public class DatabaseSteps {
 
     @Then("connection has database(s):")
     public void connection_has_databases(List<String> names) {
-        assertEquals(set(names), client.databases().all().stream().map(Database::name).collect(Collectors.toSet()));
+        assertEquals(set(names), driver.databases().all().stream().map(Database::name).collect(Collectors.toSet()));
     }
 
     @Then("connection does not have database: {word}")
@@ -122,7 +122,7 @@ public class DatabaseSteps {
 
     @Then("connection does not have database(s):")
     public void connection_does_not_have_databases(List<String> names) {
-        Set<String> databases = client.databases().all().stream().map(Database::name).collect(Collectors.toSet());
+        Set<String> databases = driver.databases().all().stream().map(Database::name).collect(Collectors.toSet());
         for (String databaseName : names) {
             assertFalse(databases.contains(databaseName));
         }

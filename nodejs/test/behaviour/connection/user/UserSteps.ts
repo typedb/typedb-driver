@@ -21,68 +21,68 @@
 
 import {Then} from "@cucumber/cucumber";
 import {User} from "../../../../dist"
-import {client} from "../ConnectionStepsBase";
+import {driver} from "../ConnectionStepsBase";
 import {assertThrows} from "../../util/Util";
 
 Then("get connected user", async () => {
-    await client.user();
+    await driver.user();
 });
 
 Then("users contains: {words}", async (username: string) => {
-    const users = await client.users.all();
+    const users = await driver.users.all();
     users.map((user: User) => user.username).includes(username);
 });
 
 Then("users contains: {words}; throws exception", async (username: string) => {
-    await assertThrows(() => client.users.all());
+    await assertThrows(() => driver.users.all());
 });
 
 Then("users not contains: {words}", async (username: string) => {
-    const users = await client.users.all();
+    const users = await driver.users.all();
     !users.map((user: User) => user.username).includes(username);
 });
 
 Then("users create: {words}, {words}", async (username: string, password: string) => {
-    await client.users.create(username, password);
+    await driver.users.create(username, password);
 });
 
 Then("users create: {words}, {words}; throws exception", async (username: string, password: string) => {
-    await assertThrows(() => client.users.create(username, password));
+    await assertThrows(() => driver.users.create(username, password));
 });
 
 Then('users get all', async () => {
-    await client.users.all();
+    await driver.users.all();
 });
 
 Then('users get all; throws exception', async () => {
-    await assertThrows(() => client.users.all());
+    await assertThrows(() => driver.users.all());
 });
 
 Then('users get user: {words}', async (username: string) => {
-    await client.users.get(username);
+    await driver.users.get(username);
 });
 
 Then('users get user: {words}; throws exception', async (username: string) => {
-    await assertThrows(() => client.users.get(username));
+    await assertThrows(() => driver.users.get(username));
 });
 
 Then("users delete: {words}", async (username: string) => {
-    await client.users.delete(username);
+    await driver.users.delete(username);
 });
 
 Then("users delete: {words}; throws exception", async (username: string) => {
-    await assertThrows(() => client.users.delete(username));
+    await assertThrows(() => driver.users.delete(username));
 });
 
 Then("users password set: {words}, {words}", async (username: string, password: string) => {
-    await client.users.passwordSet(username, password);
+    await driver.users.passwordSet(username, password);
 });
 
 Then("users password set: {words}, {words}; throws exception", async (username: string, password: string) => {
-    await assertThrows(() => client.users.passwordSet(username, password));
+    await assertThrows(() => driver.users.passwordSet(username, password));
 });
 
 Then("user password update: {word}, {word}, {word}", async (username: string, passwordOld: string, passwordNew: string) => {
-    const user = await client.users.get(username);
+    const user = await driver.users.get(username);
     await user.passwordUpdate(passwordOld, passwordNew);
 });

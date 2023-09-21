@@ -24,7 +24,7 @@ from functools import partial
 
 from behave import *
 from hamcrest import *
-from typedb.client import *
+from typedb.driver import *
 
 from tests.behaviour.config.parameters import parse_bool, parse_list
 from tests.behaviour.context import Context
@@ -35,7 +35,7 @@ DATA = SessionType.DATA
 
 def open_sessions_for_databases(context: Context, names: list, session_type):
     for name in names:
-        sess = context.client.session(name, session_type, context.session_options)
+        sess = context.driver.session(name, session_type, context.session_options)
         context.sessions.append(sess)
 
 
@@ -79,7 +79,7 @@ def step_impl(context: Context):
     assert_that(len(names), is_(less_than_or_equal_to(context.THREAD_POOL_SIZE)))
     with ThreadPoolExecutor(max_workers=context.THREAD_POOL_SIZE) as executor:
         for name in names:
-            context.sessions_parallel.append(executor.submit(partial(context.client.session, name, DATA)))
+            context.sessions_parallel.append(executor.submit(partial(context.driver.session, name, DATA)))
 
 
 @step("connection close all sessions")

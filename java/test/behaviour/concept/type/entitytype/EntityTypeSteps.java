@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.test.behaviour.concept.type.entitytype;
+package com.vaticle.typedb.driver.test.behaviour.concept.type.entitytype;
 
 public class EntityTypeSteps {
 }

@@ -19,55 +19,55 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.connection;
+package com.vaticle.typedb.driver.connection;
 
-import com.vaticle.typedb.client.api.database.Database;
-import com.vaticle.typedb.client.api.database.DatabaseManager;
-import com.vaticle.typedb.client.common.NativeObject;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
+import com.vaticle.typedb.driver.api.database.Database;
+import com.vaticle.typedb.driver.api.database.DatabaseManager;
+import com.vaticle.typedb.driver.common.NativeObject;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
 import java.util.List;
 
-import static com.vaticle.typedb.client.common.exception.ErrorMessage.Client.MISSING_DB_NAME;
-import static com.vaticle.typedb.client.jni.typedb_client.database_manager_new;
-import static com.vaticle.typedb.client.jni.typedb_client.databases_all;
-import static com.vaticle.typedb.client.jni.typedb_client.databases_contains;
-import static com.vaticle.typedb.client.jni.typedb_client.databases_create;
-import static com.vaticle.typedb.client.jni.typedb_client.databases_get;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.MISSING_DB_NAME;
+import static com.vaticle.typedb.driver.jni.typedb_driver.database_manager_new;
+import static com.vaticle.typedb.driver.jni.typedb_driver.databases_all;
+import static com.vaticle.typedb.driver.jni.typedb_driver.databases_contains;
+import static com.vaticle.typedb.driver.jni.typedb_driver.databases_create;
+import static com.vaticle.typedb.driver.jni.typedb_driver.databases_get;
 import static java.util.stream.Collectors.toList;
 
-public class TypeDBDatabaseManagerImpl extends NativeObject<com.vaticle.typedb.client.jni.DatabaseManager> implements DatabaseManager {
-    public TypeDBDatabaseManagerImpl(com.vaticle.typedb.client.jni.Connection connection) {
+public class TypeDBDatabaseManagerImpl extends NativeObject<com.vaticle.typedb.driver.jni.DatabaseManager> implements DatabaseManager {
+    public TypeDBDatabaseManagerImpl(com.vaticle.typedb.driver.jni.Connection connection) {
         super(database_manager_new(connection));
     }
 
     @Override
     public Database get(String name) throws Error {
-        if (name == null || name.isEmpty()) throw new TypeDBClientException(MISSING_DB_NAME);
+        if (name == null || name.isEmpty()) throw new TypeDBDriverException(MISSING_DB_NAME);
         try {
             return new TypeDBDatabaseImpl(databases_get(nativeObject, name));
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 
     @Override
     public boolean contains(String name) throws Error {
-        if (name == null || name.isEmpty()) throw new TypeDBClientException(MISSING_DB_NAME);
+        if (name == null || name.isEmpty()) throw new TypeDBDriverException(MISSING_DB_NAME);
         try {
             return databases_contains(nativeObject, name);
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 
     @Override
     public void create(String name) throws Error {
-        if (name == null || name.isEmpty()) throw new TypeDBClientException(MISSING_DB_NAME);
+        if (name == null || name.isEmpty()) throw new TypeDBDriverException(MISSING_DB_NAME);
         try {
             databases_create(nativeObject, name);
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 
@@ -75,8 +75,8 @@ public class TypeDBDatabaseManagerImpl extends NativeObject<com.vaticle.typedb.c
     public List<Database> all() {
         try {
             return databases_all(nativeObject).stream().map(TypeDBDatabaseImpl::new).collect(toList());
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 }

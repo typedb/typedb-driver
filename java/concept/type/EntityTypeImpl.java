@@ -19,25 +19,25 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.concept.type;
+package com.vaticle.typedb.driver.concept.type;
 
-import com.vaticle.typedb.client.api.TypeDBTransaction;
-import com.vaticle.typedb.client.api.concept.type.EntityType;
-import com.vaticle.typedb.client.common.exception.TypeDBClientException;
-import com.vaticle.typedb.client.concept.thing.EntityImpl;
+import com.vaticle.typedb.driver.api.TypeDBTransaction;
+import com.vaticle.typedb.driver.api.concept.type.EntityType;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.vaticle.typedb.driver.concept.thing.EntityImpl;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.jni.typedb_client.entity_type_create;
-import static com.vaticle.typedb.client.jni.typedb_client.entity_type_get_instances;
-import static com.vaticle.typedb.client.jni.typedb_client.entity_type_get_subtypes;
-import static com.vaticle.typedb.client.jni.typedb_client.entity_type_get_supertype;
-import static com.vaticle.typedb.client.jni.typedb_client.entity_type_get_supertypes;
-import static com.vaticle.typedb.client.jni.typedb_client.entity_type_set_supertype;
+import static com.vaticle.typedb.driver.jni.typedb_driver.entity_type_create;
+import static com.vaticle.typedb.driver.jni.typedb_driver.entity_type_get_instances;
+import static com.vaticle.typedb.driver.jni.typedb_driver.entity_type_get_subtypes;
+import static com.vaticle.typedb.driver.jni.typedb_driver.entity_type_get_supertype;
+import static com.vaticle.typedb.driver.jni.typedb_driver.entity_type_get_supertypes;
+import static com.vaticle.typedb.driver.jni.typedb_driver.entity_type_set_supertype;
 
 public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
-    public EntityTypeImpl(com.vaticle.typedb.client.jni.Concept concept) {
+    public EntityTypeImpl(com.vaticle.typedb.driver.jni.Concept concept) {
         super(concept);
     }
 
@@ -45,8 +45,8 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     public final EntityImpl create(TypeDBTransaction transaction) {
         try {
             return new EntityImpl(entity_type_create(nativeTransaction(transaction), nativeObject));
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 
@@ -54,8 +54,8 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     public final void setSupertype(TypeDBTransaction transaction, EntityType entityType) {
         try {
             entity_type_set_supertype(nativeTransaction(transaction), nativeObject, ((EntityTypeImpl) entityType).nativeObject);
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 
@@ -63,11 +63,11 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     @Override
     public EntityTypeImpl getSupertype(TypeDBTransaction transaction) {
         try {
-            com.vaticle.typedb.client.jni.Concept res = entity_type_get_supertype(nativeTransaction(transaction), nativeObject);
+            com.vaticle.typedb.driver.jni.Concept res = entity_type_get_supertype(nativeTransaction(transaction), nativeObject);
             if (res != null) return new EntityTypeImpl(res);
             else return null;
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 
@@ -75,8 +75,8 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     public final Stream<EntityTypeImpl> getSupertypes(TypeDBTransaction transaction) {
         try {
             return entity_type_get_supertypes(nativeTransaction(transaction), nativeObject).stream().map(EntityTypeImpl::new);
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 
@@ -89,8 +89,8 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     public final Stream<EntityTypeImpl> getSubtypes(TypeDBTransaction transaction, Transitivity transitivity) {
         try {
             return entity_type_get_subtypes(nativeTransaction(transaction), nativeObject, transitivity.nativeObject).stream().map(EntityTypeImpl::new);
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 
@@ -103,8 +103,8 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     public final Stream<EntityImpl> getInstances(TypeDBTransaction transaction, Transitivity transitivity) {
         try {
             return entity_type_get_instances(nativeTransaction(transaction), nativeObject, transitivity.nativeObject).stream().map(EntityImpl::new);
-        } catch (com.vaticle.typedb.client.jni.Error e) {
-            throw new TypeDBClientException(e);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
         }
     }
 }

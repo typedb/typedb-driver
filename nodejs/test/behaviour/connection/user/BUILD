@@ -34,7 +34,7 @@ ts_project(
     srcs = ["UserSteps.ts"],
     tsconfig = behaviour_test_ts_config(),
     deps = [
-        "//nodejs:client-nodejs",
+        "//nodejs:driver-nodejs",
         "//nodejs:node_modules/@cucumber/cucumber",
         "//nodejs/test/behaviour/util:util",
         "//nodejs/test/behaviour/connection:steps-base",
@@ -44,8 +44,8 @@ ts_project(
 )
 
 node_cucumber_test(
-    name = "test-cluster",
-    steps = "@//nodejs/test/behaviour/connection:steps-cluster",
+    name = "test-enterprise",
+    steps = "@//nodejs/test/behaviour/connection:steps-enterprise",
     features = ["@vaticle_typedb_behaviour//connection:user.feature"],
     data = [":steps"],
 )

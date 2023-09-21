@@ -23,7 +23,7 @@ from __future__ import annotations
 
 from typing import Iterator, Optional, TYPE_CHECKING, Any
 
-from typedb.native_client_wrapper import role_type_is_root, role_type_is_abstract, role_type_get_scope, \
+from typedb.native_driver_wrapper import role_type_is_root, role_type_is_abstract, role_type_get_scope, \
     role_type_get_name, role_type_delete, role_type_is_deleted, role_type_set_label, role_type_get_supertype, \
     role_type_get_supertypes, role_type_get_subtypes, role_type_get_relation_instances, \
     role_type_get_player_instances, role_type_get_relation_type, role_type_get_relation_types, \

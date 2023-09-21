@@ -19,24 +19,24 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api.concept.type;
+package com.vaticle.typedb.driver.api.concept.type;
 
-import com.vaticle.typedb.client.api.TypeDBTransaction;
-import com.vaticle.typedb.client.api.concept.thing.Thing;
-import com.vaticle.typedb.client.api.concept.value.Value;
-import com.vaticle.typedb.client.common.NativeObject;
+import com.vaticle.typedb.driver.api.TypeDBTransaction;
+import com.vaticle.typedb.driver.api.concept.thing.Thing;
+import com.vaticle.typedb.driver.api.concept.value.Value;
+import com.vaticle.typedb.driver.common.NativeObject;
 
 import javax.annotation.CheckReturnValue;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static com.vaticle.typedb.client.jni.typedb_client.annotation_equals;
-import static com.vaticle.typedb.client.jni.typedb_client.annotation_is_key;
-import static com.vaticle.typedb.client.jni.typedb_client.annotation_is_unique;
-import static com.vaticle.typedb.client.jni.typedb_client.annotation_new_key;
-import static com.vaticle.typedb.client.jni.typedb_client.annotation_new_unique;
-import static com.vaticle.typedb.client.jni.typedb_client.annotation_to_string;
+import static com.vaticle.typedb.driver.jni.typedb_driver.annotation_equals;
+import static com.vaticle.typedb.driver.jni.typedb_driver.annotation_is_key;
+import static com.vaticle.typedb.driver.jni.typedb_driver.annotation_is_unique;
+import static com.vaticle.typedb.driver.jni.typedb_driver.annotation_new_key;
+import static com.vaticle.typedb.driver.jni.typedb_driver.annotation_new_unique;
+import static com.vaticle.typedb.driver.jni.typedb_driver.annotation_to_string;
 
 public interface ThingType extends Type {
     @Override
@@ -132,10 +132,10 @@ public interface ThingType extends Type {
     @CheckReturnValue
     String getSyntax(TypeDBTransaction transaction);
 
-    class Annotation extends NativeObject<com.vaticle.typedb.client.jni.Annotation> {
+    class Annotation extends NativeObject<com.vaticle.typedb.driver.jni.Annotation> {
         private final int hash;
 
-        private Annotation(com.vaticle.typedb.client.jni.Annotation annotation) {
+        private Annotation(com.vaticle.typedb.driver.jni.Annotation annotation) {
             super(annotation);
             this.hash = Objects.hash(isKey(), isUnique());
         }

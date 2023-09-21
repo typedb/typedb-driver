@@ -19,32 +19,32 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.common.exception;
+package com.vaticle.typedb.driver.common.exception;
 
 import javax.annotation.Nullable;
 
-public class TypeDBClientException extends RuntimeException {
+public class TypeDBDriverException extends RuntimeException {
 
     @Nullable
-    private final com.vaticle.typedb.client.jni.Error nativeError;
+    private final com.vaticle.typedb.driver.jni.Error nativeError;
 
     @Nullable
     private final ErrorMessage errorMessage;
 
-    public TypeDBClientException(ErrorMessage error, Object... parameters) {
+    public TypeDBDriverException(ErrorMessage error, Object... parameters) {
         super(error.message(parameters));
         assert !getMessage().contains("%s");
         this.nativeError = null;
         this.errorMessage = error;
     }
 
-    public TypeDBClientException(String message, Throwable cause) {
+    public TypeDBDriverException(String message, Throwable cause) {
         super(message, cause);
         this.nativeError = null;
         this.errorMessage = null;
     }
 
-    public TypeDBClientException(com.vaticle.typedb.client.jni.Error error) {
+    public TypeDBDriverException(com.vaticle.typedb.driver.jni.Error error) {
         super(error.getMessage());
         assert !getMessage().contains("%s");
         this.nativeError = error;

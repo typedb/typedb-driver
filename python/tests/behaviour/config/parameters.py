@@ -27,7 +27,7 @@ import parse
 from behave import register_type
 from behave.model import Table
 # TODO: We aren't consistently using typed parameters in step implementations - we should be.
-from typedb.client import *
+from typedb.driver import *
 
 
 @parse.with_pattern(r"true|false")
@@ -123,7 +123,7 @@ def parse_annotations(text: str) -> set[Annotation]:
     try:
         return {{"key": Annotation.key(), "unique": Annotation.unique()}[anno.strip()] for anno in text.split(",")}
     except KeyError:
-        raise TypeDBClientException(UNRECOGNISED_ANNOTATION)
+        raise TypeDBDriverException(UNRECOGNISED_ANNOTATION)
 
 
 register_type(Annotations=parse_annotations)

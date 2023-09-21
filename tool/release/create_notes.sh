@@ -20,4 +20,4 @@
 # under the License.
 #
 
-bazel run @vaticle_dependencies//tool/release/notes:create -- vaticle typedb-client-java HEAD $(cat VERSION) ./RELEASE_TEMPLATE.md ./RELEASE_NOTES_LATEST.md
+bazel run @vaticle_dependencies//tool/release/notes:create -- vaticle typedb-driver-java HEAD $(cat VERSION) ./RELEASE_TEMPLATE.md ./RELEASE_NOTES_LATEST.md

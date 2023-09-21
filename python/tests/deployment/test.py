@@ -22,7 +22,7 @@
 import unittest
 from unittest import TestCase
 
-from typedb.client import *
+from typedb.driver import *
 
 SCHEMA = SessionType.SCHEMA
 DATA = SessionType.DATA
@@ -30,44 +30,44 @@ READ = TransactionType.READ
 WRITE = TransactionType.WRITE
 
 
-class TestClientPython(TestCase):
+class TestDriverPython(TestCase):
     """
-    Very basic tests to ensure no error occur when performing simple operations with the typedb-client distribution
+    Very basic tests to ensure no error occur when performing simple operations with the typedb-driver distribution
     """
 
     @classmethod
     def setUpClass(cls):
-        super(TestClientPython, cls).setUpClass()
-        global client
-        client = TypeDB.core_client(TypeDB.DEFAULT_ADDRESS)
+        super(TestDriverPython, cls).setUpClass()
+        global driver
+        driver = TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS)
 
     @classmethod
     def tearDownClass(cls):
-        super(TestClientPython, cls).tearDownClass()
-        global client
-        client.close()
+        super(TestDriverPython, cls).tearDownClass()
+        global driver
+        driver.close()
 
     def setUp(self):
-        if not client.databases.contains("typedb"):
-            client.databases.create("typedb")
+        if not driver.databases.contains("typedb"):
+            driver.databases.create("typedb")
 
     def test_database(self):
-        if client.databases.contains("typedb"):
-            client.databases.get("typedb").delete()
-        client.databases.create("typedb")
-        self.assertTrue(client.databases.contains("typedb"))
+        if driver.databases.contains("typedb"):
+            driver.databases.get("typedb").delete()
+        driver.databases.create("typedb")
+        self.assertTrue(driver.databases.contains("typedb"))
 
     def test_session(self):
-        session = client.session("typedb", SCHEMA)
+        session = driver.session("typedb", SCHEMA)
         session.close()
 
     def test_transaction(self):
-        with client.session("typedb", SCHEMA) as session:
+        with driver.session("typedb", SCHEMA) as session:
             with session.transaction(WRITE) as tx:
                 pass
 
     def test_define_and_undef_relation_type(self):
-        with client.session("typedb", SCHEMA) as session:
+        with driver.session("typedb", SCHEMA) as session:
             with session.transaction(WRITE) as tx:
                 tx.query.define("define lionfight sub relation, relates victor, relates loser;")
                 lionfight_type = tx.concepts.get_relation_type("lionfight")
@@ -76,11 +76,11 @@ class TestClientPython(TestCase):
                 tx.commit()
 
     def test_insert_some_entities(self):
-        with client.session("typedb", SCHEMA) as session:
+        with driver.session("typedb", SCHEMA) as session:
             with session.transaction(WRITE) as tx:
                 tx.query.define("define lion sub entity;")
                 tx.commit()
-        with client.session("typedb", DATA) as session:
+        with driver.session("typedb", DATA) as session:
             with session.transaction(WRITE) as tx:
                 for answer in tx.query.insert("insert $a isa lion; $b isa lion; $c isa lion;"):
                     print("insert: " + str(answer))

@@ -21,11 +21,11 @@
 
 from __future__ import annotations
 
-from typedb.native_client_wrapper import numeric_is_long, numeric_is_double, numeric_is_nan, \
+from typedb.native_driver_wrapper import numeric_is_long, numeric_is_double, numeric_is_nan, \
     numeric_get_long, numeric_get_double, numeric_to_string, Numeric as NativeNumeric
 
 from typedb.api.answer.numeric import Numeric
-from typedb.common.exception import TypeDBClientExceptionExt, ILLEGAL_CAST, ILLEGAL_STATE, NULL_NATIVE_OBJECT
+from typedb.common.exception import TypeDBDriverExceptionExt, ILLEGAL_CAST, ILLEGAL_STATE, NULL_NATIVE_OBJECT
 from typedb.common.native_wrapper import NativeWrapper
 
 
@@ -33,12 +33,12 @@ class _Numeric(Numeric, NativeWrapper[NativeNumeric]):
 
     def __init__(self, numeric: NativeNumeric):
         if not numeric:
-            raise TypeDBClientExceptionExt(NULL_NATIVE_OBJECT)
+            raise TypeDBDriverExceptionExt(NULL_NATIVE_OBJECT)
         super().__init__(numeric)
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBClientExceptionExt:
-        return TypeDBClientExceptionExt.of(ILLEGAL_STATE)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
+        return TypeDBDriverExceptionExt.of(ILLEGAL_STATE)
 
     def is_int(self) -> bool:
         return numeric_is_long(self.native_object)
@@ -51,12 +51,12 @@ class _Numeric(Numeric, NativeWrapper[NativeNumeric]):
 
     def as_int(self):
         if not self.is_int():
-            raise TypeDBClientExceptionExt.of(ILLEGAL_CAST, "int")
+            raise TypeDBDriverExceptionExt.of(ILLEGAL_CAST, "int")
         return numeric_get_long(self.native_object)
 
     def as_float(self):
         if not self.is_float():
-            raise TypeDBClientExceptionExt.of(ILLEGAL_CAST, "float")
+            raise TypeDBDriverExceptionExt.of(ILLEGAL_CAST, "float")
         return numeric_get_double(self.native_object)
 
     def __repr__(self):

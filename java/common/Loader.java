@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.common;
+package com.vaticle.typedb.driver.common;
 
 import java.io.IOException;
 import java.net.URI;
@@ -39,7 +39,7 @@ public class Loader {
         if (!loaded) {
             try {
                 Path tempPath = getNativeResourceURI();
-                System.load(tempPath.resolve(System.mapLibraryName("typedb_client_jni")).toString());
+                System.load(tempPath.resolve(System.mapLibraryName("typedb_driver_jni")).toString());
                 loaded = true;
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -49,7 +49,7 @@ public class Loader {
 
     private static Path getNativeResourceURI() throws IOException {
         ClassLoader loader = Loader.class.getClassLoader();
-        String resource = System.mapLibraryName("typedb_client_jni");
+        String resource = System.mapLibraryName("typedb_driver_jni");
         URL resourceURL = loader.getResource(resource);
         Objects.requireNonNull(resourceURL, String.format("Resource %s was not found in ClassLoader %s", resource, loader));
 

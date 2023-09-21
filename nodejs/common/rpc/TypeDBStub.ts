@@ -34,7 +34,7 @@ import {
     DatabaseTypeSchemaReq
 } from "typedb-protocol/proto/database";
 import {TypeDBClient as GRPCStub} from "typedb-protocol/proto/typedb-service";
-import {TypeDBClientError} from "../errors/TypeDBClientError";
+import {TypeDBDriverError} from "../errors/TypeDBDriverError";
 import {ServerManagerAllReq, ServerManagerAllRes} from "typedb-protocol/proto/server";
 import {RequestBuilder} from "./RequestBuilder";
 import {SessionCloseReq, SessionOpenReq, SessionOpenRes, SessionPulseReq} from "typedb-protocol/proto/session";
@@ -66,7 +66,7 @@ export abstract class TypeDBStub {
         return this.mayRenewToken(() =>
             new Promise((resolve, reject) => {
                 this.stub().connection_open(req, (err) => {
-                    if (err) reject(new TypeDBClientError(err));
+                    if (err) reject(new TypeDBDriverError(err));
                     else resolve();
                 })
             })
@@ -77,7 +77,7 @@ export abstract class TypeDBStub {
         return this.mayRenewToken(() =>
             new Promise<ServerManagerAllRes>((resolve, reject) => {
                 this.stub().servers_all(req, (err, res) => {
-                    if (err) reject(new TypeDBClientError(err));
+                    if (err) reject(new TypeDBDriverError(err));
                     else resolve(res);
                 });
             })
@@ -88,7 +88,7 @@ export abstract class TypeDBStub {
         return this.mayRenewToken(() =>
             new Promise((resolve, reject) => {
                 this.stub().databases_create(req, (err) => {
-                    if (err) reject(new TypeDBClientError(err));
+                    if (err) reject(new TypeDBDriverError(err));
                     else resolve();
                 })
             })
@@ -99,7 +99,7 @@ export abstract class TypeDBStub {
         return this.mayRenewToken(() =>
             new Promise((resolve, reject) => {
                 this.stub().databases_contains(req, (err, res) => {
-                    if (err) reject(new TypeDBClientError(err));
+                    if (err) reject(new TypeDBDriverError(err));
                     else resolve(res.contains);
                 });
             })
@@ -110,7 +110,7 @@ export abstract class TypeDBStub {
         return this.mayRenewToken(() =>
             new Promise((resolve, reject) => {
                 this.stub().databases_get(req, (err, res) => {
-                    if (err) reject(new TypeDBClientError(err));
+                    if (err) reject(new TypeDBDriverError(err));
                     else resolve(res);
                 })
             })
@@ -121,7 +121,7 @@ export abstract class TypeDBStub {
         return this.mayRenewToken(() =>
             new Promise((resolve, reject) => {
                 this.stub().databases_all(req, (err, res) => {
-                    if (err) reject(new TypeDBClientError(err));
+                    if (err) reject(new TypeDBDriverError(err));
                     else resolve(res);
                 })
             })
@@ -175,7 +175,7 @@ export abstract class TypeDBStub {
     sessionOpen(openReq: SessionOpenReq): Promise<SessionOpenRes> {
         return new Promise<SessionOpenRes>((resolve, reject) => {
             this.stub().session_open(openReq, (err, res) => {
-                if (err) reject(new TypeDBClientError(err));
+                if (err) reject(new TypeDBDriverError(err));
                 else resolve(res);
             });
         });
@@ -218,7 +218,7 @@ export abstract class TypeDBStub {
         return this.mayRenewToken(() =>
             new Promise<UserManagerAllRes>((resolve, reject) => {
                 this.stub().users_all(req, (err, res) => {
-                    if (err) reject(new TypeDBClientError(err));
+                    if (err) reject(new TypeDBDriverError(err));
                     else resolve(res);
                 });
             })
@@ -229,7 +229,7 @@ export abstract class TypeDBStub {
         return this.mayRenewToken(() =>
             new Promise<boolean>((resolve, reject) => {
                 this.stub().users_contains(req, (err, res) => {
-                    if (err) reject(new TypeDBClientError(err));
+                    if (err) reject(new TypeDBDriverError(err));
                     else resolve(res.contains);
                 })
             })
@@ -240,7 +240,7 @@ export abstract class TypeDBStub {
         return this.mayRenewToken(() =>
             new Promise<void>((resolve, reject) => {
                 this.stub().users_create(req, (err, _res) => {
-                    if (err) reject(new TypeDBClientError(err));
+                    if (err) reject(new TypeDBDriverError(err));
                     else resolve();
                 })
             })
@@ -251,7 +251,7 @@ export abstract class TypeDBStub {
         return this.mayRenewToken(() =>
             new Promise<void>((resolve, reject) => {
                 this.stub().users_delete(req, (err, _res) => {
-                    if (err) reject(new TypeDBClientError(err));
+                    if (err) reject(new TypeDBDriverError(err));
                     else resolve();
                 });
             })
@@ -262,7 +262,7 @@ export abstract class TypeDBStub {
         return this.mayRenewToken(() =>
             new Promise<void>((resolve, reject) => {
                 this.stub().users_password_set(req, (err, _res) => {
-                    if (err) reject(new TypeDBClientError(err));
+                    if (err) reject(new TypeDBDriverError(err));
                     else resolve();
                 })
             })
@@ -273,7 +273,7 @@ export abstract class TypeDBStub {
         return this.mayRenewToken(() =>
             new Promise<UserManagerGetRes>((resolve, reject) => {
                 this.stub().users_get(req, (err, res) => {
-                    if (err) reject(new TypeDBClientError(err));
+                    if (err) reject(new TypeDBDriverError(err));
                     else resolve(res);
                 });
             })
@@ -284,7 +284,7 @@ export abstract class TypeDBStub {
         return this.mayRenewToken(() =>
             new Promise<void>((resolve, reject) => {
                 this.stub().user_password_update(req, (err, _res) => {
-                    if (err) reject(new TypeDBClientError(err));
+                    if (err) reject(new TypeDBDriverError(err));
                     else resolve();
                 })
             })

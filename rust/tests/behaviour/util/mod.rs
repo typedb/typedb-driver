@@ -31,7 +31,7 @@ use futures::{
 };
 use regex::{Captures, Regex};
 use tokio::time::sleep;
-use typedb_client::{
+use typedb_driver::{
     answer::ConceptMap,
     concept::{
         Annotation, Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,

@@ -19,32 +19,22 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.api;
+import {DatabaseManager} from "./database/DatabaseManager";
+import {TypeDBOptions} from "./TypeDBOptions";
+import {SessionType, TypeDBSession} from "./TypeDBSession";
+import {UserManager} from "./user/UserManager";
+import {User} from "./user/User";
 
-import com.vaticle.typedb.client.api.database.DatabaseManager;
-import com.vaticle.typedb.client.api.user.User;
-import com.vaticle.typedb.client.api.user.UserManager;
+export interface TypeDBDriver {
+    isOpen(): boolean;
 
-import javax.annotation.CheckReturnValue;
+    readonly databases: DatabaseManager;
 
-public interface TypeDBClient extends AutoCloseable {
-    @CheckReturnValue
-    boolean isOpen();
+    session(database: string, type: SessionType, options?: TypeDBOptions): Promise<TypeDBSession>;
 
-    @CheckReturnValue
-    DatabaseManager databases();
+    close(): Promise<void>;
 
-    @CheckReturnValue
-    TypeDBSession session(String database, TypeDBSession.Type type);
+    readonly users: UserManager;
 
-    @CheckReturnValue
-    TypeDBSession session(String database, TypeDBSession.Type type, TypeDBOptions options);
-
-    void close();
-
-    @CheckReturnValue
-    User user();
-
-    @CheckReturnValue
-    UserManager users();
+    user(): Promise<User>;
 }

@@ -33,7 +33,7 @@ java_library(
         exclude = ["test/**"],
     ),
     deps = [
-        "//java:typedb_client_jni",
+        "//java:typedb_driver_jni",
 
         # External dependencies from @vaticle
         "@vaticle_typedb_common//:common",

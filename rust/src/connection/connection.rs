@@ -89,7 +89,7 @@ impl Connection {
         let errors: Vec<Error> =
             server_connections.values().map(|conn| conn.validate()).filter_map(Result::err).collect();
         if errors.len() == server_connections.len() {
-            Err(ConnectionError::ClusterAllNodesFailed(
+            Err(ConnectionError::EnterpriseAllNodesFailed(
                 errors.into_iter().map(|err| err.to_string()).collect::<Vec<_>>().join("\n"),
             ))?
         } else {
@@ -153,7 +153,7 @@ impl Connection {
     }
 
     pub(crate) fn unable_to_connect_error(&self) -> Error {
-        Error::Connection(ConnectionError::ClusterUnableToConnect(
+        Error::Connection(ConnectionError::EnterpriseUnableToConnect(
             self.addresses().map(Address::to_string).collect::<Vec<_>>().join(","),
         ))
     }

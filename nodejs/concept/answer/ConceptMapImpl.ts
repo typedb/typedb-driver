@@ -29,7 +29,7 @@ import {Concept as ConceptProto} from "typedb-protocol/proto/concept";
 import {ConceptMap} from "../../api/answer/ConceptMap";
 import {Concept} from "../../api/concept/Concept";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
-import {TypeDBClientError} from "../../common/errors/TypeDBClientError";
+import {TypeDBDriverError} from "../../common/errors/TypeDBDriverError";
 import {ResponseReader} from "../../common/rpc/ResponseReader";
 
 export class ConceptMapImpl implements ConceptMap {
@@ -122,13 +122,13 @@ export namespace ConceptMapImpl {
 
         relation(variable: string): ConceptMap.Explainable {
             const explainable = this._relations.get(variable);
-            if (!explainable) throw new TypeDBClientError(NONEXISTENT_EXPLAINABLE_CONCEPT.message(variable));
+            if (!explainable) throw new TypeDBDriverError(NONEXISTENT_EXPLAINABLE_CONCEPT.message(variable));
             return explainable;
         }
 
         attribute(variable: string): ConceptMap.Explainable {
             const explainable = this._attributes.get(variable);
-            if (!explainable) throw new TypeDBClientError(NONEXISTENT_EXPLAINABLE_CONCEPT.message(variable));
+            if (!explainable) throw new TypeDBDriverError(NONEXISTENT_EXPLAINABLE_CONCEPT.message(variable));
             return explainable;
         }
 
@@ -136,7 +136,7 @@ export namespace ConceptMapImpl {
             for (const entry of this._ownerships) {
                 if (entry[0][0] === owner && entry[0][1] === attribute) return entry[1];
             }
-            throw new TypeDBClientError(NONEXISTENT_EXPLAINABLE_OWNERSHIP.message(owner, attribute));
+            throw new TypeDBDriverError(NONEXISTENT_EXPLAINABLE_OWNERSHIP.message(owner, attribute));
         }
 
         get relations(): Map<string, ConceptMap.Explainable> {
