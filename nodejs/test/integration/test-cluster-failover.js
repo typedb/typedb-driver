@@ -61,6 +61,7 @@ function serverStart(idx) {
         "--server.peers.peer-3.address", "localhost:31729",
         "--server.peers.peer-3.internal-address.zeromq", "localhost:31730",
         "--server.peers.peer-3.internal-address.grpc", "localhost:31731",
+        "--server.encryption.enable=true",
         "--server.encryption.file.enable=true",
         "--server.encryption.file.external-grpc.private-key", "tool/test/resources/encryption/ext-grpc-private-key.pem",
         "--server.encryption.file.external-grpc.certificate", "tool/test/resources/encryption/ext-grpc-certificate.pem",
