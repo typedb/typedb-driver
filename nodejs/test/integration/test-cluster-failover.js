@@ -60,7 +60,16 @@ function serverStart(idx) {
         "--server.peers.peer-2.internal-address.grpc", "localhost:21731",
         "--server.peers.peer-3.address", "localhost:31729",
         "--server.peers.peer-3.internal-address.zeromq", "localhost:31730",
-        "--server.peers.peer-3.internal-address.grpc", "localhost:31731"
+        "--server.peers.peer-3.internal-address.grpc", "localhost:31731",
+        "--server.encryption.file.enable=true",
+        "--server.encryption.file.external-grpc.private-key", "tool/test/resources/encryption/ext-grpc-private-key.pem",
+        "--server.encryption.file.external-grpc.certificate", "tool/test/resources/encryption/ext-grpc-certificate.pem",
+        "--server.encryption.file.external-grpc.root-ca", "tool/test/resources/encryption/ext-grpc-root-ca.pem",
+        "--server.encryption.file.internal-grpc.private-key", "tool/test/resources/encryption/int-grpc-private-key.pem",
+        "--server.encryption.file.internal-grpc.certificate", "tool/test/resources/encryption/int-grpc-certificate.pem",
+        "--server.encryption.file.internal-grpc.root-ca", "tool/test/resources/encryption/int-grpc-root-ca.pem",
+        "--server.encryption.file.internal-zmq.secret-key", "tool/test/resources/encryption/int-zmq-private-key",
+        "--server.encryption.file.internal-zmq.public-key", "tool/test/resources/encryption/int-zmq-public-key",
     ]);
     node.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
