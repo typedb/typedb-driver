@@ -33,12 +33,12 @@ import {
     DatabaseSchemaReq,
     DatabaseTypeSchemaReq
 } from "typedb-protocol/proto/database";
-import {TypeDBDriver as GRPCStub} from "typedb-protocol/proto/typedb-service";
+import {TypeDBClient as GRPCStub} from "typedb-protocol/proto/typedb-service";
 import {TypeDBDriverError} from "../errors/TypeDBDriverError";
 import {ServerManagerAllReq, ServerManagerAllRes} from "typedb-protocol/proto/server";
 import {RequestBuilder} from "./RequestBuilder";
 import {SessionCloseReq, SessionOpenReq, SessionOpenRes, SessionPulseReq} from "typedb-protocol/proto/session";
-import {DriverDuplexStream} from "@grpc/grpc-js";
+import {ClientDuplexStream} from "@grpc/grpc-js";
 import {TransactionClient, TransactionServer} from "typedb-protocol/proto/transaction";
 import {
     UserManagerAllReq,
@@ -203,8 +203,8 @@ export abstract class TypeDBStub {
         });
     }
 
-    transaction(): Promise<DriverDuplexStream<TransactionClient, TransactionServer>> {
-        return new Promise<DriverDuplexStream<TransactionClient, TransactionServer>>(
+    transaction(): Promise<ClientDuplexStream<TransactionClient, TransactionServer>> {
+        return new Promise<ClientDuplexStream<TransactionClient, TransactionServer>>(
             (resolve, reject) => {
                 try {
                     resolve(this.stub().transaction());

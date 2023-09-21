@@ -19,7 +19,7 @@
  * under the License.
  */
 
-import {DriverDuplexStream} from "@grpc/grpc-js";
+import {ClientDuplexStream} from "@grpc/grpc-js";
 import {TransactionClient, TransactionReq, TransactionServer} from "typedb-protocol/proto/transaction";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 
@@ -29,11 +29,11 @@ export class BatchDispatcher {
     private static BATCH_WINDOW_LARGE_MILLIS = 3;
 
     private readonly _transmitter: RequestTransmitter;
-    private readonly _transactionStream: DriverDuplexStream<TransactionClient, TransactionServer>;
+    private readonly _transactionStream: ClientDuplexStream<TransactionClient, TransactionServer>;
     private _bufferedRequests: TransactionReq[];
     private _isRunning: boolean;
 
-    constructor(transmitter: RequestTransmitter, transactionStream: DriverDuplexStream<TransactionClient, TransactionServer>) {
+    constructor(transmitter: RequestTransmitter, transactionStream: ClientDuplexStream<TransactionClient, TransactionServer>) {
         this._transmitter = transmitter;
         this._transactionStream = transactionStream;
         this._bufferedRequests = new Array<TransactionReq>();
@@ -97,7 +97,7 @@ export class RequestTransmitter {
         }
     }
 
-    dispatcher(transactionStream: DriverDuplexStream<TransactionClient, TransactionServer>): BatchDispatcher {
+    dispatcher(transactionStream: ClientDuplexStream<TransactionClient, TransactionServer>): BatchDispatcher {
         const dispatcher = new BatchDispatcher(this, transactionStream);
         this._dispatchers.add(dispatcher);
         return dispatcher;
