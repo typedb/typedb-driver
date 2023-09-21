@@ -63,7 +63,6 @@ release_validate_deps(
     tagged_deps = [
         "@vaticle_typedb_common",
         "@vaticle_typeql",
-        "@vaticle_factory_tracing",
     ],
     tags = ["manual"],  # in order for bazel test //... to not fail
 )
