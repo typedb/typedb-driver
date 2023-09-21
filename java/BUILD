@@ -29,6 +29,7 @@ load("@vaticle_dependencies//library/maven:artifacts.bzl", artifacts_org = "arti
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":rules.bzl", "swig_native_java_library")
 load("@google_bazel_common//tools/javadoc:javadoc.bzl", "javadoc_library")
+load("@vaticle_dependencies//tool/doc:rules.bzl", "html_doc_parser")
 
 java_library(
     name = "driver-java",
@@ -114,6 +115,12 @@ javadoc_library(
         "//java/api",
         "@vaticle_typedb_common//:common",
     ],
+)
+
+html_doc_parser(
+    name = "driver_doc_parsed",
+    data = ":driver_doc",
+    script_name = "JavaDocParser",
 )
 
 checkstyle_test(
