@@ -74,9 +74,10 @@ function serverStart(idx) {
 }
 
 async function run() {
+    console.log("root ca path: ", process.env.ROOT_CA)
     const client = await TypeDB.clusterClient(
         ["localhost:11729", "localhost:21729", "localhost:31729"],
-        new TypeDBCredential("admin", "password")
+        new TypeDBCredential("admin", "password", process.env.ROOT_CA)
     );
     try {
         if (await client.databases.contains("typedb")) {
@@ -99,7 +100,7 @@ async function run() {
         for (let iteration = 1; iteration <= 10; iteration++) {
             const client = await TypeDB.clusterClient(
                 ["localhost:11729", "localhost:21729", "localhost:31729"],
-                new TypeDBCredential("admin", "password")
+                new TypeDBCredential("admin", "password", process.env.ROOT_CA)
             );
             primaryReplica = await seekPrimaryReplica(client.databases);
             console.info(`Stopping primary replica (test ${iteration}/10)...`);

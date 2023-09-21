@@ -37,7 +37,8 @@ function server_start() {
     --server.address=localhost:${1}1729 \
     --server.internal-address.zeromq=localhost:${1}1730 \
     --server.internal-address.grpc=localhost:${1}1731 \
-    $(echo $peers)
+    $(echo $peers) \
+    --server.encryption.enable=true
 }
 
 rm -rf $(seq 1 $NODE_COUNT) typedb-cluster-all
@@ -51,6 +52,9 @@ echo Starting a cluster consisting of $NODE_COUNT servers...
 for i in $(seq 1 $NODE_COUNT); do
   server_start $i &
 done
+
+ROOT_CA=`realpath typedb-cluster-all/server/conf/encryption/ext-root-ca.pem`
+export ROOT_CA
 
 POLL_INTERVAL_SECS=0.5
 MAX_RETRIES=60
