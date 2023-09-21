@@ -76,7 +76,7 @@ impl Drop for TransactionTransmitter {
 impl TransactionTransmitter {
     pub(in crate::connection) fn new(
         background_runtime: &BackgroundRuntime,
-        request_sink: UnboundedSender<transaction::Driver>,
+        request_sink: UnboundedSender<transaction::Client>,
         response_source: Streaming<transaction::Server>,
     ) -> Self {
         let (buffer_sink, buffer_source) = unbounded_async();
@@ -157,7 +157,7 @@ impl TransactionTransmitter {
     async fn start_workers(
         queue_sink: UnboundedSender<(TransactionRequest, Option<ResponseSink<TransactionResponse>>)>,
         queue_source: UnboundedReceiver<(TransactionRequest, Option<ResponseSink<TransactionResponse>>)>,
-        request_sink: UnboundedSender<transaction::Driver>,
+        request_sink: UnboundedSender<transaction::Client>,
         response_source: Streaming<transaction::Server>,
         is_open: Arc<AtomicCell<bool>>,
         error: Arc<RwLock<Option<ConnectionError>>>,
@@ -184,7 +184,7 @@ impl TransactionTransmitter {
 
     async fn dispatch_loop(
         mut request_source: UnboundedReceiver<(TransactionRequest, Option<ResponseSink<TransactionResponse>>)>,
-        request_sink: UnboundedSender<transaction::Driver>,
+        request_sink: UnboundedSender<transaction::Client>,
         mut collector: ResponseCollector,
         mut on_close_callback_source: UnboundedReceiver<Box<dyn FnOnce(ConnectionError) + Send + Sync>>,
         mut shutdown_signal: UnboundedReceiver<()>,
@@ -269,9 +269,9 @@ impl TransactionRequestBuffer {
         self.reqs.push(request);
     }
 
-    fn take(&mut self) -> transaction::Driver {
+    fn take(&mut self) -> transaction::Client {
         self.len = 0;
-        transaction::Driver { reqs: std::mem::take(&mut self.reqs) }
+        transaction::Client { reqs: std::mem::take(&mut self.reqs) }
     }
 }
 

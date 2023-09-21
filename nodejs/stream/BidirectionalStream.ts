@@ -21,7 +21,7 @@
 
 import {DriverDuplexStream} from "@grpc/grpc-js";
 import {
-    TransactionDriver,
+    TransactionClient,
     TransactionReq,
     TransactionRes,
     TransactionResPart,
@@ -93,7 +93,7 @@ export class BidirectionalStream {
         this._dispatcher.close();
     }
 
-    registerObserver(transactionStream: DriverDuplexStream<TransactionDriver, TransactionServer>): void {
+    registerObserver(transactionStream: DriverDuplexStream<TransactionClient, TransactionServer>): void {
         transactionStream.on("data", (res: TransactionServer) => {
             if (!this.isOpen()) {
                 return;

@@ -20,7 +20,7 @@
  */
 
 import {DriverDuplexStream} from "@grpc/grpc-js";
-import {TransactionDriver, TransactionReq, TransactionServer} from "typedb-protocol/proto/transaction";
+import {TransactionClient, TransactionReq, TransactionServer} from "typedb-protocol/proto/transaction";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 
 export class BatchDispatcher {
@@ -29,11 +29,11 @@ export class BatchDispatcher {
     private static BATCH_WINDOW_LARGE_MILLIS = 3;
 
     private readonly _transmitter: RequestTransmitter;
-    private readonly _transactionStream: DriverDuplexStream<TransactionDriver, TransactionServer>;
+    private readonly _transactionStream: DriverDuplexStream<TransactionClient, TransactionServer>;
     private _bufferedRequests: TransactionReq[];
     private _isRunning: boolean;
 
-    constructor(transmitter: RequestTransmitter, transactionStream: DriverDuplexStream<TransactionDriver, TransactionServer>) {
+    constructor(transmitter: RequestTransmitter, transactionStream: DriverDuplexStream<TransactionClient, TransactionServer>) {
         this._transmitter = transmitter;
         this._transactionStream = transactionStream;
         this._bufferedRequests = new Array<TransactionReq>();
@@ -56,8 +56,8 @@ export class BatchDispatcher {
     }
 
     private sendNow(): void {
-        const driverRequest = RequestBuilder.Transaction.driverReq(this._bufferedRequests);
-        this._transactionStream.write(driverRequest);
+        const clientRequest = RequestBuilder.Transaction.clientReq(this._bufferedRequests);
+        this._transactionStream.write(clientRequest);
         this._bufferedRequests = [];
     }
 
@@ -97,7 +97,7 @@ export class RequestTransmitter {
         }
     }
 
-    dispatcher(transactionStream: DriverDuplexStream<TransactionDriver, TransactionServer>): BatchDispatcher {
+    dispatcher(transactionStream: DriverDuplexStream<TransactionClient, TransactionServer>): BatchDispatcher {
         const dispatcher = new BatchDispatcher(this, transactionStream);
         this._dispatchers.add(dispatcher);
         return dispatcher;

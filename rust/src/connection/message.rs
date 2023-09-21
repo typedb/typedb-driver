@@ -108,7 +108,7 @@ pub(super) enum Response {
     SessionClose,
 
     TransactionOpen {
-        request_sink: UnboundedSender<transaction::Driver>,
+        request_sink: UnboundedSender<transaction::Client>,
         response_source: Streaming<transaction::Server>,
     },
 

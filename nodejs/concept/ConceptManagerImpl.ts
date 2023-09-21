@@ -46,8 +46,8 @@ import {TypeDBDriverError} from "../common/errors/TypeDBDriverError";
 export class ConceptManagerImpl implements ConceptManager {
     private _transaction: TypeDBTransaction.Extended;
 
-    constructor(driver: TypeDBTransaction.Extended) {
-        this._transaction = driver;
+    constructor(transaction: TypeDBTransaction.Extended) {
+        this._transaction = transaction;
     }
 
     async getRootThingType(): Promise<ThingType> {

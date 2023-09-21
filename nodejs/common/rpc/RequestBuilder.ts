@@ -162,7 +162,7 @@ import {
     DatabaseTypeSchemaReq
 } from "typedb-protocol/proto/database";
 import {
-    TransactionDriver,
+    TransactionClient,
     TransactionCommitReq,
     TransactionOpenReq,
     TransactionReq,
@@ -279,8 +279,8 @@ export namespace RequestBuilder {
     }
 
     export namespace Transaction {
-        export function driverReq(reqs: TransactionReq[]) {
-            return new TransactionDriver({reqs: reqs});
+        export function clientReq(reqs: TransactionReq[]) {
+            return new TransactionClient({reqs: reqs});
         }
 
         export function openReq(sessionId: string, type: TransactionType, options: Options, latencyMillis: number) {

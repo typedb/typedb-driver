@@ -39,7 +39,7 @@ import {ServerManagerAllReq, ServerManagerAllRes} from "typedb-protocol/proto/se
 import {RequestBuilder} from "./RequestBuilder";
 import {SessionCloseReq, SessionOpenReq, SessionOpenRes, SessionPulseReq} from "typedb-protocol/proto/session";
 import {DriverDuplexStream} from "@grpc/grpc-js";
-import {TransactionDriver, TransactionServer} from "typedb-protocol/proto/transaction";
+import {TransactionClient, TransactionServer} from "typedb-protocol/proto/transaction";
 import {
     UserManagerAllReq,
     UserManagerAllRes,
@@ -203,8 +203,8 @@ export abstract class TypeDBStub {
         });
     }
 
-    transaction(): Promise<DriverDuplexStream<TransactionDriver, TransactionServer>> {
-        return new Promise<DriverDuplexStream<TransactionDriver, TransactionServer>>(
+    transaction(): Promise<DriverDuplexStream<TransactionClient, TransactionServer>> {
+        return new Promise<DriverDuplexStream<TransactionClient, TransactionServer>>(
             (resolve, reject) => {
                 try {
                     resolve(this.stub().transaction());

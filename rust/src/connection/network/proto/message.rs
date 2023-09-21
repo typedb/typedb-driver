@@ -167,10 +167,10 @@ impl TryIntoProto<session::close::Req> for Request {
     }
 }
 
-impl TryIntoProto<transaction::Driver> for Request {
-    fn try_into_proto(self) -> Result<transaction::Driver> {
+impl TryIntoProto<transaction::Client> for Request {
+    fn try_into_proto(self) -> Result<transaction::Client> {
         match self {
-            Self::Transaction(transaction_req) => Ok(transaction::Driver { reqs: vec![transaction_req.into_proto()] }),
+            Self::Transaction(transaction_req) => Ok(transaction::Client { reqs: vec![transaction_req.into_proto()] }),
             other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
         }
     }

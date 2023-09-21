@@ -152,9 +152,9 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
     pub(super) async fn transaction(
         &mut self,
         open_req: transaction::Req,
-    ) -> Result<(UnboundedSender<transaction::Driver>, Streaming<transaction::Server>)> {
+    ) -> Result<(UnboundedSender<transaction::Client>, Streaming<transaction::Server>)> {
         self.call_with_auto_renew_token(|this| {
-            let transaction_req = transaction::Driver { reqs: vec![open_req.clone()] };
+            let transaction_req = transaction::Client { reqs: vec![open_req.clone()] };
             Box::pin(async {
                 let (sender, receiver) = unbounded_async();
                 sender.send(transaction_req)?;
