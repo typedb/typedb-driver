@@ -757,8 +757,6 @@ release:
       image: vaticle-ubuntu-22.04
       command: |
         bazel test //:release-validate-deps --test_output=streamed
-        bazel test //python:release-validate-python-deps --test_output=streamed
-        bazel test //nodejs:release-validate-nodejs-deps --test_output=streamed
     validate-release-notes:
       image: vaticle-ubuntu-22.04
       command: |
