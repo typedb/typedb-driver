@@ -77,8 +77,8 @@ build:
 
     test-rust-integration-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -92,79 +92,79 @@ build:
     test-rust-integration-cluster:
       machine: 4-core-16-gb
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh 3 # use source to receive export vars
-        bazel test //rust/tests --test_arg=-- --test_arg=integration::queries::cluster --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        bazel test //rust/tests --test_env=ROOT_CA=$ROOT_CA --test_arg=-- --test_arg=integration::queries::cluster --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
     test-rust-integration-runtimes:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh 3 # use source to receive export vars
-        bazel test //rust/tests --test_arg=-- --test_arg=integration::runtimes --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        bazel test //rust/tests --test_env=ROOT_CA=$ROOT_CA --test_arg=-- --test_arg=integration::runtimes --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
     test-rust-behaviour-concept:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh 3 # use source to receive export vars
-        bazel test //rust/tests --test_arg=-- --test_arg=behaviour::concept --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        bazel test //rust/tests --test_env=ROOT_CA=$ROOT_CA --test_arg=-- --test_arg=behaviour::concept --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
     test-rust-behaviour-connection:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh 3 # use source to receive export vars
-        bazel test //rust/tests --test_arg=-- --test_arg=behaviour::connection --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        bazel test //rust/tests --test_env=ROOT_CA=$ROOT_CA --test_arg=-- --test_arg=behaviour::connection --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
     test-rust-behaviour-typeql:
       machine: 8-core-32-gb
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh 3 # use source to receive export vars
-        bazel test //rust/tests --test_arg=-- --test_arg=behaviour::typeql --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        bazel test //rust/tests --test_env=ROOT_CA=$ROOT_CA --test_arg=-- --test_arg=behaviour::typeql --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
     test-java-integration:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -174,8 +174,8 @@ build:
 
     test-java-behaviour-connection-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -186,8 +186,8 @@ build:
 
     test-java-behaviour-connection-cluster:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -198,8 +198,8 @@ build:
 
     test-java-behaviour-concept-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -209,8 +209,8 @@ build:
 
     test-java-behaviour-concept-cluster:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -220,8 +220,8 @@ build:
 
     test-java-behaviour-match-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -233,8 +233,8 @@ build:
 
     test-java-behaviour-match-cluster:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -246,8 +246,8 @@ build:
 
     test-java-behaviour-writable-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -259,8 +259,8 @@ build:
 
     test-java-behaviour-writable-cluster:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -272,8 +272,8 @@ build:
 
     test-java-behaviour-definable-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -284,8 +284,8 @@ build:
 
     test-java-behaviour-definable-cluster:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -296,8 +296,8 @@ build:
 
     test-python-behaviour-connection-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -316,8 +316,8 @@ build:
 
     test-python-behaviour-connection-cluster:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -327,18 +327,18 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
 
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //python/tests/behaviour/connection/database/... --test_output=streamed --jobs=1 &&
-          .factory/test-cluster.sh //python/tests/behaviour/connection/session/... --test_output=streamed --jobs=1 &&
-          .factory/test-cluster.sh //python/tests/behaviour/connection/transaction/... --test_output=streamed --jobs=1 &&
-          .factory/test-cluster.sh //python/tests/behaviour/connection/user/... --test_output=streamed --jobs=1 &&
+        .factory/test-cluster.sh //python/tests/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cluster.sh //python/tests/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cluster.sh //python/tests/behaviour/connection/transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cluster.sh //python/tests/behaviour/connection/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
     test-python-behaviour-concept-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -357,8 +357,8 @@ build:
 
     test-python-behaviour-concept-cluster:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -371,14 +371,14 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //python/tests/behaviour/concept/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //python/tests/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
     test-python-behaviour-match-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -400,8 +400,8 @@ build:
 
     test-python-behaviour-match-cluster:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -414,17 +414,17 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //python/tests/behaviour/typeql/language/match/... --test_output=errors &&
-          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/get/... --test_output=errors &&
-          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/expression/... --test_output=errors &&
+        .factory/test-cluster.sh //python/tests/behaviour/typeql/language/match/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/get/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/expression/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
     test-python-behaviour-writable-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -446,8 +446,8 @@ build:
 
     test-python-behaviour-writable-cluster:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -460,17 +460,17 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //python/tests/behaviour/typeql/language/insert/... --test_output=errors &&
-          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/delete/... --test_output=errors &&
-          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/update/... --test_output=errors &&
+        .factory/test-cluster.sh //python/tests/behaviour/typeql/language/insert/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/delete/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/update/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
     test-python-behaviour-definable-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -491,8 +491,8 @@ build:
 
     test-python-behaviour-definable-cluster:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -505,8 +505,8 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //python/tests/behaviour/typeql/language/define/... --test_output=errors &&
-          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/undefine/... --test_output=errors &&
+        .factory/test-cluster.sh //python/tests/behaviour/typeql/language/define/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cluster.sh //python/tests/behaviour/typeql/language/undefine/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
@@ -532,8 +532,8 @@ build:
 
     test-nodejs-integration:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -552,8 +552,8 @@ build:
     test-nodejs-cluster-failover:
       machine: 4-core-16-gb
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -568,8 +568,8 @@ build:
 
     test-nodejs-behaviour-connection-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -583,24 +583,24 @@ build:
 
     test-nodejs-behaviour-connection-cluster:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //nodejs/test/behaviour/connection/database/... --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //nodejs/test/behaviour/connection/session/... --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //nodejs/test/behaviour/connection/transaction/... --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //nodejs/test/behaviour/connection/user/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //nodejs/test/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //nodejs/test/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //nodejs/test/behaviour/connection/transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //nodejs/test/behaviour/connection/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
     test-nodejs-behaviour-concept-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -612,22 +612,22 @@ build:
 
     test-nodejs-behaviour-concept-cluster:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //nodejs/test/behaviour/concept/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //nodejs/test/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
     # TODO: Delete --jobs=1 once tests are parallelisable
 
     test-nodejs-behaviour-match-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -641,23 +641,23 @@ build:
 
     test-nodejs-behaviour-match-cluster:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/match/... --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/get/... --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/expression/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/match/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/get/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/expression/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
     test-nodejs-behaviour-writable-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -671,23 +671,23 @@ build:
 
     test-nodejs-behaviour-writable-cluster:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/insert/... --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/delete/... --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/update/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/insert/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/delete/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/update/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
     test-nodejs-behaviour-definable-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -700,15 +700,15 @@ build:
 
     test-nodejs-behaviour-definable-cluster:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-cluster-servers.sh # use source to receive export vars
-        .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/define/... --test_output=errors --jobs=1 &&
-          .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/undefine/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/define/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-cluster.sh //nodejs/test/behaviour/typeql/language/undefine/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cluster-servers.sh
         exit $TEST_SUCCESS
 
@@ -718,7 +718,7 @@ build:
         branch: [master, development]
       image: vaticle-ubuntu-22.04
       dependencies:
-#        - build
+        - build
         - test-integration-core
         - test-integration-cluster
         - test-integration-runtimes
@@ -736,7 +736,7 @@ build:
         branch: [master, development]
       image: vaticle-ubuntu-22.04
       dependencies:
-#        - build
+        - build
         - test-nodejs-integration
         - test-nodejs-cluster-failover
         - test-nodejs-behaviour-connection-core
