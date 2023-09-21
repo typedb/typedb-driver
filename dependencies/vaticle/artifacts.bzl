@@ -30,13 +30,14 @@ def vaticle_typedb_artifact():
         tag_source = deployment["artifact.release"],
         commit_source = deployment["artifact.snapshot"],
         commit = "eb6a130aa3b34545180d6be10c1ff5b2dace34f8",
+        # commit = "ea09e4574649234f01fc34cc8dfd6a9f7ec52f2d",
     )
 
 def vaticle_typedb_enterprise_artifact():
     native_artifact_files(
         name = "vaticle_typedb_enterprise_artifact",
-        group_name = "vaticle_typedb_enterprise",
-        artifact_name = "typedb-enterprise-all-{platform}-{version}.{ext}",
+        group_name = "vaticle_typedb_cluster",
+        artifact_name = "typedb-cluster-all-{platform}-{version}.{ext}",
         tag_source = deployment_private["artifact.release"],
         commit_source = deployment_private["artifact.snapshot"],
         commit = "c351fcba2c2017893a6bad2715f261f06f231e5e",

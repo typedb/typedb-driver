@@ -23,7 +23,7 @@ use std::sync::{Arc, RwLock};
 
 use tonic::{
     body::BoxBody,
-    driver::GrpcService,
+    client::GrpcService,
     service::{
         interceptor::{InterceptedService, ResponseFuture as InterceptorResponseFuture},
         Interceptor,

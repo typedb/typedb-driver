@@ -27,7 +27,7 @@ use tokio::sync::mpsc::{unbounded_channel as unbounded_async, UnboundedSender};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tonic::{Response, Status, Streaming};
 use typedb_protocol::{
-    connection, database, database_manager, server_manager, session, transaction, type_db_driver::TypeDbDriver as GRPC,
+    connection, database, database_manager, server_manager, session, transaction, type_db_client::TypeDbClient as GRPC,
     user, user_manager,
 };
 
