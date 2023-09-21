@@ -88,7 +88,7 @@
 @maven//:net_jcip_jcip_annotations_1_0
 @maven//:org_antlr_antlr4_runtime_4_8
 @maven//:org_apache_commons_commons_compress_1_21
-@maven//:org_apache_httpcomponents_httpdriver_4_5_11
+@maven//:org_apache_httpcomponents_httpclient_4_5_11
 @maven//:org_apache_httpcomponents_httpcore_4_4_13
 @maven//:org_apiguardian_apiguardian_api_1_1_0
 @maven//:org_checkerframework_checker_qual_3_5_0
