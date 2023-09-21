@@ -35,11 +35,34 @@ npm install typedb-driver@{version}
 
 ## New Features
 
+- **Rearchitect Rust Driver to support full TypeDB feature set**
+
+- **Extend Rust Driver to support FFI**
+
+- **Create SWIG rules to generate C compatibility layer & C Driver**
+ 
+- **Create SWIG rules for Python and Java**
+
+- **Reimplement Java Driver using JNI over Rust**
+
+- **Reimplement Python Driver using FFI over Rust**
+
+- **Reimplement Python Driver using FFI over Rust**
+
 
 ## Bugs Fixed
 
 ## Code Refactors
 
+- **Create unified network API for Core and Enterprise**
+
+- **Simplify Concept API by parametrizing methods with enum arguments**
+
+- **Delete Remote Concept API**
+
+
 
 ## Other Improvements
+
+- **Move all drivers into sub-packages in this centralised repository**
 
