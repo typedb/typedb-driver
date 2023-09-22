@@ -69,10 +69,7 @@ impl Connection {
             .exactly_one()
             .map_err(|_| ConnectionError::UnableToConnect())?;
         server_connection.set_address(address.clone());
-        match server_connection.validate() {
-            Ok(()) => Ok(Self { server_connections: [(address, server_connection)].into(), background_runtime, username: None }),
-            Err(err) => Err(err)
-        }
+        Ok(Self { server_connections: [(address, server_connection)].into(), background_runtime, username: None })
     }
 
     pub fn new_encrypted<T: AsRef<str> + Sync>(init_addresses: &[T], credential: Credential) -> Result<Self> {
