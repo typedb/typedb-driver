@@ -27,7 +27,7 @@ load("@vaticle_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
 load("@vaticle_dependencies//builder/swig:java.bzl", "swig_java")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_dependencies//tool/doc:rules.bzl", "html_doc_parser")
+load("//tool/doc:rules.bzl", "html_doc_parser")
 
 typedb_driver_srcs = glob(["src/**/*.rs"])
 typedb_driver_tags = ["crate-name=typedb-driver"]
@@ -99,7 +99,7 @@ rust_doc(
 html_doc_parser(
     name = "driver_doc_parsed",
     data = ":driver_doc",
-    script_name = "RustDocParser",
+    language = "rust",
 )
 
 checkstyle_test(

@@ -22,7 +22,7 @@
 load("@vaticle_dependencies//builder/swig:python.bzl", "py_native_lib_rename")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//python:doc/rules.bzl", "sphinx_doc")
-load("@vaticle_dependencies//tool/doc:rules.bzl", "html_doc_parser")
+load("//tool/doc:rules.bzl", "html_doc_parser")
 
 load("//python:rules.bzl", "native_driver_versioned")
 load("//python:python_versions.bzl", "python_versions")
@@ -92,7 +92,7 @@ sphinx_doc(
 html_doc_parser(
     name = "driver_doc_parsed",
     data = ":driver_doc",
-    script_name = "PythonDocParser",
+    language = "python",
 )
 
 # CI targets that are not declared in any BUILD_ file, but are called externally

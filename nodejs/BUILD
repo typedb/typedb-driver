@@ -36,7 +36,7 @@ load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
 load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_run_binary")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("//nodejs:doc/rules.bzl", "typedoc_doc")
-load("@vaticle_dependencies//tool/doc:rules.bzl", "html_doc_parser")
+load("//tool/doc:rules.bzl", "html_doc_parser")
 
 npm_link_all_packages(
     name = "node_modules",
@@ -195,7 +195,7 @@ typedoc_doc(
 html_doc_parser(
     name = "driver_doc_parsed",
     data = ":driver_doc",
-    script_name = "NodejsDocParser",
+    language = "nodejs",
 )
 
 checkstyle_test(
