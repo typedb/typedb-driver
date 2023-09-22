@@ -36,7 +36,6 @@ public interface User {
     /**
      * Updates the user's password.
      *
-     * <h3>Examples</h3>
      * <pre>
      * user.passwordUpdate("oldpassword", "nEwp@ssw0rd");
      * </pre>

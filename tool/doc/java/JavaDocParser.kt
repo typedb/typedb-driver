@@ -18,136 +18,107 @@
 
 package com.vaticle.typedb.client.tool.doc.java
 
-import java.io.File
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
-import java.io.FileInputStream
-import java.nio.ByteBuffer
-import java.nio.channels.FileChannel
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.StandardOpenOption
-import java.util.zip.ZipEntry
-import java.util.zip.ZipInputStream
-
 import com.vaticle.typedb.client.tool.doc.common.Argument
 import com.vaticle.typedb.client.tool.doc.common.Class
 import com.vaticle.typedb.client.tool.doc.common.Method
-import com.vaticle.typedb.client.tool.doc.common.unzipFile
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
+import java.io.File
+
 
 fun main(args: Array<String>) {
     val outputFilename = args[0]
-    val inputJarName = args[1]
-    println("Input: $inputJarName")
+    val inputDirectoryName = args[1]
+    println("Input: $inputDirectoryName")
 
     val outputFile = File(outputFilename)
     outputFile.createNewFile()
 
-//    File(inputDirectoryName).walkTopDown().forEach {
-//        println(it)
-////        if (it.toString().endsWith(".html")) {
-////            val html = it.readText(Charsets.UTF_8)
-////            val parsed = Jsoup.parse(html)
-////
-////            parsed.select("dl.class").forEach {
-////                val parsedClass = parseClassPy(it)
-////                println(parsedClass)
-////                outputFile.appendText(parsedClass.toString() + "\n")
-////            }
-////        }
-//        outputFile.appendText(it.readText())
-//    }
-
-    unzipFile(Path.of(inputJarName), Path.of(".")).forEach {
-        println(it)
-//        if (it.toString().contains("struct.")) {
-//            val html = File(it.toUri()).readText(Charsets.UTF_8)
-//            val parsed = Jsoup.parse(html)
-//            if (!parsed.select(".main-heading h1 a.struct").isNullOrEmpty()) {
-//                val parsedClass = parseClass(parsed)
-//                print(parsedClass)
-//                outputFile.appendText(parsedClass.toString() + "\n")
-//            }
-//        }
+    File(inputDirectoryName).walkTopDown().forEach {
+        if (it.toString().contains("/api/") && !it.toString().contains("-use")
+            && !it.toString().contains("-summary") && !it.toString().contains("-tree")
+            && it.toString().endsWith(".html")) {
+            println(it)
+            val html = File(it.path).readText(Charsets.UTF_8)
+            val parsed = Jsoup.parse(html)
+            if (!parsed.select("h2[title^=Interface]").isNullOrEmpty()) {
+                val parsedClass = parseClass(parsed)
+                println(parsedClass)
+                outputFile.appendText(parsedClass.toString() + "\n")
+            }
+            outputFile.appendText(it.toString() + "\n")
+        }
     }
 }
 
 
-//fun parseClassPy(element: Element): Class {
-//    val classSigElement = element.selectFirst("dt.sig-object")
-//    val className = classSigElement!!.selectFirst("dt.sig-object span.sig-name")!!.text()
-//
-//    val classDetails = classSigElement.nextElementSibling()
-//    val classDetailsParagraphs = classDetails!!.children().map { it }.filter { it.tagName() == "p" }  // FIXME
-//    val (descr, bases) = classDetailsParagraphs.partition { it.select("code.py-class").isNullOrEmpty() }
-//    val classBases = bases[0]!!.select("span").map { it.html() }
-//    val classDescr = descr.map { it.html() }
-//
-//    val methodsDetails = classDetails.children().map { it }.filter { it.classNames().contains("method") }
-//    val methods = methodsDetails.map { parseMethodPy(it) }
-//
-//    val propertiesDetails = classDetails.children().map { it }.filter { it.classNames().contains("property") }
-//    val properties = propertiesDetails.map { parsePropertyPy(it) }
-//
-//    return Class(
-//        name = className,
-//        description = classDescr,
-//        methods = methods,
-//        fields = properties,
-//        bases = classBases,
-//    )
-//}
-//
-//fun parseMethodPy(element: Element): Method {
-//    val methodSignature = element.selectFirst("dt.sig-object")!!.text()
-//    val methodName = element.selectFirst("dt.sig-object span.sig-name")!!.text()
-//    val allArgs = getArgsFromSignaturePy(element.selectFirst("dt.sig-object")!!)
-//    val methodReturnType = element.select(".sig-return-typehint").text()
-//    val methodDescr = element.select("dd > p").map { it.html() }
-//    val methodArgs = mutableListOf<Argument>()
-//    var methodReturnDescr: String? = null
-//    if (!element.select(".field-list").isNullOrEmpty()) {
-//        element.select(".field-list > dt").forEach {
-//            if (it.textNodes().map { it.text() }.contains("Parameters")) {
-//                it.nextElementSibling()!!.select("li p").forEach {
-//                    val arg_name = it.selectFirst("strong")!!.text()
-//                    assert(allArgs.contains(arg_name))
-//                    val arg_descr = it.textNodes().joinToString()
-//                    methodArgs.add(Argument(name = arg_name, type = allArgs[arg_name], description = arg_descr))
-//                }
-//            }
-//            if (it.textNodes().map { it.text() }.contains("Returns")) {
-//                methodReturnDescr = it.nextElementSibling()?.select("p")?.text()
-//            }
-//        }
-//    }
-//    val methodExample = element.selectFirst("#examples .highlight")?.text()
-//
-//    return Method(
-//        name = methodName,
-//        signature = methodSignature,
-//        description = methodDescr,
-//        args = methodArgs,
-//        returnType = methodReturnType,
-//        returnDescription = methodReturnDescr,
-//        example = methodExample,
-//    )
-//
-//}
-//
-//fun parsePropertyPy(element: Element): Argument {
-//    val propertyName = element.selectFirst("dt.sig-object span.sig-name")!!.text()
-//    val propertyType = element.selectFirst("dt.sig-object span.sig-name + .property ")?.text()?.dropWhile { !it.isLetter() }
-//    val propertyDescr = element.select("dd > p").map { it.html() }.joinToString()  // TODO: Test it
-//    return Argument(
-//        name = propertyName,
-//        type = propertyType,
-//        description = propertyDescr,
-//    )
-//}
-//
-//fun getArgsFromSignaturePy(methodSignature: Element): Map<String, String?> {
-//    return methodSignature.select(".sig-param").map {
-//        it.selectFirst(".n")!!.text() to it.select(".p + .w + .n").text()
-//    }.toMap()
-//}
+fun parseClass(document: Element): Class {
+    val className = document.selectFirst(".contentContainer .description pre .typeNameLabel")!!.text()
+    val classDescr = document.select(".contentContainer .description pre + div").map { it.text() }
+    val classBases = document.select(".contentContainer .description dt:contains(Superinterfaces) + dd code").map {
+        it.text()
+    }
+
+    val fields = document.select(".summary > ul > li > section > ul > li:has(a[id=field.summary]) > table tr:gt(0)").map {
+        parseField(it)
+    }
+    val methods = document.select(".details > ul > li > section > ul > li:has(a[id=method.detail]) > ul > li").map {
+        parseMethod(it)
+    }
+
+    return Class(
+        name = className,
+        description = classDescr,
+        methods = methods,
+        fields = fields,
+        bases = classBases,
+    )
+}
+
+fun parseMethod(element: Element): Method {
+    val methodName = element.selectFirst("h4")!!.text()
+    val methodSignature = element.selectFirst(".methodSignature")!!.text()
+    val allArgs = getArgsFromSignature(methodSignature)
+    val methodReturnType = methodSignature.substringBefore("(").substringBeforeLast("\u00a0")
+    val methodDescr: List<String> = element.selectFirst(".methodSignature + div")?.textNodes()?.map { it.text() } ?: listOf()
+    val methodExamples = element.select(".methodSignature + div pre").map { it.text() }
+    val methodArgs = element.select("dl:has(.paramLabel) dd").map {
+        val arg_name = it.select("code").text()
+        assert(allArgs.contains(arg_name))
+        Argument(
+            name = arg_name,
+            type = allArgs[arg_name],
+            description = it.textNodes().joinToString().drop(3),    // Drop " - " in the beginning
+        )
+    }
+
+    return Method(
+        name = methodName,
+        signature = methodSignature,
+        description = methodDescr,
+        args = methodArgs,
+        returnType = methodReturnType,
+        examples = methodExamples,
+    )
+
+}
+
+fun parseField(element: Element): Argument {
+    val propertyName = element.selectFirst(".colSecond")!!.text()
+    val propertyType = element.selectFirst(".colFirst")!!.text()
+    val propertyDescr = element.selectFirst(".colLast")?.text()
+    return Argument(
+        name = propertyName,
+        type = propertyType,
+        description = propertyDescr,
+    )
+}
+
+fun getArgsFromSignature(methodSignature: String): Map<String, String?> {
+    println("--- " + methodSignature)
+    return methodSignature
+        .substringAfter("(").substringBefore(")")
+        .split(", ").map {
+            it.split(" ").let { it.last() to it.dropLast(1).joinToString(" ") }
+        }.toMap()
+}
