@@ -33,6 +33,7 @@ import java.util.zip.ZipInputStream
 import com.vaticle.typedb.client.tool.doc.common.Argument
 import com.vaticle.typedb.client.tool.doc.common.Class
 import com.vaticle.typedb.client.tool.doc.common.Method
+import com.vaticle.typedb.client.tool.doc.common.unzipFile
 
 fun main(args: Array<String>) {
     val outputFilename = args[0]
@@ -150,54 +151,3 @@ fun main(args: Array<String>) {
 //        it.selectFirst(".n")!!.text() to it.select(".p + .w + .n").text()
 //    }.toMap()
 //}
-
-fun unzipFile(path: Path, into: Path, strip: Int = 0, delete: Boolean = true) = sequence {
-    val stream = ZipInputStream(FileInputStream(path.toFile()))
-    val buffer = ByteArray(1024)
-    stream.use {
-        it.asIterable().forEach { entry ->
-            val destination = Path.of(entry.name)
-            val sanitizedDestination = if (destination.nameCount > strip) {
-                destination.subpath(strip, destination.nameCount)
-            } else destination
-
-            val finalDestination = into.resolve(sanitizedDestination)
-            if (finalDestination.parent?.let { parent -> !Files.exists(parent) } == true) {
-                Files.createDirectories(finalDestination.parent)
-            }
-            if (entry.isDirectory) {
-                if (sanitizedDestination.nameCount > strip) {
-                    if (!Files.exists(finalDestination)) {
-                        Files.createDirectories(finalDestination)
-                    }
-                }
-            } else {
-                Files.createFile(finalDestination)
-                FileChannel.open(finalDestination, StandardOpenOption.WRITE).use { writer ->
-                    while (it.read(buffer) > 0) {
-                        writer.write(ByteBuffer.wrap(buffer))
-                    }
-                }
-                yield(finalDestination)
-            }
-        }
-    }
-
-    if (delete) {
-        Files.deleteIfExists(path)
-    }
-}
-
-private fun ZipInputStream.asIterable(): Iterable<ZipEntry> = object : Iterable<ZipEntry> {
-    override fun iterator(): Iterator<ZipEntry> = ZipIterator(this@asIterable)
-}
-
-private class ZipIterator(private val stream: ZipInputStream) : Iterator<ZipEntry> {
-    private var next: ZipEntry? = null
-    override fun hasNext(): Boolean {
-        next = stream.nextEntry
-        return next != null
-    }
-
-    override fun next(): ZipEntry = next ?: throw NoSuchElementException()
-}
