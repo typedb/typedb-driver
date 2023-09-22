@@ -19,6 +19,8 @@
 package com.vaticle.typedb.client.tool.doc.python
 
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Paths
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
@@ -27,11 +29,10 @@ import com.vaticle.typedb.client.tool.doc.common.Class
 import com.vaticle.typedb.client.tool.doc.common.Method
 
 fun main(args: Array<String>) {
-    val outputFilename = args[0]
-    val inputDirectoryName = args[1]
+    val inputDirectoryName = args[0]
+    val outputDirectoryName = args[1]
 
-    val outputFile = File(outputFilename)
-    outputFile.createNewFile()
+    Files.createDirectory(Paths.get(outputDirectoryName))
 
     File(inputDirectoryName).walkTopDown().forEach {
         if (it.toString().endsWith(".html")) {
@@ -41,10 +42,14 @@ fun main(args: Array<String>) {
             parsed.select("dl.class").forEach {
                 val parsedClass = parseClass(it)
                 println(parsedClass)
-                outputFile.appendText(parsedClass.toString() + "\n")
+                val outputFile = File(outputDirectoryName + "/" + parsedClass.name + ".adoc")
+                outputFile.createNewFile()
+                outputFile.writeText(parsedClass.toAsciiDoc("python"))
             }
         }
     }
+
+
 }
 
 fun parseClass(element: Element): Class {
@@ -86,7 +91,7 @@ fun parseMethod(element: Element): Method {
                 it.nextElementSibling()!!.select("li p").forEach {
                     val arg_name = it.selectFirst("strong")!!.text()
                     assert(allArgs.contains(arg_name))
-                    val arg_descr = it.textNodes().joinToString("")
+                    val arg_descr = it.textNodes().joinToString("").removePrefix(" – ")
                     methodArgs.add(Argument(name = arg_name, type = allArgs[arg_name], description = arg_descr))
                 }
             }
