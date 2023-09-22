@@ -86,8 +86,8 @@ fun parseMethod(element: Element): Method {
         it.text()
     }.joinToString("")
     val methodDescr = element.select(".tsd-description > .tsd-comment p").map { it.html() }
-    val methodExample = element.select(".tsd-description > .tsd-comment > :has(a[href*=examples]) + pre > :not(button)")
-        .map { it.text() }.joinToString("")
+    val methodExamples = element.select(".tsd-description > .tsd-comment > :has(a[href*=examples]) + pre > :not(button)")
+        .map { it.text() }
 
     val methodArgs = element.select(".tsd-description .tsd-parameters .tsd-parameter-list > li").map {
         Argument(
@@ -103,7 +103,7 @@ fun parseMethod(element: Element): Method {
         description = methodDescr,
         args = methodArgs,
         returnType = methodReturnType,
-        example = methodExample,
+        examples = methodExamples,
     )
 }
 

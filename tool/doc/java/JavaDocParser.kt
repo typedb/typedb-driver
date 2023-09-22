@@ -88,7 +88,7 @@ fun parseMethod(element: Element): Method {
         Argument(
             name = arg_name,
             type = allArgs[arg_name],
-            description = it.textNodes().joinToString().drop(3),    // Drop " - " in the beginning
+            description = it.textNodes().joinToString().removePrefix(" - "),
         )
     }
 

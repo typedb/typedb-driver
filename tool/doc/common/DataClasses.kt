@@ -23,7 +23,7 @@ data class Class(
     val fields: List<Argument> = listOf(),
     val methods: List<Method> = listOf(),
     val description: List<String> = listOf(),
-    val example: String? = null,
+    val examples: List<String> = listOf(),
     val bases: List<String> = listOf(),
     val packagePath: String? = null,
 )
@@ -35,7 +35,7 @@ data class Method(
     val args: List<Argument> = listOf(),
     val returnType: String? = null,
     val returnDescription: String? = null,
-    val example: String? = null,
+    val examples: List<String> = listOf(),
     val defaultValue: String? = null,
 )
 

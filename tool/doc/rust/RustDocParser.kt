@@ -81,7 +81,7 @@ fun parseMethod(element: Element): Method {
     val docblocks = element.select("div.docblock")
     var methodDescr = listOf<String>()
     val methodArgs = mutableListOf<Argument>()
-    var methodExample: String? = null
+    var methodExamples: List<String> = listOf()
     if (!docblocks.isNullOrEmpty()) {   // We store arguments info only if their comments are specified
         val methodComment = docblocks.first()!!
         methodDescr = methodComment.select("p").map { it.html() }
@@ -91,10 +91,7 @@ fun parseMethod(element: Element): Method {
             val arg_descr = it.parent()!!.text().removePrefix(it.text()).removePrefix(" – ")
             methodArgs.add(Argument(name = arg_name, type = allArgs[arg_name], description = arg_descr))
         }
-        val exampleWrap = methodComment.select("div.example-wrap")
-        if (!exampleWrap.isNullOrEmpty()) {
-            methodExample = exampleWrap.first()?.text()
-        }
+        methodExamples = methodComment.select("div.example-wrap pre").map { it.text() }
     }
     return Method(
         name = methodName,
@@ -102,7 +99,7 @@ fun parseMethod(element: Element): Method {
         description = methodDescr,
         args = methodArgs,
         returnType = methodReturnType,
-        example = methodExample,
+        examples = methodExamples,
     )
 
 }

@@ -95,7 +95,7 @@ fun parseMethod(element: Element): Method {
             }
         }
     }
-    val methodExample = element.selectFirst("#examples .highlight")?.text()
+    val methodExamples = element.select("#examples .highlight").map { it.text() }
 
     return Method(
         name = methodName,
@@ -104,7 +104,7 @@ fun parseMethod(element: Element): Method {
         args = methodArgs,
         returnType = methodReturnType,
         returnDescription = methodReturnDescr,
-        example = methodExample,
+        examples = methodExamples,
     )
 
 }
