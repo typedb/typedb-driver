@@ -42,7 +42,7 @@ fun main(args: Array<String>) {
 
             val title = parsed.select(".tsd-page-title h1")
             if (!title.isNullOrEmpty() && (title.text().contains("Class") || title.text().contains("Interface"))) {
-                val parsedClass = parseClassTs(parsed)
+                val parsedClass = parseClass(parsed)
                 if (parsedClass.name == "User") {
                     println(parsedClass)
                 }
@@ -52,7 +52,7 @@ fun main(args: Array<String>) {
     }
 }
 
-fun parseClassTs(document: Element): Class {
+fun parseClass(document: Element): Class {
     val className = document.selectFirst(".tsd-page-title h1")!!.text().split(" ")[1]
     val classDescr = document.select(".tsd-page-title + section.tsd-comment div.tsd-comment p").map { it.html() }
 
@@ -62,12 +62,12 @@ fun parseClassTs(document: Element): Class {
 
     val propertiesElements = document.select("section.tsd-member-group:contains(Properties)")
     val properties = propertiesElements.select("section.tsd-member").map {
-        parsePropertyTs(it)
+        parseProperty(it)
     }
 
     val methodsElements = document.select("section.tsd-member-group:contains(Method)")
     val methods = methodsElements.select("section.tsd-member").map {
-        parseMethodTs(it)
+        parseMethod(it)
     }
 
     return Class(
@@ -79,7 +79,7 @@ fun parseClassTs(document: Element): Class {
     )
 }
 
-fun parseMethodTs(element: Element): Method {
+fun parseMethod(element: Element): Method {
     val methodSignature = element.selectFirst(".tsd-signatures .tsd-signature")!!.text()
     val methodName = element.selectFirst(".tsd-signatures .tsd-signature .tsd-kind-call-signature")!!.text()
     val methodReturnType = element.select(".tsd-signatures .tsd-description .tsd-returns-title > *").map {
@@ -107,7 +107,7 @@ fun parseMethodTs(element: Element): Method {
     )
 }
 
-fun parsePropertyTs(element: Element): Argument {
+fun parseProperty(element: Element): Argument {
     val propertyName = element.selectFirst(".tsd-signature span.tsd-kind-property")!!.text()
     val propertyType = element.selectFirst(".tsd-signature span.tsd-signature-type")?.text()
     return Argument(

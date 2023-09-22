@@ -39,7 +39,7 @@ fun main(args: Array<String>) {
             val parsed = Jsoup.parse(html)
 
             parsed.select("dl.class").forEach {
-                val parsedClass = parseClassPy(it)
+                val parsedClass = parseClass(it)
                 println(parsedClass)
                 outputFile.appendText(parsedClass.toString() + "\n")
             }
@@ -47,7 +47,7 @@ fun main(args: Array<String>) {
     }
 }
 
-fun parseClassPy(element: Element): Class {
+fun parseClass(element: Element): Class {
     val classSigElement = element.selectFirst("dt.sig-object")
     val className = classSigElement!!.selectFirst("dt.sig-object span.sig-name")!!.text()
 
@@ -58,10 +58,10 @@ fun parseClassPy(element: Element): Class {
     val classDescr = descr.map { it.html() }
 
     val methodsDetails = classDetails.children().map { it }.filter { it.classNames().contains("method") }
-    val methods = methodsDetails.map { parseMethodPy(it) }
+    val methods = methodsDetails.map { parseMethod(it) }
 
     val propertiesDetails = classDetails.children().map { it }.filter { it.classNames().contains("property") }
-    val properties = propertiesDetails.map { parsePropertyPy(it) }
+    val properties = propertiesDetails.map { parseProperty(it) }
 
     return Class(
         name = className,
@@ -72,10 +72,10 @@ fun parseClassPy(element: Element): Class {
     )
 }
 
-fun parseMethodPy(element: Element): Method {
+fun parseMethod(element: Element): Method {
     val methodSignature = element.selectFirst("dt.sig-object")!!.text()
     val methodName = element.selectFirst("dt.sig-object span.sig-name")!!.text()
-    val allArgs = getArgsFromSignaturePy(element.selectFirst("dt.sig-object")!!)
+    val allArgs = getArgsFromSignature(element.selectFirst("dt.sig-object")!!)
     val methodReturnType = element.select(".sig-return-typehint").text()
     val methodDescr = element.select("dd > p").map { it.html() }
     val methodArgs = mutableListOf<Argument>()
@@ -109,7 +109,7 @@ fun parseMethodPy(element: Element): Method {
 
 }
 
-fun parsePropertyPy(element: Element): Argument {
+fun parseProperty(element: Element): Argument {
     val propertyName = element.selectFirst("dt.sig-object span.sig-name")!!.text()
     val propertyType = element.selectFirst("dt.sig-object span.sig-name + .property ")?.text()?.dropWhile { !it.isLetter() }
     val propertyDescr = element.select("dd > p").map { it.html() }.joinToString("")  // TODO: Test it
@@ -120,7 +120,7 @@ fun parsePropertyPy(element: Element): Argument {
     )
 }
 
-fun getArgsFromSignaturePy(methodSignature: Element): Map<String, String?> {
+fun getArgsFromSignature(methodSignature: Element): Map<String, String?> {
     return methodSignature.select(".sig-param").map {
         it.selectFirst(".n")!!.text() to it.select(".p + .w + .n").text()
     }.toMap()
