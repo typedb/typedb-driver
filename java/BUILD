@@ -109,12 +109,19 @@ deploy_maven(
 )
 
 javadoc_library(
-    name = "driver_doc",
+    name = "driver_doc_jar",
     srcs = ["//java/api:source_files"],
     deps = [
         "//java/api",
         "@vaticle_typedb_common//:common",
     ],
+)
+
+genrule(
+    name = "driver_doc",
+    srcs = [":driver_doc_jar"],
+    outs = ["driver_doc_javadoc"],
+    cmd = "mkdir $@ && tar -xf $< -C $@",
 )
 
 html_doc_parser(
