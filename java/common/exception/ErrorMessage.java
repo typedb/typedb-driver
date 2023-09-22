@@ -28,20 +28,26 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
     }
 
     public static class Driver extends ErrorMessage {
+        public static final Driver UNRECOGNISED_OS =
+                new Driver(1, "The operating system '%s' is not recognised.");
+        public static final Driver UNRECOGNISED_ARCH =
+                new Driver(2, "The architecture '%s' is not recognised.");
+        public static final Driver UNRECOGNISED_OS_ARCH =
+                new Driver(3, "The platform os '%s' and architecture '%s' are not supported by this driver.");
         public static final Driver CLIENT_CLOSED =
-                new Driver(1, "The driver has been closed and no further operation is allowed.");
+                new Driver(4, "The driver has been closed and no further operation is allowed.");
         public static final Driver SESSION_CLOSED =
-                new Driver(2, "The session has been closed and no further operation is allowed.");
+                new Driver(5, "The session has been closed and no further operation is allowed.");
         public static final Driver TRANSACTION_CLOSED =
-                new Driver(3, "The transaction has been closed and no further operation is allowed.");
+                new Driver(6, "The transaction has been closed and no further operation is allowed.");
         public static final Driver TRANSACTION_CLOSED_WITH_ERRORS =
-                new Driver(4, "The transaction has been closed with error(s): \n%s.");
+                new Driver(7, "The transaction has been closed with error(s): \n%s.");
         public static final Driver DATABASE_DELETED =
-                new Driver(5, "The database has been deleted and no further operation is allowed.");
+                new Driver(8, "The database has been deleted and no further operation is allowed.");
         public static final Driver POSITIVE_VALUE_REQUIRED =
-                new Driver(6, "Value cannot be less than 1, was: '%d'.");
+                new Driver(9, "Value cannot be less than 1, was: '%d'.");
         public static final Driver MISSING_DB_NAME =
-                new Driver(7, "Database name cannot be null.");
+                new Driver(10, "Database name cannot be null.");
 
         private static final String codePrefix = "JCL";
         private static final String messagePrefix = "Driver Error";

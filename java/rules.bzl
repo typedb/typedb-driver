@@ -29,9 +29,10 @@ def swig_native_java_library(name, platforms, maven_coordinates, tags=[], **kwar
         **kwargs,
     )
 
+    # generate identical libraries with different maven coordinate tags, since we can't 'select' tags
     for platform in platforms.values():
         native.java_library(
-            name = name + "-" + platform + "__do_not_reference",
+            name = name + "__native-as__" + platform + "__do_not_reference",
             srcs = ["__" + name + "__swig"],
             resources = ["lib" + name],
             tags = tags + ["maven_coordinates=" + maven_coordinates.replace("{platform}", platform)],
@@ -40,7 +41,7 @@ def swig_native_java_library(name, platforms, maven_coordinates, tags=[], **kwar
     native.alias(
         name = name,
         actual = select({
-            config: name + "-" + platform + "__do_not_reference"
+            config: name + "__native-as__" + platform + "__do_not_reference"
             for config, platform in platforms.items()
         })
     )
