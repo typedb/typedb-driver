@@ -54,8 +54,7 @@ build:
         bazel build //...
         bazel run @vaticle_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
-        # TODO: re-enable
-        #        bazel test $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//rust:rustfmt_config
+        bazel test $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//rust:rustfmt_config
         cd nodejs
         npm install
         npm run lint
@@ -70,8 +69,8 @@ build:
 
     test-rust-integration-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -85,8 +84,8 @@ build:
     test-rust-integration-enterprise:
       machine: 4-core-16-gb
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -99,8 +98,8 @@ build:
 
     test-rust-integration-runtimes:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -113,8 +112,8 @@ build:
 
     test-rust-behaviour-concept:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -127,8 +126,8 @@ build:
 
     test-rust-behaviour-connection:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -142,8 +141,8 @@ build:
     test-rust-behaviour-typeql:
       machine: 8-core-32-gb
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -156,8 +155,8 @@ build:
 
     test-java-integration:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -167,8 +166,8 @@ build:
 
     test-java-behaviour-connection-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -179,8 +178,8 @@ build:
 
     test-java-behaviour-connection-enterprise:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -191,8 +190,8 @@ build:
 
     test-java-behaviour-concept-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -202,8 +201,8 @@ build:
 
     test-java-behaviour-concept-enterprise:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -213,8 +212,8 @@ build:
 
     test-java-behaviour-match-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -226,8 +225,8 @@ build:
 
     test-java-behaviour-match-enterprise:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -239,8 +238,8 @@ build:
 
     test-java-behaviour-writable-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -252,8 +251,8 @@ build:
 
     test-java-behaviour-writable-enterprise:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -265,8 +264,8 @@ build:
 
     test-java-behaviour-definable-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -277,8 +276,8 @@ build:
 
     test-java-behaviour-definable-enterprise:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -289,8 +288,8 @@ build:
 
     test-python-behaviour-connection-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -309,8 +308,8 @@ build:
 
     test-python-behaviour-connection-enterprise:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -330,8 +329,8 @@ build:
 
     test-python-behaviour-concept-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -350,8 +349,8 @@ build:
 
     test-python-behaviour-concept-enterprise:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -370,8 +369,8 @@ build:
 
     test-python-behaviour-match-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -393,8 +392,8 @@ build:
 
     test-python-behaviour-match-enterprise:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -416,8 +415,8 @@ build:
 
     test-python-behaviour-writable-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -439,8 +438,8 @@ build:
 
     test-python-behaviour-writable-enterprise:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -462,8 +461,8 @@ build:
 
     test-python-behaviour-definable-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -484,8 +483,8 @@ build:
 
     test-python-behaviour-definable-enterprise:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       type: foreground
       command: |
         export PATH="$HOME/.local/bin:$PATH"
@@ -507,8 +506,8 @@ build:
 #    test-python-failover-enterprise:
 #      machine: 4-core-16-gb
 #      image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
 #      type: foreground
 #      command: |
 #        export PATH="$HOME/.local/bin:$PATH"
@@ -525,8 +524,8 @@ build:
 
     test-nodejs-integration:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -545,8 +544,8 @@ build:
     test-nodejs-enterprise-failover:
       machine: 4-core-16-gb
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -561,8 +560,8 @@ build:
 
     test-nodejs-behaviour-connection-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -576,8 +575,8 @@ build:
 
     test-nodejs-behaviour-connection-enterprise:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -592,8 +591,8 @@ build:
 
     test-nodejs-behaviour-concept-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -605,8 +604,8 @@ build:
 
     test-nodejs-behaviour-concept-enterprise:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -619,8 +618,8 @@ build:
 
     test-nodejs-behaviour-match-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -634,8 +633,8 @@ build:
 
     test-nodejs-behaviour-match-enterprise:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -649,8 +648,8 @@ build:
 
     test-nodejs-behaviour-writable-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -664,8 +663,8 @@ build:
 
     test-nodejs-behaviour-writable-enterprise:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -679,8 +678,8 @@ build:
 
     test-nodejs-behaviour-definable-core:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -693,8 +692,8 @@ build:
 
     test-nodejs-behaviour-definable-enterprise:
       image: vaticle-ubuntu-22.04
-#      dependencies:
-#        - build
+      dependencies:
+        - build
       command: |
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
