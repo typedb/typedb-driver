@@ -81,8 +81,8 @@ fun parseMethod(element: Element): Method {
     val methodName = element.selectFirst("dt.sig-object span.sig-name")!!.text()
     val allArgs = getArgsFromSignature(element.selectFirst("dt.sig-object")!!)
     val methodReturnType = element.select(".sig-return-typehint").text()
-    val methodDescr = element.select("dd > p").map { it.html() }
-    val methodArgs = element.select(".field-list > dt:contains(Parameters) + dd li p").map {
+    val methodDescr = element.select("dl.method > dd > p").map { removeAllTags(replaceCodeTags(it.html())) }
+    val methodArgs = element.select(".field-list > dt:contains(Parameters) + dd p").map {
         val arg_name = it.selectFirst("strong")!!.text()
         assert(allArgs.contains(arg_name))
         val arg_descr = it.textNodes().joinToString("").removePrefix(" – ")
@@ -93,7 +93,7 @@ fun parseMethod(element: Element): Method {
         )
     }
     val methodReturnDescr = element.select(".field-list > dt:contains(Returns) + dd p")?.text()
-    val methodExamples = element.select("#examples .highlight").map { it.text() }
+    val methodExamples = element.select("section:contains(Examples) .highlight").map { it.text() }
 
     return Method(
         name = methodName,
@@ -122,4 +122,12 @@ fun getArgsFromSignature(methodSignature: Element): Map<String, String?> {
     return methodSignature.select(".sig-param").map {
         it.selectFirst(".n")!!.text() to it.select(".p + .w + .n").text()
     }.toMap()
+}
+
+fun replaceCodeTags(text: String): String {
+    return Regex("<code[^>]*>").replace(text, "`").replace("</code>", "`")
+}
+
+fun removeAllTags(text: String): String {
+    return Regex("<[^>]*>").replace(text, "")
 }
