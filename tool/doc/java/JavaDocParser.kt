@@ -24,29 +24,30 @@ import com.vaticle.typedb.client.tool.doc.common.Method
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Paths
 
 
 fun main(args: Array<String>) {
-    val outputFilename = args[0]
-    val inputDirectoryName = args[1]
-    println("Input: $inputDirectoryName")
+    val inputDirectoryName = args[0]
+    val outputDirectoryName = args[1]
 
-    val outputFile = File(outputFilename)
-    outputFile.createNewFile()
+    val docsDir = Paths.get(outputDirectoryName)
+    Files.createDirectory(docsDir)
 
-    File(inputDirectoryName).walkTopDown().forEach {
-        if (it.toString().contains("/api/") && !it.toString().contains("-use")
-            && !it.toString().contains("-summary") && !it.toString().contains("-tree")
-            && it.toString().endsWith(".html")) {
-            println(it)
-            val html = File(it.path).readText(Charsets.UTF_8)
-            val parsed = Jsoup.parse(html)
-            if (!parsed.select("h2[title^=Interface]").isNullOrEmpty()) {
-                val parsedClass = parseClass(parsed)
-                println(parsedClass)
-                outputFile.appendText(parsedClass.toString() + "\n")
-            }
-            outputFile.appendText(it.toString() + "\n")
+    File(inputDirectoryName).walkTopDown().filter {
+        it.toString().contains("/api/") && !it.toString().contains("-use")
+                && !it.toString().contains("-summary") && !it.toString().contains("-tree")
+                && it.toString().endsWith(".html")
+    }.forEach {
+        val html = File(it.path).readText(Charsets.UTF_8)
+        val parsed = Jsoup.parse(html)
+        if (!parsed.select("h2[title^=Interface]").isNullOrEmpty()) {
+            val parsedClass = parseClass(parsed)
+            println(parsedClass)
+            val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
+            outputFile.createNewFile()
+            outputFile.writeText(parsedClass.toAsciiDoc("java"))
         }
     }
 }
@@ -80,7 +81,8 @@ fun parseMethod(element: Element): Method {
     val methodSignature = element.selectFirst(".methodSignature")!!.text()
     val allArgs = getArgsFromSignature(methodSignature)
     val methodReturnType = methodSignature.substringBefore("(").substringBeforeLast("\u00a0")
-    val methodDescr: List<String> = element.selectFirst(".methodSignature + div")?.textNodes()?.map { it.text() } ?: listOf()
+    val methodDescr: List<String> = element.selectFirst(".methodSignature + div")?.textNodes()
+        ?.map { it.text() } ?: listOf()
     val methodExamples = element.select(".methodSignature + div pre").map { it.text() }
     val methodArgs = element.select("dl:has(.paramLabel) dd").map {
         val arg_name = it.select("code").text()
@@ -115,10 +117,9 @@ fun parseField(element: Element): Argument {
 }
 
 fun getArgsFromSignature(methodSignature: String): Map<String, String?> {
-    println("--- " + methodSignature)
     return methodSignature
         .substringAfter("(").substringBefore(")")
-        .split(", ").map {
-            it.split(" ").let { it.last() to it.dropLast(1).joinToString(" ") }
+        .split(",").map {
+            it.split("\u00a0").let { it.last() to it.dropLast(1).joinToString(" ") }
         }.toMap()
 }

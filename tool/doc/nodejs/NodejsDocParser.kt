@@ -25,29 +25,31 @@ import org.jsoup.nodes.Element
 import com.vaticle.typedb.client.tool.doc.common.Argument
 import com.vaticle.typedb.client.tool.doc.common.Class
 import com.vaticle.typedb.client.tool.doc.common.Method
+import java.nio.file.Files
+import java.nio.file.Paths
 
 fun main(args: Array<String>) {
-    val outputFilename = args[0]
-    val inputDirectoryName = args[1]
-//    println("Input: $inputDirectoryName")
+    val inputDirectoryName = args[0]
+    val outputDirectoryName = args[1]
 
-    val outputFile = File(outputFilename)
-    outputFile.createNewFile()
+    val docsDir = Paths.get(outputDirectoryName)
+    Files.createDirectory(docsDir)
 
-    File(inputDirectoryName).walkTopDown().forEach {
-        if (it.toString().contains("/classes/") || it.toString().contains("/interfaces/")) {
-//            println(it)
-            val html = it.readText(Charsets.UTF_8)
-            val parsed = Jsoup.parse(html)
+    File(inputDirectoryName).walkTopDown().filter {
+        it.toString().contains("/classes/") || it.toString().contains("/interfaces/")
+    }.forEach {
+        val html = it.readText(Charsets.UTF_8)
+        val parsed = Jsoup.parse(html)
 
-            val title = parsed.select(".tsd-page-title h1")
-            if (!title.isNullOrEmpty() && (title.text().contains("Class") || title.text().contains("Interface"))) {
-                val parsedClass = parseClass(parsed)
-                if (parsedClass.name == "User") {
-                    println(parsedClass)
-                }
-                outputFile.appendText(parsedClass.toString() + "\n")
+        val title = parsed.select(".tsd-page-title h1")
+        if (!title.isNullOrEmpty() && (title.text().contains("Class") || title.text().contains("Interface"))) {
+            val parsedClass = parseClass(parsed)
+            if (parsedClass.name == "User") {
+                println(parsedClass)
             }
+            val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
+            outputFile.createNewFile()
+            outputFile.writeText(parsedClass.toAsciiDoc("nodejs"))
         }
     }
 }

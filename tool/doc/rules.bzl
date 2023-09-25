@@ -26,7 +26,9 @@ def html_doc_parser(name, data, language):
         name = name + "_lib",
         srcs = [
             "//tool/doc:" + language + "/" + script_name + ".kt",
-            "//tool/doc:common/DataClasses.kt",
+            "//tool/doc:common/Argument.kt",
+            "//tool/doc:common/Class.kt",
+            "//tool/doc:common/Method.kt",
         ],
         deps = [
             "@maven//:org_jsoup_jsoup",

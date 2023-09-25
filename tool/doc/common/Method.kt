@@ -18,31 +18,6 @@
 
 package com.vaticle.typedb.client.tool.doc.common
 
-data class Class(
-    val name: String,
-    val fields: List<Argument> = listOf(),
-    val methods: List<Method> = listOf(),
-    val description: List<String> = listOf(),
-    val examples: List<String> = listOf(),
-    val bases: List<String> = listOf(),
-    val packagePath: String? = null,
-) {
-    fun toAsciiDoc(language: String): String {
-        var result = ""
-        result += "[#_${this.name}]\n"
-        result += "= ${this.name}\n\n"
-        result += "=== Description\n\n${this.description.joinToString("\n\n")}\n\n"
-
-        result += "== Properties\n\n"
-        this.fields.forEach { result += it.toAsciiDocPage(language) }
-
-        result += "\n== Methods\n\n"
-        this.methods.forEach { result += it.toAsciiDoc(language) }
-
-        return result
-    }
-}
-
 data class Method(
     val name: String,
     val signature: String,
@@ -71,31 +46,6 @@ data class Method(
             result += "[source,$language]\n----\n$it\n----\n\n"
         }
 
-        return result
-    }
-}
-
-data class Argument(
-    val name: String,
-    val type: String? = null,
-    val description: String? = null,
-    val defaultValue: String? = null,
-) {
-    fun toAsciiDocPage(language: String): String {
-        var result = ""
-        result += "[#_${this.name}]\n"
-        result += "== ${this.name}\n\n"
-        result += "=== Type\n\n${this.type}\n\n"
-        result += "=== Description\n\n${this.description}\n\n"
-        return result
-    }
-
-    fun toAsciiDocTableRow(language: String): String {
-        var result = ""
-        result += "| ${this.name}"
-        result += "| ${this.description}"
-        result += "| ${this.type}"
-        result += "| ${this.defaultValue}"
         return result
     }
 }

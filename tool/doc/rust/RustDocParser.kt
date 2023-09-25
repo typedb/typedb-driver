@@ -25,24 +25,25 @@ import org.jsoup.nodes.Element
 import com.vaticle.typedb.client.tool.doc.common.Argument
 import com.vaticle.typedb.client.tool.doc.common.Class
 import com.vaticle.typedb.client.tool.doc.common.Method
+import java.nio.file.Files
+import java.nio.file.Paths
 
 fun main(args: Array<String>) {
-    val outputFilename = args[0]
-    val inputDirectoryName = args[1]
+    val inputDirectoryName = args[0]
+    val outputDirectoryName = args[1]
 
-    val outputFile = File(outputFilename)
-    outputFile.createNewFile()
+    val docsDir = Paths.get(outputDirectoryName)
+    Files.createDirectory(docsDir)
 
-    File(inputDirectoryName).walkTopDown().forEach {
-        println(it)
-        if (it.toString().contains("struct.")) {
-            val html = it.readText(Charsets.UTF_8)
-            val parsed = Jsoup.parse(html)
-            if (!parsed.select(".main-heading h1 a.struct").isNullOrEmpty()) {
-                val parsedClass = parseClass(parsed)
-                print(parsedClass)
-                outputFile.appendText(parsedClass.toString() + "\n")
-            }
+    File(inputDirectoryName).walkTopDown().filter { it.toString().contains("struct.") }.forEach {
+        val html = it.readText(Charsets.UTF_8)
+        val parsed = Jsoup.parse(html)
+        if (!parsed.select(".main-heading h1 a.struct").isNullOrEmpty()) {
+            val parsedClass = parseClass(parsed)
+            print(parsedClass)
+            val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
+            outputFile.createNewFile()
+            outputFile.writeText(parsedClass.toAsciiDoc("rust"))
         }
     }
 }
@@ -56,12 +57,8 @@ fun parseClass(document: Element): Class {
         Argument(name = row[0], type = row[1])
     }
 
-    val methodsDetails = document.select("details[class*=method-toggle]")
-    val methods = mutableListOf<Method>()
-    methodsDetails.forEach {
-        if (!it.select("summary section.method").isNullOrEmpty()) {
-            methods.add(parseMethod(it))
-        }
+    val methods = document.select("details[class*=method-toggle]:has(summary section.method)").map {
+        parseMethod(it)
     }
 
     return Class(
@@ -78,21 +75,19 @@ fun parseMethod(element: Element): Method {
 //    Splitting by ", " is incorrect (could be used in the type)
     val allArgs = getArgsFromSignature(methodSignature)
     val methodReturnType = if (methodSignature.contains(" -> ")) methodSignature.split(" -> ").last() else null
-    val docblocks = element.select("div.docblock")
-    var methodDescr = listOf<String>()
-    val methodArgs = mutableListOf<Argument>()
-    var methodExamples: List<String> = listOf()
-    if (!docblocks.isNullOrEmpty()) {   // We store arguments info only if their comments are specified
-        val methodComment = docblocks.first()!!
-        methodDescr = methodComment.select("p").map { it.html() }
-        methodComment.select("ul li code:eq(0)").forEach {
-            val arg_name = it.text()
-            assert(allArgs.contains(arg_name))
-            val arg_descr = it.parent()!!.text().removePrefix(it.text()).removePrefix(" – ")
-            methodArgs.add(Argument(name = arg_name, type = allArgs[arg_name], description = arg_descr))
-        }
-        methodExamples = methodComment.select("div.example-wrap pre").map { it.text() }
+    val methodDescr = element.select("div.docblock p").map { it.html() }
+    val methodExamples = element.select("div.docblock div.example-wrap pre").map { it.text() }
+    val methodArgs = element.select("div.docblock ul li code:eq(0)").map {
+        val argName = it.text()
+        assert(allArgs.contains(argName))
+        val argDescr = it.parent()!!.text().removePrefix(it.text()).removePrefix(" – ")
+        Argument(
+            name = argName,
+            type = allArgs[argName],
+            description = argDescr
+        )
     }
+
     return Method(
         name = methodName,
         signature = methodSignature,
@@ -106,9 +101,8 @@ fun parseMethod(element: Element): Method {
 
 fun getArgsFromSignature(methodSignature: String): Map<String, String?> {
     return methodSignature
-        .dropWhile { it != '(' }.drop(1)
-        .dropLastWhile { it != ')' }.dropLast(1)
-        .split(", ").map {
+        .substringAfter("(").substringBeforeLast(")")
+        .split(", ").associate {
             if (it.contains(": ")) it.split(": ", limit = 2).let { it[0] to it[1] } else it to null
-        }.toMap()
+        }
 }

@@ -32,20 +32,19 @@ fun main(args: Array<String>) {
     val inputDirectoryName = args[0]
     val outputDirectoryName = args[1]
 
-    Files.createDirectory(Paths.get(outputDirectoryName))
+    val docsDir = Paths.get(outputDirectoryName)
+    Files.createDirectory(docsDir)
 
-    File(inputDirectoryName).walkTopDown().forEach {
-        if (it.toString().endsWith(".html")) {
-            val html = it.readText(Charsets.UTF_8)
-            val parsed = Jsoup.parse(html)
+    File(inputDirectoryName).walkTopDown().filter { (it.toString().endsWith(".html")) }.forEach {
+        val html = it.readText(Charsets.UTF_8)
+        val parsed = Jsoup.parse(html)
 
-            parsed.select("dl.class").forEach {
-                val parsedClass = parseClass(it)
-                println(parsedClass)
-                val outputFile = File(outputDirectoryName + "/" + parsedClass.name + ".adoc")
-                outputFile.createNewFile()
-                outputFile.writeText(parsedClass.toAsciiDoc("python"))
-            }
+        parsed.select("dl.class").forEach {
+            val parsedClass = parseClass(it)
+            println(parsedClass)
+            val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
+            outputFile.createNewFile()
+            outputFile.writeText(parsedClass.toAsciiDoc("python"))
         }
     }
 
@@ -83,23 +82,17 @@ fun parseMethod(element: Element): Method {
     val allArgs = getArgsFromSignature(element.selectFirst("dt.sig-object")!!)
     val methodReturnType = element.select(".sig-return-typehint").text()
     val methodDescr = element.select("dd > p").map { it.html() }
-    val methodArgs = mutableListOf<Argument>()
-    var methodReturnDescr: String? = null
-    if (!element.select(".field-list").isNullOrEmpty()) {
-        element.select(".field-list > dt").forEach {
-            if (it.textNodes().map { it.text() }.contains("Parameters")) {
-                it.nextElementSibling()!!.select("li p").forEach {
-                    val arg_name = it.selectFirst("strong")!!.text()
-                    assert(allArgs.contains(arg_name))
-                    val arg_descr = it.textNodes().joinToString("").removePrefix(" – ")
-                    methodArgs.add(Argument(name = arg_name, type = allArgs[arg_name], description = arg_descr))
-                }
-            }
-            if (it.textNodes().map { it.text() }.contains("Returns")) {
-                methodReturnDescr = it.nextElementSibling()?.select("p")?.text()
-            }
-        }
+    val methodArgs = element.select(".field-list > dt:contains(Parameters) + dd li p").map {
+        val arg_name = it.selectFirst("strong")!!.text()
+        assert(allArgs.contains(arg_name))
+        val arg_descr = it.textNodes().joinToString("").removePrefix(" – ")
+        Argument(
+            name = arg_name,
+            type = allArgs[arg_name],
+            description = arg_descr
+        )
     }
+    val methodReturnDescr = element.select(".field-list > dt:contains(Returns) + dd p")?.text()
     val methodExamples = element.select("#examples .highlight").map { it.text() }
 
     return Method(
