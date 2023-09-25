@@ -29,58 +29,216 @@ if TYPE_CHECKING:
 
 
 class ConceptMap(ABC):
+    """
+    Contains a mapping of variables to concepts
+    """
 
     @abstractmethod
     def variables(self) -> Iterator[str]:
+        """
+        Produces an iterator over all variables in this ``ConceptMap``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+          concept_map.variables()
+        """
         pass
 
     @abstractmethod
     def concepts(self) -> Iterator[Concept]:
+        """
+        Produces an iterator over all concepts in this ``ConceptMap``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+          concept_map.concepts()
+        """
         pass
 
     @abstractmethod
     def get(self, variable: str) -> Concept:
+        """
+        Retrieves a concept for a given variable name.
+
+        :param variable: The string representation of a variable
+        :return:
+
+        Examples
+        --------
+        ::
+
+          concept_map.get(var)
+        """
         pass
 
     @abstractmethod
     def explainables(self) -> Explainables:
+        """
+        Gets the ``Explainables`` object for this ``ConceptMap``, exposing
+        which of the concepts in this ``ConceptMap`` are explainable.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+          concept_map.explainables()
+        """
         pass
 
     def to_json(self) -> Mapping[str, Mapping[str, Union[str, int, float, bool]]]:
+        """
+        Serializes this ``ConceptMap`` to JSON.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+          concept_map.to_json()
+        """
         return {var: self.get(var).to_json() for var in self.variables()}
 
     class Explainables(ABC):
+        """
+        Contains explainable objects.
+        """
 
         @abstractmethod
         def relation(self, variable: str) -> ConceptMap.Explainable:
+            """
+            Retrieves the explainable relation with the given variable name.
+
+            :param variable: The string representation of a variable
+            :return:
+
+            Examples
+            --------
+            ::
+
+              concept_map.explainables().relation(var)
+            """
             pass
 
         @abstractmethod
         def attribute(self, variable: str) -> ConceptMap.Explainable:
+            """
+            Retrieves the explainable attribute with the given variable name.
+
+            :param variable: The string representation of a variable
+            :return:
+
+            Examples
+            --------
+            ::
+
+              concept_map.explainables().attribute(var)
+            """
             pass
 
         @abstractmethod
         def ownership(self, owner: str, attribute: str) -> ConceptMap.Explainable:
+            """
+            Retrieves the explainable attribute ownership with the pair of (owner, attribute) variable names.
+
+            :param owner: The string representation of the owner variable
+            :param attribute: The string representation of the attribute variable
+            :return:
+
+            Examples
+            --------
+            ::
+
+              concept_map.explainables().ownership(owner_var, attribute_var)
+            """
             pass
 
         @abstractmethod
         def relations(self) -> Mapping[str, ConceptMap.Explainable]:
+            """
+            Retrieves all of this ``ConceptMap``’s explainable relations.
+
+            :return:
+
+            Examples
+            --------
+            ::
+
+              concept_map.explainables().relations()
+            """
             pass
 
         @abstractmethod
         def attributes(self) -> Mapping[str, ConceptMap.Explainable]:
+            """
+            Retrieves all of this ``ConceptMap``’s explainable attributes.
+
+            :return:
+
+            Examples
+            --------
+            ::
+
+              concept_map.explainables().attributes()
+            """
             pass
 
         @abstractmethod
         def ownerships(self) -> Mapping[tuple[str, str], ConceptMap.Explainable]:
+            """
+            Retrieves all of this ``ConceptMap``’s explainable ownerships.
+
+            :return:
+
+            Examples
+            --------
+            ::
+
+              concept_map.explainables().ownerships()
+            """
             pass
 
     class Explainable(ABC):
+        """
+        Contains an explainable object.
+        """
 
         @abstractmethod
         def conjunction(self) -> str:
+            """
+            Retrieves the subquery of the original query that is actually being explained.
+
+            :return:
+
+            Examples
+            --------
+            ::
+
+              explainable.conjunction()
+            """
             pass
 
         @abstractmethod
         def id(self) -> int:
+            """
+            Retrieves the unique ID that identifies this ``Explainable``.
+
+            :return:
+
+            Examples
+            --------
+            ::
+
+              explainable.id()
+            """
             pass
