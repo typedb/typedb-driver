@@ -22,7 +22,7 @@
 use std::{ffi::c_char, ptr::addr_of_mut};
 
 use typedb_driver::{
-    answer::{ConceptMap, ConceptMapGroup, Numeric, NumericGroup},
+    answer::{ConceptMap, ConceptMapGroup, Explainable, Numeric, NumericGroup},
     box_stream,
     logic::Explanation,
     Options, Result, Transaction,

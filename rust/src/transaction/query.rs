@@ -22,7 +22,7 @@
 use std::sync::Arc;
 
 use crate::{
-    answer::{ConceptMap, ConceptMapGroup, Numeric, NumericGroup, Explainable},
+    answer::{ConceptMap, ConceptMapGroup, Explainable, Numeric, NumericGroup},
     common::{stream::Stream, Result},
     connection::TransactionStream,
     logic::Explanation,
