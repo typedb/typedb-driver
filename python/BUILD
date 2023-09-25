@@ -29,8 +29,6 @@ load("//python:python_versions.bzl", "python_versions")
 
 load("@vaticle_dependencies_tool_doc//:requirements.bzl", doc_requirement = "requirement")
 
-load("@rules_foreign_cc//foreign_cc:defs.bzl", "make")
-
 native_driver_versioned(python_versions = python_versions)
 
 alias(

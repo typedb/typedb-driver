@@ -32,8 +32,8 @@ load("@vaticle_bazel_distribution//npm:rules.bzl", "assemble_npm", "deploy_npm")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
-load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_run_binary")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("//nodejs:doc/rules.bzl", "typedoc_doc")
 load("//tool/doc:rules.bzl", "html_doc_parser")
@@ -96,25 +96,19 @@ npm_package(
     visibility = ["//visibility:public"],
 )
 
-typedoc(
-    name = "driver_doc",
-    entry_points = ["index.ts"],
-    data = [
-        ":driver-nodejs",
-        "*.ts",
-        "api/**/*.ts",
-        "common/**/*.ts",
-        "connection/**/*.ts",
-        "concept/**/*.ts",
-        "logic/**/*.ts",
-        "query/**/*.ts",
-        "stream/**/*.ts",
-        "user/**/*.ts",
-    ],
-    visibility = ["//visibility:public"],
-    out_dir = ".",
+assemble_npm(
+    name= "assemble-npm",
+    target = ":driver-nodejs-npm-package"
 )
 
+deploy_npm(
+    name = "deploy-npm",
+    target = ":assemble-npm",
+    snapshot = deployment["npm.snapshot"],
+    release = deployment["npm.release"],
+)
+
+# Documentation generation
 ts_project(
     name = "typedoc_runner",
     srcs = glob([
@@ -129,18 +123,6 @@ ts_project(
     ],
     visibility = ["//visibility:public"],
     out_dir = ".",
-)
-
-assemble_npm(
-    name= "assemble-npm",
-    target = ":driver-nodejs-npm-package"
-)
-
-deploy_npm(
-    name = "deploy-npm",
-    target = ":assemble-npm",
-    snapshot = deployment["npm.snapshot"],
-    release = deployment["npm.release"],
 )
 
 js_binary(

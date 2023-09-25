@@ -108,6 +108,7 @@ deploy_maven(
     target = ":assemble-maven-jni",
 )
 
+# Documentation generation
 javadoc_library(
     name = "driver_doc_jar",
     srcs = ["//java/api:source_files"],
