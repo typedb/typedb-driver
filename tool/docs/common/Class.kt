@@ -38,8 +38,10 @@ data class Class(
             this.fields.forEach { result += it.toAsciiDocPage(language) }
         }
 
-        result += "\n== Methods\n\n"
-        this.methods.forEach { result += it.toAsciiDoc(language) }
+        if (this.methods.isNotEmpty()) {
+            result += "\n== Methods\n\n"
+            this.methods.forEach { result += it.toAsciiDoc(language) }
+        }
 
         return result
     }
