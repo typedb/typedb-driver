@@ -21,9 +21,9 @@
 
 workspace(name = "vaticle_typedb_driver")
 
-################################
+##############################
 # Load @vaticle_dependencies #
-################################
+##############################
 
 load("//dependencies/vaticle:repositories.bzl", "vaticle_dependencies")
 vaticle_dependencies()
@@ -119,7 +119,7 @@ sonarcloud_dependencies()
 load("@vaticle_dependencies//tool/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
 unuseddeps_deps()
 
-# Load //tool/doc
+# Load //tool/docs
 load("@vaticle_dependencies//tool/doc:deps.bzl", doc_deps = "deps")
 doc_deps()
 load("@vaticle_dependencies_tool_doc//:requirements.bzl", install_doc_deps = "install_deps")
@@ -130,9 +130,9 @@ java_doc_deps()
 load("@google_bazel_common//:workspace_defs.bzl", "google_common_workspace_rules")
 google_common_workspace_rules()
 
-######################################
+####################################
 # Load @vaticle_bazel_distribution #
-######################################
+####################################
 
 load("@vaticle_dependencies//distribution:deps.bzl", "vaticle_bazel_distribution")
 vaticle_bazel_distribution()

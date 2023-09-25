@@ -29,7 +29,7 @@ load("@vaticle_dependencies//library/maven:artifacts.bzl", artifacts_org = "arti
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":rules.bzl", "swig_native_java_library")
 load("@google_bazel_common//tools/javadoc:javadoc.bzl", "javadoc_library")
-load("//tool/doc:rules.bzl", "html_doc_parser")
+load("//tool/docs:rules.bzl", "html_doc_parser")
 
 java_library(
     name = "driver-java",

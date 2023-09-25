@@ -25,10 +25,10 @@ def html_doc_parser(name, data, language):
     kt_jvm_library(
         name = name + "_lib",
         srcs = [
-            "//tool/doc:" + language + "/" + script_name + ".kt",
-            "//tool/doc:common/Argument.kt",
-            "//tool/doc:common/Class.kt",
-            "//tool/doc:common/Method.kt",
+            "//tool/docs:" + language + "/" + script_name + ".kt",
+            "//tool/docs:common/Argument.kt",
+            "//tool/docs:common/Class.kt",
+            "//tool/docs:common/Method.kt",
         ],
         deps = [
             "@maven//:org_jsoup_jsoup",

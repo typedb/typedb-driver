@@ -21,8 +21,8 @@
 
 load("@vaticle_dependencies//builder/swig:python.bzl", "py_native_lib_rename")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//python:doc/rules.bzl", "sphinx_doc")
-load("//tool/doc:rules.bzl", "html_doc_parser")
+load("//python:docs/rules.bzl", "sphinx_doc")
+load("//tool/docs:rules.bzl", "html_doc_parser")
 
 load("//python:rules.bzl", "native_driver_versioned")
 load("//python:python_versions.bzl", "python_versions")
@@ -72,9 +72,9 @@ checkstyle_test(
 py_binary(
     name = "sphinx_runner",
     srcs = [
-        "doc/sphinx_html_builder_runner.py",
+        "docs/sphinx_html_builder_runner.py",
     ],
-    main = "doc/sphinx_html_builder_runner.py",
+    main = "docs/sphinx_html_builder_runner.py",
     deps = [doc_requirement("sphinx")],
     visibility = ["//visibility:public"]
 )
@@ -83,8 +83,8 @@ sphinx_doc(
     name = "driver_doc",
     script = ":sphinx_runner",
     target = ":assemble-pip39",
-    srcs = glob(["doc/source/*"]),
-    out = "doc/build",
+    srcs = glob(["docs/source/*"]),
+    out = "docs/build",
 )
 
 html_doc_parser(

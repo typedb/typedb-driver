@@ -35,8 +35,8 @@ load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
 load("@npm//:defs.bzl", "npm_link_all_packages")
-load("//nodejs:doc/rules.bzl", "typedoc_doc")
-load("//tool/doc:rules.bzl", "html_doc_parser")
+load("//nodejs:docs/rules.bzl", "typedoc_doc")
+load("//tool/docs:rules.bzl", "html_doc_parser")
 
 npm_link_all_packages(
     name = "node_modules",
@@ -112,9 +112,9 @@ deploy_npm(
 ts_project(
     name = "typedoc_runner",
     srcs = glob([
-        "doc/TypeDocRunner.ts",
+        "docs/TypeDocRunner.ts",
     ]),
-    tsconfig = "doc/tsconfig.json",
+    tsconfig = "docs/tsconfig.json",
     declaration = True,
     deps = [
         ":node_modules/typedoc",
