@@ -39,6 +39,20 @@ from typedb.common.native_wrapper import NativeWrapper
 
 
 class TypeDBOptions(NativeWrapper[NativeOptions]):
+    """
+    TypeDB session and transaction options. ``TypeDBOptions`` object
+    can be used to override the default server behaviour query processing.
+
+    Options could be specified either as constructor arguments or using
+    properties assignment.
+
+    Examples
+    --------
+
+    ::
+
+      transaction_options = TypeDBOptions(infer=True)
+    """
 
     def __init__(self, *,
                  infer: Optional[bool] = None,
@@ -80,6 +94,12 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
 
     @property
     def infer(self) -> Optional[bool]:
+        """
+        Whether to enable inference for the provided query (only settable
+        at transaction level and above, and only affects read transactions).
+
+        Default: ``False``
+        """
         return options_get_infer(self.native_object) if options_has_infer(self.native_object) else None
 
     @infer.setter
@@ -97,6 +117,12 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
 
     @property
     def explain(self) -> Optional[bool]:
+        """
+        Whether to enable explanations for the provided query
+        (only affects read transactions).
+
+        :return: default: ``False``
+        """
         return options_get_explain(self.native_object) if options_has_explain(self.native_object) else None
 
     @explain.setter
