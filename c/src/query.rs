@@ -183,13 +183,13 @@ pub extern "C" fn explanation_iterator_drop(it: *mut ExplanationIterator) {
 #[no_mangle]
 pub extern "C" fn query_explain(
     transaction: *mut Transaction<'static>,
-    explainable_id: i64,
+    explainable: *const Explainable,
     options: *const Options,
 ) -> *mut ExplanationIterator {
     try_release(
         borrow(transaction)
             .query()
-            .explain_with_options(explainable_id, borrow(options).clone())
+            .explain_with_options(borrow(explainable), borrow(options).clone())
             .map(|it| ExplanationIterator(CIterator(box_stream(it)))),
     )
 }

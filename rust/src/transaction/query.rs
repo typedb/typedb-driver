@@ -127,15 +127,15 @@ impl QueryManager {
         self.transaction_stream.match_group_aggregate(query.to_string(), options)
     }
 
-    pub fn explain(&self, explainable_id: i64) -> Result<impl Stream<Item = Result<Explanation>>> {
-        self.explain_with_options(explainable_id, Options::new())
+    pub fn explain(&self, explainable: &Explainable) -> Result<impl Stream<Item = Result<Explanation>>> {
+        self.explain_with_options(explainable, Options::new())
     }
 
     pub fn explain_with_options(
         &self,
-        explainable_id: i64,
+        explainable: &Explainable,
         options: Options,
     ) -> Result<impl Stream<Item = Result<Explanation>>> {
-        self.transaction_stream.explain(explainable_id, options)
+        self.transaction_stream.explain(explainable.id, options)
     }
 }

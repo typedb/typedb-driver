@@ -506,8 +506,8 @@ build:
 #    test-python-failover-enterprise:
 #      machine: 4-core-16-gb
 #      image: vaticle-ubuntu-22.04
-      dependencies:
-        - build
+#      dependencies:
+#        - build
 #      type: foreground
 #      command: |
 #        export PATH="$HOME/.local/bin:$PATH"

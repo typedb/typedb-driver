@@ -134,6 +134,6 @@ class _QueryManager(QueryManager, NativeWrapper[NativeTransaction]):
                 ) -> Iterator[Explanation]:
         if not options:
             options = TypeDBOptions()
-        return map(_Explanation, IteratorWrapper(query_explain(self._native_transaction, explainable.id(),
+        return map(_Explanation, IteratorWrapper(query_explain(self._native_transaction, explainable._native_object,
                                                                options.native_object),
                                                  explanation_iterator_next))
