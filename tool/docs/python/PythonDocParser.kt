@@ -35,7 +35,10 @@ fun main(args: Array<String>) {
     val docsDir = Paths.get(outputDirectoryName)
     Files.createDirectory(docsDir)
 
-    File(inputDirectoryName).walkTopDown().filter { (it.toString().endsWith(".html")) }.forEach {
+    File(inputDirectoryName).walkTopDown().filter {
+        it.toString().endsWith(".html") &&
+                (it.toString().contains(".api.") || it.toString().contains(".common."))
+    }.forEach {
         val html = it.readText(Charsets.UTF_8)
         val parsed = Jsoup.parse(html)
 
@@ -61,11 +64,11 @@ fun parseClass(element: Element): Class {
     val classBases = bases[0]!!.select("span").map { it.html() }
     val classDescr = descr.map { it.html() }
 
-    val methodsDetails = classDetails.children().map { it }.filter { it.classNames().contains("method") }
-    val methods = methodsDetails.map { parseMethod(it) }
+    val methods = classDetails.children().map { it }.filter { it.classNames().contains("method") }
+        .map { parseMethod(it) }
 
-    val propertiesDetails = classDetails.children().map { it }.filter { it.classNames().contains("property") }
-    val properties = propertiesDetails.map { parseProperty(it) }
+    val properties = classDetails.children().map { it }.filter { it.classNames().contains("property") }
+        .map { parseProperty(it) }
 
     return Class(
         name = className,
