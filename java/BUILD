@@ -53,14 +53,14 @@ assemble_maven(
     target = ":driver-java",
     version_overrides = version(artifacts_org, artifacts_repo),
     workspace_refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
-    profile_overrides = {
-        ":typedb_driver_jni": json.encode({
-            "linux-aarch64": "com.vaticle.typedb:typedb-driver-jni-linux-aarch64:{pom_version}",
-            "linux-x86_64": "com.vaticle.typedb:typedb-driver-jni-linux-x86_64:{pom_version}",
-            "mac-aarch64": "com.vaticle.typedb:typedb-driver-jni-macosx-aarch64:{pom_version}",
-            "mac-x86_64": "com.vaticle.typedb:typedb-driver-jni-macosx-x86_64:{pom_version}",
-            "windows-x86_64": "com.vaticle.typedb:typedb-driver-jni-windows-x86_64:{pom_version}",
-        })
+    platform_overrides = {
+        ":typedb_driver_jni": json.encode([
+           "com.vaticle.typedb:typedb-driver-jni-linux-aarch64:{pom_version}",
+           "com.vaticle.typedb:typedb-driver-jni-linux-x86_64:{pom_version}",
+           "com.vaticle.typedb:typedb-driver-jni-macosx-aarch64:{pom_version}",
+           "com.vaticle.typedb:typedb-driver-jni-macosx-x86_64:{pom_version}",
+           "com.vaticle.typedb:typedb-driver-jni-windows-x86_64:{pom_version}",
+        ])
     }
 )
 
