@@ -35,15 +35,20 @@ data class Method(
         result += "[source,$language]\n----\n${this.signature}\n----\n\n"
         result += "=== Description\n\n${this.description.joinToString("\n\n")}\n\n"
 
-        result += "=== Input parameters\n\n[options=\"header\"]\n|===\n"
-        result += "|Name |Description |Type |Default Value\n"
-        this.args.forEach { result += it.toAsciiDocTableRow(language) + "\n" }
+        if (this.args.isNotEmpty()) {
+            result += "=== Input parameters\n\n[options=\"header\"]\n|===\n"
+            result += "|Name |Description |Type |Default Value\n"
+            this.args.forEach { result += it.toAsciiDocTableRow(language) + "\n" }
+            result += "|===\n\n"
+        }
 
-        result += "|===\n\n=== Returns\n\n${this.returnType}\n\n"
+        result += "=== Returns\n\n${this.returnType}\n\n"
 
-        result += "=== Code examples\n\n"
-        this.examples.forEach {
-            result += "[source,$language]\n----\n$it\n----\n\n"
+        if (this.examples.isNotEmpty()) {
+            result += "=== Code examples\n\n"
+            this.examples.forEach {
+                result += "[source,$language]\n----\n$it\n----\n\n"
+            }
         }
 
         return result

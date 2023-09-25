@@ -38,7 +38,8 @@ data class Argument(
         result += "| ${this.name}"
         result += "| ${this.description}"
         result += "| ${this.type}"
-        result += "| ${this.defaultValue}"
+        result += "| "
+        this.defaultValue?.let { result += it }
         return result
     }
 }

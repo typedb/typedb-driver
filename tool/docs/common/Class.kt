@@ -33,8 +33,10 @@ data class Class(
         result += "= ${this.name}\n\n"
         result += "=== Description\n\n${this.description.joinToString("\n\n")}\n\n"
 
-        result += "== Properties\n\n"
-        this.fields.forEach { result += it.toAsciiDocPage(language) }
+        if (this.fields.isNotEmpty()) {
+            result += "== Properties\n\n"
+            this.fields.forEach { result += it.toAsciiDocPage(language) }
+        }
 
         result += "\n== Methods\n\n"
         this.methods.forEach { result += it.toAsciiDoc(language) }
