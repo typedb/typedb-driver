@@ -62,12 +62,12 @@ fun parseClass(element: Element): Class {
     val classDetailsParagraphs = classDetails!!.children().map { it }.filter { it.tagName() == "p" }  // FIXME
     val (descr, bases) = classDetailsParagraphs.partition { it.select("code.py-class").isNullOrEmpty() }
     val classBases = bases[0]!!.select("span").map { it.html() }
-    val classDescr = descr.map { it.html() }
+    val classDescr = descr.map { removeAllTags(replaceCodeTags(it.html())) }
 
-    val methods = classDetails.children().map { it }.filter { it.classNames().contains("method") }
+    val methods = classDetails.select("dl.method")
         .map { parseMethod(it) }
 
-    val properties = classDetails.children().map { it }.filter { it.classNames().contains("property") }
+    val properties = classDetails.select("dl.property")
         .map { parseProperty(it) }
 
     return Class(
