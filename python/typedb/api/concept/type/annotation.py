@@ -36,16 +36,60 @@ class Annotation:
 
     @staticmethod
     def key() -> Annotation:
+        """
+        Produces a ``@key`` annotation.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           Annotation.key()
+        """
         return Annotation(annotation_new_key())
 
     @staticmethod
     def unique() -> Annotation:
+        """
+        Produces a ``@unique`` annotation.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           Annotation.unique()
+        """
         return Annotation(annotation_new_unique())
 
     def is_key(self) -> bool:
+        """
+        Checks if this ``Annotation`` is a ``@key`` annotation.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           annotation.is_key()
+        """
         return annotation_is_key(self.native_object)
 
     def is_unique(self) -> bool:
+        """
+        Checks if this ``Annotation`` is a ``@unique`` annotation.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           annotation.is_unique()
+        """
         return annotation_is_unique(self.native_object)
 
     def __str__(self):

@@ -35,31 +35,132 @@ if TYPE_CHECKING:
 class Relation(Thing, ABC):
 
     def is_relation(self) -> bool:
+        """
+        Checks if the concept is an ``Relation``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           relation.is_relation()
+        """
         return True
 
     def as_relation(self) -> Relation:
+        """
+        Casts the concept to ``Relation``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           relation.as_relation()
+        """
         return self
 
     @abstractmethod
     def get_type(self) -> RelationType:
+        """
+        Retrieves the type which this ``Relation`` belongs to.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           relation.get_type()
+        """
         pass
 
     @abstractmethod
     def add_player(self, transaction: TypeDBTransaction, role_type: RoleType, player: Thing) -> None:
+        """
+        Adds a new roleplayer to play the given role in this ``Relation``.
+        
+        :param transaction: The current transaction
+        :param role_type: The role to be played by the ``player``
+        :param player: The thing to play the role
+        :return: 
+
+        Examples
+        --------
+        ::
+
+           relation.add_player(transaction, role_type, player)
+        """
         pass
 
     @abstractmethod
     def remove_player(self, transaction: TypeDBTransaction, role_type: RoleType, player: Thing) -> None:
+        """
+        Removes the association of the given instance that plays the given role in this ``Relation``.
+
+        :param transaction: The current transaction
+        :param role_type: The role to no longer be played by the thing in this ``Relation``
+        :param player: The instance to no longer play the role in this ``Relation``
+        :return:
+
+        Examples
+        --------
+        ::
+
+           relation.remove_player(transaction, role_type, player)
+        """
         pass
 
     @abstractmethod
     def get_players_by_role_type(self, transaction: TypeDBTransaction, *role_types: RoleType) -> Iterator[Thing]:
+        """
+        Retrieves all roleplayers of this ``Relation``, optionally
+        filtered by given role types.
+
+        :param transaction: The current transaction
+        :param role_types: 0 or more role types
+        :return:
+
+        Examples
+        --------
+        ::
+
+           relation.get_players_by_role_type(transaction)
+           relation.get_players_by_role_type(transaction, role_type1, role_type2)
+        """
         pass
 
     @abstractmethod
     def get_players(self, transaction: TypeDBTransaction) -> dict[RoleType, list[Thing]]:
+        """
+        Retrieves a mapping of all instances involved in the ``Relation``
+        and the role each play.
+
+        :param transaction: The current transaction
+        :return:
+
+        Examples
+        --------
+        ::
+
+           relation.get_players(transaction)
+        """
         pass
 
     @abstractmethod
     def get_relating(self, transaction: TypeDBTransaction) -> Iterator[RoleType]:
+        """
+        Retrieves all role types currently played in this ``Relation``.
+
+        :param transaction: The current transaction
+        :return:
+
+        Examples
+        --------
+        ::
+
+           relation.get_relating(transaction)
+        """
         pass

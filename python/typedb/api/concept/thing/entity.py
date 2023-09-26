@@ -33,11 +33,44 @@ if TYPE_CHECKING:
 class Entity(Thing, ABC):
 
     def is_entity(self) -> bool:
+        """
+        Checks if the concept is an ``Entity``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           attribute.is_entity()
+        """
         return True
 
     def as_entity(self) -> Entity:
+        """
+        Casts the concept to ``Entity``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           attribute.as_entity()
+        """
         return self
 
     @abstractmethod
     def get_type(self) -> EntityType:
+        """
+        Retrieves the type which this ``Entity`` belongs to.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           entity.get_type()
+        """
         pass

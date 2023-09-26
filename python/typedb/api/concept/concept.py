@@ -199,7 +199,7 @@ class Concept(ABC):
 
     def as_type(self) -> Type:
         """
-        Casts the concept as ``Type``.
+        Casts the concept to ``Type``.
 
         :return:
 
@@ -213,7 +213,7 @@ class Concept(ABC):
 
     def as_thing_type(self) -> ThingType:
         """
-        Casts the concept as ``ThingType``.
+        Casts the concept to ``ThingType``.
 
         :return:
 
@@ -227,7 +227,7 @@ class Concept(ABC):
 
     def as_entity_type(self) -> EntityType:
         """
-        Casts the concept as ``EntityType``.
+        Casts the concept to ``EntityType``.
 
         :return:
 
@@ -241,7 +241,7 @@ class Concept(ABC):
 
     def as_attribute_type(self) -> AttributeType:
         """
-        Casts the concept as ``AttributeType``.
+        Casts the concept to ``AttributeType``.
 
         :return:
 
@@ -255,7 +255,7 @@ class Concept(ABC):
 
     def as_relation_type(self) -> RelationType:
         """
-        Casts the concept as ``RelationType``.
+        Casts the concept to ``RelationType``.
 
         :return:
 
@@ -269,7 +269,7 @@ class Concept(ABC):
 
     def as_role_type(self) -> RoleType:
         """
-        Casts the concept as ``RoleType``.
+        Casts the concept to ``RoleType``.
 
         :return:
 
@@ -283,7 +283,7 @@ class Concept(ABC):
 
     def as_thing(self) -> Thing:
         """
-        Casts the concept as ``Thing``.
+        Casts the concept to ``Thing``.
 
         :return:
 
@@ -297,7 +297,7 @@ class Concept(ABC):
 
     def as_entity(self) -> Entity:
         """
-        Casts the concept as ``Entity``.
+        Casts the concept to ``Entity``.
 
         :return:
 
@@ -311,7 +311,7 @@ class Concept(ABC):
 
     def as_attribute(self) -> Attribute:
         """
-        Casts the concept as ``Attribute``.
+        Casts the concept to ``Attribute``.
 
         :return:
 
@@ -325,7 +325,7 @@ class Concept(ABC):
 
     def as_relation(self) -> Relation:
         """
-        Casts the concept as ``Relation``.
+        Casts the concept to ``Relation``.
 
         :return:
 
@@ -339,7 +339,7 @@ class Concept(ABC):
 
     def as_value(self) -> Value:
         """
-        Casts the concept as ``Value``.
+        Casts the concept to ``Value``.
 
         :return:
 
