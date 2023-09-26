@@ -36,55 +36,212 @@ if TYPE_CHECKING:
 
 
 class ConceptManager(ABC):
+    """
+    Provides access for all Concept API methods.
+    """
 
     @abstractmethod
     def get_root_entity_type(self) -> EntityType:
+        """
+        Retrieves the root ``EntityType``, "entity".
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           transaction.concepts().get_root_entity_type()
+        """
         pass
 
     @abstractmethod
     def get_root_relation_type(self) -> RelationType:
+        """
+        Retrieve the root ``RelationType``, "relation".
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           transaction.concepts().get_root_relation_type()
+        """
         pass
 
     @abstractmethod
     def get_root_attribute_type(self) -> AttributeType:
+        """
+        Retrieve the root ``AttributeType``, "attribute".
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           transaction.concepts().get_root_attribute_type()
+        """
         pass
 
     @abstractmethod
     def get_entity_type(self, label: str) -> EntityType:
+        """
+        Retrieves an ``EntityType`` by its label.
+
+        :param label: The label of the ``EntityType`` to retrieve
+        :return:
+
+        Examples
+        --------
+        ::
+
+           transaction.concepts().get_entity_type(label)
+        """
         pass
 
     @abstractmethod
     def put_entity_type(self, label: str) -> EntityType:
+        """
+        Creates a new ``EntityType`` if none exists with the given label,
+        otherwise retrieves the existing one.
+
+        :param label: The label of the ``EntityType`` to create or retrieve
+        :return:
+
+        Examples
+        --------
+        ::
+
+           transaction.concepts().put_entity_type(label)
+        """
         pass
 
     @abstractmethod
     def get_relation_type(self, label: str) -> RelationType:
+        """
+        Retrieves a ``RelationType`` by its label.
+
+        :param label: The label of the ``RelationType`` to retrieve
+        :return:
+
+        Examples
+        --------
+        ::
+
+           transaction.concepts().get_relation_type(label)
+        """
         pass
 
     @abstractmethod
     def put_relation_type(self, label: str) -> RelationType:
+        """
+        Creates a new ``RelationType`` if none exists with the given label,
+        otherwise retrieves the existing one.
+
+        :param label: The label of the ``RelationType`` to create or retrieve
+        :return:
+
+        Examples
+        --------
+        ::
+
+           transaction.concepts().put_relation_type(label)
+        """
         pass
 
     @abstractmethod
     def get_attribute_type(self, label: str) -> AttributeType:
+        """
+        Retrieves an ``AttributeType`` by its label.
+
+        :param label: The label of the ``AttributeType`` to retrieve
+        :return:
+
+        Examples
+        --------
+        ::
+
+           transaction.concepts().get_attribute_type(label)
+        """
         pass
 
     @abstractmethod
     def put_attribute_type(self, label: str, value_type: ValueType) -> AttributeType:
+        """
+        Creates a new ``AttributeType`` if none exists with the given label,
+        or retrieves the existing one.
+
+        :param label: The label of the ``AttributeType`` to create or retrieve
+        :param value_type: The value type of the ``AttributeType`` to create
+        or retrieve.
+        :return:
+
+        Examples
+        --------
+        ::
+
+           await transaction.concepts().put_attribute_type(label, value_type)
+        """
         pass
 
     @abstractmethod
     def get_entity(self, iid: str) -> Entity:
+        """
+        Retrieves an ``Entity`` by its iid.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           transaction.concepts().get_entity(iid)
+        """
         pass
 
     @abstractmethod
     def get_relation(self, iid: str) -> Relation:
+        """
+        Retrieves a ``Relation`` by its iid.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           transaction.concepts().get_relation(iid)
+        """
         pass
 
     @abstractmethod
     def get_attribute(self, iid: str) -> Attribute:
+        """
+        Retrieves an ``Attribute`` by its iid.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           transaction.concepts().get_attribute(iid)
+        """
         pass
 
     @abstractmethod
     def get_schema_exception(self) -> list[TypeDBException]:
+        """
+        Retrieves a list of all exceptions for the current transaction.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           transaction.concepts().get_schema_exception()
+        """
         pass

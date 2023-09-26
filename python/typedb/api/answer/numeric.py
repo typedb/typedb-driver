@@ -23,23 +23,81 @@ from abc import ABC, abstractmethod
 
 
 class Numeric(ABC):
+    """
+    Stores an aggregate query answer.
+    """
 
     @abstractmethod
     def is_int(self) -> bool:
+        """
+        Checks if the type of an aggregate answer is an integer.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           numeric.is_int()
+        """
         pass
 
     @abstractmethod
     def is_float(self) -> bool:
+        """
+        Checks if the type of an aggregate answer is a float.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           numeric.is_float()
+        """
         pass
 
     @abstractmethod
     def is_nan(self) -> bool:
+        """
+        Checks if the aggregate answer is not a number.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           numeric.is_nan()
+        """
         pass
 
     @abstractmethod
     def as_int(self) -> int:
+        """
+        Retrieves numeric value of an aggregate answer as an integer.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           numeric.as_int()
+        """
         pass
 
     @abstractmethod
     def as_float(self) -> float:
+        """
+        Retrieves numeric value of an aggregate answer as a float.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           numeric.as_float()
+        """
         pass

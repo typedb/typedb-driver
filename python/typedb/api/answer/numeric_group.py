@@ -30,11 +30,36 @@ if TYPE_CHECKING:
 
 
 class NumericGroup(ABC):
+    """
+    Contains an element of the group aggregate query result.
+    """
 
     @abstractmethod
     def owner(self) -> Concept:
+        """
+        Retrieves the concept that is the group owner.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           concept_map_group.owner()
+        """
         pass
 
     @abstractmethod
     def numeric(self) -> Numeric:
+        """
+        Retrieves the Numeric answer of the group.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           numeric_group.numeric()
+        """
         pass
