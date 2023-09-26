@@ -52,6 +52,7 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
     ::
 
       transaction_options = TypeDBOptions(infer=True)
+      transaction_options.explain = True
     """
 
     def __init__(self, *,
@@ -108,6 +109,11 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
 
     @property
     def trace_inference(self) -> Optional[bool]:
+        """
+        If enabled, outputs reasoning tracing graphs in the logging directory. Should be used with ``parallel = False``.
+
+        Default: ``False``
+        """
         return options_get_trace_inference(self.native_object) if options_has_trace_inference(self.native_object) \
             else None
 
@@ -121,7 +127,7 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
         Whether to enable explanations for the provided query
         (only affects read transactions).
 
-        :return: default: ``False``
+        Default: ``False``
         """
         return options_get_explain(self.native_object) if options_has_explain(self.native_object) else None
 
@@ -131,6 +137,11 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
 
     @property
     def parallel(self) -> Optional[bool]:
+        """
+        Whether the server should use parallel or single-threaded execution.
+
+        Default: ``True``
+        """
         return options_get_parallel(self.native_object) if options_has_parallel(self.native_object) else None
 
     @parallel.setter
@@ -139,6 +150,11 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
 
     @property
     def prefetch(self) -> Optional[bool]:
+        """
+        If enabled, the first batch of answers is streamed to the client even without an explicit request for it.
+
+        Default: ``True`` if query type is match, otherwise ``False``
+        """
         return options_get_prefetch(self.native_object) if options_has_prefetch(self.native_object) else None
 
     @prefetch.setter
@@ -147,6 +163,11 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
 
     @property
     def prefetch_size(self) -> Optional[int]:
+        """
+        A guideline number of answers that the server should send before the client issues a fresh request.
+
+        Default: 50
+        """
         return options_get_prefetch_size(self.native_object) if options_has_prefetch_size(self.native_object) else None
 
     @prefetch_size.setter
@@ -157,6 +178,11 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
 
     @property
     def session_idle_timeout_millis(self) -> Optional[int]:
+        """
+        This timeout allows the server to close sessions if a client terminates or becomes unresponsive.
+
+        Default: 30000
+        """
         return options_get_session_idle_timeout_millis(self.native_object) \
             if options_has_session_idle_timeout_millis(self.native_object) else None
 
@@ -168,6 +194,11 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
 
     @property
     def transaction_timeout_millis(self) -> Optional[int]:
+        """
+        This timeout will automatically kill transactions, preventing memory leaks in unclosed transactions.
+
+        Default: 300000
+        """
         return options_get_transaction_timeout_millis(self.native_object) \
             if options_has_transaction_timeout_millis(self.native_object) else None
 
@@ -179,6 +210,11 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
 
     @property
     def schema_lock_acquire_timeout_millis(self) -> Optional[int]:
+        """
+        How long the client should wait if opening a session or transaction is blocked by a schema write lock.
+
+        Default: 10000
+        """
         return options_get_schema_lock_acquire_timeout_millis(self.native_object) \
             if options_has_schema_lock_acquire_timeout_millis(self.native_object) else None
 
@@ -190,6 +226,11 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
 
     @property
     def read_any_replica(self) -> Optional[bool]:
+        """
+        Enables reading data from any replica, potentially boosting read throughput (default: False)
+
+        Default: ``False``
+        """
         return options_get_read_any_replica(self.native_object) if options_has_read_any_replica(self.native_object) \
             else None
 
