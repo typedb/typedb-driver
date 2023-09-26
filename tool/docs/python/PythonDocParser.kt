@@ -184,7 +184,7 @@ fun textWithCode(text: String): String {
 }
 
 fun replaceCodeTags(text: String): String {
-    return Regex("<code[^>]*>").replace(text, "`").replace("</code>", "`")
+    return Regex("<code[^>]*>").replace(text, "`").replace("</code>", "` ")
 }
 
 fun replaceEmTags(text: String): String {
