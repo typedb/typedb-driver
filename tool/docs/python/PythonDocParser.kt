@@ -62,7 +62,7 @@ fun parseClass(element: Element): Class {
     val classDetailsParagraphs = classDetails!!.children().map { it }.filter { it.tagName() == "p" }  // FIXME
     val (descr, bases) = classDetailsParagraphs.partition { it.select("code.py-class").isNullOrEmpty() }
     val classBases = bases[0]!!.select("span").map { it.html() }
-    val classDescr = descr.map { removeAllTags(replaceCodeTags(it.html())) }
+    val classDescr = descr.map { textWithCode(it.html()) }
 
     val methods = classDetails.select("dl.method")
         .map { parseMethod(it) }
@@ -84,7 +84,7 @@ fun parseMethod(element: Element): Method {
     val methodName = element.selectFirst("dt.sig-object span.sig-name")!!.text()
     val allArgs = getArgsFromSignature(element.selectFirst("dt.sig-object")!!)
     val methodReturnType = element.select(".sig-return-typehint").text()
-    val methodDescr = element.select("dl.method > dd > p").map { removeAllTags(replaceCodeTags(it.html())) }
+    val methodDescr = element.select("dl.method > dd > p").map { textWithCode(it.html()) }
     val methodArgs = element.select(".field-list > dt:contains(Parameters) + dd p").map {
         val arg_name = it.selectFirst("strong")!!.text()
         assert(allArgs.contains(arg_name))
@@ -113,7 +113,7 @@ fun parseMethod(element: Element): Method {
 fun parseProperty(element: Element): Argument {
     val propertyName = element.selectFirst("dt.sig-object span.sig-name")!!.text()
     val propertyType = element.selectFirst("dt.sig-object span.sig-name + .property ")?.text()?.dropWhile { !it.isLetter() }
-    val propertyDescr = element.select("dd > p").map { it.html() }.joinToString("")  // TODO: Test it
+    val propertyDescr = element.select("dd > p").map { textWithCode(it.html()) }.joinToString("\n\n")  // TODO: Test it
     return Argument(
         name = propertyName,
         type = propertyType,
@@ -125,6 +125,10 @@ fun getArgsFromSignature(methodSignature: Element): Map<String, String?> {
     return methodSignature.select(".sig-param").map {
         it.selectFirst(".n")!!.text() to it.select(".p + .w + .n").text()
     }.toMap()
+}
+
+fun textWithCode(text: String): String {
+    return removeAllTags(replaceCodeTags(text))
 }
 
 fun replaceCodeTags(text: String): String {
