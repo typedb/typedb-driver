@@ -18,28 +18,14 @@
 
 package com.vaticle.typedb.client.tool.doc.common
 
-data class Argument(
+data class EnumMember(
     val name: String,
-    val type: String? = null,
-    val description: String? = null,
-    val defaultValue: String? = null,
+    val value: String,
 ) {
-    fun toAsciiDocPage(language: String): String {
-        var result = ""
-        result += "[#_${this.name}]\n"
-        result += "== ${this.name}\n\n"
-        result += "=== Type\n\n`${this.type}`\n\n"
-        result += "=== Description\n\n${this.description}\n\n"
-        return result
-    }
-
     fun toAsciiDocTableRow(language: String): String {
         var result = ""
         result += "| `${this.name}`"
-        result += "| ${this.description}"
-        result += "| `${this.type}`"
-        result += "| "
-        this.defaultValue?.let { result += "`$it`" }
+        result += "| `${this.value}`"
         return result
     }
 }

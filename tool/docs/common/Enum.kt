@@ -18,37 +18,38 @@
 
 package com.vaticle.typedb.client.tool.doc.common
 
-data class Method(
+data class Enum(
     val name: String,
-    val signature: String,
+    val members: List<EnumMember> = listOf(),
+    val methods: List<Method> = listOf(),
     val description: List<String> = listOf(),
-    val args: List<Argument> = listOf(),
-    val returnType: String? = null,
-    val returnDescription: String? = null,
     val examples: List<String> = listOf(),
+    val bases: List<String> = listOf(),
+    val packagePath: String? = null,
 ) {
     fun toAsciiDoc(language: String): String {
         var result = ""
         result += "[#_${this.name}]\n"
-        result += "== ${this.name}\n\n"
-        result += "=== Signature\n\n"
-        result += "[source,$language]\n----\n${this.signature}\n----\n\n"
-        result += "=== Description\n\n${this.description.joinToString("\n\n")}\n\n"
-
-        if (this.args.isNotEmpty()) {
-            result += "=== Input parameters\n\n[options=\"header\"]\n|===\n"
-            result += "|Name |Description |Type |Default Value\n"
-            this.args.forEach { result += it.toAsciiDocTableRow(language) + "\n" }
-            result += "|===\n\n"
-        }
-
-        result += "=== Returns\n\n`${this.returnType}`\n\n"
+        result += "= ${this.name}\n\n"
+        result += "== Description\n\n${this.description.joinToString("\n\n")}\n\n"
 
         if (this.examples.isNotEmpty()) {
-            result += "=== Code examples\n\n"
+            result += "== Code examples\n\n"
             this.examples.forEach {
                 result += "[source,$language]\n----\n$it\n----\n\n"
             }
+        }
+
+        if (this.members.isNotEmpty()) {
+            result += "== Enum members\n\n[options=\"header\"]\n|===\n"
+            result += "|Name |Value \n"
+            this.members.forEach { result += it.toAsciiDocTableRow(language) + "\n" }
+            result += "|===\n\n"
+        }
+
+        if (this.methods.isNotEmpty()) {
+            result += "\n== Methods\n\n"
+            this.methods.forEach { result += it.toAsciiDoc(language) }
         }
 
         return result

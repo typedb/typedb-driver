@@ -29,6 +29,8 @@ def html_doc_parser(name, data, language):
             "//tool/docs:common/Argument.kt",
             "//tool/docs:common/Class.kt",
             "//tool/docs:common/Method.kt",
+            "//tool/docs:common/Enum.kt",
+            "//tool/docs:common/EnumMember.kt",
         ],
         deps = [
             "@maven//:org_jsoup_jsoup",

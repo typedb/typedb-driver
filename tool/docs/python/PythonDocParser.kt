@@ -26,6 +26,8 @@ import org.jsoup.nodes.Element
 
 import com.vaticle.typedb.client.tool.doc.common.Argument
 import com.vaticle.typedb.client.tool.doc.common.Class
+import com.vaticle.typedb.client.tool.doc.common.Enum
+import com.vaticle.typedb.client.tool.doc.common.EnumMember
 import com.vaticle.typedb.client.tool.doc.common.Method
 
 fun main(args: Array<String>) {
@@ -43,15 +45,22 @@ fun main(args: Array<String>) {
         val parsed = Jsoup.parse(html)
 
         parsed.select("dl.class").forEach {
-            val parsedClass = parseClass(it)
-            println(parsedClass)
-            val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
-            outputFile.createNewFile()
-            outputFile.writeText(parsedClass.toAsciiDoc("python"))
+            if (it.selectFirst("dt.sig-object + dd > p")!!.text().contains("Enum")) {
+                val parsedClass = parseEnum(it)
+                println(parsedClass)
+                val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
+                outputFile.createNewFile()
+                outputFile.writeText(parsedClass.toAsciiDoc("python"))
+
+            } else {
+                val parsedClass = parseClass(it)
+                println(parsedClass)
+                val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
+                outputFile.createNewFile()
+                outputFile.writeText(parsedClass.toAsciiDoc("python"))
+            }
         }
     }
-
-
 }
 
 fun parseClass(element: Element): Class {
@@ -77,6 +86,34 @@ fun parseClass(element: Element): Class {
         description = classDescr,
         methods = methods,
         fields = properties,
+        bases = classBases,
+        examples = classExamples,
+    )
+}
+
+fun parseEnum(element: Element): Enum {
+    val classSigElement = element.selectFirst("dt.sig-object")
+    val className = classSigElement!!.selectFirst("dt.sig-object span.sig-name")!!.text()
+
+    val classDetails = classSigElement.nextElementSibling()
+    val classDetailsParagraphs = classDetails!!.children().map { it }.filter { it.tagName() == "p" }
+    val (descr, bases) = classDetailsParagraphs.partition { it.select("code.py-class").isNullOrEmpty() }
+    val classBases = bases[0]!!.select("span").map { it.html() }
+    val classDescr = descr.map { textWithCode(it.html()) }
+
+    val classExamples = element.select("section:contains(Examples) .highlight").map { it.text() }
+
+    val methods = classDetails.select("dl.method")
+        .map { parseMethod(it) }
+
+    val members = classDetails.select("dl.attribute")
+        .map { parseEnumMember(it) }
+
+    return Enum(
+        name = className,
+        description = classDescr,
+        methods = methods,
+        members = members,
         bases = classBases,
         examples = classExamples,
     )
@@ -121,6 +158,15 @@ fun parseProperty(element: Element): Argument {
         name = propertyName,
         type = propertyType,
         description = propertyDescr,
+    )
+}
+
+fun parseEnumMember(element: Element): EnumMember {
+    val memberName = element.selectFirst("dt.sig-object span.sig-name")!!.text()
+    val memberValue = element.selectFirst("dt.sig-object span.sig-name + .property")!!.text().removePrefix("= ")
+    return EnumMember(
+        name = memberName,
+        value = memberValue,
     )
 }
 
