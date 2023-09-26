@@ -25,5 +25,16 @@ from typedb.native_driver_wrapper import Transitive, Explicit
 
 
 class Transitivity(Enum):
+    """
+    This class is used for specifying whether we need explicit
+    or transitive subtyping, instances, etc.
+
+    Examples
+    --------
+
+    ::
+
+       attribute_type.get_owners(transaction, annotations=annotations, transitivity=Transitivity.EXPLICIT)))
+    """
     TRANSITIVE = Transitive
     EXPLICIT = Explicit
