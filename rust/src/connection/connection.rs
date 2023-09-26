@@ -70,8 +70,12 @@ impl Connection {
             .map_err(|_| ConnectionError::UnableToConnect())?;
         server_connection.set_address(address.clone());
         match server_connection.validate() {
-            Ok(()) => Ok(Self { server_connections: [(address, server_connection)].into(), background_runtime, username: None }),
-            Err(err) => Err(err)
+            Ok(()) => Ok(Self {
+                server_connections: [(address, server_connection)].into(),
+                background_runtime,
+                username: None,
+            }),
+            Err(err) => Err(err),
         }
     }
 

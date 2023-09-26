@@ -20,4 +20,4 @@
 # under the License.
 #
 
-bazel run @vaticle_dependencies//tool/cargo:sync
+bazel run @vaticle_dependencies//tool/ide:rust_sync

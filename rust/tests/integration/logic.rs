@@ -316,7 +316,7 @@ fn all_explainables(ans: &ConceptMap) -> Vec<&Explainable> {
 }
 
 async fn get_explanations(explainable: &Explainable, transaction: &Transaction<'_>) -> TypeDBResult<Vec<Explanation>> {
-    transaction.query().explain(explainable.id)?.try_collect::<Vec<_>>().await
+    transaction.query().explain(explainable)?.try_collect::<Vec<_>>().await
 }
 
 fn assert_explanation_concepts_match_projection(ans: &ConceptMap, explanations: Vec<Explanation>) {

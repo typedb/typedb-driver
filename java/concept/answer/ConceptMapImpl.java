@@ -185,7 +185,7 @@ public class ConceptMapImpl extends NativeObject<com.vaticle.typedb.driver.jni.C
         }
     }
 
-    static class ExplainableImpl extends NativeObject<com.vaticle.typedb.driver.jni.Explainable> implements Explainable {
+    public static class ExplainableImpl extends NativeObject<com.vaticle.typedb.driver.jni.Explainable> implements Explainable {
         public ExplainableImpl(com.vaticle.typedb.driver.jni.Explainable explainable) {
             super(explainable);
         }

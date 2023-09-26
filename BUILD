@@ -67,9 +67,9 @@ release_validate_deps(
     tags = ["manual"],  # in order for bazel test //... to not fail
 )
 
-# CI targets that are not declared in any BUILD file, but are called externally
+# Force tools to be built during `build //...`
 filegroup(
-    name = "ci",
+    name = "tools",
     data = [
         "@vaticle_dependencies//tool/checkstyle:test-coverage",
         "@vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh",
@@ -77,5 +77,6 @@ filegroup(
         "@vaticle_dependencies//tool/ide:rust_sync",
         "@vaticle_dependencies//tool/sonarcloud:code-analysis",
         "@vaticle_dependencies//tool/unuseddeps:unused-deps",
+        "@rust_analyzer_toolchain_tools//lib/rustlib/src:rustc_srcs"
     ],
 )

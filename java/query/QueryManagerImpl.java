@@ -306,7 +306,7 @@ public final class QueryManagerImpl implements QueryManager {
     public Stream<Explanation> explain(ConceptMap.Explainable explainable, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         try {
-            return query_explain(nativeTransaction, explainable.id(), options.nativeObject).stream().map(ExplanationImpl::new);
+            return query_explain(nativeTransaction, ((ConceptMapImpl.ExplainableImpl) explainable).nativeObject, options.nativeObject).stream().map(ExplanationImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
