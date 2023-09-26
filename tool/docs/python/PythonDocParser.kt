@@ -132,7 +132,8 @@ fun parseMethod(element: Element): Method {
         val arg_descr = textWithCode(removeArgName(it.html())).removePrefix(" – ")
         Argument(
             name = arg_name,
-            type = allArgs[arg_name],
+            type = allArgs[arg_name]?.first,
+            defaultValue = allArgs[arg_name]?.second,
             description = arg_descr
         )
     }
@@ -171,9 +172,10 @@ fun parseEnumMember(element: Element): EnumMember {
     )
 }
 
-fun getArgsFromSignature(methodSignature: Element): Map<String, String?> {
+fun getArgsFromSignature(methodSignature: Element): Map<String, Pair<String?, String?>> {
     return methodSignature.select(".sig-param").map {
-        it.selectFirst(".n")!!.text() to it.select(".p + .w + .n").text()
+        it.selectFirst(".n")!!.text() to
+                Pair(it.select(".p + .w + .n").text(), it.selectFirst("span.default_value")?.text())
     }.toMap()
 }
 

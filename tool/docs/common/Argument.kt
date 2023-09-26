@@ -28,7 +28,7 @@ data class Argument(
         var result = ""
         result += "[#_${this.name}]\n"
         result += "== ${this.name}\n\n"
-        result += "=== Type\n\n`${this.type}`\n\n"
+        this.type?.let { result += "=== Type\n\n`$it`\n\n" }
         result += "=== Description\n\n${this.description}\n\n"
         return result
     }
@@ -37,7 +37,8 @@ data class Argument(
         var result = ""
         result += "| `${this.name}`"
         result += "| ${this.description}"
-        result += "| `${this.type}`"
+        result += "| "
+        this.type?.let { result += "`${it.replace("|", "\\|")}`" }
         result += "| "
         this.defaultValue?.let { result += "`$it`" }
         return result
