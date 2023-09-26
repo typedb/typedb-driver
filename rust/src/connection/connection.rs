@@ -23,13 +23,18 @@ use std::{
     collections::{HashMap, HashSet},
     fmt,
     sync::{Arc, Mutex},
+    thread::JoinHandle,
     time::Duration,
 };
 
+use crossbeam::channel::{unbounded, Sender};
 use itertools::Itertools;
 use tokio::{
     select,
-    sync::mpsc::{unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
+    sync::{
+        mpsc::{unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
+        oneshot::{channel as oneshot_async, Sender as AsyncOneshotSender},
+    },
     time::{sleep_until, Instant},
 };
 
@@ -55,6 +60,10 @@ use crate::{
 pub struct Connection {
     server_connections: HashMap<Address, ServerConnection>,
     background_runtime: Arc<BackgroundRuntime>,
+
+    callback_handler: Arc<JoinHandle<()>>,
+    callback_handler_sink: Sender<(Box<dyn FnOnce() + Send>, AsyncOneshotSender<()>)>,
+
     username: Option<String>,
 }
 
@@ -62,7 +71,9 @@ impl Connection {
     pub fn new_plaintext(address: impl AsRef<str>) -> Result<Self> {
         let address: Address = address.as_ref().parse()?;
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
-        let mut server_connection = ServerConnection::new_plaintext(background_runtime.clone(), address)?;
+        let (callback_handler, callback_handler_sink) = Self::spawn_callback_handler();
+        let mut server_connection =
+            ServerConnection::new_plaintext(background_runtime.clone(), address, callback_handler_sink.clone())?;
         let address = server_connection
             .servers_all()?
             .into_iter()
@@ -73,6 +84,8 @@ impl Connection {
             Ok(()) => Ok(Self {
                 server_connections: [(address, server_connection)].into(),
                 background_runtime,
+                callback_handler,
+                callback_handler_sink,
                 username: None,
             }),
             Err(err) => Err(err),
@@ -81,15 +94,26 @@ impl Connection {
 
     pub fn new_encrypted<T: AsRef<str> + Sync>(init_addresses: &[T], credential: Credential) -> Result<Self> {
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
+        let (callback_handler, callback_handler_sink) = Self::spawn_callback_handler();
 
         let init_addresses = init_addresses.iter().map(|addr| addr.as_ref().parse()).try_collect()?;
-        let addresses = Self::fetch_current_addresses(background_runtime.clone(), init_addresses, credential.clone())?;
+        let addresses = Self::fetch_current_addresses(
+            background_runtime.clone(),
+            init_addresses,
+            credential.clone(),
+            callback_handler_sink.clone(),
+        )?;
 
         let server_connections: HashMap<Address, ServerConnection> = addresses
             .into_iter()
             .map(|address| {
-                ServerConnection::new_encrypted(background_runtime.clone(), address.clone(), credential.clone())
-                    .map(|server_connection| (address, server_connection))
+                ServerConnection::new_encrypted(
+                    background_runtime.clone(),
+                    address.clone(),
+                    credential.clone(),
+                    callback_handler_sink.clone(),
+                )
+                .map(|server_connection| (address, server_connection))
             })
             .try_collect()?;
 
@@ -100,7 +124,13 @@ impl Connection {
                 errors.into_iter().map(|err| err.to_string()).collect::<Vec<_>>().join("\n"),
             ))?
         } else {
-            Ok(Self { server_connections, background_runtime, username: Some(credential.username().to_string()) })
+            Ok(Self {
+                server_connections,
+                background_runtime,
+                callback_handler,
+                callback_handler_sink,
+                username: Some(credential.username().to_string()),
+            })
         }
     }
 
@@ -108,10 +138,15 @@ impl Connection {
         background_runtime: Arc<BackgroundRuntime>,
         addresses: Vec<Address>,
         credential: Credential,
+        callback_handler_sink: Sender<(Box<dyn FnOnce() + Send>, AsyncOneshotSender<()>)>,
     ) -> Result<HashSet<Address>> {
         for address in addresses {
-            let server_connection =
-                ServerConnection::new_encrypted(background_runtime.clone(), address.clone(), credential.clone());
+            let server_connection = ServerConnection::new_encrypted(
+                background_runtime.clone(),
+                address.clone(),
+                credential.clone(),
+                callback_handler_sink.clone(),
+            );
             match server_connection {
                 Ok(server_connection) => match server_connection.servers_all() {
                     Ok(servers) => return Ok(servers.into_iter().collect()),
@@ -125,6 +160,20 @@ impl Connection {
             }
         }
         Err(ConnectionError::UnableToConnect().into())
+    }
+
+    fn spawn_callback_handler() -> (Arc<JoinHandle<()>>, Sender<(Box<dyn FnOnce() + Send>, AsyncOneshotSender<()>)>) {
+        let (callback_handler_sink, callback_handler_source) =
+            unbounded::<(Box<dyn FnOnce() + Send>, AsyncOneshotSender<()>)>();
+        (
+            Arc::new(std::thread::spawn(move || {
+                while let Ok((callback, response_sink)) = callback_handler_source.recv() {
+                    callback();
+                    response_sink.send(()).unwrap();
+                }
+            })),
+            callback_handler_sink,
+        )
     }
 
     pub fn is_open(&self) -> bool {
@@ -178,22 +227,40 @@ pub(crate) struct ServerConnection {
     background_runtime: Arc<BackgroundRuntime>,
     open_sessions: Arc<Mutex<HashMap<SessionID, UnboundedSender<()>>>>,
     request_transmitter: Arc<RPCTransmitter>,
+    callback_handler_sink: Sender<(Box<dyn FnOnce() + Send>, AsyncOneshotSender<()>)>,
 }
 
 impl ServerConnection {
-    fn new_plaintext(background_runtime: Arc<BackgroundRuntime>, address: Address) -> Result<Self> {
+    fn new_plaintext(
+        background_runtime: Arc<BackgroundRuntime>,
+        address: Address,
+        callback_handler_sink: Sender<(Box<dyn FnOnce() + Send>, AsyncOneshotSender<()>)>,
+    ) -> Result<Self> {
         let request_transmitter = Arc::new(RPCTransmitter::start_plaintext(address.clone(), &background_runtime)?);
-        Ok(Self { address, background_runtime, open_sessions: Default::default(), request_transmitter })
+        Ok(Self {
+            address,
+            background_runtime,
+            open_sessions: Default::default(),
+            request_transmitter,
+            callback_handler_sink,
+        })
     }
 
     fn new_encrypted(
         background_runtime: Arc<BackgroundRuntime>,
         address: Address,
         credential: Credential,
+        callback_handler_sink: Sender<(Box<dyn FnOnce() + Send>, AsyncOneshotSender<()>)>,
     ) -> Result<Self> {
         let request_transmitter =
             Arc::new(RPCTransmitter::start_encrypted(address.clone(), credential, &background_runtime)?);
-        Ok(Self { address, background_runtime, open_sessions: Default::default(), request_transmitter })
+        Ok(Self {
+            address,
+            background_runtime,
+            open_sessions: Default::default(),
+            request_transmitter,
+            callback_handler_sink,
+        })
     }
 
     pub(crate) fn validate(&self) -> Result {
@@ -318,6 +385,7 @@ impl ServerConnection {
                     session_id.clone(),
                     self.request_transmitter.clone(),
                     on_close_register_source,
+                    self.callback_handler_sink.clone(),
                     pulse_shutdown_source,
                 ));
                 Ok(SessionInfo {
@@ -357,7 +425,12 @@ impl ServerConnection {
             .await?
         {
             Response::TransactionOpen { request_sink, response_source } => {
-                let transmitter = TransactionTransmitter::new(&self.background_runtime, request_sink, response_source);
+                let transmitter = TransactionTransmitter::new(
+                    &self.background_runtime,
+                    request_sink,
+                    response_source,
+                    self.callback_handler_sink.clone(),
+                );
                 let transmitter_shutdown_sink = transmitter.shutdown_sink().clone();
                 let transaction_stream = TransactionStream::new(transaction_type, options, transmitter);
                 Ok((transaction_stream, transmitter_shutdown_sink))
@@ -441,6 +514,7 @@ async fn session_pulse(
     session_id: SessionID,
     request_transmitter: Arc<RPCTransmitter>,
     mut on_close_callback_source: UnboundedReceiver<Box<dyn FnOnce() + Send>>,
+    callback_handler_sink: Sender<(Box<dyn FnOnce() + Send>, AsyncOneshotSender<()>)>,
     mut shutdown_source: UnboundedReceiver<()>,
 ) {
     const PULSE_INTERVAL: Duration = Duration::from_secs(5);
@@ -464,6 +538,8 @@ async fn session_pulse(
         }
     }
     for callback in on_close {
-        callback();
+        let (response_sink, response) = oneshot_async();
+        callback_handler_sink.send((Box::new(callback), response_sink)).unwrap();
+        response.await.ok();
     }
 }

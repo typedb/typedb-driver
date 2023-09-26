@@ -28,6 +28,9 @@ import com.vaticle.typedb.driver.api.database.Database;
 import com.vaticle.typedb.driver.common.NativeObject;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.vaticle.typedb.driver.jni.typedb_driver.session_force_close;
 import static com.vaticle.typedb.driver.jni.typedb_driver.session_get_database_name;
 import static com.vaticle.typedb.driver.jni.typedb_driver.session_is_open;
@@ -38,10 +41,14 @@ public class TypeDBSessionImpl extends NativeObject<com.vaticle.typedb.driver.jn
     private final Type type;
     private final TypeDBOptions options;
 
+    private final List<SessionOnClose> callbacks;
+
     TypeDBSessionImpl(Database database, Type type, TypeDBOptions options) {
         super(newNative(database, type, options));
         this.type = type;
         this.options = options;
+
+        callbacks = new ArrayList<>();
     }
 
     private static com.vaticle.typedb.driver.jni.Session newNative(Database database, Type type, TypeDBOptions options) {
@@ -84,18 +91,21 @@ public class TypeDBSessionImpl extends NativeObject<com.vaticle.typedb.driver.jn
 
     @Override
     public void onClose(Runnable function) {
-        session_on_close(nativeObject, new Callback(function).released());
+        SessionOnClose callback = new SessionOnClose(function);
+        callbacks.add(callback);
+        session_on_close(nativeObject, callback.released());
     }
 
     @Override
     public void close() {
         session_force_close(nativeObject);
+        callbacks.clear();
     }
 
-    static class Callback extends com.vaticle.typedb.driver.jni.SessionCallbackDirector {
+    static class SessionOnClose extends com.vaticle.typedb.driver.jni.SessionCallbackDirector {
         private final Runnable function;
 
-        Callback(Runnable function) {
+        SessionOnClose(Runnable function) {
             this.function = function;
         }
 

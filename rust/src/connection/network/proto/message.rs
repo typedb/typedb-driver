@@ -884,11 +884,7 @@ impl TryFromProto<thing_type::Res> for ThingTypeResponse {
                 })
             }
             Some(thing_type::res::Res::EntityTypeGetSupertypeRes(entity_type::get_supertype::Res { entity_type })) => {
-                Ok(Self::EntityTypeGetSupertype {
-                    entity_type: EntityType::from_proto(
-                        entity_type.ok_or(ConnectionError::MissingResponseField("entity_type"))?,
-                    ),
-                })
+                Ok(Self::EntityTypeGetSupertype { entity_type: entity_type.map(EntityType::from_proto) })
             }
             Some(thing_type::res::Res::EntityTypeSetSupertypeRes(_)) => Ok(Self::EntityTypeSetSupertype),
             Some(thing_type::res::Res::RelationTypeCreateRes(relation_type::create::Res { relation })) => {
@@ -900,11 +896,7 @@ impl TryFromProto<thing_type::Res> for ThingTypeResponse {
             }
             Some(thing_type::res::Res::RelationTypeGetSupertypeRes(relation_type::get_supertype::Res {
                 relation_type,
-            })) => Ok(Self::RelationTypeGetSupertype {
-                relation_type: RelationType::from_proto(
-                    relation_type.ok_or(ConnectionError::MissingResponseField("relation_type"))?,
-                ),
-            }),
+            })) => Ok(Self::RelationTypeGetSupertype { relation_type: relation_type.map(RelationType::from_proto) }),
             Some(thing_type::res::Res::RelationTypeSetSupertypeRes(_)) => Ok(Self::RelationTypeSetSupertype),
             Some(thing_type::res::Res::RelationTypeGetRelatesForRoleLabelRes(
                 relation_type::get_relates_for_role_label::Res { role_type },
@@ -927,9 +919,7 @@ impl TryFromProto<thing_type::Res> for ThingTypeResponse {
             Some(thing_type::res::Res::AttributeTypeGetSupertypeRes(attribute_type::get_supertype::Res {
                 attribute_type,
             })) => Ok(Self::AttributeTypeGetSupertype {
-                attribute_type: AttributeType::try_from_proto(
-                    attribute_type.ok_or(ConnectionError::MissingResponseField("attribute_type"))?,
-                )?,
+                attribute_type: attribute_type.map(AttributeType::try_from_proto).transpose()?,
             }),
             Some(thing_type::res::Res::AttributeTypeSetSupertypeRes(_)) => Ok(Self::AttributeTypeSetSupertype),
             Some(thing_type::res::Res::AttributeTypeGetRegexRes(attribute_type::get_regex::Res { regex })) => {
@@ -1075,11 +1065,7 @@ impl TryFromProto<role_type::Res> for RoleTypeResponse {
             Some(role_type::res::Res::RoleTypeDeleteRes(_)) => Ok(Self::Delete),
             Some(role_type::res::Res::RoleTypeSetLabelRes(_)) => Ok(Self::SetLabel),
             Some(role_type::res::Res::RoleTypeGetSupertypeRes(role_type::get_supertype::Res { role_type })) => {
-                Ok(Self::GetSupertype {
-                    role_type: RoleType::from_proto(
-                        role_type.ok_or(ConnectionError::MissingResponseField("role_type"))?,
-                    ),
-                })
+                Ok(Self::GetSupertype { role_type: role_type.map(RoleType::from_proto) })
             }
             None => Err(ConnectionError::MissingResponseField("res").into()),
         }

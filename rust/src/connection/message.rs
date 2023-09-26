@@ -401,14 +401,14 @@ pub(super) enum ThingTypeResponse {
     ThingTypeGetSyntax { syntax: String },
 
     EntityTypeCreate { entity: Entity },
-    EntityTypeGetSupertype { entity_type: EntityType },
+    EntityTypeGetSupertype { entity_type: Option<EntityType> },
     EntityTypeSetSupertype,
     EntityTypeGetSupertypes { entity_types: Vec<EntityType> },
     EntityTypeGetSubtypes { entity_types: Vec<EntityType> },
     EntityTypeGetInstances { entities: Vec<Entity> },
 
     RelationTypeCreate { relation: Relation },
-    RelationTypeGetSupertype { relation_type: RelationType },
+    RelationTypeGetSupertype { relation_type: Option<RelationType> },
     RelationTypeSetSupertype,
     RelationTypeGetSupertypes { relation_types: Vec<RelationType> },
     RelationTypeGetSubtypes { relation_types: Vec<RelationType> },
@@ -421,7 +421,7 @@ pub(super) enum ThingTypeResponse {
 
     AttributeTypePut { attribute: Attribute },
     AttributeTypeGet { attribute: Option<Attribute> },
-    AttributeTypeGetSupertype { attribute_type: AttributeType },
+    AttributeTypeGetSupertype { attribute_type: Option<AttributeType> },
     AttributeTypeSetSupertype,
     AttributeTypeGetSupertypes { attribute_types: Vec<AttributeType> },
     AttributeTypeGetSubtypes { attribute_types: Vec<AttributeType> },
@@ -448,7 +448,7 @@ pub(super) enum RoleTypeRequest {
 pub(super) enum RoleTypeResponse {
     Delete,
     SetLabel,
-    GetSupertype { role_type: RoleType },
+    GetSupertype { role_type: Option<RoleType> },
     GetSupertypes { role_types: Vec<RoleType> },
     GetSubtypes { role_types: Vec<RoleType> },
     GetRelationTypes { relation_types: Vec<RelationType> },

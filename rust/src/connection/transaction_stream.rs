@@ -423,7 +423,7 @@ impl TransactionStream {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn entity_type_get_supertype(&self, entity_type: EntityType) -> Result<EntityType> {
+    pub(crate) async fn entity_type_get_supertype(&self, entity_type: EntityType) -> Result<Option<EntityType>> {
         match self.thing_type_single(ThingTypeRequest::EntityTypeGetSupertype { entity_type }).await? {
             ThingTypeResponse::EntityTypeGetSupertype { entity_type } => Ok(entity_type),
             other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
@@ -489,7 +489,7 @@ impl TransactionStream {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn relation_type_get_supertype(&self, relation_type: RelationType) -> Result<RelationType> {
+    pub(crate) async fn relation_type_get_supertype(&self, relation_type: RelationType) -> Result<Option<RelationType>> {
         match self.thing_type_single(ThingTypeRequest::RelationTypeGetSupertype { relation_type }).await? {
             ThingTypeResponse::RelationTypeGetSupertype { relation_type } => Ok(relation_type),
             other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
@@ -648,7 +648,7 @@ impl TransactionStream {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn attribute_type_get_supertype(&self, attribute_type: AttributeType) -> Result<AttributeType> {
+    pub(crate) async fn attribute_type_get_supertype(&self, attribute_type: AttributeType) -> Result<Option<AttributeType>> {
         match self.thing_type_single(ThingTypeRequest::AttributeTypeGetSupertype { attribute_type }).await? {
             ThingTypeResponse::AttributeTypeGetSupertype { attribute_type } => Ok(attribute_type),
             other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
@@ -774,7 +774,7 @@ impl TransactionStream {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn role_type_get_supertype(&self, role_type: RoleType) -> Result<RoleType> {
+    pub(crate) async fn role_type_get_supertype(&self, role_type: RoleType) -> Result<Option<RoleType>> {
         match self.role_type_single(RoleTypeRequest::GetSupertype { role_type }).await? {
             RoleTypeResponse::GetSupertype { role_type } => Ok(role_type),
             other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
