@@ -41,6 +41,7 @@ fun main(args: Array<String>) {
         it.toString().endsWith(".html") &&
                 (it.toString().contains(".api.") || it.toString().contains(".common."))
     }.forEach {
+        println(it)
         val html = it.readText(Charsets.UTF_8)
         val parsed = Jsoup.parse(html)
 
@@ -128,15 +129,14 @@ fun parseMethod(element: Element): Method {
     val methodArgs = element.select(".field-list > dt:contains(Parameters) + dd p").map {
         val arg_name = it.selectFirst("strong")!!.text()
         assert(allArgs.contains(arg_name))
-        it.selectFirst("strong")!!.remove()
-        val arg_descr = textWithCode(it.html()).removePrefix("– ")
+        val arg_descr = textWithCode(removeArgName(it.html())).removePrefix(" – ")
         Argument(
             name = arg_name,
             type = allArgs[arg_name],
             description = arg_descr
         )
     }
-    val methodReturnDescr = element.select(".field-list > dt:contains(Returns) + dd p")?.text()
+    val methodReturnDescr = element.select(".field-list > dt:contains(Returns) + dd p").text()
     val methodExamples = element.select("section:contains(Examples) .highlight").map { it.text() }
 
     return Method(
@@ -191,4 +191,8 @@ fun replaceEmTags(text: String): String {
 
 fun removeAllTags(text: String): String {
     return Regex("<[^>]*>").replace(text, "")
+}
+
+fun removeArgName(text: String): String {
+    return Regex("<strong>[^<]*</strong>").replace(text, "")
 }
