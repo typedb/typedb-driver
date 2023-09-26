@@ -128,7 +128,8 @@ fun parseMethod(element: Element): Method {
     val methodArgs = element.select(".field-list > dt:contains(Parameters) + dd p").map {
         val arg_name = it.selectFirst("strong")!!.text()
         assert(allArgs.contains(arg_name))
-        val arg_descr = it.textNodes().joinToString("").removePrefix(" – ")
+        it.selectFirst("strong")!!.remove()
+        val arg_descr = textWithCode(it.html()).removePrefix("– ")
         Argument(
             name = arg_name,
             type = allArgs[arg_name],
