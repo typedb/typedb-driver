@@ -73,7 +73,7 @@ fun parseClass(element: Element): Class {
     val classBases = bases[0]!!.select("span").map { it.html() }
     val classDescr = descr.map { textWithCode(it.html()) }
 
-    val classExamples = element.select("section:contains(Examples) .highlight").map { it.text() }
+    val classExamples = element.select("dl.class > dt.sig-object + dd > section:contains(Example) > div > .highlight").map { it.text() }
 
     val methods = classDetails.select("dl.method")
         .map { parseMethod(it) }
