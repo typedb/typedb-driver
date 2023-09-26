@@ -64,6 +64,8 @@ fun parseClass(element: Element): Class {
     val classBases = bases[0]!!.select("span").map { it.html() }
     val classDescr = descr.map { textWithCode(it.html()) }
 
+    val classExamples = element.select("section:contains(Examples) .highlight").map { it.text() }
+
     val methods = classDetails.select("dl.method")
         .map { parseMethod(it) }
 
@@ -76,6 +78,7 @@ fun parseClass(element: Element): Class {
         methods = methods,
         fields = properties,
         bases = classBases,
+        examples = classExamples,
     )
 }
 
@@ -128,11 +131,15 @@ fun getArgsFromSignature(methodSignature: Element): Map<String, String?> {
 }
 
 fun textWithCode(text: String): String {
-    return removeAllTags(replaceCodeTags(text))
+    return removeAllTags(replaceEmTags(replaceCodeTags(text)))
 }
 
 fun replaceCodeTags(text: String): String {
     return Regex("<code[^>]*>").replace(text, "`").replace("</code>", "`")
+}
+
+fun replaceEmTags(text: String): String {
+    return Regex("<em[^>]*>").replace(text, "_").replace("</em>", "_")
 }
 
 fun removeAllTags(text: String): String {
