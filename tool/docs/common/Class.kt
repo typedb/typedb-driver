@@ -31,7 +31,14 @@ data class Class(
         var result = ""
         result += "[#_${this.name}]\n"
         result += "= ${this.name}\n\n"
-        result += "=== Description\n\n${this.description.joinToString("\n\n")}\n\n"
+        result += "== Description\n\n${this.description.joinToString("\n\n")}\n\n"
+
+        if (this.examples.isNotEmpty()) {
+            result += "== Code examples\n\n"
+            this.examples.forEach {
+                result += "[source,$language]\n----\n$it\n----\n\n"
+            }
+        }
 
         if (this.fields.isNotEmpty()) {
             result += "== Properties\n\n"
