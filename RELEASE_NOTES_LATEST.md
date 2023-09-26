@@ -33,6 +33,10 @@ Documentation: https://docs.vaticle.com/docs/driver-api/nodejs
 npm install typedb-driver@{version}
 ```
 
+## Architectural Changes
+
+**We have centralised all TypeDB Driver libraries into this repository**. This will make maintanance and development much simpler across the wide surface area exposed by the drivers.
+
 ## New Features
 
 - **Rearchitect Rust Driver to support full TypeDB feature set**
@@ -47,7 +51,7 @@ npm install typedb-driver@{version}
 
 - **Reimplement Python Driver using FFI over Rust**
 
-- **Reimplement Python Driver using FFI over Rust**
+- **Update TypeDB NodeJS Driver to the latest feature set**
 
 
 ## Bugs Fixed
@@ -63,6 +67,3 @@ npm install typedb-driver@{version}
 
 
 ## Other Improvements
-
-- **Move all drivers into sub-packages in this centralised repository**
-
