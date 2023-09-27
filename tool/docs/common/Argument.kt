@@ -43,4 +43,25 @@ data class Argument(
         this.defaultValue?.let { result += "`$it`" }
         return result
     }
+
+    fun toJavaCommentArg(): String {
+        var result = ""
+        result += "     * @param ${snakeToCamel(this.name)} ${backquotesToCode(this.description)}\n"
+        return result
+    }
+
+    fun toJavaCommentField(): String {
+        var result = ""
+        result += "${snakeToCamel(this.name)}\n\n"
+        result += "    /**\n     * ${backquotesToCode(this.description)}\n"
+        return result + "     */\n\n"
+    }
+}
+
+fun backquotesToCode(text: String?): String? {
+    return text?.let { Regex("`([^`]*)`").replace(text, "<code>$1</code>") }
+}
+
+fun snakeToCamel(text: String): String {
+    return Regex("_(\\w)").replace(text, "\\U$1\\E")
 }

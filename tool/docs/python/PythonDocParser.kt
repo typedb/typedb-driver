@@ -36,6 +36,7 @@ fun main(args: Array<String>) {
 
     val docsDir = Paths.get(outputDirectoryName)
     Files.createDirectory(docsDir)
+    Files.createDirectory(docsDir.resolve("for_java"))
 
     File(inputDirectoryName).walkTopDown().filter {
         it.toString().endsWith(".html") &&
@@ -53,12 +54,19 @@ fun main(args: Array<String>) {
                 outputFile.createNewFile()
                 outputFile.writeText(parsedClass.toAsciiDoc("python"))
 
+                val outputFileJava = docsDir.resolve("for_java").resolve(parsedClass.name + ".txt").toFile()
+                outputFileJava.createNewFile()
+                outputFileJava.writeText(parsedClass.toJavaComment())
             } else {
                 val parsedClass = parseClass(it)
                 println(parsedClass)
                 val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
                 outputFile.createNewFile()
                 outputFile.writeText(parsedClass.toAsciiDoc("python"))
+
+                val outputFileJava = docsDir.resolve("for_java").resolve(parsedClass.name + ".txt").toFile()
+                outputFileJava.createNewFile()
+                outputFileJava.writeText(parsedClass.toJavaComment())
             }
         }
     }
@@ -184,7 +192,7 @@ fun textWithCode(text: String): String {
 }
 
 fun replaceCodeTags(text: String): String {
-    return Regex("<code[^>]*>").replace(text, "`").replace("</code>", "` ")
+    return Regex("<code[^>]*>").replace(text, "`").replace("</code>", "`")
 }
 
 fun replaceEmTags(text: String): String {

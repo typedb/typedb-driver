@@ -55,4 +55,23 @@ data class Class(
 
         return result
     }
+
+    fun toJavaComment(): String {
+        var result = ""
+        result += "${this.name}\n\n"
+
+        if (this.description.isNotEmpty()) {
+            result += "/**\n * ${this.description.map { backquotesToCode(it) }.joinToString("\n * ")}\n */\n\n"
+        }
+
+        if (this.fields.isNotEmpty()) {
+            this.fields.forEach { result += it.toJavaCommentField() }
+        }
+
+        if (this.methods.isNotEmpty()) {
+            this.methods.forEach { result += it.toJavaComment() }
+        }
+
+        return result
+    }
 }

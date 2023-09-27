@@ -53,4 +53,27 @@ data class Method(
 
         return result
     }
+
+    fun toJavaComment(): String {
+        var result = ""
+        result += "${this.name}\n\n"
+        result += "    /**\n     * ${this.description.map { backquotesToCode(it) }.joinToString("\n     * ")}\n"
+        result += "     * \n"
+
+        if (this.examples.isNotEmpty()) {
+            result += "     * <h3>Examples</h3>\n"
+            result += "     * <pre>\n"
+            this.examples.forEach {
+                result += "     * ${snakeToCamel(it)}\n"
+            }
+            result += "     * </pre>\n"
+        }
+
+        if (this.args.isNotEmpty()) {
+            result += "     * \n"
+            this.args.forEach { result += it.toJavaCommentArg() }
+        }
+
+        return result + "     */\n\n"
+    }
 }
