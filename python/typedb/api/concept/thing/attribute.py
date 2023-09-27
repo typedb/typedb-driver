@@ -278,7 +278,7 @@ class Attribute(Thing, ABC):
     @abstractmethod
     def to_json(self) -> Mapping[str, Union[str, int, float, bool]]:
         """
-        Retrieves an attribute as JSON.
+        Retrieves this ``Attribute`` as JSON.
 
         :return:
 

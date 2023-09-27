@@ -36,39 +36,159 @@ class Type(Concept, ABC):
 
     @abstractmethod
     def get_label(self) -> Label:
+        """
+        Retrieves the unique label of the type.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            type_.get_label()
+        """
         pass
 
     @abstractmethod
     def set_label(self, transaction: TypeDBTransaction, new_label: Label) -> None:
+        """
+        Renames the label of the type. The new label must remain unique.
+
+        :param transaction: The current ``Transaction``
+        :param new_label: The new ``Label`` to be given to the type.
+        :return:
+
+        Examples
+        --------
+        ::
+
+            type_.set_label(transaction, new_label)
+        """
         pass
 
     @abstractmethod
     def is_root(self) -> bool:
+        """
+        Checks if the type is a root type.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            type_.is_root()
+        """
         pass
     
     @abstractmethod
     def is_abstract(self) -> bool:
+        """
+        Checks if the type is prevented from having data instances (i.e., ``abstract``).
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            type_.is_abstract()
+        """
         pass
 
     def is_type(self) -> bool:
+        """
+        Checks if the concept is a ``Type``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            type_.is_type()
+        """
         return True
 
     def to_json(self) -> Mapping[str, str]:
+        """
+        Retrieves the type as JSON.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            type_.to_json()
+        """
         return {"label": self.get_label().scoped_name()}
 
     @abstractmethod
     def get_supertype(self, transaction: TypeDBTransaction) -> Optional[Type]:
+        """
+        Retrieves the most immediate supertype of the type.
+
+        :param transaction: The current ``Transaction``
+        :return:
+
+        Examples
+        --------
+        ::
+
+            type_.get_supertype(transaction)
+        """
         pass
 
     @abstractmethod
     def get_supertypes(self, transaction: TypeDBTransaction) -> Iterator[Type]:
+        """
+        Retrieves all supertypes of the type.
+
+        :param transaction: The current ``Transaction``
+        :return:
+
+        Examples
+        --------
+        ::
+
+            type_.get_supertypes(transaction)
+        """
         pass
 
     @abstractmethod
     def get_subtypes(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                      ) -> Iterator[Type]:
+        """
+        Retrieves all direct and indirect (or direct only) subtypes of the type.
+
+        :param transaction: The current ``Transaction``
+        :param transitivity: ``Transitivity.TRANSITIVE`` for direct
+            and indirect subtypes, ``Transitivity.EXPLICIT`` for direct
+            subtypes only
+        :return:
+
+        Examples
+        --------
+        ::
+
+            type_.get_subtypes(transaction)
+            type_.get_subtypes(transaction, Transitivity.EXPLICIT)
+        """
         pass
 
     @abstractmethod
     def delete(self, transaction: TypeDBTransaction) -> None:
+        """
+        Deletes this type from the database.
+
+        :param transaction: The current ``Transaction``
+        :return:
+
+        Examples
+        --------
+        ::
+
+            type_.delete(transaction)
+        """
         pass

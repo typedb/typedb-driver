@@ -101,7 +101,7 @@ class ThingType(Type, ABC):
         ::
 
             thing_type.get_subtypes(transaction)
-           thing_type.get_subtypes(transaction, Transitivity.EXPLICIT)
+            thing_type.get_subtypes(transaction, Transitivity.EXPLICIT)
         """
         pass
 
@@ -123,7 +123,7 @@ class ThingType(Type, ABC):
         ::
 
             thing_type.get_instances(transaction)
-           thing_type.get_instances(transaction, Transitivity.EXPLICIT)
+            thing_type.get_instances(transaction, Transitivity.EXPLICIT)
         """
         pass
 
@@ -176,7 +176,7 @@ class ThingType(Type, ABC):
         ::
 
             thing_type.set_plays(transaction, role_type)
-           thing_type.set_plays(transaction, role_type, overridden_type)
+            thing_type.set_plays(transaction, role_type, overridden_type)
         """
         pass
 
@@ -218,9 +218,9 @@ class ThingType(Type, ABC):
         ::
 
             thing_type.set_owns(transaction, attribute_type);
-           thing_type.set_owns(transaction, attribute_type,
-                               overridden_type=overridden_type,
-                               annotations={Annotation.key()});
+            thing_type.set_owns(transaction, attribute_type,
+                                overridden_type=overridden_type,
+                                annotations={Annotation.key()});
         """
         pass
 
@@ -260,7 +260,7 @@ class ThingType(Type, ABC):
         ::
 
             thing_type.get_plays(transaction)
-           thing_type.get_plays(transaction, Transitivity.EXPLICIT)
+            thing_type.get_plays(transaction, Transitivity.EXPLICIT)
         """
         pass
 
