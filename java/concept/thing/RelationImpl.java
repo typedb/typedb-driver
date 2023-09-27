@@ -78,7 +78,7 @@ public class RelationImpl extends ThingImpl implements Relation {
     }
 
     @Override
-    public Stream<ThingImpl> getPlayers(TypeDBTransaction transaction, RoleType... roleTypes) {
+    public Stream<ThingImpl> getPlayersByRoleType(TypeDBTransaction transaction, RoleType... roleTypes) {
         try {
             return relation_get_players_by_role_type(nativeTransaction(transaction),
                 nativeObject, Arrays.stream(roleTypes).map(rt -> ((RoleTypeImpl) rt).nativeObject).toArray(com.vaticle.typedb.driver.jni.Concept[]::new)).stream().map(ThingImpl::of);
@@ -88,7 +88,7 @@ public class RelationImpl extends ThingImpl implements Relation {
     }
 
     @Override
-    public Map<RoleTypeImpl, List<ThingImpl>> getPlayersByRoleType(TypeDBTransaction transaction) {
+    public Map<RoleTypeImpl, List<ThingImpl>> getPlayers(TypeDBTransaction transaction) {
         Map<RoleTypeImpl, List<ThingImpl>> rolePlayerMap = new HashMap<>();
         try {
             relation_get_role_players(nativeTransaction(transaction), nativeObject).stream().forEach(rolePlayer -> {
