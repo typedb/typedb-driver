@@ -33,10 +33,14 @@ if TYPE_CHECKING:
 
 
 class Relation(Thing, ABC):
+    """
+    Relation is an instance of a relation type and can be uniquely addressed
+    by a combination of its type, owned attributes and role players.
+    """
 
     def is_relation(self) -> bool:
         """
-        Checks if the concept is an ``Relation``.
+        Checks if the concept is a ``Relation``.
 
         :return:
 
@@ -82,7 +86,7 @@ class Relation(Thing, ABC):
         """
         Adds a new roleplayer to play the given role in this ``Relation``.
         
-        :param transaction: The current transaction
+        :param transaction: The current ``Transaction``
         :param role_type: The role to be played by the ``player``
         :param player: The thing to play the role
         :return: 
@@ -100,7 +104,7 @@ class Relation(Thing, ABC):
         """
         Removes the association of the given instance that plays the given role in this ``Relation``.
 
-        :param transaction: The current transaction
+        :param transaction: The current ``Transaction``
         :param role_type: The role to no longer be played by the thing in this ``Relation``
         :param player: The instance to no longer play the role in this ``Relation``
         :return:
@@ -119,7 +123,7 @@ class Relation(Thing, ABC):
         Retrieves all roleplayers of this ``Relation``, optionally
         filtered by given role types.
 
-        :param transaction: The current transaction
+        :param transaction: The current ``Transaction``
         :param role_types: 0 or more role types
         :return:
 
@@ -138,7 +142,7 @@ class Relation(Thing, ABC):
         Retrieves a mapping of all instances involved in the ``Relation``
         and the role each play.
 
-        :param transaction: The current transaction
+        :param transaction: The current ``Transaction``
         :return:
 
         Examples
@@ -154,7 +158,7 @@ class Relation(Thing, ABC):
         """
         Retrieves all role types currently played in this ``Relation``.
 
-        :param transaction: The current transaction
+        :param transaction: The current ``Transaction``
         :return:
 
         Examples

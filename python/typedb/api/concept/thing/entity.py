@@ -31,6 +31,13 @@ if TYPE_CHECKING:
 
 
 class Entity(Thing, ABC):
+    """
+    Instance of data of an entity type, representing a standalone object
+    that exists in the data model independently.
+
+    Entity does not have a value. It is usually addressed by its ownership
+    over attribute instances and/or roles played in relation instances.
+    """
 
     def is_entity(self) -> bool:
         """
@@ -42,7 +49,7 @@ class Entity(Thing, ABC):
         --------
         ::
 
-           attribute.is_entity()
+           entity.is_entity()
         """
         return True
 
@@ -56,7 +63,7 @@ class Entity(Thing, ABC):
         --------
         ::
 
-           attribute.as_entity()
+           entity.as_entity()
         """
         return self
 

@@ -39,73 +39,309 @@ if TYPE_CHECKING:
 class ThingType(Type, ABC):
 
     def is_thing_type(self) -> bool:
+        """
+        Checks if the concept is a ``ThingType``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           thing_type.is_thing_type()
+        """
         return True
 
     @abstractmethod
     def get_supertype(self, transaction: TypeDBTransaction) -> Optional[ThingType]:
+        """
+        Retrieves the most immediate supertype of the ``ThingType``.
+
+        :param transaction: The current ``Transaction``
+        :return:
+
+        Examples
+        --------
+        ::
+
+           thing_type.get_supertype(transaction)
+        """
         pass
 
     @abstractmethod
     def get_supertypes(self, transaction: TypeDBTransaction) -> Iterator[ThingType]:
+        """
+        Retrieves all supertypes of the ``ThingType``.
+
+        :param transaction: The current ``Transaction``
+        :return:
+
+        Examples
+        --------
+        ::
+
+           thing_type.get_supertypes(transaction)
+        """
         pass
 
     @abstractmethod
     def get_subtypes(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                      ) -> Iterator[ThingType]:
+        """
+        Retrieves all direct and indirect (or direct only) subtypes of the ``ThingType``.
+
+        :param transaction: The current ``Transaction``
+        :param transitivity: ``Transitivity.TRANSITIVE`` for direct
+            and indirect subtypes, ``Transitivity.EXPLICIT`` for direct
+            subtypes only
+        :return:
+
+        Examples
+        --------
+        ::
+
+           thing_type.get_subtypes(transaction)
+           thing_type.get_subtypes(transaction, Transitivity.EXPLICIT)
+        """
         pass
 
     @abstractmethod
     def get_instances(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                       ) -> Iterator[Thing]:
+        """
+        Retrieves all direct and indirect (or direct only) ``Thing`` objects
+        that are instances of this ``ThingType``.
+
+        :param transaction: The current ``Transaction``
+        :param transitivity: ``Transitivity.TRANSITIVE`` for direct
+            and indirect instances, ``Transitivity.EXPLICIT`` for direct
+            instances only
+        :return:
+
+        Examples
+        --------
+        ::
+
+           thing_type.get_instances(transaction)
+           thing_type.get_instances(transaction, Transitivity.EXPLICIT)
+        """
         pass
 
     @abstractmethod
     def set_abstract(self, transaction: TypeDBTransaction) -> None:
+        """
+        Set a ``ThingType`` to be abstract, meaning it cannot have instances.
+
+        :param transaction: The current ``Transaction``
+        :return:
+
+        Examples
+        --------
+        ::
+
+           thing_type.set_abstract(transaction)
+        """
         pass
 
     @abstractmethod
     def unset_abstract(self, transaction: TypeDBTransaction) -> None:
+        """
+        Set a ``ThingType`` to be non-abstract, meaning it can have instances.
+
+        :param transaction: The current ``Transaction``
+        :return:
+
+        Examples
+        --------
+        ::
+
+           thing_type.unset_abstract(transaction)
+        """
         pass
 
     @abstractmethod
     def set_plays(self, transaction: TypeDBTransaction, role_type: RoleType,
                   overriden_type: Optional[RoleType] = None) -> None:
+        """
+        Allows the instances of this ``ThingType`` to play the given role.
+
+        :param transaction: The current ``Transaction``
+        :param role_type: The role to be played by the instances of this type
+        :param overriden_type: The role type that this role overrides,
+            if applicable
+        :return:
+
+        Examples
+        --------
+        ::
+
+           thing_type.set_plays(transaction, role_type)
+           thing_type.set_plays(transaction, role_type, overridden_type)
+        """
         pass
 
     @abstractmethod
     def unset_plays(self, transaction: TypeDBTransaction, role_type: RoleType) -> None:
+        """
+        Disallows the instances of this ``ThingType`` from playing the given role.
+
+        :param transaction: The current ``Transaction``
+        :param role_type: The role to not be played by the instances of this type.
+        :return:
+
+        Examples
+        --------
+        ::
+
+           thing_type.unset_plays(transaction, role_type)
+        """
         pass
 
     @abstractmethod
     def set_owns(self, transaction: TypeDBTransaction, attribute_type: AttributeType,
                  overridden_type: Optional[AttributeType] = None,
                  annotations: Optional[set[Annotation]] = None) -> None:
+        """
+        Allows the instances of this ``ThingType`` to own
+        the given ``AttributeType``.
+
+        :param transaction: The current ``Transaction``
+        :param attribute_type: The ``AttributeType`` to be owned
+            by the instances of this type.
+        :param overridden_type: The ``AttributeType`` that this attribute
+            ownership overrides, if applicable.
+        :param annotations: Adds annotations to the ownership.
+        :return:
+
+        Examples
+        --------
+        ::
+
+           thing_type.set_owns(transaction, attribute_type);
+           thing_type.set_owns(transaction, attribute_type,
+                               overridden_type=overridden_type,
+                               annotations={Annotation.key()});
+        """
         pass
 
     @abstractmethod
     def unset_owns(self, transaction: TypeDBTransaction, attribute_type: AttributeType) -> None:
+        """
+        Disallows the instances of this ``ThingType`` from owning
+        the given ``AttributeType``.
+
+        :param transaction: The current ``Transaction``
+        :param attribute_type: The ``AttributeType`` to not be owned by the type.
+        :return:
+
+        Examples
+        --------
+        ::
+
+           thing_type.unset_owns(transaction, attribute_type)
+        """
         pass
 
     @abstractmethod
-    @abstractmethod
     def get_plays(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                   ) -> Iterator[RoleType]:
+        """
+        Retrieves all direct and inherited (or direct only) roles that
+        are allowed to be played by the instances of this ``ThingType``.
+
+        :param transaction: The current ``Transaction``
+        :param transitivity: transitivity: ``Transitivity.TRANSITIVE`` for direct
+            and indirect playing, ``Transitivity.EXPLICIT`` for direct
+            playing only
+        :return:
+
+        Examples
+        --------
+        ::
+
+           thing_type.get_plays(transaction)
+           thing_type.get_plays(transaction, Transitivity.EXPLICIT)
+        """
         pass
 
     @abstractmethod
     def get_plays_overridden(self, transaction: TypeDBTransaction, role_type: RoleType) -> Optional[RoleType]:
+        """
+        Retrieves a ``RoleType`` that is overridden by the given ``role_type``
+        for this ``ThingType``.
+
+        :param transaction: The current ``Transaction``
+        :param role_type: The ``RoleType`` that overrides an inherited role
+        :return:
+
+        Examples
+        --------
+        ::
+
+           thing_type.get_plays_overridden(transaction, role_type)
+        """
         pass
 
+    @abstractmethod
     def get_owns(self, transaction: TypeDBTransaction, value_type: Optional[ValueType] = None,
                  transitivity: Transitivity = Transitivity.TRANSITIVE, annotations: Optional[set[Annotation]] = None
                  ) -> Iterator[AttributeType]:
+        """
+        Retrieves ``AttributeType`` that the instances of this ``ThingType``
+        are allowed to own directly or via inheritance.
+
+        :param transaction: The current ``Transaction``
+        :param value_type: If specified, only attribute types of this
+            ``ValueType`` will be retrieved.
+        :param transitivity: ``Transitivity.TRANSITIVE`` for direct
+            and inherited ownership, ``Transitivity.EXPLICIT`` for direct
+            ownership only
+        :param annotations: Only retrieve attribute types owned with annotations.
+        :return:
+
+        Examples
+        --------
+        ::
+
+           thing_type.get_owns(transaction)
+           thing_type.get_owns(transaction, value_type,
+                               transitivity=Transitivity.EXPLICIT,
+                               annotations={Annotation.key()})
+        """
         pass
 
     @abstractmethod
     def get_owns_overridden(self, transaction: TypeDBTransaction, attribute_type: AttributeType
                             ) -> Optional[AttributeType]:
+        """
+        Retrieves an ``AttributeType``, ownership of which is overridden
+        for this ``ThingType`` by a given ``attribute_type``.
+
+        :param transaction: The current ``Transaction``
+        :param attribute_type: The ``AttributeType`` that overrides requested
+            ``AttributeType``
+        :return:
+
+        Examples
+        --------
+        ::
+
+           thing_type.get_owns_overridden(transaction, attribute_type)
+        """
         pass
 
     @abstractmethod
     def get_syntax(self, transaction: TypeDBTransaction) -> str:
+        """
+        Produces a pattern for creating this ``ThingType`` in a ``define`` query.
+
+        :param transaction: The current ``Transaction``
+        :return:
+
+        Examples
+        --------
+        ::
+
+           thing_type.get_syntax(transaction)
+        """
         pass

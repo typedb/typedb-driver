@@ -34,46 +34,196 @@ if TYPE_CHECKING:
 
 
 class RelationType(ThingType, ABC):
+    """
+    Relation types (or subtypes of the relation root type) represent relationships
+    between types. Relation types have roles.
+
+    Other types can play roles in relations if it’s mentioned in their definition.
+
+    A relation type must specify at least one role.
+    """
 
     def is_relation_type(self) -> bool:
+        """
+        Checks if the concept is a ``RelationType``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           relation_type.is_relation_type()
+        """
         return True
 
     def as_relation_type(self) -> RelationType:
+        """
+        Casts the concept to ``RelationType``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           relation_type.as_relation_type()
+        """
         return self
 
     @abstractmethod
     def create(self, transaction: TypeDBTransaction) -> Relation:
+        """
+        Creates and returns an instance of this ``RelationType``.
+
+        :param transaction: The current ``Transaction``
+        :return:
+
+        Examples
+        --------
+        ::
+
+           relation_type.create(transaction)
+        """
         pass
 
     @abstractmethod
     def get_instances(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                       ) -> Iterator[Relation]:
+        """
+        Retrieves all direct and indirect (or direct only) ``Relation``\ s
+        that are instances of this ``RelationType``.
+
+        :param transaction: The current ``Transaction``
+        :param transitivity: ``Transitivity.TRANSITIVE`` for direct
+            and indirect instances, ``Transitivity.EXPLICIT`` for direct
+            relates only
+        :return:
+
+        Examples
+        --------
+        ::
+
+           relation_type.get_instances(transaction, transitivity)
+        """
         pass
 
     @abstractmethod
     def get_relates(self, transaction: TypeDBTransaction, role_label: Optional[str] = None,
                     transitivity: Transitivity = Transitivity.TRANSITIVE) \
             -> Union[Optional[RoleType], Iterator[RoleType]]:
+        """
+        Retrieves roles that this ``RelationType`` relates to directly
+        or via inheritance. If ``role_label`` is given, returns
+        a corresponding ``RoleType`` or ``None``.
+
+        :param transaction: The current ``Transaction``
+        :param role_label: Label of the role we wish to retrieve (optional)
+        :param transitivity: ``Transitivity.TRANSITIVE`` for direct
+            and inherited relates, ``Transitivity.EXPLICIT`` for direct
+            relates only
+        :return:
+
+        Examples
+        --------
+        ::
+
+           relation_type.get_relates(transaction, role_label, transitivity)
+        """
         pass
 
     @abstractmethod
     def get_relates_overridden(self, transaction: TypeDBTransaction, role_label: str) -> Optional[RoleType]:
+        """
+        Retrieves a ``RoleType`` that is overridden by the role with
+        the ``role_label``.
+
+        :param transaction: The current ``Transaction``
+        :param role_label: Label of the role that overrides an inherited role
+        :return:
+
+        Examples
+        --------
+        ::
+
+           relation_type.get_relates_overridden(transaction, role_label)
+        """
         pass
 
     @abstractmethod
     def set_relates(self, transaction: TypeDBTransaction, role_label: str, overridden_label: Optional[str] = None
                     ) -> None:
+        """
+        Sets the new role that this ``RelationType`` relates to.
+        If we are setting an overriding type this way, we have to also pass
+        the overridden type as a second argument.
+
+        :param transaction: The current ``Transaction``
+        :param role_label: The new role for the ``RelationType`` to relate to
+        :param overridden_label: The label being overridden, if applicable
+        :return:
+
+        Examples
+        --------
+        ::
+
+           relation_type.set_relates(transaction, role_label)
+           relation_type.set_relates(transaction, role_label, overridden_label)
+        """
         pass
 
     @abstractmethod
     def unset_relates(self, transaction: TypeDBTransaction, role_label: str) -> None:
+        """
+        Disallows this ``RelationType`` from relating to the given role.
+
+        :param transaction: The current ``Transaction``
+        :param role_label: The role to not relate to the relation type.
+        :return:
+
+        Examples
+        --------
+        ::
+
+           relation_type.unset_relates(transaction, role_label)
+        """
         pass
 
     @abstractmethod
     def get_subtypes(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                      ) -> Iterator[RelationType]:
+        """
+        Retrieves all direct and indirect (or direct only) subtypes
+        of the ``RelationType``.
+
+        :param transaction: The current ``Transaction``
+        :param transitivity: ``Transitivity.TRANSITIVE`` for direct
+            and indirect subtypes, ``Transitivity.EXPLICIT`` for direct
+            subtypes only
+        :return:
+
+        Examples
+        --------
+        ::
+
+           relation_type.get_subtypes(transaction, transitivity)
+        """
         pass
 
     @abstractmethod
     def set_supertype(self, transaction: TypeDBTransaction, super_relation_type: RelationType) -> None:
+        """
+        Sets the supplied ``RelationType`` as the supertype of the current ``RelationType``.
+
+        :param transaction: The current ``Transaction``
+        :param super_relation_type: The ``RelationType`` to set as the supertype
+            of this ``RelationType``
+        :return:
+
+        Examples
+        --------
+        ::
+
+           relation_type.set_supertype(transaction, super_relation_type)
+        """
         pass

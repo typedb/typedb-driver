@@ -33,27 +33,110 @@ if TYPE_CHECKING:
 
 
 class EntityType(ThingType, ABC):
+    """
+    Entity types represent the classification of independent objects
+    in the data model of the business domain.
+    """
 
-    def is_entity_type(self):
+    def is_entity_type(self) -> bool:
+        """
+        Checks if the concept is an ``EntityType``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           entity_type.is_entity_type()
+        """
         return True
 
     def as_entity_type(self) -> EntityType:
+        """
+        Casts the concept to ``EntityType``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           entity_type.as_entity_type()
+        """
         return self
 
     @abstractmethod
     def create(self, transaction: TypeDBTransaction) -> Entity:
+        """
+        Creates and returns a new instance of this ``EntityType``.
+
+        :param transaction: The current ``Transaction``
+        :return:
+
+        Examples
+        --------
+        ::
+
+           entity_type.create(transaction)
+        """
         pass
 
     @abstractmethod
     def get_subtypes(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                      ) -> Iterator[EntityType]:
+        """
+        Retrieves all direct and indirect (or direct only) subtypes of the ``EntityType``.
+
+        :param transaction: The current ``Transaction``
+        :param transitivity: ``Transitivity.TRANSITIVE`` for direct
+            and indirect subtypes, ``Transitivity.EXPLICIT`` for direct
+            subtypes only
+        :return:
+
+        Examples
+        --------
+        ::
+
+           entity_type.get_subtypes(transaction, transitivity)
+        """
         pass
 
     @abstractmethod
     def get_instances(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                       ) -> Iterator[Entity]:
+        """
+        Retrieves all direct and indirect (or direct only) ``Entity`` objects
+        that are instances of this ``EntityType``.
+
+        :param transaction: The current ``Transaction``
+        :param transitivity: ``Transitivity.TRANSITIVE`` for direct
+            and indirect instances, ``Transitivity.EXPLICIT`` for direct
+            instances only
+        :return:
+
+        Examples
+        --------
+        ::
+
+           entity_type.get_instances(transaction, transitivity)
+        """
         pass
 
     @abstractmethod
-    def set_supertype(self, transaction: TypeDBTransaction, super_entity_type: EntityType):
+    def set_supertype(self, transaction: TypeDBTransaction, super_entity_type: EntityType) -> None:
+        """
+        Sets the supplied ``EntityType`` as the supertype of the current ``EntityType``.
+
+        :param transaction: The current ``Transaction``
+        :param super_entity_type: The ``EntityType`` to set as the supertype of
+            this ``EntityType``
+        :return:
+
+        Examples
+        --------
+        ::
+
+           entity_type.set_supertype(transaction, entity_type)
+        """
         pass

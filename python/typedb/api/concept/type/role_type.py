@@ -36,45 +36,185 @@ if TYPE_CHECKING:
 
 
 class RoleType(Type, ABC):
+    """
+    Roles are special internal types used by relations. We can not create
+    an instance of a role in a database. But we can set an instance
+    of another type (role player) to play a role in a particular instance
+    of a relation type.
+
+    Roles allow a schema to enforce logical constraints on types
+    of role players.
+    """
 
     def is_role_type(self) -> bool:
+        """
+        Checks if the concept is a ``RoleType``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           role_type.is_role_type()
+        """
         return True
 
     def as_role_type(self) -> RoleType:
+        """
+        Casts the concept to ``RoleType``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+           role_type.as_role_type()
+        """
         return self
 
     @abstractmethod
     def get_supertype(self, transaction: TypeDBTransaction) -> Optional[RoleType]:
+        """
+        Retrieves the most immediate supertype of the ``RoleType``.
+
+        :param transaction: The current ``Transaction``
+        :return:
+
+        Examples
+        --------
+        ::
+
+           role_type.get_supertype(transaction)
+        """
         pass
 
     @abstractmethod
     def get_supertypes(self, transaction: TypeDBTransaction) -> Iterator[RoleType]:
+        """
+        Retrieves all supertypes of the ``RoleType``.
+
+        :param transaction: The current ``Transaction``
+        :return:
+
+        Examples
+        --------
+        ::
+
+           role_type.get_supertypes(transaction)
+        """
         pass
 
     @abstractmethod
     def get_subtypes(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                      ) -> Iterator[RoleType]:
+        """
+        Retrieves all direct and indirect (or direct only) subtypes of the ``RoleType``.
+
+        :param transaction: The current ``Transaction``
+        :param transitivity: ``Transitivity.TRANSITIVE`` for direct
+            and indirect subtypes, ``Transitivity.EXPLICIT`` for direct
+            subtypes only
+        :return:
+
+        Examples
+        --------
+        ::
+
+           role_type.get_subtypes(transaction, transitivity)
+        """
         pass
 
     @abstractmethod
     def get_relation_type(self, transaction: TypeDBTransaction) -> RelationType:
+        """
+        Retrieves the ``RelationType`` that this role is directly related to.
+
+        :param transaction: The current ``Transaction``
+        :return:
+
+        Examples
+        --------
+        ::
+
+           role_type.get_relation_type(transaction)
+        """
         pass
 
     @abstractmethod
     def get_relation_types(self, transaction: TypeDBTransaction) -> Iterator[RelationType]:
+        """
+        Retrieves ``RelationType``\ s that this role is related to
+        (directly or indirectly).
+
+        :param transaction: The current ``Transaction``
+        :return:
+
+        Examples
+        --------
+        ::
+
+           role_type.get_relation_types(transaction)
+        """
         pass
 
     @abstractmethod
     def get_player_types(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                          ) -> Iterator[ThingType]:
+        """
+        Retrieves the ``ThingType``\ s whose instances play this role.
+
+        :param transaction: The current ``Transaction``
+        :param transitivity: ``Transitivity.TRANSITIVE`` for direct
+            and indirect playing, ``Transitivity.EXPLICIT`` for direct
+            playing only
+        :return:
+
+        Examples
+        --------
+        ::
+
+           role_type.get_player_types(transaction, transitivity)
+        """
         pass
 
     @abstractmethod
     def get_relation_instances(self, transaction: TypeDBTransaction,
                                transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Relation]:
+        """
+        Retrieves the ``Relation`` instances that this role is related to.
+
+        :param transaction: The current ``Transaction``
+        :param transitivity: ``Transitivity.TRANSITIVE`` for direct
+            and indirect relation, ``Transitivity.EXPLICIT`` for direct
+            relation only
+        :return:
+
+        Examples
+        --------
+        ::
+
+           role_type.get_relation_instances(transaction, transitivity)
+        """
         pass
 
     @abstractmethod
     def get_player_instances(self, transaction: TypeDBTransaction,
                              transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Thing]:
+        """
+        Retrieves the ``Thing`` instances that play this role.
+
+        :param transaction: The current ``Transaction``
+        :param transitivity: ``Transitivity.TRANSITIVE`` for direct
+            and indirect playing, ``Transitivity.EXPLICIT`` for direct
+            playing only
+        :return:
+
+        Examples
+        --------
+        ::
+
+           role_type.get_player_instances(transaction, transitivity)
+        """
         pass

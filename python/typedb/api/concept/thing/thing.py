@@ -92,7 +92,7 @@ class Thing(Concept, ABC):
         --------
         ::
 
-           attribute.is_thing()
+           thing.is_thing()
         """
         return True
 
@@ -106,7 +106,7 @@ class Thing(Concept, ABC):
         --------
         ::
 
-           attribute.as_thing()
+           thing.as_thing()
         """
         return self
 
@@ -129,7 +129,7 @@ class Thing(Concept, ABC):
         """
         Assigns an ``Attribute`` to be owned by this ``Thing``.
 
-        :param transaction: The current transaction
+        :param transaction: The current ``Transaction``
         :param attribute: The ``Attribute`` to be owned by this ``Thing``.
         :return:
 
@@ -146,7 +146,7 @@ class Thing(Concept, ABC):
         """
         Unassigns an ``Attribute`` from this ``Thing``.
 
-        :param transaction: The current transaction
+        :param transaction: The current ``Transaction``
         :param attribute: The ``Attribute`` to be disowned from this ``Thing``.
         :return:
 
@@ -168,13 +168,13 @@ class Thing(Concept, ABC):
         ``AttributeType``\ s.
         Optionally, filtered by ``Annotation``\ s.
 
-        :param transaction: The current transaction
-        :param attribute_type: The ``AttributeType`` to filter \
-        the attributes by
-        :param attribute_types: The ``AttributeType``\ s to filter \
-        the attributes by
-        :param annotations: Only retrieve attributes with all specified \
-        ``Annotation``\ s
+        :param transaction: The current ``Transaction``
+        :param attribute_type: The ``AttributeType`` to filter
+            the attributes by
+        :param attribute_types: The ``AttributeType``\ s to filter
+            the attributes by
+        :param annotations: Only retrieve attributes with all given
+            ``Annotation``\ s
 
         :return:
 
@@ -194,7 +194,7 @@ class Thing(Concept, ABC):
         Retrieves all the ``Relations`` which this ``Thing`` plays a role in,
         optionally filtered by one or more given roles.
 
-        :param transaction: The current transaction
+        :param transaction: The current ``Transaction``
         :param role_types: The list of roles to filter the relations by.
 
         :return:
@@ -212,7 +212,7 @@ class Thing(Concept, ABC):
         """
         Retrieves the roles that this ``Thing`` is currently playing.
 
-        :param transaction: The current transaction
+        :param transaction: The current ``Transaction``
         :return:
 
         Examples
@@ -228,7 +228,7 @@ class Thing(Concept, ABC):
         """
         Deletes this ``Thing``.
 
-        :param transaction: The current transaction
+        :param transaction: The current ``Transaction``
         :return:
 
         Examples
@@ -244,7 +244,7 @@ class Thing(Concept, ABC):
         """
         Checks if this ``Thing`` is deleted.
 
-        :param transaction: The current transaction
+        :param transaction: The current ``Transaction``
         :return:
 
         Examples

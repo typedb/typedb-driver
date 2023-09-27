@@ -35,6 +35,13 @@ if TYPE_CHECKING:
 
 
 class Attribute(Thing, ABC):
+    """
+    Attribute is an instance of the attribute type and has a value.
+    This value is fixed and unique for every given instance of the
+    attribute type.
+
+    Attribute type can be uniquely addressed by its type and value.
+    """
 
     @abstractmethod
     def get_type(self) -> AttributeType:
@@ -288,9 +295,9 @@ class Attribute(Thing, ABC):
         """
         Retrieves the instances that own this ``Attribute``.
 
-        :param transaction: The current transaction
-        :param owner_type: If specified, filter results for only owners \
-        of the given type
+        :param transaction: The current ``Transaction``
+        :param owner_type: If specified, filter results for only owners
+            of the given type
         :return:
 
         Examples
