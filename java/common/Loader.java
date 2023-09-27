@@ -49,9 +49,9 @@ public class Loader {
     private static final Map<Pair<OS, Arch>, String> DRIVER_JNI_JAR_NAME = Map.of(
             new Pair<>(OS.WINDOWS, Arch.x86_64), "windows-x86_64",
             new Pair<>(OS.MAC, Arch.x86_64), "macosx-x86_64",
-            new Pair<>(OS.MAC, Arch.AARCH64), "macosx-aarch64",
+            new Pair<>(OS.MAC, Arch.AARCH64), "macosx-arm64",
             new Pair<>(OS.LINUX, Arch.x86_64), "linux-x86_64",
-            new Pair<>(OS.LINUX, Arch.AARCH64), "linux-aarch64"
+            new Pair<>(OS.LINUX, Arch.AARCH64), "linux-arm64"
     );
 
     private static boolean loaded = false;
