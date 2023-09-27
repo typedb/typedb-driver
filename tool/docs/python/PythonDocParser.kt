@@ -121,7 +121,7 @@ fun parseEnum(element: Element): Enum {
 }
 
 fun parseMethod(element: Element): Method {
-    val methodSignature = element.selectFirst("dt.sig-object")!!.text()
+    val methodSignature = enhanceSignature(element.selectFirst("dt.sig-object")!!.text())
     val methodName = element.selectFirst("dt.sig-object span.sig-name")!!.text()
     val allArgs = getArgsFromSignature(element.selectFirst("dt.sig-object")!!)
     val methodReturnType = element.select(".sig-return-typehint").text()
@@ -197,4 +197,8 @@ fun removeAllTags(text: String): String {
 
 fun removeArgName(text: String): String {
     return Regex("<strong>[^<]*</strong>").replace(text, "")
+}
+
+fun enhanceSignature(signature: String): String {
+    return signature.replace("→", "->").replace("¶", "")
 }
