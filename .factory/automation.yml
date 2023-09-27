@@ -150,9 +150,9 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-enterprise-servers.sh 3 # use source to receive export vars
         bazel test //rust/tests --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
-          --test_arg=behaviour::typeql::match_ \
-          --test_arg=behaviour::typeql::get \
-          --test_arg=behaviour::typeql::expression \
+          --test_arg=behaviour::typeql::language::match_ \
+          --test_arg=behaviour::typeql::language::get \
+          --test_arg=behaviour::typeql::language::expression \
           --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
@@ -169,12 +169,12 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-enterprise-servers.sh 3 # use source to receive export vars
         bazel test //rust/tests --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
-          --test_arg=behaviour::typeql::define \
-          --test_arg=behaviour::typeql::undefine \
-          --test_arg=behaviour::typeql::insert \
-          --test_arg=behaviour::typeql::delete \
-          --test_arg=behaviour::typeql::update \
-          --test_arg=behaviour::typeql::rule_validation \
+          --test_arg=behaviour::typeql::language::define \
+          --test_arg=behaviour::typeql::language::undefine \
+          --test_arg=behaviour::typeql::language::insert \
+          --test_arg=behaviour::typeql::language::delete \
+          --test_arg=behaviour::typeql::language::update \
+          --test_arg=behaviour::typeql::language::rule_validation \
           --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
