@@ -34,7 +34,7 @@ public abstract class ErrorMessage extends com.vaticle.typedb.common.exception.E
                 new Driver(2, "The architecture '%s' is not recognised.");
         public static final Driver UNRECOGNISED_OS_ARCH =
                 new Driver(3, "The platform os '%s' and architecture '%s' are not supported by this driver.");
-        public static final Driver CLIENT_CLOSED =
+        public static final Driver DRIVER_CLOSED =
                 new Driver(4, "The driver has been closed and no further operation is allowed.");
         public static final Driver SESSION_CLOSED =
                 new Driver(5, "The session has been closed and no further operation is allowed.");

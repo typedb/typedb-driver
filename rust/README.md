@@ -1,24 +1,24 @@
 
-# TypeDB Client for Rust
+# TypeDB Driver for Rust
 
-[![Factory](https://factory.vaticle.com/api/status/vaticle/typedb-client-rust/badge.svg)](https://factory.vaticle.com/vaticle/typedb-client-rust)
+[![Factory](https://factory.vaticle.com/api/status/vaticle/typedb-driver-rust/badge.svg)](https://factory.vaticle.com/vaticle/typedb-driver-rust)
 [![Discord](https://img.shields.io/discord/665254494820368395?color=7389D8&label=chat&logo=discord&logoColor=ffffff)](https://vaticle.com/discord)
 [![Discussion Forum](https://img.shields.io/discourse/https/forum.vaticle.com/topics.svg)](https://forum.vaticle.com)
 [![Stack Overflow](https://img.shields.io/badge/stackoverflow-typedb-796de3.svg)](https://stackoverflow.com/questions/tagged/typedb)
 [![Stack Overflow](https://img.shields.io/badge/stackoverflow-typeql-3dce8c.svg)](https://stackoverflow.com/questions/tagged/typeql)
 
 ## Driver Architecture
-To learn about the mechanism that a TypeDB Driver uses to set up communication with databases running on the TypeDB Server, refer to the [Driver Overview](https://typedb.com/docs/clients/2.x/clients).
+To learn about the mechanism that a TypeDB Driver uses to set up communication with databases running on the TypeDB Server, refer to the [Driver Overview](https://typedb.com/docs/drivers/2.x/drivers).
 
 The TypeDB Driver for Rust provides a fully async API that supports multiple async runtimes or a synchronous interface gated by the `sync` feature.
 
 ## API Reference
-To learn about the methods available for executing queries and retrieving their answers using Driver Rust, refer to the [API Reference](https://typedb.com/docs/clients/2.x/rust/rust-api-ref).
+To learn about the methods available for executing queries and retrieving their answers using Driver Rust, refer to the [API Reference](https://typedb.com/docs/drivers/2.x/rust/rust-api-ref).
 
 ## Quickstart
 1. Import `typedb-driver` through Cargo:
 ```toml
-typedb-client = "2.24.2"
+typedb-driver = "2.24.2"
 ```
 2. Make sure the [TypeDB Server](https://docs.vaticle.com/docs/running-typedb/install-and-run#start-the-typedb-server) is running.
 3. See `rust/tests/integration` for examples of usage.

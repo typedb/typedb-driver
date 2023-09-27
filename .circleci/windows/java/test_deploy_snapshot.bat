@@ -29,7 +29,7 @@ powershell -Command "Move-Item -Path bazel-typedb-driver\external\vaticle_typedb
 powershell -Command "Move-Item -Path typedb-server-windows-* -Destination typedb-server-windows"
 START /B "" typedb-server-windows\typedb server
 
-powershell -Command "(gc java\test\deployment\pom.xml) -replace 'CLIENT_JAVA_VERSION_MARKER', '%CIRCLE_SHA1%' | Out-File -encoding ASCII java\test\deployment\pom.xml"
+powershell -Command "(gc java\test\deployment\pom.xml) -replace 'DRIVER_JAVA_VERSION_MARKER', '%CIRCLE_SHA1%' | Out-File -encoding ASCII java\test\deployment\pom.xml"
 type java\test\deployment\pom.xml
 cd java\test\deployment
 CALL mvn test

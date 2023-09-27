@@ -1,10 +1,10 @@
 # TypeDB Driver for Python
 
 ## Driver Architecture
-To learn about the mechanism that a TypeDB Driver uses to set up communication with databases running on the TypeDB Server, refer to the [Driver Overview](https://typedb.com/docs/clients/2.x/clients).
+To learn about the mechanism that a TypeDB Driver uses to set up communication with databases running on the TypeDB Server, refer to the [Driver Overview](https://typedb.com/docs/drivers/2.x/drivers).
 
 ## API Reference
-To learn about the methods available for executing queries and retrieving their answers using Driver Python, refer to the [API Reference](https://typedb.com/docs/clients/2.x/python/python-api-ref).
+To learn about the methods available for executing queries and retrieving their answers using Driver Python, refer to the [API Reference](https://typedb.com/docs/drivers/2.x/python/python-api-ref).
 
 ## Install TypeDB Driver for Python through Pip
 ```
