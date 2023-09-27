@@ -141,7 +141,7 @@ generic_step_impl! {
         supertype: LabelParam,
     ) -> TypeDBResult {
         let tx = context.transaction();
-        assert_eq!(context.get_relation_type(type_label.name).await?.get_supertype(tx).await?.label, supertype.name);
+        assert_eq!(context.get_relation_type(type_label.name).await?.get_supertype(tx).await?.map(|st| st.label), Some(supertype.name));
         Ok(())
     }
 
@@ -524,7 +524,7 @@ generic_step_impl! {
         let tx = context.transaction();
         let relation_type = context.get_relation_type(type_label.name).await?;
         let role_type = relation_type.get_relates_for_role_label(tx, role_name.name).await?.unwrap();
-        assert_eq!(role_type.get_supertype(tx).await?.label, supertype.label);
+        assert_eq!(role_type.get_supertype(tx).await?.map(|st| st.label), Some(supertype.label));
         Ok(())
     }
 
