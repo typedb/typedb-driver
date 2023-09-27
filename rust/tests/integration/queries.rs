@@ -114,11 +114,11 @@ test_for_each_arg! {
         let session = Arc::new(Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?);
         let transaction = session.transaction(Read).await?;
 
-		transaction.on_close({
-			let session = session.clone();
-			move |_| { session.force_close().ok(); }
-		});
-		transaction.force_close();
+        transaction.on_close({
+            let session = session.clone();
+            move |_| { session.force_close().ok(); }
+        });
+        transaction.force_close();
 
         Ok(())
     }

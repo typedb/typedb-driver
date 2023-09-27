@@ -115,7 +115,7 @@ impl Drop for BackgroundRuntime {
         self.is_open.store(false);
         self.shutdown_sink.send(()).ok();
         if let Err(err) = self.callback_handler.take().unwrap().join() {
-			error!("Error shutting down the callback handler thread: {:?}", err);
-		}
+            error!("Error shutting down the callback handler thread: {:?}", err);
+        }
     }
 }
