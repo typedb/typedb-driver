@@ -84,7 +84,7 @@ class Thing(Concept, ABC):
 
     def is_thing(self) -> bool:
         """
-        Checks if the concept is an ``Thing``.
+        Checks if the concept is a ``Thing``.
 
         :return:
 

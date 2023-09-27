@@ -84,7 +84,7 @@ class Relation(Thing, ABC):
     @abstractmethod
     def add_player(self, transaction: TypeDBTransaction, role_type: RoleType, player: Thing) -> None:
         """
-        Adds a new roleplayer to play the given role in this ``Relation``.
+        Adds a new role player to play the given role in this ``Relation``.
         
         :param transaction: The current transaction
         :param role_type: The role to be played by the ``player``
@@ -120,7 +120,7 @@ class Relation(Thing, ABC):
     @abstractmethod
     def get_players_by_role_type(self, transaction: TypeDBTransaction, *role_types: RoleType) -> Iterator[Thing]:
         """
-        Retrieves all roleplayers of this ``Relation``, optionally
+        Retrieves all role players of this ``Relation``, optionally
         filtered by given role types.
 
         :param transaction: The current transaction
@@ -132,7 +132,7 @@ class Relation(Thing, ABC):
         ::
 
             relation.get_players_by_role_type(transaction)
-           relation.get_players_by_role_type(transaction, role_type1, role_type2)
+            relation.get_players_by_role_type(transaction, role_type1, role_type2)
         """
         pass
 
