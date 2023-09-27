@@ -49,9 +49,9 @@ public class Loader {
     private static final Map<Pair<OS, Arch>, String> DRIVER_JNI_JAR_NAME = Map.of(
             new Pair<>(OS.WINDOWS, Arch.x86_64), "windows-x86_64",
             new Pair<>(OS.MAC, Arch.x86_64), "macosx-x86_64",
-            new Pair<>(OS.MAC, Arch.AARCH64), "macosx-arm64",
+            new Pair<>(OS.MAC, Arch.ARM64), "macosx-arm64",
             new Pair<>(OS.LINUX, Arch.x86_64), "linux-x86_64",
-            new Pair<>(OS.LINUX, Arch.AARCH64), "linux-arm64"
+            new Pair<>(OS.LINUX, Arch.ARM64), "linux-arm64"
     );
 
     private static boolean loaded = false;
@@ -121,7 +121,7 @@ public class Loader {
     }
 
     private enum Arch {
-        AARCH64, x86_64;
+        ARM64, x86_64;
 
         static Arch detect() {
             String arch = System.getProperty("os.arch").toLowerCase();
@@ -129,7 +129,7 @@ public class Loader {
             if (arch.equals("amd64") || arch.equals("x86_64") || arch.contains("x64")) {
                 return x86_64;
             } else if (arch.equals("aarch64") || arch.contains("arm64")) {
-                return AARCH64;
+                return ARM64;
             } else {
                 throw new TypeDBDriverException(UNRECOGNISED_ARCH, arch);
             }
