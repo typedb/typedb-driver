@@ -10,7 +10,7 @@
 ## Driver Architecture
 To learn about the mechanism that a TypeDB Driver uses to set up communication with databases running on the TypeDB Server, refer to the [Driver Overview](https://typedb.com/docs/clients/2.x/clients).
 
-The TypeDB Client for Rust provides a fully async API that supports the [`tokio`](https://crates.io/crates/tokio) **multi-threaded** runtime.
+The TypeDB Driver for Rust provides a fully async API that supports multiple async runtimes or a synchronous interface gated by the `sync` feature.
 
 ## API Reference
 To learn about the methods available for executing queries and retrieving their answers using Driver Rust, refer to the [API Reference](https://typedb.com/docs/clients/2.x/rust/rust-api-ref).
