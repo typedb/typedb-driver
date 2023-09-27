@@ -24,13 +24,14 @@ use std::time::Duration;
 use tokio::sync::mpsc::UnboundedSender;
 
 use super::{address::Address, SessionID};
+use crate::common::Callback;
 
 #[derive(Clone, Debug)]
 pub(crate) struct SessionInfo {
     pub(crate) address: Address,
     pub(crate) session_id: SessionID,
     pub(crate) network_latency: Duration,
-    pub(crate) on_close_register_sink: UnboundedSender<Box<dyn FnOnce() + Send>>,
+    pub(crate) on_close_register_sink: UnboundedSender<Callback>,
 }
 
 #[derive(Debug)]

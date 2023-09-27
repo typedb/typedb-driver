@@ -34,7 +34,7 @@ use tokio::{
     },
 };
 
-use crate::common::Result;
+use crate::common::{Callback, Result};
 
 pub(super) struct BackgroundRuntime {
     async_runtime_handle: runtime::Handle,
@@ -42,7 +42,7 @@ pub(super) struct BackgroundRuntime {
     shutdown_sink: UnboundedSender<()>,
 
     callback_handler: Option<JoinHandle<()>>,
-    callback_handler_sink: Sender<(Box<dyn FnOnce() + Send>, AsyncOneshotSender<()>)>,
+    callback_handler_sink: Sender<(Callback, AsyncOneshotSender<()>)>,
 }
 
 impl BackgroundRuntime {
@@ -56,26 +56,19 @@ impl BackgroundRuntime {
                 shutdown_source.recv().await;
             });
         })?;
-        let (callback_handler, callback_handler_sink) = Self::spawn_callback_handler()?;
+
+        let (callback_handler_sink, callback_handler_source) = unbounded::<(Callback, AsyncOneshotSender<()>)>();
+        let callback_handler = Some(thread::Builder::new().name("Callback handler".to_owned()).spawn(move || {
+            while let Ok((callback, response_sink)) = callback_handler_source.recv() {
+                callback();
+                response_sink.send(()).unwrap();
+            }
+        })?);
+
         Ok(Self { async_runtime_handle, is_open, shutdown_sink, callback_handler, callback_handler_sink })
     }
 
-    fn spawn_callback_handler(
-    ) -> Result<(Option<JoinHandle<()>>, Sender<(Box<dyn FnOnce() + Send>, AsyncOneshotSender<()>)>)> {
-        let (callback_handler_sink, callback_handler_source) =
-            unbounded::<(Box<dyn FnOnce() + Send>, AsyncOneshotSender<()>)>();
-        Ok((
-            Some(thread::Builder::new().name("Callback handler".to_owned()).spawn(move || {
-                while let Ok((callback, response_sink)) = callback_handler_source.recv() {
-                    callback();
-                    response_sink.send(()).unwrap();
-                }
-            })?),
-            callback_handler_sink,
-        ))
-    }
-
-    pub(super) fn callback_handler_sink(&self) -> Sender<(Box<dyn FnOnce() + Send>, AsyncOneshotSender<()>)> {
+    pub(super) fn callback_handler_sink(&self) -> Sender<(Callback, AsyncOneshotSender<()>)> {
         self.callback_handler_sink.clone()
     }
 

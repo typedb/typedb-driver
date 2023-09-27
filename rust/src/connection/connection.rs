@@ -47,7 +47,7 @@ use crate::{
         address::Address,
         error::{ConnectionError, Error},
         info::{DatabaseInfo, SessionInfo},
-        Result, SessionID, SessionType, TransactionType,
+        Callback, Result, SessionID, SessionType, TransactionType,
     },
     connection::message::{Request, Response, TransactionRequest},
     error::InternalError,
@@ -59,7 +59,6 @@ use crate::{
 pub struct Connection {
     server_connections: HashMap<Address, ServerConnection>,
     background_runtime: Arc<BackgroundRuntime>,
-
     username: Option<String>,
 }
 
@@ -451,8 +450,8 @@ impl fmt::Debug for ServerConnection {
 async fn session_pulse(
     session_id: SessionID,
     request_transmitter: Arc<RPCTransmitter>,
-    mut on_close_callback_source: UnboundedReceiver<Box<dyn FnOnce() + Send>>,
-    callback_handler_sink: Sender<(Box<dyn FnOnce() + Send>, AsyncOneshotSender<()>)>,
+    mut on_close_callback_source: UnboundedReceiver<Callback>,
+    callback_handler_sink: Sender<(Callback, AsyncOneshotSender<()>)>,
     mut shutdown_source: UnboundedReceiver<()>,
 ) {
     const PULSE_INTERVAL: Duration = Duration::from_secs(5);

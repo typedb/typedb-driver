@@ -53,7 +53,7 @@ use crate::{
     common::{
         error::ConnectionError,
         stream::{NetworkStream, Stream},
-        RequestID, Result,
+        Callback, RequestID, Result,
     },
     connection::{
         message::{TransactionRequest, TransactionResponse},
@@ -81,7 +81,7 @@ impl TransactionTransmitter {
         background_runtime: &BackgroundRuntime,
         request_sink: UnboundedSender<transaction::Client>,
         response_source: Streaming<transaction::Server>,
-        callback_handler_sink: Sender<(Box<dyn FnOnce() + Send>, AsyncOneshotSender<()>)>,
+        callback_handler_sink: Sender<(Callback, AsyncOneshotSender<()>)>,
     ) -> Self {
         let (buffer_sink, buffer_source) = unbounded_async();
         let (on_close_register_sink, on_close_register_source) = unbounded_async();
@@ -167,7 +167,7 @@ impl TransactionTransmitter {
         is_open: Arc<AtomicCell<bool>>,
         error: Arc<RwLock<Option<ConnectionError>>>,
         on_close_callback_source: UnboundedReceiver<Box<dyn FnOnce(ConnectionError) + Send + Sync>>,
-        callback_handler_sink: Sender<(Box<dyn FnOnce() + Send>, AsyncOneshotSender<()>)>,
+        callback_handler_sink: Sender<(Callback, AsyncOneshotSender<()>)>,
         shutdown_sink: UnboundedSender<()>,
         shutdown_signal: UnboundedReceiver<()>,
     ) {
@@ -289,7 +289,7 @@ struct ResponseCollector {
     is_open: Arc<AtomicCell<bool>>,
     error: Arc<RwLock<Option<ConnectionError>>>,
     on_close: Arc<RwLock<Vec<Box<dyn FnOnce(ConnectionError) + Send + Sync>>>>,
-    callback_handler_sink: Sender<(Box<dyn FnOnce() + Send>, AsyncOneshotSender<()>)>,
+    callback_handler_sink: Sender<(Callback, AsyncOneshotSender<()>)>,
 }
 
 impl ResponseCollector {
