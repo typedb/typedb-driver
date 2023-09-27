@@ -80,23 +80,23 @@ fun parseMethod(element: Element): Method {
     val methodName = element.selectFirst("h4")!!.text()
     val methodSignature = element.selectFirst(".methodSignature")!!.text()
     val allArgs = getArgsFromSignature(methodSignature)
-    val methodReturnType = methodSignature.substringBefore("(").substringBeforeLast("\u00a0")
-    val methodDescr: List<String> = element.selectFirst(".methodSignature + div")?.textNodes()
-        ?.map { it.text() } ?: listOf()
+    val methodReturnType = getReturnTypeFromSignature(methodSignature)
+    val methodDescr: List<String> = element.select(".methodSignature + div")
+        .map { replaceCodeTags(it.html().substringBefore("<h")) }
     val methodExamples = element.select(".methodSignature + div pre").map { it.text() }
     val methodArgs = element.select("dl:has(.paramLabel) dd").map {
-        val arg_name = it.select("code").text()
+        val arg_name = it.selectFirst("code")!!.text()
         assert(allArgs.contains(arg_name))
         Argument(
             name = arg_name,
             type = allArgs[arg_name],
-            description = it.textNodes().joinToString().removePrefix(" - "),
+            description = replaceCodeTags(it.html().substringAfter(" - ")),
         )
     }
 
     return Method(
         name = methodName,
-        signature = methodSignature,
+        signature = enhanceSignature(methodSignature),
         description = methodDescr,
         args = methodArgs,
         returnType = methodReturnType,
@@ -118,8 +118,22 @@ fun parseField(element: Element): Argument {
 
 fun getArgsFromSignature(methodSignature: String): Map<String, String?> {
     return methodSignature
+        .replace("\\s+".toRegex(), " ")
         .substringAfter("(").substringBefore(")")
-        .split(",").map {
+        .split(",\\s".toRegex()).map {
             it.split("\u00a0").let { it.last() to it.dropLast(1).joinToString(" ") }
         }.toMap()
+}
+
+fun replaceCodeTags(text: String): String {
+    return Regex("<code[^>]*>").replace(text, "`").replace("</code>", "` ")
+}
+
+fun enhanceSignature(signature: String): String {
+    return signature.replace("\u00a0", " ")
+}
+
+fun getReturnTypeFromSignature(signature: String): String {
+    return Regex("@[^\\s]*\\s|default ").replace(signature.substringBefore("(")
+        .substringBeforeLast("\u00a0"), "")
 }
