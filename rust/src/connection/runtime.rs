@@ -19,12 +19,19 @@
  * under the License.
  */
 
-use std::{future::Future, thread};
+use std::{future::Future, thread, thread::JoinHandle};
 
-use crossbeam::{atomic::AtomicCell, channel::bounded as bounded_blocking};
+use crossbeam::{
+    atomic::AtomicCell,
+    channel::{bounded as bounded_blocking, unbounded, Sender},
+};
+use log::error;
 use tokio::{
     runtime,
-    sync::mpsc::{unbounded_channel as unbounded_async, UnboundedSender},
+    sync::{
+        mpsc::{unbounded_channel as unbounded_async, UnboundedSender},
+        oneshot::Sender as AsyncOneshotSender,
+    },
 };
 
 use crate::common::Result;
@@ -33,6 +40,9 @@ pub(super) struct BackgroundRuntime {
     async_runtime_handle: runtime::Handle,
     is_open: AtomicCell<bool>,
     shutdown_sink: UnboundedSender<()>,
+
+    callback_handler: Option<JoinHandle<()>>,
+    callback_handler_sink: Sender<(Box<dyn FnOnce() + Send>, AsyncOneshotSender<()>)>,
 }
 
 impl BackgroundRuntime {
@@ -41,12 +51,32 @@ impl BackgroundRuntime {
         let (shutdown_sink, mut shutdown_source) = unbounded_async();
         let async_runtime = runtime::Builder::new_current_thread().enable_time().enable_io().build()?;
         let async_runtime_handle = async_runtime.handle().clone();
-        thread::Builder::new().name("gRPC worker".to_string()).spawn(move || {
+        thread::Builder::new().name("gRPC worker".to_owned()).spawn(move || {
             async_runtime.block_on(async move {
                 shutdown_source.recv().await;
             });
         })?;
-        Ok(Self { async_runtime_handle, is_open, shutdown_sink })
+        let (callback_handler, callback_handler_sink) = Self::spawn_callback_handler()?;
+        Ok(Self { async_runtime_handle, is_open, shutdown_sink, callback_handler, callback_handler_sink })
+    }
+
+    fn spawn_callback_handler(
+    ) -> Result<(Option<JoinHandle<()>>, Sender<(Box<dyn FnOnce() + Send>, AsyncOneshotSender<()>)>)> {
+        let (callback_handler_sink, callback_handler_source) =
+            unbounded::<(Box<dyn FnOnce() + Send>, AsyncOneshotSender<()>)>();
+        Ok((
+            Some(thread::Builder::new().name("Callback handler".to_owned()).spawn(move || {
+                while let Ok((callback, response_sink)) = callback_handler_source.recv() {
+                    callback();
+                    response_sink.send(()).unwrap();
+                }
+            })?),
+            callback_handler_sink,
+        ))
+    }
+
+    pub(super) fn callback_handler_sink(&self) -> Sender<(Box<dyn FnOnce() + Send>, AsyncOneshotSender<()>)> {
+        self.callback_handler_sink.clone()
     }
 
     pub(super) fn is_open(&self) -> bool {
@@ -84,5 +114,8 @@ impl Drop for BackgroundRuntime {
     fn drop(&mut self) {
         self.is_open.store(false);
         self.shutdown_sink.send(()).ok();
+        if let Err(err) = self.callback_handler.take().unwrap().join() {
+			error!("Error shutting down the callback handler thread: {:?}", err);
+		}
     }
 }
