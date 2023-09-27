@@ -35,27 +35,75 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public interface Thing extends Concept {
+    /**
+     * Retrieves the unique id of the <code>Thing</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thing.getIID();
+     * </pre>
+     */
     @CheckReturnValue
     String getIID();
 
+    /**
+     * Retrieves the type which this <code>Thing</code> belongs to.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thing.getType();
+     * </pre>
+     */
     @CheckReturnValue
     ThingType getType();
 
+    /**
+     * Checks if this <code>Thing</code> is inferred by a [Reasoning Rule].
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thing.isInferred();
+     * </pre>
+     */
     @CheckReturnValue
     boolean isInferred();
 
+    /**
+     * Checks if the concept is a <code>Thing</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thing.isThing();
+     * </pre>
+     */
     @Override
     @CheckReturnValue
     default boolean isThing() {
         return true;
     }
 
+    /**
+     * Casts the concept to <code>Thing</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thing.asThing();
+     * </pre>
+     */
     @Override
     @CheckReturnValue
     default Thing asThing() {
         return this;
     }
 
+    /**
+     * Retrieves a <code>Thing</code> as JSON.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thing.toJSON();
+     * </pre>
+     */
     @Override
     default JsonObject toJSON() {
         return Json.object().add("type", getType().getLabel().scopedName());
@@ -68,17 +116,59 @@ public interface Thing extends Concept {
     @CheckReturnValue
     Stream<? extends Attribute> getHas(TypeDBTransaction transaction, AttributeType... attributeTypes);
 
+    /**
+     * Retrieves all the <code>Relations</code> which this <code>Thing</code> plays a role in,
+     * optionally filtered by one or more given roles.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thing.getRelations(transaction, roleTypes);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param roleTypes The array of roles to filter the relations by.
+     */
     @CheckReturnValue
     Stream<? extends Attribute> getHas(TypeDBTransaction transaction, Set<Annotation> annotations);
 
     @CheckReturnValue
     Stream<? extends Relation> getRelations(TypeDBTransaction transaction, RoleType... roleTypes);
 
+    /**
+     * Retrieves the roles that this <code>Thing</code> is currently playing.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thing.getPlaying(transaction);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     */
     @CheckReturnValue
     Stream<? extends RoleType> getPlaying(TypeDBTransaction transaction);
 
+    /**
+     * Deletes this <code>Thing</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thing.delete(transaction);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     */
     void delete(TypeDBTransaction transaction);
 
+    /**
+     * Checks if this <code>Thing</code> is deleted.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thing.isDeleted(transaction)
+     * </pre>
+     *
+     * @param transaction The current transaction
+     */
     @CheckReturnValue
     boolean isDeleted(TypeDBTransaction transaction);
 }

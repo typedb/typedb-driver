@@ -29,16 +29,53 @@ import com.vaticle.typedb.common.collection.Pair;
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
+/**
+ * Contains a mapping of variables to concepts.
+ */
 public interface ConceptMap {
+    /**
+     * Produces a stream over all variables in this <code>ConceptMap</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMap.variables();
+     * </pre>
+     */
     @CheckReturnValue
     Stream<String> variables();
 
+    /**
+     * Produces a stream over all concepts in this <code>ConceptMap</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMap.concepts();
+     * </pre>
+     */
     @CheckReturnValue
     Stream<Concept> concepts();
 
+    /**
+     * Retrieves a concept for a given variable name.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMap.get(variable);
+     * </pre>
+     *
+     * @param variable The string representation of a variable
+     */
     @CheckReturnValue
     Concept get(String variable);
 
+    /**
+     * Retrieves this <code>ConceptMap</code> as JSON.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMap.toJSON();
+     * </pre>
+     */
     @CheckReturnValue
     default JsonObject toJSON() {
         JsonObject object = Json.object();
@@ -46,25 +83,111 @@ public interface ConceptMap {
         return object;
     }
 
+    /**
+     * Gets the <code>Explainables</code> object for this <code>ConceptMap</code>, exposing
+     * which of the concepts in this <code>ConceptMap</code> are explainable.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMap.explainables();
+     * </pre>
+     */
     Explainables explainables();
 
+    /**
+     * Contains explainable objects.
+     */
     interface Explainables {
+        /**
+         * Retrieves the explainable relation with the given variable name.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * conceptMap.explainables().relation(variable);
+         * </pre>
+         *
+         * @param variable The string representation of a variable
+         */
         Explainable relation(String variable);
 
+        /**
+         * Retrieves the explainable attribute with the given variable name.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * conceptMap.explainables().attribute(variable);
+         * </pre>
+         *
+         * @param variable The string representation of a variable
+         */
         Explainable attribute(String variable);
 
+        /**
+         * Retrieves the explainable attribute ownership with the pair of (owner, attribute) variable names.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * conceptMap.explainables().ownership(owner, attribute);
+         * </pre>
+         *
+         * @param owner The string representation of the owner variable
+         * @param attribute The string representation of the attribute variable
+         */
         Explainable ownership(String owner, String attribute);
 
+        /**
+         * Retrieves all of this <code>ConceptMap</code>’s explainable relations.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * conceptMap.explainables().relations();
+         * </pre>
+         */
         Stream<Pair<String, Explainable>> relations();
 
+        /**
+         * Retrieves all of this <code>ConceptMap</code>’s explainable attributes.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * conceptMap.explainables().attributes();
+         * </pre>
+         */
         Stream<Pair<String, Explainable>> attributes();
 
+        /**
+         * Retrieves all of this <code>ConceptMap</code>’s explainable ownerships.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * conceptMap.explainables().ownerships();
+         * </pre>
+         */
         Stream<Pair<Pair<String, String>, Explainable>> ownerships();
     }
 
+    /**
+     * Contains an explainable object.
+     */
     interface Explainable {
+        /**
+         * Retrieves the subquery of the original query that is actually being explained.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * explainable.conjunction();
+         * </pre>
+         */
         String conjunction();
 
+        /**
+         * Retrieves the unique ID that identifies this <code>Explainable</code>.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * explainable.id();
+         * </pre>
+         */
         long id();
     }
 }
