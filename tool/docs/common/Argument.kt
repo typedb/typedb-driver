@@ -63,5 +63,6 @@ fun backquotesToCode(text: String?): String? {
 }
 
 fun snakeToCamel(text: String): String {
-    return Regex("_(\\w)").replace(text, "\\U$1\\E")
+    val splitted = text.split("_")
+    return splitted.first()!! + splitted.drop(1).map { it.capitalize() }.joinToString("")
 }
