@@ -79,7 +79,7 @@ class RoleType(Type, ABC):
         """
         Retrieves the most immediate supertype of the ``RoleType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :return:
 
         Examples
@@ -95,7 +95,7 @@ class RoleType(Type, ABC):
         """
         Retrieves all supertypes of the ``RoleType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :return:
 
         Examples
@@ -112,7 +112,7 @@ class RoleType(Type, ABC):
         """
         Retrieves all direct and indirect (or direct only) subtypes of the ``RoleType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param transitivity: ``Transitivity.TRANSITIVE`` for direct
             and indirect subtypes, ``Transitivity.EXPLICIT`` for direct
             subtypes only
@@ -131,7 +131,7 @@ class RoleType(Type, ABC):
         """
         Retrieves the ``RelationType`` that this role is directly related to.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :return:
 
         Examples
@@ -148,7 +148,7 @@ class RoleType(Type, ABC):
         Retrieves ``RelationType``\ s that this role is related to
         (directly or indirectly).
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :return:
 
         Examples
@@ -165,7 +165,7 @@ class RoleType(Type, ABC):
         """
         Retrieves the ``ThingType``\ s whose instances play this role.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param transitivity: ``Transitivity.TRANSITIVE`` for direct
             and indirect playing, ``Transitivity.EXPLICIT`` for direct
             playing only
@@ -185,7 +185,7 @@ class RoleType(Type, ABC):
         """
         Retrieves the ``Relation`` instances that this role is related to.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param transitivity: ``Transitivity.TRANSITIVE`` for direct
             and indirect relation, ``Transitivity.EXPLICIT`` for direct
             relation only
@@ -205,7 +205,7 @@ class RoleType(Type, ABC):
         """
         Retrieves the ``Thing`` instances that play this role.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param transitivity: ``Transitivity.TRANSITIVE`` for direct
             and indirect playing, ``Transitivity.EXPLICIT`` for direct
             playing only

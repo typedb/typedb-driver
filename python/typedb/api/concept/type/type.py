@@ -54,7 +54,7 @@ class Type(Concept, ABC):
         """
         Renames the label of the type. The new label must remain unique.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param new_label: The new ``Label`` to be given to the type.
         :return:
 
@@ -129,7 +129,7 @@ class Type(Concept, ABC):
         """
         Retrieves the most immediate supertype of the type.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :return:
 
         Examples
@@ -145,7 +145,7 @@ class Type(Concept, ABC):
         """
         Retrieves all supertypes of the type.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :return:
 
         Examples
@@ -162,7 +162,7 @@ class Type(Concept, ABC):
         """
         Retrieves all direct and indirect (or direct only) subtypes of the type.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param transitivity: ``Transitivity.TRANSITIVE`` for direct
             and indirect subtypes, ``Transitivity.EXPLICIT`` for direct
             subtypes only
@@ -182,7 +182,7 @@ class Type(Concept, ABC):
         """
         Deletes this type from the database.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :return:
 
         Examples

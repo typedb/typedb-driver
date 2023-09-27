@@ -71,7 +71,7 @@ class EntityType(ThingType, ABC):
         """
         Creates and returns a new instance of this ``EntityType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :return:
 
         Examples
@@ -89,7 +89,7 @@ class EntityType(ThingType, ABC):
         Retrieves all direct and indirect (or direct only) subtypes of the 
         ``EntityType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param transitivity: ``Transitivity.TRANSITIVE`` for direct
             and indirect subtypes, ``Transitivity.EXPLICIT`` for direct
             subtypes only
@@ -110,7 +110,7 @@ class EntityType(ThingType, ABC):
         Retrieves all direct and indirect (or direct only) ``Entity`` objects
         that are instances of this ``EntityType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param transitivity: ``Transitivity.TRANSITIVE`` for direct
             and indirect instances, ``Transitivity.EXPLICIT`` for direct
             instances only
@@ -129,7 +129,7 @@ class EntityType(ThingType, ABC):
         """
         Sets the supplied ``EntityType`` as the supertype of the current ``EntityType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param super_entity_type: The ``EntityType`` to set as the supertype of
             this ``EntityType``
         :return:

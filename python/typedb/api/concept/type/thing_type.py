@@ -57,7 +57,7 @@ class ThingType(Type, ABC):
         """
         Retrieves the most immediate supertype of the ``ThingType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :return:
 
         Examples
@@ -73,7 +73,7 @@ class ThingType(Type, ABC):
         """
         Retrieves all supertypes of the ``ThingType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :return:
 
         Examples
@@ -90,7 +90,7 @@ class ThingType(Type, ABC):
         """
         Retrieves all direct and indirect (or direct only) subtypes of the ``ThingType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param transitivity: ``Transitivity.TRANSITIVE`` for direct
             and indirect subtypes, ``Transitivity.EXPLICIT`` for direct
             subtypes only
@@ -112,7 +112,7 @@ class ThingType(Type, ABC):
         Retrieves all direct and indirect (or direct only) ``Thing`` objects
         that are instances of this ``ThingType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param transitivity: ``Transitivity.TRANSITIVE`` for direct
             and indirect instances, ``Transitivity.EXPLICIT`` for direct
             instances only
@@ -132,7 +132,7 @@ class ThingType(Type, ABC):
         """
         Set a ``ThingType`` to be abstract, meaning it cannot have instances.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :return:
 
         Examples
@@ -148,7 +148,7 @@ class ThingType(Type, ABC):
         """
         Set a ``ThingType`` to be non-abstract, meaning it can have instances.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :return:
 
         Examples
@@ -165,7 +165,7 @@ class ThingType(Type, ABC):
         """
         Allows the instances of this ``ThingType`` to play the given role.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param role_type: The role to be played by the instances of this type
         :param overriden_type: The role type that this role overrides,
             if applicable
@@ -185,7 +185,7 @@ class ThingType(Type, ABC):
         """
         Disallows the instances of this ``ThingType`` from playing the given role.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param role_type: The role to not be played by the instances of this type.
         :return:
 
@@ -205,7 +205,7 @@ class ThingType(Type, ABC):
         Allows the instances of this ``ThingType`` to own
         the given ``AttributeType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param attribute_type: The ``AttributeType`` to be owned
             by the instances of this type.
         :param overridden_type: The ``AttributeType`` that this attribute
@@ -230,7 +230,7 @@ class ThingType(Type, ABC):
         Disallows the instances of this ``ThingType`` from owning
         the given ``AttributeType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param attribute_type: The ``AttributeType`` to not be owned by the type.
         :return:
 
@@ -249,7 +249,7 @@ class ThingType(Type, ABC):
         Retrieves all direct and inherited (or direct only) roles that
         are allowed to be played by the instances of this ``ThingType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param transitivity: transitivity: ``Transitivity.TRANSITIVE`` for direct
             and indirect playing, ``Transitivity.EXPLICIT`` for direct
             playing only
@@ -270,7 +270,7 @@ class ThingType(Type, ABC):
         Retrieves a ``RoleType`` that is overridden by the given ``role_type``
         for this ``ThingType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param role_type: The ``RoleType`` that overrides an inherited role
         :return:
 
@@ -290,7 +290,7 @@ class ThingType(Type, ABC):
         Retrieves ``AttributeType`` that the instances of this ``ThingType``
         are allowed to own directly or via inheritance.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param value_type: If specified, only attribute types of this
             ``ValueType`` will be retrieved.
         :param transitivity: ``Transitivity.TRANSITIVE`` for direct
@@ -317,7 +317,7 @@ class ThingType(Type, ABC):
         Retrieves an ``AttributeType``, ownership of which is overridden
         for this ``ThingType`` by a given ``attribute_type``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param attribute_type: The ``AttributeType`` that overrides requested
             ``AttributeType``
         :return:
@@ -335,7 +335,7 @@ class ThingType(Type, ABC):
         """
         Produces a pattern for creating this ``ThingType`` in a ``define`` query.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :return:
 
         Examples

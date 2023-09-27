@@ -76,7 +76,7 @@ class RelationType(ThingType, ABC):
         """
         Creates and returns an instance of this ``RelationType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :return:
 
         Examples
@@ -94,7 +94,7 @@ class RelationType(ThingType, ABC):
         Retrieves all direct and indirect (or direct only) ``Relation``\ s
         that are instances of this ``RelationType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param transitivity: ``Transitivity.TRANSITIVE`` for direct
             and indirect instances, ``Transitivity.EXPLICIT`` for direct
             relates only
@@ -117,7 +117,7 @@ class RelationType(ThingType, ABC):
         or via inheritance. If ``role_label`` is given, returns
         a corresponding ``RoleType`` or ``None``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param role_label: Label of the role we wish to retrieve (optional)
         :param transitivity: ``Transitivity.TRANSITIVE`` for direct
             and inherited relates, ``Transitivity.EXPLICIT`` for direct
@@ -138,7 +138,7 @@ class RelationType(ThingType, ABC):
         Retrieves a ``RoleType`` that is overridden by the role with
         the ``role_label``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param role_label: Label of the role that overrides an inherited role
         :return:
 
@@ -158,7 +158,7 @@ class RelationType(ThingType, ABC):
         If we are setting an overriding type this way, we have to also pass
         the overridden type as a second argument.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param role_label: The new role for the ``RelationType`` to relate to
         :param overridden_label: The label being overridden, if applicable
         :return:
@@ -177,7 +177,7 @@ class RelationType(ThingType, ABC):
         """
         Disallows this ``RelationType`` from relating to the given role.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param role_label: The role to not relate to the relation type.
         :return:
 
@@ -196,7 +196,7 @@ class RelationType(ThingType, ABC):
         Retrieves all direct and indirect (or direct only) subtypes
         of the ``RelationType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param transitivity: ``Transitivity.TRANSITIVE`` for direct
             and indirect subtypes, ``Transitivity.EXPLICIT`` for direct
             subtypes only
@@ -215,7 +215,7 @@ class RelationType(ThingType, ABC):
         """
         Sets the supplied ``RelationType`` as the supertype of the current ``RelationType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param super_relation_type: The ``RelationType`` to set as the supertype
             of this ``RelationType``
         :return:

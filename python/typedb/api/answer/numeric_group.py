@@ -45,14 +45,14 @@ class NumericGroup(ABC):
         --------
         ::
 
-            concept_map_group.owner()
+            numeric_group.owner()
         """
         pass
 
     @abstractmethod
     def numeric(self) -> Numeric:
         """
-        Retrieves the Numeric answer of the group.
+        Retrieves the ``Numeric`` answer of the group.
 
         :return:
 

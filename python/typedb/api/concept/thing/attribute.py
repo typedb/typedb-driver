@@ -295,7 +295,7 @@ class Attribute(Thing, ABC):
         """
         Retrieves the instances that own this ``Attribute``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param owner_type: If specified, filter results for only owners
             of the given type
         :return:

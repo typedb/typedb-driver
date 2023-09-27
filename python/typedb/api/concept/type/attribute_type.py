@@ -175,7 +175,7 @@ class AttributeType(ThingType, ABC):
         '''
         Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param value: New ``Attribute``'s value
         :return:
 
@@ -194,7 +194,7 @@ class AttributeType(ThingType, ABC):
         Retrieves an ``Attribute`` of this ``AttributeType`` with the given value
         if such ``Attribute`` exists. Otherwise, returns ``None``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param value: ``Attribute``'s value
         :return:
 
@@ -212,7 +212,7 @@ class AttributeType(ThingType, ABC):
         Retrieves the regular expression that is defined
         for this ``AttributeType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :return:
 
         Examples
@@ -233,7 +233,7 @@ class AttributeType(ThingType, ABC):
         Can only be applied for ``AttributeType``\ s with ``string``
         value type.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param regex: Regular expression
         :return:
 
@@ -251,7 +251,7 @@ class AttributeType(ThingType, ABC):
         Removes the regular expression that is defined
         for this ``AttributeType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :return:
 
         Examples
@@ -268,7 +268,7 @@ class AttributeType(ThingType, ABC):
         Sets the supplied ``AttributeType`` as the supertype of
         the current ``AttributeType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param attribute_type: The ``AttributeType`` to set as
             the supertype of this ``AttributeType``
         :return:
@@ -289,7 +289,7 @@ class AttributeType(ThingType, ABC):
         Retrieves all direct and indirect (or direct only) subtypes
         of the ``AttributeType`` with given ``ValueType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param value_type: ``ValueType`` for retrieving subtypes
         :param transitivity: ``Transitivity.TRANSITIVE`` for direct
             and indirect subtypes, ``Transitivity.EXPLICIT`` for direct
@@ -313,7 +313,7 @@ class AttributeType(ThingType, ABC):
         Retrieves all direct and indirect (or direct only) ``Attributes``
         that are instances of this ``AttributeType``.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param transitivity: ``Transitivity.TRANSITIVE`` for direct
             and indirect subtypes, ``Transitivity.EXPLICIT`` for direct
             subtypes only
@@ -335,7 +335,7 @@ class AttributeType(ThingType, ABC):
         Retrieve all ``Things`` that own an attribute of this ``AttributeType``.
         Optionally, filtered by ``Annotation``\ s.
 
-        :param transaction: The current ``Transaction``
+        :param transaction: The current transaction
         :param annotations: Only retrieve ``ThingTypes`` that have an attribute
             of this ``AttributeType`` with all given ``Annotation``\ s
         :param transitivity: ``Transitivity.TRANSITIVE`` for direct
