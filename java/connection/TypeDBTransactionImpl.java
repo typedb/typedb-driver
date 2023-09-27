@@ -32,6 +32,8 @@ import com.vaticle.typedb.driver.concept.ConceptManagerImpl;
 import com.vaticle.typedb.driver.logic.LogicManagerImpl;
 import com.vaticle.typedb.driver.query.QueryManagerImpl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.TRANSACTION_CLOSED;
@@ -50,6 +52,8 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.drive
     private final LogicManager logicManager;
     private final QueryManager queryManager;
 
+    private final List<TransactionOnClose> callbacks;
+
     TypeDBTransactionImpl(TypeDBSessionImpl session, Type type, TypeDBOptions options) {
         super(newNative(session, type, options));
         this.type = type;
@@ -58,6 +62,8 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.drive
         conceptManager = new ConceptManagerImpl(nativeObject);
         logicManager = new LogicManagerImpl(nativeObject);
         queryManager = new QueryManagerImpl(nativeObject);
+
+        callbacks = new ArrayList<>();
     }
 
     private static com.vaticle.typedb.driver.jni.Transaction newNative(TypeDBSessionImpl session, Type type, TypeDBOptions options) {
@@ -102,7 +108,9 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.drive
     @Override
     public void onClose(Consumer<Throwable> function) {
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        transaction_on_close(nativeObject, new TransactionOnClose(function).released());
+        TransactionOnClose callback = new TransactionOnClose(function);
+        callbacks.add(callback);
+        transaction_on_close(nativeObject, callback.released());
     }
 
     @Override
@@ -130,6 +138,7 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.drive
     public void close() {
         if (nativeObject.isOwned()) {
             transaction_force_close(nativeObject);
+            callbacks.clear();
         }
     }
 

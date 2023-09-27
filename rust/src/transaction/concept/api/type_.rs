@@ -221,7 +221,7 @@ pub trait EntityTypeAPI: ThingTypeAPI + Clone + Into<EntityType> {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn get_supertype(&self, transaction: &Transaction<'_>) -> Result<EntityType> {
+    async fn get_supertype(&self, transaction: &Transaction<'_>) -> Result<Option<EntityType>> {
         transaction.concept().transaction_stream.entity_type_get_supertype(self.clone().into()).await
     }
 
@@ -299,7 +299,7 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn get_supertype(&self, transaction: &Transaction<'_>) -> Result<RelationType> {
+    async fn get_supertype(&self, transaction: &Transaction<'_>) -> Result<Option<RelationType>> {
         transaction.concept().transaction_stream.relation_type_get_supertype(self.clone().into()).await
     }
 
@@ -441,7 +441,7 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn get_supertype(&self, transaction: &Transaction<'_>) -> Result<AttributeType> {
+    async fn get_supertype(&self, transaction: &Transaction<'_>) -> Result<Option<AttributeType>> {
         transaction.concept().transaction_stream.attribute_type_get_supertype(self.clone().into()).await
     }
 
@@ -555,7 +555,7 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn get_supertype(&self, transaction: &Transaction<'_>) -> Result<RoleType> {
+    async fn get_supertype(&self, transaction: &Transaction<'_>) -> Result<Option<RoleType>> {
         transaction.concept().transaction_stream.role_type_get_supertype(self.clone().into()).await
     }
 

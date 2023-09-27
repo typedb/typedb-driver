@@ -106,6 +106,23 @@ test_for_each_arg! {
         Ok(())
     }
 
+    async fn networking_in_on_close(connection: Connection) -> typedb_driver::Result {
+        common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
+        let databases = DatabaseManager::new(connection);
+        assert!(databases.contains(common::TEST_DATABASE).await?);
+
+        let session = Arc::new(Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?);
+        let transaction = session.transaction(Read).await?;
+
+        transaction.on_close({
+            let session = session.clone();
+            move |_| { session.force_close().ok(); }
+        });
+        transaction.force_close();
+
+        Ok(())
+    }
+
     async fn query_options(connection: Connection) -> typedb_driver::Result {
         let schema = r#"define
             person sub entity,

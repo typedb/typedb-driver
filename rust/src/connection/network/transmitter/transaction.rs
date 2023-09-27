@@ -25,7 +25,7 @@ use std::{
     time::Duration,
 };
 
-use crossbeam::atomic::AtomicCell;
+use crossbeam::{atomic::AtomicCell, channel::Sender};
 use futures::StreamExt;
 #[cfg(not(feature = "sync"))]
 use futures::TryStreamExt;
@@ -37,7 +37,10 @@ use prost::Message;
 use tokio::sync::oneshot::channel as oneshot;
 use tokio::{
     select,
-    sync::mpsc::{error::SendError, unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
+    sync::{
+        mpsc::{error::SendError, unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
+        oneshot::{channel as oneshot_async, Sender as AsyncOneshotSender},
+    },
     time::{sleep_until, Instant},
 };
 use tonic::Streaming;
@@ -50,7 +53,7 @@ use crate::{
     common::{
         error::ConnectionError,
         stream::{NetworkStream, Stream},
-        RequestID, Result,
+        Callback, RequestID, Result,
     },
     connection::{
         message::{TransactionRequest, TransactionResponse},
@@ -78,6 +81,7 @@ impl TransactionTransmitter {
         background_runtime: &BackgroundRuntime,
         request_sink: UnboundedSender<transaction::Client>,
         response_source: Streaming<transaction::Server>,
+        callback_handler_sink: Sender<(Callback, AsyncOneshotSender<()>)>,
     ) -> Self {
         let (buffer_sink, buffer_source) = unbounded_async();
         let (on_close_register_sink, on_close_register_source) = unbounded_async();
@@ -92,6 +96,7 @@ impl TransactionTransmitter {
             is_open.clone(),
             error.clone(),
             on_close_register_source,
+            callback_handler_sink,
             shutdown_sink.clone(),
             shutdown_source,
         ));
@@ -162,6 +167,7 @@ impl TransactionTransmitter {
         is_open: Arc<AtomicCell<bool>>,
         error: Arc<RwLock<Option<ConnectionError>>>,
         on_close_callback_source: UnboundedReceiver<Box<dyn FnOnce(ConnectionError) + Send + Sync>>,
+        callback_handler_sink: Sender<(Callback, AsyncOneshotSender<()>)>,
         shutdown_sink: UnboundedSender<()>,
         shutdown_signal: UnboundedReceiver<()>,
     ) {
@@ -171,6 +177,7 @@ impl TransactionTransmitter {
             is_open,
             error,
             on_close: Default::default(),
+            callback_handler_sink,
         };
         tokio::spawn(Self::dispatch_loop(
             queue_source,
@@ -282,6 +289,7 @@ struct ResponseCollector {
     is_open: Arc<AtomicCell<bool>>,
     error: Arc<RwLock<Option<ConnectionError>>>,
     on_close: Arc<RwLock<Vec<Box<dyn FnOnce(ConnectionError) + Send + Sync>>>>,
+    callback_handler_sink: Sender<(Callback, AsyncOneshotSender<()>)>,
 }
 
 impl ResponseCollector {
@@ -344,8 +352,12 @@ impl ResponseCollector {
         for (_, listener) in listeners.drain() {
             listener.error(error.clone());
         }
-        for callback in self.on_close.write().unwrap().drain(..) {
-            callback(error.clone());
+        let callbacks = std::mem::take(&mut *self.on_close.write().unwrap());
+        for callback in callbacks {
+            let error = error.clone();
+            let (response_sink, response) = oneshot_async();
+            self.callback_handler_sink.send((Box::new(move || callback(error)), response_sink)).unwrap();
+            response.await.ok();
         }
     }
 }

@@ -36,6 +36,8 @@ pub use self::{
     stream::{box_stream, BoxStream},
 };
 
+pub(crate) type Callback = Box<dyn FnOnce() + Send>;
+
 pub(crate) type StdResult<T, E> = std::result::Result<T, E>;
 pub type Result<T = ()> = StdResult<T, Error>;
 

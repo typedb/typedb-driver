@@ -26,10 +26,14 @@ use std::{
     time::Duration,
 };
 
+use crossbeam::channel::Sender;
 use itertools::Itertools;
 use tokio::{
     select,
-    sync::mpsc::{unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
+    sync::{
+        mpsc::{unbounded_channel as unbounded_async, UnboundedReceiver, UnboundedSender},
+        oneshot::{channel as oneshot_async, Sender as AsyncOneshotSender},
+    },
     time::{sleep_until, Instant},
 };
 
@@ -43,7 +47,7 @@ use crate::{
         address::Address,
         error::{ConnectionError, Error},
         info::{DatabaseInfo, SessionInfo},
-        Result, SessionID, SessionType, TransactionType,
+        Callback, Result, SessionID, SessionType, TransactionType,
     },
     connection::message::{Request, Response, TransactionRequest},
     error::InternalError,
@@ -318,6 +322,7 @@ impl ServerConnection {
                     session_id.clone(),
                     self.request_transmitter.clone(),
                     on_close_register_source,
+                    self.background_runtime.callback_handler_sink(),
                     pulse_shutdown_source,
                 ));
                 Ok(SessionInfo {
@@ -357,7 +362,12 @@ impl ServerConnection {
             .await?
         {
             Response::TransactionOpen { request_sink, response_source } => {
-                let transmitter = TransactionTransmitter::new(&self.background_runtime, request_sink, response_source);
+                let transmitter = TransactionTransmitter::new(
+                    &self.background_runtime,
+                    request_sink,
+                    response_source,
+                    self.background_runtime.callback_handler_sink(),
+                );
                 let transmitter_shutdown_sink = transmitter.shutdown_sink().clone();
                 let transaction_stream = TransactionStream::new(transaction_type, options, transmitter);
                 Ok((transaction_stream, transmitter_shutdown_sink))
@@ -440,7 +450,8 @@ impl fmt::Debug for ServerConnection {
 async fn session_pulse(
     session_id: SessionID,
     request_transmitter: Arc<RPCTransmitter>,
-    mut on_close_callback_source: UnboundedReceiver<Box<dyn FnOnce() + Send>>,
+    mut on_close_callback_source: UnboundedReceiver<Callback>,
+    callback_handler_sink: Sender<(Callback, AsyncOneshotSender<()>)>,
     mut shutdown_source: UnboundedReceiver<()>,
 ) {
     const PULSE_INTERVAL: Duration = Duration::from_secs(5);
@@ -464,6 +475,8 @@ async fn session_pulse(
         }
     }
     for callback in on_close {
-        callback();
+        let (response_sink, response) = oneshot_async();
+        callback_handler_sink.send((Box::new(callback), response_sink)).unwrap();
+        response.await.ok();
     }
 }

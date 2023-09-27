@@ -263,6 +263,7 @@ pub(super) fn borrow_as_thing_type(concept: *const Concept) -> &'static dyn Thin
         Concept::EntityType(entity_type) => entity_type,
         Concept::RelationType(relation_type) => relation_type,
         Concept::AttributeType(attribute_type) => attribute_type,
+        Concept::RootThingType(root_thing_type) => root_thing_type,
         _ => unreachable!(),
     }
 }
@@ -272,6 +273,7 @@ pub(super) fn borrow_as_thing_type_mut(concept: *mut Concept) -> &'static mut dy
         Concept::EntityType(entity_type) => entity_type,
         Concept::RelationType(relation_type) => relation_type,
         Concept::AttributeType(attribute_type) => attribute_type,
+        Concept::RootThingType(root_thing_type) => root_thing_type,
         _ => unreachable!(),
     }
 }

@@ -218,7 +218,10 @@ pub extern "C" fn entity_type_get_supertype(
     transaction: *mut Transaction<'static>,
     entity_type: *const Concept,
 ) -> *mut Concept {
-    try_release(borrow_as_entity_type(entity_type).get_supertype(borrow(transaction)).map(Concept::EntityType))
+    try_release_map_optional(
+        borrow_as_entity_type(entity_type).get_supertype(borrow(transaction)).transpose(),
+        Concept::EntityType,
+    )
 }
 
 #[no_mangle]
@@ -282,7 +285,10 @@ pub extern "C" fn relation_type_get_supertype(
     transaction: *mut Transaction<'static>,
     relation_type: *const Concept,
 ) -> *mut Concept {
-    try_release(borrow_as_relation_type(relation_type).get_supertype(borrow(transaction)).map(Concept::RelationType))
+    try_release_map_optional(
+        borrow_as_relation_type(relation_type).get_supertype(borrow(transaction)).transpose(),
+        Concept::RelationType,
+    )
 }
 
 #[no_mangle]
@@ -437,7 +443,10 @@ pub extern "C" fn attribute_type_get_supertype(
     transaction: *mut Transaction<'static>,
     attribute_type: *const Concept,
 ) -> *mut Concept {
-    try_release(borrow_as_attribute_type(attribute_type).get_supertype(borrow(transaction)).map(Concept::AttributeType))
+    try_release_map_optional(
+        borrow_as_attribute_type(attribute_type).get_supertype(borrow(transaction)).transpose(),
+        Concept::AttributeType,
+    )
 }
 
 #[no_mangle]
@@ -599,7 +608,10 @@ pub extern "C" fn role_type_get_supertype(
     transaction: *mut Transaction<'static>,
     role_type: *const Concept,
 ) -> *mut Concept {
-    try_release(borrow_as_role_type(role_type).get_supertype(borrow(transaction)).map(Concept::RoleType))
+    try_release_map_optional(
+        borrow_as_role_type(role_type).get_supertype(borrow(transaction)).transpose(),
+        Concept::RoleType,
+    )
 }
 
 #[no_mangle]

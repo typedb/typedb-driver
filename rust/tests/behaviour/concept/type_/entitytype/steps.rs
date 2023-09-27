@@ -137,7 +137,7 @@ generic_step_impl! {
         supertype: LabelParam,
     ) -> TypeDBResult {
         let tx = context.transaction();
-        assert_eq!(context.get_entity_type(type_label.name).await?.get_supertype(tx).await?.label, supertype.name);
+        assert_eq!(context.get_entity_type(type_label.name).await?.get_supertype(tx).await?.map(|st| st.label), Some(supertype.name));
         Ok(())
     }
 
