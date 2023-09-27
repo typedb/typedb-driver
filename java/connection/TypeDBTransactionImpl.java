@@ -137,7 +137,7 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.drive
     @Override
     public void close() {
         if (nativeObject.isOwned()) {
-            transaction_force_close(nativeObject.released());
+            transaction_force_close(nativeObject);
             callbacks.clear();
         }
     }
