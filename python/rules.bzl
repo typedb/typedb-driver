@@ -98,7 +98,7 @@ def native_driver_versioned(python_versions):
             distribution_tag = select({
                 "@vaticle_dependencies//util/platform:is_mac_arm64": "py" + version["suffix"] + "-none-macosx_11_0_arm64",
                 "@vaticle_dependencies//util/platform:is_mac_x86_64": "py" + version["suffix"] + "-none-macosx_11_0_x86_64",
-                "@vaticle_dependencies//util/platform:is_linux_arm64": "py" + version["suffix"] + "-none-linux_arm64",
+                "@vaticle_dependencies//util/platform:is_linux_arm64": "py" + version["suffix"] + "-none-linux_aarch64",
                 "@vaticle_dependencies//util/platform:is_linux_x86_64": "py" + version["suffix"] + "-none-linux_x86_64",
                 "@vaticle_dependencies//util/platform:is_windows": "py" + version["suffix"] + "-none-win_amd64",
             }),
