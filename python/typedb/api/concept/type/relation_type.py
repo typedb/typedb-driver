@@ -53,7 +53,7 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-           relation_type.is_relation_type()
+            relation_type.is_relation_type()
         """
         return True
 
@@ -67,7 +67,7 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-           relation_type.as_relation_type()
+            relation_type.as_relation_type()
         """
         return self
 
@@ -83,7 +83,7 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-           relation_type.create(transaction)
+            relation_type.create(transaction)
         """
         pass
 
@@ -104,7 +104,7 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-           relation_type.get_instances(transaction, transitivity)
+            relation_type.get_instances(transaction, transitivity)
         """
         pass
 
@@ -128,7 +128,7 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-           relation_type.get_relates(transaction, role_label, transitivity)
+            relation_type.get_relates(transaction, role_label, transitivity)
         """
         pass
 
@@ -146,7 +146,7 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-           relation_type.get_relates_overridden(transaction, role_label)
+            relation_type.get_relates_overridden(transaction, role_label)
         """
         pass
 
@@ -167,7 +167,7 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-           relation_type.set_relates(transaction, role_label)
+            relation_type.set_relates(transaction, role_label)
            relation_type.set_relates(transaction, role_label, overridden_label)
         """
         pass
@@ -185,7 +185,7 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-           relation_type.unset_relates(transaction, role_label)
+            relation_type.unset_relates(transaction, role_label)
         """
         pass
 
@@ -206,7 +206,7 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-           relation_type.get_subtypes(transaction, transitivity)
+            relation_type.get_subtypes(transaction, transitivity)
         """
         pass
 
@@ -224,6 +224,6 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-           relation_type.set_supertype(transaction, super_relation_type)
+            relation_type.set_supertype(transaction, super_relation_type)
         """
         pass

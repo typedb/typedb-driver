@@ -56,7 +56,7 @@ class RoleType(Type, ABC):
         --------
         ::
 
-           role_type.is_role_type()
+            role_type.is_role_type()
         """
         return True
 
@@ -70,7 +70,7 @@ class RoleType(Type, ABC):
         --------
         ::
 
-           role_type.as_role_type()
+            role_type.as_role_type()
         """
         return self
 
@@ -86,7 +86,7 @@ class RoleType(Type, ABC):
         --------
         ::
 
-           role_type.get_supertype(transaction)
+            role_type.get_supertype(transaction)
         """
         pass
 
@@ -102,7 +102,7 @@ class RoleType(Type, ABC):
         --------
         ::
 
-           role_type.get_supertypes(transaction)
+            role_type.get_supertypes(transaction)
         """
         pass
 
@@ -122,7 +122,7 @@ class RoleType(Type, ABC):
         --------
         ::
 
-           role_type.get_subtypes(transaction, transitivity)
+            role_type.get_subtypes(transaction, transitivity)
         """
         pass
 
@@ -138,7 +138,7 @@ class RoleType(Type, ABC):
         --------
         ::
 
-           role_type.get_relation_type(transaction)
+            role_type.get_relation_type(transaction)
         """
         pass
 
@@ -155,7 +155,7 @@ class RoleType(Type, ABC):
         --------
         ::
 
-           role_type.get_relation_types(transaction)
+            role_type.get_relation_types(transaction)
         """
         pass
 
@@ -175,7 +175,7 @@ class RoleType(Type, ABC):
         --------
         ::
 
-           role_type.get_player_types(transaction, transitivity)
+            role_type.get_player_types(transaction, transitivity)
         """
         pass
 
@@ -195,7 +195,7 @@ class RoleType(Type, ABC):
         --------
         ::
 
-           role_type.get_relation_instances(transaction, transitivity)
+            role_type.get_relation_instances(transaction, transitivity)
         """
         pass
 
@@ -215,6 +215,6 @@ class RoleType(Type, ABC):
         --------
         ::
 
-           role_type.get_player_instances(transaction, transitivity)
+            role_type.get_player_instances(transaction, transitivity)
         """
         pass

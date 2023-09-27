@@ -54,7 +54,7 @@ class Attribute(Thing, ABC):
         --------
         ::
 
-           attribute.get_type()
+            attribute.get_type()
         """
         pass
 
@@ -69,7 +69,7 @@ class Attribute(Thing, ABC):
         --------
         ::
 
-           attribute.get_value()
+            attribute.get_value()
         """
         pass
 
@@ -83,7 +83,7 @@ class Attribute(Thing, ABC):
         --------
         ::
 
-           attribute.get_value_type()
+            attribute.get_value_type()
         """
         pass
 
@@ -97,7 +97,7 @@ class Attribute(Thing, ABC):
         --------
         ::
 
-           attribute.is_attribute()
+            attribute.is_attribute()
         """
         return True
 
@@ -111,7 +111,7 @@ class Attribute(Thing, ABC):
         --------
         ::
 
-           attribute.as_attribute()
+            attribute.as_attribute()
         """
         return self
 
@@ -127,7 +127,7 @@ class Attribute(Thing, ABC):
         --------
         ::
 
-           attribute.is_boolean()
+            attribute.is_boolean()
         """
         pass
 
@@ -143,7 +143,7 @@ class Attribute(Thing, ABC):
         --------
         ::
 
-           attribute.is_long()
+            attribute.is_long()
         """
         pass
 
@@ -159,7 +159,7 @@ class Attribute(Thing, ABC):
         --------
         ::
 
-           attribute.is_double()
+            attribute.is_double()
         """
         pass
 
@@ -175,7 +175,7 @@ class Attribute(Thing, ABC):
         --------
         ::
 
-           attribute.is_string()
+            attribute.is_string()
         """
         pass
 
@@ -191,7 +191,7 @@ class Attribute(Thing, ABC):
         --------
         ::
 
-           attribute.is_datetime()
+            attribute.is_datetime()
         """
         pass
 
@@ -207,7 +207,7 @@ class Attribute(Thing, ABC):
         --------
         ::
 
-           attribute.as_boolean()
+            attribute.as_boolean()
         """
         pass
 
@@ -223,7 +223,7 @@ class Attribute(Thing, ABC):
         --------
         ::
 
-           attribute.as_long()
+            attribute.as_long()
         """
         pass
 
@@ -239,7 +239,7 @@ class Attribute(Thing, ABC):
         --------
         ::
 
-           attribute.as_boolean()
+            attribute.as_boolean()
         """
         pass
 
@@ -255,7 +255,7 @@ class Attribute(Thing, ABC):
         --------
         ::
 
-           attribute.as_boolean()
+            attribute.as_boolean()
         """
         pass
 
@@ -271,7 +271,7 @@ class Attribute(Thing, ABC):
         --------
         ::
 
-           attribute.as_boolean()
+            attribute.as_boolean()
         """
         pass
 
@@ -286,7 +286,7 @@ class Attribute(Thing, ABC):
         --------
         ::
 
-           attribute.to_json()
+            attribute.to_json()
         """
         pass
 
@@ -304,7 +304,7 @@ class Attribute(Thing, ABC):
         --------
         ::
 
-            attribute.get_owners(transaction)
+             attribute.get_owners(transaction)
             attribute.get_owners(transaction, owner_type)
         """
         pass

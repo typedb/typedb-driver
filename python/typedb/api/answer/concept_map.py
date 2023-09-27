@@ -126,7 +126,7 @@ class ConceptMap(ABC):
             --------
             ::
 
-              concept_map.explainables().relation(var)
+               concept_map.explainables().relation(var)
             """
             pass
 
@@ -142,7 +142,7 @@ class ConceptMap(ABC):
             --------
             ::
 
-              concept_map.explainables().attribute(var)
+               concept_map.explainables().attribute(var)
             """
             pass
 
@@ -159,7 +159,7 @@ class ConceptMap(ABC):
             --------
             ::
 
-              concept_map.explainables().ownership(owner_var, attribute_var)
+               concept_map.explainables().ownership(owner_var, attribute_var)
             """
             pass
 
@@ -174,7 +174,7 @@ class ConceptMap(ABC):
             --------
             ::
 
-              concept_map.explainables().relations()
+               concept_map.explainables().relations()
             """
             pass
 
@@ -189,7 +189,7 @@ class ConceptMap(ABC):
             --------
             ::
 
-              concept_map.explainables().attributes()
+               concept_map.explainables().attributes()
             """
             pass
 
@@ -204,7 +204,7 @@ class ConceptMap(ABC):
             --------
             ::
 
-              concept_map.explainables().ownerships()
+               concept_map.explainables().ownerships()
             """
             pass
 
@@ -224,7 +224,7 @@ class ConceptMap(ABC):
             --------
             ::
 
-              explainable.conjunction()
+               explainable.conjunction()
             """
             pass
 
@@ -239,6 +239,6 @@ class ConceptMap(ABC):
             --------
             ::
 
-              explainable.id()
+               explainable.id()
             """
             pass

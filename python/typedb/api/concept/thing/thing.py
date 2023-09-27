@@ -48,7 +48,7 @@ class Thing(Concept, ABC):
         --------
         ::
 
-           thing.get_iid()
+            thing.get_iid()
         """
         pass
 
@@ -63,7 +63,7 @@ class Thing(Concept, ABC):
         --------
         ::
 
-           thing.get_type()
+            thing.get_type()
         """
         pass
 
@@ -78,7 +78,7 @@ class Thing(Concept, ABC):
         --------
         ::
 
-           thing.is_inferred()
+            thing.is_inferred()
         """
         pass
 
@@ -92,7 +92,7 @@ class Thing(Concept, ABC):
         --------
         ::
 
-           thing.is_thing()
+            thing.is_thing()
         """
         return True
 
@@ -106,7 +106,7 @@ class Thing(Concept, ABC):
         --------
         ::
 
-           thing.as_thing()
+            thing.as_thing()
         """
         return self
 
@@ -120,7 +120,7 @@ class Thing(Concept, ABC):
         --------
         ::
 
-           thing.to_json()
+            thing.to_json()
         """
         return {"type": self.get_type().get_label().name}
 
@@ -137,7 +137,7 @@ class Thing(Concept, ABC):
         --------
         ::
 
-           thing.set_has(transaction, attribute)
+            thing.set_has(transaction, attribute)
         """
         pass
 
@@ -154,7 +154,7 @@ class Thing(Concept, ABC):
         --------
         ::
 
-           thing.unset_has(transaction, attribute)
+            thing.unset_has(transaction, attribute)
         """
         pass
 
@@ -182,7 +182,7 @@ class Thing(Concept, ABC):
         --------
         ::
 
-           thing.get_has(transaction)
+            thing.get_has(transaction)
            thing.get_has(transaction, attribute_type=attribute_type,
                          annotations=set(Annotation.key()))
         """
@@ -203,7 +203,7 @@ class Thing(Concept, ABC):
         --------
         ::
 
-           thing.get_relations(transaction, role_types)
+            thing.get_relations(transaction, role_types)
         """
         pass
 
@@ -219,7 +219,7 @@ class Thing(Concept, ABC):
         --------
         ::
 
-           thing.get_playing(transaction)
+            thing.get_playing(transaction)
         """
         pass
 
@@ -235,7 +235,7 @@ class Thing(Concept, ABC):
         --------
         ::
 
-           thing.delete(transaction)
+            thing.delete(transaction)
         """
         pass
 
@@ -251,6 +251,6 @@ class Thing(Concept, ABC):
         --------
         ::
 
-           thing.is_deleted(transaction)
+            thing.is_deleted(transaction)
         """
         pass

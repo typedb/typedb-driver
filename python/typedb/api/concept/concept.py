@@ -53,7 +53,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.is_type()
+            concept.is_type()
         """
         return False
 
@@ -67,7 +67,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.is_thing_type()
+            concept.is_thing_type()
         """
         return False
 
@@ -81,7 +81,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.is_entity_type()
+            concept.is_entity_type()
         """
         return False
 
@@ -95,7 +95,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.is_attribute_type()
+            concept.is_attribute_type()
         """
         return False
 
@@ -109,7 +109,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.is_relation_type()
+            concept.is_relation_type()
         """
         return False
 
@@ -123,7 +123,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.is_role_type()
+            concept.is_role_type()
         """
         return False
 
@@ -137,7 +137,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.is_thing()
+            concept.is_thing()
         """
         return False
 
@@ -151,7 +151,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.is_entity()
+            concept.is_entity()
         """
         return False
 
@@ -165,7 +165,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.is_attribute()
+            concept.is_attribute()
         """
         return False
 
@@ -179,7 +179,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.is_relation()
+            concept.is_relation()
         """
         return False
 
@@ -193,7 +193,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.is_value()
+            concept.is_value()
         """
         return False
 
@@ -207,7 +207,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.as_type()
+            concept.as_type()
         """
         raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Type"))
 
@@ -221,7 +221,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.as_thing_type()
+            concept.as_thing_type()
         """
         raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "ThingType"))
 
@@ -235,7 +235,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.as_entity_type()
+            concept.as_entity_type()
         """
         raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "EntityType"))
 
@@ -249,7 +249,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.as_attribute_type()
+            concept.as_attribute_type()
         """
         raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "AttributeType"))
 
@@ -263,7 +263,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.as_relation_type()
+            concept.as_relation_type()
         """
         raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "RelationType"))
 
@@ -277,7 +277,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.as_role_type()
+            concept.as_role_type()
         """
         raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "RoleType"))
 
@@ -291,7 +291,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.as_thing()
+            concept.as_thing()
         """
         raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Thing"))
 
@@ -305,7 +305,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.as_entity()
+            concept.as_entity()
         """
         raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Entity"))
 
@@ -319,7 +319,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.as_attribute()
+            concept.as_attribute()
         """
         raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Attribute"))
 
@@ -333,7 +333,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.as_relation()
+            concept.as_relation()
         """
         raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Relation"))
 
@@ -347,7 +347,7 @@ class Concept(ABC):
         --------
         ::
 
-           concept.as_value()
+            concept.as_value()
         """
         raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Value"))
 
@@ -362,6 +362,6 @@ class Concept(ABC):
         --------
         ::
 
-           concept.to_json()
+            concept.to_json()
         """
         pass

@@ -49,7 +49,7 @@ class Entity(Thing, ABC):
         --------
         ::
 
-           entity.is_entity()
+            entity.is_entity()
         """
         return True
 
@@ -63,7 +63,7 @@ class Entity(Thing, ABC):
         --------
         ::
 
-           entity.as_entity()
+            entity.as_entity()
         """
         return self
 
@@ -78,6 +78,6 @@ class Entity(Thing, ABC):
         --------
         ::
 
-           entity.get_type()
+            entity.get_type()
         """
         pass

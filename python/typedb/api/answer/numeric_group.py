@@ -45,7 +45,7 @@ class NumericGroup(ABC):
         --------
         ::
 
-           concept_map_group.owner()
+            concept_map_group.owner()
         """
         pass
 
@@ -60,6 +60,6 @@ class NumericGroup(ABC):
         --------
         ::
 
-           numeric_group.numeric()
+            numeric_group.numeric()
         """
         pass

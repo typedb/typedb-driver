@@ -63,7 +63,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-           attribute_type.get_value_type()
+            attribute_type.get_value_type()
         """
         return ValueType.OBJECT
 
@@ -77,7 +77,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-           attribute.as_attribute_type()
+            attribute.as_attribute_type()
         """
         return self
 
@@ -91,7 +91,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-           attribute.is_attribute_type()
+            attribute.is_attribute_type()
         """
         return True
 
@@ -106,7 +106,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-           attribute_type.is_boolean()
+            attribute_type.is_boolean()
         """
         return self.get_value_type() == ValueType.BOOLEAN
 
@@ -121,7 +121,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-           attribute_type.is_long()
+            attribute_type.is_long()
         """
         return self.get_value_type() == ValueType.LONG
 
@@ -136,7 +136,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-           attribute_type.is_double()
+            attribute_type.is_double()
         """
         return self.get_value_type() == ValueType.DOUBLE
 
@@ -151,7 +151,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-           attribute_type.is_string()
+            attribute_type.is_string()
         """
         return self.get_value_type() == ValueType.STRING
 
@@ -166,7 +166,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-           attribute_type.is_datetime()
+            attribute_type.is_datetime()
         """
         return self.get_value_type() == ValueType.DATETIME
 
@@ -183,7 +183,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-           attribute = attribute_type.put(transaction, value)
+            attribute = attribute_type.put(transaction, value)
         '''
         pass
 
@@ -202,7 +202,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-           attribute = attribute_type.get(transaction, value)
+            attribute = attribute_type.get(transaction, value)
         '''
         pass
 
@@ -219,7 +219,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-           attribute_type.get_regex(transaction)
+            attribute_type.get_regex(transaction)
         """
         pass
 
@@ -241,7 +241,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-           attribute_type.set_regex(transaction, regex)
+            attribute_type.set_regex(transaction, regex)
         """
         pass
 
@@ -258,7 +258,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-           attribute_type.unset_regex(transaction)
+            attribute_type.unset_regex(transaction)
         """
         pass
 
@@ -277,7 +277,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-           attribute_type.set_supertype(transaction, attribute_type)
+            attribute_type.set_supertype(transaction, attribute_type)
         """
         pass
 
@@ -300,7 +300,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-           attribute_type.get_subtypes_with_value_type(transaction, value_type)
+            attribute_type.get_subtypes_with_value_type(transaction, value_type)
            attribute_type.get_subtypes_with_value_type(transaction, value_type,
                                                        Transitivity.EXPLICIT)
         """
@@ -323,7 +323,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-           attributeType.get_instances(transaction)
+            attributeType.get_instances(transaction)
            attributeType.get_instances(transaction, Transitivity.EXPLICIT)
         """
         pass

@@ -48,7 +48,7 @@ class EntityType(ThingType, ABC):
         --------
         ::
 
-           entity_type.is_entity_type()
+            entity_type.is_entity_type()
         """
         return True
 
@@ -62,7 +62,7 @@ class EntityType(ThingType, ABC):
         --------
         ::
 
-           entity_type.as_entity_type()
+            entity_type.as_entity_type()
         """
         return self
 
@@ -78,7 +78,7 @@ class EntityType(ThingType, ABC):
         --------
         ::
 
-           entity_type.create(transaction)
+            entity_type.create(transaction)
         """
         pass
 
@@ -86,7 +86,8 @@ class EntityType(ThingType, ABC):
     def get_subtypes(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                      ) -> Iterator[EntityType]:
         """
-        Retrieves all direct and indirect (or direct only) subtypes of the ``EntityType``.
+        Retrieves all direct and indirect (or direct only) subtypes of the 
+        ``EntityType``.
 
         :param transaction: The current ``Transaction``
         :param transitivity: ``Transitivity.TRANSITIVE`` for direct
@@ -98,7 +99,7 @@ class EntityType(ThingType, ABC):
         --------
         ::
 
-           entity_type.get_subtypes(transaction, transitivity)
+            entity_type.get_subtypes(transaction, transitivity)
         """
         pass
 
@@ -119,7 +120,7 @@ class EntityType(ThingType, ABC):
         --------
         ::
 
-           entity_type.get_instances(transaction, transitivity)
+            entity_type.get_instances(transaction, transitivity)
         """
         pass
 
@@ -137,6 +138,6 @@ class EntityType(ThingType, ABC):
         --------
         ::
 
-           entity_type.set_supertype(transaction, entity_type)
+            entity_type.set_supertype(transaction, entity_type)
         """
         pass

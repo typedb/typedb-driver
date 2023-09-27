@@ -45,7 +45,7 @@ class Annotation:
         --------
         ::
 
-           Annotation.key()
+            Annotation.key()
         """
         return Annotation(annotation_new_key())
 
@@ -60,7 +60,7 @@ class Annotation:
         --------
         ::
 
-           Annotation.unique()
+            Annotation.unique()
         """
         return Annotation(annotation_new_unique())
 
@@ -74,7 +74,7 @@ class Annotation:
         --------
         ::
 
-           annotation.is_key()
+            annotation.is_key()
         """
         return annotation_is_key(self.native_object)
 
@@ -88,7 +88,7 @@ class Annotation:
         --------
         ::
 
-           annotation.is_unique()
+            annotation.is_unique()
         """
         return annotation_is_unique(self.native_object)
 

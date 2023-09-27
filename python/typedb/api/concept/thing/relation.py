@@ -48,7 +48,7 @@ class Relation(Thing, ABC):
         --------
         ::
 
-           relation.is_relation()
+            relation.is_relation()
         """
         return True
 
@@ -62,7 +62,7 @@ class Relation(Thing, ABC):
         --------
         ::
 
-           relation.as_relation()
+            relation.as_relation()
         """
         return self
 
@@ -77,7 +77,7 @@ class Relation(Thing, ABC):
         --------
         ::
 
-           relation.get_type()
+            relation.get_type()
         """
         pass
 
@@ -95,7 +95,7 @@ class Relation(Thing, ABC):
         --------
         ::
 
-           relation.add_player(transaction, role_type, player)
+            relation.add_player(transaction, role_type, player)
         """
         pass
 
@@ -113,7 +113,7 @@ class Relation(Thing, ABC):
         --------
         ::
 
-           relation.remove_player(transaction, role_type, player)
+            relation.remove_player(transaction, role_type, player)
         """
         pass
 
@@ -131,7 +131,7 @@ class Relation(Thing, ABC):
         --------
         ::
 
-           relation.get_players_by_role_type(transaction)
+            relation.get_players_by_role_type(transaction)
            relation.get_players_by_role_type(transaction, role_type1, role_type2)
         """
         pass
@@ -149,7 +149,7 @@ class Relation(Thing, ABC):
         --------
         ::
 
-           relation.get_players(transaction)
+            relation.get_players(transaction)
         """
         pass
 
@@ -165,6 +165,6 @@ class Relation(Thing, ABC):
         --------
         ::
 
-           relation.get_relating(transaction)
+            relation.get_relating(transaction)
         """
         pass

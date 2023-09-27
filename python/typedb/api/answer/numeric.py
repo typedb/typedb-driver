@@ -38,7 +38,7 @@ class Numeric(ABC):
         --------
         ::
 
-           numeric.is_int()
+            numeric.is_int()
         """
         pass
 
@@ -53,7 +53,7 @@ class Numeric(ABC):
         --------
         ::
 
-           numeric.is_float()
+            numeric.is_float()
         """
         pass
 
@@ -68,7 +68,7 @@ class Numeric(ABC):
         --------
         ::
 
-           numeric.is_nan()
+            numeric.is_nan()
         """
         pass
 
@@ -83,7 +83,7 @@ class Numeric(ABC):
         --------
         ::
 
-           numeric.as_int()
+            numeric.as_int()
         """
         pass
 
@@ -98,6 +98,6 @@ class Numeric(ABC):
         --------
         ::
 
-           numeric.as_float()
+            numeric.as_float()
         """
         pass

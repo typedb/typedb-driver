@@ -45,7 +45,7 @@ class ConceptMapGroup(ABC):
         ---------
         ::
 
-           concept_map_group.owner()
+            concept_map_group.owner()
         """
         pass
 
@@ -60,6 +60,6 @@ class ConceptMapGroup(ABC):
         ---------
         ::
 
-           concept_map_group.concept_maps()
+            concept_map_group.concept_maps()
         """
         pass

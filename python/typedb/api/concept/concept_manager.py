@@ -51,7 +51,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-           transaction.concepts().get_root_entity_type()
+            transaction.concepts().get_root_entity_type()
         """
         pass
 
@@ -66,7 +66,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-           transaction.concepts().get_root_relation_type()
+            transaction.concepts().get_root_relation_type()
         """
         pass
 
@@ -81,7 +81,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-           transaction.concepts().get_root_attribute_type()
+            transaction.concepts().get_root_attribute_type()
         """
         pass
 
@@ -97,7 +97,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-           transaction.concepts().get_entity_type(label)
+            transaction.concepts().get_entity_type(label)
         """
         pass
 
@@ -114,7 +114,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-           transaction.concepts().put_entity_type(label)
+            transaction.concepts().put_entity_type(label)
         """
         pass
 
@@ -130,7 +130,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-           transaction.concepts().get_relation_type(label)
+            transaction.concepts().get_relation_type(label)
         """
         pass
 
@@ -147,7 +147,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-           transaction.concepts().put_relation_type(label)
+            transaction.concepts().put_relation_type(label)
         """
         pass
 
@@ -163,7 +163,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-           transaction.concepts().get_attribute_type(label)
+            transaction.concepts().get_attribute_type(label)
         """
         pass
 
@@ -182,7 +182,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-           await transaction.concepts().put_attribute_type(label, value_type)
+            await transaction.concepts().put_attribute_type(label, value_type)
         """
         pass
 
@@ -197,7 +197,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-           transaction.concepts().get_entity(iid)
+            transaction.concepts().get_entity(iid)
         """
         pass
 
@@ -212,7 +212,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-           transaction.concepts().get_relation(iid)
+            transaction.concepts().get_relation(iid)
         """
         pass
 
@@ -227,7 +227,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-           transaction.concepts().get_attribute(iid)
+            transaction.concepts().get_attribute(iid)
         """
         pass
 
@@ -242,6 +242,6 @@ class ConceptManager(ABC):
         --------
         ::
 
-           transaction.concepts().get_schema_exception()
+            transaction.concepts().get_schema_exception()
         """
         pass
