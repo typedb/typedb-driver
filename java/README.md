@@ -1,10 +1,10 @@
 # TypeDB Driver for Java
 
 ## Driver Architecture
-To learn about the mechanism that a TypeDB Driver uses to set up communication with databases running on the TypeDB Server, refer to [TypeDB > Development > TypeDB Driver API](https://typedb.com/docs/typedb/2.x/development/api.html).
+To learn about the mechanism that a TypeDB Driver uses to set up communication with databases running on the TypeDB Server, refer to the [Driver Overview](https://typedb.com/docs/clients/2.x/clients).
 
 ## API Reference
-To learn about the methods available for executing queries and retrieving their answers using Driver Java, refer to [TypeDB Drivers > Java Driver > Java Driver API reference](https://typedb.com/docs/drivers/2.x/java/java-api-ref.html).
+To learn about the methods available for executing queries and retrieving their answers using Driver Java, refer to the [API Reference](https://typedb.com/docs/clients/2.x/java/java-api-ref).
 
 ## Import TypeDB Driver for Java through Maven
 
@@ -25,7 +25,7 @@ To learn about the methods available for executing queries and retrieving their 
 </dependencies>
 ```
 
-Further documentation: https://typedb.com/docs/drivers/2.x/java/java-install.html
+Further documentation: https://typedb.com/docs/clients/2.x/java/java-overview
 
 ## Build TypeDB Driver for Java from Source
 

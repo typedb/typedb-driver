@@ -1,13 +1,10 @@
 # TypeDB Driver for Python
 
 ## Driver Architecture
-To learn about the mechanism that a TypeDB Driver uses to set up communication with databases running on the TypeDB Server, refer to [TypeDB > Driver API > Overview](http://docs.vaticle.com/docs/driver-api/overview).
+To learn about the mechanism that a TypeDB Driver uses to set up communication with databases running on the TypeDB Server, refer to the [Driver Overview](https://typedb.com/docs/clients/2.x/clients).
 
 ## API Reference
-To learn about the methods available for executing queries and retrieving their answers using Driver Python, refer to [TypeDB > Driver API > Python > API Reference](http://docs.vaticle.com/docs/driver-api/python#api-reference).
-
-## Concept API
-To learn about the methods available on the concepts retrieved as the answers to TypeQL queries, refer to [TypeDB > Concept API > Overview](http://docs.vaticle.com/docs/concept-api/overview)
+To learn about the methods available for executing queries and retrieving their answers using Driver Python, refer to the [API Reference](https://typedb.com/docs/clients/2.x/python/python-api-ref).
 
 ## Install TypeDB Driver for Python through Pip
 ```

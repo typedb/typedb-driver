@@ -7,13 +7,10 @@
 [![Stack Overflow](https://img.shields.io/badge/stackoverflow-typeql-3dce8c.svg)](https://stackoverflow.com/questions/tagged/typeql)
 
 ## Driver Architecture
-To learn about the mechanism that a TypeDB Driver uses to set up communication with databases running on the TypeDB Server, refer to [TypeDB > Driver API > Overview](http://docs.vaticle.com/docs/driver-api/overview).
+To learn about the mechanism that a TypeDB Driver uses to set up communication with databases running on the TypeDB Server, refer to the [Driver Overview](https://typedb.com/docs/clients/2.x/clients).
 
 ## API Reference
-To learn about the methods available for executing queries and retrieving their answers using Driver Node.js, refer to [TypeDB > Driver API > Node.js > API Reference](http://docs.vaticle.com/docs/driver-api/nodejs#api-reference).
-
-## Concept API
-To learn about the methods available on the concepts retrieved as the answers to TypeQL queries, refer to [TypeDB > Concept API > Overview](http://docs.vaticle.com/docs/concept-api/overview).
+To learn about the methods available for executing queries and retrieving their answers using Driver NodeJS, refer to the [API Reference](https://typedb.com/docs/clients/2.x/node-js/node-js-api-ref).
 
 ## Installation
 
@@ -22,7 +19,7 @@ To learn about the methods available on the concepts retrieved as the answers to
 ```shell script
 npm install typedb-driver
 ```
-Further documentation: https://docs.vaticle.com/docs/driver-api/nodejs
+Further documentation: https://typedb.com/docs/clients/2.x/node-js/node-js-overview
 
 ## Using TypeScript
 `typedb-driver` is a TypeScript project and provides its own type definitions out of the box - for example:
