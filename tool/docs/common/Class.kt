@@ -32,6 +32,16 @@ data class Class(
         result += "[#_${this.name}]\n"
         result += "= ${this.name}\n\n"
 
+        if (this.bases.isNotEmpty()) {
+            if (language == "java") {
+                result += "== Superinterfaces\n\n"
+            } else {
+                result += "== Base classes\n\n"
+            }
+            result += this.bases.map { "`$it`" }.joinToString(", ")
+            result += "\n\n"
+        }
+
         if (this.description.isNotEmpty()) {
             result += "== Description\n\n${this.description.joinToString("\n\n")}\n\n"
         }
