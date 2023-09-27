@@ -42,7 +42,7 @@ pub(super) struct BackgroundRuntime {
     shutdown_sink: UnboundedSender<()>,
 
     callback_handler: Option<JoinHandle<()>>,
-    callback_handler_sink: Sender<(Callback, AsyncOneshotSender<()>)>,
+    callback_handler_sink: Option<Sender<(Callback, AsyncOneshotSender<()>)>>,
 }
 
 impl BackgroundRuntime {
@@ -65,11 +65,17 @@ impl BackgroundRuntime {
             }
         })?);
 
-        Ok(Self { async_runtime_handle, is_open, shutdown_sink, callback_handler, callback_handler_sink })
+        Ok(Self {
+            async_runtime_handle,
+            is_open,
+            shutdown_sink,
+            callback_handler,
+            callback_handler_sink: Some(callback_handler_sink),
+        })
     }
 
     pub(super) fn callback_handler_sink(&self) -> Sender<(Callback, AsyncOneshotSender<()>)> {
-        self.callback_handler_sink.clone()
+        self.callback_handler_sink.clone().unwrap()
     }
 
     pub(super) fn is_open(&self) -> bool {
@@ -107,6 +113,7 @@ impl Drop for BackgroundRuntime {
     fn drop(&mut self) {
         self.is_open.store(false);
         self.shutdown_sink.send(()).ok();
+        drop(self.callback_handler_sink.take());
         if let Err(err) = self.callback_handler.take().unwrap().join() {
             error!("Error shutting down the callback handler thread: {:?}", err);
         }
