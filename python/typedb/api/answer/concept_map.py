@@ -30,7 +30,7 @@ if TYPE_CHECKING:
 
 class ConceptMap(ABC):
     """
-    Contains a mapping of variables to concepts
+    Contains a mapping of variables to concepts.
     """
 
     @abstractmethod
@@ -75,7 +75,7 @@ class ConceptMap(ABC):
         --------
         ::
 
-          concept_map.get(var)
+          concept_map.get(variable)
         """
         pass
 
@@ -97,7 +97,7 @@ class ConceptMap(ABC):
 
     def to_json(self) -> Mapping[str, Mapping[str, Union[str, int, float, bool]]]:
         """
-        Serializes this ``ConceptMap`` to JSON.
+        Retrieves this ``ConceptMap`` as JSON.
 
         :return:
 
@@ -126,7 +126,7 @@ class ConceptMap(ABC):
             --------
             ::
 
-               concept_map.explainables().relation(var)
+               concept_map.explainables().relation(variable)
             """
             pass
 
@@ -142,7 +142,7 @@ class ConceptMap(ABC):
             --------
             ::
 
-               concept_map.explainables().attribute(var)
+               concept_map.explainables().attribute(variable)
             """
             pass
 
@@ -159,7 +159,7 @@ class ConceptMap(ABC):
             --------
             ::
 
-               concept_map.explainables().ownership(owner_var, attribute_var)
+               concept_map.explainables().ownership(owner, attribute)
             """
             pass
 
