@@ -94,6 +94,11 @@ checkstyle_test(
         "*",
         "src/**/*",
     ]),
+    exclude = glob([
+        "README.md",
+        "**/Cargo.toml",
+        "**/Cargo.lock",
+    ]),
     license_type = "apache-header",
 )
 

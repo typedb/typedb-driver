@@ -34,7 +34,7 @@ import {UserManagerImpl} from "../user/UserManagerImpl";
 import {TypeDBDatabaseManagerImpl} from "./TypeDBDatabaseManagerImpl";
 import {TypeDBSessionImpl} from "./TypeDBSessionImpl";
 import {TypeDBStubImpl} from "./TypeDBStubImpl";
-import CLIENT_NOT_OPEN = ErrorMessage.Driver.CLIENT_NOT_OPEN;
+import DRIVER_NOT_OPEN = ErrorMessage.Driver.DRIVER_NOT_OPEN;
 import ENTERPRISE_UNABLE_TO_CONNECT = ErrorMessage.Driver.ENTPERPRISE_UNABLE_TO_CONNECT;
 import SESSION_ID_EXISTS = ErrorMessage.Driver.SESSION_ID_EXISTS;
 
@@ -104,7 +104,7 @@ export class TypeDBDriverImpl implements TypeDBDriver {
     }
 
     async session(databaseName: string, type: SessionType, options?: TypeDBOptions): Promise<TypeDBSessionImpl> {
-        if (!this.isOpen()) throw new TypeDBDriverError(CLIENT_NOT_OPEN);
+        if (!this.isOpen()) throw new TypeDBDriverError(DRIVER_NOT_OPEN);
         if (!options) options = new TypeDBOptions();
         const session = new TypeDBSessionImpl(databaseName, type, options, this);
         await session.open();
@@ -114,17 +114,17 @@ export class TypeDBDriverImpl implements TypeDBDriver {
     }
 
     get databases(): TypeDBDatabaseManagerImpl {
-        if (!this.isOpen()) throw new TypeDBDriverError(CLIENT_NOT_OPEN);
+        if (!this.isOpen()) throw new TypeDBDriverError(DRIVER_NOT_OPEN);
         return this._databases;
     }
 
     async user(): Promise<UserImpl> {
-        if (!this.isOpen()) throw new TypeDBDriverError(CLIENT_NOT_OPEN);
+        if (!this.isOpen()) throw new TypeDBDriverError(DRIVER_NOT_OPEN);
         return await this.users.get(this._credential.username)
     }
 
     get users(): UserManagerImpl {
-        if (!this.isOpen()) throw new TypeDBDriverError(CLIENT_NOT_OPEN);
+        if (!this.isOpen()) throw new TypeDBDriverError(DRIVER_NOT_OPEN);
         return this._userManager;
     }
 

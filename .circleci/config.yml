@@ -210,7 +210,7 @@ commands:
           $TYPEDB_DIST_DIR/typedb server &
           PID=$!
           
-          sed -i -e "s/CLIENT_JAVA_VERSION_MARKER/$CIRCLE_SHA1/g" java/test/deployment/pom.xml
+          sed -i -e "s/DRIVER_JAVA_VERSION_MARKER/$CIRCLE_SHA1/g" java/test/deployment/pom.xml
           cat java/test/deployment/pom.xml
           cd java/test/deployment && mvn test
           kill $PID

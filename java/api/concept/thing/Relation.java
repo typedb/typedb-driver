@@ -52,10 +52,10 @@ public interface Relation extends Thing {
     void removePlayer(TypeDBTransaction transaction, RoleType roleType, Thing player);
 
     @CheckReturnValue
-    Stream<? extends Thing> getPlayers(TypeDBTransaction transaction, RoleType... roleTypes);
+    Stream<? extends Thing> getPlayersByRoleType(TypeDBTransaction transaction, RoleType... roleTypes);
 
     @CheckReturnValue
-    Map<? extends RoleType, ? extends List<? extends Thing>> getPlayersByRoleType(TypeDBTransaction transaction);
+    Map<? extends RoleType, ? extends List<? extends Thing>> getPlayers(TypeDBTransaction transaction);
 
     @CheckReturnValue
     Stream<? extends RoleType> getRelating(TypeDBTransaction transaction);

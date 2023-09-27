@@ -68,7 +68,7 @@ class DriverErrorMessage(ErrorMessage):
                                                  message_body=message)
 
 
-CLIENT_CLOSED = DriverErrorMessage(1, "The driver has been closed and no further operation is allowed.")
+DRIVER_CLOSED = DriverErrorMessage(1, "The driver has been closed and no further operation is allowed.")
 SESSION_CLOSED = DriverErrorMessage(2, "The session has been closed and no further operation is allowed.")
 TRANSACTION_CLOSED = DriverErrorMessage(3, "The transaction has been closed and no further operation is allowed.")
 DATABASE_DELETED = DriverErrorMessage(4, "The database '%s' has been deleted and no further operation is allowed.")

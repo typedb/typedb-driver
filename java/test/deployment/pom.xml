@@ -57,7 +57,7 @@ under the License.
         <dependency>
             <groupId>com.vaticle.typedb</groupId>
             <artifactId>typedb-driver</artifactId>
-            <version>CLIENT_JAVA_VERSION_MARKER</version>
+            <version>DRIVER_JAVA_VERSION_MARKER</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

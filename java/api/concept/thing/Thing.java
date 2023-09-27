@@ -61,15 +61,15 @@ public interface Thing extends Concept {
         return Json.object().add("type", getType().getLabel().scopedName());
     }
 
-    @CheckReturnValue
-    Stream<? extends Attribute> getHas(TypeDBTransaction transaction, Set<Annotation> annotations);
-
     void setHas(TypeDBTransaction transaction, Attribute attribute);
 
     void unsetHas(TypeDBTransaction transaction, Attribute attribute);
 
     @CheckReturnValue
     Stream<? extends Attribute> getHas(TypeDBTransaction transaction, AttributeType... attributeTypes);
+
+    @CheckReturnValue
+    Stream<? extends Attribute> getHas(TypeDBTransaction transaction, Set<Annotation> annotations);
 
     @CheckReturnValue
     Stream<? extends Relation> getRelations(TypeDBTransaction transaction, RoleType... roleTypes);
