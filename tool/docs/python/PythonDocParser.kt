@@ -27,7 +27,7 @@ import org.jsoup.nodes.Element
 import com.vaticle.typedb.client.tool.doc.common.Argument
 import com.vaticle.typedb.client.tool.doc.common.Class
 import com.vaticle.typedb.client.tool.doc.common.Enum
-import com.vaticle.typedb.client.tool.doc.common.EnumMember
+import com.vaticle.typedb.client.tool.doc.common.EnumConstant
 import com.vaticle.typedb.client.tool.doc.common.Method
 
 fun main(args: Array<String>) {
@@ -47,27 +47,27 @@ fun main(args: Array<String>) {
         val parsed = Jsoup.parse(html)
 
         parsed.select("dl.class").forEach {
+            var parsedClassName = ""
+            var parsedClassAsciiDoc = ""
+            var parsedClassForJava = ""
             if (it.selectFirst("dt.sig-object + dd > p")!!.text().contains("Enum")) {
                 val parsedClass = parseEnum(it)
-                println(parsedClass)
-                val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
-                outputFile.createNewFile()
-                outputFile.writeText(parsedClass.toAsciiDoc("python"))
-
-                val outputFileJava = docsDir.resolve("for_java").resolve(parsedClass.name + ".txt").toFile()
-                outputFileJava.createNewFile()
-                outputFileJava.writeText(parsedClass.toJavaComment())
+                parsedClassName = parsedClass.name
+                parsedClassAsciiDoc = parsedClass.toAsciiDoc("python")
+                parsedClassForJava = parsedClass.toJavaComment()
             } else {
                 val parsedClass = parseClass(it)
-                println(parsedClass)
-                val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
-                outputFile.createNewFile()
-                outputFile.writeText(parsedClass.toAsciiDoc("python"))
-
-                val outputFileJava = docsDir.resolve("for_java").resolve(parsedClass.name + ".txt").toFile()
-                outputFileJava.createNewFile()
-                outputFileJava.writeText(parsedClass.toJavaComment())
+                parsedClassName = parsedClass.name
+                parsedClassAsciiDoc = parsedClass.toAsciiDoc("python")
+                parsedClassForJava = parsedClass.toJavaComment()
             }
+            val outputFile = docsDir.resolve("$parsedClassName.adoc").toFile()
+            outputFile.createNewFile()
+            outputFile.writeText(parsedClassAsciiDoc)
+
+            val outputFileJava = docsDir.resolve("for_java").resolve("$parsedClassName.txt").toFile()
+            outputFileJava.createNewFile()
+            outputFileJava.writeText(parsedClassForJava)
         }
     }
 }
@@ -116,13 +116,13 @@ fun parseEnum(element: Element): Enum {
         .map { parseMethod(it) }
 
     val members = classDetails.select("dl.attribute")
-        .map { parseEnumMember(it) }
+        .map { parseEnumConstant(it) }
 
     return Enum(
         name = className,
         description = classDescr,
         methods = methods,
-        members = members,
+        constants = members,
         bases = classBases,
         examples = classExamples,
     )
@@ -135,14 +135,14 @@ fun parseMethod(element: Element): Method {
     val methodReturnType = element.select(".sig-return-typehint").text()
     val methodDescr = element.select("dl.method > dd > p").map { reformatTextWithCode(it.html()) }
     val methodArgs = element.select(".field-list > dt:contains(Parameters) + dd p").map {
-        val arg_name = it.selectFirst("strong")!!.text()
-        assert(allArgs.contains(arg_name))
-        val arg_descr = reformatTextWithCode(removeArgName(it.html())).removePrefix(" – ")
+        val argName = it.selectFirst("strong")!!.text()
+        assert(allArgs.contains(argName))
+        val argDescr = reformatTextWithCode(removeArgName(it.html())).removePrefix(" – ")
         Argument(
-            name = arg_name,
-            type = allArgs[arg_name]?.first,
-            defaultValue = allArgs[arg_name]?.second,
-            description = arg_descr
+            name = argName,
+            type = allArgs[argName]?.first,
+            defaultValue = allArgs[argName]?.second,
+            description = argDescr
         )
     }
     val methodReturnDescr = element.select(".field-list > dt:contains(Returns) + dd p").text()
@@ -161,22 +161,22 @@ fun parseMethod(element: Element): Method {
 }
 
 fun parseProperty(element: Element): Argument {
-    val propertyName = element.selectFirst("dt.sig-object span.sig-name")!!.text()
-    val propertyType = element.selectFirst("dt.sig-object span.sig-name + .property ")?.text()?.dropWhile { !it.isLetter() }
-    val propertyDescr = element.select("dd > p").map { reformatTextWithCode(it.html()) }.joinToString("\n\n")  // TODO: Test it
+    val name = element.selectFirst("dt.sig-object span.sig-name")!!.text()
+    val type = element.selectFirst("dt.sig-object span.sig-name + .property ")?.text()?.dropWhile { !it.isLetter() }
+    val descr = element.select("dd > p").map { reformatTextWithCode(it.html()) }.joinToString("\n\n")  // TODO: Test it
     return Argument(
-        name = propertyName,
-        type = propertyType,
-        description = propertyDescr,
+        name = name,
+        type = type,
+        description = descr,
     )
 }
 
-fun parseEnumMember(element: Element): EnumMember {
-    val memberName = element.selectFirst("dt.sig-object span.sig-name")!!.text()
-    val memberValue = element.selectFirst("dt.sig-object span.sig-name + .property")!!.text().removePrefix("= ")
-    return EnumMember(
-        name = memberName,
-        value = memberValue,
+fun parseEnumConstant(element: Element): EnumConstant {
+    val name = element.selectFirst("dt.sig-object span.sig-name")!!.text()
+    val value = element.selectFirst("dt.sig-object span.sig-name + .property")!!.text().removePrefix("= ")
+    return EnumConstant(
+        name = name,
+        value = value,
     )
 }
 

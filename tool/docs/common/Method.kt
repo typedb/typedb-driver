@@ -37,10 +37,11 @@ data class Method(
 
         if (this.args.isNotEmpty()) {
             result += "=== Input parameters\n\n[options=\"header\"]\n|===\n"
-            result += "|Name |Description |Type\n"
+            result += "|Name |Description |Type"
             if (language == "python") {
-                result += " |Default Value\n"
+                result += " |Default Value"
             }
+            result += "\n"
             this.args.forEach { result += it.toAsciiDocTableRow(language) + "\n" }
             result += "|===\n\n"
         }

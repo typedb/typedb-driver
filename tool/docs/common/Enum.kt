@@ -20,7 +20,8 @@ package com.vaticle.typedb.client.tool.doc.common
 
 data class Enum(
     val name: String,
-    val members: List<EnumMember> = listOf(),
+    val constants: List<EnumConstant> = listOf(),
+    val fields: List<Argument> = listOf(),
     val methods: List<Method> = listOf(),
     val description: List<String> = listOf(),
     val examples: List<String> = listOf(),
@@ -40,10 +41,10 @@ data class Enum(
             }
         }
 
-        if (this.members.isNotEmpty()) {
-            result += "== Enum members\n\n[options=\"header\"]\n|===\n"
+        if (this.constants.isNotEmpty()) {
+            result += "== Enum constants\n\n[options=\"header\"]\n|===\n"
             result += "|Name |Value \n"
-            this.members.forEach { result += it.toAsciiDocTableRow(language) + "\n" }
+            this.constants.forEach { result += it.toAsciiDocTableRow(language) + "\n" }
             result += "|===\n\n"
         }
 

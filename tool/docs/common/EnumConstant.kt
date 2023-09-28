@@ -18,14 +18,15 @@
 
 package com.vaticle.typedb.client.tool.doc.common
 
-data class EnumMember(
+data class EnumConstant(
     val name: String,
-    val value: String,
+    val value: String? = null,
 ) {
     fun toAsciiDocTableRow(language: String): String {
         var result = ""
         result += "| `${this.name}`"
-        result += "| `${this.value}`"
+        result += "| "
+        this.value?.let { result += "`$it`" }
         return result
     }
 }
