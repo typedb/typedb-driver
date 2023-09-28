@@ -347,7 +347,7 @@ jobs:
               fname=$(basename $f)
               base=${fname%.*}
               pyversion=${base#typedb-driver}
-              cp $f ~/dist/typedb_driver-py${pyversion}-none-linux_aarch64.whl
+              cp $f ~/dist/typedb_driver-py${pyversion}-none-manylinux_2_17_aarch64.whl
           done
       - persist_to_workspace:
           root: ~/dist
@@ -364,7 +364,7 @@ jobs:
               fname=$(basename $f)
               base=${fname%.*}
               pyversion=${base#typedb-driver}
-              cp $f ~/dist/typedb_driver-py${pyversion}-none-linux_x86_64.whl
+              cp $f ~/dist/typedb_driver-py${pyversion}-none-manylinux_2_17_x86_64.whl
           done
       - persist_to_workspace:
           root: ~/dist
