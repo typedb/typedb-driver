@@ -25,7 +25,7 @@ orbs:
   win: circleci/windows@2.0.0
 
 executors:
-  linux-aarch64:
+  linux-arm64:
     machine:
       image: ubuntu-2204:current
       resource_class: arm.medium
@@ -36,7 +36,7 @@ executors:
       image: ubuntu-2204:current
     working_directory: ~/typedb-driver
 
-  mac-aarch64:
+  mac-arm64:
     macos:
       xcode: "14.2.0"
     resource_class: macos.m1.medium.gen1
@@ -272,8 +272,8 @@ jobs:
   # Python jobs #
   ###############
 
-  deploy-pip-snapshot-linux-aarch64:
-    executor: linux-aarch64
+  deploy-pip-snapshot-linux-arm64:
+    executor: linux-arm64
     steps:
       - deploy-pip-snapshot-linux:
           arch: arm64
@@ -284,8 +284,8 @@ jobs:
       - deploy-pip-snapshot-linux:
           arch: amd64
 
-  deploy-pip-snapshot-mac-aarch64:
-    executor: mac-aarch64
+  deploy-pip-snapshot-mac-arm64:
+    executor: mac-arm64
     steps:
       - deploy-pip-snapshot-mac
 
@@ -304,8 +304,8 @@ jobs:
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\python\deploy_snapshot.bat
 
-  test-pip-snapshot-linux-aarch64:
-    executor: linux-aarch64
+  test-pip-snapshot-linux-arm64:
+    executor: linux-arm64
     steps:
       - test-pip-snapshot-linux:
           arch: arm64
@@ -316,8 +316,8 @@ jobs:
       - test-pip-snapshot-linux:
           arch: amd64
 
-  test-pip-snapshot-mac-aarch64:
-    executor: mac-aarch64
+  test-pip-snapshot-mac-arm64:
+    executor: mac-arm64
     steps:
       - test-pip-snapshot-mac
 
@@ -336,8 +336,8 @@ jobs:
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\python\test_deploy_snapshot.bat
 
-  deploy-pip-release-linux-aarch64:
-    executor: linux-aarch64
+  deploy-pip-release-linux-arm64:
+    executor: linux-arm64
     steps:
       - deploy-pip-release-linux:
           arch: arm64
@@ -370,8 +370,8 @@ jobs:
           root: ~/dist
           paths: ["./*"]
 
-  deploy-pip-release-mac-aarch64:
-    executor: mac-aarch64
+  deploy-pip-release-mac-arm64:
+    executor: mac-arm64
     steps:
       - deploy-pip-release-mac
       - run: |
@@ -419,8 +419,8 @@ jobs:
   # Java jobs #
   #############
 
-  deploy-maven-jni-snapshot-linux-aarch64:
-    executor: linux-aarch64
+  deploy-maven-jni-snapshot-linux-arm64:
+    executor: linux-arm64
     steps:
       - deploy-maven-jni-snapshot-linux:
           arch: arm64
@@ -431,8 +431,8 @@ jobs:
       - deploy-maven-jni-snapshot-linux:
           arch: amd64
 
-  deploy-maven-jni-snapshot-mac-aarch64:
-    executor: mac-aarch64
+  deploy-maven-jni-snapshot-mac-arm64:
+    executor: mac-arm64
     steps:
       - deploy-maven-jni-snapshot-mac
 
@@ -459,8 +459,8 @@ jobs:
           arch: amd64
       - deploy-maven-snapshot-unix
 
-  test-maven-snapshot-linux-aarch64:
-    executor: linux-aarch64
+  test-maven-snapshot-linux-arm64:
+    executor: linux-arm64
     steps:
       - test-maven-snapshot-linux:
           arch: arm64
@@ -471,8 +471,8 @@ jobs:
       - test-maven-snapshot-linux:
           arch: amd64
 
-  test-maven-snapshot-mac-aarch64:
-    executor: mac-aarch64
+  test-maven-snapshot-mac-arm64:
+    executor: mac-arm64
     steps:
       - test-maven-snapshot-mac
 
@@ -491,14 +491,14 @@ jobs:
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\java\test_deploy_snapshot.bat
 
-  deploy-maven-jni-release-linux-aarch64:
-    executor: linux-aarch64
+  deploy-maven-jni-release-linux-arm64:
+    executor: linux-arm64
     steps:
       - deploy-maven-jni-release-linux:
           arch: arm64
       - run: |
           mkdir -p ~/dist
-          cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-linux-aarch64.jar ~/dist/typedb-driver-jni-linux-aarch64.jar
+          cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-linux-arm64.jar ~/dist/typedb-driver-jni-linux-arm64.jar
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]
@@ -515,13 +515,13 @@ jobs:
           root: ~/dist
           paths: ["./*"]
 
-  deploy-maven-jni-release-mac-aarch64:
-    executor: mac-aarch64
+  deploy-maven-jni-release-mac-arm64:
+    executor: mac-arm64
     steps:
       - deploy-maven-jni-release-mac
       - run: |
           mkdir -p ~/dist
-          cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-macosx-aarch64.jar ~/dist/typedb-driver-jni-macosx-aarch64.jar
+          cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-macosx-arm64.jar ~/dist/typedb-driver-jni-macosx-arm64.jar
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]
@@ -629,7 +629,7 @@ jobs:
 workflows:
   typedb-driver-python-snapshot:
     jobs:
-      - deploy-pip-snapshot-linux-aarch64:
+      - deploy-pip-snapshot-linux-arm64:
           filters:
             branches:
               only: [master, development]
@@ -637,7 +637,7 @@ workflows:
           filters:
             branches:
               only: [master, development]
-      - deploy-pip-snapshot-mac-aarch64:
+      - deploy-pip-snapshot-mac-arm64:
           filters:
             branches:
               only: [master, development]
@@ -650,24 +650,24 @@ workflows:
             branches:
               only: [master, development]
 
-      - test-pip-snapshot-linux-aarch64:
+      - test-pip-snapshot-linux-arm64:
           filters:
             branches:
               only: [master, development]
           requires:
-            - deploy-pip-snapshot-linux-aarch64
+            - deploy-pip-snapshot-linux-arm64
       - test-pip-snapshot-linux-x86_64:
           filters:
             branches:
               only: [master, development]
           requires:
             - deploy-pip-snapshot-linux-x86_64
-      - test-pip-snapshot-mac-aarch64:
+      - test-pip-snapshot-mac-arm64:
           filters:
             branches:
               only: [master, development]
           requires:
-            - deploy-pip-snapshot-mac-aarch64
+            - deploy-pip-snapshot-mac-arm64
       - test-pip-snapshot-mac-x86_64:
           filters:
             branches:
@@ -684,7 +684,7 @@ workflows:
 
   typedb-driver-java-snapshot:
     jobs:
-      - deploy-maven-jni-snapshot-linux-aarch64:
+      - deploy-maven-jni-snapshot-linux-arm64:
           filters:
             branches:
               only: [master, development]
@@ -692,7 +692,7 @@ workflows:
           filters:
             branches:
               only: [master, development]
-      - deploy-maven-jni-snapshot-mac-aarch64:
+      - deploy-maven-jni-snapshot-mac-arm64:
           filters:
             branches:
               only: [master, development]
@@ -709,13 +709,13 @@ workflows:
             branches:
               only: [master, development]
           requires:
-            - deploy-maven-jni-snapshot-linux-aarch64
+            - deploy-maven-jni-snapshot-linux-arm64
             - deploy-maven-jni-snapshot-linux-x86_64
-            - deploy-maven-jni-snapshot-mac-aarch64
+            - deploy-maven-jni-snapshot-mac-arm64
             - deploy-maven-jni-snapshot-mac-x86_64
             - deploy-maven-jni-snapshot-windows-x86_64
 
-      - test-maven-snapshot-linux-aarch64:
+      - test-maven-snapshot-linux-arm64:
           filters:
             branches:
               only: [master, development]
@@ -727,7 +727,7 @@ workflows:
               only: [master, development]
           requires:
             - deploy-maven-snapshot
-      - test-maven-snapshot-mac-aarch64:
+      - test-maven-snapshot-mac-arm64:
           filters:
             branches:
               only: [master, development]
@@ -749,7 +749,7 @@ workflows:
 
   release:
     jobs:
-      - deploy-pip-release-linux-aarch64:
+      - deploy-pip-release-linux-arm64:
           filters:
             branches:
               only: [release]
@@ -757,7 +757,7 @@ workflows:
           filters:
             branches:
               only: [release]
-      - deploy-pip-release-mac-aarch64:
+      - deploy-pip-release-mac-arm64:
           filters:
             branches:
               only: [release]
@@ -770,7 +770,7 @@ workflows:
             branches:
               only: [release]
 
-      - deploy-maven-jni-release-linux-aarch64:
+      - deploy-maven-jni-release-linux-arm64:
           filters:
             branches:
               only: [release]
@@ -778,7 +778,7 @@ workflows:
           filters:
             branches:
               only: [release]
-      - deploy-maven-jni-release-mac-aarch64:
+      - deploy-maven-jni-release-mac-arm64:
           filters:
             branches:
               only: [release]
@@ -795,9 +795,9 @@ workflows:
             branches:
               only: [release]
           requires:
-            - deploy-maven-jni-release-linux-aarch64
+            - deploy-maven-jni-release-linux-arm64
             - deploy-maven-jni-release-linux-x86_64
-            - deploy-maven-jni-release-mac-aarch64
+            - deploy-maven-jni-release-mac-arm64
             - deploy-maven-jni-release-mac-x86_64
             - deploy-maven-jni-release-windows-x86_64
 
@@ -816,9 +816,9 @@ workflows:
             branches:
               only: [release]
           requires:
-            - deploy-pip-release-mac-aarch64
+            - deploy-pip-release-mac-arm64
             - deploy-pip-release-mac-x86_64
-            - deploy-pip-release-linux-aarch64
+            - deploy-pip-release-linux-arm64
             - deploy-pip-release-linux-x86_64
             - deploy-pip-release-windows-x86_64
             - deploy-maven-release
