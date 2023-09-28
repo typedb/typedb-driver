@@ -39,8 +39,10 @@ data class Argument(
         result += "| ${this.description}"
         result += "| "
         this.type?.let { result += "`${it.replace("|", "\\|")}`" }
-        result += "| "
-        this.defaultValue?.let { result += "`$it`" }
+        if (language == "python") {
+            result += "| "
+            this.defaultValue?.let { result += "`$it`" }
+        }
         return result
     }
 
