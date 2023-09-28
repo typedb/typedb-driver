@@ -80,7 +80,7 @@ fun parseClass(element: Element): Class {
     val classDetailsParagraphs = classDetails!!.children().map { it }.filter { it.tagName() == "p" }  // FIXME
     val (descr, bases) = classDetailsParagraphs.partition { it.select("code.py-class").isNullOrEmpty() }
     val classBases = bases[0]!!.select("span").map { it.html() }
-    val classDescr = descr.map { textWithCode(it.html()) }
+    val classDescr = descr.map { reformatTextWithCode(it.html()) }
 
     val classExamples = element.select("dl.class > dt.sig-object + dd > section:contains(Example) > div > .highlight").map { it.text() }
 
@@ -108,7 +108,7 @@ fun parseEnum(element: Element): Enum {
     val classDetailsParagraphs = classDetails!!.children().map { it }.filter { it.tagName() == "p" }
     val (descr, bases) = classDetailsParagraphs.partition { it.select("code.py-class").isNullOrEmpty() }
     val classBases = bases[0]!!.select("span").map { it.html() }
-    val classDescr = descr.map { textWithCode(it.html()) }
+    val classDescr = descr.map { reformatTextWithCode(it.html()) }
 
     val classExamples = element.select("section:contains(Examples) .highlight").map { it.text() }
 
@@ -133,11 +133,11 @@ fun parseMethod(element: Element): Method {
     val methodName = element.selectFirst("dt.sig-object span.sig-name")!!.text()
     val allArgs = getArgsFromSignature(element.selectFirst("dt.sig-object")!!)
     val methodReturnType = element.select(".sig-return-typehint").text()
-    val methodDescr = element.select("dl.method > dd > p").map { textWithCode(it.html()) }
+    val methodDescr = element.select("dl.method > dd > p").map { reformatTextWithCode(it.html()) }
     val methodArgs = element.select(".field-list > dt:contains(Parameters) + dd p").map {
         val arg_name = it.selectFirst("strong")!!.text()
         assert(allArgs.contains(arg_name))
-        val arg_descr = textWithCode(removeArgName(it.html())).removePrefix(" – ")
+        val arg_descr = reformatTextWithCode(removeArgName(it.html())).removePrefix(" – ")
         Argument(
             name = arg_name,
             type = allArgs[arg_name]?.first,
@@ -163,7 +163,7 @@ fun parseMethod(element: Element): Method {
 fun parseProperty(element: Element): Argument {
     val propertyName = element.selectFirst("dt.sig-object span.sig-name")!!.text()
     val propertyType = element.selectFirst("dt.sig-object span.sig-name + .property ")?.text()?.dropWhile { !it.isLetter() }
-    val propertyDescr = element.select("dd > p").map { textWithCode(it.html()) }.joinToString("\n\n")  // TODO: Test it
+    val propertyDescr = element.select("dd > p").map { reformatTextWithCode(it.html()) }.joinToString("\n\n")  // TODO: Test it
     return Argument(
         name = propertyName,
         type = propertyType,
@@ -187,24 +187,24 @@ fun getArgsFromSignature(methodSignature: Element): Map<String, Pair<String?, St
     }.toMap()
 }
 
-fun textWithCode(text: String): String {
-    return removeAllTags(replaceEmTags(replaceCodeTags(text)))
+fun reformatTextWithCode(html: String): String {
+    return removeAllTags(replaceEmTags(replaceCodeTags(html)))
 }
 
-fun replaceCodeTags(text: String): String {
-    return Regex("<code[^>]*>").replace(text, "`").replace("</code>", "`")
+fun replaceCodeTags(html: String): String {
+    return Regex("<code[^>]*>").replace(html, "`").replace("</code>", "`")
 }
 
-fun replaceEmTags(text: String): String {
-    return Regex("<em[^>]*>").replace(text, "_").replace("</em>", "_")
+fun replaceEmTags(html: String): String {
+    return Regex("<em[^>]*>").replace(html, "_").replace("</em>", "_")
 }
 
-fun removeAllTags(text: String): String {
-    return Regex("<[^>]*>").replace(text, "")
+fun removeAllTags(html: String): String {
+    return Regex("<[^>]*>").replace(html, "")
 }
 
-fun removeArgName(text: String): String {
-    return Regex("<strong>[^<]*</strong>").replace(text, "")
+fun removeArgName(html: String): String {
+    return Regex("<strong>[^<]*</strong>").replace(html, "")
 }
 
 fun enhanceSignature(signature: String): String {
