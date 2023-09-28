@@ -20,6 +20,8 @@ package com.vaticle.typedb.client.tool.doc.java
 
 import com.vaticle.typedb.client.tool.doc.common.Argument
 import com.vaticle.typedb.client.tool.doc.common.Class
+import com.vaticle.typedb.client.tool.doc.common.Enum
+import com.vaticle.typedb.client.tool.doc.common.EnumConstant
 import com.vaticle.typedb.client.tool.doc.common.Method
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -42,14 +44,22 @@ fun main(args: Array<String>) {
     }.forEach {
         val html = File(it.path).readText(Charsets.UTF_8)
         val parsed = Jsoup.parse(html)
+        var parsedClassName = ""
+        var parsedClassAsciiDoc = ""
         if (!parsed.select("h2[title^=Interface]").isNullOrEmpty()
                 || !parsed.select("h2[title^=Class]").isNullOrEmpty()) {
             val parsedClass = parseClass(parsed)
-            println(parsedClass)
-            val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
-            outputFile.createNewFile()
-            outputFile.writeText(parsedClass.toAsciiDoc("java"))
+            parsedClassName = parsedClass.name
+            parsedClassAsciiDoc = parsedClass.toAsciiDoc("java")
+
+        } else if (!parsed.select("h2[title^=Enum]").isNullOrEmpty()) {
+            val parsedClass = parseEnum(parsed)
+            parsedClassName = parsedClass.name
+            parsedClassAsciiDoc = parsedClass.toAsciiDoc("java")
         }
+        val outputFile = docsDir.resolve("$parsedClassName.adoc").toFile()
+        outputFile.createNewFile()
+        outputFile.writeText(parsedClassAsciiDoc)
     }
 }
 
@@ -57,7 +67,8 @@ fun main(args: Array<String>) {
 fun parseClass(document: Element): Class {
     val className = document.selectFirst(".contentContainer .description pre .typeNameLabel")!!.text()
     val classDescr: List<String> = document.selectFirst(".contentContainer .description pre + div")
-        ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it) } ?: listOf()
+        ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
+    val classExamples = document.select(".contentContainer .description pre + div pre").map { replaceSpaces(it.text()) }
     val classBases = document.select(".contentContainer .description dt:contains(Superinterfaces) + dd code").map {
         it.text()
     }
@@ -77,6 +88,39 @@ fun parseClass(document: Element): Class {
         methods = methods,
         fields = fields,
         bases = classBases,
+        examples = classExamples,
+    )
+}
+
+fun parseEnum(document: Element): Enum {
+    val className = document.selectFirst(".contentContainer .description pre .typeNameLabel")!!.text()
+    val classDescr: List<String> = document.selectFirst(".contentContainer .description pre + div")
+        ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
+    val classExamples = document.select(".contentContainer .description pre + div pre").map { replaceSpaces(it.text()) }
+    val classBases = document.select(".contentContainer .description dt:contains(Superinterfaces) + dd code").map {
+        it.text()
+    }
+
+    val enumConstants = document.select(".summary > ul > li > section > ul > li:has(a[id=enum.constant.summary]) > table tr:gt(0)").map {
+        parseEnumConstant(it)
+    }
+    val fields = document.select(".summary > ul > li > section > ul > li:has(a[id=field.summary]) > table tr:gt(0)").map {
+        parseField(it)
+    }
+    val methods = document.select(".details > ul > li > section > ul > li:has(a[id=constructor.detail]) > ul > li").map {
+        parseMethod(it)
+    } + document.select(".details > ul > li > section > ul > li:has(a[id=method.detail]) > ul > li").map {
+        parseMethod(it)
+    }
+
+    return Enum(
+        name = className,
+        description = classDescr,
+        constants = enumConstants,
+        fields = fields,
+        methods = methods,
+        bases = classBases,
+        examples = classExamples,
     )
 }
 
@@ -87,9 +131,9 @@ fun parseMethod(element: Element): Method {
     val methodReturnType = getReturnTypeFromSignature(methodSignature)
     val methodDescr: List<String> = element.selectFirst("li.blockList > pre + div")
         ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
-    val methodExamples = element.select("li.blockList > pre + div pre").map { it.text() }
-//    FIXME: Fails if there are "in interface" or "in class" substrings in the comments
-    val methodArgs = element.select("dl:has(.paramLabel) dd:not(dd:contains(in interface), dd:contains(in class))")
+    val methodExamples = element.select("li.blockList > pre + div pre").map { replaceSpaces(it.text()) }
+    val methodArgs = element
+        .select("dt:has(.paramLabel) ~ dd:not(dt:has(.returnLabel) ~ dd, dt:has(.throwsLabel) ~ dd)")
         .map {
             val arg_name = it.selectFirst("code")!!.text()
             assert(allArgs.contains(arg_name))
@@ -112,13 +156,20 @@ fun parseMethod(element: Element): Method {
 }
 
 fun parseField(element: Element): Argument {
-    val propertyName = element.selectFirst(".colSecond")!!.text()
-    val propertyType = element.selectFirst(".colFirst")!!.text()
-    val propertyDescr = element.selectFirst(".colLast")?.text()
+    val name = element.selectFirst(".colSecond")!!.text()
+    val type = element.selectFirst(".colFirst")!!.text()
+    val descr = element.selectFirst(".colLast")?.text()
     return Argument(
-        name = propertyName,
-        type = propertyType,
-        description = propertyDescr,
+        name = name,
+        type = type,
+        description = descr,
+    )
+}
+
+fun parseEnumConstant(element: Element): EnumConstant {
+    val name = element.selectFirst(".colFirst")!!.text()
+    return EnumConstant(
+        name = name,
     )
 }
 
@@ -137,6 +188,7 @@ fun reformatTextWithCode(html: String): String {
 
 fun replaceCodeTags(html: String): String {
     return Regex("<code[^>]*>").replace(html, "`").replace("</code>", "` ")
+        .replace("<pre>", "[source,java]\n----\n").replace("</pre>", "\n----\n")
 }
 
 fun replaceEmTags(html: String): String {
@@ -144,16 +196,20 @@ fun replaceEmTags(html: String): String {
 }
 
 fun removeAllTags(html: String): String {
-    return Regex("<[^>]*>").replace(html, "")
+    return replaceSpaces(Regex("<[^>]*>").replace(html, ""))
 }
 
 fun enhanceSignature(signature: String): String {
-    return signature.replace("\u00a0", " ")
+    return replaceSpaces(signature)
 }
 
 fun getReturnTypeFromSignature(signature: String): String {
     return Regex("@[^\\s]*\\s|default ").replace(signature.substringBefore("(")
         .substringBeforeLast("\u00a0"), "")
+}
+
+fun replaceSpaces(html: String): String {
+    return html.replace("&nbsp;", " ").replace("\u00a0", " ")
 }
 
 fun splitToParagraphs(html: String): List<String> {
