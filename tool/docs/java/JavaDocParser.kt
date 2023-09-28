@@ -85,7 +85,7 @@ fun parseMethod(element: Element): Method {
     val methodDescr: List<String> = element.selectFirst(".methodSignature + div")
         ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
     val methodExamples = element.select(".methodSignature + div pre").map { it.text() }
-    val methodArgs = element.select("dl:has(.paramLabel) dd").map {
+    val methodArgs = element.select("dl:has(.paramLabel) dd:not(dd:contains(in interface))").map {
         val arg_name = it.selectFirst("code")!!.text()
         assert(allArgs.contains(arg_name))
         Argument(
