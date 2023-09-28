@@ -230,7 +230,7 @@ class AttributeType(ThingType, ABC):
         ``Values`` of all ``Attribute``\ s of this type (inserted earlier
         or later) should match this regex.
 
-        Can only be applied for ``AttributeType``\ s with ``string``
+        Can only be applied for ``AttributeType``\ s with a ``string``
         value type.
 
         :param transaction: The current transaction
@@ -277,7 +277,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-            attribute_type.set_supertype(transaction, attribute_type)
+            attribute_type.set_supertype(transaction, super_type)
         """
         pass
 
@@ -287,7 +287,7 @@ class AttributeType(ThingType, ABC):
                                      ) -> Iterator[AttributeType]:
         """
         Retrieves all direct and indirect (or direct only) subtypes
-        of the ``AttributeType`` with given ``ValueType``.
+        of this ``AttributeType`` with given ``ValueType``.
 
         :param transaction: The current transaction
         :param value_type: ``ValueType`` for retrieving subtypes
@@ -301,8 +301,8 @@ class AttributeType(ThingType, ABC):
         ::
 
             attribute_type.get_subtypes_with_value_type(transaction, value_type)
-           attribute_type.get_subtypes_with_value_type(transaction, value_type,
-                                                       Transitivity.EXPLICIT)
+            attribute_type.get_subtypes_with_value_type(transaction, value_type,
+                                                        Transitivity.EXPLICIT)
         """
         pass
 
@@ -324,7 +324,7 @@ class AttributeType(ThingType, ABC):
         ::
 
             attributeType.get_instances(transaction)
-           attributeType.get_instances(transaction, Transitivity.EXPLICIT)
+            attributeType.get_instances(transaction, Transitivity.EXPLICIT)
         """
         pass
 
@@ -342,5 +342,12 @@ class AttributeType(ThingType, ABC):
             and inherited ownership, ``Transitivity.EXPLICIT`` for direct
             ownership only
         :return:
+
+        Examples
+        --------
+        ::
+
+            attribute_type.get_owners(transaction)
+            attribute_type.get_owners(transaction, annotations=Annotation.unique(), transitivity=Transitivity.EXPLICIT)
         """
         pass

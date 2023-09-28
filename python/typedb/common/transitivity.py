@@ -34,7 +34,7 @@ class Transitivity(Enum):
 
     ::
 
-       attribute_type.get_owners(transaction, annotations=annotations, transitivity=Transitivity.EXPLICIT)))
+       attribute_type.get_owners(transaction, annotations=annotations, transitivity=Transitivity.EXPLICIT)
     """
     TRANSITIVE = Transitive
     EXPLICIT = Explicit
