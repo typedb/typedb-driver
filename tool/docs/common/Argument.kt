@@ -58,6 +58,19 @@ data class Argument(
         result += "    /**\n     * ${backquotesToCode(this.description)}\n"
         return result + "     */\n\n"
     }
+
+    fun toRustCommentArg(): String {
+        var result = ""
+        result += "    /// * `${this.name}` -- ${this.description}\n"
+        return result
+    }
+
+    fun toRustCommentField(): String {
+        var result = ""
+        result += "${this.name}\n\n"
+        result += "    /// ${this.description}\n"
+        return result + "\n"
+    }
 }
 
 fun backquotesToCode(text: String?): String? {

@@ -80,4 +80,30 @@ data class Method(
 
         return result + "     */\n\n"
     }
+
+    fun toRustComment(): String {
+        var result = ""
+        result += "${this.name}\n\n"
+        result += "    /// ${this.description.joinToString("\n    /// ")}\n"
+
+        if (this.args.isNotEmpty()) {
+            result += "    /// \n"
+            result += "    /// # Arguments\n"
+            result += "    /// \n"
+            this.args.forEach { result += it.toRustCommentArg() }
+        }
+
+        if (this.examples.isNotEmpty()) {
+            result += "    /// \n"
+            result += "    /// # Examples\n"
+            result += "    /// \n"
+            result += "    /// ```rust\n"
+            this.examples.forEach {
+                result += "    /// $it\n"
+            }
+            result += "    /// ```\n"
+        }
+
+        return result + "\n"
+    }
 }

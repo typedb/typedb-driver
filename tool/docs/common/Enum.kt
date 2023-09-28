@@ -59,23 +59,50 @@ data class Enum(
     fun toJavaComment(): String {
         var result = ""
         result += "${this.name}\n\n"
-        result += "    /**\n     * ${this.description.map { backquotesToCode(it) }.joinToString("\n     * ")}\n"
-        result += "     * \n"
+        result += "/**\n     * ${this.description.map { backquotesToCode(it) }.joinToString("\n     * ")}\n"
+        result += " * \n"
 
         if (this.examples.isNotEmpty()) {
-            result += "     * <h3>Examples</h3>\n"
-            result += "     * <pre>\n"
+            result += " * <h3>Examples</h3>\n"
+            result += " * <pre>\n"
             this.examples.forEach {
-                result += "     * ${snakeToCamel(it)}\n"
+                result += " * ${snakeToCamel(it)}\n"
             }
-            result += "     * </pre>\n"
+            result += " * </pre>\n"
         }
-//
-//        if (this.args.isNotEmpty()) {
-//            result += "     * \n"
-//            this.args.forEach { result += it.toJavaCommentArg() }
-//        }
 
-        return result + "     */\n\n"
+        return result + " */\n\n"
+    }
+
+    fun toRustComment(): String {
+        var result = ""
+        result += "${this.name}\n\n"
+
+        if (this.description.isNotEmpty()) {
+            result += "/// ${this.description.joinToString("\n/// ")}\n"
+        }
+
+        if (this.examples.isNotEmpty()) {
+            result += "/// \n"
+            result += "/// # Examples\n"
+            result += "/// \n"
+            result += "/// ```rust\n"
+            this.examples.forEach {
+                result += "/// $it\n"
+            }
+            result += "/// ```\n"
+        }
+
+        result += "\n"
+
+        if (this.fields.isNotEmpty()) {
+            this.fields.forEach { result += it.toRustCommentField() }
+        }
+
+        if (this.methods.isNotEmpty()) {
+            this.methods.forEach { result += it.toRustComment() }
+        }
+
+        return result
     }
 }

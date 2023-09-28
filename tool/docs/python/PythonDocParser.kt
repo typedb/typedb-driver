@@ -37,6 +37,7 @@ fun main(args: Array<String>) {
     val docsDir = Paths.get(outputDirectoryName)
     Files.createDirectory(docsDir)
     Files.createDirectory(docsDir.resolve("for_java"))
+    Files.createDirectory(docsDir.resolve("for_rust"))
 
     File(inputDirectoryName).walkTopDown().filter {
         it.toString().endsWith(".html") &&
@@ -50,16 +51,19 @@ fun main(args: Array<String>) {
             var parsedClassName = ""
             var parsedClassAsciiDoc = ""
             var parsedClassForJava = ""
+            var parsedClassForRust = ""
             if (it.selectFirst("dt.sig-object + dd > p")!!.text().contains("Enum")) {
                 val parsedClass = parseEnum(it)
                 parsedClassName = parsedClass.name
                 parsedClassAsciiDoc = parsedClass.toAsciiDoc("python")
                 parsedClassForJava = parsedClass.toJavaComment()
+                parsedClassForRust = parsedClass.toRustComment()
             } else {
                 val parsedClass = parseClass(it)
                 parsedClassName = parsedClass.name
                 parsedClassAsciiDoc = parsedClass.toAsciiDoc("python")
                 parsedClassForJava = parsedClass.toJavaComment()
+                parsedClassForRust = parsedClass.toRustComment()
             }
             val outputFile = docsDir.resolve("$parsedClassName.adoc").toFile()
             outputFile.createNewFile()
@@ -68,6 +72,10 @@ fun main(args: Array<String>) {
             val outputFileJava = docsDir.resolve("for_java").resolve("$parsedClassName.txt").toFile()
             outputFileJava.createNewFile()
             outputFileJava.writeText(parsedClassForJava)
+
+            val outputFileRust = docsDir.resolve("for_rust").resolve("$parsedClassName.txt").toFile()
+            outputFileRust.createNewFile()
+            outputFileRust.writeText(parsedClassForRust)
         }
     }
 }

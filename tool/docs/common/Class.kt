@@ -71,7 +71,16 @@ data class Class(
         result += "${this.name}\n\n"
 
         if (this.description.isNotEmpty()) {
-            result += "/**\n * ${this.description.map { backquotesToCode(it) }.joinToString("\n * ")}\n */\n\n"
+            result += "/**\n * ${this.description.map { backquotesToCode(it) }.joinToString("\n * ")}\n"
+            if (this.examples.isNotEmpty()) {
+                result += " * <h3>Examples</h3>\n"
+                result += " * <pre>\n"
+                this.examples.forEach {
+                    result += " * ${snakeToCamel(it)}\n"
+                }
+                result += " * </pre>\n"
+            }
+            result += " */\n\n"
         }
 
         if (this.fields.isNotEmpty()) {
@@ -80,6 +89,38 @@ data class Class(
 
         if (this.methods.isNotEmpty()) {
             this.methods.forEach { result += it.toJavaComment() }
+        }
+
+        return result
+    }
+
+    fun toRustComment(): String {
+        var result = ""
+        result += "${this.name}\n\n"
+
+        if (this.description.isNotEmpty()) {
+            result += "/// ${this.description.joinToString("\n/// ")}\n"
+        }
+
+        if (this.examples.isNotEmpty()) {
+            result += "/// \n"
+            result += "/// # Examples\n"
+            result += "/// \n"
+            result += "/// ```rust\n"
+            this.examples.forEach {
+                result += "/// $it\n"
+            }
+            result += "/// ```\n"
+        }
+
+        result += "\n"
+
+        if (this.fields.isNotEmpty()) {
+            this.fields.forEach { result += it.toRustCommentField() }
+        }
+
+        if (this.methods.isNotEmpty()) {
+            this.methods.forEach { result += it.toRustComment() }
         }
 
         return result
