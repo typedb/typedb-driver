@@ -8,7 +8,7 @@
 
 This repository stores all TypeDB Drivers built by Vaticle.
 
-See the table below for links to README files, documentation, and source codes.
+See the table below for links to README files, documentation, and source code.
 
 | Driver  | Readme                                                                             | Documentation                                                                 | Source codes                                                                                         |
 |---------|------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------|
