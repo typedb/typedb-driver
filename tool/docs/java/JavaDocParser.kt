@@ -55,7 +55,8 @@ fun main(args: Array<String>) {
 
 fun parseClass(document: Element): Class {
     val className = document.selectFirst(".contentContainer .description pre .typeNameLabel")!!.text()
-    val classDescr = document.select(".contentContainer .description pre + div").map { it.text() }
+    val classDescr: List<String> = document.selectFirst(".contentContainer .description pre + div")
+        ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it) } ?: listOf()
     val classBases = document.select(".contentContainer .description dt:contains(Superinterfaces) + dd code").map {
         it.text()
     }
@@ -81,8 +82,8 @@ fun parseMethod(element: Element): Method {
     val methodSignature = element.selectFirst(".methodSignature")!!.text()
     val allArgs = getArgsFromSignature(methodSignature)
     val methodReturnType = getReturnTypeFromSignature(methodSignature)
-    val methodDescr: List<String> = element.select(".methodSignature + div")
-        .map { replaceCodeTags(it.html().substringBefore("<h")) }
+    val methodDescr: List<String> = element.selectFirst(".methodSignature + div")
+        ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
     val methodExamples = element.select(".methodSignature + div pre").map { it.text() }
     val methodArgs = element.select("dl:has(.paramLabel) dd").map {
         val arg_name = it.selectFirst("code")!!.text()
@@ -90,7 +91,7 @@ fun parseMethod(element: Element): Method {
         Argument(
             name = arg_name,
             type = allArgs[arg_name],
-            description = replaceCodeTags(it.html().substringAfter(" - ")),
+            description = reformatTextWithCode(it.html().substringAfter(" - ")),
         )
     }
 
@@ -125,8 +126,20 @@ fun getArgsFromSignature(methodSignature: String): Map<String, String?> {
         }.toMap()
 }
 
-fun replaceCodeTags(text: String): String {
-    return Regex("<code[^>]*>").replace(text, "`").replace("</code>", "` ")
+fun reformatTextWithCode(html: String): String {
+    return removeAllTags(replaceEmTags(replaceCodeTags(html)))
+}
+
+fun replaceCodeTags(html: String): String {
+    return Regex("<code[^>]*>").replace(html, "`").replace("</code>", "` ")
+}
+
+fun replaceEmTags(html: String): String {
+    return Regex("<em[^>]*>").replace(html, "_").replace("</em>", "_")
+}
+
+fun removeAllTags(html: String): String {
+    return Regex("<[^>]*>").replace(html, "")
 }
 
 fun enhanceSignature(signature: String): String {
@@ -136,4 +149,8 @@ fun enhanceSignature(signature: String): String {
 fun getReturnTypeFromSignature(signature: String): String {
     return Regex("@[^\\s]*\\s|default ").replace(signature.substringBefore("(")
         .substringBeforeLast("\u00a0"), "")
+}
+
+fun splitToParagraphs(html: String): List<String> {
+    return html.replace("</p>", "").split("\\s*<p>\\s*".toRegex()).map { it.trim() }
 }
