@@ -42,7 +42,8 @@ fun main(args: Array<String>) {
     }.forEach {
         val html = File(it.path).readText(Charsets.UTF_8)
         val parsed = Jsoup.parse(html)
-        if (!parsed.select("h2[title^=Interface]").isNullOrEmpty()) {
+        if (!parsed.select("h2[title^=Interface]").isNullOrEmpty()
+                || !parsed.select("h2[title^=Class]").isNullOrEmpty()) {
             val parsedClass = parseClass(parsed)
             println(parsedClass)
             val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
@@ -64,7 +65,9 @@ fun parseClass(document: Element): Class {
     val fields = document.select(".summary > ul > li > section > ul > li:has(a[id=field.summary]) > table tr:gt(0)").map {
         parseField(it)
     }
-    val methods = document.select(".details > ul > li > section > ul > li:has(a[id=method.detail]) > ul > li").map {
+    val methods = document.select(".details > ul > li > section > ul > li:has(a[id=constructor.detail]) > ul > li").map {
+        parseMethod(it)
+    } + document.select(".details > ul > li > section > ul > li:has(a[id=method.detail]) > ul > li").map {
         parseMethod(it)
     }
 
@@ -79,21 +82,23 @@ fun parseClass(document: Element): Class {
 
 fun parseMethod(element: Element): Method {
     val methodName = element.selectFirst("h4")!!.text()
-    val methodSignature = element.selectFirst(".methodSignature")!!.text()
+    val methodSignature = element.selectFirst("li.blockList > pre")!!.text()
     val allArgs = getArgsFromSignature(methodSignature)
     val methodReturnType = getReturnTypeFromSignature(methodSignature)
-    val methodDescr: List<String> = element.selectFirst(".methodSignature + div")
+    val methodDescr: List<String> = element.selectFirst("li.blockList > pre + div")
         ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
-    val methodExamples = element.select(".methodSignature + div pre").map { it.text() }
-    val methodArgs = element.select("dl:has(.paramLabel) dd:not(dd:contains(in interface))").map {
-        val arg_name = it.selectFirst("code")!!.text()
-        assert(allArgs.contains(arg_name))
-        Argument(
-            name = arg_name,
-            type = allArgs[arg_name],
-            description = reformatTextWithCode(it.html().substringAfter(" - ")),
-        )
-    }
+    val methodExamples = element.select("li.blockList > pre + div pre").map { it.text() }
+//    FIXME: Fails if there are "in interface" or "in class" substrings in the comments
+    val methodArgs = element.select("dl:has(.paramLabel) dd:not(dd:contains(in interface), dd:contains(in class))")
+        .map {
+            val arg_name = it.selectFirst("code")!!.text()
+            assert(allArgs.contains(arg_name))
+            Argument(
+                name = arg_name,
+                type = allArgs[arg_name],
+                description = reformatTextWithCode(it.html().substringAfter(" - ")),
+            )
+        }
 
     return Method(
         name = methodName,
