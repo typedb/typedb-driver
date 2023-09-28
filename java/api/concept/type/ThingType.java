@@ -132,6 +132,9 @@ public interface ThingType extends Type {
     @CheckReturnValue
     String getSyntax(TypeDBTransaction transaction);
 
+    /**
+     * Annotation
+     */
     class Annotation extends NativeObject<com.vaticle.typedb.driver.jni.Annotation> {
         private final int hash;
 
@@ -140,27 +143,77 @@ public interface ThingType extends Type {
             this.hash = Objects.hash(isKey(), isUnique());
         }
 
+        /**
+         * Produces a <code>@key</code> annotation.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * ThingType.Annotation.key();
+         * </pre>
+         */
         public static Annotation key() {
             return new Annotation(annotation_new_key());
         }
 
+        /**
+         * Produces a <code>@unique</code> annotation.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * Annotation.unique();
+         * </pre>
+         */
         public static Annotation unique() {
             return new Annotation(annotation_new_unique());
         }
 
+        /**
+         * Checks if this <code>Annotation</code> is a <code>@key</code> annotation.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * annotation.isKey();
+         * </pre>
+         */
         public boolean isKey() {
             return annotation_is_key(nativeObject);
         }
 
+        /**
+         * Checks if this <code>Annotation</code> is a <code>@unique</code> annotation.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * annotation.isUnique();
+         * </pre>
+         */
         public boolean isUnique() {
             return annotation_is_unique(nativeObject);
         }
 
+        /**
+         * Retrieves a string representation of this <code>Annotation</code>.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * annotation.toString();
+         * </pre>
+         */
         @Override
         public String toString() {
             return annotation_to_string(nativeObject);
         }
 
+        /**
+         * Checks if this <code>Annotation</code> is equal to another object.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * annotation.equals(obj);
+         * </pre>
+         *
+         * @param obj Object to compare with
+         */
         @Override
         public boolean equals(Object obj) {
             if (obj == this) return true;
