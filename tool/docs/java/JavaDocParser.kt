@@ -63,7 +63,6 @@ fun main(args: Array<String>) {
     }
 }
 
-
 fun parseClass(document: Element): Class {
     val className = document.selectFirst(".contentContainer .description pre .typeNameLabel")!!.text()
     val classDescr: List<String> = document.selectFirst(".contentContainer .description pre + div")
@@ -139,7 +138,7 @@ fun parseMethod(element: Element): Method {
             assert(allArgs.contains(arg_name))
             Argument(
                 name = arg_name,
-                type = allArgs[arg_name],
+                type = allArgs[arg_name]?.replace("...", "[]"),
                 description = reformatTextWithCode(it.html().substringAfter(" - ")),
             )
         }
