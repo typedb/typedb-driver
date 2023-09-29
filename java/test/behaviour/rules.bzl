@@ -26,29 +26,31 @@ def typedb_behaviour_java_test(
         connection_steps_core,
         connection_steps_enterprise,
         steps,
-        typedb_artifact_mac,
-        typedb_artifact_linux,
-        typedb_artifact_windows,
-        typedb_enterprise_artifact_mac,
-        typedb_enterprise_artifact_linux,
-        typedb_enterprise_artifact_windows,
         runtime_deps = [],
         **kwargs):
 
     typedb_java_test(
         name = name + "-core",
-        server_mac_artifact = typedb_artifact_mac,
-        server_linux_artifact = typedb_artifact_linux,
-        server_windows_artifact = typedb_artifact_windows,
+        server_artifacts = {
+            "@vaticle_bazel_distribution//platform:is_linux_arm64": "@vaticle_typedb_artifact_linux-arm64//file",
+            "@vaticle_bazel_distribution//platform:is_linux_x86_64": "@vaticle_typedb_artifact_linux-x86_64//file",
+            "@vaticle_bazel_distribution//platform:is_mac_arm64": "@vaticle_typedb_artifact_mac-arm64//file",
+            "@vaticle_bazel_distribution//platform:is_mac_x86_64": "@vaticle_typedb_artifact_mac-x86_64//file",
+            "@vaticle_bazel_distribution//platform:is_windows_x86_64": "@vaticle_typedb_artifact_windows-x86_64//file",
+        },
         runtime_deps = runtime_deps + [connection_steps_core] + steps,
         **kwargs,
     )
 
     typedb_java_test(
         name = name + "-enterprise",
-        server_mac_artifact = typedb_enterprise_artifact_mac,
-        server_linux_artifact = typedb_enterprise_artifact_linux,
-        server_windows_artifact = typedb_enterprise_artifact_windows,
+        server_artifacts = {
+            "@vaticle_bazel_distribution//platform:is_linux_arm64": "@vaticle_typedb_enterprise_artifact_linux-arm64//file",
+            "@vaticle_bazel_distribution//platform:is_linux_x86_64": "@vaticle_typedb_enterprise_artifact_linux-x86_64//file",
+            "@vaticle_bazel_distribution//platform:is_mac_arm64": "@vaticle_typedb_enterprise_artifact_mac-arm64//file",
+            "@vaticle_bazel_distribution//platform:is_mac_x86_64": "@vaticle_typedb_enterprise_artifact_mac-x86_64//file",
+            "@vaticle_bazel_distribution//platform:is_windows_x86_64": "@vaticle_typedb_enterprise_artifact_windows-x86_64//file",
+        },
         runtime_deps = runtime_deps + [connection_steps_enterprise] + steps,
         **kwargs,
     )
