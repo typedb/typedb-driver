@@ -29,6 +29,9 @@ import com.vaticle.typedb.client.tool.doc.common.Class
 import com.vaticle.typedb.client.tool.doc.common.Enum
 import com.vaticle.typedb.client.tool.doc.common.EnumConstant
 import com.vaticle.typedb.client.tool.doc.common.Method
+import com.vaticle.typedb.client.tool.doc.common.removeAllTags
+import com.vaticle.typedb.client.tool.doc.common.replaceCodeTags
+import com.vaticle.typedb.client.tool.doc.common.replaceEmTags
 
 fun main(args: Array<String>) {
     val inputDirectoryName = args[0]
@@ -197,18 +200,6 @@ fun getArgsFromSignature(methodSignature: Element): Map<String, Pair<String?, St
 
 fun reformatTextWithCode(html: String): String {
     return removeAllTags(replaceEmTags(replaceCodeTags(html)))
-}
-
-fun replaceCodeTags(html: String): String {
-    return Regex("<code[^>]*>").replace(html, "`").replace("</code>", "`")
-}
-
-fun replaceEmTags(html: String): String {
-    return Regex("<em[^>]*>").replace(html, "_").replace("</em>", "_")
-}
-
-fun removeAllTags(html: String): String {
-    return Regex("<[^>]*>").replace(html, "")
 }
 
 fun removeArgName(html: String): String {

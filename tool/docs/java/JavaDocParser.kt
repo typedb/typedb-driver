@@ -23,6 +23,10 @@ import com.vaticle.typedb.client.tool.doc.common.Class
 import com.vaticle.typedb.client.tool.doc.common.Enum
 import com.vaticle.typedb.client.tool.doc.common.EnumConstant
 import com.vaticle.typedb.client.tool.doc.common.Method
+import com.vaticle.typedb.client.tool.doc.common.removeAllTags
+import com.vaticle.typedb.client.tool.doc.common.replaceCodeTags
+import com.vaticle.typedb.client.tool.doc.common.replaceEmTags
+import com.vaticle.typedb.client.tool.doc.common.replaceSpaces
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.io.File
@@ -182,20 +186,11 @@ fun getArgsFromSignature(methodSignature: String): Map<String, String?> {
 }
 
 fun reformatTextWithCode(html: String): String {
-    return removeAllTags(replaceEmTags(replaceCodeTags(html)))
+    return removeAllTags(replaceEmTags(replacePreTags(replaceCodeTags(html))))
 }
 
-fun replaceCodeTags(html: String): String {
-    return Regex("<code[^>]*>").replace(html, "`").replace("</code>", "` ")
-        .replace("<pre>", "[source,java]\n----\n").replace("</pre>", "\n----\n")
-}
-
-fun replaceEmTags(html: String): String {
-    return Regex("<em[^>]*>").replace(html, "_").replace("</em>", "_")
-}
-
-fun removeAllTags(html: String): String {
-    return replaceSpaces(Regex("<[^>]*>").replace(html, ""))
+fun replacePreTags(html: String): String {
+    return html.replace("<pre>", "[source,java]\n----\n").replace("</pre>", "\n----\n")
 }
 
 fun enhanceSignature(signature: String): String {
@@ -205,10 +200,6 @@ fun enhanceSignature(signature: String): String {
 fun getReturnTypeFromSignature(signature: String): String {
     return Regex("@[^\\s]*\\s|default ").replace(signature.substringBefore("(")
         .substringBeforeLast("\u00a0"), "")
-}
-
-fun replaceSpaces(html: String): String {
-    return html.replace("&nbsp;", " ").replace("\u00a0", " ")
 }
 
 fun splitToParagraphs(html: String): List<String> {
