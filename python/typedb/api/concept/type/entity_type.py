@@ -138,6 +138,6 @@ class EntityType(ThingType, ABC):
         --------
         ::
 
-            entity_type.set_supertype(transaction, entity_type)
+            entity_type.set_supertype(transaction, super_entity_type)
         """
         pass

@@ -263,13 +263,13 @@ class AttributeType(ThingType, ABC):
         pass
 
     @abstractmethod
-    def set_supertype(self, transaction: TypeDBTransaction, attribute_type: AttributeType) -> None:
+    def set_supertype(self, transaction: TypeDBTransaction, super_attribute_type: AttributeType) -> None:
         """
         Sets the supplied ``AttributeType`` as the supertype of
         the current ``AttributeType``.
 
         :param transaction: The current transaction
-        :param attribute_type: The ``AttributeType`` to set as
+        :param super_attribute_type: The ``AttributeType`` to set as
             the supertype of this ``AttributeType``
         :return:
 
@@ -277,7 +277,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-            attribute_type.set_supertype(transaction, super_type)
+            attribute_type.set_supertype(transaction, super_attribute_type)
         """
         pass
 
@@ -323,8 +323,8 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-            attributeType.get_instances(transaction)
-            attributeType.get_instances(transaction, Transitivity.EXPLICIT)
+            attribute_type.get_instances(transaction)
+            attribute_type.get_instances(transaction, Transitivity.EXPLICIT)
         """
         pass
 

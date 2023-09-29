@@ -217,10 +217,10 @@ class ThingType(Type, ABC):
         --------
         ::
 
-            thing_type.set_owns(transaction, attribute_type);
+            thing_type.set_owns(transaction, attribute_type)
             thing_type.set_owns(transaction, attribute_type,
                                 overridden_type=overridden_type,
-                                annotations={Annotation.key()});
+                                annotations={Annotation.key()})
         """
         pass
 

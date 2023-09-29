@@ -61,9 +61,9 @@ class _AttributeType(AttributeType, _ThingType):
     def __hash__(self):
         return super(_AttributeType, self).__hash__()
 
-    def set_supertype(self, transaction: _Transaction, attribute_type: _AttributeType) -> None:
+    def set_supertype(self, transaction: _Transaction, super_attribute_type: _AttributeType) -> None:
         attribute_type_set_supertype(transaction.native_object, self.native_object,
-                                     attribute_type.native_object)
+                                     super_attribute_type.native_object)
 
     def get_supertype(self, transaction: _Transaction) -> Optional[_AttributeType]:
         if res := attribute_type_get_supertype(transaction.native_object, self.native_object):
