@@ -70,7 +70,7 @@ function serverStart(idx) {
         "--server.encryption.file.internal-grpc.private-key", encryptionResourceDir + "int-grpc-private-key.pem",
         "--server.encryption.file.internal-grpc.certificate", encryptionResourceDir + "int-grpc-certificate.pem",
         "--server.encryption.file.internal-grpc.root-ca", encryptionResourceDir + "int-grpc-root-ca.pem",
-        "--server.encryption.file.internal-zmq.secret-key", encryptionResourceDir + "int-zmq-private-key",
+        "--server.encryption.file.internal-zmq.private-key", encryptionResourceDir + "int-zmq-private-key",
         "--server.encryption.file.internal-zmq.public-key", encryptionResourceDir + "int-zmq-public-key",
     ]);
     node.stdout.on('data', (data) => {
