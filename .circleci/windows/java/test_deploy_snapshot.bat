@@ -23,7 +23,7 @@ choco install maven --limit-output --yes --no-progress
 choco install 7zip.portable --limit-output --yes --no-progress
 CALL refreshenv
 
-bazel --output_user_root=C:\bazel build @vaticle_typedb_artifact_windows//file
+bazel --output_user_root=C:\bazel build @vaticle_typedb_artifact_windows-x86_64//file
 powershell -Command "Move-Item -Path bazel-typedb-driver\external\vaticle_typedb_artifact_windows\file\typedb-server-windows* -Destination typedb-server-windows.zip"
 7z x typedb-server-windows.zip
 powershell -Command "Move-Item -Path typedb-server-windows-* -Destination typedb-server-windows"
