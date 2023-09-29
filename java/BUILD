@@ -80,11 +80,11 @@ swig_native_java_library(
     enable_cxx = True,
     maven_coordinates = "com.vaticle.typedb:typedb-driver-jni-{platform}:{pom_version}",
     platforms = {
-        "@vaticle_dependencies//util/platform:is_linux_arm64": "linux-arm64",
-        "@vaticle_dependencies//util/platform:is_linux_x86_64": "linux-x86_64",
-        "@vaticle_dependencies//util/platform:is_mac_arm64": "macosx-arm64",
-        "@vaticle_dependencies//util/platform:is_mac_x86_64": "macosx-x86_64",
-        "@vaticle_dependencies//util/platform:is_win_x86_64": "windows-x86_64",
+        "@vaticle_bazel_distribution//platform:is_linux_arm64": "linux-arm64",
+        "@vaticle_bazel_distribution//platform:is_linux_x86_64": "linux-x86_64",
+        "@vaticle_bazel_distribution//platform:is_mac_arm64": "macosx-arm64",
+        "@vaticle_bazel_distribution//platform:is_mac_x86_64": "macosx-x86_64",
+        "@vaticle_bazel_distribution//platform:is_windows_x86_64": "windows-x86_64",
     },
 )
 

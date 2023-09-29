@@ -32,12 +32,6 @@ typedb_behaviour_java_test(
     data = [
         "@vaticle_typedb_behaviour//typeql/language:define.feature",
     ],
-    typedb_artifact_mac = "@vaticle_typedb_artifact_mac//file",
-    typedb_artifact_linux = "@vaticle_typedb_artifact_linux//file",
-    typedb_artifact_windows = "@vaticle_typedb_artifact_windows//file",
-    typedb_enterprise_artifact_mac = "@vaticle_typedb_enterprise_artifact_mac//file",
-    typedb_enterprise_artifact_linux = "@vaticle_typedb_enterprise_artifact_linux//file",
-    typedb_enterprise_artifact_windows = "@vaticle_typedb_enterprise_artifact_windows//file",
     connection_steps_core = "//java/test/behaviour/connection:steps-core",
     connection_steps_enterprise = "//java/test/behaviour/connection:steps-enterprise",
     steps = [
