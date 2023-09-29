@@ -24,7 +24,7 @@ use std::time::Duration;
 use tokio::sync::mpsc::UnboundedSender;
 use tonic::Streaming;
 use typedb_protocol::transaction;
-use typeql_lang::pattern::{Conjunction, Variable};
+use typeql::pattern::{Conjunction, Variable};
 
 use crate::{
     answer::{ConceptMap, ConceptMapGroup, Numeric, NumericGroup},

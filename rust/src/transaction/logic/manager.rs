@@ -21,7 +21,7 @@
 
 use std::sync::Arc;
 
-use typeql_lang::pattern::{Conjunction, Variable};
+use typeql::pattern::{Conjunction, Variable};
 
 use crate::{
     common::{stream::Stream, Result},

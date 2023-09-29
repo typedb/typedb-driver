@@ -1,3 +1,11 @@
+#### Rust driver
+
+Available from https://crates.io/crates/typedb-driver
+
+```sh
+cargo add typedb-driver@2.24.5
+```
+
 ## Java driver
 
 Documentation: http://docs.vaticle.com/docs/driver-api/java
@@ -17,9 +25,20 @@ Available through https://repo.vaticle.com
     <dependency>
         <groupid>com.vaticle.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>{version}</version>
+        <version>2.24.5</version>
     </dependency>
 </dependencies>
+```
+
+### Python driver
+
+PyPI package: https://pypi.org/project/typedb-driver
+Documentation: https://docs.vaticle.com/docs/driver-api/python
+
+Available through https://pypi.org
+
+```
+pip install typedb-driver==2.24.5
 ```
 
 ## NodeJS driver
@@ -30,7 +49,7 @@ Documentation: https://docs.vaticle.com/docs/driver-api/nodejs
 ### Installation
 
 ```
-npm install typedb-driver@{version}
+npm install typedb-driver@2.24.5
 ```
 
 ## Architectural Changes
