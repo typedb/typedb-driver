@@ -79,8 +79,8 @@ pub extern "C" fn logic_manager_put_rule(
     try_release((|| {
         borrow(transaction).logic().put_rule(
             string_view(label).to_owned(),
-            typeql_lang::parse_pattern(string_view(when))?.into_conjunction(),
-            typeql_lang::parse_variable(string_view(then))?,
+            typeql::parse_pattern(string_view(when))?.into_conjunction(),
+            typeql::parse_variable(string_view(then))?,
         )
     })())
 }

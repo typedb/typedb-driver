@@ -43,7 +43,7 @@ typedb_driver_deps = [
     "@crates//:tonic",
     "@crates//:uuid",
     "@vaticle_typedb_protocol//grpc/rust:typedb_protocol",
-    "@vaticle_typeql//rust:typeql_lang",
+    "@vaticle_typeql//rust:typeql",
 ]
 typedb_driver_proc_macro_deps = [
     "@crates//:async-trait",

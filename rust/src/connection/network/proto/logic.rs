@@ -20,7 +20,7 @@
  */
 
 use typedb_protocol::Rule as RuleProto;
-use typeql_lang::{
+use typeql::{
     parse_pattern, parse_variable,
     pattern::{Pattern, Variable},
 };
