@@ -24,7 +24,14 @@ import org.jsoup.nodes.Element
 
 import com.vaticle.typedb.client.tool.doc.common.Argument
 import com.vaticle.typedb.client.tool.doc.common.Class
+import com.vaticle.typedb.client.tool.doc.common.Enum
+import com.vaticle.typedb.client.tool.doc.common.EnumConstant
 import com.vaticle.typedb.client.tool.doc.common.Method
+import com.vaticle.typedb.client.tool.doc.common.removeAllTags
+import com.vaticle.typedb.client.tool.doc.common.replaceCodeTags
+import com.vaticle.typedb.client.tool.doc.common.replaceEmTags
+import com.vaticle.typedb.client.tool.doc.common.replaceSpaces
+import com.vaticle.typedb.client.tool.doc.common.replaceSymbols
 import java.nio.file.Files
 import java.nio.file.Paths
 
@@ -52,12 +59,11 @@ fun parseClass(document: Element): Class {
     val class_name = document.selectFirst(".main-heading h1 a.struct")!!.text()
     val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { it.html() }
 
-    val fields = document.select(".structfield code").map {
-        val row = it.text().split(": ")
-        Argument(name = row[0], type = row[1])
+    val fields = document.select(".structfield").map {
+        parseField(it)
     }
 
-    val methods = document.select("details[class*=method-toggle]:has(summary section.method)").map {
+    val methods = document.select("#implementations-list details[class*=method-toggle]:has(summary section.method)").map {
         parseMethod(it)
     }
 
@@ -70,12 +76,11 @@ fun parseClass(document: Element): Class {
 }
 
 fun parseMethod(element: Element): Method {
-    val methodName = element.select("summary section.method").first()!!.attr("id").removePrefix("method.")
-    val methodSignature = element.select("summary section h4").first()!!.text()
-//    Splitting by ", " is incorrect (could be used in the type)
+    val methodSignature = enhanceSignature(element.selectFirst("summary section h4")!!.html())
+    val methodName = element.selectFirst("summary section h4 a.fn")!!.text()
     val allArgs = getArgsFromSignature(methodSignature)
     val methodReturnType = if (methodSignature.contains(" -> ")) methodSignature.split(" -> ").last() else null
-    val methodDescr = element.select("div.docblock p").map { it.html() }
+    val methodDescr = element.select("div.docblock p").map { reformatTextWithCode(it.html()) }
     val methodExamples = element.select("div.docblock div.example-wrap pre").map { it.text() }
     val methodArgs = element.select("div.docblock ul li code:eq(0)").map {
         val argName = it.text()
@@ -99,10 +104,33 @@ fun parseMethod(element: Element): Method {
 
 }
 
+fun parseField(element: Element): Argument {
+    val nameAndType = element.selectFirst("code")!!.text().split(": ")
+    val descr = element.nextElementSibling()?.html()?.let { reformatTextWithCode(it) }
+    return Argument(
+        name = nameAndType[0],
+        type = nameAndType[1],
+        description = descr,
+    )
+}
+
 fun getArgsFromSignature(methodSignature: String): Map<String, String?> {
+//    Splitting by ", " is incorrect (could be used in the type)
     return methodSignature
         .substringAfter("(").substringBeforeLast(")")
         .split(", ").associate {
             if (it.contains(": ")) it.split(": ", limit = 2).let { it[0] to it[1] } else it to null
         }
+}
+
+fun reformatTextWithCode(html: String): String {
+    return removeAllTags(replaceEmTags(replaceCodeTags(html)))
+}
+
+fun enhanceSignature(signature: String): String {
+    return replaceSymbols(removeAllTags(replaceSpaces(dispatchNewlines(signature))))
+}
+
+fun dispatchNewlines(html: String): String {
+    return Regex("<span[^>]*newline[^>]*>").replace(html, "\n")
 }

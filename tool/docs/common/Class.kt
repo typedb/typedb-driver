@@ -33,10 +33,9 @@ data class Class(
         result += "= ${this.name}\n\n"
 
         if (this.bases.isNotEmpty()) {
-            if (language == "java") {
-                result += "== Superinterfaces\n\n"
-            } else {
-                result += "== Base classes\n\n"
+            result += when (language) {
+                "java" -> "== Superinterfaces\n\n"
+                else -> "== Base classes\n\n"
             }
             result += this.bases.map { "`$it`" }.joinToString(", ")
             result += "\n\n"
@@ -54,7 +53,10 @@ data class Class(
         }
 
         if (this.fields.isNotEmpty()) {
-            result += "== Properties\n\n"
+            result += when (language) {
+                "python" -> "== Properties\n\n"
+                else -> "== Fields\n\n"
+            }
             this.fields.forEach { result += it.toAsciiDocPage(language) }
         }
 

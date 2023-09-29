@@ -33,3 +33,8 @@ fun removeAllTags(html: String): String {
 fun replaceSpaces(html: String): String {
     return html.replace("&nbsp;", " ").replace("\u00a0", " ")
 }
+
+fun replaceSymbols(html: String): String {
+    return html.replace("&lt;", "<").replace("&gt;", ">")
+        .replace("&amp;", "&")
+}
