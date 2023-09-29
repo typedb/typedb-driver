@@ -93,8 +93,15 @@ deploy_crate(
 
 # Documentation generation
 rust_doc(
-    name = "driver_doc",
+    name = "driver_doc_zip",
     crate = ":typedb_driver",
+)
+
+genrule(
+    name = "driver_doc",
+    srcs = [":driver_doc_zip"],
+    outs = ["driver_doc_rustdoc"],
+    cmd = "mkdir $@ && tar -xf $< -C $@",
 )
 
 html_doc_parser(
