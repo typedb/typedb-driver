@@ -43,7 +43,7 @@ fun main(args: Array<String>) {
     Files.createDirectory(docsDir)
 
     File(inputDirectoryName).walkTopDown().filter {
-        it.toString().contains("struct.") || it.toString().contains("trait.")
+        it.toString().contains("struct.") || it.toString().contains("trait.") || it.toString().contains("enum.")
     }.forEach {
         val html = it.readText(Charsets.UTF_8)
         val parsed = Jsoup.parse(html)
@@ -59,12 +59,18 @@ fun main(args: Array<String>) {
             val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
             outputFile.createNewFile()
             outputFile.writeText(parsedClass.toAsciiDoc("rust"))
+        } else if (!parsed.select(".main-heading h1 a.enum").isNullOrEmpty()) {
+            val parsedClass = parseEnum(parsed)
+            print(parsedClass)
+            val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
+            outputFile.createNewFile()
+            outputFile.writeText(parsedClass.toAsciiDoc("rust"))
         }
     }
 }
 
 fun parseClass(document: Element): Class {
-    val class_name = document.selectFirst(".main-heading h1 a.struct")!!.text()
+    val className = document.selectFirst(".main-heading h1 a.struct")!!.text()
     val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { it.html() }
 
     val fields = document.select(".structfield").map {
@@ -76,7 +82,7 @@ fun parseClass(document: Element): Class {
     }
 
     return Class(
-        name = class_name,
+        name = className,
         description = classDescr,
         fields = fields,
         methods = methods,
@@ -84,7 +90,7 @@ fun parseClass(document: Element): Class {
 }
 
 fun parseTrait(document: Element): Class {
-    val class_name = document.selectFirst(".main-heading h1 a.trait")!!.text()
+    val className = document.selectFirst(".main-heading h1 a.trait")!!.text()
     val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { it.html() }
 
     val methods = document.select("#provided-methods + .methods details[class*=method-toggle]:has(summary section.method)").map {
@@ -92,8 +98,32 @@ fun parseTrait(document: Element): Class {
     }
 
     return Class(
-        name = "Trait $class_name",
+        name = "Trait $className",
         description = classDescr,
+        methods = methods,
+    )
+}
+
+fun parseEnum(document: Element): Enum {
+    val className = document.selectFirst(".main-heading h1 a.enum")!!.text()
+    val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { it.html() }
+
+//    val fields = document.select(".structfield").map {
+//        parseField(it)
+//    }
+
+    val variants = document.select("section.variant").map {
+        parseEnumConstant(it)
+    }
+
+    val methods = document.select("#implementations-list details[class*=method-toggle]:has(summary section.method)").map {
+        parseMethod(it)
+    }
+
+    return Enum(
+        name = className,
+        description = classDescr,
+        constants = variants,
         methods = methods,
     )
 }
@@ -102,7 +132,6 @@ fun parseMethod(element: Element): Method {
     val methodSignature = enhanceSignature(element.selectFirst("summary section h4")!!.html())
     val methodName = element.selectFirst("summary section h4 a.fn")!!.text()
     val allArgs = getArgsFromSignature(methodSignature)
-    println(allArgs)
     val methodReturnType = if (methodSignature.contains(" -> ")) methodSignature.split(" -> ").last() else null
     val methodDescr = element.select("div.docblock p").map { reformatTextWithCode(it.html()) }
     val methodExamples = element.select("div.docblock div.example-wrap pre").map { it.text() }
@@ -135,6 +164,14 @@ fun parseField(element: Element): Argument {
         name = nameAndType[0],
         type = nameAndType[1],
         description = descr,
+    )
+}
+
+fun parseEnumConstant(element: Element): EnumConstant {
+    val nameAndType = element.selectFirst("h3")!!.text()
+    return EnumConstant(
+        name = nameAndType.substringBefore("("),
+        type = nameAndType.substringAfter("(").substringBefore(")"),
     )
 }
 

@@ -20,13 +20,16 @@ package com.vaticle.typedb.client.tool.doc.common
 
 data class EnumConstant(
     val name: String,
+    val type: String? = null,
     val value: String? = null,
 ) {
     fun toAsciiDocTableRow(language: String): String {
         var result = ""
         result += "| `${this.name}`"
         result += "| "
+        assert(this.type == null || this.value == null)
         this.value?.let { result += "`$it`" }
+        this.type?.let { result += "`$it`" }
         return result
     }
 }

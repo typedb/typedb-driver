@@ -42,8 +42,17 @@ data class Enum(
         }
 
         if (this.constants.isNotEmpty()) {
-            result += "== Enum constants\n\n[options=\"header\"]\n|===\n"
-            result += "|Name |Value \n"
+            result += "== "
+            result += when (language) {
+                "rust" -> "Enum variants"
+                else -> "Enum constants"
+            }
+            result += "\n\n[options=\"header\"]\n|===\n"
+            result += "|Name |"
+            result += when (language) {
+                "rust" -> "Type \n"
+                else -> "Value \n"
+            }
             this.constants.forEach { result += it.toAsciiDocTableRow(language) + "\n" }
             result += "|===\n\n"
         }
