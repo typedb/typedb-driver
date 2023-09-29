@@ -25,9 +25,7 @@ use super::ValueType;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum Annotation {
-    /// A `@key` annotation
     Key,
-    /// A `@unique` annotation
     Unique,
 }
 
@@ -40,6 +38,13 @@ pub enum ThingType {
 }
 
 impl ThingType {
+    /// Retrieves the unique label of the `ThingType`.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// thing_type.label()
+    /// ```
     pub fn label(&self) -> &str {
         match self {
             Self::RootThingType(_) => RootThingType::LABEL,
