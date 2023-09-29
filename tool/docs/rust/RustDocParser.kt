@@ -42,12 +42,20 @@ fun main(args: Array<String>) {
     val docsDir = Paths.get(outputDirectoryName)
     Files.createDirectory(docsDir)
 
-    File(inputDirectoryName).walkTopDown().filter { it.toString().contains("struct.") }.forEach {
+    File(inputDirectoryName).walkTopDown().filter {
+        it.toString().contains("struct.") || it.toString().contains("trait.")
+    }.forEach {
         val html = it.readText(Charsets.UTF_8)
         val parsed = Jsoup.parse(html)
         if (!parsed.select(".main-heading h1 a.struct").isNullOrEmpty()) {
             val parsedClass = parseClass(parsed)
-            print(parsedClass)
+//            print(parsedClass)
+            val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
+            outputFile.createNewFile()
+            outputFile.writeText(parsedClass.toAsciiDoc("rust"))
+        } else if (!parsed.select(".main-heading h1 a.trait").isNullOrEmpty()) {
+            val parsedClass = parseTrait(parsed)
+//            print(parsedClass)
             val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
             outputFile.createNewFile()
             outputFile.writeText(parsedClass.toAsciiDoc("rust"))
@@ -75,20 +83,36 @@ fun parseClass(document: Element): Class {
     )
 }
 
+fun parseTrait(document: Element): Class {
+    val class_name = document.selectFirst(".main-heading h1 a.trait")!!.text()
+    val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { it.html() }
+
+    val methods = document.select("#provided-methods + .methods details[class*=method-toggle]:has(summary section.method)").map {
+        parseMethod(it)
+    }
+
+    return Class(
+        name = "Trait $class_name",
+        description = classDescr,
+        methods = methods,
+    )
+}
+
 fun parseMethod(element: Element): Method {
     val methodSignature = enhanceSignature(element.selectFirst("summary section h4")!!.html())
     val methodName = element.selectFirst("summary section h4 a.fn")!!.text()
     val allArgs = getArgsFromSignature(methodSignature)
+    println(allArgs)
     val methodReturnType = if (methodSignature.contains(" -> ")) methodSignature.split(" -> ").last() else null
     val methodDescr = element.select("div.docblock p").map { reformatTextWithCode(it.html()) }
     val methodExamples = element.select("div.docblock div.example-wrap pre").map { it.text() }
     val methodArgs = element.select("div.docblock ul li code:eq(0)").map {
-        val argName = it.text()
+        val argName = it.text().trim()
         assert(allArgs.contains(argName))
-        val argDescr = it.parent()!!.text().removePrefix(it.text()).removePrefix(" – ")
+        val argDescr = reformatTextWithCode(removeArgName(it.parent()!!.html())).removePrefix(" – ")
         Argument(
             name = argName,
-            type = allArgs[argName],
+            type = allArgs[argName]?.let { it.trim() },
             description = argDescr
         )
     }
@@ -118,8 +142,9 @@ fun getArgsFromSignature(methodSignature: String): Map<String, String?> {
 //    Splitting by ", " is incorrect (could be used in the type)
     return methodSignature
         .substringAfter("(").substringBeforeLast(")")
-        .split(", ").associate {
-            if (it.contains(": ")) it.split(": ", limit = 2).let { it[0] to it[1] } else it to null
+        .split(",\\s".toRegex()).associate {
+            if (it.contains(":\\s".toRegex())) it.split(":\\s".toRegex(), limit = 2)
+                .let { it[0].trim() to it[1].trim() } else it.trim() to null
         }
 }
 
@@ -134,3 +159,8 @@ fun enhanceSignature(signature: String): String {
 fun dispatchNewlines(html: String): String {
     return Regex("<span[^>]*newline[^>]*>").replace(html, "\n")
 }
+
+fun removeArgName(html: String): String {
+    return Regex("<code>[^<]*</code>").replaceFirst(html, "")
+}
+
