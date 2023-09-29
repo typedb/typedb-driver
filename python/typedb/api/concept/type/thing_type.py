@@ -250,7 +250,7 @@ class ThingType(Type, ABC):
         are allowed to be played by the instances of this ``ThingType``.
 
         :param transaction: The current transaction
-        :param transitivity: transitivity: ``Transitivity.TRANSITIVE`` for direct
+        :param transitivity: ``Transitivity.TRANSITIVE`` for direct
             and indirect playing, ``Transitivity.EXPLICIT`` for direct
             playing only
         :return:

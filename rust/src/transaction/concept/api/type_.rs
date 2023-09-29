@@ -159,8 +159,8 @@ pub trait ThingTypeAPI: Sync + Send {
     ///
     /// * `transaction` -- The current transaction
     /// * `value_type` -- If specified, only attribute types of this `ValueType` will be retrieved.
-    /// * `transitivity` -- `Transitivity.TRANSITIVE` for direct and inherited ownership,
-    /// `Transitivity.EXPLICIT` for direct ownership only
+    /// * `transitivity` -- `Transitivity::Transitive` for direct and inherited ownership,
+    /// `Transitivity::Explicit` for direct ownership only
     /// * `annotations` -- Only retrieve attribute types owned with annotations.
     ///
     /// # Examples
@@ -265,8 +265,8 @@ pub trait ThingTypeAPI: Sync + Send {
     /// # Arguments
     ///
     /// * `transaction` -- The current transaction
-    /// * `transitivity` -- transitivity: `Transitivity.TRANSITIVE` for direct and indirect playing,
-    /// `Transitivity.EXPLICIT` for direct playing only
+    /// * `transitivity` -- `Transitivity::Transitive` for direct and indirect playing,
+    /// `Transitivity::Explicit` for direct playing only
     ///
     /// # Examples
     ///
@@ -490,8 +490,8 @@ pub trait EntityTypeAPI: ThingTypeAPI + Clone + Into<EntityType> {
     /// # Arguments
     ///
     /// * `transaction` -- The current transaction
-    /// * `transitivity` -- `Transitivity.TRANSITIVE` for direct and indirect subtypes,
-    /// `Transitivity.EXPLICIT` for direct subtypes only
+    /// * `transitivity` -- `Transitivity::Transitive` for direct and indirect subtypes,
+    /// `Transitivity::Explicit` for direct subtypes only
     ///
     /// # Examples
     ///
@@ -516,8 +516,8 @@ pub trait EntityTypeAPI: ThingTypeAPI + Clone + Into<EntityType> {
     /// # Arguments
     ///
     /// * `transaction` -- The current transaction
-    /// * `transitivity` -- `Transitivity.TRANSITIVE` for direct and indirect instances,
-    /// `Transitivity.EXPLICIT` for direct instances only
+    /// * `transitivity` -- `Transitivity::Transitive` for direct and indirect instances,
+    /// `Transitivity::Explicit` for direct instances only
     ///
     /// # Examples
     ///
@@ -640,8 +640,8 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// # Arguments
     ///
     /// * `transaction` -- The current transaction
-    /// * `transitivity` -- `Transitivity.TRANSITIVE` for direct and indirect subtypes,
-    /// `Transitivity.EXPLICIT` for direct subtypes only
+    /// * `transitivity` -- `Transitivity::Transitive` for direct and indirect subtypes,
+    /// `Transitivity::Explicit` for direct subtypes only
     ///
     /// # Examples
     ///
@@ -666,8 +666,8 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// # Arguments
     ///
     /// * `transaction` -- The current transaction
-    /// * `transitivity` -- `Transitivity.TRANSITIVE` for direct and indirect instances,
-    /// `Transitivity.EXPLICIT` for direct relates only
+    /// * `transitivity` -- `Transitivity::Transitive` for direct and indirect instances,
+    /// `Transitivity::Explicit` for direct relates only
     ///
     /// # Examples
     ///
@@ -691,8 +691,8 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// # Arguments
     ///
     /// * `transaction` -- The current transaction
-    /// * `transitivity` -- `Transitivity.TRANSITIVE` for direct and inherited relates,
-    /// `Transitivity.EXPLICIT` for direct relates only
+    /// * `transitivity` -- `Transitivity::Transitive` for direct and inherited relates,
+    /// `Transitivity::Explicit` for direct relates only
     ///
     /// # Examples
     ///
@@ -938,8 +938,8 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// # Arguments
     ///
     /// * `transaction` -- The current transaction
-    /// * `transitivity` -- `Transitivity.TRANSITIVE` for direct and indirect subtypes,
-    /// `Transitivity.EXPLICIT` for direct subtypes only
+    /// * `transitivity` -- `Transitivity::Transitive` for direct and indirect subtypes,
+    /// `Transitivity::Explicit` for direct subtypes only
     ///
     /// # Examples
     ///
@@ -966,8 +966,8 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     ///
     /// * `transaction` -- The current transaction
     /// * `value_type` -- `ValueType`  for retrieving subtypes
-    /// * `transitivity` -- `Transitivity.TRANSITIVE`  for direct and indirect subtypes,
-    /// `Transitivity.EXPLICIT`  for direct subtypes only
+    /// * `transitivity` -- `Transitivity::Transitive`  for direct and indirect subtypes,
+    /// `Transitivity::Explicit`  for direct subtypes only
     ///
     /// # Examples
     ///
@@ -993,8 +993,8 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// # Arguments
     ///
     /// * `transaction` -- The current transaction
-    /// * `transitivity` -- `Transitivity.TRANSITIVE`  for direct and indirect subtypes,
-    /// `Transitivity.EXPLICIT`  for direct subtypes only
+    /// * `transitivity` -- `Transitivity::Transitive`  for direct and indirect subtypes,
+    /// `Transitivity::Explicit`  for direct subtypes only
     ///
     /// # Examples
     ///
@@ -1071,8 +1071,8 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// # Arguments
     ///
     /// * `transaction` -- The current transaction
-    /// * `transitivity` -- `Transitivity.TRANSITIVE` for direct and inherited ownership,
-    /// `Transitivity.EXPLICIT` for direct ownership only
+    /// * `transitivity` -- `Transitivity::Transitive` for direct and inherited ownership,
+    /// `Transitivity::Explicit` for direct ownership only
     /// * `annotations` -- Only retrieve `ThingTypes` that have an attribute of this
     /// `AttributeType` with all given `Annotation`s
     ///
@@ -1238,8 +1238,8 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// # Arguments
     ///
     /// * `transaction` -- The current transaction
-    /// * `transitivity` -- `Transitivity.TRANSITIVE` for direct and indirect subtypes,
-    /// `Transitivity.EXPLICIT` for direct subtypes only
+    /// * `transitivity` -- `Transitivity::Transitive` for direct and indirect subtypes,
+    /// `Transitivity::Explicit` for direct subtypes only
     ///
     /// # Examples
     ///
@@ -1278,8 +1278,8 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// # Arguments
     ///
     /// * `transaction` -- The current transaction
-    /// * `transitivity` -- `Transitivity.TRANSITIVE` for direct and indirect playing,
-    /// `Transitivity.EXPLICIT` for direct playing only
+    /// * `transitivity` -- `Transitivity::Transitive` for direct and indirect playing,
+    /// `Transitivity::Explicit` for direct playing only
     ///
     /// # Examples
     ///
@@ -1303,8 +1303,8 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// # Arguments
     ///
     /// * `transaction` -- The current transaction
-    /// * `transitivity` -- `Transitivity.TRANSITIVE` for direct and indirect relation,
-    /// `Transitivity.EXPLICIT` for direct relation only
+    /// * `transitivity` -- `Transitivity::Transitive` for direct and indirect relation,
+    /// `Transitivity::Explicit` for direct relation only
     ///
     /// # Examples
     ///
@@ -1328,8 +1328,8 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// # Arguments
     ///
     /// * `transaction` -- The current transaction
-    /// * `transitivity` -- `Transitivity.TRANSITIVE` for direct and indirect playing,
-    /// `Transitivity.EXPLICIT` for direct playing only
+    /// * `transitivity` -- `Transitivity::Transitive` for direct and indirect playing,
+    /// `Transitivity::Explicit` for direct playing only
     ///
     /// # Examples
     ///
