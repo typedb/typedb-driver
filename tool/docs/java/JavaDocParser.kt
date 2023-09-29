@@ -128,15 +128,20 @@ fun parseEnum(document: Element): Enum {
 }
 
 fun parseMethod(element: Element): Method {
+    val methodAnchor = element.parent()!!.previousElementSibling()!!.id()
+        .replace("[\\.,\\(\\)]".toRegex(), "_").removeSuffix("_")
+    println(methodAnchor)
     val methodName = element.selectFirst("h4")!!.text()
     val methodSignature = element.selectFirst("li.blockList > pre")!!.text()
     val allArgs = getArgsFromSignature(methodSignature)
     val methodReturnType = getReturnTypeFromSignature(methodSignature)
-    val methodDescr: List<String> = element.selectFirst("li.blockList > pre + div")
+    var methodDescr: List<String> = element.selectFirst("li.blockList > pre + div")
         ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
     val methodExamples = element.select("li.blockList > pre + div pre").map { replaceSpaces(it.text()) }
+
     val methodArgs = element
-        .select("dt:has(.paramLabel) ~ dd:not(dt:has(.returnLabel) ~ dd, dt:has(.throwsLabel) ~ dd)")
+        .select("dt:has(.paramLabel) " +
+                "~ dd:not(dt:has(.returnLabel) ~ dd, dt:has(.throwsLabel) ~ dd, dt:has(.seeLabel) ~ dd)")
         .map {
             val arg_name = it.selectFirst("code")!!.text()
             assert(allArgs.contains(arg_name))
@@ -147,6 +152,9 @@ fun parseMethod(element: Element): Method {
             )
         }
 
+    val seeAlso = element.selectFirst("dt:has(.seeLabel) + dd")?.let { reformatTextWithCode(it.html()) }
+    seeAlso?.let { methodDescr += "\nSee also: $seeAlso\n" }
+
     return Method(
         name = methodName,
         signature = enhanceSignature(methodSignature),
@@ -154,6 +162,7 @@ fun parseMethod(element: Element): Method {
         args = methodArgs,
         returnType = methodReturnType,
         examples = methodExamples,
+        anchor = methodAnchor,
     )
 
 }
@@ -186,7 +195,7 @@ fun getArgsFromSignature(methodSignature: String): Map<String, String?> {
 }
 
 fun reformatTextWithCode(html: String): String {
-    return removeAllTags(replaceEmTags(replacePreTags(replaceCodeTags(html))))
+    return removeAllTags(replaceLocalLinks(replaceEmTags(replacePreTags(replaceCodeTags(html)))))
 }
 
 fun replacePreTags(html: String): String {
@@ -204,4 +213,17 @@ fun getReturnTypeFromSignature(signature: String): String {
 
 fun splitToParagraphs(html: String): List<String> {
     return html.replace("</p>", "").split("\\s*<p>\\s*".toRegex()).map { it.trim() }
+}
+
+fun replaceLocalLinks(html: String): String {
+    val fragments: MutableList<String> = Regex("<a\\shref=\"#([^\"]*)\">([^<]*)</a>")
+        .replace(html, "<<~#_$1~,$2>>").split("~").toMutableList()
+    val iterator = fragments.listIterator()
+    while (iterator.hasNext()) {
+        val value = iterator.next()
+        if (!value.contains("<<") && !value.contains(">>")) {
+            iterator.set(value.replace("[\\.,\\(\\)]".toRegex(), "_").removeSuffix("_"))
+        }
+    }
+    return fragments.joinToString("")
 }

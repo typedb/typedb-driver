@@ -19,7 +19,7 @@
 package com.vaticle.typedb.client.tool.doc.common
 
 fun replaceCodeTags(html: String): String {
-    return Regex("<code[^>]*>").replace(html, "`").replace("</code>", "`")
+    return Regex("<code[^>]*>").replace(html, "`").replace("</code>", "` ")
 }
 
 fun replaceEmTags(html: String): String {
@@ -27,7 +27,7 @@ fun replaceEmTags(html: String): String {
 }
 
 fun removeAllTags(html: String): String {
-    return Regex("<[^>]*>").replace(html, "")
+    return Regex("([^<])<[^<][^>]*>").replace(html, "$1")
 }
 
 fun replaceSpaces(html: String): String {
