@@ -27,10 +27,7 @@ fun replaceEmTags(html: String): String {
 }
 
 fun removeAllTags(html: String): String {
-    println("Before: $html")
-    val result = Regex("([^<])<[^<][^>]*>").replace(html, "$1")
-    println("After: $result")
-    return result
+    return Regex("(?<!<)<[^<>]*>(?!>)").replace(html, "")
 }
 
 fun replaceSpaces(html: String): String {
