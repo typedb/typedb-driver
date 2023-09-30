@@ -23,7 +23,7 @@ use std::{fmt, iter};
 
 #[cfg(not(feature = "sync"))]
 use futures::{stream, StreamExt};
-use typeql_lang::pattern::{Conjunction, Variable};
+use typeql::pattern::{Conjunction, Variable};
 
 use super::{
     message::{RoleTypeRequest, RoleTypeResponse, ThingRequest, ThingResponse},

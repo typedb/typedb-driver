@@ -25,9 +25,13 @@ load("@vaticle_typedb_common//test:rules.bzl", "typedb_java_test")
 typedb_java_test(
     name = "test-driver-query",
     srcs = ["DriverQueryTest.java"],
-    server_linux_artifact = "@vaticle_typedb_artifact_linux//file",
-    server_mac_artifact = "@vaticle_typedb_artifact_mac//file",
-    server_windows_artifact = "@vaticle_typedb_artifact_windows//file",
+    server_artifacts = {
+        "@vaticle_bazel_distribution//platform:is_linux_arm64": "@vaticle_typedb_artifact_linux-arm64//file",
+        "@vaticle_bazel_distribution//platform:is_linux_x86_64": "@vaticle_typedb_artifact_linux-x86_64//file",
+        "@vaticle_bazel_distribution//platform:is_mac_arm64": "@vaticle_typedb_artifact_mac-arm64//file",
+        "@vaticle_bazel_distribution//platform:is_mac_x86_64": "@vaticle_typedb_artifact_mac-x86_64//file",
+        "@vaticle_bazel_distribution//platform:is_windows_x86_64": "@vaticle_typedb_artifact_windows-x86_64//file",
+    },
     test_class = "com.vaticle.typedb.driver.test.integration.DriverQueryTest",
     deps = [
         # Internal dependencies

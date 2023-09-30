@@ -32,18 +32,26 @@ checkstyle_test(
 
 native_typedb_artifact(
     name = "native-typedb-artifact",
-    mac_artifact = "@vaticle_typedb_artifact_mac//file",
-    linux_artifact = "@vaticle_typedb_artifact_linux//file",
-    windows_artifact = "@vaticle_typedb_artifact_windows//file",
+    native_artifacts = {
+        "@vaticle_bazel_distribution//platform:is_linux_arm64": ["@vaticle_typedb_artifact_linux-arm64//file"],
+        "@vaticle_bazel_distribution//platform:is_linux_x86_64": ["@vaticle_typedb_artifact_linux-x86_64//file"],
+        "@vaticle_bazel_distribution//platform:is_mac_arm64": ["@vaticle_typedb_artifact_mac-arm64//file"],
+        "@vaticle_bazel_distribution//platform:is_mac_x86_64": ["@vaticle_typedb_artifact_mac-x86_64//file"],
+        "@vaticle_bazel_distribution//platform:is_windows_x86_64": ["@vaticle_typedb_artifact_windows-x86_64//file"],
+    },
     output = "typedb-artifact.tar.gz",
     visibility = ["//visibility:public"],
 )
 
 native_typedb_artifact(
     name = "native-typedb-enterprise-artifact",
-    mac_artifact = "@vaticle_typedb_enterprise_artifact_mac//file",
-    linux_artifact = "@vaticle_typedb_enterprise_artifact_linux//file",
-    windows_artifact = "@vaticle_typedb_enterprise_artifact_windows//file",
+    native_artifacts = {
+        "@vaticle_bazel_distribution//platform:is_linux_arm64": ["@vaticle_typedb_enterprise_artifact_linux-arm64//file"],
+        "@vaticle_bazel_distribution//platform:is_linux_x86_64": ["@vaticle_typedb_enterprise_artifact_linux-x86_64//file"],
+        "@vaticle_bazel_distribution//platform:is_mac_arm64": ["@vaticle_typedb_enterprise_artifact_mac-arm64//file"],
+        "@vaticle_bazel_distribution//platform:is_mac_x86_64": ["@vaticle_typedb_enterprise_artifact_mac-x86_64//file"],
+        "@vaticle_bazel_distribution//platform:is_windows_x86_64": ["@vaticle_typedb_enterprise_artifact_windows-x86_64//file"],
+    },
     output = "typedb-enterprise-artifact.tar.gz",
     visibility = ["//visibility:public"],
 )

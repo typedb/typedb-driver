@@ -96,10 +96,10 @@ def native_driver_versioned(python_versions):
             release = deployment["pypi.release"],
             suffix = version["suffix"],
             distribution_tag = select({
-                "@vaticle_dependencies//util/platform:is_mac_arm64": "py" + version["suffix"] + "-none-macosx_11_0_arm64",
-                "@vaticle_dependencies//util/platform:is_mac_x86_64": "py" + version["suffix"] + "-none-macosx_11_0_x86_64",
-                "@vaticle_dependencies//util/platform:is_linux_arm64": "py" + version["suffix"] + "-none-manylinux_2_17_aarch64",
-                "@vaticle_dependencies//util/platform:is_linux_x86_64": "py" + version["suffix"] + "-none-manylinux_2_17_x86_64",
-                "@vaticle_dependencies//util/platform:is_windows": "py" + version["suffix"] + "-none-win_amd64",
+                "@vaticle_bazel_distribution//platform:is_mac_arm64": "py" + version["suffix"] + "-none-macosx_11_0_arm64",
+                "@vaticle_bazel_distribution//platform:is_mac_x86_64": "py" + version["suffix"] + "-none-macosx_11_0_x86_64",
+                "@vaticle_bazel_distribution//platform:is_linux_arm64": "py" + version["suffix"] + "-none-manylinux_2_17_aarch64",
+                "@vaticle_bazel_distribution//platform:is_linux_x86_64": "py" + version["suffix"] + "-none-manylinux_2_17_x86_64",
+                "@vaticle_bazel_distribution//platform:is_windows": "py" + version["suffix"] + "-none-win_amd64",
             }),
         )

@@ -43,7 +43,7 @@ typedb_driver_deps = [
     "@crates//:tonic",
     "@crates//:uuid",
     "@vaticle_typedb_protocol//grpc/rust:typedb_protocol",
-    "@vaticle_typeql//rust:typeql_lang",
+    "@vaticle_typeql//rust:typeql",
 ]
 typedb_driver_proc_macro_deps = [
     "@crates//:async-trait",
@@ -72,12 +72,15 @@ rust_library(
 assemble_crate(
     name = "assemble_crate",
     description = "TypeDB Driver API for Rust",
-    homepage = "https://github.com/vaticle/typedb-driver-rust",
+    homepage = "https://github.com/vaticle/typedb-driver",
     license = "Apache-2.0",
-    repository = "https://github.com/vaticle/typedb-driver-rust",
+    license_file = "//:LICENSE",
+    readme_file = ":README.md",
+    repository = "https://github.com/vaticle/typedb-driver",
     target = ":typedb_driver",
     universe_manifests = ["@vaticle_dependencies//library/crates:Cargo.toml"],
     crate_features = { "sync": [] },
+    workspace_refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
 )
 
 deploy_crate(

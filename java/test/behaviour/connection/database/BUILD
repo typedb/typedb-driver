@@ -53,9 +53,13 @@ typedb_java_test(
     data = [
         "@vaticle_typedb_behaviour//connection:database.feature",
     ],
-    server_mac_artifact = "@vaticle_typedb_artifact_mac//file",
-    server_linux_artifact = "@vaticle_typedb_artifact_linux//file",
-    server_windows_artifact = "@vaticle_typedb_artifact_windows//file",
+    server_artifacts = {
+        "@vaticle_bazel_distribution//platform:is_linux_arm64": "@vaticle_typedb_artifact_linux-arm64//file",
+        "@vaticle_bazel_distribution//platform:is_linux_x86_64": "@vaticle_typedb_artifact_linux-x86_64//file",
+        "@vaticle_bazel_distribution//platform:is_mac_arm64": "@vaticle_typedb_artifact_mac-arm64//file",
+        "@vaticle_bazel_distribution//platform:is_mac_x86_64": "@vaticle_typedb_artifact_mac-x86_64//file",
+        "@vaticle_bazel_distribution//platform:is_windows_x86_64": "@vaticle_typedb_artifact_windows-x86_64//file",
+    },
     runtime_deps = [
         "//java/test/behaviour/connection:steps-core",
 
@@ -85,9 +89,13 @@ typedb_java_test(
     data = [
         "@vaticle_typedb_behaviour//connection:database.feature",
     ],
-    server_mac_artifact = "@vaticle_typedb_enterprise_artifact_mac//file",
-    server_linux_artifact = "@vaticle_typedb_enterprise_artifact_linux//file",
-    server_windows_artifact = "@vaticle_typedb_enterprise_artifact_windows//file",
+    server_artifacts = {
+        "@vaticle_bazel_distribution//platform:is_linux_arm64": "@vaticle_typedb_enterprise_artifact_linux-arm64//file",
+        "@vaticle_bazel_distribution//platform:is_linux_x86_64": "@vaticle_typedb_enterprise_artifact_linux-x86_64//file",
+        "@vaticle_bazel_distribution//platform:is_mac_arm64": "@vaticle_typedb_enterprise_artifact_mac-arm64//file",
+        "@vaticle_bazel_distribution//platform:is_mac_x86_64": "@vaticle_typedb_enterprise_artifact_mac-x86_64//file",
+        "@vaticle_bazel_distribution//platform:is_windows_x86_64": "@vaticle_typedb_enterprise_artifact_windows-x86_64//file",
+    },
     runtime_deps = [
         "//java/test/behaviour/connection:steps-enterprise",
 

@@ -22,7 +22,7 @@
 use std::{error::Error as StdError, fmt};
 
 use tonic::{Code, Status};
-use typeql_lang::error_messages;
+use typeql::error_messages;
 
 use super::{address::Address, RequestID};
 
@@ -88,7 +88,7 @@ error_messages! { InternalError
 pub enum Error {
     Connection(ConnectionError),
     Internal(InternalError),
-    TypeQL(typeql_lang::common::Error),
+    TypeQL(typeql::common::Error),
     Other(String),
 }
 
@@ -171,8 +171,8 @@ impl From<InternalError> for Error {
     }
 }
 
-impl From<typeql_lang::common::Error> for Error {
-    fn from(err: typeql_lang::common::Error) -> Self {
+impl From<typeql::common::Error> for Error {
+    fn from(err: typeql::common::Error) -> Self {
         Self::TypeQL(err)
     }
 }

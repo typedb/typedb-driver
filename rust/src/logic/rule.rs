@@ -19,7 +19,7 @@
  * under the License.
  */
 
-use typeql_lang::pattern::{Conjunction, ThingVariable};
+use typeql::pattern::{Conjunction, ThingVariable};
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Rule {

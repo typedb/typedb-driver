@@ -1,6 +1,15 @@
-Documentation: http://docs.vaticle.com/docs/driver-api/java
+Documentation: https://typedb.com/docs/drivers/2.x/drivers
 
 ## Distribution
+
+#### Rust driver
+
+Available from https://crates.io/crates/typedb-driver
+
+```sh
+cargo add typedb-driver@{version}
+```
+
 
 ### Java driver
 

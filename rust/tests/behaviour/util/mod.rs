@@ -40,7 +40,7 @@ use typedb_driver::{
     transaction::concept::api::ThingAPI,
     DatabaseManager, Result as TypeDBResult,
 };
-use typeql_lang::{parse_patterns, parse_query, pattern::Variable};
+use typeql::{parse_patterns, parse_query, pattern::Variable};
 
 use crate::{assert_with_timeout, behaviour::Context};
 
