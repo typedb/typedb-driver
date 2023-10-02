@@ -1,4 +1,4 @@
-# TypeDB Driver for Node.js
+# TypeDB Node.js Driver
 
 [![Factory](https://factory.vaticle.com/api/status/vaticle/typedb-driver-nodejs/badge.svg)](https://factory.vaticle.com/vaticle/typedb-driver-nodejs)
 [![Discord](https://img.shields.io/discord/665254494820368395?color=7389D8&label=chat&logo=discord&logoColor=ffffff)](https://vaticle.com/discord)

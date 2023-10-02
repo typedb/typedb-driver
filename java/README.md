@@ -1,4 +1,4 @@
-# TypeDB Driver for Java
+# TypeDB Java Driver
 
 ## Driver Architecture
 To learn about the mechanism that a TypeDB Driver uses to set up communication with databases running on the TypeDB Server, refer to the [Clients Overview](https://typedb.com/docs/clients/2.x/clients).
