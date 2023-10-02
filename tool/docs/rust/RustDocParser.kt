@@ -32,6 +32,7 @@ import com.vaticle.typedb.client.tool.doc.common.replaceCodeTags
 import com.vaticle.typedb.client.tool.doc.common.replaceEmTags
 import com.vaticle.typedb.client.tool.doc.common.replaceSpaces
 import com.vaticle.typedb.client.tool.doc.common.replaceSymbols
+import com.vaticle.typedb.client.tool.doc.common.replaceSymbolsForAnchor
 import java.nio.file.Files
 import java.nio.file.Paths
 
@@ -47,21 +48,22 @@ fun main(args: Array<String>) {
     }.forEach {
         val html = it.readText(Charsets.UTF_8)
         val parsed = Jsoup.parse(html)
+        val anchor = getAnchorFromUrl(it.toString())
         if (!parsed.select(".main-heading h1 a.struct").isNullOrEmpty()) {
-            val parsedClass = parseClass(parsed)
-//            print(parsedClass)
+            val parsedClass = parseClass(parsed, anchor)
+//            println(parsedClass)
             val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
             outputFile.createNewFile()
             outputFile.writeText(parsedClass.toAsciiDoc("rust"))
         } else if (!parsed.select(".main-heading h1 a.trait").isNullOrEmpty()) {
-            val parsedClass = parseTrait(parsed)
-//            print(parsedClass)
+            val parsedClass = parseTrait(parsed, anchor)
+//            println(parsedClass)
             val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
             outputFile.createNewFile()
             outputFile.writeText(parsedClass.toAsciiDoc("rust"))
         } else if (!parsed.select(".main-heading h1 a.enum").isNullOrEmpty()) {
-            val parsedClass = parseEnum(parsed)
-            print(parsedClass)
+            val parsedClass = parseEnum(parsed, anchor)
+            //print(parsedClass)
             val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
             outputFile.createNewFile()
             outputFile.writeText(parsedClass.toAsciiDoc("rust"))
@@ -69,16 +71,19 @@ fun main(args: Array<String>) {
     }
 }
 
-fun parseClass(document: Element): Class {
+fun parseClass(document: Element, classAnchor: String): Class {
     val className = document.selectFirst(".main-heading h1 a.struct")!!.text()
     val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { it.html() }
 
     val fields = document.select(".structfield").map {
-        parseField(it)
+        parseField(it, classAnchor)
     }
 
     val methods = document.select("#implementations-list details[class*=method-toggle]:has(summary section.method)").map {
-        parseMethod(it)
+        parseMethod(it, classAnchor)
+    } + document.select("#trait-implementations-list summary:has(section:not(h3 a.trait[href^=http])) " +
+            "+ .impl-items details[class*=method-toggle]:has(summary section.method)").map {
+        parseMethod(it, classAnchor)
     }
 
     return Class(
@@ -86,27 +91,29 @@ fun parseClass(document: Element): Class {
         description = classDescr,
         fields = fields,
         methods = methods,
+        anchor = classAnchor,
     )
 }
 
-fun parseTrait(document: Element): Class {
+fun parseTrait(document: Element, classAnchor: String): Class {
     val className = document.selectFirst(".main-heading h1 a.trait")!!.text()
     val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { it.html() }
 
     val methods = document.select("#required-methods + .methods details[class*=method-toggle]:has(summary section.method)").map {
-        parseMethod(it)
+        parseMethod(it, classAnchor)
     } + document.select("#provided-methods + .methods details[class*=method-toggle]:has(summary section.method)").map {
-        parseMethod(it)
+        parseMethod(it, classAnchor)
     }
 
     return Class(
         name = "Trait $className",
         description = classDescr,
         methods = methods,
+        anchor = classAnchor,
     )
 }
 
-fun parseEnum(document: Element): Enum {
+fun parseEnum(document: Element, classAnchor: String): Enum {
     val className = document.selectFirst(".main-heading h1 a.enum")!!.text()
     val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { it.html() }
 
@@ -119,7 +126,7 @@ fun parseEnum(document: Element): Enum {
     }
 
     val methods = document.select("#implementations-list details[class*=method-toggle]:has(summary section.method)").map {
-        parseMethod(it)
+        parseMethod(it, classAnchor)
     }
 
     return Enum(
@@ -127,15 +134,25 @@ fun parseEnum(document: Element): Enum {
         description = classDescr,
         constants = variants,
         methods = methods,
+        anchor = classAnchor,
     )
 }
 
-fun parseMethod(element: Element): Method {
+fun parseMethod(element: Element, classAnchor: String): Method {
     val methodSignature = enhanceSignature(element.selectFirst("summary section h4")!!.html())
     val methodName = element.selectFirst("summary section h4 a.fn")!!.text()
+    val methodAnchor = replaceSymbolsForAnchor(
+        element.selectFirst("summary section h4 a.fn")!!.attr("href").substringAfter("#")
+    )
     val allArgs = getArgsFromSignature(methodSignature)
     val methodReturnType = if (methodSignature.contains(" -> ")) methodSignature.split(" -> ").last() else null
-    val methodDescr = element.select("div.docblock p").map { reformatTextWithCode(it.html()) }
+    val methodDescr = if (element.select("div.docblock p").isNotEmpty()) {
+        element.select("div.docblock p").map { reformatTextWithCode(it.html()) }
+    } else {
+        element.select("div.docblock a:contains(Read more)").map {
+            "<<#_" + getAnchorFromUrl(it.attr("href")) + ",Read more>>"
+        }
+    }
     val methodExamples = element.select("div.docblock div.example-wrap pre").map { it.text() }
     val methodArgs = element.select("div.docblock ul li code:eq(0)").map {
         val argName = it.text().trim()
@@ -143,7 +160,7 @@ fun parseMethod(element: Element): Method {
         val argDescr = reformatTextWithCode(removeArgName(it.parent()!!.html())).removePrefix(" – ")
         Argument(
             name = argName,
-            type = allArgs[argName]?.let { it.trim() },
+            type = allArgs[argName]?.trim(),
             description = argDescr
         )
     }
@@ -155,17 +172,19 @@ fun parseMethod(element: Element): Method {
         args = methodArgs,
         returnType = methodReturnType,
         examples = methodExamples,
+        anchor = "${classAnchor}_$methodAnchor",
     )
 
 }
 
-fun parseField(element: Element): Argument {
+fun parseField(element: Element, classAnchor: String): Argument {
     val nameAndType = element.selectFirst("code")!!.text().split(": ")
     val descr = element.nextElementSibling()?.selectFirst(".docblock")?.let { reformatTextWithCode(it.html()) }
     return Argument(
         name = nameAndType[0],
         type = nameAndType[1],
         description = descr,
+        anchor = "${classAnchor}_${nameAndType[0]}",
     )
 }
 
@@ -203,3 +222,6 @@ fun removeArgName(html: String): String {
     return Regex("<code>[^<]*</code>").replaceFirst(html, "")
 }
 
+fun getAnchorFromUrl(url: String): String {
+   return  replaceSymbolsForAnchor(url.substringAfterLast("/").replace(".html", ""))
+}
