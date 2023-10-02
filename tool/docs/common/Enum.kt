@@ -27,10 +27,11 @@ data class Enum(
     val examples: List<String> = listOf(),
     val bases: List<String> = listOf(),
     val packagePath: String? = null,
+    val anchor: String? = null,
 ) {
     fun toAsciiDoc(language: String): String {
         var result = ""
-        result += "[#_${this.name}]\n"
+        result += "[#_${this.anchor ?: this.name}]\n"
         result += "= ${this.name}\n\n"
         result += "== Description\n\n${this.description.joinToString("\n\n")}\n\n"
 

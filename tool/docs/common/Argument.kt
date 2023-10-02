@@ -23,10 +23,11 @@ data class Argument(
     val type: String? = null,
     val description: String? = null,
     val defaultValue: String? = null,
+    val anchor: String? = null,
 ) {
     fun toAsciiDocPage(language: String): String {
         var result = ""
-        result += "[#_${this.name}]\n"
+        result += "[#_${this.anchor ?: this.name}]\n"
         result += "== ${this.name}\n\n"
         this.type?.let { result += "=== Type\n\n`$it`\n\n" }
         this.description?.let { result += "=== Description\n\n${this.description}\n\n" }

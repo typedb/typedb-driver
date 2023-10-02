@@ -38,3 +38,7 @@ fun replaceSymbols(html: String): String {
     return html.replace("&lt;", "<").replace("&gt;", ">")
         .replace("&amp;", "&")
 }
+
+fun replaceSymbolsForAnchor(name: String): String {
+    return name.replace("[\\.,\\(\\)\\s#]".toRegex(), "_").removeSuffix("_")
+}
