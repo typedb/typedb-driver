@@ -93,7 +93,9 @@ fun parseTrait(document: Element): Class {
     val className = document.selectFirst(".main-heading h1 a.trait")!!.text()
     val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { it.html() }
 
-    val methods = document.select("#provided-methods + .methods details[class*=method-toggle]:has(summary section.method)").map {
+    val methods = document.select("#required-methods + .methods details[class*=method-toggle]:has(summary section.method)").map {
+        parseMethod(it)
+    } + document.select("#provided-methods + .methods details[class*=method-toggle]:has(summary section.method)").map {
         parseMethod(it)
     }
 
