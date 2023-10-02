@@ -100,6 +100,12 @@ data class Method(
             result += "    /// \n"
             result += "    /// ```rust\n"
             this.examples.forEach {
+                result += "    #[cfg_attr(feature = \"sync\", doc = \"$it\")]\n"
+            }
+            this.examples.forEach {
+                result += "    #[cfg_attr(not(feature = \"sync\"), doc = \"${it}.await\")]\n"
+            }
+            this.examples.forEach {
                 result += "    /// $it\n"
             }
             result += "    /// ```\n"
