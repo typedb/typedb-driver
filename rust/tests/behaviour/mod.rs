@@ -94,7 +94,7 @@ impl Context {
 
     pub async fn after_scenario(&mut self) -> TypeDBResult {
         sleep(Context::STEP_REATTEMPT_SLEEP).await;
-        self.set_connection(Connection::new_encrypted(
+        self.set_connection(Connection::new_enterprise(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
             Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&self.tls_root_ca))?,
         )?);
@@ -217,7 +217,7 @@ impl Default for Context {
         let tls_root_ca = PathBuf::from(
             std::env::var("ROOT_CA").expect("ROOT_CA environment variable needs to be set for enterprise tests to run"),
         );
-        let connection = Connection::new_encrypted(
+        let connection = Connection::new_enterprise(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
             Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&tls_root_ca)).unwrap(),
         )

@@ -73,7 +73,7 @@ impl Interceptor for PlainTextFacade {
     }
 }
 
-pub(super) fn open_encrypted_channel(
+pub(super) fn open_callcred_channel(
     address: Address,
     credential: Credential,
 ) -> Result<(CallCredChannel, Arc<CallCredentials>)> {

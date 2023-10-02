@@ -36,19 +36,19 @@ import java.util.Set;
 
 import static com.vaticle.typedb.driver.jni.typedb_driver.connection_force_close;
 import static com.vaticle.typedb.driver.jni.typedb_driver.connection_is_open;
-import static com.vaticle.typedb.driver.jni.typedb_driver.connection_open_encrypted;
-import static com.vaticle.typedb.driver.jni.typedb_driver.connection_open_plaintext;
+import static com.vaticle.typedb.driver.jni.typedb_driver.connection_open_enterprise;
+import static com.vaticle.typedb.driver.jni.typedb_driver.connection_open_core;
 
 public class TypeDBDriverImpl extends NativeObject<com.vaticle.typedb.driver.jni.Connection> implements TypeDBDriver {
     private final UserManagerImpl userMgr;
     private final DatabaseManager databaseMgr;
 
     public TypeDBDriverImpl(String address) throws TypeDBDriverException {
-        this(openPlaintext(address));
+        this(openCore(address));
     }
 
     public TypeDBDriverImpl(Set<String> initAddresses, TypeDBCredential credential) throws TypeDBDriverException {
-        this(openEncrypted(initAddresses, credential));
+        this(openEnterprise(initAddresses, credential));
     }
 
     private TypeDBDriverImpl(com.vaticle.typedb.driver.jni.Connection connection) {
@@ -57,17 +57,17 @@ public class TypeDBDriverImpl extends NativeObject<com.vaticle.typedb.driver.jni
         userMgr = new UserManagerImpl(this.nativeObject);
     }
 
-    private static com.vaticle.typedb.driver.jni.Connection openPlaintext(String address) {
+    private static com.vaticle.typedb.driver.jni.Connection openCore(String address) {
         try {
-            return connection_open_plaintext(address);
+            return connection_open_core(address);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
-    private static com.vaticle.typedb.driver.jni.Connection openEncrypted(Set<String> initAddresses, TypeDBCredential credential) {
+    private static com.vaticle.typedb.driver.jni.Connection openEnterprise(Set<String> initAddresses, TypeDBCredential credential) {
         try {
-            return connection_open_encrypted(initAddresses.toArray(new String[0]), credential.nativeObject);
+            return connection_open_enterprise(initAddresses.toArray(new String[0]), credential.nativeObject);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
