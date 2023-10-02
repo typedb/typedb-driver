@@ -46,8 +46,8 @@ java_library(
 
 assemble_maven(
     name = "assemble-maven",
-    project_description = "TypeDB Driver API for Java",
-    project_name = "TypeDB Driver Java",
+    project_description = "TypeDB Java Driver",
+    project_name = "TypeDB Java Driver",
     project_url = "https://github.com/vaticle/typedb-driver-java",
     scm_url = "https://github.com/vaticle/typedb-driver-java",
     target = ":driver-java",
@@ -90,8 +90,8 @@ swig_native_java_library(
 
 assemble_maven(
     name = "assemble-maven-jni",
-    project_description = "TypeDB Driver JNI",
-    project_name = "TypeDB Driver Java",
+    project_description = "Java TypeDB Driver JNI",
+    project_name = "Java TypeDB Driver JNI",
     project_url = "https://github.com/vaticle/typedb-driver-java",
     scm_url = "https://github.com/vaticle/typedb-driver-java",
     target = ":typedb_driver_jni",
