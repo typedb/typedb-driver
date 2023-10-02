@@ -31,6 +31,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.io.File
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.Paths
 
 
@@ -52,7 +53,7 @@ fun main(args: Array<String>) {
         var parsedClassAsciiDoc = ""
         if (!parsed.select("h2[title^=Interface]").isNullOrEmpty()
                 || !parsed.select("h2[title^=Class]").isNullOrEmpty()) {
-            val parsedClass = parseClass(parsed)
+            val parsedClass = parseClass(parsed, it.parent)
             parsedClassName = parsedClass.name
             parsedClassAsciiDoc = parsedClass.toAsciiDoc("java")
 
@@ -61,13 +62,14 @@ fun main(args: Array<String>) {
             parsedClassName = parsedClass.name
             parsedClassAsciiDoc = parsedClass.toAsciiDoc("java")
         }
+
         val outputFile = docsDir.resolve("$parsedClassName.adoc").toFile()
         outputFile.createNewFile()
         outputFile.writeText(parsedClassAsciiDoc)
     }
 }
 
-fun parseClass(document: Element): Class {
+fun parseClass(document: Element, currentDirName: String): Class {
     val className = document.selectFirst(".contentContainer .description pre .typeNameLabel")!!.text()
     val classDescr: List<String> = document.selectFirst(".contentContainer .description pre + div")
         ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
@@ -83,7 +85,14 @@ fun parseClass(document: Element): Class {
         parseMethod(it)
     } + document.select(".details > ul > li > section > ul > li:has(a[id=method.detail]) > ul > li").map {
         parseMethod(it)
+    } + document.select(".memberSummary + ul > li > h3:contains(Methods inherited from) + code > a").map {
+        val parentPath = Path.of(currentDirName).resolve(it.attr("href").substringBefore("#"))
+        val parentHtml = File(parentPath.toString()).readText(Charsets.UTF_8)
+        val parentParsed = Jsoup.parse(parentHtml)
+        val anchor = it.attr("href").substringAfter("#")
+        parseMethod(parentParsed.selectFirst("a[id=$anchor] + ul > li")!!)
     }
+
 
     return Class(
         name = className,
@@ -130,12 +139,11 @@ fun parseEnum(document: Element): Enum {
 fun parseMethod(element: Element): Method {
     val methodAnchor = element.parent()!!.previousElementSibling()!!.id()
         .replace("[\\.,\\(\\)]".toRegex(), "_").removeSuffix("_")
-    println(methodAnchor)
     val methodName = element.selectFirst("h4")!!.text()
     val methodSignature = element.selectFirst("li.blockList > pre")!!.text()
     val allArgs = getArgsFromSignature(methodSignature)
     val methodReturnType = getReturnTypeFromSignature(methodSignature)
-    var methodDescr: List<String> = element.selectFirst("li.blockList > pre + div")
+    var methodDescr: List<String> = element.selectFirst("li.blockList > pre ~ div:not(div:has(.descfrmTypeLabel))")
         ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
     val methodExamples = element.select("li.blockList > pre + div pre").map { replaceSpaces(it.text()) }
 
@@ -218,11 +226,13 @@ fun splitToParagraphs(html: String): List<String> {
 fun replaceLocalLinks(html: String): String {
     val fragments: MutableList<String> = Regex("<a\\shref=\"#([^\"]*)\">([^<]*)</a>")
         .replace(html, "<<~#_$1~,$2>>").split("~").toMutableList()
-    val iterator = fragments.listIterator()
-    while (iterator.hasNext()) {
-        val value = iterator.next()
-        if (!value.contains("<<") && !value.contains(">>")) {
-            iterator.set(value.replace("[\\.,\\(\\)]".toRegex(), "_").removeSuffix("_"))
+    if (fragments.size > 1) {
+        val iterator = fragments.listIterator()
+        while (iterator.hasNext()) {
+            val value = iterator.next()
+            if (!value.contains("<<") && !value.contains(">>")) {
+                iterator.set(value.replace("[\\.,\\(\\)]".toRegex(), "_").removeSuffix("_"))
+            }
         }
     }
     return fragments.joinToString("")
