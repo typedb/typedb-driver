@@ -27,6 +27,7 @@ import com.vaticle.typedb.client.tool.doc.common.removeAllTags
 import com.vaticle.typedb.client.tool.doc.common.replaceCodeTags
 import com.vaticle.typedb.client.tool.doc.common.replaceEmTags
 import com.vaticle.typedb.client.tool.doc.common.replaceSpaces
+import com.vaticle.typedb.client.tool.doc.common.replaceSymbolsForAnchor
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.io.File
@@ -137,8 +138,7 @@ fun parseEnum(document: Element): Enum {
 }
 
 fun parseMethod(element: Element): Method {
-    val methodAnchor = element.parent()!!.previousElementSibling()!!.id()
-        .replace("[\\.,\\(\\)]".toRegex(), "_").removeSuffix("_")
+    val methodAnchor = replaceSymbolsForAnchor(element.parent()!!.previousElementSibling()!!.id())
     val methodName = element.selectFirst("h4")!!.text()
     val methodSignature = element.selectFirst("li.blockList > pre")!!.text()
     val allArgs = getArgsFromSignature(methodSignature)
@@ -231,7 +231,7 @@ fun replaceLocalLinks(html: String): String {
         while (iterator.hasNext()) {
             val value = iterator.next()
             if (!value.contains("<<") && !value.contains(">>")) {
-                iterator.set(value.replace("[\\.,\\(\\)]".toRegex(), "_").removeSuffix("_"))
+                iterator.set(replaceSymbolsForAnchor(value))
             }
         }
     }
