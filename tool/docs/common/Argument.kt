@@ -29,7 +29,7 @@ data class Argument(
         result += "[#_${this.name}]\n"
         result += "== ${this.name}\n\n"
         this.type?.let { result += "=== Type\n\n`$it`\n\n" }
-        result += "=== Description\n\n${this.description}\n\n"
+        this.description?.let { result += "=== Description\n\n${this.description}\n\n" }
         return result
     }
 
