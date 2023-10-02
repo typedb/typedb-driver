@@ -33,7 +33,7 @@ use crate::{
     connection::{
         message::{Request, Response},
         network::{
-            channel::{open_encrypted_channel, open_plaintext_channel, GRPCChannel},
+            channel::{open_callcred_channel, open_plaintext_channel, GRPCChannel},
             proto::{FromProto, IntoProto, TryFromProto, TryIntoProto},
             stub::RPCStub,
         },
@@ -48,7 +48,7 @@ pub(in crate::connection) struct RPCTransmitter {
 }
 
 impl RPCTransmitter {
-    pub(in crate::connection) fn start_plaintext(address: Address, runtime: &BackgroundRuntime) -> Result<Self> {
+    pub(in crate::connection) fn start_core(address: Address, runtime: &BackgroundRuntime) -> Result<Self> {
         let (request_sink, request_source) = unbounded_async();
         let (shutdown_sink, shutdown_source) = unbounded_async();
         runtime.run_blocking(async move {
@@ -60,7 +60,7 @@ impl RPCTransmitter {
         Ok(Self { request_sink, shutdown_sink })
     }
 
-    pub(in crate::connection) fn start_encrypted(
+    pub(in crate::connection) fn start_enterprise(
         address: Address,
         credential: Credential,
         runtime: &BackgroundRuntime,
@@ -68,7 +68,7 @@ impl RPCTransmitter {
         let (request_sink, request_source) = unbounded_async();
         let (shutdown_sink, shutdown_source) = unbounded_async();
         runtime.run_blocking(async move {
-            let (channel, call_credentials) = open_encrypted_channel(address, credential)?;
+            let (channel, call_credentials) = open_callcred_channel(address, credential)?;
             let rpc = RPCStub::new(channel, Some(call_credentials)).await;
             tokio::spawn(Self::dispatcher_loop(rpc, request_source, shutdown_source));
             Ok::<(), Error>(())

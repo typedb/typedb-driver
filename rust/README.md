@@ -1,5 +1,4 @@
-
-# TypeDB Driver for Rust
+# TypeDB Rust Driver
 
 [![Factory](https://factory.vaticle.com/api/status/vaticle/typedb-driver/badge.svg)](https://factory.vaticle.com/vaticle/typedb-driver)
 [![Discord](https://img.shields.io/discord/665254494820368395?color=7389D8&label=chat&logo=discord&logoColor=ffffff)](https://vaticle.com/discord)
@@ -8,12 +7,12 @@
 [![Stack Overflow](https://img.shields.io/badge/stackoverflow-typeql-3dce8c.svg)](https://stackoverflow.com/questions/tagged/typeql)
 
 ## Driver Architecture
-To learn about the mechanism that a TypeDB Driver uses to set up communication with databases running on the TypeDB Server, refer to the [Driver Overview](https://typedb.com/docs/drivers/2.x/drivers).
+To learn about the mechanism that a TypeDB Driver uses to set up communication with databases running on the TypeDB Server, refer to the [Clients Overview](https://typedb.com/docs/clients/2.x/clients).
 
 The TypeDB Driver for Rust provides a fully async API that supports multiple async runtimes or a synchronous interface gated by the `sync` feature.
 
 ## API Reference
-To learn about the methods available for executing queries and retrieving their answers using Driver Rust, refer to the [API Reference](https://typedb.com/docs/drivers/2.x/rust/rust-api-ref).
+To learn about the methods available for executing queries and retrieving their answers using Driver Rust, refer to the [API Reference](https://typedb.com/docs/clients/2.x/rust/rust-api-ref).
 
 ## Quickstart
 1. Import `typedb-driver` through Cargo:

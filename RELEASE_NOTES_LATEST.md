@@ -1,18 +1,22 @@
+Documentation: https://typedb.com/docs/clients/2.x/clients
+
+## Distribution
+
 #### Rust driver
 
 Available from https://crates.io/crates/typedb-driver
+Documentation: https://typedb.com/docs/clients/2.x/rust/rust-api-ref
+
 
 ```sh
-cargo add typedb-driver@2.24.5
+cargo add typedb-driver@2.24.8
 ```
 
-## Java driver
 
-Documentation: http://docs.vaticle.com/docs/driver-api/java
-
-### Distribution
+### Java driver
 
 Available through https://repo.vaticle.com
+Documentation: https://typedb.com/docs/clients/2.x/java/java-api-ref
 
 ```xml
 <repositories>
@@ -25,7 +29,7 @@ Available through https://repo.vaticle.com
     <dependency>
         <groupid>com.vaticle.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>2.24.5</version>
+        <version>2.24.8</version>
     </dependency>
 </dependencies>
 ```
@@ -33,56 +37,41 @@ Available through https://repo.vaticle.com
 ### Python driver
 
 PyPI package: https://pypi.org/project/typedb-driver
-Documentation: https://docs.vaticle.com/docs/driver-api/python
+Documentation: https://typedb.com/docs/clients/2.x/python/python-api-ref
 
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==2.24.5
+pip install typedb-driver==2.24.8
 ```
 
-## NodeJS driver
+### NodeJS driver
 
 NPM package: https://www.npmjs.com/package/typedb-driver
-Documentation: https://docs.vaticle.com/docs/driver-api/nodejs
-
-### Installation
+Documentation: https://typedb.com/docs/clients/2.x/node-js/node-js-api-ref
 
 ```
-npm install typedb-driver@2.24.5
+npm install typedb-driver@2.24.8
 ```
 
-## Architectural Changes
-
-**We have centralised all TypeDB Driver libraries into this repository**. This will make maintanance and development much simpler across the wide surface area exposed by the drivers.
 
 ## New Features
-
-- **Rearchitect Rust Driver to support full TypeDB feature set**
-
-- **Extend Rust Driver to support FFI**
-
-- **Create SWIG rules to generate C compatibility layer & C Driver**
- 
-- **Create SWIG rules for Python and Java**
-
-- **Reimplement Java Driver using JNI over Rust**
-
-- **Reimplement Python Driver using FFI over Rust**
-
-- **Update TypeDB NodeJS Driver to the latest feature set**
 
 
 ## Bugs Fixed
 
+
 ## Code Refactors
-
-- **Create unified network API for Core and Enterprise**
-
-- **Simplify Concept API by parametrizing methods with enum arguments**
-
-- **Delete Remote Concept API**
-
 
 
 ## Other Improvements
+- **Update pest 2.4.0 => 2.7.4**
+  
+  We update to pest and pest-derive v2.7.4, which among other things purports to fix the error where [deriving Parser fails on "undeclared crate or module `alloc`"](https://github.com/pest-parser/pest/issues/899) (https://github.com/pest-parser/pest/pull/900).
+  
+  
+- **Merge master into development**
+  
+  Synchronise changes for release into the development branch.
+  
+    

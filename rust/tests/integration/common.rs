@@ -29,11 +29,11 @@ use typedb_driver::{
 pub const TEST_DATABASE: &str = "test";
 
 pub fn new_core_connection() -> typedb_driver::Result<Connection> {
-    Connection::new_plaintext("0.0.0.0:1729")
+    Connection::new_core("0.0.0.0:1729")
 }
 
 pub fn new_enterprise_connection() -> typedb_driver::Result<Connection> {
-    Connection::new_encrypted(
+    Connection::new_enterprise(
         &["localhost:11729", "localhost:21729", "localhost:31729"],
         Credential::with_tls(
             "admin",

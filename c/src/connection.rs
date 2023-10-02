@@ -29,17 +29,17 @@ use super::{
 };
 
 #[no_mangle]
-pub extern "C" fn connection_open_plaintext(address: *const c_char) -> *mut Connection {
-    try_release(Connection::new_plaintext(string_view(address)))
+pub extern "C" fn connection_open_core(address: *const c_char) -> *mut Connection {
+    try_release(Connection::new_core(string_view(address)))
 }
 
 #[no_mangle]
-pub extern "C" fn connection_open_encrypted(
+pub extern "C" fn connection_open_enterprise(
     addresses: *const *const c_char,
     credential: *const Credential,
 ) -> *mut Connection {
     let addresses: Vec<&str> = string_array_view(addresses).collect();
-    try_release(Connection::new_encrypted(&addresses, borrow(credential).clone()))
+    try_release(Connection::new_enterprise(&addresses, borrow(credential).clone()))
 }
 
 #[no_mangle]

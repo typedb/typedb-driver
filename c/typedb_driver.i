@@ -289,8 +289,8 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject role_type_get_relation_instances;
 %newobject role_type_get_player_instances;
 
-%newobject connection_open_plaintext;
-%newobject connection_open_encrypted;
+%newobject connection_open_core;
+%newobject connection_open_enterprise;
 
 %newobject credential_new;
 

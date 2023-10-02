@@ -1,7 +1,7 @@
 {
   "name": "typedb-driver",
   "version": "0.0.0",
-  "description": "TypeDB Driver for Node.js",
+  "description": "TypeDB Node.js Driver",
   "author": "Vaticle",
   "license": "Apache-2.0",
   "homepage": "https://vaticle.com",

@@ -63,10 +63,10 @@ pub struct Connection {
 }
 
 impl Connection {
-    pub fn new_plaintext(address: impl AsRef<str>) -> Result<Self> {
+    pub fn new_core(address: impl AsRef<str>) -> Result<Self> {
         let address: Address = address.as_ref().parse()?;
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
-        let mut server_connection = ServerConnection::new_plaintext(background_runtime.clone(), address)?;
+        let mut server_connection = ServerConnection::new_core(background_runtime.clone(), address)?;
         let address = server_connection
             .servers_all()?
             .into_iter()
@@ -83,7 +83,7 @@ impl Connection {
         }
     }
 
-    pub fn new_encrypted<T: AsRef<str> + Sync>(init_addresses: &[T], credential: Credential) -> Result<Self> {
+    pub fn new_enterprise<T: AsRef<str> + Sync>(init_addresses: &[T], credential: Credential) -> Result<Self> {
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
 
         let init_addresses = init_addresses.iter().map(|addr| addr.as_ref().parse()).try_collect()?;
@@ -92,7 +92,7 @@ impl Connection {
         let server_connections: HashMap<Address, ServerConnection> = addresses
             .into_iter()
             .map(|address| {
-                ServerConnection::new_encrypted(background_runtime.clone(), address.clone(), credential.clone())
+                ServerConnection::new_enterprise(background_runtime.clone(), address.clone(), credential.clone())
                     .map(|server_connection| (address, server_connection))
             })
             .try_collect()?;
@@ -115,7 +115,7 @@ impl Connection {
     ) -> Result<HashSet<Address>> {
         for address in addresses {
             let server_connection =
-                ServerConnection::new_encrypted(background_runtime.clone(), address.clone(), credential.clone());
+                ServerConnection::new_enterprise(background_runtime.clone(), address.clone(), credential.clone());
             match server_connection {
                 Ok(server_connection) => match server_connection.servers_all() {
                     Ok(servers) => return Ok(servers.into_iter().collect()),
@@ -185,18 +185,18 @@ pub(crate) struct ServerConnection {
 }
 
 impl ServerConnection {
-    fn new_plaintext(background_runtime: Arc<BackgroundRuntime>, address: Address) -> Result<Self> {
-        let request_transmitter = Arc::new(RPCTransmitter::start_plaintext(address.clone(), &background_runtime)?);
+    fn new_core(background_runtime: Arc<BackgroundRuntime>, address: Address) -> Result<Self> {
+        let request_transmitter = Arc::new(RPCTransmitter::start_core(address.clone(), &background_runtime)?);
         Ok(Self { address, background_runtime, open_sessions: Default::default(), request_transmitter })
     }
 
-    fn new_encrypted(
+    fn new_enterprise(
         background_runtime: Arc<BackgroundRuntime>,
         address: Address,
         credential: Credential,
     ) -> Result<Self> {
         let request_transmitter =
-            Arc::new(RPCTransmitter::start_encrypted(address.clone(), credential, &background_runtime)?);
+            Arc::new(RPCTransmitter::start_enterprise(address.clone(), credential, &background_runtime)?);
         Ok(Self { address, background_runtime, open_sessions: Default::default(), request_transmitter })
     }
 

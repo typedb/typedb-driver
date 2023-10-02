@@ -71,7 +71,7 @@ rust_library(
 
 assemble_crate(
     name = "assemble_crate",
-    description = "TypeDB Driver API for Rust",
+    description = "TypeDB Rust Driver",
     homepage = "https://github.com/vaticle/typedb-driver",
     license = "Apache-2.0",
     license_file = "//:LICENSE",
