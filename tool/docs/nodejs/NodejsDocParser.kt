@@ -24,7 +24,14 @@ import org.jsoup.nodes.Element
 
 import com.vaticle.typedb.client.tool.doc.common.Argument
 import com.vaticle.typedb.client.tool.doc.common.Class
+import com.vaticle.typedb.client.tool.doc.common.Enum
+import com.vaticle.typedb.client.tool.doc.common.EnumConstant
 import com.vaticle.typedb.client.tool.doc.common.Method
+import com.vaticle.typedb.client.tool.doc.common.removeAllTags
+import com.vaticle.typedb.client.tool.doc.common.replaceCodeTags
+import com.vaticle.typedb.client.tool.doc.common.replaceEmTags
+import com.vaticle.typedb.client.tool.doc.common.replaceSpaces
+import com.vaticle.typedb.client.tool.doc.common.replaceSymbolsForAnchor
 import java.nio.file.Files
 import java.nio.file.Paths
 
@@ -56,7 +63,9 @@ fun main(args: Array<String>) {
 
 fun parseClass(document: Element): Class {
     val className = document.selectFirst(".tsd-page-title h1")!!.text().split(" ")[1]
-    val classDescr = document.select(".tsd-page-title + section.tsd-comment div.tsd-comment p").map { it.html() }
+    val classDescr = document.select(".tsd-page-title + section.tsd-comment div.tsd-comment p").map {
+        reformatTextWithCode(it.html())
+    }
 
     val classBases = document.select("ul.tsd-hierarchy li:has(ul.tsd-hierarchy span.target)").map {
         it.child(0).text()
@@ -87,7 +96,7 @@ fun parseMethod(element: Element): Method {
     val methodReturnType = element.select(".tsd-signatures .tsd-description .tsd-returns-title > *").map {
         it.text()
     }.joinToString("")
-    val methodDescr = element.select(".tsd-description > .tsd-comment p").map { it.html() }
+    val methodDescr = element.select(".tsd-description > .tsd-comment p").map { reformatTextWithCode(it.html()) }
     val methodExamples = element.select(".tsd-description > .tsd-comment > :has(a[href*=examples]) + pre > :not(button)")
         .map { it.text() }
 
@@ -95,7 +104,7 @@ fun parseMethod(element: Element): Method {
         Argument(
             name = it.selectFirst(".tsd-kind-parameter")!!.text(),
             type = it.selectFirst(".tsd-signature-type")?.text(),
-            description = it.selectFirst(".tsd-comment")?.text(),
+            description = it.selectFirst(".tsd-comment")?.let { reformatTextWithCode(it.html()) },
         )
     }
 
@@ -116,4 +125,8 @@ fun parseProperty(element: Element): Argument {
         name = propertyName,
         type = propertyType,
     )
+}
+
+fun reformatTextWithCode(html: String): String {
+    return removeAllTags(replaceEmTags(replaceCodeTags(html)))
 }
