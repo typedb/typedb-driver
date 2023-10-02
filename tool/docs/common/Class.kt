@@ -97,6 +97,36 @@ data class Class(
         return result
     }
 
+    fun toNodejsComment(): String {
+        var result = ""
+        result += "${this.name}\n\n"
+
+        if (this.description.isNotEmpty()) {
+            result += "/**\n * ${this.description.map { backquotesToCode(it) }.joinToString("\n * ")}\n"
+            result += " * \n"
+            if (this.examples.isNotEmpty()) {
+                result += " * ### Examples\n"
+                result += " * \n"
+                result += " * ```ts\n"
+                this.examples.forEach {
+                    result += " * ${snakeToCamel(it)}\n"
+                }
+                result += " * ```\n"
+            }
+            result += " */\n\n"
+        }
+
+        if (this.fields.isNotEmpty()) {
+            this.fields.forEach { result += it.toNodejsCommentField() }
+        }
+
+        if (this.methods.isNotEmpty()) {
+            this.methods.forEach { result += it.toNodejsComment() }
+        }
+
+        return result
+    }
+
     fun toRustComment(): String {
         var result = ""
         result += "${this.name}\n\n"

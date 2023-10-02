@@ -41,6 +41,7 @@ fun main(args: Array<String>) {
     Files.createDirectory(docsDir)
     Files.createDirectory(docsDir.resolve("for_java"))
     Files.createDirectory(docsDir.resolve("for_rust"))
+    Files.createDirectory(docsDir.resolve("for_nodejs"))
 
     File(inputDirectoryName).walkTopDown().filter {
         it.toString().endsWith(".html") &&
@@ -55,18 +56,21 @@ fun main(args: Array<String>) {
             var parsedClassAsciiDoc = ""
             var parsedClassForJava = ""
             var parsedClassForRust = ""
+            var parsedClassForNodejs = ""
             if (it.selectFirst("dt.sig-object + dd > p")!!.text().contains("Enum")) {
                 val parsedClass = parseEnum(it)
                 parsedClassName = parsedClass.name
                 parsedClassAsciiDoc = parsedClass.toAsciiDoc("python")
                 parsedClassForJava = parsedClass.toJavaComment()
                 parsedClassForRust = parsedClass.toRustComment()
+                parsedClassForNodejs = parsedClass.toNodejsComment()
             } else {
                 val parsedClass = parseClass(it)
                 parsedClassName = parsedClass.name
                 parsedClassAsciiDoc = parsedClass.toAsciiDoc("python")
                 parsedClassForJava = parsedClass.toJavaComment()
                 parsedClassForRust = parsedClass.toRustComment()
+                parsedClassForNodejs = parsedClass.toNodejsComment()
             }
             val outputFile = docsDir.resolve("$parsedClassName.adoc").toFile()
             outputFile.createNewFile()
@@ -79,6 +83,10 @@ fun main(args: Array<String>) {
             val outputFileRust = docsDir.resolve("for_rust").resolve("$parsedClassName.txt").toFile()
             outputFileRust.createNewFile()
             outputFileRust.writeText(parsedClassForRust)
+
+            val outputFileNodejs = docsDir.resolve("for_nodejs").resolve("$parsedClassName.txt").toFile()
+            outputFileNodejs.createNewFile()
+            outputFileNodejs.writeText(parsedClassForNodejs)
         }
     }
 }

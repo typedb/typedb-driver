@@ -113,4 +113,28 @@ data class Method(
 
         return result + "\n"
     }
+
+    fun toNodejsComment(): String {
+        var result = ""
+        result += "${this.name}\n\n"
+        result += "    /**\n     * ${this.description.map { backquotesToCode(it) }.joinToString("\n     * ")}\n"
+        result += "     * \n"
+
+        if (this.examples.isNotEmpty()) {
+            result += "     * ### Examples\n"
+            result += "     * \n"
+            result += "     * ```ts\n"
+            this.examples.forEach {
+                result += "     * ${snakeToCamel(it)}\n"
+            }
+            result += "     * ```\n"
+        }
+
+        if (this.args.isNotEmpty()) {
+            result += "     * \n"
+            this.args.forEach { result += it.toNodejsCommentArg() }
+        }
+
+        return result + "     */\n\n"
+    }
 }

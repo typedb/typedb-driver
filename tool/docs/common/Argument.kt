@@ -72,6 +72,19 @@ data class Argument(
         result += "    /// ${this.description}\n"
         return result + "\n"
     }
+
+    fun toNodejsCommentArg(): String {
+        var result = ""
+        result += "     * @param ${snakeToCamel(this.name)} - ${backquotesToCode(this.description)}\n"
+        return result
+    }
+
+    fun toNodejsCommentField(): String {
+        var result = ""
+        result += "${snakeToCamel(this.name)}\n\n"
+        result += "    /**\n     * ${backquotesToCode(this.description)}\n"
+        return result + "     */\n\n"
+    }
 }
 
 fun backquotesToCode(text: String?): String? {
