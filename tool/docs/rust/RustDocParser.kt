@@ -161,7 +161,7 @@ fun parseMethod(element: Element): Method {
 
 fun parseField(element: Element): Argument {
     val nameAndType = element.selectFirst("code")!!.text().split(": ")
-    val descr = element.nextElementSibling()?.html()?.let { reformatTextWithCode(it) }
+    val descr = element.nextElementSibling()?.selectFirst(".docblock")?.let { reformatTextWithCode(it.html()) }
     return Argument(
         name = nameAndType[0],
         type = nameAndType[1],
