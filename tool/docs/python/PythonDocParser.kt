@@ -98,7 +98,7 @@ fun parseClass(element: Element): Class {
     val classDetails = classSigElement.nextElementSibling()
     val classDetailsParagraphs = classDetails!!.children().map { it }.filter { it.tagName() == "p" }  // FIXME
     val (descr, bases) = classDetailsParagraphs.partition { it.select("code.py-class").isNullOrEmpty() }
-    val classBases = bases[0]!!.select("span").map { it.html() }
+    val superClasses = bases[0]!!.select("span").map { it.html() }.filter { it != "ABC" }
     val classDescr = descr.map { reformatTextWithCode(it.html()) }
 
     val classExamples = element.select("dl.class > dt.sig-object + dd > section:contains(Example) > div > .highlight").map { it.text() }
@@ -114,7 +114,7 @@ fun parseClass(element: Element): Class {
         description = classDescr,
         methods = methods,
         fields = properties,
-        bases = classBases,
+        superClasses = superClasses,
         examples = classExamples,
     )
 }

@@ -75,7 +75,7 @@ fun parseClass(document: Element, currentDirName: String): Class {
     val classDescr: List<String> = document.selectFirst(".contentContainer .description pre + div")
         ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
     val classExamples = document.select(".contentContainer .description pre + div pre").map { replaceSpaces(it.text()) }
-    val classBases = document.select(".contentContainer .description dt:contains(Superinterfaces) + dd code").map {
+    val superClasses = document.select(".contentContainer .description dt:contains(Superinterfaces) + dd code").map {
         it.text()
     }
 
@@ -100,7 +100,7 @@ fun parseClass(document: Element, currentDirName: String): Class {
         description = classDescr,
         methods = methods,
         fields = fields,
-        bases = classBases,
+        superClasses = superClasses,
         examples = classExamples,
     )
 }

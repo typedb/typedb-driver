@@ -24,7 +24,7 @@ data class Class(
     val methods: List<Method> = listOf(),
     val description: List<String> = listOf(),
     val examples: List<String> = listOf(),
-    val bases: List<String> = listOf(),
+    val superClasses: List<String> = listOf(),
     val packagePath: String? = null,
     val anchor: String? = null,
 ) {
@@ -33,12 +33,12 @@ data class Class(
         result += "[#_${this.anchor ?: this.name}]\n"
         result += "= ${this.name}\n\n"
 
-        if (this.bases.isNotEmpty()) {
+        if (this.superClasses.isNotEmpty()) {
             result += when (language) {
-                "java" -> "== Superinterfaces\n\n"
-                else -> "== Base classes\n\n"
+                "java" -> "*Superinterfaces:*\n\n"
+                else -> "*Supertypes:*\n\n"
             }
-            result += this.bases.map { "`$it`" }.joinToString(", ")
+            result += this.superClasses.map { "* `$it`" }.joinToString("\n")
             result += "\n\n"
         }
 

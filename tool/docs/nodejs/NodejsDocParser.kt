@@ -24,14 +24,10 @@ import org.jsoup.nodes.Element
 
 import com.vaticle.typedb.client.tool.doc.common.Argument
 import com.vaticle.typedb.client.tool.doc.common.Class
-import com.vaticle.typedb.client.tool.doc.common.Enum
-import com.vaticle.typedb.client.tool.doc.common.EnumConstant
 import com.vaticle.typedb.client.tool.doc.common.Method
 import com.vaticle.typedb.client.tool.doc.common.removeAllTags
 import com.vaticle.typedb.client.tool.doc.common.replaceCodeTags
 import com.vaticle.typedb.client.tool.doc.common.replaceEmTags
-import com.vaticle.typedb.client.tool.doc.common.replaceSpaces
-import com.vaticle.typedb.client.tool.doc.common.replaceSymbolsForAnchor
 import java.nio.file.Files
 import java.nio.file.Paths
 
@@ -67,7 +63,7 @@ fun parseClass(document: Element): Class {
         reformatTextWithCode(it.html())
     }
 
-    val classBases = document.select("ul.tsd-hierarchy li:has(ul.tsd-hierarchy span.target)").map {
+    val superClasses = document.select("ul.tsd-hierarchy li:has(ul.tsd-hierarchy span.target)").map {
         it.child(0).text()
     }
 
@@ -86,7 +82,7 @@ fun parseClass(document: Element): Class {
         description = classDescr,
         methods = methods,
         fields = properties,
-        bases = classBases,
+        superClasses = superClasses,
     )
 }
 
