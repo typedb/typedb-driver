@@ -83,7 +83,7 @@ class TypeDBTransaction(ABC):
         pass
 
     @abstractmethod
-    def on_close(self, function: callable):
+    def on_close(self, function: callable) -> None:
         pass
 
     @abstractmethod
