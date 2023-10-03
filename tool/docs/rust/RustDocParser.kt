@@ -90,12 +90,15 @@ fun parseClass(document: Element, classAnchor: String): Class {
         parseMethod(it, classAnchor)
     }
 
+    val traits = document.select(".sidebar-elems h3:has(a[href=#trait-implementations]) + ul li").map { it.text() }
+
     return Class(
         name = className,
         description = classDescr,
         fields = fields,
         methods = methods,
         anchor = classAnchor,
+        superClasses = traits,
     )
 }
 
