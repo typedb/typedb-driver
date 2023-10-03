@@ -2,7 +2,7 @@
 
 [![Factory](https://factory.vaticle.com/api/status/vaticle/typedb-driver/badge.svg)](https://factory.vaticle.com/vaticle/typedb-driver)
 [![Discord](https://img.shields.io/discord/665254494820368395?color=7389D8&label=chat&logo=discord&logoColor=ffffff)](https://vaticle.com/discord)
-[![Discussion Forum](https://img.shields.io/discourse/https/forum.vaticle.com/topics.svg)](https://forum.vaticle.com)
+[![Discussion Forum](https://img.shields.io/discourse/https/typedb.com/forum/topics.svg)](https://typedb.com/forum)
 [![Stack Overflow](https://img.shields.io/badge/stackoverflow-typedb-796de3.svg)](https://stackoverflow.com/questions/tagged/typedb)
 [![Stack Overflow](https://img.shields.io/badge/stackoverflow-typeql-3dce8c.svg)](https://stackoverflow.com/questions/tagged/typeql)
 
@@ -16,8 +16,8 @@ To learn about the methods available for executing queries and retrieving their 
 
 ## Quickstart
 1. Import `typedb-driver` through Cargo:
-```toml
-typedb-driver = "2.24.2"
+```bash
+cargo add typedb-driver
 ```
 2. Make sure the [TypeDB Server](https://docs.vaticle.com/docs/running-typedb/install-and-run#start-the-typedb-server) is running.
 3. See `rust/tests/integration` for examples of usage.
