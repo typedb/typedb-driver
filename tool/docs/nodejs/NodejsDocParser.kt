@@ -87,6 +87,8 @@ fun parseClass(document: Element): Class {
             "section.tsd-member-group:contains(Method)")
     val methods = methodsElements.select("section.tsd-member > .tsd-signatures > .tsd-signature").map {
         parseMethod(it)
+    }.filter {
+        it.name != "proto"
     } + document.select("section.tsd-member-group:contains(Accessors)")
         .select("section.tsd-member > .tsd-signatures > .tsd-signature").map {
             parseAccessor(it)
