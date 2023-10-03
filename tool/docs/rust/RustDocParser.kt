@@ -49,24 +49,28 @@ fun main(args: Array<String>) {
         val html = it.readText(Charsets.UTF_8)
         val parsed = Jsoup.parse(html)
         val anchor = getAnchorFromUrl(it.toString())
+        val overallOutputFile = docsDir.resolve("_rust_driver.adoc").toFile()
         if (!parsed.select(".main-heading h1 a.struct").isNullOrEmpty()) {
             val parsedClass = parseClass(parsed, anchor)
 //            println(parsedClass)
             val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
             outputFile.createNewFile()
             outputFile.writeText(parsedClass.toAsciiDoc("rust"))
+            overallOutputFile.appendText(parsedClass.toAsciiDoc("rust"))
         } else if (!parsed.select(".main-heading h1 a.trait").isNullOrEmpty()) {
             val parsedClass = parseTrait(parsed, anchor)
 //            println(parsedClass)
             val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
             outputFile.createNewFile()
             outputFile.writeText(parsedClass.toAsciiDoc("rust"))
+            overallOutputFile.appendText(parsedClass.toAsciiDoc("rust"))
         } else if (!parsed.select(".main-heading h1 a.enum").isNullOrEmpty()) {
             val parsedClass = parseEnum(parsed, anchor)
             //print(parsedClass)
             val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
             outputFile.createNewFile()
             outputFile.writeText(parsedClass.toAsciiDoc("rust"))
+            overallOutputFile.appendText(parsedClass.toAsciiDoc("rust"))
         }
     }
 }
