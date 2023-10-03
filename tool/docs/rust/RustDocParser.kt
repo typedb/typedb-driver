@@ -235,7 +235,7 @@ fun getAnchorFromUrl(url: String): String {
 
 fun replaceLinks(html: String): String {
     val fragments: MutableList<String> = Regex("<a\\shref=\"([^:]*)#([^\"]*)\"[^>]*><code>([^<]*)</code>")
-        .replace(html, "<<#_~$1_$2~,$3>>").split("~").toMutableList()
+        .replace(html, "<<#_~$1_$2~,`$3`>>").split("~").toMutableList()
     if (fragments.size > 1) {
         val iterator = fragments.listIterator()
         while (iterator.hasNext()) {
