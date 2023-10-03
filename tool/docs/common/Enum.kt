@@ -33,6 +33,9 @@ data class Enum(
         var result = ""
         result += "[#_${this.anchor ?: this.name}]\n"
         result += "= ${this.name}\n\n"
+
+        this.packagePath?.let { result += "*Package*: `$it`\n\n" }
+
         result += "== Description\n\n${this.description.joinToString("\n\n")}\n\n"
 
         if (this.examples.isNotEmpty()) {

@@ -74,6 +74,7 @@ fun parseClass(document: Element, currentDirName: String): Class {
     val className = document.selectFirst(".contentContainer .description pre .typeNameLabel")!!.text()
     val classDescr: List<String> = document.selectFirst(".contentContainer .description pre + div")
         ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
+    val packagePath = document.selectFirst(".packageLabelInType + a")?.text()
     val classExamples = document.select(".contentContainer .description pre + div pre").map { replaceSpaces(it.text()) }
     val superClasses = document.select(".contentContainer .description dt:contains(Superinterfaces) + dd code").map {
         it.text()
@@ -102,6 +103,7 @@ fun parseClass(document: Element, currentDirName: String): Class {
         fields = fields,
         superClasses = superClasses,
         examples = classExamples,
+        packagePath = packagePath,
     )
 }
 
@@ -109,6 +111,7 @@ fun parseEnum(document: Element): Enum {
     val className = document.selectFirst(".contentContainer .description pre .typeNameLabel")!!.text()
     val classDescr: List<String> = document.selectFirst(".contentContainer .description pre + div")
         ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
+    val packagePath = document.selectFirst(".packageLabelInType + a")?.text()
     val classExamples = document.select(".contentContainer .description pre + div pre").map { replaceSpaces(it.text()) }
     val classBases = document.select(".contentContainer .description dt:contains(Superinterfaces) + dd code").map {
         it.text()
@@ -134,6 +137,7 @@ fun parseEnum(document: Element): Enum {
         methods = methods,
         bases = classBases,
         examples = classExamples,
+        packagePath = packagePath,
     )
 }
 

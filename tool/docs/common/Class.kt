@@ -33,6 +33,8 @@ data class Class(
         result += "[#_${this.anchor ?: this.name}]\n"
         result += "= ${this.name}\n\n"
 
+        this.packagePath?.let { result += "*Package*: `$it`\n\n" }
+
         if (this.superClasses.isNotEmpty()) {
             result += when (language) {
                 "java" -> "*Superinterfaces:*\n\n"
