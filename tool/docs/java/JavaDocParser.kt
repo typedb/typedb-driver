@@ -229,7 +229,7 @@ fun splitToParagraphs(html: String): List<String> {
 
 fun replaceLocalLinks(html: String): String {
     val fragments: MutableList<String> = Regex("<a\\shref=\"#([^\"]*)\">([^<]*)</a>")
-        .replace(html, "<<~#_$1~,$2>>").split("~").toMutableList()
+        .replace(html, "<<#_~$1~,$2>>").split("~").toMutableList()
     if (fragments.size > 1) {
         val iterator = fragments.listIterator()
         while (iterator.hasNext()) {

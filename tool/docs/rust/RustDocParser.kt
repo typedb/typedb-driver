@@ -214,7 +214,7 @@ fun getArgsFromSignature(methodSignature: String): Map<String, String?> {
 }
 
 fun reformatTextWithCode(html: String): String {
-    return removeAllTags(replaceEmTags(replaceCodeTags(html)))
+    return removeAllTags(replaceEmTags(replaceCodeTags(replaceLinks(html))))
 }
 
 fun enhanceSignature(signature: String): String {
@@ -230,5 +230,20 @@ fun removeArgName(html: String): String {
 }
 
 fun getAnchorFromUrl(url: String): String {
-   return  replaceSymbolsForAnchor(url.substringAfterLast("/").replace(".html", ""))
+   return replaceSymbolsForAnchor(url.substringAfterLast("/").replace(".html", ""))
+}
+
+fun replaceLinks(html: String): String {
+    val fragments: MutableList<String> = Regex("<a\\shref=\"([^:]*)#([^\"]*)\"[^>]*><code>([^<]*)</code>")
+        .replace(html, "<<#_~$1_$2~,$3>>").split("~").toMutableList()
+    if (fragments.size > 1) {
+        val iterator = fragments.listIterator()
+        while (iterator.hasNext()) {
+            val value = iterator.next()
+            if (!value.contains("<<") && !value.contains(">>")) {
+                iterator.set(getAnchorFromUrl(value))
+            }
+        }
+    }
+    return fragments.joinToString("")
 }
