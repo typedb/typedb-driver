@@ -73,7 +73,7 @@ fun parseClass(document: Element): Class {
     }
 
     val methodsElements = document.select("section.tsd-member-group:contains(Method)")
-    val methods = methodsElements.select("section.tsd-member").map {
+    val methods = methodsElements.select("section.tsd-member > .tsd-signatures > .tsd-signature").map {
         parseMethod(it)
     }
 
@@ -87,16 +87,16 @@ fun parseClass(document: Element): Class {
 }
 
 fun parseMethod(element: Element): Method {
-    val methodSignature = element.selectFirst(".tsd-signatures .tsd-signature")!!.text()
-    val methodName = element.selectFirst(".tsd-signatures .tsd-signature .tsd-kind-call-signature")!!.text()
-    val methodReturnType = element.select(".tsd-signatures .tsd-description .tsd-returns-title > *").map {
-        it.text()
-    }.joinToString("")
-    val methodDescr = element.select(".tsd-description > .tsd-comment p").map { reformatTextWithCode(it.html()) }
-    val methodExamples = element.select(".tsd-description > .tsd-comment > :has(a[href*=examples]) + pre > :not(button)")
+    val methodSignature = element.text()
+    val methodName = element.selectFirst(".tsd-kind-call-signature")!!.text()
+    val descrElement = element.nextElementSibling()
+    val methodReturnType = descrElement!!.select(".tsd-returns-title > *")
+        .joinToString("") { it.text() }
+    val methodDescr = descrElement.select(".tsd-description > .tsd-comment p").map { reformatTextWithCode(it.html()) }
+    val methodExamples = descrElement.select(".tsd-description > .tsd-comment > :has(a[href*=examples]) + pre > :not(button)")
         .map { it.text() }
 
-    val methodArgs = element.select(".tsd-description .tsd-parameters .tsd-parameter-list > li").map {
+    val methodArgs = descrElement.select(".tsd-description .tsd-parameters .tsd-parameter-list > li").map {
         Argument(
             name = it.selectFirst(".tsd-kind-parameter")!!.text(),
             type = it.selectFirst(".tsd-signature-type")?.text(),
