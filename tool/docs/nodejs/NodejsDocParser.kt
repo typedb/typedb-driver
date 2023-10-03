@@ -69,7 +69,7 @@ fun main(args: Array<String>) {
 }
 
 fun parseClass(document: Element): Class {
-    val className = document.selectFirst(".tsd-page-title h1")!!.text().split(" ")[1]
+    val className = document.selectFirst(".tsd-page-title h1")!!.text().split(" ", limit = 2)[1]
     val classDescr = document.select(".tsd-page-title + section.tsd-comment div.tsd-comment p").map {
         reformatTextWithCode(it.html())
     }
