@@ -68,7 +68,7 @@ fun parseClass(document: Element): Class {
     }
 
     val propertiesElements = document.select("section.tsd-member-group:contains(Properties)")
-    val properties = propertiesElements.select("section.tsd-member").map {
+    val properties = propertiesElements.select("section.tsd-member:not(.tsd-is-private)").map {
         parseProperty(it)
     }
 
@@ -115,11 +115,13 @@ fun parseMethod(element: Element): Method {
 }
 
 fun parseProperty(element: Element): Argument {
-    val propertyName = element.selectFirst(".tsd-signature span.tsd-kind-property")!!.text()
-    val propertyType = element.selectFirst(".tsd-signature span.tsd-signature-type")?.text()
+    val name = element.selectFirst(".tsd-signature span.tsd-kind-property")!!.text()
+    val type = element.selectFirst(".tsd-signature .tsd-signature-type")?.text()
+    val descr = element.selectFirst(".tsd-signature + .tsd-comment")?.text()
     return Argument(
-        name = propertyName,
-        type = propertyType,
+        name = name,
+        type = type,
+        description = descr,
     )
 }
 
