@@ -41,6 +41,7 @@ fun main(args: Array<String>) {
     File(inputDirectoryName).walkTopDown().filter {
         it.toString().contains("/classes/") || it.toString().contains("/interfaces/")
     }.forEach {
+        println(it)
         val html = it.readText(Charsets.UTF_8)
         val parsed = Jsoup.parse(html)
 
@@ -72,10 +73,14 @@ fun parseClass(document: Element): Class {
         parseProperty(it)
     }
 
-    val methodsElements = document.select("section.tsd-member-group:contains(Method)")
+    val methodsElements = document.select("section.tsd-member-group:contains(Constructors), " +
+            "section.tsd-member-group:contains(Method)")
     val methods = methodsElements.select("section.tsd-member > .tsd-signatures > .tsd-signature").map {
         parseMethod(it)
-    }
+    } + document.select("section.tsd-member-group:contains(Accessors)")
+        .select("section.tsd-member > .tsd-signatures > .tsd-signature").map {
+            parseAccessor(it)
+        }
 
     return Class(
         name = className,
@@ -88,7 +93,7 @@ fun parseClass(document: Element): Class {
 
 fun parseMethod(element: Element): Method {
     val methodSignature = element.text()
-    val methodName = element.selectFirst(".tsd-kind-call-signature")!!.text()
+    val methodName = element.selectFirst(".tsd-kind-call-signature, .tsd-kind-constructor-signature")!!.text()
     val descrElement = element.nextElementSibling()
     val methodReturnType = descrElement!!.select(".tsd-returns-title > *")
         .joinToString("") { it.text() }
@@ -109,6 +114,25 @@ fun parseMethod(element: Element): Method {
         signature = methodSignature,
         description = methodDescr,
         args = methodArgs,
+        returnType = methodReturnType,
+        examples = methodExamples,
+    )
+}
+
+fun parseAccessor(element: Element): Method {
+    val methodSignature = element.text()
+    val methodName = element.selectFirst(".tsd-signature")!!.textNodes().first()!!.text()
+    val descrElement = element.nextElementSibling()
+    val methodReturnType = descrElement!!.select(".tsd-returns-title > *")
+        .joinToString("") { it.text() }
+    val methodDescr = descrElement.select(".tsd-description > .tsd-comment p").map { reformatTextWithCode(it.html()) }
+    val methodExamples = descrElement.select(".tsd-description > .tsd-comment > :has(a[href*=examples]) + pre > :not(button)")
+        .map { it.text() }
+
+    return Method(
+        name = methodName,
+        signature = methodSignature,
+        description = methodDescr,
         returnType = methodReturnType,
         examples = methodExamples,
     )
