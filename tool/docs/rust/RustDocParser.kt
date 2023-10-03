@@ -85,7 +85,7 @@ fun parseClass(document: Element, classAnchor: String): Class {
 
     val methods = document.select("#implementations-list details[class*=method-toggle]:has(summary section.method)").map {
         parseMethod(it, classAnchor)
-    } + document.select("#trait-implementations-list summary:has(section:not(h3 a.trait[href^=http])) " +
+    } + document.select("#trait-implementations-list summary:has(section:not(section:has(h3 a.trait[href^=http]))) " +
             "+ .impl-items details[class*=method-toggle]:has(summary section.method)").map {
         parseMethod(it, classAnchor)
     }
