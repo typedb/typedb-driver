@@ -26,6 +26,7 @@ import com.vaticle.typedb.client.tool.doc.common.Argument
 import com.vaticle.typedb.client.tool.doc.common.Class
 import com.vaticle.typedb.client.tool.doc.common.EnumConstant
 import com.vaticle.typedb.client.tool.doc.common.Method
+import com.vaticle.typedb.client.tool.doc.common.mergeClasses
 import com.vaticle.typedb.client.tool.doc.common.removeAllTags
 import com.vaticle.typedb.client.tool.doc.common.replaceCodeTags
 import com.vaticle.typedb.client.tool.doc.common.replaceEmTags
@@ -39,6 +40,7 @@ fun main(args: Array<String>) {
     val docsDir = Paths.get(outputDirectoryName)
     Files.createDirectory(docsDir)
 
+    val parsedClasses: HashMap<String, Class> = hashMapOf()
     File(inputDirectoryName).walkTopDown().filter {
         it.toString().contains("/classes/") || it.toString().contains("/interfaces/")
                 || it.toString().contains("/modules/")
@@ -52,8 +54,15 @@ fun main(args: Array<String>) {
             parseNamespace(parsed)
         }
         val parsedClassName = parsedClass.name
-        val parsedClassAsciiDoc = parsedClass.toAsciiDoc("nodejs")
-        val outputFile = docsDir.resolve(parsedClassName + ".adoc").toFile()
+
+        parsedClasses[parsedClass.name] = if (parsedClasses.contains(parsedClassName)) {
+            mergeClasses(parsedClasses[parsedClass.name]!!, parsedClass)
+        } else {
+            parsedClass
+        }
+
+        val parsedClassAsciiDoc = parsedClasses[parsedClass.name]!!.toAsciiDoc("nodejs")
+        val outputFile = docsDir.resolve("$parsedClassName.adoc").toFile()
         outputFile.createNewFile()
         outputFile.writeText(parsedClassAsciiDoc)
     }
