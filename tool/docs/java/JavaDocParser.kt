@@ -20,7 +20,6 @@ package com.vaticle.typedb.client.tool.doc.java
 
 import com.vaticle.typedb.client.tool.doc.common.Argument
 import com.vaticle.typedb.client.tool.doc.common.Class
-import com.vaticle.typedb.client.tool.doc.common.Enum
 import com.vaticle.typedb.client.tool.doc.common.EnumConstant
 import com.vaticle.typedb.client.tool.doc.common.Method
 import com.vaticle.typedb.client.tool.doc.common.removeAllTags
@@ -50,20 +49,15 @@ fun main(args: Array<String>) {
     }.forEach {
         val html = File(it.path).readText(Charsets.UTF_8)
         val parsed = Jsoup.parse(html)
-        var parsedClassName = ""
-        var parsedClassAsciiDoc = ""
-        if (!parsed.select("h2[title^=Interface]").isNullOrEmpty()
+        val parsedClass = if (!parsed.select("h2[title^=Interface]").isNullOrEmpty()
                 || !parsed.select("h2[title^=Class]").isNullOrEmpty()) {
-            val parsedClass = parseClass(parsed, it.parent)
-            parsedClassName = parsedClass.name
-            parsedClassAsciiDoc = parsedClass.toAsciiDoc("java")
-
-        } else if (!parsed.select("h2[title^=Enum]").isNullOrEmpty()) {
-            val parsedClass = parseEnum(parsed)
-            parsedClassName = parsedClass.name
-            parsedClassAsciiDoc = parsedClass.toAsciiDoc("java")
+            parseClass(parsed, it.parent)
+        } else {
+            parseEnum(parsed)
         }
 
+        val parsedClassName = parsedClass.name
+        val parsedClassAsciiDoc = parsedClass.toAsciiDoc("java")
         val outputFile = docsDir.resolve("$parsedClassName.adoc").toFile()
         outputFile.createNewFile()
         outputFile.writeText(parsedClassAsciiDoc)
@@ -107,7 +101,7 @@ fun parseClass(document: Element, currentDirName: String): Class {
     )
 }
 
-fun parseEnum(document: Element): Enum {
+fun parseEnum(document: Element): Class {
     val className = document.selectFirst(".contentContainer .description pre .typeNameLabel")!!.text()
     val classDescr: List<String> = document.selectFirst(".contentContainer .description pre + div")
         ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
@@ -129,13 +123,13 @@ fun parseEnum(document: Element): Enum {
         parseMethod(it)
     }
 
-    return Enum(
+    return Class(
         name = className,
         description = classDescr,
-        constants = enumConstants,
+        enumConstants = enumConstants,
         fields = fields,
         methods = methods,
-        bases = classBases,
+        superClasses = classBases,
         examples = classExamples,
         packagePath = packagePath,
     )

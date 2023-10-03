@@ -26,7 +26,6 @@ import org.jsoup.nodes.Element
 
 import com.vaticle.typedb.client.tool.doc.common.Argument
 import com.vaticle.typedb.client.tool.doc.common.Class
-import com.vaticle.typedb.client.tool.doc.common.Enum
 import com.vaticle.typedb.client.tool.doc.common.EnumConstant
 import com.vaticle.typedb.client.tool.doc.common.Method
 import com.vaticle.typedb.client.tool.doc.common.removeAllTags
@@ -52,26 +51,17 @@ fun main(args: Array<String>) {
         val parsed = Jsoup.parse(html)
 
         parsed.select("dl.class").forEach {
-            var parsedClassName = ""
-            var parsedClassAsciiDoc = ""
-            var parsedClassForJava = ""
-            var parsedClassForRust = ""
-            var parsedClassForNodejs = ""
-            if (it.selectFirst("dt.sig-object + dd > p")!!.text().contains("Enum")) {
-                val parsedClass = parseEnum(it)
-                parsedClassName = parsedClass.name
-                parsedClassAsciiDoc = parsedClass.toAsciiDoc("python")
-                parsedClassForJava = parsedClass.toJavaComment()
-                parsedClassForRust = parsedClass.toRustComment()
-                parsedClassForNodejs = parsedClass.toNodejsComment()
+            val parsedClass = if (it.selectFirst("dt.sig-object + dd > p")!!.text().contains("Enum")) {
+                parseEnum(it)
             } else {
-                val parsedClass = parseClass(it)
-                parsedClassName = parsedClass.name
-                parsedClassAsciiDoc = parsedClass.toAsciiDoc("python")
-                parsedClassForJava = parsedClass.toJavaComment()
-                parsedClassForRust = parsedClass.toRustComment()
-                parsedClassForNodejs = parsedClass.toNodejsComment()
+                parseClass(it)
             }
+            val parsedClassName = parsedClass.name
+            val parsedClassAsciiDoc = parsedClass.toAsciiDoc("python")
+            val parsedClassForJava = parsedClass.toJavaComment()
+            val parsedClassForRust = parsedClass.toRustComment()
+            val parsedClassForNodejs = parsedClass.toNodejsComment()
+
             val outputFile = docsDir.resolve("$parsedClassName.adoc").toFile()
             outputFile.createNewFile()
             outputFile.writeText(parsedClassAsciiDoc)
@@ -98,7 +88,7 @@ fun parseClass(element: Element): Class {
     val classDetails = classSigElement.nextElementSibling()
     val classDetailsParagraphs = classDetails!!.children().map { it }.filter { it.tagName() == "p" }  // FIXME
     val (descr, bases) = classDetailsParagraphs.partition { it.select("code.py-class").isNullOrEmpty() }
-    val superClasses = bases[0]!!.select("span").map { it.html() }.filter { it != "ABC" }
+    val superClasses = bases[0]!!.select("span").map { it.html() }.filter { it != "ABC" && it != "Enum" }
     val classDescr = descr.map { reformatTextWithCode(it.html()) }
 
     val classExamples = element.select("dl.class > dt.sig-object + dd > section:contains(Example) > div > .highlight").map { it.text() }
@@ -119,7 +109,7 @@ fun parseClass(element: Element): Class {
     )
 }
 
-fun parseEnum(element: Element): Enum {
+fun parseEnum(element: Element): Class {
     val classSigElement = element.selectFirst("dt.sig-object")
     val className = classSigElement!!.selectFirst("dt.sig-object span.sig-name")!!.text()
 
@@ -137,12 +127,12 @@ fun parseEnum(element: Element): Enum {
     val members = classDetails.select("dl.attribute")
         .map { parseEnumConstant(it) }
 
-    return Enum(
+    return Class(
         name = className,
         description = classDescr,
         methods = methods,
-        constants = members,
-        bases = classBases,
+        enumConstants = members,
+        superClasses = classBases,
         examples = classExamples,
     )
 }

@@ -20,13 +20,14 @@ package com.vaticle.typedb.client.tool.doc.common
 
 data class Class(
     val name: String,
-    val fields: List<Argument> = listOf(),
-    val methods: List<Method> = listOf(),
+    val anchor: String? = null,
+    val enumConstants: List<EnumConstant> = listOf(),
     val description: List<String> = listOf(),
     val examples: List<String> = listOf(),
-    val superClasses: List<String> = listOf(),
+    val fields: List<Argument> = listOf(),
+    val methods: List<Method> = listOf(),
     val packagePath: String? = null,
-    val anchor: String? = null,
+    val superClasses: List<String> = listOf(),
 ) {
     fun toAsciiDoc(language: String): String {
         var result = ""
@@ -56,7 +57,23 @@ data class Class(
             }
         }
 
-        if (this.fields.isNotEmpty()) {
+        if (this.enumConstants.isNotEmpty()) {
+            result += "== "
+            result += when (language) {
+                "rust" -> "Enum variants"
+                "nodejs" -> "Namespace variables"
+                else -> "Enum constants"
+            }
+            result += "\n\n[options=\"header\"]\n|===\n"
+            result += "|Name "
+            result += when (language) {
+                "rust" -> "|Type \n"
+                "python" -> "|Value \n"
+                else -> "\n"
+            }
+            this.enumConstants.forEach { result += it.toAsciiDocTableRow(language) }
+            result += "|===\n\n"
+        } else if (this.fields.isNotEmpty()) {
             result += when (language) {
                 "python" -> "== Properties\n\n"
                 else -> "== Fields\n\n"

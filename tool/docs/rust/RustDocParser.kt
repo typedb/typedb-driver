@@ -24,7 +24,6 @@ import org.jsoup.nodes.Element
 
 import com.vaticle.typedb.client.tool.doc.common.Argument
 import com.vaticle.typedb.client.tool.doc.common.Class
-import com.vaticle.typedb.client.tool.doc.common.Enum
 import com.vaticle.typedb.client.tool.doc.common.EnumConstant
 import com.vaticle.typedb.client.tool.doc.common.Method
 import com.vaticle.typedb.client.tool.doc.common.removeAllTags
@@ -50,23 +49,17 @@ fun main(args: Array<String>) {
         val parsed = Jsoup.parse(html)
         val anchor = getAnchorFromUrl(it.toString())
         val overallOutputFile = docsDir.resolve("_rust_driver.adoc").toFile()
-        if (!parsed.select(".main-heading h1 a.struct").isNullOrEmpty()) {
-            val parsedClass = parseClass(parsed, anchor)
+        val parsedClass = if (!parsed.select(".main-heading h1 a.struct").isNullOrEmpty()) {
 //            println(parsedClass)
-            val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
-            outputFile.createNewFile()
-            outputFile.writeText(parsedClass.toAsciiDoc("rust"))
-            overallOutputFile.appendText(parsedClass.toAsciiDoc("rust"))
+            parseClass(parsed, anchor)
         } else if (!parsed.select(".main-heading h1 a.trait").isNullOrEmpty()) {
-            val parsedClass = parseTrait(parsed, anchor)
-//            println(parsedClass)
-            val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
-            outputFile.createNewFile()
-            outputFile.writeText(parsedClass.toAsciiDoc("rust"))
-            overallOutputFile.appendText(parsedClass.toAsciiDoc("rust"))
+            parseTrait(parsed, anchor)
         } else if (!parsed.select(".main-heading h1 a.enum").isNullOrEmpty()) {
-            val parsedClass = parseEnum(parsed, anchor)
-            //print(parsedClass)
+            parseEnum(parsed, anchor)
+        } else {
+            null
+        }
+        parsedClass?.let {
             val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
             outputFile.createNewFile()
             outputFile.writeText(parsedClass.toAsciiDoc("rust"))
@@ -120,7 +113,7 @@ fun parseTrait(document: Element, classAnchor: String): Class {
     )
 }
 
-fun parseEnum(document: Element, classAnchor: String): Enum {
+fun parseEnum(document: Element, classAnchor: String): Class {
     val className = document.selectFirst(".main-heading h1 a.enum")!!.text()
     val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { it.html() }
 
@@ -136,10 +129,10 @@ fun parseEnum(document: Element, classAnchor: String): Enum {
         parseMethod(it, classAnchor)
     }
 
-    return Enum(
+    return Class(
         name = className,
         description = classDescr,
-        constants = variants,
+        enumConstants = variants,
         methods = methods,
         anchor = classAnchor,
     )

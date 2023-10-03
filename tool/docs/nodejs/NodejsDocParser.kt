@@ -24,6 +24,7 @@ import org.jsoup.nodes.Element
 
 import com.vaticle.typedb.client.tool.doc.common.Argument
 import com.vaticle.typedb.client.tool.doc.common.Class
+import com.vaticle.typedb.client.tool.doc.common.EnumConstant
 import com.vaticle.typedb.client.tool.doc.common.Method
 import com.vaticle.typedb.client.tool.doc.common.removeAllTags
 import com.vaticle.typedb.client.tool.doc.common.replaceCodeTags
@@ -40,21 +41,21 @@ fun main(args: Array<String>) {
 
     File(inputDirectoryName).walkTopDown().filter {
         it.toString().contains("/classes/") || it.toString().contains("/interfaces/")
+                || it.toString().contains("/modules/")
     }.forEach {
-        println(it)
         val html = it.readText(Charsets.UTF_8)
         val parsed = Jsoup.parse(html)
-
         val title = parsed.select(".tsd-page-title h1")
-        if (!title.isNullOrEmpty() && (title.text().contains("Class") || title.text().contains("Interface"))) {
-            val parsedClass = parseClass(parsed)
-            if (parsedClass.name == "User") {
-                println(parsedClass)
-            }
-            val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
-            outputFile.createNewFile()
-            outputFile.writeText(parsedClass.toAsciiDoc("nodejs"))
+        val parsedClass = if (!title.isNullOrEmpty() && (title.text().contains("Class") || title.text().contains("Interface"))) {
+            parseClass(parsed)
+        } else {
+            parseNamespace(parsed)
         }
+        val parsedClassName = parsedClass.name
+        val parsedClassAsciiDoc = parsedClass.toAsciiDoc("nodejs")
+        val outputFile = docsDir.resolve(parsedClassName + ".adoc").toFile()
+        outputFile.createNewFile()
+        outputFile.writeText(parsedClassAsciiDoc)
     }
 }
 
@@ -88,6 +89,23 @@ fun parseClass(document: Element): Class {
         methods = methods,
         fields = properties,
         superClasses = superClasses,
+    )
+}
+
+fun parseNamespace(document: Element): Class {
+    val className = document.selectFirst(".tsd-page-title h1")!!.text().split(" ")[1]
+    val classDescr = document.select(".tsd-page-title + section.tsd-comment div.tsd-comment p").map {
+        reformatTextWithCode(it.html())
+    }
+
+    val variables = document.select(".tsd-index-heading:contains(Variables) + .tsd-index-list a").map {
+        EnumConstant(name = it.text())
+    }
+
+    return Class(
+        name = className,
+        description = classDescr,
+        enumConstants = variables,
     )
 }
 

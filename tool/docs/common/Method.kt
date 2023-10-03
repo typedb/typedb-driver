@@ -21,12 +21,12 @@ package com.vaticle.typedb.client.tool.doc.common
 data class Method(
     val name: String,
     val signature: String,
-    val description: List<String> = listOf(),
-    val args: List<Argument> = listOf(),
-    val returnType: String? = null,
-    val returnDescription: String? = null,
-    val examples: List<String> = listOf(),
     val anchor: String? = null,
+    val args: List<Argument> = listOf(),
+    val description: List<String> = listOf(),
+    val examples: List<String> = listOf(),
+    val returnDescription: String? = null,
+    val returnType: String? = null,
 ) {
     fun toAsciiDoc(language: String): String {
         var result = ""
