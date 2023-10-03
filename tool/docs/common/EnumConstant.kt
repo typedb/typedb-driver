@@ -25,8 +25,8 @@ data class EnumConstant(
 ) {
     fun toAsciiDocTableRow(language: String): String {
         var result = ""
-        result += "| `${this.name}`"
-        result += "| "
+        result += "a| `${this.name}` "
+        result += "a| "
         assert(this.type == null || this.value == null)
         this.value?.let { result += "`$it`" }
         this.type?.let { result += "`$it`" }

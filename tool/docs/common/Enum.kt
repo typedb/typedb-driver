@@ -49,9 +49,10 @@ data class Enum(
             result += "== "
             result += when (language) {
                 "rust" -> "Enum variants"
+                "nodejs" -> "Namespace variables"
                 else -> "Enum constants"
             }
-            result += "\n\n[cols=\"~,~,~\"]\n[options=\"header\"]\n|===\n"
+            result += "\n\n[cols=\"~,~\"]\n[options=\"header\"]\n|===\n"
             result += "|Name |"
             result += when (language) {
                 "rust" -> "Type \n"
