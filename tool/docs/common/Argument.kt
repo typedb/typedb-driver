@@ -27,10 +27,13 @@ data class Argument(
 ) {
     fun toAsciiDocPage(language: String): String {
         var result = ""
-        result += "[#_${this.anchor ?: this.name}]\n"
-        result += "== ${this.name}\n\n"
-        this.type?.let { result += "=== Type\n\n`$it`\n\n" }
-        this.description?.let { result += "=== Description\n\n${this.description}\n\n" }
+//        result += "[#_${this.anchor ?: this.name}]\n"
+//        result += "== ${this.name}\n\n"
+//        this.type?.let { result += "=== Type\n\n`$it`\n\n" }
+//        this.description?.let { result += "=== Description\n\n${this.description}\n\n" }
+        result += "| `${this.name}`"
+        result += "| `${this.type}`"
+        result += "| ${this.description ?: ""}\n"
         return result
     }
 

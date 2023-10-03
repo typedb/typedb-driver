@@ -48,7 +48,7 @@ data class Enum(
                 "rust" -> "Enum variants"
                 else -> "Enum constants"
             }
-            result += "\n\n[options=\"header\"]\n|===\n"
+            result += "\n\n[cols=\"~,~,~\"]\n[options=\"header\"]\n|===\n"
             result += "|Name |"
             result += when (language) {
                 "rust" -> "Type \n"

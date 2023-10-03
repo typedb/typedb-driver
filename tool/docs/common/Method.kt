@@ -31,13 +31,13 @@ data class Method(
     fun toAsciiDoc(language: String): String {
         var result = ""
         result += "[#_${this.anchor ?: this.name}]\n"
-        result += "== ${this.name}\n\n"
-        result += "=== Signature\n\n"
+        result += "=== ${this.name}\n\n"
+        result += "==== Signature\n\n"
         result += "[source,$language]\n----\n${this.signature}\n----\n\n"
-        result += "=== Description\n\n${this.description.joinToString("\n\n")}\n\n"
+        result += "==== Description\n\n${this.description.joinToString("\n\n")}\n\n"
 
         if (this.args.isNotEmpty()) {
-            result += "=== Input parameters\n\n[options=\"header\"]\n|===\n"
+            result += "==== Input parameters\n\n[cols=\"~,~,~\"]\n[options=\"header\"]\n|===\n"
             result += "|Name |Description |Type"
             if (language == "python") {
                 result += " |Default Value"
@@ -47,10 +47,14 @@ data class Method(
             result += "|===\n\n"
         }
 
-        result += "=== Returns\n\n`${this.returnType}`\n\n"
+        result += "==== Returns\n\n"
+        result += when (language) {
+            "rust" -> "[source,rust]\n----\n${this.returnType}\n----\n\n"
+            else -> "`${this.returnType}`\n\n"
+        }
 
         if (this.examples.isNotEmpty()) {
-            result += "=== Code examples\n\n"
+            result += "==== Code examples\n\n"
             this.examples.forEach {
                 result += "[source,$language]\n----\n$it\n----\n\n"
             }

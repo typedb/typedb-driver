@@ -36,6 +36,7 @@ data class Class(
         if (this.superClasses.isNotEmpty()) {
             result += when (language) {
                 "java" -> "*Superinterfaces:*\n\n"
+                "rust" -> "*Implements traits:*\n\n"
                 else -> "*Supertypes:*\n\n"
             }
             result += this.superClasses.map { "* `$it`" }.joinToString("\n")
@@ -58,7 +59,11 @@ data class Class(
                 "python" -> "== Properties\n\n"
                 else -> "== Fields\n\n"
             }
+//            this.fields.forEach { result += it.toAsciiDocPage(language) }
+            result += "[cols=\"~,~,~\"]\n[options=\"header\"]\n|===\n"
+            result += "|Name |Type |Description\n"
             this.fields.forEach { result += it.toAsciiDocPage(language) }
+            result += "|===\n\n"
         }
 
         if (this.methods.isNotEmpty()) {
