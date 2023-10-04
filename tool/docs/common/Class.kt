@@ -58,6 +58,7 @@ data class Class(
         }
 
         if (this.enumConstants.isNotEmpty()) {
+            result += "// tag::enum_constants[]\n"
             result += "== "
             result += when (language) {
                 "rust" -> "Enum variants"
@@ -67,27 +68,31 @@ data class Class(
             result += "\n\n[options=\"header\"]\n|===\n"
             result += "|Name "
             result += when (language) {
-                "rust" -> "|Type \n"
-                "python" -> "|Value \n"
-                else -> "\n"
-            }
+                "rust" -> "|Type "
+                "python" -> "|Value "
+                else -> ""
+            } + "\n"
             this.enumConstants.forEach { result += it.toAsciiDocTableRow(language) }
-            result += "|===\n\n"
+            result += "|===\n"
+            result += "// end::enum_constants[]\n\n"
         } else if (this.fields.isNotEmpty()) {
-            result += when (language) {
-                "python" -> "== Properties\n\n"
-                else -> "== Fields\n\n"
-            }
-//            this.fields.forEach { result += it.toAsciiDocPage(language) }
+            result += "== " +  when (language) {
+                "python" -> "Properties"
+                else -> "Fields"
+            } + "\n\n"
+            result += "// tag::properties[]\n"
             result += "[cols=\"~,~,~\"]\n[options=\"header\"]\n|===\n"
             result += "|Name |Type |Description\n"
             this.fields.forEach { result += it.toAsciiDocPage(language) }
-            result += "|===\n\n"
+            result += "|===\n"
+            result += "// end::properties[]\n\n"
         }
 
         if (this.methods.isNotEmpty()) {
-            result += "\n== Methods\n\n"
+            result += "== Methods\n\n"
+            result += "// tag::methods[]\n"
             this.methods.forEach { result += it.toAsciiDoc(language) }
+            result += "// end::methods[]\n"
         }
 
         return result
