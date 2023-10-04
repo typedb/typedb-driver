@@ -33,18 +33,18 @@ data class Argument(
 //        this.description?.let { result += "=== Description\n\n${this.description}\n\n" }
         result += "a| `${this.name}` "
         result += "a| `${this.type}` "
-        result += "| ${this.description ?: ""}\n"
+        result += "a| ${this.description ?: ""}\n"
         return result
     }
 
     fun toAsciiDocTableRow(language: String): String {
         var result = ""
         result += "a| `${this.name}` "
-        result += "| ${this.description} "
+        result += "a| ${this.description} "
         result += "a| "
-        this.type?.let { result += "`${it.replace("|", "\\|")}`" }
+        this.type?.let { result += "`${it.replace("|", "\\|")}` " }
         if (language == "python") {
-            result += "| "
+            result += "a| "
             this.defaultValue?.let { result += "`$it`" }
         }
         return result

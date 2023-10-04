@@ -37,7 +37,12 @@ data class Method(
         result += "==== Description\n\n${this.description.joinToString("\n\n")}\n\n"
 
         if (this.args.isNotEmpty()) {
-            result += "==== Input parameters\n\n[cols=\"~,~,~\"]\n[options=\"header\"]\n|===\n"
+            result += "==== Input parameters\n\n"
+            result += "[cols=\"~,~,~"
+            if (language == "python") {
+                result += ",~"
+            }
+            result += "\"]\n[options=\"header\"]\n|===\n"
             result += "|Name |Description |Type"
             if (language == "python") {
                 result += " |Default Value"
