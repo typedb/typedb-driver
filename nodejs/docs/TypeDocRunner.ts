@@ -23,8 +23,9 @@ const TypeDoc = require("typedoc");
 
 async function main() {
     const app = await TypeDoc.Application.bootstrapWithPlugins({
-        entryPoints: ["nodejs"],
         tsconfig: ["nodejs/tsconfig.json"],
+        options: ["nodejs/docs/typedoc.json"],
+        entryPoints: ["nodejs"],
     });
 
     const project = await app.convert();

@@ -170,6 +170,7 @@ typedoc_doc(
         "stream/**/*.ts",
         "user/**/*.ts",
         "tsconfig.json",
+        "docs/*.json",
     ]),
     out = "doc-build",
 )
@@ -195,6 +196,7 @@ checkstyle_test(
     ]),
     exclude = glob([
         "*.json",
+        "docs/*.json",
         "*.md",
         ".eslintrc",
         "dist/**/*.*",
