@@ -33,7 +33,7 @@ def rust_docs_parser(name, feature):
         name = "driver_docs_" + feature,
         srcs = [":driver_docs_zip_" + feature],
         outs = ["driver_docs_rustdoc_" + feature],
-        cmd = "mkdir $@ && tar -xf $< -C $@",
+        cmd = "mkdir $@ && unzip $< -d $@",
     )
 
     html_docs_parser(

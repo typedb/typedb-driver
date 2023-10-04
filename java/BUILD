@@ -122,7 +122,7 @@ genrule(
     name = "driver_docs",
     srcs = [":driver_docs_jar"],
     outs = ["driver_docs_javadoc"],
-    cmd = "mkdir $@ && tar -xf $< -C $@",
+    cmd = "mkdir $@ && unzip $< -d $@",
 )
 
 html_docs_parser(
