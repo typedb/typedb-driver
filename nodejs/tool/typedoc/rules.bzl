@@ -19,68 +19,69 @@
 # under the License.
 #
 
-def _sphinx_docs_impl(ctx):
-    driver_package = ctx.actions.declare_directory("driver-package")
-
+def _copy_to_bin(ctx, src, dst):
     ctx.actions.run_shell(
-        inputs = ctx.files.target,
-        outputs = [driver_package],
-        command = 'PACKAGE=$(find . -name "*.tar.gz") && tar -xf ${PACKAGE} && mv */typedb %s' % (driver_package.path),
+        inputs = [src],
+        outputs = [dst],
+        command = "cp -f '{}' '{}'".format(src.path, dst.path),
     )
 
-    args = ctx.actions.args()
-    args.add('--output', ctx.outputs.out.path)
-    args.add('--package', driver_package.path)
-    args.add('--source_dir', ctx.files.srcs[0].dirname)
 
+def _typedoc_doc_impl(ctx):
+    dsts = []
+    for src in ctx.files.srcs:
+        dst = ctx.actions.declare_file(src.short_path)
+        _copy_to_bin(ctx, src, dst)
+        dsts.append(dst)
+
+    print(ctx.files.srcs)
     ctx.actions.run(
-        inputs = [ctx.executable.script, driver_package] + ctx.files.srcs,
+        inputs = [ctx.executable.script] + ctx.files.deps + dsts,
         outputs = [ctx.outputs.out],
-        arguments = [args],
+        arguments = [ctx.outputs.out.basename],
         executable = ctx.executable.script,
-        env = {"PYTHONPATH": driver_package.path},
+        env = {"BAZEL_BINDIR": ctx.bin_dir.path},
     )
 
     return DefaultInfo(files = depset([ctx.outputs.out]))
 
 
-_sphinx_docs = rule(
+typedoc_doc = rule(
     attrs = {
         "script": attr.label(
             mandatory = True,
             executable = True,
             cfg = "exec",
-            doc = "Python script for running sphinx",
+            doc = "Python script for running typedoc",
         ),
-        "target": attr.label(
+        "deps": attr.label_list(
             mandatory = True,
             allow_files = True,
-            doc = "Package .tar.gz archive",
+            doc = "Dependencies for typedoc",
         ),
         "srcs": attr.label_list(
             mandatory = True,
             allow_files = True,
-            doc = "Additional source files for sphinx",
+            doc = "Client source files",
         ),
         "out": attr.output(
             mandatory = True,
             doc = "Output directory",
         ),
     },
-#    executable = True,
-    implementation = _sphinx_docs_impl,
+    implementation = _typedoc_doc_impl,
     doc = """
-        Creates an HTML documentation for python module using Sphinx.
+        Creates an HTML documentation for python module using typedoc.
         """
 
 )
 
 
-def sphinx_docs(name, script, target, srcs, out):
-    _sphinx_docs(
-        name = name,
-        script = script,
-        target = target,
-        srcs = srcs,
-        out = out,
-    )
+#def typedoc_doc(name, script, deps, srcs, out):
+#    _typedoc_doc(
+#        name = name,
+#        script = script,
+#        deps = deps,
+#        srcs = srcs,
+#        out = out,
+#    )

@@ -47,10 +47,10 @@ def html_docs_parser(name, data, language):
     run_binary(
         name = name,
         tool = name + "_script",
-        outs = [name],
+        outs = [name + "_parsed"],
         args = [
             "$(location %s)" % data,
-            "$(location %s)" % name,
+            "$(location %s_parsed)" % name,
         ],
         srcs = [data],
     )

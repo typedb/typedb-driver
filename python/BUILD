@@ -21,7 +21,7 @@
 
 load("@vaticle_dependencies//builder/swig:python.bzl", "py_native_lib_rename")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//python:docs/rules.bzl", "sphinx_docs")
+load("//python:tool/sphinx/rules.bzl", "sphinx_docs")
 load("//tool/docs:rules.bzl", "html_docs_parser")
 
 load("//python:rules.bzl", "native_driver_versioned")
@@ -52,6 +52,31 @@ py_native_lib_rename(
     visibility = ["//visibility:public"]
 )
 
+# Documentation generation
+py_binary(
+    name = "sphinx_runner",
+    srcs = [
+        "tool/sphinx/sphinx_html_builder_runner.py",
+    ],
+    main = "tool/sphinx/sphinx_html_builder_runner.py",
+    deps = [doc_requirement("sphinx")],
+    visibility = ["//visibility:public"]
+)
+
+sphinx_docs(
+    name = "driver_docs",
+    script = ":sphinx_runner",
+    target = ":assemble-pip39",
+    srcs = glob(["tool/sphinx/source/*"]),
+    out = "docs/build",
+)
+
+html_docs_parser(
+    name = "driver_adoc",
+    data = ":driver_docs",
+    language = "python",
+)
+
 checkstyle_test(
     name = "checkstyle",
     include = glob([
@@ -63,34 +88,13 @@ checkstyle_test(
         "WORKSPACE",
         "requirements*.txt",
         "typedb/**/*",
+        "tool/sphinx/*",
+    ]),
+    exclude = glob([
+        "tool/sphinx/sources/**/*",
     ]),
     license_type = "apache-header",
     size = "small",
-)
-
-# Documentation generation
-py_binary(
-    name = "sphinx_runner",
-    srcs = [
-        "docs/sphinx_html_builder_runner.py",
-    ],
-    main = "docs/sphinx_html_builder_runner.py",
-    deps = [doc_requirement("sphinx")],
-    visibility = ["//visibility:public"]
-)
-
-sphinx_docs(
-    name = "driver_docs",
-    script = ":sphinx_runner",
-    target = ":assemble-pip39",
-    srcs = glob(["docs/source/*"]),
-    out = "docs/build",
-)
-
-html_docs_parser(
-    name = "driver_adoc",
-    data = ":driver_docs",
-    language = "python",
 )
 
 # CI targets that are not declared in any BUILD_ file, but are called externally

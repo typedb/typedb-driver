@@ -35,7 +35,7 @@ load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
 load("@npm//:defs.bzl", "npm_link_all_packages")
-load("//nodejs:docs/rules.bzl", "typedoc_doc")
+load("//nodejs:tool/typedoc/rules.bzl", "typedoc_doc")
 load("//tool/docs:rules.bzl", "html_docs_parser")
 
 npm_link_all_packages(
@@ -112,9 +112,9 @@ deploy_npm(
 ts_project(
     name = "typedoc_runner",
     srcs = glob([
-        "docs/TypeDocRunner.ts",
+        "tool/typedoc/TypeDocRunner.ts",
     ]),
-    tsconfig = "docs/tsconfig.json",
+    tsconfig = "tool/typedoc/tsconfig.json",
     declaration = True,
     deps = [
         ":node_modules/typedoc",
@@ -170,7 +170,7 @@ typedoc_doc(
         "stream/**/*.ts",
         "user/**/*.ts",
         "tsconfig.json",
-        "docs/*.json",
+        "tool/typedoc/*.json",
     ]),
     out = "docs-build",
 )
@@ -193,10 +193,11 @@ checkstyle_test(
         "query/**/*.ts",
         "stream/**/*.ts",
         "user/**/*.ts",
+        "tool/typedoc/*",
     ]),
     exclude = glob([
         "*.json",
-        "docs/*.json",
+        "tool/typedoc/*.json",
         "*.md",
         ".eslintrc",
         "dist/**/*.*",
