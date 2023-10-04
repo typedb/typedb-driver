@@ -31,7 +31,7 @@ data class Class(
 ) {
     fun toAsciiDoc(language: String): String {
         var result = ""
-        result += "[#_${this.anchor ?: this.name}]\n"
+        result += "[#_${this.anchor ?: replaceSymbolsForAnchor(this.name)}]\n"
         result += "= ${this.name}\n\n"
 
         this.packagePath?.let { result += "*Package*: `$it`\n\n" }

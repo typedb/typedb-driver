@@ -30,7 +30,7 @@ data class Method(
 ) {
     fun toAsciiDoc(language: String): String {
         var result = ""
-        result += "[#_${this.anchor ?: this.name}]\n"
+        result += "[#_${this.anchor ?: replaceSymbolsForAnchor(this.name)}]\n"
         result += "=== ${this.name}\n\n"
         result += "==== Signature\n\n"
         result += "[source,$language]\n----\n${this.signature}\n----\n\n"
