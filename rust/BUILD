@@ -27,8 +27,8 @@ load("@vaticle_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
 load("@vaticle_dependencies//builder/swig:java.bzl", "swig_java")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//tool/docs:rules.bzl", "html_doc_parser")
-load("//tool/docs:rust/rules.bzl", "rust_doc_parser")
+load("//tool/docs:rules.bzl", "html_docs_parser")
+load("//tool/docs:rust/rules.bzl", "rust_docs_parser")
 
 typedb_driver_srcs = glob(["src/**/*.rs"])
 typedb_driver_tags = ["crate-name=typedb-driver"]
@@ -93,31 +93,13 @@ deploy_crate(
 )
 
 # Documentation generation
-#rust_doc(
-#    name = "driver_doc_zip",
-#    crate = ":typedb_driver",
-#)
-#
-#genrule(
-#    name = "driver_doc",
-#    srcs = [":driver_doc_zip"],
-#    outs = ["driver_doc_rustdoc"],
-#    cmd = "mkdir $@ && tar -xf $< -C $@",
-#)
-#
-#html_doc_parser(
-#    name = "driver_doc_parsed",
-#    data = ":driver_doc",
-#    language = "rust",
-#)
-
-rust_doc_parser(
-    name = "driver_doc_parsed_async",
+rust_docs_parser(
+    name = "driver_adoc_async",
     feature = "async",
 )
 
-rust_doc_parser(
-    name = "driver_doc_parsed_sync",
+rust_docs_parser(
+    name = "driver_adoc_sync",
     feature = "sync",
 )
 

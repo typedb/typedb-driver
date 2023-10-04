@@ -29,7 +29,7 @@ load("@vaticle_dependencies//library/maven:artifacts.bzl", artifacts_org = "arti
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":rules.bzl", "swig_native_java_library")
 load("@google_bazel_common//tools/javadoc:javadoc.bzl", "javadoc_library")
-load("//tool/docs:rules.bzl", "html_doc_parser")
+load("//tool/docs:rules.bzl", "html_docs_parser")
 
 java_library(
     name = "driver-java",
@@ -110,7 +110,7 @@ deploy_maven(
 
 # Documentation generation
 javadoc_library(
-    name = "driver_doc_jar",
+    name = "driver_docs_jar",
     srcs = ["//java/api:source_files"],
     deps = [
         "//java/api",
@@ -119,15 +119,15 @@ javadoc_library(
 )
 
 genrule(
-    name = "driver_doc",
-    srcs = [":driver_doc_jar"],
-    outs = ["driver_doc_javadoc"],
+    name = "driver_docs",
+    srcs = [":driver_docs_jar"],
+    outs = ["driver_docs_javadoc"],
     cmd = "mkdir $@ && tar -xf $< -C $@",
 )
 
-html_doc_parser(
-    name = "driver_doc_parsed",
-    data = ":driver_doc",
+html_docs_parser(
+    name = "driver_adoc",
+    data = ":driver_docs",
     language = "java",
 )
 

@@ -36,7 +36,7 @@ load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("//nodejs:docs/rules.bzl", "typedoc_doc")
-load("//tool/docs:rules.bzl", "html_doc_parser")
+load("//tool/docs:rules.bzl", "html_docs_parser")
 
 npm_link_all_packages(
     name = "node_modules",
@@ -144,7 +144,7 @@ js_binary(
 )
 
 typedoc_doc(
-    name = "driver_doc",
+    name = "driver_docs",
     script = ":typedoc_runner_bin",
     deps = [
         ":typedoc_runner_bin",
@@ -172,12 +172,12 @@ typedoc_doc(
         "tsconfig.json",
         "docs/*.json",
     ]),
-    out = "doc-build",
+    out = "docs-build",
 )
 
-html_doc_parser(
-    name = "driver_doc_parsed",
-    data = ":driver_doc",
+html_docs_parser(
+    name = "driver_adoc",
+    data = ":driver_docs",
     language = "nodejs",
 )
 

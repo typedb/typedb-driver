@@ -19,7 +19,7 @@ load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary", "kt_jvm_library"
 load("@bazel_skylib//rules:run_binary.bzl", "run_binary")
 load("@vaticle_dependencies_tool_doc//:requirements.bzl", "requirement")
 
-def html_doc_parser(name, data, language):
+def html_docs_parser(name, data, language):
     script_name = language.title() + "DocParser"
 
     kt_jvm_library(
@@ -47,10 +47,10 @@ def html_doc_parser(name, data, language):
     run_binary(
         name = name,
         tool = name + "_script",
-        outs = [name + "_adoc"],
+        outs = [name],
         args = [
             "$(location %s)" % data,
-            "$(location %s_adoc)" % name,
+            "$(location %s)" % name,
         ],
         srcs = [data],
     )

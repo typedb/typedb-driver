@@ -20,14 +20,3 @@
 #
 
 exports_files(glob(["**/*.kt"]))
-#load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
-
-#package(default_visibility = ["//visibility:public"])
-#
-#kt_jvm_library(
-#    name = "parse_html_doc",
-#    srcs = glob(["*.kt"]),
-#    deps = [
-#        "@maven//:org_jsoup_jsoup",
-#    ],
-#)

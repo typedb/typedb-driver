@@ -19,7 +19,7 @@
 # under the License.
 #
 
-def _sphinx_doc_impl(ctx):
+def _sphinx_docs_impl(ctx):
     driver_package = ctx.actions.declare_directory("driver-package")
 
     ctx.actions.run_shell(
@@ -44,7 +44,7 @@ def _sphinx_doc_impl(ctx):
     return DefaultInfo(files = depset([ctx.outputs.out]))
 
 
-_sphinx_doc = rule(
+_sphinx_docs = rule(
     attrs = {
         "script": attr.label(
             mandatory = True,
@@ -68,7 +68,7 @@ _sphinx_doc = rule(
         ),
     },
 #    executable = True,
-    implementation = _sphinx_doc_impl,
+    implementation = _sphinx_docs_impl,
     doc = """
         Creates an HTML documentation for python module using Sphinx.
         """
@@ -76,8 +76,8 @@ _sphinx_doc = rule(
 )
 
 
-def sphinx_doc(name, script, target, srcs, out):
-    _sphinx_doc(
+def sphinx_docs(name, script, target, srcs, out):
+    _sphinx_docs(
         name = name,
         script = script,
         target = target,
