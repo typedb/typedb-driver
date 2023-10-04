@@ -1,5 +1,5 @@
 ---
-name: Language Request
+name: Language Driver Request
 about: Request a new language driver here, or visit forum.typedb.com for ideas and questions
 ---
 
