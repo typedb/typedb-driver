@@ -120,12 +120,12 @@ load("@vaticle_dependencies//tool/unuseddeps:deps.bzl", unuseddeps_deps = "deps"
 unuseddeps_deps()
 
 # Load //tool/docs
-load("@vaticle_dependencies//tool/doc:deps.bzl", doc_deps = "deps")
+load("@vaticle_dependencies//tool/docs:deps.bzl", doc_deps = "deps")
 doc_deps()
-load("@vaticle_dependencies_tool_doc//:requirements.bzl", install_doc_deps = "install_deps")
+load("@vaticle_dependencies_tool_docs//:requirements.bzl", install_doc_deps = "install_deps")
 install_doc_deps()
 
-load("@vaticle_dependencies//tool/doc:java_deps.bzl", java_doc_deps = "deps")
+load("@vaticle_dependencies//tool/docs:java_deps.bzl", java_doc_deps = "deps")
 java_doc_deps()
 load("@google_bazel_common//:workspace_defs.bzl", "google_common_workspace_rules")
 google_common_workspace_rules()

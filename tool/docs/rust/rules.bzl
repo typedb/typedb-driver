@@ -17,7 +17,7 @@
 
 load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary", "kt_jvm_library")
 load("@bazel_skylib//rules:run_binary.bzl", "run_binary")
-load("@vaticle_dependencies_tool_doc//:requirements.bzl", "requirement")
+load("@vaticle_dependencies_tool_docs//:requirements.bzl", "requirement")
 load("@rules_rust//rust:defs.bzl", "rust_doc")
 load("//tool/docs:rules.bzl", "html_docs_parser")
 
