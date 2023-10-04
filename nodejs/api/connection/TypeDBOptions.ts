@@ -24,16 +24,27 @@ import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {TypeDBDriverError} from "../../common/errors/TypeDBDriverError";
 import NEGATIVE_VALUE_NOT_ALLOWED = ErrorMessage.Driver.NEGATIVE_VALUE_NOT_ALLOWED;
 
+/** Interface for TypeDBOptions. Use {@link TypeDBOptions} instead. */
 export interface Opts {
+    /** If set to <code>True</code>, enables inference for queries. Only settable at transaction level and above. Only affects read transactions.*/
     infer?: boolean;
+    /** If set to <code>True</code>, reasoning tracing graphs are output in the logging directory. Should be used with <code>parallel = False</code>.*/
     traceInference?: boolean;
+    /** If set to <code>True</code>, enables explanations for queries. Only affects read transactions.*/
     explain?: boolean;
+    /** If set to <code>True</code>, the server uses parallel instead of single-threaded execution.*/
     parallel?: boolean;
+    /** If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request. */
     prefetchSize?: number;
+    /** If set to <code>True</code>, the first batch of answers is streamed to the driver even without an explicit request for it. */
     prefetch?: boolean;
+    /** If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive. */
     sessionIdleTimeoutMillis?: number;
+    /** If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions. */
     transactionTimeoutMillis?: number;
+    /** If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock. */
     schemaLockAcquireTimeoutMillis?: number;
+    /** If set to <code>True</code>, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise. */
     readAnyReplica?: boolean;
 }
 
@@ -56,6 +67,17 @@ namespace Opts {
     }
 }
 
+/**
+ * TypeDB session and transaction options. <code>TypeDBOptions</code> object can be used to override the default server behaviour query processing.
+ * Options could be specified either as constructor arguments or using setters.
+ *
+ * ### Examples
+ *
+ * ```ts
+ * transactionOptions = new TypeDBOptions({"infer": true})
+ * transactionOptions.infer(true)
+ * ```
+ */
 export class TypeDBOptions implements Opts {
     private _infer: boolean;
     private _traceInference: boolean;

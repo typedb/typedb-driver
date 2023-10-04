@@ -22,8 +22,17 @@
 import {Concept} from "../concept/Concept";
 import {ConceptMap} from "./ConceptMap";
 
+/**
+ * Contains an element of the group query result.
+ */
 export interface ConceptMapGroup {
+    /**
+     * The concept that is the group owner.
+     */
     readonly owner: Concept;
 
+    /**
+     * The ConceptMaps of the group.
+     */
     readonly conceptMaps: ConceptMap[];
 }

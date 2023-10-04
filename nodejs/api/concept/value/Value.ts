@@ -24,20 +24,113 @@ import {Concept} from "../Concept";
 import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
 export interface Value extends Concept {
+    /** The <code>ValueType</code> of this value concept */
     readonly valueType: Concept.ValueType;
 
+    /** Retrieves the value which this value concept holds. */
     readonly value: boolean | string | number | Date;
 
+    /**
+     * Returns <code>True</code> if the value which this value concept holds is of type <code>boolean</code>. Otherwise, returns <code>False</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * value.isBoolean()
+     * ```
+     */
     isBoolean(): boolean;
+    /**
+     * Returns <code>True</code> if the value which this value concept holds is of type <code>long</code>. Otherwise, returns <code>False</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * value.isLong()
+     * ```
+     */
     isLong(): boolean;
+    /**
+     * Returns <code>True</code> if the value which this value concept holds is of type <code>double</code>.
+     * Otherwise, returns <code>False</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * value.isDouble()
+     * ```
+     */
     isDouble(): boolean;
+    /**
+     * Returns <code>True</code> if the value which this value concept holds is of type <code>string</code>. Otherwise, returns <code>False</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * value.isString()
+     * ```
+     */
     isString(): boolean;
+    /**
+     * Returns <code>True</code> if the value which this value concept holds is of type <code>datetime</code>. Otherwise, returns <code>False</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * value.isDatetime()
+     * ```
+     */
     isDateTime(): boolean;
 
+    /**
+     * Returns a <code>boolean</code> value of this value concept. If the value has another type, raises an exception.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * value.asBoolean()
+     * ```
+     */
     asBoolean(): boolean;
+    /**
+     * Returns a <code>number</code> value of this value concept. If the value has another type, raises an exception.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * value.asLong()
+     * ```
+     */
     asLong(): number;
+    /**
+     * Returns a <code>number</code> value of this value concept. If the value has another type, raises an exception.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * value.asDouble()
+     * ```
+     */
     asDouble(): number;
+    /**
+     * Returns a <code>string</code> value of this value concept. If the value has another type, raises an exception.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * value.asString()
+     * ```
+     */
     asString(): string;
+    /**
+     * Returns a <code>datetime</code> value of this value concept. If the value has another type, raises an exception.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * value.asDatetime()
+     * ```
+     */
     asDateTime(): Date;
 }
 

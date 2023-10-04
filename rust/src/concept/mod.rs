@@ -45,6 +45,14 @@ pub enum Concept {
     Value(Value),
 }
 
+/// Used for specifying whether we need explicit or transitive subtyping, instances, etc.
+///
+/// # Examples
+///
+/// ```rust
+/// entity_type.get_subtypes(transaction, Transitivity::Transitive);
+/// relation_type.get_instances(transaction, Transitivity::Explicit);
+/// ```
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum Transitivity {

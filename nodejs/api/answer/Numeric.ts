@@ -19,10 +19,40 @@
  * under the License.
  */
 
+/**
+ * Stores an aggregate query answer.
+ */
 export interface Numeric {
+    /**
+     * Checks if the type of an aggregate answer is a number.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * numeric.isNumber()
+     * ```
+     */
     isNumber(): boolean;
 
+    /**
+     * Checks if the aggregate answer is not a number.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * numeric.isNan()
+     * ```
+     */
     isNaN(): boolean;
 
+    /**
+     * Retrieves numeric value of an aggregate answer as a number.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * numeric.asNumber()
+     * ```
+     */
     asNumber(): number;
 }

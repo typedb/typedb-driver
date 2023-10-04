@@ -22,8 +22,29 @@
 import {Concept} from "../concept/Concept";
 import {Numeric} from "./Numeric";
 
+/**
+ * Contains an element of the group aggregate query result.
+ */
 export interface NumericGroup {
+    /**
+     * Retrieves the concept that is the group owner.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * numericGroup.owner
+     * ```
+     */
     readonly owner: Concept;
 
+    /**
+     * Retrieves the <code>Numeric</code> answer of the group.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * numericGroup.numeric
+     * ```
+     */
     readonly numeric: Numeric;
 }

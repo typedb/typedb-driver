@@ -26,10 +26,32 @@ import {TypeDBDriverImpl} from "./connection/TypeDBDriverImpl";
 export namespace TypeDB {
     export const DEFAULT_ADDRESS = "127.0.0.1:1729";
 
+    /**
+     * Creates a connection to TypeDB.
+     * @param address - Address of the TypeDB server.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * const driver = TypeDB.enterpriseDriver(["127.0.0.1:11729"], new TypeDBCredential(username, password));
+     * ```
+     */
     export function coreDriver(address: string = DEFAULT_ADDRESS): Promise<TypeDBDriver> {
         return new TypeDBDriverImpl(address).open();
     }
 
+    /**
+     * Creates a connection to TypeDB Enterprise, authenticating with the provided credentials.
+     * @param addresses - List of addresses of the individual TypeDB enterprise servers.
+     * As long one specified address is provided, the driver will discover the other addresses from that server.
+     * @param credential - The credentials to log in, and encryption settings. See <code>{@link TypeDBCredential}</code>
+     *
+     * ### Examples
+     *
+     * ```ts
+     * const driver = TypeDB.enterpriseDriver(["127.0.0.1:11729"], new TypeDBCredential(username, password));
+     * ```
+     */
     export function enterpriseDriver(addresses: string | string[], credential: TypeDBCredential): Promise<TypeDBDriver> {
         if (typeof addresses === 'string') addresses = [addresses];
         return new TypeDBDriverImpl(addresses, credential).open();

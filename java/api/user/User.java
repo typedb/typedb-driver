@@ -28,20 +28,22 @@ import java.util.Optional;
  *  `User` class
  */
 public interface User {
+    /**
+     * Returns the name of this user.
+     */
     @CheckReturnValue
     String username();
 
+    /**
+     * Returns the number of seconds remaining till this user’s current password expires.
+     */
     Optional<Long> passwordExpirySeconds();
 
     /**
-     * Updates the user's password.
+     * Updates the password for this user.
      *
-     * <pre>
-     * user.passwordUpdate("oldpassword", "nEwp@ssw0rd");
-     * </pre>
-     *
-     * @param passwordOld   Old password
-     * @param passwordNew   New password
+     * @param passwordOld The current password of this user
+     * @param passwordNew The new password
      */
     void passwordUpdate(String passwordOld, String passwordNew);
 }

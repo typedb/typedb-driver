@@ -191,6 +191,7 @@ class ConceptManager(ABC):
         """
         Retrieves an ``Entity`` by its iid.
 
+        :param iid: The iid of the ``Entity`` to retrieve
         :return:
 
         Examples
@@ -206,6 +207,7 @@ class ConceptManager(ABC):
         """
         Retrieves a ``Relation`` by its iid.
 
+        :param iid: The iid of the ``Relation`` to retrieve
         :return:
 
         Examples
@@ -221,6 +223,7 @@ class ConceptManager(ABC):
         """
         Retrieves an ``Attribute`` by its iid.
 
+        :param iid: The iid of the ``Attribute`` to retrieve
         :return:
 
         Examples

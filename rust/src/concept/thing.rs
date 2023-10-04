@@ -41,6 +41,10 @@ impl Thing {
 
 // TODO: Storing the Type here is *extremely* inefficient; we could be effectively creating
 //       1 million copies of the same data when matching concepts of homogeneous types
+/// Instance of data of an entity type, representing a standalone object
+/// that exists in the data model independently.
+/// Entity does not have a value. It is usually addressed by its ownership over attribute instances
+/// and/or roles played in relation instances.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Entity {
     pub iid: IID,
@@ -48,6 +52,8 @@ pub struct Entity {
     pub is_inferred: bool,
 }
 
+/// Relation is an instance of a relation type and can be uniquely addressed by
+/// a combination of its type, owned attributes and role players.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Relation {
     pub iid: IID,
@@ -55,6 +61,9 @@ pub struct Relation {
     pub is_inferred: bool,
 }
 
+/// Attribute is an instance of the attribute type and has a value.
+/// This value is fixed and unique for every given instance of the attribute type.
+/// Attribute type can be uniquely addressed by its type and value.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Attribute {
     pub iid: IID,

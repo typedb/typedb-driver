@@ -25,7 +25,12 @@ from typing import Optional
 
 
 class Label:
+    """
+    A ``Label`` holds the uniquely identifying name of a type.
 
+    It consists of an optional 'scope', and a 'name', represented "scope:name".
+    The scope is used only used to distinguish between role-types of the same name declared in different relation types.
+    """
     def __init__(self, scope: Optional[str], name: str):
         self._scope = scope
         self._name = name
@@ -47,13 +52,16 @@ class Label:
 
     @property
     def scope(self) -> Optional[str]:
+        """ The scope part of the label """
         return self._scope
 
     @property
     def name(self) -> str:
+        """ The name part of the label """
         return self._name
 
     def scoped_name(self) -> str:
+        """ Returns the string representation of the scoped name. """
         return "%s:%s" % (self.scope, self.name) if self.scope else self.name
 
     def __str__(self):

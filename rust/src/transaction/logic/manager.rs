@@ -29,6 +29,7 @@ use crate::{
     logic::Rule,
 };
 
+/// Provides methods for manipulating rules in the database.
 #[derive(Clone, Debug)]
 pub struct LogicManager {
     pub(super) transaction_stream: Arc<TransactionStream>,
@@ -39,16 +40,49 @@ impl LogicManager {
         Self { transaction_stream }
     }
 
+    /// Creates a new Rule if none exists with the given label, or replaces the existing one.
+    ///
+    /// # Arguments
+    ///
+    /// * `label` -- The label of the Rule to create or replace
+    /// * `when` -- The when body of the rule to create
+    /// * `then` -- The then body of the rule to create
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "transaction.logic().put_rule(label, when, then)")]
+    #[cfg_attr(not(feature = "sync"), doc = "transaction.logic().put_rule(label, when, then).await")]
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn put_rule(&self, label: String, when: Conjunction, then: Variable) -> Result<Rule> {
         self.transaction_stream.put_rule(label, when, then).await
     }
 
+    /// Retrieves the Rule that has the given label.
+    ///
+    /// # Arguments
+    ///
+    /// * `label` -- The label of the Rule to create or retrieve
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "transaction.logic().get_rule(label)")]
+    #[cfg_attr(not(feature = "sync"), doc = "transaction.logic().get_rule(label).await")]
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get_rule(&self, label: String) -> Result<Option<Rule>> {
         self.transaction_stream.get_rule(label).await
     }
 
+    /// Retrieves all rules.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// transaction.logic.get_rules()
+    /// ```
     pub fn get_rules(&self) -> Result<impl Stream<Item = Result<Rule>>> {
         self.transaction_stream.get_rules()
     }

@@ -24,6 +24,7 @@ use std::future::Future;
 
 use crate::{common::Result, connection::ServerConnection, Connection, DatabaseManager, User};
 
+/// Provides access to all user management methods.
 #[derive(Clone, Debug)]
 pub struct UserManager {
     // FIXME: currently required to be `pub` because we refer to it in bindings and over FFI
@@ -37,6 +38,13 @@ impl UserManager {
         Self { connection }
     }
 
+    /// Returns the logged-in user for the connection.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// driver.users.current_user().await;
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn current_user(&self) -> Result<Option<User>> {
         match self.connection.username() {
@@ -45,12 +53,30 @@ impl UserManager {
         }
     }
 
+    /// Retrieves all users which exist on the TypeDB server.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// driver.users.all().await;
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn all(&self) -> Result<Vec<User>> {
         self.run_any_node(|server_connection: ServerConnection| async move { server_connection.all_users().await })
             .await
     }
 
+    /// Checks if a user with the given name exists.
+    ///
+    /// # Arguments
+    ///
+    /// * `username` -- The user name to be checked
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// driver.users.contains(username).await;
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn contains(&self, username: impl Into<String>) -> Result<bool> {
         let username = username.into();
@@ -61,6 +87,18 @@ impl UserManager {
         .await
     }
 
+    /// Create a user with the given name &amp; password.
+    ///
+    /// # Arguments
+    ///
+    /// * `username` -- The name of the user to be created
+    /// * `password` -- The password of the user to be created
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// driver.users.create(username, password).await;
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn create(&self, username: impl Into<String>, password: impl Into<String>) -> Result {
         let username = username.into();
@@ -73,6 +111,17 @@ impl UserManager {
         .await
     }
 
+    /// Deletes a user with the given name.
+    ///
+    /// # Arguments
+    ///
+    /// * `username` -- The name of the user to be deleted
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// driver.users.delete(username).await;
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn delete(&self, username: impl Into<String>) -> Result {
         let username = username.into();
@@ -83,6 +132,17 @@ impl UserManager {
         .await
     }
 
+    /// Retrieve a user with the given name.
+    ///
+    /// # Arguments
+    ///
+    /// * `username` -- The name of the user to retrieve
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// driver.users.get(username).await;
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get(&self, username: impl Into<String>) -> Result<Option<User>> {
         let username = username.into();
@@ -93,6 +153,18 @@ impl UserManager {
         .await
     }
 
+    /// Sets a new password for a user. This operation can only be performed by administrators.
+    ///
+    /// # Arguments
+    ///
+    /// * `username` -- The name of the user to set the password of
+    /// * `password` -- The new password
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// driver.users.password_set(username, password).await;
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn set_password(&self, username: impl Into<String>, password: impl Into<String>) -> Result {
         let username = username.into();

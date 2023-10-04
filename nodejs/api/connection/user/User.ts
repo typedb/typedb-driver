@@ -23,8 +23,10 @@
  * `User` class
  */
 export interface User {
+    /** The name of this user. */
     readonly username: string;
 
+    /** The number of seconds remaining till this user’s current password expires. */
     readonly passwordExpirySeconds: number;
 
     /**

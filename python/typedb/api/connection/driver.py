@@ -35,29 +35,83 @@ class TypeDBDriver(ABC):
 
     @abstractmethod
     def is_open(self) -> bool:
+        """
+        Checks whether this connection is presently open.
+
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            driver.is_open()
+        """
         pass
 
     @property
     @abstractmethod
     def databases(self) -> DatabaseManager:
+        """
+        The ``DatabaseManager`` for this connection, providing access to database management methods.
+        """
         pass
 
     @abstractmethod
     def session(self, database: str, session_type: SessionType, options: Optional[TypeDBOptions] = None
                 ) -> TypeDBSession:
+        """
+        Opens a communication tunnel (session) to the given database on the running TypeDB server.
+        For more information on the methods, available with sessions, see the ``TypeDBSession`` section.
+
+        :param database: The name of the database with which the session connects
+        :param session_type: The type of session to be created (DATA or SCHEMA)
+        :param options: ``TypeDBOptions`` for the session
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            driver.session(database, session_type, options)
+        """
         pass
 
     @abstractmethod
     def close(self) -> None:
+        """
+        Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
+
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            driver.close()
+        """
         pass
 
     @property
     @abstractmethod
     def users(self) -> UserManager:
+        """
+        The ``UserManager`` instance for this connection, providing access to user management methods.
+        """
         pass
 
     @abstractmethod
     def user(self) -> User:
+        """
+        Returns the logged-in user for the connection.
+
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            driver.user()
+        """
         pass
 
     @abstractmethod

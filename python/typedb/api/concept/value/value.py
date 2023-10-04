@@ -289,6 +289,7 @@ class _ValueType:
 
 
 class ValueType(Enum):
+    """ TypeQL value types for attributes & value concepts. """
     OBJECT = _ValueType(False, False, Object)
     BOOLEAN = _ValueType(True, False, Boolean)
     LONG = _ValueType(True, True, Long)

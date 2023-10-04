@@ -26,18 +26,100 @@ import {RoleType} from "../type/RoleType";
 import {Thing} from "./Thing";
 import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
+/**
+ * Relation is an instance of a relation type and can be uniquely addressed by
+ * a combination of its type, owned attributes and role players.
+ */
 export interface Relation extends Thing {
+    /**
+     * The type which this <code>Relation</code> belongs to.
+     */
     readonly type: RelationType;
 
+    /**
+     * Adds a new role player to play the given role in this <code>Relation</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * relation.addRolePlayer(transaction, roleType, player)
+     * ```
+     *
+     * @param transaction - The current transaction
+     * @param roleType - The role to be played by the <code>player</code>
+     * @param player - The thing to play the role
+     */
     addRolePlayer(transaction: TypeDBTransaction, roleType: RoleType, player: Thing): Promise<void>;
 
+    /**
+     * Removes the association of the given instance that plays the given role in this <code>Relation</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * relation.removeRolePlayer(transaction, roleType, player)
+     * ```
+     *
+     * @param transaction - The current transaction
+     * @param roleType - The role to no longer be played by the thing in this <code>Relation</code>
+     * @param player - The instance to no longer play the role in this <code>Relation</code>
+     */
     removeRolePlayer(transaction: TypeDBTransaction, roleType: RoleType, player: Thing): Promise<void>;
 
+    /**
+     * Retrieves all role players of this <code>Relation</code>, optionally filtered by given role types.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * relation.getPlayersByRoleType(transaction)
+     * relation.getPlayersByRoleType(transaction, [roleType1, roleType2])
+     * ```
+     *
+     * @param transaction - The current transaction
+     * @param roleTypes - 0 or more role types
+     */
     getPlayersByRoleType(transaction: TypeDBTransaction): Stream<Thing>;
+
+    /**
+     * Retrieves all role players of this <code>Relation</code>, optionally filtered by given role types.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * relation.getPlayersByRoleType(transaction)
+     * relation.getPlayersByRoleType(transaction, [roleType1, roleType2])
+     * ```
+     *
+     * @param transaction - The current transaction
+     * @param roleTypes - 0 or more role types
+     */
     getPlayersByRoleType(transaction: TypeDBTransaction, roleTypes: RoleType[]): Stream<Thing>;
 
+    /**
+     * Retrieves a mapping of all instances involved in the <code>Relation</code> and the role each play.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * relation.getRolePlayers(transaction)
+     * ```
+     *
+     * @param transaction - The current transaction
+     */
     getRolePlayers(transaction: TypeDBTransaction): Promise<Map<RoleType, Thing[]>>;
 
+    /**
+     * Retrieves all role types currently played in this <code>Relation</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * relation.getRelating(transaction)
+     * ```
+     *
+     * @param transaction - The current transaction
+     */
     getRelating(transaction: TypeDBTransaction): Stream<RoleType>;
 }
 

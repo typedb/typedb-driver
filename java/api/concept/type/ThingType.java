@@ -39,96 +39,334 @@ import static com.vaticle.typedb.driver.jni.typedb_driver.annotation_new_unique;
 import static com.vaticle.typedb.driver.jni.typedb_driver.annotation_to_string;
 
 public interface ThingType extends Type {
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @CheckReturnValue
     default boolean isThingType() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @CheckReturnValue
     default ThingType asThingType() {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @CheckReturnValue
     ThingType getSupertype(TypeDBTransaction transaction);
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @CheckReturnValue
     Stream<? extends ThingType> getSupertypes(TypeDBTransaction transaction);
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @CheckReturnValue
     Stream<? extends ThingType> getSubtypes(TypeDBTransaction transaction);
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @CheckReturnValue
     Stream<? extends ThingType> getSubtypes(TypeDBTransaction transaction, Transitivity transitivity);
 
+    /**
+     * Retrieves all <code>Thing</code> objects that are instances of this <code>ThingType</code> or its subtypes.
+     * Equivalent to <code>getInstances(transaction, Transitivity.TRANSITIVE)</code>
+     *
+     * @see ThingType#getInstances(TypeDBTransaction, Transitivity)
+     */
     @CheckReturnValue
     Stream<? extends Thing> getInstances(TypeDBTransaction transaction);
 
+    /**
+     * Retrieves <code>Thing</code> objects that are instances of this exact <code>ThingType</code>, OR
+     * this <code>ThingType</code> and any of its subtypes
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thingType.getInstances(transaction);
+     * thingType.getInstances(transaction, Transitivity.EXPLICIT);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param transitivity <code>Transitivity.EXPLICIT</code> for direct instances only, <code>Transitivity.TRANSITIVE</code> to include instances of subtypes
+     */
     @CheckReturnValue
     Stream<? extends Thing> getInstances(TypeDBTransaction transaction, Transitivity transitivity);
 
+    /**
+     * Set a <code>ThingType</code> to be abstract, meaning it cannot have instances.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thingType.setAbstract(transaction);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     */
     void setAbstract(TypeDBTransaction transaction);
 
+    /**
+     * Set a <code>ThingType</code> to be non-abstract, meaning it can have instances.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thingType.unsetAbstract(transaction);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     */
     void unsetAbstract(TypeDBTransaction transaction);
 
+    /**
+     * Allows the instances of this <code>ThingType</code> to play the given role.
+     *
+     * @see ThingType#setPlays(TypeDBTransaction, RoleType, RoleType)
+     */
     void setPlays(TypeDBTransaction transaction, RoleType roleType);
 
+    /**
+     * Allows the instances of this <code>ThingType</code> to play the given role.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thingType.setPlays(transaction, roleType)
+     * thingType.setPlays(transaction, roleType, overriddenType)
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param roleType The role to be played by the instances of this type
+     * @param overriddenType The role type that this role overrides, if applicable
+     */
     void setPlays(TypeDBTransaction transaction, RoleType roleType, RoleType overriddenType);
 
+    /**
+     * Allows the instances of this <code>ThingType</code> to own the given <code>AttributeType</code>.
+     * Optionally, overriding a previously declared ownership.
+     * Optionally, adds annotations to the ownership.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thingType.setOwns(transaction, attributeType);
+     * thingType.setOwns(transaction, attributeType, overriddenType, Collections.singleton(Annotation.key()));
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param attributeType The <code>AttributeType</code> to be owned by the instances of this type.
+     * @param overriddenType The <code>AttributeType</code> that this attribute ownership overrides, if applicable.
+     * @param annotations Adds annotations to the ownership.
+     */
     void setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType, Set<Annotation> annotations);
 
-    void setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType);
+    /**
+     * Allows the instances of this <code>ThingType</code> to own the given <code>AttributeType</code>,
+     *
+     * @see ThingType#setOwns(TypeDBTransaction, AttributeType, AttributeType, Set)
+     */
+     void setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType);
 
+    /**
+     * Allows the instances of this <code>ThingType</code> to own the given <code>AttributeType</code>.
+     *
+     * @see ThingType#setOwns(TypeDBTransaction, AttributeType, AttributeType, Set)
+     */
     void setOwns(TypeDBTransaction transaction, AttributeType attributeType, Set<Annotation> annotations);
 
+    /**
+     * Allows the instances of this <code>ThingType</code> to own the given <code>AttributeType</code>.
+     *
+     * @see ThingType#setOwns(TypeDBTransaction, AttributeType, AttributeType, Set)
+     */
     void setOwns(TypeDBTransaction transaction, AttributeType attributeType);
 
+    /**
+     * Retrieves all direct and inherited roles that are allowed
+     * to be played by the instances of this <code>ThingType</code>.
+     *
+     * @see ThingType#getPlays(TypeDBTransaction, Transitivity)
+     */
     @CheckReturnValue
     Stream<? extends RoleType> getPlays(TypeDBTransaction transaction);
 
+    /**
+     * Retrieves all direct and inherited (or direct only) roles that are allowed
+     * to be played by the instances of this <code>ThingType</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thingType.getPlays(transaction);
+     * thingType.getPlays(transaction, Transitivity.EXPLICIT);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param transitivity transitivity: <code>Transitivity.TRANSITIVE</code> for direct and indirect playing, <code>Transitivity.EXPLICIT</code> for direct playing only
+     */
     @CheckReturnValue
     Stream<? extends RoleType> getPlays(TypeDBTransaction transaction, Transitivity transitivity);
 
+    /**
+     * Retrieves a <code>RoleType</code> that is overridden by the given
+     * <code>role_type</code> for this <code>ThingType</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thingType.getPlaysOverridden(transaction, roleType);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param roleType The <code>RoleType</code> that overrides an inherited role
+     */
     @CheckReturnValue
     RoleType getPlaysOverridden(TypeDBTransaction transaction, RoleType roleType);
 
+    /**
+     * Retrieves <code>AttributeType</code> that the instances of this
+     * <code>ThingType</code> are allowed to own directly or via inheritance.
+     *
+     * @see ThingType#getOwns(TypeDBTransaction, Value.Type, Set, Transitivity)
+     */
     @CheckReturnValue
     Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction);
 
+    /**
+     * Retrieves <code>AttributeType</code> that the instances of this
+     * <code>ThingType</code> are allowed to own directly or via inheritance.
+     *
+     * @see ThingType#getOwns(TypeDBTransaction, Value.Type, Set, Transitivity)
+     */
     @CheckReturnValue
     Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Value.Type valueType);
 
+    /**
+     * Retrieves <code>AttributeType</code> that the instances of this
+     * <code>ThingType</code> are allowed to own directly or via inheritance.
+     *
+     * @see ThingType#getOwns(TypeDBTransaction, Value.Type, Set, Transitivity)
+     */
     @CheckReturnValue
     Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Set<Annotation> annotations);
 
+    /**
+     * Retrieves <code>AttributeType</code> that the instances of this
+     * <code>ThingType</code> are allowed to own directly or via inheritance.
+     *
+     * @see ThingType#getOwns(TypeDBTransaction, Value.Type, Set, Transitivity)
+     */
     @CheckReturnValue
     Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Value.Type valueType, Set<Annotation> annotations);
 
+    /**
+     * Retrieves <code>AttributeType</code> that the instances of this
+     * <code>ThingType</code> are allowed to own directly or via inheritance.
+     *
+     * @see ThingType#getOwns(TypeDBTransaction, Value.Type, Set, Transitivity)
+     */
     @CheckReturnValue
     Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Transitivity transitivity);
 
+    /**
+     * Retrieves <code>AttributeType</code> that the instances of this
+     * <code>ThingType</code> are allowed to own directly or via inheritance.
+     *
+     * @see ThingType#getOwns(TypeDBTransaction, Value.Type, Set, Transitivity)
+     */
     @CheckReturnValue
     Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Value.Type valueType, Transitivity transitivity);
 
+    /**
+     * Retrieves <code>AttributeType</code> that the instances of this
+     * <code>ThingType</code> are allowed to own directly or via inheritance.
+     *
+     * @see ThingType#getOwns(TypeDBTransaction, Value.Type, Set, Transitivity)
+     */
     @CheckReturnValue
     Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Set<Annotation> annotations, Transitivity transitivity);
 
+    /**
+     * Retrieves <code>AttributeType</code> that the instances of this
+     * <code>ThingType</code> are allowed to own directly or via inheritance.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thingType.getOwns(transaction);
+     * thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT, Collections.singleton(Annotation.key()));
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param valueType If specified, only attribute types of this <code>ValueType</code> will be retrieved.
+     * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and inherited ownership, <code>Transitivity.EXPLICIT</code> for direct ownership only
+     * @param annotations Only retrieve attribute types owned with annotations.
+     */
     @CheckReturnValue
     Stream<? extends AttributeType> getOwns(TypeDBTransaction transaction, Value.Type valueType, Set<Annotation> annotations, Transitivity transitivity);
 
+    /**
+     * Retrieves an <code>AttributeType</code>, ownership of which is overridden
+     * for this <code>ThingType</code> by a given <code>attribute_type</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thingType.getOwnsOverridden(transaction, attributeType);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param attributeType The <code>AttributeType</code> that overrides requested <code>AttributeType</code>
+     */
     @CheckReturnValue
     AttributeType getOwnsOverridden(TypeDBTransaction transaction, AttributeType attributeType);
 
+    /**
+     * Disallows the instances of this <code>ThingType</code> from playing the given role.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thingType.unsetPlays(transaction, roleType);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param roleType The role to not be played by the instances of this type.
+     */
     void unsetPlays(TypeDBTransaction transaction, RoleType roleType);
 
+    /**
+     * Disallows the instances of this <code>ThingType</code> from owning the given <code>AttributeType</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thingType.unsetOwns(transaction, attributeType);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param attributeType The <code>AttributeType</code> to not be owned by the type.
+     */
     void unsetOwns(TypeDBTransaction transaction, AttributeType attributeType);
 
+    /**
+     * Produces a pattern for creating this <code>ThingType</code> in a <code>define</code> query.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thingType.getSyntax(transaction);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     */
     @CheckReturnValue
     String getSyntax(TypeDBTransaction transaction);
 

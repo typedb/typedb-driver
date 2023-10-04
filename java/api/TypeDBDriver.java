@@ -28,23 +28,72 @@ import com.vaticle.typedb.driver.api.user.UserManager;
 import javax.annotation.CheckReturnValue;
 
 public interface TypeDBDriver extends AutoCloseable {
+
+    /**
+     * Checks whether this connection is presently open.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.isOpen();
+     * </pre>
+     */
     @CheckReturnValue
     boolean isOpen();
 
+    /**
+     * The <code>DatabaseManager</code> for this connection, providing access to database management methods.
+     */
     @CheckReturnValue
     DatabaseManager databases();
 
+    /**
+     * Opens a session to the given database with default options. 
+     * 
+     * @see TypeDBDriver#session(String, TypeDBSession.Type, TypeDBOptions)
+     */
     @CheckReturnValue
     TypeDBSession session(String database, TypeDBSession.Type type);
 
+    /**
+     * Opens a communication tunnel (session) to the given database on the running TypeDB server.
+     * For more information on the methods, available with sessions, see the <code>TypeDBSession</code> section.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.session(database, sessionType, options);
+     * </pre>
+     *
+     * @param database The name of the database with which the session connects
+     * @param type The type of session to be created (DATA or SCHEMA)
+     * @param options <code>TypeDBOptions</code> for the session
+     */
     @CheckReturnValue
     TypeDBSession session(String database, TypeDBSession.Type type, TypeDBOptions options);
 
+    /**
+     * Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.close()
+     * </pre>
+     */
     void close();
 
+    /**
+     * The <code>UserManager</code> instance for this connection, providing access to user management methods.
+     */
     @CheckReturnValue
     User user();
 
+    /**
+     * Returns the logged-in user for the connection.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.user();
+     * </pre>
+     */
     @CheckReturnValue
     UserManager users();
 }

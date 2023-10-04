@@ -23,10 +23,17 @@ use std::collections::HashMap;
 
 use crate::{answer::ConceptMap, logic::Rule};
 
+/// An explanation of which rule was used for inferring the explained concept,
+/// the condition of the rule, the conclusion of the rule,
+/// and the mapping of variables between the query and the rule’s conclusion.
 #[derive(Debug, PartialEq)]
 pub struct Explanation {
+    /// The Rule for this Explanation.
     pub rule: Rule,
+    /// The Conclusion for this Explanation.
     pub conclusion: ConceptMap,
+    /// The Condition for this Explanation.
     pub condition: ConceptMap,
+    /// The mapping from query variables to rule variables for this `Explanation`.
     pub variable_mapping: HashMap<String, Vec<String>>,
 }

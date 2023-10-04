@@ -26,15 +26,44 @@ import {UserManager} from "./user/UserManager";
 import {User} from "./user/User";
 
 export interface TypeDBDriver {
+    /**
+     * Checks whether this connection is presently open.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * driver.isOpen()
+     * ```
+     */
     isOpen(): boolean;
 
+    /** The <code>DatabaseManager</code> for this connection, providing access to database management methods. */
     readonly databases: DatabaseManager;
 
     session(database: string, type: SessionType, options?: TypeDBOptions): Promise<TypeDBSession>;
 
+    /**
+     * Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * driver.close()
+     * ```
+     */
     close(): Promise<void>;
 
+    /** The <code>UserManager</code> instance for this connection, providing access to user management methods. */
     readonly users: UserManager;
 
+    /**
+     * Returns the logged-in user for the connection.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * driver.user()
+     * ```
+     */
     user(): Promise<User>;
 }

@@ -63,6 +63,7 @@ pub struct Connection {
 }
 
 impl Connection {
+    // TODO DOCS
     pub fn new_core(address: impl AsRef<str>) -> Result<Self> {
         let address: Address = address.as_ref().parse()?;
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
@@ -83,6 +84,7 @@ impl Connection {
         }
     }
 
+    // TODO DOCS
     pub fn new_enterprise<T: AsRef<str> + Sync>(init_addresses: &[T], credential: Credential) -> Result<Self> {
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
 

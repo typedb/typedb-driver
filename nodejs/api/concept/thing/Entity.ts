@@ -23,7 +23,15 @@ import {EntityType} from "../type/EntityType";
 import {Thing} from "./Thing";
 import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 
+/**
+ * Instance of data of an entity type, representing a standalone object that exists in the data model independently.
+ * Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles played in relation instances.
+ *
+ */
 export interface Entity extends Thing {
+    /**
+     * The type which this <code>Entity</code> belongs to.
+     */
     readonly type: EntityType;
 }
 

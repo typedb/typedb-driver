@@ -53,12 +53,7 @@ public interface AttributeType extends ThingType {
     Value.Type getValueType();
 
     /**
-     * Checks if the concept is an <code>AttributeType</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * attribute.isAttributeType();
-     * </pre>
+     * {@inheritDoc}
      */
     @Override
     @CheckReturnValue
@@ -67,12 +62,7 @@ public interface AttributeType extends ThingType {
     }
 
     /**
-     * Casts the concept to <code>AttributeType</code>.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * attribute.asAttributeType();
-     * </pre>
+     * {@inheritDoc}
      */
     @Override
     @CheckReturnValue
