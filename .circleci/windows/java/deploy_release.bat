@@ -28,7 +28,7 @@ SET DEPLOY_MAVEN_USERNAME=%REPO_VATICLE_USERNAME%
 SET DEPLOY_MAVEN_PASSWORD=%REPO_VATICLE_PASSWORD%
 
 SET /p VER=<VERSION
-bazel --output_user_root=C:/bazel run --verbose_failures --define version=%VER% //java:deploy-maven-jni -- release
+bazel --output_user_root=C:/bazel run --verbose_failures --define version=%VER% //java:deploy-maven-jni --compilation_mode=opt -- release
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
 
 MD dist

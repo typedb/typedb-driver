@@ -139,9 +139,9 @@ commands:
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_PYPI_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_PYPI_PASSWORD
-          bazel run --define version=$(cat VERSION) //python:deploy-pip39 -- release
-          bazel run --define version=$(cat VERSION) //python:deploy-pip310 -- release
-          bazel run --define version=$(cat VERSION) //python:deploy-pip311 -- release
+          bazel run --define version=$(cat VERSION) //python:deploy-pip39 --compilation_mode=opt -- release
+          bazel run --define version=$(cat VERSION) //python:deploy-pip310 --compilation_mode=opt -- release
+          bazel run --define version=$(cat VERSION) //python:deploy-pip311 --compilation_mode=opt -- release
 
   deploy-pip-release-linux:
     parameters:
@@ -238,7 +238,7 @@ commands:
           export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-          bazel run --define version=$(cat VERSION) //java:deploy-maven-jni -- release
+          bazel run --define version=$(cat VERSION) //java:deploy-maven-jni --compilation_mode=opt -- release
 
   deploy-maven-jni-release-linux:
     parameters:
@@ -263,7 +263,7 @@ commands:
           export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-          bazel run --define version=$(cat VERSION) //java:deploy-maven -- release
+          bazel run --define version=$(cat VERSION) //java:deploy-maven --compilation_mode=opt -- release
 
 
 jobs:
@@ -576,7 +576,7 @@ jobs:
           arch: amd64
       - run: |
           export DEPLOY_CRATE_TOKEN=$REPO_CRATES_TOKEN
-          bazel run --define version=$(cat VERSION) //rust:deploy_crate -- release
+          bazel run --define version=$(cat VERSION) //rust:deploy_crate --compilation_mode=opt -- release
           mkdir -p ~/dist
           cp bazel-bin/rust/assemble_crate.crate ~/dist/typedb-driver.crate
       - persist_to_workspace:
@@ -595,7 +595,7 @@ jobs:
           sudo apt update -y
           sudo apt install -y expect
           export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN
-          bazel run --define version=$(cat VERSION) //nodejs:deploy-npm -- release
+          bazel run --define version=$(cat VERSION) //nodejs:deploy-npm --compilation_mode=opt -- release
           mkdir -p ~/dist
           cp bazel-bin/nodejs/assemble-npm.tar.gz ~/dist/typedb-driver-node.tar.gz
       - persist_to_workspace:

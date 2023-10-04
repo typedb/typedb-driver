@@ -9,7 +9,7 @@ Documentation: https://typedb.com/docs/clients/2.x/rust/rust-api-ref
 
 
 ```sh
-cargo add typedb-driver@2.24.11
+cargo add typedb-driver@2.24.13
 ```
 
 
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/clients/2.x/java/java-api-ref
     <dependency>
         <groupid>com.vaticle.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>2.24.11</version>
+        <version>2.24.13</version>
     </dependency>
 </dependencies>
 ```
@@ -42,7 +42,7 @@ Documentation: https://typedb.com/docs/clients/2.x/python/python-api-ref
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==2.24.11
+pip install typedb-driver==2.24.13
 ```
 
 ### NodeJS driver
@@ -51,7 +51,7 @@ NPM package: https://www.npmjs.com/package/typedb-driver
 Documentation: https://typedb.com/docs/clients/2.x/node-js/node-js-api-ref
 
 ```
-npm install typedb-driver@2.24.11
+npm install typedb-driver@2.24.13
 ```
 
 
@@ -59,15 +59,21 @@ npm install typedb-driver@2.24.11
 
 
 ## Bugs Fixed
-
-- **Fix crate**
-
-We fix crate deployment metadata when uploading to crates.io
+- **Set release compilation mode to optimized**
+  
+  We set the Bazel compilation mode for releases to `opt` to ensure the native library is running optimised binary.
+  
 
 ## Code Refactors
 
 
 ## Other Improvements
+- **Remove debug print line**
+
+- **New issue template: Language Driver Request**
   
+  We added a new issue template for requesting a language to support.
+  
+- **Update README.md**
+
     
-- **Fix URLs and README**

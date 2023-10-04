@@ -125,7 +125,6 @@ public class Loader {
 
         static Arch detect() {
             String arch = System.getProperty("os.arch").toLowerCase();
-            System.out.println("Os arch: " + arch);
             if (arch.equals("amd64") || arch.equals("x86_64") || arch.contains("x64")) {
                 return x86_64;
             } else if (arch.equals("aarch64") || arch.contains("arm64")) {
