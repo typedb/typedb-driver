@@ -53,16 +53,15 @@ fun main(args: Array<String>) {
         } else {
             parseNamespace(parsed)
         }
-        val parsedClassName = parsedClass.name
 
-        parsedClasses[parsedClass.name] = if (parsedClasses.contains(parsedClassName)) {
+        parsedClasses[parsedClass.name] = if (parsedClasses.contains(parsedClass.name)) {
             mergeClasses(parsedClasses[parsedClass.name]!!, parsedClass)
         } else {
             parsedClass
         }
 
         val parsedClassAsciiDoc = parsedClasses[parsedClass.name]!!.toAsciiDoc("nodejs")
-        val outputFile = docsDir.resolve("$parsedClassName.adoc").toFile()
+        val outputFile = docsDir.resolve("${parsedClass.name}.adoc").toFile()
         outputFile.createNewFile()
         outputFile.writeText(parsedClassAsciiDoc)
     }
@@ -97,8 +96,8 @@ fun parseClass(document: Element): Class {
     return Class(
         name = className,
         description = classDescr,
-        methods = methods,
         fields = properties,
+        methods = methods,
         superClasses = superClasses,
     )
 }
@@ -143,10 +142,10 @@ fun parseMethod(element: Element): Method {
     return Method(
         name = methodName,
         signature = methodSignature,
-        description = methodDescr,
         args = methodArgs,
-        returnType = methodReturnType,
+        description = methodDescr,
         examples = methodExamples,
+        returnType = methodReturnType,
     )
 }
 
@@ -157,15 +156,16 @@ fun parseAccessor(element: Element): Method {
     val methodReturnType = descrElement!!.select(".tsd-returns-title > *")
         .joinToString("") { it.text() }
     val methodDescr = descrElement.select(".tsd-description > .tsd-comment p").map { reformatTextWithCode(it.html()) }
-    val methodExamples = descrElement.select(".tsd-description > .tsd-comment > :has(a[href*=examples]) + pre > :not(button)")
+    val methodExamples = descrElement
+        .select(".tsd-description > .tsd-comment > :has(a[href*=examples]) + pre > :not(button)")
         .map { it.text() }
 
     return Method(
         name = methodName,
         signature = methodSignature,
         description = methodDescr,
-        returnType = methodReturnType,
         examples = methodExamples,
+        returnType = methodReturnType,
     )
 }
 
@@ -175,8 +175,8 @@ fun parseProperty(element: Element): Argument {
     val descr = element.selectFirst(".tsd-signature + .tsd-comment")?.text()
     return Argument(
         name = name,
-        type = type,
         description = descr,
+        type = type,
     )
 }
 

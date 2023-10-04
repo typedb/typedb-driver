@@ -32,6 +32,6 @@ data class EnumConstant(
             this.value?.let { result += "`$it`" }
             this.type?.let { result += "`$it`" }
         }
-        return result + "\n"
+        return "$result\n"
     }
 }

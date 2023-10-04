@@ -74,9 +74,8 @@ fun parseClass(document: Element, currentDirName: String): Class {
         it.text()
     }
 
-    val fields = document.select(".summary > ul > li > section > ul > li:has(a[id=field.summary]) > table tr:gt(0)").map {
-        parseField(it)
-    }
+    val fields = document.select(".summary > ul > li > section > ul > li:has(a[id=field.summary]) > table tr:gt(0)")
+        .map { parseField(it) }
     val methods = document.select(".details > ul > li > section > ul > li:has(a[id=constructor.detail]) > ul > li").map {
         parseMethod(it)
     } + document.select(".details > ul > li > section > ul > li:has(a[id=method.detail]) > ul > li").map {
@@ -89,15 +88,14 @@ fun parseClass(document: Element, currentDirName: String): Class {
         parseMethod(parentParsed.selectFirst("a[id=$anchor] + ul > li")!!)
     }
 
-
     return Class(
         name = className,
         description = classDescr,
-        methods = methods,
-        fields = fields,
-        superClasses = superClasses,
         examples = classExamples,
+        fields = fields,
+        methods = methods,
         packagePath = packagePath,
+        superClasses = superClasses,
     )
 }
 
@@ -127,11 +125,11 @@ fun parseEnum(document: Element): Class {
         name = className,
         description = classDescr,
         enumConstants = enumConstants,
+        examples = classExamples,
         fields = fields,
         methods = methods,
-        superClasses = classBases,
-        examples = classExamples,
         packagePath = packagePath,
+        superClasses = classBases,
     )
 }
 
@@ -164,11 +162,11 @@ fun parseMethod(element: Element): Method {
     return Method(
         name = methodName,
         signature = enhanceSignature(methodSignature),
-        description = methodDescr,
-        args = methodArgs,
-        returnType = methodReturnType,
-        examples = methodExamples,
         anchor = methodAnchor,
+        args = methodArgs,
+        description = methodDescr,
+        examples = methodExamples,
+        returnType = methodReturnType,
     )
 
 }
@@ -179,8 +177,8 @@ fun parseField(element: Element): Argument {
     val descr = element.selectFirst(".colLast")?.text()
     return Argument(
         name = name,
-        type = type,
         description = descr,
+        type = type,
     )
 }
 

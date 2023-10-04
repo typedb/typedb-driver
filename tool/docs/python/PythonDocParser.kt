@@ -38,15 +38,14 @@ fun main(args: Array<String>) {
 
     val docsDir = Paths.get(outputDirectoryName)
     Files.createDirectory(docsDir)
-    Files.createDirectory(docsDir.resolve("for_java"))
-    Files.createDirectory(docsDir.resolve("for_rust"))
-    Files.createDirectory(docsDir.resolve("for_nodejs"))
+//    Files.createDirectory(docsDir.resolve("for_java"))
+//    Files.createDirectory(docsDir.resolve("for_rust"))
+//    Files.createDirectory(docsDir.resolve("for_nodejs"))
 
     File(inputDirectoryName).walkTopDown().filter {
         it.toString().endsWith(".html") &&
                 (it.toString().contains(".api.") || it.toString().contains(".common."))
     }.forEach {
-        println(it)
         val html = it.readText(Charsets.UTF_8)
         val parsed = Jsoup.parse(html)
 
@@ -58,40 +57,41 @@ fun main(args: Array<String>) {
             }
             val parsedClassName = parsedClass.name
             val parsedClassAsciiDoc = parsedClass.toAsciiDoc("python")
-            val parsedClassForJava = parsedClass.toJavaComment()
-            val parsedClassForRust = parsedClass.toRustComment()
-            val parsedClassForNodejs = parsedClass.toNodejsComment()
+//            val parsedClassForJava = parsedClass.toJavaComment()
+//            val parsedClassForRust = parsedClass.toRustComment()
+//            val parsedClassForNodejs = parsedClass.toNodejsComment()
 
             val outputFile = docsDir.resolve("$parsedClassName.adoc").toFile()
             outputFile.createNewFile()
             outputFile.writeText(parsedClassAsciiDoc)
 
-            val outputFileJava = docsDir.resolve("for_java").resolve("$parsedClassName.txt").toFile()
-            outputFileJava.createNewFile()
-            outputFileJava.writeText(parsedClassForJava)
-
-            val outputFileRust = docsDir.resolve("for_rust").resolve("$parsedClassName.txt").toFile()
-            outputFileRust.createNewFile()
-            outputFileRust.writeText(parsedClassForRust)
-
-            val outputFileNodejs = docsDir.resolve("for_nodejs").resolve("$parsedClassName.txt").toFile()
-            outputFileNodejs.createNewFile()
-            outputFileNodejs.writeText(parsedClassForNodejs)
+//            val outputFileJava = docsDir.resolve("for_java").resolve("$parsedClassName.txt").toFile()
+//            outputFileJava.createNewFile()
+//            outputFileJava.writeText(parsedClassForJava)
+//
+//            val outputFileRust = docsDir.resolve("for_rust").resolve("$parsedClassName.txt").toFile()
+//            outputFileRust.createNewFile()
+//            outputFileRust.writeText(parsedClassForRust)
+//
+//            val outputFileNodejs = docsDir.resolve("for_nodejs").resolve("$parsedClassName.txt").toFile()
+//            outputFileNodejs.createNewFile()
+//            outputFileNodejs.writeText(parsedClassForNodejs)
         }
     }
 }
 
 fun parseClass(element: Element): Class {
-    val classSigElement = element.selectFirst("dt.sig-object")
-    val className = classSigElement!!.selectFirst("dt.sig-object span.sig-name")!!.text()
+    val classSignElement = element.selectFirst("dt.sig-object")
+    val className = classSignElement!!.selectFirst("dt.sig-object span.sig-name")!!.text()
 
-    val classDetails = classSigElement.nextElementSibling()
-    val classDetailsParagraphs = classDetails!!.children().map { it }.filter { it.tagName() == "p" }  // FIXME
+    val classDetails = classSignElement.nextElementSibling()
+    val classDetailsParagraphs = classDetails!!.children().map { it }.filter { it.tagName() == "p" }
     val (descr, bases) = classDetailsParagraphs.partition { it.select("code.py-class").isNullOrEmpty() }
     val superClasses = bases[0]!!.select("span").map { it.html() }.filter { it != "ABC" && it != "Enum" }
     val classDescr = descr.map { reformatTextWithCode(it.html()) }
 
-    val classExamples = element.select("dl.class > dt.sig-object + dd > section:contains(Example) > div > .highlight").map { it.text() }
+    val classExamples = element.select("dl.class > dt.sig-object + dd > section:contains(Example) > div > .highlight")
+        .map { it.text() }
 
     val methods = classDetails.select("dl.method")
         .map { parseMethod(it) }
@@ -102,18 +102,18 @@ fun parseClass(element: Element): Class {
     return Class(
         name = className,
         description = classDescr,
-        methods = methods,
-        fields = properties,
-        superClasses = superClasses,
         examples = classExamples,
+        fields = properties,
+        methods = methods,
+        superClasses = superClasses,
     )
 }
 
 fun parseEnum(element: Element): Class {
-    val classSigElement = element.selectFirst("dt.sig-object")
-    val className = classSigElement!!.selectFirst("dt.sig-object span.sig-name")!!.text()
+    val classSignElement = element.selectFirst("dt.sig-object")
+    val className = classSignElement!!.selectFirst("dt.sig-object span.sig-name")!!.text()
 
-    val classDetails = classSigElement.nextElementSibling()
+    val classDetails = classSignElement.nextElementSibling()
     val classDetailsParagraphs = classDetails!!.children().map { it }.filter { it.tagName() == "p" }
     val (descr, bases) = classDetailsParagraphs.partition { it.select("code.py-class").isNullOrEmpty() }
     val classBases = bases[0]!!.select("span").map { it.html() }
@@ -121,19 +121,16 @@ fun parseEnum(element: Element): Class {
 
     val classExamples = element.select("section:contains(Examples) .highlight").map { it.text() }
 
-    val methods = classDetails.select("dl.method")
-        .map { parseMethod(it) }
-
-    val members = classDetails.select("dl.attribute")
-        .map { parseEnumConstant(it) }
+    val methods = classDetails.select("dl.method").map { parseMethod(it) }
+    val members = classDetails.select("dl.attribute").map { parseEnumConstant(it) }
 
     return Class(
         name = className,
         description = classDescr,
-        methods = methods,
         enumConstants = members,
-        superClasses = classBases,
         examples = classExamples,
+        methods = methods,
+        superClasses = classBases,
     )
 }
 
@@ -149,9 +146,9 @@ fun parseMethod(element: Element): Method {
         val argDescr = reformatTextWithCode(removeArgName(it.html())).removePrefix(" – ")
         Argument(
             name = argName,
-            type = allArgs[argName]?.first,
             defaultValue = allArgs[argName]?.second,
-            description = argDescr
+            description = argDescr,
+            type = allArgs[argName]?.first,
         )
     }
     val methodReturnDescr = element.select(".field-list > dt:contains(Returns) + dd p").text()
@@ -160,11 +157,11 @@ fun parseMethod(element: Element): Method {
     return Method(
         name = methodName,
         signature = methodSignature,
-        description = methodDescr,
         args = methodArgs,
-        returnType = methodReturnType,
-        returnDescription = methodReturnDescr,
+        description = methodDescr,
         examples = methodExamples,
+        returnDescription = methodReturnDescr,
+        returnType = methodReturnType,
     )
 
 }
@@ -172,11 +169,11 @@ fun parseMethod(element: Element): Method {
 fun parseProperty(element: Element): Argument {
     val name = element.selectFirst("dt.sig-object span.sig-name")!!.text()
     val type = element.selectFirst("dt.sig-object span.sig-name + .property ")?.text()?.dropWhile { !it.isLetter() }
-    val descr = element.select("dd > p").map { reformatTextWithCode(it.html()) }.joinToString("\n\n")  // TODO: Test it
+    val descr = element.select("dd > p").map { reformatTextWithCode(it.html()) }.joinToString("\n\n")
     return Argument(
         name = name,
-        type = type,
         description = descr,
+        type = type,
     )
 }
 

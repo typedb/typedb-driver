@@ -20,17 +20,13 @@ package com.vaticle.typedb.client.tool.doc.common
 
 data class Argument(
     val name: String,
-    val type: String? = null,
-    val description: String? = null,
-    val defaultValue: String? = null,
     val anchor: String? = null,
+    val defaultValue: String? = null,
+    val description: String? = null,
+    val type: String? = null,
 ) {
     fun toAsciiDocPage(language: String): String {
         var result = ""
-//        result += "[#_${this.anchor ?: this.name}]\n"
-//        result += "== ${this.name}\n\n"
-//        this.type?.let { result += "=== Type\n\n`$it`\n\n" }
-//        this.description?.let { result += "=== Description\n\n${this.description}\n\n" }
         result += "a| `${this.name}` "
         result += "a| `${this.type}` "
         result += "a| ${this.description ?: ""}\n"
@@ -50,44 +46,44 @@ data class Argument(
         return result
     }
 
-    fun toJavaCommentArg(): String {
-        var result = ""
-        result += "     * @param ${snakeToCamel(this.name)} ${backquotesToCode(this.description)}\n"
-        return result
-    }
-
-    fun toJavaCommentField(): String {
-        var result = ""
-        result += "${snakeToCamel(this.name)}\n\n"
-        result += "    /**\n     * ${backquotesToCode(this.description)}\n"
-        return result + "     */\n\n"
-    }
-
-    fun toRustCommentArg(): String {
-        var result = ""
-        result += "    /// * `${this.name}` -- ${this.description}\n"
-        return result
-    }
-
-    fun toRustCommentField(): String {
-        var result = ""
-        result += "${this.name}\n\n"
-        result += "    /// ${this.description}\n"
-        return result + "\n"
-    }
-
-    fun toNodejsCommentArg(): String {
-        var result = ""
-        result += "     * @param ${snakeToCamel(this.name)} - ${backquotesToCode(this.description)}\n"
-        return result
-    }
-
-    fun toNodejsCommentField(): String {
-        var result = ""
-        result += "${snakeToCamel(this.name)}\n\n"
-        result += "    /**\n     * ${backquotesToCode(this.description)}\n"
-        return result + "     */\n\n"
-    }
+//    fun toJavaCommentArg(): String {
+//        var result = ""
+//        result += "     * @param ${snakeToCamel(this.name)} ${backquotesToCode(this.description)}\n"
+//        return result
+//    }
+//
+//    fun toJavaCommentField(): String {
+//        var result = ""
+//        result += "${snakeToCamel(this.name)}\n\n"
+//        result += "    /**\n     * ${backquotesToCode(this.description)}\n"
+//        return "$result     */\n\n"
+//    }
+//
+//    fun toRustCommentArg(): String {
+//        var result = ""
+//        result += "    /// * `${this.name}` -- ${this.description}\n"
+//        return result
+//    }
+//
+//    fun toRustCommentField(): String {
+//        var result = ""
+//        result += "${this.name}\n\n"
+//        result += "    /// ${this.description}\n"
+//        return "$result\n"
+//    }
+//
+//    fun toNodejsCommentArg(): String {
+//        var result = ""
+//        result += "     * @param ${snakeToCamel(this.name)} - ${backquotesToCode(this.description)}\n"
+//        return result
+//    }
+//
+//    fun toNodejsCommentField(): String {
+//        var result = ""
+//        result += "${snakeToCamel(this.name)}\n\n"
+//        result += "    /**\n     * ${backquotesToCode(this.description)}\n"
+//        return "$result     */\n\n"
+//    }
 }
 
 fun backquotesToCode(text: String?): String? {
@@ -95,6 +91,6 @@ fun backquotesToCode(text: String?): String? {
 }
 
 fun snakeToCamel(text: String): String {
-    val splitted = text.split("_")
-    return splitted.first()!! + splitted.drop(1).map { it.capitalize() }.joinToString("")
+    val words = text.split("_")
+    return words.first() + words.drop(1).joinToString("") { it.capitalize() }
 }

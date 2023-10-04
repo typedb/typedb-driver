@@ -42,15 +42,15 @@ fun main(args: Array<String>) {
     val docsDir = Paths.get(outputDirectoryName)
     Files.createDirectory(docsDir)
 
+//    val overallOutputFile = docsDir.resolve("_rust_driver.adoc").toFile()
+
     File(inputDirectoryName).walkTopDown().filter {
         it.toString().contains("struct.") || it.toString().contains("trait.") || it.toString().contains("enum.")
     }.forEach {
         val html = it.readText(Charsets.UTF_8)
         val parsed = Jsoup.parse(html)
         val anchor = getAnchorFromUrl(it.toString())
-        val overallOutputFile = docsDir.resolve("_rust_driver.adoc").toFile()
         val parsedClass = if (!parsed.select(".main-heading h1 a.struct").isNullOrEmpty()) {
-//            println(parsedClass)
             parseClass(parsed, anchor)
         } else if (!parsed.select(".main-heading h1 a.trait").isNullOrEmpty()) {
             parseTrait(parsed, anchor)
@@ -63,7 +63,7 @@ fun main(args: Array<String>) {
             val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
             outputFile.createNewFile()
             outputFile.writeText(parsedClass.toAsciiDoc("rust"))
-            overallOutputFile.appendText(parsedClass.toAsciiDoc("rust"))
+//            overallOutputFile.appendText(parsedClass.toAsciiDoc("rust"))
         }
     }
 }
@@ -87,10 +87,10 @@ fun parseClass(document: Element, classAnchor: String): Class {
 
     return Class(
         name = className,
+        anchor = classAnchor,
         description = classDescr,
         fields = fields,
         methods = methods,
-        anchor = classAnchor,
         superClasses = traits,
     )
 }
@@ -107,9 +107,9 @@ fun parseTrait(document: Element, classAnchor: String): Class {
 
     return Class(
         name = "Trait $className",
+        anchor = classAnchor,
         description = classDescr,
         methods = methods,
-        anchor = classAnchor,
     )
 }
 
@@ -117,24 +117,17 @@ fun parseEnum(document: Element, classAnchor: String): Class {
     val className = document.selectFirst(".main-heading h1 a.enum")!!.text()
     val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { it.html() }
 
-//    val fields = document.select(".structfield").map {
-//        parseField(it)
-//    }
+    val variants = document.select("section.variant").map { parseEnumConstant(it) }
 
-    val variants = document.select("section.variant").map {
-        parseEnumConstant(it)
-    }
-
-    val methods = document.select("#implementations-list details[class*=method-toggle]:has(summary section.method)").map {
-        parseMethod(it, classAnchor)
-    }
+    val methods = document.select("#implementations-list details[class*=method-toggle]:has(summary section.method)")
+        .map { parseMethod(it, classAnchor)}
 
     return Class(
         name = className,
+        anchor = classAnchor,
         description = classDescr,
         enumConstants = variants,
         methods = methods,
-        anchor = classAnchor,
     )
 }
 
@@ -146,6 +139,7 @@ fun parseMethod(element: Element, classAnchor: String): Method {
     )
     val allArgs = getArgsFromSignature(methodSignature)
     val methodReturnType = if (methodSignature.contains(" -> ")) methodSignature.split(" -> ").last() else null
+
     val methodDescr = if (element.select("div.docblock p").isNotEmpty()) {
         element.select("div.docblock p").map { reformatTextWithCode(it.html()) }
     } else {
@@ -153,26 +147,28 @@ fun parseMethod(element: Element, classAnchor: String): Method {
             "<<#_" + getAnchorFromUrl(it.attr("href")) + ",Read more>>"
         }
     }
+
     val methodExamples = element.select("div.docblock div.example-wrap pre").map { it.text() }
+
     val methodArgs = element.select("div.docblock ul li code:eq(0)").map {
         val argName = it.text().trim()
         assert(allArgs.contains(argName))
         val argDescr = reformatTextWithCode(removeArgName(it.parent()!!.html())).removePrefix(" – ")
         Argument(
             name = argName,
+            description = argDescr,
             type = allArgs[argName]?.trim(),
-            description = argDescr
         )
     }
 
     return Method(
         name = methodName,
         signature = methodSignature,
-        description = methodDescr,
-        args = methodArgs,
-        returnType = methodReturnType,
-        examples = methodExamples,
         anchor = "${classAnchor}_$methodAnchor",
+        args = methodArgs,
+        description = methodDescr,
+        examples = methodExamples,
+        returnType = methodReturnType,
     )
 
 }
@@ -182,9 +178,9 @@ fun parseField(element: Element, classAnchor: String): Argument {
     val descr = element.nextElementSibling()?.selectFirst(".docblock")?.let { reformatTextWithCode(it.html()) }
     return Argument(
         name = nameAndType[0],
-        type = nameAndType[1],
-        description = descr,
         anchor = "${classAnchor}_${nameAndType[0]}",
+        description = descr,
+        type = nameAndType[1],
     )
 }
 
@@ -197,7 +193,7 @@ fun parseEnumConstant(element: Element): EnumConstant {
 }
 
 fun getArgsFromSignature(methodSignature: String): Map<String, String?> {
-//    Splitting by ", " is incorrect (could be used in the type)
+//    Splitting by ", " is incorrect (could be used in the type), but we don't have such cases now
     return methodSignature
         .substringAfter("(").substringBeforeLast(")")
         .split(",\\s".toRegex()).associate {
