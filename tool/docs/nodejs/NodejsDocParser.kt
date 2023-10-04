@@ -124,16 +124,18 @@ fun parseMethod(element: Element): Method {
     val methodSignature = element.text()
     val methodName = element.selectFirst(".tsd-kind-call-signature, .tsd-kind-constructor-signature")!!.text()
     val descrElement = element.nextElementSibling()
-    val methodReturnType = descrElement!!.select(".tsd-returns-title > *")
-        .joinToString("") { it.text() }
+    val methodReturnType = descrElement!!
+        .selectFirst(".tsd-description > .tsd-returns-title:not(.tsd-parameter-signature .tsd-returns-title)")
+        ?.text()?.substringAfter("Returns ")
     val methodDescr = descrElement.select(".tsd-description > .tsd-comment p").map { reformatTextWithCode(it.html()) }
     val methodExamples = descrElement.select(".tsd-description > .tsd-comment > :has(a[href*=examples]) + pre > :not(button)")
         .map { it.text() }
 
-    val methodArgs = descrElement.select(".tsd-description .tsd-parameters .tsd-parameter-list > li").map {
+    val methodArgs = descrElement.select(".tsd-description > .tsd-parameters > .tsd-parameter-list > " +
+            "li:not(.tsd-parameter-signature li)").map {
         Argument(
             name = it.selectFirst(".tsd-kind-parameter")!!.text(),
-            type = it.selectFirst(".tsd-signature-type")?.text(),
+            type = it.selectFirst("h5")!!.text().substringAfter(": "),
             description = it.selectFirst(".tsd-comment")?.let { reformatTextWithCode(it.html()) },
         )
     }
