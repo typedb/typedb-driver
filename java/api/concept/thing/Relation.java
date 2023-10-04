@@ -103,9 +103,30 @@ public interface Relation extends Thing {
      */
     void removePlayer(TypeDBTransaction transaction, RoleType roleType, Thing player);
 
+    /**
+     * Retrieves all role players of this <code>Relation</code>, optionally filtered by given role types.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * relation.getPlayersByRoleType(transaction, roleTypes);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param roleTypes 0 or more role types
+     */
     @CheckReturnValue
     Stream<? extends Thing> getPlayersByRoleType(TypeDBTransaction transaction, RoleType... roleTypes);
 
+    /**
+     * Retrieves a mapping of all instances involved in the <code>Relation</code> and the role each play.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * relation.getPlayers(transaction)
+     * </pre>
+     *
+     * @param transaction The current transaction
+     */
     @CheckReturnValue
     Map<? extends RoleType, ? extends List<? extends Thing>> getPlayers(TypeDBTransaction transaction);
 
