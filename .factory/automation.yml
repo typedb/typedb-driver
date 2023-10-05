@@ -72,6 +72,7 @@ build:
       image: vaticle-ubuntu-22.04
       command: |
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        rm -rf java/docs nodejs/docs python/docs rust/docs
         tool/docs/update.sh
         git diff --exit-code java/docs nodejs/docs python/docs rust/docs
 
