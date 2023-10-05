@@ -20,7 +20,6 @@
 #
 
 load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
-load("@vaticle_dependencies_tool_docs//:requirements.bzl", "requirement")
 
 def html_docs_parser(name, data, language, feature=""):
     script_name = language.title() + "DocParser"
