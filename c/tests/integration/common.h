@@ -19,10 +19,10 @@
  * under the License.
  */
 
-#define NOT_NULL(RES, FN_CALL) if(!((RES) = (FN_CALL)) ){return 1;}
+#define PRINT_ERR() print_error(__FILE__, __LINE__)
+#define NOT_NULL(X) {if(!RES) return 1; }
 #define OK(OP) {int errno=(OP); if(errno) return errno;}
-
-#define ASSERT(COND, MSG)
+#define null 0
 
 
 #ifdef TEST_TYPEDB_ENTERPRISE
@@ -33,8 +33,8 @@
 
 
 
-void print_error();
+bool print_error(char* filename, int lineno);
 
-int run_test_core(const char* test_name, const char* test_fn);
+int run_test_core(const char* test_name, int (*test_fn)(const Connection*));
 
-int run_test_enterprise(const char* test_name, const char* test_fn);
+int run_test_enterprise(const char* test_name, int (*test_fn)(const Connection*));

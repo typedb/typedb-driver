@@ -24,34 +24,105 @@
 #include "../typedb_driver.h"
 #include "common.h"
 
-int test_basic(const Connection* conn) {
-    OK( create_test_database_with_schema(conn, "define person sub entity;") );
+bool delete_database_if_exists(DatabaseManager* dbMgr, char* name) {
+    Database* database = databases_get(dbMgr, "test");
+    if (null != database) {
+        database_delete(database); // PRINT_ERR();
+    } else error_drop(get_last_error()); // Clear the error
+    return true;
+}
 
-    /*
-        async fn basic(connection: Connection) -> typedb_driver::Result {
-            common::create_test_database_with_schema(connection.clone(), "define person sub entity;").await?;
-            let databases = DatabaseManager::new(connection);
-            assert!(databases.contains(common::TEST_DATABASE).await?);
 
-            let session = Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?;
-            let transaction = session.transaction(Write).await?;
-            let answer_stream = transaction.query().match_("match $x sub thing;")?;
-            let results: Vec<_> = answer_stream.collect().await;
-            transaction.commit().await?;
-            assert_eq!(results.len(), 5);
-            assert!(results.into_iter().all(|res| res.is_ok()));
+int test_basic_happy(const Connection* conn) {
+    DatabaseManager* dbMgr = database_manager_new(conn);
+    delete_database_if_exists(dbMgr, "test");
+    databases_create(dbMgr, "test");
 
-            Ok(())
+    Options* opts = options_new();
+    Session* session = session_new(databases_get(dbMgr, "test"), Schema, opts);
+    Transaction* transaction = transaction_new(session, Write, opts);
+
+    query_define(transaction, "define person sub entity;", opts);
+    {
+        ConceptMapIterator* it = query_match(transaction, "match $t sub thing;", opts);
+        ConceptMap* conceptMap;
+        printf("Results:\n");
+        while ( null != (conceptMap = concept_map_iterator_next(it)) ) {
+            Concept* concept = concept_map_get(conceptMap, "t");
+            char* label = thing_type_get_label(concept);
+            printf("- %s\n", label);
+            free(label);
+            concept_drop(concept);
+            concept_map_drop(conceptMap);
         }
-    */
+        concept_map_iterator_drop(it);
+    }
+    transaction_commit(transaction);
+
+    session_force_close(session);
+    options_drop(opts);
+    delete_database_if_exists(dbMgr, "test");
+    database_manager_drop(dbMgr);
+    printf("Test ran successfully\n");
+    return 0;
+}
+
+int test_basic_happy__DEBUG(const Connection* conn) {
+    DatabaseManager* dbMgr = database_manager_new(conn);
+    PRINT_ERR();
+    delete_database_if_exists(dbMgr, "test");
+    PRINT_ERR();
+    databases_create(dbMgr, "test");
+    PRINT_ERR();
+
+    Options* opts = options_new();
+    PRINT_ERR();
+    Session* session = session_new(databases_get(dbMgr, "test"), Schema, opts);
+    PRINT_ERR();
+    Transaction* transaction = transaction_new(session, Write, opts);
+    PRINT_ERR();
+
+    query_define(transaction, "define person sub entity;", opts);
+    {
+        ConceptMapIterator* it = query_match(transaction, "match $t sub thing;", opts);
+        ConceptMap* conceptMap;
+        printf("Results:\n");
+        while ( null != (conceptMap = concept_map_iterator_next(it)) ) {
+            Concept* concept = concept_map_get(conceptMap, "t");
+            PRINT_ERR();
+            char* label = thing_type_get_label(concept);
+            PRINT_ERR();
+            printf("- %s\n", label);
+            free(label);
+            concept_drop(concept);
+            concept_map_drop(conceptMap);
+        }
+        concept_map_iterator_drop(it);
+        PRINT_ERR();
+    }
+    transaction_commit(transaction);
+    PRINT_ERR();
+
+    // transaction_drop(transaction); PRINT_ERR();
+    session_force_close(session); //    session_drop(session);
+    PRINT_ERR();
+    options_drop(opts);
+    PRINT_ERR();
+    delete_database_if_exists(dbMgr, "test");
+
+
+    database_manager_drop(dbMgr);
+    PRINT_ERR();
+    fprintf(stdout, "Test ran successfully\n");
+    fflush(stdout);
 
     return 0;
 }
 
 
-
 int main() {
-    RUN_TEST(test_basic);
-    Connection* conn = connection_open_core("127.0.0.1:1729");
+    run_test_core("test_basic_happy", &test_basic_happy);
+//    RUN_TEST(test_basic_happy);
+
     return 0;
 }

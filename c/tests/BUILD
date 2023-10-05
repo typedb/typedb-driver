@@ -22,25 +22,15 @@
 package(default_visibility = ["//visibility:public"])
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-cc_library(
-    name = "c-wrapper",
-    srcs = ["wrapper/*.*"],
-    deps = [
-        "//c:typedb_driver_clib_headers",
-        "//c:typedb_driver_clib"
-    ],
-)
-
 cc_test(
     name = "test-database",
     srcs = glob(["integration/*.*"]),
     includes = ["."],
     deps = [
-        ":c-wrapper",
-#        "//c:typedb_driver_clib_headers",
-#        "//c:typedb_driver_clib"
+        "//c:typedb_driver_clib_headers",
+        "//c:typedb_driver_clib"
     ],
-    env = {"RUST_BACKTRACE" : "1"},
+    env = {"RUST_BACKTRACE" : "full"},
 )
 
 checkstyle_test(

@@ -22,38 +22,44 @@
 #include <stdio.h>
 
 #include "../typedb_driver.h"
+#include "common.h"
 
-void print_error() {
+bool print_error(char* filename, int lineno) {
+    fprintf(stdout, "Checking errors at : %s: %d\n", filename, lineno);
+    fflush(stdout);
     if (check_error()) {
         Error* error = get_last_error();
         char* errcode = error_code(error);
         char* errmsg = error_message(error);
-        fprintf(stderr, "Error!\n%s: %s", errcode, errmsg);
+        fprintf(stderr, "Error!\nCheck called at %s:%d\n%s: %s\n", filename, lineno, errcode, errmsg);
+        fflush(stderr);
         free(errmsg);
         free(errcode);
         error_drop(error);
-    }
+        return true;
+    } else return false;
+
 }
 
-int run_test_core(const char* test_name, const char* test_fn) {
-    fprintf(stdout, "Running test %s on core", test_name);
-    int errno;
+int run_test_core(const char* test_name, int (*test_fn)(const Connection*) ) {
+    fprintf(stdout, "Running test %s on core\n", test_name);
+    int errno = -1;
     {
         Connection* conn = connection_open_core("127.0.0.1:1729");
-        run_test(conn);
-        if (errno) print_error(); // TODO: Can I move this after connection close?
+        errno = (*test_fn)(conn);
+        if (errno) PRINT_ERR(); // TODO: Can I move this after connection close?
         connection_close(conn);
     }
     return errno;
 }
 
-int run_test_enterprise(const char* test_name, const char* test_fn) {
-    fprintf(stdout, "Running test %s on enterprise", test_name);
-    int errno;
+int run_test_enterprise(const char* test_name, int (*test_fn)(const Connection*)) {
+    fprintf(stdout, "Running test %s on enterprise\n", test_name);
+    int errno = -1;
     {
         Connection* conn = connection_open_core("127.0.0.1:1729");
-        run_test(conn);
-        if (errno) print_error(); // TODO: Can I move this after connection close?
+        errno = (*test_fn)(conn);
+        if (errno) PRINT_ERR(); // TODO: Can I move this after connection close?
         connection_close(conn);
     }
     return errno;
