@@ -41,8 +41,7 @@ checkstyle_test(
     size = "small",
     include = glob([
         "*",
-        "src/**/*",
-        "swig/*",
+        "integration/*",
     ]),
     license_type = "apache-header",
 )
