@@ -19,12 +19,12 @@
  * under the License.
  */
 
-const TypeDoc = require("typedoc");
+import TypeDoc = require("typedoc");
 
 async function main() {
     const app = await TypeDoc.Application.bootstrapWithPlugins({
-        tsconfig: ["nodejs/tsconfig.json"],
-        options: ["nodejs/tool/typedoc/typedoc.json"],
+        tsconfig: "nodejs/tsconfig.json",
+        options: "nodejs/tool/typedoc/typedoc.json",
         entryPoints: ["nodejs"],
     });
 
