@@ -68,7 +68,7 @@ sphinx_docs(
     script = ":sphinx_runner",
     target = ":assemble-pip39",
     srcs = glob(["tool/sphinx/source/*"]),
-    out = "docs/build",
+    out = "driver_docs_sphinx",
 )
 
 html_docs_parser(

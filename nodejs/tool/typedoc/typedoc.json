@@ -1,6 +1,4 @@
 {
   "name": "TypeDB Driver",
-//  "excludeNotDocumented": true,
-//  "excludeNotDocumentedKinds": ["Property", "TypeAlias", "Namespace", "Module"],
   "disableSources": true
 }

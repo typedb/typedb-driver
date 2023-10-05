@@ -34,7 +34,6 @@ def _typedoc_doc_impl(ctx):
         _copy_to_bin(ctx, src, dst)
         dsts.append(dst)
 
-#    print(ctx.files.srcs)
     ctx.actions.run(
         inputs = [ctx.executable.script] + ctx.files.deps + dsts,
         outputs = [ctx.outputs.out],

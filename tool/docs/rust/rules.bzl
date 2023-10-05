@@ -23,6 +23,7 @@ load("@rules_rust//rust:defs.bzl", "rust_doc")
 load("//tool/docs:rules.bzl", "html_docs_parser")
 
 def rust_docs_parser(name, feature):
+    # rust_doc from rules_rust < 0.20 produces a zip-archive
     rust_doc(
         name = "driver_docs_zip_" + feature,
         crate = ":typedb_driver",

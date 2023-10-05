@@ -22,7 +22,7 @@
 load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
 
 def html_docs_parser(name, data, language, feature=""):
-    script_name = language.title() + "DocParser"
+    script_name = language.title() + "DocsParser"
 
     kt_jvm_binary(
         name = name,

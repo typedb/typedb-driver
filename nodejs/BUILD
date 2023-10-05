@@ -74,14 +74,14 @@ ts_project(
     deps = [
         ":typedb-protocol",
 
-#        ":node_modules/google-protobuf",
-#        ":node_modules/@types/google-protobuf",
+        ":node_modules/google-protobuf",
+        ":node_modules/@types/google-protobuf",
 
         ":node_modules/@grpc/grpc-js",
         ":node_modules/@types/node",
-#        ":node_modules/typescript",
+        ":node_modules/typescript",
 
-#        ":node_modules/uuid",
+        ":node_modules/uuid",
         ":node_modules/@types/uuid",
     ],
     visibility = ["//visibility:public"],

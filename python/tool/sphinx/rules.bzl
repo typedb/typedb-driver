@@ -55,7 +55,7 @@ sphinx_docs = rule(
         "target": attr.label(
             mandatory = True,
             allow_files = True,
-            doc = "Package .tar.gz archive",
+            doc = "Driver package, including .tar.gz archive",
         ),
         "srcs": attr.label_list(
             mandatory = True,
@@ -71,15 +71,4 @@ sphinx_docs = rule(
     doc = """
         Creates an HTML documentation for python module using Sphinx.
         """
-
 )
-
-
-#def sphinx_docs(name, script, target, srcs, out):
-#    _sphinx_docs(
-#        name = name,
-#        script = script,
-#        target = target,
-#        srcs = srcs,
-#        out = out,
-#    )

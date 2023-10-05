@@ -6,10 +6,9 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'typedb-client'
+project = 'typedb-driver'
 copyright = '2023, Vaticle'
 author = 'Vaticle'
-release = '0.0.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
