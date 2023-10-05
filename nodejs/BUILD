@@ -35,7 +35,7 @@ load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
 load("@npm//:defs.bzl", "npm_link_all_packages")
-load("//nodejs:tool/typedoc/rules.bzl", "typedoc_doc")
+load("//nodejs:tool/typedoc/rules.bzl", "typedoc_docs")
 load("//tool/docs:rules.bzl", "html_docs_parser")
 
 npm_link_all_packages(
@@ -74,14 +74,14 @@ ts_project(
     deps = [
         ":typedb-protocol",
 
-        ":node_modules/google-protobuf",
-        ":node_modules/@types/google-protobuf",
+#        ":node_modules/google-protobuf",
+#        ":node_modules/@types/google-protobuf",
 
         ":node_modules/@grpc/grpc-js",
         ":node_modules/@types/node",
-        ":node_modules/typescript",
+#        ":node_modules/typescript",
 
-        ":node_modules/uuid",
+#        ":node_modules/uuid",
         ":node_modules/@types/uuid",
     ],
     visibility = ["//visibility:public"],
@@ -119,7 +119,6 @@ ts_project(
     deps = [
         ":node_modules/typedoc",
         ":node_modules/@types/node",
-        ":node_modules/typescript",
     ],
     visibility = ["//visibility:public"],
     out_dir = ".",
@@ -129,34 +128,18 @@ js_binary(
     name = "typedoc_runner_bin",
     data = [
         ":typedoc_runner",
-        ":node_modules/typedoc",
-        ":typedb-protocol",
-        ":node_modules/google-protobuf",
-        ":node_modules/@types/google-protobuf",
-        ":node_modules/@grpc/grpc-js",
-        ":node_modules/@types/node",
-        ":node_modules/typescript",
-        ":node_modules/uuid",
-        ":node_modules/@types/uuid",
     ],
     entry_point = ":typedoc_runner",
     chdir = "nodejs",
 )
 
-typedoc_doc(
+typedoc_docs(
     name = "driver_docs",
     script = ":typedoc_runner_bin",
     deps = [
-        ":typedoc_runner_bin",
-        ":typedoc_runner",
-        ":node_modules/typedoc",
         ":typedb-protocol",
-        ":node_modules/google-protobuf",
-        ":node_modules/@types/google-protobuf",
         ":node_modules/@grpc/grpc-js",
         ":node_modules/@types/node",
-        ":node_modules/typescript",
-        ":node_modules/uuid",
         ":node_modules/@types/uuid",
     ],
     srcs = glob([
@@ -172,7 +155,7 @@ typedoc_doc(
         "tsconfig.json",
         "tool/typedoc/*.json",
     ]),
-    out = "docs-build",
+    out = "driver_docs_typedoc",
 )
 
 html_docs_parser(

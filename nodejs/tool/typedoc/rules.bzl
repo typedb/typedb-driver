@@ -34,7 +34,7 @@ def _typedoc_doc_impl(ctx):
         _copy_to_bin(ctx, src, dst)
         dsts.append(dst)
 
-    print(ctx.files.srcs)
+#    print(ctx.files.srcs)
     ctx.actions.run(
         inputs = [ctx.executable.script] + ctx.files.deps + dsts,
         outputs = [ctx.outputs.out],
@@ -46,23 +46,23 @@ def _typedoc_doc_impl(ctx):
     return DefaultInfo(files = depset([ctx.outputs.out]))
 
 
-typedoc_doc = rule(
+typedoc_docs = rule(
     attrs = {
         "script": attr.label(
             mandatory = True,
             executable = True,
             cfg = "exec",
-            doc = "Python script for running typedoc",
+            doc = "Script for running typedoc",
         ),
         "deps": attr.label_list(
             mandatory = True,
             allow_files = True,
-            doc = "Dependencies for typedoc",
+            doc = "Dependencies for typedoc and driver",
         ),
         "srcs": attr.label_list(
             mandatory = True,
             allow_files = True,
-            doc = "Client source files",
+            doc = "Driver source files",
         ),
         "out": attr.output(
             mandatory = True,
@@ -73,15 +73,4 @@ typedoc_doc = rule(
     doc = """
         Creates an HTML documentation for python module using typedoc.
         """
-
 )
-
-
-#def typedoc_doc(name, script, deps, srcs, out):
-#    _typedoc_doc(
-#        name = name,
-#        script = script,
-#        deps = deps,
-#        srcs = srcs,
-#        out = out,
-#    )
