@@ -86,7 +86,7 @@ data class Class(
             result += "// tag::properties[]\n"
             result += "[cols=\"~,~,~\"]\n[options=\"header\"]\n|===\n"
             result += "|Name |Type |Description\n"
-            this.fields.forEach { result += it.toAsciiDocPage(language) }
+            this.fields.forEach { result += it.toAsciiDocAsField(language) }
             result += "|===\n"
             result += "// end::properties[]\n\n"
         }

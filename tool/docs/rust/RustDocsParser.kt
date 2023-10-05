@@ -213,7 +213,7 @@ fun reformatTextWithCode(html: String): String {
 }
 
 fun enhanceSignature(signature: String): String {
-    return replaceSymbols(removeAllTags(replaceSpaces(dispatchNewlines(signature))))
+    return replaceHtmlSymbols(removeAllTags(replaceSpaces(dispatchNewlines(signature))))
 }
 
 fun dispatchNewlines(html: String): String {

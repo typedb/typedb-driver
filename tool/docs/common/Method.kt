@@ -51,7 +51,7 @@ data class Method(
                 result += " |Default Value"
             }
             result += "\n"
-            this.args.forEach { result += it.toAsciiDocTableRow(language) + "\n" }
+            this.args.forEach { result += it.toAsciiDocAsArgument(language) + "\n" }
             result += "|===\n\n"
         }
 

@@ -28,7 +28,7 @@ data class Variable(
     val description: String? = null,
     val type: String? = null,
 ) {
-    fun toAsciiDocPage(language: String): String {
+    fun toAsciiDocAsField(language: String): String {
         var result = ""
         result += "a| `${this.name}` "
         result += "a| `${this.type}` "
@@ -36,7 +36,7 @@ data class Variable(
         return result
     }
 
-    fun toAsciiDocTableRow(language: String): String {
+    fun toAsciiDocAsArgument(language: String): String {
         var result = ""
         result += "a| `${this.name}` "
         result += "a| ${this.description} "
