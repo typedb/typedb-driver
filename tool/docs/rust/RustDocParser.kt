@@ -61,7 +61,7 @@ fun main(args: Array<String>) {
             null
         }
         parsedClass?.let {
-            val outputFile = docsDir.resolve(parsedClass.name + ".adoc").toFile()
+            val outputFile = docsDir.resolve(parsedClass.name.replace(" ", "_") + ".adoc").toFile()
             outputFile.createNewFile()
             outputFile.writeText(parsedClass.toAsciiDoc("rust"))
 //            overallOutputFile.appendText(parsedClass.toAsciiDoc("rust"))
