@@ -46,7 +46,6 @@ impl Drop for Session {
 }
 
 impl Session {
-
     /// Opens a communication tunnel (session) to the given database with default options.
     /// See [`Session::new_with_options`]
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]

@@ -170,8 +170,14 @@ pub trait ThingTypeAPI: Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "thing_type.get_owns(transaction, Some(value_type), Transitivity::EXPLICIT, vec![Annotation::Key]);")]
-    #[cfg_attr(not(feature = "sync"), doc = "thing_type.get_owns(transaction, Some(value_type), Transitivity::EXPLICIT, vec![Annotation::Key]).await;")]
+    #[cfg_attr(
+        feature = "sync",
+        doc = "thing_type.get_owns(transaction, Some(value_type), Transitivity::EXPLICIT, vec![Annotation::Key]);"
+    )]
+    #[cfg_attr(
+        not(feature = "sync"),
+        doc = "thing_type.get_owns(transaction, Some(value_type), Transitivity::EXPLICIT, vec![Annotation::Key]).await;"
+    )]
     /// ```
     fn get_owns(
         &self,
@@ -227,8 +233,14 @@ pub trait ThingTypeAPI: Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "thing_type.set_owns(transaction, attribute_type, Some(overridden_type), vec![Annotation::Key]);")]
-    #[cfg_attr(not(feature = "sync"), doc = "thing_type.set_owns(transaction, attribute_type, Some(overridden_type), vec![Annotation::Key]).await;")]
+    #[cfg_attr(
+        feature = "sync",
+        doc = "thing_type.set_owns(transaction, attribute_type, Some(overridden_type), vec![Annotation::Key]);"
+    )]
+    #[cfg_attr(
+        not(feature = "sync"),
+        doc = "thing_type.set_owns(transaction, attribute_type, Some(overridden_type), vec![Annotation::Key]).await;"
+    )]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn set_owns(
@@ -774,7 +786,10 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     ///
     /// ```rust
     #[cfg_attr(feature = "sync", doc = "relation_type.get_relates_overridden(transaction, overridden_role_label);")]
-    #[cfg_attr(not(feature = "sync"), doc = "relation_type.get_relates_overridden(transaction, overridden_role_label).await;")]
+    #[cfg_attr(
+        not(feature = "sync"),
+        doc = "relation_type.get_relates_overridden(transaction, overridden_role_label).await;"
+    )]
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn get_relates_overridden(

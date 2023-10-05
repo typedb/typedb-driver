@@ -35,7 +35,6 @@ pub struct Credential {
 
 /// User credentials and TLS encryption settings for connecting to TypeDB enterprise.
 impl Credential {
-
     /// Creates a credential with username and password. Specifies the connection must use TLS
     ///
     /// # Arguments
