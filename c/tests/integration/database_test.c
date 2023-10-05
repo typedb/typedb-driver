@@ -59,7 +59,7 @@ int test_basic_happy(const Connection* conn) {
     }
     transaction_commit(transaction);
 
-    session_force_close(session);
+    session_drop(session);
     options_drop(opts);
     delete_database_if_exists(dbMgr, "test");
     database_manager_drop(dbMgr);
@@ -68,8 +68,10 @@ int test_basic_happy(const Connection* conn) {
 }
 
 int main() {
+    // run with `leaks --atExit -- ./bazel-bin/path/to/this-binary`
     run_test_core("test_basic_happy", &test_basic_happy);
 //    RUN_TEST(test_basic_happy);
+//    malloc(123);
 
     return 0;
 }
