@@ -21,18 +21,10 @@
 
 package com.vaticle.typedb.client.tool.doc.nodejs
 
-import java.io.File
+import com.vaticle.typedb.client.tool.doc.common.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-
-import com.vaticle.typedb.client.tool.doc.common.Argument
-import com.vaticle.typedb.client.tool.doc.common.Class
-import com.vaticle.typedb.client.tool.doc.common.EnumConstant
-import com.vaticle.typedb.client.tool.doc.common.Method
-import com.vaticle.typedb.client.tool.doc.common.mergeClasses
-import com.vaticle.typedb.client.tool.doc.common.removeAllTags
-import com.vaticle.typedb.client.tool.doc.common.replaceCodeTags
-import com.vaticle.typedb.client.tool.doc.common.replaceEmTags
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
 
@@ -135,7 +127,7 @@ fun parseMethod(element: Element): Method {
 
     val methodArgs = descrElement.select(".tsd-description > .tsd-parameters > .tsd-parameter-list > " +
             "li:not(.tsd-parameter-signature li)").map {
-        Argument(
+        Variable(
             name = it.selectFirst(".tsd-kind-parameter")!!.text(),
             type = it.selectFirst("h5")!!.text().substringAfter(": "),
             description = it.selectFirst(".tsd-comment")?.let { reformatTextWithCode(it.html()) },
@@ -172,11 +164,11 @@ fun parseAccessor(element: Element): Method {
     )
 }
 
-fun parseProperty(element: Element): Argument {
+fun parseProperty(element: Element): Variable {
     val name = element.selectFirst(".tsd-signature span.tsd-kind-property")!!.text()
     val type = element.selectFirst(".tsd-signature .tsd-signature-type")?.text()
     val descr = element.selectFirst(".tsd-signature + .tsd-comment")?.text()
-    return Argument(
+    return Variable(
         name = name,
         description = descr,
         type = type,

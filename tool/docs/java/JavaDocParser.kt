@@ -21,15 +21,7 @@
 
 package com.vaticle.typedb.client.tool.doc.java
 
-import com.vaticle.typedb.client.tool.doc.common.Argument
-import com.vaticle.typedb.client.tool.doc.common.Class
-import com.vaticle.typedb.client.tool.doc.common.EnumConstant
-import com.vaticle.typedb.client.tool.doc.common.Method
-import com.vaticle.typedb.client.tool.doc.common.removeAllTags
-import com.vaticle.typedb.client.tool.doc.common.replaceCodeTags
-import com.vaticle.typedb.client.tool.doc.common.replaceEmTags
-import com.vaticle.typedb.client.tool.doc.common.replaceSpaces
-import com.vaticle.typedb.client.tool.doc.common.replaceSymbolsForAnchor
+import com.vaticle.typedb.client.tool.doc.common.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.io.File
@@ -152,7 +144,7 @@ fun parseMethod(element: Element): Method {
         .map {
             val arg_name = it.selectFirst("code")!!.text()
             assert(allArgs.contains(arg_name))
-            Argument(
+            Variable(
                 name = arg_name,
                 type = allArgs[arg_name]?.replace("...", "[]"),
                 description = reformatTextWithCode(it.html().substringAfter(" - ")),
@@ -174,11 +166,11 @@ fun parseMethod(element: Element): Method {
 
 }
 
-fun parseField(element: Element): Argument {
+fun parseField(element: Element): Variable {
     val name = element.selectFirst(".colSecond")!!.text()
     val type = element.selectFirst(".colFirst")!!.text()
     val descr = element.selectFirst(".colLast")?.text()
-    return Argument(
+    return Variable(
         name = name,
         description = descr,
         type = type,

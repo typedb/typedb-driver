@@ -25,7 +25,7 @@ data class Method(
     val name: String,
     val signature: String,
     val anchor: String? = null,
-    val args: List<Argument> = listOf(),
+    val args: List<Variable> = listOf(),
     val description: List<String> = listOf(),
     val examples: List<String> = listOf(),
     val returnDescription: String? = null,

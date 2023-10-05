@@ -27,7 +27,7 @@ data class Class(
     val enumConstants: List<EnumConstant> = listOf(),
     val description: List<String> = listOf(),
     val examples: List<String> = listOf(),
-    val fields: List<Argument> = listOf(),
+    val fields: List<Variable> = listOf(),
     val methods: List<Method> = listOf(),
     val packagePath: String? = null,
     val superClasses: List<String> = listOf(),

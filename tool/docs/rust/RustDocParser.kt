@@ -21,20 +21,10 @@
 
 package com.vaticle.typedb.client.tool.doc.rust
 
-import java.io.File
+import com.vaticle.typedb.client.tool.doc.common.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-
-import com.vaticle.typedb.client.tool.doc.common.Argument
-import com.vaticle.typedb.client.tool.doc.common.Class
-import com.vaticle.typedb.client.tool.doc.common.EnumConstant
-import com.vaticle.typedb.client.tool.doc.common.Method
-import com.vaticle.typedb.client.tool.doc.common.removeAllTags
-import com.vaticle.typedb.client.tool.doc.common.replaceCodeTags
-import com.vaticle.typedb.client.tool.doc.common.replaceEmTags
-import com.vaticle.typedb.client.tool.doc.common.replaceSpaces
-import com.vaticle.typedb.client.tool.doc.common.replaceSymbols
-import com.vaticle.typedb.client.tool.doc.common.replaceSymbolsForAnchor
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
 
@@ -157,7 +147,7 @@ fun parseMethod(element: Element, classAnchor: String): Method {
         val argName = it.text().trim()
         assert(allArgs.contains(argName))
         val argDescr = reformatTextWithCode(removeArgName(it.parent()!!.html())).removePrefix(" – ")
-        Argument(
+        Variable(
             name = argName,
             description = argDescr,
             type = allArgs[argName]?.trim(),
@@ -176,10 +166,10 @@ fun parseMethod(element: Element, classAnchor: String): Method {
 
 }
 
-fun parseField(element: Element, classAnchor: String): Argument {
+fun parseField(element: Element, classAnchor: String): Variable {
     val nameAndType = element.selectFirst("code")!!.text().split(": ")
     val descr = element.nextElementSibling()?.selectFirst(".docblock")?.let { reformatTextWithCode(it.html()) }
-    return Argument(
+    return Variable(
         name = nameAndType[0],
         anchor = "${classAnchor}_${nameAndType[0]}",
         description = descr,

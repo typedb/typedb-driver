@@ -21,19 +21,12 @@
 
 package com.vaticle.typedb.client.tool.doc.python
 
+import com.vaticle.typedb.client.tool.doc.common.*
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
-
-import com.vaticle.typedb.client.tool.doc.common.Argument
-import com.vaticle.typedb.client.tool.doc.common.Class
-import com.vaticle.typedb.client.tool.doc.common.EnumConstant
-import com.vaticle.typedb.client.tool.doc.common.Method
-import com.vaticle.typedb.client.tool.doc.common.removeAllTags
-import com.vaticle.typedb.client.tool.doc.common.replaceCodeTags
-import com.vaticle.typedb.client.tool.doc.common.replaceEmTags
 
 fun main(args: Array<String>) {
     val inputDirectoryName = args[0]
@@ -147,7 +140,7 @@ fun parseMethod(element: Element): Method {
         val argName = it.selectFirst("strong")!!.text()
         assert(allArgs.contains(argName))
         val argDescr = reformatTextWithCode(removeArgName(it.html())).removePrefix(" – ")
-        Argument(
+        Variable(
             name = argName,
             defaultValue = allArgs[argName]?.second,
             description = argDescr,
@@ -169,11 +162,11 @@ fun parseMethod(element: Element): Method {
 
 }
 
-fun parseProperty(element: Element): Argument {
+fun parseProperty(element: Element): Variable {
     val name = element.selectFirst("dt.sig-object span.sig-name")!!.text()
     val type = element.selectFirst("dt.sig-object span.sig-name + .property ")?.text()?.dropWhile { !it.isLetter() }
     val descr = element.select("dd > p").map { reformatTextWithCode(it.html()) }.joinToString("\n\n")
-    return Argument(
+    return Variable(
         name = name,
         description = descr,
         type = type,

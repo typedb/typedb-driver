@@ -21,7 +21,7 @@
 
 package com.vaticle.typedb.client.tool.doc.common
 
-data class Argument(
+data class Variable(
     val name: String,
     val anchor: String? = null,
     val defaultValue: String? = null,
