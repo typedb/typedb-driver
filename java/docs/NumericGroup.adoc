@@ -1,0 +1,67 @@
+[#_NumericGroup]
+= NumericGroup
+
+*Package*: `com.vaticle.typedb.driver.api.answer`
+
+== Description
+
+Contains an element of the group aggregate query result.
+
+== Methods
+
+// tag::methods[]
+[#_owner_]
+=== owner
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+Concept owner()
+----
+
+==== Description
+
+Retrieves the concept that is the group owner. 
+
+
+==== Returns
+
+`Concept`
+
+==== Code examples
+
+[source,java]
+----
+conceptMapGroup.owner()
+----
+
+[#_numeric_]
+=== numeric
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+Numeric numeric()
+----
+
+==== Description
+
+Retrieves the `Numeric` answer of the group. 
+
+
+==== Returns
+
+`Numeric`
+
+==== Code examples
+
+[source,java]
+----
+numericGroup.numeric();
+----
+
+// end::methods[]

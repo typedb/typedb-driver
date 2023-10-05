@@ -1,0 +1,278 @@
+[#_struct_UserManager]
+= UserManager
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+== Description
+
+Provides access to all user management methods.
+
+== Fields
+
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `connection` a| `Connection` a| 
+|===
+// end::properties[]
+
+== Methods
+
+// tag::methods[]
+[#_struct_UserManager_method_current_user]
+=== current_user
+
+==== Signature
+
+[source,rust]
+----
+pub fn current_user(&self) -> Result<Option<User>>
+----
+
+==== Description
+
+Returns the logged-in user for the connection.
+
+==== Returns
+
+[source,rust]
+----
+Result<Option<User>>
+----
+
+==== Code examples
+
+[source,rust]
+----
+driver.users.current_user().await;
+----
+
+[#_struct_UserManager_method_all]
+=== all
+
+==== Signature
+
+[source,rust]
+----
+pub fn all(&self) -> Result<Vec<User>>
+----
+
+==== Description
+
+Retrieves all users which exist on the TypeDB server.
+
+==== Returns
+
+[source,rust]
+----
+Result<Vec<User>>
+----
+
+==== Code examples
+
+[source,rust]
+----
+driver.users.all().await;
+----
+
+[#_struct_UserManager_method_contains]
+=== contains
+
+==== Signature
+
+[source,rust]
+----
+pub fn contains(&self, username: impl Into<String>) -> Result<bool>
+----
+
+==== Description
+
+Checks if a user with the given name exists.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The user name to be checked a| `impl Into<String>` 
+|===
+
+==== Returns
+
+[source,rust]
+----
+Result<bool>
+----
+
+==== Code examples
+
+[source,rust]
+----
+driver.users.contains(username).await;
+----
+
+[#_struct_UserManager_method_create]
+=== create
+
+==== Signature
+
+[source,rust]
+----
+pub fn create(
+    &self,
+    username: impl Into<String>,
+    password: impl Into<String>
+) -> Result
+----
+
+==== Description
+
+Create a user with the given name &amp; password.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to be created a| `impl Into<String>` 
+a| `password` a| The password of the user to be created a| `impl Into<String>` 
+|===
+
+==== Returns
+
+[source,rust]
+----
+Result
+----
+
+==== Code examples
+
+[source,rust]
+----
+driver.users.create(username, password).await;
+----
+
+[#_struct_UserManager_method_delete]
+=== delete
+
+==== Signature
+
+[source,rust]
+----
+pub fn delete(&self, username: impl Into<String>) -> Result
+----
+
+==== Description
+
+Deletes a user with the given name.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to be deleted a| `impl Into<String>` 
+|===
+
+==== Returns
+
+[source,rust]
+----
+Result
+----
+
+==== Code examples
+
+[source,rust]
+----
+driver.users.delete(username).await;
+----
+
+[#_struct_UserManager_method_get]
+=== get
+
+==== Signature
+
+[source,rust]
+----
+pub fn get(&self, username: impl Into<String>) -> Result<Option<User>>
+----
+
+==== Description
+
+Retrieve a user with the given name.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to retrieve a| `impl Into<String>` 
+|===
+
+==== Returns
+
+[source,rust]
+----
+Result<Option<User>>
+----
+
+==== Code examples
+
+[source,rust]
+----
+driver.users.get(username).await;
+----
+
+[#_struct_UserManager_method_set_password]
+=== set_password
+
+==== Signature
+
+[source,rust]
+----
+pub fn set_password(
+    &self,
+    username: impl Into<String>,
+    password: impl Into<String>
+) -> Result
+----
+
+==== Description
+
+Sets a new password for a user. This operation can only be performed by administrators.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to set the password of a| `impl Into<String>` 
+a| `password` a| The new password a| `impl Into<String>` 
+|===
+
+==== Returns
+
+[source,rust]
+----
+Result
+----
+
+==== Code examples
+
+[source,rust]
+----
+driver.users.password_set(username, password).await;
+----
+
+// end::methods[]

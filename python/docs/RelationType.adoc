@@ -1,0 +1,351 @@
+[#_RelationType]
+= RelationType
+
+*Supertypes:*
+
+* `ThingType`
+
+== Description
+
+Relation types (or subtypes of the relation root type) represent relationships between types. Relation types have roles.
+
+Other types can play roles in relations if it’s mentioned in their definition.
+
+A relation type must specify at least one role.
+
+== Methods
+
+// tag::methods[]
+[#_as_relation_type]
+=== as_relation_type
+
+==== Signature
+
+[source,python]
+----
+as_relation_type() -> RelationType
+----
+
+==== Description
+
+Casts the concept to `RelationType`.
+
+==== Returns
+
+`RelationType`
+
+==== Code examples
+
+[source,python]
+----
+relation_type.as_relation_type()
+----
+
+[#_create]
+=== create
+
+==== Signature
+
+[source,python]
+----
+abstract create(transaction: TypeDBTransaction) -> Relation
+----
+
+==== Description
+
+Creates and returns an instance of this `RelationType`.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+|===
+
+==== Returns
+
+`Relation`
+
+==== Code examples
+
+[source,python]
+----
+relation_type.create(transaction)
+----
+
+[#_get_instances]
+=== get_instances
+
+==== Signature
+
+[source,python]
+----
+abstract get_instances(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Relation]
+----
+
+==== Description
+
+Retrieves all direct and indirect (or direct only) `Relation`s that are instances of this `RelationType`.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect instances, `Transitivity.EXPLICIT` for direct relates only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+|===
+
+==== Returns
+
+`Iterator[Relation]`
+
+==== Code examples
+
+[source,python]
+----
+relation_type.get_instances(transaction, transitivity)
+----
+
+[#_get_relates]
+=== get_relates
+
+==== Signature
+
+[source,python]
+----
+abstract get_relates(transaction: TypeDBTransaction, role_label: str | None = None, transitivity: Transitivity = Transitivity.TRANSITIVE) -> RoleType | None | Iterator[RoleType]
+----
+
+==== Description
+
+Retrieves roles that this `RelationType` relates to directly or via inheritance. If `role_label` is given, returns a corresponding `RoleType` or `None`.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `role_label` a| Label of the role we wish to retrieve (optional) a| `str \| None` a| `None`
+a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and inherited relates, `Transitivity.EXPLICIT` for direct relates only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+|===
+
+==== Returns
+
+`RoleType | None | Iterator[RoleType]`
+
+==== Code examples
+
+[source,python]
+----
+relation_type.get_relates(transaction, role_label, transitivity)
+----
+
+[#_get_relates_overridden]
+=== get_relates_overridden
+
+==== Signature
+
+[source,python]
+----
+abstract get_relates_overridden(transaction: TypeDBTransaction, role_label: str) -> RoleType | None
+----
+
+==== Description
+
+Retrieves a `RoleType` that is overridden by the role with the `role_label`.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `role_label` a| Label of the role that overrides an inherited role a| `str` a| 
+|===
+
+==== Returns
+
+`RoleType | None`
+
+==== Code examples
+
+[source,python]
+----
+relation_type.get_relates_overridden(transaction, role_label)
+----
+
+[#_get_subtypes]
+=== get_subtypes
+
+==== Signature
+
+[source,python]
+----
+abstract get_subtypes(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[RelationType]
+----
+
+==== Description
+
+Retrieves all direct and indirect (or direct only) subtypes of the `RelationType`.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect subtypes, `Transitivity.EXPLICIT` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+|===
+
+==== Returns
+
+`Iterator[RelationType]`
+
+==== Code examples
+
+[source,python]
+----
+relation_type.get_subtypes(transaction, transitivity)
+----
+
+[#_is_relation_type]
+=== is_relation_type
+
+==== Signature
+
+[source,python]
+----
+is_relation_type() -> bool
+----
+
+==== Description
+
+Checks if the concept is a `RelationType`.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+relation_type.is_relation_type()
+----
+
+[#_set_relates]
+=== set_relates
+
+==== Signature
+
+[source,python]
+----
+abstract set_relates(transaction: TypeDBTransaction, role_label: str, overridden_label: str | None = None) -> None
+----
+
+==== Description
+
+Sets the new role that this `RelationType` relates to. If we are setting an overriding type this way, we have to also pass the overridden type as a second argument.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `role_label` a| The new role for the `RelationType` to relate to a| `str` a| 
+a| `overridden_label` a| The label being overridden, if applicable a| `str \| None` a| `None`
+|===
+
+==== Returns
+
+`None`
+
+==== Code examples
+
+[source,python]
+----
+relation_type.set_relates(transaction, role_label)
+relation_type.set_relates(transaction, role_label, overridden_label)
+----
+
+[#_set_supertype]
+=== set_supertype
+
+==== Signature
+
+[source,python]
+----
+abstract set_supertype(transaction: TypeDBTransaction, super_relation_type: RelationType) -> None
+----
+
+==== Description
+
+Sets the supplied `RelationType` as the supertype of the current `RelationType`.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `super_relation_type` a| The `RelationType` to set as the supertype of this `RelationType` a| `RelationType` a| 
+|===
+
+==== Returns
+
+`None`
+
+==== Code examples
+
+[source,python]
+----
+relation_type.set_supertype(transaction, super_relation_type)
+----
+
+[#_unset_relates]
+=== unset_relates
+
+==== Signature
+
+[source,python]
+----
+abstract unset_relates(transaction: TypeDBTransaction, role_label: str) -> None
+----
+
+==== Description
+
+Disallows this `RelationType` from relating to the given role.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `role_label` a| The role to not relate to the relation type. a| `str` a| 
+|===
+
+==== Returns
+
+`None`
+
+==== Code examples
+
+[source,python]
+----
+relation_type.unset_relates(transaction, role_label)
+----
+
+// end::methods[]

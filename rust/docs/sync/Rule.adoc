@@ -1,0 +1,120 @@
+[#_struct_Rule]
+= Rule
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `PartialEq<Rule>`
+* `RuleAPI`
+* `StructuralPartialEq`
+
+== Description
+
+Rules are a part of schema and define embedded logic. The reasoning engine uses rules as a set of logic to infer new data. A rule consists of a condition and a conclusion, and is uniquely identified by a label.
+
+== Fields
+
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `label` a| `String` a| The unique label of the rule.
+a| `when` a| `Conjunction` a| The statements that constitute the ‘when’ of the rule.
+a| `then` a| `ThingVariable` a| The single statement that constitutes the ‘then’ of the rule.
+|===
+// end::properties[]
+
+== Methods
+
+// tag::methods[]
+[#_struct_Rule_tymethod_label]
+=== label
+
+==== Signature
+
+[source,rust]
+----
+fn label(&self) -> &String
+----
+
+==== Description
+
+
+
+==== Returns
+
+[source,rust]
+----
+&String
+----
+
+[#_struct_Rule_tymethod_delete]
+=== delete
+
+==== Signature
+
+[source,rust]
+----
+fn delete(&mut self, transaction: &Transaction<'_>) -> Result
+----
+
+==== Description
+
+<<#_trait_RuleAPI_tymethod_delete,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result
+----
+
+[#_struct_Rule_tymethod_set_label]
+=== set_label
+
+==== Signature
+
+[source,rust]
+----
+fn set_label(
+    &mut self,
+    transaction: &Transaction<'_>,
+    new_label: String
+) -> Result
+----
+
+==== Description
+
+<<#_trait_RuleAPI_tymethod_set_label,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result
+----
+
+[#_struct_Rule_method_is_deleted]
+=== is_deleted
+
+==== Signature
+
+[source,rust]
+----
+fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool>
+----
+
+==== Description
+
+<<#_trait_RuleAPI_method_is_deleted,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result<bool>
+----
+
+// end::methods[]

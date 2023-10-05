@@ -1,0 +1,71 @@
+[#_Database]
+= Database
+
+== Fields
+
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `name` a| `string` a| The database name as a string.
+a| `preferredReplica` a| `Replica` a| The preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. Only works in TypeDB Enterprise
+a| `primaryReplica` a| `Replica` a| The primary replica for this database. Only works in TypeDB Enterprise
+a| `replicas` a| `Replica` a| The Replica instances for this database. Only works in TypeDB Enterprise
+|===
+// end::properties[]
+
+== Methods
+
+// tag::methods[]
+[#_delete]
+=== delete
+
+==== Signature
+
+[source,nodejs]
+----
+delete(): Promise<void>
+----
+
+==== Description
+
+Deletes this database.
+
+==== Returns
+
+`Promise<void>`
+
+==== Code examples
+
+[source,nodejs]
+----
+database.delete()
+----
+
+[#_schema]
+=== schema
+
+==== Signature
+
+[source,nodejs]
+----
+schema(): Promise<string>
+----
+
+==== Description
+
+Returns a full schema text as a valid TypeQL define query string.
+
+==== Returns
+
+`Promise<string>`
+
+==== Code examples
+
+[source,nodejs]
+----
+database.schema()
+----
+
+// end::methods[]

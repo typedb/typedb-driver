@@ -1,0 +1,196 @@
+[#_ThingType_Annotation]
+= ThingType.Annotation
+
+*Package*: `com.vaticle.typedb.driver.api.concept.type`
+
+== Description
+
+Annotation
+
+== Methods
+
+// tag::methods[]
+[#_key_]
+=== key
+
+==== Signature
+
+[source,java]
+----
+public static ThingType.Annotation key()
+----
+
+==== Description
+
+Produces a `@key` annotation. 
+
+
+==== Returns
+
+`public static ThingType.Annotation`
+
+==== Code examples
+
+[source,java]
+----
+ThingType.Annotation.key();
+----
+
+[#_unique_]
+=== unique
+
+==== Signature
+
+[source,java]
+----
+public static ThingType.Annotation unique()
+----
+
+==== Description
+
+Produces a `@unique` annotation. 
+
+
+==== Returns
+
+`public static ThingType.Annotation`
+
+==== Code examples
+
+[source,java]
+----
+Annotation.unique();
+----
+
+[#_isKey_]
+=== isKey
+
+==== Signature
+
+[source,java]
+----
+public boolean isKey()
+----
+
+==== Description
+
+Checks if this `Annotation` is a `@key` annotation. 
+
+
+==== Returns
+
+`public boolean`
+
+==== Code examples
+
+[source,java]
+----
+annotation.isKey();
+----
+
+[#_isUnique_]
+=== isUnique
+
+==== Signature
+
+[source,java]
+----
+public boolean isUnique()
+----
+
+==== Description
+
+Checks if this `Annotation` is a `@unique` annotation. 
+
+
+==== Returns
+
+`public boolean`
+
+==== Code examples
+
+[source,java]
+----
+annotation.isUnique();
+----
+
+[#_toString_]
+=== toString
+
+==== Signature
+
+[source,java]
+----
+public java.lang.String toString()
+----
+
+==== Description
+
+Retrieves a string representation of this `Annotation`. 
+
+
+==== Returns
+
+`public java.lang.String`
+
+==== Code examples
+
+[source,java]
+----
+annotation.toString();
+----
+
+[#_equals_java_lang_Object]
+=== equals
+
+==== Signature
+
+[source,java]
+----
+public boolean equals​(java.lang.Object obj)
+----
+
+==== Description
+
+Checks if this `Annotation` is equal to another object. 
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `obj` a| Object to compare with a| `java.lang.Object` 
+|===
+
+==== Returns
+
+`public boolean`
+
+==== Code examples
+
+[source,java]
+----
+annotation.equals(obj);
+----
+
+[#_hashCode_]
+=== hashCode
+
+==== Signature
+
+[source,java]
+----
+public int hashCode()
+----
+
+==== Description
+
+
+
+==== Returns
+
+`public int`
+
+// end::methods[]

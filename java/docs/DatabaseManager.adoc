@@ -1,0 +1,147 @@
+[#_DatabaseManager]
+= DatabaseManager
+
+*Package*: `com.vaticle.typedb.driver.api.database`
+
+== Description
+
+Provides access to all database management methods.
+
+== Methods
+
+// tag::methods[]
+[#_get_java_lang_String]
+=== get
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+Database get​(java.lang.String name)
+----
+
+==== Description
+
+Retrieve the database with the given name. 
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| The name of the database to retrieve a| `java.lang.String` 
+|===
+
+==== Returns
+
+`Database`
+
+==== Code examples
+
+[source,java]
+----
+driver.databases().get(name)
+----
+
+[#_contains_java_lang_String]
+=== contains
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+boolean contains​(java.lang.String name)
+----
+
+==== Description
+
+Checks if a database with the given name exists 
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| The database name to be checked a| `java.lang.String` 
+|===
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+driver.databases().contains(name)
+----
+
+[#_create_java_lang_String]
+=== create
+
+==== Signature
+
+[source,java]
+----
+void create​(java.lang.String name)
+----
+
+==== Description
+
+Create a database with the given name 
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| The name of the database to be created a| `java.lang.String` 
+|===
+
+==== Returns
+
+`void`
+
+==== Code examples
+
+[source,java]
+----
+driver.databases().create(name)
+----
+
+[#_all_]
+=== all
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+java.util.List<Database> all()
+----
+
+==== Description
+
+Retrieves all databases present on the TypeDB server 
+
+
+==== Returns
+
+`java.util.List<Database>`
+
+==== Code examples
+
+[source,java]
+----
+driver.databases().all()
+----
+
+// end::methods[]

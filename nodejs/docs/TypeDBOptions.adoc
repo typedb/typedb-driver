@@ -1,0 +1,398 @@
+[#_TypeDBOptions]
+= TypeDBOptions
+
+== Description
+
+TypeDB session and transaction options. `TypeDBOptions` object can be used to override the default server behaviour query processing. Options could be specified either as constructor arguments or using setters.
+
+== Methods
+
+// tag::methods[]
+[#_new_TypeDBOptions]
+=== new TypeDBOptions
+
+==== Signature
+
+[source,nodejs]
+----
+new TypeDBOptions(obj?): TypeDBOptions
+----
+
+==== Description
+
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `obj` a| If set to `True`, enables explanations for queries. Only affects read transactions. a| `{ explain?: boolean; infer?: boolean; parallel?: boolean; prefetch?: boolean; prefetchSize?: number; readAnyReplica?: boolean; schemaLockAcquireTimeoutMillis?: number; sessionIdleTimeoutMillis?: number; traceInference?: boolean; transactionTimeoutMillis?: number; } = {}` 
+|===
+
+==== Returns
+
+`TypeDBOptions`
+
+[#__explain]
+===  explain
+
+==== Signature
+
+[source,nodejs]
+----
+get explain(): boolean
+----
+
+==== Description
+
+If set to `True`, enables explanations for queries. Only affects read transactions.
+
+==== Returns
+
+`boolean`
+
+[#__explain]
+===  explain
+
+==== Signature
+
+[source,nodejs]
+----
+set explain(value): void
+----
+
+==== Description
+
+If set to `True`, enables explanations for queries. Only affects read transactions.
+
+==== Returns
+
+`void`
+
+[#__infer]
+===  infer
+
+==== Signature
+
+[source,nodejs]
+----
+get infer(): boolean
+----
+
+==== Description
+
+If set to `True`, enables inference for queries. Only settable at transaction level and above. Only affects read transactions.
+
+==== Returns
+
+`boolean`
+
+[#__infer]
+===  infer
+
+==== Signature
+
+[source,nodejs]
+----
+set infer(value): void
+----
+
+==== Description
+
+If set to `True`, enables inference for queries. Only settable at transaction level and above. Only affects read transactions.
+
+==== Returns
+
+`void`
+
+[#__parallel]
+===  parallel
+
+==== Signature
+
+[source,nodejs]
+----
+get parallel(): boolean
+----
+
+==== Description
+
+If set to `True`, the server uses parallel instead of single-threaded execution.
+
+==== Returns
+
+`boolean`
+
+[#__parallel]
+===  parallel
+
+==== Signature
+
+[source,nodejs]
+----
+set parallel(value): void
+----
+
+==== Description
+
+If set to `True`, the server uses parallel instead of single-threaded execution.
+
+==== Returns
+
+`void`
+
+[#__prefetch]
+===  prefetch
+
+==== Signature
+
+[source,nodejs]
+----
+get prefetch(): boolean
+----
+
+==== Description
+
+If set to `True`, the first batch of answers is streamed to the driver even without an explicit request for it.
+
+==== Returns
+
+`boolean`
+
+[#__prefetch]
+===  prefetch
+
+==== Signature
+
+[source,nodejs]
+----
+set prefetch(value): void
+----
+
+==== Description
+
+If set to `True`, the first batch of answers is streamed to the driver even without an explicit request for it.
+
+==== Returns
+
+`void`
+
+[#__prefetchSize]
+===  prefetchSize
+
+==== Signature
+
+[source,nodejs]
+----
+get prefetchSize(): number
+----
+
+==== Description
+
+If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
+
+==== Returns
+
+`number`
+
+[#__prefetchSize]
+===  prefetchSize
+
+==== Signature
+
+[source,nodejs]
+----
+set prefetchSize(value): void
+----
+
+==== Description
+
+If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
+
+==== Returns
+
+`void`
+
+[#__readAnyReplica]
+===  readAnyReplica
+
+==== Signature
+
+[source,nodejs]
+----
+get readAnyReplica(): boolean
+----
+
+==== Description
+
+If set to `True`, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise.
+
+==== Returns
+
+`boolean`
+
+[#__readAnyReplica]
+===  readAnyReplica
+
+==== Signature
+
+[source,nodejs]
+----
+set readAnyReplica(value): void
+----
+
+==== Description
+
+If set to `True`, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise.
+
+==== Returns
+
+`void`
+
+[#__schemaLockAcquireTimeoutMillis]
+===  schemaLockAcquireTimeoutMillis
+
+==== Signature
+
+[source,nodejs]
+----
+get schemaLockAcquireTimeoutMillis(): number
+----
+
+==== Description
+
+If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock.
+
+==== Returns
+
+`number`
+
+[#__schemaLockAcquireTimeoutMillis]
+===  schemaLockAcquireTimeoutMillis
+
+==== Signature
+
+[source,nodejs]
+----
+set schemaLockAcquireTimeoutMillis(value): void
+----
+
+==== Description
+
+If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock.
+
+==== Returns
+
+`void`
+
+[#__sessionIdleTimeoutMillis]
+===  sessionIdleTimeoutMillis
+
+==== Signature
+
+[source,nodejs]
+----
+get sessionIdleTimeoutMillis(): number
+----
+
+==== Description
+
+If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive.
+
+==== Returns
+
+`number`
+
+[#__sessionIdleTimeoutMillis]
+===  sessionIdleTimeoutMillis
+
+==== Signature
+
+[source,nodejs]
+----
+set sessionIdleTimeoutMillis(millis): void
+----
+
+==== Description
+
+If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive.
+
+==== Returns
+
+`void`
+
+[#__traceInference]
+===  traceInference
+
+==== Signature
+
+[source,nodejs]
+----
+get traceInference(): boolean
+----
+
+==== Description
+
+If set to `True`, reasoning tracing graphs are output in the logging directory. Should be used with `parallel = False`.
+
+==== Returns
+
+`boolean`
+
+[#__traceInference]
+===  traceInference
+
+==== Signature
+
+[source,nodejs]
+----
+set traceInference(value): void
+----
+
+==== Description
+
+If set to `True`, reasoning tracing graphs are output in the logging directory. Should be used with `parallel = False`.
+
+==== Returns
+
+`void`
+
+[#__transactionTimeoutMillis]
+===  transactionTimeoutMillis
+
+==== Signature
+
+[source,nodejs]
+----
+get transactionTimeoutMillis(): number
+----
+
+==== Description
+
+If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
+
+==== Returns
+
+`number`
+
+[#__transactionTimeoutMillis]
+===  transactionTimeoutMillis
+
+==== Signature
+
+[source,nodejs]
+----
+set transactionTimeoutMillis(millis): void
+----
+
+==== Description
+
+If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
+
+==== Returns
+
+`void`
+
+// end::methods[]

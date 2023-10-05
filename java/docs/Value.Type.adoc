@@ -1,0 +1,160 @@
+[#_Value_Type]
+= Value.Type
+
+*Package*: `com.vaticle.typedb.driver.api.concept.value`
+
+// tag::enum_constants[]
+== Enum constants
+
+[options="header"]
+|===
+|Name 
+a| `BOOLEAN` 
+a| `DATETIME` 
+a| `DOUBLE` 
+a| `LONG` 
+a| `OBJECT` 
+a| `STRING` 
+|===
+// end::enum_constants[]
+
+== Methods
+
+// tag::methods[]
+[#_values_]
+=== values
+
+==== Signature
+
+[source,java]
+----
+public static Value.Type[] values()
+----
+
+==== Description
+
+Returns an array containing the constants of this enum type, in the order they are declared. This method may be used to iterate over the constants as follows: 
+[source,java]
+----
+for (Value.Type c : Value.Type.values())
+&nbsp;   System.out.println(c);
+
+----
+
+
+==== Returns
+
+`public static Value.Type[]`
+
+==== Code examples
+
+[source,java]
+----
+for (Value.Type c : Value.Type.values())
+    System.out.println(c);
+----
+
+[#_valueOf_java_lang_String]
+=== valueOf
+
+==== Signature
+
+[source,java]
+----
+public static Value.Type valueOf​(java.lang.String name)
+----
+
+==== Description
+
+Returns the enum constant of this type with the specified name. The string must match exactly an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| the name of the enum constant to be returned. a| `java.lang.String` 
+|===
+
+==== Returns
+
+`public static Value.Type`
+
+[#_of_com_vaticle_typedb_driver_jni_ValueType]
+=== of
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+public static Value.Type of​(com.vaticle.typedb.driver.jni.ValueType valueType)
+----
+
+==== Description
+
+
+
+==== Returns
+
+`public static Value.Type`
+
+[#_valueClass_]
+=== valueClass
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+public java.lang.Class<?> valueClass()
+----
+
+==== Description
+
+
+
+==== Returns
+
+`public java.lang.Class<?>`
+
+[#_isWritable_]
+=== isWritable
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+public boolean isWritable()
+----
+
+==== Description
+
+
+
+==== Returns
+
+`public boolean`
+
+[#_isKeyable_]
+=== isKeyable
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+public boolean isKeyable()
+----
+
+==== Description
+
+
+
+==== Returns
+
+`public boolean`
+
+// end::methods[]

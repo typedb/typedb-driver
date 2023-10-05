@@ -1,0 +1,47 @@
+[#_ErrorMessage]
+= ErrorMessage
+
+*Supertypes:*
+
+* `object`
+
+== Methods
+
+// tag::methods[]
+[#_code]
+=== code
+
+==== Signature
+
+[source,python]
+----
+code() -> str
+----
+
+==== Description
+
+
+
+==== Returns
+
+`str`
+
+[#_message]
+=== message
+
+==== Signature
+
+[source,python]
+----
+message(params: Any) -> str
+----
+
+==== Description
+
+
+
+==== Returns
+
+`str`
+
+// end::methods[]

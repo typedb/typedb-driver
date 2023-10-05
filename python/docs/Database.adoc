@@ -1,0 +1,193 @@
+[#_Database]
+= Database
+
+== Properties
+
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `name` a| `str` a| The database name as a string.
+|===
+// end::properties[]
+
+== Methods
+
+// tag::methods[]
+[#_delete]
+=== delete
+
+==== Signature
+
+[source,python]
+----
+abstract delete() -> None
+----
+
+==== Description
+
+Deletes this database.
+
+==== Returns
+
+`None`
+
+==== Code examples
+
+[source,python]
+----
+database.delete()
+----
+
+[#_preferred_replica]
+=== preferred_replica
+
+==== Signature
+
+[source,python]
+----
+abstract preferred_replica() -> Replica | None
+----
+
+==== Description
+
+Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Enterprise_
+
+==== Returns
+
+`Replica | None`
+
+==== Code examples
+
+[source,python]
+----
+database.preferred_replica()
+----
+
+[#_primary_replica]
+=== primary_replica
+
+==== Signature
+
+[source,python]
+----
+abstract primary_replica() -> Replica | None
+----
+
+==== Description
+
+Returns the primary replica for this database. _Only works in TypeDB Enterprise_
+
+==== Returns
+
+`Replica | None`
+
+==== Code examples
+
+[source,python]
+----
+database.primary_replica()
+----
+
+[#_replicas]
+=== replicas
+
+==== Signature
+
+[source,python]
+----
+abstract replicas() -> set[typedb.api.connection.database.Replica]
+----
+
+==== Description
+
+Set of `Replica` instances for this database. _Only works in TypeDB Enterprise_
+
+==== Returns
+
+`set[typedb.api.connection.database.Replica]`
+
+==== Code examples
+
+[source,python]
+----
+database.replicas()
+----
+
+[#_rule_schema]
+=== rule_schema
+
+==== Signature
+
+[source,python]
+----
+rule_schema() -> str
+----
+
+==== Description
+
+Returns the rules in the schema as a valid TypeQL define query string.
+
+==== Returns
+
+`str`
+
+==== Code examples
+
+[source,python]
+----
+database.rule_schema()
+----
+
+[#_schema]
+=== schema
+
+==== Signature
+
+[source,python]
+----
+abstract schema() -> str
+----
+
+==== Description
+
+Returns a full schema text as a valid TypeQL define query string.
+
+==== Returns
+
+`str`
+
+==== Code examples
+
+[source,python]
+----
+database.schema()
+----
+
+[#_type_schema]
+=== type_schema
+
+==== Signature
+
+[source,python]
+----
+type_schema() -> str
+----
+
+==== Description
+
+Returns the types in the schema as a valid TypeQL define query string.
+
+==== Returns
+
+`str`
+
+==== Code examples
+
+[source,python]
+----
+database.type_schema()
+----
+
+// end::methods[]

@@ -1,0 +1,361 @@
+[#_struct_Relation]
+= Relation
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `Eq`
+* `PartialEq<Relation>`
+* `RelationAPI`
+* `StructuralEq`
+* `StructuralPartialEq`
+* `ThingAPI`
+
+== Description
+
+Relation is an instance of a relation type and can be uniquely addressed by a combination of its type, owned attributes and role players.
+
+== Fields
+
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `iid` a| `IID` a| 
+a| `type_` a| `RelationType` a| 
+a| `is_inferred` a| `bool` a| 
+|===
+// end::properties[]
+
+== Methods
+
+// tag::methods[]
+[#_struct_Relation_method_add_role_player]
+=== add_role_player
+
+==== Signature
+
+[source,rust]
+----
+fn add_role_player(
+    &self,
+    transaction: &Transaction<'_>,
+    role_type: RoleType,
+    player: Thing
+) -> Result
+----
+
+==== Description
+
+<<#_trait_RelationAPI_method_add_role_player,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result
+----
+
+[#_struct_Relation_method_remove_role_player]
+=== remove_role_player
+
+==== Signature
+
+[source,rust]
+----
+fn remove_role_player(
+    &self,
+    transaction: &Transaction<'_>,
+    role_type: RoleType,
+    player: Thing
+) -> Result
+----
+
+==== Description
+
+<<#_trait_RelationAPI_method_remove_role_player,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result
+----
+
+[#_struct_Relation_method_get_players_by_role_type]
+=== get_players_by_role_type
+
+==== Signature
+
+[source,rust]
+----
+fn get_players_by_role_type(
+    &self,
+    transaction: &Transaction<'_>,
+    role_types: Vec<RoleType>
+) -> Result<BoxStream<'_, Result<Thing>>>
+----
+
+==== Description
+
+<<#_trait_RelationAPI_method_get_players_by_role_type,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result<BoxStream<'_, Result<Thing>>>
+----
+
+[#_struct_Relation_method_get_role_players]
+=== get_role_players
+
+==== Signature
+
+[source,rust]
+----
+fn get_role_players(
+    &self,
+    transaction: &Transaction<'_>
+) -> Result<BoxStream<'_, Result<(RoleType, Thing)>>>
+----
+
+==== Description
+
+<<#_trait_RelationAPI_method_get_role_players,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result<BoxStream<'_, Result<(RoleType, Thing)>>>
+----
+
+[#_struct_Relation_method_get_relating]
+=== get_relating
+
+==== Signature
+
+[source,rust]
+----
+fn get_relating(
+    &self,
+    transaction: &Transaction<'_>
+) -> Result<BoxStream<'_, Result<RoleType>>>
+----
+
+==== Description
+
+<<#_trait_RelationAPI_method_get_relating,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result<BoxStream<'_, Result<RoleType>>>
+----
+
+[#_struct_Relation_tymethod_iid]
+=== iid
+
+==== Signature
+
+[source,rust]
+----
+fn iid(&self) -> &IID
+----
+
+==== Description
+
+<<#_trait_ThingAPI_tymethod_iid,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+&IID
+----
+
+[#_struct_Relation_tymethod_is_inferred]
+=== is_inferred
+
+==== Signature
+
+[source,rust]
+----
+fn is_inferred(&self) -> bool
+----
+
+==== Description
+
+<<#_trait_ThingAPI_tymethod_is_inferred,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+bool
+----
+
+[#_struct_Relation_tymethod_is_deleted]
+=== is_deleted
+
+==== Signature
+
+[source,rust]
+----
+fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool>
+----
+
+==== Description
+
+<<#_trait_ThingAPI_tymethod_is_deleted,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result<bool>
+----
+
+[#_struct_Relation_method_delete]
+=== delete
+
+==== Signature
+
+[source,rust]
+----
+fn delete(&self, transaction: &Transaction<'_>) -> Result
+----
+
+==== Description
+
+<<#_trait_ThingAPI_method_delete,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result
+----
+
+[#_struct_Relation_method_get_has]
+=== get_has
+
+==== Signature
+
+[source,rust]
+----
+fn get_has(
+    &self,
+    transaction: &Transaction<'_>,
+    attribute_types: Vec<AttributeType>,
+    annotations: Vec<Annotation>
+) -> Result<BoxStream<'_, Result<Attribute>>>
+----
+
+==== Description
+
+<<#_trait_ThingAPI_method_get_has,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result<BoxStream<'_, Result<Attribute>>>
+----
+
+[#_struct_Relation_method_set_has]
+=== set_has
+
+==== Signature
+
+[source,rust]
+----
+fn set_has(&self, transaction: &Transaction<'_>, attribute: Attribute) -> Result
+----
+
+==== Description
+
+<<#_trait_ThingAPI_method_set_has,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result
+----
+
+[#_struct_Relation_method_unset_has]
+=== unset_has
+
+==== Signature
+
+[source,rust]
+----
+fn unset_has(&self, transaction: &Transaction<'_>, attribute: Attribute) -> Result
+----
+
+==== Description
+
+<<#_trait_ThingAPI_method_unset_has,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result
+----
+
+[#_struct_Relation_method_get_relations]
+=== get_relations
+
+==== Signature
+
+[source,rust]
+----
+fn get_relations(
+    &self,
+    transaction: &Transaction<'_>,
+    role_types: Vec<RoleType>
+) -> Result<BoxStream<'_, Result<Relation>>>
+----
+
+==== Description
+
+<<#_trait_ThingAPI_method_get_relations,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result<BoxStream<'_, Result<Relation>>>
+----
+
+[#_struct_Relation_method_get_playing]
+=== get_playing
+
+==== Signature
+
+[source,rust]
+----
+fn get_playing(
+    &self,
+    transaction: &Transaction<'_>
+) -> Result<BoxStream<'_, Result<RoleType>>>
+----
+
+==== Description
+
+<<#_trait_ThingAPI_method_get_playing,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result<BoxStream<'_, Result<RoleType>>>
+----
+
+// end::methods[]

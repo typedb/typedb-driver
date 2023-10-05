@@ -1,0 +1,138 @@
+[#_DatabaseManager]
+= DatabaseManager
+
+== Description
+
+Provides access to all database management methods.
+
+== Methods
+
+// tag::methods[]
+[#_all]
+=== all
+
+==== Signature
+
+[source,nodejs]
+----
+all(): Promise<Database[]>
+----
+
+==== Description
+
+Retrieves all databases present on the TypeDB server
+
+==== Returns
+
+`Promise<Database[]>`
+
+==== Code examples
+
+[source,nodejs]
+----
+driver.databases().all()
+----
+
+[#_contains]
+=== contains
+
+==== Signature
+
+[source,nodejs]
+----
+contains(name): Promise<boolean>
+----
+
+==== Description
+
+Checks if a database with the given name exists
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| The database name to be checked a| `string` 
+|===
+
+==== Returns
+
+`Promise<boolean>`
+
+==== Code examples
+
+[source,nodejs]
+----
+driver.databases().contains(name)
+----
+
+[#_create]
+=== create
+
+==== Signature
+
+[source,nodejs]
+----
+create(name): Promise<void>
+----
+
+==== Description
+
+Create a database with the given name
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| The name of the database to be created a| `string` 
+|===
+
+==== Returns
+
+`Promise<void>`
+
+==== Code examples
+
+[source,nodejs]
+----
+driver.databases().create(name)
+----
+
+[#_get]
+=== get
+
+==== Signature
+
+[source,nodejs]
+----
+get(name): Promise<Database>
+----
+
+==== Description
+
+Retrieve the database with the given name.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| The name of the database to retrieve a| `string` 
+|===
+
+==== Returns
+
+`Promise<Database>`
+
+==== Code examples
+
+[source,nodejs]
+----
+driver.databases().get(name)
+----
+
+// end::methods[]

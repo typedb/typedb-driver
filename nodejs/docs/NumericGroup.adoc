@@ -1,0 +1,21 @@
+[#_NumericGroup]
+= NumericGroup
+
+== Description
+
+Contains an element of the group aggregate query result.
+
+== Fields
+
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `numeric` a| `Numeric` a| Retrieves the Numeric answer of the group. Examples numericGroup.numeric
+Copy
+a| `owner` a| `Concept` a| Retrieves the concept that is the group owner. Examples numericGroup.owner
+Copy
+|===
+// end::properties[]
+

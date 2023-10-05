@@ -1,0 +1,164 @@
+[#_TypeDBTransaction_Type]
+= TypeDBTransaction.Type
+
+*Package*: `com.vaticle.typedb.driver.api`
+
+== Description
+
+Used to specify the type of transaction. 
+
+
+== Code examples
+
+[source,java]
+----
+session.transaction(TransactionType.READ);
+----
+
+// tag::enum_constants[]
+== Enum constants
+
+[options="header"]
+|===
+|Name 
+a| `READ` 
+a| `WRITE` 
+|===
+// end::enum_constants[]
+
+== Methods
+
+// tag::methods[]
+[#_values_]
+=== values
+
+==== Signature
+
+[source,java]
+----
+public static TypeDBTransaction.Type[] values()
+----
+
+==== Description
+
+Returns an array containing the constants of this enum type, in the order they are declared. This method may be used to iterate over the constants as follows: 
+[source,java]
+----
+for (TypeDBTransaction.Type c : TypeDBTransaction.Type.values())
+&nbsp;   System.out.println(c);
+
+----
+
+
+==== Returns
+
+`public static TypeDBTransaction.Type[]`
+
+==== Code examples
+
+[source,java]
+----
+for (TypeDBTransaction.Type c : TypeDBTransaction.Type.values())
+    System.out.println(c);
+----
+
+[#_valueOf_java_lang_String]
+=== valueOf
+
+==== Signature
+
+[source,java]
+----
+public static TypeDBTransaction.Type valueOf​(java.lang.String name)
+----
+
+==== Description
+
+Returns the enum constant of this type with the specified name. The string must match exactly an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| the name of the enum constant to be returned. a| `java.lang.String` 
+|===
+
+==== Returns
+
+`public static TypeDBTransaction.Type`
+
+[#_of_com_vaticle_typedb_driver_jni_TransactionType]
+=== of
+
+==== Signature
+
+[source,java]
+----
+public static TypeDBTransaction.Type of​(com.vaticle.typedb.driver.jni.TransactionType transactionType)
+----
+
+==== Description
+
+
+
+==== Returns
+
+`public static TypeDBTransaction.Type`
+
+[#_id_]
+=== id
+
+==== Signature
+
+[source,java]
+----
+public int id()
+----
+
+==== Description
+
+
+
+==== Returns
+
+`public int`
+
+[#_isRead_]
+=== isRead
+
+==== Signature
+
+[source,java]
+----
+public boolean isRead()
+----
+
+==== Description
+
+
+
+==== Returns
+
+`public boolean`
+
+[#_isWrite_]
+=== isWrite
+
+==== Signature
+
+[source,java]
+----
+public boolean isWrite()
+----
+
+==== Description
+
+
+
+==== Returns
+
+`public boolean`
+
+// end::methods[]

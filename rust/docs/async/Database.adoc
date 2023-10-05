@@ -1,0 +1,228 @@
+[#_struct_Database]
+= Database
+
+*Implements traits:*
+
+* `Debug`
+
+== Methods
+
+// tag::methods[]
+[#_struct_Database_method_name]
+=== name
+
+==== Signature
+
+[source,rust]
+----
+pub fn name(&self) -> &str
+----
+
+==== Description
+
+Retrieves the database name as a string.
+
+==== Returns
+
+[source,rust]
+----
+&str
+----
+
+[#_struct_Database_method_replicas_info]
+=== replicas_info
+
+==== Signature
+
+[source,rust]
+----
+pub fn replicas_info(&self) -> Vec<ReplicaInfo> <a href="#" class="notable-traits" data-ty="Vec">ⓘ
+----
+
+==== Description
+
+Returns the `Replica` instances for this database. _Only works in TypeDB Enterprise_
+
+==== Returns
+
+[source,rust]
+----
+Vec<ReplicaInfo> <a href="#" class="notable-traits" data-ty="Vec">ⓘ
+----
+
+==== Code examples
+
+[source,rust]
+----
+database.replicas_info()
+----
+
+[#_struct_Database_method_primary_replica_info]
+=== primary_replica_info
+
+==== Signature
+
+[source,rust]
+----
+pub fn primary_replica_info(&self) -> Option<ReplicaInfo>
+----
+
+==== Description
+
+Returns the primary replica for this database. _Only works in TypeDB Enterprise_
+
+==== Returns
+
+[source,rust]
+----
+Option<ReplicaInfo>
+----
+
+==== Code examples
+
+[source,rust]
+----
+database.primary_replica_info()
+----
+
+[#_struct_Database_method_preferred_replica_info]
+=== preferred_replica_info
+
+==== Signature
+
+[source,rust]
+----
+pub fn preferred_replica_info(&self) -> Option<ReplicaInfo>
+----
+
+==== Description
+
+Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Enterprise_
+
+==== Returns
+
+[source,rust]
+----
+Option<ReplicaInfo>
+----
+
+==== Code examples
+
+[source,rust]
+----
+database.preferred_replica_info();
+----
+
+[#_struct_Database_method_delete]
+=== delete
+
+==== Signature
+
+[source,rust]
+----
+pub async fn delete(self) -> Result
+----
+
+==== Description
+
+Deletes this database.
+
+==== Returns
+
+[source,rust]
+----
+Result
+----
+
+==== Code examples
+
+[source,rust]
+----
+database.delete().await;
+----
+
+[#_struct_Database_method_schema]
+=== schema
+
+==== Signature
+
+[source,rust]
+----
+pub async fn schema(&self) -> Result<String>
+----
+
+==== Description
+
+Returns a full schema text as a valid TypeQL define query string.
+
+==== Returns
+
+[source,rust]
+----
+Result<String>
+----
+
+==== Code examples
+
+[source,rust]
+----
+database.schema().await;
+----
+
+[#_struct_Database_method_type_schema]
+=== type_schema
+
+==== Signature
+
+[source,rust]
+----
+pub async fn type_schema(&self) -> Result<String>
+----
+
+==== Description
+
+Returns the types in the schema as a valid TypeQL define query string.
+
+==== Returns
+
+[source,rust]
+----
+Result<String>
+----
+
+==== Code examples
+
+[source,rust]
+----
+database.type_schema().await;
+----
+
+[#_struct_Database_method_rule_schema]
+=== rule_schema
+
+==== Signature
+
+[source,rust]
+----
+pub async fn rule_schema(&self) -> Result<String>
+----
+
+==== Description
+
+Returns the rules in the schema as a valid TypeQL define query string.
+
+==== Returns
+
+[source,rust]
+----
+Result<String>
+----
+
+==== Code examples
+
+[source,rust]
+----
+database.rule_schema().await;
+----
+
+// end::methods[]

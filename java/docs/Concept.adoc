@@ -1,0 +1,619 @@
+[#_Concept]
+= Concept
+
+*Package*: `com.vaticle.typedb.driver.api.concept`
+
+== Methods
+
+// tag::methods[]
+[#_isType_]
+=== isType
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isType()
+----
+
+==== Description
+
+Checks if the concept is a `Type`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+concept.isType();
+----
+
+[#_isThingType_]
+=== isThingType
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isThingType()
+----
+
+==== Description
+
+Checks if the concept is a `ThingType`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+concept.isThingType();
+----
+
+[#_isEntityType_]
+=== isEntityType
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isEntityType()
+----
+
+==== Description
+
+Checks if the concept is an `EntityType`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+concept.isEntityType();
+----
+
+[#_isAttributeType_]
+=== isAttributeType
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isAttributeType()
+----
+
+==== Description
+
+Checks if the concept is an `AttributeType`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+concept.isAttributeType();
+----
+
+[#_isRelationType_]
+=== isRelationType
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isRelationType()
+----
+
+==== Description
+
+Checks if the concept is a `RelationType`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+concept.isRelationType();
+----
+
+[#_isRoleType_]
+=== isRoleType
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isRoleType()
+----
+
+==== Description
+
+Checks if the concept is a `RoleType`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+concept.isRoleType();
+----
+
+[#_isThing_]
+=== isThing
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isThing()
+----
+
+==== Description
+
+Checks if the concept is a `Thing`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+concept.isThing();
+----
+
+[#_isEntity_]
+=== isEntity
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isEntity()
+----
+
+==== Description
+
+Checks if the concept is an `Entity`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+concept.isEntity();
+----
+
+[#_isRelation_]
+=== isRelation
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isRelation()
+----
+
+==== Description
+
+Checks if the concept is a `Relation`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+concept.isRelation();
+----
+
+[#_isAttribute_]
+=== isAttribute
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isAttribute()
+----
+
+==== Description
+
+Checks if the concept is an `Attribute`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+concept.isAttribute();
+----
+
+[#_isValue_]
+=== isValue
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isValue()
+----
+
+==== Description
+
+Checks if the concept is a `Value`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+concept.isValue();
+----
+
+[#_asType_]
+=== asType
+
+==== Signature
+
+[source,java]
+----
+default Type asType()
+----
+
+==== Description
+
+Casts the concept to `Type`. 
+
+
+==== Returns
+
+`Type`
+
+==== Code examples
+
+[source,java]
+----
+concept.asType();
+----
+
+[#_asThingType_]
+=== asThingType
+
+==== Signature
+
+[source,java]
+----
+default ThingType asThingType()
+----
+
+==== Description
+
+Casts the concept to `ThingType`. 
+
+
+==== Returns
+
+`ThingType`
+
+==== Code examples
+
+[source,java]
+----
+concept.asThingType();
+----
+
+[#_asEntityType_]
+=== asEntityType
+
+==== Signature
+
+[source,java]
+----
+default EntityType asEntityType()
+----
+
+==== Description
+
+Casts the concept to `EntityType`. 
+
+
+==== Returns
+
+`EntityType`
+
+==== Code examples
+
+[source,java]
+----
+concept.asEntityType();
+----
+
+[#_asRelationType_]
+=== asRelationType
+
+==== Signature
+
+[source,java]
+----
+default RelationType asRelationType()
+----
+
+==== Description
+
+Casts the concept to `RelationType`. 
+
+
+==== Returns
+
+`RelationType`
+
+==== Code examples
+
+[source,java]
+----
+concept.asRelationType();
+----
+
+[#_asAttributeType_]
+=== asAttributeType
+
+==== Signature
+
+[source,java]
+----
+default AttributeType asAttributeType()
+----
+
+==== Description
+
+Casts the concept to `AttributeType`. 
+
+
+==== Returns
+
+`AttributeType`
+
+==== Code examples
+
+[source,java]
+----
+concept.asAttributeType();
+----
+
+[#_asRoleType_]
+=== asRoleType
+
+==== Signature
+
+[source,java]
+----
+default RoleType asRoleType()
+----
+
+==== Description
+
+Casts the concept to `RoleType`. 
+
+
+==== Returns
+
+`RoleType`
+
+==== Code examples
+
+[source,java]
+----
+concept.asRoleType();
+----
+
+[#_asThing_]
+=== asThing
+
+==== Signature
+
+[source,java]
+----
+default Thing asThing()
+----
+
+==== Description
+
+Casts the concept to `Thing`. 
+
+
+==== Returns
+
+`Thing`
+
+==== Code examples
+
+[source,java]
+----
+concept.asThing();
+----
+
+[#_asEntity_]
+=== asEntity
+
+==== Signature
+
+[source,java]
+----
+default Entity asEntity()
+----
+
+==== Description
+
+Casts the concept to `Entity`. 
+
+
+==== Returns
+
+`Entity`
+
+==== Code examples
+
+[source,java]
+----
+concept.asEntity();
+----
+
+[#_asRelation_]
+=== asRelation
+
+==== Signature
+
+[source,java]
+----
+default Relation asRelation()
+----
+
+==== Description
+
+Casts the concept to `Relation`. 
+
+
+==== Returns
+
+`Relation`
+
+==== Code examples
+
+[source,java]
+----
+concept.asRelation();
+----
+
+[#_asAttribute_]
+=== asAttribute
+
+==== Signature
+
+[source,java]
+----
+default Attribute asAttribute()
+----
+
+==== Description
+
+Casts the concept to `Attribute`. 
+
+
+==== Returns
+
+`Attribute`
+
+==== Code examples
+
+[source,java]
+----
+concept.asAttribute();
+----
+
+[#_asValue_]
+=== asValue
+
+==== Signature
+
+[source,java]
+----
+default Value asValue()
+----
+
+==== Description
+
+Casts the concept to `Value`. 
+
+
+==== Returns
+
+`Value`
+
+==== Code examples
+
+[source,java]
+----
+concept.asValue();
+----
+
+[#_toJSON_]
+=== toJSON
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+com.eclipsesource.json.JsonObject toJSON()
+----
+
+==== Description
+
+Retrieves the concept as JSON. 
+
+
+==== Returns
+
+`com.eclipsesource.json.JsonObject`
+
+==== Code examples
+
+[source,java]
+----
+concept.toJSON();
+----
+
+// end::methods[]

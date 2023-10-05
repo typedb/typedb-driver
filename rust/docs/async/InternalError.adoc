@@ -1,0 +1,18 @@
+[#_enum_InternalError]
+= InternalError
+
+// tag::enum_constants[]
+== Enum variants
+
+[options="header"]
+|===
+|Name |Type 
+a| `RecvError` a| ``
+a| `SendError` a| ``
+a| `UnexpectedRequestType` a| `String`
+a| `UnexpectedResponseType` a| `String`
+a| `UnknownConnectionAddress` a| `Address`
+a| `EnumOutOfBounds` a| `i32, &'static str`
+|===
+// end::enum_constants[]
+

@@ -1,0 +1,136 @@
+[#_Numeric]
+= Numeric
+
+== Description
+
+Stores an aggregate query answer.
+
+== Methods
+
+// tag::methods[]
+[#_as_float]
+=== as_float
+
+==== Signature
+
+[source,python]
+----
+abstract as_float() -> float
+----
+
+==== Description
+
+Retrieves numeric value of an aggregate answer as a float.
+
+==== Returns
+
+`float`
+
+==== Code examples
+
+[source,python]
+----
+numeric.as_float()
+----
+
+[#_as_int]
+=== as_int
+
+==== Signature
+
+[source,python]
+----
+abstract as_int() -> int
+----
+
+==== Description
+
+Retrieves numeric value of an aggregate answer as an integer.
+
+==== Returns
+
+`int`
+
+==== Code examples
+
+[source,python]
+----
+numeric.as_int()
+----
+
+[#_is_float]
+=== is_float
+
+==== Signature
+
+[source,python]
+----
+abstract is_float() -> bool
+----
+
+==== Description
+
+Checks if the type of an aggregate answer is a float.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+numeric.is_float()
+----
+
+[#_is_int]
+=== is_int
+
+==== Signature
+
+[source,python]
+----
+abstract is_int() -> bool
+----
+
+==== Description
+
+Checks if the type of an aggregate answer is an integer.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+numeric.is_int()
+----
+
+[#_is_nan]
+=== is_nan
+
+==== Signature
+
+[source,python]
+----
+abstract is_nan() -> bool
+----
+
+==== Description
+
+Checks if the aggregate answer is not a number.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+numeric.is_nan()
+----
+
+// end::methods[]

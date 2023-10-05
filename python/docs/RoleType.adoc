@@ -1,0 +1,343 @@
+[#_RoleType]
+= RoleType
+
+*Supertypes:*
+
+* `Type`
+
+== Description
+
+Roles are special internal types used by relations. We can not create an instance of a role in a database. But we can set an instance of another type (role player) to play a role in a particular instance of a relation type.
+
+Roles allow a schema to enforce logical constraints on types of role players.
+
+== Methods
+
+// tag::methods[]
+[#_as_role_type]
+=== as_role_type
+
+==== Signature
+
+[source,python]
+----
+as_role_type() -> RoleType
+----
+
+==== Description
+
+Casts the concept to `RoleType`.
+
+==== Returns
+
+`RoleType`
+
+==== Code examples
+
+[source,python]
+----
+role_type.as_role_type()
+----
+
+[#_get_player_instances]
+=== get_player_instances
+
+==== Signature
+
+[source,python]
+----
+abstract get_player_instances(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Thing]
+----
+
+==== Description
+
+Retrieves the `Thing` instances that play this role.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect playing, `Transitivity.EXPLICIT` for direct playing only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+|===
+
+==== Returns
+
+`Iterator[Thing]`
+
+==== Code examples
+
+[source,python]
+----
+role_type.get_player_instances(transaction, transitivity)
+----
+
+[#_get_player_types]
+=== get_player_types
+
+==== Signature
+
+[source,python]
+----
+abstract get_player_types(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[ThingType]
+----
+
+==== Description
+
+Retrieves the `ThingType`s whose instances play this role.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect playing, `Transitivity.EXPLICIT` for direct playing only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+|===
+
+==== Returns
+
+`Iterator[ThingType]`
+
+==== Code examples
+
+[source,python]
+----
+role_type.get_player_types(transaction, transitivity)
+----
+
+[#_get_relation_instances]
+=== get_relation_instances
+
+==== Signature
+
+[source,python]
+----
+abstract get_relation_instances(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Relation]
+----
+
+==== Description
+
+Retrieves the `Relation` instances that this role is related to.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect relation, `Transitivity.EXPLICIT` for direct relation only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+|===
+
+==== Returns
+
+`Iterator[Relation]`
+
+==== Code examples
+
+[source,python]
+----
+role_type.get_relation_instances(transaction, transitivity)
+----
+
+[#_get_relation_type]
+=== get_relation_type
+
+==== Signature
+
+[source,python]
+----
+abstract get_relation_type(transaction: TypeDBTransaction) -> RelationType
+----
+
+==== Description
+
+Retrieves the `RelationType` that this role is directly related to.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+|===
+
+==== Returns
+
+`RelationType`
+
+==== Code examples
+
+[source,python]
+----
+role_type.get_relation_type(transaction)
+----
+
+[#_get_relation_types]
+=== get_relation_types
+
+==== Signature
+
+[source,python]
+----
+abstract get_relation_types(transaction: TypeDBTransaction) -> Iterator[RelationType]
+----
+
+==== Description
+
+Retrieves `RelationType`s that this role is related to (directly or indirectly).
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+|===
+
+==== Returns
+
+`Iterator[RelationType]`
+
+==== Code examples
+
+[source,python]
+----
+role_type.get_relation_types(transaction)
+----
+
+[#_get_subtypes]
+=== get_subtypes
+
+==== Signature
+
+[source,python]
+----
+abstract get_subtypes(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[RoleType]
+----
+
+==== Description
+
+Retrieves all direct and indirect (or direct only) subtypes of the `RoleType`.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect subtypes, `Transitivity.EXPLICIT` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+|===
+
+==== Returns
+
+`Iterator[RoleType]`
+
+==== Code examples
+
+[source,python]
+----
+role_type.get_subtypes(transaction, transitivity)
+----
+
+[#_get_supertype]
+=== get_supertype
+
+==== Signature
+
+[source,python]
+----
+abstract get_supertype(transaction: TypeDBTransaction) -> RoleType | None
+----
+
+==== Description
+
+Retrieves the most immediate supertype of the `RoleType`.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+|===
+
+==== Returns
+
+`RoleType | None`
+
+==== Code examples
+
+[source,python]
+----
+role_type.get_supertype(transaction)
+----
+
+[#_get_supertypes]
+=== get_supertypes
+
+==== Signature
+
+[source,python]
+----
+abstract get_supertypes(transaction: TypeDBTransaction) -> Iterator[RoleType]
+----
+
+==== Description
+
+Retrieves all supertypes of the `RoleType`.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+|===
+
+==== Returns
+
+`Iterator[RoleType]`
+
+==== Code examples
+
+[source,python]
+----
+role_type.get_supertypes(transaction)
+----
+
+[#_is_role_type]
+=== is_role_type
+
+==== Signature
+
+[source,python]
+----
+is_role_type() -> bool
+----
+
+==== Description
+
+Checks if the concept is a `RoleType`.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+role_type.is_role_type()
+----
+
+// end::methods[]

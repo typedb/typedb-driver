@@ -1,0 +1,999 @@
+[#_RelationType]
+= RelationType
+
+*Package*: `com.vaticle.typedb.driver.api.concept.type`
+
+*Superinterfaces:*
+
+* `Concept`
+* `ThingType`
+* `Type`
+
+== Description
+
+Relation types (or subtypes of the relation root type) represent relationships between types. Relation types have roles. Other types can play roles in relations if it’s mentioned in their definition. A relation type must specify at least one role.
+
+== Methods
+
+// tag::methods[]
+[#_isRelationType_]
+=== isRelationType
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isRelationType()
+----
+
+==== Description
+
+Checks if the concept is a `RelationType`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+concept.isRelationType();
+----
+
+[#_asRelationType_]
+=== asRelationType
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+default RelationType asRelationType()
+----
+
+==== Description
+
+Casts the concept to `RelationType`. 
+
+
+==== Returns
+
+`RelationType`
+
+==== Code examples
+
+[source,java]
+----
+concept.asRelationType();
+----
+
+[#_create_com_vaticle_typedb_driver_api_TypeDBTransaction]
+=== create
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+Relation create​(TypeDBTransaction transaction)
+----
+
+==== Description
+
+Creates and returns an instance of this `RelationType`. 
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+|===
+
+==== Returns
+
+`Relation`
+
+==== Code examples
+
+[source,java]
+----
+relationType.create(transaction);
+----
+
+[#_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction]
+=== getInstances
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends Relation> getInstances​(TypeDBTransaction transaction)
+----
+
+==== Description
+
+Retrieves all `Relation` objects that are instances of this `RelationType` or its subtypes. Equivalent to `getInstances(transaction, Transitivity.TRANSITIVE)`
+
+
+See also: <<#_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,`getInstances(TypeDBTransaction, Transitivity)`>>
+
+
+==== Returns
+
+`java.util.stream.Stream<? extends Relation>`
+
+[#_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+=== getInstances
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends Relation> getInstances​(TypeDBTransaction transaction,
+                                                         Concept.Transitivity transitivity)
+----
+
+==== Description
+
+Retrieves `Relation`s that are instances of this exact `RelationType`, OR this `RelationType` and any of its subtypes. 
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect instances, `Transitivity.EXPLICIT` for direct relates only a| `Concept.Transitivity` 
+|===
+
+==== Returns
+
+`java.util.stream.Stream<? extends Relation>`
+
+==== Code examples
+
+[source,java]
+----
+relationType.getInstances(transaction, transitivity)
+----
+
+[#_getRelates_com_vaticle_typedb_driver_api_TypeDBTransaction]
+=== getRelates
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends RoleType> getRelates​(TypeDBTransaction transaction)
+----
+
+==== Description
+
+Retrieves roles that this `RelationType` relates to directly or via inheritance.
+
+
+See also: <<#_getRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,`getRelates(TypeDBTransaction, Transitivity)`>>
+
+
+==== Returns
+
+`java.util.stream.Stream<? extends RoleType>`
+
+[#_getRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+=== getRelates
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends RoleType> getRelates​(TypeDBTransaction transaction,
+                                                       Concept.Transitivity transitivity)
+----
+
+==== Description
+
+Retrieves roles that this `RelationType` relates to directly or via inheritance. 
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and inherited relates, `Transitivity.EXPLICIT` for direct relates only a| `Concept.Transitivity` 
+|===
+
+==== Returns
+
+`java.util.stream.Stream<? extends RoleType>`
+
+==== Code examples
+
+[source,java]
+----
+relationType.getRelates(transaction, transitivity);
+----
+
+[#_getRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
+=== getRelates
+
+==== Signature
+
+[source,java]
+----
+@Nullable
+@CheckReturnValue
+RoleType getRelates​(TypeDBTransaction transaction,
+                    java.lang.String roleLabel)
+----
+
+==== Description
+
+Retrieves roles that this `RelationType` relates to directly or via inheritance. If `role_label` is given, returns a corresponding `RoleType` or `null`. 
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `roleLabel` a| Label of the role we wish to retrieve a| `java.lang.String` 
+|===
+
+==== Returns
+
+`RoleType`
+
+==== Code examples
+
+[source,java]
+----
+relationType.getRelates(transaction, roleLabel);
+----
+
+[#_getRelatesOverridden_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType]
+=== getRelatesOverridden
+
+==== Signature
+
+[source,java]
+----
+@Nullable
+@CheckReturnValue
+RoleType getRelatesOverridden​(TypeDBTransaction transaction,
+                              RoleType roleType)
+----
+
+==== Description
+
+
+
+==== Returns
+
+`RoleType`
+
+[#_getRelatesOverridden_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
+=== getRelatesOverridden
+
+==== Signature
+
+[source,java]
+----
+@Nullable
+@CheckReturnValue
+RoleType getRelatesOverridden​(TypeDBTransaction transaction,
+                              java.lang.String roleLabel)
+----
+
+==== Description
+
+Retrieves a `RoleType` that is overridden by the role with the `role_label`. 
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `roleLabel` a| Label of the role that overrides an inherited role a| `java.lang.String` 
+|===
+
+==== Returns
+
+`RoleType`
+
+==== Code examples
+
+[source,java]
+----
+relationType.getRelatesOverridden(transaction, roleLabel);
+----
+
+[#_setRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
+=== setRelates
+
+==== Signature
+
+[source,java]
+----
+void setRelates​(TypeDBTransaction transaction,
+                java.lang.String roleLabel)
+----
+
+==== Description
+
+Sets the new role that this `RelationType` relates to.
+
+
+See also: <<#_setRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String_java_lang_String,`setRelates(TypeDBTransaction, String, String)`>>
+
+
+==== Returns
+
+`void`
+
+[#_setRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String_com_vaticle_typedb_driver_api_concept_type_RoleType]
+=== setRelates
+
+==== Signature
+
+[source,java]
+----
+void setRelates​(TypeDBTransaction transaction,
+                java.lang.String roleLabel,
+                RoleType overriddenType)
+----
+
+==== Description
+
+Sets the new role that this `RelationType` relates to.
+
+
+See also: <<#_setRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String_java_lang_String,`setRelates(TypeDBTransaction, String, String)`>>
+
+
+==== Returns
+
+`void`
+
+[#_setRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String_java_lang_String]
+=== setRelates
+
+==== Signature
+
+[source,java]
+----
+void setRelates​(TypeDBTransaction transaction,
+                java.lang.String roleLabel,
+                java.lang.String overriddenLabel)
+----
+
+==== Description
+
+Sets the new role that this `RelationType` relates to. If we are setting an overriding type this way, we have to also pass the overridden type as a second argument. 
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `roleLabel` a| The new role for the `RelationType` to relate to a| `java.lang.String` 
+a| `overriddenLabel` a| The label being overridden, if applicable a| `java.lang.String` 
+|===
+
+==== Returns
+
+`void`
+
+==== Code examples
+
+[source,java]
+----
+relationType.setRelates(transaction, roleLabel);
+ relationType.setRelates(transaction, roleLabel, overriddenLabel);
+----
+
+[#_unsetRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType]
+=== unsetRelates
+
+==== Signature
+
+[source,java]
+----
+void unsetRelates​(TypeDBTransaction transaction,
+                  RoleType roleType)
+----
+
+==== Description
+
+Disallows this `RelationType` from relating to the given role.
+
+
+See also: <<#_unsetRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String,`unsetRelates(TypeDBTransaction, String)`>>
+
+
+==== Returns
+
+`void`
+
+[#_unsetRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
+=== unsetRelates
+
+==== Signature
+
+[source,java]
+----
+void unsetRelates​(TypeDBTransaction transaction,
+                  java.lang.String roleLabel)
+----
+
+==== Description
+
+Disallows this `RelationType` from relating to the given role. 
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `roleLabel` a| The role to not relate to the relation type. a| `java.lang.String` 
+|===
+
+==== Returns
+
+`void`
+
+==== Code examples
+
+[source,java]
+----
+relationType.unsetRelates(transaction, roleLabel);
+----
+
+[#_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction]
+=== getSubtypes
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends RelationType> getSubtypes​(TypeDBTransaction transaction)
+----
+
+==== Description
+
+Retrieves all direct and indirect subtypes of the `RelationType`. Equivalent to `getSubtypes(transaction, Transitivity.TRANSITIVE)`
+
+
+See also: <<#_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,`getSubtypes(TypeDBTransaction, Transitivity)`>>
+
+
+==== Returns
+
+`java.util.stream.Stream<? extends RelationType>`
+
+[#_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+=== getSubtypes
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends RelationType> getSubtypes​(TypeDBTransaction transaction,
+                                                            Concept.Transitivity transitivity)
+----
+
+==== Description
+
+Retrieves all direct and indirect (or direct only) subtypes of the `RelationType`. 
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect subtypes, `Transitivity.EXPLICIT` for direct subtypes only a| `Concept.Transitivity` 
+|===
+
+==== Returns
+
+`java.util.stream.Stream<? extends RelationType>`
+
+==== Code examples
+
+[source,java]
+----
+relationType.getSubtypes(transaction, transitivity);
+----
+
+[#_setSupertype_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RelationType]
+=== setSupertype
+
+==== Signature
+
+[source,java]
+----
+void setSupertype​(TypeDBTransaction transaction,
+                  RelationType superRelationType)
+----
+
+==== Description
+
+Sets the supplied `RelationType` as the supertype of the current `RelationType`. 
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `superRelationType` a| The `RelationType` to set as the supertype of this `RelationType` a| `RelationType` 
+|===
+
+==== Returns
+
+`void`
+
+==== Code examples
+
+[source,java]
+----
+relationType.setSupertype(transaction, superRelationType);
+----
+
+[#_asAttribute_]
+=== asAttribute
+
+==== Signature
+
+[source,java]
+----
+default Attribute asAttribute()
+----
+
+==== Description
+
+Casts the concept to `Attribute`. 
+
+
+==== Returns
+
+`Attribute`
+
+==== Code examples
+
+[source,java]
+----
+concept.asAttribute();
+----
+
+[#_asAttributeType_]
+=== asAttributeType
+
+==== Signature
+
+[source,java]
+----
+default AttributeType asAttributeType()
+----
+
+==== Description
+
+Casts the concept to `AttributeType`. 
+
+
+==== Returns
+
+`AttributeType`
+
+==== Code examples
+
+[source,java]
+----
+concept.asAttributeType();
+----
+
+[#_asEntity_]
+=== asEntity
+
+==== Signature
+
+[source,java]
+----
+default Entity asEntity()
+----
+
+==== Description
+
+Casts the concept to `Entity`. 
+
+
+==== Returns
+
+`Entity`
+
+==== Code examples
+
+[source,java]
+----
+concept.asEntity();
+----
+
+[#_asEntityType_]
+=== asEntityType
+
+==== Signature
+
+[source,java]
+----
+default EntityType asEntityType()
+----
+
+==== Description
+
+Casts the concept to `EntityType`. 
+
+
+==== Returns
+
+`EntityType`
+
+==== Code examples
+
+[source,java]
+----
+concept.asEntityType();
+----
+
+[#_asRelation_]
+=== asRelation
+
+==== Signature
+
+[source,java]
+----
+default Relation asRelation()
+----
+
+==== Description
+
+Casts the concept to `Relation`. 
+
+
+==== Returns
+
+`Relation`
+
+==== Code examples
+
+[source,java]
+----
+concept.asRelation();
+----
+
+[#_asRoleType_]
+=== asRoleType
+
+==== Signature
+
+[source,java]
+----
+default RoleType asRoleType()
+----
+
+==== Description
+
+Casts the concept to `RoleType`. 
+
+
+==== Returns
+
+`RoleType`
+
+==== Code examples
+
+[source,java]
+----
+concept.asRoleType();
+----
+
+[#_asThing_]
+=== asThing
+
+==== Signature
+
+[source,java]
+----
+default Thing asThing()
+----
+
+==== Description
+
+Casts the concept to `Thing`. 
+
+
+==== Returns
+
+`Thing`
+
+==== Code examples
+
+[source,java]
+----
+concept.asThing();
+----
+
+[#_asValue_]
+=== asValue
+
+==== Signature
+
+[source,java]
+----
+default Value asValue()
+----
+
+==== Description
+
+Casts the concept to `Value`. 
+
+
+==== Returns
+
+`Value`
+
+==== Code examples
+
+[source,java]
+----
+concept.asValue();
+----
+
+[#_isAttribute_]
+=== isAttribute
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isAttribute()
+----
+
+==== Description
+
+Checks if the concept is an `Attribute`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+concept.isAttribute();
+----
+
+[#_isAttributeType_]
+=== isAttributeType
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isAttributeType()
+----
+
+==== Description
+
+Checks if the concept is an `AttributeType`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+concept.isAttributeType();
+----
+
+[#_isEntity_]
+=== isEntity
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isEntity()
+----
+
+==== Description
+
+Checks if the concept is an `Entity`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+concept.isEntity();
+----
+
+[#_isEntityType_]
+=== isEntityType
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isEntityType()
+----
+
+==== Description
+
+Checks if the concept is an `EntityType`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+concept.isEntityType();
+----
+
+[#_isRelation_]
+=== isRelation
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isRelation()
+----
+
+==== Description
+
+Checks if the concept is a `Relation`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+concept.isRelation();
+----
+
+[#_isRoleType_]
+=== isRoleType
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isRoleType()
+----
+
+==== Description
+
+Checks if the concept is a `RoleType`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+concept.isRoleType();
+----
+
+[#_isThing_]
+=== isThing
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isThing()
+----
+
+==== Description
+
+Checks if the concept is a `Thing`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+concept.isThing();
+----
+
+[#_isValue_]
+=== isValue
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isValue()
+----
+
+==== Description
+
+Checks if the concept is a `Value`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+concept.isValue();
+----
+
+// end::methods[]

@@ -1,0 +1,208 @@
+[#_UserManager]
+= UserManager
+
+== Description
+
+Provides access to all user management methods.
+
+== Methods
+
+// tag::methods[]
+[#_all]
+=== all
+
+==== Signature
+
+[source,python]
+----
+abstract all() -> list[typedb.api.user.user.User]
+----
+
+==== Description
+
+Retrieves all users which exist on the TypeDB server.
+
+==== Returns
+
+`list[typedb.api.user.user.User]`
+
+==== Code examples
+
+[source,python]
+----
+driver.users.all()
+----
+
+[#_contains]
+=== contains
+
+==== Signature
+
+[source,python]
+----
+abstract contains(username: str) -> bool
+----
+
+==== Description
+
+Checks if a user with the given name exists.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `username` a| The user name to be checked a| `str` a| 
+|===
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+driver.users.contains(username)
+----
+
+[#_create]
+=== create
+
+==== Signature
+
+[source,python]
+----
+abstract create(username: str, password: str) -> None
+----
+
+==== Description
+
+Create a user with the given name &amp; password.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `username` a| The name of the user to be created a| `str` a| 
+a| `password` a| The password of the user to be created a| `str` a| 
+|===
+
+==== Returns
+
+`None`
+
+==== Code examples
+
+[source,python]
+----
+driver.users.create(username, password)
+----
+
+[#_delete]
+=== delete
+
+==== Signature
+
+[source,python]
+----
+abstract delete(username: str) -> None
+----
+
+==== Description
+
+Deletes a user with the given name.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `username` a| The name of the user to be deleted a| `str` a| 
+|===
+
+==== Returns
+
+`None`
+
+==== Code examples
+
+[source,python]
+----
+driver.users.delete(username)
+----
+
+[#_get]
+=== get
+
+==== Signature
+
+[source,python]
+----
+abstract get(username: str) -> User | None
+----
+
+==== Description
+
+Retrieve a user with the given name.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `username` a| The name of the user to retrieve a| `str` a| 
+|===
+
+==== Returns
+
+`User | None`
+
+==== Code examples
+
+[source,python]
+----
+driver.users.get(username)
+----
+
+[#_password_set]
+=== password_set
+
+==== Signature
+
+[source,python]
+----
+abstract password_set(username: str, password: str) -> None
+----
+
+==== Description
+
+Sets a new password for a user. This operation can only be performed by administrators.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `username` a| The name of the user to set the password of a| `str` a| 
+a| `password` a| The new password a| `str` a| 
+|===
+
+==== Returns
+
+`None`
+
+==== Code examples
+
+[source,python]
+----
+driver.users.password_set(username, password)
+----
+
+// end::methods[]

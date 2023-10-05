@@ -1,0 +1,216 @@
+[#_Database]
+= Database
+
+*Package*: `com.vaticle.typedb.driver.api.database`
+
+== Methods
+
+// tag::methods[]
+[#_name_]
+=== name
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String name()
+----
+
+==== Description
+
+The database name as a string.
+
+==== Returns
+
+`java.lang.String`
+
+[#_schema_]
+=== schema
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String schema()
+----
+
+==== Description
+
+A full schema text as a valid TypeQL define query string. 
+
+
+==== Returns
+
+`java.lang.String`
+
+==== Code examples
+
+[source,java]
+----
+database.schema()
+----
+
+[#_typeSchema_]
+=== typeSchema
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String typeSchema()
+----
+
+==== Description
+
+The types in the schema as a valid TypeQL define query string. 
+
+
+==== Returns
+
+`java.lang.String`
+
+==== Code examples
+
+[source,java]
+----
+database.typeSchema()
+----
+
+[#_ruleSchema_]
+=== ruleSchema
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String ruleSchema()
+----
+
+==== Description
+
+The rules in the schema as a valid TypeQL define query string. 
+
+
+==== Returns
+
+`java.lang.String`
+
+==== Code examples
+
+[source,java]
+----
+database.ruleSchema()
+----
+
+[#_delete_]
+=== delete
+
+==== Signature
+
+[source,java]
+----
+void delete()
+----
+
+==== Description
+
+Deletes this database. 
+
+
+==== Returns
+
+`void`
+
+==== Code examples
+
+[source,java]
+----
+database.delete()
+----
+
+[#_replicas_]
+=== replicas
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Set<? extends Database.Replica> replicas()
+----
+
+==== Description
+
+Set of `Replica` instances for this database. Only works in TypeDB Enterprise
+
+
+==== Returns
+
+`java.util.Set<? extends Database.Replica>`
+
+==== Code examples
+
+[source,java]
+----
+database.replicas()
+----
+
+[#_primaryReplica_]
+=== primaryReplica
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Optional<? extends Database.Replica> primaryReplica()
+----
+
+==== Description
+
+Returns the primary replica for this database. _Only works in TypeDB Enterprise_ 
+
+
+==== Returns
+
+`java.util.Optional<? extends Database.Replica>`
+
+==== Code examples
+
+[source,java]
+----
+database.primaryReplica()
+----
+
+[#_preferredReplica_]
+=== preferredReplica
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Optional<? extends Database.Replica> preferredReplica()
+----
+
+==== Description
+
+Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Enterprise_ 
+
+
+==== Returns
+
+`java.util.Optional<? extends Database.Replica>`
+
+==== Code examples
+
+[source,java]
+----
+database.preferredReplica()
+----
+
+// end::methods[]

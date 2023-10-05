@@ -1,0 +1,195 @@
+[#_TypeDBDriver]
+= TypeDBDriver
+
+*Package*: `com.vaticle.typedb.driver.api`
+
+*Superinterfaces:*
+
+* `java.lang.AutoCloseable`
+
+== Methods
+
+// tag::methods[]
+[#_isOpen_]
+=== isOpen
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+boolean isOpen()
+----
+
+==== Description
+
+Checks whether this connection is presently open. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+driver.isOpen();
+----
+
+[#_databases_]
+=== databases
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+DatabaseManager databases()
+----
+
+==== Description
+
+The `DatabaseManager` for this connection, providing access to database management methods.
+
+==== Returns
+
+`DatabaseManager`
+
+[#_session_java_lang_String_com_vaticle_typedb_driver_api_TypeDBSession_Type]
+=== session
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+TypeDBSession session​(java.lang.String database,
+                      TypeDBSession.Type type)
+----
+
+==== Description
+
+Opens a session to the given database with default options.
+
+
+See also: <<#_session_java_lang_String_com_vaticle_typedb_driver_api_TypeDBSession_Type_com_vaticle_typedb_driver_api_TypeDBOptions,`session(String, TypeDBSession.Type, TypeDBOptions)`>>
+
+
+==== Returns
+
+`TypeDBSession`
+
+[#_session_java_lang_String_com_vaticle_typedb_driver_api_TypeDBSession_Type_com_vaticle_typedb_driver_api_TypeDBOptions]
+=== session
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+TypeDBSession session​(java.lang.String database,
+                      TypeDBSession.Type type,
+                      TypeDBOptions options)
+----
+
+==== Description
+
+Opens a communication tunnel (session) to the given database on the running TypeDB server. For more information on the methods, available with sessions, see the `TypeDBSession` section. 
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `database` a| The name of the database with which the session connects a| `java.lang.String` 
+a| `type` a| The type of session to be created (DATA or SCHEMA) a| `TypeDBSession.Type` 
+a| `options` a| `TypeDBOptions` for the session a| `TypeDBOptions` 
+|===
+
+==== Returns
+
+`TypeDBSession`
+
+==== Code examples
+
+[source,java]
+----
+driver.session(database, sessionType, options);
+----
+
+[#_close_]
+=== close
+
+==== Signature
+
+[source,java]
+----
+void close()
+----
+
+==== Description
+
+Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed. 
+
+
+==== Returns
+
+`void`
+
+==== Code examples
+
+[source,java]
+----
+driver.close()
+----
+
+[#_user_]
+=== user
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+User user()
+----
+
+==== Description
+
+The `UserManager` instance for this connection, providing access to user management methods.
+
+==== Returns
+
+`User`
+
+[#_users_]
+=== users
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+UserManager users()
+----
+
+==== Description
+
+Returns the logged-in user for the connection. 
+
+
+==== Returns
+
+`UserManager`
+
+==== Code examples
+
+[source,java]
+----
+driver.user();
+----
+
+// end::methods[]

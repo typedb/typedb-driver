@@ -1,0 +1,90 @@
+[#_ValueType]
+= ValueType
+
+== Description
+
+TypeQL value types for attributes &amp; value concepts.
+
+// tag::enum_constants[]
+== Namespace variables
+
+[options="header"]
+|===
+|Name 
+a| `BOOLEAN` 
+a| `DATETIME` 
+a| `DOUBLE` 
+a| `LONG` 
+a| `OBJECT` 
+a| `STRING` 
+|===
+// end::enum_constants[]
+
+== Methods
+
+// tag::methods[]
+[#_new_ValueType]
+=== new ValueType
+
+==== Signature
+
+[source,nodejs]
+----
+new ValueType(type, name): ValueType
+----
+
+==== Description
+
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `type` a| null a| `ValueType` 
+a| `name` a| null a| `string` 
+|===
+
+==== Returns
+
+`ValueType`
+
+[#_name]
+=== name
+
+==== Signature
+
+[source,nodejs]
+----
+name(): string
+----
+
+==== Description
+
+
+
+==== Returns
+
+`string`
+
+[#_toString]
+=== toString
+
+==== Signature
+
+[source,nodejs]
+----
+toString(): string
+----
+
+==== Description
+
+
+
+==== Returns
+
+`string`
+
+// end::methods[]

@@ -1,0 +1,15 @@
+[#_enum_Thing]
+= Thing
+
+// tag::enum_constants[]
+== Enum variants
+
+[options="header"]
+|===
+|Name |Type 
+a| `Entity` a| `Entity`
+a| `Relation` a| `Relation`
+a| `Attribute` a| `Attribute`
+|===
+// end::enum_constants[]
+

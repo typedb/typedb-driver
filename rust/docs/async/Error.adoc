@@ -1,0 +1,16 @@
+[#_enum_Error]
+= Error
+
+// tag::enum_constants[]
+== Enum variants
+
+[options="header"]
+|===
+|Name |Type 
+a| `Connection` a| `ConnectionError`
+a| `Internal` a| `InternalError`
+a| `TypeQL` a| `Error`
+a| `Other` a| `String`
+|===
+// end::enum_constants[]
+

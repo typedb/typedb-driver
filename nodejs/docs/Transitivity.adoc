@@ -1,0 +1,45 @@
+[#_Transitivity]
+= Transitivity
+
+// tag::enum_constants[]
+== Namespace variables
+
+[options="header"]
+|===
+|Name 
+a| `EXPLICIT` 
+a| `TRANSITIVE` 
+|===
+// end::enum_constants[]
+
+== Methods
+
+// tag::methods[]
+[#_new_Transitivity]
+=== new Transitivity
+
+==== Signature
+
+[source,nodejs]
+----
+new Transitivity(transitivity): Transitivity
+----
+
+==== Description
+
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transitivity` a| null a| `TypeTransitivity` 
+|===
+
+==== Returns
+
+`Transitivity`
+
+// end::methods[]

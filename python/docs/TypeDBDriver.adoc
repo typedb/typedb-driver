@@ -1,0 +1,130 @@
+[#_TypeDBDriver]
+= TypeDBDriver
+
+== Properties
+
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `databases` a| `DatabaseManager` a| The `DatabaseManager` for this connection, providing access to database management methods.
+a| `users` a| `UserManager` a| The `UserManager` instance for this connection, providing access to user management methods.
+|===
+// end::properties[]
+
+== Methods
+
+// tag::methods[]
+[#_close]
+=== close
+
+==== Signature
+
+[source,python]
+----
+abstract close() -> None
+----
+
+==== Description
+
+Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
+
+==== Returns
+
+`None`
+
+==== Code examples
+
+[source,python]
+----
+driver.close()
+----
+
+[#_is_open]
+=== is_open
+
+==== Signature
+
+[source,python]
+----
+abstract is_open() -> bool
+----
+
+==== Description
+
+Checks whether this connection is presently open.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+driver.is_open()
+----
+
+[#_session]
+=== session
+
+==== Signature
+
+[source,python]
+----
+abstract session(database: str, session_type: SessionType, options: TypeDBOptions | None = None) -> TypeDBSession
+----
+
+==== Description
+
+Opens a communication tunnel (session) to the given database on the running TypeDB server. For more information on the methods, available with sessions, see the `TypeDBSession` section.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `database` a| The name of the database with which the session connects a| `str` a| 
+a| `session_type` a| The type of session to be created (DATA or SCHEMA) a| `SessionType` a| 
+a| `options` a| `TypeDBOptions` for the session a| `TypeDBOptions \| None` a| `None`
+|===
+
+==== Returns
+
+`TypeDBSession`
+
+==== Code examples
+
+[source,python]
+----
+driver.session(database, session_type, options)
+----
+
+[#_user]
+=== user
+
+==== Signature
+
+[source,python]
+----
+abstract user() -> User
+----
+
+==== Description
+
+Returns the logged-in user for the connection.
+
+==== Returns
+
+`User`
+
+==== Code examples
+
+[source,python]
+----
+driver.user()
+----
+
+// end::methods[]

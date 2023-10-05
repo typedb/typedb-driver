@@ -1,0 +1,208 @@
+[#_UserManager]
+= UserManager
+
+== Description
+
+Provides access to all user management methods.
+
+== Methods
+
+// tag::methods[]
+[#_all]
+=== all
+
+==== Signature
+
+[source,nodejs]
+----
+all(): Promise<User[]>
+----
+
+==== Description
+
+Retrieves all users which exist on the TypeDB server.
+
+==== Returns
+
+`Promise<User[]>`
+
+==== Code examples
+
+[source,nodejs]
+----
+driver.users.all()
+----
+
+[#_contains]
+=== contains
+
+==== Signature
+
+[source,nodejs]
+----
+contains(name): Promise<boolean>
+----
+
+==== Description
+
+Checks if a user with the given name exists.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| null a| `string` 
+|===
+
+==== Returns
+
+`Promise<boolean>`
+
+==== Code examples
+
+[source,nodejs]
+----
+driver.users.contains(username)
+----
+
+[#_create]
+=== create
+
+==== Signature
+
+[source,nodejs]
+----
+create(name, password): Promise<void>
+----
+
+==== Description
+
+Create a user with the given name &amp; password.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| null a| `string` 
+a| `password` a| The password of the user to be created a| `string` 
+|===
+
+==== Returns
+
+`Promise<void>`
+
+==== Code examples
+
+[source,nodejs]
+----
+driver.users.create(username, password)
+----
+
+[#_delete]
+=== delete
+
+==== Signature
+
+[source,nodejs]
+----
+delete(name): Promise<void>
+----
+
+==== Description
+
+Deletes a user with the given name.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| null a| `string` 
+|===
+
+==== Returns
+
+`Promise<void>`
+
+==== Code examples
+
+[source,nodejs]
+----
+driver.users.delete(username)
+----
+
+[#_get]
+=== get
+
+==== Signature
+
+[source,nodejs]
+----
+get(name): Promise<User>
+----
+
+==== Description
+
+Retrieve a user with the given name.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| null a| `string` 
+|===
+
+==== Returns
+
+`Promise<User>`
+
+==== Code examples
+
+[source,nodejs]
+----
+driver.users.get(username)
+----
+
+[#_passwordSet]
+=== passwordSet
+
+==== Signature
+
+[source,nodejs]
+----
+passwordSet(name, password): Promise<void>
+----
+
+==== Description
+
+Sets a new password for a user. This operation can only be performed by administrators.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| null a| `string` 
+a| `password` a| The new password a| `string` 
+|===
+
+==== Returns
+
+`Promise<void>`
+
+==== Code examples
+
+[source,nodejs]
+----
+driver.users.passwordSet(username, password)
+----
+
+// end::methods[]

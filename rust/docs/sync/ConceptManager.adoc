@@ -1,0 +1,383 @@
+[#_struct_ConceptManager]
+= ConceptManager
+
+*Implements traits:*
+
+* `Debug`
+
+== Description
+
+Provides access for all Concept API methods.
+
+== Methods
+
+// tag::methods[]
+[#_struct_ConceptManager_method_get_entity_type]
+=== get_entity_type
+
+==== Signature
+
+[source,rust]
+----
+pub fn get_entity_type(&self, label: String) -> Result<Option<EntityType>>
+----
+
+==== Description
+
+Retrieves an `EntityType` by its label.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the `EntityType` to retrieve a| `String` 
+|===
+
+==== Returns
+
+[source,rust]
+----
+Result<Option<EntityType>>
+----
+
+==== Code examples
+
+[source,rust]
+----
+transaction.concepts().get_entity_type(label)
+----
+
+[#_struct_ConceptManager_method_get_relation_type]
+=== get_relation_type
+
+==== Signature
+
+[source,rust]
+----
+pub fn get_relation_type(&self, label: String) -> Result<Option<RelationType>>
+----
+
+==== Description
+
+Retrieves a `RelationType` by its label.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the `RelationType` to retrieve a| `String` 
+|===
+
+==== Returns
+
+[source,rust]
+----
+Result<Option<RelationType>>
+----
+
+==== Code examples
+
+[source,rust]
+----
+transaction.concepts().get_relation_type(label)
+----
+
+[#_struct_ConceptManager_method_get_attribute_type]
+=== get_attribute_type
+
+==== Signature
+
+[source,rust]
+----
+pub fn get_attribute_type(&self, label: String) -> Result<Option<AttributeType>>
+----
+
+==== Description
+
+Retrieves an `AttributeType` by its label.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the `AttributeType` to retrieve a| `String` 
+|===
+
+==== Returns
+
+[source,rust]
+----
+Result<Option<AttributeType>>
+----
+
+==== Code examples
+
+[source,rust]
+----
+transaction.concepts().get_attribute_type(label)
+----
+
+[#_struct_ConceptManager_method_put_entity_type]
+=== put_entity_type
+
+==== Signature
+
+[source,rust]
+----
+pub fn put_entity_type(&self, label: String) -> Result<EntityType>
+----
+
+==== Description
+
+Creates a new `EntityType` if none exists with the given label, otherwise retrieves the existing one.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the `EntityType` to create or retrieve a| `String` 
+|===
+
+==== Returns
+
+[source,rust]
+----
+Result<EntityType>
+----
+
+==== Code examples
+
+[source,rust]
+----
+transaction.concepts().put_entity_type(label)
+----
+
+[#_struct_ConceptManager_method_put_relation_type]
+=== put_relation_type
+
+==== Signature
+
+[source,rust]
+----
+pub fn put_relation_type(&self, label: String) -> Result<RelationType>
+----
+
+==== Description
+
+Creates a new `RelationType` if none exists with the given label, otherwise retrieves the existing one.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the `RelationType` to create or retrieve a| `String` 
+|===
+
+==== Returns
+
+[source,rust]
+----
+Result<RelationType>
+----
+
+==== Code examples
+
+[source,rust]
+----
+transaction.concepts().put_relation_type(label)
+----
+
+[#_struct_ConceptManager_method_put_attribute_type]
+=== put_attribute_type
+
+==== Signature
+
+[source,rust]
+----
+pub fn put_attribute_type(
+    &self,
+    label: String,
+    value_type: ValueType
+) -> Result<AttributeType>
+----
+
+==== Description
+
+Creates a new `AttributeType` if none exists with the given label, or retrieves the existing one. or retrieve. :return:
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the `AttributeType` to create or retrieve a| `String` 
+a| `value_type` a| The value type of the `AttributeType` to create a| `ValueType` 
+|===
+
+==== Returns
+
+[source,rust]
+----
+Result<AttributeType>
+----
+
+==== Code examples
+
+[source,rust]
+----
+await transaction.concepts().put_attribute_type(label, value_type)
+----
+
+[#_struct_ConceptManager_method_get_entity]
+=== get_entity
+
+==== Signature
+
+[source,rust]
+----
+pub fn get_entity(&self, iid: IID) -> Result<Option<Entity>>
+----
+
+==== Description
+
+Retrieves an `Entity` by its iid.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `iid` a| The iid of the `Entity` to retrieve a| `IID` 
+|===
+
+==== Returns
+
+[source,rust]
+----
+Result<Option<Entity>>
+----
+
+==== Code examples
+
+[source,rust]
+----
+transaction.concepts().get_entity(iid)
+----
+
+[#_struct_ConceptManager_method_get_relation]
+=== get_relation
+
+==== Signature
+
+[source,rust]
+----
+pub fn get_relation(&self, iid: IID) -> Result<Option<Relation>>
+----
+
+==== Description
+
+Retrieves a `Relation` by its iid.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `iid` a| The iid of the `Relation` to retrieve a| `IID` 
+|===
+
+==== Returns
+
+[source,rust]
+----
+Result<Option<Relation>>
+----
+
+==== Code examples
+
+[source,rust]
+----
+transaction.concepts().get_relation(iid)
+----
+
+[#_struct_ConceptManager_method_get_attribute]
+=== get_attribute
+
+==== Signature
+
+[source,rust]
+----
+pub fn get_attribute(&self, iid: IID) -> Result<Option<Attribute>>
+----
+
+==== Description
+
+Retrieves an `Attribute` by its iid.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `iid` a| The iid of the `Attribute` to retrieve a| `IID` 
+|===
+
+==== Returns
+
+[source,rust]
+----
+Result<Option<Attribute>>
+----
+
+==== Code examples
+
+[source,rust]
+----
+transaction.concepts().get_attribute(iid)
+----
+
+[#_struct_ConceptManager_method_get_schema_exceptions]
+=== get_schema_exceptions
+
+==== Signature
+
+[source,rust]
+----
+pub fn get_schema_exceptions(
+    &self
+) -> Result<impl Stream<Item = Result<SchemaException>>>
+----
+
+==== Description
+
+Retrieves a list of all exceptions for the current transaction.
+
+==== Returns
+
+[source,rust]
+----
+Result<impl Stream<Item = Result<SchemaException>>>
+----
+
+==== Code examples
+
+[source,rust]
+----
+transaction.concepts().get_schema_exceptions()
+----
+
+// end::methods[]

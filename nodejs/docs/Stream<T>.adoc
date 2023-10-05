@@ -1,0 +1,273 @@
+[#_Stream<T>]
+= Stream<T>
+
+== Description
+
+A stream of elements offering a functional interface to manipulate elements. Typically the elements are generated/retrieved lazily.
+
+== Methods
+
+// tag::methods[]
+[#_new_Stream]
+=== new Stream
+
+==== Signature
+
+[source,nodejs]
+----
+new Stream<T>(): Stream<T>
+----
+
+==== Description
+
+
+
+==== Returns
+
+`Stream<T>`
+
+[#_[asyncIterator]]
+=== [asyncIterator]
+
+==== Signature
+
+[source,nodejs]
+----
+[asyncIterator](): AsyncIterator<T, any, undefined>
+----
+
+==== Description
+
+
+
+==== Returns
+
+`AsyncIterator<T, any, undefined>`
+
+[#_collect]
+=== collect
+
+==== Signature
+
+[source,nodejs]
+----
+collect(): Promise<T[]>
+----
+
+==== Description
+
+Collects all the answers from this stream into an array
+
+==== Returns
+
+`Promise<T[]>`
+
+==== Code examples
+
+[source,nodejs]
+----
+results = transaction.query.match(query).collect().await;
+----
+
+[#_every]
+=== every
+
+==== Signature
+
+[source,nodejs]
+----
+every(callbackFn): Promise<boolean>
+----
+
+==== Description
+
+Checks whether a condition is satisfied by ALL answers in this stream.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `callbackFn` a| null a| `((value) => unknown)` 
+|===
+
+==== Returns
+
+`Promise<boolean>`
+
+[#_filter]
+=== filter
+
+==== Signature
+
+[source,nodejs]
+----
+filter(filter): Stream<T>
+----
+
+==== Description
+
+Returns a new stream from this stream consisting only of elements which satisfy a given condition.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `filter` a| The condition to evaluate.
+Examples
+`// For a query "match $p isa person, has age $a;", only retrieve results having $a &gt;= 60.results = transaction.query.match(query).filter(cm =&gt; cm.get("a").value &gt; 60).collect();
+`Copy a| `((value) => boolean)` 
+|===
+
+==== Returns
+
+`Stream<T>`
+
+[#_first]
+=== first
+
+==== Signature
+
+[source,nodejs]
+----
+first(): Promise<T>
+----
+
+==== Description
+
+Returns the first element in the stream.
+
+==== Returns
+
+`Promise<T>`
+
+[#_flatMap]
+=== flatMap
+
+==== Signature
+
+[source,nodejs]
+----
+flatMap<U>(mapper): Stream<U>
+----
+
+==== Description
+
+Given a function which accepts a single element of this stream and returns a new stream, This function returns a new stream obtained by applying the function to each element in the stream, and concatenating each result thus obtained
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `mapper` a| The mapping function to apply. Must return a stream. a| `((value) => Stream<U>)` 
+|===
+
+==== Returns
+
+`Stream<U>`
+
+[#_forEach]
+=== forEach
+
+==== Signature
+
+[source,nodejs]
+----
+forEach(fn): Promise<void>
+----
+
+==== Description
+
+Executes the given function for each element in the stream.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `fn` a| The function to evaluate for each element. a| `((value) => void)` 
+|===
+
+==== Returns
+
+`Promise<void>`
+
+[#_iterator]
+=== iterator
+
+==== Signature
+
+[source,nodejs]
+----
+iterator(): AsyncIterator<T, any, undefined>
+----
+
+==== Description
+
+
+
+==== Returns
+
+`AsyncIterator<T, any, undefined>`
+
+[#_map]
+=== map
+
+==== Signature
+
+[source,nodejs]
+----
+map<U>(mapper): Stream<U>
+----
+
+==== Description
+
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `mapper` a| The mapping function to apply. Returns a new stream from this stream by applying the `mapper` function to each element. a| `((value) => U)` 
+|===
+
+==== Returns
+
+`Stream<U>`
+
+[#_some]
+=== some
+
+==== Signature
+
+[source,nodejs]
+----
+some(callbackFn): Promise<boolean>
+----
+
+==== Description
+
+Checks whether a condition is satisfied by ANY answer in this stream.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `callbackFn` a| null a| `((value) => unknown)` 
+|===
+
+==== Returns
+
+`Promise<boolean>`
+
+// end::methods[]

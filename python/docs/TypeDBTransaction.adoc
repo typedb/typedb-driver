@@ -1,0 +1,156 @@
+[#_TypeDBTransaction]
+= TypeDBTransaction
+
+== Properties
+
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `concepts` a| `ConceptManager` a| The `ConceptManager` for this transaction, providing access to all Concept API methods.
+a| `logic` a| `LogicManager` a| The `LogicManager` for this Transaction, providing access to all Concept API - Logic methods.
+a| `options` a| `TypeDBOptions` a| The options for the transaction
+a| `query` a| `QueryManager` a| The``QueryManager`` for this Transaction, from which any TypeQL query can be executed.
+a| `transaction_type` a| `TransactionType` a| The transaction’s type (READ or WRITE)
+|===
+// end::properties[]
+
+== Methods
+
+// tag::methods[]
+[#_close]
+=== close
+
+==== Signature
+
+[source,python]
+----
+abstract close() -> None
+----
+
+==== Description
+
+Closes the transaction.
+
+==== Returns
+
+`None`
+
+==== Code examples
+
+[source,python]
+----
+transaction.close()
+----
+
+[#_commit]
+=== commit
+
+==== Signature
+
+[source,python]
+----
+abstract commit() -> None
+----
+
+==== Description
+
+Commits the changes made via this transaction to the TypeDB database. Whether or not the transaction is commited successfully, it gets closed after the commit call.
+
+==== Returns
+
+`None`
+
+==== Code examples
+
+[source,python]
+----
+transaction.commit()
+----
+
+[#_is_open]
+=== is_open
+
+==== Signature
+
+[source,python]
+----
+abstract is_open() -> bool
+----
+
+==== Description
+
+Checks whether this transaction is open.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+transaction.is_open()
+----
+
+[#_on_close]
+=== on_close
+
+==== Signature
+
+[source,python]
+----
+abstract on_close(function: callable) -> None
+----
+
+==== Description
+
+Registers a callback function which will be executed when this session is closed.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `function` a| The callback function. a| `callable` a| 
+|===
+
+==== Returns
+
+`None`
+
+==== Code examples
+
+[source,python]
+----
+transaction.on_close(function)
+----
+
+[#_rollback]
+=== rollback
+
+==== Signature
+
+[source,python]
+----
+abstract rollback() -> None
+----
+
+==== Description
+
+Rolls back the uncommitted changes made via this transaction.
+
+==== Returns
+
+`None`
+
+==== Code examples
+
+[source,python]
+----
+transaction.rollback()
+----
+
+// end::methods[]

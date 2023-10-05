@@ -1,0 +1,106 @@
+[#_LogicManager]
+= LogicManager
+
+== Description
+
+Provides methods for manipulating rules in the database.
+
+== Methods
+
+// tag::methods[]
+[#_get_rule]
+=== get_rule
+
+==== Signature
+
+[source,python]
+----
+abstract get_rule(label: str) -> Rule | None
+----
+
+==== Description
+
+Retrieves the Rule that has the given label.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `label` a| The label of the Rule to create or retrieve a| `str` a| 
+|===
+
+==== Returns
+
+`Rule | None`
+
+==== Code examples
+
+[source,python]
+----
+transaction.logic.get_rule(label)
+----
+
+[#_get_rules]
+=== get_rules
+
+==== Signature
+
+[source,python]
+----
+abstract get_rules() -> Iterator[Rule]
+----
+
+==== Description
+
+Retrieves all rules.
+
+==== Returns
+
+`Iterator[Rule]`
+
+==== Code examples
+
+[source,python]
+----
+transaction.logic.get_rules()
+----
+
+[#_put_rule]
+=== put_rule
+
+==== Signature
+
+[source,python]
+----
+abstract put_rule(label: str, when: str, then: str) -> Rule
+----
+
+==== Description
+
+Creates a new Rule if none exists with the given label, or replaces the existing one.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `label` a| The label of the Rule to create or replace a| `str` a| 
+a| `when` a| The when body of the rule to create a| `str` a| 
+a| `then` a| The then body of the rule to create a| `str` a| 
+|===
+
+==== Returns
+
+`Rule`
+
+==== Code examples
+
+[source,python]
+----
+transaction.logic.put_rule(label, when, then)
+----
+
+// end::methods[]

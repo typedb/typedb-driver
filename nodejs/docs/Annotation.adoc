@@ -1,0 +1,68 @@
+[#_Annotation]
+= Annotation
+
+== Description
+
+Annotations for ownership declarations.
+
+== Fields
+
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `KEY` a| `Annotation` a| Annotation to specify the attribute owned is a KEY
+a| `UNIQUE` a| `Annotation` a| Annotation to specify the owned is UNIQUE
+|===
+// end::properties[]
+
+== Methods
+
+// tag::methods[]
+[#_toString]
+=== toString
+
+==== Signature
+
+[source,nodejs]
+----
+toString(): string
+----
+
+==== Description
+
+Printable string
+
+==== Returns
+
+`string`
+
+[#_parse]
+=== parse
+
+==== Signature
+
+[source,nodejs]
+----
+parse(string): Annotation
+----
+
+==== Description
+
+Returns the relevant `Annotation` given the name as a string
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `string` a| name of the attribute as a string. e.g.: "key", "unique" a| `string` 
+|===
+
+==== Returns
+
+`Annotation`
+
+// end::methods[]

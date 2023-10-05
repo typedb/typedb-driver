@@ -1,0 +1,18 @@
+[#_enum_SessionType]
+= SessionType
+
+== Description
+
+This enum is used to specify the type of the session.
+
+// tag::enum_constants[]
+== Enum variants
+
+[options="header"]
+|===
+|Name |Type 
+a| `Data` a| `Data`
+a| `Schema` a| `Schema`
+|===
+// end::enum_constants[]
+

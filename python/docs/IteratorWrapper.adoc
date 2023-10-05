@@ -1,0 +1,7 @@
+[#_IteratorWrapper]
+= IteratorWrapper
+
+*Supertypes:*
+
+* `object`
+

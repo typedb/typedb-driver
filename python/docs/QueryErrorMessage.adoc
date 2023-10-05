@@ -1,0 +1,7 @@
+[#_QueryErrorMessage]
+= QueryErrorMessage
+
+*Supertypes:*
+
+* `ErrorMessage`
+

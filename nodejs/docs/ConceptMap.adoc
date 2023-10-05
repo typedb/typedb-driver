@@ -1,0 +1,131 @@
+[#_ConceptMap]
+= ConceptMap
+
+== Description
+
+Contains a mapping of variables to concepts.
+
+== Fields
+
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `explainables` a| `Explainables` a| The Explainables object for this ConceptMap, exposing which of the concepts in this ConceptMap are explainable.
+|===
+// end::properties[]
+
+== Methods
+
+// tag::methods[]
+[#_concepts]
+=== concepts
+
+==== Signature
+
+[source,nodejs]
+----
+concepts(): IterableIterator<Concept>
+----
+
+==== Description
+
+Produces an iterator over all concepts in this `ConceptMap`.
+
+==== Returns
+
+`IterableIterator<Concept>`
+
+==== Code examples
+
+[source,nodejs]
+----
+conceptMap.concepts()
+----
+
+[#_get]
+=== get
+
+==== Signature
+
+[source,nodejs]
+----
+get(variable): Concept
+----
+
+==== Description
+
+Retrieves a concept for a given variable name.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `variable` a| The string representation of a variable a| `string` 
+|===
+
+==== Returns
+
+`Concept`
+
+==== Code examples
+
+[source,nodejs]
+----
+conceptMap.get(variable)
+----
+
+[#_toJSONRecord]
+=== toJSONRecord
+
+==== Signature
+
+[source,nodejs]
+----
+toJSONRecord(): Record<string, Record<string, string | number | boolean>>
+----
+
+==== Description
+
+Retrieves this `ConceptMap` as JSON.
+
+==== Returns
+
+`Record<string, Record<string, string | number | boolean>>`
+
+==== Code examples
+
+[source,nodejs]
+----
+conceptMap.toJSONRecord()
+----
+
+[#_variables]
+=== variables
+
+==== Signature
+
+[source,nodejs]
+----
+variables(): IterableIterator<string>
+----
+
+==== Description
+
+Produces an iterator over all variables in this `ConceptMap`.
+
+==== Returns
+
+`IterableIterator<string>`
+
+==== Code examples
+
+[source,nodejs]
+----
+conceptMap.variables()
+----
+
+// end::methods[]

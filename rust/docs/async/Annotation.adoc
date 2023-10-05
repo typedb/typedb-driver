@@ -1,0 +1,14 @@
+[#_enum_Annotation]
+= Annotation
+
+// tag::enum_constants[]
+== Enum variants
+
+[options="header"]
+|===
+|Name |Type 
+a| `Key` a| `Key`
+a| `Unique` a| `Unique`
+|===
+// end::enum_constants[]
+

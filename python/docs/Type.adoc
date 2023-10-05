@@ -1,0 +1,309 @@
+[#_Type]
+= Type
+
+*Supertypes:*
+
+* `Concept`
+
+== Methods
+
+// tag::methods[]
+[#_delete]
+=== delete
+
+==== Signature
+
+[source,python]
+----
+abstract delete(transaction: TypeDBTransaction) -> None
+----
+
+==== Description
+
+Deletes this type from the database.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+|===
+
+==== Returns
+
+`None`
+
+==== Code examples
+
+[source,python]
+----
+type_.delete(transaction)
+----
+
+[#_get_label]
+=== get_label
+
+==== Signature
+
+[source,python]
+----
+abstract get_label() -> Label
+----
+
+==== Description
+
+Retrieves the unique label of the type.
+
+==== Returns
+
+`Label`
+
+==== Code examples
+
+[source,python]
+----
+type_.get_label()
+----
+
+[#_get_subtypes]
+=== get_subtypes
+
+==== Signature
+
+[source,python]
+----
+abstract get_subtypes(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Type]
+----
+
+==== Description
+
+Retrieves all direct and indirect (or direct only) subtypes of the type.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect subtypes, `Transitivity.EXPLICIT` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+|===
+
+==== Returns
+
+`Iterator[Type]`
+
+==== Code examples
+
+[source,python]
+----
+type_.get_subtypes(transaction)
+type_.get_subtypes(transaction, Transitivity.EXPLICIT)
+----
+
+[#_get_supertype]
+=== get_supertype
+
+==== Signature
+
+[source,python]
+----
+abstract get_supertype(transaction: TypeDBTransaction) -> Type | None
+----
+
+==== Description
+
+Retrieves the most immediate supertype of the type.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+|===
+
+==== Returns
+
+`Type | None`
+
+==== Code examples
+
+[source,python]
+----
+type_.get_supertype(transaction)
+----
+
+[#_get_supertypes]
+=== get_supertypes
+
+==== Signature
+
+[source,python]
+----
+abstract get_supertypes(transaction: TypeDBTransaction) -> Iterator[Type]
+----
+
+==== Description
+
+Retrieves all supertypes of the type.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+|===
+
+==== Returns
+
+`Iterator[Type]`
+
+==== Code examples
+
+[source,python]
+----
+type_.get_supertypes(transaction)
+----
+
+[#_is_abstract]
+=== is_abstract
+
+==== Signature
+
+[source,python]
+----
+abstract is_abstract() -> bool
+----
+
+==== Description
+
+Checks if the type is prevented from having data instances (i.e., `abstract`).
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+type_.is_abstract()
+----
+
+[#_is_root]
+=== is_root
+
+==== Signature
+
+[source,python]
+----
+abstract is_root() -> bool
+----
+
+==== Description
+
+Checks if the type is a root type.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+type_.is_root()
+----
+
+[#_is_type]
+=== is_type
+
+==== Signature
+
+[source,python]
+----
+is_type() -> bool
+----
+
+==== Description
+
+Checks if the concept is a `Type`.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+type_.is_type()
+----
+
+[#_set_label]
+=== set_label
+
+==== Signature
+
+[source,python]
+----
+abstract set_label(transaction: TypeDBTransaction, new_label: Label) -> None
+----
+
+==== Description
+
+Renames the label of the type. The new label must remain unique.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `new_label` a| The new `Label` to be given to the type. a| `Label` a| 
+|===
+
+==== Returns
+
+`None`
+
+==== Code examples
+
+[source,python]
+----
+type_.set_label(transaction, new_label)
+----
+
+[#_to_json]
+=== to_json
+
+==== Signature
+
+[source,python]
+----
+to_json() -> Mapping[str, str]
+----
+
+==== Description
+
+Retrieves the type as JSON.
+
+==== Returns
+
+`Mapping[str, str]`
+
+==== Code examples
+
+[source,python]
+----
+type_.to_json()
+----
+
+// end::methods[]

@@ -1,0 +1,61 @@
+[#_ConceptMapGroup]
+= ConceptMapGroup
+
+== Description
+
+Contains an element of the group query result.
+
+== Methods
+
+// tag::methods[]
+[#_concept_maps]
+=== concept_maps
+
+==== Signature
+
+[source,python]
+----
+abstract concept_maps() -> Iterator[ConceptMap]
+----
+
+==== Description
+
+Retrieves the ConceptMaps of the group.
+
+==== Returns
+
+`Iterator[ConceptMap]`
+
+==== Code examples
+
+[source,python]
+----
+concept_map_group.concept_maps()
+----
+
+[#_owner]
+=== owner
+
+==== Signature
+
+[source,python]
+----
+abstract owner() -> Concept
+----
+
+==== Description
+
+Retrieves the concept that is the group owner.
+
+==== Returns
+
+`Concept`
+
+==== Code examples
+
+[source,python]
+----
+concept_map_group.owner()
+----
+
+// end::methods[]

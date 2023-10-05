@@ -1,0 +1,69 @@
+[#_TransactionType]
+= TransactionType
+
+*Supertypes:*
+
+* `Enum`
+
+== Description
+
+This class is used to specify the type of transaction.
+
+== Code examples
+
+[source,python]
+----
+session.transaction(TransactionType.READ)
+----
+
+// tag::enum_constants[]
+== Enum constants
+
+[options="header"]
+|===
+|Name |Value 
+a| `READ` a| `0`
+a| `WRITE` a| `1`
+|===
+// end::enum_constants[]
+
+== Methods
+
+// tag::methods[]
+[#_is_read]
+=== is_read
+
+==== Signature
+
+[source,python]
+----
+is_read()
+----
+
+==== Description
+
+
+
+==== Returns
+
+``
+
+[#_is_write]
+=== is_write
+
+==== Signature
+
+[source,python]
+----
+is_write()
+----
+
+==== Description
+
+
+
+==== Returns
+
+``
+
+// end::methods[]

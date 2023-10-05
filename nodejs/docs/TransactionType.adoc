@@ -1,0 +1,58 @@
+[#_TransactionType]
+= TransactionType
+
+== Description
+
+This class is used to specify the type of transaction.
+
+// tag::enum_constants[]
+== Namespace variables
+
+[options="header"]
+|===
+|Name 
+a| `READ` 
+a| `WRITE` 
+|===
+// end::enum_constants[]
+
+== Methods
+
+// tag::methods[]
+[#_isRead]
+=== isRead
+
+==== Signature
+
+[source,nodejs]
+----
+isRead(): boolean
+----
+
+==== Description
+
+Checks whether this is the READ TransactionType
+
+==== Returns
+
+`boolean`
+
+[#_isWrite]
+=== isWrite
+
+==== Signature
+
+[source,nodejs]
+----
+isWrite(): boolean
+----
+
+==== Description
+
+Checks whether this is the WRITE TransactionType
+
+==== Returns
+
+`boolean`
+
+// end::methods[]

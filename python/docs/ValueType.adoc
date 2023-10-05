@@ -1,0 +1,48 @@
+[#_ValueType]
+= ValueType
+
+*Supertypes:*
+
+* `Enum`
+
+== Description
+
+TypeQL value types for attributes &amp; value concepts.
+
+// tag::enum_constants[]
+== Enum constants
+
+[options="header"]
+|===
+|Name |Value 
+a| `BOOLEAN` a| `<typedb.api.concept.value.value._ValueType object>`
+a| `DATETIME` a| `<typedb.api.concept.value.value._ValueType object>`
+a| `DOUBLE` a| `<typedb.api.concept.value.value._ValueType object>`
+a| `LONG` a| `<typedb.api.concept.value.value._ValueType object>`
+a| `OBJECT` a| `<typedb.api.concept.value.value._ValueType object>`
+a| `STRING` a| `<typedb.api.concept.value.value._ValueType object>`
+|===
+// end::enum_constants[]
+
+== Methods
+
+// tag::methods[]
+[#_of]
+=== of
+
+==== Signature
+
+[source,python]
+----
+static of(value_type: Object | Boolean | Long | Double | String | DateTime) -> ValueType
+----
+
+==== Description
+
+
+
+==== Returns
+
+`ValueType`
+
+// end::methods[]

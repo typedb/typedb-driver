@@ -1,0 +1,13 @@
+[#_TypeDB]
+= TypeDB
+
+// tag::enum_constants[]
+== Namespace variables
+
+[options="header"]
+|===
+|Name 
+a| `DEFAULT_ADDRESS` 
+|===
+// end::enum_constants[]
+

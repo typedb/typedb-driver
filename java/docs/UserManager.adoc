@@ -1,0 +1,220 @@
+[#_UserManager]
+= UserManager
+
+*Package*: `com.vaticle.typedb.driver.api.user`
+
+== Description
+
+Provides access to all user management methods.
+
+== Methods
+
+// tag::methods[]
+[#_contains_java_lang_String]
+=== contains
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+boolean contains​(java.lang.String username)
+----
+
+==== Description
+
+Checks if a user with the given name exists. 
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The user name to be checked a| `java.lang.String` 
+|===
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+driver.users().contains(username);
+----
+
+[#_create_java_lang_String_java_lang_String]
+=== create
+
+==== Signature
+
+[source,java]
+----
+void create​(java.lang.String username,
+            java.lang.String password)
+----
+
+==== Description
+
+Create a user with the given name &amp; password. 
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to be created a| `java.lang.String` 
+a| `password` a| The password of the user to be created a| `java.lang.String` 
+|===
+
+==== Returns
+
+`void`
+
+==== Code examples
+
+[source,java]
+----
+driver.users().create(username, password);
+----
+
+[#_delete_java_lang_String]
+=== delete
+
+==== Signature
+
+[source,java]
+----
+void delete​(java.lang.String username)
+----
+
+==== Description
+
+Deletes a user with the given name. 
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to be deleted a| `java.lang.String` 
+|===
+
+==== Returns
+
+`void`
+
+==== Code examples
+
+[source,java]
+----
+driver.users().delete(username);
+----
+
+[#_get_java_lang_String]
+=== get
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+User get​(java.lang.String username)
+----
+
+==== Description
+
+Retrieve a user with the given name. 
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to retrieve a| `java.lang.String` 
+|===
+
+==== Returns
+
+`User`
+
+==== Code examples
+
+[source,java]
+----
+driver.users().get(username);
+----
+
+[#_all_]
+=== all
+
+==== Signature
+
+[source,java]
+----
+java.util.Set<User> all()
+----
+
+==== Description
+
+Retrieves all users which exist on the TypeDB server. 
+
+
+==== Returns
+
+`java.util.Set<User>`
+
+==== Code examples
+
+[source,java]
+----
+driver.users().all();
+----
+
+[#_passwordSet_java_lang_String_java_lang_String]
+=== passwordSet
+
+==== Signature
+
+[source,java]
+----
+void passwordSet​(java.lang.String username,
+                 java.lang.String password)
+----
+
+==== Description
+
+Sets a new password for a user. This operation can only be performed by administrators. 
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to set the password of a| `java.lang.String` 
+a| `password` a| The new password a| `java.lang.String` 
+|===
+
+==== Returns
+
+`void`
+
+==== Code examples
+
+[source,java]
+----
+driver.users().passwordSet(username, password);
+----
+
+// end::methods[]

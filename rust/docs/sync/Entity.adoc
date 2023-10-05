@@ -1,0 +1,236 @@
+[#_struct_Entity]
+= Entity
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `EntityAPI`
+* `Eq`
+* `PartialEq<Entity>`
+* `StructuralEq`
+* `StructuralPartialEq`
+* `ThingAPI`
+
+== Description
+
+Instance of data of an entity type, representing a standalone object that exists in the data model independently. Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles played in relation instances.
+
+== Fields
+
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `iid` a| `IID` a| 
+a| `type_` a| `EntityType` a| 
+a| `is_inferred` a| `bool` a| 
+|===
+// end::properties[]
+
+== Methods
+
+// tag::methods[]
+[#_struct_Entity_tymethod_iid]
+=== iid
+
+==== Signature
+
+[source,rust]
+----
+fn iid(&self) -> &IID
+----
+
+==== Description
+
+<<#_trait_ThingAPI_tymethod_iid,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+&IID
+----
+
+[#_struct_Entity_tymethod_is_inferred]
+=== is_inferred
+
+==== Signature
+
+[source,rust]
+----
+fn is_inferred(&self) -> bool
+----
+
+==== Description
+
+<<#_trait_ThingAPI_tymethod_is_inferred,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+bool
+----
+
+[#_struct_Entity_tymethod_is_deleted]
+=== is_deleted
+
+==== Signature
+
+[source,rust]
+----
+fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool>
+----
+
+==== Description
+
+<<#_trait_ThingAPI_tymethod_is_deleted,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result<bool>
+----
+
+[#_struct_Entity_method_delete]
+=== delete
+
+==== Signature
+
+[source,rust]
+----
+fn delete(&self, transaction: &Transaction<'_>) -> Result
+----
+
+==== Description
+
+<<#_trait_ThingAPI_method_delete,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result
+----
+
+[#_struct_Entity_method_get_has]
+=== get_has
+
+==== Signature
+
+[source,rust]
+----
+fn get_has(
+    &self,
+    transaction: &Transaction<'_>,
+    attribute_types: Vec<AttributeType>,
+    annotations: Vec<Annotation>
+) -> Result<BoxStream<'_, Result<Attribute>>>
+----
+
+==== Description
+
+<<#_trait_ThingAPI_method_get_has,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result<BoxStream<'_, Result<Attribute>>>
+----
+
+[#_struct_Entity_method_set_has]
+=== set_has
+
+==== Signature
+
+[source,rust]
+----
+fn set_has(&self, transaction: &Transaction<'_>, attribute: Attribute) -> Result
+----
+
+==== Description
+
+<<#_trait_ThingAPI_method_set_has,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result
+----
+
+[#_struct_Entity_method_unset_has]
+=== unset_has
+
+==== Signature
+
+[source,rust]
+----
+fn unset_has(&self, transaction: &Transaction<'_>, attribute: Attribute) -> Result
+----
+
+==== Description
+
+<<#_trait_ThingAPI_method_unset_has,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result
+----
+
+[#_struct_Entity_method_get_relations]
+=== get_relations
+
+==== Signature
+
+[source,rust]
+----
+fn get_relations(
+    &self,
+    transaction: &Transaction<'_>,
+    role_types: Vec<RoleType>
+) -> Result<BoxStream<'_, Result<Relation>>>
+----
+
+==== Description
+
+<<#_trait_ThingAPI_method_get_relations,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result<BoxStream<'_, Result<Relation>>>
+----
+
+[#_struct_Entity_method_get_playing]
+=== get_playing
+
+==== Signature
+
+[source,rust]
+----
+fn get_playing(
+    &self,
+    transaction: &Transaction<'_>
+) -> Result<BoxStream<'_, Result<RoleType>>>
+----
+
+==== Description
+
+<<#_trait_ThingAPI_method_get_playing,Read more>>
+
+==== Returns
+
+[source,rust]
+----
+Result<BoxStream<'_, Result<RoleType>>>
+----
+
+// end::methods[]

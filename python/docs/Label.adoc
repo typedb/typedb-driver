@@ -1,0 +1,69 @@
+[#_Label]
+= Label
+
+*Supertypes:*
+
+* `object`
+
+== Description
+
+A `Label` holds the uniquely identifying name of a type.
+
+It consists of an optional ‘scope’, and a ‘name’, represented “scope:name”. The scope is used only used to distinguish between role-types of the same name declared in different relation types.
+
+== Properties
+
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `name` a| `str` a| The name part of the label
+a| `scope` a| `str | None` a| The scope part of the label
+|===
+// end::properties[]
+
+== Methods
+
+// tag::methods[]
+[#_of]
+=== of
+
+==== Signature
+
+[source,python]
+----
+static of(*args: str) -> Label
+----
+
+==== Description
+
+Create a Label from a specified name, or scoped name.
+
+If a single string is provided, this is interpreted as the label name. If a pair of strings is provided, the first string is the scope and the second string is the name.
+
+Examples
+
+==== Returns
+
+`Label`
+
+[#_scoped_name]
+=== scoped_name
+
+==== Signature
+
+[source,python]
+----
+scoped_name() -> str
+----
+
+==== Description
+
+Returns the string representation of the scoped name.
+
+==== Returns
+
+`str`
+
+// end::methods[]

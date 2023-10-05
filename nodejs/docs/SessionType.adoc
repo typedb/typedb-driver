@@ -1,0 +1,58 @@
+[#_SessionType]
+= SessionType
+
+== Description
+
+This class is used to specify the type of the session.
+
+// tag::enum_constants[]
+== Namespace variables
+
+[options="header"]
+|===
+|Name 
+a| `DATA` 
+a| `SCHEMA` 
+|===
+// end::enum_constants[]
+
+== Methods
+
+// tag::methods[]
+[#_isData]
+=== isData
+
+==== Signature
+
+[source,nodejs]
+----
+isData(): boolean
+----
+
+==== Description
+
+
+
+==== Returns
+
+`boolean`
+
+[#_isSchema]
+=== isSchema
+
+==== Signature
+
+[source,nodejs]
+----
+isSchema(): boolean
+----
+
+==== Description
+
+
+
+==== Returns
+
+`boolean`
+
+// end::methods[]

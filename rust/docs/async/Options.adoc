@@ -1,0 +1,247 @@
+[#_struct_Options]
+= Options
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `Default`
+
+== Description
+
+TypeDB session and transaction options. <code>TypeDBOptions</code> object can be used to override the default server behaviour query processing. Options are specified using properties assignment.
+
+== Fields
+
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `infer` a| `Option<bool>` a| If set to `True`, enables inference for queries. Only settable at transaction level and above. Only affects read transactions.
+a| `trace_inference` a| `Option<bool>` a| If set to `True`, reasoning tracing graphs are output in the logging directory. Should be used with `parallel = False`.
+a| `explain` a| `Option<bool>` a| If set to `True`, enables explanations for queries. Only affects read transactions.
+a| `parallel` a| `Option<bool>` a| If set to `True`, the server uses parallel instead of single-threaded execution.
+a| `prefetch` a| `Option<bool>` a| If set to `True`, the first batch of answers is streamed to the driver even without an explicit request for it.
+a| `prefetch_size` a| `Option<i32>` a| If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
+a| `session_idle_timeout` a| `Option<Duration>` a| If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive.
+a| `transaction_timeout` a| `Option<Duration>` a| If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
+a| `schema_lock_acquire_timeout` a| `Option<Duration>` a| If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock.
+a| `read_any_replica` a| `Option<bool>` a| If set to `True`, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise.
+|===
+// end::properties[]
+
+== Methods
+
+// tag::methods[]
+[#_struct_Options_method_infer]
+=== infer
+
+==== Signature
+
+[source,rust]
+----
+pub fn infer(self, infer: bool) -> Self
+----
+
+==== Description
+
+If set to `True`, enables inference for queries. Only settable at transaction level and above. Only affects read transactions.
+
+==== Returns
+
+[source,rust]
+----
+Self
+----
+
+[#_struct_Options_method_trace_inference]
+=== trace_inference
+
+==== Signature
+
+[source,rust]
+----
+pub fn trace_inference(self, trace_inference: bool) -> Self
+----
+
+==== Description
+
+If set to `True`, reasoning tracing graphs are output in the logging directory. Should be used with `parallel = False`.
+
+==== Returns
+
+[source,rust]
+----
+Self
+----
+
+[#_struct_Options_method_explain]
+=== explain
+
+==== Signature
+
+[source,rust]
+----
+pub fn explain(self, explain: bool) -> Self
+----
+
+==== Description
+
+If set to `True`, enables explanations for queries. Only affects read transactions.
+
+==== Returns
+
+[source,rust]
+----
+Self
+----
+
+[#_struct_Options_method_parallel]
+=== parallel
+
+==== Signature
+
+[source,rust]
+----
+pub fn parallel(self, parallel: bool) -> Self
+----
+
+==== Description
+
+If set to `True`, the server uses parallel instead of single-threaded execution.
+
+==== Returns
+
+[source,rust]
+----
+Self
+----
+
+[#_struct_Options_method_prefetch]
+=== prefetch
+
+==== Signature
+
+[source,rust]
+----
+pub fn prefetch(self, prefetch: bool) -> Self
+----
+
+==== Description
+
+If set to `True`, the first batch of answers is streamed to the driver even without an explicit request for it.
+
+==== Returns
+
+[source,rust]
+----
+Self
+----
+
+[#_struct_Options_method_prefetch_size]
+=== prefetch_size
+
+==== Signature
+
+[source,rust]
+----
+pub fn prefetch_size(self, prefetch_size: i32) -> Self
+----
+
+==== Description
+
+If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
+
+==== Returns
+
+[source,rust]
+----
+Self
+----
+
+[#_struct_Options_method_session_idle_timeout]
+=== session_idle_timeout
+
+==== Signature
+
+[source,rust]
+----
+pub fn session_idle_timeout(self, timeout: Duration) -> Self
+----
+
+==== Description
+
+If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive.
+
+==== Returns
+
+[source,rust]
+----
+Self
+----
+
+[#_struct_Options_method_transaction_timeout]
+=== transaction_timeout
+
+==== Signature
+
+[source,rust]
+----
+pub fn transaction_timeout(self, timeout: Duration) -> Self
+----
+
+==== Description
+
+If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
+
+==== Returns
+
+[source,rust]
+----
+Self
+----
+
+[#_struct_Options_method_schema_lock_acquire_timeout]
+=== schema_lock_acquire_timeout
+
+==== Signature
+
+[source,rust]
+----
+pub fn schema_lock_acquire_timeout(self, timeout: Duration) -> Self
+----
+
+==== Description
+
+If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock.
+
+==== Returns
+
+[source,rust]
+----
+Self
+----
+
+[#_struct_Options_method_read_any_replica]
+=== read_any_replica
+
+==== Signature
+
+[source,rust]
+----
+pub fn read_any_replica(self, read_any_replica: bool) -> Self
+----
+
+==== Description
+
+If set to `True`, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise.
+
+==== Returns
+
+[source,rust]
+----
+Self
+----
+
+// end::methods[]

@@ -1,0 +1,152 @@
+[#_Explanation]
+= Explanation
+
+*Package*: `com.vaticle.typedb.driver.api.logic`
+
+== Description
+
+An explanation of which rule was used for inferring the explained concept, the condition of the rule, the conclusion of the rule, and the mapping of variables between the query and the rule’s conclusion.
+
+== Methods
+
+// tag::methods[]
+[#_rule_]
+=== rule
+
+==== Signature
+
+[source,java]
+----
+Rule rule()
+----
+
+==== Description
+
+Retrieves the Rule for this Explanation. 
+
+
+==== Returns
+
+`Rule`
+
+==== Code examples
+
+[source,java]
+----
+explanation.rule()
+----
+
+[#_conclusion_]
+=== conclusion
+
+==== Signature
+
+[source,java]
+----
+ConceptMap conclusion()
+----
+
+==== Description
+
+Retrieves the Conclusion for this Explanation. 
+
+
+==== Returns
+
+`ConceptMap`
+
+==== Code examples
+
+[source,java]
+----
+explanation.conclusion()
+----
+
+[#_condition_]
+=== condition
+
+==== Signature
+
+[source,java]
+----
+ConceptMap condition()
+----
+
+==== Description
+
+Retrieves the Condition for this Explanation. 
+
+
+==== Returns
+
+`ConceptMap`
+
+==== Code examples
+
+[source,java]
+----
+explanation.condition()
+----
+
+[#_queryVariables_]
+=== queryVariables
+
+==== Signature
+
+[source,java]
+----
+java.util.Set<java.lang.String> queryVariables()
+----
+
+==== Description
+
+Retrieves the query variables for this `Explanation`. 
+
+
+==== Returns
+
+`java.util.Set<java.lang.String>`
+
+==== Code examples
+
+[source,java]
+----
+explanation.queryVariables()
+----
+
+[#_queryVariableMapping_java_lang_String]
+=== queryVariableMapping
+
+==== Signature
+
+[source,java]
+----
+java.util.Set<java.lang.String> queryVariableMapping​(java.lang.String var)
+----
+
+==== Description
+
+Retrieves the rule variables corresponding to the query variable var for this `Explanation`. 
+
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `var` a| The query variable to map to rule variables. a| `java.lang.String` 
+|===
+
+==== Returns
+
+`java.util.Set<java.lang.String>`
+
+==== Code examples
+
+[source,java]
+----
+explanation.variableMapping(var)
+----
+
+// end::methods[]

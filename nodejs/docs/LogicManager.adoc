@@ -1,0 +1,106 @@
+[#_LogicManager]
+= LogicManager
+
+== Description
+
+Provides methods for manipulating rules in the database.
+
+== Methods
+
+// tag::methods[]
+[#_getRule]
+=== getRule
+
+==== Signature
+
+[source,nodejs]
+----
+getRule(label): Promise<Rule>
+----
+
+==== Description
+
+Retrieves the Rule that has the given label.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the Rule to create or retrieve a| `string` 
+|===
+
+==== Returns
+
+`Promise<Rule>`
+
+==== Code examples
+
+[source,nodejs]
+----
+transaction.logic.getRule(label)
+----
+
+[#_getRules]
+=== getRules
+
+==== Signature
+
+[source,nodejs]
+----
+getRules(): Stream<Rule>
+----
+
+==== Description
+
+Retrieves all rules.
+
+==== Returns
+
+`Stream<Rule>`
+
+==== Code examples
+
+[source,nodejs]
+----
+transaction.logic.getRules()
+----
+
+[#_putRule]
+=== putRule
+
+==== Signature
+
+[source,nodejs]
+----
+putRule(label, when, then): Promise<Rule>
+----
+
+==== Description
+
+Creates a new Rule if none exists with the given label, or replaces the existing one.
+
+==== Input parameters
+
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the Rule to create or replace a| `string` 
+a| `when` a| The when body of the rule to create a| `string` 
+a| `then` a| The then body of the rule to create a| `string` 
+|===
+
+==== Returns
+
+`Promise<Rule>`
+
+==== Code examples
+
+[source,nodejs]
+----
+transaction.logic.putRule(label, when, then)
+----
+
+// end::methods[]

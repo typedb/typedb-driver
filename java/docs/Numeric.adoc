@@ -1,0 +1,202 @@
+[#_Numeric]
+= Numeric
+
+*Package*: `com.vaticle.typedb.driver.api.answer`
+
+== Description
+
+Stores an aggregate query answer.
+
+== Methods
+
+// tag::methods[]
+[#_isLong_]
+=== isLong
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+boolean isLong()
+----
+
+==== Description
+
+Checks if the type of an aggregate answer is a `long`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+numeric.isLong();
+----
+
+[#_isDouble_]
+=== isDouble
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+boolean isDouble()
+----
+
+==== Description
+
+Checks if the type of an aggregate answer is a `double`. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+numeric.isDouble();
+----
+
+[#_isNaN_]
+=== isNaN
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+boolean isNaN()
+----
+
+==== Description
+
+Checks if the aggregate answer is not a number. 
+
+
+==== Returns
+
+`boolean`
+
+==== Code examples
+
+[source,java]
+----
+numeric.isNaN();
+----
+
+[#_asLong_]
+=== asLong
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+long asLong()
+----
+
+==== Description
+
+Retrieves numeric value of an aggregate answer as a `long`. 
+
+
+==== Returns
+
+`long`
+
+==== Code examples
+
+[source,java]
+----
+numeric.asLong();
+----
+
+[#_asDouble_]
+=== asDouble
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+double asDouble()
+----
+
+==== Description
+
+Retrieves numeric value of an aggregate answer as a `double`. 
+
+
+==== Returns
+
+`double`
+
+==== Code examples
+
+[source,java]
+----
+numeric.asDouble();
+----
+
+[#_asNumber_]
+=== asNumber
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.Number asNumber()
+----
+
+==== Description
+
+Retrieves numeric value of an aggregate answer. 
+
+
+==== Returns
+
+`java.lang.Number`
+
+==== Code examples
+
+[source,java]
+----
+numeric.asNumber();
+----
+
+[#_toString_]
+=== toString
+
+==== Signature
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String toString()
+----
+
+==== Description
+
+Retrieves a string representation of an aggregate answer. 
+
+
+==== Returns
+
+`java.lang.String`
+
+==== Code examples
+
+[source,java]
+----
+numeric.toString();
+----
+
+// end::methods[]

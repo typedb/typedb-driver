@@ -1,0 +1,48 @@
+[#_enum_ThingType]
+= ThingType
+
+// tag::enum_constants[]
+== Enum variants
+
+[options="header"]
+|===
+|Name |Type 
+a| `RootThingType` a| `RootThingType`
+a| `EntityType` a| `EntityType`
+a| `RelationType` a| `RelationType`
+a| `AttributeType` a| `AttributeType`
+|===
+// end::enum_constants[]
+
+== Methods
+
+// tag::methods[]
+[#_enum_ThingType_method_label]
+=== label
+
+==== Signature
+
+[source,rust]
+----
+pub fn label(&self) -> &str
+----
+
+==== Description
+
+Retrieves the unique label of the `ThingType`.
+
+==== Returns
+
+[source,rust]
+----
+&str
+----
+
+==== Code examples
+
+[source,rust]
+----
+thing_type.label()
+----
+
+// end::methods[]

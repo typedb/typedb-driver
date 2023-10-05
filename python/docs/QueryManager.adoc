@@ -1,0 +1,361 @@
+[#_QueryManager]
+= QueryManager
+
+== Description
+
+Provides methods for executing TypeQL queries in the transaction.
+
+== Methods
+
+// tag::methods[]
+[#_define]
+=== define
+
+==== Signature
+
+[source,python]
+----
+abstract define(query: str, options: TypeDBOptions = None) -> None
+----
+
+==== Description
+
+Performs a TypeQL Define query in the transaction.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `query` a| The TypeQL Define query to be executed a| `str` a| 
+a| `options` a| Specify query options a| `TypeDBOptions` a| `None`
+|===
+
+==== Returns
+
+`None`
+
+==== Code examples
+
+[source,python]
+----
+transaction.query.define(query, options)
+----
+
+[#_delete]
+=== delete
+
+==== Signature
+
+[source,python]
+----
+abstract delete(query: str, options: TypeDBOptions | None = None) -> None
+----
+
+==== Description
+
+Performs a TypeQL Delete query in the transaction.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `query` a| The TypeQL Delete query to be executed a| `str` a| 
+a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
+|===
+
+==== Returns
+
+`None`
+
+==== Code examples
+
+[source,python]
+----
+transaction.query.delete(query, options)
+----
+
+[#_explain]
+=== explain
+
+==== Signature
+
+[source,python]
+----
+abstract explain(explainable: ConceptMap.Explainable, options: TypeDBOptions | None = None) -> Iterator[Explanation]
+----
+
+==== Description
+
+Performs a TypeQL Explain query in the transaction.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `explainable` a| The Explainable to be explained a| `ConceptMap.Explainable` a| 
+a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
+|===
+
+==== Returns
+
+`Iterator[Explanation]`
+
+==== Code examples
+
+[source,python]
+----
+transaction.query.explain(explainable, options)
+----
+
+[#_insert]
+=== insert
+
+==== Signature
+
+[source,python]
+----
+abstract insert(query: str, options: TypeDBOptions | None = None) -> Iterator[ConceptMap]
+----
+
+==== Description
+
+Performs a TypeQL Insert query in the transaction.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `query` a| The TypeQL Insert query to be executed a| `str` a| 
+a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
+|===
+
+==== Returns
+
+`Iterator[ConceptMap]`
+
+==== Code examples
+
+[source,python]
+----
+transaction.query.insert(query, options)
+----
+
+[#_match]
+=== match
+
+==== Signature
+
+[source,python]
+----
+abstract match(query: str, options: TypeDBOptions | None = None) -> Iterator[ConceptMap]
+----
+
+==== Description
+
+Performs a TypeQL Match (Get) query in the transaction.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `query` a| The TypeQL Match (Get) query to be executed a| `str` a| 
+a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
+|===
+
+==== Returns
+
+`Iterator[ConceptMap]`
+
+==== Code examples
+
+[source,python]
+----
+transaction.query.match(query, options)
+----
+
+[#_match_aggregate]
+=== match_aggregate
+
+==== Signature
+
+[source,python]
+----
+abstract match_aggregate(query: str, options: TypeDBOptions | None = None) -> Numeric
+----
+
+==== Description
+
+Performs a TypeQL Match Aggregate query in the transaction.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `query` a| The TypeQL Match Aggregate query to be executed a| `str` a| 
+a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
+|===
+
+==== Returns
+
+`Numeric`
+
+==== Code examples
+
+[source,python]
+----
+transaction.query.match_aggregate(query, options)
+----
+
+[#_match_group]
+=== match_group
+
+==== Signature
+
+[source,python]
+----
+abstract match_group(query: str, options: TypeDBOptions | None = None) -> Iterator[ConceptMapGroup]
+----
+
+==== Description
+
+Performs a TypeQL Match Group query in the transaction.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `query` a| The TypeQL Match Group query to be executed a| `str` a| 
+a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
+|===
+
+==== Returns
+
+`Iterator[ConceptMapGroup]`
+
+==== Code examples
+
+[source,python]
+----
+transaction.query.match_group(query, options)
+----
+
+[#_match_group_aggregate]
+=== match_group_aggregate
+
+==== Signature
+
+[source,python]
+----
+abstract match_group_aggregate(query: str, options: TypeDBOptions | None = None) -> Iterator[NumericGroup]
+----
+
+==== Description
+
+Performs a TypeQL Match Group Aggregate query in the transaction.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `query` a| The TypeQL Match Group Aggregate query to be executed a| `str` a| 
+a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
+|===
+
+==== Returns
+
+`Iterator[NumericGroup]`
+
+==== Code examples
+
+[source,python]
+----
+transaction.query.match_group_aggregate(query, options)
+----
+
+[#_undefine]
+=== undefine
+
+==== Signature
+
+[source,python]
+----
+abstract undefine(query: str, options: TypeDBOptions = None) -> None
+----
+
+==== Description
+
+Performs a TypeQL Undefine query in the transaction.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `query` a| The TypeQL Undefine query to be executed a| `str` a| 
+a| `options` a| Specify query options a| `TypeDBOptions` a| `None`
+|===
+
+==== Returns
+
+`None`
+
+==== Code examples
+
+[source,python]
+----
+transaction.query.undefine(query, options)
+----
+
+[#_update]
+=== update
+
+==== Signature
+
+[source,python]
+----
+abstract update(query: str, options: TypeDBOptions | None = None) -> Iterator[ConceptMap]
+----
+
+==== Description
+
+Performs a TypeQL Update query in the transaction.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `query` a| The TypeQL Update query to be executed a| `str` a| 
+a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
+|===
+
+==== Returns
+
+`Iterator[ConceptMap]`
+
+==== Code examples
+
+[source,python]
+----
+transaction.query.update(query, options)
+----
+
+// end::methods[]

@@ -1,0 +1,163 @@
+[#_TypeDBSession]
+= TypeDBSession
+
+== Properties
+
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `options` a| `TypeDBOptions` a| Gets the options for the session
+a| `type` a| `SessionType` a| The current session’s type (SCHEMA or DATA)
+|===
+// end::properties[]
+
+== Methods
+
+// tag::methods[]
+[#_close]
+=== close
+
+==== Signature
+
+[source,python]
+----
+abstract close() -> None
+----
+
+==== Description
+
+Closes the session. Before opening a new session, the session currently open should first be closed.
+
+==== Returns
+
+`None`
+
+==== Code examples
+
+[source,python]
+----
+session.close()
+----
+
+[#_database_name]
+=== database_name
+
+==== Signature
+
+[source,python]
+----
+abstract database_name() -> str
+----
+
+==== Description
+
+Returns the name of the database of the session.
+
+==== Returns
+
+`str`
+
+==== Code examples
+
+[source,python]
+----
+session.database_name()
+----
+
+[#_is_open]
+=== is_open
+
+==== Signature
+
+[source,python]
+----
+abstract is_open() -> bool
+----
+
+==== Description
+
+Checks whether this session is open.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+session.is_open()
+----
+
+[#_on_close]
+=== on_close
+
+==== Signature
+
+[source,python]
+----
+abstract on_close(function: callable) -> None
+----
+
+==== Description
+
+Registers a callback function which will be executed when this session is closed.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `function` a| The callback function. a| `callable` a| 
+|===
+
+==== Returns
+
+`None`
+
+==== Code examples
+
+[source,python]
+----
+session.on_close(function)
+----
+
+[#_transaction]
+=== transaction
+
+==== Signature
+
+[source,python]
+----
+abstract transaction(transaction_type: TransactionType, options: TypeDBOptions = None) -> TypeDBTransaction
+----
+
+==== Description
+
+Opens a transaction to perform read or write queries on the database connected to the session.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction_type` a| The type of transaction to be created (READ or WRITE) a| `TransactionType` a| 
+a| `options` a| Options for the session a| `TypeDBOptions` a| `None`
+|===
+
+==== Returns
+
+`TypeDBTransaction`
+
+==== Code examples
+
+[source,python]
+----
+session.transaction(transaction_type, options)
+----
+
+// end::methods[]

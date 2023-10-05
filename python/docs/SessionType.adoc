@@ -1,0 +1,69 @@
+[#_SessionType]
+= SessionType
+
+*Supertypes:*
+
+* `Enum`
+
+== Description
+
+This class is used to specify the type of the session.
+
+== Code examples
+
+[source,python]
+----
+driver.session(database, SessionType.SCHEMA)
+----
+
+// tag::enum_constants[]
+== Enum constants
+
+[options="header"]
+|===
+|Name |Value 
+a| `DATA` a| `0`
+a| `SCHEMA` a| `1`
+|===
+// end::enum_constants[]
+
+== Methods
+
+// tag::methods[]
+[#_is_data]
+=== is_data
+
+==== Signature
+
+[source,python]
+----
+is_data()
+----
+
+==== Description
+
+
+
+==== Returns
+
+``
+
+[#_is_schema]
+=== is_schema
+
+==== Signature
+
+[source,python]
+----
+is_schema()
+----
+
+==== Description
+
+
+
+==== Returns
+
+``
+
+// end::methods[]

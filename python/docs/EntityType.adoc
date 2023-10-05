@@ -1,0 +1,204 @@
+[#_EntityType]
+= EntityType
+
+*Supertypes:*
+
+* `ThingType`
+
+== Description
+
+Entity types represent the classification of independent objects in the data model of the business domain.
+
+== Methods
+
+// tag::methods[]
+[#_as_entity_type]
+=== as_entity_type
+
+==== Signature
+
+[source,python]
+----
+as_entity_type() -> EntityType
+----
+
+==== Description
+
+Casts the concept to `EntityType`.
+
+==== Returns
+
+`EntityType`
+
+==== Code examples
+
+[source,python]
+----
+entity_type.as_entity_type()
+----
+
+[#_create]
+=== create
+
+==== Signature
+
+[source,python]
+----
+abstract create(transaction: TypeDBTransaction) -> Entity
+----
+
+==== Description
+
+Creates and returns a new instance of this `EntityType`.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+|===
+
+==== Returns
+
+`Entity`
+
+==== Code examples
+
+[source,python]
+----
+entity_type.create(transaction)
+----
+
+[#_get_instances]
+=== get_instances
+
+==== Signature
+
+[source,python]
+----
+abstract get_instances(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Entity]
+----
+
+==== Description
+
+Retrieves all direct and indirect (or direct only) `Entity` objects that are instances of this `EntityType`.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect instances, `Transitivity.EXPLICIT` for direct instances only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+|===
+
+==== Returns
+
+`Iterator[Entity]`
+
+==== Code examples
+
+[source,python]
+----
+entity_type.get_instances(transaction, transitivity)
+----
+
+[#_get_subtypes]
+=== get_subtypes
+
+==== Signature
+
+[source,python]
+----
+abstract get_subtypes(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[EntityType]
+----
+
+==== Description
+
+Retrieves all direct and indirect (or direct only) subtypes of the `EntityType`.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect subtypes, `Transitivity.EXPLICIT` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+|===
+
+==== Returns
+
+`Iterator[EntityType]`
+
+==== Code examples
+
+[source,python]
+----
+entity_type.get_subtypes(transaction, transitivity)
+----
+
+[#_is_entity_type]
+=== is_entity_type
+
+==== Signature
+
+[source,python]
+----
+is_entity_type() -> bool
+----
+
+==== Description
+
+Checks if the concept is an `EntityType`.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+entity_type.is_entity_type()
+----
+
+[#_set_supertype]
+=== set_supertype
+
+==== Signature
+
+[source,python]
+----
+abstract set_supertype(transaction: TypeDBTransaction, super_entity_type: EntityType) -> None
+----
+
+==== Description
+
+Sets the supplied `EntityType` as the supertype of the current `EntityType`.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `super_entity_type` a| The `EntityType` to set as the supertype of this `EntityType` a| `EntityType` a| 
+|===
+
+==== Returns
+
+`None`
+
+==== Code examples
+
+[source,python]
+----
+entity_type.set_supertype(transaction, super_entity_type)
+----
+
+// end::methods[]

@@ -1,0 +1,19 @@
+[#_NativeWrapper]
+= NativeWrapper
+
+*Supertypes:*
+
+* `Generic`
+* `T`
+
+== Properties
+
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `native_object` a| `Any` a| 
+|===
+// end::properties[]
+

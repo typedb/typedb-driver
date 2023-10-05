@@ -1,0 +1,138 @@
+[#_DatabaseManager]
+= DatabaseManager
+
+== Description
+
+Provides access to all database management methods.
+
+== Methods
+
+// tag::methods[]
+[#_all]
+=== all
+
+==== Signature
+
+[source,python]
+----
+abstract all() -> list[typedb.api.connection.database.Database]
+----
+
+==== Description
+
+Retrieves all databases present on the TypeDB server
+
+==== Returns
+
+`list[typedb.api.connection.database.Database]`
+
+==== Code examples
+
+[source,python]
+----
+driver.databases().all()
+----
+
+[#_contains]
+=== contains
+
+==== Signature
+
+[source,python]
+----
+abstract contains(name: str) -> bool
+----
+
+==== Description
+
+Checks if a database with the given name exists
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `name` a| The database name to be checked a| `str` a| 
+|===
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+driver.databases().contains(name)
+----
+
+[#_create]
+=== create
+
+==== Signature
+
+[source,python]
+----
+abstract create(name: str) -> None
+----
+
+==== Description
+
+Create a database with the given name
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `name` a| The name of the database to be created a| `str` a| 
+|===
+
+==== Returns
+
+`None`
+
+==== Code examples
+
+[source,python]
+----
+driver.databases().create(name)
+----
+
+[#_get]
+=== get
+
+==== Signature
+
+[source,python]
+----
+abstract get(name: str) -> Database
+----
+
+==== Description
+
+Retrieve the database with the given name.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `name` a| The name of the database to retrieve a| `str` a| 
+|===
+
+==== Returns
+
+`Database`
+
+==== Code examples
+
+[source,python]
+----
+driver.databases().get(name)
+----
+
+// end::methods[]

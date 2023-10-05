@@ -1,0 +1,453 @@
+[#_Attribute]
+= Attribute
+
+*Supertypes:*
+
+* `Thing`
+
+== Description
+
+Attribute is an instance of the attribute type and has a value. This value is fixed and unique for every given instance of the attribute type.
+
+Attribute type can be uniquely addressed by its type and value.
+
+== Methods
+
+// tag::methods[]
+[#_as_attribute]
+=== as_attribute
+
+==== Signature
+
+[source,python]
+----
+as_attribute() -> Attribute
+----
+
+==== Description
+
+Casts the concept to `Attribute`.
+
+==== Returns
+
+`Attribute`
+
+==== Code examples
+
+[source,python]
+----
+attribute.as_attribute()
+----
+
+[#_as_boolean]
+=== as_boolean
+
+==== Signature
+
+[source,python]
+----
+abstract as_boolean() -> bool
+----
+
+==== Description
+
+Returns a `boolean` value of the attribute. If the value has another type, raises an exception.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+attribute.as_boolean()
+----
+
+[#_as_datetime]
+=== as_datetime
+
+==== Signature
+
+[source,python]
+----
+abstract as_datetime() -> datetime
+----
+
+==== Description
+
+Returns a `datetime` value of the attribute. If the value has another type, raises an exception.
+
+==== Returns
+
+`datetime`
+
+==== Code examples
+
+[source,python]
+----
+attribute.as_boolean()
+----
+
+[#_as_double]
+=== as_double
+
+==== Signature
+
+[source,python]
+----
+abstract as_double() -> float
+----
+
+==== Description
+
+Returns a `double` value of the attribute. If the value has another type, raises an exception.
+
+==== Returns
+
+`float`
+
+==== Code examples
+
+[source,python]
+----
+attribute.as_boolean()
+----
+
+[#_as_long]
+=== as_long
+
+==== Signature
+
+[source,python]
+----
+abstract as_long() -> int
+----
+
+==== Description
+
+Returns a `long` value of the attribute. If the value has another type, raises an exception.
+
+==== Returns
+
+`int`
+
+==== Code examples
+
+[source,python]
+----
+attribute.as_long()
+----
+
+[#_as_string]
+=== as_string
+
+==== Signature
+
+[source,python]
+----
+abstract as_string() -> str
+----
+
+==== Description
+
+Returns a `string` value of the attribute. If the value has another type, raises an exception.
+
+==== Returns
+
+`str`
+
+==== Code examples
+
+[source,python]
+----
+attribute.as_boolean()
+----
+
+[#_get_owners]
+=== get_owners
+
+==== Signature
+
+[source,python]
+----
+abstract get_owners(transaction: TypeDBTransaction, owner_type: ThingType | None = None) -> Iterator[Thing]
+----
+
+==== Description
+
+Retrieves the instances that own this `Attribute`.
+
+==== Input parameters
+
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `owner_type` a| If specified, filter results for only owners of the given type a| `ThingType \| None` a| `None`
+|===
+
+==== Returns
+
+`Iterator[Thing]`
+
+==== Code examples
+
+[source,python]
+----
+attribute.get_owners(transaction)
+attribute.get_owners(transaction, owner_type)
+----
+
+[#_get_type]
+=== get_type
+
+==== Signature
+
+[source,python]
+----
+abstract get_type() -> AttributeType
+----
+
+==== Description
+
+Retrieves the type which this `Attribute` belongs to.
+
+==== Returns
+
+`AttributeType`
+
+==== Code examples
+
+[source,python]
+----
+attribute.get_type()
+----
+
+[#_get_value]
+=== get_value
+
+==== Signature
+
+[source,python]
+----
+abstract get_value() -> bool | int | float | str | datetime
+----
+
+==== Description
+
+Retrieves the value which the `Attribute` instance holds.
+
+==== Returns
+
+`bool | int | float | str | datetime`
+
+==== Code examples
+
+[source,python]
+----
+attribute.get_value()
+----
+
+[#_get_value_type]
+=== get_value_type
+
+==== Signature
+
+[source,python]
+----
+abstract get_value_type() -> ValueType
+----
+
+==== Description
+
+Retrieves the type of the value which the `Attribute` instance holds.
+
+==== Returns
+
+`ValueType`
+
+==== Code examples
+
+[source,python]
+----
+attribute.get_value_type()
+----
+
+[#_is_attribute]
+=== is_attribute
+
+==== Signature
+
+[source,python]
+----
+is_attribute() -> bool
+----
+
+==== Description
+
+Checks if the concept is an `Attribute`.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+attribute.is_attribute()
+----
+
+[#_is_boolean]
+=== is_boolean
+
+==== Signature
+
+[source,python]
+----
+abstract is_boolean() -> bool
+----
+
+==== Description
+
+Returns `True` if the attribute value is of type `boolean`. Otherwise, returns `False`.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+attribute.is_boolean()
+----
+
+[#_is_datetime]
+=== is_datetime
+
+==== Signature
+
+[source,python]
+----
+abstract is_datetime() -> bool
+----
+
+==== Description
+
+Returns `True` if the attribute value is of type `datetime`. Otherwise, returns `False`.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+attribute.is_datetime()
+----
+
+[#_is_double]
+=== is_double
+
+==== Signature
+
+[source,python]
+----
+abstract is_double() -> bool
+----
+
+==== Description
+
+Returns `True` if the attribute value is of type `double`. Otherwise, returns `False`.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+attribute.is_double()
+----
+
+[#_is_long]
+=== is_long
+
+==== Signature
+
+[source,python]
+----
+abstract is_long() -> bool
+----
+
+==== Description
+
+Returns `True` if the attribute value is of type `long`. Otherwise, returns `False`.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+attribute.is_long()
+----
+
+[#_is_string]
+=== is_string
+
+==== Signature
+
+[source,python]
+----
+abstract is_string() -> bool
+----
+
+==== Description
+
+Returns `True` if the attribute value is of type `string`. Otherwise, returns `False`.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+attribute.is_string()
+----
+
+[#_to_json]
+=== to_json
+
+==== Signature
+
+[source,python]
+----
+abstract to_json() -> Mapping[str, str | int | float | bool]
+----
+
+==== Description
+
+Retrieves this `Attribute` as JSON.
+
+==== Returns
+
+`Mapping[str, str | int | float | bool]`
+
+==== Code examples
+
+[source,python]
+----
+attribute.to_json()
+----
+
+// end::methods[]

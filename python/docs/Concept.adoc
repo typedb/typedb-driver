@@ -1,0 +1,582 @@
+[#_Concept]
+= Concept
+
+== Methods
+
+// tag::methods[]
+[#_as_attribute]
+=== as_attribute
+
+==== Signature
+
+[source,python]
+----
+as_attribute() -> Attribute
+----
+
+==== Description
+
+Casts the concept to `Attribute`.
+
+==== Returns
+
+`Attribute`
+
+==== Code examples
+
+[source,python]
+----
+concept.as_attribute()
+----
+
+[#_as_attribute_type]
+=== as_attribute_type
+
+==== Signature
+
+[source,python]
+----
+as_attribute_type() -> AttributeType
+----
+
+==== Description
+
+Casts the concept to `AttributeType`.
+
+==== Returns
+
+`AttributeType`
+
+==== Code examples
+
+[source,python]
+----
+concept.as_attribute_type()
+----
+
+[#_as_entity]
+=== as_entity
+
+==== Signature
+
+[source,python]
+----
+as_entity() -> Entity
+----
+
+==== Description
+
+Casts the concept to `Entity`.
+
+==== Returns
+
+`Entity`
+
+==== Code examples
+
+[source,python]
+----
+concept.as_entity()
+----
+
+[#_as_entity_type]
+=== as_entity_type
+
+==== Signature
+
+[source,python]
+----
+as_entity_type() -> EntityType
+----
+
+==== Description
+
+Casts the concept to `EntityType`.
+
+==== Returns
+
+`EntityType`
+
+==== Code examples
+
+[source,python]
+----
+concept.as_entity_type()
+----
+
+[#_as_relation]
+=== as_relation
+
+==== Signature
+
+[source,python]
+----
+as_relation() -> Relation
+----
+
+==== Description
+
+Casts the concept to `Relation`.
+
+==== Returns
+
+`Relation`
+
+==== Code examples
+
+[source,python]
+----
+concept.as_relation()
+----
+
+[#_as_relation_type]
+=== as_relation_type
+
+==== Signature
+
+[source,python]
+----
+as_relation_type() -> RelationType
+----
+
+==== Description
+
+Casts the concept to `RelationType`.
+
+==== Returns
+
+`RelationType`
+
+==== Code examples
+
+[source,python]
+----
+concept.as_relation_type()
+----
+
+[#_as_role_type]
+=== as_role_type
+
+==== Signature
+
+[source,python]
+----
+as_role_type() -> RoleType
+----
+
+==== Description
+
+Casts the concept to `RoleType`.
+
+==== Returns
+
+`RoleType`
+
+==== Code examples
+
+[source,python]
+----
+concept.as_role_type()
+----
+
+[#_as_thing]
+=== as_thing
+
+==== Signature
+
+[source,python]
+----
+as_thing() -> Thing
+----
+
+==== Description
+
+Casts the concept to `Thing`.
+
+==== Returns
+
+`Thing`
+
+==== Code examples
+
+[source,python]
+----
+concept.as_thing()
+----
+
+[#_as_thing_type]
+=== as_thing_type
+
+==== Signature
+
+[source,python]
+----
+as_thing_type() -> ThingType
+----
+
+==== Description
+
+Casts the concept to `ThingType`.
+
+==== Returns
+
+`ThingType`
+
+==== Code examples
+
+[source,python]
+----
+concept.as_thing_type()
+----
+
+[#_as_type]
+=== as_type
+
+==== Signature
+
+[source,python]
+----
+as_type() -> Type
+----
+
+==== Description
+
+Casts the concept to `Type`.
+
+==== Returns
+
+`Type`
+
+==== Code examples
+
+[source,python]
+----
+concept.as_type()
+----
+
+[#_as_value]
+=== as_value
+
+==== Signature
+
+[source,python]
+----
+as_value() -> Value
+----
+
+==== Description
+
+Casts the concept to `Value`.
+
+==== Returns
+
+`Value`
+
+==== Code examples
+
+[source,python]
+----
+concept.as_value()
+----
+
+[#_is_attribute]
+=== is_attribute
+
+==== Signature
+
+[source,python]
+----
+is_attribute() -> bool
+----
+
+==== Description
+
+Checks if the concept is an `Attribute`.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+concept.is_attribute()
+----
+
+[#_is_attribute_type]
+=== is_attribute_type
+
+==== Signature
+
+[source,python]
+----
+is_attribute_type() -> bool
+----
+
+==== Description
+
+Checks if the concept is an `AttributeType`.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+concept.is_attribute_type()
+----
+
+[#_is_entity]
+=== is_entity
+
+==== Signature
+
+[source,python]
+----
+is_entity() -> bool
+----
+
+==== Description
+
+Checks if the concept is an `Entity`.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+concept.is_entity()
+----
+
+[#_is_entity_type]
+=== is_entity_type
+
+==== Signature
+
+[source,python]
+----
+is_entity_type() -> bool
+----
+
+==== Description
+
+Checks if the concept is an `EntityType`.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+concept.is_entity_type()
+----
+
+[#_is_relation]
+=== is_relation
+
+==== Signature
+
+[source,python]
+----
+is_relation() -> bool
+----
+
+==== Description
+
+Checks if the concept is a `Relation`.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+concept.is_relation()
+----
+
+[#_is_relation_type]
+=== is_relation_type
+
+==== Signature
+
+[source,python]
+----
+is_relation_type() -> bool
+----
+
+==== Description
+
+Checks if the concept is a `RelationType`.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+concept.is_relation_type()
+----
+
+[#_is_role_type]
+=== is_role_type
+
+==== Signature
+
+[source,python]
+----
+is_role_type() -> bool
+----
+
+==== Description
+
+Checks if the concept is a `RoleType`.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+concept.is_role_type()
+----
+
+[#_is_thing]
+=== is_thing
+
+==== Signature
+
+[source,python]
+----
+is_thing() -> bool
+----
+
+==== Description
+
+Checks if the concept is a `Thing`.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+concept.is_thing()
+----
+
+[#_is_thing_type]
+=== is_thing_type
+
+==== Signature
+
+[source,python]
+----
+is_thing_type() -> bool
+----
+
+==== Description
+
+Checks if the concept is a `ThingType`.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+concept.is_thing_type()
+----
+
+[#_is_type]
+=== is_type
+
+==== Signature
+
+[source,python]
+----
+is_type() -> bool
+----
+
+==== Description
+
+Checks if the concept is a `Type`.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+concept.is_type()
+----
+
+[#_is_value]
+=== is_value
+
+==== Signature
+
+[source,python]
+----
+is_value() -> bool
+----
+
+==== Description
+
+Checks if the concept is a `Value`.
+
+==== Returns
+
+`bool`
+
+==== Code examples
+
+[source,python]
+----
+concept.is_value()
+----
+
+[#_to_json]
+=== to_json
+
+==== Signature
+
+[source,python]
+----
+abstract to_json() -> Mapping[str, str | int | float | bool | datetime]
+----
+
+==== Description
+
+Retrieves the concept as JSON.
+
+==== Returns
+
+`Mapping[str, str | int | float | bool | datetime]`
+
+==== Code examples
+
+[source,python]
+----
+concept.to_json()
+----
+
+// end::methods[]
