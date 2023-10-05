@@ -44,4 +44,5 @@ def rust_docs_parser(name, feature):
         name = name,
         data = ":driver_docs_" + feature,
         language = "rust",
+        feature = feature,
     )

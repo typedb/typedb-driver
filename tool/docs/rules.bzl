@@ -19,15 +19,14 @@
 # under the License.
 #
 
-load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary", "kt_jvm_library")
-load("@bazel_skylib//rules:run_binary.bzl", "run_binary")
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
 load("@vaticle_dependencies_tool_docs//:requirements.bzl", "requirement")
 
-def html_docs_parser(name, data, language):
+def html_docs_parser(name, data, language, feature=""):
     script_name = language.title() + "DocParser"
 
-    kt_jvm_library(
-        name = name + "_lib",
+    kt_jvm_binary(
+        name = name,
         srcs = [
             "//tool/docs:" + language + "/" + script_name + ".kt",
             "//tool/docs:common/Class.kt",
@@ -36,25 +35,15 @@ def html_docs_parser(name, data, language):
             "//tool/docs:common/Method.kt",
             "//tool/docs:common/Variable.kt",
         ],
+        main_class = "com.vaticle.typedb.client.tool.doc." + language + "." + script_name + "Kt",
+        args = [
+            "$(location %s)" % data,
+            "%s/docs" % language,
+            feature,
+        ],
         deps = [
             "@maven//:org_jsoup_jsoup",
         ],
-    )
-
-    native.java_binary(
-        name = name + "_script",
-        runtime_deps = [name + "_lib"],
-        main_class = "com.vaticle.typedb.client.tool.doc." + language + "." + script_name + "Kt",
-        visibility = ["//visibility:public"]
-    )
-
-    run_binary(
-        name = name,
-        tool = name + "_script",
-        outs = [name + "_parsed"],
-        args = [
-            "$(location %s)" % data,
-            "$(location %s_parsed)" % name,
-        ],
-        srcs = [data],
+        data = [data],
+        visibility = ["//visibility:public"],
     )

@@ -135,6 +135,9 @@ checkstyle_test(
     name = "checkstyle",
     size = "small",
     include = glob(["*"]),
-    exclude = ["README.md"],
+    exclude = glob([
+        "README.md",
+        "docs/**/*.adoc",
+    ]),
     license_type = "apache-header",
 )

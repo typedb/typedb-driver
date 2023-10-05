@@ -202,6 +202,7 @@ checkstyle_test(
         ".eslintrc",
         "dist/**/*.*",
         "pnpm-lock.yaml",
+        "docs/**/*.adoc",
     ]),
     license_type = "apache-header",
 )

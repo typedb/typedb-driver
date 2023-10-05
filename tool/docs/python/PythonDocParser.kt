@@ -32,11 +32,11 @@ fun main(args: Array<String>) {
     val inputDirectoryName = args[0]
     val outputDirectoryName = args[1]
 
-    val docsDir = Paths.get(outputDirectoryName)
-    Files.createDirectory(docsDir)
-//    Files.createDirectory(docsDir.resolve("for_java"))
-//    Files.createDirectory(docsDir.resolve("for_rust"))
-//    Files.createDirectory(docsDir.resolve("for_nodejs"))
+    val docsDir = System.getenv("BUILD_WORKSPACE_DIRECTORY")?.let { Paths.get(it).resolve(outputDirectoryName) }
+        ?: Paths.get(outputDirectoryName)
+    if (!docsDir.toFile().exists()) {
+        Files.createDirectory(docsDir)
+    }
 
     File(inputDirectoryName).walkTopDown().filter {
         it.toString().endsWith(".html") &&
@@ -53,25 +53,10 @@ fun main(args: Array<String>) {
             }
             val parsedClassName = parsedClass.name
             val parsedClassAsciiDoc = parsedClass.toAsciiDoc("python")
-//            val parsedClassForJava = parsedClass.toJavaComment()
-//            val parsedClassForRust = parsedClass.toRustComment()
-//            val parsedClassForNodejs = parsedClass.toNodejsComment()
 
             val outputFile = docsDir.resolve("$parsedClassName.adoc").toFile()
             outputFile.createNewFile()
             outputFile.writeText(parsedClassAsciiDoc)
-
-//            val outputFileJava = docsDir.resolve("for_java").resolve("$parsedClassName.txt").toFile()
-//            outputFileJava.createNewFile()
-//            outputFileJava.writeText(parsedClassForJava)
-//
-//            val outputFileRust = docsDir.resolve("for_rust").resolve("$parsedClassName.txt").toFile()
-//            outputFileRust.createNewFile()
-//            outputFileRust.writeText(parsedClassForRust)
-//
-//            val outputFileNodejs = docsDir.resolve("for_nodejs").resolve("$parsedClassName.txt").toFile()
-//            outputFileNodejs.createNewFile()
-//            outputFileNodejs.writeText(parsedClassForNodejs)
         }
     }
 }

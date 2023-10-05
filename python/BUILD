@@ -92,6 +92,7 @@ checkstyle_test(
     ]),
     exclude = glob([
         "tool/sphinx/source/**/*",
+        "docs/**/*.adoc",
     ]),
     license_type = "apache-header",
     size = "small",

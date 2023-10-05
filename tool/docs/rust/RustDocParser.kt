@@ -31,9 +31,17 @@ import java.nio.file.Paths
 fun main(args: Array<String>) {
     val inputDirectoryName = args[0]
     val outputDirectoryName = args[1]
+    val subDir = args[2]
 
-    val docsDir = Paths.get(outputDirectoryName)
-    Files.createDirectory(docsDir)
+    val baseDocsDir = System.getenv("BUILD_WORKSPACE_DIRECTORY")?.let { Paths.get(it).resolve(outputDirectoryName) }
+        ?: Paths.get(outputDirectoryName)
+    if (!baseDocsDir.toFile().exists()) {
+        Files.createDirectory(baseDocsDir)
+    }
+    val docsDir = baseDocsDir.resolve(subDir)
+    if (!docsDir.toFile().exists()) {
+        Files.createDirectory(docsDir)
+    }
 
 //    val overallOutputFile = docsDir.resolve("_rust_driver.adoc").toFile()
 

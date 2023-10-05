@@ -32,8 +32,11 @@ fun main(args: Array<String>) {
     val inputDirectoryName = args[0]
     val outputDirectoryName = args[1]
 
-    val docsDir = Paths.get(outputDirectoryName)
-    Files.createDirectory(docsDir)
+    val docsDir = System.getenv("BUILD_WORKSPACE_DIRECTORY")?.let { Paths.get(it).resolve(outputDirectoryName) }
+        ?: Paths.get(outputDirectoryName)
+    if (!docsDir.toFile().exists()) {
+        Files.createDirectory(docsDir)
+    }
 
     val parsedClasses: HashMap<String, Class> = hashMapOf()
     File(inputDirectoryName).walkTopDown().filter {

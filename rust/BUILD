@@ -114,6 +114,7 @@ checkstyle_test(
         "README.md",
         "**/Cargo.toml",
         "**/Cargo.lock",
+        "docs/**/*.adoc",
     ]),
     license_type = "apache-header",
 )
