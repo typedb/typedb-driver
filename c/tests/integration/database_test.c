@@ -67,59 +67,6 @@ int test_basic_happy(const Connection* conn) {
     return 0;
 }
 
-int test_basic_happy__DEBUG(const Connection* conn) {
-    DatabaseManager* dbMgr = database_manager_new(conn);
-    PRINT_ERR();
-    delete_database_if_exists(dbMgr, "test");
-    PRINT_ERR();
-    databases_create(dbMgr, "test");
-    PRINT_ERR();
-
-    Options* opts = options_new();
-    PRINT_ERR();
-    Session* session = session_new(databases_get(dbMgr, "test"), Schema, opts);
-    PRINT_ERR();
-    Transaction* transaction = transaction_new(session, Write, opts);
-    PRINT_ERR();
-
-    query_define(transaction, "define person sub entity;", opts);
-    {
-        ConceptMapIterator* it = query_match(transaction, "match $t sub thing;", opts);
-        ConceptMap* conceptMap;
-        printf("Results:\n");
-        while ( null != (conceptMap = concept_map_iterator_next(it)) ) {
-            Concept* concept = concept_map_get(conceptMap, "t");
-            PRINT_ERR();
-            char* label = thing_type_get_label(concept);
-            PRINT_ERR();
-            printf("- %s\n", label);
-            free(label);
-            concept_drop(concept);
-            concept_map_drop(conceptMap);
-        }
-        concept_map_iterator_drop(it);
-        PRINT_ERR();
-    }
-    transaction_commit(transaction);
-    PRINT_ERR();
-
-    // transaction_drop(transaction); PRINT_ERR();
-    session_force_close(session); //    session_drop(session);
-    PRINT_ERR();
-    options_drop(opts);
-    PRINT_ERR();
-    delete_database_if_exists(dbMgr, "test");
-
-
-    database_manager_drop(dbMgr);
-    PRINT_ERR();
-    fprintf(stdout, "Test ran successfully\n");
-    fflush(stdout);
-
-    return 0;
-}
-
-
 int main() {
     run_test_core("test_basic_happy", &test_basic_happy);
 //    RUN_TEST(test_basic_happy);

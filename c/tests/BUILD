@@ -31,6 +31,9 @@ cc_test(
         "//c:typedb_driver_clib"
     ],
     env = {"RUST_BACKTRACE" : "full"},
+    # `-fsanitize=undefined` address is useful memory mistakes
+    copts = ["-fsanitize=address"],# ["-fsanitize=undefined"],
+    linkopts = ["-fsanitize=address"],# ["-fsanitize=undefined"],
 )
 
 checkstyle_test(
