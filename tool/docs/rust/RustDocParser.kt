@@ -69,12 +69,15 @@ fun parseClass(document: Element, classAnchor: String): Class {
         parseField(it, classAnchor)
     }
 
-    val methods = document.select("#implementations-list details[class*=method-toggle]:has(summary section.method)").map {
-        parseMethod(it, classAnchor)
-    } + document.select("#trait-implementations-list summary:has(section:not(section:has(h3 a.trait[href^=http]))) " +
-            "+ .impl-items details[class*=method-toggle]:has(summary section.method)").map {
-        parseMethod(it, classAnchor)
-    }
+    val methods =
+        document.select("#implementations-list details[class*=method-toggle]:has(summary section.method)").map {
+            parseMethod(it, classAnchor)
+        } + document.select(
+            "#trait-implementations-list summary:has(section:not(section:has(h3 a.trait[href^=http]))) " +
+                    "+ .impl-items details[class*=method-toggle]:has(summary section.method)"
+        ).map {
+            parseMethod(it, classAnchor)
+        }
 
     val traits = document.select(".sidebar-elems h3:has(a[href=#trait-implementations]) + ul li").map { it.text() }
 
@@ -92,11 +95,13 @@ fun parseTrait(document: Element, classAnchor: String): Class {
     val className = document.selectFirst(".main-heading h1 a.trait")!!.text()
     val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { it.html() }
 
-    val methods = document.select("#required-methods + .methods details[class*=method-toggle]:has(summary section.method)").map {
-        parseMethod(it, classAnchor)
-    } + document.select("#provided-methods + .methods details[class*=method-toggle]:has(summary section.method)").map {
-        parseMethod(it, classAnchor)
-    }
+    val methods =
+        document.select("#required-methods + .methods details[class*=method-toggle]:has(summary section.method)").map {
+            parseMethod(it, classAnchor)
+        } + document.select("#provided-methods + .methods details[class*=method-toggle]:has(summary section.method)")
+            .map {
+                parseMethod(it, classAnchor)
+            }
 
     return Class(
         name = "Trait $className",
@@ -113,7 +118,7 @@ fun parseEnum(document: Element, classAnchor: String): Class {
     val variants = document.select("section.variant").map { parseEnumConstant(it) }
 
     val methods = document.select("#implementations-list details[class*=method-toggle]:has(summary section.method)")
-        .map { parseMethod(it, classAnchor)}
+        .map { parseMethod(it, classAnchor) }
 
     return Class(
         name = className,
@@ -212,7 +217,7 @@ fun removeArgName(html: String): String {
 }
 
 fun getAnchorFromUrl(url: String): String {
-   return replaceSymbolsForAnchor(url.substringAfterLast("/").replace(".html", ""))
+    return replaceSymbolsForAnchor(url.substringAfterLast("/").replace(".html", ""))
 }
 
 fun replaceLinks(html: String): String {

@@ -79,7 +79,7 @@ data class Class(
             result += "|===\n"
             result += "// end::enum_constants[]\n\n"
         } else if (this.fields.isNotEmpty()) {
-            result += "== " +  when (language) {
+            result += "== " + when (language) {
                 "python" -> "Properties"
                 else -> "Fields"
             } + "\n\n"

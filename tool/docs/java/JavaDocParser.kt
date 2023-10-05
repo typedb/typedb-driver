@@ -45,7 +45,8 @@ fun main(args: Array<String>) {
         val html = File(it.path).readText(Charsets.UTF_8)
         val parsed = Jsoup.parse(html)
         val parsedClass = if (!parsed.select("h2[title^=Interface]").isNullOrEmpty()
-                || !parsed.select("h2[title^=Class]").isNullOrEmpty()) {
+            || !parsed.select("h2[title^=Class]").isNullOrEmpty()
+        ) {
             parseClass(parsed, it.parent)
         } else {
             parseEnum(parsed)
@@ -71,17 +72,18 @@ fun parseClass(document: Element, currentDirName: String): Class {
 
     val fields = document.select(".summary > ul > li > section > ul > li:has(a[id=field.summary]) > table tr:gt(0)")
         .map { parseField(it) }
-    val methods = document.select(".details > ul > li > section > ul > li:has(a[id=constructor.detail]) > ul > li").map {
-        parseMethod(it)
-    } + document.select(".details > ul > li > section > ul > li:has(a[id=method.detail]) > ul > li").map {
-        parseMethod(it)
-    } + document.select(".memberSummary + ul > li > h3:contains(Methods inherited from) + code > a").map {
-        val parentPath = Path.of(currentDirName).resolve(it.attr("href").substringBefore("#"))
-        val parentHtml = File(parentPath.toString()).readText(Charsets.UTF_8)
-        val parentParsed = Jsoup.parse(parentHtml)
-        val anchor = it.attr("href").substringAfter("#")
-        parseMethod(parentParsed.selectFirst("a[id=$anchor] + ul > li")!!)
-    }
+    val methods =
+        document.select(".details > ul > li > section > ul > li:has(a[id=constructor.detail]) > ul > li").map {
+            parseMethod(it)
+        } + document.select(".details > ul > li > section > ul > li:has(a[id=method.detail]) > ul > li").map {
+            parseMethod(it)
+        } + document.select(".memberSummary + ul > li > h3:contains(Methods inherited from) + code > a").map {
+            val parentPath = Path.of(currentDirName).resolve(it.attr("href").substringBefore("#"))
+            val parentHtml = File(parentPath.toString()).readText(Charsets.UTF_8)
+            val parentParsed = Jsoup.parse(parentHtml)
+            val anchor = it.attr("href").substringAfter("#")
+            parseMethod(parentParsed.selectFirst("a[id=$anchor] + ul > li")!!)
+        }
 
     return Class(
         name = className,
@@ -104,17 +106,21 @@ fun parseEnum(document: Element): Class {
         it.text()
     }
 
-    val enumConstants = document.select(".summary > ul > li > section > ul > li:has(a[id=enum.constant.summary]) > table tr:gt(0)").map {
-        parseEnumConstant(it)
-    }
-    val fields = document.select(".summary > ul > li > section > ul > li:has(a[id=field.summary]) > table tr:gt(0)").map {
-        parseField(it)
-    }
-    val methods = document.select(".details > ul > li > section > ul > li:has(a[id=constructor.detail]) > ul > li").map {
-        parseMethod(it)
-    } + document.select(".details > ul > li > section > ul > li:has(a[id=method.detail]) > ul > li").map {
-        parseMethod(it)
-    }
+    val enumConstants =
+        document.select(".summary > ul > li > section > ul > li:has(a[id=enum.constant.summary]) > table tr:gt(0)")
+            .map {
+                parseEnumConstant(it)
+            }
+    val fields =
+        document.select(".summary > ul > li > section > ul > li:has(a[id=field.summary]) > table tr:gt(0)").map {
+            parseField(it)
+        }
+    val methods =
+        document.select(".details > ul > li > section > ul > li:has(a[id=constructor.detail]) > ul > li").map {
+            parseMethod(it)
+        } + document.select(".details > ul > li > section > ul > li:has(a[id=method.detail]) > ul > li").map {
+            parseMethod(it)
+        }
 
     return Class(
         name = className,
@@ -139,8 +145,10 @@ fun parseMethod(element: Element): Method {
     val methodExamples = element.select("li.blockList > pre + div pre").map { replaceSpaces(it.text()) }
 
     val methodArgs = element
-        .select("dt:has(.paramLabel) " +
-                "~ dd:not(dt:has(.returnLabel) ~ dd, dt:has(.throwsLabel) ~ dd, dt:has(.seeLabel) ~ dd)")
+        .select(
+            "dt:has(.paramLabel) " +
+                    "~ dd:not(dt:has(.returnLabel) ~ dd, dt:has(.throwsLabel) ~ dd, dt:has(.seeLabel) ~ dd)"
+        )
         .map {
             val arg_name = it.selectFirst("code")!!.text()
             assert(allArgs.contains(arg_name))
@@ -206,8 +214,10 @@ fun enhanceSignature(signature: String): String {
 }
 
 fun getReturnTypeFromSignature(signature: String): String {
-    return Regex("@[^\\s]*\\s|default ").replace(signature.substringBefore("(")
-        .substringBeforeLast("\u00a0"), "")
+    return Regex("@[^\\s]*\\s|default ").replace(
+        signature.substringBefore("(")
+            .substringBeforeLast("\u00a0"), ""
+    )
 }
 
 fun splitToParagraphs(html: String): List<String> {

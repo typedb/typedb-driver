@@ -43,11 +43,12 @@ fun main(args: Array<String>) {
         val html = it.readText(Charsets.UTF_8)
         val parsed = Jsoup.parse(html)
         val title = parsed.select(".tsd-page-title h1")
-        val parsedClass = if (!title.isNullOrEmpty() && (title.text().contains("Class") || title.text().contains("Interface"))) {
-            parseClass(parsed)
-        } else {
-            parseNamespace(parsed)
-        }
+        val parsedClass =
+            if (!title.isNullOrEmpty() && (title.text().contains("Class") || title.text().contains("Interface"))) {
+                parseClass(parsed)
+            } else {
+                parseNamespace(parsed)
+            }
 
         parsedClasses[parsedClass.name] = if (parsedClasses.contains(parsedClass.name)) {
             mergeClasses(parsedClasses[parsedClass.name]!!, parsedClass)
@@ -77,8 +78,10 @@ fun parseClass(document: Element): Class {
         parseProperty(it)
     }
 
-    val methodsElements = document.select("section.tsd-member-group:contains(Constructors), " +
-            "section.tsd-member-group:contains(Method)")
+    val methodsElements = document.select(
+        "section.tsd-member-group:contains(Constructors), " +
+                "section.tsd-member-group:contains(Method)"
+    )
     val methods = methodsElements.select("section.tsd-member > .tsd-signatures > .tsd-signature").map {
         parseMethod(it)
     }.filter {
@@ -122,11 +125,14 @@ fun parseMethod(element: Element): Method {
         .selectFirst(".tsd-description > .tsd-returns-title:not(.tsd-parameter-signature .tsd-returns-title)")
         ?.text()?.substringAfter("Returns ")
     val methodDescr = descrElement.select(".tsd-description > .tsd-comment p").map { reformatTextWithCode(it.html()) }
-    val methodExamples = descrElement.select(".tsd-description > .tsd-comment > :has(a[href*=examples]) + pre > :not(button)")
-        .map { it.text() }
+    val methodExamples =
+        descrElement.select(".tsd-description > .tsd-comment > :has(a[href*=examples]) + pre > :not(button)")
+            .map { it.text() }
 
-    val methodArgs = descrElement.select(".tsd-description > .tsd-parameters > .tsd-parameter-list > " +
-            "li:not(.tsd-parameter-signature li)").map {
+    val methodArgs = descrElement.select(
+        ".tsd-description > .tsd-parameters > .tsd-parameter-list > " +
+                "li:not(.tsd-parameter-signature li)"
+    ).map {
         Variable(
             name = it.selectFirst(".tsd-kind-parameter")!!.text(),
             type = it.selectFirst("h5")!!.text().substringAfter(": "),
