@@ -8,24 +8,24 @@
 |===
 |Name |Type 
 a| `RPCMethodUnavailable` a| `String`
-a| `ConnectionIsClosed` a| ``
-a| `SessionIsClosed` a| ``
-a| `TransactionIsClosed` a| ``
+a| `ConnectionIsClosed` a| 
+a| `SessionIsClosed` a| 
+a| `TransactionIsClosed` a| 
 a| `TransactionIsClosedWithErrors` a| `String`
-a| `UnableToConnect` a| ``
+a| `UnableToConnect` a| 
 a| `DatabaseDoesNotExist` a| `String`
 a| `MissingResponseField` a| `&'static str`
 a| `UnknownRequestId` a| `ID`
 a| `InvalidResponseField` a| `&'static str`
 a| `EnterpriseUnableToConnect` a| `String`
-a| `EnterpriseReplicaNotPrimary` a| ``
+a| `EnterpriseReplicaNotPrimary` a| 
 a| `EnterpriseAllNodesFailed` a| `String`
-a| `EnterpriseTokenCredentialInvalid` a| ``
-a| `SessionCloseFailed` a| ``
-a| `EnterpriseEndpointEncrypted` a| ``
-a| `EnterpriseSSLCertificateNotValidated` a| ``
-a| `BrokenPipe` a| ``
-a| `ConnectionRefused` a| ``
+a| `EnterpriseTokenCredentialInvalid` a| 
+a| `SessionCloseFailed` a| 
+a| `EnterpriseEndpointEncrypted` a| 
+a| `EnterpriseSSLCertificateNotValidated` a| 
+a| `BrokenPipe` a| 
+a| `ConnectionRefused` a| 
 |===
 // end::enum_constants[]
 

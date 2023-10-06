@@ -7,8 +7,8 @@
 [options="header"]
 |===
 |Name |Type 
-a| `RecvError` a| ``
-a| `SendError` a| ``
+a| `RecvError` a| 
+a| `SendError` a| 
 a| `UnexpectedRequestType` a| `String`
 a| `UnexpectedResponseType` a| `String`
 a| `UnknownConnectionAddress` a| `Address`
