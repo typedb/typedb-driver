@@ -65,20 +65,24 @@ fun parseClass(element: Element): Class {
     val classSignElement = element.selectFirst("dt.sig-object")
     val className = classSignElement!!.selectFirst("dt.sig-object span.sig-name")!!.text()
 
-    val classDetails = classSignElement.nextElementSibling()
-    val classDetailsParagraphs = classDetails!!.children().map { it }.filter { it.tagName() == "p" }
+    var classDetailsElement = classSignElement.nextElementSibling()
+    val classDetailsParagraphs = classDetailsElement!!.children().map { it }.filter { it.tagName() == "p" }
     val (descr, bases) = classDetailsParagraphs.partition { it.select("code.py-class").isNullOrEmpty() }
     val superClasses = bases[0]!!.text().substringAfter("Bases: ").split(", ")
         .filter { it != "ABC" && it != "object" && it != "Generic[T]" && !it.startsWith("NativeWrapper") }
     val classDescr = descr.map { reformatTextWithCode(it.html()) }
 
-    val classExamples = element.select("dl.class > dt.sig-object + dd > section:contains(Example) > div > .highlight")
-        .map { it.text() }
+    val exampleHeaderElements = classDetailsElement.children().map { it.firstElementChild() }
+        .filter { it?.text()?.contains("Examples") ?: false }
+    val classExamples = if (exampleHeaderElements.isNotEmpty()) {
+        classDetailsElement = exampleHeaderElements.first()!!.parent()
+        exampleHeaderElements.first()!!.nextElementSibling()?.select(".highlight")?.map { it.text() } ?: listOf()
+    } else listOf()
 
-    val methods = classDetails.select("dl.method")
+    val methods = classDetailsElement!!.children().map { it }.filter { it.className() == "py method" }
         .map { parseMethod(it) }
 
-    val properties = classDetails.select("dl.property")
+    val properties = classDetailsElement.children().map { it }.filter { it.className() == "py property" }
         .map { parseProperty(it) }.filter { it.name != "native_object" }
 
     return Class(
