@@ -85,12 +85,10 @@ export class TypeDBDriverImpl implements TypeDBDriver {
     private async fetchEnterpriseServers(): Promise<string[]> {
         for (const address of this._initAddresses) {
             try {
-                console.info(`Fetching list of enterprise servers from ${address}...`);
                 const stub = new TypeDBStubImpl(address, this._credential);
                 await stub.open();
                 const res = await stub.serversAll(RequestBuilder.ServerManager.allReq());
                 const members = res.servers.map(x => x.address);
-                console.info(`The enterprise servers are ${members}`);
                 return members;
             } catch (e) {
                 console.error(`Fetching enterprise servers from ${address} failed.`, e);
