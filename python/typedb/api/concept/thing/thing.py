@@ -28,6 +28,7 @@ from typedb.api.concept.concept import Concept
 
 if TYPE_CHECKING:
     from typedb.api.concept.thing.attribute import Attribute
+    from typedb.api.concept.thing.relation import Relation
     from typedb.api.concept.type.attribute_type import AttributeType
     from typedb.api.concept.type.role_type import RoleType
     from typedb.api.concept.type.thing_type import ThingType
@@ -189,7 +190,7 @@ class Thing(Concept, ABC):
         pass
 
     @abstractmethod
-    def get_relations(self, transaction: TypeDBTransaction, role_types: list[RoleType] = None):
+    def get_relations(self, transaction: TypeDBTransaction, role_types: list[RoleType] = None) -> Iterator[Relation]:
         """
         Retrieves all the ``Relations`` which this ``Thing`` plays a role in,
         optionally filtered by one or more given roles.

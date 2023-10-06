@@ -172,7 +172,7 @@ thing.get_playing(transaction)
 
 [source,python]
 ----
-get_relations(transaction: TypeDBTransaction, role_types: list[RoleType] = None)
+get_relations(transaction: TypeDBTransaction, role_types: list[RoleType] = None) -> Iterator[Relation]
 ----
 
 ==== Description
@@ -191,7 +191,7 @@ a| `role_types` a| The list of roles to filter the relations by. a| `list[RoleTy
 
 ==== Returns
 
-``
+`Iterator[Relation]`
 
 ==== Code examples
 
