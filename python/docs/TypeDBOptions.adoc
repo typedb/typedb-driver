@@ -1,11 +1,6 @@
 [#_TypeDBOptions]
 = TypeDBOptions
 
-*Supertypes:*
-
-* `NativeWrapper`
-* `Options`
-
 == Description
 
 TypeDB session and transaction options. `TypeDBOptions` object can be used to override the default server behaviour query processing.

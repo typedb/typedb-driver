@@ -100,4 +100,13 @@ data class Class(
 
         return result
     }
+
+    fun isNotEmpty(): Boolean {
+        return enumConstants.isNotEmpty()
+                || description.isNotEmpty()
+                || examples.isNotEmpty()
+                || fields.isNotEmpty()
+                || methods.isNotEmpty()
+                || superClasses.isNotEmpty()
+    }
 }

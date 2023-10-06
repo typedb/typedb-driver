@@ -59,10 +59,12 @@ fun main(args: Array<String>) {
             parsedClass
         }
 
-        val parsedClassAsciiDoc = parsedClasses[parsedClass.name]!!.toAsciiDoc("nodejs")
-        val outputFile = docsDir.resolve("${parsedClass.name}.adoc").toFile()
-        outputFile.createNewFile()
-        outputFile.writeText(parsedClassAsciiDoc)
+        if (parsedClasses[parsedClass.name]!!.isNotEmpty()) {
+            val parsedClassAsciiDoc = parsedClasses[parsedClass.name]!!.toAsciiDoc("nodejs")
+            val outputFile = docsDir.resolve("${parsedClass.name}.adoc").toFile()
+            outputFile.createNewFile()
+            outputFile.writeText(parsedClassAsciiDoc)
+        }
     }
 }
 

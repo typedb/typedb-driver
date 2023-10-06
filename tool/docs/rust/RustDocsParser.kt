@@ -43,8 +43,6 @@ fun main(args: Array<String>) {
         Files.createDirectory(docsDir)
     }
 
-//    val overallOutputFile = docsDir.resolve("_rust_driver.adoc").toFile()
-
     File(inputDirectoryName).walkTopDown().filter {
         it.toString().contains("struct.") || it.toString().contains("trait.") || it.toString().contains("enum.")
     }.forEach {
@@ -61,10 +59,11 @@ fun main(args: Array<String>) {
             null
         }
         parsedClass?.let {
-            val outputFile = docsDir.resolve(parsedClass.name.replace(" ", "_") + ".adoc").toFile()
-            outputFile.createNewFile()
-            outputFile.writeText(parsedClass.toAsciiDoc("rust"))
-//            overallOutputFile.appendText(parsedClass.toAsciiDoc("rust"))
+            if (parsedClass.isNotEmpty()) {
+                val outputFile = docsDir.resolve(parsedClass.name.replace(" ", "_") + ".adoc").toFile()
+                outputFile.createNewFile()
+                outputFile.writeText(parsedClass.toAsciiDoc("rust"))
+            }
         }
     }
 }

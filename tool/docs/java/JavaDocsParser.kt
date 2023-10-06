@@ -55,11 +55,12 @@ fun main(args: Array<String>) {
             parseEnum(parsed)
         }
 
-        val parsedClassName = parsedClass.name
-        val parsedClassAsciiDoc = parsedClass.toAsciiDoc("java")
-        val outputFile = docsDir.resolve("$parsedClassName.adoc").toFile()
-        outputFile.createNewFile()
-        outputFile.writeText(parsedClassAsciiDoc)
+        if (parsedClass.isNotEmpty()) {
+            val parsedClassAsciiDoc = parsedClass.toAsciiDoc("java")
+            val outputFile = docsDir.resolve("${parsedClass.name}.adoc").toFile()
+            outputFile.createNewFile()
+            outputFile.writeText(parsedClassAsciiDoc)
+        }
     }
 }
 

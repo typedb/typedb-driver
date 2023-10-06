@@ -51,12 +51,14 @@ fun main(args: Array<String>) {
             } else {
                 parseClass(it)
             }
-            val parsedClassName = parsedClass.name
-            val parsedClassAsciiDoc = parsedClass.toAsciiDoc("python")
-
-            val outputFile = docsDir.resolve("$parsedClassName.adoc").toFile()
-            outputFile.createNewFile()
-            outputFile.writeText(parsedClassAsciiDoc)
+            if (parsedClass.isNotEmpty()) {
+                val parsedClassAsciiDoc = parsedClass.toAsciiDoc("python")
+                val outputFile = docsDir.resolve("${parsedClass.name}.adoc").toFile()
+                outputFile.createNewFile()
+                outputFile.writeText(parsedClassAsciiDoc)
+            } else {
+                println("Empty class: ${parsedClass.name}")
+            }
         }
     }
 }
@@ -68,7 +70,8 @@ fun parseClass(element: Element): Class {
     val classDetails = classSignElement.nextElementSibling()
     val classDetailsParagraphs = classDetails!!.children().map { it }.filter { it.tagName() == "p" }
     val (descr, bases) = classDetailsParagraphs.partition { it.select("code.py-class").isNullOrEmpty() }
-    val superClasses = bases[0]!!.select("span").map { it.html() }.filter { it != "ABC" && it != "Enum" }
+    val superClasses = bases[0]!!.text().substringAfter("Bases: ").split(", ")
+        .filter { it != "ABC" && it != "Enum" && it != "object" && it != "Generic[T]" && !it.startsWith("NativeWrapper") }
     val classDescr = descr.map { reformatTextWithCode(it.html()) }
 
     val classExamples = element.select("dl.class > dt.sig-object + dd > section:contains(Example) > div > .highlight")
@@ -78,7 +81,7 @@ fun parseClass(element: Element): Class {
         .map { parseMethod(it) }
 
     val properties = classDetails.select("dl.property")
-        .map { parseProperty(it) }
+        .map { parseProperty(it) }.filter { it.name != "native_object" }
 
     return Class(
         name = className,

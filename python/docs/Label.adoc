@@ -1,10 +1,6 @@
 [#_Label]
 = Label
 
-*Supertypes:*
-
-* `object`
-
 == Description
 
 A `Label` holds the uniquely identifying name of a type.

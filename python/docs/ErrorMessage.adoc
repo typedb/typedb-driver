@@ -1,10 +1,6 @@
 [#_ErrorMessage]
 = ErrorMessage
 
-*Supertypes:*
-
-* `object`
-
 == Methods
 
 // tag::methods[]

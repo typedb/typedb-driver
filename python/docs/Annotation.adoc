@@ -1,21 +1,6 @@
 [#_Annotation]
 = Annotation
 
-*Supertypes:*
-
-* `object`
-
-== Properties
-
-// tag::properties[]
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Type |Description
-a| `native_object` a| `Annotation` a| 
-|===
-// end::properties[]
-
 == Methods
 
 // tag::methods[]
