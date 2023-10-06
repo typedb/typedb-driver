@@ -45,10 +45,10 @@ class SessionType(Enum):
     DATA = Data
     SCHEMA = Schema
 
-    def is_data(self):
+    def is_data(self) -> bool:
         return self is SessionType.DATA
 
-    def is_schema(self):
+    def is_schema(self) -> bool:
         return self is SessionType.SCHEMA
 
 

@@ -18,6 +18,7 @@ attributeType.getOwners(transaction, annotation, Concept.Transitivity.EXPLICIT);
 // tag::enum_constants[]
 == Enum constants
 
+[cols="~"]
 [options="header"]
 |===
 |Name 

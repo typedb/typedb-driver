@@ -97,7 +97,7 @@ database.primary_replica()
 
 [source,python]
 ----
-replicas() -> set[typedb.api.connection.database.Replica]
+replicas() -> Set[Replica]
 ----
 
 ==== Description
@@ -106,7 +106,7 @@ Set of ``Replica`` instances for this database. _Only works in TypeDB Enterprise
 
 ==== Returns
 
-`set[typedb.api.connection.database.Replica]`
+`Set[Replica]`
 
 ==== Code examples
 

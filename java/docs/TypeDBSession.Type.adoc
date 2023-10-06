@@ -18,6 +18,7 @@ driver.session(database, TypeDBSession.Type.SCHEMA);
 // tag::enum_constants[]
 == Enum constants
 
+[cols="~"]
 [options="header"]
 |===
 |Name 

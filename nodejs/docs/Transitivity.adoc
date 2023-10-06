@@ -4,6 +4,7 @@
 // tag::enum_constants[]
 == Namespace variables
 
+[cols="~"]
 [options="header"]
 |===
 |Name 

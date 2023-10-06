@@ -68,7 +68,11 @@ data class Class(
                 "nodejs" -> "Namespace variables"
                 else -> "Enum constants"
             }
-            result += "\n\n[options=\"header\"]\n|===\n"
+            result += "\n\n[cols=\"~"
+            if (language == "python" || language == "rust") {
+                result += ",~"
+            }
+            result += "\"]\n[options=\"header\"]\n|===\n"
             result += "|Name "
             result += when (language) {
                 "rust" -> "|Type "

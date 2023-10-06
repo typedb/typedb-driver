@@ -18,6 +18,7 @@ session.transaction(TransactionType.READ);
 // tag::enum_constants[]
 == Enum constants
 
+[cols="~"]
 [options="header"]
 |===
 |Name 

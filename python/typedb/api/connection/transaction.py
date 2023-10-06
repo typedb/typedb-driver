@@ -45,10 +45,10 @@ class TransactionType(enum.Enum):
     READ = 0
     WRITE = 1
 
-    def is_read(self):
+    def is_read(self) -> bool:
         return self is TransactionType.READ
 
-    def is_write(self):
+    def is_write(self) -> bool:
         return self is TransactionType.WRITE
 
 

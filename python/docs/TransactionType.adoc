@@ -15,6 +15,7 @@ session.transaction(TransactionType.READ)
 // tag::enum_constants[]
 == Enum constants
 
+[cols="~,~"]
 [options="header"]
 |===
 |Name |Value 
@@ -33,7 +34,7 @@ a| `WRITE` a| `1`
 
 [source,python]
 ----
-is_read()
+is_read() -> bool
 ----
 
 ==== Description
@@ -42,7 +43,7 @@ is_read()
 
 ==== Returns
 
-``
+`bool`
 
 [#_is_write]
 === is_write
@@ -51,7 +52,7 @@ is_read()
 
 [source,python]
 ----
-is_write()
+is_write() -> bool
 ----
 
 ==== Description
@@ -60,6 +61,6 @@ is_write()
 
 ==== Returns
 
-``
+`bool`
 
 // end::methods[]

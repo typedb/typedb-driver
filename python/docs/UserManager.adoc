@@ -15,7 +15,7 @@ Provides access to all user management methods.
 
 [source,python]
 ----
-all() -> list[typedb.api.user.user.User]
+all() -> List[User]
 ----
 
 ==== Description
@@ -24,7 +24,7 @@ Retrieves all users which exist on the TypeDB server.
 
 ==== Returns
 
-`list[typedb.api.user.user.User]`
+`List[User]`
 
 ==== Code examples
 
@@ -79,7 +79,7 @@ create(username: str, password: str) -> None
 
 ==== Description
 
-Create a user with the given name &amp; password.
+Create a user with the given name and password.
 
 ==== Input parameters
 

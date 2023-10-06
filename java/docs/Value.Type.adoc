@@ -6,6 +6,7 @@
 // tag::enum_constants[]
 == Enum constants
 
+[cols="~"]
 [options="header"]
 |===
 |Name 

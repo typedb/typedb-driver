@@ -8,6 +8,7 @@ TypeQL value types for attributes &amp; value concepts.
 // tag::enum_constants[]
 == Namespace variables
 
+[cols="~"]
 [options="header"]
 |===
 |Name 

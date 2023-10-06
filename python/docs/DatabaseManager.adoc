@@ -15,7 +15,7 @@ Provides access to all database management methods.
 
 [source,python]
 ----
-all() -> list[typedb.api.connection.database.Database]
+all() -> List[Database]
 ----
 
 ==== Description
@@ -24,7 +24,7 @@ Retrieves all databases present on the TypeDB server
 
 ==== Returns
 
-`list[typedb.api.connection.database.Database]`
+`List[Database]`
 
 ==== Code examples
 

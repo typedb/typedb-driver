@@ -8,6 +8,7 @@ This class is used to specify the type of transaction.
 // tag::enum_constants[]
 == Namespace variables
 
+[cols="~"]
 [options="header"]
 |===
 |Name 
