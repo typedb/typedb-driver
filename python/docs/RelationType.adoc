@@ -48,7 +48,7 @@ relation_type.as_relation_type()
 
 [source,python]
 ----
-abstract create(transaction: TypeDBTransaction) -> Relation
+create(transaction: TypeDBTransaction) -> Relation
 ----
 
 ==== Description
@@ -82,7 +82,7 @@ relation_type.create(transaction)
 
 [source,python]
 ----
-abstract get_instances(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Relation]
+get_instances(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Relation]
 ----
 
 ==== Description
@@ -117,7 +117,7 @@ relation_type.get_instances(transaction, transitivity)
 
 [source,python]
 ----
-abstract get_relates(transaction: TypeDBTransaction, role_label: str | None = None, transitivity: Transitivity = Transitivity.TRANSITIVE) -> RoleType | None | Iterator[RoleType]
+get_relates(transaction: TypeDBTransaction, role_label: str | None = None, transitivity: Transitivity = Transitivity.TRANSITIVE) -> RoleType | None | Iterator[RoleType]
 ----
 
 ==== Description
@@ -153,7 +153,7 @@ relation_type.get_relates(transaction, role_label, transitivity)
 
 [source,python]
 ----
-abstract get_relates_overridden(transaction: TypeDBTransaction, role_label: str) -> RoleType | None
+get_relates_overridden(transaction: TypeDBTransaction, role_label: str) -> RoleType | None
 ----
 
 ==== Description
@@ -188,7 +188,7 @@ relation_type.get_relates_overridden(transaction, role_label)
 
 [source,python]
 ----
-abstract get_subtypes(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[RelationType]
+get_subtypes(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[RelationType]
 ----
 
 ==== Description
@@ -248,7 +248,7 @@ relation_type.is_relation_type()
 
 [source,python]
 ----
-abstract set_relates(transaction: TypeDBTransaction, role_label: str, overridden_label: str | None = None) -> None
+set_relates(transaction: TypeDBTransaction, role_label: str, overridden_label: str | None = None) -> None
 ----
 
 ==== Description
@@ -285,7 +285,7 @@ relation_type.set_relates(transaction, role_label, overridden_label)
 
 [source,python]
 ----
-abstract set_supertype(transaction: TypeDBTransaction, super_relation_type: RelationType) -> None
+set_supertype(transaction: TypeDBTransaction, super_relation_type: RelationType) -> None
 ----
 
 ==== Description
@@ -320,7 +320,7 @@ relation_type.set_supertype(transaction, super_relation_type)
 
 [source,python]
 ----
-abstract unset_relates(transaction: TypeDBTransaction, role_label: str) -> None
+unset_relates(transaction: TypeDBTransaction, role_label: str) -> None
 ----
 
 ==== Description

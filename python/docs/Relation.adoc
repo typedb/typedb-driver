@@ -19,7 +19,7 @@ Relation is an instance of a relation type and can be uniquely addressed by a co
 
 [source,python]
 ----
-abstract add_player(transaction: TypeDBTransaction, role_type: RoleType, player: Thing) -> None
+add_player(transaction: TypeDBTransaction, role_type: RoleType, player: Thing) -> None
 ----
 
 ==== Description
@@ -80,7 +80,7 @@ relation.as_relation()
 
 [source,python]
 ----
-abstract get_players(transaction: TypeDBTransaction) -> dict[RoleType, list[Thing]]
+get_players(transaction: TypeDBTransaction) -> dict[RoleType, list[Thing]]
 ----
 
 ==== Description
@@ -114,7 +114,7 @@ relation.get_players(transaction)
 
 [source,python]
 ----
-abstract get_players_by_role_type(transaction: TypeDBTransaction, *role_types: RoleType) -> Iterator[Thing]
+get_players_by_role_type(transaction: TypeDBTransaction, *role_types: RoleType) -> Iterator[Thing]
 ----
 
 ==== Description
@@ -150,7 +150,7 @@ relation.get_players_by_role_type(transaction, role_type1, role_type2)
 
 [source,python]
 ----
-abstract get_relating(transaction: TypeDBTransaction) -> Iterator[RoleType]
+get_relating(transaction: TypeDBTransaction) -> Iterator[RoleType]
 ----
 
 ==== Description
@@ -184,7 +184,7 @@ relation.get_relating(transaction)
 
 [source,python]
 ----
-abstract get_type() -> RelationType
+get_type() -> RelationType
 ----
 
 ==== Description
@@ -234,7 +234,7 @@ relation.is_relation()
 
 [source,python]
 ----
-abstract remove_player(transaction: TypeDBTransaction, role_type: RoleType, player: Thing) -> None
+remove_player(transaction: TypeDBTransaction, role_type: RoleType, player: Thing) -> None
 ----
 
 ==== Description

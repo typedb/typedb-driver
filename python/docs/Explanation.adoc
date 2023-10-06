@@ -15,7 +15,7 @@ An explanation of which rule was used for inferring the explained concept, the c
 
 [source,python]
 ----
-abstract conclusion() -> ConceptMap
+conclusion() -> ConceptMap
 ----
 
 ==== Description
@@ -40,7 +40,7 @@ explanation.conclusion()
 
 [source,python]
 ----
-abstract condition() -> ConceptMap
+condition() -> ConceptMap
 ----
 
 ==== Description
@@ -65,7 +65,7 @@ explanation.condition()
 
 [source,python]
 ----
-abstract query_variable_mapping(var: str) -> set[str]
+query_variable_mapping(var: str) -> set[str]
 ----
 
 ==== Description
@@ -99,7 +99,7 @@ explanation.variable_mapping(var)
 
 [source,python]
 ----
-abstract query_variables() -> set[str]
+query_variables() -> set[str]
 ----
 
 ==== Description
@@ -124,7 +124,7 @@ explanation.query_variables()
 
 [source,python]
 ----
-abstract rule() -> Rule
+rule() -> Rule
 ----
 
 ==== Description

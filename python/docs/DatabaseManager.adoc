@@ -15,7 +15,7 @@ Provides access to all database management methods.
 
 [source,python]
 ----
-abstract all() -> list[typedb.api.connection.database.Database]
+all() -> list[typedb.api.connection.database.Database]
 ----
 
 ==== Description
@@ -40,7 +40,7 @@ driver.databases.all()
 
 [source,python]
 ----
-abstract contains(name: str) -> bool
+contains(name: str) -> bool
 ----
 
 ==== Description
@@ -74,7 +74,7 @@ driver.databases.contains(name)
 
 [source,python]
 ----
-abstract create(name: str) -> None
+create(name: str) -> None
 ----
 
 ==== Description
@@ -108,7 +108,7 @@ driver.databases.create(name)
 
 [source,python]
 ----
-abstract get(name: str) -> Database
+get(name: str) -> Database
 ----
 
 ==== Description

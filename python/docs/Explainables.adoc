@@ -15,7 +15,7 @@ Contains explainable objects.
 
 [source,python]
 ----
-abstract attribute(variable: str) -> Explainable
+attribute(variable: str) -> Explainable
 ----
 
 ==== Description
@@ -49,7 +49,7 @@ concept_map.explainables().attribute(variable)
 
 [source,python]
 ----
-abstract attributes() -> Mapping[str, Explainable]
+attributes() -> Mapping[str, Explainable]
 ----
 
 ==== Description
@@ -74,7 +74,7 @@ concept_map.explainables().attributes()
 
 [source,python]
 ----
-abstract ownership(owner: str, attribute: str) -> Explainable
+ownership(owner: str, attribute: str) -> Explainable
 ----
 
 ==== Description
@@ -109,7 +109,7 @@ concept_map.explainables().ownership(owner, attribute)
 
 [source,python]
 ----
-abstract ownerships() -> Mapping[tuple[str, str], Explainable]
+ownerships() -> Mapping[tuple[str, str], Explainable]
 ----
 
 ==== Description
@@ -134,7 +134,7 @@ concept_map.explainables().ownerships()
 
 [source,python]
 ----
-abstract relation(variable: str) -> Explainable
+relation(variable: str) -> Explainable
 ----
 
 ==== Description
@@ -168,7 +168,7 @@ concept_map.explainables().relation(variable)
 
 [source,python]
 ----
-abstract relations() -> Mapping[str, Explainable]
+relations() -> Mapping[str, Explainable]
 ----
 
 ==== Description

@@ -15,7 +15,7 @@
 
 [source,python]
 ----
-abstract delete(transaction: TypeDBTransaction) -> None
+delete(transaction: TypeDBTransaction) -> None
 ----
 
 ==== Description
@@ -49,7 +49,7 @@ type_.delete(transaction)
 
 [source,python]
 ----
-abstract get_label() -> Label
+get_label() -> Label
 ----
 
 ==== Description
@@ -74,7 +74,7 @@ type_.get_label()
 
 [source,python]
 ----
-abstract get_subtypes(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Type]
+get_subtypes(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Type]
 ----
 
 ==== Description
@@ -110,7 +110,7 @@ type_.get_subtypes(transaction, Transitivity.EXPLICIT)
 
 [source,python]
 ----
-abstract get_supertype(transaction: TypeDBTransaction) -> Type | None
+get_supertype(transaction: TypeDBTransaction) -> Type | None
 ----
 
 ==== Description
@@ -144,7 +144,7 @@ type_.get_supertype(transaction)
 
 [source,python]
 ----
-abstract get_supertypes(transaction: TypeDBTransaction) -> Iterator[Type]
+get_supertypes(transaction: TypeDBTransaction) -> Iterator[Type]
 ----
 
 ==== Description
@@ -178,7 +178,7 @@ type_.get_supertypes(transaction)
 
 [source,python]
 ----
-abstract is_abstract() -> bool
+is_abstract() -> bool
 ----
 
 ==== Description
@@ -203,7 +203,7 @@ type_.is_abstract()
 
 [source,python]
 ----
-abstract is_root() -> bool
+is_root() -> bool
 ----
 
 ==== Description
@@ -253,7 +253,7 @@ type_.is_type()
 
 [source,python]
 ----
-abstract set_label(transaction: TypeDBTransaction, new_label: Label) -> None
+set_label(transaction: TypeDBTransaction, new_label: Label) -> None
 ----
 
 ==== Description

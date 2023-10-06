@@ -15,7 +15,7 @@ Provides access to all user management methods.
 
 [source,python]
 ----
-abstract all() -> list[typedb.api.user.user.User]
+all() -> list[typedb.api.user.user.User]
 ----
 
 ==== Description
@@ -40,7 +40,7 @@ driver.users.all()
 
 [source,python]
 ----
-abstract contains(username: str) -> bool
+contains(username: str) -> bool
 ----
 
 ==== Description
@@ -74,7 +74,7 @@ driver.users.contains(username)
 
 [source,python]
 ----
-abstract create(username: str, password: str) -> None
+create(username: str, password: str) -> None
 ----
 
 ==== Description
@@ -109,7 +109,7 @@ driver.users.create(username, password)
 
 [source,python]
 ----
-abstract delete(username: str) -> None
+delete(username: str) -> None
 ----
 
 ==== Description
@@ -143,7 +143,7 @@ driver.users.delete(username)
 
 [source,python]
 ----
-abstract get(username: str) -> User | None
+get(username: str) -> User | None
 ----
 
 ==== Description
@@ -177,7 +177,7 @@ driver.users.get(username)
 
 [source,python]
 ----
-abstract password_set(username: str, password: str) -> None
+password_set(username: str, password: str) -> None
 ----
 
 ==== Description

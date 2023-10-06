@@ -182,5 +182,5 @@ fun removeArgName(html: String): String {
 }
 
 fun enhanceSignature(signature: String): String {
-    return signature.replace("→", "->").replace("¶", "")
+    return signature.replace("→", "->").replace("¶", "").replace("abstract ", "")
 }

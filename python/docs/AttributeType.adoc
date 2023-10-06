@@ -50,7 +50,7 @@ attribute.as_attribute_type()
 
 [source,python]
 ----
-abstract get(transaction: TypeDBTransaction, value: Value | bool | int | float | str | datetime) -> Attribute | None
+get(transaction: TypeDBTransaction, value: Value | bool | int | float | str | datetime) -> Attribute | None
 ----
 
 ==== Description
@@ -85,7 +85,7 @@ attribute = attribute_type.get(transaction, value)
 
 [source,python]
 ----
-abstract get_instances(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Attribute]
+get_instances(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Attribute]
 ----
 
 ==== Description
@@ -121,7 +121,7 @@ attribute_type.get_instances(transaction, Transitivity.EXPLICIT)
 
 [source,python]
 ----
-abstract get_owners(transaction: TypeDBTransaction, annotations: set[Annotation] | None = None, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[ThingType]
+get_owners(transaction: TypeDBTransaction, annotations: set[Annotation] | None = None, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[ThingType]
 ----
 
 ==== Description
@@ -158,7 +158,7 @@ attribute_type.get_owners(transaction, annotations=Annotation.unique(), transiti
 
 [source,python]
 ----
-abstract get_regex(transaction: TypeDBTransaction) -> str
+get_regex(transaction: TypeDBTransaction) -> str
 ----
 
 ==== Description
@@ -192,7 +192,7 @@ attribute_type.get_regex(transaction)
 
 [source,python]
 ----
-abstract get_subtypes_with_value_type(transaction: TypeDBTransaction, value_type: ValueType, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[AttributeType]
+get_subtypes_with_value_type(transaction: TypeDBTransaction, value_type: ValueType, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[AttributeType]
 ----
 
 ==== Description
@@ -405,7 +405,7 @@ attribute_type.is_string()
 
 [source,python]
 ----
-abstract put(transaction: TypeDBTransaction, value: Value | bool | int | float | str | datetime) -> Attribute
+put(transaction: TypeDBTransaction, value: Value | bool | int | float | str | datetime) -> Attribute
 ----
 
 ==== Description
@@ -440,7 +440,7 @@ attribute = attribute_type.put(transaction, value)
 
 [source,python]
 ----
-abstract set_regex(transaction: TypeDBTransaction, regex: str) -> None
+set_regex(transaction: TypeDBTransaction, regex: str) -> None
 ----
 
 ==== Description
@@ -477,7 +477,7 @@ attribute_type.set_regex(transaction, regex)
 
 [source,python]
 ----
-abstract set_supertype(transaction: TypeDBTransaction, super_attribute_type: AttributeType) -> None
+set_supertype(transaction: TypeDBTransaction, super_attribute_type: AttributeType) -> None
 ----
 
 ==== Description
@@ -512,7 +512,7 @@ attribute_type.set_supertype(transaction, super_attribute_type)
 
 [source,python]
 ----
-abstract unset_regex(transaction: TypeDBTransaction) -> None
+unset_regex(transaction: TypeDBTransaction) -> None
 ----
 
 ==== Description

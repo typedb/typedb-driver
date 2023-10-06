@@ -15,7 +15,7 @@ Provides methods for executing TypeQL queries in the transaction.
 
 [source,python]
 ----
-abstract define(query: str, options: TypeDBOptions = None) -> None
+define(query: str, options: TypeDBOptions = None) -> None
 ----
 
 ==== Description
@@ -50,7 +50,7 @@ transaction.query.define(query, options)
 
 [source,python]
 ----
-abstract delete(query: str, options: TypeDBOptions | None = None) -> None
+delete(query: str, options: TypeDBOptions | None = None) -> None
 ----
 
 ==== Description
@@ -85,7 +85,7 @@ transaction.query.delete(query, options)
 
 [source,python]
 ----
-abstract explain(explainable: ConceptMap.Explainable, options: TypeDBOptions | None = None) -> Iterator[Explanation]
+explain(explainable: ConceptMap.Explainable, options: TypeDBOptions | None = None) -> Iterator[Explanation]
 ----
 
 ==== Description
@@ -120,7 +120,7 @@ transaction.query.explain(explainable, options)
 
 [source,python]
 ----
-abstract insert(query: str, options: TypeDBOptions | None = None) -> Iterator[ConceptMap]
+insert(query: str, options: TypeDBOptions | None = None) -> Iterator[ConceptMap]
 ----
 
 ==== Description
@@ -155,7 +155,7 @@ transaction.query.insert(query, options)
 
 [source,python]
 ----
-abstract match(query: str, options: TypeDBOptions | None = None) -> Iterator[ConceptMap]
+match(query: str, options: TypeDBOptions | None = None) -> Iterator[ConceptMap]
 ----
 
 ==== Description
@@ -190,7 +190,7 @@ transaction.query.match(query, options)
 
 [source,python]
 ----
-abstract match_aggregate(query: str, options: TypeDBOptions | None = None) -> Numeric
+match_aggregate(query: str, options: TypeDBOptions | None = None) -> Numeric
 ----
 
 ==== Description
@@ -225,7 +225,7 @@ transaction.query.match_aggregate(query, options)
 
 [source,python]
 ----
-abstract match_group(query: str, options: TypeDBOptions | None = None) -> Iterator[ConceptMapGroup]
+match_group(query: str, options: TypeDBOptions | None = None) -> Iterator[ConceptMapGroup]
 ----
 
 ==== Description
@@ -260,7 +260,7 @@ transaction.query.match_group(query, options)
 
 [source,python]
 ----
-abstract match_group_aggregate(query: str, options: TypeDBOptions | None = None) -> Iterator[NumericGroup]
+match_group_aggregate(query: str, options: TypeDBOptions | None = None) -> Iterator[NumericGroup]
 ----
 
 ==== Description
@@ -295,7 +295,7 @@ transaction.query.match_group_aggregate(query, options)
 
 [source,python]
 ----
-abstract undefine(query: str, options: TypeDBOptions = None) -> None
+undefine(query: str, options: TypeDBOptions = None) -> None
 ----
 
 ==== Description
@@ -330,7 +330,7 @@ transaction.query.undefine(query, options)
 
 [source,python]
 ----
-abstract update(query: str, options: TypeDBOptions | None = None) -> Iterator[ConceptMap]
+update(query: str, options: TypeDBOptions | None = None) -> Iterator[ConceptMap]
 ----
 
 ==== Description

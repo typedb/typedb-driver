@@ -15,7 +15,7 @@ Provides access for all Concept API methods.
 
 [source,python]
 ----
-abstract get_attribute(iid: str) -> Attribute
+get_attribute(iid: str) -> Attribute
 ----
 
 ==== Description
@@ -49,7 +49,7 @@ transaction.concepts.get_attribute(iid)
 
 [source,python]
 ----
-abstract get_attribute_type(label: str) -> AttributeType
+get_attribute_type(label: str) -> AttributeType
 ----
 
 ==== Description
@@ -83,7 +83,7 @@ transaction.concepts.get_attribute_type(label)
 
 [source,python]
 ----
-abstract get_entity(iid: str) -> Entity
+get_entity(iid: str) -> Entity
 ----
 
 ==== Description
@@ -117,7 +117,7 @@ transaction.concepts.get_entity(iid)
 
 [source,python]
 ----
-abstract get_entity_type(label: str) -> EntityType
+get_entity_type(label: str) -> EntityType
 ----
 
 ==== Description
@@ -151,7 +151,7 @@ transaction.concepts.get_entity_type(label)
 
 [source,python]
 ----
-abstract get_relation(iid: str) -> Relation
+get_relation(iid: str) -> Relation
 ----
 
 ==== Description
@@ -185,7 +185,7 @@ transaction.concepts.get_relation(iid)
 
 [source,python]
 ----
-abstract get_relation_type(label: str) -> RelationType
+get_relation_type(label: str) -> RelationType
 ----
 
 ==== Description
@@ -219,7 +219,7 @@ transaction.concepts.get_relation_type(label)
 
 [source,python]
 ----
-abstract get_root_attribute_type() -> AttributeType
+get_root_attribute_type() -> AttributeType
 ----
 
 ==== Description
@@ -244,7 +244,7 @@ transaction.concepts.get_root_attribute_type()
 
 [source,python]
 ----
-abstract get_root_entity_type() -> EntityType
+get_root_entity_type() -> EntityType
 ----
 
 ==== Description
@@ -269,7 +269,7 @@ transaction.concepts.get_root_entity_type()
 
 [source,python]
 ----
-abstract get_root_relation_type() -> RelationType
+get_root_relation_type() -> RelationType
 ----
 
 ==== Description
@@ -294,7 +294,7 @@ transaction.concepts.get_root_relation_type()
 
 [source,python]
 ----
-abstract get_schema_exception() -> list[TypeDBException]
+get_schema_exception() -> list[TypeDBException]
 ----
 
 ==== Description
@@ -319,14 +319,12 @@ transaction.concepts.get_schema_exception()
 
 [source,python]
 ----
-abstract put_attribute_type(label: str, value_type: ValueType) -> AttributeType
+put_attribute_type(label: str, value_type: ValueType) -> AttributeType
 ----
 
 ==== Description
 
 Creates a new ``AttributeType`` if none exists with the given label, or retrieves the existing one.
-
-or retrieve. :return:
 
 ==== Input parameters
 
@@ -335,7 +333,7 @@ or retrieve. :return:
 |===
 |Name |Description |Type |Default Value
 a| `label` a| The label of the ``AttributeType`` to create or retrieve a| `str` a| 
-a| `value_type` a| The value type of the ``AttributeType`` to create a| `ValueType` a| 
+a| `value_type` a| The value type of the ``AttributeType`` to create or retrieve. a| `ValueType` a| 
 |===
 
 ==== Returns
@@ -356,7 +354,7 @@ transaction.concepts.put_attribute_type(label, value_type)
 
 [source,python]
 ----
-abstract put_entity_type(label: str) -> EntityType
+put_entity_type(label: str) -> EntityType
 ----
 
 ==== Description
@@ -390,7 +388,7 @@ transaction.concepts.put_entity_type(label)
 
 [source,python]
 ----
-abstract put_relation_type(label: str) -> RelationType
+put_relation_type(label: str) -> RelationType
 ----
 
 ==== Description

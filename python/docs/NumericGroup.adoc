@@ -15,7 +15,7 @@ Contains an element of the group aggregate query result.
 
 [source,python]
 ----
-abstract numeric() -> Numeric
+numeric() -> Numeric
 ----
 
 ==== Description
@@ -40,7 +40,7 @@ numeric_group.numeric()
 
 [source,python]
 ----
-abstract owner() -> Concept
+owner() -> Concept
 ----
 
 ==== Description

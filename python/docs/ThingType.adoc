@@ -15,7 +15,7 @@
 
 [source,python]
 ----
-abstract get_instances(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Thing]
+get_instances(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Thing]
 ----
 
 ==== Description
@@ -51,7 +51,7 @@ thing_type.get_instances(transaction, Transitivity.EXPLICIT)
 
 [source,python]
 ----
-abstract get_owns(transaction: TypeDBTransaction, value_type: ValueType | None = None, transitivity: Transitivity = Transitivity.TRANSITIVE, annotations: set[Annotation] | None = None) -> Iterator[AttributeType]
+get_owns(transaction: TypeDBTransaction, value_type: ValueType | None = None, transitivity: Transitivity = Transitivity.TRANSITIVE, annotations: set[Annotation] | None = None) -> Iterator[AttributeType]
 ----
 
 ==== Description
@@ -91,7 +91,7 @@ thing_type.get_owns(transaction, value_type,
 
 [source,python]
 ----
-abstract get_owns_overridden(transaction: TypeDBTransaction, attribute_type: AttributeType) -> AttributeType | None
+get_owns_overridden(transaction: TypeDBTransaction, attribute_type: AttributeType) -> AttributeType | None
 ----
 
 ==== Description
@@ -126,7 +126,7 @@ thing_type.get_owns_overridden(transaction, attribute_type)
 
 [source,python]
 ----
-abstract get_plays(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[RoleType]
+get_plays(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[RoleType]
 ----
 
 ==== Description
@@ -162,7 +162,7 @@ thing_type.get_plays(transaction, Transitivity.EXPLICIT)
 
 [source,python]
 ----
-abstract get_plays_overridden(transaction: TypeDBTransaction, role_type: RoleType) -> RoleType | None
+get_plays_overridden(transaction: TypeDBTransaction, role_type: RoleType) -> RoleType | None
 ----
 
 ==== Description
@@ -197,7 +197,7 @@ thing_type.get_plays_overridden(transaction, role_type)
 
 [source,python]
 ----
-abstract get_subtypes(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[ThingType]
+get_subtypes(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[ThingType]
 ----
 
 ==== Description
@@ -233,7 +233,7 @@ thing_type.get_subtypes(transaction, Transitivity.EXPLICIT)
 
 [source,python]
 ----
-abstract get_supertype(transaction: TypeDBTransaction) -> ThingType | None
+get_supertype(transaction: TypeDBTransaction) -> ThingType | None
 ----
 
 ==== Description
@@ -267,7 +267,7 @@ thing_type.get_supertype(transaction)
 
 [source,python]
 ----
-abstract get_supertypes(transaction: TypeDBTransaction) -> Iterator[ThingType]
+get_supertypes(transaction: TypeDBTransaction) -> Iterator[ThingType]
 ----
 
 ==== Description
@@ -301,7 +301,7 @@ thing_type.get_supertypes(transaction)
 
 [source,python]
 ----
-abstract get_syntax(transaction: TypeDBTransaction) -> str
+get_syntax(transaction: TypeDBTransaction) -> str
 ----
 
 ==== Description
@@ -360,7 +360,7 @@ thing_type.is_thing_type()
 
 [source,python]
 ----
-abstract set_abstract(transaction: TypeDBTransaction) -> None
+set_abstract(transaction: TypeDBTransaction) -> None
 ----
 
 ==== Description
@@ -394,7 +394,7 @@ thing_type.set_abstract(transaction)
 
 [source,python]
 ----
-abstract set_owns(transaction: TypeDBTransaction, attribute_type: AttributeType, overridden_type: AttributeType | None = None, annotations: set[Annotation] | None = None) -> None
+set_owns(transaction: TypeDBTransaction, attribute_type: AttributeType, overridden_type: AttributeType | None = None, annotations: set[Annotation] | None = None) -> None
 ----
 
 ==== Description
@@ -434,7 +434,7 @@ thing_type.set_owns(transaction, attribute_type,
 
 [source,python]
 ----
-abstract set_plays(transaction: TypeDBTransaction, role_type: RoleType, overriden_type: RoleType | None = None) -> None
+set_plays(transaction: TypeDBTransaction, role_type: RoleType, overriden_type: RoleType | None = None) -> None
 ----
 
 ==== Description
@@ -471,7 +471,7 @@ thing_type.set_plays(transaction, role_type, overridden_type)
 
 [source,python]
 ----
-abstract unset_abstract(transaction: TypeDBTransaction) -> None
+unset_abstract(transaction: TypeDBTransaction) -> None
 ----
 
 ==== Description
@@ -505,7 +505,7 @@ thing_type.unset_abstract(transaction)
 
 [source,python]
 ----
-abstract unset_owns(transaction: TypeDBTransaction, attribute_type: AttributeType) -> None
+unset_owns(transaction: TypeDBTransaction, attribute_type: AttributeType) -> None
 ----
 
 ==== Description
@@ -540,7 +540,7 @@ thing_type.unset_owns(transaction, attribute_type)
 
 [source,python]
 ----
-abstract unset_plays(transaction: TypeDBTransaction, role_type: RoleType) -> None
+unset_plays(transaction: TypeDBTransaction, role_type: RoleType) -> None
 ----
 
 ==== Description

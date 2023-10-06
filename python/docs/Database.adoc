@@ -22,7 +22,7 @@ a| `name` a| `str` a| The database name as a string.
 
 [source,python]
 ----
-abstract delete() -> None
+delete() -> None
 ----
 
 ==== Description
@@ -47,7 +47,7 @@ database.delete()
 
 [source,python]
 ----
-abstract preferred_replica() -> Replica | None
+preferred_replica() -> Replica | None
 ----
 
 ==== Description
@@ -72,7 +72,7 @@ database.preferred_replica()
 
 [source,python]
 ----
-abstract primary_replica() -> Replica | None
+primary_replica() -> Replica | None
 ----
 
 ==== Description
@@ -97,7 +97,7 @@ database.primary_replica()
 
 [source,python]
 ----
-abstract replicas() -> set[typedb.api.connection.database.Replica]
+replicas() -> set[typedb.api.connection.database.Replica]
 ----
 
 ==== Description
@@ -147,7 +147,7 @@ database.rule_schema()
 
 [source,python]
 ----
-abstract schema() -> str
+schema() -> str
 ----
 
 ==== Description

@@ -23,7 +23,7 @@ a| `users` a| `UserManager` a| The ``UserManager`` instance for this connection,
 
 [source,python]
 ----
-abstract close() -> None
+close() -> None
 ----
 
 ==== Description
@@ -48,7 +48,7 @@ driver.close()
 
 [source,python]
 ----
-abstract is_open() -> bool
+is_open() -> bool
 ----
 
 ==== Description
@@ -73,7 +73,7 @@ driver.is_open()
 
 [source,python]
 ----
-abstract session(database: str, session_type: SessionType, options: TypeDBOptions | None = None) -> TypeDBSession
+session(database: str, session_type: SessionType, options: TypeDBOptions | None = None) -> TypeDBSession
 ----
 
 ==== Description
@@ -109,7 +109,7 @@ driver.session(database, session_type, options)
 
 [source,python]
 ----
-abstract user() -> User
+user() -> User
 ----
 
 ==== Description

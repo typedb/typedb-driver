@@ -44,7 +44,7 @@ entity_type.as_entity_type()
 
 [source,python]
 ----
-abstract create(transaction: TypeDBTransaction) -> Entity
+create(transaction: TypeDBTransaction) -> Entity
 ----
 
 ==== Description
@@ -78,7 +78,7 @@ entity_type.create(transaction)
 
 [source,python]
 ----
-abstract get_instances(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Entity]
+get_instances(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Entity]
 ----
 
 ==== Description
@@ -113,7 +113,7 @@ entity_type.get_instances(transaction, transitivity)
 
 [source,python]
 ----
-abstract get_subtypes(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[EntityType]
+get_subtypes(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[EntityType]
 ----
 
 ==== Description
@@ -173,7 +173,7 @@ entity_type.is_entity_type()
 
 [source,python]
 ----
-abstract set_supertype(transaction: TypeDBTransaction, super_entity_type: EntityType) -> None
+set_supertype(transaction: TypeDBTransaction, super_entity_type: EntityType) -> None
 ----
 
 ==== Description

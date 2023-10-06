@@ -15,7 +15,7 @@ Provides methods for manipulating rules in the database.
 
 [source,python]
 ----
-abstract get_rule(label: str) -> Rule | None
+get_rule(label: str) -> Rule | None
 ----
 
 ==== Description
@@ -49,7 +49,7 @@ transaction.logic.get_rule(label)
 
 [source,python]
 ----
-abstract get_rules() -> Iterator[Rule]
+get_rules() -> Iterator[Rule]
 ----
 
 ==== Description
@@ -74,7 +74,7 @@ transaction.logic.get_rules()
 
 [source,python]
 ----
-abstract put_rule(label: str, when: str, then: str) -> Rule
+put_rule(label: str, when: str, then: str) -> Rule
 ----
 
 ==== Description

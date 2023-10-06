@@ -15,7 +15,7 @@ Stores an aggregate query answer.
 
 [source,python]
 ----
-abstract as_float() -> float
+as_float() -> float
 ----
 
 ==== Description
@@ -40,7 +40,7 @@ numeric.as_float()
 
 [source,python]
 ----
-abstract as_int() -> int
+as_int() -> int
 ----
 
 ==== Description
@@ -65,7 +65,7 @@ numeric.as_int()
 
 [source,python]
 ----
-abstract is_float() -> bool
+is_float() -> bool
 ----
 
 ==== Description
@@ -90,7 +90,7 @@ numeric.is_float()
 
 [source,python]
 ----
-abstract is_int() -> bool
+is_int() -> bool
 ----
 
 ==== Description
@@ -115,7 +115,7 @@ numeric.is_int()
 
 [source,python]
 ----
-abstract is_nan() -> bool
+is_nan() -> bool
 ----
 
 ==== Description

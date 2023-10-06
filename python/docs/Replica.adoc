@@ -15,7 +15,7 @@ The metadata and state of an individual raft replica of a database.
 
 [source,python]
 ----
-abstract address() -> str
+address() -> str
 ----
 
 ==== Description
@@ -33,7 +33,7 @@ Retrieves address of the server hosting this replica
 
 [source,python]
 ----
-abstract database() -> Database
+database() -> Database
 ----
 
 ==== Description
@@ -51,7 +51,7 @@ Retrieves the database for which this is a replica
 
 [source,python]
 ----
-abstract is_preferred() -> bool
+is_preferred() -> bool
 ----
 
 ==== Description
@@ -69,7 +69,7 @@ Checks whether this is the preferred replica of the raft cluster. If true, Opera
 
 [source,python]
 ----
-abstract is_primary() -> bool
+is_primary() -> bool
 ----
 
 ==== Description
@@ -87,7 +87,7 @@ Checks whether this is the primary replica of the raft cluster.
 
 [source,python]
 ----
-abstract term() -> int
+term() -> int
 ----
 
 ==== Description

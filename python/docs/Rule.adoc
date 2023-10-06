@@ -28,7 +28,7 @@ a| `when` a| `str` a| The statements that constitute the ‘when’ of the rule.
 
 [source,python]
 ----
-abstract delete(transaction: TypeDBTransaction) -> None
+delete(transaction: TypeDBTransaction) -> None
 ----
 
 ==== Description
@@ -62,7 +62,7 @@ rule.delete(transaction)
 
 [source,python]
 ----
-abstract is_deleted(transaction: TypeDBTransaction) -> bool
+is_deleted(transaction: TypeDBTransaction) -> bool
 ----
 
 ==== Description
@@ -96,7 +96,7 @@ rule.is_deleted(transaction)
 
 [source,python]
 ----
-abstract set_label(transaction: TypeDBTransaction, new_label: str) -> None
+set_label(transaction: TypeDBTransaction, new_label: str) -> None
 ----
 
 ==== Description

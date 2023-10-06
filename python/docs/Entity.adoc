@@ -46,7 +46,7 @@ entity.as_entity()
 
 [source,python]
 ----
-abstract get_type() -> EntityType
+get_type() -> EntityType
 ----
 
 ==== Description

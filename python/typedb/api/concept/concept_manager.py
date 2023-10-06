@@ -175,7 +175,7 @@ class ConceptManager(ABC):
 
         :param label: The label of the ``AttributeType`` to create or retrieve
         :param value_type: The value type of the ``AttributeType`` to create
-        or retrieve.
+            or retrieve.
         :return:
 
         Examples

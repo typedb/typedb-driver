@@ -46,7 +46,7 @@ attribute.as_attribute()
 
 [source,python]
 ----
-abstract as_boolean() -> bool
+as_boolean() -> bool
 ----
 
 ==== Description
@@ -71,7 +71,7 @@ attribute.as_boolean()
 
 [source,python]
 ----
-abstract as_datetime() -> datetime
+as_datetime() -> datetime
 ----
 
 ==== Description
@@ -96,7 +96,7 @@ attribute.as_boolean()
 
 [source,python]
 ----
-abstract as_double() -> float
+as_double() -> float
 ----
 
 ==== Description
@@ -121,7 +121,7 @@ attribute.as_boolean()
 
 [source,python]
 ----
-abstract as_long() -> int
+as_long() -> int
 ----
 
 ==== Description
@@ -146,7 +146,7 @@ attribute.as_long()
 
 [source,python]
 ----
-abstract as_string() -> str
+as_string() -> str
 ----
 
 ==== Description
@@ -171,7 +171,7 @@ attribute.as_boolean()
 
 [source,python]
 ----
-abstract get_owners(transaction: TypeDBTransaction, owner_type: ThingType | None = None) -> Iterator[Thing]
+get_owners(transaction: TypeDBTransaction, owner_type: ThingType | None = None) -> Iterator[Thing]
 ----
 
 ==== Description
@@ -207,7 +207,7 @@ attribute.get_owners(transaction, owner_type)
 
 [source,python]
 ----
-abstract get_type() -> AttributeType
+get_type() -> AttributeType
 ----
 
 ==== Description
@@ -232,7 +232,7 @@ attribute.get_type()
 
 [source,python]
 ----
-abstract get_value() -> bool | int | float | str | datetime
+get_value() -> bool | int | float | str | datetime
 ----
 
 ==== Description
@@ -257,7 +257,7 @@ attribute.get_value()
 
 [source,python]
 ----
-abstract get_value_type() -> ValueType
+get_value_type() -> ValueType
 ----
 
 ==== Description
@@ -307,7 +307,7 @@ attribute.is_attribute()
 
 [source,python]
 ----
-abstract is_boolean() -> bool
+is_boolean() -> bool
 ----
 
 ==== Description
@@ -332,7 +332,7 @@ attribute.is_boolean()
 
 [source,python]
 ----
-abstract is_datetime() -> bool
+is_datetime() -> bool
 ----
 
 ==== Description
@@ -357,7 +357,7 @@ attribute.is_datetime()
 
 [source,python]
 ----
-abstract is_double() -> bool
+is_double() -> bool
 ----
 
 ==== Description
@@ -382,7 +382,7 @@ attribute.is_double()
 
 [source,python]
 ----
-abstract is_long() -> bool
+is_long() -> bool
 ----
 
 ==== Description
@@ -407,7 +407,7 @@ attribute.is_long()
 
 [source,python]
 ----
-abstract is_string() -> bool
+is_string() -> bool
 ----
 
 ==== Description
@@ -432,7 +432,7 @@ attribute.is_string()
 
 [source,python]
 ----
-abstract to_json() -> Mapping[str, str | int | float | bool]
+to_json() -> Mapping[str, str | int | float | bool]
 ----
 
 ==== Description

@@ -40,7 +40,7 @@ thing.as_thing()
 
 [source,python]
 ----
-abstract delete(transaction: TypeDBTransaction) -> None
+delete(transaction: TypeDBTransaction) -> None
 ----
 
 ==== Description
@@ -74,7 +74,7 @@ thing.delete(transaction)
 
 [source,python]
 ----
-abstract get_has(transaction: TypeDBTransaction, attribute_type: AttributeType = None, attribute_types: list[AttributeType] = None, annotations: set[Annotation] = frozenset({})) -> Iterator[Attribute]
+get_has(transaction: TypeDBTransaction, attribute_type: AttributeType = None, attribute_types: list[AttributeType] = None, annotations: set[Annotation] = frozenset({})) -> Iterator[Attribute]
 ----
 
 ==== Description
@@ -113,7 +113,7 @@ thing.get_has(transaction, attribute_type=attribute_type,
 
 [source,python]
 ----
-abstract get_iid() -> str
+get_iid() -> str
 ----
 
 ==== Description
@@ -138,7 +138,7 @@ thing.get_iid()
 
 [source,python]
 ----
-abstract get_playing(transaction: TypeDBTransaction) -> Iterator[RoleType]
+get_playing(transaction: TypeDBTransaction) -> Iterator[RoleType]
 ----
 
 ==== Description
@@ -172,7 +172,7 @@ thing.get_playing(transaction)
 
 [source,python]
 ----
-abstract get_relations(transaction: TypeDBTransaction, role_types: list[RoleType] = None)
+get_relations(transaction: TypeDBTransaction, role_types: list[RoleType] = None)
 ----
 
 ==== Description
@@ -207,7 +207,7 @@ thing.get_relations(transaction, role_types)
 
 [source,python]
 ----
-abstract get_type() -> ThingType
+get_type() -> ThingType
 ----
 
 ==== Description
@@ -232,7 +232,7 @@ thing.get_type()
 
 [source,python]
 ----
-abstract is_deleted(transaction: TypeDBTransaction) -> bool
+is_deleted(transaction: TypeDBTransaction) -> bool
 ----
 
 ==== Description
@@ -266,7 +266,7 @@ thing.is_deleted(transaction)
 
 [source,python]
 ----
-abstract is_inferred() -> bool
+is_inferred() -> bool
 ----
 
 ==== Description
@@ -316,7 +316,7 @@ thing.is_thing()
 
 [source,python]
 ----
-abstract set_has(transaction: TypeDBTransaction, attribute: Attribute) -> None
+set_has(transaction: TypeDBTransaction, attribute: Attribute) -> None
 ----
 
 ==== Description
@@ -376,7 +376,7 @@ thing.to_json()
 
 [source,python]
 ----
-abstract unset_has(transaction: TypeDBTransaction, attribute: Attribute) -> None
+unset_has(transaction: TypeDBTransaction, attribute: Attribute) -> None
 ----
 
 ==== Description

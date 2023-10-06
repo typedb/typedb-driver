@@ -26,7 +26,7 @@ a| `transaction_type` a| `TransactionType` a| The transaction’s type (READ or 
 
 [source,python]
 ----
-abstract close() -> None
+close() -> None
 ----
 
 ==== Description
@@ -51,7 +51,7 @@ transaction.close()
 
 [source,python]
 ----
-abstract commit() -> None
+commit() -> None
 ----
 
 ==== Description
@@ -76,7 +76,7 @@ transaction.commit()
 
 [source,python]
 ----
-abstract is_open() -> bool
+is_open() -> bool
 ----
 
 ==== Description
@@ -101,7 +101,7 @@ transaction.is_open()
 
 [source,python]
 ----
-abstract on_close(function: callable) -> None
+on_close(function: callable) -> None
 ----
 
 ==== Description
@@ -135,7 +135,7 @@ transaction.on_close(function)
 
 [source,python]
 ----
-abstract rollback() -> None
+rollback() -> None
 ----
 
 ==== Description

@@ -23,7 +23,7 @@ a| `type` a| `SessionType` a| The current session’s type (SCHEMA or DATA)
 
 [source,python]
 ----
-abstract close() -> None
+close() -> None
 ----
 
 ==== Description
@@ -48,7 +48,7 @@ session.close()
 
 [source,python]
 ----
-abstract database_name() -> str
+database_name() -> str
 ----
 
 ==== Description
@@ -73,7 +73,7 @@ session.database_name()
 
 [source,python]
 ----
-abstract is_open() -> bool
+is_open() -> bool
 ----
 
 ==== Description
@@ -98,7 +98,7 @@ session.is_open()
 
 [source,python]
 ----
-abstract on_close(function: callable) -> None
+on_close(function: callable) -> None
 ----
 
 ==== Description
@@ -132,7 +132,7 @@ session.on_close(function)
 
 [source,python]
 ----
-abstract transaction(transaction_type: TransactionType, options: TypeDBOptions = None) -> TypeDBTransaction
+transaction(transaction_type: TransactionType, options: TypeDBOptions = None) -> TypeDBTransaction
 ----
 
 ==== Description

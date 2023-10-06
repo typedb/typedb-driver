@@ -15,7 +15,7 @@
 
 [source,python]
 ----
-abstract as_boolean() -> bool
+as_boolean() -> bool
 ----
 
 ==== Description
@@ -40,7 +40,7 @@ value.as_boolean()
 
 [source,python]
 ----
-abstract as_datetime() -> datetime
+as_datetime() -> datetime
 ----
 
 ==== Description
@@ -65,7 +65,7 @@ value.as_datetime()
 
 [source,python]
 ----
-abstract as_double() -> float
+as_double() -> float
 ----
 
 ==== Description
@@ -90,7 +90,7 @@ value.as_double()
 
 [source,python]
 ----
-abstract as_long() -> int
+as_long() -> int
 ----
 
 ==== Description
@@ -115,7 +115,7 @@ value.as_long()
 
 [source,python]
 ----
-abstract as_string() -> str
+as_string() -> str
 ----
 
 ==== Description
@@ -165,7 +165,7 @@ value.as_value()
 
 [source,python]
 ----
-abstract get() -> bool | int | float | str | datetime
+get() -> bool | int | float | str | datetime
 ----
 
 ==== Description
@@ -190,7 +190,7 @@ value.get()
 
 [source,python]
 ----
-abstract get_value_type() -> ValueType
+get_value_type() -> ValueType
 ----
 
 ==== Description
@@ -215,7 +215,7 @@ value.get_value_type()
 
 [source,python]
 ----
-abstract is_boolean() -> bool
+is_boolean() -> bool
 ----
 
 ==== Description
@@ -240,7 +240,7 @@ value.is_boolean()
 
 [source,python]
 ----
-abstract is_datetime() -> bool
+is_datetime() -> bool
 ----
 
 ==== Description
@@ -265,7 +265,7 @@ value.is_datetime()
 
 [source,python]
 ----
-abstract is_double() -> bool
+is_double() -> bool
 ----
 
 ==== Description
@@ -290,7 +290,7 @@ value.is_double()
 
 [source,python]
 ----
-abstract is_long() -> bool
+is_long() -> bool
 ----
 
 ==== Description
@@ -315,7 +315,7 @@ value.is_long()
 
 [source,python]
 ----
-abstract is_string() -> bool
+is_string() -> bool
 ----
 
 ==== Description

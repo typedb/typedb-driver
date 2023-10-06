@@ -15,7 +15,7 @@ User information
 
 [source,python]
 ----
-abstract password_expiry_seconds() -> int | None
+password_expiry_seconds() -> int | None
 ----
 
 ==== Description
@@ -33,7 +33,7 @@ Returns the number of seconds remaining till this user’s current password expi
 
 [source,python]
 ----
-abstract password_update(password_old: str, password_new: str) -> None
+password_update(password_old: str, password_new: str) -> None
 ----
 
 ==== Description
@@ -61,7 +61,7 @@ a| `password_new` a| The new password a| `str` a|
 
 [source,python]
 ----
-abstract username() -> str
+username() -> str
 ----
 
 ==== Description

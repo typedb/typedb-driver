@@ -561,7 +561,7 @@ concept.is_value()
 
 [source,python]
 ----
-abstract to_json() -> Mapping[str, str | int | float | bool | datetime]
+to_json() -> Mapping[str, str | int | float | bool | datetime]
 ----
 
 ==== Description

@@ -15,7 +15,7 @@ Contains an element of the group query result.
 
 [source,python]
 ----
-abstract concept_maps() -> Iterator[ConceptMap]
+concept_maps() -> Iterator[ConceptMap]
 ----
 
 ==== Description
@@ -40,7 +40,7 @@ concept_map_group.concept_maps()
 
 [source,python]
 ----
-abstract owner() -> Concept
+owner() -> Concept
 ----
 
 ==== Description

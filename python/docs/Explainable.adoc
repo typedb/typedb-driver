@@ -15,7 +15,7 @@ Contains an explainable object.
 
 [source,python]
 ----
-abstract conjunction() -> str
+conjunction() -> str
 ----
 
 ==== Description
@@ -40,7 +40,7 @@ explainable.conjunction()
 
 [source,python]
 ----
-abstract id() -> int
+id() -> int
 ----
 
 ==== Description

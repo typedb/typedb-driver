@@ -15,7 +15,7 @@ Contains a mapping of variables to concepts.
 
 [source,python]
 ----
-abstract conjunction() -> str
+conjunction() -> str
 ----
 
 ==== Description
@@ -40,7 +40,7 @@ explainable.conjunction()
 
 [source,python]
 ----
-abstract id() -> int
+id() -> int
 ----
 
 ==== Description
@@ -65,7 +65,7 @@ explainable.id()
 
 [source,python]
 ----
-abstract attribute(variable: str) -> Explainable
+attribute(variable: str) -> Explainable
 ----
 
 ==== Description
@@ -99,7 +99,7 @@ concept_map.explainables().attribute(variable)
 
 [source,python]
 ----
-abstract attributes() -> Mapping[str, Explainable]
+attributes() -> Mapping[str, Explainable]
 ----
 
 ==== Description
@@ -124,7 +124,7 @@ concept_map.explainables().attributes()
 
 [source,python]
 ----
-abstract ownership(owner: str, attribute: str) -> Explainable
+ownership(owner: str, attribute: str) -> Explainable
 ----
 
 ==== Description
@@ -159,7 +159,7 @@ concept_map.explainables().ownership(owner, attribute)
 
 [source,python]
 ----
-abstract ownerships() -> Mapping[tuple[str, str], Explainable]
+ownerships() -> Mapping[tuple[str, str], Explainable]
 ----
 
 ==== Description
@@ -184,7 +184,7 @@ concept_map.explainables().ownerships()
 
 [source,python]
 ----
-abstract relation(variable: str) -> Explainable
+relation(variable: str) -> Explainable
 ----
 
 ==== Description
@@ -218,7 +218,7 @@ concept_map.explainables().relation(variable)
 
 [source,python]
 ----
-abstract relations() -> Mapping[str, Explainable]
+relations() -> Mapping[str, Explainable]
 ----
 
 ==== Description
@@ -243,7 +243,7 @@ concept_map.explainables().relations()
 
 [source,python]
 ----
-abstract concepts() -> Iterator[Concept]
+concepts() -> Iterator[Concept]
 ----
 
 ==== Description
@@ -268,7 +268,7 @@ concept_map.concepts()
 
 [source,python]
 ----
-abstract explainables() -> Explainables
+explainables() -> Explainables
 ----
 
 ==== Description
@@ -293,7 +293,7 @@ concept_map.explainables()
 
 [source,python]
 ----
-abstract get(variable: str) -> Concept
+get(variable: str) -> Concept
 ----
 
 ==== Description
@@ -352,7 +352,7 @@ concept_map.to_json()
 
 [source,python]
 ----
-abstract variables() -> Iterator[str]
+variables() -> Iterator[str]
 ----
 
 ==== Description
