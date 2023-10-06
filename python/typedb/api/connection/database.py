@@ -213,7 +213,7 @@ class DatabaseManager(ABC):
         ---------
         ::
 
-            driver.databases().get(name)
+            driver.databases.get(name)
         """
         pass
 
@@ -229,7 +229,7 @@ class DatabaseManager(ABC):
         ---------
         ::
 
-            driver.databases().contains(name)
+            driver.databases.contains(name)
         """
         pass
 
@@ -245,7 +245,7 @@ class DatabaseManager(ABC):
         ---------
         ::
 
-            driver.databases().create(name)
+            driver.databases.create(name)
         """
         pass
 
@@ -260,6 +260,6 @@ class DatabaseManager(ABC):
         ---------
         ::
 
-            driver.databases().all()
+            driver.databases.all()
         """
         pass

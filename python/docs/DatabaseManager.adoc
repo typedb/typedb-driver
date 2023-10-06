@@ -30,7 +30,7 @@ Retrieves all databases present on the TypeDB server
 
 [source,python]
 ----
-driver.databases().all()
+driver.databases.all()
 ----
 
 [#_contains]
@@ -64,7 +64,7 @@ a| `name` a| The database name to be checked a| `str` a|
 
 [source,python]
 ----
-driver.databases().contains(name)
+driver.databases.contains(name)
 ----
 
 [#_create]
@@ -98,7 +98,7 @@ a| `name` a| The name of the database to be created a| `str` a|
 
 [source,python]
 ----
-driver.databases().create(name)
+driver.databases.create(name)
 ----
 
 [#_get]
@@ -132,7 +132,7 @@ a| `name` a| The name of the database to retrieve a| `str` a|
 
 [source,python]
 ----
-driver.databases().get(name)
+driver.databases.get(name)
 ----
 
 // end::methods[]

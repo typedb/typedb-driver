@@ -39,7 +39,7 @@ a| `iid` a| The iid of the `Attribute` to retrieve a| `str` a|
 
 [source,python]
 ----
-transaction.concepts().get_attribute(iid)
+transaction.concepts.get_attribute(iid)
 ----
 
 [#_get_attribute_type]
@@ -73,7 +73,7 @@ a| `label` a| The label of the `AttributeType` to retrieve a| `str` a|
 
 [source,python]
 ----
-transaction.concepts().get_attribute_type(label)
+transaction.concepts.get_attribute_type(label)
 ----
 
 [#_get_entity]
@@ -107,7 +107,7 @@ a| `iid` a| The iid of the `Entity` to retrieve a| `str` a|
 
 [source,python]
 ----
-transaction.concepts().get_entity(iid)
+transaction.concepts.get_entity(iid)
 ----
 
 [#_get_entity_type]
@@ -141,7 +141,7 @@ a| `label` a| The label of the `EntityType` to retrieve a| `str` a|
 
 [source,python]
 ----
-transaction.concepts().get_entity_type(label)
+transaction.concepts.get_entity_type(label)
 ----
 
 [#_get_relation]
@@ -175,7 +175,7 @@ a| `iid` a| The iid of the `Relation` to retrieve a| `str` a|
 
 [source,python]
 ----
-transaction.concepts().get_relation(iid)
+transaction.concepts.get_relation(iid)
 ----
 
 [#_get_relation_type]
@@ -209,7 +209,7 @@ a| `label` a| The label of the `RelationType` to retrieve a| `str` a|
 
 [source,python]
 ----
-transaction.concepts().get_relation_type(label)
+transaction.concepts.get_relation_type(label)
 ----
 
 [#_get_root_attribute_type]
@@ -234,7 +234,7 @@ Retrieve the root `AttributeType`, “attribute”.
 
 [source,python]
 ----
-transaction.concepts().get_root_attribute_type()
+transaction.concepts.get_root_attribute_type()
 ----
 
 [#_get_root_entity_type]
@@ -259,7 +259,7 @@ Retrieves the root `EntityType`, “entity”.
 
 [source,python]
 ----
-transaction.concepts().get_root_entity_type()
+transaction.concepts.get_root_entity_type()
 ----
 
 [#_get_root_relation_type]
@@ -284,7 +284,7 @@ Retrieve the root `RelationType`, “relation”.
 
 [source,python]
 ----
-transaction.concepts().get_root_relation_type()
+transaction.concepts.get_root_relation_type()
 ----
 
 [#_get_schema_exception]
@@ -309,7 +309,7 @@ Retrieves a list of all exceptions for the current transaction.
 
 [source,python]
 ----
-transaction.concepts().get_schema_exception()
+transaction.concepts.get_schema_exception()
 ----
 
 [#_put_attribute_type]
@@ -346,7 +346,7 @@ a| `value_type` a| The value type of the `AttributeType` to create a| `ValueType
 
 [source,python]
 ----
-transaction.concepts().put_attribute_type(label, value_type)
+transaction.concepts.put_attribute_type(label, value_type)
 ----
 
 [#_put_entity_type]
@@ -380,7 +380,7 @@ a| `label` a| The label of the `EntityType` to create or retrieve a| `str` a|
 
 [source,python]
 ----
-transaction.concepts().put_entity_type(label)
+transaction.concepts.put_entity_type(label)
 ----
 
 [#_put_relation_type]
@@ -414,7 +414,7 @@ a| `label` a| The label of the `RelationType` to create or retrieve a| `str` a|
 
 [source,python]
 ----
-transaction.concepts().put_relation_type(label)
+transaction.concepts.put_relation_type(label)
 ----
 
 // end::methods[]
