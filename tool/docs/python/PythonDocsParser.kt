@@ -56,8 +56,6 @@ fun main(args: Array<String>) {
                 val outputFile = docsDir.resolve("${parsedClass.name}.adoc").toFile()
                 outputFile.createNewFile()
                 outputFile.writeText(parsedClassAsciiDoc)
-            } else {
-                println("Empty class: ${parsedClass.name}")
             }
         }
     }
@@ -71,7 +69,7 @@ fun parseClass(element: Element): Class {
     val classDetailsParagraphs = classDetails!!.children().map { it }.filter { it.tagName() == "p" }
     val (descr, bases) = classDetailsParagraphs.partition { it.select("code.py-class").isNullOrEmpty() }
     val superClasses = bases[0]!!.text().substringAfter("Bases: ").split(", ")
-        .filter { it != "ABC" && it != "Enum" && it != "object" && it != "Generic[T]" && !it.startsWith("NativeWrapper") }
+        .filter { it != "ABC" && it != "object" && it != "Generic[T]" && !it.startsWith("NativeWrapper") }
     val classDescr = descr.map { reformatTextWithCode(it.html()) }
 
     val classExamples = element.select("dl.class > dt.sig-object + dd > section:contains(Example) > div > .highlight")
@@ -100,7 +98,6 @@ fun parseEnum(element: Element): Class {
     val classDetails = classSignElement.nextElementSibling()
     val classDetailsParagraphs = classDetails!!.children().map { it }.filter { it.tagName() == "p" }
     val (descr, bases) = classDetailsParagraphs.partition { it.select("code.py-class").isNullOrEmpty() }
-    val classBases = bases[0]!!.select("span").map { it.html() }
     val classDescr = descr.map { reformatTextWithCode(it.html()) }
 
     val classExamples = element.select("section:contains(Examples) .highlight").map { it.text() }
@@ -114,7 +111,6 @@ fun parseEnum(element: Element): Class {
         enumConstants = members,
         examples = classExamples,
         methods = methods,
-        superClasses = classBases,
     )
 }
 

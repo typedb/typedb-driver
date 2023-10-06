@@ -182,7 +182,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-            await transaction.concepts().put_attribute_type(label, value_type)
+            transaction.concepts().put_attribute_type(label, value_type)
         """
         pass
 

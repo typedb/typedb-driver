@@ -1,10 +1,6 @@
 [#_TransactionType]
 = TransactionType
 
-*Supertypes:*
-
-* `Enum`
-
 == Description
 
 This class is used to specify the type of transaction.

@@ -346,7 +346,7 @@ a| `value_type` a| The value type of the `AttributeType` to create a| `ValueType
 
 [source,python]
 ----
-await transaction.concepts().put_attribute_type(label, value_type)
+transaction.concepts().put_attribute_type(label, value_type)
 ----
 
 [#_put_entity_type]

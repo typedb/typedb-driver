@@ -1,10 +1,6 @@
 [#_ValueType]
 = ValueType
 
-*Supertypes:*
-
-* `Enum`
-
 == Description
 
 TypeQL value types for attributes &amp; value concepts.
