@@ -20,7 +20,7 @@
 #
 
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, List
 
 
 class User(ABC):
@@ -80,7 +80,7 @@ class UserManager(ABC):
     @abstractmethod
     def create(self, username: str, password: str) -> None:
         """
-        Create a user with the given name & password.
+        Create a user with the given name and password.
 
         :param username: The name of the user to be created
         :param password: The password of the user to be created
@@ -127,7 +127,7 @@ class UserManager(ABC):
         pass
 
     @abstractmethod
-    def all(self) -> list[User]:
+    def all(self) -> List[User]:
         """
         Retrieves all users which exist on the TypeDB server.
 

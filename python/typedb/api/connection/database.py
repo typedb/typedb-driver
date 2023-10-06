@@ -22,7 +22,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, List, Set
 
 
 class Database(ABC):
@@ -94,7 +94,7 @@ class Database(ABC):
         pass
 
     @abstractmethod
-    def replicas(self) -> set[Replica]:
+    def replicas(self) -> Set[Replica]:
         """
         Set of ``Replica`` instances for this database.
         *Only works in TypeDB Enterprise*
@@ -250,7 +250,7 @@ class DatabaseManager(ABC):
         pass
 
     @abstractmethod
-    def all(self) -> list[Database]:
+    def all(self) -> List[Database]:
         """
         Retrieves all databases present on the TypeDB server
 
