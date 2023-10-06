@@ -31,7 +31,7 @@ data class Variable(
     fun toAsciiDocAsField(language: String): String {
         var result = ""
         result += "a| `${this.name}` "
-        result += "a| `${this.type}` "
+        result += "a| `${this.type?.replace("|", "\\|")}` "
         result += "a| ${this.description ?: ""}\n"
         return result
     }

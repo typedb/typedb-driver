@@ -15,7 +15,7 @@ It consists of an optional ‘scope’, and a ‘name’, represented “scope:n
 |===
 |Name |Type |Description
 a| `name` a| `str` a| The name part of the label
-a| `scope` a| `str | None` a| The scope part of the label
+a| `scope` a| `str \| None` a| The scope part of the label
 |===
 // end::properties[]
 
