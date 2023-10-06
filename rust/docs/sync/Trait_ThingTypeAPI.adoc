@@ -321,7 +321,7 @@ Result<BoxStream<'_, Result<AttributeType>>>
 
 [source,rust]
 ----
-thing_type.get_owns(transaction, Some(value_type), Transitivity::EXPLICIT, vec![Annotation::Key]);
+thing_type.get_owns(transaction, Some(value_type), Transitivity::Explicit, vec![Annotation::Key]);
 ----
 
 [#_trait_ThingTypeAPI_method_get_owns_overridden]
@@ -493,7 +493,7 @@ Result<BoxStream<'_, Result<RoleType>>>
 
 [source,rust]
 ----
-thing_type.get_plays(transaction, Transitivity::EXPLICIT);
+thing_type.get_plays(transaction, Transitivity::Explicit);
 ----
 
 [#_trait_ThingTypeAPI_method_get_plays_overridden]

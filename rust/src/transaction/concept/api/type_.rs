@@ -172,11 +172,11 @@ pub trait ThingTypeAPI: Sync + Send {
     /// ```rust
     #[cfg_attr(
         feature = "sync",
-        doc = "thing_type.get_owns(transaction, Some(value_type), Transitivity::EXPLICIT, vec![Annotation::Key]);"
+        doc = "thing_type.get_owns(transaction, Some(value_type), Transitivity::Explicit, vec![Annotation::Key]);"
     )]
     #[cfg_attr(
         not(feature = "sync"),
-        doc = "thing_type.get_owns(transaction, Some(value_type), Transitivity::EXPLICIT, vec![Annotation::Key]).await;"
+        doc = "thing_type.get_owns(transaction, Some(value_type), Transitivity::Explicit, vec![Annotation::Key]).await;"
     )]
     /// ```
     fn get_owns(
@@ -291,8 +291,8 @@ pub trait ThingTypeAPI: Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "thing_type.get_plays(transaction, Transitivity::EXPLICIT);")]
-    #[cfg_attr(not(feature = "sync"), doc = "thing_type.get_plays(transaction, Transitivity::EXPLICIT).await;")]
+    #[cfg_attr(feature = "sync", doc = "thing_type.get_plays(transaction, Transitivity::Explicit);")]
+    #[cfg_attr(not(feature = "sync"), doc = "thing_type.get_plays(transaction, Transitivity::Explicit).await;")]
     /// ```
     fn get_plays(
         &self,
@@ -552,8 +552,8 @@ pub trait EntityTypeAPI: ThingTypeAPI + Clone + Into<EntityType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "entity_type.get_instances(transaction, Transitivity::EXPLICIT);")]
-    #[cfg_attr(not(feature = "sync"), doc = "entity_type.get_instances(transaction, Transitivity::EXPLICIT).await;")]
+    #[cfg_attr(feature = "sync", doc = "entity_type.get_instances(transaction, Transitivity::Explicit);")]
+    #[cfg_attr(not(feature = "sync"), doc = "entity_type.get_instances(transaction, Transitivity::Explicit).await;")]
     /// ```
     fn get_instances(
         &self,

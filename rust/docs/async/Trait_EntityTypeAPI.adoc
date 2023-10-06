@@ -277,7 +277,7 @@ Result<BoxStream<'_, Result<Entity>>>
 
 [source,rust]
 ----
-entity_type.get_instances(transaction, Transitivity::EXPLICIT).await;
+entity_type.get_instances(transaction, Transitivity::Explicit).await;
 ----
 
 // end::methods[]

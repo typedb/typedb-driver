@@ -8,6 +8,7 @@ This enum is used to specify the type of transaction.
 // tag::enum_constants[]
 == Enum variants
 
+[cols="~,~"]
 [options="header"]
 |===
 |Name |Type 
