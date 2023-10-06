@@ -3,20 +3,21 @@
 
 == Description
 
-TypeQL value types for attributes &amp; value concepts.
+TypeQL value types for attributes and value concepts.
 
 // tag::enum_constants[]
 == Enum constants
 
+[cols="~,~"]
 [options="header"]
 |===
 |Name |Value 
-a| `BOOLEAN` a| `<typedb.api.concept.value.value._ValueType object>`
-a| `DATETIME` a| `<typedb.api.concept.value.value._ValueType object>`
-a| `DOUBLE` a| `<typedb.api.concept.value.value._ValueType object>`
-a| `LONG` a| `<typedb.api.concept.value.value._ValueType object>`
-a| `OBJECT` a| `<typedb.api.concept.value.value._ValueType object>`
-a| `STRING` a| `<typedb.api.concept.value.value._ValueType object>`
+a| `BOOLEAN` a| `_ValueType(is_writable=True, is_keyable=False, 1)`
+a| `DATETIME` a| `_ValueType(is_writable=True, is_keyable=True, 5)`
+a| `DOUBLE` a| `_ValueType(is_writable=True, is_keyable=False, 3)`
+a| `LONG` a| `_ValueType(is_writable=True, is_keyable=True, 2)`
+a| `OBJECT` a| `_ValueType(is_writable=False, is_keyable=False, 0)`
+a| `STRING` a| `_ValueType(is_writable=True, is_keyable=True, 4)`
 |===
 // end::enum_constants[]
 

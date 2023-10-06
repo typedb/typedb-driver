@@ -287,9 +287,12 @@ class _ValueType:
     def is_keyable(self) -> bool:
         return self._is_keyable
 
+    def __repr__(self):
+        return f"_ValueType(is_writable={self._is_writable}, is_keyable={self._is_keyable}, {self._native_object})"
+
 
 class ValueType(Enum):
-    """ TypeQL value types for attributes & value concepts. """
+    """ TypeQL value types for attributes and value concepts. """
     OBJECT = _ValueType(False, False, Object)
     BOOLEAN = _ValueType(True, False, Boolean)
     LONG = _ValueType(True, True, Long)
