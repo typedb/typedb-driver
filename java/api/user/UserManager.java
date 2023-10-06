@@ -42,7 +42,7 @@ public interface UserManager {
     boolean contains(String username);
 
     /**
-     * Create a user with the given name &amp; password.
+     * Creates a user with the given name &amp; password.
      *
      * <h3>Examples</h3>
      * <pre>
@@ -67,7 +67,7 @@ public interface UserManager {
     void delete(String username);
 
     /**
-     * Retrieve a user with the given name.
+     * Retrieves a user with the given name.
      *
      * <h3>Examples</h3>
      * <pre>

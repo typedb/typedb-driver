@@ -59,7 +59,7 @@ void create​(java.lang.String username,
 
 ==== Description
 
-Create a user with the given name &amp; password. 
+Creates a user with the given name &amp; password. 
 
 
 ==== Input parameters
@@ -131,7 +131,7 @@ User get​(java.lang.String username)
 
 ==== Description
 
-Retrieve a user with the given name. 
+Retrieves a user with the given name. 
 
 
 ==== Input parameters

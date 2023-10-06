@@ -25,7 +25,7 @@ import javax.annotation.CheckReturnValue;
 import java.util.Optional;
 
 /**
- *  `User` class
+ *  TypeDB user information
  */
 public interface User {
     /**

@@ -38,7 +38,7 @@ Returns an array containing the constants of this enum type, in the order they a
 [source,java]
 ----
 for (Value.Type c : Value.Type.values())
-&nbsp;   System.out.println(c);
+    System.out.println(c);
 
 ----
 

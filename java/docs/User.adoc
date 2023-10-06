@@ -5,7 +5,7 @@
 
 == Description
 
-`User` class
+TypeDB user information
 
 == Methods
 

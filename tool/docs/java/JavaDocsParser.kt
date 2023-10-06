@@ -145,7 +145,8 @@ fun parseMethod(element: Element): Method {
     val allArgs = getArgsFromSignature(methodSignature)
     val methodReturnType = getReturnTypeFromSignature(methodSignature)
     var methodDescr: List<String> = element.selectFirst("li.blockList > pre ~ div:not(div:has(.descfrmTypeLabel))")
-        ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
+        ?.let { splitToParagraphs(it.html()) }
+        ?.map { replaceSpaces(reformatTextWithCode(it.substringBefore("<h"))) } ?: listOf()
     val methodExamples = element.select("li.blockList > pre + div pre").map { replaceSpaces(it.text()) }
 
     val methodArgs = element

@@ -3,7 +3,7 @@
 
 == Description
 
-User information
+TypeDB user information
 
 == Methods
 

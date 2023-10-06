@@ -24,7 +24,7 @@ from typing import Optional, List
 
 
 class User(ABC):
-    """User information"""
+    """TypeDB user information"""
 
     @abstractmethod
     def username(self) -> str:
