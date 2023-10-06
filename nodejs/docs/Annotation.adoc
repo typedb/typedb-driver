@@ -50,7 +50,7 @@ parse(string): Annotation
 
 ==== Description
 
-Returns the relevant `Annotation` given the name as a string
+Returns the relevant ``Annotation`` given the name as a string
 
 ==== Input parameters
 

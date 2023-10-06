@@ -23,7 +23,7 @@ boolean isLong()
 
 ==== Description
 
-Checks if the type of an aggregate answer is a `long`. 
+Checks if the type of an aggregate answer is a ``long``. 
 
 
 ==== Returns
@@ -50,7 +50,7 @@ boolean isDouble()
 
 ==== Description
 
-Checks if the type of an aggregate answer is a `double`. 
+Checks if the type of an aggregate answer is a ``double``. 
 
 
 ==== Returns
@@ -104,7 +104,7 @@ long asLong()
 
 ==== Description
 
-Retrieves numeric value of an aggregate answer as a `long`. 
+Retrieves numeric value of an aggregate answer as a ``long``. 
 
 
 ==== Returns
@@ -131,7 +131,7 @@ double asDouble()
 
 ==== Description
 
-Retrieves numeric value of an aggregate answer as a `double`. 
+Retrieves numeric value of an aggregate answer as a ``double``. 
 
 
 ==== Returns

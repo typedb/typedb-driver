@@ -28,7 +28,7 @@ as_relation_type() -> RelationType
 
 ==== Description
 
-Casts the concept to `RelationType`.
+Casts the concept to ``RelationType``.
 
 ==== Returns
 
@@ -53,7 +53,7 @@ abstract create(transaction: TypeDBTransaction) -> Relation
 
 ==== Description
 
-Creates and returns an instance of this `RelationType`.
+Creates and returns an instance of this ``RelationType``.
 
 ==== Input parameters
 
@@ -87,7 +87,7 @@ abstract get_instances(transaction: TypeDBTransaction, transitivity: Transitivit
 
 ==== Description
 
-Retrieves all direct and indirect (or direct only) `Relation`s that are instances of this `RelationType`.
+Retrieves all direct and indirect (or direct only) ``Relation``s that are instances of this ``RelationType``.
 
 ==== Input parameters
 
@@ -96,7 +96,7 @@ Retrieves all direct and indirect (or direct only) `Relation`s that are instance
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect instances, `Transitivity.EXPLICIT` for direct relates only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect instances, ``Transitivity.EXPLICIT`` for direct relates only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
 ==== Returns
@@ -122,7 +122,7 @@ abstract get_relates(transaction: TypeDBTransaction, role_label: str | None = No
 
 ==== Description
 
-Retrieves roles that this `RelationType` relates to directly or via inheritance. If `role_label` is given, returns a corresponding `RoleType` or `None`.
+Retrieves roles that this ``RelationType`` relates to directly or via inheritance. If ``role_label`` is given, returns a corresponding ``RoleType`` or ``None``.
 
 ==== Input parameters
 
@@ -132,7 +132,7 @@ Retrieves roles that this `RelationType` relates to directly or via inheritance.
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 a| `role_label` a| Label of the role we wish to retrieve (optional) a| `str \| None` a| `None`
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and inherited relates, `Transitivity.EXPLICIT` for direct relates only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited relates, ``Transitivity.EXPLICIT`` for direct relates only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
 ==== Returns
@@ -158,7 +158,7 @@ abstract get_relates_overridden(transaction: TypeDBTransaction, role_label: str)
 
 ==== Description
 
-Retrieves a `RoleType` that is overridden by the role with the `role_label`.
+Retrieves a ``RoleType`` that is overridden by the role with the ``role_label``.
 
 ==== Input parameters
 
@@ -193,7 +193,7 @@ abstract get_subtypes(transaction: TypeDBTransaction, transitivity: Transitivity
 
 ==== Description
 
-Retrieves all direct and indirect (or direct only) subtypes of the `RelationType`.
+Retrieves all direct and indirect (or direct only) subtypes of the ``RelationType``.
 
 ==== Input parameters
 
@@ -202,7 +202,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the `RelationType
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect subtypes, `Transitivity.EXPLICIT` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
 ==== Returns
@@ -228,7 +228,7 @@ is_relation_type() -> bool
 
 ==== Description
 
-Checks if the concept is a `RelationType`.
+Checks if the concept is a ``RelationType``.
 
 ==== Returns
 
@@ -253,7 +253,7 @@ abstract set_relates(transaction: TypeDBTransaction, role_label: str, overridden
 
 ==== Description
 
-Sets the new role that this `RelationType` relates to. If we are setting an overriding type this way, we have to also pass the overridden type as a second argument.
+Sets the new role that this ``RelationType`` relates to. If we are setting an overriding type this way, we have to also pass the overridden type as a second argument.
 
 ==== Input parameters
 
@@ -262,7 +262,7 @@ Sets the new role that this `RelationType` relates to. If we are setting an over
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `role_label` a| The new role for the `RelationType` to relate to a| `str` a| 
+a| `role_label` a| The new role for the ``RelationType`` to relate to a| `str` a| 
 a| `overridden_label` a| The label being overridden, if applicable a| `str \| None` a| `None`
 |===
 
@@ -290,7 +290,7 @@ abstract set_supertype(transaction: TypeDBTransaction, super_relation_type: Rela
 
 ==== Description
 
-Sets the supplied `RelationType` as the supertype of the current `RelationType`.
+Sets the supplied ``RelationType`` as the supertype of the current ``RelationType``.
 
 ==== Input parameters
 
@@ -299,7 +299,7 @@ Sets the supplied `RelationType` as the supertype of the current `RelationType`.
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `super_relation_type` a| The `RelationType` to set as the supertype of this `RelationType` a| `RelationType` a| 
+a| `super_relation_type` a| The ``RelationType`` to set as the supertype of this ``RelationType`` a| `RelationType` a| 
 |===
 
 ==== Returns
@@ -325,7 +325,7 @@ abstract unset_relates(transaction: TypeDBTransaction, role_label: str) -> None
 
 ==== Description
 
-Disallows this `RelationType` from relating to the given role.
+Disallows this ``RelationType`` from relating to the given role.
 
 ==== Input parameters
 

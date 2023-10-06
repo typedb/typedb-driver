@@ -24,7 +24,7 @@ default boolean isThingType()
 
 ==== Description
 
-Checks if the concept is a `ThingType`. 
+Checks if the concept is a ``ThingType``. 
 
 
 ==== Returns
@@ -51,7 +51,7 @@ default ThingType asThingType()
 
 ==== Description
 
-Casts the concept to `ThingType`. 
+Casts the concept to ``ThingType``. 
 
 
 ==== Returns
@@ -150,10 +150,10 @@ java.util.stream.Stream<? extends ThingType> getSubtypes​(TypeDBTransaction tr
 
 ==== Description
 
-Retrieves all direct and indirect subtypes of the type. Equivalent to `getSubtypes(transaction, Transitivity.TRANSITIVE)`
+Retrieves all direct and indirect subtypes of the type. Equivalent to ``getSubtypes(transaction, Transitivity.TRANSITIVE)``
 
 
-See also: `Type.getSubtypes(TypeDBTransaction, Transitivity)`
+See also: ``Type.getSubtypes(TypeDBTransaction, Transitivity)``
 
 
 ==== Returns
@@ -184,7 +184,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the type.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect subtypes, `Transitivity.EXPLICIT` for direct subtypes only a| `Concept.Transitivity` 
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Concept.Transitivity` 
 |===
 
 ==== Returns
@@ -212,10 +212,10 @@ java.util.stream.Stream<? extends Thing> getInstances​(TypeDBTransaction trans
 
 ==== Description
 
-Retrieves all `Thing` objects that are instances of this `ThingType` or its subtypes. Equivalent to `getInstances(transaction, Transitivity.TRANSITIVE)`
+Retrieves all ``Thing`` objects that are instances of this ``ThingType`` or its subtypes. Equivalent to ``getInstances(transaction, Transitivity.TRANSITIVE)``
 
 
-See also: <<#_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,`getInstances(TypeDBTransaction, Transitivity)`>>
+See also: <<#_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getInstances(TypeDBTransaction, Transitivity)``>>
 
 
 ==== Returns
@@ -236,7 +236,7 @@ java.util.stream.Stream<? extends Thing> getInstances​(TypeDBTransaction trans
 
 ==== Description
 
-Retrieves `Thing` objects that are instances of this exact `ThingType`, OR this `ThingType` and any of its subtypes 
+Retrieves ``Thing`` objects that are instances of this exact ``ThingType``, OR this ``ThingType`` and any of its subtypes 
 
 
 ==== Input parameters
@@ -246,7 +246,7 @@ Retrieves `Thing` objects that are instances of this exact `ThingType`, OR this 
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `transitivity` a| `Transitivity.EXPLICIT` for direct instances only, `Transitivity.TRANSITIVE` to include instances of subtypes a| `Concept.Transitivity` 
+a| `transitivity` a| ``Transitivity.EXPLICIT`` for direct instances only, ``Transitivity.TRANSITIVE`` to include instances of subtypes a| `Concept.Transitivity` 
 |===
 
 ==== Returns
@@ -273,7 +273,7 @@ void setAbstract​(TypeDBTransaction transaction)
 
 ==== Description
 
-Set a `ThingType` to be abstract, meaning it cannot have instances. 
+Set a ``ThingType`` to be abstract, meaning it cannot have instances. 
 
 
 ==== Input parameters
@@ -308,7 +308,7 @@ void unsetAbstract​(TypeDBTransaction transaction)
 
 ==== Description
 
-Set a `ThingType` to be non-abstract, meaning it can have instances. 
+Set a ``ThingType`` to be non-abstract, meaning it can have instances. 
 
 
 ==== Input parameters
@@ -344,10 +344,10 @@ void setPlays​(TypeDBTransaction transaction,
 
 ==== Description
 
-Allows the instances of this `ThingType` to play the given role.
+Allows the instances of this ``ThingType`` to play the given role.
 
 
-See also: <<#_setPlays_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType_com_vaticle_typedb_driver_api_concept_type_RoleType,`setPlays(TypeDBTransaction, RoleType, RoleType)`>>
+See also: <<#_setPlays_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType_com_vaticle_typedb_driver_api_concept_type_RoleType,``setPlays(TypeDBTransaction, RoleType, RoleType)``>>
 
 
 ==== Returns
@@ -368,7 +368,7 @@ void setPlays​(TypeDBTransaction transaction,
 
 ==== Description
 
-Allows the instances of this `ThingType` to play the given role. 
+Allows the instances of this ``ThingType`` to play the given role. 
 
 
 ==== Input parameters
@@ -409,7 +409,7 @@ void setOwns​(TypeDBTransaction transaction,
 
 ==== Description
 
-Allows the instances of this `ThingType` to own the given `AttributeType`. Optionally, overriding a previously declared ownership. Optionally, adds annotations to the ownership. 
+Allows the instances of this ``ThingType`` to own the given ``AttributeType``. Optionally, overriding a previously declared ownership. Optionally, adds annotations to the ownership. 
 
 
 ==== Input parameters
@@ -419,8 +419,8 @@ Allows the instances of this `ThingType` to own the given `AttributeType`. Optio
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeType` a| The `AttributeType` to be owned by the instances of this type. a| `AttributeType` 
-a| `overriddenType` a| The `AttributeType` that this attribute ownership overrides, if applicable. a| `AttributeType` 
+a| `attributeType` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType` 
+a| `overriddenType` a| The ``AttributeType`` that this attribute ownership overrides, if applicable. a| `AttributeType` 
 a| `annotations` a| Adds annotations to the ownership. a| `java.util.Set<ThingType.Annotation>` 
 |===
 
@@ -450,10 +450,10 @@ void setOwns​(TypeDBTransaction transaction,
 
 ==== Description
 
-Allows the instances of this `ThingType` to own the given `AttributeType`,
+Allows the instances of this ``ThingType`` to own the given ``AttributeType``,
 
 
-See also: <<#_setOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType_com_vaticle_typedb_driver_api_concept_type_AttributeType_java_util_Set,`setOwns(TypeDBTransaction, AttributeType, AttributeType, Set)`>>
+See also: <<#_setOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType_com_vaticle_typedb_driver_api_concept_type_AttributeType_java_util_Set,``setOwns(TypeDBTransaction, AttributeType, AttributeType, Set)``>>
 
 
 ==== Returns
@@ -474,10 +474,10 @@ void setOwns​(TypeDBTransaction transaction,
 
 ==== Description
 
-Allows the instances of this `ThingType` to own the given `AttributeType`.
+Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
 
 
-See also: <<#_setOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType_com_vaticle_typedb_driver_api_concept_type_AttributeType_java_util_Set,`setOwns(TypeDBTransaction, AttributeType, AttributeType, Set)`>>
+See also: <<#_setOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType_com_vaticle_typedb_driver_api_concept_type_AttributeType_java_util_Set,``setOwns(TypeDBTransaction, AttributeType, AttributeType, Set)``>>
 
 
 ==== Returns
@@ -497,10 +497,10 @@ void setOwns​(TypeDBTransaction transaction,
 
 ==== Description
 
-Allows the instances of this `ThingType` to own the given `AttributeType`.
+Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
 
 
-See also: <<#_setOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType_com_vaticle_typedb_driver_api_concept_type_AttributeType_java_util_Set,`setOwns(TypeDBTransaction, AttributeType, AttributeType, Set)`>>
+See also: <<#_setOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType_com_vaticle_typedb_driver_api_concept_type_AttributeType_java_util_Set,``setOwns(TypeDBTransaction, AttributeType, AttributeType, Set)``>>
 
 
 ==== Returns
@@ -520,10 +520,10 @@ java.util.stream.Stream<? extends RoleType> getPlays​(TypeDBTransaction transa
 
 ==== Description
 
-Retrieves all direct and inherited roles that are allowed to be played by the instances of this `ThingType`.
+Retrieves all direct and inherited roles that are allowed to be played by the instances of this ``ThingType``.
 
 
-See also: <<#_getPlays_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,`getPlays(TypeDBTransaction, Transitivity)`>>
+See also: <<#_getPlays_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getPlays(TypeDBTransaction, Transitivity)``>>
 
 
 ==== Returns
@@ -544,7 +544,7 @@ java.util.stream.Stream<? extends RoleType> getPlays​(TypeDBTransaction transa
 
 ==== Description
 
-Retrieves all direct and inherited (or direct only) roles that are allowed to be played by the instances of this `ThingType`. 
+Retrieves all direct and inherited (or direct only) roles that are allowed to be played by the instances of this ``ThingType``. 
 
 
 ==== Input parameters
@@ -554,7 +554,7 @@ Retrieves all direct and inherited (or direct only) roles that are allowed to be
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `transitivity` a| transitivity: `Transitivity.TRANSITIVE` for direct and indirect playing, `Transitivity.EXPLICIT` for direct playing only a| `Concept.Transitivity` 
+a| `transitivity` a| transitivity: ``Transitivity.TRANSITIVE`` for direct and indirect playing, ``Transitivity.EXPLICIT`` for direct playing only a| `Concept.Transitivity` 
 |===
 
 ==== Returns
@@ -583,7 +583,7 @@ RoleType getPlaysOverridden​(TypeDBTransaction transaction,
 
 ==== Description
 
-Retrieves a `RoleType` that is overridden by the given `role_type` for this `ThingType`. 
+Retrieves a ``RoleType`` that is overridden by the given ``role_type`` for this ``ThingType``. 
 
 
 ==== Input parameters
@@ -593,7 +593,7 @@ Retrieves a `RoleType` that is overridden by the given `role_type` for this `Thi
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `roleType` a| The `RoleType` that overrides an inherited role a| `RoleType` 
+a| `roleType` a| The ``RoleType`` that overrides an inherited role a| `RoleType` 
 |===
 
 ==== Returns
@@ -620,10 +620,10 @@ java.util.stream.Stream<? extends AttributeType> getOwns​(TypeDBTransaction tr
 
 ==== Description
 
-Retrieves `AttributeType` that the instances of this `ThingType` are allowed to own directly or via inheritance.
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
 
 
-See also: <<#_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type_java_util_Set_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,`getOwns(TypeDBTransaction, Value.Type, Set, Transitivity)`>>
+See also: <<#_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type_java_util_Set_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getOwns(TypeDBTransaction, Value.Type, Set, Transitivity)``>>
 
 
 ==== Returns
@@ -644,10 +644,10 @@ java.util.stream.Stream<? extends AttributeType> getOwns​(TypeDBTransaction tr
 
 ==== Description
 
-Retrieves `AttributeType` that the instances of this `ThingType` are allowed to own directly or via inheritance.
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
 
 
-See also: <<#_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type_java_util_Set_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,`getOwns(TypeDBTransaction, Value.Type, Set, Transitivity)`>>
+See also: <<#_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type_java_util_Set_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getOwns(TypeDBTransaction, Value.Type, Set, Transitivity)``>>
 
 
 ==== Returns
@@ -668,10 +668,10 @@ java.util.stream.Stream<? extends AttributeType> getOwns​(TypeDBTransaction tr
 
 ==== Description
 
-Retrieves `AttributeType` that the instances of this `ThingType` are allowed to own directly or via inheritance.
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
 
 
-See also: <<#_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type_java_util_Set_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,`getOwns(TypeDBTransaction, Value.Type, Set, Transitivity)`>>
+See also: <<#_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type_java_util_Set_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getOwns(TypeDBTransaction, Value.Type, Set, Transitivity)``>>
 
 
 ==== Returns
@@ -693,10 +693,10 @@ java.util.stream.Stream<? extends AttributeType> getOwns​(TypeDBTransaction tr
 
 ==== Description
 
-Retrieves `AttributeType` that the instances of this `ThingType` are allowed to own directly or via inheritance.
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
 
 
-See also: <<#_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type_java_util_Set_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,`getOwns(TypeDBTransaction, Value.Type, Set, Transitivity)`>>
+See also: <<#_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type_java_util_Set_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getOwns(TypeDBTransaction, Value.Type, Set, Transitivity)``>>
 
 
 ==== Returns
@@ -717,10 +717,10 @@ java.util.stream.Stream<? extends AttributeType> getOwns​(TypeDBTransaction tr
 
 ==== Description
 
-Retrieves `AttributeType` that the instances of this `ThingType` are allowed to own directly or via inheritance.
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
 
 
-See also: <<#_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type_java_util_Set_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,`getOwns(TypeDBTransaction, Value.Type, Set, Transitivity)`>>
+See also: <<#_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type_java_util_Set_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getOwns(TypeDBTransaction, Value.Type, Set, Transitivity)``>>
 
 
 ==== Returns
@@ -742,10 +742,10 @@ java.util.stream.Stream<? extends AttributeType> getOwns​(TypeDBTransaction tr
 
 ==== Description
 
-Retrieves `AttributeType` that the instances of this `ThingType` are allowed to own directly or via inheritance.
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
 
 
-See also: <<#_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type_java_util_Set_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,`getOwns(TypeDBTransaction, Value.Type, Set, Transitivity)`>>
+See also: <<#_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type_java_util_Set_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getOwns(TypeDBTransaction, Value.Type, Set, Transitivity)``>>
 
 
 ==== Returns
@@ -767,10 +767,10 @@ java.util.stream.Stream<? extends AttributeType> getOwns​(TypeDBTransaction tr
 
 ==== Description
 
-Retrieves `AttributeType` that the instances of this `ThingType` are allowed to own directly or via inheritance.
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
 
 
-See also: <<#_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type_java_util_Set_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,`getOwns(TypeDBTransaction, Value.Type, Set, Transitivity)`>>
+See also: <<#_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type_java_util_Set_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getOwns(TypeDBTransaction, Value.Type, Set, Transitivity)``>>
 
 
 ==== Returns
@@ -793,7 +793,7 @@ java.util.stream.Stream<? extends AttributeType> getOwns​(TypeDBTransaction tr
 
 ==== Description
 
-Retrieves `AttributeType` that the instances of this `ThingType` are allowed to own directly or via inheritance. 
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance. 
 
 
 ==== Input parameters
@@ -803,8 +803,8 @@ Retrieves `AttributeType` that the instances of this `ThingType` are allowed to 
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `valueType` a| If specified, only attribute types of this `ValueType` will be retrieved. a| `Value.Type` 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and inherited ownership, `Transitivity.EXPLICIT` for direct ownership only a| `Concept.Transitivity` 
+a| `valueType` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `Value.Type` 
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited ownership, ``Transitivity.EXPLICIT`` for direct ownership only a| `Concept.Transitivity` 
 a| `annotations` a| Only retrieve attribute types owned with annotations. a| `java.util.Set<ThingType.Annotation>` 
 |===
 
@@ -834,7 +834,7 @@ AttributeType getOwnsOverridden​(TypeDBTransaction transaction,
 
 ==== Description
 
-Retrieves an `AttributeType`, ownership of which is overridden for this `ThingType` by a given `attribute_type`. 
+Retrieves an ``AttributeType``, ownership of which is overridden for this ``ThingType`` by a given ``attribute_type``. 
 
 
 ==== Input parameters
@@ -844,7 +844,7 @@ Retrieves an `AttributeType`, ownership of which is overridden for this `ThingTy
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeType` a| The `AttributeType` that overrides requested `AttributeType` a| `AttributeType` 
+a| `attributeType` a| The ``AttributeType`` that overrides requested ``AttributeType`` a| `AttributeType` 
 |===
 
 ==== Returns
@@ -871,7 +871,7 @@ void unsetPlays​(TypeDBTransaction transaction,
 
 ==== Description
 
-Disallows the instances of this `ThingType` from playing the given role. 
+Disallows the instances of this ``ThingType`` from playing the given role. 
 
 
 ==== Input parameters
@@ -908,7 +908,7 @@ void unsetOwns​(TypeDBTransaction transaction,
 
 ==== Description
 
-Disallows the instances of this `ThingType` from owning the given `AttributeType`. 
+Disallows the instances of this ``ThingType`` from owning the given ``AttributeType``. 
 
 
 ==== Input parameters
@@ -918,7 +918,7 @@ Disallows the instances of this `ThingType` from owning the given `AttributeType
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeType` a| The `AttributeType` to not be owned by the type. a| `AttributeType` 
+a| `attributeType` a| The ``AttributeType`` to not be owned by the type. a| `AttributeType` 
 |===
 
 ==== Returns
@@ -945,7 +945,7 @@ java.lang.String getSyntax​(TypeDBTransaction transaction)
 
 ==== Description
 
-Produces a pattern for creating this `ThingType` in a `define` query. 
+Produces a pattern for creating this ``ThingType`` in a ``define`` query. 
 
 
 ==== Input parameters
@@ -980,7 +980,7 @@ default Attribute asAttribute()
 
 ==== Description
 
-Casts the concept to `Attribute`. 
+Casts the concept to ``Attribute``. 
 
 
 ==== Returns
@@ -1006,7 +1006,7 @@ default AttributeType asAttributeType()
 
 ==== Description
 
-Casts the concept to `AttributeType`. 
+Casts the concept to ``AttributeType``. 
 
 
 ==== Returns
@@ -1032,7 +1032,7 @@ default Entity asEntity()
 
 ==== Description
 
-Casts the concept to `Entity`. 
+Casts the concept to ``Entity``. 
 
 
 ==== Returns
@@ -1058,7 +1058,7 @@ default EntityType asEntityType()
 
 ==== Description
 
-Casts the concept to `EntityType`. 
+Casts the concept to ``EntityType``. 
 
 
 ==== Returns
@@ -1084,7 +1084,7 @@ default Relation asRelation()
 
 ==== Description
 
-Casts the concept to `Relation`. 
+Casts the concept to ``Relation``. 
 
 
 ==== Returns
@@ -1110,7 +1110,7 @@ default RelationType asRelationType()
 
 ==== Description
 
-Casts the concept to `RelationType`. 
+Casts the concept to ``RelationType``. 
 
 
 ==== Returns
@@ -1136,7 +1136,7 @@ default RoleType asRoleType()
 
 ==== Description
 
-Casts the concept to `RoleType`. 
+Casts the concept to ``RoleType``. 
 
 
 ==== Returns
@@ -1162,7 +1162,7 @@ default Thing asThing()
 
 ==== Description
 
-Casts the concept to `Thing`. 
+Casts the concept to ``Thing``. 
 
 
 ==== Returns
@@ -1188,7 +1188,7 @@ default Value asValue()
 
 ==== Description
 
-Casts the concept to `Value`. 
+Casts the concept to ``Value``. 
 
 
 ==== Returns
@@ -1215,7 +1215,7 @@ default boolean isAttribute()
 
 ==== Description
 
-Checks if the concept is an `Attribute`. 
+Checks if the concept is an ``Attribute``. 
 
 
 ==== Returns
@@ -1242,7 +1242,7 @@ default boolean isAttributeType()
 
 ==== Description
 
-Checks if the concept is an `AttributeType`. 
+Checks if the concept is an ``AttributeType``. 
 
 
 ==== Returns
@@ -1269,7 +1269,7 @@ default boolean isEntity()
 
 ==== Description
 
-Checks if the concept is an `Entity`. 
+Checks if the concept is an ``Entity``. 
 
 
 ==== Returns
@@ -1296,7 +1296,7 @@ default boolean isEntityType()
 
 ==== Description
 
-Checks if the concept is an `EntityType`. 
+Checks if the concept is an ``EntityType``. 
 
 
 ==== Returns
@@ -1323,7 +1323,7 @@ default boolean isRelation()
 
 ==== Description
 
-Checks if the concept is a `Relation`. 
+Checks if the concept is a ``Relation``. 
 
 
 ==== Returns
@@ -1350,7 +1350,7 @@ default boolean isRelationType()
 
 ==== Description
 
-Checks if the concept is a `RelationType`. 
+Checks if the concept is a ``RelationType``. 
 
 
 ==== Returns
@@ -1377,7 +1377,7 @@ default boolean isRoleType()
 
 ==== Description
 
-Checks if the concept is a `RoleType`. 
+Checks if the concept is a ``RoleType``. 
 
 
 ==== Returns
@@ -1404,7 +1404,7 @@ default boolean isThing()
 
 ==== Description
 
-Checks if the concept is a `Thing`. 
+Checks if the concept is a ``Thing``. 
 
 
 ==== Returns
@@ -1431,7 +1431,7 @@ default boolean isValue()
 
 ==== Description
 
-Checks if the concept is a `Value`. 
+Checks if the concept is a ``Value``. 
 
 
 ==== Returns

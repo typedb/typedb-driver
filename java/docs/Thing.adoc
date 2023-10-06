@@ -23,7 +23,7 @@ java.lang.String getIID()
 
 ==== Description
 
-Retrieves the unique id of the `Thing`. 
+Retrieves the unique id of the ``Thing``. 
 
 
 ==== Returns
@@ -50,7 +50,7 @@ ThingType getType()
 
 ==== Description
 
-Retrieves the type which this `Thing` belongs to. 
+Retrieves the type which this ``Thing`` belongs to. 
 
 
 ==== Returns
@@ -77,7 +77,7 @@ boolean isInferred()
 
 ==== Description
 
-Checks if this `Thing` is inferred by a [Reasoning Rule]. 
+Checks if this ``Thing`` is inferred by a [Reasoning Rule]. 
 
 
 ==== Returns
@@ -104,7 +104,7 @@ default boolean isThing()
 
 ==== Description
 
-Checks if the concept is a `Thing`. 
+Checks if the concept is a ``Thing``. 
 
 
 ==== Returns
@@ -131,7 +131,7 @@ default Thing asThing()
 
 ==== Description
 
-Casts the concept to `Thing`. 
+Casts the concept to ``Thing``. 
 
 
 ==== Returns
@@ -157,7 +157,7 @@ default com.eclipsesource.json.JsonObject toJSON()
 
 ==== Description
 
-Retrieves a `Thing` as JSON. 
+Retrieves a ``Thing`` as JSON. 
 
 
 ==== Returns
@@ -184,7 +184,7 @@ void setHas​(TypeDBTransaction transaction,
 
 ==== Description
 
-Assigns an `Attribute` to be owned by this `Thing`. 
+Assigns an ``Attribute`` to be owned by this ``Thing``. 
 
 
 ==== Input parameters
@@ -194,7 +194,7 @@ Assigns an `Attribute` to be owned by this `Thing`.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attribute` a| The `Attribute` to be owned by this `Thing`. a| `Attribute` 
+a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute` 
 |===
 
 ==== Returns
@@ -221,7 +221,7 @@ void unsetHas​(TypeDBTransaction transaction,
 
 ==== Description
 
-Unassigns an `Attribute` from this `Thing`. 
+Unassigns an ``Attribute`` from this ``Thing``. 
 
 
 ==== Input parameters
@@ -231,7 +231,7 @@ Unassigns an `Attribute` from this `Thing`.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attribute` a| The `Attribute` to be disowned from this `Thing`. a| `Attribute` 
+a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attribute` 
 |===
 
 ==== Returns
@@ -259,7 +259,7 @@ java.util.stream.Stream<? extends Attribute> getHas​(TypeDBTransaction transac
 
 ==== Description
 
-Retrieves the `Attribute`s that this `Thing` owns, optionally filtered by `AttributeType`s. 
+Retrieves the ``Attribute``s that this ``Thing`` owns, optionally filtered by ``AttributeType``s. 
 
 
 ==== Input parameters
@@ -269,7 +269,7 @@ Retrieves the `Attribute`s that this `Thing` owns, optionally filtered by `Attri
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeTypes` a| The `AttributeType`s to filter the attributes by a| `AttributeType[]` 
+a| `attributeTypes` a| The ``AttributeType``s to filter the attributes by a| `AttributeType[]` 
 |===
 
 ==== Returns
@@ -299,7 +299,7 @@ java.util.stream.Stream<? extends Attribute> getHas​(TypeDBTransaction transac
 
 ==== Description
 
-Retrieves the `Attribute`s that this `Thing` owns, filtered by `Annotation`s. 
+Retrieves the ``Attribute``s that this ``Thing`` owns, filtered by ``Annotation``s. 
 
 
 ==== Input parameters
@@ -309,7 +309,7 @@ Retrieves the `Attribute`s that this `Thing` owns, filtered by `Annotation`s.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `annotations` a| Only retrieve attributes with all given `Annotation`s a| `java.util.Set<ThingType.Annotation>` 
+a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a| `java.util.Set<ThingType.Annotation>` 
 |===
 
 ==== Returns
@@ -338,7 +338,7 @@ java.util.stream.Stream<? extends Relation> getRelations​(TypeDBTransaction tr
 
 ==== Description
 
-Retrieves all the `Relations` which this `Thing` plays a role in, optionally filtered by one or more given roles. 
+Retrieves all the ``Relations`` which this ``Thing`` plays a role in, optionally filtered by one or more given roles. 
 
 
 ==== Input parameters
@@ -375,7 +375,7 @@ java.util.stream.Stream<? extends RoleType> getPlaying​(TypeDBTransaction tran
 
 ==== Description
 
-Retrieves the roles that this `Thing` is currently playing. 
+Retrieves the roles that this ``Thing`` is currently playing. 
 
 
 ==== Input parameters
@@ -410,7 +410,7 @@ void delete​(TypeDBTransaction transaction)
 
 ==== Description
 
-Deletes this `Thing`. 
+Deletes this ``Thing``. 
 
 
 ==== Input parameters
@@ -446,7 +446,7 @@ boolean isDeleted​(TypeDBTransaction transaction)
 
 ==== Description
 
-Checks if this `Thing` is deleted. 
+Checks if this ``Thing`` is deleted. 
 
 
 ==== Input parameters
@@ -481,7 +481,7 @@ default Attribute asAttribute()
 
 ==== Description
 
-Casts the concept to `Attribute`. 
+Casts the concept to ``Attribute``. 
 
 
 ==== Returns
@@ -507,7 +507,7 @@ default AttributeType asAttributeType()
 
 ==== Description
 
-Casts the concept to `AttributeType`. 
+Casts the concept to ``AttributeType``. 
 
 
 ==== Returns
@@ -533,7 +533,7 @@ default Entity asEntity()
 
 ==== Description
 
-Casts the concept to `Entity`. 
+Casts the concept to ``Entity``. 
 
 
 ==== Returns
@@ -559,7 +559,7 @@ default EntityType asEntityType()
 
 ==== Description
 
-Casts the concept to `EntityType`. 
+Casts the concept to ``EntityType``. 
 
 
 ==== Returns
@@ -585,7 +585,7 @@ default Relation asRelation()
 
 ==== Description
 
-Casts the concept to `Relation`. 
+Casts the concept to ``Relation``. 
 
 
 ==== Returns
@@ -611,7 +611,7 @@ default RelationType asRelationType()
 
 ==== Description
 
-Casts the concept to `RelationType`. 
+Casts the concept to ``RelationType``. 
 
 
 ==== Returns
@@ -637,7 +637,7 @@ default RoleType asRoleType()
 
 ==== Description
 
-Casts the concept to `RoleType`. 
+Casts the concept to ``RoleType``. 
 
 
 ==== Returns
@@ -663,7 +663,7 @@ default ThingType asThingType()
 
 ==== Description
 
-Casts the concept to `ThingType`. 
+Casts the concept to ``ThingType``. 
 
 
 ==== Returns
@@ -689,7 +689,7 @@ default Type asType()
 
 ==== Description
 
-Casts the concept to `Type`. 
+Casts the concept to ``Type``. 
 
 
 ==== Returns
@@ -715,7 +715,7 @@ default Value asValue()
 
 ==== Description
 
-Casts the concept to `Value`. 
+Casts the concept to ``Value``. 
 
 
 ==== Returns
@@ -742,7 +742,7 @@ default boolean isAttribute()
 
 ==== Description
 
-Checks if the concept is an `Attribute`. 
+Checks if the concept is an ``Attribute``. 
 
 
 ==== Returns
@@ -769,7 +769,7 @@ default boolean isAttributeType()
 
 ==== Description
 
-Checks if the concept is an `AttributeType`. 
+Checks if the concept is an ``AttributeType``. 
 
 
 ==== Returns
@@ -796,7 +796,7 @@ default boolean isEntity()
 
 ==== Description
 
-Checks if the concept is an `Entity`. 
+Checks if the concept is an ``Entity``. 
 
 
 ==== Returns
@@ -823,7 +823,7 @@ default boolean isEntityType()
 
 ==== Description
 
-Checks if the concept is an `EntityType`. 
+Checks if the concept is an ``EntityType``. 
 
 
 ==== Returns
@@ -850,7 +850,7 @@ default boolean isRelation()
 
 ==== Description
 
-Checks if the concept is a `Relation`. 
+Checks if the concept is a ``Relation``. 
 
 
 ==== Returns
@@ -877,7 +877,7 @@ default boolean isRelationType()
 
 ==== Description
 
-Checks if the concept is a `RelationType`. 
+Checks if the concept is a ``RelationType``. 
 
 
 ==== Returns
@@ -904,7 +904,7 @@ default boolean isRoleType()
 
 ==== Description
 
-Checks if the concept is a `RoleType`. 
+Checks if the concept is a ``RoleType``. 
 
 
 ==== Returns
@@ -931,7 +931,7 @@ default boolean isThingType()
 
 ==== Description
 
-Checks if the concept is a `ThingType`. 
+Checks if the concept is a ``ThingType``. 
 
 
 ==== Returns
@@ -958,7 +958,7 @@ default boolean isType()
 
 ==== Description
 
-Checks if the concept is a `Type`. 
+Checks if the concept is a ``Type``. 
 
 
 ==== Returns
@@ -985,7 +985,7 @@ default boolean isValue()
 
 ==== Description
 
-Checks if the concept is a `Value`. 
+Checks if the concept is a ``Value``. 
 
 
 ==== Returns

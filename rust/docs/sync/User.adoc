@@ -50,7 +50,7 @@ Updates user password.
 [options="header"]
 |===
 |Name |Description |Type
-a| `connection` a| an opened `Connection` a| `&Connection` 
+a| `connection` a| an opened ``Connection`` a| `&Connection` 
 a| `password_old` a| an old password a| `impl Into<String>` 
 a| `password_new` a| a new password a| `impl Into<String>` 
 |===

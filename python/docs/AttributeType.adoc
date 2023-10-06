@@ -30,7 +30,7 @@ as_attribute_type() -> AttributeType
 
 ==== Description
 
-Casts the concept to `AttributeType`.
+Casts the concept to ``AttributeType``.
 
 ==== Returns
 
@@ -55,7 +55,7 @@ abstract get(transaction: TypeDBTransaction, value: Value | bool | int | float |
 
 ==== Description
 
-Retrieves an `Attribute` of this `AttributeType` with the given value if such `Attribute` exists. Otherwise, returns `None`.
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``.
 
 ==== Input parameters
 
@@ -64,7 +64,7 @@ Retrieves an `Attribute` of this `AttributeType` with the given value if such `A
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `value` a| `Attribute`’s value a| `Value \| bool \| int \| float \| str \| datetime` a| 
+a| `value` a| ``Attribute``’s value a| `Value \| bool \| int \| float \| str \| datetime` a| 
 |===
 
 ==== Returns
@@ -90,7 +90,7 @@ abstract get_instances(transaction: TypeDBTransaction, transitivity: Transitivit
 
 ==== Description
 
-Retrieves all direct and indirect (or direct only) `Attributes` that are instances of this `AttributeType`.
+Retrieves all direct and indirect (or direct only) ``Attributes`` that are instances of this ``AttributeType``.
 
 ==== Input parameters
 
@@ -99,7 +99,7 @@ Retrieves all direct and indirect (or direct only) `Attributes` that are instanc
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect subtypes, `Transitivity.EXPLICIT` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
 ==== Returns
@@ -126,7 +126,7 @@ abstract get_owners(transaction: TypeDBTransaction, annotations: set[Annotation]
 
 ==== Description
 
-Retrieve all `Things` that own an attribute of this `AttributeType`. Optionally, filtered by `Annotation`s.
+Retrieve all ``Things`` that own an attribute of this ``AttributeType``. Optionally, filtered by ``Annotation``s.
 
 ==== Input parameters
 
@@ -135,8 +135,8 @@ Retrieve all `Things` that own an attribute of this `AttributeType`. Optionally,
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `annotations` a| Only retrieve `ThingTypes` that have an attribute of this `AttributeType` with all given `Annotation`s a| `set[Annotation] \| None` a| `None`
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and inherited ownership, `Transitivity.EXPLICIT` for direct ownership only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``AttributeType`` with all given ``Annotation``s a| `set[Annotation] \| None` a| `None`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited ownership, ``Transitivity.EXPLICIT`` for direct ownership only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
 ==== Returns
@@ -163,7 +163,7 @@ abstract get_regex(transaction: TypeDBTransaction) -> str
 
 ==== Description
 
-Retrieves the regular expression that is defined for this `AttributeType`.
+Retrieves the regular expression that is defined for this ``AttributeType``.
 
 ==== Input parameters
 
@@ -197,7 +197,7 @@ abstract get_subtypes_with_value_type(transaction: TypeDBTransaction, value_type
 
 ==== Description
 
-Retrieves all direct and indirect (or direct only) subtypes of this `AttributeType` with given `ValueType`.
+Retrieves all direct and indirect (or direct only) subtypes of this ``AttributeType`` with given ``ValueType``.
 
 ==== Input parameters
 
@@ -206,8 +206,8 @@ Retrieves all direct and indirect (or direct only) subtypes of this `AttributeTy
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `value_type` a| `ValueType` for retrieving subtypes a| `ValueType` a| 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect subtypes, `Transitivity.EXPLICIT` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+a| `value_type` a| ``ValueType`` for retrieving subtypes a| `ValueType` a| 
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
 ==== Returns
@@ -235,7 +235,7 @@ get_value_type() -> ValueType
 
 ==== Description
 
-Retrieves the `ValueType` of this `AttributeType`.
+Retrieves the ``ValueType`` of this ``AttributeType``.
 
 ==== Returns
 
@@ -260,7 +260,7 @@ is_attribute_type() -> bool
 
 ==== Description
 
-Checks if the concept is an `AttributeType`.
+Checks if the concept is an ``AttributeType``.
 
 ==== Returns
 
@@ -285,7 +285,7 @@ is_boolean() -> bool
 
 ==== Description
 
-Returns `True` if the value for attributes of this type is of type `boolean`. Otherwise, returns `False`.
+Returns ``True`` if the value for attributes of this type is of type ``boolean``. Otherwise, returns ``False``.
 
 ==== Returns
 
@@ -310,7 +310,7 @@ is_datetime() -> bool
 
 ==== Description
 
-Returns `True` if the value for attributes of this type is of type `datetime`. Otherwise, returns `False`.
+Returns ``True`` if the value for attributes of this type is of type ``datetime``. Otherwise, returns ``False``.
 
 ==== Returns
 
@@ -335,7 +335,7 @@ is_double() -> bool
 
 ==== Description
 
-Returns `True` if the value for attributes of this type is of type `double`. Otherwise, returns `False`.
+Returns ``True`` if the value for attributes of this type is of type ``double``. Otherwise, returns ``False``.
 
 ==== Returns
 
@@ -360,7 +360,7 @@ is_long() -> bool
 
 ==== Description
 
-Returns `True` if the value for attributes of this type is of type `long`. Otherwise, returns `False`.
+Returns ``True`` if the value for attributes of this type is of type ``long``. Otherwise, returns ``False``.
 
 ==== Returns
 
@@ -385,7 +385,7 @@ is_string() -> bool
 
 ==== Description
 
-Returns `True` if the value for attributes of this type is of type `string`. Otherwise, returns `False`.
+Returns ``True`` if the value for attributes of this type is of type ``string``. Otherwise, returns ``False``.
 
 ==== Returns
 
@@ -410,7 +410,7 @@ abstract put(transaction: TypeDBTransaction, value: Value | bool | int | float |
 
 ==== Description
 
-Adds and returns an `Attribute` of this `AttributeType` with the given value.
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
 
 ==== Input parameters
 
@@ -419,7 +419,7 @@ Adds and returns an `Attribute` of this `AttributeType` with the given value.
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `value` a| New `Attribute`’s value a| `Value \| bool \| int \| float \| str \| datetime` a| 
+a| `value` a| New ``Attribute``’s value a| `Value \| bool \| int \| float \| str \| datetime` a| 
 |===
 
 ==== Returns
@@ -445,9 +445,9 @@ abstract set_regex(transaction: TypeDBTransaction, regex: str) -> None
 
 ==== Description
 
-Sets a regular expression as a constraint for this `AttributeType`. `Values` of all `Attribute`s of this type (inserted earlier or later) should match this regex.
+Sets a regular expression as a constraint for this ``AttributeType``. ``Values`` of all ``Attribute``s of this type (inserted earlier or later) should match this regex.
 
-Can only be applied for `AttributeType`s with a `string` value type.
+Can only be applied for ``AttributeType``s with a ``string`` value type.
 
 ==== Input parameters
 
@@ -482,7 +482,7 @@ abstract set_supertype(transaction: TypeDBTransaction, super_attribute_type: Att
 
 ==== Description
 
-Sets the supplied `AttributeType` as the supertype of the current `AttributeType`.
+Sets the supplied ``AttributeType`` as the supertype of the current ``AttributeType``.
 
 ==== Input parameters
 
@@ -491,7 +491,7 @@ Sets the supplied `AttributeType` as the supertype of the current `AttributeType
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `super_attribute_type` a| The `AttributeType` to set as the supertype of this `AttributeType` a| `AttributeType` a| 
+a| `super_attribute_type` a| The ``AttributeType`` to set as the supertype of this ``AttributeType`` a| `AttributeType` a| 
 |===
 
 ==== Returns
@@ -517,7 +517,7 @@ abstract unset_regex(transaction: TypeDBTransaction) -> None
 
 ==== Description
 
-Removes the regular expression that is defined for this `AttributeType`.
+Removes the regular expression that is defined for this ``AttributeType``.
 
 ==== Input parameters
 

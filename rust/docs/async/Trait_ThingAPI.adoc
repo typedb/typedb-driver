@@ -16,7 +16,7 @@ fn iid(&self) -> &IID
 
 ==== Description
 
-Retrieves the unique id of the `Thing`.
+Retrieves the unique id of the ``Thing``.
 
 ==== Returns
 
@@ -44,7 +44,7 @@ fn is_inferred(&self) -> bool
 
 ==== Description
 
-Checks if this `Thing` is inferred by a [Reasoning Rule].
+Checks if this ``Thing`` is inferred by a [Reasoning Rule].
 
 ==== Returns
 
@@ -80,7 +80,7 @@ where
 
 ==== Description
 
-Checks if this `Thing` is deleted.
+Checks if this ``Thing`` is deleted.
 
 ==== Input parameters
 
@@ -130,7 +130,7 @@ where
 
 ==== Description
 
-Deletes this `Thing`.
+Deletes this ``Thing``.
 
 ==== Input parameters
 
@@ -177,7 +177,7 @@ fn get_has(
 
 ==== Description
 
-Retrieves the `Attribute`s that this `Thing` owns. Optionally, filtered by an `AttributeType` or a list of `AttributeType`s. Optionally, filtered by `Annotation`s.
+Retrieves the ``Attribute``s that this ``Thing`` owns. Optionally, filtered by an ``AttributeType`` or a list of ``AttributeType``s. Optionally, filtered by ``Annotation``s.
 
 ==== Input parameters
 
@@ -186,9 +186,9 @@ Retrieves the `Attribute`s that this `Thing` owns. Optionally, filtered by an `A
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `attribute_type` a| The `AttributeType` to filter the attributes by a| 
-a| `attribute_types` a| The `AttributeType`s to filter the attributes by a| `Vec<AttributeType>` 
-a| `annotations` a| Only retrieve attributes with all given `Annotation`s a| `Vec<Annotation>` 
+a| `attribute_type` a| The ``AttributeType`` to filter the attributes by a| 
+a| `attribute_types` a| The ``AttributeType``s to filter the attributes by a| `Vec<AttributeType>` 
+a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a| `Vec<Annotation>` 
 |===
 
 ==== Returns
@@ -226,7 +226,7 @@ where
 
 ==== Description
 
-Assigns an `Attribute` to be owned by this `Thing`.
+Assigns an ``Attribute`` to be owned by this ``Thing``.
 
 ==== Input parameters
 
@@ -235,7 +235,7 @@ Assigns an `Attribute` to be owned by this `Thing`.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
-a| `attribute` a| The `Attribute` to be owned by this `Thing`. a| `Attribute` 
+a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute` 
 |===
 
 ==== Returns
@@ -278,7 +278,7 @@ where
 
 ==== Description
 
-Unassigns an `Attribute` from this `Thing`.
+Unassigns an ``Attribute`` from this ``Thing``.
 
 ==== Input parameters
 
@@ -287,7 +287,7 @@ Unassigns an `Attribute` from this `Thing`.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
-a| `attribute` a| The `Attribute` to be disowned from this `Thing`. a| `Attribute` 
+a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attribute` 
 |===
 
 ==== Returns
@@ -325,7 +325,7 @@ fn get_relations(
 
 ==== Description
 
-Retrieves all the `Relations` which this `Thing` plays a role in, optionally filtered by one or more given roles.
+Retrieves all the ``Relations`` which this ``Thing`` plays a role in, optionally filtered by one or more given roles.
 
 ==== Input parameters
 
@@ -366,7 +366,7 @@ fn get_playing(
 
 ==== Description
 
-Retrieves the roles that this `Thing` is currently playing.
+Retrieves the roles that this ``Thing`` is currently playing.
 
 ==== Input parameters
 

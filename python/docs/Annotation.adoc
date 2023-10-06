@@ -16,7 +16,7 @@ is_key() -> bool
 
 ==== Description
 
-Checks if this `Annotation` is a `@key` annotation.
+Checks if this ``Annotation`` is a ``@key`` annotation.
 
 ==== Returns
 
@@ -41,7 +41,7 @@ is_unique() -> bool
 
 ==== Description
 
-Checks if this `Annotation` is a `@unique` annotation.
+Checks if this ``Annotation`` is a ``@unique`` annotation.
 
 ==== Returns
 
@@ -66,7 +66,7 @@ static key() -> Annotation
 
 ==== Description
 
-Produces a `@key` annotation.
+Produces a ``@key`` annotation.
 
 ==== Returns
 
@@ -91,7 +91,7 @@ static unique() -> Annotation
 
 ==== Description
 
-Produces a `@unique` annotation.
+Produces a ``@unique`` annotation.
 
 ==== Returns
 

@@ -102,7 +102,7 @@ abstract replicas() -> set[typedb.api.connection.database.Replica]
 
 ==== Description
 
-Set of `Replica` instances for this database. _Only works in TypeDB Enterprise_
+Set of ``Replica`` instances for this database. _Only works in TypeDB Enterprise_
 
 ==== Returns
 

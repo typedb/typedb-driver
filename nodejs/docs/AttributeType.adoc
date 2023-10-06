@@ -38,7 +38,7 @@ asAttribute(): Attribute
 
 ==== Description
 
-Casts the concept to `Attribute`.
+Casts the concept to ``Attribute``.
 
 ==== Returns
 
@@ -63,7 +63,7 @@ asAttributeType(): AttributeType
 
 ==== Description
 
-Casts the concept to `AttributeType`.
+Casts the concept to ``AttributeType``.
 
 ==== Returns
 
@@ -88,7 +88,7 @@ asEntity(): Entity
 
 ==== Description
 
-Casts the concept to `Entity`.
+Casts the concept to ``Entity``.
 
 ==== Returns
 
@@ -113,7 +113,7 @@ asEntityType(): EntityType
 
 ==== Description
 
-Casts the concept to `EntityType`.
+Casts the concept to ``EntityType``.
 
 ==== Returns
 
@@ -138,7 +138,7 @@ asRelation(): Relation
 
 ==== Description
 
-Casts the concept to `Relation`.
+Casts the concept to ``Relation``.
 
 ==== Returns
 
@@ -163,7 +163,7 @@ asRelationType(): RelationType
 
 ==== Description
 
-Casts the concept to `RelationType`.
+Casts the concept to ``RelationType``.
 
 ==== Returns
 
@@ -188,7 +188,7 @@ asRoleType(): RoleType
 
 ==== Description
 
-Casts the concept to `RoleType`.
+Casts the concept to ``RoleType``.
 
 ==== Returns
 
@@ -213,7 +213,7 @@ asThing(): Thing
 
 ==== Description
 
-Casts the concept to `Thing`.
+Casts the concept to ``Thing``.
 
 ==== Returns
 
@@ -238,7 +238,7 @@ asThingType(): ThingType
 
 ==== Description
 
-Casts the concept to `ThingType`.
+Casts the concept to ``ThingType``.
 
 ==== Returns
 
@@ -263,7 +263,7 @@ asType(): Type
 
 ==== Description
 
-Casts the concept to `Type`.
+Casts the concept to ``Type``.
 
 ==== Returns
 
@@ -288,7 +288,7 @@ asValue(): Value
 
 ==== Description
 
-Casts the concept to `Value`.
+Casts the concept to ``Value``.
 
 ==== Returns
 
@@ -347,7 +347,7 @@ equals(concept): boolean
 
 ==== Description
 
-Checks if this concept is equal to the argument `concept`.
+Checks if this concept is equal to the argument ``concept``.
 
 ==== Input parameters
 
@@ -374,7 +374,7 @@ get(transaction, value): Promise<Attribute>
 
 ==== Description
 
-Retrieves an `Attribute` of this `AttributeType` with the given value if such `Attribute` exists. Otherwise, returns `None`.
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``.
 
 ==== Input parameters
 
@@ -383,7 +383,7 @@ Retrieves an `Attribute` of this `AttributeType` with the given value if such `A
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| `Attribute`’s value a| `Value` 
+a| `value` a| ``Attribute``’s value a| `Value` 
 |===
 
 ==== Returns
@@ -409,7 +409,7 @@ getBoolean(transaction, value): Promise<Attribute>
 
 ==== Description
 
-Retrieves an `Attribute` of this `AttributeType` with the given value if such `Attribute` exists. Otherwise, returns `None`.
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``.
 
 ==== Input parameters
 
@@ -418,7 +418,7 @@ Retrieves an `Attribute` of this `AttributeType` with the given value if such `A
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| `Attribute`’s value a| `boolean` 
+a| `value` a| ``Attribute``’s value a| `boolean` 
 |===
 
 ==== Returns
@@ -444,7 +444,7 @@ getDateTime(transaction, value): Promise<Attribute>
 
 ==== Description
 
-Retrieves an `Attribute` of this `AttributeType` with the given value if such `Attribute` exists. Otherwise, returns `None`.
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``.
 
 ==== Input parameters
 
@@ -453,7 +453,7 @@ Retrieves an `Attribute` of this `AttributeType` with the given value if such `A
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| `Attribute`’s value a| `Date` 
+a| `value` a| ``Attribute``’s value a| `Date` 
 |===
 
 ==== Returns
@@ -479,7 +479,7 @@ getDouble(transaction, value): Promise<Attribute>
 
 ==== Description
 
-Retrieves an `Attribute` of this `AttributeType` with the given value if such `Attribute` exists. Otherwise, returns `None`.
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``.
 
 ==== Input parameters
 
@@ -488,7 +488,7 @@ Retrieves an `Attribute` of this `AttributeType` with the given value if such `A
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| `Attribute`’s value a| `number` 
+a| `value` a| ``Attribute``’s value a| `number` 
 |===
 
 ==== Returns
@@ -514,7 +514,7 @@ getInstances(transaction, transitivity): Stream<Attribute>
 
 ==== Description
 
-Retrieves all direct and indirect (or direct only) `Attributes` that are instances of this `AttributeType`.
+Retrieves all direct and indirect (or direct only) ``Attributes`` that are instances of this ``AttributeType``.
 
 ==== Input parameters
 
@@ -523,7 +523,7 @@ Retrieves all direct and indirect (or direct only) `Attributes` that are instanc
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect subtypes, `Transitivity.EXPLICIT` for direct subtypes only a| `Transitivity` 
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Transitivity` 
 |===
 
 ==== Returns
@@ -549,7 +549,7 @@ getInstances(transaction): Stream<Attribute>
 
 ==== Description
 
-Retrieves all direct and indirect (or direct only) `Thing` objects that are instances of this `ThingType`.
+Retrieves all direct and indirect (or direct only) ``Thing`` objects that are instances of this ``ThingType``.
 
 ==== Input parameters
 
@@ -583,7 +583,7 @@ getLong(transaction, value): Promise<Attribute>
 
 ==== Description
 
-Retrieves an `Attribute` of this `AttributeType` with the given value if such `Attribute` exists. Otherwise, returns `None`.
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``.
 
 ==== Input parameters
 
@@ -592,7 +592,7 @@ Retrieves an `Attribute` of this `AttributeType` with the given value if such `A
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| `Attribute`’s value a| `number` 
+a| `value` a| ``Attribute``’s value a| `number` 
 |===
 
 ==== Returns
@@ -618,7 +618,7 @@ getOwners(transaction, annotations, transitivity): Stream<ThingType>
 
 ==== Description
 
-Retrieve all `Things` that own an attribute of this `AttributeType`. Optionally, filtered by `Annotation`s.
+Retrieve all ``Things`` that own an attribute of this ``AttributeType``. Optionally, filtered by ``Annotation``s.
 
 ==== Input parameters
 
@@ -627,8 +627,8 @@ Retrieve all `Things` that own an attribute of this `AttributeType`. Optionally,
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `annotations` a| Only retrieve `ThingTypes` that have an attribute of this `AttributeType` with all given `Annotation`s a| `Annotation[]` 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and inherited ownership, `Transitivity.EXPLICIT` for direct ownership only a| `Transitivity` 
+a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``AttributeType`` with all given ``Annotation``s a| `Annotation[]` 
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited ownership, ``Transitivity.EXPLICIT`` for direct ownership only a| `Transitivity` 
 |===
 
 ==== Returns
@@ -737,7 +737,7 @@ getOwns(transaction): Stream<AttributeType>
 
 ==== Description
 
-Retrieves `AttributeType` that the instances of this `ThingType` are allowed to own directly or via inheritance.
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
 
 ==== Input parameters
 
@@ -771,7 +771,7 @@ getOwns(transaction, valueType): Stream<AttributeType>
 
 ==== Description
 
-Retrieves `AttributeType` that the instances of this `ThingType` are allowed to own directly or via inheritance.
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
 
 ==== Input parameters
 
@@ -780,7 +780,7 @@ Retrieves `AttributeType` that the instances of this `ThingType` are allowed to 
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `valueType` a| If specified, only attribute types of this `ValueType` will be retrieved. a| `ValueType` 
+a| `valueType` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `ValueType` 
 |===
 
 ==== Returns
@@ -806,7 +806,7 @@ getOwns(transaction, annotations): Stream<AttributeType>
 
 ==== Description
 
-Retrieves `AttributeType` that the instances of this `ThingType` are allowed to own directly or via inheritance.
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
 
 ==== Input parameters
 
@@ -815,7 +815,7 @@ Retrieves `AttributeType` that the instances of this `ThingType` are allowed to 
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `annotations` a| If specified, only attribute types of this `ValueType` will be retrieved. a| `Annotation[]` 
+a| `annotations` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `Annotation[]` 
 |===
 
 ==== Returns
@@ -841,7 +841,7 @@ getOwns(transaction, valueType, annotations): Stream<AttributeType>
 
 ==== Description
 
-Retrieves `AttributeType` that the instances of this `ThingType` are allowed to own directly or via inheritance.
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
 
 ==== Input parameters
 
@@ -850,7 +850,7 @@ Retrieves `AttributeType` that the instances of this `ThingType` are allowed to 
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `valueType` a| If specified, only attribute types of this `ValueType` will be retrieved. a| `ValueType` 
+a| `valueType` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `ValueType` 
 a| `annotations` a| Only retrieve attribute types owned with annotations. a| `Annotation[]` 
 |===
 
@@ -877,7 +877,7 @@ getOwns(transaction, transitivity): Stream<AttributeType>
 
 ==== Description
 
-Retrieves `AttributeType` that the instances of this `ThingType` are allowed to own directly or via inheritance.
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
 
 ==== Input parameters
 
@@ -886,7 +886,7 @@ Retrieves `AttributeType` that the instances of this `ThingType` are allowed to 
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `transitivity` a| If specified, only attribute types of this `ValueType` will be retrieved. a| `Transitivity` 
+a| `transitivity` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `Transitivity` 
 |===
 
 ==== Returns
@@ -912,7 +912,7 @@ getOwns(transaction, valueType, transitivity): Stream<AttributeType>
 
 ==== Description
 
-Retrieves `AttributeType` that the instances of this `ThingType` are allowed to own directly or via inheritance.
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
 
 ==== Input parameters
 
@@ -921,7 +921,7 @@ Retrieves `AttributeType` that the instances of this `ThingType` are allowed to 
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `valueType` a| If specified, only attribute types of this `ValueType` will be retrieved. a| `ValueType` 
+a| `valueType` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `ValueType` 
 a| `transitivity` a| Only retrieve attribute types owned with annotations. a| `Transitivity` 
 |===
 
@@ -948,7 +948,7 @@ getOwns(transaction, annotations, transitivity): Stream<AttributeType>
 
 ==== Description
 
-Retrieves `AttributeType` that the instances of this `ThingType` are allowed to own directly or via inheritance.
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
 
 ==== Input parameters
 
@@ -957,7 +957,7 @@ Retrieves `AttributeType` that the instances of this `ThingType` are allowed to 
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `annotations` a| If specified, only attribute types of this `ValueType` will be retrieved. a| `Annotation[]` 
+a| `annotations` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `Annotation[]` 
 a| `transitivity` a| Only retrieve attribute types owned with annotations. a| `Transitivity` 
 |===
 
@@ -984,7 +984,7 @@ getOwns(transaction, valueType, annotations, transitivity): Stream<AttributeType
 
 ==== Description
 
-Retrieves `AttributeType` that the instances of this `ThingType` are allowed to own directly or via inheritance.
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
 
 ==== Input parameters
 
@@ -993,9 +993,9 @@ Retrieves `AttributeType` that the instances of this `ThingType` are allowed to 
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `valueType` a| If specified, only attribute types of this `ValueType` will be retrieved. a| `ValueType` 
+a| `valueType` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `ValueType` 
 a| `annotations` a| Only retrieve attribute types owned with annotations. a| `Annotation[]` 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and inherited ownership, `Transitivity.EXPLICIT` for direct ownership only a| `Transitivity` 
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited ownership, ``Transitivity.EXPLICIT`` for direct ownership only a| `Transitivity` 
 |===
 
 ==== Returns
@@ -1021,7 +1021,7 @@ getOwnsOverridden(transaction, attributeType): Promise<AttributeType>
 
 ==== Description
 
-Retrieves an `AttributeType`, ownership of which is overridden for this `ThingType` by a given `attribute_type`.
+Retrieves an ``AttributeType``, ownership of which is overridden for this ``ThingType`` by a given ``attribute_type``.
 
 ==== Input parameters
 
@@ -1030,7 +1030,7 @@ Retrieves an `AttributeType`, ownership of which is overridden for this `ThingTy
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeType` a| The `AttributeType` that overrides requested `AttributeType` a| `AttributeType` 
+a| `attributeType` a| The ``AttributeType`` that overrides requested ``AttributeType`` a| `AttributeType` 
 |===
 
 ==== Returns
@@ -1056,7 +1056,7 @@ getPlays(transaction): Stream<RoleType>
 
 ==== Description
 
-Retrieves all direct and inherited (or direct only) roles that are allowed to be played by the instances of this `ThingType`.
+Retrieves all direct and inherited (or direct only) roles that are allowed to be played by the instances of this ``ThingType``.
 
 ==== Input parameters
 
@@ -1090,7 +1090,7 @@ getPlays(transaction, transitivity): Stream<RoleType>
 
 ==== Description
 
-Retrieves all direct and inherited (or direct only) roles that are allowed to be played by the instances of this `ThingType`.
+Retrieves all direct and inherited (or direct only) roles that are allowed to be played by the instances of this ``ThingType``.
 
 ==== Input parameters
 
@@ -1099,7 +1099,7 @@ Retrieves all direct and inherited (or direct only) roles that are allowed to be
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect playing, `Transitivity.EXPLICIT` for direct playing only a| `Transitivity` 
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect playing, ``Transitivity.EXPLICIT`` for direct playing only a| `Transitivity` 
 |===
 
 ==== Returns
@@ -1125,7 +1125,7 @@ getPlaysOverridden(transaction, role): Promise<RoleType>
 
 ==== Description
 
-Retrieves a `RoleType` that is overridden by the given `role_type` for this `ThingType`.
+Retrieves a ``RoleType`` that is overridden by the given ``role_type`` for this ``ThingType``.
 
 ==== Input parameters
 
@@ -1134,7 +1134,7 @@ Retrieves a `RoleType` that is overridden by the given `role_type` for this `Thi
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `role` a| The `RoleType` that overrides an inherited role a| `RoleType` 
+a| `role` a| The ``RoleType`` that overrides an inherited role a| `RoleType` 
 |===
 
 ==== Returns
@@ -1160,7 +1160,7 @@ getRegex(transaction): Promise<string>
 
 ==== Description
 
-Retrieves the regular expression that is defined for this `AttributeType`.
+Retrieves the regular expression that is defined for this ``AttributeType``.
 
 ==== Input parameters
 
@@ -1194,7 +1194,7 @@ getString(transaction, value): Promise<Attribute>
 
 ==== Description
 
-Retrieves an `Attribute` of this `AttributeType` with the given value if such `Attribute` exists. Otherwise, returns `None`.
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``.
 
 ==== Input parameters
 
@@ -1203,7 +1203,7 @@ Retrieves an `Attribute` of this `AttributeType` with the given value if such `A
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| `Attribute`’s value a| `string` 
+a| `value` a| ``Attribute``’s value a| `string` 
 |===
 
 ==== Returns
@@ -1229,7 +1229,7 @@ getSubtypes(transaction): Stream<AttributeType>
 
 ==== Description
 
-Retrieves all direct and indirect subtypes of the `ThingType`. Equivalent to getSubtypes(transaction, Transitivity.TRANSITIVE)
+Retrieves all direct and indirect subtypes of the ``ThingType``. Equivalent to getSubtypes(transaction, Transitivity.TRANSITIVE)
 
 ==== Input parameters
 
@@ -1263,7 +1263,7 @@ getSubtypes(transaction, valueType): Stream<AttributeType>
 
 ==== Description
 
-Retrieves all direct and indirect (or direct only) subtypes of the `ThingType`.
+Retrieves all direct and indirect (or direct only) subtypes of the ``ThingType``.
 
 ==== Input parameters
 
@@ -1272,7 +1272,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the `ThingType`.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `valueType` a| `Transitivity.TRANSITIVE` for direct and indirect subtypes, `Transitivity.EXPLICIT` for direct subtypes only a| `ValueType` 
+a| `valueType` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `ValueType` 
 |===
 
 ==== Returns
@@ -1355,7 +1355,7 @@ getSupertype(transaction): Promise<AttributeType>
 
 ==== Description
 
-Retrieves the most immediate supertype of the `ThingType`.
+Retrieves the most immediate supertype of the ``ThingType``.
 
 ==== Input parameters
 
@@ -1389,7 +1389,7 @@ getSupertypes(transaction): Stream<AttributeType>
 
 ==== Description
 
-Retrieves all supertypes of the `ThingType`.
+Retrieves all supertypes of the ``ThingType``.
 
 ==== Input parameters
 
@@ -1423,7 +1423,7 @@ getSyntax(transaction): Promise<string>
 
 ==== Description
 
-Produces a pattern for creating this `ThingType` in a `define` query.
+Produces a pattern for creating this ``ThingType`` in a ``define`` query.
 
 ==== Input parameters
 
@@ -1457,7 +1457,7 @@ isAttribute(): boolean
 
 ==== Description
 
-Checks if the concept is an `Attribute`.
+Checks if the concept is an ``Attribute``.
 
 ==== Returns
 
@@ -1482,7 +1482,7 @@ isAttributeType(): boolean
 
 ==== Description
 
-Checks if the concept is an `AttributeType`.
+Checks if the concept is an ``AttributeType``.
 
 ==== Returns
 
@@ -1534,7 +1534,7 @@ isEntity(): boolean
 
 ==== Description
 
-Checks if the concept is an `Entity`.
+Checks if the concept is an ``Entity``.
 
 ==== Returns
 
@@ -1559,7 +1559,7 @@ isEntityType(): boolean
 
 ==== Description
 
-Checks if the concept is an `EntityType`.
+Checks if the concept is an ``EntityType``.
 
 ==== Returns
 
@@ -1584,7 +1584,7 @@ isRelation(): boolean
 
 ==== Description
 
-Checks if the concept is a `Relation`.
+Checks if the concept is a ``Relation``.
 
 ==== Returns
 
@@ -1609,7 +1609,7 @@ isRelationType(): boolean
 
 ==== Description
 
-Checks if the concept is a `RelationType`.
+Checks if the concept is a ``RelationType``.
 
 ==== Returns
 
@@ -1634,7 +1634,7 @@ isRoleType(): boolean
 
 ==== Description
 
-Checks if the concept is a `RoleType`.
+Checks if the concept is a ``RoleType``.
 
 ==== Returns
 
@@ -1659,7 +1659,7 @@ isThing(): boolean
 
 ==== Description
 
-Checks if the concept is a `Thing`.
+Checks if the concept is a ``Thing``.
 
 ==== Returns
 
@@ -1684,7 +1684,7 @@ isThingType(): boolean
 
 ==== Description
 
-Checks if the concept is a `ThingType`.
+Checks if the concept is a ``ThingType``.
 
 ==== Returns
 
@@ -1709,7 +1709,7 @@ isType(): boolean
 
 ==== Description
 
-Checks if the concept is a `Type`.
+Checks if the concept is a ``Type``.
 
 ==== Returns
 
@@ -1734,7 +1734,7 @@ isValue(): boolean
 
 ==== Description
 
-Checks if the concept is a `Value`.
+Checks if the concept is a ``Value``.
 
 ==== Returns
 
@@ -1759,7 +1759,7 @@ put(transaction, value): Promise<Attribute>
 
 ==== Description
 
-Adds and returns an `Attribute` of this `AttributeType` with the given value.
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
 
 ==== Input parameters
 
@@ -1768,7 +1768,7 @@ Adds and returns an `Attribute` of this `AttributeType` with the given value.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| New `Attribute`’s value a| `Value` 
+a| `value` a| New ``Attribute``’s value a| `Value` 
 |===
 
 ==== Returns
@@ -1794,7 +1794,7 @@ putBoolean(transaction, value): Promise<Attribute>
 
 ==== Description
 
-Adds and returns an `Attribute` of this `AttributeType` with the given value.
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
 
 ==== Input parameters
 
@@ -1803,7 +1803,7 @@ Adds and returns an `Attribute` of this `AttributeType` with the given value.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| New `Attribute`’s value a| `boolean` 
+a| `value` a| New ``Attribute``’s value a| `boolean` 
 |===
 
 ==== Returns
@@ -1829,7 +1829,7 @@ putDateTime(transaction, value): Promise<Attribute>
 
 ==== Description
 
-Adds and returns an `Attribute` of this `AttributeType` with the given value.
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
 
 ==== Input parameters
 
@@ -1838,7 +1838,7 @@ Adds and returns an `Attribute` of this `AttributeType` with the given value.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| New `Attribute`’s value a| `Date` 
+a| `value` a| New ``Attribute``’s value a| `Date` 
 |===
 
 ==== Returns
@@ -1864,7 +1864,7 @@ putDouble(transaction, value): Promise<Attribute>
 
 ==== Description
 
-Adds and returns an `Attribute` of this `AttributeType` with the given value.
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
 
 ==== Input parameters
 
@@ -1873,7 +1873,7 @@ Adds and returns an `Attribute` of this `AttributeType` with the given value.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| New `Attribute`’s value a| `number` 
+a| `value` a| New ``Attribute``’s value a| `number` 
 |===
 
 ==== Returns
@@ -1899,7 +1899,7 @@ putLong(transaction, value): Promise<Attribute>
 
 ==== Description
 
-Adds and returns an `Attribute` of this `AttributeType` with the given value.
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
 
 ==== Input parameters
 
@@ -1908,7 +1908,7 @@ Adds and returns an `Attribute` of this `AttributeType` with the given value.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| New `Attribute`’s value a| `number` 
+a| `value` a| New ``Attribute``’s value a| `number` 
 |===
 
 ==== Returns
@@ -1934,7 +1934,7 @@ putString(transaction, value): Promise<Attribute>
 
 ==== Description
 
-Adds and returns an `Attribute` of this `AttributeType` with the given value.
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
 
 ==== Input parameters
 
@@ -1943,7 +1943,7 @@ Adds and returns an `Attribute` of this `AttributeType` with the given value.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| New `Attribute`’s value a| `string` 
+a| `value` a| New ``Attribute``’s value a| `string` 
 |===
 
 ==== Returns
@@ -1969,7 +1969,7 @@ setAbstract(transaction): Promise<void>
 
 ==== Description
 
-Set a `ThingType` to be abstract, meaning it cannot have instances.
+Set a ``ThingType`` to be abstract, meaning it cannot have instances.
 
 ==== Input parameters
 
@@ -2012,7 +2012,7 @@ Renames the label of the type. The new label must remain unique.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `label` a| The new `Label` to be given to the type. a| `string` 
+a| `label` a| The new ``Label`` to be given to the type. a| `string` 
 |===
 
 ==== Returns
@@ -2038,7 +2038,7 @@ setOwns(transaction, attributeType): Promise<void>
 
 ==== Description
 
-Allows the instances of this `ThingType` to own the given `AttributeType`.
+Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
 
 ==== Input parameters
 
@@ -2047,7 +2047,7 @@ Allows the instances of this `ThingType` to own the given `AttributeType`.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeType` a| The `AttributeType` to be owned by the instances of this type. a| `AttributeType` 
+a| `attributeType` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType` 
 |===
 
 ==== Returns
@@ -2073,7 +2073,7 @@ setOwns(transaction, attributeType, annotations): Promise<void>
 
 ==== Description
 
-Allows the instances of this `ThingType` to own the given `AttributeType`.
+Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
 
 ==== Input parameters
 
@@ -2082,8 +2082,8 @@ Allows the instances of this `ThingType` to own the given `AttributeType`.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeType` a| The `AttributeType` to be owned by the instances of this type. a| `AttributeType` 
-a| `annotations` a| The `AttributeType` that this attribute ownership overrides, if applicable. a| `Annotation[]` 
+a| `attributeType` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType` 
+a| `annotations` a| The ``AttributeType`` that this attribute ownership overrides, if applicable. a| `Annotation[]` 
 |===
 
 ==== Returns
@@ -2109,7 +2109,7 @@ setOwns(transaction, attributeType, overriddenType): Promise<void>
 
 ==== Description
 
-Allows the instances of this `ThingType` to own the given `AttributeType`.
+Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
 
 ==== Input parameters
 
@@ -2118,8 +2118,8 @@ Allows the instances of this `ThingType` to own the given `AttributeType`.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeType` a| The `AttributeType` to be owned by the instances of this type. a| `AttributeType` 
-a| `overriddenType` a| The `AttributeType` that this attribute ownership overrides, if applicable. a| `AttributeType` 
+a| `attributeType` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType` 
+a| `overriddenType` a| The ``AttributeType`` that this attribute ownership overrides, if applicable. a| `AttributeType` 
 |===
 
 ==== Returns
@@ -2145,7 +2145,7 @@ setOwns(transaction, attributeType, overriddenType, annotations): Promise<void>
 
 ==== Description
 
-Allows the instances of this `ThingType` to own the given `AttributeType`.
+Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
 
 ==== Input parameters
 
@@ -2154,8 +2154,8 @@ Allows the instances of this `ThingType` to own the given `AttributeType`.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeType` a| The `AttributeType` to be owned by the instances of this type. a| `AttributeType` 
-a| `overriddenType` a| The `AttributeType` that this attribute ownership overrides, if applicable. a| `AttributeType` 
+a| `attributeType` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType` 
+a| `overriddenType` a| The ``AttributeType`` that this attribute ownership overrides, if applicable. a| `AttributeType` 
 a| `annotations` a| Adds annotations to the ownership. a| `Annotation[]` 
 |===
 
@@ -2182,7 +2182,7 @@ setPlays(transaction, role): Promise<void>
 
 ==== Description
 
-Allows the instances of this `ThingType` to play the given role.
+Allows the instances of this ``ThingType`` to play the given role.
 
 ==== Input parameters
 
@@ -2217,7 +2217,7 @@ setPlays(transaction, role, overriddenType): Promise<void>
 
 ==== Description
 
-Allows the instances of this `ThingType` to play the given role.
+Allows the instances of this ``ThingType`` to play the given role.
 
 ==== Input parameters
 
@@ -2253,7 +2253,7 @@ setRegex(transaction, regex): Promise<void>
 
 ==== Description
 
-Sets a regular expression as a constraint for this `AttributeType`. `Values` of all `Attribute`s of this type (inserted earlier or later) should match this regex. Can only be applied for `AttributeType`s with a `string` value type.
+Sets a regular expression as a constraint for this ``AttributeType``. ``Values`` of all ``Attribute``s of this type (inserted earlier or later) should match this regex. Can only be applied for ``AttributeType``s with a ``string`` value type.
 
 ==== Input parameters
 
@@ -2341,7 +2341,7 @@ unsetAbstract(transaction): Promise<void>
 
 ==== Description
 
-Set a `ThingType` to be non-abstract, meaning it can have instances.
+Set a ``ThingType`` to be non-abstract, meaning it can have instances.
 
 ==== Input parameters
 
@@ -2375,7 +2375,7 @@ unsetOwns(transaction, attributeType): Promise<void>
 
 ==== Description
 
-Disallows the instances of this `ThingType` from owning the given `AttributeType`.
+Disallows the instances of this ``ThingType`` from owning the given ``AttributeType``.
 
 ==== Input parameters
 
@@ -2384,7 +2384,7 @@ Disallows the instances of this `ThingType` from owning the given `AttributeType
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeType` a| The `AttributeType` to not be owned by the type. a| `AttributeType` 
+a| `attributeType` a| The ``AttributeType`` to not be owned by the type. a| `AttributeType` 
 |===
 
 ==== Returns
@@ -2410,7 +2410,7 @@ unsetPlays(transaction, role): Promise<void>
 
 ==== Description
 
-Disallows the instances of this `ThingType` from playing the given role.
+Disallows the instances of this ``ThingType`` from playing the given role.
 
 ==== Input parameters
 
@@ -2445,7 +2445,7 @@ unsetRegex(transaction): Promise<void>
 
 ==== Description
 
-Removes the regular expression that is defined for this `AttributeType`.
+Removes the regular expression that is defined for this ``AttributeType``.
 
 ==== Input parameters
 

@@ -41,7 +41,7 @@ Deletes this rule.
 [options="header"]
 |===
 |Name |Description |Type |Default Value
-a| `transaction` a| The current `Transaction` a| `TypeDBTransaction` a| 
+a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction` a| 
 |===
 
 ==== Returns
@@ -75,7 +75,7 @@ Check if this rule has been deleted.
 [options="header"]
 |===
 |Name |Description |Type |Default Value
-a| `transaction` a| The current `Transaction` a| `TypeDBTransaction` a| 
+a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction` a| 
 |===
 
 ==== Returns
@@ -109,7 +109,7 @@ Renames the label of the rule. The new label must remain unique.
 [options="header"]
 |===
 |Name |Description |Type |Default Value
-a| `transaction` a| The current `Transaction` a| `TypeDBTransaction` a| 
+a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction` a| 
 a| `new_label` a| The new label to be given to the rule a| `str` a| 
 |===
 

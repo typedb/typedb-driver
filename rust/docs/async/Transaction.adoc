@@ -69,7 +69,7 @@ pub fn query(&self) -> &QueryManager
 
 ==== Description
 
-Retrieves the`QueryManager` for this Transaction, from which any TypeQL query can be executed.
+Retrieves the``QueryManager`` for this Transaction, from which any TypeQL query can be executed.
 
 ==== Returns
 
@@ -90,7 +90,7 @@ pub fn concept(&self) -> &ConceptManager
 
 ==== Description
 
-The `ConceptManager` for this transaction, providing access to all Concept API methods.
+The ``ConceptManager`` for this transaction, providing access to all Concept API methods.
 
 ==== Returns
 
@@ -111,7 +111,7 @@ pub fn logic(&self) -> &LogicManager
 
 ==== Description
 
-Retrieves the `LogicManager` for this Transaction, providing access to all Concept API - Logic methods.
+Retrieves the ``LogicManager`` for this Transaction, providing access to all Concept API - Logic methods.
 
 ==== Returns
 

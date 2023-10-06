@@ -26,7 +26,7 @@ as_role_type() -> RoleType
 
 ==== Description
 
-Casts the concept to `RoleType`.
+Casts the concept to ``RoleType``.
 
 ==== Returns
 
@@ -51,7 +51,7 @@ abstract get_player_instances(transaction: TypeDBTransaction, transitivity: Tran
 
 ==== Description
 
-Retrieves the `Thing` instances that play this role.
+Retrieves the ``Thing`` instances that play this role.
 
 ==== Input parameters
 
@@ -60,7 +60,7 @@ Retrieves the `Thing` instances that play this role.
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect playing, `Transitivity.EXPLICIT` for direct playing only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect playing, ``Transitivity.EXPLICIT`` for direct playing only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
 ==== Returns
@@ -86,7 +86,7 @@ abstract get_player_types(transaction: TypeDBTransaction, transitivity: Transiti
 
 ==== Description
 
-Retrieves the `ThingType`s whose instances play this role.
+Retrieves the ``ThingType``s whose instances play this role.
 
 ==== Input parameters
 
@@ -95,7 +95,7 @@ Retrieves the `ThingType`s whose instances play this role.
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect playing, `Transitivity.EXPLICIT` for direct playing only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect playing, ``Transitivity.EXPLICIT`` for direct playing only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
 ==== Returns
@@ -121,7 +121,7 @@ abstract get_relation_instances(transaction: TypeDBTransaction, transitivity: Tr
 
 ==== Description
 
-Retrieves the `Relation` instances that this role is related to.
+Retrieves the ``Relation`` instances that this role is related to.
 
 ==== Input parameters
 
@@ -130,7 +130,7 @@ Retrieves the `Relation` instances that this role is related to.
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect relation, `Transitivity.EXPLICIT` for direct relation only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect relation, ``Transitivity.EXPLICIT`` for direct relation only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
 ==== Returns
@@ -156,7 +156,7 @@ abstract get_relation_type(transaction: TypeDBTransaction) -> RelationType
 
 ==== Description
 
-Retrieves the `RelationType` that this role is directly related to.
+Retrieves the ``RelationType`` that this role is directly related to.
 
 ==== Input parameters
 
@@ -190,7 +190,7 @@ abstract get_relation_types(transaction: TypeDBTransaction) -> Iterator[Relation
 
 ==== Description
 
-Retrieves `RelationType`s that this role is related to (directly or indirectly).
+Retrieves ``RelationType``s that this role is related to (directly or indirectly).
 
 ==== Input parameters
 
@@ -224,7 +224,7 @@ abstract get_subtypes(transaction: TypeDBTransaction, transitivity: Transitivity
 
 ==== Description
 
-Retrieves all direct and indirect (or direct only) subtypes of the `RoleType`.
+Retrieves all direct and indirect (or direct only) subtypes of the ``RoleType``.
 
 ==== Input parameters
 
@@ -233,7 +233,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the `RoleType`.
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect subtypes, `Transitivity.EXPLICIT` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
 ==== Returns
@@ -259,7 +259,7 @@ abstract get_supertype(transaction: TypeDBTransaction) -> RoleType | None
 
 ==== Description
 
-Retrieves the most immediate supertype of the `RoleType`.
+Retrieves the most immediate supertype of the ``RoleType``.
 
 ==== Input parameters
 
@@ -293,7 +293,7 @@ abstract get_supertypes(transaction: TypeDBTransaction) -> Iterator[RoleType]
 
 ==== Description
 
-Retrieves all supertypes of the `RoleType`.
+Retrieves all supertypes of the ``RoleType``.
 
 ==== Input parameters
 
@@ -327,7 +327,7 @@ is_role_type() -> bool
 
 ==== Description
 
-Checks if the concept is a `RoleType`.
+Checks if the concept is a ``RoleType``.
 
 ==== Returns
 

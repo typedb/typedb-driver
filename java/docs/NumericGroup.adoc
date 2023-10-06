@@ -50,7 +50,7 @@ Numeric numeric()
 
 ==== Description
 
-Retrieves the `Numeric` answer of the group. 
+Retrieves the ``Numeric`` answer of the group. 
 
 
 ==== Returns

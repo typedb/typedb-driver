@@ -3,7 +3,7 @@
 
 == Description
 
-A `Label` holds the uniquely identifying name of a type.
+A ``Label`` holds the uniquely identifying name of a type.
 
 It consists of an optional 'scope', and a 'name', represented "scope:name". The scope is used only used to distinguish between role-types of the same name declared in different relation types.
 
@@ -22,7 +22,7 @@ equals(that): boolean
 
 ==== Description
 
-Compares this label to `that` label.
+Compares this label to ``that`` label.
 
 ==== Input parameters
 

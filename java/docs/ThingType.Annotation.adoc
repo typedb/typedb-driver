@@ -22,7 +22,7 @@ public static ThingType.Annotation key()
 
 ==== Description
 
-Produces a `@key` annotation. 
+Produces a ``@key`` annotation. 
 
 
 ==== Returns
@@ -48,7 +48,7 @@ public static ThingType.Annotation unique()
 
 ==== Description
 
-Produces a `@unique` annotation. 
+Produces a ``@unique`` annotation. 
 
 
 ==== Returns
@@ -74,7 +74,7 @@ public boolean isKey()
 
 ==== Description
 
-Checks if this `Annotation` is a `@key` annotation. 
+Checks if this ``Annotation`` is a ``@key`` annotation. 
 
 
 ==== Returns
@@ -100,7 +100,7 @@ public boolean isUnique()
 
 ==== Description
 
-Checks if this `Annotation` is a `@unique` annotation. 
+Checks if this ``Annotation`` is a ``@unique`` annotation. 
 
 
 ==== Returns
@@ -126,7 +126,7 @@ public java.lang.String toString()
 
 ==== Description
 
-Retrieves a string representation of this `Annotation`. 
+Retrieves a string representation of this ``Annotation``. 
 
 
 ==== Returns
@@ -152,7 +152,7 @@ public boolean equals​(java.lang.Object obj)
 
 ==== Description
 
-Checks if this `Annotation` is equal to another object. 
+Checks if this ``Annotation`` is equal to another object. 
 
 
 ==== Input parameters

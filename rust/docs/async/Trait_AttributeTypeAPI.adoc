@@ -16,7 +16,7 @@ fn value_type(&self) -> ValueType
 
 ==== Description
 
-Retrieves the `ValueType` of this `AttributeType`.
+Retrieves the ``ValueType`` of this ``AttributeType``.
 
 ==== Returns
 
@@ -53,7 +53,7 @@ where
 
 ==== Description
 
-Adds and returns an `Attribute` of this `AttributeType` with the given value.
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
 
 ==== Input parameters
 
@@ -62,7 +62,7 @@ Adds and returns an `Attribute` of this `AttributeType` with the given value.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
-a| `value` a| New `Attribute`’s value a| `Value` 
+a| `value` a| New ``Attribute``’s value a| `Value` 
 |===
 
 ==== Returns
@@ -105,7 +105,7 @@ where
 
 ==== Description
 
-Retrieves an `Attribute` of this `AttributeType` with the given value if such `Attribute` exists. Otherwise, returns `None`.
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``.
 
 ==== Input parameters
 
@@ -114,7 +114,7 @@ Retrieves an `Attribute` of this `AttributeType` with the given value if such `A
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
-a| `value` a| `Attribute`’s value a| `Value` 
+a| `value` a| ``Attribute``’s value a| `Value` 
 |===
 
 ==== Returns
@@ -156,7 +156,7 @@ where
 
 ==== Description
 
-Retrieves the most immediate supertype of this `AttributeType`.
+Retrieves the most immediate supertype of this ``AttributeType``.
 
 ==== Input parameters
 
@@ -207,7 +207,7 @@ where
 
 ==== Description
 
-Sets the supplied `AttributeType` as the supertype of the current `AttributeType`.
+Sets the supplied ``AttributeType`` as the supertype of the current ``AttributeType``.
 
 ==== Input parameters
 
@@ -216,7 +216,7 @@ Sets the supplied `AttributeType` as the supertype of the current `AttributeType
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
-a| `supertype` a| The `AttributeType` to set as the supertype of this `AttributeType` a| `AttributeType` 
+a| `supertype` a| The ``AttributeType`` to set as the supertype of this ``AttributeType`` a| `AttributeType` 
 |===
 
 ==== Returns
@@ -253,7 +253,7 @@ fn get_supertypes(
 
 ==== Description
 
-Retrieves all supertypes of this `AttributeType`.
+Retrieves all supertypes of this ``AttributeType``.
 
 ==== Input parameters
 
@@ -294,7 +294,7 @@ fn get_subtypes(
 
 ==== Description
 
-Retrieves all direct and indirect (or direct only) subtypes of this `AttributeType`.
+Retrieves all direct and indirect (or direct only) subtypes of this ``AttributeType``.
 
 ==== Input parameters
 
@@ -303,7 +303,7 @@ Retrieves all direct and indirect (or direct only) subtypes of this `AttributeTy
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `transitivity` a| `Transitivity::Transitive` for direct and indirect subtypes, `Transitivity::Explicit` for direct subtypes only a| `Transitivity` 
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity` 
 |===
 
 ==== Returns
@@ -337,7 +337,7 @@ fn get_subtypes_with_value_type(
 
 ==== Description
 
-Retrieves all direct and indirect (or direct only) subtypes of this `AttributeType` with given `ValueType`.
+Retrieves all direct and indirect (or direct only) subtypes of this ``AttributeType`` with given ``ValueType``.
 
 ==== Input parameters
 
@@ -346,8 +346,8 @@ Retrieves all direct and indirect (or direct only) subtypes of this `AttributeTy
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `value_type` a| `ValueType` for retrieving subtypes a| `ValueType` 
-a| `transitivity` a| `Transitivity::Transitive` for direct and indirect subtypes, `Transitivity::Explicit` for direct subtypes only a| `Transitivity` 
+a| `value_type` a| ``ValueType`` for retrieving subtypes a| `ValueType` 
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity` 
 |===
 
 ==== Returns
@@ -380,7 +380,7 @@ fn get_instances(
 
 ==== Description
 
-Retrieves all direct and indirect (or direct only) `Attributes` that are instances of this `AttributeType`.
+Retrieves all direct and indirect (or direct only) ``Attributes`` that are instances of this ``AttributeType``.
 
 ==== Input parameters
 
@@ -389,7 +389,7 @@ Retrieves all direct and indirect (or direct only) `Attributes` that are instanc
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `transitivity` a| `Transitivity::Transitive` for direct and indirect subtypes, `Transitivity::Explicit` for direct subtypes only a| `Transitivity` 
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity` 
 |===
 
 ==== Returns
@@ -426,7 +426,7 @@ where
 
 ==== Description
 
-Retrieves the regular expression that is defined for this `AttributeType`.
+Retrieves the regular expression that is defined for this ``AttributeType``.
 
 ==== Input parameters
 
@@ -477,9 +477,9 @@ where
 
 ==== Description
 
-Sets a regular expression as a constraint for this `AttributeType`. `Values` of all `Attribute`s of this type (inserted earlier or later) should match this regex.
+Sets a regular expression as a constraint for this ``AttributeType``. ``Values`` of all ``Attribute``s of this type (inserted earlier or later) should match this regex.
 
-Can only be applied for `AttributeType`s with a `string` value type.
+Can only be applied for ``AttributeType``s with a ``string`` value type.
 
 ==== Input parameters
 
@@ -530,7 +530,7 @@ where
 
 ==== Description
 
-Removes the regular expression that is defined for this `AttributeType`.
+Removes the regular expression that is defined for this ``AttributeType``.
 
 ==== Input parameters
 
@@ -577,7 +577,7 @@ fn get_owners(
 
 ==== Description
 
-Retrieve all `Things` that own an attribute of this `AttributeType` and have all given `Annotation`s.
+Retrieve all ``Things`` that own an attribute of this ``AttributeType`` and have all given ``Annotation``s.
 
 ==== Input parameters
 
@@ -586,8 +586,8 @@ Retrieve all `Things` that own an attribute of this `AttributeType` and have all
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `transitivity` a| `Transitivity::Transitive` for direct and inherited ownership, `Transitivity::Explicit` for direct ownership only a| `Transitivity` 
-a| `annotations` a| Only retrieve `ThingTypes` that have an attribute of this `AttributeType` with all given `Annotation`s a| `Vec<Annotation>` 
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and inherited ownership, ``Transitivity::Explicit`` for direct ownership only a| `Transitivity` 
+a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``AttributeType`` with all given ``Annotation``s a| `Vec<Annotation>` 
 |===
 
 ==== Returns

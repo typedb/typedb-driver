@@ -20,7 +20,7 @@ getAttribute(iid): Promise<Attribute>
 
 ==== Description
 
-Retrieves an `Attribute` by its iid.
+Retrieves an ``Attribute`` by its iid.
 
 ==== Input parameters
 
@@ -28,7 +28,7 @@ Retrieves an `Attribute` by its iid.
 [options="header"]
 |===
 |Name |Description |Type
-a| `iid` a| The iid of the `Attribute` to retrieve a| `string` 
+a| `iid` a| The iid of the ``Attribute`` to retrieve a| `string` 
 |===
 
 ==== Returns
@@ -54,7 +54,7 @@ getAttributeType(label): Promise<AttributeType>
 
 ==== Description
 
-Retrieves an `AttributeType` by its label.
+Retrieves an ``AttributeType`` by its label.
 
 ==== Input parameters
 
@@ -62,7 +62,7 @@ Retrieves an `AttributeType` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the `AttributeType` to retrieve a| `string` 
+a| `label` a| The label of the ``AttributeType`` to retrieve a| `string` 
 |===
 
 ==== Returns
@@ -88,7 +88,7 @@ getEntity(iid): Promise<Entity>
 
 ==== Description
 
-Retrieves an `Entity` by its iid.
+Retrieves an ``Entity`` by its iid.
 
 ==== Input parameters
 
@@ -96,7 +96,7 @@ Retrieves an `Entity` by its iid.
 [options="header"]
 |===
 |Name |Description |Type
-a| `iid` a| The iid of the `Entity` to retrieve a| `string` 
+a| `iid` a| The iid of the ``Entity`` to retrieve a| `string` 
 |===
 
 ==== Returns
@@ -122,7 +122,7 @@ getEntityType(label): Promise<EntityType>
 
 ==== Description
 
-Retrieves an `EntityType` by its label.
+Retrieves an ``EntityType`` by its label.
 
 ==== Input parameters
 
@@ -130,7 +130,7 @@ Retrieves an `EntityType` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the `EntityType` to retrieve a| `string` 
+a| `label` a| The label of the ``EntityType`` to retrieve a| `string` 
 |===
 
 ==== Returns
@@ -156,7 +156,7 @@ getRelation(iid): Promise<Relation>
 
 ==== Description
 
-Retrieves a `Relation` by its iid.
+Retrieves a ``Relation`` by its iid.
 
 ==== Input parameters
 
@@ -164,7 +164,7 @@ Retrieves a `Relation` by its iid.
 [options="header"]
 |===
 |Name |Description |Type
-a| `iid` a| The iid of the `Relation` to retrieve a| `string` 
+a| `iid` a| The iid of the ``Relation`` to retrieve a| `string` 
 |===
 
 ==== Returns
@@ -190,7 +190,7 @@ getRelationType(label): Promise<RelationType>
 
 ==== Description
 
-Retrieves a `RelationType` by its label.
+Retrieves a ``RelationType`` by its label.
 
 ==== Input parameters
 
@@ -198,7 +198,7 @@ Retrieves a `RelationType` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the `RelationType` to retrieve a| `string` 
+a| `label` a| The label of the ``RelationType`` to retrieve a| `string` 
 |===
 
 ==== Returns
@@ -224,7 +224,7 @@ getRootAttributeType(): Promise<AttributeType>
 
 ==== Description
 
-Retrieve the root `AttributeType`, “attribute”.
+Retrieve the root ``AttributeType``, “attribute”.
 
 ==== Returns
 
@@ -249,7 +249,7 @@ getRootEntityType(): Promise<EntityType>
 
 ==== Description
 
-Retrieves the root `EntityType`, “entity”.
+Retrieves the root ``EntityType``, “entity”.
 
 ==== Returns
 
@@ -274,7 +274,7 @@ getRootRelationType(): Promise<RelationType>
 
 ==== Description
 
-Retrieve the root `RelationType`, “relation”.
+Retrieve the root ``RelationType``, “relation”.
 
 ==== Returns
 
@@ -299,7 +299,7 @@ getRootThingType(): Promise<ThingType>
 
 ==== Description
 
-Retrieves the root `ThingType`, “thing”.
+Retrieves the root ``ThingType``, “thing”.
 
 ==== Returns
 
@@ -349,7 +349,7 @@ putAttributeType(label, valueType): Promise<AttributeType>
 
 ==== Description
 
-Creates a new `AttributeType` if none exists with the given label, or retrieves the existing one. or retrieve. :return:
+Creates a new ``AttributeType`` if none exists with the given label, or retrieves the existing one. or retrieve. :return:
 
 ==== Input parameters
 
@@ -357,8 +357,8 @@ Creates a new `AttributeType` if none exists with the given label, or retrieves 
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the `AttributeType` to create or retrieve a| `string` 
-a| `valueType` a| The value type of the `AttributeType` to create a| `ValueType` 
+a| `label` a| The label of the ``AttributeType`` to create or retrieve a| `string` 
+a| `valueType` a| The value type of the ``AttributeType`` to create a| `ValueType` 
 |===
 
 ==== Returns
@@ -384,7 +384,7 @@ putEntityType(label): Promise<EntityType>
 
 ==== Description
 
-Creates a new `EntityType` if none exists with the given label, otherwise retrieves the existing one.
+Creates a new ``EntityType`` if none exists with the given label, otherwise retrieves the existing one.
 
 ==== Input parameters
 
@@ -392,7 +392,7 @@ Creates a new `EntityType` if none exists with the given label, otherwise retrie
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the `EntityType` to create or retrieve a| `string` 
+a| `label` a| The label of the ``EntityType`` to create or retrieve a| `string` 
 |===
 
 ==== Returns
@@ -418,7 +418,7 @@ putRelationType(label): Promise<RelationType>
 
 ==== Description
 
-Creates a new `RelationType` if none exists with the given label, otherwise retrieves the existing one.
+Creates a new ``RelationType`` if none exists with the given label, otherwise retrieves the existing one.
 
 ==== Input parameters
 
@@ -426,7 +426,7 @@ Creates a new `RelationType` if none exists with the given label, otherwise retr
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the `RelationType` to create or retrieve a| `string` 
+a| `label` a| The label of the ``RelationType`` to create or retrieve a| `string` 
 |===
 
 ==== Returns

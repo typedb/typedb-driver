@@ -145,7 +145,7 @@ java.util.Set<? extends Database.Replica> replicas()
 
 ==== Description
 
-Set of `Replica` instances for this database. Only works in TypeDB Enterprise
+Set of ``Replica`` instances for this database. Only works in TypeDB Enterprise
 
 
 ==== Returns

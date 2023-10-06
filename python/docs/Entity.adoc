@@ -26,7 +26,7 @@ as_entity() -> Entity
 
 ==== Description
 
-Casts the concept to `Entity`.
+Casts the concept to ``Entity``.
 
 ==== Returns
 
@@ -51,7 +51,7 @@ abstract get_type() -> EntityType
 
 ==== Description
 
-Retrieves the type which this `Entity` belongs to.
+Retrieves the type which this ``Entity`` belongs to.
 
 ==== Returns
 
@@ -76,7 +76,7 @@ is_entity() -> bool
 
 ==== Description
 
-Checks if the concept is an `Entity`.
+Checks if the concept is an ``Entity``.
 
 ==== Returns
 

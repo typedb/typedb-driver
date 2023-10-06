@@ -24,7 +24,7 @@ as_entity_type() -> EntityType
 
 ==== Description
 
-Casts the concept to `EntityType`.
+Casts the concept to ``EntityType``.
 
 ==== Returns
 
@@ -49,7 +49,7 @@ abstract create(transaction: TypeDBTransaction) -> Entity
 
 ==== Description
 
-Creates and returns a new instance of this `EntityType`.
+Creates and returns a new instance of this ``EntityType``.
 
 ==== Input parameters
 
@@ -83,7 +83,7 @@ abstract get_instances(transaction: TypeDBTransaction, transitivity: Transitivit
 
 ==== Description
 
-Retrieves all direct and indirect (or direct only) `Entity` objects that are instances of this `EntityType`.
+Retrieves all direct and indirect (or direct only) ``Entity`` objects that are instances of this ``EntityType``.
 
 ==== Input parameters
 
@@ -92,7 +92,7 @@ Retrieves all direct and indirect (or direct only) `Entity` objects that are ins
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect instances, `Transitivity.EXPLICIT` for direct instances only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect instances, ``Transitivity.EXPLICIT`` for direct instances only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
 ==== Returns
@@ -118,7 +118,7 @@ abstract get_subtypes(transaction: TypeDBTransaction, transitivity: Transitivity
 
 ==== Description
 
-Retrieves all direct and indirect (or direct only) subtypes of the `EntityType`.
+Retrieves all direct and indirect (or direct only) subtypes of the ``EntityType``.
 
 ==== Input parameters
 
@@ -127,7 +127,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the `EntityType`.
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect subtypes, `Transitivity.EXPLICIT` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
 ==== Returns
@@ -153,7 +153,7 @@ is_entity_type() -> bool
 
 ==== Description
 
-Checks if the concept is an `EntityType`.
+Checks if the concept is an ``EntityType``.
 
 ==== Returns
 
@@ -178,7 +178,7 @@ abstract set_supertype(transaction: TypeDBTransaction, super_entity_type: Entity
 
 ==== Description
 
-Sets the supplied `EntityType` as the supertype of the current `EntityType`.
+Sets the supplied ``EntityType`` as the supertype of the current ``EntityType``.
 
 ==== Input parameters
 
@@ -187,7 +187,7 @@ Sets the supplied `EntityType` as the supertype of the current `EntityType`.
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `super_entity_type` a| The `EntityType` to set as the supertype of this `EntityType` a| `EntityType` a| 
+a| `super_entity_type` a| The ``EntityType`` to set as the supertype of this ``EntityType`` a| `EntityType` a| 
 |===
 
 ==== Returns

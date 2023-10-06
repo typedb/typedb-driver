@@ -20,7 +20,7 @@ abstract as_boolean() -> bool
 
 ==== Description
 
-Returns a `boolean` value of this value concept. If the value has another type, raises an exception.
+Returns a ``boolean`` value of this value concept. If the value has another type, raises an exception.
 
 ==== Returns
 
@@ -45,7 +45,7 @@ abstract as_datetime() -> datetime
 
 ==== Description
 
-Returns a `datetime` value of this value concept. If the value has another type, raises an exception.
+Returns a ``datetime`` value of this value concept. If the value has another type, raises an exception.
 
 ==== Returns
 
@@ -70,7 +70,7 @@ abstract as_double() -> float
 
 ==== Description
 
-Returns a `double` value of this value concept. If the value has another type, raises an exception.
+Returns a ``double`` value of this value concept. If the value has another type, raises an exception.
 
 ==== Returns
 
@@ -95,7 +95,7 @@ abstract as_long() -> int
 
 ==== Description
 
-Returns a `long` value of this value concept. If the value has another type, raises an exception.
+Returns a ``long`` value of this value concept. If the value has another type, raises an exception.
 
 ==== Returns
 
@@ -120,7 +120,7 @@ abstract as_string() -> str
 
 ==== Description
 
-Returns a `string` value of this value concept. If the value has another type, raises an exception.
+Returns a ``string`` value of this value concept. If the value has another type, raises an exception.
 
 ==== Returns
 
@@ -145,7 +145,7 @@ as_value() -> Value
 
 ==== Description
 
-Casts the concept to `Value`.
+Casts the concept to ``Value``.
 
 ==== Returns
 
@@ -195,7 +195,7 @@ abstract get_value_type() -> ValueType
 
 ==== Description
 
-Retrieves the `ValueType` of this value concept.
+Retrieves the ``ValueType`` of this value concept.
 
 ==== Returns
 
@@ -220,7 +220,7 @@ abstract is_boolean() -> bool
 
 ==== Description
 
-Returns `True` if the value which this value concept holds is of type `boolean`. Otherwise, returns `False`.
+Returns ``True`` if the value which this value concept holds is of type ``boolean``. Otherwise, returns ``False``.
 
 ==== Returns
 
@@ -245,7 +245,7 @@ abstract is_datetime() -> bool
 
 ==== Description
 
-Returns `True` if the value which this value concept holds is of type `datetime`. Otherwise, returns `False`.
+Returns ``True`` if the value which this value concept holds is of type ``datetime``. Otherwise, returns ``False``.
 
 ==== Returns
 
@@ -270,7 +270,7 @@ abstract is_double() -> bool
 
 ==== Description
 
-Returns `True` if the value which this value concept holds is of type `double`. Otherwise, returns `False`.
+Returns ``True`` if the value which this value concept holds is of type ``double``. Otherwise, returns ``False``.
 
 ==== Returns
 
@@ -295,7 +295,7 @@ abstract is_long() -> bool
 
 ==== Description
 
-Returns `True` if the value which this value concept holds is of type `long`. Otherwise, returns `False`.
+Returns ``True`` if the value which this value concept holds is of type ``long``. Otherwise, returns ``False``.
 
 ==== Returns
 
@@ -320,7 +320,7 @@ abstract is_string() -> bool
 
 ==== Description
 
-Returns `True` if the value which this value concept holds is of type `string`. Otherwise, returns `False`.
+Returns ``True`` if the value which this value concept holds is of type ``string``. Otherwise, returns ``False``.
 
 ==== Returns
 
@@ -345,7 +345,7 @@ is_value() -> bool
 
 ==== Description
 
-Checks if the concept is a `Value`.
+Checks if the concept is a ``Value``.
 
 ==== Returns
 

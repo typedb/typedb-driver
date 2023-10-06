@@ -88,7 +88,7 @@ ConceptManager concepts()
 
 ==== Description
 
-The `ConceptManager` for this transaction, providing access to all Concept API methods.
+The ``ConceptManager`` for this transaction, providing access to all Concept API methods.
 
 ==== Returns
 
@@ -107,7 +107,7 @@ LogicManager logic()
 
 ==== Description
 
-The `LogicManager` for this Transaction, providing access to all Concept API - Logic methods.
+The ``LogicManager`` for this Transaction, providing access to all Concept API - Logic methods.
 
 ==== Returns
 
@@ -126,7 +126,7 @@ QueryManager query()
 
 ==== Description
 
-The``QueryManager`` for this Transaction, from which any TypeQL query can be executed.
+The````QueryManager```` for this Transaction, from which any TypeQL query can be executed.
 
 ==== Returns
 

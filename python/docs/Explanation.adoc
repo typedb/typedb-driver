@@ -70,7 +70,7 @@ abstract query_variable_mapping(var: str) -> set[str]
 
 ==== Description
 
-Retrieves the rule variables corresponding to the query variable var for this `Explanation`.
+Retrieves the rule variables corresponding to the query variable var for this ``Explanation``.
 
 ==== Input parameters
 
@@ -104,7 +104,7 @@ abstract query_variables() -> set[str]
 
 ==== Description
 
-Retrieves the query variables for this `Explanation`.
+Retrieves the query variables for this ``Explanation``.
 
 ==== Returns
 

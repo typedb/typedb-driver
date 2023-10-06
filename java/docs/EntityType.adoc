@@ -29,7 +29,7 @@ default boolean isEntityType()
 
 ==== Description
 
-Checks if the concept is an `EntityType`. 
+Checks if the concept is an ``EntityType``. 
 
 
 ==== Returns
@@ -56,7 +56,7 @@ default EntityType asEntityType()
 
 ==== Description
 
-Casts the concept to `EntityType`. 
+Casts the concept to ``EntityType``. 
 
 
 ==== Returns
@@ -83,7 +83,7 @@ Entity create​(TypeDBTransaction transaction)
 
 ==== Description
 
-Creates and returns a new instance of this `EntityType`. 
+Creates and returns a new instance of this ``EntityType``. 
 
 
 ==== Input parameters
@@ -119,10 +119,10 @@ java.util.stream.Stream<? extends Entity> getInstances​(TypeDBTransaction tran
 
 ==== Description
 
-Retrieves all `Entity` objects that are instances of this `EntityType` or its subtypes. Equivalent to `getInstances(transaction, Transitivity.TRANSITIVE)`
+Retrieves all ``Entity`` objects that are instances of this ``EntityType`` or its subtypes. Equivalent to ``getInstances(transaction, Transitivity.TRANSITIVE)``
 
 
-See also: <<#_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,`getInstances(TypeDBTransaction, Transitivity)`>>
+See also: <<#_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getInstances(TypeDBTransaction, Transitivity)``>>
 
 
 ==== Returns
@@ -143,7 +143,7 @@ java.util.stream.Stream<? extends Entity> getInstances​(TypeDBTransaction tran
 
 ==== Description
 
-Retrieves `Entity` objects that are instances of this exact `EntityType` OR this `EntityType` and any of its subtypes. 
+Retrieves ``Entity`` objects that are instances of this exact ``EntityType`` OR this ``EntityType`` and any of its subtypes. 
 
 
 ==== Input parameters
@@ -153,7 +153,7 @@ Retrieves `Entity` objects that are instances of this exact `EntityType` OR this
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `transitivity` a| `Transitivity.EXPLICIT` for direct instances only, `Transitivity.TRANSITIVE` to include subtypes a| `Concept.Transitivity` 
+a| `transitivity` a| ``Transitivity.EXPLICIT`` for direct instances only, ``Transitivity.TRANSITIVE`` to include subtypes a| `Concept.Transitivity` 
 |===
 
 ==== Returns
@@ -180,10 +180,10 @@ java.util.stream.Stream<? extends EntityType> getSubtypes​(TypeDBTransaction t
 
 ==== Description
 
-Retrieves all (direct and indirect) subtypes of the `EntityType`. Equivalent to `getSubtypes(transaction, Transitivity.TRANSITIVE)`
+Retrieves all (direct and indirect) subtypes of the ``EntityType``. Equivalent to ``getSubtypes(transaction, Transitivity.TRANSITIVE)``
 
 
-See also: <<#_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,`getSubtypes(TypeDBTransaction, Transitivity)`>>
+See also: <<#_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getSubtypes(TypeDBTransaction, Transitivity)``>>
 
 
 ==== Returns
@@ -204,7 +204,7 @@ java.util.stream.Stream<? extends EntityType> getSubtypes​(TypeDBTransaction t
 
 ==== Description
 
-Retrieves all direct and indirect (or direct only) subtypes of the `EntityType`. 
+Retrieves all direct and indirect (or direct only) subtypes of the ``EntityType``. 
 
 
 ==== Input parameters
@@ -214,7 +214,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the `EntityType`.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect subtypes, `Transitivity.EXPLICIT` for direct subtypes only a| `Concept.Transitivity` 
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Concept.Transitivity` 
 |===
 
 ==== Returns
@@ -241,7 +241,7 @@ void setSupertype​(TypeDBTransaction transaction,
 
 ==== Description
 
-Sets the supplied `EntityType` as the supertype of the current `EntityType`. 
+Sets the supplied ``EntityType`` as the supertype of the current ``EntityType``. 
 
 
 ==== Input parameters
@@ -251,7 +251,7 @@ Sets the supplied `EntityType` as the supertype of the current `EntityType`.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `superEntityType` a| The `EntityType` to set as the supertype of this `EntityType` a| `EntityType` 
+a| `superEntityType` a| The ``EntityType`` to set as the supertype of this ``EntityType`` a| `EntityType` 
 |===
 
 ==== Returns
@@ -277,7 +277,7 @@ default Attribute asAttribute()
 
 ==== Description
 
-Casts the concept to `Attribute`. 
+Casts the concept to ``Attribute``. 
 
 
 ==== Returns
@@ -303,7 +303,7 @@ default AttributeType asAttributeType()
 
 ==== Description
 
-Casts the concept to `AttributeType`. 
+Casts the concept to ``AttributeType``. 
 
 
 ==== Returns
@@ -329,7 +329,7 @@ default Entity asEntity()
 
 ==== Description
 
-Casts the concept to `Entity`. 
+Casts the concept to ``Entity``. 
 
 
 ==== Returns
@@ -355,7 +355,7 @@ default Relation asRelation()
 
 ==== Description
 
-Casts the concept to `Relation`. 
+Casts the concept to ``Relation``. 
 
 
 ==== Returns
@@ -381,7 +381,7 @@ default RelationType asRelationType()
 
 ==== Description
 
-Casts the concept to `RelationType`. 
+Casts the concept to ``RelationType``. 
 
 
 ==== Returns
@@ -407,7 +407,7 @@ default RoleType asRoleType()
 
 ==== Description
 
-Casts the concept to `RoleType`. 
+Casts the concept to ``RoleType``. 
 
 
 ==== Returns
@@ -433,7 +433,7 @@ default Thing asThing()
 
 ==== Description
 
-Casts the concept to `Thing`. 
+Casts the concept to ``Thing``. 
 
 
 ==== Returns
@@ -459,7 +459,7 @@ default Value asValue()
 
 ==== Description
 
-Casts the concept to `Value`. 
+Casts the concept to ``Value``. 
 
 
 ==== Returns
@@ -486,7 +486,7 @@ default boolean isAttribute()
 
 ==== Description
 
-Checks if the concept is an `Attribute`. 
+Checks if the concept is an ``Attribute``. 
 
 
 ==== Returns
@@ -513,7 +513,7 @@ default boolean isAttributeType()
 
 ==== Description
 
-Checks if the concept is an `AttributeType`. 
+Checks if the concept is an ``AttributeType``. 
 
 
 ==== Returns
@@ -540,7 +540,7 @@ default boolean isEntity()
 
 ==== Description
 
-Checks if the concept is an `Entity`. 
+Checks if the concept is an ``Entity``. 
 
 
 ==== Returns
@@ -567,7 +567,7 @@ default boolean isRelation()
 
 ==== Description
 
-Checks if the concept is a `Relation`. 
+Checks if the concept is a ``Relation``. 
 
 
 ==== Returns
@@ -594,7 +594,7 @@ default boolean isRelationType()
 
 ==== Description
 
-Checks if the concept is a `RelationType`. 
+Checks if the concept is a ``RelationType``. 
 
 
 ==== Returns
@@ -621,7 +621,7 @@ default boolean isRoleType()
 
 ==== Description
 
-Checks if the concept is a `RoleType`. 
+Checks if the concept is a ``RoleType``. 
 
 
 ==== Returns
@@ -648,7 +648,7 @@ default boolean isThing()
 
 ==== Description
 
-Checks if the concept is a `Thing`. 
+Checks if the concept is a ``Thing``. 
 
 
 ==== Returns
@@ -675,7 +675,7 @@ default boolean isValue()
 
 ==== Description
 
-Checks if the concept is a `Value`. 
+Checks if the concept is a ``Value``. 
 
 
 ==== Returns

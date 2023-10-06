@@ -3,7 +3,7 @@
 
 == Description
 
-TypeDB session and transaction options. `TypeDBOptions` object can be used to override the default server behaviour query processing. Options could be specified either as constructor arguments or using setters.
+TypeDB session and transaction options. ``TypeDBOptions`` object can be used to override the default server behaviour query processing. Options could be specified either as constructor arguments or using setters.
 
 == Methods
 
@@ -28,7 +28,7 @@ new TypeDBOptions(obj?): TypeDBOptions
 [options="header"]
 |===
 |Name |Description |Type
-a| `obj` a| If set to `True`, enables explanations for queries. Only affects read transactions. a| `{ explain?: boolean; infer?: boolean; parallel?: boolean; prefetch?: boolean; prefetchSize?: number; readAnyReplica?: boolean; schemaLockAcquireTimeoutMillis?: number; sessionIdleTimeoutMillis?: number; traceInference?: boolean; transactionTimeoutMillis?: number; } = {}` 
+a| `obj` a| If set to ``True``, enables explanations for queries. Only affects read transactions. a| `{ explain?: boolean; infer?: boolean; parallel?: boolean; prefetch?: boolean; prefetchSize?: number; readAnyReplica?: boolean; schemaLockAcquireTimeoutMillis?: number; sessionIdleTimeoutMillis?: number; traceInference?: boolean; transactionTimeoutMillis?: number; } = {}` 
 |===
 
 ==== Returns
@@ -47,7 +47,7 @@ get explain(): boolean
 
 ==== Description
 
-If set to `True`, enables explanations for queries. Only affects read transactions.
+If set to ``True``, enables explanations for queries. Only affects read transactions.
 
 ==== Returns
 
@@ -65,7 +65,7 @@ set explain(value): void
 
 ==== Description
 
-If set to `True`, enables explanations for queries. Only affects read transactions.
+If set to ``True``, enables explanations for queries. Only affects read transactions.
 
 ==== Returns
 
@@ -83,7 +83,7 @@ get infer(): boolean
 
 ==== Description
 
-If set to `True`, enables inference for queries. Only settable at transaction level and above. Only affects read transactions.
+If set to ``True``, enables inference for queries. Only settable at transaction level and above. Only affects read transactions.
 
 ==== Returns
 
@@ -101,7 +101,7 @@ set infer(value): void
 
 ==== Description
 
-If set to `True`, enables inference for queries. Only settable at transaction level and above. Only affects read transactions.
+If set to ``True``, enables inference for queries. Only settable at transaction level and above. Only affects read transactions.
 
 ==== Returns
 
@@ -119,7 +119,7 @@ get parallel(): boolean
 
 ==== Description
 
-If set to `True`, the server uses parallel instead of single-threaded execution.
+If set to ``True``, the server uses parallel instead of single-threaded execution.
 
 ==== Returns
 
@@ -137,7 +137,7 @@ set parallel(value): void
 
 ==== Description
 
-If set to `True`, the server uses parallel instead of single-threaded execution.
+If set to ``True``, the server uses parallel instead of single-threaded execution.
 
 ==== Returns
 
@@ -155,7 +155,7 @@ get prefetch(): boolean
 
 ==== Description
 
-If set to `True`, the first batch of answers is streamed to the driver even without an explicit request for it.
+If set to ``True``, the first batch of answers is streamed to the driver even without an explicit request for it.
 
 ==== Returns
 
@@ -173,7 +173,7 @@ set prefetch(value): void
 
 ==== Description
 
-If set to `True`, the first batch of answers is streamed to the driver even without an explicit request for it.
+If set to ``True``, the first batch of answers is streamed to the driver even without an explicit request for it.
 
 ==== Returns
 
@@ -227,7 +227,7 @@ get readAnyReplica(): boolean
 
 ==== Description
 
-If set to `True`, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise.
+If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise.
 
 ==== Returns
 
@@ -245,7 +245,7 @@ set readAnyReplica(value): void
 
 ==== Description
 
-If set to `True`, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise.
+If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise.
 
 ==== Returns
 
@@ -335,7 +335,7 @@ get traceInference(): boolean
 
 ==== Description
 
-If set to `True`, reasoning tracing graphs are output in the logging directory. Should be used with `parallel = False`.
+If set to ``True``, reasoning tracing graphs are output in the logging directory. Should be used with ``parallel = False``.
 
 ==== Returns
 
@@ -353,7 +353,7 @@ set traceInference(value): void
 
 ==== Description
 
-If set to `True`, reasoning tracing graphs are output in the logging directory. Should be used with `parallel = False`.
+If set to ``True``, reasoning tracing graphs are output in the logging directory. Should be used with ``parallel = False``.
 
 ==== Returns
 

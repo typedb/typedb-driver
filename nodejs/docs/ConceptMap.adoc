@@ -31,7 +31,7 @@ concepts(): IterableIterator<Concept>
 
 ==== Description
 
-Produces an iterator over all concepts in this `ConceptMap`.
+Produces an iterator over all concepts in this ``ConceptMap``.
 
 ==== Returns
 
@@ -90,7 +90,7 @@ toJSONRecord(): Record<string, Record<string, string | number | boolean>>
 
 ==== Description
 
-Retrieves this `ConceptMap` as JSON.
+Retrieves this ``ConceptMap`` as JSON.
 
 ==== Returns
 
@@ -115,7 +115,7 @@ variables(): IterableIterator<string>
 
 ==== Description
 
-Produces an iterator over all variables in this `ConceptMap`.
+Produces an iterator over all variables in this ``ConceptMap``.
 
 ==== Returns
 

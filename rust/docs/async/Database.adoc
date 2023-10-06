@@ -41,7 +41,7 @@ pub fn replicas_info(&self) -> Vec<ReplicaInfo> <a href="#" class="notable-trait
 
 ==== Description
 
-Returns the `Replica` instances for this database. _Only works in TypeDB Enterprise_
+Returns the ``Replica`` instances for this database. _Only works in TypeDB Enterprise_
 
 ==== Returns
 

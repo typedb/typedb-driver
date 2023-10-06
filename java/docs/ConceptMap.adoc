@@ -23,7 +23,7 @@ java.util.stream.Stream<java.lang.String> variables()
 
 ==== Description
 
-Produces a stream over all variables in this `ConceptMap`. 
+Produces a stream over all variables in this ``ConceptMap``. 
 
 
 ==== Returns
@@ -50,7 +50,7 @@ java.util.stream.Stream<Concept> concepts()
 
 ==== Description
 
-Produces a stream over all concepts in this `ConceptMap`. 
+Produces a stream over all concepts in this ``ConceptMap``. 
 
 
 ==== Returns
@@ -113,7 +113,7 @@ default com.eclipsesource.json.JsonObject toJSON()
 
 ==== Description
 
-Retrieves this `ConceptMap` as JSON. 
+Retrieves this ``ConceptMap`` as JSON. 
 
 
 ==== Returns
@@ -139,7 +139,7 @@ ConceptMap.Explainables explainables()
 
 ==== Description
 
-Gets the `Explainables` object for this `ConceptMap`, exposing which of the concepts in this `ConceptMap` are explainable. 
+Gets the ``Explainables`` object for this ``ConceptMap``, exposing which of the concepts in this ``ConceptMap`` are explainable. 
 
 
 ==== Returns

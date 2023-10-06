@@ -24,7 +24,7 @@ abstract add_player(transaction: TypeDBTransaction, role_type: RoleType, player:
 
 ==== Description
 
-Adds a new role player to play the given role in this `Relation`.
+Adds a new role player to play the given role in this ``Relation``.
 
 ==== Input parameters
 
@@ -33,7 +33,7 @@ Adds a new role player to play the given role in this `Relation`.
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `role_type` a| The role to be played by the `player` a| `RoleType` a| 
+a| `role_type` a| The role to be played by the ``player`` a| `RoleType` a| 
 a| `player` a| The thing to play the role a| `Thing` a| 
 |===
 
@@ -60,7 +60,7 @@ as_relation() -> Relation
 
 ==== Description
 
-Casts the concept to `Relation`.
+Casts the concept to ``Relation``.
 
 ==== Returns
 
@@ -85,7 +85,7 @@ abstract get_players(transaction: TypeDBTransaction) -> dict[RoleType, list[Thin
 
 ==== Description
 
-Retrieves a mapping of all instances involved in the `Relation` and the role each play.
+Retrieves a mapping of all instances involved in the ``Relation`` and the role each play.
 
 ==== Input parameters
 
@@ -119,7 +119,7 @@ abstract get_players_by_role_type(transaction: TypeDBTransaction, *role_types: R
 
 ==== Description
 
-Retrieves all role players of this `Relation`, optionally filtered by given role types.
+Retrieves all role players of this ``Relation``, optionally filtered by given role types.
 
 ==== Input parameters
 
@@ -155,7 +155,7 @@ abstract get_relating(transaction: TypeDBTransaction) -> Iterator[RoleType]
 
 ==== Description
 
-Retrieves all role types currently played in this `Relation`.
+Retrieves all role types currently played in this ``Relation``.
 
 ==== Input parameters
 
@@ -189,7 +189,7 @@ abstract get_type() -> RelationType
 
 ==== Description
 
-Retrieves the type which this `Relation` belongs to.
+Retrieves the type which this ``Relation`` belongs to.
 
 ==== Returns
 
@@ -214,7 +214,7 @@ is_relation() -> bool
 
 ==== Description
 
-Checks if the concept is a `Relation`.
+Checks if the concept is a ``Relation``.
 
 ==== Returns
 
@@ -239,7 +239,7 @@ abstract remove_player(transaction: TypeDBTransaction, role_type: RoleType, play
 
 ==== Description
 
-Removes the association of the given instance that plays the given role in this `Relation`.
+Removes the association of the given instance that plays the given role in this ``Relation``.
 
 ==== Input parameters
 
@@ -248,8 +248,8 @@ Removes the association of the given instance that plays the given role in this 
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `role_type` a| The role to no longer be played by the thing in this `Relation` a| `RoleType` a| 
-a| `player` a| The instance to no longer play the role in this `Relation` a| `Thing` a| 
+a| `role_type` a| The role to no longer be played by the thing in this ``Relation`` a| `RoleType` a| 
+a| `player` a| The instance to no longer play the role in this ``Relation`` a| `Thing` a| 
 |===
 
 ==== Returns

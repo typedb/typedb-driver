@@ -50,7 +50,7 @@ java.util.stream.Stream<ConceptMap> conceptMaps()
 
 ==== Description
 
-Retrieves the `ConceptMap`s of the group. 
+Retrieves the ``ConceptMap``s of the group. 
 
 
 ==== Returns

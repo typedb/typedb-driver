@@ -35,7 +35,7 @@ Value.Type getValueType()
 
 ==== Description
 
-Retrieves the `Value.Type` of this `AttributeType`. 
+Retrieves the ``Value.Type`` of this ``AttributeType``. 
 
 
 ==== Returns
@@ -62,7 +62,7 @@ default boolean isAttributeType()
 
 ==== Description
 
-Checks if the concept is an `AttributeType`. 
+Checks if the concept is an ``AttributeType``. 
 
 
 ==== Returns
@@ -89,7 +89,7 @@ default AttributeType asAttributeType()
 
 ==== Description
 
-Casts the concept to `AttributeType`. 
+Casts the concept to ``AttributeType``. 
 
 
 ==== Returns
@@ -116,7 +116,7 @@ Attribute put​(TypeDBTransaction transaction,
 
 ==== Description
 
-Adds and returns an `Attribute` of this `AttributeType` with the given value. 
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value. 
 
 
 ==== Input parameters
@@ -126,7 +126,7 @@ Adds and returns an `Attribute` of this `AttributeType` with the given value.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| New `Attribute`’s value a| `Value` 
+a| `value` a| New ``Attribute``’s value a| `Value` 
 |===
 
 ==== Returns
@@ -153,7 +153,7 @@ Attribute put​(TypeDBTransaction transaction,
 
 ==== Description
 
-Adds and returns an `Attribute` of this `AttributeType` with the given `String` value. 
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``String`` value. 
 
 
 ==== Input parameters
@@ -163,7 +163,7 @@ Adds and returns an `Attribute` of this `AttributeType` with the given `String` 
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| New `Attribute`’s value a| `java.lang.String` 
+a| `value` a| New ``Attribute``’s value a| `java.lang.String` 
 |===
 
 ==== Returns
@@ -190,7 +190,7 @@ Attribute put​(TypeDBTransaction transaction,
 
 ==== Description
 
-Adds and returns an `Attribute` of this `AttributeType` with the given `long` value. 
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``long`` value. 
 
 
 ==== Input parameters
@@ -200,7 +200,7 @@ Adds and returns an `Attribute` of this `AttributeType` with the given `long` va
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| New `Attribute`’s value a| `long` 
+a| `value` a| New ``Attribute``’s value a| `long` 
 |===
 
 ==== Returns
@@ -227,7 +227,7 @@ Attribute put​(TypeDBTransaction transaction,
 
 ==== Description
 
-Adds and returns an `Attribute` of this `AttributeType` with the given `double` value. 
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``double`` value. 
 
 
 ==== Input parameters
@@ -237,7 +237,7 @@ Adds and returns an `Attribute` of this `AttributeType` with the given `double` 
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| New `Attribute`’s value a| `double` 
+a| `value` a| New ``Attribute``’s value a| `double` 
 |===
 
 ==== Returns
@@ -264,7 +264,7 @@ Attribute put​(TypeDBTransaction transaction,
 
 ==== Description
 
-Adds and returns an `Attribute` of this `AttributeType` with the given `boolean` value. 
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``boolean`` value. 
 
 
 ==== Input parameters
@@ -274,7 +274,7 @@ Adds and returns an `Attribute` of this `AttributeType` with the given `boolean`
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| New `Attribute`’s value a| `boolean` 
+a| `value` a| New ``Attribute``’s value a| `boolean` 
 |===
 
 ==== Returns
@@ -301,7 +301,7 @@ Attribute put​(TypeDBTransaction transaction,
 
 ==== Description
 
-Adds and returns an `Attribute` of this `AttributeType` with the given `LocalDateTime` value. 
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``LocalDateTime`` value. 
 
 
 ==== Input parameters
@@ -311,7 +311,7 @@ Adds and returns an `Attribute` of this `AttributeType` with the given `LocalDat
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| New `Attribute`’s value a| `java.time.LocalDateTime` 
+a| `value` a| New ``Attribute``’s value a| `java.time.LocalDateTime` 
 |===
 
 ==== Returns
@@ -339,7 +339,7 @@ Attribute get​(TypeDBTransaction transaction,
 
 ==== Description
 
-Retrieves an `Attribute` of this `AttributeType` with the given value if such `Attribute` exists. Otherwise, returns `None`. 
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``. 
 
 
 ==== Input parameters
@@ -349,7 +349,7 @@ Retrieves an `Attribute` of this `AttributeType` with the given value if such `A
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| `Attribute`’s value a| `Value` 
+a| `value` a| ``Attribute``’s value a| `Value` 
 |===
 
 ==== Returns
@@ -377,7 +377,7 @@ Attribute get​(TypeDBTransaction transaction,
 
 ==== Description
 
-Retrieves an `Attribute` of this `AttributeType` with the given value if such `Attribute` exists. Otherwise, returns `None`. 
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``. 
 
 
 ==== Input parameters
@@ -387,7 +387,7 @@ Retrieves an `Attribute` of this `AttributeType` with the given value if such `A
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| `Attribute`’s value a| `java.lang.String` 
+a| `value` a| ``Attribute``’s value a| `java.lang.String` 
 |===
 
 ==== Returns
@@ -415,7 +415,7 @@ Attribute get​(TypeDBTransaction transaction,
 
 ==== Description
 
-Retrieves an `Attribute` of this `AttributeType` with the given value if such `Attribute` exists. Otherwise, returns `None`. 
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``. 
 
 
 ==== Input parameters
@@ -425,7 +425,7 @@ Retrieves an `Attribute` of this `AttributeType` with the given value if such `A
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| `Attribute`’s value a| `long` 
+a| `value` a| ``Attribute``’s value a| `long` 
 |===
 
 ==== Returns
@@ -453,7 +453,7 @@ Attribute get​(TypeDBTransaction transaction,
 
 ==== Description
 
-Retrieves an `Attribute` of this `AttributeType` with the given value if such `Attribute` exists. Otherwise, returns `None`. 
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``. 
 
 
 ==== Input parameters
@@ -463,7 +463,7 @@ Retrieves an `Attribute` of this `AttributeType` with the given value if such `A
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| `Attribute`’s value a| `double` 
+a| `value` a| ``Attribute``’s value a| `double` 
 |===
 
 ==== Returns
@@ -491,7 +491,7 @@ Attribute get​(TypeDBTransaction transaction,
 
 ==== Description
 
-Retrieves an `Attribute` of this `AttributeType` with the given value if such `Attribute` exists. Otherwise, returns `None`. 
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``. 
 
 
 ==== Input parameters
@@ -501,7 +501,7 @@ Retrieves an `Attribute` of this `AttributeType` with the given value if such `A
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| `Attribute`’s value a| `boolean` 
+a| `value` a| ``Attribute``’s value a| `boolean` 
 |===
 
 ==== Returns
@@ -529,7 +529,7 @@ Attribute get​(TypeDBTransaction transaction,
 
 ==== Description
 
-Retrieves an `Attribute` of this `AttributeType` with the given value if such `Attribute` exists. Otherwise, returns `None`. 
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``. 
 
 
 ==== Input parameters
@@ -539,7 +539,7 @@ Retrieves an `Attribute` of this `AttributeType` with the given value if such `A
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| `Attribute`’s value a| `java.time.LocalDateTime` 
+a| `value` a| ``Attribute``’s value a| `java.time.LocalDateTime` 
 |===
 
 ==== Returns
@@ -565,7 +565,7 @@ java.lang.String getRegex​(TypeDBTransaction transaction)
 
 ==== Description
 
-Retrieves the regular expression that is defined for this `AttributeType`. 
+Retrieves the regular expression that is defined for this ``AttributeType``. 
 
 
 ==== Input parameters
@@ -601,9 +601,9 @@ void setRegex​(TypeDBTransaction transaction,
 
 ==== Description
 
-Sets a regular expression as a constraint for this `AttributeType`. `Values` of all `Attribute`s of this type (inserted earlier or later) should match this regex.
+Sets a regular expression as a constraint for this ``AttributeType``. ``Values`` of all ``Attribute``s of this type (inserted earlier or later) should match this regex.
 
-Can only be applied for `AttributeType`s with a `string` value type.
+Can only be applied for ``AttributeType``s with a ``string`` value type.
 
 
 ==== Input parameters
@@ -639,7 +639,7 @@ void unsetRegex​(TypeDBTransaction transaction)
 
 ==== Description
 
-Removes the regular expression that is defined for this `AttributeType`. 
+Removes the regular expression that is defined for this ``AttributeType``. 
 
 
 ==== Input parameters
@@ -675,7 +675,7 @@ default boolean isBoolean()
 
 ==== Description
 
-Returns `True` if the value for attributes of this type is of type `boolean`. Otherwise, returns `False`. 
+Returns ``True`` if the value for attributes of this type is of type ``boolean``. Otherwise, returns ``False``. 
 
 
 ==== Returns
@@ -702,7 +702,7 @@ default boolean isLong()
 
 ==== Description
 
-Returns `True` if the value for attributes of this type is of type `long`. Otherwise, returns `False`. 
+Returns ``True`` if the value for attributes of this type is of type ``long``. Otherwise, returns ``False``. 
 
 
 ==== Returns
@@ -729,7 +729,7 @@ default boolean isDouble()
 
 ==== Description
 
-Returns `True` if the value for attributes of this type is of type `double`. Otherwise, returns `False`. 
+Returns ``True`` if the value for attributes of this type is of type ``double``. Otherwise, returns ``False``. 
 
 
 ==== Returns
@@ -756,7 +756,7 @@ default boolean isString()
 
 ==== Description
 
-Returns `True` if the value for attributes of this type is of type `string`. Otherwise, returns `False`. 
+Returns ``True`` if the value for attributes of this type is of type ``string``. Otherwise, returns ``False``. 
 
 
 ==== Returns
@@ -783,7 +783,7 @@ default boolean isDateTime()
 
 ==== Description
 
-Returns `True` if the value for attributes of this type is of type `datetime`. Otherwise, returns `False`. 
+Returns ``True`` if the value for attributes of this type is of type ``datetime``. Otherwise, returns ``False``. 
 
 
 ==== Returns
@@ -810,7 +810,7 @@ void setSupertype​(TypeDBTransaction transaction,
 
 ==== Description
 
-Sets the supplied `AttributeType` as the supertype of the current `AttributeType`. 
+Sets the supplied ``AttributeType`` as the supertype of the current ``AttributeType``. 
 
 
 ==== Input parameters
@@ -820,7 +820,7 @@ Sets the supplied `AttributeType` as the supertype of the current `AttributeType
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeType` a| The `AttributeType` to set as the supertype of this `AttributeType` a| `AttributeType` 
+a| `attributeType` a| The ``AttributeType`` to set as the supertype of this ``AttributeType`` a| `AttributeType` 
 |===
 
 ==== Returns
@@ -847,11 +847,11 @@ java.util.stream.Stream<? extends AttributeType> getSubtypes​(TypeDBTransactio
 
 ==== Description
 
-Retrieves all direct and indirect subtypes of this `AttributeType`. 
+Retrieves all direct and indirect subtypes of this ``AttributeType``. 
 
 
 
-See also: `Type.getSubtypes(TypeDBTransaction, Transitivity)`
+See also: ``Type.getSubtypes(TypeDBTransaction, Transitivity)``
 
 
 ==== Input parameters
@@ -888,7 +888,7 @@ java.util.stream.Stream<? extends AttributeType> getSubtypes​(TypeDBTransactio
 
 ==== Description
 
-Retrieves all direct and indirect subtypes of this `AttributeType` with given `Value.Type`. 
+Retrieves all direct and indirect subtypes of this ``AttributeType`` with given ``Value.Type``. 
 
 
 ==== Input parameters
@@ -898,7 +898,7 @@ Retrieves all direct and indirect subtypes of this `AttributeType` with given `V
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `valueType` a| `Value.Type` for retrieving subtypes a| `Value.Type` 
+a| `valueType` a| ``Value.Type`` for retrieving subtypes a| `Value.Type` 
 |===
 
 ==== Returns
@@ -927,7 +927,7 @@ java.util.stream.Stream<? extends AttributeType> getSubtypes​(TypeDBTransactio
 
 ==== Description
 
-Retrieves all direct and indirect (or direct only) subtypes of this `AttributeType` with given `Value.Type`. 
+Retrieves all direct and indirect (or direct only) subtypes of this ``AttributeType`` with given ``Value.Type``. 
 
 
 ==== Input parameters
@@ -937,8 +937,8 @@ Retrieves all direct and indirect (or direct only) subtypes of this `AttributeTy
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `valueType` a| `Value.Type` for retrieving subtypes a| `Value.Type` 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect subtypes, `Transitivity.EXPLICIT` for direct subtypes only a| `Concept.Transitivity` 
+a| `valueType` a| ``Value.Type`` for retrieving subtypes a| `Value.Type` 
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Concept.Transitivity` 
 |===
 
 ==== Returns
@@ -966,7 +966,7 @@ java.util.stream.Stream<? extends AttributeType> getSubtypes​(TypeDBTransactio
 
 ==== Description
 
-Retrieves all direct and indirect (or direct only) subtypes of this `AttributeType`. 
+Retrieves all direct and indirect (or direct only) subtypes of this ``AttributeType``. 
 
 
 ==== Input parameters
@@ -976,7 +976,7 @@ Retrieves all direct and indirect (or direct only) subtypes of this `AttributeTy
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect subtypes, `Transitivity.EXPLICIT` for direct subtypes only a| `Concept.Transitivity` 
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Concept.Transitivity` 
 |===
 
 ==== Returns
@@ -1003,11 +1003,11 @@ java.util.stream.Stream<? extends Attribute> getInstances​(TypeDBTransaction t
 
 ==== Description
 
-Retrieves all direct and indirect `Attributes` that are instances of this `AttributeType`. 
+Retrieves all direct and indirect ``Attributes`` that are instances of this ``AttributeType``. 
 
 
 
-See also: `ThingType.getInstances(TypeDBTransaction, Transitivity)`
+See also: ``ThingType.getInstances(TypeDBTransaction, Transitivity)``
 
 
 ==== Input parameters
@@ -1044,7 +1044,7 @@ java.util.stream.Stream<? extends Attribute> getInstances​(TypeDBTransaction t
 
 ==== Description
 
-Retrieves all direct and indirect (or direct only) `Attributes` that are instances of this `AttributeType`. 
+Retrieves all direct and indirect (or direct only) ``Attributes`` that are instances of this ``AttributeType``. 
 
 
 ==== Input parameters
@@ -1054,7 +1054,7 @@ Retrieves all direct and indirect (or direct only) `Attributes` that are instanc
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect subtypes, `Transitivity.EXPLICIT` for direct subtypes only a| `Concept.Transitivity` 
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Concept.Transitivity` 
 |===
 
 ==== Returns
@@ -1081,7 +1081,7 @@ java.util.stream.Stream<? extends ThingType> getOwners​(TypeDBTransaction tran
 
 ==== Description
 
-Retrieve all `Things` that own an attribute of this `AttributeType` directly or through inheritance. 
+Retrieve all ``Things`` that own an attribute of this ``AttributeType`` directly or through inheritance. 
 
 
 ==== Input parameters
@@ -1118,7 +1118,7 @@ java.util.stream.Stream<? extends ThingType> getOwners​(TypeDBTransaction tran
 
 ==== Description
 
-Retrieve all `Things` that own an attribute of this `AttributeType`, filtered by `Annotation`s, directly or through inheritance. 
+Retrieve all ``Things`` that own an attribute of this ``AttributeType``, filtered by ``Annotation``s, directly or through inheritance. 
 
 
 ==== Input parameters
@@ -1128,7 +1128,7 @@ Retrieve all `Things` that own an attribute of this `AttributeType`, filtered by
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `annotations` a| Only retrieve `ThingTypes` that have an attribute of this `AttributeType` with all given `Annotation`s a| `java.util.Set<ThingType.Annotation>` 
+a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``AttributeType`` with all given ``Annotation``s a| `java.util.Set<ThingType.Annotation>` 
 |===
 
 ==== Returns
@@ -1156,7 +1156,7 @@ java.util.stream.Stream<? extends ThingType> getOwners​(TypeDBTransaction tran
 
 ==== Description
 
-Retrieve all `Things` that own an attribute of this `AttributeType`. 
+Retrieve all ``Things`` that own an attribute of this ``AttributeType``. 
 
 
 ==== Input parameters
@@ -1166,7 +1166,7 @@ Retrieve all `Things` that own an attribute of this `AttributeType`.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and inherited ownership, `Transitivity.EXPLICIT` for direct ownership only a| `Concept.Transitivity` 
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited ownership, ``Transitivity.EXPLICIT`` for direct ownership only a| `Concept.Transitivity` 
 |===
 
 ==== Returns
@@ -1195,7 +1195,7 @@ java.util.stream.Stream<? extends ThingType> getOwners​(TypeDBTransaction tran
 
 ==== Description
 
-Retrieve all `Things` that own an attribute of this `AttributeType`, filtered by `Annotation`s. 
+Retrieve all ``Things`` that own an attribute of this ``AttributeType``, filtered by ``Annotation``s. 
 
 
 ==== Input parameters
@@ -1205,8 +1205,8 @@ Retrieve all `Things` that own an attribute of this `AttributeType`, filtered by
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `annotations` a| Only retrieve `ThingTypes` that have an attribute of this `AttributeType` with all given `Annotation`s a| `java.util.Set<ThingType.Annotation>` 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and inherited ownership, `Transitivity.EXPLICIT` for direct ownership only a| `Concept.Transitivity` 
+a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``AttributeType`` with all given ``Annotation``s a| `java.util.Set<ThingType.Annotation>` 
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited ownership, ``Transitivity.EXPLICIT`` for direct ownership only a| `Concept.Transitivity` 
 |===
 
 ==== Returns
@@ -1232,7 +1232,7 @@ default Attribute asAttribute()
 
 ==== Description
 
-Casts the concept to `Attribute`. 
+Casts the concept to ``Attribute``. 
 
 
 ==== Returns
@@ -1258,7 +1258,7 @@ default Entity asEntity()
 
 ==== Description
 
-Casts the concept to `Entity`. 
+Casts the concept to ``Entity``. 
 
 
 ==== Returns
@@ -1284,7 +1284,7 @@ default EntityType asEntityType()
 
 ==== Description
 
-Casts the concept to `EntityType`. 
+Casts the concept to ``EntityType``. 
 
 
 ==== Returns
@@ -1310,7 +1310,7 @@ default Relation asRelation()
 
 ==== Description
 
-Casts the concept to `Relation`. 
+Casts the concept to ``Relation``. 
 
 
 ==== Returns
@@ -1336,7 +1336,7 @@ default RelationType asRelationType()
 
 ==== Description
 
-Casts the concept to `RelationType`. 
+Casts the concept to ``RelationType``. 
 
 
 ==== Returns
@@ -1362,7 +1362,7 @@ default RoleType asRoleType()
 
 ==== Description
 
-Casts the concept to `RoleType`. 
+Casts the concept to ``RoleType``. 
 
 
 ==== Returns
@@ -1388,7 +1388,7 @@ default Thing asThing()
 
 ==== Description
 
-Casts the concept to `Thing`. 
+Casts the concept to ``Thing``. 
 
 
 ==== Returns
@@ -1414,7 +1414,7 @@ default Value asValue()
 
 ==== Description
 
-Casts the concept to `Value`. 
+Casts the concept to ``Value``. 
 
 
 ==== Returns
@@ -1441,7 +1441,7 @@ default boolean isAttribute()
 
 ==== Description
 
-Checks if the concept is an `Attribute`. 
+Checks if the concept is an ``Attribute``. 
 
 
 ==== Returns
@@ -1468,7 +1468,7 @@ default boolean isEntity()
 
 ==== Description
 
-Checks if the concept is an `Entity`. 
+Checks if the concept is an ``Entity``. 
 
 
 ==== Returns
@@ -1495,7 +1495,7 @@ default boolean isEntityType()
 
 ==== Description
 
-Checks if the concept is an `EntityType`. 
+Checks if the concept is an ``EntityType``. 
 
 
 ==== Returns
@@ -1522,7 +1522,7 @@ default boolean isRelation()
 
 ==== Description
 
-Checks if the concept is a `Relation`. 
+Checks if the concept is a ``Relation``. 
 
 
 ==== Returns
@@ -1549,7 +1549,7 @@ default boolean isRelationType()
 
 ==== Description
 
-Checks if the concept is a `RelationType`. 
+Checks if the concept is a ``RelationType``. 
 
 
 ==== Returns
@@ -1576,7 +1576,7 @@ default boolean isRoleType()
 
 ==== Description
 
-Checks if the concept is a `RoleType`. 
+Checks if the concept is a ``RoleType``. 
 
 
 ==== Returns
@@ -1603,7 +1603,7 @@ default boolean isThing()
 
 ==== Description
 
-Checks if the concept is a `Thing`. 
+Checks if the concept is a ``Thing``. 
 
 
 ==== Returns
@@ -1630,7 +1630,7 @@ default boolean isValue()
 
 ==== Description
 
-Checks if the concept is a `Value`. 
+Checks if the concept is a ``Value``. 
 
 
 ==== Returns

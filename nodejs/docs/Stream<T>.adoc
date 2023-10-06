@@ -118,8 +118,8 @@ Returns a new stream from this stream consisting only of elements which satisfy 
 |Name |Description |Type
 a| `filter` a| The condition to evaluate.
 Examples
-`// For a query "match $p isa person, has age $a;", only retrieve results having $a &gt;= 60.results = transaction.query.match(query).filter(cm =&gt; cm.get("a").value &gt; 60).collect();
-`Copy a| `((value) => boolean)` 
+``// For a query "match $p isa person, has age $a;", only retrieve results having $a &gt;= 60.results = transaction.query.match(query).filter(cm =&gt; cm.get("a").value &gt; 60).collect();
+``Copy a| `((value) => boolean)` 
 |===
 
 ==== Returns
@@ -236,7 +236,7 @@ map<U>(mapper): Stream<U>
 [options="header"]
 |===
 |Name |Description |Type
-a| `mapper` a| The mapping function to apply. Returns a new stream from this stream by applying the `mapper` function to each element. a| `((value) => U)` 
+a| `mapper` a| The mapping function to apply. Returns a new stream from this stream by applying the ``mapper`` function to each element. a| `((value) => U)` 
 |===
 
 ==== Returns

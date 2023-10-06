@@ -20,7 +20,7 @@ fn get_owners(
 
 ==== Description
 
-Retrieves the instances that own this `Attribute`.
+Retrieves the instances that own this ``Attribute``.
 
 ==== Input parameters
 

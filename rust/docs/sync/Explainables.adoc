@@ -41,7 +41,7 @@ pub fn is_empty(&self) -> bool
 
 ==== Description
 
-Checks if this `Explainables` does not contain any `Explainable` object.
+Checks if this ``Explainables`` does not contain any ``Explainable`` object.
 
 ==== Returns
 

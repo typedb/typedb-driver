@@ -8,8 +8,8 @@
 [options="header"]
 |===
 |Name |Type |Description
-a| `databases` a| `DatabaseManager` a| The `DatabaseManager` for this connection, providing access to database management methods.
-a| `users` a| `UserManager` a| The `UserManager` instance for this connection, providing access to user management methods.
+a| `databases` a| `DatabaseManager` a| The ``DatabaseManager`` for this connection, providing access to database management methods.
+a| `users` a| `UserManager` a| The ``UserManager`` instance for this connection, providing access to user management methods.
 |===
 // end::properties[]
 
@@ -78,7 +78,7 @@ abstract session(database: str, session_type: SessionType, options: TypeDBOption
 
 ==== Description
 
-Opens a communication tunnel (session) to the given database on the running TypeDB server. For more information on the methods, available with sessions, see the `TypeDBSession` section.
+Opens a communication tunnel (session) to the given database on the running TypeDB server. For more information on the methods, available with sessions, see the ``TypeDBSession`` section.
 
 ==== Input parameters
 
@@ -88,7 +88,7 @@ Opens a communication tunnel (session) to the given database on the running Type
 |Name |Description |Type |Default Value
 a| `database` a| The name of the database with which the session connects a| `str` a| 
 a| `session_type` a| The type of session to be created (DATA or SCHEMA) a| `SessionType` a| 
-a| `options` a| `TypeDBOptions` for the session a| `TypeDBOptions \| None` a| `None`
+a| `options` a| ``TypeDBOptions`` for the session a| `TypeDBOptions \| None` a| `None`
 |===
 
 ==== Returns

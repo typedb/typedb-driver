@@ -29,7 +29,7 @@ default boolean isRelationType()
 
 ==== Description
 
-Checks if the concept is a `RelationType`. 
+Checks if the concept is a ``RelationType``. 
 
 
 ==== Returns
@@ -56,7 +56,7 @@ default RelationType asRelationType()
 
 ==== Description
 
-Casts the concept to `RelationType`. 
+Casts the concept to ``RelationType``. 
 
 
 ==== Returns
@@ -83,7 +83,7 @@ Relation create​(TypeDBTransaction transaction)
 
 ==== Description
 
-Creates and returns an instance of this `RelationType`. 
+Creates and returns an instance of this ``RelationType``. 
 
 
 ==== Input parameters
@@ -119,10 +119,10 @@ java.util.stream.Stream<? extends Relation> getInstances​(TypeDBTransaction tr
 
 ==== Description
 
-Retrieves all `Relation` objects that are instances of this `RelationType` or its subtypes. Equivalent to `getInstances(transaction, Transitivity.TRANSITIVE)`
+Retrieves all ``Relation`` objects that are instances of this ``RelationType`` or its subtypes. Equivalent to ``getInstances(transaction, Transitivity.TRANSITIVE)``
 
 
-See also: <<#_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,`getInstances(TypeDBTransaction, Transitivity)`>>
+See also: <<#_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getInstances(TypeDBTransaction, Transitivity)``>>
 
 
 ==== Returns
@@ -143,7 +143,7 @@ java.util.stream.Stream<? extends Relation> getInstances​(TypeDBTransaction tr
 
 ==== Description
 
-Retrieves `Relation`s that are instances of this exact `RelationType`, OR this `RelationType` and any of its subtypes. 
+Retrieves ``Relation``s that are instances of this exact ``RelationType``, OR this ``RelationType`` and any of its subtypes. 
 
 
 ==== Input parameters
@@ -153,7 +153,7 @@ Retrieves `Relation`s that are instances of this exact `RelationType`, OR this `
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect instances, `Transitivity.EXPLICIT` for direct relates only a| `Concept.Transitivity` 
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect instances, ``Transitivity.EXPLICIT`` for direct relates only a| `Concept.Transitivity` 
 |===
 
 ==== Returns
@@ -180,10 +180,10 @@ java.util.stream.Stream<? extends RoleType> getRelates​(TypeDBTransaction tran
 
 ==== Description
 
-Retrieves roles that this `RelationType` relates to directly or via inheritance.
+Retrieves roles that this ``RelationType`` relates to directly or via inheritance.
 
 
-See also: <<#_getRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,`getRelates(TypeDBTransaction, Transitivity)`>>
+See also: <<#_getRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getRelates(TypeDBTransaction, Transitivity)``>>
 
 
 ==== Returns
@@ -204,7 +204,7 @@ java.util.stream.Stream<? extends RoleType> getRelates​(TypeDBTransaction tran
 
 ==== Description
 
-Retrieves roles that this `RelationType` relates to directly or via inheritance. 
+Retrieves roles that this ``RelationType`` relates to directly or via inheritance. 
 
 
 ==== Input parameters
@@ -214,7 +214,7 @@ Retrieves roles that this `RelationType` relates to directly or via inheritance.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and inherited relates, `Transitivity.EXPLICIT` for direct relates only a| `Concept.Transitivity` 
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited relates, ``Transitivity.EXPLICIT`` for direct relates only a| `Concept.Transitivity` 
 |===
 
 ==== Returns
@@ -243,7 +243,7 @@ RoleType getRelates​(TypeDBTransaction transaction,
 
 ==== Description
 
-Retrieves roles that this `RelationType` relates to directly or via inheritance. If `role_label` is given, returns a corresponding `RoleType` or `null`. 
+Retrieves roles that this ``RelationType`` relates to directly or via inheritance. If ``role_label`` is given, returns a corresponding ``RoleType`` or ``null``. 
 
 
 ==== Input parameters
@@ -303,7 +303,7 @@ RoleType getRelatesOverridden​(TypeDBTransaction transaction,
 
 ==== Description
 
-Retrieves a `RoleType` that is overridden by the role with the `role_label`. 
+Retrieves a ``RoleType`` that is overridden by the role with the ``role_label``. 
 
 
 ==== Input parameters
@@ -340,10 +340,10 @@ void setRelates​(TypeDBTransaction transaction,
 
 ==== Description
 
-Sets the new role that this `RelationType` relates to.
+Sets the new role that this ``RelationType`` relates to.
 
 
-See also: <<#_setRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String_java_lang_String,`setRelates(TypeDBTransaction, String, String)`>>
+See also: <<#_setRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String_java_lang_String,``setRelates(TypeDBTransaction, String, String)``>>
 
 
 ==== Returns
@@ -364,10 +364,10 @@ void setRelates​(TypeDBTransaction transaction,
 
 ==== Description
 
-Sets the new role that this `RelationType` relates to.
+Sets the new role that this ``RelationType`` relates to.
 
 
-See also: <<#_setRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String_java_lang_String,`setRelates(TypeDBTransaction, String, String)`>>
+See also: <<#_setRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String_java_lang_String,``setRelates(TypeDBTransaction, String, String)``>>
 
 
 ==== Returns
@@ -388,7 +388,7 @@ void setRelates​(TypeDBTransaction transaction,
 
 ==== Description
 
-Sets the new role that this `RelationType` relates to. If we are setting an overriding type this way, we have to also pass the overridden type as a second argument. 
+Sets the new role that this ``RelationType`` relates to. If we are setting an overriding type this way, we have to also pass the overridden type as a second argument. 
 
 
 ==== Input parameters
@@ -398,7 +398,7 @@ Sets the new role that this `RelationType` relates to. If we are setting an over
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `roleLabel` a| The new role for the `RelationType` to relate to a| `java.lang.String` 
+a| `roleLabel` a| The new role for the ``RelationType`` to relate to a| `java.lang.String` 
 a| `overriddenLabel` a| The label being overridden, if applicable a| `java.lang.String` 
 |===
 
@@ -427,10 +427,10 @@ void unsetRelates​(TypeDBTransaction transaction,
 
 ==== Description
 
-Disallows this `RelationType` from relating to the given role.
+Disallows this ``RelationType`` from relating to the given role.
 
 
-See also: <<#_unsetRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String,`unsetRelates(TypeDBTransaction, String)`>>
+See also: <<#_unsetRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String,``unsetRelates(TypeDBTransaction, String)``>>
 
 
 ==== Returns
@@ -450,7 +450,7 @@ void unsetRelates​(TypeDBTransaction transaction,
 
 ==== Description
 
-Disallows this `RelationType` from relating to the given role. 
+Disallows this ``RelationType`` from relating to the given role. 
 
 
 ==== Input parameters
@@ -487,10 +487,10 @@ java.util.stream.Stream<? extends RelationType> getSubtypes​(TypeDBTransaction
 
 ==== Description
 
-Retrieves all direct and indirect subtypes of the `RelationType`. Equivalent to `getSubtypes(transaction, Transitivity.TRANSITIVE)`
+Retrieves all direct and indirect subtypes of the ``RelationType``. Equivalent to ``getSubtypes(transaction, Transitivity.TRANSITIVE)``
 
 
-See also: <<#_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,`getSubtypes(TypeDBTransaction, Transitivity)`>>
+See also: <<#_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getSubtypes(TypeDBTransaction, Transitivity)``>>
 
 
 ==== Returns
@@ -511,7 +511,7 @@ java.util.stream.Stream<? extends RelationType> getSubtypes​(TypeDBTransaction
 
 ==== Description
 
-Retrieves all direct and indirect (or direct only) subtypes of the `RelationType`. 
+Retrieves all direct and indirect (or direct only) subtypes of the ``RelationType``. 
 
 
 ==== Input parameters
@@ -521,7 +521,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the `RelationType
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `transitivity` a| `Transitivity.TRANSITIVE` for direct and indirect subtypes, `Transitivity.EXPLICIT` for direct subtypes only a| `Concept.Transitivity` 
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Concept.Transitivity` 
 |===
 
 ==== Returns
@@ -548,7 +548,7 @@ void setSupertype​(TypeDBTransaction transaction,
 
 ==== Description
 
-Sets the supplied `RelationType` as the supertype of the current `RelationType`. 
+Sets the supplied ``RelationType`` as the supertype of the current ``RelationType``. 
 
 
 ==== Input parameters
@@ -558,7 +558,7 @@ Sets the supplied `RelationType` as the supertype of the current `RelationType`.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `superRelationType` a| The `RelationType` to set as the supertype of this `RelationType` a| `RelationType` 
+a| `superRelationType` a| The ``RelationType`` to set as the supertype of this ``RelationType`` a| `RelationType` 
 |===
 
 ==== Returns
@@ -584,7 +584,7 @@ default Attribute asAttribute()
 
 ==== Description
 
-Casts the concept to `Attribute`. 
+Casts the concept to ``Attribute``. 
 
 
 ==== Returns
@@ -610,7 +610,7 @@ default AttributeType asAttributeType()
 
 ==== Description
 
-Casts the concept to `AttributeType`. 
+Casts the concept to ``AttributeType``. 
 
 
 ==== Returns
@@ -636,7 +636,7 @@ default Entity asEntity()
 
 ==== Description
 
-Casts the concept to `Entity`. 
+Casts the concept to ``Entity``. 
 
 
 ==== Returns
@@ -662,7 +662,7 @@ default EntityType asEntityType()
 
 ==== Description
 
-Casts the concept to `EntityType`. 
+Casts the concept to ``EntityType``. 
 
 
 ==== Returns
@@ -688,7 +688,7 @@ default Relation asRelation()
 
 ==== Description
 
-Casts the concept to `Relation`. 
+Casts the concept to ``Relation``. 
 
 
 ==== Returns
@@ -714,7 +714,7 @@ default RoleType asRoleType()
 
 ==== Description
 
-Casts the concept to `RoleType`. 
+Casts the concept to ``RoleType``. 
 
 
 ==== Returns
@@ -740,7 +740,7 @@ default Thing asThing()
 
 ==== Description
 
-Casts the concept to `Thing`. 
+Casts the concept to ``Thing``. 
 
 
 ==== Returns
@@ -766,7 +766,7 @@ default Value asValue()
 
 ==== Description
 
-Casts the concept to `Value`. 
+Casts the concept to ``Value``. 
 
 
 ==== Returns
@@ -793,7 +793,7 @@ default boolean isAttribute()
 
 ==== Description
 
-Checks if the concept is an `Attribute`. 
+Checks if the concept is an ``Attribute``. 
 
 
 ==== Returns
@@ -820,7 +820,7 @@ default boolean isAttributeType()
 
 ==== Description
 
-Checks if the concept is an `AttributeType`. 
+Checks if the concept is an ``AttributeType``. 
 
 
 ==== Returns
@@ -847,7 +847,7 @@ default boolean isEntity()
 
 ==== Description
 
-Checks if the concept is an `Entity`. 
+Checks if the concept is an ``Entity``. 
 
 
 ==== Returns
@@ -874,7 +874,7 @@ default boolean isEntityType()
 
 ==== Description
 
-Checks if the concept is an `EntityType`. 
+Checks if the concept is an ``EntityType``. 
 
 
 ==== Returns
@@ -901,7 +901,7 @@ default boolean isRelation()
 
 ==== Description
 
-Checks if the concept is a `Relation`. 
+Checks if the concept is a ``Relation``. 
 
 
 ==== Returns
@@ -928,7 +928,7 @@ default boolean isRoleType()
 
 ==== Description
 
-Checks if the concept is a `RoleType`. 
+Checks if the concept is a ``RoleType``. 
 
 
 ==== Returns
@@ -955,7 +955,7 @@ default boolean isThing()
 
 ==== Description
 
-Checks if the concept is a `Thing`. 
+Checks if the concept is a ``Thing``. 
 
 
 ==== Returns
@@ -982,7 +982,7 @@ default boolean isValue()
 
 ==== Description
 
-Checks if the concept is a `Value`. 
+Checks if the concept is a ``Value``. 
 
 
 ==== Returns

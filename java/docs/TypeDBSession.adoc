@@ -118,7 +118,7 @@ TypeDBTransaction transaction​(TypeDBTransaction.Type type)
 Opens a transaction on the database connected to the session with default options.
 
 
-See also: <<#_transaction_com_vaticle_typedb_driver_api_TypeDBTransaction_Type_com_vaticle_typedb_driver_api_TypeDBOptions,`transaction(TypeDBTransaction.Type, TypeDBOptions)`>>
+See also: <<#_transaction_com_vaticle_typedb_driver_api_TypeDBTransaction_Type_com_vaticle_typedb_driver_api_TypeDBOptions,``transaction(TypeDBTransaction.Type, TypeDBOptions)``>>
 
 
 ==== Returns

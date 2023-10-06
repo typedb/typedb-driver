@@ -56,7 +56,7 @@ Opens a communication tunnel (session) to the given database on the running Type
 |Name |Description |Type
 a| `database` a| The database with which the session connects a| `Database` 
 a| `session_type` a| The type of session to be created (DATA or SCHEMA) a| `SessionType` 
-a| `options` a| `TypeDBOptions` for the session a| `Options` 
+a| `options` a| ``TypeDBOptions`` for the session a| `Options` 
 |===
 
 ==== Returns

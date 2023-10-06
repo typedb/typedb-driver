@@ -3,7 +3,7 @@
 
 == Description
 
-Class defining the error-code and message template for `TypeDBDriverError`s
+Class defining the error-code and message template for ``TypeDBDriverError``s
 
 == Methods
 
@@ -68,7 +68,7 @@ message(...args): string
 
 ==== Description
 
-Generates the error message by substituting `args` into the messageTemplate
+Generates the error message by substituting ``args`` into the messageTemplate
 
 ==== Input parameters
 

@@ -16,7 +16,7 @@ fn is_abstract(&self) -> bool
 
 ==== Description
 
-Checks if the type is prevented from having data instances (i.e., `abstract`).
+Checks if the type is prevented from having data instances (i.e., ``abstract``).
 
 ==== Returns
 
@@ -84,7 +84,7 @@ fn get_relation_type(
 
 ==== Description
 
-Retrieves `RelationType`s that this role is related to (directly or indirectly).
+Retrieves ``RelationType``s that this role is related to (directly or indirectly).
 
 ==== Input parameters
 
@@ -167,7 +167,7 @@ Renames the label of the type. The new label must remain unique.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `new_label` a| The new `Label` to be given to the type. a| `String` 
+a| `new_label` a| The new ``Label`` to be given to the type. a| `String` 
 |===
 
 ==== Returns
@@ -199,7 +199,7 @@ fn get_supertype(
 
 ==== Description
 
-Retrieves the most immediate supertype of the `RoleType`.
+Retrieves the most immediate supertype of the ``RoleType``.
 
 ==== Input parameters
 
@@ -239,7 +239,7 @@ fn get_supertypes(
 
 ==== Description
 
-Retrieves all supertypes of the `RoleType`.
+Retrieves all supertypes of the ``RoleType``.
 
 ==== Input parameters
 
@@ -280,7 +280,7 @@ fn get_subtypes(
 
 ==== Description
 
-Retrieves all direct and indirect (or direct only) subtypes of the `RoleType`.
+Retrieves all direct and indirect (or direct only) subtypes of the ``RoleType``.
 
 ==== Input parameters
 
@@ -289,7 +289,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the `RoleType`.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `transitivity` a| `Transitivity::Transitive` for direct and indirect subtypes, `Transitivity::Explicit` for direct subtypes only a| `Transitivity` 
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity` 
 |===
 
 ==== Returns
@@ -321,7 +321,7 @@ fn get_relation_types(
 
 ==== Description
 
-Retrieves `RelationType`s that this role is related to (directly or indirectly).
+Retrieves ``RelationType``s that this role is related to (directly or indirectly).
 
 ==== Input parameters
 
@@ -362,7 +362,7 @@ fn get_player_types(
 
 ==== Description
 
-Retrieves the `ThingType`s whose instances play this role.
+Retrieves the ``ThingType``s whose instances play this role.
 
 ==== Input parameters
 
@@ -371,7 +371,7 @@ Retrieves the `ThingType`s whose instances play this role.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `transitivity` a| `Transitivity::Transitive` for direct and indirect playing, `Transitivity::Explicit` for direct playing only a| `Transitivity` 
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect playing, ``Transitivity::Explicit`` for direct playing only a| `Transitivity` 
 |===
 
 ==== Returns
@@ -404,7 +404,7 @@ fn get_relation_instances(
 
 ==== Description
 
-Retrieves the `Relation` instances that this role is related to.
+Retrieves the ``Relation`` instances that this role is related to.
 
 ==== Input parameters
 
@@ -413,7 +413,7 @@ Retrieves the `Relation` instances that this role is related to.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `transitivity` a| `Transitivity::Transitive` for direct and indirect relation, `Transitivity::Explicit` for direct relation only a| `Transitivity` 
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect relation, ``Transitivity::Explicit`` for direct relation only a| `Transitivity` 
 |===
 
 ==== Returns
@@ -446,7 +446,7 @@ fn get_player_instances(
 
 ==== Description
 
-Retrieves the `Thing` instances that play this role.
+Retrieves the ``Thing`` instances that play this role.
 
 ==== Input parameters
 
@@ -455,7 +455,7 @@ Retrieves the `Thing` instances that play this role.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `transitivity` a| `Transitivity::Transitive` for direct and indirect playing, `Transitivity::Explicit` for direct playing only a| `Transitivity` 
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect playing, ``Transitivity::Explicit`` for direct playing only a| `Transitivity` 
 |===
 
 ==== Returns

@@ -37,7 +37,7 @@ addRolePlayer(transaction, roleType, player): Promise<void>
 
 ==== Description
 
-Adds a new role player to play the given role in this `Relation`.
+Adds a new role player to play the given role in this ``Relation``.
 
 ==== Input parameters
 
@@ -46,7 +46,7 @@ Adds a new role player to play the given role in this `Relation`.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `roleType` a| The role to be played by the `player` a| `RoleType` 
+a| `roleType` a| The role to be played by the ``player`` a| `RoleType` 
 a| `player` a| The thing to play the role a| `Thing` 
 |===
 
@@ -73,7 +73,7 @@ asAttribute(): Attribute
 
 ==== Description
 
-Casts the concept to `Attribute`.
+Casts the concept to ``Attribute``.
 
 ==== Returns
 
@@ -98,7 +98,7 @@ asAttributeType(): AttributeType
 
 ==== Description
 
-Casts the concept to `AttributeType`.
+Casts the concept to ``AttributeType``.
 
 ==== Returns
 
@@ -123,7 +123,7 @@ asEntity(): Entity
 
 ==== Description
 
-Casts the concept to `Entity`.
+Casts the concept to ``Entity``.
 
 ==== Returns
 
@@ -148,7 +148,7 @@ asEntityType(): EntityType
 
 ==== Description
 
-Casts the concept to `EntityType`.
+Casts the concept to ``EntityType``.
 
 ==== Returns
 
@@ -173,7 +173,7 @@ asRelation(): Relation
 
 ==== Description
 
-Casts the concept to `Relation`.
+Casts the concept to ``Relation``.
 
 ==== Returns
 
@@ -198,7 +198,7 @@ asRelationType(): RelationType
 
 ==== Description
 
-Casts the concept to `RelationType`.
+Casts the concept to ``RelationType``.
 
 ==== Returns
 
@@ -223,7 +223,7 @@ asRoleType(): RoleType
 
 ==== Description
 
-Casts the concept to `RoleType`.
+Casts the concept to ``RoleType``.
 
 ==== Returns
 
@@ -248,7 +248,7 @@ asThing(): Thing
 
 ==== Description
 
-Casts the concept to `Thing`.
+Casts the concept to ``Thing``.
 
 ==== Returns
 
@@ -273,7 +273,7 @@ asThingType(): ThingType
 
 ==== Description
 
-Casts the concept to `ThingType`.
+Casts the concept to ``ThingType``.
 
 ==== Returns
 
@@ -298,7 +298,7 @@ asType(): Type
 
 ==== Description
 
-Casts the concept to `Type`.
+Casts the concept to ``Type``.
 
 ==== Returns
 
@@ -323,7 +323,7 @@ asValue(): Value
 
 ==== Description
 
-Casts the concept to `Value`.
+Casts the concept to ``Value``.
 
 ==== Returns
 
@@ -348,7 +348,7 @@ delete(transaction): Promise<void>
 
 ==== Description
 
-Deletes this `Thing`.
+Deletes this ``Thing``.
 
 ==== Input parameters
 
@@ -382,7 +382,7 @@ equals(concept): boolean
 
 ==== Description
 
-Checks if this concept is equal to the argument `concept`.
+Checks if this concept is equal to the argument ``concept``.
 
 ==== Input parameters
 
@@ -409,7 +409,7 @@ getHas(transaction): Stream<Attribute>
 
 ==== Description
 
-Retrieves the `Attribute`s that this `Thing` owns. Optionally, filtered by an `AttributeType` or a list of `AttributeType`s. Optionally, filtered by `Annotation`s.
+Retrieves the ``Attribute``s that this ``Thing`` owns. Optionally, filtered by an ``AttributeType`` or a list of ``AttributeType``s. Optionally, filtered by ``Annotation``s.
 
 ==== Input parameters
 
@@ -443,7 +443,7 @@ getHas(transaction, annotations): Stream<Attribute>
 
 ==== Description
 
-Retrieves the `Attribute`s that this `Thing` owns. Optionally, filtered by an `AttributeType` or a list of `AttributeType`s. Optionally, filtered by `Annotation`s.
+Retrieves the ``Attribute``s that this ``Thing`` owns. Optionally, filtered by an ``AttributeType`` or a list of ``AttributeType``s. Optionally, filtered by ``Annotation``s.
 
 ==== Input parameters
 
@@ -452,7 +452,7 @@ Retrieves the `Attribute`s that this `Thing` owns. Optionally, filtered by an `A
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `annotations` a| The `AttributeType`s to filter the attributes by a| `Annotation[]` 
+a| `annotations` a| The ``AttributeType``s to filter the attributes by a| `Annotation[]` 
 |===
 
 ==== Returns
@@ -478,7 +478,7 @@ getHas(transaction, attributeType): Stream<Attribute>
 
 ==== Description
 
-Retrieves the `Attribute`s that this `Thing` owns. Optionally, filtered by an `AttributeType` or a list of `AttributeType`s. Optionally, filtered by `Annotation`s.
+Retrieves the ``Attribute``s that this ``Thing`` owns. Optionally, filtered by an ``AttributeType`` or a list of ``AttributeType``s. Optionally, filtered by ``Annotation``s.
 
 ==== Input parameters
 
@@ -487,7 +487,7 @@ Retrieves the `Attribute`s that this `Thing` owns. Optionally, filtered by an `A
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeType` a| The `AttributeType`s to filter the attributes by a| `AttributeType` 
+a| `attributeType` a| The ``AttributeType``s to filter the attributes by a| `AttributeType` 
 |===
 
 ==== Returns
@@ -513,7 +513,7 @@ getHas(transaction, attributeTypes): Stream<Attribute>
 
 ==== Description
 
-Retrieves the `Attribute`s that this `Thing` owns. Optionally, filtered by an `AttributeType` or a list of `AttributeType`s. Optionally, filtered by `Annotation`s.
+Retrieves the ``Attribute``s that this ``Thing`` owns. Optionally, filtered by an ``AttributeType`` or a list of ``AttributeType``s. Optionally, filtered by ``Annotation``s.
 
 ==== Input parameters
 
@@ -522,7 +522,7 @@ Retrieves the `Attribute`s that this `Thing` owns. Optionally, filtered by an `A
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeTypes` a| The `AttributeType`s to filter the attributes by a| `AttributeType[]` 
+a| `attributeTypes` a| The ``AttributeType``s to filter the attributes by a| `AttributeType[]` 
 |===
 
 ==== Returns
@@ -548,7 +548,7 @@ getHas(transaction, attributeTypes, annotations): Stream<Attribute>
 
 ==== Description
 
-Retrieves the `Attribute`s that this `Thing` owns. Optionally, filtered by an `AttributeType` or a list of `AttributeType`s. Optionally, filtered by `Annotation`s.
+Retrieves the ``Attribute``s that this ``Thing`` owns. Optionally, filtered by an ``AttributeType`` or a list of ``AttributeType``s. Optionally, filtered by ``Annotation``s.
 
 ==== Input parameters
 
@@ -557,8 +557,8 @@ Retrieves the `Attribute`s that this `Thing` owns. Optionally, filtered by an `A
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeTypes` a| The `AttributeType`s to filter the attributes by a| `AttributeType[]` 
-a| `annotations` a| Only retrieve attributes with all given `Annotation`s a| `Annotation[]` 
+a| `attributeTypes` a| The ``AttributeType``s to filter the attributes by a| `AttributeType[]` 
+a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a| `Annotation[]` 
 |===
 
 ==== Returns
@@ -584,7 +584,7 @@ getPlayersByRoleType(transaction): Stream<Thing>
 
 ==== Description
 
-Retrieves all role players of this `Relation`, optionally filtered by given role types.
+Retrieves all role players of this ``Relation``, optionally filtered by given role types.
 
 ==== Input parameters
 
@@ -618,7 +618,7 @@ getPlayersByRoleType(transaction, roleTypes): Stream<Thing>
 
 ==== Description
 
-Retrieves all role players of this `Relation`, optionally filtered by given role types.
+Retrieves all role players of this ``Relation``, optionally filtered by given role types.
 
 ==== Input parameters
 
@@ -653,7 +653,7 @@ getPlaying(transaction): Stream<RoleType>
 
 ==== Description
 
-Retrieves the roles that this `Thing` is currently playing.
+Retrieves the roles that this ``Thing`` is currently playing.
 
 ==== Input parameters
 
@@ -687,7 +687,7 @@ getRelating(transaction): Stream<RoleType>
 
 ==== Description
 
-Retrieves all role types currently played in this `Relation`.
+Retrieves all role types currently played in this ``Relation``.
 
 ==== Input parameters
 
@@ -721,7 +721,7 @@ getRelations(transaction): Stream<Relation>
 
 ==== Description
 
-Retrieves all the `Relations` which this `Thing` plays a role in, optionally filtered by one or more given roles.
+Retrieves all the ``Relations`` which this ``Thing`` plays a role in, optionally filtered by one or more given roles.
 
 ==== Input parameters
 
@@ -755,7 +755,7 @@ getRelations(transaction, roleTypes): Stream<Relation>
 
 ==== Description
 
-Retrieves all the `Relations` which this `Thing` plays a role in, optionally filtered by one or more given roles.
+Retrieves all the ``Relations`` which this ``Thing`` plays a role in, optionally filtered by one or more given roles.
 
 ==== Input parameters
 
@@ -790,7 +790,7 @@ getRolePlayers(transaction): Promise<Map<RoleType, Thing[]>>
 
 ==== Description
 
-Retrieves a mapping of all instances involved in the `Relation` and the role each play.
+Retrieves a mapping of all instances involved in the ``Relation`` and the role each play.
 
 ==== Input parameters
 
@@ -824,7 +824,7 @@ isAttribute(): boolean
 
 ==== Description
 
-Checks if the concept is an `Attribute`.
+Checks if the concept is an ``Attribute``.
 
 ==== Returns
 
@@ -849,7 +849,7 @@ isAttributeType(): boolean
 
 ==== Description
 
-Checks if the concept is an `AttributeType`.
+Checks if the concept is an ``AttributeType``.
 
 ==== Returns
 
@@ -874,7 +874,7 @@ isDeleted(transaction): Promise<boolean>
 
 ==== Description
 
-Checks if this `Thing` is deleted.
+Checks if this ``Thing`` is deleted.
 
 ==== Input parameters
 
@@ -908,7 +908,7 @@ isEntity(): boolean
 
 ==== Description
 
-Checks if the concept is an `Entity`.
+Checks if the concept is an ``Entity``.
 
 ==== Returns
 
@@ -933,7 +933,7 @@ isEntityType(): boolean
 
 ==== Description
 
-Checks if the concept is an `EntityType`.
+Checks if the concept is an ``EntityType``.
 
 ==== Returns
 
@@ -958,7 +958,7 @@ isRelation(): boolean
 
 ==== Description
 
-Checks if the concept is a `Relation`.
+Checks if the concept is a ``Relation``.
 
 ==== Returns
 
@@ -983,7 +983,7 @@ isRelationType(): boolean
 
 ==== Description
 
-Checks if the concept is a `RelationType`.
+Checks if the concept is a ``RelationType``.
 
 ==== Returns
 
@@ -1008,7 +1008,7 @@ isRoleType(): boolean
 
 ==== Description
 
-Checks if the concept is a `RoleType`.
+Checks if the concept is a ``RoleType``.
 
 ==== Returns
 
@@ -1033,7 +1033,7 @@ isThing(): boolean
 
 ==== Description
 
-Checks if the concept is a `Thing`.
+Checks if the concept is a ``Thing``.
 
 ==== Returns
 
@@ -1058,7 +1058,7 @@ isThingType(): boolean
 
 ==== Description
 
-Checks if the concept is a `ThingType`.
+Checks if the concept is a ``ThingType``.
 
 ==== Returns
 
@@ -1083,7 +1083,7 @@ isType(): boolean
 
 ==== Description
 
-Checks if the concept is a `Type`.
+Checks if the concept is a ``Type``.
 
 ==== Returns
 
@@ -1108,7 +1108,7 @@ isValue(): boolean
 
 ==== Description
 
-Checks if the concept is a `Value`.
+Checks if the concept is a ``Value``.
 
 ==== Returns
 
@@ -1133,7 +1133,7 @@ removeRolePlayer(transaction, roleType, player): Promise<void>
 
 ==== Description
 
-Removes the association of the given instance that plays the given role in this `Relation`.
+Removes the association of the given instance that plays the given role in this ``Relation``.
 
 ==== Input parameters
 
@@ -1142,8 +1142,8 @@ Removes the association of the given instance that plays the given role in this 
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `roleType` a| The role to no longer be played by the thing in this `Relation` a| `RoleType` 
-a| `player` a| The instance to no longer play the role in this `Relation` a| `Thing` 
+a| `roleType` a| The role to no longer be played by the thing in this ``Relation`` a| `RoleType` 
+a| `player` a| The instance to no longer play the role in this ``Relation`` a| `Thing` 
 |===
 
 ==== Returns
@@ -1169,7 +1169,7 @@ setHas(transaction, attribute): Promise<void>
 
 ==== Description
 
-Assigns an `Attribute` to be owned by this `Thing`.
+Assigns an ``Attribute`` to be owned by this ``Thing``.
 
 ==== Input parameters
 
@@ -1178,7 +1178,7 @@ Assigns an `Attribute` to be owned by this `Thing`.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attribute` a| The `Attribute` to be owned by this `Thing`. a| `Attribute` 
+a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute` 
 |===
 
 ==== Returns
@@ -1229,7 +1229,7 @@ unsetHas(transaction, attribute): Promise<void>
 
 ==== Description
 
-Unassigns an `Attribute` from this `Thing`.
+Unassigns an ``Attribute`` from this ``Thing``.
 
 ==== Input parameters
 
@@ -1238,7 +1238,7 @@ Unassigns an `Attribute` from this `Thing`.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attribute` a| The `Attribute` to be disowned from this `Thing`. a| `Attribute` 
+a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attribute` 
 |===
 
 ==== Returns

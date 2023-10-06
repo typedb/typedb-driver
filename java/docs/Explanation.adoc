@@ -100,7 +100,7 @@ java.util.Set<java.lang.String> queryVariables()
 
 ==== Description
 
-Retrieves the query variables for this `Explanation`. 
+Retrieves the query variables for this ``Explanation``. 
 
 
 ==== Returns
@@ -126,7 +126,7 @@ java.util.Set<java.lang.String> queryVariableMapping​(java.lang.String var)
 
 ==== Description
 
-Retrieves the rule variables corresponding to the query variable var for this `Explanation`. 
+Retrieves the rule variables corresponding to the query variable var for this ``Explanation``. 
 
 
 ==== Input parameters

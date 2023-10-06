@@ -8,8 +8,8 @@
 [options="header"]
 |===
 |Name |Type |Description
-a| `concepts` a| `ConceptManager` a| The `ConceptManager` for this transaction, providing access to all Concept API methods.
-a| `logic` a| `LogicManager` a| The `LogicManager` for this Transaction, providing access to all Concept API - Logic methods.
+a| `concepts` a| `ConceptManager` a| The ``ConceptManager`` for this transaction, providing access to all Concept API methods.
+a| `logic` a| `LogicManager` a| The ``LogicManager`` for this Transaction, providing access to all Concept API - Logic methods.
 a| `options` a| `TypeDBOptions` a| The options for the transaction
 a| `query` a| `QueryManager` a| The``QueryManager`` for this Transaction, from which any TypeQL query can be executed.
 a| `transaction_type` a| `TransactionType` a| The transaction’s type (READ or WRITE)

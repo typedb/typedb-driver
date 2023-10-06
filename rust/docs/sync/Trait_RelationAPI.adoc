@@ -21,7 +21,7 @@ fn add_role_player(
 
 ==== Description
 
-Adds a new role player to play the given role in this `Relation`.
+Adds a new role player to play the given role in this ``Relation``.
 
 ==== Input parameters
 
@@ -30,7 +30,7 @@ Adds a new role player to play the given role in this `Relation`.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `role_type` a| The role to be played by the `player` a| `RoleType` 
+a| `role_type` a| The role to be played by the ``player`` a| `RoleType` 
 a| `player` a| The thing to play the role a| `Thing` 
 |===
 
@@ -65,7 +65,7 @@ fn remove_role_player(
 
 ==== Description
 
-Removes the association of the given instance that plays the given role in this `Relation`.
+Removes the association of the given instance that plays the given role in this ``Relation``.
 
 ==== Input parameters
 
@@ -74,8 +74,8 @@ Removes the association of the given instance that plays the given role in this 
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `role_type` a| The role to no longer be played by the thing in this `Relation` a| `RoleType` 
-a| `player` a| The instance to no longer play the role in this `Relation` a| `Thing` 
+a| `role_type` a| The role to no longer be played by the thing in this ``Relation`` a| `RoleType` 
+a| `player` a| The instance to no longer play the role in this ``Relation`` a| `Thing` 
 |===
 
 ==== Returns
@@ -108,7 +108,7 @@ fn get_players_by_role_type(
 
 ==== Description
 
-Retrieves all role players of this `Relation`, optionally filtered by given role types.
+Retrieves all role players of this ``Relation``, optionally filtered by given role types.
 
 ==== Input parameters
 
@@ -149,7 +149,7 @@ fn get_role_players(
 
 ==== Description
 
-Retrieves a mapping of all instances involved in the `Relation` and the role each play.
+Retrieves a mapping of all instances involved in the ``Relation`` and the role each play.
 
 ==== Input parameters
 
@@ -190,7 +190,7 @@ fn get_relating(
 
 ==== Description
 
-Retrieves all role types currently played in this `Relation`.
+Retrieves all role types currently played in this ``Relation``.
 
 ==== Input parameters
 

@@ -30,7 +30,7 @@ pub fn get_type(&self) -> ValueType
 
 ==== Description
 
-Retrieves the `ValueType` of this value concept.
+Retrieves the ``ValueType`` of this value concept.
 
 ==== Returns
 

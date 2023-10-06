@@ -32,7 +32,7 @@ AttributeType getType()
 
 ==== Description
 
-Retrieves the type which this `Attribute` belongs to. 
+Retrieves the type which this ``Attribute`` belongs to. 
 
 
 ==== Returns
@@ -59,7 +59,7 @@ default boolean isAttribute()
 
 ==== Description
 
-Checks if the concept is an `Attribute`. 
+Checks if the concept is an ``Attribute``. 
 
 
 ==== Returns
@@ -86,7 +86,7 @@ default Attribute asAttribute()
 
 ==== Description
 
-Casts the concept to `Attribute`. 
+Casts the concept to ``Attribute``. 
 
 
 ==== Returns
@@ -112,7 +112,7 @@ Value getValue()
 
 ==== Description
 
-Retrieves the value which the `Attribute` instance holds. 
+Retrieves the value which the ``Attribute`` instance holds. 
 
 
 ==== Returns
@@ -138,7 +138,7 @@ default com.eclipsesource.json.JsonObject toJSON()
 
 ==== Description
 
-Retrieves this `Attribute` as JSON. 
+Retrieves this ``Attribute`` as JSON. 
 
 
 ==== Returns
@@ -165,7 +165,7 @@ java.util.stream.Stream<? extends Thing> getOwners​(TypeDBTransaction transact
 
 ==== Description
 
-Retrieves the instances that own this `Attribute`. 
+Retrieves the instances that own this ``Attribute``. 
 
 
 ==== Input parameters
@@ -202,7 +202,7 @@ java.util.stream.Stream<? extends Thing> getOwners​(TypeDBTransaction transact
 
 ==== Description
 
-Retrieves the instances that own this `Attribute`. 
+Retrieves the instances that own this ``Attribute``. 
 
 
 ==== Input parameters
@@ -238,7 +238,7 @@ default AttributeType asAttributeType()
 
 ==== Description
 
-Casts the concept to `AttributeType`. 
+Casts the concept to ``AttributeType``. 
 
 
 ==== Returns
@@ -264,7 +264,7 @@ default Entity asEntity()
 
 ==== Description
 
-Casts the concept to `Entity`. 
+Casts the concept to ``Entity``. 
 
 
 ==== Returns
@@ -290,7 +290,7 @@ default EntityType asEntityType()
 
 ==== Description
 
-Casts the concept to `EntityType`. 
+Casts the concept to ``EntityType``. 
 
 
 ==== Returns
@@ -316,7 +316,7 @@ default Relation asRelation()
 
 ==== Description
 
-Casts the concept to `Relation`. 
+Casts the concept to ``Relation``. 
 
 
 ==== Returns
@@ -342,7 +342,7 @@ default RelationType asRelationType()
 
 ==== Description
 
-Casts the concept to `RelationType`. 
+Casts the concept to ``RelationType``. 
 
 
 ==== Returns
@@ -368,7 +368,7 @@ default RoleType asRoleType()
 
 ==== Description
 
-Casts the concept to `RoleType`. 
+Casts the concept to ``RoleType``. 
 
 
 ==== Returns
@@ -394,7 +394,7 @@ default ThingType asThingType()
 
 ==== Description
 
-Casts the concept to `ThingType`. 
+Casts the concept to ``ThingType``. 
 
 
 ==== Returns
@@ -420,7 +420,7 @@ default Type asType()
 
 ==== Description
 
-Casts the concept to `Type`. 
+Casts the concept to ``Type``. 
 
 
 ==== Returns
@@ -446,7 +446,7 @@ default Value asValue()
 
 ==== Description
 
-Casts the concept to `Value`. 
+Casts the concept to ``Value``. 
 
 
 ==== Returns
@@ -473,7 +473,7 @@ default boolean isAttributeType()
 
 ==== Description
 
-Checks if the concept is an `AttributeType`. 
+Checks if the concept is an ``AttributeType``. 
 
 
 ==== Returns
@@ -500,7 +500,7 @@ default boolean isEntity()
 
 ==== Description
 
-Checks if the concept is an `Entity`. 
+Checks if the concept is an ``Entity``. 
 
 
 ==== Returns
@@ -527,7 +527,7 @@ default boolean isEntityType()
 
 ==== Description
 
-Checks if the concept is an `EntityType`. 
+Checks if the concept is an ``EntityType``. 
 
 
 ==== Returns
@@ -554,7 +554,7 @@ default boolean isRelation()
 
 ==== Description
 
-Checks if the concept is a `Relation`. 
+Checks if the concept is a ``Relation``. 
 
 
 ==== Returns
@@ -581,7 +581,7 @@ default boolean isRelationType()
 
 ==== Description
 
-Checks if the concept is a `RelationType`. 
+Checks if the concept is a ``RelationType``. 
 
 
 ==== Returns
@@ -608,7 +608,7 @@ default boolean isRoleType()
 
 ==== Description
 
-Checks if the concept is a `RoleType`. 
+Checks if the concept is a ``RoleType``. 
 
 
 ==== Returns
@@ -635,7 +635,7 @@ default boolean isThingType()
 
 ==== Description
 
-Checks if the concept is a `ThingType`. 
+Checks if the concept is a ``ThingType``. 
 
 
 ==== Returns
@@ -662,7 +662,7 @@ default boolean isType()
 
 ==== Description
 
-Checks if the concept is a `Type`. 
+Checks if the concept is a ``Type``. 
 
 
 ==== Returns
@@ -689,7 +689,7 @@ default boolean isValue()
 
 ==== Description
 
-Checks if the concept is a `Value`. 
+Checks if the concept is a ``Value``. 
 
 
 ==== Returns

@@ -5,7 +5,7 @@
 
 == Description
 
-TypeDB session and transaction options. `TypeDBOptions` object can be used to override the default server behaviour query processing.
+TypeDB session and transaction options. ``TypeDBOptions`` object can be used to override the default server behaviour query processing.
 
 == Methods
 
@@ -22,7 +22,7 @@ public TypeDBOptions()
 
 ==== Description
 
-Produces a new `TypeDBOptions` object. 
+Produces a new ``TypeDBOptions`` object. 
 
 
 ==== Returns
@@ -49,7 +49,7 @@ public java.util.Optional<java.lang.Boolean> infer()
 
 ==== Description
 
-Returns the value set for the inference in this `TypeDBOptions` object. 
+Returns the value set for the inference in this ``TypeDBOptions`` object. 
 
 
 ==== Returns
@@ -111,7 +111,7 @@ public java.util.Optional<java.lang.Boolean> traceInference()
 
 ==== Description
 
-Returns the value set for reasoning tracing in this `TypeDBOptions` object. If set to `true`, reasoning tracing graphs are output in the logging directory. 
+Returns the value set for reasoning tracing in this ``TypeDBOptions`` object. If set to ``true``, reasoning tracing graphs are output in the logging directory. 
 
 
 ==== Returns
@@ -137,7 +137,7 @@ public TypeDBOptions traceInference​(boolean traceInference)
 
 ==== Description
 
-Explicitly enables or disables reasoning tracing. If set to `true`, reasoning tracing graphs are output in the logging directory. Should be used with `parallel = False`. 
+Explicitly enables or disables reasoning tracing. If set to ``true``, reasoning tracing graphs are output in the logging directory. Should be used with ``parallel = False``. 
 
 
 ==== Input parameters
@@ -173,7 +173,7 @@ public java.util.Optional<java.lang.Boolean> explain()
 
 ==== Description
 
-Returns the value set for the explanation in this `TypeDBOptions` object. If set to `true`, explanations for queries are enabled. 
+Returns the value set for the explanation in this ``TypeDBOptions`` object. If set to ``true``, explanations for queries are enabled. 
 
 
 ==== Returns
@@ -199,7 +199,7 @@ public TypeDBOptions explain​(boolean explain)
 
 ==== Description
 
-Explicitly enables or disables explanations. If set to `true`, enables explanations for queries. Only affects read transactions. 
+Explicitly enables or disables explanations. If set to ``true``, enables explanations for queries. Only affects read transactions. 
 
 
 ==== Input parameters
@@ -235,7 +235,7 @@ public java.util.Optional<java.lang.Boolean> parallel()
 
 ==== Description
 
-Returns the value set for the parallel execution in this `TypeDBOptions` object. If set to `true`, the server uses parallel instead of single-threaded execution. 
+Returns the value set for the parallel execution in this ``TypeDBOptions`` object. If set to ``true``, the server uses parallel instead of single-threaded execution. 
 
 
 ==== Returns
@@ -261,7 +261,7 @@ public TypeDBOptions parallel​(boolean parallel)
 
 ==== Description
 
-Explicitly enables or disables parallel execution. If set to `true`, the server uses parallel instead of single-threaded execution. 
+Explicitly enables or disables parallel execution. If set to ``true``, the server uses parallel instead of single-threaded execution. 
 
 
 ==== Input parameters
@@ -297,7 +297,7 @@ public java.util.Optional<java.lang.Boolean> prefetch()
 
 ==== Description
 
-Returns the value set for the prefetching in this `TypeDBOptions` object. If set to `true`, the first batch of answers is streamed to the driver even without an explicit request for it. 
+Returns the value set for the prefetching in this ``TypeDBOptions`` object. If set to ``true``, the first batch of answers is streamed to the driver even without an explicit request for it. 
 
 
 ==== Returns
@@ -323,7 +323,7 @@ public TypeDBOptions prefetch​(boolean prefetch)
 
 ==== Description
 
-Explicitly enables or disables prefetching. If set to `true`, the first batch of answers is streamed to the driver even without an explicit request for it. 
+Explicitly enables or disables prefetching. If set to ``true``, the first batch of answers is streamed to the driver even without an explicit request for it. 
 
 
 ==== Input parameters
@@ -359,7 +359,7 @@ public java.util.Optional<java.lang.Integer> prefetchSize()
 
 ==== Description
 
-Returns the value set for the prefetch size in this `TypeDBOptions` object. If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request. 
+Returns the value set for the prefetch size in this ``TypeDBOptions`` object. If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request. 
 
 
 ==== Returns
@@ -421,7 +421,7 @@ public java.util.Optional<java.lang.Integer> sessionIdleTimeoutMillis()
 
 ==== Description
 
-Returns the value set for the session idle timeout in this `TypeDBOptions` object. If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive. 
+Returns the value set for the session idle timeout in this ``TypeDBOptions`` object. If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive. 
 
 
 ==== Returns
@@ -483,7 +483,7 @@ public java.util.Optional<java.lang.Integer> transactionTimeoutMillis()
 
 ==== Description
 
-Returns the value set for the transaction timeout in this `TypeDBOptions` object. If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions. 
+Returns the value set for the transaction timeout in this ``TypeDBOptions`` object. If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions. 
 
 
 ==== Returns
@@ -544,7 +544,7 @@ public java.util.Optional<java.lang.Integer> schemaLockAcquireTimeoutMillis()
 
 ==== Description
 
-Returns the value set for the schema lock acquire timeout in this `TypeDBOptions` object. If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock. 
+Returns the value set for the schema lock acquire timeout in this ``TypeDBOptions`` object. If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock. 
 
 
 ==== Returns
@@ -606,7 +606,7 @@ public java.util.Optional<java.lang.Boolean> readAnyReplica()
 
 ==== Description
 
-Returns the value set for reading data from any replica in this `TypeDBOptions` object. If set to `True`, enables reading data from any replica, potentially boosting read throughput. 
+Returns the value set for reading data from any replica in this ``TypeDBOptions`` object. If set to ``True``, enables reading data from any replica, potentially boosting read throughput. 
 
 
 ==== Returns
@@ -632,7 +632,7 @@ public TypeDBOptions readAnyReplica​(boolean readAnyReplica)
 
 ==== Description
 
-Explicitly enables or disables reading data from any replica. If set to `True`, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise. 
+Explicitly enables or disables reading data from any replica. If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise. 
 
 
 ==== Input parameters

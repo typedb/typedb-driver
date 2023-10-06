@@ -23,7 +23,7 @@ EntityType getRootEntityType()
 
 ==== Description
 
-Retrieves the root `EntityType`, “entity”. 
+Retrieves the root ``EntityType``, “entity”. 
 
 
 ==== Returns
@@ -50,7 +50,7 @@ RelationType getRootRelationType()
 
 ==== Description
 
-Retrieve the root `RelationType`, “relation”. 
+Retrieve the root ``RelationType``, “relation”. 
 
 
 ==== Returns
@@ -77,7 +77,7 @@ AttributeType getRootAttributeType()
 
 ==== Description
 
-Retrieve the root `AttributeType`, “attribute”. 
+Retrieve the root ``AttributeType``, “attribute”. 
 
 
 ==== Returns
@@ -105,7 +105,7 @@ EntityType getEntityType​(java.lang.String label)
 
 ==== Description
 
-Retrieves an `EntityType` by its label. 
+Retrieves an ``EntityType`` by its label. 
 
 
 ==== Input parameters
@@ -114,7 +114,7 @@ Retrieves an `EntityType` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the `EntityType` to retrieve a| `java.lang.String` 
+a| `label` a| The label of the ``EntityType`` to retrieve a| `java.lang.String` 
 |===
 
 ==== Returns
@@ -142,7 +142,7 @@ RelationType getRelationType​(java.lang.String label)
 
 ==== Description
 
-Retrieves a `RelationType` by its label. 
+Retrieves a ``RelationType`` by its label. 
 
 
 ==== Input parameters
@@ -151,7 +151,7 @@ Retrieves a `RelationType` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the `RelationType` to retrieve a| `java.lang.String` 
+a| `label` a| The label of the ``RelationType`` to retrieve a| `java.lang.String` 
 |===
 
 ==== Returns
@@ -179,7 +179,7 @@ AttributeType getAttributeType​(java.lang.String label)
 
 ==== Description
 
-Retrieves an `AttributeType` by its label. 
+Retrieves an ``AttributeType`` by its label. 
 
 
 ==== Input parameters
@@ -188,7 +188,7 @@ Retrieves an `AttributeType` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the `AttributeType` to retrieve a| `java.lang.String` 
+a| `label` a| The label of the ``AttributeType`` to retrieve a| `java.lang.String` 
 |===
 
 ==== Returns
@@ -214,7 +214,7 @@ EntityType putEntityType​(java.lang.String label)
 
 ==== Description
 
-Creates a new `EntityType` if none exists with the given label, otherwise retrieves the existing one. 
+Creates a new ``EntityType`` if none exists with the given label, otherwise retrieves the existing one. 
 
 
 ==== Input parameters
@@ -223,7 +223,7 @@ Creates a new `EntityType` if none exists with the given label, otherwise retrie
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the `EntityType` to create or retrieve a| `java.lang.String` 
+a| `label` a| The label of the ``EntityType`` to create or retrieve a| `java.lang.String` 
 |===
 
 ==== Returns
@@ -249,7 +249,7 @@ RelationType putRelationType​(java.lang.String label)
 
 ==== Description
 
-Creates a new `RelationType` if none exists with the given label, otherwise retrieves the existing one. 
+Creates a new ``RelationType`` if none exists with the given label, otherwise retrieves the existing one. 
 
 
 ==== Input parameters
@@ -258,7 +258,7 @@ Creates a new `RelationType` if none exists with the given label, otherwise retr
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the `RelationType` to create or retrieve a| `java.lang.String` 
+a| `label` a| The label of the ``RelationType`` to create or retrieve a| `java.lang.String` 
 |===
 
 ==== Returns
@@ -285,7 +285,7 @@ AttributeType putAttributeType​(java.lang.String label,
 
 ==== Description
 
-Creates a new `AttributeType` if none exists with the given label, or retrieves the existing one. 
+Creates a new ``AttributeType`` if none exists with the given label, or retrieves the existing one. 
 
 
 ==== Input parameters
@@ -294,8 +294,8 @@ Creates a new `AttributeType` if none exists with the given label, or retrieves 
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the `AttributeType` to create or retrieve a| `java.lang.String` 
-a| `valueType` a| The value type of the `AttributeType` to create a| `Value.Type` 
+a| `label` a| The label of the ``AttributeType`` to create or retrieve a| `java.lang.String` 
+a| `valueType` a| The value type of the ``AttributeType`` to create a| `Value.Type` 
 |===
 
 ==== Returns
@@ -323,7 +323,7 @@ Entity getEntity​(java.lang.String iid)
 
 ==== Description
 
-Retrieves an `Entity` by its iid. 
+Retrieves an ``Entity`` by its iid. 
 
 
 ==== Input parameters
@@ -332,7 +332,7 @@ Retrieves an `Entity` by its iid.
 [options="header"]
 |===
 |Name |Description |Type
-a| `iid` a| The iid of the `Entity` to retrieve a| `java.lang.String` 
+a| `iid` a| The iid of the ``Entity`` to retrieve a| `java.lang.String` 
 |===
 
 ==== Returns
@@ -360,7 +360,7 @@ Relation getRelation​(java.lang.String iid)
 
 ==== Description
 
-Retrieves a `Relation` by its iid. 
+Retrieves a ``Relation`` by its iid. 
 
 
 ==== Input parameters
@@ -369,7 +369,7 @@ Retrieves a `Relation` by its iid.
 [options="header"]
 |===
 |Name |Description |Type
-a| `iid` a| The iid of the `Relation` to retrieve a| `java.lang.String` 
+a| `iid` a| The iid of the ``Relation`` to retrieve a| `java.lang.String` 
 |===
 
 ==== Returns
@@ -397,7 +397,7 @@ Attribute getAttribute​(java.lang.String iid)
 
 ==== Description
 
-Retrieves an `Attribute` by its iid. 
+Retrieves an ``Attribute`` by its iid. 
 
 
 ==== Input parameters
@@ -406,7 +406,7 @@ Retrieves an `Attribute` by its iid.
 [options="header"]
 |===
 |Name |Description |Type
-a| `iid` a| The iid of the `Attribute` to retrieve a| `java.lang.String` 
+a| `iid` a| The iid of the ``Attribute`` to retrieve a| `java.lang.String` 
 |===
 
 ==== Returns

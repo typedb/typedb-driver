@@ -24,7 +24,7 @@ where
 
 ==== Description
 
-Creates and returns an instance of this `RelationType`.
+Creates and returns an instance of this ``RelationType``.
 
 ==== Input parameters
 
@@ -74,7 +74,7 @@ where
 
 ==== Description
 
-Retrieves the most immediate supertype of the `RelationType`.
+Retrieves the most immediate supertype of the ``RelationType``.
 
 ==== Input parameters
 
@@ -125,7 +125,7 @@ where
 
 ==== Description
 
-Sets the supplied `RelationType` as the supertype of the current `RelationType`.
+Sets the supplied ``RelationType`` as the supertype of the current ``RelationType``.
 
 ==== Input parameters
 
@@ -134,7 +134,7 @@ Sets the supplied `RelationType` as the supertype of the current `RelationType`.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
-a| `supertype` a| The `RelationType` to set as the supertype of this `RelationType` a| `RelationType` 
+a| `supertype` a| The ``RelationType`` to set as the supertype of this ``RelationType`` a| `RelationType` 
 |===
 
 ==== Returns
@@ -171,7 +171,7 @@ fn get_supertypes(
 
 ==== Description
 
-Retrieves all supertypes of the `RelationType`.
+Retrieves all supertypes of the ``RelationType``.
 
 ==== Input parameters
 
@@ -212,7 +212,7 @@ fn get_subtypes(
 
 ==== Description
 
-Retrieves all direct and indirect (or direct only) subtypes of the `RelationType`.
+Retrieves all direct and indirect (or direct only) subtypes of the ``RelationType``.
 
 ==== Input parameters
 
@@ -221,7 +221,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the `RelationType
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `transitivity` a| `Transitivity::Transitive` for direct and indirect subtypes, `Transitivity::Explicit` for direct subtypes only a| `Transitivity` 
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity` 
 |===
 
 ==== Returns
@@ -254,7 +254,7 @@ fn get_instances(
 
 ==== Description
 
-Retrieves all direct and indirect (or direct only) `Relation`s that are instances of this `RelationType`.
+Retrieves all direct and indirect (or direct only) ``Relation``s that are instances of this ``RelationType``.
 
 ==== Input parameters
 
@@ -263,7 +263,7 @@ Retrieves all direct and indirect (or direct only) `Relation`s that are instance
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `transitivity` a| `Transitivity::Transitive` for direct and indirect instances, `Transitivity::Explicit` for direct relates only a| `Transitivity` 
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect instances, ``Transitivity::Explicit`` for direct relates only a| `Transitivity` 
 |===
 
 ==== Returns
@@ -296,7 +296,7 @@ fn get_relates(
 
 ==== Description
 
-Retrieves roles that this `RelationType` relates to directly or via inheritance.
+Retrieves roles that this ``RelationType`` relates to directly or via inheritance.
 
 ==== Input parameters
 
@@ -305,7 +305,7 @@ Retrieves roles that this `RelationType` relates to directly or via inheritance.
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `transitivity` a| `Transitivity::Transitive` for direct and inherited relates, `Transitivity::Explicit` for direct relates only a| `Transitivity` 
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and inherited relates, ``Transitivity::Explicit`` for direct relates only a| `Transitivity` 
 |===
 
 ==== Returns
@@ -343,7 +343,7 @@ where
 
 ==== Description
 
-Retrieves role with a given `role_label` that this `RelationType` relates to.
+Retrieves role with a given ``role_label`` that this ``RelationType`` relates to.
 
 ==== Input parameters
 
@@ -395,7 +395,7 @@ where
 
 ==== Description
 
-Retrieves a `RoleType` that is overridden by the role with the `overridden_role_label`.
+Retrieves a ``RoleType`` that is overridden by the role with the ``overridden_role_label``.
 
 ==== Input parameters
 
@@ -448,7 +448,7 @@ where
 
 ==== Description
 
-Sets the new role that this `RelationType` relates to. If we are setting an overriding type this way, we have to also pass the overridden type as a second argument.
+Sets the new role that this ``RelationType`` relates to. If we are setting an overriding type this way, we have to also pass the overridden type as a second argument.
 
 ==== Input parameters
 
@@ -457,7 +457,7 @@ Sets the new role that this `RelationType` relates to. If we are setting an over
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
-a| `role_label` a| The new role for the `RelationType` to relate to a| `String` 
+a| `role_label` a| The new role for the ``RelationType`` to relate to a| `String` 
 a| `overridden_role_label` a| The label being overridden, if applicable a| `Option<String>` 
 |===
 
@@ -501,7 +501,7 @@ where
 
 ==== Description
 
-Disallows this `RelationType` from relating to the given role.
+Disallows this ``RelationType`` from relating to the given role.
 
 ==== Input parameters
 

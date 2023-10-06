@@ -129,7 +129,7 @@ java.util.stream.Stream<com.vaticle.typedb.common.collection.Pair<java.lang.Stri
 
 ==== Description
 
-Retrieves all of this `ConceptMap`’s explainable relations. 
+Retrieves all of this ``ConceptMap``’s explainable relations. 
 
 
 ==== Returns
@@ -155,7 +155,7 @@ java.util.stream.Stream<com.vaticle.typedb.common.collection.Pair<java.lang.Stri
 
 ==== Description
 
-Retrieves all of this `ConceptMap`’s explainable attributes. 
+Retrieves all of this ``ConceptMap``’s explainable attributes. 
 
 
 ==== Returns
@@ -181,7 +181,7 @@ java.util.stream.Stream<com.vaticle.typedb.common.collection.Pair<com.vaticle.ty
 
 ==== Description
 
-Retrieves all of this `ConceptMap`’s explainable ownerships. 
+Retrieves all of this ``ConceptMap``’s explainable ownerships. 
 
 
 ==== Returns

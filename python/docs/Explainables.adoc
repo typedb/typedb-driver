@@ -54,7 +54,7 @@ abstract attributes() -> Mapping[str, Explainable]
 
 ==== Description
 
-Retrieves all of this `ConceptMap`’s explainable attributes.
+Retrieves all of this ``ConceptMap``’s explainable attributes.
 
 ==== Returns
 
@@ -114,7 +114,7 @@ abstract ownerships() -> Mapping[tuple[str, str], Explainable]
 
 ==== Description
 
-Retrieves all of this `ConceptMap`’s explainable ownerships.
+Retrieves all of this ``ConceptMap``’s explainable ownerships.
 
 ==== Returns
 
@@ -173,7 +173,7 @@ abstract relations() -> Mapping[str, Explainable]
 
 ==== Description
 
-Retrieves all of this `ConceptMap`’s explainable relations.
+Retrieves all of this ``ConceptMap``’s explainable relations.
 
 ==== Returns
 

@@ -45,7 +45,7 @@ abstract id() -> int
 
 ==== Description
 
-Retrieves the unique ID that identifies this `Explainable`.
+Retrieves the unique ID that identifies this ``Explainable``.
 
 ==== Returns
 
@@ -104,7 +104,7 @@ abstract attributes() -> Mapping[str, Explainable]
 
 ==== Description
 
-Retrieves all of this `ConceptMap`’s explainable attributes.
+Retrieves all of this ``ConceptMap``’s explainable attributes.
 
 ==== Returns
 
@@ -164,7 +164,7 @@ abstract ownerships() -> Mapping[tuple[str, str], Explainable]
 
 ==== Description
 
-Retrieves all of this `ConceptMap`’s explainable ownerships.
+Retrieves all of this ``ConceptMap``’s explainable ownerships.
 
 ==== Returns
 
@@ -223,7 +223,7 @@ abstract relations() -> Mapping[str, Explainable]
 
 ==== Description
 
-Retrieves all of this `ConceptMap`’s explainable relations.
+Retrieves all of this ``ConceptMap``’s explainable relations.
 
 ==== Returns
 
@@ -248,7 +248,7 @@ abstract concepts() -> Iterator[Concept]
 
 ==== Description
 
-Produces an iterator over all concepts in this `ConceptMap`.
+Produces an iterator over all concepts in this ``ConceptMap``.
 
 ==== Returns
 
@@ -273,7 +273,7 @@ abstract explainables() -> Explainables
 
 ==== Description
 
-Gets the `Explainables` object for this `ConceptMap`, exposing which of the concepts in this `ConceptMap` are explainable.
+Gets the ``Explainables`` object for this ``ConceptMap``, exposing which of the concepts in this ``ConceptMap`` are explainable.
 
 ==== Returns
 
@@ -332,7 +332,7 @@ to_json() -> Mapping[str, Mapping[str, str | int | float | bool]]
 
 ==== Description
 
-Retrieves this `ConceptMap` as JSON.
+Retrieves this ``ConceptMap`` as JSON.
 
 ==== Returns
 
@@ -357,7 +357,7 @@ abstract variables() -> Iterator[str]
 
 ==== Description
 
-Produces an iterator over all variables in this `ConceptMap`.
+Produces an iterator over all variables in this ``ConceptMap``.
 
 ==== Returns
 

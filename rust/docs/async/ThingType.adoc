@@ -29,7 +29,7 @@ pub fn label(&self) -> &str
 
 ==== Description
 
-Retrieves the unique label of the `ThingType`.
+Retrieves the unique label of the ``ThingType``.
 
 ==== Returns
 

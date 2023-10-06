@@ -26,7 +26,7 @@ as_attribute() -> Attribute
 
 ==== Description
 
-Casts the concept to `Attribute`.
+Casts the concept to ``Attribute``.
 
 ==== Returns
 
@@ -51,7 +51,7 @@ abstract as_boolean() -> bool
 
 ==== Description
 
-Returns a `boolean` value of the attribute. If the value has another type, raises an exception.
+Returns a ``boolean`` value of the attribute. If the value has another type, raises an exception.
 
 ==== Returns
 
@@ -76,7 +76,7 @@ abstract as_datetime() -> datetime
 
 ==== Description
 
-Returns a `datetime` value of the attribute. If the value has another type, raises an exception.
+Returns a ``datetime`` value of the attribute. If the value has another type, raises an exception.
 
 ==== Returns
 
@@ -101,7 +101,7 @@ abstract as_double() -> float
 
 ==== Description
 
-Returns a `double` value of the attribute. If the value has another type, raises an exception.
+Returns a ``double`` value of the attribute. If the value has another type, raises an exception.
 
 ==== Returns
 
@@ -126,7 +126,7 @@ abstract as_long() -> int
 
 ==== Description
 
-Returns a `long` value of the attribute. If the value has another type, raises an exception.
+Returns a ``long`` value of the attribute. If the value has another type, raises an exception.
 
 ==== Returns
 
@@ -151,7 +151,7 @@ abstract as_string() -> str
 
 ==== Description
 
-Returns a `string` value of the attribute. If the value has another type, raises an exception.
+Returns a ``string`` value of the attribute. If the value has another type, raises an exception.
 
 ==== Returns
 
@@ -176,7 +176,7 @@ abstract get_owners(transaction: TypeDBTransaction, owner_type: ThingType | None
 
 ==== Description
 
-Retrieves the instances that own this `Attribute`.
+Retrieves the instances that own this ``Attribute``.
 
 ==== Input parameters
 
@@ -212,7 +212,7 @@ abstract get_type() -> AttributeType
 
 ==== Description
 
-Retrieves the type which this `Attribute` belongs to.
+Retrieves the type which this ``Attribute`` belongs to.
 
 ==== Returns
 
@@ -237,7 +237,7 @@ abstract get_value() -> bool | int | float | str | datetime
 
 ==== Description
 
-Retrieves the value which the `Attribute` instance holds.
+Retrieves the value which the ``Attribute`` instance holds.
 
 ==== Returns
 
@@ -262,7 +262,7 @@ abstract get_value_type() -> ValueType
 
 ==== Description
 
-Retrieves the type of the value which the `Attribute` instance holds.
+Retrieves the type of the value which the ``Attribute`` instance holds.
 
 ==== Returns
 
@@ -287,7 +287,7 @@ is_attribute() -> bool
 
 ==== Description
 
-Checks if the concept is an `Attribute`.
+Checks if the concept is an ``Attribute``.
 
 ==== Returns
 
@@ -312,7 +312,7 @@ abstract is_boolean() -> bool
 
 ==== Description
 
-Returns `True` if the attribute value is of type `boolean`. Otherwise, returns `False`.
+Returns ``True`` if the attribute value is of type ``boolean``. Otherwise, returns ``False``.
 
 ==== Returns
 
@@ -337,7 +337,7 @@ abstract is_datetime() -> bool
 
 ==== Description
 
-Returns `True` if the attribute value is of type `datetime`. Otherwise, returns `False`.
+Returns ``True`` if the attribute value is of type ``datetime``. Otherwise, returns ``False``.
 
 ==== Returns
 
@@ -362,7 +362,7 @@ abstract is_double() -> bool
 
 ==== Description
 
-Returns `True` if the attribute value is of type `double`. Otherwise, returns `False`.
+Returns ``True`` if the attribute value is of type ``double``. Otherwise, returns ``False``.
 
 ==== Returns
 
@@ -387,7 +387,7 @@ abstract is_long() -> bool
 
 ==== Description
 
-Returns `True` if the attribute value is of type `long`. Otherwise, returns `False`.
+Returns ``True`` if the attribute value is of type ``long``. Otherwise, returns ``False``.
 
 ==== Returns
 
@@ -412,7 +412,7 @@ abstract is_string() -> bool
 
 ==== Description
 
-Returns `True` if the attribute value is of type `string`. Otherwise, returns `False`.
+Returns ``True`` if the attribute value is of type ``string``. Otherwise, returns ``False``.
 
 ==== Returns
 
@@ -437,7 +437,7 @@ abstract to_json() -> Mapping[str, str | int | float | bool]
 
 ==== Description
 
-Retrieves this `Attribute` as JSON.
+Retrieves this ``Attribute`` as JSON.
 
 ==== Returns
 
