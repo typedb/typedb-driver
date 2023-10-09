@@ -24,8 +24,25 @@
 #include "../typedb_driver.h"
 #include "common.h"
 
+char TYPEDB_CORE_ADDRESS[] = "127.0.0.1:1729";
+
+int run_test_core(const char* test_name, int (*test_fn)(const Connection*) ) {
+    fprintf(stdout, "Running test %s on core\n", test_name);
+    int errno = -1;
+    {
+        Connection* conn = connection_open_core(TYPEDB_CORE_ADDRESS);
+        if (0 == conn) {
+            PRINT_ERR();
+            return 1;
+        }
+        errno = (*test_fn)(conn);
+        if (errno) PRINT_ERR();
+        connection_close(conn);
+    }
+    return errno;
+}
+
 bool print_error(char* filename, int lineno) {
-    fprintf(stdout, "Checking errors at : %s: %d\n", filename, lineno);
     fflush(stdout);
     if (check_error()) {
         Error* error = get_last_error();
@@ -38,29 +55,11 @@ bool print_error(char* filename, int lineno) {
         error_drop(error);
         return true;
     } else return false;
-
 }
 
-int run_test_core(const char* test_name, int (*test_fn)(const Connection*) ) {
-    fprintf(stdout, "Running test %s on core\n", test_name);
-    int errno = -1;
-    {
-        Connection* conn = connection_open_core("127.0.0.1:1729");
-        errno = (*test_fn)(conn);
-        if (errno) PRINT_ERR(); // TODO: Can I move this after connection close?
-        connection_close(conn);
+void delete_database_if_exists(DatabaseManager* dbMgr, char* name) {
+    if (databases_contains(dbMgr, name)) {
+        Database* database = databases_get(dbMgr, name);
+        database_delete(database);
     }
-    return errno;
-}
-
-int run_test_enterprise(const char* test_name, int (*test_fn)(const Connection*)) {
-    fprintf(stdout, "Running test %s on enterprise\n", test_name);
-    int errno = -1;
-    {
-        Connection* conn = connection_open_core("127.0.0.1:1729");
-        errno = (*test_fn)(conn);
-        if (errno) PRINT_ERR(); // TODO: Can I move this after connection close?
-        connection_close(conn);
-    }
-    return errno;
 }

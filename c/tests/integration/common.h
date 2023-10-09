@@ -20,21 +20,11 @@
  */
 
 #define PRINT_ERR() print_error(__FILE__, __LINE__)
-#define NOT_NULL(X) {if(!RES) return 1; }
-#define OK(OP) {int errno=(OP); if(errno) return errno;}
-#define null 0
 
-
-#ifdef TEST_TYPEDB_ENTERPRISE
-    #define RUN_TEST(A) run_test_enterprise(#A, A)
-#else
-    #define RUN_TEST(A) run_test_core(#A, A)
-#endif
-
-
-
-bool print_error(char* filename, int lineno);
+#define RUN_TEST(A) run_test_core(#A, A)
 
 int run_test_core(const char* test_name, int (*test_fn)(const Connection*));
 
-int run_test_enterprise(const char* test_name, int (*test_fn)(const Connection*));
+bool print_error(char* filename, int lineno);
+
+void delete_database_if_exists(DatabaseManager* dbMgr, char* name);
