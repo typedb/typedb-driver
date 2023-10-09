@@ -30,14 +30,14 @@ data class Variable(
 ) {
      fun toTableDataAsField(language: String): List<String?> {
         val result = mutableListOf("`${this.name}`")
-        result.add(if (this.type != null) "`${this.type.replace("|", "\\|")}`" else "")
+        result.add(if (this.type != null) "`${escape(this.type)}`" else "")
         result.add(this.description ?: "")
         return result.toList()
     }
 
     fun toTableDataAsArgument(language: String): List<String?> {
         val result = mutableListOf("`${this.name}`", this.description ?: "")
-        result.add(if (this.type != null) "`${this.type.replace("|", "\\|")}`" else "")
+        result.add(if (this.type != null) "`${escape(this.type)}`" else "")
         if (language == "python") {
             this.defaultValue?.let { result.add("`$it`") } ?: result.add("")
         }

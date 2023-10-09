@@ -60,3 +60,7 @@ fun mergeClasses(first: Class, second: Class): Class {
         superClasses = first.superClasses.ifEmpty { second.superClasses },
     )
 }
+
+fun escape(text: String): String {
+    return text.replace("|", "\\|")
+}
