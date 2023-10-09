@@ -20,9 +20,11 @@ boolean isOpen()
 Checks whether this transaction is open. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -40,6 +42,7 @@ TypeDBTransaction.Type type()
 
 The transaction’s type (READ or WRITE)
 
+[caption=""]
 .Returns
 `TypeDBTransaction.Type`
 
@@ -54,6 +57,7 @@ TypeDBOptions options()
 
 The options for the transaction
 
+[caption=""]
 .Returns
 `TypeDBOptions`
 
@@ -68,6 +72,7 @@ ConceptManager concepts()
 
 The ``ConceptManager`` for this transaction, providing access to all Concept API methods.
 
+[caption=""]
 .Returns
 `ConceptManager`
 
@@ -82,6 +87,7 @@ LogicManager logic()
 
 The ``LogicManager`` for this Transaction, providing access to all Concept API - Logic methods.
 
+[caption=""]
 .Returns
 `LogicManager`
 
@@ -96,6 +102,7 @@ QueryManager query()
 
 The````QueryManager```` for this Transaction, from which any TypeQL query can be executed.
 
+[caption=""]
 .Returns
 `QueryManager`
 
@@ -116,12 +123,14 @@ Registers a callback function which will be executed when this session is closed
 [options="header"]
 |===
 |Name |Description |Type
-a| `function` a| The callback function. a| `java.util.function.Consumer<java.lang.Throwable>` 
+a| `function` a| The callback function. a| `java.util.function.Consumer<java.lang.Throwable>`
 |===
 
+[caption=""]
 .Returns
 `void`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -139,9 +148,11 @@ void commit()
 Commits the changes made via this transaction to the TypeDB database. Whether or not the transaction is commited successfully, it gets closed after the commit call. 
 
 
+[caption=""]
 .Returns
 `void`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -159,9 +170,11 @@ void rollback()
 Rolls back the uncommitted changes made via this transaction. 
 
 
+[caption=""]
 .Returns
 `void`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -179,9 +192,11 @@ void close()
 Closes the transaction. 
 
 
+[caption=""]
 .Returns
 `void`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -189,3 +204,4 @@ transaction.close()
 ----
 
 // end::methods[]
+

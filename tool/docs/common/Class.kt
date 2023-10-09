@@ -33,18 +33,19 @@ data class Class(
     val superClasses: List<String> = listOf(),
 ) {
     fun toAsciiDoc(language: String): String {
+        val builder = AsciiDocBuilder()
         var result = ""
-        result += "[#_${this.anchor ?: replaceSymbolsForAnchor(this.name)}]\n"
-        result += "=== ${this.name}\n\n"
+        result += builder.anchor(this.anchor ?: replaceSymbolsForAnchor(this.name))
+        result += builder.header(3, this.name)
 
         this.packagePath?.let { result += "*Package*: `$it`\n\n" }
 
         if (this.superClasses.isNotEmpty()) {
-            result += when (language) {
-                "java" -> "*Superinterfaces:*\n\n"
-                "rust" -> "*Implements traits:*\n\n"
-                else -> "*Supertypes:*\n\n"
-            }
+            result += builder.boldHeader(when (language) {
+                "java" -> "Superinterfaces:"
+                "rust" -> "Implements traits:"
+                else -> "Supertypes:"
+            })
             result += this.superClasses.joinToString("\n") { "* `$it`" }
             result += "\n\n"
         }
@@ -54,52 +55,49 @@ data class Class(
         }
 
         if (this.examples.isNotEmpty()) {
-            result += "[caption=\"\"]\n.${this.name} examples\n====\n\n"
-            this.examples.forEach {
-                result += "[source,$language]\n----\n$it\n----\n\n"
-            }
-            result += "====\n\n"
+            result += builder.captionedBlock("${this.name} examples",
+                this.examples.joinToString {
+                    builder.codeBlock(it, language)
+                }
+            )
         }
 
         if (this.enumConstants.isNotEmpty()) {
-            result += "[caption=\"\"]\n."
-            result += when (language) {
+            result += builder.caption(when (language) {
                 "rust" -> "Enum variants"
                 "nodejs" -> "Namespace variables"
                 else -> "Enum constants"
-            } + "\n"
-            result += "// tag::enum_constants[]\n"
-            result += "[cols=\"~"
-            if (language == "python" || language == "rust") {
-                result += ",~"
+            })
+            result += builder.tagBegin("enum_constants")
+
+            val headers = when (language) {
+                "rust" -> listOf("Name", "Type")
+                "python" -> listOf("Name", "Value")
+                else -> listOf("Name")
             }
-            result += "\"]\n[options=\"header\"]\n|===\n"
-            result += "|Name "
-            result += when (language) {
-                "rust" -> "|Type "
-                "python" -> "|Value "
-                else -> ""
-            } + "\n"
-            this.enumConstants.forEach { result += it.toAsciiDocTableRow(language) }
-            result += "|===\n"
-            result += "// end::enum_constants[]\n\n"
+            val tableBuilder = AsciiDocTableBuilder(headers)
+            result += tableBuilder.header()
+            result += tableBuilder.body(this.enumConstants.map { it.toTableData(language) })
+            result += builder.tagEnd("enum_constants")
         } else if (this.fields.isNotEmpty()) {
-            result += "[caption=\"\"]\n." + when (language) {
+            result += builder.caption(when (language) {
                 "python" -> "Properties"
                 else -> "Fields"
-            } + "\n"
-            result += "// tag::properties[]\n"
-            result += "[cols=\"~,~,~\"]\n[options=\"header\"]\n|===\n"
-            result += "|Name |Type |Description\n"
-            this.fields.forEach { result += it.toAsciiDocAsField(language) }
-            result += "|===\n"
-            result += "// end::properties[]\n\n"
+            })
+            result += builder.tagBegin("properties")
+
+            val headers = listOf("Name", "Type", "Description")
+            val tableBuilder = AsciiDocTableBuilder(headers)
+            result += tableBuilder.header()
+            result += tableBuilder.body(this.fields.map { it.toTableDataAsField(language) })
+
+            result += builder.tagEnd("properties")
         }
 
         if (this.methods.isNotEmpty()) {
-            result += "// tag::methods[]\n"
+            result += builder.tagBegin("methods")
             this.methods.forEach { result += it.toAsciiDoc(language) }
-            result += "// end::methods[]\n"
+            result += builder.tagEnd("methods")
         }
 
         return result

@@ -26,9 +26,11 @@ close(): Promise<void>
 
 Closes the session. Before opening a new session, the session currently open should first be closed.
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -45,9 +47,11 @@ isOpen(): boolean
 
 Checks whether this session is open.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -70,13 +74,15 @@ Opens a transaction to perform read or write queries on the database connected t
 [options="header"]
 |===
 |Name |Description |Type
-a| `type` a| null a| `TransactionType` 
-a| `options` a| Options for the session a| `TypeDBOptions` 
+a| `type` a|  a| `TransactionType`
+a| `options` a| Options for the session a| `TypeDBOptions`
 |===
 
+[caption=""]
 .Returns
 `Promise<TypeDBTransaction>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -84,3 +90,4 @@ session.transaction(transactionType, options)
 ----
 
 // end::methods[]
+

@@ -9,13 +9,13 @@ TypeQL value types for attributes &amp; value concepts.
 [cols="~"]
 [options="header"]
 |===
-|Name 
-a| `BOOLEAN` 
-a| `DATETIME` 
-a| `DOUBLE` 
-a| `LONG` 
-a| `OBJECT` 
-a| `STRING` 
+|Name
+a| `BOOLEAN`
+a| `DATETIME`
+a| `DOUBLE`
+a| `LONG`
+a| `OBJECT`
+a| `STRING`
 |===
 // end::enum_constants[]
 
@@ -36,10 +36,11 @@ new ValueType(type, name): ValueType
 [options="header"]
 |===
 |Name |Description |Type
-a| `type` a| null a| `ValueType` 
-a| `name` a| null a| `string` 
+a| `type` a|  a| `ValueType`
+a| `name` a|  a| `string`
 |===
 
+[caption=""]
 .Returns
 `ValueType`
 
@@ -53,6 +54,7 @@ name(): string
 
 
 
+[caption=""]
 .Returns
 `string`
 
@@ -66,7 +68,9 @@ toString(): string
 
 
 
+[caption=""]
 .Returns
 `string`
 
 // end::methods[]
+

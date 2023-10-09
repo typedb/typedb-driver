@@ -9,7 +9,7 @@ This enum is used to specify the type of the session.
 [cols="~,~"]
 [options="header"]
 |===
-|Name |Type 
+|Name |Type
 a| `Data` a| `Data`
 a| `Schema` a| `Schema`
 |===

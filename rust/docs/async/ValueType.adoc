@@ -7,7 +7,7 @@
 [cols="~,~"]
 [options="header"]
 |===
-|Name |Type 
+|Name |Type
 a| `Object` a| `Object`
 a| `Boolean` a| `Boolean`
 a| `Long` a| `Long`

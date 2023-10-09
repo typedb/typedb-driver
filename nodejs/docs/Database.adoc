@@ -26,9 +26,11 @@ delete(): Promise<void>
 
 Deletes this database.
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -45,9 +47,11 @@ schema(): Promise<string>
 
 Returns a full schema text as a valid TypeQL define query string.
 
+[caption=""]
 .Returns
 `Promise<string>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -55,3 +59,4 @@ database.schema()
 ----
 
 // end::methods[]
+

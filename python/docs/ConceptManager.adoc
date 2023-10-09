@@ -23,9 +23,11 @@ Retrieves an ``Attribute`` by its iid.
 a| `iid` a| The iid of the ``Attribute`` to retrieve a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `Attribute`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -51,9 +53,11 @@ Retrieves an ``AttributeType`` by its label.
 a| `label` a| The label of the ``AttributeType`` to retrieve a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `AttributeType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -79,9 +83,11 @@ Retrieves an ``Entity`` by its iid.
 a| `iid` a| The iid of the ``Entity`` to retrieve a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `Entity`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -107,9 +113,11 @@ Retrieves an ``EntityType`` by its label.
 a| `label` a| The label of the ``EntityType`` to retrieve a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `EntityType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -135,9 +143,11 @@ Retrieves a ``Relation`` by its iid.
 a| `iid` a| The iid of the ``Relation`` to retrieve a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `Relation`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -163,9 +173,11 @@ Retrieves a ``RelationType`` by its label.
 a| `label` a| The label of the ``RelationType`` to retrieve a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `RelationType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -182,9 +194,11 @@ get_root_attribute_type() -> AttributeType
 
 Retrieve the root ``AttributeType``, “attribute”.
 
+[caption=""]
 .Returns
 `AttributeType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -201,9 +215,11 @@ get_root_entity_type() -> EntityType
 
 Retrieves the root ``EntityType``, “entity”.
 
+[caption=""]
 .Returns
 `EntityType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -220,9 +236,11 @@ get_root_relation_type() -> RelationType
 
 Retrieve the root ``RelationType``, “relation”.
 
+[caption=""]
 .Returns
 `RelationType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -239,9 +257,11 @@ get_schema_exception() -> list[TypeDBException]
 
 Retrieves a list of all exceptions for the current transaction.
 
+[caption=""]
 .Returns
 `list[TypeDBException]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -268,9 +288,11 @@ a| `label` a| The label of the ``AttributeType`` to create or retrieve a| `str` 
 a| `value_type` a| The value type of the ``AttributeType`` to create or retrieve. a| `ValueType` a| 
 |===
 
+[caption=""]
 .Returns
 `AttributeType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -296,9 +318,11 @@ Creates a new ``EntityType`` if none exists with the given label, otherwise retr
 a| `label` a| The label of the ``EntityType`` to create or retrieve a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `EntityType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -324,9 +348,11 @@ Creates a new ``RelationType`` if none exists with the given label, otherwise re
 a| `label` a| The label of the ``RelationType`` to create or retrieve a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `RelationType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -334,3 +360,4 @@ transaction.concepts.put_relation_type(label)
 ----
 
 // end::methods[]
+

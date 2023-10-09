@@ -25,9 +25,11 @@ Deletes this type from the database.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -44,9 +46,11 @@ get_label() -> Label
 
 Retrieves the unique label of the type.
 
+[caption=""]
 .Returns
 `Label`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -73,9 +77,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
+[caption=""]
 .Returns
 `Iterator[Type]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -102,9 +108,11 @@ Retrieves the most immediate supertype of the type.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
+[caption=""]
 .Returns
 `Type | None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -130,9 +138,11 @@ Retrieves all supertypes of the type.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
+[caption=""]
 .Returns
 `Iterator[Type]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -149,9 +159,11 @@ is_abstract() -> bool
 
 Checks if the type is prevented from having data instances (i.e., ``abstract``).
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -168,9 +180,11 @@ is_root() -> bool
 
 Checks if the type is a root type.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -187,9 +201,11 @@ is_type() -> bool
 
 Checks if the concept is a ``Type``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -216,9 +232,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `new_label` a| The new ``Label`` to be given to the type. a| `Label` a| 
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -235,9 +253,11 @@ to_json() -> Mapping[str, str]
 
 Retrieves the type as JSON.
 
+[caption=""]
 .Returns
 `Mapping[str, str]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -245,3 +265,4 @@ type_.to_json()
 ----
 
 // end::methods[]
+

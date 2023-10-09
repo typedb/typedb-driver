@@ -35,12 +35,14 @@ pub fn is_empty(&self) -> bool
 
 Checks if this ``Explainables`` does not contain any ``Explainable`` object.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 bool
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -48,3 +50,4 @@ explainables.is_empty()
 ----
 
 // end::methods[]
+

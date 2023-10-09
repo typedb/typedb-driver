@@ -36,9 +36,11 @@ Deletes this rule.
 a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction` a| 
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -64,9 +66,11 @@ Check if this rule has been deleted.
 a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction` a| 
 |===
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -93,9 +97,11 @@ a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction` a|
 a| `new_label` a| The new label to be given to the rule a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -103,3 +109,4 @@ rule.set_label(transaction, new_label)
 ----
 
 // end::methods[]
+

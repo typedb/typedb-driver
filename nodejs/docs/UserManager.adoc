@@ -14,9 +14,11 @@ all(): Promise<User[]>
 
 Retrieves all users which exist on the TypeDB server.
 
+[caption=""]
 .Returns
 `Promise<User[]>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -39,12 +41,14 @@ Checks if a user with the given name exists.
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| null a| `string` 
+a| `name` a|  a| `string`
 |===
 
+[caption=""]
 .Returns
 `Promise<boolean>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -67,13 +71,15 @@ Create a user with the given name &amp; password.
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| null a| `string` 
-a| `password` a| The password of the user to be created a| `string` 
+a| `name` a|  a| `string`
+a| `password` a| The password of the user to be created a| `string`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -96,12 +102,14 @@ Deletes a user with the given name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| null a| `string` 
+a| `name` a|  a| `string`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -124,12 +132,14 @@ Retrieve a user with the given name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| null a| `string` 
+a| `name` a|  a| `string`
 |===
 
+[caption=""]
 .Returns
 `Promise<User>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -152,13 +162,15 @@ Sets a new password for a user. This operation can only be performed by administ
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| null a| `string` 
-a| `password` a| The new password a| `string` 
+a| `name` a|  a| `string`
+a| `password` a| The new password a| `string`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -166,3 +178,4 @@ driver.users.passwordSet(username, password)
 ----
 
 // end::methods[]
+

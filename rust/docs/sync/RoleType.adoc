@@ -39,6 +39,7 @@ fn is_abstract(&self) -> bool
 
 <<#_trait_RoleTypeAPI_tymethod_is_abstract,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -58,6 +59,7 @@ fn get_relation_type(
 
 <<#_trait_RoleTypeAPI_tymethod_get_relation_type,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -74,6 +76,7 @@ fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool>
 
 <<#_trait_RoleTypeAPI_tymethod_is_deleted,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -90,6 +93,7 @@ fn delete(&self, transaction: &Transaction<'_>) -> Result
 
 <<#_trait_RoleTypeAPI_method_delete,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -106,6 +110,7 @@ fn set_label(&self, transaction: &Transaction<'_>, new_label: String) -> Result
 
 <<#_trait_RoleTypeAPI_method_set_label,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -125,6 +130,7 @@ fn get_supertype(
 
 <<#_trait_RoleTypeAPI_method_get_supertype,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -144,6 +150,7 @@ fn get_supertypes(
 
 <<#_trait_RoleTypeAPI_method_get_supertypes,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -164,6 +171,7 @@ fn get_subtypes(
 
 <<#_trait_RoleTypeAPI_method_get_subtypes,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -183,6 +191,7 @@ fn get_relation_types(
 
 <<#_trait_RoleTypeAPI_method_get_relation_types,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -203,6 +212,7 @@ fn get_player_types(
 
 <<#_trait_RoleTypeAPI_method_get_player_types,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -223,6 +233,7 @@ fn get_relation_instances(
 
 <<#_trait_RoleTypeAPI_method_get_relation_instances,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -243,6 +254,7 @@ fn get_player_instances(
 
 <<#_trait_RoleTypeAPI_method_get_player_instances,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -250,3 +262,4 @@ Result<BoxStream<'_, Result<Thing>>>
 ----
 
 // end::methods[]
+

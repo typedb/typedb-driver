@@ -40,6 +40,7 @@ pub fn infer(self, infer: bool) -> Self
 
 If set to ``True``, enables inference for queries. Only settable at transaction level and above. Only affects read transactions.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -56,6 +57,7 @@ pub fn trace_inference(self, trace_inference: bool) -> Self
 
 If set to ``True``, reasoning tracing graphs are output in the logging directory. Should be used with ``parallel = False``.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -72,6 +74,7 @@ pub fn explain(self, explain: bool) -> Self
 
 If set to ``True``, enables explanations for queries. Only affects read transactions.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -88,6 +91,7 @@ pub fn parallel(self, parallel: bool) -> Self
 
 If set to ``True``, the server uses parallel instead of single-threaded execution.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -104,6 +108,7 @@ pub fn prefetch(self, prefetch: bool) -> Self
 
 If set to ``True``, the first batch of answers is streamed to the driver even without an explicit request for it.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -120,6 +125,7 @@ pub fn prefetch_size(self, prefetch_size: i32) -> Self
 
 If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -136,6 +142,7 @@ pub fn session_idle_timeout(self, timeout: Duration) -> Self
 
 If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -152,6 +159,7 @@ pub fn transaction_timeout(self, timeout: Duration) -> Self
 
 If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -168,6 +176,7 @@ pub fn schema_lock_acquire_timeout(self, timeout: Duration) -> Self
 
 If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -184,6 +193,7 @@ pub fn read_any_replica(self, read_any_replica: bool) -> Self
 
 If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -191,3 +201,4 @@ Self
 ----
 
 // end::methods[]
+

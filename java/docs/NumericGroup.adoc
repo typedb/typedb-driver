@@ -18,9 +18,11 @@ Concept owner()
 Retrieves the concept that is the group owner. 
 
 
+[caption=""]
 .Returns
 `Concept`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -39,9 +41,11 @@ Numeric numeric()
 Retrieves the ``Numeric`` answer of the group. 
 
 
+[caption=""]
 .Returns
 `Numeric`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -49,3 +53,4 @@ numericGroup.numeric();
 ----
 
 // end::methods[]
+

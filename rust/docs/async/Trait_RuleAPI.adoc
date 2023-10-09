@@ -12,6 +12,7 @@ fn label(&self) -> &String
 
 Retrieves the unique label of the rule.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -42,9 +43,10 @@ Deletes this rule.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current ``Transaction`` a| `&'life1 Transaction<'life2>` 
+a| `transaction` a| The current ``Transaction`` a| `&'life1 Transaction<'life2>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -56,6 +58,7 @@ where
      'life2: 'async_trait,
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -87,10 +90,11 @@ Renames the label of the rule. The new label must remain unique.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current ``Transaction`` a| `&'life1 Transaction<'life2>` 
-a| `new_label` a| The new label to be given to the rule a| `String` 
+a| `transaction` a| The current ``Transaction`` a| `&'life1 Transaction<'life2>`
+a| `new_label` a| The new label to be given to the rule a| `String`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -102,6 +106,7 @@ where
      'life2: 'async_trait,
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -132,9 +137,10 @@ Check if this rule has been deleted.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current ``Transaction`` a| `&'life1 Transaction<'life2>` 
+a| `transaction` a| The current ``Transaction`` a| `&'life1 Transaction<'life2>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -146,6 +152,7 @@ where
      'life2: 'async_trait,
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -153,3 +160,4 @@ rule.is_deleted(transaction).await
 ----
 
 // end::methods[]
+

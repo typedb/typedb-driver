@@ -7,7 +7,7 @@
 [cols="~,~"]
 [options="header"]
 |===
-|Name |Type 
+|Name |Type
 a| `RootThingType` a| `RootThingType`
 a| `EntityType` a| `EntityType`
 a| `RelationType` a| `RelationType`
@@ -26,12 +26,14 @@ pub fn label(&self) -> &str
 
 Retrieves the unique label of the ``ThingType``.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 &str
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -39,3 +41,4 @@ thing_type.label()
 ----
 
 // end::methods[]
+

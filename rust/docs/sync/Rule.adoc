@@ -35,6 +35,7 @@ fn label(&self) -> &String
 
 
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -51,6 +52,7 @@ fn delete(&mut self, transaction: &Transaction<'_>) -> Result
 
 <<#_trait_RuleAPI_tymethod_delete,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -71,6 +73,7 @@ fn set_label(
 
 <<#_trait_RuleAPI_tymethod_set_label,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -87,6 +90,7 @@ fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool>
 
 <<#_trait_RuleAPI_method_is_deleted,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -94,3 +98,4 @@ Result<bool>
 ----
 
 // end::methods[]
+

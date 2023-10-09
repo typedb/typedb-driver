@@ -32,9 +32,11 @@ asAttribute(): Attribute
 
 Casts the concept to ``Attribute``.
 
+[caption=""]
 .Returns
 `Attribute`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -51,9 +53,11 @@ asAttributeType(): AttributeType
 
 Casts the concept to ``AttributeType``.
 
+[caption=""]
 .Returns
 `AttributeType`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -70,9 +74,11 @@ asEntity(): Entity
 
 Casts the concept to ``Entity``.
 
+[caption=""]
 .Returns
 `Entity`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -89,9 +95,11 @@ asEntityType(): EntityType
 
 Casts the concept to ``EntityType``.
 
+[caption=""]
 .Returns
 `EntityType`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -108,9 +116,11 @@ asRelation(): Relation
 
 Casts the concept to ``Relation``.
 
+[caption=""]
 .Returns
 `Relation`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -127,9 +137,11 @@ asRelationType(): RelationType
 
 Casts the concept to ``RelationType``.
 
+[caption=""]
 .Returns
 `RelationType`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -146,9 +158,11 @@ asRoleType(): RoleType
 
 Casts the concept to ``RoleType``.
 
+[caption=""]
 .Returns
 `RoleType`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -165,9 +179,11 @@ asThing(): Thing
 
 Casts the concept to ``Thing``.
 
+[caption=""]
 .Returns
 `Thing`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -184,9 +200,11 @@ asThingType(): ThingType
 
 Casts the concept to ``ThingType``.
 
+[caption=""]
 .Returns
 `ThingType`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -203,9 +221,11 @@ asType(): Type
 
 Casts the concept to ``Type``.
 
+[caption=""]
 .Returns
 `Type`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -222,9 +242,11 @@ asValue(): Value
 
 Casts the concept to ``Value``.
 
+[caption=""]
 .Returns
 `Value`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -247,12 +269,14 @@ Deletes this type from the database.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -275,9 +299,10 @@ Checks if this concept is equal to the argument ``concept``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `concept` a| The concept to compare to. a| `Concept` 
+a| `concept` a| The concept to compare to. a| `Concept`
 |===
 
+[caption=""]
 .Returns
 `boolean`
 
@@ -297,13 +322,15 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| ``Attribute``’s value a| `Value` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| ``Attribute``’s value a| `Value`
 |===
 
+[caption=""]
 .Returns
 `Promise<Attribute>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -326,13 +353,15 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| ``Attribute``’s value a| `boolean` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| ``Attribute``’s value a| `boolean`
 |===
 
+[caption=""]
 .Returns
 `Promise<Attribute>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -355,13 +384,15 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| ``Attribute``’s value a| `Date` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| ``Attribute``’s value a| `Date`
 |===
 
+[caption=""]
 .Returns
 `Promise<Attribute>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -384,13 +415,15 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| ``Attribute``’s value a| `number` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| ``Attribute``’s value a| `number`
 |===
 
+[caption=""]
 .Returns
 `Promise<Attribute>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -413,13 +446,15 @@ Retrieves all direct and indirect (or direct only) ``Attributes`` that are insta
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Transitivity` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Transitivity`
 |===
 
+[caption=""]
 .Returns
 `Stream<Attribute>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -442,12 +477,14 @@ Retrieves all direct and indirect (or direct only) ``Thing`` objects that are in
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Stream<Attribute>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -470,13 +507,15 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| ``Attribute``’s value a| `number` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| ``Attribute``’s value a| `number`
 |===
 
+[caption=""]
 .Returns
 `Promise<Attribute>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -499,14 +538,16 @@ Retrieve all ``Things`` that own an attribute of this ``AttributeType``. Optiona
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``AttributeType`` with all given ``Annotation``s a| `Annotation[]` 
-a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited ownership, ``Transitivity.EXPLICIT`` for direct ownership only a| `Transitivity` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``AttributeType`` with all given ``Annotation``s a| `Annotation[]`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited ownership, ``Transitivity.EXPLICIT`` for direct ownership only a| `Transitivity`
 |===
 
+[caption=""]
 .Returns
 `Stream<ThingType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -529,9 +570,10 @@ getOwners(transaction): Stream<ThingType>
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| null a| `TypeDBTransaction` 
+a| `transaction` a|  a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Stream<ThingType>`
 
@@ -551,10 +593,11 @@ getOwners(transaction, annotations): Stream<ThingType>
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| null a| `TypeDBTransaction` 
-a| `annotations` a| null a| `Annotation[]` 
+a| `transaction` a|  a| `TypeDBTransaction`
+a| `annotations` a|  a| `Annotation[]`
 |===
 
+[caption=""]
 .Returns
 `Stream<ThingType>`
 
@@ -574,10 +617,11 @@ getOwners(transaction, transitivity): Stream<ThingType>
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| null a| `TypeDBTransaction` 
-a| `transitivity` a| null a| `Transitivity` 
+a| `transaction` a|  a| `TypeDBTransaction`
+a| `transitivity` a|  a| `Transitivity`
 |===
 
+[caption=""]
 .Returns
 `Stream<ThingType>`
 
@@ -597,12 +641,14 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Stream<AttributeType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -625,13 +671,15 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `valueType` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `ValueType` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `valueType` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `ValueType`
 |===
 
+[caption=""]
 .Returns
 `Stream<AttributeType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -654,13 +702,15 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `annotations` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `Annotation[]` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `annotations` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `Annotation[]`
 |===
 
+[caption=""]
 .Returns
 `Stream<AttributeType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -683,14 +733,16 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `valueType` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `ValueType` 
-a| `annotations` a| Only retrieve attribute types owned with annotations. a| `Annotation[]` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `valueType` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `ValueType`
+a| `annotations` a| Only retrieve attribute types owned with annotations. a| `Annotation[]`
 |===
 
+[caption=""]
 .Returns
 `Stream<AttributeType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -713,13 +765,15 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `transitivity` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `Transitivity` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `transitivity` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `Transitivity`
 |===
 
+[caption=""]
 .Returns
 `Stream<AttributeType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -742,14 +796,16 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `valueType` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `ValueType` 
-a| `transitivity` a| Only retrieve attribute types owned with annotations. a| `Transitivity` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `valueType` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `ValueType`
+a| `transitivity` a| Only retrieve attribute types owned with annotations. a| `Transitivity`
 |===
 
+[caption=""]
 .Returns
 `Stream<AttributeType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -772,14 +828,16 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `annotations` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `Annotation[]` 
-a| `transitivity` a| Only retrieve attribute types owned with annotations. a| `Transitivity` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `annotations` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `Annotation[]`
+a| `transitivity` a| Only retrieve attribute types owned with annotations. a| `Transitivity`
 |===
 
+[caption=""]
 .Returns
 `Stream<AttributeType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -802,15 +860,17 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `valueType` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `ValueType` 
-a| `annotations` a| Only retrieve attribute types owned with annotations. a| `Annotation[]` 
-a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited ownership, ``Transitivity.EXPLICIT`` for direct ownership only a| `Transitivity` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `valueType` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `ValueType`
+a| `annotations` a| Only retrieve attribute types owned with annotations. a| `Annotation[]`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited ownership, ``Transitivity.EXPLICIT`` for direct ownership only a| `Transitivity`
 |===
 
+[caption=""]
 .Returns
 `Stream<AttributeType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -833,13 +893,15 @@ Retrieves an ``AttributeType``, ownership of which is overridden for this ``Thin
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeType` a| The ``AttributeType`` that overrides requested ``AttributeType`` a| `AttributeType` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `attributeType` a| The ``AttributeType`` that overrides requested ``AttributeType`` a| `AttributeType`
 |===
 
+[caption=""]
 .Returns
 `Promise<AttributeType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -862,12 +924,14 @@ Retrieves all direct and inherited (or direct only) roles that are allowed to be
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Stream<RoleType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -890,13 +954,15 @@ Retrieves all direct and inherited (or direct only) roles that are allowed to be
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect playing, ``Transitivity.EXPLICIT`` for direct playing only a| `Transitivity` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect playing, ``Transitivity.EXPLICIT`` for direct playing only a| `Transitivity`
 |===
 
+[caption=""]
 .Returns
 `Stream<RoleType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -919,13 +985,15 @@ Retrieves a ``RoleType`` that is overridden by the given ``role_type`` for this 
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `role` a| The ``RoleType`` that overrides an inherited role a| `RoleType` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `role` a| The ``RoleType`` that overrides an inherited role a| `RoleType`
 |===
 
+[caption=""]
 .Returns
 `Promise<RoleType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -948,12 +1016,14 @@ Retrieves the regular expression that is defined for this ``AttributeType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Promise<string>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -976,13 +1046,15 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| ``Attribute``’s value a| `string` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| ``Attribute``’s value a| `string`
 |===
 
+[caption=""]
 .Returns
 `Promise<Attribute>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1005,12 +1077,14 @@ Retrieves all direct and indirect subtypes of the ``ThingType``. Equivalent to g
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Stream<AttributeType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1033,13 +1107,15 @@ Retrieves all direct and indirect (or direct only) subtypes of the ``ThingType``
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `valueType` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `ValueType` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `valueType` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `ValueType`
 |===
 
+[caption=""]
 .Returns
 `Stream<AttributeType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1062,10 +1138,11 @@ getSubtypes(transaction, transitivity): Stream<AttributeType>
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| null a| `TypeDBTransaction` 
-a| `transitivity` a| null a| `Transitivity` 
+a| `transaction` a|  a| `TypeDBTransaction`
+a| `transitivity` a|  a| `Transitivity`
 |===
 
+[caption=""]
 .Returns
 `Stream<AttributeType>`
 
@@ -1085,11 +1162,12 @@ getSubtypes(transaction, valueType, transitivity): Stream<AttributeType>
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| null a| `TypeDBTransaction` 
-a| `valueType` a| null a| `ValueType` 
-a| `transitivity` a| null a| `Transitivity` 
+a| `transaction` a|  a| `TypeDBTransaction`
+a| `valueType` a|  a| `ValueType`
+a| `transitivity` a|  a| `Transitivity`
 |===
 
+[caption=""]
 .Returns
 `Stream<AttributeType>`
 
@@ -1109,12 +1187,14 @@ Retrieves the most immediate supertype of the ``ThingType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Promise<AttributeType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1137,12 +1217,14 @@ Retrieves all supertypes of the ``ThingType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Stream<AttributeType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1165,12 +1247,14 @@ Produces a pattern for creating this ``ThingType`` in a ``define`` query.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Promise<string>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1187,9 +1271,11 @@ isAttribute(): boolean
 
 Checks if the concept is an ``Attribute``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1206,9 +1292,11 @@ isAttributeType(): boolean
 
 Checks if the concept is an ``AttributeType``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1231,9 +1319,10 @@ Check if the concept has been deleted
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Promise<boolean>`
 
@@ -1247,9 +1336,11 @@ isEntity(): boolean
 
 Checks if the concept is an ``Entity``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1266,9 +1357,11 @@ isEntityType(): boolean
 
 Checks if the concept is an ``EntityType``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1285,9 +1378,11 @@ isRelation(): boolean
 
 Checks if the concept is a ``Relation``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1304,9 +1399,11 @@ isRelationType(): boolean
 
 Checks if the concept is a ``RelationType``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1323,9 +1420,11 @@ isRoleType(): boolean
 
 Checks if the concept is a ``RoleType``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1342,9 +1441,11 @@ isThing(): boolean
 
 Checks if the concept is a ``Thing``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1361,9 +1462,11 @@ isThingType(): boolean
 
 Checks if the concept is a ``ThingType``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1380,9 +1483,11 @@ isType(): boolean
 
 Checks if the concept is a ``Type``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1399,9 +1504,11 @@ isValue(): boolean
 
 Checks if the concept is a ``Value``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1424,13 +1531,15 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| New ``Attribute``’s value a| `Value` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| New ``Attribute``’s value a| `Value`
 |===
 
+[caption=""]
 .Returns
 `Promise<Attribute>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1453,13 +1562,15 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| New ``Attribute``’s value a| `boolean` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| New ``Attribute``’s value a| `boolean`
 |===
 
+[caption=""]
 .Returns
 `Promise<Attribute>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1482,13 +1593,15 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| New ``Attribute``’s value a| `Date` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| New ``Attribute``’s value a| `Date`
 |===
 
+[caption=""]
 .Returns
 `Promise<Attribute>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1511,13 +1624,15 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| New ``Attribute``’s value a| `number` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| New ``Attribute``’s value a| `number`
 |===
 
+[caption=""]
 .Returns
 `Promise<Attribute>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1540,13 +1655,15 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| New ``Attribute``’s value a| `number` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| New ``Attribute``’s value a| `number`
 |===
 
+[caption=""]
 .Returns
 `Promise<Attribute>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1569,13 +1686,15 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `value` a| New ``Attribute``’s value a| `string` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| New ``Attribute``’s value a| `string`
 |===
 
+[caption=""]
 .Returns
 `Promise<Attribute>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1598,12 +1717,14 @@ Set a ``ThingType`` to be abstract, meaning it cannot have instances.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1626,13 +1747,15 @@ Renames the label of the type. The new label must remain unique.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `label` a| The new ``Label`` to be given to the type. a| `string` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `label` a| The new ``Label`` to be given to the type. a| `string`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1655,13 +1778,15 @@ Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeType` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `attributeType` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1684,14 +1809,16 @@ Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeType` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType` 
-a| `annotations` a| The ``AttributeType`` that this attribute ownership overrides, if applicable. a| `Annotation[]` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `attributeType` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType`
+a| `annotations` a| The ``AttributeType`` that this attribute ownership overrides, if applicable. a| `Annotation[]`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1714,14 +1841,16 @@ Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeType` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType` 
-a| `overriddenType` a| The ``AttributeType`` that this attribute ownership overrides, if applicable. a| `AttributeType` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `attributeType` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType`
+a| `overriddenType` a| The ``AttributeType`` that this attribute ownership overrides, if applicable. a| `AttributeType`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1744,15 +1873,17 @@ Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeType` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType` 
-a| `overriddenType` a| The ``AttributeType`` that this attribute ownership overrides, if applicable. a| `AttributeType` 
-a| `annotations` a| Adds annotations to the ownership. a| `Annotation[]` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `attributeType` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType`
+a| `overriddenType` a| The ``AttributeType`` that this attribute ownership overrides, if applicable. a| `AttributeType`
+a| `annotations` a| Adds annotations to the ownership. a| `Annotation[]`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1775,13 +1906,15 @@ Allows the instances of this ``ThingType`` to play the given role.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `role` a| The role to be played by the instances of this type a| `RoleType` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `role` a| The role to be played by the instances of this type a| `RoleType`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1804,14 +1937,16 @@ Allows the instances of this ``ThingType`` to play the given role.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `role` a| The role to be played by the instances of this type a| `RoleType` 
-a| `overriddenType` a| The role type that this role overrides, if applicable a| `RoleType` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `role` a| The role to be played by the instances of this type a| `RoleType`
+a| `overriddenType` a| The role type that this role overrides, if applicable a| `RoleType`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1834,13 +1969,15 @@ Sets a regular expression as a constraint for this ``AttributeType``. ``Values``
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `regex` a| Regular expression a| `string` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `regex` a| Regular expression a| `string`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1863,10 +2000,11 @@ setSupertype(transaction, type): Promise<void>
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| null a| `TypeDBTransaction` 
-a| `type` a| null a| `AttributeType` 
+a| `transaction` a|  a| `TypeDBTransaction`
+a| `type` a|  a| `AttributeType`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
@@ -1880,9 +2018,11 @@ toJSONRecord(): Record<string, string | number | boolean>
 
 Retrieves the concept as JSON.
 
+[caption=""]
 .Returns
 `Record<string, string | number | boolean>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1905,12 +2045,14 @@ Set a ``ThingType`` to be non-abstract, meaning it can have instances.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1933,13 +2075,15 @@ Disallows the instances of this ``ThingType`` from owning the given ``AttributeT
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeType` a| The ``AttributeType`` to not be owned by the type. a| `AttributeType` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `attributeType` a| The ``AttributeType`` to not be owned by the type. a| `AttributeType`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1962,13 +2106,15 @@ Disallows the instances of this ``ThingType`` from playing the given role.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `role` a| The role to not be played by the instances of this type. a| `RoleType` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `role` a| The role to not be played by the instances of this type. a| `RoleType`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -1991,12 +2137,14 @@ Removes the regular expression that is defined for this ``AttributeType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -2004,3 +2152,4 @@ attributeType.unsetRegex(transaction)
 ----
 
 // end::methods[]
+

@@ -24,12 +24,14 @@ Checks if a user with the given name exists.
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The user name to be checked a| `java.lang.String` 
+a| `username` a| The user name to be checked a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -54,13 +56,15 @@ Creates a user with the given name &amp; password.
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The name of the user to be created a| `java.lang.String` 
-a| `password` a| The password of the user to be created a| `java.lang.String` 
+a| `username` a| The name of the user to be created a| `java.lang.String`
+a| `password` a| The password of the user to be created a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `void`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -84,12 +88,14 @@ Deletes a user with the given name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The name of the user to be deleted a| `java.lang.String` 
+a| `username` a| The name of the user to be deleted a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `void`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -114,12 +120,14 @@ Retrieves a user with the given name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The name of the user to retrieve a| `java.lang.String` 
+a| `username` a| The name of the user to retrieve a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `User`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -137,9 +145,11 @@ java.util.Set<User> all()
 Retrieves all users which exist on the TypeDB server. 
 
 
+[caption=""]
 .Returns
 `java.util.Set<User>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -164,13 +174,15 @@ Sets a new password for a user. This operation can only be performed by administ
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The name of the user to set the password of a| `java.lang.String` 
-a| `password` a| The new password a| `java.lang.String` 
+a| `username` a| The name of the user to set the password of a| `java.lang.String`
+a| `password` a| The new password a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `void`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -178,3 +190,4 @@ driver.users().passwordSet(username, password);
 ----
 
 // end::methods[]
+

@@ -24,9 +24,11 @@ default boolean isRelationType()
 Checks if the concept is a ``RelationType``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -45,9 +47,11 @@ default RelationType asRelationType()
 Casts the concept to ``RelationType``. 
 
 
+[caption=""]
 .Returns
 `RelationType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -72,12 +76,14 @@ Creates and returns an instance of this ``RelationType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Relation`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -99,6 +105,7 @@ Retrieves all ``Relation`` objects that are instances of this ``RelationType`` o
 See also: <<#_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getInstances(TypeDBTransaction, Transitivity)``>>
 
 
+[caption=""]
 .Returns
 `java.util.stream.Stream<? extends Relation>`
 
@@ -121,13 +128,15 @@ Retrieves ``Relation``s that are instances of this exact ``RelationType``, OR th
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect instances, ``Transitivity.EXPLICIT`` for direct relates only a| `Concept.Transitivity` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect instances, ``Transitivity.EXPLICIT`` for direct relates only a| `Concept.Transitivity`
 |===
 
+[caption=""]
 .Returns
 `java.util.stream.Stream<? extends Relation>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -149,6 +158,7 @@ Retrieves roles that this ``RelationType`` relates to directly or via inheritanc
 See also: <<#_getRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getRelates(TypeDBTransaction, Transitivity)``>>
 
 
+[caption=""]
 .Returns
 `java.util.stream.Stream<? extends RoleType>`
 
@@ -171,13 +181,15 @@ Retrieves roles that this ``RelationType`` relates to directly or via inheritanc
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited relates, ``Transitivity.EXPLICIT`` for direct relates only a| `Concept.Transitivity` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited relates, ``Transitivity.EXPLICIT`` for direct relates only a| `Concept.Transitivity`
 |===
 
+[caption=""]
 .Returns
 `java.util.stream.Stream<? extends RoleType>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -204,13 +216,15 @@ Retrieves roles that this ``RelationType`` relates to directly or via inheritanc
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `roleLabel` a| Label of the role we wish to retrieve a| `java.lang.String` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `roleLabel` a| Label of the role we wish to retrieve a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `RoleType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -230,6 +244,7 @@ RoleType getRelatesOverridden​(TypeDBTransaction transaction,
 
 
 
+[caption=""]
 .Returns
 `RoleType`
 
@@ -253,13 +268,15 @@ Retrieves a ``RoleType`` that is overridden by the role with the ``role_label``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `roleLabel` a| Label of the role that overrides an inherited role a| `java.lang.String` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `roleLabel` a| Label of the role that overrides an inherited role a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `RoleType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -281,6 +298,7 @@ Sets the new role that this ``RelationType`` relates to.
 See also: <<#_setRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String_java_lang_String,``setRelates(TypeDBTransaction, String, String)``>>
 
 
+[caption=""]
 .Returns
 `void`
 
@@ -300,6 +318,7 @@ Sets the new role that this ``RelationType`` relates to.
 See also: <<#_setRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String_java_lang_String,``setRelates(TypeDBTransaction, String, String)``>>
 
 
+[caption=""]
 .Returns
 `void`
 
@@ -322,14 +341,16 @@ Sets the new role that this ``RelationType`` relates to. If we are setting an ov
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `roleLabel` a| The new role for the ``RelationType`` to relate to a| `java.lang.String` 
-a| `overriddenLabel` a| The label being overridden, if applicable a| `java.lang.String` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `roleLabel` a| The new role for the ``RelationType`` to relate to a| `java.lang.String`
+a| `overriddenLabel` a| The label being overridden, if applicable a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `void`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -352,6 +373,7 @@ Disallows this ``RelationType`` from relating to the given role.
 See also: <<#_unsetRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String,``unsetRelates(TypeDBTransaction, String)``>>
 
 
+[caption=""]
 .Returns
 `void`
 
@@ -373,13 +395,15 @@ Disallows this ``RelationType`` from relating to the given role.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `roleLabel` a| The role to not relate to the relation type. a| `java.lang.String` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `roleLabel` a| The role to not relate to the relation type. a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `void`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -401,6 +425,7 @@ Retrieves all direct and indirect subtypes of the ``RelationType``. Equivalent t
 See also: <<#_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getSubtypes(TypeDBTransaction, Transitivity)``>>
 
 
+[caption=""]
 .Returns
 `java.util.stream.Stream<? extends RelationType>`
 
@@ -423,13 +448,15 @@ Retrieves all direct and indirect (or direct only) subtypes of the ``RelationTyp
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Concept.Transitivity` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Concept.Transitivity`
 |===
 
+[caption=""]
 .Returns
 `java.util.stream.Stream<? extends RelationType>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -454,13 +481,15 @@ Sets the supplied ``RelationType`` as the supertype of the current ``RelationTyp
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `superRelationType` a| The ``RelationType`` to set as the supertype of this ``RelationType`` a| `RelationType` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `superRelationType` a| The ``RelationType`` to set as the supertype of this ``RelationType`` a| `RelationType`
 |===
 
+[caption=""]
 .Returns
 `void`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -478,9 +507,11 @@ default Attribute asAttribute()
 Casts the concept to ``Attribute``. 
 
 
+[caption=""]
 .Returns
 `Attribute`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -498,9 +529,11 @@ default AttributeType asAttributeType()
 Casts the concept to ``AttributeType``. 
 
 
+[caption=""]
 .Returns
 `AttributeType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -518,9 +551,11 @@ default Entity asEntity()
 Casts the concept to ``Entity``. 
 
 
+[caption=""]
 .Returns
 `Entity`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -538,9 +573,11 @@ default EntityType asEntityType()
 Casts the concept to ``EntityType``. 
 
 
+[caption=""]
 .Returns
 `EntityType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -558,9 +595,11 @@ default Relation asRelation()
 Casts the concept to ``Relation``. 
 
 
+[caption=""]
 .Returns
 `Relation`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -578,9 +617,11 @@ default RoleType asRoleType()
 Casts the concept to ``RoleType``. 
 
 
+[caption=""]
 .Returns
 `RoleType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -598,9 +639,11 @@ default Thing asThing()
 Casts the concept to ``Thing``. 
 
 
+[caption=""]
 .Returns
 `Thing`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -618,9 +661,11 @@ default Value asValue()
 Casts the concept to ``Value``. 
 
 
+[caption=""]
 .Returns
 `Value`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -639,9 +684,11 @@ default boolean isAttribute()
 Checks if the concept is an ``Attribute``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -660,9 +707,11 @@ default boolean isAttributeType()
 Checks if the concept is an ``AttributeType``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -681,9 +730,11 @@ default boolean isEntity()
 Checks if the concept is an ``Entity``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -702,9 +753,11 @@ default boolean isEntityType()
 Checks if the concept is an ``EntityType``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -723,9 +776,11 @@ default boolean isRelation()
 Checks if the concept is a ``Relation``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -744,9 +799,11 @@ default boolean isRoleType()
 Checks if the concept is a ``RoleType``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -765,9 +822,11 @@ default boolean isThing()
 Checks if the concept is a ``Thing``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -786,9 +845,11 @@ default boolean isValue()
 Checks if the concept is a ``Value``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -796,3 +857,4 @@ concept.isValue();
 ----
 
 // end::methods[]
+

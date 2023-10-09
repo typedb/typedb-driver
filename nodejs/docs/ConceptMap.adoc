@@ -25,9 +25,11 @@ concepts(): IterableIterator<Concept>
 
 Produces an iterator over all concepts in this ``ConceptMap``.
 
+[caption=""]
 .Returns
 `IterableIterator<Concept>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -50,12 +52,14 @@ Retrieves a concept for a given variable name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `variable` a| The string representation of a variable a| `string` 
+a| `variable` a| The string representation of a variable a| `string`
 |===
 
+[caption=""]
 .Returns
 `Concept`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -72,9 +76,11 @@ toJSONRecord(): Record<string, Record<string, string | number | boolean>>
 
 Retrieves this ``ConceptMap`` as JSON.
 
+[caption=""]
 .Returns
 `Record<string, Record<string, string | number | boolean>>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -91,9 +97,11 @@ variables(): IterableIterator<string>
 
 Produces an iterator over all variables in this ``ConceptMap``.
 
+[caption=""]
 .Returns
 `IterableIterator<string>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -101,3 +109,4 @@ conceptMap.variables()
 ----
 
 // end::methods[]
+

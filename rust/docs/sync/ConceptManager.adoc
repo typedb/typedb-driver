@@ -24,15 +24,17 @@ Retrieves an ``EntityType`` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``EntityType`` to retrieve a| `String` 
+a| `label` a| The label of the ``EntityType`` to retrieve a| `String`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<Option<EntityType>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -55,15 +57,17 @@ Retrieves a ``RelationType`` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``RelationType`` to retrieve a| `String` 
+a| `label` a| The label of the ``RelationType`` to retrieve a| `String`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<Option<RelationType>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -86,15 +90,17 @@ Retrieves an ``AttributeType`` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``AttributeType`` to retrieve a| `String` 
+a| `label` a| The label of the ``AttributeType`` to retrieve a| `String`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<Option<AttributeType>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -117,15 +123,17 @@ Creates a new ``EntityType`` if none exists with the given label, otherwise retr
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``EntityType`` to create or retrieve a| `String` 
+a| `label` a| The label of the ``EntityType`` to create or retrieve a| `String`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<EntityType>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -148,15 +156,17 @@ Creates a new ``RelationType`` if none exists with the given label, otherwise re
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``RelationType`` to create or retrieve a| `String` 
+a| `label` a| The label of the ``RelationType`` to create or retrieve a| `String`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<RelationType>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -183,16 +193,18 @@ Creates a new ``AttributeType`` if none exists with the given label, or retrieve
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``AttributeType`` to create or retrieve a| `String` 
-a| `value_type` a| The value type of the ``AttributeType`` to create a| `ValueType` 
+a| `label` a| The label of the ``AttributeType`` to create or retrieve a| `String`
+a| `value_type` a| The value type of the ``AttributeType`` to create a| `ValueType`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<AttributeType>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -215,15 +227,17 @@ Retrieves an ``Entity`` by its iid.
 [options="header"]
 |===
 |Name |Description |Type
-a| `iid` a| The iid of the ``Entity`` to retrieve a| `IID` 
+a| `iid` a| The iid of the ``Entity`` to retrieve a| `IID`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<Option<Entity>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -246,15 +260,17 @@ Retrieves a ``Relation`` by its iid.
 [options="header"]
 |===
 |Name |Description |Type
-a| `iid` a| The iid of the ``Relation`` to retrieve a| `IID` 
+a| `iid` a| The iid of the ``Relation`` to retrieve a| `IID`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<Option<Relation>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -277,15 +293,17 @@ Retrieves an ``Attribute`` by its iid.
 [options="header"]
 |===
 |Name |Description |Type
-a| `iid` a| The iid of the ``Attribute`` to retrieve a| `IID` 
+a| `iid` a| The iid of the ``Attribute`` to retrieve a| `IID`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<Option<Attribute>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -304,12 +322,14 @@ pub fn get_schema_exceptions(
 
 Retrieves a list of all exceptions for the current transaction.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<impl Stream<Item = Result<SchemaException>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -317,3 +337,4 @@ transaction.concepts().get_schema_exceptions()
 ----
 
 // end::methods[]
+

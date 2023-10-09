@@ -12,12 +12,14 @@ fn iid(&self) -> &IID
 
 Retrieves the unique id of the ``Thing``.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 &IID
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -34,12 +36,14 @@ fn is_inferred(&self) -> bool
 
 Checks if this ``Thing`` is inferred by a [Reasoning Rule].
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 bool
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -70,9 +74,10 @@ Checks if this ``Thing`` is deleted.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -84,6 +89,7 @@ where
      'life2: 'async_trait,
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -114,9 +120,10 @@ Deletes this ``Thing``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -128,6 +135,7 @@ where
      'life2: 'async_trait,
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -155,18 +163,20 @@ Retrieves the ``Attribute``s that this ``Thing`` owns. Optionally, filtered by a
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `attribute_type` a| The ``AttributeType`` to filter the attributes by a| 
-a| `attribute_types` a| The ``AttributeType``s to filter the attributes by a| `Vec<AttributeType>` 
-a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a| `Vec<Annotation>` 
+a| `attribute_types` a| The ``AttributeType``s to filter the attributes by a| `Vec<AttributeType>`
+a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a| `Vec<Annotation>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<Attribute>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -198,10 +208,11 @@ Assigns an ``Attribute`` to be owned by this ``Thing``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
-a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute` 
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -213,6 +224,7 @@ where
      'life2: 'async_trait,
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -244,10 +256,11 @@ Unassigns an ``Attribute`` from this ``Thing``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
-a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attribute` 
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attribute`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -259,6 +272,7 @@ where
      'life2: 'async_trait,
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -285,16 +299,18 @@ Retrieves all the ``Relations`` which this ``Thing`` plays a role in, optionally
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `role_types` a| The list of roles to filter the relations by. a| `Vec<RoleType>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `role_types` a| The list of roles to filter the relations by. a| `Vec<RoleType>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<Relation>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -320,15 +336,17 @@ Retrieves the roles that this ``Thing`` is currently playing.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<RoleType>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -336,3 +354,4 @@ thing.get_playing(transaction);
 ----
 
 // end::methods[]
+

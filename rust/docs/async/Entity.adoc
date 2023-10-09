@@ -38,6 +38,7 @@ fn iid(&self) -> &IID
 
 <<#_trait_ThingAPI_tymethod_iid,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -54,6 +55,7 @@ fn is_inferred(&self) -> bool
 
 <<#_trait_ThingAPI_tymethod_is_inferred,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -78,6 +80,7 @@ where
 
 <<#_trait_ThingAPI_tymethod_is_deleted,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -107,6 +110,7 @@ where
 
 <<#_trait_ThingAPI_method_delete,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -133,6 +137,7 @@ fn get_has(
 
 <<#_trait_ThingAPI_method_get_has,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -158,6 +163,7 @@ where
 
 <<#_trait_ThingAPI_method_set_has,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -188,6 +194,7 @@ where
 
 <<#_trait_ThingAPI_method_unset_has,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -213,6 +220,7 @@ fn get_relations(
 
 <<#_trait_ThingAPI_method_get_relations,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -232,6 +240,7 @@ fn get_playing(
 
 <<#_trait_ThingAPI_method_get_playing,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -239,3 +248,4 @@ Result<BoxStream<'_, Result<RoleType>>>
 ----
 
 // end::methods[]
+

@@ -18,9 +18,11 @@ as_entity_type() -> EntityType
 
 Casts the concept to ``EntityType``.
 
+[caption=""]
 .Returns
 `EntityType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -46,9 +48,11 @@ Creates and returns a new instance of this ``EntityType``.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
+[caption=""]
 .Returns
 `Entity`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -75,9 +79,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect instances, ``Transitivity.EXPLICIT`` for direct instances only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
+[caption=""]
 .Returns
 `Iterator[Entity]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -104,9 +110,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
+[caption=""]
 .Returns
 `Iterator[EntityType]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -123,9 +131,11 @@ is_entity_type() -> bool
 
 Checks if the concept is an ``EntityType``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -152,9 +162,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `super_entity_type` a| The ``EntityType`` to set as the supertype of this ``EntityType`` a| `EntityType` a| 
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -162,3 +174,4 @@ entity_type.set_supertype(transaction, super_entity_type)
 ----
 
 // end::methods[]
+

@@ -7,7 +7,7 @@
 [cols="~,~"]
 [options="header"]
 |===
-|Name |Type 
+|Name |Type
 a| `Key` a| `Key`
 a| `Unique` a| `Unique`
 |===

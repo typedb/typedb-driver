@@ -23,17 +23,19 @@ Adds a new role player to play the given role in this ``Relation``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `role_type` a| The role to be played by the ``player`` a| `RoleType` 
-a| `player` a| The thing to play the role a| `Thing` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `role_type` a| The role to be played by the ``player`` a| `RoleType`
+a| `player` a| The thing to play the role a| `Thing`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -61,17 +63,19 @@ Removes the association of the given instance that plays the given role in this 
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `role_type` a| The role to no longer be played by the thing in this ``Relation`` a| `RoleType` 
-a| `player` a| The instance to no longer play the role in this ``Relation`` a| `Thing` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `role_type` a| The role to no longer be played by the thing in this ``Relation`` a| `RoleType`
+a| `player` a| The instance to no longer play the role in this ``Relation`` a| `Thing`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -98,16 +102,18 @@ Retrieves all role players of this ``Relation``, optionally filtered by given ro
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `role_types` a| 0 or more role types a| `Vec<RoleType>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `role_types` a| 0 or more role types a| `Vec<RoleType>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<Thing>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -134,15 +140,17 @@ Retrieves a mapping of all instances involved in the ``Relation`` and the role e
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>
-) -> Result<BoxStream<'_` 
+) -> Result<BoxStream<'_`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<(RoleType, Thing)>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -168,15 +176,17 @@ Retrieves all role types currently played in this ``Relation``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<RoleType>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -184,3 +194,4 @@ relation.get_relating(transaction)
 ----
 
 // end::methods[]
+

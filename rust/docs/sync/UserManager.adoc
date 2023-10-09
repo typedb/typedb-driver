@@ -30,12 +30,14 @@ pub fn current_user(&self) -> Result<Option<User>>
 
 Returns the logged-in user for the connection.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<Option<User>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -52,12 +54,14 @@ pub fn all(&self) -> Result<Vec<User>>
 
 Retrieves all users which exist on the TypeDB server.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<Vec<User>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -80,15 +84,17 @@ Checks if a user with the given name exists.
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The user name to be checked a| `impl Into<String>` 
+a| `username` a| The user name to be checked a| `impl Into<String>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<bool>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -115,16 +121,18 @@ Create a user with the given name &amp; password.
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The name of the user to be created a| `impl Into<String>` 
-a| `password` a| The password of the user to be created a| `impl Into<String>` 
+a| `username` a| The name of the user to be created a| `impl Into<String>`
+a| `password` a| The password of the user to be created a| `impl Into<String>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -147,15 +155,17 @@ Deletes a user with the given name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The name of the user to be deleted a| `impl Into<String>` 
+a| `username` a| The name of the user to be deleted a| `impl Into<String>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -178,15 +188,17 @@ Retrieve a user with the given name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The name of the user to retrieve a| `impl Into<String>` 
+a| `username` a| The name of the user to retrieve a| `impl Into<String>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<Option<User>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -213,16 +225,18 @@ Sets a new password for a user. This operation can only be performed by administ
 [options="header"]
 |===
 |Name |Description |Type
-a| `username` a| The name of the user to set the password of a| `impl Into<String>` 
-a| `password` a| The new password a| `impl Into<String>` 
+a| `username` a| The name of the user to set the password of a| `impl Into<String>`
+a| `password` a| The new password a| `impl Into<String>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -230,3 +244,4 @@ driver.users.password_set(username, password).await;
 ----
 
 // end::methods[]
+

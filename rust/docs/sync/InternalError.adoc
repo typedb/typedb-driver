@@ -7,9 +7,9 @@
 [cols="~,~"]
 [options="header"]
 |===
-|Name |Type 
-a| `RecvError` a| 
-a| `SendError` a| 
+|Name |Type
+a| `RecvError`
+a| `SendError`
 a| `UnexpectedRequestType` a| `String`
 a| `UnexpectedResponseType` a| `String`
 a| `UnknownConnectionAddress` a| `Address`

@@ -28,9 +28,11 @@ asAttribute(): Attribute
 
 Casts the concept to ``Attribute``.
 
+[caption=""]
 .Returns
 `Attribute`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -47,9 +49,11 @@ asAttributeType(): AttributeType
 
 Casts the concept to ``AttributeType``.
 
+[caption=""]
 .Returns
 `AttributeType`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -66,9 +70,11 @@ asBoolean(): boolean
 
 Returns a ``boolean`` value of this value concept. If the value has another type, raises an exception.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -85,9 +91,11 @@ asDateTime(): Date
 
 Returns a ``datetime`` value of this value concept. If the value has another type, raises an exception.
 
+[caption=""]
 .Returns
 `Date`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -104,9 +112,11 @@ asDouble(): number
 
 Returns a ``number`` value of this value concept. If the value has another type, raises an exception.
 
+[caption=""]
 .Returns
 `number`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -123,9 +133,11 @@ asEntity(): Entity
 
 Casts the concept to ``Entity``.
 
+[caption=""]
 .Returns
 `Entity`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -142,9 +154,11 @@ asEntityType(): EntityType
 
 Casts the concept to ``EntityType``.
 
+[caption=""]
 .Returns
 `EntityType`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -161,9 +175,11 @@ asLong(): number
 
 Returns a ``number`` value of this value concept. If the value has another type, raises an exception.
 
+[caption=""]
 .Returns
 `number`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -180,9 +196,11 @@ asRelation(): Relation
 
 Casts the concept to ``Relation``.
 
+[caption=""]
 .Returns
 `Relation`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -199,9 +217,11 @@ asRelationType(): RelationType
 
 Casts the concept to ``RelationType``.
 
+[caption=""]
 .Returns
 `RelationType`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -218,9 +238,11 @@ asRoleType(): RoleType
 
 Casts the concept to ``RoleType``.
 
+[caption=""]
 .Returns
 `RoleType`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -237,9 +259,11 @@ asString(): string
 
 Returns a ``string`` value of this value concept. If the value has another type, raises an exception.
 
+[caption=""]
 .Returns
 `string`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -256,9 +280,11 @@ asThing(): Thing
 
 Casts the concept to ``Thing``.
 
+[caption=""]
 .Returns
 `Thing`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -275,9 +301,11 @@ asThingType(): ThingType
 
 Casts the concept to ``ThingType``.
 
+[caption=""]
 .Returns
 `ThingType`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -294,9 +322,11 @@ asType(): Type
 
 Casts the concept to ``Type``.
 
+[caption=""]
 .Returns
 `Type`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -313,9 +343,11 @@ asValue(): Value
 
 Casts the concept to ``Value``.
 
+[caption=""]
 .Returns
 `Value`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -338,9 +370,10 @@ Checks if this concept is equal to the argument ``concept``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `concept` a| The concept to compare to. a| `Concept` 
+a| `concept` a| The concept to compare to. a| `Concept`
 |===
 
+[caption=""]
 .Returns
 `boolean`
 
@@ -354,9 +387,11 @@ isAttribute(): boolean
 
 Checks if the concept is an ``Attribute``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -373,9 +408,11 @@ isAttributeType(): boolean
 
 Checks if the concept is an ``AttributeType``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -392,9 +429,11 @@ isBoolean(): boolean
 
 Returns ``True`` if the value which this value concept holds is of type ``boolean``. Otherwise, returns ``False``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -411,9 +450,11 @@ isDateTime(): boolean
 
 Returns ``True`` if the value which this value concept holds is of type ``datetime``. Otherwise, returns ``False``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -430,9 +471,11 @@ isDouble(): boolean
 
 Returns ``True`` if the value which this value concept holds is of type ``double``. Otherwise, returns ``False``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -449,9 +492,11 @@ isEntity(): boolean
 
 Checks if the concept is an ``Entity``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -468,9 +513,11 @@ isEntityType(): boolean
 
 Checks if the concept is an ``EntityType``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -487,9 +534,11 @@ isLong(): boolean
 
 Returns ``True`` if the value which this value concept holds is of type ``long``. Otherwise, returns ``False``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -506,9 +555,11 @@ isRelation(): boolean
 
 Checks if the concept is a ``Relation``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -525,9 +576,11 @@ isRelationType(): boolean
 
 Checks if the concept is a ``RelationType``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -544,9 +597,11 @@ isRoleType(): boolean
 
 Checks if the concept is a ``RoleType``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -563,9 +618,11 @@ isString(): boolean
 
 Returns ``True`` if the value which this value concept holds is of type ``string``. Otherwise, returns ``False``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -582,9 +639,11 @@ isThing(): boolean
 
 Checks if the concept is a ``Thing``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -601,9 +660,11 @@ isThingType(): boolean
 
 Checks if the concept is a ``ThingType``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -620,9 +681,11 @@ isType(): boolean
 
 Checks if the concept is a ``Type``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -639,9 +702,11 @@ isValue(): boolean
 
 Checks if the concept is a ``Value``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -658,9 +723,11 @@ toJSONRecord(): Record<string, string | number | boolean>
 
 Retrieves the concept as JSON.
 
+[caption=""]
 .Returns
 `Record<string, string | number | boolean>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -668,3 +735,4 @@ concept.toJSONRecord()
 ----
 
 // end::methods[]
+

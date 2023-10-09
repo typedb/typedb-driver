@@ -9,9 +9,9 @@ This class is used to specify the type of the session.
 [cols="~"]
 [options="header"]
 |===
-|Name 
-a| `DATA` 
-a| `SCHEMA` 
+|Name
+a| `DATA`
+a| `SCHEMA`
 |===
 // end::enum_constants[]
 
@@ -26,6 +26,7 @@ isData(): boolean
 
 
 
+[caption=""]
 .Returns
 `boolean`
 
@@ -39,7 +40,9 @@ isSchema(): boolean
 
 
 
+[caption=""]
 .Returns
 `boolean`
 
 // end::methods[]
+

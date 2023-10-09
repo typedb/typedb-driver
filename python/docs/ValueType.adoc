@@ -9,7 +9,7 @@ TypeQL value types for attributes and value concepts.
 [cols="~,~"]
 [options="header"]
 |===
-|Name |Value 
+|Name |Value
 a| `BOOLEAN` a| `_ValueType(is_writable=True, is_keyable=False, 1)`
 a| `DATETIME` a| `_ValueType(is_writable=True, is_keyable=True, 5)`
 a| `DOUBLE` a| `_ValueType(is_writable=True, is_keyable=False, 3)`
@@ -30,7 +30,9 @@ static of(value_type: Object | Boolean | Long | Double | String | DateTime) -> V
 
 
 
+[caption=""]
 .Returns
 `ValueType`
 
 // end::methods[]
+

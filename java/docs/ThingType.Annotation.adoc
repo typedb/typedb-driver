@@ -17,9 +17,11 @@ public static ThingType.Annotation key()
 Produces a ``@key`` annotation. 
 
 
+[caption=""]
 .Returns
 `public static ThingType.Annotation`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -37,9 +39,11 @@ public static ThingType.Annotation unique()
 Produces a ``@unique`` annotation. 
 
 
+[caption=""]
 .Returns
 `public static ThingType.Annotation`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -57,9 +61,11 @@ public boolean isKey()
 Checks if this ``Annotation`` is a ``@key`` annotation. 
 
 
+[caption=""]
 .Returns
 `public boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -77,9 +83,11 @@ public boolean isUnique()
 Checks if this ``Annotation`` is a ``@unique`` annotation. 
 
 
+[caption=""]
 .Returns
 `public boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -97,9 +105,11 @@ public java.lang.String toString()
 Retrieves a string representation of this ``Annotation``. 
 
 
+[caption=""]
 .Returns
 `public java.lang.String`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -123,12 +133,14 @@ Checks if this ``Annotation`` is equal to another object.
 [options="header"]
 |===
 |Name |Description |Type
-a| `obj` a| Object to compare with a| `java.lang.Object` 
+a| `obj` a| Object to compare with a| `java.lang.Object`
 |===
 
+[caption=""]
 .Returns
 `public boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -145,7 +157,9 @@ public int hashCode()
 
 
 
+[caption=""]
 .Returns
 `public int`
 
 // end::methods[]
+

@@ -14,9 +14,11 @@ asNumber(): number
 
 Retrieves numeric value of an aggregate answer as a number.
 
+[caption=""]
 .Returns
 `number`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -33,9 +35,11 @@ isNaN(): boolean
 
 Checks if the aggregate answer is not a number.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -52,9 +56,11 @@ isNumber(): boolean
 
 Checks if the type of an aggregate answer is a number.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -62,3 +68,4 @@ numeric.isNumber()
 ----
 
 // end::methods[]
+

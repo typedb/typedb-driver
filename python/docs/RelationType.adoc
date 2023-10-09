@@ -22,9 +22,11 @@ as_relation_type() -> RelationType
 
 Casts the concept to ``RelationType``.
 
+[caption=""]
 .Returns
 `RelationType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -50,9 +52,11 @@ Creates and returns an instance of this ``RelationType``.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
+[caption=""]
 .Returns
 `Relation`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -79,9 +83,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect instances, ``Transitivity.EXPLICIT`` for direct relates only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
+[caption=""]
 .Returns
 `Iterator[Relation]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -109,9 +115,11 @@ a| `role_label` a| Label of the role we wish to retrieve (optional) a| `str \| N
 a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited relates, ``Transitivity.EXPLICIT`` for direct relates only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
+[caption=""]
 .Returns
 `RoleType | None | Iterator[RoleType]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -138,9 +146,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `role_label` a| Label of the role that overrides an inherited role a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `RoleType | None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -167,9 +177,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
+[caption=""]
 .Returns
 `Iterator[RelationType]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -186,9 +198,11 @@ is_relation_type() -> bool
 
 Checks if the concept is a ``RelationType``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -216,9 +230,11 @@ a| `role_label` a| The new role for the ``RelationType`` to relate to a| `str` a
 a| `overridden_label` a| The label being overridden, if applicable a| `str \| None` a| `None`
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -246,9 +262,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `super_relation_type` a| The ``RelationType`` to set as the supertype of this ``RelationType`` a| `RelationType` a| 
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -275,9 +293,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `role_label` a| The role to not relate to the relation type. a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -285,3 +305,4 @@ relation_type.unset_relates(transaction, role_label)
 ----
 
 // end::methods[]
+

@@ -14,9 +14,11 @@ all(): Promise<Database[]>
 
 Retrieves all databases present on the TypeDB server
 
+[caption=""]
 .Returns
 `Promise<Database[]>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -39,12 +41,14 @@ Checks if a database with the given name exists
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| The database name to be checked a| `string` 
+a| `name` a| The database name to be checked a| `string`
 |===
 
+[caption=""]
 .Returns
 `Promise<boolean>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -67,12 +71,14 @@ Create a database with the given name
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| The name of the database to be created a| `string` 
+a| `name` a| The name of the database to be created a| `string`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -95,12 +101,14 @@ Retrieve the database with the given name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| The name of the database to retrieve a| `string` 
+a| `name` a| The name of the database to retrieve a| `string`
 |===
 
+[caption=""]
 .Returns
 `Promise<Database>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -108,3 +116,4 @@ driver.databases().get(name)
 ----
 
 // end::methods[]
+

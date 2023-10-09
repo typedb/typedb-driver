@@ -7,7 +7,7 @@
 [cols="~,~"]
 [options="header"]
 |===
-|Name |Type 
+|Name |Type
 a| `Connection` a| `ConnectionError`
 a| `Internal` a| `InternalError`
 a| `TypeQL` a| `Error`

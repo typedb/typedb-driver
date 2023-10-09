@@ -12,9 +12,11 @@ as_attribute() -> Attribute
 
 Casts the concept to ``Attribute``.
 
+[caption=""]
 .Returns
 `Attribute`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -31,9 +33,11 @@ as_attribute_type() -> AttributeType
 
 Casts the concept to ``AttributeType``.
 
+[caption=""]
 .Returns
 `AttributeType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -50,9 +54,11 @@ as_entity() -> Entity
 
 Casts the concept to ``Entity``.
 
+[caption=""]
 .Returns
 `Entity`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -69,9 +75,11 @@ as_entity_type() -> EntityType
 
 Casts the concept to ``EntityType``.
 
+[caption=""]
 .Returns
 `EntityType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -88,9 +96,11 @@ as_relation() -> Relation
 
 Casts the concept to ``Relation``.
 
+[caption=""]
 .Returns
 `Relation`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -107,9 +117,11 @@ as_relation_type() -> RelationType
 
 Casts the concept to ``RelationType``.
 
+[caption=""]
 .Returns
 `RelationType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -126,9 +138,11 @@ as_role_type() -> RoleType
 
 Casts the concept to ``RoleType``.
 
+[caption=""]
 .Returns
 `RoleType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -145,9 +159,11 @@ as_thing() -> Thing
 
 Casts the concept to ``Thing``.
 
+[caption=""]
 .Returns
 `Thing`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -164,9 +180,11 @@ as_thing_type() -> ThingType
 
 Casts the concept to ``ThingType``.
 
+[caption=""]
 .Returns
 `ThingType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -183,9 +201,11 @@ as_type() -> Type
 
 Casts the concept to ``Type``.
 
+[caption=""]
 .Returns
 `Type`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -202,9 +222,11 @@ as_value() -> Value
 
 Casts the concept to ``Value``.
 
+[caption=""]
 .Returns
 `Value`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -221,9 +243,11 @@ is_attribute() -> bool
 
 Checks if the concept is an ``Attribute``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -240,9 +264,11 @@ is_attribute_type() -> bool
 
 Checks if the concept is an ``AttributeType``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -259,9 +285,11 @@ is_entity() -> bool
 
 Checks if the concept is an ``Entity``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -278,9 +306,11 @@ is_entity_type() -> bool
 
 Checks if the concept is an ``EntityType``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -297,9 +327,11 @@ is_relation() -> bool
 
 Checks if the concept is a ``Relation``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -316,9 +348,11 @@ is_relation_type() -> bool
 
 Checks if the concept is a ``RelationType``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -335,9 +369,11 @@ is_role_type() -> bool
 
 Checks if the concept is a ``RoleType``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -354,9 +390,11 @@ is_thing() -> bool
 
 Checks if the concept is a ``Thing``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -373,9 +411,11 @@ is_thing_type() -> bool
 
 Checks if the concept is a ``ThingType``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -392,9 +432,11 @@ is_type() -> bool
 
 Checks if the concept is a ``Type``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -411,9 +453,11 @@ is_value() -> bool
 
 Checks if the concept is a ``Value``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -430,9 +474,11 @@ to_json() -> Mapping[str, str | int | float | bool | datetime]
 
 Retrieves the concept as JSON.
 
+[caption=""]
 .Returns
 `Mapping[str, str | int | float | bool | datetime]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -440,3 +486,4 @@ concept.to_json()
 ----
 
 // end::methods[]
+

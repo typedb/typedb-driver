@@ -26,9 +26,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect instances, ``Transitivity.EXPLICIT`` for direct instances only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
+[caption=""]
 .Returns
 `Iterator[Thing]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -58,9 +60,11 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited owners
 a| `annotations` a| Only retrieve attribute types owned with annotations. a| `set[Annotation] \| None` a| `None`
 |===
 
+[caption=""]
 .Returns
 `Iterator[AttributeType]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -90,9 +94,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `attribute_type` a| The ``AttributeType`` that overrides requested ``AttributeType`` a| `AttributeType` a| 
 |===
 
+[caption=""]
 .Returns
 `AttributeType | None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -119,9 +125,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect playing, ``Transitivity.EXPLICIT`` for direct playing only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
+[caption=""]
 .Returns
 `Iterator[RoleType]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -149,9 +157,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `role_type` a| The ``RoleType`` that overrides an inherited role a| `RoleType` a| 
 |===
 
+[caption=""]
 .Returns
 `RoleType | None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -178,9 +188,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
+[caption=""]
 .Returns
 `Iterator[ThingType]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -207,9 +219,11 @@ Retrieves the most immediate supertype of the ``ThingType``.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
+[caption=""]
 .Returns
 `ThingType | None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -235,9 +249,11 @@ Retrieves all supertypes of the ``ThingType``.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
+[caption=""]
 .Returns
 `Iterator[ThingType]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -263,9 +279,11 @@ Produces a pattern for creating this ``ThingType`` in a ``define`` query.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
+[caption=""]
 .Returns
 `str`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -282,9 +300,11 @@ is_thing_type() -> bool
 
 Checks if the concept is a ``ThingType``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -310,9 +330,11 @@ Set a ``ThingType`` to be abstract, meaning it cannot have instances.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -341,9 +363,11 @@ a| `overridden_type` a| The ``AttributeType`` that this attribute ownership over
 a| `annotations` a| Adds annotations to the ownership. a| `set[Annotation] \| None` a| `None`
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -374,9 +398,11 @@ a| `role_type` a| The role to be played by the instances of this type a| `RoleTy
 a| `overriden_type` a| The role type that this role overrides, if applicable a| `RoleType \| None` a| `None`
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -403,9 +429,11 @@ Set a ``ThingType`` to be non-abstract, meaning it can have instances.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -432,9 +460,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `attribute_type` a| The ``AttributeType`` to not be owned by the type. a| `AttributeType` a| 
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -461,9 +491,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `role_type` a| The role to not be played by the instances of this type. a| `RoleType` a| 
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -471,3 +503,4 @@ thing_type.unset_plays(transaction, role_type)
 ----
 
 // end::methods[]
+

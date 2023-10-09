@@ -18,15 +18,17 @@ Creates and returns an instance of this ``RelationType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<Relation>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -52,15 +54,17 @@ Retrieves the most immediate supertype of the ``RelationType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<Option<RelationType>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -87,16 +91,18 @@ Sets the supplied ``RelationType`` as the supertype of the current ``RelationTyp
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `supertype` a| The ``RelationType`` to set as the supertype of this ``RelationType`` a| `RelationType` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `supertype` a| The ``RelationType`` to set as the supertype of this ``RelationType`` a| `RelationType`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -122,15 +128,17 @@ Retrieves all supertypes of the ``RelationType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<RelationType>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -157,16 +165,18 @@ Retrieves all direct and indirect (or direct only) subtypes of the ``RelationTyp
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<RelationType>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -193,16 +203,18 @@ Retrieves all direct and indirect (or direct only) ``Relation``s that are instan
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect instances, ``Transitivity::Explicit`` for direct relates only a| `Transitivity` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect instances, ``Transitivity::Explicit`` for direct relates only a| `Transitivity`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<Relation>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -229,16 +241,18 @@ Retrieves roles that this ``RelationType`` relates to directly or via inheritanc
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `transitivity` a| ``Transitivity::Transitive`` for direct and inherited relates, ``Transitivity::Explicit`` for direct relates only a| `Transitivity` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and inherited relates, ``Transitivity::Explicit`` for direct relates only a| `Transitivity`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<RoleType>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -265,16 +279,18 @@ Retrieves role with a given ``role_label`` that this ``RelationType`` relates to
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `role_label` a| Label of the role we wish to retrieve a| `String` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `role_label` a| Label of the role we wish to retrieve a| `String`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<Option<RoleType>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -301,16 +317,18 @@ Retrieves a ``RoleType`` that is overridden by the role with the ``overridden_ro
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `overridden_role_label` a| Label of the role that overrides an inherited role a| `String` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `overridden_role_label` a| Label of the role that overrides an inherited role a| `String`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<Option<RoleType>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -338,17 +356,19 @@ Sets the new role that this ``RelationType`` relates to. If we are setting an ov
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `role_label` a| The new role for the ``RelationType`` to relate to a| `String` 
-a| `overridden_role_label` a| The label being overridden, if applicable a| `Option<String>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `role_label` a| The new role for the ``RelationType`` to relate to a| `String`
+a| `overridden_role_label` a| The label being overridden, if applicable a| `Option<String>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -375,16 +395,18 @@ Disallows this ``RelationType`` from relating to the given role.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `role_label` a| The role to not relate to the relation type. a| `String` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `role_label` a| The role to not relate to the relation type. a| `String`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -392,3 +414,4 @@ relation_type.unset_relates(transaction, role_label);
 ----
 
 // end::methods[]
+

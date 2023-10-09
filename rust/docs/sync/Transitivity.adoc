@@ -9,7 +9,7 @@ Used for specifying whether we need explicit or transitive subtyping, instances,
 [cols="~,~"]
 [options="header"]
 |===
-|Name |Type 
+|Name |Type
 a| `Explicit` a| `Explicit`
 a| `Transitive` a| `Transitive`
 |===

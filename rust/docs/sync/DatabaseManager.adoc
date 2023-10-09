@@ -23,15 +23,17 @@ Retrieve the database with the given name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| The name of the database to retrieve a| `impl Into<String>` 
+a| `name` a| The name of the database to retrieve a| `impl Into<String>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<Database>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -54,15 +56,17 @@ Checks if a database with the given name exists
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| The database name to be checked a| `impl Into<String>` 
+a| `name` a| The database name to be checked a| `impl Into<String>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<bool>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -85,15 +89,17 @@ Create a database with the given name
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| The name of the database to be created a| `impl Into<String>` 
+a| `name` a| The name of the database to be created a| `impl Into<String>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -110,12 +116,14 @@ pub fn all(&self) -> Result<Vec<Database>>
 
 Retrieves all databases present on the TypeDB server
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<Vec<Database>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -123,3 +131,4 @@ driver.databases().all();
 ----
 
 // end::methods[]
+

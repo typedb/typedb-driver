@@ -20,9 +20,10 @@ new TypeDBOptions(obj?): TypeDBOptions
 [options="header"]
 |===
 |Name |Description |Type
-a| `obj` a| If set to ``True``, enables explanations for queries. Only affects read transactions. a| `{ explain?: boolean; infer?: boolean; parallel?: boolean; prefetch?: boolean; prefetchSize?: number; readAnyReplica?: boolean; schemaLockAcquireTimeoutMillis?: number; sessionIdleTimeoutMillis?: number; traceInference?: boolean; transactionTimeoutMillis?: number; } = {}` 
+a| `obj` a| If set to ``True``, enables explanations for queries. Only affects read transactions. a| `{ explain?: boolean; infer?: boolean; parallel?: boolean; prefetch?: boolean; prefetchSize?: number; readAnyReplica?: boolean; schemaLockAcquireTimeoutMillis?: number; sessionIdleTimeoutMillis?: number; traceInference?: boolean; transactionTimeoutMillis?: number; } = {}`
 |===
 
+[caption=""]
 .Returns
 `TypeDBOptions`
 
@@ -36,6 +37,7 @@ get explain(): boolean
 
 If set to ``True``, enables explanations for queries. Only affects read transactions.
 
+[caption=""]
 .Returns
 `boolean`
 
@@ -49,6 +51,7 @@ set explain(value): void
 
 If set to ``True``, enables explanations for queries. Only affects read transactions.
 
+[caption=""]
 .Returns
 `void`
 
@@ -62,6 +65,7 @@ get infer(): boolean
 
 If set to ``True``, enables inference for queries. Only settable at transaction level and above. Only affects read transactions.
 
+[caption=""]
 .Returns
 `boolean`
 
@@ -75,6 +79,7 @@ set infer(value): void
 
 If set to ``True``, enables inference for queries. Only settable at transaction level and above. Only affects read transactions.
 
+[caption=""]
 .Returns
 `void`
 
@@ -88,6 +93,7 @@ get parallel(): boolean
 
 If set to ``True``, the server uses parallel instead of single-threaded execution.
 
+[caption=""]
 .Returns
 `boolean`
 
@@ -101,6 +107,7 @@ set parallel(value): void
 
 If set to ``True``, the server uses parallel instead of single-threaded execution.
 
+[caption=""]
 .Returns
 `void`
 
@@ -114,6 +121,7 @@ get prefetch(): boolean
 
 If set to ``True``, the first batch of answers is streamed to the driver even without an explicit request for it.
 
+[caption=""]
 .Returns
 `boolean`
 
@@ -127,6 +135,7 @@ set prefetch(value): void
 
 If set to ``True``, the first batch of answers is streamed to the driver even without an explicit request for it.
 
+[caption=""]
 .Returns
 `void`
 
@@ -140,6 +149,7 @@ get prefetchSize(): number
 
 If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
 
+[caption=""]
 .Returns
 `number`
 
@@ -153,6 +163,7 @@ set prefetchSize(value): void
 
 If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
 
+[caption=""]
 .Returns
 `void`
 
@@ -166,6 +177,7 @@ get readAnyReplica(): boolean
 
 If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise.
 
+[caption=""]
 .Returns
 `boolean`
 
@@ -179,6 +191,7 @@ set readAnyReplica(value): void
 
 If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise.
 
+[caption=""]
 .Returns
 `void`
 
@@ -192,6 +205,7 @@ get schemaLockAcquireTimeoutMillis(): number
 
 If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock.
 
+[caption=""]
 .Returns
 `number`
 
@@ -205,6 +219,7 @@ set schemaLockAcquireTimeoutMillis(value): void
 
 If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock.
 
+[caption=""]
 .Returns
 `void`
 
@@ -218,6 +233,7 @@ get sessionIdleTimeoutMillis(): number
 
 If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive.
 
+[caption=""]
 .Returns
 `number`
 
@@ -231,6 +247,7 @@ set sessionIdleTimeoutMillis(millis): void
 
 If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive.
 
+[caption=""]
 .Returns
 `void`
 
@@ -244,6 +261,7 @@ get traceInference(): boolean
 
 If set to ``True``, reasoning tracing graphs are output in the logging directory. Should be used with ``parallel = False``.
 
+[caption=""]
 .Returns
 `boolean`
 
@@ -257,6 +275,7 @@ set traceInference(value): void
 
 If set to ``True``, reasoning tracing graphs are output in the logging directory. Should be used with ``parallel = False``.
 
+[caption=""]
 .Returns
 `void`
 
@@ -270,6 +289,7 @@ get transactionTimeoutMillis(): number
 
 If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
 
+[caption=""]
 .Returns
 `number`
 
@@ -283,7 +303,9 @@ set transactionTimeoutMillis(millis): void
 
 If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
 
+[caption=""]
 .Returns
 `void`
 
 // end::methods[]
+

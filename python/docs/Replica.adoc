@@ -14,6 +14,7 @@ address() -> str
 
 Retrieves address of the server hosting this replica
 
+[caption=""]
 .Returns
 `str`
 
@@ -27,6 +28,7 @@ database() -> Database
 
 Retrieves the database for which this is a replica
 
+[caption=""]
 .Returns
 `Database`
 
@@ -40,6 +42,7 @@ is_preferred() -> bool
 
 Checks whether this is the preferred replica of the raft cluster. If true, Operations which can be run on any replica will prefer to use this replica.
 
+[caption=""]
 .Returns
 `bool`
 
@@ -53,6 +56,7 @@ is_primary() -> bool
 
 Checks whether this is the primary replica of the raft cluster.
 
+[caption=""]
 .Returns
 `bool`
 
@@ -66,7 +70,9 @@ term() -> int
 
 The raft protocol ‘term’ of this replica.
 
+[caption=""]
 .Returns
 `int`
 
 // end::methods[]
+

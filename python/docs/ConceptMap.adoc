@@ -14,9 +14,11 @@ concepts() -> Iterator[Concept]
 
 Produces an iterator over all concepts in this ``ConceptMap``.
 
+[caption=""]
 .Returns
 `Iterator[Concept]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -33,9 +35,11 @@ explainables() -> Explainables
 
 Gets the ``Explainables`` object for this ``ConceptMap``, exposing which of the concepts in this ``ConceptMap`` are explainable.
 
+[caption=""]
 .Returns
 `Explainables`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -61,9 +65,11 @@ Retrieves a concept for a given variable name.
 a| `variable` a| The string representation of a variable a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `Concept`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -80,9 +86,11 @@ to_json() -> Mapping[str, Mapping[str, str | int | float | bool]]
 
 Retrieves this ``ConceptMap`` as JSON.
 
+[caption=""]
 .Returns
 `Mapping[str, Mapping[str, str | int | float | bool]]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -99,9 +107,11 @@ variables() -> Iterator[str]
 
 Produces an iterator over all variables in this ``ConceptMap``.
 
+[caption=""]
 .Returns
 `Iterator[str]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -109,3 +119,4 @@ concept_map.variables()
 ----
 
 // end::methods[]
+

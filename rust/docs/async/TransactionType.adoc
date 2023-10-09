@@ -9,7 +9,7 @@ This enum is used to specify the type of transaction.
 [cols="~,~"]
 [options="header"]
 |===
-|Name |Type 
+|Name |Type
 a| `Read` a| `Read`
 a| `Write` a| `Write`
 |===

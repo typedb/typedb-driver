@@ -14,6 +14,7 @@ new Stream<T>(): Stream<T>
 
 
 
+[caption=""]
 .Returns
 `Stream<T>`
 
@@ -27,6 +28,7 @@ new Stream<T>(): Stream<T>
 
 
 
+[caption=""]
 .Returns
 `AsyncIterator<T, any, undefined>`
 
@@ -40,9 +42,11 @@ collect(): Promise<T[]>
 
 Collects all the answers from this stream into an array
 
+[caption=""]
 .Returns
 `Promise<T[]>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -65,9 +69,10 @@ Checks whether a condition is satisfied by ALL answers in this stream.
 [options="header"]
 |===
 |Name |Description |Type
-a| `callbackFn` a| null a| `((value) => unknown)` 
+a| `callbackFn` a|  a| `((value) => unknown)`
 |===
 
+[caption=""]
 .Returns
 `Promise<boolean>`
 
@@ -90,9 +95,10 @@ Returns a new stream from this stream consisting only of elements which satisfy 
 a| `filter` a| The condition to evaluate.
 Examples
 ``// For a query "match $p isa person, has age $a;", only retrieve results having $a &gt;= 60.results = transaction.query.match(query).filter(cm =&gt; cm.get("a").value &gt; 60).collect();
-``Copy a| `((value) => boolean)` 
+``Copy a| `((value) => boolean)`
 |===
 
+[caption=""]
 .Returns
 `Stream<T>`
 
@@ -106,6 +112,7 @@ first(): Promise<T>
 
 Returns the first element in the stream.
 
+[caption=""]
 .Returns
 `Promise<T>`
 
@@ -125,9 +132,10 @@ Given a function which accepts a single element of this stream and returns a new
 [options="header"]
 |===
 |Name |Description |Type
-a| `mapper` a| The mapping function to apply. Must return a stream. a| `((value) => Stream<U>)` 
+a| `mapper` a| The mapping function to apply. Must return a stream. a| `((value) => Stream<U>)`
 |===
 
+[caption=""]
 .Returns
 `Stream<U>`
 
@@ -147,9 +155,10 @@ Executes the given function for each element in the stream.
 [options="header"]
 |===
 |Name |Description |Type
-a| `fn` a| The function to evaluate for each element. a| `((value) => void)` 
+a| `fn` a| The function to evaluate for each element. a| `((value) => void)`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
@@ -163,6 +172,7 @@ iterator(): AsyncIterator<T, any, undefined>
 
 
 
+[caption=""]
 .Returns
 `AsyncIterator<T, any, undefined>`
 
@@ -182,9 +192,10 @@ map<U>(mapper): Stream<U>
 [options="header"]
 |===
 |Name |Description |Type
-a| `mapper` a| The mapping function to apply. Returns a new stream from this stream by applying the ``mapper`` function to each element. a| `((value) => U)` 
+a| `mapper` a| The mapping function to apply. Returns a new stream from this stream by applying the ``mapper`` function to each element. a| `((value) => U)`
 |===
 
+[caption=""]
 .Returns
 `Stream<U>`
 
@@ -204,10 +215,12 @@ Checks whether a condition is satisfied by ANY answer in this stream.
 [options="header"]
 |===
 |Name |Description |Type
-a| `callbackFn` a| null a| `((value) => unknown)` 
+a| `callbackFn` a|  a| `((value) => unknown)`
 |===
 
+[caption=""]
 .Returns
 `Promise<boolean>`
 
 // end::methods[]
+

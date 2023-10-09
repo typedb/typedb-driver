@@ -12,6 +12,7 @@ fn label(&self) -> &String
 
 Retrieves the unique label of the rule.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -34,15 +35,17 @@ Deletes this rule.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current ``Transaction`` a| `&Transaction<'_>` 
+a| `transaction` a| The current ``Transaction`` a| `&Transaction<'_>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -69,16 +72,18 @@ Renames the label of the rule. The new label must remain unique.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current ``Transaction`` a| `&Transaction<'_>` 
-a| `new_label` a| The new label to be given to the rule a| `String` 
+a| `transaction` a| The current ``Transaction`` a| `&Transaction<'_>`
+a| `new_label` a| The new label to be given to the rule a| `String`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -101,15 +106,17 @@ Check if this rule has been deleted.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current ``Transaction`` a| `&Transaction<'_>` 
+a| `transaction` a| The current ``Transaction`` a| `&Transaction<'_>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<bool>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -117,3 +124,4 @@ rule.is_deleted(transaction)
 ----
 
 // end::methods[]
+

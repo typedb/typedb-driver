@@ -17,9 +17,11 @@ public TypeDBOptions()
 Produces a new ``TypeDBOptions`` object. 
 
 
+[caption=""]
 .Returns
 `public`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -38,9 +40,11 @@ public java.util.Optional<java.lang.Boolean> infer()
 Returns the value set for the inference in this ``TypeDBOptions`` object. 
 
 
+[caption=""]
 .Returns
 `public java.util.Optional<java.lang.Boolean>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -64,12 +68,14 @@ Explicitly enables or disables inference. Only settable at transaction level and
 [options="header"]
 |===
 |Name |Description |Type
-a| `infer` a| Explicitly enable or disable inference a| `boolean` 
+a| `infer` a| Explicitly enable or disable inference a| `boolean`
 |===
 
+[caption=""]
 .Returns
 `public TypeDBOptions`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -88,9 +94,11 @@ public java.util.Optional<java.lang.Boolean> traceInference()
 Returns the value set for reasoning tracing in this ``TypeDBOptions`` object. If set to ``true``, reasoning tracing graphs are output in the logging directory. 
 
 
+[caption=""]
 .Returns
 `public java.util.Optional<java.lang.Boolean>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -114,12 +122,14 @@ Explicitly enables or disables reasoning tracing. If set to ``true``, reasoning 
 [options="header"]
 |===
 |Name |Description |Type
-a| `traceInference` a| Explicitly enable or disable reasoning tracing a| `boolean` 
+a| `traceInference` a| Explicitly enable or disable reasoning tracing a| `boolean`
 |===
 
+[caption=""]
 .Returns
 `public TypeDBOptions`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -138,9 +148,11 @@ public java.util.Optional<java.lang.Boolean> explain()
 Returns the value set for the explanation in this ``TypeDBOptions`` object. If set to ``true``, explanations for queries are enabled. 
 
 
+[caption=""]
 .Returns
 `public java.util.Optional<java.lang.Boolean>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -164,12 +176,14 @@ Explicitly enables or disables explanations. If set to ``true``, enables explana
 [options="header"]
 |===
 |Name |Description |Type
-a| `explain` a| Explicitly enable or disable explanations a| `boolean` 
+a| `explain` a| Explicitly enable or disable explanations a| `boolean`
 |===
 
+[caption=""]
 .Returns
 `public TypeDBOptions`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -188,9 +202,11 @@ public java.util.Optional<java.lang.Boolean> parallel()
 Returns the value set for the parallel execution in this ``TypeDBOptions`` object. If set to ``true``, the server uses parallel instead of single-threaded execution. 
 
 
+[caption=""]
 .Returns
 `public java.util.Optional<java.lang.Boolean>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -214,12 +230,14 @@ Explicitly enables or disables parallel execution. If set to ``true``, the serve
 [options="header"]
 |===
 |Name |Description |Type
-a| `parallel` a| Explicitly enable or disable parallel execution a| `boolean` 
+a| `parallel` a| Explicitly enable or disable parallel execution a| `boolean`
 |===
 
+[caption=""]
 .Returns
 `public TypeDBOptions`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -238,9 +256,11 @@ public java.util.Optional<java.lang.Boolean> prefetch()
 Returns the value set for the prefetching in this ``TypeDBOptions`` object. If set to ``true``, the first batch of answers is streamed to the driver even without an explicit request for it. 
 
 
+[caption=""]
 .Returns
 `public java.util.Optional<java.lang.Boolean>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -264,12 +284,14 @@ Explicitly enables or disables prefetching. If set to ``true``, the first batch 
 [options="header"]
 |===
 |Name |Description |Type
-a| `prefetch` a| Explicitly enable or disable prefetching a| `boolean` 
+a| `prefetch` a| Explicitly enable or disable prefetching a| `boolean`
 |===
 
+[caption=""]
 .Returns
 `public TypeDBOptions`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -288,9 +310,11 @@ public java.util.Optional<java.lang.Integer> prefetchSize()
 Returns the value set for the prefetch size in this ``TypeDBOptions`` object. If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request. 
 
 
+[caption=""]
 .Returns
 `public java.util.Optional<java.lang.Integer>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -314,12 +338,14 @@ Explicitly sets a prefetch size. If set, specifies a guideline number of answers
 [options="header"]
 |===
 |Name |Description |Type
-a| `prefetchSize` a| Number of answers that the server should send before the driver issues a fresh request a| `int` 
+a| `prefetchSize` a| Number of answers that the server should send before the driver issues a fresh request a| `int`
 |===
 
+[caption=""]
 .Returns
 `public TypeDBOptions`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -338,9 +364,11 @@ public java.util.Optional<java.lang.Integer> sessionIdleTimeoutMillis()
 Returns the value set for the session idle timeout in this ``TypeDBOptions`` object. If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive. 
 
 
+[caption=""]
 .Returns
 `public java.util.Optional<java.lang.Integer>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -364,12 +392,14 @@ Explicitly sets a session idle timeout. If set, specifies a timeout that allows 
 [options="header"]
 |===
 |Name |Description |Type
-a| `sessionIdleTimeoutMillis` a| timeout that allows the server to close sessions if the driver terminates or becomes unresponsive a| `int` 
+a| `sessionIdleTimeoutMillis` a| timeout that allows the server to close sessions if the driver terminates or becomes unresponsive a| `int`
 |===
 
+[caption=""]
 .Returns
 `public TypeDBOptions`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -388,9 +418,11 @@ public java.util.Optional<java.lang.Integer> transactionTimeoutMillis()
 Returns the value set for the transaction timeout in this ``TypeDBOptions`` object. If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions. 
 
 
+[caption=""]
 .Returns
 `public java.util.Optional<java.lang.Integer>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -414,12 +446,14 @@ Explicitly set a transaction timeout. If set, specifies a timeout for killing tr
 [options="header"]
 |===
 |Name |Description |Type
-a| `transactionTimeoutMillis` a| Timeout for killing transactions automatically a| `int` 
+a| `transactionTimeoutMillis` a| Timeout for killing transactions automatically a| `int`
 |===
 
+[caption=""]
 .Returns
 `public TypeDBOptions`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -437,9 +471,11 @@ public java.util.Optional<java.lang.Integer> schemaLockAcquireTimeoutMillis()
 Returns the value set for the schema lock acquire timeout in this ``TypeDBOptions`` object. If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock. 
 
 
+[caption=""]
 .Returns
 `public java.util.Optional<java.lang.Integer>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -463,12 +499,14 @@ Explicitly sets schema lock acquire timeout. If set, specifies how long the driv
 [options="header"]
 |===
 |Name |Description |Type
-a| `schemaLockAcquireTimeoutMillis` a| How long the driver should wait if opening a session or transaction is blocked by a schema write lock a| `int` 
+a| `schemaLockAcquireTimeoutMillis` a| How long the driver should wait if opening a session or transaction is blocked by a schema write lock a| `int`
 |===
 
+[caption=""]
 .Returns
 `public TypeDBOptions`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -487,9 +525,11 @@ public java.util.Optional<java.lang.Boolean> readAnyReplica()
 Returns the value set for reading data from any replica in this ``TypeDBOptions`` object. If set to ``True``, enables reading data from any replica, potentially boosting read throughput. 
 
 
+[caption=""]
 .Returns
 `public java.util.Optional<java.lang.Boolean>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -513,12 +553,14 @@ Explicitly enables or disables reading data from any replica. If set to ``True``
 [options="header"]
 |===
 |Name |Description |Type
-a| `readAnyReplica` a| Explicitly enable or disable reading data from any replica a| `boolean` 
+a| `readAnyReplica` a| Explicitly enable or disable reading data from any replica a| `boolean`
 |===
 
+[caption=""]
 .Returns
 `public TypeDBOptions`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -526,3 +568,4 @@ options.readAnyReplica(readAnyReplica);
 ----
 
 // end::methods[]
+

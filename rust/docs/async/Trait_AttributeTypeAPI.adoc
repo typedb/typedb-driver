@@ -12,12 +12,14 @@ fn value_type(&self) -> ValueType
 
 Retrieves the ``ValueType`` of this ``AttributeType``.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 ValueType
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -49,10 +51,11 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
-a| `value` a| New ``Attribute``’s value a| `Value` 
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `value` a| New ``Attribute``’s value a| `Value`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -64,6 +67,7 @@ where
      'life2: 'async_trait,
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -95,10 +99,11 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
-a| `value` a| ``Attribute``’s value a| `Value` 
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `value` a| ``Attribute``’s value a| `Value`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -110,6 +115,7 @@ where
      'life2: 'async_trait,
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -140,9 +146,10 @@ Retrieves the most immediate supertype of this ``AttributeType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -154,6 +161,7 @@ where
      'life2: 'async_trait,
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -185,10 +193,11 @@ Sets the supplied ``AttributeType`` as the supertype of the current ``AttributeT
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
-a| `supertype` a| The ``AttributeType`` to set as the supertype of this ``AttributeType`` a| `AttributeType` 
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `supertype` a| The ``AttributeType`` to set as the supertype of this ``AttributeType`` a| `AttributeType`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -200,6 +209,7 @@ where
      'life2: 'async_trait,
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -225,15 +235,17 @@ Retrieves all supertypes of this ``AttributeType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<AttributeType>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -260,16 +272,18 @@ Retrieves all direct and indirect (or direct only) subtypes of this ``AttributeT
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<AttributeType>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -297,17 +311,19 @@ Retrieves all direct and indirect (or direct only) subtypes of this ``AttributeT
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `value_type` a| ``ValueType`` for retrieving subtypes a| `ValueType` 
-a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `value_type` a| ``ValueType`` for retrieving subtypes a| `ValueType`
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<AttributeType>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -334,16 +350,18 @@ Retrieves all direct and indirect (or direct only) ``Attributes`` that are insta
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<Attribute>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -374,9 +392,10 @@ Retrieves the regular expression that is defined for this ``AttributeType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -388,6 +407,7 @@ where
      'life2: 'async_trait,
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -421,10 +441,11 @@ Can only be applied for ``AttributeType``s with a ``string`` value type.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
-a| `regex` a| Regular expression a| `String` 
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `regex` a| Regular expression a| `String`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -436,6 +457,7 @@ where
      'life2: 'async_trait,
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -466,9 +488,10 @@ Removes the regular expression that is defined for this ``AttributeType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -480,6 +503,7 @@ where
      'life2: 'async_trait,
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -507,17 +531,19 @@ Retrieve all ``Things`` that own an attribute of this ``AttributeType`` and have
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `transitivity` a| ``Transitivity::Transitive`` for direct and inherited ownership, ``Transitivity::Explicit`` for direct ownership only a| `Transitivity` 
-a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``AttributeType`` with all given ``Annotation``s a| `Vec<Annotation>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and inherited ownership, ``Transitivity::Explicit`` for direct ownership only a| `Transitivity`
+a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``AttributeType`` with all given ``Annotation``s a| `Vec<Annotation>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<ThingType>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -525,3 +551,4 @@ attribute_type.get_owners(transaction, transitivity, annotations)
 ----
 
 // end::methods[]
+

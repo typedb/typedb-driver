@@ -7,8 +7,8 @@
 [cols="~"]
 [options="header"]
 |===
-|Name 
-a| `DEFAULT_ADDRESS` 
+|Name
+a| `DEFAULT_ADDRESS`
 |===
 // end::enum_constants[]
 

@@ -14,9 +14,11 @@ numeric() -> Numeric
 
 Retrieves the ``Numeric`` answer of the group.
 
+[caption=""]
 .Returns
 `Numeric`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -33,9 +35,11 @@ owner() -> Concept
 
 Retrieves the concept that is the group owner.
 
+[caption=""]
 .Returns
 `Concept`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -43,3 +47,4 @@ numeric_group.owner()
 ----
 
 // end::methods[]
+

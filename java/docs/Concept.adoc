@@ -16,9 +16,11 @@ default boolean isType()
 Checks if the concept is a ``Type``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -37,9 +39,11 @@ default boolean isThingType()
 Checks if the concept is a ``ThingType``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -58,9 +62,11 @@ default boolean isEntityType()
 Checks if the concept is an ``EntityType``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -79,9 +85,11 @@ default boolean isAttributeType()
 Checks if the concept is an ``AttributeType``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -100,9 +108,11 @@ default boolean isRelationType()
 Checks if the concept is a ``RelationType``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -121,9 +131,11 @@ default boolean isRoleType()
 Checks if the concept is a ``RoleType``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -142,9 +154,11 @@ default boolean isThing()
 Checks if the concept is a ``Thing``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -163,9 +177,11 @@ default boolean isEntity()
 Checks if the concept is an ``Entity``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -184,9 +200,11 @@ default boolean isRelation()
 Checks if the concept is a ``Relation``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -205,9 +223,11 @@ default boolean isAttribute()
 Checks if the concept is an ``Attribute``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -226,9 +246,11 @@ default boolean isValue()
 Checks if the concept is a ``Value``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -246,9 +268,11 @@ default Type asType()
 Casts the concept to ``Type``. 
 
 
+[caption=""]
 .Returns
 `Type`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -266,9 +290,11 @@ default ThingType asThingType()
 Casts the concept to ``ThingType``. 
 
 
+[caption=""]
 .Returns
 `ThingType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -286,9 +312,11 @@ default EntityType asEntityType()
 Casts the concept to ``EntityType``. 
 
 
+[caption=""]
 .Returns
 `EntityType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -306,9 +334,11 @@ default RelationType asRelationType()
 Casts the concept to ``RelationType``. 
 
 
+[caption=""]
 .Returns
 `RelationType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -326,9 +356,11 @@ default AttributeType asAttributeType()
 Casts the concept to ``AttributeType``. 
 
 
+[caption=""]
 .Returns
 `AttributeType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -346,9 +378,11 @@ default RoleType asRoleType()
 Casts the concept to ``RoleType``. 
 
 
+[caption=""]
 .Returns
 `RoleType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -366,9 +400,11 @@ default Thing asThing()
 Casts the concept to ``Thing``. 
 
 
+[caption=""]
 .Returns
 `Thing`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -386,9 +422,11 @@ default Entity asEntity()
 Casts the concept to ``Entity``. 
 
 
+[caption=""]
 .Returns
 `Entity`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -406,9 +444,11 @@ default Relation asRelation()
 Casts the concept to ``Relation``. 
 
 
+[caption=""]
 .Returns
 `Relation`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -426,9 +466,11 @@ default Attribute asAttribute()
 Casts the concept to ``Attribute``. 
 
 
+[caption=""]
 .Returns
 `Attribute`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -446,9 +488,11 @@ default Value asValue()
 Casts the concept to ``Value``. 
 
 
+[caption=""]
 .Returns
 `Value`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -467,9 +511,11 @@ com.eclipsesource.json.JsonObject toJSON()
 Retrieves the concept as JSON. 
 
 
+[caption=""]
 .Returns
 `com.eclipsesource.json.JsonObject`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -477,3 +523,4 @@ concept.toJSON();
 ----
 
 // end::methods[]
+

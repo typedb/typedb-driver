@@ -29,9 +29,11 @@ a| `role_type` a| The role to be played by the ``player`` a| `RoleType` a|
 a| `player` a| The thing to play the role a| `Thing` a| 
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -48,9 +50,11 @@ as_relation() -> Relation
 
 Casts the concept to ``Relation``.
 
+[caption=""]
 .Returns
 `Relation`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -76,9 +80,11 @@ Retrieves a mapping of all instances involved in the ``Relation`` and the role e
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
+[caption=""]
 .Returns
 `dict[RoleType, list[Thing]]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -105,9 +111,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `role_types` a| 0 or more role types a| `RoleType` a| 
 |===
 
+[caption=""]
 .Returns
 `Iterator[Thing]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -134,9 +142,11 @@ Retrieves all role types currently played in this ``Relation``.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
+[caption=""]
 .Returns
 `Iterator[RoleType]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -153,9 +163,11 @@ get_type() -> RelationType
 
 Retrieves the type which this ``Relation`` belongs to.
 
+[caption=""]
 .Returns
 `RelationType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -172,9 +184,11 @@ is_relation() -> bool
 
 Checks if the concept is a ``Relation``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -202,9 +216,11 @@ a| `role_type` a| The role to no longer be played by the thing in this ``Relatio
 a| `player` a| The instance to no longer play the role in this ``Relation`` a| `Thing` a| 
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -212,3 +228,4 @@ relation.remove_player(transaction, role_type, player)
 ----
 
 // end::methods[]
+

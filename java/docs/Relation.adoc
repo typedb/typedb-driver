@@ -23,9 +23,11 @@ default boolean isRelation()
 Checks if the concept is a ``Relation``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -44,9 +46,11 @@ default Relation asRelation()
 Casts the concept to ``Relation``. 
 
 
+[caption=""]
 .Returns
 `Relation`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -65,9 +69,11 @@ RelationType getType()
 Retrieves the type which this ``Relation`` belongs to. 
 
 
+[caption=""]
 .Returns
 `RelationType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -93,14 +99,16 @@ Adds a new role player to play the given role in this ``Relation``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `roleType` a| The role to be played by the ``player`` a| `RoleType` 
-a| `player` a| The thing to play the role a| `Thing` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `roleType` a| The role to be played by the ``player`` a| `RoleType`
+a| `player` a| The thing to play the role a| `Thing`
 |===
 
+[caption=""]
 .Returns
 `void`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -126,14 +134,16 @@ Removes the association of the given instance that plays the given role in this 
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `roleType` a| The role to no longer be played by the thing in this ``Relation`` a| `RoleType` 
-a| `player` a| The instance to no longer play the role in this ``Relation`` a| `Thing` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `roleType` a| The role to no longer be played by the thing in this ``Relation`` a| `RoleType`
+a| `player` a| The instance to no longer play the role in this ``Relation`` a| `Thing`
 |===
 
+[caption=""]
 .Returns
 `void`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -159,13 +169,15 @@ Retrieves all role players of this ``Relation``, optionally filtered by given ro
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `roleTypes` a| 0 or more role types a| `RoleType[]` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `roleTypes` a| 0 or more role types a| `RoleType[]`
 |===
 
+[caption=""]
 .Returns
 `java.util.stream.Stream<? extends Thing>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -190,12 +202,14 @@ Retrieves a mapping of all instances involved in the ``Relation`` and the role e
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `java.util.Map<? extends RoleType,​? extends java.util.List<? extends Thing>>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -220,12 +234,14 @@ Retrieves all role types currently played in this ``Relation``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `java.util.stream.Stream<? extends RoleType>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -243,9 +259,11 @@ default Attribute asAttribute()
 Casts the concept to ``Attribute``. 
 
 
+[caption=""]
 .Returns
 `Attribute`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -263,9 +281,11 @@ default AttributeType asAttributeType()
 Casts the concept to ``AttributeType``. 
 
 
+[caption=""]
 .Returns
 `AttributeType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -283,9 +303,11 @@ default Entity asEntity()
 Casts the concept to ``Entity``. 
 
 
+[caption=""]
 .Returns
 `Entity`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -303,9 +325,11 @@ default EntityType asEntityType()
 Casts the concept to ``EntityType``. 
 
 
+[caption=""]
 .Returns
 `EntityType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -323,9 +347,11 @@ default RelationType asRelationType()
 Casts the concept to ``RelationType``. 
 
 
+[caption=""]
 .Returns
 `RelationType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -343,9 +369,11 @@ default RoleType asRoleType()
 Casts the concept to ``RoleType``. 
 
 
+[caption=""]
 .Returns
 `RoleType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -363,9 +391,11 @@ default ThingType asThingType()
 Casts the concept to ``ThingType``. 
 
 
+[caption=""]
 .Returns
 `ThingType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -383,9 +413,11 @@ default Type asType()
 Casts the concept to ``Type``. 
 
 
+[caption=""]
 .Returns
 `Type`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -403,9 +435,11 @@ default Value asValue()
 Casts the concept to ``Value``. 
 
 
+[caption=""]
 .Returns
 `Value`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -424,9 +458,11 @@ default boolean isAttribute()
 Checks if the concept is an ``Attribute``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -445,9 +481,11 @@ default boolean isAttributeType()
 Checks if the concept is an ``AttributeType``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -466,9 +504,11 @@ default boolean isEntity()
 Checks if the concept is an ``Entity``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -487,9 +527,11 @@ default boolean isEntityType()
 Checks if the concept is an ``EntityType``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -508,9 +550,11 @@ default boolean isRelationType()
 Checks if the concept is a ``RelationType``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -529,9 +573,11 @@ default boolean isRoleType()
 Checks if the concept is a ``RoleType``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -550,9 +596,11 @@ default boolean isThingType()
 Checks if the concept is a ``ThingType``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -571,9 +619,11 @@ default boolean isType()
 Checks if the concept is a ``Type``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -592,9 +642,11 @@ default boolean isValue()
 Checks if the concept is a ``Value``. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -602,3 +654,4 @@ concept.isValue();
 ----
 
 // end::methods[]
+

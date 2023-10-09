@@ -20,12 +20,14 @@ Retrieves an ``Attribute`` by its iid.
 [options="header"]
 |===
 |Name |Description |Type
-a| `iid` a| The iid of the ``Attribute`` to retrieve a| `string` 
+a| `iid` a| The iid of the ``Attribute`` to retrieve a| `string`
 |===
 
+[caption=""]
 .Returns
 `Promise<Attribute>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -48,12 +50,14 @@ Retrieves an ``AttributeType`` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``AttributeType`` to retrieve a| `string` 
+a| `label` a| The label of the ``AttributeType`` to retrieve a| `string`
 |===
 
+[caption=""]
 .Returns
 `Promise<AttributeType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -76,12 +80,14 @@ Retrieves an ``Entity`` by its iid.
 [options="header"]
 |===
 |Name |Description |Type
-a| `iid` a| The iid of the ``Entity`` to retrieve a| `string` 
+a| `iid` a| The iid of the ``Entity`` to retrieve a| `string`
 |===
 
+[caption=""]
 .Returns
 `Promise<Entity>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -104,12 +110,14 @@ Retrieves an ``EntityType`` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``EntityType`` to retrieve a| `string` 
+a| `label` a| The label of the ``EntityType`` to retrieve a| `string`
 |===
 
+[caption=""]
 .Returns
 `Promise<EntityType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -132,12 +140,14 @@ Retrieves a ``Relation`` by its iid.
 [options="header"]
 |===
 |Name |Description |Type
-a| `iid` a| The iid of the ``Relation`` to retrieve a| `string` 
+a| `iid` a| The iid of the ``Relation`` to retrieve a| `string`
 |===
 
+[caption=""]
 .Returns
 `Promise<Relation>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -160,12 +170,14 @@ Retrieves a ``RelationType`` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``RelationType`` to retrieve a| `string` 
+a| `label` a| The label of the ``RelationType`` to retrieve a| `string`
 |===
 
+[caption=""]
 .Returns
 `Promise<RelationType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -182,9 +194,11 @@ getRootAttributeType(): Promise<AttributeType>
 
 Retrieve the root ``AttributeType``, “attribute”.
 
+[caption=""]
 .Returns
 `Promise<AttributeType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -201,9 +215,11 @@ getRootEntityType(): Promise<EntityType>
 
 Retrieves the root ``EntityType``, “entity”.
 
+[caption=""]
 .Returns
 `Promise<EntityType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -220,9 +236,11 @@ getRootRelationType(): Promise<RelationType>
 
 Retrieve the root ``RelationType``, “relation”.
 
+[caption=""]
 .Returns
 `Promise<RelationType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -239,9 +257,11 @@ getRootThingType(): Promise<ThingType>
 
 Retrieves the root ``ThingType``, “thing”.
 
+[caption=""]
 .Returns
 `Promise<ThingType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -258,9 +278,11 @@ getSchemaExceptions(): Promise<TypeDBDriverError[]>
 
 Retrieves a list of all exceptions for the current transaction.
 
+[caption=""]
 .Returns
 `Promise<TypeDBDriverError[]>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -283,13 +305,15 @@ Creates a new ``AttributeType`` if none exists with the given label, or retrieve
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``AttributeType`` to create or retrieve a| `string` 
-a| `valueType` a| The value type of the ``AttributeType`` to create a| `ValueType` 
+a| `label` a| The label of the ``AttributeType`` to create or retrieve a| `string`
+a| `valueType` a| The value type of the ``AttributeType`` to create a| `ValueType`
 |===
 
+[caption=""]
 .Returns
 `Promise<AttributeType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -312,12 +336,14 @@ Creates a new ``EntityType`` if none exists with the given label, otherwise retr
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``EntityType`` to create or retrieve a| `string` 
+a| `label` a| The label of the ``EntityType`` to create or retrieve a| `string`
 |===
 
+[caption=""]
 .Returns
 `Promise<EntityType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -340,12 +366,14 @@ Creates a new ``RelationType`` if none exists with the given label, otherwise re
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``RelationType`` to create or retrieve a| `string` 
+a| `label` a| The label of the ``RelationType`` to create or retrieve a| `string`
 |===
 
+[caption=""]
 .Returns
 `Promise<RelationType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -353,3 +381,4 @@ transaction.concepts().putRelationType(label)
 ----
 
 // end::methods[]
+

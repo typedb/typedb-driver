@@ -20,7 +20,7 @@ driver.session(database, SessionType.SCHEMA)
 [cols="~,~"]
 [options="header"]
 |===
-|Name |Value 
+|Name |Value
 a| `DATA` a| `0`
 a| `SCHEMA` a| `1`
 |===
@@ -37,6 +37,7 @@ is_data() -> bool
 
 
 
+[caption=""]
 .Returns
 `bool`
 
@@ -50,7 +51,9 @@ is_schema() -> bool
 
 
 
+[caption=""]
 .Returns
 `bool`
 
 // end::methods[]
+

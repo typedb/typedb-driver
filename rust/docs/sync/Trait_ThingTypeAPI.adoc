@@ -12,12 +12,14 @@ fn label(&self) -> &str
 
 Retrieves the unique label of the type.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 &str
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -34,12 +36,14 @@ fn is_abstract(&self) -> bool
 
 Checks if the type is prevented from having data instances (i.e. ``abstract``).
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 bool
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -56,12 +60,14 @@ fn is_root(&self) -> bool
 
 Checks if the type is a root type.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 bool
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -84,15 +90,17 @@ Checks if this type is deleted.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<bool>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -115,15 +123,17 @@ Deletes this type from the database.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -150,16 +160,18 @@ Renames the label of the type. The new label must remain unique.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `new_label` a| The new ``Label`` to be given to the type. a| `String` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `new_label` a| The new ``Label`` to be given to the type. a| `String`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -182,15 +194,17 @@ Set a type to be abstract, meaning it cannot have instances.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -213,15 +227,17 @@ Set a type to be non-abstract, meaning it can have instances.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -250,18 +266,20 @@ Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `value_type` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `Option<ValueType>` 
-a| `transitivity` a| ``Transitivity::Transitive`` for direct and inherited ownership, ``Transitivity::Explicit`` for direct ownership only a| `Transitivity` 
-a| `annotations` a| Only retrieve attribute types owned with annotations. a| `Vec<Annotation>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `value_type` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `Option<ValueType>`
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and inherited ownership, ``Transitivity::Explicit`` for direct ownership only a| `Transitivity`
+a| `annotations` a| Only retrieve attribute types owned with annotations. a| `Vec<Annotation>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<AttributeType>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -288,16 +306,18 @@ Retrieves an ``AttributeType``, ownership of which is overridden for this ``Thin
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `overridden_attribute_type` a| The ``AttributeType`` that overrides requested ``AttributeType`` a| `AttributeType` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `overridden_attribute_type` a| The ``AttributeType`` that overrides requested ``AttributeType`` a| `AttributeType`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<Option<AttributeType>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -326,18 +346,20 @@ Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `attribute_type` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType` 
-a| `overridden_attribute_type` a| The ``AttributeType`` that this attribute ownership overrides, if applicable. a| `Option<AttributeType>` 
-a| `annotations` a| Adds annotations to the ownership. a| `Vec<Annotation>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `attribute_type` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType`
+a| `overridden_attribute_type` a| The ``AttributeType`` that this attribute ownership overrides, if applicable. a| `Option<AttributeType>`
+a| `annotations` a| Adds annotations to the ownership. a| `Vec<Annotation>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -364,16 +386,18 @@ Disallows the instances of this ``ThingType`` from owning the given ``AttributeT
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `attribute_type` a| The ``AttributeType`` to not be owned by the type. a| `AttributeType` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `attribute_type` a| The ``AttributeType`` to not be owned by the type. a| `AttributeType`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -400,16 +424,18 @@ Retrieves all direct and inherited (or direct only) roles that are allowed to be
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect playing, ``Transitivity::Explicit`` for direct playing only a| `Transitivity` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect playing, ``Transitivity::Explicit`` for direct playing only a| `Transitivity`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<RoleType>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -436,16 +462,18 @@ Retrieves a ``RoleType`` that is overridden by the given ``role_type`` for this 
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `overridden_role_type` a| The ``RoleType`` that overrides an inherited role a| `RoleType` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `overridden_role_type` a| The ``RoleType`` that overrides an inherited role a| `RoleType`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<Option<RoleType>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -473,17 +501,19 @@ Allows the instances of this ``ThingType`` to play the given role.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `role_type` a| The role to be played by the instances of this type a| `RoleType` 
-a| `overridden_role_type` a| The role type that this role overrides, if applicable a| `Option<RoleType>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `role_type` a| The role to be played by the instances of this type a| `RoleType`
+a| `overridden_role_type` a| The role type that this role overrides, if applicable a| `Option<RoleType>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -510,16 +540,18 @@ Disallows the instances of this ``ThingType`` from playing the given role.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `role_type` a| The role to not be played by the instances of this type. a| `RoleType` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `role_type` a| The role to not be played by the instances of this type. a| `RoleType`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -542,15 +574,17 @@ Produces a pattern for creating this ``ThingType`` in a ``define`` query.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<String>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -558,3 +592,4 @@ thing_type.get_syntax(transaction);
 ----
 
 // end::methods[]
+

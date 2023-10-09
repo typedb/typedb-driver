@@ -32,38 +32,36 @@ data class Method(
     val returnType: String? = null,
 ) {
     fun toAsciiDoc(language: String): String {
+        val builder = AsciiDocBuilder()
         var result = ""
-        result += "[#_${this.anchor ?: replaceSymbolsForAnchor(this.name)}]\n"
-        result += "==== ${this.name}\n\n"
-        result += "[source,$language]\n----\n${this.signature}\n----\n\n"
+        result += builder.anchor(this.anchor ?: replaceSymbolsForAnchor(this.name))
+        result += builder.header(4, this.name)
+        result += builder.codeBlock(this.signature, language)
         result += "${this.description.joinToString("\n\n")}\n\n"
 
         if (this.args.isNotEmpty()) {
-            result += "[caption=\"\"]\n.Input parameters\n"
-            result += "[cols=\"~,~,~"
+            result += builder.caption("Input parameters")
+
+            val headers = mutableListOf("Name", "Description", "Type")
             if (language == "python") {
-                result += ",~"
+                headers.add("Default Value")
             }
-            result += "\"]\n[options=\"header\"]\n|===\n"
-            result += "|Name |Description |Type"
-            if (language == "python") {
-                result += " |Default Value"
-            }
+            val tableBuilder = AsciiDocTableBuilder(headers)
+            result += tableBuilder.header()
+            result += tableBuilder.body(this.args.map { it.toTableDataAsArgument(language) })
             result += "\n"
-            this.args.forEach { result += it.toAsciiDocAsArgument(language) + "\n" }
-            result += "|===\n\n"
         }
 
-        result += ".Returns\n"
+        result += builder.caption("Returns")
         result += when (language) {
-            "rust" -> "[source,rust]\n----\n${this.returnType}\n----\n\n"
+            "rust" -> builder.codeBlock(this.returnType, language)
             else -> "`${this.returnType}`\n\n"
         }
 
         if (this.examples.isNotEmpty()) {
-            result += ".Code examples\n"
+            result += builder.caption("Code examples")
             this.examples.forEach {
-                result += "[source,$language]\n----\n$it\n----\n\n"
+                result += builder.codeBlock(it, language)
             }
         }
 

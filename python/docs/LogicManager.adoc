@@ -23,9 +23,11 @@ Retrieves the Rule that has the given label.
 a| `label` a| The label of the Rule to create or retrieve a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `Rule | None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -42,9 +44,11 @@ get_rules() -> Iterator[Rule]
 
 Retrieves all rules.
 
+[caption=""]
 .Returns
 `Iterator[Rule]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -72,9 +76,11 @@ a| `when` a| The when body of the rule to create a| `str` a|
 a| `then` a| The then body of the rule to create a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `Rule`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -82,3 +88,4 @@ transaction.logic.put_rule(label, when, then)
 ----
 
 // end::methods[]
+

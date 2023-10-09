@@ -25,12 +25,14 @@ Retrieves the Rule that has the given label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the Rule to create or retrieve a| `java.lang.String` 
+a| `label` a| The label of the Rule to create or retrieve a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `Rule`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -49,9 +51,11 @@ java.util.stream.Stream<? extends Rule> getRules()
 Retrieves all rules. 
 
 
+[caption=""]
 .Returns
 `java.util.stream.Stream<? extends Rule>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -77,14 +81,16 @@ Creates a new Rule if none exists with the given label, or replaces the existing
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the Rule to create or replace a| `java.lang.String` 
-a| `when` a| The when body of the rule to create a| `com.vaticle.typeql.lang.pattern.Pattern` 
-a| `then` a| The then body of the rule to create a| `com.vaticle.typeql.lang.pattern.Pattern` 
+a| `label` a| The label of the Rule to create or replace a| `java.lang.String`
+a| `when` a| The when body of the rule to create a| `com.vaticle.typeql.lang.pattern.Pattern`
+a| `then` a| The then body of the rule to create a| `com.vaticle.typeql.lang.pattern.Pattern`
 |===
 
+[caption=""]
 .Returns
 `Rule`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -92,3 +98,4 @@ transaction.logic().putRule(label, when, then)
 ----
 
 // end::methods[]
+

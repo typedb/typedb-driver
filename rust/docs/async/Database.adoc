@@ -16,6 +16,7 @@ pub fn name(&self) -> &str
 
 Retrieves the database name as a string.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -32,12 +33,14 @@ pub fn replicas_info(&self) -> Vec<ReplicaInfo> <a href="#" class="notable-trait
 
 Returns the ``Replica`` instances for this database. _Only works in TypeDB Enterprise_
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Vec<ReplicaInfo> <a href="#" class="notable-traits" data-ty="Vec">ⓘ
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -54,12 +57,14 @@ pub fn primary_replica_info(&self) -> Option<ReplicaInfo>
 
 Returns the primary replica for this database. _Only works in TypeDB Enterprise_
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Option<ReplicaInfo>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -76,12 +81,14 @@ pub fn preferred_replica_info(&self) -> Option<ReplicaInfo>
 
 Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Enterprise_
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Option<ReplicaInfo>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -98,12 +105,14 @@ pub async fn delete(self) -> Result
 
 Deletes this database.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -120,12 +129,14 @@ pub async fn schema(&self) -> Result<String>
 
 Returns a full schema text as a valid TypeQL define query string.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<String>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -142,12 +153,14 @@ pub async fn type_schema(&self) -> Result<String>
 
 Returns the types in the schema as a valid TypeQL define query string.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<String>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -164,12 +177,14 @@ pub async fn rule_schema(&self) -> Result<String>
 
 Returns the rules in the schema as a valid TypeQL define query string.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<String>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -177,3 +192,4 @@ database.rule_schema().await;
 ----
 
 // end::methods[]
+

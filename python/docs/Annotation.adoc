@@ -12,9 +12,11 @@ is_key() -> bool
 
 Checks if this ``Annotation`` is a ``@key`` annotation.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -31,9 +33,11 @@ is_unique() -> bool
 
 Checks if this ``Annotation`` is a ``@unique`` annotation.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -50,9 +54,11 @@ static key() -> Annotation
 
 Produces a ``@key`` annotation.
 
+[caption=""]
 .Returns
 `Annotation`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -69,9 +75,11 @@ static unique() -> Annotation
 
 Produces a ``@unique`` annotation.
 
+[caption=""]
 .Returns
 `Annotation`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -79,3 +87,4 @@ Annotation.unique()
 ----
 
 // end::methods[]
+

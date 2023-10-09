@@ -18,9 +18,11 @@ java.util.stream.Stream<java.lang.String> variables()
 Produces a stream over all variables in this ``ConceptMap``. 
 
 
+[caption=""]
 .Returns
 `java.util.stream.Stream<java.lang.String>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -39,9 +41,11 @@ java.util.stream.Stream<Concept> concepts()
 Produces a stream over all concepts in this ``ConceptMap``. 
 
 
+[caption=""]
 .Returns
 `java.util.stream.Stream<Concept>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -66,12 +70,14 @@ Retrieves a concept for a given variable name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `variable` a| The string representation of a variable a| `java.lang.String` 
+a| `variable` a| The string representation of a variable a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `Concept`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -90,9 +96,11 @@ default com.eclipsesource.json.JsonObject toJSON()
 Retrieves this ``ConceptMap`` as JSON. 
 
 
+[caption=""]
 .Returns
 `com.eclipsesource.json.JsonObject`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -110,9 +118,11 @@ ConceptMap.Explainables explainables()
 Gets the ``Explainables`` object for this ``ConceptMap``, exposing which of the concepts in this ``ConceptMap`` are explainable. 
 
 
+[caption=""]
 .Returns
 `ConceptMap.Explainables`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -120,3 +130,4 @@ conceptMap.explainables();
 ----
 
 // end::methods[]
+

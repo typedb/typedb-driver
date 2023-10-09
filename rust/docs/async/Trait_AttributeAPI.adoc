@@ -22,16 +22,18 @@ Retrieves the instances that own this ``Attribute``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `owner_type` a| If specified, filter results for only owners of the given type a| 
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<Thing>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -39,3 +41,4 @@ attribute.get_owners(transaction, Some(owner_type));
 ----
 
 // end::methods[]
+

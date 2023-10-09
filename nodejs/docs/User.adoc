@@ -32,13 +32,15 @@ Updates the user's password.
 [options="header"]
 |===
 |Name |Description |Type
-a| `oldPassword` a| Old password a| `string` 
-a| `newPassword` a| New password a| `string` 
+a| `oldPassword` a| Old password a| `string`
+a| `newPassword` a| New password a| `string`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -46,3 +48,4 @@ user.passwordUpdate("oldpassword", "nEwp@ssw0rd");
 ----
 
 // end::methods[]
+

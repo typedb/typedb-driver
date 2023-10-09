@@ -23,12 +23,14 @@ Retrieves the explainable relation with the given variable name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `variable` a| The string representation of a variable a| `java.lang.String` 
+a| `variable` a| The string representation of a variable a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `ConceptMap.Explainable`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -52,12 +54,14 @@ Retrieves the explainable attribute with the given variable name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `variable` a| The string representation of a variable a| `java.lang.String` 
+a| `variable` a| The string representation of a variable a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `ConceptMap.Explainable`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -82,13 +86,15 @@ Retrieves the explainable attribute ownership with the pair of (owner, attribute
 [options="header"]
 |===
 |Name |Description |Type
-a| `owner` a| The string representation of the owner variable a| `java.lang.String` 
-a| `attribute` a| The string representation of the attribute variable a| `java.lang.String` 
+a| `owner` a| The string representation of the owner variable a| `java.lang.String`
+a| `attribute` a| The string representation of the attribute variable a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `ConceptMap.Explainable`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -106,9 +112,11 @@ java.util.stream.Stream<com.vaticle.typedb.common.collection.Pair<java.lang.Stri
 Retrieves all of this ``ConceptMap``’s explainable relations. 
 
 
+[caption=""]
 .Returns
 `java.util.stream.Stream<com.vaticle.typedb.common.collection.Pair<java.lang.String,​ConceptMap.Explainable>>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -126,9 +134,11 @@ java.util.stream.Stream<com.vaticle.typedb.common.collection.Pair<java.lang.Stri
 Retrieves all of this ``ConceptMap``’s explainable attributes. 
 
 
+[caption=""]
 .Returns
 `java.util.stream.Stream<com.vaticle.typedb.common.collection.Pair<java.lang.String,​ConceptMap.Explainable>>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -146,9 +156,11 @@ java.util.stream.Stream<com.vaticle.typedb.common.collection.Pair<com.vaticle.ty
 Retrieves all of this ``ConceptMap``’s explainable ownerships. 
 
 
+[caption=""]
 .Returns
 `java.util.stream.Stream<com.vaticle.typedb.common.collection.Pair<com.vaticle.typedb.common.collection.Pair<java.lang.String,​java.lang.String>,​ConceptMap.Explainable>>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -156,3 +168,4 @@ conceptMap.explainables().ownerships();
 ----
 
 // end::methods[]
+

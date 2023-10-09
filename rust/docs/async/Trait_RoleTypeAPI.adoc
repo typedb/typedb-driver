@@ -12,12 +12,14 @@ fn is_abstract(&self) -> bool
 
 Checks if the type is prevented from having data instances (i.e., ``abstract``).
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 bool
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -48,9 +50,10 @@ Checks if this type is deleted.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -62,6 +65,7 @@ where
      'life2: 'async_trait,
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -92,9 +96,10 @@ Retrieves the ``RelationType`` that this role is directly related to.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -106,6 +111,7 @@ where
      'life2: 'async_trait,
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -136,9 +142,10 @@ Deletes this type from the database.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -150,6 +157,7 @@ where
      'life2: 'async_trait,
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -181,10 +189,11 @@ Renames the label of the type. The new label must remain unique.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
-a| `new_label` a| The new ``Label`` to be given to the type. a| `String` 
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `new_label` a| The new ``Label`` to be given to the type. a| `String`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -196,6 +205,7 @@ where
      'life2: 'async_trait,
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -226,9 +236,10 @@ Retrieves the most immediate supertype of the ``RoleType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -240,6 +251,7 @@ where
      'life2: 'async_trait,
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -265,15 +277,17 @@ Retrieves all supertypes of the ``RoleType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<RoleType>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -300,16 +314,18 @@ Retrieves all direct and indirect (or direct only) subtypes of the ``RoleType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<RoleType>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -335,15 +351,17 @@ Retrieves ``RelationType``s that this role is related to (directly or indirectly
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<RelationType>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -370,16 +388,18 @@ Retrieves the ``ThingType``s whose instances play this role.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect playing, ``Transitivity::Explicit`` for direct playing only a| `Transitivity` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect playing, ``Transitivity::Explicit`` for direct playing only a| `Transitivity`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<ThingType>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -406,16 +426,18 @@ Retrieves the ``Relation`` instances that this role is related to.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect relation, ``Transitivity::Explicit`` for direct relation only a| `Transitivity` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect relation, ``Transitivity::Explicit`` for direct relation only a| `Transitivity`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<Relation>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -442,16 +464,18 @@ Retrieves the ``Thing`` instances that play this role.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>` 
-a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect playing, ``Transitivity::Explicit`` for direct playing only a| `Transitivity` 
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect playing, ``Transitivity::Explicit`` for direct playing only a| `Transitivity`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<Thing>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -459,3 +483,4 @@ role_type.get_player_instances(transaction, transitivity)
 ----
 
 // end::methods[]
+

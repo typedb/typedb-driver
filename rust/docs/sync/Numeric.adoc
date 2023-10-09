@@ -7,7 +7,7 @@
 [cols="~,~"]
 [options="header"]
 |===
-|Name |Type 
+|Name |Type
 a| `Long` a| `i64`
 a| `Double` a| `f64`
 a| `NaN` a| `NaN`

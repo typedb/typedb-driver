@@ -20,9 +20,11 @@ as_entity() -> Entity
 
 Casts the concept to ``Entity``.
 
+[caption=""]
 .Returns
 `Entity`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -39,9 +41,11 @@ get_type() -> EntityType
 
 Retrieves the type which this ``Entity`` belongs to.
 
+[caption=""]
 .Returns
 `EntityType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -58,9 +62,11 @@ is_entity() -> bool
 
 Checks if the concept is an ``Entity``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -68,3 +74,4 @@ entity.is_entity()
 ----
 
 // end::methods[]
+

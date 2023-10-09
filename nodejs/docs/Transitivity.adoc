@@ -7,9 +7,9 @@
 [cols="~"]
 [options="header"]
 |===
-|Name 
-a| `EXPLICIT` 
-a| `TRANSITIVE` 
+|Name
+a| `EXPLICIT`
+a| `TRANSITIVE`
 |===
 // end::enum_constants[]
 
@@ -30,10 +30,12 @@ new Transitivity(transitivity): Transitivity
 [options="header"]
 |===
 |Name |Description |Type
-a| `transitivity` a| null a| `TypeTransitivity` 
+a| `transitivity` a|  a| `TypeTransitivity`
 |===
 
+[caption=""]
 .Returns
 `Transitivity`
 
 // end::methods[]
+

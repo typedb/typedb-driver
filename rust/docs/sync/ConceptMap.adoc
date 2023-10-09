@@ -42,15 +42,17 @@ Retrieves a concept for a given variable name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `var_name` a| The string representation of a variable a| `&str` 
+a| `var_name` a| The string representation of a variable a| `&str`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Option<&Concept>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -67,12 +69,14 @@ pub fn concepts(&self) -> impl Iterator<Item = &Concept>
 
 Produces an iterator over all concepts in this ``ConceptMap``.
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 impl Iterator<Item = &Concept>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -80,3 +84,4 @@ concept_map.concepts()
 ----
 
 // end::methods[]
+

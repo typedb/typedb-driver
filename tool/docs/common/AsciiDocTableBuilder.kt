@@ -21,26 +21,21 @@
 
 package com.vaticle.typedb.client.tool.doc.common
 
-data class Variable(
-    val name: String,
-    val anchor: String? = null,
-    val defaultValue: String? = null,
-    val description: String? = null,
-    val type: String? = null,
-) {
-     fun toTableDataAsField(language: String): List<String?> {
-        val result = mutableListOf("`${this.name}`")
-        result.add(if (this.type != null) "`${this.type.replace("|", "\\|")}`" else "")
-        result.add(this.description ?: "")
-        return result.toList()
+class AsciiDocTableBuilder(private val headers: List<String>) {
+
+    fun header(): String {
+        return "[cols=\"~" + ",~".repeat(this.headers.size - 1) +
+                "\"]\n[options=\"header\"]\n" +
+                "|===\n|" +
+                this.headers.joinToString(" |") + "\n"
     }
 
-    fun toTableDataAsArgument(language: String): List<String?> {
-        val result = mutableListOf("`${this.name}`", this.description ?: "")
-        result.add(if (this.type != null) "`${this.type.replace("|", "\\|")}`" else "")
-        if (language == "python") {
-            this.defaultValue?.let { result.add("`$it`") } ?: result.add("")
-        }
-        return result.toList()
+    fun body(rows: Iterable<List<String?>>): String {
+        return rows.joinToString("") { this.row(it) } + "|===\n"
+    }
+
+    private fun row(row: List<String?>): String {
+        assert(this.headers.size == row.size)
+        return "a| " + row.joinToString(" a| ") + "\n"
     }
 }

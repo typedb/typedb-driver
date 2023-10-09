@@ -20,13 +20,15 @@ Performs a TypeQL Define query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Define query to be executed a| `string` 
-a| `options` a| Specify query options a| `TypeDBOptions` 
+a| `query` a| The TypeQL Define query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -49,13 +51,15 @@ Performs a TypeQL Delete query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Delete query to be executed a| `string` 
-a| `options` a| Specify query options a| `TypeDBOptions` 
+a| `query` a| The TypeQL Delete query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -78,13 +82,15 @@ Performs a TypeQL Explain query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `explainable` a| The Explainable to be explained a| `Explainable` 
-a| `options` a| Specify query options a| `TypeDBOptions` 
+a| `explainable` a| The Explainable to be explained a| `Explainable`
+a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
+[caption=""]
 .Returns
 `Stream<Explanation>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -107,13 +113,15 @@ Performs a TypeQL Insert query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Insert query to be executed a| `string` 
-a| `options` a| Specify query options a| `TypeDBOptions` 
+a| `query` a| The TypeQL Insert query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
+[caption=""]
 .Returns
 `Stream<ConceptMap>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -136,13 +144,15 @@ Performs a TypeQL Match (Get) query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Match (Get) query to be executed a| `string` 
-a| `options` a| Specify query options a| `TypeDBOptions` 
+a| `query` a| The TypeQL Match (Get) query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
+[caption=""]
 .Returns
 `Stream<ConceptMap>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -165,13 +175,15 @@ Performs a TypeQL Match Aggregate query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Match Aggregate query to be executed a| `string` 
-a| `options` a| Specify query options a| `TypeDBOptions` 
+a| `query` a| The TypeQL Match Aggregate query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
+[caption=""]
 .Returns
 `Promise<Numeric>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -194,13 +206,15 @@ Performs a TypeQL Match Group query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Match Group query to be executed a| `string` 
-a| `options` a| Specify query options a| `TypeDBOptions` 
+a| `query` a| The TypeQL Match Group query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
+[caption=""]
 .Returns
 `Stream<ConceptMapGroup>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -223,13 +237,15 @@ Performs a TypeQL Match Group Aggregate query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Match Group Aggregate query to be executed a| `string` 
-a| `options` a| Specify query options a| `TypeDBOptions` 
+a| `query` a| The TypeQL Match Group Aggregate query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
+[caption=""]
 .Returns
 `Stream<NumericGroup>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -252,13 +268,15 @@ Performs a TypeQL Undefine query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Undefine query to be executed a| `string` 
-a| `options` a| Specify query options a| `TypeDBOptions` 
+a| `query` a| The TypeQL Undefine query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -281,13 +299,15 @@ Performs a TypeQL Update query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Update query to be executed a| `string` 
-a| `options` a| Specify query options a| `TypeDBOptions` 
+a| `query` a| The TypeQL Update query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
+[caption=""]
 .Returns
 `Stream<ConceptMap>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -295,3 +315,4 @@ transaction.query.update(query, options)
 ----
 
 // end::methods[]
+

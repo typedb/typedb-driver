@@ -39,9 +39,10 @@ new TypeDBDriverError(error): TypeDBDriverError
 [options="header"]
 |===
 |Name |Description |Type
-a| `error` a| null a| `string \| ErrorMessage \| Error \| ServiceError` 
+a| `error` a|  a| `string \| ErrorMessage \| Error \| ServiceError`
 |===
 
+[caption=""]
 .Returns
 `TypeDBDriverError`
 
@@ -61,10 +62,11 @@ Create .stack property on a target object
 [options="header"]
 |===
 |Name |Description |Type
-a| `targetObject` a| null a| `object` 
-a| `constructorOpt` a| null a| `Function` 
+a| `targetObject` a|  a| `object`
+a| `constructorOpt` a|  a| `Function`
 |===
 
+[caption=""]
 .Returns
 `void`
 
@@ -78,7 +80,9 @@ get messageTemplate(): ErrorMessage
 
 Returns the message template for this error.
 
+[caption=""]
 .Returns
 `ErrorMessage`
 
 // end::methods[]
+

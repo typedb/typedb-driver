@@ -38,6 +38,7 @@ fn create(&self, transaction: &Transaction<'_>) -> Result<Entity>
 
 <<#_trait_EntityTypeAPI_method_create,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -57,6 +58,7 @@ fn get_supertype(
 
 <<#_trait_EntityTypeAPI_method_get_supertype,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -77,6 +79,7 @@ fn set_supertype(
 
 <<#_trait_EntityTypeAPI_method_set_supertype,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -96,6 +99,7 @@ fn get_supertypes(
 
 <<#_trait_EntityTypeAPI_method_get_supertypes,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -116,6 +120,7 @@ fn get_subtypes(
 
 <<#_trait_EntityTypeAPI_method_get_subtypes,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -136,6 +141,7 @@ fn get_instances(
 
 <<#_trait_EntityTypeAPI_method_get_instances,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -152,6 +158,7 @@ fn label(&self) -> &str
 
 <<#_trait_ThingTypeAPI_tymethod_label,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -168,6 +175,7 @@ fn is_abstract(&self) -> bool
 
 <<#_trait_ThingTypeAPI_tymethod_is_abstract,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -184,6 +192,7 @@ fn is_root(&self) -> bool
 
 <<#_trait_ThingTypeAPI_tymethod_is_root,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -200,6 +209,7 @@ fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool>
 
 <<#_trait_ThingTypeAPI_tymethod_is_deleted,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -216,6 +226,7 @@ fn delete(&mut self, transaction: &Transaction<'_>) -> Result
 
 <<#_trait_ThingTypeAPI_method_delete,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -236,6 +247,7 @@ fn set_label(
 
 <<#_trait_ThingTypeAPI_method_set_label,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -252,6 +264,7 @@ fn set_abstract(&mut self, transaction: &Transaction<'_>) -> Result
 
 <<#_trait_ThingTypeAPI_method_set_abstract,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -268,6 +281,7 @@ fn unset_abstract(&mut self, transaction: &Transaction<'_>) -> Result
 
 <<#_trait_ThingTypeAPI_method_unset_abstract,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -290,6 +304,7 @@ fn get_owns(
 
 <<#_trait_ThingTypeAPI_method_get_owns,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -310,6 +325,7 @@ fn get_owns_overridden(
 
 <<#_trait_ThingTypeAPI_method_get_owns_overridden,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -332,6 +348,7 @@ fn set_owns(
 
 <<#_trait_ThingTypeAPI_method_set_owns,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -352,6 +369,7 @@ fn unset_owns(
 
 <<#_trait_ThingTypeAPI_method_unset_owns,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -372,6 +390,7 @@ fn get_plays(
 
 <<#_trait_ThingTypeAPI_method_get_plays,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -392,6 +411,7 @@ fn get_plays_overridden(
 
 <<#_trait_ThingTypeAPI_method_get_plays_overridden,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -413,6 +433,7 @@ fn set_plays(
 
 <<#_trait_ThingTypeAPI_method_set_plays,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -433,6 +454,7 @@ fn unset_plays(
 
 <<#_trait_ThingTypeAPI_method_unset_plays,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -449,6 +471,7 @@ fn get_syntax(&self, transaction: &Transaction<'_>) -> Result<String>
 
 <<#_trait_ThingTypeAPI_method_get_syntax,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -456,3 +479,4 @@ Result<String>
 ----
 
 // end::methods[]
+

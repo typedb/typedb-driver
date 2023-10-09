@@ -18,9 +18,11 @@ Concept owner()
 Retrieves the concept that is the group owner. 
 
 
+[caption=""]
 .Returns
 `Concept`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -39,9 +41,11 @@ java.util.stream.Stream<ConceptMap> conceptMaps()
 Retrieves the ``ConceptMap``s of the group. 
 
 
+[caption=""]
 .Returns
 `java.util.stream.Stream<ConceptMap>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -49,3 +53,4 @@ conceptMapGroup.conceptMaps();
 ----
 
 // end::methods[]
+

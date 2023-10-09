@@ -24,12 +24,14 @@ Retrieve the database with the given name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| The name of the database to retrieve a| `java.lang.String` 
+a| `name` a| The name of the database to retrieve a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `Database`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -54,12 +56,14 @@ Checks if a database with the given name exists
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| The database name to be checked a| `java.lang.String` 
+a| `name` a| The database name to be checked a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -83,12 +87,14 @@ Create a database with the given name
 [options="header"]
 |===
 |Name |Description |Type
-a| `name` a| The name of the database to be created a| `java.lang.String` 
+a| `name` a| The name of the database to be created a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `void`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -107,9 +113,11 @@ java.util.List<Database> all()
 Retrieves all databases present on the TypeDB server 
 
 
+[caption=""]
 .Returns
 `java.util.List<Database>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -117,3 +125,4 @@ driver.databases().all()
 ----
 
 // end::methods[]
+

@@ -24,9 +24,11 @@ a| `query` a| The TypeQL Define query to be executed a| `str` a|
 a| `options` a| Specify query options a| `TypeDBOptions` a| `None`
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -53,9 +55,11 @@ a| `query` a| The TypeQL Delete query to be executed a| `str` a|
 a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -82,9 +86,11 @@ a| `explainable` a| The Explainable to be explained a| `ConceptMap.Explainable` 
 a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
 |===
 
+[caption=""]
 .Returns
 `Iterator[Explanation]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -111,9 +117,11 @@ a| `query` a| The TypeQL Insert query to be executed a| `str` a|
 a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
 |===
 
+[caption=""]
 .Returns
 `Iterator[ConceptMap]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -140,9 +148,11 @@ a| `query` a| The TypeQL Match (Get) query to be executed a| `str` a|
 a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
 |===
 
+[caption=""]
 .Returns
 `Iterator[ConceptMap]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -169,9 +179,11 @@ a| `query` a| The TypeQL Match Aggregate query to be executed a| `str` a|
 a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
 |===
 
+[caption=""]
 .Returns
 `Numeric`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -198,9 +210,11 @@ a| `query` a| The TypeQL Match Group query to be executed a| `str` a|
 a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
 |===
 
+[caption=""]
 .Returns
 `Iterator[ConceptMapGroup]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -227,9 +241,11 @@ a| `query` a| The TypeQL Match Group Aggregate query to be executed a| `str` a|
 a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
 |===
 
+[caption=""]
 .Returns
 `Iterator[NumericGroup]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -256,9 +272,11 @@ a| `query` a| The TypeQL Undefine query to be executed a| `str` a|
 a| `options` a| Specify query options a| `TypeDBOptions` a| `None`
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -285,9 +303,11 @@ a| `query` a| The TypeQL Update query to be executed a| `str` a|
 a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
 |===
 
+[caption=""]
 .Returns
 `Iterator[ConceptMap]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -295,3 +315,4 @@ transaction.query.update(query, options)
 ----
 
 // end::methods[]
+

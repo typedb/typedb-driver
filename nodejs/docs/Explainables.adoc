@@ -33,12 +33,14 @@ Retrieves the explainable attribute with the given variable name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `variable` a| The string representation of a variable a| `string` 
+a| `variable` a| The string representation of a variable a| `string`
 |===
 
+[caption=""]
 .Returns
 `Explainable`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -61,13 +63,15 @@ Retrieves the explainable attribute ownership with the pair of (owner, attribute
 [options="header"]
 |===
 |Name |Description |Type
-a| `owner` a| The string representation of the owner variable a| `string` 
-a| `attribute` a| The string representation of the attribute variable a| `string` 
+a| `owner` a| The string representation of the owner variable a| `string`
+a| `attribute` a| The string representation of the attribute variable a| `string`
 |===
 
+[caption=""]
 .Returns
 `Explainable`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -90,12 +94,14 @@ Retrieves the explainable relation with the given variable name.
 [options="header"]
 |===
 |Name |Description |Type
-a| `variable` a| The string representation of a variable a| `string` 
+a| `variable` a| The string representation of a variable a| `string`
 |===
 
+[caption=""]
 .Returns
 `Explainable`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -103,3 +109,4 @@ conceptMap.explainables.relation(variable)
 ----
 
 // end::methods[]
+

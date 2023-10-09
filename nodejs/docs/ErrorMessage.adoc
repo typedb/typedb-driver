@@ -20,12 +20,13 @@ new ErrorMessage(codePrefix, codeNumber, messagePrefix, messageBody): ErrorMessa
 [options="header"]
 |===
 |Name |Description |Type
-a| `codePrefix` a| null a| `string` 
-a| `codeNumber` a| null a| `number` 
-a| `messagePrefix` a| null a| `string` 
-a| `messageBody` a| null a| `((args) => string)` 
+a| `codePrefix` a|  a| `string`
+a| `codeNumber` a|  a| `number`
+a| `messagePrefix` a|  a| `string`
+a| `messageBody` a|  a| `((args) => string)`
 |===
 
+[caption=""]
 .Returns
 `ErrorMessage`
 
@@ -39,6 +40,7 @@ code(): string
 
 Retrieves the error-code for this ErrorMessage
 
+[caption=""]
 .Returns
 `string`
 
@@ -58,9 +60,10 @@ Generates the error message by substituting ``args`` into the messageTemplate
 [options="header"]
 |===
 |Name |Description |Type
-a| `args` a| The format arguments to the message-template. a| `Stringable[]` 
+a| `args` a| The format arguments to the message-template. a| `Stringable[]`
 |===
 
+[caption=""]
 .Returns
 `string`
 
@@ -74,7 +77,9 @@ toString(): string
 
 Summarises the error into a string
 
+[caption=""]
 .Returns
 `string`
 
 // end::methods[]
+

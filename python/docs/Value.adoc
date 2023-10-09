@@ -16,9 +16,11 @@ as_boolean() -> bool
 
 Returns a ``boolean`` value of this value concept. If the value has another type, raises an exception.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -35,9 +37,11 @@ as_datetime() -> datetime
 
 Returns a ``datetime`` value of this value concept. If the value has another type, raises an exception.
 
+[caption=""]
 .Returns
 `datetime`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -54,9 +58,11 @@ as_double() -> float
 
 Returns a ``double`` value of this value concept. If the value has another type, raises an exception.
 
+[caption=""]
 .Returns
 `float`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -73,9 +79,11 @@ as_long() -> int
 
 Returns a ``long`` value of this value concept. If the value has another type, raises an exception.
 
+[caption=""]
 .Returns
 `int`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -92,9 +100,11 @@ as_string() -> str
 
 Returns a ``string`` value of this value concept. If the value has another type, raises an exception.
 
+[caption=""]
 .Returns
 `str`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -111,9 +121,11 @@ as_value() -> Value
 
 Casts the concept to ``Value``.
 
+[caption=""]
 .Returns
 `Value`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -130,9 +142,11 @@ get() -> bool | int | float | str | datetime
 
 Retrieves the value which this value concept holds.
 
+[caption=""]
 .Returns
 `bool | int | float | str | datetime`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -149,9 +163,11 @@ get_value_type() -> ValueType
 
 Retrieves the ``ValueType`` of this value concept.
 
+[caption=""]
 .Returns
 `ValueType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -168,9 +184,11 @@ is_boolean() -> bool
 
 Returns ``True`` if the value which this value concept holds is of type ``boolean``. Otherwise, returns ``False``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -187,9 +205,11 @@ is_datetime() -> bool
 
 Returns ``True`` if the value which this value concept holds is of type ``datetime``. Otherwise, returns ``False``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -206,9 +226,11 @@ is_double() -> bool
 
 Returns ``True`` if the value which this value concept holds is of type ``double``. Otherwise, returns ``False``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -225,9 +247,11 @@ is_long() -> bool
 
 Returns ``True`` if the value which this value concept holds is of type ``long``. Otherwise, returns ``False``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -244,9 +268,11 @@ is_string() -> bool
 
 Returns ``True`` if the value which this value concept holds is of type ``string``. Otherwise, returns ``False``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -263,9 +289,11 @@ is_value() -> bool
 
 Checks if the concept is a ``Value``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -282,9 +310,11 @@ to_json() -> Mapping[str, str | int | float | bool]
 
 Retrieves this value concept as JSON.
 
+[caption=""]
 .Returns
 `Mapping[str, str | int | float | bool]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -292,3 +322,4 @@ value.to_json()
 ----
 
 // end::methods[]
+

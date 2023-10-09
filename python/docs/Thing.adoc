@@ -16,9 +16,11 @@ as_thing() -> Thing
 
 Casts the concept to ``Thing``.
 
+[caption=""]
 .Returns
 `Thing`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -44,9 +46,11 @@ Deletes this ``Thing``.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -75,9 +79,11 @@ a| `attribute_types` a| The ``AttributeType``s to filter the attributes by a| `l
 a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a| `set[Annotation]` a| `frozenset({})`
 |===
 
+[caption=""]
 .Returns
 `Iterator[Attribute]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -96,9 +102,11 @@ get_iid() -> str
 
 Retrieves the unique id of the ``Thing``.
 
+[caption=""]
 .Returns
 `str`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -124,9 +132,11 @@ Retrieves the roles that this ``Thing`` is currently playing.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
+[caption=""]
 .Returns
 `Iterator[RoleType]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -153,9 +163,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `role_types` a| The list of roles to filter the relations by. a| `list[RoleType]` a| `None`
 |===
 
+[caption=""]
 .Returns
 `Iterator[Relation]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -172,9 +184,11 @@ get_type() -> ThingType
 
 Retrieves the type which this ``Thing`` belongs to.
 
+[caption=""]
 .Returns
 `ThingType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -200,9 +214,11 @@ Checks if this ``Thing`` is deleted.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -219,9 +235,11 @@ is_inferred() -> bool
 
 Checks if this ``Thing`` is inferred by a [Reasoning Rule].
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -238,9 +256,11 @@ is_thing() -> bool
 
 Checks if the concept is a ``Thing``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -267,9 +287,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute` a| 
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -286,9 +308,11 @@ to_json() -> Mapping[str, str]
 
 Retrieves a ``Thing`` as JSON.
 
+[caption=""]
 .Returns
 `Mapping[str, str]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -315,9 +339,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attribute` a| 
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -325,3 +351,4 @@ thing.unset_has(transaction, attribute)
 ----
 
 // end::methods[]
+

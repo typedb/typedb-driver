@@ -26,15 +26,13 @@ data class EnumConstant(
     val type: String? = null,
     val value: String? = null,
 ) {
-    fun toAsciiDocTableRow(language: String): String {
-        var result = ""
-        result += "a| `${this.name}` "
+    fun toTableData(language: String): List<String> {
+        val result = mutableListOf("`${this.name}`")
         if (language == "python" || language == "rust") {
-            result += "a| "
             assert(this.type == null || this.value == null)
-            this.value?.let { result += "`$it`" }
-            this.type?.let { result += "`$it`" }
+            this.value?.let { result.add("`$it`") }
+            this.type?.let { result.add("`$it`") }
         }
-        return "$result\n"
+        return result
     }
 }

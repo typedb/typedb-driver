@@ -24,9 +24,11 @@ close(): Promise<void>
 
 Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -43,9 +45,11 @@ isOpen(): boolean
 
 Checks whether this connection is presently open.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -68,11 +72,12 @@ session(database, type, options?): Promise<TypeDBSession>
 [options="header"]
 |===
 |Name |Description |Type
-a| `database` a| null a| `string` 
-a| `type` a| null a| `SessionType` 
-a| `options` a| null a| `TypeDBOptions` 
+a| `database` a|  a| `string`
+a| `type` a|  a| `SessionType`
+a| `options` a|  a| `TypeDBOptions`
 |===
 
+[caption=""]
 .Returns
 `Promise<TypeDBSession>`
 
@@ -86,9 +91,11 @@ user(): Promise<User>
 
 Returns the logged-in user for the connection.
 
+[caption=""]
 .Returns
 `Promise<User>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -96,3 +103,4 @@ driver.user()
 ----
 
 // end::methods[]
+

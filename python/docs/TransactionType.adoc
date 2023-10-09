@@ -20,7 +20,7 @@ session.transaction(TransactionType.READ)
 [cols="~,~"]
 [options="header"]
 |===
-|Name |Value 
+|Name |Value
 a| `READ` a| `0`
 a| `WRITE` a| `1`
 |===
@@ -37,6 +37,7 @@ is_read() -> bool
 
 
 
+[caption=""]
 .Returns
 `bool`
 
@@ -50,7 +51,9 @@ is_write() -> bool
 
 
 
+[caption=""]
 .Returns
 `bool`
 
 // end::methods[]
+

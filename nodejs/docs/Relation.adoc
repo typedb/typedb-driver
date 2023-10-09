@@ -37,14 +37,16 @@ Adds a new role player to play the given role in this ``Relation``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `roleType` a| The role to be played by the ``player`` a| `RoleType` 
-a| `player` a| The thing to play the role a| `Thing` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `roleType` a| The role to be played by the ``player`` a| `RoleType`
+a| `player` a| The thing to play the role a| `Thing`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -61,9 +63,11 @@ asAttribute(): Attribute
 
 Casts the concept to ``Attribute``.
 
+[caption=""]
 .Returns
 `Attribute`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -80,9 +84,11 @@ asAttributeType(): AttributeType
 
 Casts the concept to ``AttributeType``.
 
+[caption=""]
 .Returns
 `AttributeType`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -99,9 +105,11 @@ asEntity(): Entity
 
 Casts the concept to ``Entity``.
 
+[caption=""]
 .Returns
 `Entity`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -118,9 +126,11 @@ asEntityType(): EntityType
 
 Casts the concept to ``EntityType``.
 
+[caption=""]
 .Returns
 `EntityType`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -137,9 +147,11 @@ asRelation(): Relation
 
 Casts the concept to ``Relation``.
 
+[caption=""]
 .Returns
 `Relation`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -156,9 +168,11 @@ asRelationType(): RelationType
 
 Casts the concept to ``RelationType``.
 
+[caption=""]
 .Returns
 `RelationType`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -175,9 +189,11 @@ asRoleType(): RoleType
 
 Casts the concept to ``RoleType``.
 
+[caption=""]
 .Returns
 `RoleType`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -194,9 +210,11 @@ asThing(): Thing
 
 Casts the concept to ``Thing``.
 
+[caption=""]
 .Returns
 `Thing`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -213,9 +231,11 @@ asThingType(): ThingType
 
 Casts the concept to ``ThingType``.
 
+[caption=""]
 .Returns
 `ThingType`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -232,9 +252,11 @@ asType(): Type
 
 Casts the concept to ``Type``.
 
+[caption=""]
 .Returns
 `Type`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -251,9 +273,11 @@ asValue(): Value
 
 Casts the concept to ``Value``.
 
+[caption=""]
 .Returns
 `Value`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -276,12 +300,14 @@ Deletes this ``Thing``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -304,9 +330,10 @@ Checks if this concept is equal to the argument ``concept``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `concept` a| The concept to compare to. a| `Concept` 
+a| `concept` a| The concept to compare to. a| `Concept`
 |===
 
+[caption=""]
 .Returns
 `boolean`
 
@@ -326,12 +353,14 @@ Retrieves the ``Attribute``s that this ``Thing`` owns. Optionally, filtered by a
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Stream<Attribute>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -354,13 +383,15 @@ Retrieves the ``Attribute``s that this ``Thing`` owns. Optionally, filtered by a
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `annotations` a| The ``AttributeType``s to filter the attributes by a| `Annotation[]` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `annotations` a| The ``AttributeType``s to filter the attributes by a| `Annotation[]`
 |===
 
+[caption=""]
 .Returns
 `Stream<Attribute>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -383,13 +414,15 @@ Retrieves the ``Attribute``s that this ``Thing`` owns. Optionally, filtered by a
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeType` a| The ``AttributeType``s to filter the attributes by a| `AttributeType` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `attributeType` a| The ``AttributeType``s to filter the attributes by a| `AttributeType`
 |===
 
+[caption=""]
 .Returns
 `Stream<Attribute>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -412,13 +445,15 @@ Retrieves the ``Attribute``s that this ``Thing`` owns. Optionally, filtered by a
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeTypes` a| The ``AttributeType``s to filter the attributes by a| `AttributeType[]` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `attributeTypes` a| The ``AttributeType``s to filter the attributes by a| `AttributeType[]`
 |===
 
+[caption=""]
 .Returns
 `Stream<Attribute>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -441,14 +476,16 @@ Retrieves the ``Attribute``s that this ``Thing`` owns. Optionally, filtered by a
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attributeTypes` a| The ``AttributeType``s to filter the attributes by a| `AttributeType[]` 
-a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a| `Annotation[]` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `attributeTypes` a| The ``AttributeType``s to filter the attributes by a| `AttributeType[]`
+a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a| `Annotation[]`
 |===
 
+[caption=""]
 .Returns
 `Stream<Attribute>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -471,12 +508,14 @@ Retrieves all role players of this ``Relation``, optionally filtered by given ro
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Stream<Thing>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -499,13 +538,15 @@ Retrieves all role players of this ``Relation``, optionally filtered by given ro
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `roleTypes` a| 0 or more role types a| `RoleType[]` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `roleTypes` a| 0 or more role types a| `RoleType[]`
 |===
 
+[caption=""]
 .Returns
 `Stream<Thing>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -528,12 +569,14 @@ Retrieves the roles that this ``Thing`` is currently playing.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Stream<RoleType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -556,12 +599,14 @@ Retrieves all role types currently played in this ``Relation``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Stream<RoleType>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -584,12 +629,14 @@ Retrieves all the ``Relations`` which this ``Thing`` plays a role in, optionally
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Stream<Relation>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -612,13 +659,15 @@ Retrieves all the ``Relations`` which this ``Thing`` plays a role in, optionally
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `roleTypes` a| The list of roles to filter the relations by. a| `RoleType[]` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `roleTypes` a| The list of roles to filter the relations by. a| `RoleType[]`
 |===
 
+[caption=""]
 .Returns
 `Stream<Relation>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -641,12 +690,14 @@ Retrieves a mapping of all instances involved in the ``Relation`` and the role e
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Promise<Map<RoleType, Thing[]>>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -663,9 +714,11 @@ isAttribute(): boolean
 
 Checks if the concept is an ``Attribute``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -682,9 +735,11 @@ isAttributeType(): boolean
 
 Checks if the concept is an ``AttributeType``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -707,12 +762,14 @@ Checks if this ``Thing`` is deleted.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 |===
 
+[caption=""]
 .Returns
 `Promise<boolean>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -729,9 +786,11 @@ isEntity(): boolean
 
 Checks if the concept is an ``Entity``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -748,9 +807,11 @@ isEntityType(): boolean
 
 Checks if the concept is an ``EntityType``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -767,9 +828,11 @@ isRelation(): boolean
 
 Checks if the concept is a ``Relation``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -786,9 +849,11 @@ isRelationType(): boolean
 
 Checks if the concept is a ``RelationType``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -805,9 +870,11 @@ isRoleType(): boolean
 
 Checks if the concept is a ``RoleType``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -824,9 +891,11 @@ isThing(): boolean
 
 Checks if the concept is a ``Thing``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -843,9 +912,11 @@ isThingType(): boolean
 
 Checks if the concept is a ``ThingType``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -862,9 +933,11 @@ isType(): boolean
 
 Checks if the concept is a ``Type``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -881,9 +954,11 @@ isValue(): boolean
 
 Checks if the concept is a ``Value``.
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -906,14 +981,16 @@ Removes the association of the given instance that plays the given role in this 
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `roleType` a| The role to no longer be played by the thing in this ``Relation`` a| `RoleType` 
-a| `player` a| The instance to no longer play the role in this ``Relation`` a| `Thing` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `roleType` a| The role to no longer be played by the thing in this ``Relation`` a| `RoleType`
+a| `player` a| The instance to no longer play the role in this ``Relation`` a| `Thing`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -936,13 +1013,15 @@ Assigns an ``Attribute`` to be owned by this ``Thing``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -959,9 +1038,11 @@ toJSONRecord(): Record<string, string | number | boolean>
 
 Retrieves the concept as JSON.
 
+[caption=""]
 .Returns
 `Record<string, string | number | boolean>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -984,13 +1065,15 @@ Unassigns an ``Attribute`` from this ``Thing``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction` 
-a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attribute` 
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attribute`
 |===
 
+[caption=""]
 .Returns
 `Promise<void>`
 
+[caption=""]
 .Code examples
 [source,nodejs]
 ----
@@ -998,3 +1081,4 @@ thing.unsetHas(transaction, attribute)
 ----
 
 // end::methods[]
+

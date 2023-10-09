@@ -12,6 +12,7 @@ code() -> str
 
 
 
+[caption=""]
 .Returns
 `str`
 
@@ -25,7 +26,9 @@ message(params: Any) -> str
 
 
 
+[caption=""]
 .Returns
 `str`
 
 // end::methods[]
+

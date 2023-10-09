@@ -14,9 +14,11 @@ all() -> List[User]
 
 Retrieves all users which exist on the TypeDB server.
 
+[caption=""]
 .Returns
 `List[User]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -42,9 +44,11 @@ Checks if a user with the given name exists.
 a| `username` a| The user name to be checked a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -71,9 +75,11 @@ a| `username` a| The name of the user to be created a| `str` a|
 a| `password` a| The password of the user to be created a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -99,9 +105,11 @@ Deletes a user with the given name.
 a| `username` a| The name of the user to be deleted a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -127,9 +135,11 @@ Retrieve a user with the given name.
 a| `username` a| The name of the user to retrieve a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `User | None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -156,9 +166,11 @@ a| `username` a| The name of the user to set the password of a| `str` a|
 a| `password` a| The new password a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -166,3 +178,4 @@ driver.users.password_set(username, password)
 ----
 
 // end::methods[]
+

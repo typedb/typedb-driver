@@ -26,6 +26,7 @@ toString(): string
 
 Printable string
 
+[caption=""]
 .Returns
 `string`
 
@@ -45,10 +46,12 @@ Returns the relevant ``Annotation`` given the name as a string
 [options="header"]
 |===
 |Name |Description |Type
-a| `string` a| name of the attribute as a string. e.g.: "key", "unique" a| `string` 
+a| `string` a| name of the attribute as a string. e.g.: "key", "unique" a| `string`
 |===
 
+[caption=""]
 .Returns
 `Annotation`
 
 // end::methods[]
+

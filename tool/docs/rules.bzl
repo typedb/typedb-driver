@@ -28,10 +28,12 @@ def html_docs_parser(name, data, language, feature=""):
         name = name,
         srcs = [
             "//tool/docs:" + language + "/" + script_name + ".kt",
+            "//tool/docs:common/AsciiDocBuilder.kt",
+            "//tool/docs:common/AsciiDocTableBuilder.kt",
             "//tool/docs:common/Class.kt",
             "//tool/docs:common/EnumConstant.kt",
-            "//tool/docs:common/Helper.kt",
             "//tool/docs:common/Method.kt",
+            "//tool/docs:common/Util.kt",
             "//tool/docs:common/Variable.kt",
         ],
         main_class = "com.vaticle.typedb.client.tool.doc." + language + "." + script_name + "Kt",

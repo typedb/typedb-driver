@@ -7,7 +7,7 @@
 [cols="~,~"]
 [options="header"]
 |===
-|Name |Type 
+|Name |Type
 a| `RootThingType` a| `RootThingType`
 a| `EntityType` a| `EntityType`
 a| `RelationType` a| `RelationType`

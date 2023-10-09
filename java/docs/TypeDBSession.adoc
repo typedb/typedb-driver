@@ -20,9 +20,11 @@ boolean isOpen()
 Checks whether this session is open. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -40,6 +42,7 @@ TypeDBSession.Type type()
 
 The current session’s type (SCHEMA or DATA)
 
+[caption=""]
 .Returns
 `TypeDBSession.Type`
 
@@ -55,9 +58,11 @@ java.lang.String database_name()
 Returns the name of the database of the session. 
 
 
+[caption=""]
 .Returns
 `java.lang.String`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -75,6 +80,7 @@ TypeDBOptions options()
 
 Gets the options for the session
 
+[caption=""]
 .Returns
 `TypeDBOptions`
 
@@ -93,6 +99,7 @@ Opens a transaction on the database connected to the session with default option
 See also: <<#_transaction_com_vaticle_typedb_driver_api_TypeDBTransaction_Type_com_vaticle_typedb_driver_api_TypeDBOptions,``transaction(TypeDBTransaction.Type, TypeDBOptions)``>>
 
 
+[caption=""]
 .Returns
 `TypeDBTransaction`
 
@@ -115,13 +122,15 @@ Opens a transaction to perform read or write queries on the database connected t
 [options="header"]
 |===
 |Name |Description |Type
-a| `type` a| The type of transaction to be created (READ or WRITE) a| `TypeDBTransaction.Type` 
-a| `options` a| Options for the session a| `TypeDBOptions` 
+a| `type` a| The type of transaction to be created (READ or WRITE) a| `TypeDBTransaction.Type`
+a| `options` a| Options for the session a| `TypeDBOptions`
 |===
 
+[caption=""]
 .Returns
 `TypeDBTransaction`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -145,12 +154,14 @@ Registers a callback function which will be executed when this session is closed
 [options="header"]
 |===
 |Name |Description |Type
-a| `function` a| The callback function. a| `java.lang.Runnable` 
+a| `function` a| The callback function. a| `java.lang.Runnable`
 |===
 
+[caption=""]
 .Returns
 `void`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -168,9 +179,11 @@ void close()
 Closes the session. Before opening a new session, the session currently open should first be closed. 
 
 
+[caption=""]
 .Returns
 `void`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -178,3 +191,4 @@ session.close();
 ----
 
 // end::methods[]
+

@@ -17,9 +17,11 @@ java.lang.String conjunction()
 Retrieves the subquery of the original query that is actually being explained. 
 
 
+[caption=""]
 .Returns
 `java.lang.String`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -37,9 +39,11 @@ long id()
 Retrieves the unique ID that identifies this ``Explainable``. 
 
 
+[caption=""]
 .Returns
 `long`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -47,3 +51,4 @@ explainable.id();
 ----
 
 // end::methods[]
+

@@ -17,6 +17,7 @@ java.lang.String username()
 
 Returns the name of this user.
 
+[caption=""]
 .Returns
 `java.lang.String`
 
@@ -30,6 +31,7 @@ java.util.Optional<java.lang.Long> passwordExpirySeconds()
 
 Returns the number of seconds remaining till this user’s current password expires.
 
+[caption=""]
 .Returns
 `java.util.Optional<java.lang.Long>`
 
@@ -50,11 +52,13 @@ Updates the password for this user.
 [options="header"]
 |===
 |Name |Description |Type
-a| `passwordOld` a| The current password of this user a| `java.lang.String` 
-a| `passwordNew` a| The new password a| `java.lang.String` 
+a| `passwordOld` a| The current password of this user a| `java.lang.String`
+a| `passwordNew` a| The new password a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `void`
 
 // end::methods[]
+

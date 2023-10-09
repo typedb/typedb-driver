@@ -20,9 +20,11 @@ as_role_type() -> RoleType
 
 Casts the concept to ``RoleType``.
 
+[caption=""]
 .Returns
 `RoleType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -49,9 +51,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect playing, ``Transitivity.EXPLICIT`` for direct playing only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
+[caption=""]
 .Returns
 `Iterator[Thing]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -78,9 +82,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect playing, ``Transitivity.EXPLICIT`` for direct playing only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
+[caption=""]
 .Returns
 `Iterator[ThingType]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -107,9 +113,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect relation, ``Transitivity.EXPLICIT`` for direct relation only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
+[caption=""]
 .Returns
 `Iterator[Relation]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -135,9 +143,11 @@ Retrieves the ``RelationType`` that this role is directly related to.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
+[caption=""]
 .Returns
 `RelationType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -163,9 +173,11 @@ Retrieves ``RelationType``s that this role is related to (directly or indirectly
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
+[caption=""]
 .Returns
 `Iterator[RelationType]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -192,9 +204,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
 |===
 
+[caption=""]
 .Returns
 `Iterator[RoleType]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -220,9 +234,11 @@ Retrieves the most immediate supertype of the ``RoleType``.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
+[caption=""]
 .Returns
 `RoleType | None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -248,9 +264,11 @@ Retrieves all supertypes of the ``RoleType``.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
+[caption=""]
 .Returns
 `Iterator[RoleType]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -267,9 +285,11 @@ is_role_type() -> bool
 
 Checks if the concept is a ``RoleType``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -277,3 +297,4 @@ role_type.is_role_type()
 ----
 
 // end::methods[]
+

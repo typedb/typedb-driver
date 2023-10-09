@@ -20,9 +20,11 @@ boolean isOpen()
 Checks whether this connection is presently open. 
 
 
+[caption=""]
 .Returns
 `boolean`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -40,6 +42,7 @@ DatabaseManager databases()
 
 The ``DatabaseManager`` for this connection, providing access to database management methods.
 
+[caption=""]
 .Returns
 `DatabaseManager`
 
@@ -59,6 +62,7 @@ Opens a session to the given database with default options.
 See also: <<#_session_java_lang_String_com_vaticle_typedb_driver_api_TypeDBSession_Type_com_vaticle_typedb_driver_api_TypeDBOptions,``session(String, TypeDBSession.Type, TypeDBOptions)``>>
 
 
+[caption=""]
 .Returns
 `TypeDBSession`
 
@@ -82,14 +86,16 @@ Opens a communication tunnel (session) to the given database on the running Type
 [options="header"]
 |===
 |Name |Description |Type
-a| `database` a| The name of the database with which the session connects a| `java.lang.String` 
-a| `type` a| The type of session to be created (DATA or SCHEMA) a| `TypeDBSession.Type` 
-a| `options` a| ``TypeDBOptions`` for the session a| `TypeDBOptions` 
+a| `database` a| The name of the database with which the session connects a| `java.lang.String`
+a| `type` a| The type of session to be created (DATA or SCHEMA) a| `TypeDBSession.Type`
+a| `options` a| ``TypeDBOptions`` for the session a| `TypeDBOptions`
 |===
 
+[caption=""]
 .Returns
 `TypeDBSession`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -107,9 +113,11 @@ void close()
 Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed. 
 
 
+[caption=""]
 .Returns
 `void`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -127,6 +135,7 @@ User user()
 
 The ``UserManager`` instance for this connection, providing access to user management methods.
 
+[caption=""]
 .Returns
 `User`
 
@@ -142,9 +151,11 @@ UserManager users()
 Returns the logged-in user for the connection. 
 
 
+[caption=""]
 .Returns
 `UserManager`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -152,3 +163,4 @@ driver.user();
 ----
 
 // end::methods[]
+

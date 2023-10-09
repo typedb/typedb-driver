@@ -24,9 +24,11 @@ close() -> None
 
 Closes the session. Before opening a new session, the session currently open should first be closed.
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -43,9 +45,11 @@ database_name() -> str
 
 Returns the name of the database of the session.
 
+[caption=""]
 .Returns
 `str`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -62,9 +66,11 @@ is_open() -> bool
 
 Checks whether this session is open.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -90,9 +96,11 @@ Registers a callback function which will be executed when this session is closed
 a| `function` a| The callback function. a| `callable` a| 
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -119,9 +127,11 @@ a| `transaction_type` a| The type of transaction to be created (READ or WRITE) a
 a| `options` a| Options for the session a| `TypeDBOptions` a| `None`
 |===
 
+[caption=""]
 .Returns
 `TypeDBTransaction`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -129,3 +139,4 @@ session.transaction(transaction_type, options)
 ----
 
 // end::methods[]
+

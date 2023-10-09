@@ -35,6 +35,7 @@ fn label(&self) -> &String
 
 
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -59,6 +60,7 @@ where
 
 <<#_trait_RuleAPI_tymethod_delete,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -89,6 +91,7 @@ where
 
 <<#_trait_RuleAPI_tymethod_set_label,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -118,6 +121,7 @@ where
 
 <<#_trait_RuleAPI_method_is_deleted,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -130,3 +134,4 @@ where
 ----
 
 // end::methods[]
+

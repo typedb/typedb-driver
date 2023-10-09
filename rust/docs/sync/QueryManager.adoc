@@ -18,6 +18,7 @@ pub fn define(&self, query: &str) -> Result
 
 Performs a TypeQL Define query with default options. See <<#_struct_QueryManager_method_define_with_options,`QueryManager::define_with_options`>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -40,16 +41,18 @@ Performs a TypeQL Define query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Define query to be executed a| `&str` 
-a| `options` a| Specify query options a| `Options` 
+a| `query` a| The TypeQL Define query to be executed a| `&str`
+a| `options` a| Specify query options a| `Options`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -66,6 +69,7 @@ pub fn undefine(&self, query: &str) -> Result
 
 Performs a TypeQL Undefine query with default options See <<#_struct_QueryManager_method_undefine_with_options,`QueryManager::undefine_with_options`>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -88,16 +92,18 @@ Performs a TypeQL Undefine query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Undefine query to be executed a| `&str` 
-a| `options` a| Specify query options a| `Options` 
+a| `query` a| The TypeQL Undefine query to be executed a| `&str`
+a| `options` a| Specify query options a| `Options`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -114,6 +120,7 @@ pub fn delete(&self, query: &str) -> Result
 
 Performs a TypeQL Delete query with default options. See <<#_struct_QueryManager_method_delete_with_options,`QueryManager::delete_with_options`>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -136,16 +143,18 @@ Performs a TypeQL Delete query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Delete query to be executed a| `&str` 
-a| `options` a| Specify query options a| `Options` 
+a| `query` a| The TypeQL Delete query to be executed a| `&str`
+a| `options` a| Specify query options a| `Options`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -165,6 +174,7 @@ pub fn match_(
 
 Performs a TypeQL Match (Get) query with default options. See <<#_struct_QueryManager_method_match_with_options,`QueryManager::match_with_options`>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -191,16 +201,18 @@ Performs a TypeQL Match (Get) query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Match (Get) query to be executed a| `&str` 
-a| `options` a| Specify query options a| `Options` 
+a| `query` a| The TypeQL Match (Get) query to be executed a| `&str`
+a| `options` a| Specify query options a| `Options`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<impl Stream<Item = Result<ConceptMap>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -220,6 +232,7 @@ pub fn insert(
 
 Performs a TypeQL Insert query with default options. See <<#_struct_QueryManager_method_insert_with_options,`QueryManager::insert_with_options`>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -246,16 +259,18 @@ Performs a TypeQL Insert query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Insert query to be executed a| `&str` 
-a| `options` a| Specify query options a| `Options` 
+a| `query` a| The TypeQL Insert query to be executed a| `&str`
+a| `options` a| Specify query options a| `Options`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<impl Stream<Item = Result<ConceptMap>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -275,6 +290,7 @@ pub fn update(
 
 Performs a TypeQL Update query with default options. See <<#_struct_QueryManager_method_update_with_options,`QueryManager::update_with_options`>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -301,16 +317,18 @@ Performs a TypeQL Update query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Update query to be executed a| `&str` 
-a| `options` a| Specify query options a| `Options` 
+a| `query` a| The TypeQL Update query to be executed a| `&str`
+a| `options` a| Specify query options a| `Options`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<impl Stream<Item = Result<ConceptMap>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -327,6 +345,7 @@ pub fn match_aggregate(&self, query: &str) -> Result<Numeric>
 
 Performs a TypeQL Match Aggregate query with default options. See <<#_struct_QueryManager_method_match_aggregate,`QueryManager::match_aggregate`>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -353,16 +372,18 @@ Performs a TypeQL Match Aggregate query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Match Aggregate query to be executed a| `&str` 
-a| `options` a| Specify query options a| `Options` 
+a| `query` a| The TypeQL Match Aggregate query to be executed a| `&str`
+a| `options` a| Specify query options a| `Options`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<Numeric>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -382,6 +403,7 @@ pub fn match_group(
 
 Performs a TypeQL Match Group query with default options. See <<#_struct_QueryManager_method_match_group,`QueryManager::match_group`>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -408,16 +430,18 @@ Performs a TypeQL Match Group query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Match Group query to be executed a| `&str` 
-a| `options` a| Specify query options a| `Options` 
+a| `query` a| The TypeQL Match Group query to be executed a| `&str`
+a| `options` a| Specify query options a| `Options`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<impl Stream<Item = Result<ConceptMapGroup>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -437,6 +461,7 @@ pub fn match_group_aggregate(
 
 Performs a TypeQL Match Group Aggregate query with default options. See <<#_struct_QueryManager_method_match_group_aggregate_with_options,`QueryManager::match_group_aggregate_with_options`>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -463,16 +488,18 @@ Performs a TypeQL Match Group Aggregate query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Match Group Aggregate query to be executed a| `&str` 
-a| `options` a| Specify query options a| `Options` 
+a| `query` a| The TypeQL Match Group Aggregate query to be executed a| `&str`
+a| `options` a| Specify query options a| `Options`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<impl Stream<Item = Result<NumericGroup>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -492,6 +519,7 @@ pub fn explain(
 
 Performs a TypeQL Explain query in the transaction. See ``QueryManager::explain_with_options
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -518,16 +546,18 @@ Performs a TypeQL Explain query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `explainable` a| The Explainable to be explained a| `&Explainable` 
-a| `options` a| Specify query options a| `Options` 
+a| `explainable` a| The Explainable to be explained a| `&Explainable`
+a| `options` a| Specify query options a| `Options`
 |===
 
+[caption=""]
 .Returns
 [source,rust]
 ----
 Result<impl Stream<Item = Result<Explanation>>>
 ----
 
+[caption=""]
 .Code examples
 [source,rust]
 ----
@@ -535,3 +565,4 @@ transaction.query().explain_with_options(explainable, options)
 ----
 
 // end::methods[]
+

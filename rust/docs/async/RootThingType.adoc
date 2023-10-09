@@ -22,6 +22,7 @@ fn label(&self) -> &str
 
 <<#_trait_ThingTypeAPI_tymethod_label,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -38,6 +39,7 @@ fn is_abstract(&self) -> bool
 
 <<#_trait_ThingTypeAPI_tymethod_is_abstract,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -54,6 +56,7 @@ fn is_root(&self) -> bool
 
 <<#_trait_ThingTypeAPI_tymethod_is_root,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -78,6 +81,7 @@ where
 
 <<#_trait_ThingTypeAPI_tymethod_is_deleted,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -107,6 +111,7 @@ where
 
 <<#_trait_ThingTypeAPI_method_delete,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -137,6 +142,7 @@ where
 
 <<#_trait_ThingTypeAPI_method_set_label,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -166,6 +172,7 @@ where
 
 <<#_trait_ThingTypeAPI_method_set_abstract,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -195,6 +202,7 @@ where
 
 <<#_trait_ThingTypeAPI_method_unset_abstract,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -222,6 +230,7 @@ fn get_owns(
 
 <<#_trait_ThingTypeAPI_method_get_owns,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -247,6 +256,7 @@ where
 
 <<#_trait_ThingTypeAPI_method_get_owns_overridden,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -279,6 +289,7 @@ where
 
 <<#_trait_ThingTypeAPI_method_set_owns,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -309,6 +320,7 @@ where
 
 <<#_trait_ThingTypeAPI_method_unset_owns,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -334,6 +346,7 @@ fn get_plays(
 
 <<#_trait_ThingTypeAPI_method_get_plays,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -359,6 +372,7 @@ where
 
 <<#_trait_ThingTypeAPI_method_get_plays_overridden,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -390,6 +404,7 @@ where
 
 <<#_trait_ThingTypeAPI_method_set_plays,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -420,6 +435,7 @@ where
 
 <<#_trait_ThingTypeAPI_method_unset_plays,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -449,6 +465,7 @@ where
 
 <<#_trait_ThingTypeAPI_method_get_syntax,Read more>>
 
+[caption=""]
 .Returns
 [source,rust]
 ----
@@ -461,3 +478,4 @@ where
 ----
 
 // end::methods[]
+

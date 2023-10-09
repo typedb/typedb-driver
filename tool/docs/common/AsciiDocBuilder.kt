@@ -21,26 +21,40 @@
 
 package com.vaticle.typedb.client.tool.doc.common
 
-data class Variable(
-    val name: String,
-    val anchor: String? = null,
-    val defaultValue: String? = null,
-    val description: String? = null,
-    val type: String? = null,
-) {
-     fun toTableDataAsField(language: String): List<String?> {
-        val result = mutableListOf("`${this.name}`")
-        result.add(if (this.type != null) "`${this.type.replace("|", "\\|")}`" else "")
-        result.add(this.description ?: "")
-        return result.toList()
+class AsciiDocBuilder {
+    fun header(level: Int, header: String): String {
+        return "=".repeat(level) + " $header\n\n"
     }
 
-    fun toTableDataAsArgument(language: String): List<String?> {
-        val result = mutableListOf("`${this.name}`", this.description ?: "")
-        result.add(if (this.type != null) "`${this.type.replace("|", "\\|")}`" else "")
-        if (language == "python") {
-            this.defaultValue?.let { result.add("`$it`") } ?: result.add("")
-        }
-        return result.toList()
+    fun anchor(link: String): String {
+        return "[#_$link]\n"
     }
+
+    fun boldHeader(header: String): String {
+        return "*$header*\n\n"
+    }
+
+    fun caption(title: String): String {
+        return "[caption=\"\"]\n.$title\n"
+    }
+
+    fun captionedBlock(title: String, content: String): String {
+        return caption(title) + "====\n\n$content====\n\n"
+    }
+
+    fun codeBlock(content: String?, language: String?): String {
+        var result = "[source"
+        language?.let { result += ",$language" }
+        result += "]\n----\n$content\n----\n\n"
+        return result
+    }
+
+    fun tagBegin(title: String): String {
+        return "// tag::$title[]\n"
+    }
+
+    fun tagEnd(title: String): String {
+        return "// end::$title[]\n\n"
+    }
+
 }

@@ -14,9 +14,11 @@ all() -> List[Database]
 
 Retrieves all databases present on the TypeDB server
 
+[caption=""]
 .Returns
 `List[Database]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -42,9 +44,11 @@ Checks if a database with the given name exists
 a| `name` a| The database name to be checked a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -70,9 +74,11 @@ Create a database with the given name
 a| `name` a| The name of the database to be created a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -98,9 +104,11 @@ Retrieve the database with the given name.
 a| `name` a| The name of the database to retrieve a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `Database`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -108,3 +116,4 @@ driver.databases.get(name)
 ----
 
 // end::methods[]
+

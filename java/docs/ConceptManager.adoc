@@ -18,9 +18,11 @@ EntityType getRootEntityType()
 Retrieves the root ``EntityType``, “entity”. 
 
 
+[caption=""]
 .Returns
 `EntityType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -39,9 +41,11 @@ RelationType getRootRelationType()
 Retrieve the root ``RelationType``, “relation”. 
 
 
+[caption=""]
 .Returns
 `RelationType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -60,9 +64,11 @@ AttributeType getRootAttributeType()
 Retrieve the root ``AttributeType``, “attribute”. 
 
 
+[caption=""]
 .Returns
 `AttributeType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -88,12 +94,14 @@ Retrieves an ``EntityType`` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``EntityType`` to retrieve a| `java.lang.String` 
+a| `label` a| The label of the ``EntityType`` to retrieve a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `EntityType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -119,12 +127,14 @@ Retrieves a ``RelationType`` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``RelationType`` to retrieve a| `java.lang.String` 
+a| `label` a| The label of the ``RelationType`` to retrieve a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `RelationType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -150,12 +160,14 @@ Retrieves an ``AttributeType`` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``AttributeType`` to retrieve a| `java.lang.String` 
+a| `label` a| The label of the ``AttributeType`` to retrieve a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `AttributeType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -179,12 +191,14 @@ Creates a new ``EntityType`` if none exists with the given label, otherwise retr
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``EntityType`` to create or retrieve a| `java.lang.String` 
+a| `label` a| The label of the ``EntityType`` to create or retrieve a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `EntityType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -208,12 +222,14 @@ Creates a new ``RelationType`` if none exists with the given label, otherwise re
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``RelationType`` to create or retrieve a| `java.lang.String` 
+a| `label` a| The label of the ``RelationType`` to create or retrieve a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `RelationType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -238,13 +254,15 @@ Creates a new ``AttributeType`` if none exists with the given label, or retrieve
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``AttributeType`` to create or retrieve a| `java.lang.String` 
-a| `valueType` a| The value type of the ``AttributeType`` to create a| `Value.Type` 
+a| `label` a| The label of the ``AttributeType`` to create or retrieve a| `java.lang.String`
+a| `valueType` a| The value type of the ``AttributeType`` to create a| `Value.Type`
 |===
 
+[caption=""]
 .Returns
 `AttributeType`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -270,12 +288,14 @@ Retrieves an ``Entity`` by its iid.
 [options="header"]
 |===
 |Name |Description |Type
-a| `iid` a| The iid of the ``Entity`` to retrieve a| `java.lang.String` 
+a| `iid` a| The iid of the ``Entity`` to retrieve a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `Entity`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -301,12 +321,14 @@ Retrieves a ``Relation`` by its iid.
 [options="header"]
 |===
 |Name |Description |Type
-a| `iid` a| The iid of the ``Relation`` to retrieve a| `java.lang.String` 
+a| `iid` a| The iid of the ``Relation`` to retrieve a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `Relation`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -332,12 +354,14 @@ Retrieves an ``Attribute`` by its iid.
 [options="header"]
 |===
 |Name |Description |Type
-a| `iid` a| The iid of the ``Attribute`` to retrieve a| `java.lang.String` 
+a| `iid` a| The iid of the ``Attribute`` to retrieve a| `java.lang.String`
 |===
 
+[caption=""]
 .Returns
 `Attribute`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -356,9 +380,11 @@ java.util.List<com.vaticle.typedb.driver.common.exception.TypeDBException> getSc
 Retrieves a list of all exceptions for the current transaction. 
 
 
+[caption=""]
 .Returns
 `java.util.List<com.vaticle.typedb.driver.common.exception.TypeDBException>`
 
+[caption=""]
 .Code examples
 [source,java]
 ----
@@ -366,3 +392,4 @@ transaction.concepts().getSchemaException();
 ----
 
 // end::methods[]
+

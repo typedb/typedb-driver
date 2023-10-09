@@ -20,9 +20,11 @@ as_attribute() -> Attribute
 
 Casts the concept to ``Attribute``.
 
+[caption=""]
 .Returns
 `Attribute`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -39,9 +41,11 @@ as_boolean() -> bool
 
 Returns a ``boolean`` value of the attribute. If the value has another type, raises an exception.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -58,9 +62,11 @@ as_datetime() -> datetime
 
 Returns a ``datetime`` value of the attribute. If the value has another type, raises an exception.
 
+[caption=""]
 .Returns
 `datetime`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -77,9 +83,11 @@ as_double() -> float
 
 Returns a ``double`` value of the attribute. If the value has another type, raises an exception.
 
+[caption=""]
 .Returns
 `float`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -96,9 +104,11 @@ as_long() -> int
 
 Returns a ``long`` value of the attribute. If the value has another type, raises an exception.
 
+[caption=""]
 .Returns
 `int`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -115,9 +125,11 @@ as_string() -> str
 
 Returns a ``string`` value of the attribute. If the value has another type, raises an exception.
 
+[caption=""]
 .Returns
 `str`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -144,9 +156,11 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `owner_type` a| If specified, filter results for only owners of the given type a| `ThingType \| None` a| `None`
 |===
 
+[caption=""]
 .Returns
 `Iterator[Thing]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -164,9 +178,11 @@ get_type() -> AttributeType
 
 Retrieves the type which this ``Attribute`` belongs to.
 
+[caption=""]
 .Returns
 `AttributeType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -183,9 +199,11 @@ get_value() -> bool | int | float | str | datetime
 
 Retrieves the value which the ``Attribute`` instance holds.
 
+[caption=""]
 .Returns
 `bool | int | float | str | datetime`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -202,9 +220,11 @@ get_value_type() -> ValueType
 
 Retrieves the type of the value which the ``Attribute`` instance holds.
 
+[caption=""]
 .Returns
 `ValueType`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -221,9 +241,11 @@ is_attribute() -> bool
 
 Checks if the concept is an ``Attribute``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -240,9 +262,11 @@ is_boolean() -> bool
 
 Returns ``True`` if the attribute value is of type ``boolean``. Otherwise, returns ``False``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -259,9 +283,11 @@ is_datetime() -> bool
 
 Returns ``True`` if the attribute value is of type ``datetime``. Otherwise, returns ``False``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -278,9 +304,11 @@ is_double() -> bool
 
 Returns ``True`` if the attribute value is of type ``double``. Otherwise, returns ``False``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -297,9 +325,11 @@ is_long() -> bool
 
 Returns ``True`` if the attribute value is of type ``long``. Otherwise, returns ``False``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -316,9 +346,11 @@ is_string() -> bool
 
 Returns ``True`` if the attribute value is of type ``string``. Otherwise, returns ``False``.
 
+[caption=""]
 .Returns
 `bool`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -335,9 +367,11 @@ to_json() -> Mapping[str, str | int | float | bool]
 
 Retrieves this ``Attribute`` as JSON.
 
+[caption=""]
 .Returns
 `Mapping[str, str | int | float | bool]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -345,3 +379,4 @@ attribute.to_json()
 ----
 
 // end::methods[]
+

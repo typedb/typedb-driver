@@ -17,6 +17,7 @@ java.lang.String address()
 
 Retrieves the address of the server hosting this replica
 
+[caption=""]
 .Returns
 `java.lang.String`
 
@@ -31,6 +32,7 @@ boolean isPrimary()
 
 Checks whether this is the primary replica of the raft cluster.
 
+[caption=""]
 .Returns
 `boolean`
 
@@ -45,6 +47,7 @@ boolean isPreferred()
 
 Checks whether this is the preferred replica of the raft cluster. If true, Operations which can be run on any replica will prefer to use this replica.
 
+[caption=""]
 .Returns
 `boolean`
 
@@ -59,7 +62,9 @@ long term()
 
 The raft protocol ‘term’ of this replica.
 
+[caption=""]
 .Returns
 `long`
 
 // end::methods[]
+

@@ -37,9 +37,11 @@ Creates a Label from a specified name, or scoped name.
 a| `args` a| If a single string is provided, this is interpreted as the label name. If a pair of strings is provided, the first string is the scope and the second string is the name. a| `str` a| 
 |===
 
+[caption=""]
 .Returns
 `Label`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -57,9 +59,11 @@ scoped_name() -> str
 
 Returns the string representation of the scoped name.
 
+[caption=""]
 .Returns
 `str`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -67,3 +71,4 @@ label.scoped_name()
 ----
 
 // end::methods[]
+

@@ -23,9 +23,11 @@ delete() -> None
 
 Deletes this database.
 
+[caption=""]
 .Returns
 `None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -42,9 +44,11 @@ preferred_replica() -> Replica | None
 
 Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Enterprise_
 
+[caption=""]
 .Returns
 `Replica | None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -61,9 +65,11 @@ primary_replica() -> Replica | None
 
 Returns the primary replica for this database. _Only works in TypeDB Enterprise_
 
+[caption=""]
 .Returns
 `Replica | None`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -80,9 +86,11 @@ replicas() -> Set[Replica]
 
 Set of ``Replica`` instances for this database. _Only works in TypeDB Enterprise_
 
+[caption=""]
 .Returns
 `Set[Replica]`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -99,9 +107,11 @@ rule_schema() -> str
 
 Returns the rules in the schema as a valid TypeQL define query string.
 
+[caption=""]
 .Returns
 `str`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -118,9 +128,11 @@ schema() -> str
 
 Returns a full schema text as a valid TypeQL define query string.
 
+[caption=""]
 .Returns
 `str`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -137,9 +149,11 @@ type_schema() -> str
 
 Returns the types in the schema as a valid TypeQL define query string.
 
+[caption=""]
 .Returns
 `str`
 
+[caption=""]
 .Code examples
 [source,python]
 ----
@@ -147,3 +161,4 @@ database.type_schema()
 ----
 
 // end::methods[]
+
