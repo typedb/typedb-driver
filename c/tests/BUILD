@@ -22,17 +22,30 @@
 package(default_visibility = ["//visibility:public"])
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-cc_test(
-    name = "test-driver",
-    srcs = glob(["integration/*.*"]),
-    includes = ["."],
+cc_library(
+    name = "test-driver-lib",
+    srcs = glob(["integration/*.c", "integration/*.h"]),
     deps = [
         "//c:typedb_driver_clib_headers",
         "//c:typedb_driver_clib"
     ],
-    env = {"RUST_BACKTRACE" : "full"},
     copts = ["-fsanitize=address"],
     linkopts = ["-fsanitize=address"],
+    linkstatic = True,
+)
+
+cc_test(
+    name = "test-driver",
+    srcs = glob(["integration/gtest_runner.cpp"]),
+    deps = [
+        ":test-driver-lib",
+        "//c:typedb_driver_clib_headers",
+        "//c:typedb_driver_clib",
+
+        # External
+        "@gtest//:gtest",
+        "@gtest//:gtest_main"
+    ],
 )
 
 checkstyle_test(

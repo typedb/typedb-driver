@@ -18,32 +18,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+//
+#include "gtest/gtest.h"
 
-#include <stdio.h>
-
-#include "c/typedb_driver.h"
-#include "common.h"
-
-const char* TYPEDB_CORE_ADDRESS = "127.0.0.1:1729";
-
-bool print_error(char* filename, int lineno) {
-    fflush(stdout);
-    if (check_error()) {
-        Error* error = get_last_error();
-        char* errcode = error_code(error);
-        char* errmsg = error_message(error);
-        fprintf(stderr, "Error!\nCheck called at %s:%d\n%s: %s\n", filename, lineno, errcode, errmsg);
-        fflush(stderr);
-        free(errmsg);
-        free(errcode);
-        error_drop(error);
-        return true;
-    } else return false;
+extern "C" {
+    #include "c/tests/integration/tests.h"
 }
 
-void delete_database_if_exists(DatabaseManager* dbMgr, char* name) {
-    if (databases_contains(dbMgr, name)) {
-        Database* database = databases_get(dbMgr, name);
-        database_delete(database);
-    }
+TEST(BasicTestSuite, BasicTests) {
+    EXPECT_EQ(test_basic_query(), 0);
 }

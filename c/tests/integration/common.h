@@ -21,9 +21,7 @@
 
 #define PRINT_ERR() print_error(__FILE__, __LINE__)
 
-#define RUN_TEST(A) run_test_core(#A, A)
-
-int run_test_core(const char* test_name, int (*test_fn)(const Connection*));
+extern const char* TYPEDB_CORE_ADDRESS;
 
 bool print_error(char* filename, int lineno);
 

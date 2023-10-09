@@ -21,16 +21,22 @@
 
 #include <stdio.h>
 
-#include "../typedb_driver.h"
+#include "c/typedb_driver.h"
 #include "common.h"
 
-int test_basic_query(const Connection* conn) {
-    int ret = 1;
+// Connection, database management, concept api, queries
 
+int test_basic_query() {
+    Connection* conn = 0;
     DatabaseManager* dbMgr = 0;
     Session* session = 0;
     Transaction* transaction = 0;
     Options* opts = 0;
+
+    int ret = 1;
+
+    conn = connection_open_core(TYPEDB_CORE_ADDRESS);
+    if (0 == conn) goto cleanup;
 
     dbMgr = database_manager_new(conn);
     if (0 == dbMgr || check_error()) goto cleanup;
@@ -80,15 +86,7 @@ int test_basic_query(const Connection* conn) {
             if (check_error()) print_error(__FILE__, __LINE__);
             database_manager_drop(dbMgr);
         }
+        if (0 != conn) connection_close(conn);
 
     return ret;
-}
-
-int main() {
-    // To check memory-leaks, Unset `-fsanitize=address` in BUILD; run `leaks --atExit -- ./bazel-bin/path/to/this-binary`.
-    int failures = 0;
-
-    failures += RUN_TEST(test_basic_query);
-
-    return failures > 0 ? 1 : 0;
 }
