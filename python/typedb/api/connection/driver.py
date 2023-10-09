@@ -57,7 +57,7 @@ class TypeDBDriver(ABC):
         pass
 
     @abstractmethod
-    def session(self, database: str, session_type: SessionType, options: Optional[TypeDBOptions] = None
+    def session(self, database_name: str, session_type: SessionType, options: Optional[TypeDBOptions] = None
                 ) -> TypeDBSession:
         """
         Opens a communication tunnel (session) to the given database on the running TypeDB server.
