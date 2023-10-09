@@ -54,7 +54,7 @@ fun main(args: Array<String>) {
             }
 
         parsedClasses[parsedClass.name] = if (parsedClasses.contains(parsedClass.name)) {
-            mergeClasses(parsedClasses[parsedClass.name]!!, parsedClass)
+            parsedClasses[parsedClass.name]!!.merge(parsedClass)
         } else {
             parsedClass
         }

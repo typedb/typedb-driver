@@ -46,21 +46,6 @@ fun replaceSymbolsForAnchor(name: String): String {
     return name.replace("[\\.,\\(\\)\\s#]".toRegex(), "_").removeSuffix("_")
 }
 
-fun mergeClasses(first: Class, second: Class): Class {
-    assert(first.name == second.name)
-    return Class(
-        name = first.name,
-        anchor = first.anchor ?: second.anchor,
-        enumConstants = first.enumConstants + second.enumConstants,
-        description = first.description.ifEmpty { second.description },
-        examples = first.examples.ifEmpty { second.examples },
-        fields = first.fields + second.fields,
-        methods = first.methods + second.methods,
-        packagePath = first.packagePath ?: second.packagePath,
-        superClasses = first.superClasses.ifEmpty { second.superClasses },
-    )
-}
-
 fun escape(text: String): String {
     return text.replace("|", "\\|")
 }

@@ -32,6 +32,21 @@ data class Class(
     val packagePath: String? = null,
     val superClasses: List<String> = listOf(),
 ) {
+    fun merge(other: Class): Class {
+        assert(this.name == other.name)
+        return Class(
+            name = this.name,
+            anchor = this.anchor ?: other.anchor,
+            enumConstants = this.enumConstants + other.enumConstants,
+            description = this.description.ifEmpty { other.description },
+            examples = this.examples.ifEmpty { other.examples },
+            fields = this.fields + other.fields,
+            methods = this.methods + other.methods,
+            packagePath = this.packagePath ?: other.packagePath,
+            superClasses = this.superClasses.ifEmpty { other.superClasses },
+        )
+    }
+
     fun toAsciiDoc(language: String): String {
         val builder = AsciiDocBuilder()
         var result = ""
