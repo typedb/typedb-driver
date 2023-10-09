@@ -100,7 +100,7 @@ public class TypeDBDriverImpl extends NativeObject<com.vaticle.typedb.driver.jni
 
     @Override
     public TypeDBSession session(String database, TypeDBSession.Type type, TypeDBOptions options) {
-        return new TypeDBSessionImpl(databases().get(database), type, options);
+        return new TypeDBSessionImpl(databases(), database, type, options);
     }
 
     @Override

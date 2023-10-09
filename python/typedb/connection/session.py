@@ -36,18 +36,17 @@ if TYPE_CHECKING:
     from typedb.api.connection.session import SessionType
     from typedb.api.connection.transaction import TypeDBTransaction, TransactionType
     from typedb.connection.database import _Database
+    from typedb.connection.database_manager import DatabaseManager
 
 
 class _Session(TypeDBSession, NativeWrapper[NativeSession]):
 
-    def __init__(self, database: _Database, session_type: SessionType, options: Optional[TypeDBOptions] = None):
+    def __init__(self, database_manager: DatabaseManager , database_name: str, session_type: SessionType, options: Optional[TypeDBOptions] = None):
         if not options:
             options = TypeDBOptions()
         self._type = session_type
         self._options = options
-        native_database = database.native_object
-        native_database.thisown = 0
-        super().__init__(session_new(native_database, session_type.value, options.native_object))
+        super().__init__(session_new(database_manager.native_object, database_name, session_type.value, options.native_object))
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:

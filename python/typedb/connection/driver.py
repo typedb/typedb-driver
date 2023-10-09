@@ -59,8 +59,8 @@ class _Driver(TypeDBDriver, NativeWrapper[NativeConnection]):
     def _native_connection(self) -> NativeConnection:
         return self.native_object
 
-    def session(self, database: str, session_type: SessionType, options: TypeDBOptions = None) -> _Session:
-        return _Session(self.databases.get(database), session_type, options if options else TypeDBOptions())
+    def session(self, database_name: str, session_type: SessionType, options: TypeDBOptions = None) -> _Session:
+        return _Session(self.databases, database_name, session_type, options if options else TypeDBOptions())
 
     def is_open(self) -> bool:
         return connection_is_open(self._native_connection)
