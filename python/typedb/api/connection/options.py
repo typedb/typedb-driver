@@ -41,7 +41,7 @@ from typedb.common.native_wrapper import NativeWrapper
 class TypeDBOptions(NativeWrapper[NativeOptions]):
     """
     TypeDB session and transaction options. ``TypeDBOptions`` object
-    can be used to override the default server behaviour query processing.
+    can be used to override the default server behaviour.
 
     Options could be specified either as constructor arguments or using
     properties assignment.

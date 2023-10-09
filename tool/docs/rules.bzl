@@ -36,7 +36,7 @@ def html_docs_parser(name, data, language, feature=""):
             "//tool/docs:common/Util.kt",
             "//tool/docs:common/Variable.kt",
         ],
-        main_class = "com.vaticle.typedb.client.tool.doc." + language + "." + script_name + "Kt",
+        main_class = "com.vaticle.typedb.driver.tool.doc." + language + "." + script_name + "Kt",
         args = [
             "$(location %s)" % data,
             "%s/docs" % language,

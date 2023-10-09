@@ -22,7 +22,7 @@
 use std::time::Duration;
 
 /// TypeDB session and transaction options.
-/// `TypeDBOptions` object can be used to override the default server behaviour query processing.
+/// `TypeDBOptions` object can be used to override the default server behaviour.
 /// Options are specified using properties assignment.
 ///
 /// # Examples

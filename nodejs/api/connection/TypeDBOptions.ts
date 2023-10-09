@@ -68,7 +68,7 @@ namespace Opts {
 }
 
 /**
- * TypeDB session and transaction options. <code>TypeDBOptions</code> object can be used to override the default server behaviour query processing.
+ * TypeDB session and transaction options. <code>TypeDBOptions</code> object can be used to override the default server behaviour.
  * Options could be specified either as constructor arguments or using setters.
  *
  * ### Examples

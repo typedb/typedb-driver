@@ -33,7 +33,7 @@ export namespace TypeDB {
      * ### Examples
      *
      * ```ts
-     * const driver = TypeDB.enterpriseDriver(["127.0.0.1:11729"], new TypeDBCredential(username, password));
+     * const driver = TypeDB.coreDriver("127.0.0.1:11729");
      * ```
      */
     export function coreDriver(address: string = DEFAULT_ADDRESS): Promise<TypeDBDriver> {

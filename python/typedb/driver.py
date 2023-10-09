@@ -64,10 +64,23 @@ class TypeDB:
 
     @staticmethod
     def core_driver(address: str) -> TypeDBDriver:
+        """
+        Creates a connection to TypeDB.
+
+        :param address: Address of the TypeDB server.
+        :return:
+        """
         return _Driver([address])
 
     @staticmethod
     def enterprise_driver(addresses: Union[Iterable[str], str], credential: TypeDBCredential) -> TypeDBDriver:
+        """
+        Creates a connection to TypeDB Enterprise, authenticating with the provided credentials.
+
+        :param addresses:
+        :param credential:
+        :return:
+        """
         if isinstance(addresses, str):
             return _Driver([addresses], credential)
         else:

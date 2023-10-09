@@ -53,11 +53,14 @@ export interface TypeDBDriver {
      */
     close(): Promise<void>;
 
-    /** The <code>UserManager</code> instance for this connection, providing access to user management methods. */
+    /**
+     * The <code>UserManager</code> instance for this connection, providing access to user management methods.
+     * Only for TypeDB Enterprise.
+     */
     readonly users: UserManager;
 
     /**
-     * Returns the logged-in user for the connection.
+     * Returns the logged-in user for the connection. Only for TypeDB Enterprise.
      *
      * ### Examples
      *

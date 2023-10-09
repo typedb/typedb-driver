@@ -19,9 +19,9 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.tool.doc.java
+package com.vaticle.typedb.driver.tool.doc.java
 
-import com.vaticle.typedb.client.tool.doc.common.*
+import com.vaticle.typedb.driver.tool.doc.common.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.io.File

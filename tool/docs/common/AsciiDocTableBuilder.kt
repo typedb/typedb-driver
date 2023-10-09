@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.client.tool.doc.common
+package com.vaticle.typedb.driver.tool.doc.common
 
 class AsciiDocTableBuilder(private val headers: List<String>) {
 

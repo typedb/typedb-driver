@@ -3,7 +3,7 @@
 
 *Package*: `com.vaticle.typedb.driver.api`
 
-TypeDB session and transaction options. ``TypeDBOptions`` object can be used to override the default server behaviour query processing.
+TypeDB session and transaction options. ``TypeDBOptions`` object can be used to override the default server behaviour.
 
 // tag::methods[]
 [#_<init>_]

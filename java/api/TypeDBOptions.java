@@ -62,7 +62,7 @@ import static com.vaticle.typedb.driver.jni.typedb_driver.options_set_transactio
 
 /**
  * TypeDB session and transaction options. <code>TypeDBOptions</code> object can be used to override
- * the default server behaviour query processing.
+ * the default server behaviour.
  */
 public class TypeDBOptions extends NativeObject<com.vaticle.typedb.driver.jni.Options> {
     /**

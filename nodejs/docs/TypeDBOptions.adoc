@@ -1,7 +1,7 @@
 [#_TypeDBOptions]
 === TypeDBOptions
 
-TypeDB session and transaction options. ``TypeDBOptions`` object can be used to override the default server behaviour query processing. Options could be specified either as constructor arguments or using setters.
+TypeDB session and transaction options. ``TypeDBOptions`` object can be used to override the default server behaviour. Options could be specified either as constructor arguments or using setters.
 
 // tag::methods[]
 [#_new_TypeDBOptions]

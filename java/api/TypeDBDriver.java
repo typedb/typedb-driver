@@ -82,12 +82,13 @@ public interface TypeDBDriver extends AutoCloseable {
 
     /**
      * The <code>UserManager</code> instance for this connection, providing access to user management methods.
+     * Only for TypeDB Enterprise.
      */
     @CheckReturnValue
     User user();
 
     /**
-     * Returns the logged-in user for the connection.
+     * Returns the logged-in user for the connection. Only for TypeDB Enterprise.
      *
      * <h3>Examples</h3>
      * <pre>
