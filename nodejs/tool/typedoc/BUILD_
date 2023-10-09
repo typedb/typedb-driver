@@ -1,0 +1,67 @@
+#
+# Copyright (C) 2022 Vaticle
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+
+exports_files([
+    "tsconfig.json",
+    "typedoc.json",
+])
+
+load("@vaticle_bazel_distribution//npm:rules.bzl", "assemble_npm", "deploy_npm")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+
+ts_project(
+    name = "typedoc_runner",
+    srcs = glob([
+        "TypeDocRunner.ts",
+    ]),
+    tsconfig = "tsconfig.json",
+    declaration = True,
+    deps = [
+        "//nodejs:node_modules/typedoc",
+        "//nodejs:node_modules/@types/node",
+    ],
+    out_dir = ".",
+)
+
+js_binary(
+    name = "typedoc_runner_bin",
+    data = [
+        ":typedoc_runner",
+    ],
+    entry_point = ":typedoc_runner",
+    chdir = "nodejs",
+    visibility = ["//visibility:public"],
+)
+
+checkstyle_test(
+    name = "checkstyle",
+    include = glob([
+        "*",
+    ]),
+    exclude = glob([
+        "*.json",
+    ]),
+    license_type = "apache-header",
+)

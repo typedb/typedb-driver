@@ -56,12 +56,12 @@ typedoc_docs = rule(
         "deps": attr.label_list(
             mandatory = True,
             allow_files = True,
-            doc = "Dependencies for typedoc and driver",
+            doc = "Dependencies for typedoc and module",
         ),
         "srcs": attr.label_list(
             mandatory = True,
             allow_files = True,
-            doc = "Driver source files",
+            doc = "Module source files",
         ),
         "out": attr.output(
             mandatory = True,
@@ -70,6 +70,6 @@ typedoc_docs = rule(
     },
     implementation = _typedoc_doc_impl,
     doc = """
-        Creates an HTML documentation for python module using typedoc.
+        Creates an HTML documentation for typescript module using typedoc.
         """
 )
