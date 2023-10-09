@@ -20,25 +20,26 @@
 #
 
 def _sphinx_docs_impl(ctx):
-    driver_package = ctx.actions.declare_directory("driver-package")
+    package = ctx.actions.declare_directory("package")
 
     ctx.actions.run_shell(
         inputs = ctx.files.target,
-        outputs = [driver_package],
-        command = 'PACKAGE=$(find . -name "*.tar.gz") && tar -xf ${PACKAGE} && mv */typedb %s' % (driver_package.path),
+        outputs = [package],
+        command = 'PACKAGE=$(find . -name "*.tar.gz") && tar -xf ${PACKAGE} && mv */%s %s'
+            % (ctx.attr.package_subdir, package.path),
     )
 
     args = ctx.actions.args()
     args.add('--output', ctx.outputs.out.path)
-    args.add('--package', driver_package.path)
-    args.add('--source_dir', ctx.files.srcs[0].dirname)
+    args.add('--package', package.path)
+    args.add('--source_dir', ctx.files.sphinx_conf[0].dirname)
 
     ctx.actions.run(
-        inputs = [ctx.executable.script, driver_package] + ctx.files.srcs,
+        inputs = [ctx.executable._script, package] + ctx.files.sphinx_conf + ctx.files.sphinx_rst,
         outputs = [ctx.outputs.out],
         arguments = [args],
-        executable = ctx.executable.script,
-        env = {"PYTHONPATH": driver_package.path},
+        executable = ctx.executable._script,
+        env = {"PYTHONPATH": package.path},
     )
 
     return DefaultInfo(files = depset([ctx.outputs.out]))
@@ -46,26 +47,35 @@ def _sphinx_docs_impl(ctx):
 
 sphinx_docs = rule(
     attrs = {
-        "script": attr.label(
-            mandatory = True,
+        "_script": attr.label(
+            default = ":sphinx_runner",
             executable = True,
             cfg = "exec",
-            doc = "Python script for running sphinx",
+            doc = "Script for running sphinx",
         ),
         "target": attr.label(
             mandatory = True,
             allow_files = True,
-            doc = "Driver package, including .tar.gz archive",
+            doc = "Package including .tar.gz archive",
         ),
-        "srcs": attr.label_list(
+        "sphinx_conf": attr.label(
             mandatory = True,
             allow_files = True,
-            doc = "Additional source files for sphinx",
+            doc = "Configuration file for the Sphinx documentation builder",
+        ),
+        "sphinx_rst": attr.label(
+            mandatory = True,
+            allow_files = True,
+            doc = "Sphinx documentation master file for the package",
         ),
         "out": attr.output(
             mandatory = True,
             doc = "Output directory",
         ),
+        "package_subdir": attr.string(
+            mandatory = True,
+            doc = "Directory with the module files in the package archive",
+        )
     },
     implementation = _sphinx_docs_impl,
     doc = """

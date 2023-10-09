@@ -54,10 +54,11 @@ py_native_lib_rename(
 
 sphinx_docs(
     name = "driver_docs",
-    script = "//python/tool/sphinx:sphinx_runner",
     target = ":assemble-pip39",
-    srcs = ["//python/tool/sphinx:source/conf.py", "//python/tool/sphinx:source/index.rst"],
     out = "driver_docs_sphinx",
+    sphinx_conf = "conf.py",
+    sphinx_rst = "index.rst",
+    package_subdir = "typedb",
 )
 
 html_docs_parser(

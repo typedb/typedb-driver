@@ -1,4 +1,4 @@
-.. typedb-client documentation master file, created by
+.. typedb-driver documentation master file, created by
    sphinx-quickstart on Fri Sep 15 16:13:51 2023.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.

@@ -19,8 +19,6 @@
 # under the License.
 #
 
-exports_files(glob(["source/*"]))
-
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_dependencies_tool_docs//:requirements.bzl", docs_requirement = "requirement")
 
@@ -38,9 +36,6 @@ checkstyle_test(
     name = "checkstyle",
     include = glob([
         "*",
-    ]),
-    exclude = glob([
-        "source/**/*",
     ]),
     license_type = "apache-header",
     size = "small",
