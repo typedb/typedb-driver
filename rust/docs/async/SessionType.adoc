@@ -6,12 +6,12 @@ This enum is used to specify the type of the session.
 [caption=""]
 .Enum variants
 // tag::enum_constants[]
-[cols="~,~"]
+[cols="~"]
 [options="header"]
 |===
-|Name |Type
-a| `Data` a| `Data`
-a| `Schema` a| `Schema`
+|Variant
+a| `Data`
+a| `Schema`
 |===
 // end::enum_constants[]
 

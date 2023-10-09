@@ -86,7 +86,7 @@ data class Class(
             result += builder.tagBegin("enum_constants")
 
             val headers = when (language) {
-                "rust" -> listOf("Name", "Type")
+                "rust" -> listOf("Variant")
                 "python" -> listOf("Name", "Value")
                 else -> listOf("Name")
             }

@@ -190,10 +190,8 @@ fun parseField(element: Element, classAnchor: String): Variable {
 }
 
 fun parseEnumConstant(element: Element): EnumConstant {
-    val nameAndType = element.selectFirst("h3")!!.text()
     return EnumConstant(
-        name = nameAndType.substringBefore("("),
-        type = nameAndType.substringAfter("(").substringBefore(")").ifEmpty { null },
+        name = element.selectFirst("h3")!!.text(),
     )
 }
 

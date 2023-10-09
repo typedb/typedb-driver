@@ -4,12 +4,12 @@
 [caption=""]
 .Enum variants
 // tag::enum_constants[]
-[cols="~,~"]
+[cols="~"]
 [options="header"]
 |===
-|Name |Type
-a| `Key` a| `Key`
-a| `Unique` a| `Unique`
+|Variant
+a| `Key`
+a| `Unique`
 |===
 // end::enum_constants[]
 

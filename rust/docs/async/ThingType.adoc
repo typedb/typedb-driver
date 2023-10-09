@@ -4,14 +4,14 @@
 [caption=""]
 .Enum variants
 // tag::enum_constants[]
-[cols="~,~"]
+[cols="~"]
 [options="header"]
 |===
-|Name |Type
-a| `RootThingType` a| `RootThingType`
-a| `EntityType` a| `EntityType`
-a| `RelationType` a| `RelationType`
-a| `AttributeType` a| `AttributeType`
+|Variant
+a| `RootThingType(RootThingType)`
+a| `EntityType(EntityType)`
+a| `RelationType(RelationType)`
+a| `AttributeType(AttributeType)`
 |===
 // end::enum_constants[]
 

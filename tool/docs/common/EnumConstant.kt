@@ -28,10 +28,11 @@ data class EnumConstant(
 ) {
     fun toTableData(language: String): List<String> {
         val result = mutableListOf("`${this.name}`")
-        if (language == "python" || language == "rust") {
+        if (language == "python") {
             assert(this.type == null || this.value == null)
             this.value?.let { result.add("`$it`") }
-            this.type?.let { result.add("`$it`") }
+                ?: this.type?.let { result.add("`$it`") }
+                ?: { result.add("") }
         }
         return result
     }
