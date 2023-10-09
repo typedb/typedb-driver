@@ -21,9 +21,9 @@ Relation is an instance of a relation type and can be uniquely addressed by a co
 [options="header"]
 |===
 |Name |Type |Description
-a| `iid` a| `IID` a| 
-a| `type_` a| `RelationType` a| 
-a| `is_inferred` a| `bool` a| 
+a| `iid` a| `IID` a| The unique id of this Relation
+a| `type_` a| `RelationType` a| The type which this Relation belongs to
+a| `is_inferred` a| `bool` a| If this Relation is inferred by a [Reasoning Rule] or not
 |===
 // end::properties[]
 

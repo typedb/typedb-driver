@@ -47,8 +47,11 @@ impl Thing {
 /// and/or roles played in relation instances.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Entity {
+    /// The unique id of this Entity
     pub iid: IID,
+    /// The type which this Entity belongs to
     pub type_: EntityType,
+    /// If this Thing is inferred by a [Reasoning Rule] or not
     pub is_inferred: bool,
 }
 
@@ -56,8 +59,11 @@ pub struct Entity {
 /// a combination of its type, owned attributes and role players.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Relation {
+    /// The unique id of this Relation
     pub iid: IID,
+    /// The type which this Relation belongs to
     pub type_: RelationType,
+    /// If this Relation is inferred by a [Reasoning Rule] or not
     pub is_inferred: bool,
 }
 
@@ -66,8 +72,12 @@ pub struct Relation {
 /// Attribute type can be uniquely addressed by its type and value.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Attribute {
+    /// The unique id of this Attribute
     pub iid: IID,
+    /// The type which this Attribute belongs to
     pub type_: AttributeType,
+    /// The value which this Attribute instance holds.
     pub value: Value,
+    /// If this Attribute is inferred by a [Reasoning Rule] or not
     pub is_inferred: bool,
 }

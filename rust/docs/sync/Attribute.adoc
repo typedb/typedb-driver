@@ -19,10 +19,10 @@ Attribute is an instance of the attribute type and has a value. This value is fi
 [options="header"]
 |===
 |Name |Type |Description
-a| `iid` a| `IID` a| 
-a| `type_` a| `AttributeType` a| 
-a| `value` a| `Value` a| 
-a| `is_inferred` a| `bool` a| 
+a| `iid` a| `IID` a| The unique id of this Attribute
+a| `type_` a| `AttributeType` a| The type which this Attribute belongs to
+a| `value` a| `Value` a| The value which this Attribute instance holds.
+a| `is_inferred` a| `bool` a| If this Attribute is inferred by a [Reasoning Rule] or not
 |===
 // end::properties[]
 

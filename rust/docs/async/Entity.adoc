@@ -21,9 +21,9 @@ Instance of data of an entity type, representing a standalone object that exists
 [options="header"]
 |===
 |Name |Type |Description
-a| `iid` a| `IID` a| 
-a| `type_` a| `EntityType` a| 
-a| `is_inferred` a| `bool` a| 
+a| `iid` a| `IID` a| The unique id of this Entity
+a| `type_` a| `EntityType` a| The type which this Entity belongs to
+a| `is_inferred` a| `bool` a| If this Thing is inferred by a [Reasoning Rule] or not
 |===
 // end::properties[]
 
