@@ -1,9 +1,9 @@
 [#_enum_Annotation]
-= Annotation
+=== Annotation
 
+[caption=""]
+.Enum variants
 // tag::enum_constants[]
-== Enum variants
-
 [cols="~,~"]
 [options="header"]
 |===

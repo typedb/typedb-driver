@@ -1,12 +1,10 @@
 [#_Opts]
-= Opts
-
-== Description
+=== Opts
 
 Interface for TypeDBOptions. Use TypeDBOptions instead.
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]

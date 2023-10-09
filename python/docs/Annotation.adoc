@@ -1,104 +1,78 @@
 [#_Annotation]
-= Annotation
-
-== Methods
+=== Annotation
 
 // tag::methods[]
 [#_is_key]
-=== is_key
-
-==== Signature
+==== is_key
 
 [source,python]
 ----
 is_key() -> bool
 ----
 
-==== Description
-
 Checks if this ``Annotation`` is a ``@key`` annotation.
 
-==== Returns
-
+.Returns
 `bool`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 annotation.is_key()
 ----
 
 [#_is_unique]
-=== is_unique
-
-==== Signature
+==== is_unique
 
 [source,python]
 ----
 is_unique() -> bool
 ----
 
-==== Description
-
 Checks if this ``Annotation`` is a ``@unique`` annotation.
 
-==== Returns
-
+.Returns
 `bool`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 annotation.is_unique()
 ----
 
 [#_key]
-=== key
-
-==== Signature
+==== key
 
 [source,python]
 ----
 static key() -> Annotation
 ----
 
-==== Description
-
 Produces a ``@key`` annotation.
 
-==== Returns
-
+.Returns
 `Annotation`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 Annotation.key()
 ----
 
 [#_unique]
-=== unique
-
-==== Signature
+==== unique
 
 [source,python]
 ----
 static unique() -> Annotation
 ----
 
-==== Description
-
 Produces a ``@unique`` annotation.
 
-==== Returns
-
+.Returns
 `Annotation`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 Annotation.unique()

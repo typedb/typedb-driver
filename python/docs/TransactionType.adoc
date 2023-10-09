@@ -1,20 +1,22 @@
 [#_TransactionType]
-= TransactionType
-
-== Description
+=== TransactionType
 
 This class is used to specify the type of transaction.
 
-== Code examples
+[caption=""]
+.TransactionType examples
+====
 
 [source,python]
 ----
 session.transaction(TransactionType.READ)
 ----
 
-// tag::enum_constants[]
-== Enum constants
+====
 
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
 [cols="~,~"]
 [options="header"]
 |===
@@ -24,43 +26,31 @@ a| `WRITE` a| `1`
 |===
 // end::enum_constants[]
 
-== Methods
-
 // tag::methods[]
 [#_is_read]
-=== is_read
-
-==== Signature
+==== is_read
 
 [source,python]
 ----
 is_read() -> bool
 ----
 
-==== Description
 
 
-
-==== Returns
-
+.Returns
 `bool`
 
 [#_is_write]
-=== is_write
-
-==== Signature
+==== is_write
 
 [source,python]
 ----
 is_write() -> bool
 ----
 
-==== Description
 
 
-
-==== Returns
-
+.Returns
 `bool`
 
 // end::methods[]

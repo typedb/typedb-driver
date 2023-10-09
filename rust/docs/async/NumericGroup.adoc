@@ -1,5 +1,5 @@
 [#_struct_NumericGroup]
-= NumericGroup
+=== NumericGroup
 
 *Implements traits:*
 
@@ -8,8 +8,8 @@
 * `PartialEq<NumericGroup>`
 * `StructuralPartialEq`
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]

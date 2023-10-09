@@ -1,9 +1,9 @@
 [#_enum_Value]
-= Value
+=== Value
 
+[caption=""]
+.Enum variants
 // tag::enum_constants[]
-== Enum variants
-
 [cols="~,~"]
 [options="header"]
 |===
@@ -16,32 +16,24 @@ a| `DateTime` a| `NaiveDateTime`
 |===
 // end::enum_constants[]
 
-== Methods
-
 // tag::methods[]
 [#_enum_Value_method_get_type]
-=== get_type
-
-==== Signature
+==== get_type
 
 [source,rust]
 ----
 pub fn get_type(&self) -> ValueType
 ----
 
-==== Description
-
 Retrieves the ``ValueType`` of this value concept.
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 ValueType
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 value.get_value_type();

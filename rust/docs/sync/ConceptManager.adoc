@@ -1,33 +1,25 @@
 [#_struct_ConceptManager]
-= ConceptManager
+=== ConceptManager
 
 *Implements traits:*
 
 * `Debug`
 
-== Description
-
 Provides access for all Concept API methods.
-
-== Methods
 
 // tag::methods[]
 [#_struct_ConceptManager_method_get_entity_type]
-=== get_entity_type
-
-==== Signature
+==== get_entity_type
 
 [source,rust]
 ----
 pub fn get_entity_type(&self, label: String) -> Result<Option<EntityType>>
 ----
 
-==== Description
-
 Retrieves an ``EntityType`` by its label.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -35,36 +27,30 @@ Retrieves an ``EntityType`` by its label.
 a| `label` a| The label of the ``EntityType`` to retrieve a| `String` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Option<EntityType>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 transaction.concepts().get_entity_type(label)
 ----
 
 [#_struct_ConceptManager_method_get_relation_type]
-=== get_relation_type
-
-==== Signature
+==== get_relation_type
 
 [source,rust]
 ----
 pub fn get_relation_type(&self, label: String) -> Result<Option<RelationType>>
 ----
 
-==== Description
-
 Retrieves a ``RelationType`` by its label.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -72,36 +58,30 @@ Retrieves a ``RelationType`` by its label.
 a| `label` a| The label of the ``RelationType`` to retrieve a| `String` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Option<RelationType>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 transaction.concepts().get_relation_type(label)
 ----
 
 [#_struct_ConceptManager_method_get_attribute_type]
-=== get_attribute_type
-
-==== Signature
+==== get_attribute_type
 
 [source,rust]
 ----
 pub fn get_attribute_type(&self, label: String) -> Result<Option<AttributeType>>
 ----
 
-==== Description
-
 Retrieves an ``AttributeType`` by its label.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -109,36 +89,30 @@ Retrieves an ``AttributeType`` by its label.
 a| `label` a| The label of the ``AttributeType`` to retrieve a| `String` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Option<AttributeType>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 transaction.concepts().get_attribute_type(label)
 ----
 
 [#_struct_ConceptManager_method_put_entity_type]
-=== put_entity_type
-
-==== Signature
+==== put_entity_type
 
 [source,rust]
 ----
 pub fn put_entity_type(&self, label: String) -> Result<EntityType>
 ----
 
-==== Description
-
 Creates a new ``EntityType`` if none exists with the given label, otherwise retrieves the existing one.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -146,36 +120,30 @@ Creates a new ``EntityType`` if none exists with the given label, otherwise retr
 a| `label` a| The label of the ``EntityType`` to create or retrieve a| `String` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<EntityType>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 transaction.concepts().put_entity_type(label)
 ----
 
 [#_struct_ConceptManager_method_put_relation_type]
-=== put_relation_type
-
-==== Signature
+==== put_relation_type
 
 [source,rust]
 ----
 pub fn put_relation_type(&self, label: String) -> Result<RelationType>
 ----
 
-==== Description
-
 Creates a new ``RelationType`` if none exists with the given label, otherwise retrieves the existing one.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -183,24 +151,20 @@ Creates a new ``RelationType`` if none exists with the given label, otherwise re
 a| `label` a| The label of the ``RelationType`` to create or retrieve a| `String` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<RelationType>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 transaction.concepts().put_relation_type(label)
 ----
 
 [#_struct_ConceptManager_method_put_attribute_type]
-=== put_attribute_type
-
-==== Signature
+==== put_attribute_type
 
 [source,rust]
 ----
@@ -211,12 +175,10 @@ pub fn put_attribute_type(
 ) -> Result<AttributeType>
 ----
 
-==== Description
-
 Creates a new ``AttributeType`` if none exists with the given label, or retrieves the existing one. or retrieve. :return:
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -225,36 +187,30 @@ a| `label` a| The label of the ``AttributeType`` to create or retrieve a| `Strin
 a| `value_type` a| The value type of the ``AttributeType`` to create a| `ValueType` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<AttributeType>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 await transaction.concepts().put_attribute_type(label, value_type)
 ----
 
 [#_struct_ConceptManager_method_get_entity]
-=== get_entity
-
-==== Signature
+==== get_entity
 
 [source,rust]
 ----
 pub fn get_entity(&self, iid: IID) -> Result<Option<Entity>>
 ----
 
-==== Description
-
 Retrieves an ``Entity`` by its iid.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -262,36 +218,30 @@ Retrieves an ``Entity`` by its iid.
 a| `iid` a| The iid of the ``Entity`` to retrieve a| `IID` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Option<Entity>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 transaction.concepts().get_entity(iid)
 ----
 
 [#_struct_ConceptManager_method_get_relation]
-=== get_relation
-
-==== Signature
+==== get_relation
 
 [source,rust]
 ----
 pub fn get_relation(&self, iid: IID) -> Result<Option<Relation>>
 ----
 
-==== Description
-
 Retrieves a ``Relation`` by its iid.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -299,36 +249,30 @@ Retrieves a ``Relation`` by its iid.
 a| `iid` a| The iid of the ``Relation`` to retrieve a| `IID` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Option<Relation>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 transaction.concepts().get_relation(iid)
 ----
 
 [#_struct_ConceptManager_method_get_attribute]
-=== get_attribute
-
-==== Signature
+==== get_attribute
 
 [source,rust]
 ----
 pub fn get_attribute(&self, iid: IID) -> Result<Option<Attribute>>
 ----
 
-==== Description
-
 Retrieves an ``Attribute`` by its iid.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -336,24 +280,20 @@ Retrieves an ``Attribute`` by its iid.
 a| `iid` a| The iid of the ``Attribute`` to retrieve a| `IID` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Option<Attribute>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 transaction.concepts().get_attribute(iid)
 ----
 
 [#_struct_ConceptManager_method_get_schema_exceptions]
-=== get_schema_exceptions
-
-==== Signature
+==== get_schema_exceptions
 
 [source,rust]
 ----
@@ -362,19 +302,15 @@ pub fn get_schema_exceptions(
 ) -> Result<impl Stream<Item = Result<SchemaException>>>
 ----
 
-==== Description
-
 Retrieves a list of all exceptions for the current transaction.
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<impl Stream<Item = Result<SchemaException>>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 transaction.concepts().get_schema_exceptions()

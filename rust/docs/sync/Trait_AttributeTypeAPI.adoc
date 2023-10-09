@@ -1,53 +1,41 @@
 [#_trait_AttributeTypeAPI]
-= Trait AttributeTypeAPI
-
-== Methods
+=== Trait AttributeTypeAPI
 
 // tag::methods[]
 [#_trait_AttributeTypeAPI_tymethod_value_type]
-=== value_type
-
-==== Signature
+==== value_type
 
 [source,rust]
 ----
 fn value_type(&self) -> ValueType
 ----
 
-==== Description
-
 Retrieves the ``ValueType`` of this ``AttributeType``.
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 ValueType
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 attribute_type.value_type()
 ----
 
 [#_trait_AttributeTypeAPI_method_put]
-=== put
-
-==== Signature
+==== put
 
 [source,rust]
 ----
 fn put(&self, transaction: &Transaction<'_>, value: Value) -> Result<Attribute>
 ----
 
-==== Description
-
 Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -56,24 +44,20 @@ a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `value` a| New ``Attribute``’s value a| `Value` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Attribute>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 attribute = attribute_type.put(transaction, value);
 ----
 
 [#_trait_AttributeTypeAPI_method_get]
-=== get
-
-==== Signature
+==== get
 
 [source,rust]
 ----
@@ -84,12 +68,10 @@ fn get(
 ) -> Result<Option<Attribute>>
 ----
 
-==== Description
-
 Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -98,24 +80,20 @@ a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `value` a| ``Attribute``’s value a| `Value` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Option<Attribute>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 attribute = attribute_type.get(transaction, value);
 ----
 
 [#_trait_AttributeTypeAPI_method_get_supertype]
-=== get_supertype
-
-==== Signature
+==== get_supertype
 
 [source,rust]
 ----
@@ -125,12 +103,10 @@ fn get_supertype(
 ) -> Result<Option<AttributeType>>
 ----
 
-==== Description
-
 Retrieves the most immediate supertype of this ``AttributeType``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -138,24 +114,20 @@ Retrieves the most immediate supertype of this ``AttributeType``.
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Option<AttributeType>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 attribute_type.get_supertype(transaction);
 ----
 
 [#_trait_AttributeTypeAPI_method_set_supertype]
-=== set_supertype
-
-==== Signature
+==== set_supertype
 
 [source,rust]
 ----
@@ -166,12 +138,10 @@ fn set_supertype(
 ) -> Result
 ----
 
-==== Description
-
 Sets the supplied ``AttributeType`` as the supertype of the current ``AttributeType``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -180,24 +150,20 @@ a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `supertype` a| The ``AttributeType`` to set as the supertype of this ``AttributeType`` a| `AttributeType` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 attribute_type.set_supertype(transaction, supertype);
 ----
 
 [#_trait_AttributeTypeAPI_method_get_supertypes]
-=== get_supertypes
-
-==== Signature
+==== get_supertypes
 
 [source,rust]
 ----
@@ -207,12 +173,10 @@ fn get_supertypes(
 ) -> Result<BoxStream<'_, Result<AttributeType>>>
 ----
 
-==== Description
-
 Retrieves all supertypes of this ``AttributeType``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -220,24 +184,20 @@ Retrieves all supertypes of this ``AttributeType``.
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<AttributeType>>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 attribute_type.get_supertypes(transaction)
 ----
 
 [#_trait_AttributeTypeAPI_method_get_subtypes]
-=== get_subtypes
-
-==== Signature
+==== get_subtypes
 
 [source,rust]
 ----
@@ -248,12 +208,10 @@ fn get_subtypes(
 ) -> Result<BoxStream<'_, Result<AttributeType>>>
 ----
 
-==== Description
-
 Retrieves all direct and indirect (or direct only) subtypes of this ``AttributeType``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -262,24 +220,20 @@ a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<AttributeType>>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 attribute_type.get_subtypes(transaction, transitivity)
 ----
 
 [#_trait_AttributeTypeAPI_method_get_subtypes_with_value_type]
-=== get_subtypes_with_value_type
-
-==== Signature
+==== get_subtypes_with_value_type
 
 [source,rust]
 ----
@@ -291,12 +245,10 @@ fn get_subtypes_with_value_type(
 ) -> Result<BoxStream<'_, Result<AttributeType>>>
 ----
 
-==== Description
-
 Retrieves all direct and indirect (or direct only) subtypes of this ``AttributeType`` with given ``ValueType``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -306,24 +258,20 @@ a| `value_type` a| ``ValueType`` for retrieving subtypes a| `ValueType`
 a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<AttributeType>>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 attribute_type.get_subtypes_with_value_type(transaction, value_type, transitivity)
 ----
 
 [#_trait_AttributeTypeAPI_method_get_instances]
-=== get_instances
-
-==== Signature
+==== get_instances
 
 [source,rust]
 ----
@@ -334,12 +282,10 @@ fn get_instances(
 ) -> Result<BoxStream<'_, Result<Attribute>>>
 ----
 
-==== Description
-
 Retrieves all direct and indirect (or direct only) ``Attributes`` that are instances of this ``AttributeType``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -348,36 +294,30 @@ a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<Attribute>>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 attribute_type.get_instances(transaction, transitivity)
 ----
 
 [#_trait_AttributeTypeAPI_method_get_regex]
-=== get_regex
-
-==== Signature
+==== get_regex
 
 [source,rust]
 ----
 fn get_regex(&self, transaction: &Transaction<'_>) -> Result<Option<String>>
 ----
 
-==== Description
-
 Retrieves the regular expression that is defined for this ``AttributeType``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -385,38 +325,32 @@ Retrieves the regular expression that is defined for this ``AttributeType``.
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Option<String>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 attribute_type.get_regex(transaction);
 ----
 
 [#_trait_AttributeTypeAPI_method_set_regex]
-=== set_regex
-
-==== Signature
+==== set_regex
 
 [source,rust]
 ----
 fn set_regex(&self, transaction: &Transaction<'_>, regex: String) -> Result
 ----
 
-==== Description
-
 Sets a regular expression as a constraint for this ``AttributeType``. ``Values`` of all ``Attribute``s of this type (inserted earlier or later) should match this regex.
 
 Can only be applied for ``AttributeType``s with a ``string`` value type.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -425,36 +359,30 @@ a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `regex` a| Regular expression a| `String` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 attribute_type.set_regex(transaction, regex);
 ----
 
 [#_trait_AttributeTypeAPI_method_unset_regex]
-=== unset_regex
-
-==== Signature
+==== unset_regex
 
 [source,rust]
 ----
 fn unset_regex(&self, transaction: &Transaction<'_>) -> Result
 ----
 
-==== Description
-
 Removes the regular expression that is defined for this ``AttributeType``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -462,24 +390,20 @@ Removes the regular expression that is defined for this ``AttributeType``.
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 attribute_type.unset_regex(transaction);
 ----
 
 [#_trait_AttributeTypeAPI_method_get_owners]
-=== get_owners
-
-==== Signature
+==== get_owners
 
 [source,rust]
 ----
@@ -491,12 +415,10 @@ fn get_owners(
 ) -> Result<BoxStream<'_, Result<ThingType>>>
 ----
 
-==== Description
-
 Retrieve all ``Things`` that own an attribute of this ``AttributeType`` and have all given ``Annotation``s.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -506,15 +428,13 @@ a| `transitivity` a| ``Transitivity::Transitive`` for direct and inherited owner
 a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``AttributeType`` with all given ``Annotation``s a| `Vec<Annotation>` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<ThingType>>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 attribute_type.get_owners(transaction, transitivity, annotations)

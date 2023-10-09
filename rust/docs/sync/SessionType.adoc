@@ -1,13 +1,11 @@
 [#_enum_SessionType]
-= SessionType
-
-== Description
+=== SessionType
 
 This enum is used to specify the type of the session.
 
+[caption=""]
+.Enum variants
 // tag::enum_constants[]
-== Enum variants
-
 [cols="~,~"]
 [options="header"]
 |===

@@ -1,29 +1,21 @@
 [#_ErrorMessage]
-= ErrorMessage
-
-== Description
+=== ErrorMessage
 
 Class defining the error-code and message template for ``TypeDBDriverError``s
 
-== Methods
-
 // tag::methods[]
 [#_new_ErrorMessage]
-=== new ErrorMessage
-
-==== Signature
+==== new ErrorMessage
 
 [source,nodejs]
 ----
 new ErrorMessage(codePrefix, codeNumber, messagePrefix, messageBody): ErrorMessage
 ----
 
-==== Description
 
 
-
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -34,44 +26,34 @@ a| `messagePrefix` a| null a| `string`
 a| `messageBody` a| null a| `((args) => string)` 
 |===
 
-==== Returns
-
+.Returns
 `ErrorMessage`
 
 [#_code]
-=== code
-
-==== Signature
+==== code
 
 [source,nodejs]
 ----
 code(): string
 ----
 
-==== Description
-
 Retrieves the error-code for this ErrorMessage
 
-==== Returns
-
+.Returns
 `string`
 
 [#_message]
-=== message
-
-==== Signature
+==== message
 
 [source,nodejs]
 ----
 message(...args): string
 ----
 
-==== Description
-
 Generates the error message by substituting ``args`` into the messageTemplate
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -79,26 +61,20 @@ Generates the error message by substituting ``args`` into the messageTemplate
 a| `args` a| The format arguments to the message-template. a| `Stringable[]` 
 |===
 
-==== Returns
-
+.Returns
 `string`
 
 [#_toString]
-=== toString
-
-==== Signature
+==== toString
 
 [source,nodejs]
 ----
 toString(): string
 ----
 
-==== Description
-
 Summarises the error into a string
 
-==== Returns
-
+.Returns
 `string`
 
 // end::methods[]

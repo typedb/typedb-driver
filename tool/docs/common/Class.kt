@@ -35,7 +35,7 @@ data class Class(
     fun toAsciiDoc(language: String): String {
         var result = ""
         result += "[#_${this.anchor ?: replaceSymbolsForAnchor(this.name)}]\n"
-        result += "= ${this.name}\n\n"
+        result += "=== ${this.name}\n\n"
 
         this.packagePath?.let { result += "*Package*: `$it`\n\n" }
 
@@ -50,25 +50,26 @@ data class Class(
         }
 
         if (this.description.isNotEmpty()) {
-            result += "== Description\n\n${this.description.joinToString("\n\n")}\n\n"
+            result += "${this.description.joinToString("\n\n")}\n\n"
         }
 
         if (this.examples.isNotEmpty()) {
-            result += "== Code examples\n\n"
+            result += "[caption=\"\"]\n.${this.name} examples\n====\n\n"
             this.examples.forEach {
                 result += "[source,$language]\n----\n$it\n----\n\n"
             }
+            result += "====\n\n"
         }
 
         if (this.enumConstants.isNotEmpty()) {
-            result += "// tag::enum_constants[]\n"
-            result += "== "
+            result += "[caption=\"\"]\n."
             result += when (language) {
                 "rust" -> "Enum variants"
                 "nodejs" -> "Namespace variables"
                 else -> "Enum constants"
-            }
-            result += "\n\n[cols=\"~"
+            } + "\n"
+            result += "// tag::enum_constants[]\n"
+            result += "[cols=\"~"
             if (language == "python" || language == "rust") {
                 result += ",~"
             }
@@ -83,10 +84,10 @@ data class Class(
             result += "|===\n"
             result += "// end::enum_constants[]\n\n"
         } else if (this.fields.isNotEmpty()) {
-            result += "== " + when (language) {
+            result += "[caption=\"\"]\n." + when (language) {
                 "python" -> "Properties"
                 else -> "Fields"
-            } + "\n\n"
+            } + "\n"
             result += "// tag::properties[]\n"
             result += "[cols=\"~,~,~\"]\n[options=\"header\"]\n|===\n"
             result += "|Name |Type |Description\n"
@@ -96,7 +97,6 @@ data class Class(
         }
 
         if (this.methods.isNotEmpty()) {
-            result += "== Methods\n\n"
             result += "// tag::methods[]\n"
             this.methods.forEach { result += it.toAsciiDoc(language) }
             result += "// end::methods[]\n"

@@ -1,29 +1,21 @@
 [#_ConceptManager]
-= ConceptManager
-
-== Description
+=== ConceptManager
 
 Provides access for all Concept API methods.
 
-== Methods
-
 // tag::methods[]
 [#_getAttribute]
-=== getAttribute
-
-==== Signature
+==== getAttribute
 
 [source,nodejs]
 ----
 getAttribute(iid): Promise<Attribute>
 ----
 
-==== Description
-
 Retrieves an ``Attribute`` by its iid.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -31,33 +23,27 @@ Retrieves an ``Attribute`` by its iid.
 a| `iid` a| The iid of the ``Attribute`` to retrieve a| `string` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<Attribute>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.concepts().getAttribute(iid)
 ----
 
 [#_getAttributeType]
-=== getAttributeType
-
-==== Signature
+==== getAttributeType
 
 [source,nodejs]
 ----
 getAttributeType(label): Promise<AttributeType>
 ----
 
-==== Description
-
 Retrieves an ``AttributeType`` by its label.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -65,33 +51,27 @@ Retrieves an ``AttributeType`` by its label.
 a| `label` a| The label of the ``AttributeType`` to retrieve a| `string` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<AttributeType>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.concepts().getAttributeType(label)
 ----
 
 [#_getEntity]
-=== getEntity
-
-==== Signature
+==== getEntity
 
 [source,nodejs]
 ----
 getEntity(iid): Promise<Entity>
 ----
 
-==== Description
-
 Retrieves an ``Entity`` by its iid.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -99,33 +79,27 @@ Retrieves an ``Entity`` by its iid.
 a| `iid` a| The iid of the ``Entity`` to retrieve a| `string` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<Entity>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.concepts().getEntity(iid)
 ----
 
 [#_getEntityType]
-=== getEntityType
-
-==== Signature
+==== getEntityType
 
 [source,nodejs]
 ----
 getEntityType(label): Promise<EntityType>
 ----
 
-==== Description
-
 Retrieves an ``EntityType`` by its label.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -133,33 +107,27 @@ Retrieves an ``EntityType`` by its label.
 a| `label` a| The label of the ``EntityType`` to retrieve a| `string` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<EntityType>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.concepts().getEntityType(label)
 ----
 
 [#_getRelation]
-=== getRelation
-
-==== Signature
+==== getRelation
 
 [source,nodejs]
 ----
 getRelation(iid): Promise<Relation>
 ----
 
-==== Description
-
 Retrieves a ``Relation`` by its iid.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -167,33 +135,27 @@ Retrieves a ``Relation`` by its iid.
 a| `iid` a| The iid of the ``Relation`` to retrieve a| `string` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<Relation>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.concepts().getRelation(iid)
 ----
 
 [#_getRelationType]
-=== getRelationType
-
-==== Signature
+==== getRelationType
 
 [source,nodejs]
 ----
 getRelationType(label): Promise<RelationType>
 ----
 
-==== Description
-
 Retrieves a ``RelationType`` by its label.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -201,158 +163,122 @@ Retrieves a ``RelationType`` by its label.
 a| `label` a| The label of the ``RelationType`` to retrieve a| `string` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<RelationType>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.concepts().getRelationType(label)
 ----
 
 [#_getRootAttributeType]
-=== getRootAttributeType
-
-==== Signature
+==== getRootAttributeType
 
 [source,nodejs]
 ----
 getRootAttributeType(): Promise<AttributeType>
 ----
 
-==== Description
-
 Retrieve the root ``AttributeType``, “attribute”.
 
-==== Returns
-
+.Returns
 `Promise<AttributeType>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.concepts().getRootAttributeType()
 ----
 
 [#_getRootEntityType]
-=== getRootEntityType
-
-==== Signature
+==== getRootEntityType
 
 [source,nodejs]
 ----
 getRootEntityType(): Promise<EntityType>
 ----
 
-==== Description
-
 Retrieves the root ``EntityType``, “entity”.
 
-==== Returns
-
+.Returns
 `Promise<EntityType>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.concepts().getRootEntityType()
 ----
 
 [#_getRootRelationType]
-=== getRootRelationType
-
-==== Signature
+==== getRootRelationType
 
 [source,nodejs]
 ----
 getRootRelationType(): Promise<RelationType>
 ----
 
-==== Description
-
 Retrieve the root ``RelationType``, “relation”.
 
-==== Returns
-
+.Returns
 `Promise<RelationType>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.concepts().getRootRelationType()
 ----
 
 [#_getRootThingType]
-=== getRootThingType
-
-==== Signature
+==== getRootThingType
 
 [source,nodejs]
 ----
 getRootThingType(): Promise<ThingType>
 ----
 
-==== Description
-
 Retrieves the root ``ThingType``, “thing”.
 
-==== Returns
-
+.Returns
 `Promise<ThingType>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.concepts().getRootThingType()
 ----
 
 [#_getSchemaExceptions]
-=== getSchemaExceptions
-
-==== Signature
+==== getSchemaExceptions
 
 [source,nodejs]
 ----
 getSchemaExceptions(): Promise<TypeDBDriverError[]>
 ----
 
-==== Description
-
 Retrieves a list of all exceptions for the current transaction.
 
-==== Returns
-
+.Returns
 `Promise<TypeDBDriverError[]>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.concepts().getSchemaException()
 ----
 
 [#_putAttributeType]
-=== putAttributeType
-
-==== Signature
+==== putAttributeType
 
 [source,nodejs]
 ----
 putAttributeType(label, valueType): Promise<AttributeType>
 ----
 
-==== Description
-
 Creates a new ``AttributeType`` if none exists with the given label, or retrieves the existing one. or retrieve. :return:
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -361,33 +287,27 @@ a| `label` a| The label of the ``AttributeType`` to create or retrieve a| `strin
 a| `valueType` a| The value type of the ``AttributeType`` to create a| `ValueType` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<AttributeType>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 await transaction.concepts().putAttributeType(label, valueType)
 ----
 
 [#_putEntityType]
-=== putEntityType
-
-==== Signature
+==== putEntityType
 
 [source,nodejs]
 ----
 putEntityType(label): Promise<EntityType>
 ----
 
-==== Description
-
 Creates a new ``EntityType`` if none exists with the given label, otherwise retrieves the existing one.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -395,33 +315,27 @@ Creates a new ``EntityType`` if none exists with the given label, otherwise retr
 a| `label` a| The label of the ``EntityType`` to create or retrieve a| `string` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<EntityType>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.concepts().putEntityType(label)
 ----
 
 [#_putRelationType]
-=== putRelationType
-
-==== Signature
+==== putRelationType
 
 [source,nodejs]
 ----
 putRelationType(label): Promise<RelationType>
 ----
 
-==== Description
-
 Creates a new ``RelationType`` if none exists with the given label, otherwise retrieves the existing one.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -429,12 +343,10 @@ Creates a new ``RelationType`` if none exists with the given label, otherwise re
 a| `label` a| The label of the ``RelationType`` to create or retrieve a| `string` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<RelationType>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.concepts().putRelationType(label)

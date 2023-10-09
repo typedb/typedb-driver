@@ -1,5 +1,5 @@
 [#_struct_RoleType]
-= RoleType
+=== RoleType
 
 *Implements traits:*
 
@@ -11,14 +11,12 @@
 * `StructuralEq`
 * `StructuralPartialEq`
 
-== Description
-
 Roles are special internal types used by relations. We can not create an instance of a role in a database. But we can set an instance of another type (role player) to play a role in a particular instance of a relation type.
 
 Roles allow a schema to enforce logical constraints on types of role players.
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]
@@ -30,34 +28,25 @@ a| `is_abstract` a| `bool` a|
 |===
 // end::properties[]
 
-== Methods
-
 // tag::methods[]
 [#_struct_RoleType_tymethod_is_abstract]
-=== is_abstract
-
-==== Signature
+==== is_abstract
 
 [source,rust]
 ----
 fn is_abstract(&self) -> bool
 ----
 
-==== Description
-
 <<#_trait_RoleTypeAPI_tymethod_is_abstract,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 bool
 ----
 
 [#_struct_RoleType_tymethod_get_relation_type]
-=== get_relation_type
-
-==== Signature
+==== get_relation_type
 
 [source,rust]
 ----
@@ -67,84 +56,64 @@ fn get_relation_type(
 ) -> Result<Option<RelationType>>
 ----
 
-==== Description
-
 <<#_trait_RoleTypeAPI_tymethod_get_relation_type,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Option<RelationType>>
 ----
 
 [#_struct_RoleType_tymethod_is_deleted]
-=== is_deleted
-
-==== Signature
+==== is_deleted
 
 [source,rust]
 ----
 fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool>
 ----
 
-==== Description
-
 <<#_trait_RoleTypeAPI_tymethod_is_deleted,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<bool>
 ----
 
 [#_struct_RoleType_method_delete]
-=== delete
-
-==== Signature
+==== delete
 
 [source,rust]
 ----
 fn delete(&self, transaction: &Transaction<'_>) -> Result
 ----
 
-==== Description
-
 <<#_trait_RoleTypeAPI_method_delete,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result
 ----
 
 [#_struct_RoleType_method_set_label]
-=== set_label
-
-==== Signature
+==== set_label
 
 [source,rust]
 ----
 fn set_label(&self, transaction: &Transaction<'_>, new_label: String) -> Result
 ----
 
-==== Description
-
 <<#_trait_RoleTypeAPI_method_set_label,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result
 ----
 
 [#_struct_RoleType_method_get_supertype]
-=== get_supertype
-
-==== Signature
+==== get_supertype
 
 [source,rust]
 ----
@@ -154,21 +123,16 @@ fn get_supertype(
 ) -> Result<Option<RoleType>>
 ----
 
-==== Description
-
 <<#_trait_RoleTypeAPI_method_get_supertype,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Option<RoleType>>
 ----
 
 [#_struct_RoleType_method_get_supertypes]
-=== get_supertypes
-
-==== Signature
+==== get_supertypes
 
 [source,rust]
 ----
@@ -178,21 +142,16 @@ fn get_supertypes(
 ) -> Result<BoxStream<'_, Result<RoleType>>>
 ----
 
-==== Description
-
 <<#_trait_RoleTypeAPI_method_get_supertypes,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<RoleType>>>
 ----
 
 [#_struct_RoleType_method_get_subtypes]
-=== get_subtypes
-
-==== Signature
+==== get_subtypes
 
 [source,rust]
 ----
@@ -203,21 +162,16 @@ fn get_subtypes(
 ) -> Result<BoxStream<'_, Result<RoleType>>>
 ----
 
-==== Description
-
 <<#_trait_RoleTypeAPI_method_get_subtypes,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<RoleType>>>
 ----
 
 [#_struct_RoleType_method_get_relation_types]
-=== get_relation_types
-
-==== Signature
+==== get_relation_types
 
 [source,rust]
 ----
@@ -227,21 +181,16 @@ fn get_relation_types(
 ) -> Result<BoxStream<'_, Result<RelationType>>>
 ----
 
-==== Description
-
 <<#_trait_RoleTypeAPI_method_get_relation_types,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<RelationType>>>
 ----
 
 [#_struct_RoleType_method_get_player_types]
-=== get_player_types
-
-==== Signature
+==== get_player_types
 
 [source,rust]
 ----
@@ -252,21 +201,16 @@ fn get_player_types(
 ) -> Result<BoxStream<'_, Result<ThingType>>>
 ----
 
-==== Description
-
 <<#_trait_RoleTypeAPI_method_get_player_types,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<ThingType>>>
 ----
 
 [#_struct_RoleType_method_get_relation_instances]
-=== get_relation_instances
-
-==== Signature
+==== get_relation_instances
 
 [source,rust]
 ----
@@ -277,21 +221,16 @@ fn get_relation_instances(
 ) -> Result<BoxStream<'_, Result<Relation>>>
 ----
 
-==== Description
-
 <<#_trait_RoleTypeAPI_method_get_relation_instances,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<Relation>>>
 ----
 
 [#_struct_RoleType_method_get_player_instances]
-=== get_player_instances
-
-==== Signature
+==== get_player_instances
 
 [source,rust]
 ----
@@ -302,12 +241,9 @@ fn get_player_instances(
 ) -> Result<BoxStream<'_, Result<Thing>>>
 ----
 
-==== Description
-
 <<#_trait_RoleTypeAPI_method_get_player_instances,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<Thing>>>

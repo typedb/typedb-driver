@@ -1,29 +1,21 @@
 [#_ConceptManager]
-= ConceptManager
-
-== Description
+=== ConceptManager
 
 Provides access for all Concept API methods.
 
-== Methods
-
 // tag::methods[]
 [#_get_attribute]
-=== get_attribute
-
-==== Signature
+==== get_attribute
 
 [source,python]
 ----
 get_attribute(iid: str) -> Attribute
 ----
 
-==== Description
-
 Retrieves an ``Attribute`` by its iid.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -31,33 +23,27 @@ Retrieves an ``Attribute`` by its iid.
 a| `iid` a| The iid of the ``Attribute`` to retrieve a| `str` a| 
 |===
 
-==== Returns
-
+.Returns
 `Attribute`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 transaction.concepts.get_attribute(iid)
 ----
 
 [#_get_attribute_type]
-=== get_attribute_type
-
-==== Signature
+==== get_attribute_type
 
 [source,python]
 ----
 get_attribute_type(label: str) -> AttributeType
 ----
 
-==== Description
-
 Retrieves an ``AttributeType`` by its label.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -65,33 +51,27 @@ Retrieves an ``AttributeType`` by its label.
 a| `label` a| The label of the ``AttributeType`` to retrieve a| `str` a| 
 |===
 
-==== Returns
-
+.Returns
 `AttributeType`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 transaction.concepts.get_attribute_type(label)
 ----
 
 [#_get_entity]
-=== get_entity
-
-==== Signature
+==== get_entity
 
 [source,python]
 ----
 get_entity(iid: str) -> Entity
 ----
 
-==== Description
-
 Retrieves an ``Entity`` by its iid.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -99,33 +79,27 @@ Retrieves an ``Entity`` by its iid.
 a| `iid` a| The iid of the ``Entity`` to retrieve a| `str` a| 
 |===
 
-==== Returns
-
+.Returns
 `Entity`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 transaction.concepts.get_entity(iid)
 ----
 
 [#_get_entity_type]
-=== get_entity_type
-
-==== Signature
+==== get_entity_type
 
 [source,python]
 ----
 get_entity_type(label: str) -> EntityType
 ----
 
-==== Description
-
 Retrieves an ``EntityType`` by its label.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -133,33 +107,27 @@ Retrieves an ``EntityType`` by its label.
 a| `label` a| The label of the ``EntityType`` to retrieve a| `str` a| 
 |===
 
-==== Returns
-
+.Returns
 `EntityType`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 transaction.concepts.get_entity_type(label)
 ----
 
 [#_get_relation]
-=== get_relation
-
-==== Signature
+==== get_relation
 
 [source,python]
 ----
 get_relation(iid: str) -> Relation
 ----
 
-==== Description
-
 Retrieves a ``Relation`` by its iid.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -167,33 +135,27 @@ Retrieves a ``Relation`` by its iid.
 a| `iid` a| The iid of the ``Relation`` to retrieve a| `str` a| 
 |===
 
-==== Returns
-
+.Returns
 `Relation`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 transaction.concepts.get_relation(iid)
 ----
 
 [#_get_relation_type]
-=== get_relation_type
-
-==== Signature
+==== get_relation_type
 
 [source,python]
 ----
 get_relation_type(label: str) -> RelationType
 ----
 
-==== Description
-
 Retrieves a ``RelationType`` by its label.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -201,133 +163,103 @@ Retrieves a ``RelationType`` by its label.
 a| `label` a| The label of the ``RelationType`` to retrieve a| `str` a| 
 |===
 
-==== Returns
-
+.Returns
 `RelationType`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 transaction.concepts.get_relation_type(label)
 ----
 
 [#_get_root_attribute_type]
-=== get_root_attribute_type
-
-==== Signature
+==== get_root_attribute_type
 
 [source,python]
 ----
 get_root_attribute_type() -> AttributeType
 ----
 
-==== Description
-
 Retrieve the root ``AttributeType``, “attribute”.
 
-==== Returns
-
+.Returns
 `AttributeType`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 transaction.concepts.get_root_attribute_type()
 ----
 
 [#_get_root_entity_type]
-=== get_root_entity_type
-
-==== Signature
+==== get_root_entity_type
 
 [source,python]
 ----
 get_root_entity_type() -> EntityType
 ----
 
-==== Description
-
 Retrieves the root ``EntityType``, “entity”.
 
-==== Returns
-
+.Returns
 `EntityType`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 transaction.concepts.get_root_entity_type()
 ----
 
 [#_get_root_relation_type]
-=== get_root_relation_type
-
-==== Signature
+==== get_root_relation_type
 
 [source,python]
 ----
 get_root_relation_type() -> RelationType
 ----
 
-==== Description
-
 Retrieve the root ``RelationType``, “relation”.
 
-==== Returns
-
+.Returns
 `RelationType`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 transaction.concepts.get_root_relation_type()
 ----
 
 [#_get_schema_exception]
-=== get_schema_exception
-
-==== Signature
+==== get_schema_exception
 
 [source,python]
 ----
 get_schema_exception() -> list[TypeDBException]
 ----
 
-==== Description
-
 Retrieves a list of all exceptions for the current transaction.
 
-==== Returns
-
+.Returns
 `list[TypeDBException]`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 transaction.concepts.get_schema_exception()
 ----
 
 [#_put_attribute_type]
-=== put_attribute_type
-
-==== Signature
+==== put_attribute_type
 
 [source,python]
 ----
 put_attribute_type(label: str, value_type: ValueType) -> AttributeType
 ----
 
-==== Description
-
 Creates a new ``AttributeType`` if none exists with the given label, or retrieves the existing one.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -336,33 +268,27 @@ a| `label` a| The label of the ``AttributeType`` to create or retrieve a| `str` 
 a| `value_type` a| The value type of the ``AttributeType`` to create or retrieve. a| `ValueType` a| 
 |===
 
-==== Returns
-
+.Returns
 `AttributeType`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 transaction.concepts.put_attribute_type(label, value_type)
 ----
 
 [#_put_entity_type]
-=== put_entity_type
-
-==== Signature
+==== put_entity_type
 
 [source,python]
 ----
 put_entity_type(label: str) -> EntityType
 ----
 
-==== Description
-
 Creates a new ``EntityType`` if none exists with the given label, otherwise retrieves the existing one.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -370,33 +296,27 @@ Creates a new ``EntityType`` if none exists with the given label, otherwise retr
 a| `label` a| The label of the ``EntityType`` to create or retrieve a| `str` a| 
 |===
 
-==== Returns
-
+.Returns
 `EntityType`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 transaction.concepts.put_entity_type(label)
 ----
 
 [#_put_relation_type]
-=== put_relation_type
-
-==== Signature
+==== put_relation_type
 
 [source,python]
 ----
 put_relation_type(label: str) -> RelationType
 ----
 
-==== Description
-
 Creates a new ``RelationType`` if none exists with the given label, otherwise retrieves the existing one.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -404,12 +324,10 @@ Creates a new ``RelationType`` if none exists with the given label, otherwise re
 a| `label` a| The label of the ``RelationType`` to create or retrieve a| `str` a| 
 |===
 
-==== Returns
-
+.Returns
 `RelationType`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 transaction.concepts.put_relation_type(label)

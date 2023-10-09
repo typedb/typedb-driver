@@ -1,13 +1,13 @@
 [#_struct_SchemaException]
-= SchemaException
+=== SchemaException
 
 *Implements traits:*
 
 * `Clone`
 * `Debug`
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]

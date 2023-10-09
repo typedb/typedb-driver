@@ -1,58 +1,42 @@
 [#_Explainable]
-= Explainable
-
-== Description
+=== Explainable
 
 Contains an explainable object.
 
-== Methods
-
 // tag::methods[]
 [#_conjunction]
-=== conjunction
-
-==== Signature
+==== conjunction
 
 [source,python]
 ----
 conjunction() -> str
 ----
 
-==== Description
-
 Retrieves the subquery of the original query that is actually being explained.
 
-==== Returns
-
+.Returns
 `str`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 explainable.conjunction()
 ----
 
 [#_id]
-=== id
-
-==== Signature
+==== id
 
 [source,python]
 ----
 id() -> int
 ----
 
-==== Description
-
 Retrieves the unique ID that identifies this ``Explainable``.
 
-==== Returns
-
+.Returns
 `int`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 explainable.id()

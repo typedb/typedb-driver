@@ -1,15 +1,11 @@
 [#_Database]
-= Database
+=== Database
 
 *Package*: `com.vaticle.typedb.driver.api.database`
 
-== Methods
-
 // tag::methods[]
 [#_name_]
-=== name
-
-==== Signature
+==== name
 
 [source,java]
 ----
@@ -17,18 +13,13 @@
 java.lang.String name()
 ----
 
-==== Description
-
 The database name as a string.
 
-==== Returns
-
+.Returns
 `java.lang.String`
 
 [#_schema_]
-=== schema
-
-==== Signature
+==== schema
 
 [source,java]
 ----
@@ -36,26 +27,20 @@ The database name as a string.
 java.lang.String schema()
 ----
 
-==== Description
-
 A full schema text as a valid TypeQL define query string. 
 
 
-==== Returns
-
+.Returns
 `java.lang.String`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 database.schema()
 ----
 
 [#_typeSchema_]
-=== typeSchema
-
-==== Signature
+==== typeSchema
 
 [source,java]
 ----
@@ -63,26 +48,20 @@ database.schema()
 java.lang.String typeSchema()
 ----
 
-==== Description
-
 The types in the schema as a valid TypeQL define query string. 
 
 
-==== Returns
-
+.Returns
 `java.lang.String`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 database.typeSchema()
 ----
 
 [#_ruleSchema_]
-=== ruleSchema
-
-==== Signature
+==== ruleSchema
 
 [source,java]
 ----
@@ -90,52 +69,40 @@ database.typeSchema()
 java.lang.String ruleSchema()
 ----
 
-==== Description
-
 The rules in the schema as a valid TypeQL define query string. 
 
 
-==== Returns
-
+.Returns
 `java.lang.String`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 database.ruleSchema()
 ----
 
 [#_delete_]
-=== delete
-
-==== Signature
+==== delete
 
 [source,java]
 ----
 void delete()
 ----
 
-==== Description
-
 Deletes this database. 
 
 
-==== Returns
-
+.Returns
 `void`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 database.delete()
 ----
 
 [#_replicas_]
-=== replicas
-
-==== Signature
+==== replicas
 
 [source,java]
 ----
@@ -143,26 +110,20 @@ database.delete()
 java.util.Set<? extends Database.Replica> replicas()
 ----
 
-==== Description
-
 Set of ``Replica`` instances for this database. Only works in TypeDB Enterprise
 
 
-==== Returns
-
+.Returns
 `java.util.Set<? extends Database.Replica>`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 database.replicas()
 ----
 
 [#_primaryReplica_]
-=== primaryReplica
-
-==== Signature
+==== primaryReplica
 
 [source,java]
 ----
@@ -170,26 +131,20 @@ database.replicas()
 java.util.Optional<? extends Database.Replica> primaryReplica()
 ----
 
-==== Description
-
 Returns the primary replica for this database. _Only works in TypeDB Enterprise_ 
 
 
-==== Returns
-
+.Returns
 `java.util.Optional<? extends Database.Replica>`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 database.primaryReplica()
 ----
 
 [#_preferredReplica_]
-=== preferredReplica
-
-==== Signature
+==== preferredReplica
 
 [source,java]
 ----
@@ -197,17 +152,13 @@ database.primaryReplica()
 java.util.Optional<? extends Database.Replica> preferredReplica()
 ----
 
-==== Description
-
 Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Enterprise_ 
 
 
-==== Returns
-
+.Returns
 `java.util.Optional<? extends Database.Replica>`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 database.preferredReplica()

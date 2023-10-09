@@ -1,5 +1,5 @@
 [#_TypeDBTransaction]
-= TypeDBTransaction
+=== TypeDBTransaction
 
 *Package*: `com.vaticle.typedb.driver.api`
 
@@ -7,13 +7,9 @@
 
 * `java.lang.AutoCloseable`
 
-== Methods
-
 // tag::methods[]
 [#_isOpen_]
-=== isOpen
-
-==== Signature
+==== isOpen
 
 [source,java]
 ----
@@ -21,26 +17,20 @@
 boolean isOpen()
 ----
 
-==== Description
-
 Checks whether this transaction is open. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 transaction.isOpen();
 ----
 
 [#_type_]
-=== type
-
-==== Signature
+==== type
 
 [source,java]
 ----
@@ -48,18 +38,13 @@ transaction.isOpen();
 TypeDBTransaction.Type type()
 ----
 
-==== Description
-
 The transaction’s type (READ or WRITE)
 
-==== Returns
-
+.Returns
 `TypeDBTransaction.Type`
 
 [#_options_]
-=== options
-
-==== Signature
+==== options
 
 [source,java]
 ----
@@ -67,18 +52,13 @@ The transaction’s type (READ or WRITE)
 TypeDBOptions options()
 ----
 
-==== Description
-
 The options for the transaction
 
-==== Returns
-
+.Returns
 `TypeDBOptions`
 
 [#_concepts_]
-=== concepts
-
-==== Signature
+==== concepts
 
 [source,java]
 ----
@@ -86,18 +66,13 @@ The options for the transaction
 ConceptManager concepts()
 ----
 
-==== Description
-
 The ``ConceptManager`` for this transaction, providing access to all Concept API methods.
 
-==== Returns
-
+.Returns
 `ConceptManager`
 
 [#_logic_]
-=== logic
-
-==== Signature
+==== logic
 
 [source,java]
 ----
@@ -105,18 +80,13 @@ The ``ConceptManager`` for this transaction, providing access to all Concept API
 LogicManager logic()
 ----
 
-==== Description
-
 The ``LogicManager`` for this Transaction, providing access to all Concept API - Logic methods.
 
-==== Returns
-
+.Returns
 `LogicManager`
 
 [#_query_]
-=== query
-
-==== Signature
+==== query
 
 [source,java]
 ----
@@ -124,31 +94,24 @@ The ``LogicManager`` for this Transaction, providing access to all Concept API -
 QueryManager query()
 ----
 
-==== Description
-
 The````QueryManager```` for this Transaction, from which any TypeQL query can be executed.
 
-==== Returns
-
+.Returns
 `QueryManager`
 
 [#_onClose_java_util_function_Consumer]
-=== onClose
-
-==== Signature
+==== onClose
 
 [source,java]
 ----
 void onClose​(java.util.function.Consumer<java.lang.Throwable> function)
 ----
 
-==== Description
-
 Registers a callback function which will be executed when this session is closed. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -156,90 +119,70 @@ Registers a callback function which will be executed when this session is closed
 a| `function` a| The callback function. a| `java.util.function.Consumer<java.lang.Throwable>` 
 |===
 
-==== Returns
-
+.Returns
 `void`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 transaction.onClose(function);
 ----
 
 [#_commit_]
-=== commit
-
-==== Signature
+==== commit
 
 [source,java]
 ----
 void commit()
 ----
 
-==== Description
-
 Commits the changes made via this transaction to the TypeDB database. Whether or not the transaction is commited successfully, it gets closed after the commit call. 
 
 
-==== Returns
-
+.Returns
 `void`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 transaction.commit()
 ----
 
 [#_rollback_]
-=== rollback
-
-==== Signature
+==== rollback
 
 [source,java]
 ----
 void rollback()
 ----
 
-==== Description
-
 Rolls back the uncommitted changes made via this transaction. 
 
 
-==== Returns
-
+.Returns
 `void`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 transaction.rollback()
 ----
 
 [#_close_]
-=== close
-
-==== Signature
+==== close
 
 [source,java]
 ----
 void close()
 ----
 
-==== Description
-
 Closes the transaction. 
 
 
-==== Returns
-
+.Returns
 `void`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 transaction.close()

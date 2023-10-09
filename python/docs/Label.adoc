@@ -1,14 +1,12 @@
 [#_Label]
-= Label
-
-== Description
+=== Label
 
 A ``Label`` holds the uniquely identifying name of a type.
 
 It consists of an optional ``scope``, and a ``name``, represented ``scope:name``. The scope is used only used to distinguish between role-types of the same name declared in different relation types.
 
-== Properties
-
+[caption=""]
+.Properties
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]
@@ -19,25 +17,19 @@ a| `scope` a| `str \| None` a| The scope part of the label
 |===
 // end::properties[]
 
-== Methods
-
 // tag::methods[]
 [#_of]
-=== of
-
-==== Signature
+==== of
 
 [source,python]
 ----
 static of(*args: str) -> Label
 ----
 
-==== Description
-
 Creates a Label from a specified name, or scoped name.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -45,12 +37,10 @@ Creates a Label from a specified name, or scoped name.
 a| `args` a| If a single string is provided, this is interpreted as the label name. If a pair of strings is provided, the first string is the scope and the second string is the name. a| `str` a| 
 |===
 
-==== Returns
-
+.Returns
 `Label`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 Label.of("entity")
@@ -58,25 +48,19 @@ Label.of("relation", "role")
 ----
 
 [#_scoped_name]
-=== scoped_name
-
-==== Signature
+==== scoped_name
 
 [source,python]
 ----
 scoped_name() -> str
 ----
 
-==== Description
-
 Returns the string representation of the scoped name.
 
-==== Returns
-
+.Returns
 `str`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 label.scoped_name()

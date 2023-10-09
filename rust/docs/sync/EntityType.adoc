@@ -1,5 +1,5 @@
 [#_struct_EntityType]
-= EntityType
+=== EntityType
 
 *Implements traits:*
 
@@ -12,12 +12,10 @@
 * `StructuralPartialEq`
 * `ThingTypeAPI`
 
-== Description
-
 Entity types represent the classification of independent objects in the data model of the business domain.
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]
@@ -29,34 +27,25 @@ a| `is_abstract` a| `bool` a|
 |===
 // end::properties[]
 
-== Methods
-
 // tag::methods[]
 [#_struct_EntityType_method_create]
-=== create
-
-==== Signature
+==== create
 
 [source,rust]
 ----
 fn create(&self, transaction: &Transaction<'_>) -> Result<Entity>
 ----
 
-==== Description
-
 <<#_trait_EntityTypeAPI_method_create,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Entity>
 ----
 
 [#_struct_EntityType_method_get_supertype]
-=== get_supertype
-
-==== Signature
+==== get_supertype
 
 [source,rust]
 ----
@@ -66,21 +55,16 @@ fn get_supertype(
 ) -> Result<Option<EntityType>>
 ----
 
-==== Description
-
 <<#_trait_EntityTypeAPI_method_get_supertype,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Option<EntityType>>
 ----
 
 [#_struct_EntityType_method_set_supertype]
-=== set_supertype
-
-==== Signature
+==== set_supertype
 
 [source,rust]
 ----
@@ -91,21 +75,16 @@ fn set_supertype(
 ) -> Result
 ----
 
-==== Description
-
 <<#_trait_EntityTypeAPI_method_set_supertype,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result
 ----
 
 [#_struct_EntityType_method_get_supertypes]
-=== get_supertypes
-
-==== Signature
+==== get_supertypes
 
 [source,rust]
 ----
@@ -115,21 +94,16 @@ fn get_supertypes(
 ) -> Result<BoxStream<'_, Result<EntityType>>>
 ----
 
-==== Description
-
 <<#_trait_EntityTypeAPI_method_get_supertypes,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<EntityType>>>
 ----
 
 [#_struct_EntityType_method_get_subtypes]
-=== get_subtypes
-
-==== Signature
+==== get_subtypes
 
 [source,rust]
 ----
@@ -140,21 +114,16 @@ fn get_subtypes(
 ) -> Result<BoxStream<'_, Result<EntityType>>>
 ----
 
-==== Description
-
 <<#_trait_EntityTypeAPI_method_get_subtypes,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<EntityType>>>
 ----
 
 [#_struct_EntityType_method_get_instances]
-=== get_instances
-
-==== Signature
+==== get_instances
 
 [source,rust]
 ----
@@ -165,126 +134,96 @@ fn get_instances(
 ) -> Result<BoxStream<'_, Result<Entity>>>
 ----
 
-==== Description
-
 <<#_trait_EntityTypeAPI_method_get_instances,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<Entity>>>
 ----
 
 [#_struct_EntityType_tymethod_label]
-=== label
-
-==== Signature
+==== label
 
 [source,rust]
 ----
 fn label(&self) -> &str
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_tymethod_label,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 &str
 ----
 
 [#_struct_EntityType_tymethod_is_abstract]
-=== is_abstract
-
-==== Signature
+==== is_abstract
 
 [source,rust]
 ----
 fn is_abstract(&self) -> bool
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_tymethod_is_abstract,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 bool
 ----
 
 [#_struct_EntityType_tymethod_is_root]
-=== is_root
-
-==== Signature
+==== is_root
 
 [source,rust]
 ----
 fn is_root(&self) -> bool
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_tymethod_is_root,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 bool
 ----
 
 [#_struct_EntityType_tymethod_is_deleted]
-=== is_deleted
-
-==== Signature
+==== is_deleted
 
 [source,rust]
 ----
 fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool>
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_tymethod_is_deleted,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<bool>
 ----
 
 [#_struct_EntityType_method_delete]
-=== delete
-
-==== Signature
+==== delete
 
 [source,rust]
 ----
 fn delete(&mut self, transaction: &Transaction<'_>) -> Result
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_delete,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result
 ----
 
 [#_struct_EntityType_method_set_label]
-=== set_label
-
-==== Signature
+==== set_label
 
 [source,rust]
 ----
@@ -295,63 +234,48 @@ fn set_label(
 ) -> Result
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_set_label,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result
 ----
 
 [#_struct_EntityType_method_set_abstract]
-=== set_abstract
-
-==== Signature
+==== set_abstract
 
 [source,rust]
 ----
 fn set_abstract(&mut self, transaction: &Transaction<'_>) -> Result
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_set_abstract,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result
 ----
 
 [#_struct_EntityType_method_unset_abstract]
-=== unset_abstract
-
-==== Signature
+==== unset_abstract
 
 [source,rust]
 ----
 fn unset_abstract(&mut self, transaction: &Transaction<'_>) -> Result
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_unset_abstract,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result
 ----
 
 [#_struct_EntityType_method_get_owns]
-=== get_owns
-
-==== Signature
+==== get_owns
 
 [source,rust]
 ----
@@ -364,21 +288,16 @@ fn get_owns(
 ) -> Result<BoxStream<'_, Result<AttributeType>>>
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_get_owns,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<AttributeType>>>
 ----
 
 [#_struct_EntityType_method_get_owns_overridden]
-=== get_owns_overridden
-
-==== Signature
+==== get_owns_overridden
 
 [source,rust]
 ----
@@ -389,21 +308,16 @@ fn get_owns_overridden(
 ) -> Result<Option<AttributeType>>
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_get_owns_overridden,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Option<AttributeType>>
 ----
 
 [#_struct_EntityType_method_set_owns]
-=== set_owns
-
-==== Signature
+==== set_owns
 
 [source,rust]
 ----
@@ -416,21 +330,16 @@ fn set_owns(
 ) -> Result
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_set_owns,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result
 ----
 
 [#_struct_EntityType_method_unset_owns]
-=== unset_owns
-
-==== Signature
+==== unset_owns
 
 [source,rust]
 ----
@@ -441,21 +350,16 @@ fn unset_owns(
 ) -> Result
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_unset_owns,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result
 ----
 
 [#_struct_EntityType_method_get_plays]
-=== get_plays
-
-==== Signature
+==== get_plays
 
 [source,rust]
 ----
@@ -466,21 +370,16 @@ fn get_plays(
 ) -> Result<BoxStream<'_, Result<RoleType>>>
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_get_plays,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<RoleType>>>
 ----
 
 [#_struct_EntityType_method_get_plays_overridden]
-=== get_plays_overridden
-
-==== Signature
+==== get_plays_overridden
 
 [source,rust]
 ----
@@ -491,21 +390,16 @@ fn get_plays_overridden(
 ) -> Result<Option<RoleType>>
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_get_plays_overridden,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Option<RoleType>>
 ----
 
 [#_struct_EntityType_method_set_plays]
-=== set_plays
-
-==== Signature
+==== set_plays
 
 [source,rust]
 ----
@@ -517,21 +411,16 @@ fn set_plays(
 ) -> Result
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_set_plays,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result
 ----
 
 [#_struct_EntityType_method_unset_plays]
-=== unset_plays
-
-==== Signature
+==== unset_plays
 
 [source,rust]
 ----
@@ -542,33 +431,25 @@ fn unset_plays(
 ) -> Result
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_unset_plays,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result
 ----
 
 [#_struct_EntityType_method_get_syntax]
-=== get_syntax
-
-==== Signature
+==== get_syntax
 
 [source,rust]
 ----
 fn get_syntax(&self, transaction: &Transaction<'_>) -> Result<String>
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_get_syntax,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<String>

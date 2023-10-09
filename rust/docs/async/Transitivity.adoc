@@ -1,13 +1,11 @@
 [#_enum_Transitivity]
-= Transitivity
-
-== Description
+=== Transitivity
 
 Used for specifying whether we need explicit or transitive subtyping, instances, etc.
 
+[caption=""]
+.Enum variants
 // tag::enum_constants[]
-== Enum variants
-
 [cols="~,~"]
 [options="header"]
 |===

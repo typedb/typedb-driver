@@ -1,8 +1,8 @@
 [#_TypeDBDriver]
-= TypeDBDriver
+=== TypeDBDriver
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]
@@ -13,75 +13,57 @@ a| `users` a| `UserManager` a| The UserManager instance for this connection, pro
 |===
 // end::properties[]
 
-== Methods
-
 // tag::methods[]
 [#_close]
-=== close
-
-==== Signature
+==== close
 
 [source,nodejs]
 ----
 close(): Promise<void>
 ----
 
-==== Description
-
 Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
 
-==== Returns
-
+.Returns
 `Promise<void>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 driver.close()
 ----
 
 [#_isOpen]
-=== isOpen
-
-==== Signature
+==== isOpen
 
 [source,nodejs]
 ----
 isOpen(): boolean
 ----
 
-==== Description
-
 Checks whether this connection is presently open.
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 driver.isOpen()
 ----
 
 [#_session]
-=== session
-
-==== Signature
+==== session
 
 [source,nodejs]
 ----
 session(database, type, options?): Promise<TypeDBSession>
 ----
 
-==== Description
 
 
-
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -91,30 +73,23 @@ a| `type` a| null a| `SessionType`
 a| `options` a| null a| `TypeDBOptions` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<TypeDBSession>`
 
 [#_user]
-=== user
-
-==== Signature
+==== user
 
 [source,nodejs]
 ----
 user(): Promise<User>
 ----
 
-==== Description
-
 Returns the logged-in user for the connection.
 
-==== Returns
-
+.Returns
 `Promise<User>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 driver.user()

@@ -1,13 +1,11 @@
 [#_ValueType]
-= ValueType
-
-== Description
+=== ValueType
 
 TypeQL value types for attributes &amp; value concepts.
 
+[caption=""]
+.Namespace variables
 // tag::enum_constants[]
-== Namespace variables
-
 [cols="~"]
 [options="header"]
 |===
@@ -21,25 +19,19 @@ a| `STRING`
 |===
 // end::enum_constants[]
 
-== Methods
-
 // tag::methods[]
 [#_new_ValueType]
-=== new ValueType
-
-==== Signature
+==== new ValueType
 
 [source,nodejs]
 ----
 new ValueType(type, name): ValueType
 ----
 
-==== Description
 
 
-
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -48,44 +40,33 @@ a| `type` a| null a| `ValueType`
 a| `name` a| null a| `string` 
 |===
 
-==== Returns
-
+.Returns
 `ValueType`
 
 [#_name]
-=== name
-
-==== Signature
+==== name
 
 [source,nodejs]
 ----
 name(): string
 ----
 
-==== Description
 
 
-
-==== Returns
-
+.Returns
 `string`
 
 [#_toString]
-=== toString
-
-==== Signature
+==== toString
 
 [source,nodejs]
 ----
 toString(): string
 ----
 
-==== Description
 
 
-
-==== Returns
-
+.Returns
 `string`
 
 // end::methods[]

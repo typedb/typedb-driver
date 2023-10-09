@@ -1,12 +1,10 @@
 [#_Rule]
-= Rule
-
-== Description
+=== Rule
 
 Rules are a part of schema and define embedded logic. The reasoning engine uses rules as a set of logic to infer new data. A rule consists of a condition and a conclusion, and is uniquely identified by a label.
 
-== Properties
-
+[caption=""]
+.Properties
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]
@@ -18,25 +16,19 @@ a| `when` a| `str` a| The statements that constitute the ‘when’ of the rule.
 |===
 // end::properties[]
 
-== Methods
-
 // tag::methods[]
 [#_delete]
-=== delete
-
-==== Signature
+==== delete
 
 [source,python]
 ----
 delete(transaction: TypeDBTransaction) -> None
 ----
 
-==== Description
-
 Deletes this rule.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -44,33 +36,27 @@ Deletes this rule.
 a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction` a| 
 |===
 
-==== Returns
-
+.Returns
 `None`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 rule.delete(transaction)
 ----
 
 [#_is_deleted]
-=== is_deleted
-
-==== Signature
+==== is_deleted
 
 [source,python]
 ----
 is_deleted(transaction: TypeDBTransaction) -> bool
 ----
 
-==== Description
-
 Check if this rule has been deleted.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -78,33 +64,27 @@ Check if this rule has been deleted.
 a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction` a| 
 |===
 
-==== Returns
-
+.Returns
 `bool`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 rule.is_deleted(transaction)
 ----
 
 [#_set_label]
-=== set_label
-
-==== Signature
+==== set_label
 
 [source,python]
 ----
 set_label(transaction: TypeDBTransaction, new_label: str) -> None
 ----
 
-==== Description
-
 Renames the label of the rule. The new label must remain unique.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -113,12 +93,10 @@ a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction` a|
 a| `new_label` a| The new label to be given to the rule a| `str` a| 
 |===
 
-==== Returns
-
+.Returns
 `None`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 rule.set_label(transaction, new_label)

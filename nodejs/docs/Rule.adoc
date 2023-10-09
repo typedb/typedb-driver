@@ -1,12 +1,10 @@
 [#_Rule]
-= Rule
-
-== Description
+=== Rule
 
 Rules are a part of schema and define embedded logic. The reasoning engine uses rules as a set of logic to infer new data. A rule consists of a condition and a conclusion, and is uniquely identified by a label.
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]
@@ -18,25 +16,19 @@ a| `when` a| `string` a| The statements that constitute the ‘when’ of the ru
 |===
 // end::properties[]
 
-== Methods
-
 // tag::methods[]
 [#_delete]
-=== delete
-
-==== Signature
+==== delete
 
 [source,nodejs]
 ----
 delete(transaction): Promise<void>
 ----
 
-==== Description
-
 Deletes this rule.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -44,33 +36,27 @@ Deletes this rule.
 a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<void>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 rule.delete(transaction)
 ----
 
 [#_isDeleted]
-=== isDeleted
-
-==== Signature
+==== isDeleted
 
 [source,nodejs]
 ----
 isDeleted(transaction): Promise<boolean>
 ----
 
-==== Description
-
 Check if this rule has been deleted.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -78,33 +64,27 @@ Check if this rule has been deleted.
 a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<boolean>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 rule.isDeleted(transaction)
 ----
 
 [#_setLabel]
-=== setLabel
-
-==== Signature
+==== setLabel
 
 [source,nodejs]
 ----
 setLabel(transaction, label): Promise<void>
 ----
 
-==== Description
-
 Renames the label of the rule. The new label must remain unique.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -113,12 +93,10 @@ a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction`
 a| `label` a| null a| `string` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<void>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 rule.setLabel(transaction, newLabel)

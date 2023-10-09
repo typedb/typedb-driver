@@ -1,79 +1,59 @@
 [#_ConceptMap]
-= ConceptMap
-
-== Description
+=== ConceptMap
 
 Contains a mapping of variables to concepts.
 
-== Methods
-
 // tag::methods[]
 [#_concepts]
-=== concepts
-
-==== Signature
+==== concepts
 
 [source,python]
 ----
 concepts() -> Iterator[Concept]
 ----
 
-==== Description
-
 Produces an iterator over all concepts in this ``ConceptMap``.
 
-==== Returns
-
+.Returns
 `Iterator[Concept]`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 concept_map.concepts()
 ----
 
 [#_explainables]
-=== explainables
-
-==== Signature
+==== explainables
 
 [source,python]
 ----
 explainables() -> Explainables
 ----
 
-==== Description
-
 Gets the ``Explainables`` object for this ``ConceptMap``, exposing which of the concepts in this ``ConceptMap`` are explainable.
 
-==== Returns
-
+.Returns
 `Explainables`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 concept_map.explainables()
 ----
 
 [#_get]
-=== get
-
-==== Signature
+==== get
 
 [source,python]
 ----
 get(variable: str) -> Concept
 ----
 
-==== Description
-
 Retrieves a concept for a given variable name.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -81,62 +61,48 @@ Retrieves a concept for a given variable name.
 a| `variable` a| The string representation of a variable a| `str` a| 
 |===
 
-==== Returns
-
+.Returns
 `Concept`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 concept_map.get(variable)
 ----
 
 [#_to_json]
-=== to_json
-
-==== Signature
+==== to_json
 
 [source,python]
 ----
 to_json() -> Mapping[str, Mapping[str, str | int | float | bool]]
 ----
 
-==== Description
-
 Retrieves this ``ConceptMap`` as JSON.
 
-==== Returns
-
+.Returns
 `Mapping[str, Mapping[str, str | int | float | bool]]`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 concept_map.to_json()
 ----
 
 [#_variables]
-=== variables
-
-==== Signature
+==== variables
 
 [source,python]
 ----
 variables() -> Iterator[str]
 ----
 
-==== Description
-
 Produces an iterator over all variables in this ``ConceptMap``.
 
-==== Returns
-
+.Returns
 `Iterator[str]`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 concept_map.variables()

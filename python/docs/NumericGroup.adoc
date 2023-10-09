@@ -1,58 +1,42 @@
 [#_NumericGroup]
-= NumericGroup
-
-== Description
+=== NumericGroup
 
 Contains an element of the group aggregate query result.
 
-== Methods
-
 // tag::methods[]
 [#_numeric]
-=== numeric
-
-==== Signature
+==== numeric
 
 [source,python]
 ----
 numeric() -> Numeric
 ----
 
-==== Description
-
 Retrieves the ``Numeric`` answer of the group.
 
-==== Returns
-
+.Returns
 `Numeric`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 numeric_group.numeric()
 ----
 
 [#_owner]
-=== owner
-
-==== Signature
+==== owner
 
 [source,python]
 ----
 owner() -> Concept
 ----
 
-==== Description
-
 Retrieves the concept that is the group owner.
 
-==== Returns
-
+.Returns
 `Concept`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 numeric_group.owner()

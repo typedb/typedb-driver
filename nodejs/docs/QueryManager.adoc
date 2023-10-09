@@ -1,29 +1,21 @@
 [#_QueryManager]
-= QueryManager
-
-== Description
+=== QueryManager
 
 Provides methods for executing TypeQL queries in the transaction.
 
-== Methods
-
 // tag::methods[]
 [#_define]
-=== define
-
-==== Signature
+==== define
 
 [source,nodejs]
 ----
 define(query, options?): Promise<void>
 ----
 
-==== Description
-
 Performs a TypeQL Define query in the transaction.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -32,33 +24,27 @@ a| `query` a| The TypeQL Define query to be executed a| `string`
 a| `options` a| Specify query options a| `TypeDBOptions` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<void>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.query.define(query, options)
 ----
 
 [#_delete]
-=== delete
-
-==== Signature
+==== delete
 
 [source,nodejs]
 ----
 delete(query, options?): Promise<void>
 ----
 
-==== Description
-
 Performs a TypeQL Delete query in the transaction.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -67,33 +53,27 @@ a| `query` a| The TypeQL Delete query to be executed a| `string`
 a| `options` a| Specify query options a| `TypeDBOptions` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<void>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.query.delete(query, options)
 ----
 
 [#_explain]
-=== explain
-
-==== Signature
+==== explain
 
 [source,nodejs]
 ----
 explain(explainable, options?): Stream<Explanation>
 ----
 
-==== Description
-
 Performs a TypeQL Explain query in the transaction.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -102,33 +82,27 @@ a| `explainable` a| The Explainable to be explained a| `Explainable`
 a| `options` a| Specify query options a| `TypeDBOptions` 
 |===
 
-==== Returns
-
+.Returns
 `Stream<Explanation>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.query.explain(explainable, options)
 ----
 
 [#_insert]
-=== insert
-
-==== Signature
+==== insert
 
 [source,nodejs]
 ----
 insert(query, options?): Stream<ConceptMap>
 ----
 
-==== Description
-
 Performs a TypeQL Insert query in the transaction.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -137,33 +111,27 @@ a| `query` a| The TypeQL Insert query to be executed a| `string`
 a| `options` a| Specify query options a| `TypeDBOptions` 
 |===
 
-==== Returns
-
+.Returns
 `Stream<ConceptMap>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.query.insert(query, options)
 ----
 
 [#_match]
-=== match
-
-==== Signature
+==== match
 
 [source,nodejs]
 ----
 match(query, options?): Stream<ConceptMap>
 ----
 
-==== Description
-
 Performs a TypeQL Match (Get) query in the transaction.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -172,33 +140,27 @@ a| `query` a| The TypeQL Match (Get) query to be executed a| `string`
 a| `options` a| Specify query options a| `TypeDBOptions` 
 |===
 
-==== Returns
-
+.Returns
 `Stream<ConceptMap>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.query.match(query, options)
 ----
 
 [#_matchAggregate]
-=== matchAggregate
-
-==== Signature
+==== matchAggregate
 
 [source,nodejs]
 ----
 matchAggregate(query, options?): Promise<Numeric>
 ----
 
-==== Description
-
 Performs a TypeQL Match Aggregate query in the transaction.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -207,33 +169,27 @@ a| `query` a| The TypeQL Match Aggregate query to be executed a| `string`
 a| `options` a| Specify query options a| `TypeDBOptions` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<Numeric>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.query.matchAggregate(query, options)
 ----
 
 [#_matchGroup]
-=== matchGroup
-
-==== Signature
+==== matchGroup
 
 [source,nodejs]
 ----
 matchGroup(query, options?): Stream<ConceptMapGroup>
 ----
 
-==== Description
-
 Performs a TypeQL Match Group query in the transaction.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -242,33 +198,27 @@ a| `query` a| The TypeQL Match Group query to be executed a| `string`
 a| `options` a| Specify query options a| `TypeDBOptions` 
 |===
 
-==== Returns
-
+.Returns
 `Stream<ConceptMapGroup>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.query.matchGroup(query, options)
 ----
 
 [#_matchGroupAggregate]
-=== matchGroupAggregate
-
-==== Signature
+==== matchGroupAggregate
 
 [source,nodejs]
 ----
 matchGroupAggregate(query, options?): Stream<NumericGroup>
 ----
 
-==== Description
-
 Performs a TypeQL Match Group Aggregate query in the transaction.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -277,33 +227,27 @@ a| `query` a| The TypeQL Match Group Aggregate query to be executed a| `string`
 a| `options` a| Specify query options a| `TypeDBOptions` 
 |===
 
-==== Returns
-
+.Returns
 `Stream<NumericGroup>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.query.matchGroupAggregate(query, options)
 ----
 
 [#_undefine]
-=== undefine
-
-==== Signature
+==== undefine
 
 [source,nodejs]
 ----
 undefine(query, options?): Promise<void>
 ----
 
-==== Description
-
 Performs a TypeQL Undefine query in the transaction.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -312,33 +256,27 @@ a| `query` a| The TypeQL Undefine query to be executed a| `string`
 a| `options` a| Specify query options a| `TypeDBOptions` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<void>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.query.undefine(query, options)
 ----
 
 [#_update]
-=== update
-
-==== Signature
+==== update
 
 [source,nodejs]
 ----
 update(query, options?): Stream<ConceptMap>
 ----
 
-==== Description
-
 Performs a TypeQL Update query in the transaction.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -347,12 +285,10 @@ a| `query` a| The TypeQL Update query to be executed a| `string`
 a| `options` a| Specify query options a| `TypeDBOptions` 
 |===
 
-==== Returns
-
+.Returns
 `Stream<ConceptMap>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.query.update(query, options)

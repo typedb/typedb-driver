@@ -1,11 +1,11 @@
 [#_Value_Type]
-= Value.Type
+=== Value.Type
 
 *Package*: `com.vaticle.typedb.driver.api.concept.value`
 
+[caption=""]
+.Enum constants
 // tag::enum_constants[]
-== Enum constants
-
 [cols="~"]
 [options="header"]
 |===
@@ -19,20 +19,14 @@ a| `STRING`
 |===
 // end::enum_constants[]
 
-== Methods
-
 // tag::methods[]
 [#_values_]
-=== values
-
-==== Signature
+==== values
 
 [source,java]
 ----
 public static Value.Type[] values()
 ----
-
-==== Description
 
 Returns an array containing the constants of this enum type, in the order they are declared. This method may be used to iterate over the constants as follows: 
 [source,java]
@@ -43,12 +37,10 @@ for (Value.Type c : Value.Type.values())
 ----
 
 
-==== Returns
-
+.Returns
 `public static Value.Type[]`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 for (Value.Type c : Value.Type.values())
@@ -56,21 +48,17 @@ for (Value.Type c : Value.Type.values())
 ----
 
 [#_valueOf_java_lang_String]
-=== valueOf
-
-==== Signature
+==== valueOf
 
 [source,java]
 ----
 public static Value.Type valueOf​(java.lang.String name)
 ----
 
-==== Description
-
 Returns the enum constant of this type with the specified name. The string must match exactly an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -78,14 +66,11 @@ Returns the enum constant of this type with the specified name. The string must 
 a| `name` a| the name of the enum constant to be returned. a| `java.lang.String` 
 |===
 
-==== Returns
-
+.Returns
 `public static Value.Type`
 
 [#_of_com_vaticle_typedb_driver_jni_ValueType]
-=== of
-
-==== Signature
+==== of
 
 [source,java]
 ----
@@ -93,18 +78,13 @@ a| `name` a| the name of the enum constant to be returned. a| `java.lang.String`
 public static Value.Type of​(com.vaticle.typedb.driver.jni.ValueType valueType)
 ----
 
-==== Description
 
 
-
-==== Returns
-
+.Returns
 `public static Value.Type`
 
 [#_valueClass_]
-=== valueClass
-
-==== Signature
+==== valueClass
 
 [source,java]
 ----
@@ -112,18 +92,13 @@ public static Value.Type of​(com.vaticle.typedb.driver.jni.ValueType valueType
 public java.lang.Class<?> valueClass()
 ----
 
-==== Description
 
 
-
-==== Returns
-
+.Returns
 `public java.lang.Class<?>`
 
 [#_isWritable_]
-=== isWritable
-
-==== Signature
+==== isWritable
 
 [source,java]
 ----
@@ -131,18 +106,13 @@ public java.lang.Class<?> valueClass()
 public boolean isWritable()
 ----
 
-==== Description
 
 
-
-==== Returns
-
+.Returns
 `public boolean`
 
 [#_isKeyable_]
-=== isKeyable
-
-==== Signature
+==== isKeyable
 
 [source,java]
 ----
@@ -150,12 +120,9 @@ public boolean isWritable()
 public boolean isKeyable()
 ----
 
-==== Description
 
 
-
-==== Returns
-
+.Returns
 `public boolean`
 
 // end::methods[]

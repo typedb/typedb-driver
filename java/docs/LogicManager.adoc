@@ -1,19 +1,13 @@
 [#_LogicManager]
-= LogicManager
+=== LogicManager
 
 *Package*: `com.vaticle.typedb.driver.api.logic`
 
-== Description
-
 Provides methods for manipulating rules in the database.
-
-== Methods
 
 // tag::methods[]
 [#_getRule_java_lang_String]
-=== getRule
-
-==== Signature
+==== getRule
 
 [source,java]
 ----
@@ -22,13 +16,11 @@ Provides methods for manipulating rules in the database.
 Rule getRule​(java.lang.String label)
 ----
 
-==== Description
-
 Retrieves the Rule that has the given label. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -36,21 +28,17 @@ Retrieves the Rule that has the given label.
 a| `label` a| The label of the Rule to create or retrieve a| `java.lang.String` 
 |===
 
-==== Returns
-
+.Returns
 `Rule`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 transaction.logic().getRule(label)
 ----
 
 [#_getRules_]
-=== getRules
-
-==== Signature
+==== getRules
 
 [source,java]
 ----
@@ -58,26 +46,20 @@ transaction.logic().getRule(label)
 java.util.stream.Stream<? extends Rule> getRules()
 ----
 
-==== Description
-
 Retrieves all rules. 
 
 
-==== Returns
-
+.Returns
 `java.util.stream.Stream<? extends Rule>`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 transaction.logic().getRules()
 ----
 
 [#_putRule_java_lang_String_com_vaticle_typeql_lang_pattern_Pattern_com_vaticle_typeql_lang_pattern_Pattern]
-=== putRule
-
-==== Signature
+==== putRule
 
 [source,java]
 ----
@@ -86,13 +68,11 @@ Rule putRule​(java.lang.String label,
              com.vaticle.typeql.lang.pattern.Pattern then)
 ----
 
-==== Description
-
 Creates a new Rule if none exists with the given label, or replaces the existing one. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -102,12 +82,10 @@ a| `when` a| The when body of the rule to create a| `com.vaticle.typeql.lang.pat
 a| `then` a| The then body of the rule to create a| `com.vaticle.typeql.lang.pattern.Pattern` 
 |===
 
-==== Returns
-
+.Returns
 `Rule`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 transaction.logic().putRule(label, when, then)

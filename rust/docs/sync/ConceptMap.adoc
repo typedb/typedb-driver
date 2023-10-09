@@ -1,5 +1,5 @@
 [#_struct_ConceptMap]
-= ConceptMap
+=== ConceptMap
 
 *Implements traits:*
 
@@ -11,12 +11,10 @@
 * `PartialEq<ConceptMap>`
 * `StructuralPartialEq`
 
-== Description
-
 Contains a mapping of variables to concepts.
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]
@@ -27,25 +25,19 @@ a| `explainables` a| `Explainables` a| The ``Explainables`` object for this ``Co
 |===
 // end::properties[]
 
-== Methods
-
 // tag::methods[]
 [#_struct_ConceptMap_method_get]
-=== get
-
-==== Signature
+==== get
 
 [source,rust]
 ----
 pub fn get(&self, var_name: &str) -> Option<&Concept>
 ----
 
-==== Description
-
 Retrieves a concept for a given variable name.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -53,43 +45,35 @@ Retrieves a concept for a given variable name.
 a| `var_name` a| The string representation of a variable a| `&str` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Option<&Concept>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 concept_map.get(var_name)
 ----
 
 [#_struct_ConceptMap_method_concepts]
-=== concepts
-
-==== Signature
+==== concepts
 
 [source,rust]
 ----
 pub fn concepts(&self) -> impl Iterator<Item = &Concept>
 ----
 
-==== Description
-
 Produces an iterator over all concepts in this ``ConceptMap``.
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 impl Iterator<Item = &Concept>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 concept_map.concepts()

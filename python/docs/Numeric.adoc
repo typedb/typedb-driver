@@ -1,133 +1,99 @@
 [#_Numeric]
-= Numeric
-
-== Description
+=== Numeric
 
 Stores an aggregate query answer.
 
-== Methods
-
 // tag::methods[]
 [#_as_float]
-=== as_float
-
-==== Signature
+==== as_float
 
 [source,python]
 ----
 as_float() -> float
 ----
 
-==== Description
-
 Retrieves numeric value of an aggregate answer as a float.
 
-==== Returns
-
+.Returns
 `float`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 numeric.as_float()
 ----
 
 [#_as_int]
-=== as_int
-
-==== Signature
+==== as_int
 
 [source,python]
 ----
 as_int() -> int
 ----
 
-==== Description
-
 Retrieves numeric value of an aggregate answer as an integer.
 
-==== Returns
-
+.Returns
 `int`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 numeric.as_int()
 ----
 
 [#_is_float]
-=== is_float
-
-==== Signature
+==== is_float
 
 [source,python]
 ----
 is_float() -> bool
 ----
 
-==== Description
-
 Checks if the type of an aggregate answer is a float.
 
-==== Returns
-
+.Returns
 `bool`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 numeric.is_float()
 ----
 
 [#_is_int]
-=== is_int
-
-==== Signature
+==== is_int
 
 [source,python]
 ----
 is_int() -> bool
 ----
 
-==== Description
-
 Checks if the type of an aggregate answer is an integer.
 
-==== Returns
-
+.Returns
 `bool`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 numeric.is_int()
 ----
 
 [#_is_nan]
-=== is_nan
-
-==== Signature
+==== is_nan
 
 [source,python]
 ----
 is_nan() -> bool
 ----
 
-==== Description
-
 Checks if the aggregate answer is not a number.
 
-==== Returns
-
+.Returns
 `bool`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 numeric.is_nan()

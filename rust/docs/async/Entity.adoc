@@ -1,5 +1,5 @@
 [#_struct_Entity]
-= Entity
+=== Entity
 
 *Implements traits:*
 
@@ -12,12 +12,10 @@
 * `StructuralPartialEq`
 * `ThingAPI`
 
-== Description
-
 Instance of data of an entity type, representing a standalone object that exists in the data model independently. Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles played in relation instances.
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]
@@ -29,55 +27,41 @@ a| `is_inferred` a| `bool` a|
 |===
 // end::properties[]
 
-== Methods
-
 // tag::methods[]
 [#_struct_Entity_tymethod_iid]
-=== iid
-
-==== Signature
+==== iid
 
 [source,rust]
 ----
 fn iid(&self) -> &IID
 ----
 
-==== Description
-
 <<#_trait_ThingAPI_tymethod_iid,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 &IID
 ----
 
 [#_struct_Entity_tymethod_is_inferred]
-=== is_inferred
-
-==== Signature
+==== is_inferred
 
 [source,rust]
 ----
 fn is_inferred(&self) -> bool
 ----
 
-==== Description
-
 <<#_trait_ThingAPI_tymethod_is_inferred,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 bool
 ----
 
 [#_struct_Entity_tymethod_is_deleted]
-=== is_deleted
-
-==== Signature
+==== is_deleted
 
 [source,rust]
 ----
@@ -92,12 +76,9 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 <<#_trait_ThingAPI_tymethod_is_deleted,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result<bool>> + Send + 'async_trait>>
@@ -109,9 +90,7 @@ where
 ----
 
 [#_struct_Entity_method_delete]
-=== delete
-
-==== Signature
+==== delete
 
 [source,rust]
 ----
@@ -126,12 +105,9 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 <<#_trait_ThingAPI_method_delete,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
@@ -143,9 +119,7 @@ where
 ----
 
 [#_struct_Entity_method_get_has]
-=== get_has
-
-==== Signature
+==== get_has
 
 [source,rust]
 ----
@@ -157,21 +131,16 @@ fn get_has(
 ) -> Result<BoxStream<'_, Result<Attribute>>>
 ----
 
-==== Description
-
 <<#_trait_ThingAPI_method_get_has,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<Attribute>>>
 ----
 
 [#_struct_Entity_method_set_has]
-=== set_has
-
-==== Signature
+==== set_has
 
 [source,rust]
 ----
@@ -187,12 +156,9 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 <<#_trait_ThingAPI_method_set_has,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
@@ -204,9 +170,7 @@ where
 ----
 
 [#_struct_Entity_method_unset_has]
-=== unset_has
-
-==== Signature
+==== unset_has
 
 [source,rust]
 ----
@@ -222,12 +186,9 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 <<#_trait_ThingAPI_method_unset_has,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
@@ -239,9 +200,7 @@ where
 ----
 
 [#_struct_Entity_method_get_relations]
-=== get_relations
-
-==== Signature
+==== get_relations
 
 [source,rust]
 ----
@@ -252,21 +211,16 @@ fn get_relations(
 ) -> Result<BoxStream<'_, Result<Relation>>>
 ----
 
-==== Description
-
 <<#_trait_ThingAPI_method_get_relations,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<Relation>>>
 ----
 
 [#_struct_Entity_method_get_playing]
-=== get_playing
-
-==== Signature
+==== get_playing
 
 [source,rust]
 ----
@@ -276,12 +230,9 @@ fn get_playing(
 ) -> Result<BoxStream<'_, Result<RoleType>>>
 ----
 
-==== Description
-
 <<#_trait_ThingAPI_method_get_playing,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<RoleType>>>

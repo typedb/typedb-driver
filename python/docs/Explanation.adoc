@@ -1,79 +1,59 @@
 [#_Explanation]
-= Explanation
-
-== Description
+=== Explanation
 
 An explanation of which rule was used for inferring the explained concept, the condition of the rule, the conclusion of the rule, and the mapping of variables between the query and the rule’s conclusion.
 
-== Methods
-
 // tag::methods[]
 [#_conclusion]
-=== conclusion
-
-==== Signature
+==== conclusion
 
 [source,python]
 ----
 conclusion() -> ConceptMap
 ----
 
-==== Description
-
 Retrieves the Conclusion for this Explanation.
 
-==== Returns
-
+.Returns
 `ConceptMap`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 explanation.conclusion()
 ----
 
 [#_condition]
-=== condition
-
-==== Signature
+==== condition
 
 [source,python]
 ----
 condition() -> ConceptMap
 ----
 
-==== Description
-
 Retrieves the Condition for this Explanation.
 
-==== Returns
-
+.Returns
 `ConceptMap`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 explanation.condition()
 ----
 
 [#_query_variable_mapping]
-=== query_variable_mapping
-
-==== Signature
+==== query_variable_mapping
 
 [source,python]
 ----
 query_variable_mapping(var: str) -> set[str]
 ----
 
-==== Description
-
 Retrieves the rule variables corresponding to the query variable var for this ``Explanation``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -81,62 +61,48 @@ Retrieves the rule variables corresponding to the query variable var for this ``
 a| `var` a| The query variable to map to rule variables. a| `str` a| 
 |===
 
-==== Returns
-
+.Returns
 `set[str]`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 explanation.variable_mapping(var)
 ----
 
 [#_query_variables]
-=== query_variables
-
-==== Signature
+==== query_variables
 
 [source,python]
 ----
 query_variables() -> set[str]
 ----
 
-==== Description
-
 Retrieves the query variables for this ``Explanation``.
 
-==== Returns
-
+.Returns
 `set[str]`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 explanation.query_variables()
 ----
 
 [#_rule]
-=== rule
-
-==== Signature
+==== rule
 
 [source,python]
 ----
 rule() -> Rule
 ----
 
-==== Description
-
 Retrieves the Rule for this Explanation.
 
-==== Returns
-
+.Returns
 `Rule`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 explanation.rule()

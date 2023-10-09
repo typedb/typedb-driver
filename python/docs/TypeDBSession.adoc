@@ -1,8 +1,8 @@
 [#_TypeDBSession]
-= TypeDBSession
+=== TypeDBSession
 
-== Properties
-
+[caption=""]
+.Properties
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]
@@ -13,100 +13,76 @@ a| `type` a| `SessionType` a| The current session’s type (SCHEMA or DATA)
 |===
 // end::properties[]
 
-== Methods
-
 // tag::methods[]
 [#_close]
-=== close
-
-==== Signature
+==== close
 
 [source,python]
 ----
 close() -> None
 ----
 
-==== Description
-
 Closes the session. Before opening a new session, the session currently open should first be closed.
 
-==== Returns
-
+.Returns
 `None`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 session.close()
 ----
 
 [#_database_name]
-=== database_name
-
-==== Signature
+==== database_name
 
 [source,python]
 ----
 database_name() -> str
 ----
 
-==== Description
-
 Returns the name of the database of the session.
 
-==== Returns
-
+.Returns
 `str`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 session.database_name()
 ----
 
 [#_is_open]
-=== is_open
-
-==== Signature
+==== is_open
 
 [source,python]
 ----
 is_open() -> bool
 ----
 
-==== Description
-
 Checks whether this session is open.
 
-==== Returns
-
+.Returns
 `bool`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 session.is_open()
 ----
 
 [#_on_close]
-=== on_close
-
-==== Signature
+==== on_close
 
 [source,python]
 ----
 on_close(function: callable) -> None
 ----
 
-==== Description
-
 Registers a callback function which will be executed when this session is closed.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -114,33 +90,27 @@ Registers a callback function which will be executed when this session is closed
 a| `function` a| The callback function. a| `callable` a| 
 |===
 
-==== Returns
-
+.Returns
 `None`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 session.on_close(function)
 ----
 
 [#_transaction]
-=== transaction
-
-==== Signature
+==== transaction
 
 [source,python]
 ----
 transaction(transaction_type: TransactionType, options: TypeDBOptions = None) -> TypeDBTransaction
 ----
 
-==== Description
-
 Opens a transaction to perform read or write queries on the database connected to the session.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -149,12 +119,10 @@ a| `transaction_type` a| The type of transaction to be created (READ or WRITE) a
 a| `options` a| Options for the session a| `TypeDBOptions` a| `None`
 |===
 
-==== Returns
-
+.Returns
 `TypeDBTransaction`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 session.transaction(transaction_type, options)

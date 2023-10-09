@@ -1,12 +1,10 @@
 [#_User]
-= User
-
-== Description
+=== User
 
 ``User`` class
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]
@@ -17,25 +15,19 @@ a| `username` a| `string` a| The name of this user.
 |===
 // end::properties[]
 
-== Methods
-
 // tag::methods[]
 [#_passwordUpdate]
-=== passwordUpdate
-
-==== Signature
+==== passwordUpdate
 
 [source,nodejs]
 ----
 passwordUpdate(oldPassword, newPassword): Promise<void>
 ----
 
-==== Description
-
 Updates the user's password.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -44,12 +36,10 @@ a| `oldPassword` a| Old password a| `string`
 a| `newPassword` a| New password a| `string` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<void>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 user.passwordUpdate("oldpassword", "nEwp@ssw0rd");

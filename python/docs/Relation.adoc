@@ -1,33 +1,25 @@
 [#_Relation]
-= Relation
+=== Relation
 
 *Supertypes:*
 
 * `Thing`
 
-== Description
-
 Relation is an instance of a relation type and can be uniquely addressed by a combination of its type, owned attributes and role players.
-
-== Methods
 
 // tag::methods[]
 [#_add_player]
-=== add_player
-
-==== Signature
+==== add_player
 
 [source,python]
 ----
 add_player(transaction: TypeDBTransaction, role_type: RoleType, player: Thing) -> None
 ----
 
-==== Description
-
 Adds a new role player to play the given role in this ``Relation``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -37,58 +29,46 @@ a| `role_type` a| The role to be played by the ``player`` a| `RoleType` a|
 a| `player` a| The thing to play the role a| `Thing` a| 
 |===
 
-==== Returns
-
+.Returns
 `None`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 relation.add_player(transaction, role_type, player)
 ----
 
 [#_as_relation]
-=== as_relation
-
-==== Signature
+==== as_relation
 
 [source,python]
 ----
 as_relation() -> Relation
 ----
 
-==== Description
-
 Casts the concept to ``Relation``.
 
-==== Returns
-
+.Returns
 `Relation`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 relation.as_relation()
 ----
 
 [#_get_players]
-=== get_players
-
-==== Signature
+==== get_players
 
 [source,python]
 ----
 get_players(transaction: TypeDBTransaction) -> dict[RoleType, list[Thing]]
 ----
 
-==== Description
-
 Retrieves a mapping of all instances involved in the ``Relation`` and the role each play.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -96,33 +76,27 @@ Retrieves a mapping of all instances involved in the ``Relation`` and the role e
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
-==== Returns
-
+.Returns
 `dict[RoleType, list[Thing]]`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 relation.get_players(transaction)
 ----
 
 [#_get_players_by_role_type]
-=== get_players_by_role_type
-
-==== Signature
+==== get_players_by_role_type
 
 [source,python]
 ----
 get_players_by_role_type(transaction: TypeDBTransaction, *role_types: RoleType) -> Iterator[Thing]
 ----
 
-==== Description
-
 Retrieves all role players of this ``Relation``, optionally filtered by given role types.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -131,12 +105,10 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `role_types` a| 0 or more role types a| `RoleType` a| 
 |===
 
-==== Returns
-
+.Returns
 `Iterator[Thing]`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 relation.get_players_by_role_type(transaction)
@@ -144,21 +116,17 @@ relation.get_players_by_role_type(transaction, role_type1, role_type2)
 ----
 
 [#_get_relating]
-=== get_relating
-
-==== Signature
+==== get_relating
 
 [source,python]
 ----
 get_relating(transaction: TypeDBTransaction) -> Iterator[RoleType]
 ----
 
-==== Description
-
 Retrieves all role types currently played in this ``Relation``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -166,83 +134,65 @@ Retrieves all role types currently played in this ``Relation``.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
-==== Returns
-
+.Returns
 `Iterator[RoleType]`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 relation.get_relating(transaction)
 ----
 
 [#_get_type]
-=== get_type
-
-==== Signature
+==== get_type
 
 [source,python]
 ----
 get_type() -> RelationType
 ----
 
-==== Description
-
 Retrieves the type which this ``Relation`` belongs to.
 
-==== Returns
-
+.Returns
 `RelationType`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 relation.get_type()
 ----
 
 [#_is_relation]
-=== is_relation
-
-==== Signature
+==== is_relation
 
 [source,python]
 ----
 is_relation() -> bool
 ----
 
-==== Description
-
 Checks if the concept is a ``Relation``.
 
-==== Returns
-
+.Returns
 `bool`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 relation.is_relation()
 ----
 
 [#_remove_player]
-=== remove_player
-
-==== Signature
+==== remove_player
 
 [source,python]
 ----
 remove_player(transaction: TypeDBTransaction, role_type: RoleType, player: Thing) -> None
 ----
 
-==== Description
-
 Removes the association of the given instance that plays the given role in this ``Relation``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -252,12 +202,10 @@ a| `role_type` a| The role to no longer be played by the thing in this ``Relatio
 a| `player` a| The instance to no longer play the role in this ``Relation`` a| `Thing` a| 
 |===
 
-==== Returns
-
+.Returns
 `None`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 relation.remove_player(transaction, role_type, player)

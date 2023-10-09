@@ -1,8 +1,8 @@
 [#_TypeDBTransaction]
-= TypeDBTransaction
+=== TypeDBTransaction
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]
@@ -16,104 +16,78 @@ a| `type` a| `TransactionType` a| The transaction’s type (READ or WRITE)
 |===
 // end::properties[]
 
-== Methods
-
 // tag::methods[]
 [#_close]
-=== close
-
-==== Signature
+==== close
 
 [source,nodejs]
 ----
 close(): Promise<void>
 ----
 
-==== Description
-
 Closes the transaction.
 
-==== Returns
-
+.Returns
 `Promise<void>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.close()
 ----
 
 [#_commit]
-=== commit
-
-==== Signature
+==== commit
 
 [source,nodejs]
 ----
 commit(): Promise<void>
 ----
 
-==== Description
-
 Commits the changes made via this transaction to the TypeDB database. Whether or not the transaction is commited successfully, it gets closed after the commit call.
 
-==== Returns
-
+.Returns
 `Promise<void>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.commit()
 ----
 
 [#_isOpen]
-=== isOpen
-
-==== Signature
+==== isOpen
 
 [source,nodejs]
 ----
 isOpen(): boolean
 ----
 
-==== Description
-
 Checks whether this transaction is open.
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.isOpen()
 ----
 
 [#_rollback]
-=== rollback
-
-==== Signature
+==== rollback
 
 [source,nodejs]
 ----
 rollback(): Promise<void>
 ----
 
-==== Description
-
 Rolls back the uncommitted changes made via this transaction.
 
-==== Returns
-
+.Returns
 `Promise<void>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 transaction.rollback()

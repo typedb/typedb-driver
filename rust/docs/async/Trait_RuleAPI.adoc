@@ -1,34 +1,25 @@
 [#_trait_RuleAPI]
-= Trait RuleAPI
-
-== Methods
+=== Trait RuleAPI
 
 // tag::methods[]
 [#_trait_RuleAPI_tymethod_label]
-=== label
-
-==== Signature
+==== label
 
 [source,rust]
 ----
 fn label(&self) -> &String
 ----
 
-==== Description
-
 Retrieves the unique label of the rule.
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 &String
 ----
 
 [#_trait_RuleAPI_tymethod_delete]
-=== delete
-
-==== Signature
+==== delete
 
 [source,rust]
 ----
@@ -43,12 +34,10 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 Deletes this rule.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -56,8 +45,7 @@ Deletes this rule.
 a| `transaction` a| The current ``Transaction`` a| `&'life1 Transaction<'life2>` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
@@ -68,17 +56,14 @@ where
      'life2: 'async_trait,
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 rule.delete(transaction).await;
 ----
 
 [#_trait_RuleAPI_tymethod_set_label]
-=== set_label
-
-==== Signature
+==== set_label
 
 [source,rust]
 ----
@@ -94,12 +79,10 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 Renames the label of the rule. The new label must remain unique.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -108,8 +91,7 @@ a| `transaction` a| The current ``Transaction`` a| `&'life1 Transaction<'life2>`
 a| `new_label` a| The new label to be given to the rule a| `String` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
@@ -120,17 +102,14 @@ where
      'life2: 'async_trait,
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 rule.set_label(transaction, new_label).await;
 ----
 
 [#_trait_RuleAPI_method_is_deleted]
-=== is_deleted
-
-==== Signature
+==== is_deleted
 
 [source,rust]
 ----
@@ -145,12 +124,10 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 Check if this rule has been deleted.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -158,8 +135,7 @@ Check if this rule has been deleted.
 a| `transaction` a| The current ``Transaction`` a| `&'life1 Transaction<'life2>` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result<bool>> + Send + 'async_trait>>
@@ -170,8 +146,7 @@ where
      'life2: 'async_trait,
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 rule.is_deleted(transaction).await

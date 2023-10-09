@@ -1,19 +1,13 @@
 [#_Numeric]
-= Numeric
+=== Numeric
 
 *Package*: `com.vaticle.typedb.driver.api.answer`
 
-== Description
-
 Stores an aggregate query answer.
-
-== Methods
 
 // tag::methods[]
 [#_isLong_]
-=== isLong
-
-==== Signature
+==== isLong
 
 [source,java]
 ----
@@ -21,26 +15,20 @@ Stores an aggregate query answer.
 boolean isLong()
 ----
 
-==== Description
-
 Checks if the type of an aggregate answer is a ``long``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 numeric.isLong();
 ----
 
 [#_isDouble_]
-=== isDouble
-
-==== Signature
+==== isDouble
 
 [source,java]
 ----
@@ -48,26 +36,20 @@ numeric.isLong();
 boolean isDouble()
 ----
 
-==== Description
-
 Checks if the type of an aggregate answer is a ``double``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 numeric.isDouble();
 ----
 
 [#_isNaN_]
-=== isNaN
-
-==== Signature
+==== isNaN
 
 [source,java]
 ----
@@ -75,26 +57,20 @@ numeric.isDouble();
 boolean isNaN()
 ----
 
-==== Description
-
 Checks if the aggregate answer is not a number. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 numeric.isNaN();
 ----
 
 [#_asLong_]
-=== asLong
-
-==== Signature
+==== asLong
 
 [source,java]
 ----
@@ -102,26 +78,20 @@ numeric.isNaN();
 long asLong()
 ----
 
-==== Description
-
 Retrieves numeric value of an aggregate answer as a ``long``. 
 
 
-==== Returns
-
+.Returns
 `long`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 numeric.asLong();
 ----
 
 [#_asDouble_]
-=== asDouble
-
-==== Signature
+==== asDouble
 
 [source,java]
 ----
@@ -129,26 +99,20 @@ numeric.asLong();
 double asDouble()
 ----
 
-==== Description
-
 Retrieves numeric value of an aggregate answer as a ``double``. 
 
 
-==== Returns
-
+.Returns
 `double`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 numeric.asDouble();
 ----
 
 [#_asNumber_]
-=== asNumber
-
-==== Signature
+==== asNumber
 
 [source,java]
 ----
@@ -156,26 +120,20 @@ numeric.asDouble();
 java.lang.Number asNumber()
 ----
 
-==== Description
-
 Retrieves numeric value of an aggregate answer. 
 
 
-==== Returns
-
+.Returns
 `java.lang.Number`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 numeric.asNumber();
 ----
 
 [#_toString_]
-=== toString
-
-==== Signature
+==== toString
 
 [source,java]
 ----
@@ -183,17 +141,13 @@ numeric.asNumber();
 java.lang.String toString()
 ----
 
-==== Description
-
 Retrieves a string representation of an aggregate answer. 
 
 
-==== Returns
-
+.Returns
 `java.lang.String`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 numeric.toString();

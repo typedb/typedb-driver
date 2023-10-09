@@ -1,19 +1,13 @@
 [#_ConceptManager]
-= ConceptManager
+=== ConceptManager
 
 *Package*: `com.vaticle.typedb.driver.api.concept`
 
-== Description
-
 Provides access for all Concept API methods.
-
-== Methods
 
 // tag::methods[]
 [#_getRootEntityType_]
-=== getRootEntityType
-
-==== Signature
+==== getRootEntityType
 
 [source,java]
 ----
@@ -21,26 +15,20 @@ Provides access for all Concept API methods.
 EntityType getRootEntityType()
 ----
 
-==== Description
-
 Retrieves the root ``EntityType``, “entity”. 
 
 
-==== Returns
-
+.Returns
 `EntityType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 transaction.concepts().getRootEntityType();
 ----
 
 [#_getRootRelationType_]
-=== getRootRelationType
-
-==== Signature
+==== getRootRelationType
 
 [source,java]
 ----
@@ -48,26 +36,20 @@ transaction.concepts().getRootEntityType();
 RelationType getRootRelationType()
 ----
 
-==== Description
-
 Retrieve the root ``RelationType``, “relation”. 
 
 
-==== Returns
-
+.Returns
 `RelationType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 transaction.concepts().getRootRelationType();
 ----
 
 [#_getRootAttributeType_]
-=== getRootAttributeType
-
-==== Signature
+==== getRootAttributeType
 
 [source,java]
 ----
@@ -75,26 +57,20 @@ transaction.concepts().getRootRelationType();
 AttributeType getRootAttributeType()
 ----
 
-==== Description
-
 Retrieve the root ``AttributeType``, “attribute”. 
 
 
-==== Returns
-
+.Returns
 `AttributeType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 transaction.concepts().getRootAttributeType();
 ----
 
 [#_getEntityType_java_lang_String]
-=== getEntityType
-
-==== Signature
+==== getEntityType
 
 [source,java]
 ----
@@ -103,13 +79,11 @@ transaction.concepts().getRootAttributeType();
 EntityType getEntityType​(java.lang.String label)
 ----
 
-==== Description
-
 Retrieves an ``EntityType`` by its label. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -117,21 +91,17 @@ Retrieves an ``EntityType`` by its label.
 a| `label` a| The label of the ``EntityType`` to retrieve a| `java.lang.String` 
 |===
 
-==== Returns
-
+.Returns
 `EntityType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 transaction.concepts().getEntityType(label);
 ----
 
 [#_getRelationType_java_lang_String]
-=== getRelationType
-
-==== Signature
+==== getRelationType
 
 [source,java]
 ----
@@ -140,13 +110,11 @@ transaction.concepts().getEntityType(label);
 RelationType getRelationType​(java.lang.String label)
 ----
 
-==== Description
-
 Retrieves a ``RelationType`` by its label. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -154,21 +122,17 @@ Retrieves a ``RelationType`` by its label.
 a| `label` a| The label of the ``RelationType`` to retrieve a| `java.lang.String` 
 |===
 
-==== Returns
-
+.Returns
 `RelationType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 transaction.concepts().getRelationType(label);
 ----
 
 [#_getAttributeType_java_lang_String]
-=== getAttributeType
-
-==== Signature
+==== getAttributeType
 
 [source,java]
 ----
@@ -177,13 +141,11 @@ transaction.concepts().getRelationType(label);
 AttributeType getAttributeType​(java.lang.String label)
 ----
 
-==== Description
-
 Retrieves an ``AttributeType`` by its label. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -191,34 +153,28 @@ Retrieves an ``AttributeType`` by its label.
 a| `label` a| The label of the ``AttributeType`` to retrieve a| `java.lang.String` 
 |===
 
-==== Returns
-
+.Returns
 `AttributeType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 transaction.concepts().getAttributeType(label)
 ----
 
 [#_putEntityType_java_lang_String]
-=== putEntityType
-
-==== Signature
+==== putEntityType
 
 [source,java]
 ----
 EntityType putEntityType​(java.lang.String label)
 ----
 
-==== Description
-
 Creates a new ``EntityType`` if none exists with the given label, otherwise retrieves the existing one. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -226,34 +182,28 @@ Creates a new ``EntityType`` if none exists with the given label, otherwise retr
 a| `label` a| The label of the ``EntityType`` to create or retrieve a| `java.lang.String` 
 |===
 
-==== Returns
-
+.Returns
 `EntityType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 transaction.concepts().putEntityType(label);
 ----
 
 [#_putRelationType_java_lang_String]
-=== putRelationType
-
-==== Signature
+==== putRelationType
 
 [source,java]
 ----
 RelationType putRelationType​(java.lang.String label)
 ----
 
-==== Description
-
 Creates a new ``RelationType`` if none exists with the given label, otherwise retrieves the existing one. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -261,21 +211,17 @@ Creates a new ``RelationType`` if none exists with the given label, otherwise re
 a| `label` a| The label of the ``RelationType`` to create or retrieve a| `java.lang.String` 
 |===
 
-==== Returns
-
+.Returns
 `RelationType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 transaction.concepts().putRelationType(label);
 ----
 
 [#_putAttributeType_java_lang_String_com_vaticle_typedb_driver_api_concept_value_Value_Type]
-=== putAttributeType
-
-==== Signature
+==== putAttributeType
 
 [source,java]
 ----
@@ -283,13 +229,11 @@ AttributeType putAttributeType​(java.lang.String label,
                                Value.Type valueType)
 ----
 
-==== Description
-
 Creates a new ``AttributeType`` if none exists with the given label, or retrieves the existing one. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -298,21 +242,17 @@ a| `label` a| The label of the ``AttributeType`` to create or retrieve a| `java.
 a| `valueType` a| The value type of the ``AttributeType`` to create a| `Value.Type` 
 |===
 
-==== Returns
-
+.Returns
 `AttributeType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 await transaction.concepts().putAttributeType(label, valueType);
 ----
 
 [#_getEntity_java_lang_String]
-=== getEntity
-
-==== Signature
+==== getEntity
 
 [source,java]
 ----
@@ -321,13 +261,11 @@ await transaction.concepts().putAttributeType(label, valueType);
 Entity getEntity​(java.lang.String iid)
 ----
 
-==== Description
-
 Retrieves an ``Entity`` by its iid. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -335,21 +273,17 @@ Retrieves an ``Entity`` by its iid.
 a| `iid` a| The iid of the ``Entity`` to retrieve a| `java.lang.String` 
 |===
 
-==== Returns
-
+.Returns
 `Entity`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 transaction.concepts().getEntity(iid);
 ----
 
 [#_getRelation_java_lang_String]
-=== getRelation
-
-==== Signature
+==== getRelation
 
 [source,java]
 ----
@@ -358,13 +292,11 @@ transaction.concepts().getEntity(iid);
 Relation getRelation​(java.lang.String iid)
 ----
 
-==== Description
-
 Retrieves a ``Relation`` by its iid. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -372,21 +304,17 @@ Retrieves a ``Relation`` by its iid.
 a| `iid` a| The iid of the ``Relation`` to retrieve a| `java.lang.String` 
 |===
 
-==== Returns
-
+.Returns
 `Relation`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 transaction.concepts().getRelation(iid);
 ----
 
 [#_getAttribute_java_lang_String]
-=== getAttribute
-
-==== Signature
+==== getAttribute
 
 [source,java]
 ----
@@ -395,13 +323,11 @@ transaction.concepts().getRelation(iid);
 Attribute getAttribute​(java.lang.String iid)
 ----
 
-==== Description
-
 Retrieves an ``Attribute`` by its iid. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -409,21 +335,17 @@ Retrieves an ``Attribute`` by its iid.
 a| `iid` a| The iid of the ``Attribute`` to retrieve a| `java.lang.String` 
 |===
 
-==== Returns
-
+.Returns
 `Attribute`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 transaction.concepts().getAttribute(iid);
 ----
 
 [#_getSchemaExceptions_]
-=== getSchemaExceptions
-
-==== Signature
+==== getSchemaExceptions
 
 [source,java]
 ----
@@ -431,17 +353,13 @@ transaction.concepts().getAttribute(iid);
 java.util.List<com.vaticle.typedb.driver.common.exception.TypeDBException> getSchemaExceptions()
 ----
 
-==== Description
-
 Retrieves a list of all exceptions for the current transaction. 
 
 
-==== Returns
-
+.Returns
 `java.util.List<com.vaticle.typedb.driver.common.exception.TypeDBException>`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 transaction.concepts().getSchemaException();

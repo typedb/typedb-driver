@@ -1,5 +1,5 @@
 [#_EntityType]
-= EntityType
+=== EntityType
 
 *Package*: `com.vaticle.typedb.driver.api.concept.type`
 
@@ -9,17 +9,11 @@
 * `ThingType`
 * `Type`
 
-== Description
-
 Entity types represent the classification of independent objects in the data model of the business domain.
-
-== Methods
 
 // tag::methods[]
 [#_isEntityType_]
-=== isEntityType
-
-==== Signature
+==== isEntityType
 
 [source,java]
 ----
@@ -27,26 +21,20 @@ Entity types represent the classification of independent objects in the data mod
 default boolean isEntityType()
 ----
 
-==== Description
-
 Checks if the concept is an ``EntityType``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isEntityType();
 ----
 
 [#_asEntityType_]
-=== asEntityType
-
-==== Signature
+==== asEntityType
 
 [source,java]
 ----
@@ -54,26 +42,20 @@ concept.isEntityType();
 default EntityType asEntityType()
 ----
 
-==== Description
-
 Casts the concept to ``EntityType``. 
 
 
-==== Returns
-
+.Returns
 `EntityType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asEntityType();
 ----
 
 [#_create_com_vaticle_typedb_driver_api_TypeDBTransaction]
-=== create
-
-==== Signature
+==== create
 
 [source,java]
 ----
@@ -81,13 +63,11 @@ concept.asEntityType();
 Entity create​(TypeDBTransaction transaction)
 ----
 
-==== Description
-
 Creates and returns a new instance of this ``EntityType``. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -95,21 +75,17 @@ Creates and returns a new instance of this ``EntityType``.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
 |===
 
-==== Returns
-
+.Returns
 `Entity`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 entityType.create(transaction);
 ----
 
 [#_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction]
-=== getInstances
-
-==== Signature
+==== getInstances
 
 [source,java]
 ----
@@ -117,22 +93,17 @@ entityType.create(transaction);
 java.util.stream.Stream<? extends Entity> getInstances​(TypeDBTransaction transaction)
 ----
 
-==== Description
-
 Retrieves all ``Entity`` objects that are instances of this ``EntityType`` or its subtypes. Equivalent to ``getInstances(transaction, Transitivity.TRANSITIVE)``
 
 
 See also: <<#_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getInstances(TypeDBTransaction, Transitivity)``>>
 
 
-==== Returns
-
+.Returns
 `java.util.stream.Stream<? extends Entity>`
 
 [#_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
-=== getInstances
-
-==== Signature
+==== getInstances
 
 [source,java]
 ----
@@ -141,13 +112,11 @@ java.util.stream.Stream<? extends Entity> getInstances​(TypeDBTransaction tran
                                                        Concept.Transitivity transitivity)
 ----
 
-==== Description
-
 Retrieves ``Entity`` objects that are instances of this exact ``EntityType`` OR this ``EntityType`` and any of its subtypes. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -156,21 +125,17 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 a| `transitivity` a| ``Transitivity.EXPLICIT`` for direct instances only, ``Transitivity.TRANSITIVE`` to include subtypes a| `Concept.Transitivity` 
 |===
 
-==== Returns
-
+.Returns
 `java.util.stream.Stream<? extends Entity>`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 entityType.getInstances(transaction, transitivity);
 ----
 
 [#_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction]
-=== getSubtypes
-
-==== Signature
+==== getSubtypes
 
 [source,java]
 ----
@@ -178,22 +143,17 @@ entityType.getInstances(transaction, transitivity);
 java.util.stream.Stream<? extends EntityType> getSubtypes​(TypeDBTransaction transaction)
 ----
 
-==== Description
-
 Retrieves all (direct and indirect) subtypes of the ``EntityType``. Equivalent to ``getSubtypes(transaction, Transitivity.TRANSITIVE)``
 
 
 See also: <<#_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getSubtypes(TypeDBTransaction, Transitivity)``>>
 
 
-==== Returns
-
+.Returns
 `java.util.stream.Stream<? extends EntityType>`
 
 [#_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
-=== getSubtypes
-
-==== Signature
+==== getSubtypes
 
 [source,java]
 ----
@@ -202,13 +162,11 @@ java.util.stream.Stream<? extends EntityType> getSubtypes​(TypeDBTransaction t
                                                           Concept.Transitivity transitivity)
 ----
 
-==== Description
-
 Retrieves all direct and indirect (or direct only) subtypes of the ``EntityType``. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -217,21 +175,17 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Concept.Transitivity` 
 |===
 
-==== Returns
-
+.Returns
 `java.util.stream.Stream<? extends EntityType>`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 entityType.getSubtypes(transaction, transitivity);
 ----
 
 [#_setSupertype_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_EntityType]
-=== setSupertype
-
-==== Signature
+==== setSupertype
 
 [source,java]
 ----
@@ -239,13 +193,11 @@ void setSupertype​(TypeDBTransaction transaction,
                   EntityType superEntityType)
 ----
 
-==== Description
-
 Sets the supplied ``EntityType`` as the supertype of the current ``EntityType``. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -254,229 +206,177 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 a| `superEntityType` a| The ``EntityType`` to set as the supertype of this ``EntityType`` a| `EntityType` 
 |===
 
-==== Returns
-
+.Returns
 `void`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 entityType.setSupertype(transaction, entityType);
 ----
 
 [#_asAttribute_]
-=== asAttribute
-
-==== Signature
+==== asAttribute
 
 [source,java]
 ----
 default Attribute asAttribute()
 ----
 
-==== Description
-
 Casts the concept to ``Attribute``. 
 
 
-==== Returns
-
+.Returns
 `Attribute`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asAttribute();
 ----
 
 [#_asAttributeType_]
-=== asAttributeType
-
-==== Signature
+==== asAttributeType
 
 [source,java]
 ----
 default AttributeType asAttributeType()
 ----
 
-==== Description
-
 Casts the concept to ``AttributeType``. 
 
 
-==== Returns
-
+.Returns
 `AttributeType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asAttributeType();
 ----
 
 [#_asEntity_]
-=== asEntity
-
-==== Signature
+==== asEntity
 
 [source,java]
 ----
 default Entity asEntity()
 ----
 
-==== Description
-
 Casts the concept to ``Entity``. 
 
 
-==== Returns
-
+.Returns
 `Entity`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asEntity();
 ----
 
 [#_asRelation_]
-=== asRelation
-
-==== Signature
+==== asRelation
 
 [source,java]
 ----
 default Relation asRelation()
 ----
 
-==== Description
-
 Casts the concept to ``Relation``. 
 
 
-==== Returns
-
+.Returns
 `Relation`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asRelation();
 ----
 
 [#_asRelationType_]
-=== asRelationType
-
-==== Signature
+==== asRelationType
 
 [source,java]
 ----
 default RelationType asRelationType()
 ----
 
-==== Description
-
 Casts the concept to ``RelationType``. 
 
 
-==== Returns
-
+.Returns
 `RelationType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asRelationType();
 ----
 
 [#_asRoleType_]
-=== asRoleType
-
-==== Signature
+==== asRoleType
 
 [source,java]
 ----
 default RoleType asRoleType()
 ----
 
-==== Description
-
 Casts the concept to ``RoleType``. 
 
 
-==== Returns
-
+.Returns
 `RoleType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asRoleType();
 ----
 
 [#_asThing_]
-=== asThing
-
-==== Signature
+==== asThing
 
 [source,java]
 ----
 default Thing asThing()
 ----
 
-==== Description
-
 Casts the concept to ``Thing``. 
 
 
-==== Returns
-
+.Returns
 `Thing`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asThing();
 ----
 
 [#_asValue_]
-=== asValue
-
-==== Signature
+==== asValue
 
 [source,java]
 ----
 default Value asValue()
 ----
 
-==== Description
-
 Casts the concept to ``Value``. 
 
 
-==== Returns
-
+.Returns
 `Value`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asValue();
 ----
 
 [#_isAttribute_]
-=== isAttribute
-
-==== Signature
+==== isAttribute
 
 [source,java]
 ----
@@ -484,26 +384,20 @@ concept.asValue();
 default boolean isAttribute()
 ----
 
-==== Description
-
 Checks if the concept is an ``Attribute``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isAttribute();
 ----
 
 [#_isAttributeType_]
-=== isAttributeType
-
-==== Signature
+==== isAttributeType
 
 [source,java]
 ----
@@ -511,26 +405,20 @@ concept.isAttribute();
 default boolean isAttributeType()
 ----
 
-==== Description
-
 Checks if the concept is an ``AttributeType``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isAttributeType();
 ----
 
 [#_isEntity_]
-=== isEntity
-
-==== Signature
+==== isEntity
 
 [source,java]
 ----
@@ -538,26 +426,20 @@ concept.isAttributeType();
 default boolean isEntity()
 ----
 
-==== Description
-
 Checks if the concept is an ``Entity``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isEntity();
 ----
 
 [#_isRelation_]
-=== isRelation
-
-==== Signature
+==== isRelation
 
 [source,java]
 ----
@@ -565,26 +447,20 @@ concept.isEntity();
 default boolean isRelation()
 ----
 
-==== Description
-
 Checks if the concept is a ``Relation``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isRelation();
 ----
 
 [#_isRelationType_]
-=== isRelationType
-
-==== Signature
+==== isRelationType
 
 [source,java]
 ----
@@ -592,26 +468,20 @@ concept.isRelation();
 default boolean isRelationType()
 ----
 
-==== Description
-
 Checks if the concept is a ``RelationType``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isRelationType();
 ----
 
 [#_isRoleType_]
-=== isRoleType
-
-==== Signature
+==== isRoleType
 
 [source,java]
 ----
@@ -619,26 +489,20 @@ concept.isRelationType();
 default boolean isRoleType()
 ----
 
-==== Description
-
 Checks if the concept is a ``RoleType``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isRoleType();
 ----
 
 [#_isThing_]
-=== isThing
-
-==== Signature
+==== isThing
 
 [source,java]
 ----
@@ -646,26 +510,20 @@ concept.isRoleType();
 default boolean isThing()
 ----
 
-==== Description
-
 Checks if the concept is a ``Thing``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isThing();
 ----
 
 [#_isValue_]
-=== isValue
-
-==== Signature
+==== isValue
 
 [source,java]
 ----
@@ -673,17 +531,13 @@ concept.isThing();
 default boolean isValue()
 ----
 
-==== Description
-
 Checks if the concept is a ``Value``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isValue();

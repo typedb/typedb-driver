@@ -1,13 +1,13 @@
 [#_TypeDBOptions]
-= TypeDBOptions
-
-== Description
+=== TypeDBOptions
 
 TypeDB session and transaction options. ``TypeDBOptions`` object can be used to override the default server behaviour query processing.
 
 Options could be specified either as constructor arguments or using properties assignment.
 
-== Code examples
+[caption=""]
+.TypeDBOptions examples
+====
 
 [source,python]
 ----
@@ -15,8 +15,10 @@ transaction_options = TypeDBOptions(infer=True, session_idle_timeout_millis=2000
 transaction_options.explain = True
 ----
 
-== Properties
+====
 
+[caption=""]
+.Properties
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]

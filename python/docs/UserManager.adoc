@@ -1,54 +1,40 @@
 [#_UserManager]
-= UserManager
-
-== Description
+=== UserManager
 
 Provides access to all user management methods.
 
-== Methods
-
 // tag::methods[]
 [#_all]
-=== all
-
-==== Signature
+==== all
 
 [source,python]
 ----
 all() -> List[User]
 ----
 
-==== Description
-
 Retrieves all users which exist on the TypeDB server.
 
-==== Returns
-
+.Returns
 `List[User]`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 driver.users.all()
 ----
 
 [#_contains]
-=== contains
-
-==== Signature
+==== contains
 
 [source,python]
 ----
 contains(username: str) -> bool
 ----
 
-==== Description
-
 Checks if a user with the given name exists.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -56,33 +42,27 @@ Checks if a user with the given name exists.
 a| `username` a| The user name to be checked a| `str` a| 
 |===
 
-==== Returns
-
+.Returns
 `bool`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 driver.users.contains(username)
 ----
 
 [#_create]
-=== create
-
-==== Signature
+==== create
 
 [source,python]
 ----
 create(username: str, password: str) -> None
 ----
 
-==== Description
-
 Create a user with the given name and password.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -91,33 +71,27 @@ a| `username` a| The name of the user to be created a| `str` a|
 a| `password` a| The password of the user to be created a| `str` a| 
 |===
 
-==== Returns
-
+.Returns
 `None`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 driver.users.create(username, password)
 ----
 
 [#_delete]
-=== delete
-
-==== Signature
+==== delete
 
 [source,python]
 ----
 delete(username: str) -> None
 ----
 
-==== Description
-
 Deletes a user with the given name.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -125,33 +99,27 @@ Deletes a user with the given name.
 a| `username` a| The name of the user to be deleted a| `str` a| 
 |===
 
-==== Returns
-
+.Returns
 `None`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 driver.users.delete(username)
 ----
 
 [#_get]
-=== get
-
-==== Signature
+==== get
 
 [source,python]
 ----
 get(username: str) -> User | None
 ----
 
-==== Description
-
 Retrieve a user with the given name.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -159,33 +127,27 @@ Retrieve a user with the given name.
 a| `username` a| The name of the user to retrieve a| `str` a| 
 |===
 
-==== Returns
-
+.Returns
 `User | None`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 driver.users.get(username)
 ----
 
 [#_password_set]
-=== password_set
-
-==== Signature
+==== password_set
 
 [source,python]
 ----
 password_set(username: str, password: str) -> None
 ----
 
-==== Description
-
 Sets a new password for a user. This operation can only be performed by administrators.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -194,12 +156,10 @@ a| `username` a| The name of the user to set the password of a| `str` a|
 a| `password` a| The new password a| `str` a| 
 |===
 
-==== Returns
-
+.Returns
 `None`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 driver.users.password_set(username, password)

@@ -1,29 +1,21 @@
 [#_Explainables]
-= Explainables
-
-== Description
+=== Explainables
 
 Contains explainable objects.
 
-== Methods
-
 // tag::methods[]
 [#_attribute]
-=== attribute
-
-==== Signature
+==== attribute
 
 [source,python]
 ----
 attribute(variable: str) -> Explainable
 ----
 
-==== Description
-
 Retrieves the explainable attribute with the given variable name.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -31,58 +23,46 @@ Retrieves the explainable attribute with the given variable name.
 a| `variable` a| The string representation of a variable a| `str` a| 
 |===
 
-==== Returns
-
+.Returns
 `Explainable`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 concept_map.explainables().attribute(variable)
 ----
 
 [#_attributes]
-=== attributes
-
-==== Signature
+==== attributes
 
 [source,python]
 ----
 attributes() -> Mapping[str, Explainable]
 ----
 
-==== Description
-
 Retrieves all of this ``ConceptMap``’s explainable attributes.
 
-==== Returns
-
+.Returns
 `Mapping[str, Explainable]`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 concept_map.explainables().attributes()
 ----
 
 [#_ownership]
-=== ownership
-
-==== Signature
+==== ownership
 
 [source,python]
 ----
 ownership(owner: str, attribute: str) -> Explainable
 ----
 
-==== Description
-
 Retrieves the explainable attribute ownership with the pair of (owner, attribute) variable names.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -91,58 +71,46 @@ a| `owner` a| The string representation of the owner variable a| `str` a|
 a| `attribute` a| The string representation of the attribute variable a| `str` a| 
 |===
 
-==== Returns
-
+.Returns
 `Explainable`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 concept_map.explainables().ownership(owner, attribute)
 ----
 
 [#_ownerships]
-=== ownerships
-
-==== Signature
+==== ownerships
 
 [source,python]
 ----
 ownerships() -> Mapping[tuple[str, str], Explainable]
 ----
 
-==== Description
-
 Retrieves all of this ``ConceptMap``’s explainable ownerships.
 
-==== Returns
-
+.Returns
 `Mapping[tuple[str, str], Explainable]`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 concept_map.explainables().ownerships()
 ----
 
 [#_relation]
-=== relation
-
-==== Signature
+==== relation
 
 [source,python]
 ----
 relation(variable: str) -> Explainable
 ----
 
-==== Description
-
 Retrieves the explainable relation with the given variable name.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -150,37 +118,29 @@ Retrieves the explainable relation with the given variable name.
 a| `variable` a| The string representation of a variable a| `str` a| 
 |===
 
-==== Returns
-
+.Returns
 `Explainable`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 concept_map.explainables().relation(variable)
 ----
 
 [#_relations]
-=== relations
-
-==== Signature
+==== relations
 
 [source,python]
 ----
 relations() -> Mapping[str, Explainable]
 ----
 
-==== Description
-
 Retrieves all of this ``ConceptMap``’s explainable relations.
 
-==== Returns
-
+.Returns
 `Mapping[str, Explainable]`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 concept_map.explainables().relations()

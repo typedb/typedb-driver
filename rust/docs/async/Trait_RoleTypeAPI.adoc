@@ -1,41 +1,31 @@
 [#_trait_RoleTypeAPI]
-= Trait RoleTypeAPI
-
-== Methods
+=== Trait RoleTypeAPI
 
 // tag::methods[]
 [#_trait_RoleTypeAPI_tymethod_is_abstract]
-=== is_abstract
-
-==== Signature
+==== is_abstract
 
 [source,rust]
 ----
 fn is_abstract(&self) -> bool
 ----
 
-==== Description
-
 Checks if the type is prevented from having data instances (i.e., ``abstract``).
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 bool
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 role_type.is_abstract()
 ----
 
 [#_trait_RoleTypeAPI_tymethod_is_deleted]
-=== is_deleted
-
-==== Signature
+==== is_deleted
 
 [source,rust]
 ----
@@ -50,12 +40,10 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 Checks if this type is deleted.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -63,8 +51,7 @@ Checks if this type is deleted.
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result<bool>> + Send + 'async_trait>>
@@ -75,17 +62,14 @@ where
      'life2: 'async_trait,
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 role_type.is_deleted(transaction).await;
 ----
 
 [#_trait_RoleTypeAPI_tymethod_get_relation_type]
-=== get_relation_type
-
-==== Signature
+==== get_relation_type
 
 [source,rust]
 ----
@@ -100,12 +84,10 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 Retrieves the ``RelationType`` that this role is directly related to.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -113,8 +95,7 @@ Retrieves the ``RelationType`` that this role is directly related to.
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result<Option<RelationType>>> + Send + 'async_trait>>
@@ -125,17 +106,14 @@ where
      'life2: 'async_trait,
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 role_type.get_relation_type(transaction).await;
 ----
 
 [#_trait_RoleTypeAPI_method_delete]
-=== delete
-
-==== Signature
+==== delete
 
 [source,rust]
 ----
@@ -150,12 +128,10 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 Deletes this type from the database.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -163,8 +139,7 @@ Deletes this type from the database.
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
@@ -175,17 +150,14 @@ where
      'life2: 'async_trait,
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 role_type.delete(transaction).await;
 ----
 
 [#_trait_RoleTypeAPI_method_set_label]
-=== set_label
-
-==== Signature
+==== set_label
 
 [source,rust]
 ----
@@ -201,12 +173,10 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 Renames the label of the type. The new label must remain unique.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -215,8 +185,7 @@ a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 a| `new_label` a| The new ``Label`` to be given to the type. a| `String` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
@@ -227,17 +196,14 @@ where
      'life2: 'async_trait,
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 role_type.set_label(transaction, new_label).await;
 ----
 
 [#_trait_RoleTypeAPI_method_get_supertype]
-=== get_supertype
-
-==== Signature
+==== get_supertype
 
 [source,rust]
 ----
@@ -252,12 +218,10 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 Retrieves the most immediate supertype of the ``RoleType``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -265,8 +229,7 @@ Retrieves the most immediate supertype of the ``RoleType``.
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result<Option<RoleType>>> + Send + 'async_trait>>
@@ -277,17 +240,14 @@ where
      'life2: 'async_trait,
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 role_type.get_supertype(transaction).await;
 ----
 
 [#_trait_RoleTypeAPI_method_get_supertypes]
-=== get_supertypes
-
-==== Signature
+==== get_supertypes
 
 [source,rust]
 ----
@@ -297,12 +257,10 @@ fn get_supertypes(
 ) -> Result<BoxStream<'_, Result<RoleType>>>
 ----
 
-==== Description
-
 Retrieves all supertypes of the ``RoleType``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -310,24 +268,20 @@ Retrieves all supertypes of the ``RoleType``.
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<RoleType>>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 role_type.get_supertypes(transaction)
 ----
 
 [#_trait_RoleTypeAPI_method_get_subtypes]
-=== get_subtypes
-
-==== Signature
+==== get_subtypes
 
 [source,rust]
 ----
@@ -338,12 +292,10 @@ fn get_subtypes(
 ) -> Result<BoxStream<'_, Result<RoleType>>>
 ----
 
-==== Description
-
 Retrieves all direct and indirect (or direct only) subtypes of the ``RoleType``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -352,24 +304,20 @@ a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<RoleType>>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 role_type.get_subtypes(transaction, transitivity)
 ----
 
 [#_trait_RoleTypeAPI_method_get_relation_types]
-=== get_relation_types
-
-==== Signature
+==== get_relation_types
 
 [source,rust]
 ----
@@ -379,12 +327,10 @@ fn get_relation_types(
 ) -> Result<BoxStream<'_, Result<RelationType>>>
 ----
 
-==== Description
-
 Retrieves ``RelationType``s that this role is related to (directly or indirectly).
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -392,24 +338,20 @@ Retrieves ``RelationType``s that this role is related to (directly or indirectly
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<RelationType>>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 role_type.get_relation_types(transaction)
 ----
 
 [#_trait_RoleTypeAPI_method_get_player_types]
-=== get_player_types
-
-==== Signature
+==== get_player_types
 
 [source,rust]
 ----
@@ -420,12 +362,10 @@ fn get_player_types(
 ) -> Result<BoxStream<'_, Result<ThingType>>>
 ----
 
-==== Description
-
 Retrieves the ``ThingType``s whose instances play this role.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -434,24 +374,20 @@ a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect playing, ``Transitivity::Explicit`` for direct playing only a| `Transitivity` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<ThingType>>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 role_type.get_player_types(transaction, transitivity)
 ----
 
 [#_trait_RoleTypeAPI_method_get_relation_instances]
-=== get_relation_instances
-
-==== Signature
+==== get_relation_instances
 
 [source,rust]
 ----
@@ -462,12 +398,10 @@ fn get_relation_instances(
 ) -> Result<BoxStream<'_, Result<Relation>>>
 ----
 
-==== Description
-
 Retrieves the ``Relation`` instances that this role is related to.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -476,24 +410,20 @@ a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect relation, ``Transitivity::Explicit`` for direct relation only a| `Transitivity` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<Relation>>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 role_type.get_relation_instances(transaction, transitivity)
 ----
 
 [#_trait_RoleTypeAPI_method_get_player_instances]
-=== get_player_instances
-
-==== Signature
+==== get_player_instances
 
 [source,rust]
 ----
@@ -504,12 +434,10 @@ fn get_player_instances(
 ) -> Result<BoxStream<'_, Result<Thing>>>
 ----
 
-==== Description
-
 Retrieves the ``Thing`` instances that play this role.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -518,15 +446,13 @@ a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect playing, ``Transitivity::Explicit`` for direct playing only a| `Transitivity` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<Thing>>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 role_type.get_player_instances(transaction, transitivity)

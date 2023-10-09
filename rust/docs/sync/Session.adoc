@@ -1,39 +1,30 @@
 [#_struct_Session]
-= Session
+=== Session
 
 *Implements traits:*
 
 * `Debug`
 * `Drop`
 
-== Methods
-
 // tag::methods[]
 [#_struct_Session_method_new]
-=== new
-
-==== Signature
+==== new
 
 [source,rust]
 ----
 pub fn new(database: Database, session_type: SessionType) -> Result<Self>
 ----
 
-==== Description
-
 Opens a communication tunnel (session) to the given database with default options. See <<#_struct_Session_method_new_with_options,`Session::new_with_options`>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Self>
 ----
 
 [#_struct_Session_method_new_with_options]
-=== new_with_options
-
-==== Signature
+==== new_with_options
 
 [source,rust]
 ----
@@ -44,12 +35,10 @@ pub fn new_with_options(
 ) -> Result<Self>
 ----
 
-==== Description
-
 Opens a communication tunnel (session) to the given database on the running TypeDB server.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -59,141 +48,112 @@ a| `session_type` a| The type of session to be created (DATA or SCHEMA) a| `Sess
 a| `options` a| ``TypeDBOptions`` for the session a| `Options` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Self>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 Session::new_with_options(database, session_type, options);
 ----
 
 [#_struct_Session_method_database_name]
-=== database_name
-
-==== Signature
+==== database_name
 
 [source,rust]
 ----
 pub fn database_name(&self) -> &str
 ----
 
-==== Description
-
 Returns the name of the database of the session.
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 &str
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 session.database_name();
 ----
 
 [#_struct_Session_method_type]
-=== type_
-
-==== Signature
+==== type_
 
 [source,rust]
 ----
 pub fn type_(&self) -> SessionType
 ----
 
-==== Description
-
 The current session’s type (SCHEMA or DATA)
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 SessionType
 ----
 
 [#_struct_Session_method_is_open]
-=== is_open
-
-==== Signature
+==== is_open
 
 [source,rust]
 ----
 pub fn is_open(&self) -> bool
 ----
 
-==== Description
-
 Checks whether this session is open.
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 bool
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 session.is_open();
 ----
 
 [#_struct_Session_method_force_close]
-=== force_close
-
-==== Signature
+==== force_close
 
 [source,rust]
 ----
 pub fn force_close(&self) -> Result
 ----
 
-==== Description
-
 Closes the session. Before opening a new session, the session currently open should first be closed.
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 session.force_close();
 ----
 
 [#_struct_Session_method_on_close]
-=== on_close
-
-==== Signature
+==== on_close
 
 [source,rust]
 ----
 pub fn on_close(&self, callback: impl FnOnce() + Send + 'static)
 ----
 
-==== Description
-
 Registers a callback function which will be executed when this session is closed.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -201,24 +161,20 @@ Registers a callback function which will be executed when this session is closed
 a| `function` a| The callback function. a| 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 null
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 session.on_close(function);
 ----
 
 [#_struct_Session_method_transaction]
-=== transaction
-
-==== Signature
+==== transaction
 
 [source,rust]
 ----
@@ -228,21 +184,16 @@ pub fn transaction(
 ) -> Result<Transaction<'_>>
 ----
 
-==== Description
-
 Opens a transaction to perform read or write queries on the database connected to the session. See <<#_struct_Session_method_transaction_with_options,`Session::transaction_with_options`>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Transaction<'_>>
 ----
 
 [#_struct_Session_method_transaction_with_options]
-=== transaction_with_options
-
-==== Signature
+==== transaction_with_options
 
 [source,rust]
 ----
@@ -253,12 +204,10 @@ pub fn transaction_with_options(
 ) -> Result<Transaction<'_>>
 ----
 
-==== Description
-
 Opens a transaction to perform read or write queries on the database connected to the session.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -267,15 +216,13 @@ a| `transaction_type` a| The type of transaction to be created (READ or WRITE) a
 a| `options` a| Options for the session a| `Options` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Transaction<'_>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 session.transaction_with_options(transaction_type, options);

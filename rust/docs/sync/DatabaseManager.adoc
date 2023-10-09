@@ -1,30 +1,24 @@
 [#_struct_DatabaseManager]
-= DatabaseManager
+=== DatabaseManager
 
 *Implements traits:*
 
 * `Clone`
 * `Debug`
 
-== Methods
-
 // tag::methods[]
 [#_struct_DatabaseManager_method_get]
-=== get
-
-==== Signature
+==== get
 
 [source,rust]
 ----
 pub fn get(&self, name: impl Into<String>) -> Result<Database>
 ----
 
-==== Description
-
 Retrieve the database with the given name.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -32,36 +26,30 @@ Retrieve the database with the given name.
 a| `name` a| The name of the database to retrieve a| `impl Into<String>` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Database>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 driver.databases().get(name);
 ----
 
 [#_struct_DatabaseManager_method_contains]
-=== contains
-
-==== Signature
+==== contains
 
 [source,rust]
 ----
 pub fn contains(&self, name: impl Into<String>) -> Result<bool>
 ----
 
-==== Description
-
 Checks if a database with the given name exists
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -69,36 +57,30 @@ Checks if a database with the given name exists
 a| `name` a| The database name to be checked a| `impl Into<String>` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<bool>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 driver.databases().contains(name);
 ----
 
 [#_struct_DatabaseManager_method_create]
-=== create
-
-==== Signature
+==== create
 
 [source,rust]
 ----
 pub fn create(&self, name: impl Into<String>) -> Result
 ----
 
-==== Description
-
 Create a database with the given name
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -106,43 +88,35 @@ Create a database with the given name
 a| `name` a| The name of the database to be created a| `impl Into<String>` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 driver.databases().create(name);
 ----
 
 [#_struct_DatabaseManager_method_all]
-=== all
-
-==== Signature
+==== all
 
 [source,rust]
 ----
 pub fn all(&self) -> Result<Vec<Database>>
 ----
 
-==== Description
-
 Retrieves all databases present on the TypeDB server
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Vec<Database>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 driver.databases().all();

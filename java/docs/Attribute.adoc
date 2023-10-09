@@ -1,5 +1,5 @@
 [#_Attribute]
-= Attribute
+=== Attribute
 
 *Package*: `com.vaticle.typedb.driver.api.concept.thing`
 
@@ -8,21 +8,15 @@
 * `Concept`
 * `Thing`
 
-== Description
-
 
 
 Attribute is an instance of the attribute type and has a value. This value is fixed and unique for every given instance of the attribute type.
 
 Attribute type can be uniquely addressed by its type and value.
 
-== Methods
-
 // tag::methods[]
 [#_getType_]
-=== getType
-
-==== Signature
+==== getType
 
 [source,java]
 ----
@@ -30,26 +24,20 @@ Attribute type can be uniquely addressed by its type and value.
 AttributeType getType()
 ----
 
-==== Description
-
 Retrieves the type which this ``Attribute`` belongs to. 
 
 
-==== Returns
-
+.Returns
 `AttributeType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 attribute.getType();
 ----
 
 [#_isAttribute_]
-=== isAttribute
-
-==== Signature
+==== isAttribute
 
 [source,java]
 ----
@@ -57,26 +45,20 @@ attribute.getType();
 default boolean isAttribute()
 ----
 
-==== Description
-
 Checks if the concept is an ``Attribute``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 attribute.isAttribute();
 ----
 
 [#_asAttribute_]
-=== asAttribute
-
-==== Signature
+==== asAttribute
 
 [source,java]
 ----
@@ -84,78 +66,60 @@ attribute.isAttribute();
 default Attribute asAttribute()
 ----
 
-==== Description
-
 Casts the concept to ``Attribute``. 
 
 
-==== Returns
-
+.Returns
 `Attribute`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 attribute.asAttribute();
 ----
 
 [#_getValue_]
-=== getValue
-
-==== Signature
+==== getValue
 
 [source,java]
 ----
 Value getValue()
 ----
 
-==== Description
-
 Retrieves the value which the ``Attribute`` instance holds. 
 
 
-==== Returns
-
+.Returns
 `Value`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 attribute.getValue();
 ----
 
 [#_toJSON_]
-=== toJSON
-
-==== Signature
+==== toJSON
 
 [source,java]
 ----
 default com.eclipsesource.json.JsonObject toJSON()
 ----
 
-==== Description
-
 Retrieves this ``Attribute`` as JSON. 
 
 
-==== Returns
-
+.Returns
 `com.eclipsesource.json.JsonObject`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 attribute.toJson();
 ----
 
 [#_getOwners_com_vaticle_typedb_driver_api_TypeDBTransaction]
-=== getOwners
-
-==== Signature
+==== getOwners
 
 [source,java]
 ----
@@ -163,13 +127,11 @@ attribute.toJson();
 java.util.stream.Stream<? extends Thing> getOwners​(TypeDBTransaction transaction)
 ----
 
-==== Description
-
 Retrieves the instances that own this ``Attribute``. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -177,21 +139,17 @@ Retrieves the instances that own this ``Attribute``.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
 |===
 
-==== Returns
-
+.Returns
 `java.util.stream.Stream<? extends Thing>`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 attribute.getOwners(transaction);
 ----
 
 [#_getOwners_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_ThingType]
-=== getOwners
-
-==== Signature
+==== getOwners
 
 [source,java]
 ----
@@ -200,13 +158,11 @@ java.util.stream.Stream<? extends Thing> getOwners​(TypeDBTransaction transact
                                                    ThingType ownerType)
 ----
 
-==== Description
-
 Retrieves the instances that own this ``Attribute``. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -215,255 +171,197 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 a| `ownerType` a| Filter results for only owners of the given type a| `ThingType` 
 |===
 
-==== Returns
-
+.Returns
 `java.util.stream.Stream<? extends Thing>`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 attribute.getOwners(transaction, ownerType);
 ----
 
 [#_asAttributeType_]
-=== asAttributeType
-
-==== Signature
+==== asAttributeType
 
 [source,java]
 ----
 default AttributeType asAttributeType()
 ----
 
-==== Description
-
 Casts the concept to ``AttributeType``. 
 
 
-==== Returns
-
+.Returns
 `AttributeType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asAttributeType();
 ----
 
 [#_asEntity_]
-=== asEntity
-
-==== Signature
+==== asEntity
 
 [source,java]
 ----
 default Entity asEntity()
 ----
 
-==== Description
-
 Casts the concept to ``Entity``. 
 
 
-==== Returns
-
+.Returns
 `Entity`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asEntity();
 ----
 
 [#_asEntityType_]
-=== asEntityType
-
-==== Signature
+==== asEntityType
 
 [source,java]
 ----
 default EntityType asEntityType()
 ----
 
-==== Description
-
 Casts the concept to ``EntityType``. 
 
 
-==== Returns
-
+.Returns
 `EntityType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asEntityType();
 ----
 
 [#_asRelation_]
-=== asRelation
-
-==== Signature
+==== asRelation
 
 [source,java]
 ----
 default Relation asRelation()
 ----
 
-==== Description
-
 Casts the concept to ``Relation``. 
 
 
-==== Returns
-
+.Returns
 `Relation`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asRelation();
 ----
 
 [#_asRelationType_]
-=== asRelationType
-
-==== Signature
+==== asRelationType
 
 [source,java]
 ----
 default RelationType asRelationType()
 ----
 
-==== Description
-
 Casts the concept to ``RelationType``. 
 
 
-==== Returns
-
+.Returns
 `RelationType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asRelationType();
 ----
 
 [#_asRoleType_]
-=== asRoleType
-
-==== Signature
+==== asRoleType
 
 [source,java]
 ----
 default RoleType asRoleType()
 ----
 
-==== Description
-
 Casts the concept to ``RoleType``. 
 
 
-==== Returns
-
+.Returns
 `RoleType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asRoleType();
 ----
 
 [#_asThingType_]
-=== asThingType
-
-==== Signature
+==== asThingType
 
 [source,java]
 ----
 default ThingType asThingType()
 ----
 
-==== Description
-
 Casts the concept to ``ThingType``. 
 
 
-==== Returns
-
+.Returns
 `ThingType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asThingType();
 ----
 
 [#_asType_]
-=== asType
-
-==== Signature
+==== asType
 
 [source,java]
 ----
 default Type asType()
 ----
 
-==== Description
-
 Casts the concept to ``Type``. 
 
 
-==== Returns
-
+.Returns
 `Type`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asType();
 ----
 
 [#_asValue_]
-=== asValue
-
-==== Signature
+==== asValue
 
 [source,java]
 ----
 default Value asValue()
 ----
 
-==== Description
-
 Casts the concept to ``Value``. 
 
 
-==== Returns
-
+.Returns
 `Value`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asValue();
 ----
 
 [#_isAttributeType_]
-=== isAttributeType
-
-==== Signature
+==== isAttributeType
 
 [source,java]
 ----
@@ -471,26 +369,20 @@ concept.asValue();
 default boolean isAttributeType()
 ----
 
-==== Description
-
 Checks if the concept is an ``AttributeType``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isAttributeType();
 ----
 
 [#_isEntity_]
-=== isEntity
-
-==== Signature
+==== isEntity
 
 [source,java]
 ----
@@ -498,26 +390,20 @@ concept.isAttributeType();
 default boolean isEntity()
 ----
 
-==== Description
-
 Checks if the concept is an ``Entity``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isEntity();
 ----
 
 [#_isEntityType_]
-=== isEntityType
-
-==== Signature
+==== isEntityType
 
 [source,java]
 ----
@@ -525,26 +411,20 @@ concept.isEntity();
 default boolean isEntityType()
 ----
 
-==== Description
-
 Checks if the concept is an ``EntityType``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isEntityType();
 ----
 
 [#_isRelation_]
-=== isRelation
-
-==== Signature
+==== isRelation
 
 [source,java]
 ----
@@ -552,26 +432,20 @@ concept.isEntityType();
 default boolean isRelation()
 ----
 
-==== Description
-
 Checks if the concept is a ``Relation``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isRelation();
 ----
 
 [#_isRelationType_]
-=== isRelationType
-
-==== Signature
+==== isRelationType
 
 [source,java]
 ----
@@ -579,26 +453,20 @@ concept.isRelation();
 default boolean isRelationType()
 ----
 
-==== Description
-
 Checks if the concept is a ``RelationType``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isRelationType();
 ----
 
 [#_isRoleType_]
-=== isRoleType
-
-==== Signature
+==== isRoleType
 
 [source,java]
 ----
@@ -606,26 +474,20 @@ concept.isRelationType();
 default boolean isRoleType()
 ----
 
-==== Description
-
 Checks if the concept is a ``RoleType``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isRoleType();
 ----
 
 [#_isThingType_]
-=== isThingType
-
-==== Signature
+==== isThingType
 
 [source,java]
 ----
@@ -633,26 +495,20 @@ concept.isRoleType();
 default boolean isThingType()
 ----
 
-==== Description
-
 Checks if the concept is a ``ThingType``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isThingType();
 ----
 
 [#_isType_]
-=== isType
-
-==== Signature
+==== isType
 
 [source,java]
 ----
@@ -660,26 +516,20 @@ concept.isThingType();
 default boolean isType()
 ----
 
-==== Description
-
 Checks if the concept is a ``Type``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isType();
 ----
 
 [#_isValue_]
-=== isValue
-
-==== Signature
+==== isValue
 
 [source,java]
 ----
@@ -687,17 +537,13 @@ concept.isType();
 default boolean isValue()
 ----
 
-==== Description
-
 Checks if the concept is a ``Value``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isValue();

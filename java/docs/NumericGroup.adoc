@@ -1,19 +1,13 @@
 [#_NumericGroup]
-= NumericGroup
+=== NumericGroup
 
 *Package*: `com.vaticle.typedb.driver.api.answer`
 
-== Description
-
 Contains an element of the group aggregate query result.
-
-== Methods
 
 // tag::methods[]
 [#_owner_]
-=== owner
-
-==== Signature
+==== owner
 
 [source,java]
 ----
@@ -21,26 +15,20 @@ Contains an element of the group aggregate query result.
 Concept owner()
 ----
 
-==== Description
-
 Retrieves the concept that is the group owner. 
 
 
-==== Returns
-
+.Returns
 `Concept`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 conceptMapGroup.owner()
 ----
 
 [#_numeric_]
-=== numeric
-
-==== Signature
+==== numeric
 
 [source,java]
 ----
@@ -48,17 +36,13 @@ conceptMapGroup.owner()
 Numeric numeric()
 ----
 
-==== Description
-
 Retrieves the ``Numeric`` answer of the group. 
 
 
-==== Returns
-
+.Returns
 `Numeric`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 numericGroup.numeric();

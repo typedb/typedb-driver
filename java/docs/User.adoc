@@ -1,19 +1,13 @@
 [#_User]
-= User
+=== User
 
 *Package*: `com.vaticle.typedb.driver.api.user`
 
-== Description
-
 TypeDB user information
-
-== Methods
 
 // tag::methods[]
 [#_username_]
-=== username
-
-==== Signature
+==== username
 
 [source,java]
 ----
@@ -21,36 +15,26 @@ TypeDB user information
 java.lang.String username()
 ----
 
-==== Description
-
 Returns the name of this user.
 
-==== Returns
-
+.Returns
 `java.lang.String`
 
 [#_passwordExpirySeconds_]
-=== passwordExpirySeconds
-
-==== Signature
+==== passwordExpirySeconds
 
 [source,java]
 ----
 java.util.Optional<java.lang.Long> passwordExpirySeconds()
 ----
 
-==== Description
-
 Returns the number of seconds remaining till this user’s current password expires.
 
-==== Returns
-
+.Returns
 `java.util.Optional<java.lang.Long>`
 
 [#_passwordUpdate_java_lang_String_java_lang_String]
-=== passwordUpdate
-
-==== Signature
+==== passwordUpdate
 
 [source,java]
 ----
@@ -58,12 +42,10 @@ void passwordUpdate​(java.lang.String passwordOld,
                     java.lang.String passwordNew)
 ----
 
-==== Description
-
 Updates the password for this user.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -72,8 +54,7 @@ a| `passwordOld` a| The current password of this user a| `java.lang.String`
 a| `passwordNew` a| The new password a| `java.lang.String` 
 |===
 
-==== Returns
-
+.Returns
 `void`
 
 // end::methods[]

@@ -1,19 +1,13 @@
 [#_ConceptMap]
-= ConceptMap
+=== ConceptMap
 
 *Package*: `com.vaticle.typedb.driver.api.answer`
 
-== Description
-
 Contains a mapping of variables to concepts.
-
-== Methods
 
 // tag::methods[]
 [#_variables_]
-=== variables
-
-==== Signature
+==== variables
 
 [source,java]
 ----
@@ -21,26 +15,20 @@ Contains a mapping of variables to concepts.
 java.util.stream.Stream<java.lang.String> variables()
 ----
 
-==== Description
-
 Produces a stream over all variables in this ``ConceptMap``. 
 
 
-==== Returns
-
+.Returns
 `java.util.stream.Stream<java.lang.String>`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 conceptMap.variables();
 ----
 
 [#_concepts_]
-=== concepts
-
-==== Signature
+==== concepts
 
 [source,java]
 ----
@@ -48,26 +36,20 @@ conceptMap.variables();
 java.util.stream.Stream<Concept> concepts()
 ----
 
-==== Description
-
 Produces a stream over all concepts in this ``ConceptMap``. 
 
 
-==== Returns
-
+.Returns
 `java.util.stream.Stream<Concept>`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 conceptMap.concepts();
 ----
 
 [#_get_java_lang_String]
-=== get
-
-==== Signature
+==== get
 
 [source,java]
 ----
@@ -75,13 +57,11 @@ conceptMap.concepts();
 Concept get​(java.lang.String variable)
 ----
 
-==== Description
-
 Retrieves a concept for a given variable name. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -89,21 +69,17 @@ Retrieves a concept for a given variable name.
 a| `variable` a| The string representation of a variable a| `java.lang.String` 
 |===
 
-==== Returns
-
+.Returns
 `Concept`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 conceptMap.get(variable);
 ----
 
 [#_toJSON_]
-=== toJSON
-
-==== Signature
+==== toJSON
 
 [source,java]
 ----
@@ -111,43 +87,33 @@ conceptMap.get(variable);
 default com.eclipsesource.json.JsonObject toJSON()
 ----
 
-==== Description
-
 Retrieves this ``ConceptMap`` as JSON. 
 
 
-==== Returns
-
+.Returns
 `com.eclipsesource.json.JsonObject`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 conceptMap.toJSON();
 ----
 
 [#_explainables_]
-=== explainables
-
-==== Signature
+==== explainables
 
 [source,java]
 ----
 ConceptMap.Explainables explainables()
 ----
 
-==== Description
-
 Gets the ``Explainables`` object for this ``ConceptMap``, exposing which of the concepts in this ``ConceptMap`` are explainable. 
 
 
-==== Returns
-
+.Returns
 `ConceptMap.Explainables`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 conceptMap.explainables();

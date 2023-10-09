@@ -1,8 +1,8 @@
 [#_TypeDBSession]
-= TypeDBSession
+=== TypeDBSession
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]
@@ -15,75 +15,57 @@ a| `type` a| `SessionType` a| The current session’s type (SCHEMA or DATA)
 |===
 // end::properties[]
 
-== Methods
-
 // tag::methods[]
 [#_close]
-=== close
-
-==== Signature
+==== close
 
 [source,nodejs]
 ----
 close(): Promise<void>
 ----
 
-==== Description
-
 Closes the session. Before opening a new session, the session currently open should first be closed.
 
-==== Returns
-
+.Returns
 `Promise<void>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 session.close()
 ----
 
 [#_isOpen]
-=== isOpen
-
-==== Signature
+==== isOpen
 
 [source,nodejs]
 ----
 isOpen(): boolean
 ----
 
-==== Description
-
 Checks whether this session is open.
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 session.isOpen()
 ----
 
 [#_transaction]
-=== transaction
-
-==== Signature
+==== transaction
 
 [source,nodejs]
 ----
 transaction(type, options?): Promise<TypeDBTransaction>
 ----
 
-==== Description
-
 Opens a transaction to perform read or write queries on the database connected to the session.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -92,12 +74,10 @@ a| `type` a| null a| `TransactionType`
 a| `options` a| Options for the session a| `TypeDBOptions` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<TypeDBTransaction>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 session.transaction(transactionType, options)

@@ -1,9 +1,9 @@
 [#_TypeDB]
-= TypeDB
+=== TypeDB
 
+[caption=""]
+.Namespace variables
 // tag::enum_constants[]
-== Namespace variables
-
 [cols="~"]
 [options="header"]
 |===

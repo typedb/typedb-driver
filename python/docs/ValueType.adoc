@@ -1,13 +1,11 @@
 [#_ValueType]
-= ValueType
-
-== Description
+=== ValueType
 
 TypeQL value types for attributes and value concepts.
 
+[caption=""]
+.Enum constants
 // tag::enum_constants[]
-== Enum constants
-
 [cols="~,~"]
 [options="header"]
 |===
@@ -21,25 +19,18 @@ a| `STRING` a| `_ValueType(is_writable=True, is_keyable=True, 4)`
 |===
 // end::enum_constants[]
 
-== Methods
-
 // tag::methods[]
 [#_of]
-=== of
-
-==== Signature
+==== of
 
 [source,python]
 ----
 static of(value_type: Object | Boolean | Long | Double | String | DateTime) -> ValueType
 ----
 
-==== Description
 
 
-
-==== Returns
-
+.Returns
 `ValueType`
 
 // end::methods[]

@@ -1,12 +1,10 @@
 [#_NumericGroup]
-= NumericGroup
-
-== Description
+=== NumericGroup
 
 Contains an element of the group aggregate query result.
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]

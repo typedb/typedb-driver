@@ -1,47 +1,34 @@
 [#_User]
-= User
-
-== Description
+=== User
 
 TypeDB user information
 
-== Methods
-
 // tag::methods[]
 [#_password_expiry_seconds]
-=== password_expiry_seconds
-
-==== Signature
+==== password_expiry_seconds
 
 [source,python]
 ----
 password_expiry_seconds() -> int | None
 ----
 
-==== Description
-
 Returns the number of seconds remaining till this user’s current password expires.
 
-==== Returns
-
+.Returns
 `int | None`
 
 [#_password_update]
-=== password_update
-
-==== Signature
+==== password_update
 
 [source,python]
 ----
 password_update(password_old: str, password_new: str) -> None
 ----
 
-==== Description
-
 Updates the password for this user.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -50,26 +37,20 @@ a| `password_old` a| The current password of this user a| `str` a|
 a| `password_new` a| The new password a| `str` a| 
 |===
 
-==== Returns
-
+.Returns
 `None`
 
 [#_username]
-=== username
-
-==== Signature
+==== username
 
 [source,python]
 ----
 username() -> str
 ----
 
-==== Description
-
 Returns the name of this user.
 
-==== Returns
-
+.Returns
 `str`
 
 // end::methods[]

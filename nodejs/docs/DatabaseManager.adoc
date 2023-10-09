@@ -1,54 +1,40 @@
 [#_DatabaseManager]
-= DatabaseManager
-
-== Description
+=== DatabaseManager
 
 Provides access to all database management methods.
 
-== Methods
-
 // tag::methods[]
 [#_all]
-=== all
-
-==== Signature
+==== all
 
 [source,nodejs]
 ----
 all(): Promise<Database[]>
 ----
 
-==== Description
-
 Retrieves all databases present on the TypeDB server
 
-==== Returns
-
+.Returns
 `Promise<Database[]>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 driver.databases().all()
 ----
 
 [#_contains]
-=== contains
-
-==== Signature
+==== contains
 
 [source,nodejs]
 ----
 contains(name): Promise<boolean>
 ----
 
-==== Description
-
 Checks if a database with the given name exists
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -56,33 +42,27 @@ Checks if a database with the given name exists
 a| `name` a| The database name to be checked a| `string` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<boolean>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 driver.databases().contains(name)
 ----
 
 [#_create]
-=== create
-
-==== Signature
+==== create
 
 [source,nodejs]
 ----
 create(name): Promise<void>
 ----
 
-==== Description
-
 Create a database with the given name
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -90,33 +70,27 @@ Create a database with the given name
 a| `name` a| The name of the database to be created a| `string` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<void>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 driver.databases().create(name)
 ----
 
 [#_get]
-=== get
-
-==== Signature
+==== get
 
 [source,nodejs]
 ----
 get(name): Promise<Database>
 ----
 
-==== Description
-
 Retrieve the database with the given name.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -124,12 +98,10 @@ Retrieve the database with the given name.
 a| `name` a| The name of the database to retrieve a| `string` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<Database>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 driver.databases().get(name)

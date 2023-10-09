@@ -34,13 +34,12 @@ data class Method(
     fun toAsciiDoc(language: String): String {
         var result = ""
         result += "[#_${this.anchor ?: replaceSymbolsForAnchor(this.name)}]\n"
-        result += "=== ${this.name}\n\n"
-        result += "==== Signature\n\n"
+        result += "==== ${this.name}\n\n"
         result += "[source,$language]\n----\n${this.signature}\n----\n\n"
-        result += "==== Description\n\n${this.description.joinToString("\n\n")}\n\n"
+        result += "${this.description.joinToString("\n\n")}\n\n"
 
         if (this.args.isNotEmpty()) {
-            result += "==== Input parameters\n\n"
+            result += "[caption=\"\"]\n.Input parameters\n"
             result += "[cols=\"~,~,~"
             if (language == "python") {
                 result += ",~"
@@ -55,14 +54,14 @@ data class Method(
             result += "|===\n\n"
         }
 
-        result += "==== Returns\n\n"
+        result += ".Returns\n"
         result += when (language) {
             "rust" -> "[source,rust]\n----\n${this.returnType}\n----\n\n"
             else -> "`${this.returnType}`\n\n"
         }
 
         if (this.examples.isNotEmpty()) {
-            result += "==== Code examples\n\n"
+            result += ".Code examples\n"
             this.examples.forEach {
                 result += "[source,$language]\n----\n$it\n----\n\n"
             }

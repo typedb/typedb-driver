@@ -1,12 +1,10 @@
 [#_ConceptMapGroup]
-= ConceptMapGroup
-
-== Description
+=== ConceptMapGroup
 
 Contains an element of the group query result.
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]

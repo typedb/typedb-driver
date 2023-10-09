@@ -1,54 +1,42 @@
 [#_Thing]
-= Thing
+=== Thing
 
 *Supertypes:*
 
 * `Concept`
 
-== Methods
-
 // tag::methods[]
 [#_as_thing]
-=== as_thing
-
-==== Signature
+==== as_thing
 
 [source,python]
 ----
 as_thing() -> Thing
 ----
 
-==== Description
-
 Casts the concept to ``Thing``.
 
-==== Returns
-
+.Returns
 `Thing`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 thing.as_thing()
 ----
 
 [#_delete]
-=== delete
-
-==== Signature
+==== delete
 
 [source,python]
 ----
 delete(transaction: TypeDBTransaction) -> None
 ----
 
-==== Description
-
 Deletes this ``Thing``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -56,33 +44,27 @@ Deletes this ``Thing``.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
-==== Returns
-
+.Returns
 `None`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 thing.delete(transaction)
 ----
 
 [#_get_has]
-=== get_has
-
-==== Signature
+==== get_has
 
 [source,python]
 ----
 get_has(transaction: TypeDBTransaction, attribute_type: AttributeType = None, attribute_types: list[AttributeType] = None, annotations: set[Annotation] = frozenset({})) -> Iterator[Attribute]
 ----
 
-==== Description
-
 Retrieves the ``Attribute``s that this ``Thing`` owns. Optionally, filtered by an ``AttributeType`` or a list of ``AttributeType``s. Optionally, filtered by ``Annotation``s.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -93,12 +75,10 @@ a| `attribute_types` a| The ``AttributeType``s to filter the attributes by a| `l
 a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a| `set[Annotation]` a| `frozenset({})`
 |===
 
-==== Returns
-
+.Returns
 `Iterator[Attribute]`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 thing.get_has(transaction)
@@ -107,46 +87,36 @@ thing.get_has(transaction, attribute_type=attribute_type,
 ----
 
 [#_get_iid]
-=== get_iid
-
-==== Signature
+==== get_iid
 
 [source,python]
 ----
 get_iid() -> str
 ----
 
-==== Description
-
 Retrieves the unique id of the ``Thing``.
 
-==== Returns
-
+.Returns
 `str`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 thing.get_iid()
 ----
 
 [#_get_playing]
-=== get_playing
-
-==== Signature
+==== get_playing
 
 [source,python]
 ----
 get_playing(transaction: TypeDBTransaction) -> Iterator[RoleType]
 ----
 
-==== Description
-
 Retrieves the roles that this ``Thing`` is currently playing.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -154,33 +124,27 @@ Retrieves the roles that this ``Thing`` is currently playing.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
-==== Returns
-
+.Returns
 `Iterator[RoleType]`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 thing.get_playing(transaction)
 ----
 
 [#_get_relations]
-=== get_relations
-
-==== Signature
+==== get_relations
 
 [source,python]
 ----
 get_relations(transaction: TypeDBTransaction, role_types: list[RoleType] = None) -> Iterator[Relation]
 ----
 
-==== Description
-
 Retrieves all the ``Relations`` which this ``Thing`` plays a role in, optionally filtered by one or more given roles.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -189,58 +153,46 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `role_types` a| The list of roles to filter the relations by. a| `list[RoleType]` a| `None`
 |===
 
-==== Returns
-
+.Returns
 `Iterator[Relation]`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 thing.get_relations(transaction, role_types)
 ----
 
 [#_get_type]
-=== get_type
-
-==== Signature
+==== get_type
 
 [source,python]
 ----
 get_type() -> ThingType
 ----
 
-==== Description
-
 Retrieves the type which this ``Thing`` belongs to.
 
-==== Returns
-
+.Returns
 `ThingType`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 thing.get_type()
 ----
 
 [#_is_deleted]
-=== is_deleted
-
-==== Signature
+==== is_deleted
 
 [source,python]
 ----
 is_deleted(transaction: TypeDBTransaction) -> bool
 ----
 
-==== Description
-
 Checks if this ``Thing`` is deleted.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -248,83 +200,65 @@ Checks if this ``Thing`` is deleted.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
 |===
 
-==== Returns
-
+.Returns
 `bool`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 thing.is_deleted(transaction)
 ----
 
 [#_is_inferred]
-=== is_inferred
-
-==== Signature
+==== is_inferred
 
 [source,python]
 ----
 is_inferred() -> bool
 ----
 
-==== Description
-
 Checks if this ``Thing`` is inferred by a [Reasoning Rule].
 
-==== Returns
-
+.Returns
 `bool`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 thing.is_inferred()
 ----
 
 [#_is_thing]
-=== is_thing
-
-==== Signature
+==== is_thing
 
 [source,python]
 ----
 is_thing() -> bool
 ----
 
-==== Description
-
 Checks if the concept is a ``Thing``.
 
-==== Returns
-
+.Returns
 `bool`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 thing.is_thing()
 ----
 
 [#_set_has]
-=== set_has
-
-==== Signature
+==== set_has
 
 [source,python]
 ----
 set_has(transaction: TypeDBTransaction, attribute: Attribute) -> None
 ----
 
-==== Description
-
 Assigns an ``Attribute`` to be owned by this ``Thing``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -333,58 +267,46 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute` a| 
 |===
 
-==== Returns
-
+.Returns
 `None`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 thing.set_has(transaction, attribute)
 ----
 
 [#_to_json]
-=== to_json
-
-==== Signature
+==== to_json
 
 [source,python]
 ----
 to_json() -> Mapping[str, str]
 ----
 
-==== Description
-
 Retrieves a ``Thing`` as JSON.
 
-==== Returns
-
+.Returns
 `Mapping[str, str]`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 thing.to_json()
 ----
 
 [#_unset_has]
-=== unset_has
-
-==== Signature
+==== unset_has
 
 [source,python]
 ----
 unset_has(transaction: TypeDBTransaction, attribute: Attribute) -> None
 ----
 
-==== Description
-
 Unassigns an ``Attribute`` from this ``Thing``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -393,12 +315,10 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attribute` a| 
 |===
 
-==== Returns
-
+.Returns
 `None`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 thing.unset_has(transaction, attribute)

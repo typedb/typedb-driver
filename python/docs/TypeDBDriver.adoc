@@ -1,8 +1,8 @@
 [#_TypeDBDriver]
-= TypeDBDriver
+=== TypeDBDriver
 
-== Properties
-
+[caption=""]
+.Properties
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]
@@ -13,75 +13,57 @@ a| `users` a| `UserManager` a| The ``UserManager`` instance for this connection,
 |===
 // end::properties[]
 
-== Methods
-
 // tag::methods[]
 [#_close]
-=== close
-
-==== Signature
+==== close
 
 [source,python]
 ----
 close() -> None
 ----
 
-==== Description
-
 Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
 
-==== Returns
-
+.Returns
 `None`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 driver.close()
 ----
 
 [#_is_open]
-=== is_open
-
-==== Signature
+==== is_open
 
 [source,python]
 ----
 is_open() -> bool
 ----
 
-==== Description
-
 Checks whether this connection is presently open.
 
-==== Returns
-
+.Returns
 `bool`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 driver.is_open()
 ----
 
 [#_session]
-=== session
-
-==== Signature
+==== session
 
 [source,python]
 ----
 session(database: str, session_type: SessionType, options: TypeDBOptions | None = None) -> TypeDBSession
 ----
 
-==== Description
-
 Opens a communication tunnel (session) to the given database on the running TypeDB server. For more information on the methods, available with sessions, see the ``TypeDBSession`` section.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~,~"]
 [options="header"]
 |===
@@ -91,37 +73,29 @@ a| `session_type` a| The type of session to be created (DATA or SCHEMA) a| `Sess
 a| `options` a| ``TypeDBOptions`` for the session a| `TypeDBOptions \| None` a| `None`
 |===
 
-==== Returns
-
+.Returns
 `TypeDBSession`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 driver.session(database, session_type, options)
 ----
 
 [#_user]
-=== user
-
-==== Signature
+==== user
 
 [source,python]
 ----
 user() -> User
 ----
 
-==== Description
-
 Returns the logged-in user for the connection.
 
-==== Returns
-
+.Returns
 `User`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 driver.user()

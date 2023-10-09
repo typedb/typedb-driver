@@ -1,5 +1,5 @@
 [#_struct_Explainables]
-= Explainables
+=== Explainables
 
 *Implements traits:*
 
@@ -9,12 +9,10 @@
 * `PartialEq<Explainables>`
 * `StructuralPartialEq`
 
-== Description
-
 Contains explainable objects.
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]
@@ -26,32 +24,24 @@ a| `ownerships` a| `HashMap<(String, String), Explainable>` a| Explainable pairs
 |===
 // end::properties[]
 
-== Methods
-
 // tag::methods[]
 [#_struct_Explainables_method_is_empty]
-=== is_empty
-
-==== Signature
+==== is_empty
 
 [source,rust]
 ----
 pub fn is_empty(&self) -> bool
 ----
 
-==== Description
-
 Checks if this ``Explainables`` does not contain any ``Explainable`` object.
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 bool
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 explainables.is_empty()

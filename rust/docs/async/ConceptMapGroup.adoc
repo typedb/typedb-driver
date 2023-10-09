@@ -1,5 +1,5 @@
 [#_struct_ConceptMapGroup]
-= ConceptMapGroup
+=== ConceptMapGroup
 
 *Implements traits:*
 
@@ -8,8 +8,8 @@
 * `PartialEq<ConceptMapGroup>`
 * `StructuralPartialEq`
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]

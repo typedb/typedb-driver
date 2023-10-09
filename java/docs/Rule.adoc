@@ -1,19 +1,13 @@
 [#_Rule]
-= Rule
+=== Rule
 
 *Package*: `com.vaticle.typedb.driver.api.logic`
 
-== Description
-
 Rules are a part of schema and define embedded logic. The reasoning engine uses rules as a set of logic to infer new data. A rule consists of a condition and a conclusion, and is uniquely identified by a label.
-
-== Methods
 
 // tag::methods[]
 [#_getLabel_]
-=== getLabel
-
-==== Signature
+==== getLabel
 
 [source,java]
 ----
@@ -21,18 +15,13 @@ Rules are a part of schema and define embedded logic. The reasoning engine uses 
 java.lang.String getLabel()
 ----
 
-==== Description
-
 Retrieves the unique label of the rule.
 
-==== Returns
-
+.Returns
 `java.lang.String`
 
 [#_getWhen_]
-=== getWhen
-
-==== Signature
+==== getWhen
 
 [source,java]
 ----
@@ -40,18 +29,13 @@ Retrieves the unique label of the rule.
 com.vaticle.typeql.lang.pattern.Pattern getWhen()
 ----
 
-==== Description
-
 The statements that constitute the ‘when’ of the rule.
 
-==== Returns
-
+.Returns
 `com.vaticle.typeql.lang.pattern.Pattern`
 
 [#_getThen_]
-=== getThen
-
-==== Signature
+==== getThen
 
 [source,java]
 ----
@@ -59,18 +43,13 @@ The statements that constitute the ‘when’ of the rule.
 com.vaticle.typeql.lang.pattern.Pattern getThen()
 ----
 
-==== Description
-
 The single statement that constitutes the ‘then’ of the rule.
 
-==== Returns
-
+.Returns
 `com.vaticle.typeql.lang.pattern.Pattern`
 
 [#_setLabel_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
-=== setLabel
-
-==== Signature
+==== setLabel
 
 [source,java]
 ----
@@ -78,13 +57,11 @@ void setLabel​(TypeDBTransaction transaction,
               java.lang.String label)
 ----
 
-==== Description
-
 Renames the label of the rule. The new label must remain unique. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -93,34 +70,28 @@ a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction`
 a| `label` a| The new label to be given to the rule a| `java.lang.String` 
 |===
 
-==== Returns
-
+.Returns
 `void`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 rule.setLabel(transaction, newLabel)
 ----
 
 [#_delete_com_vaticle_typedb_driver_api_TypeDBTransaction]
-=== delete
-
-==== Signature
+==== delete
 
 [source,java]
 ----
 void delete​(TypeDBTransaction transaction)
 ----
 
-==== Description
-
 Deletes this rule. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -128,21 +99,17 @@ Deletes this rule.
 a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction` 
 |===
 
-==== Returns
-
+.Returns
 `void`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 rule.delete(transaction)
 ----
 
 [#_isDeleted_com_vaticle_typedb_driver_api_TypeDBTransaction]
-=== isDeleted
-
-==== Signature
+==== isDeleted
 
 [source,java]
 ----
@@ -150,13 +117,11 @@ rule.delete(transaction)
 boolean isDeleted​(TypeDBTransaction transaction)
 ----
 
-==== Description
-
 Check if this rule has been deleted. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -164,12 +129,10 @@ Check if this rule has been deleted.
 a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction` 
 |===
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 rule.isDeleted(transaction)

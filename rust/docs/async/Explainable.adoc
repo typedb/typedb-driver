@@ -1,5 +1,5 @@
 [#_struct_Explainable]
-= Explainable
+=== Explainable
 
 *Implements traits:*
 
@@ -8,12 +8,10 @@
 * `PartialEq<Explainable>`
 * `StructuralPartialEq`
 
-== Description
-
 Contains an explainable object.
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]

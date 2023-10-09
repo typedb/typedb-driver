@@ -1,23 +1,25 @@
 [#_TypeDBTransaction_Type]
-= TypeDBTransaction.Type
+=== TypeDBTransaction.Type
 
 *Package*: `com.vaticle.typedb.driver.api`
-
-== Description
 
 Used to specify the type of transaction. 
 
 
-== Code examples
+[caption=""]
+.TypeDBTransaction.Type examples
+====
 
 [source,java]
 ----
 session.transaction(TransactionType.READ);
 ----
 
-// tag::enum_constants[]
-== Enum constants
+====
 
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
 [cols="~"]
 [options="header"]
 |===
@@ -27,20 +29,14 @@ a| `WRITE`
 |===
 // end::enum_constants[]
 
-== Methods
-
 // tag::methods[]
 [#_values_]
-=== values
-
-==== Signature
+==== values
 
 [source,java]
 ----
 public static TypeDBTransaction.Type[] values()
 ----
-
-==== Description
 
 Returns an array containing the constants of this enum type, in the order they are declared. This method may be used to iterate over the constants as follows: 
 [source,java]
@@ -51,12 +47,10 @@ for (TypeDBTransaction.Type c : TypeDBTransaction.Type.values())
 ----
 
 
-==== Returns
-
+.Returns
 `public static TypeDBTransaction.Type[]`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 for (TypeDBTransaction.Type c : TypeDBTransaction.Type.values())
@@ -64,21 +58,17 @@ for (TypeDBTransaction.Type c : TypeDBTransaction.Type.values())
 ----
 
 [#_valueOf_java_lang_String]
-=== valueOf
-
-==== Signature
+==== valueOf
 
 [source,java]
 ----
 public static TypeDBTransaction.Type valueOf​(java.lang.String name)
 ----
 
-==== Description
-
 Returns the enum constant of this type with the specified name. The string must match exactly an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -86,80 +76,59 @@ Returns the enum constant of this type with the specified name. The string must 
 a| `name` a| the name of the enum constant to be returned. a| `java.lang.String` 
 |===
 
-==== Returns
-
+.Returns
 `public static TypeDBTransaction.Type`
 
 [#_of_com_vaticle_typedb_driver_jni_TransactionType]
-=== of
-
-==== Signature
+==== of
 
 [source,java]
 ----
 public static TypeDBTransaction.Type of​(com.vaticle.typedb.driver.jni.TransactionType transactionType)
 ----
 
-==== Description
 
 
-
-==== Returns
-
+.Returns
 `public static TypeDBTransaction.Type`
 
 [#_id_]
-=== id
-
-==== Signature
+==== id
 
 [source,java]
 ----
 public int id()
 ----
 
-==== Description
 
 
-
-==== Returns
-
+.Returns
 `public int`
 
 [#_isRead_]
-=== isRead
-
-==== Signature
+==== isRead
 
 [source,java]
 ----
 public boolean isRead()
 ----
 
-==== Description
 
 
-
-==== Returns
-
+.Returns
 `public boolean`
 
 [#_isWrite_]
-=== isWrite
-
-==== Signature
+==== isWrite
 
 [source,java]
 ----
 public boolean isWrite()
 ----
 
-==== Description
 
 
-
-==== Returns
-
+.Returns
 `public boolean`
 
 // end::methods[]

@@ -1,13 +1,9 @@
 [#_trait_AttributeAPI]
-= Trait AttributeAPI
-
-== Methods
+=== Trait AttributeAPI
 
 // tag::methods[]
 [#_trait_AttributeAPI_method_get_owners]
-=== get_owners
-
-==== Signature
+==== get_owners
 
 [source,rust]
 ----
@@ -18,12 +14,10 @@ fn get_owners(
 ) -> Result<BoxStream<'_, Result<Thing>>>
 ----
 
-==== Description
-
 Retrieves the instances that own this ``Attribute``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -32,15 +26,13 @@ a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `owner_type` a| If specified, filter results for only owners of the given type a| 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<Thing>>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 attribute.get_owners(transaction, Some(owner_type));

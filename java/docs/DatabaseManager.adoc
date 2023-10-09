@@ -1,19 +1,13 @@
 [#_DatabaseManager]
-= DatabaseManager
+=== DatabaseManager
 
 *Package*: `com.vaticle.typedb.driver.api.database`
 
-== Description
-
 Provides access to all database management methods.
-
-== Methods
 
 // tag::methods[]
 [#_get_java_lang_String]
-=== get
-
-==== Signature
+==== get
 
 [source,java]
 ----
@@ -21,13 +15,11 @@ Provides access to all database management methods.
 Database get​(java.lang.String name)
 ----
 
-==== Description
-
 Retrieve the database with the given name. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -35,21 +27,17 @@ Retrieve the database with the given name.
 a| `name` a| The name of the database to retrieve a| `java.lang.String` 
 |===
 
-==== Returns
-
+.Returns
 `Database`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 driver.databases().get(name)
 ----
 
 [#_contains_java_lang_String]
-=== contains
-
-==== Signature
+==== contains
 
 [source,java]
 ----
@@ -57,13 +45,11 @@ driver.databases().get(name)
 boolean contains​(java.lang.String name)
 ----
 
-==== Description
-
 Checks if a database with the given name exists 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -71,34 +57,28 @@ Checks if a database with the given name exists
 a| `name` a| The database name to be checked a| `java.lang.String` 
 |===
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 driver.databases().contains(name)
 ----
 
 [#_create_java_lang_String]
-=== create
-
-==== Signature
+==== create
 
 [source,java]
 ----
 void create​(java.lang.String name)
 ----
 
-==== Description
-
 Create a database with the given name 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -106,21 +86,17 @@ Create a database with the given name
 a| `name` a| The name of the database to be created a| `java.lang.String` 
 |===
 
-==== Returns
-
+.Returns
 `void`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 driver.databases().create(name)
 ----
 
 [#_all_]
-=== all
-
-==== Signature
+==== all
 
 [source,java]
 ----
@@ -128,17 +104,13 @@ driver.databases().create(name)
 java.util.List<Database> all()
 ----
 
-==== Description
-
 Retrieves all databases present on the TypeDB server 
 
 
-==== Returns
-
+.Returns
 `java.util.List<Database>`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 driver.databases().all()

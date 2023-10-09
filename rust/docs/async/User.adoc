@@ -1,17 +1,15 @@
 [#_struct_User]
-= User
+=== User
 
 *Implements traits:*
 
 * `Clone`
 * `Debug`
 
-== Description
-
 User information
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]
@@ -22,13 +20,9 @@ a| `password_expiry_seconds` a| `Option<i64>` a| Returns the number of seconds r
 |===
 // end::properties[]
 
-== Methods
-
 // tag::methods[]
 [#_struct_User_method_password_update]
-=== password_update
-
-==== Signature
+==== password_update
 
 [source,rust]
 ----
@@ -40,12 +34,10 @@ pub async fn password_update(
 ) -> Result
 ----
 
-==== Description
-
 Updates user password.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -55,15 +47,13 @@ a| `password_old` a| an old password a| `impl Into<String>`
 a| `password_new` a| a new password a| `impl Into<String>` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 user.password_update(connection, "oldpassword", "nEwp@ssw0rd").await;

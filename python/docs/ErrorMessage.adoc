@@ -1,43 +1,31 @@
 [#_ErrorMessage]
-= ErrorMessage
-
-== Methods
+=== ErrorMessage
 
 // tag::methods[]
 [#_code]
-=== code
-
-==== Signature
+==== code
 
 [source,python]
 ----
 code() -> str
 ----
 
-==== Description
 
 
-
-==== Returns
-
+.Returns
 `str`
 
 [#_message]
-=== message
-
-==== Signature
+==== message
 
 [source,python]
 ----
 message(params: Any) -> str
 ----
 
-==== Description
 
 
-
-==== Returns
-
+.Returns
 `str`
 
 // end::methods[]

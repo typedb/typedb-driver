@@ -1,90 +1,66 @@
 [#_Stream<T>]
-= Stream<T>
-
-== Description
+=== Stream<T>
 
 A stream of elements offering a functional interface to manipulate elements. Typically the elements are generated/retrieved lazily.
 
-== Methods
-
 // tag::methods[]
 [#_new_Stream]
-=== new Stream
-
-==== Signature
+==== new Stream
 
 [source,nodejs]
 ----
 new Stream<T>(): Stream<T>
 ----
 
-==== Description
 
 
-
-==== Returns
-
+.Returns
 `Stream<T>`
 
 [#_[asyncIterator]]
-=== [asyncIterator]
-
-==== Signature
+==== [asyncIterator]
 
 [source,nodejs]
 ----
 [asyncIterator](): AsyncIterator<T, any, undefined>
 ----
 
-==== Description
 
 
-
-==== Returns
-
+.Returns
 `AsyncIterator<T, any, undefined>`
 
 [#_collect]
-=== collect
-
-==== Signature
+==== collect
 
 [source,nodejs]
 ----
 collect(): Promise<T[]>
 ----
 
-==== Description
-
 Collects all the answers from this stream into an array
 
-==== Returns
-
+.Returns
 `Promise<T[]>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 results = transaction.query.match(query).collect().await;
 ----
 
 [#_every]
-=== every
-
-==== Signature
+==== every
 
 [source,nodejs]
 ----
 every(callbackFn): Promise<boolean>
 ----
 
-==== Description
-
 Checks whether a condition is satisfied by ALL answers in this stream.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -92,26 +68,21 @@ Checks whether a condition is satisfied by ALL answers in this stream.
 a| `callbackFn` a| null a| `((value) => unknown)` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<boolean>`
 
 [#_filter]
-=== filter
-
-==== Signature
+==== filter
 
 [source,nodejs]
 ----
 filter(filter): Stream<T>
 ----
 
-==== Description
-
 Returns a new stream from this stream consisting only of elements which satisfy a given condition.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -122,44 +93,34 @@ Examples
 ``Copy a| `((value) => boolean)` 
 |===
 
-==== Returns
-
+.Returns
 `Stream<T>`
 
 [#_first]
-=== first
-
-==== Signature
+==== first
 
 [source,nodejs]
 ----
 first(): Promise<T>
 ----
 
-==== Description
-
 Returns the first element in the stream.
 
-==== Returns
-
+.Returns
 `Promise<T>`
 
 [#_flatMap]
-=== flatMap
-
-==== Signature
+==== flatMap
 
 [source,nodejs]
 ----
 flatMap<U>(mapper): Stream<U>
 ----
 
-==== Description
-
 Given a function which accepts a single element of this stream and returns a new stream, This function returns a new stream obtained by applying the function to each element in the stream, and concatenating each result thus obtained
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -167,26 +128,21 @@ Given a function which accepts a single element of this stream and returns a new
 a| `mapper` a| The mapping function to apply. Must return a stream. a| `((value) => Stream<U>)` 
 |===
 
-==== Returns
-
+.Returns
 `Stream<U>`
 
 [#_forEach]
-=== forEach
-
-==== Signature
+==== forEach
 
 [source,nodejs]
 ----
 forEach(fn): Promise<void>
 ----
 
-==== Description
-
 Executes the given function for each element in the stream.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -194,44 +150,34 @@ Executes the given function for each element in the stream.
 a| `fn` a| The function to evaluate for each element. a| `((value) => void)` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<void>`
 
 [#_iterator]
-=== iterator
-
-==== Signature
+==== iterator
 
 [source,nodejs]
 ----
 iterator(): AsyncIterator<T, any, undefined>
 ----
 
-==== Description
 
 
-
-==== Returns
-
+.Returns
 `AsyncIterator<T, any, undefined>`
 
 [#_map]
-=== map
-
-==== Signature
+==== map
 
 [source,nodejs]
 ----
 map<U>(mapper): Stream<U>
 ----
 
-==== Description
 
 
-
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -239,26 +185,21 @@ map<U>(mapper): Stream<U>
 a| `mapper` a| The mapping function to apply. Returns a new stream from this stream by applying the ``mapper`` function to each element. a| `((value) => U)` 
 |===
 
-==== Returns
-
+.Returns
 `Stream<U>`
 
 [#_some]
-=== some
-
-==== Signature
+==== some
 
 [source,nodejs]
 ----
 some(callbackFn): Promise<boolean>
 ----
 
-==== Description
-
 Checks whether a condition is satisfied by ANY answer in this stream.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -266,8 +207,7 @@ Checks whether a condition is satisfied by ANY answer in this stream.
 a| `callbackFn` a| null a| `((value) => unknown)` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<boolean>`
 
 // end::methods[]

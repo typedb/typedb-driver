@@ -1,5 +1,5 @@
 [#_struct_Options]
-= Options
+=== Options
 
 *Implements traits:*
 
@@ -7,12 +7,10 @@
 * `Debug`
 * `Default`
 
-== Description
-
 TypeDB session and transaction options. <code>TypeDBOptions</code> object can be used to override the default server behaviour query processing. Options are specified using properties assignment.
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]
@@ -31,214 +29,162 @@ a| `read_any_replica` a| `Option<bool>` a| If set to ``True``, enables reading d
 |===
 // end::properties[]
 
-== Methods
-
 // tag::methods[]
 [#_struct_Options_method_infer]
-=== infer
-
-==== Signature
+==== infer
 
 [source,rust]
 ----
 pub fn infer(self, infer: bool) -> Self
 ----
 
-==== Description
-
 If set to ``True``, enables inference for queries. Only settable at transaction level and above. Only affects read transactions.
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Self
 ----
 
 [#_struct_Options_method_trace_inference]
-=== trace_inference
-
-==== Signature
+==== trace_inference
 
 [source,rust]
 ----
 pub fn trace_inference(self, trace_inference: bool) -> Self
 ----
 
-==== Description
-
 If set to ``True``, reasoning tracing graphs are output in the logging directory. Should be used with ``parallel = False``.
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Self
 ----
 
 [#_struct_Options_method_explain]
-=== explain
-
-==== Signature
+==== explain
 
 [source,rust]
 ----
 pub fn explain(self, explain: bool) -> Self
 ----
 
-==== Description
-
 If set to ``True``, enables explanations for queries. Only affects read transactions.
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Self
 ----
 
 [#_struct_Options_method_parallel]
-=== parallel
-
-==== Signature
+==== parallel
 
 [source,rust]
 ----
 pub fn parallel(self, parallel: bool) -> Self
 ----
 
-==== Description
-
 If set to ``True``, the server uses parallel instead of single-threaded execution.
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Self
 ----
 
 [#_struct_Options_method_prefetch]
-=== prefetch
-
-==== Signature
+==== prefetch
 
 [source,rust]
 ----
 pub fn prefetch(self, prefetch: bool) -> Self
 ----
 
-==== Description
-
 If set to ``True``, the first batch of answers is streamed to the driver even without an explicit request for it.
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Self
 ----
 
 [#_struct_Options_method_prefetch_size]
-=== prefetch_size
-
-==== Signature
+==== prefetch_size
 
 [source,rust]
 ----
 pub fn prefetch_size(self, prefetch_size: i32) -> Self
 ----
 
-==== Description
-
 If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Self
 ----
 
 [#_struct_Options_method_session_idle_timeout]
-=== session_idle_timeout
-
-==== Signature
+==== session_idle_timeout
 
 [source,rust]
 ----
 pub fn session_idle_timeout(self, timeout: Duration) -> Self
 ----
 
-==== Description
-
 If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive.
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Self
 ----
 
 [#_struct_Options_method_transaction_timeout]
-=== transaction_timeout
-
-==== Signature
+==== transaction_timeout
 
 [source,rust]
 ----
 pub fn transaction_timeout(self, timeout: Duration) -> Self
 ----
 
-==== Description
-
 If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Self
 ----
 
 [#_struct_Options_method_schema_lock_acquire_timeout]
-=== schema_lock_acquire_timeout
-
-==== Signature
+==== schema_lock_acquire_timeout
 
 [source,rust]
 ----
 pub fn schema_lock_acquire_timeout(self, timeout: Duration) -> Self
 ----
 
-==== Description
-
 If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock.
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Self
 ----
 
 [#_struct_Options_method_read_any_replica]
-=== read_any_replica
-
-==== Signature
+==== read_any_replica
 
 [source,rust]
 ----
 pub fn read_any_replica(self, read_any_replica: bool) -> Self
 ----
 
-==== Description
-
 If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise.
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Self

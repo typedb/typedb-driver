@@ -1,62 +1,46 @@
 [#_ConceptMap_Explainable]
-= ConceptMap.Explainable
+=== ConceptMap.Explainable
 
 *Package*: `com.vaticle.typedb.driver.api.answer`
 
-== Description
-
 Contains an explainable object.
-
-== Methods
 
 // tag::methods[]
 [#_conjunction_]
-=== conjunction
-
-==== Signature
+==== conjunction
 
 [source,java]
 ----
 java.lang.String conjunction()
 ----
 
-==== Description
-
 Retrieves the subquery of the original query that is actually being explained. 
 
 
-==== Returns
-
+.Returns
 `java.lang.String`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 explainable.conjunction();
 ----
 
 [#_id_]
-=== id
-
-==== Signature
+==== id
 
 [source,java]
 ----
 long id()
 ----
 
-==== Description
-
 Retrieves the unique ID that identifies this ``Explainable``. 
 
 
-==== Returns
-
+.Returns
 `long`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 explainable.id();

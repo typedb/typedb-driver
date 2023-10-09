@@ -1,12 +1,10 @@
 [#_ConceptMap]
-= ConceptMap
-
-== Description
+=== ConceptMap
 
 Contains a mapping of variables to concepts.
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]
@@ -16,50 +14,38 @@ a| `explainables` a| `Explainables` a| The Explainables object for this ConceptM
 |===
 // end::properties[]
 
-== Methods
-
 // tag::methods[]
 [#_concepts]
-=== concepts
-
-==== Signature
+==== concepts
 
 [source,nodejs]
 ----
 concepts(): IterableIterator<Concept>
 ----
 
-==== Description
-
 Produces an iterator over all concepts in this ``ConceptMap``.
 
-==== Returns
-
+.Returns
 `IterableIterator<Concept>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 conceptMap.concepts()
 ----
 
 [#_get]
-=== get
-
-==== Signature
+==== get
 
 [source,nodejs]
 ----
 get(variable): Concept
 ----
 
-==== Description
-
 Retrieves a concept for a given variable name.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -67,62 +53,48 @@ Retrieves a concept for a given variable name.
 a| `variable` a| The string representation of a variable a| `string` 
 |===
 
-==== Returns
-
+.Returns
 `Concept`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 conceptMap.get(variable)
 ----
 
 [#_toJSONRecord]
-=== toJSONRecord
-
-==== Signature
+==== toJSONRecord
 
 [source,nodejs]
 ----
 toJSONRecord(): Record<string, Record<string, string | number | boolean>>
 ----
 
-==== Description
-
 Retrieves this ``ConceptMap`` as JSON.
 
-==== Returns
-
+.Returns
 `Record<string, Record<string, string | number | boolean>>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 conceptMap.toJSONRecord()
 ----
 
 [#_variables]
-=== variables
-
-==== Signature
+==== variables
 
 [source,nodejs]
 ----
 variables(): IterableIterator<string>
 ----
 
-==== Description
-
 Produces an iterator over all variables in this ``ConceptMap``.
 
-==== Returns
-
+.Returns
 `IterableIterator<string>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 conceptMap.variables()

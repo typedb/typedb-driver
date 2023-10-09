@@ -1,300 +1,228 @@
 [#_Concept]
-= Concept
-
-== Methods
+=== Concept
 
 // tag::methods[]
 [#_asAttribute]
-=== asAttribute
-
-==== Signature
+==== asAttribute
 
 [source,nodejs]
 ----
 asAttribute(): Attribute
 ----
 
-==== Description
-
 Casts the concept to ``Attribute``.
 
-==== Returns
-
+.Returns
 `Attribute`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.asAttribute()
 ----
 
 [#_asAttributeType]
-=== asAttributeType
-
-==== Signature
+==== asAttributeType
 
 [source,nodejs]
 ----
 asAttributeType(): AttributeType
 ----
 
-==== Description
-
 Casts the concept to ``AttributeType``.
 
-==== Returns
-
+.Returns
 `AttributeType`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.asAttributeType()
 ----
 
 [#_asEntity]
-=== asEntity
-
-==== Signature
+==== asEntity
 
 [source,nodejs]
 ----
 asEntity(): Entity
 ----
 
-==== Description
-
 Casts the concept to ``Entity``.
 
-==== Returns
-
+.Returns
 `Entity`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.asEntity()
 ----
 
 [#_asEntityType]
-=== asEntityType
-
-==== Signature
+==== asEntityType
 
 [source,nodejs]
 ----
 asEntityType(): EntityType
 ----
 
-==== Description
-
 Casts the concept to ``EntityType``.
 
-==== Returns
-
+.Returns
 `EntityType`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.asEntityType()
 ----
 
 [#_asRelation]
-=== asRelation
-
-==== Signature
+==== asRelation
 
 [source,nodejs]
 ----
 asRelation(): Relation
 ----
 
-==== Description
-
 Casts the concept to ``Relation``.
 
-==== Returns
-
+.Returns
 `Relation`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.asRelation()
 ----
 
 [#_asRelationType]
-=== asRelationType
-
-==== Signature
+==== asRelationType
 
 [source,nodejs]
 ----
 asRelationType(): RelationType
 ----
 
-==== Description
-
 Casts the concept to ``RelationType``.
 
-==== Returns
-
+.Returns
 `RelationType`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.asRelationType()
 ----
 
 [#_asRoleType]
-=== asRoleType
-
-==== Signature
+==== asRoleType
 
 [source,nodejs]
 ----
 asRoleType(): RoleType
 ----
 
-==== Description
-
 Casts the concept to ``RoleType``.
 
-==== Returns
-
+.Returns
 `RoleType`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.asRoleType()
 ----
 
 [#_asThing]
-=== asThing
-
-==== Signature
+==== asThing
 
 [source,nodejs]
 ----
 asThing(): Thing
 ----
 
-==== Description
-
 Casts the concept to ``Thing``.
 
-==== Returns
-
+.Returns
 `Thing`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.asThing()
 ----
 
 [#_asThingType]
-=== asThingType
-
-==== Signature
+==== asThingType
 
 [source,nodejs]
 ----
 asThingType(): ThingType
 ----
 
-==== Description
-
 Casts the concept to ``ThingType``.
 
-==== Returns
-
+.Returns
 `ThingType`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.asThingType()
 ----
 
 [#_asType]
-=== asType
-
-==== Signature
+==== asType
 
 [source,nodejs]
 ----
 asType(): Type
 ----
 
-==== Description
-
 Casts the concept to ``Type``.
 
-==== Returns
-
+.Returns
 `Type`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.asType()
 ----
 
 [#_asValue]
-=== asValue
-
-==== Signature
+==== asValue
 
 [source,nodejs]
 ----
 asValue(): Value
 ----
 
-==== Description
-
 Casts the concept to ``Value``.
 
-==== Returns
-
+.Returns
 `Value`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.asValue()
 ----
 
 [#_equals]
-=== equals
-
-==== Signature
+==== equals
 
 [source,nodejs]
 ----
 equals(concept): boolean
 ----
 
-==== Description
-
 Checks if this concept is equal to the argument ``concept``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -302,305 +230,232 @@ Checks if this concept is equal to the argument ``concept``.
 a| `concept` a| The concept to compare to. a| `Concept` 
 |===
 
-==== Returns
-
+.Returns
 `boolean`
 
 [#_isAttribute]
-=== isAttribute
-
-==== Signature
+==== isAttribute
 
 [source,nodejs]
 ----
 isAttribute(): boolean
 ----
 
-==== Description
-
 Checks if the concept is an ``Attribute``.
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.isAttribute()
 ----
 
 [#_isAttributeType]
-=== isAttributeType
-
-==== Signature
+==== isAttributeType
 
 [source,nodejs]
 ----
 isAttributeType(): boolean
 ----
 
-==== Description
-
 Checks if the concept is an ``AttributeType``.
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.isAttributeType()
 ----
 
 [#_isEntity]
-=== isEntity
-
-==== Signature
+==== isEntity
 
 [source,nodejs]
 ----
 isEntity(): boolean
 ----
 
-==== Description
-
 Checks if the concept is an ``Entity``.
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.isEntity()
 ----
 
 [#_isEntityType]
-=== isEntityType
-
-==== Signature
+==== isEntityType
 
 [source,nodejs]
 ----
 isEntityType(): boolean
 ----
 
-==== Description
-
 Checks if the concept is an ``EntityType``.
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.isEntityType()
 ----
 
 [#_isRelation]
-=== isRelation
-
-==== Signature
+==== isRelation
 
 [source,nodejs]
 ----
 isRelation(): boolean
 ----
 
-==== Description
-
 Checks if the concept is a ``Relation``.
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.isRelation()
 ----
 
 [#_isRelationType]
-=== isRelationType
-
-==== Signature
+==== isRelationType
 
 [source,nodejs]
 ----
 isRelationType(): boolean
 ----
 
-==== Description
-
 Checks if the concept is a ``RelationType``.
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.isRelationType()
 ----
 
 [#_isRoleType]
-=== isRoleType
-
-==== Signature
+==== isRoleType
 
 [source,nodejs]
 ----
 isRoleType(): boolean
 ----
 
-==== Description
-
 Checks if the concept is a ``RoleType``.
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.isRoleType()
 ----
 
 [#_isThing]
-=== isThing
-
-==== Signature
+==== isThing
 
 [source,nodejs]
 ----
 isThing(): boolean
 ----
 
-==== Description
-
 Checks if the concept is a ``Thing``.
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.isThing()
 ----
 
 [#_isThingType]
-=== isThingType
-
-==== Signature
+==== isThingType
 
 [source,nodejs]
 ----
 isThingType(): boolean
 ----
 
-==== Description
-
 Checks if the concept is a ``ThingType``.
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.isThingType()
 ----
 
 [#_isType]
-=== isType
-
-==== Signature
+==== isType
 
 [source,nodejs]
 ----
 isType(): boolean
 ----
 
-==== Description
-
 Checks if the concept is a ``Type``.
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.isType()
 ----
 
 [#_isValue]
-=== isValue
-
-==== Signature
+==== isValue
 
 [source,nodejs]
 ----
 isValue(): boolean
 ----
 
-==== Description
-
 Checks if the concept is a ``Value``.
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.isValue()
 ----
 
 [#_toJSONRecord]
-=== toJSONRecord
-
-==== Signature
+==== toJSONRecord
 
 [source,nodejs]
 ----
 toJSONRecord(): Record<string, string | number | boolean>
 ----
 
-==== Description
-
 Retrieves the concept as JSON.
 
-==== Returns
-
+.Returns
 `Record<string, string | number | boolean>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 concept.toJSONRecord()

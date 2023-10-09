@@ -1,9 +1,9 @@
 [#_enum_Concept]
-= Concept
+=== Concept
 
+[caption=""]
+.Enum variants
 // tag::enum_constants[]
-== Enum variants
-
 [cols="~,~"]
 [options="header"]
 |===

@@ -1,12 +1,10 @@
 [#_Explainable]
-= Explainable
-
-== Description
+=== Explainable
 
 Contains an explainable object.
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]

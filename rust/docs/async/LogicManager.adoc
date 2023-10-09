@@ -1,22 +1,16 @@
 [#_struct_LogicManager]
-= LogicManager
+=== LogicManager
 
 *Implements traits:*
 
 * `Clone`
 * `Debug`
 
-== Description
-
 Provides methods for manipulating rules in the database.
-
-== Methods
 
 // tag::methods[]
 [#_struct_LogicManager_method_put_rule]
-=== put_rule
-
-==== Signature
+==== put_rule
 
 [source,rust]
 ----
@@ -28,12 +22,10 @@ pub async fn put_rule(
 ) -> Result<Rule>
 ----
 
-==== Description
-
 Creates a new Rule if none exists with the given label, or replaces the existing one.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -43,36 +35,30 @@ a| `when` a| The when body of the rule to create a| `Conjunction`
 a| `then` a| The then body of the rule to create a| `Variable` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Rule>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 transaction.logic().put_rule(label, when, then).await
 ----
 
 [#_struct_LogicManager_method_get_rule]
-=== get_rule
-
-==== Signature
+==== get_rule
 
 [source,rust]
 ----
 pub async fn get_rule(&self, label: String) -> Result<Option<Rule>>
 ----
 
-==== Description
-
 Retrieves the Rule that has the given label.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -80,43 +66,35 @@ Retrieves the Rule that has the given label.
 a| `label` a| The label of the Rule to create or retrieve a| `String` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<Option<Rule>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 transaction.logic().get_rule(label).await
 ----
 
 [#_struct_LogicManager_method_get_rules]
-=== get_rules
-
-==== Signature
+==== get_rules
 
 [source,rust]
 ----
 pub fn get_rules(&self) -> Result<impl Stream<Item = Result<Rule>>>
 ----
 
-==== Description
-
 Retrieves all rules.
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<impl Stream<Item = Result<Rule>>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 transaction.logic.get_rules()

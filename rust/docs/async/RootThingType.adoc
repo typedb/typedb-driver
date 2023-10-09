@@ -1,5 +1,5 @@
 [#_struct_RootThingType]
-= RootThingType
+=== RootThingType
 
 *Implements traits:*
 
@@ -11,76 +11,57 @@
 * `StructuralPartialEq`
 * `ThingTypeAPI`
 
-== Methods
-
 // tag::methods[]
 [#_struct_RootThingType_tymethod_label]
-=== label
-
-==== Signature
+==== label
 
 [source,rust]
 ----
 fn label(&self) -> &str
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_tymethod_label,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 &str
 ----
 
 [#_struct_RootThingType_tymethod_is_abstract]
-=== is_abstract
-
-==== Signature
+==== is_abstract
 
 [source,rust]
 ----
 fn is_abstract(&self) -> bool
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_tymethod_is_abstract,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 bool
 ----
 
 [#_struct_RootThingType_tymethod_is_root]
-=== is_root
-
-==== Signature
+==== is_root
 
 [source,rust]
 ----
 fn is_root(&self) -> bool
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_tymethod_is_root,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 bool
 ----
 
 [#_struct_RootThingType_tymethod_is_deleted]
-=== is_deleted
-
-==== Signature
+==== is_deleted
 
 [source,rust]
 ----
@@ -95,12 +76,9 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_tymethod_is_deleted,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result<bool>> + Send + 'async_trait>>
@@ -112,9 +90,7 @@ where
 ----
 
 [#_struct_RootThingType_method_delete]
-=== delete
-
-==== Signature
+==== delete
 
 [source,rust]
 ----
@@ -129,12 +105,9 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_delete,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
@@ -146,9 +119,7 @@ where
 ----
 
 [#_struct_RootThingType_method_set_label]
-=== set_label
-
-==== Signature
+==== set_label
 
 [source,rust]
 ----
@@ -164,12 +135,9 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_set_label,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
@@ -181,9 +149,7 @@ where
 ----
 
 [#_struct_RootThingType_method_set_abstract]
-=== set_abstract
-
-==== Signature
+==== set_abstract
 
 [source,rust]
 ----
@@ -198,12 +164,9 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_set_abstract,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
@@ -215,9 +178,7 @@ where
 ----
 
 [#_struct_RootThingType_method_unset_abstract]
-=== unset_abstract
-
-==== Signature
+==== unset_abstract
 
 [source,rust]
 ----
@@ -232,12 +193,9 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_unset_abstract,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
@@ -249,9 +207,7 @@ where
 ----
 
 [#_struct_RootThingType_method_get_owns]
-=== get_owns
-
-==== Signature
+==== get_owns
 
 [source,rust]
 ----
@@ -264,21 +220,16 @@ fn get_owns(
 ) -> Result<BoxStream<'_, Result<AttributeType>>>
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_get_owns,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<AttributeType>>>
 ----
 
 [#_struct_RootThingType_method_get_owns_overridden]
-=== get_owns_overridden
-
-==== Signature
+==== get_owns_overridden
 
 [source,rust]
 ----
@@ -294,12 +245,9 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_get_owns_overridden,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result<Option<AttributeType>>> + Send + 'async_trait>>
@@ -311,9 +259,7 @@ where
 ----
 
 [#_struct_RootThingType_method_set_owns]
-=== set_owns
-
-==== Signature
+==== set_owns
 
 [source,rust]
 ----
@@ -331,12 +277,9 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_set_owns,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
@@ -348,9 +291,7 @@ where
 ----
 
 [#_struct_RootThingType_method_unset_owns]
-=== unset_owns
-
-==== Signature
+==== unset_owns
 
 [source,rust]
 ----
@@ -366,12 +307,9 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_unset_owns,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
@@ -383,9 +321,7 @@ where
 ----
 
 [#_struct_RootThingType_method_get_plays]
-=== get_plays
-
-==== Signature
+==== get_plays
 
 [source,rust]
 ----
@@ -396,21 +332,16 @@ fn get_plays(
 ) -> Result<BoxStream<'_, Result<RoleType>>>
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_get_plays,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<RoleType>>>
 ----
 
 [#_struct_RootThingType_method_get_plays_overridden]
-=== get_plays_overridden
-
-==== Signature
+==== get_plays_overridden
 
 [source,rust]
 ----
@@ -426,12 +357,9 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_get_plays_overridden,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result<Option<RoleType>>> + Send + 'async_trait>>
@@ -443,9 +371,7 @@ where
 ----
 
 [#_struct_RootThingType_method_set_plays]
-=== set_plays
-
-==== Signature
+==== set_plays
 
 [source,rust]
 ----
@@ -462,12 +388,9 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_set_plays,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
@@ -479,9 +402,7 @@ where
 ----
 
 [#_struct_RootThingType_method_unset_plays]
-=== unset_plays
-
-==== Signature
+==== unset_plays
 
 [source,rust]
 ----
@@ -497,12 +418,9 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_unset_plays,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
@@ -514,9 +432,7 @@ where
 ----
 
 [#_struct_RootThingType_method_get_syntax]
-=== get_syntax
-
-==== Signature
+==== get_syntax
 
 [source,rust]
 ----
@@ -531,12 +447,9 @@ where
      'life2: 'async_trait,
 ----
 
-==== Description
-
 <<#_trait_ThingTypeAPI_method_get_syntax,Read more>>
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result<String>> + Send + 'async_trait>>

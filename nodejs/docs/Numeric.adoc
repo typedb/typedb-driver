@@ -1,83 +1,61 @@
 [#_Numeric]
-= Numeric
-
-== Description
+=== Numeric
 
 Stores an aggregate query answer.
 
-== Methods
-
 // tag::methods[]
 [#_asNumber]
-=== asNumber
-
-==== Signature
+==== asNumber
 
 [source,nodejs]
 ----
 asNumber(): number
 ----
 
-==== Description
-
 Retrieves numeric value of an aggregate answer as a number.
 
-==== Returns
-
+.Returns
 `number`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 numeric.asNumber()
 ----
 
 [#_isNaN]
-=== isNaN
-
-==== Signature
+==== isNaN
 
 [source,nodejs]
 ----
 isNaN(): boolean
 ----
 
-==== Description
-
 Checks if the aggregate answer is not a number.
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 numeric.isNan()
 ----
 
 [#_isNumber]
-=== isNumber
-
-==== Signature
+==== isNumber
 
 [source,nodejs]
 ----
 isNumber(): boolean
 ----
 
-==== Description
-
 Checks if the type of an aggregate answer is a number.
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 numeric.isNumber()

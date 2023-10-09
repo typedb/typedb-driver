@@ -1,54 +1,40 @@
 [#_UserManager]
-= UserManager
-
-== Description
+=== UserManager
 
 Provides access to all user management methods.
 
-== Methods
-
 // tag::methods[]
 [#_all]
-=== all
-
-==== Signature
+==== all
 
 [source,nodejs]
 ----
 all(): Promise<User[]>
 ----
 
-==== Description
-
 Retrieves all users which exist on the TypeDB server.
 
-==== Returns
-
+.Returns
 `Promise<User[]>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 driver.users.all()
 ----
 
 [#_contains]
-=== contains
-
-==== Signature
+==== contains
 
 [source,nodejs]
 ----
 contains(name): Promise<boolean>
 ----
 
-==== Description
-
 Checks if a user with the given name exists.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -56,33 +42,27 @@ Checks if a user with the given name exists.
 a| `name` a| null a| `string` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<boolean>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 driver.users.contains(username)
 ----
 
 [#_create]
-=== create
-
-==== Signature
+==== create
 
 [source,nodejs]
 ----
 create(name, password): Promise<void>
 ----
 
-==== Description
-
 Create a user with the given name &amp; password.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -91,33 +71,27 @@ a| `name` a| null a| `string`
 a| `password` a| The password of the user to be created a| `string` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<void>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 driver.users.create(username, password)
 ----
 
 [#_delete]
-=== delete
-
-==== Signature
+==== delete
 
 [source,nodejs]
 ----
 delete(name): Promise<void>
 ----
 
-==== Description
-
 Deletes a user with the given name.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -125,33 +99,27 @@ Deletes a user with the given name.
 a| `name` a| null a| `string` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<void>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 driver.users.delete(username)
 ----
 
 [#_get]
-=== get
-
-==== Signature
+==== get
 
 [source,nodejs]
 ----
 get(name): Promise<User>
 ----
 
-==== Description
-
 Retrieve a user with the given name.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -159,33 +127,27 @@ Retrieve a user with the given name.
 a| `name` a| null a| `string` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<User>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 driver.users.get(username)
 ----
 
 [#_passwordSet]
-=== passwordSet
-
-==== Signature
+==== passwordSet
 
 [source,nodejs]
 ----
 passwordSet(name, password): Promise<void>
 ----
 
-==== Description
-
 Sets a new password for a user. This operation can only be performed by administrators.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -194,12 +156,10 @@ a| `name` a| null a| `string`
 a| `password` a| The new password a| `string` 
 |===
 
-==== Returns
-
+.Returns
 `Promise<void>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 driver.users.passwordSet(username, password)

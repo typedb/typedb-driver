@@ -1,89 +1,67 @@
 [#_Entity]
-= Entity
+=== Entity
 
 *Supertypes:*
 
 * `Thing`
 
-== Description
-
 Instance of data of an entity type, representing a standalone object that exists in the data model independently.
 
 Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles played in relation instances.
 
-== Methods
-
 // tag::methods[]
 [#_as_entity]
-=== as_entity
-
-==== Signature
+==== as_entity
 
 [source,python]
 ----
 as_entity() -> Entity
 ----
 
-==== Description
-
 Casts the concept to ``Entity``.
 
-==== Returns
-
+.Returns
 `Entity`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 entity.as_entity()
 ----
 
 [#_get_type]
-=== get_type
-
-==== Signature
+==== get_type
 
 [source,python]
 ----
 get_type() -> EntityType
 ----
 
-==== Description
-
 Retrieves the type which this ``Entity`` belongs to.
 
-==== Returns
-
+.Returns
 `EntityType`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 entity.get_type()
 ----
 
 [#_is_entity]
-=== is_entity
-
-==== Signature
+==== is_entity
 
 [source,python]
 ----
 is_entity() -> bool
 ----
 
-==== Description
-
 Checks if the concept is an ``Entity``.
 
-==== Returns
-
+.Returns
 `bool`
 
-==== Code examples
-
+.Code examples
 [source,python]
 ----
 entity.is_entity()

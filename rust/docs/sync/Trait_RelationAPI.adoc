@@ -1,13 +1,9 @@
 [#_trait_RelationAPI]
-= Trait RelationAPI
-
-== Methods
+=== Trait RelationAPI
 
 // tag::methods[]
 [#_trait_RelationAPI_method_add_role_player]
-=== add_role_player
-
-==== Signature
+==== add_role_player
 
 [source,rust]
 ----
@@ -19,12 +15,10 @@ fn add_role_player(
 ) -> Result
 ----
 
-==== Description
-
 Adds a new role player to play the given role in this ``Relation``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -34,24 +28,20 @@ a| `role_type` a| The role to be played by the ``player`` a| `RoleType`
 a| `player` a| The thing to play the role a| `Thing` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 relation.add_role_player(transaction, role_type, player);
 ----
 
 [#_trait_RelationAPI_method_remove_role_player]
-=== remove_role_player
-
-==== Signature
+==== remove_role_player
 
 [source,rust]
 ----
@@ -63,12 +53,10 @@ fn remove_role_player(
 ) -> Result
 ----
 
-==== Description
-
 Removes the association of the given instance that plays the given role in this ``Relation``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -78,24 +66,20 @@ a| `role_type` a| The role to no longer be played by the thing in this ``Relatio
 a| `player` a| The instance to no longer play the role in this ``Relation`` a| `Thing` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 relation.remove_role_player(transaction, role_type, player);
 ----
 
 [#_trait_RelationAPI_method_get_players_by_role_type]
-=== get_players_by_role_type
-
-==== Signature
+==== get_players_by_role_type
 
 [source,rust]
 ----
@@ -106,12 +90,10 @@ fn get_players_by_role_type(
 ) -> Result<BoxStream<'_, Result<Thing>>>
 ----
 
-==== Description
-
 Retrieves all role players of this ``Relation``, optionally filtered by given role types.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -120,24 +102,20 @@ a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `role_types` a| 0 or more role types a| `Vec<RoleType>` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<Thing>>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 relation.get_players_by_role_type(transaction, role_types);
 ----
 
 [#_trait_RelationAPI_method_get_role_players]
-=== get_role_players
-
-==== Signature
+==== get_role_players
 
 [source,rust]
 ----
@@ -147,12 +125,10 @@ fn get_role_players(
 ) -> Result<BoxStream<'_, Result<(RoleType, Thing)>>>
 ----
 
-==== Description
-
 Retrieves a mapping of all instances involved in the ``Relation`` and the role each play.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -161,24 +137,20 @@ a| `transaction` a| The current transaction a| `&Transaction<'_>
 ) -> Result<BoxStream<'_` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<(RoleType, Thing)>>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 relation.get_role_players(transaction)
 ----
 
 [#_trait_RelationAPI_method_get_relating]
-=== get_relating
-
-==== Signature
+==== get_relating
 
 [source,rust]
 ----
@@ -188,12 +160,10 @@ fn get_relating(
 ) -> Result<BoxStream<'_, Result<RoleType>>>
 ----
 
-==== Description
-
 Retrieves all role types currently played in this ``Relation``.
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -201,15 +171,13 @@ Retrieves all role types currently played in this ``Relation``.
 a| `transaction` a| The current transaction a| `&Transaction<'_>` 
 |===
 
-==== Returns
-
+.Returns
 [source,rust]
 ----
 Result<BoxStream<'_, Result<RoleType>>>
 ----
 
-==== Code examples
-
+.Code examples
 [source,rust]
 ----
 relation.get_relating(transaction)

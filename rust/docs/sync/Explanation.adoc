@@ -1,5 +1,5 @@
 [#_struct_Explanation]
-= Explanation
+=== Explanation
 
 *Implements traits:*
 
@@ -7,12 +7,10 @@
 * `PartialEq<Explanation>`
 * `StructuralPartialEq`
 
-== Description
-
 An explanation of which rule was used for inferring the explained concept, the condition of the rule, the conclusion of the rule, and the mapping of variables between the query and the rule’s conclusion.
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]

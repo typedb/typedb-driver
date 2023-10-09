@@ -1,16 +1,14 @@
 [#_TypeDBDriverError]
-= TypeDBDriverError
+=== TypeDBDriverError
 
 *Supertypes:*
 
 * `Error`
 
-== Description
-
 Errors encountered when interacting with TypeDB
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]
@@ -24,25 +22,19 @@ a| `stackTraceLimit` a| `number` a|
 |===
 // end::properties[]
 
-== Methods
-
 // tag::methods[]
 [#_new_TypeDBDriverError]
-=== new TypeDBDriverError
-
-==== Signature
+==== new TypeDBDriverError
 
 [source,nodejs]
 ----
 new TypeDBDriverError(error): TypeDBDriverError
 ----
 
-==== Description
 
 
-
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -50,26 +42,21 @@ new TypeDBDriverError(error): TypeDBDriverError
 a| `error` a| null a| `string \| ErrorMessage \| Error \| ServiceError` 
 |===
 
-==== Returns
-
+.Returns
 `TypeDBDriverError`
 
 [#_captureStackTrace]
-=== captureStackTrace
-
-==== Signature
+==== captureStackTrace
 
 [source,nodejs]
 ----
 captureStackTrace(targetObject, constructorOpt?): void
 ----
 
-==== Description
-
 Create .stack property on a target object
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -78,26 +65,20 @@ a| `targetObject` a| null a| `object`
 a| `constructorOpt` a| null a| `Function` 
 |===
 
-==== Returns
-
+.Returns
 `void`
 
 [#__messageTemplate]
-===  messageTemplate
-
-==== Signature
+====  messageTemplate
 
 [source,nodejs]
 ----
 get messageTemplate(): ErrorMessage
 ----
 
-==== Description
-
 Returns the message template for this error.
 
-==== Returns
-
+.Returns
 `ErrorMessage`
 
 // end::methods[]

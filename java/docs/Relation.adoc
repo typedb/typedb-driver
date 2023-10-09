@@ -1,5 +1,5 @@
 [#_Relation]
-= Relation
+=== Relation
 
 *Package*: `com.vaticle.typedb.driver.api.concept.thing`
 
@@ -8,17 +8,11 @@
 * `Concept`
 * `Thing`
 
-== Description
-
 Relation is an instance of a relation type and can be uniquely addressed by a combination of its type, owned attributes and role players.
-
-== Methods
 
 // tag::methods[]
 [#_isRelation_]
-=== isRelation
-
-==== Signature
+==== isRelation
 
 [source,java]
 ----
@@ -26,26 +20,20 @@ Relation is an instance of a relation type and can be uniquely addressed by a co
 default boolean isRelation()
 ----
 
-==== Description
-
 Checks if the concept is a ``Relation``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 relation.isRelation();
 ----
 
 [#_asRelation_]
-=== asRelation
-
-==== Signature
+==== asRelation
 
 [source,java]
 ----
@@ -53,26 +41,20 @@ relation.isRelation();
 default Relation asRelation()
 ----
 
-==== Description
-
 Casts the concept to ``Relation``. 
 
 
-==== Returns
-
+.Returns
 `Relation`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 relation.asRelation();
 ----
 
 [#_getType_]
-=== getType
-
-==== Signature
+==== getType
 
 [source,java]
 ----
@@ -80,26 +62,20 @@ relation.asRelation();
 RelationType getType()
 ----
 
-==== Description
-
 Retrieves the type which this ``Relation`` belongs to. 
 
 
-==== Returns
-
+.Returns
 `RelationType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 relation.getType();
 ----
 
 [#_addPlayer_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType_com_vaticle_typedb_driver_api_concept_thing_Thing]
-=== addPlayer
-
-==== Signature
+==== addPlayer
 
 [source,java]
 ----
@@ -108,13 +84,11 @@ void addPlayer​(TypeDBTransaction transaction,
                Thing player)
 ----
 
-==== Description
-
 Adds a new role player to play the given role in this ``Relation``. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -124,21 +98,17 @@ a| `roleType` a| The role to be played by the ``player`` a| `RoleType`
 a| `player` a| The thing to play the role a| `Thing` 
 |===
 
-==== Returns
-
+.Returns
 `void`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 relation.addPlayer(transaction, roleType, player);
 ----
 
 [#_removePlayer_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType_com_vaticle_typedb_driver_api_concept_thing_Thing]
-=== removePlayer
-
-==== Signature
+==== removePlayer
 
 [source,java]
 ----
@@ -147,13 +117,11 @@ void removePlayer​(TypeDBTransaction transaction,
                   Thing player)
 ----
 
-==== Description
-
 Removes the association of the given instance that plays the given role in this ``Relation``. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -163,21 +131,17 @@ a| `roleType` a| The role to no longer be played by the thing in this ``Relation
 a| `player` a| The instance to no longer play the role in this ``Relation`` a| `Thing` 
 |===
 
-==== Returns
-
+.Returns
 `void`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 relation.removePlayer(transaction, roleType, player);
 ----
 
 [#_getPlayersByRoleType_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType___]
-=== getPlayersByRoleType
-
-==== Signature
+==== getPlayersByRoleType
 
 [source,java]
 ----
@@ -186,13 +150,11 @@ java.util.stream.Stream<? extends Thing> getPlayersByRoleType​(TypeDBTransacti
                                                               RoleType... roleTypes)
 ----
 
-==== Description
-
 Retrieves all role players of this ``Relation``, optionally filtered by given role types. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -201,21 +163,17 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 a| `roleTypes` a| 0 or more role types a| `RoleType[]` 
 |===
 
-==== Returns
-
+.Returns
 `java.util.stream.Stream<? extends Thing>`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 relation.getPlayersByRoleType(transaction, roleTypes);
 ----
 
 [#_getPlayers_com_vaticle_typedb_driver_api_TypeDBTransaction]
-=== getPlayers
-
-==== Signature
+==== getPlayers
 
 [source,java]
 ----
@@ -223,13 +181,11 @@ relation.getPlayersByRoleType(transaction, roleTypes);
 java.util.Map<? extends RoleType,​? extends java.util.List<? extends Thing>> getPlayers​(TypeDBTransaction transaction)
 ----
 
-==== Description
-
 Retrieves a mapping of all instances involved in the ``Relation`` and the role each play. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -237,21 +193,17 @@ Retrieves a mapping of all instances involved in the ``Relation`` and the role e
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
 |===
 
-==== Returns
-
+.Returns
 `java.util.Map<? extends RoleType,​? extends java.util.List<? extends Thing>>`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 relation.getPlayers(transaction)
 ----
 
 [#_getRelating_com_vaticle_typedb_driver_api_TypeDBTransaction]
-=== getRelating
-
-==== Signature
+==== getRelating
 
 [source,java]
 ----
@@ -259,13 +211,11 @@ relation.getPlayers(transaction)
 java.util.stream.Stream<? extends RoleType> getRelating​(TypeDBTransaction transaction)
 ----
 
-==== Description
-
 Retrieves all role types currently played in this ``Relation``. 
 
 
-==== Input parameters
-
+[caption=""]
+.Input parameters
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -273,255 +223,197 @@ Retrieves all role types currently played in this ``Relation``.
 a| `transaction` a| The current transaction a| `TypeDBTransaction` 
 |===
 
-==== Returns
-
+.Returns
 `java.util.stream.Stream<? extends RoleType>`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 relation.getRelating(transaction);
 ----
 
 [#_asAttribute_]
-=== asAttribute
-
-==== Signature
+==== asAttribute
 
 [source,java]
 ----
 default Attribute asAttribute()
 ----
 
-==== Description
-
 Casts the concept to ``Attribute``. 
 
 
-==== Returns
-
+.Returns
 `Attribute`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asAttribute();
 ----
 
 [#_asAttributeType_]
-=== asAttributeType
-
-==== Signature
+==== asAttributeType
 
 [source,java]
 ----
 default AttributeType asAttributeType()
 ----
 
-==== Description
-
 Casts the concept to ``AttributeType``. 
 
 
-==== Returns
-
+.Returns
 `AttributeType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asAttributeType();
 ----
 
 [#_asEntity_]
-=== asEntity
-
-==== Signature
+==== asEntity
 
 [source,java]
 ----
 default Entity asEntity()
 ----
 
-==== Description
-
 Casts the concept to ``Entity``. 
 
 
-==== Returns
-
+.Returns
 `Entity`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asEntity();
 ----
 
 [#_asEntityType_]
-=== asEntityType
-
-==== Signature
+==== asEntityType
 
 [source,java]
 ----
 default EntityType asEntityType()
 ----
 
-==== Description
-
 Casts the concept to ``EntityType``. 
 
 
-==== Returns
-
+.Returns
 `EntityType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asEntityType();
 ----
 
 [#_asRelationType_]
-=== asRelationType
-
-==== Signature
+==== asRelationType
 
 [source,java]
 ----
 default RelationType asRelationType()
 ----
 
-==== Description
-
 Casts the concept to ``RelationType``. 
 
 
-==== Returns
-
+.Returns
 `RelationType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asRelationType();
 ----
 
 [#_asRoleType_]
-=== asRoleType
-
-==== Signature
+==== asRoleType
 
 [source,java]
 ----
 default RoleType asRoleType()
 ----
 
-==== Description
-
 Casts the concept to ``RoleType``. 
 
 
-==== Returns
-
+.Returns
 `RoleType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asRoleType();
 ----
 
 [#_asThingType_]
-=== asThingType
-
-==== Signature
+==== asThingType
 
 [source,java]
 ----
 default ThingType asThingType()
 ----
 
-==== Description
-
 Casts the concept to ``ThingType``. 
 
 
-==== Returns
-
+.Returns
 `ThingType`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asThingType();
 ----
 
 [#_asType_]
-=== asType
-
-==== Signature
+==== asType
 
 [source,java]
 ----
 default Type asType()
 ----
 
-==== Description
-
 Casts the concept to ``Type``. 
 
 
-==== Returns
-
+.Returns
 `Type`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asType();
 ----
 
 [#_asValue_]
-=== asValue
-
-==== Signature
+==== asValue
 
 [source,java]
 ----
 default Value asValue()
 ----
 
-==== Description
-
 Casts the concept to ``Value``. 
 
 
-==== Returns
-
+.Returns
 `Value`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.asValue();
 ----
 
 [#_isAttribute_]
-=== isAttribute
-
-==== Signature
+==== isAttribute
 
 [source,java]
 ----
@@ -529,26 +421,20 @@ concept.asValue();
 default boolean isAttribute()
 ----
 
-==== Description
-
 Checks if the concept is an ``Attribute``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isAttribute();
 ----
 
 [#_isAttributeType_]
-=== isAttributeType
-
-==== Signature
+==== isAttributeType
 
 [source,java]
 ----
@@ -556,26 +442,20 @@ concept.isAttribute();
 default boolean isAttributeType()
 ----
 
-==== Description
-
 Checks if the concept is an ``AttributeType``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isAttributeType();
 ----
 
 [#_isEntity_]
-=== isEntity
-
-==== Signature
+==== isEntity
 
 [source,java]
 ----
@@ -583,26 +463,20 @@ concept.isAttributeType();
 default boolean isEntity()
 ----
 
-==== Description
-
 Checks if the concept is an ``Entity``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isEntity();
 ----
 
 [#_isEntityType_]
-=== isEntityType
-
-==== Signature
+==== isEntityType
 
 [source,java]
 ----
@@ -610,26 +484,20 @@ concept.isEntity();
 default boolean isEntityType()
 ----
 
-==== Description
-
 Checks if the concept is an ``EntityType``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isEntityType();
 ----
 
 [#_isRelationType_]
-=== isRelationType
-
-==== Signature
+==== isRelationType
 
 [source,java]
 ----
@@ -637,26 +505,20 @@ concept.isEntityType();
 default boolean isRelationType()
 ----
 
-==== Description
-
 Checks if the concept is a ``RelationType``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isRelationType();
 ----
 
 [#_isRoleType_]
-=== isRoleType
-
-==== Signature
+==== isRoleType
 
 [source,java]
 ----
@@ -664,26 +526,20 @@ concept.isRelationType();
 default boolean isRoleType()
 ----
 
-==== Description
-
 Checks if the concept is a ``RoleType``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isRoleType();
 ----
 
 [#_isThingType_]
-=== isThingType
-
-==== Signature
+==== isThingType
 
 [source,java]
 ----
@@ -691,26 +547,20 @@ concept.isRoleType();
 default boolean isThingType()
 ----
 
-==== Description
-
 Checks if the concept is a ``ThingType``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isThingType();
 ----
 
 [#_isType_]
-=== isType
-
-==== Signature
+==== isType
 
 [source,java]
 ----
@@ -718,26 +568,20 @@ concept.isThingType();
 default boolean isType()
 ----
 
-==== Description
-
 Checks if the concept is a ``Type``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isType();
 ----
 
 [#_isValue_]
-=== isValue
-
-==== Signature
+==== isValue
 
 [source,java]
 ----
@@ -745,17 +589,13 @@ concept.isType();
 default boolean isValue()
 ----
 
-==== Description
-
 Checks if the concept is a ``Value``. 
 
 
-==== Returns
-
+.Returns
 `boolean`
 
-==== Code examples
-
+.Code examples
 [source,java]
 ----
 concept.isValue();

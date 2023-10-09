@@ -1,8 +1,8 @@
 [#_Database]
-= Database
+=== Database
 
-== Fields
-
+[caption=""]
+.Fields
 // tag::properties[]
 [cols="~,~,~"]
 [options="header"]
@@ -15,54 +15,40 @@ a| `replicas` a| `Replica` a| The Replica instances for this database. Only work
 |===
 // end::properties[]
 
-== Methods
-
 // tag::methods[]
 [#_delete]
-=== delete
-
-==== Signature
+==== delete
 
 [source,nodejs]
 ----
 delete(): Promise<void>
 ----
 
-==== Description
-
 Deletes this database.
 
-==== Returns
-
+.Returns
 `Promise<void>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 database.delete()
 ----
 
 [#_schema]
-=== schema
-
-==== Signature
+==== schema
 
 [source,nodejs]
 ----
 schema(): Promise<string>
 ----
 
-==== Description
-
 Returns a full schema text as a valid TypeQL define query string.
 
-==== Returns
-
+.Returns
 `Promise<string>`
 
-==== Code examples
-
+.Code examples
 [source,nodejs]
 ----
 database.schema()
