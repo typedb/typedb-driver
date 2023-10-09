@@ -60,6 +60,10 @@ load("@rules_antlr//antlr:lang.bzl", "JAVA")
 load("@rules_antlr//antlr:repositories.bzl", "rules_antlr_dependencies")
 rules_antlr_dependencies(antlr_version, JAVA)
 
+# Load //builder/cpp
+load("@vaticle_dependencies//builder/cpp:deps.bzl", cpp_deps = "deps")
+cpp_deps()
+
 # Load //builder/grpc
 load("@vaticle_dependencies//builder/grpc:deps.bzl", grpc_deps = "deps")
 grpc_deps()
