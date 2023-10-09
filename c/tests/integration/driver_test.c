@@ -85,11 +85,10 @@ int test_basic_query(const Connection* conn) {
 }
 
 int main() {
-    // run with `leaks --atExit -- ./bazel-bin/path/to/this-binary`
-    // Remember to unset `-fsanitize=address` in the BUILD copts if you want to use leaks
+    // To check memory-leaks, Unset `-fsanitize=address` in BUILD; run `leaks --atExit -- ./bazel-bin/path/to/this-binary`.
     int failures = 0;
 
     failures += RUN_TEST(test_basic_query);
 
-    return failures;
+    return failures > 0 ? 1 : 0;
 }
