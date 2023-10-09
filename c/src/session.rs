@@ -22,11 +22,10 @@
 use std::ffi::c_char;
 
 use typedb_driver::{DatabaseManager, Options, Session, SessionType};
-use crate::memory::string_view;
 
 use super::{
     error::{try_release, unwrap_void},
-    memory::{borrow, borrow_mut, free, release_string},
+    memory::{borrow, borrow_mut, free, release_string, string_view},
 };
 
 #[no_mangle]
@@ -36,12 +35,9 @@ pub extern "C" fn session_new(
     session_type: SessionType,
     options: *const Options,
 ) -> *mut Session {
-    borrow(databases).get(string_view(database_name)).map_or(
-        std::ptr::null_mut(),
-        |database| try_release(Session::new_with_options(
-            database,
-            session_type,
-            borrow(options).clone())))
+    borrow(databases).get(string_view(database_name)).map_or(std::ptr::null_mut(), |database| {
+        try_release(Session::new_with_options(database, session_type, borrow(options).clone()))
+    })
 }
 
 #[no_mangle]
