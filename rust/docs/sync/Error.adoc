@@ -4,14 +4,14 @@
 [caption=""]
 .Enum variants
 // tag::enum_constants[]
-[cols="~,~"]
+[cols="~"]
 [options="header"]
 |===
-|Name |Type
-a| `Connection` a| `ConnectionError`
-a| `Internal` a| `InternalError`
-a| `TypeQL` a| `Error`
-a| `Other` a| `String`
+|Variant
+a| `Connection(ConnectionError)`
+a| `Internal(InternalError)`
+a| `TypeQL(Error)`
+a| `Other(String)`
 |===
 // end::enum_constants[]
 

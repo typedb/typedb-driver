@@ -1,6 +1,10 @@
 [#_trait_RoleTypeAPI]
 === Trait RoleTypeAPI
 
+*Implementors:*
+
+* `RoleType`
+
 // tag::methods[]
 [#_trait_RoleTypeAPI_tymethod_is_abstract]
 ==== is_abstract

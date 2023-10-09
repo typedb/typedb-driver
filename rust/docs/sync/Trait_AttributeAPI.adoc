@@ -1,6 +1,10 @@
 [#_trait_AttributeAPI]
 === Trait AttributeAPI
 
+*Implementors:*
+
+* `Attribute`
+
 // tag::methods[]
 [#_trait_AttributeAPI_method_get_owners]
 ==== get_owners

@@ -377,7 +377,7 @@ transaction.concepts().getAttribute(iid);
 java.util.List<com.vaticle.typedb.driver.common.exception.TypeDBException> getSchemaExceptions()
 ----
 
-Retrieves a list of all exceptions for the current transaction. 
+Retrieves a list of all schema exceptions for the current transaction. 
 
 
 [caption=""]

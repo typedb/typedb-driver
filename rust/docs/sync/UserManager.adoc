@@ -8,17 +8,6 @@
 
 Provides access to all user management methods.
 
-[caption=""]
-.Fields
-// tag::properties[]
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Type |Description
-a| `connection` a| `Connection` a| 
-|===
-// end::properties[]
-
 // tag::methods[]
 [#_struct_UserManager_method_current_user]
 ==== current_user

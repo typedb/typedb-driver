@@ -1,6 +1,10 @@
 [#_trait_AttributeTypeAPI]
 === Trait AttributeTypeAPI
 
+*Implementors:*
+
+* `AttributeType`
+
 // tag::methods[]
 [#_trait_AttributeTypeAPI_tymethod_value_type]
 ==== value_type

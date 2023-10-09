@@ -6,12 +6,12 @@ This enum is used to specify the type of transaction.
 [caption=""]
 .Enum variants
 // tag::enum_constants[]
-[cols="~,~"]
+[cols="~"]
 [options="header"]
 |===
-|Name |Type
-a| `Read` a| `Read`
-a| `Write` a| `Write`
+|Variant
+a| `Read`
+a| `Write`
 |===
 // end::enum_constants[]
 

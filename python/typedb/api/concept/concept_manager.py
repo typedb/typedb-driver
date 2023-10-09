@@ -237,7 +237,7 @@ class ConceptManager(ABC):
     @abstractmethod
     def get_schema_exception(self) -> list[TypeDBException]:
         """
-        Retrieves a list of all exceptions for the current transaction.
+        Retrieves a list of all schema exceptions for the current transaction.
 
         :return:
 

@@ -1,6 +1,10 @@
 [#_trait_RelationAPI]
 === Trait RelationAPI
 
+*Implementors:*
+
+* `Relation`
+
 // tag::methods[]
 [#_trait_RelationAPI_method_add_role_player]
 ==== add_role_player

@@ -4,16 +4,16 @@
 [caption=""]
 .Enum variants
 // tag::enum_constants[]
-[cols="~,~"]
+[cols="~"]
 [options="header"]
 |===
-|Name |Type
-a| `Object` a| `Object`
-a| `Boolean` a| `Boolean`
-a| `Long` a| `Long`
-a| `Double` a| `Double`
-a| `String` a| `String`
-a| `DateTime` a| `DateTime`
+|Variant
+a| `Object`
+a| `Boolean`
+a| `Long`
+a| `Double`
+a| `String`
+a| `DateTime`
 |===
 // end::enum_constants[]
 

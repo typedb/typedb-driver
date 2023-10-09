@@ -326,7 +326,7 @@ pub fn get_schema_exceptions(
 ) -> Result<impl Stream<Item = Result<SchemaException>>>
 ----
 
-Retrieves a list of all exceptions for the current transaction.
+Retrieves a list of all schema exceptions for the current transaction.
 
 [caption=""]
 .Returns

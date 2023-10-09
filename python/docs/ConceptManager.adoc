@@ -255,7 +255,7 @@ transaction.concepts.get_root_relation_type()
 get_schema_exception() -> list[TypeDBException]
 ----
 
-Retrieves a list of all exceptions for the current transaction.
+Retrieves a list of all schema exceptions for the current transaction.
 
 [caption=""]
 .Returns

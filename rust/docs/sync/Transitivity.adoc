@@ -6,12 +6,12 @@ Used for specifying whether we need explicit or transitive subtyping, instances,
 [caption=""]
 .Enum variants
 // tag::enum_constants[]
-[cols="~,~"]
+[cols="~"]
 [options="header"]
 |===
-|Name |Type
-a| `Explicit` a| `Explicit`
-a| `Transitive` a| `Transitive`
+|Variant
+a| `Explicit`
+a| `Transitive`
 |===
 // end::enum_constants[]
 

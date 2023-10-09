@@ -1,6 +1,10 @@
 [#_trait_RuleAPI]
 === Trait RuleAPI
 
+*Implementors:*
+
+* `Rule`
+
 // tag::methods[]
 [#_trait_RuleAPI_tymethod_label]
 ==== label

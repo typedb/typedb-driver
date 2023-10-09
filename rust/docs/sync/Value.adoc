@@ -4,15 +4,15 @@
 [caption=""]
 .Enum variants
 // tag::enum_constants[]
-[cols="~,~"]
+[cols="~"]
 [options="header"]
 |===
-|Name |Type
-a| `Boolean` a| `bool`
-a| `Long` a| `i64`
-a| `Double` a| `f64`
-a| `String` a| `String`
-a| `DateTime` a| `NaiveDateTime`
+|Variant
+a| `Boolean(bool)`
+a| `Long(i64)`
+a| `Double(f64)`
+a| `String(String)`
+a| `DateTime(NaiveDateTime)`
 |===
 // end::enum_constants[]
 

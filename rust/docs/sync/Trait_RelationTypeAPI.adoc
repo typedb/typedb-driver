@@ -1,6 +1,10 @@
 [#_trait_RelationTypeAPI]
 === Trait RelationTypeAPI
 
+*Implementors:*
+
+* `RelationType`
+
 // tag::methods[]
 [#_trait_RelationTypeAPI_method_create]
 ==== create

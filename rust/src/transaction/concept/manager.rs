@@ -194,7 +194,7 @@ impl ConceptManager {
         self.transaction_stream.get_attribute(iid).await
     }
 
-    /// Retrieves a list of all exceptions for the current transaction.
+    /// Retrieves a list of all schema exceptions for the current transaction.
     ///
     /// # Examples
     ///

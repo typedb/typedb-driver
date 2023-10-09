@@ -1,6 +1,13 @@
 [#_trait_ThingTypeAPI]
 === Trait ThingTypeAPI
 
+*Implementors:*
+
+* `AttributeType`
+* `EntityType`
+* `RelationType`
+* `RootThingType`
+
 // tag::methods[]
 [#_trait_ThingTypeAPI_tymethod_label]
 ==== label

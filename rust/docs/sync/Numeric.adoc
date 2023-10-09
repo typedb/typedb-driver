@@ -4,13 +4,13 @@
 [caption=""]
 .Enum variants
 // tag::enum_constants[]
-[cols="~,~"]
+[cols="~"]
 [options="header"]
 |===
-|Name |Type
-a| `Long` a| `i64`
-a| `Double` a| `f64`
-a| `NaN` a| `NaN`
+|Variant
+a| `Long(i64)`
+a| `Double(f64)`
+a| `NaN`
 |===
 // end::enum_constants[]
 

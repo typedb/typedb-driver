@@ -196,7 +196,7 @@ public interface ConceptManager {
     Attribute getAttribute(String iid);
 
     /**
-     * Retrieves a list of all exceptions for the current transaction.
+     * Retrieves a list of all schema exceptions for the current transaction.
      *
      * <h3>Examples</h3>
      * <pre>
