@@ -1,6 +1,12 @@
 [#_trait_ThingAPI]
 === Trait ThingAPI
 
+*Implementors:*
+
+* `Attribute`
+* `Entity`
+* `Relation`
+
 // tag::methods[]
 [#_trait_ThingAPI_tymethod_iid]
 ==== iid

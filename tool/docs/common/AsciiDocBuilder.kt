@@ -57,4 +57,8 @@ class AsciiDocBuilder {
         return "// end::$title[]\n\n"
     }
 
+    fun unorderedList(items: Iterable<String>):String {
+        return items.joinToString("\n") { "* `$it`" }
+    }
+
 }

@@ -31,6 +31,7 @@ data class Class(
     val methods: List<Method> = listOf(),
     val packagePath: String? = null,
     val superClasses: List<String> = listOf(),
+    val traitImplementors: List<String> = listOf(),
 ) {
     fun merge(other: Class): Class {
         assert(this.name == other.name)
@@ -61,7 +62,13 @@ data class Class(
                 "rust" -> "Implements traits:"
                 else -> "Supertypes:"
             })
-            result += this.superClasses.joinToString("\n") { "* `$it`" }
+            result += builder.unorderedList(this.superClasses)
+            result += "\n\n"
+        }
+
+        if (this.traitImplementors.isNotEmpty()) {
+            result += builder.boldHeader("Implementors:")
+            result += builder.unorderedList(this.traitImplementors)
             result += "\n\n"
         }
 

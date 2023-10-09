@@ -110,11 +110,17 @@ fun parseTrait(document: Element, classAnchor: String): Class {
                 parseMethod(it, classAnchor)
             }
 
+    val implementors = document.select("#implementors-list > section > .code-header > .struct")
+        .map {
+            it.text()
+        }
+
     return Class(
         name = "Trait $className",
         anchor = classAnchor,
         description = classDescr,
         methods = methods,
+        traitImplementors = implementors,
     )
 }
 

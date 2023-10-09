@@ -1,6 +1,10 @@
 [#_trait_EntityTypeAPI]
 === Trait EntityTypeAPI
 
+*Implementors:*
+
+* `EntityType`
+
 // tag::methods[]
 [#_trait_EntityTypeAPI_method_create]
 ==== create
