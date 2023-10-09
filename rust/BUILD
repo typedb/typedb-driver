@@ -92,7 +92,6 @@ deploy_crate(
     target = ":assemble_crate",
 )
 
-# Documentation generation
 rust_docs_parser(
     name = "driver_adoc_async",
     feature = "async",

@@ -46,6 +46,7 @@ java_library(
 filegroup(
     name = "source_files",
     srcs = glob(["**/*.java"]),
+    visibility = ["//java:__pkg__"],
 )
 
 checkstyle_test(

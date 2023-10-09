@@ -108,9 +108,8 @@ deploy_maven(
     target = ":assemble-maven-jni",
 )
 
-# Documentation generation
 javadoc_library(
-    name = "driver_docs_jar",
+    name = "driver_docs_library",
     srcs = ["//java/api:source_files"],
     deps = [
         "//java/api",
@@ -120,7 +119,7 @@ javadoc_library(
 
 genrule(
     name = "driver_docs",
-    srcs = [":driver_docs_jar"],
+    srcs = [":driver_docs_library"],
     outs = ["driver_docs_javadoc"],
     cmd = "mkdir $@ && unzip $< -d $@",
 )

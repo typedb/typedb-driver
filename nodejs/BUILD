@@ -108,7 +108,6 @@ deploy_npm(
     release = deployment["npm.release"],
 )
 
-# Documentation generation
 ts_project(
     name = "typedoc_runner",
     srcs = glob([
@@ -153,7 +152,7 @@ typedoc_docs(
         "stream/**/*.ts",
         "user/**/*.ts",
         "tsconfig.json",
-        "tool/typedoc/*.json",
+        "tool/**/*.json",
     ]),
     out = "driver_docs_typedoc",
 )

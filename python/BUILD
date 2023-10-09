@@ -52,7 +52,6 @@ py_native_lib_rename(
     visibility = ["//visibility:public"]
 )
 
-# Documentation generation
 py_binary(
     name = "sphinx_runner",
     srcs = [
