@@ -21,9 +21,10 @@
 
 mod concept;
 mod connection;
+mod driver;
 mod parameter;
+mod query;
 mod session_tracker;
-mod typeql;
 mod util;
 
 use std::{
@@ -47,6 +48,7 @@ use self::session_tracker::SessionTracker;
 pub struct Context {
     pub tls_root_ca: PathBuf,
     pub connection: Connection,
+    pub default_database_name: String,
     pub databases: DatabaseManager,
     pub users: UserManager,
     pub session_trackers: Vec<SessionTracker>,
@@ -60,7 +62,6 @@ pub struct Context {
 impl Context {
     const GROUP_COLUMN_NAME: &'static str = "owner";
     const VALUE_COLUMN_NAME: &'static str = "value";
-    const DEFAULT_DATABASE: &'static str = "test";
     const ADMIN_USERNAME: &'static str = "admin";
     const ADMIN_PASSWORD: &'static str = "password";
     const STEP_REATTEMPT_SLEEP: Duration = Duration::from_millis(250);
@@ -95,7 +96,7 @@ impl Context {
     pub async fn after_scenario(&mut self) -> TypeDBResult {
         sleep(Context::STEP_REATTEMPT_SLEEP).await;
         self.set_connection(Connection::new_enterprise(
-            &["localhost:11729", "localhost:21729", "localhost:31729"],
+            &["localhost:11729"],
             Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&self.tls_root_ca))?,
         )?);
         self.cleanup_databases().await;
@@ -218,7 +219,7 @@ impl Default for Context {
             std::env::var("ROOT_CA").expect("ROOT_CA environment variable needs to be set for enterprise tests to run"),
         );
         let connection = Connection::new_enterprise(
-            &["localhost:11729", "localhost:21729", "localhost:31729"],
+            &["localhost:11729"],
             Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&tls_root_ca)).unwrap(),
         )
         .unwrap();
@@ -227,6 +228,7 @@ impl Default for Context {
         Self {
             tls_root_ca,
             connection,
+            default_database_name: uuid::Uuid::new_v4().to_string(),
             databases,
             users,
             session_trackers: Vec::new(),
