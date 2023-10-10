@@ -2,7 +2,7 @@
 === ErrorMessage
 
 // tag::methods[]
-[#_code]
+[#_ErrorMessage_code]
 ==== code
 
 [source,python]
@@ -16,7 +16,7 @@ code() -> str
 .Returns
 `str`
 
-[#_message]
+[#_ErrorMessage_message]
 ==== message
 
 [source,python]

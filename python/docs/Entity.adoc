@@ -10,7 +10,7 @@ Instance of data of an entity type, representing a standalone object that exists
 Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles played in relation instances.
 
 // tag::methods[]
-[#_as_entity]
+[#_Entity_as_entity]
 ==== as_entity
 
 [source,python]
@@ -31,7 +31,7 @@ Casts the concept to ``Entity``.
 entity.as_entity()
 ----
 
-[#_get_type]
+[#_Entity_get_type]
 ==== get_type
 
 [source,python]
@@ -52,7 +52,7 @@ Retrieves the type which this ``Entity`` belongs to.
 entity.get_type()
 ----
 
-[#_is_entity]
+[#_Entity_is_entity]
 ==== is_entity
 
 [source,python]

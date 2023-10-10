@@ -1,7 +1,0 @@
-[#_InternalErrorMessage]
-=== InternalErrorMessage
-
-*Supertypes:*
-
-* `ErrorMessage`
-

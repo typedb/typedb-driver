@@ -4,7 +4,7 @@
 Contains a mapping of variables to concepts.
 
 // tag::methods[]
-[#_concepts]
+[#_ConceptMap_concepts]
 ==== concepts
 
 [source,python]
@@ -25,7 +25,7 @@ Produces an iterator over all concepts in this ``ConceptMap``.
 concept_map.concepts()
 ----
 
-[#_explainables]
+[#_ConceptMap_explainables]
 ==== explainables
 
 [source,python]
@@ -46,7 +46,7 @@ Gets the ``Explainables`` object for this ``ConceptMap``, exposing which of the 
 concept_map.explainables()
 ----
 
-[#_get]
+[#_ConceptMap_get]
 ==== get
 
 [source,python]
@@ -76,7 +76,7 @@ a| `variable` a| The string representation of a variable a| `str` a|
 concept_map.get(variable)
 ----
 
-[#_to_json]
+[#_ConceptMap_to_json]
 ==== to_json
 
 [source,python]
@@ -97,7 +97,7 @@ Retrieves this ``ConceptMap`` as JSON.
 concept_map.to_json()
 ----
 
-[#_variables]
+[#_ConceptMap_variables]
 ==== variables
 
 [source,python]

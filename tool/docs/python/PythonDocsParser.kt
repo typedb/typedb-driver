@@ -45,7 +45,7 @@ fun main(args: Array<String>) {
         val html = it.readText(Charsets.UTF_8)
         val parsed = Jsoup.parse(html)
 
-        parsed.select("dl.class").forEach {
+        parsed.select("dl.class, dl.exception").forEach {
             val parsedClass = if (it.selectFirst("dt.sig-object + dd > p")!!.text().contains("Enum")) {
                 parseEnum(it)
             } else {
@@ -64,6 +64,7 @@ fun main(args: Array<String>) {
 fun parseClass(element: Element): Class {
     val classSignElement = element.selectFirst("dt.sig-object")
     val className = classSignElement!!.selectFirst("dt.sig-object span.sig-name")!!.text()
+    val classAnchor = className
 
     var classDetailsElement = classSignElement.nextElementSibling()
     val classDetailsParagraphs = classDetailsElement!!.children().map { it }.filter { it.tagName() == "p" }
@@ -80,13 +81,14 @@ fun parseClass(element: Element): Class {
     } else listOf()
 
     val methods = classDetailsElement!!.children().map { it }.filter { it.className() == "py method" }
-        .map { parseMethod(it) }
+        .map { parseMethod(it, classAnchor) }
 
     val properties = classDetailsElement.children().map { it }.filter { it.className() == "py property" }
         .map { parseProperty(it) }.filter { it.name != "native_object" }
 
     return Class(
         name = className,
+        anchor = classAnchor,
         description = classDescr,
         examples = classExamples,
         fields = properties,
@@ -98,6 +100,7 @@ fun parseClass(element: Element): Class {
 fun parseEnum(element: Element): Class {
     val classSignElement = element.selectFirst("dt.sig-object")
     val className = classSignElement!!.selectFirst("dt.sig-object span.sig-name")!!.text()
+    val classAnchor = className
 
     val classDetails = classSignElement.nextElementSibling()
     val classDetailsParagraphs = classDetails!!.children().map { it }.filter { it.tagName() == "p" }
@@ -106,11 +109,12 @@ fun parseEnum(element: Element): Class {
 
     val classExamples = element.select("section:contains(Examples) .highlight").map { it.text() }
 
-    val methods = classDetails.select("dl.method").map { parseMethod(it) }
+    val methods = classDetails.select("dl.method").map { parseMethod(it, classAnchor) }
     val members = classDetails.select("dl.attribute").map { parseEnumConstant(it) }
 
     return Class(
         name = className,
+        anchor = classAnchor,
         description = classDescr,
         enumConstants = members,
         examples = classExamples,
@@ -118,7 +122,7 @@ fun parseEnum(element: Element): Class {
     )
 }
 
-fun parseMethod(element: Element): Method {
+fun parseMethod(element: Element, classAnchor: String): Method {
     val methodSignature = enhanceSignature(element.selectFirst("dt.sig-object")!!.text())
     val methodName = element.selectFirst("dt.sig-object span.sig-name")!!.text()
     val allArgs = getArgsFromSignature(element.selectFirst("dt.sig-object")!!)
@@ -141,6 +145,7 @@ fun parseMethod(element: Element): Method {
     return Method(
         name = methodName,
         signature = methodSignature,
+        anchor = "${classAnchor}_$methodName",
         args = methodArgs,
         description = methodDescr,
         examples = methodExamples,

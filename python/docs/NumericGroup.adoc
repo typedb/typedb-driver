@@ -4,7 +4,7 @@
 Contains an element of the group aggregate query result.
 
 // tag::methods[]
-[#_numeric]
+[#_NumericGroup_numeric]
 ==== numeric
 
 [source,python]
@@ -25,7 +25,7 @@ Retrieves the ``Numeric`` answer of the group.
 numeric_group.numeric()
 ----
 
-[#_owner]
+[#_NumericGroup_owner]
 ==== owner
 
 [source,python]

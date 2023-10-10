@@ -1,7 +1,0 @@
-[#_ConceptErrorMessage]
-=== ConceptErrorMessage
-
-*Supertypes:*
-
-* `ErrorMessage`
-

@@ -4,7 +4,7 @@
 Contains explainable objects.
 
 // tag::methods[]
-[#_attribute]
+[#_Explainables_attribute]
 ==== attribute
 
 [source,python]
@@ -34,7 +34,7 @@ a| `variable` a| The string representation of a variable a| `str` a|
 concept_map.explainables().attribute(variable)
 ----
 
-[#_attributes]
+[#_Explainables_attributes]
 ==== attributes
 
 [source,python]
@@ -55,7 +55,7 @@ Retrieves all of this ``ConceptMap``’s explainable attributes.
 concept_map.explainables().attributes()
 ----
 
-[#_ownership]
+[#_Explainables_ownership]
 ==== ownership
 
 [source,python]
@@ -86,7 +86,7 @@ a| `attribute` a| The string representation of the attribute variable a| `str` a
 concept_map.explainables().ownership(owner, attribute)
 ----
 
-[#_ownerships]
+[#_Explainables_ownerships]
 ==== ownerships
 
 [source,python]
@@ -107,7 +107,7 @@ Retrieves all of this ``ConceptMap``’s explainable ownerships.
 concept_map.explainables().ownerships()
 ----
 
-[#_relation]
+[#_Explainables_relation]
 ==== relation
 
 [source,python]
@@ -137,7 +137,7 @@ a| `variable` a| The string representation of a variable a| `str` a|
 concept_map.explainables().relation(variable)
 ----
 
-[#_relations]
+[#_Explainables_relations]
 ==== relations
 
 [source,python]

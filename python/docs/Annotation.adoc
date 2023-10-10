@@ -2,7 +2,7 @@
 === Annotation
 
 // tag::methods[]
-[#_is_key]
+[#_Annotation_is_key]
 ==== is_key
 
 [source,python]
@@ -23,7 +23,7 @@ Checks if this ``Annotation`` is a ``@key`` annotation.
 annotation.is_key()
 ----
 
-[#_is_unique]
+[#_Annotation_is_unique]
 ==== is_unique
 
 [source,python]
@@ -44,7 +44,7 @@ Checks if this ``Annotation`` is a ``@unique`` annotation.
 annotation.is_unique()
 ----
 
-[#_key]
+[#_Annotation_key]
 ==== key
 
 [source,python]
@@ -65,7 +65,7 @@ Produces a ``@key`` annotation.
 Annotation.key()
 ----
 
-[#_unique]
+[#_Annotation_unique]
 ==== unique
 
 [source,python]

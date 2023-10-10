@@ -6,7 +6,7 @@
 * `Concept`
 
 // tag::methods[]
-[#_delete]
+[#_Type_delete]
 ==== delete
 
 [source,python]
@@ -36,7 +36,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 type_.delete(transaction)
 ----
 
-[#_get_label]
+[#_Type_get_label]
 ==== get_label
 
 [source,python]
@@ -57,7 +57,7 @@ Retrieves the unique label of the type.
 type_.get_label()
 ----
 
-[#_get_subtypes]
+[#_Type_get_subtypes]
 ==== get_subtypes
 
 [source,python]
@@ -89,7 +89,7 @@ type_.get_subtypes(transaction)
 type_.get_subtypes(transaction, Transitivity.EXPLICIT)
 ----
 
-[#_get_supertype]
+[#_Type_get_supertype]
 ==== get_supertype
 
 [source,python]
@@ -119,7 +119,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 type_.get_supertype(transaction)
 ----
 
-[#_get_supertypes]
+[#_Type_get_supertypes]
 ==== get_supertypes
 
 [source,python]
@@ -149,7 +149,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 type_.get_supertypes(transaction)
 ----
 
-[#_is_abstract]
+[#_Type_is_abstract]
 ==== is_abstract
 
 [source,python]
@@ -170,7 +170,7 @@ Checks if the type is prevented from having data instances (i.e., ``abstract``).
 type_.is_abstract()
 ----
 
-[#_is_root]
+[#_Type_is_root]
 ==== is_root
 
 [source,python]
@@ -191,7 +191,7 @@ Checks if the type is a root type.
 type_.is_root()
 ----
 
-[#_is_type]
+[#_Type_is_type]
 ==== is_type
 
 [source,python]
@@ -212,7 +212,7 @@ Checks if the concept is a ``Type``.
 type_.is_type()
 ----
 
-[#_set_label]
+[#_Type_set_label]
 ==== set_label
 
 [source,python]
@@ -243,7 +243,7 @@ a| `new_label` a| The new ``Label`` to be given to the type. a| `Label` a|
 type_.set_label(transaction, new_label)
 ----
 
-[#_to_json]
+[#_Type_to_json]
 ==== to_json
 
 [source,python]

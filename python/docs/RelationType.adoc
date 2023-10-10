@@ -12,7 +12,7 @@ Other types can play roles in relations if it’s mentioned in their definition.
 A relation type must specify at least one role.
 
 // tag::methods[]
-[#_as_relation_type]
+[#_RelationType_as_relation_type]
 ==== as_relation_type
 
 [source,python]
@@ -33,7 +33,7 @@ Casts the concept to ``RelationType``.
 relation_type.as_relation_type()
 ----
 
-[#_create]
+[#_RelationType_create]
 ==== create
 
 [source,python]
@@ -63,7 +63,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 relation_type.create(transaction)
 ----
 
-[#_get_instances]
+[#_RelationType_get_instances]
 ==== get_instances
 
 [source,python]
@@ -94,7 +94,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect instanc
 relation_type.get_instances(transaction, transitivity)
 ----
 
-[#_get_relates]
+[#_RelationType_get_relates]
 ==== get_relates
 
 [source,python]
@@ -126,7 +126,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited relate
 relation_type.get_relates(transaction, role_label, transitivity)
 ----
 
-[#_get_relates_overridden]
+[#_RelationType_get_relates_overridden]
 ==== get_relates_overridden
 
 [source,python]
@@ -157,7 +157,7 @@ a| `role_label` a| Label of the role that overrides an inherited role a| `str` a
 relation_type.get_relates_overridden(transaction, role_label)
 ----
 
-[#_get_subtypes]
+[#_RelationType_get_subtypes]
 ==== get_subtypes
 
 [source,python]
@@ -188,7 +188,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtype
 relation_type.get_subtypes(transaction, transitivity)
 ----
 
-[#_is_relation_type]
+[#_RelationType_is_relation_type]
 ==== is_relation_type
 
 [source,python]
@@ -209,7 +209,7 @@ Checks if the concept is a ``RelationType``.
 relation_type.is_relation_type()
 ----
 
-[#_set_relates]
+[#_RelationType_set_relates]
 ==== set_relates
 
 [source,python]
@@ -242,7 +242,7 @@ relation_type.set_relates(transaction, role_label)
 relation_type.set_relates(transaction, role_label, overridden_label)
 ----
 
-[#_set_supertype]
+[#_RelationType_set_supertype]
 ==== set_supertype
 
 [source,python]
@@ -273,7 +273,7 @@ a| `super_relation_type` a| The ``RelationType`` to set as the supertype of this
 relation_type.set_supertype(transaction, super_relation_type)
 ----
 
-[#_unset_relates]
+[#_RelationType_unset_relates]
 ==== unset_relates
 
 [source,python]

@@ -14,7 +14,7 @@ a| `users` a| `UserManager` a| The ``UserManager`` instance for this connection,
 // end::properties[]
 
 // tag::methods[]
-[#_close]
+[#_TypeDBDriver_close]
 ==== close
 
 [source,python]
@@ -35,7 +35,7 @@ Closes the driver. Before instantiating a new driver, the driver that’s curren
 driver.close()
 ----
 
-[#_is_open]
+[#_TypeDBDriver_is_open]
 ==== is_open
 
 [source,python]
@@ -56,7 +56,7 @@ Checks whether this connection is presently open.
 driver.is_open()
 ----
 
-[#_session]
+[#_TypeDBDriver_session]
 ==== session
 
 [source,python]
@@ -88,7 +88,7 @@ a| `options` a| ``TypeDBOptions`` for the session a| `TypeDBOptions \| None` a| 
 driver.session(database, session_type, options)
 ----
 
-[#_user]
+[#_TypeDBDriver_user]
 ==== user
 
 [source,python]

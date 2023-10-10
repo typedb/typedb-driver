@@ -4,7 +4,7 @@
 Provides methods for manipulating rules in the database.
 
 // tag::methods[]
-[#_get_rule]
+[#_LogicManager_get_rule]
 ==== get_rule
 
 [source,python]
@@ -34,7 +34,7 @@ a| `label` a| The label of the Rule to create or retrieve a| `str` a|
 transaction.logic.get_rule(label)
 ----
 
-[#_get_rules]
+[#_LogicManager_get_rules]
 ==== get_rules
 
 [source,python]
@@ -55,7 +55,7 @@ Retrieves all rules.
 transaction.logic.get_rules()
 ----
 
-[#_put_rule]
+[#_LogicManager_put_rule]
 ==== put_rule
 
 [source,python]

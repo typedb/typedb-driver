@@ -14,7 +14,7 @@ Other types can own an attribute type. That means that instances of these other 
 Multiple types can own the same attribute type, and different instances of the same type or different types can share ownership of the same attribute instance.
 
 // tag::methods[]
-[#_as_attribute_type]
+[#_AttributeType_as_attribute_type]
 ==== as_attribute_type
 
 [source,python]
@@ -35,7 +35,7 @@ Casts the concept to ``AttributeType``.
 attribute.as_attribute_type()
 ----
 
-[#_get]
+[#_AttributeType_get]
 ==== get
 
 [source,python]
@@ -66,7 +66,7 @@ a| `value` a| ``Attribute``’s value a| `Value \| bool \| int \| float \| str \
 attribute = attribute_type.get(transaction, value)
 ----
 
-[#_get_instances]
+[#_AttributeType_get_instances]
 ==== get_instances
 
 [source,python]
@@ -98,7 +98,7 @@ attribute_type.get_instances(transaction)
 attribute_type.get_instances(transaction, Transitivity.EXPLICIT)
 ----
 
-[#_get_owners]
+[#_AttributeType_get_owners]
 ==== get_owners
 
 [source,python]
@@ -131,7 +131,7 @@ attribute_type.get_owners(transaction)
 attribute_type.get_owners(transaction, annotations=Annotation.unique(), transitivity=Transitivity.EXPLICIT)
 ----
 
-[#_get_regex]
+[#_AttributeType_get_regex]
 ==== get_regex
 
 [source,python]
@@ -161,7 +161,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 attribute_type.get_regex(transaction)
 ----
 
-[#_get_subtypes_with_value_type]
+[#_AttributeType_get_subtypes_with_value_type]
 ==== get_subtypes_with_value_type
 
 [source,python]
@@ -195,7 +195,7 @@ attribute_type.get_subtypes_with_value_type(transaction, value_type,
                                             Transitivity.EXPLICIT)
 ----
 
-[#_get_value_type]
+[#_AttributeType_get_value_type]
 ==== get_value_type
 
 [source,python]
@@ -216,7 +216,7 @@ Retrieves the ``ValueType`` of this ``AttributeType``.
 attribute_type.get_value_type()
 ----
 
-[#_is_attribute_type]
+[#_AttributeType_is_attribute_type]
 ==== is_attribute_type
 
 [source,python]
@@ -237,7 +237,7 @@ Checks if the concept is an ``AttributeType``.
 attribute.is_attribute_type()
 ----
 
-[#_is_boolean]
+[#_AttributeType_is_boolean]
 ==== is_boolean
 
 [source,python]
@@ -258,7 +258,7 @@ Returns ``True`` if the value for attributes of this type is of type ``boolean``
 attribute_type.is_boolean()
 ----
 
-[#_is_datetime]
+[#_AttributeType_is_datetime]
 ==== is_datetime
 
 [source,python]
@@ -279,7 +279,7 @@ Returns ``True`` if the value for attributes of this type is of type ``datetime`
 attribute_type.is_datetime()
 ----
 
-[#_is_double]
+[#_AttributeType_is_double]
 ==== is_double
 
 [source,python]
@@ -300,7 +300,7 @@ Returns ``True`` if the value for attributes of this type is of type ``double``.
 attribute_type.is_double()
 ----
 
-[#_is_long]
+[#_AttributeType_is_long]
 ==== is_long
 
 [source,python]
@@ -321,7 +321,7 @@ Returns ``True`` if the value for attributes of this type is of type ``long``. O
 attribute_type.is_long()
 ----
 
-[#_is_string]
+[#_AttributeType_is_string]
 ==== is_string
 
 [source,python]
@@ -342,7 +342,7 @@ Returns ``True`` if the value for attributes of this type is of type ``string``.
 attribute_type.is_string()
 ----
 
-[#_put]
+[#_AttributeType_put]
 ==== put
 
 [source,python]
@@ -373,7 +373,7 @@ a| `value` a| New ``Attribute``’s value a| `Value \| bool \| int \| float \| s
 attribute = attribute_type.put(transaction, value)
 ----
 
-[#_set_regex]
+[#_AttributeType_set_regex]
 ==== set_regex
 
 [source,python]
@@ -406,7 +406,7 @@ a| `regex` a| Regular expression a| `str` a|
 attribute_type.set_regex(transaction, regex)
 ----
 
-[#_set_supertype]
+[#_AttributeType_set_supertype]
 ==== set_supertype
 
 [source,python]
@@ -437,7 +437,7 @@ a| `super_attribute_type` a| The ``AttributeType`` to set as the supertype of th
 attribute_type.set_supertype(transaction, super_attribute_type)
 ----
 
-[#_unset_regex]
+[#_AttributeType_unset_regex]
 ==== unset_regex
 
 [source,python]
