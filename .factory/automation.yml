@@ -262,9 +262,6 @@ build:
 
     test-java-behaviour-driver-enterprise:
       image: vaticle-ubuntu-22.04
-      filter:
-        owner: vaticle
-        branch: development
       dependencies:
         - build
       command: |
