@@ -1,8 +1,0 @@
-[#_struct_Connection]
-=== Connection
-
-*Implements traits:*
-
-* `Clone`
-* `Debug`
-

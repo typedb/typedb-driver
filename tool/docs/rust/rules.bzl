@@ -23,24 +23,61 @@ load("@rules_rust//rust:defs.bzl", "rust_doc")
 load("//tool/docs:rules.bzl", "html_docs_parser")
 
 def rust_docs_parser(name, feature):
-    # rust_doc from rules_rust < 0.20 produces a zip-archive
-    rust_doc(
-        name = "driver_docs_zip_" + feature,
-        crate = ":typedb_driver",
-        # TODO: Replace with rustdoc_flags after upgrading rules_rust to >=0.20
-        rustc_flags = ["--cfg", "feature=\"" + feature + "\""],
-    )
+    if feature != "merge":
+        # rust_doc from rules_rust < 0.20 produces a zip-archive
+        rust_doc(
+            name = "driver_docs_zip_" + feature,
+            crate = ":typedb_driver",
+            # TODO: Replace with rustdoc_flags after upgrading rules_rust to >=0.20
+            rustc_flags = ["--cfg", "feature=\"" + feature + "\""],
+        )
 
-    native.genrule(
-        name = "driver_docs_" + feature,
-        srcs = [":driver_docs_zip_" + feature],
-        outs = ["driver_docs_rustdoc_" + feature],
-        cmd = "mkdir $@ && unzip $< -d $@",
-    )
+        native.genrule(
+            name = "driver_docs_" + feature,
+            srcs = [":driver_docs_zip_" + feature],
+            outs = ["driver_docs_rustdoc_" + feature],
+            cmd = "mkdir $@ && unzip $< -d $@",
+        )
 
-    html_docs_parser(
-        name = name,
-        data = ":driver_docs_" + feature,
-        language = "rust",
-        feature = feature,
-    )
+        html_docs_parser(
+            name = name,
+            data = ":driver_docs_" + feature,
+            language = "rust",
+            feature = feature,
+        )
+    else:
+        rust_doc(
+            name = "driver_docs_zip_async",
+            crate = ":typedb_driver",
+            # TODO: Replace with rustdoc_flags after upgrading rules_rust to >=0.20
+            rustc_flags = ["--cfg", "feature=\"async\""],
+        )
+
+        rust_doc(
+            name = "driver_docs_zip_sync",
+            crate = ":typedb_driver",
+            # TODO: Replace with rustdoc_flags after upgrading rules_rust to >=0.20
+            rustc_flags = ["--cfg", "feature=\"sync\""],
+        )
+
+        native.genrule(
+            name = "driver_docs_async",
+            srcs = [":driver_docs_zip_async"],
+            outs = ["driver_docs_rustdoc_async"],
+            cmd = "mkdir $@ && unzip $< -d $@",
+        )
+
+        native.genrule(
+            name = "driver_docs_sync",
+            srcs = [":driver_docs_zip_sync"],
+            outs = ["driver_docs_rustdoc_sync"],
+            cmd = "mkdir $@ && unzip $< -d $@",
+        )
+
+        html_docs_parser(
+            name = name,
+            data = ":driver_docs_async",
+            language = "rust",
+            feature = "merge",
+            merge_data = ":driver_docs_sync",
+        )

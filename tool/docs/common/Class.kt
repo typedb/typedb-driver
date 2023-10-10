@@ -48,7 +48,16 @@ data class Class(
         )
     }
 
-    fun toAsciiDoc(language: String): String {
+    fun isNotEmpty(): Boolean {
+        return enumConstants.isNotEmpty()
+                || description.isNotEmpty()
+                || examples.isNotEmpty()
+                || fields.isNotEmpty()
+                || methods.isNotEmpty()
+                || superClasses.isNotEmpty()
+    }
+
+    fun toAsciiDoc(language: String, syncClass: Class? = null): String {
         val builder = AsciiDocBuilder()
         var result = ""
         result += builder.anchor(this.anchor ?: replaceSymbolsForAnchor(this.name))
@@ -57,11 +66,13 @@ data class Class(
         this.packagePath?.let { result += "*Package*: `$it`\n\n" }
 
         if (this.superClasses.isNotEmpty()) {
-            result += builder.boldHeader(when (language) {
-                "java" -> "Superinterfaces:"
-                "rust" -> "Implements traits:"
-                else -> "Supertypes:"
-            })
+            result += builder.boldHeader(
+                when (language) {
+                    "java" -> "Superinterfaces:"
+                    "rust" -> "Implements traits:"
+                    else -> "Supertypes:"
+                }
+            )
             result += builder.unorderedList(this.superClasses)
             result += "\n\n"
         }
@@ -85,11 +96,13 @@ data class Class(
         }
 
         if (this.enumConstants.isNotEmpty()) {
-            result += builder.caption(when (language) {
-                "rust" -> "Enum variants"
-                "nodejs" -> "Namespace variables"
-                else -> "Enum constants"
-            })
+            result += builder.caption(
+                when (language) {
+                    "rust" -> "Enum variants"
+                    "nodejs" -> "Namespace variables"
+                    else -> "Enum constants"
+                }
+            )
             result += builder.tagBegin("enum_constants")
 
             val headers = when (language) {
@@ -102,10 +115,12 @@ data class Class(
             result += tableBuilder.body(this.enumConstants.map { it.toTableData(language) })
             result += builder.tagEnd("enum_constants")
         } else if (this.fields.isNotEmpty()) {
-            result += builder.caption(when (language) {
-                "python" -> "Properties"
-                else -> "Fields"
-            })
+            result += builder.caption(
+                when (language) {
+                    "python" -> "Properties"
+                    else -> "Fields"
+                }
+            )
             result += builder.tagBegin("properties")
 
             val headers = listOf("Name", "Type", "Description")
@@ -118,19 +133,17 @@ data class Class(
 
         if (this.methods.isNotEmpty()) {
             result += builder.tagBegin("methods")
-            this.methods.forEach { result += it.toAsciiDoc(language) }
+            if (syncClass == null) {
+                this.methods.forEach { result += it.toAsciiDoc(language) }
+            } else {
+                val syncMethods = syncClass.methods.associateBy {
+                    it.name
+                }
+                this.methods.forEach { result += it.toAsciiDocFeaturesMerged(syncMethods[it.name]!!) }
+            }
             result += builder.tagEnd("methods")
         }
 
         return result
-    }
-
-    fun isNotEmpty(): Boolean {
-        return enumConstants.isNotEmpty()
-                || description.isNotEmpty()
-                || examples.isNotEmpty()
-                || fields.isNotEmpty()
-                || methods.isNotEmpty()
-                || superClasses.isNotEmpty()
     }
 }

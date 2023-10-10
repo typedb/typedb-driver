@@ -67,4 +67,53 @@ data class Method(
 
         return result
     }
+
+    fun toAsciiDocFeaturesMerged(syncMethod: Method): String {
+        val builder = AsciiDocBuilder()
+        val language = "rust"
+        var result = ""
+        result += builder.anchor(this.anchor ?: replaceSymbolsForAnchor(this.name))
+        result += builder.header(4, this.name)
+
+        result += builder.featureTabsIfNeeded(
+            builder.codeBlock(this.signature, language),
+            builder.codeBlock(syncMethod.signature, language),
+        )
+
+        result += builder.featureTabsIfNeeded(
+            "${this.description.joinToString("\n\n")}\n\n",
+            "${syncMethod.description.joinToString("\n\n")}\n\n",
+        )
+
+        if (this.args.isNotEmpty()) {
+            result += builder.caption("Input parameters")
+            val tableBuilder = AsciiDocTableBuilder(listOf("Name", "Description", "Type"))
+            result += tableBuilder.header()
+            result += builder.featureTabsIfNeeded(
+                tableBuilder.body(this.args.map { it.toTableDataAsArgument(language) }),
+                tableBuilder.body(syncMethod.args.map { it.toTableDataAsArgument(language) }),
+            )
+            result += "\n"
+        }
+
+        result += builder.caption("Returns")
+        result += builder.featureTabsIfNeeded(
+            builder.codeBlock(this.returnType, language),
+            builder.codeBlock(syncMethod.returnType, language),
+        )
+
+        if (this.examples.isNotEmpty()) {
+            result += builder.caption("Code examples")
+            result += builder.featureTabsIfNeeded(
+                this.examples.joinToString("") {
+                    builder.codeBlock(it, language)
+                },
+                syncMethod.examples.joinToString("") {
+                    builder.codeBlock(it, language)
+                },
+            )
+        }
+
+        return result
+    }
 }

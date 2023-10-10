@@ -31,18 +31,38 @@ import java.nio.file.Paths
 fun main(args: Array<String>) {
     val inputDirectoryName = args[0]
     val outputDirectoryName = args[1]
-    val subDir = args[2]
+    val feature = args[2]
 
     val baseDocsDir = System.getenv("BUILD_WORKSPACE_DIRECTORY")?.let { Paths.get(it).resolve(outputDirectoryName) }
         ?: Paths.get(outputDirectoryName)
     if (!baseDocsDir.toFile().exists()) {
         Files.createDirectory(baseDocsDir)
     }
-    val docsDir = baseDocsDir.resolve(subDir)
-    if (!docsDir.toFile().exists()) {
-        Files.createDirectory(docsDir)
-    }
 
+    if (feature != "merge") {
+        val docsDir = baseDocsDir.resolve(feature)
+        if (!docsDir.toFile().exists()) {
+            Files.createDirectory(docsDir)
+        }
+        parseDirectory(inputDirectoryName).forEach { (className, parsedClass) ->
+            val outputFile = docsDir.resolve(className.replace(" ", "_") + ".adoc").toFile()
+            outputFile.createNewFile()
+            outputFile.writeText(parsedClass.toAsciiDoc("rust"))
+        }
+    } else {
+        val parsedAsync = parseDirectory(inputDirectoryName)
+        val parsedSync = parseDirectory(args[3])
+        parsedAsync.forEach { (className, classAsync) ->
+            val outputFile = baseDocsDir.resolve(className.replace(" ", "_") + ".adoc").toFile()
+            outputFile.createNewFile()
+            outputFile.writeText(classAsync.toAsciiDoc("rust", parsedSync[className]!!))
+        }
+
+    }
+}
+
+fun parseDirectory(inputDirectoryName: String): HashMap<String, Class> {
+    val parsedClasses: HashMap<String, Class> = hashMapOf()
     File(inputDirectoryName).walkTopDown().filter {
         it.toString().contains("struct.") || it.toString().contains("trait.") || it.toString().contains("enum.")
     }.forEach {
@@ -60,12 +80,11 @@ fun main(args: Array<String>) {
         }
         parsedClass?.let {
             if (parsedClass.isNotEmpty()) {
-                val outputFile = docsDir.resolve(parsedClass.name.replace(" ", "_") + ".adoc").toFile()
-                outputFile.createNewFile()
-                outputFile.writeText(parsedClass.toAsciiDoc("rust"))
+                parsedClasses[parsedClass.name] = parsedClass
             }
         }
     }
+    return parsedClasses
 }
 
 fun parseClass(document: Element, classAnchor: String): Class {

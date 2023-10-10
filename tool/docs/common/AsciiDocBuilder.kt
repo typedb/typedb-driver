@@ -57,8 +57,29 @@ class AsciiDocBuilder {
         return "// end::$title[]\n\n"
     }
 
-    fun unorderedList(items: Iterable<String>):String {
+    fun unorderedList(items: Iterable<String>): String {
         return items.joinToString("\n") { "* `$it`" }
     }
 
+    fun tabs(items: Iterable<Pair<String, String>>): String {
+        var result = "[tabs]\n====\n"
+        result += items.joinToString("\n") { (tabName, content) ->
+            "$tabName::\n+\n--\n$content--\n"
+        }
+        result += "====\n\n"
+        return result
+    }
+
+    fun featureTabsIfNeeded(async: String, sync: String): String {
+        return if (async == sync) {
+            async
+        } else {
+            this.tabs(
+                listOf(
+                    Pair("async", async),
+                    Pair("sync", sync),
+                )
+            )
+        }
+    }
 }

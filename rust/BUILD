@@ -92,14 +92,19 @@ deploy_crate(
     target = ":assemble_crate",
 )
 
-rust_docs_parser(
-    name = "driver_adoc_async",
-    feature = "async",
-)
+#rust_docs_parser(
+#    name = "driver_adoc_async",
+#    feature = "async",
+#)
+#
+#rust_docs_parser(
+#    name = "driver_adoc_sync",
+#    feature = "sync",
+#)
 
 rust_docs_parser(
-    name = "driver_adoc_sync",
-    feature = "sync",
+    name = "driver_adoc",
+    feature = "merge",
 )
 
 checkstyle_test(

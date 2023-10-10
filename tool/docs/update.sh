@@ -23,5 +23,4 @@
 bazel run //java:driver_adoc
 bazel run //nodejs:driver_adoc
 bazel run //python:driver_adoc
-bazel run //rust:driver_adoc_async
-bazel run //rust:driver_adoc_sync
+bazel run //rust:driver_adoc

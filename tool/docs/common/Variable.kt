@@ -28,7 +28,7 @@ data class Variable(
     val description: String? = null,
     val type: String? = null,
 ) {
-     fun toTableDataAsField(language: String): List<String?> {
+    fun toTableDataAsField(language: String): List<String?> {
         val result = mutableListOf("`${this.name}`")
         result.add(if (this.type != null) "`${escape(this.type)}`" else "")
         result.add(this.description ?: "")
