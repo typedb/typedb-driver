@@ -78,15 +78,13 @@ int test_basic_query() {
 
     cleanup:
         if (check_error()) print_error(__FILE__, __LINE__);
-        if (0 != transaction) transaction_drop(transaction);
-        if (0 != session) session_drop(session);
-        if (0 != opts) options_drop(opts);
-        if (0 != dbMgr) {
-            delete_database_if_exists(dbMgr, "test");
-            if (check_error()) print_error(__FILE__, __LINE__);
-            database_manager_drop(dbMgr);
-        }
-        if (0 != conn) connection_close(conn);
+        transaction_drop(transaction);
+        session_drop(session);
+        options_drop(opts);
 
+        delete_database_if_exists(dbMgr, "test");
+        if (check_error()) print_error(__FILE__, __LINE__);
+        database_manager_drop(dbMgr);
+        connection_close(conn);
     return ret;
 }
