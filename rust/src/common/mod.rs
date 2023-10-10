@@ -20,7 +20,6 @@
  */
 
 pub(crate) mod address;
-mod credential;
 pub mod error;
 mod id;
 pub mod info;
@@ -30,7 +29,6 @@ mod options;
 pub mod stream;
 
 pub use self::{
-    credential::Credential,
     error::Error,
     options::Options,
     stream::{box_stream, BoxStream},
