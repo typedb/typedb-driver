@@ -81,7 +81,8 @@ checkstyle_test(
         "tool/sphinx/*",
     ]),
     exclude = glob([
-        "tool/sphinx/source/**/*",
+        "conf.py",
+        "index.rst",
         "docs/**/*.adoc",
     ]),
     license_type = "apache-header",
