@@ -19,8 +19,9 @@
 # under the License.
 #
 
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//nodejs/test/behaviour:rules.bzl", "typedb_behaviour_node_test")
+load("//nodejs/test/behaviour:rules.bzl", "behaviour_test_ts_config")
 
 checkstyle_test(
     name = "checkstyle",
@@ -28,13 +29,20 @@ checkstyle_test(
     license_type = "apache-header",
 )
 
-typedb_behaviour_node_test(
-    name = "test",
-    features = ["@vaticle_typedb_behaviour//typeql/language:get.feature"],
-    data = [
-        "//nodejs/test/behaviour/connection/database:steps",
-        "//nodejs/test/behaviour/connection/session:steps",
-        "//nodejs/test/behaviour/connection/transaction:steps",
-        "//nodejs/test/behaviour/typeql:steps",
+ts_project(
+    name = "steps",
+    srcs = ["QuerySteps.ts"],
+    tsconfig = behaviour_test_ts_config(),
+    deps = [
+        "//nodejs:driver-nodejs",
+
+        "//nodejs:node_modules/@cucumber/cucumber",
+
+        "//nodejs/test/behaviour/config:parameters",
+        "//nodejs/test/behaviour/connection:steps-base",
+        "//nodejs/test/behaviour/util:util",
     ],
+    declaration = True,
+    resolve_json_module = True,
+    visibility = ["//visibility:public"],
 )

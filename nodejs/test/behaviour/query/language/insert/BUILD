@@ -30,11 +30,12 @@ checkstyle_test(
 
 typedb_behaviour_node_test(
     name = "test",
-    features = ["@vaticle_typedb_behaviour//typeql/language:define.feature"],
+    features = ["@vaticle_typedb_behaviour//query/language:insert.feature"],
     data = [
         "//nodejs/test/behaviour/connection/database:steps",
         "//nodejs/test/behaviour/connection/session:steps",
         "//nodejs/test/behaviour/connection/transaction:steps",
-        "//nodejs/test/behaviour/typeql:steps",
+        "//nodejs/test/behaviour/query:steps",
+        "//nodejs/test/behaviour/util:steps",
     ],
 )

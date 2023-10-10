@@ -20,22 +20,9 @@
 #
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//nodejs/test/behaviour:rules.bzl", "typedb_behaviour_node_test")
 
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
     license_type = "apache-header",
-)
-
-typedb_behaviour_node_test(
-    name = "test",
-    features = ["@vaticle_typedb_behaviour//typeql/language:insert.feature"],
-    data = [
-        "//nodejs/test/behaviour/connection/database:steps",
-        "//nodejs/test/behaviour/connection/session:steps",
-        "//nodejs/test/behaviour/connection/transaction:steps",
-        "//nodejs/test/behaviour/typeql:steps",
-        "//nodejs/test/behaviour/util:steps",
-    ],
 )
