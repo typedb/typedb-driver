@@ -22,7 +22,7 @@
 #include "gtest/gtest.h"
 
 extern "C" {
-    #include "c/tests/integration/tests.h"
+#include "c/tests/integration/tests.h"
 }
 
 TEST(BasicTestSuite, BasicTests) {
