@@ -485,7 +485,7 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-enterprise-servers.sh # use source to receive export vars
-        .factory/test-core.sh //python/tests/behaviour/driver/query/... --test_output=errors && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-enterprise.sh //python/tests/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
