@@ -92,7 +92,7 @@ public class Loader {
     }
 
     private static Path unpackNativeResources(URI resourceURI) throws IOException {
-        Path tempPath = Files.createDirectory(Paths.get("typedb-driver-tmp"));
+        Path tempPath = Files.createTempDirectory("typedb-driver-lib");
         tempPath.toFile().deleteOnExit();
 
         FileSystem fs = FileSystems.newFileSystem(resourceURI, Collections.emptyMap());
