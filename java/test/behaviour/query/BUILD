@@ -19,37 +19,38 @@
 # under the License.
 #
 
-package(default_visibility = ["//visibility:__subpackages__"])
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//java/test/behaviour:rules.bzl", "typedb_behaviour_java_test")
+package(default_visibility = ["//java/test/behaviour/query/language:__subpackages__"])
 
-typedb_behaviour_java_test(
-    name = "test",
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+
+java_library(
+    name = "steps",
     srcs = [
-        "DeleteTest.java",
+        "TypeQLSteps.java",
     ],
-    test_class = "com.vaticle.typedb.driver.test.behaviour.typeql.language.delete.DeleteTest",
-    data = [
-        "@vaticle_typedb_behaviour//typeql/language:delete.feature",
-    ],
-    connection_steps_core = "//java/test/behaviour/connection:steps-core",
-    connection_steps_enterprise = "//java/test/behaviour/connection:steps-enterprise",
-    steps = [
-        "//java/test/behaviour/typeql:steps",
-        "//java/test/behaviour/connection/session:steps",
+    visibility = ["//visibility:public"],
+    runtime_deps = [
+        "//java/test/behaviour/connection/database:steps",
+        "//java/test/behaviour/connection/transaction:steps",
+        "@vaticle_typeql//java/pattern",
     ],
     deps = [
-        # Internal Package Dependencies
-        "//java/test/behaviour:behaviour",
+        # Package dependencies
+        "//java/api",
+        "//java/common",
+        "//java/test/behaviour/connection:steps-base",
+        "//java/test/behaviour/util",
+
+        # Vaticle dependencies
+        "@vaticle_typedb_common//:common",
+        "@vaticle_typeql//java:typeql-lang",
+        "@vaticle_typeql//java/common",
+        "@vaticle_typeql//java/query",
 
         # External dependencies from Maven
-        "@maven//:io_cucumber_cucumber_junit",
+        "@maven//:junit_junit",
+        "@maven//:io_cucumber_cucumber_java",
     ],
-    runtime_deps = [
-        "//java/test/behaviour/config:parameters",
-    ],
-    size = "large",
-    visibility = ["//visibility:public"],
 )
 
 checkstyle_test(

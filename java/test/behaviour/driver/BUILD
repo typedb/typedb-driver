@@ -19,39 +19,9 @@
 # under the License.
 #
 
-package(default_visibility = ["//java/test/behaviour/typeql/language/define:__subpackages__"])
+package(default_visibility = ["//java/test/behaviour/driver:__subpackages__"])
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-
-java_library(
-    name = "steps",
-    srcs = [
-        "TypeQLSteps.java",
-    ],
-    visibility = ["//visibility:public"],
-    runtime_deps = [
-        "//java/test/behaviour/connection/database:steps",
-        "//java/test/behaviour/connection/transaction:steps",
-        "@vaticle_typeql//java/pattern",
-    ],
-    deps = [
-        # Package dependencies
-        "//java/api",
-        "//java/common",
-        "//java/test/behaviour/connection:steps-base",
-        "//java/test/behaviour/util",
-
-        # Vaticle dependencies
-        "@vaticle_typedb_common//:common",
-        "@vaticle_typeql//java:typeql-lang",
-        "@vaticle_typeql//java/common",
-        "@vaticle_typeql//java/query",
-
-        # External dependencies from Maven
-        "@maven//:junit_junit",
-        "@maven//:io_cucumber_cucumber_java",
-    ],
-)
 
 checkstyle_test(
     name = "checkstyle",

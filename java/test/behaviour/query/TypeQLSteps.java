@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.test.behaviour.typeql;
+package com.vaticle.typedb.driver.test.behaviour.query;
 
 import com.vaticle.typedb.driver.api.answer.ConceptMap;
 import com.vaticle.typedb.driver.api.answer.ConceptMapGroup;

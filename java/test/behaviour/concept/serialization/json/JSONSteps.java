@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.vaticle.typedb.driver.test.behaviour.typeql.TypeQLSteps;
+import com.vaticle.typedb.driver.test.behaviour.query.TypeQLSteps;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

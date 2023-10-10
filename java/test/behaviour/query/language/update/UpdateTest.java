@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.test.behaviour.typeql.language.define;
+package com.vaticle.typedb.driver.test.behaviour.query.language.update;
 
 import com.vaticle.typedb.driver.test.behaviour.BehaviourTest;
 import io.cucumber.junit.Cucumber;
@@ -31,17 +31,17 @@ import org.junit.runner.RunWith;
         strict = true,
         plugin = "pretty",
         glue = "com.vaticle.typedb.driver.test.behaviour",
-        features = "external/vaticle_typedb_behaviour/typeql/language/define.feature",
+        features = "external/vaticle_typedb_behaviour/query/language/update.feature",
         tags = "not @ignore and not @ignore-typedb-driver-java"
 )
-public class DefineTest extends BehaviourTest {
+public class UpdateTest extends BehaviourTest {
     // ATTENTION:
     // When you click RUN from within this class through Intellij IDE, it will fail.
     // You can fix it by doing:
     //
     // 1) Go to 'Run'
     // 2) Select 'Edit Configurations...'
-    // 3) Select 'Bazel test DefineTest'
+    // 3) Select 'Bazel test InsertTest'
     //
     // 4) Ensure 'Target Expression' is set correctly:
     //    a) Use '//<this>/<package>/<name>:test-core' to test against typedb
@@ -56,5 +56,5 @@ public class DefineTest extends BehaviourTest {
     //       --sandbox_debug : to keep the sandbox not deleted after test runs
     //       --spawn_strategy=standalone : if you're on Mac, tests need permission to access filesystem (to run TypeDB)
     //
-    // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar    private static TypeDBCoreRunner runner;
+    // 6) Hit the RUN button by selecting the test from the dropdown menu on the top bar
 }

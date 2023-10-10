@@ -26,16 +26,16 @@ load("//java/test/behaviour:rules.bzl", "typedb_behaviour_java_test")
 typedb_behaviour_java_test(
     name = "test",
     srcs = [
-        "DefineTest.java",
+        "ExpressionTest.java",
     ],
-    test_class = "com.vaticle.typedb.driver.test.behaviour.typeql.language.define.DefineTest",
+    test_class = "query",
     data = [
-        "@vaticle_typedb_behaviour//typeql/language:define.feature",
+        "@vaticle_typedb_behaviour//query/language:expression.feature",
     ],
     connection_steps_core = "//java/test/behaviour/connection:steps-core",
     connection_steps_enterprise = "//java/test/behaviour/connection:steps-enterprise",
     steps = [
-        "//java/test/behaviour/typeql:steps",
+        "//java/test/behaviour/query:steps",
         "//java/test/behaviour/connection/session:steps",
     ],
     deps = [
@@ -48,7 +48,7 @@ typedb_behaviour_java_test(
     runtime_deps = [
         "//java/test/behaviour/config:parameters",
     ],
-    size = "enormous",
+    size = "large",
     visibility = ["//visibility:public"],
 )
 

@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.test.behaviour.typeql.language.match;
+package com.vaticle.typedb.driver.test.behaviour.query.language.undefine;
 
 import com.vaticle.typedb.driver.test.behaviour.BehaviourTest;
 import io.cucumber.junit.Cucumber;
@@ -31,17 +31,17 @@ import org.junit.runner.RunWith;
         strict = true,
         plugin = "pretty",
         glue = "com.vaticle.typedb.driver.test.behaviour",
-        features = "external/vaticle_typedb_behaviour/typeql/language/match.feature",
+        features = "external/vaticle_typedb_behaviour/query/language/undefine.feature",
         tags = "not @ignore and not @ignore-typedb-driver-java"
 )
-public class MatchTest extends BehaviourTest {
+public class UndefineTest extends BehaviourTest {
     // ATTENTION:
     // When you click RUN from within this class through Intellij IDE, it will fail.
     // You can fix it by doing:
     //
     // 1) Go to 'Run'
     // 2) Select 'Edit Configurations...'
-    // 3) Select 'Bazel test MatchTest'
+    // 3) Select 'Bazel test UndefineTest'
     //
     // 4) Ensure 'Target Expression' is set correctly:
     //    a) Use '//<this>/<package>/<name>:test-core' to test against typedb
