@@ -120,8 +120,8 @@ load("@vaticle_dependencies//tool/unuseddeps:deps.bzl", unuseddeps_deps = "deps"
 unuseddeps_deps()
 
 # Load //tool/docs
-load("@vaticle_dependencies//tool/docs:deps.bzl", doc_deps = "deps")
-doc_deps()
+load("@vaticle_dependencies//tool/docs:python_deps.bzl", docs_deps = "deps")
+docs_deps()
 load("@vaticle_dependencies_tool_docs//:requirements.bzl", install_doc_deps = "install_deps")
 install_doc_deps()
 
