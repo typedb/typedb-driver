@@ -30,8 +30,8 @@ cc_library(
         "//c:typedb_driver_clib_headers",
         "//c:typedb_driver_clib"
     ],
-    copts = ["-fsanitize=address"],
-    linkopts = ["-fsanitize=address"],
+    copts = ["-fsanitize=address"], # Remove this if you're running leaks
+    linkopts = ["-fsanitize=address"], # Remove this if you're running leaks
     linkstatic = True,
 )
 
@@ -47,6 +47,7 @@ cc_test(
         "@gtest//:gtest",
         "@gtest//:gtest_main"
     ],
+    env = {"RUST_BACKTRACE": "full"}
 )
 
 clang_format_test(

@@ -25,6 +25,16 @@ extern "C" {
 #include "c/tests/integration/tests.h"
 }
 
-TEST(BasicTestSuite, BasicTests) {
-    EXPECT_EQ(test_basic_query(), 0);
+TEST(BasicTestSuite, TestDatabaseManagement) {
+    EXPECT_EQ(test_database_management(), 0);
+}
+
+TEST(BasicTestSuite, TestQuery) {
+    EXPECT_EQ(test_query_schema(), 0);
+    EXPECT_EQ(test_query_data(), 0);
+}
+
+TEST(BasicTestSuite, TestConceptAPI) {
+    EXPECT_EQ(test_concept_api_schema(), 0);
+    EXPECT_EQ(test_concept_api_data(), 0);
 }

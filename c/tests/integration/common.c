@@ -26,7 +26,7 @@
 
 const char* TYPEDB_CORE_ADDRESS = "127.0.0.1:1729";
 
-bool print_error(char* filename, int lineno) {
+bool print_error(const char* filename, int lineno) {
     fflush(stdout);
     if (check_error()) {
         Error* error = get_last_error();
@@ -41,7 +41,7 @@ bool print_error(char* filename, int lineno) {
     } else return false;
 }
 
-void delete_database_if_exists(DatabaseManager* dbMgr, char* name) {
+void delete_database_if_exists(DatabaseManager* dbMgr, const char* name) {
     if (databases_contains(dbMgr, name)) {
         Database* database = databases_get(dbMgr, name);
         database_delete(database);
