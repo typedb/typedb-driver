@@ -62,7 +62,7 @@ int test_basic_query() {
     ConceptMapIterator* it = query_match(transaction, "match $t sub thing;", opts);
     ConceptMap* conceptMap;
     printf("Results:\n");
-    while ( 0 != (conceptMap = concept_map_iterator_next(it)) ) {
+    while (0 != (conceptMap = concept_map_iterator_next(it))) {
         Concept* concept = concept_map_get(conceptMap, "t");
         char* label = thing_type_get_label(concept);
         printf("- %s\n", label);
@@ -76,15 +76,15 @@ int test_basic_query() {
     transaction = 0;
     ret = 0;
 
-    cleanup:
-        if (check_error()) print_error(__FILE__, __LINE__);
-        transaction_drop(transaction);
-        session_drop(session);
-        options_drop(opts);
+cleanup:
+    if (check_error()) print_error(__FILE__, __LINE__);
+    transaction_drop(transaction);
+    session_drop(session);
+    options_drop(opts);
 
-        delete_database_if_exists(dbMgr, "test");
-        if (check_error()) print_error(__FILE__, __LINE__);
-        database_manager_drop(dbMgr);
-        connection_close(conn);
+    delete_database_if_exists(dbMgr, "test");
+    if (check_error()) print_error(__FILE__, __LINE__);
+    database_manager_drop(dbMgr);
+    connection_close(conn);
     return ret;
 }
