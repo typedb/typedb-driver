@@ -1,6 +1,6 @@
 ---
 BasedOnStyle: Chromium
 IndentWidth: 4
-AllowShortIfStatementsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
 ColumnLimit: 0
 ---
