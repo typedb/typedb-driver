@@ -28,7 +28,7 @@ typedb_behaviour_java_test(
     srcs = [
         "QueryTest.java",
     ],
-    test_class = "query",
+    test_class = "com.vaticle.typedb.driver.test.behaviour.driver.query.QueryTest",
     data = [
         "@vaticle_typedb_behaviour//driver:query.feature",
     ],
@@ -37,6 +37,7 @@ typedb_behaviour_java_test(
     steps = [
         "//java/test/behaviour/query:steps",
         "//java/test/behaviour/connection/session:steps",
+        "//java/test/behaviour/util:steps",
     ],
     deps = [
         # Internal Package Dependencies

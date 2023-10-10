@@ -28,7 +28,7 @@ typedb_behaviour_java_test(
     srcs = [
         "MatchTest.java",
     ],
-    test_class = "query",
+    test_class = "com.vaticle.typedb.driver.test.behaviour.query.language.match.MatchTest",
     data = [
         "@vaticle_typedb_behaviour//query/language:match.feature",
     ],

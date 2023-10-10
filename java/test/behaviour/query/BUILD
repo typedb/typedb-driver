@@ -26,7 +26,7 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 java_library(
     name = "steps",
     srcs = [
-        "TypeQLSteps.java",
+        "QuerySteps.java",
     ],
     visibility = ["//visibility:public"],
     runtime_deps = [
