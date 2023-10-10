@@ -108,6 +108,8 @@ deploy_npm(
     release = deployment["npm.release"],
 )
 
+# This rule should be in tool/typedoc, but there is a problem with the path configurations
+# when typedoc script is placed below the modules being documented.
 ts_project(
     name = "typedoc_runner",
     srcs = glob([

@@ -27,8 +27,6 @@ load("//tool/docs:rules.bzl", "html_docs_parser")
 load("//python:rules.bzl", "native_driver_versioned")
 load("//python:python_versions.bzl", "python_versions")
 
-load("@vaticle_dependencies_tool_docs//:requirements.bzl", docs_requirement = "requirement")
-
 native_driver_versioned(python_versions = python_versions)
 
 alias(

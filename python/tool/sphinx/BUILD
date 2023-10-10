@@ -25,9 +25,9 @@ load("@vaticle_dependencies_tool_docs//:requirements.bzl", docs_requirement = "r
 py_binary(
     name = "sphinx_runner",
     srcs = [
-        "sphinx_html_builder_runner.py",
+        "sphinx_html_builder.py",
     ],
-    main = "sphinx_html_builder_runner.py",
+    main = "sphinx_html_builder.py",
     deps = [docs_requirement("sphinx")],
     visibility = ["//visibility:public"]
 )
