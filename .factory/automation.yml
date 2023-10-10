@@ -130,7 +130,7 @@ build:
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
-    test-rust-behaviour-driver-smoke:
+    test-rust-behaviour-driver:
       machine: 8-core-32-gb
       image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
       dependencies:
@@ -249,7 +249,7 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         .factory/test-enterprise.sh //java/test/behaviour/concept/... --test_output=errors
 
-    test-java-behaviour-driver-smoke-core:
+    test-java-behaviour-driver-core:
       image: vaticle-ubuntu-22.04
       dependencies:
         - build
@@ -260,7 +260,7 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         .factory/test-core.sh //java/test/behaviour/driver/query/... --test_output=errors
 
-    test-java-behaviour-driver-smoke-enterprise:
+    test-java-behaviour-driver-enterprise:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
@@ -449,7 +449,7 @@ build:
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
-    test-python-behaviour-driver-smoke-core:
+    test-python-behaviour-driver-core:
       image: vaticle-ubuntu-22.04
       dependencies:
         - build
@@ -469,7 +469,7 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    test-python-behaviour-driver-smoke-enterprise:
+    test-python-behaviour-driver-enterprise:
       image: vaticle-ubuntu-22.04
       dependencies:
         - build
@@ -755,7 +755,7 @@ build:
         exit $TEST_SUCCESS
     # TODO: Delete --jobs=1 once tests are parallelisable
 
-    test-nodejs-behaviour-driver-smoke-core:
+    test-nodejs-behaviour-driver-core:
       image: vaticle-ubuntu-22.04
       dependencies:
         - build
@@ -768,7 +768,7 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    test-nodejs-behaviour-driver-smoke-enterprise:
+    test-nodejs-behaviour-driver-enterprise:
       image: vaticle-ubuntu-22.04
       dependencies:
         - build
