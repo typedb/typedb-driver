@@ -29,7 +29,7 @@ import java.nio.file.Path;
 import static com.vaticle.typedb.driver.jni.typedb_driver.credential_new;
 
 /**
- * User credentials and TLS encryption settings for connecting to TypeDB enterprise.
+ * User credentials and TLS encryption settings for connecting to TypeDB Enterprise.
  *
  * <h3>Examples</h3>
  * <pre>

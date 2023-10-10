@@ -42,7 +42,7 @@ export namespace TypeDB {
 
     /**
      * Creates a connection to TypeDB Enterprise, authenticating with the provided credentials.
-     * @param addresses - List of addresses of the individual TypeDB enterprise servers.
+     * @param addresses - List of addresses of the individual TypeDB Enterprise servers.
      * As long one specified address is provided, the driver will discover the other addresses from that server.
      * @param credential - The credentials to log in, and encryption settings. See <code>{@link TypeDBCredential}</code>
      *

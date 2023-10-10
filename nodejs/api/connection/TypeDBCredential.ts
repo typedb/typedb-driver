@@ -25,7 +25,7 @@ import {TypeDBDriverError} from "../../common/errors/TypeDBDriverError";
 import ENTERPRISE_INVALID_ROOT_CA_PATH = ErrorMessage.Driver.ENTERPRISE_INVALID_ROOT_CA_PATH;
 
 /**
- * User credentials and TLS encryption settings for connecting to TypeDB enterprise.
+ * User credentials and TLS encryption settings for connecting to TypeDB Enterprise.
  *
  * ### Examples
  *

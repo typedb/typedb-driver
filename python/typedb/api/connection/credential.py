@@ -29,7 +29,7 @@ from typedb.common.native_wrapper import NativeWrapper
 
 class TypeDBCredential(NativeWrapper[NativeCredential]):
     """
-    User credentials and TLS encryption settings for connecting to TypeDB enterprise.
+    User credentials and TLS encryption settings for connecting to TypeDB Enterprise.
 
     :param username: The name of the user to connect as
     :param password: The password for the user
