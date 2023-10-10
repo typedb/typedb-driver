@@ -44,15 +44,15 @@ Creates and returns an instance of this ``RelationType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 --
@@ -60,6 +60,10 @@ a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 --
@@ -162,15 +166,15 @@ Retrieves the most immediate supertype of the ``RelationType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 --
@@ -178,6 +182,10 @@ a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 --
@@ -282,15 +290,15 @@ Sets the supplied ``RelationType`` as the supertype of the current ``RelationTyp
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 a| `supertype` a| The ``RelationType`` to set as the supertype of this ``RelationType`` a| `RelationType`
 |===
@@ -299,6 +307,10 @@ a| `supertype` a| The ``RelationType`` to set as the supertype of this ``Relatio
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `supertype` a| The ``RelationType`` to set as the supertype of this ``RelationType`` a| `RelationType`
 |===
@@ -626,15 +638,15 @@ Retrieves role with a given ``role_label`` that this ``RelationType`` relates to
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 a| `role_label` a| Label of the role we wish to retrieve a| `String`
 |===
@@ -643,6 +655,10 @@ a| `role_label` a| Label of the role we wish to retrieve a| `String`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `role_label` a| Label of the role we wish to retrieve a| `String`
 |===
@@ -748,15 +764,15 @@ Retrieves a ``RoleType`` that is overridden by the role with the ``overridden_ro
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 a| `overridden_role_label` a| Label of the role that overrides an inherited role a| `String`
 |===
@@ -765,6 +781,10 @@ a| `overridden_role_label` a| Label of the role that overrides an inherited role
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `overridden_role_label` a| Label of the role that overrides an inherited role a| `String`
 |===
@@ -872,15 +892,15 @@ Sets the new role that this ``RelationType`` relates to. If we are setting an ov
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 a| `role_label` a| The new role for the ``RelationType`` to relate to a| `String`
 a| `overridden_role_label` a| The label being overridden, if applicable a| `Option<String>`
@@ -890,6 +910,10 @@ a| `overridden_role_label` a| The label being overridden, if applicable a| `Opti
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `role_label` a| The new role for the ``RelationType`` to relate to a| `String`
 a| `overridden_role_label` a| The label being overridden, if applicable a| `Option<String>`
@@ -996,15 +1020,15 @@ Disallows this ``RelationType`` from relating to the given role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 a| `role_label` a| The role to not relate to the relation type. a| `String`
 |===
@@ -1013,6 +1037,10 @@ a| `role_label` a| The role to not relate to the relation type. a| `String`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `role_label` a| The role to not relate to the relation type. a| `String`
 |===

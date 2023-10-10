@@ -68,15 +68,15 @@ Checks if this type is deleted.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 --
@@ -84,6 +84,10 @@ a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 --
@@ -201,15 +205,15 @@ Retrieves ``RelationType``s that this role is related to (directly or indirectly
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 --
@@ -217,6 +221,10 @@ a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 --
@@ -316,15 +324,15 @@ Deletes this type from the database.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 --
@@ -332,6 +340,10 @@ a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 --
@@ -432,15 +444,15 @@ Renames the label of the type. The new label must remain unique.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 a| `new_label` a| The new ``Label`` to be given to the type. a| `String`
 |===
@@ -449,6 +461,10 @@ a| `new_label` a| The new ``Label`` to be given to the type. a| `String`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `new_label` a| The new ``Label`` to be given to the type. a| `String`
 |===
@@ -552,15 +568,15 @@ Retrieves the most immediate supertype of the ``RoleType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 --
@@ -568,6 +584,10 @@ a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 --

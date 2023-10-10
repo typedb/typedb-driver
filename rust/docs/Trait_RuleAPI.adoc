@@ -61,15 +61,15 @@ Deletes this rule.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current ``Transaction`` a| `&'life1 Transaction<'life2>`
 |===
 --
@@ -77,6 +77,10 @@ a| `transaction` a| The current ``Transaction`` a| `&'life1 Transaction<'life2>`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current ``Transaction`` a| `&Transaction<'_>`
 |===
 --
@@ -181,15 +185,15 @@ Renames the label of the rule. The new label must remain unique.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current ``Transaction`` a| `&'life1 Transaction<'life2>`
 a| `new_label` a| The new label to be given to the rule a| `String`
 |===
@@ -198,6 +202,10 @@ a| `new_label` a| The new label to be given to the rule a| `String`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current ``Transaction`` a| `&Transaction<'_>`
 a| `new_label` a| The new label to be given to the rule a| `String`
 |===
@@ -298,15 +306,15 @@ Check if this rule has been deleted.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current ``Transaction`` a| `&'life1 Transaction<'life2>`
 |===
 --
@@ -314,6 +322,10 @@ a| `transaction` a| The current ``Transaction`` a| `&'life1 Transaction<'life2>`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current ``Transaction`` a| `&Transaction<'_>`
 |===
 --

@@ -94,15 +94,15 @@ Checks if this ``Thing`` is deleted.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 --
@@ -110,6 +110,10 @@ a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 --
@@ -209,15 +213,15 @@ Deletes this ``Thing``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 --
@@ -225,6 +229,10 @@ a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 --
@@ -366,15 +374,15 @@ Assigns an ``Attribute`` to be owned by this ``Thing``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute`
 |===
@@ -383,6 +391,10 @@ a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute`
 |===
@@ -484,15 +496,15 @@ Unassigns an ``Attribute`` from this ``Thing``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attribute`
 |===
@@ -501,6 +513,10 @@ a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attr
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attribute`
 |===

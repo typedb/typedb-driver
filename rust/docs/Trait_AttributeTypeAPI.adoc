@@ -69,15 +69,15 @@ Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 a| `value` a| New ``Attribute``’s value a| `Value`
 |===
@@ -86,6 +86,10 @@ a| `value` a| New ``Attribute``’s value a| `Value`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `value` a| New ``Attribute``’s value a| `Value`
 |===
@@ -191,15 +195,15 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if suc
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 a| `value` a| ``Attribute``’s value a| `Value`
 |===
@@ -208,6 +212,10 @@ a| `value` a| ``Attribute``’s value a| `Value`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `value` a| ``Attribute``’s value a| `Value`
 |===
@@ -311,15 +319,15 @@ Retrieves the most immediate supertype of this ``AttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 --
@@ -327,6 +335,10 @@ a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 --
@@ -431,15 +443,15 @@ Sets the supplied ``AttributeType`` as the supertype of the current ``AttributeT
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 a| `supertype` a| The ``AttributeType`` to set as the supertype of this ``AttributeType`` a| `AttributeType`
 |===
@@ -448,6 +460,10 @@ a| `supertype` a| The ``AttributeType`` to set as the supertype of this ``Attrib
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `supertype` a| The ``AttributeType`` to set as the supertype of this ``AttributeType`` a| `AttributeType`
 |===
@@ -700,15 +716,15 @@ Retrieves the regular expression that is defined for this ``AttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 --
@@ -716,6 +732,10 @@ a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 --
@@ -818,15 +838,15 @@ Can only be applied for ``AttributeType``s with a ``string`` value type.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 a| `regex` a| Regular expression a| `String`
 |===
@@ -835,6 +855,10 @@ a| `regex` a| Regular expression a| `String`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `regex` a| Regular expression a| `String`
 |===
@@ -935,15 +959,15 @@ Removes the regular expression that is defined for this ``AttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 --
@@ -951,6 +975,10 @@ a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 --

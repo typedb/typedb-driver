@@ -48,8 +48,8 @@ data class Method(
                 headers.add("Default Value")
             }
             val tableBuilder = AsciiDocTableBuilder(headers)
-            result += tableBuilder.header()
-            result += tableBuilder.body(this.args.map { it.toTableDataAsArgument(language) })
+            this.args.forEach { tableBuilder.addRow(it.toTableDataAsArgument(language)) }
+            result += tableBuilder.build()
             result += "\n"
         }
 
@@ -87,10 +87,11 @@ data class Method(
 
         if (this.args.isNotEmpty()) {
             result += builder.caption("Input parameters")
-            val tableBuilder = AsciiDocTableBuilder(listOf("Name", "Description", "Type"))
-            result += tableBuilder.header()
+
             result += builder.tabsIfNotEqual(methods.map {
-                Pair(it.mode!!, tableBuilder.body(it.args.map { it.toTableDataAsArgument(language) }))
+                val tableBuilder = AsciiDocTableBuilder(listOf("Name", "Description", "Type"))
+                it.args.forEach { tableBuilder.addRow(it.toTableDataAsArgument(language)) }
+                Pair(it.mode!!, tableBuilder.build())
             })
             result += "\n"
         }

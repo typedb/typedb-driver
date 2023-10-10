@@ -119,15 +119,15 @@ Checks if this type is deleted.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 --
@@ -135,6 +135,10 @@ a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 --
@@ -234,15 +238,15 @@ Deletes this type from the database.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 --
@@ -250,6 +254,10 @@ a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 --
@@ -354,15 +362,15 @@ Renames the label of the type. The new label must remain unique.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 a| `new_label` a| The new ``Label`` to be given to the type. a| `String`
 |===
@@ -371,6 +379,10 @@ a| `new_label` a| The new ``Label`` to be given to the type. a| `String`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `new_label` a| The new ``Label`` to be given to the type. a| `String`
 |===
@@ -471,15 +483,15 @@ Set a type to be abstract, meaning it cannot have instances.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 --
@@ -487,6 +499,10 @@ a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 --
@@ -586,15 +602,15 @@ Set a type to be non-abstract, meaning it can have instances.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 --
@@ -602,6 +618,10 @@ a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 --
@@ -766,15 +786,15 @@ Retrieves an ``AttributeType``, ownership of which is overridden for this ``Thin
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 a| `overridden_attribute_type` a| The ``AttributeType`` that overrides requested ``AttributeType`` a| `AttributeType`
 |===
@@ -783,6 +803,10 @@ a| `overridden_attribute_type` a| The ``AttributeType`` that overrides requested
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `overridden_attribute_type` a| The ``AttributeType`` that overrides requested ``AttributeType`` a| `AttributeType`
 |===
@@ -892,15 +916,15 @@ Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 a| `attribute_type` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType`
 a| `overridden_attribute_type` a| The ``AttributeType`` that this attribute ownership overrides, if applicable. a| `Option<AttributeType>`
@@ -911,6 +935,10 @@ a| `annotations` a| Adds annotations to the ownership. a| `Vec<Annotation>`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `attribute_type` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType`
 a| `overridden_attribute_type` a| The ``AttributeType`` that this attribute ownership overrides, if applicable. a| `Option<AttributeType>`
@@ -1018,15 +1046,15 @@ Disallows the instances of this ``ThingType`` from owning the given ``AttributeT
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 a| `attribute_type` a| The ``AttributeType`` to not be owned by the type. a| `AttributeType`
 |===
@@ -1035,6 +1063,10 @@ a| `attribute_type` a| The ``AttributeType`` to not be owned by the type. a| `At
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `attribute_type` a| The ``AttributeType`` to not be owned by the type. a| `AttributeType`
 |===
@@ -1196,15 +1228,15 @@ Retrieves a ``RoleType`` that is overridden by the given ``role_type`` for this 
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 a| `overridden_role_type` a| The ``RoleType`` that overrides an inherited role a| `RoleType`
 |===
@@ -1213,6 +1245,10 @@ a| `overridden_role_type` a| The ``RoleType`` that overrides an inherited role a
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `overridden_role_type` a| The ``RoleType`` that overrides an inherited role a| `RoleType`
 |===
@@ -1320,15 +1356,15 @@ Allows the instances of this ``ThingType`` to play the given role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 a| `role_type` a| The role to be played by the instances of this type a| `RoleType`
 a| `overridden_role_type` a| The role type that this role overrides, if applicable a| `Option<RoleType>`
@@ -1338,6 +1374,10 @@ a| `overridden_role_type` a| The role type that this role overrides, if applicab
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `role_type` a| The role to be played by the instances of this type a| `RoleType`
 a| `overridden_role_type` a| The role type that this role overrides, if applicable a| `Option<RoleType>`
@@ -1444,15 +1484,15 @@ Disallows the instances of this ``ThingType`` from playing the given role.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 a| `role_type` a| The role to not be played by the instances of this type. a| `RoleType`
 |===
@@ -1461,6 +1501,10 @@ a| `role_type` a| The role to not be played by the instances of this type. a| `R
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 a| `role_type` a| The role to not be played by the instances of this type. a| `RoleType`
 |===
@@ -1561,15 +1605,15 @@ Produces a pattern for creating this ``ThingType`` in a ``define`` query.
 
 [caption=""]
 .Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
 [tabs]
 ====
 async::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 |===
 --
@@ -1577,6 +1621,10 @@ a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
 sync::
 +
 --
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
 a| `transaction` a| The current transaction a| `&Transaction<'_>`
 |===
 --

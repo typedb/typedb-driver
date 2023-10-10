@@ -110,9 +110,11 @@ data class Class(
                 "python" -> listOf("Name", "Value")
                 else -> listOf("Name")
             }
+
             val tableBuilder = AsciiDocTableBuilder(headers)
-            result += tableBuilder.header()
-            result += tableBuilder.body(this.enumConstants.map { it.toTableData(language) })
+            this.enumConstants.forEach { tableBuilder.addRow(it.toTableData(language)) }
+            result += tableBuilder.build()
+
             result += builder.tagEnd("enum_constants")
         } else if (this.fields.isNotEmpty()) {
             result += builder.caption(
@@ -125,8 +127,8 @@ data class Class(
 
             val headers = listOf("Name", "Type", "Description")
             val tableBuilder = AsciiDocTableBuilder(headers)
-            result += tableBuilder.header()
-            result += tableBuilder.body(this.fields.map { it.toTableDataAsField(language) })
+            this.fields.forEach { tableBuilder.addRow(it.toTableDataAsField(language)) }
+            result += tableBuilder.build()
 
             result += builder.tagEnd("properties")
         }

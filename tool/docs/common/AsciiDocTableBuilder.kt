@@ -22,20 +22,29 @@
 package com.vaticle.typedb.driver.tool.doc.common
 
 class AsciiDocTableBuilder(private val headers: List<String>) {
+    private val rows: MutableList<List<String?>> = mutableListOf()
 
-    fun header(): String {
+    fun addRow(row: List<String?>) {
+        assert(this.headers.size == row.size)
+        rows.add(row)
+    }
+
+    private fun header(): String {
         return "[cols=\"~" + ",~".repeat(this.headers.size - 1) +
                 "\"]\n[options=\"header\"]\n" +
                 "|===\n|" +
-                this.headers.joinToString(" |") + "\n"
+                headers.joinToString(" |") + "\n"
     }
 
-    fun body(rows: Iterable<List<String?>>): String {
+    private fun body(): String {
         return rows.joinToString("") { this.row(it) } + "|===\n"
     }
 
     private fun row(row: List<String?>): String {
-        assert(this.headers.size == row.size)
         return "a| " + row.joinToString(" a| ") + "\n"
+    }
+
+    fun build(): String {
+        return this.header() + this.body()
     }
 }
