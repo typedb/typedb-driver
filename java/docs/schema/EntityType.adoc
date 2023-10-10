@@ -217,7 +217,7 @@ concept.asValue();
 [source,java]
 ----
 @CheckReturnValue
-Entity create​(TypeDBTransaction transaction)
+Promise<? extends Entity> create​(TypeDBTransaction transaction)
 ----
 
 Creates and returns a new instance of this ``EntityType``. 
@@ -234,13 +234,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 
 [caption=""]
 .Returns
-`Entity`
+`Promise<? extends Entity>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-entityType.create(transaction);
+entityType.create(transaction).resolve();
 ----
 
 [#_EntityType_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction]
@@ -561,8 +561,9 @@ concept.isValue();
 
 [source,java]
 ----
-void setSupertype​(TypeDBTransaction transaction,
-                  EntityType superEntityType)
+@CheckReturnValue
+Promise<java.lang.Void> setSupertype​(TypeDBTransaction transaction,
+                                     EntityType superEntityType)
 ----
 
 Sets the supplied ``EntityType`` as the supertype of the current ``EntityType``. 
@@ -580,13 +581,13 @@ a| `superEntityType` a| The ``EntityType`` to set as the supertype of this ``Ent
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-entityType.setSupertype(transaction, entityType);
+entityType.setSupertype(transaction, entityType).resolve();
 ----
 
 // end::methods[]

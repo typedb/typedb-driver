@@ -23,11 +23,11 @@ pub mod concept;
 pub mod logic;
 pub mod query;
 
-use std::{fmt, marker::PhantomData, sync::Arc};
+use std::{fmt, marker::PhantomData, pin::Pin};
 
 use self::{concept::ConceptManager, logic::LogicManager, query::QueryManager};
 use crate::{
-    common::{Result, TransactionType},
+    common::{Promise, Result, TransactionType},
     connection::TransactionStream,
     error::ConnectionError,
     Options,
@@ -38,28 +38,19 @@ pub struct Transaction<'a> {
     type_: TransactionType,
     /// The options for the transaction
     options: Options,
-    /// The``QueryManager`` for this Transaction, from which any TypeQL query can be executed.
-    query: QueryManager,
-    /// The `ConceptManager` for this transaction, providing access to all Concept API methods.
-    concept: ConceptManager,
-    /// The `LogicManager` for this Transaction, providing access to all Concept API - Logic methods.
-    logic: LogicManager,
-    transaction_stream: Arc<TransactionStream>,
+    transaction_stream: Pin<Box<TransactionStream>>,
 
     _lifetime_guard: PhantomData<&'a ()>,
 }
 
 impl Transaction<'_> {
     pub(super) fn new(transaction_stream: TransactionStream) -> Self {
-        let transaction_stream = Arc::new(transaction_stream);
+        let transaction_stream = Box::pin(transaction_stream);
         Transaction {
             type_: transaction_stream.type_(),
             options: transaction_stream.options().clone(),
-            query: QueryManager::new(transaction_stream.clone()),
-            concept: ConceptManager::new(transaction_stream.clone()),
-            logic: LogicManager::new(transaction_stream.clone()),
             transaction_stream,
-            _lifetime_guard: PhantomData::default(),
+            _lifetime_guard: PhantomData,
         }
     }
 
@@ -80,18 +71,18 @@ impl Transaction<'_> {
     }
 
     /// Retrieves the``QueryManager`` for this Transaction, from which any TypeQL query can be executed.
-    pub fn query(&self) -> &QueryManager {
-        &self.query
+    pub fn query(&self) -> QueryManager<'_> {
+        QueryManager::new(self.transaction_stream.as_ref())
     }
 
     /// The `ConceptManager` for this transaction, providing access to all Concept API methods.
-    pub fn concept(&self) -> &ConceptManager {
-        &self.concept
+    pub fn concept(&self) -> ConceptManager<'_> {
+        ConceptManager::new(self.transaction_stream.as_ref())
     }
 
     /// Retrieves the `LogicManager` for this Transaction, providing access to all Concept API - Logic methods.
-    pub fn logic(&self) -> &LogicManager {
-        &self.logic
+    pub fn logic(&self) -> LogicManager<'_> {
+        LogicManager::new(self.transaction_stream.as_ref())
     }
 
     /// Registers a callback function which will be executed when this session is closed.
@@ -128,9 +119,9 @@ impl Transaction<'_> {
     #[cfg_attr(feature = "sync", doc = "transaction.commit()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.commit().await")]
     /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn commit(self) -> Result {
-        self.transaction_stream.commit().await
+    pub fn commit(self) -> impl Promise<'static, Result> {
+        let stream = self.transaction_stream;
+        stream.commit()
     }
 
     /// Rolls back the uncommitted changes made via this transaction.
@@ -141,9 +132,8 @@ impl Transaction<'_> {
     #[cfg_attr(feature = "sync", doc = "transaction.rollback()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.rollback().await")]
     /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn rollback(&self) -> Result {
-        self.transaction_stream.rollback().await
+    pub fn rollback(&self) -> impl Promise<'_, Result> {
+        self.transaction_stream.rollback()
     }
 }
 

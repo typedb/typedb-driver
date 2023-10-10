@@ -23,12 +23,12 @@ package com.vaticle.typedb.driver.concept.type;
 
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.value.Value;
-import com.vaticle.typedb.driver.api.concept.thing.Attribute;
 import com.vaticle.typedb.driver.api.concept.type.AttributeType;
+import com.vaticle.typedb.driver.common.NativeIterator;
+import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.value.ValueImpl;
 import com.vaticle.typedb.driver.concept.thing.AttributeImpl;
-import com.vaticle.typedb.driver.jni.Transitivity;
 
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
@@ -61,32 +61,21 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     }
 
     @Override
-    public final void setSupertype(TypeDBTransaction transaction, AttributeType attributeType) {
-        try {
-            attribute_type_set_supertype(nativeTransaction(transaction),
-                nativeObject, ((AttributeTypeImpl) attributeType).nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public final Promise<Void> setSupertype(TypeDBTransaction transaction, AttributeType attributeType) {
+        return new Promise(attribute_type_set_supertype(nativeTransaction(transaction),
+                nativeObject, ((AttributeTypeImpl) attributeType).nativeObject));
     }
 
     @Nullable
     @Override
-    public AttributeTypeImpl getSupertype(TypeDBTransaction transaction) {
-        try {
-            com.vaticle.typedb.driver.jni.Concept res = attribute_type_get_supertype(nativeTransaction(transaction),
-                    nativeObject);
-            if (res != null) return new AttributeTypeImpl(res);
-            else return null;
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public Promise<AttributeTypeImpl> getSupertype(TypeDBTransaction transaction) {
+        return Promise.map(attribute_type_get_supertype(nativeTransaction(transaction), nativeObject), AttributeTypeImpl::new);
     }
 
     @Override
     public final Stream<AttributeTypeImpl> getSupertypes(TypeDBTransaction transaction) {
         try {
-            return attribute_type_get_supertypes(nativeTransaction(transaction), nativeObject).stream().map(AttributeTypeImpl::new);
+            return new NativeIterator<>(attribute_type_get_supertypes(nativeTransaction(transaction), nativeObject)).stream().map(AttributeTypeImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -105,7 +94,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     @Override
     public final Stream<AttributeTypeImpl> getSubtypes(TypeDBTransaction transaction, Transitivity transitivity) {
         try {
-            return attribute_type_get_subtypes(nativeTransaction(transaction), nativeObject, transitivity.nativeObject).stream().map(AttributeTypeImpl::new);
+            return new NativeIterator<>(attribute_type_get_subtypes(nativeTransaction(transaction), nativeObject, transitivity.nativeObject)).stream().map(AttributeTypeImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -114,8 +103,8 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     @Override
     public final Stream<AttributeTypeImpl> getSubtypes(TypeDBTransaction transaction, Value.Type valueType, Transitivity transitivity) {
         try {
-            return attribute_type_get_subtypes_with_value_type(nativeTransaction(transaction), nativeObject, valueType.nativeObject, transitivity.nativeObject)
-                    .stream().map(AttributeTypeImpl::new);
+            return new NativeIterator<>(attribute_type_get_subtypes_with_value_type(nativeTransaction(transaction), nativeObject, valueType.nativeObject, transitivity.nativeObject)
+                    ).stream().map(AttributeTypeImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -129,7 +118,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     @Override
     public final Stream<AttributeImpl> getInstances(TypeDBTransaction transaction, Transitivity transitivity) {
         try {
-            return attribute_type_get_instances(nativeTransaction(transaction), nativeObject, transitivity.nativeObject).stream().map(AttributeImpl::new);
+            return new NativeIterator<>(attribute_type_get_instances(nativeTransaction(transaction), nativeObject, transitivity.nativeObject)).stream().map(AttributeImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -154,112 +143,84 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     public Stream<ThingTypeImpl> getOwners(TypeDBTransaction transaction, Set<Annotation> annotations, Transitivity transitivity) {
         com.vaticle.typedb.driver.jni.Annotation[] annotationsArray = annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.driver.jni.Annotation[]::new);
         try {
-            return attribute_type_get_owners(nativeTransaction(transaction), nativeObject, transitivity.nativeObject, annotationsArray).stream().map(ThingTypeImpl::of);
+            return new NativeIterator<>(attribute_type_get_owners(nativeTransaction(transaction), nativeObject, transitivity.nativeObject, annotationsArray)).stream().map(ThingTypeImpl::of);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public Attribute put(TypeDBTransaction transaction, String value) {
+    public Promise<AttributeImpl> put(TypeDBTransaction transaction, String value) {
         return put(transaction, ValueImpl.of(value));
     }
 
     @Override
-    public Attribute put(TypeDBTransaction transaction, long value) {
+    public Promise<AttributeImpl> put(TypeDBTransaction transaction, long value) {
         return put(transaction, ValueImpl.of(value));
     }
 
     @Override
-    public Attribute put(TypeDBTransaction transaction, double value) {
+    public Promise<AttributeImpl> put(TypeDBTransaction transaction, double value) {
         return put(transaction, ValueImpl.of(value));
     }
 
     @Override
-    public Attribute put(TypeDBTransaction transaction, boolean value) {
+    public Promise<AttributeImpl> put(TypeDBTransaction transaction, boolean value) {
         return put(transaction, ValueImpl.of(value));
     }
 
     @Override
-    public Attribute put(TypeDBTransaction transaction, LocalDateTime value) {
+    public Promise<AttributeImpl> put(TypeDBTransaction transaction, LocalDateTime value) {
         return put(transaction, ValueImpl.of(value));
     }
 
     @Override
-    public final Attribute put(TypeDBTransaction transaction, Value value) {
-        try {
-            return new AttributeImpl(attribute_type_put(nativeTransaction(transaction), nativeObject, ((ValueImpl) value).nativeObject));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public final Promise<AttributeImpl> put(TypeDBTransaction transaction, Value value) {
+        return Promise.map(attribute_type_put(nativeTransaction(transaction), nativeObject, ((ValueImpl) value).nativeObject), AttributeImpl::new);
     }
 
-    @Nullable
     @Override
-    public Attribute get(TypeDBTransaction transaction, String value) {
+    public Promise<AttributeImpl> get(TypeDBTransaction transaction, String value) {
         return get(transaction, ValueImpl.of(value));
     }
 
-    @Nullable
     @Override
-    public Attribute get(TypeDBTransaction transaction, long value) {
+    public Promise<AttributeImpl> get(TypeDBTransaction transaction, long value) {
         return get(transaction, ValueImpl.of(value));
     }
 
-    @Nullable
     @Override
-    public Attribute get(TypeDBTransaction transaction, double value) {
+    public Promise<AttributeImpl> get(TypeDBTransaction transaction, double value) {
         return get(transaction, ValueImpl.of(value));
     }
 
-    @Nullable
     @Override
-    public Attribute get(TypeDBTransaction transaction, boolean value) {
+    public Promise<AttributeImpl> get(TypeDBTransaction transaction, boolean value) {
         return get(transaction, ValueImpl.of(value));
     }
 
-    @Nullable
     @Override
-    public Attribute get(TypeDBTransaction transaction, LocalDateTime value) {
+    public Promise<AttributeImpl> get(TypeDBTransaction transaction, LocalDateTime value) {
         return get(transaction, ValueImpl.of(value));
     }
 
-    @Nullable
     @Override
-    public final Attribute get(TypeDBTransaction transaction, Value value) {
-        try {
-            com.vaticle.typedb.driver.jni.Concept res = attribute_type_get(nativeTransaction(transaction), nativeObject, ((ValueImpl) value).nativeObject);
-            if (res != null) return new AttributeImpl(res);
-            else return null;
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public final Promise<AttributeImpl> get(TypeDBTransaction transaction, Value value) {
+        return Promise.map(attribute_type_get(nativeTransaction(transaction), nativeObject, ((ValueImpl) value).nativeObject), AttributeImpl::new);
     }
 
     @Override
-    public String getRegex(TypeDBTransaction transaction) {
-        try {
-            return attribute_type_get_regex(nativeTransaction(transaction), nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public Promise<String> getRegex(TypeDBTransaction transaction) {
+        return new Promise(attribute_type_get_regex(nativeTransaction(transaction), nativeObject));
     }
 
     @Override
-    public void setRegex(TypeDBTransaction transaction, String regex) {
-        try {
-            attribute_type_set_regex(nativeTransaction(transaction), nativeObject, regex);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public Promise<Void> setRegex(TypeDBTransaction transaction, String regex) {
+        return new Promise(attribute_type_set_regex(nativeTransaction(transaction), nativeObject, regex));
     }
 
     @Override
-    public void unsetRegex(TypeDBTransaction transaction) {
-        try {
-            attribute_type_unset_regex(nativeTransaction(transaction), nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public Promise<Void> unsetRegex(TypeDBTransaction transaction) {
+        return new Promise(attribute_type_unset_regex(nativeTransaction(transaction), nativeObject));
     }
 }

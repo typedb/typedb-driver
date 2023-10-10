@@ -25,7 +25,7 @@ from typing import TYPE_CHECKING
 
 from typedb.native_driver_wrapper import error_code, error_message, transaction_new, transaction_commit, \
     transaction_rollback, transaction_is_open, transaction_on_close, transaction_force_close, \
-    Transaction as NativeTransaction, TransactionCallbackDirector, TypeDBDriverExceptionNative
+    Transaction as NativeTransaction, TransactionCallbackDirector, TypeDBDriverExceptionNative, void_promise_resolve
 
 from typedb.api.connection.options import TypeDBOptions
 from typedb.api.connection.transaction import TypeDBTransaction
@@ -100,13 +100,13 @@ class _Transaction(TypeDBTransaction, NativeWrapper[NativeTransaction]):
     def commit(self):
         try:
             self.native_object.thisown = 0
-            transaction_commit(self._native_object)
+            void_promise_resolve(transaction_commit(self._native_object))
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
 
     def rollback(self):
         try:
-            transaction_rollback(self.native_object)
+            void_promise_resolve(transaction_rollback(self.native_object))
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
 

@@ -21,6 +21,7 @@
 
 package com.vaticle.typedb.driver.api.logic;
 
+import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typeql.lang.pattern.Pattern;
 
 import javax.annotation.CheckReturnValue;
@@ -37,14 +38,13 @@ public interface LogicManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.logic().getRule(label)
+     * transaction.logic().getRule(label).resolve();
      * </pre>
      *
      * @param label The label of the Rule to create or retrieve
      */
-    @Nullable
     @CheckReturnValue
-    Rule getRule(String label);
+    Promise<Rule> getRule(String label);
 
     /**
      * Retrieves all rules.
@@ -62,12 +62,13 @@ public interface LogicManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.logic().putRule(label, when, then)
+     * transaction.logic().putRule(label, when, then).resolve();
      * </pre>
      *
      * @param label The label of the Rule to create or replace
      * @param when The when body of the rule to create
      * @param then The then body of the rule to create
      */
-    Rule putRule(String label, Pattern when, Pattern then);
+    @CheckReturnValue
+    Promise<Rule> putRule(String label, Pattern when, Pattern then);
 }

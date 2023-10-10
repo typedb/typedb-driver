@@ -28,6 +28,7 @@ import com.vaticle.typedb.driver.api.concept.type.AttributeType;
 import com.vaticle.typedb.driver.api.concept.type.EntityType;
 import com.vaticle.typedb.driver.api.concept.type.RelationType;
 import com.vaticle.typedb.driver.api.concept.value.Value;
+import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBException;
 
 import java.util.List;
@@ -76,42 +77,39 @@ public interface ConceptManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getEntityType(label);
+     * transaction.concepts().getEntityType(label).resolve();
      * </pre>
      *
      * @param label The label of the <code>EntityType</code> to retrieve
      */
-    @Nullable
     @CheckReturnValue
-    EntityType getEntityType(String label);
+    Promise<? extends EntityType> getEntityType(String label);
 
     /**
      * Retrieves a <code>RelationType</code> by its label.
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getRelationType(label);
+     * transaction.concepts().getRelationType(label).resolve();
      * </pre>
      *
      * @param label The label of the <code>RelationType</code> to retrieve
      */
-    @Nullable
     @CheckReturnValue
-    RelationType getRelationType(String label);
+    Promise<? extends RelationType> getRelationType(String label);
 
     /**
      * Retrieves an <code>AttributeType</code> by its label.
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getAttributeType(label)
+     * transaction.concepts().getAttributeType(label).resolve();
      * </pre>
      *
      * @param label The label of the <code>AttributeType</code> to retrieve
      */
-    @Nullable
     @CheckReturnValue
-    AttributeType getAttributeType(String label);
+    Promise<? extends AttributeType> getAttributeType(String label);
 
     /**
      * Creates a new <code>EntityType</code> if none exists with the given label,
@@ -119,12 +117,13 @@ public interface ConceptManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().putEntityType(label);
+     * transaction.concepts().putEntityType(label).resolve();
      * </pre>
      *
      * @param label The label of the <code>EntityType</code> to create or retrieve
      */
-    EntityType putEntityType(String label);
+    @CheckReturnValue
+    Promise<? extends EntityType> putEntityType(String label);
 
     /**
      * Creates a new <code>RelationType</code> if none exists with the given label,
@@ -132,12 +131,13 @@ public interface ConceptManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().putRelationType(label);
+     * transaction.concepts().putRelationType(label).resolve();
      * </pre>
      *
      * @param label The label of the <code>RelationType</code> to create or retrieve
      */
-    RelationType putRelationType(String label);
+    @CheckReturnValue
+    Promise<? extends RelationType> putRelationType(String label);
 
     /**
      * Creates a new <code>AttributeType</code> if none exists with the given label,
@@ -145,55 +145,53 @@ public interface ConceptManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * await transaction.concepts().putAttributeType(label, valueType);
+     * await transaction.concepts().putAttributeType(label, valueType).resolve();
      * </pre>
      *
      * @param label The label of the <code>AttributeType</code> to create or retrieve
      * @param valueType The value type of the <code>AttributeType</code> to create
      */
-    AttributeType putAttributeType(String label, Value.Type valueType);
+    @CheckReturnValue
+    Promise<? extends AttributeType> putAttributeType(String label, Value.Type valueType);
 
     /**
      * Retrieves an <code>Entity</code> by its iid.
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getEntity(iid);
+     * transaction.concepts().getEntity(iid).resolve();
      * </pre>
      *
      * @param iid The iid of the <code>Entity</code> to retrieve
      */
-    @Nullable
     @CheckReturnValue
-    Entity getEntity(String iid);
+    Promise<? extends Entity> getEntity(String iid);
 
     /**
      * Retrieves a <code>Relation</code> by its iid.
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getRelation(iid);
+     * transaction.concepts().getRelation(iid).resolve();
      * </pre>
      *
      * @param iid The iid of the <code>Relation</code> to retrieve
      */
-    @Nullable
     @CheckReturnValue
-    Relation getRelation(String iid);
+    Promise<? extends Relation> getRelation(String iid);
 
     /**
      * Retrieves an <code>Attribute</code> by its iid.
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getAttribute(iid);
+     * transaction.concepts().getAttribute(iid).resolve();
      * </pre>
      *
      * @param iid The iid of the <code>Attribute</code> to retrieve
      */
-    @Nullable
     @CheckReturnValue
-    Attribute getAttribute(String iid);
+    Promise<? extends Attribute> getAttribute(String iid);
 
     /**
      * Retrieves a list of all schema exceptions for the current transaction.

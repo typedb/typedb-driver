@@ -27,6 +27,7 @@ import com.vaticle.typedb.driver.api.answer.ConceptMapGroup;
 import com.vaticle.typedb.driver.api.answer.Numeric;
 import com.vaticle.typedb.driver.api.answer.NumericGroup;
 import com.vaticle.typedb.driver.api.logic.Explanation;
+import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typeql.lang.query.TypeQLDefine;
 import com.vaticle.typeql.lang.query.TypeQLDelete;
 import com.vaticle.typeql.lang.query.TypeQLInsert;
@@ -82,21 +83,21 @@ public interface QueryManager {
      * @see QueryManager#match(TypeQLMatch.Aggregate, TypeDBOptions)
      */
     @CheckReturnValue
-    Numeric match(TypeQLMatch.Aggregate query);
+    Promise<Numeric> match(TypeQLMatch.Aggregate query);
 
     /**
      * Performs a TypeQL Match Aggregate query in the transaction.
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.query().matchAggregate(query, options)
+     * transaction.query().matchAggregate(query, options).resolve()
      * </pre>
      *
      * @param query The TypeQL Match Aggregate query to be executed
      * @param options Specify query options
      */
     @CheckReturnValue
-    Numeric match(TypeQLMatch.Aggregate query, TypeDBOptions options);
+    Promise<Numeric> match(TypeQLMatch.Aggregate query, TypeDBOptions options);
 
     /**
      * Performs a TypeQL Match Aggregate query with default options.
@@ -104,13 +105,13 @@ public interface QueryManager {
      * @see QueryManager#match(TypeQLMatch.Aggregate, TypeDBOptions)
      */
     @CheckReturnValue
-    Numeric matchAggregate(String query);
+    Promise<Numeric> matchAggregate(String query);
 
     /**
      * @see QueryManager#match(TypeQLMatch.Aggregate, TypeDBOptions)
      */
     @CheckReturnValue
-    Numeric matchAggregate(String query, TypeDBOptions options);
+    Promise<Numeric> matchAggregate(String query, TypeDBOptions options);
 
     /**
      * Performs a TypeQL Match Group query with default options.
@@ -221,32 +222,36 @@ public interface QueryManager {
      *
      * @see QueryManager#delete(TypeQLDelete, TypeDBOptions) 
      */
-    void delete(TypeQLDelete query);
+    @CheckReturnValue
+    Promise<Void> delete(TypeQLDelete query);
 
     /**
      * Performs a TypeQL Delete query in the transaction.
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.query().delete(query, options)
+     * transaction.query().delete(query, options).resolve()
      * </pre>
      *
      * @param query The TypeQL Delete query to be executed
      * @param options Specify query options
      */
-    void delete(TypeQLDelete query, TypeDBOptions options);
+    @CheckReturnValue
+    Promise<Void> delete(TypeQLDelete query, TypeDBOptions options);
 
     /**
      * Performs a TypeQL Delete query with default options.
      *
      * @see QueryManager#delete(TypeQLDelete, TypeDBOptions)
      */
-    void delete(String query);
+    @CheckReturnValue
+    Promise<Void> delete(String query);
 
     /**
      * @see QueryManager#delete(TypeQLDelete, TypeDBOptions)
      */
-    void delete(String query, TypeDBOptions options);
+    @CheckReturnValue
+    Promise<Void> delete(String query, TypeDBOptions options);
 
     /**
      * Performs a TypeQL Update query with default options.
@@ -285,20 +290,22 @@ public interface QueryManager {
      *
      * @see QueryManager#define(TypeQLDefine, TypeDBOptions)
      */
-    void define(TypeQLDefine query);
+    @CheckReturnValue
+    Promise<Void> define(TypeQLDefine query);
 
     /**
      * Performs a TypeQL Define query in the transaction.
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.query().define(query, options)
+     * transaction.query().define(query, options).resolve()
      * </pre>
      *
      * @param query The TypeQL Define query to be executed
      * @param options Specify query options
      */
-    void define(TypeQLDefine query, TypeDBOptions options);
+    @CheckReturnValue
+    Promise<Void> define(TypeQLDefine query, TypeDBOptions options);
 
 
     /**
@@ -306,44 +313,50 @@ public interface QueryManager {
      *
      * @see QueryManager#define(TypeQLDefine, TypeDBOptions)
      */
-    void define(String query);
+    @CheckReturnValue
+    Promise<Void> define(String query);
 
     /**
      * @see QueryManager#define(TypeQLDefine, TypeDBOptions)
      */
-    void define(String query, TypeDBOptions options);
+    @CheckReturnValue
+    Promise<Void> define(String query, TypeDBOptions options);
 
     /**
      * Performs a TypeQL Undefine query with default options.
      *
      * @see QueryManager#undefine(TypeQLUndefine, TypeDBOptions)
      */
-    void undefine(TypeQLUndefine query);
+    @CheckReturnValue
+    Promise<Void> undefine(TypeQLUndefine query);
 
     /**
      * Performs a TypeQL Undefine query in the transaction.
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.query().undefine(query, options)
+     * transaction.query().undefine(query, options).resolve()
      * </pre>
      *
      * @param query The TypeQL Undefine query to be executed
      * @param options Specify query options
      */
-    void undefine(TypeQLUndefine query, TypeDBOptions options);
+    @CheckReturnValue
+    Promise<Void> undefine(TypeQLUndefine query, TypeDBOptions options);
 
     /**
      * Performs a TypeQL Undefine query with default options.
      *
      * @see QueryManager#undefine(TypeQLUndefine, TypeDBOptions)
      */
-    void undefine(String query);
+    @CheckReturnValue
+    Promise<Void> undefine(String query);
 
     /**
      * @see QueryManager#undefine(TypeQLUndefine, TypeDBOptions)
      */
-    void undefine(String query, TypeDBOptions options);
+    @CheckReturnValue
+    Promise<Void> undefine(String query, TypeDBOptions options);
 
     /**
      * Performs a TypeQL Explain query with default options.

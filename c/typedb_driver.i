@@ -101,6 +101,20 @@ struct Type {};
 %dropproxy(Rule, rule)
 %dropproxy(RuleIterator, rule_iterator)
 
+%define %promiseproxy(Type, function_prefix)
+struct Type {};
+%extend Type { ~Type() { function_prefix ## _resolve(self); } }
+%newobject function_prefix ## _resolve;
+%delobject function_prefix ## _resolve;
+%enddef
+
+%promiseproxy(BoolPromise, bool_promise)
+%promiseproxy(ConceptPromise, concept_promise)
+%promiseproxy(NumericPromise, numeric_promise)
+%promiseproxy(RulePromise, rule_promise)
+%promiseproxy(StringPromise, string_promise)
+%promiseproxy(VoidPromise, void_promise)
+
 %feature("director") SessionCallbackDirector;
 %inline %{
 struct SessionCallbackDirector {

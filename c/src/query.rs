@@ -25,18 +25,28 @@ use typedb_driver::{
     answer::{ConceptMap, ConceptMapGroup, Explainable, Numeric, NumericGroup},
     box_stream,
     logic::Explanation,
-    Options, Result, Transaction,
+    BoxPromise, Options, Promise, Result, Transaction,
 };
 
 use super::{
-    error::{try_release, unwrap_void},
+    error::try_release,
     iterator::{iterator_try_next, CIterator},
     memory::{borrow, free, string_view},
 };
+use crate::{
+    memory::{release, take_ownership},
+    promise::VoidPromise,
+};
 
 #[no_mangle]
-pub extern "C" fn query_define(transaction: *mut Transaction<'static>, query: *const c_char, options: *const Options) {
-    unwrap_void(borrow(transaction).query().define_with_options(string_view(query), borrow(options).clone()))
+pub extern "C" fn query_define(
+    transaction: *mut Transaction<'static>,
+    query: *const c_char,
+    options: *const Options,
+) -> *mut VoidPromise {
+    release(VoidPromise(Box::new(
+        borrow(transaction).query().define_with_options(string_view(query), borrow(options).clone()),
+    )))
 }
 
 #[no_mangle]
@@ -44,13 +54,21 @@ pub extern "C" fn query_undefine(
     transaction: *mut Transaction<'static>,
     query: *const c_char,
     options: *const Options,
-) {
-    unwrap_void(borrow(transaction).query().undefine_with_options(string_view(query), borrow(options).clone()))
+) -> *mut VoidPromise {
+    release(VoidPromise(Box::new(
+        borrow(transaction).query().undefine_with_options(string_view(query), borrow(options).clone()),
+    )))
 }
 
 #[no_mangle]
-pub extern "C" fn query_delete(transaction: *mut Transaction<'static>, query: *const c_char, options: *const Options) {
-    unwrap_void(borrow(transaction).query().delete_with_options(string_view(query), borrow(options).clone()))
+pub extern "C" fn query_delete(
+    transaction: *mut Transaction<'static>,
+    query: *const c_char,
+    options: *const Options,
+) -> *mut VoidPromise {
+    release(VoidPromise(Box::new(
+        borrow(transaction).query().delete_with_options(string_view(query), borrow(options).clone()),
+    )))
 }
 
 pub struct ConceptMapIterator(pub CIterator<Result<ConceptMap>>);
@@ -107,13 +125,22 @@ pub extern "C" fn query_update(
     )
 }
 
+pub struct NumericPromise(BoxPromise<'static, Result<Numeric>>);
+
+#[no_mangle]
+pub extern "C" fn numeric_promise_resolve(promise: *mut NumericPromise) -> *mut Numeric {
+    try_release(take_ownership(promise).0.resolve())
+}
+
 #[no_mangle]
 pub extern "C" fn query_match_aggregate(
     transaction: *mut Transaction<'static>,
     query: *const c_char,
     options: *const Options,
-) -> *mut Numeric {
-    try_release(borrow(transaction).query().match_aggregate_with_options(string_view(query), borrow(options).clone()))
+) -> *mut NumericPromise {
+    release(NumericPromise(Box::new(
+        borrow(transaction).query().match_aggregate_with_options(string_view(query), borrow(options).clone()),
+    )))
 }
 
 pub struct ConceptMapGroupIterator(CIterator<Result<ConceptMapGroup>>);

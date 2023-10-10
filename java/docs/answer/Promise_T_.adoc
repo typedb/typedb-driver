@@ -1,0 +1,48 @@
+[#_Promise<T>]
+=== Promise<T>
+
+*Package*: `com.vaticle.typedb.driver.common`
+
+A ``Promise`` represents an asynchronous network operation.
+
+The request it represents is performed immediately. The response is only retrieved once the ``Promise`` is ``resolve``d.
+
+// tag::methods[]
+[#_Promise<T>__init__java_util_function_Supplier]
+==== Promise
+
+[source,java]
+----
+public Promise​(java.util.function.Supplier<T> inner)
+----
+
+
+
+[caption=""]
+.Returns
+`public`
+
+[#_Promise<T>_resolve_]
+==== resolve
+
+[source,java]
+----
+public T resolve()
+----
+
+Retrieves the result of the Promise. 
+
+
+[caption=""]
+.Returns
+`public T`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+promise.resolve()
+----
+
+// end::methods[]
+

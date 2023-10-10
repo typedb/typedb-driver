@@ -11,28 +11,10 @@ Provides methods for executing TypeQL queries in the transaction.
 [#_struct_QueryManager_method_define]
 ==== define
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-pub async fn define(&self, query: &str) -> Result
+pub fn define(&self, query: &str) -> impl Promise<'tx, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn define(&self, query: &str) -> Result
-----
-
---
-====
 
 Performs a TypeQL Define query with default options. See <<#_struct_QueryManager_method_define_with_options,`QueryManager::define_with_options`>>
 
@@ -40,34 +22,20 @@ Performs a TypeQL Define query with default options. See <<#_struct_QueryManager
 .Returns
 [source,rust]
 ----
-Result
+impl Promise<'tx, Result>
 ----
 
 [#_struct_QueryManager_method_define_with_options]
 ==== define_with_options
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-pub async fn define_with_options(&self, query: &str, options: Options) -> Result
+pub fn define_with_options(
+    &self,
+    query: &str,
+    options: Options
+) -> impl Promise<'tx, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn define_with_options(&self, query: &str, options: Options) -> Result
-----
-
---
-====
 
 Performs a TypeQL Define query in the transaction.
 
@@ -85,7 +53,7 @@ a| `options` a| Specify query options a| `Options`
 .Returns
 [source,rust]
 ----
-Result
+impl Promise<'tx, Result>
 ----
 
 [caption=""]
@@ -107,7 +75,7 @@ sync::
 --
 [source,rust]
 ----
-transaction.query().define_with_options(query, options)
+transaction.query().define_with_options(query, options).resolve()
 ----
 
 --
@@ -116,28 +84,10 @@ transaction.query().define_with_options(query, options)
 [#_struct_QueryManager_method_delete]
 ==== delete
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-pub async fn delete(&self, query: &str) -> Result
+pub fn delete(&self, query: &str) -> impl Promise<'tx, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn delete(&self, query: &str) -> Result
-----
-
---
-====
 
 Performs a TypeQL Delete query with default options. See <<#_struct_QueryManager_method_delete_with_options,`QueryManager::delete_with_options`>>
 
@@ -145,34 +95,20 @@ Performs a TypeQL Delete query with default options. See <<#_struct_QueryManager
 .Returns
 [source,rust]
 ----
-Result
+impl Promise<'tx, Result>
 ----
 
 [#_struct_QueryManager_method_delete_with_options]
 ==== delete_with_options
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-pub async fn delete_with_options(&self, query: &str, options: Options) -> Result
+pub fn delete_with_options(
+    &self,
+    query: &str,
+    options: Options
+) -> impl Promise<'tx, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn delete_with_options(&self, query: &str, options: Options) -> Result
-----
-
---
-====
 
 Performs a TypeQL Delete query in the transaction.
 
@@ -190,7 +126,7 @@ a| `options` a| Specify query options a| `Options`
 .Returns
 [source,rust]
 ----
-Result
+impl Promise<'tx, Result>
 ----
 
 [caption=""]
@@ -212,7 +148,7 @@ sync::
 --
 [source,rust]
 ----
-transaction.query().delete_with_options(query, options)
+transaction.query().delete_with_options(query, options).resolve()
 ----
 
 --
@@ -357,28 +293,10 @@ Result<impl Stream<Item = Result<ConceptMap>>>
 [#_struct_QueryManager_method_match_aggregate]
 ==== match_aggregate
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-pub async fn match_aggregate(&self, query: &str) -> Result<Numeric>
+pub fn match_aggregate(&self, query: &str) -> impl Promise<'tx, Result<Numeric>>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn match_aggregate(&self, query: &str) -> Result<Numeric>
-----
-
---
-====
 
 Performs a TypeQL Match Aggregate query with default options. See <<#_struct_QueryManager_method_match_aggregate,`QueryManager::match_aggregate`>>
 
@@ -386,42 +304,20 @@ Performs a TypeQL Match Aggregate query with default options. See <<#_struct_Que
 .Returns
 [source,rust]
 ----
-Result<Numeric>
+impl Promise<'tx, Result<Numeric>>
 ----
 
 [#_struct_QueryManager_method_match_aggregate_with_options]
 ==== match_aggregate_with_options
 
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-pub async fn match_aggregate_with_options(
-    &self,
-    query: &str,
-    options: Options
-) -> Result<Numeric>
-----
-
---
-
-sync::
-+
---
 [source,rust]
 ----
 pub fn match_aggregate_with_options(
     &self,
     query: &str,
     options: Options
-) -> Result<Numeric>
+) -> impl Promise<'tx, Result<Numeric>>
 ----
-
---
-====
 
 Performs a TypeQL Match Aggregate query in the transaction.
 
@@ -439,7 +335,7 @@ a| `options` a| Specify query options a| `Options`
 .Returns
 [source,rust]
 ----
-Result<Numeric>
+impl Promise<'tx, Result<Numeric>>
 ----
 
 [caption=""]
@@ -461,7 +357,7 @@ sync::
 --
 [source,rust]
 ----
-transaction.query().match_aggregate_with_options(query, options)
+transaction.query().match_aggregate_with_options(query, options).resolve()
 ----
 
 --
@@ -624,28 +520,10 @@ transaction.query().match_with_options(query, options)
 [#_struct_QueryManager_method_undefine]
 ==== undefine
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-pub async fn undefine(&self, query: &str) -> Result
+pub fn undefine(&self, query: &str) -> impl Promise<'tx, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn undefine(&self, query: &str) -> Result
-----
-
---
-====
 
 Performs a TypeQL Undefine query with default options See <<#_struct_QueryManager_method_undefine_with_options,`QueryManager::undefine_with_options`>>
 
@@ -653,34 +531,20 @@ Performs a TypeQL Undefine query with default options See <<#_struct_QueryManage
 .Returns
 [source,rust]
 ----
-Result
+impl Promise<'tx, Result>
 ----
 
 [#_struct_QueryManager_method_undefine_with_options]
 ==== undefine_with_options
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-pub async fn undefine_with_options(&self, query: &str, options: Options) -> Result
+pub fn undefine_with_options(
+    &self,
+    query: &str,
+    options: Options
+) -> impl Promise<'tx, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn undefine_with_options(&self, query: &str, options: Options) -> Result
-----
-
---
-====
 
 Performs a TypeQL Undefine query in the transaction.
 
@@ -698,7 +562,7 @@ a| `options` a| Specify query options a| `Options`
 .Returns
 [source,rust]
 ----
-Result
+impl Promise<'tx, Result>
 ----
 
 [caption=""]
@@ -720,7 +584,7 @@ sync::
 --
 [source,rust]
 ----
-transaction.query().undefine_with_options(query, options)
+transaction.query().undefine_with_options(query, options).resolve()
 ----
 
 --

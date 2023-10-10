@@ -9,28 +9,10 @@
 [#_struct_Transaction_method_commit]
 ==== commit
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-pub async fn commit(self) -> Result
+pub fn commit(self) -> impl Promise<'static, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn commit(self) -> Result
-----
-
---
-====
 
 Commits the changes made via this transaction to the TypeDB database. Whether or not the transaction is commited successfully, it gets closed after the commit call.
 
@@ -38,7 +20,7 @@ Commits the changes made via this transaction to the TypeDB database. Whether or
 .Returns
 [source,rust]
 ----
-Result
+impl Promise<'static, Result>
 ----
 
 [caption=""]
@@ -71,7 +53,7 @@ transaction.commit()
 
 [source,rust]
 ----
-pub fn concept(&self) -> &ConceptManager
+pub fn concept(&self) -> ConceptManager<'_>
 ----
 
 The ``ConceptManager`` for this transaction, providing access to all Concept API methods.
@@ -80,7 +62,7 @@ The ``ConceptManager`` for this transaction, providing access to all Concept API
 .Returns
 [source,rust]
 ----
-&ConceptManager
+ConceptManager<'_>
 ----
 
 [#_struct_Transaction_method_force_close]
@@ -136,7 +118,7 @@ transaction.close()
 
 [source,rust]
 ----
-pub fn logic(&self) -> &LogicManager
+pub fn logic(&self) -> LogicManager<'_>
 ----
 
 Retrieves the ``LogicManager`` for this Transaction, providing access to all Concept API - Logic methods.
@@ -145,7 +127,7 @@ Retrieves the ``LogicManager`` for this Transaction, providing access to all Con
 .Returns
 [source,rust]
 ----
-&LogicManager
+LogicManager<'_>
 ----
 
 [#_struct_Transaction_method_on_close]
@@ -189,7 +171,7 @@ transaction.on_close(function)
 
 [source,rust]
 ----
-pub fn query(&self) -> &QueryManager
+pub fn query(&self) -> QueryManager<'_>
 ----
 
 Retrieves the``QueryManager`` for this Transaction, from which any TypeQL query can be executed.
@@ -198,34 +180,16 @@ Retrieves the``QueryManager`` for this Transaction, from which any TypeQL query 
 .Returns
 [source,rust]
 ----
-&QueryManager
+QueryManager<'_>
 ----
 
 [#_struct_Transaction_method_rollback]
 ==== rollback
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-pub async fn rollback(&self) -> Result
+pub fn rollback(&self) -> impl Promise<'_, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn rollback(&self) -> Result
-----
-
---
-====
 
 Rolls back the uncommitted changes made via this transaction.
 
@@ -233,7 +197,7 @@ Rolls back the uncommitted changes made via this transaction.
 .Returns
 [source,rust]
 ----
-Result
+impl Promise<'_, Result>
 ----
 
 [caption=""]

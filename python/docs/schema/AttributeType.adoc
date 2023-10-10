@@ -40,7 +40,7 @@ attribute.as_attribute_type()
 
 [source,python]
 ----
-get(transaction: TypeDBTransaction, value: Value | bool | int | float | str | datetime) -> Attribute | None
+get(transaction: TypeDBTransaction, value: Value | bool | int | float | str | datetime) -> Promise[Attribute | None]
 ----
 
 Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``.
@@ -57,13 +57,13 @@ a| `value` a| ``Attribute``’s value a| `Value \| bool \| int \| float \| str \
 
 [caption=""]
 .Returns
-`Attribute | None`
+`Promise[Attribute | None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-attribute = attribute_type.get(transaction, value)
+attribute = attribute_type.get(transaction, value).resolve()
 ----
 
 [#_AttributeType_get_instances]
@@ -136,7 +136,7 @@ attribute_type.get_owners(transaction, annotations=Annotation.unique(), transiti
 
 [source,python]
 ----
-get_regex(transaction: TypeDBTransaction) -> str
+get_regex(transaction: TypeDBTransaction) -> Promise[str]
 ----
 
 Retrieves the regular expression that is defined for this ``AttributeType``.
@@ -152,13 +152,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 
 [caption=""]
 .Returns
-`str`
+`Promise[str]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-attribute_type.get_regex(transaction)
+attribute_type.get_regex(transaction).resolve()
 ----
 
 [#_AttributeType_get_subtypes_with_value_type]
@@ -347,7 +347,7 @@ attribute_type.is_string()
 
 [source,python]
 ----
-put(transaction: TypeDBTransaction, value: Value | bool | int | float | str | datetime) -> Attribute
+put(transaction: TypeDBTransaction, value: Value | bool | int | float | str | datetime) -> Promise[Attribute]
 ----
 
 Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
@@ -364,13 +364,13 @@ a| `value` a| New ``Attribute``’s value a| `Value \| bool \| int \| float \| s
 
 [caption=""]
 .Returns
-`Attribute`
+`Promise[Attribute]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-attribute = attribute_type.put(transaction, value)
+attribute = attribute_type.put(transaction, value).resolve()
 ----
 
 [#_AttributeType_set_regex]
@@ -378,7 +378,7 @@ attribute = attribute_type.put(transaction, value)
 
 [source,python]
 ----
-set_regex(transaction: TypeDBTransaction, regex: str) -> None
+set_regex(transaction: TypeDBTransaction, regex: str) -> Promise[None]
 ----
 
 Sets a regular expression as a constraint for this ``AttributeType``. ``Values`` of all ``Attribute``s of this type (inserted earlier or later) should match this regex.
@@ -397,13 +397,13 @@ a| `regex` a| Regular expression a| `str` a|
 
 [caption=""]
 .Returns
-`None`
+`Promise[None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-attribute_type.set_regex(transaction, regex)
+attribute_type.set_regex(transaction, regex).resolve()
 ----
 
 [#_AttributeType_set_supertype]
@@ -411,7 +411,7 @@ attribute_type.set_regex(transaction, regex)
 
 [source,python]
 ----
-set_supertype(transaction: TypeDBTransaction, super_attribute_type: AttributeType) -> None
+set_supertype(transaction: TypeDBTransaction, super_attribute_type: AttributeType) -> Promise[None]
 ----
 
 Sets the supplied ``AttributeType`` as the supertype of the current ``AttributeType``.
@@ -428,13 +428,13 @@ a| `super_attribute_type` a| The ``AttributeType`` to set as the supertype of th
 
 [caption=""]
 .Returns
-`None`
+`Promise[None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-attribute_type.set_supertype(transaction, super_attribute_type)
+attribute_type.set_supertype(transaction, super_attribute_type).resolve()
 ----
 
 [#_AttributeType_unset_regex]
@@ -442,7 +442,7 @@ attribute_type.set_supertype(transaction, super_attribute_type)
 
 [source,python]
 ----
-unset_regex(transaction: TypeDBTransaction) -> None
+unset_regex(transaction: TypeDBTransaction) -> Promise[None]
 ----
 
 Removes the regular expression that is defined for this ``AttributeType``.
@@ -458,13 +458,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 
 [caption=""]
 .Returns
-`None`
+`Promise[None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-attribute_type.unset_regex(transaction)
+attribute_type.unset_regex(transaction).resolve()
 ----
 
 // end::methods[]

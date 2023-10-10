@@ -100,8 +100,8 @@ public class DriverQueryTest {
                     .then(rel("parent", cVar("male")).rel("parent", cVar("female")).rel("child", cVar("offspring")).isa("parentship")));
             LOG.info("driverJavaE2E() - define a schema...");
             LOG.info("driverJavaE2E() - '" + defineQuery + "'");
-            tx.query().define(defineQuery);
-            tx.query().define(ruleQuery);
+            tx.query().define(defineQuery).resolve();
+            tx.query().define(ruleQuery).resolve();
             tx.commit();
             LOG.info("driverJavaE2E() - done.");
         }, TypeDBSession.Type.SCHEMA);
@@ -167,7 +167,7 @@ public class DriverQueryTest {
 
             LOG.info("driverJavaE2E() - define a schema...");
             LOG.info("driverJavaE2E() - '" + defineQuery + "'");
-            tx.query().define(defineQuery);
+            tx.query().define(defineQuery).resolve();
             tx.commit();
             LOG.info("driverJavaE2E() - done.");
         }, TypeDBSession.Type.SCHEMA);
@@ -344,7 +344,7 @@ public class DriverQueryTest {
                     "} then {" +
                     "   (friend: $x, friend: $y) isa friendship;" +
                     "};").asDefine();
-            tx.query().define(schema);
+            tx.query().define(schema).resolve();
             tx.commit();
         }, TypeDBSession.Type.SCHEMA);
 
@@ -382,13 +382,13 @@ public class DriverQueryTest {
     public void testStreaming() {
         localhostTypeDBTX(tx -> {
             for (int i = 0; i < 51; i++) {
-                tx.query().define(String.format("define person sub entity, owns name%d; name%d sub attribute, value string;", i, i));
+                tx.query().define(String.format("define person sub entity, owns name%d; name%d sub attribute, value string;", i, i)).resolve();
             }
             tx.commit();
         }, TypeDBSession.Type.SCHEMA);
         localhostTypeDBTX(tx -> {
             for (int i = 0; i < 50; i++) {
-                EntityType concept = tx.concepts().getEntityType("person");
+                EntityType concept = tx.concepts().getEntityType("person").resolve();
                 List<? extends AttributeType> attributeTypes = concept.getOwns(tx).collect(toList());
                 Optional<ConceptMap> conceptMap = tx.query().match("match $x sub thing; limit 1;").findFirst();
             }

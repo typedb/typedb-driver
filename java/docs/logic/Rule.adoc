@@ -11,7 +11,8 @@ Rules are a part of schema and define embedded logic. The reasoning engine uses 
 
 [source,java]
 ----
-void delete​(TypeDBTransaction transaction)
+@CheckReturnValue
+Promise<java.lang.Void> delete​(TypeDBTransaction transaction)
 ----
 
 Deletes this rule. 
@@ -28,13 +29,13 @@ a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction`
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-rule.delete(transaction)
+rule.delete(transaction).resolve();
 ----
 
 [#_Rule_getLabel_]
@@ -88,7 +89,7 @@ The statements that constitute the ‘when’ of the rule.
 [source,java]
 ----
 @CheckReturnValue
-boolean isDeleted​(TypeDBTransaction transaction)
+Promise<java.lang.Boolean> isDeleted​(TypeDBTransaction transaction)
 ----
 
 Check if this rule has been deleted. 
@@ -105,13 +106,13 @@ a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction`
 
 [caption=""]
 .Returns
-`boolean`
+`Promise<java.lang.Boolean>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-rule.isDeleted(transaction)
+rule.isDeleted(transaction).resolve();
 ----
 
 [#_Rule_setLabel_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
@@ -119,8 +120,9 @@ rule.isDeleted(transaction)
 
 [source,java]
 ----
-void setLabel​(TypeDBTransaction transaction,
-              java.lang.String label)
+@CheckReturnValue
+Promise<java.lang.Void> setLabel​(TypeDBTransaction transaction,
+                                 java.lang.String label)
 ----
 
 Renames the label of the rule. The new label must remain unique. 
@@ -138,13 +140,13 @@ a| `label` a| The new label to be given to the rule a| `java.lang.String`
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-rule.setLabel(transaction, newLabel)
+rule.setLabel(transaction, newLabel).resolve();
 ----
 
 // end::methods[]

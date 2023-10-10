@@ -31,6 +31,7 @@ if TYPE_CHECKING:
     from typedb.api.concept.thing.relation import Relation
     from typedb.api.concept.type.role_type import RoleType
     from typedb.api.connection.transaction import TypeDBTransaction
+    from typedb.common.promise import Promise
 
 
 class RelationType(ThingType, ABC):
@@ -72,7 +73,7 @@ class RelationType(ThingType, ABC):
         return self
 
     @abstractmethod
-    def create(self, transaction: TypeDBTransaction) -> Relation:
+    def create(self, transaction: TypeDBTransaction) -> Promise[Relation]:
         """
         Creates and returns an instance of this ``RelationType``.
 
@@ -83,13 +84,16 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-            relation_type.create(transaction)
+            relation_type.create(transaction).resolve()
         """
         pass
 
     @abstractmethod
-    def get_instances(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
-                      ) -> Iterator[Relation]:
+    def get_instances(
+        self,
+        transaction: TypeDBTransaction,
+        transitivity: Transitivity = Transitivity.TRANSITIVE,
+    ) -> Iterator[Relation]:
         """
         Retrieves all direct and indirect (or direct only) ``Relation``\ s
         that are instances of this ``RelationType``.
@@ -109,9 +113,12 @@ class RelationType(ThingType, ABC):
         pass
 
     @abstractmethod
-    def get_relates(self, transaction: TypeDBTransaction, role_label: Optional[str] = None,
-                    transitivity: Transitivity = Transitivity.TRANSITIVE) \
-            -> Union[Optional[RoleType], Iterator[RoleType]]:
+    def get_relates(
+        self,
+        transaction: TypeDBTransaction,
+        role_label: Optional[str] = None,
+        transitivity: Transitivity = Transitivity.TRANSITIVE,
+    ) -> Union[Promise[Optional[RoleType]], Iterator[RoleType]]:
         """
         Retrieves roles that this ``RelationType`` relates to directly
         or via inheritance. If ``role_label`` is given, returns
@@ -128,12 +135,13 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-            relation_type.get_relates(transaction, role_label, transitivity)
+            relation_type.get_relates(transaction, role_label, transitivity).resolve()
+            relation_type.get_relates(transaction, transitivity)
         """
         pass
 
     @abstractmethod
-    def get_relates_overridden(self, transaction: TypeDBTransaction, role_label: str) -> Optional[RoleType]:
+    def get_relates_overridden(self, transaction: TypeDBTransaction, role_label: str) -> Promise[Optional[RoleType]]:
         """
         Retrieves a ``RoleType`` that is overridden by the role with
         the ``role_label``.
@@ -146,13 +154,17 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-            relation_type.get_relates_overridden(transaction, role_label)
+            relation_type.get_relates_overridden(transaction, role_label).resolve()
         """
         pass
 
     @abstractmethod
-    def set_relates(self, transaction: TypeDBTransaction, role_label: str, overridden_label: Optional[str] = None
-                    ) -> None:
+    def set_relates(
+        self,
+        transaction: TypeDBTransaction,
+        role_label: str,
+        overridden_label: Optional[str] = None,
+    ) -> Promise[None]:
         """
         Sets the new role that this ``RelationType`` relates to.
         If we are setting an overriding type this way, we have to also pass
@@ -167,13 +179,13 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-            relation_type.set_relates(transaction, role_label)
-           relation_type.set_relates(transaction, role_label, overridden_label)
+            relation_type.set_relates(transaction, role_label).resolve()
+            relation_type.set_relates(transaction, role_label, overridden_label).resolve()
         """
         pass
 
     @abstractmethod
-    def unset_relates(self, transaction: TypeDBTransaction, role_label: str) -> None:
+    def unset_relates(self, transaction: TypeDBTransaction, role_label: str) -> Promise[None]:
         """
         Disallows this ``RelationType`` from relating to the given role.
 
@@ -185,13 +197,16 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-            relation_type.unset_relates(transaction, role_label)
+            relation_type.unset_relates(transaction, role_label).resolve()
         """
         pass
 
     @abstractmethod
-    def get_subtypes(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
-                     ) -> Iterator[RelationType]:
+    def get_subtypes(
+        self,
+        transaction: TypeDBTransaction,
+        transitivity: Transitivity = Transitivity.TRANSITIVE,
+    ) -> Iterator[RelationType]:
         """
         Retrieves all direct and indirect (or direct only) subtypes
         of the ``RelationType``.
@@ -211,7 +226,7 @@ class RelationType(ThingType, ABC):
         pass
 
     @abstractmethod
-    def set_supertype(self, transaction: TypeDBTransaction, super_relation_type: RelationType) -> None:
+    def set_supertype(self, transaction: TypeDBTransaction, super_relation_type: RelationType) -> Promise[None]:
         """
         Sets the supplied ``RelationType`` as the supertype of the current ``RelationType``.
 
@@ -224,6 +239,6 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-            relation_type.set_supertype(transaction, super_relation_type)
+            relation_type.set_supertype(transaction, super_relation_type).resolve()
         """
         pass

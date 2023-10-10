@@ -12,28 +12,10 @@ Provides methods for manipulating rules in the database.
 [#_struct_LogicManager_method_get_rule]
 ==== get_rule
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-pub async fn get_rule(&self, label: String) -> Result<Option<Rule>>
+pub fn get_rule(&self, label: String) -> impl Promise<'tx, Result<Option<Rule>>>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn get_rule(&self, label: String) -> Result<Option<Rule>>
-----
-
---
-====
 
 Retrieves the Rule that has the given label.
 
@@ -50,7 +32,7 @@ a| `label` a| The label of the Rule to create or retrieve a| `String`
 .Returns
 [source,rust]
 ----
-Result<Option<Rule>>
+impl Promise<'tx, Result<Option<Rule>>>
 ----
 
 [caption=""]
@@ -72,7 +54,7 @@ sync::
 --
 [source,rust]
 ----
-transaction.logic().get_rule(label)
+transaction.logic().get_rule(label).resolve()
 ----
 
 --
@@ -105,26 +87,6 @@ transaction.logic.get_rules()
 [#_struct_LogicManager_method_put_rule]
 ==== put_rule
 
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-pub async fn put_rule(
-    &self,
-    label: String,
-    when: Conjunction,
-    then: Variable
-) -> Result<Rule>
-----
-
---
-
-sync::
-+
---
 [source,rust]
 ----
 pub fn put_rule(
@@ -132,11 +94,8 @@ pub fn put_rule(
     label: String,
     when: Conjunction,
     then: Variable
-) -> Result<Rule>
+) -> impl Promise<'tx, Result<Rule>>
 ----
-
---
-====
 
 Creates a new Rule if none exists with the given label, or replaces the existing one.
 
@@ -155,7 +114,7 @@ a| `then` a| The then body of the rule to create a| `Variable`
 .Returns
 [source,rust]
 ----
-Result<Rule>
+impl Promise<'tx, Result<Rule>>
 ----
 
 [caption=""]
@@ -177,7 +136,7 @@ sync::
 --
 [source,rust]
 ----
-transaction.logic().put_rule(label, when, then)
+transaction.logic().put_rule(label, when, then).resolve()
 ----
 
 --

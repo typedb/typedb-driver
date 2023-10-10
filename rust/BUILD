@@ -48,7 +48,6 @@ typedb_driver_deps = [
     "@vaticle_typeql//rust:typeql",
 ]
 typedb_driver_proc_macro_deps = [
-    "@crates//:async-trait",
     "@crates//:maybe-async",
 ]
 
@@ -133,4 +132,5 @@ filegroup(
 rustfmt_test(
     name = "driver_rustfmt_test",
     targets = ["typedb_driver"],
+    size = "small",
 )

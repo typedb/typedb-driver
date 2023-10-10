@@ -24,6 +24,7 @@ package com.vaticle.typedb.driver.api.concept.thing;
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.type.RelationType;
 import com.vaticle.typedb.driver.api.concept.type.RoleType;
+import com.vaticle.typedb.driver.common.Promise;
 
 import javax.annotation.CheckReturnValue;
 import java.util.List;
@@ -80,28 +81,30 @@ public interface Relation extends Thing {
      *
      * <h3>Examples</h3>
      * <pre>
-     * relation.addPlayer(transaction, roleType, player);
+     * relation.addPlayer(transaction, roleType, player).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param roleType The role to be played by the <code>player</code>
      * @param player The thing to play the role
      */
-    void addPlayer(TypeDBTransaction transaction, RoleType roleType, Thing player);
+    @CheckReturnValue
+    Promise<Void> addPlayer(TypeDBTransaction transaction, RoleType roleType, Thing player);
 
     /**
      * Removes the association of the given instance that plays the given role in this <code>Relation</code>.
      *
      * <h3>Examples</h3>
      * <pre>
-     * relation.removePlayer(transaction, roleType, player);
+     * relation.removePlayer(transaction, roleType, player).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param roleType The role to no longer be played by the thing in this <code>Relation</code>
      * @param player The instance to no longer play the role in this <code>Relation</code>
      */
-    void removePlayer(TypeDBTransaction transaction, RoleType roleType, Thing player);
+    @CheckReturnValue
+    Promise<Void> removePlayer(TypeDBTransaction transaction, RoleType roleType, Thing player);
 
     /**
      * Retrieves all role players of this <code>Relation</code>, optionally filtered by given role types.

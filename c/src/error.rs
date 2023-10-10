@@ -48,10 +48,6 @@ pub(super) fn try_release<T>(result: Result<T>) -> *mut T {
     release_optional(ok_record(result))
 }
 
-pub(super) fn try_release_map_optional<T, U>(result: Option<Result<T>>, f: impl FnOnce(T) -> U) -> *mut U {
-    release_optional(ok_record_flatten(result).map(f))
-}
-
 pub(super) fn try_release_optional<T>(result: Option<Result<T>>) -> *mut T {
     release_optional(ok_record_flatten(result))
 }

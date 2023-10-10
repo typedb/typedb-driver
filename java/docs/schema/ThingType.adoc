@@ -471,8 +471,8 @@ thingType.getOwns(transaction);
 [source,java]
 ----
 @CheckReturnValue
-AttributeType getOwnsOverridden​(TypeDBTransaction transaction,
-                                AttributeType attributeType)
+Promise<? extends AttributeType> getOwnsOverridden​(TypeDBTransaction transaction,
+                                                   AttributeType attributeType)
 ----
 
 Retrieves an ``AttributeType``, ownership of which is overridden for this ``ThingType`` by a given ``attribute_type``. 
@@ -490,13 +490,13 @@ a| `attributeType` a| The ``AttributeType`` that overrides requested ``Attribute
 
 [caption=""]
 .Returns
-`AttributeType`
+`Promise<? extends AttributeType>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-thingType.getOwnsOverridden(transaction, attributeType);
+thingType.getOwnsOverridden(transaction, attributeType).resolve();
 ----
 
 [#_ThingType_getPlays_com_vaticle_typedb_driver_api_TypeDBTransaction]
@@ -549,8 +549,8 @@ a| `transitivity` a| transitivity: ``Transitivity.TRANSITIVE`` for direct and in
 .Code examples
 [source,java]
 ----
-thingType.getPlays(transaction);
- thingType.getPlays(transaction, Transitivity.EXPLICIT);
+thingType.getPlays(transaction).resolve();
+ thingType.getPlays(transaction, Transitivity.EXPLICIT).resolve();
 ----
 
 [#_ThingType_getPlaysOverridden_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType]
@@ -559,8 +559,8 @@ thingType.getPlays(transaction);
 [source,java]
 ----
 @CheckReturnValue
-RoleType getPlaysOverridden​(TypeDBTransaction transaction,
-                            RoleType roleType)
+Promise<? extends RoleType> getPlaysOverridden​(TypeDBTransaction transaction,
+                                               RoleType roleType)
 ----
 
 Retrieves a ``RoleType`` that is overridden by the given ``role_type`` for this ``ThingType``. 
@@ -578,13 +578,13 @@ a| `roleType` a| The ``RoleType`` that overrides an inherited role a| `RoleType`
 
 [caption=""]
 .Returns
-`RoleType`
+`Promise<? extends RoleType>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-thingType.getPlaysOverridden(transaction, roleType);
+thingType.getPlaysOverridden(transaction, roleType).resolve();
 ----
 
 [#_ThingType_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction]
@@ -647,7 +647,7 @@ type.getSubtypes(transaction);
 [source,java]
 ----
 @CheckReturnValue
-ThingType getSupertype​(TypeDBTransaction transaction)
+Promise<? extends ThingType> getSupertype​(TypeDBTransaction transaction)
 ----
 
 Retrieves the most immediate supertype of the type. 
@@ -664,13 +664,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 
 [caption=""]
 .Returns
-`ThingType`
+`Promise<? extends ThingType>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-type.getSupertype(transaction);
+type.getSupertype(transaction).resolve();
 ----
 
 [#_ThingType_getSupertypes_com_vaticle_typedb_driver_api_TypeDBTransaction]
@@ -711,7 +711,7 @@ type.getSupertypes(transaction);
 [source,java]
 ----
 @CheckReturnValue
-java.lang.String getSyntax​(TypeDBTransaction transaction)
+Promise<java.lang.String> getSyntax​(TypeDBTransaction transaction)
 ----
 
 Produces a pattern for creating this ``ThingType`` in a ``define`` query. 
@@ -728,13 +728,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 
 [caption=""]
 .Returns
-`java.lang.String`
+`Promise<java.lang.String>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-thingType.getSyntax(transaction);
+thingType.getSyntax(transaction).resolve();
 ----
 
 [#_ThingType_isAttribute_]
@@ -972,7 +972,8 @@ concept.isValue();
 
 [source,java]
 ----
-void setAbstract​(TypeDBTransaction transaction)
+@CheckReturnValue
+Promise<java.lang.Void> setAbstract​(TypeDBTransaction transaction)
 ----
 
 Set a ``ThingType`` to be abstract, meaning it cannot have instances. 
@@ -989,13 +990,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-thingType.setAbstract(transaction);
+thingType.setAbstract(transaction).resolve();
 ----
 
 [#_ThingType_setOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType_com_vaticle_typedb_driver_api_concept_type_AttributeType_java_util_Set]
@@ -1003,10 +1004,11 @@ thingType.setAbstract(transaction);
 
 [source,java]
 ----
-void setOwns​(TypeDBTransaction transaction,
-             AttributeType attributeType,
-             AttributeType overriddenType,
-             java.util.Set<ThingType.Annotation> annotations)
+@CheckReturnValue
+Promise<java.lang.Void> setOwns​(TypeDBTransaction transaction,
+                                AttributeType attributeType,
+                                AttributeType overriddenType,
+                                java.util.Set<ThingType.Annotation> annotations)
 ----
 
 Allows the instances of this ``ThingType`` to own the given ``AttributeType``. Optionally, overriding a previously declared ownership. Optionally, adds annotations to the ownership. 
@@ -1026,14 +1028,14 @@ a| `annotations` a| Adds annotations to the ownership. a| `java.util.Set<ThingTy
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-thingType.setOwns(transaction, attributeType);
- thingType.setOwns(transaction, attributeType, overriddenType, Collections.singleton(Annotation.key()));
+thingType.setOwns(transaction, attributeType).resolve();
+ thingType.setOwns(transaction, attributeType, overriddenType, Collections.singleton(Annotation.key())).resolve();
 ----
 
 [#_ThingType_setOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType_com_vaticle_typedb_driver_api_concept_type_AttributeType]
@@ -1041,9 +1043,10 @@ thingType.setOwns(transaction, attributeType);
 
 [source,java]
 ----
-void setOwns​(TypeDBTransaction transaction,
-             AttributeType attributeType,
-             AttributeType overriddenType)
+@CheckReturnValue
+Promise<java.lang.Void> setOwns​(TypeDBTransaction transaction,
+                                AttributeType attributeType,
+                                AttributeType overriddenType)
 ----
 
 Allows the instances of this ``ThingType`` to own the given ``AttributeType``,
@@ -1054,16 +1057,17 @@ See also: <<#_setOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticl
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [#_ThingType_setOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType_java_util_Set]
 ==== setOwns
 
 [source,java]
 ----
-void setOwns​(TypeDBTransaction transaction,
-             AttributeType attributeType,
-             java.util.Set<ThingType.Annotation> annotations)
+@CheckReturnValue
+Promise<java.lang.Void> setOwns​(TypeDBTransaction transaction,
+                                AttributeType attributeType,
+                                java.util.Set<ThingType.Annotation> annotations)
 ----
 
 Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
@@ -1074,15 +1078,16 @@ See also: <<#_setOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticl
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [#_ThingType_setOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType]
 ==== setOwns
 
 [source,java]
 ----
-void setOwns​(TypeDBTransaction transaction,
-             AttributeType attributeType)
+@CheckReturnValue
+Promise<java.lang.Void> setOwns​(TypeDBTransaction transaction,
+                                AttributeType attributeType)
 ----
 
 Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
@@ -1093,15 +1098,16 @@ See also: <<#_setOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticl
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [#_ThingType_setPlays_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType]
 ==== setPlays
 
 [source,java]
 ----
-void setPlays​(TypeDBTransaction transaction,
-              RoleType roleType)
+@CheckReturnValue
+Promise<java.lang.Void> setPlays​(TypeDBTransaction transaction,
+                                 RoleType roleType)
 ----
 
 Allows the instances of this ``ThingType`` to play the given role.
@@ -1112,16 +1118,17 @@ See also: <<#_setPlays_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vatic
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [#_ThingType_setPlays_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType_com_vaticle_typedb_driver_api_concept_type_RoleType]
 ==== setPlays
 
 [source,java]
 ----
-void setPlays​(TypeDBTransaction transaction,
-              RoleType roleType,
-              RoleType overriddenType)
+@CheckReturnValue
+Promise<java.lang.Void> setPlays​(TypeDBTransaction transaction,
+                                 RoleType roleType,
+                                 RoleType overriddenType)
 ----
 
 Allows the instances of this ``ThingType`` to play the given role. 
@@ -1140,14 +1147,14 @@ a| `overriddenType` a| The role type that this role overrides, if applicable a| 
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-thingType.setPlays(transaction, roleType)
- thingType.setPlays(transaction, roleType, overriddenType)
+thingType.setPlays(transaction, roleType).resolve();
+ thingType.setPlays(transaction, roleType, overriddenType).resolve();
 ----
 
 [#_ThingType_unsetAbstract_com_vaticle_typedb_driver_api_TypeDBTransaction]
@@ -1155,7 +1162,8 @@ thingType.setPlays(transaction, roleType)
 
 [source,java]
 ----
-void unsetAbstract​(TypeDBTransaction transaction)
+@CheckReturnValue
+Promise<java.lang.Void> unsetAbstract​(TypeDBTransaction transaction)
 ----
 
 Set a ``ThingType`` to be non-abstract, meaning it can have instances. 
@@ -1172,13 +1180,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-thingType.unsetAbstract(transaction);
+thingType.unsetAbstract(transaction).resolve();
 ----
 
 [#_ThingType_unsetOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType]
@@ -1186,8 +1194,9 @@ thingType.unsetAbstract(transaction);
 
 [source,java]
 ----
-void unsetOwns​(TypeDBTransaction transaction,
-               AttributeType attributeType)
+@CheckReturnValue
+Promise<java.lang.Void> unsetOwns​(TypeDBTransaction transaction,
+                                  AttributeType attributeType)
 ----
 
 Disallows the instances of this ``ThingType`` from owning the given ``AttributeType``. 
@@ -1205,13 +1214,13 @@ a| `attributeType` a| The ``AttributeType`` to not be owned by the type. a| `Att
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-thingType.unsetOwns(transaction, attributeType);
+thingType.unsetOwns(transaction, attributeType).resolve();
 ----
 
 [#_ThingType_unsetPlays_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType]
@@ -1219,8 +1228,9 @@ thingType.unsetOwns(transaction, attributeType);
 
 [source,java]
 ----
-void unsetPlays​(TypeDBTransaction transaction,
-                RoleType roleType)
+@CheckReturnValue
+Promise<java.lang.Void> unsetPlays​(TypeDBTransaction transaction,
+                                   RoleType roleType)
 ----
 
 Disallows the instances of this ``ThingType`` from playing the given role. 
@@ -1238,13 +1248,13 @@ a| `roleType` a| The role to not be played by the instances of this type. a| `Ro
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-thingType.unsetPlays(transaction, roleType);
+thingType.unsetPlays(transaction, roleType).resolve();
 ----
 
 // end::methods[]

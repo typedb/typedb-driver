@@ -256,7 +256,8 @@ concept.asValue();
 
 [source,java]
 ----
-void delete​(TypeDBTransaction transaction)
+@CheckReturnValue
+Promise<java.lang.Void> delete​(TypeDBTransaction transaction)
 ----
 
 Deletes this ``Thing``. 
@@ -273,13 +274,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-thing.delete(transaction);
+thing.delete(transaction).resolve();
 ----
 
 [#_Thing_getHas_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType___]
@@ -313,9 +314,8 @@ a| `attributeTypes` a| The ``AttributeType``s to filter the attributes by a| `At
 .Code examples
 [source,java]
 ----
-thing.getHas(transaction)
-     thing.getHas(transaction, attributeType=attributeType,
-     annotations=set(Annotation.key()))
+thing.getHas(transaction);
+ thing.getHas(transaction, attributeType);
 ----
 
 [#_Thing_getHas_com_vaticle_typedb_driver_api_TypeDBTransaction_java_util_Set]
@@ -350,7 +350,7 @@ a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a| `
 [source,java]
 ----
 thing.getHas(transaction);
- thing.getHas(transaction, annotations=set(Annotation.key()));
+ thing.getHas(transaction, set(Annotation.key()));
 ----
 
 [#_Thing_getIID_]
@@ -517,7 +517,7 @@ concept.isAttributeType();
 [source,java]
 ----
 @CheckReturnValue
-boolean isDeleted​(TypeDBTransaction transaction)
+Promise<java.lang.Boolean> isDeleted​(TypeDBTransaction transaction)
 ----
 
 Checks if this ``Thing`` is deleted. 
@@ -534,13 +534,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 
 [caption=""]
 .Returns
-`boolean`
+`Promise<java.lang.Boolean>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-thing.isDeleted(transaction)
+thing.isDeleted(transaction).resolve();
 ----
 
 [#_Thing_isEntity_]
@@ -778,8 +778,9 @@ concept.isValue();
 
 [source,java]
 ----
-void setHas​(TypeDBTransaction transaction,
-            Attribute attribute)
+@CheckReturnValue
+Promise<java.lang.Void> setHas​(TypeDBTransaction transaction,
+                               Attribute attribute)
 ----
 
 Assigns an ``Attribute`` to be owned by this ``Thing``. 
@@ -797,13 +798,13 @@ a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-thing.setHas(transaction, attribute);
+thing.setHas(transaction, attribute).resolve();
 ----
 
 [#_Thing_toJSON_]
@@ -833,8 +834,9 @@ thing.toJSON();
 
 [source,java]
 ----
-void unsetHas​(TypeDBTransaction transaction,
-              Attribute attribute)
+@CheckReturnValue
+Promise<java.lang.Void> unsetHas​(TypeDBTransaction transaction,
+                                 Attribute attribute)
 ----
 
 Unassigns an ``Attribute`` from this ``Thing``. 
@@ -852,13 +854,13 @@ a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attr
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-thing.unsetHas(transaction, attribute);
+thing.unsetHas(transaction, attribute).resolve();
 ----
 
 // end::methods[]

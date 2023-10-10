@@ -237,6 +237,7 @@ concept.asValue();
 
 [source,java]
 ----
+@CheckReturnValue
 java.util.stream.Stream<? extends Thing> getPlayerInstances​(TypeDBTransaction transaction)
 ----
 
@@ -255,6 +256,7 @@ See also: <<#_getPlayerTypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com
 
 [source,java]
 ----
+@CheckReturnValue
 java.util.stream.Stream<? extends Thing> getPlayerInstances​(TypeDBTransaction transaction,
                                                             Concept.Transitivity transitivity)
 ----
@@ -288,6 +290,7 @@ roleType.getPlayerInstances(transaction, transitivity);
 
 [source,java]
 ----
+@CheckReturnValue
 java.util.stream.Stream<? extends ThingType> getPlayerTypes​(TypeDBTransaction transaction)
 ----
 
@@ -306,6 +309,7 @@ See also: <<#_getPlayerTypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com
 
 [source,java]
 ----
+@CheckReturnValue
 java.util.stream.Stream<? extends ThingType> getPlayerTypes​(TypeDBTransaction transaction,
                                                             Concept.Transitivity transitivity)
 ----
@@ -339,6 +343,7 @@ roleType.getPlayerTypes(transaction, transitivity)
 
 [source,java]
 ----
+@CheckReturnValue
 java.util.stream.Stream<? extends Relation> getRelationInstances​(TypeDBTransaction transaction)
 ----
 
@@ -357,6 +362,7 @@ See also: <<#_getRelationInstances_com_vaticle_typedb_driver_api_TypeDBTransacti
 
 [source,java]
 ----
+@CheckReturnValue
 java.util.stream.Stream<? extends Relation> getRelationInstances​(TypeDBTransaction transaction,
                                                                  Concept.Transitivity transitivity)
 ----
@@ -390,7 +396,8 @@ roleType.getRelationInstances(transaction, transitivity)
 
 [source,java]
 ----
-RelationType getRelationType​(TypeDBTransaction transaction)
+@CheckReturnValue
+Promise<? extends RelationType> getRelationType​(TypeDBTransaction transaction)
 ----
 
 Retrieves the ``RelationType`` that this role is directly related to. 
@@ -407,13 +414,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 
 [caption=""]
 .Returns
-`RelationType`
+`Promise<? extends RelationType>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-roleType.getRelationType(transaction);
+roleType.getRelationType(transaction).resolve();
 ----
 
 [#_RoleType_getRelationTypes_com_vaticle_typedb_driver_api_TypeDBTransaction]
@@ -421,6 +428,7 @@ roleType.getRelationType(transaction);
 
 [source,java]
 ----
+@CheckReturnValue
 java.util.stream.Stream<? extends RelationType> getRelationTypes​(TypeDBTransaction transaction)
 ----
 
@@ -452,6 +460,7 @@ roleType.getRelationTypes(transaction);
 
 [source,java]
 ----
+@CheckReturnValue
 java.util.stream.Stream<? extends RoleType> getSubtypes​(TypeDBTransaction transaction)
 ----
 
@@ -470,6 +479,7 @@ See also: <<#_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_va
 
 [source,java]
 ----
+@CheckReturnValue
 java.util.stream.Stream<? extends RoleType> getSubtypes​(TypeDBTransaction transaction,
                                                         Concept.Transitivity transitivity)
 ----
@@ -503,7 +513,8 @@ roleType.getSubtypes(transaction, transitivity);
 
 [source,java]
 ----
-RoleType getSupertype​(TypeDBTransaction transaction)
+@CheckReturnValue
+Promise<? extends RoleType> getSupertype​(TypeDBTransaction transaction)
 ----
 
 Retrieves the most immediate supertype of the ``RoleType``. 
@@ -520,13 +531,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 
 [caption=""]
 .Returns
-`RoleType`
+`Promise<? extends RoleType>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-roleType.getSupertype(transaction);
+roleType.getSupertype(transaction).resolve();
 ----
 
 [#_RoleType_getSupertypes_com_vaticle_typedb_driver_api_TypeDBTransaction]
@@ -534,6 +545,7 @@ roleType.getSupertype(transaction);
 
 [source,java]
 ----
+@CheckReturnValue
 java.util.stream.Stream<? extends RoleType> getSupertypes​(TypeDBTransaction transaction)
 ----
 

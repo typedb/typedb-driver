@@ -11,7 +11,8 @@ Provides methods for executing TypeQL queries in the transaction.
 
 [source,java]
 ----
-void define​(com.vaticle.typeql.lang.query.TypeQLDefine query)
+@CheckReturnValue
+Promise<java.lang.Void> define​(com.vaticle.typeql.lang.query.TypeQLDefine query)
 ----
 
 Performs a TypeQL Define query with default options.
@@ -22,15 +23,16 @@ See also: <<#_define_com_vaticle_typeql_lang_query_TypeQLDefine_com_vaticle_type
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [#_QueryManager_define_com_vaticle_typeql_lang_query_TypeQLDefine_com_vaticle_typedb_driver_api_TypeDBOptions]
 ==== define
 
 [source,java]
 ----
-void define​(com.vaticle.typeql.lang.query.TypeQLDefine query,
-            TypeDBOptions options)
+@CheckReturnValue
+Promise<java.lang.Void> define​(com.vaticle.typeql.lang.query.TypeQLDefine query,
+                               TypeDBOptions options)
 ----
 
 Performs a TypeQL Define query in the transaction. 
@@ -48,13 +50,13 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-transaction.query().define(query, options)
+transaction.query().define(query, options).resolve()
 ----
 
 [#_QueryManager_define_java_lang_String]
@@ -62,7 +64,8 @@ transaction.query().define(query, options)
 
 [source,java]
 ----
-void define​(java.lang.String query)
+@CheckReturnValue
+Promise<java.lang.Void> define​(java.lang.String query)
 ----
 
 Performs a TypeQL Define query with default options.
@@ -73,15 +76,16 @@ See also: <<#_define_com_vaticle_typeql_lang_query_TypeQLDefine_com_vaticle_type
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [#_QueryManager_define_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
 ==== define
 
 [source,java]
 ----
-void define​(java.lang.String query,
-            TypeDBOptions options)
+@CheckReturnValue
+Promise<java.lang.Void> define​(java.lang.String query,
+                               TypeDBOptions options)
 ----
 
 
@@ -90,14 +94,15 @@ See also: <<#_define_com_vaticle_typeql_lang_query_TypeQLDefine_com_vaticle_type
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [#_QueryManager_delete_com_vaticle_typeql_lang_query_TypeQLDelete]
 ==== delete
 
 [source,java]
 ----
-void delete​(com.vaticle.typeql.lang.query.TypeQLDelete query)
+@CheckReturnValue
+Promise<java.lang.Void> delete​(com.vaticle.typeql.lang.query.TypeQLDelete query)
 ----
 
 Performs a TypeQL Delete query with default options.
@@ -108,15 +113,16 @@ See also: <<#_delete_com_vaticle_typeql_lang_query_TypeQLDelete_com_vaticle_type
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [#_QueryManager_delete_com_vaticle_typeql_lang_query_TypeQLDelete_com_vaticle_typedb_driver_api_TypeDBOptions]
 ==== delete
 
 [source,java]
 ----
-void delete​(com.vaticle.typeql.lang.query.TypeQLDelete query,
-            TypeDBOptions options)
+@CheckReturnValue
+Promise<java.lang.Void> delete​(com.vaticle.typeql.lang.query.TypeQLDelete query,
+                               TypeDBOptions options)
 ----
 
 Performs a TypeQL Delete query in the transaction. 
@@ -134,13 +140,13 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-transaction.query().delete(query, options)
+transaction.query().delete(query, options).resolve()
 ----
 
 [#_QueryManager_delete_java_lang_String]
@@ -148,7 +154,8 @@ transaction.query().delete(query, options)
 
 [source,java]
 ----
-void delete​(java.lang.String query)
+@CheckReturnValue
+Promise<java.lang.Void> delete​(java.lang.String query)
 ----
 
 Performs a TypeQL Delete query with default options.
@@ -159,15 +166,16 @@ See also: <<#_delete_com_vaticle_typeql_lang_query_TypeQLDelete_com_vaticle_type
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [#_QueryManager_delete_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
 ==== delete
 
 [source,java]
 ----
-void delete​(java.lang.String query,
-            TypeDBOptions options)
+@CheckReturnValue
+Promise<java.lang.Void> delete​(java.lang.String query,
+                               TypeDBOptions options)
 ----
 
 
@@ -176,7 +184,7 @@ See also: <<#_delete_com_vaticle_typeql_lang_query_TypeQLDelete_com_vaticle_type
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [#_QueryManager_explain_com_vaticle_typedb_driver_api_answer_ConceptMap_Explainable]
 ==== explain
@@ -413,7 +421,7 @@ See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_com_vaticle_typedb
 [source,java]
 ----
 @CheckReturnValue
-Numeric match​(com.vaticle.typeql.lang.query.TypeQLMatch.Aggregate query)
+Promise<Numeric> match​(com.vaticle.typeql.lang.query.TypeQLMatch.Aggregate query)
 ----
 
 Performs a TypeQL Match Aggregate query with default options.
@@ -424,7 +432,7 @@ See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Aggregate_com_vati
 
 [caption=""]
 .Returns
-`Numeric`
+`Promise<Numeric>`
 
 [#_QueryManager_match_com_vaticle_typeql_lang_query_TypeQLMatch_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions]
 ==== match
@@ -432,8 +440,8 @@ See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Aggregate_com_vati
 [source,java]
 ----
 @CheckReturnValue
-Numeric match​(com.vaticle.typeql.lang.query.TypeQLMatch.Aggregate query,
-              TypeDBOptions options)
+Promise<Numeric> match​(com.vaticle.typeql.lang.query.TypeQLMatch.Aggregate query,
+                       TypeDBOptions options)
 ----
 
 Performs a TypeQL Match Aggregate query in the transaction. 
@@ -451,13 +459,13 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 
 [caption=""]
 .Returns
-`Numeric`
+`Promise<Numeric>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-transaction.query().matchAggregate(query, options)
+transaction.query().matchAggregate(query, options).resolve()
 ----
 
 [#_QueryManager_match_com_vaticle_typeql_lang_query_TypeQLMatch_Group]
@@ -572,7 +580,7 @@ transaction.query().matchGroupAggregate(query, options)
 [source,java]
 ----
 @CheckReturnValue
-Numeric matchAggregate​(java.lang.String query)
+Promise<Numeric> matchAggregate​(java.lang.String query)
 ----
 
 Performs a TypeQL Match Aggregate query with default options.
@@ -583,7 +591,7 @@ See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Aggregate_com_vati
 
 [caption=""]
 .Returns
-`Numeric`
+`Promise<Numeric>`
 
 [#_QueryManager_matchAggregate_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
 ==== matchAggregate
@@ -591,8 +599,8 @@ See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Aggregate_com_vati
 [source,java]
 ----
 @CheckReturnValue
-Numeric matchAggregate​(java.lang.String query,
-                       TypeDBOptions options)
+Promise<Numeric> matchAggregate​(java.lang.String query,
+                                TypeDBOptions options)
 ----
 
 
@@ -601,7 +609,7 @@ See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Aggregate_com_vati
 
 [caption=""]
 .Returns
-`Numeric`
+`Promise<Numeric>`
 
 [#_QueryManager_matchGroup_java_lang_String]
 ==== matchGroup
@@ -682,7 +690,8 @@ See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Group_Aggregate_co
 
 [source,java]
 ----
-void undefine​(com.vaticle.typeql.lang.query.TypeQLUndefine query)
+@CheckReturnValue
+Promise<java.lang.Void> undefine​(com.vaticle.typeql.lang.query.TypeQLUndefine query)
 ----
 
 Performs a TypeQL Undefine query with default options.
@@ -693,15 +702,16 @@ See also: <<#_undefine_com_vaticle_typeql_lang_query_TypeQLUndefine_com_vaticle_
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [#_QueryManager_undefine_com_vaticle_typeql_lang_query_TypeQLUndefine_com_vaticle_typedb_driver_api_TypeDBOptions]
 ==== undefine
 
 [source,java]
 ----
-void undefine​(com.vaticle.typeql.lang.query.TypeQLUndefine query,
-              TypeDBOptions options)
+@CheckReturnValue
+Promise<java.lang.Void> undefine​(com.vaticle.typeql.lang.query.TypeQLUndefine query,
+                                 TypeDBOptions options)
 ----
 
 Performs a TypeQL Undefine query in the transaction. 
@@ -719,13 +729,13 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-transaction.query().undefine(query, options)
+transaction.query().undefine(query, options).resolve()
 ----
 
 [#_QueryManager_undefine_java_lang_String]
@@ -733,7 +743,8 @@ transaction.query().undefine(query, options)
 
 [source,java]
 ----
-void undefine​(java.lang.String query)
+@CheckReturnValue
+Promise<java.lang.Void> undefine​(java.lang.String query)
 ----
 
 Performs a TypeQL Undefine query with default options.
@@ -744,15 +755,16 @@ See also: <<#_undefine_com_vaticle_typeql_lang_query_TypeQLUndefine_com_vaticle_
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [#_QueryManager_undefine_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
 ==== undefine
 
 [source,java]
 ----
-void undefine​(java.lang.String query,
-              TypeDBOptions options)
+@CheckReturnValue
+Promise<java.lang.Void> undefine​(java.lang.String query,
+                                 TypeDBOptions options)
 ----
 
 
@@ -761,7 +773,7 @@ See also: <<#_undefine_com_vaticle_typeql_lang_query_TypeQLUndefine_com_vaticle_
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [#_QueryManager_update_com_vaticle_typeql_lang_query_TypeQLUpdate]
 ==== update

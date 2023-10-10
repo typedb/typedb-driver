@@ -22,8 +22,6 @@
 package com.vaticle.typedb.driver.api.concept;
 
 import com.eclipsesource.json.JsonObject;
-import com.vaticle.typedb.driver.api.TypeDBSession;
-import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.thing.Attribute;
 import com.vaticle.typedb.driver.api.concept.thing.Entity;
 import com.vaticle.typedb.driver.api.concept.thing.Relation;
@@ -36,7 +34,6 @@ import com.vaticle.typedb.driver.api.concept.type.ThingType;
 import com.vaticle.typedb.driver.api.concept.type.Type;
 import com.vaticle.typedb.driver.api.concept.value.Value;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
-import com.vaticle.typedb.driver.jni.Transitivity;
 
 import javax.annotation.CheckReturnValue;
 

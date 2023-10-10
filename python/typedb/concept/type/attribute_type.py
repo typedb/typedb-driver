@@ -24,16 +24,19 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Optional, Iterator, TYPE_CHECKING, Union, Any
 
-from typedb.native_driver_wrapper import attribute_type_set_supertype, attribute_type_get_supertype, \
-    attribute_type_get_supertypes, attribute_type_get_subtypes, attribute_type_get_subtypes_with_value_type, \
-    attribute_type_get_instances, attribute_type_get_owners, attribute_type_put, attribute_type_get, \
-    attribute_type_get_regex, attribute_type_set_regex, attribute_type_unset_regex, attribute_type_get_value_type, \
-    concept_iterator_next, TypeDBDriverExceptionNative
+from typedb.native_driver_wrapper import (
+    TypeDBDriverExceptionNative, attribute_type_get, attribute_type_get_instances, attribute_type_get_owners,
+    attribute_type_get_regex, attribute_type_get_subtypes, attribute_type_get_subtypes_with_value_type,
+    attribute_type_get_supertype, attribute_type_get_supertypes, attribute_type_get_value_type, attribute_type_put,
+    attribute_type_set_regex, attribute_type_set_supertype, attribute_type_unset_regex, concept_iterator_next,
+    concept_promise_resolve, string_promise_resolve, void_promise_resolve,
+)
 
 from typedb.api.concept.type.attribute_type import AttributeType
 from typedb.api.concept.value.value import ValueType
 from typedb.common.exception import TypeDBDriverException
 from typedb.common.iterator_wrapper import IteratorWrapper
+from typedb.common.promise import Promise
 from typedb.common.transitivity import Transitivity
 from typedb.concept.concept_factory import wrap_attribute, wrap_thing_type
 from typedb.concept.type.thing_type import _ThingType
@@ -47,7 +50,6 @@ if TYPE_CHECKING:
 
 
 class _AttributeType(AttributeType, _ThingType):
-
     def get_value_type(self) -> ValueType:
         return ValueType.of(attribute_type_get_value_type(self.native_object))
 
@@ -62,104 +64,114 @@ class _AttributeType(AttributeType, _ThingType):
     def __hash__(self):
         return super(_AttributeType, self).__hash__()
 
-    def set_supertype(self, transaction: _Transaction, super_attribute_type: _AttributeType) -> None:
-        try:
-            attribute_type_set_supertype(transaction.native_object, self.native_object,
-                                         super_attribute_type.native_object)
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+    def set_supertype(self, transaction: _Transaction, super_attribute_type: _AttributeType) -> Promise[None]:
+        promise = attribute_type_set_supertype(transaction.native_object, self.native_object, super_attribute_type.native_object)
+        return Promise(lambda: void_promise_resolve(promise))
 
-    def get_supertype(self, transaction: _Transaction) -> Optional[_AttributeType]:
-        try:
-            if res := attribute_type_get_supertype(transaction.native_object, self.native_object):
-                return _AttributeType(res)
-            return None
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+    def get_supertype(self, transaction: _Transaction) -> Promise[Optional[_AttributeType]]:
+        promise = attribute_type_get_supertype(transaction.native_object, self.native_object)
+        return Promise.map(_AttributeType, lambda: concept_promise_resolve(promise))
 
     def get_supertypes(self, transaction: _Transaction) -> Iterator[_AttributeType]:
         try:
-            return map(_AttributeType,
-                       IteratorWrapper(attribute_type_get_supertypes(transaction.native_object, self.native_object),
-                                       concept_iterator_next))
+            return map(
+                _AttributeType,
+                IteratorWrapper(
+                    attribute_type_get_supertypes(transaction.native_object, self.native_object), concept_iterator_next
+                )
+            )
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
 
-    def get_subtypes(self, transaction: _Transaction, transitivity: Transitivity = Transitivity.TRANSITIVE
-                     ) -> Iterator[_AttributeType]:
+    def get_subtypes(
+        self,
+        transaction: _Transaction,
+        transitivity: Transitivity = Transitivity.TRANSITIVE,
+    ) -> Iterator[_AttributeType]:
         try:
-            return map(_AttributeType,
-                       IteratorWrapper(attribute_type_get_subtypes(transaction.native_object, self.native_object,
-                                                                   transitivity.value),
-                                       concept_iterator_next))
+            return map(
+                _AttributeType,
+                IteratorWrapper(
+                    attribute_type_get_subtypes(transaction.native_object, self.native_object, transitivity.value),
+                    concept_iterator_next
+                )
+            )
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
 
-    def get_subtypes_with_value_type(self, transaction: _Transaction, value_type: ValueType,
-                                     transitivity: Transitivity = Transitivity.TRANSITIVE
-                                     ) -> Iterator[_AttributeType]:
+    def get_subtypes_with_value_type(
+        self,
+        transaction: _Transaction,
+        value_type: ValueType,
+        transitivity: Transitivity = Transitivity.TRANSITIVE
+    ) -> Iterator[_AttributeType]:
         try:
-            return map(_AttributeType,
-                       IteratorWrapper(attribute_type_get_subtypes_with_value_type(transaction.native_object,
-                                                                                   self.native_object,
-                                                                                   value_type.native_object,
-                                                                                   transitivity.value),
-                                       concept_iterator_next))
+            return map(
+                _AttributeType,
+                IteratorWrapper(
+                    attribute_type_get_subtypes_with_value_type(
+                        transaction.native_object, self.native_object, value_type.native_object, transitivity.value
+                    ), concept_iterator_next
+                )
+            )
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
 
-    def get_instances(self, transaction: _Transaction, transitivity: Transitivity = Transitivity.TRANSITIVE
-                      ) -> Iterator[_Attribute]:
+    def get_instances(
+        self,
+        transaction: _Transaction,
+        transitivity: Transitivity = Transitivity.TRANSITIVE,
+    ) -> Iterator[_Attribute]:
         try:
-            return map(wrap_attribute,
-                       IteratorWrapper(attribute_type_get_instances(transaction.native_object, self.native_object,
-                                                                    transitivity.value),
-                                       concept_iterator_next))
+            return map(
+                wrap_attribute,
+                IteratorWrapper(
+                    attribute_type_get_instances(transaction.native_object, self.native_object, transitivity.value),
+                    concept_iterator_next
+                )
+            )
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
 
-    def get_owners(self, transaction: _Transaction,
-                   annotations: Optional[set[Annotation]] = None,
-                   transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Any]:
+    def get_owners(
+        self,
+        transaction: _Transaction,
+        annotations: Optional[set[Annotation]] = None,
+        transitivity: Transitivity = Transitivity.TRANSITIVE,
+    ) -> Iterator[Any]:
         try:
             annotations_array = [anno.native_object for anno in annotations] if annotations else []
-            return map(wrap_thing_type,
-                       IteratorWrapper(attribute_type_get_owners(transaction.native_object, self.native_object,
-                                                                 transitivity.value, annotations_array),
-                                       concept_iterator_next))
+            return map(
+                wrap_thing_type,
+                IteratorWrapper(
+                    attribute_type_get_owners(
+                        transaction.native_object, self.native_object, transitivity.value, annotations_array
+                    ), concept_iterator_next
+                )
+            )
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
 
-    def put(self, transaction: _Transaction, value: Union[Value, bool, int, float, str, datetime]) -> _Attribute:
-        try:
-            return wrap_attribute(attribute_type_put(transaction.native_object, self.native_object,
-                                                     _Value.of(value).native_object))
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+    def put(self, transaction: _Transaction, value: Union[Value, bool, int, float, str, datetime]) -> Promise[_Attribute]:
+        promise = attribute_type_put(transaction.native_object, self.native_object, _Value.of(value).native_object)
+        return Promise.map(wrap_attribute, lambda: concept_promise_resolve(promise))
 
-    def get(self, transaction: _Transaction, value: Union[Value, bool, int, float, str, datetime]
-            ) -> Optional[_Attribute]:
-        try:
-            if res := attribute_type_get(transaction.native_object, self.native_object, _Value.of(value).native_object):
-                return wrap_attribute(res)
-            return None
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+    def get(
+        self,
+        transaction: _Transaction,
+        value: Union[Value, bool, int, float, str, datetime],
+    ) -> Promise[Optional[_Attribute]]:
+        promise = attribute_type_get(transaction.native_object, self.native_object, _Value.of(value).native_object)
+        return Promise.map(wrap_attribute, lambda: concept_promise_resolve(promise))
 
-    def get_regex(self, transaction: _Transaction) -> str:
-        try:
-            return attribute_type_get_regex(transaction.native_object, self.native_object)
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+    def get_regex(self, transaction: _Transaction) -> Promise[str]:
+        promise = attribute_type_get_regex(transaction.native_object, self.native_object)
+        return Promise(lambda: string_promise_resolve(promise))
 
-    def set_regex(self, transaction: _Transaction, regex: str) -> None:
-        try:
-            attribute_type_set_regex(transaction.native_object, self.native_object, regex)
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+    def set_regex(self, transaction: _Transaction, regex: str) -> Promise[None]:
+        promise = attribute_type_set_regex(transaction.native_object, self.native_object, regex)
+        return Promise(lambda: void_promise_resolve(promise))
 
-    def unset_regex(self, transaction: _Transaction) -> None:
-        try:
-            attribute_type_unset_regex(transaction.native_object, self.native_object)
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+    def unset_regex(self, transaction: _Transaction) -> Promise[None]:
+        promise = attribute_type_unset_regex(transaction.native_object, self.native_object)
+        return Promise(lambda: void_promise_resolve(promise))

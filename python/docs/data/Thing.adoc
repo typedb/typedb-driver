@@ -32,7 +32,7 @@ thing.as_thing()
 
 [source,python]
 ----
-delete(transaction: TypeDBTransaction) -> None
+delete(transaction: TypeDBTransaction) -> Promise[None]
 ----
 
 Deletes this ``Thing``.
@@ -48,13 +48,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 
 [caption=""]
 .Returns
-`None`
+`Promise[None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-thing.delete(transaction)
+thing.delete(transaction).resolve()
 ----
 
 [#_Thing_get_has]
@@ -151,7 +151,7 @@ thing.get_playing(transaction)
 get_relations(transaction: TypeDBTransaction, role_types: list[RoleType] = None) -> Iterator[Relation]
 ----
 
-Retrieves all the ``Relations`` which this ``Thing`` plays a role in, optionally filtered by one or more given roles.
+Retrieves all the ``Relation``s which this ``Thing`` plays a role in, optionally filtered by one or more given roles.
 
 [caption=""]
 .Input parameters
@@ -200,7 +200,7 @@ thing.get_type()
 
 [source,python]
 ----
-is_deleted(transaction: TypeDBTransaction) -> bool
+is_deleted(transaction: TypeDBTransaction) -> Promise[bool]
 ----
 
 Checks if this ``Thing`` is deleted.
@@ -216,13 +216,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 
 [caption=""]
 .Returns
-`bool`
+`Promise[bool]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-thing.is_deleted(transaction)
+thing.is_deleted(transaction).resolve()
 ----
 
 [#_Thing_is_inferred]
@@ -272,7 +272,7 @@ thing.is_thing()
 
 [source,python]
 ----
-set_has(transaction: TypeDBTransaction, attribute: Attribute) -> None
+set_has(transaction: TypeDBTransaction, attribute: Attribute) -> Promise[None]
 ----
 
 Assigns an ``Attribute`` to be owned by this ``Thing``.
@@ -289,13 +289,13 @@ a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute
 
 [caption=""]
 .Returns
-`None`
+`Promise[None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-thing.set_has(transaction, attribute)
+thing.set_has(transaction, attribute).resolve()
 ----
 
 [#_Thing_to_json]
@@ -324,7 +324,7 @@ thing.to_json()
 
 [source,python]
 ----
-unset_has(transaction: TypeDBTransaction, attribute: Attribute) -> None
+unset_has(transaction: TypeDBTransaction, attribute: Attribute) -> Promise[None]
 ----
 
 Unassigns an ``Attribute`` from this ``Thing``.
@@ -341,13 +341,13 @@ a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attr
 
 [caption=""]
 .Returns
-`None`
+`Promise[None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-thing.unset_has(transaction, attribute)
+thing.unset_has(transaction, attribute).resolve()
 ----
 
 // end::methods[]

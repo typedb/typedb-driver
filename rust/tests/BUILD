@@ -79,7 +79,8 @@ rust_test(
 
 rustfmt_test(
     name = "rustfmt_test",
-    targets = ["tests"]
+    targets = ["tests"],
+    size = "small",
 )
 
 checkstyle_test(

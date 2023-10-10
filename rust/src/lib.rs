@@ -19,6 +19,7 @@
  * under the License.
  */
 
+#![deny(elided_lifetimes_in_paths)]
 #![deny(unused_must_use)]
 
 pub mod answer;
@@ -32,9 +33,10 @@ mod user;
 
 pub use self::{
     common::{
-        box_stream, error, info, BoxStream, Credential, Error, Options, Result, SessionType, TransactionType, IID,
+        box_stream, error, info, BoxPromise, BoxStream, Error, Options, Promise, Result, SessionType, TransactionType,
+        IID,
     },
-    connection::Connection,
+    connection::{Connection, Credential},
     database::{Database, DatabaseManager, Session},
     transaction::Transaction,
     user::{User, UserManager},

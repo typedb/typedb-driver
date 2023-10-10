@@ -283,7 +283,7 @@ public class TransactionSteps {
         for (TypeDBSession session : sessions) {
             for (TypeDBTransaction transaction : sessionsToTransactions.get(session)) {
                 try {
-                    transaction.query().define(TypeQL.parseQuery(defineQueryStatements).asDefine());
+                    transaction.query().define(TypeQL.parseQuery(defineQueryStatements).asDefine()).resolve();
                     fail();
                 } catch (Exception e) {
                     assertThat(e.getMessage(), Matchers.containsString(expectedException));

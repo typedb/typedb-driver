@@ -29,6 +29,7 @@ import com.vaticle.typedb.driver.api.concept.type.AttributeType;
 import com.vaticle.typedb.driver.api.concept.type.RoleType;
 import com.vaticle.typedb.driver.api.concept.type.ThingType;
 import com.vaticle.typedb.driver.api.concept.type.ThingType.Annotation;
+import com.vaticle.typedb.driver.common.Promise;
 
 import javax.annotation.CheckReturnValue;
 import java.util.Set;
@@ -114,26 +115,28 @@ public interface Thing extends Concept {
      *
      * <h3>Examples</h3>
      * <pre>
-     * thing.setHas(transaction, attribute);
+     * thing.setHas(transaction, attribute).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param attribute The <code>Attribute</code> to be owned by this <code>Thing</code>.
      */
-    void setHas(TypeDBTransaction transaction, Attribute attribute);
+    @CheckReturnValue
+    Promise<Void> setHas(TypeDBTransaction transaction, Attribute attribute);
 
     /**
      * Unassigns an <code>Attribute</code> from this <code>Thing</code>.
      *
      * <h3>Examples</h3>
      * <pre>
-     * thing.unsetHas(transaction, attribute);
+     * thing.unsetHas(transaction, attribute).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param attribute The <code>Attribute</code> to be disowned from this <code>Thing</code>.
      */
-    void unsetHas(TypeDBTransaction transaction, Attribute attribute);
+    @CheckReturnValue
+    Promise<Void> unsetHas(TypeDBTransaction transaction, Attribute attribute);
 
     /**
      * Retrieves the <code>Attribute</code>s that this <code>Thing</code> owns,
@@ -141,9 +144,8 @@ public interface Thing extends Concept {
      *
      * <h3>Examples</h3>
      * <pre>
-     * thing.getHas(transaction)
-     thing.getHas(transaction, attributeType=attributeType,
-     annotations=set(Annotation.key()))
+     * thing.getHas(transaction);
+     * thing.getHas(transaction, attributeType);
      * </pre>
      *
      * @param transaction The current transaction
@@ -159,7 +161,7 @@ public interface Thing extends Concept {
      * <h3>Examples</h3>
      * <pre>
      * thing.getHas(transaction);
-     * thing.getHas(transaction, annotations=set(Annotation.key()));
+     * thing.getHas(transaction, set(Annotation.key()));
      * </pre>
      *
      * @param transaction The current transaction
@@ -201,23 +203,24 @@ public interface Thing extends Concept {
      *
      * <h3>Examples</h3>
      * <pre>
-     * thing.delete(transaction);
+     * thing.delete(transaction).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      */
-    void delete(TypeDBTransaction transaction);
+    @CheckReturnValue
+    Promise<Void> delete(TypeDBTransaction transaction);
 
     /**
      * Checks if this <code>Thing</code> is deleted.
      *
      * <h3>Examples</h3>
      * <pre>
-     * thing.isDeleted(transaction)
+     * thing.isDeleted(transaction).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      */
     @CheckReturnValue
-    boolean isDeleted(TypeDBTransaction transaction);
+    Promise<Boolean> isDeleted(TypeDBTransaction transaction);
 }

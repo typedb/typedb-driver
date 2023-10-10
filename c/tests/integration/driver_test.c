@@ -58,7 +58,7 @@ bool test_database_management() {
     while (NULL != (database = database_iterator_next(it))) {
         char* name = database_get_name(database);
         foundDB = foundDB || (0 == strcmp(databaseName, name));
-        free(name);
+        string_free(name);
         database_close(database);
     }
     database_iterator_drop(it);
@@ -112,7 +112,7 @@ bool test_query_schema() {
         transaction = transaction_new(session, Write, opts);
         if (FAILED()) goto cleanup;
 
-        query_define(transaction, "define name sub attribute, value string;", opts);
+        void_promise_resolve(query_define(transaction, "define name sub attribute, value string;", opts));
         if (FAILED()) goto cleanup;
 
         ConceptMapIterator* it = query_match(transaction, "match $t sub thing;", opts);
@@ -122,13 +122,13 @@ bool test_query_schema() {
             Concept* concept = concept_map_get(conceptMap, "t");
             char* label = thing_type_get_label(concept);
             foundName = foundName || (0 == strcmp(label, "name"));
-            free(label);
+            string_free(label);
             concept_drop(concept);
             concept_map_drop(conceptMap);
         }
         concept_map_iterator_drop(it);
 
-        transaction_commit(transaction);
+        void_promise_resolve(transaction_commit(transaction));
         transaction = NULL;
 
         if (!foundName) {
@@ -185,10 +185,10 @@ bool test_query_data() {
         transaction = transaction_new(session, Write, opts);
         if (FAILED()) goto cleanup;
 
-        query_define(transaction, "define name sub attribute, value string;", opts);
+        void_promise_resolve(query_define(transaction, "define name sub attribute, value string;", opts));
         if (FAILED()) goto cleanup;
 
-        transaction_commit(transaction);
+        void_promise_resolve(transaction_commit(transaction));
         transaction = NULL;
 
         session_close(session);
@@ -214,14 +214,14 @@ bool test_query_data() {
             Concept* asValue = attribute_get_value(concept);
             char* attr = value_get_string(asValue);
             foundJohn = foundJohn || (0 == strcmp(attr, "John"));
-            free(attr);
+            string_free(attr);
             concept_drop(asValue);
             concept_drop(concept);
             concept_map_drop(conceptMap);
         }
         concept_map_iterator_drop(it);
 
-        transaction_commit(transaction);
+        void_promise_resolve(transaction_commit(transaction));
         transaction = NULL;
 
         if (!foundJohn) {
@@ -278,7 +278,8 @@ bool test_concept_api_schema() {
         transaction = transaction_new(session, Write, opts);
         if (FAILED()) goto cleanup;
         {
-            Concept* definedNameType = concepts_put_attribute_type(transaction, "name", String);
+            Concept* definedNameType =
+                concept_promise_resolve(concepts_put_attribute_type(transaction, "name", String));
             if (FAILED()) goto cleanup;
             else concept_drop(definedNameType);
         }
@@ -288,15 +289,14 @@ bool test_concept_api_schema() {
             Concept* nameType = NULL;
             Concept* rootAttributeType = NULL;
             bool foundName = false;
-            if (
-                NULL != (nameType = concepts_get_attribute_type(transaction, "name")) &&
-                NULL != (rootAttributeType = concepts_get_attribute_type(transaction, "attribute")) &&
-                NULL != (it = attribute_type_get_subtypes(transaction, rootAttributeType, Transitive))) {
+            if (NULL != (nameType = concept_promise_resolve(concepts_get_attribute_type(transaction, "name"))) &&
+                NULL != (rootAttributeType = concepts_get_root_attribute_type()) &&
+                NULL != (it = (attribute_type_get_subtypes(transaction, rootAttributeType, Transitive)))) {
                 Concept* concept;
                 while (NULL != (concept = concept_iterator_next(it))) {
                     char* label = thing_type_get_label(concept);
                     foundName = foundName || (0 == strcmp(label, "name"));
-                    free(label);
+                    string_free(label);
                     concept_drop(concept);
                 }
             }
@@ -304,7 +304,7 @@ bool test_concept_api_schema() {
             concept_drop(rootAttributeType);
             concept_drop(nameType);
 
-            transaction_commit(transaction);
+            void_promise_resolve(transaction_commit(transaction));
             transaction = NULL;
             if (!foundName) {
                 fprintf(stderr, "Did not find type \'name\' in subtypes of attribute.\n");
@@ -364,12 +364,13 @@ bool test_concept_api_data() {
         if (FAILED()) goto cleanup;
 
         {
-            Concept* definedNameType = concepts_put_attribute_type(transaction, "name", String);
+            Concept* definedNameType =
+                concept_promise_resolve(concepts_put_attribute_type(transaction, "name", String));
             if (FAILED()) goto cleanup;
             else concept_drop(definedNameType);
         }
 
-        transaction_commit(transaction);
+        void_promise_resolve(transaction_commit(transaction));
         transaction = NULL;
 
         session_close(session);
@@ -383,12 +384,15 @@ bool test_concept_api_data() {
 
         transaction = transaction_new(session, Write, opts);
         if (FAILED()) goto cleanup;
-        if (NULL == (nameType = concepts_get_attribute_type(transaction, "name"))) goto cleanup;
+        if (NULL == (nameType = concept_promise_resolve(concepts_get_attribute_type(transaction, "name"))))
+            goto cleanup;
         {
             Concept* valueOfJohn = NULL;
             Concept* insertedJohn = NULL;
-            bool success = NULL != (valueOfJohn = value_new_string("John")) &&
-                           NULL != (insertedJohn = attribute_type_put(transaction, nameType, valueOfJohn));
+            bool success =
+                NULL != (valueOfJohn = value_new_string("John")) &&
+                NULL !=
+                    (insertedJohn = concept_promise_resolve(attribute_type_put(transaction, nameType, valueOfJohn)));
             concept_drop(insertedJohn);
             concept_drop(valueOfJohn);
             if (!success) goto cleanup;
@@ -404,14 +408,14 @@ bool test_concept_api_data() {
                 Concept* asValue = attribute_get_value(concept);
                 char* attr = value_get_string(asValue);
                 foundJohn = foundJohn || (0 == strcmp(attr, "John"));
-                free(attr);
+                string_free(attr);
                 concept_drop(asValue);
                 concept_drop(concept);
             }
             concept_iterator_drop(it);
         }
 
-        transaction_commit(transaction);
+        void_promise_resolve(transaction_commit(transaction));
         transaction = NULL;
 
         if (!foundJohn) {

@@ -82,7 +82,7 @@ class JavaDocParser : Callable<Unit> {
 
             if (parsedClass.isNotEmpty()) {
                 val parsedClassAsciiDoc = parsedClass.toAsciiDoc("java")
-                val fileName = "${parsedClass.name}.adoc"
+                val fileName = "${generateFilename(parsedClass.name)}.adoc"
                 val fileDir = docsDir.resolve(dirs[fileName]
                     ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided"))
                 if (!fileDir.toFile().exists()) {
@@ -280,5 +280,9 @@ class JavaDocParser : Callable<Unit> {
             }
         }
         return fragments.joinToString("")
+    }
+
+    private fun generateFilename(className: String): String {
+        return className.replace("[<>]".toRegex(), "_")
     }
 }

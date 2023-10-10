@@ -71,6 +71,13 @@ pub struct EntityType {
     pub is_abstract: bool,
 }
 
+impl EntityType {
+    /// Returns the root `EntityType`
+    pub fn root() -> Self {
+        Self { label: "entity".to_owned(), is_root: true, is_abstract: true }
+    }
+}
+
 /// Relation types (or subtypes of the relation root type) represent relationships between types.
 /// Relation types have roles.
 ///
@@ -82,6 +89,13 @@ pub struct RelationType {
     pub label: String,
     pub is_root: bool,
     pub is_abstract: bool,
+}
+
+impl RelationType {
+    /// Returns the root `RelationType`
+    pub fn root() -> Self {
+        Self { label: "relation".to_owned(), is_root: true, is_abstract: true }
+    }
 }
 
 /// Attribute types represent properties that other types can own.
@@ -101,6 +115,13 @@ pub struct AttributeType {
     pub is_root: bool,
     pub is_abstract: bool,
     pub value_type: ValueType,
+}
+
+impl AttributeType {
+    /// Returns the root `AttributeType`
+    pub fn root() -> Self {
+        Self { label: "attribute".to_owned(), is_root: true, is_abstract: true, value_type: ValueType::Object }
+    }
 }
 
 /// Roles are special internal types used by relations. We can not create an instance

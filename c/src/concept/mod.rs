@@ -32,14 +32,51 @@ use typedb_driver::{
     concept::{
         Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Thing, ThingType,
     },
-    BoxStream, Result,
+    BoxPromise, BoxStream, Promise, Result,
 };
 
 use super::{
     iterator::iterator_try_next,
     memory::{borrow, free, release},
 };
-use crate::iterator::CIterator;
+use crate::{error::try_release_optional, iterator::CIterator, memory::take_ownership};
+
+pub struct ConceptPromise(BoxPromise<'static, Result<Option<Concept>>>);
+
+impl ConceptPromise {
+    fn entity(promise: impl Promise<'static, Result<Option<Entity>>>) -> Self {
+        Self(Box::new(|| Ok(promise.resolve()?.map(Concept::Entity))))
+    }
+
+    fn relation(promise: impl Promise<'static, Result<Option<Relation>>>) -> Self {
+        Self(Box::new(|| Ok(promise.resolve()?.map(Concept::Relation))))
+    }
+
+    fn attribute(promise: impl Promise<'static, Result<Option<Attribute>>>) -> Self {
+        Self(Box::new(|| Ok(promise.resolve()?.map(Concept::Attribute))))
+    }
+
+    fn entity_type(promise: impl Promise<'static, Result<Option<EntityType>>>) -> Self {
+        Self(Box::new(|| Ok(promise.resolve()?.map(Concept::EntityType))))
+    }
+
+    fn relation_type(promise: impl Promise<'static, Result<Option<RelationType>>>) -> Self {
+        Self(Box::new(|| Ok(promise.resolve()?.map(Concept::RelationType))))
+    }
+
+    fn attribute_type(promise: impl Promise<'static, Result<Option<AttributeType>>>) -> Self {
+        Self(Box::new(|| Ok(promise.resolve()?.map(Concept::AttributeType))))
+    }
+
+    fn role_type(promise: impl Promise<'static, Result<Option<RoleType>>>) -> Self {
+        Self(Box::new(|| Ok(promise.resolve()?.map(Concept::RoleType))))
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn concept_promise_resolve(promise: *mut ConceptPromise) -> *mut Concept {
+    try_release_optional(take_ownership(promise).0.resolve().transpose())
+}
 
 pub struct ConceptIterator(pub CIterator<Result<Concept>>);
 

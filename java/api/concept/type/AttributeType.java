@@ -24,6 +24,7 @@ package com.vaticle.typedb.driver.api.concept.type;
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.value.Value;
 import com.vaticle.typedb.driver.api.concept.thing.Attribute;
+import com.vaticle.typedb.driver.common.Promise;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -75,13 +76,14 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.put(transaction, value);
+     * attributeType.put(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param value New <code>Attribute</code>’s value
      */
-    Attribute put(TypeDBTransaction transaction, Value value);
+    @CheckReturnValue
+    Promise<? extends Attribute> put(TypeDBTransaction transaction, Value value);
 
     /**
      * Adds and returns an <code>Attribute</code> of this <code>AttributeType</code>
@@ -89,13 +91,14 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.put(transaction, value);
+     * attributeType.put(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param value New <code>Attribute</code>’s value
      */
-    Attribute put(TypeDBTransaction transaction, String value);
+    @CheckReturnValue
+    Promise<? extends Attribute> put(TypeDBTransaction transaction, String value);
 
     /**
      * Adds and returns an <code>Attribute</code> of this <code>AttributeType</code>
@@ -103,13 +106,14 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.put(transaction, value);
+     * attributeType.put(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param value New <code>Attribute</code>’s value
      */
-    Attribute put(TypeDBTransaction transaction, long value);
+    @CheckReturnValue
+    Promise<? extends Attribute> put(TypeDBTransaction transaction, long value);
 
     /**
      * Adds and returns an <code>Attribute</code> of this <code>AttributeType</code>
@@ -117,13 +121,14 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.put(transaction, value);
+     * attributeType.put(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param value New <code>Attribute</code>’s value
      */
-    Attribute put(TypeDBTransaction transaction, double value);
+    @CheckReturnValue
+    Promise<? extends Attribute> put(TypeDBTransaction transaction, double value);
 
     /**
      * Adds and returns an <code>Attribute</code> of this <code>AttributeType</code>
@@ -131,13 +136,14 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.put(transaction, value);
+     * attributeType.put(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param value New <code>Attribute</code>’s value
      */
-    Attribute put(TypeDBTransaction transaction, boolean value);
+    @CheckReturnValue
+    Promise<? extends Attribute> put(TypeDBTransaction transaction, boolean value);
 
     /**
      * Adds and returns an <code>Attribute</code> of this <code>AttributeType</code>
@@ -145,13 +151,14 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.put(transaction, value);
+     * attributeType.put(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param value New <code>Attribute</code>’s value
      */
-    Attribute put(TypeDBTransaction transaction, LocalDateTime value);
+    @CheckReturnValue
+    Promise<? extends Attribute> put(TypeDBTransaction transaction, LocalDateTime value);
 
     /**
      * Retrieves an <code>Attribute</code> of this <code>AttributeType</code> with the given value
@@ -159,14 +166,14 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.get(transaction, value);
+     * attributeType.get(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param value <code>Attribute</code>’s value
      */
-    @Nullable
-    Attribute get(TypeDBTransaction transaction, Value value);
+    @CheckReturnValue
+    Promise<? extends Attribute> get(TypeDBTransaction transaction, Value value);
 
     /**
      * Retrieves an <code>Attribute</code> of this <code>AttributeType</code> with the given value
@@ -174,14 +181,14 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.get(transaction, value);
+     * attributeType.get(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param value <code>Attribute</code>’s value
      */
-    @Nullable
-    Attribute get(TypeDBTransaction transaction, String value);
+    @CheckReturnValue
+    Promise<? extends Attribute> get(TypeDBTransaction transaction, String value);
 
     /**
      * Retrieves an <code>Attribute</code> of this <code>AttributeType</code> with the given value
@@ -189,14 +196,14 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.get(transaction, value);
+     * attributeType.get(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param value <code>Attribute</code>’s value
      */
-    @Nullable
-    Attribute get(TypeDBTransaction transaction, long value);
+    @CheckReturnValue
+    Promise<? extends Attribute> get(TypeDBTransaction transaction, long value);
 
     /**
      * Retrieves an <code>Attribute</code> of this <code>AttributeType</code> with the given value
@@ -204,14 +211,14 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.get(transaction, value);
+     * attributeType.get(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param value <code>Attribute</code>’s value
      */
-    @Nullable
-    Attribute get(TypeDBTransaction transaction, double value);
+    @CheckReturnValue
+    Promise<? extends Attribute> get(TypeDBTransaction transaction, double value);
 
     /**
      * Retrieves an <code>Attribute</code> of this <code>AttributeType</code> with the given value
@@ -219,14 +226,14 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.get(transaction, value);
+     * attributeType.get(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param value <code>Attribute</code>’s value
      */
-    @Nullable
-    Attribute get(TypeDBTransaction transaction, boolean value);
+    @CheckReturnValue
+    Promise<? extends Attribute> get(TypeDBTransaction transaction, boolean value);
 
     /**
      * Retrieves an <code>Attribute</code> of this <code>AttributeType</code> with the given value
@@ -234,26 +241,27 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.get(transaction, value);
+     * attributeType.get(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param value <code>Attribute</code>’s value
      */
-    @Nullable
-    Attribute get(TypeDBTransaction transaction, LocalDateTime value);
+    @CheckReturnValue
+    Promise<? extends Attribute> get(TypeDBTransaction transaction, LocalDateTime value);
 
     /**
      * Retrieves the regular expression that is defined for this <code>AttributeType</code>.
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.getRegex(transaction);
+     * attributeType.getRegex(transaction).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      */
-    String getRegex(TypeDBTransaction transaction);
+    @CheckReturnValue
+    Promise<String> getRegex(TypeDBTransaction transaction);
 
     /**
      * Sets a regular expression as a constraint for this <code>AttributeType</code>. <code>Values</code>
@@ -262,25 +270,27 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.setRegex(transaction, regex);
+     * attributeType.setRegex(transaction, regex).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param regex Regular expression
      */
-    void setRegex(TypeDBTransaction transaction, String regex);
+    @CheckReturnValue
+    Promise<Void> setRegex(TypeDBTransaction transaction, String regex);
 
     /**
      * Removes the regular expression that is defined for this <code>AttributeType</code>.
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.unsetRegex(transaction);
+     * attributeType.unsetRegex(transaction).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      */
-    void unsetRegex(TypeDBTransaction transaction);
+    @CheckReturnValue
+    Promise<Void> unsetRegex(TypeDBTransaction transaction);
 
     /**
      * Returns <code>True</code> if the value for attributes of this type is of type <code>boolean</code>.
@@ -357,13 +367,14 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.setSupertype(transaction, superType);
+     * attributeType.setSupertype(transaction, superType).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param attributeType The <code>AttributeType</code> to set as the supertype of this <code>AttributeType</code>
      */
-    void setSupertype(TypeDBTransaction transaction, AttributeType attributeType);
+    @CheckReturnValue
+    Promise<Void> setSupertype(TypeDBTransaction transaction, AttributeType attributeType);
 
     /**
      * Retrieves all direct and indirect subtypes of this <code>AttributeType</code>.

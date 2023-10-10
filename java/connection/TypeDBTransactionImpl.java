@@ -108,9 +108,13 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.drive
     @Override
     public void onClose(Consumer<Throwable> function) {
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        TransactionOnClose callback = new TransactionOnClose(function);
-        callbacks.add(callback);
-        transaction_on_close(nativeObject, callback.released());
+        try {
+            TransactionOnClose callback = new TransactionOnClose(function);
+            callbacks.add(callback);
+            transaction_on_close(nativeObject, callback.released());
+        } catch (com.vaticle.typedb.driver.jni.Error error) {
+            throw new TypeDBDriverException(error);
+        }
     }
 
     @Override
@@ -118,8 +122,8 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.drive
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         try {
             // NOTE: .released() relinquishes ownership of the native object to the Rust side
-            transaction_commit(nativeObject.released());
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            transaction_commit(nativeObject.released()).get();
+        } catch (com.vaticle.typedb.driver.jni.Error.Unchecked e) {
             throw new TypeDBDriverException(e);
         }
     }
@@ -128,8 +132,8 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.drive
     public void rollback() {
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         try {
-            transaction_rollback(nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            transaction_rollback(nativeObject).get();
+        } catch (com.vaticle.typedb.driver.jni.Error.Unchecked e) {
             throw new TypeDBDriverException(e);
         }
     }
@@ -137,8 +141,13 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.drive
     @Override
     public void close() {
         if (nativeObject.isOwned()) {
-            transaction_force_close(nativeObject);
-            callbacks.clear();
+            try {
+                transaction_force_close(nativeObject);
+            } catch (com.vaticle.typedb.driver.jni.Error error) {
+                throw new TypeDBDriverException(error);
+            } finally {
+                callbacks.clear();
+            }
         }
     }
 

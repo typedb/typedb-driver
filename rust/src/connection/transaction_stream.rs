@@ -19,7 +19,7 @@
  * under the License.
  */
 
-use std::{fmt, iter};
+use std::{fmt, iter, pin::Pin};
 
 #[cfg(not(feature = "sync"))]
 use futures::{stream, StreamExt};
@@ -33,7 +33,7 @@ use crate::{
     answer::{ConceptMap, ConceptMapGroup, Numeric, NumericGroup},
     common::{
         stream::{BoxStream, Stream},
-        Result, IID,
+        Promise, Result, IID,
     },
     concept::{
         Annotation, Attribute, AttributeType, Entity, EntityType, Relation, RelationType, RoleType, SchemaException,
@@ -45,7 +45,7 @@ use crate::{
     },
     error::{ConnectionError, InternalError},
     logic::{Explanation, Rule},
-    Options, TransactionType,
+    promisify, resolve, Options, TransactionType,
 };
 
 pub(crate) struct TransactionStream {
@@ -83,34 +83,32 @@ impl TransactionStream {
         self.transaction_transmitter.on_close(callback)
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn commit(&self) -> Result {
-        self.single(TransactionRequest::Commit).await?;
-        Ok(())
+    pub(crate) fn commit(self: Pin<Box<Self>>) -> impl Promise<'static, Result> {
+        let promise = self.transaction_transmitter.single(TransactionRequest::Commit);
+        promisify! {
+            let _this = self;  // move into the promise so the stream isn't dropped until the promise is resolved
+            resolve!(promise).map(|_| ())
+        }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn rollback(&self) -> Result {
-        self.single(TransactionRequest::Rollback).await?;
-        Ok(())
+    pub(crate) fn rollback(&self) -> impl Promise<'_, Result> {
+        let promise = self.single(TransactionRequest::Rollback);
+        promisify! { resolve!(promise).map(|_| ()) }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn define(&self, query: String, options: Options) -> Result {
-        self.query_single(QueryRequest::Define { query, options }).await?;
-        Ok(())
+    pub(crate) fn define(&self, query: String, options: Options) -> impl Promise<'_, Result> {
+        let promise = self.query_single(QueryRequest::Define { query, options });
+        promisify! { resolve!(promise).map(|_| ()) }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn undefine(&self, query: String, options: Options) -> Result {
-        self.query_single(QueryRequest::Undefine { query, options }).await?;
-        Ok(())
+    pub(crate) fn undefine(&self, query: String, options: Options) -> impl Promise<'_, Result> {
+        let promise = self.query_single(QueryRequest::Undefine { query, options });
+        promisify! { resolve!(promise).map(|_| ()) }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn delete(&self, query: String, options: Options) -> Result {
-        self.query_single(QueryRequest::Delete { query, options }).await?;
-        Ok(())
+    pub(crate) fn delete(&self, query: String, options: Options) -> impl Promise<'_, Result> {
+        let promise = self.query_single(QueryRequest::Delete { query, options });
+        promisify! { resolve!(promise).map(|_| ()) }
     }
 
     pub(crate) fn match_(&self, query: String, options: Options) -> Result<impl Stream<Item = Result<ConceptMap>>> {
@@ -140,11 +138,13 @@ impl TransactionStream {
         }))
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn match_aggregate(&self, query: String, options: Options) -> Result<Numeric> {
-        match self.query_single(QueryRequest::MatchAggregate { query, options }).await? {
-            QueryResponse::MatchAggregate { answer } => Ok(answer),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn match_aggregate(&self, query: String, options: Options) -> impl Promise<'_, Result<Numeric>> {
+        let promise = self.query_single(QueryRequest::MatchAggregate { query, options });
+        promisify! {
+            match resolve!(promise)? {
+                QueryResponse::MatchAggregate { answer } => Ok(answer),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
@@ -174,75 +174,97 @@ impl TransactionStream {
         }))
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn get_entity_type(&self, label: String) -> Result<Option<EntityType>> {
-        match self.concept_single(ConceptRequest::GetEntityType { label }).await? {
-            ConceptResponse::GetEntityType { entity_type } => Ok(entity_type),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn get_entity_type(&self, label: String) -> impl Promise<'_, Result<Option<EntityType>>> {
+        let promise = self.concept_single(ConceptRequest::GetEntityType { label });
+        promisify! {
+            match resolve!(promise)? {
+                ConceptResponse::GetEntityType { entity_type } => Ok(entity_type),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn get_relation_type(&self, label: String) -> Result<Option<RelationType>> {
-        match self.concept_single(ConceptRequest::GetRelationType { label }).await? {
-            ConceptResponse::GetRelationType { relation_type } => Ok(relation_type),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn get_relation_type(&self, label: String) -> impl Promise<'_, Result<Option<RelationType>>> {
+        let promise = self.concept_single(ConceptRequest::GetRelationType { label });
+        promisify! {
+            match resolve!(promise)? {
+                ConceptResponse::GetRelationType { relation_type } => Ok(relation_type),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn get_attribute_type(&self, label: String) -> Result<Option<AttributeType>> {
-        match self.concept_single(ConceptRequest::GetAttributeType { label }).await? {
-            ConceptResponse::GetAttributeType { attribute_type } => Ok(attribute_type),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn get_attribute_type(&self, label: String) -> impl Promise<'_, Result<Option<AttributeType>>> {
+        let promise = self.concept_single(ConceptRequest::GetAttributeType { label });
+        promisify! {
+            match resolve!(promise)? {
+                ConceptResponse::GetAttributeType { attribute_type } => Ok(attribute_type),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn put_entity_type(&self, label: String) -> Result<EntityType> {
-        match self.concept_single(ConceptRequest::PutEntityType { label }).await? {
-            ConceptResponse::PutEntityType { entity_type } => Ok(entity_type),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn put_entity_type(&self, label: String) -> impl Promise<'_, Result<EntityType>> {
+        let promise = self.concept_single(ConceptRequest::PutEntityType { label });
+        promisify! {
+            match resolve!(promise)? {
+                ConceptResponse::PutEntityType { entity_type } => Ok(entity_type),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn put_relation_type(&self, label: String) -> Result<RelationType> {
-        match self.concept_single(ConceptRequest::PutRelationType { label }).await? {
-            ConceptResponse::PutRelationType { relation_type } => Ok(relation_type),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn put_relation_type(&self, label: String) -> impl Promise<'_, Result<RelationType>> {
+        let promise = self.concept_single(ConceptRequest::PutRelationType { label });
+        promisify! {
+            match resolve!(promise)? {
+                ConceptResponse::PutRelationType { relation_type } => Ok(relation_type),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn put_attribute_type(&self, label: String, value_type: ValueType) -> Result<AttributeType> {
-        match self.concept_single(ConceptRequest::PutAttributeType { label, value_type }).await? {
-            ConceptResponse::PutAttributeType { attribute_type } => Ok(attribute_type),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn put_attribute_type(
+        &self,
+        label: String,
+        value_type: ValueType,
+    ) -> impl Promise<'_, Result<AttributeType>> {
+        let promise = self.concept_single(ConceptRequest::PutAttributeType { label, value_type });
+        promisify! {
+            match resolve!(promise)? {
+                ConceptResponse::PutAttributeType { attribute_type } => Ok(attribute_type),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn get_entity(&self, iid: IID) -> Result<Option<Entity>> {
-        match self.concept_single(ConceptRequest::GetEntity { iid }).await? {
-            ConceptResponse::GetEntity { entity } => Ok(entity),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn get_entity(&self, iid: IID) -> impl Promise<'_, Result<Option<Entity>>> {
+        let promise = self.concept_single(ConceptRequest::GetEntity { iid });
+        promisify! {
+            match resolve!(promise)? {
+                ConceptResponse::GetEntity { entity } => Ok(entity),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn get_relation(&self, iid: IID) -> Result<Option<Relation>> {
-        match self.concept_single(ConceptRequest::GetRelation { iid }).await? {
-            ConceptResponse::GetRelation { relation } => Ok(relation),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn get_relation(&self, iid: IID) -> impl Promise<'_, Result<Option<Relation>>> {
+        let promise = self.concept_single(ConceptRequest::GetRelation { iid });
+        promisify! {
+            match resolve!(promise)? {
+                ConceptResponse::GetRelation { relation } => Ok(relation),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn get_attribute(&self, iid: IID) -> Result<Option<Attribute>> {
-        match self.concept_single(ConceptRequest::GetAttribute { iid }).await? {
-            ConceptResponse::GetAttribute { attribute } => Ok(attribute),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn get_attribute(&self, iid: IID) -> impl Promise<'_, Result<Option<Attribute>>> {
+        let promise = self.concept_single(ConceptRequest::GetAttribute { iid });
+        promisify! {
+            match resolve!(promise)? {
+                ConceptResponse::GetAttribute { attribute } => Ok(attribute),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
@@ -255,35 +277,43 @@ impl TransactionStream {
         }))
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn thing_type_delete(&self, thing_type: ThingType) -> Result {
-        match self.thing_type_single(ThingTypeRequest::ThingTypeDelete { thing_type }).await? {
-            ThingTypeResponse::ThingTypeDelete => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn thing_type_delete(&self, thing_type: ThingType) -> impl Promise<'_, Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::ThingTypeDelete { thing_type });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::ThingTypeDelete => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn thing_type_set_label(&self, thing_type: ThingType, new_label: String) -> Result {
-        match self.thing_type_single(ThingTypeRequest::ThingTypeSetLabel { thing_type, new_label }).await? {
-            ThingTypeResponse::ThingTypeSetLabel => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn thing_type_set_label(&self, thing_type: ThingType, new_label: String) -> impl Promise<'_, Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::ThingTypeSetLabel { thing_type, new_label });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::ThingTypeSetLabel => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn thing_type_set_abstract(&self, thing_type: ThingType) -> Result {
-        match self.thing_type_single(ThingTypeRequest::ThingTypeSetAbstract { thing_type }).await? {
-            ThingTypeResponse::ThingTypeSetAbstract => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn thing_type_set_abstract(&self, thing_type: ThingType) -> impl Promise<'_, Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::ThingTypeSetAbstract { thing_type });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::ThingTypeSetAbstract => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn thing_type_unset_abstract(&self, thing_type: ThingType) -> Result {
-        match self.thing_type_single(ThingTypeRequest::ThingTypeUnsetAbstract { thing_type }).await? {
-            ThingTypeResponse::ThingTypeUnsetAbstract => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn thing_type_unset_abstract(&self, thing_type: ThingType) -> impl Promise<'_, Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::ThingTypeUnsetAbstract { thing_type });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::ThingTypeUnsetAbstract => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
@@ -309,48 +339,54 @@ impl TransactionStream {
         }))
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn thing_type_get_owns_overridden(
+    pub(crate) fn thing_type_get_owns_overridden(
         &self,
         thing_type: ThingType,
         overridden_attribute_type: AttributeType,
-    ) -> Result<Option<AttributeType>> {
-        match self
-            .thing_type_single(ThingTypeRequest::ThingTypeGetOwnsOverridden { thing_type, overridden_attribute_type })
-            .await?
-        {
-            ThingTypeResponse::ThingTypeGetOwnsOverridden { attribute_type } => Ok(attribute_type),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    ) -> impl Promise<'_, Result<Option<AttributeType>>> {
+        let promise = self
+            .thing_type_single(ThingTypeRequest::ThingTypeGetOwnsOverridden { thing_type, overridden_attribute_type });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::ThingTypeGetOwnsOverridden { attribute_type } => Ok(attribute_type),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn thing_type_set_owns(
+    pub(crate) fn thing_type_set_owns(
         &self,
         thing_type: ThingType,
         attribute_type: AttributeType,
         overridden_attribute_type: Option<AttributeType>,
         annotations: Vec<Annotation>,
-    ) -> Result {
-        match self
-            .thing_type_single(ThingTypeRequest::ThingTypeSetOwns {
-                thing_type,
-                attribute_type,
-                overridden_attribute_type,
-                annotations,
-            })
-            .await?
-        {
-            ThingTypeResponse::ThingTypeSetOwns => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    ) -> impl Promise<'_, Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::ThingTypeSetOwns {
+            thing_type,
+            attribute_type,
+            overridden_attribute_type,
+            annotations,
+        });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::ThingTypeSetOwns => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn thing_type_unset_owns(&self, thing_type: ThingType, attribute_type: AttributeType) -> Result {
-        match self.thing_type_single(ThingTypeRequest::ThingTypeUnsetOwns { thing_type, attribute_type }).await? {
-            ThingTypeResponse::ThingTypeUnsetOwns => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn thing_type_unset_owns(
+        &self,
+        thing_type: ThingType,
+        attribute_type: AttributeType,
+    ) -> impl Promise<'_, Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::ThingTypeUnsetOwns { thing_type, attribute_type });
+        promisify! {
+            match resolve!(promise)?
+            {
+                ThingTypeResponse::ThingTypeUnsetOwns => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
@@ -367,74 +403,96 @@ impl TransactionStream {
         }))
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn thing_type_get_plays_overridden(
+    pub(crate) fn thing_type_get_plays_overridden(
         &self,
         thing_type: ThingType,
         overridden_role_type: RoleType,
-    ) -> Result<Option<RoleType>> {
-        match self
-            .thing_type_single(ThingTypeRequest::ThingTypeGetPlaysOverridden { thing_type, overridden_role_type })
-            .await?
-        {
-            ThingTypeResponse::ThingTypeGetPlaysOverridden { role_type } => Ok(role_type),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    ) -> impl Promise<'_, Result<Option<RoleType>>> {
+        let promise =
+            self.thing_type_single(ThingTypeRequest::ThingTypeGetPlaysOverridden { thing_type, overridden_role_type });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::ThingTypeGetPlaysOverridden { role_type } => Ok(role_type),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn thing_type_set_plays(
+    pub(crate) fn thing_type_set_plays(
         &self,
         thing_type: ThingType,
         role_type: RoleType,
         overridden_role_type: Option<RoleType>,
-    ) -> Result {
-        match self
-            .thing_type_single(ThingTypeRequest::ThingTypeSetPlays { thing_type, role_type, overridden_role_type })
-            .await?
-        {
-            ThingTypeResponse::ThingTypeSetPlays => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    ) -> impl Promise<'_, Result> {
+        let promise =
+            self.thing_type_single(ThingTypeRequest::ThingTypeSetPlays { thing_type, role_type, overridden_role_type });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::ThingTypeSetPlays => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn thing_type_unset_plays(&self, thing_type: ThingType, role_type: RoleType) -> Result {
-        match self.thing_type_single(ThingTypeRequest::ThingTypeUnsetPlays { thing_type, role_type }).await? {
-            ThingTypeResponse::ThingTypeUnsetPlays => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn thing_type_unset_plays(
+        &self,
+        thing_type: ThingType,
+        role_type: RoleType,
+    ) -> impl Promise<'_, Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::ThingTypeUnsetPlays { thing_type, role_type });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::ThingTypeUnsetPlays => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn thing_type_get_syntax(&self, thing_type: ThingType) -> Result<String> {
-        match self.thing_type_single(ThingTypeRequest::ThingTypeGetSyntax { thing_type }).await? {
-            ThingTypeResponse::ThingTypeGetSyntax { syntax } => Ok(syntax),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn thing_type_get_syntax(&self, thing_type: ThingType) -> impl Promise<'_, Result<String>> {
+        let promise = self.thing_type_single(ThingTypeRequest::ThingTypeGetSyntax { thing_type });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::ThingTypeGetSyntax { syntax } => Ok(syntax),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn entity_type_create(&self, entity_type: EntityType) -> Result<Entity> {
-        match self.thing_type_single(ThingTypeRequest::EntityTypeCreate { entity_type }).await? {
-            ThingTypeResponse::EntityTypeCreate { entity } => Ok(entity),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn entity_type_create(&self, entity_type: EntityType) -> impl Promise<'_, Result<Entity>> {
+        let promise = self.thing_type_single(ThingTypeRequest::EntityTypeCreate { entity_type });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::EntityTypeCreate { entity } => Ok(entity),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn entity_type_get_supertype(&self, entity_type: EntityType) -> Result<Option<EntityType>> {
-        match self.thing_type_single(ThingTypeRequest::EntityTypeGetSupertype { entity_type }).await? {
-            ThingTypeResponse::EntityTypeGetSupertype { entity_type } => Ok(entity_type),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn entity_type_get_supertype(
+        &self,
+        entity_type: EntityType,
+    ) -> impl Promise<'_, Result<Option<EntityType>>> {
+        let promise = self.thing_type_single(ThingTypeRequest::EntityTypeGetSupertype { entity_type });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::EntityTypeGetSupertype { entity_type } => Ok(entity_type),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn entity_type_set_supertype(&self, entity_type: EntityType, supertype: EntityType) -> Result {
-        match self.thing_type_single(ThingTypeRequest::EntityTypeSetSupertype { entity_type, supertype }).await? {
-            ThingTypeResponse::EntityTypeSetSupertype => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn entity_type_set_supertype(
+        &self,
+        entity_type: EntityType,
+        supertype: EntityType,
+    ) -> impl Promise<'_, Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::EntityTypeSetSupertype { entity_type, supertype });
+        promisify! {
+            match resolve!(promise)?
+            {
+                ThingTypeResponse::EntityTypeSetSupertype => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
@@ -480,34 +538,40 @@ impl TransactionStream {
         }))
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn relation_type_create(&self, relation_type: RelationType) -> Result<Relation> {
-        match self.thing_type_single(ThingTypeRequest::RelationTypeCreate { relation_type }).await? {
-            ThingTypeResponse::RelationTypeCreate { relation } => Ok(relation),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn relation_type_create(&self, relation_type: RelationType) -> impl Promise<'_, Result<Relation>> {
+        let promise = self.thing_type_single(ThingTypeRequest::RelationTypeCreate { relation_type });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::RelationTypeCreate { relation } => Ok(relation),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn relation_type_get_supertype(
+    pub(crate) fn relation_type_get_supertype(
         &self,
         relation_type: RelationType,
-    ) -> Result<Option<RelationType>> {
-        match self.thing_type_single(ThingTypeRequest::RelationTypeGetSupertype { relation_type }).await? {
-            ThingTypeResponse::RelationTypeGetSupertype { relation_type } => Ok(relation_type),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    ) -> impl Promise<'_, Result<Option<RelationType>>> {
+        let promise = self.thing_type_single(ThingTypeRequest::RelationTypeGetSupertype { relation_type });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::RelationTypeGetSupertype { relation_type } => Ok(relation_type),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn relation_type_set_supertype(
+    pub(crate) fn relation_type_set_supertype(
         &self,
         relation_type: RelationType,
         supertype: RelationType,
-    ) -> Result {
-        match self.thing_type_single(ThingTypeRequest::RelationTypeSetSupertype { relation_type, supertype }).await? {
-            ThingTypeResponse::RelationTypeSetSupertype => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    ) -> impl Promise<'_, Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::RelationTypeSetSupertype { relation_type, supertype });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::RelationTypeSetSupertype => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
@@ -569,107 +633,123 @@ impl TransactionStream {
         }))
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn relation_type_get_relates_for_role_label(
+    pub(crate) fn relation_type_get_relates_for_role_label(
         &self,
         relation_type: RelationType,
         role_label: String,
-    ) -> Result<Option<RoleType>> {
-        match self
-            .thing_type_single(ThingTypeRequest::RelationTypeGetRelatesForRoleLabel { relation_type, role_label })
-            .await?
-        {
-            ThingTypeResponse::RelationTypeGetRelatesForRoleLabel { role_type } => Ok(role_type),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    ) -> impl Promise<'_, Result<Option<RoleType>>> {
+        let promise =
+            self.thing_type_single(ThingTypeRequest::RelationTypeGetRelatesForRoleLabel { relation_type, role_label });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::RelationTypeGetRelatesForRoleLabel { role_type } => Ok(role_type),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn relation_type_get_relates_overridden(
+    pub(crate) fn relation_type_get_relates_overridden(
         &self,
         relation_type: RelationType,
         overridden_role_label: String,
-    ) -> Result<Option<RoleType>> {
-        match self
-            .thing_type_single(ThingTypeRequest::RelationTypeGetRelatesOverridden {
-                relation_type,
-                role_label: overridden_role_label,
-            })
-            .await?
-        {
-            ThingTypeResponse::RelationTypeGetRelatesOverridden { role_type } => Ok(role_type),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    ) -> impl Promise<'_, Result<Option<RoleType>>> {
+        let promise = self.thing_type_single(ThingTypeRequest::RelationTypeGetRelatesOverridden {
+            relation_type,
+            role_label: overridden_role_label,
+        });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::RelationTypeGetRelatesOverridden { role_type } => Ok(role_type),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn relation_type_set_relates(
+    pub(crate) fn relation_type_set_relates(
         &self,
         relation_type: RelationType,
         role_label: String,
         overridden_role_label: Option<String>,
-    ) -> Result {
-        match self
-            .thing_type_single(ThingTypeRequest::RelationTypeSetRelates {
-                relation_type,
-                role_label,
-                overridden_role_label,
-            })
-            .await?
-        {
-            ThingTypeResponse::RelationTypeSetRelates => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    ) -> impl Promise<'_, Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::RelationTypeSetRelates {
+            relation_type,
+            role_label,
+            overridden_role_label,
+        });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::RelationTypeSetRelates => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn relation_type_unset_relates(&self, relation_type: RelationType, role_label: String) -> Result {
-        match self.thing_type_single(ThingTypeRequest::RelationTypeUnsetRelates { relation_type, role_label }).await? {
-            ThingTypeResponse::RelationTypeUnsetRelates => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn relation_type_unset_relates(
+        &self,
+        relation_type: RelationType,
+        role_label: String,
+    ) -> impl Promise<'_, Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::RelationTypeUnsetRelates { relation_type, role_label });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::RelationTypeUnsetRelates => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn attribute_type_put(&self, attribute_type: AttributeType, value: Value) -> Result<Attribute> {
-        match self.thing_type_single(ThingTypeRequest::AttributeTypePut { attribute_type, value }).await? {
-            ThingTypeResponse::AttributeTypePut { attribute } => Ok(attribute),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
-        }
-    }
-
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn attribute_type_get(
+    pub(crate) fn attribute_type_put(
         &self,
         attribute_type: AttributeType,
         value: Value,
-    ) -> Result<Option<Attribute>> {
-        match self.thing_type_single(ThingTypeRequest::AttributeTypeGet { attribute_type, value }).await? {
-            ThingTypeResponse::AttributeTypeGet { attribute } => Ok(attribute),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    ) -> impl Promise<'_, Result<Attribute>> {
+        let promise = self.thing_type_single(ThingTypeRequest::AttributeTypePut { attribute_type, value });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::AttributeTypePut { attribute } => Ok(attribute),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn attribute_type_get_supertype(
+    pub(crate) fn attribute_type_get(
         &self,
         attribute_type: AttributeType,
-    ) -> Result<Option<AttributeType>> {
-        match self.thing_type_single(ThingTypeRequest::AttributeTypeGetSupertype { attribute_type }).await? {
-            ThingTypeResponse::AttributeTypeGetSupertype { attribute_type } => Ok(attribute_type),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+        value: Value,
+    ) -> impl Promise<'_, Result<Option<Attribute>>> {
+        let promise = self.thing_type_single(ThingTypeRequest::AttributeTypeGet { attribute_type, value });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::AttributeTypeGet { attribute } => Ok(attribute),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn attribute_type_set_supertype(
+    pub(crate) fn attribute_type_get_supertype(
+        &self,
+        attribute_type: AttributeType,
+    ) -> impl Promise<'_, Result<Option<AttributeType>>> {
+        let promise = self.thing_type_single(ThingTypeRequest::AttributeTypeGetSupertype { attribute_type });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::AttributeTypeGetSupertype { attribute_type } => Ok(attribute_type),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
+        }
+    }
+
+    pub(crate) fn attribute_type_set_supertype(
         &self,
         attribute_type: AttributeType,
         supertype: AttributeType,
-    ) -> Result {
-        match self.thing_type_single(ThingTypeRequest::AttributeTypeSetSupertype { attribute_type, supertype }).await? {
-            ThingTypeResponse::AttributeTypeSetSupertype => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    ) -> impl Promise<'_, Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::AttributeTypeSetSupertype { attribute_type, supertype });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::AttributeTypeSetSupertype => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
@@ -727,19 +807,30 @@ impl TransactionStream {
         }))
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn attribute_type_get_regex(&self, attribute_type: AttributeType) -> Result<Option<String>> {
-        match self.thing_type_single(ThingTypeRequest::AttributeTypeGetRegex { attribute_type }).await? {
-            ThingTypeResponse::AttributeTypeGetRegex { regex } => Ok(regex),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn attribute_type_get_regex(
+        &self,
+        attribute_type: AttributeType,
+    ) -> impl Promise<'_, Result<Option<String>>> {
+        let promise = self.thing_type_single(ThingTypeRequest::AttributeTypeGetRegex { attribute_type });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::AttributeTypeGetRegex { regex } => Ok(regex),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn attribute_type_set_regex(&self, attribute_type: AttributeType, regex: String) -> Result {
-        match self.thing_type_single(ThingTypeRequest::AttributeTypeSetRegex { attribute_type, regex }).await? {
-            ThingTypeResponse::AttributeTypeSetRegex => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn attribute_type_set_regex(
+        &self,
+        attribute_type: AttributeType,
+        regex: String,
+    ) -> impl Promise<'_, Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::AttributeTypeSetRegex { attribute_type, regex });
+        promisify! {
+            match resolve!(promise)? {
+                ThingTypeResponse::AttributeTypeSetRegex => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
@@ -763,27 +854,33 @@ impl TransactionStream {
         }))
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn role_type_delete(&self, role_type: RoleType) -> Result {
-        match self.role_type_single(RoleTypeRequest::Delete { role_type }).await? {
-            RoleTypeResponse::Delete => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn role_type_delete(&self, role_type: RoleType) -> impl Promise<'_, Result> {
+        let promise = self.role_type_single(RoleTypeRequest::Delete { role_type });
+        promisify! {
+            match resolve!(promise)? {
+                RoleTypeResponse::Delete => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn role_type_set_label(&self, role_type: RoleType, new_label: String) -> Result {
-        match self.role_type_single(RoleTypeRequest::SetLabel { role_type, new_label }).await? {
-            RoleTypeResponse::SetLabel => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn role_type_set_label(&self, role_type: RoleType, new_label: String) -> impl Promise<'_, Result> {
+        let promise = self.role_type_single(RoleTypeRequest::SetLabel { role_type, new_label });
+        promisify! {
+            match resolve!(promise)? {
+                RoleTypeResponse::SetLabel => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn role_type_get_supertype(&self, role_type: RoleType) -> Result<Option<RoleType>> {
-        match self.role_type_single(RoleTypeRequest::GetSupertype { role_type }).await? {
-            RoleTypeResponse::GetSupertype { role_type } => Ok(role_type),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn role_type_get_supertype(&self, role_type: RoleType) -> impl Promise<'_, Result<Option<RoleType>>> {
+        let promise = self.role_type_single(RoleTypeRequest::GetSupertype { role_type });
+        promisify! {
+            match resolve!(promise)? {
+                RoleTypeResponse::GetSupertype { role_type } => Ok(role_type),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
@@ -862,11 +959,13 @@ impl TransactionStream {
         }))
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn thing_delete(&self, thing: Thing) -> Result {
-        match self.thing_single(ThingRequest::ThingDelete { thing }).await? {
-            ThingResponse::ThingDelete {} => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn thing_delete(&self, thing: Thing) -> impl Promise<'_, Result> {
+        let promise = self.thing_single(ThingRequest::ThingDelete { thing });
+        promisify! {
+            match resolve!(promise)? {
+                ThingResponse::ThingDelete {} => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
@@ -884,19 +983,23 @@ impl TransactionStream {
         }))
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn thing_set_has(&self, thing: Thing, attribute: Attribute) -> Result {
-        match self.thing_single(ThingRequest::ThingSetHas { thing, attribute }).await? {
-            ThingResponse::ThingSetHas {} => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn thing_set_has(&self, thing: Thing, attribute: Attribute) -> impl Promise<'_, Result> {
+        let promise = self.thing_single(ThingRequest::ThingSetHas { thing, attribute });
+        promisify! {
+            match resolve!(promise)? {
+                ThingResponse::ThingSetHas {} => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn thing_unset_has(&self, thing: Thing, attribute: Attribute) -> Result {
-        match self.thing_single(ThingRequest::ThingUnsetHas { thing, attribute }).await? {
-            ThingResponse::ThingUnsetHas {} => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn thing_unset_has(&self, thing: Thing, attribute: Attribute) -> impl Promise<'_, Result> {
+        let promise = self.thing_single(ThingRequest::ThingUnsetHas { thing, attribute });
+        promisify! {
+            match resolve!(promise)? {
+                ThingResponse::ThingUnsetHas {} => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
@@ -922,29 +1025,33 @@ impl TransactionStream {
         }))
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn relation_add_role_player(
+    pub(crate) fn relation_add_role_player(
         &self,
         relation: Relation,
         role_type: RoleType,
         player: Thing,
-    ) -> Result {
-        match self.thing_single(ThingRequest::RelationAddRolePlayer { relation, role_type, player }).await? {
-            ThingResponse::RelationAddRolePlayer {} => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    ) -> impl Promise<'_, Result> {
+        let promise = self.thing_single(ThingRequest::RelationAddRolePlayer { relation, role_type, player });
+        promisify! {
+            match resolve!(promise)? {
+                ThingResponse::RelationAddRolePlayer {} => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn relation_remove_role_player(
+    pub(crate) fn relation_remove_role_player(
         &self,
         relation: Relation,
         role_type: RoleType,
         player: Thing,
-    ) -> Result {
-        match self.thing_single(ThingRequest::RelationRemoveRolePlayer { relation, role_type, player }).await? {
-            ThingResponse::RelationRemoveRolePlayer {} => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    ) -> impl Promise<'_, Result> {
+        let promise = self.thing_single(ThingRequest::RelationRemoveRolePlayer { relation, role_type, player });
+        promisify! {
+            match resolve!(promise)? {
+                ThingResponse::RelationRemoveRolePlayer {} => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
@@ -999,35 +1106,43 @@ impl TransactionStream {
         }))
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn rule_delete(&self, rule: Rule) -> Result {
-        match self.rule_single(RuleRequest::Delete { label: rule.label }).await? {
-            RuleResponse::Delete => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn rule_delete(&self, rule: Rule) -> impl Promise<'_, Result> {
+        let promise = self.rule_single(RuleRequest::Delete { label: rule.label });
+        promisify! {
+            match resolve!(promise)? {
+                RuleResponse::Delete => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn rule_set_label(&self, rule: Rule, new_label: String) -> Result {
-        match self.rule_single(RuleRequest::SetLabel { current_label: rule.label, new_label }).await? {
-            RuleResponse::SetLabel => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn rule_set_label(&self, rule: Rule, new_label: String) -> impl Promise<'_, Result> {
+        let promise = self.rule_single(RuleRequest::SetLabel { current_label: rule.label, new_label });
+        promisify! {
+            match resolve!(promise)? {
+                RuleResponse::SetLabel => Ok(()),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn put_rule(&self, label: String, when: Conjunction, then: Variable) -> Result<Rule> {
-        match self.logic_single(LogicRequest::PutRule { label, when, then }).await? {
-            LogicResponse::PutRule { rule } => Ok(rule),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn put_rule(&self, label: String, when: Conjunction, then: Variable) -> impl Promise<'_, Result<Rule>> {
+        let promise = self.logic_single(LogicRequest::PutRule { label, when, then });
+        promisify! {
+            match resolve!(promise)? {
+                LogicResponse::PutRule { rule } => Ok(rule),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub(crate) async fn get_rule(&self, label: String) -> Result<Option<Rule>> {
-        match self.logic_single(LogicRequest::GetRule { label }).await? {
-            LogicResponse::GetRule { rule } => Ok(rule),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    pub(crate) fn get_rule(&self, label: String) -> impl Promise<'_, Result<Option<Rule>>> {
+        let promise = self.logic_single(LogicRequest::GetRule { label });
+        promisify! {
+            match resolve!(promise)? {
+                LogicResponse::GetRule { rule } => Ok(rule),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
@@ -1053,64 +1168,77 @@ impl TransactionStream {
         }))
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn single(&self, req: TransactionRequest) -> Result<TransactionResponse> {
-        self.transaction_transmitter.single(req).await
+    fn single(&self, req: TransactionRequest) -> impl Promise<'static, Result<TransactionResponse>> {
+        self.transaction_transmitter.single(req)
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn query_single(&self, req: QueryRequest) -> Result<QueryResponse> {
-        match self.single(TransactionRequest::Query(req)).await? {
-            TransactionResponse::Query(res) => Ok(res),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    fn query_single(&self, req: QueryRequest) -> impl Promise<'_, Result<QueryResponse>> {
+        let promise = self.single(TransactionRequest::Query(req));
+        promisify! {
+            match resolve!(promise)? {
+                TransactionResponse::Query(res) => Ok(res),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn concept_single(&self, req: ConceptRequest) -> Result<ConceptResponse> {
-        match self.single(TransactionRequest::Concept(req)).await? {
-            TransactionResponse::Concept(res) => Ok(res),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    fn concept_single(&self, req: ConceptRequest) -> impl Promise<'_, Result<ConceptResponse>> {
+        let promise = self.single(TransactionRequest::Concept(req));
+        promisify! {
+            match resolve!(promise)? {
+                TransactionResponse::Concept(res) => Ok(res),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn thing_type_single(&self, req: ThingTypeRequest) -> Result<ThingTypeResponse> {
-        match self.single(TransactionRequest::ThingType(req)).await? {
-            TransactionResponse::ThingType(res) => Ok(res),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    fn thing_type_single(&self, req: ThingTypeRequest) -> impl Promise<'_, Result<ThingTypeResponse>> {
+        let promise = self.single(TransactionRequest::ThingType(req));
+        promisify! {
+            match resolve!(promise)? {
+                TransactionResponse::ThingType(res) => Ok(res),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn role_type_single(&self, req: RoleTypeRequest) -> Result<RoleTypeResponse> {
-        match self.single(TransactionRequest::RoleType(req)).await? {
-            TransactionResponse::RoleType(res) => Ok(res),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    fn role_type_single(&self, req: RoleTypeRequest) -> impl Promise<'_, Result<RoleTypeResponse>> {
+        let promise = self.single(TransactionRequest::RoleType(req));
+        promisify! {
+            match resolve!(promise)? {
+                TransactionResponse::RoleType(res) => Ok(res),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn thing_single(&self, req: ThingRequest) -> Result<ThingResponse> {
-        match self.single(TransactionRequest::Thing(req)).await? {
-            TransactionResponse::Thing(res) => Ok(res),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    fn thing_single(&self, req: ThingRequest) -> impl Promise<'_, Result<ThingResponse>> {
+        let promise = self.single(TransactionRequest::Thing(req));
+        promisify! {
+            match resolve!(promise)? {
+                TransactionResponse::Thing(res) => Ok(res),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn rule_single(&self, req: RuleRequest) -> Result<RuleResponse> {
-        match self.single(TransactionRequest::Rule(req)).await? {
-            TransactionResponse::Rule(res) => Ok(res),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    fn rule_single(&self, req: RuleRequest) -> impl Promise<'_, Result<RuleResponse>> {
+        let promise = self.single(TransactionRequest::Rule(req));
+        promisify! {
+            match resolve!(promise)? {
+                TransactionResponse::Rule(res) => Ok(res),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn logic_single(&self, req: LogicRequest) -> Result<LogicResponse> {
-        match self.single(TransactionRequest::Logic(req)).await? {
-            TransactionResponse::Logic(res) => Ok(res),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+    fn logic_single(&self, req: LogicRequest) -> impl Promise<'_, Result<LogicResponse>> {
+        let promise = self.single(TransactionRequest::Logic(req));
+        promisify! {
+            match resolve!(promise)? {
+                TransactionResponse::Logic(res) => Ok(res),
+                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            }
         }
     }
 

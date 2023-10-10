@@ -38,7 +38,7 @@ relation_type.as_relation_type()
 
 [source,python]
 ----
-create(transaction: TypeDBTransaction) -> Relation
+create(transaction: TypeDBTransaction) -> Promise[Relation]
 ----
 
 Creates and returns an instance of this ``RelationType``.
@@ -54,13 +54,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 
 [caption=""]
 .Returns
-`Relation`
+`Promise[Relation]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-relation_type.create(transaction)
+relation_type.create(transaction).resolve()
 ----
 
 [#_RelationType_get_instances]
@@ -99,7 +99,7 @@ relation_type.get_instances(transaction, transitivity)
 
 [source,python]
 ----
-get_relates(transaction: TypeDBTransaction, role_label: str | None = None, transitivity: Transitivity = Transitivity.TRANSITIVE) -> RoleType | None | Iterator[RoleType]
+get_relates(transaction: TypeDBTransaction, role_label: str | None = None, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Promise[RoleType | None] | Iterator[RoleType]
 ----
 
 Retrieves roles that this ``RelationType`` relates to directly or via inheritance. If ``role_label`` is given, returns a corresponding ``RoleType`` or ``None``.
@@ -117,13 +117,14 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited relate
 
 [caption=""]
 .Returns
-`RoleType | None | Iterator[RoleType]`
+`Promise[RoleType | None] | Iterator[RoleType]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-relation_type.get_relates(transaction, role_label, transitivity)
+relation_type.get_relates(transaction, role_label, transitivity).resolve()
+relation_type.get_relates(transaction, transitivity)
 ----
 
 [#_RelationType_get_relates_overridden]
@@ -131,7 +132,7 @@ relation_type.get_relates(transaction, role_label, transitivity)
 
 [source,python]
 ----
-get_relates_overridden(transaction: TypeDBTransaction, role_label: str) -> RoleType | None
+get_relates_overridden(transaction: TypeDBTransaction, role_label: str) -> Promise[RoleType | None]
 ----
 
 Retrieves a ``RoleType`` that is overridden by the role with the ``role_label``.
@@ -148,13 +149,13 @@ a| `role_label` a| Label of the role that overrides an inherited role a| `str` a
 
 [caption=""]
 .Returns
-`RoleType | None`
+`Promise[RoleType | None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-relation_type.get_relates_overridden(transaction, role_label)
+relation_type.get_relates_overridden(transaction, role_label).resolve()
 ----
 
 [#_RelationType_get_subtypes]
@@ -214,7 +215,7 @@ relation_type.is_relation_type()
 
 [source,python]
 ----
-set_relates(transaction: TypeDBTransaction, role_label: str, overridden_label: str | None = None) -> None
+set_relates(transaction: TypeDBTransaction, role_label: str, overridden_label: str | None = None) -> Promise[None]
 ----
 
 Sets the new role that this ``RelationType`` relates to. If we are setting an overriding type this way, we have to also pass the overridden type as a second argument.
@@ -232,14 +233,14 @@ a| `overridden_label` a| The label being overridden, if applicable a| `str \| No
 
 [caption=""]
 .Returns
-`None`
+`Promise[None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-relation_type.set_relates(transaction, role_label)
-relation_type.set_relates(transaction, role_label, overridden_label)
+relation_type.set_relates(transaction, role_label).resolve()
+relation_type.set_relates(transaction, role_label, overridden_label).resolve()
 ----
 
 [#_RelationType_set_supertype]
@@ -247,7 +248,7 @@ relation_type.set_relates(transaction, role_label, overridden_label)
 
 [source,python]
 ----
-set_supertype(transaction: TypeDBTransaction, super_relation_type: RelationType) -> None
+set_supertype(transaction: TypeDBTransaction, super_relation_type: RelationType) -> Promise[None]
 ----
 
 Sets the supplied ``RelationType`` as the supertype of the current ``RelationType``.
@@ -264,13 +265,13 @@ a| `super_relation_type` a| The ``RelationType`` to set as the supertype of this
 
 [caption=""]
 .Returns
-`None`
+`Promise[None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-relation_type.set_supertype(transaction, super_relation_type)
+relation_type.set_supertype(transaction, super_relation_type).resolve()
 ----
 
 [#_RelationType_unset_relates]
@@ -278,7 +279,7 @@ relation_type.set_supertype(transaction, super_relation_type)
 
 [source,python]
 ----
-unset_relates(transaction: TypeDBTransaction, role_label: str) -> None
+unset_relates(transaction: TypeDBTransaction, role_label: str) -> Promise[None]
 ----
 
 Disallows this ``RelationType`` from relating to the given role.
@@ -295,13 +296,13 @@ a| `role_label` a| The role to not relate to the relation type. a| `str` a|
 
 [caption=""]
 .Returns
-`None`
+`Promise[None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-relation_type.unset_relates(transaction, role_label)
+relation_type.unset_relates(transaction, role_label).resolve()
 ----
 
 // end::methods[]

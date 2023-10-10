@@ -19,24 +19,24 @@
  * under the License.
  */
 
-use std::sync::Arc;
+use std::pin::Pin;
 
 use typeql::pattern::{Conjunction, Variable};
 
 use crate::{
-    common::{stream::Stream, Result},
+    common::{stream::Stream, Promise, Result},
     connection::TransactionStream,
     logic::Rule,
 };
 
 /// Provides methods for manipulating rules in the database.
 #[derive(Clone, Debug)]
-pub struct LogicManager {
-    pub(super) transaction_stream: Arc<TransactionStream>,
+pub struct LogicManager<'tx> {
+    pub(super) transaction_stream: Pin<&'tx TransactionStream>,
 }
 
-impl LogicManager {
-    pub(crate) fn new(transaction_stream: Arc<TransactionStream>) -> Self {
+impl<'tx> LogicManager<'tx> {
+    pub(crate) fn new(transaction_stream: Pin<&'tx TransactionStream>) -> Self {
         Self { transaction_stream }
     }
 
@@ -51,12 +51,11 @@ impl LogicManager {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "transaction.logic().put_rule(label, when, then)")]
+    #[cfg_attr(feature = "sync", doc = "transaction.logic().put_rule(label, when, then).resolve()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.logic().put_rule(label, when, then).await")]
     /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn put_rule(&self, label: String, when: Conjunction, then: Variable) -> Result<Rule> {
-        self.transaction_stream.put_rule(label, when, then).await
+    pub fn put_rule(&self, label: String, when: Conjunction, then: Variable) -> impl Promise<'tx, Result<Rule>> {
+        self.transaction_stream.get_ref().put_rule(label, when, then)
     }
 
     /// Retrieves the Rule that has the given label.
@@ -68,12 +67,11 @@ impl LogicManager {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "transaction.logic().get_rule(label)")]
+    #[cfg_attr(feature = "sync", doc = "transaction.logic().get_rule(label).resolve()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.logic().get_rule(label).await")]
     /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn get_rule(&self, label: String) -> Result<Option<Rule>> {
-        self.transaction_stream.get_rule(label).await
+    pub fn get_rule(&self, label: String) -> impl Promise<'tx, Result<Option<Rule>>> {
+        self.transaction_stream.get_ref().get_rule(label)
     }
 
     /// Retrieves all rules.
@@ -84,6 +82,6 @@ impl LogicManager {
     /// transaction.logic.get_rules()
     /// ```
     pub fn get_rules(&self) -> Result<impl Stream<Item = Result<Rule>>> {
-        self.transaction_stream.get_rules()
+        self.transaction_stream.get_ref().get_rules()
     }
 }

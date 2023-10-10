@@ -22,9 +22,10 @@
 use typedb_driver::{Error, Options, Session, Transaction, TransactionType};
 
 use super::{
-    error::{try_release, unwrap_void},
+    error::try_release,
     memory::{borrow, borrow_mut, free, release, take_ownership},
 };
+use crate::promise::VoidPromise;
 
 #[no_mangle]
 pub extern "C" fn transaction_new(
@@ -46,13 +47,13 @@ pub extern "C" fn transaction_force_close(txn: *mut Transaction<'static>) {
 }
 
 #[no_mangle]
-pub extern "C" fn transaction_commit(txn: *mut Transaction<'static>) {
-    unwrap_void(take_ownership(txn).commit());
+pub extern "C" fn transaction_commit(txn: *mut Transaction<'static>) -> *mut VoidPromise {
+    release(VoidPromise(Box::new(take_ownership(txn).commit())))
 }
 
 #[no_mangle]
-pub extern "C" fn transaction_rollback(txn: *const Transaction<'static>) {
-    unwrap_void(borrow(txn).rollback());
+pub extern "C" fn transaction_rollback(txn: *const Transaction<'static>) -> *mut VoidPromise {
+    release(VoidPromise(Box::new(borrow(txn).rollback())))
 }
 
 #[no_mangle]

@@ -30,6 +30,7 @@ if TYPE_CHECKING:
     from typedb.api.concept.type.role_type import RoleType
     from typedb.api.concept.type.relation_type import RelationType
     from typedb.api.connection.transaction import TypeDBTransaction
+    from typedb.common.promise import Promise
 
 
 class Relation(Thing, ABC):
@@ -82,25 +83,25 @@ class Relation(Thing, ABC):
         pass
 
     @abstractmethod
-    def add_player(self, transaction: TypeDBTransaction, role_type: RoleType, player: Thing) -> None:
+    def add_player(self, transaction: TypeDBTransaction, role_type: RoleType, player: Thing) -> Promise[None]:
         """
         Adds a new role player to play the given role in this ``Relation``.
-        
+
         :param transaction: The current transaction
         :param role_type: The role to be played by the ``player``
         :param player: The thing to play the role
-        :return: 
+        :return:
 
         Examples
         --------
         ::
 
-            relation.add_player(transaction, role_type, player)
+            relation.add_player(transaction, role_type, player).resolve()
         """
         pass
 
     @abstractmethod
-    def remove_player(self, transaction: TypeDBTransaction, role_type: RoleType, player: Thing) -> None:
+    def remove_player(self, transaction: TypeDBTransaction, role_type: RoleType, player: Thing) -> Promise[None]:
         """
         Removes the association of the given instance that plays the given role in this ``Relation``.
 
@@ -113,7 +114,7 @@ class Relation(Thing, ABC):
         --------
         ::
 
-            relation.remove_player(transaction, role_type, player)
+            relation.remove_player(transaction, role_type, player).resolve()
         """
         pass
 

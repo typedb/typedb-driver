@@ -19,7 +19,7 @@
 # under the License.
 #
 
-from typing import Iterable
+from typing import Iterable, Union
 
 from typedb.api.answer.concept_map import *  # noqa # pylint: disable=unused-import
 from typedb.api.answer.concept_map_group import *  # noqa # pylint: disable=unused-import
@@ -54,7 +54,6 @@ from typedb.common.exception import *  # noqa # pylint: disable=unused-import
 from typedb.common.label import *  # noqa # pylint: disable=unused-import
 from typedb.common.transitivity import *  # noqa # pylint: disable=unused-import
 from typedb.connection.driver import _Driver
-
 
 # Repackaging these symbols allows them to be imported from "typedb.driver"
 

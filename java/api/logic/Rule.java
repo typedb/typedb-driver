@@ -22,6 +22,7 @@
 package com.vaticle.typedb.driver.api.logic;
 
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
+import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typeql.lang.pattern.Pattern;
 
 import javax.annotation.CheckReturnValue;
@@ -56,36 +57,38 @@ public interface Rule {
      *
      * <h3>Examples</h3>
      * <pre>
-     * rule.setLabel(transaction, newLabel)
+     * rule.setLabel(transaction, newLabel).resolve();
      * </pre>
      *
      * @param transaction The current <code>Transaction</code>
      * @param label The new label to be given to the rule
      */
-    void setLabel(TypeDBTransaction transaction, String label);
+    @CheckReturnValue
+    Promise<Void> setLabel(TypeDBTransaction transaction, String label);
 
     /**
      * Deletes this rule.
      *
      * <h3>Examples</h3>
      * <pre>
-     * rule.delete(transaction)
+     * rule.delete(transaction).resolve();
      * </pre>
      *
      * @param transaction The current <code>Transaction</code>
      */
-    void delete(TypeDBTransaction transaction);
+    @CheckReturnValue
+    Promise<Void> delete(TypeDBTransaction transaction);
 
     /**
      * Check if this rule has been deleted.
      *
      * <h3>Examples</h3>
      * <pre>
-     * rule.isDeleted(transaction)
+     * rule.isDeleted(transaction).resolve();
      * </pre>
      *
      * @param transaction The current <code>Transaction</code>
      */
     @CheckReturnValue
-    boolean isDeleted(TypeDBTransaction transaction);
+    Promise<Boolean> isDeleted(TypeDBTransaction transaction);
 }

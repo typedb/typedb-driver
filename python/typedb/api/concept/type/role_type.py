@@ -33,6 +33,7 @@ if TYPE_CHECKING:
     from typedb.api.concept.type.relation_type import RelationType
     from typedb.api.concept.type.thing_type import ThingType
     from typedb.api.connection.transaction import TypeDBTransaction
+    from typedb.common.promise import Promise
 
 
 class RoleType(Type, ABC):
@@ -75,7 +76,7 @@ class RoleType(Type, ABC):
         return self
 
     @abstractmethod
-    def get_supertype(self, transaction: TypeDBTransaction) -> Optional[RoleType]:
+    def get_supertype(self, transaction: TypeDBTransaction) -> Promise[Optional[RoleType]]:
         """
         Retrieves the most immediate supertype of the ``RoleType``.
 
@@ -86,7 +87,7 @@ class RoleType(Type, ABC):
         --------
         ::
 
-            role_type.get_supertype(transaction)
+            role_type.get_supertype(transaction).resolve()
         """
         pass
 
@@ -107,8 +108,11 @@ class RoleType(Type, ABC):
         pass
 
     @abstractmethod
-    def get_subtypes(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
-                     ) -> Iterator[RoleType]:
+    def get_subtypes(
+        self,
+        transaction: TypeDBTransaction,
+        transitivity: Transitivity = Transitivity.TRANSITIVE,
+    ) -> Iterator[RoleType]:
         """
         Retrieves all direct and indirect (or direct only) subtypes of the ``RoleType``.
 
@@ -127,7 +131,7 @@ class RoleType(Type, ABC):
         pass
 
     @abstractmethod
-    def get_relation_type(self, transaction: TypeDBTransaction) -> RelationType:
+    def get_relation_type(self, transaction: TypeDBTransaction) -> Promise[RelationType]:
         """
         Retrieves the ``RelationType`` that this role is directly related to.
 
@@ -138,7 +142,7 @@ class RoleType(Type, ABC):
         --------
         ::
 
-            role_type.get_relation_type(transaction)
+            role_type.get_relation_type(transaction).resolve()
         """
         pass
 
@@ -160,8 +164,11 @@ class RoleType(Type, ABC):
         pass
 
     @abstractmethod
-    def get_player_types(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
-                         ) -> Iterator[ThingType]:
+    def get_player_types(
+        self,
+        transaction: TypeDBTransaction,
+        transitivity: Transitivity = Transitivity.TRANSITIVE,
+    ) -> Iterator[ThingType]:
         """
         Retrieves the ``ThingType``\ s whose instances play this role.
 
@@ -180,8 +187,11 @@ class RoleType(Type, ABC):
         pass
 
     @abstractmethod
-    def get_relation_instances(self, transaction: TypeDBTransaction,
-                               transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Relation]:
+    def get_relation_instances(
+        self,
+        transaction: TypeDBTransaction,
+        transitivity: Transitivity = Transitivity.TRANSITIVE,
+    ) -> Iterator[Relation]:
         """
         Retrieves the ``Relation`` instances that this role is related to.
 
@@ -200,8 +210,11 @@ class RoleType(Type, ABC):
         pass
 
     @abstractmethod
-    def get_player_instances(self, transaction: TypeDBTransaction,
-                             transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Thing]:
+    def get_player_instances(
+        self,
+        transaction: TypeDBTransaction,
+        transitivity: Transitivity = Transitivity.TRANSITIVE,
+    ) -> Iterator[Thing]:
         """
         Retrieves the ``Thing`` instances that play this role.
 

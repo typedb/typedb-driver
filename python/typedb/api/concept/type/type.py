@@ -28,12 +28,12 @@ from typedb.api.concept.concept import Concept
 from typedb.common.transitivity import Transitivity
 
 if TYPE_CHECKING:
-    from typedb.common.label import Label
     from typedb.api.connection.transaction import TypeDBTransaction
+    from typedb.common.label import Label
+    from typedb.common.promise import Promise
 
 
 class Type(Concept, ABC):
-
     @abstractmethod
     def get_label(self) -> Label:
         """
@@ -50,7 +50,7 @@ class Type(Concept, ABC):
         pass
 
     @abstractmethod
-    def set_label(self, transaction: TypeDBTransaction, new_label: Label) -> None:
+    def set_label(self, transaction: TypeDBTransaction, new_label: Label) -> Promise[None]:
         """
         Renames the label of the type. The new label must remain unique.
 
@@ -62,7 +62,7 @@ class Type(Concept, ABC):
         --------
         ::
 
-            type_.set_label(transaction, new_label)
+            type_.set_label(transaction, new_label).resolve()
         """
         pass
 
@@ -80,7 +80,7 @@ class Type(Concept, ABC):
             type_.is_root()
         """
         pass
-    
+
     @abstractmethod
     def is_abstract(self) -> bool:
         """
@@ -125,7 +125,7 @@ class Type(Concept, ABC):
         return {"label": self.get_label().scoped_name()}
 
     @abstractmethod
-    def get_supertype(self, transaction: TypeDBTransaction) -> Optional[Type]:
+    def get_supertype(self, transaction: TypeDBTransaction) -> Promise[Optional[Type]]:
         """
         Retrieves the most immediate supertype of the type.
 
@@ -136,7 +136,7 @@ class Type(Concept, ABC):
         --------
         ::
 
-            type_.get_supertype(transaction)
+            type_.get_supertype(transaction).resolve()
         """
         pass
 
@@ -157,8 +157,11 @@ class Type(Concept, ABC):
         pass
 
     @abstractmethod
-    def get_subtypes(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
-                     ) -> Iterator[Type]:
+    def get_subtypes(
+        self,
+        transaction: TypeDBTransaction,
+        transitivity: Transitivity = Transitivity.TRANSITIVE,
+    ) -> Iterator[Type]:
         """
         Retrieves all direct and indirect (or direct only) subtypes of the type.
 
@@ -178,7 +181,7 @@ class Type(Concept, ABC):
         pass
 
     @abstractmethod
-    def delete(self, transaction: TypeDBTransaction) -> None:
+    def delete(self, transaction: TypeDBTransaction) -> Promise[None]:
         """
         Deletes this type from the database.
 
@@ -189,6 +192,6 @@ class Type(Concept, ABC):
         --------
         ::
 
-            type_.delete(transaction)
+            type_.delete(transaction).resolve()
         """
         pass

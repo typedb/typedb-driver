@@ -23,65 +23,76 @@ use std::{ffi::c_char, ptr::addr_of_mut};
 
 use typedb_driver::{
     box_stream,
-    concept::{Concept, SchemaException, ValueType},
-    Result, Transaction, IID,
+    concept::{AttributeType, Concept, EntityType, RelationType, SchemaException, ValueType},
+    Promise, Result, Transaction, IID,
 };
 
+use super::ConceptPromise;
 use crate::{
-    error::{try_release, try_release_map_optional},
+    error::try_release,
     iterator::{iterator_try_next, CIterator},
-    memory::{borrow, free, release_string, string_view},
+    memory::{borrow, free, release, release_string, string_view},
 };
+
+#[no_mangle]
+pub extern "C" fn concepts_get_root_entity_type() -> *mut Concept {
+    release(Concept::EntityType(EntityType::root()))
+}
+
+#[no_mangle]
+pub extern "C" fn concepts_get_root_relation_type() -> *mut Concept {
+    release(Concept::RelationType(RelationType::root()))
+}
+
+#[no_mangle]
+pub extern "C" fn concepts_get_root_attribute_type() -> *mut Concept {
+    release(Concept::AttributeType(AttributeType::root()))
+}
 
 #[no_mangle]
 pub extern "C" fn concepts_get_entity_type(
     transaction: *const Transaction<'static>,
     label: *const c_char,
-) -> *mut Concept {
-    try_release_map_optional(
-        borrow(transaction).concept().get_entity_type(string_view(label).to_owned()).transpose(),
-        Concept::EntityType,
-    )
+) -> *mut ConceptPromise {
+    release(ConceptPromise::entity_type(borrow(transaction).concept().get_entity_type(string_view(label).to_owned())))
 }
 
 #[no_mangle]
 pub extern "C" fn concepts_get_relation_type(
     transaction: *const Transaction<'static>,
     label: *const c_char,
-) -> *mut Concept {
-    try_release_map_optional(
-        borrow(transaction).concept().get_relation_type(string_view(label).to_owned()).transpose(),
-        Concept::RelationType,
-    )
+) -> *mut ConceptPromise {
+    release(ConceptPromise::relation_type(
+        borrow(transaction).concept().get_relation_type(string_view(label).to_owned()),
+    ))
 }
 
 #[no_mangle]
 pub extern "C" fn concepts_get_attribute_type(
     transaction: *const Transaction<'static>,
     label: *const c_char,
-) -> *mut Concept {
-    try_release_map_optional(
-        borrow(transaction).concept().get_attribute_type(string_view(label).to_owned()).transpose(),
-        Concept::AttributeType,
-    )
+) -> *mut ConceptPromise {
+    release(ConceptPromise::attribute_type(
+        borrow(transaction).concept().get_attribute_type(string_view(label).to_owned()),
+    ))
 }
 
 #[no_mangle]
 pub extern "C" fn concepts_put_entity_type(
     transaction: *const Transaction<'static>,
     label: *const c_char,
-) -> *mut Concept {
-    try_release(borrow(transaction).concept().put_entity_type(string_view(label).to_owned()).map(Concept::EntityType))
+) -> *mut ConceptPromise {
+    let promise = borrow(transaction).concept().put_entity_type(string_view(label).to_owned());
+    release(ConceptPromise::entity_type(|| promise.resolve().map(Some)))
 }
 
 #[no_mangle]
 pub extern "C" fn concepts_put_relation_type(
     transaction: *const Transaction<'static>,
     label: *const c_char,
-) -> *mut Concept {
-    try_release(
-        borrow(transaction).concept().put_relation_type(string_view(label).to_owned()).map(Concept::RelationType),
-    )
+) -> *mut ConceptPromise {
+    let promise = borrow(transaction).concept().put_relation_type(string_view(label).to_owned());
+    release(ConceptPromise::relation_type(|| promise.resolve().map(Some)))
 }
 
 #[no_mangle]
@@ -89,13 +100,9 @@ pub extern "C" fn concepts_put_attribute_type(
     transaction: *const Transaction<'static>,
     label: *const c_char,
     value_type: ValueType,
-) -> *mut Concept {
-    try_release(
-        borrow(transaction)
-            .concept()
-            .put_attribute_type(string_view(label).to_owned(), value_type)
-            .map(Concept::AttributeType),
-    )
+) -> *mut ConceptPromise {
+    let promise = borrow(transaction).concept().put_attribute_type(string_view(label).to_owned(), value_type);
+    release(ConceptPromise::attribute_type(|| promise.resolve().map(Some)))
 }
 
 fn iid_from_str(str: &str) -> IID {
@@ -103,27 +110,27 @@ fn iid_from_str(str: &str) -> IID {
 }
 
 #[no_mangle]
-pub extern "C" fn concepts_get_entity(transaction: *const Transaction<'static>, iid: *const c_char) -> *mut Concept {
-    try_release_map_optional(
-        borrow(transaction).concept().get_entity(iid_from_str(string_view(iid))).transpose(),
-        Concept::Entity,
-    )
+pub extern "C" fn concepts_get_entity(
+    transaction: *const Transaction<'static>,
+    iid: *const c_char,
+) -> *mut ConceptPromise {
+    release(ConceptPromise::entity(borrow(transaction).concept().get_entity(iid_from_str(string_view(iid)))))
 }
 
 #[no_mangle]
-pub extern "C" fn concepts_get_relation(transaction: *const Transaction<'static>, iid: *const c_char) -> *mut Concept {
-    try_release_map_optional(
-        borrow(transaction).concept().get_relation(iid_from_str(string_view(iid))).transpose(),
-        Concept::Relation,
-    )
+pub extern "C" fn concepts_get_relation(
+    transaction: *const Transaction<'static>,
+    iid: *const c_char,
+) -> *mut ConceptPromise {
+    release(ConceptPromise::relation(borrow(transaction).concept().get_relation(iid_from_str(string_view(iid)))))
 }
 
 #[no_mangle]
-pub extern "C" fn concepts_get_attribute(transaction: *const Transaction<'static>, iid: *const c_char) -> *mut Concept {
-    try_release_map_optional(
-        borrow(transaction).concept().get_attribute(iid_from_str(string_view(iid))).transpose(),
-        Concept::Attribute,
-    )
+pub extern "C" fn concepts_get_attribute(
+    transaction: *const Transaction<'static>,
+    iid: *const c_char,
+) -> *mut ConceptPromise {
+    release(ConceptPromise::attribute(borrow(transaction).concept().get_attribute(iid_from_str(string_view(iid)))))
 }
 
 pub struct SchemaExceptionIterator(CIterator<Result<SchemaException>>);

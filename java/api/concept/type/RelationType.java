@@ -23,6 +23,7 @@ package com.vaticle.typedb.driver.api.concept.type;
 
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.thing.Relation;
+import com.vaticle.typedb.driver.common.Promise;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -57,13 +58,13 @@ public interface RelationType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * relationType.create(transaction);
+     * relationType.create(transaction).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      */
     @CheckReturnValue
-    Relation create(TypeDBTransaction transaction);
+    Promise<? extends Relation> create(TypeDBTransaction transaction);
 
     /**
      * Retrieves all <code>Relation</code> objects that are instances of this <code>RelationType</code> or its subtypes.
@@ -120,48 +121,47 @@ public interface RelationType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * relationType.getRelates(transaction, roleLabel);
+     * relationType.getRelates(transaction, roleLabel).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param roleLabel Label of the role we wish to retrieve
      */
-    @Nullable
     @CheckReturnValue
-    RoleType getRelates(TypeDBTransaction transaction, String roleLabel);
+    Promise<? extends RoleType> getRelates(TypeDBTransaction transaction, String roleLabel);
 
-    @Nullable
     @CheckReturnValue
-    RoleType getRelatesOverridden(TypeDBTransaction transaction, RoleType roleType);
+    Promise<? extends RoleType> getRelatesOverridden(TypeDBTransaction transaction, RoleType roleType);
 
     /**
      * Retrieves a <code>RoleType</code> that is overridden by the role with the <code>role_label</code>.
      *
      * <h3>Examples</h3>
      * <pre>
-     * relationType.getRelatesOverridden(transaction, roleLabel);
+     * relationType.getRelatesOverridden(transaction, roleLabel).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param roleLabel Label of the role that overrides an inherited role
      */
-    @Nullable
     @CheckReturnValue
-    RoleType getRelatesOverridden(TypeDBTransaction transaction, String roleLabel);
+    Promise<? extends RoleType> getRelatesOverridden(TypeDBTransaction transaction, String roleLabel);
 
     /**
      * Sets the new role that this <code>RelationType</code> relates to.
      *
      * @see RelationType#setRelates(TypeDBTransaction, String, String)
      */
-    void setRelates(TypeDBTransaction transaction, String roleLabel);
+    @CheckReturnValue
+    Promise<Void> setRelates(TypeDBTransaction transaction, String roleLabel);
 
     /**
      * Sets the new role that this <code>RelationType</code> relates to.
      *
      * @see RelationType#setRelates(TypeDBTransaction, String, String)
      */
-    void setRelates(TypeDBTransaction transaction, String roleLabel, RoleType overriddenType);
+    @CheckReturnValue
+    Promise<Void> setRelates(TypeDBTransaction transaction, String roleLabel, RoleType overriddenType);
 
     /**
      * Sets the new role that this <code>RelationType</code> relates to.
@@ -169,35 +169,38 @@ public interface RelationType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * relationType.setRelates(transaction, roleLabel);
-     * relationType.setRelates(transaction, roleLabel, overriddenLabel);
+     * relationType.setRelates(transaction, roleLabel).resolve();
+     * relationType.setRelates(transaction, roleLabel, overriddenLabel).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param roleLabel The new role for the <code>RelationType</code> to relate to
      * @param overriddenLabel The label being overridden, if applicable
      */
-    void setRelates(TypeDBTransaction transaction, String roleLabel, String overriddenLabel);
+    @CheckReturnValue
+    Promise<Void> setRelates(TypeDBTransaction transaction, String roleLabel, String overriddenLabel);
 
     /**
      * Disallows this <code>RelationType</code> from relating to the given role.
      *
      * @see RelationType#unsetRelates(TypeDBTransaction, String)
      */
-    void unsetRelates(TypeDBTransaction transaction, RoleType roleType);
+    @CheckReturnValue
+    Promise<Void> unsetRelates(TypeDBTransaction transaction, RoleType roleType);
 
     /**
      * Disallows this <code>RelationType</code> from relating to the given role.
      *
      * <h3>Examples</h3>
      * <pre>
-     * relationType.unsetRelates(transaction, roleLabel);
+     * relationType.unsetRelates(transaction, roleLabel).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param roleLabel The role to not relate to the relation type.
      */
-    void unsetRelates(TypeDBTransaction transaction, String roleLabel);
+    @CheckReturnValue
+    Promise<Void> unsetRelates(TypeDBTransaction transaction, String roleLabel);
 
     /**
      * Retrieves all direct and indirect subtypes of the <code>RelationType</code>.
@@ -205,7 +208,7 @@ public interface RelationType extends ThingType {
      * 
      * @see RelationType#getSubtypes(TypeDBTransaction, Transitivity)
      */
-     @Override
+    @Override
     @CheckReturnValue
     Stream<? extends RelationType> getSubtypes(TypeDBTransaction transaction);
 
@@ -214,7 +217,7 @@ public interface RelationType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * relationType.getSubtypes(transaction, transitivity);
+     * relationType.getSubtypes(transaction, transitivity).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -229,11 +232,12 @@ public interface RelationType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * relationType.setSupertype(transaction, superRelationType);
+     * relationType.setSupertype(transaction, superRelationType).resolve();
      * </pre>
      *
      * @param transaction The current transaction
      * @param superRelationType The <code>RelationType</code> to set as the supertype of this <code>RelationType</code>
      */
-    void setSupertype(TypeDBTransaction transaction, RelationType superRelationType);
+    @CheckReturnValue
+    Promise<Void> setSupertype(TypeDBTransaction transaction, RelationType superRelationType);
 }

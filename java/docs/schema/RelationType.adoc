@@ -217,7 +217,7 @@ concept.asValue();
 [source,java]
 ----
 @CheckReturnValue
-Relation create​(TypeDBTransaction transaction)
+Promise<? extends Relation> create​(TypeDBTransaction transaction)
 ----
 
 Creates and returns an instance of this ``RelationType``. 
@@ -234,13 +234,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 
 [caption=""]
 .Returns
-`Relation`
+`Promise<? extends Relation>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-relationType.create(transaction);
+relationType.create(transaction).resolve();
 ----
 
 [#_RelationType_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction]
@@ -354,10 +354,9 @@ relationType.getRelates(transaction, transitivity);
 
 [source,java]
 ----
-@Nullable
 @CheckReturnValue
-RoleType getRelates​(TypeDBTransaction transaction,
-                    java.lang.String roleLabel)
+Promise<? extends RoleType> getRelates​(TypeDBTransaction transaction,
+                                       java.lang.String roleLabel)
 ----
 
 Retrieves roles that this ``RelationType`` relates to directly or via inheritance. If ``role_label`` is given, returns a corresponding ``RoleType`` or ``null``. 
@@ -375,13 +374,13 @@ a| `roleLabel` a| Label of the role we wish to retrieve a| `java.lang.String`
 
 [caption=""]
 .Returns
-`RoleType`
+`Promise<? extends RoleType>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-relationType.getRelates(transaction, roleLabel);
+relationType.getRelates(transaction, roleLabel).resolve();
 ----
 
 [#_RelationType_getRelatesOverridden_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType]
@@ -389,27 +388,25 @@ relationType.getRelates(transaction, roleLabel);
 
 [source,java]
 ----
-@Nullable
 @CheckReturnValue
-RoleType getRelatesOverridden​(TypeDBTransaction transaction,
-                              RoleType roleType)
+Promise<? extends RoleType> getRelatesOverridden​(TypeDBTransaction transaction,
+                                                 RoleType roleType)
 ----
 
 
 
 [caption=""]
 .Returns
-`RoleType`
+`Promise<? extends RoleType>`
 
 [#_RelationType_getRelatesOverridden_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
 ==== getRelatesOverridden
 
 [source,java]
 ----
-@Nullable
 @CheckReturnValue
-RoleType getRelatesOverridden​(TypeDBTransaction transaction,
-                              java.lang.String roleLabel)
+Promise<? extends RoleType> getRelatesOverridden​(TypeDBTransaction transaction,
+                                                 java.lang.String roleLabel)
 ----
 
 Retrieves a ``RoleType`` that is overridden by the role with the ``role_label``. 
@@ -427,13 +424,13 @@ a| `roleLabel` a| Label of the role that overrides an inherited role a| `java.la
 
 [caption=""]
 .Returns
-`RoleType`
+`Promise<? extends RoleType>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-relationType.getRelatesOverridden(transaction, roleLabel);
+relationType.getRelatesOverridden(transaction, roleLabel).resolve();
 ----
 
 [#_RelationType_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction]
@@ -486,7 +483,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtype
 .Code examples
 [source,java]
 ----
-relationType.getSubtypes(transaction, transitivity);
+relationType.getSubtypes(transaction, transitivity).resolve();
 ----
 
 [#_RelationType_isAttribute_]
@@ -701,8 +698,9 @@ concept.isValue();
 
 [source,java]
 ----
-void setRelates​(TypeDBTransaction transaction,
-                java.lang.String roleLabel)
+@CheckReturnValue
+Promise<java.lang.Void> setRelates​(TypeDBTransaction transaction,
+                                   java.lang.String roleLabel)
 ----
 
 Sets the new role that this ``RelationType`` relates to.
@@ -713,16 +711,17 @@ See also: <<#_setRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_la
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [#_RelationType_setRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String_com_vaticle_typedb_driver_api_concept_type_RoleType]
 ==== setRelates
 
 [source,java]
 ----
-void setRelates​(TypeDBTransaction transaction,
-                java.lang.String roleLabel,
-                RoleType overriddenType)
+@CheckReturnValue
+Promise<java.lang.Void> setRelates​(TypeDBTransaction transaction,
+                                   java.lang.String roleLabel,
+                                   RoleType overriddenType)
 ----
 
 Sets the new role that this ``RelationType`` relates to.
@@ -733,16 +732,17 @@ See also: <<#_setRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_la
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [#_RelationType_setRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String_java_lang_String]
 ==== setRelates
 
 [source,java]
 ----
-void setRelates​(TypeDBTransaction transaction,
-                java.lang.String roleLabel,
-                java.lang.String overriddenLabel)
+@CheckReturnValue
+Promise<java.lang.Void> setRelates​(TypeDBTransaction transaction,
+                                   java.lang.String roleLabel,
+                                   java.lang.String overriddenLabel)
 ----
 
 Sets the new role that this ``RelationType`` relates to. If we are setting an overriding type this way, we have to also pass the overridden type as a second argument. 
@@ -761,14 +761,14 @@ a| `overriddenLabel` a| The label being overridden, if applicable a| `java.lang.
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-relationType.setRelates(transaction, roleLabel);
- relationType.setRelates(transaction, roleLabel, overriddenLabel);
+relationType.setRelates(transaction, roleLabel).resolve();
+ relationType.setRelates(transaction, roleLabel, overriddenLabel).resolve();
 ----
 
 [#_RelationType_setSupertype_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RelationType]
@@ -776,8 +776,9 @@ relationType.setRelates(transaction, roleLabel);
 
 [source,java]
 ----
-void setSupertype​(TypeDBTransaction transaction,
-                  RelationType superRelationType)
+@CheckReturnValue
+Promise<java.lang.Void> setSupertype​(TypeDBTransaction transaction,
+                                     RelationType superRelationType)
 ----
 
 Sets the supplied ``RelationType`` as the supertype of the current ``RelationType``. 
@@ -795,13 +796,13 @@ a| `superRelationType` a| The ``RelationType`` to set as the supertype of this `
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-relationType.setSupertype(transaction, superRelationType);
+relationType.setSupertype(transaction, superRelationType).resolve();
 ----
 
 [#_RelationType_unsetRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType]
@@ -809,8 +810,9 @@ relationType.setSupertype(transaction, superRelationType);
 
 [source,java]
 ----
-void unsetRelates​(TypeDBTransaction transaction,
-                  RoleType roleType)
+@CheckReturnValue
+Promise<java.lang.Void> unsetRelates​(TypeDBTransaction transaction,
+                                     RoleType roleType)
 ----
 
 Disallows this ``RelationType`` from relating to the given role.
@@ -821,15 +823,16 @@ See also: <<#_unsetRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [#_RelationType_unsetRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
 ==== unsetRelates
 
 [source,java]
 ----
-void unsetRelates​(TypeDBTransaction transaction,
-                  java.lang.String roleLabel)
+@CheckReturnValue
+Promise<java.lang.Void> unsetRelates​(TypeDBTransaction transaction,
+                                     java.lang.String roleLabel)
 ----
 
 Disallows this ``RelationType`` from relating to the given role. 
@@ -847,13 +850,13 @@ a| `roleLabel` a| The role to not relate to the relation type. a| `java.lang.Str
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-relationType.unsetRelates(transaction, roleLabel);
+relationType.unsetRelates(transaction, roleLabel).resolve();
 ----
 
 // end::methods[]
