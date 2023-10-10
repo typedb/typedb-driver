@@ -25,13 +25,14 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 typedb_behaviour_py_test(
     name = "test",
-    feats = ["@vaticle_typedb_behaviour//typeql/language:expression.feature"],
+    feats = ["@vaticle_typedb_behaviour//query/language:insert.feature"],
     steps = [
         "//python/tests/behaviour/connection:steps",
         "//python/tests/behaviour/connection/database:steps",
         "//python/tests/behaviour/connection/session:steps",
         "//python/tests/behaviour/connection/transaction:steps",
-        "//python/tests/behaviour/typeql:steps",
+        "//python/tests/behaviour/query:steps",
+        "//python/tests/behaviour/util:util_steps"
     ],
     deps = [
         "//python:driver_python",

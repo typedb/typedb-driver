@@ -19,30 +19,9 @@
 # under the License.
 #
 
-package(default_visibility = ["//python/tests/behaviour:__subpackages__"])
-load("//python/tests/behaviour:behave_rule.bzl", "typedb_behaviour_py_test")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-typedb_behaviour_py_test(
-    name = "test",
-    feats = ["@vaticle_typedb_behaviour//typeql/language:get.feature"],
-    steps = [
-        "//python/tests/behaviour/connection:steps",
-        "//python/tests/behaviour/connection/database:steps",
-        "//python/tests/behaviour/connection/session:steps",
-        "//python/tests/behaviour/connection/transaction:steps",
-        "//python/tests/behaviour/typeql:steps",
-    ],
-    deps = [
-        "//python:driver_python",
-        "//python/tests/behaviour:context",
-        "//python/tests/behaviour/util:util",
-        "//python/tests/behaviour/config:parameters",
-        "//python/tests/behaviour/background",
-    ],
-    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
-    size = "medium",
-)
+package(default_visibility = ["//python/tests/behaviour:__subpackages__"])
 
 checkstyle_test(
     name = "checkstyle",
