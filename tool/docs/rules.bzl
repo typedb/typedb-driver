@@ -21,15 +21,13 @@
 
 load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
 
-def html_docs_parser(name, data, language, feature=""):
+def html_docs_parser(name, data, language, modes = {}):
     script_name = language.title() + "DocsParser"
 
     args = ["$(location %s)" % target for target in data] + [
         "--output",
         "%s/docs" % language,
-    ]
-    if feature:
-        args += ["--feature", feature]
+    ] + ["--mode=$(location %s)=%s" % (target, modes[target]) for target in modes]
     kt_jvm_binary(
         name = name,
         srcs = [

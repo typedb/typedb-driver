@@ -28,6 +28,7 @@ data class Method(
     val args: List<Variable> = listOf(),
     val description: List<String> = listOf(),
     val examples: List<String> = listOf(),
+    val mode: String? = null,
     val returnDescription: String? = null,
     val returnType: String? = null,
 ) {
@@ -68,50 +69,42 @@ data class Method(
         return result
     }
 
-    fun toAsciiDocFeaturesMerged(syncMethod: Method): String {
+    fun toAsciiDocFeaturesMerged(vararg other_methods: Method): String {
+        val methods = other_methods.toList() + listOf(this)
         val builder = AsciiDocBuilder()
         val language = "rust"
         var result = ""
         result += builder.anchor(this.anchor ?: replaceSymbolsForAnchor(this.name))
         result += builder.header(4, this.name)
 
-        result += builder.featureTabsIfNeeded(
-            builder.codeBlock(this.signature, language),
-            builder.codeBlock(syncMethod.signature, language),
-        )
+        result += builder.tabsIfNotEqual(methods.map {
+            Pair(it.mode!!, builder.codeBlock(it.signature, language))
+        })
 
-        result += builder.featureTabsIfNeeded(
-            "${this.description.joinToString("\n\n")}\n\n",
-            "${syncMethod.description.joinToString("\n\n")}\n\n",
-        )
+        result += builder.tabsIfNotEqual(methods.map {
+            Pair(it.mode!!, "${it.description.joinToString("\n\n")}\n\n")
+        })
 
         if (this.args.isNotEmpty()) {
             result += builder.caption("Input parameters")
             val tableBuilder = AsciiDocTableBuilder(listOf("Name", "Description", "Type"))
             result += tableBuilder.header()
-            result += builder.featureTabsIfNeeded(
-                tableBuilder.body(this.args.map { it.toTableDataAsArgument(language) }),
-                tableBuilder.body(syncMethod.args.map { it.toTableDataAsArgument(language) }),
-            )
+            result += builder.tabsIfNotEqual(methods.map {
+                Pair(it.mode!!, tableBuilder.body(it.args.map { it.toTableDataAsArgument(language) }))
+            })
             result += "\n"
         }
 
         result += builder.caption("Returns")
-        result += builder.featureTabsIfNeeded(
-            builder.codeBlock(this.returnType, language),
-            builder.codeBlock(syncMethod.returnType, language),
-        )
+        result += builder.tabsIfNotEqual(methods.map {
+            Pair(it.mode!!, builder.codeBlock(it.returnType, language))
+        })
 
         if (this.examples.isNotEmpty()) {
             result += builder.caption("Code examples")
-            result += builder.featureTabsIfNeeded(
-                this.examples.joinToString("") {
-                    builder.codeBlock(it, language)
-                },
-                syncMethod.examples.joinToString("") {
-                    builder.codeBlock(it, language)
-                },
-            )
+            result += builder.tabsIfNotEqual(methods.map {
+                Pair(it.mode!!, it.examples.joinToString("") { builder.codeBlock(it, language) })
+            })
         }
 
         return result

@@ -57,7 +57,7 @@ data class Class(
                 || superClasses.isNotEmpty()
     }
 
-    fun toAsciiDoc(language: String, syncClass: Class? = null): String {
+    fun toAsciiDoc(language: String, otherClass: Class? = null): String {
         val builder = AsciiDocBuilder()
         var result = ""
         result += builder.anchor(this.anchor ?: replaceSymbolsForAnchor(this.name))
@@ -133,13 +133,13 @@ data class Class(
 
         if (this.methods.isNotEmpty()) {
             result += builder.tagBegin("methods")
-            if (syncClass == null) {
+            if (otherClass == null) {
                 this.methods.forEach { result += it.toAsciiDoc(language) }
             } else {
-                val syncMethods = syncClass.methods.associateBy {
+                val otherMethods = otherClass.methods.associateBy {
                     it.name
                 }
-                this.methods.forEach { result += it.toAsciiDocFeaturesMerged(syncMethods[it.name]!!) }
+                this.methods.forEach { result += it.toAsciiDocFeaturesMerged(otherMethods[it.name]!!) }
             }
             result += builder.tagEnd("methods")
         }

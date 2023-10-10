@@ -106,7 +106,7 @@ html_docs_parser(
     name = "docs_adoc",
     data = [":docs_html_async", ":docs_html_sync"],
     language = "rust",
-    feature = "merge",
+    modes = {":docs_html_async": "async", ":docs_html_sync": "sync"}
 )
 
 checkstyle_test(

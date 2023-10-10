@@ -37,14 +37,18 @@ fun main(args: Array<String>): Unit = exitProcess(CommandLine(RustDocParser()).e
 
 @CommandLine.Command(name = "RustDocsParser", mixinStandardHelpOptions = true)
 class RustDocParser : Callable<Unit> {
-    @Parameters(paramLabel = "<input>", description = ["Input directory (for rust specify async first)"])
+    @Parameters(paramLabel = "<input>", description = ["Input directories"])
     private lateinit var inputDirectoryNames: List<String>
 
     @CommandLine.Option(names = ["--output", "-o"], required = true)
     private lateinit var outputDirectoryName: String
 
-    @CommandLine.Option(names = ["--feature", "-f"], required = false)
-    private lateinit var feature: String
+//    @CommandLine.Option(names = ["--feature", "-f"], required = false)
+//    private lateinit var feature: String
+
+    /* keys: input targets, values: modes (features) */
+    @CommandLine.Option(names = ["--mode", "-m"], required = true)
+    private lateinit var modes: HashMap<String, String>
 
     @Override
     override fun call() {
@@ -54,30 +58,31 @@ class RustDocParser : Callable<Unit> {
             Files.createDirectory(baseDocsDir)
         }
 
-        if (feature != "merge") {
+        if (modes.size == 1) {
+            val feature = modes[inputDirectoryNames[0]]!!
             val docsDir = baseDocsDir.resolve(feature)
             if (!docsDir.toFile().exists()) {
                 Files.createDirectory(docsDir)
             }
-            parseDirectory(inputDirectoryNames[0]).forEach { (className, parsedClass) ->
+            parseDirectory(inputDirectoryNames[0], feature).forEach { (className, parsedClass) ->
                 val outputFile = docsDir.resolve(className.replace(" ", "_") + ".adoc").toFile()
                 outputFile.createNewFile()
                 outputFile.writeText(parsedClass.toAsciiDoc("rust"))
             }
         } else {
             assert(inputDirectoryNames.size == 2)
-            val parsedAsync = parseDirectory(inputDirectoryNames[0])
-            val parsedSync = parseDirectory(inputDirectoryNames[1])
-            parsedAsync.forEach { (className, classAsync) ->
+            val parsedDirs = inputDirectoryNames.map { parseDirectory(it, modes[it]!!) }
+//            val parsedSync = parseDirectory(inputDirectoryNames[1])
+            parsedDirs[0].forEach { (className, classFirst) ->
                 val outputFile = baseDocsDir.resolve(className.replace(" ", "_") + ".adoc").toFile()
                 outputFile.createNewFile()
-                outputFile.writeText(classAsync.toAsciiDoc("rust", parsedSync[className]!!))
+                outputFile.writeText(classFirst.toAsciiDoc("rust", parsedDirs[1][className]!!))
             }
 
         }
     }
 
-    fun parseDirectory(inputDirectoryName: String): HashMap<String, Class> {
+    fun parseDirectory(inputDirectoryName: String, mode: String): HashMap<String, Class> {
         val parsedClasses: HashMap<String, Class> = hashMapOf()
         File(inputDirectoryName).walkTopDown().filter {
             it.toString().contains("struct.") || it.toString().contains("trait.") || it.toString().contains("enum.")
@@ -86,11 +91,11 @@ class RustDocParser : Callable<Unit> {
             val parsed = Jsoup.parse(html)
             val anchor = getAnchorFromUrl(it.toString())
             val parsedClass = if (!parsed.select(".main-heading h1 a.struct").isNullOrEmpty()) {
-                parseClass(parsed, anchor)
+                parseClass(parsed, anchor, mode)
             } else if (!parsed.select(".main-heading h1 a.trait").isNullOrEmpty()) {
-                parseTrait(parsed, anchor)
+                parseTrait(parsed, anchor, mode)
             } else if (!parsed.select(".main-heading h1 a.enum").isNullOrEmpty()) {
-                parseEnum(parsed, anchor)
+                parseEnum(parsed, anchor, mode)
             } else {
                 null
             }
@@ -103,7 +108,7 @@ class RustDocParser : Callable<Unit> {
         return parsedClasses
     }
 
-    fun parseClass(document: Element, classAnchor: String): Class {
+    fun parseClass(document: Element, classAnchor: String, mode: String): Class {
         val className = document.selectFirst(".main-heading h1 a.struct")!!.text()
         val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { it.html() }
 
@@ -113,12 +118,12 @@ class RustDocParser : Callable<Unit> {
 
         val methods =
             document.select("#implementations-list details[class*=method-toggle]:has(summary section.method)").map {
-                parseMethod(it, classAnchor)
+                parseMethod(it, classAnchor, mode)
             } + document.select(
                 "#trait-implementations-list summary:has(section:not(section:has(h3 a.trait[href^=http]))) " +
                         "+ .impl-items details[class*=method-toggle]:has(summary section.method)"
             ).map {
-                parseMethod(it, classAnchor)
+                parseMethod(it, classAnchor, mode)
             }
 
         val traits = document.select(".sidebar-elems h3:has(a[href=#trait-implementations]) + ul li").map { it.text() }
@@ -133,17 +138,17 @@ class RustDocParser : Callable<Unit> {
         )
     }
 
-    fun parseTrait(document: Element, classAnchor: String): Class {
+    fun parseTrait(document: Element, classAnchor: String, mode: String): Class {
         val className = document.selectFirst(".main-heading h1 a.trait")!!.text()
         val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { it.html() }
 
         val methods =
             document.select("#required-methods + .methods details[class*=method-toggle]:has(summary section.method)")
                 .map {
-                    parseMethod(it, classAnchor)
+                    parseMethod(it, classAnchor, mode)
                 } + document.select("#provided-methods + .methods details[class*=method-toggle]:has(summary section.method)")
                 .map {
-                    parseMethod(it, classAnchor)
+                    parseMethod(it, classAnchor, mode)
                 }
 
         val implementors = document.select("#implementors-list > section > .code-header > .struct")
@@ -160,14 +165,14 @@ class RustDocParser : Callable<Unit> {
         )
     }
 
-    fun parseEnum(document: Element, classAnchor: String): Class {
+    fun parseEnum(document: Element, classAnchor: String, mode: String): Class {
         val className = document.selectFirst(".main-heading h1 a.enum")!!.text()
         val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { it.html() }
 
         val variants = document.select("section.variant").map { parseEnumConstant(it) }
 
         val methods = document.select("#implementations-list details[class*=method-toggle]:has(summary section.method)")
-            .map { parseMethod(it, classAnchor) }
+            .map { parseMethod(it, classAnchor, mode) }
 
         return Class(
             name = className,
@@ -178,7 +183,7 @@ class RustDocParser : Callable<Unit> {
         )
     }
 
-    fun parseMethod(element: Element, classAnchor: String): Method {
+    fun parseMethod(element: Element, classAnchor: String, mode: String): Method {
         val methodSignature = enhanceSignature(element.selectFirst("summary section h4")!!.html())
         val methodName = element.selectFirst("summary section h4 a.fn")!!.text()
         val methodAnchor = replaceSymbolsForAnchor(
@@ -215,6 +220,7 @@ class RustDocParser : Callable<Unit> {
             args = methodArgs,
             description = methodDescr,
             examples = methodExamples,
+            mode = mode,
             returnType = methodReturnType,
         )
 

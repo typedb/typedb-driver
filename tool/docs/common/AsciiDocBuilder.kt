@@ -70,16 +70,14 @@ class AsciiDocBuilder {
         return result
     }
 
-    fun featureTabsIfNeeded(async: String, sync: String): String {
-        return if (async == sync) {
-            async
+    /**
+     * Gets the list if pairs {tab_caption, tab_content} and produces tabs if not all elements are equal
+     */
+    fun tabsIfNotEqual(tabs: List<Pair<String, String>>): String {
+        return if (tabs.all { it.second == tabs[0].second }) {
+            tabs[0].second
         } else {
-            this.tabs(
-                listOf(
-                    Pair("async", async),
-                    Pair("sync", sync),
-                )
-            )
+            this.tabs(tabs.sortedBy { it.first })
         }
     }
 }
