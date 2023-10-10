@@ -23,6 +23,6 @@
 
 extern const char* TYPEDB_CORE_ADDRESS;
 
-bool print_error(char* filename, int lineno);
+bool print_error(const char* filename, int lineno);
 
-void delete_database_if_exists(DatabaseManager* dbMgr, char* name);
+void delete_database_if_exists(DatabaseManager* dbMgr, const char* name);

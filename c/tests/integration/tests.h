@@ -19,4 +19,10 @@
  * under the License.
  */
 
-int test_basic_query();
+int test_database_management();
+
+int test_query_schema();
+int test_query_data();
+
+int test_concept_api_schema();
+int test_concept_api_data();
