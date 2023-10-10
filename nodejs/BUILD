@@ -133,7 +133,7 @@ js_binary(
 )
 
 typedoc_docs(
-    name = "driver_docs",
+    name = "docs_html",
     script = ":typedoc_runner_bin",
     deps = [
         ":typedb-protocol",
@@ -158,8 +158,8 @@ typedoc_docs(
 )
 
 html_docs_parser(
-    name = "driver_adoc",
-    data = ":driver_docs",
+    name = "docs_adoc",
+    data = [":docs_html"],
     language = "nodejs",
 )
 

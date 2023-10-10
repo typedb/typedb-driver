@@ -21,18 +21,15 @@
 
 load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
 
-def html_docs_parser(name, data, language, feature="", merge_data=""):
+def html_docs_parser(name, data, language, feature=""):
     script_name = language.title() + "DocsParser"
 
-    rule_args = [
-       "$(location %s)" % data,
-       "%s/docs" % language,
-       feature,
+    args = ["$(location %s)" % target for target in data] + [
+        "--output",
+        "%s/docs" % language,
     ]
-    rule_data = [data]
-    if feature == "merge":
-        rule_args.append("$(location %s)" % merge_data)
-        rule_data.append(merge_data)
+    if feature:
+        args += ["--feature", feature]
     kt_jvm_binary(
         name = name,
         srcs = [
@@ -46,10 +43,11 @@ def html_docs_parser(name, data, language, feature="", merge_data=""):
             "//tool/docs:common/Variable.kt",
         ],
         main_class = "com.vaticle.typedb.driver.tool.doc." + language + "." + script_name + "Kt",
-        args = rule_args,
+        args = args,
         deps = [
             "@maven//:org_jsoup_jsoup",
+            "@maven//:info_picocli_picocli",
         ],
-        data = rule_data,
+        data = data,
         visibility = ["//visibility:public"],
     )

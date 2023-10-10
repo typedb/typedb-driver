@@ -53,7 +53,7 @@ py_native_lib_rename(
 )
 
 sphinx_docs(
-    name = "driver_docs",
+    name = "docs_html",
     target = ":assemble-pip39",
     out = "driver_docs_sphinx",
     sphinx_conf = "conf.py",
@@ -62,8 +62,8 @@ sphinx_docs(
 )
 
 html_docs_parser(
-    name = "driver_adoc",
-    data = ":driver_docs",
+    name = "docs_adoc",
+    data = [":docs_html"],
     language = "python",
 )
 

@@ -28,7 +28,7 @@ load("@vaticle_dependencies//builder/swig:java.bzl", "swig_java")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//tool/docs:rules.bzl", "html_docs_parser")
-load("//tool/docs:rust/rules.bzl", "rust_docs_parser")
+load("//tool/docs:rust/rules.bzl", "rust_docs")
 
 typedb_driver_srcs = glob(["src/**/*.rs"])
 typedb_driver_tags = ["crate-name=typedb-driver"]
@@ -92,18 +92,20 @@ deploy_crate(
     target = ":assemble_crate",
 )
 
-#rust_docs_parser(
-#    name = "driver_adoc_async",
-#    feature = "async",
-#)
-#
-#rust_docs_parser(
-#    name = "driver_adoc_sync",
-#    feature = "sync",
-#)
+rust_docs(
+    name = "docs_html_async",
+    feature = "async",
+)
 
-rust_docs_parser(
-    name = "driver_adoc",
+rust_docs(
+    name = "docs_html_sync",
+    feature = "sync",
+)
+
+html_docs_parser(
+    name = "docs_adoc",
+    data = [":docs_html_async", ":docs_html_sync"],
+    language = "rust",
     feature = "merge",
 )
 

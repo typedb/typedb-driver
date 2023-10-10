@@ -20,7 +20,7 @@
 # under the License.
 #
 
-bazel run //java:driver_adoc
-bazel run //nodejs:driver_adoc
-bazel run //python:driver_adoc
-bazel run //rust:driver_adoc
+bazel run //java:docs_adoc
+bazel run //nodejs:docs_adoc
+bazel run //python:docs_adoc
+bazel run //rust:docs_adoc

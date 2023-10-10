@@ -118,15 +118,15 @@ javadoc_library(
 )
 
 genrule(
-    name = "driver_docs",
+    name = "docs_html",
     srcs = [":driver_docs_library"],
     outs = ["driver_docs_javadoc"],
     cmd = "mkdir $@ && unzip $< -d $@",
 )
 
 html_docs_parser(
-    name = "driver_adoc",
-    data = ":driver_docs",
+    name = "docs_adoc",
+    data = [":docs_html"],
     language = "java",
 )
 
