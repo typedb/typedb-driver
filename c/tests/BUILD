@@ -21,6 +21,7 @@
 
 package(default_visibility = ["//visibility:public"])
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@vaticle_dependencies//builder/cpp:rules.bzl", "clang_format_test")
 
 cc_library(
     name = "test-driver-lib",
@@ -46,6 +47,11 @@ cc_test(
         "@gtest//:gtest",
         "@gtest//:gtest_main"
     ],
+)
+
+clang_format_test(
+    name = "clang_format",
+    include = glob(["integration/*.*"])
 )
 
 checkstyle_test(
