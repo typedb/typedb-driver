@@ -92,7 +92,7 @@ public class Loader {
     }
 
     private static Path unpackNativeResources(URI resourceURI) throws IOException {
-        Path tempPath = Files.createDirectory(Paths.get("typedb-driver-tmp"));
+        Path tempPath = Files.createTempDirectory("typedb-driver-lib");
         tempPath.toFile().deleteOnExit();
 
         FileSystem fs = FileSystems.newFileSystem(resourceURI, Collections.emptyMap());
@@ -125,7 +125,6 @@ public class Loader {
 
         static Arch detect() {
             String arch = System.getProperty("os.arch").toLowerCase();
-            System.out.println("Os arch: " + arch);
             if (arch.equals("amd64") || arch.equals("x86_64") || arch.contains("x64")) {
                 return x86_64;
             } else if (arch.equals("aarch64") || arch.contains("arm64")) {
