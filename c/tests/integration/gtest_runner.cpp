@@ -26,15 +26,15 @@ extern "C" {
 }
 
 TEST(BasicTestSuite, TestDatabaseManagement) {
-    EXPECT_EQ(test_database_management(), 0);
+    EXPECT_EQ(test_database_management(), true);
 }
 
 TEST(BasicTestSuite, TestQuery) {
-    EXPECT_EQ(test_query_schema(), 0);
-    EXPECT_EQ(test_query_data(), 0);
+    EXPECT_EQ(test_query_schema(), true);
+    EXPECT_EQ(test_query_data(), true);
 }
 
 TEST(BasicTestSuite, TestConceptAPI) {
-    EXPECT_EQ(test_concept_api_schema(), 0);
-    EXPECT_EQ(test_concept_api_data(), 0);
+    EXPECT_EQ(test_concept_api_schema(), true);
+    EXPECT_EQ(test_concept_api_data(), true);
 }
