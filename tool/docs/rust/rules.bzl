@@ -20,7 +20,7 @@
 #
 
 load("@rules_rust//rust:defs.bzl", "rust_doc")
-load("//tool/docs:rules.bzl", "html_docs_parser")
+load("//tool/docs:rules.bzl", "html_docs_to_adoc")
 
 def rust_docs(name, feature):
     # rust_doc from rules_rust < 0.20 produces a zip-archive

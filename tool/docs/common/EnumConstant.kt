@@ -32,7 +32,7 @@ data class EnumConstant(
             assert(this.type == null || this.value == null)
             this.value?.let { result.add("`$it`") }
                 ?: this.type?.let { result.add("`$it`") }
-                ?: { result.add("") }
+                ?: run { result.add("") }
         }
         return result
     }

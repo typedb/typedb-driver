@@ -36,7 +36,7 @@ load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("//nodejs:tool/typedoc/rules.bzl", "typedoc_docs")
-load("//tool/docs:rules.bzl", "html_docs_parser")
+load("//tool/docs:rules.bzl", "html_docs_to_adoc")
 
 npm_link_all_packages(
     name = "node_modules",
@@ -159,7 +159,7 @@ typedoc_docs(
     out = "driver_docs_typedoc",
 )
 
-html_docs_parser(
+html_docs_to_adoc(
     name = "docs_adoc",
     data = [":docs_html"],
     language = "nodejs",

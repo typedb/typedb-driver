@@ -29,7 +29,7 @@ load("@vaticle_dependencies//library/maven:artifacts.bzl", artifacts_org = "arti
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":rules.bzl", "swig_native_java_library")
 load("@google_bazel_common//tools/javadoc:javadoc.bzl", "javadoc_library")
-load("//tool/docs:rules.bzl", "html_docs_parser")
+load("//tool/docs:rules.bzl", "html_docs_to_adoc")
 
 java_library(
     name = "driver-java",
@@ -124,7 +124,7 @@ genrule(
     cmd = "mkdir $@ && unzip $< -d $@",
 )
 
-html_docs_parser(
+html_docs_to_adoc(
     name = "docs_adoc",
     data = [":docs_html"],
     language = "java",

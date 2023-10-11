@@ -36,16 +36,13 @@ import kotlin.system.exitProcess
 
 fun main(args: Array<String>): Unit = exitProcess(CommandLine(JavaDocParser()).execute(*args))
 
-@CommandLine.Command(name = "RustDocsParser", mixinStandardHelpOptions = true)
+@CommandLine.Command(name = "JavaDocsParser", mixinStandardHelpOptions = true)
 class JavaDocParser : Callable<Unit> {
     @Parameters(paramLabel = "<input>", description = ["Input directory (for rust specify async first)"])
     private lateinit var inputDirectoryNames: List<String>
 
     @CommandLine.Option(names = ["--output", "-o"], required = true)
     private lateinit var outputDirectoryName: String
-
-    @CommandLine.Option(names = ["--feature", "-f"], required = false)
-    private lateinit var feature: String
 
     @Override
     override fun call() {

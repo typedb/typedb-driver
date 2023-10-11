@@ -21,7 +21,7 @@
 
 load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
 
-def html_docs_parser(name, data, language, modes = {}):
+def html_docs_to_adoc(name, data, language, modes = {}):
     script_name = language.title() + "DocsParser"
 
     args = ["$(location %s)" % target for target in data] + [

@@ -43,10 +43,9 @@ class RustDocParser : Callable<Unit> {
     @CommandLine.Option(names = ["--output", "-o"], required = true)
     private lateinit var outputDirectoryName: String
 
-//    @CommandLine.Option(names = ["--feature", "-f"], required = false)
-//    private lateinit var feature: String
-
-    /* keys: input targets, values: modes (features) */
+    /**
+     * --mode=key=value, where key is an input target, and value is a mode (feature)
+     */
     @CommandLine.Option(names = ["--mode", "-m"], required = true)
     private lateinit var modes: HashMap<String, String>
 
@@ -72,7 +71,6 @@ class RustDocParser : Callable<Unit> {
         } else {
             assert(inputDirectoryNames.size == 2)
             val parsedDirs = inputDirectoryNames.map { parseDirectory(it, modes[it]!!) }
-//            val parsedSync = parseDirectory(inputDirectoryNames[1])
             parsedDirs[0].forEach { (className, classFirst) ->
                 val outputFile = baseDocsDir.resolve(className.replace(" ", "_") + ".adoc").toFile()
                 outputFile.createNewFile()

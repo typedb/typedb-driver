@@ -29,6 +29,10 @@ class AsciiDocTableBuilder(private val headers: List<String>) {
         rows.add(row)
     }
 
+    fun build(): String {
+        return this.header() + this.body()
+    }
+
     private fun header(): String {
         return "[cols=\"~" + ",~".repeat(this.headers.size - 1) +
                 "\"]\n[options=\"header\"]\n" +
@@ -42,9 +46,5 @@ class AsciiDocTableBuilder(private val headers: List<String>) {
 
     private fun row(row: List<String?>): String {
         return "a| " + row.joinToString(" a| ") + "\n"
-    }
-
-    fun build(): String {
-        return this.header() + this.body()
     }
 }
