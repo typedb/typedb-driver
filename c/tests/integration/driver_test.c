@@ -256,10 +256,6 @@ int test_concept_api_schema() {
     Transaction* transaction = 0;
     Options* opts = 0;
 
-    ConceptIterator* it = 0;
-    Concept* nameType = 0;
-    Concept* rootAttributeType = 0;
-
     int ret = 1;
 
     conn = connection_open_core(TYPEDB_CORE_ADDRESS);
@@ -284,33 +280,39 @@ int test_concept_api_schema() {
 
         transaction = transaction_new(session, Write, opts);
         if (0 == transaction) goto cleanup;
-
-        Concept* definedNameType = concepts_put_attribute_type(transaction, "name", String);
-        if (0 == definedNameType) goto cleanup;
-        else concept_drop(definedNameType);
-
-        bool foundName = false;
-        if (
-            0 != (nameType = concepts_get_attribute_type(transaction, "name")) &&
-            0 != (rootAttributeType = concepts_get_attribute_type(transaction, "attribute")) &&
-            0 != (it = attribute_type_get_subtypes(transaction, rootAttributeType, Transitive))) {
-            Concept* concept;
-            while (0 != (concept = concept_iterator_next(it))) {
-                char* label = thing_type_get_label(concept);
-                foundName = foundName || (0 == strcmp(label, "name"));
-                free(label);
-                concept_drop(concept);
-            }
-        } else {
-            goto cleanup;
+        {
+            Concept* definedNameType = concepts_put_attribute_type(transaction, "name", String);
+            if (0 == definedNameType) goto cleanup;
+            else concept_drop(definedNameType);
         }
 
-        transaction_commit(transaction);
-        transaction = 0;
+        {
+            ConceptIterator* it = 0;
+            Concept* nameType = 0;
+            Concept* rootAttributeType = 0;
+            bool foundName = false;
+            if (
+                0 != (nameType = concepts_get_attribute_type(transaction, "name")) &&
+                0 != (rootAttributeType = concepts_get_attribute_type(transaction, "attribute")) &&
+                0 != (it = attribute_type_get_subtypes(transaction, rootAttributeType, Transitive))) {
+                Concept* concept;
+                while (0 != (concept = concept_iterator_next(it))) {
+                    char* label = thing_type_get_label(concept);
+                    foundName = foundName || (0 == strcmp(label, "name"));
+                    free(label);
+                    concept_drop(concept);
+                }
+            }
+            concept_iterator_drop(it);
+            concept_drop(rootAttributeType);
+            concept_drop(nameType);
 
-        if (!foundName) {
-            fprintf(stderr, "Did not find type \'name\' in subtypes of attribute.\n");
-            goto cleanup;
+            transaction_commit(transaction);
+            transaction = 0;
+            if (!foundName) {
+                fprintf(stderr, "Did not find type \'name\' in subtypes of attribute.\n");
+                goto cleanup;
+            }
         }
     }
 
@@ -318,9 +320,6 @@ int test_concept_api_schema() {
 
 cleanup:
     if (check_error()) print_error(__FILE__, __LINE__);
-    concept_iterator_drop(it);
-    concept_drop(rootAttributeType);
-    concept_drop(nameType);
 
     transaction_drop(transaction);
     session_drop(session);
@@ -369,9 +368,12 @@ int test_concept_api_data() {
         transaction = transaction_new(session, Write, opts);
         if (0 == transaction) goto cleanup;
 
-        Concept* definedNameType = concepts_put_attribute_type(transaction, "name", String);
-        if (0 == definedNameType) goto cleanup;
-        else concept_drop(definedNameType);
+        {
+            Concept* definedNameType = concepts_put_attribute_type(transaction, "name", String);
+            if (0 == definedNameType) goto cleanup;
+            else concept_drop(definedNameType);
+        }
+
         transaction_commit(transaction);
         transaction = 0;
 
@@ -386,30 +388,33 @@ int test_concept_api_data() {
 
         transaction = transaction_new(session, Write, opts);
         if (0 == transaction) goto cleanup;
-
         if (0 == (nameType = concepts_get_attribute_type(transaction, "name"))) goto cleanup;
-
-        Concept* valueOfJohn = value_new_string("John");
-        if (valueOfJohn == 0) goto cleanup;
-        Concept* insertedJohn = attribute_type_put(transaction, nameType, valueOfJohn);
-        if (insertedJohn == 0) goto cleanup;
-        concept_drop(insertedJohn);
-        concept_drop(valueOfJohn);
-
-        ConceptIterator* it = attribute_type_get_instances(transaction, nameType, Transitive);
-        if (0 == it) goto cleanup;
-
-        Concept* concept;
-        bool foundJohn = false;
-        while (0 != (concept = concept_iterator_next(it))) {
-            Concept* asValue = attribute_get_value(concept);
-            char* attr = value_get_string(asValue);
-            foundJohn = foundJohn || (0 == strcmp(attr, "John"));
-            free(attr);
-            concept_drop(asValue);
-            concept_drop(concept);
+        {
+            Concept* valueOfJohn = 0;
+            Concept* insertedJohn = 0;
+            bool success = 0 != (valueOfJohn = value_new_string("John")) &&
+                           0 != (insertedJohn = attribute_type_put(transaction, nameType, valueOfJohn));
+            concept_drop(insertedJohn);
+            concept_drop(valueOfJohn);
+            if (!success) goto cleanup;
         }
-        concept_iterator_drop(it);
+
+        bool foundJohn = false;
+        {
+            ConceptIterator* it = attribute_type_get_instances(transaction, nameType, Transitive);
+            if (0 == it) goto cleanup;
+
+            Concept* concept;
+            while (0 != (concept = concept_iterator_next(it))) {
+                Concept* asValue = attribute_get_value(concept);
+                char* attr = value_get_string(asValue);
+                foundJohn = foundJohn || (0 == strcmp(attr, "John"));
+                free(attr);
+                concept_drop(asValue);
+                concept_drop(concept);
+            }
+            concept_iterator_drop(it);
+        }
 
         transaction_commit(transaction);
         transaction = 0;
