@@ -36,7 +36,7 @@ use super::{
 
 #[no_mangle]
 pub extern "C" fn query_define(transaction: *mut Transaction<'static>, query: *const c_char, options: *const Options) {
-    unwrap_void(borrow(transaction).query().define_with_options(string_view(query), borrow(options).clone()))
+    unwrap_void((borrow(transaction).query().define_with_options(string_view(query), borrow(options).clone()))())
 }
 
 #[no_mangle]
@@ -45,12 +45,12 @@ pub extern "C" fn query_undefine(
     query: *const c_char,
     options: *const Options,
 ) {
-    unwrap_void(borrow(transaction).query().undefine_with_options(string_view(query), borrow(options).clone()))
+    unwrap_void((borrow(transaction).query().undefine_with_options(string_view(query), borrow(options).clone()))())
 }
 
 #[no_mangle]
 pub extern "C" fn query_delete(transaction: *mut Transaction<'static>, query: *const c_char, options: *const Options) {
-    unwrap_void(borrow(transaction).query().delete_with_options(string_view(query), borrow(options).clone()))
+    unwrap_void((borrow(transaction).query().delete_with_options(string_view(query), borrow(options).clone()))())
 }
 
 pub struct ConceptMapIterator(pub CIterator<Result<ConceptMap>>);
@@ -113,7 +113,9 @@ pub extern "C" fn query_match_aggregate(
     query: *const c_char,
     options: *const Options,
 ) -> *mut Numeric {
-    try_release(borrow(transaction).query().match_aggregate_with_options(string_view(query), borrow(options).clone()))
+    try_release(
+        (borrow(transaction).query().match_aggregate_with_options(string_view(query), borrow(options).clone()))(),
+    )
 }
 
 pub struct ConceptMapGroupIterator(CIterator<Result<ConceptMapGroup>>);
