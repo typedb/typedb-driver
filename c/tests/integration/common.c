@@ -42,7 +42,7 @@ bool print_error(const char* filename, int lineno) {
 }
 
 void delete_database_if_exists(DatabaseManager* dbMgr, const char* name) {
-    if (databases_contains(dbMgr, name)) {
+    if (0 != dbMgr && databases_contains(dbMgr, name)) {
         Database* database = databases_get(dbMgr, name);
         database_delete(database);
     }
