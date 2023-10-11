@@ -63,7 +63,17 @@ pub struct Connection {
 }
 
 impl Connection {
-    // TODO DOCS
+    /// Creates a new TypeDB Server connection.
+    ///
+    /// # Arguments
+    ///
+    /// * `address` -- The address (host:port) on which the TypeDB Server is running
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// Connection::new_core("127.0.0.1:1729")
+    /// ```
     pub fn new_core(address: impl AsRef<str>) -> Result<Self> {
         let address: Address = address.as_ref().parse()?;
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
@@ -84,7 +94,28 @@ impl Connection {
         }
     }
 
-    // TODO DOCS
+    /// Creates a new TypeDB Enterprise connection.
+    ///
+    /// # Arguments
+    ///
+    /// * `init_addresses` -- Addresses (host:port) on which TypeDB Enterprise nodes are running
+    /// * `credential` -- User credential and TLS encryption setting
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// Connection::new_enterprise(
+    ///     &["localhost:11729", "localhost:21729", "localhost:31729"],
+    ///     Credential::with_tls(
+    ///         "admin",
+    ///         "password",
+    ///         Some(&PathBuf::from(
+    ///             std::env::var("ROOT_CA")
+    ///                 .expect("ROOT_CA environment variable needs to be set for enterprise tests to run"),
+    ///         )),
+    ///     )?,
+    /// )
+    /// ```
     pub fn new_enterprise<T: AsRef<str> + Sync>(init_addresses: &[T], credential: Credential) -> Result<Self> {
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
 
@@ -133,10 +164,24 @@ impl Connection {
         Err(ConnectionError::UnableToConnect().into())
     }
 
+    /// Checks it this connection is opened.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// connection.is_open()
+    /// ```
     pub fn is_open(&self) -> bool {
         self.background_runtime.is_open()
     }
 
+    /// Closes this connection.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// connection.force_close()
+    /// ```
     pub fn force_close(&self) -> Result {
         let result =
             self.server_connections.values().map(ServerConnection::force_close).try_collect().map_err(Into::into);
