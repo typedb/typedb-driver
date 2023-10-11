@@ -27,6 +27,21 @@ from typedb.native_driver_wrapper import TypeDBDriverException
 
 
 class TypeDBDriverExceptionExt(TypeDBDriverException):
+    """
+    Exceptions raised by the driver.
+
+    For exceptions handling use ``TypeDBDriverException`` instead of this class.
+
+    Examples
+    --------
+
+    ::
+
+        try:
+            transaction.commit()
+        except TypeDBDriverException as err:
+            println("Error:", err)
+    """
 
     def __init__(self, msg: Union[ErrorMessage, str], cause: BaseException = None, params: Any = None):
         if isinstance(msg, str):
@@ -40,11 +55,17 @@ class TypeDBDriverExceptionExt(TypeDBDriverException):
         super(TypeDBDriverException, self).__init__(self.message)
 
     @staticmethod
-    def of(error_message: ErrorMessage, params: Any = None):
+    def of(error_message: ErrorMessage, params: Any = None) -> TypeDBDriverExceptionExt:
+        """
+        :meta private:
+        """
         return TypeDBDriverExceptionExt(msg=error_message, cause=None, params=params)
 
 
 class ErrorMessage:
+    """
+    :meta private:
+    """
 
     def __init__(self, code_prefix: str, code_number: int, message_prefix: str, message_body: str):
         self._code_prefix = code_prefix
@@ -62,6 +83,9 @@ class ErrorMessage:
 
 
 class DriverErrorMessage(ErrorMessage):
+    """
+    :meta private:
+    """
 
     def __init__(self, code: int, message: str):
         super(DriverErrorMessage, self).__init__(code_prefix="CLI", code_number=code, message_prefix="Driver Error",
@@ -78,6 +102,9 @@ ENTERPRISE_CREDENTIAL_INCONSISTENT = DriverErrorMessage(7, "TLS disabled but the
 
 
 class ConceptErrorMessage(ErrorMessage):
+    """
+    :meta private:
+    """
 
     def __init__(self, code: int, message: str):
         super(ConceptErrorMessage, self).__init__(code_prefix="CON", code_number=code,
@@ -99,6 +126,9 @@ UNRECOGNISED_ANNOTATION = ConceptErrorMessage(9, "The annotation '%s' is not rec
 
 
 class QueryErrorMessage(ErrorMessage):
+    """
+    :meta private:
+    """
 
     def __init__(self, code: int, message: str):
         super(QueryErrorMessage, self).__init__(code_prefix="QRY", code_number=code,
@@ -110,6 +140,9 @@ MISSING_QUERY = QueryErrorMessage(2, "Query cannot be null or empty.")
 
 
 class InternalErrorMessage(ErrorMessage):
+    """
+    :meta private:
+    """
 
     def __init__(self, code: int, message: str):
         super(InternalErrorMessage, self).__init__(code_prefix="PIN", code_number=code,
@@ -123,6 +156,9 @@ NULL_NATIVE_OBJECT = InternalErrorMessage(4, "Unhandled null pointer to a native
 
 
 class TypeDBException(Exception):
+    """
+    :meta private:
+    """
 
     def __init__(self, code: str, message: str):
         super().__init__(code, message)

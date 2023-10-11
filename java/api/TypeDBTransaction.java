@@ -32,32 +32,97 @@ import java.util.function.Consumer;
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 
 public interface TypeDBTransaction extends AutoCloseable {
+    /**
+     * Checks whether this transaction is open.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * transaction.isOpen();
+     * </pre>
+     */
     @CheckReturnValue
     boolean isOpen();
 
+    /**
+     * The transaction’s type (READ or WRITE)
+     */
     @CheckReturnValue
     Type type();
 
+    /**
+     * The options for the transaction
+     */
     @CheckReturnValue
     TypeDBOptions options();
 
+    /**
+     * The <code>ConceptManager</code> for this transaction, providing access to all Concept API methods.
+     */
     @CheckReturnValue
     ConceptManager concepts();
 
+    /**
+     * The <code>LogicManager</code> for this Transaction, providing access to all Concept API - Logic methods.
+     */
     @CheckReturnValue
     LogicManager logic();
 
+    /**
+     * The<code></code>QueryManager<code></code> for this Transaction, from which any TypeQL query can be executed.
+     */
     @CheckReturnValue
     QueryManager query();
 
+    /**
+     * Registers a callback function which will be executed when this session is closed.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * transaction.onClose(function);
+     * </pre>
+     *
+     * @param function The callback function.
+     */
     void onClose(Consumer<Throwable> function);
 
+    /**
+     * Commits the changes made via this transaction to the TypeDB database. Whether or not the transaction is commited successfully, it gets closed after the commit call.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * transaction.commit()
+     * </pre>
+     */
     void commit();
 
+    /**
+     * Rolls back the uncommitted changes made via this transaction.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * transaction.rollback()
+     * </pre>
+     */
     void rollback();
 
+    /**
+     * Closes the transaction.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * transaction.close()
+     * </pre>
+     */
     void close();
 
+    /**
+     * Used to specify the type of transaction.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * session.transaction(TransactionType.READ);
+     * </pre>
+     */
     enum Type {
         READ(0, com.vaticle.typedb.driver.jni.TransactionType.Read),
         WRITE(1, com.vaticle.typedb.driver.jni.TransactionType.Write);

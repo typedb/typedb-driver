@@ -21,10 +21,11 @@
 
 load("@vaticle_dependencies//builder/swig:python.bzl", "py_native_lib_rename")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//python/tool/sphinx:rules.bzl", "sphinx_docs")
+load("//tool/docs:python/rules.bzl", "sphinx_to_adoc")
 
 load("//python:rules.bzl", "native_driver_versioned")
 load("//python:python_versions.bzl", "python_versions")
-
 
 native_driver_versioned(python_versions = python_versions)
 
@@ -49,6 +50,20 @@ py_native_lib_rename(
     visibility = ["//visibility:public"]
 )
 
+sphinx_docs(
+    name = "docs_html",
+    target = ":assemble-pip39",
+    out = "driver_docs_sphinx",
+    sphinx_conf = "conf.py",
+    sphinx_rst = "index.rst",
+    package_subdir = "typedb",
+)
+
+sphinx_to_adoc(
+    name = "docs_adoc",
+    data = [":docs_html"],
+)
+
 checkstyle_test(
     name = "checkstyle",
     include = glob([
@@ -60,6 +75,12 @@ checkstyle_test(
         "WORKSPACE",
         "requirements*.txt",
         "typedb/**/*",
+        "tool/sphinx/*",
+    ]),
+    exclude = glob([
+        "conf.py",
+        "index.rst",
+        "docs/**/*.adoc",
     ]),
     license_type = "apache-header",
     size = "small",

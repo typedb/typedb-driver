@@ -28,6 +28,24 @@ from typedb.common.native_wrapper import NativeWrapper
 
 
 class TypeDBCredential(NativeWrapper[NativeCredential]):
+    """
+    User credentials and TLS encryption settings for connecting to TypeDB Enterprise.
+
+    :param username: The name of the user to connect as
+    :param password: The password for the user
+    :param tls_root_ca_path: Path to the CA certificate to use for authenticating server certificates.
+    :param tls_enabled: Specify whether the connection to TypeDB Enterprise must be done over TLS
+
+    Examples:
+    --------
+    ::
+
+        # Creates a credential using the specified username and password. Specifies that TLS must be used.
+        credential = TypeDBCredential(username, password)
+
+        # Creates a credential as above, but TLS will use the specified CA to authenticate server certificates.
+        credential = TypeDBCredential(username, password, tls_root_ca_path="path/to/ca-certificate.pem")
+    """
 
     def __init__(self, username: str, password: str, *, tls_root_ca_path: Optional[str] = None,
                  tls_enabled: bool = True):

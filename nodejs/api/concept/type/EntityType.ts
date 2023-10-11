@@ -28,16 +28,21 @@ import {RequestBuilder} from "../../../common/rpc/RequestBuilder";
 import Transitivity = Concept.Transitivity;
 
 export interface EntityType extends ThingType {
+    /** @inheritDoc */
     create(transaction: TypeDBTransaction): Promise<Entity>;
 
+    /** @inheritDoc */
     getSupertype(transaction: TypeDBTransaction): Promise<EntityType>;
     setSupertype(transaction: TypeDBTransaction, superEntityType: EntityType): Promise<void>;
 
+    /** @inheritDoc */
     getSupertypes(transaction: TypeDBTransaction): Stream<EntityType>;
 
+    /** @inheritDoc */
     getSubtypes(transaction: TypeDBTransaction): Stream<EntityType>;
     getSubtypes(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<EntityType>;
 
+    /** @inheritDoc */
     getInstances(transaction: TypeDBTransaction): Stream<Entity>;
     getInstances(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<Entity>;
 }

@@ -32,8 +32,11 @@ load("@vaticle_bazel_distribution//npm:rules.bzl", "assemble_npm", "deploy_npm")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
 load("@npm//:defs.bzl", "npm_link_all_packages")
+load("//nodejs:tool/typedoc/rules.bzl", "typedoc_docs")
+load("//tool/docs:nodejs/rules.bzl", "typedoc_to_adoc")
 
 npm_link_all_packages(
     name = "node_modules",
@@ -105,6 +108,62 @@ deploy_npm(
     release = deployment["npm.release"],
 )
 
+# This rule should be in tool/typedoc, but there is a problem with the path configurations
+# when typedoc script is placed below the modules being documented.
+ts_project(
+    name = "typedoc_runner",
+    srcs = glob([
+        "tool/typedoc/TypeDocRunner.ts",
+    ]),
+    tsconfig = "tool/typedoc/tsconfig.json",
+    declaration = True,
+    deps = [
+        ":node_modules/typedoc",
+        ":node_modules/@types/node",
+    ],
+    visibility = ["//visibility:public"],
+    out_dir = ".",
+)
+
+js_binary(
+    name = "typedoc_runner_bin",
+    data = [
+        ":typedoc_runner",
+    ],
+    entry_point = ":typedoc_runner",
+    chdir = "nodejs",
+)
+
+typedoc_docs(
+    name = "docs_html",
+    script = ":typedoc_runner_bin",
+    deps = [
+        ":typedb-protocol",
+        ":node_modules/@grpc/grpc-js",
+        ":node_modules/@types/node",
+        ":node_modules/@types/uuid",
+    ],
+    srcs = glob([
+        "*.ts",
+        "api/**/*.ts",
+        "common/**/*.ts",
+        "connection/**/*.ts",
+        "concept/**/*.ts",
+        "logic/**/*.ts",
+        "query/**/*.ts",
+        "stream/**/*.ts",
+        "user/**/*.ts",
+        "tsconfig.json",
+        "tool/**/*.json",
+    ]),
+    out = "driver_docs_typedoc",
+)
+
+typedoc_to_adoc(
+    name = "docs_adoc",
+    data = [":docs_html"],
+)
+
 checkstyle_test(
     name = "checkstyle",
     include = glob([
@@ -117,13 +176,16 @@ checkstyle_test(
         "query/**/*.ts",
         "stream/**/*.ts",
         "user/**/*.ts",
+        "tool/typedoc/*",
     ]),
     exclude = glob([
         "*.json",
+        "tool/typedoc/*.json",
         "*.md",
         ".eslintrc",
         "dist/**/*.*",
         "pnpm-lock.yaml",
+        "docs/**/*.adoc",
     ]),
     license_type = "apache-header",
 )

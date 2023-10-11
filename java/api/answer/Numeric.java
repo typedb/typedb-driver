@@ -23,25 +23,84 @@ package com.vaticle.typedb.driver.api.answer;
 
 import javax.annotation.CheckReturnValue;
 
+/**
+ * Stores an aggregate query answer.
+ */
 public interface Numeric {
+    /**
+     * Checks if the type of an aggregate answer is a <code>long</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * numeric.isLong();
+     * </pre>
+     */
     @CheckReturnValue
     boolean isLong();
 
+    /**
+     * Checks if the type of an aggregate answer is a <code>double</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * numeric.isDouble();
+     * </pre>
+     */
     @CheckReturnValue
     boolean isDouble();
 
+    /**
+     * Checks if the aggregate answer is not a number.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * numeric.isNaN();
+     * </pre>
+     */
     @CheckReturnValue
     boolean isNaN();
 
+    /**
+     * Retrieves numeric value of an aggregate answer as a <code>long</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * numeric.asLong();
+     * </pre>
+     */
     @CheckReturnValue
     long asLong();
 
+    /**
+     * Retrieves numeric value of an aggregate answer as a <code>double</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * numeric.asDouble();
+     * </pre>
+     */
     @CheckReturnValue
     double asDouble();
 
+    /**
+     * Retrieves numeric value of an aggregate answer.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * numeric.asNumber();
+     * </pre>
+     */
     @CheckReturnValue
     Number asNumber();
 
+    /**
+     * Retrieves a string representation of an aggregate answer.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * numeric.toString();
+     * </pre>
+     */
     @Override
     @CheckReturnValue
     String toString();

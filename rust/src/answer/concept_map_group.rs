@@ -23,6 +23,8 @@ use crate::{answer::ConceptMap, concept::Concept};
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct ConceptMapGroup {
+    /// Retrieves the concept that is the group owner.
     pub owner: Concept,
+    /// Retrieves the ConceptMaps of the group.
     pub concept_maps: Vec<ConceptMap>,
 }

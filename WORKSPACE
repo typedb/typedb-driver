@@ -21,9 +21,9 @@
 
 workspace(name = "vaticle_typedb_driver")
 
-################################
+##############################
 # Load @vaticle_dependencies #
-################################
+##############################
 
 load("//dependencies/vaticle:repositories.bzl", "vaticle_dependencies")
 vaticle_dependencies()
@@ -119,9 +119,20 @@ sonarcloud_dependencies()
 load("@vaticle_dependencies//tool/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
 unuseddeps_deps()
 
-######################################
+# Load //tool/docs
+load("@vaticle_dependencies//tool/docs:python_deps.bzl", docs_deps = "deps")
+docs_deps()
+load("@vaticle_dependencies_tool_docs//:requirements.bzl", install_doc_deps = "install_deps")
+install_doc_deps()
+
+load("@vaticle_dependencies//tool/docs:java_deps.bzl", java_doc_deps = "deps")
+java_doc_deps()
+load("@google_bazel_common//:workspace_defs.bzl", "google_common_workspace_rules")
+google_common_workspace_rules()
+
+####################################
 # Load @vaticle_bazel_distribution #
-######################################
+####################################
 
 load("@vaticle_dependencies//distribution:deps.bzl", "vaticle_bazel_distribution")
 vaticle_bazel_distribution()
@@ -139,8 +150,8 @@ github_deps()
 # Load //pip
 load("@vaticle_bazel_distribution//pip:deps.bzl", pip_deps = "deps")
 pip_deps()
-load("@vaticle_bazel_distribution_pip//:requirements.bzl", "install_deps")
-install_deps()
+load("@vaticle_bazel_distribution_pip//:requirements.bzl", install_pip_deps = "install_deps")
+install_pip_deps()
 
 ######################################
 # Load @vaticle_typedb_driver_python #

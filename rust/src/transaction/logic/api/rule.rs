@@ -23,22 +23,81 @@ use crate::{logic::Rule, Result, Transaction};
 
 #[cfg_attr(not(feature = "sync"), async_trait::async_trait)]
 pub trait RuleAPI: Clone + Sync + Send {
+    /// Retrieves the unique label of the rule.
     fn label(&self) -> &String;
 
+    /// Deletes this rule.
+    ///
+    /// # Arguments
+    ///
+    /// * `transaction` -- The current `Transaction`
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// rule.delete(transaction).await;
+    /// ```
     #[cfg(not(feature = "sync"))]
     async fn delete(&mut self, transaction: &Transaction<'_>) -> Result;
 
+    /// Deletes this rule.
+    ///
+    /// # Arguments
+    ///
+    /// * `transaction` -- The current `Transaction`
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// rule.delete(transaction);
+    /// ```
     #[cfg(feature = "sync")]
     fn delete(&mut self, transaction: &Transaction<'_>) -> Result;
 
+    /// Check if this rule has been deleted.
+    ///
+    /// # Arguments
+    ///
+    /// * `transaction` -- The current `Transaction`
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "rule.is_deleted(transaction)")]
+    #[cfg_attr(not(feature = "sync"), doc = "rule.is_deleted(transaction).await")]
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool> {
         transaction.logic().get_rule(self.label().to_owned()).await.map(|rule| rule.is_none())
     }
 
+    /// Renames the label of the rule. The new label must remain unique.
+    ///
+    /// # Arguments
+    ///
+    /// * `transaction` -- The current `Transaction`
+    /// * `new_label` -- The new label to be given to the rule
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// rule.set_label(transaction, new_label).await;
+    /// ```
     #[cfg(not(feature = "sync"))]
     async fn set_label(&mut self, transaction: &Transaction<'_>, new_label: String) -> Result;
 
+    /// Renames the label of the rule. The new label must remain unique.
+    ///
+    /// # Arguments
+    ///
+    /// * `transaction` -- The current `Transaction`
+    /// * `new_label` -- The new label to be given to the rule
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// rule.set_label(transaction, new_label);
+    /// ```
     #[cfg(feature = "sync")]
     fn set_label(&mut self, transaction: &Transaction<'_>, new_label: String) -> Result;
 }

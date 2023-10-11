@@ -1,0 +1,20 @@
+[#_struct_SchemaException]
+=== SchemaException
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `code` a| `String` a| 
+a| `message` a| `String` a| 
+|===
+// end::properties[]
+

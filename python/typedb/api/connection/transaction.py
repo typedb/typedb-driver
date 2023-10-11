@@ -33,13 +33,22 @@ if TYPE_CHECKING:
 
 
 class TransactionType(enum.Enum):
+    """
+    This class is used to specify the type of transaction.
+
+    Examples
+    --------
+    ::
+
+       session.transaction(TransactionType.READ)
+    """
     READ = 0
     WRITE = 1
 
-    def is_read(self):
+    def is_read(self) -> bool:
         return self is TransactionType.READ
 
-    def is_write(self):
+    def is_write(self) -> bool:
         return self is TransactionType.WRITE
 
 
@@ -47,47 +56,120 @@ class TypeDBTransaction(ABC):
 
     @abstractmethod
     def is_open(self) -> bool:
+        """
+        Checks whether this transaction is open.
+
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            transaction.is_open()
+        """
         pass
 
     @property
     @abstractmethod
     def transaction_type(self) -> TransactionType:
+        """
+        The transaction's type (READ or WRITE)
+        """
         pass
 
     @property
     @abstractmethod
     def options(self) -> TypeDBOptions:
+        """
+        The options for the transaction
+        """
         pass
 
     @property
     @abstractmethod
     def concepts(self) -> ConceptManager:
+        """
+        The ``ConceptManager`` for this transaction, providing access to all Concept API methods.
+        """
         pass
 
     @property
     @abstractmethod
     def logic(self) -> LogicManager:
+        """
+        The ``LogicManager`` for this Transaction, providing access to all Concept API - Logic methods.
+        """
         pass
 
     @property
     @abstractmethod
     def query(self) -> QueryManager:
+        """
+        The``QueryManager`` for this Transaction, from which any TypeQL query can be executed.
+        """
         pass
 
     @abstractmethod
     def commit(self) -> None:
+        """
+        Commits the changes made via this transaction to the TypeDB database.
+        **Whether or not the transaction is commited successfully, it gets closed after the commit call.**
+
+
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            transaction.commit()
+        """
         pass
 
     @abstractmethod
     def rollback(self) -> None:
+        """
+        Rolls back the uncommitted changes made via this transaction.
+
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            transaction.rollback()
+        """
         pass
 
     @abstractmethod
-    def on_close(self, function: callable):
+    def on_close(self, function: callable) -> None:
+        """
+        Registers a callback function which will be executed when this session is closed.
+
+        :param function: The callback function.
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            transaction.on_close(function)
+        """
         pass
 
     @abstractmethod
     def close(self) -> None:
+        """
+        Closes the transaction.
+
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            transaction.close()
+        """
         pass
 
     @abstractmethod

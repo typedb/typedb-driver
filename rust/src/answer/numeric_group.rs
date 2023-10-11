@@ -23,6 +23,8 @@ use crate::{answer::Numeric, concept::Concept};
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct NumericGroup {
+    /// The concept that is the group owner.
     pub owner: Concept,
+    // The `Numeric` answer of the group.
     pub numeric: Numeric,
 }

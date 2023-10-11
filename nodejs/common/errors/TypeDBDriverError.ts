@@ -39,6 +39,7 @@ function isServiceError(e: Error | ServiceError): e is ServiceError {
     return "code" in e;
 }
 
+/** Errors encountered when interacting with TypeDB */
 export class TypeDBDriverError extends Error {
     private readonly _messageTemplate: ErrorMessage;
 
@@ -69,6 +70,7 @@ export class TypeDBDriverError extends Error {
         this.name = "TypeDBDriverError"; // Required to correctly report error type in default throw
     }
 
+    /** Returns the message template for this error.*/
     get messageTemplate(): ErrorMessage {
         return this._messageTemplate;
     }

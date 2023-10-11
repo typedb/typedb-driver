@@ -25,10 +25,29 @@ import com.vaticle.typedb.driver.api.concept.Concept;
 
 import javax.annotation.CheckReturnValue;
 
+/**
+ * Contains an element of the group aggregate query result.
+ */
 public interface NumericGroup {
+    /**
+     * Retrieves the concept that is the group owner.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMapGroup.owner()
+     * </pre>
+     */
     @CheckReturnValue
     Concept owner();
 
+    /**
+     * Retrieves the <code>Numeric</code> answer of the group.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * numericGroup.numeric();
+     * </pre>
+     */
     @CheckReturnValue
     Numeric numeric();
 }

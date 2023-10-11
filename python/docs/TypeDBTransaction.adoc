@@ -1,0 +1,135 @@
+[#_TypeDBTransaction]
+=== TypeDBTransaction
+
+[caption=""]
+.Properties
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `concepts` a| `ConceptManager` a| The ``ConceptManager`` for this transaction, providing access to all Concept API methods.
+a| `logic` a| `LogicManager` a| The ``LogicManager`` for this Transaction, providing access to all Concept API - Logic methods.
+a| `options` a| `TypeDBOptions` a| The options for the transaction
+a| `query` a| `QueryManager` a| The``QueryManager`` for this Transaction, from which any TypeQL query can be executed.
+a| `transaction_type` a| `TransactionType` a| The transaction’s type (READ or WRITE)
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_TypeDBTransaction_close]
+==== close
+
+[source,python]
+----
+close() -> None
+----
+
+Closes the transaction.
+
+[caption=""]
+.Returns
+`None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+transaction.close()
+----
+
+[#_TypeDBTransaction_commit]
+==== commit
+
+[source,python]
+----
+commit() -> None
+----
+
+Commits the changes made via this transaction to the TypeDB database. Whether or not the transaction is commited successfully, it gets closed after the commit call.
+
+[caption=""]
+.Returns
+`None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+transaction.commit()
+----
+
+[#_TypeDBTransaction_is_open]
+==== is_open
+
+[source,python]
+----
+is_open() -> bool
+----
+
+Checks whether this transaction is open.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+transaction.is_open()
+----
+
+[#_TypeDBTransaction_on_close]
+==== on_close
+
+[source,python]
+----
+on_close(function: callable) -> None
+----
+
+Registers a callback function which will be executed when this session is closed.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `function` a| The callback function. a| `callable` a| 
+|===
+
+[caption=""]
+.Returns
+`None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+transaction.on_close(function)
+----
+
+[#_TypeDBTransaction_rollback]
+==== rollback
+
+[source,python]
+----
+rollback() -> None
+----
+
+Rolls back the uncommitted changes made via this transaction.
+
+[caption=""]
+.Returns
+`None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+transaction.rollback()
+----
+
+// end::methods[]
+

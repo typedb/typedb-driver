@@ -1,0 +1,25 @@
+[#_TypeDBDriverExceptionExt]
+=== TypeDBDriverExceptionExt
+
+*Supertypes:*
+
+* `TypeDBDriverException`
+
+Exceptions raised by the driver.
+
+For exceptions handling use ``TypeDBDriverException`` instead of this class.
+
+[caption=""]
+.TypeDBDriverExceptionExt examples
+====
+
+[source,python]
+----
+try:
+    transaction.commit()
+except TypeDBDriverException as err:
+    println("Error:", err)
+----
+
+====
+

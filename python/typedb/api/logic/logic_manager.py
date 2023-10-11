@@ -29,15 +29,55 @@ if TYPE_CHECKING:
 
 
 class LogicManager(ABC):
+    """
+    Provides methods for manipulating rules in the database.
+    """
 
     @abstractmethod
     def get_rule(self, label: str) -> Optional[Rule]:
+        """
+        Retrieves the Rule that has the given label.
+
+        :param label: The label of the Rule to create or retrieve
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            transaction.logic.get_rule(label)
+        """
         pass
 
     @abstractmethod
     def get_rules(self) -> Iterator[Rule]:
+        """
+        Retrieves all rules.
+
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            transaction.logic.get_rules()
+        """
         pass
 
     @abstractmethod
     def put_rule(self, label: str, when: str, then: str) -> Rule:
+        """
+        Creates a new Rule if none exists with the given label, or replaces the existing one.
+        
+        :param label: The label of the Rule to create or replace
+        :param when: The when body of the rule to create
+        :param then: The then body of the rule to create
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            transaction.logic.put_rule(label, when, then)
+        """
         pass

@@ -1,0 +1,471 @@
+[#_AttributeType]
+=== AttributeType
+
+*Supertypes:*
+
+* `ThingType`
+
+Attribute types represent properties that other types can own.
+
+Attribute types have a value type. This value type is fixed and unique for every given instance of the attribute type.
+
+Other types can own an attribute type. That means that instances of these other types can own an instance of this attribute type. This usually means that an object in our domain has a property with the matching value.
+
+Multiple types can own the same attribute type, and different instances of the same type or different types can share ownership of the same attribute instance.
+
+// tag::methods[]
+[#_AttributeType_as_attribute_type]
+==== as_attribute_type
+
+[source,python]
+----
+as_attribute_type() -> AttributeType
+----
+
+Casts the concept to ``AttributeType``.
+
+[caption=""]
+.Returns
+`AttributeType`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute.as_attribute_type()
+----
+
+[#_AttributeType_get]
+==== get
+
+[source,python]
+----
+get(transaction: TypeDBTransaction, value: Value | bool | int | float | str | datetime) -> Attribute | None
+----
+
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `value` a| ``Attribute``’s value a| `Value \| bool \| int \| float \| str \| datetime` a| 
+|===
+
+[caption=""]
+.Returns
+`Attribute | None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute = attribute_type.get(transaction, value)
+----
+
+[#_AttributeType_get_instances]
+==== get_instances
+
+[source,python]
+----
+get_instances(transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Attribute]
+----
+
+Retrieves all direct and indirect (or direct only) ``Attributes`` that are instances of this ``AttributeType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+|===
+
+[caption=""]
+.Returns
+`Iterator[Attribute]`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute_type.get_instances(transaction)
+attribute_type.get_instances(transaction, Transitivity.EXPLICIT)
+----
+
+[#_AttributeType_get_owners]
+==== get_owners
+
+[source,python]
+----
+get_owners(transaction: TypeDBTransaction, annotations: set[Annotation] | None = None, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[ThingType]
+----
+
+Retrieve all ``Things`` that own an attribute of this ``AttributeType``. Optionally, filtered by ``Annotation``s.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``AttributeType`` with all given ``Annotation``s a| `set[Annotation] \| None` a| `None`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited ownership, ``Transitivity.EXPLICIT`` for direct ownership only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+|===
+
+[caption=""]
+.Returns
+`Iterator[ThingType]`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute_type.get_owners(transaction)
+attribute_type.get_owners(transaction, annotations=Annotation.unique(), transitivity=Transitivity.EXPLICIT)
+----
+
+[#_AttributeType_get_regex]
+==== get_regex
+
+[source,python]
+----
+get_regex(transaction: TypeDBTransaction) -> str
+----
+
+Retrieves the regular expression that is defined for this ``AttributeType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+|===
+
+[caption=""]
+.Returns
+`str`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute_type.get_regex(transaction)
+----
+
+[#_AttributeType_get_subtypes_with_value_type]
+==== get_subtypes_with_value_type
+
+[source,python]
+----
+get_subtypes_with_value_type(transaction: TypeDBTransaction, value_type: ValueType, transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[AttributeType]
+----
+
+Retrieves all direct and indirect (or direct only) subtypes of this ``AttributeType`` with given ``ValueType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `value_type` a| ``ValueType`` for retrieving subtypes a| `ValueType` a| 
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Transitivity` a| `Transitivity.TRANSITIVE`
+|===
+
+[caption=""]
+.Returns
+`Iterator[AttributeType]`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute_type.get_subtypes_with_value_type(transaction, value_type)
+attribute_type.get_subtypes_with_value_type(transaction, value_type,
+                                            Transitivity.EXPLICIT)
+----
+
+[#_AttributeType_get_value_type]
+==== get_value_type
+
+[source,python]
+----
+get_value_type() -> ValueType
+----
+
+Retrieves the ``ValueType`` of this ``AttributeType``.
+
+[caption=""]
+.Returns
+`ValueType`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute_type.get_value_type()
+----
+
+[#_AttributeType_is_attribute_type]
+==== is_attribute_type
+
+[source,python]
+----
+is_attribute_type() -> bool
+----
+
+Checks if the concept is an ``AttributeType``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute.is_attribute_type()
+----
+
+[#_AttributeType_is_boolean]
+==== is_boolean
+
+[source,python]
+----
+is_boolean() -> bool
+----
+
+Returns ``True`` if the value for attributes of this type is of type ``boolean``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute_type.is_boolean()
+----
+
+[#_AttributeType_is_datetime]
+==== is_datetime
+
+[source,python]
+----
+is_datetime() -> bool
+----
+
+Returns ``True`` if the value for attributes of this type is of type ``datetime``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute_type.is_datetime()
+----
+
+[#_AttributeType_is_double]
+==== is_double
+
+[source,python]
+----
+is_double() -> bool
+----
+
+Returns ``True`` if the value for attributes of this type is of type ``double``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute_type.is_double()
+----
+
+[#_AttributeType_is_long]
+==== is_long
+
+[source,python]
+----
+is_long() -> bool
+----
+
+Returns ``True`` if the value for attributes of this type is of type ``long``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute_type.is_long()
+----
+
+[#_AttributeType_is_string]
+==== is_string
+
+[source,python]
+----
+is_string() -> bool
+----
+
+Returns ``True`` if the value for attributes of this type is of type ``string``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute_type.is_string()
+----
+
+[#_AttributeType_put]
+==== put
+
+[source,python]
+----
+put(transaction: TypeDBTransaction, value: Value | bool | int | float | str | datetime) -> Attribute
+----
+
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `value` a| New ``Attribute``’s value a| `Value \| bool \| int \| float \| str \| datetime` a| 
+|===
+
+[caption=""]
+.Returns
+`Attribute`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute = attribute_type.put(transaction, value)
+----
+
+[#_AttributeType_set_regex]
+==== set_regex
+
+[source,python]
+----
+set_regex(transaction: TypeDBTransaction, regex: str) -> None
+----
+
+Sets a regular expression as a constraint for this ``AttributeType``. ``Values`` of all ``Attribute``s of this type (inserted earlier or later) should match this regex.
+
+Can only be applied for ``AttributeType``s with a ``string`` value type.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `regex` a| Regular expression a| `str` a| 
+|===
+
+[caption=""]
+.Returns
+`None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute_type.set_regex(transaction, regex)
+----
+
+[#_AttributeType_set_supertype]
+==== set_supertype
+
+[source,python]
+----
+set_supertype(transaction: TypeDBTransaction, super_attribute_type: AttributeType) -> None
+----
+
+Sets the supplied ``AttributeType`` as the supertype of the current ``AttributeType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+a| `super_attribute_type` a| The ``AttributeType`` to set as the supertype of this ``AttributeType`` a| `AttributeType` a| 
+|===
+
+[caption=""]
+.Returns
+`None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute_type.set_supertype(transaction, super_attribute_type)
+----
+
+[#_AttributeType_unset_regex]
+==== unset_regex
+
+[source,python]
+----
+unset_regex(transaction: TypeDBTransaction) -> None
+----
+
+Removes the regular expression that is defined for this ``AttributeType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
+|===
+
+[caption=""]
+.Returns
+`None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+attribute_type.unset_regex(transaction)
+----
+
+// end::methods[]
+

@@ -30,23 +30,92 @@ import {Type} from "./Type";
 import {Concept} from "../Concept";
 import Transitivity = Concept.Transitivity;
 
+/**
+ * Roles are special internal types used by relations. We can not create an instance of a role in a database. But we can set an instance of another type (role player) to play a role in a particular instance of a relation type.
+ * Roles allow a schema to enforce logical constraints on types of role players.
+ */
 export interface RoleType extends Type {
+    /** @inheritDoc */
     getSupertype(transaction: TypeDBTransaction): Promise<RoleType | null>;
 
+    /** @inheritDoc */
     getSupertypes(transaction: TypeDBTransaction): Stream<RoleType>;
 
+    /** @inheritDoc */
     getSubtypes(transaction: TypeDBTransaction): Stream<RoleType>;
 
+    /**
+     * Retrieves the <code>RelationType</code> that this role is directly related to.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * roleType.getRelationType(transaction)
+     * ```
+     *
+     * @param transaction - The current transaction
+     */
     getRelationType(transaction: TypeDBTransaction): Promise<RelationType>;
+
+    /**
+     * Retrieves <code>RelationType</code>s that this role is related to (directly or indirectly).
+     *
+     * ### Examples
+     *
+     * ```ts
+     * roleType.getRelationTypes(transaction)
+     * ```
+     *
+     * @param transaction - The current transaction
+     */
     getRelationTypes(transaction: TypeDBTransaction): Stream<RelationType>;
 
+    /** {@inheritDoc RoleType#getPlayerTypes:(1)} */
     getPlayerTypes(transaction: TypeDBTransaction): Stream<ThingType>;
+    /**
+     * Retrieves the <code>ThingType</code>s whose instances play this role.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * roleType.getPlayerTypes(transaction, transitivity)
+     * ```
+     *
+     * @param transaction - The current transaction
+     * @param transitivity - <code>Transitivity.TRANSITIVE</code> for direct and indirect playing, <code>Transitivity.EXPLICIT</code> for direct playing only
+     */
     getPlayerTypes(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<ThingType>;
 
+    /** {@inheritDoc RoleType#getRelationInstances:(1)} */
     getRelationInstances(transaction: TypeDBTransaction): Stream<Relation>;
+    /**
+     * Retrieves the <code>Relation</code> instances that this role is related to.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * roleType.getRelationInstances(transaction, transitivity)
+     * ```
+     *
+     * @param transaction - The current transaction
+     * @param transitivity - <code>Transitivity.TRANSITIVE</code> for direct and indirect relation, <code>Transitivity.EXPLICIT</code> for direct relation only
+     */
     getRelationInstances(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<Relation>;
 
+    /** {@inheritDoc RoleType#getPlayerInstances:(1)} */
     getPlayerInstances(transaction: TypeDBTransaction): Stream<Thing>;
+    /**
+     * Retrieves the <code>Thing</code> instances that play this role.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * roleType.getPlayerInstances(transaction, transitivity)
+     * ```
+     *
+     * @param transaction - The current transaction
+     * @param transitivity - <code>Transitivity.TRANSITIVE</code> for direct and indirect playing, <code>Transitivity.EXPLICIT</code> for direct playing only
+     */
     getPlayerInstances(transaction: TypeDBTransaction, transitivity: Transitivity): Stream<Thing>;
 }
 

@@ -1,0 +1,16 @@
+[#_enum_Thing]
+=== Thing
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols="~"]
+[options="header"]
+|===
+|Variant
+a| `Entity(Entity)`
+a| `Relation(Relation)`
+a| `Attribute(Attribute)`
+|===
+// end::enum_constants[]
+

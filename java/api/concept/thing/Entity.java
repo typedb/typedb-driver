@@ -25,19 +25,48 @@ import com.vaticle.typedb.driver.api.concept.type.EntityType;
 
 import javax.annotation.CheckReturnValue;
 
+/**
+ * Instance of data of an entity type, representing a standalone object that exists in the data model independently.
+ * Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles
+ * played in relation instances.
+ */
 public interface Entity extends Thing {
+    /**
+     * Checks if the concept is an <code>Entity</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * entity.isEntity();
+     * </pre>
+     */
     @Override
     @CheckReturnValue
     default boolean isEntity() {
         return true;
     }
 
+    /**
+     * Casts the concept to <code>Entity</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * entity.asEntity();
+     * </pre>
+     */
     @Override
     @CheckReturnValue
     default Entity asEntity() {
         return this;
     }
 
+    /**
+     * Retrieves the type which this <code>Entity</code> belongs to.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * entity.getType();
+     * </pre>
+     */
     @Override
     @CheckReturnValue
     EntityType getType();

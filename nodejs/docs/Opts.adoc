@@ -1,0 +1,25 @@
+[#_Opts]
+=== Opts
+
+Interface for TypeDBOptions. Use TypeDBOptions instead.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `explain` a| `boolean` a| If set to True, enables explanations for queries. Only affects read transactions.
+a| `infer` a| `boolean` a| If set to True, enables inference for queries. Only settable at transaction level and above. Only affects read transactions.
+a| `parallel` a| `boolean` a| If set to True, the server uses parallel instead of single-threaded execution.
+a| `prefetch` a| `boolean` a| If set to True, the first batch of answers is streamed to the driver even without an explicit request for it.
+a| `prefetchSize` a| `number` a| If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
+a| `readAnyReplica` a| `boolean` a| If set to True, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise.
+a| `schemaLockAcquireTimeoutMillis` a| `number` a| If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock.
+a| `sessionIdleTimeoutMillis` a| `number` a| If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive.
+a| `traceInference` a| `boolean` a| If set to True, reasoning tracing graphs are output in the logging directory. Should be used with parallel = False.
+a| `transactionTimeoutMillis` a| `number` a| If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
+|===
+// end::properties[]
+

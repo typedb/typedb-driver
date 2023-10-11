@@ -1,0 +1,39 @@
+[#_TypeDBOptions]
+=== TypeDBOptions
+
+TypeDB session and transaction options. ``TypeDBOptions`` object can be used to override the default server behaviour.
+
+Options could be specified either as constructor arguments or using properties assignment.
+
+[caption=""]
+.TypeDBOptions examples
+====
+
+[source,python]
+----
+transaction_options = TypeDBOptions(infer=True, session_idle_timeout_millis=20000)
+transaction_options.explain = True
+----
+
+====
+
+[caption=""]
+.Properties
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `explain` a| `bool \| None` a| If set to ``True``, enables explanations for queries. Only affects read transactions.
+a| `infer` a| `bool \| None` a| If set to ``True``, enables inference for queries. Only settable at transaction level and above. Only affects read transactions.
+a| `parallel` a| `bool \| None` a| If set to ``True``, the server uses parallel instead of single-threaded execution.
+a| `prefetch` a| `bool \| None` a| If set to ``True``, the first batch of answers is streamed to the driver even without an explicit request for it.
+a| `prefetch_size` a| `int \| None` a| If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
+a| `read_any_replica` a| `bool \| None` a| If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise.
+a| `schema_lock_acquire_timeout_millis` a| `int \| None` a| If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock.
+a| `session_idle_timeout_millis` a| `int \| None` a| If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive.
+a| `trace_inference` a| `bool \| None` a| If set to ``True``, reasoning tracing graphs are output in the logging directory. Should be used with ``parallel = False``.
+a| `transaction_timeout_millis` a| `int \| None` a| If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
+|===
+// end::properties[]
+

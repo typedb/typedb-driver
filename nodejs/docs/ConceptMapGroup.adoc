@@ -1,0 +1,17 @@
+[#_ConceptMapGroup]
+=== ConceptMapGroup
+
+Contains an element of the group query result.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `conceptMaps` a| `ConceptMap` a| The ConceptMaps of the group.
+a| `owner` a| `Concept` a| The concept that is the group owner.
+|===
+// end::properties[]
+

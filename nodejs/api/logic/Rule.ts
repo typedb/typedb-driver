@@ -21,16 +21,58 @@
 
 import {TypeDBTransaction} from "../connection/TypeDBTransaction";
 
+/**
+ * Rules are a part of schema and define embedded logic.
+ * The reasoning engine uses rules as a set of logic to infer new data.
+ * A rule consists of a condition and a conclusion, and is uniquely identified by a label.
+ */
 export interface Rule {
+    /** The unique label of the rule. */
     readonly label: string;
 
+    /** The statements that constitute the ‘when’ of the rule. */
     readonly when: string;
 
+    /** The single statement that constitutes the ‘then’ of the rule. */
     readonly then: string;
 
+    /**
+     * Renames the label of the rule. The new label must remain unique.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * rule.setLabel(transaction, newLabel)
+     * ```
+     *
+     * @param transaction - The current <code>Transaction</code>
+     * @param newLabel - The new label to be given to the rule
+     */
     setLabel(transaction: TypeDBTransaction, label: string): Promise<void>;
 
+    /**
+     * Deletes this rule.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * rule.delete(transaction)
+     * ```
+     *
+     * @param transaction - The current <code>Transaction</code>
+     */
     delete(transaction: TypeDBTransaction): Promise<void>;
 
+    /**
+     * Check if this rule has been deleted.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * rule.isDeleted(transaction)
+     * ```
+     *
+     * @param transaction - The current <code>Transaction</code>
+     */
     isDeleted(transaction: TypeDBTransaction): Promise<boolean>;
 }

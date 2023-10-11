@@ -1,0 +1,22 @@
+[#_enum_Concept]
+=== Concept
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols="~"]
+[options="header"]
+|===
+|Variant
+a| `RootThingType(RootThingType)`
+a| `EntityType(EntityType)`
+a| `RelationType(RelationType)`
+a| `RoleType(RoleType)`
+a| `AttributeType(AttributeType)`
+a| `Entity(Entity)`
+a| `Relation(Relation)`
+a| `Attribute(Attribute)`
+a| `Value(Value)`
+|===
+// end::enum_constants[]
+

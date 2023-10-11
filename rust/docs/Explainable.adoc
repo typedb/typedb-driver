@@ -1,0 +1,24 @@
+[#_struct_Explainable]
+=== Explainable
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `PartialEq<Explainable>`
+* `StructuralPartialEq`
+
+Contains an explainable object.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `conjunction` a| `String` a| The subquery of the original query that is actually being explained.
+a| `id` a| `i64` a| The unique ID that identifies this ``Explainable``.
+|===
+// end::properties[]
+

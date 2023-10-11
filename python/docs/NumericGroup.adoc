@@ -1,0 +1,50 @@
+[#_NumericGroup]
+=== NumericGroup
+
+Contains an element of the group aggregate query result.
+
+// tag::methods[]
+[#_NumericGroup_numeric]
+==== numeric
+
+[source,python]
+----
+numeric() -> Numeric
+----
+
+Retrieves the ``Numeric`` answer of the group.
+
+[caption=""]
+.Returns
+`Numeric`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+numeric_group.numeric()
+----
+
+[#_NumericGroup_owner]
+==== owner
+
+[source,python]
+----
+owner() -> Concept
+----
+
+Retrieves the concept that is the group owner.
+
+[caption=""]
+.Returns
+`Concept`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+numeric_group.owner()
+----
+
+// end::methods[]
+
