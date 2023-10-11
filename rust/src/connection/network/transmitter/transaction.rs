@@ -49,11 +49,13 @@ use typedb_protocol::transaction::{self, server::Server, stream::State};
 #[cfg(feature = "sync")]
 use super::oneshot_blocking as oneshot;
 use super::response_sink::ResponseSink;
+#[cfg(feature = "sync")]
+use crate::{common::box_promise, Error};
 use crate::{
     common::{
         error::ConnectionError,
         stream::{NetworkStream, Stream},
-        Callback, RequestID, Result,
+        Callback, Promise, RequestID, Result,
     },
     connection::{
         message::{TransactionRequest, TransactionResponse},
@@ -122,27 +124,29 @@ impl TransactionTransmitter {
     }
 
     #[cfg(not(feature = "sync"))]
-    pub(in crate::connection) async fn single(&self, req: TransactionRequest) -> Result<TransactionResponse> {
-        if !self.is_open() {
-            let error = self.error.read().unwrap();
-            assert!(error.is_some());
-            return Err(error.clone().unwrap().into());
+    pub(in crate::connection) fn single(&self, req: TransactionRequest) -> impl Promise<Result<TransactionResponse>> {
+        async move {
+            if !self.is_open() {
+                let error = self.error.read().unwrap();
+                assert!(error.is_some());
+                return Err(error.clone().unwrap().into());
+            }
+            let (res_sink, recv) = oneshot();
+            self.request_sink.send((req, Some(ResponseSink::AsyncOneShot(res_sink))))?;
+            recv.await?.map(Into::into)
         }
-        let (res_sink, recv) = oneshot();
-        self.request_sink.send((req, Some(ResponseSink::AsyncOneShot(res_sink))))?;
-        recv.await?.map(Into::into)
     }
 
     #[cfg(feature = "sync")]
-    pub(in crate::connection) fn single(&self, req: TransactionRequest) -> Result<TransactionResponse> {
+    pub(in crate::connection) fn single(&self, req: TransactionRequest) -> impl Promise<Result<TransactionResponse>> {
         if !self.is_open() {
-            let error = self.error.read().unwrap();
+            let error = self.error.read().unwrap().clone();
             assert!(error.is_some());
-            return Err(error.clone().unwrap().into());
+            return box_promise(|| Err(error.unwrap().into()));
         }
         let (res_sink, recv) = oneshot();
-        self.request_sink.send((req, Some(ResponseSink::BlockingOneShot(res_sink))))?;
-        recv.recv()?
+        let send_result = self.request_sink.send((req, Some(ResponseSink::BlockingOneShot(res_sink))));
+        box_promise(move || send_result.map_err(Error::from).and_then(|_| recv.recv()?))
     }
 
     pub(in crate::connection) fn stream(

@@ -27,10 +27,10 @@ use std::{fmt, marker::PhantomData, sync::Arc};
 
 use self::{concept::ConceptManager, logic::LogicManager, query::QueryManager};
 use crate::{
-    common::{Result, TransactionType},
+    common::{Promise, Result, TransactionType},
     connection::TransactionStream,
     error::ConnectionError,
-    Options,
+    promisify, resolve, Options,
 };
 
 pub struct Transaction<'a> {
@@ -59,7 +59,7 @@ impl Transaction<'_> {
             concept: ConceptManager::new(transaction_stream.clone()),
             logic: LogicManager::new(transaction_stream.clone()),
             transaction_stream,
-            _lifetime_guard: PhantomData::default(),
+            _lifetime_guard: PhantomData,
         }
     }
 
@@ -128,9 +128,8 @@ impl Transaction<'_> {
     #[cfg_attr(feature = "sync", doc = "transaction.commit()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.commit().await")]
     /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn commit(self) -> Result {
-        self.transaction_stream.commit().await
+    pub fn commit(self) -> impl Promise<'static, Result> {
+        promisify! { resolve!(self.transaction_stream.commit()) }
     }
 
     /// Rolls back the uncommitted changes made via this transaction.
@@ -141,9 +140,8 @@ impl Transaction<'_> {
     #[cfg_attr(feature = "sync", doc = "transaction.rollback()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.rollback().await")]
     /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn rollback(&self) -> Result {
-        self.transaction_stream.rollback().await
+    pub fn rollback(&self) -> impl Promise<Result> {
+        promisify! { resolve!(self.transaction_stream.rollback()) }
     }
 }
 

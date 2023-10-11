@@ -21,6 +21,9 @@
 
 pub(crate) mod address;
 pub mod error;
+#[cfg_attr(not(feature = "sync"), path = "future_async.rs")]
+#[cfg_attr(feature = "sync", path = "future_sync.rs")]
+pub mod future;
 mod id;
 pub mod info;
 mod options;
@@ -30,6 +33,7 @@ pub mod stream;
 
 pub use self::{
     error::Error,
+    future::{box_promise, BoxPromise, Promise},
     options::Options,
     stream::{box_stream, BoxStream},
 };

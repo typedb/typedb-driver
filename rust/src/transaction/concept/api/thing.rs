@@ -20,12 +20,11 @@
  */
 
 use crate::{
-    common::{box_stream, stream::BoxStream, IID},
+    common::{box_promise, box_stream, stream::BoxStream, BoxPromise, IID},
     concept::{Annotation, Attribute, AttributeType, Entity, Relation, RoleType, Thing, ThingType},
-    Result, Transaction,
+    promisify, resolve, Result, Transaction,
 };
 
-#[cfg_attr(not(feature = "sync"), async_trait::async_trait)]
 pub trait ThingAPI: Sync + Send {
     /// Retrieves the unique id of the `Thing`.
     ///
@@ -56,24 +55,10 @@ pub trait ThingAPI: Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    /// thing.is_deleted(transaction).await;
+    #[cfg_attr(feature = "sync", doc = "thing.is_deleted(transaction);")]
+    #[cfg_attr(not(feature = "sync"), doc = "thing.is_deleted(transaction).await;")]
     /// ```
-    #[cfg(not(feature = "sync"))]
-    async fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool>;
-
-    /// Checks if this `Thing` is deleted.
-    ///
-    /// # Arguments
-    ///
-    /// * `transaction` -- The current transaction
-    ///
-    /// # Examples
-    ///
-    /// ```rust
-    /// thing.is_deleted(transaction);
-    /// ```
-    #[cfg(feature = "sync")]
-    fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool>;
+    fn is_deleted<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result<bool>>;
 
     /// Deletes this `Thing`.
     ///
@@ -87,9 +72,10 @@ pub trait ThingAPI: Sync + Send {
     #[cfg_attr(feature = "sync", doc = "thing.delete(transaction);")]
     #[cfg_attr(not(feature = "sync"), doc = "thing.delete(transaction).await;")]
     /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn delete(&self, transaction: &Transaction<'_>) -> Result {
-        transaction.concept().transaction_stream.thing_delete(self.to_thing_cloned()).await
+    fn delete<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result> {
+        box_promise(promisify! {
+            resolve!(transaction.concept().transaction_stream.thing_delete(self.to_thing_cloned()))
+        })
     }
 
     /// Retrieves the `Attribute`s that this `Thing` owns. Optionally, filtered by an `AttributeType` or a list of `AttributeType`s. Optionally, filtered by `Annotation`s.
@@ -106,9 +92,9 @@ pub trait ThingAPI: Sync + Send {
     /// ```rust
     /// thing.get_has(transaction, attribute_type, annotations=vec![Annotation::Key]);
     /// ```
-    fn get_has(
-        &self,
-        transaction: &Transaction<'_>,
+    fn get_has<'tx>(
+        &'tx self,
+        transaction: &'tx Transaction<'tx>,
         attribute_types: Vec<AttributeType>,
         annotations: Vec<Annotation>,
     ) -> Result<BoxStream<Result<Attribute>>> {
@@ -132,9 +118,10 @@ pub trait ThingAPI: Sync + Send {
     #[cfg_attr(feature = "sync", doc = "thing.set_has(transaction, attribute);")]
     #[cfg_attr(not(feature = "sync"), doc = "thing.set_has(transaction, attribute).await;")]
     /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn set_has(&self, transaction: &Transaction<'_>, attribute: Attribute) -> Result {
-        transaction.concept().transaction_stream.thing_set_has(self.to_thing_cloned(), attribute).await
+    fn set_has<'tx>(&'tx self, transaction: &'tx Transaction<'tx>, attribute: Attribute) -> BoxPromise<Result> {
+        box_promise(promisify! {
+            resolve!(transaction.concept().transaction_stream.thing_set_has(self.to_thing_cloned(), attribute))
+        })
     }
 
     /// Unassigns an `Attribute` from this `Thing`.
@@ -150,9 +137,10 @@ pub trait ThingAPI: Sync + Send {
     #[cfg_attr(feature = "sync", doc = "thing.unset_has(transaction, attribute);")]
     #[cfg_attr(not(feature = "sync"), doc = "thing.unset_has(transaction, attribute).await;")]
     /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn unset_has(&self, transaction: &Transaction<'_>, attribute: Attribute) -> Result {
-        transaction.concept().transaction_stream.thing_unset_has(self.to_thing_cloned(), attribute).await
+    fn unset_has<'tx>(&'tx self, transaction: &'tx Transaction<'tx>, attribute: Attribute) -> BoxPromise<Result> {
+        box_promise(promisify! {
+            resolve!(transaction.concept().transaction_stream.thing_unset_has(self.to_thing_cloned(), attribute))
+        })
     }
 
     /// Retrieves all the `Relations` which this `Thing` plays a role in, optionally filtered by one or more given roles.
@@ -167,9 +155,9 @@ pub trait ThingAPI: Sync + Send {
     /// ```rust
     /// thing.get_relations(transaction, role_types);
     /// ```
-    fn get_relations(
-        &self,
-        transaction: &Transaction<'_>,
+    fn get_relations<'tx>(
+        &'tx self,
+        transaction: &'tx Transaction<'tx>,
         role_types: Vec<RoleType>,
     ) -> Result<BoxStream<Result<Relation>>> {
         transaction.concept().transaction_stream.thing_get_relations(self.to_thing_cloned(), role_types).map(box_stream)
@@ -186,12 +174,11 @@ pub trait ThingAPI: Sync + Send {
     /// ```rust
     /// thing.get_playing(transaction);
     /// ```
-    fn get_playing(&self, transaction: &Transaction<'_>) -> Result<BoxStream<Result<RoleType>>> {
+    fn get_playing<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> Result<BoxStream<Result<RoleType>>> {
         transaction.concept().transaction_stream.thing_get_playing(self.to_thing_cloned()).map(box_stream)
     }
 }
 
-#[cfg_attr(not(feature = "sync"), async_trait::async_trait)]
 impl ThingAPI for Thing {
     fn iid(&self) -> &IID {
         match self {
@@ -213,17 +200,17 @@ impl ThingAPI for Thing {
         self.clone()
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool> {
-        match self {
-            Thing::Entity(entity) => entity.is_deleted(transaction).await,
-            Thing::Relation(relation) => relation.is_deleted(transaction).await,
-            Thing::Attribute(attribute) => attribute.is_deleted(transaction).await,
-        }
+    fn is_deleted<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result<bool>> {
+        box_promise(promisify! {
+            match self {
+                Thing::Entity(entity) => resolve!(entity.is_deleted(transaction)),
+                Thing::Relation(relation) => resolve!(relation.is_deleted(transaction)),
+                Thing::Attribute(attribute) => resolve!(attribute.is_deleted(transaction)),
+            }
+        })
     }
 }
 
-#[cfg_attr(not(feature = "sync"), async_trait::async_trait)]
 impl ThingAPI for Entity {
     fn iid(&self) -> &IID {
         &self.iid
@@ -237,19 +224,17 @@ impl ThingAPI for Entity {
         Thing::Entity(self.clone())
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool> {
-        transaction.concept().transaction_stream.get_entity(self.iid().clone()).await.map(|res| res.is_none())
+    fn is_deleted<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result<bool>> {
+        box_promise(promisify! {
+            resolve!(transaction.concept().transaction_stream.get_entity(self.iid().clone())).map(|res| res.is_none())
+        })
     }
 }
 
-#[cfg_attr(not(feature = "sync"), async_trait::async_trait)]
 pub trait EntityAPI: ThingAPI + Clone + Into<Entity> {}
 
-#[cfg_attr(not(feature = "sync"), async_trait::async_trait)]
 impl EntityAPI for Entity {}
 
-#[cfg_attr(not(feature = "sync"), async_trait::async_trait)]
 impl ThingAPI for Relation {
     fn iid(&self) -> &IID {
         &self.iid
@@ -263,13 +248,13 @@ impl ThingAPI for Relation {
         Thing::Relation(self.clone())
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool> {
-        transaction.concept().transaction_stream.get_relation(self.iid().clone()).await.map(|res| res.is_none())
+    fn is_deleted<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result<bool>> {
+        box_promise(promisify! {
+            resolve!(transaction.concept().transaction_stream.get_relation(self.iid().clone())).map(|res| res.is_none())
+        })
     }
 }
 
-#[cfg_attr(not(feature = "sync"), async_trait::async_trait)]
 pub trait RelationAPI: ThingAPI + Clone + Into<Relation> {
     /// Adds a new role player to play the given role in this `Relation`.
     ///
@@ -285,9 +270,17 @@ pub trait RelationAPI: ThingAPI + Clone + Into<Relation> {
     #[cfg_attr(feature = "sync", doc = "relation.add_role_player(transaction, role_type, player);")]
     #[cfg_attr(not(feature = "sync"), doc = "relation.add_role_player(transaction, role_type, player).await;")]
     /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn add_role_player(&self, transaction: &Transaction<'_>, role_type: RoleType, player: Thing) -> Result {
-        transaction.concept().transaction_stream.relation_add_role_player(self.clone().into(), role_type, player).await
+    fn add_role_player<'tx>(
+        &'tx self,
+        transaction: &'tx Transaction<'tx>,
+        role_type: RoleType,
+        player: Thing,
+    ) -> BoxPromise<Result> {
+        box_promise(transaction.concept().transaction_stream.relation_add_role_player(
+            self.clone().into(),
+            role_type,
+            player,
+        ))
     }
 
     /// Removes the association of the given instance that plays the given role in this `Relation`.
@@ -304,13 +297,17 @@ pub trait RelationAPI: ThingAPI + Clone + Into<Relation> {
     #[cfg_attr(feature = "sync", doc = "relation.remove_role_player(transaction, role_type, player);")]
     #[cfg_attr(not(feature = "sync"), doc = "relation.remove_role_player(transaction, role_type, player).await;")]
     /// ```
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn remove_role_player(&self, transaction: &Transaction<'_>, role_type: RoleType, player: Thing) -> Result {
-        transaction
-            .concept()
-            .transaction_stream
-            .relation_remove_role_player(self.clone().into(), role_type, player)
-            .await
+    fn remove_role_player<'tx>(
+        &'tx self,
+        transaction: &'tx Transaction<'tx>,
+        role_type: RoleType,
+        player: Thing,
+    ) -> BoxPromise<Result> {
+        box_promise(transaction.concept().transaction_stream.relation_remove_role_player(
+            self.clone().into(),
+            role_type,
+            player,
+        ))
     }
 
     /// Retrieves all role players of this `Relation`, optionally filtered by given role types.
@@ -325,9 +322,9 @@ pub trait RelationAPI: ThingAPI + Clone + Into<Relation> {
     /// ```rust
     /// relation.get_players_by_role_type(transaction, role_types);
     /// ```
-    fn get_players_by_role_type(
-        &self,
-        transaction: &Transaction<'_>,
+    fn get_players_by_role_type<'tx>(
+        &'tx self,
+        transaction: &'tx Transaction<'tx>,
         role_types: Vec<RoleType>,
     ) -> Result<BoxStream<Result<Thing>>> {
         transaction
@@ -348,7 +345,10 @@ pub trait RelationAPI: ThingAPI + Clone + Into<Relation> {
     /// ```rust
     /// relation.get_role_players(transaction)
     /// ```
-    fn get_role_players(&self, transaction: &Transaction<'_>) -> Result<BoxStream<Result<(RoleType, Thing)>>> {
+    fn get_role_players<'tx>(
+        &'tx self,
+        transaction: &'tx Transaction<'tx>,
+    ) -> Result<BoxStream<Result<(RoleType, Thing)>>> {
         transaction.concept().transaction_stream.relation_get_role_players(self.clone().into()).map(box_stream)
     }
 
@@ -363,15 +363,13 @@ pub trait RelationAPI: ThingAPI + Clone + Into<Relation> {
     /// ```rust
     /// relation.get_relating(transaction)
     /// ```
-    fn get_relating(&self, transaction: &Transaction<'_>) -> Result<BoxStream<Result<RoleType>>> {
+    fn get_relating<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> Result<BoxStream<Result<RoleType>>> {
         transaction.concept().transaction_stream.relation_get_relating(self.clone().into()).map(box_stream)
     }
 }
 
-#[cfg_attr(not(feature = "sync"), async_trait::async_trait)]
 impl RelationAPI for Relation {}
 
-#[cfg_attr(not(feature = "sync"), async_trait::async_trait)]
 impl ThingAPI for Attribute {
     fn iid(&self) -> &IID {
         &self.iid
@@ -385,13 +383,13 @@ impl ThingAPI for Attribute {
         Thing::Attribute(self.clone())
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    async fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool> {
-        transaction.concept().transaction_stream.get_attribute(self.iid().clone()).await.map(|res| res.is_none())
+    fn is_deleted<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result<bool>> {
+        box_promise(promisify! {
+            resolve!(transaction.concept().transaction_stream.get_attribute(self.iid().clone())).map(|res| res.is_none())
+        })
     }
 }
 
-#[cfg_attr(not(feature = "sync"), async_trait::async_trait)]
 pub trait AttributeAPI: ThingAPI + Clone + Into<Attribute> {
     /// Retrieves the instances that own this `Attribute`.
     ///
@@ -405,14 +403,13 @@ pub trait AttributeAPI: ThingAPI + Clone + Into<Attribute> {
     /// ```rust
     /// attribute.get_owners(transaction, Some(owner_type));
     /// ```
-    fn get_owners(
-        &self,
-        transaction: &Transaction<'_>,
+    fn get_owners<'tx>(
+        &'tx self,
+        transaction: &'tx Transaction<'tx>,
         thing_type: Option<ThingType>,
     ) -> Result<BoxStream<Result<Thing>>> {
         transaction.concept().transaction_stream.attribute_get_owners(self.clone().into(), thing_type).map(box_stream)
     }
 }
 
-#[cfg_attr(not(feature = "sync"), async_trait::async_trait)]
 impl AttributeAPI for Attribute {}
