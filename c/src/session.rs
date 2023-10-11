@@ -35,8 +35,11 @@ pub extern "C" fn session_new(
     session_type: SessionType,
     options: *const Options,
 ) -> *mut Session {
-    try_release(borrow(databases).get(string_view(database_name))
-        .and_then(|db| Session::new_with_options(db, session_type, borrow(options).clone())))
+    try_release(
+        borrow(databases)
+            .get(string_view(database_name))
+            .and_then(|db| Session::new_with_options(db, session_type, borrow(options).clone())),
+    )
 }
 
 #[no_mangle]
