@@ -19,10 +19,10 @@
  * under the License.
  */
 
-int test_database_management();
+bool test_database_management();
 
-int test_query_schema();
-int test_query_data();
+bool test_query_schema();
+bool test_query_data();
 
-int test_concept_api_schema();
-int test_concept_api_data();
+bool test_concept_api_schema();
+bool test_concept_api_data();

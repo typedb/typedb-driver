@@ -27,13 +27,13 @@
 
 // Avoid helpers so the tests serve as documentation for the C API.
 
-int test_database_management() {
+bool test_database_management() {
     const char dbName[] = "test_database_management";
 
     Connection* conn = 0;
     DatabaseManager* dbMgr = 0;
 
-    int ret = 1;
+    bool completed = false;
 
     conn = connection_open_core(TYPEDB_CORE_ADDRESS);
     if (0 == conn) goto cleanup;
@@ -68,17 +68,17 @@ int test_database_management() {
         goto cleanup;
     }
 
-    ret = 0;
+    completed = true;
 cleanup:
     if (check_error()) print_error(__FILE__, __LINE__);
     delete_database_if_exists(dbMgr, dbName);
     if (check_error()) print_error(__FILE__, __LINE__);
     database_manager_drop(dbMgr);
     connection_close(conn);
-    return ret;
+    return completed;
 }
 
-int test_query_schema() {
+bool test_query_schema() {
     const char dbName[] = "test_query_schema";
 
     Connection* conn = 0;
@@ -87,7 +87,7 @@ int test_query_schema() {
     Transaction* transaction = 0;
     Options* opts = 0;
 
-    int ret = 1;
+    bool completed = false;
 
     // Set up connection & database
     conn = connection_open_core(TYPEDB_CORE_ADDRESS);
@@ -137,7 +137,7 @@ int test_query_schema() {
             goto cleanup;
         }
     }
-    ret = 0;
+    completed = true;
 
 cleanup:
     if (check_error()) print_error(__FILE__, __LINE__);
@@ -149,10 +149,10 @@ cleanup:
     if (check_error()) print_error(__FILE__, __LINE__);
     database_manager_drop(dbMgr);
     connection_close(conn);
-    return ret;
+    return completed;
 }
 
-int test_query_data() {
+bool test_query_data() {
     const char dbName[] = "test_query_data";
 
     Connection* conn = 0;
@@ -161,7 +161,7 @@ int test_query_data() {
     Transaction* transaction = 0;
     Options* opts = 0;
 
-    int ret = 1;
+    bool completed = false;
 
     // Set up connection & database
     conn = connection_open_core(TYPEDB_CORE_ADDRESS);
@@ -232,7 +232,7 @@ int test_query_data() {
         }
     }
 
-    ret = 0;
+    completed = true;
 
 cleanup:
     if (check_error()) print_error(__FILE__, __LINE__);
@@ -244,10 +244,10 @@ cleanup:
     if (check_error()) print_error(__FILE__, __LINE__);
     database_manager_drop(dbMgr);
     connection_close(conn);
-    return ret;
+    return completed;
 }
 
-int test_concept_api_schema() {
+bool test_concept_api_schema() {
     const char dbName[] = "test_concept_api";
 
     Connection* conn = 0;
@@ -256,7 +256,7 @@ int test_concept_api_schema() {
     Transaction* transaction = 0;
     Options* opts = 0;
 
-    int ret = 1;
+    bool completed = false;
 
     conn = connection_open_core(TYPEDB_CORE_ADDRESS);
     if (0 == conn) goto cleanup;
@@ -316,7 +316,7 @@ int test_concept_api_schema() {
         }
     }
 
-    ret = 0;
+    completed = true;
 
 cleanup:
     if (check_error()) print_error(__FILE__, __LINE__);
@@ -329,10 +329,10 @@ cleanup:
     if (check_error()) print_error(__FILE__, __LINE__);
     database_manager_drop(dbMgr);
     connection_close(conn);
-    return ret;
+    return completed;
 }
 
-int test_concept_api_data() {
+bool test_concept_api_data() {
     const char dbName[] = "test_concept_api";
 
     Connection* conn = 0;
@@ -343,7 +343,7 @@ int test_concept_api_data() {
 
     Concept* nameType = 0;
 
-    int ret = 1;
+    bool completed = false;
 
     conn = connection_open_core(TYPEDB_CORE_ADDRESS);
     if (0 == conn) goto cleanup;
@@ -425,7 +425,7 @@ int test_concept_api_data() {
         }
     }
 
-    ret = 0;
+    completed = true;
 
 cleanup:
     if (check_error()) print_error(__FILE__, __LINE__);
@@ -439,5 +439,5 @@ cleanup:
     if (check_error()) print_error(__FILE__, __LINE__);
     database_manager_drop(dbMgr);
     connection_close(conn);
-    return ret;
+    return completed;
 }
