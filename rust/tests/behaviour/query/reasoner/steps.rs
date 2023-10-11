@@ -33,7 +33,7 @@ use crate::{
             transaction::steps::{session_opens_transaction_of_type, transaction_commits},
         },
         parameter::TransactionTypeParam,
-        typeql::language::steps::{answer_size, get_answers_typeql_match, typeql_define, typeql_insert},
+        query::language::steps::{answer_size, get_answers_typeql_match, typeql_define, typeql_insert},
         Context,
     },
     generic_step_impl,
