@@ -20,37 +20,19 @@
 #
 
 load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
-load("@rules_rust//rust:defs.bzl", "rust_doc")
 
 
-def rust_docs(name, feature):
-    # rust_doc from rules_rust < 0.20 produces a zip-archive
-    rust_doc(
-        name = "docs_html_zip_" + feature,
-        crate = ":typedb_driver",
-        # TODO: Replace with rustdoc_flags after upgrading rules_rust to >=0.20
-        rustc_flags = ["--cfg", "feature=\"" + feature + "\""],
-    )
-
-    native.genrule(
-        name = "docs_html_" + feature,
-        srcs = [":docs_html_zip_" + feature],
-        outs = ["docs_html_rustdoc_" + feature],
-        cmd = "mkdir $@ && unzip $< -d $@",
-    )
-
-
-def rustdoc_to_adoc(name, data, modes = {}):
+def typedoc_to_adoc(name, data):
     args = ["$(location %s)" % target for target in data] + [
         "--output",
-        "rust/docs",
-    ] + ["--mode=$(location %s)=%s" % (target, modes[target]) for target in modes]
+        "nodejs/docs",
+    ]
     kt_jvm_binary(
         name = name,
         srcs = [
-            "//tool/docs:rust/RustDocsParser.kt",
+            "//tool/docs:nodejs/NodejsDocsParser.kt",
         ],
-        main_class = "com.vaticle.typedb.driver.tool.doc.rust.RustDocsParserKt",
+        main_class = "com.vaticle.typedb.driver.tool.doc.nodejs.NodejsDocsParserKt",
         args = args,
         deps = [
             "//tool/docs/common:html_docs_to_adoc_lib",

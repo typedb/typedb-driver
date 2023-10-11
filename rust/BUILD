@@ -27,8 +27,7 @@ load("@vaticle_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
 load("@vaticle_dependencies//builder/swig:java.bzl", "swig_java")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//tool/docs:rules.bzl", "html_docs_to_adoc")
-load("//tool/docs:rust/rules.bzl", "rust_docs")
+load("//tool/docs:rust/rules.bzl", "rust_docs", "rustdoc_to_adoc")
 
 typedb_driver_srcs = glob(["src/**/*.rs"])
 typedb_driver_tags = ["crate-name=typedb-driver"]
@@ -102,12 +101,10 @@ rust_docs(
     feature = "sync",
 )
 
-html_docs_to_adoc(
+rustdoc_to_adoc(
     name = "docs_adoc",
     data = [":docs_html_async", ":docs_html_sync"],
-    language = "rust",
     modes = {":docs_html_async": "async", ":docs_html_sync": "sync"},
-
 )
 
 checkstyle_test(

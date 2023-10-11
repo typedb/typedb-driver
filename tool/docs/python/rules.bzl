@@ -21,28 +21,21 @@
 
 load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
 
-def html_docs_to_adoc(name, data, language, modes = {}):
-    script_name = language.title() + "DocsParser"
 
+def sphinx_to_adoc(name, data):
     args = ["$(location %s)" % target for target in data] + [
         "--output",
-        "%s/docs" % language,
-    ] + ["--mode=$(location %s)=%s" % (target, modes[target]) for target in modes]
+        "python/docs",
+    ]
     kt_jvm_binary(
         name = name,
         srcs = [
-            "//tool/docs:" + language + "/" + script_name + ".kt",
-            "//tool/docs:common/AsciiDocBuilder.kt",
-            "//tool/docs:common/AsciiDocTableBuilder.kt",
-            "//tool/docs:common/Class.kt",
-            "//tool/docs:common/EnumConstant.kt",
-            "//tool/docs:common/Method.kt",
-            "//tool/docs:common/Util.kt",
-            "//tool/docs:common/Variable.kt",
+            "//tool/docs:python/PythonDocsParser.kt",
         ],
-        main_class = "com.vaticle.typedb.driver.tool.doc." + language + "." + script_name + "Kt",
+        main_class = "com.vaticle.typedb.driver.tool.doc.python.PythonDocsParserKt",
         args = args,
         deps = [
+            "//tool/docs/common:html_docs_to_adoc_lib",
             "@maven//:org_jsoup_jsoup",
             "@maven//:info_picocli_picocli",
         ],

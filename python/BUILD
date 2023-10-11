@@ -22,7 +22,7 @@
 load("@vaticle_dependencies//builder/swig:python.bzl", "py_native_lib_rename")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//python/tool/sphinx:rules.bzl", "sphinx_docs")
-load("//tool/docs:rules.bzl", "html_docs_to_adoc")
+load("//tool/docs:python/rules.bzl", "sphinx_to_adoc")
 
 load("//python:rules.bzl", "native_driver_versioned")
 load("//python:python_versions.bzl", "python_versions")
@@ -59,10 +59,9 @@ sphinx_docs(
     package_subdir = "typedb",
 )
 
-html_docs_to_adoc(
+sphinx_to_adoc(
     name = "docs_adoc",
     data = [":docs_html"],
-    language = "python",
 )
 
 checkstyle_test(
