@@ -100,13 +100,9 @@ pub extern "C" fn thing_type_get_owns(
 ) -> *mut ConceptIterator {
     let annotations = array_view(annotations).copied().collect();
     try_release(
-        borrow_as_thing_type(thing_type).get_owns(
-            borrow(transaction),
-            borrow_optional(value_type).copied(),
-            transitivity,
-            annotations,
-        )
-        .map(ConceptIterator::attribute_types),
+        borrow_as_thing_type(thing_type)
+            .get_owns(borrow(transaction), borrow_optional(value_type).copied(), transitivity, annotations)
+            .map(ConceptIterator::attribute_types),
     )
 }
 
