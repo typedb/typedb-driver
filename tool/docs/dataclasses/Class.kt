@@ -19,7 +19,11 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.tool.doc.common
+package com.vaticle.typedb.driver.tool.docs.dataclasses
+
+import com.vaticle.typedb.driver.tool.docs.adoc.AsciiDocBuilder
+import com.vaticle.typedb.driver.tool.docs.adoc.AsciiDocTableBuilder
+import com.vaticle.typedb.driver.tool.docs.util.replaceSymbolsForAnchor
 
 data class Class(
     val name: String,

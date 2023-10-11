@@ -50,10 +50,10 @@ def rustdoc_to_adoc(name, data, modes = {}):
         srcs = [
             "//tool/docs:rust/RustDocsParser.kt",
         ],
-        main_class = "com.vaticle.typedb.driver.tool.doc.rust.RustDocsParserKt",
+        main_class = "com.vaticle.typedb.driver.tool.docs.rust.RustDocsParserKt",
         args = args,
         deps = [
-            "//tool/docs/common:html_docs_to_adoc_lib",
+            "//tool/docs:html_docs_to_adoc_lib",
             "@maven//:org_jsoup_jsoup",
             "@maven//:info_picocli_picocli",
         ],

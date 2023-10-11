@@ -19,7 +19,9 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.tool.doc.common
+package com.vaticle.typedb.driver.tool.docs.dataclasses
+
+import com.vaticle.typedb.driver.tool.docs.util.escape
 
 data class Variable(
     val name: String,

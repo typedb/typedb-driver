@@ -19,9 +19,13 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.tool.doc.rust
+package com.vaticle.typedb.driver.tool.docs.rust
 
-import com.vaticle.typedb.driver.tool.doc.common.*
+import com.vaticle.typedb.driver.tool.docs.dataclasses.Class
+import com.vaticle.typedb.driver.tool.docs.dataclasses.EnumConstant
+import com.vaticle.typedb.driver.tool.docs.dataclasses.Method
+import com.vaticle.typedb.driver.tool.docs.dataclasses.Variable
+import com.vaticle.typedb.driver.tool.docs.util.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import picocli.CommandLine
@@ -80,7 +84,7 @@ class RustDocParser : Callable<Unit> {
         }
     }
 
-    fun parseDirectory(inputDirectoryName: String, mode: String): HashMap<String, Class> {
+    private fun parseDirectory(inputDirectoryName: String, mode: String): HashMap<String, Class> {
         val parsedClasses: HashMap<String, Class> = hashMapOf()
         File(inputDirectoryName).walkTopDown().filter {
             it.toString().contains("struct.") || it.toString().contains("trait.") || it.toString().contains("enum.")
@@ -106,7 +110,7 @@ class RustDocParser : Callable<Unit> {
         return parsedClasses
     }
 
-    fun parseClass(document: Element, classAnchor: String, mode: String): Class {
+    private fun parseClass(document: Element, classAnchor: String, mode: String): Class {
         val className = document.selectFirst(".main-heading h1 a.struct")!!.text()
         val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { it.html() }
 
@@ -136,7 +140,7 @@ class RustDocParser : Callable<Unit> {
         )
     }
 
-    fun parseTrait(document: Element, classAnchor: String, mode: String): Class {
+    private fun parseTrait(document: Element, classAnchor: String, mode: String): Class {
         val className = document.selectFirst(".main-heading h1 a.trait")!!.text()
         val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { it.html() }
 
@@ -163,7 +167,7 @@ class RustDocParser : Callable<Unit> {
         )
     }
 
-    fun parseEnum(document: Element, classAnchor: String, mode: String): Class {
+    private fun parseEnum(document: Element, classAnchor: String, mode: String): Class {
         val className = document.selectFirst(".main-heading h1 a.enum")!!.text()
         val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { it.html() }
 
@@ -181,7 +185,7 @@ class RustDocParser : Callable<Unit> {
         )
     }
 
-    fun parseMethod(element: Element, classAnchor: String, mode: String): Method {
+    private fun parseMethod(element: Element, classAnchor: String, mode: String): Method {
         val methodSignature = enhanceSignature(element.selectFirst("summary section h4")!!.html())
         val methodName = element.selectFirst("summary section h4 a.fn")!!.text()
         val methodAnchor = replaceSymbolsForAnchor(
@@ -224,7 +228,7 @@ class RustDocParser : Callable<Unit> {
 
     }
 
-    fun parseField(element: Element, classAnchor: String): Variable {
+    private fun parseField(element: Element, classAnchor: String): Variable {
         val nameAndType = element.selectFirst("code")!!.text().split(": ")
         val descr = element.nextElementSibling()?.selectFirst(".docblock")?.let { reformatTextWithCode(it.html()) }
         return Variable(
@@ -235,13 +239,13 @@ class RustDocParser : Callable<Unit> {
         )
     }
 
-    fun parseEnumConstant(element: Element): EnumConstant {
+    private fun parseEnumConstant(element: Element): EnumConstant {
         return EnumConstant(
             name = element.selectFirst("h3")!!.text(),
         )
     }
 
-    fun getArgsFromSignature(methodSignature: String): Map<String, String?> {
+    private fun getArgsFromSignature(methodSignature: String): Map<String, String?> {
         //    Splitting by ", " is incorrect (could be used in the type), but we don't have such cases now
         return methodSignature
             .substringAfter("(").substringBeforeLast(")")
@@ -251,27 +255,27 @@ class RustDocParser : Callable<Unit> {
             }
     }
 
-    fun reformatTextWithCode(html: String): String {
+    private fun reformatTextWithCode(html: String): String {
         return removeAllTags(replaceEmTags(replaceCodeTags(replaceLinks(html))))
     }
 
-    fun enhanceSignature(signature: String): String {
+    private fun enhanceSignature(signature: String): String {
         return replaceHtmlSymbols(removeAllTags(replaceSpaces(dispatchNewlines(signature))))
     }
 
-    fun dispatchNewlines(html: String): String {
+    private fun dispatchNewlines(html: String): String {
         return Regex("<span[^>]*newline[^>]*>").replace(html, "\n")
     }
 
-    fun removeArgName(html: String): String {
+    private fun removeArgName(html: String): String {
         return Regex("<code>[^<]*</code>").replaceFirst(html, "")
     }
 
-    fun getAnchorFromUrl(url: String): String {
+    private fun getAnchorFromUrl(url: String): String {
         return replaceSymbolsForAnchor(url.substringAfterLast("/").replace(".html", ""))
     }
 
-    fun replaceLinks(html: String): String {
+    private fun replaceLinks(html: String): String {
         val fragments: MutableList<String> = Regex("<a\\shref=\"([^:]*)#([^\"]*)\"[^>]*><code>([^<]*)</code>")
             .replace(html, "<<#_~$1_$2~,`$3`>>").split("~").toMutableList()
         if (fragments.size > 1) {

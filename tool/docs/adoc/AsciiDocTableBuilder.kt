@@ -19,33 +19,32 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.tool.doc.common
+package com.vaticle.typedb.driver.tool.docs.adoc
 
-fun replaceCodeTags(html: String): String {
-    return Regex("<code[^>]*>").replace(html, "``").replace("</code>", "``")
-}
+class AsciiDocTableBuilder(private val headers: List<String>) {
+    private val rows: MutableList<List<String?>> = mutableListOf()
 
-fun replaceEmTags(html: String): String {
-    return Regex("<em[^>]*>").replace(html, "_").replace("</em>", "_")
-}
+    fun addRow(row: List<String?>) {
+        assert(this.headers.size == row.size)
+        rows.add(row)
+    }
 
-fun removeAllTags(html: String): String {
-    return Regex("(?<!<)<[^<>]*>(?!>)").replace(html, "")
-}
+    fun build(): String {
+        return this.header() + this.body()
+    }
 
-fun replaceSpaces(html: String): String {
-    return html.replace("&nbsp;", " ").replace("\u00a0", " ")
-}
+    private fun header(): String {
+        return "[cols=\"~" + ",~".repeat(this.headers.size - 1) +
+                "\"]\n[options=\"header\"]\n" +
+                "|===\n|" +
+                headers.joinToString(" |") + "\n"
+    }
 
-fun replaceHtmlSymbols(html: String): String {
-    return html.replace("&lt;", "<").replace("&gt;", ">")
-        .replace("&amp;", "&")
-}
+    private fun body(): String {
+        return rows.joinToString("") { this.row(it) } + "|===\n"
+    }
 
-fun replaceSymbolsForAnchor(name: String): String {
-    return name.replace("[\\.,\\(\\)\\s#]".toRegex(), "_").removeSuffix("_")
-}
-
-fun escape(text: String): String {
-    return text.replace("|", "\\|")
+    private fun row(row: List<String?>): String {
+        return "a| " + row.joinToString(" a| ") + "\n"
+    }
 }

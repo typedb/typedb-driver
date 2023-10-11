@@ -21,7 +21,14 @@
 
 exports_files(glob(["**/*.kt"]))
 
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+
+kt_jvm_library(
+    name = "html_docs_to_adoc_lib",
+    srcs = glob(["adoc/*.kt", "dataclasses/*.kt", "util/*.kt"]),
+    visibility = ["//visibility:public"],
+)
 
 checkstyle_test(
     name = "checkstyle",

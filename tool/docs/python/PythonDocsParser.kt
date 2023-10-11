@@ -19,9 +19,13 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.tool.doc.python
+package com.vaticle.typedb.driver.tool.docs.python
 
-import com.vaticle.typedb.driver.tool.doc.common.*
+import com.vaticle.typedb.driver.tool.docs.dataclasses.Class
+import com.vaticle.typedb.driver.tool.docs.dataclasses.EnumConstant
+import com.vaticle.typedb.driver.tool.docs.dataclasses.Method
+import com.vaticle.typedb.driver.tool.docs.dataclasses.Variable
+import com.vaticle.typedb.driver.tool.docs.util.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import picocli.CommandLine
@@ -75,7 +79,7 @@ class PythonDocParser : Callable<Unit> {
         }
     }
 
-    fun parseClass(element: Element): Class {
+    private fun parseClass(element: Element): Class {
         val classSignElement = element.selectFirst("dt.sig-object")
         val className = classSignElement!!.selectFirst("dt.sig-object span.sig-name")!!.text()
         val classAnchor = className
@@ -111,7 +115,7 @@ class PythonDocParser : Callable<Unit> {
         )
     }
 
-    fun parseEnum(element: Element): Class {
+    private fun parseEnum(element: Element): Class {
         val classSignElement = element.selectFirst("dt.sig-object")
         val className = classSignElement!!.selectFirst("dt.sig-object span.sig-name")!!.text()
         val classAnchor = className
@@ -136,7 +140,7 @@ class PythonDocParser : Callable<Unit> {
         )
     }
 
-    fun parseMethod(element: Element, classAnchor: String): Method {
+    private fun parseMethod(element: Element, classAnchor: String): Method {
         val methodSignature = enhanceSignature(element.selectFirst("dt.sig-object")!!.text())
         val methodName = element.selectFirst("dt.sig-object span.sig-name")!!.text()
         val allArgs = getArgsFromSignature(element.selectFirst("dt.sig-object")!!)
@@ -169,7 +173,7 @@ class PythonDocParser : Callable<Unit> {
 
     }
 
-    fun parseProperty(element: Element): Variable {
+    private fun parseProperty(element: Element): Variable {
         val name = element.selectFirst("dt.sig-object span.sig-name")!!.text()
         val type = element.selectFirst("dt.sig-object span.sig-name + .property ")?.text()?.dropWhile { !it.isLetter() }
         val descr = element.select("dd > p").map { reformatTextWithCode(it.html()) }.joinToString("\n\n")
@@ -180,7 +184,7 @@ class PythonDocParser : Callable<Unit> {
         )
     }
 
-    fun parseEnumConstant(element: Element): EnumConstant {
+    private fun parseEnumConstant(element: Element): EnumConstant {
         val name = element.selectFirst("dt.sig-object span.sig-name")!!.text()
         val value = element.selectFirst("dt.sig-object span.sig-name + .property")!!.text().removePrefix("= ")
         return EnumConstant(
@@ -189,22 +193,22 @@ class PythonDocParser : Callable<Unit> {
         )
     }
 
-    fun getArgsFromSignature(methodSignature: Element): Map<String, Pair<String?, String?>> {
+    private fun getArgsFromSignature(methodSignature: Element): Map<String, Pair<String?, String?>> {
         return methodSignature.select(".sig-param").map {
             it.selectFirst(".n")!!.text() to
                     Pair(it.select(".p + .w + .n").text(), it.selectFirst("span.default_value")?.text())
         }.toMap()
     }
 
-    fun reformatTextWithCode(html: String): String {
+    private fun reformatTextWithCode(html: String): String {
         return removeAllTags(replaceEmTags(replaceCodeTags(html)))
     }
 
-    fun removeArgName(html: String): String {
+    private fun removeArgName(html: String): String {
         return Regex("<strong>[^<]*</strong>").replace(html, "")
     }
 
-    fun enhanceSignature(signature: String): String {
+    private fun enhanceSignature(signature: String): String {
         return signature.replace("→", "->").replace("¶", "").replace("abstract ", "")
     }
 }

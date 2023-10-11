@@ -19,21 +19,33 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.tool.doc.common
+package com.vaticle.typedb.driver.tool.docs.util
 
-data class EnumConstant(
-    val name: String,
-    val type: String? = null,
-    val value: String? = null,
-) {
-    fun toTableData(language: String): List<String> {
-        val result = mutableListOf("`${this.name}`")
-        if (language == "python") {
-            assert(this.type == null || this.value == null)
-            this.value?.let { result.add("`$it`") }
-                ?: this.type?.let { result.add("`$it`") }
-                ?: run { result.add("") }
-        }
-        return result
-    }
+fun replaceCodeTags(html: String): String {
+    return Regex("<code[^>]*>").replace(html, "``").replace("</code>", "``")
+}
+
+fun replaceEmTags(html: String): String {
+    return Regex("<em[^>]*>").replace(html, "_").replace("</em>", "_")
+}
+
+fun removeAllTags(html: String): String {
+    return Regex("(?<!<)<[^<>]*>(?!>)").replace(html, "")
+}
+
+fun replaceSpaces(html: String): String {
+    return html.replace("&nbsp;", " ").replace("\u00a0", " ")
+}
+
+fun replaceHtmlSymbols(html: String): String {
+    return html.replace("&lt;", "<").replace("&gt;", ">")
+        .replace("&amp;", "&")
+}
+
+fun replaceSymbolsForAnchor(name: String): String {
+    return name.replace("[\\.,\\(\\)\\s#]".toRegex(), "_").removeSuffix("_")
+}
+
+fun escape(text: String): String {
+    return text.replace("|", "\\|")
 }

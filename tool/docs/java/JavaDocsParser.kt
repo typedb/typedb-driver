@@ -19,9 +19,13 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.tool.doc.java
+package com.vaticle.typedb.driver.tool.docs.java
 
-import com.vaticle.typedb.driver.tool.doc.common.*
+import com.vaticle.typedb.driver.tool.docs.dataclasses.Class
+import com.vaticle.typedb.driver.tool.docs.dataclasses.EnumConstant
+import com.vaticle.typedb.driver.tool.docs.dataclasses.Method
+import com.vaticle.typedb.driver.tool.docs.dataclasses.Variable
+import com.vaticle.typedb.driver.tool.docs.util.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import picocli.CommandLine
@@ -78,7 +82,7 @@ class JavaDocParser : Callable<Unit> {
         }
     }
 
-    fun parseClass(document: Element, currentDirName: String): Class {
+    private fun parseClass(document: Element, currentDirName: String): Class {
         val className = document.selectFirst(".contentContainer .description pre .typeNameLabel")!!.text()
         val classDescr: List<String> = document.selectFirst(".contentContainer .description pre + div")
             ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
@@ -116,7 +120,7 @@ class JavaDocParser : Callable<Unit> {
         )
     }
 
-    fun parseEnum(document: Element): Class {
+    private fun parseEnum(document: Element): Class {
         val className = document.selectFirst(".contentContainer .description pre .typeNameLabel")!!.text()
         val classDescr: List<String> = document.selectFirst(".contentContainer .description pre + div")
             ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
@@ -155,7 +159,7 @@ class JavaDocParser : Callable<Unit> {
         )
     }
 
-    fun parseMethod(element: Element): Method {
+    private fun parseMethod(element: Element): Method {
         val methodAnchor = replaceSymbolsForAnchor(element.parent()!!.previousElementSibling()!!.id())
         val methodName = element.selectFirst("h4")!!.text()
         val methodSignature = element.selectFirst("li.blockList > pre")!!.text()
@@ -196,7 +200,7 @@ class JavaDocParser : Callable<Unit> {
 
     }
 
-    fun parseField(element: Element): Variable {
+    private fun parseField(element: Element): Variable {
         val name = element.selectFirst(".colSecond")!!.text()
         val type = element.selectFirst(".colFirst")!!.text()
         val descr = element.selectFirst(".colLast")?.text()
@@ -207,14 +211,14 @@ class JavaDocParser : Callable<Unit> {
         )
     }
 
-    fun parseEnumConstant(element: Element): EnumConstant {
+    private fun parseEnumConstant(element: Element): EnumConstant {
         val name = element.selectFirst(".colFirst")!!.text()
         return EnumConstant(
             name = name,
         )
     }
 
-    fun getArgsFromSignature(methodSignature: String): Map<String, String?> {
+    private fun getArgsFromSignature(methodSignature: String): Map<String, String?> {
         return methodSignature
             .replace("\\s+".toRegex(), " ")
             .substringAfter("(").substringBefore(")")
@@ -223,30 +227,30 @@ class JavaDocParser : Callable<Unit> {
             }.toMap()
     }
 
-    fun reformatTextWithCode(html: String): String {
+    private fun reformatTextWithCode(html: String): String {
         return removeAllTags(replaceLocalLinks(replaceEmTags(replacePreTags(replaceCodeTags(html)))))
     }
 
-    fun replacePreTags(html: String): String {
+    private fun replacePreTags(html: String): String {
         return html.replace("<pre>", "[source,java]\n----\n").replace("</pre>", "\n----\n")
     }
 
-    fun enhanceSignature(signature: String): String {
+    private fun enhanceSignature(signature: String): String {
         return replaceSpaces(signature)
     }
 
-    fun getReturnTypeFromSignature(signature: String): String {
+    private fun getReturnTypeFromSignature(signature: String): String {
         return Regex("@[^\\s]*\\s|default ").replace(
             signature.substringBefore("(")
                 .substringBeforeLast("\u00a0"), ""
         )
     }
 
-    fun splitToParagraphs(html: String): List<String> {
+    private fun splitToParagraphs(html: String): List<String> {
         return html.replace("</p>", "").split("\\s*<p>\\s*".toRegex()).map { it.trim() }
     }
 
-    fun replaceLocalLinks(html: String): String {
+    private fun replaceLocalLinks(html: String): String {
         val fragments: MutableList<String> = Regex("<a\\shref=\"#([^\"]*)\">([^<]*)</a>")
             .replace(html, "<<#_~$1~,$2>>").split("~").toMutableList()
         if (fragments.size > 1) {

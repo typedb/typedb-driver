@@ -19,9 +19,13 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.tool.doc.nodejs
+package com.vaticle.typedb.driver.tool.docs.nodejs
 
-import com.vaticle.typedb.driver.tool.doc.common.*
+import com.vaticle.typedb.driver.tool.docs.dataclasses.Class
+import com.vaticle.typedb.driver.tool.docs.dataclasses.EnumConstant
+import com.vaticle.typedb.driver.tool.docs.dataclasses.Method
+import com.vaticle.typedb.driver.tool.docs.dataclasses.Variable
+import com.vaticle.typedb.driver.tool.docs.util.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import picocli.CommandLine
@@ -82,7 +86,7 @@ class NodejsDocParser : Callable<Unit> {
         }
     }
 
-    fun parseClass(document: Element): Class {
+    private fun parseClass(document: Element): Class {
         val className =
             document.selectFirst(".tsd-page-title h1")!!.textNodes().first()!!.text().split(" ", limit = 2)[1]
         val classDescr = document.select(".tsd-page-title + section.tsd-comment div.tsd-comment p").map {
@@ -120,7 +124,7 @@ class NodejsDocParser : Callable<Unit> {
         )
     }
 
-    fun parseNamespace(document: Element): Class {
+    private fun parseNamespace(document: Element): Class {
         val className = document.selectFirst(".tsd-page-title h1")!!.text().split(" ")[1]
         val classDescr = document.select(".tsd-page-title + section.tsd-comment div.tsd-comment p").map {
             reformatTextWithCode(it.html())
@@ -137,7 +141,7 @@ class NodejsDocParser : Callable<Unit> {
         )
     }
 
-    fun parseMethod(element: Element): Method {
+    private fun parseMethod(element: Element): Method {
         val methodSignature = element.text()
         val methodName = element.selectFirst(".tsd-kind-call-signature, .tsd-kind-constructor-signature")!!.text()
         val descrElement = element.nextElementSibling()
@@ -171,7 +175,7 @@ class NodejsDocParser : Callable<Unit> {
         )
     }
 
-    fun parseAccessor(element: Element): Method {
+    private fun parseAccessor(element: Element): Method {
         val methodSignature = element.text()
         val methodName = element.selectFirst(".tsd-signature")!!.textNodes().first()!!.text()
         val descrElement = element.nextElementSibling()
@@ -192,7 +196,7 @@ class NodejsDocParser : Callable<Unit> {
         )
     }
 
-    fun parseProperty(element: Element): Variable {
+    private fun parseProperty(element: Element): Variable {
         val name = element.selectFirst(".tsd-signature span.tsd-kind-property")!!.text()
         val type = element.selectFirst(".tsd-signature .tsd-signature-type")?.text()
         val descr = element.selectFirst(".tsd-signature + .tsd-comment")?.text()
@@ -203,7 +207,7 @@ class NodejsDocParser : Callable<Unit> {
         )
     }
 
-    fun reformatTextWithCode(html: String): String {
+    private fun reformatTextWithCode(html: String): String {
         return removeAllTags(replaceEmTags(replaceCodeTags(html)))
     }
 }

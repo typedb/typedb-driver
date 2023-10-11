@@ -32,10 +32,10 @@ def typedoc_to_adoc(name, data):
         srcs = [
             "//tool/docs:nodejs/NodejsDocsParser.kt",
         ],
-        main_class = "com.vaticle.typedb.driver.tool.doc.nodejs.NodejsDocsParserKt",
+        main_class = "com.vaticle.typedb.driver.tool.docs.nodejs.NodejsDocsParserKt",
         args = args,
         deps = [
-            "//tool/docs/common:html_docs_to_adoc_lib",
+            "//tool/docs:html_docs_to_adoc_lib",
             "@maven//:org_jsoup_jsoup",
             "@maven//:info_picocli_picocli",
         ],

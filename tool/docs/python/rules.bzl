@@ -32,10 +32,10 @@ def sphinx_to_adoc(name, data):
         srcs = [
             "//tool/docs:python/PythonDocsParser.kt",
         ],
-        main_class = "com.vaticle.typedb.driver.tool.doc.python.PythonDocsParserKt",
+        main_class = "com.vaticle.typedb.driver.tool.docs.python.PythonDocsParserKt",
         args = args,
         deps = [
-            "//tool/docs/common:html_docs_to_adoc_lib",
+            "//tool/docs:html_docs_to_adoc_lib",
             "@maven//:org_jsoup_jsoup",
             "@maven//:info_picocli_picocli",
         ],
