@@ -36,7 +36,7 @@ fun main(args: Array<String>): Unit = exitProcess(CommandLine(PythonDocParser())
 
 @CommandLine.Command(name = "PythonDocParser", mixinStandardHelpOptions = true)
 class PythonDocParser : Callable<Unit> {
-    @Parameters(paramLabel = "<input>", description = ["Input directory (for rust specify async first)"])
+    @Parameters(paramLabel = "<input>", description = ["Input directory"])
     private lateinit var inputDirectoryNames: List<String>
 
     @CommandLine.Option(names = ["--output", "-o"], required = true)

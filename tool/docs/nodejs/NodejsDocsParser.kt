@@ -36,7 +36,7 @@ fun main(args: Array<String>): Unit = exitProcess(CommandLine(NodejsDocParser())
 
 @CommandLine.Command(name = "NodejsDocParser", mixinStandardHelpOptions = true)
 class NodejsDocParser : Callable<Unit> {
-    @Parameters(paramLabel = "<input>", description = ["Input directory (for rust specify async first)"])
+    @Parameters(paramLabel = "<input>", description = ["Input directory"])
     private lateinit var inputDirectoryNames: List<String>
 
     @CommandLine.Option(names = ["--output", "-o"], required = true)
