@@ -23,14 +23,12 @@ from __future__ import annotations
 
 from typing import Union, Any
 
-from typedb.native_driver_wrapper import TypeDBDriverException
+from typedb.native_driver_wrapper import TypeDBDriverExceptionNative
 
 
-class TypeDBDriverExceptionExt(TypeDBDriverException):
+class TypeDBDriverException(TypeDBDriverExceptionNative):
     """
     Exceptions raised by the driver.
-
-    For exceptions handling use ``TypeDBDriverException`` instead of this class.
 
     Examples
     --------
@@ -52,14 +50,14 @@ class TypeDBDriverExceptionExt(TypeDBDriverException):
             self.error_message = msg
 
         self.__cause__ = cause
-        super(TypeDBDriverException, self).__init__(self.message)
+        super(TypeDBDriverExceptionNative, self).__init__(self.message)
 
     @staticmethod
-    def of(error_message: ErrorMessage, params: Any = None) -> TypeDBDriverExceptionExt:
+    def of(error_message: ErrorMessage, params: Any = None) -> TypeDBDriverException:
         """
         :meta private:
         """
-        return TypeDBDriverExceptionExt(msg=error_message, cause=None, params=params)
+        return TypeDBDriverException(msg=error_message, cause=None, params=params)
 
 
 class ErrorMessage:

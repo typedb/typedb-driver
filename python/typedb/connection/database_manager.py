@@ -27,7 +27,7 @@ from typedb.native_driver_wrapper import databases_contains, databases_create, d
     databases_all, database_iterator_next, DatabaseManager as NativeDatabaseManager
 
 from typedb.api.connection.database import DatabaseManager
-from typedb.common.exception import TypeDBDriverExceptionExt, DATABASE_DELETED, ILLEGAL_STATE, MISSING_DB_NAME
+from typedb.common.exception import TypeDBDriverException, DATABASE_DELETED, ILLEGAL_STATE, MISSING_DB_NAME
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.connection.database import _Database
@@ -38,7 +38,7 @@ if TYPE_CHECKING:
 
 def _not_blank(name: str) -> str:
     if not name or name.isspace():
-        raise TypeDBDriverExceptionExt.of(MISSING_DB_NAME)
+        raise TypeDBDriverException.of(MISSING_DB_NAME)
     return name
 
 
@@ -48,12 +48,12 @@ class _DatabaseManager(DatabaseManager, NativeWrapper[NativeDatabaseManager]):
         super().__init__(database_manager_new(connection))
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
-        return TypeDBDriverExceptionExt.of(ILLEGAL_STATE)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverException:
+        return TypeDBDriverException.of(ILLEGAL_STATE)
 
     def get(self, name: str) -> _Database:
         if not self.contains(name):
-            raise TypeDBDriverExceptionExt.of(DATABASE_DELETED, name)
+            raise TypeDBDriverException.of(DATABASE_DELETED, name)
         return _Database(databases_get(self.native_object, name))
 
     def contains(self, name: str) -> bool:

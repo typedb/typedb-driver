@@ -29,7 +29,7 @@ from typedb.native_driver_wrapper import database_get_name, database_schema, dat
     database_get_preferred_replica_info, replica_info_iterator_next, Database as NativeDatabase
 
 from typedb.api.connection.database import Database, Replica
-from typedb.common.exception import TypeDBDriverExceptionExt, DATABASE_DELETED, NULL_NATIVE_OBJECT
+from typedb.common.exception import TypeDBDriverException, DATABASE_DELETED, NULL_NATIVE_OBJECT
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
 
@@ -38,13 +38,13 @@ class _Database(Database, NativeWrapper[NativeDatabase]):
 
     def __init__(self, database: NativeDatabase):
         if not database:
-            raise TypeDBDriverExceptionExt(NULL_NATIVE_OBJECT)
+            raise TypeDBDriverException(NULL_NATIVE_OBJECT)
         super().__init__(database)
         self._name = database_get_name(database)
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
-        return TypeDBDriverExceptionExt.of(DATABASE_DELETED)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverException:
+        return TypeDBDriverException.of(DATABASE_DELETED)
 
     @property
     def name(self) -> str:

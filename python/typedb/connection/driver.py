@@ -28,7 +28,7 @@ from typedb.native_driver_wrapper import connection_open_core, connection_open_e
 
 from typedb.api.connection.driver import TypeDBDriver
 from typedb.api.connection.options import TypeDBOptions
-from typedb.common.exception import TypeDBDriverExceptionExt, DRIVER_CLOSED
+from typedb.common.exception import TypeDBDriverException, DRIVER_CLOSED
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.connection.database_manager import _DatabaseManager
 from typedb.connection.session import _Session
@@ -52,8 +52,8 @@ class _Driver(TypeDBDriver, NativeWrapper[NativeConnection]):
         self._user_manager = _UserManager(native_connection)
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
-        return TypeDBDriverExceptionExt.of(DRIVER_CLOSED)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverException:
+        return TypeDBDriverException.of(DRIVER_CLOSED)
 
     @property
     def _native_connection(self) -> NativeConnection:

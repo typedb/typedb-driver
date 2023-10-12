@@ -1,5 +1,5 @@
 [#_TypeDBDriverExceptionExt]
-=== TypeDBDriverExceptionExt
+=== TypeDBDriverException
 
 *Supertypes:*
 
@@ -10,7 +10,7 @@ Exceptions raised by the driver.
 For exceptions handling use ``TypeDBDriverException`` instead of this class.
 
 [caption=""]
-.TypeDBDriverExceptionExt examples
+.TypeDBDriverException examples
 ====
 
 [source,python]

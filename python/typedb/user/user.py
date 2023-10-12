@@ -27,7 +27,7 @@ from typedb.native_driver_wrapper import user_get_username, user_get_password_ex
     User as NativeUser
 
 from typedb.api.user.user import User
-from typedb.common.exception import TypeDBDriverExceptionExt, ILLEGAL_STATE
+from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
 
 if TYPE_CHECKING:
@@ -41,8 +41,8 @@ class _User(User, NativeWrapper[NativeUser]):
         self._user_manager = user_manager
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
-        return TypeDBDriverExceptionExt.of(ILLEGAL_STATE)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverException:
+        return TypeDBDriverException.of(ILLEGAL_STATE)
 
     def username(self) -> str:
         return user_get_username(self.native_object)

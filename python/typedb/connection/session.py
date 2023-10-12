@@ -28,7 +28,7 @@ from typedb.native_driver_wrapper import session_new, session_on_close, session_
 
 from typedb.api.connection.options import TypeDBOptions
 from typedb.api.connection.session import TypeDBSession
-from typedb.common.exception import TypeDBDriverExceptionExt, SESSION_CLOSED
+from typedb.common.exception import TypeDBDriverException, SESSION_CLOSED
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.connection.transaction import _Transaction
 
@@ -49,8 +49,8 @@ class _Session(TypeDBSession, NativeWrapper[NativeSession]):
         super().__init__(session_new(database_manager.native_object, database_name, session_type.value, options.native_object))
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
-        return TypeDBDriverExceptionExt.of(SESSION_CLOSED)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverException:
+        return TypeDBDriverException.of(SESSION_CLOSED)
 
     def is_open(self) -> bool:
         return session_is_open(self.native_object)

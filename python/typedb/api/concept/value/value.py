@@ -29,7 +29,7 @@ from typing import Mapping, Union
 from typedb.native_driver_wrapper import Object, Boolean, Long, Double, String, DateTime
 
 from typedb.api.concept.concept import Concept
-from typedb.common.exception import TypeDBDriverExceptionExt, UNEXPECTED_NATIVE_VALUE
+from typedb.common.exception import TypeDBDriverException, UNEXPECTED_NATIVE_VALUE
 
 
 class Value(Concept, ABC):
@@ -315,4 +315,4 @@ class ValueType(Enum):
         for type_ in ValueType:
             if type_.native_object == value_type:
                 return type_
-        raise TypeDBDriverExceptionExt(UNEXPECTED_NATIVE_VALUE)
+        raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)

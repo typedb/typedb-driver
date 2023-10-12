@@ -34,7 +34,7 @@ from typedb.native_driver_wrapper import options_new, options_has_infer, options
     options_has_schema_lock_acquire_timeout_millis, options_set_schema_lock_acquire_timeout_millis, \
     options_set_read_any_replica, options_get_read_any_replica, options_has_read_any_replica, Options as NativeOptions
 
-from typedb.common.exception import TypeDBDriverExceptionExt, ILLEGAL_STATE, POSITIVE_VALUE_REQUIRED
+from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, POSITIVE_VALUE_REQUIRED
 from typedb.common.native_wrapper import NativeWrapper
 
 
@@ -90,8 +90,8 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
             self.read_any_replica = read_any_replica
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
-        return TypeDBDriverExceptionExt.of(ILLEGAL_STATE)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverException:
+        return TypeDBDriverException.of(ILLEGAL_STATE)
 
     @property
     def infer(self) -> Optional[bool]:
@@ -163,7 +163,7 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
     @prefetch_size.setter
     def prefetch_size(self, prefetch_size: int):
         if prefetch_size < 1:
-            raise TypeDBDriverExceptionExt.of(POSITIVE_VALUE_REQUIRED, prefetch_size)
+            raise TypeDBDriverException.of(POSITIVE_VALUE_REQUIRED, prefetch_size)
         options_set_prefetch_size(self.native_object, prefetch_size)
 
     @property
@@ -178,7 +178,7 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
     @session_idle_timeout_millis.setter
     def session_idle_timeout_millis(self, session_idle_timeout_millis: int):
         if session_idle_timeout_millis < 1:
-            raise TypeDBDriverExceptionExt.of(POSITIVE_VALUE_REQUIRED, session_idle_timeout_millis)
+            raise TypeDBDriverException.of(POSITIVE_VALUE_REQUIRED, session_idle_timeout_millis)
         options_set_session_idle_timeout_millis(self.native_object, session_idle_timeout_millis)
 
     @property
@@ -193,7 +193,7 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
     @transaction_timeout_millis.setter
     def transaction_timeout_millis(self, transaction_timeout_millis: int):
         if transaction_timeout_millis < 1:
-            raise TypeDBDriverExceptionExt.of(POSITIVE_VALUE_REQUIRED, transaction_timeout_millis)
+            raise TypeDBDriverException.of(POSITIVE_VALUE_REQUIRED, transaction_timeout_millis)
         options_set_transaction_timeout_millis(self.native_object, transaction_timeout_millis)
 
     @property
@@ -208,7 +208,7 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
     @schema_lock_acquire_timeout_millis.setter
     def schema_lock_acquire_timeout_millis(self, schema_lock_acquire_timeout_millis: int):
         if schema_lock_acquire_timeout_millis < 1:
-            raise TypeDBDriverExceptionExt.of(POSITIVE_VALUE_REQUIRED, schema_lock_acquire_timeout_millis)
+            raise TypeDBDriverException.of(POSITIVE_VALUE_REQUIRED, schema_lock_acquire_timeout_millis)
         options_set_schema_lock_acquire_timeout_millis(self.native_object, schema_lock_acquire_timeout_millis)
 
     @property

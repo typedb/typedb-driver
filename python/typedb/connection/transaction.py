@@ -29,7 +29,7 @@ from typedb.native_driver_wrapper import error_code, error_message, transaction_
 
 from typedb.api.connection.options import TypeDBOptions
 from typedb.api.connection.transaction import TypeDBTransaction
-from typedb.common.exception import TypeDBDriverExceptionExt, TRANSACTION_CLOSED, TypeDBException
+from typedb.common.exception import TypeDBDriverException, TRANSACTION_CLOSED, TypeDBException
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.concept.concept_manager import _ConceptManager
 from typedb.logic.logic_manager import _LogicManager
@@ -54,8 +54,8 @@ class _Transaction(TypeDBTransaction, NativeWrapper[NativeTransaction]):
         self._logic_manager = _LogicManager(self._native_object)
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
-        return TypeDBDriverExceptionExt.of(TRANSACTION_CLOSED)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverException:
+        return TypeDBDriverException.of(TRANSACTION_CLOSED)
 
     @property
     def transaction_type(self) -> TransactionType:
