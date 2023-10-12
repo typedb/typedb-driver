@@ -48,7 +48,6 @@ typedb_driver_deps = [
     "@vaticle_typeql//rust:typeql",
 ]
 typedb_driver_proc_macro_deps = [
-    "@crates//:async-trait",
     "@crates//:maybe-async",
 ]
 

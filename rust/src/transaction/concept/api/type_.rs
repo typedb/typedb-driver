@@ -375,9 +375,7 @@ pub trait ThingTypeAPI: Sync + Send {
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.get_syntax(transaction).await;")]
     /// ```
     fn get_syntax<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result<String>> {
-        box_promise(promisify! {
-            resolve!(transaction.concept().transaction_stream.thing_type_get_syntax(self.to_thing_type_cloned()))
-        })
+        box_promise(transaction.concept().transaction_stream.thing_type_get_syntax(self.to_thing_type_cloned()))
     }
 }
 
@@ -421,9 +419,8 @@ impl ThingTypeAPI for EntityType {
     }
 
     fn is_deleted<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result<bool>> {
-        box_promise(promisify! {
-            resolve!(transaction.concept().transaction_stream.get_entity_type(self.label().to_owned())).map(|res| res.is_none())
-        })
+        let promise = transaction.concept().transaction_stream.get_entity_type(self.label().to_owned());
+        box_promise(promisify! { resolve!(promise).map(|res| res.is_none()) })
     }
 }
 
@@ -571,15 +568,8 @@ impl ThingTypeAPI for RelationType {
     }
 
     fn is_deleted<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result<bool>> {
-        box_promise(promisify! {
-            resolve!(
-                transaction
-                     .concept()
-                     .transaction_stream
-                     .get_relation_type(self.label().to_owned())
-            )
-            .map(|res| res.is_none())
-        })
+        let promise = transaction.concept().transaction_stream.get_relation_type(self.label().to_owned());
+        box_promise(promisify! { resolve!(promise).map(|res| res.is_none()) })
     }
 }
 
@@ -857,15 +847,8 @@ impl ThingTypeAPI for AttributeType {
     }
 
     fn is_deleted<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result<bool>> {
-        box_promise(promisify! {
-            resolve!(
-                transaction
-                    .concept()
-                    .transaction_stream
-                    .get_attribute_type(self.label().to_owned())
-            )
-            .map(|res| res.is_none())
-        })
+        let promise = transaction.concept().transaction_stream.get_attribute_type(self.label().to_owned());
+        box_promise(promisify! { resolve!(promise).map(|res| res.is_none()) })
     }
 }
 
@@ -1097,7 +1080,7 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     #[cfg_attr(not(feature = "sync"), doc = "attribute_type.unset_regex(transaction).await;")]
     /// ```
     fn unset_regex<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result> {
-        box_promise(self.set_regex(transaction, String::new()))
+        self.set_regex(transaction, String::new())
     }
 
     /// Retrieve all `Things` that own an attribute of this `AttributeType`
@@ -1192,7 +1175,6 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
         &'tx self,
         transaction: &'tx Transaction<'tx>,
     ) -> BoxPromise<Result<Option<RelationType>>>;
-
 
     /// Renames the label of the type. The new label must remain unique.
     ///
@@ -1374,6 +1356,7 @@ impl RoleTypeAPI for RoleType {
     }
 
     fn is_deleted<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result<bool>> {
+        // FIXME only request get_relates_for_role_label() after NPE is fixed in core
         box_promise(promisify! {
             if let Some(relation_type) = resolve!(self.get_relation_type(transaction))? {
                 resolve!(relation_type.get_relates_for_role_label(transaction, self.label.name.clone())).map(|res| res.is_none())

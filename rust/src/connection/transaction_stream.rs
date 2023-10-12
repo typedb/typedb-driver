@@ -85,38 +85,27 @@ impl TransactionStream {
 
     pub(crate) fn commit(&self) -> impl Promise<Result> {
         let promise = self.single(TransactionRequest::Commit);
-        promisify! {
-            resolve!(promise)?;
-            Ok(())
-        }
+        promisify! { resolve!(promise).map(|_| ()) }
     }
 
     pub(crate) fn rollback(&self) -> impl Promise<Result> {
-        promisify! {
-            resolve!(self.single(TransactionRequest::Rollback))?;
-            Ok(())
-        }
+        let promise = self.single(TransactionRequest::Rollback);
+        promisify! { resolve!(promise).map(|_| ()) }
     }
 
     pub(crate) fn define(&self, query: String, options: Options) -> impl Promise<Result> {
-        promisify! {
-            resolve!(self.query_single(QueryRequest::Define { query, options }))?;
-            Ok(())
-        }
+        let promise = self.query_single(QueryRequest::Define { query, options });
+        promisify! { resolve!(promise).map(|_| ()) }
     }
 
     pub(crate) fn undefine(&self, query: String, options: Options) -> impl Promise<Result> {
-        promisify! {
-            resolve!(self.query_single(QueryRequest::Undefine { query, options }))?;
-            Ok(())
-        }
+        let promise = self.query_single(QueryRequest::Undefine { query, options });
+        promisify! { resolve!(promise).map(|_| ()) }
     }
 
     pub(crate) fn delete(&self, query: String, options: Options) -> impl Promise<Result> {
-        promisify! {
-            resolve!(self.query_single(QueryRequest::Delete { query, options }))?;
-            Ok(())
-        }
+        let promise = self.query_single(QueryRequest::Delete { query, options });
+        promisify! { resolve!(promise).map(|_| ()) }
     }
 
     pub(crate) fn match_(&self, query: String, options: Options) -> Result<impl Stream<Item = Result<ConceptMap>>> {
@@ -147,8 +136,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn match_aggregate(&self, query: String, options: Options) -> impl Promise<Result<Numeric>> {
+        let promise = self.query_single(QueryRequest::MatchAggregate { query, options });
         promisify! {
-            match resolve!(self.query_single(QueryRequest::MatchAggregate { query, options }))? {
+            match resolve!(promise)? {
                 QueryResponse::MatchAggregate { answer } => Ok(answer),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -182,8 +172,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn get_entity_type(&self, label: String) -> impl Promise<Result<Option<EntityType>>> {
+        let promise = self.concept_single(ConceptRequest::GetEntityType { label });
         promisify! {
-            match resolve!(self.concept_single(ConceptRequest::GetEntityType { label }))? {
+            match resolve!(promise)? {
                 ConceptResponse::GetEntityType { entity_type } => Ok(entity_type),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -191,8 +182,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn get_relation_type(&self, label: String) -> impl Promise<Result<Option<RelationType>>> {
+        let promise = self.concept_single(ConceptRequest::GetRelationType { label });
         promisify! {
-            match resolve!(self.concept_single(ConceptRequest::GetRelationType { label }))? {
+            match resolve!(promise)? {
                 ConceptResponse::GetRelationType { relation_type } => Ok(relation_type),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -200,8 +192,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn get_attribute_type(&self, label: String) -> impl Promise<Result<Option<AttributeType>>> {
+        let promise = self.concept_single(ConceptRequest::GetAttributeType { label });
         promisify! {
-            match resolve!(self.concept_single(ConceptRequest::GetAttributeType { label }))? {
+            match resolve!(promise)? {
                 ConceptResponse::GetAttributeType { attribute_type } => Ok(attribute_type),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -209,8 +202,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn put_entity_type(&self, label: String) -> impl Promise<Result<EntityType>> {
+        let promise = self.concept_single(ConceptRequest::PutEntityType { label });
         promisify! {
-            match resolve!(self.concept_single(ConceptRequest::PutEntityType { label }))? {
+            match resolve!(promise)? {
                 ConceptResponse::PutEntityType { entity_type } => Ok(entity_type),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -218,8 +212,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn put_relation_type(&self, label: String) -> impl Promise<Result<RelationType>> {
+        let promise = self.concept_single(ConceptRequest::PutRelationType { label });
         promisify! {
-            match resolve!(self.concept_single(ConceptRequest::PutRelationType { label }))? {
+            match resolve!(promise)? {
                 ConceptResponse::PutRelationType { relation_type } => Ok(relation_type),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -231,8 +226,9 @@ impl TransactionStream {
         label: String,
         value_type: ValueType,
     ) -> impl Promise<Result<AttributeType>> {
+        let promise = self.concept_single(ConceptRequest::PutAttributeType { label, value_type });
         promisify! {
-            match resolve!(self.concept_single(ConceptRequest::PutAttributeType { label, value_type }))? {
+            match resolve!(promise)? {
                 ConceptResponse::PutAttributeType { attribute_type } => Ok(attribute_type),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -240,8 +236,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn get_entity(&self, iid: IID) -> impl Promise<Result<Option<Entity>>> {
+        let promise = self.concept_single(ConceptRequest::GetEntity { iid });
         promisify! {
-            match resolve!(self.concept_single(ConceptRequest::GetEntity { iid }))? {
+            match resolve!(promise)? {
                 ConceptResponse::GetEntity { entity } => Ok(entity),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -249,8 +246,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn get_relation(&self, iid: IID) -> impl Promise<Result<Option<Relation>>> {
+        let promise = self.concept_single(ConceptRequest::GetRelation { iid });
         promisify! {
-            match resolve!(self.concept_single(ConceptRequest::GetRelation { iid }))? {
+            match resolve!(promise)? {
                 ConceptResponse::GetRelation { relation } => Ok(relation),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -258,8 +256,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn get_attribute(&self, iid: IID) -> impl Promise<Result<Option<Attribute>>> {
+        let promise = self.concept_single(ConceptRequest::GetAttribute { iid });
         promisify! {
-            match resolve!(self.concept_single(ConceptRequest::GetAttribute { iid }))? {
+            match resolve!(promise)? {
                 ConceptResponse::GetAttribute { attribute } => Ok(attribute),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -276,8 +275,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn thing_type_delete(&self, thing_type: ThingType) -> impl Promise<Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::ThingTypeDelete { thing_type });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::ThingTypeDelete { thing_type }))? {
+            match resolve!(promise)? {
                 ThingTypeResponse::ThingTypeDelete => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -285,8 +285,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn thing_type_set_label(&self, thing_type: ThingType, new_label: String) -> impl Promise<Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::ThingTypeSetLabel { thing_type, new_label });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::ThingTypeSetLabel { thing_type, new_label }))? {
+            match resolve!(promise)? {
                 ThingTypeResponse::ThingTypeSetLabel => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -294,8 +295,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn thing_type_set_abstract(&self, thing_type: ThingType) -> impl Promise<Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::ThingTypeSetAbstract { thing_type });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::ThingTypeSetAbstract { thing_type }))? {
+            match resolve!(promise)? {
                 ThingTypeResponse::ThingTypeSetAbstract => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -303,8 +305,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn thing_type_unset_abstract(&self, thing_type: ThingType) -> impl Promise<Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::ThingTypeUnsetAbstract { thing_type });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::ThingTypeUnsetAbstract { thing_type }))? {
+            match resolve!(promise)? {
                 ThingTypeResponse::ThingTypeUnsetAbstract => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -338,11 +341,10 @@ impl TransactionStream {
         thing_type: ThingType,
         overridden_attribute_type: AttributeType,
     ) -> impl Promise<Result<Option<AttributeType>>> {
+        let promise = self
+            .thing_type_single(ThingTypeRequest::ThingTypeGetOwnsOverridden { thing_type, overridden_attribute_type });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::ThingTypeGetOwnsOverridden {
-                thing_type,
-                overridden_attribute_type,
-            }))? {
+            match resolve!(promise)? {
                 ThingTypeResponse::ThingTypeGetOwnsOverridden { attribute_type } => Ok(attribute_type),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -356,13 +358,14 @@ impl TransactionStream {
         overridden_attribute_type: Option<AttributeType>,
         annotations: Vec<Annotation>,
     ) -> impl Promise<Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::ThingTypeSetOwns {
+            thing_type,
+            attribute_type,
+            overridden_attribute_type,
+            annotations,
+        });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::ThingTypeSetOwns {
-                thing_type,
-                attribute_type,
-                overridden_attribute_type,
-                annotations,
-            }))? {
+            match resolve!(promise)? {
                 ThingTypeResponse::ThingTypeSetOwns => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -374,8 +377,9 @@ impl TransactionStream {
         thing_type: ThingType,
         attribute_type: AttributeType,
     ) -> impl Promise<Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::ThingTypeUnsetOwns { thing_type, attribute_type });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::ThingTypeUnsetOwns { thing_type, attribute_type }))?
+            match resolve!(promise)?
             {
                 ThingTypeResponse::ThingTypeUnsetOwns => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
@@ -401,13 +405,10 @@ impl TransactionStream {
         thing_type: ThingType,
         overridden_role_type: RoleType,
     ) -> impl Promise<Result<Option<RoleType>>> {
+        let promise =
+            self.thing_type_single(ThingTypeRequest::ThingTypeGetPlaysOverridden { thing_type, overridden_role_type });
         promisify! {
-            match resolve!(
-                self.thing_type_single(ThingTypeRequest::ThingTypeGetPlaysOverridden {
-                    thing_type,
-                    overridden_role_type,
-                }),
-            )? {
+            match resolve!(promise)? {
                 ThingTypeResponse::ThingTypeGetPlaysOverridden { role_type } => Ok(role_type),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -420,12 +421,10 @@ impl TransactionStream {
         role_type: RoleType,
         overridden_role_type: Option<RoleType>,
     ) -> impl Promise<Result> {
+        let promise =
+            self.thing_type_single(ThingTypeRequest::ThingTypeSetPlays { thing_type, role_type, overridden_role_type });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::ThingTypeSetPlays {
-                thing_type,
-                role_type,
-                overridden_role_type,
-            }))? {
+            match resolve!(promise)? {
                 ThingTypeResponse::ThingTypeSetPlays => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -433,8 +432,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn thing_type_unset_plays(&self, thing_type: ThingType, role_type: RoleType) -> impl Promise<Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::ThingTypeUnsetPlays { thing_type, role_type });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::ThingTypeUnsetPlays { thing_type, role_type }))? {
+            match resolve!(promise)? {
                 ThingTypeResponse::ThingTypeUnsetPlays => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -442,8 +442,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn thing_type_get_syntax(&self, thing_type: ThingType) -> impl Promise<Result<String>> {
+        let promise = self.thing_type_single(ThingTypeRequest::ThingTypeGetSyntax { thing_type });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::ThingTypeGetSyntax { thing_type }))? {
+            match resolve!(promise)? {
                 ThingTypeResponse::ThingTypeGetSyntax { syntax } => Ok(syntax),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -451,8 +452,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn entity_type_create(&self, entity_type: EntityType) -> impl Promise<Result<Entity>> {
+        let promise = self.thing_type_single(ThingTypeRequest::EntityTypeCreate { entity_type });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::EntityTypeCreate { entity_type }))? {
+            match resolve!(promise)? {
                 ThingTypeResponse::EntityTypeCreate { entity } => Ok(entity),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -463,8 +465,9 @@ impl TransactionStream {
         &self,
         entity_type: EntityType,
     ) -> impl Promise<Result<Option<EntityType>>> {
+        let promise = self.thing_type_single(ThingTypeRequest::EntityTypeGetSupertype { entity_type });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::EntityTypeGetSupertype { entity_type }))? {
+            match resolve!(promise)? {
                 ThingTypeResponse::EntityTypeGetSupertype { entity_type } => Ok(entity_type),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -476,8 +479,9 @@ impl TransactionStream {
         entity_type: EntityType,
         supertype: EntityType,
     ) -> impl Promise<Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::EntityTypeSetSupertype { entity_type, supertype });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::EntityTypeSetSupertype { entity_type, supertype }))?
+            match resolve!(promise)?
             {
                 ThingTypeResponse::EntityTypeSetSupertype => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
@@ -528,8 +532,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn relation_type_create(&self, relation_type: RelationType) -> impl Promise<Result<Relation>> {
+        let promise = self.thing_type_single(ThingTypeRequest::RelationTypeCreate { relation_type });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::RelationTypeCreate { relation_type }))? {
+            match resolve!(promise)? {
                 ThingTypeResponse::RelationTypeCreate { relation } => Ok(relation),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -540,8 +545,9 @@ impl TransactionStream {
         &self,
         relation_type: RelationType,
     ) -> impl Promise<Result<Option<RelationType>>> {
+        let promise = self.thing_type_single(ThingTypeRequest::RelationTypeGetSupertype { relation_type });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::RelationTypeGetSupertype { relation_type }))? {
+            match resolve!(promise)? {
                 ThingTypeResponse::RelationTypeGetSupertype { relation_type } => Ok(relation_type),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -553,10 +559,9 @@ impl TransactionStream {
         relation_type: RelationType,
         supertype: RelationType,
     ) -> impl Promise<Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::RelationTypeSetSupertype { relation_type, supertype });
         promisify! {
-            match resolve!(
-                self.thing_type_single(ThingTypeRequest::RelationTypeSetSupertype { relation_type, supertype }),
-            )? {
+            match resolve!(promise)? {
                 ThingTypeResponse::RelationTypeSetSupertype => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -626,13 +631,10 @@ impl TransactionStream {
         relation_type: RelationType,
         role_label: String,
     ) -> impl Promise<Result<Option<RoleType>>> {
+        let promise =
+            self.thing_type_single(ThingTypeRequest::RelationTypeGetRelatesForRoleLabel { relation_type, role_label });
         promisify! {
-            match resolve!(
-                self.thing_type_single(ThingTypeRequest::RelationTypeGetRelatesForRoleLabel {
-                    relation_type,
-                    role_label,
-                }),
-            )? {
+            match resolve!(promise)? {
                 ThingTypeResponse::RelationTypeGetRelatesForRoleLabel { role_type } => Ok(role_type),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -644,11 +646,12 @@ impl TransactionStream {
         relation_type: RelationType,
         overridden_role_label: String,
     ) -> impl Promise<Result<Option<RoleType>>> {
+        let promise = self.thing_type_single(ThingTypeRequest::RelationTypeGetRelatesOverridden {
+            relation_type,
+            role_label: overridden_role_label,
+        });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::RelationTypeGetRelatesOverridden {
-                relation_type,
-                role_label: overridden_role_label,
-            }))? {
+            match resolve!(promise)? {
                 ThingTypeResponse::RelationTypeGetRelatesOverridden { role_type } => Ok(role_type),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -661,12 +664,13 @@ impl TransactionStream {
         role_label: String,
         overridden_role_label: Option<String>,
     ) -> impl Promise<Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::RelationTypeSetRelates {
+            relation_type,
+            role_label,
+            overridden_role_label,
+        });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::RelationTypeSetRelates {
-                relation_type,
-                role_label,
-                overridden_role_label,
-            }))? {
+            match resolve!(promise)? {
                 ThingTypeResponse::RelationTypeSetRelates => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -678,10 +682,9 @@ impl TransactionStream {
         relation_type: RelationType,
         role_label: String,
     ) -> impl Promise<Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::RelationTypeUnsetRelates { relation_type, role_label });
         promisify! {
-            match resolve!(
-                self.thing_type_single(ThingTypeRequest::RelationTypeUnsetRelates { relation_type, role_label }),
-            )? {
+            match resolve!(promise)? {
                 ThingTypeResponse::RelationTypeUnsetRelates => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -693,8 +696,9 @@ impl TransactionStream {
         attribute_type: AttributeType,
         value: Value,
     ) -> impl Promise<Result<Attribute>> {
+        let promise = self.thing_type_single(ThingTypeRequest::AttributeTypePut { attribute_type, value });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::AttributeTypePut { attribute_type, value }))? {
+            match resolve!(promise)? {
                 ThingTypeResponse::AttributeTypePut { attribute } => Ok(attribute),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -706,8 +710,9 @@ impl TransactionStream {
         attribute_type: AttributeType,
         value: Value,
     ) -> impl Promise<Result<Option<Attribute>>> {
+        let promise = self.thing_type_single(ThingTypeRequest::AttributeTypeGet { attribute_type, value });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::AttributeTypeGet { attribute_type, value }))? {
+            match resolve!(promise)? {
                 ThingTypeResponse::AttributeTypeGet { attribute } => Ok(attribute),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -718,8 +723,9 @@ impl TransactionStream {
         &self,
         attribute_type: AttributeType,
     ) -> impl Promise<Result<Option<AttributeType>>> {
+        let promise = self.thing_type_single(ThingTypeRequest::AttributeTypeGetSupertype { attribute_type });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::AttributeTypeGetSupertype { attribute_type }))? {
+            match resolve!(promise)? {
                 ThingTypeResponse::AttributeTypeGetSupertype { attribute_type } => Ok(attribute_type),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -731,10 +737,9 @@ impl TransactionStream {
         attribute_type: AttributeType,
         supertype: AttributeType,
     ) -> impl Promise<Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::AttributeTypeSetSupertype { attribute_type, supertype });
         promisify! {
-            match resolve!(
-                self.thing_type_single(ThingTypeRequest::AttributeTypeSetSupertype { attribute_type, supertype }),
-            )? {
+            match resolve!(promise)? {
                 ThingTypeResponse::AttributeTypeSetSupertype => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -799,8 +804,9 @@ impl TransactionStream {
         &self,
         attribute_type: AttributeType,
     ) -> impl Promise<Result<Option<String>>> {
+        let promise = self.thing_type_single(ThingTypeRequest::AttributeTypeGetRegex { attribute_type });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::AttributeTypeGetRegex { attribute_type }))? {
+            match resolve!(promise)? {
                 ThingTypeResponse::AttributeTypeGetRegex { regex } => Ok(regex),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -812,8 +818,9 @@ impl TransactionStream {
         attribute_type: AttributeType,
         regex: String,
     ) -> impl Promise<Result> {
+        let promise = self.thing_type_single(ThingTypeRequest::AttributeTypeSetRegex { attribute_type, regex });
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::AttributeTypeSetRegex { attribute_type, regex }))? {
+            match resolve!(promise)? {
                 ThingTypeResponse::AttributeTypeSetRegex => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -841,8 +848,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn role_type_delete(&self, role_type: RoleType) -> impl Promise<Result> {
+        let promise = self.role_type_single(RoleTypeRequest::Delete { role_type });
         promisify! {
-            match resolve!(self.role_type_single(RoleTypeRequest::Delete { role_type }))? {
+            match resolve!(promise)? {
                 RoleTypeResponse::Delete => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -850,8 +858,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn role_type_set_label(&self, role_type: RoleType, new_label: String) -> impl Promise<Result> {
+        let promise = self.role_type_single(RoleTypeRequest::SetLabel { role_type, new_label });
         promisify! {
-            match resolve!(self.role_type_single(RoleTypeRequest::SetLabel { role_type, new_label }))? {
+            match resolve!(promise)? {
                 RoleTypeResponse::SetLabel => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -859,8 +868,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn role_type_get_supertype(&self, role_type: RoleType) -> impl Promise<Result<Option<RoleType>>> {
+        let promise = self.role_type_single(RoleTypeRequest::GetSupertype { role_type });
         promisify! {
-            match resolve!(self.role_type_single(RoleTypeRequest::GetSupertype { role_type }))? {
+            match resolve!(promise)? {
                 RoleTypeResponse::GetSupertype { role_type } => Ok(role_type),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -943,8 +953,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn thing_delete(&self, thing: Thing) -> impl Promise<Result> {
+        let promise = self.thing_single(ThingRequest::ThingDelete { thing });
         promisify! {
-            match resolve!(self.thing_single(ThingRequest::ThingDelete { thing }))? {
+            match resolve!(promise)? {
                 ThingResponse::ThingDelete {} => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -966,8 +977,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn thing_set_has(&self, thing: Thing, attribute: Attribute) -> impl Promise<Result> {
+        let promise = self.thing_single(ThingRequest::ThingSetHas { thing, attribute });
         promisify! {
-            match resolve!(self.thing_single(ThingRequest::ThingSetHas { thing, attribute }))? {
+            match resolve!(promise)? {
                 ThingResponse::ThingSetHas {} => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -975,8 +987,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn thing_unset_has(&self, thing: Thing, attribute: Attribute) -> impl Promise<Result> {
+        let promise = self.thing_single(ThingRequest::ThingUnsetHas { thing, attribute });
         promisify! {
-            match resolve!(self.thing_single(ThingRequest::ThingUnsetHas { thing, attribute }))? {
+            match resolve!(promise)? {
                 ThingResponse::ThingUnsetHas {} => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -1011,8 +1024,9 @@ impl TransactionStream {
         role_type: RoleType,
         player: Thing,
     ) -> impl Promise<Result> {
+        let promise = self.thing_single(ThingRequest::RelationAddRolePlayer { relation, role_type, player });
         promisify! {
-            match resolve!(self.thing_single(ThingRequest::RelationAddRolePlayer { relation, role_type, player }))? {
+            match resolve!(promise)? {
                 ThingResponse::RelationAddRolePlayer {} => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -1025,8 +1039,9 @@ impl TransactionStream {
         role_type: RoleType,
         player: Thing,
     ) -> impl Promise<Result> {
+        let promise = self.thing_single(ThingRequest::RelationRemoveRolePlayer { relation, role_type, player });
         promisify! {
-            match resolve!(self.thing_single(ThingRequest::RelationRemoveRolePlayer { relation, role_type, player }))? {
+            match resolve!(promise)? {
                 ThingResponse::RelationRemoveRolePlayer {} => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -1085,8 +1100,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn rule_delete(&self, rule: Rule) -> impl Promise<Result> {
+        let promise = self.rule_single(RuleRequest::Delete { label: rule.label });
         promisify! {
-            match resolve!(self.rule_single(RuleRequest::Delete { label: rule.label }))? {
+            match resolve!(promise)? {
                 RuleResponse::Delete => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -1094,8 +1110,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn rule_set_label(&self, rule: Rule, new_label: String) -> impl Promise<Result> {
+        let promise = self.rule_single(RuleRequest::SetLabel { current_label: rule.label, new_label });
         promisify! {
-            match resolve!(self.rule_single(RuleRequest::SetLabel { current_label: rule.label, new_label }))? {
+            match resolve!(promise)? {
                 RuleResponse::SetLabel => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -1103,8 +1120,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn put_rule(&self, label: String, when: Conjunction, then: Variable) -> impl Promise<Result<Rule>> {
+        let promise = self.logic_single(LogicRequest::PutRule { label, when, then });
         promisify! {
-            match resolve!(self.logic_single(LogicRequest::PutRule { label, when, then }))? {
+            match resolve!(promise)? {
                 LogicResponse::PutRule { rule } => Ok(rule),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -1112,8 +1130,9 @@ impl TransactionStream {
     }
 
     pub(crate) fn get_rule(&self, label: String) -> impl Promise<Result<Option<Rule>>> {
+        let promise = self.logic_single(LogicRequest::GetRule { label });
         promisify! {
-            match resolve!(self.logic_single(LogicRequest::GetRule { label }))? {
+            match resolve!(promise)? {
                 LogicResponse::GetRule { rule } => Ok(rule),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -1147,8 +1166,9 @@ impl TransactionStream {
     }
 
     fn query_single(&self, req: QueryRequest) -> impl Promise<Result<QueryResponse>> {
+        let promise = self.single(TransactionRequest::Query(req));
         promisify! {
-            match resolve!(self.single(TransactionRequest::Query(req)))? {
+            match resolve!(promise)? {
                 TransactionResponse::Query(res) => Ok(res),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -1156,8 +1176,9 @@ impl TransactionStream {
     }
 
     fn concept_single(&self, req: ConceptRequest) -> impl Promise<Result<ConceptResponse>> {
+        let promise = self.single(TransactionRequest::Concept(req));
         promisify! {
-            match resolve!(self.single(TransactionRequest::Concept(req)))? {
+            match resolve!(promise)? {
                 TransactionResponse::Concept(res) => Ok(res),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -1165,8 +1186,9 @@ impl TransactionStream {
     }
 
     fn thing_type_single(&self, req: ThingTypeRequest) -> impl Promise<Result<ThingTypeResponse>> {
+        let promise = self.single(TransactionRequest::ThingType(req));
         promisify! {
-            match resolve!(self.single(TransactionRequest::ThingType(req)))? {
+            match resolve!(promise)? {
                 TransactionResponse::ThingType(res) => Ok(res),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -1174,8 +1196,9 @@ impl TransactionStream {
     }
 
     fn role_type_single(&self, req: RoleTypeRequest) -> impl Promise<Result<RoleTypeResponse>> {
+        let promise = self.single(TransactionRequest::RoleType(req));
         promisify! {
-            match resolve!(self.single(TransactionRequest::RoleType(req)))? {
+            match resolve!(promise)? {
                 TransactionResponse::RoleType(res) => Ok(res),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -1183,8 +1206,9 @@ impl TransactionStream {
     }
 
     fn thing_single(&self, req: ThingRequest) -> impl Promise<Result<ThingResponse>> {
+        let promise = self.single(TransactionRequest::Thing(req));
         promisify! {
-            match resolve!(self.single(TransactionRequest::Thing(req)))? {
+            match resolve!(promise)? {
                 TransactionResponse::Thing(res) => Ok(res),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -1192,8 +1216,9 @@ impl TransactionStream {
     }
 
     fn rule_single(&self, req: RuleRequest) -> impl Promise<Result<RuleResponse>> {
+        let promise = self.single(TransactionRequest::Rule(req));
         promisify! {
-            match resolve!(self.single(TransactionRequest::Rule(req)))? {
+            match resolve!(promise)? {
                 TransactionResponse::Rule(res) => Ok(res),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -1201,8 +1226,9 @@ impl TransactionStream {
     }
 
     fn logic_single(&self, req: LogicRequest) -> impl Promise<Result<LogicResponse>> {
+        let promise = self.single(TransactionRequest::Logic(req));
         promisify! {
-            match resolve!(self.single(TransactionRequest::Logic(req)))? {
+            match resolve!(promise)? {
                 TransactionResponse::Logic(res) => Ok(res),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }

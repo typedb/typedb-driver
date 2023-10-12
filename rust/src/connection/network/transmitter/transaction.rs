@@ -55,7 +55,7 @@ use crate::{
     common::{
         error::ConnectionError,
         stream::{NetworkStream, Stream},
-        Callback, Promise, RequestID, Result,
+        BoxPromise, Callback, RequestID, Result,
     },
     connection::{
         message::{TransactionRequest, TransactionResponse},
@@ -138,7 +138,7 @@ impl TransactionTransmitter {
     }
 
     #[cfg(feature = "sync")]
-    pub(in crate::connection) fn single(&self, req: TransactionRequest) -> impl Promise<Result<TransactionResponse>> {
+    pub(in crate::connection) fn single(&self, req: TransactionRequest) -> BoxPromise<Result<TransactionResponse>> {
         if !self.is_open() {
             let error = self.error.read().unwrap().clone();
             assert!(error.is_some());

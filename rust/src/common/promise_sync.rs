@@ -19,26 +19,39 @@
  * under the License.
  */
 
-pub type BoxPromise<'a, T> = Box<dyn FnOnce() -> T + 'a>;
+pub type BoxPromise<'a, T> = Box<dyn Promise<'a, T> + 'a>;
 
-pub fn box_promise<'a, T>(future: impl FnOnce() -> T + 'a) -> BoxPromise<'a, T> {
-    Box::new(future) as BoxPromise<'a, T>
+pub fn box_promise<'a, T>(promise: impl Promise<'a, T> + 'a) -> BoxPromise<'a, T> {
+    Box::new(promise)
 }
 
-pub trait Promise<'a, T>: FnOnce() -> T + 'a {}
-impl<'a, T, U: FnOnce() -> T + 'a> Promise<'a, T> for U {}
+pub trait Promise<'a, T> {
+    fn resolve(self) -> T;
+}
+
+impl<'a, T> Promise<'a, T> for Box<dyn Promise<'a, T> + 'a> {
+    fn resolve(self) -> T {
+        todo!()
+    }
+}
+
+impl<'a, T, U: FnOnce() -> T + 'a> Promise<'a, T> for U {
+    fn resolve(self) -> T {
+        (self)()
+    }
+}
 
 #[macro_export]
 macro_rules! promisify {
-    {$($fut:tt)*} => {
+    {$($promise:tt)*} => {
         #[allow(redundant_semicolons)]
-        move || { $($fut)* }
+        move || { $($promise)* }
     };
 }
 
 #[macro_export]
 macro_rules! resolve {
-    ($fut:expr $(,)?) => {
-        ($fut)()
+    ($promise:expr $(,)?) => {
+        $crate::common::Promise::resolve($promise)
     };
 }

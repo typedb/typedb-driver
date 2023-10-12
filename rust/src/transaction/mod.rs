@@ -129,6 +129,7 @@ impl Transaction<'_> {
     #[cfg_attr(not(feature = "sync"), doc = "transaction.commit().await")]
     /// ```
     pub fn commit(self) -> impl Promise<'static, Result> {
+        // FIXME return an owning CommitPromise that will hold onto Txn until resolved
         promisify! { resolve!(self.transaction_stream.commit()) }
     }
 

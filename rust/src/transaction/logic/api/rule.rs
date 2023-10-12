@@ -56,10 +56,8 @@ pub trait RuleAPI: Clone + Sync + Send {
     #[cfg_attr(not(feature = "sync"), doc = "rule.is_deleted(transaction).await")]
     /// ```
     fn is_deleted<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result<bool>> {
-        let label = self.label().to_owned();
-        box_promise(promisify! {
-            resolve!(transaction.logic().get_rule(label)).map(|rule| rule.is_none())
-        })
+        let promise = transaction.logic().get_rule(self.label().to_owned());
+        box_promise(promisify! { resolve!(promise).map(|rule| rule.is_none()) })
     }
 
     /// Renames the label of the rule. The new label must remain unique.

@@ -195,11 +195,11 @@ impl ThingAPI for Thing {
     }
 
     fn is_deleted<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result<bool>> {
-        box_promise(match self {
+        match self {
             Thing::Entity(entity) => entity.is_deleted(transaction),
             Thing::Relation(relation) => relation.is_deleted(transaction),
             Thing::Attribute(attribute) => attribute.is_deleted(transaction),
-        })
+        }
     }
 }
 
@@ -217,8 +217,9 @@ impl ThingAPI for Entity {
     }
 
     fn is_deleted<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result<bool>> {
+        let promise = transaction.concept().transaction_stream.get_entity(self.iid().clone());
         box_promise(promisify! {
-            resolve!(transaction.concept().transaction_stream.get_entity(self.iid().clone())).map(|res| res.is_none())
+            resolve!(promise).map(|res| res.is_none())
         })
     }
 }
@@ -241,8 +242,9 @@ impl ThingAPI for Relation {
     }
 
     fn is_deleted<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result<bool>> {
+        let promise = transaction.concept().transaction_stream.get_relation(self.iid().clone());
         box_promise(promisify! {
-            resolve!(transaction.concept().transaction_stream.get_relation(self.iid().clone())).map(|res| res.is_none())
+            resolve!(promise).map(|res| res.is_none())
         })
     }
 }
@@ -376,8 +378,9 @@ impl ThingAPI for Attribute {
     }
 
     fn is_deleted<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result<bool>> {
+        let promise = transaction.concept().transaction_stream.get_attribute(self.iid().clone());
         box_promise(promisify! {
-            resolve!(transaction.concept().transaction_stream.get_attribute(self.iid().clone())).map(|res| res.is_none())
+            resolve!(promise).map(|res| res.is_none())
         })
     }
 }
