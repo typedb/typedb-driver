@@ -19,7 +19,7 @@
  * under the License.
  */
 
-use typedb_driver::{Error, Options, Session, Transaction, TransactionType};
+use typedb_driver::{Error, Options, Promise, Session, Transaction, TransactionType};
 
 use super::{
     error::{try_release, unwrap_void},
@@ -47,12 +47,12 @@ pub extern "C" fn transaction_force_close(txn: *mut Transaction<'static>) {
 
 #[no_mangle]
 pub extern "C" fn transaction_commit(txn: *mut Transaction<'static>) {
-    unwrap_void((take_ownership(txn).commit())());
+    unwrap_void(take_ownership(txn).commit().resolve());
 }
 
 #[no_mangle]
 pub extern "C" fn transaction_rollback(txn: *const Transaction<'static>) {
-    unwrap_void((borrow(txn).rollback())());
+    unwrap_void(borrow(txn).rollback().resolve());
 }
 
 #[no_mangle]

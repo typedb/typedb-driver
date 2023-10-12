@@ -49,6 +49,8 @@ use typedb_protocol::transaction::{self, server::Server, stream::State};
 #[cfg(feature = "sync")]
 use super::oneshot_blocking as oneshot;
 use super::response_sink::ResponseSink;
+#[cfg(not(feature = "sync"))]
+use crate::common::Promise;
 #[cfg(feature = "sync")]
 use crate::{common::box_promise, Error};
 use crate::{

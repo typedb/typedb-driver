@@ -24,7 +24,7 @@ use std::{ffi::c_char, ptr::addr_of_mut};
 use typedb_driver::{
     box_stream,
     concept::{Concept, SchemaException, ValueType},
-    Result, Transaction, IID,
+    Promise, Result, Transaction, IID,
 };
 
 use crate::{
@@ -39,7 +39,7 @@ pub extern "C" fn concepts_get_entity_type(
     label: *const c_char,
 ) -> *mut Concept {
     try_release_map_optional(
-        (borrow(transaction).concept().get_entity_type(string_view(label).to_owned()))().transpose(),
+        borrow(transaction).concept().get_entity_type(string_view(label).to_owned()).resolve().transpose(),
         Concept::EntityType,
     )
 }
@@ -50,7 +50,7 @@ pub extern "C" fn concepts_get_relation_type(
     label: *const c_char,
 ) -> *mut Concept {
     try_release_map_optional(
-        (borrow(transaction).concept().get_relation_type(string_view(label).to_owned()))().transpose(),
+        borrow(transaction).concept().get_relation_type(string_view(label).to_owned()).resolve().transpose(),
         Concept::RelationType,
     )
 }
@@ -61,7 +61,7 @@ pub extern "C" fn concepts_get_attribute_type(
     label: *const c_char,
 ) -> *mut Concept {
     try_release_map_optional(
-        (borrow(transaction).concept().get_attribute_type(string_view(label).to_owned()))().transpose(),
+        borrow(transaction).concept().get_attribute_type(string_view(label).to_owned()).resolve().transpose(),
         Concept::AttributeType,
     )
 }
@@ -72,7 +72,7 @@ pub extern "C" fn concepts_put_entity_type(
     label: *const c_char,
 ) -> *mut Concept {
     try_release(
-        (borrow(transaction).concept().put_entity_type(string_view(label).to_owned()))().map(Concept::EntityType),
+        borrow(transaction).concept().put_entity_type(string_view(label).to_owned()).resolve().map(Concept::EntityType),
     )
 }
 
@@ -82,7 +82,11 @@ pub extern "C" fn concepts_put_relation_type(
     label: *const c_char,
 ) -> *mut Concept {
     try_release(
-        (borrow(transaction).concept().put_relation_type(string_view(label).to_owned()))().map(Concept::RelationType),
+        borrow(transaction)
+            .concept()
+            .put_relation_type(string_view(label).to_owned())
+            .resolve()
+            .map(Concept::RelationType),
     )
 }
 
@@ -93,7 +97,10 @@ pub extern "C" fn concepts_put_attribute_type(
     value_type: ValueType,
 ) -> *mut Concept {
     try_release(
-        (borrow(transaction).concept().put_attribute_type(string_view(label).to_owned(), value_type))()
+        borrow(transaction)
+            .concept()
+            .put_attribute_type(string_view(label).to_owned(), value_type)
+            .resolve()
             .map(Concept::AttributeType),
     )
 }
@@ -105,7 +112,7 @@ fn iid_from_str(str: &str) -> IID {
 #[no_mangle]
 pub extern "C" fn concepts_get_entity(transaction: *const Transaction<'static>, iid: *const c_char) -> *mut Concept {
     try_release_map_optional(
-        (borrow(transaction).concept().get_entity(iid_from_str(string_view(iid))))().transpose(),
+        borrow(transaction).concept().get_entity(iid_from_str(string_view(iid))).resolve().transpose(),
         Concept::Entity,
     )
 }
@@ -113,7 +120,7 @@ pub extern "C" fn concepts_get_entity(transaction: *const Transaction<'static>, 
 #[no_mangle]
 pub extern "C" fn concepts_get_relation(transaction: *const Transaction<'static>, iid: *const c_char) -> *mut Concept {
     try_release_map_optional(
-        (borrow(transaction).concept().get_relation(iid_from_str(string_view(iid))))().transpose(),
+        borrow(transaction).concept().get_relation(iid_from_str(string_view(iid))).resolve().transpose(),
         Concept::Relation,
     )
 }
@@ -121,7 +128,7 @@ pub extern "C" fn concepts_get_relation(transaction: *const Transaction<'static>
 #[no_mangle]
 pub extern "C" fn concepts_get_attribute(transaction: *const Transaction<'static>, iid: *const c_char) -> *mut Concept {
     try_release_map_optional(
-        (borrow(transaction).concept().get_attribute(iid_from_str(string_view(iid))))().transpose(),
+        borrow(transaction).concept().get_attribute(iid_from_str(string_view(iid))).resolve().transpose(),
         Concept::Attribute,
     )
 }

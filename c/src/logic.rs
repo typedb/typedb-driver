@@ -21,7 +21,7 @@
 
 use std::{ffi::c_char, ptr::addr_of_mut};
 
-use typedb_driver::{box_stream, logic::Rule, transaction::logic::api::RuleAPI, Result, Transaction};
+use typedb_driver::{box_stream, logic::Rule, transaction::logic::api::RuleAPI, Promise, Result, Transaction};
 
 use super::{
     error::{try_release, try_release_optional, unwrap_or_default, unwrap_void},
@@ -56,17 +56,17 @@ pub extern "C" fn rule_get_then(rule: *const Rule) -> *mut c_char {
 
 #[no_mangle]
 pub extern "C" fn rule_set_label(transaction: *const Transaction<'static>, rule: *mut Rule, new_label: *const c_char) {
-    unwrap_void((borrow_mut(rule).set_label(borrow(transaction), string_view(new_label).to_owned()))());
+    unwrap_void(borrow_mut(rule).set_label(borrow(transaction), string_view(new_label).to_owned()).resolve());
 }
 
 #[no_mangle]
 pub extern "C" fn rule_delete(transaction: *const Transaction<'static>, rule: *mut Rule) {
-    unwrap_void((borrow_mut(rule).delete(borrow(transaction)))());
+    unwrap_void(borrow_mut(rule).delete(borrow(transaction)).resolve());
 }
 
 #[no_mangle]
 pub extern "C" fn rule_is_deleted(transaction: *const Transaction<'static>, rule: *mut Rule) -> bool {
-    unwrap_or_default((borrow_mut(rule).is_deleted(borrow(transaction)))())
+    unwrap_or_default(borrow_mut(rule).is_deleted(borrow(transaction)).resolve())
 }
 
 #[no_mangle]
@@ -77,17 +77,20 @@ pub extern "C" fn logic_manager_put_rule(
     then: *const c_char,
 ) -> *mut Rule {
     try_release((|| {
-        (borrow(transaction).logic().put_rule(
-            string_view(label).to_owned(),
-            typeql::parse_pattern(string_view(when))?.into_conjunction(),
-            typeql::parse_variable(string_view(then))?,
-        ))()
+        borrow(transaction)
+            .logic()
+            .put_rule(
+                string_view(label).to_owned(),
+                typeql::parse_pattern(string_view(when))?.into_conjunction(),
+                typeql::parse_variable(string_view(then))?,
+            )
+            .resolve()
     })())
 }
 
 #[no_mangle]
 pub extern "C" fn logic_manager_get_rule(transaction: *mut Transaction<'static>, label: *mut c_char) -> *mut Rule {
-    try_release_optional((borrow(transaction).logic().get_rule(string_view(label).to_owned()))().transpose())
+    try_release_optional(borrow(transaction).logic().get_rule(string_view(label).to_owned()).resolve().transpose())
 }
 
 pub struct RuleIterator(CIterator<Result<Rule>>);

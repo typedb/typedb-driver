@@ -26,6 +26,7 @@ use typedb_driver::{
     box_stream,
     logic::Explanation,
     Options, Result, Transaction,
+    Promise,
 };
 
 use super::{
@@ -36,7 +37,7 @@ use super::{
 
 #[no_mangle]
 pub extern "C" fn query_define(transaction: *mut Transaction<'static>, query: *const c_char, options: *const Options) {
-    unwrap_void((borrow(transaction).query().define_with_options(string_view(query), borrow(options).clone()))())
+    unwrap_void(borrow(transaction).query().define_with_options(string_view(query), borrow(options).clone()).resolve())
 }
 
 #[no_mangle]
@@ -45,12 +46,14 @@ pub extern "C" fn query_undefine(
     query: *const c_char,
     options: *const Options,
 ) {
-    unwrap_void((borrow(transaction).query().undefine_with_options(string_view(query), borrow(options).clone()))())
+    unwrap_void(
+        borrow(transaction).query().undefine_with_options(string_view(query), borrow(options).clone()).resolve(),
+    )
 }
 
 #[no_mangle]
 pub extern "C" fn query_delete(transaction: *mut Transaction<'static>, query: *const c_char, options: *const Options) {
-    unwrap_void((borrow(transaction).query().delete_with_options(string_view(query), borrow(options).clone()))())
+    unwrap_void(borrow(transaction).query().delete_with_options(string_view(query), borrow(options).clone()).resolve())
 }
 
 pub struct ConceptMapIterator(pub CIterator<Result<ConceptMap>>);
@@ -114,7 +117,7 @@ pub extern "C" fn query_match_aggregate(
     options: *const Options,
 ) -> *mut Numeric {
     try_release(
-        (borrow(transaction).query().match_aggregate_with_options(string_view(query), borrow(options).clone()))(),
+        borrow(transaction).query().match_aggregate_with_options(string_view(query), borrow(options).clone()).resolve(),
     )
 }
 

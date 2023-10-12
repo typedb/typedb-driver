@@ -24,7 +24,7 @@ use std::ffi::c_char;
 use typedb_driver::{
     concept::{Annotation, Concept, Transitivity, ValueType},
     transaction::concept::api::{AttributeTypeAPI, EntityTypeAPI, RelationTypeAPI, RoleTypeAPI},
-    Transaction,
+    Promise, Transaction,
 };
 
 use super::{
@@ -61,12 +61,12 @@ pub extern "C" fn thing_type_get_label(thing_type: *const Concept) -> *mut c_cha
 
 #[no_mangle]
 pub extern "C" fn thing_type_is_deleted(transaction: *const Transaction<'static>, thing_type: *const Concept) -> bool {
-    unwrap_or_default((borrow_as_thing_type(thing_type).is_deleted(borrow(transaction)))())
+    unwrap_or_default(borrow_as_thing_type(thing_type).is_deleted(borrow(transaction)).resolve())
 }
 
 #[no_mangle]
 pub extern "C" fn thing_type_delete(transaction: *const Transaction<'static>, thing_type: *mut Concept) {
-    unwrap_void((borrow_as_thing_type_mut(thing_type).delete(borrow(transaction)))())
+    unwrap_void(borrow_as_thing_type_mut(thing_type).delete(borrow(transaction)).resolve())
 }
 
 #[no_mangle]
@@ -76,18 +76,20 @@ pub extern "C" fn thing_type_set_label(
     new_label: *const c_char,
 ) {
     unwrap_void(
-        (borrow_as_thing_type_mut(thing_type).set_label(borrow(transaction), string_view(new_label).to_owned()))()
+        borrow_as_thing_type_mut(thing_type)
+            .set_label(borrow(transaction), string_view(new_label).to_owned())
+            .resolve(),
     )
 }
 
 #[no_mangle]
 pub extern "C" fn thing_type_set_abstract(transaction: *const Transaction<'static>, thing_type: *mut Concept) {
-    unwrap_void((borrow_as_thing_type_mut(thing_type).set_abstract(borrow(transaction)))())
+    unwrap_void(borrow_as_thing_type_mut(thing_type).set_abstract(borrow(transaction)).resolve())
 }
 
 #[no_mangle]
 pub extern "C" fn thing_type_unset_abstract(transaction: *const Transaction<'static>, thing_type: *mut Concept) {
-    unwrap_void((borrow_as_thing_type_mut(thing_type).unset_abstract(borrow(transaction)))())
+    unwrap_void(borrow_as_thing_type_mut(thing_type).unset_abstract(borrow(transaction)).resolve())
 }
 
 #[no_mangle]
@@ -113,10 +115,10 @@ pub extern "C" fn thing_type_get_owns_overridden(
     overridden_attribute_type: *const Concept,
 ) -> *mut Concept {
     try_release_map_optional(
-        (borrow_as_thing_type(thing_type)
-            .get_owns_overridden(borrow(transaction), borrow_as_attribute_type(overridden_attribute_type).clone()))(
-        )
-        .transpose(),
+        borrow_as_thing_type(thing_type)
+            .get_owns_overridden(borrow(transaction), borrow_as_attribute_type(overridden_attribute_type).clone())
+            .resolve()
+            .transpose(),
         Concept::AttributeType,
     )
 }
@@ -130,12 +132,16 @@ pub extern "C" fn thing_type_set_owns(
     annotations: *const *const Annotation,
 ) {
     let annotations = array_view(annotations).copied().collect();
-    unwrap_void((borrow_as_thing_type_mut(thing_type).set_owns(
-        borrow(transaction),
-        borrow_as_attribute_type(attribute_type).clone(),
-        borrow_optional(overridden_attribute_type).map(|at| borrow_as_attribute_type(at).clone()),
-        annotations,
-    ))())
+    unwrap_void(
+        borrow_as_thing_type_mut(thing_type)
+            .set_owns(
+                borrow(transaction),
+                borrow_as_attribute_type(attribute_type).clone(),
+                borrow_optional(overridden_attribute_type).map(|at| borrow_as_attribute_type(at).clone()),
+                annotations,
+            )
+            .resolve(),
+    )
 }
 
 #[no_mangle]
@@ -144,8 +150,11 @@ pub extern "C" fn thing_type_unset_owns(
     thing_type: *mut Concept,
     attribute_type: *const Concept,
 ) {
-    unwrap_void((borrow_as_thing_type_mut(thing_type)
-        .unset_owns(borrow(transaction), borrow_as_attribute_type(attribute_type).clone()))())
+    unwrap_void(
+        borrow_as_thing_type_mut(thing_type)
+            .unset_owns(borrow(transaction), borrow_as_attribute_type(attribute_type).clone())
+            .resolve(),
+    )
 }
 
 #[no_mangle]
@@ -166,9 +175,10 @@ pub extern "C" fn thing_type_get_plays_overridden(
     overridden_role_type: *const Concept,
 ) -> *mut Concept {
     try_release_map_optional(
-        (borrow_as_thing_type(thing_type)
-            .get_plays_overridden(borrow(transaction), borrow_as_role_type(overridden_role_type).clone()))()
-        .transpose(),
+        borrow_as_thing_type(thing_type)
+            .get_plays_overridden(borrow(transaction), borrow_as_role_type(overridden_role_type).clone())
+            .resolve()
+            .transpose(),
         Concept::RoleType,
     )
 }
@@ -180,11 +190,15 @@ pub extern "C" fn thing_type_set_plays(
     role_type: *const Concept,
     overridden_role_type: *const Concept,
 ) {
-    unwrap_void((borrow_as_thing_type_mut(thing_type).set_plays(
-        borrow(transaction),
-        borrow_as_role_type(role_type).clone(),
-        borrow_optional(overridden_role_type).map(|c| borrow_as_role_type(c).clone()),
-    ))())
+    unwrap_void(
+        borrow_as_thing_type_mut(thing_type)
+            .set_plays(
+                borrow(transaction),
+                borrow_as_role_type(role_type).clone(),
+                borrow_optional(overridden_role_type).map(|c| borrow_as_role_type(c).clone()),
+            )
+            .resolve(),
+    )
 }
 
 #[no_mangle]
@@ -193,8 +207,11 @@ pub extern "C" fn thing_type_unset_plays(
     thing_type: *mut Concept,
     role_type: *const Concept,
 ) {
-    unwrap_void((borrow_as_thing_type_mut(thing_type)
-        .unset_plays(borrow(transaction), borrow_as_role_type(role_type).clone()))())
+    unwrap_void(
+        borrow_as_thing_type_mut(thing_type)
+            .unset_plays(borrow(transaction), borrow_as_role_type(role_type).clone())
+            .resolve(),
+    )
 }
 
 #[no_mangle]
@@ -202,7 +219,7 @@ pub extern "C" fn thing_type_get_syntax(
     transaction: *const Transaction<'static>,
     thing_type: *const Concept,
 ) -> *mut c_char {
-    try_release_string((borrow_as_thing_type(thing_type).get_syntax(borrow(transaction)))())
+    try_release_string(borrow_as_thing_type(thing_type).get_syntax(borrow(transaction)).resolve())
 }
 
 #[no_mangle]
@@ -210,7 +227,7 @@ pub extern "C" fn entity_type_create(
     transaction: *mut Transaction<'static>,
     entity_type: *const Concept,
 ) -> *mut Concept {
-    try_release((borrow_as_entity_type(entity_type).create(borrow(transaction)))().map(Concept::Entity))
+    try_release(borrow_as_entity_type(entity_type).create(borrow(transaction)).resolve().map(Concept::Entity))
 }
 
 #[no_mangle]
@@ -219,7 +236,7 @@ pub extern "C" fn entity_type_get_supertype(
     entity_type: *const Concept,
 ) -> *mut Concept {
     try_release_map_optional(
-        (borrow_as_entity_type(entity_type).get_supertype(borrow(transaction)))().transpose(),
+        borrow_as_entity_type(entity_type).get_supertype(borrow(transaction)).resolve().transpose(),
         Concept::EntityType,
     )
 }
@@ -230,8 +247,11 @@ pub extern "C" fn entity_type_set_supertype(
     entity_type: *mut Concept,
     supertype: *const Concept,
 ) {
-    unwrap_void((borrow_as_entity_type_mut(entity_type)
-        .set_supertype(borrow(transaction), borrow_as_entity_type(supertype).clone()))())
+    unwrap_void(
+        borrow_as_entity_type_mut(entity_type)
+            .set_supertype(borrow(transaction), borrow_as_entity_type(supertype).clone())
+            .resolve(),
+    )
 }
 
 #[no_mangle]
@@ -275,7 +295,7 @@ pub extern "C" fn relation_type_create(
     transaction: *mut Transaction<'static>,
     relation_type: *const Concept,
 ) -> *mut Concept {
-    try_release((borrow_as_relation_type(relation_type).create(borrow(transaction)))().map(Concept::Relation))
+    try_release(borrow_as_relation_type(relation_type).create(borrow(transaction)).resolve().map(Concept::Relation))
 }
 
 #[no_mangle]
@@ -284,7 +304,7 @@ pub extern "C" fn relation_type_get_supertype(
     relation_type: *const Concept,
 ) -> *mut Concept {
     try_release_map_optional(
-        (borrow_as_relation_type(relation_type).get_supertype(borrow(transaction)))().transpose(),
+        borrow_as_relation_type(relation_type).get_supertype(borrow(transaction)).resolve().transpose(),
         Concept::RelationType,
     )
 }
@@ -295,8 +315,11 @@ pub extern "C" fn relation_type_set_supertype(
     relation_type: *mut Concept,
     supertype: *const Concept,
 ) {
-    unwrap_void((borrow_as_relation_type_mut(relation_type)
-        .set_supertype(borrow(transaction), borrow_as_relation_type(supertype).clone()))())
+    unwrap_void(
+        borrow_as_relation_type_mut(relation_type)
+            .set_supertype(borrow(transaction), borrow_as_relation_type(supertype).clone())
+            .resolve(),
+    )
 }
 
 #[no_mangle]
@@ -355,9 +378,10 @@ pub extern "C" fn relation_type_get_relates_for_role_label(
     role_label: *const c_char,
 ) -> *mut Concept {
     try_release_map_optional(
-        (borrow_as_relation_type(relation_type)
-            .get_relates_for_role_label(borrow(transaction), string_view(role_label).to_owned()))()
-        .transpose(),
+        borrow_as_relation_type(relation_type)
+            .get_relates_for_role_label(borrow(transaction), string_view(role_label).to_owned())
+            .resolve()
+            .transpose(),
         Concept::RoleType,
     )
 }
@@ -369,9 +393,10 @@ pub extern "C" fn relation_type_get_relates_overridden(
     overridden_role_label: *const c_char,
 ) -> *mut Concept {
     try_release_map_optional(
-        (borrow_as_relation_type(relation_type)
-            .get_relates_overridden(borrow(transaction), string_view(overridden_role_label).to_owned()))()
-        .transpose(),
+        borrow_as_relation_type(relation_type)
+            .get_relates_overridden(borrow(transaction), string_view(overridden_role_label).to_owned())
+            .resolve()
+            .transpose(),
         Concept::RoleType,
     )
 }
@@ -384,11 +409,15 @@ pub extern "C" fn relation_type_set_relates(
     overridden_role_label: *const c_char,
 ) {
     unsafe {
-        unwrap_void((borrow_as_relation_type_mut(relation_type).set_relates(
-            borrow(transaction),
-            string_view(role_label).to_owned(),
-            overridden_role_label.as_ref().map(|p| string_view(p).to_owned()),
-        ))())
+        unwrap_void(
+            borrow_as_relation_type_mut(relation_type)
+                .set_relates(
+                    borrow(transaction),
+                    string_view(role_label).to_owned(),
+                    overridden_role_label.as_ref().map(|p| string_view(p).to_owned()),
+                )
+                .resolve(),
+        )
     }
 }
 
@@ -398,8 +427,11 @@ pub extern "C" fn relation_type_unset_relates(
     relation_type: *mut Concept,
     role_label: *const c_char,
 ) {
-    unwrap_void((borrow_as_relation_type_mut(relation_type)
-        .unset_relates(borrow(transaction), string_view(role_label).to_owned()))())
+    unwrap_void(
+        borrow_as_relation_type_mut(relation_type)
+            .unset_relates(borrow(transaction), string_view(role_label).to_owned())
+            .resolve(),
+    )
 }
 
 #[no_mangle]
@@ -414,7 +446,9 @@ pub extern "C" fn attribute_type_put(
     value: *const Concept,
 ) -> *mut Concept {
     try_release(
-        (borrow_as_attribute_type(attribute_type).put(borrow(transaction), borrow_as_value(value).clone()))()
+        borrow_as_attribute_type(attribute_type)
+            .put(borrow(transaction), borrow_as_value(value).clone())
+            .resolve()
             .map(Concept::Attribute),
     )
 }
@@ -426,7 +460,9 @@ pub extern "C" fn attribute_type_get(
     value: *const Concept,
 ) -> *mut Concept {
     try_release_map_optional(
-        (borrow_as_attribute_type(attribute_type).get(borrow(transaction), borrow_as_value(value).clone()))()
+        borrow_as_attribute_type(attribute_type)
+            .get(borrow(transaction), borrow_as_value(value).clone())
+            .resolve()
             .transpose(),
         Concept::Attribute,
     )
@@ -438,7 +474,7 @@ pub extern "C" fn attribute_type_get_supertype(
     attribute_type: *const Concept,
 ) -> *mut Concept {
     try_release_map_optional(
-        (borrow_as_attribute_type(attribute_type).get_supertype(borrow(transaction)))().transpose(),
+        borrow_as_attribute_type(attribute_type).get_supertype(borrow(transaction)).resolve().transpose(),
         Concept::AttributeType,
     )
 }
@@ -449,8 +485,11 @@ pub extern "C" fn attribute_type_set_supertype(
     attribute_type: *mut Concept,
     supertype: *const Concept,
 ) {
-    unwrap_void((borrow_as_attribute_type_mut(attribute_type)
-        .set_supertype(borrow(transaction), borrow_as_attribute_type(supertype).clone()))())
+    unwrap_void(
+        borrow_as_attribute_type_mut(attribute_type)
+            .set_supertype(borrow(transaction), borrow_as_attribute_type(supertype).clone())
+            .resolve(),
+    )
 }
 
 #[no_mangle]
@@ -510,7 +549,9 @@ pub extern "C" fn attribute_type_get_regex(
     transaction: *mut Transaction<'static>,
     attribute_type: *const Concept,
 ) -> *mut c_char {
-    try_release_optional_string((borrow_as_attribute_type(attribute_type).get_regex(borrow(transaction)))().transpose())
+    try_release_optional_string(
+        borrow_as_attribute_type(attribute_type).get_regex(borrow(transaction)).resolve().transpose(),
+    )
 }
 
 #[no_mangle]
@@ -520,13 +561,15 @@ pub extern "C" fn attribute_type_set_regex(
     regex: *const c_char,
 ) {
     unwrap_void(
-        (borrow_as_attribute_type(attribute_type).set_regex(borrow(transaction), string_view(regex).to_owned()))()
+        borrow_as_attribute_type(attribute_type)
+            .set_regex(borrow(transaction), string_view(regex).to_owned())
+            .resolve(),
     )
 }
 
 #[no_mangle]
 pub extern "C" fn attribute_type_unset_regex(transaction: *mut Transaction<'static>, attribute_type: *const Concept) {
-    unwrap_void((borrow_as_attribute_type(attribute_type).unset_regex(borrow(transaction)))())
+    unwrap_void(borrow_as_attribute_type(attribute_type).unset_regex(borrow(transaction)).resolve())
 }
 
 #[no_mangle]
@@ -551,7 +594,7 @@ pub extern "C" fn role_type_is_abstract(role_type: *const Concept) -> bool {
 
 #[no_mangle]
 pub extern "C" fn role_type_is_deleted(transaction: *const Transaction<'static>, role_type: *const Concept) -> bool {
-    unwrap_or_default((borrow_as_role_type(role_type).is_deleted(borrow(transaction)))())
+    unwrap_or_default(borrow_as_role_type(role_type).is_deleted(borrow(transaction)).resolve())
 }
 
 #[no_mangle]
@@ -560,7 +603,9 @@ pub extern "C" fn role_type_get_relation_type(
     role_type: *const Concept,
 ) -> *mut Concept {
     try_release(
-        (borrow_as_role_type(role_type).get_relation_type(borrow(transaction)))()
+        borrow_as_role_type(role_type)
+            .get_relation_type(borrow(transaction))
+            .resolve()
             .transpose()
             .unwrap()
             .map(Concept::RelationType),
@@ -569,7 +614,7 @@ pub extern "C" fn role_type_get_relation_type(
 
 #[no_mangle]
 pub extern "C" fn role_type_delete(transaction: *mut Transaction<'static>, role_type: *const Concept) {
-    unwrap_void((borrow_as_role_type(role_type).delete(borrow(transaction)))())
+    unwrap_void(borrow_as_role_type(role_type).delete(borrow(transaction)).resolve())
 }
 
 #[no_mangle]
@@ -593,7 +638,9 @@ pub extern "C" fn role_type_set_label(
     role_type: *const Concept,
     new_label: *const c_char,
 ) {
-    unwrap_void((borrow_as_role_type(role_type).set_label(borrow(transaction), string_view(new_label).to_owned()))())
+    unwrap_void(
+        borrow_as_role_type(role_type).set_label(borrow(transaction), string_view(new_label).to_owned()).resolve(),
+    )
 }
 
 #[no_mangle]
@@ -602,7 +649,7 @@ pub extern "C" fn role_type_get_supertype(
     role_type: *const Concept,
 ) -> *mut Concept {
     try_release_map_optional(
-        (borrow_as_role_type(role_type).get_supertype(borrow(transaction)))().transpose(),
+        borrow_as_role_type(role_type).get_supertype(borrow(transaction)).resolve().transpose(),
         Concept::RoleType,
     )
 }
