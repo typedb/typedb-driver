@@ -387,7 +387,7 @@ build:
         .factory/test-core.sh //python/tests/behaviour/connection/database/... --test_output=streamed --jobs=1 &&
           .factory/test-core.sh //python/tests/behaviour/connection/session/... --test_output=streamed --jobs=1 &&
           .factory/test-core.sh //python/tests/behaviour/connection/transaction/... --test_output=streamed --jobs=1 &&
-          && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
@@ -449,8 +449,8 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-enterprise-servers.sh # use source to receive export vars
-        .factory/test-enterprise.sh //python/tests/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 
-          && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-enterprise.sh //python/tests/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
@@ -470,8 +470,8 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         tool/test/start-core-server.sh
-        .factory/test-core.sh //python/tests/behaviour/driver/query/... --test_output=errors 
-          && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-core.sh //python/tests/behaviour/driver/query/... --test_output=errors &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
@@ -491,8 +491,8 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-enterprise-servers.sh # use source to receive export vars
-        .factory/test-enterprise.sh //python/tests/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors 
-          && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-enterprise.sh //python/tests/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
@@ -748,8 +748,8 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         tool/test/start-core-server.sh
-        .factory/test-core.sh //nodejs/test/behaviour/concept/... --test_output=errors --jobs=1
-          && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-core.sh //nodejs/test/behaviour/concept/... --test_output=errors --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
