@@ -84,9 +84,7 @@ impl RuleAPI for Rule {
     }
 
     fn delete<'tx>(&'tx mut self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result> {
-        box_promise(promisify! {
-            resolve!(transaction.logic().transaction_stream.rule_delete(self.clone()))
-        })
+        box_promise(transaction.logic().transaction_stream.rule_delete(self.clone()))
     }
 
     fn set_label<'tx>(&'tx mut self, transaction: &'tx Transaction<'tx>, new_label: String) -> BoxPromise<Result> {

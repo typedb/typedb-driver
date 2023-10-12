@@ -27,7 +27,6 @@ use crate::{
     common::{stream::Stream, Promise, Result},
     connection::TransactionStream,
     logic::Rule,
-    promisify, resolve,
 };
 
 /// Provides methods for manipulating rules in the database.
@@ -56,9 +55,7 @@ impl LogicManager {
     #[cfg_attr(not(feature = "sync"), doc = "transaction.logic().put_rule(label, when, then).await")]
     /// ```
     pub fn put_rule(&self, label: String, when: Conjunction, then: Variable) -> impl Promise<Result<Rule>> {
-        promisify! {
-            resolve!(self.transaction_stream.put_rule(label, when, then))
-        }
+        self.transaction_stream.put_rule(label, when, then)
     }
 
     /// Retrieves the Rule that has the given label.
@@ -74,9 +71,7 @@ impl LogicManager {
     #[cfg_attr(not(feature = "sync"), doc = "transaction.logic().get_rule(label).await")]
     /// ```
     pub fn get_rule(&self, label: String) -> impl Promise<Result<Option<Rule>>> {
-        promisify! {
-            resolve!(self.transaction_stream.get_rule(label))
-        }
+        self.transaction_stream.get_rule(label)
     }
 
     /// Retrieves all rules.

@@ -73,9 +73,7 @@ pub trait ThingAPI: Sync + Send {
     #[cfg_attr(not(feature = "sync"), doc = "thing.delete(transaction).await;")]
     /// ```
     fn delete<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result> {
-        box_promise(promisify! {
-            resolve!(transaction.concept().transaction_stream.thing_delete(self.to_thing_cloned()))
-        })
+        box_promise(transaction.concept().transaction_stream.thing_delete(self.to_thing_cloned()))
     }
 
     /// Retrieves the `Attribute`s that this `Thing` owns. Optionally, filtered by an `AttributeType` or a list of `AttributeType`s. Optionally, filtered by `Annotation`s.
@@ -119,9 +117,7 @@ pub trait ThingAPI: Sync + Send {
     #[cfg_attr(not(feature = "sync"), doc = "thing.set_has(transaction, attribute).await;")]
     /// ```
     fn set_has<'tx>(&'tx self, transaction: &'tx Transaction<'tx>, attribute: Attribute) -> BoxPromise<Result> {
-        box_promise(promisify! {
-            resolve!(transaction.concept().transaction_stream.thing_set_has(self.to_thing_cloned(), attribute))
-        })
+        box_promise(transaction.concept().transaction_stream.thing_set_has(self.to_thing_cloned(), attribute))
     }
 
     /// Unassigns an `Attribute` from this `Thing`.
@@ -138,9 +134,7 @@ pub trait ThingAPI: Sync + Send {
     #[cfg_attr(not(feature = "sync"), doc = "thing.unset_has(transaction, attribute).await;")]
     /// ```
     fn unset_has<'tx>(&'tx self, transaction: &'tx Transaction<'tx>, attribute: Attribute) -> BoxPromise<Result> {
-        box_promise(promisify! {
-            resolve!(transaction.concept().transaction_stream.thing_unset_has(self.to_thing_cloned(), attribute))
-        })
+        box_promise(transaction.concept().transaction_stream.thing_unset_has(self.to_thing_cloned(), attribute))
     }
 
     /// Retrieves all the `Relations` which this `Thing` plays a role in, optionally filtered by one or more given roles.
@@ -201,12 +195,10 @@ impl ThingAPI for Thing {
     }
 
     fn is_deleted<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result<bool>> {
-        box_promise(promisify! {
-            match self {
-                Thing::Entity(entity) => resolve!(entity.is_deleted(transaction)),
-                Thing::Relation(relation) => resolve!(relation.is_deleted(transaction)),
-                Thing::Attribute(attribute) => resolve!(attribute.is_deleted(transaction)),
-            }
+        box_promise(match self {
+            Thing::Entity(entity) => entity.is_deleted(transaction),
+            Thing::Relation(relation) => relation.is_deleted(transaction),
+            Thing::Attribute(attribute) => attribute.is_deleted(transaction),
         })
     }
 }

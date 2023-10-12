@@ -141,7 +141,7 @@ impl Transaction<'_> {
     #[cfg_attr(not(feature = "sync"), doc = "transaction.rollback().await")]
     /// ```
     pub fn rollback(&self) -> impl Promise<Result> {
-        promisify! { resolve!(self.transaction_stream.rollback()) }
+        self.transaction_stream.rollback()
     }
 }
 

@@ -30,15 +30,15 @@ impl<'a, T, U: FnOnce() -> T + 'a> Promise<'a, T> for U {}
 
 #[macro_export]
 macro_rules! promisify {
-    {$($fut:stmt);*} => {
+    {$($fut:tt)*} => {
         #[allow(redundant_semicolons)]
-        move || { $($fut);* }
+        move || { $($fut)* }
     };
 }
 
 #[macro_export]
 macro_rules! resolve {
-    ($fut:expr) => {
+    ($fut:expr $(,)?) => {
         ($fut)()
     };
 }

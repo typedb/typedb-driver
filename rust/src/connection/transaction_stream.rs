@@ -84,36 +84,37 @@ impl TransactionStream {
     }
 
     pub(crate) fn commit(&self) -> impl Promise<Result> {
+        let promise = self.single(TransactionRequest::Commit);
         promisify! {
-            let _ = resolve!(self.single(TransactionRequest::Commit))?;
+            resolve!(promise)?;
             Ok(())
         }
     }
 
     pub(crate) fn rollback(&self) -> impl Promise<Result> {
         promisify! {
-            let _ = resolve!(self.single(TransactionRequest::Rollback))?;
+            resolve!(self.single(TransactionRequest::Rollback))?;
             Ok(())
         }
     }
 
     pub(crate) fn define(&self, query: String, options: Options) -> impl Promise<Result> {
         promisify! {
-            let _ = resolve!(self.query_single(QueryRequest::Define { query, options }))?;
+            resolve!(self.query_single(QueryRequest::Define { query, options }))?;
             Ok(())
         }
     }
 
     pub(crate) fn undefine(&self, query: String, options: Options) -> impl Promise<Result> {
         promisify! {
-            let _ = resolve!(self.query_single(QueryRequest::Undefine { query, options }))?;
+            resolve!(self.query_single(QueryRequest::Undefine { query, options }))?;
             Ok(())
         }
     }
 
     pub(crate) fn delete(&self, query: String, options: Options) -> impl Promise<Result> {
         promisify! {
-            let _ = resolve!(self.query_single(QueryRequest::Delete { query, options }))?;
+            resolve!(self.query_single(QueryRequest::Delete { query, options }))?;
             Ok(())
         }
     }
@@ -338,9 +339,10 @@ impl TransactionStream {
         overridden_attribute_type: AttributeType,
     ) -> impl Promise<Result<Option<AttributeType>>> {
         promisify! {
-            match resolve!(self.thing_type_single(
-                ThingTypeRequest::ThingTypeGetOwnsOverridden { thing_type, overridden_attribute_type }
-            ))? {
+            match resolve!(self.thing_type_single(ThingTypeRequest::ThingTypeGetOwnsOverridden {
+                thing_type,
+                overridden_attribute_type,
+            }))? {
                 ThingTypeResponse::ThingTypeGetOwnsOverridden { attribute_type } => Ok(attribute_type),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -355,14 +357,12 @@ impl TransactionStream {
         annotations: Vec<Annotation>,
     ) -> impl Promise<Result> {
         promisify! {
-            match resolve!(self
-                .thing_type_single(ThingTypeRequest::ThingTypeSetOwns {
-                    thing_type,
-                    attribute_type,
-                    overridden_attribute_type,
-                    annotations,
-                }))?
-            {
+            match resolve!(self.thing_type_single(ThingTypeRequest::ThingTypeSetOwns {
+                thing_type,
+                attribute_type,
+                overridden_attribute_type,
+                annotations,
+            }))? {
                 ThingTypeResponse::ThingTypeSetOwns => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -375,7 +375,8 @@ impl TransactionStream {
         attribute_type: AttributeType,
     ) -> impl Promise<Result> {
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::ThingTypeUnsetOwns { thing_type, attribute_type }))? {
+            match resolve!(self.thing_type_single(ThingTypeRequest::ThingTypeUnsetOwns { thing_type, attribute_type }))?
+            {
                 ThingTypeResponse::ThingTypeUnsetOwns => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -402,7 +403,10 @@ impl TransactionStream {
     ) -> impl Promise<Result<Option<RoleType>>> {
         promisify! {
             match resolve!(
-                self.thing_type_single(ThingTypeRequest::ThingTypeGetPlaysOverridden { thing_type, overridden_role_type })
+                self.thing_type_single(ThingTypeRequest::ThingTypeGetPlaysOverridden {
+                    thing_type,
+                    overridden_role_type,
+                }),
             )? {
                 ThingTypeResponse::ThingTypeGetPlaysOverridden { role_type } => Ok(role_type),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
@@ -417,9 +421,11 @@ impl TransactionStream {
         overridden_role_type: Option<RoleType>,
     ) -> impl Promise<Result> {
         promisify! {
-            match resolve!(
-                self.thing_type_single(ThingTypeRequest::ThingTypeSetPlays { thing_type, role_type, overridden_role_type })
-            )? {
+            match resolve!(self.thing_type_single(ThingTypeRequest::ThingTypeSetPlays {
+                thing_type,
+                role_type,
+                overridden_role_type,
+            }))? {
                 ThingTypeResponse::ThingTypeSetPlays => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -471,7 +477,8 @@ impl TransactionStream {
         supertype: EntityType,
     ) -> impl Promise<Result> {
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::EntityTypeSetSupertype { entity_type, supertype }))? {
+            match resolve!(self.thing_type_single(ThingTypeRequest::EntityTypeSetSupertype { entity_type, supertype }))?
+            {
                 ThingTypeResponse::EntityTypeSetSupertype => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -547,7 +554,9 @@ impl TransactionStream {
         supertype: RelationType,
     ) -> impl Promise<Result> {
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::RelationTypeSetSupertype { relation_type, supertype }))? {
+            match resolve!(
+                self.thing_type_single(ThingTypeRequest::RelationTypeSetSupertype { relation_type, supertype }),
+            )? {
                 ThingTypeResponse::RelationTypeSetSupertype => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -619,7 +628,10 @@ impl TransactionStream {
     ) -> impl Promise<Result<Option<RoleType>>> {
         promisify! {
             match resolve!(
-                self.thing_type_single(ThingTypeRequest::RelationTypeGetRelatesForRoleLabel { relation_type, role_label })
+                self.thing_type_single(ThingTypeRequest::RelationTypeGetRelatesForRoleLabel {
+                    relation_type,
+                    role_label,
+                }),
             )? {
                 ThingTypeResponse::RelationTypeGetRelatesForRoleLabel { role_type } => Ok(role_type),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
@@ -633,12 +645,10 @@ impl TransactionStream {
         overridden_role_label: String,
     ) -> impl Promise<Result<Option<RoleType>>> {
         promisify! {
-            match resolve!(self
-                .thing_type_single(ThingTypeRequest::RelationTypeGetRelatesOverridden {
-                    relation_type,
-                    role_label: overridden_role_label,
-                }))?
-            {
+            match resolve!(self.thing_type_single(ThingTypeRequest::RelationTypeGetRelatesOverridden {
+                relation_type,
+                role_label: overridden_role_label,
+            }))? {
                 ThingTypeResponse::RelationTypeGetRelatesOverridden { role_type } => Ok(role_type),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -652,13 +662,11 @@ impl TransactionStream {
         overridden_role_label: Option<String>,
     ) -> impl Promise<Result> {
         promisify! {
-            match resolve!(self
-                .thing_type_single(ThingTypeRequest::RelationTypeSetRelates {
-                    relation_type,
-                    role_label,
-                    overridden_role_label,
-                }))?
-            {
+            match resolve!(self.thing_type_single(ThingTypeRequest::RelationTypeSetRelates {
+                relation_type,
+                role_label,
+                overridden_role_label,
+            }))? {
                 ThingTypeResponse::RelationTypeSetRelates => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -671,7 +679,9 @@ impl TransactionStream {
         role_label: String,
     ) -> impl Promise<Result> {
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::RelationTypeUnsetRelates { relation_type, role_label }))? {
+            match resolve!(
+                self.thing_type_single(ThingTypeRequest::RelationTypeUnsetRelates { relation_type, role_label }),
+            )? {
                 ThingTypeResponse::RelationTypeUnsetRelates => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
@@ -722,7 +732,9 @@ impl TransactionStream {
         supertype: AttributeType,
     ) -> impl Promise<Result> {
         promisify! {
-            match resolve!(self.thing_type_single(ThingTypeRequest::AttributeTypeSetSupertype { attribute_type, supertype }))? {
+            match resolve!(
+                self.thing_type_single(ThingTypeRequest::AttributeTypeSetSupertype { attribute_type, supertype }),
+            )? {
                 ThingTypeResponse::AttributeTypeSetSupertype => Ok(()),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }

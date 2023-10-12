@@ -25,7 +25,7 @@ use crate::{
     common::{stream::Stream, Promise, IID},
     concept::{Attribute, AttributeType, Entity, EntityType, Relation, RelationType, SchemaException, ValueType},
     connection::TransactionStream,
-    promisify, resolve, Result,
+    Result,
 };
 
 /// Provides access for all Concept API methods.
@@ -52,9 +52,7 @@ impl ConceptManager {
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().get_entity_type(label).await")]
     /// ```
     pub fn get_entity_type(&self, label: String) -> impl Promise<Result<Option<EntityType>>> {
-        promisify! {
-            resolve!(self.transaction_stream.get_entity_type(label))
-        }
+        self.transaction_stream.get_entity_type(label)
     }
 
     /// Retrieves a `RelationType` by its label.
@@ -70,9 +68,7 @@ impl ConceptManager {
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().get_relation_type(label).await")]
     /// ```
     pub fn get_relation_type(&self, label: String) -> impl Promise<Result<Option<RelationType>>> {
-        promisify! {
-            resolve!(self.transaction_stream.get_relation_type(label))
-        }
+        self.transaction_stream.get_relation_type(label)
     }
 
     /// Retrieves an `AttributeType` by its label.
@@ -88,9 +84,7 @@ impl ConceptManager {
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().get_attribute_type(label).await")]
     /// ```
     pub fn get_attribute_type(&self, label: String) -> impl Promise<Result<Option<AttributeType>>> {
-        promisify! {
-            resolve!(self.transaction_stream.get_attribute_type(label))
-        }
+        self.transaction_stream.get_attribute_type(label)
     }
 
     /// Creates a new `EntityType` if none exists with the given label, otherwise retrieves the existing one.
@@ -106,9 +100,7 @@ impl ConceptManager {
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().put_entity_type(label).await")]
     /// ```
     pub fn put_entity_type(&self, label: String) -> impl Promise<Result<EntityType>> {
-        promisify! {
-            resolve!(self.transaction_stream.put_entity_type(label))
-        }
+        self.transaction_stream.put_entity_type(label)
     }
 
     /// Creates a new `RelationType` if none exists with the given label, otherwise retrieves the existing one.
@@ -124,9 +116,7 @@ impl ConceptManager {
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().put_relation_type(label).await")]
     /// ```
     pub fn put_relation_type(&self, label: String) -> impl Promise<Result<RelationType>> {
-        promisify! {
-            resolve!(self.transaction_stream.put_relation_type(label))
-        }
+        self.transaction_stream.put_relation_type(label)
     }
 
     /// Creates a new `AttributeType` if none exists with the given label, or retrieves the existing one.
@@ -144,9 +134,7 @@ impl ConceptManager {
     #[cfg_attr(not(feature = "sync"), doc = "await transaction.concepts().put_attribute_type(label, value_type).await")]
     /// ```
     pub fn put_attribute_type(&self, label: String, value_type: ValueType) -> impl Promise<Result<AttributeType>> {
-        promisify! {
-            resolve!(self.transaction_stream.put_attribute_type(label, value_type))
-        }
+        self.transaction_stream.put_attribute_type(label, value_type)
     }
 
     /// Retrieves an `Entity` by its iid.
@@ -162,9 +150,7 @@ impl ConceptManager {
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().get_entity(iid).await")]
     /// ```
     pub fn get_entity(&self, iid: IID) -> impl Promise<Result<Option<Entity>>> {
-        promisify! {
-            resolve!(self.transaction_stream.get_entity(iid))
-        }
+        self.transaction_stream.get_entity(iid)
     }
 
     /// Retrieves a `Relation` by its iid.
@@ -180,9 +166,7 @@ impl ConceptManager {
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().get_relation(iid).await")]
     /// ```
     pub fn get_relation(&self, iid: IID) -> impl Promise<Result<Option<Relation>>> {
-        promisify! {
-            resolve!(self.transaction_stream.get_relation(iid))
-        }
+        self.transaction_stream.get_relation(iid)
     }
 
     /// Retrieves an `Attribute` by its iid.
@@ -198,9 +182,7 @@ impl ConceptManager {
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().get_attribute(iid).await")]
     /// ```
     pub fn get_attribute(&self, iid: IID) -> impl Promise<Result<Option<Attribute>>> {
-        promisify! {
-            resolve!(self.transaction_stream.get_attribute(iid))
-        }
+        self.transaction_stream.get_attribute(iid)
     }
 
     /// Retrieves a list of all schema exceptions for the current transaction.
