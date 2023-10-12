@@ -34,7 +34,7 @@ typedb_behaviour_py_test(
     feats = ["@vaticle_typedb_behaviour//concept/serialization:json.feature"],
     steps = [
         ":steps",
-        "//python/tests/behaviour/typeql:steps",
+        "//python/tests/behaviour/query:steps",
         "//python/tests/behaviour/connection:steps",
         "//python/tests/behaviour/connection/database:steps",
         "//python/tests/behaviour/connection/session:steps",

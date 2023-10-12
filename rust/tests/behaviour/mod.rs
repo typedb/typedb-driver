@@ -21,9 +21,10 @@
 
 mod concept;
 mod connection;
+mod driver;
 mod parameter;
+mod query;
 mod session_tracker;
-mod typeql;
 mod util;
 
 use std::{

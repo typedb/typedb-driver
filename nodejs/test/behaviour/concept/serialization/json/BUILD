@@ -36,7 +36,7 @@ ts_project(
     deps = [
         "//nodejs:driver-nodejs",
         "//nodejs:node_modules/@cucumber/cucumber",
-        "//nodejs/test/behaviour/typeql:steps",
+        "//nodejs/test/behaviour/query:steps",
         "//nodejs/test/behaviour/util:util",
     ],
     resolve_json_module = True,
@@ -51,6 +51,6 @@ typedb_behaviour_node_test(
         "//nodejs/test/behaviour/connection/database:steps",
         "//nodejs/test/behaviour/connection/session:steps",
         "//nodejs/test/behaviour/connection/transaction:steps",
-        "//nodejs/test/behaviour/typeql:steps",
+        "//nodejs/test/behaviour/query:steps",
     ],
 )

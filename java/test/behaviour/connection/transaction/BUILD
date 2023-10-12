@@ -62,7 +62,7 @@ typedb_behaviour_java_test(
         ":steps",
         "//java/test/behaviour/connection/database:steps",
         "//java/test/behaviour/connection/session:steps",
-        "//java/test/behaviour/typeql:steps",
+        "//java/test/behaviour/query:steps",
         "//java/test/behaviour/util:steps",
     ],
     deps = [

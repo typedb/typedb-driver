@@ -50,6 +50,6 @@ typedb_behaviour_node_test(
         ":steps",
         "//nodejs/test/behaviour/connection/database:steps",
         "//nodejs/test/behaviour/connection/transaction:steps",
-        "//nodejs/test/behaviour/typeql:steps",
+        "//nodejs/test/behaviour/query:steps",
     ],
 )

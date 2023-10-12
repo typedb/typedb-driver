@@ -20,7 +20,7 @@
  */
 
 import {Then} from "@cucumber/cucumber";
-import {answers} from "../../../typeql/TypeQLSteps"
+import {answers} from "../../../query/QuerySteps"
 import {isDeepStrictEqual} from "util";
 import assert = require("assert");
 

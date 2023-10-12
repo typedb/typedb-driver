@@ -86,7 +86,9 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         tool/test/start-core-server.sh
-        bazel test //rust/tests --test_arg=-- --test_arg=integration::queries::core --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        bazel test //rust/tests --test_output=streamed --test_arg=-- \
+          --test_arg=integration::queries::core &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
@@ -101,21 +103,10 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-enterprise-servers.sh 3 # use source to receive export vars
-        bazel test //rust/tests --test_env=ROOT_CA=$ROOT_CA --test_arg=-- --test_arg=integration::queries::enterprise --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        tool/test/stop-enterprise-servers.sh
-        exit $TEST_SUCCESS
-
-    test-rust-integration-runtimes:
-      image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
-      dependencies:
-        - build
-      command: |
-        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        source tool/test/start-enterprise-servers.sh 3 # use source to receive export vars
-        bazel test //rust/tests --test_env=ROOT_CA=$ROOT_CA --test_arg=-- --test_arg=integration::runtimes --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        bazel test //rust/tests --test_output=streamed --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
+          --test_arg=integration::queries::enterprise \
+          --test_arg=integration::runtimes &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
@@ -129,7 +120,9 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-enterprise-servers.sh 3 # use source to receive export vars
-        bazel test //rust/tests --test_env=ROOT_CA=$ROOT_CA --test_arg=-- --test_arg=behaviour::concept --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        bazel test //rust/tests --test_output=streamed --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
+          --test_arg=behaviour::concept &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
@@ -143,11 +136,13 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-enterprise-servers.sh 3 # use source to receive export vars
-        bazel test //rust/tests --test_env=ROOT_CA=$ROOT_CA --test_arg=-- --test_arg=behaviour::connection --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        bazel test //rust/tests --test_output=streamed --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
+          --test_arg=behaviour::connection &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
-    test-rust-behaviour-typeql-read:
+    test-rust-behaviour-driver:
       machine: 8-core-32-gb
       image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
       dependencies:
@@ -158,17 +153,18 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-enterprise-servers.sh 3 # use source to receive export vars
-        bazel test //rust/tests --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
-          --test_arg=behaviour::typeql::language::match_ \
-          --test_arg=behaviour::typeql::language::get \
-          --test_arg=behaviour::typeql::language::expression \
-          --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        bazel test //rust/tests --test_output=streamed --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
+          --test_arg=behaviour::driver &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
-    test-rust-behaviour-typeql-write:
+    test-rust-behaviour-query-read:
       machine: 8-core-32-gb
       image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
+      filter:
+        owner: vaticle
+        branch: development
       dependencies:
         - build
       command: |
@@ -177,14 +173,36 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-enterprise-servers.sh 3 # use source to receive export vars
-        bazel test //rust/tests --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
-          --test_arg=behaviour::typeql::language::define \
-          --test_arg=behaviour::typeql::language::undefine \
-          --test_arg=behaviour::typeql::language::insert \
-          --test_arg=behaviour::typeql::language::delete \
-          --test_arg=behaviour::typeql::language::update \
-          --test_arg=behaviour::typeql::language::rule_validation \
-          --test_output=streamed && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        bazel test //rust/tests --test_output=streamed --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
+          --test_arg=behaviour::query::language::match_ \
+          --test_arg=behaviour::query::language::get \
+          --test_arg=behaviour::query::language::expression &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-enterprise-servers.sh
+        exit $TEST_SUCCESS
+
+    test-rust-behaviour-query-write:
+      machine: 8-core-32-gb
+      image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
+      filter:
+        owner: vaticle
+        branch: development
+      dependencies:
+        - build
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        source tool/test/start-enterprise-servers.sh 3 # use source to receive export vars
+        bazel test //rust/tests --test_output=streamed --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
+          --test_arg=behaviour::query::language::define \
+          --test_arg=behaviour::query::language::undefine \
+          --test_arg=behaviour::query::language::insert \
+          --test_arg=behaviour::query::language::delete \
+          --test_arg=behaviour::query::language::update \
+          --test_arg=behaviour::query::language::rule_validation &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
@@ -245,7 +263,7 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         .factory/test-enterprise.sh //java/test/behaviour/concept/... --test_output=errors
 
-    test-java-behaviour-match-core:
+    test-java-behaviour-driver-core:
       image: vaticle-ubuntu-22.04
       dependencies:
         - build
@@ -254,12 +272,40 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .factory/test-core.sh //java/test/behaviour/typeql/language/match/... --test_output=errors
-        .factory/test-core.sh //java/test/behaviour/typeql/language/get/... --test_output=errors
-        .factory/test-core.sh //java/test/behaviour/typeql/language/expression/... --test_output=errors
+        .factory/test-core.sh //java/test/behaviour/driver/query/... --test_output=errors
+
+    test-java-behaviour-driver-enterprise:
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        .factory/test-enterprise.sh //java/test/behaviour/driver/query/... --test_output=errors
+
+    test-java-behaviour-match-core:
+      image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: development
+      dependencies:
+        - build
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        .factory/test-core.sh //java/test/behaviour/query/language/match/... --test_output=errors
+        .factory/test-core.sh //java/test/behaviour/query/language/get/... --test_output=errors
+        .factory/test-core.sh //java/test/behaviour/query/language/expression/... --test_output=errors
 
     test-java-behaviour-match-enterprise:
       image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: development
       dependencies:
         - build
       command: |
@@ -267,12 +313,15 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .factory/test-enterprise.sh //java/test/behaviour/typeql/language/match/... --test_output=errors
-        .factory/test-enterprise.sh //java/test/behaviour/typeql/language/get/... --test_output=errors
-        .factory/test-enterprise.sh //java/test/behaviour/typeql/language/expression/... --test_output=errors
+        .factory/test-enterprise.sh //java/test/behaviour/query/language/match/... --test_output=errors
+        .factory/test-enterprise.sh //java/test/behaviour/query/language/get/... --test_output=errors
+        .factory/test-enterprise.sh //java/test/behaviour/query/language/expression/... --test_output=errors
 
     test-java-behaviour-writable-core:
       image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: development
       dependencies:
         - build
       command: |
@@ -280,12 +329,15 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .factory/test-core.sh //java/test/behaviour/typeql/language/insert/... --test_output=errors
-        .factory/test-core.sh //java/test/behaviour/typeql/language/delete/... --test_output=errors
-        .factory/test-core.sh //java/test/behaviour/typeql/language/update/... --test_output=errors
+        .factory/test-core.sh //java/test/behaviour/query/language/insert/... --test_output=errors
+        .factory/test-core.sh //java/test/behaviour/query/language/delete/... --test_output=errors
+        .factory/test-core.sh //java/test/behaviour/query/language/update/... --test_output=errors
 
     test-java-behaviour-writable-enterprise:
       image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: development
       dependencies:
         - build
       command: |
@@ -293,12 +345,15 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .factory/test-enterprise.sh //java/test/behaviour/typeql/language/insert/... --test_output=errors
-        .factory/test-enterprise.sh //java/test/behaviour/typeql/language/delete/... --test_output=errors
-        .factory/test-enterprise.sh //java/test/behaviour/typeql/language/update/... --test_output=errors
+        .factory/test-enterprise.sh //java/test/behaviour/query/language/insert/... --test_output=errors
+        .factory/test-enterprise.sh //java/test/behaviour/query/language/delete/... --test_output=errors
+        .factory/test-enterprise.sh //java/test/behaviour/query/language/update/... --test_output=errors
 
     test-java-behaviour-definable-core:
       image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: development
       dependencies:
         - build
       command: |
@@ -306,11 +361,14 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .factory/test-core.sh //java/test/behaviour/typeql/language/define/... --test_output=errors
-        .factory/test-core.sh //java/test/behaviour/typeql/language/undefine/... --test_output=errors
+        .factory/test-core.sh //java/test/behaviour/query/language/define/... --test_output=errors
+        .factory/test-core.sh //java/test/behaviour/query/language/undefine/... --test_output=errors
 
     test-java-behaviour-definable-enterprise:
       image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: development
       dependencies:
         - build
       command: |
@@ -318,8 +376,8 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        .factory/test-enterprise.sh //java/test/behaviour/typeql/language/define/... --test_output=errors
-        .factory/test-enterprise.sh //java/test/behaviour/typeql/language/undefine/... --test_output=errors
+        .factory/test-enterprise.sh //java/test/behaviour/query/language/define/... --test_output=errors
+        .factory/test-enterprise.sh //java/test/behaviour/query/language/undefine/... --test_output=errors
 
     test-python-behaviour-connection-core:
       image: vaticle-ubuntu-22.04
@@ -378,7 +436,8 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         tool/test/start-core-server.sh
-        .factory/test-core.sh //python/tests/behaviour/concept/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-core.sh //python/tests/behaviour/concept/... --test_output=errors --jobs=1 && 
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
@@ -398,11 +457,12 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-enterprise-servers.sh # use source to receive export vars
-        .factory/test-enterprise.sh //python/tests/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-enterprise.sh //python/tests/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
-    test-python-behaviour-match-core:
+    test-python-behaviour-driver-core:
       image: vaticle-ubuntu-22.04
       dependencies:
         - build
@@ -418,15 +478,63 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         tool/test/start-core-server.sh
-        .factory/test-core.sh //python/tests/behaviour/typeql/language/match/... --test_output=errors &&
-          .factory/test-core.sh //python/tests/behaviour/typeql/language/get/... --test_output=errors &&
-          .factory/test-core.sh //python/tests/behaviour/typeql/language/expression/... --test_output=errors &&
+        .factory/test-core.sh //python/tests/behaviour/driver/query/... --test_output=errors &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
+
+    test-python-behaviour-driver-enterprise:
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        export PATH="$HOME/.local/bin:$PATH"
+        sudo apt-get update
+        sudo apt install python3-pip -y
+        python3 -m pip install -U pip
+        python3 -m pip install -r python/requirements_dev.txt
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        source tool/test/start-enterprise-servers.sh # use source to receive export vars
+        .factory/test-enterprise.sh //python/tests/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-enterprise-servers.sh
+        exit $TEST_SUCCESS
+
+    test-python-behaviour-match-core:
+      image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: development
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        export PATH="$HOME/.local/bin:$PATH"
+        sudo apt-get update
+        sudo apt install python3-pip -y
+        python3 -m pip install -U pip
+        python3 -m pip install -r python/requirements_dev.txt
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        tool/test/start-core-server.sh
+        .factory/test-core.sh //python/tests/behaviour/query/language/match/... --test_output=errors &&
+          .factory/test-core.sh //python/tests/behaviour/query/language/get/... --test_output=errors &&
+          .factory/test-core.sh //python/tests/behaviour/query/language/expression/... --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
     test-python-behaviour-match-enterprise:
       image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: development
       dependencies:
         - build
       type: foreground
@@ -441,15 +549,18 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-enterprise-servers.sh # use source to receive export vars
-        .factory/test-enterprise.sh //python/tests/behaviour/typeql/language/match/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-enterprise.sh //python/tests/behaviour/typeql/language/get/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-enterprise.sh //python/tests/behaviour/typeql/language/expression/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+        .factory/test-enterprise.sh //python/tests/behaviour/query/language/match/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-enterprise.sh //python/tests/behaviour/query/language/get/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-enterprise.sh //python/tests/behaviour/query/language/expression/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
     test-python-behaviour-writable-core:
       image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: development
       dependencies:
         - build
       type: foreground
@@ -464,15 +575,18 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         tool/test/start-core-server.sh
-        .factory/test-core.sh //python/tests/behaviour/typeql/language/insert/... --test_output=errors &&
-          .factory/test-core.sh //python/tests/behaviour/typeql/language/delete/... --test_output=errors &&
-          .factory/test-core.sh //python/tests/behaviour/typeql/language/update/... --test_output=errors &&
+        .factory/test-core.sh //python/tests/behaviour/query/language/insert/... --test_output=errors &&
+          .factory/test-core.sh //python/tests/behaviour/query/language/delete/... --test_output=errors &&
+          .factory/test-core.sh //python/tests/behaviour/query/language/update/... --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
     test-python-behaviour-writable-enterprise:
       image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: development
       dependencies:
         - build
       type: foreground
@@ -487,15 +601,18 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-enterprise-servers.sh # use source to receive export vars
-        .factory/test-enterprise.sh //python/tests/behaviour/typeql/language/insert/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-enterprise.sh //python/tests/behaviour/typeql/language/delete/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-enterprise.sh //python/tests/behaviour/typeql/language/update/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+        .factory/test-enterprise.sh //python/tests/behaviour/query/language/insert/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-enterprise.sh //python/tests/behaviour/query/language/delete/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-enterprise.sh //python/tests/behaviour/query/language/update/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
     test-python-behaviour-definable-core:
       image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: development
       dependencies:
         - build
       type: foreground
@@ -510,14 +627,17 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         tool/test/start-core-server.sh
-        .factory/test-core.sh //python/tests/behaviour/typeql/language/define/... --test_output=errors &&
-          .factory/test-core.sh //python/tests/behaviour/typeql/language/undefine/... --test_output=errors &&
+        .factory/test-core.sh //python/tests/behaviour/query/language/define/... --test_output=errors &&
+          .factory/test-core.sh //python/tests/behaviour/query/language/undefine/... --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
     test-python-behaviour-definable-enterprise:
       image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: development
       dependencies:
         - build
       type: foreground
@@ -532,8 +652,8 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-enterprise-servers.sh # use source to receive export vars
-        .factory/test-enterprise.sh //python/tests/behaviour/typeql/language/define/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-enterprise.sh //python/tests/behaviour/typeql/language/undefine/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+        .factory/test-enterprise.sh //python/tests/behaviour/query/language/define/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-enterprise.sh //python/tests/behaviour/query/language/undefine/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
@@ -571,7 +691,8 @@ build:
         sleep 10
         node nodejs/test/integration/test-concept.js &&
           node nodejs/test/integration/test-connection.js &&
-          node nodejs/test/integration/test-query.js && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+          node nodejs/test/integration/test-query.js && 
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
@@ -588,7 +709,8 @@ build:
         cp -rL bazel-bin/nodejs/node_modules nodejs/.
         cp -rL bazel-bin/nodejs/dist nodejs/.
         source tool/test/start-enterprise-servers.sh 3 # use source to receive export vars
-        node nodejs/test/integration/test-enterprise-failover.js && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        node nodejs/test/integration/test-enterprise-failover.js && 
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
@@ -602,8 +724,9 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         tool/test/start-core-server.sh
         .factory/test-core.sh //nodejs/test/behaviour/connection/database/... --test_output=errors --jobs=1 &&
-        .factory/test-core.sh //nodejs/test/behaviour/connection/session/... --test_output=errors --jobs=1 &&
-        .factory/test-core.sh //nodejs/test/behaviour/connection/transaction/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+          .factory/test-core.sh //nodejs/test/behaviour/connection/session/... --test_output=errors --jobs=1 &&
+          .factory/test-core.sh //nodejs/test/behaviour/connection/transaction/... --test_output=errors --jobs=1 && 
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
@@ -619,7 +742,8 @@ build:
         .factory/test-enterprise.sh //nodejs/test/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
           .factory/test-enterprise.sh //nodejs/test/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
           .factory/test-enterprise.sh //nodejs/test/behaviour/connection/transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-          .factory/test-enterprise.sh //nodejs/test/behaviour/connection/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+          .factory/test-enterprise.sh //nodejs/test/behaviour/connection/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && 
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
@@ -632,7 +756,8 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         tool/test/start-core-server.sh
-        .factory/test-core.sh //nodejs/test/behaviour/concept/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-core.sh //nodejs/test/behaviour/concept/... --test_output=errors --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
@@ -645,12 +770,13 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-enterprise-servers.sh # use source to receive export vars
-        .factory/test-enterprise.sh //nodejs/test/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-enterprise.sh //nodejs/test/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
     # TODO: Delete --jobs=1 once tests are parallelisable
 
-    test-nodejs-behaviour-match-core:
+    test-nodejs-behaviour-driver-core:
       image: vaticle-ubuntu-22.04
       dependencies:
         - build
@@ -659,14 +785,49 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         tool/test/start-core-server.sh
-        .factory/test-core.sh //nodejs/test/behaviour/typeql/language/match/... --test_output=errors --jobs=1 &&
-          .factory/test-core.sh //nodejs/test/behaviour/typeql/language/get/... --test_output=errors --jobs=1 &&
-          .factory/test-core.sh //nodejs/test/behaviour/typeql/language/expression/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-core.sh //nodejs/test/behaviour/driver/query/... --test_output=errors --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
+
+    test-nodejs-behaviour-driver-enterprise:
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        source tool/test/start-enterprise-servers.sh # use source to receive export vars
+        .factory/test-enterprise.sh //nodejs/test/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-enterprise-servers.sh
+        exit $TEST_SUCCESS
+
+    test-nodejs-behaviour-match-core:
+      image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: development
+      dependencies:
+        - build
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        tool/test/start-core-server.sh
+        .factory/test-core.sh //nodejs/test/behaviour/query/language/match/... --test_output=errors --jobs=1 &&
+          .factory/test-core.sh //nodejs/test/behaviour/query/language/get/... --test_output=errors --jobs=1 &&
+          .factory/test-core.sh //nodejs/test/behaviour/query/language/expression/... --test_output=errors --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
     test-nodejs-behaviour-match-enterprise:
       image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: development
       dependencies:
         - build
       command: |
@@ -674,14 +835,18 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-enterprise-servers.sh # use source to receive export vars
-        .factory/test-enterprise.sh //nodejs/test/behaviour/typeql/language/match/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-          .factory/test-enterprise.sh //nodejs/test/behaviour/typeql/language/get/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-          .factory/test-enterprise.sh //nodejs/test/behaviour/typeql/language/expression/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-enterprise.sh //nodejs/test/behaviour/query/language/match/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-enterprise.sh //nodejs/test/behaviour/query/language/get/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-enterprise.sh //nodejs/test/behaviour/query/language/expression/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
     test-nodejs-behaviour-writable-core:
       image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: development
       dependencies:
         - build
       command: |
@@ -689,14 +854,18 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         tool/test/start-core-server.sh
-        .factory/test-core.sh //nodejs/test/behaviour/typeql/language/insert/... --test_output=errors --jobs=1 &&
-          .factory/test-core.sh //nodejs/test/behaviour/typeql/language/delete/... --test_output=errors --jobs=1 &&
-          .factory/test-core.sh //nodejs/test/behaviour/typeql/language/update/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-core.sh //nodejs/test/behaviour/query/language/insert/... --test_output=errors --jobs=1 &&
+          .factory/test-core.sh //nodejs/test/behaviour/query/language/delete/... --test_output=errors --jobs=1 &&
+          .factory/test-core.sh //nodejs/test/behaviour/query/language/update/... --test_output=errors --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
     test-nodejs-behaviour-writable-enterprise:
       image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: development
       dependencies:
         - build
       command: |
@@ -704,14 +873,18 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-enterprise-servers.sh # use source to receive export vars
-        .factory/test-enterprise.sh //nodejs/test/behaviour/typeql/language/insert/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-          .factory/test-enterprise.sh //nodejs/test/behaviour/typeql/language/delete/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-          .factory/test-enterprise.sh //nodejs/test/behaviour/typeql/language/update/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-enterprise.sh //nodejs/test/behaviour/query/language/insert/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-enterprise.sh //nodejs/test/behaviour/query/language/delete/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-enterprise.sh //nodejs/test/behaviour/query/language/update/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
     test-nodejs-behaviour-definable-core:
       image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: development
       dependencies:
         - build
       command: |
@@ -719,13 +892,17 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         tool/test/start-core-server.sh
-        .factory/test-core.sh //nodejs/test/behaviour/typeql/language/define/... --test_output=errors --jobs=1 &&
-          .factory/test-core.sh //nodejs/test/behaviour/typeql/language/undefine/... --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-core.sh //nodejs/test/behaviour/query/language/define/... --test_output=errors --jobs=1 &&
+          .factory/test-core.sh //nodejs/test/behaviour/query/language/undefine/... --test_output=errors --jobs=1 && 
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
     test-nodejs-behaviour-definable-enterprise:
       image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: development
       dependencies:
         - build
       command: |
@@ -733,8 +910,9 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-enterprise-servers.sh # use source to receive export vars
-        .factory/test-enterprise.sh //nodejs/test/behaviour/typeql/language/define/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
-          .factory/test-enterprise.sh //nodejs/test/behaviour/typeql/language/undefine/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        .factory/test-enterprise.sh //nodejs/test/behaviour/query/language/define/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          .factory/test-enterprise.sh //nodejs/test/behaviour/query/language/undefine/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
@@ -750,8 +928,8 @@ build:
         - test-rust-integration-runtimes
         - test-rust-behaviour-concept
         - test-rust-behaviour-connection
-        - test-rust-behaviour-typeql-read
-        - test-rust-behaviour-typeql-write
+        - test-rust-behaviour-query-read
+        - test-rust-behaviour-query-write
       command: |
         export DEPLOY_CRATE_TOKEN=$REPO_VATICLE_CRATES_TOKEN
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh

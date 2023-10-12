@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.vaticle.typedb.driver.test.behaviour.typeql.TypeQLSteps;
+import com.vaticle.typedb.driver.test.behaviour.query.QuerySteps;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -40,7 +40,7 @@ import static org.junit.Assert.assertTrue;
 public class JSONSteps {
     @Then("JSON serialization of answers matches")
     public void json_matches(String expectedJSON) {
-        List<JsonValue> actual = TypeQLSteps.answers().stream().map(ConceptMap::toJSON).collect(Collectors.toList());
+        List<JsonValue> actual = QuerySteps.answers().stream().map(ConceptMap::toJSON).collect(Collectors.toList());
         List<JsonValue> expected = Json.parse(expectedJSON).asArray().values();
         assertEquals(actual.size(), expected.size());
         for (JsonValue expectedItem: expected) {
