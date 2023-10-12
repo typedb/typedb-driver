@@ -50,11 +50,6 @@ cc_test(
     env = {"RUST_BACKTRACE": "full"}
 )
 
-clang_format_test(
-    name = "clang_format",
-    include = glob(["integration/*.*"])
-)
-
 checkstyle_test(
     name = "checkstyle",
     size = "small",
