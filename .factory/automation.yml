@@ -925,7 +925,6 @@ build:
         - build
         - test-rust-integration-core
         - test-rust-integration-enterprise
-        - test-rust-integration-runtimes
         - test-rust-behaviour-concept
         - test-rust-behaviour-connection
         - test-rust-behaviour-query-read
