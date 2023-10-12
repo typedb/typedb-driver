@@ -180,6 +180,20 @@ build:
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
+    test-c-integration:
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        tool/test/start-core-server.sh
+        bazel test //c/tests:test-driver-lib --test_output=errors
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
+
     test-java-integration:
       image: vaticle-ubuntu-22.04
       dependencies:
