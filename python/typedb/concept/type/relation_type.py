@@ -47,7 +47,7 @@ class _RelationType(RelationType, _ThingType):
         try:
             return wrap_relation(relation_type_create(transaction.native_object, self.native_object))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_instances(self, transaction: _Transaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                       ) -> Iterator[_Relation]:
@@ -57,7 +57,7 @@ class _RelationType(RelationType, _ThingType):
                                                                    self.native_object, transitivity.value),
                                        concept_iterator_next))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_relates(self, transaction: _Transaction, role_label: Optional[str] = None,
                     transitivity: Transitivity = Transitivity.TRANSITIVE) \
@@ -73,7 +73,7 @@ class _RelationType(RelationType, _ThingType):
                                                                                  transitivity.value),
                                                        concept_iterator_next))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_relates_overridden(self, transaction: _Transaction, role_label: str) -> Optional[_RoleType]:
         try:
@@ -81,19 +81,19 @@ class _RelationType(RelationType, _ThingType):
                 return wrap_role_type(res)
             return None
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def set_relates(self, transaction: _Transaction, role_label: str, overridden_label: Optional[str] = None) -> None:
         try:
             relation_type_set_relates(transaction.native_object, self.native_object, role_label, overridden_label)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def unset_relates(self, transaction: _Transaction, role_label: str) -> None:
         try:
             relation_type_unset_relates(transaction.native_object, self.native_object, role_label)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_subtypes(self, transaction: _Transaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                      ) -> Iterator[_RelationType]:
@@ -103,7 +103,7 @@ class _RelationType(RelationType, _ThingType):
                                                                                  transitivity.value),
                                                       concept_iterator_next))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_supertype(self, transaction: _Transaction) -> Optional[_RelationType]:
         try:
@@ -111,7 +111,7 @@ class _RelationType(RelationType, _ThingType):
                 return _RelationType(res)
             return None
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_supertypes(self, transaction: _Transaction) -> Iterator[_RelationType]:
         try:
@@ -119,11 +119,11 @@ class _RelationType(RelationType, _ThingType):
                                                                                    self.native_object),
                                                       concept_iterator_next))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def set_supertype(self, transaction: _Transaction, super_relation_type: _RelationType) -> None:
         try:
             relation_type_set_supertype(transaction.native_object, self.native_object,
                                         super_relation_type.native_object)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)

@@ -49,7 +49,7 @@ class _Session(TypeDBSession, NativeWrapper[NativeSession]):
         try:
             super().__init__(session_new(database_manager.native_object, database_name, session_type.value, options.native_object))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:

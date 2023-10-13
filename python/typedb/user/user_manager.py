@@ -51,25 +51,25 @@ class _UserManager(UserManager, NativeWrapper[NativeUserManager]):
         try:
             return users_contains(self.native_object, username)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def create(self, username: str, password: str) -> None:
         try:
             users_create(self.native_object, username, password)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def delete(self, username: str) -> None:
         try:
             users_delete(self.native_object, username)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def all(self) -> list[User]:
         try:
             return [_User(user, self) for user in IteratorWrapper(users_all(self.native_object), user_iterator_next)]
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get(self, username: str) -> Optional[User]:
         try:
@@ -77,16 +77,16 @@ class _UserManager(UserManager, NativeWrapper[NativeUserManager]):
                 return _User(user, self)
             return None
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def password_set(self, username: str, password: str) -> None:
         try:
             users_set_password(self.native_object, username, password)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_current_user(self) -> User:
         try:
             return _User(users_current_user(self.native_object), self)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)

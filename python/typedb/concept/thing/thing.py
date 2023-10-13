@@ -70,7 +70,7 @@ class _Thing(Thing, _Concept, ABC):
                                                      native_attribute_types, native_annotations),
                                        concept_iterator_next))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_relations(self, transaction: _Transaction, *role_types: _RoleType) -> Iterator[_Relation]:
         try:
@@ -80,7 +80,7 @@ class _Thing(Thing, _Concept, ABC):
                                                            native_role_types),
                                        concept_iterator_next))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_playing(self, transaction: _Transaction) -> Iterator[_RoleType]:
         try:
@@ -88,31 +88,31 @@ class _Thing(Thing, _Concept, ABC):
                        IteratorWrapper(thing_get_playing(transaction.native_object, self.native_object),
                                        concept_iterator_next))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def set_has(self, transaction: _Transaction, attribute: _Attribute) -> None:
         try:
             thing_set_has(transaction.native_object, self.native_object, attribute.native_object)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def unset_has(self, transaction: _Transaction, attribute: _Attribute) -> None:
         try:
             thing_unset_has(transaction.native_object, self.native_object, attribute.native_object)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def delete(self, transaction: _Transaction) -> None:
         try:
             thing_delete(transaction.native_object, self.native_object)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def is_deleted(self, transaction: _Transaction) -> bool:
         try:
             return thing_is_deleted(transaction.native_object, self.native_object)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def __repr__(self):
         return "%s[%s:%s]" % (type(self).__name__, self.get_type().get_label(), self.get_iid())

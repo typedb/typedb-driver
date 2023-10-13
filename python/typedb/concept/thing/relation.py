@@ -50,14 +50,14 @@ class _Relation(Relation, _Thing):
             relation_add_role_player(transaction.native_object, self.native_object,
                                      role_type.native_object, player.native_object)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def remove_player(self, transaction: _Transaction, role_type: _RoleType, player: _Thing) -> None:
         try:
             relation_remove_role_player(transaction.native_object, self.native_object,
                                         role_type.native_object, player.native_object)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_players_by_role_type(self, transaction: _Transaction, *role_types: _RoleType) -> Iterator[Any]:
         try:
@@ -67,7 +67,7 @@ class _Relation(Relation, _Thing):
                                                                                      native_role_types),
                                                    concept_iterator_next))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_players(self, transaction: _Transaction) -> dict[_RoleType, list[_Thing]]:
         try:
@@ -80,7 +80,7 @@ class _Relation(Relation, _Thing):
                 role_players[role].append(player)
             return role_players
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_relating(self, transaction: _Transaction) -> Iterator[_RoleType]:
         try:
@@ -88,4 +88,4 @@ class _Relation(Relation, _Thing):
                                                                              self.native_object),
                                                        concept_iterator_next))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)

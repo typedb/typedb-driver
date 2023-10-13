@@ -57,22 +57,22 @@ class _DatabaseManager(DatabaseManager, NativeWrapper[NativeDatabaseManager]):
                 raise TypeDBDriverException(DATABASE_DELETED, name)
             return _Database(databases_get(self.native_object, name))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def contains(self, name: str) -> bool:
         try:
             return databases_contains(self.native_object, _not_blank(name))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def create(self, name: str) -> None:
         try:
             databases_create(self.native_object, _not_blank(name))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def all(self) -> list[_Database]:
         try:
             return list(map(_Database, IteratorWrapper(databases_all(self.native_object), database_iterator_next)))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)

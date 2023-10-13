@@ -59,16 +59,16 @@ class _LogicManager(LogicManager, NativeWrapper[NativeTransaction]):
                 return _Rule(rule)
             return None
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_rules(self):
         try:
             return map(_Rule, IteratorWrapper(logic_manager_get_rules(self._native_transaction), rule_iterator_next))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def put_rule(self, label: str, when: str, then: str):
         try:
             return _Rule(logic_manager_put_rule(self._native_transaction, _not_blank_label(label), when, then))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)

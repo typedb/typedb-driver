@@ -29,9 +29,10 @@ from typedb.native_driver_wrapper import thing_type_is_root, thing_type_is_abstr
     thing_type_get_label, thing_type_delete, thing_type_is_deleted, thing_type_set_label, thing_type_set_abstract, \
     thing_type_unset_abstract, thing_type_set_plays, thing_type_unset_plays, thing_type_set_owns, thing_type_get_owns, \
     thing_type_get_plays, thing_type_get_owns_overridden, thing_type_unset_owns, thing_type_get_syntax, \
-    thing_type_get_plays_overridden, concept_iterator_next
+    thing_type_get_plays_overridden, concept_iterator_next, TypeDBDriverExceptionNative
 
 from typedb.api.concept.type.thing_type import ThingType
+from typedb.common.exception import TypeDBDriverException
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.label import Label
 from typedb.common.transitivity import Transitivity
@@ -53,92 +54,143 @@ class _ThingType(ThingType, _Type, ABC):
         return self
 
     def is_root(self) -> bool:
-        return thing_type_is_root(self.native_object)
+        try:
+            return thing_type_is_root(self.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def is_abstract(self) -> bool:
-        return thing_type_is_abstract(self.native_object)
+        try:
+            return thing_type_is_abstract(self.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def get_label(self) -> Label:
-        return Label.of(thing_type_get_label(self.native_object))
+        try:
+            return Label.of(thing_type_get_label(self.native_object))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def delete(self, transaction: _Transaction) -> None:
-        thing_type_delete(transaction.native_object, self.native_object)
+        try:
+            thing_type_delete(transaction.native_object, self.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def is_deleted(self, transaction: _Transaction) -> bool:
-        return thing_type_is_deleted(transaction.native_object, self.native_object)
+        try:
+            return thing_type_is_deleted(transaction.native_object, self.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def set_label(self, transaction: _Transaction, new_label: Label) -> None:
-        thing_type_set_label(transaction.native_object, self.native_object, new_label)
+        try:
+            thing_type_set_label(transaction.native_object, self.native_object, new_label)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     @abstractmethod
     def get_instances(self, transaction: _Transaction, transitivity: Transitivity = Transitivity.TRANSITIVE):
         pass
 
     def set_abstract(self, transaction: _Transaction) -> None:
-        thing_type_set_abstract(transaction.native_object, self.native_object)
+        try:
+            thing_type_set_abstract(transaction.native_object, self.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def unset_abstract(self, transaction: _Transaction) -> None:
-        thing_type_unset_abstract(transaction.native_object, self.native_object)
+        try:
+            thing_type_unset_abstract(transaction.native_object, self.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def set_plays(self, transaction: _Transaction,
                   role_type: _RoleType, overridden_role_type: Optional[_RoleType] = None) -> None:
-        thing_type_set_plays(transaction.native_object,
-                             self.native_object, role_type.native_object,
-                             overridden_role_type.native_object if overridden_role_type else None)
+        try:
+            thing_type_set_plays(transaction.native_object,
+                                 self.native_object, role_type.native_object,
+                                 overridden_role_type.native_object if overridden_role_type else None)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def unset_plays(self, transaction: _Transaction, role_type: _RoleType) -> None:
-        thing_type_unset_plays(transaction.native_object, self.native_object, role_type.native_object)
+        try:
+            thing_type_unset_plays(transaction.native_object, self.native_object, role_type.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def set_owns(self, transaction: _Transaction, attribute_type: _AttributeType,
                  overridden_type: Optional[_AttributeType] = None, annotations: Optional[set[Annotation]] = None
                  ) -> None:
-        overridden_type_native = overridden_type.native_object if overridden_type else None
-        annotations_array = [anno.native_object for anno in annotations] if annotations else []
-        thing_type_set_owns(
-            transaction.native_object,
-            self.native_object,
-            attribute_type.native_object,
-            overridden_type_native,
-            annotations_array,
-        )
+        try:
+            overridden_type_native = overridden_type.native_object if overridden_type else None
+            annotations_array = [anno.native_object for anno in annotations] if annotations else []
+            thing_type_set_owns(
+                transaction.native_object,
+                self.native_object,
+                attribute_type.native_object,
+                overridden_type_native,
+                annotations_array,
+            )
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def unset_owns(self, transaction: _Transaction, attribute_type: _AttributeType) -> None:
-        thing_type_unset_owns(transaction.native_object,
-                              self.native_object, attribute_type.native_object)
+        try:
+            thing_type_unset_owns(transaction.native_object,
+                                  self.native_object, attribute_type.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def get_plays(self, transaction: _Transaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                   ) -> Iterator[_RoleType]:
-        return map(wrap_role_type,
-                   IteratorWrapper(thing_type_get_plays(transaction.native_object, self.native_object,
-                                                        transitivity.value),
-                                   concept_iterator_next))
+        try:
+            return map(wrap_role_type,
+                       IteratorWrapper(thing_type_get_plays(transaction.native_object, self.native_object,
+                                                            transitivity.value),
+                                       concept_iterator_next))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def get_plays_overridden(self, transaction: _Transaction, role_type: _RoleType) -> Optional[_RoleType]:
-        if res := thing_type_get_plays_overridden(transaction.native_object,
-                                                  self.native_object, role_type.native_object):
-            return wrap_role_type(res)
-        return None
+        try:
+            if res := thing_type_get_plays_overridden(transaction.native_object,
+                                                      self.native_object, role_type.native_object):
+                return wrap_role_type(res)
+            return None
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def get_owns(self, transaction: _Transaction, value_type: Optional[ValueType] = None,
                  transitivity: Transitivity = Transitivity.TRANSITIVE, annotations: Optional[set[Annotation]] = None
                  ) -> Iterator[AttributeType]:
-        return map(wrap_attribute_type,
-                   IteratorWrapper(thing_type_get_owns(transaction.native_object,
-                                                       self.native_object,
-                                                       value_type.native_object if value_type else None,
-                                                       transitivity.value,
-                                                       [anno.native_object for anno in annotations] if annotations
-                                                       else []),
-                                   concept_iterator_next))
+        try:
+            return map(wrap_attribute_type,
+                       IteratorWrapper(thing_type_get_owns(transaction.native_object,
+                                                           self.native_object,
+                                                           value_type.native_object if value_type else None,
+                                                           transitivity.value,
+                                                           [anno.native_object for anno in annotations] if annotations
+                                                           else []),
+                                       concept_iterator_next))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def get_owns_overridden(self, transaction: _Transaction, attribute_type: _AttributeType) -> Optional[AttributeType]:
-        if res := thing_type_get_owns_overridden(transaction.native_object,
-                                                 self.native_object, attribute_type.native_object):
-            return wrap_attribute_type(res)
-        return None
+        try:
+            if res := thing_type_get_owns_overridden(transaction.native_object,
+                                                     self.native_object, attribute_type.native_object):
+                return wrap_attribute_type(res)
+            return None
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def get_syntax(self, transaction: _Transaction) -> str:
-        return thing_type_get_syntax(transaction.native_object, self.native_object, )
+        try:
+            return thing_type_get_syntax(transaction.native_object, self.native_object, )
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
 
 class _Root(_ThingType):

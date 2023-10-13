@@ -58,7 +58,7 @@ class _Rule(Rule, NativeWrapper[NativeRule]):
         try:
             rule_set_label(transaction.logic, self.native_object, new_label)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     @property
     def when(self) -> str:
@@ -72,13 +72,13 @@ class _Rule(Rule, NativeWrapper[NativeRule]):
         try:
             rule_delete(transaction.logic, self.native_object)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def is_deleted(self, transaction: _Transaction) -> bool:
         try:
             return rule_is_deleted(transaction.logic, self.native_object)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def __repr__(self):
         return rule_to_string(self.native_object)

@@ -47,12 +47,12 @@ class _Driver(TypeDBDriver, NativeWrapper[NativeConnection]):
             try:
                 native_connection = connection_open_enterprise(addresses, credential.native_object)
             except TypeDBDriverExceptionNative as e:
-                raise TypeDBDriverException(e)
+                raise TypeDBDriverException.of(e)
         else:
             try:
                 native_connection = connection_open_core(addresses[0])
             except TypeDBDriverExceptionNative as e:
-                raise TypeDBDriverException(e)
+                raise TypeDBDriverException.of(e)
         super().__init__(native_connection)
         self._database_manager = _DatabaseManager(native_connection)
         self._user_manager = _UserManager(native_connection)

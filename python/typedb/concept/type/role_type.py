@@ -59,19 +59,19 @@ class _RoleType(_Type, RoleType):
         try:
             role_type_delete(transaction.native_object, self.native_object)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def is_deleted(self, transaction: _Transaction) -> bool:
         try:
             return role_type_is_deleted(transaction.native_object, self.native_object)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def set_label(self, transaction: _Transaction, new_label: Label) -> None:
         try:
             role_type_set_label(transaction.native_object, self.native_object, new_label)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_supertype(self, transaction: _Transaction) -> Optional[_RoleType]:
         try:
@@ -79,7 +79,7 @@ class _RoleType(_Type, RoleType):
                 return _RoleType(res)
             return None
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_supertypes(self, transaction: _Transaction) -> Iterator[_RoleType]:
         try:
@@ -87,7 +87,7 @@ class _RoleType(_Type, RoleType):
                                                                            self.native_object),
                                                   concept_iterator_next))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_subtypes(self, transaction: _Transaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                      ) -> Iterator[_RoleType]:
@@ -96,13 +96,13 @@ class _RoleType(_Type, RoleType):
                                                                          transitivity.value),
                                                   concept_iterator_next))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_relation_type(self, transaction: _Transaction) -> _RelationType:
         try:
             return wrap_relation_type(role_type_get_relation_type(transaction.native_object, self.native_object))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_relation_types(self, transaction: _Transaction) -> Iterator[_RelationType]:
         try:
@@ -110,7 +110,7 @@ class _RoleType(_Type, RoleType):
                        IteratorWrapper(role_type_get_relation_types(transaction.native_object, self.native_object),
                                        concept_iterator_next))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_player_types(self, transaction: _Transaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                          ) -> Iterator[Any]:
@@ -120,7 +120,7 @@ class _RoleType(_Type, RoleType):
                                                                   transitivity.value),
                                        concept_iterator_next))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_relation_instances(self, transaction: _Transaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                                ) -> Iterator[_Relation]:
@@ -130,7 +130,7 @@ class _RoleType(_Type, RoleType):
                                                                         self.native_object, transitivity.value),
                                        concept_iterator_next))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_player_instances(self, transaction: _Transaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                              ) -> Iterator[_Thing]:
@@ -140,4 +140,4 @@ class _RoleType(_Type, RoleType):
                                                                                   transitivity.value),
                                                    concept_iterator_next))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)

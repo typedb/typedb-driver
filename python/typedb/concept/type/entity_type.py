@@ -45,14 +45,14 @@ class _EntityType(EntityType, _ThingType):
         try:
             return wrap_entity(entity_type_create(transaction.native_object, self.native_object))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def set_supertype(self, transaction: _Transaction, super_entity_type: _EntityType) -> None:
         try:
             entity_type_set_supertype(transaction.native_object, self.native_object,
                                       super_entity_type.native_object)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_supertype(self, transaction: _Transaction) -> Optional[_EntityType]:
         try:
@@ -60,7 +60,7 @@ class _EntityType(EntityType, _ThingType):
                 return _EntityType(res)
             return None
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_supertypes(self, transaction: _Transaction) -> Iterator[_EntityType]:
         try:
@@ -68,7 +68,7 @@ class _EntityType(EntityType, _ThingType):
                                                                                self.native_object),
                                                     concept_iterator_next))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_subtypes(self, transaction: _Transaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                      ) -> Iterator[_EntityType]:
@@ -78,7 +78,7 @@ class _EntityType(EntityType, _ThingType):
                                                                              transitivity.value),
                                                     concept_iterator_next))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_instances(self, transaction: _Transaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                       ) -> Iterator[_Entity]:
@@ -88,4 +88,4 @@ class _EntityType(EntityType, _ThingType):
                                                                               transitivity.value),
                                                     concept_iterator_next))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)

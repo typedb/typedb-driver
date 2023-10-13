@@ -83,7 +83,7 @@ class _ConceptManager(ConceptManager, NativeWrapper[NativeTransaction]):
                 return _EntityType(_type)
             return None
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_relation_type(self, label: str) -> Optional[_RelationType]:
         try:
@@ -91,7 +91,7 @@ class _ConceptManager(ConceptManager, NativeWrapper[NativeTransaction]):
                 return _RelationType(_type)
             return None
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_attribute_type(self, label: str) -> Optional[_AttributeType]:
         try:
@@ -99,26 +99,26 @@ class _ConceptManager(ConceptManager, NativeWrapper[NativeTransaction]):
                 return _AttributeType(_type)
             return None
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def put_entity_type(self, label: str) -> _EntityType:
         try:
             return _EntityType(concepts_put_entity_type(self.native_transaction, _not_blank_label(label)))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def put_relation_type(self, label: str) -> _RelationType:
         try:
             return _RelationType(concepts_put_relation_type(self.native_transaction, _not_blank_label(label)))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def put_attribute_type(self, label: str, value_type: ValueType) -> _AttributeType:
         try:
             return _AttributeType(concepts_put_attribute_type(self.native_transaction, _not_blank_label(label),
                                                               value_type.native_object))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_entity(self, iid: str) -> Optional[_Entity]:
         try:
@@ -126,7 +126,7 @@ class _ConceptManager(ConceptManager, NativeWrapper[NativeTransaction]):
                 return _Entity(concept)
             return None
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_relation(self, iid: str) -> Optional[_Relation]:
         try:
@@ -134,7 +134,7 @@ class _ConceptManager(ConceptManager, NativeWrapper[NativeTransaction]):
                 return _Relation(concept)
             return None
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_attribute(self, iid: str) -> Optional[_Attribute]:
         try:
@@ -142,11 +142,11 @@ class _ConceptManager(ConceptManager, NativeWrapper[NativeTransaction]):
                 return _Attribute(concept)
             return None
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def get_schema_exception(self) -> list[TypeDBException]:
         try:
             return [TypeDBException(schema_exception_code(e), schema_exception_message(e))
                     for e in concepts_get_schema_exceptions(self.native_transaction)]
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)

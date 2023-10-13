@@ -51,7 +51,7 @@ class _Transaction(TypeDBTransaction, NativeWrapper[NativeTransaction]):
         try:
             super().__init__(transaction_new(session.native_object, transaction_type.value, options.native_object))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
         self._concept_manager = _ConceptManager(self._native_object)
         self._query_manager = _QueryManager(self._native_object)
         self._logic_manager = _LogicManager(self._native_object)
@@ -102,13 +102,13 @@ class _Transaction(TypeDBTransaction, NativeWrapper[NativeTransaction]):
             self.native_object.thisown = 0
             transaction_commit(self._native_object)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def rollback(self):
         try:
             transaction_rollback(self.native_object)
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
 
     def close(self):
         if self._native_object.thisown:

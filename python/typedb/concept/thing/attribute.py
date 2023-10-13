@@ -95,4 +95,4 @@ class _Attribute(Attribute, _Thing):
                                                             owner_type.native_object if owner_type else None),
                                        concept_iterator_next))
         except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException(e)
+            raise TypeDBDriverException.of(e)
