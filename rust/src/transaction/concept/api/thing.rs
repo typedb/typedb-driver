@@ -90,9 +90,9 @@ pub trait ThingAPI: Sync + Send {
     /// ```rust
     /// thing.get_has(transaction, attribute_type, annotations=vec![Annotation::Key]);
     /// ```
-    fn get_has<'tx>(
-        &'tx self,
-        transaction: &'tx Transaction<'tx>,
+    fn get_has(
+        &self,
+        transaction: &Transaction,
         attribute_types: Vec<AttributeType>,
         annotations: Vec<Annotation>,
     ) -> Result<BoxStream<Result<Attribute>>> {
@@ -148,9 +148,9 @@ pub trait ThingAPI: Sync + Send {
     /// ```rust
     /// thing.get_relations(transaction, role_types);
     /// ```
-    fn get_relations<'tx>(
-        &'tx self,
-        transaction: &'tx Transaction<'tx>,
+    fn get_relations(
+        &self,
+        transaction: &Transaction,
         role_types: Vec<RoleType>,
     ) -> Result<BoxStream<Result<Relation>>> {
         transaction.transaction_stream.thing_get_relations(self.to_thing_cloned(), role_types).map(box_stream)
@@ -167,7 +167,7 @@ pub trait ThingAPI: Sync + Send {
     /// ```rust
     /// thing.get_playing(transaction);
     /// ```
-    fn get_playing<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> Result<BoxStream<Result<RoleType>>> {
+    fn get_playing(&self, transaction: &Transaction) -> Result<BoxStream<Result<RoleType>>> {
         transaction.transaction_stream.thing_get_playing(self.to_thing_cloned()).map(box_stream)
     }
 }
@@ -307,9 +307,9 @@ pub trait RelationAPI: ThingAPI + Clone + Into<Relation> {
     /// ```rust
     /// relation.get_players_by_role_type(transaction, role_types);
     /// ```
-    fn get_players_by_role_type<'tx>(
-        &'tx self,
-        transaction: &'tx Transaction<'tx>,
+    fn get_players_by_role_type(
+        &self,
+        transaction: &Transaction,
         role_types: Vec<RoleType>,
     ) -> Result<BoxStream<Result<Thing>>> {
         transaction
@@ -329,10 +329,7 @@ pub trait RelationAPI: ThingAPI + Clone + Into<Relation> {
     /// ```rust
     /// relation.get_role_players(transaction)
     /// ```
-    fn get_role_players<'tx>(
-        &'tx self,
-        transaction: &'tx Transaction<'tx>,
-    ) -> Result<BoxStream<Result<(RoleType, Thing)>>> {
+    fn get_role_players(&self, transaction: &Transaction) -> Result<BoxStream<Result<(RoleType, Thing)>>> {
         transaction.transaction_stream.relation_get_role_players(self.clone().into()).map(box_stream)
     }
 
@@ -347,7 +344,7 @@ pub trait RelationAPI: ThingAPI + Clone + Into<Relation> {
     /// ```rust
     /// relation.get_relating(transaction)
     /// ```
-    fn get_relating<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> Result<BoxStream<Result<RoleType>>> {
+    fn get_relating(&self, transaction: &Transaction) -> Result<BoxStream<Result<RoleType>>> {
         transaction.transaction_stream.relation_get_relating(self.clone().into()).map(box_stream)
     }
 }
@@ -367,7 +364,7 @@ impl ThingAPI for Attribute {
         Thing::Attribute(self.clone())
     }
 
-    fn is_deleted<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result<bool>> {
+    fn is_deleted<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<bool>> {
         let promise = transaction.transaction_stream.get_attribute(self.iid().clone());
         box_promise(promisify! {
             resolve!(promise).map(|res| res.is_none())
@@ -388,11 +385,7 @@ pub trait AttributeAPI: ThingAPI + Clone + Into<Attribute> {
     /// ```rust
     /// attribute.get_owners(transaction, Some(owner_type));
     /// ```
-    fn get_owners<'tx>(
-        &'tx self,
-        transaction: &'tx Transaction<'tx>,
-        thing_type: Option<ThingType>,
-    ) -> Result<BoxStream<Result<Thing>>> {
+    fn get_owners(&self, transaction: &Transaction, thing_type: Option<ThingType>) -> Result<BoxStream<Result<Thing>>> {
         transaction.transaction_stream.attribute_get_owners(self.clone().into(), thing_type).map(box_stream)
     }
 }

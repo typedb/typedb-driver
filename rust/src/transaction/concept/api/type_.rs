@@ -160,9 +160,9 @@ pub trait ThingTypeAPI: Sync + Send {
         doc = "thing_type.get_owns(transaction, Some(value_type), Transitivity::Explicit, vec![Annotation::Key]).await;"
     )]
     /// ```
-    fn get_owns<'tx>(
-        &'tx self,
-        transaction: &'tx Transaction<'tx>,
+    fn get_owns(
+        &self,
+        transaction: &Transaction,
         value_type: Option<ValueType>,
         transitivity: Transitivity,
         annotations: Vec<Annotation>,
@@ -272,11 +272,7 @@ pub trait ThingTypeAPI: Sync + Send {
     #[cfg_attr(feature = "sync", doc = "thing_type.get_plays(transaction, Transitivity::Explicit);")]
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.get_plays(transaction, Transitivity::Explicit).await;")]
     /// ```
-    fn get_plays<'tx>(
-        &'tx self,
-        transaction: &'tx Transaction<'tx>,
-        transitivity: Transitivity,
-    ) -> Result<BoxStream<Result<RoleType>>> {
+    fn get_plays(&self, transaction: &Transaction, transitivity: Transitivity) -> Result<BoxStream<Result<RoleType>>> {
         transaction.transaction_stream.thing_type_get_plays(self.to_thing_type_cloned(), transitivity).map(box_stream)
     }
 
@@ -383,7 +379,7 @@ impl ThingTypeAPI for RootThingType {
         ThingType::RootThingType(self.clone())
     }
 
-    fn is_deleted<'tx>(&'tx self, _transaction: &'tx Transaction<'tx>) -> BoxPromise<Result<bool>> {
+    fn is_deleted(&self, _transaction: &Transaction) -> BoxPromise<Result<bool>> {
         box_promise(promisify! { Ok(false) })
     }
 }
@@ -477,7 +473,7 @@ pub trait EntityTypeAPI: ThingTypeAPI + Clone + Into<EntityType> {
     #[cfg_attr(feature = "sync", doc = "entity_type.get_supertypes(transaction);")]
     #[cfg_attr(not(feature = "sync"), doc = "entity_type.get_supertypes(transaction).await;")]
     /// ```
-    fn get_supertypes<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> Result<BoxStream<Result<EntityType>>> {
+    fn get_supertypes(&self, transaction: &Transaction) -> Result<BoxStream<Result<EntityType>>> {
         transaction.transaction_stream.entity_type_get_supertypes(self.clone().into()).map(box_stream)
     }
 
@@ -495,9 +491,9 @@ pub trait EntityTypeAPI: ThingTypeAPI + Clone + Into<EntityType> {
     #[cfg_attr(feature = "sync", doc = "entity_type.get_subtypes(transaction, transitivity);")]
     #[cfg_attr(not(feature = "sync"), doc = "entity_type.get_subtypes(transaction, transitivity).await;")]
     /// ```
-    fn get_subtypes<'tx>(
-        &'tx self,
-        transaction: &'tx Transaction<'tx>,
+    fn get_subtypes(
+        &self,
+        transaction: &Transaction,
         transitivity: Transitivity,
     ) -> Result<BoxStream<Result<EntityType>>> {
         transaction.transaction_stream.entity_type_get_subtypes(self.clone().into(), transitivity).map(box_stream)
@@ -518,9 +514,9 @@ pub trait EntityTypeAPI: ThingTypeAPI + Clone + Into<EntityType> {
     #[cfg_attr(feature = "sync", doc = "entity_type.get_instances(transaction, Transitivity::Explicit);")]
     #[cfg_attr(not(feature = "sync"), doc = "entity_type.get_instances(transaction, Transitivity::Explicit).await;")]
     /// ```
-    fn get_instances<'tx>(
-        &'tx self,
-        transaction: &'tx Transaction<'tx>,
+    fn get_instances(
+        &self,
+        transaction: &Transaction,
         transitivity: Transitivity,
     ) -> Result<BoxStream<Result<Entity>>> {
         transaction.transaction_stream.entity_type_get_instances(self.clone().into(), transitivity).map(box_stream)
@@ -618,7 +614,7 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     #[cfg_attr(feature = "sync", doc = "relation_type.get_supertypes(transaction);")]
     #[cfg_attr(not(feature = "sync"), doc = "relation_type.get_supertypes(transaction).await;")]
     /// ```
-    fn get_supertypes<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> Result<BoxStream<Result<RelationType>>> {
+    fn get_supertypes(&self, transaction: &Transaction) -> Result<BoxStream<Result<RelationType>>> {
         transaction.transaction_stream.relation_type_get_supertypes(self.clone().into()).map(box_stream)
     }
 
@@ -636,9 +632,9 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     #[cfg_attr(feature = "sync", doc = "relation_type.get_subtypes(transaction, Transivity::Transitive);")]
     #[cfg_attr(not(feature = "sync"), doc = "relation_type.get_subtypes(transaction, Transivity::Transitive).await;")]
     /// ```
-    fn get_subtypes<'tx>(
-        &'tx self,
-        transaction: &'tx Transaction<'tx>,
+    fn get_subtypes(
+        &self,
+        transaction: &Transaction,
         transitivity: Transitivity,
     ) -> Result<BoxStream<Result<RelationType>>> {
         transaction.transaction_stream.relation_type_get_subtypes(self.clone().into(), transitivity).map(box_stream)
@@ -659,9 +655,9 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     #[cfg_attr(feature = "sync", doc = "relation_type.get_instances(transaction, Transitivity::Explicit);")]
     #[cfg_attr(not(feature = "sync"), doc = "relation_type.get_instances(transaction, Transitivity::Explicit).await;")]
     /// ```
-    fn get_instances<'tx>(
-        &'tx self,
-        transaction: &'tx Transaction<'tx>,
+    fn get_instances(
+        &self,
+        transaction: &Transaction,
         transitivity: Transitivity,
     ) -> Result<BoxStream<Result<Relation>>> {
         transaction.transaction_stream.relation_type_get_instances(self.clone().into(), transitivity).map(box_stream)
@@ -681,9 +677,9 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     #[cfg_attr(feature = "sync", doc = "relation_type.get_relates(transaction, Transitivity::Transitive);")]
     #[cfg_attr(not(feature = "sync"), doc = "relation_type.get_relates(transaction, Transitivity::Transitive).await;")]
     /// ```
-    fn get_relates<'tx>(
-        &'tx self,
-        transaction: &'tx Transaction<'tx>,
+    fn get_relates(
+        &self,
+        transaction: &Transaction,
         transitivity: Transitivity,
     ) -> Result<BoxStream<Result<RoleType>>> {
         transaction.transaction_stream.relation_type_get_relates(self.clone().into(), transitivity).map(box_stream)
@@ -904,7 +900,7 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// ```rust
     /// attribute_type.get_supertypes(transaction)
     /// ```
-    fn get_supertypes<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> Result<BoxStream<Result<AttributeType>>> {
+    fn get_supertypes(&self, transaction: &Transaction) -> Result<BoxStream<Result<AttributeType>>> {
         transaction.transaction_stream.attribute_type_get_supertypes(self.clone().into()).map(box_stream)
     }
 
@@ -921,9 +917,9 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// ```rust
     /// attribute_type.get_subtypes(transaction, transitivity)
     /// ```
-    fn get_subtypes<'tx>(
-        &'tx self,
-        transaction: &'tx Transaction<'tx>,
+    fn get_subtypes(
+        &self,
+        transaction: &Transaction,
         transitivity: Transitivity,
     ) -> Result<BoxStream<Result<AttributeType>>> {
         // FIXME when None?
@@ -948,9 +944,9 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// ```rust
     /// attribute_type.get_subtypes_with_value_type(transaction, value_type, transitivity)
     /// ```
-    fn get_subtypes_with_value_type<'tx>(
-        &'tx self,
-        transaction: &'tx Transaction<'tx>,
+    fn get_subtypes_with_value_type(
+        &self,
+        transaction: &Transaction,
         value_type: ValueType,
         transitivity: Transitivity,
     ) -> Result<BoxStream<Result<AttributeType>>> {
@@ -974,9 +970,9 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// ```rust
     /// attribute_type.get_instances(transaction, transitivity)
     /// ```
-    fn get_instances<'tx>(
-        &'tx self,
-        transaction: &'tx Transaction<'tx>,
+    fn get_instances(
+        &self,
+        transaction: &Transaction,
         transitivity: Transitivity,
     ) -> Result<BoxStream<Result<Attribute>>> {
         transaction
@@ -1053,9 +1049,9 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// ```rust
     /// attribute_type.get_owners(transaction, transitivity, annotations)
     /// ```
-    fn get_owners<'tx>(
-        &'tx self,
-        transaction: &'tx Transaction<'tx>,
+    fn get_owners(
+        &self,
+        transaction: &Transaction,
         transitivity: Transitivity,
         annotations: Vec<Annotation>,
     ) -> Result<BoxStream<Result<ThingType>>> {
@@ -1173,7 +1169,7 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// ```rust
     /// role_type.get_supertypes(transaction)
     /// ```
-    fn get_supertypes<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> Result<BoxStream<Result<RoleType>>> {
+    fn get_supertypes(&self, transaction: &Transaction) -> Result<BoxStream<Result<RoleType>>> {
         transaction.transaction_stream.role_type_get_supertypes(self.clone().into()).map(box_stream)
     }
 
@@ -1190,9 +1186,9 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// ```rust
     /// role_type.get_subtypes(transaction, transitivity)
     /// ```
-    fn get_subtypes<'tx>(
-        &'tx self,
-        transaction: &'tx Transaction<'tx>,
+    fn get_subtypes(
+        &self,
+        transaction: &Transaction,
         transitivity: Transitivity,
     ) -> Result<BoxStream<Result<RoleType>>> {
         transaction.transaction_stream.role_type_get_subtypes(self.clone().into(), transitivity).map(box_stream)
@@ -1209,10 +1205,7 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// ```rust
     /// role_type.get_relation_types(transaction)
     /// ```
-    fn get_relation_types<'tx>(
-        &'tx self,
-        transaction: &'tx Transaction<'tx>,
-    ) -> Result<BoxStream<Result<RelationType>>> {
+    fn get_relation_types(&self, transaction: &Transaction) -> Result<BoxStream<Result<RelationType>>> {
         transaction.transaction_stream.role_type_get_relation_types(self.clone().into()).map(box_stream)
     }
 
@@ -1229,9 +1222,9 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// ```rust
     /// role_type.get_player_types(transaction, transitivity)
     /// ```
-    fn get_player_types<'tx>(
-        &'tx self,
-        transaction: &'tx Transaction<'tx>,
+    fn get_player_types(
+        &self,
+        transaction: &Transaction,
         transitivity: Transitivity,
     ) -> Result<BoxStream<Result<ThingType>>> {
         transaction.transaction_stream.role_type_get_player_types(self.clone().into(), transitivity).map(box_stream)
@@ -1250,9 +1243,9 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// ```rust
     /// role_type.get_relation_instances(transaction, transitivity)
     /// ```
-    fn get_relation_instances<'tx>(
-        &'tx self,
-        transaction: &'tx Transaction<'tx>,
+    fn get_relation_instances(
+        &self,
+        transaction: &Transaction,
         transitivity: Transitivity,
     ) -> Result<BoxStream<Result<Relation>>> {
         transaction
@@ -1274,9 +1267,9 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// ```rust
     /// role_type.get_player_instances(transaction, transitivity)
     /// ```
-    fn get_player_instances<'tx>(
-        &'tx self,
-        transaction: &'tx Transaction<'tx>,
+    fn get_player_instances(
+        &self,
+        transaction: &Transaction,
         transitivity: Transitivity,
     ) -> Result<BoxStream<Result<Thing>>> {
         transaction.transaction_stream.role_type_get_player_instances(self.clone().into(), transitivity).map(box_stream)
