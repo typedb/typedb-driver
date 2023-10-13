@@ -25,14 +25,8 @@ pub fn box_promise<'a, T>(promise: impl Promise<'a, T> + 'a) -> BoxPromise<'a, T
     Box::new(promise)
 }
 
-pub trait Promise<'a, T> {
+pub trait Promise<'a, T>: FnOnce() -> T + 'a {
     fn resolve(self) -> T;
-}
-
-impl<'a, T> Promise<'a, T> for Box<dyn Promise<'a, T> + 'a> {
-    fn resolve(self) -> T {
-        todo!()
-    }
 }
 
 impl<'a, T, U: FnOnce() -> T + 'a> Promise<'a, T> for U {
