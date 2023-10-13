@@ -73,32 +73,56 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
     @Override
     public final boolean isRoot() {
-        return thing_type_is_root(nativeObject);
+        try {
+            return thing_type_is_root(nativeObject);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     @Override
     public final boolean isAbstract() {
-        return thing_type_is_abstract(nativeObject);
+        try {
+            return thing_type_is_abstract(nativeObject);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     @Override
     public Label getLabel() {
-        return Label.of(thing_type_get_label(nativeObject));
+        try {
+            return Label.of(thing_type_get_label(nativeObject));
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     @Override
     public void delete(TypeDBTransaction transaction) {
-        thing_type_delete(nativeTransaction(transaction), nativeObject);
+        try {
+            thing_type_delete(nativeTransaction(transaction), nativeObject);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     @Override
     public boolean isDeleted(TypeDBTransaction transaction) {
-        return thing_type_is_deleted(nativeTransaction(transaction), nativeObject);
+        try {
+            return thing_type_is_deleted(nativeTransaction(transaction), nativeObject);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     @Override
     public final void setLabel(TypeDBTransaction transaction, String newLabel) {
-        thing_type_set_label(nativeTransaction(transaction), nativeObject, newLabel);
+        try {
+            thing_type_set_label(nativeTransaction(transaction), nativeObject, newLabel);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     @Override
@@ -121,23 +145,39 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
     @Override
     public final void setAbstract(TypeDBTransaction transaction) {
-        thing_type_set_abstract(nativeTransaction(transaction), nativeObject);
+        try {
+            thing_type_set_abstract(nativeTransaction(transaction), nativeObject);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     @Override
     public final void unsetAbstract(TypeDBTransaction transaction) {
-        thing_type_unset_abstract(nativeTransaction(transaction), nativeObject);
+        try {
+            thing_type_unset_abstract(nativeTransaction(transaction), nativeObject);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     @Override
     public final void setPlays(TypeDBTransaction transaction, RoleType roleType) {
-        thing_type_set_plays(nativeTransaction(transaction), nativeObject, ((RoleTypeImpl) roleType).nativeObject, null);
+        try {
+            thing_type_set_plays(nativeTransaction(transaction), nativeObject, ((RoleTypeImpl) roleType).nativeObject, null);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     @Override
     public final void setPlays(TypeDBTransaction transaction, RoleType roleType, RoleType overriddenRoleType) {
-        thing_type_set_plays(nativeTransaction(transaction),
-                nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((RoleTypeImpl) overriddenRoleType).nativeObject);
+        try {
+            thing_type_set_plays(nativeTransaction(transaction),
+                    nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((RoleTypeImpl) overriddenRoleType).nativeObject);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     @Override
@@ -157,9 +197,13 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
     @Override
     public final void setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType, Set<Annotation> annotations) {
-        com.vaticle.typedb.driver.jni.Concept overriddenTypeNative = overriddenType != null ? ((AttributeTypeImpl) overriddenType).nativeObject : null;
-        com.vaticle.typedb.driver.jni.Annotation[] annotationsArray = annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.driver.jni.Annotation[]::new);
-        thing_type_set_owns(nativeTransaction(transaction), nativeObject, ((AttributeTypeImpl) attributeType).nativeObject, overriddenTypeNative, annotationsArray);
+        try {
+            com.vaticle.typedb.driver.jni.Concept overriddenTypeNative = overriddenType != null ? ((AttributeTypeImpl) overriddenType).nativeObject : null;
+            com.vaticle.typedb.driver.jni.Annotation[] annotationsArray = annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.driver.jni.Annotation[]::new);
+            thing_type_set_owns(nativeTransaction(transaction), nativeObject, ((AttributeTypeImpl) attributeType).nativeObject, overriddenTypeNative, annotationsArray);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     @Override
@@ -169,15 +213,23 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
     @Override
     public final Stream<RoleTypeImpl> getPlays(TypeDBTransaction transaction, Transitivity transitivity) {
-        return thing_type_get_plays(nativeTransaction(transaction), nativeObject, transitivity.nativeObject).stream().map(RoleTypeImpl::new);
+        try {
+            return thing_type_get_plays(nativeTransaction(transaction), nativeObject, transitivity.nativeObject).stream().map(RoleTypeImpl::new);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     @Override
     public RoleTypeImpl getPlaysOverridden(TypeDBTransaction transaction, RoleType roleType) {
-        com.vaticle.typedb.driver.jni.Concept res = thing_type_get_plays_overridden(nativeTransaction(transaction),
-                nativeObject, ((RoleTypeImpl) roleType).nativeObject);
-        if (res != null) return new RoleTypeImpl(res);
-        else return null;
+        try {
+            com.vaticle.typedb.driver.jni.Concept res = thing_type_get_plays_overridden(nativeTransaction(transaction),
+                    nativeObject, ((RoleTypeImpl) roleType).nativeObject);
+            if (res != null) return new RoleTypeImpl(res);
+            else return null;
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     @Override
@@ -225,33 +277,53 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     private Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, Value.Type valueType, Transitivity transitivity, Set<Annotation> annotations) {
-        return thing_type_get_owns(nativeTransaction(transaction), nativeObject, valueType == null ? null : valueType.nativeObject, transitivity.nativeObject,
-                annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.driver.jni.Annotation[]::new)
-        ).stream().map(AttributeTypeImpl::new);
+        try {
+            return thing_type_get_owns(nativeTransaction(transaction), nativeObject, valueType == null ? null : valueType.nativeObject, transitivity.nativeObject,
+                    annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.driver.jni.Annotation[]::new)
+            ).stream().map(AttributeTypeImpl::new);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     @Override
     public AttributeTypeImpl getOwnsOverridden(TypeDBTransaction transaction, AttributeType attributeType) {
-        com.vaticle.typedb.driver.jni.Concept res = thing_type_get_owns_overridden(nativeTransaction(transaction),
-                nativeObject, ((AttributeTypeImpl) attributeType).nativeObject);
-        if (res != null) return new AttributeTypeImpl(res);
-        else return null;
+        try {
+            com.vaticle.typedb.driver.jni.Concept res = thing_type_get_owns_overridden(nativeTransaction(transaction),
+                    nativeObject, ((AttributeTypeImpl) attributeType).nativeObject);
+            if (res != null) return new AttributeTypeImpl(res);
+            else return null;
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     @Override
     public final void unsetOwns(TypeDBTransaction transaction, AttributeType attributeType) {
-        thing_type_unset_owns(nativeTransaction(transaction),
-                nativeObject, ((AttributeTypeImpl) attributeType).nativeObject);
+        try {
+            thing_type_unset_owns(nativeTransaction(transaction),
+                    nativeObject, ((AttributeTypeImpl) attributeType).nativeObject);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     @Override
     public final void unsetPlays(TypeDBTransaction transaction, RoleType roleType) {
-        thing_type_unset_plays(nativeTransaction(transaction), nativeObject, ((RoleTypeImpl) roleType).nativeObject);
+        try {
+            thing_type_unset_plays(nativeTransaction(transaction), nativeObject, ((RoleTypeImpl) roleType).nativeObject);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     @Override
     public final String getSyntax(TypeDBTransaction transaction) {
-        return thing_type_get_syntax(nativeTransaction(transaction), nativeObject);
+        try {
+            return thing_type_get_syntax(nativeTransaction(transaction), nativeObject);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     public static class Root extends ThingTypeImpl {
