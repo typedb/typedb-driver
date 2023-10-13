@@ -31,18 +31,18 @@ use crate::{
 
 /// Provides methods for executing TypeQL queries in the transaction.
 #[derive(Debug)]
-pub struct QueryManager<'a> {
-    transaction_stream: Pin<&'a TransactionStream>,
+pub struct QueryManager<'tx> {
+    transaction_stream: Pin<&'tx TransactionStream>,
 }
 
-impl<'a> QueryManager<'a> {
-    pub(super) fn new(transaction_stream: Pin<&'a TransactionStream>) -> Self {
+impl<'tx> QueryManager<'tx> {
+    pub(super) fn new(transaction_stream: Pin<&'tx TransactionStream>) -> Self {
         Self { transaction_stream }
     }
 
     /// Performs a TypeQL Define query with default options.
     /// See [`QueryManager::define_with_options`]
-    pub fn define(&self, query: &str) -> impl Promise<Result> {
+    pub fn define(&self, query: &str) -> impl Promise<'tx, Result> {
         self.define_with_options(query, Options::new())
     }
 
@@ -59,13 +59,13 @@ impl<'a> QueryManager<'a> {
     #[cfg_attr(feature = "sync", doc = "transaction.query().define_with_options(query, options)")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.query().define_with_options(query, options)")]
     /// ```
-    pub fn define_with_options(&self, query: &str, options: Options) -> impl Promise<Result> {
-        self.transaction_stream.define(query.to_string(), options)
+    pub fn define_with_options(&self, query: &str, options: Options) -> impl Promise<'tx, Result> {
+        self.transaction_stream.get_ref().define(query.to_string(), options)
     }
 
     /// Performs a TypeQL Undefine query with default options
     /// See [`QueryManager::undefine_with_options`]
-    pub fn undefine(&self, query: &str) -> impl Promise<Result> {
+    pub fn undefine(&self, query: &str) -> impl Promise<'tx, Result> {
         self.undefine_with_options(query, Options::new())
     }
 
@@ -82,13 +82,13 @@ impl<'a> QueryManager<'a> {
     #[cfg_attr(feature = "sync", doc = "transaction.query().undefine_with_options(query, options)")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.query().undefine_with_options(query, options)")]
     /// ```
-    pub fn undefine_with_options(&self, query: &str, options: Options) -> impl Promise<Result> {
-        self.transaction_stream.undefine(query.to_string(), options)
+    pub fn undefine_with_options(&self, query: &str, options: Options) -> impl Promise<'tx, Result> {
+        self.transaction_stream.get_ref().undefine(query.to_string(), options)
     }
 
     /// Performs a TypeQL Delete query with default options.
     /// See [`QueryManager::delete_with_options`]
-    pub fn delete(&self, query: &str) -> impl Promise<Result> {
+    pub fn delete(&self, query: &str) -> impl Promise<'tx, Result> {
         self.delete_with_options(query, Options::new())
     }
 
@@ -105,8 +105,8 @@ impl<'a> QueryManager<'a> {
     #[cfg_attr(feature = "sync", doc = "transaction.query().delete_with_options(query, options)")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.query().delete_with_options(query, options)")]
     /// ```
-    pub fn delete_with_options(&self, query: &str, options: Options) -> impl Promise<Result> {
-        self.transaction_stream.delete(query.to_string(), options)
+    pub fn delete_with_options(&self, query: &str, options: Options) -> impl Promise<'tx, Result> {
+        self.transaction_stream.get_ref().delete(query.to_string(), options)
     }
 
     /// Performs a TypeQL Match (Get) query with default options.
@@ -128,7 +128,7 @@ impl<'a> QueryManager<'a> {
     /// transaction.query().match_with_options(query, options)
     /// ```
     pub fn match_with_options(&self, query: &str, options: Options) -> Result<impl Stream<Item = Result<ConceptMap>>> {
-        self.transaction_stream.match_(query.to_string(), options)
+        self.transaction_stream.get_ref().match_(query.to_string(), options)
     }
 
     /// Performs a TypeQL Insert query with default options.
@@ -150,7 +150,7 @@ impl<'a> QueryManager<'a> {
     /// transaction.query().insert_with_options(query, options)
     /// ```
     pub fn insert_with_options(&self, query: &str, options: Options) -> Result<impl Stream<Item = Result<ConceptMap>>> {
-        self.transaction_stream.insert(query.to_string(), options)
+        self.transaction_stream.get_ref().insert(query.to_string(), options)
     }
 
     /// Performs a TypeQL Update query with default options.
@@ -172,12 +172,12 @@ impl<'a> QueryManager<'a> {
     /// transaction.query().update_with_options(query, options)
     /// ```
     pub fn update_with_options(&self, query: &str, options: Options) -> Result<impl Stream<Item = Result<ConceptMap>>> {
-        self.transaction_stream.update(query.to_string(), options)
+        self.transaction_stream.get_ref().update(query.to_string(), options)
     }
 
     /// Performs a TypeQL Match Aggregate query with default options.
     /// See [`QueryManager::match_aggregate`]
-    pub fn match_aggregate(&self, query: &str) -> impl Promise<Result<Numeric>> {
+    pub fn match_aggregate(&self, query: &str) -> impl Promise<'tx, Result<Numeric>> {
         self.match_aggregate_with_options(query, Options::new())
     }
 
@@ -194,8 +194,8 @@ impl<'a> QueryManager<'a> {
     #[cfg_attr(feature = "sync", doc = "transaction.query().match_aggregate_with_options(query, options)")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.query().match_aggregate_with_options(query, options)")]
     /// ```
-    pub fn match_aggregate_with_options(&self, query: &str, options: Options) -> impl Promise<Result<Numeric>> {
-        self.transaction_stream.match_aggregate(query.to_string(), options)
+    pub fn match_aggregate_with_options(&self, query: &str, options: Options) -> impl Promise<'tx, Result<Numeric>> {
+        self.transaction_stream.get_ref().match_aggregate(query.to_string(), options)
     }
 
     /// Performs a TypeQL Match Group query with default options.
@@ -221,7 +221,7 @@ impl<'a> QueryManager<'a> {
         query: &str,
         options: Options,
     ) -> Result<impl Stream<Item = Result<ConceptMapGroup>>> {
-        self.transaction_stream.match_group(query.to_string(), options)
+        self.transaction_stream.get_ref().match_group(query.to_string(), options)
     }
 
     /// Performs a TypeQL Match Group Aggregate query with default options.
@@ -247,7 +247,7 @@ impl<'a> QueryManager<'a> {
         query: &str,
         options: Options,
     ) -> Result<impl Stream<Item = Result<NumericGroup>>> {
-        self.transaction_stream.match_group_aggregate(query.to_string(), options)
+        self.transaction_stream.get_ref().match_group_aggregate(query.to_string(), options)
     }
 
     /// Performs a TypeQL Explain query in the transaction.
@@ -273,6 +273,6 @@ impl<'a> QueryManager<'a> {
         explainable: &Explainable,
         options: Options,
     ) -> Result<impl Stream<Item = Result<Explanation>>> {
-        self.transaction_stream.explain(explainable.id, options)
+        self.transaction_stream.get_ref().explain(explainable.id, options)
     }
 }

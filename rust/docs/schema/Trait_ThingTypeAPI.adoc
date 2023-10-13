@@ -217,11 +217,7 @@ sync::
 --
 [source,rust]
 ----
-fn get_owns_overridden(
-    &self,
-    transaction: &Transaction<'_>,
-    overridden_attribute_type: AttributeType
-) -> Result<Option<AttributeType>>
+thing_type.get_owns_overridden(transaction, attribute_type);
 ----
 
 --
@@ -261,6 +257,13 @@ a| `overridden_attribute_type` a| The ``AttributeType`` that overrides requested
 
 [caption=""]
 .Returns
+[source,rust]
+----
+BoxPromise<'tx, Result>
+----
+
+[caption=""]
+.Code examples
 [tabs]
 ====
 async::
@@ -1230,24 +1233,6 @@ Allows the instances of this ``ThingType`` to play the given role.
 
 [caption=""]
 .Input parameters
-[tabs]
-====
-async::
-+
---
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
-a| `role_type` a| The role to be played by the instances of this type a| `RoleType`
-a| `overridden_role_type` a| The role type that this role overrides, if applicable a| `Option<RoleType>`
-|===
---
-
-sync::
-+
---
 [cols="~,~,~"]
 [options="header"]
 |===
@@ -1633,6 +1618,13 @@ a| `role_type` a| The role to not be played by the instances of this type. a| `R
 
 [caption=""]
 .Returns
+[source,rust]
+----
+BoxPromise<'tx, Result>
+----
+
+[caption=""]
+.Code examples
 [tabs]
 ====
 async::

@@ -429,21 +429,12 @@ fn get_supertype(
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-Pin<Box<dyn Future<Output = Result<Option<EntityType>>> + Send + 'async_trait>>
-where
-     Self: Sync + 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+BoxPromise<'tx, Result<Option<EntityType>>>
 ----
 
+<<<<<<< HEAD:rust/docs/schema/EntityType.adoc
 --
 
 sync::
@@ -715,75 +706,35 @@ where
 
 --
 
-sync::
-+
---
+[caption=""]
+.Returns
 [source,rust]
 ----
-Result
+BoxPromise<'tx, Result>
 ----
-
---
-====
 
 [#_struct_EntityType_method_set_label]
 ==== set_label
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-fn set_label<'life0, 'life1, 'life2, 'async_trait>(
-    &'life0 mut self,
-    transaction: &'life1 Transaction<'life2>,
-    new_label: String
-) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-fn set_label(
+fn set_label<'tx>(
     &mut self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'tx>,
     new_label: String
-) -> Result
+) -> BoxPromise<'tx, Result>
 ----
-
---
-====
 
 <<#_trait_ThingTypeAPI_method_set_label,Read more>>
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+BoxPromise<'tx, Result>
 ----
 
+<<<<<<< HEAD:rust/docs/schema/EntityType.adoc
 --
 
 sync::
@@ -799,14 +750,14 @@ Result
 
 [#_struct_EntityType_method_set_owns]
 ==== set_owns
+=======
+[#_struct_EntityType_method_set_abstract]
+==== set_abstract
+>>>>>>> ae5ec657 (deny(elided_lifetimes_in_paths) + fix lifetimes):rust/docs/EntityType.adoc
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
+<<<<<<< HEAD:rust/docs/schema/EntityType.adoc
 fn set_owns<'life0, 'life1, 'life2, 'async_trait>(
     &'life0 mut self,
     transaction: &'life1 Transaction<'life2>,
@@ -841,24 +792,24 @@ fn set_owns(
 ====
 
 <<#_trait_ThingTypeAPI_method_set_owns,Read more>>
+=======
+fn set_abstract<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result>
+----
+
+<<#_trait_ThingTypeAPI_method_set_abstract,Read more>>
+>>>>>>> ae5ec657 (deny(elided_lifetimes_in_paths) + fix lifetimes):rust/docs/EntityType.adoc
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+BoxPromise<'tx, Result>
 ----
 
+<<<<<<< HEAD:rust/docs/schema/EntityType.adoc
 --
 
 sync::
@@ -1016,59 +967,29 @@ Result
 --
 ====
 
+=======
+>>>>>>> ae5ec657 (deny(elided_lifetimes_in_paths) + fix lifetimes):rust/docs/EntityType.adoc
 [#_struct_EntityType_method_unset_abstract]
 ==== unset_abstract
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-fn unset_abstract<'life0, 'life1, 'life2, 'async_trait>(
-    &'life0 mut self,
-    transaction: &'life1 Transaction<'life2>
-) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+fn unset_abstract<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-fn unset_abstract(&mut self, transaction: &Transaction<'_>) -> Result
-----
-
---
-====
 
 <<#_trait_ThingTypeAPI_method_unset_abstract,Read more>>
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+BoxPromise<'tx, Result>
 ----
 
+<<<<<<< HEAD:rust/docs/schema/EntityType.adoc
 --
 
 sync::
@@ -1081,65 +1002,97 @@ Result
 
 --
 ====
+=======
+[#_struct_EntityType_method_get_owns]
+==== get_owns
+
+[source,rust]
+----
+fn get_owns(
+    &self,
+    transaction: &Transaction<'_>,
+    value_type: Option<ValueType>,
+    transitivity: Transitivity,
+    annotations: Vec<Annotation>
+) -> Result<BoxStream<'_, Result<AttributeType>>>
+----
+
+<<#_trait_ThingTypeAPI_method_get_owns,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<AttributeType>>>
+----
+
+[#_struct_EntityType_method_get_owns_overridden]
+==== get_owns_overridden
+
+[source,rust]
+----
+fn get_owns_overridden<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>,
+    overridden_attribute_type: AttributeType
+) -> BoxPromise<'tx, Result<Option<AttributeType>>>
+----
+
+<<#_trait_ThingTypeAPI_method_get_owns_overridden,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxPromise<'tx, Result<Option<AttributeType>>>
+----
+
+[#_struct_EntityType_method_set_owns]
+==== set_owns
+
+[source,rust]
+----
+fn set_owns<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>,
+    attribute_type: AttributeType,
+    overridden_attribute_type: Option<AttributeType>,
+    annotations: Vec<Annotation>
+) -> BoxPromise<'tx, Result>
+----
+
+<<#_trait_ThingTypeAPI_method_set_owns,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxPromise<'tx, Result>
+----
+>>>>>>> ae5ec657 (deny(elided_lifetimes_in_paths) + fix lifetimes):rust/docs/EntityType.adoc
 
 [#_struct_EntityType_method_unset_owns]
 ==== unset_owns
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-fn unset_owns<'life0, 'life1, 'life2, 'async_trait>(
-    &'life0 mut self,
-    transaction: &'life1 Transaction<'life2>,
-    attribute_type: AttributeType
-) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-fn unset_owns(
+fn unset_owns<'tx>(
     &mut self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'tx>,
     attribute_type: AttributeType
-) -> Result
+) -> BoxPromise<'tx, Result>
 ----
-
---
-====
 
 <<#_trait_ThingTypeAPI_method_unset_owns,Read more>>
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+BoxPromise<'tx, Result>
 ----
 
+<<<<<<< HEAD:rust/docs/schema/EntityType.adoc
 --
 
 sync::
@@ -1152,65 +1105,94 @@ Result
 
 --
 ====
+=======
+[#_struct_EntityType_method_get_plays]
+==== get_plays
+
+[source,rust]
+----
+fn get_plays(
+    &self,
+    transaction: &Transaction<'_>,
+    transitivity: Transitivity
+) -> Result<BoxStream<'_, Result<RoleType>>>
+----
+
+<<#_trait_ThingTypeAPI_method_get_plays,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<RoleType>>>
+----
+
+[#_struct_EntityType_method_get_plays_overridden]
+==== get_plays_overridden
+
+[source,rust]
+----
+fn get_plays_overridden<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>,
+    overridden_role_type: RoleType
+) -> BoxPromise<'tx, Result<Option<RoleType>>>
+----
+
+<<#_trait_ThingTypeAPI_method_get_plays_overridden,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxPromise<'tx, Result<Option<RoleType>>>
+----
+
+[#_struct_EntityType_method_set_plays]
+==== set_plays
+
+[source,rust]
+----
+fn set_plays<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>,
+    role_type: RoleType,
+    overridden_role_type: Option<RoleType>
+) -> BoxPromise<'tx, Result>
+----
+
+<<#_trait_ThingTypeAPI_method_set_plays,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxPromise<'tx, Result>
+----
+>>>>>>> ae5ec657 (deny(elided_lifetimes_in_paths) + fix lifetimes):rust/docs/EntityType.adoc
 
 [#_struct_EntityType_method_unset_plays]
 ==== unset_plays
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-fn unset_plays<'life0, 'life1, 'life2, 'async_trait>(
-    &'life0 mut self,
-    transaction: &'life1 Transaction<'life2>,
-    role_type: RoleType
-) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-fn unset_plays(
+fn unset_plays<'tx>(
     &mut self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'tx>,
     role_type: RoleType
-) -> Result
+) -> BoxPromise<'tx, Result>
 ----
-
---
-====
 
 <<#_trait_ThingTypeAPI_method_unset_plays,Read more>>
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+BoxPromise<'tx, Result>
 ----
 
+<<<<<<< HEAD:rust/docs/schema/EntityType.adoc
 --
 
 sync::
@@ -1223,6 +1205,27 @@ Result
 
 --
 ====
+=======
+[#_struct_EntityType_method_get_syntax]
+==== get_syntax
+
+[source,rust]
+----
+fn get_syntax<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result<String>>
+----
+
+<<#_trait_ThingTypeAPI_method_get_syntax,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+BoxPromise<'tx, Result<String>>
+----
+>>>>>>> ae5ec657 (deny(elided_lifetimes_in_paths) + fix lifetimes):rust/docs/EntityType.adoc
 
 // end::methods[]
 

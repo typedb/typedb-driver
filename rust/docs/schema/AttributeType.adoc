@@ -549,11 +549,6 @@ fn get_supertype(
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result<Option<AttributeType>>> + Send + 'async_trait>>
@@ -956,11 +951,6 @@ fn set_label(
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
 Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>

@@ -41,7 +41,7 @@ pub trait RuleAPI: Clone + Sync + Send {
     #[cfg_attr(feature = "sync", doc = "rule.delete(transaction)")]
     #[cfg_attr(not(feature = "sync"), doc = "rule.delete(transaction).await")]
     /// ```
-    fn delete<'tx>(&'tx mut self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result>;
+    fn delete<'tx>(&mut self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result>;
 
     /// Check if this rule has been deleted.
     ///
@@ -55,7 +55,7 @@ pub trait RuleAPI: Clone + Sync + Send {
     #[cfg_attr(feature = "sync", doc = "rule.is_deleted(transaction)")]
     #[cfg_attr(not(feature = "sync"), doc = "rule.is_deleted(transaction).await")]
     /// ```
-    fn is_deleted<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result<bool>> {
+    fn is_deleted<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<bool>> {
         let promise = transaction.transaction_stream.get_rule(self.label().to_owned());
         box_promise(promisify! { resolve!(promise).map(|rule| rule.is_none()) })
     }
@@ -73,7 +73,7 @@ pub trait RuleAPI: Clone + Sync + Send {
     #[cfg_attr(feature = "sync", doc = "rule.set_label(transaction, new_label)")]
     #[cfg_attr(not(feature = "sync"), doc = "rule.set_label(transaction, new_label).await")]
     /// ```
-    fn set_label<'tx>(&'tx mut self, transaction: &'tx Transaction<'tx>, new_label: String) -> BoxPromise<Result>;
+    fn set_label<'tx>(&mut self, transaction: &'tx Transaction<'tx>, new_label: String) -> BoxPromise<'tx, Result>;
 }
 
 impl RuleAPI for Rule {
@@ -81,11 +81,11 @@ impl RuleAPI for Rule {
         &self.label
     }
 
-    fn delete<'tx>(&'tx mut self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result> {
+    fn delete<'tx>(&mut self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result> {
         box_promise(transaction.transaction_stream.rule_delete(self.clone()))
     }
 
-    fn set_label<'tx>(&'tx mut self, transaction: &'tx Transaction<'tx>, new_label: String) -> BoxPromise<Result> {
+    fn set_label<'tx>(&mut self, transaction: &'tx Transaction<'tx>, new_label: String) -> BoxPromise<'tx, Result> {
         box_promise(transaction.transaction_stream.rule_set_label(self.clone(), new_label))
     }
 }

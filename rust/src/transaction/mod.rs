@@ -71,17 +71,17 @@ impl Transaction<'_> {
     }
 
     /// Retrieves the``QueryManager`` for this Transaction, from which any TypeQL query can be executed.
-    pub fn query(&self) -> QueryManager {
+    pub fn query(&self) -> QueryManager<'_> {
         QueryManager::new(self.transaction_stream.as_ref())
     }
 
     /// The `ConceptManager` for this transaction, providing access to all Concept API methods.
-    pub fn concept(&self) -> ConceptManager {
+    pub fn concept(&self) -> ConceptManager<'_> {
         ConceptManager::new(self.transaction_stream.as_ref())
     }
 
     /// Retrieves the `LogicManager` for this Transaction, providing access to all Concept API - Logic methods.
-    pub fn logic(&self) -> LogicManager {
+    pub fn logic(&self) -> LogicManager<'_> {
         LogicManager::new(self.transaction_stream.as_ref())
     }
 
@@ -132,7 +132,7 @@ impl Transaction<'_> {
     #[cfg_attr(feature = "sync", doc = "transaction.rollback()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.rollback().await")]
     /// ```
-    pub fn rollback(&self) -> impl Promise<Result> {
+    pub fn rollback(&self) -> impl Promise<'_, Result> {
         self.transaction_stream.rollback()
     }
 }

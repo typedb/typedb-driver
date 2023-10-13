@@ -91,22 +91,22 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn rollback(&self) -> impl Promise<Result> {
+    pub(crate) fn rollback(&self) -> impl Promise<'_, Result> {
         let promise = self.single(TransactionRequest::Rollback);
         promisify! { resolve!(promise).map(|_| ()) }
     }
 
-    pub(crate) fn define(&self, query: String, options: Options) -> impl Promise<Result> {
+    pub(crate) fn define(&self, query: String, options: Options) -> impl Promise<'_, Result> {
         let promise = self.query_single(QueryRequest::Define { query, options });
         promisify! { resolve!(promise).map(|_| ()) }
     }
 
-    pub(crate) fn undefine(&self, query: String, options: Options) -> impl Promise<Result> {
+    pub(crate) fn undefine(&self, query: String, options: Options) -> impl Promise<'_, Result> {
         let promise = self.query_single(QueryRequest::Undefine { query, options });
         promisify! { resolve!(promise).map(|_| ()) }
     }
 
-    pub(crate) fn delete(&self, query: String, options: Options) -> impl Promise<Result> {
+    pub(crate) fn delete(&self, query: String, options: Options) -> impl Promise<'_, Result> {
         let promise = self.query_single(QueryRequest::Delete { query, options });
         promisify! { resolve!(promise).map(|_| ()) }
     }
@@ -138,7 +138,7 @@ impl TransactionStream {
         }))
     }
 
-    pub(crate) fn match_aggregate(&self, query: String, options: Options) -> impl Promise<Result<Numeric>> {
+    pub(crate) fn match_aggregate(&self, query: String, options: Options) -> impl Promise<'_, Result<Numeric>> {
         let promise = self.query_single(QueryRequest::MatchAggregate { query, options });
         promisify! {
             match resolve!(promise)? {
@@ -174,7 +174,7 @@ impl TransactionStream {
         }))
     }
 
-    pub(crate) fn get_entity_type(&self, label: String) -> impl Promise<Result<Option<EntityType>>> {
+    pub(crate) fn get_entity_type(&self, label: String) -> impl Promise<'_, Result<Option<EntityType>>> {
         let promise = self.concept_single(ConceptRequest::GetEntityType { label });
         promisify! {
             match resolve!(promise)? {
@@ -184,7 +184,7 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn get_relation_type(&self, label: String) -> impl Promise<Result<Option<RelationType>>> {
+    pub(crate) fn get_relation_type(&self, label: String) -> impl Promise<'_, Result<Option<RelationType>>> {
         let promise = self.concept_single(ConceptRequest::GetRelationType { label });
         promisify! {
             match resolve!(promise)? {
@@ -194,7 +194,7 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn get_attribute_type(&self, label: String) -> impl Promise<Result<Option<AttributeType>>> {
+    pub(crate) fn get_attribute_type(&self, label: String) -> impl Promise<'_, Result<Option<AttributeType>>> {
         let promise = self.concept_single(ConceptRequest::GetAttributeType { label });
         promisify! {
             match resolve!(promise)? {
@@ -204,7 +204,7 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn put_entity_type(&self, label: String) -> impl Promise<Result<EntityType>> {
+    pub(crate) fn put_entity_type(&self, label: String) -> impl Promise<'_, Result<EntityType>> {
         let promise = self.concept_single(ConceptRequest::PutEntityType { label });
         promisify! {
             match resolve!(promise)? {
@@ -214,7 +214,7 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn put_relation_type(&self, label: String) -> impl Promise<Result<RelationType>> {
+    pub(crate) fn put_relation_type(&self, label: String) -> impl Promise<'_, Result<RelationType>> {
         let promise = self.concept_single(ConceptRequest::PutRelationType { label });
         promisify! {
             match resolve!(promise)? {
@@ -228,7 +228,7 @@ impl TransactionStream {
         &self,
         label: String,
         value_type: ValueType,
-    ) -> impl Promise<Result<AttributeType>> {
+    ) -> impl Promise<'_, Result<AttributeType>> {
         let promise = self.concept_single(ConceptRequest::PutAttributeType { label, value_type });
         promisify! {
             match resolve!(promise)? {
@@ -238,7 +238,7 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn get_entity(&self, iid: IID) -> impl Promise<Result<Option<Entity>>> {
+    pub(crate) fn get_entity(&self, iid: IID) -> impl Promise<'_, Result<Option<Entity>>> {
         let promise = self.concept_single(ConceptRequest::GetEntity { iid });
         promisify! {
             match resolve!(promise)? {
@@ -248,7 +248,7 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn get_relation(&self, iid: IID) -> impl Promise<Result<Option<Relation>>> {
+    pub(crate) fn get_relation(&self, iid: IID) -> impl Promise<'_, Result<Option<Relation>>> {
         let promise = self.concept_single(ConceptRequest::GetRelation { iid });
         promisify! {
             match resolve!(promise)? {
@@ -258,7 +258,7 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn get_attribute(&self, iid: IID) -> impl Promise<Result<Option<Attribute>>> {
+    pub(crate) fn get_attribute(&self, iid: IID) -> impl Promise<'_, Result<Option<Attribute>>> {
         let promise = self.concept_single(ConceptRequest::GetAttribute { iid });
         promisify! {
             match resolve!(promise)? {
@@ -277,7 +277,7 @@ impl TransactionStream {
         }))
     }
 
-    pub(crate) fn thing_type_delete(&self, thing_type: ThingType) -> impl Promise<Result> {
+    pub(crate) fn thing_type_delete(&self, thing_type: ThingType) -> impl Promise<'_, Result> {
         let promise = self.thing_type_single(ThingTypeRequest::ThingTypeDelete { thing_type });
         promisify! {
             match resolve!(promise)? {
@@ -287,7 +287,7 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn thing_type_set_label(&self, thing_type: ThingType, new_label: String) -> impl Promise<Result> {
+    pub(crate) fn thing_type_set_label(&self, thing_type: ThingType, new_label: String) -> impl Promise<'_, Result> {
         let promise = self.thing_type_single(ThingTypeRequest::ThingTypeSetLabel { thing_type, new_label });
         promisify! {
             match resolve!(promise)? {
@@ -297,7 +297,7 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn thing_type_set_abstract(&self, thing_type: ThingType) -> impl Promise<Result> {
+    pub(crate) fn thing_type_set_abstract(&self, thing_type: ThingType) -> impl Promise<'_, Result> {
         let promise = self.thing_type_single(ThingTypeRequest::ThingTypeSetAbstract { thing_type });
         promisify! {
             match resolve!(promise)? {
@@ -307,7 +307,7 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn thing_type_unset_abstract(&self, thing_type: ThingType) -> impl Promise<Result> {
+    pub(crate) fn thing_type_unset_abstract(&self, thing_type: ThingType) -> impl Promise<'_, Result> {
         let promise = self.thing_type_single(ThingTypeRequest::ThingTypeUnsetAbstract { thing_type });
         promisify! {
             match resolve!(promise)? {
@@ -343,7 +343,7 @@ impl TransactionStream {
         &self,
         thing_type: ThingType,
         overridden_attribute_type: AttributeType,
-    ) -> impl Promise<Result<Option<AttributeType>>> {
+    ) -> impl Promise<'_, Result<Option<AttributeType>>> {
         let promise = self
             .thing_type_single(ThingTypeRequest::ThingTypeGetOwnsOverridden { thing_type, overridden_attribute_type });
         promisify! {
@@ -360,7 +360,7 @@ impl TransactionStream {
         attribute_type: AttributeType,
         overridden_attribute_type: Option<AttributeType>,
         annotations: Vec<Annotation>,
-    ) -> impl Promise<Result> {
+    ) -> impl Promise<'_, Result> {
         let promise = self.thing_type_single(ThingTypeRequest::ThingTypeSetOwns {
             thing_type,
             attribute_type,
@@ -379,7 +379,7 @@ impl TransactionStream {
         &self,
         thing_type: ThingType,
         attribute_type: AttributeType,
-    ) -> impl Promise<Result> {
+    ) -> impl Promise<'_, Result> {
         let promise = self.thing_type_single(ThingTypeRequest::ThingTypeUnsetOwns { thing_type, attribute_type });
         promisify! {
             match resolve!(promise)?
@@ -407,7 +407,7 @@ impl TransactionStream {
         &self,
         thing_type: ThingType,
         overridden_role_type: RoleType,
-    ) -> impl Promise<Result<Option<RoleType>>> {
+    ) -> impl Promise<'_, Result<Option<RoleType>>> {
         let promise =
             self.thing_type_single(ThingTypeRequest::ThingTypeGetPlaysOverridden { thing_type, overridden_role_type });
         promisify! {
@@ -423,7 +423,7 @@ impl TransactionStream {
         thing_type: ThingType,
         role_type: RoleType,
         overridden_role_type: Option<RoleType>,
-    ) -> impl Promise<Result> {
+    ) -> impl Promise<'_, Result> {
         let promise =
             self.thing_type_single(ThingTypeRequest::ThingTypeSetPlays { thing_type, role_type, overridden_role_type });
         promisify! {
@@ -434,7 +434,7 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn thing_type_unset_plays(&self, thing_type: ThingType, role_type: RoleType) -> impl Promise<Result> {
+    pub(crate) fn thing_type_unset_plays(&self, thing_type: ThingType, role_type: RoleType) -> impl Promise<'_, Result> {
         let promise = self.thing_type_single(ThingTypeRequest::ThingTypeUnsetPlays { thing_type, role_type });
         promisify! {
             match resolve!(promise)? {
@@ -444,7 +444,7 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn thing_type_get_syntax(&self, thing_type: ThingType) -> impl Promise<Result<String>> {
+    pub(crate) fn thing_type_get_syntax(&self, thing_type: ThingType) -> impl Promise<'_, Result<String>> {
         let promise = self.thing_type_single(ThingTypeRequest::ThingTypeGetSyntax { thing_type });
         promisify! {
             match resolve!(promise)? {
@@ -454,7 +454,7 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn entity_type_create(&self, entity_type: EntityType) -> impl Promise<Result<Entity>> {
+    pub(crate) fn entity_type_create(&self, entity_type: EntityType) -> impl Promise<'_, Result<Entity>> {
         let promise = self.thing_type_single(ThingTypeRequest::EntityTypeCreate { entity_type });
         promisify! {
             match resolve!(promise)? {
@@ -467,7 +467,7 @@ impl TransactionStream {
     pub(crate) fn entity_type_get_supertype(
         &self,
         entity_type: EntityType,
-    ) -> impl Promise<Result<Option<EntityType>>> {
+    ) -> impl Promise<'_, Result<Option<EntityType>>> {
         let promise = self.thing_type_single(ThingTypeRequest::EntityTypeGetSupertype { entity_type });
         promisify! {
             match resolve!(promise)? {
@@ -481,7 +481,7 @@ impl TransactionStream {
         &self,
         entity_type: EntityType,
         supertype: EntityType,
-    ) -> impl Promise<Result> {
+    ) -> impl Promise<'_, Result> {
         let promise = self.thing_type_single(ThingTypeRequest::EntityTypeSetSupertype { entity_type, supertype });
         promisify! {
             match resolve!(promise)?
@@ -534,7 +534,7 @@ impl TransactionStream {
         }))
     }
 
-    pub(crate) fn relation_type_create(&self, relation_type: RelationType) -> impl Promise<Result<Relation>> {
+    pub(crate) fn relation_type_create(&self, relation_type: RelationType) -> impl Promise<'_, Result<Relation>> {
         let promise = self.thing_type_single(ThingTypeRequest::RelationTypeCreate { relation_type });
         promisify! {
             match resolve!(promise)? {
@@ -547,7 +547,7 @@ impl TransactionStream {
     pub(crate) fn relation_type_get_supertype(
         &self,
         relation_type: RelationType,
-    ) -> impl Promise<Result<Option<RelationType>>> {
+    ) -> impl Promise<'_, Result<Option<RelationType>>> {
         let promise = self.thing_type_single(ThingTypeRequest::RelationTypeGetSupertype { relation_type });
         promisify! {
             match resolve!(promise)? {
@@ -561,7 +561,7 @@ impl TransactionStream {
         &self,
         relation_type: RelationType,
         supertype: RelationType,
-    ) -> impl Promise<Result> {
+    ) -> impl Promise<'_, Result> {
         let promise = self.thing_type_single(ThingTypeRequest::RelationTypeSetSupertype { relation_type, supertype });
         promisify! {
             match resolve!(promise)? {
@@ -633,7 +633,7 @@ impl TransactionStream {
         &self,
         relation_type: RelationType,
         role_label: String,
-    ) -> impl Promise<Result<Option<RoleType>>> {
+    ) -> impl Promise<'_, Result<Option<RoleType>>> {
         let promise =
             self.thing_type_single(ThingTypeRequest::RelationTypeGetRelatesForRoleLabel { relation_type, role_label });
         promisify! {
@@ -648,7 +648,7 @@ impl TransactionStream {
         &self,
         relation_type: RelationType,
         overridden_role_label: String,
-    ) -> impl Promise<Result<Option<RoleType>>> {
+    ) -> impl Promise<'_, Result<Option<RoleType>>> {
         let promise = self.thing_type_single(ThingTypeRequest::RelationTypeGetRelatesOverridden {
             relation_type,
             role_label: overridden_role_label,
@@ -666,7 +666,7 @@ impl TransactionStream {
         relation_type: RelationType,
         role_label: String,
         overridden_role_label: Option<String>,
-    ) -> impl Promise<Result> {
+    ) -> impl Promise<'_, Result> {
         let promise = self.thing_type_single(ThingTypeRequest::RelationTypeSetRelates {
             relation_type,
             role_label,
@@ -684,7 +684,7 @@ impl TransactionStream {
         &self,
         relation_type: RelationType,
         role_label: String,
-    ) -> impl Promise<Result> {
+    ) -> impl Promise<'_, Result> {
         let promise = self.thing_type_single(ThingTypeRequest::RelationTypeUnsetRelates { relation_type, role_label });
         promisify! {
             match resolve!(promise)? {
@@ -698,7 +698,7 @@ impl TransactionStream {
         &self,
         attribute_type: AttributeType,
         value: Value,
-    ) -> impl Promise<Result<Attribute>> {
+    ) -> impl Promise<'_, Result<Attribute>> {
         let promise = self.thing_type_single(ThingTypeRequest::AttributeTypePut { attribute_type, value });
         promisify! {
             match resolve!(promise)? {
@@ -712,7 +712,7 @@ impl TransactionStream {
         &self,
         attribute_type: AttributeType,
         value: Value,
-    ) -> impl Promise<Result<Option<Attribute>>> {
+    ) -> impl Promise<'_, Result<Option<Attribute>>> {
         let promise = self.thing_type_single(ThingTypeRequest::AttributeTypeGet { attribute_type, value });
         promisify! {
             match resolve!(promise)? {
@@ -725,7 +725,7 @@ impl TransactionStream {
     pub(crate) fn attribute_type_get_supertype(
         &self,
         attribute_type: AttributeType,
-    ) -> impl Promise<Result<Option<AttributeType>>> {
+    ) -> impl Promise<'_, Result<Option<AttributeType>>> {
         let promise = self.thing_type_single(ThingTypeRequest::AttributeTypeGetSupertype { attribute_type });
         promisify! {
             match resolve!(promise)? {
@@ -739,7 +739,7 @@ impl TransactionStream {
         &self,
         attribute_type: AttributeType,
         supertype: AttributeType,
-    ) -> impl Promise<Result> {
+    ) -> impl Promise<'_, Result> {
         let promise = self.thing_type_single(ThingTypeRequest::AttributeTypeSetSupertype { attribute_type, supertype });
         promisify! {
             match resolve!(promise)? {
@@ -806,7 +806,7 @@ impl TransactionStream {
     pub(crate) fn attribute_type_get_regex(
         &self,
         attribute_type: AttributeType,
-    ) -> impl Promise<Result<Option<String>>> {
+    ) -> impl Promise<'_, Result<Option<String>>> {
         let promise = self.thing_type_single(ThingTypeRequest::AttributeTypeGetRegex { attribute_type });
         promisify! {
             match resolve!(promise)? {
@@ -820,7 +820,7 @@ impl TransactionStream {
         &self,
         attribute_type: AttributeType,
         regex: String,
-    ) -> impl Promise<Result> {
+    ) -> impl Promise<'_, Result> {
         let promise = self.thing_type_single(ThingTypeRequest::AttributeTypeSetRegex { attribute_type, regex });
         promisify! {
             match resolve!(promise)? {
@@ -850,7 +850,7 @@ impl TransactionStream {
         }))
     }
 
-    pub(crate) fn role_type_delete(&self, role_type: RoleType) -> impl Promise<Result> {
+    pub(crate) fn role_type_delete(&self, role_type: RoleType) -> impl Promise<'_, Result> {
         let promise = self.role_type_single(RoleTypeRequest::Delete { role_type });
         promisify! {
             match resolve!(promise)? {
@@ -860,7 +860,7 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn role_type_set_label(&self, role_type: RoleType, new_label: String) -> impl Promise<Result> {
+    pub(crate) fn role_type_set_label(&self, role_type: RoleType, new_label: String) -> impl Promise<'_, Result> {
         let promise = self.role_type_single(RoleTypeRequest::SetLabel { role_type, new_label });
         promisify! {
             match resolve!(promise)? {
@@ -870,7 +870,7 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn role_type_get_supertype(&self, role_type: RoleType) -> impl Promise<Result<Option<RoleType>>> {
+    pub(crate) fn role_type_get_supertype(&self, role_type: RoleType) -> impl Promise<'_, Result<Option<RoleType>>> {
         let promise = self.role_type_single(RoleTypeRequest::GetSupertype { role_type });
         promisify! {
             match resolve!(promise)? {
@@ -955,7 +955,7 @@ impl TransactionStream {
         }))
     }
 
-    pub(crate) fn thing_delete(&self, thing: Thing) -> impl Promise<Result> {
+    pub(crate) fn thing_delete(&self, thing: Thing) -> impl Promise<'_, Result> {
         let promise = self.thing_single(ThingRequest::ThingDelete { thing });
         promisify! {
             match resolve!(promise)? {
@@ -979,7 +979,7 @@ impl TransactionStream {
         }))
     }
 
-    pub(crate) fn thing_set_has(&self, thing: Thing, attribute: Attribute) -> impl Promise<Result> {
+    pub(crate) fn thing_set_has(&self, thing: Thing, attribute: Attribute) -> impl Promise<'_, Result> {
         let promise = self.thing_single(ThingRequest::ThingSetHas { thing, attribute });
         promisify! {
             match resolve!(promise)? {
@@ -989,7 +989,7 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn thing_unset_has(&self, thing: Thing, attribute: Attribute) -> impl Promise<Result> {
+    pub(crate) fn thing_unset_has(&self, thing: Thing, attribute: Attribute) -> impl Promise<'_, Result> {
         let promise = self.thing_single(ThingRequest::ThingUnsetHas { thing, attribute });
         promisify! {
             match resolve!(promise)? {
@@ -1026,7 +1026,7 @@ impl TransactionStream {
         relation: Relation,
         role_type: RoleType,
         player: Thing,
-    ) -> impl Promise<Result> {
+    ) -> impl Promise<'_, Result> {
         let promise = self.thing_single(ThingRequest::RelationAddRolePlayer { relation, role_type, player });
         promisify! {
             match resolve!(promise)? {
@@ -1041,7 +1041,7 @@ impl TransactionStream {
         relation: Relation,
         role_type: RoleType,
         player: Thing,
-    ) -> impl Promise<Result> {
+    ) -> impl Promise<'_, Result> {
         let promise = self.thing_single(ThingRequest::RelationRemoveRolePlayer { relation, role_type, player });
         promisify! {
             match resolve!(promise)? {
@@ -1102,7 +1102,7 @@ impl TransactionStream {
         }))
     }
 
-    pub(crate) fn rule_delete(&self, rule: Rule) -> impl Promise<Result> {
+    pub(crate) fn rule_delete(&self, rule: Rule) -> impl Promise<'_, Result> {
         let promise = self.rule_single(RuleRequest::Delete { label: rule.label });
         promisify! {
             match resolve!(promise)? {
@@ -1112,7 +1112,7 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn rule_set_label(&self, rule: Rule, new_label: String) -> impl Promise<Result> {
+    pub(crate) fn rule_set_label(&self, rule: Rule, new_label: String) -> impl Promise<'_, Result> {
         let promise = self.rule_single(RuleRequest::SetLabel { current_label: rule.label, new_label });
         promisify! {
             match resolve!(promise)? {
@@ -1122,7 +1122,7 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn put_rule(&self, label: String, when: Conjunction, then: Variable) -> impl Promise<Result<Rule>> {
+    pub(crate) fn put_rule(&self, label: String, when: Conjunction, then: Variable) -> impl Promise<'_, Result<Rule>> {
         let promise = self.logic_single(LogicRequest::PutRule { label, when, then });
         promisify! {
             match resolve!(promise)? {
@@ -1132,7 +1132,7 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn get_rule(&self, label: String) -> impl Promise<Result<Option<Rule>>> {
+    pub(crate) fn get_rule(&self, label: String) -> impl Promise<'_, Result<Option<Rule>>> {
         let promise = self.logic_single(LogicRequest::GetRule { label });
         promisify! {
             match resolve!(promise)? {
@@ -1168,7 +1168,7 @@ impl TransactionStream {
         self.transaction_transmitter.single(req)
     }
 
-    fn query_single(&self, req: QueryRequest) -> impl Promise<Result<QueryResponse>> {
+    fn query_single(&self, req: QueryRequest) -> impl Promise<'_, Result<QueryResponse>> {
         let promise = self.single(TransactionRequest::Query(req));
         promisify! {
             match resolve!(promise)? {
@@ -1178,7 +1178,7 @@ impl TransactionStream {
         }
     }
 
-    fn concept_single(&self, req: ConceptRequest) -> impl Promise<Result<ConceptResponse>> {
+    fn concept_single(&self, req: ConceptRequest) -> impl Promise<'_, Result<ConceptResponse>> {
         let promise = self.single(TransactionRequest::Concept(req));
         promisify! {
             match resolve!(promise)? {
@@ -1188,7 +1188,7 @@ impl TransactionStream {
         }
     }
 
-    fn thing_type_single(&self, req: ThingTypeRequest) -> impl Promise<Result<ThingTypeResponse>> {
+    fn thing_type_single(&self, req: ThingTypeRequest) -> impl Promise<'_, Result<ThingTypeResponse>> {
         let promise = self.single(TransactionRequest::ThingType(req));
         promisify! {
             match resolve!(promise)? {
@@ -1198,7 +1198,7 @@ impl TransactionStream {
         }
     }
 
-    fn role_type_single(&self, req: RoleTypeRequest) -> impl Promise<Result<RoleTypeResponse>> {
+    fn role_type_single(&self, req: RoleTypeRequest) -> impl Promise<'_, Result<RoleTypeResponse>> {
         let promise = self.single(TransactionRequest::RoleType(req));
         promisify! {
             match resolve!(promise)? {
@@ -1208,7 +1208,7 @@ impl TransactionStream {
         }
     }
 
-    fn thing_single(&self, req: ThingRequest) -> impl Promise<Result<ThingResponse>> {
+    fn thing_single(&self, req: ThingRequest) -> impl Promise<'_, Result<ThingResponse>> {
         let promise = self.single(TransactionRequest::Thing(req));
         promisify! {
             match resolve!(promise)? {
@@ -1218,7 +1218,7 @@ impl TransactionStream {
         }
     }
 
-    fn rule_single(&self, req: RuleRequest) -> impl Promise<Result<RuleResponse>> {
+    fn rule_single(&self, req: RuleRequest) -> impl Promise<'_, Result<RuleResponse>> {
         let promise = self.single(TransactionRequest::Rule(req));
         promisify! {
             match resolve!(promise)? {
@@ -1228,7 +1228,7 @@ impl TransactionStream {
         }
     }
 
-    fn logic_single(&self, req: LogicRequest) -> impl Promise<Result<LogicResponse>> {
+    fn logic_single(&self, req: LogicRequest) -> impl Promise<'_, Result<LogicResponse>> {
         let promise = self.single(TransactionRequest::Logic(req));
         promisify! {
             match resolve!(promise)? {

@@ -139,7 +139,15 @@ pub fn delete(&self, query: &str) -> Result
 --
 ====
 
-Performs a TypeQL Delete query with default options. See <<#_struct_QueryManager_method_delete_with_options,`QueryManager::delete_with_options`>>
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Undefine query to be executed a| `&str`
+a| `options` a| Specify query options a| `Options`
+|===
 
 [caption=""]
 .Returns

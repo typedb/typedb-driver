@@ -466,30 +466,6 @@ Result<Option<RoleType>>
 [#_struct_RelationType_method_get_relates_overridden]
 ==== get_relates_overridden
 
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-fn get_relates_overridden<'life0, 'life1, 'life2, 'async_trait>(
-    &'life0 self,
-    transaction: &'life1 Transaction<'life2>,
-    overridden_role_label: String
-) -> Pin<Box<dyn Future<Output = Result<Option<RoleType>>> + Send + 'async_trait>>
-where
-     Self: Sync + 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
-----
-
---
-
-sync::
-+
---
 [source,rust]
 ----
 fn get_relates_overridden(
@@ -896,11 +872,6 @@ Result
 [#_struct_RelationType_method_set_label]
 ==== set_label
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
 fn set_label<'life0, 'life1, 'life2, 'async_trait>(
@@ -1365,21 +1336,12 @@ fn unset_owns(
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+BoxPromise<'tx, Result>
 ----
 
+<<<<<<< HEAD:rust/docs/schema/RelationType.adoc
 --
 
 sync::
@@ -1395,6 +1357,8 @@ Result
 
 [#_struct_RelationType_method_unset_plays]
 ==== unset_plays
+) -> Result<BoxStream<'_, Result<RoleType>>>
+----
 
 [tabs]
 ====

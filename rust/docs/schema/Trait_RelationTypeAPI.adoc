@@ -72,6 +72,13 @@ a| `transaction` a| The current transaction a| `&Transaction<'_>`
 
 [caption=""]
 .Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<RelationType>>>
+----
+
+[caption=""]
+.Code examples
 [tabs]
 ====
 async::

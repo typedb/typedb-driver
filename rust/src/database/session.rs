@@ -145,7 +145,7 @@ impl Session {
     /// Opens a transaction to perform read or write queries on the database connected to the session.
     /// See [`Session::transaction_with_options`]
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn transaction(&self, transaction_type: TransactionType) -> Result<Transaction> {
+    pub async fn transaction(&self, transaction_type: TransactionType) -> Result<Transaction<'_>> {
         self.transaction_with_options(transaction_type, Options::new()).await
     }
 
@@ -167,7 +167,7 @@ impl Session {
         &self,
         transaction_type: TransactionType,
         options: Options,
-    ) -> Result<Transaction> {
+    ) -> Result<Transaction<'_>> {
         if !self.is_open() {
             return Err(ConnectionError::SessionIsClosed().into());
         }

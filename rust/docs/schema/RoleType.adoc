@@ -199,21 +199,12 @@ fn get_relation_type(
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-Pin<Box<dyn Future<Output = Result<Option<RelationType>>> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+BoxPromise<'tx, Result<Option<RelationType>>>
 ----
 
+<<<<<<< HEAD:rust/docs/schema/RoleType.adoc
 --
 
 sync::
@@ -309,26 +300,15 @@ fn get_supertype(
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-Pin<Box<dyn Future<Output = Result<Option<RoleType>>> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+BoxPromise<'tx, Result>
 ----
 
---
+>>>>>>> ae5ec657 (deny(elided_lifetimes_in_paths) + fix lifetimes):rust/docs/RoleType.adoc
+[#_struct_RoleType_method_get_supertype]
+==== get_supertype
 
-sync::
-+
---
 [source,rust]
 ----
 Result<Option<RoleType>>

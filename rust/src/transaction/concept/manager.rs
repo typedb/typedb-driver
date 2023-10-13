@@ -30,12 +30,12 @@ use crate::{
 
 /// Provides access for all Concept API methods.
 #[derive(Debug)]
-pub struct ConceptManager<'a> {
-    pub(super) transaction_stream: Pin<&'a TransactionStream>,
+pub struct ConceptManager<'tx> {
+    pub(super) transaction_stream: Pin<&'tx TransactionStream>,
 }
 
-impl<'a> ConceptManager<'a> {
-    pub(crate) fn new(transaction_stream: Pin<&'a TransactionStream>) -> Self {
+impl<'tx> ConceptManager<'tx> {
+    pub(crate) fn new(transaction_stream: Pin<&'tx TransactionStream>) -> Self {
         Self { transaction_stream }
     }
 
@@ -51,8 +51,8 @@ impl<'a> ConceptManager<'a> {
     #[cfg_attr(feature = "sync", doc = "transaction.concepts().get_entity_type(label)")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().get_entity_type(label).await")]
     /// ```
-    pub fn get_entity_type(&self, label: String) -> impl Promise<Result<Option<EntityType>>> {
-        self.transaction_stream.get_entity_type(label)
+    pub fn get_entity_type(&self, label: String) -> impl Promise<'tx, Result<Option<EntityType>>> {
+        self.transaction_stream.get_ref().get_entity_type(label)
     }
 
     /// Retrieves a `RelationType` by its label.
@@ -67,8 +67,8 @@ impl<'a> ConceptManager<'a> {
     #[cfg_attr(feature = "sync", doc = "transaction.concepts().get_relation_type(label)")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().get_relation_type(label).await")]
     /// ```
-    pub fn get_relation_type(&self, label: String) -> impl Promise<Result<Option<RelationType>>> {
-        self.transaction_stream.get_relation_type(label)
+    pub fn get_relation_type(&self, label: String) -> impl Promise<'tx, Result<Option<RelationType>>> {
+        self.transaction_stream.get_ref().get_relation_type(label)
     }
 
     /// Retrieves an `AttributeType` by its label.
@@ -83,8 +83,8 @@ impl<'a> ConceptManager<'a> {
     #[cfg_attr(feature = "sync", doc = "transaction.concepts().get_attribute_type(label)")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().get_attribute_type(label).await")]
     /// ```
-    pub fn get_attribute_type(&self, label: String) -> impl Promise<Result<Option<AttributeType>>> {
-        self.transaction_stream.get_attribute_type(label)
+    pub fn get_attribute_type(&self, label: String) -> impl Promise<'tx, Result<Option<AttributeType>>> {
+        self.transaction_stream.get_ref().get_attribute_type(label)
     }
 
     /// Creates a new `EntityType` if none exists with the given label, otherwise retrieves the existing one.
@@ -99,8 +99,8 @@ impl<'a> ConceptManager<'a> {
     #[cfg_attr(feature = "sync", doc = "transaction.concepts().put_entity_type(label)")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().put_entity_type(label).await")]
     /// ```
-    pub fn put_entity_type(&self, label: String) -> impl Promise<Result<EntityType>> {
-        self.transaction_stream.put_entity_type(label)
+    pub fn put_entity_type(&self, label: String) -> impl Promise<'tx, Result<EntityType>> {
+        self.transaction_stream.get_ref().put_entity_type(label)
     }
 
     /// Creates a new `RelationType` if none exists with the given label, otherwise retrieves the existing one.
@@ -115,8 +115,8 @@ impl<'a> ConceptManager<'a> {
     #[cfg_attr(feature = "sync", doc = "transaction.concepts().put_relation_type(label)")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().put_relation_type(label).await")]
     /// ```
-    pub fn put_relation_type(&self, label: String) -> impl Promise<Result<RelationType>> {
-        self.transaction_stream.put_relation_type(label)
+    pub fn put_relation_type(&self, label: String) -> impl Promise<'tx, Result<RelationType>> {
+        self.transaction_stream.get_ref().put_relation_type(label)
     }
 
     /// Creates a new `AttributeType` if none exists with the given label, or retrieves the existing one.
@@ -133,8 +133,8 @@ impl<'a> ConceptManager<'a> {
     #[cfg_attr(feature = "sync", doc = "await transaction.concepts().put_attribute_type(label, value_type)")]
     #[cfg_attr(not(feature = "sync"), doc = "await transaction.concepts().put_attribute_type(label, value_type).await")]
     /// ```
-    pub fn put_attribute_type(&self, label: String, value_type: ValueType) -> impl Promise<Result<AttributeType>> {
-        self.transaction_stream.put_attribute_type(label, value_type)
+    pub fn put_attribute_type(&self, label: String, value_type: ValueType) -> impl Promise<'tx, Result<AttributeType>> {
+        self.transaction_stream.get_ref().put_attribute_type(label, value_type)
     }
 
     /// Retrieves an `Entity` by its iid.
@@ -149,8 +149,8 @@ impl<'a> ConceptManager<'a> {
     #[cfg_attr(feature = "sync", doc = "transaction.concepts().get_entity(iid)")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().get_entity(iid).await")]
     /// ```
-    pub fn get_entity(&self, iid: IID) -> impl Promise<Result<Option<Entity>>> {
-        self.transaction_stream.get_entity(iid)
+    pub fn get_entity(&self, iid: IID) -> impl Promise<'tx, Result<Option<Entity>>> {
+        self.transaction_stream.get_ref().get_entity(iid)
     }
 
     /// Retrieves a `Relation` by its iid.
@@ -165,8 +165,8 @@ impl<'a> ConceptManager<'a> {
     #[cfg_attr(feature = "sync", doc = "transaction.concepts().get_relation(iid)")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().get_relation(iid).await")]
     /// ```
-    pub fn get_relation(&self, iid: IID) -> impl Promise<Result<Option<Relation>>> {
-        self.transaction_stream.get_relation(iid)
+    pub fn get_relation(&self, iid: IID) -> impl Promise<'tx, Result<Option<Relation>>> {
+        self.transaction_stream.get_ref().get_relation(iid)
     }
 
     /// Retrieves an `Attribute` by its iid.
@@ -181,8 +181,8 @@ impl<'a> ConceptManager<'a> {
     #[cfg_attr(feature = "sync", doc = "transaction.concepts().get_attribute(iid)")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().get_attribute(iid).await")]
     /// ```
-    pub fn get_attribute(&self, iid: IID) -> impl Promise<Result<Option<Attribute>>> {
-        self.transaction_stream.get_attribute(iid)
+    pub fn get_attribute(&self, iid: IID) -> impl Promise<'tx, Result<Option<Attribute>>> {
+        self.transaction_stream.get_ref().get_attribute(iid)
     }
 
     /// Retrieves a list of all schema exceptions for the current transaction.
@@ -193,6 +193,6 @@ impl<'a> ConceptManager<'a> {
     /// transaction.concepts().get_schema_exceptions()
     /// ```
     pub fn get_schema_exceptions(&self) -> Result<impl Stream<Item = Result<SchemaException>>> {
-        self.transaction_stream.get_schema_exceptions()
+        self.transaction_stream.get_ref().get_schema_exceptions()
     }
 }
