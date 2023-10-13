@@ -24,7 +24,7 @@ from __future__ import annotations
 from typing import Optional
 
 from typedb.native_driver_wrapper import logic_manager_get_rule, logic_manager_get_rules, rule_iterator_next, \
-    logic_manager_put_rule, Transaction as NativeTransaction
+    logic_manager_put_rule, Transaction as NativeTransaction, TypeDBDriverExceptionNative
 
 from typedb.api.logic.logic_manager import LogicManager
 from typedb.api.logic.rule import Rule
@@ -36,7 +36,7 @@ from typedb.logic.rule import _Rule
 
 def _not_blank_label(label: str) -> str:
     if not label or label.isspace():
-        raise TypeDBDriverException.of(MISSING_LABEL)
+        raise TypeDBDriverException(MISSING_LABEL)
     return label
 
 
@@ -47,19 +47,28 @@ class _LogicManager(LogicManager, NativeWrapper[NativeTransaction]):
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
-        return TypeDBDriverException.of(TRANSACTION_CLOSED)
+        return TypeDBDriverException(TRANSACTION_CLOSED)
 
     @property
     def _native_transaction(self) -> NativeTransaction:
         return self.native_object
 
     def get_rule(self, label: str) -> Optional[Rule]:
-        if rule := logic_manager_get_rule(self._native_transaction, _not_blank_label(label)):
-            return _Rule(rule)
-        return None
+        try:
+            if rule := logic_manager_get_rule(self._native_transaction, _not_blank_label(label)):
+                return _Rule(rule)
+            return None
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def get_rules(self):
-        return map(_Rule, IteratorWrapper(logic_manager_get_rules(self._native_transaction), rule_iterator_next))
+        try:
+            return map(_Rule, IteratorWrapper(logic_manager_get_rules(self._native_transaction), rule_iterator_next))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def put_rule(self, label: str, when: str, then: str):
-        return _Rule(logic_manager_put_rule(self._native_transaction, _not_blank_label(label), when, then))
+        try:
+            return _Rule(logic_manager_put_rule(self._native_transaction, _not_blank_label(label), when, then))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)

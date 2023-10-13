@@ -209,7 +209,7 @@ class Concept(ABC):
 
             concept.as_type()
         """
-        raise TypeDBDriverException.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Type"))
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Type"))
 
     def as_thing_type(self) -> ThingType:
         """
@@ -223,7 +223,7 @@ class Concept(ABC):
 
             concept.as_thing_type()
         """
-        raise TypeDBDriverException.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "ThingType"))
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "ThingType"))
 
     def as_entity_type(self) -> EntityType:
         """
@@ -237,7 +237,7 @@ class Concept(ABC):
 
             concept.as_entity_type()
         """
-        raise TypeDBDriverException.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "EntityType"))
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "EntityType"))
 
     def as_attribute_type(self) -> AttributeType:
         """
@@ -251,7 +251,7 @@ class Concept(ABC):
 
             concept.as_attribute_type()
         """
-        raise TypeDBDriverException.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "AttributeType"))
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "AttributeType"))
 
     def as_relation_type(self) -> RelationType:
         """
@@ -265,7 +265,7 @@ class Concept(ABC):
 
             concept.as_relation_type()
         """
-        raise TypeDBDriverException.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "RelationType"))
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "RelationType"))
 
     def as_role_type(self) -> RoleType:
         """
@@ -279,7 +279,7 @@ class Concept(ABC):
 
             concept.as_role_type()
         """
-        raise TypeDBDriverException.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "RoleType"))
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "RoleType"))
 
     def as_thing(self) -> Thing:
         """
@@ -293,7 +293,7 @@ class Concept(ABC):
 
             concept.as_thing()
         """
-        raise TypeDBDriverException.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Thing"))
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Thing"))
 
     def as_entity(self) -> Entity:
         """
@@ -307,7 +307,7 @@ class Concept(ABC):
 
             concept.as_entity()
         """
-        raise TypeDBDriverException.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Entity"))
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Entity"))
 
     def as_attribute(self) -> Attribute:
         """
@@ -321,7 +321,7 @@ class Concept(ABC):
 
             concept.as_attribute()
         """
-        raise TypeDBDriverException.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Attribute"))
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Attribute"))
 
     def as_relation(self) -> Relation:
         """
@@ -335,7 +335,7 @@ class Concept(ABC):
 
             concept.as_relation()
         """
-        raise TypeDBDriverException.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Relation"))
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Relation"))
 
     def as_value(self) -> Value:
         """
@@ -349,7 +349,7 @@ class Concept(ABC):
 
             concept.as_value()
         """
-        raise TypeDBDriverException.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Value"))
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Value"))
 
     @abstractmethod
     def to_json(self) -> Mapping[str, Union[str, int, float, bool, datetime]]:

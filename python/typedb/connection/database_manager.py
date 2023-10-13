@@ -24,7 +24,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from typedb.native_driver_wrapper import databases_contains, databases_create, database_manager_new, databases_get, \
-    databases_all, database_iterator_next, DatabaseManager as NativeDatabaseManager
+    databases_all, database_iterator_next, DatabaseManager as NativeDatabaseManager, TypeDBDriverExceptionNative
 
 from typedb.api.connection.database import DatabaseManager
 from typedb.common.exception import TypeDBDriverException, DATABASE_DELETED, ILLEGAL_STATE, MISSING_DB_NAME
@@ -38,7 +38,7 @@ if TYPE_CHECKING:
 
 def _not_blank(name: str) -> str:
     if not name or name.isspace():
-        raise TypeDBDriverException.of(MISSING_DB_NAME)
+        raise TypeDBDriverException(MISSING_DB_NAME)
     return name
 
 
@@ -49,18 +49,30 @@ class _DatabaseManager(DatabaseManager, NativeWrapper[NativeDatabaseManager]):
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
-        return TypeDBDriverException.of(ILLEGAL_STATE)
+        return TypeDBDriverException(ILLEGAL_STATE)
 
     def get(self, name: str) -> _Database:
-        if not self.contains(name):
-            raise TypeDBDriverException.of(DATABASE_DELETED, name)
-        return _Database(databases_get(self.native_object, name))
+        try:
+            if not self.contains(name):
+                raise TypeDBDriverException(DATABASE_DELETED, name)
+            return _Database(databases_get(self.native_object, name))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def contains(self, name: str) -> bool:
-        return databases_contains(self.native_object, _not_blank(name))
+        try:
+            return databases_contains(self.native_object, _not_blank(name))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def create(self, name: str) -> None:
-        databases_create(self.native_object, _not_blank(name))
+        try:
+            databases_create(self.native_object, _not_blank(name))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def all(self) -> list[_Database]:
-        return list(map(_Database, IteratorWrapper(databases_all(self.native_object), database_iterator_next)))
+        try:
+            return list(map(_Database, IteratorWrapper(databases_all(self.native_object), database_iterator_next)))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)

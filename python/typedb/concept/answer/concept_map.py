@@ -44,7 +44,7 @@ if TYPE_CHECKING:
 
 def _not_blank_var(var: str) -> str:
     if not var or var.isspace():
-        raise TypeDBDriverException.of(MISSING_VARIABLE)
+        raise TypeDBDriverException(MISSING_VARIABLE)
     return var
 
 
@@ -57,7 +57,7 @@ class _ConceptMap(ConceptMap, NativeWrapper[NativeConceptMap]):
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
-        return TypeDBDriverException.of(ILLEGAL_STATE)
+        return TypeDBDriverException(ILLEGAL_STATE)
 
     def variables(self) -> Iterator[str]:
         return IteratorWrapper(concept_map_get_variables(self.native_object), string_iterator_next)
@@ -69,7 +69,7 @@ class _ConceptMap(ConceptMap, NativeWrapper[NativeConceptMap]):
     def get(self, variable: str) -> Concept:
         concept = concept_map_get(self.native_object, _not_blank_var(variable))
         if not concept:
-            raise TypeDBDriverException.of(VARIABLE_DOES_NOT_EXIST, variable)
+            raise TypeDBDriverException(VARIABLE_DOES_NOT_EXIST, variable)
         return concept_factory.wrap_concept(concept)
 
     def explainables(self) -> ConceptMap.Explainables:
@@ -97,25 +97,25 @@ class _ConceptMap(ConceptMap, NativeWrapper[NativeConceptMap]):
 
         @property
         def _native_object_not_owned_exception(self) -> TypeDBDriverException:
-            return TypeDBDriverException.of(ILLEGAL_STATE)
+            return TypeDBDriverException(ILLEGAL_STATE)
 
         def relation(self, variable: str) -> ConceptMap.Explainable:
             explainable = explainables_get_relation(self.native_object, _not_blank_var(variable))
             if not explainable:
-                raise TypeDBDriverException.of(NONEXISTENT_EXPLAINABLE_CONCEPT, variable)
+                raise TypeDBDriverException(NONEXISTENT_EXPLAINABLE_CONCEPT, variable)
             return _ConceptMap.Explainable(explainable)
 
         def attribute(self, variable: str) -> ConceptMap.Explainable:
             explainable = explainables_get_attribute(self.native_object, _not_blank_var(variable))
             if not explainable:
-                raise TypeDBDriverException.of(NONEXISTENT_EXPLAINABLE_CONCEPT, variable)
+                raise TypeDBDriverException(NONEXISTENT_EXPLAINABLE_CONCEPT, variable)
             return _ConceptMap.Explainable(explainable)
 
         def ownership(self, owner: str, attribute: str) -> ConceptMap.Explainable:
             explainable = explainables_get_ownership(self.native_object, _not_blank_var(owner),
                                                      _not_blank_var(attribute))
             if not explainable:
-                raise TypeDBDriverException.of(NONEXISTENT_EXPLAINABLE_OWNERSHIP, (owner, attribute))
+                raise TypeDBDriverException(NONEXISTENT_EXPLAINABLE_OWNERSHIP, (owner, attribute))
             return _ConceptMap.Explainable(explainable)
 
         def relations(self) -> Mapping[str, ConceptMap.Explainable]:
@@ -155,7 +155,7 @@ class _ConceptMap(ConceptMap, NativeWrapper[NativeConceptMap]):
 
         @property
         def _native_object_not_owned_exception(self) -> TypeDBDriverException:
-            return TypeDBDriverException.of(ILLEGAL_STATE)
+            return TypeDBDriverException(ILLEGAL_STATE)
 
         def conjunction(self) -> str:
             return explainable_get_conjunction(self.native_object)

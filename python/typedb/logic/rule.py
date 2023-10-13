@@ -24,7 +24,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from typedb.native_driver_wrapper import rule_get_when, rule_get_then, rule_get_label, rule_set_label, rule_delete, \
-    rule_is_deleted, rule_to_string, Rule as NativeRule
+    rule_is_deleted, rule_to_string, Rule as NativeRule, TypeDBDriverExceptionNative
 
 from typedb.api.logic.rule import Rule
 from typedb.common.exception import TypeDBDriverException, MISSING_LABEL, NULL_NATIVE_OBJECT, ILLEGAL_STATE
@@ -46,7 +46,7 @@ class _Rule(Rule, NativeWrapper[NativeRule]):
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
-        return TypeDBDriverException.of(ILLEGAL_STATE)
+        return TypeDBDriverException(ILLEGAL_STATE)
 
     @property
     def label(self) -> str:
@@ -55,7 +55,10 @@ class _Rule(Rule, NativeWrapper[NativeRule]):
     def set_label(self, transaction: _Transaction, new_label: str) -> None:
         if not new_label:
             raise TypeDBDriverException(MISSING_LABEL)
-        rule_set_label(transaction.logic, self.native_object, new_label)
+        try:
+            rule_set_label(transaction.logic, self.native_object, new_label)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     @property
     def when(self) -> str:
@@ -66,10 +69,16 @@ class _Rule(Rule, NativeWrapper[NativeRule]):
         return self._then
 
     def delete(self, transaction: _Transaction) -> None:
-        rule_delete(transaction.logic, self.native_object)
+        try:
+            rule_delete(transaction.logic, self.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def is_deleted(self, transaction: _Transaction) -> bool:
-        return rule_is_deleted(transaction.logic, self.native_object)
+        try:
+            return rule_is_deleted(transaction.logic, self.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def __repr__(self):
         return rule_to_string(self.native_object)

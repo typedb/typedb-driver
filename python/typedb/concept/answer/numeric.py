@@ -38,7 +38,7 @@ class _Numeric(Numeric, NativeWrapper[NativeNumeric]):
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
-        return TypeDBDriverException.of(ILLEGAL_STATE)
+        return TypeDBDriverException(ILLEGAL_STATE)
 
     def is_int(self) -> bool:
         return numeric_is_long(self.native_object)
@@ -51,12 +51,12 @@ class _Numeric(Numeric, NativeWrapper[NativeNumeric]):
 
     def as_int(self):
         if not self.is_int():
-            raise TypeDBDriverException.of(ILLEGAL_CAST, "int")
+            raise TypeDBDriverException(ILLEGAL_CAST, "int")
         return numeric_get_long(self.native_object)
 
     def as_float(self):
         if not self.is_float():
-            raise TypeDBDriverException.of(ILLEGAL_CAST, "float")
+            raise TypeDBDriverException(ILLEGAL_CAST, "float")
         return numeric_get_double(self.native_object)
 
     def __repr__(self):

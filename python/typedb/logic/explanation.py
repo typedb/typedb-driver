@@ -48,7 +48,7 @@ class _Explanation(Explanation, NativeWrapper[NativeExplanation]):
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
-        return TypeDBDriverException.of(ILLEGAL_STATE)
+        return TypeDBDriverException(ILLEGAL_STATE)
 
     def rule(self) -> Rule:
         return _Rule(explanation_get_rule(self.native_object))

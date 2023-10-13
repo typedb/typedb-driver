@@ -50,9 +50,9 @@ class TypeDBCredential(NativeWrapper[NativeCredential]):
     def __init__(self, username: str, password: str, *, tls_root_ca_path: Optional[str] = None,
                  tls_enabled: bool = True):
         if tls_root_ca_path is not None and not tls_enabled:
-            raise TypeDBDriverException.of(ENTERPRISE_CREDENTIAL_INCONSISTENT)
+            raise TypeDBDriverException(ENTERPRISE_CREDENTIAL_INCONSISTENT)
         super().__init__(credential_new(username, password, tls_root_ca_path, tls_enabled))
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
-        return TypeDBDriverException.of(ILLEGAL_STATE)
+        return TypeDBDriverException(ILLEGAL_STATE)

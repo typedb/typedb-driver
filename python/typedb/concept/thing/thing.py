@@ -25,7 +25,8 @@ from abc import ABC
 from typing import TYPE_CHECKING, Iterator, Optional
 
 from typedb.native_driver_wrapper import thing_get_iid, thing_get_is_inferred, thing_get_has, thing_get_relations, \
-    thing_get_playing, thing_set_has, thing_unset_has, thing_delete, thing_is_deleted, concept_iterator_next
+    thing_get_playing, thing_set_has, thing_unset_has, thing_delete, thing_is_deleted, concept_iterator_next, \
+    TypeDBDriverExceptionNative
 
 from typedb.api.concept.thing.thing import Thing
 from typedb.common.exception import TypeDBDriverException, GET_HAS_WITH_MULTIPLE_FILTERS
@@ -58,39 +59,60 @@ class _Thing(Thing, _Concept, ABC):
                 annotations: set[Annotation] = frozenset()
                 ) -> Iterator[_Attribute]:
         if [bool(attribute_type), bool(attribute_types), bool(annotations)].count(True) > 1:
-            raise TypeDBDriverException.of(GET_HAS_WITH_MULTIPLE_FILTERS)
+            raise TypeDBDriverException(GET_HAS_WITH_MULTIPLE_FILTERS)
         if attribute_type:
             attribute_types = [attribute_type]
         native_attribute_types = [type_.native_object for type_ in attribute_types]
         native_annotations = [anno.native_object for anno in annotations]
-        return map(wrap_attribute,
-                   IteratorWrapper(thing_get_has(transaction.native_object, self.native_object,
-                                                 native_attribute_types, native_annotations),
-                                   concept_iterator_next))
+        try:
+            return map(wrap_attribute,
+                       IteratorWrapper(thing_get_has(transaction.native_object, self.native_object,
+                                                     native_attribute_types, native_annotations),
+                                       concept_iterator_next))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def get_relations(self, transaction: _Transaction, *role_types: _RoleType) -> Iterator[_Relation]:
-        native_role_types = [rt.native_object for rt in role_types]
-        return map(wrap_relation,
-                   IteratorWrapper(thing_get_relations(transaction.native_object, self.native_object,
-                                                       native_role_types),
-                                   concept_iterator_next))
+        try:
+            native_role_types = [rt.native_object for rt in role_types]
+            return map(wrap_relation,
+                       IteratorWrapper(thing_get_relations(transaction.native_object, self.native_object,
+                                                           native_role_types),
+                                       concept_iterator_next))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def get_playing(self, transaction: _Transaction) -> Iterator[_RoleType]:
-        return map(wrap_role_type,
-                   IteratorWrapper(thing_get_playing(transaction.native_object, self.native_object),
-                                   concept_iterator_next))
+        try:
+            return map(wrap_role_type,
+                       IteratorWrapper(thing_get_playing(transaction.native_object, self.native_object),
+                                       concept_iterator_next))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def set_has(self, transaction: _Transaction, attribute: _Attribute) -> None:
-        thing_set_has(transaction.native_object, self.native_object, attribute.native_object)
+        try:
+            thing_set_has(transaction.native_object, self.native_object, attribute.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def unset_has(self, transaction: _Transaction, attribute: _Attribute) -> None:
-        thing_unset_has(transaction.native_object, self.native_object, attribute.native_object)
+        try:
+            thing_unset_has(transaction.native_object, self.native_object, attribute.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def delete(self, transaction: _Transaction) -> None:
-        thing_delete(transaction.native_object, self.native_object)
+        try:
+            thing_delete(transaction.native_object, self.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def is_deleted(self, transaction: _Transaction) -> bool:
-        return thing_is_deleted(transaction.native_object, self.native_object)
+        try:
+            return thing_is_deleted(transaction.native_object, self.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def __repr__(self):
         return "%s[%s:%s]" % (type(self).__name__, self.get_type().get_label(), self.get_iid())

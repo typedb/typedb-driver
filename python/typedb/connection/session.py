@@ -24,7 +24,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Optional
 
 from typedb.native_driver_wrapper import session_new, session_on_close, session_force_close, session_is_open, \
-    session_get_database_name, SessionCallbackDirector, Session as NativeSession
+    session_get_database_name, SessionCallbackDirector, Session as NativeSession, TypeDBDriverExceptionNative
 
 from typedb.api.connection.options import TypeDBOptions
 from typedb.api.connection.session import TypeDBSession
@@ -46,11 +46,14 @@ class _Session(TypeDBSession, NativeWrapper[NativeSession]):
             options = TypeDBOptions()
         self._type = session_type
         self._options = options
-        super().__init__(session_new(database_manager.native_object, database_name, session_type.value, options.native_object))
+        try:
+            super().__init__(session_new(database_manager.native_object, database_name, session_type.value, options.native_object))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
-        return TypeDBDriverException.of(SESSION_CLOSED)
+        return TypeDBDriverException(SESSION_CLOSED)
 
     def is_open(self) -> bool:
         return session_is_open(self.native_object)

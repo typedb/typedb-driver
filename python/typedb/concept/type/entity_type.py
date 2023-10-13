@@ -24,9 +24,11 @@ from __future__ import annotations
 from typing import Iterator, Optional, TYPE_CHECKING
 
 from typedb.native_driver_wrapper import entity_type_create, entity_type_get_subtypes, entity_type_get_instances, \
-    entity_type_get_supertypes, entity_type_get_supertype, entity_type_set_supertype, concept_iterator_next
+    entity_type_get_supertypes, entity_type_get_supertype, entity_type_set_supertype, concept_iterator_next, \
+    TypeDBDriverExceptionNative
 
 from typedb.api.concept.type.entity_type import EntityType
+from typedb.common.exception import TypeDBDriverException
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.transitivity import Transitivity
 from typedb.concept.concept_factory import wrap_entity
@@ -40,30 +42,50 @@ if TYPE_CHECKING:
 class _EntityType(EntityType, _ThingType):
 
     def create(self, transaction: _Transaction) -> _Entity:
-        return wrap_entity(entity_type_create(transaction.native_object, self.native_object))
+        try:
+            return wrap_entity(entity_type_create(transaction.native_object, self.native_object))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def set_supertype(self, transaction: _Transaction, super_entity_type: _EntityType) -> None:
-        entity_type_set_supertype(transaction.native_object, self.native_object,
-                                  super_entity_type.native_object)
+        try:
+            entity_type_set_supertype(transaction.native_object, self.native_object,
+                                      super_entity_type.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def get_supertype(self, transaction: _Transaction) -> Optional[_EntityType]:
-        if res := entity_type_get_supertype(transaction.native_object, self.native_object):
-            return _EntityType(res)
-        return None
+        try:
+            if res := entity_type_get_supertype(transaction.native_object, self.native_object):
+                return _EntityType(res)
+            return None
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def get_supertypes(self, transaction: _Transaction) -> Iterator[_EntityType]:
-        return map(_EntityType, IteratorWrapper(entity_type_get_supertypes(transaction.native_object,
-                                                                           self.native_object),
-                                                concept_iterator_next))
+        try:
+            return map(_EntityType, IteratorWrapper(entity_type_get_supertypes(transaction.native_object,
+                                                                               self.native_object),
+                                                    concept_iterator_next))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def get_subtypes(self, transaction: _Transaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                      ) -> Iterator[_EntityType]:
-        return map(_EntityType, IteratorWrapper(entity_type_get_subtypes(transaction.native_object, self.native_object,
-                                                                         transitivity.value),
-                                                concept_iterator_next))
+        try:
+            return map(_EntityType, IteratorWrapper(entity_type_get_subtypes(transaction.native_object,
+                                                                             self.native_object,
+                                                                             transitivity.value),
+                                                    concept_iterator_next))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def get_instances(self, transaction: _Transaction, transitivity: Transitivity = Transitivity.TRANSITIVE
                       ) -> Iterator[_Entity]:
-        return map(wrap_entity, IteratorWrapper(entity_type_get_instances(transaction.native_object, self.native_object,
-                                                                          transitivity.value),
-                                                concept_iterator_next))
+        try:
+            return map(wrap_entity, IteratorWrapper(entity_type_get_instances(transaction.native_object,
+                                                                              self.native_object,
+                                                                              transitivity.value),
+                                                    concept_iterator_next))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)

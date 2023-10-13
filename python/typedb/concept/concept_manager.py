@@ -26,7 +26,7 @@ from typing import Optional, TYPE_CHECKING
 from typedb.native_driver_wrapper import concepts_get_entity_type, concepts_get_relation_type, \
     concepts_get_attribute_type, concepts_put_entity_type, concepts_put_relation_type, concepts_put_attribute_type, \
     concepts_get_entity, concepts_get_relation, concepts_get_attribute, concepts_get_schema_exceptions, \
-    schema_exception_message, schema_exception_code, Transaction as NativeTransaction
+    schema_exception_message, schema_exception_code, Transaction as NativeTransaction, TypeDBDriverExceptionNative
 
 from typedb.api.concept.concept_manager import ConceptManager
 from typedb.common.exception import TypeDBDriverException, TypeDBException, MISSING_LABEL, MISSING_IID, \
@@ -45,13 +45,13 @@ if TYPE_CHECKING:
 
 def _not_blank_label(label: str) -> str:
     if not label or label.isspace():
-        raise TypeDBDriverException.of(MISSING_LABEL)
+        raise TypeDBDriverException(MISSING_LABEL)
     return label
 
 
 def _not_blank_iid(iid: str) -> str:
     if not iid or iid.isspace():
-        raise TypeDBDriverException.of(MISSING_IID)
+        raise TypeDBDriverException(MISSING_IID)
     return iid
 
 
@@ -62,7 +62,7 @@ class _ConceptManager(ConceptManager, NativeWrapper[NativeTransaction]):
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
-        return TypeDBDriverException.of(TRANSACTION_CLOSED)
+        return TypeDBDriverException(TRANSACTION_CLOSED)
 
     @property
     def native_transaction(self) -> NativeTransaction:
@@ -78,45 +78,75 @@ class _ConceptManager(ConceptManager, NativeWrapper[NativeTransaction]):
         return self.get_attribute_type("attribute")
 
     def get_entity_type(self, label: str) -> Optional[_EntityType]:
-        if _type := concepts_get_entity_type(self.native_transaction, _not_blank_label(label)):
-            return _EntityType(_type)
-        return None
+        try:
+            if _type := concepts_get_entity_type(self.native_transaction, _not_blank_label(label)):
+                return _EntityType(_type)
+            return None
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def get_relation_type(self, label: str) -> Optional[_RelationType]:
-        if _type := concepts_get_relation_type(self.native_transaction, _not_blank_label(label)):
-            return _RelationType(_type)
-        return None
+        try:
+            if _type := concepts_get_relation_type(self.native_transaction, _not_blank_label(label)):
+                return _RelationType(_type)
+            return None
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def get_attribute_type(self, label: str) -> Optional[_AttributeType]:
-        if _type := concepts_get_attribute_type(self.native_transaction, _not_blank_label(label)):
-            return _AttributeType(_type)
-        return None
+        try:
+            if _type := concepts_get_attribute_type(self.native_transaction, _not_blank_label(label)):
+                return _AttributeType(_type)
+            return None
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def put_entity_type(self, label: str) -> _EntityType:
-        return _EntityType(concepts_put_entity_type(self.native_transaction, _not_blank_label(label)))
+        try:
+            return _EntityType(concepts_put_entity_type(self.native_transaction, _not_blank_label(label)))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def put_relation_type(self, label: str) -> _RelationType:
-        return _RelationType(concepts_put_relation_type(self.native_transaction, _not_blank_label(label)))
+        try:
+            return _RelationType(concepts_put_relation_type(self.native_transaction, _not_blank_label(label)))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def put_attribute_type(self, label: str, value_type: ValueType) -> _AttributeType:
-        return _AttributeType(concepts_put_attribute_type(self.native_transaction, _not_blank_label(label),
-                                                          value_type.native_object))
+        try:
+            return _AttributeType(concepts_put_attribute_type(self.native_transaction, _not_blank_label(label),
+                                                              value_type.native_object))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def get_entity(self, iid: str) -> Optional[_Entity]:
-        if concept := concepts_get_entity(self.native_transaction, _not_blank_iid(iid)):
-            return _Entity(concept)
-        return None
+        try:
+            if concept := concepts_get_entity(self.native_transaction, _not_blank_iid(iid)):
+                return _Entity(concept)
+            return None
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def get_relation(self, iid: str) -> Optional[_Relation]:
-        if concept := concepts_get_relation(self.native_transaction, _not_blank_iid(iid)):
-            return _Relation(concept)
-        return None
+        try:
+            if concept := concepts_get_relation(self.native_transaction, _not_blank_iid(iid)):
+                return _Relation(concept)
+            return None
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def get_attribute(self, iid: str) -> Optional[_Attribute]:
-        if concept := concepts_get_attribute(self.native_transaction, _not_blank_iid(iid)):
-            return _Attribute(concept)
-        return None
+        try:
+            if concept := concepts_get_attribute(self.native_transaction, _not_blank_iid(iid)):
+                return _Attribute(concept)
+            return None
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)
 
     def get_schema_exception(self) -> list[TypeDBException]:
-        return [TypeDBException(schema_exception_code(e), schema_exception_message(e))
-                for e in concepts_get_schema_exceptions(self.native_transaction)]
+        try:
+            return [TypeDBException(schema_exception_code(e), schema_exception_message(e))
+                    for e in concepts_get_schema_exceptions(self.native_transaction)]
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException(e)

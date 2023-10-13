@@ -48,7 +48,7 @@ class _ConceptMapGroup(ConceptMapGroup, NativeWrapper[NativeConceptMapGroup]):
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
-        return TypeDBDriverException.of(ILLEGAL_STATE)
+        return TypeDBDriverException(ILLEGAL_STATE)
 
     def owner(self) -> Concept:
         return concept_factory.wrap_concept(concept_map_group_get_owner(self.native_object))

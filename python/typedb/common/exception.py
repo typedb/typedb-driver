@@ -26,7 +26,7 @@ from typing import Union, Any
 from typedb.native_driver_wrapper import TypeDBDriverExceptionNative
 
 
-class TypeDBDriverException(TypeDBDriverExceptionNative):
+class TypeDBDriverException(RuntimeError):
     """
     Exceptions raised by the driver.
 
@@ -38,10 +38,10 @@ class TypeDBDriverException(TypeDBDriverExceptionNative):
         try:
             transaction.commit()
         except TypeDBDriverException as err:
-            println("Error:", err)
+            print("Error:", err)
     """
 
-    def __init__(self, msg: Union[ErrorMessage, str], cause: BaseException = None, params: Any = None):
+    def __init__(self, msg: Union[ErrorMessage, str], params: Any = None):
         if isinstance(msg, str):
             self.message = msg
             self.error_message = None
@@ -49,15 +49,14 @@ class TypeDBDriverException(TypeDBDriverExceptionNative):
             self.message = msg.message(params)
             self.error_message = msg
 
-        self.__cause__ = cause
-        super(TypeDBDriverExceptionNative, self).__init__(self.message)
+        super().__init__(self.message)
 
     @staticmethod
-    def of(error_message: ErrorMessage, params: Any = None) -> TypeDBDriverException:
+    def of(exception: TypeDBDriverExceptionNative) -> TypeDBDriverException:
         """
         :meta private:
         """
-        return TypeDBDriverException(msg=error_message, cause=None, params=params)
+        return TypeDBDriverException(str(exception))
 
 
 class ErrorMessage:

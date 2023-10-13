@@ -39,7 +39,7 @@ class _Concept(Concept, NativeWrapper[NativeConcept], ABC):
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
-        return TypeDBDriverException.of(ILLEGAL_STATE)
+        return TypeDBDriverException(ILLEGAL_STATE)
 
     def __repr__(self):
         return concept_to_string(self.native_object)

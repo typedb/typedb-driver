@@ -39,7 +39,7 @@ class _Value(Value, _Concept):
 
     @singledispatchmethod
     def of(value):
-        raise TypeDBDriverException.of(UNEXPECTED_NATIVE_VALUE)
+        raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)
 
     @of.register
     def _(value: bool):
