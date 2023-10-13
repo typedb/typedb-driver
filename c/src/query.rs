@@ -25,8 +25,7 @@ use typedb_driver::{
     answer::{ConceptMap, ConceptMapGroup, Explainable, Numeric, NumericGroup},
     box_stream,
     logic::Explanation,
-    Options, Result, Transaction,
-    Promise,
+    Options, Promise, Result, Transaction,
 };
 
 use super::{
