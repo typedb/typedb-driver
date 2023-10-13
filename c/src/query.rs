@@ -33,10 +33,17 @@ use super::{
     iterator::{iterator_try_next, CIterator},
     memory::{borrow, free, string_view},
 };
+use crate::{memory::release, promise::VoidPromise};
 
 #[no_mangle]
-pub extern "C" fn query_define(transaction: *mut Transaction<'static>, query: *const c_char, options: *const Options) {
-    unwrap_void(borrow(transaction).query().define_with_options(string_view(query), borrow(options).clone()).resolve())
+pub extern "C" fn query_define(
+    transaction: *mut Transaction<'static>,
+    query: *const c_char,
+    options: *const Options,
+) -> *mut VoidPromise {
+    release(VoidPromise(Box::new(
+        borrow(transaction).query().define_with_options(string_view(query), borrow(options).clone()),
+    )))
 }
 
 #[no_mangle]

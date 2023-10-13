@@ -19,20 +19,26 @@
  * under the License.
  */
 
-mod answer;
-mod common;
-mod concept;
-mod connection;
-mod database;
-mod database_manager;
-mod error;
-mod iterator;
-mod logic;
-mod memory;
-mod options;
-mod promise;
-mod query;
-mod session;
-mod transaction;
-mod user;
-mod user_manager;
+use typedb_driver::{BoxPromise, Promise, Result};
+
+use crate::{
+    error::{try_release, unwrap_void},
+    memory::{release, take_ownership},
+};
+
+pub struct CPromise<T: 'static>(BoxPromise<'static, T>);
+
+pub(super) fn promise_resolve<T: 'static>(promise: *mut CPromise<T>) -> *mut T {
+    release(take_ownership(promise).0.resolve())
+}
+
+pub(super) fn promise_try_resolve<T: 'static>(promise: *mut CPromise<Result<T>>) -> *mut T {
+    try_release(take_ownership(promise).0.resolve())
+}
+
+pub struct VoidPromise(pub BoxPromise<'static, Result<()>>);
+
+#[no_mangle]
+pub extern "C" fn void_promise_resolve(promise: *mut VoidPromise) {
+    unwrap_void(take_ownership(promise).0.resolve());
+}
