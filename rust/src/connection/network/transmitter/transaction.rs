@@ -49,15 +49,14 @@ use typedb_protocol::transaction::{self, server::Server, stream::State};
 #[cfg(feature = "sync")]
 use super::oneshot_blocking as oneshot;
 use super::response_sink::ResponseSink;
-#[cfg(not(feature = "sync"))]
-use crate::common::Promise;
 #[cfg(feature = "sync")]
-use crate::{common::box_promise, Error};
+use crate::Error;
 use crate::{
     common::{
+        box_promise,
         error::ConnectionError,
         stream::{NetworkStream, Stream},
-        BoxPromise, Callback, RequestID, Result,
+        Callback, Promise, RequestID, Result,
     },
     connection::{
         message::{TransactionRequest, TransactionResponse},
@@ -126,21 +125,28 @@ impl TransactionTransmitter {
     }
 
     #[cfg(not(feature = "sync"))]
-    pub(in crate::connection) fn single(&self, req: TransactionRequest) -> impl Promise<Result<TransactionResponse>> {
-        async move {
-            if !self.is_open() {
-                let error = self.error.read().unwrap();
-                assert!(error.is_some());
-                return Err(error.clone().unwrap().into());
-            }
-            let (res_sink, recv) = oneshot();
-            self.request_sink.send((req, Some(ResponseSink::AsyncOneShot(res_sink))))?;
-            recv.await?.map(Into::into)
+    pub(in crate::connection) fn single(
+        &self,
+        req: TransactionRequest,
+    ) -> impl Promise<'static, Result<TransactionResponse>> {
+        if !self.is_open() {
+            let error = self.error.read().unwrap().clone();
+            assert!(error.is_some());
+            return box_promise(async move { Err(error.unwrap().into()) });
         }
+        let (res_sink, recv) = oneshot();
+        let send_result = self.request_sink.send((req, Some(ResponseSink::AsyncOneShot(res_sink))));
+        box_promise(async move {
+            send_result?;
+            recv.await?.map(Into::into)
+        })
     }
 
     #[cfg(feature = "sync")]
-    pub(in crate::connection) fn single(&self, req: TransactionRequest) -> BoxPromise<Result<TransactionResponse>> {
+    pub(in crate::connection) fn single(
+        &self,
+        req: TransactionRequest,
+    ) -> impl Promise<'static, Result<TransactionResponse>> {
         if !self.is_open() {
             let error = self.error.read().unwrap().clone();
             assert!(error.is_some());

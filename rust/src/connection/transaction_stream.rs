@@ -19,7 +19,7 @@
  * under the License.
  */
 
-use std::{fmt, iter};
+use std::{fmt, iter, pin::Pin};
 
 #[cfg(not(feature = "sync"))]
 use futures::{stream, StreamExt};
@@ -83,8 +83,8 @@ impl TransactionStream {
         self.transaction_transmitter.on_close(callback)
     }
 
-    pub(crate) fn commit(&self) -> impl Promise<Result> {
-        let promise = self.single(TransactionRequest::Commit);
+    pub(crate) fn commit(self: Pin<Box<Self>>) -> impl Promise<'static, Result> {
+        let promise = self.transaction_transmitter.single(TransactionRequest::Commit);
         promisify! { resolve!(promise).map(|_| ()) }
     }
 
@@ -1161,7 +1161,7 @@ impl TransactionStream {
         }))
     }
 
-    fn single(&self, req: TransactionRequest) -> impl Promise<Result<TransactionResponse>> {
+    fn single(&self, req: TransactionRequest) -> impl Promise<'static, Result<TransactionResponse>> {
         self.transaction_transmitter.single(req)
     }
 

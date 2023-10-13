@@ -56,7 +56,7 @@ pub trait RuleAPI: Clone + Sync + Send {
     #[cfg_attr(not(feature = "sync"), doc = "rule.is_deleted(transaction).await")]
     /// ```
     fn is_deleted<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<Result<bool>> {
-        let promise = transaction.logic().get_rule(self.label().to_owned());
+        let promise = transaction.transaction_stream.get_rule(self.label().to_owned());
         box_promise(promisify! { resolve!(promise).map(|rule| rule.is_none()) })
     }
 
@@ -82,10 +82,10 @@ impl RuleAPI for Rule {
     }
 
     fn delete<'tx>(&'tx mut self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result> {
-        box_promise(transaction.logic().transaction_stream.rule_delete(self.clone()))
+        box_promise(transaction.transaction_stream.rule_delete(self.clone()))
     }
 
     fn set_label<'tx>(&'tx mut self, transaction: &'tx Transaction<'tx>, new_label: String) -> BoxPromise<Result> {
-        box_promise(transaction.logic().transaction_stream.rule_set_label(self.clone(), new_label))
+        box_promise(transaction.transaction_stream.rule_set_label(self.clone(), new_label))
     }
 }

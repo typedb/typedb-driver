@@ -19,7 +19,7 @@
  * under the License.
  */
 
-use std::sync::Arc;
+use std::pin::Pin;
 
 use crate::{
     common::{stream::Stream, Promise, IID},
@@ -30,12 +30,12 @@ use crate::{
 
 /// Provides access for all Concept API methods.
 #[derive(Debug)]
-pub struct ConceptManager {
-    pub(super) transaction_stream: Arc<TransactionStream>,
+pub struct ConceptManager<'a> {
+    pub(super) transaction_stream: Pin<&'a TransactionStream>,
 }
 
-impl ConceptManager {
-    pub(crate) fn new(transaction_stream: Arc<TransactionStream>) -> Self {
+impl<'a> ConceptManager<'a> {
+    pub(crate) fn new(transaction_stream: Pin<&'a TransactionStream>) -> Self {
         Self { transaction_stream }
     }
 

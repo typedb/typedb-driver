@@ -19,7 +19,7 @@
  * under the License.
  */
 
-use std::sync::Arc;
+use std::pin::Pin;
 
 use crate::{
     answer::{ConceptMap, ConceptMapGroup, Explainable, Numeric, NumericGroup},
@@ -31,12 +31,12 @@ use crate::{
 
 /// Provides methods for executing TypeQL queries in the transaction.
 #[derive(Debug)]
-pub struct QueryManager {
-    transaction_stream: Arc<TransactionStream>,
+pub struct QueryManager<'a> {
+    transaction_stream: Pin<&'a TransactionStream>,
 }
 
-impl QueryManager {
-    pub(super) fn new(transaction_stream: Arc<TransactionStream>) -> Self {
+impl<'a> QueryManager<'a> {
+    pub(super) fn new(transaction_stream: Pin<&'a TransactionStream>) -> Self {
         Self { transaction_stream }
     }
 

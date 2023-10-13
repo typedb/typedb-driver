@@ -19,7 +19,7 @@
  * under the License.
  */
 
-use std::sync::Arc;
+use std::pin::Pin;
 
 use typeql::pattern::{Conjunction, Variable};
 
@@ -31,12 +31,12 @@ use crate::{
 
 /// Provides methods for manipulating rules in the database.
 #[derive(Clone, Debug)]
-pub struct LogicManager {
-    pub(super) transaction_stream: Arc<TransactionStream>,
+pub struct LogicManager<'a> {
+    pub(super) transaction_stream: Pin<&'a TransactionStream>,
 }
 
-impl LogicManager {
-    pub(crate) fn new(transaction_stream: Arc<TransactionStream>) -> Self {
+impl<'a> LogicManager<'a> {
+    pub(crate) fn new(transaction_stream: Pin<&'a TransactionStream>) -> Self {
         Self { transaction_stream }
     }
 
