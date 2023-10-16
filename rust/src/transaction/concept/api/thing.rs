@@ -385,7 +385,11 @@ pub trait AttributeAPI: ThingAPI + Clone + Into<Attribute> {
     /// ```rust
     /// attribute.get_owners(transaction, Some(owner_type));
     /// ```
-    fn get_owners(&self, transaction: &Transaction<'_>, thing_type: Option<ThingType>) -> Result<BoxStream<'_, Result<Thing>>> {
+    fn get_owners(
+        &self,
+        transaction: &Transaction<'_>,
+        thing_type: Option<ThingType>,
+    ) -> Result<BoxStream<'_, Result<Thing>>> {
         transaction.transaction_stream.attribute_get_owners(self.clone().into(), thing_type).map(box_stream)
     }
 }

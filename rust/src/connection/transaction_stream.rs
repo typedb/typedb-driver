@@ -434,7 +434,11 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn thing_type_unset_plays(&self, thing_type: ThingType, role_type: RoleType) -> impl Promise<'_, Result> {
+    pub(crate) fn thing_type_unset_plays(
+        &self,
+        thing_type: ThingType,
+        role_type: RoleType,
+    ) -> impl Promise<'_, Result> {
         let promise = self.thing_type_single(ThingTypeRequest::ThingTypeUnsetPlays { thing_type, role_type });
         promisify! {
             match resolve!(promise)? {
