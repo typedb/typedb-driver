@@ -25,96 +25,95 @@
 #include "c/typedb_driver.h"
 #include "common.h"
 
-// Avoid helpers so the tests serve as documentation for the C API.
+#define FAILED() failed(__FILE__, __LINE__)
 
 bool test_database_management() {
-    const char dbName[] = "test_database_management";
+    const char databaseName[] = "test_database_management";
 
-    Connection* conn = 0;
-    DatabaseManager* dbMgr = 0;
+    Connection* connection = NULL;
+    DatabaseManager* databaseManager = NULL;
 
-    bool completed = false;
+    bool success = false;
 
-    conn = connection_open_core(TYPEDB_CORE_ADDRESS);
-    if (check_error()) goto cleanup;
+    connection = connection_open_core(TYPEDB_CORE_ADDRESS);
+    if (FAILED()) goto cleanup;
 
-    dbMgr = database_manager_new(conn);
-    if (check_error()) goto cleanup;
+    databaseManager = database_manager_new(connection);
+    if (FAILED()) goto cleanup;
 
-    delete_database_if_exists(dbMgr, dbName);
-    if (check_error()) goto cleanup;
+    delete_database_if_exists(databaseManager, databaseName);
+    if (FAILED()) goto cleanup;
 
-    databases_create(dbMgr, dbName);
-    if (check_error()) goto cleanup;
+    databases_create(databaseManager, databaseName);
+    if (FAILED()) goto cleanup;
 
-    if (!databases_contains(dbMgr, dbName)) {
-        fprintf(stderr, "databases_contains(\'%s\') failed\n", dbName);
+    if (!databases_contains(databaseManager, databaseName)) {
+        fprintf(stderr, "databases_contains(\'%s\') failed\n", databaseName);
         goto cleanup;
     }
 
     bool foundDB = false;
-    DatabaseIterator* it = databases_all(dbMgr);
-    Database* database = 0;
+    DatabaseIterator* it = databases_all(databaseManager);
+    Database* database = NULL;
     while (0 != (database = database_iterator_next(it))) {
         char* name = database_get_name(database);
-        foundDB = foundDB || (0 == strcmp(dbName, name));
+        foundDB = foundDB || (0 == strcmp(databaseName, name));
         free(name);
         database_drop(database);
     }
     database_iterator_drop(it);
 
     if (!foundDB) {
-        fprintf(stderr, "Did not find database \'%s\' in list of databases\n", dbName);
+        fprintf(stderr, "Did not find database \'%s\' in list of databases\n", databaseName);
         goto cleanup;
     }
 
-    completed = true;
+    success = true;
 cleanup:
-    if (check_error()) print_error(__FILE__, __LINE__);
-    delete_database_if_exists(dbMgr, dbName);
-    if (check_error()) print_error(__FILE__, __LINE__);
-    database_manager_drop(dbMgr);
-    connection_close(conn);
-    return completed;
+    delete_database_if_exists(databaseManager, databaseName);
+    FAILED(); // Check and print error if needed
+    database_manager_drop(databaseManager);
+    connection_close(connection);
+    return success;
 }
 
 bool test_query_schema() {
-    const char dbName[] = "test_query_schema";
+    const char databaseName[] = "test_query_schema";
 
-    Connection* conn = 0;
-    DatabaseManager* dbMgr = 0;
-    Session* session = 0;
-    Transaction* transaction = 0;
-    Options* opts = 0;
+    Connection* connection = NULL;
+    DatabaseManager* databaseManager = NULL;
+    Session* session = NULL;
+    Transaction* transaction = NULL;
+    Options* opts = NULL;
 
-    bool completed = false;
+    bool success = false;
 
     // Set up connection & database
-    conn = connection_open_core(TYPEDB_CORE_ADDRESS);
-    if (check_error()) goto cleanup;
+    connection = connection_open_core(TYPEDB_CORE_ADDRESS);
+    if (FAILED()) goto cleanup;
 
-    dbMgr = database_manager_new(conn);
-    if (check_error()) goto cleanup;
+    databaseManager = database_manager_new(connection);
+    if (FAILED()) goto cleanup;
 
-    delete_database_if_exists(dbMgr, dbName);
-    if (check_error()) goto cleanup;
+    delete_database_if_exists(databaseManager, databaseName);
+    if (FAILED()) goto cleanup;
 
-    databases_create(dbMgr, dbName);
-    if (check_error()) goto cleanup;
+    databases_create(databaseManager, databaseName);
+    if (FAILED()) goto cleanup;
 
     opts = options_new();
-    if (check_error()) goto cleanup;
+    if (FAILED()) goto cleanup;
 
     // test schema queries
     {
-        session = session_new(dbMgr, dbName, Schema, opts);
-        if (check_error()) goto cleanup;
+        session = session_new(databaseManager, databaseName, Schema, opts);
+        if (FAILED()) goto cleanup;
 
         transaction = transaction_new(session, Write, opts);
-        if (check_error()) goto cleanup;
+        if (FAILED()) goto cleanup;
 
         query_define(transaction, "define name sub attribute, value string;", opts);
-        if (check_error()) goto cleanup;
+        if (FAILED()) goto cleanup;
 
         ConceptMapIterator* it = query_match(transaction, "match $t sub thing;", opts);
         ConceptMap* conceptMap;
@@ -130,82 +129,81 @@ bool test_query_schema() {
         concept_map_iterator_drop(it);
 
         transaction_commit(transaction);
-        transaction = 0;
+        transaction = NULL;
 
         if (!foundName) {
             fprintf(stderr, "Did not find type \'name\' in query result.\n");
             goto cleanup;
         }
     }
-    completed = true;
+    success = true;
 
 cleanup:
-    if (check_error()) print_error(__FILE__, __LINE__);
     transaction_drop(transaction);
     session_drop(session);
     options_drop(opts);
 
-    delete_database_if_exists(dbMgr, dbName);
-    if (check_error()) print_error(__FILE__, __LINE__);
-    database_manager_drop(dbMgr);
-    connection_close(conn);
-    return completed;
+    delete_database_if_exists(databaseManager, databaseName);
+    FAILED(); // Check and print error if needed
+    database_manager_drop(databaseManager);
+    connection_close(connection);
+    return success;
 }
 
 bool test_query_data() {
-    const char dbName[] = "test_query_data";
+    const char databaseName[] = "test_query_data";
 
-    Connection* conn = 0;
-    DatabaseManager* dbMgr = 0;
-    Session* session = 0;
-    Transaction* transaction = 0;
-    Options* opts = 0;
+    Connection* connection = NULL;
+    DatabaseManager* databaseManager = NULL;
+    Session* session = NULL;
+    Transaction* transaction = NULL;
+    Options* opts = NULL;
 
-    bool completed = false;
+    bool success = false;
 
     // Set up connection & database
-    conn = connection_open_core(TYPEDB_CORE_ADDRESS);
-    if (check_error()) goto cleanup;
+    connection = connection_open_core(TYPEDB_CORE_ADDRESS);
+    if (FAILED()) goto cleanup;
 
-    dbMgr = database_manager_new(conn);
-    if (check_error()) goto cleanup;
+    databaseManager = database_manager_new(connection);
+    if (FAILED()) goto cleanup;
 
-    delete_database_if_exists(dbMgr, dbName);
-    if (check_error()) goto cleanup;
+    delete_database_if_exists(databaseManager, databaseName);
+    if (FAILED()) goto cleanup;
 
-    databases_create(dbMgr, dbName);
-    if (check_error()) goto cleanup;
+    databases_create(databaseManager, databaseName);
+    if (FAILED()) goto cleanup;
 
     opts = options_new();
-    if (check_error()) goto cleanup;
+    if (FAILED()) goto cleanup;
 
     // Set up schema
     {
-        session = session_new(dbMgr, dbName, Schema, opts);
-        if (check_error()) goto cleanup;
+        session = session_new(databaseManager, databaseName, Schema, opts);
+        if (FAILED()) goto cleanup;
 
         transaction = transaction_new(session, Write, opts);
-        if (check_error()) goto cleanup;
+        if (FAILED()) goto cleanup;
 
         query_define(transaction, "define name sub attribute, value string;", opts);
-        if (check_error()) goto cleanup;
+        if (FAILED()) goto cleanup;
 
         transaction_commit(transaction);
-        transaction = 0;
+        transaction = NULL;
 
         session_drop(session);
-        session = 0;
+        session = NULL;
     }
 
     {
-        session = session_new(dbMgr, dbName, Data, opts);
-        if (check_error()) goto cleanup;
+        session = session_new(databaseManager, databaseName, Data, opts);
+        if (FAILED()) goto cleanup;
 
         transaction = transaction_new(session, Write, opts);
-        if (check_error()) goto cleanup;
+        if (FAILED()) goto cleanup;
 
         ConceptMapIterator* insertResult = query_insert(transaction, "insert $n \"John\" isa name;", opts);
-        if (check_error()) goto cleanup;
+        if (FAILED()) goto cleanup;
         else concept_map_iterator_drop(insertResult);
 
         ConceptMapIterator* it = query_match(transaction, "match $n isa name;", opts);
@@ -224,7 +222,7 @@ bool test_query_data() {
         concept_map_iterator_drop(it);
 
         transaction_commit(transaction);
-        transaction = 0;
+        transaction = NULL;
 
         if (!foundJohn) {
             fprintf(stderr, "Did not find inserted name \'John\' in query result.\n");
@@ -232,64 +230,63 @@ bool test_query_data() {
         }
     }
 
-    completed = true;
+    success = true;
 
 cleanup:
-    if (check_error()) print_error(__FILE__, __LINE__);
     transaction_drop(transaction);
     session_drop(session);
     options_drop(opts);
 
-    delete_database_if_exists(dbMgr, dbName);
-    if (check_error()) print_error(__FILE__, __LINE__);
-    database_manager_drop(dbMgr);
-    connection_close(conn);
-    return completed;
+    delete_database_if_exists(databaseManager, databaseName);
+    FAILED(); // Check and print error if needed
+    database_manager_drop(databaseManager);
+    connection_close(connection);
+    return success;
 }
 
 bool test_concept_api_schema() {
-    const char dbName[] = "test_concept_api";
+    const char databaseName[] = "test_concept_api";
 
-    Connection* conn = 0;
-    DatabaseManager* dbMgr = 0;
-    Session* session = 0;
-    Transaction* transaction = 0;
-    Options* opts = 0;
+    Connection* connection = NULL;
+    DatabaseManager* databaseManager = NULL;
+    Session* session = NULL;
+    Transaction* transaction = NULL;
+    Options* opts = NULL;
 
-    bool completed = false;
+    bool success = false;
 
-    conn = connection_open_core(TYPEDB_CORE_ADDRESS);
-    if (check_error()) goto cleanup;
+    connection = connection_open_core(TYPEDB_CORE_ADDRESS);
+    if (FAILED()) goto cleanup;
 
-    dbMgr = database_manager_new(conn);
-    if (check_error()) goto cleanup;
+    databaseManager = database_manager_new(connection);
+    if (FAILED()) goto cleanup;
 
-    delete_database_if_exists(dbMgr, dbName);
-    if (check_error()) goto cleanup;
+    delete_database_if_exists(databaseManager, databaseName);
+    if (FAILED()) goto cleanup;
 
-    databases_create(dbMgr, dbName);
-    if (check_error()) goto cleanup;
+    databases_create(databaseManager, databaseName);
+    if (FAILED()) goto cleanup;
 
     opts = options_new();
-    if (check_error()) goto cleanup;
+    if (FAILED()) goto cleanup;
 
     // test schema api
     {
-        session = session_new(dbMgr, dbName, Schema, opts);
-        if (check_error()) goto cleanup;
+        session = session_new(databaseManager, databaseName, Schema, opts);
+        if (FAILED()) goto cleanup;
 
         transaction = transaction_new(session, Write, opts);
-        if (check_error()) goto cleanup;
+        if (FAILED()) goto cleanup;
         {
             Concept* definedNameType = concepts_put_attribute_type(transaction, "name", String);
-            if (check_error()) goto cleanup;
+            if (FAILED()) goto cleanup;
             else concept_drop(definedNameType);
         }
 
         {
-            ConceptIterator* it = 0;
-            Concept* nameType = 0;
-            Concept* rootAttributeType = 0;
+            ConceptIterator* it = NULL;
+            Concept* nameType = NULL;
+            Concept* rootAttributeType = NULL;
             bool foundName = false;
             if (
                 0 != (nameType = concepts_get_attribute_type(transaction, "name")) &&
@@ -308,7 +305,7 @@ bool test_concept_api_schema() {
             concept_drop(nameType);
 
             transaction_commit(transaction);
-            transaction = 0;
+            transaction = NULL;
             if (!foundName) {
                 fprintf(stderr, "Did not find type \'name\' in subtypes of attribute.\n");
                 goto cleanup;
@@ -316,82 +313,80 @@ bool test_concept_api_schema() {
         }
     }
 
-    completed = true;
+    success = true;
 
 cleanup:
-    if (check_error()) print_error(__FILE__, __LINE__);
-
     transaction_drop(transaction);
     session_drop(session);
     options_drop(opts);
 
-    delete_database_if_exists(dbMgr, dbName);
-    if (check_error()) print_error(__FILE__, __LINE__);
-    database_manager_drop(dbMgr);
-    connection_close(conn);
-    return completed;
+    delete_database_if_exists(databaseManager, databaseName);
+    FAILED(); // Check and print error if needed
+    database_manager_drop(databaseManager);
+    connection_close(connection);
+    return success;
 }
 
 bool test_concept_api_data() {
-    const char dbName[] = "test_concept_api";
+    const char databaseName[] = "test_concept_api";
 
-    Connection* conn = 0;
-    DatabaseManager* dbMgr = 0;
-    Session* session = 0;
-    Transaction* transaction = 0;
-    Options* opts = 0;
+    Connection* connection = NULL;
+    DatabaseManager* databaseManager = NULL;
+    Session* session = NULL;
+    Transaction* transaction = NULL;
+    Options* opts = NULL;
 
-    Concept* nameType = 0;
+    Concept* nameType = NULL;
 
-    bool completed = false;
+    bool success = false;
 
-    conn = connection_open_core(TYPEDB_CORE_ADDRESS);
-    if (check_error()) goto cleanup;
+    connection = connection_open_core(TYPEDB_CORE_ADDRESS);
+    if (FAILED()) goto cleanup;
 
-    dbMgr = database_manager_new(conn);
-    if (check_error()) goto cleanup;
+    databaseManager = database_manager_new(connection);
+    if (FAILED()) goto cleanup;
 
-    delete_database_if_exists(dbMgr, dbName);
-    if (check_error()) goto cleanup;
+    delete_database_if_exists(databaseManager, databaseName);
+    if (FAILED()) goto cleanup;
 
-    databases_create(dbMgr, dbName);
-    if (check_error()) goto cleanup;
+    databases_create(databaseManager, databaseName);
+    if (FAILED()) goto cleanup;
 
     opts = options_new();
-    if (check_error()) goto cleanup;
+    if (FAILED()) goto cleanup;
 
     // Set up schema
     {
-        session = session_new(dbMgr, dbName, Schema, opts);
-        if (check_error()) goto cleanup;
+        session = session_new(databaseManager, databaseName, Schema, opts);
+        if (FAILED()) goto cleanup;
 
         transaction = transaction_new(session, Write, opts);
-        if (check_error()) goto cleanup;
+        if (FAILED()) goto cleanup;
 
         {
             Concept* definedNameType = concepts_put_attribute_type(transaction, "name", String);
-            if (check_error()) goto cleanup;
+            if (FAILED()) goto cleanup;
             else concept_drop(definedNameType);
         }
 
         transaction_commit(transaction);
-        transaction = 0;
+        transaction = NULL;
 
         session_drop(session);
-        session = 0;
+        session = NULL;
     }
 
     // Test data API
     {
-        session = session_new(dbMgr, dbName, Data, opts);
-        if (check_error()) goto cleanup;
+        session = session_new(databaseManager, databaseName, Data, opts);
+        if (FAILED()) goto cleanup;
 
         transaction = transaction_new(session, Write, opts);
-        if (check_error()) goto cleanup;
+        if (FAILED()) goto cleanup;
         if (0 == (nameType = concepts_get_attribute_type(transaction, "name"))) goto cleanup;
         {
-            Concept* valueOfJohn = 0;
-            Concept* insertedJohn = 0;
+            Concept* valueOfJohn = NULL;
+            Concept* insertedJohn = NULL;
             bool success = 0 != (valueOfJohn = value_new_string("John")) &&
                            0 != (insertedJohn = attribute_type_put(transaction, nameType, valueOfJohn));
             concept_drop(insertedJohn);
@@ -402,7 +397,7 @@ bool test_concept_api_data() {
         bool foundJohn = false;
         {
             ConceptIterator* it = attribute_type_get_instances(transaction, nameType, Transitive);
-            if (check_error()) goto cleanup;
+            if (FAILED()) goto cleanup;
 
             Concept* concept;
             while (0 != (concept = concept_iterator_next(it))) {
@@ -417,7 +412,7 @@ bool test_concept_api_data() {
         }
 
         transaction_commit(transaction);
-        transaction = 0;
+        transaction = NULL;
 
         if (!foundJohn) {
             fprintf(stderr, "Did not find inserted name \'John\' in query result.\n");
@@ -425,19 +420,18 @@ bool test_concept_api_data() {
         }
     }
 
-    completed = true;
+    success = true;
 
 cleanup:
-    if (check_error()) print_error(__FILE__, __LINE__);
     concept_drop(nameType);
 
     transaction_drop(transaction);
     session_drop(session);
     options_drop(opts);
 
-    delete_database_if_exists(dbMgr, dbName);
-    if (check_error()) print_error(__FILE__, __LINE__);
-    database_manager_drop(dbMgr);
-    connection_close(conn);
-    return completed;
+    delete_database_if_exists(databaseManager, databaseName);
+    FAILED(); // Check and print error if needed 
+    database_manager_drop(databaseManager);
+    connection_close(connection);
+    return success;
 }

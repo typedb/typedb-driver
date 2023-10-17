@@ -23,7 +23,7 @@ package(default_visibility = ["//visibility:public"])
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 cc_library(
-    name = "test-driver-lib",
+    name = "lib-test-driver",
     srcs = glob(["integration/*.c", "integration/*.h"]),
     deps = [
         "//c:typedb_driver_clib_headers",
@@ -38,7 +38,7 @@ cc_test(
     name = "test-driver",
     srcs = glob(["integration/gtest_runner.cpp"]),
     deps = [
-        ":test-driver-lib",
+        ":lib-test-driver",
         "//c:typedb_driver_clib_headers",
         "//c:typedb_driver_clib",
 

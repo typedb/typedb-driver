@@ -19,10 +19,8 @@
  * under the License.
  */
 
-#define PRINT_ERR() print_error(__FILE__, __LINE__)
-
 extern const char* TYPEDB_CORE_ADDRESS;
 
-bool print_error(const char* filename, int lineno);
+bool failed(const char* filename, int lineno);
 
 void delete_database_if_exists(DatabaseManager* dbMgr, const char* name);

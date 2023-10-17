@@ -18,23 +18,32 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-//
+
 #include "gtest/gtest.h"
 
 extern "C" {
 #include "c/tests/integration/tests.h"
 }
 
-TEST(BasicTestSuite, TestDatabaseManagement) {
-    EXPECT_EQ(test_database_management(), true);
+TEST(TestDatabaseManagement, TestDatabaseManagement) {
+    EXPECT_TRUE(test_database_management());
 }
 
-TEST(BasicTestSuite, TestQuery) {
-    EXPECT_EQ(test_query_schema(), true);
-    EXPECT_EQ(test_query_data(), true);
+TEST(TestQuery, TestSchema) {
+    EXPECT_TRUE(test_query_schema());
+}
+TEST(TestQuery, TestData) {
+    EXPECT_TRUE(test_query_data());
 }
 
-TEST(BasicTestSuite, TestConceptAPI) {
-    EXPECT_EQ(test_concept_api_schema(), true);
-    EXPECT_EQ(test_concept_api_data(), true);
+TEST(TestConceptAPI, TestSchema) {
+    EXPECT_TRUE(test_concept_api_schema());
+}
+TEST(TestConceptAPI, TestData) {
+    EXPECT_TRUE(test_concept_api_data());
+}
+
+int main(int argc, char **argv) {
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
 }
