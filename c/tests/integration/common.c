@@ -39,9 +39,9 @@ bool check_error_may_print(const char* filename, int lineno) {
     } else return false;
 }
 
-void delete_database_if_exists(DatabaseManager* dbMgr, const char* name) {
-    if (NULL != dbMgr && databases_contains(dbMgr, name)) {
-        Database* database = databases_get(dbMgr, name);
+void delete_database_if_exists(DatabaseManager* databaseManager, const char* name) {
+    if (NULL != databaseManager && databases_contains(databaseManager, name)) {
+        Database* database = databases_get(databaseManager, name);
         database_delete(database);
     }
 }
