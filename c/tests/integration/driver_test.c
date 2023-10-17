@@ -25,7 +25,7 @@
 #include "c/typedb_driver.h"
 #include "common.h"
 
-#define CHECK_ERROR_MAY_PRINT() check_error_may_print(__FILE__, __LINE__)
+#define FAILED() check_error_may_print(__FILE__, __LINE__)
 
 bool test_database_management() {
     const char databaseName[] = "test_database_management";
@@ -71,7 +71,7 @@ bool test_database_management() {
     success = true;
 cleanup:
     delete_database_if_exists(databaseManager, databaseName);
-    FAILED();  // Check and print error if needed
+    check_error_may_print(__FILE__, __LINE__);
     database_manager_drop(databaseManager);
     connection_close(connection);
     return success;
@@ -144,7 +144,7 @@ cleanup:
     options_drop(opts);
 
     delete_database_if_exists(databaseManager, databaseName);
-    FAILED();  // Check and print error if needed
+    check_error_may_print(__FILE__, __LINE__);
     database_manager_drop(databaseManager);
     connection_close(connection);
     return success;
@@ -238,7 +238,7 @@ cleanup:
     options_drop(opts);
 
     delete_database_if_exists(databaseManager, databaseName);
-    FAILED();  // Check and print error if needed
+    check_error_may_print(__FILE__, __LINE__);
     database_manager_drop(databaseManager);
     connection_close(connection);
     return success;
@@ -321,7 +321,7 @@ cleanup:
     options_drop(opts);
 
     delete_database_if_exists(databaseManager, databaseName);
-    FAILED();  // Check and print error if needed
+    check_error_may_print(__FILE__, __LINE__);
     database_manager_drop(databaseManager);
     connection_close(connection);
     return success;
@@ -430,7 +430,7 @@ cleanup:
     options_drop(opts);
 
     delete_database_if_exists(databaseManager, databaseName);
-    FAILED();  // Check and print error if needed
+    check_error_may_print(__FILE__, __LINE__);
     database_manager_drop(databaseManager);
     connection_close(connection);
     return success;
