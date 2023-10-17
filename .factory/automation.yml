@@ -72,7 +72,7 @@ build:
       image: vaticle-ubuntu-22.04
       command: |
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        DOCS_DIRS = "java/docs nodejs/docs python/docs rust/docs"
+        DOCS_DIRS="java/docs nodejs/docs python/docs rust/docs"
         rm -rf DOCS_DIRS
         tool/docs/update.sh
         git add DOCS_DIRS
