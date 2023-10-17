@@ -73,10 +73,10 @@ build:
       command: |
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         DOCS_DIRS="java/docs nodejs/docs python/docs rust/docs"
-        rm -rf DOCS_DIRS
+        rm -rf $DOCS_DIRS
         tool/docs/update.sh
-        git add DOCS_DIRS
-        git diff --exit-code DOCS_DIRS
+        git add $DOCS_DIRS
+        git diff --exit-code $DOCS_DIRS
 
     test-rust-integration-core:
       image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
