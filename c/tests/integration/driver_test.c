@@ -36,10 +36,10 @@ bool test_database_management() {
     bool completed = false;
 
     conn = connection_open_core(TYPEDB_CORE_ADDRESS);
-    if (0 == conn) goto cleanup;
+    if (check_error()) goto cleanup;
 
     dbMgr = database_manager_new(conn);
-    if (0 == dbMgr || check_error()) goto cleanup;
+    if (check_error()) goto cleanup;
 
     delete_database_if_exists(dbMgr, dbName);
     if (check_error()) goto cleanup;
@@ -91,10 +91,10 @@ bool test_query_schema() {
 
     // Set up connection & database
     conn = connection_open_core(TYPEDB_CORE_ADDRESS);
-    if (0 == conn) goto cleanup;
+    if (check_error()) goto cleanup;
 
     dbMgr = database_manager_new(conn);
-    if (0 == dbMgr || check_error()) goto cleanup;
+    if (check_error()) goto cleanup;
 
     delete_database_if_exists(dbMgr, dbName);
     if (check_error()) goto cleanup;
@@ -103,15 +103,15 @@ bool test_query_schema() {
     if (check_error()) goto cleanup;
 
     opts = options_new();
-    if (0 == opts) goto cleanup;
+    if (check_error()) goto cleanup;
 
     // test schema queries
     {
         session = session_new(dbMgr, dbName, Schema, opts);
-        if (0 == session) goto cleanup;
+        if (check_error()) goto cleanup;
 
         transaction = transaction_new(session, Write, opts);
-        if (0 == transaction) goto cleanup;
+        if (check_error()) goto cleanup;
 
         query_define(transaction, "define name sub attribute, value string;", opts);
         if (check_error()) goto cleanup;
@@ -165,10 +165,10 @@ bool test_query_data() {
 
     // Set up connection & database
     conn = connection_open_core(TYPEDB_CORE_ADDRESS);
-    if (0 == conn) goto cleanup;
+    if (check_error()) goto cleanup;
 
     dbMgr = database_manager_new(conn);
-    if (0 == dbMgr || check_error()) goto cleanup;
+    if (check_error()) goto cleanup;
 
     delete_database_if_exists(dbMgr, dbName);
     if (check_error()) goto cleanup;
@@ -177,15 +177,15 @@ bool test_query_data() {
     if (check_error()) goto cleanup;
 
     opts = options_new();
-    if (0 == opts) goto cleanup;
+    if (check_error()) goto cleanup;
 
     // Set up schema
     {
         session = session_new(dbMgr, dbName, Schema, opts);
-        if (0 == session) goto cleanup;
+        if (check_error()) goto cleanup;
 
         transaction = transaction_new(session, Write, opts);
-        if (0 == transaction) goto cleanup;
+        if (check_error()) goto cleanup;
 
         query_define(transaction, "define name sub attribute, value string;", opts);
         if (check_error()) goto cleanup;
@@ -199,19 +199,19 @@ bool test_query_data() {
 
     {
         session = session_new(dbMgr, dbName, Data, opts);
-        if (0 == session) goto cleanup;
+        if (check_error()) goto cleanup;
 
         transaction = transaction_new(session, Write, opts);
-        if (0 == transaction) goto cleanup;
+        if (check_error()) goto cleanup;
 
         ConceptMapIterator* insertResult = query_insert(transaction, "insert $n \"John\" isa name;", opts);
-        if (0 == insertResult) goto cleanup;
+        if (check_error()) goto cleanup;
         else concept_map_iterator_drop(insertResult);
 
         ConceptMapIterator* it = query_match(transaction, "match $n isa name;", opts);
         ConceptMap* conceptMap;
         bool foundJohn = false;
-        while (0 != (conceptMap = concept_map_iterator_next(it))) {
+        while (0 != (conceptMap = concept_map_iterator_next(it)) && !check_error()) {
             Concept* concept = concept_map_get(conceptMap, "n");
             Concept* asValue = attribute_get_value(concept);
             char* attr = value_get_string(asValue);
@@ -259,10 +259,10 @@ bool test_concept_api_schema() {
     bool completed = false;
 
     conn = connection_open_core(TYPEDB_CORE_ADDRESS);
-    if (0 == conn) goto cleanup;
+    if (check_error()) goto cleanup;
 
     dbMgr = database_manager_new(conn);
-    if (0 == dbMgr || check_error()) goto cleanup;
+    if (check_error()) goto cleanup;
 
     delete_database_if_exists(dbMgr, dbName);
     if (check_error()) goto cleanup;
@@ -271,18 +271,18 @@ bool test_concept_api_schema() {
     if (check_error()) goto cleanup;
 
     opts = options_new();
-    if (0 == opts) goto cleanup;
+    if (check_error()) goto cleanup;
 
     // test schema api
     {
         session = session_new(dbMgr, dbName, Schema, opts);
-        if (0 == session) goto cleanup;
+        if (check_error()) goto cleanup;
 
         transaction = transaction_new(session, Write, opts);
-        if (0 == transaction) goto cleanup;
+        if (check_error()) goto cleanup;
         {
             Concept* definedNameType = concepts_put_attribute_type(transaction, "name", String);
-            if (0 == definedNameType) goto cleanup;
+            if (check_error()) goto cleanup;
             else concept_drop(definedNameType);
         }
 
@@ -346,10 +346,10 @@ bool test_concept_api_data() {
     bool completed = false;
 
     conn = connection_open_core(TYPEDB_CORE_ADDRESS);
-    if (0 == conn) goto cleanup;
+    if (check_error()) goto cleanup;
 
     dbMgr = database_manager_new(conn);
-    if (0 == dbMgr || check_error()) goto cleanup;
+    if (check_error()) goto cleanup;
 
     delete_database_if_exists(dbMgr, dbName);
     if (check_error()) goto cleanup;
@@ -358,19 +358,19 @@ bool test_concept_api_data() {
     if (check_error()) goto cleanup;
 
     opts = options_new();
-    if (0 == opts) goto cleanup;
+    if (check_error()) goto cleanup;
 
     // Set up schema
     {
         session = session_new(dbMgr, dbName, Schema, opts);
-        if (0 == session) goto cleanup;
+        if (check_error()) goto cleanup;
 
         transaction = transaction_new(session, Write, opts);
-        if (0 == transaction) goto cleanup;
+        if (check_error()) goto cleanup;
 
         {
             Concept* definedNameType = concepts_put_attribute_type(transaction, "name", String);
-            if (0 == definedNameType) goto cleanup;
+            if (check_error()) goto cleanup;
             else concept_drop(definedNameType);
         }
 
@@ -384,10 +384,10 @@ bool test_concept_api_data() {
     // Test data API
     {
         session = session_new(dbMgr, dbName, Data, opts);
-        if (0 == session) goto cleanup;
+        if (check_error()) goto cleanup;
 
         transaction = transaction_new(session, Write, opts);
-        if (0 == transaction) goto cleanup;
+        if (check_error()) goto cleanup;
         if (0 == (nameType = concepts_get_attribute_type(transaction, "name"))) goto cleanup;
         {
             Concept* valueOfJohn = 0;
@@ -402,7 +402,7 @@ bool test_concept_api_data() {
         bool foundJohn = false;
         {
             ConceptIterator* it = attribute_type_get_instances(transaction, nameType, Transitive);
-            if (0 == it) goto cleanup;
+            if (check_error()) goto cleanup;
 
             Concept* concept;
             while (0 != (concept = concept_iterator_next(it))) {
