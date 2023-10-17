@@ -26,7 +26,7 @@
 
 const char* TYPEDB_CORE_ADDRESS = "127.0.0.1:1729";
 
-bool failed(const char* filename, int lineno) {
+bool check_error_may_print(const char* filename, int lineno) {
     if (check_error()) {
         Error* error = get_last_error();
         char* errcode = error_code(error);

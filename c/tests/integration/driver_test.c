@@ -25,7 +25,7 @@
 #include "c/typedb_driver.h"
 #include "common.h"
 
-#define FAILED() failed(__FILE__, __LINE__)
+#define CHECK_ERROR_MAY_PRINT() check_error_may_print(__FILE__, __LINE__)
 
 bool test_database_management() {
     const char databaseName[] = "test_database_management";
