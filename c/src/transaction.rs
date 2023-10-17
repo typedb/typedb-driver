@@ -36,7 +36,7 @@ pub extern "C" fn transaction_new(
 }
 
 #[no_mangle]
-pub extern "C" fn transaction_drop(txn: *mut Transaction<'static>) {
+pub extern "C" fn transaction_close(txn: *mut Transaction<'static>) {
     free(txn);
 }
 

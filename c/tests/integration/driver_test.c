@@ -59,7 +59,7 @@ bool test_database_management() {
         char* name = database_get_name(database);
         foundDB = foundDB || (0 == strcmp(databaseName, name));
         free(name);
-        database_drop(database);
+        database_close(database);
     }
     database_iterator_drop(it);
 
@@ -139,8 +139,8 @@ bool test_query_schema() {
     success = true;
 
 cleanup:
-    transaction_drop(transaction);
-    session_drop(session);
+    transaction_close(transaction);
+    session_close(session);
     options_drop(opts);
 
     delete_database_if_exists(databaseManager, databaseName);
@@ -191,7 +191,7 @@ bool test_query_data() {
         transaction_commit(transaction);
         transaction = NULL;
 
-        session_drop(session);
+        session_close(session);
         session = NULL;
     }
 
@@ -233,8 +233,8 @@ bool test_query_data() {
     success = true;
 
 cleanup:
-    transaction_drop(transaction);
-    session_drop(session);
+    transaction_close(transaction);
+    session_close(session);
     options_drop(opts);
 
     delete_database_if_exists(databaseManager, databaseName);
@@ -316,8 +316,8 @@ bool test_concept_api_schema() {
     success = true;
 
 cleanup:
-    transaction_drop(transaction);
-    session_drop(session);
+    transaction_close(transaction);
+    session_close(session);
     options_drop(opts);
 
     delete_database_if_exists(databaseManager, databaseName);
@@ -372,7 +372,7 @@ bool test_concept_api_data() {
         transaction_commit(transaction);
         transaction = NULL;
 
-        session_drop(session);
+        session_close(session);
         session = NULL;
     }
 
@@ -425,8 +425,8 @@ bool test_concept_api_data() {
 cleanup:
     concept_drop(nameType);
 
-    transaction_drop(transaction);
-    session_drop(session);
+    transaction_close(transaction);
+    session_close(session);
     options_drop(opts);
 
     delete_database_if_exists(databaseManager, databaseName);

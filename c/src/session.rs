@@ -43,7 +43,7 @@ pub extern "C" fn session_new(
 }
 
 #[no_mangle]
-pub extern "C" fn session_drop(session: *mut Session) {
+pub extern "C" fn session_close(session: *mut Session) {
     free(session);
 }
 

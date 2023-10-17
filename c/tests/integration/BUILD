@@ -24,7 +24,7 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 cc_library(
     name = "lib-test-driver",
-    srcs = glob(["integration/*.c", "integration/*.h"]),
+    srcs = glob(["*.c", "*.h"]),
     deps = [
         "//c:typedb_driver_clib_headers",
         "//c:typedb_driver_clib"
@@ -36,7 +36,7 @@ cc_library(
 
 cc_test(
     name = "test-driver",
-    srcs = glob(["integration/gtest_runner.cpp"]),
+    srcs = glob(["gtest_runner.cpp"]),
     deps = [
         ":lib-test-driver",
         "//c:typedb_driver_clib_headers",
@@ -54,7 +54,6 @@ checkstyle_test(
     size = "small",
     include = glob([
         "*",
-        "integration/*",
     ]),
     license_type = "apache-header",
 )
