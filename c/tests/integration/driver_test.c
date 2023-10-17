@@ -55,7 +55,7 @@ bool test_database_management() {
     bool foundDB = false;
     DatabaseIterator* it = databases_all(databaseManager);
     Database* database = NULL;
-    while (0 != (database = database_iterator_next(it))) {
+    while (NULL != (database = database_iterator_next(it))) {
         char* name = database_get_name(database);
         foundDB = foundDB || (0 == strcmp(databaseName, name));
         free(name);
@@ -118,7 +118,7 @@ bool test_query_schema() {
         ConceptMapIterator* it = query_match(transaction, "match $t sub thing;", opts);
         ConceptMap* conceptMap;
         bool foundName = false;
-        while (0 != (conceptMap = concept_map_iterator_next(it))) {
+        while (NULL != (conceptMap = concept_map_iterator_next(it))) {
             Concept* concept = concept_map_get(conceptMap, "t");
             char* label = thing_type_get_label(concept);
             foundName = foundName || (0 == strcmp(label, "name"));
@@ -209,7 +209,7 @@ bool test_query_data() {
         ConceptMapIterator* it = query_match(transaction, "match $n isa name;", opts);
         ConceptMap* conceptMap;
         bool foundJohn = false;
-        while (0 != (conceptMap = concept_map_iterator_next(it)) && !check_error()) {
+        while (NULL != (conceptMap = concept_map_iterator_next(it)) && !check_error()) {
             Concept* concept = concept_map_get(conceptMap, "n");
             Concept* asValue = attribute_get_value(concept);
             char* attr = value_get_string(asValue);
@@ -289,11 +289,11 @@ bool test_concept_api_schema() {
             Concept* rootAttributeType = NULL;
             bool foundName = false;
             if (
-                0 != (nameType = concepts_get_attribute_type(transaction, "name")) &&
-                0 != (rootAttributeType = concepts_get_attribute_type(transaction, "attribute")) &&
-                0 != (it = attribute_type_get_subtypes(transaction, rootAttributeType, Transitive))) {
+                NULL != (nameType = concepts_get_attribute_type(transaction, "name")) &&
+                NULL != (rootAttributeType = concepts_get_attribute_type(transaction, "attribute")) &&
+                NULL != (it = attribute_type_get_subtypes(transaction, rootAttributeType, Transitive))) {
                 Concept* concept;
-                while (0 != (concept = concept_iterator_next(it))) {
+                while (NULL != (concept = concept_iterator_next(it))) {
                     char* label = thing_type_get_label(concept);
                     foundName = foundName || (0 == strcmp(label, "name"));
                     free(label);
@@ -383,12 +383,12 @@ bool test_concept_api_data() {
 
         transaction = transaction_new(session, Write, opts);
         if (FAILED()) goto cleanup;
-        if (0 == (nameType = concepts_get_attribute_type(transaction, "name"))) goto cleanup;
+        if (NULL == (nameType = concepts_get_attribute_type(transaction, "name"))) goto cleanup;
         {
             Concept* valueOfJohn = NULL;
             Concept* insertedJohn = NULL;
-            bool success = 0 != (valueOfJohn = value_new_string("John")) &&
-                           0 != (insertedJohn = attribute_type_put(transaction, nameType, valueOfJohn));
+            bool success = NULL != (valueOfJohn = value_new_string("John")) &&
+                           NULL != (insertedJohn = attribute_type_put(transaction, nameType, valueOfJohn));
             concept_drop(insertedJohn);
             concept_drop(valueOfJohn);
             if (!success) goto cleanup;
@@ -400,7 +400,7 @@ bool test_concept_api_data() {
             if (FAILED()) goto cleanup;
 
             Concept* concept;
-            while (0 != (concept = concept_iterator_next(it))) {
+            while (NULL != (concept = concept_iterator_next(it))) {
                 Concept* asValue = attribute_get_value(concept);
                 char* attr = value_get_string(asValue);
                 foundJohn = foundJohn || (0 == strcmp(attr, "John"));
