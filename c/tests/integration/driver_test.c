@@ -209,7 +209,7 @@ bool test_query_data() {
         ConceptMapIterator* it = query_match(transaction, "match $n isa name;", opts);
         ConceptMap* conceptMap;
         bool foundJohn = false;
-        while (NULL != (conceptMap = concept_map_iterator_next(it)) && !check_error()) {
+        while (NULL != (conceptMap = concept_map_iterator_next(it))) {
             Concept* concept = concept_map_get(conceptMap, "n");
             Concept* asValue = attribute_get_value(concept);
             char* attr = value_get_string(asValue);
