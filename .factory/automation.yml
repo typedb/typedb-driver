@@ -216,7 +216,8 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         tool/test/start-core-server.sh
-        bazel test //c/tests:test-driver-lib --test_output=errors
+        bazel test //c/tests:test-driver-lib --test_output=errors &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
