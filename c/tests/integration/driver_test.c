@@ -71,7 +71,7 @@ bool test_database_management() {
     success = true;
 cleanup:
     delete_database_if_exists(databaseManager, databaseName);
-    FAILED(); // Check and print error if needed
+    FAILED();  // Check and print error if needed
     database_manager_drop(databaseManager);
     connection_close(connection);
     return success;
@@ -144,7 +144,7 @@ cleanup:
     options_drop(opts);
 
     delete_database_if_exists(databaseManager, databaseName);
-    FAILED(); // Check and print error if needed
+    FAILED();  // Check and print error if needed
     database_manager_drop(databaseManager);
     connection_close(connection);
     return success;
@@ -238,7 +238,7 @@ cleanup:
     options_drop(opts);
 
     delete_database_if_exists(databaseManager, databaseName);
-    FAILED(); // Check and print error if needed
+    FAILED();  // Check and print error if needed
     database_manager_drop(databaseManager);
     connection_close(connection);
     return success;
@@ -321,7 +321,7 @@ cleanup:
     options_drop(opts);
 
     delete_database_if_exists(databaseManager, databaseName);
-    FAILED(); // Check and print error if needed
+    FAILED();  // Check and print error if needed
     database_manager_drop(databaseManager);
     connection_close(connection);
     return success;
@@ -430,7 +430,7 @@ cleanup:
     options_drop(opts);
 
     delete_database_if_exists(databaseManager, databaseName);
-    FAILED(); // Check and print error if needed 
+    FAILED();  // Check and print error if needed
     database_manager_drop(databaseManager);
     connection_close(connection);
     return success;
