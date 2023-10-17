@@ -19,23 +19,18 @@
  * under the License.
  */
 
-use typedb_driver::{BoxPromise, Promise, Result};
+package com.vaticle.typedb.driver.common;
 
-use crate::{
-    error::{unwrap_or_default, unwrap_void},
-    memory::take_ownership,
-};
+import java.util.function.Supplier;
 
-pub struct VoidPromise(pub BoxPromise<'static, Result<()>>);
+public class Promise<T> {
+    private final Supplier<T> inner;
 
-#[no_mangle]
-pub extern "C" fn void_promise_resolve(promise: *mut VoidPromise) {
-    unwrap_void(take_ownership(promise).0.resolve());
-}
+    public <F extends Supplier<T>> Promise(F inner) {
+        this.inner = inner;
+    }
 
-pub struct BoolPromise(pub BoxPromise<'static, Result<bool>>);
-
-#[no_mangle]
-pub extern "C" fn bool_promise_resolve(promise: *mut BoolPromise) -> bool {
-    unwrap_or_default(take_ownership(promise).0.resolve())
+    public T resolve() {
+        return this.inner.get();
+    }
 }

@@ -26,6 +26,7 @@ import com.eclipsesource.json.JsonObject;
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.Concept;
 import com.vaticle.typedb.driver.common.Label;
+import com.vaticle.typedb.driver.common.Promise;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -102,7 +103,8 @@ public interface Type extends Concept {
      * @param transaction The current transaction
      * @param label The new <code>Label</code> to be given to the type.
      */
-    void setLabel(TypeDBTransaction transaction, String label);
+    @CheckReturnValue
+    Promise<Void> setLabel(TypeDBTransaction transaction, String label);
 
     /**
      * Retrieves the most immediate supertype of the type.
@@ -165,7 +167,8 @@ public interface Type extends Concept {
      *
      * @param transaction The current transaction
      */
-    void delete(TypeDBTransaction transaction);
+    @CheckReturnValue
+    Promise<Void> delete(TypeDBTransaction transaction);
 
     /**
      * Check if the concept has been deleted
@@ -173,5 +176,5 @@ public interface Type extends Concept {
      * @param transaction The current transaction
      */
     @CheckReturnValue
-    boolean isDeleted(TypeDBTransaction transaction);
+    Promise<Boolean> isDeleted(TypeDBTransaction transaction);
 }

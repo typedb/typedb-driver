@@ -27,12 +27,14 @@ import com.vaticle.typedb.driver.api.concept.thing.Thing;
 import com.vaticle.typedb.driver.api.concept.type.AttributeType;
 import com.vaticle.typedb.driver.api.concept.type.RoleType;
 import com.vaticle.typedb.driver.api.concept.type.ThingType.Annotation;
+import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.ConceptImpl;
 import com.vaticle.typedb.driver.concept.type.AttributeTypeImpl;
 import com.vaticle.typedb.driver.concept.type.RoleTypeImpl;
 import com.vaticle.typedb.driver.concept.type.ThingTypeImpl;
 
+import javax.annotation.CheckReturnValue;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -123,36 +125,40 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
     }
 
     @Override
-    public final void setHas(TypeDBTransaction transaction, Attribute attribute) {
+    @CheckReturnValue
+    public final Promise<Void> setHas(TypeDBTransaction transaction, Attribute attribute) {
         try {
-            thing_set_has(nativeTransaction(transaction), nativeObject, ((AttributeImpl) attribute).nativeObject);
+            return new Promise<>(thing_set_has(nativeTransaction(transaction), nativeObject, ((AttributeImpl) attribute).nativeObject));
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public final void unsetHas(TypeDBTransaction transaction, Attribute attribute) {
+    @CheckReturnValue
+    public final Promise<Void> unsetHas(TypeDBTransaction transaction, Attribute attribute) {
         try {
-            thing_unset_has(nativeTransaction(transaction), nativeObject, ((AttributeImpl) attribute).nativeObject);
+            return new Promise<>(thing_unset_has(nativeTransaction(transaction), nativeObject, ((AttributeImpl) attribute).nativeObject));
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public final void delete(TypeDBTransaction transaction) {
+    @CheckReturnValue
+    public final Promise<Void> delete(TypeDBTransaction transaction) {
         try {
-            thing_delete(nativeTransaction(transaction), nativeObject);
+            return new Promise<>(thing_delete(nativeTransaction(transaction), nativeObject));
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public final boolean isDeleted(TypeDBTransaction transaction) {
+    @CheckReturnValue
+    public final Promise<Boolean> isDeleted(TypeDBTransaction transaction) {
         try {
-            return thing_is_deleted(nativeTransaction(transaction), nativeObject);
+            return new Promise<>(thing_is_deleted(nativeTransaction(transaction), nativeObject));
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

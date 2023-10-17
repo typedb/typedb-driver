@@ -87,7 +87,7 @@ public class QuerySteps {
     @Given("typeql define")
     public void typeql_define(String defineQueryStatements) {
         TypeQLDefine typeQLQuery = TypeQL.parseQuery(String.join("\n", defineQueryStatements));
-        tx().query().define(String.join("\n", defineQueryStatements));
+        tx().query().define(String.join("\n", defineQueryStatements)).resolve();
     }
 
     @Given("typeql define; throws exception")
@@ -103,7 +103,7 @@ public class QuerySteps {
     @Given("typeql undefine")
     public void typeql_undefine(String undefineQueryStatements) {
         TypeQLUndefine typeQLQuery = TypeQL.parseQuery(String.join("\n", undefineQueryStatements));
-        tx().query().undefine(String.join("\n", undefineQueryStatements));
+        tx().query().undefine(String.join("\n", undefineQueryStatements)).resolve();
     }
 
     @Given("typeql undefine; throws exception")
@@ -139,7 +139,7 @@ public class QuerySteps {
     @Given("typeql delete")
     public void typeql_delete(String deleteQueryStatements) {
         TypeQLDelete typeQLQuery = TypeQL.parseQuery(String.join("\n", deleteQueryStatements));
-        tx().query().delete(String.join("\n", deleteQueryStatements));
+        tx().query().delete(String.join("\n", deleteQueryStatements)).resolve();
     }
 
     @Given("typeql delete; throws exception")
@@ -210,7 +210,7 @@ public class QuerySteps {
     public void typeql_match_aggregate(String typeQLQueryStatements) {
         TypeQLMatch.Aggregate typeQLQuery = TypeQL.parseQuery(String.join("\n", typeQLQueryStatements)).asMatchAggregate();
         clearAnswers();
-        numericAnswer = tx().query().matchAggregate(String.join("\n", typeQLQueryStatements));
+        numericAnswer = tx().query().matchAggregate(String.join("\n", typeQLQueryStatements)).resolve();
     }
 
     @When("typeql match aggregate; throws exception")

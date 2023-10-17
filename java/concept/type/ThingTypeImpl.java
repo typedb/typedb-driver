@@ -27,10 +27,12 @@ import com.vaticle.typedb.driver.api.concept.type.RoleType;
 import com.vaticle.typedb.driver.api.concept.type.ThingType;
 import com.vaticle.typedb.driver.api.concept.value.Value;
 import com.vaticle.typedb.driver.common.Label;
+import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.thing.ThingImpl;
 import com.vaticle.typeql.lang.common.TypeQLToken;
 
+import javax.annotation.CheckReturnValue;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -99,30 +101,21 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     @Override
-    public void delete(TypeDBTransaction transaction) {
-        try {
-            thing_type_delete(nativeTransaction(transaction), nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    @CheckReturnValue
+    public Promise<Void> delete(TypeDBTransaction transaction) {
+        return new Promise<>(thing_type_delete(nativeTransaction(transaction), nativeObject));
     }
 
     @Override
-    public boolean isDeleted(TypeDBTransaction transaction) {
-        try {
-            return thing_type_is_deleted(nativeTransaction(transaction), nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    @CheckReturnValue
+    public Promise<Boolean> isDeleted(TypeDBTransaction transaction) {
+        return new Promise<>(thing_type_is_deleted(nativeTransaction(transaction), nativeObject));
     }
 
     @Override
-    public final void setLabel(TypeDBTransaction transaction, String newLabel) {
-        try {
-            thing_type_set_label(nativeTransaction(transaction), nativeObject, newLabel);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    @CheckReturnValue
+    public final Promise<Void> setLabel(TypeDBTransaction transaction, String newLabel) {
+        return new Promise<>(thing_type_set_label(nativeTransaction(transaction), nativeObject, newLabel));
     }
 
     @Override
@@ -144,66 +137,46 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     public abstract Stream<? extends ThingImpl> getInstances(TypeDBTransaction transaction, Transitivity transitivity);
 
     @Override
-    public final void setAbstract(TypeDBTransaction transaction) {
-        try {
-            thing_type_set_abstract(nativeTransaction(transaction), nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public final Promise<Void> setAbstract(TypeDBTransaction transaction) {
+        return new Promise<>(thing_type_set_abstract(nativeTransaction(transaction), nativeObject));
     }
 
     @Override
-    public final void unsetAbstract(TypeDBTransaction transaction) {
-        try {
-            thing_type_unset_abstract(nativeTransaction(transaction), nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public final Promise<Void> unsetAbstract(TypeDBTransaction transaction) {
+        return new Promise<>(thing_type_unset_abstract(nativeTransaction(transaction), nativeObject));
     }
 
     @Override
-    public final void setPlays(TypeDBTransaction transaction, RoleType roleType) {
-        try {
-            thing_type_set_plays(nativeTransaction(transaction), nativeObject, ((RoleTypeImpl) roleType).nativeObject, null);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public final Promise<Void> setPlays(TypeDBTransaction transaction, RoleType roleType) {
+        return new Promise<>(thing_type_set_plays(nativeTransaction(transaction), nativeObject, ((RoleTypeImpl) roleType).nativeObject, null));
     }
 
     @Override
-    public final void setPlays(TypeDBTransaction transaction, RoleType roleType, RoleType overriddenRoleType) {
-        try {
-            thing_type_set_plays(nativeTransaction(transaction),
-                    nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((RoleTypeImpl) overriddenRoleType).nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public final Promise<Void> setPlays(TypeDBTransaction transaction, RoleType roleType, RoleType overriddenRoleType) {
+        return new Promise<>(thing_type_set_plays(nativeTransaction(transaction),
+                nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((RoleTypeImpl) overriddenRoleType).nativeObject));
     }
 
     @Override
-    public void setOwns(TypeDBTransaction transaction, AttributeType attributeType) {
-        setOwns(transaction, attributeType, null, emptySet());
+    public Promise<Void> setOwns(TypeDBTransaction transaction, AttributeType attributeType) {
+        return setOwns(transaction, attributeType, null, emptySet());
     }
 
     @Override
-    public void setOwns(TypeDBTransaction transaction, AttributeType attributeType, Set<Annotation> annotations) {
-        setOwns(transaction, attributeType, null, annotations);
+    public Promise<Void> setOwns(TypeDBTransaction transaction, AttributeType attributeType, Set<Annotation> annotations) {
+        return setOwns(transaction, attributeType, null, annotations);
     }
 
     @Override
-    public void setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType) {
-        setOwns(transaction, attributeType, overriddenType, emptySet());
+    public Promise<Void> setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType) {
+        return setOwns(transaction, attributeType, overriddenType, emptySet());
     }
 
     @Override
-    public final void setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType, Set<Annotation> annotations) {
-        try {
-            com.vaticle.typedb.driver.jni.Concept overriddenTypeNative = overriddenType != null ? ((AttributeTypeImpl) overriddenType).nativeObject : null;
-            com.vaticle.typedb.driver.jni.Annotation[] annotationsArray = annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.driver.jni.Annotation[]::new);
-            thing_type_set_owns(nativeTransaction(transaction), nativeObject, ((AttributeTypeImpl) attributeType).nativeObject, overriddenTypeNative, annotationsArray);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public final Promise<Void> setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType, Set<Annotation> annotations) {
+        com.vaticle.typedb.driver.jni.Concept overriddenTypeNative = overriddenType != null ? ((AttributeTypeImpl) overriddenType).nativeObject : null;
+        com.vaticle.typedb.driver.jni.Annotation[] annotationsArray = annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.driver.jni.Annotation[]::new);
+        return new Promise<>(thing_type_set_owns(nativeTransaction(transaction), nativeObject, ((AttributeTypeImpl) attributeType).nativeObject, overriddenTypeNative, annotationsArray));
     }
 
     @Override
@@ -299,22 +272,14 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     @Override
-    public final void unsetOwns(TypeDBTransaction transaction, AttributeType attributeType) {
-        try {
-            thing_type_unset_owns(nativeTransaction(transaction),
-                    nativeObject, ((AttributeTypeImpl) attributeType).nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public final Promise<Void> unsetOwns(TypeDBTransaction transaction, AttributeType attributeType) {
+        return new Promise<>(thing_type_unset_owns(nativeTransaction(transaction),
+                nativeObject, ((AttributeTypeImpl) attributeType).nativeObject));
     }
 
     @Override
-    public final void unsetPlays(TypeDBTransaction transaction, RoleType roleType) {
-        try {
-            thing_type_unset_plays(nativeTransaction(transaction), nativeObject, ((RoleTypeImpl) roleType).nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public final Promise<Void> unsetPlays(TypeDBTransaction transaction, RoleType roleType) {
+        return new Promise<>(thing_type_unset_plays(nativeTransaction(transaction), nativeObject, ((RoleTypeImpl) roleType).nativeObject));
     }
 
     @Override

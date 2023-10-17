@@ -23,6 +23,7 @@ package com.vaticle.typedb.driver.api.concept.type;
 
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.thing.Relation;
+import com.vaticle.typedb.driver.common.Promise;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -154,14 +155,16 @@ public interface RelationType extends ThingType {
      *
      * @see RelationType#setRelates(TypeDBTransaction, String, String)
      */
-    void setRelates(TypeDBTransaction transaction, String roleLabel);
+    @CheckReturnValue
+    Promise<Void> setRelates(TypeDBTransaction transaction, String roleLabel);
 
     /**
      * Sets the new role that this <code>RelationType</code> relates to.
      *
      * @see RelationType#setRelates(TypeDBTransaction, String, String)
      */
-    void setRelates(TypeDBTransaction transaction, String roleLabel, RoleType overriddenType);
+    @CheckReturnValue
+    Promise<Void> setRelates(TypeDBTransaction transaction, String roleLabel, RoleType overriddenType);
 
     /**
      * Sets the new role that this <code>RelationType</code> relates to.
@@ -177,14 +180,16 @@ public interface RelationType extends ThingType {
      * @param roleLabel The new role for the <code>RelationType</code> to relate to
      * @param overriddenLabel The label being overridden, if applicable
      */
-    void setRelates(TypeDBTransaction transaction, String roleLabel, String overriddenLabel);
+    @CheckReturnValue
+    Promise<Void> setRelates(TypeDBTransaction transaction, String roleLabel, String overriddenLabel);
 
     /**
      * Disallows this <code>RelationType</code> from relating to the given role.
      *
      * @see RelationType#unsetRelates(TypeDBTransaction, String)
      */
-    void unsetRelates(TypeDBTransaction transaction, RoleType roleType);
+    @CheckReturnValue
+    Promise<Void> unsetRelates(TypeDBTransaction transaction, RoleType roleType);
 
     /**
      * Disallows this <code>RelationType</code> from relating to the given role.
@@ -197,7 +202,8 @@ public interface RelationType extends ThingType {
      * @param transaction The current transaction
      * @param roleLabel The role to not relate to the relation type.
      */
-    void unsetRelates(TypeDBTransaction transaction, String roleLabel);
+    @CheckReturnValue
+    Promise<Void> unsetRelates(TypeDBTransaction transaction, String roleLabel);
 
     /**
      * Retrieves all direct and indirect subtypes of the <code>RelationType</code>.
@@ -235,5 +241,6 @@ public interface RelationType extends ThingType {
      * @param transaction The current transaction
      * @param superRelationType The <code>RelationType</code> to set as the supertype of this <code>RelationType</code>
      */
-    void setSupertype(TypeDBTransaction transaction, RelationType superRelationType);
+    @CheckReturnValue
+    Promise<Void> setSupertype(TypeDBTransaction transaction, RelationType superRelationType);
 }

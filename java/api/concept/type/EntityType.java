@@ -23,6 +23,7 @@ package com.vaticle.typedb.driver.api.concept.type;
 
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.thing.Entity;
+import com.vaticle.typedb.driver.common.Promise;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
@@ -124,5 +125,6 @@ public interface EntityType extends ThingType {
      * @param transaction The current transaction
      * @param superEntityType The <code>EntityType</code> to set as the supertype of this <code>EntityType</code>
      */
-    void setSupertype(TypeDBTransaction transaction, EntityType superEntityType);
+    @CheckReturnValue
+    Promise<Void> setSupertype(TypeDBTransaction transaction, EntityType superEntityType);
 }

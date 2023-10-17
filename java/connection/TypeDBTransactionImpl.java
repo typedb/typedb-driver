@@ -118,7 +118,7 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.drive
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         try {
             // NOTE: .released() relinquishes ownership of the native object to the Rust side
-            transaction_commit(nativeObject.released());
+            transaction_commit(nativeObject.released()).get();
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -128,7 +128,7 @@ public class TypeDBTransactionImpl extends NativeObject<com.vaticle.typedb.drive
     public void rollback() {
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         try {
-            transaction_rollback(nativeObject);
+            transaction_rollback(nativeObject).get();
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

@@ -86,6 +86,41 @@
     } 
 %}
 
+%define %promise(Type, function_prefix)
+%typemap(javainterfaces) Type ## Promise "java.util.function.Supplier<Type>";
+%typemap(javacode) Type ## Promise %{
+    @Override
+    public Type get() {
+        swigCMemOwn = false;
+        return typedb_driver.function_prefix ## _promise_resolve(this);
+    }
+%}
+%enddef
+
+%promise(Numeric, numeric)
+%promise(Rule, rule)
+
+/* void promises require special handling */
+%typemap(javainterfaces) VoidPromise "java.util.function.Supplier<Void>";
+%typemap(javacode) VoidPromise %{
+    @Override
+    public Void get() {
+        swigCMemOwn = false;
+        typedb_driver.void_promise_resolve(this);
+        return null;
+    }
+%}
+
+/* bool promises require special handling */
+%typemap(javainterfaces) BoolPromise "java.util.function.Supplier<Boolean>";
+%typemap(javacode) BoolPromise %{
+    @Override
+    public Boolean get() {
+        swigCMemOwn = false;
+        return typedb_driver.bool_promise_resolve(this);
+    }
+%}
+
 %define %iterator(Type, function_prefix)
 %typemap(javaimports) Type ## Iterator "
 import java.util.Spliterator;

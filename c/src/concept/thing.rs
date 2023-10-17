@@ -24,7 +24,7 @@ use std::ffi::c_char;
 use typedb_driver::{
     concept::{Annotation, Concept},
     transaction::concept::api::{AttributeAPI, RelationAPI},
-    Promise, Transaction,
+    Transaction,
 };
 
 use super::{
@@ -35,8 +35,9 @@ use super::{
     ConceptIterator, RolePlayerIterator,
 };
 use crate::{
-    error::{try_release, unwrap_or_default, unwrap_void},
+    error::try_release,
     memory::{array_view, borrow, release, release_string},
+    promise::{BoolPromise, VoidPromise},
 };
 
 #[no_mangle]
@@ -70,13 +71,13 @@ pub extern "C" fn attribute_get_value(attribute: *const Concept) -> *mut Concept
 }
 
 #[no_mangle]
-pub extern "C" fn thing_delete(transaction: *mut Transaction<'static>, thing: *mut Concept) {
-    unwrap_void(borrow_as_thing(thing).delete(borrow(transaction)).resolve())
+pub extern "C" fn thing_delete(transaction: *mut Transaction<'static>, thing: *mut Concept) -> *mut VoidPromise {
+    release(VoidPromise(Box::new(borrow_as_thing(thing).delete(borrow(transaction)))))
 }
 
 #[no_mangle]
-pub extern "C" fn thing_is_deleted(transaction: *mut Transaction<'static>, thing: *const Concept) -> bool {
-    unwrap_or_default(borrow_as_thing(thing).is_deleted(borrow(transaction)).resolve())
+pub extern "C" fn thing_is_deleted(transaction: *mut Transaction<'static>, thing: *const Concept) -> *mut BoolPromise {
+    release(BoolPromise(Box::new(borrow_as_thing(thing).is_deleted(borrow(transaction)))))
 }
 
 #[no_mangle]
@@ -98,10 +99,10 @@ pub extern "C" fn thing_set_has(
     transaction: *mut Transaction<'static>,
     thing: *mut Concept,
     attribute: *const Concept,
-) {
+) -> *mut VoidPromise {
     let transaction = borrow(transaction);
     let attribute = borrow_as_attribute(attribute).clone();
-    unwrap_void(borrow_as_thing(thing).set_has(transaction, attribute).resolve())
+    release(VoidPromise(Box::new(borrow_as_thing(thing).set_has(transaction, attribute))))
 }
 
 #[no_mangle]
@@ -109,10 +110,10 @@ pub extern "C" fn thing_unset_has(
     transaction: *mut Transaction<'static>,
     thing: *mut Concept,
     attribute: *const Concept,
-) {
+) -> *mut VoidPromise {
     let transaction = borrow(transaction);
     let attribute = borrow_as_attribute(attribute).clone();
-    unwrap_void(borrow_as_thing(thing).unset_has(transaction, attribute).resolve())
+    release(VoidPromise(Box::new(borrow_as_thing(thing).unset_has(transaction, attribute))))
 }
 
 #[no_mangle]
@@ -141,11 +142,11 @@ pub extern "C" fn relation_add_role_player(
     relation: *mut Concept,
     role_type: *const Concept,
     player: *const Concept,
-) {
+) -> *mut VoidPromise {
     let transaction = borrow(transaction);
     let role_type = borrow_as_role_type(role_type).clone();
     let player = borrow_as_thing(player).to_thing_cloned();
-    unwrap_void(borrow_as_relation(relation).add_role_player(transaction, role_type, player).resolve())
+    release(VoidPromise(Box::new(borrow_as_relation(relation).add_role_player(transaction, role_type, player))))
 }
 
 #[no_mangle]
@@ -154,11 +155,11 @@ pub extern "C" fn relation_remove_role_player(
     relation: *mut Concept,
     role_type: *const Concept,
     player: *const Concept,
-) {
+) -> *mut VoidPromise {
     let transaction = borrow(transaction);
     let role_type = borrow_as_role_type(role_type).clone();
     let player = borrow_as_thing(player).to_thing_cloned();
-    unwrap_void(borrow_as_relation(relation).remove_role_player(transaction, role_type, player).resolve())
+    release(VoidPromise(Box::new(borrow_as_relation(relation).remove_role_player(transaction, role_type, player))))
 }
 
 #[no_mangle]

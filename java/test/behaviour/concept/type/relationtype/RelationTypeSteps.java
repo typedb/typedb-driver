@@ -44,7 +44,7 @@ public class RelationTypeSteps {
 
     @When("relation\\( ?{type_label} ?) set relates role: {type_label}")
     public void relation_type_set_relates_role_type(String relationLabel, String roleLabel) {
-        tx().concepts().getRelationType(relationLabel).setRelates(tx(), roleLabel);
+        tx().concepts().getRelationType(relationLabel).setRelates(tx(), roleLabel).resolve();
     }
 
     @When("relation\\( ?{type_label} ?) set relates role: {type_label}; throws exception")
@@ -54,7 +54,7 @@ public class RelationTypeSteps {
 
     @When("relation\\( ?{type_label} ?) unset related role: {type_label}")
     public void relation_type_unset_related_role_type(String relationLabel, String roleLabel) {
-        tx().concepts().getRelationType(relationLabel).unsetRelates(tx(), roleLabel);
+        tx().concepts().getRelationType(relationLabel).unsetRelates(tx(), roleLabel).resolve();
     }
 
     @When("relation\\( ?{type_label} ?) unset related role: {type_label}; throws exception")
@@ -64,7 +64,7 @@ public class RelationTypeSteps {
 
     @When("relation\\( ?{type_label} ?) set relates role: {type_label} as {type_label}")
     public void relation_type_set_relates_role_type_as(String relationLabel, String roleLabel, String superRole) {
-        tx().concepts().getRelationType(relationLabel).setRelates(tx(), roleLabel, superRole);
+        tx().concepts().getRelationType(relationLabel).setRelates(tx(), roleLabel, superRole).resolve();
     }
 
     @When("relation\\( ?{type_label} ?) set relates role: {type_label} as {type_label}; throws exception")
@@ -74,7 +74,7 @@ public class RelationTypeSteps {
 
     @When("relation\\( ?{type_label} ?) remove related role: {type_label}")
     public void relation_type_remove_related_role(String relationLabel, String roleLabel) {
-        tx().concepts().getRelationType(relationLabel).getRelates(tx(), roleLabel).delete(tx());
+        tx().concepts().getRelationType(relationLabel).getRelates(tx(), roleLabel).delete(tx()).resolve();
     }
 
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) is null: {bool}")
@@ -89,7 +89,7 @@ public class RelationTypeSteps {
 
     @When("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) set label: {type_label}")
     public void relation_type_get_role_type_set_label(String relationLabel, String roleLabel, String newLabel) {
-        tx().concepts().getRelationType(relationLabel).getRelates(tx(), roleLabel).setLabel(tx(), newLabel);
+        tx().concepts().getRelationType(relationLabel).getRelates(tx(), roleLabel).setLabel(tx(), newLabel).resolve();
     }
 
     @Then("relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get label: {type_label}")

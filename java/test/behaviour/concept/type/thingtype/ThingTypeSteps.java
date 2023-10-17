@@ -80,7 +80,7 @@ public class ThingTypeSteps {
 
     @When("delete {root_label} type: {type_label}")
     public void delete_thing_type(RootLabel rootLabel, String typeLabel) {
-        get_thing_type(rootLabel, typeLabel).delete(tx());
+        get_thing_type(rootLabel, typeLabel).delete(tx()).resolve();
     }
 
     @Then("delete {root_label} type: {type_label}; throws exception")
@@ -95,7 +95,7 @@ public class ThingTypeSteps {
 
     @When("{root_label}\\( ?{type_label} ?) set label: {type_label}")
     public void thing_type_set_label(RootLabel rootLabel, String typeLabel, String newLabel) {
-        get_thing_type(rootLabel, typeLabel).setLabel(tx(), newLabel);
+        get_thing_type(rootLabel, typeLabel).setLabel(tx(), newLabel).resolve();
     }
 
     @Then("{root_label}\\( ?{type_label} ?) get label: {type_label}")
@@ -107,9 +107,9 @@ public class ThingTypeSteps {
     public void thing_type_set_abstract(RootLabel rootLabel, String typeLabel, boolean isAbstract) {
         ThingType thingType = get_thing_type(rootLabel, typeLabel);
         if (isAbstract) {
-            thingType.setAbstract(tx());
+            thingType.setAbstract(tx()).resolve();
         } else {
-            thingType.unsetAbstract(tx());
+            thingType.unsetAbstract(tx()).resolve();
         }
     }
 
@@ -128,15 +128,15 @@ public class ThingTypeSteps {
         switch (rootLabel) {
             case ENTITY:
                 EntityType entitySuperType = tx().concepts().getEntityType(superLabel);
-                tx().concepts().getEntityType(typeLabel).setSupertype(tx(), entitySuperType);
+                tx().concepts().getEntityType(typeLabel).setSupertype(tx(), entitySuperType).resolve();
                 break;
             case ATTRIBUTE:
                 AttributeType attributeSuperType = tx().concepts().getAttributeType(superLabel);
-                tx().concepts().getAttributeType(typeLabel).setSupertype(tx(), attributeSuperType);
+                tx().concepts().getAttributeType(typeLabel).setSupertype(tx(), attributeSuperType).resolve();
                 break;
             case RELATION:
                 RelationType relationSuperType = tx().concepts().getRelationType(superLabel);
-                tx().concepts().getRelationType(typeLabel).setSupertype(tx(), relationSuperType);
+                tx().concepts().getRelationType(typeLabel).setSupertype(tx(), relationSuperType).resolve();
                 break;
             case THING:
                 throw new IllegalArgumentException(ILLEGAL_ARGUMENT);
@@ -186,14 +186,14 @@ public class ThingTypeSteps {
     @When("{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label}, with annotations: {annotations}")
     public void thing_type_set_owns_attribute_type_with_annotations(RootLabel rootLabel, String typeLabel, String attTypeLabel, List<Annotation> annotations) {
         AttributeType attributeType = tx().concepts().getAttributeType(attTypeLabel);
-        get_thing_type(rootLabel, typeLabel).setOwns(tx(), attributeType, set(annotations));
+        get_thing_type(rootLabel, typeLabel).setOwns(tx(), attributeType, set(annotations)).resolve();
     }
 
     @When("{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label} as {type_label}, with annotations: {annotations}")
     public void thing_type_set_owns_attribute_type_as_type_with_annotations(RootLabel rootLabel, String typeLabel, String attTypeLabel, String overriddenLabel, List<Annotation> annotations) {
         AttributeType attributeType = tx().concepts().getAttributeType(attTypeLabel);
         AttributeType overriddenType = tx().concepts().getAttributeType(overriddenLabel);
-        get_thing_type(rootLabel, typeLabel).setOwns(tx(), attributeType, overriddenType, set(annotations));
+        get_thing_type(rootLabel, typeLabel).setOwns(tx(), attributeType, overriddenType, set(annotations)).resolve();
     }
 
     @Then("{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label}, with annotations: {annotations}; throws exception")
@@ -237,7 +237,7 @@ public class ThingTypeSteps {
     @When("{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label}")
     public void thing_type_set_owns_attribute_type(RootLabel rootLabel, String typeLabel, String attributeLabel) {
         AttributeType attributeType = tx().concepts().getAttributeType(attributeLabel);
-        get_thing_type(rootLabel, typeLabel).setOwns(tx(), attributeType);
+        get_thing_type(rootLabel, typeLabel).setOwns(tx(), attributeType).resolve();
     }
 
     @Then("{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label}; throws exception")
@@ -249,7 +249,7 @@ public class ThingTypeSteps {
     public void thing_type_set_owns_attribute_type_as(RootLabel rootLabel, String typeLabel, String attributeLabel, String overriddenLabel) {
         AttributeType attributeType = tx().concepts().getAttributeType(attributeLabel);
         AttributeType overriddenType = tx().concepts().getAttributeType(overriddenLabel);
-        get_thing_type(rootLabel, typeLabel).setOwns(tx(), attributeType, overriddenType);
+        get_thing_type(rootLabel, typeLabel).setOwns(tx(), attributeType, overriddenType).resolve();
     }
 
     @Then("{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label} as {type_label}; throws exception")
@@ -260,7 +260,7 @@ public class ThingTypeSteps {
     @When("{root_label}\\( ?{type_label} ?) unset owns attribute type: {type_label}")
     public void thing_type_unset_owns_attribute_type(RootLabel rootLabel, String typeLabel, String attributeLabel) {
         AttributeType attributeType = tx().concepts().getAttributeType(attributeLabel);
-        get_thing_type(rootLabel, typeLabel).unsetOwns(tx(), attributeType);
+        get_thing_type(rootLabel, typeLabel).unsetOwns(tx(), attributeType).resolve();
     }
 
     @When("{root_label}\\( ?{type_label} ?) unset owns attribute type: {type_label}; throws exception")
@@ -309,7 +309,7 @@ public class ThingTypeSteps {
     @When("{root_label}\\( ?{type_label} ?) set plays role: {scoped_label}")
     public void thing_type_set_plays_role(RootLabel rootLabel, String typeLabel, Label roleLabel) {
         RoleType roleType = tx().concepts().getRelationType(roleLabel.scope().get()).getRelates(tx(), roleLabel.name());
-        get_thing_type(rootLabel, typeLabel).setPlays(tx(), roleType);
+        get_thing_type(rootLabel, typeLabel).setPlays(tx(), roleType).resolve();
     }
 
     @When("{root_label}\\( ?{type_label} ?) set plays role: {scoped_label}; throws exception")
@@ -321,7 +321,7 @@ public class ThingTypeSteps {
     public void thing_type_set_plays_role_as(RootLabel rootLabel, String typeLabel, Label roleLabel, Label overriddenLabel) {
         RoleType roleType = tx().concepts().getRelationType(roleLabel.scope().get()).getRelates(tx(), roleLabel.name());
         RoleType overriddenType = tx().concepts().getRelationType(overriddenLabel.scope().get()).getRelates(tx(), overriddenLabel.name());
-        get_thing_type(rootLabel, typeLabel).setPlays(tx(), roleType, overriddenType);
+        get_thing_type(rootLabel, typeLabel).setPlays(tx(), roleType, overriddenType).resolve();
     }
 
     @When("{root_label}\\( ?{type_label} ?) set plays role: {scoped_label} as {scoped_label}; throws exception")
@@ -332,7 +332,7 @@ public class ThingTypeSteps {
     @When("{root_label}\\( ?{type_label} ?) unset plays role: {scoped_label}")
     public void thing_type_unset_plays_role(RootLabel rootLabel, String typeLabel, Label roleLabel) {
         RoleType roleType = tx().concepts().getRelationType(roleLabel.scope().get()).getRelates(tx(), roleLabel.name());
-        get_thing_type(rootLabel, typeLabel).unsetPlays(tx(), roleType);
+        get_thing_type(rootLabel, typeLabel).unsetPlays(tx(), roleType).resolve();
     }
 
     @When("{root_label}\\( ?{type_label} ?) unset plays role: {scoped_label}; throws exception")

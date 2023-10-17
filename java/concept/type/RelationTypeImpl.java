@@ -24,9 +24,11 @@ package com.vaticle.typedb.driver.concept.type;
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.type.RelationType;
 import com.vaticle.typedb.driver.api.concept.type.RoleType;
+import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.thing.RelationImpl;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
@@ -57,9 +59,10 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     }
 
     @Override
-    public final void setSupertype(TypeDBTransaction transaction, RelationType relationType) {
+    @CheckReturnValue
+    public final Promise<Void> setSupertype(TypeDBTransaction transaction, RelationType relationType) {
         try {
-            relation_type_set_supertype(nativeTransaction(transaction), nativeObject, ((RelationTypeImpl) relationType).nativeObject);
+            return new Promise<>(relation_type_set_supertype(nativeTransaction(transaction), nativeObject, ((RelationTypeImpl) relationType).nativeObject));
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -108,37 +111,42 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     }
 
     @Override
-    public final void setRelates(TypeDBTransaction transaction, String roleLabel) {
-        setRelates(transaction, roleLabel, (String) null);
+    @CheckReturnValue
+    public final Promise<Void> setRelates(TypeDBTransaction transaction, String roleLabel) {
+        return setRelates(transaction, roleLabel, (String) null);
     }
 
     @Override
-    public void setRelates(TypeDBTransaction transaction, String roleLabel, RoleType overriddenType) {
-        setRelates(transaction, roleLabel, overriddenType.getLabel().name());
+    @CheckReturnValue
+    public Promise<Void> setRelates(TypeDBTransaction transaction, String roleLabel, RoleType overriddenType) {
+        return setRelates(transaction, roleLabel, overriddenType.getLabel().name());
     }
 
     @Override
-    public final void setRelates(TypeDBTransaction transaction, String roleLabel, String overriddenLabel) {
+    @CheckReturnValue
+    public final Promise<Void> setRelates(TypeDBTransaction transaction, String roleLabel, String overriddenLabel) {
         try {
-            relation_type_set_relates(nativeTransaction(transaction), nativeObject, roleLabel, overriddenLabel);
+            return new Promise<>(relation_type_set_relates(nativeTransaction(transaction), nativeObject, roleLabel, overriddenLabel));
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public void unsetRelates(TypeDBTransaction transaction, RoleType roleType) {
+    @CheckReturnValue
+    public Promise<Void> unsetRelates(TypeDBTransaction transaction, RoleType roleType) {
         try {
-            relation_type_unset_relates(nativeTransaction(transaction), nativeObject, roleType.getLabel().name());
+            return new Promise<>(relation_type_unset_relates(nativeTransaction(transaction), nativeObject, roleType.getLabel().name()));
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public final void unsetRelates(TypeDBTransaction transaction, String roleLabel) {
+    @CheckReturnValue
+    public final Promise<Void> unsetRelates(TypeDBTransaction transaction, String roleLabel) {
         try {
-            relation_type_unset_relates(nativeTransaction(transaction), nativeObject, roleLabel);
+            return new Promise<>(relation_type_unset_relates(nativeTransaction(transaction), nativeObject, roleLabel));
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

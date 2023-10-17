@@ -23,6 +23,7 @@ package com.vaticle.typedb.driver.concept.type;
 
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.type.EntityType;
+import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.thing.EntityImpl;
 
@@ -51,9 +52,9 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     }
 
     @Override
-    public final void setSupertype(TypeDBTransaction transaction, EntityType entityType) {
+    public final Promise<Void> setSupertype(TypeDBTransaction transaction, EntityType entityType) {
         try {
-            entity_type_set_supertype(nativeTransaction(transaction), nativeObject, ((EntityTypeImpl) entityType).nativeObject);
+            return new Promise<>(entity_type_set_supertype(nativeTransaction(transaction), nativeObject, ((EntityTypeImpl) entityType).nativeObject));
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

@@ -24,6 +24,7 @@ package com.vaticle.typedb.driver.api.concept.type;
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.value.Value;
 import com.vaticle.typedb.driver.api.concept.thing.Attribute;
+import com.vaticle.typedb.driver.common.Promise;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -268,7 +269,8 @@ public interface AttributeType extends ThingType {
      * @param transaction The current transaction
      * @param regex Regular expression
      */
-    void setRegex(TypeDBTransaction transaction, String regex);
+    @CheckReturnValue
+    Promise<Void> setRegex(TypeDBTransaction transaction, String regex);
 
     /**
      * Removes the regular expression that is defined for this <code>AttributeType</code>.
@@ -280,7 +282,8 @@ public interface AttributeType extends ThingType {
      *
      * @param transaction The current transaction
      */
-    void unsetRegex(TypeDBTransaction transaction);
+    @CheckReturnValue
+    Promise<Void> unsetRegex(TypeDBTransaction transaction);
 
     /**
      * Returns <code>True</code> if the value for attributes of this type is of type <code>boolean</code>.
@@ -363,7 +366,8 @@ public interface AttributeType extends ThingType {
      * @param transaction The current transaction
      * @param attributeType The <code>AttributeType</code> to set as the supertype of this <code>AttributeType</code>
      */
-    void setSupertype(TypeDBTransaction transaction, AttributeType attributeType);
+    @CheckReturnValue
+    Promise<Void> setSupertype(TypeDBTransaction transaction, AttributeType attributeType);
 
     /**
      * Retrieves all direct and indirect subtypes of this <code>AttributeType</code>.

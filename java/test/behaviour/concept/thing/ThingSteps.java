@@ -61,7 +61,7 @@ public class ThingSteps {
 
     @Then("entity/attribute/relation {var} is deleted: {bool}")
     public void thing_is_deleted(String var, boolean isDeleted) {
-        assertEquals(isDeleted, get(var).isDeleted(tx()));
+        assertEquals(isDeleted, get(var).isDeleted(tx()).resolve());
     }
 
     @Then("{root_label} {var} has type: {type_label}")
@@ -72,22 +72,22 @@ public class ThingSteps {
 
     @When("delete entity:/attribute:/relation: {var}")
     public void delete_thing(String var) {
-        get(var).delete(tx());
+        get(var).delete(tx()).resolve();
     }
 
     @When("entity/attribute/relation {var} set has: {var}")
     public void thing_set_has(String var1, String var2) {
-        get(var1).setHas(tx(), get(var2).asAttribute());
+        get(var1).setHas(tx(), get(var2).asAttribute()).resolve();
     }
 
     @Then("entity/attribute/relation {var} set has: {var}; throws exception")
     public void thing_set_has_throws_exception(String var1, String var2) {
-        assertThrows(() -> get(var1).setHas(tx(), get(var2).asAttribute()));
+        assertThrows(() -> get(var1).setHas(tx(), get(var2).asAttribute()).resolve());
     }
 
     @When("entity/attribute/relation {var} unset has: {var}")
     public void thing_unset_has(String var1, String var2) {
-        get(var1).unsetHas(tx(), get(var2).asAttribute());
+        get(var1).unsetHas(tx(), get(var2).asAttribute()).resolve();
     }
 
     @Then("entity/attribute/relation {var} get keys contain: {var}")

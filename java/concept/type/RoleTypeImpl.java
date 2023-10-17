@@ -25,10 +25,12 @@ import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.type.RelationType;
 import com.vaticle.typedb.driver.api.concept.type.RoleType;
 import com.vaticle.typedb.driver.common.Label;
+import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.thing.RelationImpl;
 import com.vaticle.typedb.driver.concept.thing.ThingImpl;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
@@ -69,27 +71,30 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
     }
 
     @Override
-    public final void delete(TypeDBTransaction transaction) {
+    @CheckReturnValue
+    public final Promise<Void> delete(TypeDBTransaction transaction) {
         try {
-            role_type_delete(nativeTransaction(transaction), nativeObject);
+            return new Promise<>(role_type_delete(nativeTransaction(transaction), nativeObject));
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public final boolean isDeleted(TypeDBTransaction transaction) {
+    @CheckReturnValue
+    public final Promise<Boolean> isDeleted(TypeDBTransaction transaction) {
         try {
-            return role_type_is_deleted(nativeTransaction(transaction), nativeObject);
+            return new Promise<>(role_type_is_deleted(nativeTransaction(transaction), nativeObject));
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public final void setLabel(TypeDBTransaction transaction, String newLabel) {
+    @CheckReturnValue
+    public final Promise<Void> setLabel(TypeDBTransaction transaction, String newLabel) {
         try {
-            role_type_set_label(nativeTransaction(transaction), nativeObject, newLabel);
+            return new Promise<>(role_type_set_label(nativeTransaction(transaction), nativeObject, newLabel));
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

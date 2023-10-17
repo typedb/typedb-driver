@@ -25,6 +25,7 @@ import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.thing.Thing;
 import com.vaticle.typedb.driver.api.concept.value.Value;
 import com.vaticle.typedb.driver.common.NativeObject;
+import com.vaticle.typedb.driver.common.Promise;
 
 import javax.annotation.CheckReturnValue;
 import java.util.Objects;
@@ -119,8 +120,10 @@ public interface ThingType extends Type {
      * </pre>
      *
      * @param transaction The current transaction
+     * @return
      */
-    void setAbstract(TypeDBTransaction transaction);
+    @CheckReturnValue
+    Promise<Void> setAbstract(TypeDBTransaction transaction);
 
     /**
      * Set a <code>ThingType</code> to be non-abstract, meaning it can have instances.
@@ -132,14 +135,16 @@ public interface ThingType extends Type {
      *
      * @param transaction The current transaction
      */
-    void unsetAbstract(TypeDBTransaction transaction);
+    @CheckReturnValue
+    Promise<Void> unsetAbstract(TypeDBTransaction transaction);
 
     /**
      * Allows the instances of this <code>ThingType</code> to play the given role.
      *
      * @see ThingType#setPlays(TypeDBTransaction, RoleType, RoleType)
      */
-    void setPlays(TypeDBTransaction transaction, RoleType roleType);
+    @CheckReturnValue
+    Promise<Void> setPlays(TypeDBTransaction transaction, RoleType roleType);
 
     /**
      * Allows the instances of this <code>ThingType</code> to play the given role.
@@ -154,7 +159,8 @@ public interface ThingType extends Type {
      * @param roleType The role to be played by the instances of this type
      * @param overriddenType The role type that this role overrides, if applicable
      */
-    void setPlays(TypeDBTransaction transaction, RoleType roleType, RoleType overriddenType);
+    @CheckReturnValue
+    Promise<Void> setPlays(TypeDBTransaction transaction, RoleType roleType, RoleType overriddenType);
 
     /**
      * Allows the instances of this <code>ThingType</code> to own the given <code>AttributeType</code>.
@@ -172,28 +178,32 @@ public interface ThingType extends Type {
      * @param overriddenType The <code>AttributeType</code> that this attribute ownership overrides, if applicable.
      * @param annotations Adds annotations to the ownership.
      */
-    void setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType, Set<Annotation> annotations);
+    @CheckReturnValue
+    Promise<Void> setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType, Set<Annotation> annotations);
 
     /**
      * Allows the instances of this <code>ThingType</code> to own the given <code>AttributeType</code>,
      *
      * @see ThingType#setOwns(TypeDBTransaction, AttributeType, AttributeType, Set)
      */
-     void setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType);
+    @CheckReturnValue
+     Promise<Void> setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType);
 
     /**
      * Allows the instances of this <code>ThingType</code> to own the given <code>AttributeType</code>.
      *
      * @see ThingType#setOwns(TypeDBTransaction, AttributeType, AttributeType, Set)
      */
-    void setOwns(TypeDBTransaction transaction, AttributeType attributeType, Set<Annotation> annotations);
+    @CheckReturnValue
+    Promise<Void> setOwns(TypeDBTransaction transaction, AttributeType attributeType, Set<Annotation> annotations);
 
     /**
      * Allows the instances of this <code>ThingType</code> to own the given <code>AttributeType</code>.
      *
      * @see ThingType#setOwns(TypeDBTransaction, AttributeType, AttributeType, Set)
      */
-    void setOwns(TypeDBTransaction transaction, AttributeType attributeType);
+    @CheckReturnValue
+    Promise<Void> setOwns(TypeDBTransaction transaction, AttributeType attributeType);
 
     /**
      * Retrieves all direct and inherited roles that are allowed
@@ -342,7 +352,8 @@ public interface ThingType extends Type {
      * @param transaction The current transaction
      * @param roleType The role to not be played by the instances of this type.
      */
-    void unsetPlays(TypeDBTransaction transaction, RoleType roleType);
+    @CheckReturnValue
+    Promise<Void> unsetPlays(TypeDBTransaction transaction, RoleType roleType);
 
     /**
      * Disallows the instances of this <code>ThingType</code> from owning the given <code>AttributeType</code>.
@@ -355,7 +366,8 @@ public interface ThingType extends Type {
      * @param transaction The current transaction
      * @param attributeType The <code>AttributeType</code> to not be owned by the type.
      */
-    void unsetOwns(TypeDBTransaction transaction, AttributeType attributeType);
+    @CheckReturnValue
+    Promise<Void> unsetOwns(TypeDBTransaction transaction, AttributeType attributeType);
 
     /**
      * Produces a pattern for creating this <code>ThingType</code> in a <code>define</code> query.

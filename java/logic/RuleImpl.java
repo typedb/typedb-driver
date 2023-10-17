@@ -24,12 +24,14 @@ package com.vaticle.typedb.driver.logic;
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.logic.Rule;
 import com.vaticle.typedb.driver.common.NativeObject;
+import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
-import com.vaticle.typedb.driver.concept.ConceptManagerImpl;
 import com.vaticle.typeql.lang.TypeQL;
 import com.vaticle.typeql.lang.pattern.Conjunction;
 import com.vaticle.typeql.lang.pattern.Pattern;
 import com.vaticle.typeql.lang.pattern.variable.ThingVariable;
+
+import javax.annotation.CheckReturnValue;
 
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.TRANSACTION_CLOSED;
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Concept.MISSING_LABEL;
@@ -69,28 +71,31 @@ public class RuleImpl extends NativeObject<com.vaticle.typedb.driver.jni.Rule> i
     }
 
     @Override
-    public void setLabel(TypeDBTransaction transaction, String newLabel) {
+    @CheckReturnValue
+    public Promise<Void> setLabel(TypeDBTransaction transaction, String newLabel) {
         if (newLabel == null || newLabel.isEmpty()) throw new TypeDBDriverException(MISSING_LABEL);
         try {
-            rule_set_label(nativeTransaction(transaction), nativeObject, newLabel);
+            return new Promise<>(rule_set_label(nativeTransaction(transaction), nativeObject, newLabel));
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public void delete(TypeDBTransaction transaction) {
+    @CheckReturnValue
+    public Promise<Void> delete(TypeDBTransaction transaction) {
         try {
-            rule_delete(nativeTransaction(transaction), nativeObject);
+            return new Promise<>(rule_delete(nativeTransaction(transaction), nativeObject));
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public final boolean isDeleted(TypeDBTransaction transaction) {
+    @CheckReturnValue
+    public final Promise<Boolean> isDeleted(TypeDBTransaction transaction) {
         try {
-            return rule_is_deleted(nativeTransaction(transaction), nativeObject);
+            return new Promise<>(rule_is_deleted(nativeTransaction(transaction), nativeObject));
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

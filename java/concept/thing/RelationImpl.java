@@ -25,6 +25,7 @@ import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.thing.Relation;
 import com.vaticle.typedb.driver.api.concept.thing.Thing;
 import com.vaticle.typedb.driver.api.concept.type.RoleType;
+import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.type.RelationTypeImpl;
 import com.vaticle.typedb.driver.concept.type.RoleTypeImpl;
@@ -58,20 +59,20 @@ public class RelationImpl extends ThingImpl implements Relation {
     }
 
     @Override
-    public void addPlayer(TypeDBTransaction transaction, RoleType roleType, Thing player) {
+    public Promise<Void> addPlayer(TypeDBTransaction transaction, RoleType roleType, Thing player) {
         try {
-            relation_add_role_player(nativeTransaction(transaction),
-                nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((ThingImpl) player).nativeObject);
+            return new Promise<>(relation_add_role_player(nativeTransaction(transaction),
+                nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((ThingImpl) player).nativeObject));
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public void removePlayer(TypeDBTransaction transaction, RoleType roleType, Thing player) {
+    public Promise<Void> removePlayer(TypeDBTransaction transaction, RoleType roleType, Thing player) {
         try {
-            relation_remove_role_player(nativeTransaction(transaction),
-                nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((ThingImpl) player).nativeObject);
+            return new Promise<>(relation_remove_role_player(nativeTransaction(transaction),
+                nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((ThingImpl) player).nativeObject));
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

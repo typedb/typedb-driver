@@ -19,7 +19,7 @@
  * under the License.
  */
 
-pub type BoxPromise<'a, T> = Box<dyn Promise<'a, T> + 'a>;
+pub type BoxPromise<'a, T> = Box<dyn FnOnce() -> T + 'a>;
 
 pub fn box_promise<'a, T>(promise: impl Promise<'a, T> + 'a) -> BoxPromise<'a, T> {
     Box::new(promise)

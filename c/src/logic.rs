@@ -21,12 +21,18 @@
 
 use std::{ffi::c_char, ptr::addr_of_mut};
 
-use typedb_driver::{box_stream, logic::Rule, transaction::logic::api::RuleAPI, Promise, Result, Transaction};
+use typedb_driver::{
+    box_stream, logic::Rule, transaction::logic::api::RuleAPI, BoxPromise, Error, Promise, Result, Transaction,
+};
 
 use super::{
-    error::{try_release, try_release_optional, unwrap_or_default, unwrap_void},
+    error::{try_release, try_release_optional},
     iterator::{iterator_try_next, CIterator},
     memory::{borrow, borrow_mut, free, release_string, string_view},
+};
+use crate::{
+    memory::{release, take_ownership},
+    promise::{BoolPromise, VoidPromise},
 };
 
 #[no_mangle]
@@ -55,18 +61,29 @@ pub extern "C" fn rule_get_then(rule: *const Rule) -> *mut c_char {
 }
 
 #[no_mangle]
-pub extern "C" fn rule_set_label(transaction: *const Transaction<'static>, rule: *mut Rule, new_label: *const c_char) {
-    unwrap_void(borrow_mut(rule).set_label(borrow(transaction), string_view(new_label).to_owned()).resolve());
+pub extern "C" fn rule_set_label(
+    transaction: *const Transaction<'static>,
+    rule: *mut Rule,
+    new_label: *const c_char,
+) -> *mut VoidPromise {
+    release(VoidPromise(Box::new(borrow_mut(rule).set_label(borrow(transaction), string_view(new_label).to_owned()))))
 }
 
 #[no_mangle]
-pub extern "C" fn rule_delete(transaction: *const Transaction<'static>, rule: *mut Rule) {
-    unwrap_void(borrow_mut(rule).delete(borrow(transaction)).resolve());
+pub extern "C" fn rule_delete(transaction: *const Transaction<'static>, rule: *mut Rule) -> *mut VoidPromise {
+    release(VoidPromise(Box::new(borrow_mut(rule).delete(borrow(transaction)))))
 }
 
 #[no_mangle]
-pub extern "C" fn rule_is_deleted(transaction: *const Transaction<'static>, rule: *mut Rule) -> bool {
-    unwrap_or_default(borrow_mut(rule).is_deleted(borrow(transaction)).resolve())
+pub extern "C" fn rule_is_deleted(transaction: *const Transaction<'static>, rule: *mut Rule) -> *mut BoolPromise {
+    release(BoolPromise(Box::new(borrow_mut(rule).is_deleted(borrow(transaction)))))
+}
+
+pub struct RulePromise(BoxPromise<'static, Result<Option<Rule>>>);
+
+#[no_mangle]
+pub extern "C" fn rule_promise_resolve(promise: *mut RulePromise) -> *mut Rule {
+    try_release_optional(take_ownership(promise).0.resolve().transpose())
 }
 
 #[no_mangle]
@@ -75,22 +92,23 @@ pub extern "C" fn logic_manager_put_rule(
     label: *const c_char,
     when: *const c_char,
     then: *const c_char,
-) -> *mut Rule {
-    try_release((|| {
-        borrow(transaction)
-            .logic()
-            .put_rule(
-                string_view(label).to_owned(),
-                typeql::parse_pattern(string_view(when))?.into_conjunction(),
-                typeql::parse_variable(string_view(then))?,
-            )
-            .resolve()
-    })())
+) -> *mut RulePromise {
+    let promise = (move || {
+        Ok::<_, Error>(borrow(transaction).logic().put_rule(
+            string_view(label).to_owned(),
+            typeql::parse_pattern(string_view(when))?.into_conjunction(),
+            typeql::parse_variable(string_view(then))?,
+        ))
+    })();
+    release(RulePromise(Box::new(|| promise?.resolve().map(Some))))
 }
 
 #[no_mangle]
-pub extern "C" fn logic_manager_get_rule(transaction: *mut Transaction<'static>, label: *mut c_char) -> *mut Rule {
-    try_release_optional(borrow(transaction).logic().get_rule(string_view(label).to_owned()).resolve().transpose())
+pub extern "C" fn logic_manager_get_rule(
+    transaction: *mut Transaction<'static>,
+    label: *mut c_char,
+) -> *mut RulePromise {
+    release(RulePromise(Box::new(borrow(transaction).logic().get_rule(string_view(label).to_owned()))))
 }
 
 pub struct RuleIterator(CIterator<Result<Rule>>);

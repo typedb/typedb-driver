@@ -23,10 +23,11 @@ package com.vaticle.typedb.driver.logic;
 
 import com.vaticle.typedb.driver.api.logic.LogicManager;
 import com.vaticle.typedb.driver.api.logic.Rule;
+import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typeql.lang.pattern.Pattern;
 
-import javax.annotation.Nullable;
+import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.TRANSACTION_CLOSED;
@@ -43,14 +44,17 @@ public final class LogicManagerImpl implements LogicManager {
     }
 
     @Override
-    @Nullable
-    public Rule getRule(String label) {
+    @CheckReturnValue
+    public Promise<Rule> getRule(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBDriverException(MISSING_LABEL);
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         try {
-            com.vaticle.typedb.driver.jni.Rule res = logic_manager_get_rule(nativeTransaction, label);
-            if (res != null) return new RuleImpl(res);
-            else return null;
+            com.vaticle.typedb.driver.jni.RulePromise promise = logic_manager_get_rule(nativeTransaction, label);
+            return new Promise<>(() -> {
+                com.vaticle.typedb.driver.jni.Rule res = promise.get();
+                if (res != null) return new RuleImpl(res);
+                else return null;
+            });
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -67,11 +71,13 @@ public final class LogicManagerImpl implements LogicManager {
     }
 
     @Override
-    public Rule putRule(String label, Pattern when, Pattern then) {
+    @CheckReturnValue
+    public Promise<Rule> putRule(String label, Pattern when, Pattern then) {
         if (label == null || label.isEmpty()) throw new TypeDBDriverException(MISSING_LABEL);
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         try {
-            return new RuleImpl(logic_manager_put_rule(nativeTransaction, label, when.toString(), then.toString()));
+            com.vaticle.typedb.driver.jni.RulePromise promise = logic_manager_put_rule(nativeTransaction, label, when.toString(), then.toString());
+            return new Promise<>(() -> new RuleImpl(promise.get()));
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

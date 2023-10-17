@@ -25,6 +25,7 @@ import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.value.Value;
 import com.vaticle.typedb.driver.api.concept.thing.Attribute;
 import com.vaticle.typedb.driver.api.concept.type.AttributeType;
+import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.value.ValueImpl;
 import com.vaticle.typedb.driver.concept.thing.AttributeImpl;
@@ -61,10 +62,10 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     }
 
     @Override
-    public final void setSupertype(TypeDBTransaction transaction, AttributeType attributeType) {
+    public final Promise<Void> setSupertype(TypeDBTransaction transaction, AttributeType attributeType) {
         try {
-            attribute_type_set_supertype(nativeTransaction(transaction),
-                nativeObject, ((AttributeTypeImpl) attributeType).nativeObject);
+            return new Promise<>(attribute_type_set_supertype(nativeTransaction(transaction),
+                nativeObject, ((AttributeTypeImpl) attributeType).nativeObject));
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -246,18 +247,18 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
     }
 
     @Override
-    public void setRegex(TypeDBTransaction transaction, String regex) {
+    public Promise<Void> setRegex(TypeDBTransaction transaction, String regex) {
         try {
-            attribute_type_set_regex(nativeTransaction(transaction), nativeObject, regex);
+            return new Promise<>(attribute_type_set_regex(nativeTransaction(transaction), nativeObject, regex));
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public void unsetRegex(TypeDBTransaction transaction) {
+    public Promise<Void> unsetRegex(TypeDBTransaction transaction) {
         try {
-            attribute_type_unset_regex(nativeTransaction(transaction), nativeObject);
+            return new Promise<>(attribute_type_unset_regex(nativeTransaction(transaction), nativeObject));
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

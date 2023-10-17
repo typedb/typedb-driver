@@ -39,6 +39,7 @@ java_library(
         "@vaticle_typeql//java/query",
 
         # External dependencies from Maven
+        "@maven//:com_google_code_findbugs_jsr305",
     ],
 )
 
