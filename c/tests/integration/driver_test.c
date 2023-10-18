@@ -278,7 +278,8 @@ bool test_concept_api_schema() {
         transaction = transaction_new(session, Write, opts);
         if (FAILED()) goto cleanup;
         {
-            Concept* definedNameType = concepts_put_attribute_type(transaction, "name", String);
+            Concept* definedNameType =
+                concept_promise_resolve(concepts_put_attribute_type(transaction, "name", String));
             if (FAILED()) goto cleanup;
             else concept_drop(definedNameType);
         }
@@ -288,10 +289,9 @@ bool test_concept_api_schema() {
             Concept* nameType = NULL;
             Concept* rootAttributeType = NULL;
             bool foundName = false;
-            if (
-                NULL != (nameType = concepts_get_attribute_type(transaction, "name")) &&
-                NULL != (rootAttributeType = concepts_get_attribute_type(transaction, "attribute")) &&
-                NULL != (it = attribute_type_get_subtypes(transaction, rootAttributeType, Transitive))) {
+            if (NULL != (nameType = concept_promise_resolve(concepts_get_attribute_type(transaction, "name"))) &&
+                NULL != (rootAttributeType = concepts_get_root_attribute_type()) &&
+                NULL != (it = (attribute_type_get_subtypes(transaction, rootAttributeType, Transitive)))) {
                 Concept* concept;
                 while (NULL != (concept = concept_iterator_next(it))) {
                     char* label = thing_type_get_label(concept);
@@ -364,7 +364,8 @@ bool test_concept_api_data() {
         if (FAILED()) goto cleanup;
 
         {
-            Concept* definedNameType = concepts_put_attribute_type(transaction, "name", String);
+            Concept* definedNameType =
+                concept_promise_resolve(concepts_put_attribute_type(transaction, "name", String));
             if (FAILED()) goto cleanup;
             else concept_drop(definedNameType);
         }
@@ -383,12 +384,15 @@ bool test_concept_api_data() {
 
         transaction = transaction_new(session, Write, opts);
         if (FAILED()) goto cleanup;
-        if (NULL == (nameType = concepts_get_attribute_type(transaction, "name"))) goto cleanup;
+        if (NULL == (nameType = concept_promise_resolve(concepts_get_attribute_type(transaction, "name"))))
+            goto cleanup;
         {
             Concept* valueOfJohn = NULL;
             Concept* insertedJohn = NULL;
-            bool success = NULL != (valueOfJohn = value_new_string("John")) &&
-                           NULL != (insertedJohn = attribute_type_put(transaction, nameType, valueOfJohn));
+            bool success =
+                NULL != (valueOfJohn = value_new_string("John")) &&
+                NULL !=
+                    (insertedJohn = concept_promise_resolve(attribute_type_put(transaction, nameType, valueOfJohn)));
             concept_drop(insertedJohn);
             concept_drop(valueOfJohn);
             if (!success) goto cleanup;
