@@ -79,7 +79,7 @@ class NodejsDocParser : Callable<Unit> {
 
             if (parsedClasses[parsedClass.name]!!.isNotEmpty()) {
                 val parsedClassAsciiDoc = parsedClasses[parsedClass.name]!!.toAsciiDoc("nodejs")
-                val outputFile = docsDir.resolve("${parsedClass.name}.adoc").toFile()
+                val outputFile = docsDir.resolve("${generateFilename(parsedClass.name)}.adoc").toFile()
                 outputFile.createNewFile()
                 outputFile.writeText(parsedClassAsciiDoc)
             }
@@ -209,5 +209,9 @@ class NodejsDocParser : Callable<Unit> {
 
     private fun reformatTextWithCode(html: String): String {
         return removeAllTags(replaceEmTags(replaceCodeTags(html)))
+    }
+
+    private fun generateFilename(className: String): String {
+        return className.replace("[<>]".toRegex(), "_")
     }
 }
