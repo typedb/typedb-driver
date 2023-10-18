@@ -206,6 +206,21 @@ build:
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
+    test-c-integration:
+      image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
+      dependencies:
+        - build
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        tool/test/start-core-server.sh
+        bazel test //c/tests/integration:test-driver --test_output=errors &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
+
     test-java-integration:
       image: vaticle-ubuntu-22.04
       dependencies:

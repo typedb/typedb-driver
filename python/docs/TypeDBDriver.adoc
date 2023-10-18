@@ -61,7 +61,7 @@ driver.is_open()
 
 [source,python]
 ----
-session(database: str, session_type: SessionType, options: TypeDBOptions | None = None) -> TypeDBSession
+session(database_name: str, session_type: SessionType, options: TypeDBOptions | None = None) -> TypeDBSession
 ----
 
 Opens a communication tunnel (session) to the given database on the running TypeDB server. For more information on the methods, available with sessions, see the ``TypeDBSession`` section.
@@ -72,7 +72,7 @@ Opens a communication tunnel (session) to the given database on the running Type
 [options="header"]
 |===
 |Name |Description |Type |Default Value
-a| `database` a| The name of the database with which the session connects a| `str` a| 
+a| `database_name` a| The name of the database with which the session connects a| `str` a| 
 a| `session_type` a| The type of session to be created (DATA or SCHEMA) a| `SessionType` a| 
 a| `options` a| ``TypeDBOptions`` for the session a| `TypeDBOptions \| None` a| `None`
 |===

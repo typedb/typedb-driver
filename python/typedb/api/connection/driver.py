@@ -57,13 +57,13 @@ class TypeDBDriver(ABC):
         pass
 
     @abstractmethod
-    def session(self, database: str, session_type: SessionType, options: Optional[TypeDBOptions] = None
+    def session(self, database_name: str, session_type: SessionType, options: Optional[TypeDBOptions] = None
                 ) -> TypeDBSession:
         """
         Opens a communication tunnel (session) to the given database on the running TypeDB server.
         For more information on the methods, available with sessions, see the ``TypeDBSession`` section.
 
-        :param database: The name of the database with which the session connects
+        :param database_name: The name of the database with which the session connects
         :param session_type: The type of session to be created (DATA or SCHEMA)
         :param options: ``TypeDBOptions`` for the session
         :return:

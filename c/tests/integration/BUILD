@@ -20,33 +20,33 @@
 #
 
 package(default_visibility = ["//visibility:public"])
-
-load("@rules_rust//rust:defs.bzl", "rust_static_library", "rustfmt_test")
-load("@vaticle_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-rust_static_library(
-    name = "typedb_driver_clib",
-    srcs = glob(["src/**/*.rs"]),
-    aliases = {
-        "//rust:typedb_driver_sync": "typedb_driver",
-    },
+cc_library(
+    name = "lib-test-driver",
+    srcs = glob(["*.c", "*.h"]),
     deps = [
-        "//rust:typedb_driver_sync",
-
-        "@vaticle_typeql//rust:typeql",
-
-        "@crates//:chrono",
-        "@crates//:itertools",
-        "@crates//:log",
+        "//c:typedb_driver_clib_headers",
+        "//c:typedb_driver_clib"
     ],
+    copts = ["-fsanitize=address"], # Remove this if you're running leaks
+    linkopts = ["-fsanitize=address"], # Remove this if you're running leaks
+    linkstatic = True,
 )
 
-rust_cbindgen(
-    name = "typedb_driver_clib_headers",
-    lib = ":typedb_driver_clib",
-    header_name = "typedb_driver.h",
-    config = "cbindgen.toml",
+cc_test(
+    name = "test-driver",
+    srcs = glob(["gtest_runner.cpp"]),
+    deps = [
+        ":lib-test-driver",
+        "//c:typedb_driver_clib_headers",
+        "//c:typedb_driver_clib",
+
+        # External
+        "@gtest//:gtest",
+        "@gtest//:gtest_main"
+    ],
+    env = {"RUST_BACKTRACE": "full"}
 )
 
 checkstyle_test(
@@ -54,14 +54,6 @@ checkstyle_test(
     size = "small",
     include = glob([
         "*",
-        "src/**/*",
-        "swig/*",
     ]),
-    exclude = [".clang-format"],
     license_type = "apache-header",
-)
-
-rustfmt_test(
-    name = "driver_rustfmt_test",
-    targets = ["typedb_driver_clib"],
 )

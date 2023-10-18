@@ -53,6 +53,9 @@ struct Type {};
 %dropproxy(Options, options)
 
 #define connection_drop connection_close
+#define session_drop session_close
+#define transaction_drop transaction_close
+#define database_drop database_close
 
 %dropproxy(Connection, connection)
 %dropproxy(Session, session)
