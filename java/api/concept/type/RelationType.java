@@ -64,7 +64,7 @@ public interface RelationType extends ThingType {
      * @param transaction The current transaction
      */
     @CheckReturnValue
-    Relation create(TypeDBTransaction transaction);
+    Promise<? extends Relation> create(TypeDBTransaction transaction);
 
     /**
      * Retrieves all <code>Relation</code> objects that are instances of this <code>RelationType</code> or its subtypes.
@@ -129,11 +129,11 @@ public interface RelationType extends ThingType {
      */
     @Nullable
     @CheckReturnValue
-    RoleType getRelates(TypeDBTransaction transaction, String roleLabel);
+    Promise<? extends RoleType> getRelates(TypeDBTransaction transaction, String roleLabel);
 
     @Nullable
     @CheckReturnValue
-    RoleType getRelatesOverridden(TypeDBTransaction transaction, RoleType roleType);
+    Promise<? extends RoleType> getRelatesOverridden(TypeDBTransaction transaction, RoleType roleType);
 
     /**
      * Retrieves a <code>RoleType</code> that is overridden by the role with the <code>role_label</code>.
@@ -148,7 +148,7 @@ public interface RelationType extends ThingType {
      */
     @Nullable
     @CheckReturnValue
-    RoleType getRelatesOverridden(TypeDBTransaction transaction, String roleLabel);
+    Promise<? extends RoleType> getRelatesOverridden(TypeDBTransaction transaction, String roleLabel);
 
     /**
      * Sets the new role that this <code>RelationType</code> relates to.

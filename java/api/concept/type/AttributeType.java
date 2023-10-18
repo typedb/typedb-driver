@@ -82,7 +82,7 @@ public interface AttributeType extends ThingType {
      * @param transaction The current transaction
      * @param value New <code>Attribute</code>’s value
      */
-    Attribute put(TypeDBTransaction transaction, Value value);
+    Promise<? extends Attribute> put(TypeDBTransaction transaction, Value value);
 
     /**
      * Adds and returns an <code>Attribute</code> of this <code>AttributeType</code>
@@ -96,7 +96,7 @@ public interface AttributeType extends ThingType {
      * @param transaction The current transaction
      * @param value New <code>Attribute</code>’s value
      */
-    Attribute put(TypeDBTransaction transaction, String value);
+    Promise<? extends Attribute> put(TypeDBTransaction transaction, String value);
 
     /**
      * Adds and returns an <code>Attribute</code> of this <code>AttributeType</code>
@@ -110,7 +110,7 @@ public interface AttributeType extends ThingType {
      * @param transaction The current transaction
      * @param value New <code>Attribute</code>’s value
      */
-    Attribute put(TypeDBTransaction transaction, long value);
+    Promise<? extends Attribute> put(TypeDBTransaction transaction, long value);
 
     /**
      * Adds and returns an <code>Attribute</code> of this <code>AttributeType</code>
@@ -124,7 +124,7 @@ public interface AttributeType extends ThingType {
      * @param transaction The current transaction
      * @param value New <code>Attribute</code>’s value
      */
-    Attribute put(TypeDBTransaction transaction, double value);
+    Promise<? extends Attribute> put(TypeDBTransaction transaction, double value);
 
     /**
      * Adds and returns an <code>Attribute</code> of this <code>AttributeType</code>
@@ -138,7 +138,7 @@ public interface AttributeType extends ThingType {
      * @param transaction The current transaction
      * @param value New <code>Attribute</code>’s value
      */
-    Attribute put(TypeDBTransaction transaction, boolean value);
+    Promise<? extends Attribute> put(TypeDBTransaction transaction, boolean value);
 
     /**
      * Adds and returns an <code>Attribute</code> of this <code>AttributeType</code>
@@ -152,7 +152,7 @@ public interface AttributeType extends ThingType {
      * @param transaction The current transaction
      * @param value New <code>Attribute</code>’s value
      */
-    Attribute put(TypeDBTransaction transaction, LocalDateTime value);
+    Promise<? extends Attribute> put(TypeDBTransaction transaction, LocalDateTime value);
 
     /**
      * Retrieves an <code>Attribute</code> of this <code>AttributeType</code> with the given value
@@ -167,7 +167,7 @@ public interface AttributeType extends ThingType {
      * @param value <code>Attribute</code>’s value
      */
     @Nullable
-    Attribute get(TypeDBTransaction transaction, Value value);
+    Promise<? extends Attribute> get(TypeDBTransaction transaction, Value value);
 
     /**
      * Retrieves an <code>Attribute</code> of this <code>AttributeType</code> with the given value
@@ -182,7 +182,7 @@ public interface AttributeType extends ThingType {
      * @param value <code>Attribute</code>’s value
      */
     @Nullable
-    Attribute get(TypeDBTransaction transaction, String value);
+    Promise<? extends Attribute> get(TypeDBTransaction transaction, String value);
 
     /**
      * Retrieves an <code>Attribute</code> of this <code>AttributeType</code> with the given value
@@ -197,7 +197,7 @@ public interface AttributeType extends ThingType {
      * @param value <code>Attribute</code>’s value
      */
     @Nullable
-    Attribute get(TypeDBTransaction transaction, long value);
+    Promise<? extends Attribute> get(TypeDBTransaction transaction, long value);
 
     /**
      * Retrieves an <code>Attribute</code> of this <code>AttributeType</code> with the given value
@@ -212,7 +212,7 @@ public interface AttributeType extends ThingType {
      * @param value <code>Attribute</code>’s value
      */
     @Nullable
-    Attribute get(TypeDBTransaction transaction, double value);
+    Promise<? extends Attribute> get(TypeDBTransaction transaction, double value);
 
     /**
      * Retrieves an <code>Attribute</code> of this <code>AttributeType</code> with the given value
@@ -227,7 +227,7 @@ public interface AttributeType extends ThingType {
      * @param value <code>Attribute</code>’s value
      */
     @Nullable
-    Attribute get(TypeDBTransaction transaction, boolean value);
+    Promise<? extends Attribute> get(TypeDBTransaction transaction, boolean value);
 
     /**
      * Retrieves an <code>Attribute</code> of this <code>AttributeType</code> with the given value
@@ -242,7 +242,7 @@ public interface AttributeType extends ThingType {
      * @param value <code>Attribute</code>’s value
      */
     @Nullable
-    Attribute get(TypeDBTransaction transaction, LocalDateTime value);
+    Promise<? extends Attribute> get(TypeDBTransaction transaction, LocalDateTime value);
 
     /**
      * Retrieves the regular expression that is defined for this <code>AttributeType</code>.
@@ -254,7 +254,7 @@ public interface AttributeType extends ThingType {
      *
      * @param transaction The current transaction
      */
-    String getRegex(TypeDBTransaction transaction);
+    Promise<String> getRegex(TypeDBTransaction transaction);
 
     /**
      * Sets a regular expression as a constraint for this <code>AttributeType</code>. <code>Values</code>

@@ -22,13 +22,13 @@
 package com.vaticle.typedb.driver.concept.type;
 
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
-import com.vaticle.typedb.driver.api.concept.type.RelationType;
 import com.vaticle.typedb.driver.api.concept.type.RoleType;
 import com.vaticle.typedb.driver.common.Label;
 import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.thing.RelationImpl;
 import com.vaticle.typedb.driver.concept.thing.ThingImpl;
+import com.vaticle.typedb.driver.jni.ConceptPromise;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -55,6 +55,19 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
         super(concept);
     }
 
+    @CheckReturnValue
+    public static Promise<RoleTypeImpl> promise(ConceptPromise promise) {
+        return new Promise<>(() -> {
+            try {
+                com.vaticle.typedb.driver.jni.Concept res = promise.get();
+                if (res != null) return new RoleTypeImpl(res);
+                else return null;
+            } catch (com.vaticle.typedb.driver.jni.Error e) {
+                throw new TypeDBDriverException(e);
+            }
+        });
+    }
+
     @Override
     public final boolean isRoot() {
         return role_type_is_root(nativeObject);
@@ -73,11 +86,7 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
     @Override
     @CheckReturnValue
     public final Promise<Void> delete(TypeDBTransaction transaction) {
-        try {
-            return new Promise<>(role_type_delete(nativeTransaction(transaction), nativeObject));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return Promise.ofVoid(role_type_delete(nativeTransaction(transaction), nativeObject));
     }
 
     @Override
@@ -93,23 +102,14 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
     @Override
     @CheckReturnValue
     public final Promise<Void> setLabel(TypeDBTransaction transaction, String newLabel) {
-        try {
-            return new Promise<>(role_type_set_label(nativeTransaction(transaction), nativeObject, newLabel));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return Promise.ofVoid(role_type_set_label(nativeTransaction(transaction), nativeObject, newLabel));
     }
 
     @Nullable
     @Override
-    public RoleTypeImpl getSupertype(TypeDBTransaction transaction) {
-        try {
-            com.vaticle.typedb.driver.jni.Concept res = role_type_get_supertype(nativeTransaction(transaction), nativeObject);
-            if (res != null) return new RoleTypeImpl(res);
-            else return null;
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public Promise<RoleTypeImpl> getSupertype(TypeDBTransaction transaction) {
+        ConceptPromise promise = role_type_get_supertype(nativeTransaction(transaction), nativeObject);
+        return promise(promise);
     }
 
     @Override
@@ -136,12 +136,8 @@ public class RoleTypeImpl extends TypeImpl implements RoleType {
     }
 
     @Override
-    public final RelationType getRelationType(TypeDBTransaction transaction) {
-        try {
-            return new RelationTypeImpl(role_type_get_relation_type(nativeTransaction(transaction), nativeObject));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public final Promise<RelationTypeImpl> getRelationType(TypeDBTransaction transaction) {
+        return RelationTypeImpl.promise(role_type_get_relation_type(nativeTransaction(transaction), nativeObject));
     }
 
     @Override

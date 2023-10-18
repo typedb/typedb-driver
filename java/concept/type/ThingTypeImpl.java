@@ -103,7 +103,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     @Override
     @CheckReturnValue
     public Promise<Void> delete(TypeDBTransaction transaction) {
-        return new Promise<>(thing_type_delete(nativeTransaction(transaction), nativeObject));
+        return Promise.ofVoid(thing_type_delete(nativeTransaction(transaction), nativeObject));
     }
 
     @Override
@@ -115,11 +115,11 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     @Override
     @CheckReturnValue
     public final Promise<Void> setLabel(TypeDBTransaction transaction, String newLabel) {
-        return new Promise<>(thing_type_set_label(nativeTransaction(transaction), nativeObject, newLabel));
+        return Promise.ofVoid(thing_type_set_label(nativeTransaction(transaction), nativeObject, newLabel));
     }
 
     @Override
-    public abstract ThingTypeImpl getSupertype(TypeDBTransaction transaction);
+    public abstract Promise<? extends ThingTypeImpl> getSupertype(TypeDBTransaction transaction);
 
     @Override
     public abstract Stream<? extends ThingTypeImpl> getSupertypes(TypeDBTransaction transaction);
@@ -138,22 +138,22 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
     @Override
     public final Promise<Void> setAbstract(TypeDBTransaction transaction) {
-        return new Promise<>(thing_type_set_abstract(nativeTransaction(transaction), nativeObject));
+        return Promise.ofVoid(thing_type_set_abstract(nativeTransaction(transaction), nativeObject));
     }
 
     @Override
     public final Promise<Void> unsetAbstract(TypeDBTransaction transaction) {
-        return new Promise<>(thing_type_unset_abstract(nativeTransaction(transaction), nativeObject));
+        return Promise.ofVoid(thing_type_unset_abstract(nativeTransaction(transaction), nativeObject));
     }
 
     @Override
     public final Promise<Void> setPlays(TypeDBTransaction transaction, RoleType roleType) {
-        return new Promise<>(thing_type_set_plays(nativeTransaction(transaction), nativeObject, ((RoleTypeImpl) roleType).nativeObject, null));
+        return Promise.ofVoid(thing_type_set_plays(nativeTransaction(transaction), nativeObject, ((RoleTypeImpl) roleType).nativeObject, null));
     }
 
     @Override
     public final Promise<Void> setPlays(TypeDBTransaction transaction, RoleType roleType, RoleType overriddenRoleType) {
-        return new Promise<>(thing_type_set_plays(nativeTransaction(transaction),
+        return Promise.ofVoid(thing_type_set_plays(nativeTransaction(transaction),
                 nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((RoleTypeImpl) overriddenRoleType).nativeObject));
     }
 
@@ -176,7 +176,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     public final Promise<Void> setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType, Set<Annotation> annotations) {
         com.vaticle.typedb.driver.jni.Concept overriddenTypeNative = overriddenType != null ? ((AttributeTypeImpl) overriddenType).nativeObject : null;
         com.vaticle.typedb.driver.jni.Annotation[] annotationsArray = annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.driver.jni.Annotation[]::new);
-        return new Promise<>(thing_type_set_owns(nativeTransaction(transaction), nativeObject, ((AttributeTypeImpl) attributeType).nativeObject, overriddenTypeNative, annotationsArray));
+        return Promise.ofVoid(thing_type_set_owns(nativeTransaction(transaction), nativeObject, ((AttributeTypeImpl) attributeType).nativeObject, overriddenTypeNative, annotationsArray));
     }
 
     @Override
@@ -194,15 +194,10 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     @Override
-    public RoleTypeImpl getPlaysOverridden(TypeDBTransaction transaction, RoleType roleType) {
-        try {
-            com.vaticle.typedb.driver.jni.Concept res = thing_type_get_plays_overridden(nativeTransaction(transaction),
-                    nativeObject, ((RoleTypeImpl) roleType).nativeObject);
-            if (res != null) return new RoleTypeImpl(res);
-            else return null;
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public Promise<RoleTypeImpl> getPlaysOverridden(TypeDBTransaction transaction, RoleType roleType) {
+        return RoleTypeImpl.promise(
+                thing_type_get_plays_overridden(nativeTransaction(transaction), nativeObject, ((RoleTypeImpl) roleType).nativeObject)
+        );
     }
 
     @Override
@@ -260,35 +255,25 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     }
 
     @Override
-    public AttributeTypeImpl getOwnsOverridden(TypeDBTransaction transaction, AttributeType attributeType) {
-        try {
-            com.vaticle.typedb.driver.jni.Concept res = thing_type_get_owns_overridden(nativeTransaction(transaction),
-                    nativeObject, ((AttributeTypeImpl) attributeType).nativeObject);
-            if (res != null) return new AttributeTypeImpl(res);
-            else return null;
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public Promise<AttributeTypeImpl> getOwnsOverridden(TypeDBTransaction transaction, AttributeType attributeType) {
+        return AttributeTypeImpl.promise(thing_type_get_owns_overridden(nativeTransaction(transaction),
+                nativeObject, ((AttributeTypeImpl) attributeType).nativeObject));
     }
 
     @Override
     public final Promise<Void> unsetOwns(TypeDBTransaction transaction, AttributeType attributeType) {
-        return new Promise<>(thing_type_unset_owns(nativeTransaction(transaction),
+        return Promise.ofVoid(thing_type_unset_owns(nativeTransaction(transaction),
                 nativeObject, ((AttributeTypeImpl) attributeType).nativeObject));
     }
 
     @Override
     public final Promise<Void> unsetPlays(TypeDBTransaction transaction, RoleType roleType) {
-        return new Promise<>(thing_type_unset_plays(nativeTransaction(transaction), nativeObject, ((RoleTypeImpl) roleType).nativeObject));
+        return Promise.ofVoid(thing_type_unset_plays(nativeTransaction(transaction), nativeObject, ((RoleTypeImpl) roleType).nativeObject));
     }
 
     @Override
-    public final String getSyntax(TypeDBTransaction transaction) {
-        try {
-            return thing_type_get_syntax(nativeTransaction(transaction), nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public final Promise<String> getSyntax(TypeDBTransaction transaction) {
+        return Promise.ofString(thing_type_get_syntax(nativeTransaction(transaction), nativeObject));
     }
 
     public static class Root extends ThingTypeImpl {
@@ -302,8 +287,8 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
         }
 
         @Override
-        public ThingTypeImpl getSupertype(TypeDBTransaction transaction) {
-            return null;
+        public Promise<ThingTypeImpl> getSupertype(TypeDBTransaction transaction) {
+            return new Promise<>(() -> null);
         }
 
         @Override
@@ -314,28 +299,32 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
         @Override
         public Stream<? extends ThingTypeImpl> getSubtypes(TypeDBTransaction transaction) {
             return Stream.concat(
+                    Stream.of(this),
                     Stream.concat(
-                        Stream.of(this),
-                        Stream.concat(
                             transaction.concepts().getRootEntityType().getSubtypes(transaction),
-                            transaction.concepts().getRootRelationType().getSubtypes(transaction))),
-                    transaction.concepts().getRootAttributeType().getSubtypes(transaction)).map(tt -> (ThingTypeImpl) tt);
+                            Stream.concat(
+                                    transaction.concepts().getRootRelationType().getSubtypes(transaction),
+                                    transaction.concepts().getRootAttributeType().getSubtypes(transaction)
+                            ))).map(tt -> (ThingTypeImpl) tt);
         }
 
         @Override
         public Stream<? extends ThingTypeImpl> getSubtypes(TypeDBTransaction transaction, Transitivity transitivity) {
             return Stream.of(
-                    transaction.concepts().getRootEntityType(), transaction.concepts().getRootRelationType(), transaction.concepts().getRootAttributeType()
+                    transaction.concepts().getRootEntityType(),
+                    transaction.concepts().getRootRelationType(),
+                    transaction.concepts().getRootAttributeType()
                 ).map(tt -> (ThingTypeImpl) tt);
         }
 
         @Override
         public Stream<? extends ThingImpl> getInstances(TypeDBTransaction transaction) {
             return Stream.concat(
+                    transaction.concepts().getRootEntityType().getInstances(transaction),
                     Stream.concat(
-                            transaction.concepts().getRootEntityType().getInstances(transaction),
-                            transaction.concepts().getRootRelationType().getInstances(transaction)),
-                    transaction.concepts().getRootAttributeType().getInstances(transaction)).map(t -> (ThingImpl) t);
+                            transaction.concepts().getRootRelationType().getInstances(transaction),
+                            transaction.concepts().getRootAttributeType().getInstances(transaction)
+                    )).map(t -> (ThingImpl) t);
         }
 
         @Override

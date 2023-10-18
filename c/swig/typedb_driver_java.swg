@@ -97,8 +97,10 @@
 %}
 %enddef
 
+%promise(Concept, concept)
 %promise(Numeric, numeric)
 %promise(Rule, rule)
+%promise(String, string)
 
 /* void promises require special handling */
 %typemap(javainterfaces) VoidPromise "java.util.function.Supplier<Void>";

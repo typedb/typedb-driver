@@ -61,7 +61,7 @@ public interface EntityType extends ThingType {
      * @param transaction The current transaction
      */
     @CheckReturnValue
-    Entity create(TypeDBTransaction transaction);
+    Promise<? extends Entity> create(TypeDBTransaction transaction);
 
     /**
      * Retrieves all <code>Entity</code> objects that are instances of this <code>EntityType</code> or its subtypes.

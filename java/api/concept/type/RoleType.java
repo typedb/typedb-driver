@@ -24,6 +24,7 @@ package com.vaticle.typedb.driver.api.concept.type;
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.thing.Relation;
 import com.vaticle.typedb.driver.api.concept.thing.Thing;
+import com.vaticle.typedb.driver.common.Promise;
 
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
@@ -62,7 +63,7 @@ public interface RoleType extends Type {
      * @param transaction The current transaction
      */
     @Override
-    RoleType getSupertype(TypeDBTransaction transaction);
+    Promise<? extends RoleType> getSupertype(TypeDBTransaction transaction);
 
     /**
      * Retrieves all supertypes of the <code>RoleType</code>.
@@ -109,7 +110,7 @@ public interface RoleType extends Type {
      *
      * @param transaction The current transaction
      */
-    RelationType getRelationType(TypeDBTransaction transaction);
+    Promise<? extends RelationType> getRelationType(TypeDBTransaction transaction);
 
     /**
      * Retrieves <code>RelationType</code>s that this role is related to (directly or indirectly).

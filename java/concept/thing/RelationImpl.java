@@ -29,7 +29,9 @@ import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.type.RelationTypeImpl;
 import com.vaticle.typedb.driver.concept.type.RoleTypeImpl;
+import com.vaticle.typedb.driver.jni.ConceptPromise;
 
+import javax.annotation.CheckReturnValue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -53,6 +55,19 @@ public class RelationImpl extends ThingImpl implements Relation {
         super(concept);
     }
 
+    @CheckReturnValue
+    public static Promise<RelationImpl> promise(ConceptPromise promise) {
+        return new Promise<>(() -> {
+            try {
+                com.vaticle.typedb.driver.jni.Concept res = promise.get();
+                if (res != null) return new RelationImpl(res);
+                else return null;
+            } catch (com.vaticle.typedb.driver.jni.Error e) {
+                throw new TypeDBDriverException(e);
+            }
+        });
+    }
+
     @Override
     public RelationTypeImpl getType() {
         return new RelationTypeImpl(relation_get_type(nativeObject));
@@ -60,22 +75,14 @@ public class RelationImpl extends ThingImpl implements Relation {
 
     @Override
     public Promise<Void> addPlayer(TypeDBTransaction transaction, RoleType roleType, Thing player) {
-        try {
-            return new Promise<>(relation_add_role_player(nativeTransaction(transaction),
+        return Promise.ofVoid(relation_add_role_player(nativeTransaction(transaction),
                 nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((ThingImpl) player).nativeObject));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
     }
 
     @Override
     public Promise<Void> removePlayer(TypeDBTransaction transaction, RoleType roleType, Thing player) {
-        try {
-            return new Promise<>(relation_remove_role_player(nativeTransaction(transaction),
+        return Promise.ofVoid(relation_remove_role_player(nativeTransaction(transaction),
                 nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((ThingImpl) player).nativeObject));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
     }
 
     @Override

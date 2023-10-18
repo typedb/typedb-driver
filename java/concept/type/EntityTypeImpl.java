@@ -26,7 +26,9 @@ import com.vaticle.typedb.driver.api.concept.type.EntityType;
 import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.thing.EntityImpl;
+import com.vaticle.typedb.driver.jni.ConceptPromise;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
@@ -42,34 +44,33 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
         super(concept);
     }
 
+    @CheckReturnValue
+    public static Promise<EntityTypeImpl> promise(ConceptPromise promise) {
+        return new Promise<>(() -> {
+            try {
+                com.vaticle.typedb.driver.jni.Concept res = promise.get();
+                if (res != null) return new EntityTypeImpl(res);
+                else return null;
+            } catch (com.vaticle.typedb.driver.jni.Error e) {
+                throw new TypeDBDriverException(e);
+            }
+        });
+    }
+
     @Override
-    public final EntityImpl create(TypeDBTransaction transaction) {
-        try {
-            return new EntityImpl(entity_type_create(nativeTransaction(transaction), nativeObject));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public final Promise<EntityImpl> create(TypeDBTransaction transaction) {
+        return EntityImpl.promise(entity_type_create(nativeTransaction(transaction), nativeObject));
     }
 
     @Override
     public final Promise<Void> setSupertype(TypeDBTransaction transaction, EntityType entityType) {
-        try {
-            return new Promise<>(entity_type_set_supertype(nativeTransaction(transaction), nativeObject, ((EntityTypeImpl) entityType).nativeObject));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return Promise.ofVoid(entity_type_set_supertype(nativeTransaction(transaction), nativeObject, ((EntityTypeImpl) entityType).nativeObject));
     }
 
     @Nullable
     @Override
-    public EntityTypeImpl getSupertype(TypeDBTransaction transaction) {
-        try {
-            com.vaticle.typedb.driver.jni.Concept res = entity_type_get_supertype(nativeTransaction(transaction), nativeObject);
-            if (res != null) return new EntityTypeImpl(res);
-            else return null;
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    public Promise<EntityTypeImpl> getSupertype(TypeDBTransaction transaction) {
+        return EntityTypeImpl.promise(entity_type_get_supertype(nativeTransaction(transaction), nativeObject));
     }
 
     @Override

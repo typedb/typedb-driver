@@ -107,9 +107,11 @@ struct Type {};
 %enddef
 
 %promise_proxy(BoolPromise, bool_promise)
-%promise_proxy(VoidPromise, void_promise)
+%promise_proxy(ConceptPromise, concept_promise)
 %promise_proxy(NumericPromise, numeric_promise)
 %promise_proxy(RulePromise, rule_promise)
+%promise_proxy(StringPromise, string_promise)
+%promise_proxy(VoidPromise, void_promise)
 
 %feature("director") SessionCallbackDirector;
 %inline %{

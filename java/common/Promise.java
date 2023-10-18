@@ -21,6 +21,10 @@
 
 package com.vaticle.typedb.driver.common;
 
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
+import com.vaticle.typedb.driver.jni.StringPromise;
+import com.vaticle.typedb.driver.jni.VoidPromise;
+
 import java.util.function.Supplier;
 
 public class Promise<T> {
@@ -32,5 +36,25 @@ public class Promise<T> {
 
     public T resolve() {
         return this.inner.get();
+    }
+
+    static public Promise<Void> ofVoid(VoidPromise promise) {
+        return new Promise<>(() -> {
+            try {
+                return promise.get();
+            } catch (com.vaticle.typedb.driver.jni.Error e) {
+                throw new TypeDBDriverException(e);
+            }
+        });
+    }
+
+    static public Promise<String> ofString(StringPromise promise) {
+        return new Promise<>(() -> {
+            try {
+                return promise.get();
+            } catch (com.vaticle.typedb.driver.jni.Error e) {
+                throw new TypeDBDriverException(e);
+            }
+        });
     }
 }

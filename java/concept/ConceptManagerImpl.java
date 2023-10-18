@@ -22,13 +22,8 @@
 package com.vaticle.typedb.driver.concept;
 
 import com.vaticle.typedb.driver.api.concept.ConceptManager;
-import com.vaticle.typedb.driver.api.concept.thing.Attribute;
-import com.vaticle.typedb.driver.api.concept.thing.Entity;
-import com.vaticle.typedb.driver.api.concept.thing.Relation;
-import com.vaticle.typedb.driver.api.concept.type.AttributeType;
-import com.vaticle.typedb.driver.api.concept.type.EntityType;
-import com.vaticle.typedb.driver.api.concept.type.RelationType;
 import com.vaticle.typedb.driver.api.concept.value.Value;
+import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.common.exception.TypeDBException;
 import com.vaticle.typedb.driver.concept.thing.AttributeImpl;
@@ -37,9 +32,7 @@ import com.vaticle.typedb.driver.concept.thing.RelationImpl;
 import com.vaticle.typedb.driver.concept.type.AttributeTypeImpl;
 import com.vaticle.typedb.driver.concept.type.EntityTypeImpl;
 import com.vaticle.typedb.driver.concept.type.RelationTypeImpl;
-import com.vaticle.typeql.lang.common.TypeQLToken;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,6 +45,9 @@ import static com.vaticle.typedb.driver.jni.typedb_driver.concepts_get_entity;
 import static com.vaticle.typedb.driver.jni.typedb_driver.concepts_get_entity_type;
 import static com.vaticle.typedb.driver.jni.typedb_driver.concepts_get_relation;
 import static com.vaticle.typedb.driver.jni.typedb_driver.concepts_get_relation_type;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concepts_get_root_attribute_type;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concepts_get_root_entity_type;
+import static com.vaticle.typedb.driver.jni.typedb_driver.concepts_get_root_relation_type;
 import static com.vaticle.typedb.driver.jni.typedb_driver.concepts_get_schema_exceptions;
 import static com.vaticle.typedb.driver.jni.typedb_driver.concepts_put_attribute_type;
 import static com.vaticle.typedb.driver.jni.typedb_driver.concepts_put_entity_type;
@@ -67,135 +63,81 @@ public final class ConceptManagerImpl implements ConceptManager {
     }
 
     @Override
-    public EntityType getRootEntityType() {
-        return getEntityType(TypeQLToken.Type.ENTITY.toString());
+    public EntityTypeImpl getRootEntityType() {
+        return new EntityTypeImpl(concepts_get_root_entity_type());
     }
 
     @Override
-    public RelationType getRootRelationType() {
-        return getRelationType(TypeQLToken.Type.RELATION.toString());
+    public RelationTypeImpl getRootRelationType() {
+        return new RelationTypeImpl(concepts_get_root_relation_type());
     }
 
     @Override
-    public AttributeType getRootAttributeType() {
-        return getAttributeType(TypeQLToken.Type.ATTRIBUTE.toString());
+    public AttributeTypeImpl getRootAttributeType() {
+        return new AttributeTypeImpl(concepts_get_root_attribute_type());
     }
 
     @Override
-    @Nullable
-    public EntityType getEntityType(String label) {
+    public Promise<EntityTypeImpl> getEntityType(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBDriverException(MISSING_LABEL);
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        try {
-            com.vaticle.typedb.driver.jni.Concept res = concepts_get_entity_type(nativeTransaction, label);
-            if (res != null) return new EntityTypeImpl(res);
-            else return null;
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return EntityTypeImpl.promise(concepts_get_entity_type(nativeTransaction, label));
     }
 
     @Override
-    @Nullable
-    public RelationType getRelationType(String label) {
+    public Promise<RelationTypeImpl> getRelationType(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBDriverException(MISSING_LABEL);
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        try {
-            com.vaticle.typedb.driver.jni.Concept res = concepts_get_relation_type(nativeTransaction, label);
-            if (res != null) return new RelationTypeImpl(res);
-            else return null;
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return RelationTypeImpl.promise(concepts_get_relation_type(nativeTransaction, label));
     }
 
     @Override
-    @Nullable
-    public AttributeType getAttributeType(String label) {
+    public Promise<AttributeTypeImpl> getAttributeType(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBDriverException(MISSING_LABEL);
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        try {
-            com.vaticle.typedb.driver.jni.Concept res = concepts_get_attribute_type(nativeTransaction, label);
-            if (res != null) return new AttributeTypeImpl(res);
-            else return null;
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return AttributeTypeImpl.promise(concepts_get_attribute_type(nativeTransaction, label));
     }
 
     @Override
-    public EntityType putEntityType(String label) {
+    public Promise<EntityTypeImpl> putEntityType(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBDriverException(MISSING_LABEL);
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        try {
-            return new EntityTypeImpl(concepts_put_entity_type(nativeTransaction, label));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return EntityTypeImpl.promise(concepts_put_entity_type(nativeTransaction, label));
     }
 
     @Override
-    public RelationType putRelationType(String label) {
+    public Promise<RelationTypeImpl> putRelationType(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBDriverException(MISSING_LABEL);
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        try {
-            return new RelationTypeImpl(concepts_put_relation_type(nativeTransaction, label));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return RelationTypeImpl.promise(concepts_put_relation_type(nativeTransaction, label));
     }
 
     @Override
-    public AttributeType putAttributeType(String label, Value.Type valueType) {
+    public Promise<AttributeTypeImpl> putAttributeType(String label, Value.Type valueType) {
         if (label == null || label.isEmpty()) throw new TypeDBDriverException(MISSING_LABEL);
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        try {
-            return new AttributeTypeImpl(concepts_put_attribute_type(nativeTransaction, label, valueType.nativeObject));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return AttributeTypeImpl.promise(concepts_put_attribute_type(nativeTransaction, label, valueType.nativeObject));
     }
 
     @Override
-    @Nullable
-    public Entity getEntity(String iid) {
+    public Promise<EntityImpl> getEntity(String iid) {
         if (iid == null || iid.isEmpty()) throw new TypeDBDriverException(MISSING_IID);
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        try {
-            com.vaticle.typedb.driver.jni.Concept res = concepts_get_entity(nativeTransaction, iid);
-            if (res != null) return new EntityImpl(res);
-            else return null;
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return EntityImpl.promise(concepts_get_entity(nativeTransaction, iid));
     }
 
     @Override
-    @Nullable
-    public Relation getRelation(String iid) {
+    public Promise<RelationImpl> getRelation(String iid) {
         if (iid == null || iid.isEmpty()) throw new TypeDBDriverException(MISSING_IID);
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        try {
-            com.vaticle.typedb.driver.jni.Concept res = concepts_get_relation(nativeTransaction, iid);
-            if (res != null) return new RelationImpl(res);
-            else return null;
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return RelationImpl.promise(concepts_get_relation(nativeTransaction, iid));
     }
 
     @Override
-    @Nullable
-    public Attribute getAttribute(String iid) {
+    public Promise<AttributeImpl> getAttribute(String iid) {
         if (iid == null || iid.isEmpty()) throw new TypeDBDriverException(MISSING_IID);
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        try {
-            com.vaticle.typedb.driver.jni.Concept res = concepts_get_attribute(nativeTransaction, iid);
-            if (res != null) return new AttributeImpl(res);
-            else return null;
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return AttributeImpl.promise(concepts_get_attribute(nativeTransaction, iid));
     }
 
     @Override

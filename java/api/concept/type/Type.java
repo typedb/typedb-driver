@@ -118,7 +118,7 @@ public interface Type extends Concept {
      */
     @Nullable
     @CheckReturnValue
-    Type getSupertype(TypeDBTransaction transaction);
+    Promise<? extends Type> getSupertype(TypeDBTransaction transaction);
 
     /**
      * Retrieves all supertypes of the type.

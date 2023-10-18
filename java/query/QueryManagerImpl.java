@@ -114,12 +114,14 @@ public final class QueryManagerImpl implements QueryManager {
     public Promise<Numeric> matchAggregate(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBDriverException(MISSING_QUERY);
-        try {
-            com.vaticle.typedb.driver.jni.NumericPromise nativePromise = query_match_aggregate(nativeTransaction, query, options.nativeObject);
-            return new Promise<>(() -> new NumericImpl(nativePromise.get()));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        com.vaticle.typedb.driver.jni.NumericPromise promise = query_match_aggregate(nativeTransaction, query, options.nativeObject);
+        return new Promise<>(() -> {
+            try {
+                return new NumericImpl(promise.get());
+            } catch (com.vaticle.typedb.driver.jni.Error e) {
+                throw new TypeDBDriverException(e);
+            }
+        });
     }
 
     @Override
@@ -223,11 +225,7 @@ public final class QueryManagerImpl implements QueryManager {
     public Promise<Void> delete(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBDriverException(MISSING_QUERY);
-        try {
-            return new Promise<>(query_delete(nativeTransaction, query, options.nativeObject));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return Promise.ofVoid(query_delete(nativeTransaction, query, options.nativeObject));
     }
 
     @Override
@@ -279,11 +277,7 @@ public final class QueryManagerImpl implements QueryManager {
     public Promise<Void> define(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBDriverException(MISSING_QUERY);
-        try {
-            return new Promise<>(query_define(nativeTransaction, query, options.nativeObject));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return Promise.ofVoid(query_define(nativeTransaction, query, options.nativeObject));
     }
 
     @Override
@@ -309,11 +303,7 @@ public final class QueryManagerImpl implements QueryManager {
     public Promise<Void> undefine(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBDriverException(MISSING_QUERY);
-        try {
-            return new Promise<>(query_undefine(nativeTransaction, query, options.nativeObject));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return Promise.ofVoid(query_undefine(nativeTransaction, query, options.nativeObject));
     }
 
     @Override

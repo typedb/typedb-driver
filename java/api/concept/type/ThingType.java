@@ -63,7 +63,7 @@ public interface ThingType extends Type {
      */
     @Override
     @CheckReturnValue
-    ThingType getSupertype(TypeDBTransaction transaction);
+    Promise<? extends ThingType> getSupertype(TypeDBTransaction transaction);
 
     /**
      * {@inheritDoc}
@@ -243,7 +243,7 @@ public interface ThingType extends Type {
      * @param roleType The <code>RoleType</code> that overrides an inherited role
      */
     @CheckReturnValue
-    RoleType getPlaysOverridden(TypeDBTransaction transaction, RoleType roleType);
+    Promise<? extends RoleType> getPlaysOverridden(TypeDBTransaction transaction, RoleType roleType);
 
     /**
      * Retrieves <code>AttributeType</code> that the instances of this
@@ -339,7 +339,7 @@ public interface ThingType extends Type {
      * @param attributeType The <code>AttributeType</code> that overrides requested <code>AttributeType</code>
      */
     @CheckReturnValue
-    AttributeType getOwnsOverridden(TypeDBTransaction transaction, AttributeType attributeType);
+    Promise<? extends AttributeType> getOwnsOverridden(TypeDBTransaction transaction, AttributeType attributeType);
 
     /**
      * Disallows the instances of this <code>ThingType</code> from playing the given role.
@@ -380,7 +380,7 @@ public interface ThingType extends Type {
      * @param transaction The current transaction
      */
     @CheckReturnValue
-    String getSyntax(TypeDBTransaction transaction);
+    Promise<String> getSyntax(TypeDBTransaction transaction);
 
     /**
      * Annotation

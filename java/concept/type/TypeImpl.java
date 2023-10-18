@@ -23,6 +23,7 @@ package com.vaticle.typedb.driver.concept.type;
 
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.type.Type;
+import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.concept.ConceptImpl;
 
 import javax.annotation.Nullable;
@@ -37,7 +38,7 @@ public abstract class TypeImpl extends ConceptImpl implements Type {
 
     @Nullable
     @Override
-    public abstract TypeImpl getSupertype(TypeDBTransaction transaction);
+    public abstract Promise<? extends TypeImpl> getSupertype(TypeDBTransaction transaction);
 
     @Override
     public abstract Stream<? extends TypeImpl> getSupertypes(TypeDBTransaction transaction);

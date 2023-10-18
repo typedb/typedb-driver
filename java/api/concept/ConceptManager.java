@@ -28,6 +28,7 @@ import com.vaticle.typedb.driver.api.concept.type.AttributeType;
 import com.vaticle.typedb.driver.api.concept.type.EntityType;
 import com.vaticle.typedb.driver.api.concept.type.RelationType;
 import com.vaticle.typedb.driver.api.concept.value.Value;
+import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBException;
 
 import java.util.List;
@@ -83,7 +84,7 @@ public interface ConceptManager {
      */
     @Nullable
     @CheckReturnValue
-    EntityType getEntityType(String label);
+    Promise<? extends EntityType> getEntityType(String label);
 
     /**
      * Retrieves a <code>RelationType</code> by its label.
@@ -97,7 +98,7 @@ public interface ConceptManager {
      */
     @Nullable
     @CheckReturnValue
-    RelationType getRelationType(String label);
+    Promise<? extends RelationType> getRelationType(String label);
 
     /**
      * Retrieves an <code>AttributeType</code> by its label.
@@ -111,7 +112,7 @@ public interface ConceptManager {
      */
     @Nullable
     @CheckReturnValue
-    AttributeType getAttributeType(String label);
+    Promise<? extends AttributeType> getAttributeType(String label);
 
     /**
      * Creates a new <code>EntityType</code> if none exists with the given label,
@@ -124,7 +125,7 @@ public interface ConceptManager {
      *
      * @param label The label of the <code>EntityType</code> to create or retrieve
      */
-    EntityType putEntityType(String label);
+    Promise<? extends EntityType> putEntityType(String label);
 
     /**
      * Creates a new <code>RelationType</code> if none exists with the given label,
@@ -137,7 +138,7 @@ public interface ConceptManager {
      *
      * @param label The label of the <code>RelationType</code> to create or retrieve
      */
-    RelationType putRelationType(String label);
+    Promise<? extends RelationType> putRelationType(String label);
 
     /**
      * Creates a new <code>AttributeType</code> if none exists with the given label,
@@ -151,7 +152,7 @@ public interface ConceptManager {
      * @param label The label of the <code>AttributeType</code> to create or retrieve
      * @param valueType The value type of the <code>AttributeType</code> to create
      */
-    AttributeType putAttributeType(String label, Value.Type valueType);
+    Promise<? extends AttributeType> putAttributeType(String label, Value.Type valueType);
 
     /**
      * Retrieves an <code>Entity</code> by its iid.
@@ -165,7 +166,7 @@ public interface ConceptManager {
      */
     @Nullable
     @CheckReturnValue
-    Entity getEntity(String iid);
+    Promise<? extends Entity> getEntity(String iid);
 
     /**
      * Retrieves a <code>Relation</code> by its iid.
@@ -179,7 +180,7 @@ public interface ConceptManager {
      */
     @Nullable
     @CheckReturnValue
-    Relation getRelation(String iid);
+    Promise<? extends Relation> getRelation(String iid);
 
     /**
      * Retrieves an <code>Attribute</code> by its iid.
@@ -193,7 +194,7 @@ public interface ConceptManager {
      */
     @Nullable
     @CheckReturnValue
-    Attribute getAttribute(String iid);
+    Promise<? extends Attribute> getAttribute(String iid);
 
     /**
      * Retrieves a list of all schema exceptions for the current transaction.

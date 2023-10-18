@@ -127,41 +127,31 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
     @Override
     @CheckReturnValue
     public final Promise<Void> setHas(TypeDBTransaction transaction, Attribute attribute) {
-        try {
-            return new Promise<>(thing_set_has(nativeTransaction(transaction), nativeObject, ((AttributeImpl) attribute).nativeObject));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return Promise.ofVoid(thing_set_has(nativeTransaction(transaction), nativeObject, ((AttributeImpl) attribute).nativeObject));
     }
 
     @Override
     @CheckReturnValue
     public final Promise<Void> unsetHas(TypeDBTransaction transaction, Attribute attribute) {
-        try {
-            return new Promise<>(thing_unset_has(nativeTransaction(transaction), nativeObject, ((AttributeImpl) attribute).nativeObject));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return Promise.ofVoid(thing_unset_has(nativeTransaction(transaction), nativeObject, ((AttributeImpl) attribute).nativeObject));
     }
 
     @Override
     @CheckReturnValue
     public final Promise<Void> delete(TypeDBTransaction transaction) {
-        try {
-            return new Promise<>(thing_delete(nativeTransaction(transaction), nativeObject));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return Promise.ofVoid(thing_delete(nativeTransaction(transaction), nativeObject));
     }
 
     @Override
     @CheckReturnValue
     public final Promise<Boolean> isDeleted(TypeDBTransaction transaction) {
-        try {
-            return new Promise<>(thing_is_deleted(nativeTransaction(transaction), nativeObject));
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return new Promise<>(() -> {
+            try {
+                return thing_is_deleted(nativeTransaction(transaction), nativeObject).get();
+            } catch (com.vaticle.typedb.driver.jni.Error e) {
+                throw new TypeDBDriverException(e);
+            }
+        });
     }
 
     @Override

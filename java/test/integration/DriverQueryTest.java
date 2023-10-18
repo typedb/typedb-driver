@@ -388,7 +388,7 @@ public class DriverQueryTest {
         }, TypeDBSession.Type.SCHEMA);
         localhostTypeDBTX(tx -> {
             for (int i = 0; i < 50; i++) {
-                EntityType concept = tx.concepts().getEntityType("person");
+                EntityType concept = tx.concepts().getEntityType("person").resolve();
                 List<? extends AttributeType> attributeTypes = concept.getOwns(tx).collect(toList());
                 Optional<ConceptMap> conceptMap = tx.query().match("match $x sub thing; limit 1;").findFirst();
             }

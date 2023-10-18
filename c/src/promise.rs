@@ -19,10 +19,12 @@
  * under the License.
  */
 
+use std::ffi::c_char;
+
 use typedb_driver::{BoxPromise, Promise, Result};
 
 use crate::{
-    error::{unwrap_or_default, unwrap_void},
+    error::{try_release_optional_string, unwrap_or_default, unwrap_void},
     memory::take_ownership,
 };
 
@@ -38,4 +40,11 @@ pub struct BoolPromise(pub BoxPromise<'static, Result<bool>>);
 #[no_mangle]
 pub extern "C" fn bool_promise_resolve(promise: *mut BoolPromise) -> bool {
     unwrap_or_default(take_ownership(promise).0.resolve())
+}
+
+pub struct StringPromise(pub BoxPromise<'static, Result<Option<String>>>);
+
+#[no_mangle]
+pub extern "C" fn string_promise_resolve(promise: *mut StringPromise) -> *mut c_char {
+    try_release_optional_string(take_ownership(promise).0.resolve().transpose())
 }
