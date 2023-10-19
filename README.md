@@ -10,7 +10,7 @@ This repository stores all TypeDB Drivers built by Vaticle.
 
 See the table below for links to README files, documentation, and source code.
 
-| Driver  | Readme | Documentation | Source codes |
+| Driver  | Readme | Documentation | Source code |
 |---------|--------|---------------|--------------|
 | Rust | [README](https://github.com/vaticle/typedb-driver/tree/development/rust/README.md) | Coming soon | [`rust/src/`](https://github.com/vaticle/typedb-driver/tree/development/rust/src) |
 | Python | [README](https://github.com/vaticle/typedb-driver/tree/development/python/README.md) | [Documentation](https://typedb.com/docs/clients/2.x/python/python-overview) | [`python/typedb/`](https://github.com/vaticle/typedb-driver/tree/development/python/typedb) |
