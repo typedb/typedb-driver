@@ -58,7 +58,7 @@ bool test_database_management() {
     while (NULL != (database = database_iterator_next(it))) {
         char* name = database_get_name(database);
         foundDB = foundDB || (0 == strcmp(databaseName, name));
-        free(name);
+        string_free(name);
         database_close(database);
     }
     database_iterator_drop(it);
@@ -112,7 +112,7 @@ bool test_query_schema() {
         transaction = transaction_new(session, Write, opts);
         if (FAILED()) goto cleanup;
 
-        query_define(transaction, "define name sub attribute, value string;", opts);
+        void_promise_resolve(query_define(transaction, "define name sub attribute, value string;", opts));
         if (FAILED()) goto cleanup;
 
         ConceptMapIterator* it = query_match(transaction, "match $t sub thing;", opts);
@@ -122,13 +122,13 @@ bool test_query_schema() {
             Concept* concept = concept_map_get(conceptMap, "t");
             char* label = thing_type_get_label(concept);
             foundName = foundName || (0 == strcmp(label, "name"));
-            free(label);
+            string_free(label);
             concept_drop(concept);
             concept_map_drop(conceptMap);
         }
         concept_map_iterator_drop(it);
 
-        transaction_commit(transaction);
+        void_promise_resolve(transaction_commit(transaction));
         transaction = NULL;
 
         if (!foundName) {
@@ -185,10 +185,10 @@ bool test_query_data() {
         transaction = transaction_new(session, Write, opts);
         if (FAILED()) goto cleanup;
 
-        query_define(transaction, "define name sub attribute, value string;", opts);
+        void_promise_resolve(query_define(transaction, "define name sub attribute, value string;", opts));
         if (FAILED()) goto cleanup;
 
-        transaction_commit(transaction);
+        void_promise_resolve(transaction_commit(transaction));
         transaction = NULL;
 
         session_close(session);
@@ -214,14 +214,14 @@ bool test_query_data() {
             Concept* asValue = attribute_get_value(concept);
             char* attr = value_get_string(asValue);
             foundJohn = foundJohn || (0 == strcmp(attr, "John"));
-            free(attr);
+            string_free(attr);
             concept_drop(asValue);
             concept_drop(concept);
             concept_map_drop(conceptMap);
         }
         concept_map_iterator_drop(it);
 
-        transaction_commit(transaction);
+        void_promise_resolve(transaction_commit(transaction));
         transaction = NULL;
 
         if (!foundJohn) {
@@ -296,7 +296,7 @@ bool test_concept_api_schema() {
                 while (NULL != (concept = concept_iterator_next(it))) {
                     char* label = thing_type_get_label(concept);
                     foundName = foundName || (0 == strcmp(label, "name"));
-                    free(label);
+                    string_free(label);
                     concept_drop(concept);
                 }
             }
@@ -304,7 +304,7 @@ bool test_concept_api_schema() {
             concept_drop(rootAttributeType);
             concept_drop(nameType);
 
-            transaction_commit(transaction);
+            void_promise_resolve(transaction_commit(transaction));
             transaction = NULL;
             if (!foundName) {
                 fprintf(stderr, "Did not find type \'name\' in subtypes of attribute.\n");
@@ -370,7 +370,7 @@ bool test_concept_api_data() {
             else concept_drop(definedNameType);
         }
 
-        transaction_commit(transaction);
+        void_promise_resolve(transaction_commit(transaction));
         transaction = NULL;
 
         session_close(session);
@@ -408,14 +408,14 @@ bool test_concept_api_data() {
                 Concept* asValue = attribute_get_value(concept);
                 char* attr = value_get_string(asValue);
                 foundJohn = foundJohn || (0 == strcmp(attr, "John"));
-                free(attr);
+                string_free(attr);
                 concept_drop(asValue);
                 concept_drop(concept);
             }
             concept_iterator_drop(it);
         }
 
-        transaction_commit(transaction);
+        void_promise_resolve(transaction_commit(transaction));
         transaction = NULL;
 
         if (!foundJohn) {

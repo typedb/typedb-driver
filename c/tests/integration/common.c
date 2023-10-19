@@ -32,8 +32,8 @@ bool check_error_may_print(const char* filename, int lineno) {
         char* errcode = error_code(error);
         char* errmsg = error_message(error);
         fprintf(stderr, "Error!\nCheck called at %s:%d\n%s: %s\n", filename, lineno, errcode, errmsg);
-        free(errmsg);
-        free(errcode);
+        string_free(errmsg);
+        string_free(errcode);
         error_drop(error);
         return true;
     } else return false;
