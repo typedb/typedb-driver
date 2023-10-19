@@ -1,13 +1,11 @@
-[#_TypeDBDriverExceptionExt]
+[#_TypeDBDriverException]
 === TypeDBDriverException
 
 *Supertypes:*
 
-* `TypeDBDriverException`
+* `RuntimeError`
 
 Exceptions raised by the driver.
-
-For exceptions handling use ``TypeDBDriverException`` instead of this class.
 
 [caption=""]
 .TypeDBDriverException examples
@@ -18,7 +16,7 @@ For exceptions handling use ``TypeDBDriverException`` instead of this class.
 try:
     transaction.commit()
 except TypeDBDriverException as err:
-    println("Error:", err)
+    print("Error:", err)
 ----
 
 ====
