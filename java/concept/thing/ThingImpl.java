@@ -127,19 +127,19 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
     @Override
     @CheckReturnValue
     public final Promise<Void> setHas(TypeDBTransaction transaction, Attribute attribute) {
-        return Promise.ofVoid(thing_set_has(nativeTransaction(transaction), nativeObject, ((AttributeImpl) attribute).nativeObject));
+        return Promise.of(thing_set_has(nativeTransaction(transaction), nativeObject, ((AttributeImpl) attribute).nativeObject));
     }
 
     @Override
     @CheckReturnValue
     public final Promise<Void> unsetHas(TypeDBTransaction transaction, Attribute attribute) {
-        return Promise.ofVoid(thing_unset_has(nativeTransaction(transaction), nativeObject, ((AttributeImpl) attribute).nativeObject));
+        return Promise.of(thing_unset_has(nativeTransaction(transaction), nativeObject, ((AttributeImpl) attribute).nativeObject));
     }
 
     @Override
     @CheckReturnValue
     public final Promise<Void> delete(TypeDBTransaction transaction) {
-        return Promise.ofVoid(thing_delete(nativeTransaction(transaction), nativeObject));
+        return Promise.of(thing_delete(nativeTransaction(transaction), nativeObject));
     }
 
     @Override

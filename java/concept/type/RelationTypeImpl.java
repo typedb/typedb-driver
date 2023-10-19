@@ -27,7 +27,6 @@ import com.vaticle.typedb.driver.api.concept.type.RoleType;
 import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.thing.RelationImpl;
-import com.vaticle.typedb.driver.jni.ConceptPromise;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
@@ -50,28 +49,15 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
         super(concept);
     }
 
-    @CheckReturnValue
-    public static Promise<RelationTypeImpl> promise(ConceptPromise promise) {
-        return new Promise<>(() -> {
-            try {
-                com.vaticle.typedb.driver.jni.Concept res = promise.get();
-                if (res != null) return new RelationTypeImpl(res);
-                else return null;
-            } catch (com.vaticle.typedb.driver.jni.Error e) {
-                throw new TypeDBDriverException(e);
-            }
-        });
-    }
-
     @Override
     public final Promise<RelationImpl> create(TypeDBTransaction transaction) {
-        return RelationImpl.promise(relation_type_create(nativeTransaction(transaction), nativeObject));
+        return Promise.map(relation_type_create(nativeTransaction(transaction), nativeObject), RelationImpl::new);
     }
 
     @Override
     @CheckReturnValue
     public final Promise<Void> setSupertype(TypeDBTransaction transaction, RelationType relationType) {
-        return Promise.ofVoid(relation_type_set_supertype(nativeTransaction(transaction), nativeObject, ((RelationTypeImpl) relationType).nativeObject));
+        return Promise.of(relation_type_set_supertype(nativeTransaction(transaction), nativeObject, ((RelationTypeImpl) relationType).nativeObject));
     }
 
     @Override
@@ -90,7 +76,7 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
     @Override
     public final Promise<RoleTypeImpl> getRelates(TypeDBTransaction transaction, String roleLabel) {
-        return RoleTypeImpl.promise(relation_type_get_relates_for_role_label(nativeTransaction(transaction), nativeObject, roleLabel));
+        return Promise.map(relation_type_get_relates_for_role_label(nativeTransaction(transaction), nativeObject, roleLabel), RoleTypeImpl::new);
     }
 
     @Nullable
@@ -101,7 +87,7 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
 
     @Override
     public final Promise<RoleTypeImpl> getRelatesOverridden(TypeDBTransaction transaction, String roleLabel) {
-        return RoleTypeImpl.promise(relation_type_get_relates_overridden(nativeTransaction(transaction), nativeObject, roleLabel));
+        return Promise.map(relation_type_get_relates_overridden(nativeTransaction(transaction), nativeObject, roleLabel), RoleTypeImpl::new);
     }
 
     @Override
@@ -119,25 +105,25 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     @Override
     @CheckReturnValue
     public final Promise<Void> setRelates(TypeDBTransaction transaction, String roleLabel, String overriddenLabel) {
-        return Promise.ofVoid(relation_type_set_relates(nativeTransaction(transaction), nativeObject, roleLabel, overriddenLabel));
+        return Promise.of(relation_type_set_relates(nativeTransaction(transaction), nativeObject, roleLabel, overriddenLabel));
     }
 
     @Override
     @CheckReturnValue
     public Promise<Void> unsetRelates(TypeDBTransaction transaction, RoleType roleType) {
-        return Promise.ofVoid(relation_type_unset_relates(nativeTransaction(transaction), nativeObject, roleType.getLabel().name()));
+        return Promise.of(relation_type_unset_relates(nativeTransaction(transaction), nativeObject, roleType.getLabel().name()));
     }
 
     @Override
     @CheckReturnValue
     public final Promise<Void> unsetRelates(TypeDBTransaction transaction, String roleLabel) {
-        return Promise.ofVoid(relation_type_unset_relates(nativeTransaction(transaction), nativeObject, roleLabel));
+        return Promise.of(relation_type_unset_relates(nativeTransaction(transaction), nativeObject, roleLabel));
     }
 
     @Nullable
     @Override
     public Promise<RelationTypeImpl> getSupertype(TypeDBTransaction transaction) {
-        return RelationTypeImpl.promise(relation_type_get_supertype(nativeTransaction(transaction), nativeObject));
+        return Promise.map(relation_type_get_supertype(nativeTransaction(transaction), nativeObject), RelationTypeImpl::new);
     }
 
     @Override

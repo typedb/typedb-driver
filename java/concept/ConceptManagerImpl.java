@@ -81,63 +81,63 @@ public final class ConceptManagerImpl implements ConceptManager {
     public Promise<EntityTypeImpl> getEntityType(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBDriverException(MISSING_LABEL);
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        return EntityTypeImpl.promise(concepts_get_entity_type(nativeTransaction, label));
+        return Promise.map(concepts_get_entity_type(nativeTransaction, label), EntityTypeImpl::new);
     }
 
     @Override
     public Promise<RelationTypeImpl> getRelationType(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBDriverException(MISSING_LABEL);
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        return RelationTypeImpl.promise(concepts_get_relation_type(nativeTransaction, label));
+        return Promise.map(concepts_get_relation_type(nativeTransaction, label), RelationTypeImpl::new);
     }
 
     @Override
     public Promise<AttributeTypeImpl> getAttributeType(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBDriverException(MISSING_LABEL);
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        return AttributeTypeImpl.promise(concepts_get_attribute_type(nativeTransaction, label));
+        return Promise.map(concepts_get_attribute_type(nativeTransaction, label), AttributeTypeImpl::new);
     }
 
     @Override
     public Promise<EntityTypeImpl> putEntityType(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBDriverException(MISSING_LABEL);
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        return EntityTypeImpl.promise(concepts_put_entity_type(nativeTransaction, label));
+        return Promise.map(concepts_put_entity_type(nativeTransaction, label), EntityTypeImpl::new);
     }
 
     @Override
     public Promise<RelationTypeImpl> putRelationType(String label) {
         if (label == null || label.isEmpty()) throw new TypeDBDriverException(MISSING_LABEL);
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        return RelationTypeImpl.promise(concepts_put_relation_type(nativeTransaction, label));
+        return Promise.map(concepts_put_relation_type(nativeTransaction, label), RelationTypeImpl::new);
     }
 
     @Override
     public Promise<AttributeTypeImpl> putAttributeType(String label, Value.Type valueType) {
         if (label == null || label.isEmpty()) throw new TypeDBDriverException(MISSING_LABEL);
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        return AttributeTypeImpl.promise(concepts_put_attribute_type(nativeTransaction, label, valueType.nativeObject));
+        return Promise.map(concepts_put_attribute_type(nativeTransaction, label, valueType.nativeObject), AttributeTypeImpl::new);
     }
 
     @Override
     public Promise<EntityImpl> getEntity(String iid) {
         if (iid == null || iid.isEmpty()) throw new TypeDBDriverException(MISSING_IID);
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        return EntityImpl.promise(concepts_get_entity(nativeTransaction, iid));
+        return Promise.map(concepts_get_entity(nativeTransaction, iid), EntityImpl::new);
     }
 
     @Override
     public Promise<RelationImpl> getRelation(String iid) {
         if (iid == null || iid.isEmpty()) throw new TypeDBDriverException(MISSING_IID);
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        return RelationImpl.promise(concepts_get_relation(nativeTransaction, iid));
+        return Promise.map(concepts_get_relation(nativeTransaction, iid), RelationImpl::new);
     }
 
     @Override
     public Promise<AttributeImpl> getAttribute(String iid) {
         if (iid == null || iid.isEmpty()) throw new TypeDBDriverException(MISSING_IID);
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        return AttributeImpl.promise(concepts_get_attribute(nativeTransaction, iid));
+        return Promise.map(concepts_get_attribute(nativeTransaction, iid), AttributeImpl::new);
     }
 
     @Override

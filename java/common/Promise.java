@@ -25,6 +25,7 @@ import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.jni.StringPromise;
 import com.vaticle.typedb.driver.jni.VoidPromise;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class Promise<T> {
@@ -38,7 +39,20 @@ public class Promise<T> {
         return this.inner.get();
     }
 
-    static public Promise<Void> ofVoid(VoidPromise promise) {
+    static public<T, U, P extends Supplier<T>, F extends Function<T, U>>
+    Promise<U> map(P promise, F fn) {
+        return new Promise<>(() -> {
+            try {
+                T res = promise.get();
+                if (res != null) return fn.apply(res);
+                else return null;
+            } catch (com.vaticle.typedb.driver.jni.Error e) {
+                throw new TypeDBDriverException(e);
+            }
+        });
+    }
+
+    static public Promise<Void> of(VoidPromise promise) {
         return new Promise<>(() -> {
             try {
                 return promise.get();
@@ -48,7 +62,7 @@ public class Promise<T> {
         });
     }
 
-    static public Promise<String> ofString(StringPromise promise) {
+    static public Promise<String> of(StringPromise promise) {
         return new Promise<>(() -> {
             try {
                 return promise.get();

@@ -26,9 +26,7 @@ import com.vaticle.typedb.driver.api.concept.type.EntityType;
 import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.thing.EntityImpl;
-import com.vaticle.typedb.driver.jni.ConceptPromise;
 
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
@@ -44,33 +42,20 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
         super(concept);
     }
 
-    @CheckReturnValue
-    public static Promise<EntityTypeImpl> promise(ConceptPromise promise) {
-        return new Promise<>(() -> {
-            try {
-                com.vaticle.typedb.driver.jni.Concept res = promise.get();
-                if (res != null) return new EntityTypeImpl(res);
-                else return null;
-            } catch (com.vaticle.typedb.driver.jni.Error e) {
-                throw new TypeDBDriverException(e);
-            }
-        });
-    }
-
     @Override
     public final Promise<EntityImpl> create(TypeDBTransaction transaction) {
-        return EntityImpl.promise(entity_type_create(nativeTransaction(transaction), nativeObject));
+        return Promise.map(entity_type_create(nativeTransaction(transaction), nativeObject), EntityImpl::new);
     }
 
     @Override
     public final Promise<Void> setSupertype(TypeDBTransaction transaction, EntityType entityType) {
-        return Promise.ofVoid(entity_type_set_supertype(nativeTransaction(transaction), nativeObject, ((EntityTypeImpl) entityType).nativeObject));
+        return Promise.of(entity_type_set_supertype(nativeTransaction(transaction), nativeObject, ((EntityTypeImpl) entityType).nativeObject));
     }
 
     @Nullable
     @Override
     public Promise<EntityTypeImpl> getSupertype(TypeDBTransaction transaction) {
-        return EntityTypeImpl.promise(entity_type_get_supertype(nativeTransaction(transaction), nativeObject));
+        return Promise.map(entity_type_get_supertype(nativeTransaction(transaction), nativeObject), EntityTypeImpl::new);
     }
 
     @Override

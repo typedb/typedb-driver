@@ -74,13 +74,13 @@ public class RuleImpl extends NativeObject<com.vaticle.typedb.driver.jni.Rule> i
     @CheckReturnValue
     public Promise<Void> setLabel(TypeDBTransaction transaction, String newLabel) {
         if (newLabel == null || newLabel.isEmpty()) throw new TypeDBDriverException(MISSING_LABEL);
-        return Promise.ofVoid(rule_set_label(nativeTransaction(transaction), nativeObject, newLabel));
+        return Promise.of(rule_set_label(nativeTransaction(transaction), nativeObject, newLabel));
     }
 
     @Override
     @CheckReturnValue
     public Promise<Void> delete(TypeDBTransaction transaction) {
-        return Promise.ofVoid(rule_delete(nativeTransaction(transaction), nativeObject));
+        return Promise.of(rule_delete(nativeTransaction(transaction), nativeObject));
     }
 
     @Override

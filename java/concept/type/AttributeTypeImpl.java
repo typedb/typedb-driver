@@ -23,16 +23,12 @@ package com.vaticle.typedb.driver.concept.type;
 
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.value.Value;
-import com.vaticle.typedb.driver.api.concept.thing.Attribute;
 import com.vaticle.typedb.driver.api.concept.type.AttributeType;
 import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.value.ValueImpl;
 import com.vaticle.typedb.driver.concept.thing.AttributeImpl;
-import com.vaticle.typedb.driver.jni.ConceptPromise;
-import com.vaticle.typedb.driver.jni.Transitivity;
 
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -58,19 +54,6 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
         super(concept);
     }
 
-    @CheckReturnValue
-    public static Promise<AttributeTypeImpl> promise(ConceptPromise promise) {
-        return new Promise<>(() -> {
-            try {
-                com.vaticle.typedb.driver.jni.Concept res = promise.get();
-                if (res != null) return new AttributeTypeImpl(res);
-                else return null;
-            } catch (com.vaticle.typedb.driver.jni.Error e) {
-                throw new TypeDBDriverException(e);
-            }
-        });
-    }
-
     @Override
     public Value.Type getValueType() {
         return Value.Type.of(attribute_type_get_value_type(nativeObject));
@@ -78,14 +61,14 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     @Override
     public final Promise<Void> setSupertype(TypeDBTransaction transaction, AttributeType attributeType) {
-        return Promise.ofVoid(attribute_type_set_supertype(nativeTransaction(transaction),
+        return Promise.of(attribute_type_set_supertype(nativeTransaction(transaction),
                 nativeObject, ((AttributeTypeImpl) attributeType).nativeObject));
     }
 
     @Nullable
     @Override
     public Promise<AttributeTypeImpl> getSupertype(TypeDBTransaction transaction) {
-        return AttributeTypeImpl.promise(attribute_type_get_supertype(nativeTransaction(transaction), nativeObject));
+        return Promise.map(attribute_type_get_supertype(nativeTransaction(transaction), nativeObject), AttributeTypeImpl::new);
     }
 
     @Override
@@ -192,7 +175,7 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     @Override
     public final Promise<AttributeImpl> put(TypeDBTransaction transaction, Value value) {
-        return AttributeImpl.promise(attribute_type_put(nativeTransaction(transaction), nativeObject, ((ValueImpl) value).nativeObject));
+        return Promise.map(attribute_type_put(nativeTransaction(transaction), nativeObject, ((ValueImpl) value).nativeObject), AttributeImpl::new);
     }
 
     @Override
@@ -222,21 +205,21 @@ public class AttributeTypeImpl extends ThingTypeImpl implements AttributeType {
 
     @Override
     public final Promise<AttributeImpl> get(TypeDBTransaction transaction, Value value) {
-        return AttributeImpl.promise(attribute_type_get(nativeTransaction(transaction), nativeObject, ((ValueImpl) value).nativeObject));
+        return Promise.map(attribute_type_get(nativeTransaction(transaction), nativeObject, ((ValueImpl) value).nativeObject), AttributeImpl::new);
     }
 
     @Override
     public Promise<String> getRegex(TypeDBTransaction transaction) {
-        return Promise.ofString(attribute_type_get_regex(nativeTransaction(transaction), nativeObject));
+        return Promise.of(attribute_type_get_regex(nativeTransaction(transaction), nativeObject));
     }
 
     @Override
     public Promise<Void> setRegex(TypeDBTransaction transaction, String regex) {
-        return Promise.ofVoid(attribute_type_set_regex(nativeTransaction(transaction), nativeObject, regex));
+        return Promise.of(attribute_type_set_regex(nativeTransaction(transaction), nativeObject, regex));
     }
 
     @Override
     public Promise<Void> unsetRegex(TypeDBTransaction transaction) {
-        return Promise.ofVoid(attribute_type_unset_regex(nativeTransaction(transaction), nativeObject));
+        return Promise.of(attribute_type_unset_regex(nativeTransaction(transaction), nativeObject));
     }
 }

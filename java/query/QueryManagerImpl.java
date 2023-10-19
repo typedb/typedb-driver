@@ -225,7 +225,7 @@ public final class QueryManagerImpl implements QueryManager {
     public Promise<Void> delete(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBDriverException(MISSING_QUERY);
-        return Promise.ofVoid(query_delete(nativeTransaction, query, options.nativeObject));
+        return Promise.of(query_delete(nativeTransaction, query, options.nativeObject));
     }
 
     @Override
@@ -277,7 +277,7 @@ public final class QueryManagerImpl implements QueryManager {
     public Promise<Void> define(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBDriverException(MISSING_QUERY);
-        return Promise.ofVoid(query_define(nativeTransaction, query, options.nativeObject));
+        return Promise.of(query_define(nativeTransaction, query, options.nativeObject));
     }
 
     @Override
@@ -303,7 +303,7 @@ public final class QueryManagerImpl implements QueryManager {
     public Promise<Void> undefine(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBDriverException(MISSING_QUERY);
-        return Promise.ofVoid(query_undefine(nativeTransaction, query, options.nativeObject));
+        return Promise.of(query_undefine(nativeTransaction, query, options.nativeObject));
     }
 
     @Override
