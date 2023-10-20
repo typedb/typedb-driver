@@ -8,6 +8,59 @@ A ``Label`` holds the uniquely identifying name of a type.
 It consists of an optional ``scope``, and a ``name``, represented ``scope:name``. The scope is used only used to distinguish between role-types of the same name declared in different relation types.
 
 // tag::methods[]
+[#_Label_equals_java_lang_Object]
+==== equals
+
+[source,java]
+----
+public boolean equals​(java.lang.Object obj)
+----
+
+Checks if this Label is equal to another object. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `obj` a| Object to compare with a| `java.lang.Object`
+|===
+
+[caption=""]
+.Returns
+`public boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+label.equals(obj);
+----
+
+[#_Label_name_]
+==== name
+
+[source,java]
+----
+public java.lang.String name()
+----
+
+Returns the name of this Label. 
+
+
+[caption=""]
+.Returns
+`public java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+label.name();
+----
+
 [#_Label_of_java_lang_String]
 ==== of
 
@@ -94,28 +147,6 @@ Returns the scope of this Label.
 label.scope();
 ----
 
-[#_Label_name_]
-==== name
-
-[source,java]
-----
-public java.lang.String name()
-----
-
-Returns the name of this Label. 
-
-
-[caption=""]
-.Returns
-`public java.lang.String`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-label.name();
-----
-
 [#_Label_scopedName_]
 ==== scopedName
 
@@ -158,37 +189,6 @@ Returns the string representation of the scoped name.
 [source,java]
 ----
 label.scoped_name();
-----
-
-[#_Label_equals_java_lang_Object]
-==== equals
-
-[source,java]
-----
-public boolean equals​(java.lang.Object obj)
-----
-
-Checks if this Label is equal to another object. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `obj` a| Object to compare with a| `java.lang.Object`
-|===
-
-[caption=""]
-.Returns
-`public boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-label.equals(obj);
 ----
 
 // end::methods[]

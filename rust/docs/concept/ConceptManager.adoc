@@ -8,6 +8,216 @@
 Provides access for all Concept API methods.
 
 // tag::methods[]
+[#_struct_ConceptManager_method_get_attribute]
+==== get_attribute
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn get_attribute(&self, iid: IID) -> Result<Option<Attribute>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn get_attribute(&self, iid: IID) -> Result<Option<Attribute>>
+----
+
+--
+====
+
+Retrieves an ``Attribute`` by its iid.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `iid` a| The iid of the ``Attribute`` to retrieve a| `IID`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Option<Attribute>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+transaction.concepts().get_attribute(iid).await
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+transaction.concepts().get_attribute(iid)
+----
+
+--
+====
+
+[#_struct_ConceptManager_method_get_attribute_type]
+==== get_attribute_type
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn get_attribute_type(
+    &self,
+    label: String
+) -> Result<Option<AttributeType>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn get_attribute_type(&self, label: String) -> Result<Option<AttributeType>>
+----
+
+--
+====
+
+Retrieves an ``AttributeType`` by its label.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the ``AttributeType`` to retrieve a| `String`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Option<AttributeType>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+transaction.concepts().get_attribute_type(label).await
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+transaction.concepts().get_attribute_type(label)
+----
+
+--
+====
+
+[#_struct_ConceptManager_method_get_entity]
+==== get_entity
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn get_entity(&self, iid: IID) -> Result<Option<Entity>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn get_entity(&self, iid: IID) -> Result<Option<Entity>>
+----
+
+--
+====
+
+Retrieves an ``Entity`` by its iid.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `iid` a| The iid of the ``Entity`` to retrieve a| `IID`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Option<Entity>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+transaction.concepts().get_entity(iid).await
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+transaction.concepts().get_entity(iid)
+----
+
+--
+====
+
 [#_struct_ConceptManager_method_get_entity_type]
 ==== get_entity_type
 
@@ -72,6 +282,75 @@ sync::
 [source,rust]
 ----
 transaction.concepts().get_entity_type(label)
+----
+
+--
+====
+
+[#_struct_ConceptManager_method_get_relation]
+==== get_relation
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn get_relation(&self, iid: IID) -> Result<Option<Relation>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn get_relation(&self, iid: IID) -> Result<Option<Relation>>
+----
+
+--
+====
+
+Retrieves a ``Relation`` by its iid.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `iid` a| The iid of the ``Relation`` to retrieve a| `IID`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Option<Relation>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+transaction.concepts().get_relation(iid).await
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+transaction.concepts().get_relation(iid)
 ----
 
 --
@@ -149,8 +428,34 @@ transaction.concepts().get_relation_type(label)
 --
 ====
 
-[#_struct_ConceptManager_method_get_attribute_type]
-==== get_attribute_type
+[#_struct_ConceptManager_method_get_schema_exceptions]
+==== get_schema_exceptions
+
+[source,rust]
+----
+pub fn get_schema_exceptions(
+    &self
+) -> Result<impl Stream<Item = Result<SchemaException>>>
+----
+
+Retrieves a list of all schema exceptions for the current transaction.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<impl Stream<Item = Result<SchemaException>>>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+transaction.concepts().get_schema_exceptions()
+----
+
+[#_struct_ConceptManager_method_put_attribute_type]
+==== put_attribute_type
 
 [tabs]
 ====
@@ -159,10 +464,11 @@ async::
 --
 [source,rust]
 ----
-pub async fn get_attribute_type(
+pub async fn put_attribute_type(
     &self,
-    label: String
-) -> Result<Option<AttributeType>>
+    label: String,
+    value_type: ValueType
+) -> Result<AttributeType>
 ----
 
 --
@@ -172,13 +478,17 @@ sync::
 --
 [source,rust]
 ----
-pub fn get_attribute_type(&self, label: String) -> Result<Option<AttributeType>>
+pub fn put_attribute_type(
+    &self,
+    label: String,
+    value_type: ValueType
+) -> Result<AttributeType>
 ----
 
 --
 ====
 
-Retrieves an ``AttributeType`` by its label.
+Creates a new ``AttributeType`` if none exists with the given label, or retrieves the existing one. or retrieve. :return:
 
 [caption=""]
 .Input parameters
@@ -186,14 +496,15 @@ Retrieves an ``AttributeType`` by its label.
 [options="header"]
 |===
 |Name |Description |Type
-a| `label` a| The label of the ``AttributeType`` to retrieve a| `String`
+a| `label` a| The label of the ``AttributeType`` to create or retrieve a| `String`
+a| `value_type` a| The value type of the ``AttributeType`` to create a| `ValueType`
 |===
 
 [caption=""]
 .Returns
 [source,rust]
 ----
-Result<Option<AttributeType>>
+Result<AttributeType>
 ----
 
 [caption=""]
@@ -205,7 +516,7 @@ async::
 --
 [source,rust]
 ----
-transaction.concepts().get_attribute_type(label).await
+await transaction.concepts().put_attribute_type(label, value_type).await
 ----
 
 --
@@ -215,7 +526,7 @@ sync::
 --
 [source,rust]
 ----
-transaction.concepts().get_attribute_type(label)
+await transaction.concepts().put_attribute_type(label, value_type)
 ----
 
 --
@@ -358,317 +669,6 @@ transaction.concepts().put_relation_type(label)
 
 --
 ====
-
-[#_struct_ConceptManager_method_put_attribute_type]
-==== put_attribute_type
-
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-pub async fn put_attribute_type(
-    &self,
-    label: String,
-    value_type: ValueType
-) -> Result<AttributeType>
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn put_attribute_type(
-    &self,
-    label: String,
-    value_type: ValueType
-) -> Result<AttributeType>
-----
-
---
-====
-
-Creates a new ``AttributeType`` if none exists with the given label, or retrieves the existing one. or retrieve. :return:
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `label` a| The label of the ``AttributeType`` to create or retrieve a| `String`
-a| `value_type` a| The value type of the ``AttributeType`` to create a| `ValueType`
-|===
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result<AttributeType>
-----
-
-[caption=""]
-.Code examples
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-await transaction.concepts().put_attribute_type(label, value_type).await
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-await transaction.concepts().put_attribute_type(label, value_type)
-----
-
---
-====
-
-[#_struct_ConceptManager_method_get_entity]
-==== get_entity
-
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-pub async fn get_entity(&self, iid: IID) -> Result<Option<Entity>>
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn get_entity(&self, iid: IID) -> Result<Option<Entity>>
-----
-
---
-====
-
-Retrieves an ``Entity`` by its iid.
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `iid` a| The iid of the ``Entity`` to retrieve a| `IID`
-|===
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result<Option<Entity>>
-----
-
-[caption=""]
-.Code examples
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-transaction.concepts().get_entity(iid).await
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-transaction.concepts().get_entity(iid)
-----
-
---
-====
-
-[#_struct_ConceptManager_method_get_relation]
-==== get_relation
-
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-pub async fn get_relation(&self, iid: IID) -> Result<Option<Relation>>
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn get_relation(&self, iid: IID) -> Result<Option<Relation>>
-----
-
---
-====
-
-Retrieves a ``Relation`` by its iid.
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `iid` a| The iid of the ``Relation`` to retrieve a| `IID`
-|===
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result<Option<Relation>>
-----
-
-[caption=""]
-.Code examples
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-transaction.concepts().get_relation(iid).await
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-transaction.concepts().get_relation(iid)
-----
-
---
-====
-
-[#_struct_ConceptManager_method_get_attribute]
-==== get_attribute
-
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-pub async fn get_attribute(&self, iid: IID) -> Result<Option<Attribute>>
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn get_attribute(&self, iid: IID) -> Result<Option<Attribute>>
-----
-
---
-====
-
-Retrieves an ``Attribute`` by its iid.
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `iid` a| The iid of the ``Attribute`` to retrieve a| `IID`
-|===
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result<Option<Attribute>>
-----
-
-[caption=""]
-.Code examples
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-transaction.concepts().get_attribute(iid).await
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-transaction.concepts().get_attribute(iid)
-----
-
---
-====
-
-[#_struct_ConceptManager_method_get_schema_exceptions]
-==== get_schema_exceptions
-
-[source,rust]
-----
-pub fn get_schema_exceptions(
-    &self
-) -> Result<impl Stream<Item = Result<SchemaException>>>
-----
-
-Retrieves a list of all schema exceptions for the current transaction.
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result<impl Stream<Item = Result<SchemaException>>>
-----
-
-[caption=""]
-.Code examples
-[source,rust]
-----
-transaction.concepts().get_schema_exceptions()
-----
 
 // end::methods[]
 

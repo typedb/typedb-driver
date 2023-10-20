@@ -8,409 +8,6 @@
 * `Concept`
 
 // tag::methods[]
-[#_Thing_getIID_]
-==== getIID
-
-[source,java]
-----
-@CheckReturnValue
-java.lang.String getIID()
-----
-
-Retrieves the unique id of the ``Thing``. 
-
-
-[caption=""]
-.Returns
-`java.lang.String`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-thing.getIID();
-----
-
-[#_Thing_getType_]
-==== getType
-
-[source,java]
-----
-@CheckReturnValue
-ThingType getType()
-----
-
-Retrieves the type which this ``Thing`` belongs to. 
-
-
-[caption=""]
-.Returns
-`ThingType`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-thing.getType();
-----
-
-[#_Thing_isInferred_]
-==== isInferred
-
-[source,java]
-----
-@CheckReturnValue
-boolean isInferred()
-----
-
-Checks if this ``Thing`` is inferred by a [Reasoning Rule]. 
-
-
-[caption=""]
-.Returns
-`boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-thing.isInferred();
-----
-
-[#_Thing_isThing_]
-==== isThing
-
-[source,java]
-----
-@CheckReturnValue
-default boolean isThing()
-----
-
-Checks if the concept is a ``Thing``. 
-
-
-[caption=""]
-.Returns
-`boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-thing.isThing();
-----
-
-[#_Thing_asThing_]
-==== asThing
-
-[source,java]
-----
-@CheckReturnValue
-default Thing asThing()
-----
-
-Casts the concept to ``Thing``. 
-
-
-[caption=""]
-.Returns
-`Thing`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-thing.asThing();
-----
-
-[#_Thing_toJSON_]
-==== toJSON
-
-[source,java]
-----
-default com.eclipsesource.json.JsonObject toJSON()
-----
-
-Retrieves a ``Thing`` as JSON. 
-
-
-[caption=""]
-.Returns
-`com.eclipsesource.json.JsonObject`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-thing.toJSON();
-----
-
-[#_Thing_setHas_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_thing_Attribute]
-==== setHas
-
-[source,java]
-----
-void setHas​(TypeDBTransaction transaction,
-            Attribute attribute)
-----
-
-Assigns an ``Attribute`` to be owned by this ``Thing``. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute`
-|===
-
-[caption=""]
-.Returns
-`void`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-thing.setHas(transaction, attribute);
-----
-
-[#_Thing_unsetHas_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_thing_Attribute]
-==== unsetHas
-
-[source,java]
-----
-void unsetHas​(TypeDBTransaction transaction,
-              Attribute attribute)
-----
-
-Unassigns an ``Attribute`` from this ``Thing``. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attribute`
-|===
-
-[caption=""]
-.Returns
-`void`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-thing.unsetHas(transaction, attribute);
-----
-
-[#_Thing_getHas_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType___]
-==== getHas
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<? extends Attribute> getHas​(TypeDBTransaction transaction,
-                                                    AttributeType... attributeTypes)
-----
-
-Retrieves the ``Attribute``s that this ``Thing`` owns, optionally filtered by ``AttributeType``s. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-a| `attributeTypes` a| The ``AttributeType``s to filter the attributes by a| `AttributeType[]`
-|===
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<? extends Attribute>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-thing.getHas(transaction)
-     thing.getHas(transaction, attributeType=attributeType,
-     annotations=set(Annotation.key()))
-----
-
-[#_Thing_getHas_com_vaticle_typedb_driver_api_TypeDBTransaction_java_util_Set]
-==== getHas
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<? extends Attribute> getHas​(TypeDBTransaction transaction,
-                                                    java.util.Set<ThingType.Annotation> annotations)
-----
-
-Retrieves the ``Attribute``s that this ``Thing`` owns, filtered by ``Annotation``s. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a| `java.util.Set<ThingType.Annotation>`
-|===
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<? extends Attribute>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-thing.getHas(transaction);
- thing.getHas(transaction, annotations=set(Annotation.key()));
-----
-
-[#_Thing_getRelations_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType___]
-==== getRelations
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<? extends Relation> getRelations​(TypeDBTransaction transaction,
-                                                         RoleType... roleTypes)
-----
-
-Retrieves all the ``Relations`` which this ``Thing`` plays a role in, optionally filtered by one or more given roles. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-a| `roleTypes` a| The array of roles to filter the relations by. a| `RoleType[]`
-|===
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<? extends Relation>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-thing.getRelations(transaction, roleTypes);
-----
-
-[#_Thing_getPlaying_com_vaticle_typedb_driver_api_TypeDBTransaction]
-==== getPlaying
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<? extends RoleType> getPlaying​(TypeDBTransaction transaction)
-----
-
-Retrieves the roles that this ``Thing`` is currently playing. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-|===
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<? extends RoleType>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-thing.getPlaying(transaction);
-----
-
-[#_Thing_delete_com_vaticle_typedb_driver_api_TypeDBTransaction]
-==== delete
-
-[source,java]
-----
-void delete​(TypeDBTransaction transaction)
-----
-
-Deletes this ``Thing``. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-|===
-
-[caption=""]
-.Returns
-`void`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-thing.delete(transaction);
-----
-
-[#_Thing_isDeleted_com_vaticle_typedb_driver_api_TypeDBTransaction]
-==== isDeleted
-
-[source,java]
-----
-@CheckReturnValue
-boolean isDeleted​(TypeDBTransaction transaction)
-----
-
-Checks if this ``Thing`` is deleted. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-|===
-
-[caption=""]
-.Returns
-`boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-thing.isDeleted(transaction)
-----
-
 [#_Thing_asAttribute_]
 ==== asAttribute
 
@@ -565,6 +162,29 @@ Casts the concept to ``RoleType``.
 concept.asRoleType();
 ----
 
+[#_Thing_asThing_]
+==== asThing
+
+[source,java]
+----
+@CheckReturnValue
+default Thing asThing()
+----
+
+Casts the concept to ``Thing``. 
+
+
+[caption=""]
+.Returns
+`Thing`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+thing.asThing();
+----
+
 [#_Thing_asThingType_]
 ==== asThingType
 
@@ -631,6 +251,220 @@ Casts the concept to ``Value``.
 concept.asValue();
 ----
 
+[#_Thing_delete_com_vaticle_typedb_driver_api_TypeDBTransaction]
+==== delete
+
+[source,java]
+----
+void delete​(TypeDBTransaction transaction)
+----
+
+Deletes this ``Thing``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+thing.delete(transaction);
+----
+
+[#_Thing_getHas_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType___]
+==== getHas
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends Attribute> getHas​(TypeDBTransaction transaction,
+                                                    AttributeType... attributeTypes)
+----
+
+Retrieves the ``Attribute``s that this ``Thing`` owns, optionally filtered by ``AttributeType``s. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `attributeTypes` a| The ``AttributeType``s to filter the attributes by a| `AttributeType[]`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends Attribute>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+thing.getHas(transaction)
+     thing.getHas(transaction, attributeType=attributeType,
+     annotations=set(Annotation.key()))
+----
+
+[#_Thing_getHas_com_vaticle_typedb_driver_api_TypeDBTransaction_java_util_Set]
+==== getHas
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends Attribute> getHas​(TypeDBTransaction transaction,
+                                                    java.util.Set<ThingType.Annotation> annotations)
+----
+
+Retrieves the ``Attribute``s that this ``Thing`` owns, filtered by ``Annotation``s. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a| `java.util.Set<ThingType.Annotation>`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends Attribute>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+thing.getHas(transaction);
+ thing.getHas(transaction, annotations=set(Annotation.key()));
+----
+
+[#_Thing_getIID_]
+==== getIID
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String getIID()
+----
+
+Retrieves the unique id of the ``Thing``. 
+
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+thing.getIID();
+----
+
+[#_Thing_getPlaying_com_vaticle_typedb_driver_api_TypeDBTransaction]
+==== getPlaying
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends RoleType> getPlaying​(TypeDBTransaction transaction)
+----
+
+Retrieves the roles that this ``Thing`` is currently playing. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends RoleType>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+thing.getPlaying(transaction);
+----
+
+[#_Thing_getRelations_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType___]
+==== getRelations
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends Relation> getRelations​(TypeDBTransaction transaction,
+                                                         RoleType... roleTypes)
+----
+
+Retrieves all the ``Relations`` which this ``Thing`` plays a role in, optionally filtered by one or more given roles. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `roleTypes` a| The array of roles to filter the relations by. a| `RoleType[]`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends Relation>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+thing.getRelations(transaction, roleTypes);
+----
+
+[#_Thing_getType_]
+==== getType
+
+[source,java]
+----
+@CheckReturnValue
+ThingType getType()
+----
+
+Retrieves the type which this ``Thing`` belongs to. 
+
+
+[caption=""]
+.Returns
+`ThingType`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+thing.getType();
+----
+
 [#_Thing_isAttribute_]
 ==== isAttribute
 
@@ -677,6 +511,38 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType();
 ----
 
+[#_Thing_isDeleted_com_vaticle_typedb_driver_api_TypeDBTransaction]
+==== isDeleted
+
+[source,java]
+----
+@CheckReturnValue
+boolean isDeleted​(TypeDBTransaction transaction)
+----
+
+Checks if this ``Thing`` is deleted. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+thing.isDeleted(transaction)
+----
+
 [#_Thing_isEntity_]
 ==== isEntity
 
@@ -721,6 +587,29 @@ Checks if the concept is an ``EntityType``.
 [source,java]
 ----
 concept.isEntityType();
+----
+
+[#_Thing_isInferred_]
+==== isInferred
+
+[source,java]
+----
+@CheckReturnValue
+boolean isInferred()
+----
+
+Checks if this ``Thing`` is inferred by a [Reasoning Rule]. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+thing.isInferred();
 ----
 
 [#_Thing_isRelation_]
@@ -792,6 +681,29 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType();
 ----
 
+[#_Thing_isThing_]
+==== isThing
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isThing()
+----
+
+Checks if the concept is a ``Thing``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+thing.isThing();
+----
+
 [#_Thing_isThingType_]
 ==== isThingType
 
@@ -859,6 +771,94 @@ Checks if the concept is a ``Value``.
 [source,java]
 ----
 concept.isValue();
+----
+
+[#_Thing_setHas_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_thing_Attribute]
+==== setHas
+
+[source,java]
+----
+void setHas​(TypeDBTransaction transaction,
+            Attribute attribute)
+----
+
+Assigns an ``Attribute`` to be owned by this ``Thing``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+thing.setHas(transaction, attribute);
+----
+
+[#_Thing_toJSON_]
+==== toJSON
+
+[source,java]
+----
+default com.eclipsesource.json.JsonObject toJSON()
+----
+
+Retrieves a ``Thing`` as JSON. 
+
+
+[caption=""]
+.Returns
+`com.eclipsesource.json.JsonObject`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+thing.toJSON();
+----
+
+[#_Thing_unsetHas_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_thing_Attribute]
+==== unsetHas
+
+[source,java]
+----
+void unsetHas​(TypeDBTransaction transaction,
+              Attribute attribute)
+----
+
+Unassigns an ``Attribute`` from this ``Thing``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attribute`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+thing.unsetHas(transaction, attribute);
 ----
 
 // end::methods[]

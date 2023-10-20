@@ -15,8 +15,8 @@ User information
 [options="header"]
 |===
 |Name |Type |Description
-a| `username` a| `String` a| Returns the name of this user.
 a| `password_expiry_seconds` a| `Option<i64>` a| Returns the number of seconds remaining till this user’s current password expires.
+a| `username` a| `String` a| Returns the name of this user.
 |===
 // end::properties[]
 

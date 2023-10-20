@@ -20,12 +20,36 @@ Contains a mapping of variables to concepts.
 [options="header"]
 |===
 |Name |Type |Description
-a| `map` a| `HashMap<String, Concept>` a| The ``HashMap`` where keys are query variables, and values are concepts.
 a| `explainables` a| `Explainables` a| The ``Explainables`` object for this ``ConceptMap``, that exposes which of the concepts in this ``ConceptMap`` are explainable.
+a| `map` a| `HashMap<String, Concept>` a| The ``HashMap`` where keys are query variables, and values are concepts.
 |===
 // end::properties[]
 
 // tag::methods[]
+[#_struct_ConceptMap_method_concepts]
+==== concepts
+
+[source,rust]
+----
+pub fn concepts(&self) -> impl Iterator<Item = &Concept>
+----
+
+Produces an iterator over all concepts in this ``ConceptMap``.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+impl Iterator<Item = &Concept>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+concept_map.concepts()
+----
+
 [#_struct_ConceptMap_method_get]
 ==== get
 
@@ -57,30 +81,6 @@ Option<&Concept>
 [source,rust]
 ----
 concept_map.get(var_name)
-----
-
-[#_struct_ConceptMap_method_concepts]
-==== concepts
-
-[source,rust]
-----
-pub fn concepts(&self) -> impl Iterator<Item = &Concept>
-----
-
-Produces an iterator over all concepts in this ``ConceptMap``.
-
-[caption=""]
-.Returns
-[source,rust]
-----
-impl Iterator<Item = &Concept>
-----
-
-[caption=""]
-.Code examples
-[source,rust]
-----
-concept_map.concepts()
 ----
 
 // end::methods[]

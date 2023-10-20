@@ -6,6 +6,28 @@
 Provides access to all user management methods.
 
 // tag::methods[]
+[#_UserManager_all_]
+==== all
+
+[source,java]
+----
+java.util.Set<User> all()
+----
+
+Retrieves all users which exist on the TypeDB server. 
+
+
+[caption=""]
+.Returns
+`java.util.Set<User>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.users().all();
+----
+
 [#_UserManager_contains_java_lang_String]
 ==== contains
 
@@ -132,28 +154,6 @@ a| `username` a| The name of the user to retrieve a| `java.lang.String`
 [source,java]
 ----
 driver.users().get(username);
-----
-
-[#_UserManager_all_]
-==== all
-
-[source,java]
-----
-java.util.Set<User> all()
-----
-
-Retrieves all users which exist on the TypeDB server. 
-
-
-[caption=""]
-.Returns
-`java.util.Set<User>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-driver.users().all();
 ----
 
 [#_UserManager_passwordSet_java_lang_String_java_lang_String]

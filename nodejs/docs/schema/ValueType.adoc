@@ -20,6 +20,20 @@ a| `STRING`
 // end::enum_constants[]
 
 // tag::methods[]
+[#_ValueType_name]
+==== name
+
+[source,nodejs]
+----
+name(): string
+----
+
+
+
+[caption=""]
+.Returns
+`string`
+
 [#_ValueType_new_ValueType]
 ==== new ValueType
 
@@ -43,20 +57,6 @@ a| `name` a|  a| `string`
 [caption=""]
 .Returns
 `ValueType`
-
-[#_ValueType_name]
-==== name
-
-[source,nodejs]
-----
-name(): string
-----
-
-
-
-[caption=""]
-.Returns
-`string`
 
 [#_ValueType_toString]
 ==== toString

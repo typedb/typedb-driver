@@ -15,8 +15,8 @@
 [options="header"]
 |===
 |Name |Type |Description
-a| `owner` a| `Concept` a| Retrieves the concept that is the group owner.
 a| `concept_maps` a| `Vec<ConceptMap>` a| Retrieves the ConceptMaps of the group.
+a| `owner` a| `Concept` a| Retrieves the concept that is the group owner.
 |===
 // end::properties[]
 

@@ -18,8 +18,8 @@
 [options="header"]
 |===
 |Name |Type |Description
-a| `scope` a| `String` a| 
 a| `name` a| `String` a| 
+a| `scope` a| `String` a| 
 |===
 // end::properties[]
 

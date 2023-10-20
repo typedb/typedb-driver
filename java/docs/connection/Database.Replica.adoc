@@ -21,21 +21,6 @@ Retrieves the address of the server hosting this replica
 .Returns
 `java.lang.String`
 
-[#_Database.Replica_isPrimary_]
-==== isPrimary
-
-[source,java]
-----
-@CheckReturnValue
-boolean isPrimary()
-----
-
-Checks whether this is the primary replica of the raft cluster.
-
-[caption=""]
-.Returns
-`boolean`
-
 [#_Database.Replica_isPreferred_]
 ==== isPreferred
 
@@ -46,6 +31,21 @@ boolean isPreferred()
 ----
 
 Checks whether this is the preferred replica of the raft cluster. If true, Operations which can be run on any replica will prefer to use this replica.
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Database.Replica_isPrimary_]
+==== isPrimary
+
+[source,java]
+----
+@CheckReturnValue
+boolean isPrimary()
+----
+
+Checks whether this is the primary replica of the raft cluster.
 
 [caption=""]
 .Returns

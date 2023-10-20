@@ -6,49 +6,50 @@
 Annotation
 
 // tag::methods[]
-[#_ThingType.Annotation_key_]
-==== key
+[#_ThingType.Annotation_equals_java_lang_Object]
+==== equals
 
 [source,java]
 ----
-public static ThingType.Annotation key()
+public boolean equals​(java.lang.Object obj)
 ----
 
-Produces a ``@key`` annotation. 
+Checks if this ``Annotation`` is equal to another object. 
 
 
 [caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `obj` a| Object to compare with a| `java.lang.Object`
+|===
+
+[caption=""]
 .Returns
-`public static ThingType.Annotation`
+`public boolean`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-ThingType.Annotation.key();
+annotation.equals(obj);
 ----
 
-[#_ThingType.Annotation_unique_]
-==== unique
+[#_ThingType.Annotation_hashCode_]
+==== hashCode
 
 [source,java]
 ----
-public static ThingType.Annotation unique()
+public int hashCode()
 ----
 
-Produces a ``@unique`` annotation. 
 
 
 [caption=""]
 .Returns
-`public static ThingType.Annotation`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-Annotation.unique();
-----
+`public int`
 
 [#_ThingType.Annotation_isKey_]
 ==== isKey
@@ -94,6 +95,28 @@ Checks if this ``Annotation`` is a ``@unique`` annotation.
 annotation.isUnique();
 ----
 
+[#_ThingType.Annotation_key_]
+==== key
+
+[source,java]
+----
+public static ThingType.Annotation key()
+----
+
+Produces a ``@key`` annotation. 
+
+
+[caption=""]
+.Returns
+`public static ThingType.Annotation`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+ThingType.Annotation.key();
+----
+
 [#_ThingType.Annotation_toString_]
 ==== toString
 
@@ -116,50 +139,27 @@ Retrieves a string representation of this ``Annotation``.
 annotation.toString();
 ----
 
-[#_ThingType.Annotation_equals_java_lang_Object]
-==== equals
+[#_ThingType.Annotation_unique_]
+==== unique
 
 [source,java]
 ----
-public boolean equals​(java.lang.Object obj)
+public static ThingType.Annotation unique()
 ----
 
-Checks if this ``Annotation`` is equal to another object. 
+Produces a ``@unique`` annotation. 
 
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `obj` a| Object to compare with a| `java.lang.Object`
-|===
 
 [caption=""]
 .Returns
-`public boolean`
+`public static ThingType.Annotation`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-annotation.equals(obj);
+Annotation.unique();
 ----
-
-[#_ThingType.Annotation_hashCode_]
-==== hashCode
-
-[source,java]
-----
-public int hashCode()
-----
-
-
-
-[caption=""]
-.Returns
-`public int`
 
 // end::methods[]
 

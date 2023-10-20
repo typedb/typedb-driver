@@ -4,29 +4,6 @@
 TypeDB session and transaction options. ``TypeDBOptions`` object can be used to override the default server behaviour. Options could be specified either as constructor arguments or using setters.
 
 // tag::methods[]
-[#_TypeDBOptions_new_TypeDBOptions]
-==== new TypeDBOptions
-
-[source,nodejs]
-----
-new TypeDBOptions(obj?): TypeDBOptions
-----
-
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `obj` a| If set to ``True``, enables explanations for queries. Only affects read transactions. a| `{ explain?: boolean; infer?: boolean; parallel?: boolean; prefetch?: boolean; prefetchSize?: number; readAnyReplica?: boolean; schemaLockAcquireTimeoutMillis?: number; sessionIdleTimeoutMillis?: number; traceInference?: boolean; transactionTimeoutMillis?: number; } = {}`
-|===
-
-[caption=""]
-.Returns
-`TypeDBOptions`
-
 [#__explain]
 ====  explain
 
@@ -306,6 +283,29 @@ If set, specifies a timeout for killing transactions automatically, preventing m
 [caption=""]
 .Returns
 `void`
+
+[#_TypeDBOptions_new_TypeDBOptions]
+==== new TypeDBOptions
+
+[source,nodejs]
+----
+new TypeDBOptions(obj?): TypeDBOptions
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `obj` a| If set to ``True``, enables explanations for queries. Only affects read transactions. a| `{ explain?: boolean; infer?: boolean; parallel?: boolean; prefetch?: boolean; prefetchSize?: number; readAnyReplica?: boolean; schemaLockAcquireTimeoutMillis?: number; sessionIdleTimeoutMillis?: number; traceInference?: boolean; transactionTimeoutMillis?: number; } = {}`
+|===
+
+[caption=""]
+.Returns
+`TypeDBOptions`
 
 // end::methods[]
 

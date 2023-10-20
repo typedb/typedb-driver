@@ -28,114 +28,6 @@ Produces a new ``TypeDBOptions`` object.
 TypeDBOptions options = TypeDBOptions();
 ----
 
-[#_TypeDBOptions_infer_]
-==== infer
-
-[source,java]
-----
-@CheckReturnValue
-public java.util.Optional<java.lang.Boolean> infer()
-----
-
-Returns the value set for the inference in this ``TypeDBOptions`` object. 
-
-
-[caption=""]
-.Returns
-`public java.util.Optional<java.lang.Boolean>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-options.infer();
-----
-
-[#_TypeDBOptions_infer_boolean]
-==== infer
-
-[source,java]
-----
-public TypeDBOptions infer​(boolean infer)
-----
-
-Explicitly enables or disables inference. Only settable at transaction level and above. Only affects read transactions. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `infer` a| Explicitly enable or disable inference a| `boolean`
-|===
-
-[caption=""]
-.Returns
-`public TypeDBOptions`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-options.infer(infer);
-----
-
-[#_TypeDBOptions_traceInference_]
-==== traceInference
-
-[source,java]
-----
-@CheckReturnValue
-public java.util.Optional<java.lang.Boolean> traceInference()
-----
-
-Returns the value set for reasoning tracing in this ``TypeDBOptions`` object. If set to ``true``, reasoning tracing graphs are output in the logging directory. 
-
-
-[caption=""]
-.Returns
-`public java.util.Optional<java.lang.Boolean>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-options.traceInference();
-----
-
-[#_TypeDBOptions_traceInference_boolean]
-==== traceInference
-
-[source,java]
-----
-public TypeDBOptions traceInference​(boolean traceInference)
-----
-
-Explicitly enables or disables reasoning tracing. If set to ``true``, reasoning tracing graphs are output in the logging directory. Should be used with ``parallel = False``. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `traceInference` a| Explicitly enable or disable reasoning tracing a| `boolean`
-|===
-
-[caption=""]
-.Returns
-`public TypeDBOptions`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-options.traceInference(traceInference);
-----
-
 [#_TypeDBOptions_explain_]
 ==== explain
 
@@ -188,6 +80,60 @@ a| `explain` a| Explicitly enable or disable explanations a| `boolean`
 [source,java]
 ----
 options.explain(explain);
+----
+
+[#_TypeDBOptions_infer_]
+==== infer
+
+[source,java]
+----
+@CheckReturnValue
+public java.util.Optional<java.lang.Boolean> infer()
+----
+
+Returns the value set for the inference in this ``TypeDBOptions`` object. 
+
+
+[caption=""]
+.Returns
+`public java.util.Optional<java.lang.Boolean>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.infer();
+----
+
+[#_TypeDBOptions_infer_boolean]
+==== infer
+
+[source,java]
+----
+public TypeDBOptions infer​(boolean infer)
+----
+
+Explicitly enables or disables inference. Only settable at transaction level and above. Only affects read transactions. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `infer` a| Explicitly enable or disable inference a| `boolean`
+|===
+
+[caption=""]
+.Returns
+`public TypeDBOptions`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.infer(infer);
 ----
 
 [#_TypeDBOptions_parallel_]
@@ -352,38 +298,38 @@ a| `prefetchSize` a| Number of answers that the server should send before the dr
 options.prefetchSize(prefetchSize);
 ----
 
-[#_TypeDBOptions_sessionIdleTimeoutMillis_]
-==== sessionIdleTimeoutMillis
+[#_TypeDBOptions_readAnyReplica_]
+==== readAnyReplica
 
 [source,java]
 ----
 @CheckReturnValue
-public java.util.Optional<java.lang.Integer> sessionIdleTimeoutMillis()
+public java.util.Optional<java.lang.Boolean> readAnyReplica()
 ----
 
-Returns the value set for the session idle timeout in this ``TypeDBOptions`` object. If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive. 
+Returns the value set for reading data from any replica in this ``TypeDBOptions`` object. If set to ``True``, enables reading data from any replica, potentially boosting read throughput. 
 
 
 [caption=""]
 .Returns
-`public java.util.Optional<java.lang.Integer>`
+`public java.util.Optional<java.lang.Boolean>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-options.sessionIdleTimeoutMillis();
+options.readAnyReplica();
 ----
 
-[#_TypeDBOptions_sessionIdleTimeoutMillis_int]
-==== sessionIdleTimeoutMillis
+[#_TypeDBOptions_readAnyReplica_boolean]
+==== readAnyReplica
 
 [source,java]
 ----
-public TypeDBOptions sessionIdleTimeoutMillis​(int sessionIdleTimeoutMillis)
+public TypeDBOptions readAnyReplica​(boolean readAnyReplica)
 ----
 
-Explicitly sets a session idle timeout. If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive. 
+Explicitly enables or disables reading data from any replica. If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise. 
 
 
 [caption=""]
@@ -392,7 +338,7 @@ Explicitly sets a session idle timeout. If set, specifies a timeout that allows 
 [options="header"]
 |===
 |Name |Description |Type
-a| `sessionIdleTimeoutMillis` a| timeout that allows the server to close sessions if the driver terminates or becomes unresponsive a| `int`
+a| `readAnyReplica` a| Explicitly enable or disable reading data from any replica a| `boolean`
 |===
 
 [caption=""]
@@ -403,61 +349,7 @@ a| `sessionIdleTimeoutMillis` a| timeout that allows the server to close session
 .Code examples
 [source,java]
 ----
-options.sessionIdleTimeoutMillis(sessionIdleTimeoutMillis);
-----
-
-[#_TypeDBOptions_transactionTimeoutMillis_]
-==== transactionTimeoutMillis
-
-[source,java]
-----
-@CheckReturnValue
-public java.util.Optional<java.lang.Integer> transactionTimeoutMillis()
-----
-
-Returns the value set for the transaction timeout in this ``TypeDBOptions`` object. If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions. 
-
-
-[caption=""]
-.Returns
-`public java.util.Optional<java.lang.Integer>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-options.transactionTimeoutMillis();
-----
-
-[#_TypeDBOptions_transactionTimeoutMillis_int]
-==== transactionTimeoutMillis
-
-[source,java]
-----
-public TypeDBOptions transactionTimeoutMillis​(int transactionTimeoutMillis)
-----
-
-Explicitly set a transaction timeout. If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transactionTimeoutMillis` a| Timeout for killing transactions automatically a| `int`
-|===
-
-[caption=""]
-.Returns
-`public TypeDBOptions`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-options.transactionTimeoutMillis(transactionTimeoutMillis);
+options.readAnyReplica(readAnyReplica);
 ----
 
 [#_TypeDBOptions_schemaLockAcquireTimeoutMillis_]
@@ -513,38 +405,38 @@ a| `schemaLockAcquireTimeoutMillis` a| How long the driver should wait if openin
 options.schemaLockAcquireTimeoutMillis(schemaLockAcquireTimeoutMillis);
 ----
 
-[#_TypeDBOptions_readAnyReplica_]
-==== readAnyReplica
+[#_TypeDBOptions_sessionIdleTimeoutMillis_]
+==== sessionIdleTimeoutMillis
 
 [source,java]
 ----
 @CheckReturnValue
-public java.util.Optional<java.lang.Boolean> readAnyReplica()
+public java.util.Optional<java.lang.Integer> sessionIdleTimeoutMillis()
 ----
 
-Returns the value set for reading data from any replica in this ``TypeDBOptions`` object. If set to ``True``, enables reading data from any replica, potentially boosting read throughput. 
+Returns the value set for the session idle timeout in this ``TypeDBOptions`` object. If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive. 
 
 
 [caption=""]
 .Returns
-`public java.util.Optional<java.lang.Boolean>`
+`public java.util.Optional<java.lang.Integer>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-options.readAnyReplica();
+options.sessionIdleTimeoutMillis();
 ----
 
-[#_TypeDBOptions_readAnyReplica_boolean]
-==== readAnyReplica
+[#_TypeDBOptions_sessionIdleTimeoutMillis_int]
+==== sessionIdleTimeoutMillis
 
 [source,java]
 ----
-public TypeDBOptions readAnyReplica​(boolean readAnyReplica)
+public TypeDBOptions sessionIdleTimeoutMillis​(int sessionIdleTimeoutMillis)
 ----
 
-Explicitly enables or disables reading data from any replica. If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise. 
+Explicitly sets a session idle timeout. If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive. 
 
 
 [caption=""]
@@ -553,7 +445,7 @@ Explicitly enables or disables reading data from any replica. If set to ``True``
 [options="header"]
 |===
 |Name |Description |Type
-a| `readAnyReplica` a| Explicitly enable or disable reading data from any replica a| `boolean`
+a| `sessionIdleTimeoutMillis` a| timeout that allows the server to close sessions if the driver terminates or becomes unresponsive a| `int`
 |===
 
 [caption=""]
@@ -564,7 +456,115 @@ a| `readAnyReplica` a| Explicitly enable or disable reading data from any replic
 .Code examples
 [source,java]
 ----
-options.readAnyReplica(readAnyReplica);
+options.sessionIdleTimeoutMillis(sessionIdleTimeoutMillis);
+----
+
+[#_TypeDBOptions_traceInference_]
+==== traceInference
+
+[source,java]
+----
+@CheckReturnValue
+public java.util.Optional<java.lang.Boolean> traceInference()
+----
+
+Returns the value set for reasoning tracing in this ``TypeDBOptions`` object. If set to ``true``, reasoning tracing graphs are output in the logging directory. 
+
+
+[caption=""]
+.Returns
+`public java.util.Optional<java.lang.Boolean>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.traceInference();
+----
+
+[#_TypeDBOptions_traceInference_boolean]
+==== traceInference
+
+[source,java]
+----
+public TypeDBOptions traceInference​(boolean traceInference)
+----
+
+Explicitly enables or disables reasoning tracing. If set to ``true``, reasoning tracing graphs are output in the logging directory. Should be used with ``parallel = False``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `traceInference` a| Explicitly enable or disable reasoning tracing a| `boolean`
+|===
+
+[caption=""]
+.Returns
+`public TypeDBOptions`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.traceInference(traceInference);
+----
+
+[#_TypeDBOptions_transactionTimeoutMillis_]
+==== transactionTimeoutMillis
+
+[source,java]
+----
+@CheckReturnValue
+public java.util.Optional<java.lang.Integer> transactionTimeoutMillis()
+----
+
+Returns the value set for the transaction timeout in this ``TypeDBOptions`` object. If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions. 
+
+
+[caption=""]
+.Returns
+`public java.util.Optional<java.lang.Integer>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.transactionTimeoutMillis();
+----
+
+[#_TypeDBOptions_transactionTimeoutMillis_int]
+==== transactionTimeoutMillis
+
+[source,java]
+----
+public TypeDBOptions transactionTimeoutMillis​(int transactionTimeoutMillis)
+----
+
+Explicitly set a transaction timeout. If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transactionTimeoutMillis` a| Timeout for killing transactions automatically a| `int`
+|===
+
+[caption=""]
+.Returns
+`public TypeDBOptions`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+options.transactionTimeoutMillis(transactionTimeoutMillis);
 ----
 
 // end::methods[]

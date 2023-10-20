@@ -6,21 +6,6 @@
 TypeDB user information
 
 // tag::methods[]
-[#_User_username_]
-==== username
-
-[source,java]
-----
-@CheckReturnValue
-java.lang.String username()
-----
-
-Returns the name of this user.
-
-[caption=""]
-.Returns
-`java.lang.String`
-
 [#_User_passwordExpirySeconds_]
 ==== passwordExpirySeconds
 
@@ -59,6 +44,21 @@ a| `passwordNew` a| The new password a| `java.lang.String`
 [caption=""]
 .Returns
 `void`
+
+[#_User_username_]
+==== username
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String username()
+----
+
+Returns the name of this user.
+
+[caption=""]
+.Returns
+`java.lang.String`
 
 // end::methods[]
 

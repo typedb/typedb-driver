@@ -18,9 +18,9 @@ Contains explainable objects.
 [options="header"]
 |===
 |Name |Type |Description
-a| `relations` a| `HashMap<String, Explainable>` a| Explainable relations
 a| `attributes` a| `HashMap<String, Explainable>` a| Explainable attributes
 a| `ownerships` a| `HashMap<(String, String), Explainable>` a| Explainable pairs of (owner, attribute)
+a| `relations` a| `HashMap<String, Explainable>` a| Explainable relations
 |===
 // end::properties[]
 

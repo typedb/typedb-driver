@@ -15,8 +15,8 @@
 [options="header"]
 |===
 |Name |Type |Description
-a| `owner` a| `Concept` a| The concept that is the group owner.
 a| `numeric` a| `Numeric` a| 
+a| `owner` a| `Concept` a| The concept that is the group owner.
 |===
 // end::properties[]
 

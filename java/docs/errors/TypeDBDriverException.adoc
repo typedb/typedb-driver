@@ -6,20 +6,6 @@
 Exceptions raised by the driver.
 
 // tag::methods[]
-[#_TypeDBDriverException_getName_]
-==== getName
-
-[source,java]
-----
-public java.lang.String getName()
-----
-
-
-
-[caption=""]
-.Returns
-`public java.lang.String`
-
 [#_TypeDBDriverException_getErrorMessage_]
 ==== getErrorMessage
 
@@ -34,6 +20,20 @@ public com.vaticle.typedb.driver.common.exception.ErrorMessage getErrorMessage()
 [caption=""]
 .Returns
 `public com.vaticle.typedb.driver.common.exception.ErrorMessage`
+
+[#_TypeDBDriverException_getName_]
+==== getName
+
+[source,java]
+----
+public java.lang.String getName()
+----
+
+
+
+[caption=""]
+.Returns
+`public java.lang.String`
 
 // end::methods[]
 

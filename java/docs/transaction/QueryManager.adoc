@@ -6,6 +6,317 @@
 Provides methods for executing TypeQL queries in the transaction.
 
 // tag::methods[]
+[#_QueryManager_define_com_vaticle_typeql_lang_query_TypeQLDefine]
+==== define
+
+[source,java]
+----
+void define​(com.vaticle.typeql.lang.query.TypeQLDefine query)
+----
+
+Performs a TypeQL Define query with default options.
+
+
+See also: <<#_define_com_vaticle_typeql_lang_query_TypeQLDefine_com_vaticle_typedb_driver_api_TypeDBOptions,``define(TypeQLDefine, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`void`
+
+[#_QueryManager_define_com_vaticle_typeql_lang_query_TypeQLDefine_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== define
+
+[source,java]
+----
+void define​(com.vaticle.typeql.lang.query.TypeQLDefine query,
+            TypeDBOptions options)
+----
+
+Performs a TypeQL Define query in the transaction. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Define query to be executed a| `com.vaticle.typeql.lang.query.TypeQLDefine`
+a| `options` a| Specify query options a| `TypeDBOptions`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+transaction.query().define(query, options)
+----
+
+[#_QueryManager_define_java_lang_String]
+==== define
+
+[source,java]
+----
+void define​(java.lang.String query)
+----
+
+Performs a TypeQL Define query with default options.
+
+
+See also: <<#_define_com_vaticle_typeql_lang_query_TypeQLDefine_com_vaticle_typedb_driver_api_TypeDBOptions,``define(TypeQLDefine, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`void`
+
+[#_QueryManager_define_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== define
+
+[source,java]
+----
+void define​(java.lang.String query,
+            TypeDBOptions options)
+----
+
+
+See also: <<#_define_com_vaticle_typeql_lang_query_TypeQLDefine_com_vaticle_typedb_driver_api_TypeDBOptions,``define(TypeQLDefine, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`void`
+
+[#_QueryManager_delete_com_vaticle_typeql_lang_query_TypeQLDelete]
+==== delete
+
+[source,java]
+----
+void delete​(com.vaticle.typeql.lang.query.TypeQLDelete query)
+----
+
+Performs a TypeQL Delete query with default options.
+
+
+See also: <<#_delete_com_vaticle_typeql_lang_query_TypeQLDelete_com_vaticle_typedb_driver_api_TypeDBOptions,``delete(TypeQLDelete, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`void`
+
+[#_QueryManager_delete_com_vaticle_typeql_lang_query_TypeQLDelete_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== delete
+
+[source,java]
+----
+void delete​(com.vaticle.typeql.lang.query.TypeQLDelete query,
+            TypeDBOptions options)
+----
+
+Performs a TypeQL Delete query in the transaction. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Delete query to be executed a| `com.vaticle.typeql.lang.query.TypeQLDelete`
+a| `options` a| Specify query options a| `TypeDBOptions`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+transaction.query().delete(query, options)
+----
+
+[#_QueryManager_delete_java_lang_String]
+==== delete
+
+[source,java]
+----
+void delete​(java.lang.String query)
+----
+
+Performs a TypeQL Delete query with default options.
+
+
+See also: <<#_delete_com_vaticle_typeql_lang_query_TypeQLDelete_com_vaticle_typedb_driver_api_TypeDBOptions,``delete(TypeQLDelete, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`void`
+
+[#_QueryManager_delete_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== delete
+
+[source,java]
+----
+void delete​(java.lang.String query,
+            TypeDBOptions options)
+----
+
+
+See also: <<#_delete_com_vaticle_typeql_lang_query_TypeQLDelete_com_vaticle_typedb_driver_api_TypeDBOptions,``delete(TypeQLDelete, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`void`
+
+[#_QueryManager_explain_com_vaticle_typedb_driver_api_answer_ConceptMap_Explainable]
+==== explain
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<Explanation> explain​(ConceptMap.Explainable explainable)
+----
+
+Performs a TypeQL Explain query with default options.
+
+
+See also: <<#_explain_com_vaticle_typedb_driver_api_answer_ConceptMap_Explainable_com_vaticle_typedb_driver_api_TypeDBOptions,``explain(ConceptMap.Explainable, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<Explanation>`
+
+[#_QueryManager_explain_com_vaticle_typedb_driver_api_answer_ConceptMap_Explainable_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== explain
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<Explanation> explain​(ConceptMap.Explainable explainable,
+                                             TypeDBOptions options)
+----
+
+Performs a TypeQL Explain query in the transaction. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `explainable` a| The Explainable to be explained a| `ConceptMap.Explainable`
+a| `options` a| Specify query options a| `TypeDBOptions`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<Explanation>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+transaction.query().explain(explainable, options)
+----
+
+[#_QueryManager_insert_com_vaticle_typeql_lang_query_TypeQLInsert]
+==== insert
+
+[source,java]
+----
+java.util.stream.Stream<ConceptMap> insert​(com.vaticle.typeql.lang.query.TypeQLInsert query)
+----
+
+Performs a TypeQL Insert query with default options.
+
+
+See also: <<#_insert_com_vaticle_typeql_lang_query_TypeQLInsert_com_vaticle_typedb_driver_api_TypeDBOptions,``insert(TypeQLInsert, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<ConceptMap>`
+
+[#_QueryManager_insert_com_vaticle_typeql_lang_query_TypeQLInsert_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== insert
+
+[source,java]
+----
+java.util.stream.Stream<ConceptMap> insert​(com.vaticle.typeql.lang.query.TypeQLInsert query,
+                                           TypeDBOptions options)
+----
+
+Performs a TypeQL Insert query in the transaction. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Insert query to be executed a| `com.vaticle.typeql.lang.query.TypeQLInsert`
+a| `options` a| Specify query options a| `TypeDBOptions`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<ConceptMap>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+transaction.query().insert(query, options)
+----
+
+[#_QueryManager_insert_java_lang_String]
+==== insert
+
+[source,java]
+----
+java.util.stream.Stream<ConceptMap> insert​(java.lang.String query)
+----
+
+Performs a TypeQL Insert query with default options.
+
+
+See also: <<#_insert_com_vaticle_typeql_lang_query_TypeQLInsert_com_vaticle_typedb_driver_api_TypeDBOptions,``insert(TypeQLInsert, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<ConceptMap>`
+
+[#_QueryManager_insert_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== insert
+
+[source,java]
+----
+java.util.stream.Stream<ConceptMap> insert​(java.lang.String query,
+                                           TypeDBOptions options)
+----
+
+
+See also: <<#_insert_com_vaticle_typeql_lang_query_TypeQLInsert_com_vaticle_typedb_driver_api_TypeDBOptions,``insert(TypeQLInsert, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<ConceptMap>`
+
 [#_QueryManager_match_com_vaticle_typeql_lang_query_TypeQLMatch]
 ==== match
 
@@ -149,43 +460,6 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.query().matchAggregate(query, options)
 ----
 
-[#_QueryManager_matchAggregate_java_lang_String]
-==== matchAggregate
-
-[source,java]
-----
-@CheckReturnValue
-Numeric matchAggregate​(java.lang.String query)
-----
-
-Performs a TypeQL Match Aggregate query with default options.
-
-
-See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions,``match(TypeQLMatch.Aggregate, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`Numeric`
-
-[#_QueryManager_matchAggregate_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
-==== matchAggregate
-
-[source,java]
-----
-@CheckReturnValue
-Numeric matchAggregate​(java.lang.String query,
-                       TypeDBOptions options)
-----
-
-
-See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions,``match(TypeQLMatch.Aggregate, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`Numeric`
-
 [#_QueryManager_match_com_vaticle_typeql_lang_query_TypeQLMatch_Group]
 ==== match
 
@@ -238,43 +512,6 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 ----
 transaction.query().matchGroup(query, options)
 ----
-
-[#_QueryManager_matchGroup_java_lang_String]
-==== matchGroup
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<ConceptMapGroup> matchGroup​(java.lang.String query)
-----
-
-Performs a TypeQL Match Group query with default options.
-
-
-See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Group_com_vaticle_typedb_driver_api_TypeDBOptions,``match(TypeQLMatch.Group, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<ConceptMapGroup>`
-
-[#_QueryManager_matchGroup_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
-==== matchGroup
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<ConceptMapGroup> matchGroup​(java.lang.String query,
-                                                    TypeDBOptions options)
-----
-
-
-See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Group_com_vaticle_typedb_driver_api_TypeDBOptions,``match(TypeQLMatch.Group, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<ConceptMapGroup>`
 
 [#_QueryManager_match_com_vaticle_typeql_lang_query_TypeQLMatch_Group_Aggregate]
 ==== match
@@ -329,6 +566,80 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.query().matchGroupAggregate(query, options)
 ----
 
+[#_QueryManager_matchAggregate_java_lang_String]
+==== matchAggregate
+
+[source,java]
+----
+@CheckReturnValue
+Numeric matchAggregate​(java.lang.String query)
+----
+
+Performs a TypeQL Match Aggregate query with default options.
+
+
+See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions,``match(TypeQLMatch.Aggregate, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`Numeric`
+
+[#_QueryManager_matchAggregate_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== matchAggregate
+
+[source,java]
+----
+@CheckReturnValue
+Numeric matchAggregate​(java.lang.String query,
+                       TypeDBOptions options)
+----
+
+
+See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions,``match(TypeQLMatch.Aggregate, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`Numeric`
+
+[#_QueryManager_matchGroup_java_lang_String]
+==== matchGroup
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<ConceptMapGroup> matchGroup​(java.lang.String query)
+----
+
+Performs a TypeQL Match Group query with default options.
+
+
+See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Group_com_vaticle_typedb_driver_api_TypeDBOptions,``match(TypeQLMatch.Group, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<ConceptMapGroup>`
+
+[#_QueryManager_matchGroup_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== matchGroup
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<ConceptMapGroup> matchGroup​(java.lang.String query,
+                                                    TypeDBOptions options)
+----
+
+
+See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Group_com_vaticle_typedb_driver_api_TypeDBOptions,``match(TypeQLMatch.Group, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<ConceptMapGroup>`
+
 [#_QueryManager_matchGroupAggregate_java_lang_String]
 ==== matchGroupAggregate
 
@@ -366,120 +677,34 @@ See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Group_Aggregate_co
 .Returns
 `java.util.stream.Stream<NumericGroup>`
 
-[#_QueryManager_insert_com_vaticle_typeql_lang_query_TypeQLInsert]
-==== insert
+[#_QueryManager_undefine_com_vaticle_typeql_lang_query_TypeQLUndefine]
+==== undefine
 
 [source,java]
 ----
-java.util.stream.Stream<ConceptMap> insert​(com.vaticle.typeql.lang.query.TypeQLInsert query)
+void undefine​(com.vaticle.typeql.lang.query.TypeQLUndefine query)
 ----
 
-Performs a TypeQL Insert query with default options.
+Performs a TypeQL Undefine query with default options.
 
 
-See also: <<#_insert_com_vaticle_typeql_lang_query_TypeQLInsert_com_vaticle_typedb_driver_api_TypeDBOptions,``insert(TypeQLInsert, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<ConceptMap>`
-
-[#_QueryManager_insert_com_vaticle_typeql_lang_query_TypeQLInsert_com_vaticle_typedb_driver_api_TypeDBOptions]
-==== insert
-
-[source,java]
-----
-java.util.stream.Stream<ConceptMap> insert​(com.vaticle.typeql.lang.query.TypeQLInsert query,
-                                           TypeDBOptions options)
-----
-
-Performs a TypeQL Insert query in the transaction. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `query` a| The TypeQL Insert query to be executed a| `com.vaticle.typeql.lang.query.TypeQLInsert`
-a| `options` a| Specify query options a| `TypeDBOptions`
-|===
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<ConceptMap>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-transaction.query().insert(query, options)
-----
-
-[#_QueryManager_insert_java_lang_String]
-==== insert
-
-[source,java]
-----
-java.util.stream.Stream<ConceptMap> insert​(java.lang.String query)
-----
-
-Performs a TypeQL Insert query with default options.
-
-
-See also: <<#_insert_com_vaticle_typeql_lang_query_TypeQLInsert_com_vaticle_typedb_driver_api_TypeDBOptions,``insert(TypeQLInsert, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<ConceptMap>`
-
-[#_QueryManager_insert_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
-==== insert
-
-[source,java]
-----
-java.util.stream.Stream<ConceptMap> insert​(java.lang.String query,
-                                           TypeDBOptions options)
-----
-
-
-See also: <<#_insert_com_vaticle_typeql_lang_query_TypeQLInsert_com_vaticle_typedb_driver_api_TypeDBOptions,``insert(TypeQLInsert, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<ConceptMap>`
-
-[#_QueryManager_delete_com_vaticle_typeql_lang_query_TypeQLDelete]
-==== delete
-
-[source,java]
-----
-void delete​(com.vaticle.typeql.lang.query.TypeQLDelete query)
-----
-
-Performs a TypeQL Delete query with default options.
-
-
-See also: <<#_delete_com_vaticle_typeql_lang_query_TypeQLDelete_com_vaticle_typedb_driver_api_TypeDBOptions,``delete(TypeQLDelete, TypeDBOptions)``>>
+See also: <<#_undefine_com_vaticle_typeql_lang_query_TypeQLUndefine_com_vaticle_typedb_driver_api_TypeDBOptions,``undefine(TypeQLUndefine, TypeDBOptions)``>>
 
 
 [caption=""]
 .Returns
 `void`
 
-[#_QueryManager_delete_com_vaticle_typeql_lang_query_TypeQLDelete_com_vaticle_typedb_driver_api_TypeDBOptions]
-==== delete
+[#_QueryManager_undefine_com_vaticle_typeql_lang_query_TypeQLUndefine_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== undefine
 
 [source,java]
 ----
-void delete​(com.vaticle.typeql.lang.query.TypeQLDelete query,
-            TypeDBOptions options)
+void undefine​(com.vaticle.typeql.lang.query.TypeQLUndefine query,
+              TypeDBOptions options)
 ----
 
-Performs a TypeQL Delete query in the transaction. 
+Performs a TypeQL Undefine query in the transaction. 
 
 
 [caption=""]
@@ -488,7 +713,7 @@ Performs a TypeQL Delete query in the transaction.
 [options="header"]
 |===
 |Name |Description |Type
-a| `query` a| The TypeQL Delete query to be executed a| `com.vaticle.typeql.lang.query.TypeQLDelete`
+a| `query` a| The TypeQL Undefine query to be executed a| `com.vaticle.typeql.lang.query.TypeQLUndefine`
 a| `options` a| Specify query options a| `TypeDBOptions`
 |===
 
@@ -500,38 +725,38 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 .Code examples
 [source,java]
 ----
-transaction.query().delete(query, options)
+transaction.query().undefine(query, options)
 ----
 
-[#_QueryManager_delete_java_lang_String]
-==== delete
+[#_QueryManager_undefine_java_lang_String]
+==== undefine
 
 [source,java]
 ----
-void delete​(java.lang.String query)
+void undefine​(java.lang.String query)
 ----
 
-Performs a TypeQL Delete query with default options.
+Performs a TypeQL Undefine query with default options.
 
 
-See also: <<#_delete_com_vaticle_typeql_lang_query_TypeQLDelete_com_vaticle_typedb_driver_api_TypeDBOptions,``delete(TypeQLDelete, TypeDBOptions)``>>
+See also: <<#_undefine_com_vaticle_typeql_lang_query_TypeQLUndefine_com_vaticle_typedb_driver_api_TypeDBOptions,``undefine(TypeQLUndefine, TypeDBOptions)``>>
 
 
 [caption=""]
 .Returns
 `void`
 
-[#_QueryManager_delete_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
-==== delete
+[#_QueryManager_undefine_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== undefine
 
 [source,java]
 ----
-void delete​(java.lang.String query,
-            TypeDBOptions options)
+void undefine​(java.lang.String query,
+              TypeDBOptions options)
 ----
 
 
-See also: <<#_delete_com_vaticle_typeql_lang_query_TypeQLDelete_com_vaticle_typedb_driver_api_TypeDBOptions,``delete(TypeQLDelete, TypeDBOptions)``>>
+See also: <<#_undefine_com_vaticle_typeql_lang_query_TypeQLUndefine_com_vaticle_typedb_driver_api_TypeDBOptions,``undefine(TypeQLUndefine, TypeDBOptions)``>>
 
 
 [caption=""]
@@ -623,231 +848,6 @@ See also: <<#_update_com_vaticle_typeql_lang_query_TypeQLUpdate_com_vaticle_type
 [caption=""]
 .Returns
 `java.util.stream.Stream<ConceptMap>`
-
-[#_QueryManager_define_com_vaticle_typeql_lang_query_TypeQLDefine]
-==== define
-
-[source,java]
-----
-void define​(com.vaticle.typeql.lang.query.TypeQLDefine query)
-----
-
-Performs a TypeQL Define query with default options.
-
-
-See also: <<#_define_com_vaticle_typeql_lang_query_TypeQLDefine_com_vaticle_typedb_driver_api_TypeDBOptions,``define(TypeQLDefine, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`void`
-
-[#_QueryManager_define_com_vaticle_typeql_lang_query_TypeQLDefine_com_vaticle_typedb_driver_api_TypeDBOptions]
-==== define
-
-[source,java]
-----
-void define​(com.vaticle.typeql.lang.query.TypeQLDefine query,
-            TypeDBOptions options)
-----
-
-Performs a TypeQL Define query in the transaction. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `query` a| The TypeQL Define query to be executed a| `com.vaticle.typeql.lang.query.TypeQLDefine`
-a| `options` a| Specify query options a| `TypeDBOptions`
-|===
-
-[caption=""]
-.Returns
-`void`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-transaction.query().define(query, options)
-----
-
-[#_QueryManager_define_java_lang_String]
-==== define
-
-[source,java]
-----
-void define​(java.lang.String query)
-----
-
-Performs a TypeQL Define query with default options.
-
-
-See also: <<#_define_com_vaticle_typeql_lang_query_TypeQLDefine_com_vaticle_typedb_driver_api_TypeDBOptions,``define(TypeQLDefine, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`void`
-
-[#_QueryManager_define_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
-==== define
-
-[source,java]
-----
-void define​(java.lang.String query,
-            TypeDBOptions options)
-----
-
-
-See also: <<#_define_com_vaticle_typeql_lang_query_TypeQLDefine_com_vaticle_typedb_driver_api_TypeDBOptions,``define(TypeQLDefine, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`void`
-
-[#_QueryManager_undefine_com_vaticle_typeql_lang_query_TypeQLUndefine]
-==== undefine
-
-[source,java]
-----
-void undefine​(com.vaticle.typeql.lang.query.TypeQLUndefine query)
-----
-
-Performs a TypeQL Undefine query with default options.
-
-
-See also: <<#_undefine_com_vaticle_typeql_lang_query_TypeQLUndefine_com_vaticle_typedb_driver_api_TypeDBOptions,``undefine(TypeQLUndefine, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`void`
-
-[#_QueryManager_undefine_com_vaticle_typeql_lang_query_TypeQLUndefine_com_vaticle_typedb_driver_api_TypeDBOptions]
-==== undefine
-
-[source,java]
-----
-void undefine​(com.vaticle.typeql.lang.query.TypeQLUndefine query,
-              TypeDBOptions options)
-----
-
-Performs a TypeQL Undefine query in the transaction. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `query` a| The TypeQL Undefine query to be executed a| `com.vaticle.typeql.lang.query.TypeQLUndefine`
-a| `options` a| Specify query options a| `TypeDBOptions`
-|===
-
-[caption=""]
-.Returns
-`void`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-transaction.query().undefine(query, options)
-----
-
-[#_QueryManager_undefine_java_lang_String]
-==== undefine
-
-[source,java]
-----
-void undefine​(java.lang.String query)
-----
-
-Performs a TypeQL Undefine query with default options.
-
-
-See also: <<#_undefine_com_vaticle_typeql_lang_query_TypeQLUndefine_com_vaticle_typedb_driver_api_TypeDBOptions,``undefine(TypeQLUndefine, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`void`
-
-[#_QueryManager_undefine_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
-==== undefine
-
-[source,java]
-----
-void undefine​(java.lang.String query,
-              TypeDBOptions options)
-----
-
-
-See also: <<#_undefine_com_vaticle_typeql_lang_query_TypeQLUndefine_com_vaticle_typedb_driver_api_TypeDBOptions,``undefine(TypeQLUndefine, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`void`
-
-[#_QueryManager_explain_com_vaticle_typedb_driver_api_answer_ConceptMap_Explainable]
-==== explain
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<Explanation> explain​(ConceptMap.Explainable explainable)
-----
-
-Performs a TypeQL Explain query with default options.
-
-
-See also: <<#_explain_com_vaticle_typedb_driver_api_answer_ConceptMap_Explainable_com_vaticle_typedb_driver_api_TypeDBOptions,``explain(ConceptMap.Explainable, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<Explanation>`
-
-[#_QueryManager_explain_com_vaticle_typedb_driver_api_answer_ConceptMap_Explainable_com_vaticle_typedb_driver_api_TypeDBOptions]
-==== explain
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<Explanation> explain​(ConceptMap.Explainable explainable,
-                                             TypeDBOptions options)
-----
-
-Performs a TypeQL Explain query in the transaction. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `explainable` a| The Explainable to be explained a| `ConceptMap.Explainable`
-a| `options` a| Specify query options a| `TypeDBOptions`
-|===
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<Explanation>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-transaction.query().explain(explainable, options)
-----
 
 // end::methods[]
 

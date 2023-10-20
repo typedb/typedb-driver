@@ -8,14 +8,14 @@
 [options="header"]
 |===
 |Variant
-a| `RootThingType(RootThingType)`
-a| `EntityType(EntityType)`
-a| `RelationType(RelationType)`
-a| `RoleType(RoleType)`
+a| `Attribute(Attribute)`
 a| `AttributeType(AttributeType)`
 a| `Entity(Entity)`
+a| `EntityType(EntityType)`
 a| `Relation(Relation)`
-a| `Attribute(Attribute)`
+a| `RelationType(RelationType)`
+a| `RoleType(RoleType)`
+a| `RootThingType(RootThingType)`
 a| `Value(Value)`
 |===
 // end::enum_constants[]

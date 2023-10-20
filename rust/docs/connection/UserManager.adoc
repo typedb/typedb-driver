@@ -9,48 +9,6 @@
 Provides access to all user management methods.
 
 // tag::methods[]
-[#_struct_UserManager_method_current_user]
-==== current_user
-
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-pub async fn current_user(&self) -> Result<Option<User>>
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn current_user(&self) -> Result<Option<User>>
-----
-
---
-====
-
-Returns the logged-in user for the connection.
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result<Option<User>>
-----
-
-[caption=""]
-.Code examples
-[source,rust]
-----
-driver.users.current_user().await;
-----
-
 [#_struct_UserManager_method_all]
 ==== all
 
@@ -202,6 +160,48 @@ Result
 [source,rust]
 ----
 driver.users.create(username, password).await;
+----
+
+[#_struct_UserManager_method_current_user]
+==== current_user
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn current_user(&self) -> Result<Option<User>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn current_user(&self) -> Result<Option<User>>
+----
+
+--
+====
+
+Returns the logged-in user for the connection.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Option<User>>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+driver.users.current_user().await;
 ----
 
 [#_struct_UserManager_method_delete]

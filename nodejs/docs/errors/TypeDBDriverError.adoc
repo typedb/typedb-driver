@@ -16,35 +16,26 @@ Errors encountered when interacting with TypeDB
 |Name |Type |Description
 a| `message` a| `string` a| 
 a| `name` a| `string` a| 
-a| `stack` a| `string` a| 
 a| `prepareStackTrace` a| `any` a| 
+a| `stack` a| `string` a| 
 a| `stackTraceLimit` a| `number` a| 
 |===
 // end::properties[]
 
 // tag::methods[]
-[#_TypeDBDriverError_new_TypeDBDriverError]
-==== new TypeDBDriverError
+[#__messageTemplate]
+====  messageTemplate
 
 [source,nodejs]
 ----
-new TypeDBDriverError(error): TypeDBDriverError
+get messageTemplate(): ErrorMessage
 ----
 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `error` a|  a| `string \| ErrorMessage \| Error \| ServiceError`
-|===
+Returns the message template for this error.
 
 [caption=""]
 .Returns
-`TypeDBDriverError`
+`ErrorMessage`
 
 [#_TypeDBDriverError_captureStackTrace]
 ==== captureStackTrace
@@ -70,19 +61,28 @@ a| `constructorOpt` a|  a| `Function`
 .Returns
 `void`
 
-[#__messageTemplate]
-====  messageTemplate
+[#_TypeDBDriverError_new_TypeDBDriverError]
+==== new TypeDBDriverError
 
 [source,nodejs]
 ----
-get messageTemplate(): ErrorMessage
+new TypeDBDriverError(error): TypeDBDriverError
 ----
 
-Returns the message template for this error.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `error` a|  a| `string \| ErrorMessage \| Error \| ServiceError`
+|===
 
 [caption=""]
 .Returns
-`ErrorMessage`
+`TypeDBDriverError`
 
 // end::methods[]
 

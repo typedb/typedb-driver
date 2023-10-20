@@ -11,75 +11,6 @@
 Relation is an instance of a relation type and can be uniquely addressed by a combination of its type, owned attributes and role players.
 
 // tag::methods[]
-[#_Relation_isRelation_]
-==== isRelation
-
-[source,java]
-----
-@CheckReturnValue
-default boolean isRelation()
-----
-
-Checks if the concept is a ``Relation``. 
-
-
-[caption=""]
-.Returns
-`boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-relation.isRelation();
-----
-
-[#_Relation_asRelation_]
-==== asRelation
-
-[source,java]
-----
-@CheckReturnValue
-default Relation asRelation()
-----
-
-Casts the concept to ``Relation``. 
-
-
-[caption=""]
-.Returns
-`Relation`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-relation.asRelation();
-----
-
-[#_Relation_getType_]
-==== getType
-
-[source,java]
-----
-@CheckReturnValue
-RelationType getType()
-----
-
-Retrieves the type which this ``Relation`` belongs to. 
-
-
-[caption=""]
-.Returns
-`RelationType`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-relation.getType();
-----
-
 [#_Relation_addPlayer_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType_com_vaticle_typedb_driver_api_concept_thing_Thing]
 ==== addPlayer
 
@@ -113,139 +44,6 @@ a| `player` a| The thing to play the role a| `Thing`
 [source,java]
 ----
 relation.addPlayer(transaction, roleType, player);
-----
-
-[#_Relation_removePlayer_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType_com_vaticle_typedb_driver_api_concept_thing_Thing]
-==== removePlayer
-
-[source,java]
-----
-void removePlayer​(TypeDBTransaction transaction,
-                  RoleType roleType,
-                  Thing player)
-----
-
-Removes the association of the given instance that plays the given role in this ``Relation``. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-a| `roleType` a| The role to no longer be played by the thing in this ``Relation`` a| `RoleType`
-a| `player` a| The instance to no longer play the role in this ``Relation`` a| `Thing`
-|===
-
-[caption=""]
-.Returns
-`void`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-relation.removePlayer(transaction, roleType, player);
-----
-
-[#_Relation_getPlayersByRoleType_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType___]
-==== getPlayersByRoleType
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<? extends Thing> getPlayersByRoleType​(TypeDBTransaction transaction,
-                                                              RoleType... roleTypes)
-----
-
-Retrieves all role players of this ``Relation``, optionally filtered by given role types. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-a| `roleTypes` a| 0 or more role types a| `RoleType[]`
-|===
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<? extends Thing>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-relation.getPlayersByRoleType(transaction, roleTypes);
-----
-
-[#_Relation_getPlayers_com_vaticle_typedb_driver_api_TypeDBTransaction]
-==== getPlayers
-
-[source,java]
-----
-@CheckReturnValue
-java.util.Map<? extends RoleType,​? extends java.util.List<? extends Thing>> getPlayers​(TypeDBTransaction transaction)
-----
-
-Retrieves a mapping of all instances involved in the ``Relation`` and the role each play. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-|===
-
-[caption=""]
-.Returns
-`java.util.Map<? extends RoleType,​? extends java.util.List<? extends Thing>>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-relation.getPlayers(transaction)
-----
-
-[#_Relation_getRelating_com_vaticle_typedb_driver_api_TypeDBTransaction]
-==== getRelating
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<? extends RoleType> getRelating​(TypeDBTransaction transaction)
-----
-
-Retrieves all role types currently played in this ``Relation``. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-|===
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<? extends RoleType>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-relation.getRelating(transaction);
 ----
 
 [#_Relation_asAttribute_]
@@ -334,6 +132,29 @@ Casts the concept to ``EntityType``.
 [source,java]
 ----
 concept.asEntityType();
+----
+
+[#_Relation_asRelation_]
+==== asRelation
+
+[source,java]
+----
+@CheckReturnValue
+default Relation asRelation()
+----
+
+Casts the concept to ``Relation``. 
+
+
+[caption=""]
+.Returns
+`Relation`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+relation.asRelation();
 ----
 
 [#_Relation_asRelationType_]
@@ -446,6 +267,127 @@ Casts the concept to ``Value``.
 concept.asValue();
 ----
 
+[#_Relation_getPlayers_com_vaticle_typedb_driver_api_TypeDBTransaction]
+==== getPlayers
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Map<? extends RoleType,​? extends java.util.List<? extends Thing>> getPlayers​(TypeDBTransaction transaction)
+----
+
+Retrieves a mapping of all instances involved in the ``Relation`` and the role each play. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`java.util.Map<? extends RoleType,​? extends java.util.List<? extends Thing>>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+relation.getPlayers(transaction)
+----
+
+[#_Relation_getPlayersByRoleType_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType___]
+==== getPlayersByRoleType
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends Thing> getPlayersByRoleType​(TypeDBTransaction transaction,
+                                                              RoleType... roleTypes)
+----
+
+Retrieves all role players of this ``Relation``, optionally filtered by given role types. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `roleTypes` a| 0 or more role types a| `RoleType[]`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends Thing>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+relation.getPlayersByRoleType(transaction, roleTypes);
+----
+
+[#_Relation_getRelating_com_vaticle_typedb_driver_api_TypeDBTransaction]
+==== getRelating
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends RoleType> getRelating​(TypeDBTransaction transaction)
+----
+
+Retrieves all role types currently played in this ``Relation``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends RoleType>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+relation.getRelating(transaction);
+----
+
+[#_Relation_getType_]
+==== getType
+
+[source,java]
+----
+@CheckReturnValue
+RelationType getType()
+----
+
+Retrieves the type which this ``Relation`` belongs to. 
+
+
+[caption=""]
+.Returns
+`RelationType`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+relation.getType();
+----
+
 [#_Relation_isAttribute_]
 ==== isAttribute
 
@@ -536,6 +478,29 @@ Checks if the concept is an ``EntityType``.
 [source,java]
 ----
 concept.isEntityType();
+----
+
+[#_Relation_isRelation_]
+==== isRelation
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isRelation()
+----
+
+Checks if the concept is a ``Relation``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+relation.isRelation();
 ----
 
 [#_Relation_isRelationType_]
@@ -651,6 +616,41 @@ Checks if the concept is a ``Value``.
 [source,java]
 ----
 concept.isValue();
+----
+
+[#_Relation_removePlayer_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType_com_vaticle_typedb_driver_api_concept_thing_Thing]
+==== removePlayer
+
+[source,java]
+----
+void removePlayer​(TypeDBTransaction transaction,
+                  RoleType roleType,
+                  Thing player)
+----
+
+Removes the association of the given instance that plays the given role in this ``Relation``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `roleType` a| The role to no longer be played by the thing in this ``Relation`` a| `RoleType`
+a| `player` a| The instance to no longer play the role in this ``Relation`` a| `Thing`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+relation.removePlayer(transaction, roleType, player);
 ----
 
 // end::methods[]

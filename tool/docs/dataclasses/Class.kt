@@ -116,7 +116,7 @@ data class Class(
             }
 
             val tableBuilder = AsciiDocTableBuilder(headers)
-            this.enumConstants.forEach { tableBuilder.addRow(it.toTableData(language)) }
+            this.enumConstants.sortedBy { it.name }.forEach { tableBuilder.addRow(it.toTableData(language)) }
             result += tableBuilder.build()
 
             result += builder.tagEnd("enum_constants")
@@ -131,7 +131,7 @@ data class Class(
 
             val headers = listOf("Name", "Type", "Description")
             val tableBuilder = AsciiDocTableBuilder(headers)
-            this.fields.forEach { tableBuilder.addRow(it.toTableDataAsField(language)) }
+            this.fields.sortedBy { it.name }.forEach { tableBuilder.addRow(it.toTableDataAsField(language)) }
             result += tableBuilder.build()
 
             result += builder.tagEnd("properties")
@@ -140,12 +140,12 @@ data class Class(
         if (this.methods.isNotEmpty()) {
             result += builder.tagBegin("methods")
             if (otherClass == null) {
-                this.methods.forEach { result += it.toAsciiDoc(language) }
+                this.methods.sortedBy { it.name }.forEach { result += it.toAsciiDoc(language) }
             } else {
                 val otherMethods = otherClass.methods.associateBy {
                     it.name
                 }
-                this.methods.forEach { result += it.toAsciiDocFeaturesMerged(otherMethods[it.name]!!) }
+                this.methods.sortedBy { it.name }.forEach { result += it.toAsciiDocFeaturesMerged(otherMethods[it.name]!!) }
             }
             result += builder.tagEnd("methods")
         }

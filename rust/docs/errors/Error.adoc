@@ -10,8 +10,8 @@
 |Variant
 a| `Connection(ConnectionError)`
 a| `Internal(InternalError)`
-a| `TypeQL(Error)`
 a| `Other(String)`
+a| `TypeQL(Error)`
 |===
 // end::enum_constants[]
 

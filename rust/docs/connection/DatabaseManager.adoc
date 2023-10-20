@@ -7,8 +7,8 @@
 * `Debug`
 
 // tag::methods[]
-[#_struct_DatabaseManager_method_get]
-==== get
+[#_struct_DatabaseManager_method_all]
+==== all
 
 [tabs]
 ====
@@ -17,7 +17,7 @@ async::
 --
 [source,rust]
 ----
-pub async fn get(&self, name: impl Into<String>) -> Result<Database>
+pub async fn all(&self) -> Result<Vec<Database>>
 ----
 
 --
@@ -27,28 +27,19 @@ sync::
 --
 [source,rust]
 ----
-pub fn get(&self, name: impl Into<String>) -> Result<Database>
+pub fn all(&self) -> Result<Vec<Database>>
 ----
 
 --
 ====
 
-Retrieve the database with the given name.
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `name` a| The name of the database to retrieve a| `impl Into<String>`
-|===
+Retrieves all databases present on the TypeDB server
 
 [caption=""]
 .Returns
 [source,rust]
 ----
-Result<Database>
+Result<Vec<Database>>
 ----
 
 [caption=""]
@@ -60,7 +51,7 @@ async::
 --
 [source,rust]
 ----
-driver.databases().get(name).await;
+driver.databases().all().await;
 ----
 
 --
@@ -70,7 +61,7 @@ sync::
 --
 [source,rust]
 ----
-driver.databases().get(name);
+driver.databases().all();
 ----
 
 --
@@ -214,8 +205,8 @@ driver.databases().create(name);
 --
 ====
 
-[#_struct_DatabaseManager_method_all]
-==== all
+[#_struct_DatabaseManager_method_get]
+==== get
 
 [tabs]
 ====
@@ -224,7 +215,7 @@ async::
 --
 [source,rust]
 ----
-pub async fn all(&self) -> Result<Vec<Database>>
+pub async fn get(&self, name: impl Into<String>) -> Result<Database>
 ----
 
 --
@@ -234,19 +225,28 @@ sync::
 --
 [source,rust]
 ----
-pub fn all(&self) -> Result<Vec<Database>>
+pub fn get(&self, name: impl Into<String>) -> Result<Database>
 ----
 
 --
 ====
 
-Retrieves all databases present on the TypeDB server
+Retrieve the database with the given name.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| The name of the database to retrieve a| `impl Into<String>`
+|===
 
 [caption=""]
 .Returns
 [source,rust]
 ----
-Result<Vec<Database>>
+Result<Database>
 ----
 
 [caption=""]
@@ -258,7 +258,7 @@ async::
 --
 [source,rust]
 ----
-driver.databases().all().await;
+driver.databases().get(name).await;
 ----
 
 --
@@ -268,7 +268,7 @@ sync::
 --
 [source,rust]
 ----
-driver.databases().all();
+driver.databases().get(name);
 ----
 
 --

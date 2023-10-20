@@ -11,75 +11,6 @@
 Instance of data of an entity type, representing a standalone object that exists in the data model independently. Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles played in relation instances.
 
 // tag::methods[]
-[#_Entity_isEntity_]
-==== isEntity
-
-[source,java]
-----
-@CheckReturnValue
-default boolean isEntity()
-----
-
-Checks if the concept is an ``Entity``. 
-
-
-[caption=""]
-.Returns
-`boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-entity.isEntity();
-----
-
-[#_Entity_asEntity_]
-==== asEntity
-
-[source,java]
-----
-@CheckReturnValue
-default Entity asEntity()
-----
-
-Casts the concept to ``Entity``. 
-
-
-[caption=""]
-.Returns
-`Entity`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-entity.asEntity();
-----
-
-[#_Entity_getType_]
-==== getType
-
-[source,java]
-----
-@CheckReturnValue
-EntityType getType()
-----
-
-Retrieves the type which this ``Entity`` belongs to. 
-
-
-[caption=""]
-.Returns
-`EntityType`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-entity.getType();
-----
-
 [#_Entity_asAttribute_]
 ==== asAttribute
 
@@ -122,6 +53,29 @@ Casts the concept to ``AttributeType``.
 [source,java]
 ----
 concept.asAttributeType();
+----
+
+[#_Entity_asEntity_]
+==== asEntity
+
+[source,java]
+----
+@CheckReturnValue
+default Entity asEntity()
+----
+
+Casts the concept to ``Entity``. 
+
+
+[caption=""]
+.Returns
+`Entity`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+entity.asEntity();
 ----
 
 [#_Entity_asEntityType_]
@@ -278,6 +232,29 @@ Casts the concept to ``Value``.
 concept.asValue();
 ----
 
+[#_Entity_getType_]
+==== getType
+
+[source,java]
+----
+@CheckReturnValue
+EntityType getType()
+----
+
+Retrieves the type which this ``Entity`` belongs to. 
+
+
+[caption=""]
+.Returns
+`EntityType`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+entity.getType();
+----
+
 [#_Entity_isAttribute_]
 ==== isAttribute
 
@@ -322,6 +299,29 @@ Checks if the concept is an ``AttributeType``.
 [source,java]
 ----
 concept.isAttributeType();
+----
+
+[#_Entity_isEntity_]
+==== isEntity
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isEntity()
+----
+
+Checks if the concept is an ``Entity``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+entity.isEntity();
 ----
 
 [#_Entity_isEntityType_]

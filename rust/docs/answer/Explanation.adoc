@@ -16,9 +16,9 @@ An explanation of which rule was used for inferring the explained concept, the c
 [options="header"]
 |===
 |Name |Type |Description
-a| `rule` a| `Rule` a| The Rule for this Explanation.
 a| `conclusion` a| `ConceptMap` a| The Conclusion for this Explanation.
 a| `condition` a| `ConceptMap` a| The Condition for this Explanation.
+a| `rule` a| `Rule` a| The Rule for this Explanation.
 a| `variable_mapping` a| `HashMap<String, Vec<String>>` a| The mapping from query variables to rule variables for this ``Explanation``.
 |===
 // end::properties[]

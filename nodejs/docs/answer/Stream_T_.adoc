@@ -4,20 +4,6 @@
 A stream of elements offering a functional interface to manipulate elements. Typically the elements are generated/retrieved lazily.
 
 // tag::methods[]
-[#_Stream_T_new_Stream]
-==== new Stream
-
-[source,nodejs]
-----
-new Stream<T>(): Stream<T>
-----
-
-
-
-[caption=""]
-.Returns
-`Stream<T>`
-
 [#_Stream_T__asyncIterator]
 ==== [asyncIterator]
 
@@ -198,6 +184,20 @@ a| `mapper` a| The mapping function to apply. Returns a new stream from this str
 [caption=""]
 .Returns
 `Stream<U>`
+
+[#_Stream_T_new_Stream]
+==== new Stream
+
+[source,nodejs]
+----
+new Stream<T>(): Stream<T>
+----
+
+
+
+[caption=""]
+.Returns
+`Stream<T>`
 
 [#_Stream_T_some]
 ==== some

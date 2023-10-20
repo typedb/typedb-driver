@@ -136,6 +136,117 @@ relation.add_role_player(transaction, role_type, player);
 --
 ====
 
+[#_trait_RelationAPI_method_get_players_by_role_type]
+==== get_players_by_role_type
+
+[source,rust]
+----
+fn get_players_by_role_type(
+    &self,
+    transaction: &Transaction<'_>,
+    role_types: Vec<RoleType>
+) -> Result<BoxStream<'_, Result<Thing>>>
+----
+
+Retrieves all role players of this ``Relation``, optionally filtered by given role types.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `role_types` a| 0 or more role types a| `Vec<RoleType>`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<Thing>>>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+relation.get_players_by_role_type(transaction, role_types);
+----
+
+[#_trait_RelationAPI_method_get_relating]
+==== get_relating
+
+[source,rust]
+----
+fn get_relating(
+    &self,
+    transaction: &Transaction<'_>
+) -> Result<BoxStream<'_, Result<RoleType>>>
+----
+
+Retrieves all role types currently played in this ``Relation``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<RoleType>>>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+relation.get_relating(transaction)
+----
+
+[#_trait_RelationAPI_method_get_role_players]
+==== get_role_players
+
+[source,rust]
+----
+fn get_role_players(
+    &self,
+    transaction: &Transaction<'_>
+) -> Result<BoxStream<'_, Result<(RoleType, Thing)>>>
+----
+
+Retrieves a mapping of all instances involved in the ``Relation`` and the role each play.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>
+) -> Result<BoxStream<'_`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<(RoleType, Thing)>>>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+relation.get_role_players(transaction)
+----
+
 [#_trait_RelationAPI_method_remove_role_player]
 ==== remove_role_player
 
@@ -265,117 +376,6 @@ relation.remove_role_player(transaction, role_type, player);
 
 --
 ====
-
-[#_trait_RelationAPI_method_get_players_by_role_type]
-==== get_players_by_role_type
-
-[source,rust]
-----
-fn get_players_by_role_type(
-    &self,
-    transaction: &Transaction<'_>,
-    role_types: Vec<RoleType>
-) -> Result<BoxStream<'_, Result<Thing>>>
-----
-
-Retrieves all role players of this ``Relation``, optionally filtered by given role types.
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
-a| `role_types` a| 0 or more role types a| `Vec<RoleType>`
-|===
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result<BoxStream<'_, Result<Thing>>>
-----
-
-[caption=""]
-.Code examples
-[source,rust]
-----
-relation.get_players_by_role_type(transaction, role_types);
-----
-
-[#_trait_RelationAPI_method_get_role_players]
-==== get_role_players
-
-[source,rust]
-----
-fn get_role_players(
-    &self,
-    transaction: &Transaction<'_>
-) -> Result<BoxStream<'_, Result<(RoleType, Thing)>>>
-----
-
-Retrieves a mapping of all instances involved in the ``Relation`` and the role each play.
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>
-) -> Result<BoxStream<'_`
-|===
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result<BoxStream<'_, Result<(RoleType, Thing)>>>
-----
-
-[caption=""]
-.Code examples
-[source,rust]
-----
-relation.get_role_players(transaction)
-----
-
-[#_trait_RelationAPI_method_get_relating]
-==== get_relating
-
-[source,rust]
-----
-fn get_relating(
-    &self,
-    transaction: &Transaction<'_>
-) -> Result<BoxStream<'_, Result<RoleType>>>
-----
-
-Retrieves all role types currently played in this ``Relation``.
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
-|===
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result<BoxStream<'_, Result<RoleType>>>
-----
-
-[caption=""]
-.Code examples
-[source,rust]
-----
-relation.get_relating(transaction)
-----
 
 // end::methods[]
 

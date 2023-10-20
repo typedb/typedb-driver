@@ -7,6 +7,54 @@
 * `Debug`
 
 // tag::methods[]
+[#_struct_Connection_method_force_close]
+==== force_close
+
+[source,rust]
+----
+pub fn force_close(&self) -> Result
+----
+
+Closes this connection.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+connection.force_close()
+----
+
+[#_struct_Connection_method_is_open]
+==== is_open
+
+[source,rust]
+----
+pub fn is_open(&self) -> bool
+----
+
+Checks it this connection is opened.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+connection.is_open()
+----
+
 [#_struct_Connection_method_new_core]
 ==== new_core
 
@@ -85,54 +133,6 @@ Connection::new_enterprise(
         )),
     )?,
 )
-----
-
-[#_struct_Connection_method_is_open]
-==== is_open
-
-[source,rust]
-----
-pub fn is_open(&self) -> bool
-----
-
-Checks it this connection is opened.
-
-[caption=""]
-.Returns
-[source,rust]
-----
-bool
-----
-
-[caption=""]
-.Code examples
-[source,rust]
-----
-connection.is_open()
-----
-
-[#_struct_Connection_method_force_close]
-==== force_close
-
-[source,rust]
-----
-pub fn force_close(&self) -> Result
-----
-
-Closes this connection.
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result
-----
-
-[caption=""]
-.Code examples
-[source,rust]
-----
-connection.force_close()
 ----
 
 // end::methods[]

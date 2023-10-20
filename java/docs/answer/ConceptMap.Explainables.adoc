@@ -6,37 +6,6 @@
 Contains explainable objects.
 
 // tag::methods[]
-[#_ConceptMap.Explainables_relation_java_lang_String]
-==== relation
-
-[source,java]
-----
-ConceptMap.Explainable relation​(java.lang.String variable)
-----
-
-Retrieves the explainable relation with the given variable name. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `variable` a| The string representation of a variable a| `java.lang.String`
-|===
-
-[caption=""]
-.Returns
-`ConceptMap.Explainable`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-conceptMap.explainables().relation(variable);
-----
-
 [#_ConceptMap.Explainables_attribute_java_lang_String]
 ==== attribute
 
@@ -66,6 +35,28 @@ a| `variable` a| The string representation of a variable a| `java.lang.String`
 [source,java]
 ----
 conceptMap.explainables().attribute(variable);
+----
+
+[#_ConceptMap.Explainables_attributes_]
+==== attributes
+
+[source,java]
+----
+java.util.stream.Stream<com.vaticle.typedb.common.collection.Pair<java.lang.String,​ConceptMap.Explainable>> attributes()
+----
+
+Retrieves all of this ``ConceptMap``’s explainable attributes. 
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<com.vaticle.typedb.common.collection.Pair<java.lang.String,​ConceptMap.Explainable>>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+conceptMap.explainables().attributes();
 ----
 
 [#_ConceptMap.Explainables_ownership_java_lang_String_java_lang_String]
@@ -101,50 +92,6 @@ a| `attribute` a| The string representation of the attribute variable a| `java.l
 conceptMap.explainables().ownership(owner, attribute);
 ----
 
-[#_ConceptMap.Explainables_relations_]
-==== relations
-
-[source,java]
-----
-java.util.stream.Stream<com.vaticle.typedb.common.collection.Pair<java.lang.String,​ConceptMap.Explainable>> relations()
-----
-
-Retrieves all of this ``ConceptMap``’s explainable relations. 
-
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<com.vaticle.typedb.common.collection.Pair<java.lang.String,​ConceptMap.Explainable>>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-conceptMap.explainables().relations();
-----
-
-[#_ConceptMap.Explainables_attributes_]
-==== attributes
-
-[source,java]
-----
-java.util.stream.Stream<com.vaticle.typedb.common.collection.Pair<java.lang.String,​ConceptMap.Explainable>> attributes()
-----
-
-Retrieves all of this ``ConceptMap``’s explainable attributes. 
-
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<com.vaticle.typedb.common.collection.Pair<java.lang.String,​ConceptMap.Explainable>>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-conceptMap.explainables().attributes();
-----
-
 [#_ConceptMap.Explainables_ownerships_]
 ==== ownerships
 
@@ -165,6 +112,59 @@ Retrieves all of this ``ConceptMap``’s explainable ownerships.
 [source,java]
 ----
 conceptMap.explainables().ownerships();
+----
+
+[#_ConceptMap.Explainables_relation_java_lang_String]
+==== relation
+
+[source,java]
+----
+ConceptMap.Explainable relation​(java.lang.String variable)
+----
+
+Retrieves the explainable relation with the given variable name. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `variable` a| The string representation of a variable a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`ConceptMap.Explainable`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+conceptMap.explainables().relation(variable);
+----
+
+[#_ConceptMap.Explainables_relations_]
+==== relations
+
+[source,java]
+----
+java.util.stream.Stream<com.vaticle.typedb.common.collection.Pair<java.lang.String,​ConceptMap.Explainable>> relations()
+----
+
+Retrieves all of this ``ConceptMap``’s explainable relations. 
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<com.vaticle.typedb.common.collection.Pair<java.lang.String,​ConceptMap.Explainable>>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+conceptMap.explainables().relations();
 ----
 
 // end::methods[]

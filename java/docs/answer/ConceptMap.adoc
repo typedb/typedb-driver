@@ -6,29 +6,6 @@
 Contains a mapping of variables to concepts.
 
 // tag::methods[]
-[#_ConceptMap_variables_]
-==== variables
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<java.lang.String> variables()
-----
-
-Produces a stream over all variables in this ``ConceptMap``. 
-
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<java.lang.String>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-conceptMap.variables();
-----
-
 [#_ConceptMap_concepts_]
 ==== concepts
 
@@ -50,6 +27,28 @@ Produces a stream over all concepts in this ``ConceptMap``.
 [source,java]
 ----
 conceptMap.concepts();
+----
+
+[#_ConceptMap_explainables_]
+==== explainables
+
+[source,java]
+----
+ConceptMap.Explainables explainables()
+----
+
+Gets the ``Explainables`` object for this ``ConceptMap``, exposing which of the concepts in this ``ConceptMap`` are explainable. 
+
+
+[caption=""]
+.Returns
+`ConceptMap.Explainables`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+conceptMap.explainables();
 ----
 
 [#_ConceptMap_get_java_lang_String]
@@ -107,26 +106,27 @@ Retrieves this ``ConceptMap`` as JSON.
 conceptMap.toJSON();
 ----
 
-[#_ConceptMap_explainables_]
-==== explainables
+[#_ConceptMap_variables_]
+==== variables
 
 [source,java]
 ----
-ConceptMap.Explainables explainables()
+@CheckReturnValue
+java.util.stream.Stream<java.lang.String> variables()
 ----
 
-Gets the ``Explainables`` object for this ``ConceptMap``, exposing which of the concepts in this ``ConceptMap`` are explainable. 
+Produces a stream over all variables in this ``ConceptMap``. 
 
 
 [caption=""]
 .Returns
-`ConceptMap.Explainables`
+`java.util.stream.Stream<java.lang.String>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-conceptMap.explainables();
+conceptMap.variables();
 ----
 
 // end::methods[]

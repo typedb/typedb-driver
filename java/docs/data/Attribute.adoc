@@ -15,52 +15,6 @@ Attribute is an instance of the attribute type and has a value. This value is fi
 Attribute type can be uniquely addressed by its type and value.
 
 // tag::methods[]
-[#_Attribute_getType_]
-==== getType
-
-[source,java]
-----
-@CheckReturnValue
-AttributeType getType()
-----
-
-Retrieves the type which this ``Attribute`` belongs to. 
-
-
-[caption=""]
-.Returns
-`AttributeType`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-attribute.getType();
-----
-
-[#_Attribute_isAttribute_]
-==== isAttribute
-
-[source,java]
-----
-@CheckReturnValue
-default boolean isAttribute()
-----
-
-Checks if the concept is an ``Attribute``. 
-
-
-[caption=""]
-.Returns
-`boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-attribute.isAttribute();
-----
-
 [#_Attribute_asAttribute_]
 ==== asAttribute
 
@@ -82,116 +36,6 @@ Casts the concept to ``Attribute``.
 [source,java]
 ----
 attribute.asAttribute();
-----
-
-[#_Attribute_getValue_]
-==== getValue
-
-[source,java]
-----
-Value getValue()
-----
-
-Retrieves the value which the ``Attribute`` instance holds. 
-
-
-[caption=""]
-.Returns
-`Value`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-attribute.getValue();
-----
-
-[#_Attribute_toJSON_]
-==== toJSON
-
-[source,java]
-----
-default com.eclipsesource.json.JsonObject toJSON()
-----
-
-Retrieves this ``Attribute`` as JSON. 
-
-
-[caption=""]
-.Returns
-`com.eclipsesource.json.JsonObject`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-attribute.toJson();
-----
-
-[#_Attribute_getOwners_com_vaticle_typedb_driver_api_TypeDBTransaction]
-==== getOwners
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<? extends Thing> getOwners​(TypeDBTransaction transaction)
-----
-
-Retrieves the instances that own this ``Attribute``. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-|===
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<? extends Thing>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-attribute.getOwners(transaction);
-----
-
-[#_Attribute_getOwners_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_ThingType]
-==== getOwners
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<? extends Thing> getOwners​(TypeDBTransaction transaction,
-                                                   ThingType ownerType)
-----
-
-Retrieves the instances that own this ``Attribute``. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-a| `ownerType` a| Filter results for only owners of the given type a| `ThingType`
-|===
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<? extends Thing>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-attribute.getOwners(transaction, ownerType);
 ----
 
 [#_Attribute_asAttributeType_]
@@ -390,6 +234,140 @@ Casts the concept to ``Value``.
 [source,java]
 ----
 concept.asValue();
+----
+
+[#_Attribute_getOwners_com_vaticle_typedb_driver_api_TypeDBTransaction]
+==== getOwners
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends Thing> getOwners​(TypeDBTransaction transaction)
+----
+
+Retrieves the instances that own this ``Attribute``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends Thing>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attribute.getOwners(transaction);
+----
+
+[#_Attribute_getOwners_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_ThingType]
+==== getOwners
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends Thing> getOwners​(TypeDBTransaction transaction,
+                                                   ThingType ownerType)
+----
+
+Retrieves the instances that own this ``Attribute``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `ownerType` a| Filter results for only owners of the given type a| `ThingType`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends Thing>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attribute.getOwners(transaction, ownerType);
+----
+
+[#_Attribute_getType_]
+==== getType
+
+[source,java]
+----
+@CheckReturnValue
+AttributeType getType()
+----
+
+Retrieves the type which this ``Attribute`` belongs to. 
+
+
+[caption=""]
+.Returns
+`AttributeType`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attribute.getType();
+----
+
+[#_Attribute_getValue_]
+==== getValue
+
+[source,java]
+----
+Value getValue()
+----
+
+Retrieves the value which the ``Attribute`` instance holds. 
+
+
+[caption=""]
+.Returns
+`Value`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attribute.getValue();
+----
+
+[#_Attribute_isAttribute_]
+==== isAttribute
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isAttribute()
+----
+
+Checks if the concept is an ``Attribute``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attribute.isAttribute();
 ----
 
 [#_Attribute_isAttributeType_]
@@ -597,6 +575,28 @@ Checks if the concept is a ``Value``.
 [source,java]
 ----
 concept.isValue();
+----
+
+[#_Attribute_toJSON_]
+==== toJSON
+
+[source,java]
+----
+default com.eclipsesource.json.JsonObject toJSON()
+----
+
+Retrieves this ``Attribute`` as JSON. 
+
+
+[caption=""]
+.Returns
+`com.eclipsesource.json.JsonObject`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attribute.toJson();
 ----
 
 // end::methods[]

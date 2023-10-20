@@ -6,73 +6,27 @@
 Stores an aggregate query answer.
 
 // tag::methods[]
-[#_Numeric_isLong_]
-==== isLong
+[#_Numeric_asDouble_]
+==== asDouble
 
 [source,java]
 ----
 @CheckReturnValue
-boolean isLong()
+double asDouble()
 ----
 
-Checks if the type of an aggregate answer is a ``long``. 
+Retrieves numeric value of an aggregate answer as a ``double``. 
 
 
 [caption=""]
 .Returns
-`boolean`
+`double`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-numeric.isLong();
-----
-
-[#_Numeric_isDouble_]
-==== isDouble
-
-[source,java]
-----
-@CheckReturnValue
-boolean isDouble()
-----
-
-Checks if the type of an aggregate answer is a ``double``. 
-
-
-[caption=""]
-.Returns
-`boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-numeric.isDouble();
-----
-
-[#_Numeric_isNaN_]
-==== isNaN
-
-[source,java]
-----
-@CheckReturnValue
-boolean isNaN()
-----
-
-Checks if the aggregate answer is not a number. 
-
-
-[caption=""]
-.Returns
-`boolean`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-numeric.isNaN();
+numeric.asDouble();
 ----
 
 [#_Numeric_asLong_]
@@ -98,29 +52,6 @@ Retrieves numeric value of an aggregate answer as a ``long``.
 numeric.asLong();
 ----
 
-[#_Numeric_asDouble_]
-==== asDouble
-
-[source,java]
-----
-@CheckReturnValue
-double asDouble()
-----
-
-Retrieves numeric value of an aggregate answer as a ``double``. 
-
-
-[caption=""]
-.Returns
-`double`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-numeric.asDouble();
-----
-
 [#_Numeric_asNumber_]
 ==== asNumber
 
@@ -142,6 +73,75 @@ Retrieves numeric value of an aggregate answer.
 [source,java]
 ----
 numeric.asNumber();
+----
+
+[#_Numeric_isDouble_]
+==== isDouble
+
+[source,java]
+----
+@CheckReturnValue
+boolean isDouble()
+----
+
+Checks if the type of an aggregate answer is a ``double``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+numeric.isDouble();
+----
+
+[#_Numeric_isLong_]
+==== isLong
+
+[source,java]
+----
+@CheckReturnValue
+boolean isLong()
+----
+
+Checks if the type of an aggregate answer is a ``long``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+numeric.isLong();
+----
+
+[#_Numeric_isNaN_]
+==== isNaN
+
+[source,java]
+----
+@CheckReturnValue
+boolean isNaN()
+----
+
+Checks if the aggregate answer is not a number. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+numeric.isNaN();
 ----
 
 [#_Numeric_toString_]

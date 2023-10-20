@@ -9,10 +9,10 @@
 |===
 |Variant
 a| `Boolean(bool)`
-a| `Long(i64)`
-a| `Double(f64)`
-a| `String(String)`
 a| `DateTime(NaiveDateTime)`
+a| `Double(f64)`
+a| `Long(i64)`
+a| `String(String)`
 |===
 // end::enum_constants[]
 

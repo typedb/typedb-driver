@@ -8,6 +8,51 @@
 * `java.lang.AutoCloseable`
 
 // tag::methods[]
+[#_TypeDBSession_close_]
+==== close
+
+[source,java]
+----
+void close()
+----
+
+Closes the session. Before opening a new session, the session currently open should first be closed. 
+
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+session.close();
+----
+
+[#_TypeDBSession_database_name_]
+==== database_name
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String database_name()
+----
+
+Returns the name of the database of the session. 
+
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+session.databaseName();
+----
+
 [#_TypeDBSession_isOpen_]
 ==== isOpen
 
@@ -31,42 +76,35 @@ Checks whether this session is open.
 session.isOpen();
 ----
 
-[#_TypeDBSession_type_]
-==== type
+[#_TypeDBSession_onClose_java_lang_Runnable]
+==== onClose
 
 [source,java]
 ----
-@CheckReturnValue
-TypeDBSession.Type type()
+void onClose​(java.lang.Runnable function)
 ----
 
-The current session’s type (SCHEMA or DATA)
-
-[caption=""]
-.Returns
-`TypeDBSession.Type`
-
-[#_TypeDBSession_database_name_]
-==== database_name
-
-[source,java]
-----
-@CheckReturnValue
-java.lang.String database_name()
-----
-
-Returns the name of the database of the session. 
+Registers a callback function which will be executed when this session is closed. 
 
 
 [caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `function` a| The callback function. a| `java.lang.Runnable`
+|===
+
+[caption=""]
 .Returns
-`java.lang.String`
+`void`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-session.databaseName();
+session.onClose(function)
 ----
 
 [#_TypeDBSession_options_]
@@ -137,58 +175,20 @@ a| `options` a| Options for the session a| `TypeDBOptions`
 session.transaction(transactionType, options);
 ----
 
-[#_TypeDBSession_onClose_java_lang_Runnable]
-==== onClose
+[#_TypeDBSession_type_]
+==== type
 
 [source,java]
 ----
-void onClose​(java.lang.Runnable function)
+@CheckReturnValue
+TypeDBSession.Type type()
 ----
 
-Registers a callback function which will be executed when this session is closed. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `function` a| The callback function. a| `java.lang.Runnable`
-|===
+The current session’s type (SCHEMA or DATA)
 
 [caption=""]
 .Returns
-`void`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-session.onClose(function)
-----
-
-[#_TypeDBSession_close_]
-==== close
-
-[source,java]
-----
-void close()
-----
-
-Closes the session. Before opening a new session, the session currently open should first be closed. 
-
-
-[caption=""]
-.Returns
-`void`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-session.close();
-----
+`TypeDBSession.Type`
 
 // end::methods[]
 

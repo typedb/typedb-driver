@@ -8,25 +8,25 @@
 [options="header"]
 |===
 |Variant
-a| `RPCMethodUnavailable(String)`
+a| `BrokenPipe()`
 a| `ConnectionIsClosed()`
+a| `ConnectionRefused()`
+a| `DatabaseDoesNotExist(String)`
+a| `EnterpriseAllNodesFailed(String)`
+a| `EnterpriseEndpointEncrypted()`
+a| `EnterpriseReplicaNotPrimary()`
+a| `EnterpriseSSLCertificateNotValidated()`
+a| `EnterpriseTokenCredentialInvalid()`
+a| `EnterpriseUnableToConnect(String)`
+a| `InvalidResponseField(&'static str)`
+a| `MissingResponseField(&'static str)`
+a| `RPCMethodUnavailable(String)`
+a| `SessionCloseFailed()`
 a| `SessionIsClosed()`
 a| `TransactionIsClosed()`
 a| `TransactionIsClosedWithErrors(String)`
 a| `UnableToConnect()`
-a| `DatabaseDoesNotExist(String)`
-a| `MissingResponseField(&'static str)`
 a| `UnknownRequestId(ID)`
-a| `InvalidResponseField(&'static str)`
-a| `EnterpriseUnableToConnect(String)`
-a| `EnterpriseReplicaNotPrimary()`
-a| `EnterpriseAllNodesFailed(String)`
-a| `EnterpriseTokenCredentialInvalid()`
-a| `SessionCloseFailed()`
-a| `EnterpriseEndpointEncrypted()`
-a| `EnterpriseSSLCertificateNotValidated()`
-a| `BrokenPipe()`
-a| `ConnectionRefused()`
 |===
 // end::enum_constants[]
 

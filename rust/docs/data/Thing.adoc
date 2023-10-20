@@ -8,9 +8,9 @@
 [options="header"]
 |===
 |Variant
+a| `Attribute(Attribute)`
 a| `Entity(Entity)`
 a| `Relation(Relation)`
-a| `Attribute(Attribute)`
 |===
 // end::enum_constants[]
 

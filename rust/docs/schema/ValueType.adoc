@@ -8,12 +8,12 @@
 [options="header"]
 |===
 |Variant
-a| `Object`
 a| `Boolean`
-a| `Long`
-a| `Double`
-a| `String`
 a| `DateTime`
+a| `Double`
+a| `Long`
+a| `Object`
+a| `String`
 |===
 // end::enum_constants[]
 

@@ -4,32 +4,6 @@
 Class defining the error-code and message template for ``TypeDBDriverError``s
 
 // tag::methods[]
-[#_ErrorMessage_new_ErrorMessage]
-==== new ErrorMessage
-
-[source,nodejs]
-----
-new ErrorMessage(codePrefix, codeNumber, messagePrefix, messageBody): ErrorMessage
-----
-
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `codePrefix` a|  a| `string`
-a| `codeNumber` a|  a| `number`
-a| `messagePrefix` a|  a| `string`
-a| `messageBody` a|  a| `((args) => string)`
-|===
-
-[caption=""]
-.Returns
-`ErrorMessage`
-
 [#_ErrorMessage_code]
 ==== code
 
@@ -66,6 +40,32 @@ a| `args` a| The format arguments to the message-template. a| `Stringable[]`
 [caption=""]
 .Returns
 `string`
+
+[#_ErrorMessage_new_ErrorMessage]
+==== new ErrorMessage
+
+[source,nodejs]
+----
+new ErrorMessage(codePrefix, codeNumber, messagePrefix, messageBody): ErrorMessage
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `codePrefix` a|  a| `string`
+a| `codeNumber` a|  a| `number`
+a| `messagePrefix` a|  a| `string`
+a| `messageBody` a|  a| `((args) => string)`
+|===
+
+[caption=""]
+.Returns
+`ErrorMessage`
 
 [#_ErrorMessage_toString]
 ==== toString

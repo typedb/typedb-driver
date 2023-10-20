@@ -12,27 +12,70 @@
 Entity types represent the classification of independent objects in the data model of the business domain.
 
 // tag::methods[]
-[#_EntityType_isEntityType_]
-==== isEntityType
+[#_EntityType_asAttribute_]
+==== asAttribute
 
 [source,java]
 ----
-@CheckReturnValue
-default boolean isEntityType()
+default Attribute asAttribute()
 ----
 
-Checks if the concept is an ``EntityType``. 
+Casts the concept to ``Attribute``. 
 
 
 [caption=""]
 .Returns
-`boolean`
+`Attribute`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-concept.isEntityType();
+concept.asAttribute();
+----
+
+[#_EntityType_asAttributeType_]
+==== asAttributeType
+
+[source,java]
+----
+default AttributeType asAttributeType()
+----
+
+Casts the concept to ``AttributeType``. 
+
+
+[caption=""]
+.Returns
+`AttributeType`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asAttributeType();
+----
+
+[#_EntityType_asEntity_]
+==== asEntity
+
+[source,java]
+----
+default Entity asEntity()
+----
+
+Casts the concept to ``Entity``. 
+
+
+[caption=""]
+.Returns
+`Entity`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asEntity();
 ----
 
 [#_EntityType_asEntityType_]
@@ -56,6 +99,116 @@ Casts the concept to ``EntityType``.
 [source,java]
 ----
 concept.asEntityType();
+----
+
+[#_EntityType_asRelation_]
+==== asRelation
+
+[source,java]
+----
+default Relation asRelation()
+----
+
+Casts the concept to ``Relation``. 
+
+
+[caption=""]
+.Returns
+`Relation`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asRelation();
+----
+
+[#_EntityType_asRelationType_]
+==== asRelationType
+
+[source,java]
+----
+default RelationType asRelationType()
+----
+
+Casts the concept to ``RelationType``. 
+
+
+[caption=""]
+.Returns
+`RelationType`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asRelationType();
+----
+
+[#_EntityType_asRoleType_]
+==== asRoleType
+
+[source,java]
+----
+default RoleType asRoleType()
+----
+
+Casts the concept to ``RoleType``. 
+
+
+[caption=""]
+.Returns
+`RoleType`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asRoleType();
+----
+
+[#_EntityType_asThing_]
+==== asThing
+
+[source,java]
+----
+default Thing asThing()
+----
+
+Casts the concept to ``Thing``. 
+
+
+[caption=""]
+.Returns
+`Thing`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asThing();
+----
+
+[#_EntityType_asValue_]
+==== asValue
+
+[source,java]
+----
+default Value asValue()
+----
+
+Casts the concept to ``Value``. 
+
+
+[caption=""]
+.Returns
+`Value`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asValue();
 ----
 
 [#_EntityType_create_com_vaticle_typedb_driver_api_TypeDBTransaction]
@@ -196,215 +349,6 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtype
 entityType.getSubtypes(transaction, transitivity);
 ----
 
-[#_EntityType_setSupertype_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_EntityType]
-==== setSupertype
-
-[source,java]
-----
-void setSupertype​(TypeDBTransaction transaction,
-                  EntityType superEntityType)
-----
-
-Sets the supplied ``EntityType`` as the supertype of the current ``EntityType``. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `TypeDBTransaction`
-a| `superEntityType` a| The ``EntityType`` to set as the supertype of this ``EntityType`` a| `EntityType`
-|===
-
-[caption=""]
-.Returns
-`void`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-entityType.setSupertype(transaction, entityType);
-----
-
-[#_EntityType_asAttribute_]
-==== asAttribute
-
-[source,java]
-----
-default Attribute asAttribute()
-----
-
-Casts the concept to ``Attribute``. 
-
-
-[caption=""]
-.Returns
-`Attribute`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.asAttribute();
-----
-
-[#_EntityType_asAttributeType_]
-==== asAttributeType
-
-[source,java]
-----
-default AttributeType asAttributeType()
-----
-
-Casts the concept to ``AttributeType``. 
-
-
-[caption=""]
-.Returns
-`AttributeType`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.asAttributeType();
-----
-
-[#_EntityType_asEntity_]
-==== asEntity
-
-[source,java]
-----
-default Entity asEntity()
-----
-
-Casts the concept to ``Entity``. 
-
-
-[caption=""]
-.Returns
-`Entity`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.asEntity();
-----
-
-[#_EntityType_asRelation_]
-==== asRelation
-
-[source,java]
-----
-default Relation asRelation()
-----
-
-Casts the concept to ``Relation``. 
-
-
-[caption=""]
-.Returns
-`Relation`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.asRelation();
-----
-
-[#_EntityType_asRelationType_]
-==== asRelationType
-
-[source,java]
-----
-default RelationType asRelationType()
-----
-
-Casts the concept to ``RelationType``. 
-
-
-[caption=""]
-.Returns
-`RelationType`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.asRelationType();
-----
-
-[#_EntityType_asRoleType_]
-==== asRoleType
-
-[source,java]
-----
-default RoleType asRoleType()
-----
-
-Casts the concept to ``RoleType``. 
-
-
-[caption=""]
-.Returns
-`RoleType`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.asRoleType();
-----
-
-[#_EntityType_asThing_]
-==== asThing
-
-[source,java]
-----
-default Thing asThing()
-----
-
-Casts the concept to ``Thing``. 
-
-
-[caption=""]
-.Returns
-`Thing`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.asThing();
-----
-
-[#_EntityType_asValue_]
-==== asValue
-
-[source,java]
-----
-default Value asValue()
-----
-
-Casts the concept to ``Value``. 
-
-
-[caption=""]
-.Returns
-`Value`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.asValue();
-----
-
 [#_EntityType_isAttribute_]
 ==== isAttribute
 
@@ -472,6 +416,29 @@ Checks if the concept is an ``Entity``.
 [source,java]
 ----
 concept.isEntity();
+----
+
+[#_EntityType_isEntityType_]
+==== isEntityType
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isEntityType()
+----
+
+Checks if the concept is an ``EntityType``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isEntityType();
 ----
 
 [#_EntityType_isRelation_]
@@ -587,6 +554,39 @@ Checks if the concept is a ``Value``.
 [source,java]
 ----
 concept.isValue();
+----
+
+[#_EntityType_setSupertype_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_EntityType]
+==== setSupertype
+
+[source,java]
+----
+void setSupertype​(TypeDBTransaction transaction,
+                  EntityType superEntityType)
+----
+
+Sets the supplied ``EntityType`` as the supertype of the current ``EntityType``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `superEntityType` a| The ``EntityType`` to set as the supertype of this ``EntityType`` a| `EntityType`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+entityType.setSupertype(transaction, entityType);
 ----
 
 // end::methods[]

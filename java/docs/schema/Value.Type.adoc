@@ -20,57 +20,35 @@ a| `STRING`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_Value.Type_values_]
-==== values
+[#_Value.Type_isKeyable_]
+==== isKeyable
 
 [source,java]
 ----
-public static Value.Type[] values()
+@CheckReturnValue
+public boolean isKeyable()
 ----
 
-Returns an array containing the constants of this enum type, in the order they are declared. This method may be used to iterate over the constants as follows: 
-[source,java]
-----
-for (Value.Type c : Value.Type.values())
-    System.out.println(c);
-
-----
 
 
 [caption=""]
 .Returns
-`public static Value.Type[]`
+`public boolean`
 
-[caption=""]
-.Code examples
-[source,java]
-----
-for (Value.Type c : Value.Type.values())
-    System.out.println(c);
-----
-
-[#_Value.Type_valueOf_java_lang_String]
-==== valueOf
+[#_Value.Type_isWritable_]
+==== isWritable
 
 [source,java]
 ----
-public static Value.Type valueOf​(java.lang.String name)
+@CheckReturnValue
+public boolean isWritable()
 ----
 
-Returns the enum constant of this type with the specified name. The string must match exactly an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
 
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `name` a| the name of the enum constant to be returned. a| `java.lang.String`
-|===
 
 [caption=""]
 .Returns
-`public static Value.Type`
+`public boolean`
 
 [#_Value.Type_of_com_vaticle_typedb_driver_jni_ValueType]
 ==== of
@@ -102,35 +80,57 @@ public java.lang.Class<?> valueClass()
 .Returns
 `public java.lang.Class<?>`
 
-[#_Value.Type_isWritable_]
-==== isWritable
+[#_Value.Type_valueOf_java_lang_String]
+==== valueOf
 
 [source,java]
 ----
-@CheckReturnValue
-public boolean isWritable()
+public static Value.Type valueOf​(java.lang.String name)
 ----
 
+Returns the enum constant of this type with the specified name. The string must match exactly an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| the name of the enum constant to be returned. a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`public static Value.Type`
+
+[#_Value.Type_values_]
+==== values
+
+[source,java]
+----
+public static Value.Type[] values()
+----
+
+Returns an array containing the constants of this enum type, in the order they are declared. This method may be used to iterate over the constants as follows: 
+[source,java]
+----
+for (Value.Type c : Value.Type.values())
+    System.out.println(c);
+
+----
 
 
 [caption=""]
 .Returns
-`public boolean`
-
-[#_Value.Type_isKeyable_]
-==== isKeyable
-
-[source,java]
-----
-@CheckReturnValue
-public boolean isKeyable()
-----
-
-
+`public static Value.Type[]`
 
 [caption=""]
-.Returns
-`public boolean`
+.Code examples
+[source,java]
+----
+for (Value.Type c : Value.Type.values())
+    System.out.println(c);
+----
 
 // end::methods[]
 

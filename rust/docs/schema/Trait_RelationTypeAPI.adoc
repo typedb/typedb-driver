@@ -125,364 +125,6 @@ relation_type.create(transaction);
 --
 ====
 
-[#_trait_RelationTypeAPI_method_get_supertype]
-==== get_supertype
-
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-fn get_supertype<'life0, 'life1, 'life2, 'async_trait>(
-    &'life0 self,
-    transaction: &'life1 Transaction<'life2>
-) -> Pin<Box<dyn Future<Output = Result<Option<RelationType>>> + Send + 'async_trait>>
-where
-     Self: Sync + 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-fn get_supertype(
-    &self,
-    transaction: &Transaction<'_>
-) -> Result<Option<RelationType>>
-----
-
---
-====
-
-Retrieves the most immediate supertype of the ``RelationType``.
-
-[caption=""]
-.Input parameters
-[tabs]
-====
-async::
-+
---
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
-|===
---
-
-sync::
-+
---
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
-|===
---
-====
-
-
-[caption=""]
-.Returns
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-Pin<Box<dyn Future<Output = Result<Option<RelationType>>> + Send + 'async_trait>>
-where
-     Self: Sync + 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-Result<Option<RelationType>>
-----
-
---
-====
-
-[caption=""]
-.Code examples
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-relation_type.get_supertype(transaction).await;
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-relation_type.get_supertype(transaction);
-----
-
---
-====
-
-[#_trait_RelationTypeAPI_method_set_supertype]
-==== set_supertype
-
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-fn set_supertype<'life0, 'life1, 'life2, 'async_trait>(
-    &'life0 mut self,
-    transaction: &'life1 Transaction<'life2>,
-    supertype: RelationType
-) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: Send + 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-fn set_supertype(
-    &mut self,
-    transaction: &Transaction<'_>,
-    supertype: RelationType
-) -> Result
-----
-
---
-====
-
-Sets the supplied ``RelationType`` as the supertype of the current ``RelationType``.
-
-[caption=""]
-.Input parameters
-[tabs]
-====
-async::
-+
---
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
-a| `supertype` a| The ``RelationType`` to set as the supertype of this ``RelationType`` a| `RelationType`
-|===
---
-
-sync::
-+
---
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
-a| `supertype` a| The ``RelationType`` to set as the supertype of this ``RelationType`` a| `RelationType`
-|===
---
-====
-
-
-[caption=""]
-.Returns
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: Send + 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-Result
-----
-
---
-====
-
-[caption=""]
-.Code examples
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-relation_type.set_supertype(transaction, super_relation_type).await;
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-relation_type.set_supertype(transaction, super_relation_type);
-----
-
---
-====
-
-[#_trait_RelationTypeAPI_method_get_supertypes]
-==== get_supertypes
-
-[source,rust]
-----
-fn get_supertypes(
-    &self,
-    transaction: &Transaction<'_>
-) -> Result<BoxStream<'_, Result<RelationType>>>
-----
-
-Retrieves all supertypes of the ``RelationType``.
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
-|===
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result<BoxStream<'_, Result<RelationType>>>
-----
-
-[caption=""]
-.Code examples
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-relation_type.get_supertypes(transaction).await;
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-relation_type.get_supertypes(transaction);
-----
-
---
-====
-
-[#_trait_RelationTypeAPI_method_get_subtypes]
-==== get_subtypes
-
-[source,rust]
-----
-fn get_subtypes(
-    &self,
-    transaction: &Transaction<'_>,
-    transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<RelationType>>>
-----
-
-Retrieves all direct and indirect (or direct only) subtypes of the ``RelationType``.
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
-a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity`
-|===
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result<BoxStream<'_, Result<RelationType>>>
-----
-
-[caption=""]
-.Code examples
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-relation_type.get_subtypes(transaction, Transivity::Transitive).await;
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-relation_type.get_subtypes(transaction, Transivity::Transitive);
-----
-
---
-====
-
 [#_trait_RelationTypeAPI_method_get_instances]
 ==== get_instances
 
@@ -847,6 +489,238 @@ relation_type.get_relates_overridden(transaction, overridden_role_label);
 --
 ====
 
+[#_trait_RelationTypeAPI_method_get_subtypes]
+==== get_subtypes
+
+[source,rust]
+----
+fn get_subtypes(
+    &self,
+    transaction: &Transaction<'_>,
+    transitivity: Transitivity
+) -> Result<BoxStream<'_, Result<RelationType>>>
+----
+
+Retrieves all direct and indirect (or direct only) subtypes of the ``RelationType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<RelationType>>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+relation_type.get_subtypes(transaction, Transivity::Transitive).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+relation_type.get_subtypes(transaction, Transivity::Transitive);
+----
+
+--
+====
+
+[#_trait_RelationTypeAPI_method_get_supertype]
+==== get_supertype
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn get_supertype<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 self,
+    transaction: &'life1 Transaction<'life2>
+) -> Pin<Box<dyn Future<Output = Result<Option<RelationType>>> + Send + 'async_trait>>
+where
+     Self: Sync + 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn get_supertype(
+    &self,
+    transaction: &Transaction<'_>
+) -> Result<Option<RelationType>>
+----
+
+--
+====
+
+Retrieves the most immediate supertype of the ``RelationType``.
+
+[caption=""]
+.Input parameters
+[tabs]
+====
+async::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+|===
+--
+
+sync::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+|===
+--
+====
+
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result<Option<RelationType>>> + Send + 'async_trait>>
+where
+     Self: Sync + 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result<Option<RelationType>>
+----
+
+--
+====
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+relation_type.get_supertype(transaction).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+relation_type.get_supertype(transaction);
+----
+
+--
+====
+
+[#_trait_RelationTypeAPI_method_get_supertypes]
+==== get_supertypes
+
+[source,rust]
+----
+fn get_supertypes(
+    &self,
+    transaction: &Transaction<'_>
+) -> Result<BoxStream<'_, Result<RelationType>>>
+----
+
+Retrieves all supertypes of the ``RelationType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<RelationType>>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+relation_type.get_supertypes(transaction).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+relation_type.get_supertypes(transaction);
+----
+
+--
+====
+
 [#_trait_RelationTypeAPI_method_set_relates]
 ==== set_relates
 
@@ -972,6 +846,132 @@ sync::
 [source,rust]
 ----
 relation_type.set_relates(transaction, role_label, None);
+----
+
+--
+====
+
+[#_trait_RelationTypeAPI_method_set_supertype]
+==== set_supertype
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn set_supertype<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 mut self,
+    transaction: &'life1 Transaction<'life2>,
+    supertype: RelationType
+) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: Send + 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn set_supertype(
+    &mut self,
+    transaction: &Transaction<'_>,
+    supertype: RelationType
+) -> Result
+----
+
+--
+====
+
+Sets the supplied ``RelationType`` as the supertype of the current ``RelationType``.
+
+[caption=""]
+.Input parameters
+[tabs]
+====
+async::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `supertype` a| The ``RelationType`` to set as the supertype of this ``RelationType`` a| `RelationType`
+|===
+--
+
+sync::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `supertype` a| The ``RelationType`` to set as the supertype of this ``RelationType`` a| `RelationType`
+|===
+--
+====
+
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: Send + 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result
+----
+
+--
+====
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+relation_type.set_supertype(transaction, super_relation_type).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+relation_type.set_supertype(transaction, super_relation_type);
 ----
 
 --

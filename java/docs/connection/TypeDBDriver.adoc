@@ -8,6 +8,43 @@
 * `java.lang.AutoCloseable`
 
 // tag::methods[]
+[#_TypeDBDriver_close_]
+==== close
+
+[source,java]
+----
+void close()
+----
+
+Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed. 
+
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.close()
+----
+
+[#_TypeDBDriver_databases_]
+==== databases
+
+[source,java]
+----
+@CheckReturnValue
+DatabaseManager databases()
+----
+
+The ``DatabaseManager`` for this connection, providing access to database management methods.
+
+[caption=""]
+.Returns
+`DatabaseManager`
+
 [#_TypeDBDriver_isOpen_]
 ==== isOpen
 
@@ -30,21 +67,6 @@ Checks whether this connection is presently open.
 ----
 driver.isOpen();
 ----
-
-[#_TypeDBDriver_databases_]
-==== databases
-
-[source,java]
-----
-@CheckReturnValue
-DatabaseManager databases()
-----
-
-The ``DatabaseManager`` for this connection, providing access to database management methods.
-
-[caption=""]
-.Returns
-`DatabaseManager`
 
 [#_TypeDBDriver_session_java_lang_String_com_vaticle_typedb_driver_api_TypeDBSession_Type]
 ==== session
@@ -100,28 +122,6 @@ a| `options` a| ``TypeDBOptions`` for the session a| `TypeDBOptions`
 [source,java]
 ----
 driver.session(database, sessionType, options);
-----
-
-[#_TypeDBDriver_close_]
-==== close
-
-[source,java]
-----
-void close()
-----
-
-Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed. 
-
-
-[caption=""]
-.Returns
-`void`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-driver.close()
 ----
 
 [#_TypeDBDriver_user_]
