@@ -102,6 +102,7 @@ class NodejsDocParser : Callable<Unit> {
     private fun parseClass(document: Element): Class {
         val className =
             document.selectFirst(".tsd-page-title h1")!!.textNodes().first()!!.text().split(" ", limit = 2)[1]
+        val classAnchor = replaceSymbolsForAnchor(className)
         val classDescr = document.select(".tsd-page-title + section.tsd-comment div.tsd-comment p").map {
             reformatTextWithCode(it.html())
         }
@@ -120,7 +121,7 @@ class NodejsDocParser : Callable<Unit> {
                     "section.tsd-member-group:contains(Method)"
         )
         val methods = methodsElements.select("section.tsd-member > .tsd-signatures > .tsd-signature").map {
-            parseMethod(it)
+            parseMethod(it, classAnchor)
         }.filter {
             it.name != "proto"
         } + document.select("section.tsd-member-group:contains(Accessors)")
@@ -130,6 +131,7 @@ class NodejsDocParser : Callable<Unit> {
 
         return Class(
             name = className,
+            anchor = classAnchor,
             description = classDescr,
             fields = properties,
             methods = methods,
@@ -139,6 +141,7 @@ class NodejsDocParser : Callable<Unit> {
 
     private fun parseNamespace(document: Element): Class {
         val className = document.selectFirst(".tsd-page-title h1")!!.text().split(" ")[1]
+        val classAnchor = replaceSymbolsForAnchor(className)
         val classDescr = document.select(".tsd-page-title + section.tsd-comment div.tsd-comment p").map {
             reformatTextWithCode(it.html())
         }
@@ -149,12 +152,13 @@ class NodejsDocParser : Callable<Unit> {
 
         return Class(
             name = className,
+            anchor = classAnchor,
             description = classDescr,
             enumConstants = variables,
         )
     }
 
-    private fun parseMethod(element: Element): Method {
+    private fun parseMethod(element: Element, classAnchor: String): Method {
         val methodSignature = element.text()
         val methodName = element.selectFirst(".tsd-kind-call-signature, .tsd-kind-constructor-signature")!!.text()
         val descrElement = element.nextElementSibling()
@@ -180,6 +184,7 @@ class NodejsDocParser : Callable<Unit> {
 
         return Method(
             name = methodName,
+            anchor = "${classAnchor}_${replaceSymbolsForAnchor(methodName)}",
             signature = methodSignature,
             args = methodArgs,
             description = methodDescr,

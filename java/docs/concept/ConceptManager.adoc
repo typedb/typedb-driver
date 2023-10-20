@@ -6,7 +6,7 @@
 Provides access for all Concept API methods.
 
 // tag::methods[]
-[#_getRootEntityType_]
+[#_ConceptManager_getRootEntityType_]
 ==== getRootEntityType
 
 [source,java]
@@ -29,7 +29,7 @@ Retrieves the root ``EntityType``, “entity”.
 transaction.concepts().getRootEntityType();
 ----
 
-[#_getRootRelationType_]
+[#_ConceptManager_getRootRelationType_]
 ==== getRootRelationType
 
 [source,java]
@@ -52,7 +52,7 @@ Retrieve the root ``RelationType``, “relation”.
 transaction.concepts().getRootRelationType();
 ----
 
-[#_getRootAttributeType_]
+[#_ConceptManager_getRootAttributeType_]
 ==== getRootAttributeType
 
 [source,java]
@@ -75,7 +75,7 @@ Retrieve the root ``AttributeType``, “attribute”.
 transaction.concepts().getRootAttributeType();
 ----
 
-[#_getEntityType_java_lang_String]
+[#_ConceptManager_getEntityType_java_lang_String]
 ==== getEntityType
 
 [source,java]
@@ -108,7 +108,7 @@ a| `label` a| The label of the ``EntityType`` to retrieve a| `java.lang.String`
 transaction.concepts().getEntityType(label);
 ----
 
-[#_getRelationType_java_lang_String]
+[#_ConceptManager_getRelationType_java_lang_String]
 ==== getRelationType
 
 [source,java]
@@ -141,7 +141,7 @@ a| `label` a| The label of the ``RelationType`` to retrieve a| `java.lang.String
 transaction.concepts().getRelationType(label);
 ----
 
-[#_getAttributeType_java_lang_String]
+[#_ConceptManager_getAttributeType_java_lang_String]
 ==== getAttributeType
 
 [source,java]
@@ -174,7 +174,7 @@ a| `label` a| The label of the ``AttributeType`` to retrieve a| `java.lang.Strin
 transaction.concepts().getAttributeType(label)
 ----
 
-[#_putEntityType_java_lang_String]
+[#_ConceptManager_putEntityType_java_lang_String]
 ==== putEntityType
 
 [source,java]
@@ -205,7 +205,7 @@ a| `label` a| The label of the ``EntityType`` to create or retrieve a| `java.lan
 transaction.concepts().putEntityType(label);
 ----
 
-[#_putRelationType_java_lang_String]
+[#_ConceptManager_putRelationType_java_lang_String]
 ==== putRelationType
 
 [source,java]
@@ -236,7 +236,7 @@ a| `label` a| The label of the ``RelationType`` to create or retrieve a| `java.l
 transaction.concepts().putRelationType(label);
 ----
 
-[#_putAttributeType_java_lang_String_com_vaticle_typedb_driver_api_concept_value_Value_Type]
+[#_ConceptManager_putAttributeType_java_lang_String_com_vaticle_typedb_driver_api_concept_value_Value_Type]
 ==== putAttributeType
 
 [source,java]
@@ -269,7 +269,7 @@ a| `valueType` a| The value type of the ``AttributeType`` to create a| `Value.Ty
 await transaction.concepts().putAttributeType(label, valueType);
 ----
 
-[#_getEntity_java_lang_String]
+[#_ConceptManager_getEntity_java_lang_String]
 ==== getEntity
 
 [source,java]
@@ -302,7 +302,7 @@ a| `iid` a| The iid of the ``Entity`` to retrieve a| `java.lang.String`
 transaction.concepts().getEntity(iid);
 ----
 
-[#_getRelation_java_lang_String]
+[#_ConceptManager_getRelation_java_lang_String]
 ==== getRelation
 
 [source,java]
@@ -335,7 +335,7 @@ a| `iid` a| The iid of the ``Relation`` to retrieve a| `java.lang.String`
 transaction.concepts().getRelation(iid);
 ----
 
-[#_getAttribute_java_lang_String]
+[#_ConceptManager_getAttribute_java_lang_String]
 ==== getAttribute
 
 [source,java]
@@ -368,7 +368,7 @@ a| `iid` a| The iid of the ``Attribute`` to retrieve a| `java.lang.String`
 transaction.concepts().getAttribute(iid);
 ----
 
-[#_getSchemaExceptions_]
+[#_ConceptManager_getSchemaExceptions_]
 ==== getSchemaExceptions
 
 [source,java]

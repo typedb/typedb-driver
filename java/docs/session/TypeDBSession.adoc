@@ -8,7 +8,7 @@
 * `java.lang.AutoCloseable`
 
 // tag::methods[]
-[#_isOpen_]
+[#_TypeDBSession_isOpen_]
 ==== isOpen
 
 [source,java]
@@ -31,7 +31,7 @@ Checks whether this session is open.
 session.isOpen();
 ----
 
-[#_type_]
+[#_TypeDBSession_type_]
 ==== type
 
 [source,java]
@@ -46,7 +46,7 @@ The current session’s type (SCHEMA or DATA)
 .Returns
 `TypeDBSession.Type`
 
-[#_database_name_]
+[#_TypeDBSession_database_name_]
 ==== database_name
 
 [source,java]
@@ -69,7 +69,7 @@ Returns the name of the database of the session.
 session.databaseName();
 ----
 
-[#_options_]
+[#_TypeDBSession_options_]
 ==== options
 
 [source,java]
@@ -84,7 +84,7 @@ Gets the options for the session
 .Returns
 `TypeDBOptions`
 
-[#_transaction_com_vaticle_typedb_driver_api_TypeDBTransaction_Type]
+[#_TypeDBSession_transaction_com_vaticle_typedb_driver_api_TypeDBTransaction_Type]
 ==== transaction
 
 [source,java]
@@ -103,7 +103,7 @@ See also: <<#_transaction_com_vaticle_typedb_driver_api_TypeDBTransaction_Type_c
 .Returns
 `TypeDBTransaction`
 
-[#_transaction_com_vaticle_typedb_driver_api_TypeDBTransaction_Type_com_vaticle_typedb_driver_api_TypeDBOptions]
+[#_TypeDBSession_transaction_com_vaticle_typedb_driver_api_TypeDBTransaction_Type_com_vaticle_typedb_driver_api_TypeDBOptions]
 ==== transaction
 
 [source,java]
@@ -137,7 +137,7 @@ a| `options` a| Options for the session a| `TypeDBOptions`
 session.transaction(transactionType, options);
 ----
 
-[#_onClose_java_lang_Runnable]
+[#_TypeDBSession_onClose_java_lang_Runnable]
 ==== onClose
 
 [source,java]
@@ -168,7 +168,7 @@ a| `function` a| The callback function. a| `java.lang.Runnable`
 session.onClose(function)
 ----
 
-[#_close_]
+[#_TypeDBSession_close_]
 ==== close
 
 [source,java]

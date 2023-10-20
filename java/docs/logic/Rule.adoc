@@ -6,7 +6,7 @@
 Rules are a part of schema and define embedded logic. The reasoning engine uses rules as a set of logic to infer new data. A rule consists of a condition and a conclusion, and is uniquely identified by a label.
 
 // tag::methods[]
-[#_getLabel_]
+[#_Rule_getLabel_]
 ==== getLabel
 
 [source,java]
@@ -21,7 +21,7 @@ Retrieves the unique label of the rule.
 .Returns
 `java.lang.String`
 
-[#_getWhen_]
+[#_Rule_getWhen_]
 ==== getWhen
 
 [source,java]
@@ -36,7 +36,7 @@ The statements that constitute the ‘when’ of the rule.
 .Returns
 `com.vaticle.typeql.lang.pattern.Pattern`
 
-[#_getThen_]
+[#_Rule_getThen_]
 ==== getThen
 
 [source,java]
@@ -51,7 +51,7 @@ The single statement that constitutes the ‘then’ of the rule.
 .Returns
 `com.vaticle.typeql.lang.pattern.Pattern`
 
-[#_setLabel_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
+[#_Rule_setLabel_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
 ==== setLabel
 
 [source,java]
@@ -84,7 +84,7 @@ a| `label` a| The new label to be given to the rule a| `java.lang.String`
 rule.setLabel(transaction, newLabel)
 ----
 
-[#_delete_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_Rule_delete_com_vaticle_typedb_driver_api_TypeDBTransaction]
 ==== delete
 
 [source,java]
@@ -115,7 +115,7 @@ a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction`
 rule.delete(transaction)
 ----
 
-[#_isDeleted_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_Rule_isDeleted_com_vaticle_typedb_driver_api_TypeDBTransaction]
 ==== isDeleted
 
 [source,java]

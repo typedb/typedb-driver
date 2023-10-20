@@ -1,4 +1,4 @@
-[#_ThingType_Annotation]
+[#_ThingType.Annotation]
 === ThingType.Annotation
 
 *Package*: `com.vaticle.typedb.driver.api.concept.type`
@@ -6,7 +6,7 @@
 Annotation
 
 // tag::methods[]
-[#_key_]
+[#_ThingType.Annotation_key_]
 ==== key
 
 [source,java]
@@ -28,7 +28,7 @@ Produces a ``@key`` annotation.
 ThingType.Annotation.key();
 ----
 
-[#_unique_]
+[#_ThingType.Annotation_unique_]
 ==== unique
 
 [source,java]
@@ -50,7 +50,7 @@ Produces a ``@unique`` annotation.
 Annotation.unique();
 ----
 
-[#_isKey_]
+[#_ThingType.Annotation_isKey_]
 ==== isKey
 
 [source,java]
@@ -72,7 +72,7 @@ Checks if this ``Annotation`` is a ``@key`` annotation.
 annotation.isKey();
 ----
 
-[#_isUnique_]
+[#_ThingType.Annotation_isUnique_]
 ==== isUnique
 
 [source,java]
@@ -94,7 +94,7 @@ Checks if this ``Annotation`` is a ``@unique`` annotation.
 annotation.isUnique();
 ----
 
-[#_toString_]
+[#_ThingType.Annotation_toString_]
 ==== toString
 
 [source,java]
@@ -116,7 +116,7 @@ Retrieves a string representation of this ``Annotation``.
 annotation.toString();
 ----
 
-[#_equals_java_lang_Object]
+[#_ThingType.Annotation_equals_java_lang_Object]
 ==== equals
 
 [source,java]
@@ -147,7 +147,7 @@ a| `obj` a| Object to compare with a| `java.lang.Object`
 annotation.equals(obj);
 ----
 
-[#_hashCode_]
+[#_ThingType.Annotation_hashCode_]
 ==== hashCode
 
 [source,java]

@@ -16,7 +16,7 @@ a| `replicas` a| `Replica` a| The Replica instances for this database. Only work
 // end::properties[]
 
 // tag::methods[]
-[#_delete]
+[#_Database_delete]
 ==== delete
 
 [source,nodejs]
@@ -37,7 +37,7 @@ Deletes this database.
 database.delete()
 ----
 
-[#_schema]
+[#_Database_schema]
 ==== schema
 
 [source,nodejs]

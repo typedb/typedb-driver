@@ -1,10 +1,10 @@
-[#_Stream<T>]
+[#_Stream_T]
 === Stream<T>
 
 A stream of elements offering a functional interface to manipulate elements. Typically the elements are generated/retrieved lazily.
 
 // tag::methods[]
-[#_new_Stream]
+[#_Stream_T_new_Stream]
 ==== new Stream
 
 [source,nodejs]
@@ -18,7 +18,7 @@ new Stream<T>(): Stream<T>
 .Returns
 `Stream<T>`
 
-[#_[asyncIterator]]
+[#_Stream_T__asyncIterator]
 ==== [asyncIterator]
 
 [source,nodejs]
@@ -32,7 +32,7 @@ new Stream<T>(): Stream<T>
 .Returns
 `AsyncIterator<T, any, undefined>`
 
-[#_collect]
+[#_Stream_T_collect]
 ==== collect
 
 [source,nodejs]
@@ -53,7 +53,7 @@ Collects all the answers from this stream into an array
 results = transaction.query.match(query).collect().await;
 ----
 
-[#_every]
+[#_Stream_T_every]
 ==== every
 
 [source,nodejs]
@@ -76,7 +76,7 @@ a| `callbackFn` a|  a| `((value) => unknown)`
 .Returns
 `Promise<boolean>`
 
-[#_filter]
+[#_Stream_T_filter]
 ==== filter
 
 [source,nodejs]
@@ -102,7 +102,7 @@ Examples
 .Returns
 `Stream<T>`
 
-[#_first]
+[#_Stream_T_first]
 ==== first
 
 [source,nodejs]
@@ -116,7 +116,7 @@ Returns the first element in the stream.
 .Returns
 `Promise<T>`
 
-[#_flatMap]
+[#_Stream_T_flatMap]
 ==== flatMap
 
 [source,nodejs]
@@ -139,7 +139,7 @@ a| `mapper` a| The mapping function to apply. Must return a stream. a| `((value)
 .Returns
 `Stream<U>`
 
-[#_forEach]
+[#_Stream_T_forEach]
 ==== forEach
 
 [source,nodejs]
@@ -162,7 +162,7 @@ a| `fn` a| The function to evaluate for each element. a| `((value) => void)`
 .Returns
 `Promise<void>`
 
-[#_iterator]
+[#_Stream_T_iterator]
 ==== iterator
 
 [source,nodejs]
@@ -176,7 +176,7 @@ iterator(): AsyncIterator<T, any, undefined>
 .Returns
 `AsyncIterator<T, any, undefined>`
 
-[#_map]
+[#_Stream_T_map]
 ==== map
 
 [source,nodejs]
@@ -199,7 +199,7 @@ a| `mapper` a| The mapping function to apply. Returns a new stream from this str
 .Returns
 `Stream<U>`
 
-[#_some]
+[#_Stream_T_some]
 ==== some
 
 [source,nodejs]

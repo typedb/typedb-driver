@@ -11,7 +11,7 @@
 Instance of data of an entity type, representing a standalone object that exists in the data model independently. Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles played in relation instances.
 
 // tag::methods[]
-[#_isEntity_]
+[#_Entity_isEntity_]
 ==== isEntity
 
 [source,java]
@@ -34,7 +34,7 @@ Checks if the concept is an ``Entity``.
 entity.isEntity();
 ----
 
-[#_asEntity_]
+[#_Entity_asEntity_]
 ==== asEntity
 
 [source,java]
@@ -57,7 +57,7 @@ Casts the concept to ``Entity``.
 entity.asEntity();
 ----
 
-[#_getType_]
+[#_Entity_getType_]
 ==== getType
 
 [source,java]
@@ -80,7 +80,7 @@ Retrieves the type which this ``Entity`` belongs to.
 entity.getType();
 ----
 
-[#_asAttribute_]
+[#_Entity_asAttribute_]
 ==== asAttribute
 
 [source,java]
@@ -102,7 +102,7 @@ Casts the concept to ``Attribute``.
 concept.asAttribute();
 ----
 
-[#_asAttributeType_]
+[#_Entity_asAttributeType_]
 ==== asAttributeType
 
 [source,java]
@@ -124,7 +124,7 @@ Casts the concept to ``AttributeType``.
 concept.asAttributeType();
 ----
 
-[#_asEntityType_]
+[#_Entity_asEntityType_]
 ==== asEntityType
 
 [source,java]
@@ -146,7 +146,7 @@ Casts the concept to ``EntityType``.
 concept.asEntityType();
 ----
 
-[#_asRelation_]
+[#_Entity_asRelation_]
 ==== asRelation
 
 [source,java]
@@ -168,7 +168,7 @@ Casts the concept to ``Relation``.
 concept.asRelation();
 ----
 
-[#_asRelationType_]
+[#_Entity_asRelationType_]
 ==== asRelationType
 
 [source,java]
@@ -190,7 +190,7 @@ Casts the concept to ``RelationType``.
 concept.asRelationType();
 ----
 
-[#_asRoleType_]
+[#_Entity_asRoleType_]
 ==== asRoleType
 
 [source,java]
@@ -212,7 +212,7 @@ Casts the concept to ``RoleType``.
 concept.asRoleType();
 ----
 
-[#_asThingType_]
+[#_Entity_asThingType_]
 ==== asThingType
 
 [source,java]
@@ -234,7 +234,7 @@ Casts the concept to ``ThingType``.
 concept.asThingType();
 ----
 
-[#_asType_]
+[#_Entity_asType_]
 ==== asType
 
 [source,java]
@@ -256,7 +256,7 @@ Casts the concept to ``Type``.
 concept.asType();
 ----
 
-[#_asValue_]
+[#_Entity_asValue_]
 ==== asValue
 
 [source,java]
@@ -278,7 +278,7 @@ Casts the concept to ``Value``.
 concept.asValue();
 ----
 
-[#_isAttribute_]
+[#_Entity_isAttribute_]
 ==== isAttribute
 
 [source,java]
@@ -301,7 +301,7 @@ Checks if the concept is an ``Attribute``.
 concept.isAttribute();
 ----
 
-[#_isAttributeType_]
+[#_Entity_isAttributeType_]
 ==== isAttributeType
 
 [source,java]
@@ -324,7 +324,7 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType();
 ----
 
-[#_isEntityType_]
+[#_Entity_isEntityType_]
 ==== isEntityType
 
 [source,java]
@@ -347,7 +347,7 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType();
 ----
 
-[#_isRelation_]
+[#_Entity_isRelation_]
 ==== isRelation
 
 [source,java]
@@ -370,7 +370,7 @@ Checks if the concept is a ``Relation``.
 concept.isRelation();
 ----
 
-[#_isRelationType_]
+[#_Entity_isRelationType_]
 ==== isRelationType
 
 [source,java]
@@ -393,7 +393,7 @@ Checks if the concept is a ``RelationType``.
 concept.isRelationType();
 ----
 
-[#_isRoleType_]
+[#_Entity_isRoleType_]
 ==== isRoleType
 
 [source,java]
@@ -416,7 +416,7 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType();
 ----
 
-[#_isThingType_]
+[#_Entity_isThingType_]
 ==== isThingType
 
 [source,java]
@@ -439,7 +439,7 @@ Checks if the concept is a ``ThingType``.
 concept.isThingType();
 ----
 
-[#_isType_]
+[#_Entity_isType_]
 ==== isType
 
 [source,java]
@@ -462,7 +462,7 @@ Checks if the concept is a ``Type``.
 concept.isType();
 ----
 
-[#_isValue_]
+[#_Entity_isValue_]
 ==== isValue
 
 [source,java]

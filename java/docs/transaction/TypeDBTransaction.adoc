@@ -8,7 +8,7 @@
 * `java.lang.AutoCloseable`
 
 // tag::methods[]
-[#_isOpen_]
+[#_TypeDBTransaction_isOpen_]
 ==== isOpen
 
 [source,java]
@@ -31,7 +31,7 @@ Checks whether this transaction is open.
 transaction.isOpen();
 ----
 
-[#_type_]
+[#_TypeDBTransaction_type_]
 ==== type
 
 [source,java]
@@ -46,7 +46,7 @@ The transaction’s type (READ or WRITE)
 .Returns
 `TypeDBTransaction.Type`
 
-[#_options_]
+[#_TypeDBTransaction_options_]
 ==== options
 
 [source,java]
@@ -61,7 +61,7 @@ The options for the transaction
 .Returns
 `TypeDBOptions`
 
-[#_concepts_]
+[#_TypeDBTransaction_concepts_]
 ==== concepts
 
 [source,java]
@@ -76,7 +76,7 @@ The ``ConceptManager`` for this transaction, providing access to all Concept API
 .Returns
 `ConceptManager`
 
-[#_logic_]
+[#_TypeDBTransaction_logic_]
 ==== logic
 
 [source,java]
@@ -91,7 +91,7 @@ The ``LogicManager`` for this Transaction, providing access to all Concept API -
 .Returns
 `LogicManager`
 
-[#_query_]
+[#_TypeDBTransaction_query_]
 ==== query
 
 [source,java]
@@ -106,7 +106,7 @@ The````QueryManager```` for this Transaction, from which any TypeQL query can be
 .Returns
 `QueryManager`
 
-[#_onClose_java_util_function_Consumer]
+[#_TypeDBTransaction_onClose_java_util_function_Consumer]
 ==== onClose
 
 [source,java]
@@ -137,7 +137,7 @@ a| `function` a| The callback function. a| `java.util.function.Consumer<java.lan
 transaction.onClose(function);
 ----
 
-[#_commit_]
+[#_TypeDBTransaction_commit_]
 ==== commit
 
 [source,java]
@@ -159,7 +159,7 @@ Commits the changes made via this transaction to the TypeDB database. Whether or
 transaction.commit()
 ----
 
-[#_rollback_]
+[#_TypeDBTransaction_rollback_]
 ==== rollback
 
 [source,java]
@@ -181,7 +181,7 @@ Rolls back the uncommitted changes made via this transaction.
 transaction.rollback()
 ----
 
-[#_close_]
+[#_TypeDBTransaction_close_]
 ==== close
 
 [source,java]

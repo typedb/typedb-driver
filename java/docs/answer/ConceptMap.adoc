@@ -6,7 +6,7 @@
 Contains a mapping of variables to concepts.
 
 // tag::methods[]
-[#_variables_]
+[#_ConceptMap_variables_]
 ==== variables
 
 [source,java]
@@ -29,7 +29,7 @@ Produces a stream over all variables in this ``ConceptMap``.
 conceptMap.variables();
 ----
 
-[#_concepts_]
+[#_ConceptMap_concepts_]
 ==== concepts
 
 [source,java]
@@ -52,7 +52,7 @@ Produces a stream over all concepts in this ``ConceptMap``.
 conceptMap.concepts();
 ----
 
-[#_get_java_lang_String]
+[#_ConceptMap_get_java_lang_String]
 ==== get
 
 [source,java]
@@ -84,7 +84,7 @@ a| `variable` a| The string representation of a variable a| `java.lang.String`
 conceptMap.get(variable);
 ----
 
-[#_toJSON_]
+[#_ConceptMap_toJSON_]
 ==== toJSON
 
 [source,java]
@@ -107,7 +107,7 @@ Retrieves this ``ConceptMap`` as JSON.
 conceptMap.toJSON();
 ----
 
-[#_explainables_]
+[#_ConceptMap_explainables_]
 ==== explainables
 
 [source,java]

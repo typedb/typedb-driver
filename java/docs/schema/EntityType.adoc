@@ -12,7 +12,7 @@
 Entity types represent the classification of independent objects in the data model of the business domain.
 
 // tag::methods[]
-[#_isEntityType_]
+[#_EntityType_isEntityType_]
 ==== isEntityType
 
 [source,java]
@@ -35,7 +35,7 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType();
 ----
 
-[#_asEntityType_]
+[#_EntityType_asEntityType_]
 ==== asEntityType
 
 [source,java]
@@ -58,7 +58,7 @@ Casts the concept to ``EntityType``.
 concept.asEntityType();
 ----
 
-[#_create_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_EntityType_create_com_vaticle_typedb_driver_api_TypeDBTransaction]
 ==== create
 
 [source,java]
@@ -90,7 +90,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 entityType.create(transaction);
 ----
 
-[#_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_EntityType_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction]
 ==== getInstances
 
 [source,java]
@@ -109,7 +109,7 @@ See also: <<#_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_v
 .Returns
 `java.util.stream.Stream<? extends Entity>`
 
-[#_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+[#_EntityType_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
 ==== getInstances
 
 [source,java]
@@ -143,7 +143,7 @@ a| `transitivity` a| ``Transitivity.EXPLICIT`` for direct instances only, ``Tran
 entityType.getInstances(transaction, transitivity);
 ----
 
-[#_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_EntityType_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction]
 ==== getSubtypes
 
 [source,java]
@@ -162,7 +162,7 @@ See also: <<#_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_va
 .Returns
 `java.util.stream.Stream<? extends EntityType>`
 
-[#_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+[#_EntityType_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
 ==== getSubtypes
 
 [source,java]
@@ -196,7 +196,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtype
 entityType.getSubtypes(transaction, transitivity);
 ----
 
-[#_setSupertype_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_EntityType]
+[#_EntityType_setSupertype_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_EntityType]
 ==== setSupertype
 
 [source,java]
@@ -229,7 +229,7 @@ a| `superEntityType` a| The ``EntityType`` to set as the supertype of this ``Ent
 entityType.setSupertype(transaction, entityType);
 ----
 
-[#_asAttribute_]
+[#_EntityType_asAttribute_]
 ==== asAttribute
 
 [source,java]
@@ -251,7 +251,7 @@ Casts the concept to ``Attribute``.
 concept.asAttribute();
 ----
 
-[#_asAttributeType_]
+[#_EntityType_asAttributeType_]
 ==== asAttributeType
 
 [source,java]
@@ -273,7 +273,7 @@ Casts the concept to ``AttributeType``.
 concept.asAttributeType();
 ----
 
-[#_asEntity_]
+[#_EntityType_asEntity_]
 ==== asEntity
 
 [source,java]
@@ -295,7 +295,7 @@ Casts the concept to ``Entity``.
 concept.asEntity();
 ----
 
-[#_asRelation_]
+[#_EntityType_asRelation_]
 ==== asRelation
 
 [source,java]
@@ -317,7 +317,7 @@ Casts the concept to ``Relation``.
 concept.asRelation();
 ----
 
-[#_asRelationType_]
+[#_EntityType_asRelationType_]
 ==== asRelationType
 
 [source,java]
@@ -339,7 +339,7 @@ Casts the concept to ``RelationType``.
 concept.asRelationType();
 ----
 
-[#_asRoleType_]
+[#_EntityType_asRoleType_]
 ==== asRoleType
 
 [source,java]
@@ -361,7 +361,7 @@ Casts the concept to ``RoleType``.
 concept.asRoleType();
 ----
 
-[#_asThing_]
+[#_EntityType_asThing_]
 ==== asThing
 
 [source,java]
@@ -383,7 +383,7 @@ Casts the concept to ``Thing``.
 concept.asThing();
 ----
 
-[#_asValue_]
+[#_EntityType_asValue_]
 ==== asValue
 
 [source,java]
@@ -405,7 +405,7 @@ Casts the concept to ``Value``.
 concept.asValue();
 ----
 
-[#_isAttribute_]
+[#_EntityType_isAttribute_]
 ==== isAttribute
 
 [source,java]
@@ -428,7 +428,7 @@ Checks if the concept is an ``Attribute``.
 concept.isAttribute();
 ----
 
-[#_isAttributeType_]
+[#_EntityType_isAttributeType_]
 ==== isAttributeType
 
 [source,java]
@@ -451,7 +451,7 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType();
 ----
 
-[#_isEntity_]
+[#_EntityType_isEntity_]
 ==== isEntity
 
 [source,java]
@@ -474,7 +474,7 @@ Checks if the concept is an ``Entity``.
 concept.isEntity();
 ----
 
-[#_isRelation_]
+[#_EntityType_isRelation_]
 ==== isRelation
 
 [source,java]
@@ -497,7 +497,7 @@ Checks if the concept is a ``Relation``.
 concept.isRelation();
 ----
 
-[#_isRelationType_]
+[#_EntityType_isRelationType_]
 ==== isRelationType
 
 [source,java]
@@ -520,7 +520,7 @@ Checks if the concept is a ``RelationType``.
 concept.isRelationType();
 ----
 
-[#_isRoleType_]
+[#_EntityType_isRoleType_]
 ==== isRoleType
 
 [source,java]
@@ -543,7 +543,7 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType();
 ----
 
-[#_isThing_]
+[#_EntityType_isThing_]
 ==== isThing
 
 [source,java]
@@ -566,7 +566,7 @@ Checks if the concept is a ``Thing``.
 concept.isThing();
 ----
 
-[#_isValue_]
+[#_EntityType_isValue_]
 ==== isValue
 
 [source,java]

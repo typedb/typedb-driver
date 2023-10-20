@@ -97,6 +97,7 @@ class JavaDocParser : Callable<Unit> {
 
     private fun parseClass(document: Element, currentDirName: String): Class {
         val className = document.selectFirst(".contentContainer .description pre .typeNameLabel")!!.text()
+        val classAnchor = className
         val classDescr: List<String> = document.selectFirst(".contentContainer .description pre + div")
             ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
         val packagePath = document.selectFirst(".packageLabelInType + a")?.text()
@@ -111,19 +112,20 @@ class JavaDocParser : Callable<Unit> {
             .map { parseField(it) }
         val methods =
             document.select(".details > ul > li > section > ul > li:has(a[id=constructor.detail]) > ul > li").map {
-                parseMethod(it)
+                parseMethod(it, classAnchor)
             } + document.select(".details > ul > li > section > ul > li:has(a[id=method.detail]) > ul > li").map {
-                parseMethod(it)
+                parseMethod(it, classAnchor)
             } + document.select(".memberSummary + ul > li > h3:contains(Methods inherited from) + code > a").map {
                 val parentPath = Path.of(currentDirName).resolve(it.attr("href").substringBefore("#"))
                 val parentHtml = File(parentPath.toString()).readText(Charsets.UTF_8)
                 val parentParsed = Jsoup.parse(parentHtml)
                 val anchor = it.attr("href").substringAfter("#")
-                parseMethod(parentParsed.selectFirst("a[id=$anchor] + ul > li")!!)
+                parseMethod(parentParsed.selectFirst("a[id=$anchor] + ul > li")!!, classAnchor)
             }
 
         return Class(
             name = className,
+            anchor = classAnchor,
             description = classDescr,
             examples = classExamples,
             fields = fields,
@@ -135,6 +137,7 @@ class JavaDocParser : Callable<Unit> {
 
     private fun parseEnum(document: Element): Class {
         val className = document.selectFirst(".contentContainer .description pre .typeNameLabel")!!.text()
+        val classAnchor = className
         val classDescr: List<String> = document.selectFirst(".contentContainer .description pre + div")
             ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
         val packagePath = document.selectFirst(".packageLabelInType + a")?.text()
@@ -155,13 +158,14 @@ class JavaDocParser : Callable<Unit> {
             }
         val methods =
             document.select(".details > ul > li > section > ul > li:has(a[id=constructor.detail]) > ul > li").map {
-                parseMethod(it)
+                parseMethod(it, classAnchor)
             } + document.select(".details > ul > li > section > ul > li:has(a[id=method.detail]) > ul > li").map {
-                parseMethod(it)
+                parseMethod(it, classAnchor)
             }
 
         return Class(
             name = className,
+            anchor = classAnchor,
             description = classDescr,
             enumConstants = enumConstants,
             examples = classExamples,
@@ -172,7 +176,7 @@ class JavaDocParser : Callable<Unit> {
         )
     }
 
-    private fun parseMethod(element: Element): Method {
+    private fun parseMethod(element: Element, classAnchor: String): Method {
         val methodAnchor = replaceSymbolsForAnchor(element.parent()!!.previousElementSibling()!!.id())
         val methodName = element.selectFirst("h4")!!.text()
         val methodSignature = element.selectFirst("li.blockList > pre")!!.text()
@@ -204,7 +208,7 @@ class JavaDocParser : Callable<Unit> {
         return Method(
             name = methodName,
             signature = enhanceSignature(methodSignature),
-            anchor = methodAnchor,
+            anchor = "${classAnchor}_$methodAnchor",
             args = methodArgs,
             description = methodDescr,
             examples = methodExamples,

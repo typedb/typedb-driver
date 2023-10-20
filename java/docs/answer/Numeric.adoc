@@ -6,7 +6,7 @@
 Stores an aggregate query answer.
 
 // tag::methods[]
-[#_isLong_]
+[#_Numeric_isLong_]
 ==== isLong
 
 [source,java]
@@ -29,7 +29,7 @@ Checks if the type of an aggregate answer is a ``long``.
 numeric.isLong();
 ----
 
-[#_isDouble_]
+[#_Numeric_isDouble_]
 ==== isDouble
 
 [source,java]
@@ -52,7 +52,7 @@ Checks if the type of an aggregate answer is a ``double``.
 numeric.isDouble();
 ----
 
-[#_isNaN_]
+[#_Numeric_isNaN_]
 ==== isNaN
 
 [source,java]
@@ -75,7 +75,7 @@ Checks if the aggregate answer is not a number.
 numeric.isNaN();
 ----
 
-[#_asLong_]
+[#_Numeric_asLong_]
 ==== asLong
 
 [source,java]
@@ -98,7 +98,7 @@ Retrieves numeric value of an aggregate answer as a ``long``.
 numeric.asLong();
 ----
 
-[#_asDouble_]
+[#_Numeric_asDouble_]
 ==== asDouble
 
 [source,java]
@@ -121,7 +121,7 @@ Retrieves numeric value of an aggregate answer as a ``double``.
 numeric.asDouble();
 ----
 
-[#_asNumber_]
+[#_Numeric_asNumber_]
 ==== asNumber
 
 [source,java]
@@ -144,7 +144,7 @@ Retrieves numeric value of an aggregate answer.
 numeric.asNumber();
 ----
 
-[#_toString_]
+[#_Numeric_toString_]
 ==== toString
 
 [source,java]

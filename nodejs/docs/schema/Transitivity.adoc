@@ -14,7 +14,7 @@ a| `TRANSITIVE`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_new_Transitivity]
+[#_Transitivity_new_Transitivity]
 ==== new Transitivity
 
 [source,nodejs]

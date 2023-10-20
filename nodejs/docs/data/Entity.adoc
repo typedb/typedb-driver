@@ -21,7 +21,7 @@ a| `type` a| `EntityType` a| The type which this Entity belongs to.
 // end::properties[]
 
 // tag::methods[]
-[#_asAttribute]
+[#_Entity_asAttribute]
 ==== asAttribute
 
 [source,nodejs]
@@ -42,7 +42,7 @@ Casts the concept to ``Attribute``.
 concept.asAttribute()
 ----
 
-[#_asAttributeType]
+[#_Entity_asAttributeType]
 ==== asAttributeType
 
 [source,nodejs]
@@ -63,7 +63,7 @@ Casts the concept to ``AttributeType``.
 concept.asAttributeType()
 ----
 
-[#_asEntity]
+[#_Entity_asEntity]
 ==== asEntity
 
 [source,nodejs]
@@ -84,7 +84,7 @@ Casts the concept to ``Entity``.
 concept.asEntity()
 ----
 
-[#_asEntityType]
+[#_Entity_asEntityType]
 ==== asEntityType
 
 [source,nodejs]
@@ -105,7 +105,7 @@ Casts the concept to ``EntityType``.
 concept.asEntityType()
 ----
 
-[#_asRelation]
+[#_Entity_asRelation]
 ==== asRelation
 
 [source,nodejs]
@@ -126,7 +126,7 @@ Casts the concept to ``Relation``.
 concept.asRelation()
 ----
 
-[#_asRelationType]
+[#_Entity_asRelationType]
 ==== asRelationType
 
 [source,nodejs]
@@ -147,7 +147,7 @@ Casts the concept to ``RelationType``.
 concept.asRelationType()
 ----
 
-[#_asRoleType]
+[#_Entity_asRoleType]
 ==== asRoleType
 
 [source,nodejs]
@@ -168,7 +168,7 @@ Casts the concept to ``RoleType``.
 concept.asRoleType()
 ----
 
-[#_asThing]
+[#_Entity_asThing]
 ==== asThing
 
 [source,nodejs]
@@ -189,7 +189,7 @@ Casts the concept to ``Thing``.
 concept.asThing()
 ----
 
-[#_asThingType]
+[#_Entity_asThingType]
 ==== asThingType
 
 [source,nodejs]
@@ -210,7 +210,7 @@ Casts the concept to ``ThingType``.
 concept.asThingType()
 ----
 
-[#_asType]
+[#_Entity_asType]
 ==== asType
 
 [source,nodejs]
@@ -231,7 +231,7 @@ Casts the concept to ``Type``.
 concept.asType()
 ----
 
-[#_asValue]
+[#_Entity_asValue]
 ==== asValue
 
 [source,nodejs]
@@ -252,7 +252,7 @@ Casts the concept to ``Value``.
 concept.asValue()
 ----
 
-[#_delete]
+[#_Entity_delete]
 ==== delete
 
 [source,nodejs]
@@ -282,7 +282,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thing.delete(transaction)
 ----
 
-[#_equals]
+[#_Entity_equals]
 ==== equals
 
 [source,nodejs]
@@ -305,7 +305,7 @@ a| `concept` a| The concept to compare to. a| `Concept`
 .Returns
 `boolean`
 
-[#_getHas]
+[#_Entity_getHas]
 ==== getHas
 
 [source,nodejs]
@@ -335,7 +335,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thing.getHas(transaction) thing.getHas(transaction, attributeType, [Annotation.KEY])
 ----
 
-[#_getHas]
+[#_Entity_getHas]
 ==== getHas
 
 [source,nodejs]
@@ -366,7 +366,7 @@ a| `annotations` a| The ``AttributeType``s to filter the attributes by a| `Annot
 thing.getHas(transaction) thing.getHas(transaction, attributeType, [Annotation.KEY])
 ----
 
-[#_getHas]
+[#_Entity_getHas]
 ==== getHas
 
 [source,nodejs]
@@ -397,7 +397,7 @@ a| `attributeType` a| The ``AttributeType``s to filter the attributes by a| `Att
 thing.getHas(transaction) thing.getHas(transaction, attributeType, [Annotation.KEY])
 ----
 
-[#_getHas]
+[#_Entity_getHas]
 ==== getHas
 
 [source,nodejs]
@@ -428,7 +428,7 @@ a| `attributeTypes` a| The ``AttributeType``s to filter the attributes by a| `At
 thing.getHas(transaction) thing.getHas(transaction, attributeType, [Annotation.KEY])
 ----
 
-[#_getHas]
+[#_Entity_getHas]
 ==== getHas
 
 [source,nodejs]
@@ -460,7 +460,7 @@ a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a| `
 thing.getHas(transaction) thing.getHas(transaction, attributeType, [Annotation.KEY])
 ----
 
-[#_getPlaying]
+[#_Entity_getPlaying]
 ==== getPlaying
 
 [source,nodejs]
@@ -490,7 +490,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thing.getPlaying(transaction)
 ----
 
-[#_getRelations]
+[#_Entity_getRelations]
 ==== getRelations
 
 [source,nodejs]
@@ -520,7 +520,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thing.getRelations(transaction, roleTypes)
 ----
 
-[#_getRelations]
+[#_Entity_getRelations]
 ==== getRelations
 
 [source,nodejs]
@@ -551,7 +551,7 @@ a| `roleTypes` a| The list of roles to filter the relations by. a| `RoleType[]`
 thing.getRelations(transaction, roleTypes)
 ----
 
-[#_isAttribute]
+[#_Entity_isAttribute]
 ==== isAttribute
 
 [source,nodejs]
@@ -572,7 +572,7 @@ Checks if the concept is an ``Attribute``.
 concept.isAttribute()
 ----
 
-[#_isAttributeType]
+[#_Entity_isAttributeType]
 ==== isAttributeType
 
 [source,nodejs]
@@ -593,7 +593,7 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType()
 ----
 
-[#_isDeleted]
+[#_Entity_isDeleted]
 ==== isDeleted
 
 [source,nodejs]
@@ -623,7 +623,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thing.isDeleted(transaction)
 ----
 
-[#_isEntity]
+[#_Entity_isEntity]
 ==== isEntity
 
 [source,nodejs]
@@ -644,7 +644,7 @@ Checks if the concept is an ``Entity``.
 concept.isEntity()
 ----
 
-[#_isEntityType]
+[#_Entity_isEntityType]
 ==== isEntityType
 
 [source,nodejs]
@@ -665,7 +665,7 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType()
 ----
 
-[#_isRelation]
+[#_Entity_isRelation]
 ==== isRelation
 
 [source,nodejs]
@@ -686,7 +686,7 @@ Checks if the concept is a ``Relation``.
 concept.isRelation()
 ----
 
-[#_isRelationType]
+[#_Entity_isRelationType]
 ==== isRelationType
 
 [source,nodejs]
@@ -707,7 +707,7 @@ Checks if the concept is a ``RelationType``.
 concept.isRelationType()
 ----
 
-[#_isRoleType]
+[#_Entity_isRoleType]
 ==== isRoleType
 
 [source,nodejs]
@@ -728,7 +728,7 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType()
 ----
 
-[#_isThing]
+[#_Entity_isThing]
 ==== isThing
 
 [source,nodejs]
@@ -749,7 +749,7 @@ Checks if the concept is a ``Thing``.
 concept.isThing()
 ----
 
-[#_isThingType]
+[#_Entity_isThingType]
 ==== isThingType
 
 [source,nodejs]
@@ -770,7 +770,7 @@ Checks if the concept is a ``ThingType``.
 concept.isThingType()
 ----
 
-[#_isType]
+[#_Entity_isType]
 ==== isType
 
 [source,nodejs]
@@ -791,7 +791,7 @@ Checks if the concept is a ``Type``.
 concept.isType()
 ----
 
-[#_isValue]
+[#_Entity_isValue]
 ==== isValue
 
 [source,nodejs]
@@ -812,7 +812,7 @@ Checks if the concept is a ``Value``.
 concept.isValue()
 ----
 
-[#_setHas]
+[#_Entity_setHas]
 ==== setHas
 
 [source,nodejs]
@@ -843,7 +843,7 @@ a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute
 thing.setHas(transaction, attribute)
 ----
 
-[#_toJSONRecord]
+[#_Entity_toJSONRecord]
 ==== toJSONRecord
 
 [source,nodejs]
@@ -864,7 +864,7 @@ Retrieves the concept as JSON.
 concept.toJSONRecord()
 ----
 
-[#_unsetHas]
+[#_Entity_unsetHas]
 ==== unsetHas
 
 [source,nodejs]

@@ -4,7 +4,7 @@
 Provides access for all Concept API methods.
 
 // tag::methods[]
-[#_getAttribute]
+[#_ConceptManager_getAttribute]
 ==== getAttribute
 
 [source,nodejs]
@@ -34,7 +34,7 @@ a| `iid` a| The iid of the ``Attribute`` to retrieve a| `string`
 transaction.concepts().getAttribute(iid)
 ----
 
-[#_getAttributeType]
+[#_ConceptManager_getAttributeType]
 ==== getAttributeType
 
 [source,nodejs]
@@ -64,7 +64,7 @@ a| `label` a| The label of the ``AttributeType`` to retrieve a| `string`
 transaction.concepts().getAttributeType(label)
 ----
 
-[#_getEntity]
+[#_ConceptManager_getEntity]
 ==== getEntity
 
 [source,nodejs]
@@ -94,7 +94,7 @@ a| `iid` a| The iid of the ``Entity`` to retrieve a| `string`
 transaction.concepts().getEntity(iid)
 ----
 
-[#_getEntityType]
+[#_ConceptManager_getEntityType]
 ==== getEntityType
 
 [source,nodejs]
@@ -124,7 +124,7 @@ a| `label` a| The label of the ``EntityType`` to retrieve a| `string`
 transaction.concepts().getEntityType(label)
 ----
 
-[#_getRelation]
+[#_ConceptManager_getRelation]
 ==== getRelation
 
 [source,nodejs]
@@ -154,7 +154,7 @@ a| `iid` a| The iid of the ``Relation`` to retrieve a| `string`
 transaction.concepts().getRelation(iid)
 ----
 
-[#_getRelationType]
+[#_ConceptManager_getRelationType]
 ==== getRelationType
 
 [source,nodejs]
@@ -184,7 +184,7 @@ a| `label` a| The label of the ``RelationType`` to retrieve a| `string`
 transaction.concepts().getRelationType(label)
 ----
 
-[#_getRootAttributeType]
+[#_ConceptManager_getRootAttributeType]
 ==== getRootAttributeType
 
 [source,nodejs]
@@ -205,7 +205,7 @@ Retrieve the root ``AttributeType``, “attribute”.
 transaction.concepts().getRootAttributeType()
 ----
 
-[#_getRootEntityType]
+[#_ConceptManager_getRootEntityType]
 ==== getRootEntityType
 
 [source,nodejs]
@@ -226,7 +226,7 @@ Retrieves the root ``EntityType``, “entity”.
 transaction.concepts().getRootEntityType()
 ----
 
-[#_getRootRelationType]
+[#_ConceptManager_getRootRelationType]
 ==== getRootRelationType
 
 [source,nodejs]
@@ -247,7 +247,7 @@ Retrieve the root ``RelationType``, “relation”.
 transaction.concepts().getRootRelationType()
 ----
 
-[#_getRootThingType]
+[#_ConceptManager_getRootThingType]
 ==== getRootThingType
 
 [source,nodejs]
@@ -268,7 +268,7 @@ Retrieves the root ``ThingType``, “thing”.
 transaction.concepts().getRootThingType()
 ----
 
-[#_getSchemaExceptions]
+[#_ConceptManager_getSchemaExceptions]
 ==== getSchemaExceptions
 
 [source,nodejs]
@@ -289,7 +289,7 @@ Retrieves a list of all schema exceptions for the current transaction.
 transaction.concepts().getSchemaException()
 ----
 
-[#_putAttributeType]
+[#_ConceptManager_putAttributeType]
 ==== putAttributeType
 
 [source,nodejs]
@@ -320,7 +320,7 @@ a| `valueType` a| The value type of the ``AttributeType`` to create a| `ValueTyp
 await transaction.concepts().putAttributeType(label, valueType)
 ----
 
-[#_putEntityType]
+[#_ConceptManager_putEntityType]
 ==== putEntityType
 
 [source,nodejs]
@@ -350,7 +350,7 @@ a| `label` a| The label of the ``EntityType`` to create or retrieve a| `string`
 transaction.concepts().putEntityType(label)
 ----
 
-[#_putRelationType]
+[#_ConceptManager_putRelationType]
 ==== putRelationType
 
 [source,nodejs]

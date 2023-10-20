@@ -17,7 +17,7 @@ a| `type` a| `TransactionType` a| The transaction’s type (READ or WRITE)
 // end::properties[]
 
 // tag::methods[]
-[#_close]
+[#_TypeDBTransaction_close]
 ==== close
 
 [source,nodejs]
@@ -38,7 +38,7 @@ Closes the transaction.
 transaction.close()
 ----
 
-[#_commit]
+[#_TypeDBTransaction_commit]
 ==== commit
 
 [source,nodejs]
@@ -59,7 +59,7 @@ Commits the changes made via this transaction to the TypeDB database. Whether or
 transaction.commit()
 ----
 
-[#_isOpen]
+[#_TypeDBTransaction_isOpen]
 ==== isOpen
 
 [source,nodejs]
@@ -80,7 +80,7 @@ Checks whether this transaction is open.
 transaction.isOpen()
 ----
 
-[#_rollback]
+[#_TypeDBTransaction_rollback]
 ==== rollback
 
 [source,nodejs]

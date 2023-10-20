@@ -16,7 +16,7 @@ a| `type` a| `SessionType` a| The current session’s type (SCHEMA or DATA)
 // end::properties[]
 
 // tag::methods[]
-[#_close]
+[#_TypeDBSession_close]
 ==== close
 
 [source,nodejs]
@@ -37,7 +37,7 @@ Closes the session. Before opening a new session, the session currently open sho
 session.close()
 ----
 
-[#_isOpen]
+[#_TypeDBSession_isOpen]
 ==== isOpen
 
 [source,nodejs]
@@ -58,7 +58,7 @@ Checks whether this session is open.
 session.isOpen()
 ----
 
-[#_transaction]
+[#_TypeDBSession_transaction]
 ==== transaction
 
 [source,nodejs]

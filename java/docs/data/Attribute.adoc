@@ -15,7 +15,7 @@ Attribute is an instance of the attribute type and has a value. This value is fi
 Attribute type can be uniquely addressed by its type and value.
 
 // tag::methods[]
-[#_getType_]
+[#_Attribute_getType_]
 ==== getType
 
 [source,java]
@@ -38,7 +38,7 @@ Retrieves the type which this ``Attribute`` belongs to.
 attribute.getType();
 ----
 
-[#_isAttribute_]
+[#_Attribute_isAttribute_]
 ==== isAttribute
 
 [source,java]
@@ -61,7 +61,7 @@ Checks if the concept is an ``Attribute``.
 attribute.isAttribute();
 ----
 
-[#_asAttribute_]
+[#_Attribute_asAttribute_]
 ==== asAttribute
 
 [source,java]
@@ -84,7 +84,7 @@ Casts the concept to ``Attribute``.
 attribute.asAttribute();
 ----
 
-[#_getValue_]
+[#_Attribute_getValue_]
 ==== getValue
 
 [source,java]
@@ -106,7 +106,7 @@ Retrieves the value which the ``Attribute`` instance holds.
 attribute.getValue();
 ----
 
-[#_toJSON_]
+[#_Attribute_toJSON_]
 ==== toJSON
 
 [source,java]
@@ -128,7 +128,7 @@ Retrieves this ``Attribute`` as JSON.
 attribute.toJson();
 ----
 
-[#_getOwners_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_Attribute_getOwners_com_vaticle_typedb_driver_api_TypeDBTransaction]
 ==== getOwners
 
 [source,java]
@@ -160,7 +160,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 attribute.getOwners(transaction);
 ----
 
-[#_getOwners_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_ThingType]
+[#_Attribute_getOwners_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_ThingType]
 ==== getOwners
 
 [source,java]
@@ -194,7 +194,7 @@ a| `ownerType` a| Filter results for only owners of the given type a| `ThingType
 attribute.getOwners(transaction, ownerType);
 ----
 
-[#_asAttributeType_]
+[#_Attribute_asAttributeType_]
 ==== asAttributeType
 
 [source,java]
@@ -216,7 +216,7 @@ Casts the concept to ``AttributeType``.
 concept.asAttributeType();
 ----
 
-[#_asEntity_]
+[#_Attribute_asEntity_]
 ==== asEntity
 
 [source,java]
@@ -238,7 +238,7 @@ Casts the concept to ``Entity``.
 concept.asEntity();
 ----
 
-[#_asEntityType_]
+[#_Attribute_asEntityType_]
 ==== asEntityType
 
 [source,java]
@@ -260,7 +260,7 @@ Casts the concept to ``EntityType``.
 concept.asEntityType();
 ----
 
-[#_asRelation_]
+[#_Attribute_asRelation_]
 ==== asRelation
 
 [source,java]
@@ -282,7 +282,7 @@ Casts the concept to ``Relation``.
 concept.asRelation();
 ----
 
-[#_asRelationType_]
+[#_Attribute_asRelationType_]
 ==== asRelationType
 
 [source,java]
@@ -304,7 +304,7 @@ Casts the concept to ``RelationType``.
 concept.asRelationType();
 ----
 
-[#_asRoleType_]
+[#_Attribute_asRoleType_]
 ==== asRoleType
 
 [source,java]
@@ -326,7 +326,7 @@ Casts the concept to ``RoleType``.
 concept.asRoleType();
 ----
 
-[#_asThingType_]
+[#_Attribute_asThingType_]
 ==== asThingType
 
 [source,java]
@@ -348,7 +348,7 @@ Casts the concept to ``ThingType``.
 concept.asThingType();
 ----
 
-[#_asType_]
+[#_Attribute_asType_]
 ==== asType
 
 [source,java]
@@ -370,7 +370,7 @@ Casts the concept to ``Type``.
 concept.asType();
 ----
 
-[#_asValue_]
+[#_Attribute_asValue_]
 ==== asValue
 
 [source,java]
@@ -392,7 +392,7 @@ Casts the concept to ``Value``.
 concept.asValue();
 ----
 
-[#_isAttributeType_]
+[#_Attribute_isAttributeType_]
 ==== isAttributeType
 
 [source,java]
@@ -415,7 +415,7 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType();
 ----
 
-[#_isEntity_]
+[#_Attribute_isEntity_]
 ==== isEntity
 
 [source,java]
@@ -438,7 +438,7 @@ Checks if the concept is an ``Entity``.
 concept.isEntity();
 ----
 
-[#_isEntityType_]
+[#_Attribute_isEntityType_]
 ==== isEntityType
 
 [source,java]
@@ -461,7 +461,7 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType();
 ----
 
-[#_isRelation_]
+[#_Attribute_isRelation_]
 ==== isRelation
 
 [source,java]
@@ -484,7 +484,7 @@ Checks if the concept is a ``Relation``.
 concept.isRelation();
 ----
 
-[#_isRelationType_]
+[#_Attribute_isRelationType_]
 ==== isRelationType
 
 [source,java]
@@ -507,7 +507,7 @@ Checks if the concept is a ``RelationType``.
 concept.isRelationType();
 ----
 
-[#_isRoleType_]
+[#_Attribute_isRoleType_]
 ==== isRoleType
 
 [source,java]
@@ -530,7 +530,7 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType();
 ----
 
-[#_isThingType_]
+[#_Attribute_isThingType_]
 ==== isThingType
 
 [source,java]
@@ -553,7 +553,7 @@ Checks if the concept is a ``ThingType``.
 concept.isThingType();
 ----
 
-[#_isType_]
+[#_Attribute_isType_]
 ==== isType
 
 [source,java]
@@ -576,7 +576,7 @@ Checks if the concept is a ``Type``.
 concept.isType();
 ----
 
-[#_isValue_]
+[#_Attribute_isValue_]
 ==== isValue
 
 [source,java]

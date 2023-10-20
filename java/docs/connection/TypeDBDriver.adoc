@@ -8,7 +8,7 @@
 * `java.lang.AutoCloseable`
 
 // tag::methods[]
-[#_isOpen_]
+[#_TypeDBDriver_isOpen_]
 ==== isOpen
 
 [source,java]
@@ -31,7 +31,7 @@ Checks whether this connection is presently open.
 driver.isOpen();
 ----
 
-[#_databases_]
+[#_TypeDBDriver_databases_]
 ==== databases
 
 [source,java]
@@ -46,7 +46,7 @@ The ``DatabaseManager`` for this connection, providing access to database manage
 .Returns
 `DatabaseManager`
 
-[#_session_java_lang_String_com_vaticle_typedb_driver_api_TypeDBSession_Type]
+[#_TypeDBDriver_session_java_lang_String_com_vaticle_typedb_driver_api_TypeDBSession_Type]
 ==== session
 
 [source,java]
@@ -66,7 +66,7 @@ See also: <<#_session_java_lang_String_com_vaticle_typedb_driver_api_TypeDBSessi
 .Returns
 `TypeDBSession`
 
-[#_session_java_lang_String_com_vaticle_typedb_driver_api_TypeDBSession_Type_com_vaticle_typedb_driver_api_TypeDBOptions]
+[#_TypeDBDriver_session_java_lang_String_com_vaticle_typedb_driver_api_TypeDBSession_Type_com_vaticle_typedb_driver_api_TypeDBOptions]
 ==== session
 
 [source,java]
@@ -102,7 +102,7 @@ a| `options` a| ``TypeDBOptions`` for the session a| `TypeDBOptions`
 driver.session(database, sessionType, options);
 ----
 
-[#_close_]
+[#_TypeDBDriver_close_]
 ==== close
 
 [source,java]
@@ -124,7 +124,7 @@ Closes the driver. Before instantiating a new driver, the driver that’s curren
 driver.close()
 ----
 
-[#_user_]
+[#_TypeDBDriver_user_]
 ==== user
 
 [source,java]
@@ -139,7 +139,7 @@ The ``UserManager`` instance for this connection, providing access to user manag
 .Returns
 `User`
 
-[#_users_]
+[#_TypeDBDriver_users_]
 ==== users
 
 [source,java]

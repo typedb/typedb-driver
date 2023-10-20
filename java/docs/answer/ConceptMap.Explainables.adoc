@@ -1,4 +1,4 @@
-[#_ConceptMap_Explainables]
+[#_ConceptMap.Explainables]
 === ConceptMap.Explainables
 
 *Package*: `com.vaticle.typedb.driver.api.answer`
@@ -6,7 +6,7 @@
 Contains explainable objects.
 
 // tag::methods[]
-[#_relation_java_lang_String]
+[#_ConceptMap.Explainables_relation_java_lang_String]
 ==== relation
 
 [source,java]
@@ -37,7 +37,7 @@ a| `variable` a| The string representation of a variable a| `java.lang.String`
 conceptMap.explainables().relation(variable);
 ----
 
-[#_attribute_java_lang_String]
+[#_ConceptMap.Explainables_attribute_java_lang_String]
 ==== attribute
 
 [source,java]
@@ -68,7 +68,7 @@ a| `variable` a| The string representation of a variable a| `java.lang.String`
 conceptMap.explainables().attribute(variable);
 ----
 
-[#_ownership_java_lang_String_java_lang_String]
+[#_ConceptMap.Explainables_ownership_java_lang_String_java_lang_String]
 ==== ownership
 
 [source,java]
@@ -101,7 +101,7 @@ a| `attribute` a| The string representation of the attribute variable a| `java.l
 conceptMap.explainables().ownership(owner, attribute);
 ----
 
-[#_relations_]
+[#_ConceptMap.Explainables_relations_]
 ==== relations
 
 [source,java]
@@ -123,7 +123,7 @@ Retrieves all of this ``ConceptMap``’s explainable relations.
 conceptMap.explainables().relations();
 ----
 
-[#_attributes_]
+[#_ConceptMap.Explainables_attributes_]
 ==== attributes
 
 [source,java]
@@ -145,7 +145,7 @@ Retrieves all of this ``ConceptMap``’s explainable attributes.
 conceptMap.explainables().attributes();
 ----
 
-[#_ownerships_]
+[#_ConceptMap.Explainables_ownerships_]
 ==== ownerships
 
 [source,java]

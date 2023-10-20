@@ -16,7 +16,7 @@ a| `username` a| `string` a| The name of this user.
 // end::properties[]
 
 // tag::methods[]
-[#_passwordUpdate]
+[#_User_passwordUpdate]
 ==== passwordUpdate
 
 [source,nodejs]

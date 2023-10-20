@@ -18,7 +18,7 @@ a| `valueType` a| `ValueType` a| The ValueType of this value concept
 // end::properties[]
 
 // tag::methods[]
-[#_asAttribute]
+[#_Value_asAttribute]
 ==== asAttribute
 
 [source,nodejs]
@@ -39,7 +39,7 @@ Casts the concept to ``Attribute``.
 concept.asAttribute()
 ----
 
-[#_asAttributeType]
+[#_Value_asAttributeType]
 ==== asAttributeType
 
 [source,nodejs]
@@ -60,7 +60,7 @@ Casts the concept to ``AttributeType``.
 concept.asAttributeType()
 ----
 
-[#_asBoolean]
+[#_Value_asBoolean]
 ==== asBoolean
 
 [source,nodejs]
@@ -81,7 +81,7 @@ Returns a ``boolean`` value of this value concept. If the value has another type
 value.asBoolean()
 ----
 
-[#_asDateTime]
+[#_Value_asDateTime]
 ==== asDateTime
 
 [source,nodejs]
@@ -102,7 +102,7 @@ Returns a ``datetime`` value of this value concept. If the value has another typ
 value.asDatetime()
 ----
 
-[#_asDouble]
+[#_Value_asDouble]
 ==== asDouble
 
 [source,nodejs]
@@ -123,7 +123,7 @@ Returns a ``number`` value of this value concept. If the value has another type,
 value.asDouble()
 ----
 
-[#_asEntity]
+[#_Value_asEntity]
 ==== asEntity
 
 [source,nodejs]
@@ -144,7 +144,7 @@ Casts the concept to ``Entity``.
 concept.asEntity()
 ----
 
-[#_asEntityType]
+[#_Value_asEntityType]
 ==== asEntityType
 
 [source,nodejs]
@@ -165,7 +165,7 @@ Casts the concept to ``EntityType``.
 concept.asEntityType()
 ----
 
-[#_asLong]
+[#_Value_asLong]
 ==== asLong
 
 [source,nodejs]
@@ -186,7 +186,7 @@ Returns a ``number`` value of this value concept. If the value has another type,
 value.asLong()
 ----
 
-[#_asRelation]
+[#_Value_asRelation]
 ==== asRelation
 
 [source,nodejs]
@@ -207,7 +207,7 @@ Casts the concept to ``Relation``.
 concept.asRelation()
 ----
 
-[#_asRelationType]
+[#_Value_asRelationType]
 ==== asRelationType
 
 [source,nodejs]
@@ -228,7 +228,7 @@ Casts the concept to ``RelationType``.
 concept.asRelationType()
 ----
 
-[#_asRoleType]
+[#_Value_asRoleType]
 ==== asRoleType
 
 [source,nodejs]
@@ -249,7 +249,7 @@ Casts the concept to ``RoleType``.
 concept.asRoleType()
 ----
 
-[#_asString]
+[#_Value_asString]
 ==== asString
 
 [source,nodejs]
@@ -270,7 +270,7 @@ Returns a ``string`` value of this value concept. If the value has another type,
 value.asString()
 ----
 
-[#_asThing]
+[#_Value_asThing]
 ==== asThing
 
 [source,nodejs]
@@ -291,7 +291,7 @@ Casts the concept to ``Thing``.
 concept.asThing()
 ----
 
-[#_asThingType]
+[#_Value_asThingType]
 ==== asThingType
 
 [source,nodejs]
@@ -312,7 +312,7 @@ Casts the concept to ``ThingType``.
 concept.asThingType()
 ----
 
-[#_asType]
+[#_Value_asType]
 ==== asType
 
 [source,nodejs]
@@ -333,7 +333,7 @@ Casts the concept to ``Type``.
 concept.asType()
 ----
 
-[#_asValue]
+[#_Value_asValue]
 ==== asValue
 
 [source,nodejs]
@@ -354,7 +354,7 @@ Casts the concept to ``Value``.
 concept.asValue()
 ----
 
-[#_equals]
+[#_Value_equals]
 ==== equals
 
 [source,nodejs]
@@ -377,7 +377,7 @@ a| `concept` a| The concept to compare to. a| `Concept`
 .Returns
 `boolean`
 
-[#_isAttribute]
+[#_Value_isAttribute]
 ==== isAttribute
 
 [source,nodejs]
@@ -398,7 +398,7 @@ Checks if the concept is an ``Attribute``.
 concept.isAttribute()
 ----
 
-[#_isAttributeType]
+[#_Value_isAttributeType]
 ==== isAttributeType
 
 [source,nodejs]
@@ -419,7 +419,7 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType()
 ----
 
-[#_isBoolean]
+[#_Value_isBoolean]
 ==== isBoolean
 
 [source,nodejs]
@@ -440,7 +440,7 @@ Returns ``True`` if the value which this value concept holds is of type ``boolea
 value.isBoolean()
 ----
 
-[#_isDateTime]
+[#_Value_isDateTime]
 ==== isDateTime
 
 [source,nodejs]
@@ -461,7 +461,7 @@ Returns ``True`` if the value which this value concept holds is of type ``dateti
 value.isDatetime()
 ----
 
-[#_isDouble]
+[#_Value_isDouble]
 ==== isDouble
 
 [source,nodejs]
@@ -482,7 +482,7 @@ Returns ``True`` if the value which this value concept holds is of type ``double
 value.isDouble()
 ----
 
-[#_isEntity]
+[#_Value_isEntity]
 ==== isEntity
 
 [source,nodejs]
@@ -503,7 +503,7 @@ Checks if the concept is an ``Entity``.
 concept.isEntity()
 ----
 
-[#_isEntityType]
+[#_Value_isEntityType]
 ==== isEntityType
 
 [source,nodejs]
@@ -524,7 +524,7 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType()
 ----
 
-[#_isLong]
+[#_Value_isLong]
 ==== isLong
 
 [source,nodejs]
@@ -545,7 +545,7 @@ Returns ``True`` if the value which this value concept holds is of type ``long``
 value.isLong()
 ----
 
-[#_isRelation]
+[#_Value_isRelation]
 ==== isRelation
 
 [source,nodejs]
@@ -566,7 +566,7 @@ Checks if the concept is a ``Relation``.
 concept.isRelation()
 ----
 
-[#_isRelationType]
+[#_Value_isRelationType]
 ==== isRelationType
 
 [source,nodejs]
@@ -587,7 +587,7 @@ Checks if the concept is a ``RelationType``.
 concept.isRelationType()
 ----
 
-[#_isRoleType]
+[#_Value_isRoleType]
 ==== isRoleType
 
 [source,nodejs]
@@ -608,7 +608,7 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType()
 ----
 
-[#_isString]
+[#_Value_isString]
 ==== isString
 
 [source,nodejs]
@@ -629,7 +629,7 @@ Returns ``True`` if the value which this value concept holds is of type ``string
 value.isString()
 ----
 
-[#_isThing]
+[#_Value_isThing]
 ==== isThing
 
 [source,nodejs]
@@ -650,7 +650,7 @@ Checks if the concept is a ``Thing``.
 concept.isThing()
 ----
 
-[#_isThingType]
+[#_Value_isThingType]
 ==== isThingType
 
 [source,nodejs]
@@ -671,7 +671,7 @@ Checks if the concept is a ``ThingType``.
 concept.isThingType()
 ----
 
-[#_isType]
+[#_Value_isType]
 ==== isType
 
 [source,nodejs]
@@ -692,7 +692,7 @@ Checks if the concept is a ``Type``.
 concept.isType()
 ----
 
-[#_isValue]
+[#_Value_isValue]
 ==== isValue
 
 [source,nodejs]
@@ -713,7 +713,7 @@ Checks if the concept is a ``Value``.
 concept.isValue()
 ----
 
-[#_toJSONRecord]
+[#_Value_toJSONRecord]
 ==== toJSONRecord
 
 [source,nodejs]

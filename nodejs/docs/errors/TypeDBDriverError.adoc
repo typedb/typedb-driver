@@ -23,7 +23,7 @@ a| `stackTraceLimit` a| `number` a|
 // end::properties[]
 
 // tag::methods[]
-[#_new_TypeDBDriverError]
+[#_TypeDBDriverError_new_TypeDBDriverError]
 ==== new TypeDBDriverError
 
 [source,nodejs]
@@ -46,7 +46,7 @@ a| `error` a|  a| `string \| ErrorMessage \| Error \| ServiceError`
 .Returns
 `TypeDBDriverError`
 
-[#_captureStackTrace]
+[#_TypeDBDriverError_captureStackTrace]
 ==== captureStackTrace
 
 [source,nodejs]

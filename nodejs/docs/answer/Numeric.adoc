@@ -4,7 +4,7 @@
 Stores an aggregate query answer.
 
 // tag::methods[]
-[#_asNumber]
+[#_Numeric_asNumber]
 ==== asNumber
 
 [source,nodejs]
@@ -25,7 +25,7 @@ Retrieves numeric value of an aggregate answer as a number.
 numeric.asNumber()
 ----
 
-[#_isNaN]
+[#_Numeric_isNaN]
 ==== isNaN
 
 [source,nodejs]
@@ -46,7 +46,7 @@ Checks if the aggregate answer is not a number.
 numeric.isNan()
 ----
 
-[#_isNumber]
+[#_Numeric_isNumber]
 ==== isNumber
 
 [source,nodejs]

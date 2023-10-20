@@ -17,7 +17,7 @@ a| `when` a| `string` a| The statements that constitute the ‘when’ of the ru
 // end::properties[]
 
 // tag::methods[]
-[#_delete]
+[#_Rule_delete]
 ==== delete
 
 [source,nodejs]
@@ -47,7 +47,7 @@ a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction`
 rule.delete(transaction)
 ----
 
-[#_isDeleted]
+[#_Rule_isDeleted]
 ==== isDeleted
 
 [source,nodejs]
@@ -77,7 +77,7 @@ a| `transaction` a| The current ``Transaction`` a| `TypeDBTransaction`
 rule.isDeleted(transaction)
 ----
 
-[#_setLabel]
+[#_Rule_setLabel]
 ==== setLabel
 
 [source,nodejs]

@@ -16,7 +16,7 @@ a| `UNIQUE` a| `Annotation` a| Annotation to specify the owned is UNIQUE
 // end::properties[]
 
 // tag::methods[]
-[#_toString]
+[#_Annotation_toString]
 ==== toString
 
 [source,nodejs]
@@ -30,7 +30,7 @@ Printable string
 .Returns
 `string`
 
-[#_parse]
+[#_Annotation_parse]
 ==== parse
 
 [source,nodejs]

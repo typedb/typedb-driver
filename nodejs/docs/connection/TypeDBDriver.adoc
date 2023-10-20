@@ -14,7 +14,7 @@ a| `users` a| `UserManager` a| The UserManager instance for this connection, pro
 // end::properties[]
 
 // tag::methods[]
-[#_close]
+[#_TypeDBDriver_close]
 ==== close
 
 [source,nodejs]
@@ -35,7 +35,7 @@ Closes the driver. Before instantiating a new driver, the driver that’s curren
 driver.close()
 ----
 
-[#_isOpen]
+[#_TypeDBDriver_isOpen]
 ==== isOpen
 
 [source,nodejs]
@@ -56,7 +56,7 @@ Checks whether this connection is presently open.
 driver.isOpen()
 ----
 
-[#_session]
+[#_TypeDBDriver_session]
 ==== session
 
 [source,nodejs]
@@ -81,7 +81,7 @@ a| `options` a|  a| `TypeDBOptions`
 .Returns
 `Promise<TypeDBSession>`
 
-[#_user]
+[#_TypeDBDriver_user]
 ==== user
 
 [source,nodejs]

@@ -17,7 +17,7 @@ a| `relations` a| `Map` a| All of this ConceptMap’s explainable relations.
 // end::properties[]
 
 // tag::methods[]
-[#_attribute]
+[#_Explainables_attribute]
 ==== attribute
 
 [source,nodejs]
@@ -47,7 +47,7 @@ a| `variable` a| The string representation of a variable a| `string`
 conceptMap.explainables.attribute(variable)
 ----
 
-[#_ownership]
+[#_Explainables_ownership]
 ==== ownership
 
 [source,nodejs]
@@ -78,7 +78,7 @@ a| `attribute` a| The string representation of the attribute variable a| `string
 conceptMap.explainables.ownership(owner, attribute)
 ----
 
-[#_relation]
+[#_Explainables_relation]
 ==== relation
 
 [source,nodejs]
