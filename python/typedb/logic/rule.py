@@ -24,10 +24,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from typedb.native_driver_wrapper import rule_get_when, rule_get_then, rule_get_label, rule_set_label, rule_delete, \
-    rule_is_deleted, rule_to_string, Rule as NativeRule
+    rule_is_deleted, rule_to_string, Rule as NativeRule, TypeDBDriverExceptionNative
 
 from typedb.api.logic.rule import Rule
-from typedb.common.exception import TypeDBDriverExceptionExt, MISSING_LABEL, NULL_NATIVE_OBJECT, ILLEGAL_STATE
+from typedb.common.exception import TypeDBDriverException, MISSING_LABEL, NULL_NATIVE_OBJECT, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
 
 if TYPE_CHECKING:
@@ -38,15 +38,15 @@ class _Rule(Rule, NativeWrapper[NativeRule]):
 
     def __init__(self, rule: NativeRule):
         if not rule:
-            raise TypeDBDriverExceptionExt(NULL_NATIVE_OBJECT)
+            raise TypeDBDriverException(NULL_NATIVE_OBJECT)
         super().__init__(rule)
         self._rule = rule
         self._when = rule_get_when(self._rule)
         self._then = rule_get_then(self._rule)
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
-        return TypeDBDriverExceptionExt.of(ILLEGAL_STATE)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverException:
+        return TypeDBDriverException(ILLEGAL_STATE)
 
     @property
     def label(self) -> str:
@@ -54,8 +54,11 @@ class _Rule(Rule, NativeWrapper[NativeRule]):
 
     def set_label(self, transaction: _Transaction, new_label: str) -> None:
         if not new_label:
-            raise TypeDBDriverExceptionExt(MISSING_LABEL)
-        rule_set_label(transaction.logic, self.native_object, new_label)
+            raise TypeDBDriverException(MISSING_LABEL)
+        try:
+            rule_set_label(transaction.logic, self.native_object, new_label)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     @property
     def when(self) -> str:
@@ -66,10 +69,16 @@ class _Rule(Rule, NativeWrapper[NativeRule]):
         return self._then
 
     def delete(self, transaction: _Transaction) -> None:
-        rule_delete(transaction.logic, self.native_object)
+        try:
+            rule_delete(transaction.logic, self.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def is_deleted(self, transaction: _Transaction) -> bool:
-        return rule_is_deleted(transaction.logic, self.native_object)
+        try:
+            return rule_is_deleted(transaction.logic, self.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def __repr__(self):
         return rule_to_string(self.native_object)

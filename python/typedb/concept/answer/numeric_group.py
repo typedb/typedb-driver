@@ -27,7 +27,7 @@ from typedb.native_driver_wrapper import numeric_group_get_owner, numeric_group_
     numeric_group_to_string, numeric_group_equals, NumericGroup as NativeNumericGroup
 
 from typedb.api.answer.numeric_group import NumericGroup
-from typedb.common.exception import TypeDBDriverExceptionExt, NULL_NATIVE_OBJECT, ILLEGAL_STATE
+from typedb.common.exception import TypeDBDriverException, NULL_NATIVE_OBJECT, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.concept import concept_factory
 from typedb.concept.answer.numeric import _Numeric
@@ -41,12 +41,12 @@ class _NumericGroup(NumericGroup, NativeWrapper[NativeNumericGroup]):
 
     def __init__(self, numeric_group: NativeNumericGroup):
         if not numeric_group:
-            raise TypeDBDriverExceptionExt(NULL_NATIVE_OBJECT)
+            raise TypeDBDriverException(NULL_NATIVE_OBJECT)
         super().__init__(numeric_group)
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
-        return TypeDBDriverExceptionExt.of(ILLEGAL_STATE)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverException:
+        return TypeDBDriverException(ILLEGAL_STATE)
 
     def owner(self) -> Concept:
         return concept_factory.wrap_concept(numeric_group_get_owner(self.native_object))

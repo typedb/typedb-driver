@@ -1,0 +1,23 @@
+[#_TypeDBDriverException]
+=== TypeDBDriverException
+
+*Supertypes:*
+
+* `RuntimeError`
+
+Exceptions raised by the driver.
+
+[caption=""]
+.TypeDBDriverException examples
+====
+
+[source,python]
+----
+try:
+    transaction.commit()
+except TypeDBDriverException as err:
+    print("Error:", err)
+----
+
+====
+

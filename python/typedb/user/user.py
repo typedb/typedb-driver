@@ -24,10 +24,10 @@ from __future__ import annotations
 from typing import Optional, TYPE_CHECKING
 
 from typedb.native_driver_wrapper import user_get_username, user_get_password_expiry_seconds, user_password_update, \
-    User as NativeUser
+    User as NativeUser, TypeDBDriverExceptionNative
 
 from typedb.api.user.user import User
-from typedb.common.exception import TypeDBDriverExceptionExt, ILLEGAL_STATE
+from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
 
 if TYPE_CHECKING:
@@ -41,8 +41,8 @@ class _User(User, NativeWrapper[NativeUser]):
         self._user_manager = user_manager
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
-        return TypeDBDriverExceptionExt.of(ILLEGAL_STATE)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverException:
+        return TypeDBDriverException(ILLEGAL_STATE)
 
     def username(self) -> str:
         return user_get_username(self.native_object)
@@ -53,4 +53,7 @@ class _User(User, NativeWrapper[NativeUser]):
         return None
 
     def password_update(self, password_old: str, password_new: str) -> None:
-        user_password_update(self.native_object, self._user_manager.native_object, password_old, password_new)
+        try:
+            user_password_update(self.native_object, self._user_manager.native_object, password_old, password_new)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)

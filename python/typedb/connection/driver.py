@@ -24,11 +24,11 @@ from __future__ import annotations
 from typing import Optional, TYPE_CHECKING
 
 from typedb.native_driver_wrapper import connection_open_core, connection_open_enterprise, connection_is_open, \
-    connection_force_close, Connection as NativeConnection
+    connection_force_close, Connection as NativeConnection, TypeDBDriverExceptionNative
 
 from typedb.api.connection.driver import TypeDBDriver
 from typedb.api.connection.options import TypeDBOptions
-from typedb.common.exception import TypeDBDriverExceptionExt, DRIVER_CLOSED
+from typedb.common.exception import TypeDBDriverException, DRIVER_CLOSED
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.connection.database_manager import _DatabaseManager
 from typedb.connection.session import _Session
@@ -44,16 +44,22 @@ class _Driver(TypeDBDriver, NativeWrapper[NativeConnection]):
 
     def __init__(self, addresses: list[str], credential: Optional[TypeDBCredential] = None):
         if credential:
-            native_connection = connection_open_enterprise(addresses, credential.native_object)
+            try:
+                native_connection = connection_open_enterprise(addresses, credential.native_object)
+            except TypeDBDriverExceptionNative as e:
+                raise TypeDBDriverException.of(e)
         else:
-            native_connection = connection_open_core(addresses[0])
+            try:
+                native_connection = connection_open_core(addresses[0])
+            except TypeDBDriverExceptionNative as e:
+                raise TypeDBDriverException.of(e)
         super().__init__(native_connection)
         self._database_manager = _DatabaseManager(native_connection)
         self._user_manager = _UserManager(native_connection)
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
-        return TypeDBDriverExceptionExt.of(DRIVER_CLOSED)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverException:
+        return TypeDBDriverException(DRIVER_CLOSED)
 
     @property
     def _native_connection(self) -> NativeConnection:

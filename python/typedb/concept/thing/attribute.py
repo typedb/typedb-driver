@@ -24,10 +24,11 @@ from __future__ import annotations
 from typing import Any, Iterator, Mapping, Optional, TYPE_CHECKING, Union
 
 from typedb.native_driver_wrapper import attribute_get_type, attribute_get_value, attribute_get_owners, \
-    concept_iterator_next
+    concept_iterator_next, TypeDBDriverExceptionNative
 
 from typedb.api.concept.thing.attribute import Attribute
 from typedb.api.concept.value.value import ValueType
+from typedb.common.exception import TypeDBDriverException
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.concept.concept_factory import wrap_attribute_type, wrap_thing, wrap_value
 from typedb.concept.thing.thing import _Thing
@@ -88,6 +89,10 @@ class _Attribute(Attribute, _Thing):
         return {"type": self.get_type().get_label().scoped_name()} | self._value().to_json()
 
     def get_owners(self, transaction: _Transaction, owner_type: Optional[_ThingType] = None) -> Iterator[Any]:
-        return map(wrap_thing, IteratorWrapper(attribute_get_owners(transaction.native_object, self.native_object,
-                                                                    owner_type.native_object if owner_type else None),
-                                               concept_iterator_next))
+        try:
+            return map(wrap_thing,
+                       IteratorWrapper(attribute_get_owners(transaction.native_object, self.native_object,
+                                                            owner_type.native_object if owner_type else None),
+                                       concept_iterator_next))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
