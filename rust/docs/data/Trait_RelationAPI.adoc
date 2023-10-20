@@ -1,0 +1,381 @@
+[#_trait_RelationAPI]
+=== Trait RelationAPI
+
+*Implementors:*
+
+* `Relation`
+
+// tag::methods[]
+[#_trait_RelationAPI_method_add_role_player]
+==== add_role_player
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn add_role_player<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 self,
+    transaction: &'life1 Transaction<'life2>,
+    role_type: RoleType,
+    player: Thing
+) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: Sync + 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn add_role_player(
+    &self,
+    transaction: &Transaction<'_>,
+    role_type: RoleType,
+    player: Thing
+) -> Result
+----
+
+--
+====
+
+Adds a new role player to play the given role in this ``Relation``.
+
+[caption=""]
+.Input parameters
+[tabs]
+====
+async::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `role_type` a| The role to be played by the ``player`` a| `RoleType`
+a| `player` a| The thing to play the role a| `Thing`
+|===
+--
+
+sync::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `role_type` a| The role to be played by the ``player`` a| `RoleType`
+a| `player` a| The thing to play the role a| `Thing`
+|===
+--
+====
+
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: Sync + 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result
+----
+
+--
+====
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+relation.add_role_player(transaction, role_type, player).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+relation.add_role_player(transaction, role_type, player);
+----
+
+--
+====
+
+[#_trait_RelationAPI_method_get_players_by_role_type]
+==== get_players_by_role_type
+
+[source,rust]
+----
+fn get_players_by_role_type(
+    &self,
+    transaction: &Transaction<'_>,
+    role_types: Vec<RoleType>
+) -> Result<BoxStream<'_, Result<Thing>>>
+----
+
+Retrieves all role players of this ``Relation``, optionally filtered by given role types.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `role_types` a| 0 or more role types a| `Vec<RoleType>`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<Thing>>>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+relation.get_players_by_role_type(transaction, role_types);
+----
+
+[#_trait_RelationAPI_method_get_relating]
+==== get_relating
+
+[source,rust]
+----
+fn get_relating(
+    &self,
+    transaction: &Transaction<'_>
+) -> Result<BoxStream<'_, Result<RoleType>>>
+----
+
+Retrieves all role types currently played in this ``Relation``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<RoleType>>>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+relation.get_relating(transaction)
+----
+
+[#_trait_RelationAPI_method_get_role_players]
+==== get_role_players
+
+[source,rust]
+----
+fn get_role_players(
+    &self,
+    transaction: &Transaction<'_>
+) -> Result<BoxStream<'_, Result<(RoleType, Thing)>>>
+----
+
+Retrieves a mapping of all instances involved in the ``Relation`` and the role each play.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>
+) -> Result<BoxStream<'_`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<(RoleType, Thing)>>>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+relation.get_role_players(transaction)
+----
+
+[#_trait_RelationAPI_method_remove_role_player]
+==== remove_role_player
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn remove_role_player<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 self,
+    transaction: &'life1 Transaction<'life2>,
+    role_type: RoleType,
+    player: Thing
+) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: Sync + 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn remove_role_player(
+    &self,
+    transaction: &Transaction<'_>,
+    role_type: RoleType,
+    player: Thing
+) -> Result
+----
+
+--
+====
+
+Removes the association of the given instance that plays the given role in this ``Relation``.
+
+[caption=""]
+.Input parameters
+[tabs]
+====
+async::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `role_type` a| The role to no longer be played by the thing in this ``Relation`` a| `RoleType`
+a| `player` a| The instance to no longer play the role in this ``Relation`` a| `Thing`
+|===
+--
+
+sync::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `role_type` a| The role to no longer be played by the thing in this ``Relation`` a| `RoleType`
+a| `player` a| The instance to no longer play the role in this ``Relation`` a| `Thing`
+|===
+--
+====
+
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: Sync + 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result
+----
+
+--
+====
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+relation.remove_role_player(transaction, role_type, player).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+relation.remove_role_player(transaction, role_type, player);
+----
+
+--
+====
+
+// end::methods[]
+

@@ -1,0 +1,511 @@
+[#_struct_RoleType]
+=== RoleType
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `Eq`
+* `PartialEq<RoleType>`
+* `RoleTypeAPI`
+* `StructuralEq`
+* `StructuralPartialEq`
+
+Roles are special internal types used by relations. We can not create an instance of a role in a database. But we can set an instance of another type (role player) to play a role in a particular instance of a relation type.
+
+Roles allow a schema to enforce logical constraints on types of role players.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `is_abstract` a| `bool` a| 
+a| `is_root` a| `bool` a| 
+a| `label` a| `ScopedLabel` a| 
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_struct_RoleType_method_delete]
+==== delete
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn delete<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 self,
+    transaction: &'life1 Transaction<'life2>
+) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn delete(&self, transaction: &Transaction<'_>) -> Result
+----
+
+--
+====
+
+<<#_trait_RoleTypeAPI_method_delete,Read more>>
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result
+----
+
+--
+====
+
+[#_struct_RoleType_method_get_player_instances]
+==== get_player_instances
+
+[source,rust]
+----
+fn get_player_instances(
+    &self,
+    transaction: &Transaction<'_>,
+    transitivity: Transitivity
+) -> Result<BoxStream<'_, Result<Thing>>>
+----
+
+<<#_trait_RoleTypeAPI_method_get_player_instances,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<Thing>>>
+----
+
+[#_struct_RoleType_method_get_player_types]
+==== get_player_types
+
+[source,rust]
+----
+fn get_player_types(
+    &self,
+    transaction: &Transaction<'_>,
+    transitivity: Transitivity
+) -> Result<BoxStream<'_, Result<ThingType>>>
+----
+
+<<#_trait_RoleTypeAPI_method_get_player_types,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<ThingType>>>
+----
+
+[#_struct_RoleType_method_get_relation_instances]
+==== get_relation_instances
+
+[source,rust]
+----
+fn get_relation_instances(
+    &self,
+    transaction: &Transaction<'_>,
+    transitivity: Transitivity
+) -> Result<BoxStream<'_, Result<Relation>>>
+----
+
+<<#_trait_RoleTypeAPI_method_get_relation_instances,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<Relation>>>
+----
+
+[#_struct_RoleType_tymethod_get_relation_type]
+==== get_relation_type
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn get_relation_type<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 self,
+    transaction: &'life1 Transaction<'life2>
+) -> Pin<Box<dyn Future<Output = Result<Option<RelationType>>> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn get_relation_type(
+    &self,
+    transaction: &Transaction<'_>
+) -> Result<Option<RelationType>>
+----
+
+--
+====
+
+<<#_trait_RoleTypeAPI_tymethod_get_relation_type,Read more>>
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result<Option<RelationType>>> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result<Option<RelationType>>
+----
+
+--
+====
+
+[#_struct_RoleType_method_get_relation_types]
+==== get_relation_types
+
+[source,rust]
+----
+fn get_relation_types(
+    &self,
+    transaction: &Transaction<'_>
+) -> Result<BoxStream<'_, Result<RelationType>>>
+----
+
+<<#_trait_RoleTypeAPI_method_get_relation_types,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<RelationType>>>
+----
+
+[#_struct_RoleType_method_get_subtypes]
+==== get_subtypes
+
+[source,rust]
+----
+fn get_subtypes(
+    &self,
+    transaction: &Transaction<'_>,
+    transitivity: Transitivity
+) -> Result<BoxStream<'_, Result<RoleType>>>
+----
+
+<<#_trait_RoleTypeAPI_method_get_subtypes,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<RoleType>>>
+----
+
+[#_struct_RoleType_method_get_supertype]
+==== get_supertype
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn get_supertype<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 self,
+    transaction: &'life1 Transaction<'life2>
+) -> Pin<Box<dyn Future<Output = Result<Option<RoleType>>> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn get_supertype(
+    &self,
+    transaction: &Transaction<'_>
+) -> Result<Option<RoleType>>
+----
+
+--
+====
+
+<<#_trait_RoleTypeAPI_method_get_supertype,Read more>>
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result<Option<RoleType>>> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result<Option<RoleType>>
+----
+
+--
+====
+
+[#_struct_RoleType_method_get_supertypes]
+==== get_supertypes
+
+[source,rust]
+----
+fn get_supertypes(
+    &self,
+    transaction: &Transaction<'_>
+) -> Result<BoxStream<'_, Result<RoleType>>>
+----
+
+<<#_trait_RoleTypeAPI_method_get_supertypes,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<RoleType>>>
+----
+
+[#_struct_RoleType_tymethod_is_abstract]
+==== is_abstract
+
+[source,rust]
+----
+fn is_abstract(&self) -> bool
+----
+
+<<#_trait_RoleTypeAPI_tymethod_is_abstract,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_struct_RoleType_tymethod_is_deleted]
+==== is_deleted
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn is_deleted<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 self,
+    transaction: &'life1 Transaction<'life2>
+) -> Pin<Box<dyn Future<Output = Result<bool>> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool>
+----
+
+--
+====
+
+<<#_trait_RoleTypeAPI_tymethod_is_deleted,Read more>>
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result<bool>> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result<bool>
+----
+
+--
+====
+
+[#_struct_RoleType_method_set_label]
+==== set_label
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn set_label<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 self,
+    transaction: &'life1 Transaction<'life2>,
+    new_label: String
+) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn set_label(&self, transaction: &Transaction<'_>, new_label: String) -> Result
+----
+
+--
+====
+
+<<#_trait_RoleTypeAPI_method_set_label,Read more>>
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result
+----
+
+--
+====
+
+// end::methods[]
+

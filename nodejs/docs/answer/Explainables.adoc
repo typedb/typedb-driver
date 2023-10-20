@@ -1,0 +1,112 @@
+[#_Explainables]
+=== Explainables
+
+Contains explainable objects.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `attributes` a| `Map` a| All of this ConceptMap’s explainable attributes.
+a| `ownerships` a| `Map` a| All of this ConceptMap’s explainable ownerships.
+a| `relations` a| `Map` a| All of this ConceptMap’s explainable relations.
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_Explainables_attribute]
+==== attribute
+
+[source,nodejs]
+----
+attribute(variable): Explainable
+----
+
+Retrieves the explainable attribute with the given variable name.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `variable` a| The string representation of a variable a| `string`
+|===
+
+[caption=""]
+.Returns
+`Explainable`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+conceptMap.explainables.attribute(variable)
+----
+
+[#_Explainables_ownership]
+==== ownership
+
+[source,nodejs]
+----
+ownership(owner, attribute): Explainable
+----
+
+Retrieves the explainable attribute ownership with the pair of (owner, attribute) variable names.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `owner` a| The string representation of the owner variable a| `string`
+a| `attribute` a| The string representation of the attribute variable a| `string`
+|===
+
+[caption=""]
+.Returns
+`Explainable`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+conceptMap.explainables.ownership(owner, attribute)
+----
+
+[#_Explainables_relation]
+==== relation
+
+[source,nodejs]
+----
+relation(variable): Explainable
+----
+
+Retrieves the explainable relation with the given variable name.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `variable` a| The string representation of a variable a| `string`
+|===
+
+[caption=""]
+.Returns
+`Explainable`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+conceptMap.explainables.relation(variable)
+----
+
+// end::methods[]
+

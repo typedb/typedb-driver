@@ -1,0 +1,318 @@
+[#_QueryManager]
+=== QueryManager
+
+Provides methods for executing TypeQL queries in the transaction.
+
+// tag::methods[]
+[#_QueryManager_define]
+==== define
+
+[source,nodejs]
+----
+define(query, options?): Promise<void>
+----
+
+Performs a TypeQL Define query in the transaction.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Define query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
+|===
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+transaction.query.define(query, options)
+----
+
+[#_QueryManager_delete]
+==== delete
+
+[source,nodejs]
+----
+delete(query, options?): Promise<void>
+----
+
+Performs a TypeQL Delete query in the transaction.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Delete query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
+|===
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+transaction.query.delete(query, options)
+----
+
+[#_QueryManager_explain]
+==== explain
+
+[source,nodejs]
+----
+explain(explainable, options?): Stream<Explanation>
+----
+
+Performs a TypeQL Explain query in the transaction.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `explainable` a| The Explainable to be explained a| `Explainable`
+a| `options` a| Specify query options a| `TypeDBOptions`
+|===
+
+[caption=""]
+.Returns
+`Stream<Explanation>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+transaction.query.explain(explainable, options)
+----
+
+[#_QueryManager_insert]
+==== insert
+
+[source,nodejs]
+----
+insert(query, options?): Stream<ConceptMap>
+----
+
+Performs a TypeQL Insert query in the transaction.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Insert query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
+|===
+
+[caption=""]
+.Returns
+`Stream<ConceptMap>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+transaction.query.insert(query, options)
+----
+
+[#_QueryManager_match]
+==== match
+
+[source,nodejs]
+----
+match(query, options?): Stream<ConceptMap>
+----
+
+Performs a TypeQL Match (Get) query in the transaction.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Match (Get) query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
+|===
+
+[caption=""]
+.Returns
+`Stream<ConceptMap>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+transaction.query.match(query, options)
+----
+
+[#_QueryManager_matchAggregate]
+==== matchAggregate
+
+[source,nodejs]
+----
+matchAggregate(query, options?): Promise<Numeric>
+----
+
+Performs a TypeQL Match Aggregate query in the transaction.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Match Aggregate query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
+|===
+
+[caption=""]
+.Returns
+`Promise<Numeric>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+transaction.query.matchAggregate(query, options)
+----
+
+[#_QueryManager_matchGroup]
+==== matchGroup
+
+[source,nodejs]
+----
+matchGroup(query, options?): Stream<ConceptMapGroup>
+----
+
+Performs a TypeQL Match Group query in the transaction.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Match Group query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
+|===
+
+[caption=""]
+.Returns
+`Stream<ConceptMapGroup>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+transaction.query.matchGroup(query, options)
+----
+
+[#_QueryManager_matchGroupAggregate]
+==== matchGroupAggregate
+
+[source,nodejs]
+----
+matchGroupAggregate(query, options?): Stream<NumericGroup>
+----
+
+Performs a TypeQL Match Group Aggregate query in the transaction.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Match Group Aggregate query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
+|===
+
+[caption=""]
+.Returns
+`Stream<NumericGroup>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+transaction.query.matchGroupAggregate(query, options)
+----
+
+[#_QueryManager_undefine]
+==== undefine
+
+[source,nodejs]
+----
+undefine(query, options?): Promise<void>
+----
+
+Performs a TypeQL Undefine query in the transaction.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Undefine query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
+|===
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+transaction.query.undefine(query, options)
+----
+
+[#_QueryManager_update]
+==== update
+
+[source,nodejs]
+----
+update(query, options?): Stream<ConceptMap>
+----
+
+Performs a TypeQL Update query in the transaction.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Update query to be executed a| `string`
+a| `options` a| Specify query options a| `TypeDBOptions`
+|===
+
+[caption=""]
+.Returns
+`Stream<ConceptMap>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+transaction.query.update(query, options)
+----
+
+// end::methods[]
+

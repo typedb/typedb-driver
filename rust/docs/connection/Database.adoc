@@ -1,0 +1,339 @@
+[#_struct_Database]
+=== Database
+
+*Implements traits:*
+
+* `Debug`
+
+// tag::methods[]
+[#_struct_Database_method_delete]
+==== delete
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn delete(self) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn delete(self) -> Result
+----
+
+--
+====
+
+Deletes this database.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+database.delete().await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+database.delete();
+----
+
+--
+====
+
+[#_struct_Database_method_name]
+==== name
+
+[source,rust]
+----
+pub fn name(&self) -> &str
+----
+
+Retrieves the database name as a string.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&str
+----
+
+[#_struct_Database_method_preferred_replica_info]
+==== preferred_replica_info
+
+[source,rust]
+----
+pub fn preferred_replica_info(&self) -> Option<ReplicaInfo>
+----
+
+Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Enterprise_
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<ReplicaInfo>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+database.preferred_replica_info();
+----
+
+[#_struct_Database_method_primary_replica_info]
+==== primary_replica_info
+
+[source,rust]
+----
+pub fn primary_replica_info(&self) -> Option<ReplicaInfo>
+----
+
+Returns the primary replica for this database. _Only works in TypeDB Enterprise_
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Option<ReplicaInfo>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+database.primary_replica_info()
+----
+
+[#_struct_Database_method_replicas_info]
+==== replicas_info
+
+[source,rust]
+----
+pub fn replicas_info(&self) -> Vec<ReplicaInfo> <a href="#" class="notable-traits" data-ty="Vec">ⓘ
+----
+
+Returns the ``Replica`` instances for this database. _Only works in TypeDB Enterprise_
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Vec<ReplicaInfo> <a href="#" class="notable-traits" data-ty="Vec">ⓘ
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+database.replicas_info()
+----
+
+[#_struct_Database_method_rule_schema]
+==== rule_schema
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn rule_schema(&self) -> Result<String>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn rule_schema(&self) -> Result<String>
+----
+
+--
+====
+
+Returns the rules in the schema as a valid TypeQL define query string.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<String>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+database.rule_schema().await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+database.rule_schema();
+----
+
+--
+====
+
+[#_struct_Database_method_schema]
+==== schema
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn schema(&self) -> Result<String>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn schema(&self) -> Result<String>
+----
+
+--
+====
+
+Returns a full schema text as a valid TypeQL define query string.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<String>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+database.schema().await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+database.schema();
+----
+
+--
+====
+
+[#_struct_Database_method_type_schema]
+==== type_schema
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn type_schema(&self) -> Result<String>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn type_schema(&self) -> Result<String>
+----
+
+--
+====
+
+Returns the types in the schema as a valid TypeQL define query string.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<String>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+database.type_schema().await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+database.type_schema();
+----
+
+--
+====
+
+// end::methods[]
+

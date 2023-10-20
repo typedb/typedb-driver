@@ -1,0 +1,395 @@
+[#_struct_Entity]
+=== Entity
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `EntityAPI`
+* `Eq`
+* `PartialEq<Entity>`
+* `StructuralEq`
+* `StructuralPartialEq`
+* `ThingAPI`
+
+Instance of data of an entity type, representing a standalone object that exists in the data model independently. Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles played in relation instances.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `iid` a| `IID` a| The unique id of this Entity
+a| `is_inferred` a| `bool` a| If this Thing is inferred by a [Reasoning Rule] or not
+a| `type_` a| `EntityType` a| The type which this Entity belongs to
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_struct_Entity_method_delete]
+==== delete
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn delete<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 self,
+    transaction: &'life1 Transaction<'life2>
+) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn delete(&self, transaction: &Transaction<'_>) -> Result
+----
+
+--
+====
+
+<<#_trait_ThingAPI_method_delete,Read more>>
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result
+----
+
+--
+====
+
+[#_struct_Entity_method_get_has]
+==== get_has
+
+[source,rust]
+----
+fn get_has(
+    &self,
+    transaction: &Transaction<'_>,
+    attribute_types: Vec<AttributeType>,
+    annotations: Vec<Annotation>
+) -> Result<BoxStream<'_, Result<Attribute>>>
+----
+
+<<#_trait_ThingAPI_method_get_has,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<Attribute>>>
+----
+
+[#_struct_Entity_method_get_playing]
+==== get_playing
+
+[source,rust]
+----
+fn get_playing(
+    &self,
+    transaction: &Transaction<'_>
+) -> Result<BoxStream<'_, Result<RoleType>>>
+----
+
+<<#_trait_ThingAPI_method_get_playing,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<RoleType>>>
+----
+
+[#_struct_Entity_method_get_relations]
+==== get_relations
+
+[source,rust]
+----
+fn get_relations(
+    &self,
+    transaction: &Transaction<'_>,
+    role_types: Vec<RoleType>
+) -> Result<BoxStream<'_, Result<Relation>>>
+----
+
+<<#_trait_ThingAPI_method_get_relations,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<Relation>>>
+----
+
+[#_struct_Entity_tymethod_iid]
+==== iid
+
+[source,rust]
+----
+fn iid(&self) -> &IID
+----
+
+<<#_trait_ThingAPI_tymethod_iid,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&IID
+----
+
+[#_struct_Entity_tymethod_is_deleted]
+==== is_deleted
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn is_deleted<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 self,
+    transaction: &'life1 Transaction<'life2>
+) -> Pin<Box<dyn Future<Output = Result<bool>> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool>
+----
+
+--
+====
+
+<<#_trait_ThingAPI_tymethod_is_deleted,Read more>>
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result<bool>> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result<bool>
+----
+
+--
+====
+
+[#_struct_Entity_tymethod_is_inferred]
+==== is_inferred
+
+[source,rust]
+----
+fn is_inferred(&self) -> bool
+----
+
+<<#_trait_ThingAPI_tymethod_is_inferred,Read more>>
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[#_struct_Entity_method_set_has]
+==== set_has
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn set_has<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 self,
+    transaction: &'life1 Transaction<'life2>,
+    attribute: Attribute
+) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn set_has(&self, transaction: &Transaction<'_>, attribute: Attribute) -> Result
+----
+
+--
+====
+
+<<#_trait_ThingAPI_method_set_has,Read more>>
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result
+----
+
+--
+====
+
+[#_struct_Entity_method_unset_has]
+==== unset_has
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn unset_has<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 self,
+    transaction: &'life1 Transaction<'life2>,
+    attribute: Attribute
+) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn unset_has(&self, transaction: &Transaction<'_>, attribute: Attribute) -> Result
+----
+
+--
+====
+
+<<#_trait_ThingAPI_method_unset_has,Read more>>
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result
+----
+
+--
+====
+
+// end::methods[]
+

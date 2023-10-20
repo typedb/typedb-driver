@@ -1,0 +1,249 @@
+[#_struct_Rule]
+=== Rule
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `PartialEq<Rule>`
+* `RuleAPI`
+* `StructuralPartialEq`
+
+Rules are a part of schema and define embedded logic. The reasoning engine uses rules as a set of logic to infer new data. A rule consists of a condition and a conclusion, and is uniquely identified by a label.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `label` a| `String` a| The unique label of the rule.
+a| `then` a| `ThingVariable` a| The single statement that constitutes the ‘then’ of the rule.
+a| `when` a| `Conjunction` a| The statements that constitute the ‘when’ of the rule.
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_struct_Rule_tymethod_delete]
+==== delete
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn delete<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 mut self,
+    transaction: &'life1 Transaction<'life2>
+) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn delete(&mut self, transaction: &Transaction<'_>) -> Result
+----
+
+--
+====
+
+<<#_trait_RuleAPI_tymethod_delete,Read more>>
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result
+----
+
+--
+====
+
+[#_struct_Rule_method_is_deleted]
+==== is_deleted
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn is_deleted<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 self,
+    transaction: &'life1 Transaction<'life2>
+) -> Pin<Box<dyn Future<Output = Result<bool>> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool>
+----
+
+--
+====
+
+<<#_trait_RuleAPI_method_is_deleted,Read more>>
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result<bool>> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result<bool>
+----
+
+--
+====
+
+[#_struct_Rule_tymethod_label]
+==== label
+
+[source,rust]
+----
+fn label(&self) -> &String
+----
+
+
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&String
+----
+
+[#_struct_Rule_tymethod_set_label]
+==== set_label
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn set_label<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 mut self,
+    transaction: &'life1 Transaction<'life2>,
+    new_label: String
+) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn set_label(
+    &mut self,
+    transaction: &Transaction<'_>,
+    new_label: String
+) -> Result
+----
+
+--
+====
+
+<<#_trait_RuleAPI_tymethod_set_label,Read more>>
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result
+----
+
+--
+====
+
+// end::methods[]
+

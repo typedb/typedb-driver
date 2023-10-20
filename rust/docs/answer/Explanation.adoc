@@ -1,0 +1,25 @@
+[#_struct_Explanation]
+=== Explanation
+
+*Implements traits:*
+
+* `Debug`
+* `PartialEq<Explanation>`
+* `StructuralPartialEq`
+
+An explanation of which rule was used for inferring the explained concept, the condition of the rule, the conclusion of the rule, and the mapping of variables between the query and the rule’s conclusion.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `conclusion` a| `ConceptMap` a| The Conclusion for this Explanation.
+a| `condition` a| `ConceptMap` a| The Condition for this Explanation.
+a| `rule` a| `Rule` a| The Rule for this Explanation.
+a| `variable_mapping` a| `HashMap<String, Vec<String>>` a| The mapping from query variables to rule variables for this ``Explanation``.
+|===
+// end::properties[]
+

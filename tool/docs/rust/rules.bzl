@@ -40,11 +40,15 @@ def rust_docs(name, feature):
     )
 
 
-def rustdoc_to_adoc(name, data, modes = {}):
+def rustdoc_to_adoc(name, data, docs_dirs, modes = {}):
     args = ["$(location %s)" % target for target in data] + [
         "--output",
         "rust/docs",
-    ] + ["--mode=$(location %s)=%s" % (target, modes[target]) for target in modes]
+    ] + [
+        "--dir=%s=%s" % (filename, docs_dirs[filename]) for filename in docs_dirs
+    ] + [
+        "--mode=$(location %s)=%s" % (target, modes[target]) for target in modes
+    ]
     kt_jvm_binary(
         name = name,
         srcs = [

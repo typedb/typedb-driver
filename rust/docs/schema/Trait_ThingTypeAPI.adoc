@@ -1,0 +1,1690 @@
+[#_trait_ThingTypeAPI]
+=== Trait ThingTypeAPI
+
+*Implementors:*
+
+* `AttributeType`
+* `EntityType`
+* `RelationType`
+* `RootThingType`
+
+// tag::methods[]
+[#_trait_ThingTypeAPI_method_delete]
+==== delete
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn delete<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 mut self,
+    transaction: &'life1 Transaction<'life2>
+) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn delete(&mut self, transaction: &Transaction<'_>) -> Result
+----
+
+--
+====
+
+Deletes this type from the database.
+
+[caption=""]
+.Input parameters
+[tabs]
+====
+async::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+|===
+--
+
+sync::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+|===
+--
+====
+
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result
+----
+
+--
+====
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+thing_type.delete(transaction).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+thing_type.delete(transaction);
+----
+
+--
+====
+
+[#_trait_ThingTypeAPI_method_get_owns]
+==== get_owns
+
+[source,rust]
+----
+fn get_owns(
+    &self,
+    transaction: &Transaction<'_>,
+    value_type: Option<ValueType>,
+    transitivity: Transitivity,
+    annotations: Vec<Annotation>
+) -> Result<BoxStream<'_, Result<AttributeType>>>
+----
+
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `value_type` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `Option<ValueType>`
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and inherited ownership, ``Transitivity::Explicit`` for direct ownership only a| `Transitivity`
+a| `annotations` a| Only retrieve attribute types owned with annotations. a| `Vec<Annotation>`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<AttributeType>>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+thing_type.get_owns(transaction, Some(value_type), Transitivity::Explicit, vec![Annotation::Key]).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+thing_type.get_owns(transaction, Some(value_type), Transitivity::Explicit, vec![Annotation::Key]);
+----
+
+--
+====
+
+[#_trait_ThingTypeAPI_method_get_owns_overridden]
+==== get_owns_overridden
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn get_owns_overridden<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 self,
+    transaction: &'life1 Transaction<'life2>,
+    overridden_attribute_type: AttributeType
+) -> Pin<Box<dyn Future<Output = Result<Option<AttributeType>>> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn get_owns_overridden(
+    &self,
+    transaction: &Transaction<'_>,
+    overridden_attribute_type: AttributeType
+) -> Result<Option<AttributeType>>
+----
+
+--
+====
+
+Retrieves an ``AttributeType``, ownership of which is overridden for this ``ThingType`` by a given ``attribute_type``.
+
+[caption=""]
+.Input parameters
+[tabs]
+====
+async::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `overridden_attribute_type` a| The ``AttributeType`` that overrides requested ``AttributeType`` a| `AttributeType`
+|===
+--
+
+sync::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `overridden_attribute_type` a| The ``AttributeType`` that overrides requested ``AttributeType`` a| `AttributeType`
+|===
+--
+====
+
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result<Option<AttributeType>>> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result<Option<AttributeType>>
+----
+
+--
+====
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+thing_type.get_owns_overridden(transaction, attribute_type).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+thing_type.get_owns_overridden(transaction, attribute_type);
+----
+
+--
+====
+
+[#_trait_ThingTypeAPI_method_get_plays]
+==== get_plays
+
+[source,rust]
+----
+fn get_plays(
+    &self,
+    transaction: &Transaction<'_>,
+    transitivity: Transitivity
+) -> Result<BoxStream<'_, Result<RoleType>>>
+----
+
+Retrieves all direct and inherited (or direct only) roles that are allowed to be played by the instances of this ``ThingType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect playing, ``Transitivity::Explicit`` for direct playing only a| `Transitivity`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<RoleType>>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+thing_type.get_plays(transaction, Transitivity::Explicit).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+thing_type.get_plays(transaction, Transitivity::Explicit);
+----
+
+--
+====
+
+[#_trait_ThingTypeAPI_method_get_plays_overridden]
+==== get_plays_overridden
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn get_plays_overridden<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 self,
+    transaction: &'life1 Transaction<'life2>,
+    overridden_role_type: RoleType
+) -> Pin<Box<dyn Future<Output = Result<Option<RoleType>>> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn get_plays_overridden(
+    &self,
+    transaction: &Transaction<'_>,
+    overridden_role_type: RoleType
+) -> Result<Option<RoleType>>
+----
+
+--
+====
+
+Retrieves a ``RoleType`` that is overridden by the given ``role_type`` for this ``ThingType``.
+
+[caption=""]
+.Input parameters
+[tabs]
+====
+async::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `overridden_role_type` a| The ``RoleType`` that overrides an inherited role a| `RoleType`
+|===
+--
+
+sync::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `overridden_role_type` a| The ``RoleType`` that overrides an inherited role a| `RoleType`
+|===
+--
+====
+
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result<Option<RoleType>>> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result<Option<RoleType>>
+----
+
+--
+====
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+thing_type.get_plays_overridden(transaction, role_type).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+thing_type.get_plays_overridden(transaction, role_type);
+----
+
+--
+====
+
+[#_trait_ThingTypeAPI_method_get_syntax]
+==== get_syntax
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn get_syntax<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 self,
+    transaction: &'life1 Transaction<'life2>
+) -> Pin<Box<dyn Future<Output = Result<String>> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn get_syntax(&self, transaction: &Transaction<'_>) -> Result<String>
+----
+
+--
+====
+
+Produces a pattern for creating this ``ThingType`` in a ``define`` query.
+
+[caption=""]
+.Input parameters
+[tabs]
+====
+async::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+|===
+--
+
+sync::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+|===
+--
+====
+
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result<String>> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result<String>
+----
+
+--
+====
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+thing_type.get_syntax(transaction).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+thing_type.get_syntax(transaction);
+----
+
+--
+====
+
+[#_trait_ThingTypeAPI_tymethod_is_abstract]
+==== is_abstract
+
+[source,rust]
+----
+fn is_abstract(&self) -> bool
+----
+
+Checks if the type is prevented from having data instances (i.e. ``abstract``).
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+thing_type.is_abstract();
+----
+
+[#_trait_ThingTypeAPI_tymethod_is_deleted]
+==== is_deleted
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn is_deleted<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 self,
+    transaction: &'life1 Transaction<'life2>
+) -> Pin<Box<dyn Future<Output = Result<bool>> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool>
+----
+
+--
+====
+
+Checks if this type is deleted.
+
+[caption=""]
+.Input parameters
+[tabs]
+====
+async::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+|===
+--
+
+sync::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+|===
+--
+====
+
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result<bool>> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result<bool>
+----
+
+--
+====
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+thing_type.is_deleted(transaction).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+thing_type.is_deleted(transaction);
+----
+
+--
+====
+
+[#_trait_ThingTypeAPI_tymethod_is_root]
+==== is_root
+
+[source,rust]
+----
+fn is_root(&self) -> bool
+----
+
+Checks if the type is a root type.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+thing_type.is_root();
+----
+
+[#_trait_ThingTypeAPI_tymethod_label]
+==== label
+
+[source,rust]
+----
+fn label(&self) -> &str
+----
+
+Retrieves the unique label of the type.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&str
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+thing_type.label();
+----
+
+[#_trait_ThingTypeAPI_method_set_abstract]
+==== set_abstract
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn set_abstract<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 mut self,
+    transaction: &'life1 Transaction<'life2>
+) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn set_abstract(&mut self, transaction: &Transaction<'_>) -> Result
+----
+
+--
+====
+
+Set a type to be abstract, meaning it cannot have instances.
+
+[caption=""]
+.Input parameters
+[tabs]
+====
+async::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+|===
+--
+
+sync::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+|===
+--
+====
+
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result
+----
+
+--
+====
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+thing_type.set_abstract(transaction).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+thing_type.set_abstract(transaction);
+----
+
+--
+====
+
+[#_trait_ThingTypeAPI_method_set_label]
+==== set_label
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn set_label<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 mut self,
+    transaction: &'life1 Transaction<'life2>,
+    new_label: String
+) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn set_label(
+    &mut self,
+    transaction: &Transaction<'_>,
+    new_label: String
+) -> Result
+----
+
+--
+====
+
+Renames the label of the type. The new label must remain unique.
+
+[caption=""]
+.Input parameters
+[tabs]
+====
+async::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `new_label` a| The new ``Label`` to be given to the type. a| `String`
+|===
+--
+
+sync::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `new_label` a| The new ``Label`` to be given to the type. a| `String`
+|===
+--
+====
+
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result
+----
+
+--
+====
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+thing_type.set_label(transaction, new_label).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+thing_type.set_label(transaction, new_label);
+----
+
+--
+====
+
+[#_trait_ThingTypeAPI_method_set_owns]
+==== set_owns
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn set_owns<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 mut self,
+    transaction: &'life1 Transaction<'life2>,
+    attribute_type: AttributeType,
+    overridden_attribute_type: Option<AttributeType>,
+    annotations: Vec<Annotation>
+) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn set_owns(
+    &mut self,
+    transaction: &Transaction<'_>,
+    attribute_type: AttributeType,
+    overridden_attribute_type: Option<AttributeType>,
+    annotations: Vec<Annotation>
+) -> Result
+----
+
+--
+====
+
+Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
+
+[caption=""]
+.Input parameters
+[tabs]
+====
+async::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `attribute_type` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType`
+a| `overridden_attribute_type` a| The ``AttributeType`` that this attribute ownership overrides, if applicable. a| `Option<AttributeType>`
+a| `annotations` a| Adds annotations to the ownership. a| `Vec<Annotation>`
+|===
+--
+
+sync::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `attribute_type` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType`
+a| `overridden_attribute_type` a| The ``AttributeType`` that this attribute ownership overrides, if applicable. a| `Option<AttributeType>`
+a| `annotations` a| Adds annotations to the ownership. a| `Vec<Annotation>`
+|===
+--
+====
+
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result
+----
+
+--
+====
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+thing_type.set_owns(transaction, attribute_type, Some(overridden_type), vec![Annotation::Key]).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+thing_type.set_owns(transaction, attribute_type, Some(overridden_type), vec![Annotation::Key]);
+----
+
+--
+====
+
+[#_trait_ThingTypeAPI_method_set_plays]
+==== set_plays
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn set_plays<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 mut self,
+    transaction: &'life1 Transaction<'life2>,
+    role_type: RoleType,
+    overridden_role_type: Option<RoleType>
+) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn set_plays(
+    &mut self,
+    transaction: &Transaction<'_>,
+    role_type: RoleType,
+    overridden_role_type: Option<RoleType>
+) -> Result
+----
+
+--
+====
+
+Allows the instances of this ``ThingType`` to play the given role.
+
+[caption=""]
+.Input parameters
+[tabs]
+====
+async::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `role_type` a| The role to be played by the instances of this type a| `RoleType`
+a| `overridden_role_type` a| The role type that this role overrides, if applicable a| `Option<RoleType>`
+|===
+--
+
+sync::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `role_type` a| The role to be played by the instances of this type a| `RoleType`
+a| `overridden_role_type` a| The role type that this role overrides, if applicable a| `Option<RoleType>`
+|===
+--
+====
+
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result
+----
+
+--
+====
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+thing_type.set_plays(transaction, role_type, None).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+thing_type.set_plays(transaction, role_type, None);
+----
+
+--
+====
+
+[#_trait_ThingTypeAPI_method_unset_abstract]
+==== unset_abstract
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn unset_abstract<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 mut self,
+    transaction: &'life1 Transaction<'life2>
+) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn unset_abstract(&mut self, transaction: &Transaction<'_>) -> Result
+----
+
+--
+====
+
+Set a type to be non-abstract, meaning it can have instances.
+
+[caption=""]
+.Input parameters
+[tabs]
+====
+async::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+|===
+--
+
+sync::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+|===
+--
+====
+
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result
+----
+
+--
+====
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+thing_type.unset_abstract(transaction).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+thing_type.unset_abstract(transaction);
+----
+
+--
+====
+
+[#_trait_ThingTypeAPI_method_unset_owns]
+==== unset_owns
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn unset_owns<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 mut self,
+    transaction: &'life1 Transaction<'life2>,
+    attribute_type: AttributeType
+) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn unset_owns(
+    &mut self,
+    transaction: &Transaction<'_>,
+    attribute_type: AttributeType
+) -> Result
+----
+
+--
+====
+
+Disallows the instances of this ``ThingType`` from owning the given ``AttributeType``.
+
+[caption=""]
+.Input parameters
+[tabs]
+====
+async::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `attribute_type` a| The ``AttributeType`` to not be owned by the type. a| `AttributeType`
+|===
+--
+
+sync::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `attribute_type` a| The ``AttributeType`` to not be owned by the type. a| `AttributeType`
+|===
+--
+====
+
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result
+----
+
+--
+====
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+thing_type.unset_owns(transaction, attribute_type).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+thing_type.unset_owns(transaction, attribute_type);
+----
+
+--
+====
+
+[#_trait_ThingTypeAPI_method_unset_plays]
+==== unset_plays
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn unset_plays<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 mut self,
+    transaction: &'life1 Transaction<'life2>,
+    role_type: RoleType
+) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn unset_plays(
+    &mut self,
+    transaction: &Transaction<'_>,
+    role_type: RoleType
+) -> Result
+----
+
+--
+====
+
+Disallows the instances of this ``ThingType`` from playing the given role.
+
+[caption=""]
+.Input parameters
+[tabs]
+====
+async::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `role_type` a| The role to not be played by the instances of this type. a| `RoleType`
+|===
+--
+
+sync::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `role_type` a| The role to not be played by the instances of this type. a| `RoleType`
+|===
+--
+====
+
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result
+----
+
+--
+====
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+thing_type.unset_plays(transaction, role_type).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+thing_type.unset_plays(transaction, role_type);
+----
+
+--
+====
+
+// end::methods[]
+

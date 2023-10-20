@@ -1,0 +1,311 @@
+[#_TypeDBOptions]
+=== TypeDBOptions
+
+TypeDB session and transaction options. ``TypeDBOptions`` object can be used to override the default server behaviour. Options could be specified either as constructor arguments or using setters.
+
+// tag::methods[]
+[#__explain]
+====  explain
+
+[source,nodejs]
+----
+get explain(): boolean
+----
+
+If set to ``True``, enables explanations for queries. Only affects read transactions.
+
+[caption=""]
+.Returns
+`boolean`
+
+[#__explain]
+====  explain
+
+[source,nodejs]
+----
+set explain(value): void
+----
+
+If set to ``True``, enables explanations for queries. Only affects read transactions.
+
+[caption=""]
+.Returns
+`void`
+
+[#__infer]
+====  infer
+
+[source,nodejs]
+----
+get infer(): boolean
+----
+
+If set to ``True``, enables inference for queries. Only settable at transaction level and above. Only affects read transactions.
+
+[caption=""]
+.Returns
+`boolean`
+
+[#__infer]
+====  infer
+
+[source,nodejs]
+----
+set infer(value): void
+----
+
+If set to ``True``, enables inference for queries. Only settable at transaction level and above. Only affects read transactions.
+
+[caption=""]
+.Returns
+`void`
+
+[#__parallel]
+====  parallel
+
+[source,nodejs]
+----
+get parallel(): boolean
+----
+
+If set to ``True``, the server uses parallel instead of single-threaded execution.
+
+[caption=""]
+.Returns
+`boolean`
+
+[#__parallel]
+====  parallel
+
+[source,nodejs]
+----
+set parallel(value): void
+----
+
+If set to ``True``, the server uses parallel instead of single-threaded execution.
+
+[caption=""]
+.Returns
+`void`
+
+[#__prefetch]
+====  prefetch
+
+[source,nodejs]
+----
+get prefetch(): boolean
+----
+
+If set to ``True``, the first batch of answers is streamed to the driver even without an explicit request for it.
+
+[caption=""]
+.Returns
+`boolean`
+
+[#__prefetch]
+====  prefetch
+
+[source,nodejs]
+----
+set prefetch(value): void
+----
+
+If set to ``True``, the first batch of answers is streamed to the driver even without an explicit request for it.
+
+[caption=""]
+.Returns
+`void`
+
+[#__prefetchSize]
+====  prefetchSize
+
+[source,nodejs]
+----
+get prefetchSize(): number
+----
+
+If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
+
+[caption=""]
+.Returns
+`number`
+
+[#__prefetchSize]
+====  prefetchSize
+
+[source,nodejs]
+----
+set prefetchSize(value): void
+----
+
+If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
+
+[caption=""]
+.Returns
+`void`
+
+[#__readAnyReplica]
+====  readAnyReplica
+
+[source,nodejs]
+----
+get readAnyReplica(): boolean
+----
+
+If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise.
+
+[caption=""]
+.Returns
+`boolean`
+
+[#__readAnyReplica]
+====  readAnyReplica
+
+[source,nodejs]
+----
+set readAnyReplica(value): void
+----
+
+If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise.
+
+[caption=""]
+.Returns
+`void`
+
+[#__schemaLockAcquireTimeoutMillis]
+====  schemaLockAcquireTimeoutMillis
+
+[source,nodejs]
+----
+get schemaLockAcquireTimeoutMillis(): number
+----
+
+If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock.
+
+[caption=""]
+.Returns
+`number`
+
+[#__schemaLockAcquireTimeoutMillis]
+====  schemaLockAcquireTimeoutMillis
+
+[source,nodejs]
+----
+set schemaLockAcquireTimeoutMillis(value): void
+----
+
+If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock.
+
+[caption=""]
+.Returns
+`void`
+
+[#__sessionIdleTimeoutMillis]
+====  sessionIdleTimeoutMillis
+
+[source,nodejs]
+----
+get sessionIdleTimeoutMillis(): number
+----
+
+If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive.
+
+[caption=""]
+.Returns
+`number`
+
+[#__sessionIdleTimeoutMillis]
+====  sessionIdleTimeoutMillis
+
+[source,nodejs]
+----
+set sessionIdleTimeoutMillis(millis): void
+----
+
+If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive.
+
+[caption=""]
+.Returns
+`void`
+
+[#__traceInference]
+====  traceInference
+
+[source,nodejs]
+----
+get traceInference(): boolean
+----
+
+If set to ``True``, reasoning tracing graphs are output in the logging directory. Should be used with ``parallel = False``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[#__traceInference]
+====  traceInference
+
+[source,nodejs]
+----
+set traceInference(value): void
+----
+
+If set to ``True``, reasoning tracing graphs are output in the logging directory. Should be used with ``parallel = False``.
+
+[caption=""]
+.Returns
+`void`
+
+[#__transactionTimeoutMillis]
+====  transactionTimeoutMillis
+
+[source,nodejs]
+----
+get transactionTimeoutMillis(): number
+----
+
+If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
+
+[caption=""]
+.Returns
+`number`
+
+[#__transactionTimeoutMillis]
+====  transactionTimeoutMillis
+
+[source,nodejs]
+----
+set transactionTimeoutMillis(millis): void
+----
+
+If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
+
+[caption=""]
+.Returns
+`void`
+
+[#_TypeDBOptions_new_TypeDBOptions]
+==== new TypeDBOptions
+
+[source,nodejs]
+----
+new TypeDBOptions(obj?): TypeDBOptions
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `obj` a| If set to ``True``, enables explanations for queries. Only affects read transactions. a| `{ explain?: boolean; infer?: boolean; parallel?: boolean; prefetch?: boolean; prefetchSize?: number; readAnyReplica?: boolean; schemaLockAcquireTimeoutMillis?: number; sessionIdleTimeoutMillis?: number; traceInference?: boolean; transactionTimeoutMillis?: number; } = {}`
+|===
+
+[caption=""]
+.Returns
+`TypeDBOptions`
+
+// end::methods[]
+

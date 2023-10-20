@@ -1,0 +1,183 @@
+[#_Database]
+=== Database
+
+*Package*: `com.vaticle.typedb.driver.api.database`
+
+// tag::methods[]
+[#_Database_delete_]
+==== delete
+
+[source,java]
+----
+void delete()
+----
+
+Deletes this database. 
+
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+database.delete()
+----
+
+[#_Database_name_]
+==== name
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String name()
+----
+
+The database name as a string.
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[#_Database_preferredReplica_]
+==== preferredReplica
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Optional<? extends Database.Replica> preferredReplica()
+----
+
+Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Enterprise_ 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<? extends Database.Replica>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+database.preferredReplica()
+----
+
+[#_Database_primaryReplica_]
+==== primaryReplica
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Optional<? extends Database.Replica> primaryReplica()
+----
+
+Returns the primary replica for this database. _Only works in TypeDB Enterprise_ 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<? extends Database.Replica>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+database.primaryReplica()
+----
+
+[#_Database_replicas_]
+==== replicas
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Set<? extends Database.Replica> replicas()
+----
+
+Set of ``Replica`` instances for this database. Only works in TypeDB Enterprise
+
+
+[caption=""]
+.Returns
+`java.util.Set<? extends Database.Replica>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+database.replicas()
+----
+
+[#_Database_ruleSchema_]
+==== ruleSchema
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String ruleSchema()
+----
+
+The rules in the schema as a valid TypeQL define query string. 
+
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+database.ruleSchema()
+----
+
+[#_Database_schema_]
+==== schema
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String schema()
+----
+
+A full schema text as a valid TypeQL define query string. 
+
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+database.schema()
+----
+
+[#_Database_typeSchema_]
+==== typeSchema
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String typeSchema()
+----
+
+The types in the schema as a valid TypeQL define query string. 
+
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+database.typeSchema()
+----
+
+// end::methods[]
+

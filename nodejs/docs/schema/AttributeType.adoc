@@ -1,0 +1,2155 @@
+[#_AttributeType]
+=== AttributeType
+
+*Supertypes:*
+
+* `ThingType`
+
+Attribute types represent properties that other types can own. Attribute types have a value type. This value type is fixed and unique for every given instance of the attribute type. Other types can own an attribute type. That means that instances of these other types can own an instance of this attribute type. This usually means that an object in our domain has a property with the matching value. Multiple types can own the same attribute type, and different instances of the same type or different types can share ownership of the same attribute instance.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `abstract` a| `boolean` a| Whether the type is prevented from having data instances (i.e., abstract).
+a| `label` a| `Label` a| The unique label of the type.
+a| `root` a| `boolean` a| Whether the type is a root type.
+a| `valueType` a| `ValueType` a| The ValueType of this AttributeType.
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_AttributeType_asAttribute]
+==== asAttribute
+
+[source,nodejs]
+----
+asAttribute(): Attribute
+----
+
+Casts the concept to ``Attribute``.
+
+[caption=""]
+.Returns
+`Attribute`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asAttribute()
+----
+
+[#_AttributeType_asAttributeType]
+==== asAttributeType
+
+[source,nodejs]
+----
+asAttributeType(): AttributeType
+----
+
+Casts the concept to ``AttributeType``.
+
+[caption=""]
+.Returns
+`AttributeType`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asAttributeType()
+----
+
+[#_AttributeType_asEntity]
+==== asEntity
+
+[source,nodejs]
+----
+asEntity(): Entity
+----
+
+Casts the concept to ``Entity``.
+
+[caption=""]
+.Returns
+`Entity`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asEntity()
+----
+
+[#_AttributeType_asEntityType]
+==== asEntityType
+
+[source,nodejs]
+----
+asEntityType(): EntityType
+----
+
+Casts the concept to ``EntityType``.
+
+[caption=""]
+.Returns
+`EntityType`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asEntityType()
+----
+
+[#_AttributeType_asRelation]
+==== asRelation
+
+[source,nodejs]
+----
+asRelation(): Relation
+----
+
+Casts the concept to ``Relation``.
+
+[caption=""]
+.Returns
+`Relation`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asRelation()
+----
+
+[#_AttributeType_asRelationType]
+==== asRelationType
+
+[source,nodejs]
+----
+asRelationType(): RelationType
+----
+
+Casts the concept to ``RelationType``.
+
+[caption=""]
+.Returns
+`RelationType`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asRelationType()
+----
+
+[#_AttributeType_asRoleType]
+==== asRoleType
+
+[source,nodejs]
+----
+asRoleType(): RoleType
+----
+
+Casts the concept to ``RoleType``.
+
+[caption=""]
+.Returns
+`RoleType`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asRoleType()
+----
+
+[#_AttributeType_asThing]
+==== asThing
+
+[source,nodejs]
+----
+asThing(): Thing
+----
+
+Casts the concept to ``Thing``.
+
+[caption=""]
+.Returns
+`Thing`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asThing()
+----
+
+[#_AttributeType_asThingType]
+==== asThingType
+
+[source,nodejs]
+----
+asThingType(): ThingType
+----
+
+Casts the concept to ``ThingType``.
+
+[caption=""]
+.Returns
+`ThingType`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asThingType()
+----
+
+[#_AttributeType_asType]
+==== asType
+
+[source,nodejs]
+----
+asType(): Type
+----
+
+Casts the concept to ``Type``.
+
+[caption=""]
+.Returns
+`Type`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asType()
+----
+
+[#_AttributeType_asValue]
+==== asValue
+
+[source,nodejs]
+----
+asValue(): Value
+----
+
+Casts the concept to ``Value``.
+
+[caption=""]
+.Returns
+`Value`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asValue()
+----
+
+[#_AttributeType_delete]
+==== delete
+
+[source,nodejs]
+----
+delete(transaction): Promise<void>
+----
+
+Deletes this type from the database.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+type.delete(transaction)
+----
+
+[#_AttributeType_equals]
+==== equals
+
+[source,nodejs]
+----
+equals(concept): boolean
+----
+
+Checks if this concept is equal to the argument ``concept``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `concept` a| The concept to compare to. a| `Concept`
+|===
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_AttributeType_get]
+==== get
+
+[source,nodejs]
+----
+get(transaction, value): Promise<Attribute>
+----
+
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| ``Attribute``’s value a| `Value`
+|===
+
+[caption=""]
+.Returns
+`Promise<Attribute>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+attribute = attributeType.get(transaction, value)
+----
+
+[#_AttributeType_getBoolean]
+==== getBoolean
+
+[source,nodejs]
+----
+getBoolean(transaction, value): Promise<Attribute>
+----
+
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| ``Attribute``’s value a| `boolean`
+|===
+
+[caption=""]
+.Returns
+`Promise<Attribute>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+attribute = attributeType.get(transaction, value)
+----
+
+[#_AttributeType_getDateTime]
+==== getDateTime
+
+[source,nodejs]
+----
+getDateTime(transaction, value): Promise<Attribute>
+----
+
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| ``Attribute``’s value a| `Date`
+|===
+
+[caption=""]
+.Returns
+`Promise<Attribute>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+attribute = attributeType.get(transaction, value)
+----
+
+[#_AttributeType_getDouble]
+==== getDouble
+
+[source,nodejs]
+----
+getDouble(transaction, value): Promise<Attribute>
+----
+
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| ``Attribute``’s value a| `number`
+|===
+
+[caption=""]
+.Returns
+`Promise<Attribute>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+attribute = attributeType.get(transaction, value)
+----
+
+[#_AttributeType_getInstances]
+==== getInstances
+
+[source,nodejs]
+----
+getInstances(transaction, transitivity): Stream<Attribute>
+----
+
+Retrieves all direct and indirect (or direct only) ``Attributes`` that are instances of this ``AttributeType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Transitivity`
+|===
+
+[caption=""]
+.Returns
+`Stream<Attribute>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+attributeType.getInstances(transaction) attributeType.getInstances(transaction, Transitivity.EXPLICIT)
+----
+
+[#_AttributeType_getInstances]
+==== getInstances
+
+[source,nodejs]
+----
+getInstances(transaction): Stream<Attribute>
+----
+
+Retrieves all direct and indirect (or direct only) ``Thing`` objects that are instances of this ``ThingType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Stream<Attribute>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.getInstances(transaction, Transitivity.EXPLICIT)
+----
+
+[#_AttributeType_getLong]
+==== getLong
+
+[source,nodejs]
+----
+getLong(transaction, value): Promise<Attribute>
+----
+
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| ``Attribute``’s value a| `number`
+|===
+
+[caption=""]
+.Returns
+`Promise<Attribute>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+attribute = attributeType.get(transaction, value)
+----
+
+[#_AttributeType_getOwners]
+==== getOwners
+
+[source,nodejs]
+----
+getOwners(transaction, annotations, transitivity): Stream<ThingType>
+----
+
+Retrieve all ``Things`` that own an attribute of this ``AttributeType``. Optionally, filtered by ``Annotation``s.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``AttributeType`` with all given ``Annotation``s a| `Annotation[]`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited ownership, ``Transitivity.EXPLICIT`` for direct ownership only a| `Transitivity`
+|===
+
+[caption=""]
+.Returns
+`Stream<ThingType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+attributeType.getOwners(transaction) attributeType.getOwners(transaction, [Annotation.UNIQUE]) attributeType.getOwners(transaction, Transitivity.TRANSITIVE) attributeType.getOwners(transaction, [Annotation.UNIQUE], Transitivity.TRANSITIVE)
+----
+
+[#_AttributeType_getOwners]
+==== getOwners
+
+[source,nodejs]
+----
+getOwners(transaction): Stream<ThingType>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a|  a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Stream<ThingType>`
+
+[#_AttributeType_getOwners]
+==== getOwners
+
+[source,nodejs]
+----
+getOwners(transaction, annotations): Stream<ThingType>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a|  a| `TypeDBTransaction`
+a| `annotations` a|  a| `Annotation[]`
+|===
+
+[caption=""]
+.Returns
+`Stream<ThingType>`
+
+[#_AttributeType_getOwners]
+==== getOwners
+
+[source,nodejs]
+----
+getOwners(transaction, transitivity): Stream<ThingType>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a|  a| `TypeDBTransaction`
+a| `transitivity` a|  a| `Transitivity`
+|===
+
+[caption=""]
+.Returns
+`Stream<ThingType>`
+
+[#_AttributeType_getOwns]
+==== getOwns
+
+[source,nodejs]
+----
+getOwns(transaction): Stream<AttributeType>
+----
+
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Stream<AttributeType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
+----
+
+[#_AttributeType_getOwns]
+==== getOwns
+
+[source,nodejs]
+----
+getOwns(transaction, valueType): Stream<AttributeType>
+----
+
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `valueType` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `ValueType`
+|===
+
+[caption=""]
+.Returns
+`Stream<AttributeType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
+----
+
+[#_AttributeType_getOwns]
+==== getOwns
+
+[source,nodejs]
+----
+getOwns(transaction, annotations): Stream<AttributeType>
+----
+
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `annotations` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `Annotation[]`
+|===
+
+[caption=""]
+.Returns
+`Stream<AttributeType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
+----
+
+[#_AttributeType_getOwns]
+==== getOwns
+
+[source,nodejs]
+----
+getOwns(transaction, valueType, annotations): Stream<AttributeType>
+----
+
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `valueType` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `ValueType`
+a| `annotations` a| Only retrieve attribute types owned with annotations. a| `Annotation[]`
+|===
+
+[caption=""]
+.Returns
+`Stream<AttributeType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
+----
+
+[#_AttributeType_getOwns]
+==== getOwns
+
+[source,nodejs]
+----
+getOwns(transaction, transitivity): Stream<AttributeType>
+----
+
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `transitivity` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `Transitivity`
+|===
+
+[caption=""]
+.Returns
+`Stream<AttributeType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
+----
+
+[#_AttributeType_getOwns]
+==== getOwns
+
+[source,nodejs]
+----
+getOwns(transaction, valueType, transitivity): Stream<AttributeType>
+----
+
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `valueType` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `ValueType`
+a| `transitivity` a| Only retrieve attribute types owned with annotations. a| `Transitivity`
+|===
+
+[caption=""]
+.Returns
+`Stream<AttributeType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
+----
+
+[#_AttributeType_getOwns]
+==== getOwns
+
+[source,nodejs]
+----
+getOwns(transaction, annotations, transitivity): Stream<AttributeType>
+----
+
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `annotations` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `Annotation[]`
+a| `transitivity` a| Only retrieve attribute types owned with annotations. a| `Transitivity`
+|===
+
+[caption=""]
+.Returns
+`Stream<AttributeType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
+----
+
+[#_AttributeType_getOwns]
+==== getOwns
+
+[source,nodejs]
+----
+getOwns(transaction, valueType, annotations, transitivity): Stream<AttributeType>
+----
+
+Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `valueType` a| If specified, only attribute types of this ``ValueType`` will be retrieved. a| `ValueType`
+a| `annotations` a| Only retrieve attribute types owned with annotations. a| `Annotation[]`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited ownership, ``Transitivity.EXPLICIT`` for direct ownership only a| `Transitivity`
+|===
+
+[caption=""]
+.Returns
+`Stream<AttributeType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
+----
+
+[#_AttributeType_getOwnsOverridden]
+==== getOwnsOverridden
+
+[source,nodejs]
+----
+getOwnsOverridden(transaction, attributeType): Promise<AttributeType>
+----
+
+Retrieves an ``AttributeType``, ownership of which is overridden for this ``ThingType`` by a given ``attribute_type``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `attributeType` a| The ``AttributeType`` that overrides requested ``AttributeType`` a| `AttributeType`
+|===
+
+[caption=""]
+.Returns
+`Promise<AttributeType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.getOwnsOverridden(transaction, attributeType)
+----
+
+[#_AttributeType_getPlays]
+==== getPlays
+
+[source,nodejs]
+----
+getPlays(transaction): Stream<RoleType>
+----
+
+Retrieves all direct and inherited (or direct only) roles that are allowed to be played by the instances of this ``ThingType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Stream<RoleType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.getPlays(transaction) thingType.getPlays(transaction, Transitivity.EXPLICIT)
+----
+
+[#_AttributeType_getPlays]
+==== getPlays
+
+[source,nodejs]
+----
+getPlays(transaction, transitivity): Stream<RoleType>
+----
+
+Retrieves all direct and inherited (or direct only) roles that are allowed to be played by the instances of this ``ThingType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect playing, ``Transitivity.EXPLICIT`` for direct playing only a| `Transitivity`
+|===
+
+[caption=""]
+.Returns
+`Stream<RoleType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.getPlays(transaction) thingType.getPlays(transaction, Transitivity.EXPLICIT)
+----
+
+[#_AttributeType_getPlaysOverridden]
+==== getPlaysOverridden
+
+[source,nodejs]
+----
+getPlaysOverridden(transaction, role): Promise<RoleType>
+----
+
+Retrieves a ``RoleType`` that is overridden by the given ``role_type`` for this ``ThingType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `role` a| The ``RoleType`` that overrides an inherited role a| `RoleType`
+|===
+
+[caption=""]
+.Returns
+`Promise<RoleType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.getPlaysOverridden(transaction, role)
+----
+
+[#_AttributeType_getRegex]
+==== getRegex
+
+[source,nodejs]
+----
+getRegex(transaction): Promise<string>
+----
+
+Retrieves the regular expression that is defined for this ``AttributeType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Promise<string>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+attributeType.getRegex(transaction)
+----
+
+[#_AttributeType_getString]
+==== getString
+
+[source,nodejs]
+----
+getString(transaction, value): Promise<Attribute>
+----
+
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| ``Attribute``’s value a| `string`
+|===
+
+[caption=""]
+.Returns
+`Promise<Attribute>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+attribute = attributeType.get(transaction, value)
+----
+
+[#_AttributeType_getSubtypes]
+==== getSubtypes
+
+[source,nodejs]
+----
+getSubtypes(transaction): Stream<AttributeType>
+----
+
+Retrieves all direct and indirect subtypes of the ``ThingType``. Equivalent to getSubtypes(transaction, Transitivity.TRANSITIVE)
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Stream<AttributeType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.getSubtypes(transaction)
+----
+
+[#_AttributeType_getSubtypes]
+==== getSubtypes
+
+[source,nodejs]
+----
+getSubtypes(transaction, valueType): Stream<AttributeType>
+----
+
+Retrieves all direct and indirect (or direct only) subtypes of the ``ThingType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `valueType` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `ValueType`
+|===
+
+[caption=""]
+.Returns
+`Stream<AttributeType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.getSubtypes(transaction, Transitivity.EXPLICIT)
+----
+
+[#_AttributeType_getSubtypes]
+==== getSubtypes
+
+[source,nodejs]
+----
+getSubtypes(transaction, transitivity): Stream<AttributeType>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a|  a| `TypeDBTransaction`
+a| `transitivity` a|  a| `Transitivity`
+|===
+
+[caption=""]
+.Returns
+`Stream<AttributeType>`
+
+[#_AttributeType_getSubtypes]
+==== getSubtypes
+
+[source,nodejs]
+----
+getSubtypes(transaction, valueType, transitivity): Stream<AttributeType>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a|  a| `TypeDBTransaction`
+a| `valueType` a|  a| `ValueType`
+a| `transitivity` a|  a| `Transitivity`
+|===
+
+[caption=""]
+.Returns
+`Stream<AttributeType>`
+
+[#_AttributeType_getSupertype]
+==== getSupertype
+
+[source,nodejs]
+----
+getSupertype(transaction): Promise<AttributeType>
+----
+
+Retrieves the most immediate supertype of the ``ThingType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Promise<AttributeType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.getSupertype(transaction)
+----
+
+[#_AttributeType_getSupertypes]
+==== getSupertypes
+
+[source,nodejs]
+----
+getSupertypes(transaction): Stream<AttributeType>
+----
+
+Retrieves all supertypes of the ``ThingType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Stream<AttributeType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.getSupertypes(transaction)
+----
+
+[#_AttributeType_getSyntax]
+==== getSyntax
+
+[source,nodejs]
+----
+getSyntax(transaction): Promise<string>
+----
+
+Produces a pattern for creating this ``ThingType`` in a ``define`` query.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Promise<string>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.getSyntax(transaction)
+----
+
+[#_AttributeType_isAttribute]
+==== isAttribute
+
+[source,nodejs]
+----
+isAttribute(): boolean
+----
+
+Checks if the concept is an ``Attribute``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isAttribute()
+----
+
+[#_AttributeType_isAttributeType]
+==== isAttributeType
+
+[source,nodejs]
+----
+isAttributeType(): boolean
+----
+
+Checks if the concept is an ``AttributeType``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isAttributeType()
+----
+
+[#_AttributeType_isDeleted]
+==== isDeleted
+
+[source,nodejs]
+----
+isDeleted(transaction): Promise<boolean>
+----
+
+Check if the concept has been deleted
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Promise<boolean>`
+
+[#_AttributeType_isEntity]
+==== isEntity
+
+[source,nodejs]
+----
+isEntity(): boolean
+----
+
+Checks if the concept is an ``Entity``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isEntity()
+----
+
+[#_AttributeType_isEntityType]
+==== isEntityType
+
+[source,nodejs]
+----
+isEntityType(): boolean
+----
+
+Checks if the concept is an ``EntityType``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isEntityType()
+----
+
+[#_AttributeType_isRelation]
+==== isRelation
+
+[source,nodejs]
+----
+isRelation(): boolean
+----
+
+Checks if the concept is a ``Relation``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isRelation()
+----
+
+[#_AttributeType_isRelationType]
+==== isRelationType
+
+[source,nodejs]
+----
+isRelationType(): boolean
+----
+
+Checks if the concept is a ``RelationType``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isRelationType()
+----
+
+[#_AttributeType_isRoleType]
+==== isRoleType
+
+[source,nodejs]
+----
+isRoleType(): boolean
+----
+
+Checks if the concept is a ``RoleType``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isRoleType()
+----
+
+[#_AttributeType_isThing]
+==== isThing
+
+[source,nodejs]
+----
+isThing(): boolean
+----
+
+Checks if the concept is a ``Thing``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isThing()
+----
+
+[#_AttributeType_isThingType]
+==== isThingType
+
+[source,nodejs]
+----
+isThingType(): boolean
+----
+
+Checks if the concept is a ``ThingType``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isThingType()
+----
+
+[#_AttributeType_isType]
+==== isType
+
+[source,nodejs]
+----
+isType(): boolean
+----
+
+Checks if the concept is a ``Type``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isType()
+----
+
+[#_AttributeType_isValue]
+==== isValue
+
+[source,nodejs]
+----
+isValue(): boolean
+----
+
+Checks if the concept is a ``Value``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isValue()
+----
+
+[#_AttributeType_put]
+==== put
+
+[source,nodejs]
+----
+put(transaction, value): Promise<Attribute>
+----
+
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| New ``Attribute``’s value a| `Value`
+|===
+
+[caption=""]
+.Returns
+`Promise<Attribute>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+attribute = attributeType.put(transaction, value)
+----
+
+[#_AttributeType_putBoolean]
+==== putBoolean
+
+[source,nodejs]
+----
+putBoolean(transaction, value): Promise<Attribute>
+----
+
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| New ``Attribute``’s value a| `boolean`
+|===
+
+[caption=""]
+.Returns
+`Promise<Attribute>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+attribute = attributeType.put(transaction, value)
+----
+
+[#_AttributeType_putDateTime]
+==== putDateTime
+
+[source,nodejs]
+----
+putDateTime(transaction, value): Promise<Attribute>
+----
+
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| New ``Attribute``’s value a| `Date`
+|===
+
+[caption=""]
+.Returns
+`Promise<Attribute>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+attribute = attributeType.put(transaction, value)
+----
+
+[#_AttributeType_putDouble]
+==== putDouble
+
+[source,nodejs]
+----
+putDouble(transaction, value): Promise<Attribute>
+----
+
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| New ``Attribute``’s value a| `number`
+|===
+
+[caption=""]
+.Returns
+`Promise<Attribute>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+attribute = attributeType.put(transaction, value)
+----
+
+[#_AttributeType_putLong]
+==== putLong
+
+[source,nodejs]
+----
+putLong(transaction, value): Promise<Attribute>
+----
+
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| New ``Attribute``’s value a| `number`
+|===
+
+[caption=""]
+.Returns
+`Promise<Attribute>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+attribute = attributeType.put(transaction, value)
+----
+
+[#_AttributeType_putString]
+==== putString
+
+[source,nodejs]
+----
+putString(transaction, value): Promise<Attribute>
+----
+
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| New ``Attribute``’s value a| `string`
+|===
+
+[caption=""]
+.Returns
+`Promise<Attribute>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+attribute = attributeType.put(transaction, value)
+----
+
+[#_AttributeType_setAbstract]
+==== setAbstract
+
+[source,nodejs]
+----
+setAbstract(transaction): Promise<void>
+----
+
+Set a ``ThingType`` to be abstract, meaning it cannot have instances.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.setAbstract(transaction)
+----
+
+[#_AttributeType_setLabel]
+==== setLabel
+
+[source,nodejs]
+----
+setLabel(transaction, label): Promise<void>
+----
+
+Renames the label of the type. The new label must remain unique.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `label` a| The new ``Label`` to be given to the type. a| `string`
+|===
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+type.setLabel(transaction, label)
+----
+
+[#_AttributeType_setOwns]
+==== setOwns
+
+[source,nodejs]
+----
+setOwns(transaction, attributeType): Promise<void>
+----
+
+Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `attributeType` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType`
+|===
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.setOwns(transaction, attributeType) thingType.setOwns(transaction, attributeType, overriddenType,[Annotation.KEY])
+----
+
+[#_AttributeType_setOwns]
+==== setOwns
+
+[source,nodejs]
+----
+setOwns(transaction, attributeType, annotations): Promise<void>
+----
+
+Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `attributeType` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType`
+a| `annotations` a| The ``AttributeType`` that this attribute ownership overrides, if applicable. a| `Annotation[]`
+|===
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.setOwns(transaction, attributeType) thingType.setOwns(transaction, attributeType, overriddenType,[Annotation.KEY])
+----
+
+[#_AttributeType_setOwns]
+==== setOwns
+
+[source,nodejs]
+----
+setOwns(transaction, attributeType, overriddenType): Promise<void>
+----
+
+Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `attributeType` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType`
+a| `overriddenType` a| The ``AttributeType`` that this attribute ownership overrides, if applicable. a| `AttributeType`
+|===
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.setOwns(transaction, attributeType) thingType.setOwns(transaction, attributeType, overriddenType,[Annotation.KEY])
+----
+
+[#_AttributeType_setOwns]
+==== setOwns
+
+[source,nodejs]
+----
+setOwns(transaction, attributeType, overriddenType, annotations): Promise<void>
+----
+
+Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `attributeType` a| The ``AttributeType`` to be owned by the instances of this type. a| `AttributeType`
+a| `overriddenType` a| The ``AttributeType`` that this attribute ownership overrides, if applicable. a| `AttributeType`
+a| `annotations` a| Adds annotations to the ownership. a| `Annotation[]`
+|===
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.setOwns(transaction, attributeType) thingType.setOwns(transaction, attributeType, overriddenType,[Annotation.KEY])
+----
+
+[#_AttributeType_setPlays]
+==== setPlays
+
+[source,nodejs]
+----
+setPlays(transaction, role): Promise<void>
+----
+
+Allows the instances of this ``ThingType`` to play the given role.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `role` a| The role to be played by the instances of this type a| `RoleType`
+|===
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.setPlays(transaction, role) thingType.setPlays(transaction, role, overriddenType)
+----
+
+[#_AttributeType_setPlays]
+==== setPlays
+
+[source,nodejs]
+----
+setPlays(transaction, role, overriddenType): Promise<void>
+----
+
+Allows the instances of this ``ThingType`` to play the given role.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `role` a| The role to be played by the instances of this type a| `RoleType`
+a| `overriddenType` a| The role type that this role overrides, if applicable a| `RoleType`
+|===
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.setPlays(transaction, role) thingType.setPlays(transaction, role, overriddenType)
+----
+
+[#_AttributeType_setRegex]
+==== setRegex
+
+[source,nodejs]
+----
+setRegex(transaction, regex): Promise<void>
+----
+
+Sets a regular expression as a constraint for this ``AttributeType``. ``Values`` of all ``Attribute``s of this type (inserted earlier or later) should match this regex. Can only be applied for ``AttributeType``s with a ``string`` value type.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `regex` a| Regular expression a| `string`
+|===
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+attributeType.setRegex(transaction, regex)
+----
+
+[#_AttributeType_setSupertype]
+==== setSupertype
+
+[source,nodejs]
+----
+setSupertype(transaction, type): Promise<void>
+----
+
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a|  a| `TypeDBTransaction`
+a| `type` a|  a| `AttributeType`
+|===
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[#_AttributeType_toJSONRecord]
+==== toJSONRecord
+
+[source,nodejs]
+----
+toJSONRecord(): Record<string, string | number | boolean>
+----
+
+Retrieves the concept as JSON.
+
+[caption=""]
+.Returns
+`Record<string, string | number | boolean>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.toJSONRecord()
+----
+
+[#_AttributeType_unsetAbstract]
+==== unsetAbstract
+
+[source,nodejs]
+----
+unsetAbstract(transaction): Promise<void>
+----
+
+Set a ``ThingType`` to be non-abstract, meaning it can have instances.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.unsetAbstract(transaction)
+----
+
+[#_AttributeType_unsetOwns]
+==== unsetOwns
+
+[source,nodejs]
+----
+unsetOwns(transaction, attributeType): Promise<void>
+----
+
+Disallows the instances of this ``ThingType`` from owning the given ``AttributeType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `attributeType` a| The ``AttributeType`` to not be owned by the type. a| `AttributeType`
+|===
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.unsetOwns(transaction, attributeType)
+----
+
+[#_AttributeType_unsetPlays]
+==== unsetPlays
+
+[source,nodejs]
+----
+unsetPlays(transaction, role): Promise<void>
+----
+
+Disallows the instances of this ``ThingType`` from playing the given role.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `role` a| The role to not be played by the instances of this type. a| `RoleType`
+|===
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+thingType.unsetPlays(transaction, role)
+----
+
+[#_AttributeType_unsetRegex]
+==== unsetRegex
+
+[source,nodejs]
+----
+unsetRegex(transaction): Promise<void>
+----
+
+Removes the regular expression that is defined for this ``AttributeType``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+attributeType.unsetRegex(transaction)
+----
+
+// end::methods[]
+

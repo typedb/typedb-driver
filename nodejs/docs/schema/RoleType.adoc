@@ -1,0 +1,948 @@
+[#_RoleType]
+=== RoleType
+
+*Supertypes:*
+
+* `Type`
+
+Roles are special internal types used by relations. We can not create an instance of a role in a database. But we can set an instance of another type (role player) to play a role in a particular instance of a relation type. Roles allow a schema to enforce logical constraints on types of role players.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `abstract` a| `boolean` a| Whether the type is prevented from having data instances (i.e., abstract).
+a| `label` a| `Label` a| The unique label of the type.
+a| `root` a| `boolean` a| Whether the type is a root type.
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_RoleType_asAttribute]
+==== asAttribute
+
+[source,nodejs]
+----
+asAttribute(): Attribute
+----
+
+Casts the concept to ``Attribute``.
+
+[caption=""]
+.Returns
+`Attribute`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asAttribute()
+----
+
+[#_RoleType_asAttributeType]
+==== asAttributeType
+
+[source,nodejs]
+----
+asAttributeType(): AttributeType
+----
+
+Casts the concept to ``AttributeType``.
+
+[caption=""]
+.Returns
+`AttributeType`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asAttributeType()
+----
+
+[#_RoleType_asEntity]
+==== asEntity
+
+[source,nodejs]
+----
+asEntity(): Entity
+----
+
+Casts the concept to ``Entity``.
+
+[caption=""]
+.Returns
+`Entity`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asEntity()
+----
+
+[#_RoleType_asEntityType]
+==== asEntityType
+
+[source,nodejs]
+----
+asEntityType(): EntityType
+----
+
+Casts the concept to ``EntityType``.
+
+[caption=""]
+.Returns
+`EntityType`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asEntityType()
+----
+
+[#_RoleType_asRelation]
+==== asRelation
+
+[source,nodejs]
+----
+asRelation(): Relation
+----
+
+Casts the concept to ``Relation``.
+
+[caption=""]
+.Returns
+`Relation`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asRelation()
+----
+
+[#_RoleType_asRelationType]
+==== asRelationType
+
+[source,nodejs]
+----
+asRelationType(): RelationType
+----
+
+Casts the concept to ``RelationType``.
+
+[caption=""]
+.Returns
+`RelationType`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asRelationType()
+----
+
+[#_RoleType_asRoleType]
+==== asRoleType
+
+[source,nodejs]
+----
+asRoleType(): RoleType
+----
+
+Casts the concept to ``RoleType``.
+
+[caption=""]
+.Returns
+`RoleType`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asRoleType()
+----
+
+[#_RoleType_asThing]
+==== asThing
+
+[source,nodejs]
+----
+asThing(): Thing
+----
+
+Casts the concept to ``Thing``.
+
+[caption=""]
+.Returns
+`Thing`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asThing()
+----
+
+[#_RoleType_asThingType]
+==== asThingType
+
+[source,nodejs]
+----
+asThingType(): ThingType
+----
+
+Casts the concept to ``ThingType``.
+
+[caption=""]
+.Returns
+`ThingType`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asThingType()
+----
+
+[#_RoleType_asType]
+==== asType
+
+[source,nodejs]
+----
+asType(): Type
+----
+
+Casts the concept to ``Type``.
+
+[caption=""]
+.Returns
+`Type`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asType()
+----
+
+[#_RoleType_asValue]
+==== asValue
+
+[source,nodejs]
+----
+asValue(): Value
+----
+
+Casts the concept to ``Value``.
+
+[caption=""]
+.Returns
+`Value`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asValue()
+----
+
+[#_RoleType_delete]
+==== delete
+
+[source,nodejs]
+----
+delete(transaction): Promise<void>
+----
+
+Deletes this type from the database.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+type.delete(transaction)
+----
+
+[#_RoleType_equals]
+==== equals
+
+[source,nodejs]
+----
+equals(concept): boolean
+----
+
+Checks if this concept is equal to the argument ``concept``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `concept` a| The concept to compare to. a| `Concept`
+|===
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_RoleType_getPlayerInstances]
+==== getPlayerInstances
+
+[source,nodejs]
+----
+getPlayerInstances(transaction): Stream<Thing>
+----
+
+Retrieves the ``Thing`` instances that play this role.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Stream<Thing>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+roleType.getPlayerInstances(transaction, transitivity)
+----
+
+[#_RoleType_getPlayerInstances]
+==== getPlayerInstances
+
+[source,nodejs]
+----
+getPlayerInstances(transaction, transitivity): Stream<Thing>
+----
+
+Retrieves the ``Thing`` instances that play this role.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect playing, ``Transitivity.EXPLICIT`` for direct playing only a| `Transitivity`
+|===
+
+[caption=""]
+.Returns
+`Stream<Thing>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+roleType.getPlayerInstances(transaction, transitivity)
+----
+
+[#_RoleType_getPlayerTypes]
+==== getPlayerTypes
+
+[source,nodejs]
+----
+getPlayerTypes(transaction): Stream<ThingType>
+----
+
+Retrieves the ``ThingType``s whose instances play this role.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Stream<ThingType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+roleType.getPlayerTypes(transaction, transitivity)
+----
+
+[#_RoleType_getPlayerTypes]
+==== getPlayerTypes
+
+[source,nodejs]
+----
+getPlayerTypes(transaction, transitivity): Stream<ThingType>
+----
+
+Retrieves the ``ThingType``s whose instances play this role.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect playing, ``Transitivity.EXPLICIT`` for direct playing only a| `Transitivity`
+|===
+
+[caption=""]
+.Returns
+`Stream<ThingType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+roleType.getPlayerTypes(transaction, transitivity)
+----
+
+[#_RoleType_getRelationInstances]
+==== getRelationInstances
+
+[source,nodejs]
+----
+getRelationInstances(transaction): Stream<Relation>
+----
+
+Retrieves the ``Relation`` instances that this role is related to.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Stream<Relation>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+roleType.getRelationInstances(transaction, transitivity)
+----
+
+[#_RoleType_getRelationInstances]
+==== getRelationInstances
+
+[source,nodejs]
+----
+getRelationInstances(transaction, transitivity): Stream<Relation>
+----
+
+Retrieves the ``Relation`` instances that this role is related to.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect relation, ``Transitivity.EXPLICIT`` for direct relation only a| `Transitivity`
+|===
+
+[caption=""]
+.Returns
+`Stream<Relation>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+roleType.getRelationInstances(transaction, transitivity)
+----
+
+[#_RoleType_getRelationType]
+==== getRelationType
+
+[source,nodejs]
+----
+getRelationType(transaction): Promise<RelationType>
+----
+
+Retrieves the ``RelationType`` that this role is directly related to.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Promise<RelationType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+roleType.getRelationType(transaction)
+----
+
+[#_RoleType_getRelationTypes]
+==== getRelationTypes
+
+[source,nodejs]
+----
+getRelationTypes(transaction): Stream<RelationType>
+----
+
+Retrieves ``RelationType``s that this role is related to (directly or indirectly).
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Stream<RelationType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+roleType.getRelationTypes(transaction)
+----
+
+[#_RoleType_getSubtypes]
+==== getSubtypes
+
+[source,nodejs]
+----
+getSubtypes(transaction): Stream<RoleType>
+----
+
+Retrieves all direct and indirect (or direct only) subtypes of the type.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Stream<RoleType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+type.getSubtypes(transaction) type.getSubtypes(transaction, Transitivity.EXPLICIT)
+----
+
+[#_RoleType_getSupertype]
+==== getSupertype
+
+[source,nodejs]
+----
+getSupertype(transaction): Promise<RoleType>
+----
+
+Retrieves the most immediate supertype of the type.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Promise<RoleType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+type.getSupertype(transaction)
+----
+
+[#_RoleType_getSupertypes]
+==== getSupertypes
+
+[source,nodejs]
+----
+getSupertypes(transaction): Stream<RoleType>
+----
+
+Retrieves all supertypes of the type.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Stream<RoleType>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+type.getSupertypes(transaction)
+----
+
+[#_RoleType_isAttribute]
+==== isAttribute
+
+[source,nodejs]
+----
+isAttribute(): boolean
+----
+
+Checks if the concept is an ``Attribute``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isAttribute()
+----
+
+[#_RoleType_isAttributeType]
+==== isAttributeType
+
+[source,nodejs]
+----
+isAttributeType(): boolean
+----
+
+Checks if the concept is an ``AttributeType``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isAttributeType()
+----
+
+[#_RoleType_isDeleted]
+==== isDeleted
+
+[source,nodejs]
+----
+isDeleted(transaction): Promise<boolean>
+----
+
+Check if the concept has been deleted
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Promise<boolean>`
+
+[#_RoleType_isEntity]
+==== isEntity
+
+[source,nodejs]
+----
+isEntity(): boolean
+----
+
+Checks if the concept is an ``Entity``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isEntity()
+----
+
+[#_RoleType_isEntityType]
+==== isEntityType
+
+[source,nodejs]
+----
+isEntityType(): boolean
+----
+
+Checks if the concept is an ``EntityType``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isEntityType()
+----
+
+[#_RoleType_isRelation]
+==== isRelation
+
+[source,nodejs]
+----
+isRelation(): boolean
+----
+
+Checks if the concept is a ``Relation``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isRelation()
+----
+
+[#_RoleType_isRelationType]
+==== isRelationType
+
+[source,nodejs]
+----
+isRelationType(): boolean
+----
+
+Checks if the concept is a ``RelationType``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isRelationType()
+----
+
+[#_RoleType_isRoleType]
+==== isRoleType
+
+[source,nodejs]
+----
+isRoleType(): boolean
+----
+
+Checks if the concept is a ``RoleType``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isRoleType()
+----
+
+[#_RoleType_isThing]
+==== isThing
+
+[source,nodejs]
+----
+isThing(): boolean
+----
+
+Checks if the concept is a ``Thing``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isThing()
+----
+
+[#_RoleType_isThingType]
+==== isThingType
+
+[source,nodejs]
+----
+isThingType(): boolean
+----
+
+Checks if the concept is a ``ThingType``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isThingType()
+----
+
+[#_RoleType_isType]
+==== isType
+
+[source,nodejs]
+----
+isType(): boolean
+----
+
+Checks if the concept is a ``Type``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isType()
+----
+
+[#_RoleType_isValue]
+==== isValue
+
+[source,nodejs]
+----
+isValue(): boolean
+----
+
+Checks if the concept is a ``Value``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isValue()
+----
+
+[#_RoleType_setLabel]
+==== setLabel
+
+[source,nodejs]
+----
+setLabel(transaction, label): Promise<void>
+----
+
+Renames the label of the type. The new label must remain unique.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `label` a| The new ``Label`` to be given to the type. a| `string`
+|===
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+type.setLabel(transaction, label)
+----
+
+[#_RoleType_toJSONRecord]
+==== toJSONRecord
+
+[source,nodejs]
+----
+toJSONRecord(): Record<string, string | number | boolean>
+----
+
+Retrieves the concept as JSON.
+
+[caption=""]
+.Returns
+`Record<string, string | number | boolean>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.toJSONRecord()
+----
+
+// end::methods[]
+

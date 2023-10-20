@@ -1,0 +1,16 @@
+[#_enum_Numeric]
+=== Numeric
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols="~"]
+[options="header"]
+|===
+|Variant
+a| `Double(f64)`
+a| `Long(i64)`
+a| `NaN`
+|===
+// end::enum_constants[]
+

@@ -1,0 +1,45 @@
+[#_enum_Value]
+=== Value
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols="~"]
+[options="header"]
+|===
+|Variant
+a| `Boolean(bool)`
+a| `DateTime(NaiveDateTime)`
+a| `Double(f64)`
+a| `Long(i64)`
+a| `String(String)`
+|===
+// end::enum_constants[]
+
+// tag::methods[]
+[#_enum_Value_method_get_type]
+==== get_type
+
+[source,rust]
+----
+pub fn get_type(&self) -> ValueType
+----
+
+Retrieves the ``ValueType`` of this value concept.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+ValueType
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+value.get_value_type();
+----
+
+// end::methods[]
+

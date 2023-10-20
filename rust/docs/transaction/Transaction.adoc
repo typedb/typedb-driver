@@ -1,0 +1,282 @@
+[#_struct_Transaction]
+=== Transaction
+
+*Implements traits:*
+
+* `Debug`
+
+// tag::methods[]
+[#_struct_Transaction_method_commit]
+==== commit
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn commit(self) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn commit(self) -> Result
+----
+
+--
+====
+
+Commits the changes made via this transaction to the TypeDB database. Whether or not the transaction is commited successfully, it gets closed after the commit call.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+transaction.commit().await
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+transaction.commit()
+----
+
+--
+====
+
+[#_struct_Transaction_method_concept]
+==== concept
+
+[source,rust]
+----
+pub fn concept(&self) -> &ConceptManager
+----
+
+The ``ConceptManager`` for this transaction, providing access to all Concept API methods.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&ConceptManager
+----
+
+[#_struct_Transaction_method_force_close]
+==== force_close
+
+[source,rust]
+----
+pub fn force_close(&self)
+----
+
+Closes the transaction.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+null
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+transaction.force_close()
+----
+
+[#_struct_Transaction_method_is_open]
+==== is_open
+
+[source,rust]
+----
+pub fn is_open(&self) -> bool
+----
+
+Closes the transaction.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+transaction.close()
+----
+
+[#_struct_Transaction_method_logic]
+==== logic
+
+[source,rust]
+----
+pub fn logic(&self) -> &LogicManager
+----
+
+Retrieves the ``LogicManager`` for this Transaction, providing access to all Concept API - Logic methods.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&LogicManager
+----
+
+[#_struct_Transaction_method_on_close]
+==== on_close
+
+[source,rust]
+----
+pub fn on_close(
+    &self,
+    callback: impl FnOnce(ConnectionError) + Send + Sync + 'static
+)
+----
+
+Registers a callback function which will be executed when this session is closed.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `function` a| The callback function. a| 
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+null
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+transaction.on_close(function)
+----
+
+[#_struct_Transaction_method_query]
+==== query
+
+[source,rust]
+----
+pub fn query(&self) -> &QueryManager
+----
+
+Retrieves the``QueryManager`` for this Transaction, from which any TypeQL query can be executed.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&QueryManager
+----
+
+[#_struct_Transaction_method_rollback]
+==== rollback
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn rollback(&self) -> Result
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn rollback(&self) -> Result
+----
+
+--
+====
+
+Rolls back the uncommitted changes made via this transaction.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+transaction.rollback().await
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+transaction.rollback()
+----
+
+--
+====
+
+[#_struct_Transaction_method_type]
+==== type_
+
+[source,rust]
+----
+pub fn type_(&self) -> TransactionType
+----
+
+Retrieves the transaction’s type (READ or WRITE).
+
+[caption=""]
+.Returns
+[source,rust]
+----
+TransactionType
+----
+
+// end::methods[]
+

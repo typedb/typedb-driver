@@ -1,0 +1,22 @@
+[#_struct_NumericGroup]
+=== NumericGroup
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `PartialEq<NumericGroup>`
+* `StructuralPartialEq`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `numeric` a| `Numeric` a| 
+a| `owner` a| `Concept` a| The concept that is the group owner.
+|===
+// end::properties[]
+

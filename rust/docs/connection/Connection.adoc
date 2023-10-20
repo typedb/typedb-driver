@@ -1,0 +1,139 @@
+[#_struct_Connection]
+=== Connection
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+// tag::methods[]
+[#_struct_Connection_method_force_close]
+==== force_close
+
+[source,rust]
+----
+pub fn force_close(&self) -> Result
+----
+
+Closes this connection.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+connection.force_close()
+----
+
+[#_struct_Connection_method_is_open]
+==== is_open
+
+[source,rust]
+----
+pub fn is_open(&self) -> bool
+----
+
+Checks it this connection is opened.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+connection.is_open()
+----
+
+[#_struct_Connection_method_new_core]
+==== new_core
+
+[source,rust]
+----
+pub fn new_core(address: impl AsRef<str>) -> Result<Self>
+----
+
+Creates a new TypeDB Server connection.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `address` a| The address (host:port) on which the TypeDB Server is running a| `impl AsRef<str>`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Self>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+Connection::new_core("127.0.0.1:1729")
+----
+
+[#_struct_Connection_method_new_enterprise]
+==== new_enterprise
+
+[source,rust]
+----
+pub fn new_enterprise<T: AsRef<str> + Sync>(
+    init_addresses: &[T],
+    credential: Credential
+) -> Result<Self>
+----
+
+Creates a new TypeDB Enterprise connection.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `init_addresses` a| Addresses (host:port) on which TypeDB Enterprise nodes are running a| `&[T]`
+a| `credential` a| User credential and TLS encryption setting a| `Credential`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Self>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+Connection::new_enterprise(
+    &["localhost:11729", "localhost:21729", "localhost:31729"],
+    Credential::with_tls(
+        "admin",
+        "password",
+        Some(&PathBuf::from(
+            std::env::var("ROOT_CA")
+                .expect("ROOT_CA environment variable needs to be set for enterprise tests to run"),
+        )),
+    )?,
+)
+----
+
+// end::methods[]
+

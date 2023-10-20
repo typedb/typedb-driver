@@ -1,0 +1,128 @@
+[#_DatabaseManager]
+=== DatabaseManager
+
+*Package*: `com.vaticle.typedb.driver.api.database`
+
+Provides access to all database management methods.
+
+// tag::methods[]
+[#_DatabaseManager_all_]
+==== all
+
+[source,java]
+----
+@CheckReturnValue
+java.util.List<Database> all()
+----
+
+Retrieves all databases present on the TypeDB server 
+
+
+[caption=""]
+.Returns
+`java.util.List<Database>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.databases().all()
+----
+
+[#_DatabaseManager_contains_java_lang_String]
+==== contains
+
+[source,java]
+----
+@CheckReturnValue
+boolean contains​(java.lang.String name)
+----
+
+Checks if a database with the given name exists 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| The database name to be checked a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.databases().contains(name)
+----
+
+[#_DatabaseManager_create_java_lang_String]
+==== create
+
+[source,java]
+----
+void create​(java.lang.String name)
+----
+
+Create a database with the given name 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| The name of the database to be created a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.databases().create(name)
+----
+
+[#_DatabaseManager_get_java_lang_String]
+==== get
+
+[source,java]
+----
+@CheckReturnValue
+Database get​(java.lang.String name)
+----
+
+Retrieve the database with the given name. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| The name of the database to retrieve a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`Database`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+driver.databases().get(name)
+----
+
+// end::methods[]
+

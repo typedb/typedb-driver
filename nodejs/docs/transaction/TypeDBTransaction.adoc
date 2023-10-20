@@ -1,0 +1,105 @@
+[#_TypeDBTransaction]
+=== TypeDBTransaction
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `concepts` a| `ConceptManager` a| The ConceptManager for this transaction, providing access to all Concept API methods.
+a| `logic` a| `LogicManager` a| The LogicManager for this Transaction, providing access to all Concept API - Logic methods.
+a| `options` a| `TypeDBOptions` a| The options for the transaction.
+a| `query` a| `QueryManager` a| TheQueryManager for this Transaction, from which any TypeQL query can be executed.
+a| `type` a| `TransactionType` a| The transaction’s type (READ or WRITE)
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_TypeDBTransaction_close]
+==== close
+
+[source,nodejs]
+----
+close(): Promise<void>
+----
+
+Closes the transaction.
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+transaction.close()
+----
+
+[#_TypeDBTransaction_commit]
+==== commit
+
+[source,nodejs]
+----
+commit(): Promise<void>
+----
+
+Commits the changes made via this transaction to the TypeDB database. Whether or not the transaction is commited successfully, it gets closed after the commit call.
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+transaction.commit()
+----
+
+[#_TypeDBTransaction_isOpen]
+==== isOpen
+
+[source,nodejs]
+----
+isOpen(): boolean
+----
+
+Checks whether this transaction is open.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+transaction.isOpen()
+----
+
+[#_TypeDBTransaction_rollback]
+==== rollback
+
+[source,nodejs]
+----
+rollback(): Promise<void>
+----
+
+Rolls back the uncommitted changes made via this transaction.
+
+[caption=""]
+.Returns
+`Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+transaction.rollback()
+----
+
+// end::methods[]
+

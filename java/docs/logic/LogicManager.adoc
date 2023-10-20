@@ -1,0 +1,101 @@
+[#_LogicManager]
+=== LogicManager
+
+*Package*: `com.vaticle.typedb.driver.api.logic`
+
+Provides methods for manipulating rules in the database.
+
+// tag::methods[]
+[#_LogicManager_getRule_java_lang_String]
+==== getRule
+
+[source,java]
+----
+@Nullable
+@CheckReturnValue
+Rule getRule​(java.lang.String label)
+----
+
+Retrieves the Rule that has the given label. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the Rule to create or retrieve a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`Rule`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+transaction.logic().getRule(label)
+----
+
+[#_LogicManager_getRules_]
+==== getRules
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends Rule> getRules()
+----
+
+Retrieves all rules. 
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends Rule>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+transaction.logic().getRules()
+----
+
+[#_LogicManager_putRule_java_lang_String_com_vaticle_typeql_lang_pattern_Pattern_com_vaticle_typeql_lang_pattern_Pattern]
+==== putRule
+
+[source,java]
+----
+Rule putRule​(java.lang.String label,
+             com.vaticle.typeql.lang.pattern.Pattern when,
+             com.vaticle.typeql.lang.pattern.Pattern then)
+----
+
+Creates a new Rule if none exists with the given label, or replaces the existing one. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the Rule to create or replace a| `java.lang.String`
+a| `when` a| The when body of the rule to create a| `com.vaticle.typeql.lang.pattern.Pattern`
+a| `then` a| The then body of the rule to create a| `com.vaticle.typeql.lang.pattern.Pattern`
+|===
+
+[caption=""]
+.Returns
+`Rule`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+transaction.logic().putRule(label, when, then)
+----
+
+// end::methods[]
+

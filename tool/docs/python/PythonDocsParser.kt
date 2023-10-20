@@ -46,6 +46,13 @@ class PythonDocParser : Callable<Unit> {
     @CommandLine.Option(names = ["--output", "-o"], required = true)
     private lateinit var outputDirectoryName: String
 
+    /**
+     * --dir=file=directory: put a file into the specified directory
+     * If no directory is specified for at least one file, an exception will be thrown.
+     */
+    @CommandLine.Option(names = ["--dir", "-d"], required = true)
+    private lateinit var dirs: HashMap<String, String>
+
     @Override
     override fun call() {
         val inputDirectoryName = inputDirectoryNames[0]
@@ -71,7 +78,13 @@ class PythonDocParser : Callable<Unit> {
                 }
                 if (parsedClass.isNotEmpty()) {
                     val parsedClassAsciiDoc = parsedClass.toAsciiDoc("python")
-                    val outputFile = docsDir.resolve("${parsedClass.name}.adoc").toFile()
+                    val fileName = "${parsedClass.name}.adoc"
+                    val fileDir = docsDir.resolve(dirs[fileName]
+                        ?: throw NullPointerException("Unknown directory for the file $fileName"))
+                    if (!fileDir.toFile().exists()) {
+                        Files.createDirectory(fileDir)
+                    }
+                    val outputFile = fileDir.resolve(fileName).toFile()
                     outputFile.createNewFile()
                     outputFile.writeText(parsedClassAsciiDoc)
                 }

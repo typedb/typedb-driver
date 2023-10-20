@@ -1,0 +1,657 @@
+[#_trait_ThingAPI]
+=== Trait ThingAPI
+
+*Implementors:*
+
+* `Attribute`
+* `Entity`
+* `Relation`
+
+// tag::methods[]
+[#_trait_ThingAPI_method_delete]
+==== delete
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn delete<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 self,
+    transaction: &'life1 Transaction<'life2>
+) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn delete(&self, transaction: &Transaction<'_>) -> Result
+----
+
+--
+====
+
+Deletes this ``Thing``.
+
+[caption=""]
+.Input parameters
+[tabs]
+====
+async::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+|===
+--
+
+sync::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+|===
+--
+====
+
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result
+----
+
+--
+====
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+thing.delete(transaction).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+thing.delete(transaction);
+----
+
+--
+====
+
+[#_trait_ThingAPI_method_get_has]
+==== get_has
+
+[source,rust]
+----
+fn get_has(
+    &self,
+    transaction: &Transaction<'_>,
+    attribute_types: Vec<AttributeType>,
+    annotations: Vec<Annotation>
+) -> Result<BoxStream<'_, Result<Attribute>>>
+----
+
+Retrieves the ``Attribute``s that this ``Thing`` owns. Optionally, filtered by an ``AttributeType`` or a list of ``AttributeType``s. Optionally, filtered by ``Annotation``s.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `attribute_type` a| The ``AttributeType`` to filter the attributes by a| 
+a| `attribute_types` a| The ``AttributeType``s to filter the attributes by a| `Vec<AttributeType>`
+a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a| `Vec<Annotation>`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<Attribute>>>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+thing.get_has(transaction, attribute_type, annotations=vec![Annotation::Key]);
+----
+
+[#_trait_ThingAPI_method_get_playing]
+==== get_playing
+
+[source,rust]
+----
+fn get_playing(
+    &self,
+    transaction: &Transaction<'_>
+) -> Result<BoxStream<'_, Result<RoleType>>>
+----
+
+Retrieves the roles that this ``Thing`` is currently playing.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<RoleType>>>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+thing.get_playing(transaction);
+----
+
+[#_trait_ThingAPI_method_get_relations]
+==== get_relations
+
+[source,rust]
+----
+fn get_relations(
+    &self,
+    transaction: &Transaction<'_>,
+    role_types: Vec<RoleType>
+) -> Result<BoxStream<'_, Result<Relation>>>
+----
+
+Retrieves all the ``Relations`` which this ``Thing`` plays a role in, optionally filtered by one or more given roles.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `role_types` a| The list of roles to filter the relations by. a| `Vec<RoleType>`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<BoxStream<'_, Result<Relation>>>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+thing.get_relations(transaction, role_types);
+----
+
+[#_trait_ThingAPI_tymethod_iid]
+==== iid
+
+[source,rust]
+----
+fn iid(&self) -> &IID
+----
+
+Retrieves the unique id of the ``Thing``.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+&IID
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+thing.iid();
+----
+
+[#_trait_ThingAPI_tymethod_is_deleted]
+==== is_deleted
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn is_deleted<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 self,
+    transaction: &'life1 Transaction<'life2>
+) -> Pin<Box<dyn Future<Output = Result<bool>> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool>
+----
+
+--
+====
+
+Checks if this ``Thing`` is deleted.
+
+[caption=""]
+.Input parameters
+[tabs]
+====
+async::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+|===
+--
+
+sync::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+|===
+--
+====
+
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result<bool>> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result<bool>
+----
+
+--
+====
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+thing.is_deleted(transaction).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+thing.is_deleted(transaction);
+----
+
+--
+====
+
+[#_trait_ThingAPI_tymethod_is_inferred]
+==== is_inferred
+
+[source,rust]
+----
+fn is_inferred(&self) -> bool
+----
+
+Checks if this ``Thing`` is inferred by a [Reasoning Rule].
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+thing.is_inferred();
+----
+
+[#_trait_ThingAPI_method_set_has]
+==== set_has
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn set_has<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 self,
+    transaction: &'life1 Transaction<'life2>,
+    attribute: Attribute
+) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn set_has(&self, transaction: &Transaction<'_>, attribute: Attribute) -> Result
+----
+
+--
+====
+
+Assigns an ``Attribute`` to be owned by this ``Thing``.
+
+[caption=""]
+.Input parameters
+[tabs]
+====
+async::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute`
+|===
+--
+
+sync::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute`
+|===
+--
+====
+
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result
+----
+
+--
+====
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+thing.set_has(transaction, attribute).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+thing.set_has(transaction, attribute);
+----
+
+--
+====
+
+[#_trait_ThingAPI_method_unset_has]
+==== unset_has
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+fn unset_has<'life0, 'life1, 'life2, 'async_trait>(
+    &'life0 self,
+    transaction: &'life1 Transaction<'life2>,
+    attribute: Attribute
+) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+fn unset_has(&self, transaction: &Transaction<'_>, attribute: Attribute) -> Result
+----
+
+--
+====
+
+Unassigns an ``Attribute`` from this ``Thing``.
+
+[caption=""]
+.Input parameters
+[tabs]
+====
+async::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attribute`
+|===
+--
+
+sync::
++
+--
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attribute`
+|===
+--
+====
+
+
+[caption=""]
+.Returns
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
+where
+     Self: 'async_trait,
+     'life0: 'async_trait,
+     'life1: 'async_trait,
+     'life2: 'async_trait,
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+Result
+----
+
+--
+====
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+thing.unset_has(transaction, attribute).await;
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+thing.unset_has(transaction, attribute);
+----
+
+--
+====
+
+// end::methods[]
+

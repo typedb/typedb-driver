@@ -1,0 +1,512 @@
+[#_Concept]
+=== Concept
+
+// tag::methods[]
+[#_Concept_asAttribute]
+==== asAttribute
+
+[source,nodejs]
+----
+asAttribute(): Attribute
+----
+
+Casts the concept to ``Attribute``.
+
+[caption=""]
+.Returns
+`Attribute`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asAttribute()
+----
+
+[#_Concept_asAttributeType]
+==== asAttributeType
+
+[source,nodejs]
+----
+asAttributeType(): AttributeType
+----
+
+Casts the concept to ``AttributeType``.
+
+[caption=""]
+.Returns
+`AttributeType`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asAttributeType()
+----
+
+[#_Concept_asEntity]
+==== asEntity
+
+[source,nodejs]
+----
+asEntity(): Entity
+----
+
+Casts the concept to ``Entity``.
+
+[caption=""]
+.Returns
+`Entity`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asEntity()
+----
+
+[#_Concept_asEntityType]
+==== asEntityType
+
+[source,nodejs]
+----
+asEntityType(): EntityType
+----
+
+Casts the concept to ``EntityType``.
+
+[caption=""]
+.Returns
+`EntityType`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asEntityType()
+----
+
+[#_Concept_asRelation]
+==== asRelation
+
+[source,nodejs]
+----
+asRelation(): Relation
+----
+
+Casts the concept to ``Relation``.
+
+[caption=""]
+.Returns
+`Relation`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asRelation()
+----
+
+[#_Concept_asRelationType]
+==== asRelationType
+
+[source,nodejs]
+----
+asRelationType(): RelationType
+----
+
+Casts the concept to ``RelationType``.
+
+[caption=""]
+.Returns
+`RelationType`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asRelationType()
+----
+
+[#_Concept_asRoleType]
+==== asRoleType
+
+[source,nodejs]
+----
+asRoleType(): RoleType
+----
+
+Casts the concept to ``RoleType``.
+
+[caption=""]
+.Returns
+`RoleType`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asRoleType()
+----
+
+[#_Concept_asThing]
+==== asThing
+
+[source,nodejs]
+----
+asThing(): Thing
+----
+
+Casts the concept to ``Thing``.
+
+[caption=""]
+.Returns
+`Thing`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asThing()
+----
+
+[#_Concept_asThingType]
+==== asThingType
+
+[source,nodejs]
+----
+asThingType(): ThingType
+----
+
+Casts the concept to ``ThingType``.
+
+[caption=""]
+.Returns
+`ThingType`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asThingType()
+----
+
+[#_Concept_asType]
+==== asType
+
+[source,nodejs]
+----
+asType(): Type
+----
+
+Casts the concept to ``Type``.
+
+[caption=""]
+.Returns
+`Type`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asType()
+----
+
+[#_Concept_asValue]
+==== asValue
+
+[source,nodejs]
+----
+asValue(): Value
+----
+
+Casts the concept to ``Value``.
+
+[caption=""]
+.Returns
+`Value`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.asValue()
+----
+
+[#_Concept_equals]
+==== equals
+
+[source,nodejs]
+----
+equals(concept): boolean
+----
+
+Checks if this concept is equal to the argument ``concept``.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `concept` a| The concept to compare to. a| `Concept`
+|===
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Concept_isAttribute]
+==== isAttribute
+
+[source,nodejs]
+----
+isAttribute(): boolean
+----
+
+Checks if the concept is an ``Attribute``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isAttribute()
+----
+
+[#_Concept_isAttributeType]
+==== isAttributeType
+
+[source,nodejs]
+----
+isAttributeType(): boolean
+----
+
+Checks if the concept is an ``AttributeType``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isAttributeType()
+----
+
+[#_Concept_isEntity]
+==== isEntity
+
+[source,nodejs]
+----
+isEntity(): boolean
+----
+
+Checks if the concept is an ``Entity``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isEntity()
+----
+
+[#_Concept_isEntityType]
+==== isEntityType
+
+[source,nodejs]
+----
+isEntityType(): boolean
+----
+
+Checks if the concept is an ``EntityType``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isEntityType()
+----
+
+[#_Concept_isRelation]
+==== isRelation
+
+[source,nodejs]
+----
+isRelation(): boolean
+----
+
+Checks if the concept is a ``Relation``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isRelation()
+----
+
+[#_Concept_isRelationType]
+==== isRelationType
+
+[source,nodejs]
+----
+isRelationType(): boolean
+----
+
+Checks if the concept is a ``RelationType``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isRelationType()
+----
+
+[#_Concept_isRoleType]
+==== isRoleType
+
+[source,nodejs]
+----
+isRoleType(): boolean
+----
+
+Checks if the concept is a ``RoleType``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isRoleType()
+----
+
+[#_Concept_isThing]
+==== isThing
+
+[source,nodejs]
+----
+isThing(): boolean
+----
+
+Checks if the concept is a ``Thing``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isThing()
+----
+
+[#_Concept_isThingType]
+==== isThingType
+
+[source,nodejs]
+----
+isThingType(): boolean
+----
+
+Checks if the concept is a ``ThingType``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isThingType()
+----
+
+[#_Concept_isType]
+==== isType
+
+[source,nodejs]
+----
+isType(): boolean
+----
+
+Checks if the concept is a ``Type``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isType()
+----
+
+[#_Concept_isValue]
+==== isValue
+
+[source,nodejs]
+----
+isValue(): boolean
+----
+
+Checks if the concept is a ``Value``.
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.isValue()
+----
+
+[#_Concept_toJSONRecord]
+==== toJSONRecord
+
+[source,nodejs]
+----
+toJSONRecord(): Record<string, string | number | boolean>
+----
+
+Retrieves the concept as JSON.
+
+[caption=""]
+.Returns
+`Record<string, string | number | boolean>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+concept.toJSONRecord()
+----
+
+// end::methods[]
+

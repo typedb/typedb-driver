@@ -1,0 +1,187 @@
+[#_struct_LogicManager]
+=== LogicManager
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+
+Provides methods for manipulating rules in the database.
+
+// tag::methods[]
+[#_struct_LogicManager_method_get_rule]
+==== get_rule
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn get_rule(&self, label: String) -> Result<Option<Rule>>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn get_rule(&self, label: String) -> Result<Option<Rule>>
+----
+
+--
+====
+
+Retrieves the Rule that has the given label.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the Rule to create or retrieve a| `String`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Option<Rule>>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+transaction.logic().get_rule(label).await
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+transaction.logic().get_rule(label)
+----
+
+--
+====
+
+[#_struct_LogicManager_method_get_rules]
+==== get_rules
+
+[source,rust]
+----
+pub fn get_rules(&self) -> Result<impl Stream<Item = Result<Rule>>>
+----
+
+Retrieves all rules.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<impl Stream<Item = Result<Rule>>>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+transaction.logic.get_rules()
+----
+
+[#_struct_LogicManager_method_put_rule]
+==== put_rule
+
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+pub async fn put_rule(
+    &self,
+    label: String,
+    when: Conjunction,
+    then: Variable
+) -> Result<Rule>
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+pub fn put_rule(
+    &self,
+    label: String,
+    when: Conjunction,
+    then: Variable
+) -> Result<Rule>
+----
+
+--
+====
+
+Creates a new Rule if none exists with the given label, or replaces the existing one.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the Rule to create or replace a| `String`
+a| `when` a| The when body of the rule to create a| `Conjunction`
+a| `then` a| The then body of the rule to create a| `Variable`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Rule>
+----
+
+[caption=""]
+.Code examples
+[tabs]
+====
+async::
++
+--
+[source,rust]
+----
+transaction.logic().put_rule(label, when, then).await
+----
+
+--
+
+sync::
++
+--
+[source,rust]
+----
+transaction.logic().put_rule(label, when, then)
+----
+
+--
+====
+
+// end::methods[]
+

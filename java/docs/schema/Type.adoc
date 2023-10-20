@@ -1,0 +1,806 @@
+[#_Type]
+=== Type
+
+*Package*: `com.vaticle.typedb.driver.api.concept.type`
+
+*Superinterfaces:*
+
+* `Concept`
+
+// tag::methods[]
+[#_Type_asAttribute_]
+==== asAttribute
+
+[source,java]
+----
+default Attribute asAttribute()
+----
+
+Casts the concept to ``Attribute``. 
+
+
+[caption=""]
+.Returns
+`Attribute`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asAttribute();
+----
+
+[#_Type_asAttributeType_]
+==== asAttributeType
+
+[source,java]
+----
+default AttributeType asAttributeType()
+----
+
+Casts the concept to ``AttributeType``. 
+
+
+[caption=""]
+.Returns
+`AttributeType`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asAttributeType();
+----
+
+[#_Type_asEntity_]
+==== asEntity
+
+[source,java]
+----
+default Entity asEntity()
+----
+
+Casts the concept to ``Entity``. 
+
+
+[caption=""]
+.Returns
+`Entity`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asEntity();
+----
+
+[#_Type_asEntityType_]
+==== asEntityType
+
+[source,java]
+----
+default EntityType asEntityType()
+----
+
+Casts the concept to ``EntityType``. 
+
+
+[caption=""]
+.Returns
+`EntityType`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asEntityType();
+----
+
+[#_Type_asRelation_]
+==== asRelation
+
+[source,java]
+----
+default Relation asRelation()
+----
+
+Casts the concept to ``Relation``. 
+
+
+[caption=""]
+.Returns
+`Relation`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asRelation();
+----
+
+[#_Type_asRelationType_]
+==== asRelationType
+
+[source,java]
+----
+default RelationType asRelationType()
+----
+
+Casts the concept to ``RelationType``. 
+
+
+[caption=""]
+.Returns
+`RelationType`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asRelationType();
+----
+
+[#_Type_asRoleType_]
+==== asRoleType
+
+[source,java]
+----
+default RoleType asRoleType()
+----
+
+Casts the concept to ``RoleType``. 
+
+
+[caption=""]
+.Returns
+`RoleType`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asRoleType();
+----
+
+[#_Type_asThing_]
+==== asThing
+
+[source,java]
+----
+default Thing asThing()
+----
+
+Casts the concept to ``Thing``. 
+
+
+[caption=""]
+.Returns
+`Thing`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asThing();
+----
+
+[#_Type_asThingType_]
+==== asThingType
+
+[source,java]
+----
+default ThingType asThingType()
+----
+
+Casts the concept to ``ThingType``. 
+
+
+[caption=""]
+.Returns
+`ThingType`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asThingType();
+----
+
+[#_Type_asType_]
+==== asType
+
+[source,java]
+----
+@CheckReturnValue
+default Type asType()
+----
+
+Casts the concept to ``Type``. 
+
+
+[caption=""]
+.Returns
+`Type`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asType();
+----
+
+[#_Type_asValue_]
+==== asValue
+
+[source,java]
+----
+default Value asValue()
+----
+
+Casts the concept to ``Value``. 
+
+
+[caption=""]
+.Returns
+`Value`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asValue();
+----
+
+[#_Type_delete_com_vaticle_typedb_driver_api_TypeDBTransaction]
+==== delete
+
+[source,java]
+----
+void delete​(TypeDBTransaction transaction)
+----
+
+Deletes this type from the database. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+type.delete(transaction);
+----
+
+[#_Type_getLabel_]
+==== getLabel
+
+[source,java]
+----
+@CheckReturnValue
+Label getLabel()
+----
+
+Retrieves the unique label of the type. 
+
+
+[caption=""]
+.Returns
+`Label`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+type.getLabel();
+----
+
+[#_Type_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction]
+==== getSubtypes
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends Type> getSubtypes​(TypeDBTransaction transaction)
+----
+
+Retrieves all direct and indirect subtypes of the type. Equivalent to ``getSubtypes(transaction, Transitivity.TRANSITIVE)``
+
+
+See also: <<#_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getSubtypes(TypeDBTransaction, Transitivity)``>>
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends Type>`
+
+[#_Type_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+==== getSubtypes
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends Type> getSubtypes​(TypeDBTransaction transaction,
+                                                    Concept.Transitivity transitivity)
+----
+
+Retrieves all direct and indirect (or direct only) subtypes of the type. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Concept.Transitivity`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends Type>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+type.getSubtypes(transaction);
+ type.getSubtypes(transaction, Transitivity.EXPLICIT);
+----
+
+[#_Type_getSupertype_com_vaticle_typedb_driver_api_TypeDBTransaction]
+==== getSupertype
+
+[source,java]
+----
+@Nullable
+@CheckReturnValue
+Type getSupertype​(TypeDBTransaction transaction)
+----
+
+Retrieves the most immediate supertype of the type. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Type`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+type.getSupertype(transaction);
+----
+
+[#_Type_getSupertypes_com_vaticle_typedb_driver_api_TypeDBTransaction]
+==== getSupertypes
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends Type> getSupertypes​(TypeDBTransaction transaction)
+----
+
+Retrieves all supertypes of the type. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends Type>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+type.getSupertypes(transaction);
+----
+
+[#_Type_isAbstract_]
+==== isAbstract
+
+[source,java]
+----
+@CheckReturnValue
+boolean isAbstract()
+----
+
+Checks if the type is prevented from having data instances (i.e., ``abstract``). 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+type.isAbstract();
+----
+
+[#_Type_isAttribute_]
+==== isAttribute
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isAttribute()
+----
+
+Checks if the concept is an ``Attribute``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isAttribute();
+----
+
+[#_Type_isAttributeType_]
+==== isAttributeType
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isAttributeType()
+----
+
+Checks if the concept is an ``AttributeType``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isAttributeType();
+----
+
+[#_Type_isDeleted_com_vaticle_typedb_driver_api_TypeDBTransaction]
+==== isDeleted
+
+[source,java]
+----
+@CheckReturnValue
+boolean isDeleted​(TypeDBTransaction transaction)
+----
+
+Check if the concept has been deleted
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Type_isEntity_]
+==== isEntity
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isEntity()
+----
+
+Checks if the concept is an ``Entity``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isEntity();
+----
+
+[#_Type_isEntityType_]
+==== isEntityType
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isEntityType()
+----
+
+Checks if the concept is an ``EntityType``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isEntityType();
+----
+
+[#_Type_isRelation_]
+==== isRelation
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isRelation()
+----
+
+Checks if the concept is a ``Relation``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isRelation();
+----
+
+[#_Type_isRelationType_]
+==== isRelationType
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isRelationType()
+----
+
+Checks if the concept is a ``RelationType``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isRelationType();
+----
+
+[#_Type_isRoleType_]
+==== isRoleType
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isRoleType()
+----
+
+Checks if the concept is a ``RoleType``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isRoleType();
+----
+
+[#_Type_isRoot_]
+==== isRoot
+
+[source,java]
+----
+@CheckReturnValue
+boolean isRoot()
+----
+
+Checks if the type is a root type. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+type.isRoot();
+----
+
+[#_Type_isThing_]
+==== isThing
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isThing()
+----
+
+Checks if the concept is a ``Thing``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isThing();
+----
+
+[#_Type_isThingType_]
+==== isThingType
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isThingType()
+----
+
+Checks if the concept is a ``ThingType``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isThingType();
+----
+
+[#_Type_isType_]
+==== isType
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isType()
+----
+
+Checks if the concept is a ``Type``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isType();
+----
+
+[#_Type_isValue_]
+==== isValue
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isValue()
+----
+
+Checks if the concept is a ``Value``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isValue();
+----
+
+[#_Type_setLabel_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
+==== setLabel
+
+[source,java]
+----
+void setLabel​(TypeDBTransaction transaction,
+              java.lang.String label)
+----
+
+Renames the label of the type. The new label must remain unique. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `label` a| The new ``Label`` to be given to the type. a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+type.setLabel(transaction, newLabel)
+----
+
+[#_Type_toJSON_]
+==== toJSON
+
+[source,java]
+----
+default com.eclipsesource.json.JsonObject toJSON()
+----
+
+Retrieves the concept as JSON. 
+
+
+[caption=""]
+.Returns
+`com.eclipsesource.json.JsonObject`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.toJSON();
+----
+
+// end::methods[]
+

@@ -1,0 +1,593 @@
+[#_EntityType]
+=== EntityType
+
+*Package*: `com.vaticle.typedb.driver.api.concept.type`
+
+*Superinterfaces:*
+
+* `Concept`
+* `ThingType`
+* `Type`
+
+Entity types represent the classification of independent objects in the data model of the business domain.
+
+// tag::methods[]
+[#_EntityType_asAttribute_]
+==== asAttribute
+
+[source,java]
+----
+default Attribute asAttribute()
+----
+
+Casts the concept to ``Attribute``. 
+
+
+[caption=""]
+.Returns
+`Attribute`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asAttribute();
+----
+
+[#_EntityType_asAttributeType_]
+==== asAttributeType
+
+[source,java]
+----
+default AttributeType asAttributeType()
+----
+
+Casts the concept to ``AttributeType``. 
+
+
+[caption=""]
+.Returns
+`AttributeType`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asAttributeType();
+----
+
+[#_EntityType_asEntity_]
+==== asEntity
+
+[source,java]
+----
+default Entity asEntity()
+----
+
+Casts the concept to ``Entity``. 
+
+
+[caption=""]
+.Returns
+`Entity`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asEntity();
+----
+
+[#_EntityType_asEntityType_]
+==== asEntityType
+
+[source,java]
+----
+@CheckReturnValue
+default EntityType asEntityType()
+----
+
+Casts the concept to ``EntityType``. 
+
+
+[caption=""]
+.Returns
+`EntityType`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asEntityType();
+----
+
+[#_EntityType_asRelation_]
+==== asRelation
+
+[source,java]
+----
+default Relation asRelation()
+----
+
+Casts the concept to ``Relation``. 
+
+
+[caption=""]
+.Returns
+`Relation`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asRelation();
+----
+
+[#_EntityType_asRelationType_]
+==== asRelationType
+
+[source,java]
+----
+default RelationType asRelationType()
+----
+
+Casts the concept to ``RelationType``. 
+
+
+[caption=""]
+.Returns
+`RelationType`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asRelationType();
+----
+
+[#_EntityType_asRoleType_]
+==== asRoleType
+
+[source,java]
+----
+default RoleType asRoleType()
+----
+
+Casts the concept to ``RoleType``. 
+
+
+[caption=""]
+.Returns
+`RoleType`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asRoleType();
+----
+
+[#_EntityType_asThing_]
+==== asThing
+
+[source,java]
+----
+default Thing asThing()
+----
+
+Casts the concept to ``Thing``. 
+
+
+[caption=""]
+.Returns
+`Thing`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asThing();
+----
+
+[#_EntityType_asValue_]
+==== asValue
+
+[source,java]
+----
+default Value asValue()
+----
+
+Casts the concept to ``Value``. 
+
+
+[caption=""]
+.Returns
+`Value`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asValue();
+----
+
+[#_EntityType_create_com_vaticle_typedb_driver_api_TypeDBTransaction]
+==== create
+
+[source,java]
+----
+@CheckReturnValue
+Entity create​(TypeDBTransaction transaction)
+----
+
+Creates and returns a new instance of this ``EntityType``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`Entity`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+entityType.create(transaction);
+----
+
+[#_EntityType_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction]
+==== getInstances
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends Entity> getInstances​(TypeDBTransaction transaction)
+----
+
+Retrieves all ``Entity`` objects that are instances of this ``EntityType`` or its subtypes. Equivalent to ``getInstances(transaction, Transitivity.TRANSITIVE)``
+
+
+See also: <<#_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getInstances(TypeDBTransaction, Transitivity)``>>
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends Entity>`
+
+[#_EntityType_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+==== getInstances
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends Entity> getInstances​(TypeDBTransaction transaction,
+                                                       Concept.Transitivity transitivity)
+----
+
+Retrieves ``Entity`` objects that are instances of this exact ``EntityType`` OR this ``EntityType`` and any of its subtypes. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `transitivity` a| ``Transitivity.EXPLICIT`` for direct instances only, ``Transitivity.TRANSITIVE`` to include subtypes a| `Concept.Transitivity`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends Entity>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+entityType.getInstances(transaction, transitivity);
+----
+
+[#_EntityType_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction]
+==== getSubtypes
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends EntityType> getSubtypes​(TypeDBTransaction transaction)
+----
+
+Retrieves all (direct and indirect) subtypes of the ``EntityType``. Equivalent to ``getSubtypes(transaction, Transitivity.TRANSITIVE)``
+
+
+See also: <<#_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity,``getSubtypes(TypeDBTransaction, Transitivity)``>>
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends EntityType>`
+
+[#_EntityType_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+==== getSubtypes
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends EntityType> getSubtypes​(TypeDBTransaction transaction,
+                                                          Concept.Transitivity transitivity)
+----
+
+Retrieves all direct and indirect (or direct only) subtypes of the ``EntityType``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Concept.Transitivity`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends EntityType>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+entityType.getSubtypes(transaction, transitivity);
+----
+
+[#_EntityType_isAttribute_]
+==== isAttribute
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isAttribute()
+----
+
+Checks if the concept is an ``Attribute``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isAttribute();
+----
+
+[#_EntityType_isAttributeType_]
+==== isAttributeType
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isAttributeType()
+----
+
+Checks if the concept is an ``AttributeType``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isAttributeType();
+----
+
+[#_EntityType_isEntity_]
+==== isEntity
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isEntity()
+----
+
+Checks if the concept is an ``Entity``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isEntity();
+----
+
+[#_EntityType_isEntityType_]
+==== isEntityType
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isEntityType()
+----
+
+Checks if the concept is an ``EntityType``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isEntityType();
+----
+
+[#_EntityType_isRelation_]
+==== isRelation
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isRelation()
+----
+
+Checks if the concept is a ``Relation``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isRelation();
+----
+
+[#_EntityType_isRelationType_]
+==== isRelationType
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isRelationType()
+----
+
+Checks if the concept is a ``RelationType``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isRelationType();
+----
+
+[#_EntityType_isRoleType_]
+==== isRoleType
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isRoleType()
+----
+
+Checks if the concept is a ``RoleType``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isRoleType();
+----
+
+[#_EntityType_isThing_]
+==== isThing
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isThing()
+----
+
+Checks if the concept is a ``Thing``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isThing();
+----
+
+[#_EntityType_isValue_]
+==== isValue
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isValue()
+----
+
+Checks if the concept is a ``Value``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isValue();
+----
+
+[#_EntityType_setSupertype_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_EntityType]
+==== setSupertype
+
+[source,java]
+----
+void setSupertype​(TypeDBTransaction transaction,
+                  EntityType superEntityType)
+----
+
+Sets the supplied ``EntityType`` as the supertype of the current ``EntityType``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `superEntityType` a| The ``EntityType`` to set as the supertype of this ``EntityType`` a| `EntityType`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+entityType.setSupertype(transaction, entityType);
+----
+
+// end::methods[]
+

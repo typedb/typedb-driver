@@ -1,0 +1,142 @@
+[#_TypeDBTransaction.Type]
+=== TypeDBTransaction.Type
+
+*Package*: `com.vaticle.typedb.driver.api`
+
+Used to specify the type of transaction. 
+
+
+[caption=""]
+.TypeDBTransaction.Type examples
+====
+
+[source,java]
+----
+session.transaction(TransactionType.READ);
+----
+
+====
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols="~"]
+[options="header"]
+|===
+|Name
+a| `READ`
+a| `WRITE`
+|===
+// end::enum_constants[]
+
+// tag::methods[]
+[#_TypeDBTransaction.Type_id_]
+==== id
+
+[source,java]
+----
+public int id()
+----
+
+
+
+[caption=""]
+.Returns
+`public int`
+
+[#_TypeDBTransaction.Type_isRead_]
+==== isRead
+
+[source,java]
+----
+public boolean isRead()
+----
+
+
+
+[caption=""]
+.Returns
+`public boolean`
+
+[#_TypeDBTransaction.Type_isWrite_]
+==== isWrite
+
+[source,java]
+----
+public boolean isWrite()
+----
+
+
+
+[caption=""]
+.Returns
+`public boolean`
+
+[#_TypeDBTransaction.Type_of_com_vaticle_typedb_driver_jni_TransactionType]
+==== of
+
+[source,java]
+----
+public static TypeDBTransaction.Type of​(com.vaticle.typedb.driver.jni.TransactionType transactionType)
+----
+
+
+
+[caption=""]
+.Returns
+`public static TypeDBTransaction.Type`
+
+[#_TypeDBTransaction.Type_valueOf_java_lang_String]
+==== valueOf
+
+[source,java]
+----
+public static TypeDBTransaction.Type valueOf​(java.lang.String name)
+----
+
+Returns the enum constant of this type with the specified name. The string must match exactly an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| the name of the enum constant to be returned. a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`public static TypeDBTransaction.Type`
+
+[#_TypeDBTransaction.Type_values_]
+==== values
+
+[source,java]
+----
+public static TypeDBTransaction.Type[] values()
+----
+
+Returns an array containing the constants of this enum type, in the order they are declared. This method may be used to iterate over the constants as follows: 
+[source,java]
+----
+for (TypeDBTransaction.Type c : TypeDBTransaction.Type.values())
+    System.out.println(c);
+
+----
+
+
+[caption=""]
+.Returns
+`public static TypeDBTransaction.Type[]`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+for (TypeDBTransaction.Type c : TypeDBTransaction.Type.values())
+    System.out.println(c);
+----
+
+// end::methods[]
+

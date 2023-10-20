@@ -1,0 +1,1444 @@
+[#_AttributeType]
+=== AttributeType
+
+*Package*: `com.vaticle.typedb.driver.api.concept.type`
+
+*Superinterfaces:*
+
+* `Concept`
+* `ThingType`
+* `Type`
+
+Attribute types represent properties that other types can own.
+
+Attribute types have a value type. This value type is fixed and unique for every given instance of the attribute type.
+
+Other types can own an attribute type. That means that instances of these other types can own an instance of this attribute type. This usually means that an object in our domain has a property with the matching value.
+
+Multiple types can own the same attribute type, and different instances of the same type or different types can share ownership of the same attribute instance.
+
+// tag::methods[]
+[#_AttributeType_asAttribute_]
+==== asAttribute
+
+[source,java]
+----
+default Attribute asAttribute()
+----
+
+Casts the concept to ``Attribute``. 
+
+
+[caption=""]
+.Returns
+`Attribute`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asAttribute();
+----
+
+[#_AttributeType_asAttributeType_]
+==== asAttributeType
+
+[source,java]
+----
+@CheckReturnValue
+default AttributeType asAttributeType()
+----
+
+Casts the concept to ``AttributeType``. 
+
+
+[caption=""]
+.Returns
+`AttributeType`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asAttributeType();
+----
+
+[#_AttributeType_asEntity_]
+==== asEntity
+
+[source,java]
+----
+default Entity asEntity()
+----
+
+Casts the concept to ``Entity``. 
+
+
+[caption=""]
+.Returns
+`Entity`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asEntity();
+----
+
+[#_AttributeType_asEntityType_]
+==== asEntityType
+
+[source,java]
+----
+default EntityType asEntityType()
+----
+
+Casts the concept to ``EntityType``. 
+
+
+[caption=""]
+.Returns
+`EntityType`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asEntityType();
+----
+
+[#_AttributeType_asRelation_]
+==== asRelation
+
+[source,java]
+----
+default Relation asRelation()
+----
+
+Casts the concept to ``Relation``. 
+
+
+[caption=""]
+.Returns
+`Relation`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asRelation();
+----
+
+[#_AttributeType_asRelationType_]
+==== asRelationType
+
+[source,java]
+----
+default RelationType asRelationType()
+----
+
+Casts the concept to ``RelationType``. 
+
+
+[caption=""]
+.Returns
+`RelationType`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asRelationType();
+----
+
+[#_AttributeType_asRoleType_]
+==== asRoleType
+
+[source,java]
+----
+default RoleType asRoleType()
+----
+
+Casts the concept to ``RoleType``. 
+
+
+[caption=""]
+.Returns
+`RoleType`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asRoleType();
+----
+
+[#_AttributeType_asThing_]
+==== asThing
+
+[source,java]
+----
+default Thing asThing()
+----
+
+Casts the concept to ``Thing``. 
+
+
+[caption=""]
+.Returns
+`Thing`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asThing();
+----
+
+[#_AttributeType_asValue_]
+==== asValue
+
+[source,java]
+----
+default Value asValue()
+----
+
+Casts the concept to ``Value``. 
+
+
+[caption=""]
+.Returns
+`Value`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.asValue();
+----
+
+[#_AttributeType_get_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value]
+==== get
+
+[source,java]
+----
+@Nullable
+Attribute get​(TypeDBTransaction transaction,
+              Value value)
+----
+
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| ``Attribute``’s value a| `Value`
+|===
+
+[caption=""]
+.Returns
+`Attribute`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.get(transaction, value);
+----
+
+[#_AttributeType_get_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
+==== get
+
+[source,java]
+----
+@Nullable
+Attribute get​(TypeDBTransaction transaction,
+              java.lang.String value)
+----
+
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| ``Attribute``’s value a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`Attribute`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.get(transaction, value);
+----
+
+[#_AttributeType_get_com_vaticle_typedb_driver_api_TypeDBTransaction_long]
+==== get
+
+[source,java]
+----
+@Nullable
+Attribute get​(TypeDBTransaction transaction,
+              long value)
+----
+
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| ``Attribute``’s value a| `long`
+|===
+
+[caption=""]
+.Returns
+`Attribute`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.get(transaction, value);
+----
+
+[#_AttributeType_get_com_vaticle_typedb_driver_api_TypeDBTransaction_double]
+==== get
+
+[source,java]
+----
+@Nullable
+Attribute get​(TypeDBTransaction transaction,
+              double value)
+----
+
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| ``Attribute``’s value a| `double`
+|===
+
+[caption=""]
+.Returns
+`Attribute`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.get(transaction, value);
+----
+
+[#_AttributeType_get_com_vaticle_typedb_driver_api_TypeDBTransaction_boolean]
+==== get
+
+[source,java]
+----
+@Nullable
+Attribute get​(TypeDBTransaction transaction,
+              boolean value)
+----
+
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| ``Attribute``’s value a| `boolean`
+|===
+
+[caption=""]
+.Returns
+`Attribute`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.get(transaction, value);
+----
+
+[#_AttributeType_get_com_vaticle_typedb_driver_api_TypeDBTransaction_java_time_LocalDateTime]
+==== get
+
+[source,java]
+----
+@Nullable
+Attribute get​(TypeDBTransaction transaction,
+              java.time.LocalDateTime value)
+----
+
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| ``Attribute``’s value a| `java.time.LocalDateTime`
+|===
+
+[caption=""]
+.Returns
+`Attribute`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.get(transaction, value);
+----
+
+[#_AttributeType_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction]
+==== getInstances
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends Attribute> getInstances​(TypeDBTransaction transaction)
+----
+
+Retrieves all direct and indirect ``Attributes`` that are instances of this ``AttributeType``. 
+
+
+
+See also: ``ThingType.getInstances(TypeDBTransaction, Transitivity)``
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends Attribute>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.getInstances(transaction);
+----
+
+[#_AttributeType_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+==== getInstances
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends Attribute> getInstances​(TypeDBTransaction transaction,
+                                                          Concept.Transitivity transitivity)
+----
+
+Retrieves all direct and indirect (or direct only) ``Attributes`` that are instances of this ``AttributeType``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Concept.Transitivity`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends Attribute>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.getInstances(transaction, transitivity);
+----
+
+[#_AttributeType_getOwners_com_vaticle_typedb_driver_api_TypeDBTransaction]
+==== getOwners
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends ThingType> getOwners​(TypeDBTransaction transaction)
+----
+
+Retrieve all ``Things`` that own an attribute of this ``AttributeType`` directly or through inheritance. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends ThingType>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.getOwners(transaction);
+----
+
+[#_AttributeType_getOwners_com_vaticle_typedb_driver_api_TypeDBTransaction_java_util_Set]
+==== getOwners
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends ThingType> getOwners​(TypeDBTransaction transaction,
+                                                       java.util.Set<ThingType.Annotation> annotations)
+----
+
+Retrieve all ``Things`` that own an attribute of this ``AttributeType``, filtered by ``Annotation``s, directly or through inheritance. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``AttributeType`` with all given ``Annotation``s a| `java.util.Set<ThingType.Annotation>`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends ThingType>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.getOwners(transaction, annotations);
+----
+
+[#_AttributeType_getOwners_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+==== getOwners
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends ThingType> getOwners​(TypeDBTransaction transaction,
+                                                       Concept.Transitivity transitivity)
+----
+
+Retrieve all ``Things`` that own an attribute of this ``AttributeType``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited ownership, ``Transitivity.EXPLICIT`` for direct ownership only a| `Concept.Transitivity`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends ThingType>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.getOwners(transaction, transitivity);
+----
+
+[#_AttributeType_getOwners_com_vaticle_typedb_driver_api_TypeDBTransaction_java_util_Set_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+==== getOwners
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends ThingType> getOwners​(TypeDBTransaction transaction,
+                                                       java.util.Set<ThingType.Annotation> annotations,
+                                                       Concept.Transitivity transitivity)
+----
+
+Retrieve all ``Things`` that own an attribute of this ``AttributeType``, filtered by ``Annotation``s. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``AttributeType`` with all given ``Annotation``s a| `java.util.Set<ThingType.Annotation>`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited ownership, ``Transitivity.EXPLICIT`` for direct ownership only a| `Concept.Transitivity`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends ThingType>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.getOwners(transaction, annotations, transitivity);
+----
+
+[#_AttributeType_getRegex_com_vaticle_typedb_driver_api_TypeDBTransaction]
+==== getRegex
+
+[source,java]
+----
+java.lang.String getRegex​(TypeDBTransaction transaction)
+----
+
+Retrieves the regular expression that is defined for this ``AttributeType``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.getRegex(transaction);
+----
+
+[#_AttributeType_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction]
+==== getSubtypes
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends AttributeType> getSubtypes​(TypeDBTransaction transaction)
+----
+
+Retrieves all direct and indirect subtypes of this ``AttributeType``. 
+
+
+
+See also: ``Type.getSubtypes(TypeDBTransaction, Transitivity)``
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends AttributeType>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.getSubtypes(transaction);
+----
+
+[#_AttributeType_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type]
+==== getSubtypes
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends AttributeType> getSubtypes​(TypeDBTransaction transaction,
+                                                             Value.Type valueType)
+----
+
+Retrieves all direct and indirect subtypes of this ``AttributeType`` with given ``Value.Type``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `valueType` a| ``Value.Type`` for retrieving subtypes a| `Value.Type`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends AttributeType>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.getSubtypes(transaction, valueType);
+----
+
+[#_AttributeType_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+==== getSubtypes
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends AttributeType> getSubtypes​(TypeDBTransaction transaction,
+                                                             Value.Type valueType,
+                                                             Concept.Transitivity transitivity)
+----
+
+Retrieves all direct and indirect (or direct only) subtypes of this ``AttributeType`` with given ``Value.Type``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `valueType` a| ``Value.Type`` for retrieving subtypes a| `Value.Type`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Concept.Transitivity`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends AttributeType>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.getSubtypes(transaction, valueType, transitivity);
+----
+
+[#_AttributeType_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+==== getSubtypes
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<? extends AttributeType> getSubtypes​(TypeDBTransaction transaction,
+                                                             Concept.Transitivity transitivity)
+----
+
+Retrieves all direct and indirect (or direct only) subtypes of this ``AttributeType``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| `Concept.Transitivity`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<? extends AttributeType>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.getSubtypes(transaction, transitivity);
+----
+
+[#_AttributeType_getValueType_]
+==== getValueType
+
+[source,java]
+----
+@CheckReturnValue
+Value.Type getValueType()
+----
+
+Retrieves the ``Value.Type`` of this ``AttributeType``. 
+
+
+[caption=""]
+.Returns
+`Value.Type`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.getValueType();
+----
+
+[#_AttributeType_isAttribute_]
+==== isAttribute
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isAttribute()
+----
+
+Checks if the concept is an ``Attribute``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isAttribute();
+----
+
+[#_AttributeType_isAttributeType_]
+==== isAttributeType
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isAttributeType()
+----
+
+Checks if the concept is an ``AttributeType``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isAttributeType();
+----
+
+[#_AttributeType_isBoolean_]
+==== isBoolean
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isBoolean()
+----
+
+Returns ``True`` if the value for attributes of this type is of type ``boolean``. Otherwise, returns ``False``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.isBoolean();
+----
+
+[#_AttributeType_isDateTime_]
+==== isDateTime
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isDateTime()
+----
+
+Returns ``True`` if the value for attributes of this type is of type ``datetime``. Otherwise, returns ``False``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.isDatetime();
+----
+
+[#_AttributeType_isDouble_]
+==== isDouble
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isDouble()
+----
+
+Returns ``True`` if the value for attributes of this type is of type ``double``. Otherwise, returns ``False``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.isDouble();
+----
+
+[#_AttributeType_isEntity_]
+==== isEntity
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isEntity()
+----
+
+Checks if the concept is an ``Entity``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isEntity();
+----
+
+[#_AttributeType_isEntityType_]
+==== isEntityType
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isEntityType()
+----
+
+Checks if the concept is an ``EntityType``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isEntityType();
+----
+
+[#_AttributeType_isLong_]
+==== isLong
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isLong()
+----
+
+Returns ``True`` if the value for attributes of this type is of type ``long``. Otherwise, returns ``False``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.isLong();
+----
+
+[#_AttributeType_isRelation_]
+==== isRelation
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isRelation()
+----
+
+Checks if the concept is a ``Relation``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isRelation();
+----
+
+[#_AttributeType_isRelationType_]
+==== isRelationType
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isRelationType()
+----
+
+Checks if the concept is a ``RelationType``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isRelationType();
+----
+
+[#_AttributeType_isRoleType_]
+==== isRoleType
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isRoleType()
+----
+
+Checks if the concept is a ``RoleType``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isRoleType();
+----
+
+[#_AttributeType_isString_]
+==== isString
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isString()
+----
+
+Returns ``True`` if the value for attributes of this type is of type ``string``. Otherwise, returns ``False``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.isString();
+----
+
+[#_AttributeType_isThing_]
+==== isThing
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isThing()
+----
+
+Checks if the concept is a ``Thing``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isThing();
+----
+
+[#_AttributeType_isValue_]
+==== isValue
+
+[source,java]
+----
+@CheckReturnValue
+default boolean isValue()
+----
+
+Checks if the concept is a ``Value``. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+concept.isValue();
+----
+
+[#_AttributeType_put_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value]
+==== put
+
+[source,java]
+----
+Attribute put​(TypeDBTransaction transaction,
+              Value value)
+----
+
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| New ``Attribute``’s value a| `Value`
+|===
+
+[caption=""]
+.Returns
+`Attribute`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.put(transaction, value);
+----
+
+[#_AttributeType_put_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
+==== put
+
+[source,java]
+----
+Attribute put​(TypeDBTransaction transaction,
+              java.lang.String value)
+----
+
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``String`` value. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| New ``Attribute``’s value a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`Attribute`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.put(transaction, value);
+----
+
+[#_AttributeType_put_com_vaticle_typedb_driver_api_TypeDBTransaction_long]
+==== put
+
+[source,java]
+----
+Attribute put​(TypeDBTransaction transaction,
+              long value)
+----
+
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``long`` value. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| New ``Attribute``’s value a| `long`
+|===
+
+[caption=""]
+.Returns
+`Attribute`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.put(transaction, value);
+----
+
+[#_AttributeType_put_com_vaticle_typedb_driver_api_TypeDBTransaction_double]
+==== put
+
+[source,java]
+----
+Attribute put​(TypeDBTransaction transaction,
+              double value)
+----
+
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``double`` value. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| New ``Attribute``’s value a| `double`
+|===
+
+[caption=""]
+.Returns
+`Attribute`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.put(transaction, value);
+----
+
+[#_AttributeType_put_com_vaticle_typedb_driver_api_TypeDBTransaction_boolean]
+==== put
+
+[source,java]
+----
+Attribute put​(TypeDBTransaction transaction,
+              boolean value)
+----
+
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``boolean`` value. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| New ``Attribute``’s value a| `boolean`
+|===
+
+[caption=""]
+.Returns
+`Attribute`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.put(transaction, value);
+----
+
+[#_AttributeType_put_com_vaticle_typedb_driver_api_TypeDBTransaction_java_time_LocalDateTime]
+==== put
+
+[source,java]
+----
+Attribute put​(TypeDBTransaction transaction,
+              java.time.LocalDateTime value)
+----
+
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``LocalDateTime`` value. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `value` a| New ``Attribute``’s value a| `java.time.LocalDateTime`
+|===
+
+[caption=""]
+.Returns
+`Attribute`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.put(transaction, value);
+----
+
+[#_AttributeType_setRegex_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
+==== setRegex
+
+[source,java]
+----
+void setRegex​(TypeDBTransaction transaction,
+              java.lang.String regex)
+----
+
+Sets a regular expression as a constraint for this ``AttributeType``. ``Values`` of all ``Attribute``s of this type (inserted earlier or later) should match this regex.
+
+Can only be applied for ``AttributeType``s with a ``string`` value type.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `regex` a| Regular expression a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.setRegex(transaction, regex);
+----
+
+[#_AttributeType_setSupertype_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType]
+==== setSupertype
+
+[source,java]
+----
+void setSupertype​(TypeDBTransaction transaction,
+                  AttributeType attributeType)
+----
+
+Sets the supplied ``AttributeType`` as the supertype of the current ``AttributeType``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+a| `attributeType` a| The ``AttributeType`` to set as the supertype of this ``AttributeType`` a| `AttributeType`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.setSupertype(transaction, superType);
+----
+
+[#_AttributeType_unsetRegex_com_vaticle_typedb_driver_api_TypeDBTransaction]
+==== unsetRegex
+
+[source,java]
+----
+void unsetRegex​(TypeDBTransaction transaction)
+----
+
+Removes the regular expression that is defined for this ``AttributeType``. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+attributeType.unsetRegex(transaction);
+----
+
+// end::methods[]
+
