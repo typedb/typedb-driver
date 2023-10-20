@@ -111,9 +111,10 @@ deploy_maven(
 
 javadoc_library(
     name = "driver_docs_library",
-    srcs = ["//java/api:source_files"],
+    srcs = ["//java/api:source_files", "//java/common:docs_source_files"],
     deps = [
         "//java/api",
+        "//java/common",
         "@vaticle_typedb_common//:common",
     ],
 )

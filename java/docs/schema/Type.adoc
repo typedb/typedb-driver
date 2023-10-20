@@ -14,7 +14,7 @@
 [source,java]
 ----
 @CheckReturnValue
-com.vaticle.typedb.driver.common.Label getLabel()
+Label getLabel()
 ----
 
 Retrieves the unique label of the type. 
@@ -22,7 +22,7 @@ Retrieves the unique label of the type.
 
 [caption=""]
 .Returns
-`com.vaticle.typedb.driver.common.Label`
+`Label`
 
 [caption=""]
 .Code examples

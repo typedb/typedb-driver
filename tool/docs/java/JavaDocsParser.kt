@@ -66,7 +66,7 @@ class JavaDocParser : Callable<Unit> {
         }
 
         File(inputDirectoryName).walkTopDown().filter {
-            it.toString().contains("/api/") && !it.toString().contains("-use")
+            it.toString().contains("/driver/") && !it.toString().contains("-use")
                     && !it.toString().contains("-summary") && !it.toString().contains("-tree")
                     && it.toString().endsWith(".html")
         }.forEach {

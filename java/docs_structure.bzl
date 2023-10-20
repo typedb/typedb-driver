@@ -48,6 +48,7 @@ dir_mapping = {
     "ThingType.adoc": "schema",
     "Concept.Transitivity.adoc": "schema",
     "Type.adoc": "schema",
+    "Label.adoc": "schema",
     "Concept.adoc": "concept",
     "ConceptManager.adoc": "concept",
     "Relation.adoc": "data",
@@ -58,4 +59,5 @@ dir_mapping = {
     "TypeDBSession.adoc": "session",
     "TypeDBSession.Type.adoc": "session",
     "TypeDBOptions.adoc": "session",
+    "TypeDBDriverException.adoc": "errors",
 }
