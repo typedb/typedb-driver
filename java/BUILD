@@ -30,6 +30,7 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":rules.bzl", "swig_native_java_library")
 load("@google_bazel_common//tools/javadoc:javadoc.bzl", "javadoc_library")
 load("//tool/docs:java/rules.bzl", "javadoc_to_adoc")
+load("//java:docs_structure.bzl", "dir_mapping")
 
 java_library(
     name = "driver-java",
@@ -127,6 +128,7 @@ genrule(
 javadoc_to_adoc(
     name = "docs_adoc",
     data = [":docs_html"],
+    docs_dirs = dir_mapping,
 )
 
 checkstyle_test(

@@ -37,6 +37,7 @@ load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("//nodejs:tool/typedoc/rules.bzl", "typedoc_docs")
 load("//tool/docs:nodejs/rules.bzl", "typedoc_to_adoc")
+load("//nodejs:docs_structure.bzl", "dir_mapping")
 
 npm_link_all_packages(
     name = "node_modules",
@@ -162,6 +163,7 @@ typedoc_docs(
 typedoc_to_adoc(
     name = "docs_adoc",
     data = [":docs_html"],
+    docs_dirs = dir_mapping,
 )
 
 checkstyle_test(

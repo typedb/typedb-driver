@@ -48,6 +48,13 @@ class RustDocParser : Callable<Unit> {
     private lateinit var outputDirectoryName: String
 
     /**
+     * --dir=file=directory: put a file into the specified directory
+     * If no directory is specified for at least one file, an exception will be thrown.
+     */
+    @CommandLine.Option(names = ["--dir", "-d"], required = true)
+    private lateinit var dirs: HashMap<String, String>
+
+    /**
      * --mode=key=value, where key is an input target, and value is a mode (feature)
      */
     @CommandLine.Option(names = ["--mode", "-m"], required = true)
@@ -68,7 +75,13 @@ class RustDocParser : Callable<Unit> {
                 Files.createDirectory(docsDir)
             }
             parseDirectory(inputDirectoryNames[0], feature).forEach { (className, parsedClass) ->
-                val outputFile = docsDir.resolve(className.replace(" ", "_") + ".adoc").toFile()
+                val fileName = className.replace(" ", "_") + ".adoc"
+                val fileDir = docsDir.resolve(dirs[fileName]
+                    ?: throw NullPointerException("Unknown directory for the file $fileName"))
+                if (!fileDir.toFile().exists()) {
+                    Files.createDirectory(fileDir)
+                }
+                val outputFile = fileDir.resolve(fileName).toFile()
                 outputFile.createNewFile()
                 outputFile.writeText(parsedClass.toAsciiDoc("rust"))
             }
@@ -76,7 +89,13 @@ class RustDocParser : Callable<Unit> {
             assert(inputDirectoryNames.size == 2)
             val parsedDirs = inputDirectoryNames.map { parseDirectory(it, modes[it]!!) }
             parsedDirs[0].forEach { (className, classFirst) ->
-                val outputFile = baseDocsDir.resolve(className.replace(" ", "_") + ".adoc").toFile()
+                val fileName = className.replace(" ", "_") + ".adoc"
+                val fileDir = baseDocsDir.resolve(dirs[fileName]
+                    ?: throw NullPointerException("Unknown directory for the file $fileName"))
+                if (!fileDir.toFile().exists()) {
+                    Files.createDirectory(fileDir)
+                }
+                val outputFile = fileDir.resolve(fileName).toFile()
                 outputFile.createNewFile()
                 outputFile.writeText(classFirst.toAsciiDoc("rust", parsedDirs[1][className]!!))
             }

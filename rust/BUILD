@@ -28,6 +28,7 @@ load("@vaticle_dependencies//builder/swig:java.bzl", "swig_java")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("//tool/docs:rust/rules.bzl", "rust_docs", "rustdoc_to_adoc")
+load("//rust:docs_structure.bzl", "dir_mapping")
 
 typedb_driver_srcs = glob(["src/**/*.rs"])
 typedb_driver_tags = ["crate-name=typedb-driver"]
@@ -104,6 +105,7 @@ rust_docs(
 rustdoc_to_adoc(
     name = "docs_adoc",
     data = [":docs_html_async", ":docs_html_sync"],
+    docs_dirs = dir_mapping,
     modes = {":docs_html_async": "async", ":docs_html_sync": "sync"},
 )
 
