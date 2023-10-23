@@ -10,10 +10,10 @@ This repository stores all TypeDB Drivers built by Vaticle.
 
 See the table below for links to README files, documentation, and source code.
 
-| Driver  | Readme | Documentation | Source code |
-|---------|--------|---------------|--------------|
-| Rust | [README](https://github.com/vaticle/typedb-driver/tree/development/rust/README.md) | Coming soon | [`rust/src/`](https://github.com/vaticle/typedb-driver/tree/development/rust/src) |
-| Python | [README](https://github.com/vaticle/typedb-driver/tree/development/python/README.md) | [Documentation](https://typedb.com/docs/clients/2.x/python/python-overview) | [`python/typedb/`](https://github.com/vaticle/typedb-driver/tree/development/python/typedb) |
+| Driver  | Readme | Documentation                                                                 | Driver location                                                               |
+|---------|--------|-------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| Rust | [README](https://github.com/vaticle/typedb-driver/tree/development/rust/README.md) | [Documentation](https://typedb.com/docs/clients/2.x/rust/rust-overview)       | [`rust/`](https://github.com/vaticle/typedb-driver/tree/development/rust)     |
+| Python | [README](https://github.com/vaticle/typedb-driver/tree/development/python/README.md) | [Documentation](https://typedb.com/docs/clients/2.x/python/python-overview)   | [`python/`](https://github.com/vaticle/typedb-driver/tree/development/python) |
 | Node.js | [README](https://github.com/vaticle/typedb-driver/tree/development/nodejs/README.md) | [Documentation](https://typedb.com/docs/clients/2.x/node-js/node-js-overview) | [`nodejs/`](https://github.com/vaticle/typedb-driver/tree/development/nodejs) |
-| Java | [README](https://github.com/vaticle/typedb-driver/tree/development/java/README.md) | [Documentation](https://typedb.com/docs/clients/2.x/java/java-overview) | [`java/`](https://github.com/vaticle/typedb-driver/tree/development/java) |
-| C | Coming soon | Coming soon | [`c/src/`](https://github.com/vaticle/typedb-driver/tree/development/c/src) |
+| Java | [README](https://github.com/vaticle/typedb-driver/tree/development/java/README.md) | [Documentation](https://typedb.com/docs/clients/2.x/java/java-overview)       | [`java/`](https://github.com/vaticle/typedb-driver/tree/development/java)     |
+| C | Coming soon | Coming soon                                                                   | [`c/`](https://github.com/vaticle/typedb-driver/tree/development/c)   |
