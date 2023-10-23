@@ -34,10 +34,10 @@ if TYPE_CHECKING:
     from typedb.api.concept.value.value import ValueType
     from typedb.api.concept.type.attribute_type import AttributeType
     from typedb.api.connection.transaction import TypeDBTransaction
+    from typedb.common.promise import Promise
 
 
 class ThingType(Type, ABC):
-
     def is_thing_type(self) -> bool:
         """
         Checks if the concept is a ``ThingType``.
@@ -53,7 +53,7 @@ class ThingType(Type, ABC):
         return True
 
     @abstractmethod
-    def get_supertype(self, transaction: TypeDBTransaction) -> Optional[ThingType]:
+    def get_supertype(self, transaction: TypeDBTransaction) -> Promise[Optional[ThingType]]:
         """
         Retrieves the most immediate supertype of the ``ThingType``.
 
@@ -85,8 +85,11 @@ class ThingType(Type, ABC):
         pass
 
     @abstractmethod
-    def get_subtypes(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
-                     ) -> Iterator[ThingType]:
+    def get_subtypes(
+        self,
+        transaction: TypeDBTransaction,
+        transitivity: Transitivity = Transitivity.TRANSITIVE,
+    ) -> Iterator[ThingType]:
         """
         Retrieves all direct and indirect (or direct only) subtypes of the ``ThingType``.
 
@@ -106,8 +109,11 @@ class ThingType(Type, ABC):
         pass
 
     @abstractmethod
-    def get_instances(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
-                      ) -> Iterator[Thing]:
+    def get_instances(
+        self,
+        transaction: TypeDBTransaction,
+        transitivity: Transitivity = Transitivity.TRANSITIVE,
+    ) -> Iterator[Thing]:
         """
         Retrieves all direct and indirect (or direct only) ``Thing`` objects
         that are instances of this ``ThingType``.
@@ -128,7 +134,7 @@ class ThingType(Type, ABC):
         pass
 
     @abstractmethod
-    def set_abstract(self, transaction: TypeDBTransaction) -> None:
+    def set_abstract(self, transaction: TypeDBTransaction) -> Promise[None]:
         """
         Set a ``ThingType`` to be abstract, meaning it cannot have instances.
 
@@ -144,7 +150,7 @@ class ThingType(Type, ABC):
         pass
 
     @abstractmethod
-    def unset_abstract(self, transaction: TypeDBTransaction) -> None:
+    def unset_abstract(self, transaction: TypeDBTransaction) -> Promise[None]:
         """
         Set a ``ThingType`` to be non-abstract, meaning it can have instances.
 
@@ -160,8 +166,12 @@ class ThingType(Type, ABC):
         pass
 
     @abstractmethod
-    def set_plays(self, transaction: TypeDBTransaction, role_type: RoleType,
-                  overriden_type: Optional[RoleType] = None) -> None:
+    def set_plays(
+        self,
+        transaction: TypeDBTransaction,
+        role_type: RoleType,
+        overriden_type: Optional[RoleType] = None,
+    ) -> Promise[None]:
         """
         Allows the instances of this ``ThingType`` to play the given role.
 
@@ -181,7 +191,7 @@ class ThingType(Type, ABC):
         pass
 
     @abstractmethod
-    def unset_plays(self, transaction: TypeDBTransaction, role_type: RoleType) -> None:
+    def unset_plays(self, transaction: TypeDBTransaction, role_type: RoleType) -> Promise[None]:
         """
         Disallows the instances of this ``ThingType`` from playing the given role.
 
@@ -198,9 +208,13 @@ class ThingType(Type, ABC):
         pass
 
     @abstractmethod
-    def set_owns(self, transaction: TypeDBTransaction, attribute_type: AttributeType,
-                 overridden_type: Optional[AttributeType] = None,
-                 annotations: Optional[set[Annotation]] = None) -> None:
+    def set_owns(
+        self,
+        transaction: TypeDBTransaction,
+        attribute_type: AttributeType,
+        overridden_type: Optional[AttributeType] = None,
+        annotations: Optional[set[Annotation]] = None,
+    ) -> Promise[None]:
         """
         Allows the instances of this ``ThingType`` to own
         the given ``AttributeType``.
@@ -225,7 +239,7 @@ class ThingType(Type, ABC):
         pass
 
     @abstractmethod
-    def unset_owns(self, transaction: TypeDBTransaction, attribute_type: AttributeType) -> None:
+    def unset_owns(self, transaction: TypeDBTransaction, attribute_type: AttributeType) -> Promise[None]:
         """
         Disallows the instances of this ``ThingType`` from owning
         the given ``AttributeType``.
@@ -243,8 +257,11 @@ class ThingType(Type, ABC):
         pass
 
     @abstractmethod
-    def get_plays(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
-                  ) -> Iterator[RoleType]:
+    def get_plays(
+        self,
+        transaction: TypeDBTransaction,
+        transitivity: Transitivity = Transitivity.TRANSITIVE,
+    ) -> Iterator[RoleType]:
         """
         Retrieves all direct and inherited (or direct only) roles that
         are allowed to be played by the instances of this ``ThingType``.
@@ -265,7 +282,7 @@ class ThingType(Type, ABC):
         pass
 
     @abstractmethod
-    def get_plays_overridden(self, transaction: TypeDBTransaction, role_type: RoleType) -> Optional[RoleType]:
+    def get_plays_overridden(self, transaction: TypeDBTransaction, role_type: RoleType) -> Promise[Optional[RoleType]]:
         """
         Retrieves a ``RoleType`` that is overridden by the given ``role_type``
         for this ``ThingType``.
@@ -283,9 +300,13 @@ class ThingType(Type, ABC):
         pass
 
     @abstractmethod
-    def get_owns(self, transaction: TypeDBTransaction, value_type: Optional[ValueType] = None,
-                 transitivity: Transitivity = Transitivity.TRANSITIVE, annotations: Optional[set[Annotation]] = None
-                 ) -> Iterator[AttributeType]:
+    def get_owns(
+        self,
+        transaction: TypeDBTransaction,
+        value_type: Optional[ValueType] = None,
+        transitivity: Transitivity = Transitivity.TRANSITIVE,
+        annotations: Optional[set[Annotation]] = None,
+    ) -> Iterator[AttributeType]:
         """
         Retrieves ``AttributeType`` that the instances of this ``ThingType``
         are allowed to own directly or via inheritance.
@@ -311,8 +332,11 @@ class ThingType(Type, ABC):
         pass
 
     @abstractmethod
-    def get_owns_overridden(self, transaction: TypeDBTransaction, attribute_type: AttributeType
-                            ) -> Optional[AttributeType]:
+    def get_owns_overridden(
+        self,
+        transaction: TypeDBTransaction,
+        attribute_type: AttributeType,
+    ) -> Promise[Optional[AttributeType]]:
         """
         Retrieves an ``AttributeType``, ownership of which is overridden
         for this ``ThingType`` by a given ``attribute_type``.
@@ -331,7 +355,7 @@ class ThingType(Type, ABC):
         pass
 
     @abstractmethod
-    def get_syntax(self, transaction: TypeDBTransaction) -> str:
+    def get_syntax(self, transaction: TypeDBTransaction) -> Promise[str]:
         """
         Produces a pattern for creating this ``ThingType`` in a ``define`` query.
 

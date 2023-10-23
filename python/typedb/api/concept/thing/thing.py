@@ -34,10 +34,10 @@ if TYPE_CHECKING:
     from typedb.api.concept.type.thing_type import ThingType
     from typedb.api.concept.type.annotation import Annotation
     from typedb.api.connection.transaction import TypeDBTransaction
+    from typedb.common.promise import Promise
 
 
 class Thing(Concept, ABC):
-
     @abstractmethod
     def get_iid(self) -> str:
         """
@@ -126,7 +126,7 @@ class Thing(Concept, ABC):
         return {"type": self.get_type().get_label().name}
 
     @abstractmethod
-    def set_has(self, transaction: TypeDBTransaction, attribute: Attribute) -> None:
+    def set_has(self, transaction: TypeDBTransaction, attribute: Attribute) -> Promise[None]:
         """
         Assigns an ``Attribute`` to be owned by this ``Thing``.
 
@@ -143,7 +143,7 @@ class Thing(Concept, ABC):
         pass
 
     @abstractmethod
-    def unset_has(self, transaction: TypeDBTransaction, attribute: Attribute) -> None:
+    def unset_has(self, transaction: TypeDBTransaction, attribute: Attribute) -> Promise[None]:
         """
         Unassigns an ``Attribute`` from this ``Thing``.
 
@@ -160,9 +160,13 @@ class Thing(Concept, ABC):
         pass
 
     @abstractmethod
-    def get_has(self, transaction: TypeDBTransaction, attribute_type: AttributeType = None,
-                attribute_types: list[AttributeType] = None,
-                annotations: set[Annotation] = frozenset()) -> Iterator[Attribute]:
+    def get_has(
+        self,
+        transaction: TypeDBTransaction,
+        attribute_type: AttributeType = None,
+        attribute_types: list[AttributeType] = None,
+        annotations: set[Annotation] = frozenset()
+    ) -> Iterator[Attribute]:
         """
         Retrieves the ``Attribute``\ s that this ``Thing`` owns.
         Optionally, filtered by an ``AttributeType`` or a list of
@@ -192,7 +196,7 @@ class Thing(Concept, ABC):
     @abstractmethod
     def get_relations(self, transaction: TypeDBTransaction, role_types: list[RoleType] = None) -> Iterator[Relation]:
         """
-        Retrieves all the ``Relations`` which this ``Thing`` plays a role in,
+        Retrieves all the ``Relation``\ s which this ``Thing`` plays a role in,
         optionally filtered by one or more given roles.
 
         :param transaction: The current transaction
@@ -225,7 +229,7 @@ class Thing(Concept, ABC):
         pass
 
     @abstractmethod
-    def delete(self, transaction: TypeDBTransaction) -> None:
+    def delete(self, transaction: TypeDBTransaction) -> Promise[None]:
         """
         Deletes this ``Thing``.
 
@@ -241,7 +245,7 @@ class Thing(Concept, ABC):
         pass
 
     @abstractmethod
-    def is_deleted(self, transaction: TypeDBTransaction) -> bool:
+    def is_deleted(self, transaction: TypeDBTransaction) -> Promise[bool]:
         """
         Checks if this ``Thing`` is deleted.
 

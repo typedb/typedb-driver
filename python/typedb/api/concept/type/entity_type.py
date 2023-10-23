@@ -30,6 +30,7 @@ from typedb.common.transitivity import Transitivity
 if TYPE_CHECKING:
     from typedb.api.concept.thing.entity import Entity
     from typedb.api.connection.transaction import TypeDBTransaction
+    from typedb.common.promise import Promise
 
 
 class EntityType(ThingType, ABC):
@@ -67,7 +68,7 @@ class EntityType(ThingType, ABC):
         return self
 
     @abstractmethod
-    def create(self, transaction: TypeDBTransaction) -> Entity:
+    def create(self, transaction: TypeDBTransaction) -> Promise[Entity]:
         """
         Creates and returns a new instance of this ``EntityType``.
 
@@ -83,10 +84,13 @@ class EntityType(ThingType, ABC):
         pass
 
     @abstractmethod
-    def get_subtypes(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
-                     ) -> Iterator[EntityType]:
+    def get_subtypes(
+        self,
+        transaction: TypeDBTransaction,
+        transitivity: Transitivity = Transitivity.TRANSITIVE,
+    ) -> Iterator[EntityType]:
         """
-        Retrieves all direct and indirect (or direct only) subtypes of the 
+        Retrieves all direct and indirect (or direct only) subtypes of the
         ``EntityType``.
 
         :param transaction: The current transaction
@@ -104,8 +108,11 @@ class EntityType(ThingType, ABC):
         pass
 
     @abstractmethod
-    def get_instances(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
-                      ) -> Iterator[Entity]:
+    def get_instances(
+        self,
+        transaction: TypeDBTransaction,
+        transitivity: Transitivity = Transitivity.TRANSITIVE,
+    ) -> Iterator[Entity]:
         """
         Retrieves all direct and indirect (or direct only) ``Entity`` objects
         that are instances of this ``EntityType``.
@@ -125,7 +132,7 @@ class EntityType(ThingType, ABC):
         pass
 
     @abstractmethod
-    def set_supertype(self, transaction: TypeDBTransaction, super_entity_type: EntityType) -> None:
+    def set_supertype(self, transaction: TypeDBTransaction, super_entity_type: EntityType) -> Promise[None]:
         """
         Sets the supplied ``EntityType`` as the supertype of the current ``EntityType``.
 

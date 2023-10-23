@@ -34,6 +34,7 @@ if TYPE_CHECKING:
     from typedb.api.concept.type.annotation import Annotation
     from typedb.api.concept.thing.attribute import Attribute
     from typedb.api.connection.transaction import TypeDBTransaction
+    from typedb.common.promise import Promise
 
 
 class AttributeType(ThingType, ABC):
@@ -171,7 +172,7 @@ class AttributeType(ThingType, ABC):
         return self.get_value_type() == ValueType.DATETIME
 
     @abstractmethod
-    def put(self, transaction: TypeDBTransaction, value: Union[Value, bool, int, float, str, datetime]) -> Attribute:
+    def put(self, transaction: TypeDBTransaction, value: Union[Value, bool, int, float, str, datetime]) -> Promise[Attribute]:
         '''
         Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
 
@@ -188,8 +189,8 @@ class AttributeType(ThingType, ABC):
         pass
 
     @abstractmethod
-    def get(self, transaction: TypeDBTransaction, value: Union[Value, bool, int, float, str, datetime]
-            ) -> Optional[Attribute]:
+    def get(self, transaction: TypeDBTransaction, value: Union[Value, bool, int, float, str,
+                                                               datetime]) -> Promise[Optional[Attribute]]:
         '''
         Retrieves an ``Attribute`` of this ``AttributeType`` with the given value
         if such ``Attribute`` exists. Otherwise, returns ``None``.
@@ -207,7 +208,7 @@ class AttributeType(ThingType, ABC):
         pass
 
     @abstractmethod
-    def get_regex(self, transaction: TypeDBTransaction) -> str:
+    def get_regex(self, transaction: TypeDBTransaction) -> Promise[str]:
         """
         Retrieves the regular expression that is defined
         for this ``AttributeType``.
@@ -224,7 +225,7 @@ class AttributeType(ThingType, ABC):
         pass
 
     @abstractmethod
-    def set_regex(self, transaction: TypeDBTransaction, regex: str) -> None:
+    def set_regex(self, transaction: TypeDBTransaction, regex: str) -> Promise[None]:
         """
         Sets a regular expression as a constraint for this ``AttributeType``.
         ``Values`` of all ``Attribute``\ s of this type (inserted earlier
@@ -246,7 +247,7 @@ class AttributeType(ThingType, ABC):
         pass
 
     @abstractmethod
-    def unset_regex(self, transaction: TypeDBTransaction) -> None:
+    def unset_regex(self, transaction: TypeDBTransaction) -> Promise[None]:
         """
         Removes the regular expression that is defined
         for this ``AttributeType``.
@@ -263,7 +264,7 @@ class AttributeType(ThingType, ABC):
         pass
 
     @abstractmethod
-    def set_supertype(self, transaction: TypeDBTransaction, super_attribute_type: AttributeType) -> None:
+    def set_supertype(self, transaction: TypeDBTransaction, super_attribute_type: AttributeType) -> Promise[None]:
         """
         Sets the supplied ``AttributeType`` as the supertype of
         the current ``AttributeType``.
@@ -282,9 +283,12 @@ class AttributeType(ThingType, ABC):
         pass
 
     @abstractmethod
-    def get_subtypes_with_value_type(self, transaction: TypeDBTransaction, value_type: ValueType,
-                                     transitivity: Transitivity = Transitivity.TRANSITIVE
-                                     ) -> Iterator[AttributeType]:
+    def get_subtypes_with_value_type(
+        self,
+        transaction: TypeDBTransaction,
+        value_type: ValueType,
+        transitivity: Transitivity = Transitivity.TRANSITIVE
+    ) -> Iterator[AttributeType]:
         """
         Retrieves all direct and indirect (or direct only) subtypes
         of this ``AttributeType`` with given ``ValueType``.
@@ -307,8 +311,9 @@ class AttributeType(ThingType, ABC):
         pass
 
     @abstractmethod
-    def get_instances(self, transaction: TypeDBTransaction, transitivity: Transitivity = Transitivity.TRANSITIVE
-                      ) -> Iterator[Attribute]:
+    def get_instances(self,
+                      transaction: TypeDBTransaction,
+                      transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[Attribute]:
         """
         Retrieves all direct and indirect (or direct only) ``Attributes``
         that are instances of this ``AttributeType``.
@@ -329,8 +334,12 @@ class AttributeType(ThingType, ABC):
         pass
 
     @abstractmethod
-    def get_owners(self, transaction: TypeDBTransaction, annotations: Optional[set[Annotation]] = None,
-                   transitivity: Transitivity = Transitivity.TRANSITIVE) -> Iterator[ThingType]:
+    def get_owners(
+        self,
+        transaction: TypeDBTransaction,
+        annotations: Optional[set[Annotation]] = None,
+        transitivity: Transitivity = Transitivity.TRANSITIVE
+    ) -> Iterator[ThingType]:
         """
         Retrieve all ``Things`` that own an attribute of this ``AttributeType``.
         Optionally, filtered by ``Annotation``\ s.
