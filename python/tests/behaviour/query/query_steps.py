@@ -86,7 +86,7 @@ def step_impl(context: Context):
 
 @step("typeql delete; throws exception")
 def step_impl(context: Context):
-    assert_that(calling(context.tx().query.delete).with_args(query=context.text), raises(TypeDBDriverException))
+    assert_that(calling(lambda query: context.tx().query.delete(query).resolve()).with_args(query=context.text), raises(TypeDBDriverException))
 
 
 @step("typeql delete; throws exception containing \"{pattern}\"")
