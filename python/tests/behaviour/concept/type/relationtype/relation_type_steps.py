@@ -104,7 +104,7 @@ def step_impl(context: Context, relation_label: str, role_label: str, get_label:
 @step("relation({relation_label}) get role({role_label}) is abstract: {is_abstract}")
 def step_impl(context: Context, relation_label: str, role_label: str, is_abstract: str):
     is_abstract = parse_bool(is_abstract)
-    assert_that(context.tx().concepts.get_relation_type(relation_label).resolve().get_relates(context.tx(), role_label).resolve().is_abstract().resolve(), is_(is_abstract))
+    assert_that(context.tx().concepts.get_relation_type(relation_label).resolve().get_relates(context.tx(), role_label).resolve().is_abstract(), is_(is_abstract))
 
 
 def get_actual_related_role_scoped_labels(context: Context, relation_label: str):
@@ -152,7 +152,7 @@ def step_impl(context: Context, relation_label: str):
 @step("relation({relation_label}) get role({role_label}) get supertype: {super_label:ScopedLabel}")
 def step_impl(context: Context, relation_label: str, role_label: str, super_label: Label):
     supertype = context.tx().concepts.get_relation_type(super_label.scope).resolve().get_relates(context.tx(), super_label.name).resolve()
-    assert_that(supertype, is_(context.tx().concepts.get_relation_type(relation_label).resolve().get_relates(context.tx(), role_label).resolve().get_supertype(context.tx())))
+    assert_that(supertype, is_(context.tx().concepts.get_relation_type(relation_label).resolve().get_relates(context.tx(), role_label).resolve().get_supertype(context.tx()).resolve()))
 
 
 def get_actual_related_role_supertypes_scoped_labels(context: Context, relation_label: str, role_label: str):

@@ -35,7 +35,7 @@ def step_impl(context: Context, type_label: str):
 
 @step("{var:Var} = relation({type_label}) create new instance")
 def step_impl(context: Context, var: str, type_label: str):
-    context.put(var, context.tx().concepts.get_relation_type(type_label).resolve().create(context.tx()))
+    context.put(var, context.tx().concepts.get_relation_type(type_label).resolve().create(context.tx()).resolve())
 
 
 @step("{var:Var} = relation({type_label}) create new instance with key({key_type}): {key_value}")

@@ -51,13 +51,9 @@ class _EntityType(EntityType, _ThingType):
         promise = entity_type_set_supertype(transaction.native_object, self.native_object, super_entity_type.native_object)
         return Promise(lambda: void_promise_resolve(promise))
 
-    def get_supertype(self, transaction: _Transaction) -> Optional[_EntityType]:
-        try:
-            if res := entity_type_get_supertype(transaction.native_object, self.native_object):
-                return _EntityType(res)
-            return None
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+    def get_supertype(self, transaction: _Transaction) -> Promise[Optional[_EntityType]]:
+        promise = entity_type_get_supertype(transaction.native_object, self.native_object)
+        return Promise.map(_EntityType, lambda: concept_promise_resolve(promise))
 
     def get_supertypes(self, transaction: _Transaction) -> Iterator[_EntityType]:
         try:

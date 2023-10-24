@@ -354,7 +354,7 @@ def step_impl(context: Context, root_label: RootLabel, type_label: Label, attr_t
 
 @step("{root_label:RootLabel}({type_label}) set plays role: {role_label:ScopedLabel} as {overridden_label:ScopedLabel}; throws exception")
 def step_impl(context: Context, root_label: RootLabel, type_label: str, role_label: Label, overridden_label: Label):
-    role_type = context.tx().concepts.get_relation_type(role_label.scope).resolve().get_relates(context.tx(), role_label.name)
+    role_type = context.tx().concepts.get_relation_type(role_label.scope).resolve().get_relates(context.tx(), role_label.name).resolve()
     overridden_type = context.tx().concepts.get_relation_type(overridden_label.scope).resolve().get_relates(context.tx(), overridden_label.name).resolve()
     try:
         context.get_thing_type(root_label, type_label).set_plays(context.tx(), role_type, overridden_type).resolve()
