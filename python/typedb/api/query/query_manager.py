@@ -31,13 +31,13 @@ if TYPE_CHECKING:
     from typedb.api.answer.numeric_group import NumericGroup
     from typedb.api.connection.options import TypeDBOptions
     from typedb.api.logic.explanation import Explanation
+    from typedb.common.promise import Promise
 
 
 class QueryManager(ABC):
     """
     Provides methods for executing TypeQL queries in the transaction.
     """
-
     @abstractmethod
     def match(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[ConceptMap]:
         """
@@ -56,7 +56,7 @@ class QueryManager(ABC):
         pass
 
     @abstractmethod
-    def match_aggregate(self, query: str, options: Optional[TypeDBOptions] = None) -> Numeric:
+    def match_aggregate(self, query: str, options: Optional[TypeDBOptions] = None) -> Promise[Numeric]:
         """
         Performs a TypeQL Match Aggregate query in the transaction.
 
@@ -124,7 +124,7 @@ class QueryManager(ABC):
         pass
 
     @abstractmethod
-    def delete(self, query: str, options: Optional[TypeDBOptions] = None) -> None:
+    def delete(self, query: str, options: Optional[TypeDBOptions] = None) -> Promise[None]:
         """
         Performs a TypeQL Delete query in the transaction.
 
@@ -141,7 +141,7 @@ class QueryManager(ABC):
         pass
 
     @abstractmethod
-    def define(self, query: str, options: TypeDBOptions = None) -> None:
+    def define(self, query: str, options: TypeDBOptions = None) -> Promise[None]:
         """
         Performs a TypeQL Define query in the transaction.
 
@@ -158,7 +158,7 @@ class QueryManager(ABC):
         pass
 
     @abstractmethod
-    def undefine(self, query: str, options: TypeDBOptions = None) -> None:
+    def undefine(self, query: str, options: TypeDBOptions = None) -> Promise[None]:
         """
         Performs a TypeQL Undefine query in the transaction.
 
@@ -192,8 +192,7 @@ class QueryManager(ABC):
         pass
 
     @abstractmethod
-    def explain(self, explainable: ConceptMap.Explainable, options: Optional[TypeDBOptions] = None
-                ) -> Iterator[Explanation]:
+    def explain(self, explainable: ConceptMap.Explainable, options: Optional[TypeDBOptions] = None) -> Iterator[Explanation]:
         """
         Performs a TypeQL Explain query in the transaction.
 

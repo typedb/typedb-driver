@@ -23,16 +23,19 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Iterator, Optional
 
-from typedb.native_driver_wrapper import query_match, concept_map_iterator_next, query_match_group, \
-    concept_map_group_iterator_next, query_insert, query_update, query_explain, explanation_iterator_next, \
-    query_match_aggregate, numeric_group_iterator_next, query_match_group_aggregate, query_delete, query_define, \
-    query_undefine, Transaction as NativeTransaction, TypeDBDriverExceptionNative
+from typedb.native_driver_wrapper import (
+    Transaction as NativeTransaction, TypeDBDriverExceptionNative, concept_map_group_iterator_next, concept_map_iterator_next,
+    explanation_iterator_next, numeric_group_iterator_next, numeric_promise_resolve, query_define, query_delete, query_explain,
+    query_insert, query_match, query_match_aggregate, query_match_group, query_match_group_aggregate, query_undefine,
+    query_update, void_promise_resolve
+)
 
 from typedb.api.connection.options import TypeDBOptions
 from typedb.api.query.query_manager import QueryManager
 from typedb.common.exception import TypeDBDriverException, MISSING_QUERY, TRANSACTION_CLOSED
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
+from typedb.common.promise import Promise
 from typedb.concept.answer.concept_map import _ConceptMap
 from typedb.concept.answer.concept_map_group import _ConceptMapGroup
 from typedb.concept.answer.numeric import _Numeric
@@ -48,7 +51,6 @@ if TYPE_CHECKING:
 
 
 class _QueryManager(QueryManager, NativeWrapper[NativeTransaction]):
-
     def __init__(self, transaction: NativeTransaction):
         super().__init__(transaction)
 
@@ -66,20 +68,20 @@ class _QueryManager(QueryManager, NativeWrapper[NativeTransaction]):
         if not options:
             options = TypeDBOptions()
         try:
-            return map(_ConceptMap, IteratorWrapper(query_match(self._native_transaction, query, options.native_object),
-                                                    concept_map_iterator_next))
+            return map(
+                _ConceptMap,
+                IteratorWrapper(query_match(self._native_transaction, query, options.native_object), concept_map_iterator_next)
+            )
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
 
-    def match_aggregate(self, query: str, options: Optional[TypeDBOptions] = None) -> Numeric:
+    def match_aggregate(self, query: str, options: Optional[TypeDBOptions] = None) -> Promise[Numeric]:
         if not query:
             raise TypeDBDriverException(MISSING_QUERY)
         if not options:
             options = TypeDBOptions()
-        try:
-            return _Numeric(query_match_aggregate(self._native_transaction, query, options.native_object))
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+        promise = query_match_aggregate(self._native_transaction, query, options.native_object)
+        return Promise.map(_Numeric, lambda: numeric_promise_resolve(promise))
 
     def match_group(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[ConceptMapGroup]:
         if not query:
@@ -87,9 +89,12 @@ class _QueryManager(QueryManager, NativeWrapper[NativeTransaction]):
         if not options:
             options = TypeDBOptions()
         try:
-            return map(_ConceptMapGroup, IteratorWrapper(query_match_group(self._native_transaction, query,
-                                                                           options.native_object),
-                                                         concept_map_group_iterator_next))
+            return map(
+                _ConceptMapGroup,
+                IteratorWrapper(
+                    query_match_group(self._native_transaction, query, options.native_object), concept_map_group_iterator_next
+                )
+            )
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
 
@@ -99,9 +104,13 @@ class _QueryManager(QueryManager, NativeWrapper[NativeTransaction]):
         if not options:
             options = TypeDBOptions()
         try:
-            return map(_NumericGroup, IteratorWrapper(query_match_group_aggregate(self._native_transaction, query,
-                                                                                  options.native_object),
-                                                      numeric_group_iterator_next))
+            return map(
+                _NumericGroup,
+                IteratorWrapper(
+                    query_match_group_aggregate(self._native_transaction, query, options.native_object),
+                    numeric_group_iterator_next
+                )
+            )
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
 
@@ -111,20 +120,20 @@ class _QueryManager(QueryManager, NativeWrapper[NativeTransaction]):
         if not options:
             options = TypeDBOptions()
         try:
-            return map(_ConceptMap, IteratorWrapper(query_insert(self._native_transaction, query, options.native_object),
-                                                    concept_map_iterator_next))
+            return map(
+                _ConceptMap,
+                IteratorWrapper(query_insert(self._native_transaction, query, options.native_object), concept_map_iterator_next)
+            )
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
 
-    def delete(self, query: str, options: Optional[TypeDBOptions] = None) -> None:
+    def delete(self, query: str, options: Optional[TypeDBOptions] = None) -> Promise[None]:
         if not query:
             raise TypeDBDriverException(MISSING_QUERY)
         if not options:
             options = TypeDBOptions()
-        try:
-            return query_delete(self._native_transaction, query, options.native_object)
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+        promise = query_delete(self._native_transaction, query, options.native_object)
+        return Promise(lambda: void_promise_resolve(promise))
 
     def update(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[ConceptMap]:
         if not query:
@@ -132,38 +141,39 @@ class _QueryManager(QueryManager, NativeWrapper[NativeTransaction]):
         if not options:
             options = TypeDBOptions()
         try:
-            return map(_ConceptMap, IteratorWrapper(query_update(self._native_transaction, query, options.native_object),
-                                                    concept_map_iterator_next))
+            return map(
+                _ConceptMap,
+                IteratorWrapper(query_update(self._native_transaction, query, options.native_object), concept_map_iterator_next)
+            )
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
 
-    def define(self, query: str, options: TypeDBOptions = None) -> None:
+    def define(self, query: str, options: TypeDBOptions = None) -> Promise[None]:
         if not query:
             raise TypeDBDriverException(MISSING_QUERY)
         if not options:
             options = TypeDBOptions()
-        try:
-            return query_define(self._native_transaction, query, options.native_object)
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+        promise = query_define(self._native_transaction, query, options.native_object)
+        return Promise(lambda: void_promise_resolve(promise))
 
-    def undefine(self, query: str, options: TypeDBOptions = None) -> None:
+    def undefine(self, query: str, options: TypeDBOptions = None) -> Promise[None]:
         if not query:
             raise TypeDBDriverException(MISSING_QUERY)
         if not options:
             options = TypeDBOptions()
-        try:
-            return query_undefine(self._native_transaction, query, options.native_object)
-        except TypeDBDriverExceptionNative as e:
-            raise TypeDBDriverException.of(e)
+        promise = query_undefine(self._native_transaction, query, options.native_object)
+        return Promise(lambda: void_promise_resolve(promise))
 
-    def explain(self, explainable: ConceptMap.Explainable, options: Optional[TypeDBOptions] = None
-                ) -> Iterator[Explanation]:
+    def explain(self, explainable: ConceptMap.Explainable, options: Optional[TypeDBOptions] = None) -> Iterator[Explanation]:
         if not options:
             options = TypeDBOptions()
         try:
-            return map(_Explanation, IteratorWrapper(query_explain(self._native_transaction, explainable._native_object,
-                                                                   options.native_object),
-                                                     explanation_iterator_next))
+            return map(
+                _Explanation,
+                IteratorWrapper(
+                    query_explain(self._native_transaction, explainable._native_object, options.native_object),
+                    explanation_iterator_next
+                )
+            )
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)

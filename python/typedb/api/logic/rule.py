@@ -26,6 +26,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typedb.api.connection.transaction import TypeDBTransaction
+    from typedb.common.promise import Promise
 
 
 class Rule(ABC):
@@ -44,7 +45,7 @@ class Rule(ABC):
         pass
 
     @abstractmethod
-    def set_label(self, transaction: TypeDBTransaction, new_label: str) -> None:
+    def set_label(self, transaction: TypeDBTransaction, new_label: str) -> Promise[None]:
         """
         Renames the label of the rule. The new label must remain unique.
 
@@ -77,7 +78,7 @@ class Rule(ABC):
         pass
 
     @abstractmethod
-    def delete(self, transaction: TypeDBTransaction) -> None:
+    def delete(self, transaction: TypeDBTransaction) -> Promise[None]:
         """
         Deletes this rule.
 
@@ -93,7 +94,7 @@ class Rule(ABC):
         pass
 
     @abstractmethod
-    def is_deleted(self, transaction: TypeDBTransaction) -> bool:
+    def is_deleted(self, transaction: TypeDBTransaction) -> Promise[bool]:
         """
         Check if this rule has been deleted.
 
