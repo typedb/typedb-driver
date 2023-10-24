@@ -67,7 +67,7 @@ pub trait ThingTypeAPI: Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "thing_type.is_deleted(transaction);")]
+    #[cfg_attr(feature = "sync", doc = "thing_type.is_deleted(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.is_deleted(transaction).await;")]
     /// ```
     fn is_deleted<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<bool>>;
@@ -81,7 +81,7 @@ pub trait ThingTypeAPI: Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "thing_type.delete(transaction);")]
+    #[cfg_attr(feature = "sync", doc = "thing_type.delete(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.delete(transaction).await;")]
     /// ```
     fn delete<'tx>(&mut self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result> {
@@ -98,7 +98,7 @@ pub trait ThingTypeAPI: Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "thing_type.set_label(transaction, new_label);")]
+    #[cfg_attr(feature = "sync", doc = "thing_type.set_label(transaction, new_label).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.set_label(transaction, new_label).await;")]
     /// ```
     fn set_label<'tx>(&mut self, transaction: &'tx Transaction<'tx>, new_label: String) -> BoxPromise<'tx, Result> {
@@ -114,7 +114,7 @@ pub trait ThingTypeAPI: Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "thing_type.set_abstract(transaction);")]
+    #[cfg_attr(feature = "sync", doc = "thing_type.set_abstract(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.set_abstract(transaction).await;")]
     /// ```
     fn set_abstract<'tx>(&mut self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result> {
@@ -130,7 +130,7 @@ pub trait ThingTypeAPI: Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "thing_type.unset_abstract(transaction);")]
+    #[cfg_attr(feature = "sync", doc = "thing_type.unset_abstract(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.unset_abstract(transaction).await;")]
     /// ```
     fn unset_abstract<'tx>(&mut self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result> {
@@ -184,7 +184,7 @@ pub trait ThingTypeAPI: Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "thing_type.get_owns_overridden(transaction, attribute_type);")]
+    #[cfg_attr(feature = "sync", doc = "thing_type.get_owns_overridden(transaction, attribute_type).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.get_owns_overridden(transaction, attribute_type).await;")]
     /// ```
     fn get_owns_overridden<'tx>(
@@ -246,7 +246,7 @@ pub trait ThingTypeAPI: Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "thing_type.unset_owns(transaction, attribute_type);")]
+    #[cfg_attr(feature = "sync", doc = "thing_type.unset_owns(transaction, attribute_type).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.unset_owns(transaction, attribute_type).await;")]
     /// ```
     fn unset_owns<'tx>(
@@ -269,7 +269,7 @@ pub trait ThingTypeAPI: Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "thing_type.get_plays(transaction, Transitivity::Explicit);")]
+    #[cfg_attr(feature = "sync", doc = "thing_type.get_plays(transaction, Transitivity::Explicit).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.get_plays(transaction, Transitivity::Explicit).await;")]
     /// ```
     fn get_plays(
@@ -290,7 +290,7 @@ pub trait ThingTypeAPI: Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "thing_type.get_plays_overridden(transaction, role_type);")]
+    #[cfg_attr(feature = "sync", doc = "thing_type.get_plays_overridden(transaction, role_type).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.get_plays_overridden(transaction, role_type).await;")]
     /// ```
     fn get_plays_overridden<'tx>(
@@ -316,7 +316,7 @@ pub trait ThingTypeAPI: Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "thing_type.set_plays(transaction, role_type, None);")]
+    #[cfg_attr(feature = "sync", doc = "thing_type.set_plays(transaction, role_type, None).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.set_plays(transaction, role_type, None).await;")]
     /// ```
     fn set_plays<'tx>(
@@ -342,7 +342,7 @@ pub trait ThingTypeAPI: Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "thing_type.unset_plays(transaction, role_type);")]
+    #[cfg_attr(feature = "sync", doc = "thing_type.unset_plays(transaction, role_type).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.unset_plays(transaction, role_type).await;")]
     /// ```
     fn unset_plays<'tx>(&mut self, transaction: &'tx Transaction<'tx>, role_type: RoleType) -> BoxPromise<'tx, Result> {
@@ -358,7 +358,7 @@ pub trait ThingTypeAPI: Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "thing_type.get_syntax(transaction);")]
+    #[cfg_attr(feature = "sync", doc = "thing_type.get_syntax(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.get_syntax(transaction).await;")]
     /// ```
     fn get_syntax<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<String>> {
@@ -421,7 +421,7 @@ pub trait EntityTypeAPI: ThingTypeAPI + Clone + Into<EntityType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "entity_type.create(transaction);")]
+    #[cfg_attr(feature = "sync", doc = "entity_type.create(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "entity_type.create(transaction).await;")]
     /// ```
     fn create<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<Entity>> {
@@ -437,7 +437,7 @@ pub trait EntityTypeAPI: ThingTypeAPI + Clone + Into<EntityType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "entity_type.get_supertype(transaction);")]
+    #[cfg_attr(feature = "sync", doc = "entity_type.get_supertype(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "entity_type.get_supertype(transaction).await;")]
     /// ```
     fn get_supertype<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<Option<EntityType>>> {
@@ -454,7 +454,7 @@ pub trait EntityTypeAPI: ThingTypeAPI + Clone + Into<EntityType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "entity_type.set_supertype(transaction, super_entity_type);")]
+    #[cfg_attr(feature = "sync", doc = "entity_type.set_supertype(transaction, super_entity_type).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "entity_type.set_supertype(transaction, super_entity_type).await;")]
     /// ```
     fn set_supertype<'tx>(
@@ -474,8 +474,7 @@ pub trait EntityTypeAPI: ThingTypeAPI + Clone + Into<EntityType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "entity_type.get_supertypes(transaction);")]
-    #[cfg_attr(not(feature = "sync"), doc = "entity_type.get_supertypes(transaction).await;")]
+    /// entity_type.get_supertypes(transaction);
     /// ```
     fn get_supertypes(&self, transaction: &Transaction<'_>) -> Result<BoxStream<'_, Result<EntityType>>> {
         transaction.transaction_stream.entity_type_get_supertypes(self.clone().into()).map(box_stream)
@@ -492,8 +491,7 @@ pub trait EntityTypeAPI: ThingTypeAPI + Clone + Into<EntityType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "entity_type.get_subtypes(transaction, transitivity);")]
-    #[cfg_attr(not(feature = "sync"), doc = "entity_type.get_subtypes(transaction, transitivity).await;")]
+    /// entity_type.get_subtypes(transaction, Transitivity::Transitive);
     /// ```
     fn get_subtypes(
         &self,
@@ -515,8 +513,7 @@ pub trait EntityTypeAPI: ThingTypeAPI + Clone + Into<EntityType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "entity_type.get_instances(transaction, Transitivity::Explicit);")]
-    #[cfg_attr(not(feature = "sync"), doc = "entity_type.get_instances(transaction, Transitivity::Explicit).await;")]
+    /// entity_type.get_instances(transaction, Transitivity::Explicit);
     /// ```
     fn get_instances(
         &self,
@@ -562,7 +559,7 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "relation_type.create(transaction);")]
+    #[cfg_attr(feature = "sync", doc = "relation_type.create(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "relation_type.create(transaction).await;")]
     /// ```
     fn create<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<Relation>> {
@@ -578,7 +575,7 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "relation_type.get_supertype(transaction);")]
+    #[cfg_attr(feature = "sync", doc = "relation_type.get_supertype(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "relation_type.get_supertype(transaction).await;")]
     /// ```
     fn get_supertype<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<Option<RelationType>>> {
@@ -595,7 +592,7 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "relation_type.set_supertype(transaction, super_relation_type);")]
+    #[cfg_attr(feature = "sync", doc = "relation_type.set_supertype(transaction, super_relation_type).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "relation_type.set_supertype(transaction, super_relation_type).await;")]
     /// ```
     fn set_supertype<'tx>(
@@ -615,8 +612,7 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "relation_type.get_supertypes(transaction);")]
-    #[cfg_attr(not(feature = "sync"), doc = "relation_type.get_supertypes(transaction).await;")]
+    /// relation_type.get_supertypes(transaction);
     /// ```
     fn get_supertypes(&self, transaction: &Transaction<'_>) -> Result<BoxStream<'_, Result<RelationType>>> {
         transaction.transaction_stream.relation_type_get_supertypes(self.clone().into()).map(box_stream)
@@ -633,8 +629,7 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "relation_type.get_subtypes(transaction, Transivity::Transitive);")]
-    #[cfg_attr(not(feature = "sync"), doc = "relation_type.get_subtypes(transaction, Transivity::Transitive).await;")]
+    /// relation_type.get_subtypes(transaction, Transitivity::Transitive);
     /// ```
     fn get_subtypes(
         &self,
@@ -656,8 +651,7 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "relation_type.get_instances(transaction, Transitivity::Explicit);")]
-    #[cfg_attr(not(feature = "sync"), doc = "relation_type.get_instances(transaction, Transitivity::Explicit).await;")]
+    /// relation_type.get_instances(transaction, Transitivity::Explicit);
     /// ```
     fn get_instances(
         &self,
@@ -678,8 +672,7 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "relation_type.get_relates(transaction, Transitivity::Transitive);")]
-    #[cfg_attr(not(feature = "sync"), doc = "relation_type.get_relates(transaction, Transitivity::Transitive).await;")]
+    /// relation_type.get_relates(transaction, Transitivity::Transitive);
     /// ```
     fn get_relates(
         &self,
@@ -699,7 +692,7 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "relation_type.get_relates_for_role_label(transaction, role_label);")]
+    #[cfg_attr(feature = "sync", doc = "relation_type.get_relates_for_role_label(transaction, role_label).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "relation_type.get_relates_for_role_label(transaction, role_label).await;")]
     /// ```
     fn get_relates_for_role_label<'tx>(
@@ -722,7 +715,10 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "relation_type.get_relates_overridden(transaction, overridden_role_label);")]
+    #[cfg_attr(
+        feature = "sync",
+        doc = "relation_type.get_relates_overridden(transaction, overridden_role_label).resolve();"
+    )]
     #[cfg_attr(
         not(feature = "sync"),
         doc = "relation_type.get_relates_overridden(transaction, overridden_role_label).await;"
@@ -752,7 +748,7 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "relation_type.set_relates(transaction, role_label, None);")]
+    #[cfg_attr(feature = "sync", doc = "relation_type.set_relates(transaction, role_label, None).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "relation_type.set_relates(transaction, role_label, None).await;")]
     /// ```
     fn set_relates<'tx>(
@@ -778,7 +774,7 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "relation_type.unset_relates(transaction, role_label);")]
+    #[cfg_attr(feature = "sync", doc = "relation_type.unset_relates(transaction, role_label).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "relation_type.unset_relates(transaction, role_label).await;")]
     /// ```
     fn unset_relates<'tx>(
@@ -835,7 +831,7 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "attribute = attribute_type.put(transaction, value);")]
+    #[cfg_attr(feature = "sync", doc = "attribute = attribute_type.put(transaction, value).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "attribute = attribute_type.put(transaction, value).await;")]
     /// ```
     fn put<'tx>(&self, transaction: &'tx Transaction<'tx>, value: Value) -> BoxPromise<'tx, Result<Attribute>> {
@@ -853,7 +849,7 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "attribute = attribute_type.get(transaction, value);")]
+    #[cfg_attr(feature = "sync", doc = "attribute = attribute_type.get(transaction, value).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "attribute = attribute_type.get(transaction, value).await;")]
     /// ```
     fn get<'tx>(&self, transaction: &'tx Transaction<'tx>, value: Value) -> BoxPromise<'tx, Result<Option<Attribute>>> {
@@ -869,7 +865,7 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "attribute_type.get_supertype(transaction);")]
+    #[cfg_attr(feature = "sync", doc = "attribute_type.get_supertype(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "attribute_type.get_supertype(transaction).await;")]
     /// ```
     fn get_supertype<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<Option<AttributeType>>> {
@@ -886,7 +882,7 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "attribute_type.set_supertype(transaction, supertype);")]
+    #[cfg_attr(feature = "sync", doc = "attribute_type.set_supertype(transaction, supertype).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "attribute_type.set_supertype(transaction, supertype).await;")]
     /// ```
     fn set_supertype<'tx>(
@@ -998,7 +994,7 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "attribute_type.get_regex(transaction);")]
+    #[cfg_attr(feature = "sync", doc = "attribute_type.get_regex(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "attribute_type.get_regex(transaction).await;")]
     /// ```
     fn get_regex<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<Option<String>>> {
@@ -1018,7 +1014,7 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "attribute_type.set_regex(transaction, regex);")]
+    #[cfg_attr(feature = "sync", doc = "attribute_type.set_regex(transaction, regex).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "attribute_type.set_regex(transaction, regex).await;")]
     /// ```
     fn set_regex<'tx>(&self, transaction: &'tx Transaction<'tx>, regex: String) -> BoxPromise<'tx, Result> {
@@ -1034,7 +1030,7 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "attribute_type.unset_regex(transaction);")]
+    #[cfg_attr(feature = "sync", doc = "attribute_type.unset_regex(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "attribute_type.unset_regex(transaction).await;")]
     /// ```
     fn unset_regex<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result> {
@@ -1095,7 +1091,7 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "role_type.delete(transaction);")]
+    #[cfg_attr(feature = "sync", doc = "role_type.delete(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "role_type.delete(transaction).await;")]
     /// ```
     fn delete<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result> {
@@ -1111,7 +1107,7 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "role_type.is_deleted(transaction);")]
+    #[cfg_attr(feature = "sync", doc = "role_type.is_deleted(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "role_type.is_deleted(transaction).await;")]
     /// ```
     fn is_deleted<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<bool>>;
@@ -1125,7 +1121,7 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "role_type.get_relation_type(transaction);")]
+    #[cfg_attr(feature = "sync", doc = "role_type.get_relation_type(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "role_type.get_relation_type(transaction).await;")]
     /// ```
     fn get_relation_type<'tx>(
@@ -1143,7 +1139,7 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "role_type.set_label(transaction, new_label);")]
+    #[cfg_attr(feature = "sync", doc = "role_type.set_label(transaction, new_label).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "role_type.set_label(transaction, new_label).await;")]
     /// ```
     fn set_label<'tx>(&self, transaction: &'tx Transaction<'tx>, new_label: String) -> BoxPromise<'tx, Result> {
@@ -1159,7 +1155,7 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "role_type.get_supertype(transaction);")]
+    #[cfg_attr(feature = "sync", doc = "role_type.get_supertype(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "role_type.get_supertype(transaction).await;")]
     /// ```
     fn get_supertype<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<Option<RoleType>>> {

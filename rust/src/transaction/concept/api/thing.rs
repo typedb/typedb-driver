@@ -55,7 +55,7 @@ pub trait ThingAPI: Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "thing.is_deleted(transaction);")]
+    #[cfg_attr(feature = "sync", doc = "thing.is_deleted(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing.is_deleted(transaction).await;")]
     /// ```
     fn is_deleted<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<bool>>;
@@ -69,7 +69,7 @@ pub trait ThingAPI: Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "thing.delete(transaction);")]
+    #[cfg_attr(feature = "sync", doc = "thing.delete(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing.delete(transaction).await;")]
     /// ```
     fn delete<'tx>(&'tx self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result> {
@@ -112,7 +112,7 @@ pub trait ThingAPI: Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "thing.set_has(transaction, attribute);")]
+    #[cfg_attr(feature = "sync", doc = "thing.set_has(transaction, attribute).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing.set_has(transaction, attribute).await;")]
     /// ```
     fn set_has<'tx>(&'tx self, transaction: &'tx Transaction<'tx>, attribute: Attribute) -> BoxPromise<'tx, Result> {
@@ -129,7 +129,7 @@ pub trait ThingAPI: Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "thing.unset_has(transaction, attribute);")]
+    #[cfg_attr(feature = "sync", doc = "thing.unset_has(transaction, attribute).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing.unset_has(transaction, attribute).await;")]
     /// ```
     fn unset_has<'tx>(&'tx self, transaction: &'tx Transaction<'tx>, attribute: Attribute) -> BoxPromise<'tx, Result> {
@@ -260,7 +260,7 @@ pub trait RelationAPI: ThingAPI + Clone + Into<Relation> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "relation.add_role_player(transaction, role_type, player);")]
+    #[cfg_attr(feature = "sync", doc = "relation.add_role_player(transaction, role_type, player).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "relation.add_role_player(transaction, role_type, player).await;")]
     /// ```
     fn add_role_player<'tx>(
@@ -283,7 +283,7 @@ pub trait RelationAPI: ThingAPI + Clone + Into<Relation> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "relation.remove_role_player(transaction, role_type, player);")]
+    #[cfg_attr(feature = "sync", doc = "relation.remove_role_player(transaction, role_type, player).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "relation.remove_role_player(transaction, role_type, player).await;")]
     /// ```
     fn remove_role_player<'tx>(

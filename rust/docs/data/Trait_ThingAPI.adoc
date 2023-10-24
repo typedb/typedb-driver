@@ -11,96 +11,31 @@
 [#_trait_ThingAPI_method_delete]
 ==== delete
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-fn delete<'life0, 'life1, 'life2, 'async_trait>(
-    &'life0 self,
-    transaction: &'life1 Transaction<'life2>
-) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+fn delete<'tx>(
+    &'tx self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-fn delete(&self, transaction: &Transaction<'_>) -> Result
-----
-
---
-====
 
 Deletes this ``Thing``.
 
 [caption=""]
 .Input parameters
-[tabs]
-====
-async::
-+
---
 [cols="~,~,~"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
 |===
---
-
-sync::
-+
---
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
-|===
---
-====
-
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+BoxPromise<'tx, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-Result
-----
-
---
-====
 
 [caption=""]
 .Code examples
@@ -121,7 +56,7 @@ sync::
 --
 [source,rust]
 ----
-thing.delete(transaction);
+thing.delete(transaction).resolve();
 ----
 
 --
@@ -269,96 +204,31 @@ thing.iid();
 [#_trait_ThingAPI_tymethod_is_deleted]
 ==== is_deleted
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-fn is_deleted<'life0, 'life1, 'life2, 'async_trait>(
-    &'life0 self,
-    transaction: &'life1 Transaction<'life2>
-) -> Pin<Box<dyn Future<Output = Result<bool>> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+fn is_deleted<'tx>(
+    &'tx self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result<bool>>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool>
-----
-
---
-====
 
 Checks if this ``Thing`` is deleted.
 
 [caption=""]
 .Input parameters
-[tabs]
-====
-async::
-+
---
 [cols="~,~,~"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
 |===
---
-
-sync::
-+
---
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
-|===
---
-====
-
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-Pin<Box<dyn Future<Output = Result<bool>> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+BoxPromise<'tx, Result<bool>>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-Result<bool>
-----
-
---
-====
 
 [caption=""]
 .Code examples
@@ -379,7 +249,7 @@ sync::
 --
 [source,rust]
 ----
-thing.is_deleted(transaction);
+thing.is_deleted(transaction).resolve();
 ----
 
 --
@@ -412,99 +282,33 @@ thing.is_inferred();
 [#_trait_ThingAPI_method_set_has]
 ==== set_has
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-fn set_has<'life0, 'life1, 'life2, 'async_trait>(
-    &'life0 self,
-    transaction: &'life1 Transaction<'life2>,
+fn set_has<'tx>(
+    &'tx self,
+    transaction: &'tx Transaction<'tx>,
     attribute: Attribute
-) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+) -> BoxPromise<'tx, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-fn set_has(&self, transaction: &Transaction<'_>, attribute: Attribute) -> Result
-----
-
---
-====
 
 Assigns an ``Attribute`` to be owned by this ``Thing``.
 
 [caption=""]
 .Input parameters
-[tabs]
-====
-async::
-+
---
 [cols="~,~,~"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
 a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute`
 |===
---
-
-sync::
-+
---
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
-a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute`
-|===
---
-====
-
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+BoxPromise<'tx, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-Result
-----
-
---
-====
 
 [caption=""]
 .Code examples
@@ -525,7 +329,7 @@ sync::
 --
 [source,rust]
 ----
-thing.set_has(transaction, attribute);
+thing.set_has(transaction, attribute).resolve();
 ----
 
 --
@@ -534,99 +338,33 @@ thing.set_has(transaction, attribute);
 [#_trait_ThingAPI_method_unset_has]
 ==== unset_has
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-fn unset_has<'life0, 'life1, 'life2, 'async_trait>(
-    &'life0 self,
-    transaction: &'life1 Transaction<'life2>,
+fn unset_has<'tx>(
+    &'tx self,
+    transaction: &'tx Transaction<'tx>,
     attribute: Attribute
-) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+) -> BoxPromise<'tx, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-fn unset_has(&self, transaction: &Transaction<'_>, attribute: Attribute) -> Result
-----
-
---
-====
 
 Unassigns an ``Attribute`` from this ``Thing``.
 
 [caption=""]
 .Input parameters
-[tabs]
-====
-async::
-+
---
 [cols="~,~,~"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
 a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attribute`
 |===
---
-
-sync::
-+
---
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
-a| `attribute` a| The ``Attribute`` to be disowned from this ``Thing``. a| `Attribute`
-|===
---
-====
-
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+BoxPromise<'tx, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-Result
-----
-
---
-====
 
 [caption=""]
 .Code examples
@@ -647,7 +385,7 @@ sync::
 --
 [source,rust]
 ----
-thing.unset_has(transaction, attribute);
+thing.unset_has(transaction, attribute).resolve();
 ----
 
 --

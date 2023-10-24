@@ -51,7 +51,7 @@ impl<'tx> LogicManager<'tx> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "transaction.logic().put_rule(label, when, then)")]
+    #[cfg_attr(feature = "sync", doc = "transaction.logic().put_rule(label, when, then).resolve()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.logic().put_rule(label, when, then).await")]
     /// ```
     pub fn put_rule(&self, label: String, when: Conjunction, then: Variable) -> impl Promise<'tx, Result<Rule>> {
@@ -67,7 +67,7 @@ impl<'tx> LogicManager<'tx> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "transaction.logic().get_rule(label)")]
+    #[cfg_attr(feature = "sync", doc = "transaction.logic().get_rule(label).resolve()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.logic().get_rule(label).await")]
     /// ```
     pub fn get_rule(&self, label: String) -> impl Promise<'tx, Result<Option<Rule>>> {

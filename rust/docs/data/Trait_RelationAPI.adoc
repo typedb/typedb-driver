@@ -58,7 +58,7 @@ sync::
 --
 [source,rust]
 ----
-relation.add_role_player(transaction, role_type, player);
+relation.add_role_player(transaction, role_type, player).resolve();
 ----
 
 --
@@ -227,7 +227,7 @@ sync::
 --
 [source,rust]
 ----
-relation.remove_role_player(transaction, role_type, player);
+relation.remove_role_player(transaction, role_type, player).resolve();
 ----
 
 --

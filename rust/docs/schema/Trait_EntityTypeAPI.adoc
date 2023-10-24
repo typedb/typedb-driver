@@ -54,7 +54,7 @@ sync::
 --
 [source,rust]
 ----
-entity_type.create(transaction);
+entity_type.create(transaction).resolve();
 ----
 
 --
@@ -93,28 +93,10 @@ Result<BoxStream<'_, Result<Entity>>>
 
 [caption=""]
 .Code examples
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-entity_type.get_instances(transaction, Transitivity::Explicit).await;
-----
-
---
-
-sync::
-+
---
 [source,rust]
 ----
 entity_type.get_instances(transaction, Transitivity::Explicit);
 ----
-
---
-====
 
 [#_trait_EntityTypeAPI_method_get_subtypes]
 ==== get_subtypes
@@ -149,28 +131,10 @@ Result<BoxStream<'_, Result<EntityType>>>
 
 [caption=""]
 .Code examples
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-entity_type.get_subtypes(transaction, transitivity).await;
+entity_type.get_subtypes(transaction, Transitivity::Transitive);
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-entity_type.get_subtypes(transaction, transitivity);
-----
-
---
-====
 
 [#_trait_EntityTypeAPI_method_get_supertype]
 ==== get_supertype
@@ -220,7 +184,7 @@ sync::
 --
 [source,rust]
 ----
-entity_type.get_supertype(transaction);
+entity_type.get_supertype(transaction).resolve();
 ----
 
 --
@@ -257,28 +221,10 @@ Result<BoxStream<'_, Result<EntityType>>>
 
 [caption=""]
 .Code examples
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-entity_type.get_supertypes(transaction).await;
-----
-
---
-
-sync::
-+
---
 [source,rust]
 ----
 entity_type.get_supertypes(transaction);
 ----
-
---
-====
 
 [#_trait_EntityTypeAPI_method_set_supertype]
 ==== set_supertype
@@ -330,7 +276,7 @@ sync::
 --
 [source,rust]
 ----
-entity_type.set_supertype(transaction, super_entity_type);
+entity_type.set_supertype(transaction, super_entity_type).resolve();
 ----
 
 --

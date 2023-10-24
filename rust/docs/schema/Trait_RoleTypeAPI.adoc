@@ -9,96 +9,31 @@
 [#_trait_RoleTypeAPI_method_delete]
 ==== delete
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-fn delete<'life0, 'life1, 'life2, 'async_trait>(
-    &'life0 self,
-    transaction: &'life1 Transaction<'life2>
-) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+fn delete<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-fn delete(&self, transaction: &Transaction<'_>) -> Result
-----
-
---
-====
 
 Deletes this type from the database.
 
 [caption=""]
 .Input parameters
-[tabs]
-====
-async::
-+
---
 [cols="~,~,~"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
 |===
---
-
-sync::
-+
---
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
-|===
---
-====
-
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+BoxPromise<'tx, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-Result
-----
-
---
-====
 
 [caption=""]
 .Code examples
@@ -119,7 +54,7 @@ sync::
 --
 [source,rust]
 ----
-role_type.delete(transaction);
+role_type.delete(transaction).resolve();
 ----
 
 --
@@ -242,114 +177,31 @@ role_type.get_relation_instances(transaction, transitivity)
 [#_trait_RoleTypeAPI_tymethod_get_relation_type]
 ==== get_relation_type
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-fn get_relation_type<'life0, 'life1, 'life2, 'async_trait>(
-    &'life0 self,
-    transaction: &'life1 Transaction<'life2>
-) -> Pin<Box<dyn Future<Output = Result<Option<RelationType>>> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-fn get_relation_type(
+fn get_relation_type<'tx>(
     &self,
-    transaction: &Transaction<'_>
-) -> Result<Option<RelationType>>
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result<Option<RelationType>>>
 ----
 
---
-====
-
-[tabs]
-====
-async::
-+
---
 Retrieves the ``RelationType`` that this role is directly related to.
-
---
-
-sync::
-+
---
-Retrieves ``RelationType``s that this role is related to (directly or indirectly).
-
---
-====
 
 [caption=""]
 .Input parameters
-[tabs]
-====
-async::
-+
---
 [cols="~,~,~"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
 |===
---
-
-sync::
-+
---
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
-|===
---
-====
-
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-Pin<Box<dyn Future<Output = Result<Option<RelationType>>> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+BoxPromise<'tx, Result<Option<RelationType>>>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-Result<Option<RelationType>>
-----
-
---
-====
 
 [caption=""]
 .Code examples
@@ -370,7 +222,7 @@ sync::
 --
 [source,rust]
 ----
-role_type.get_relation_types(transaction)
+role_type.get_relation_type(transaction).resolve();
 ----
 
 --
@@ -453,99 +305,31 @@ role_type.get_subtypes(transaction, transitivity)
 [#_trait_RoleTypeAPI_method_get_supertype]
 ==== get_supertype
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-fn get_supertype<'life0, 'life1, 'life2, 'async_trait>(
-    &'life0 self,
-    transaction: &'life1 Transaction<'life2>
-) -> Pin<Box<dyn Future<Output = Result<Option<RoleType>>> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-fn get_supertype(
+fn get_supertype<'tx>(
     &self,
-    transaction: &Transaction<'_>
-) -> Result<Option<RoleType>>
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result<Option<RoleType>>>
 ----
-
---
-====
 
 Retrieves the most immediate supertype of the ``RoleType``.
 
 [caption=""]
 .Input parameters
-[tabs]
-====
-async::
-+
---
 [cols="~,~,~"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
 |===
---
-
-sync::
-+
---
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
-|===
---
-====
-
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-Pin<Box<dyn Future<Output = Result<Option<RoleType>>> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+BoxPromise<'tx, Result<Option<RoleType>>>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-Result<Option<RoleType>>
-----
-
---
-====
 
 [caption=""]
 .Code examples
@@ -566,7 +350,7 @@ sync::
 --
 [source,rust]
 ----
-role_type.get_supertype(transaction);
+role_type.get_supertype(transaction).resolve();
 ----
 
 --
@@ -635,96 +419,31 @@ role_type.is_abstract()
 [#_trait_RoleTypeAPI_tymethod_is_deleted]
 ==== is_deleted
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-fn is_deleted<'life0, 'life1, 'life2, 'async_trait>(
-    &'life0 self,
-    transaction: &'life1 Transaction<'life2>
-) -> Pin<Box<dyn Future<Output = Result<bool>> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+fn is_deleted<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result<bool>>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool>
-----
-
---
-====
 
 Checks if this type is deleted.
 
 [caption=""]
 .Input parameters
-[tabs]
-====
-async::
-+
---
 [cols="~,~,~"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
 |===
---
-
-sync::
-+
---
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
-|===
---
-====
-
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-Pin<Box<dyn Future<Output = Result<bool>> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+BoxPromise<'tx, Result<bool>>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-Result<bool>
-----
-
---
-====
 
 [caption=""]
 .Code examples
@@ -745,7 +464,7 @@ sync::
 --
 [source,rust]
 ----
-role_type.is_deleted(transaction)
+role_type.is_deleted(transaction).resolve();
 ----
 
 --
@@ -754,99 +473,33 @@ role_type.is_deleted(transaction)
 [#_trait_RoleTypeAPI_method_set_label]
 ==== set_label
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-fn set_label<'life0, 'life1, 'life2, 'async_trait>(
-    &'life0 self,
-    transaction: &'life1 Transaction<'life2>,
+fn set_label<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>,
     new_label: String
-) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+) -> BoxPromise<'tx, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-fn set_label(&self, transaction: &Transaction<'_>, new_label: String) -> Result
-----
-
---
-====
 
 Renames the label of the type. The new label must remain unique.
 
 [caption=""]
 .Input parameters
-[tabs]
-====
-async::
-+
---
 [cols="~,~,~"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'life1 Transaction<'life2>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
 a| `new_label` a| The new ``Label`` to be given to the type. a| `String`
 |===
---
-
-sync::
-+
---
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
-a| `new_label` a| The new ``Label`` to be given to the type. a| `String`
-|===
---
-====
-
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+BoxPromise<'tx, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-Result
-----
-
---
-====
 
 [caption=""]
 .Code examples
@@ -867,7 +520,7 @@ sync::
 --
 [source,rust]
 ----
-role_type.set_label(transaction, new_label);
+role_type.set_label(transaction, new_label).resolve();
 ----
 
 --

@@ -38,7 +38,7 @@ pub trait RuleAPI: Clone + Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "rule.delete(transaction)")]
+    #[cfg_attr(feature = "sync", doc = "rule.delete(transaction).resolve()")]
     #[cfg_attr(not(feature = "sync"), doc = "rule.delete(transaction).await")]
     /// ```
     fn delete<'tx>(&mut self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result>;
@@ -52,7 +52,7 @@ pub trait RuleAPI: Clone + Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "rule.is_deleted(transaction)")]
+    #[cfg_attr(feature = "sync", doc = "rule.is_deleted(transaction).resolve()")]
     #[cfg_attr(not(feature = "sync"), doc = "rule.is_deleted(transaction).await")]
     /// ```
     fn is_deleted<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<bool>> {
@@ -70,7 +70,7 @@ pub trait RuleAPI: Clone + Sync + Send {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "rule.set_label(transaction, new_label)")]
+    #[cfg_attr(feature = "sync", doc = "rule.set_label(transaction, new_label).resolve()")]
     #[cfg_attr(not(feature = "sync"), doc = "rule.set_label(transaction, new_label).await")]
     /// ```
     fn set_label<'tx>(&mut self, transaction: &'tx Transaction<'tx>, new_label: String) -> BoxPromise<'tx, Result>;

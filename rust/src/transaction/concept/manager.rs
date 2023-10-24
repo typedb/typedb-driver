@@ -48,7 +48,7 @@ impl<'tx> ConceptManager<'tx> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "transaction.concepts().get_entity_type(label)")]
+    #[cfg_attr(feature = "sync", doc = "transaction.concepts().get_entity_type(label).resolve()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().get_entity_type(label).await")]
     /// ```
     pub fn get_entity_type(&self, label: String) -> impl Promise<'tx, Result<Option<EntityType>>> {
@@ -64,7 +64,7 @@ impl<'tx> ConceptManager<'tx> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "transaction.concepts().get_relation_type(label)")]
+    #[cfg_attr(feature = "sync", doc = "transaction.concepts().get_relation_type(label).resolve()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().get_relation_type(label).await")]
     /// ```
     pub fn get_relation_type(&self, label: String) -> impl Promise<'tx, Result<Option<RelationType>>> {
@@ -80,7 +80,7 @@ impl<'tx> ConceptManager<'tx> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "transaction.concepts().get_attribute_type(label)")]
+    #[cfg_attr(feature = "sync", doc = "transaction.concepts().get_attribute_type(label).resolve()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().get_attribute_type(label).await")]
     /// ```
     pub fn get_attribute_type(&self, label: String) -> impl Promise<'tx, Result<Option<AttributeType>>> {
@@ -96,7 +96,7 @@ impl<'tx> ConceptManager<'tx> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "transaction.concepts().put_entity_type(label)")]
+    #[cfg_attr(feature = "sync", doc = "transaction.concepts().put_entity_type(label).resolve()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().put_entity_type(label).await")]
     /// ```
     pub fn put_entity_type(&self, label: String) -> impl Promise<'tx, Result<EntityType>> {
@@ -112,7 +112,7 @@ impl<'tx> ConceptManager<'tx> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "transaction.concepts().put_relation_type(label)")]
+    #[cfg_attr(feature = "sync", doc = "transaction.concepts().put_relation_type(label).resolve()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().put_relation_type(label).await")]
     /// ```
     pub fn put_relation_type(&self, label: String) -> impl Promise<'tx, Result<RelationType>> {
@@ -130,8 +130,8 @@ impl<'tx> ConceptManager<'tx> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "await transaction.concepts().put_attribute_type(label, value_type)")]
-    #[cfg_attr(not(feature = "sync"), doc = "await transaction.concepts().put_attribute_type(label, value_type).await")]
+    #[cfg_attr(feature = "sync", doc = "transaction.concepts().put_attribute_type(label, value_type).resolve()")]
+    #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().put_attribute_type(label, value_type).await")]
     /// ```
     pub fn put_attribute_type(&self, label: String, value_type: ValueType) -> impl Promise<'tx, Result<AttributeType>> {
         self.transaction_stream.get_ref().put_attribute_type(label, value_type)
@@ -146,7 +146,7 @@ impl<'tx> ConceptManager<'tx> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "transaction.concepts().get_entity(iid)")]
+    #[cfg_attr(feature = "sync", doc = "transaction.concepts().get_entity(iid).resolve()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().get_entity(iid).await")]
     /// ```
     pub fn get_entity(&self, iid: IID) -> impl Promise<'tx, Result<Option<Entity>>> {
@@ -162,7 +162,7 @@ impl<'tx> ConceptManager<'tx> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "transaction.concepts().get_relation(iid)")]
+    #[cfg_attr(feature = "sync", doc = "transaction.concepts().get_relation(iid).resolve()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().get_relation(iid).await")]
     /// ```
     pub fn get_relation(&self, iid: IID) -> impl Promise<'tx, Result<Option<Relation>>> {
@@ -178,7 +178,7 @@ impl<'tx> ConceptManager<'tx> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "transaction.concepts().get_attribute(iid)")]
+    #[cfg_attr(feature = "sync", doc = "transaction.concepts().get_attribute(iid).resolve()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.concepts().get_attribute(iid).await")]
     /// ```
     pub fn get_attribute(&self, iid: IID) -> impl Promise<'tx, Result<Option<Attribute>>> {

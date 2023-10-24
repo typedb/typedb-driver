@@ -9,96 +9,31 @@
 [#_trait_RuleAPI_tymethod_delete]
 ==== delete
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-fn delete<'life0, 'life1, 'life2, 'async_trait>(
-    &'life0 mut self,
-    transaction: &'life1 Transaction<'life2>
-) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+fn delete<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-fn delete(&mut self, transaction: &Transaction<'_>) -> Result
-----
-
---
-====
 
 Deletes this rule.
 
 [caption=""]
 .Input parameters
-[tabs]
-====
-async::
-+
---
 [cols="~,~,~"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current ``Transaction`` a| `&'life1 Transaction<'life2>`
+a| `transaction` a| The current ``Transaction`` a| `&'tx Transaction<'tx>`
 |===
---
-
-sync::
-+
---
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current ``Transaction`` a| `&Transaction<'_>`
-|===
---
-====
-
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+BoxPromise<'tx, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-Result
-----
-
---
-====
 
 [caption=""]
 .Code examples
@@ -109,7 +44,7 @@ async::
 --
 [source,rust]
 ----
-rule.delete(transaction).await;
+rule.delete(transaction).await
 ----
 
 --
@@ -119,7 +54,7 @@ sync::
 --
 [source,rust]
 ----
-rule.delete(transaction);
+rule.delete(transaction).resolve()
 ----
 
 --
@@ -128,96 +63,31 @@ rule.delete(transaction);
 [#_trait_RuleAPI_method_is_deleted]
 ==== is_deleted
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-fn is_deleted<'life0, 'life1, 'life2, 'async_trait>(
-    &'life0 self,
-    transaction: &'life1 Transaction<'life2>
-) -> Pin<Box<dyn Future<Output = Result<bool>> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+fn is_deleted<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result<bool>>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-fn is_deleted(&self, transaction: &Transaction<'_>) -> Result<bool>
-----
-
---
-====
 
 Check if this rule has been deleted.
 
 [caption=""]
 .Input parameters
-[tabs]
-====
-async::
-+
---
 [cols="~,~,~"]
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current ``Transaction`` a| `&'life1 Transaction<'life2>`
+a| `transaction` a| The current ``Transaction`` a| `&'tx Transaction<'tx>`
 |===
---
-
-sync::
-+
---
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `transaction` a| The current ``Transaction`` a| `&Transaction<'_>`
-|===
---
-====
-
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-Pin<Box<dyn Future<Output = Result<bool>> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+BoxPromise<'tx, Result<bool>>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-Result<bool>
-----
-
---
-====
 
 [caption=""]
 .Code examples
@@ -238,7 +108,7 @@ sync::
 --
 [source,rust]
 ----
-rule.is_deleted(transaction)
+rule.is_deleted(transaction).resolve()
 ----
 
 --
@@ -264,41 +134,14 @@ Retrieves the unique label of the rule.
 [#_trait_RuleAPI_tymethod_set_label]
 ==== set_label
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-fn set_label<'life0, 'life1, 'life2, 'async_trait>(
-    &'life0 mut self,
-    transaction: &'life1 Transaction<'life2>,
-    new_label: String
-) -> Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
-----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-fn set_label(
+fn set_label<'tx>(
     &mut self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'tx>,
     new_label: String
-) -> Result
+) -> BoxPromise<'tx, Result>
 ----
-
---
-====
 
 Renames the label of the rule. The new label must remain unique.
 
@@ -314,33 +157,10 @@ a| `new_label` a| The new label to be given to the rule a| `String`
 
 [caption=""]
 .Returns
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-Pin<Box<dyn Future<Output = Result> + Send + 'async_trait>>
-where
-     Self: 'async_trait,
-     'life0: 'async_trait,
-     'life1: 'async_trait,
-     'life2: 'async_trait,
+BoxPromise<'tx, Result>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-Result
-----
-
---
-====
 
 [caption=""]
 .Code examples
@@ -351,7 +171,7 @@ async::
 --
 [source,rust]
 ----
-rule.set_label(transaction, new_label).await;
+rule.set_label(transaction, new_label).await
 ----
 
 --
@@ -361,7 +181,7 @@ sync::
 --
 [source,rust]
 ----
-rule.set_label(transaction, new_label);
+rule.set_label(transaction, new_label).resolve()
 ----
 
 --

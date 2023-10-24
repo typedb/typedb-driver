@@ -56,8 +56,8 @@ impl<'tx> QueryManager<'tx> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "transaction.query().define_with_options(query, options)")]
-    #[cfg_attr(not(feature = "sync"), doc = "transaction.query().define_with_options(query, options)")]
+    #[cfg_attr(feature = "sync", doc = "transaction.query().define_with_options(query, options).resolve()")]
+    #[cfg_attr(not(feature = "sync"), doc = "transaction.query().define_with_options(query, options).await")]
     /// ```
     pub fn define_with_options(&self, query: &str, options: Options) -> impl Promise<'tx, Result> {
         self.transaction_stream.get_ref().define(query.to_string(), options)
@@ -79,8 +79,8 @@ impl<'tx> QueryManager<'tx> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "transaction.query().undefine_with_options(query, options)")]
-    #[cfg_attr(not(feature = "sync"), doc = "transaction.query().undefine_with_options(query, options)")]
+    #[cfg_attr(feature = "sync", doc = "transaction.query().undefine_with_options(query, options).resolve()")]
+    #[cfg_attr(not(feature = "sync"), doc = "transaction.query().undefine_with_options(query, options).await")]
     /// ```
     pub fn undefine_with_options(&self, query: &str, options: Options) -> impl Promise<'tx, Result> {
         self.transaction_stream.get_ref().undefine(query.to_string(), options)
@@ -102,8 +102,8 @@ impl<'tx> QueryManager<'tx> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "transaction.query().delete_with_options(query, options)")]
-    #[cfg_attr(not(feature = "sync"), doc = "transaction.query().delete_with_options(query, options)")]
+    #[cfg_attr(feature = "sync", doc = "transaction.query().delete_with_options(query, options).resolve()")]
+    #[cfg_attr(not(feature = "sync"), doc = "transaction.query().delete_with_options(query, options).await")]
     /// ```
     pub fn delete_with_options(&self, query: &str, options: Options) -> impl Promise<'tx, Result> {
         self.transaction_stream.get_ref().delete(query.to_string(), options)
@@ -191,8 +191,8 @@ impl<'tx> QueryManager<'tx> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "transaction.query().match_aggregate_with_options(query, options)")]
-    #[cfg_attr(not(feature = "sync"), doc = "transaction.query().match_aggregate_with_options(query, options)")]
+    #[cfg_attr(feature = "sync", doc = "transaction.query().match_aggregate_with_options(query, options).resolve()")]
+    #[cfg_attr(not(feature = "sync"), doc = "transaction.query().match_aggregate_with_options(query, options).await")]
     /// ```
     pub fn match_aggregate_with_options(&self, query: &str, options: Options) -> impl Promise<'tx, Result<Numeric>> {
         self.transaction_stream.get_ref().match_aggregate(query.to_string(), options)

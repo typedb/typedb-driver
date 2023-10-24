@@ -11,28 +11,13 @@ Provides access for all Concept API methods.
 [#_struct_ConceptManager_method_get_attribute]
 ==== get_attribute
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-pub async fn get_attribute(&self, iid: IID) -> Result<Option<Attribute>>
+pub fn get_attribute(
+    &self,
+    iid: IID
+) -> impl Promise<'tx, Result<Option<Attribute>>>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn get_attribute(&self, iid: IID) -> Result<Option<Attribute>>
-----
-
---
-====
 
 Retrieves an ``Attribute`` by its iid.
 
@@ -49,7 +34,7 @@ a| `iid` a| The iid of the ``Attribute`` to retrieve a| `IID`
 .Returns
 [source,rust]
 ----
-Result<Option<Attribute>>
+impl Promise<'tx, Result<Option<Attribute>>>
 ----
 
 [caption=""]
@@ -71,7 +56,7 @@ sync::
 --
 [source,rust]
 ----
-transaction.concepts().get_attribute(iid)
+transaction.concepts().get_attribute(iid).resolve()
 ----
 
 --
@@ -80,31 +65,13 @@ transaction.concepts().get_attribute(iid)
 [#_struct_ConceptManager_method_get_attribute_type]
 ==== get_attribute_type
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-pub async fn get_attribute_type(
+pub fn get_attribute_type(
     &self,
     label: String
-) -> Result<Option<AttributeType>>
+) -> impl Promise<'tx, Result<Option<AttributeType>>>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn get_attribute_type(&self, label: String) -> Result<Option<AttributeType>>
-----
-
---
-====
 
 Retrieves an ``AttributeType`` by its label.
 
@@ -121,7 +88,7 @@ a| `label` a| The label of the ``AttributeType`` to retrieve a| `String`
 .Returns
 [source,rust]
 ----
-Result<Option<AttributeType>>
+impl Promise<'tx, Result<Option<AttributeType>>>
 ----
 
 [caption=""]
@@ -143,7 +110,7 @@ sync::
 --
 [source,rust]
 ----
-transaction.concepts().get_attribute_type(label)
+transaction.concepts().get_attribute_type(label).resolve()
 ----
 
 --
@@ -152,28 +119,10 @@ transaction.concepts().get_attribute_type(label)
 [#_struct_ConceptManager_method_get_entity]
 ==== get_entity
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-pub async fn get_entity(&self, iid: IID) -> Result<Option<Entity>>
+pub fn get_entity(&self, iid: IID) -> impl Promise<'tx, Result<Option<Entity>>>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn get_entity(&self, iid: IID) -> Result<Option<Entity>>
-----
-
---
-====
 
 Retrieves an ``Entity`` by its iid.
 
@@ -190,7 +139,7 @@ a| `iid` a| The iid of the ``Entity`` to retrieve a| `IID`
 .Returns
 [source,rust]
 ----
-Result<Option<Entity>>
+impl Promise<'tx, Result<Option<Entity>>>
 ----
 
 [caption=""]
@@ -212,7 +161,7 @@ sync::
 --
 [source,rust]
 ----
-transaction.concepts().get_entity(iid)
+transaction.concepts().get_entity(iid).resolve()
 ----
 
 --
@@ -221,28 +170,13 @@ transaction.concepts().get_entity(iid)
 [#_struct_ConceptManager_method_get_entity_type]
 ==== get_entity_type
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-pub async fn get_entity_type(&self, label: String) -> Result<Option<EntityType>>
+pub fn get_entity_type(
+    &self,
+    label: String
+) -> impl Promise<'tx, Result<Option<EntityType>>>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn get_entity_type(&self, label: String) -> Result<Option<EntityType>>
-----
-
---
-====
 
 Retrieves an ``EntityType`` by its label.
 
@@ -259,7 +193,7 @@ a| `label` a| The label of the ``EntityType`` to retrieve a| `String`
 .Returns
 [source,rust]
 ----
-Result<Option<EntityType>>
+impl Promise<'tx, Result<Option<EntityType>>>
 ----
 
 [caption=""]
@@ -281,7 +215,7 @@ sync::
 --
 [source,rust]
 ----
-transaction.concepts().get_entity_type(label)
+transaction.concepts().get_entity_type(label).resolve()
 ----
 
 --
@@ -290,28 +224,13 @@ transaction.concepts().get_entity_type(label)
 [#_struct_ConceptManager_method_get_relation]
 ==== get_relation
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-pub async fn get_relation(&self, iid: IID) -> Result<Option<Relation>>
+pub fn get_relation(
+    &self,
+    iid: IID
+) -> impl Promise<'tx, Result<Option<Relation>>>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn get_relation(&self, iid: IID) -> Result<Option<Relation>>
-----
-
---
-====
 
 Retrieves a ``Relation`` by its iid.
 
@@ -328,7 +247,7 @@ a| `iid` a| The iid of the ``Relation`` to retrieve a| `IID`
 .Returns
 [source,rust]
 ----
-Result<Option<Relation>>
+impl Promise<'tx, Result<Option<Relation>>>
 ----
 
 [caption=""]
@@ -350,7 +269,7 @@ sync::
 --
 [source,rust]
 ----
-transaction.concepts().get_relation(iid)
+transaction.concepts().get_relation(iid).resolve()
 ----
 
 --
@@ -359,31 +278,13 @@ transaction.concepts().get_relation(iid)
 [#_struct_ConceptManager_method_get_relation_type]
 ==== get_relation_type
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-pub async fn get_relation_type(
+pub fn get_relation_type(
     &self,
     label: String
-) -> Result<Option<RelationType>>
+) -> impl Promise<'tx, Result<Option<RelationType>>>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn get_relation_type(&self, label: String) -> Result<Option<RelationType>>
-----
-
---
-====
 
 Retrieves a ``RelationType`` by its label.
 
@@ -400,7 +301,7 @@ a| `label` a| The label of the ``RelationType`` to retrieve a| `String`
 .Returns
 [source,rust]
 ----
-Result<Option<RelationType>>
+impl Promise<'tx, Result<Option<RelationType>>>
 ----
 
 [caption=""]
@@ -422,7 +323,7 @@ sync::
 --
 [source,rust]
 ----
-transaction.concepts().get_relation_type(label)
+transaction.concepts().get_relation_type(label).resolve()
 ----
 
 --
@@ -457,36 +358,14 @@ transaction.concepts().get_schema_exceptions()
 [#_struct_ConceptManager_method_put_attribute_type]
 ==== put_attribute_type
 
-[tabs]
-====
-async::
-+
---
-[source,rust]
-----
-pub async fn put_attribute_type(
-    &self,
-    label: String,
-    value_type: ValueType
-) -> Result<AttributeType>
-----
-
---
-
-sync::
-+
---
 [source,rust]
 ----
 pub fn put_attribute_type(
     &self,
     label: String,
     value_type: ValueType
-) -> Result<AttributeType>
+) -> impl Promise<'tx, Result<AttributeType>>
 ----
-
---
-====
 
 Creates a new ``AttributeType`` if none exists with the given label, or retrieves the existing one. or retrieve. :return:
 
@@ -504,7 +383,7 @@ a| `value_type` a| The value type of the ``AttributeType`` to create a| `ValueTy
 .Returns
 [source,rust]
 ----
-Result<AttributeType>
+impl Promise<'tx, Result<AttributeType>>
 ----
 
 [caption=""]
@@ -516,7 +395,7 @@ async::
 --
 [source,rust]
 ----
-await transaction.concepts().put_attribute_type(label, value_type).await
+transaction.concepts().put_attribute_type(label, value_type).await
 ----
 
 --
@@ -526,7 +405,7 @@ sync::
 --
 [source,rust]
 ----
-await transaction.concepts().put_attribute_type(label, value_type)
+transaction.concepts().put_attribute_type(label, value_type).resolve()
 ----
 
 --
@@ -535,28 +414,13 @@ await transaction.concepts().put_attribute_type(label, value_type)
 [#_struct_ConceptManager_method_put_entity_type]
 ==== put_entity_type
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-pub async fn put_entity_type(&self, label: String) -> Result<EntityType>
+pub fn put_entity_type(
+    &self,
+    label: String
+) -> impl Promise<'tx, Result<EntityType>>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn put_entity_type(&self, label: String) -> Result<EntityType>
-----
-
---
-====
 
 Creates a new ``EntityType`` if none exists with the given label, otherwise retrieves the existing one.
 
@@ -573,7 +437,7 @@ a| `label` a| The label of the ``EntityType`` to create or retrieve a| `String`
 .Returns
 [source,rust]
 ----
-Result<EntityType>
+impl Promise<'tx, Result<EntityType>>
 ----
 
 [caption=""]
@@ -595,7 +459,7 @@ sync::
 --
 [source,rust]
 ----
-transaction.concepts().put_entity_type(label)
+transaction.concepts().put_entity_type(label).resolve()
 ----
 
 --
@@ -604,28 +468,13 @@ transaction.concepts().put_entity_type(label)
 [#_struct_ConceptManager_method_put_relation_type]
 ==== put_relation_type
 
-[tabs]
-====
-async::
-+
---
 [source,rust]
 ----
-pub async fn put_relation_type(&self, label: String) -> Result<RelationType>
+pub fn put_relation_type(
+    &self,
+    label: String
+) -> impl Promise<'tx, Result<RelationType>>
 ----
-
---
-
-sync::
-+
---
-[source,rust]
-----
-pub fn put_relation_type(&self, label: String) -> Result<RelationType>
-----
-
---
-====
 
 Creates a new ``RelationType`` if none exists with the given label, otherwise retrieves the existing one.
 
@@ -642,7 +491,7 @@ a| `label` a| The label of the ``RelationType`` to create or retrieve a| `String
 .Returns
 [source,rust]
 ----
-Result<RelationType>
+impl Promise<'tx, Result<RelationType>>
 ----
 
 [caption=""]
@@ -664,7 +513,7 @@ sync::
 --
 [source,rust]
 ----
-transaction.concepts().put_relation_type(label)
+transaction.concepts().put_relation_type(label).resolve()
 ----
 
 --
