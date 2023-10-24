@@ -33,17 +33,17 @@ from typedb.driver import *
 
 @step("typeql define")
 def step_impl(context: Context):
-    context.tx().query.define(query=context.text)
+    context.tx().query.define(query=context.text).resolve()
 
 
 @step("typeql define; throws exception")
 def step_impl(context: Context):
-    assert_that(calling(context.tx().query.define).with_args(query=context.text), raises(TypeDBDriverException))
+    assert_that(calling(lambda query: context.tx().query.define(query).resolve()).with_args(query=context.text), raises(TypeDBDriverException))
 
 
 @step("typeql define; throws exception containing \"{pattern}\"")
 def step_impl(context: Context, pattern: str):
-    assert_that(calling(context.tx().query.define).with_args(query=context.text),
+    assert_that(calling(lambda query: context.tx().query.define(query).resolve()).with_args(query=context.text),
                 raises(TypeDBDriverException, re.escape(pattern)))
 
 
@@ -54,18 +54,18 @@ def step_impl(context: Context):
 
 @step("typeql undefine; throws exception")
 def step_impl(context: Context):
-    assert_that(calling(context.tx().query.undefine).with_args(query=context.text), raises(TypeDBDriverException))
+    assert_that(calling(lambda query: context.tx().query.undefine(query).resolve()).with_args(query=context.text), raises(TypeDBDriverException))
 
 
 @step("typeql undefine; throws exception containing \"{pattern}\"")
 def step_impl(context: Context, pattern: str):
-    assert_that(calling(context.tx().query.undefine).with_args(query=context.text),
+    assert_that(calling(lambda query: context.tx().query.undefine(query).resolve()).with_args(query=context.text),
                 raises(TypeDBDriverException, re.escape(pattern)))
 
 
 @step("typeql insert")
 def step_impl(context: Context):
-    context.tx().query.insert(query=context.text)
+    list(context.tx().query.insert(query=context.text))
 
 
 @step("typeql insert; throws exception")
@@ -91,7 +91,7 @@ def step_impl(context: Context):
 
 @step("typeql delete; throws exception containing \"{pattern}\"")
 def step_impl(context: Context, pattern: str):
-    assert_that(calling(context.tx().query.delete).with_args(query=context.text),
+    assert_that(calling(lambda query: context.tx().query.delete(query).resolve()).with_args(query=context.text),
                 raises(TypeDBDriverException, re.escape(pattern)))
 
 
@@ -137,12 +137,12 @@ def step_impl(context: Context, pattern: str):
 @step("get answer of typeql match aggregate")
 def step_impl(context: Context):
     context.clear_answers()
-    context.numeric_answer = context.tx().query.match_aggregate(query=context.text)
+    context.numeric_answer = context.tx().query.match_aggregate(query=context.text).resolve()
 
 
 @step("typeql match aggregate; throws exception")
 def step_impl(context: Context):
-    assert_that(calling(context.tx().query.match_aggregate).with_args(query=context.text), raises(TypeDBDriverException))
+    assert_that(calling(lambda query: context.tx().query.match_aggregate(query).resolve()).with_args(query=context.text), raises(TypeDBDriverException))
 
 
 @step("get answers of typeql match group")

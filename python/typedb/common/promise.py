@@ -44,6 +44,6 @@ class Promise(Generic[T]):
 
     def resolve(self) -> T:
         try:
-            self.inner()
+            return self.inner()
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)

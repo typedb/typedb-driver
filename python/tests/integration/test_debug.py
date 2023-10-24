@@ -112,7 +112,7 @@ class TestDebug(TestCase):
                 tx.query.define(schema)
                 tx.commit()
             with driver.session(TYPEDB, SCHEMA) as session, session.transaction(WRITE) as tx:
-                person = tx.concepts.get_entity_type("person")
+                person = tx.concepts.get_entity_type("person").resolve()
                 assert(len(list(person.get_owns(tx, value_type=ValueType.STRING))) == 1)
                 assert(len(list(person.get_owns(tx, value_type=ValueType.LONG))) == 1)
 

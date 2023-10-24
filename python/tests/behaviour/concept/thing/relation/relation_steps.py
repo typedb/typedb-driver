@@ -29,54 +29,54 @@ from tests.behaviour.context import Context
 
 @step("relation({type_label}) create new instance; throws exception")
 def step_impl(context: Context, type_label: str):
-    assert_that(calling(context.tx().concepts.get_relation_type(type_label).create).with_args(context.tx()),
+    assert_that(calling(lambda tx: context.tx().concepts.get_relation_type(type_label).resolve().create(tx).resolve()).with_args(context.tx()),
                 raises(TypeDBDriverException))
 
 
 @step("{var:Var} = relation({type_label}) create new instance")
 def step_impl(context: Context, var: str, type_label: str):
-    context.put(var, context.tx().concepts.get_relation_type(type_label).create(context.tx()))
+    context.put(var, context.tx().concepts.get_relation_type(type_label).resolve().create(context.tx()))
 
 
 @step("{var:Var} = relation({type_label}) create new instance with key({key_type}): {key_value}")
 def step_impl(context: Context, var: str, type_label: str, key_type: str, key_value: str):
-    key = context.tx().concepts.get_attribute_type(key_type).put(context.tx(), key_value)
-    relation = context.tx().concepts.get_relation_type(type_label).create(context.tx())
-    relation.set_has(context.tx(), key)
+    key = context.tx().concepts.get_attribute_type(key_type).resolve().put(context.tx(), key_value).resolve()
+    relation = context.tx().concepts.get_relation_type(type_label).resolve().create(context.tx()).resolve()
+    relation.set_has(context.tx(), key).resolve()
     context.put(var, relation)
 
 
 @step("{var:Var} = relation({type_label}) get instance with key({key_type}): {key_value}")
 def step_impl(context: Context, var: str, type_label: str, key_type: str, key_value: str):
-    context.put(var, next((owner for owner in context.tx().concepts.get_attribute_type(key_type).get(context.tx(), key_value).get_owners(context.tx())
+    context.put(var, next((owner for owner in context.tx().concepts.get_attribute_type(key_type).resolve().get(context.tx(), key_value).resolve().get_owners(context.tx())
                            if owner.get_type().get_label() == Label.of(type_label)), None))
 
 
 @step("relation({type_label}) get instances contain: {var:Var}")
 def step_impl(context: Context, type_label: str, var: str):
-    assert_that(context.tx().concepts.get_relation_type(type_label).get_instances(context.tx()), has_item(context.get(var)))
+    assert_that(context.tx().concepts.get_relation_type(type_label).resolve().get_instances(context.tx()), has_item(context.get(var)))
 
 
 @step("relation({type_label}) get instances do not contain: {var:Var}")
 def step_impl(context: Context, type_label: str, var: str):
-    assert_that(context.tx().concepts.get_relation_type(type_label).get_instances(context.tx()), not_(has_item(context.get(var))))
+    assert_that(context.tx().concepts.get_relation_type(type_label).resolve().get_instances(context.tx()), not_(has_item(context.get(var))))
 
 
 @step("relation({type_label}) get instances is empty")
 def step_impl(context: Context, type_label: str):
-    assert_that(calling(next).with_args(context.tx().concepts.get_relation_type(type_label).get_instances(context.tx())), raises(StopIteration))
+    assert_that(calling(next).with_args(context.tx().concepts.get_relation_type(type_label).resolve().get_instances(context.tx())), raises(StopIteration))
 
 
 @step("relation {var1:Var} add player for role({role_label}): {var2:Var}")
 def step_impl(context: Context, var1: str, role_label: str, var2: str):
     relation = context.get(var1).as_relation()
-    relation.add_player(context.tx(), relation.get_type().get_relates(context.tx(), role_label), context.get(var2))
+    relation.add_player(context.tx(), relation.get_type().get_relates(context.tx(), role_label).resolve(), context.get(var2))
 
 
 @step("relation {var1:Var} remove player for role({role_label}): {var2:Var}")
 def step_impl(context: Context, var1: str, role_label: str, var2: str):
     relation = context.get(var1).as_relation()
-    relation.remove_player(context.tx(), relation.get_type().get_relates(context.tx(), role_label), context.get(var2))
+    relation.remove_player(context.tx(), relation.get_type().get_relates(context.tx(), role_label).resolve(), context.get(var2))
 
 
 @step("relation {var1:Var} add player for role({role_label}): {var2:Var}; throws exception")
@@ -89,8 +89,8 @@ def adding_player_throws_exception(context: Context, var1: str, role_label: str,
     try:
         relation.add_player(
             context.tx(),
-            relation.get_type().get_relates(context.tx(), role_label),
-            context.get(var2))
+            relation.get_type().get_relates(context.tx(), role_label).resolve(),
+            context.get(var2)).resolve()
         assert False;
     except TypeDBDriverException:
         pass
@@ -102,7 +102,7 @@ def step_impl(context: Context, var: str):
     relation = context.get(var).as_relation()
     players_by_role_type = relation.get_players(context.tx())
     for (role_label, var2) in players.items():
-        assert_that(players_by_role_type.get(relation.get_type().get_relates(context.tx(), role_label)), has_item(context.get(parse_var(var2))))
+        assert_that(players_by_role_type.get(relation.get_type().get_relates(context.tx(), role_label).resolve()), has_item(context.get(parse_var(var2))))
 
 
 @step("relation {var:Var} get players do not contain")
@@ -111,7 +111,7 @@ def step_impl(context: Context, var: str):
     relation = context.get(var).as_relation()
     players_by_role_type = relation.get_players(context.tx())
     for (role_label, var2) in players.items():
-        assert_that(players_by_role_type.get(relation.get_type().get_relates(context.tx(), role_label)), not_(has_item(context.get(parse_var(var2)))))
+        assert_that(players_by_role_type.get(relation.get_type().get_relates(context.tx(), role_label).resolve()), not_(has_item(context.get(parse_var(var2)))))
 
 
 @step("relation {var1:Var} get players contain: {var2:Var}")
@@ -127,12 +127,12 @@ def step_impl(context: Context, var1: str, var2: str):
 @step("relation {var1:Var} get players for role({role_label}) contain: {var2:Var}")
 def step_impl(context: Context, var1: str, role_label: str, var2: str):
     relation = context.get(var1).as_relation()
-    assert_that(relation.get_players_by_role_type(context.tx(), relation.get_type().get_relates(context.tx(), role_label)),
+    assert_that(relation.get_players_by_role_type(context.tx(), relation.get_type().get_relates(context.tx(), role_label).resolve()),
         has_item(context.get(var2)))
 
 
 @step("relation {var1:Var} get players for role({role_label}) do not contain: {var2:Var}")
 def step_impl(context: Context, var1: str, role_label: str, var2: str):
     relation = context.get(var1).as_relation()
-    assert_that(relation.get_players_by_role_type(context.tx(), relation.get_type().get_relates(context.tx(), role_label)),
+    assert_that(relation.get_players_by_role_type(context.tx(), relation.get_type().get_relates(context.tx(), role_label).resolve()),
         not_(has_item(context.get(var2))))
