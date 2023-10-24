@@ -55,7 +55,7 @@ public interface EntityType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * entityType.create(transaction);
+     * entityType.create(transaction).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -119,7 +119,7 @@ public interface EntityType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * entityType.setSupertype(transaction, entityType);
+     * entityType.setSupertype(transaction, entityType).resolve();
      * </pre>
      *
      * @param transaction The current transaction

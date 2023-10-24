@@ -30,6 +30,7 @@ dir_mapping = {
     "ConceptMap.adoc": "answer",
     "NumericGroup.adoc": "answer",
     "ConceptMapGroup.adoc": "answer",
+    "Promise_T_.adoc": "answer",
     "TypeDB.adoc": "connection",
     "TypeDBDriver.adoc": "connection",
     "TypeDBCredential.adoc": "connection",

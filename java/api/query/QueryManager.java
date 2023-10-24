@@ -90,7 +90,7 @@ public interface QueryManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.query().matchAggregate(query, options)
+     * transaction.query().matchAggregate(query, options).resolve()
      * </pre>
      *
      * @param query The TypeQL Match Aggregate query to be executed
@@ -230,7 +230,7 @@ public interface QueryManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.query().delete(query, options)
+     * transaction.query().delete(query, options).resolve()
      * </pre>
      *
      * @param query The TypeQL Delete query to be executed
@@ -298,7 +298,7 @@ public interface QueryManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.query().define(query, options)
+     * transaction.query().define(query, options).resolve()
      * </pre>
      *
      * @param query The TypeQL Define query to be executed
@@ -335,7 +335,7 @@ public interface QueryManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.query().undefine(query, options)
+     * transaction.query().undefine(query, options).resolve()
      * </pre>
      *
      * @param query The TypeQL Undefine query to be executed

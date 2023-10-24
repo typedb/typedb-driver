@@ -116,7 +116,7 @@ public interface ThingType extends Type {
      *
      * <h3>Examples</h3>
      * <pre>
-     * thingType.setAbstract(transaction);
+     * thingType.setAbstract(transaction).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -130,7 +130,7 @@ public interface ThingType extends Type {
      *
      * <h3>Examples</h3>
      * <pre>
-     * thingType.unsetAbstract(transaction);
+     * thingType.unsetAbstract(transaction).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -151,8 +151,8 @@ public interface ThingType extends Type {
      *
      * <h3>Examples</h3>
      * <pre>
-     * thingType.setPlays(transaction, roleType)
-     * thingType.setPlays(transaction, roleType, overriddenType)
+     * thingType.setPlays(transaction, roleType).resolve();
+     * thingType.setPlays(transaction, roleType, overriddenType).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -169,8 +169,8 @@ public interface ThingType extends Type {
      *
      * <h3>Examples</h3>
      * <pre>
-     * thingType.setOwns(transaction, attributeType);
-     * thingType.setOwns(transaction, attributeType, overriddenType, Collections.singleton(Annotation.key()));
+     * thingType.setOwns(transaction, attributeType).resolve();
+     * thingType.setOwns(transaction, attributeType, overriddenType, Collections.singleton(Annotation.key())).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -220,8 +220,8 @@ public interface ThingType extends Type {
      *
      * <h3>Examples</h3>
      * <pre>
-     * thingType.getPlays(transaction);
-     * thingType.getPlays(transaction, Transitivity.EXPLICIT);
+     * thingType.getPlays(transaction).resolve();
+     * thingType.getPlays(transaction, Transitivity.EXPLICIT).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -236,7 +236,7 @@ public interface ThingType extends Type {
      *
      * <h3>Examples</h3>
      * <pre>
-     * thingType.getPlaysOverridden(transaction, roleType);
+     * thingType.getPlaysOverridden(transaction, roleType).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -332,7 +332,7 @@ public interface ThingType extends Type {
      *
      * <h3>Examples</h3>
      * <pre>
-     * thingType.getOwnsOverridden(transaction, attributeType);
+     * thingType.getOwnsOverridden(transaction, attributeType).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -346,7 +346,7 @@ public interface ThingType extends Type {
      *
      * <h3>Examples</h3>
      * <pre>
-     * thingType.unsetPlays(transaction, roleType);
+     * thingType.unsetPlays(transaction, roleType).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -360,7 +360,7 @@ public interface ThingType extends Type {
      *
      * <h3>Examples</h3>
      * <pre>
-     * thingType.unsetOwns(transaction, attributeType);
+     * thingType.unsetOwns(transaction, attributeType).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -374,7 +374,7 @@ public interface ThingType extends Type {
      *
      * <h3>Examples</h3>
      * <pre>
-     * thingType.getSyntax(transaction);
+     * thingType.getSyntax(transaction).resolve();
      * </pre>
      *
      * @param transaction The current transaction

@@ -13,7 +13,7 @@ Provides methods for manipulating rules in the database.
 ----
 @Nullable
 @CheckReturnValue
-Rule getRule​(java.lang.String label)
+Promise<Rule> getRule​(java.lang.String label)
 ----
 
 Retrieves the Rule that has the given label. 
@@ -30,13 +30,13 @@ a| `label` a| The label of the Rule to create or retrieve a| `java.lang.String`
 
 [caption=""]
 .Returns
-`Rule`
+`Promise<Rule>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-transaction.logic().getRule(label)
+transaction.logic().getRule(label).resolve();
 ----
 
 [#_LogicManager_getRules_]
@@ -67,9 +67,10 @@ transaction.logic().getRules()
 
 [source,java]
 ----
-Rule putRule​(java.lang.String label,
-             com.vaticle.typeql.lang.pattern.Pattern when,
-             com.vaticle.typeql.lang.pattern.Pattern then)
+@CheckReturnValue
+Promise<Rule> putRule​(java.lang.String label,
+                      com.vaticle.typeql.lang.pattern.Pattern when,
+                      com.vaticle.typeql.lang.pattern.Pattern then)
 ----
 
 Creates a new Rule if none exists with the given label, or replaces the existing one. 
@@ -88,13 +89,13 @@ a| `then` a| The then body of the rule to create a| `com.vaticle.typeql.lang.pat
 
 [caption=""]
 .Returns
-`Rule`
+`Promise<Rule>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-transaction.logic().putRule(label, when, then)
+transaction.logic().putRule(label, when, then).resolve();
 ----
 
 // end::methods[]

@@ -57,7 +57,7 @@ public interface Rule {
      *
      * <h3>Examples</h3>
      * <pre>
-     * rule.setLabel(transaction, newLabel)
+     * rule.setLabel(transaction, newLabel).resolve();
      * </pre>
      *
      * @param transaction The current <code>Transaction</code>
@@ -71,7 +71,7 @@ public interface Rule {
      *
      * <h3>Examples</h3>
      * <pre>
-     * rule.delete(transaction)
+     * rule.delete(transaction).resolve();
      * </pre>
      *
      * @param transaction The current <code>Transaction</code>
@@ -84,7 +84,7 @@ public interface Rule {
      *
      * <h3>Examples</h3>
      * <pre>
-     * rule.isDeleted(transaction)
+     * rule.isDeleted(transaction).resolve();
      * </pre>
      *
      * @param transaction The current <code>Transaction</code>

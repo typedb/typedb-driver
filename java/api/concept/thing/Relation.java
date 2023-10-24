@@ -81,7 +81,7 @@ public interface Relation extends Thing {
      *
      * <h3>Examples</h3>
      * <pre>
-     * relation.addPlayer(transaction, roleType, player);
+     * relation.addPlayer(transaction, roleType, player).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -96,7 +96,7 @@ public interface Relation extends Thing {
      *
      * <h3>Examples</h3>
      * <pre>
-     * relation.removePlayer(transaction, roleType, player);
+     * relation.removePlayer(transaction, roleType, player).resolve();
      * </pre>
      *
      * @param transaction The current transaction

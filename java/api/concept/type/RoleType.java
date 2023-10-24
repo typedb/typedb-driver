@@ -57,7 +57,7 @@ public interface RoleType extends Type {
      *
      * <h3>Examples</h3>
      * <pre>
-     * roleType.getSupertype(transaction);
+     * roleType.getSupertype(transaction).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -105,7 +105,7 @@ public interface RoleType extends Type {
      *
      * <h3>Examples</h3>
      * <pre>
-     * roleType.getRelationType(transaction);
+     * roleType.getRelationType(transaction).resolve();
      * </pre>
      *
      * @param transaction The current transaction

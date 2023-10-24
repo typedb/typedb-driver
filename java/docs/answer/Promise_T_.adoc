@@ -1,0 +1,91 @@
+[#_Promise<T>]
+=== Promise<T>
+
+*Package*: `com.vaticle.typedb.driver.common`
+
+A ``Promise`` represents an asynchronous network operation.
+
+The request it represents is performed immediately. The response is only retrieved once the ``Promise`` is ``resolve``d.
+
+// tag::methods[]
+[#_Promise<T>__init__F]
+==== Promise
+
+[source,java]
+----
+public Promise​(F inner)
+----
+
+
+
+[caption=""]
+.Returns
+`public`
+
+[#_Promise<T>_map_P_F]
+==== map
+
+[source,java]
+----
+public static <T,​U,​P extends java.util.function.Supplier<T>,​F extends java.util.function.Function<T,​U>> Promise<U> map​(P promise,
+                                                                                                                                               F fn)
+----
+
+
+
+[caption=""]
+.Returns
+`public static <T,​U,​P extends java.util.function.Supplier<T>,​F extends java.util.function.Function<T,​U>> Promise<U>`
+
+[#_Promise<T>_of_com_vaticle_typedb_driver_jni_VoidPromise]
+==== of
+
+[source,java]
+----
+public static Promise<java.lang.Void> of​(com.vaticle.typedb.driver.jni.VoidPromise promise)
+----
+
+
+
+[caption=""]
+.Returns
+`public static Promise<java.lang.Void>`
+
+[#_Promise<T>_of_com_vaticle_typedb_driver_jni_StringPromise]
+==== of
+
+[source,java]
+----
+public static Promise<java.lang.String> of​(com.vaticle.typedb.driver.jni.StringPromise promise)
+----
+
+
+
+[caption=""]
+.Returns
+`public static Promise<java.lang.String>`
+
+[#_Promise<T>_resolve_]
+==== resolve
+
+[source,java]
+----
+public T resolve()
+----
+
+Retrieves the result of the Promise. 
+
+
+[caption=""]
+.Returns
+`public T`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+promise.resolve()
+----
+
+// end::methods[]
+

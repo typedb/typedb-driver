@@ -115,7 +115,7 @@ public interface Thing extends Concept {
      *
      * <h3>Examples</h3>
      * <pre>
-     * thing.setHas(transaction, attribute);
+     * thing.setHas(transaction, attribute).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -129,7 +129,7 @@ public interface Thing extends Concept {
      *
      * <h3>Examples</h3>
      * <pre>
-     * thing.unsetHas(transaction, attribute);
+     * thing.unsetHas(transaction, attribute).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -144,9 +144,8 @@ public interface Thing extends Concept {
      *
      * <h3>Examples</h3>
      * <pre>
-     * thing.getHas(transaction)
-     thing.getHas(transaction, attributeType=attributeType,
-     annotations=set(Annotation.key()))
+     * thing.getHas(transaction);
+     * thing.getHas(transaction, attributeType);
      * </pre>
      *
      * @param transaction The current transaction
@@ -162,7 +161,7 @@ public interface Thing extends Concept {
      * <h3>Examples</h3>
      * <pre>
      * thing.getHas(transaction);
-     * thing.getHas(transaction, annotations=set(Annotation.key()));
+     * thing.getHas(transaction, set(Annotation.key()));
      * </pre>
      *
      * @param transaction The current transaction
@@ -204,7 +203,7 @@ public interface Thing extends Concept {
      *
      * <h3>Examples</h3>
      * <pre>
-     * thing.delete(transaction);
+     * thing.delete(transaction).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -217,7 +216,7 @@ public interface Thing extends Concept {
      *
      * <h3>Examples</h3>
      * <pre>
-     * thing.isDeleted(transaction)
+     * thing.isDeleted(transaction).resolve();
      * </pre>
      *
      * @param transaction The current transaction

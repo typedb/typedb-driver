@@ -256,7 +256,8 @@ concept.asValue();
 
 [source,java]
 ----
-void delete​(TypeDBTransaction transaction)
+@CheckReturnValue
+Promise<java.lang.Void> delete​(TypeDBTransaction transaction)
 ----
 
 Deletes this type from the database. 
@@ -273,13 +274,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-type.delete(transaction);
+type.delete(transaction).resolve();
 ----
 
 [#_Type_getLabel_]
@@ -366,7 +367,7 @@ type.getSubtypes(transaction);
 ----
 @Nullable
 @CheckReturnValue
-Type getSupertype​(TypeDBTransaction transaction)
+Promise<? extends Type> getSupertype​(TypeDBTransaction transaction)
 ----
 
 Retrieves the most immediate supertype of the type. 
@@ -383,13 +384,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 
 [caption=""]
 .Returns
-`Type`
+`Promise<? extends Type>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-type.getSupertype(transaction);
+type.getSupertype(transaction).resolve();
 ----
 
 [#_Type_getSupertypes_com_vaticle_typedb_driver_api_TypeDBTransaction]
@@ -499,10 +500,11 @@ concept.isAttributeType();
 [source,java]
 ----
 @CheckReturnValue
-boolean isDeleted​(TypeDBTransaction transaction)
+Promise<java.lang.Boolean> isDeleted​(TypeDBTransaction transaction)
 ----
 
-Check if the concept has been deleted
+Check if the concept has been deleted 
+
 
 [caption=""]
 .Input parameters
@@ -515,7 +517,14 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 
 [caption=""]
 .Returns
-`boolean`
+`Promise<java.lang.Boolean>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+type.isDeleted(transaction).resolve();
+----
 
 [#_Type_isEntity_]
 ==== isEntity
@@ -752,8 +761,9 @@ concept.isValue();
 
 [source,java]
 ----
-void setLabel​(TypeDBTransaction transaction,
-              java.lang.String label)
+@CheckReturnValue
+Promise<java.lang.Void> setLabel​(TypeDBTransaction transaction,
+                                 java.lang.String label)
 ----
 
 Renames the label of the type. The new label must remain unique. 
@@ -771,13 +781,13 @@ a| `label` a| The new ``Label`` to be given to the type. a| `java.lang.String`
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-type.setLabel(transaction, newLabel)
+type.setLabel(transaction, newLabel).resolve();
 ----
 
 [#_Type_toJSON_]

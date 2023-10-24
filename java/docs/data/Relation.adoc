@@ -16,9 +16,10 @@ Relation is an instance of a relation type and can be uniquely addressed by a co
 
 [source,java]
 ----
-void addPlayer​(TypeDBTransaction transaction,
-               RoleType roleType,
-               Thing player)
+@CheckReturnValue
+Promise<java.lang.Void> addPlayer​(TypeDBTransaction transaction,
+                                  RoleType roleType,
+                                  Thing player)
 ----
 
 Adds a new role player to play the given role in this ``Relation``. 
@@ -37,13 +38,13 @@ a| `player` a| The thing to play the role a| `Thing`
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-relation.addPlayer(transaction, roleType, player);
+relation.addPlayer(transaction, roleType, player).resolve();
 ----
 
 [#_Relation_asAttribute_]
@@ -623,9 +624,10 @@ concept.isValue();
 
 [source,java]
 ----
-void removePlayer​(TypeDBTransaction transaction,
-                  RoleType roleType,
-                  Thing player)
+@CheckReturnValue
+Promise<java.lang.Void> removePlayer​(TypeDBTransaction transaction,
+                                     RoleType roleType,
+                                     Thing player)
 ----
 
 Removes the association of the given instance that plays the given role in this ``Relation``. 
@@ -644,13 +646,13 @@ a| `player` a| The instance to no longer play the role in this ``Relation`` a| `
 
 [caption=""]
 .Returns
-`void`
+`Promise<java.lang.Void>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-relation.removePlayer(transaction, roleType, player);
+relation.removePlayer(transaction, roleType, player).resolve();
 ----
 
 // end::methods[]

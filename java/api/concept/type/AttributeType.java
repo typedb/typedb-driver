@@ -76,7 +76,7 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.put(transaction, value);
+     * attributeType.put(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -90,7 +90,7 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.put(transaction, value);
+     * attributeType.put(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -104,7 +104,7 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.put(transaction, value);
+     * attributeType.put(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -118,7 +118,7 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.put(transaction, value);
+     * attributeType.put(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -132,7 +132,7 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.put(transaction, value);
+     * attributeType.put(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -146,7 +146,7 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.put(transaction, value);
+     * attributeType.put(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -160,7 +160,7 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.get(transaction, value);
+     * attributeType.get(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -175,7 +175,7 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.get(transaction, value);
+     * attributeType.get(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -190,7 +190,7 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.get(transaction, value);
+     * attributeType.get(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -205,7 +205,7 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.get(transaction, value);
+     * attributeType.get(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -220,7 +220,7 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.get(transaction, value);
+     * attributeType.get(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -235,7 +235,7 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.get(transaction, value);
+     * attributeType.get(transaction, value).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -249,7 +249,7 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.getRegex(transaction);
+     * attributeType.getRegex(transaction).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -263,7 +263,7 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.setRegex(transaction, regex);
+     * attributeType.setRegex(transaction, regex).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -277,7 +277,7 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.unsetRegex(transaction);
+     * attributeType.unsetRegex(transaction).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -360,7 +360,7 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.setSupertype(transaction, superType);
+     * attributeType.setSupertype(transaction, superType).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -374,7 +374,7 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.getSubtypes(transaction);
+     * attributeType.getSubtypes(transaction).resolve();
      * </pre>
      *
      * @param transaction The current transaction

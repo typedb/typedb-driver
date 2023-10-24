@@ -38,7 +38,7 @@ public interface LogicManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.logic().getRule(label)
+     * transaction.logic().getRule(label).resolve();
      * </pre>
      *
      * @param label The label of the Rule to create or retrieve
@@ -63,7 +63,7 @@ public interface LogicManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.logic().putRule(label, when, then)
+     * transaction.logic().putRule(label, when, then).resolve();
      * </pre>
      *
      * @param label The label of the Rule to create or replace

@@ -58,7 +58,7 @@ public interface RelationType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * relationType.create(transaction);
+     * relationType.create(transaction).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -121,7 +121,7 @@ public interface RelationType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * relationType.getRelates(transaction, roleLabel);
+     * relationType.getRelates(transaction, roleLabel).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -140,7 +140,7 @@ public interface RelationType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * relationType.getRelatesOverridden(transaction, roleLabel);
+     * relationType.getRelatesOverridden(transaction, roleLabel).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -172,8 +172,8 @@ public interface RelationType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * relationType.setRelates(transaction, roleLabel);
-     * relationType.setRelates(transaction, roleLabel, overriddenLabel);
+     * relationType.setRelates(transaction, roleLabel).resolve();
+     * relationType.setRelates(transaction, roleLabel, overriddenLabel).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -196,7 +196,7 @@ public interface RelationType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * relationType.unsetRelates(transaction, roleLabel);
+     * relationType.unsetRelates(transaction, roleLabel).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -220,7 +220,7 @@ public interface RelationType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * relationType.getSubtypes(transaction, transitivity);
+     * relationType.getSubtypes(transaction, transitivity).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -235,7 +235,7 @@ public interface RelationType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * relationType.setSupertype(transaction, superRelationType);
+     * relationType.setSupertype(transaction, superRelationType).resolve();
      * </pre>
      *
      * @param transaction The current transaction

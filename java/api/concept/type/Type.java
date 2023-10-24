@@ -97,7 +97,7 @@ public interface Type extends Concept {
      *
      * <h3>Examples</h3>
      * <pre>
-     * type.setLabel(transaction, newLabel)
+     * type.setLabel(transaction, newLabel).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -111,7 +111,7 @@ public interface Type extends Concept {
      *
      * <h3>Examples</h3>
      * <pre>
-     * type.getSupertype(transaction);
+     * type.getSupertype(transaction).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -162,7 +162,7 @@ public interface Type extends Concept {
      *
      * <h3>Examples</h3>
      * <pre>
-     * type.delete(transaction);
+     * type.delete(transaction).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -172,6 +172,11 @@ public interface Type extends Concept {
 
     /**
      * Check if the concept has been deleted
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * type.isDeleted(transaction).resolve();
+     * </pre>
      *
      * @param transaction The current transaction
      */

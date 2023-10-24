@@ -77,7 +77,7 @@ public interface ConceptManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getEntityType(label);
+     * transaction.concepts().getEntityType(label).resolve();
      * </pre>
      *
      * @param label The label of the <code>EntityType</code> to retrieve
@@ -91,7 +91,7 @@ public interface ConceptManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getRelationType(label);
+     * transaction.concepts().getRelationType(label).resolve();
      * </pre>
      *
      * @param label The label of the <code>RelationType</code> to retrieve
@@ -105,7 +105,7 @@ public interface ConceptManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getAttributeType(label)
+     * transaction.concepts().getAttributeType(label).resolve();
      * </pre>
      *
      * @param label The label of the <code>AttributeType</code> to retrieve
@@ -120,7 +120,7 @@ public interface ConceptManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().putEntityType(label);
+     * transaction.concepts().putEntityType(label).resolve();
      * </pre>
      *
      * @param label The label of the <code>EntityType</code> to create or retrieve
@@ -133,7 +133,7 @@ public interface ConceptManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().putRelationType(label);
+     * transaction.concepts().putRelationType(label).resolve();
      * </pre>
      *
      * @param label The label of the <code>RelationType</code> to create or retrieve
@@ -146,7 +146,7 @@ public interface ConceptManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * await transaction.concepts().putAttributeType(label, valueType);
+     * await transaction.concepts().putAttributeType(label, valueType).resolve();
      * </pre>
      *
      * @param label The label of the <code>AttributeType</code> to create or retrieve
@@ -159,7 +159,7 @@ public interface ConceptManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getEntity(iid);
+     * transaction.concepts().getEntity(iid).resolve();
      * </pre>
      *
      * @param iid The iid of the <code>Entity</code> to retrieve
@@ -173,7 +173,7 @@ public interface ConceptManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getRelation(iid);
+     * transaction.concepts().getRelation(iid).resolve();
      * </pre>
      *
      * @param iid The iid of the <code>Relation</code> to retrieve
@@ -187,7 +187,7 @@ public interface ConceptManager {
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getAttribute(iid);
+     * transaction.concepts().getAttribute(iid).resolve();
      * </pre>
      *
      * @param iid The iid of the <code>Attribute</code> to retrieve

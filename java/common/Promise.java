@@ -28,6 +28,11 @@ import com.vaticle.typedb.driver.jni.VoidPromise;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ * A <code>Promise</code> represents an asynchronous network operation.
+ * <p>The request it represents is performed immediately. The response is only retrieved
+ * once the <code>Promise</code> is <code>resolve</code>d.
+ */
 public class Promise<T> {
     private final Supplier<T> inner;
 
@@ -35,6 +40,14 @@ public class Promise<T> {
         this.inner = inner;
     }
 
+    /**
+     * Retrieves the result of the Promise.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * promise.resolve()
+     * </pre>
+     */
     public T resolve() {
         return this.inner.get();
     }

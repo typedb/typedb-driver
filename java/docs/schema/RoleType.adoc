@@ -390,7 +390,7 @@ roleType.getRelationInstances(transaction, transitivity)
 
 [source,java]
 ----
-RelationType getRelationType​(TypeDBTransaction transaction)
+Promise<? extends RelationType> getRelationType​(TypeDBTransaction transaction)
 ----
 
 Retrieves the ``RelationType`` that this role is directly related to. 
@@ -407,13 +407,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 
 [caption=""]
 .Returns
-`RelationType`
+`Promise<? extends RelationType>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-roleType.getRelationType(transaction);
+roleType.getRelationType(transaction).resolve();
 ----
 
 [#_RoleType_getRelationTypes_com_vaticle_typedb_driver_api_TypeDBTransaction]
@@ -503,7 +503,7 @@ roleType.getSubtypes(transaction, transitivity);
 
 [source,java]
 ----
-RoleType getSupertype​(TypeDBTransaction transaction)
+Promise<? extends RoleType> getSupertype​(TypeDBTransaction transaction)
 ----
 
 Retrieves the most immediate supertype of the ``RoleType``. 
@@ -520,13 +520,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 
 [caption=""]
 .Returns
-`RoleType`
+`Promise<? extends RoleType>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-roleType.getSupertype(transaction);
+roleType.getSupertype(transaction).resolve();
 ----
 
 [#_RoleType_getSupertypes_com_vaticle_typedb_driver_api_TypeDBTransaction]

@@ -13,7 +13,7 @@ Provides access for all Concept API methods.
 ----
 @Nullable
 @CheckReturnValue
-Attribute getAttribute​(java.lang.String iid)
+Promise<? extends Attribute> getAttribute​(java.lang.String iid)
 ----
 
 Retrieves an ``Attribute`` by its iid. 
@@ -30,13 +30,13 @@ a| `iid` a| The iid of the ``Attribute`` to retrieve a| `java.lang.String`
 
 [caption=""]
 .Returns
-`Attribute`
+`Promise<? extends Attribute>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-transaction.concepts().getAttribute(iid);
+transaction.concepts().getAttribute(iid).resolve();
 ----
 
 [#_ConceptManager_getAttributeType_java_lang_String]
@@ -46,7 +46,7 @@ transaction.concepts().getAttribute(iid);
 ----
 @Nullable
 @CheckReturnValue
-AttributeType getAttributeType​(java.lang.String label)
+Promise<? extends AttributeType> getAttributeType​(java.lang.String label)
 ----
 
 Retrieves an ``AttributeType`` by its label. 
@@ -63,13 +63,13 @@ a| `label` a| The label of the ``AttributeType`` to retrieve a| `java.lang.Strin
 
 [caption=""]
 .Returns
-`AttributeType`
+`Promise<? extends AttributeType>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-transaction.concepts().getAttributeType(label)
+transaction.concepts().getAttributeType(label).resolve();
 ----
 
 [#_ConceptManager_getEntity_java_lang_String]
@@ -79,7 +79,7 @@ transaction.concepts().getAttributeType(label)
 ----
 @Nullable
 @CheckReturnValue
-Entity getEntity​(java.lang.String iid)
+Promise<? extends Entity> getEntity​(java.lang.String iid)
 ----
 
 Retrieves an ``Entity`` by its iid. 
@@ -96,13 +96,13 @@ a| `iid` a| The iid of the ``Entity`` to retrieve a| `java.lang.String`
 
 [caption=""]
 .Returns
-`Entity`
+`Promise<? extends Entity>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-transaction.concepts().getEntity(iid);
+transaction.concepts().getEntity(iid).resolve();
 ----
 
 [#_ConceptManager_getEntityType_java_lang_String]
@@ -112,7 +112,7 @@ transaction.concepts().getEntity(iid);
 ----
 @Nullable
 @CheckReturnValue
-EntityType getEntityType​(java.lang.String label)
+Promise<? extends EntityType> getEntityType​(java.lang.String label)
 ----
 
 Retrieves an ``EntityType`` by its label. 
@@ -129,13 +129,13 @@ a| `label` a| The label of the ``EntityType`` to retrieve a| `java.lang.String`
 
 [caption=""]
 .Returns
-`EntityType`
+`Promise<? extends EntityType>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-transaction.concepts().getEntityType(label);
+transaction.concepts().getEntityType(label).resolve();
 ----
 
 [#_ConceptManager_getRelation_java_lang_String]
@@ -145,7 +145,7 @@ transaction.concepts().getEntityType(label);
 ----
 @Nullable
 @CheckReturnValue
-Relation getRelation​(java.lang.String iid)
+Promise<? extends Relation> getRelation​(java.lang.String iid)
 ----
 
 Retrieves a ``Relation`` by its iid. 
@@ -162,13 +162,13 @@ a| `iid` a| The iid of the ``Relation`` to retrieve a| `java.lang.String`
 
 [caption=""]
 .Returns
-`Relation`
+`Promise<? extends Relation>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-transaction.concepts().getRelation(iid);
+transaction.concepts().getRelation(iid).resolve();
 ----
 
 [#_ConceptManager_getRelationType_java_lang_String]
@@ -178,7 +178,7 @@ transaction.concepts().getRelation(iid);
 ----
 @Nullable
 @CheckReturnValue
-RelationType getRelationType​(java.lang.String label)
+Promise<? extends RelationType> getRelationType​(java.lang.String label)
 ----
 
 Retrieves a ``RelationType`` by its label. 
@@ -195,13 +195,13 @@ a| `label` a| The label of the ``RelationType`` to retrieve a| `java.lang.String
 
 [caption=""]
 .Returns
-`RelationType`
+`Promise<? extends RelationType>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-transaction.concepts().getRelationType(label);
+transaction.concepts().getRelationType(label).resolve();
 ----
 
 [#_ConceptManager_getRootAttributeType_]
@@ -301,8 +301,8 @@ transaction.concepts().getSchemaException();
 
 [source,java]
 ----
-AttributeType putAttributeType​(java.lang.String label,
-                               Value.Type valueType)
+Promise<? extends AttributeType> putAttributeType​(java.lang.String label,
+                                                  Value.Type valueType)
 ----
 
 Creates a new ``AttributeType`` if none exists with the given label, or retrieves the existing one. 
@@ -320,13 +320,13 @@ a| `valueType` a| The value type of the ``AttributeType`` to create a| `Value.Ty
 
 [caption=""]
 .Returns
-`AttributeType`
+`Promise<? extends AttributeType>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-await transaction.concepts().putAttributeType(label, valueType);
+await transaction.concepts().putAttributeType(label, valueType).resolve();
 ----
 
 [#_ConceptManager_putEntityType_java_lang_String]
@@ -334,7 +334,7 @@ await transaction.concepts().putAttributeType(label, valueType);
 
 [source,java]
 ----
-EntityType putEntityType​(java.lang.String label)
+Promise<? extends EntityType> putEntityType​(java.lang.String label)
 ----
 
 Creates a new ``EntityType`` if none exists with the given label, otherwise retrieves the existing one. 
@@ -351,13 +351,13 @@ a| `label` a| The label of the ``EntityType`` to create or retrieve a| `java.lan
 
 [caption=""]
 .Returns
-`EntityType`
+`Promise<? extends EntityType>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-transaction.concepts().putEntityType(label);
+transaction.concepts().putEntityType(label).resolve();
 ----
 
 [#_ConceptManager_putRelationType_java_lang_String]
@@ -365,7 +365,7 @@ transaction.concepts().putEntityType(label);
 
 [source,java]
 ----
-RelationType putRelationType​(java.lang.String label)
+Promise<? extends RelationType> putRelationType​(java.lang.String label)
 ----
 
 Creates a new ``RelationType`` if none exists with the given label, otherwise retrieves the existing one. 
@@ -382,13 +382,13 @@ a| `label` a| The label of the ``RelationType`` to create or retrieve a| `java.l
 
 [caption=""]
 .Returns
-`RelationType`
+`Promise<? extends RelationType>`
 
 [caption=""]
 .Code examples
 [source,java]
 ----
-transaction.concepts().putRelationType(label);
+transaction.concepts().putRelationType(label).resolve();
 ----
 
 // end::methods[]
