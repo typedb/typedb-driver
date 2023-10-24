@@ -62,7 +62,7 @@ class Type(Concept, ABC):
         --------
         ::
 
-            type_.set_label(transaction, new_label)
+            type_.set_label(transaction, new_label).resolve()
         """
         pass
 
@@ -136,7 +136,7 @@ class Type(Concept, ABC):
         --------
         ::
 
-            type_.get_supertype(transaction)
+            type_.get_supertype(transaction).resolve()
         """
         pass
 
@@ -192,6 +192,6 @@ class Type(Concept, ABC):
         --------
         ::
 
-            type_.delete(transaction)
+            type_.delete(transaction).resolve()
         """
         pass

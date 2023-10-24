@@ -84,7 +84,7 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-            relation_type.create(transaction)
+            relation_type.create(transaction).resolve()
         """
         pass
 
@@ -135,7 +135,8 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-            relation_type.get_relates(transaction, role_label, transitivity)
+            relation_type.get_relates(transaction, role_label, transitivity).resolve()
+            relation_type.get_relates(transaction, transitivity)
         """
         pass
 
@@ -153,7 +154,7 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-            relation_type.get_relates_overridden(transaction, role_label)
+            relation_type.get_relates_overridden(transaction, role_label).resolve()
         """
         pass
 
@@ -178,8 +179,8 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-            relation_type.set_relates(transaction, role_label)
-           relation_type.set_relates(transaction, role_label, overridden_label)
+            relation_type.set_relates(transaction, role_label).resolve()
+            relation_type.set_relates(transaction, role_label, overridden_label).resolve()
         """
         pass
 
@@ -196,7 +197,7 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-            relation_type.unset_relates(transaction, role_label)
+            relation_type.unset_relates(transaction, role_label).resolve()
         """
         pass
 
@@ -238,6 +239,6 @@ class RelationType(ThingType, ABC):
         --------
         ::
 
-            relation_type.set_supertype(transaction, super_relation_type)
+            relation_type.set_supertype(transaction, super_relation_type).resolve()
         """
         pass

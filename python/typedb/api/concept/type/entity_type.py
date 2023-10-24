@@ -79,7 +79,7 @@ class EntityType(ThingType, ABC):
         --------
         ::
 
-            entity_type.create(transaction)
+            entity_type.create(transaction).resolve()
         """
         pass
 
@@ -145,6 +145,6 @@ class EntityType(ThingType, ABC):
         --------
         ::
 
-            entity_type.set_supertype(transaction, super_entity_type)
+            entity_type.set_supertype(transaction, super_entity_type).resolve()
         """
         pass

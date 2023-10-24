@@ -79,7 +79,7 @@ thing_type.get_owns(transaction, value_type,
 
 [source,python]
 ----
-get_owns_overridden(transaction: TypeDBTransaction, attribute_type: AttributeType) -> AttributeType | None
+get_owns_overridden(transaction: TypeDBTransaction, attribute_type: AttributeType) -> Promise[AttributeType | None]
 ----
 
 Retrieves an ``AttributeType``, ownership of which is overridden for this ``ThingType`` by a given ``attribute_type``.
@@ -96,13 +96,13 @@ a| `attribute_type` a| The ``AttributeType`` that overrides requested ``Attribut
 
 [caption=""]
 .Returns
-`AttributeType | None`
+`Promise[AttributeType | None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-thing_type.get_owns_overridden(transaction, attribute_type)
+thing_type.get_owns_overridden(transaction, attribute_type).resolve()
 ----
 
 [#_ThingType_get_plays]
@@ -142,7 +142,7 @@ thing_type.get_plays(transaction, Transitivity.EXPLICIT)
 
 [source,python]
 ----
-get_plays_overridden(transaction: TypeDBTransaction, role_type: RoleType) -> RoleType | None
+get_plays_overridden(transaction: TypeDBTransaction, role_type: RoleType) -> Promise[RoleType | None]
 ----
 
 Retrieves a ``RoleType`` that is overridden by the given ``role_type`` for this ``ThingType``.
@@ -159,13 +159,13 @@ a| `role_type` a| The ``RoleType`` that overrides an inherited role a| `RoleType
 
 [caption=""]
 .Returns
-`RoleType | None`
+`Promise[RoleType | None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-thing_type.get_plays_overridden(transaction, role_type)
+thing_type.get_plays_overridden(transaction, role_type).resolve()
 ----
 
 [#_ThingType_get_subtypes]
@@ -205,7 +205,7 @@ thing_type.get_subtypes(transaction, Transitivity.EXPLICIT)
 
 [source,python]
 ----
-get_supertype(transaction: TypeDBTransaction) -> ThingType | None
+get_supertype(transaction: TypeDBTransaction) -> Promise[ThingType | None]
 ----
 
 Retrieves the most immediate supertype of the ``ThingType``.
@@ -221,13 +221,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 
 [caption=""]
 .Returns
-`ThingType | None`
+`Promise[ThingType | None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-thing_type.get_supertype(transaction)
+thing_type.get_supertype(transaction).resolve()
 ----
 
 [#_ThingType_get_supertypes]
@@ -265,7 +265,7 @@ thing_type.get_supertypes(transaction)
 
 [source,python]
 ----
-get_syntax(transaction: TypeDBTransaction) -> str
+get_syntax(transaction: TypeDBTransaction) -> Promise[str]
 ----
 
 Produces a pattern for creating this ``ThingType`` in a ``define`` query.
@@ -281,13 +281,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 
 [caption=""]
 .Returns
-`str`
+`Promise[str]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-thing_type.get_syntax(transaction)
+thing_type.get_syntax(transaction).resolve()
 ----
 
 [#_ThingType_is_thing_type]
@@ -316,7 +316,7 @@ thing_type.is_thing_type()
 
 [source,python]
 ----
-set_abstract(transaction: TypeDBTransaction) -> None
+set_abstract(transaction: TypeDBTransaction) -> Promise[None]
 ----
 
 Set a ``ThingType`` to be abstract, meaning it cannot have instances.
@@ -332,13 +332,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 
 [caption=""]
 .Returns
-`None`
+`Promise[None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-thing_type.set_abstract(transaction)
+thing_type.set_abstract(transaction).resolve()
 ----
 
 [#_ThingType_set_owns]
@@ -346,7 +346,7 @@ thing_type.set_abstract(transaction)
 
 [source,python]
 ----
-set_owns(transaction: TypeDBTransaction, attribute_type: AttributeType, overridden_type: AttributeType | None = None, annotations: set[Annotation] | None = None) -> None
+set_owns(transaction: TypeDBTransaction, attribute_type: AttributeType, overridden_type: AttributeType | None = None, annotations: set[Annotation] | None = None) -> Promise[None]
 ----
 
 Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
@@ -365,16 +365,16 @@ a| `annotations` a| Adds annotations to the ownership. a| `set[Annotation] \| No
 
 [caption=""]
 .Returns
-`None`
+`Promise[None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-thing_type.set_owns(transaction, attribute_type)
+thing_type.set_owns(transaction, attribute_type).resolve()
 thing_type.set_owns(transaction, attribute_type,
                     overridden_type=overridden_type,
-                    annotations={Annotation.key()})
+                    annotations={Annotation.key()}).resolve()
 ----
 
 [#_ThingType_set_plays]
@@ -382,7 +382,7 @@ thing_type.set_owns(transaction, attribute_type,
 
 [source,python]
 ----
-set_plays(transaction: TypeDBTransaction, role_type: RoleType, overriden_type: RoleType | None = None) -> None
+set_plays(transaction: TypeDBTransaction, role_type: RoleType, overriden_type: RoleType | None = None) -> Promise[None]
 ----
 
 Allows the instances of this ``ThingType`` to play the given role.
@@ -400,14 +400,14 @@ a| `overriden_type` a| The role type that this role overrides, if applicable a| 
 
 [caption=""]
 .Returns
-`None`
+`Promise[None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-thing_type.set_plays(transaction, role_type)
-thing_type.set_plays(transaction, role_type, overridden_type)
+thing_type.set_plays(transaction, role_type).resolve()
+thing_type.set_plays(transaction, role_type, overridden_type).resolve()
 ----
 
 [#_ThingType_unset_abstract]
@@ -415,7 +415,7 @@ thing_type.set_plays(transaction, role_type, overridden_type)
 
 [source,python]
 ----
-unset_abstract(transaction: TypeDBTransaction) -> None
+unset_abstract(transaction: TypeDBTransaction) -> Promise[None]
 ----
 
 Set a ``ThingType`` to be non-abstract, meaning it can have instances.
@@ -431,13 +431,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 
 [caption=""]
 .Returns
-`None`
+`Promise[None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-thing_type.unset_abstract(transaction)
+thing_type.unset_abstract(transaction).resolve()
 ----
 
 [#_ThingType_unset_owns]
@@ -445,7 +445,7 @@ thing_type.unset_abstract(transaction)
 
 [source,python]
 ----
-unset_owns(transaction: TypeDBTransaction, attribute_type: AttributeType) -> None
+unset_owns(transaction: TypeDBTransaction, attribute_type: AttributeType) -> Promise[None]
 ----
 
 Disallows the instances of this ``ThingType`` from owning the given ``AttributeType``.
@@ -462,13 +462,13 @@ a| `attribute_type` a| The ``AttributeType`` to not be owned by the type. a| `At
 
 [caption=""]
 .Returns
-`None`
+`Promise[None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-thing_type.unset_owns(transaction, attribute_type)
+thing_type.unset_owns(transaction, attribute_type).resolve()
 ----
 
 [#_ThingType_unset_plays]
@@ -476,7 +476,7 @@ thing_type.unset_owns(transaction, attribute_type)
 
 [source,python]
 ----
-unset_plays(transaction: TypeDBTransaction, role_type: RoleType) -> None
+unset_plays(transaction: TypeDBTransaction, role_type: RoleType) -> Promise[None]
 ----
 
 Disallows the instances of this ``ThingType`` from playing the given role.
@@ -493,13 +493,13 @@ a| `role_type` a| The role to not be played by the instances of this type. a| `R
 
 [caption=""]
 .Returns
-`None`
+`Promise[None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-thing_type.unset_plays(transaction, role_type)
+thing_type.unset_plays(transaction, role_type).resolve()
 ----
 
 // end::methods[]

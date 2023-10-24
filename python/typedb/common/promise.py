@@ -30,6 +30,13 @@ U = TypeVar('U')
 
 
 class Promise(Generic[T]):
+    """
+    A ``Promise`` represents an asynchronous network operation.
+
+    The request it represents is performed immediately. The response is only retrieved
+    once the ``Promise`` is ``resolve``\ d.
+    """
+
     def __init__(self, inner: Callable[[], T]):
         self.inner = inner
 
@@ -43,6 +50,18 @@ class Promise(Generic[T]):
         return cls(inner)
 
     def resolve(self) -> T:
+        """
+        Retrieves the result of the Promise.
+
+        :return:
+
+        Examples
+        --------
+
+        ::
+
+            promise.resolve()
+        """
         try:
             return self.inner()
         except TypeDBDriverExceptionNative as e:

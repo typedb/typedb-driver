@@ -68,7 +68,7 @@ class QueryManager(ABC):
         --------
         ::
 
-            transaction.query.match_aggregate(query, options)
+            transaction.query.match_aggregate(query, options).resolve()
         """
         pass
 
@@ -136,7 +136,7 @@ class QueryManager(ABC):
         --------
         ::
 
-            transaction.query.delete(query, options)
+            transaction.query.delete(query, options).resolve()
         """
         pass
 
@@ -153,7 +153,7 @@ class QueryManager(ABC):
         --------
         ::
 
-            transaction.query.define(query, options)
+            transaction.query.define(query, options).resolve()
         """
         pass
 
@@ -170,7 +170,7 @@ class QueryManager(ABC):
         --------
         ::
 
-            transaction.query.undefine(query, options)
+            transaction.query.undefine(query, options).resolve()
         """
         pass
 

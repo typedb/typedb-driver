@@ -184,7 +184,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-            attribute = attribute_type.put(transaction, value)
+            attribute = attribute_type.put(transaction, value).resolve()
         '''
         pass
 
@@ -203,7 +203,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-            attribute = attribute_type.get(transaction, value)
+            attribute = attribute_type.get(transaction, value).resolve()
         '''
         pass
 
@@ -220,7 +220,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-            attribute_type.get_regex(transaction)
+            attribute_type.get_regex(transaction).resolve()
         """
         pass
 
@@ -242,7 +242,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-            attribute_type.set_regex(transaction, regex)
+            attribute_type.set_regex(transaction, regex).resolve()
         """
         pass
 
@@ -259,7 +259,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-            attribute_type.unset_regex(transaction)
+            attribute_type.unset_regex(transaction).resolve()
         """
         pass
 
@@ -278,7 +278,7 @@ class AttributeType(ThingType, ABC):
         --------
         ::
 
-            attribute_type.set_supertype(transaction, super_attribute_type)
+            attribute_type.set_supertype(transaction, super_attribute_type).resolve()
         """
         pass
 

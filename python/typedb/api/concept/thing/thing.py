@@ -138,7 +138,7 @@ class Thing(Concept, ABC):
         --------
         ::
 
-            thing.set_has(transaction, attribute)
+            thing.set_has(transaction, attribute).resolve()
         """
         pass
 
@@ -155,7 +155,7 @@ class Thing(Concept, ABC):
         --------
         ::
 
-            thing.unset_has(transaction, attribute)
+            thing.unset_has(transaction, attribute).resolve()
         """
         pass
 
@@ -240,7 +240,7 @@ class Thing(Concept, ABC):
         --------
         ::
 
-            thing.delete(transaction)
+            thing.delete(transaction).resolve()
         """
         pass
 
@@ -256,6 +256,6 @@ class Thing(Concept, ABC):
         --------
         ::
 
-            thing.is_deleted(transaction)
+            thing.is_deleted(transaction).resolve()
         """
         pass

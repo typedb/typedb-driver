@@ -11,7 +11,7 @@
 
 [source,python]
 ----
-delete(transaction: TypeDBTransaction) -> None
+delete(transaction: TypeDBTransaction) -> Promise[None]
 ----
 
 Deletes this type from the database.
@@ -27,13 +27,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 
 [caption=""]
 .Returns
-`None`
+`Promise[None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-type_.delete(transaction)
+type_.delete(transaction).resolve()
 ----
 
 [#_Type_get_label]
@@ -94,7 +94,7 @@ type_.get_subtypes(transaction, Transitivity.EXPLICIT)
 
 [source,python]
 ----
-get_supertype(transaction: TypeDBTransaction) -> Type | None
+get_supertype(transaction: TypeDBTransaction) -> Promise[Type | None]
 ----
 
 Retrieves the most immediate supertype of the type.
@@ -110,13 +110,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 
 [caption=""]
 .Returns
-`Type | None`
+`Promise[Type | None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-type_.get_supertype(transaction)
+type_.get_supertype(transaction).resolve()
 ----
 
 [#_Type_get_supertypes]
@@ -217,7 +217,7 @@ type_.is_type()
 
 [source,python]
 ----
-set_label(transaction: TypeDBTransaction, new_label: Label) -> None
+set_label(transaction: TypeDBTransaction, new_label: Label) -> Promise[None]
 ----
 
 Renames the label of the type. The new label must remain unique.
@@ -234,13 +234,13 @@ a| `new_label` a| The new ``Label`` to be given to the type. a| `Label` a|
 
 [caption=""]
 .Returns
-`None`
+`Promise[None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-type_.set_label(transaction, new_label)
+type_.set_label(transaction, new_label).resolve()
 ----
 
 [#_Type_to_json]

@@ -87,7 +87,7 @@ class RoleType(Type, ABC):
         --------
         ::
 
-            role_type.get_supertype(transaction)
+            role_type.get_supertype(transaction).resolve()
         """
         pass
 
@@ -142,7 +142,7 @@ class RoleType(Type, ABC):
         --------
         ::
 
-            role_type.get_relation_type(transaction)
+            role_type.get_relation_type(transaction).resolve()
         """
         pass
 

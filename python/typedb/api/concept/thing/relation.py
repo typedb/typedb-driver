@@ -96,7 +96,7 @@ class Relation(Thing, ABC):
         --------
         ::
 
-            relation.add_player(transaction, role_type, player)
+            relation.add_player(transaction, role_type, player).resolve()
         """
         pass
 
@@ -114,7 +114,7 @@ class Relation(Thing, ABC):
         --------
         ::
 
-            relation.remove_player(transaction, role_type, player)
+            relation.remove_player(transaction, role_type, player).resolve()
         """
         pass
 

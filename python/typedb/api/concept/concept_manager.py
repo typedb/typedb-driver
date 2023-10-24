@@ -98,7 +98,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-            transaction.concepts.get_entity_type(label)
+            transaction.concepts.get_entity_type(label).resolve()
         """
         pass
 
@@ -114,7 +114,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-            transaction.concepts.get_relation_type(label)
+            transaction.concepts.get_relation_type(label).resolve()
         """
         pass
 
@@ -130,7 +130,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-            transaction.concepts.get_attribute_type(label)
+            transaction.concepts.get_attribute_type(label).resolve()
         """
         pass
 
@@ -147,7 +147,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-            transaction.concepts.put_entity_type(label)
+            transaction.concepts.put_entity_type(label).resolve()
         """
         pass
 
@@ -164,7 +164,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-            transaction.concepts.put_relation_type(label)
+            transaction.concepts.put_relation_type(label).resolve()
         """
         pass
 
@@ -183,7 +183,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-            transaction.concepts.put_attribute_type(label, value_type)
+            transaction.concepts.put_attribute_type(label, value_type).resolve()
         """
         pass
 
@@ -199,7 +199,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-            transaction.concepts.get_entity(iid)
+            transaction.concepts.get_entity(iid).resolve()
         """
         pass
 
@@ -215,7 +215,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-            transaction.concepts.get_relation(iid)
+            transaction.concepts.get_relation(iid).resolve()
         """
         pass
 
@@ -231,7 +231,7 @@ class ConceptManager(ABC):
         --------
         ::
 
-            transaction.concepts.get_attribute(iid)
+            transaction.concepts.get_attribute(iid).resolve()
         """
         pass
 

@@ -34,7 +34,7 @@ entity_type.as_entity_type()
 
 [source,python]
 ----
-create(transaction: TypeDBTransaction) -> Entity
+create(transaction: TypeDBTransaction) -> Promise[Entity]
 ----
 
 Creates and returns a new instance of this ``EntityType``.
@@ -50,13 +50,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 
 [caption=""]
 .Returns
-`Entity`
+`Promise[Entity]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-entity_type.create(transaction)
+entity_type.create(transaction).resolve()
 ----
 
 [#_EntityType_get_instances]
@@ -147,7 +147,7 @@ entity_type.is_entity_type()
 
 [source,python]
 ----
-set_supertype(transaction: TypeDBTransaction, super_entity_type: EntityType) -> None
+set_supertype(transaction: TypeDBTransaction, super_entity_type: EntityType) -> Promise[None]
 ----
 
 Sets the supplied ``EntityType`` as the supertype of the current ``EntityType``.
@@ -164,13 +164,13 @@ a| `super_entity_type` a| The ``EntityType`` to set as the supertype of this ``E
 
 [caption=""]
 .Returns
-`None`
+`Promise[None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-entity_type.set_supertype(transaction, super_entity_type)
+entity_type.set_supertype(transaction, super_entity_type).resolve()
 ----
 
 // end::methods[]

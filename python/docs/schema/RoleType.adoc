@@ -129,7 +129,7 @@ role_type.get_relation_instances(transaction, transitivity)
 
 [source,python]
 ----
-get_relation_type(transaction: TypeDBTransaction) -> RelationType
+get_relation_type(transaction: TypeDBTransaction) -> Promise[RelationType]
 ----
 
 Retrieves the ``RelationType`` that this role is directly related to.
@@ -145,13 +145,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 
 [caption=""]
 .Returns
-`RelationType`
+`Promise[RelationType]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-role_type.get_relation_type(transaction)
+role_type.get_relation_type(transaction).resolve()
 ----
 
 [#_RoleType_get_relation_types]
@@ -220,7 +220,7 @@ role_type.get_subtypes(transaction, transitivity)
 
 [source,python]
 ----
-get_supertype(transaction: TypeDBTransaction) -> RoleType | None
+get_supertype(transaction: TypeDBTransaction) -> Promise[RoleType | None]
 ----
 
 Retrieves the most immediate supertype of the ``RoleType``.
@@ -236,13 +236,13 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 
 [caption=""]
 .Returns
-`RoleType | None`
+`Promise[RoleType | None]`
 
 [caption=""]
 .Code examples
 [source,python]
 ----
-role_type.get_supertype(transaction)
+role_type.get_supertype(transaction).resolve()
 ----
 
 [#_RoleType_get_supertypes]

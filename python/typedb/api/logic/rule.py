@@ -57,7 +57,7 @@ class Rule(ABC):
         ---------
         ::
 
-            rule.set_label(transaction, new_label)
+            rule.set_label(transaction, new_label).resolve()
         """
         pass
 
@@ -89,7 +89,7 @@ class Rule(ABC):
         ---------
         ::
 
-            rule.delete(transaction)
+            rule.delete(transaction).resolve()
         """
         pass
 
@@ -105,6 +105,6 @@ class Rule(ABC):
         ---------
         ::
 
-            rule.is_deleted(transaction)
+            rule.is_deleted(transaction).resolve()
         """
         pass

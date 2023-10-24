@@ -64,7 +64,7 @@ class ThingType(Type, ABC):
         --------
         ::
 
-            thing_type.get_supertype(transaction)
+            thing_type.get_supertype(transaction).resolve()
         """
         pass
 
@@ -145,7 +145,7 @@ class ThingType(Type, ABC):
         --------
         ::
 
-            thing_type.set_abstract(transaction)
+            thing_type.set_abstract(transaction).resolve()
         """
         pass
 
@@ -161,7 +161,7 @@ class ThingType(Type, ABC):
         --------
         ::
 
-            thing_type.unset_abstract(transaction)
+            thing_type.unset_abstract(transaction).resolve()
         """
         pass
 
@@ -185,8 +185,8 @@ class ThingType(Type, ABC):
         --------
         ::
 
-            thing_type.set_plays(transaction, role_type)
-            thing_type.set_plays(transaction, role_type, overridden_type)
+            thing_type.set_plays(transaction, role_type).resolve()
+            thing_type.set_plays(transaction, role_type, overridden_type).resolve()
         """
         pass
 
@@ -203,7 +203,7 @@ class ThingType(Type, ABC):
         --------
         ::
 
-            thing_type.unset_plays(transaction, role_type)
+            thing_type.unset_plays(transaction, role_type).resolve()
         """
         pass
 
@@ -231,10 +231,10 @@ class ThingType(Type, ABC):
         --------
         ::
 
-            thing_type.set_owns(transaction, attribute_type)
+            thing_type.set_owns(transaction, attribute_type).resolve()
             thing_type.set_owns(transaction, attribute_type,
                                 overridden_type=overridden_type,
-                                annotations={Annotation.key()})
+                                annotations={Annotation.key()}).resolve()
         """
         pass
 
@@ -252,7 +252,7 @@ class ThingType(Type, ABC):
         --------
         ::
 
-            thing_type.unset_owns(transaction, attribute_type)
+            thing_type.unset_owns(transaction, attribute_type).resolve()
         """
         pass
 
@@ -295,7 +295,7 @@ class ThingType(Type, ABC):
         --------
         ::
 
-            thing_type.get_plays_overridden(transaction, role_type)
+            thing_type.get_plays_overridden(transaction, role_type).resolve()
         """
         pass
 
@@ -350,7 +350,7 @@ class ThingType(Type, ABC):
         --------
         ::
 
-            thing_type.get_owns_overridden(transaction, attribute_type)
+            thing_type.get_owns_overridden(transaction, attribute_type).resolve()
         """
         pass
 
@@ -366,6 +366,6 @@ class ThingType(Type, ABC):
         --------
         ::
 
-            thing_type.get_syntax(transaction)
+            thing_type.get_syntax(transaction).resolve()
         """
         pass

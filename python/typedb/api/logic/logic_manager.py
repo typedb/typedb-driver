@@ -46,7 +46,7 @@ class LogicManager(ABC):
         ---------
         ::
 
-            transaction.logic.get_rule(label)
+            transaction.logic.get_rule(label).resolve()
         """
         pass
 
@@ -79,6 +79,6 @@ class LogicManager(ABC):
         ---------
         ::
 
-            transaction.logic.put_rule(label, when, then)
+            transaction.logic.put_rule(label, when, then).resolve()
         """
         pass
