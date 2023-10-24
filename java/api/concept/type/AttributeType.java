@@ -82,6 +82,7 @@ public interface AttributeType extends ThingType {
      * @param transaction The current transaction
      * @param value New <code>Attribute</code>’s value
      */
+    @CheckReturnValue
     Promise<? extends Attribute> put(TypeDBTransaction transaction, Value value);
 
     /**
@@ -96,6 +97,7 @@ public interface AttributeType extends ThingType {
      * @param transaction The current transaction
      * @param value New <code>Attribute</code>’s value
      */
+    @CheckReturnValue
     Promise<? extends Attribute> put(TypeDBTransaction transaction, String value);
 
     /**
@@ -110,6 +112,7 @@ public interface AttributeType extends ThingType {
      * @param transaction The current transaction
      * @param value New <code>Attribute</code>’s value
      */
+    @CheckReturnValue
     Promise<? extends Attribute> put(TypeDBTransaction transaction, long value);
 
     /**
@@ -124,6 +127,7 @@ public interface AttributeType extends ThingType {
      * @param transaction The current transaction
      * @param value New <code>Attribute</code>’s value
      */
+    @CheckReturnValue
     Promise<? extends Attribute> put(TypeDBTransaction transaction, double value);
 
     /**
@@ -138,6 +142,7 @@ public interface AttributeType extends ThingType {
      * @param transaction The current transaction
      * @param value New <code>Attribute</code>’s value
      */
+    @CheckReturnValue
     Promise<? extends Attribute> put(TypeDBTransaction transaction, boolean value);
 
     /**
@@ -152,6 +157,7 @@ public interface AttributeType extends ThingType {
      * @param transaction The current transaction
      * @param value New <code>Attribute</code>’s value
      */
+    @CheckReturnValue
     Promise<? extends Attribute> put(TypeDBTransaction transaction, LocalDateTime value);
 
     /**
@@ -166,7 +172,7 @@ public interface AttributeType extends ThingType {
      * @param transaction The current transaction
      * @param value <code>Attribute</code>’s value
      */
-    @Nullable
+    @CheckReturnValue
     Promise<? extends Attribute> get(TypeDBTransaction transaction, Value value);
 
     /**
@@ -181,7 +187,7 @@ public interface AttributeType extends ThingType {
      * @param transaction The current transaction
      * @param value <code>Attribute</code>’s value
      */
-    @Nullable
+    @CheckReturnValue
     Promise<? extends Attribute> get(TypeDBTransaction transaction, String value);
 
     /**
@@ -196,7 +202,7 @@ public interface AttributeType extends ThingType {
      * @param transaction The current transaction
      * @param value <code>Attribute</code>’s value
      */
-    @Nullable
+    @CheckReturnValue
     Promise<? extends Attribute> get(TypeDBTransaction transaction, long value);
 
     /**
@@ -211,7 +217,7 @@ public interface AttributeType extends ThingType {
      * @param transaction The current transaction
      * @param value <code>Attribute</code>’s value
      */
-    @Nullable
+    @CheckReturnValue
     Promise<? extends Attribute> get(TypeDBTransaction transaction, double value);
 
     /**
@@ -226,7 +232,7 @@ public interface AttributeType extends ThingType {
      * @param transaction The current transaction
      * @param value <code>Attribute</code>’s value
      */
-    @Nullable
+    @CheckReturnValue
     Promise<? extends Attribute> get(TypeDBTransaction transaction, boolean value);
 
     /**
@@ -241,7 +247,7 @@ public interface AttributeType extends ThingType {
      * @param transaction The current transaction
      * @param value <code>Attribute</code>’s value
      */
-    @Nullable
+    @CheckReturnValue
     Promise<? extends Attribute> get(TypeDBTransaction transaction, LocalDateTime value);
 
     /**
@@ -254,6 +260,7 @@ public interface AttributeType extends ThingType {
      *
      * @param transaction The current transaction
      */
+    @CheckReturnValue
     Promise<String> getRegex(TypeDBTransaction transaction);
 
     /**
@@ -374,7 +381,7 @@ public interface AttributeType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.getSubtypes(transaction).resolve();
+     * attributeType.getSubtypes(transaction);
      * </pre>
      *
      * @param transaction The current transaction

@@ -82,7 +82,6 @@ public interface ConceptManager {
      *
      * @param label The label of the <code>EntityType</code> to retrieve
      */
-    @Nullable
     @CheckReturnValue
     Promise<? extends EntityType> getEntityType(String label);
 
@@ -96,7 +95,6 @@ public interface ConceptManager {
      *
      * @param label The label of the <code>RelationType</code> to retrieve
      */
-    @Nullable
     @CheckReturnValue
     Promise<? extends RelationType> getRelationType(String label);
 
@@ -110,7 +108,6 @@ public interface ConceptManager {
      *
      * @param label The label of the <code>AttributeType</code> to retrieve
      */
-    @Nullable
     @CheckReturnValue
     Promise<? extends AttributeType> getAttributeType(String label);
 
@@ -125,6 +122,7 @@ public interface ConceptManager {
      *
      * @param label The label of the <code>EntityType</code> to create or retrieve
      */
+    @CheckReturnValue
     Promise<? extends EntityType> putEntityType(String label);
 
     /**
@@ -138,6 +136,7 @@ public interface ConceptManager {
      *
      * @param label The label of the <code>RelationType</code> to create or retrieve
      */
+    @CheckReturnValue
     Promise<? extends RelationType> putRelationType(String label);
 
     /**
@@ -152,6 +151,7 @@ public interface ConceptManager {
      * @param label The label of the <code>AttributeType</code> to create or retrieve
      * @param valueType The value type of the <code>AttributeType</code> to create
      */
+    @CheckReturnValue
     Promise<? extends AttributeType> putAttributeType(String label, Value.Type valueType);
 
     /**
@@ -164,7 +164,6 @@ public interface ConceptManager {
      *
      * @param iid The iid of the <code>Entity</code> to retrieve
      */
-    @Nullable
     @CheckReturnValue
     Promise<? extends Entity> getEntity(String iid);
 
@@ -178,7 +177,6 @@ public interface ConceptManager {
      *
      * @param iid The iid of the <code>Relation</code> to retrieve
      */
-    @Nullable
     @CheckReturnValue
     Promise<? extends Relation> getRelation(String iid);
 
@@ -192,7 +190,6 @@ public interface ConceptManager {
      *
      * @param iid The iid of the <code>Attribute</code> to retrieve
      */
-    @Nullable
     @CheckReturnValue
     Promise<? extends Attribute> getAttribute(String iid);
 

@@ -354,7 +354,6 @@ relationType.getRelates(transaction, transitivity);
 
 [source,java]
 ----
-@Nullable
 @CheckReturnValue
 Promise<? extends RoleType> getRelates​(TypeDBTransaction transaction,
                                        java.lang.String roleLabel)
@@ -389,7 +388,6 @@ relationType.getRelates(transaction, roleLabel).resolve();
 
 [source,java]
 ----
-@Nullable
 @CheckReturnValue
 Promise<? extends RoleType> getRelatesOverridden​(TypeDBTransaction transaction,
                                                  RoleType roleType)
@@ -406,7 +404,6 @@ Promise<? extends RoleType> getRelatesOverridden​(TypeDBTransaction transactio
 
 [source,java]
 ----
-@Nullable
 @CheckReturnValue
 Promise<? extends RoleType> getRelatesOverridden​(TypeDBTransaction transaction,
                                                  java.lang.String roleLabel)

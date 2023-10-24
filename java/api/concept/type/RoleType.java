@@ -63,6 +63,7 @@ public interface RoleType extends Type {
      * @param transaction The current transaction
      */
     @Override
+    @CheckReturnValue
     Promise<? extends RoleType> getSupertype(TypeDBTransaction transaction);
 
     /**
@@ -76,6 +77,7 @@ public interface RoleType extends Type {
      * @param transaction The current transaction
      */
     @Override
+    @CheckReturnValue
     Stream<? extends RoleType> getSupertypes(TypeDBTransaction transaction);
     /**
      * Retrieves all direct and indirect subtypes of the <code>RoleType</code>.
@@ -84,6 +86,7 @@ public interface RoleType extends Type {
      * @see RoleType#getSubtypes(TypeDBTransaction, Transitivity)
      */
     @Override
+    @CheckReturnValue
     Stream<? extends RoleType> getSubtypes(TypeDBTransaction transaction);
 
     /**
@@ -98,6 +101,7 @@ public interface RoleType extends Type {
      * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes, <code>Transitivity.EXPLICIT</code> for direct subtypes only
      */
     @Override
+    @CheckReturnValue
     Stream<? extends RoleType> getSubtypes(TypeDBTransaction transaction, Transitivity transitivity);
 
     /**
@@ -110,6 +114,7 @@ public interface RoleType extends Type {
      *
      * @param transaction The current transaction
      */
+    @CheckReturnValue
     Promise<? extends RelationType> getRelationType(TypeDBTransaction transaction);
 
     /**
@@ -122,6 +127,7 @@ public interface RoleType extends Type {
      *
      * @param transaction The current transaction
      */
+    @CheckReturnValue
     Stream<? extends RelationType> getRelationTypes(TypeDBTransaction transaction);
 
     /**
@@ -130,6 +136,7 @@ public interface RoleType extends Type {
      *
      * @see RoleType#getPlayerTypes(TypeDBTransaction, Transitivity)
      */
+    @CheckReturnValue
     Stream<? extends ThingType> getPlayerTypes(TypeDBTransaction transaction);
 
     /**
@@ -143,6 +150,7 @@ public interface RoleType extends Type {
      * @param transaction The current transaction
      * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect playing, <code>Transitivity.EXPLICIT</code> for direct playing only
      */
+    @CheckReturnValue
     Stream<? extends ThingType> getPlayerTypes(TypeDBTransaction transaction, Transitivity transitivity);
 
     /**
@@ -151,6 +159,7 @@ public interface RoleType extends Type {
      *
      * @see RoleType#getRelationInstances(TypeDBTransaction, Transitivity)
      */
+    @CheckReturnValue
     Stream<? extends Relation> getRelationInstances(TypeDBTransaction transaction);
 
     /**
@@ -164,6 +173,7 @@ public interface RoleType extends Type {
      * @param transaction The current transaction
      * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect relation, <code>Transitivity.EXPLICIT</code> for direct relation only
      */
+    @CheckReturnValue
     Stream<? extends Relation> getRelationInstances(TypeDBTransaction transaction, Transitivity transitivity);
 
     /**
@@ -171,6 +181,7 @@ public interface RoleType extends Type {
      *
      * @see RoleType#getPlayerTypes(TypeDBTransaction, Transitivity)
      */
+    @CheckReturnValue
     Stream<? extends Thing> getPlayerInstances(TypeDBTransaction transaction);
 
     /**
@@ -184,5 +195,6 @@ public interface RoleType extends Type {
      * @param transaction The current transaction
      * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect playing, <code>Transitivity.EXPLICIT</code> for direct playing only
      */
+    @CheckReturnValue
     Stream<? extends Thing> getPlayerInstances(TypeDBTransaction transaction, Transitivity transitivity);
 }

@@ -365,7 +365,6 @@ type.getSubtypes(transaction);
 
 [source,java]
 ----
-@Nullable
 @CheckReturnValue
 Promise<? extends Type> getSupertype​(TypeDBTransaction transaction)
 ----

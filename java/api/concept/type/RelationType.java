@@ -127,11 +127,9 @@ public interface RelationType extends ThingType {
      * @param transaction The current transaction
      * @param roleLabel Label of the role we wish to retrieve
      */
-    @Nullable
     @CheckReturnValue
     Promise<? extends RoleType> getRelates(TypeDBTransaction transaction, String roleLabel);
 
-    @Nullable
     @CheckReturnValue
     Promise<? extends RoleType> getRelatesOverridden(TypeDBTransaction transaction, RoleType roleType);
 
@@ -146,7 +144,6 @@ public interface RelationType extends ThingType {
      * @param transaction The current transaction
      * @param roleLabel Label of the role that overrides an inherited role
      */
-    @Nullable
     @CheckReturnValue
     Promise<? extends RoleType> getRelatesOverridden(TypeDBTransaction transaction, String roleLabel);
 
@@ -211,7 +208,7 @@ public interface RelationType extends ThingType {
      * 
      * @see RelationType#getSubtypes(TypeDBTransaction, Transitivity)
      */
-     @Override
+    @Override
     @CheckReturnValue
     Stream<? extends RelationType> getSubtypes(TypeDBTransaction transaction);
 

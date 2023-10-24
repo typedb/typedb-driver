@@ -116,7 +116,6 @@ public interface Type extends Concept {
      *
      * @param transaction The current transaction
      */
-    @Nullable
     @CheckReturnValue
     Promise<? extends Type> getSupertype(TypeDBTransaction transaction);
 

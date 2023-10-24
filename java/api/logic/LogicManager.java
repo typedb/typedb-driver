@@ -43,7 +43,6 @@ public interface LogicManager {
      *
      * @param label The label of the Rule to create or retrieve
      */
-    @Nullable
     @CheckReturnValue
     Promise<Rule> getRule(String label);
 
