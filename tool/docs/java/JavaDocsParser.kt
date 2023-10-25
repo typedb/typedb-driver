@@ -129,7 +129,7 @@ class JavaDocParser : Callable<Unit> {
             description = classDescr,
             examples = classExamples,
             fields = fields,
-            methods = methods.toMutableList(),
+            methods = methods,
             packagePath = packagePath,
             superClasses = superClasses,
         )
@@ -170,7 +170,7 @@ class JavaDocParser : Callable<Unit> {
             enumConstants = enumConstants,
             examples = classExamples,
             fields = fields,
-            methods = methods.toMutableList(),
+            methods = methods,
             packagePath = packagePath,
             superClasses = classBases,
         )

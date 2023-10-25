@@ -138,7 +138,7 @@ class PythonDocParser : Callable<Unit> {
             description = classDescr,
             examples = classExamples,
             fields = properties,
-            methods = methods.toMutableList(),
+            methods = methods,
             superClasses = superClasses,
         )
     }
@@ -164,7 +164,7 @@ class PythonDocParser : Callable<Unit> {
             description = classDescr,
             enumConstants = members,
             examples = classExamples,
-            methods = methods.toMutableList(),
+            methods = methods,
         )
     }
 

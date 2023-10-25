@@ -100,8 +100,9 @@ class NodejsDocParser : Callable<Unit> {
         }
 
         namespaceFunctions.forEach{ (namespaceName, functions) ->
-            if (namespaceName in parsedClasses) {
-                parsedClasses[namespaceName]!!.methods.addAll(functions);
+            if (parsedClasses.contains(namespaceName)) {
+                val classWithMethod = Class(namespaceName, methods = functions.toList())
+                parsedClasses[namespaceName] = parsedClasses[namespaceName]!!.merge(classWithMethod)
             } else {
                 throw IllegalArgumentException("Function $functions exists in namespace $namespaceName but not class definition was found to attach to");
             }
@@ -158,7 +159,7 @@ class NodejsDocParser : Callable<Unit> {
                 anchor = classAnchor,
                 description = classDescr,
                 fields = properties,
-                methods = methods.toMutableList(),
+                methods = methods,
                 superClasses = superClasses,
         )
     }

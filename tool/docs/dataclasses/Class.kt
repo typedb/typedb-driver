@@ -32,7 +32,7 @@ data class Class(
         val description: List<String> = listOf(),
         val examples: List<String> = listOf(),
         val fields: List<Variable> = listOf(),
-        val methods: MutableList<Method> = mutableListOf(),
+        val methods: List<Method> = listOf(),
         val packagePath: String? = null,
         val superClasses: List<String> = listOf(),
         val traitImplementors: List<String> = listOf(),
@@ -46,7 +46,7 @@ data class Class(
             description = this.description.ifEmpty { other.description },
             examples = this.examples.ifEmpty { other.examples },
             fields = this.fields + other.fields,
-            methods = (this.methods + other.methods).toMutableList(),
+            methods = this.methods + other.methods,
             packagePath = this.packagePath ?: other.packagePath,
             superClasses = this.superClasses.ifEmpty { other.superClasses },
         )
