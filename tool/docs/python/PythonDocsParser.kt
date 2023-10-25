@@ -25,7 +25,9 @@ import com.vaticle.typedb.driver.tool.docs.dataclasses.Class
 import com.vaticle.typedb.driver.tool.docs.dataclasses.EnumConstant
 import com.vaticle.typedb.driver.tool.docs.dataclasses.Method
 import com.vaticle.typedb.driver.tool.docs.dataclasses.Variable
-import com.vaticle.typedb.driver.tool.docs.util.*
+import com.vaticle.typedb.driver.tool.docs.util.removeAllTags
+import com.vaticle.typedb.driver.tool.docs.util.replaceCodeTags
+import com.vaticle.typedb.driver.tool.docs.util.replaceEmTags
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import picocli.CommandLine
@@ -33,7 +35,9 @@ import picocli.CommandLine.Parameters
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.*
 import java.util.concurrent.Callable
+import kotlin.collections.HashMap
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>): Unit = exitProcess(CommandLine(PythonDocParser()).execute(*args))
@@ -63,10 +67,17 @@ class PythonDocParser : Callable<Unit> {
             Files.createDirectory(docsDir)
         }
 
+        // HTML file path regex mapped to class names to include from that path.
+        val fileClassFilter = mapOf(
+                Pair(Regex(".*\\.api\\..*"), Regex(".*")),
+                Pair(Regex(".*\\.common\\..*"), Regex(".*")),
+                Pair(Regex(".*typedb\\.html"), Regex("TypeDB")),
+        )
+
         File(inputDirectoryName).walkTopDown().filter {
-            it.toString().endsWith(".html") &&
-                    (it.toString().contains(".api.") || it.toString().contains(".common."))
+            it.toString().endsWith(".html") && getClassFilter(it.toString(), fileClassFilter).isPresent()
         }.forEach {
+            val classNameFilter = getClassFilter(it.toString(), fileClassFilter).get()
             val html = it.readText(Charsets.UTF_8)
             val parsed = Jsoup.parse(html)
 
@@ -76,20 +87,27 @@ class PythonDocParser : Callable<Unit> {
                 } else {
                     parseClass(it)
                 }
-                if (parsedClass.isNotEmpty()) {
+                println("Parsed class: ")
+                println(parsedClass)
+                if (parsedClass.isNotEmpty() && classNameFilter.matches(parsedClass.name)) {
                     val parsedClassAsciiDoc = parsedClass.toAsciiDoc("python")
                     val fileName = "${parsedClass.name}.adoc"
                     val fileDir = docsDir.resolve(dirs[fileName]
-                        ?: throw NullPointerException("Unknown directory for the file $fileName"))
+                        ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided"))
                     if (!fileDir.toFile().exists()) {
                         Files.createDirectory(fileDir)
                     }
                     val outputFile = fileDir.resolve(fileName).toFile()
+                    println("Writing file: " + outputFile.path.toString())
                     outputFile.createNewFile()
                     outputFile.writeText(parsedClassAsciiDoc)
                 }
             }
         }
+    }
+
+    private fun getClassFilter(filePathString: String, fileClassFilter: Map<Regex, Regex>, ): Optional<Regex> {
+        return fileClassFilter.entries.stream().filter { it.key.matches(filePathString) }.findFirst().map { it.value };
     }
 
     private fun parseClass(element: Element): Class {

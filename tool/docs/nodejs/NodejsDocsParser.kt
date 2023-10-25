@@ -88,7 +88,7 @@ class NodejsDocParser : Callable<Unit> {
                 val parsedClassAsciiDoc = parsedClasses[parsedClass.name]!!.toAsciiDoc("nodejs")
                 val fileName = "${generateFilename(parsedClass.name)}.adoc"
                 val fileDir = docsDir.resolve(dirs[fileName]
-                    ?: throw NullPointerException("Unknown directory for the file $fileName"))
+                    ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided"))
                 if (!fileDir.toFile().exists()) {
                     Files.createDirectory(fileDir)
                 }
