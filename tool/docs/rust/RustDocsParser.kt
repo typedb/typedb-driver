@@ -154,7 +154,7 @@ class RustDocParser : Callable<Unit> {
             anchor = classAnchor,
             description = classDescr,
             fields = fields,
-            methods = methods,
+            methods = methods.toMutableList(),
             superClasses = traits,
         )
     }
@@ -181,7 +181,7 @@ class RustDocParser : Callable<Unit> {
             name = "Trait $className",
             anchor = classAnchor,
             description = classDescr,
-            methods = methods,
+            methods = methods.toMutableList(),
             traitImplementors = implementors,
         )
     }
@@ -200,7 +200,7 @@ class RustDocParser : Callable<Unit> {
             anchor = classAnchor,
             description = classDescr,
             enumConstants = variants,
-            methods = methods,
+            methods = methods.toMutableList(),
         )
     }
 

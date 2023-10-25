@@ -30,7 +30,7 @@ import ValueType = Concept.ValueType;
 
 /**
  * Attribute is an instance of the attribute type and has a value. This value is fixed and unique for every given instance of the attribute type.
- * Attribute type can be uniquely addressed by its type and value.
+ * Attributes can be uniquely addressed by their type and value.
  */
 export interface Attribute extends Thing {
     /**

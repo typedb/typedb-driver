@@ -26,16 +26,16 @@ import com.vaticle.typedb.driver.tool.docs.adoc.AsciiDocTableBuilder
 import com.vaticle.typedb.driver.tool.docs.util.replaceSymbolsForAnchor
 
 data class Class(
-    val name: String,
-    val anchor: String? = null,
-    val enumConstants: List<EnumConstant> = listOf(),
-    val description: List<String> = listOf(),
-    val examples: List<String> = listOf(),
-    val fields: List<Variable> = listOf(),
-    val methods: List<Method> = listOf(),
-    val packagePath: String? = null,
-    val superClasses: List<String> = listOf(),
-    val traitImplementors: List<String> = listOf(),
+        val name: String,
+        val anchor: String? = null,
+        val enumConstants: List<EnumConstant> = listOf(),
+        val description: List<String> = listOf(),
+        val examples: List<String> = listOf(),
+        val fields: List<Variable> = listOf(),
+        val methods: MutableList<Method> = mutableListOf(),
+        val packagePath: String? = null,
+        val superClasses: List<String> = listOf(),
+        val traitImplementors: List<String> = listOf(),
 ) {
     fun merge(other: Class): Class {
         assert(this.name == other.name)
@@ -46,7 +46,7 @@ data class Class(
             description = this.description.ifEmpty { other.description },
             examples = this.examples.ifEmpty { other.examples },
             fields = this.fields + other.fields,
-            methods = this.methods + other.methods,
+            methods = (this.methods + other.methods).toMutableList(),
             packagePath = this.packagePath ?: other.packagePath,
             superClasses = this.superClasses.ifEmpty { other.superClasses },
         )

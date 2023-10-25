@@ -87,8 +87,6 @@ class PythonDocParser : Callable<Unit> {
                 } else {
                     parseClass(it)
                 }
-                println("Parsed class: ")
-                println(parsedClass)
                 if (parsedClass.isNotEmpty() && classNameFilter.matches(parsedClass.name)) {
                     val parsedClassAsciiDoc = parsedClass.toAsciiDoc("python")
                     val fileName = "${parsedClass.name}.adoc"
@@ -98,7 +96,6 @@ class PythonDocParser : Callable<Unit> {
                         Files.createDirectory(fileDir)
                     }
                     val outputFile = fileDir.resolve(fileName).toFile()
-                    println("Writing file: " + outputFile.path.toString())
                     outputFile.createNewFile()
                     outputFile.writeText(parsedClassAsciiDoc)
                 }
@@ -141,7 +138,7 @@ class PythonDocParser : Callable<Unit> {
             description = classDescr,
             examples = classExamples,
             fields = properties,
-            methods = methods,
+            methods = methods.toMutableList(),
             superClasses = superClasses,
         )
     }
@@ -167,7 +164,7 @@ class PythonDocParser : Callable<Unit> {
             description = classDescr,
             enumConstants = members,
             examples = classExamples,
-            methods = methods,
+            methods = methods.toMutableList(),
         )
     }
 
