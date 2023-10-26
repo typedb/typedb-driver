@@ -77,7 +77,7 @@ class RustDocParser : Callable<Unit> {
             parseDirectory(inputDirectoryNames[0], feature).forEach { (className, parsedClass) ->
                 val fileName = className.replace(" ", "_") + ".adoc"
                 val fileDir = docsDir.resolve(dirs[fileName]
-                    ?: throw NullPointerException("Unknown directory for the file $fileName"))
+                    ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided"))
                 if (!fileDir.toFile().exists()) {
                     Files.createDirectory(fileDir)
                 }
@@ -91,7 +91,7 @@ class RustDocParser : Callable<Unit> {
             parsedDirs[0].forEach { (className, classFirst) ->
                 val fileName = className.replace(" ", "_") + ".adoc"
                 val fileDir = baseDocsDir.resolve(dirs[fileName]
-                    ?: throw NullPointerException("Unknown directory for the file $fileName"))
+                    ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided"))
                 if (!fileDir.toFile().exists()) {
                     Files.createDirectory(fileDir)
                 }

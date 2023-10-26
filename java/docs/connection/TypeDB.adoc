@@ -1,0 +1,77 @@
+[#_TypeDB]
+=== TypeDB
+
+*Package*: `com.vaticle.typedb.driver`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `DEFAULT_ADDRESS` a| `static java.lang.String` a| 
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_TypeDB__init__]
+==== TypeDB
+
+[source,java]
+----
+public TypeDB()
+----
+
+
+
+[caption=""]
+.Returns
+`public`
+
+[#_TypeDB_coreDriver_java_lang_String]
+==== coreDriver
+
+[source,java]
+----
+public static TypeDBDriver coreDriver​(java.lang.String address)
+----
+
+
+
+[caption=""]
+.Returns
+`public static TypeDBDriver`
+
+[#_TypeDB_enterpriseDriver_java_lang_String_com_vaticle_typedb_driver_api_TypeDBCredential]
+==== enterpriseDriver
+
+[source,java]
+----
+public static TypeDBDriver enterpriseDriver​(java.lang.String address,
+                                            TypeDBCredential credential)
+----
+
+
+
+[caption=""]
+.Returns
+`public static TypeDBDriver`
+
+[#_TypeDB_enterpriseDriver_java_util_Set_com_vaticle_typedb_driver_api_TypeDBCredential]
+==== enterpriseDriver
+
+[source,java]
+----
+public static TypeDBDriver enterpriseDriver​(java.util.Set<java.lang.String> addresses,
+                                            TypeDBCredential credential)
+----
+
+
+
+[caption=""]
+.Returns
+`public static TypeDBDriver`
+
+// end::methods[]
+

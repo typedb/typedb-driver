@@ -396,6 +396,7 @@ build:
         .factory/test-enterprise.sh //java/test/behaviour/query/language/define/... --test_output=errors
         .factory/test-enterprise.sh //java/test/behaviour/query/language/undefine/... --test_output=errors
 
+
     test-python-behaviour-connection-core:
       image: vaticle-ubuntu-22.04
       dependencies:
@@ -675,7 +676,25 @@ build:
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
-#    test-python-failover-enterprise:
+    test-python-integration-core:
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        export PATH="$HOME/.local/bin:$PATH"
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+
+        tool/test/start-core-server.sh
+        bazel test //python/tests/integration:test_stream --test_output=streamed --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
+
+#    test-python-integration-enterprise-failover:
 #      machine: 4-core-16-gb
 #      image: vaticle-ubuntu-22.04
 #      dependencies:

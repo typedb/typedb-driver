@@ -25,7 +25,10 @@ import com.vaticle.typedb.driver.tool.docs.dataclasses.Class
 import com.vaticle.typedb.driver.tool.docs.dataclasses.EnumConstant
 import com.vaticle.typedb.driver.tool.docs.dataclasses.Method
 import com.vaticle.typedb.driver.tool.docs.dataclasses.Variable
-import com.vaticle.typedb.driver.tool.docs.util.*
+import com.vaticle.typedb.driver.tool.docs.util.removeAllTags
+import com.vaticle.typedb.driver.tool.docs.util.replaceCodeTags
+import com.vaticle.typedb.driver.tool.docs.util.replaceEmTags
+import com.vaticle.typedb.driver.tool.docs.util.replaceSymbolsForAnchor
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import picocli.CommandLine
@@ -58,37 +61,59 @@ class NodejsDocParser : Callable<Unit> {
         val inputDirectoryName = inputDirectoryNames[0]
 
         val docsDir = System.getenv("BUILD_WORKSPACE_DIRECTORY")?.let { Paths.get(it).resolve(outputDirectoryName) }
-            ?: Paths.get(outputDirectoryName)
+                ?: Paths.get(outputDirectoryName)
         if (!docsDir.toFile().exists()) {
             Files.createDirectory(docsDir)
         }
 
         val parsedClasses: HashMap<String, Class> = hashMapOf()
+        val namespaceFunctions: HashMap<String, MutableList<Method>> = hashMapOf()
+
+        // special case for namespace functions that we should parse
+        val namespaceFunctionsFilter = Regex(".*/functions/.*(coreDriver|enterpriseDriver).*")
         File(inputDirectoryName).walkTopDown().filter {
-            it.toString().contains("/classes/") || it.toString().contains("/interfaces/")
-                    || it.toString().contains("/modules/")
+            (it.toString().contains("/classes/") || it.toString().contains("/interfaces/")
+                    || it.toString().contains("/modules/") || namespaceFunctionsFilter.matches(it.toString()))
         }.forEach {
             val html = it.readText(Charsets.UTF_8)
             val parsed = Jsoup.parse(html)
             val title = parsed.select(".tsd-page-title h1")
-            val parsedClass =
-                if (!title.isNullOrEmpty() && (title.text().contains("Class") || title.text().contains("Interface"))) {
+            if (title.text().contains("Function")) {
+                val namespaceName = Paths.get(it.path).fileName.toString().split(".")[0];
+                val function = parsed.select("section.tsd-panel > .tsd-signatures > .tsd-signature").map {
+                    parseMethod(it, namespaceName)
+                }.first()
+                namespaceFunctions.computeIfAbsent(namespaceName) { mutableListOf() }.add(function)
+            } else {
+                val parsedClass = if (!title.isNullOrEmpty() && (title.text().contains("Class") || title.text().contains("Interface"))) {
                     parseClass(parsed)
                 } else {
+                    assert(title.text().contains("Namespace"))
                     parseNamespace(parsed)
                 }
-
-            parsedClasses[parsedClass.name] = if (parsedClasses.contains(parsedClass.name)) {
-                parsedClasses[parsedClass.name]!!.merge(parsedClass)
-            } else {
-                parsedClass
+                parsedClasses[parsedClass.name] = if (parsedClasses.contains(parsedClass.name)) {
+                    parsedClasses[parsedClass.name]!!.merge(parsedClass)
+                } else {
+                    parsedClass
+                }
             }
+        }
 
+        namespaceFunctions.forEach{ (namespaceName, functions) ->
+            if (parsedClasses.contains(namespaceName)) {
+                val classWithMethod = Class(namespaceName, methods = functions.toList())
+                parsedClasses[namespaceName] = parsedClasses[namespaceName]!!.merge(classWithMethod)
+            } else {
+                throw IllegalArgumentException("Function $functions exists in namespace $namespaceName but not class definition was found to attach to");
+            }
+        }
+
+        parsedClasses.forEach { (name, parsedClass) ->
             if (parsedClasses[parsedClass.name]!!.isNotEmpty()) {
                 val parsedClassAsciiDoc = parsedClasses[parsedClass.name]!!.toAsciiDoc("nodejs")
                 val fileName = "${generateFilename(parsedClass.name)}.adoc"
                 val fileDir = docsDir.resolve(dirs[fileName]
-                    ?: throw NullPointerException("Unknown directory for the file $fileName"))
+                        ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided"))
                 if (!fileDir.toFile().exists()) {
                     Files.createDirectory(fileDir)
                 }
@@ -101,7 +126,7 @@ class NodejsDocParser : Callable<Unit> {
 
     private fun parseClass(document: Element): Class {
         val className =
-            document.selectFirst(".tsd-page-title h1")!!.textNodes().first()!!.text().split(" ", limit = 2)[1]
+                document.selectFirst(".tsd-page-title h1")!!.textNodes().first()!!.text().split(" ", limit = 2)[1]
         val classAnchor = replaceSymbolsForAnchor(className)
         val classDescr = document.select(".tsd-page-title + section.tsd-comment div.tsd-comment p").map {
             reformatTextWithCode(it.html())
@@ -117,25 +142,25 @@ class NodejsDocParser : Callable<Unit> {
         }
 
         val methodsElements = document.select(
-            "section.tsd-member-group:contains(Constructors), " +
-                    "section.tsd-member-group:contains(Method)"
+                "section.tsd-member-group:contains(Constructors), " +
+                        "section.tsd-member-group:contains(Method)"
         )
         val methods = methodsElements.select("section.tsd-member > .tsd-signatures > .tsd-signature").map {
             parseMethod(it, classAnchor)
         }.filter {
             it.name != "proto"
         } + document.select("section.tsd-member-group:contains(Accessors)")
-            .select("section.tsd-member > .tsd-signatures > .tsd-signature").map {
-                parseAccessor(it)
-            }
+                .select("section.tsd-member > .tsd-signatures > .tsd-signature").map {
+                    parseAccessor(it)
+                }
 
         return Class(
-            name = className,
-            anchor = classAnchor,
-            description = classDescr,
-            fields = properties,
-            methods = methods,
-            superClasses = superClasses,
+                name = className,
+                anchor = classAnchor,
+                description = classDescr,
+                fields = properties,
+                methods = methods,
+                superClasses = superClasses,
         )
     }
 
@@ -145,16 +170,14 @@ class NodejsDocParser : Callable<Unit> {
         val classDescr = document.select(".tsd-page-title + section.tsd-comment div.tsd-comment p").map {
             reformatTextWithCode(it.html())
         }
-
         val variables = document.select(".tsd-index-heading:contains(Variables) + .tsd-index-list a").map {
             EnumConstant(name = it.text())
         }
-
         return Class(
-            name = className,
-            anchor = classAnchor,
-            description = classDescr,
-            enumConstants = variables,
+                name = className,
+                anchor = classAnchor,
+                description = classDescr,
+                enumConstants = variables,
         )
     }
 
@@ -163,33 +186,33 @@ class NodejsDocParser : Callable<Unit> {
         val methodName = element.selectFirst(".tsd-kind-call-signature, .tsd-kind-constructor-signature")!!.text()
         val descrElement = element.nextElementSibling()
         val methodReturnType = descrElement!!
-            .selectFirst(".tsd-description > .tsd-returns-title:not(.tsd-parameter-signature .tsd-returns-title)")
-            ?.text()?.substringAfter("Returns ")
+                .selectFirst(".tsd-description > .tsd-returns-title:not(.tsd-parameter-signature .tsd-returns-title)")
+                ?.text()?.substringAfter("Returns ")
         val methodDescr =
-            descrElement.select(".tsd-description > .tsd-comment p").map { reformatTextWithCode(it.html()) }
+                descrElement.select(".tsd-description > .tsd-comment p").map { reformatTextWithCode(it.html()) }
         val methodExamples =
-            descrElement.select(".tsd-description > .tsd-comment > :has(a[href*=examples]) + pre > :not(button)")
-                .map { it.text() }
+                descrElement.select(".tsd-description > .tsd-comment > :has(a[href*=examples]) + pre > :not(button)")
+                        .map { it.text() }
 
         val methodArgs = descrElement.select(
-            ".tsd-description > .tsd-parameters > .tsd-parameter-list > " +
-                    "li:not(.tsd-parameter-signature li)"
+                ".tsd-description > .tsd-parameters > .tsd-parameter-list > " +
+                        "li:not(.tsd-parameter-signature li)"
         ).map {
             Variable(
-                name = it.selectFirst(".tsd-kind-parameter")!!.text(),
-                type = it.selectFirst("h5")!!.text().substringAfter(": "),
-                description = it.selectFirst(".tsd-comment")?.let { reformatTextWithCode(it.html()) },
+                    name = it.selectFirst(".tsd-kind-parameter")!!.text(),
+                    type = it.selectFirst("h5")!!.text().substringAfter(": "),
+                    description = it.selectFirst(".tsd-comment")?.let { reformatTextWithCode(it.html()) },
             )
         }
 
         return Method(
-            name = methodName,
-            anchor = "${classAnchor}_${replaceSymbolsForAnchor(methodName)}",
-            signature = methodSignature,
-            args = methodArgs,
-            description = methodDescr,
-            examples = methodExamples,
-            returnType = methodReturnType,
+                name = methodName,
+                anchor = "${classAnchor}_${replaceSymbolsForAnchor(methodName)}",
+                signature = methodSignature,
+                args = methodArgs,
+                description = methodDescr,
+                examples = methodExamples,
+                returnType = methodReturnType,
         )
     }
 
@@ -198,19 +221,19 @@ class NodejsDocParser : Callable<Unit> {
         val methodName = element.selectFirst(".tsd-signature")!!.textNodes().first()!!.text()
         val descrElement = element.nextElementSibling()
         val methodReturnType = descrElement!!.select(".tsd-returns-title > *")
-            .joinToString("") { it.text() }
+                .joinToString("") { it.text() }
         val methodDescr =
-            descrElement.select(".tsd-description > .tsd-comment p").map { reformatTextWithCode(it.html()) }
+                descrElement.select(".tsd-description > .tsd-comment p").map { reformatTextWithCode(it.html()) }
         val methodExamples = descrElement
-            .select(".tsd-description > .tsd-comment > :has(a[href*=examples]) + pre > :not(button)")
-            .map { it.text() }
+                .select(".tsd-description > .tsd-comment > :has(a[href*=examples]) + pre > :not(button)")
+                .map { it.text() }
 
         return Method(
-            name = methodName,
-            signature = methodSignature,
-            description = methodDescr,
-            examples = methodExamples,
-            returnType = methodReturnType,
+                name = methodName,
+                signature = methodSignature,
+                description = methodDescr,
+                examples = methodExamples,
+                returnType = methodReturnType,
         )
     }
 
@@ -219,9 +242,9 @@ class NodejsDocParser : Callable<Unit> {
         val type = element.selectFirst(".tsd-signature .tsd-signature-type")?.text()
         val descr = element.selectFirst(".tsd-signature + .tsd-comment")?.text()
         return Variable(
-            name = name,
-            description = descr,
-            type = type,
+                name = name,
+                description = descr,
+                type = type,
         )
     }
 

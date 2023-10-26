@@ -69,7 +69,7 @@ pub struct Relation {
 
 /// Attribute is an instance of the attribute type and has a value.
 /// This value is fixed and unique for every given instance of the attribute type.
-/// Attribute type can be uniquely addressed by its type and value.
+/// Attributes can be uniquely addressed by their type and value.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Attribute {
     /// The unique id of this Attribute

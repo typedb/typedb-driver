@@ -44,8 +44,8 @@ java_library(
 )
 
 filegroup(
-    name = "source_files",
-    srcs = glob(["**/*.java"]),
+    name = "docs_source_files",
+    srcs = glob(["*.java", "*/*.java", "*/*/*.java"], exclude=["test/**"]),
     visibility = ["//java:__pkg__"],
 )
 

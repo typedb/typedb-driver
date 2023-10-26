@@ -26,16 +26,16 @@ import com.vaticle.typedb.driver.tool.docs.adoc.AsciiDocTableBuilder
 import com.vaticle.typedb.driver.tool.docs.util.replaceSymbolsForAnchor
 
 data class Class(
-    val name: String,
-    val anchor: String? = null,
-    val enumConstants: List<EnumConstant> = listOf(),
-    val description: List<String> = listOf(),
-    val examples: List<String> = listOf(),
-    val fields: List<Variable> = listOf(),
-    val methods: List<Method> = listOf(),
-    val packagePath: String? = null,
-    val superClasses: List<String> = listOf(),
-    val traitImplementors: List<String> = listOf(),
+        val name: String,
+        val anchor: String? = null,
+        val enumConstants: List<EnumConstant> = listOf(),
+        val description: List<String> = listOf(),
+        val examples: List<String> = listOf(),
+        val fields: List<Variable> = listOf(),
+        val methods: List<Method> = listOf(),
+        val packagePath: String? = null,
+        val superClasses: List<String> = listOf(),
+        val traitImplementors: List<String> = listOf(),
 ) {
     fun merge(other: Class): Class {
         assert(this.name == other.name)

@@ -109,10 +109,16 @@ deploy_maven(
     target = ":assemble-maven-jni",
 )
 
+filegroup(
+    name = "docs_source_files",
+    srcs = [":TypeDB.java"],
+)
+
 javadoc_library(
     name = "driver_docs_library",
-    srcs = ["//java/api:source_files", "//java/common:docs_source_files"],
+    srcs = [":docs_source_files", "//java/api:docs_source_files", "//java/common:docs_source_files"],
     deps = [
+        "//java:driver-java",
         "//java/api",
         "//java/common",
         "@vaticle_typedb_common//:common",

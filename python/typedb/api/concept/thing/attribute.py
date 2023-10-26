@@ -40,7 +40,7 @@ class Attribute(Thing, ABC):
     This value is fixed and unique for every given instance of the
     attribute type.
 
-    Attribute type can be uniquely addressed by its type and value.
+    Attributes can be uniquely addressed by their type and value.
     """
 
     @abstractmethod
