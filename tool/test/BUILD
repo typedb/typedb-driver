@@ -30,6 +30,13 @@ checkstyle_test(
     license_type = "apache-header",
 )
 
+java_binary(
+    name = "echo-java-home",
+    srcs = ["EchoJavaHome.java"],
+    deps = [],
+    main_class = "com.vaticle.typedb.driver.tool.test.EchoJavaHome"
+)
+
 native_typedb_artifact(
     name = "native-typedb-artifact",
     native_artifacts = {

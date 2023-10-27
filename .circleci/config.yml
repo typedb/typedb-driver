@@ -23,6 +23,7 @@ version: 2.1
 
 orbs:
   win: circleci/windows@2.0.0
+  macos: circleci/macos@2.4.0
 
 executors:
   linux-arm64:
@@ -40,11 +41,6 @@ executors:
     macos:
       xcode: "13.4.1"
     resource_class: macos.m1.medium.gen1
-    working_directory: ~/typedb-driver
-
-  mac-x86_64:
-    macos:
-      xcode: "13.4.1"
     working_directory: ~/typedb-driver
 
 
@@ -65,8 +61,14 @@ commands:
           chmod a+x /usr/local/bin/bazel
 
   install-bazel-mac:
+    parameters:
+      arch:
+        type: string
     steps:
-      - run: brew install bazelisk
+      - run: |
+          curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-darwin-<<parameters.arch>>"
+          sudo mv "bazelisk-darwin-<<parameters.arch>>" /usr/local/bin/bazel
+          chmod a+x /usr/local/bin/bazel
 
   ###########################
   # Python deployment steps #
@@ -99,21 +101,25 @@ commands:
       - deploy-pip-snapshot-unix
 
   deploy-pip-snapshot-mac:
+    parameters:
+      arch:
+        type: string
     steps:
       - checkout
-      - install-bazel-mac
+      - install-bazel-mac:
+          arch: "<<parameters.arch>>"
       - install-pip-requirements
       - deploy-pip-snapshot-unix
 
   test-pip-snapshot-unix:
     steps:
       - run: |
-          bazel run //tool/test:typedb-extractor -- typedb-all
-          ./typedb-all/typedb server &
+          tool/test/start-core-server.sh
           python3 -m pip install wheel
           python3 -m pip install --extra-index-url https://repo.vaticle.com/repository/pypi-snapshot/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
-          cd python/tests/deployment/ && python3 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-          kill $(jps | awk '/TypeDBServer/ {print $1}')
+          sleep 3
+          (cd python/tests/deployment/ && python3 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
+          tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
 
   test-pip-snapshot-linux:
@@ -128,9 +134,13 @@ commands:
       - test-pip-snapshot-unix
 
   test-pip-snapshot-mac:
+    parameters:
+      arch:
+        type: string
     steps:
       - checkout
-      - install-bazel-mac
+      - install-bazel-mac:
+          arch: "<<parameters.arch>>"
       - install-pip-requirements
       - test-pip-snapshot-unix
 
@@ -155,9 +165,13 @@ commands:
       - deploy-pip-release-unix
 
   deploy-pip-release-mac:
+    parameters:
+      arch:
+        type: string
     steps:
       - checkout
-      - install-bazel-mac
+      - install-bazel-mac:
+          arch: "<<parameters.arch>>"
       - install-pip-requirements
       - deploy-pip-release-unix
 
@@ -188,9 +202,13 @@ commands:
       - deploy-maven-jni-snapshot-unix
 
   deploy-maven-jni-snapshot-mac:
+    parameters:
+      arch:
+        type: string
     steps:
       - checkout
-      - install-bazel-mac
+      - install-bazel-mac:
+          arch: "<<parameters.arch>>"
       - install-maven-mac
       - deploy-maven-jni-snapshot-unix
 
@@ -205,15 +223,11 @@ commands:
   test-maven-snapshot-unix:
     steps:
       - run: |
-          export TYPEDB_DIST_DIR="dist/typedb-all-linux/"
-          bazel run //tool/test:typedb-extractor -- $TYPEDB_DIST_DIR
-          $TYPEDB_DIST_DIR/typedb server &
-          PID=$!
-          
+          tool/test/start-core-server.sh
           sed -i -e "s/DRIVER_JAVA_VERSION_MARKER/$CIRCLE_SHA1/g" java/test/deployment/pom.xml
           cat java/test/deployment/pom.xml
-          cd java/test/deployment && mvn test
-          kill $PID
+          (cd java/test/deployment && mvn test)
+          tool/test/stop-core-server.sh
 
   test-maven-snapshot-linux:
     parameters:
@@ -226,9 +240,13 @@ commands:
       - test-maven-snapshot-unix
 
   test-maven-snapshot-mac:
+    parameters:
+      arch:
+        type: string
     steps:
       - checkout
-      - install-bazel-mac
+      - install-bazel-mac:
+          arch: "<<parameters.arch>>"
       - install-maven-mac
       - test-maven-snapshot-unix
 
@@ -251,9 +269,13 @@ commands:
       - deploy-maven-jni-release-unix
 
   deploy-maven-jni-release-mac:
+    parameters:
+      arch:
+        type: string
     steps:
       - checkout
-      - install-bazel-mac
+      - install-bazel-mac:
+          arch: "<<parameters.arch>>"
       - install-maven-mac
       - deploy-maven-jni-release-unix
 
@@ -287,12 +309,15 @@ jobs:
   deploy-pip-snapshot-mac-arm64:
     executor: mac-arm64
     steps:
-      - deploy-pip-snapshot-mac
+      - deploy-pip-snapshot-mac:
+          arch: arm64
 
   deploy-pip-snapshot-mac-x86_64:
-    executor: mac-x86_64
+    executor: mac-arm64
     steps:
-      - deploy-pip-snapshot-mac
+      - macos/install-rosetta
+      - deploy-pip-snapshot-mac:
+          arch: amd64
 
   deploy-pip-snapshot-windows-x86_64:
     executor:
@@ -319,12 +344,15 @@ jobs:
   test-pip-snapshot-mac-arm64:
     executor: mac-arm64
     steps:
-      - test-pip-snapshot-mac
+      - test-pip-snapshot-mac:
+          arch: arm64
 
   test-pip-snapshot-mac-x86_64:
-    executor: mac-x86_64
+    executor: mac-arm64
     steps:
-      - test-pip-snapshot-mac
+      - macos/install-rosetta
+      - test-pip-snapshot-mac:
+          arch: amd64
 
   test-pip-snapshot-windows-x86_64:
     executor:
@@ -373,7 +401,8 @@ jobs:
   deploy-pip-release-mac-arm64:
     executor: mac-arm64
     steps:
-      - deploy-pip-release-mac
+      - deploy-pip-release-mac:
+          arch: arm64
       - run: |
           mkdir -p ~/dist
           for f in bazel-bin/python/*.whl; do
@@ -387,9 +416,11 @@ jobs:
           paths: ["./*"]
 
   deploy-pip-release-mac-x86_64:
-    executor: mac-x86_64
+    executor: mac-arm64
     steps:
-      - deploy-pip-release-mac
+      - macos/install-rosetta
+      - deploy-pip-release-mac:
+          arch: amd64
       - run: |
           mkdir -p ~/dist
           for f in bazel-bin/python/*.whl; do
@@ -434,12 +465,15 @@ jobs:
   deploy-maven-jni-snapshot-mac-arm64:
     executor: mac-arm64
     steps:
-      - deploy-maven-jni-snapshot-mac
+      - deploy-maven-jni-snapshot-mac:
+          arch: arm64
 
   deploy-maven-jni-snapshot-mac-x86_64:
-    executor: mac-x86_64
+    executor: mac-arm64
     steps:
-      - deploy-maven-jni-snapshot-mac
+      - macos/install-rosetta
+      - deploy-maven-jni-snapshot-mac:
+          arch: amd64
 
   deploy-maven-jni-snapshot-windows-x86_64:
     executor:
@@ -474,12 +508,15 @@ jobs:
   test-maven-snapshot-mac-arm64:
     executor: mac-arm64
     steps:
-      - test-maven-snapshot-mac
+      - test-maven-snapshot-mac:
+          arch: arm64
 
   test-maven-snapshot-mac-x86_64:
-    executor: mac-x86_64
+    executor: mac-arm64
     steps:
-      - test-maven-snapshot-mac
+      - macos/install-rosetta
+      - test-maven-snapshot-mac:
+          arch: amd64
 
   test-maven-snapshot-windows-x86_64:
     executor:
@@ -518,7 +555,8 @@ jobs:
   deploy-maven-jni-release-mac-arm64:
     executor: mac-arm64
     steps:
-      - deploy-maven-jni-release-mac
+      - deploy-maven-jni-release-mac:
+          arch: arm64
       - run: |
           mkdir -p ~/dist
           cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-macosx-arm64.jar ~/dist/typedb-driver-jni-macosx-arm64.jar
@@ -527,9 +565,11 @@ jobs:
           paths: ["./*"]
 
   deploy-maven-jni-release-mac-x86_64:
-    executor: mac-x86_64
+    executor: mac-arm64
     steps:
-      - deploy-maven-jni-release-mac
+      - macos/install-rosetta
+      - deploy-maven-jni-release-mac:
+          arch: amd64
       - run: |
           mkdir -p ~/dist
           cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-macosx-x86_64.jar ~/dist/typedb-driver-jni-macosx-x86_64.jar
