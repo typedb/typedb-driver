@@ -8,12 +8,12 @@ A ``Promise`` represents an asynchronous network operation.
 The request it represents is performed immediately. The response is only retrieved once the ``Promise`` is ``resolve``d.
 
 // tag::methods[]
-[#_Promise<T>__init__F]
+[#_Promise<T>__init__java_util_function_Supplier]
 ==== Promise
 
 [source,java]
 ----
-public Promise​(F inner)
+public Promise​(java.util.function.Supplier<T> inner)
 ----
 
 
@@ -22,48 +22,20 @@ public Promise​(F inner)
 .Returns
 `public`
 
-[#_Promise<T>_map_P_F]
+[#_Promise<T>_map_java_util_function_Supplier_java_util_function_Function]
 ==== map
 
 [source,java]
 ----
-public static <T,​U,​P extends java.util.function.Supplier<T>,​F extends java.util.function.Function<T,​U>> Promise<U> map​(P promise,
-                                                                                                                                               F fn)
+public static <T,​U> Promise<U> map​(java.util.function.Supplier<T> promise,
+                                         java.util.function.Function<T,​U> fn)
 ----
 
 
 
 [caption=""]
 .Returns
-`public static <T,​U,​P extends java.util.function.Supplier<T>,​F extends java.util.function.Function<T,​U>> Promise<U>`
-
-[#_Promise<T>_of_com_vaticle_typedb_driver_jni_VoidPromise]
-==== of
-
-[source,java]
-----
-public static Promise<java.lang.Void> of​(com.vaticle.typedb.driver.jni.VoidPromise promise)
-----
-
-
-
-[caption=""]
-.Returns
-`public static Promise<java.lang.Void>`
-
-[#_Promise<T>_of_com_vaticle_typedb_driver_jni_StringPromise]
-==== of
-
-[source,java]
-----
-public static Promise<java.lang.String> of​(com.vaticle.typedb.driver.jni.StringPromise promise)
-----
-
-
-
-[caption=""]
-.Returns
-`public static Promise<java.lang.String>`
+`public static <T,​U> Promise<U>`
 
 [#_Promise<T>_resolve_]
 ==== resolve
