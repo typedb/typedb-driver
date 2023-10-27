@@ -178,6 +178,8 @@ build:
           bazel test //rust/tests --test_output=streamed --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
             --test_arg=behaviour::query::language::match_ \
             --test_arg=behaviour::query::language::get \
+            --test_arg=behaviour::query::language::fetch \
+            --test_arg=behaviour::query::language::modifiers \
             --test_arg=behaviour::query::language::expression &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
