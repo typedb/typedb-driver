@@ -102,7 +102,7 @@ generic_step_impl! {
         assert_err!(typeql_update(context, step).await);
     }
 
-    #[step(expr = "get answers of typeql match")]
+    #[step(expr = "get answers of typeql get")]
     pub async fn get_answers_typeql_match(context: &mut Context, step: &Step) -> TypeDBResult {
         let parsed = parse_query(step.docstring().unwrap())?;
         context.answer = context.transaction().query().get(&parsed.to_string())?.try_collect::<Vec<_>>().await?;
@@ -152,7 +152,7 @@ generic_step_impl! {
         );
     }
 
-    #[step(expr = "typeql match; throws exception")]
+    #[step(expr = "typeql get; throws exception")]
     async fn typeql_get_throws(context: &mut Context, step: &Step) {
         let parsed = parse_query(step.docstring().unwrap());
         match parsed {
@@ -173,7 +173,7 @@ generic_step_impl! {
         }
     }
 
-    #[step(expr = "typeql match; throws exception containing {string}")]
+    #[step(expr = "typeql get; throws exception containing {string}")]
     async fn typeql_get_throws_containing(context: &mut Context, step: &Step, message: String) {
         let parsed = parse_query(step.docstring().unwrap());
         match parsed {
@@ -204,7 +204,7 @@ generic_step_impl! {
         Ok(())
     }
 
-    #[step(expr = "templated typeql match; throws exception")]
+    #[step(expr = "templated typeql get; throws exception")]
     async fn templated_typeql_get_throws(context: &mut Context, step: &Step) {
         for answer in context.answer.clone() {
             assert_err!(match_templated_answer(context, step, &answer).await);
@@ -231,14 +231,14 @@ generic_step_impl! {
         }
     }
 
-    #[step(expr = "get answer of typeql match aggregate")]
+    #[step(expr = "get answer of typeql get aggregate")]
     async fn get_answers_typeql_get_aggregate(context: &mut Context, step: &Step) -> TypeDBResult {
         let parsed = parse_query(step.docstring().unwrap())?;
         context.value_answer = Some(context.transaction().query().get_aggregate(&parsed.to_string()).await?);
         Ok(())
     }
 
-    #[step(expr = "typeql match aggregate; throws exception")]
+    #[step(expr = "typeql get aggregate; throws exception")]
     async fn typeql_get_aggregate_throws(context: &mut Context, step: &Step) {
         assert_err!(get_answers_typeql_get_aggregate(context, step).await);
     }
@@ -263,7 +263,7 @@ generic_step_impl! {
         assert!(!matches!(context.value_answer.as_ref().unwrap(), Value::Long(_) | Value::Double(_)));
     }
 
-    #[step(expr = "get answers of typeql match group")]
+    #[step(expr = "get answers of typeql get group")]
     async fn get_answers_typeql_get_group(context: &mut Context, step: &Step) -> TypeDBResult {
         let parsed = parse_query(step.docstring().unwrap())?;
         context.answer_group =
@@ -271,7 +271,7 @@ generic_step_impl! {
         Ok(())
     }
 
-    #[step(expr = "typeql match group; throws exception")]
+    #[step(expr = "typeql get group; throws exception")]
     async fn typeql_get_group_throws(context: &mut Context, step: &Step) {
         let parsed = parse_query(step.docstring().unwrap());
         match parsed {
@@ -327,7 +327,7 @@ generic_step_impl! {
         );
     }
 
-    #[step(expr = "get answers of typeql match group aggregate")]
+    #[step(expr = "get answers of typeql get group aggregate")]
     async fn get_answers_typeql_get_group_aggregate(context: &mut Context, step: &Step) -> TypeDBResult {
         let parsed = parse_query(step.docstring().unwrap())?;
         context.value_answer_group =

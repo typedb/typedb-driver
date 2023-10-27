@@ -30,7 +30,7 @@ use super::{
     network::transmitter::TransactionTransmitter,
 };
 use crate::{
-    answer::{ConceptMap, ConceptMapGroup, ValueGroup},
+    answer::{ConceptMap, ConceptMapGroup, ValueGroup, readable_concept},
     common::{
         stream::{BoxStream, Stream},
         Promise, Result, IID,
@@ -169,6 +169,19 @@ impl TransactionStream {
         let stream = self.query_stream(QueryRequest::GetGroupAggregate { query, options })?;
         Ok(stream.flat_map(|result| match result {
             Ok(QueryResponse::GetGroupAggregate { answers }) => stream_iter(answers.into_iter().map(Ok)),
+            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Err(err) => stream_once(Err(err)),
+        }))
+    }
+
+    pub(crate) fn fetch(
+        &self,
+        query: String,
+        options: Options,
+    ) -> Result<impl Stream<Item = Result<readable_concept::Tree>>> {
+        let stream = self.query_stream(QueryRequest::Fetch { query, options })?;
+        Ok(stream.flat_map(|result| match result {
+            Ok(QueryResponse::Fetch { answers }) => stream_iter(answers.into_iter().map(Ok)),
             Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
             Err(err) => stream_once(Err(err)),
         }))

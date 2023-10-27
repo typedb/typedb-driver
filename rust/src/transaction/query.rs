@@ -22,7 +22,7 @@
 use std::pin::Pin;
 
 use crate::{
-    answer::{ConceptMap, ConceptMapGroup, Explainable, ValueGroup},
+    answer::{ConceptMap, ConceptMapGroup, Explainable, ValueGroup, readable_concept},
     common::{stream::Stream, Promise, Result},
     concept::Value,
     connection::TransactionStream,
@@ -241,7 +241,7 @@ impl<'tx> QueryManager<'tx> {
     /// # Examples
     ///
     /// ```rust
-    /// transaction.query().get_group_aggregate(query, options)
+    /// transaction.query().get_group_aggregate_with_options(query, options)
     /// ```
     pub fn get_group_aggregate_with_options(
         &self,
@@ -249,6 +249,32 @@ impl<'tx> QueryManager<'tx> {
         options: Options,
     ) -> Result<impl Stream<Item = Result<ValueGroup>>> {
         self.transaction_stream.get_ref().get_group_aggregate(query.to_string(), options)
+    }
+
+    /// Performs a TypeQL Fetch query with default options.
+    /// See [`QueryManager::fetch_with_options`]
+    pub fn fetch(&self, query: &str) -> Result<impl Stream<Item = Result<readable_concept::Tree>>> {
+        self.fetch_with_options(query, Options::new())
+    }
+
+    /// Performs a TypeQL Match Group Aggregate query in the transaction.
+    ///
+    /// # Arguments
+    ///
+    /// * `query` -- The TypeQL Match Group Aggregate query to be executed
+    /// * `options` -- Specify query options
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// transaction.query().fetch_with_options(query, options)
+    /// ```
+    pub fn fetch_with_options(
+        &self,
+        query: &str,
+        options: Options,
+    ) -> Result<impl Stream<Item = Result<readable_concept::Tree>>> {
+        self.transaction_stream.get_ref().fetch(query.to_string(), options)
     }
 
     /// Performs a TypeQL Explain query in the transaction.

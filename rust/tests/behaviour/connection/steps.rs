@@ -54,7 +54,7 @@ generic_step_impl! {
             assert_with_timeout!(
                 {
                     context.cleanup_databases().await;
-                    context.cleanup_users().await;
+                    // context.cleanup_users().await;
                     context.databases.all().await?.is_empty()
                 },
                 "Connection has at least one database.",

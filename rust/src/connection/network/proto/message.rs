@@ -30,11 +30,11 @@ use typedb_protocol::{
 
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
 use crate::{
-    answer::{ConceptMap, ConceptMapGroup, ValueGroup},
+    answer::{readable_concept, ConceptMap, ConceptMapGroup, ValueGroup},
     common::{info::DatabaseInfo, RequestID, Result},
     concept::{
         Annotation, Attribute, AttributeType, Entity, EntityType, Relation, RelationType, RoleType, SchemaException,
-        Thing, ThingType, ValueType, Value,
+        Thing, ThingType, Value, ValueType,
     },
     connection::message::{
         ConceptRequest, ConceptResponse, LogicRequest, LogicResponse, QueryRequest, QueryResponse, Request, Response,
@@ -494,6 +494,10 @@ impl IntoProto<query_manager::Req> for QueryRequest {
                 options,
             ),
 
+            Self::Fetch { query, options } => {
+                (query_manager::req::Req::FetchReq(query_manager::fetch::Req { query }), options)
+            }
+
             Self::Explain { explainable_id, options } => {
                 (query_manager::req::Req::ExplainReq(query_manager::explain::Req { explainable_id }), options)
             }
@@ -534,10 +538,12 @@ impl TryFromProto<query_manager::ResPart> for QueryResponse {
             Some(query_manager::res_part::Res::GetGroupAggregateResPart(res)) => Ok(Self::GetGroupAggregate {
                 answers: res.answers.into_iter().map(ValueGroup::try_from_proto).try_collect()?,
             }),
+            Some(query_manager::res_part::Res::FetchResPart(res)) => Ok(Self::Fetch {
+                answers: res.answers.into_iter().map(readable_concept::Tree::try_from_proto).try_collect()?,
+            }),
             Some(query_manager::res_part::Res::ExplainResPart(res)) => Ok(Self::Explain {
                 answers: res.explanations.into_iter().map(Explanation::try_from_proto).try_collect()?,
             }),
-            Some(query_manager::res_part::Res::FetchResPart(res)) => todo!(),
             None => Err(ConnectionError::MissingResponseField("res").into()),
         }
     }

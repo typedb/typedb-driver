@@ -26,19 +26,20 @@ use itertools::Itertools;
 use typedb_protocol::{
     concept,
     r#type::{annotation, Annotation as AnnotationProto, Transitivity as TransitivityProto},
+    readable_concept_tree::{self, node::readable_concept::ReadableConcept as ReadableConceptProto},
     thing, thing_type,
     value::Value as ValueProtoInner,
     Attribute as AttributeProto, AttributeType as AttributeTypeProto, Concept as ConceptProto,
     ConceptMap as ConceptMapProto, ConceptMapGroup as ConceptMapGroupProto, Entity as EntityProto,
     EntityType as EntityTypeProto, Explainable as ExplainableProto, Explainables as ExplainablesProto,
-    Explanation as ExplanationProto, Relation as RelationProto, RelationType as RelationTypeProto,
-    RoleType as RoleTypeProto, Thing as ThingProto, ThingType as ThingTypeProto, Value as ValueProto,
-    ValueGroup as ValueGroupProto, ValueType as ValueTypeProto,
+    Explanation as ExplanationProto, ReadableConceptTree as ReadableConceptTreeProto, Relation as RelationProto,
+    RelationType as RelationTypeProto, RoleType as RoleTypeProto, Thing as ThingProto, ThingType as ThingTypeProto,
+    Value as ValueProto, ValueGroup as ValueGroupProto, ValueType as ValueTypeProto,
 };
 
 use super::{FromProto, IntoProto, TryFromProto};
 use crate::{
-    answer::{ConceptMap, ConceptMapGroup, Explainable, Explainables, ValueGroup},
+    answer::{readable_concept, ConceptMap, ConceptMapGroup, Explainable, Explainables, ValueGroup},
     concept::{
         Annotation, Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType,
         RootThingType, ScopedLabel, Thing, ThingType, Transitivity, Value, ValueType,
@@ -124,6 +125,71 @@ impl TryFromProto<ConceptProto> for Concept {
 
             Some(concept::Concept::ThingTypeRoot(_)) => Ok(Self::RootThingType(RootThingType)),
             None => Err(ConnectionError::MissingResponseField("concept").into()),
+        }
+    }
+}
+
+impl TryFromProto<ReadableConceptTreeProto> for readable_concept::Tree {
+    fn try_from_proto(proto: ReadableConceptTreeProto) -> Result<Self> {
+        let ReadableConceptTreeProto { root: root_proto } = proto;
+        Ok(Self { root: root_proto.map(HashMap::<String, readable_concept::Node>::try_from_proto).transpose()? })
+    }
+}
+
+impl TryFromProto<readable_concept_tree::Node> for readable_concept::Node {
+    fn try_from_proto(proto: readable_concept_tree::Node) -> Result<Self> {
+        match proto.node {
+            Some(readable_concept_tree::node::Node::Map(map)) => Ok(Self::Map(HashMap::try_from_proto(map)?)),
+            Some(readable_concept_tree::node::Node::List(list)) => Ok(Self::List(Vec::try_from_proto(list)?)),
+            Some(readable_concept_tree::node::Node::ReadableConcept(leaf)) => {
+                Ok(Self::Leaf(Concept::try_from_proto(leaf)?))
+            }
+            None => Err(ConnectionError::MissingResponseField("node").into()),
+        }
+    }
+}
+
+impl TryFromProto<readable_concept_tree::node::Map> for HashMap<String, readable_concept::Node> {
+    fn try_from_proto(proto: readable_concept_tree::node::Map) -> Result<Self> {
+        let readable_concept_tree::node::Map { map } = proto;
+        map.into_iter()
+            .map(|(var, node_proto)| readable_concept::Node::try_from_proto(node_proto).map(|node| (var, node)))
+            .try_collect()
+    }
+}
+
+impl TryFromProto<readable_concept_tree::node::List> for Vec<readable_concept::Node> {
+    fn try_from_proto(proto: readable_concept_tree::node::List) -> Result<Self> {
+        let readable_concept_tree::node::List { list } = proto;
+        list.into_iter().map(readable_concept::Node::try_from_proto).try_collect()
+    }
+}
+
+impl TryFromProto<readable_concept_tree::node::ReadableConcept> for Concept {
+    fn try_from_proto(proto: readable_concept_tree::node::ReadableConcept) -> Result<Self> {
+        match proto.readable_concept {
+            Some(ReadableConceptProto::EntityType(entity_type_proto)) => {
+                Ok(Self::EntityType(EntityType::from_proto(entity_type_proto)))
+            }
+            Some(ReadableConceptProto::RelationType(relation_type_proto)) => {
+                Ok(Self::RelationType(RelationType::from_proto(relation_type_proto)))
+            }
+            Some(ReadableConceptProto::AttributeType(attribute_type_proto)) => {
+                AttributeType::try_from_proto(attribute_type_proto).map(Self::AttributeType)
+            }
+
+            Some(ReadableConceptProto::RoleType(role_type_proto)) => {
+                Ok(Self::RoleType(RoleType::from_proto(role_type_proto)))
+            }
+
+            Some(ReadableConceptProto::Attribute(attribute_proto)) => {
+                Attribute::try_from_proto(attribute_proto).map(Self::Attribute)
+            }
+
+            Some(ReadableConceptProto::Value(value_proto)) => Value::try_from_proto(value_proto).map(Self::Value),
+
+            Some(ReadableConceptProto::ThingTypeRoot(_)) => Ok(Self::RootThingType(RootThingType)),
+            None => Err(ConnectionError::MissingResponseField("readable_concept").into()),
         }
     }
 }

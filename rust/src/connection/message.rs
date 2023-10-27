@@ -27,7 +27,7 @@ use typedb_protocol::transaction;
 use typeql::pattern::{Conjunction, Statement};
 
 use crate::{
-    answer::{ConceptMap, ConceptMapGroup, ValueGroup},
+    answer::{readable_concept, ConceptMap, ConceptMapGroup, ValueGroup},
     common::{address::Address, info::DatabaseInfo, RequestID, SessionID, IID},
     concept::{
         Annotation, Attribute, AttributeType, Entity, EntityType, Relation, RelationType, RoleType, SchemaException,
@@ -169,10 +169,12 @@ pub(super) enum QueryRequest {
 
     GetAggregate { query: String, options: Options },
 
-    Explain { explainable_id: i64, options: Options }, // TODO: ID type
-
     GetGroup { query: String, options: Options },
     GetGroupAggregate { query: String, options: Options },
+
+    Fetch { query: String, options: Options },
+
+    Explain { explainable_id: i64, options: Options }, // TODO: ID type
 }
 
 #[derive(Debug)]
@@ -187,10 +189,12 @@ pub(super) enum QueryResponse {
 
     GetAggregate { answer: Value },
 
-    Explain { answers: Vec<Explanation> },
-
     GetGroup { answers: Vec<ConceptMapGroup> },
     GetGroupAggregate { answers: Vec<ValueGroup> },
+
+    Fetch { answers: Vec<readable_concept::Tree> },
+
+    Explain { answers: Vec<Explanation> },
 }
 
 #[derive(Debug)]

@@ -19,13 +19,18 @@
  * under the License.
  */
 
-pub mod concept_map;
-mod concept_map_group;
-pub mod readable_concept;
-mod value_group;
+use std::collections::HashMap;
 
-pub use self::{
-    concept_map::{ConceptMap, Explainable, Explainables},
-    concept_map_group::ConceptMapGroup,
-    value_group::ValueGroup,
-};
+use crate::concept::Concept;
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct Tree {
+    pub root: Option<HashMap<String, Node>>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub enum Node {
+    Map(HashMap<String, Node>),
+    List(Vec<Node>),
+    Leaf(Concept),
+}
