@@ -42,7 +42,7 @@ public class NetworkIterator<T> implements Iterator<T> {
     @Override
     public boolean hasNext() {
         try {
-        return inner.hasNext();
+            return inner.hasNext();
         } catch (com.vaticle.typedb.driver.jni.Error.Unchecked e) {
             throw new TypeDBDriverException(e);
         }

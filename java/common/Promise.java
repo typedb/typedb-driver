@@ -54,6 +54,9 @@ public class Promise<T> {
         }
     }
 
+    /**
+     * @hidden
+     */
     static public<T, U> Promise<U> map(Supplier<T> promise, Function<T, U> fn) {
         return new Promise<>(() -> {
             T res = promise.get();
