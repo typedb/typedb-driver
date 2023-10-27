@@ -23,6 +23,7 @@ package com.vaticle.typedb.driver.concept.type;
 
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.type.EntityType;
+import com.vaticle.typedb.driver.common.NetworkIterator;
 import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.thing.EntityImpl;
@@ -49,7 +50,7 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
 
     @Override
     public final Promise<Void> setSupertype(TypeDBTransaction transaction, EntityType entityType) {
-        return Promise.of(entity_type_set_supertype(nativeTransaction(transaction), nativeObject, ((EntityTypeImpl) entityType).nativeObject));
+        return new Promise<>(entity_type_set_supertype(nativeTransaction(transaction), nativeObject, ((EntityTypeImpl) entityType).nativeObject));
     }
 
     @Nullable
@@ -61,7 +62,7 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     @Override
     public final Stream<EntityTypeImpl> getSupertypes(TypeDBTransaction transaction) {
         try {
-            return entity_type_get_supertypes(nativeTransaction(transaction), nativeObject).stream().map(EntityTypeImpl::new);
+            return new NetworkIterator<>(entity_type_get_supertypes(nativeTransaction(transaction), nativeObject)).stream().map(EntityTypeImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -75,7 +76,7 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     @Override
     public final Stream<EntityTypeImpl> getSubtypes(TypeDBTransaction transaction, Transitivity transitivity) {
         try {
-            return entity_type_get_subtypes(nativeTransaction(transaction), nativeObject, transitivity.nativeObject).stream().map(EntityTypeImpl::new);
+            return new NetworkIterator<>(entity_type_get_subtypes(nativeTransaction(transaction), nativeObject, transitivity.nativeObject)).stream().map(EntityTypeImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -89,7 +90,7 @@ public class EntityTypeImpl extends ThingTypeImpl implements EntityType {
     @Override
     public final Stream<EntityImpl> getInstances(TypeDBTransaction transaction, Transitivity transitivity) {
         try {
-            return entity_type_get_instances(nativeTransaction(transaction), nativeObject, transitivity.nativeObject).stream().map(EntityImpl::new);
+            return new NetworkIterator<>(entity_type_get_instances(nativeTransaction(transaction), nativeObject, transitivity.nativeObject)).stream().map(EntityImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

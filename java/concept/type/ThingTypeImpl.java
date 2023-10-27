@@ -27,6 +27,7 @@ import com.vaticle.typedb.driver.api.concept.type.RoleType;
 import com.vaticle.typedb.driver.api.concept.type.ThingType;
 import com.vaticle.typedb.driver.api.concept.value.Value;
 import com.vaticle.typedb.driver.common.Label;
+import com.vaticle.typedb.driver.common.NetworkIterator;
 import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.thing.ThingImpl;
@@ -103,7 +104,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     @Override
     @CheckReturnValue
     public Promise<Void> delete(TypeDBTransaction transaction) {
-        return Promise.of(thing_type_delete(nativeTransaction(transaction), nativeObject));
+        return new Promise<>(thing_type_delete(nativeTransaction(transaction), nativeObject));
     }
 
     @Override
@@ -115,7 +116,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     @Override
     @CheckReturnValue
     public final Promise<Void> setLabel(TypeDBTransaction transaction, String newLabel) {
-        return Promise.of(thing_type_set_label(nativeTransaction(transaction), nativeObject, newLabel));
+        return new Promise<>(thing_type_set_label(nativeTransaction(transaction), nativeObject, newLabel));
     }
 
     @Override
@@ -138,22 +139,22 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
     @Override
     public final Promise<Void> setAbstract(TypeDBTransaction transaction) {
-        return Promise.of(thing_type_set_abstract(nativeTransaction(transaction), nativeObject));
+        return new Promise<>(thing_type_set_abstract(nativeTransaction(transaction), nativeObject));
     }
 
     @Override
     public final Promise<Void> unsetAbstract(TypeDBTransaction transaction) {
-        return Promise.of(thing_type_unset_abstract(nativeTransaction(transaction), nativeObject));
+        return new Promise<>(thing_type_unset_abstract(nativeTransaction(transaction), nativeObject));
     }
 
     @Override
     public final Promise<Void> setPlays(TypeDBTransaction transaction, RoleType roleType) {
-        return Promise.of(thing_type_set_plays(nativeTransaction(transaction), nativeObject, ((RoleTypeImpl) roleType).nativeObject, null));
+        return new Promise<>(thing_type_set_plays(nativeTransaction(transaction), nativeObject, ((RoleTypeImpl) roleType).nativeObject, null));
     }
 
     @Override
     public final Promise<Void> setPlays(TypeDBTransaction transaction, RoleType roleType, RoleType overriddenRoleType) {
-        return Promise.of(thing_type_set_plays(nativeTransaction(transaction),
+        return new Promise<>(thing_type_set_plays(nativeTransaction(transaction),
                 nativeObject, ((RoleTypeImpl) roleType).nativeObject, ((RoleTypeImpl) overriddenRoleType).nativeObject));
     }
 
@@ -176,7 +177,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     public final Promise<Void> setOwns(TypeDBTransaction transaction, AttributeType attributeType, AttributeType overriddenType, Set<Annotation> annotations) {
         com.vaticle.typedb.driver.jni.Concept overriddenTypeNative = overriddenType != null ? ((AttributeTypeImpl) overriddenType).nativeObject : null;
         com.vaticle.typedb.driver.jni.Annotation[] annotationsArray = annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.driver.jni.Annotation[]::new);
-        return Promise.of(thing_type_set_owns(nativeTransaction(transaction), nativeObject, ((AttributeTypeImpl) attributeType).nativeObject, overriddenTypeNative, annotationsArray));
+        return new Promise<>(thing_type_set_owns(nativeTransaction(transaction), nativeObject, ((AttributeTypeImpl) attributeType).nativeObject, overriddenTypeNative, annotationsArray));
     }
 
     @Override
@@ -187,7 +188,7 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
     @Override
     public final Stream<RoleTypeImpl> getPlays(TypeDBTransaction transaction, Transitivity transitivity) {
         try {
-            return thing_type_get_plays(nativeTransaction(transaction), nativeObject, transitivity.nativeObject).stream().map(RoleTypeImpl::new);
+            return new NetworkIterator<>(thing_type_get_plays(nativeTransaction(transaction), nativeObject, transitivity.nativeObject)).stream().map(RoleTypeImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -247,9 +248,9 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
     private Stream<AttributeTypeImpl> getOwns(TypeDBTransaction transaction, Value.Type valueType, Transitivity transitivity, Set<Annotation> annotations) {
         try {
-            return thing_type_get_owns(nativeTransaction(transaction), nativeObject, valueType == null ? null : valueType.nativeObject, transitivity.nativeObject,
+            return new NetworkIterator<>(thing_type_get_owns(nativeTransaction(transaction), nativeObject, valueType == null ? null : valueType.nativeObject, transitivity.nativeObject,
                     annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.driver.jni.Annotation[]::new)
-            ).stream().map(AttributeTypeImpl::new);
+            )).stream().map(AttributeTypeImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -263,18 +264,18 @@ public abstract class ThingTypeImpl extends TypeImpl implements ThingType {
 
     @Override
     public final Promise<Void> unsetOwns(TypeDBTransaction transaction, AttributeType attributeType) {
-        return Promise.of(thing_type_unset_owns(nativeTransaction(transaction),
+        return new Promise<>(thing_type_unset_owns(nativeTransaction(transaction),
                 nativeObject, ((AttributeTypeImpl) attributeType).nativeObject));
     }
 
     @Override
     public final Promise<Void> unsetPlays(TypeDBTransaction transaction, RoleType roleType) {
-        return Promise.of(thing_type_unset_plays(nativeTransaction(transaction), nativeObject, ((RoleTypeImpl) roleType).nativeObject));
+        return new Promise<>(thing_type_unset_plays(nativeTransaction(transaction), nativeObject, ((RoleTypeImpl) roleType).nativeObject));
     }
 
     @Override
     public final Promise<String> getSyntax(TypeDBTransaction transaction) {
-        return Promise.of(thing_type_get_syntax(nativeTransaction(transaction), nativeObject));
+        return new Promise<>(thing_type_get_syntax(nativeTransaction(transaction), nativeObject));
     }
 
     public static class Root extends ThingTypeImpl {

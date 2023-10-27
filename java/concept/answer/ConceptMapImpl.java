@@ -24,6 +24,7 @@ package com.vaticle.typedb.driver.concept.answer;
 import com.vaticle.typedb.driver.api.answer.ConceptMap;
 import com.vaticle.typedb.driver.api.concept.Concept;
 import com.vaticle.typedb.driver.common.NativeObject;
+import com.vaticle.typedb.driver.common.NetworkIterator;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.ConceptImpl;
 import com.vaticle.typedb.common.collection.Pair;
@@ -62,12 +63,12 @@ public class ConceptMapImpl extends NativeObject<com.vaticle.typedb.driver.jni.C
 
     @Override
     public Stream<String> variables() {
-        return concept_map_get_variables(nativeObject).stream();
+        return new NetworkIterator<>(concept_map_get_variables(nativeObject)).stream();
     }
 
     @Override
     public Stream<Concept> concepts() {
-        return concept_map_get_values(nativeObject).stream().map(ConceptImpl::of);
+        return new NetworkIterator<>(concept_map_get_values(nativeObject)).stream().map(ConceptImpl::of);
     }
 
     @Override
@@ -140,17 +141,17 @@ public class ConceptMapImpl extends NativeObject<com.vaticle.typedb.driver.jni.C
 
         @Override
         public Stream<Pair<String, Explainable>> relations() {
-            return explainables_get_relations_keys(nativeObject).stream().map(k -> new Pair<>(k, relation(k)));
+            return new NetworkIterator<>(explainables_get_relations_keys(nativeObject)).stream().map(k -> new Pair<>(k, relation(k)));
         }
 
         @Override
         public Stream<Pair<String, Explainable>> attributes() {
-            return explainables_get_attributes_keys(nativeObject).stream().map(k -> new Pair<>(k, attribute(k)));
+            return new NetworkIterator<>(explainables_get_attributes_keys(nativeObject)).stream().map(k -> new Pair<>(k, attribute(k)));
         }
 
         @Override
         public Stream<Pair<Pair<String, String>, Explainable>> ownerships() {
-            return explainables_get_ownerships_keys(nativeObject).stream().map(pair -> {
+            return new NetworkIterator<>(explainables_get_ownerships_keys(nativeObject)).stream().map(pair -> {
                 String owner = pair.get_0();
                 String attribute = pair.get_1();
                 return new Pair<>(new Pair<>(owner, attribute), ownership(owner, attribute));

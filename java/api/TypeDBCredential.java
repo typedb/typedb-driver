@@ -22,6 +22,7 @@
 package com.vaticle.typedb.driver.api;
 
 import com.vaticle.typedb.driver.common.NativeObject;
+import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
 import javax.annotation.Nullable;
 import java.nio.file.Path;
@@ -62,7 +63,15 @@ public class TypeDBCredential extends NativeObject<com.vaticle.typedb.driver.jni
     }
 
     private TypeDBCredential(String username, String password, @Nullable String tlsRootCAPath, boolean tlsEnabled) {
-        super(credential_new(username, password, tlsRootCAPath, tlsEnabled));
+        super(nativeCredential(username, password, tlsRootCAPath, tlsEnabled));
+    }
+
+    private static com.vaticle.typedb.driver.jni.Credential nativeCredential(String username, String password, @Nullable String tlsRootCAPath, boolean tlsEnabled) {
         assert tlsEnabled || tlsRootCAPath == null;
+        try {
+            return credential_new(username, password, tlsRootCAPath, tlsEnabled);
+        } catch (com.vaticle.typedb.driver.jni.Error error) {
+            throw new TypeDBDriverException(error);
+        }
     }
 }

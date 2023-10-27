@@ -24,6 +24,7 @@ package com.vaticle.typedb.driver.concept.type;
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.type.RelationType;
 import com.vaticle.typedb.driver.api.concept.type.RoleType;
+import com.vaticle.typedb.driver.common.NetworkIterator;
 import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.thing.RelationImpl;
@@ -57,7 +58,7 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     @Override
     @CheckReturnValue
     public final Promise<Void> setSupertype(TypeDBTransaction transaction, RelationType relationType) {
-        return Promise.of(relation_type_set_supertype(nativeTransaction(transaction), nativeObject, ((RelationTypeImpl) relationType).nativeObject));
+        return new Promise<>(relation_type_set_supertype(nativeTransaction(transaction), nativeObject, ((RelationTypeImpl) relationType).nativeObject));
     }
 
     @Override
@@ -68,7 +69,7 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     @Override
     public final Stream<RoleTypeImpl> getRelates(TypeDBTransaction transaction, Transitivity transitivity) {
         try {
-            return relation_type_get_relates(nativeTransaction(transaction), nativeObject, transitivity.nativeObject).stream().map(RoleTypeImpl::new);
+            return new NetworkIterator<>(relation_type_get_relates(nativeTransaction(transaction), nativeObject, transitivity.nativeObject)).stream().map(RoleTypeImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -105,19 +106,19 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     @Override
     @CheckReturnValue
     public final Promise<Void> setRelates(TypeDBTransaction transaction, String roleLabel, String overriddenLabel) {
-        return Promise.of(relation_type_set_relates(nativeTransaction(transaction), nativeObject, roleLabel, overriddenLabel));
+        return new Promise<>(relation_type_set_relates(nativeTransaction(transaction), nativeObject, roleLabel, overriddenLabel));
     }
 
     @Override
     @CheckReturnValue
     public Promise<Void> unsetRelates(TypeDBTransaction transaction, RoleType roleType) {
-        return Promise.of(relation_type_unset_relates(nativeTransaction(transaction), nativeObject, roleType.getLabel().name()));
+        return new Promise<>(relation_type_unset_relates(nativeTransaction(transaction), nativeObject, roleType.getLabel().name()));
     }
 
     @Override
     @CheckReturnValue
     public final Promise<Void> unsetRelates(TypeDBTransaction transaction, String roleLabel) {
-        return Promise.of(relation_type_unset_relates(nativeTransaction(transaction), nativeObject, roleLabel));
+        return new Promise<>(relation_type_unset_relates(nativeTransaction(transaction), nativeObject, roleLabel));
     }
 
     @Nullable
@@ -129,7 +130,7 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     @Override
     public final Stream<RelationTypeImpl> getSupertypes(TypeDBTransaction transaction) {
         try {
-            return relation_type_get_supertypes(nativeTransaction(transaction), nativeObject).stream().map(RelationTypeImpl::new);
+            return new NetworkIterator<>(relation_type_get_supertypes(nativeTransaction(transaction), nativeObject)).stream().map(RelationTypeImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -143,7 +144,7 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     @Override
     public final Stream<RelationTypeImpl> getSubtypes(TypeDBTransaction transaction, Transitivity transitivity) {
         try {
-            return relation_type_get_subtypes(nativeTransaction(transaction), nativeObject, transitivity.nativeObject).stream().map(RelationTypeImpl::new);
+            return new NetworkIterator<>(relation_type_get_subtypes(nativeTransaction(transaction), nativeObject, transitivity.nativeObject)).stream().map(RelationTypeImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -157,7 +158,7 @@ public class RelationTypeImpl extends ThingTypeImpl implements RelationType {
     @Override
     public final Stream<RelationImpl> getInstances(TypeDBTransaction transaction, Transitivity transitivity) {
         try {
-            return relation_type_get_instances(nativeTransaction(transaction), nativeObject, transitivity.nativeObject).stream().map(RelationImpl::new);
+            return new NetworkIterator<>(relation_type_get_instances(nativeTransaction(transaction), nativeObject, transitivity.nativeObject)).stream().map(RelationImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

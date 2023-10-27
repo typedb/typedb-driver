@@ -56,6 +56,17 @@ public class TypeDBDriverException extends RuntimeException {
     /**
      * @hidden
      */
+    public TypeDBDriverException(RuntimeException error) {
+        super(error.getMessage());
+        assert !getMessage().contains("%s");
+        if (error.getCause() instanceof com.vaticle.typedb.driver.jni.Error) this.nativeError = (com.vaticle.typedb.driver.jni.Error)error.getCause();
+        else this.nativeError = null;
+        this.errorMessage = null;
+    }
+
+    /**
+     * @hidden
+     */
     public TypeDBDriverException(com.vaticle.typedb.driver.jni.Error error) {
         super(error.getMessage());
         assert !getMessage().contains("%s");

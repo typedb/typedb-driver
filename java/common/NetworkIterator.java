@@ -23,42 +23,41 @@ package com.vaticle.typedb.driver.common;
 
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.Iterator;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
-/**
- * A <code>Promise</code> represents an asynchronous network operation.
- * <p>The request it represents is performed immediately. The response is only retrieved
- * once the <code>Promise</code> is <code>resolve</code>d.
- */
-public class Promise<T> {
-    private final Supplier<T> inner;
+import static java.util.Spliterator.IMMUTABLE;
+import static java.util.Spliterator.NONNULL;
+import static java.util.Spliterator.ORDERED;
+import static java.util.Spliterators.spliteratorUnknownSize;
 
-    public Promise(Supplier<T> inner) {
+public class NetworkIterator<T> implements Iterator<T> {
+    private final Iterator<T> inner;
+
+    public NetworkIterator(Iterator<T> inner) {
         this.inner = inner;
     }
 
-    /**
-     * Retrieves the result of the Promise.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * promise.resolve()
-     * </pre>
-     */
-    public T resolve() {
+    @Override
+    public boolean hasNext() {
         try {
-            return this.inner.get();
+        return inner.hasNext();
         } catch (com.vaticle.typedb.driver.jni.Error.Unchecked e) {
             throw new TypeDBDriverException(e);
         }
     }
 
-    static public<T, U> Promise<U> map(Supplier<T> promise, Function<T, U> fn) {
-        return new Promise<>(() -> {
-            T res = promise.get();
-            if (res != null) return fn.apply(res);
-            else return null;
-        });
+    @Override
+    public T next() {
+        try {
+            return inner.next();
+        } catch (com.vaticle.typedb.driver.jni.Error.Unchecked e) {
+            throw new TypeDBDriverException(e);
+        }
+    }
+
+    public Stream<T> stream() {
+        return StreamSupport.stream(spliteratorUnknownSize(this, NONNULL | IMMUTABLE | ORDERED), false);
     }
 }

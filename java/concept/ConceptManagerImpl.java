@@ -23,6 +23,7 @@ package com.vaticle.typedb.driver.concept;
 
 import com.vaticle.typedb.driver.api.concept.ConceptManager;
 import com.vaticle.typedb.driver.api.concept.value.Value;
+import com.vaticle.typedb.driver.common.NetworkIterator;
 import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.common.exception.TypeDBException;
@@ -144,7 +145,7 @@ public final class ConceptManagerImpl implements ConceptManager {
     public List<TypeDBException> getSchemaExceptions() {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         try {
-            return concepts_get_schema_exceptions(nativeTransaction).stream()
+            return new NetworkIterator<>(concepts_get_schema_exceptions(nativeTransaction)).stream()
                     .map(e -> new TypeDBException(schema_exception_code(e), schema_exception_message(e))).collect(Collectors.toList());
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
