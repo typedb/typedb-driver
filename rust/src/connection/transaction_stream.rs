@@ -138,7 +138,7 @@ impl TransactionStream {
         }))
     }
 
-    pub(crate) fn get_aggregate(&self, query: String, options: Options) -> impl Promise<'_, Result<Value>> {
+    pub(crate) fn get_aggregate(&self, query: String, options: Options) -> impl Promise<'_, Result<Option<Value>>> {
         let promise = self.query_single(QueryRequest::GetAggregate { query, options });
         promisify! {
             match resolve!(promise)? {

@@ -31,6 +31,7 @@ use typedb_driver::{
     box_stream,
     concept::{
         Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Thing, ThingType,
+        Value,
     },
     BoxPromise, BoxStream, Promise, Result,
 };
@@ -54,6 +55,10 @@ impl ConceptPromise {
 
     fn attribute(promise: impl Promise<'static, Result<Option<Attribute>>>) -> Self {
         Self(Box::new(|| Ok(promise.resolve()?.map(Concept::Attribute))))
+    }
+
+    pub(super) fn value(promise: impl Promise<'static, Result<Option<Value>>>) -> Self {
+        Self(Box::new(|| Ok(promise.resolve()?.map(Concept::Value))))
     }
 
     fn entity_type(promise: impl Promise<'static, Result<Option<EntityType>>>) -> Self {

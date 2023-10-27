@@ -22,7 +22,7 @@
 use std::ffi::c_char;
 
 use typedb_driver::{
-    answer::{ConceptMap, ConceptMapGroup, Explainable, Explainables, Numeric, NumericGroup},
+    answer::{ConceptMap, ConceptMapGroup, Explainable, Explainables, ValueGroup},
     box_stream,
     concept::Concept,
     logic::{Explanation, Rule},
@@ -215,69 +215,26 @@ pub extern "C" fn concept_map_group_equals(lhs: *const ConceptMapGroup, rhs: *co
 }
 
 #[no_mangle]
-pub extern "C" fn numeric_drop(numeric: *mut Numeric) {
-    free(numeric);
+pub extern "C" fn value_group_drop(value_group: *mut ValueGroup) {
+    free(value_group);
 }
 
 #[no_mangle]
-pub extern "C" fn numeric_get_double(numeric: *const Numeric) -> f64 {
-    if let Numeric::Double(value) = borrow(numeric) {
-        *value
-    } else {
-        unreachable!()
-    }
+pub extern "C" fn value_group_to_string(value_group: *const ValueGroup) -> *const c_char {
+    release_string(format!("{:?}", borrow(value_group)))
 }
 
 #[no_mangle]
-pub extern "C" fn numeric_get_long(numeric: *const Numeric) -> i64 {
-    if let Numeric::Long(value) = borrow(numeric) {
-        *value
-    } else {
-        unreachable!()
-    }
-}
-
-#[no_mangle]
-pub extern "C" fn numeric_is_double(numeric: *const Numeric) -> bool {
-    matches!(borrow(numeric), Numeric::Double(_))
-}
-
-#[no_mangle]
-pub extern "C" fn numeric_is_long(numeric: *const Numeric) -> bool {
-    matches!(borrow(numeric), Numeric::Long(_))
-}
-
-#[no_mangle]
-pub extern "C" fn numeric_is_nan(numeric: *const Numeric) -> bool {
-    matches!(borrow(numeric), Numeric::NaN)
-}
-
-#[no_mangle]
-pub extern "C" fn numeric_to_string(numeric: *const Numeric) -> *const c_char {
-    release_string(borrow(numeric).to_string())
-}
-
-#[no_mangle]
-pub extern "C" fn numeric_group_drop(numeric_group: *mut NumericGroup) {
-    free(numeric_group);
-}
-
-#[no_mangle]
-pub extern "C" fn numeric_group_to_string(numeric_group: *const NumericGroup) -> *const c_char {
-    release_string(format!("{:?}", borrow(numeric_group)))
-}
-
-#[no_mangle]
-pub extern "C" fn numeric_group_equals(lhs: *const NumericGroup, rhs: *const NumericGroup) -> bool {
+pub extern "C" fn value_group_equals(lhs: *const ValueGroup, rhs: *const ValueGroup) -> bool {
     borrow(lhs) == borrow(rhs)
 }
 
 #[no_mangle]
-pub extern "C" fn numeric_group_get_owner(numeric_group: *mut NumericGroup) -> *mut Concept {
-    release(borrow(numeric_group).owner.clone())
+pub extern "C" fn value_group_get_owner(value_group: *mut ValueGroup) -> *mut Concept {
+    release(borrow(value_group).owner.clone())
 }
 
 #[no_mangle]
-pub extern "C" fn numeric_group_get_numeric(numeric_group: *mut NumericGroup) -> *mut Numeric {
-    release(borrow(numeric_group).numeric)
+pub extern "C" fn value_group_get_value(value_group: *mut ValueGroup) -> *mut Concept {
+    release(Concept::Value(borrow(value_group).value.clone()))
 }

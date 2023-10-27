@@ -21,8 +21,13 @@
 
 use std::pin::Pin;
 
+#[cfg(feature = "sync")]
+use itertools::Itertools;
+#[cfg(not(feature = "sync"))]
+use futures::TryStreamExt;
+
 use crate::{
-    answer::{ConceptMap, ConceptMapGroup, Explainable, ValueGroup, readable_concept},
+    answer::{ConceptMap, ConceptMapGroup, Explainable, ValueGroup, JSON},
     common::{stream::Stream, Promise, Result},
     concept::Value,
     connection::TransactionStream,
@@ -178,7 +183,7 @@ impl<'tx> QueryManager<'tx> {
 
     /// Performs a TypeQL Match Aggregate query with default options.
     /// See [`QueryManager::get_aggregate`]
-    pub fn get_aggregate(&self, query: &str) -> impl Promise<'tx, Result<Value>> {
+    pub fn get_aggregate(&self, query: &str) -> impl Promise<'tx, Result<Option<Value>>> {
         self.get_aggregate_with_options(query, Options::new())
     }
 
@@ -195,7 +200,7 @@ impl<'tx> QueryManager<'tx> {
     #[cfg_attr(feature = "sync", doc = "transaction.query().get_aggregate_with_options(query, options).resolve()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.query().get_aggregate_with_options(query, options).await")]
     /// ```
-    pub fn get_aggregate_with_options(&self, query: &str, options: Options) -> impl Promise<'tx, Result<Value>> {
+    pub fn get_aggregate_with_options(&self, query: &str, options: Options) -> impl Promise<'tx, Result<Option<Value>>> {
         self.transaction_stream.get_ref().get_aggregate(query.to_string(), options)
     }
 
@@ -253,7 +258,7 @@ impl<'tx> QueryManager<'tx> {
 
     /// Performs a TypeQL Fetch query with default options.
     /// See [`QueryManager::fetch_with_options`]
-    pub fn fetch(&self, query: &str) -> Result<impl Stream<Item = Result<readable_concept::Tree>>> {
+    pub fn fetch(&self, query: &str) -> Result<impl Stream<Item = Result<JSON>>> {
         self.fetch_with_options(query, Options::new())
     }
 
@@ -269,12 +274,8 @@ impl<'tx> QueryManager<'tx> {
     /// ```rust
     /// transaction.query().fetch_with_options(query, options)
     /// ```
-    pub fn fetch_with_options(
-        &self,
-        query: &str,
-        options: Options,
-    ) -> Result<impl Stream<Item = Result<readable_concept::Tree>>> {
-        self.transaction_stream.get_ref().fetch(query.to_string(), options)
+    pub fn fetch_with_options(&self, query: &str, options: Options) -> Result<impl Stream<Item = Result<JSON>>> {
+        Ok(self.transaction_stream.get_ref().fetch(query.to_string(), options)?.map_ok(|tree| tree.into_json()))
     }
 
     /// Performs a TypeQL Explain query in the transaction.

@@ -22,10 +22,10 @@
 use std::{ffi::c_char, ptr::addr_of_mut};
 
 use typedb_driver::{
-    answer::{ConceptMap, ConceptMapGroup, Explainable, Numeric, NumericGroup},
+    answer::{ConceptMap, ConceptMapGroup, Explainable, ValueGroup},
     box_stream,
     logic::Explanation,
-    BoxPromise, Options, Promise, Result, Transaction,
+    Options, Result, Transaction,
 };
 
 use super::{
@@ -33,10 +33,7 @@ use super::{
     iterator::{iterator_try_next, CIterator},
     memory::{borrow, free, string_view},
 };
-use crate::{
-    memory::{release, take_ownership},
-    promise::VoidPromise,
-};
+use crate::{concept::ConceptPromise, memory::release, promise::VoidPromise};
 
 #[no_mangle]
 pub extern "C" fn query_define(
@@ -84,7 +81,7 @@ pub extern "C" fn concept_map_iterator_drop(it: *mut ConceptMapIterator) {
 }
 
 #[no_mangle]
-pub extern "C" fn query_match(
+pub extern "C" fn query_get(
     transaction: *mut Transaction<'static>,
     query: *const c_char,
     options: *const Options,
@@ -92,7 +89,7 @@ pub extern "C" fn query_match(
     try_release(
         borrow(transaction)
             .query()
-            .match_with_options(string_view(query), borrow(options).clone())
+            .get_with_options(string_view(query), borrow(options).clone())
             .map(|it| ConceptMapIterator(CIterator(box_stream(it)))),
     )
 }
@@ -125,22 +122,15 @@ pub extern "C" fn query_update(
     )
 }
 
-pub struct NumericPromise(BoxPromise<'static, Result<Numeric>>);
-
 #[no_mangle]
-pub extern "C" fn numeric_promise_resolve(promise: *mut NumericPromise) -> *mut Numeric {
-    try_release(take_ownership(promise).0.resolve())
-}
-
-#[no_mangle]
-pub extern "C" fn query_match_aggregate(
+pub extern "C" fn query_get_aggregate(
     transaction: *mut Transaction<'static>,
     query: *const c_char,
     options: *const Options,
-) -> *mut NumericPromise {
-    release(NumericPromise(Box::new(
-        borrow(transaction).query().match_aggregate_with_options(string_view(query), borrow(options).clone()),
-    )))
+) -> *mut ConceptPromise {
+    release(ConceptPromise::value(
+        borrow(transaction).query().get_aggregate_with_options(string_view(query), borrow(options).clone()),
+    ))
 }
 
 pub struct ConceptMapGroupIterator(CIterator<Result<ConceptMapGroup>>);
@@ -156,7 +146,7 @@ pub extern "C" fn concept_map_group_iterator_drop(it: *mut ConceptMapGroupIterat
 }
 
 #[no_mangle]
-pub extern "C" fn query_match_group(
+pub extern "C" fn query_get_group(
     transaction: *mut Transaction<'static>,
     query: *const c_char,
     options: *const Options,
@@ -164,34 +154,34 @@ pub extern "C" fn query_match_group(
     try_release(
         borrow(transaction)
             .query()
-            .match_group_with_options(string_view(query), borrow(options).clone())
+            .get_group_with_options(string_view(query), borrow(options).clone())
             .map(|it| ConceptMapGroupIterator(CIterator(box_stream(it)))),
     )
 }
 
-pub struct NumericGroupIterator(CIterator<Result<NumericGroup>>);
+pub struct ValueGroupIterator(CIterator<Result<ValueGroup>>);
 
 #[no_mangle]
-pub extern "C" fn numeric_group_iterator_next(it: *mut NumericGroupIterator) -> *mut NumericGroup {
+pub extern "C" fn value_group_iterator_next(it: *mut ValueGroupIterator) -> *mut ValueGroup {
     unsafe { iterator_try_next(addr_of_mut!((*it).0)) }
 }
 
 #[no_mangle]
-pub extern "C" fn numeric_group_iterator_drop(it: *mut NumericGroupIterator) {
+pub extern "C" fn value_group_iterator_drop(it: *mut ValueGroupIterator) {
     free(it);
 }
 
 #[no_mangle]
-pub extern "C" fn query_match_group_aggregate(
+pub extern "C" fn query_get_group_aggregate(
     transaction: *mut Transaction<'static>,
     query: *const c_char,
     options: *const Options,
-) -> *mut NumericGroupIterator {
+) -> *mut ValueGroupIterator {
     try_release(
         borrow(transaction)
             .query()
-            .match_group_aggregate_with_options(string_view(query), borrow(options).clone())
-            .map(|it| NumericGroupIterator(CIterator(box_stream(it)))),
+            .get_group_aggregate_with_options(string_view(query), borrow(options).clone())
+            .map(|it| ValueGroupIterator(CIterator(box_stream(it)))),
     )
 }
 

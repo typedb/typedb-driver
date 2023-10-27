@@ -132,7 +132,7 @@ impl TryFromProto<ConceptProto> for Concept {
 impl TryFromProto<ReadableConceptTreeProto> for readable_concept::Tree {
     fn try_from_proto(proto: ReadableConceptTreeProto) -> Result<Self> {
         let ReadableConceptTreeProto { root: root_proto } = proto;
-        Ok(Self { root: root_proto.map(HashMap::<String, readable_concept::Node>::try_from_proto).transpose()? })
+        Ok(Self { root: HashMap::try_from_proto(root_proto.ok_or(ConnectionError::MissingResponseField("root"))?)? })
     }
 }
 

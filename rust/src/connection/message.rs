@@ -187,7 +187,7 @@ pub(super) enum QueryResponse {
     Insert { answers: Vec<ConceptMap> },
     Update { answers: Vec<ConceptMap> },
 
-    GetAggregate { answer: Value },
+    GetAggregate { answer: Option<Value> },
 
     GetGroup { answers: Vec<ConceptMapGroup> },
     GetGroupAggregate { answers: Vec<ValueGroup> },

@@ -512,9 +512,9 @@ impl TryFromProto<query_manager::Res> for QueryResponse {
             Some(query_manager::res::Res::DefineRes(_)) => Ok(Self::Define),
             Some(query_manager::res::Res::UndefineRes(_)) => Ok(Self::Undefine),
             Some(query_manager::res::Res::DeleteRes(_)) => Ok(Self::Delete),
-            Some(query_manager::res::Res::GetAggregateRes(res)) => Ok(Self::GetAggregate {
-                answer: Value::try_from_proto(res.answer.ok_or(ConnectionError::MissingResponseField("answer"))?)?,
-            }),
+            Some(query_manager::res::Res::GetAggregateRes(res)) => {
+                Ok(Self::GetAggregate { answer: res.answer.map(Value::try_from_proto).transpose()? })
+            }
             None => Err(ConnectionError::MissingResponseField("res").into()),
         }
     }
