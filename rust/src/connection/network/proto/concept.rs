@@ -25,21 +25,20 @@ use chrono::NaiveDateTime;
 use itertools::Itertools;
 use typedb_protocol::{
     concept,
-    numeric::Value as NumericValue,
     r#type::{annotation, Annotation as AnnotationProto, Transitivity as TransitivityProto},
     thing, thing_type,
     value::Value as ValueProtoInner,
     Attribute as AttributeProto, AttributeType as AttributeTypeProto, Concept as ConceptProto,
     ConceptMap as ConceptMapProto, ConceptMapGroup as ConceptMapGroupProto, Entity as EntityProto,
     EntityType as EntityTypeProto, Explainable as ExplainableProto, Explainables as ExplainablesProto,
-    Explanation as ExplanationProto, Numeric as NumericProto, NumericGroup as NumericGroupProto,
-    Relation as RelationProto, RelationType as RelationTypeProto, RoleType as RoleTypeProto, Thing as ThingProto,
-    ThingType as ThingTypeProto, Value as ValueProto, ValueType as ValueTypeProto,
+    Explanation as ExplanationProto, Relation as RelationProto, RelationType as RelationTypeProto,
+    RoleType as RoleTypeProto, Thing as ThingProto, ThingType as ThingTypeProto, Value as ValueProto,
+    ValueGroup as ValueGroupProto, ValueType as ValueTypeProto,
 };
 
 use super::{FromProto, IntoProto, TryFromProto};
 use crate::{
-    answer::{ConceptMap, ConceptMapGroup, Explainable, Explainables, Numeric, NumericGroup},
+    answer::{ConceptMap, ConceptMapGroup, Explainable, Explainables, ValueGroup},
     concept::{
         Annotation, Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType,
         RootThingType, ScopedLabel, Thing, ThingType, Transitivity, Value, ValueType,
@@ -67,24 +66,12 @@ impl IntoProto<AnnotationProto> for Annotation {
     }
 }
 
-impl TryFromProto<NumericGroupProto> for NumericGroup {
-    fn try_from_proto(proto: NumericGroupProto) -> Result<Self> {
-        let NumericGroupProto { owner: owner_proto, number: number_proto } = proto;
+impl TryFromProto<ValueGroupProto> for ValueGroup {
+    fn try_from_proto(proto: ValueGroupProto) -> Result<Self> {
+        let ValueGroupProto { owner: owner_proto, value: value_proto } = proto;
         let owner = Concept::try_from_proto(owner_proto.ok_or(ConnectionError::MissingResponseField("owner"))?)?;
-        let numeric = Numeric::try_from_proto(number_proto.ok_or(ConnectionError::MissingResponseField("number"))?)?;
-        Ok(Self { owner, numeric })
-    }
-}
-
-impl TryFromProto<NumericProto> for Numeric {
-    fn try_from_proto(proto: NumericProto) -> Result<Self> {
-        let NumericProto { value: value_proto } = proto;
-        match value_proto {
-            Some(NumericValue::LongValue(long)) => Ok(Self::Long(long)),
-            Some(NumericValue::DoubleValue(double)) => Ok(Self::Double(double)),
-            Some(NumericValue::Nan(_)) => Ok(Self::NaN),
-            None => Err(ConnectionError::MissingResponseField("value").into()),
-        }
+        let value = Value::try_from_proto(value_proto.ok_or(ConnectionError::MissingResponseField("value"))?)?;
+        Ok(Self { owner, value })
     }
 }
 

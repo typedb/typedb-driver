@@ -23,14 +23,14 @@ use std::{fmt, iter, pin::Pin};
 
 #[cfg(not(feature = "sync"))]
 use futures::{stream, StreamExt};
-use typeql::pattern::{Conjunction, Variable};
+use typeql::pattern::{Conjunction, Statement};
 
 use super::{
     message::{RoleTypeRequest, RoleTypeResponse, ThingRequest, ThingResponse},
     network::transmitter::TransactionTransmitter,
 };
 use crate::{
-    answer::{ConceptMap, ConceptMapGroup, Numeric, NumericGroup},
+    answer::{ConceptMap, ConceptMapGroup, ValueGroup},
     common::{
         stream::{BoxStream, Stream},
         Promise, Result, IID,
@@ -111,10 +111,10 @@ impl TransactionStream {
         promisify! { resolve!(promise).map(|_| ()) }
     }
 
-    pub(crate) fn match_(&self, query: String, options: Options) -> Result<impl Stream<Item = Result<ConceptMap>>> {
-        let stream = self.query_stream(QueryRequest::Match { query, options })?;
+    pub(crate) fn get(&self, query: String, options: Options) -> Result<impl Stream<Item = Result<ConceptMap>>> {
+        let stream = self.query_stream(QueryRequest::Get { query, options })?;
         Ok(stream.flat_map(|result| match result {
-            Ok(QueryResponse::Match { answers }) => stream_iter(answers.into_iter().map(Ok)),
+            Ok(QueryResponse::Get { answers }) => stream_iter(answers.into_iter().map(Ok)),
             Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
             Err(err) => stream_once(Err(err)),
         }))
@@ -138,37 +138,37 @@ impl TransactionStream {
         }))
     }
 
-    pub(crate) fn match_aggregate(&self, query: String, options: Options) -> impl Promise<'_, Result<Numeric>> {
-        let promise = self.query_single(QueryRequest::MatchAggregate { query, options });
+    pub(crate) fn get_aggregate(&self, query: String, options: Options) -> impl Promise<'_, Result<Value>> {
+        let promise = self.query_single(QueryRequest::GetAggregate { query, options });
         promisify! {
             match resolve!(promise)? {
-                QueryResponse::MatchAggregate { answer } => Ok(answer),
+                QueryResponse::GetAggregate { answer } => Ok(answer),
                 other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
             }
         }
     }
 
-    pub(crate) fn match_group(
+    pub(crate) fn get_group(
         &self,
         query: String,
         options: Options,
     ) -> Result<impl Stream<Item = Result<ConceptMapGroup>>> {
-        let stream = self.query_stream(QueryRequest::MatchGroup { query, options })?;
+        let stream = self.query_stream(QueryRequest::GetGroup { query, options })?;
         Ok(stream.flat_map(|result| match result {
-            Ok(QueryResponse::MatchGroup { answers }) => stream_iter(answers.into_iter().map(Ok)),
+            Ok(QueryResponse::GetGroup { answers }) => stream_iter(answers.into_iter().map(Ok)),
             Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
             Err(err) => stream_once(Err(err)),
         }))
     }
 
-    pub(crate) fn match_group_aggregate(
+    pub(crate) fn get_group_aggregate(
         &self,
         query: String,
         options: Options,
-    ) -> Result<impl Stream<Item = Result<NumericGroup>>> {
-        let stream = self.query_stream(QueryRequest::MatchGroupAggregate { query, options })?;
+    ) -> Result<impl Stream<Item = Result<ValueGroup>>> {
+        let stream = self.query_stream(QueryRequest::GetGroupAggregate { query, options })?;
         Ok(stream.flat_map(|result| match result {
-            Ok(QueryResponse::MatchGroupAggregate { answers }) => stream_iter(answers.into_iter().map(Ok)),
+            Ok(QueryResponse::GetGroupAggregate { answers }) => stream_iter(answers.into_iter().map(Ok)),
             Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
             Err(err) => stream_once(Err(err)),
         }))
@@ -1126,7 +1126,7 @@ impl TransactionStream {
         }
     }
 
-    pub(crate) fn put_rule(&self, label: String, when: Conjunction, then: Variable) -> impl Promise<'_, Result<Rule>> {
+    pub(crate) fn put_rule(&self, label: String, when: Conjunction, then: Statement) -> impl Promise<'_, Result<Rule>> {
         let promise = self.logic_single(LogicRequest::PutRule { label, when, then });
         promisify! {
             match resolve!(promise)? {

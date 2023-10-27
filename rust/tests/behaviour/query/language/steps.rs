@@ -21,7 +21,7 @@
 
 use cucumber::{gherkin::Step, given, then, when};
 use futures::TryStreamExt;
-use typedb_driver::{answer::Numeric, Result as TypeDBResult};
+use typedb_driver::{concept::Value, Result as TypeDBResult};
 use typeql::parse_query;
 use util::{
     equals_approximate, iter_table_map, match_answer_concept, match_answer_concept_map, match_answer_rule,
@@ -105,7 +105,7 @@ generic_step_impl! {
     #[step(expr = "get answers of typeql match")]
     pub async fn get_answers_typeql_match(context: &mut Context, step: &Step) -> TypeDBResult {
         let parsed = parse_query(step.docstring().unwrap())?;
-        context.answer = context.transaction().query().match_(&parsed.to_string())?.try_collect::<Vec<_>>().await?;
+        context.answer = context.transaction().query().get(&parsed.to_string())?.try_collect::<Vec<_>>().await?;
         Ok(())
     }
 
@@ -153,11 +153,11 @@ generic_step_impl! {
     }
 
     #[step(expr = "typeql match; throws exception")]
-    async fn typeql_match_throws(context: &mut Context, step: &Step) {
+    async fn typeql_get_throws(context: &mut Context, step: &Step) {
         let parsed = parse_query(step.docstring().unwrap());
         match parsed {
             Ok(_) => {
-                let matched = context.transaction().query().match_(&parsed.unwrap().to_string());
+                let matched = context.transaction().query().get(&parsed.unwrap().to_string());
                 if matched.is_ok() {
                     let res = matched.unwrap().try_collect::<Vec<_>>().await;
                     assert!(res.is_err());
@@ -174,11 +174,11 @@ generic_step_impl! {
     }
 
     #[step(expr = "typeql match; throws exception containing {string}")]
-    async fn typeql_match_throws_containing(context: &mut Context, step: &Step, message: String) {
+    async fn typeql_get_throws_containing(context: &mut Context, step: &Step, message: String) {
         let parsed = parse_query(step.docstring().unwrap());
         match parsed {
             Ok(_) => {
-                let matched = context.transaction().query().match_(&parsed.unwrap().to_string());
+                let matched = context.transaction().query().get(&parsed.unwrap().to_string());
                 if matched.is_ok() {
                     let res = matched.unwrap().try_collect::<Vec<_>>().await;
                     assert!(res.is_err());
@@ -205,7 +205,7 @@ generic_step_impl! {
     }
 
     #[step(expr = "templated typeql match; throws exception")]
-    async fn templated_typeql_match_throws(context: &mut Context, step: &Step) {
+    async fn templated_typeql_get_throws(context: &mut Context, step: &Step) {
         for answer in context.answer.clone() {
             assert_err!(match_templated_answer(context, step, &answer).await);
         }
@@ -232,24 +232,24 @@ generic_step_impl! {
     }
 
     #[step(expr = "get answer of typeql match aggregate")]
-    async fn get_answers_typeql_match_aggregate(context: &mut Context, step: &Step) -> TypeDBResult {
+    async fn get_answers_typeql_get_aggregate(context: &mut Context, step: &Step) -> TypeDBResult {
         let parsed = parse_query(step.docstring().unwrap())?;
-        context.numeric_answer = Some(context.transaction().query().match_aggregate(&parsed.to_string()).await?);
+        context.value_answer = Some(context.transaction().query().get_aggregate(&parsed.to_string()).await?);
         Ok(())
     }
 
     #[step(expr = "typeql match aggregate; throws exception")]
-    async fn typeql_match_aggregate_throws(context: &mut Context, step: &Step) {
-        assert_err!(get_answers_typeql_match_aggregate(context, step).await);
+    async fn typeql_get_aggregate_throws(context: &mut Context, step: &Step) {
+        assert_err!(get_answers_typeql_get_aggregate(context, step).await);
     }
 
     #[step(expr = "aggregate value is: {float}")]
     async fn aggregate_value(context: &mut Context, expected_answer: f64) {
-        assert!(context.numeric_answer.is_some(), "There is no stored answer from the previous query.");
-        let answer: f64 = match context.numeric_answer.as_ref().unwrap() {
-            Numeric::Long(value) => *value as f64,
-            Numeric::Double(value) => *value,
-            Numeric::NaN => unreachable!("Last answer in NaN while expected answer is not."),
+        assert!(context.value_answer.is_some(), "There is no stored answer from the previous query.");
+        let answer: f64 = match *context.value_answer.as_ref().unwrap() {
+            Value::Long(value) => value as f64,
+            Value::Double(value) => value,
+            _ => panic!("Last answer is not a number."),
         };
         assert!(
             equals_approximate(answer, expected_answer),
@@ -259,24 +259,24 @@ generic_step_impl! {
 
     #[step(expr = "aggregate answer is not a number")]
     async fn aggregate_answer_is_nan(context: &mut Context) {
-        assert!(context.numeric_answer.is_some(), "There is no stored answer from the previous query.");
-        assert!(matches!(context.numeric_answer.as_ref().unwrap(), Numeric::NaN));
+        assert!(context.value_answer.is_some(), "There is no stored answer from the previous query.");
+        assert!(!matches!(context.value_answer.as_ref().unwrap(), Value::Long(_) | Value::Double(_)));
     }
 
     #[step(expr = "get answers of typeql match group")]
-    async fn get_answers_typeql_match_group(context: &mut Context, step: &Step) -> TypeDBResult {
+    async fn get_answers_typeql_get_group(context: &mut Context, step: &Step) -> TypeDBResult {
         let parsed = parse_query(step.docstring().unwrap())?;
         context.answer_group =
-            context.transaction().query().match_group(&parsed.to_string())?.try_collect::<Vec<_>>().await?;
+            context.transaction().query().get_group(&parsed.to_string())?.try_collect::<Vec<_>>().await?;
         Ok(())
     }
 
     #[step(expr = "typeql match group; throws exception")]
-    async fn typeql_match_group_throws(context: &mut Context, step: &Step) {
+    async fn typeql_get_group_throws(context: &mut Context, step: &Step) {
         let parsed = parse_query(step.docstring().unwrap());
         match parsed {
             Ok(_) => {
-                let matched = context.transaction().query().match_group(&parsed.unwrap().to_string());
+                let matched = context.transaction().query().get_group(&parsed.unwrap().to_string());
                 if matched.is_ok() {
                     let res = matched.unwrap().try_collect::<Vec<_>>().await;
                     assert!(res.is_err(), "{res:?}");
@@ -328,10 +328,10 @@ generic_step_impl! {
     }
 
     #[step(expr = "get answers of typeql match group aggregate")]
-    async fn get_answers_typeql_match_group_aggregate(context: &mut Context, step: &Step) -> TypeDBResult {
+    async fn get_answers_typeql_get_group_aggregate(context: &mut Context, step: &Step) -> TypeDBResult {
         let parsed = parse_query(step.docstring().unwrap())?;
-        context.numeric_answer_group =
-            context.transaction().query().match_group_aggregate(&parsed.to_string())?.try_collect::<Vec<_>>().await?;
+        context.value_answer_group =
+            context.transaction().query().get_group_aggregate(&parsed.to_string())?.try_collect::<Vec<_>>().await?;
         Ok(())
     }
 
@@ -339,21 +339,21 @@ generic_step_impl! {
     async fn group_aggregate_values_are(context: &mut Context, step: &Step) {
         let step_table = iter_table_map(step).collect::<Vec<_>>();
         let expected_answers = step_table.len();
-        let actual_answers = context.numeric_answer_group.len();
+        let actual_answers = context.value_answer_group.len();
         assert_eq!(
             actual_answers, expected_answers,
             "The number of identifier entries (rows) should match the number of answer groups, \
             but found {expected_answers} identifier entries and {actual_answers} answer groups."
         );
         let mut matched_rows = 0;
-        for group in &context.numeric_answer_group {
+        for group in &context.value_answer_group {
             for table_row in &step_table {
                 if match_answer_concept(context, table_row.get(Context::GROUP_COLUMN_NAME).unwrap(), &group.owner).await
                 {
-                    let answer: f64 = match group.numeric {
-                        Numeric::Long(value) => value as f64,
-                        Numeric::Double(value) => value,
-                        Numeric::NaN => panic!("Last answer in NaN while expected answer is not."),
+                    let answer: f64 = match group.value {
+                        Value::Long(value) => value as f64,
+                        Value::Double(value) => value,
+                        _ => panic!("Last answer is not a number."),
                     };
                     let expected_value: f64 = table_row.get(Context::VALUE_COLUMN_NAME).unwrap().parse().unwrap();
                     if equals_approximate(answer, expected_value) {
@@ -384,7 +384,7 @@ generic_step_impl! {
     }
 
     #[step(expr = "rules are")]
-    async fn rules_are(context: &mut Context, step: &Step) {
+    async fn rules_are(context: &mut Context, step: &Step) -> TypeDBResult {
         let stream = context.transaction().logic().get_rules();
         assert!(stream.is_ok(), "{:?}", stream.err());
         let res = stream.unwrap().try_collect::<Vec<_>>().await;
@@ -401,7 +401,7 @@ generic_step_impl! {
         let mut matched_rows = 0;
         for ans_row in &answers {
             for table_row in &step_table {
-                if match_answer_rule(table_row, ans_row).await {
+                if match_answer_rule(table_row, ans_row).await? {
                     matched_rows += 1;
                     break;
                 }
@@ -412,5 +412,6 @@ generic_step_impl! {
             "An identifier entry (row) should match 1-to-1 to an answer, but there are only {matched_rows} \
             matched entries of given {actual_answers}."
         );
+        Ok(())
     }
 }

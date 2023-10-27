@@ -21,7 +21,7 @@
 
 use std::pin::Pin;
 
-use typeql::pattern::{Conjunction, Variable};
+use typeql::pattern::{Conjunction, Statement};
 
 use crate::{
     common::{stream::Stream, Promise, Result},
@@ -54,7 +54,7 @@ impl<'tx> LogicManager<'tx> {
     #[cfg_attr(feature = "sync", doc = "transaction.logic().put_rule(label, when, then).resolve()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.logic().put_rule(label, when, then).await")]
     /// ```
-    pub fn put_rule(&self, label: String, when: Conjunction, then: Variable) -> impl Promise<'tx, Result<Rule>> {
+    pub fn put_rule(&self, label: String, when: Conjunction, then: Statement) -> impl Promise<'tx, Result<Rule>> {
         self.transaction_stream.get_ref().put_rule(label, when, then)
     }
 

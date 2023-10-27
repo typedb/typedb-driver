@@ -26,7 +26,6 @@ use futures::StreamExt;
 use serial_test::serial;
 use tokio::sync::mpsc;
 use typedb_driver::{
-    answer::Numeric,
     concept::{Attribute, Concept, Value},
     error::ConnectionError,
     Connection, DatabaseManager, Error, Options, Session,
@@ -50,7 +49,7 @@ test_for_each_arg! {
 
         let session = Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?;
         let transaction = session.transaction(Write).await?;
-        let answer_stream = transaction.query().match_("match $x sub thing;")?;
+        let answer_stream = transaction.query().get("match $x sub thing; get;")?;
         let results: Vec<_> = answer_stream.collect().await;
         transaction.commit().await?;
         assert_eq!(results.len(), 5);
@@ -65,7 +64,7 @@ test_for_each_arg! {
 
         let session = Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?;
         let transaction = session.transaction(Write).await?;
-        let answer_stream = transaction.query().match_("match $x sub nonexistent-type;")?;
+        let answer_stream = transaction.query().get("match $x sub nonexistent-type; get;")?;
         let results: Vec<_> = answer_stream.collect().await;
         assert_eq!(results.len(), 1);
         assert!(results.into_iter().all(|res| res.unwrap_err().to_string().contains("[TYR03]")));
@@ -87,7 +86,7 @@ test_for_each_arg! {
             tokio::spawn(async move {
                 for _ in 0..5 {
                     let transaction = session.transaction(Read).await.unwrap();
-                    let mut answer_stream = transaction.query().match_("match $x sub thing;").unwrap();
+                    let mut answer_stream = transaction.query().get("match $x sub thing; get;").unwrap();
                     while let Some(result) = answer_stream.next().await {
                         sender.send(result).await.unwrap();
                     }
@@ -141,13 +140,13 @@ test_for_each_arg! {
         transaction.commit().await?;
 
         let transaction = session.transaction(Read).await?;
-        let age_count = transaction.query().match_aggregate("match $x isa age; count;").await?;
-        assert_eq!(age_count, Numeric::Long(0));
+        let age_count = transaction.query().get_aggregate("match $x isa age; get; count;").await?;
+        assert_eq!(age_count, Value::Long(0));
 
         let with_inference = Options::new().infer(true);
         let transaction = session.transaction_with_options(Read, with_inference).await?;
-        let age_count = transaction.query().match_aggregate("match $x isa age; count;").await?;
-        assert_eq!(age_count, Numeric::Long(1));
+        let age_count = transaction.query().get_aggregate("match $x isa age; get; count;").await?;
+        assert_eq!(age_count, Value::Long(1));
 
         Ok(())
     }
@@ -175,7 +174,7 @@ test_for_each_arg! {
         transaction.commit().await?;
 
         let transaction = session.transaction(Read).await?;
-        let mut ages = transaction.query().match_("match $age isa age;")?;
+        let mut ages = transaction.query().get("match $age isa age; get;")?;
         while let Some(age) = ages.next().await {
             assert!(age.is_ok());
             let age = unwrap_long(age?.map.remove("age").unwrap());
@@ -184,8 +183,8 @@ test_for_each_arg! {
         drop(transaction);
 
         let transaction = session.transaction(Read).await?;
-        let age_count = transaction.query().match_aggregate("match $age isa age; count;").await?;
-        assert_eq!(age_count, Numeric::Long(1));
+        let age_count = transaction.query().get_aggregate("match $age isa age; get; count;").await?;
+        assert_eq!(age_count, Value::Long(1));
         drop(transaction);
 
         let transaction = session.transaction(Write).await?;
@@ -228,10 +227,11 @@ test_for_each_arg! {
         transaction.commit().await?;
 
         let transaction = session.transaction(Read).await?;
-        let mut answer_stream = transaction.query().match_(
+        let mut answer_stream = transaction.query().get(
             r#"match
             $p isa person, has name $name, has date-of-birth $date-of-birth;
-            $f($role: $p) isa friendship;"#,
+            $f($role: $p) isa friendship;
+            get;"#,
         )?;
 
         while let Some(result) = answer_stream.next().await {
@@ -288,9 +288,9 @@ test_for_each_arg! {
         let session2 = session.clone();
         session2.force_close()?;
 
-        let answer_stream = transaction.query().match_("match $x sub thing;");
+        let answer_stream = transaction.query().get("match $x sub thing; get;");
         assert!(answer_stream.is_err());
-        assert!(transaction.query().match_("match $x sub thing;").is_err());
+        assert!(transaction.query().get("match $x sub thing; get;").is_err());
 
         let transaction = session.transaction(Write).await;
         assert!(transaction.is_err());
@@ -323,7 +323,7 @@ test_for_each_arg! {
             let mut start_time = Instant::now();
             let session = Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?;
             let transaction = session.transaction(Read).await?;
-            let mut answer_stream = transaction.query().match_("match $x isa attribute;")?;
+            let mut answer_stream = transaction.query().get("match $x isa attribute; get;")?;
             let mut sum: i64 = 0;
             let mut idx = 0;
             while let Some(result) = answer_stream.next().await {

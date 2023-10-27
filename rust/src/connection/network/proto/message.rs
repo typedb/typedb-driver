@@ -30,11 +30,11 @@ use typedb_protocol::{
 
 use super::{FromProto, IntoProto, TryFromProto, TryIntoProto};
 use crate::{
-    answer::{ConceptMap, ConceptMapGroup, Numeric, NumericGroup},
+    answer::{ConceptMap, ConceptMapGroup, ValueGroup},
     common::{info::DatabaseInfo, RequestID, Result},
     concept::{
         Annotation, Attribute, AttributeType, Entity, EntityType, Relation, RelationType, RoleType, SchemaException,
-        Thing, ThingType, ValueType,
+        Thing, ThingType, ValueType, Value,
     },
     connection::message::{
         ConceptRequest, ConceptResponse, LogicRequest, LogicResponse, QueryRequest, QueryResponse, Request, Response,
@@ -472,8 +472,8 @@ impl IntoProto<query_manager::Req> for QueryRequest {
                 (query_manager::req::Req::DeleteReq(query_manager::delete::Req { query }), options)
             }
 
-            Self::Match { query, options } => {
-                (query_manager::req::Req::MatchReq(query_manager::r#match::Req { query }), options)
+            Self::Get { query, options } => {
+                (query_manager::req::Req::GetReq(query_manager::get::Req { query }), options)
             }
             Self::Insert { query, options } => {
                 (query_manager::req::Req::InsertReq(query_manager::insert::Req { query }), options)
@@ -482,15 +482,15 @@ impl IntoProto<query_manager::Req> for QueryRequest {
                 (query_manager::req::Req::UpdateReq(query_manager::update::Req { query }), options)
             }
 
-            Self::MatchAggregate { query, options } => {
-                (query_manager::req::Req::MatchAggregateReq(query_manager::match_aggregate::Req { query }), options)
+            Self::GetAggregate { query, options } => {
+                (query_manager::req::Req::GetAggregateReq(query_manager::get_aggregate::Req { query }), options)
             }
 
-            Self::MatchGroup { query, options } => {
-                (query_manager::req::Req::MatchGroupReq(query_manager::match_group::Req { query }), options)
+            Self::GetGroup { query, options } => {
+                (query_manager::req::Req::GetGroupReq(query_manager::get_group::Req { query }), options)
             }
-            Self::MatchGroupAggregate { query, options } => (
-                query_manager::req::Req::MatchGroupAggregateReq(query_manager::match_group_aggregate::Req { query }),
+            Self::GetGroupAggregate { query, options } => (
+                query_manager::req::Req::GetGroupAggregateReq(query_manager::get_group_aggregate::Req { query }),
                 options,
             ),
 
@@ -508,8 +508,8 @@ impl TryFromProto<query_manager::Res> for QueryResponse {
             Some(query_manager::res::Res::DefineRes(_)) => Ok(Self::Define),
             Some(query_manager::res::Res::UndefineRes(_)) => Ok(Self::Undefine),
             Some(query_manager::res::Res::DeleteRes(_)) => Ok(Self::Delete),
-            Some(query_manager::res::Res::MatchAggregateRes(res)) => Ok(Self::MatchAggregate {
-                answer: Numeric::try_from_proto(res.answer.ok_or(ConnectionError::MissingResponseField("answer"))?)?,
+            Some(query_manager::res::Res::GetAggregateRes(res)) => Ok(Self::GetAggregate {
+                answer: Value::try_from_proto(res.answer.ok_or(ConnectionError::MissingResponseField("answer"))?)?,
             }),
             None => Err(ConnectionError::MissingResponseField("res").into()),
         }
@@ -519,8 +519,8 @@ impl TryFromProto<query_manager::Res> for QueryResponse {
 impl TryFromProto<query_manager::ResPart> for QueryResponse {
     fn try_from_proto(proto: query_manager::ResPart) -> Result<Self> {
         match proto.res {
-            Some(query_manager::res_part::Res::MatchResPart(res)) => {
-                Ok(Self::Match { answers: res.answers.into_iter().map(ConceptMap::try_from_proto).try_collect()? })
+            Some(query_manager::res_part::Res::GetResPart(res)) => {
+                Ok(Self::Get { answers: res.answers.into_iter().map(ConceptMap::try_from_proto).try_collect()? })
             }
             Some(query_manager::res_part::Res::InsertResPart(res)) => {
                 Ok(Self::Insert { answers: res.answers.into_iter().map(ConceptMap::try_from_proto).try_collect()? })
@@ -528,15 +528,16 @@ impl TryFromProto<query_manager::ResPart> for QueryResponse {
             Some(query_manager::res_part::Res::UpdateResPart(res)) => {
                 Ok(Self::Update { answers: res.answers.into_iter().map(ConceptMap::try_from_proto).try_collect()? })
             }
-            Some(query_manager::res_part::Res::MatchGroupResPart(res)) => Ok(Self::MatchGroup {
+            Some(query_manager::res_part::Res::GetGroupResPart(res)) => Ok(Self::GetGroup {
                 answers: res.answers.into_iter().map(ConceptMapGroup::try_from_proto).try_collect()?,
             }),
-            Some(query_manager::res_part::Res::MatchGroupAggregateResPart(res)) => Ok(Self::MatchGroupAggregate {
-                answers: res.answers.into_iter().map(NumericGroup::try_from_proto).try_collect()?,
+            Some(query_manager::res_part::Res::GetGroupAggregateResPart(res)) => Ok(Self::GetGroupAggregate {
+                answers: res.answers.into_iter().map(ValueGroup::try_from_proto).try_collect()?,
             }),
             Some(query_manager::res_part::Res::ExplainResPart(res)) => Ok(Self::Explain {
                 answers: res.explanations.into_iter().map(Explanation::try_from_proto).try_collect()?,
             }),
+            Some(query_manager::res_part::Res::FetchResPart(res)) => todo!(),
             None => Err(ConnectionError::MissingResponseField("res").into()),
         }
     }

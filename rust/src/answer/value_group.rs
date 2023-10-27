@@ -19,12 +19,12 @@
  * under the License.
  */
 
-use crate::{answer::Numeric, concept::Concept};
+use crate::concept::{Concept, Value};
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct NumericGroup {
+pub struct ValueGroup {
     /// The concept that is the group owner.
     pub owner: Concept,
-    // The `Numeric` answer of the group.
-    pub numeric: Numeric,
+    // The `Value` answer of the group.
+    pub value: Value,
 }

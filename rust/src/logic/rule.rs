@@ -19,7 +19,7 @@
  * under the License.
  */
 
-use typeql::pattern::{Conjunction, ThingVariable};
+use typeql::pattern::{Conjunction, ThingStatement};
 
 /// Rules are a part of schema and define embedded logic.
 /// The reasoning engine uses rules as a set of logic to infer new data.
@@ -31,11 +31,11 @@ pub struct Rule {
     /// The statements that constitute the ‘when’ of the rule.
     pub when: Conjunction,
     /// The single statement that constitutes the ‘then’ of the rule.
-    pub then: ThingVariable,
+    pub then: ThingStatement,
 }
 
 impl Rule {
-    pub(crate) fn new(label: String, when: Conjunction, then: ThingVariable) -> Self {
+    pub(crate) fn new(label: String, when: Conjunction, then: ThingStatement) -> Self {
         Self { label, when, then }
     }
 }

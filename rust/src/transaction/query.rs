@@ -22,8 +22,9 @@
 use std::pin::Pin;
 
 use crate::{
-    answer::{ConceptMap, ConceptMapGroup, Explainable, Numeric, NumericGroup},
+    answer::{ConceptMap, ConceptMapGroup, Explainable, ValueGroup},
     common::{stream::Stream, Promise, Result},
+    concept::Value,
     connection::TransactionStream,
     logic::Explanation,
     Options,
@@ -110,9 +111,9 @@ impl<'tx> QueryManager<'tx> {
     }
 
     /// Performs a TypeQL Match (Get) query with default options.
-    /// See [`QueryManager::match_with_options`]
-    pub fn match_(&self, query: &str) -> Result<impl Stream<Item = Result<ConceptMap>>> {
-        self.match_with_options(query, Options::new())
+    /// See [`QueryManager::get_with_options`]
+    pub fn get(&self, query: &str) -> Result<impl Stream<Item = Result<ConceptMap>>> {
+        self.get_with_options(query, Options::new())
     }
 
     /// Performs a TypeQL Match (Get) query in the transaction.
@@ -125,10 +126,10 @@ impl<'tx> QueryManager<'tx> {
     /// # Examples
     ///
     /// ```rust
-    /// transaction.query().match_with_options(query, options)
+    /// transaction.query().get_with_options(query, options)
     /// ```
-    pub fn match_with_options(&self, query: &str, options: Options) -> Result<impl Stream<Item = Result<ConceptMap>>> {
-        self.transaction_stream.get_ref().match_(query.to_string(), options)
+    pub fn get_with_options(&self, query: &str, options: Options) -> Result<impl Stream<Item = Result<ConceptMap>>> {
+        self.transaction_stream.get_ref().get(query.to_string(), options)
     }
 
     /// Performs a TypeQL Insert query with default options.
@@ -176,9 +177,9 @@ impl<'tx> QueryManager<'tx> {
     }
 
     /// Performs a TypeQL Match Aggregate query with default options.
-    /// See [`QueryManager::match_aggregate`]
-    pub fn match_aggregate(&self, query: &str) -> impl Promise<'tx, Result<Numeric>> {
-        self.match_aggregate_with_options(query, Options::new())
+    /// See [`QueryManager::get_aggregate`]
+    pub fn get_aggregate(&self, query: &str) -> impl Promise<'tx, Result<Value>> {
+        self.get_aggregate_with_options(query, Options::new())
     }
 
     /// Performs a TypeQL Match Aggregate query in the transaction.
@@ -191,17 +192,17 @@ impl<'tx> QueryManager<'tx> {
     /// # Examples
     ///
     /// ```rust
-    #[cfg_attr(feature = "sync", doc = "transaction.query().match_aggregate_with_options(query, options).resolve()")]
-    #[cfg_attr(not(feature = "sync"), doc = "transaction.query().match_aggregate_with_options(query, options).await")]
+    #[cfg_attr(feature = "sync", doc = "transaction.query().get_aggregate_with_options(query, options).resolve()")]
+    #[cfg_attr(not(feature = "sync"), doc = "transaction.query().get_aggregate_with_options(query, options).await")]
     /// ```
-    pub fn match_aggregate_with_options(&self, query: &str, options: Options) -> impl Promise<'tx, Result<Numeric>> {
-        self.transaction_stream.get_ref().match_aggregate(query.to_string(), options)
+    pub fn get_aggregate_with_options(&self, query: &str, options: Options) -> impl Promise<'tx, Result<Value>> {
+        self.transaction_stream.get_ref().get_aggregate(query.to_string(), options)
     }
 
     /// Performs a TypeQL Match Group query with default options.
-    /// See [`QueryManager::match_group`]
-    pub fn match_group(&self, query: &str) -> Result<impl Stream<Item = Result<ConceptMapGroup>>> {
-        self.match_group_with_options(query, Options::new())
+    /// See [`QueryManager::get_group`]
+    pub fn get_group(&self, query: &str) -> Result<impl Stream<Item = Result<ConceptMapGroup>>> {
+        self.get_group_with_options(query, Options::new())
     }
 
     /// Performs a TypeQL Match Group query in the transaction.
@@ -214,20 +215,20 @@ impl<'tx> QueryManager<'tx> {
     /// # Examples
     ///
     /// ```rust
-    /// transaction.query().match_group_with_options(query, options)
+    /// transaction.query().get_group_with_options(query, options)
     /// ```
-    pub fn match_group_with_options(
+    pub fn get_group_with_options(
         &self,
         query: &str,
         options: Options,
     ) -> Result<impl Stream<Item = Result<ConceptMapGroup>>> {
-        self.transaction_stream.get_ref().match_group(query.to_string(), options)
+        self.transaction_stream.get_ref().get_group(query.to_string(), options)
     }
 
     /// Performs a TypeQL Match Group Aggregate query with default options.
-    /// See [`QueryManager::match_group_aggregate_with_options`]
-    pub fn match_group_aggregate(&self, query: &str) -> Result<impl Stream<Item = Result<NumericGroup>>> {
-        self.match_group_aggregate_with_options(query, Options::new())
+    /// See [`QueryManager::get_group_aggregate_with_options`]
+    pub fn get_group_aggregate(&self, query: &str) -> Result<impl Stream<Item = Result<ValueGroup>>> {
+        self.get_group_aggregate_with_options(query, Options::new())
     }
 
     /// Performs a TypeQL Match Group Aggregate query in the transaction.
@@ -240,14 +241,14 @@ impl<'tx> QueryManager<'tx> {
     /// # Examples
     ///
     /// ```rust
-    /// transaction.query().match_group_aggregate(query, options)
+    /// transaction.query().get_group_aggregate(query, options)
     /// ```
-    pub fn match_group_aggregate_with_options(
+    pub fn get_group_aggregate_with_options(
         &self,
         query: &str,
         options: Options,
-    ) -> Result<impl Stream<Item = Result<NumericGroup>>> {
-        self.transaction_stream.get_ref().match_group_aggregate(query.to_string(), options)
+    ) -> Result<impl Stream<Item = Result<ValueGroup>>> {
+        self.transaction_stream.get_ref().get_group_aggregate(query.to_string(), options)
     }
 
     /// Performs a TypeQL Explain query in the transaction.

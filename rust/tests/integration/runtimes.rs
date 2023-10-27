@@ -36,7 +36,7 @@ fn basic_async_std() {
 
         let session = Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?;
         let transaction = session.transaction(Write).await?;
-        let answer_stream = transaction.query().match_("match $x sub thing;")?;
+        let answer_stream = transaction.query().get("match $x sub thing; get;")?;
         let results: Vec<_> = answer_stream.collect().await;
         transaction.commit().await?;
         assert_eq!(results.len(), 5);
@@ -57,7 +57,7 @@ fn basic_smol() {
 
         let session = Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?;
         let transaction = session.transaction(Write).await?;
-        let answer_stream = transaction.query().match_("match $x sub thing;")?;
+        let answer_stream = transaction.query().get("match $x sub thing; get;")?;
         let results: Vec<_> = answer_stream.collect().await;
         transaction.commit().await?;
         assert_eq!(results.len(), 5);
@@ -78,7 +78,7 @@ fn basic_futures() {
 
         let session = Session::new(databases.get(common::TEST_DATABASE).await?, Data).await?;
         let transaction = session.transaction(Write).await?;
-        let answer_stream = transaction.query().match_("match $x sub thing;")?;
+        let answer_stream = transaction.query().get("match $x sub thing; get;")?;
         let results: Vec<_> = answer_stream.collect().await;
         transaction.commit().await?;
         assert_eq!(results.len(), 5);

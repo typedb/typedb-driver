@@ -40,7 +40,7 @@ use typedb_driver::{
     transaction::concept::api::ThingAPI,
     DatabaseManager, Result as TypeDBResult,
 };
-use typeql::{parse_patterns, parse_query, pattern::Variable};
+use typeql::{parse_pattern, parse_query, parse_statement, pattern::Statement};
 
 use crate::{assert_with_timeout, behaviour::Context};
 
@@ -166,7 +166,7 @@ pub async fn match_templated_answer(
 ) -> TypeDBResult<Vec<ConceptMap>> {
     let query = apply_query_template(step.docstring().unwrap(), answer);
     let parsed = parse_query(&query)?;
-    context.transaction().query().match_(&parsed.to_string())?.try_collect::<Vec<_>>().await
+    context.transaction().query().get(&parsed.to_string())?.try_collect::<Vec<_>>().await
 }
 
 fn apply_query_template(query_template: &str, answer: &ConceptMap) -> String {
@@ -184,14 +184,12 @@ fn get_iid(concept: &Concept) -> String {
     iid.to_string()
 }
 
-pub async fn match_answer_rule(answer_identifiers: &HashMap<&str, &str>, answer: &Rule) -> bool {
-    let when_clause = answer_identifiers.get("when").unwrap().to_string();
-    let when = parse_patterns(when_clause.as_str()).unwrap()[0].clone().into_conjunction();
-    let then_clause = answer_identifiers.get("then").unwrap().to_string();
-    let then = parse_patterns(then_clause.as_str()).unwrap()[0].clone().into_variable();
-    *answer_identifiers.get("label").unwrap() == answer.label
+pub async fn match_answer_rule(answer_identifiers: &HashMap<&str, &str>, answer: &Rule) -> TypeDBResult<bool> {
+    let when = parse_pattern(answer_identifiers.get("when").unwrap())?.into_conjunction();
+    let then = parse_statement(answer_identifiers.get("then").unwrap())?;
+    Ok(*answer_identifiers.get("label").unwrap() == answer.label
         && when == answer.when
-        && then == Variable::Thing(answer.then.clone())
+        && then == Statement::Thing(answer.then.clone()))
 }
 
 pub async fn create_database_with_timeout(databases: &DatabaseManager, name: String) {
