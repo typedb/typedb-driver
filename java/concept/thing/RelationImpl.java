@@ -25,7 +25,7 @@ import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.thing.Relation;
 import com.vaticle.typedb.driver.api.concept.thing.Thing;
 import com.vaticle.typedb.driver.api.concept.type.RoleType;
-import com.vaticle.typedb.driver.common.NetworkIterator;
+import com.vaticle.typedb.driver.common.NativeIterator;
 import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.type.RelationTypeImpl;
@@ -74,7 +74,7 @@ public class RelationImpl extends ThingImpl implements Relation {
     @Override
     public Stream<ThingImpl> getPlayersByRoleType(TypeDBTransaction transaction, RoleType... roleTypes) {
         try {
-            return new NetworkIterator<>(
+            return new NativeIterator<>(
                 relation_get_players_by_role_type(
                     nativeTransaction(transaction), nativeObject,
                     Arrays.stream(roleTypes).map(rt -> ((RoleTypeImpl) rt).nativeObject).toArray(com.vaticle.typedb.driver.jni.Concept[]::new)
@@ -89,7 +89,7 @@ public class RelationImpl extends ThingImpl implements Relation {
     public Map<RoleTypeImpl, List<ThingImpl>> getPlayers(TypeDBTransaction transaction) {
         Map<RoleTypeImpl, List<ThingImpl>> rolePlayerMap = new HashMap<>();
         try {
-            new NetworkIterator<>(relation_get_role_players(nativeTransaction(transaction), nativeObject)).stream().forEach(rolePlayer -> {
+            new NativeIterator<>(relation_get_role_players(nativeTransaction(transaction), nativeObject)).stream().forEach(rolePlayer -> {
                 RoleTypeImpl role = new RoleTypeImpl(role_player_get_role_type(rolePlayer));
                 ThingImpl player = ThingImpl.of(role_player_get_player(rolePlayer));
                 if (rolePlayerMap.containsKey(role)) rolePlayerMap.get(role).add(player);
@@ -104,7 +104,7 @@ public class RelationImpl extends ThingImpl implements Relation {
     @Override
     public Stream<? extends RoleType> getRelating(TypeDBTransaction transaction) {
         try {
-            return new NetworkIterator<>(relation_get_relating(nativeTransaction(transaction), nativeObject)).stream().map(RoleTypeImpl::new);
+            return new NativeIterator<>(relation_get_relating(nativeTransaction(transaction), nativeObject)).stream().map(RoleTypeImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

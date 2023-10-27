@@ -25,7 +25,7 @@ import com.vaticle.typedb.driver.api.answer.ConceptMap;
 import com.vaticle.typedb.driver.api.answer.ConceptMapGroup;
 import com.vaticle.typedb.driver.api.concept.Concept;
 import com.vaticle.typedb.driver.common.NativeObject;
-import com.vaticle.typedb.driver.common.NetworkIterator;
+import com.vaticle.typedb.driver.common.NativeIterator;
 import com.vaticle.typedb.driver.concept.ConceptImpl;
 
 import java.util.Objects;
@@ -51,7 +51,7 @@ public class ConceptMapGroupImpl extends NativeObject<com.vaticle.typedb.driver.
 
     @Override
     public Stream<ConceptMap> conceptMaps() {
-        return new NetworkIterator<>(concept_map_group_get_concept_maps(nativeObject)).stream().map(ConceptMapImpl::new);
+        return new NativeIterator<>(concept_map_group_get_concept_maps(nativeObject)).stream().map(ConceptMapImpl::new);
     }
 
     @Override

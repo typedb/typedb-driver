@@ -25,7 +25,7 @@ import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.value.Value;
 import com.vaticle.typedb.driver.api.concept.thing.Attribute;
 import com.vaticle.typedb.driver.api.concept.type.ThingType;
-import com.vaticle.typedb.driver.common.NetworkIterator;
+import com.vaticle.typedb.driver.common.NativeIterator;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.value.ValueImpl;
 import com.vaticle.typedb.driver.concept.type.AttributeTypeImpl;
@@ -55,7 +55,7 @@ public class AttributeImpl extends ThingImpl implements Attribute {
     @Override
     public final Stream<ThingImpl> getOwners(TypeDBTransaction transaction) {
         try {
-            return new NetworkIterator<>(attribute_get_owners(nativeTransaction(transaction), nativeObject, null)).stream().map(ThingImpl::of);
+            return new NativeIterator<>(attribute_get_owners(nativeTransaction(transaction), nativeObject, null)).stream().map(ThingImpl::of);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -64,7 +64,7 @@ public class AttributeImpl extends ThingImpl implements Attribute {
     @Override
     public Stream<ThingImpl> getOwners(TypeDBTransaction transaction, ThingType ownerType) {
         try {
-            return new NetworkIterator<>(attribute_get_owners(nativeTransaction(transaction), nativeObject, ((ThingTypeImpl) ownerType).nativeObject)).stream().map(ThingImpl::of);
+            return new NativeIterator<>(attribute_get_owners(nativeTransaction(transaction), nativeObject, ((ThingTypeImpl) ownerType).nativeObject)).stream().map(ThingImpl::of);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

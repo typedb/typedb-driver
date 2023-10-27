@@ -32,10 +32,10 @@ import static java.util.Spliterator.NONNULL;
 import static java.util.Spliterator.ORDERED;
 import static java.util.Spliterators.spliteratorUnknownSize;
 
-public class NetworkIterator<T> implements Iterator<T> {
+public class NativeIterator<T> implements Iterator<T> {
     private final Iterator<T> inner;
 
-    public NetworkIterator(Iterator<T> inner) {
+    public NativeIterator(Iterator<T> inner) {
         this.inner = inner;
     }
 

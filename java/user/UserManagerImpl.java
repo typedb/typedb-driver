@@ -24,7 +24,7 @@ package com.vaticle.typedb.driver.user;
 import com.vaticle.typedb.driver.api.user.User;
 import com.vaticle.typedb.driver.api.user.UserManager;
 import com.vaticle.typedb.driver.common.NativeObject;
-import com.vaticle.typedb.driver.common.NetworkIterator;
+import com.vaticle.typedb.driver.common.NativeIterator;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
 import java.util.Set;
@@ -82,7 +82,7 @@ public class UserManagerImpl extends NativeObject<com.vaticle.typedb.driver.jni.
     @Override
     public Set<User> all() {
         try {
-            return new NetworkIterator<>(users_all(nativeObject)).stream().map(user -> new UserImpl(user, this)).collect(Collectors.toSet());
+            return new NativeIterator<>(users_all(nativeObject)).stream().map(user -> new UserImpl(user, this)).collect(Collectors.toSet());
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

@@ -23,7 +23,7 @@ package com.vaticle.typedb.driver.connection;
 
 import com.vaticle.typedb.driver.api.database.Database;
 import com.vaticle.typedb.driver.common.NativeObject;
-import com.vaticle.typedb.driver.common.NetworkIterator;
+import com.vaticle.typedb.driver.common.NativeIterator;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
 import java.util.Optional;
@@ -104,7 +104,7 @@ public class TypeDBDatabaseImpl extends NativeObject<com.vaticle.typedb.driver.j
     @Override
     public Set<? extends Database.Replica> replicas() {
         if (!nativeObject.isOwned()) throw new TypeDBDriverException(DATABASE_DELETED);
-        return new NetworkIterator<>(database_get_replicas_info(nativeObject)).stream().map(Replica::new).collect(Collectors.toSet());
+        return new NativeIterator<>(database_get_replicas_info(nativeObject)).stream().map(Replica::new).collect(Collectors.toSet());
     }
 
     @Override

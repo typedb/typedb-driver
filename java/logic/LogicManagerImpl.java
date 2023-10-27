@@ -23,7 +23,7 @@ package com.vaticle.typedb.driver.logic;
 
 import com.vaticle.typedb.driver.api.logic.LogicManager;
 import com.vaticle.typedb.driver.api.logic.Rule;
-import com.vaticle.typedb.driver.common.NetworkIterator;
+import com.vaticle.typedb.driver.common.NativeIterator;
 import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typeql.lang.pattern.Pattern;
@@ -57,7 +57,7 @@ public final class LogicManagerImpl implements LogicManager {
     public Stream<RuleImpl> getRules() {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         try {
-            return new NetworkIterator<>(logic_manager_get_rules(nativeTransaction)).stream().map(RuleImpl::new);
+            return new NativeIterator<>(logic_manager_get_rules(nativeTransaction)).stream().map(RuleImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

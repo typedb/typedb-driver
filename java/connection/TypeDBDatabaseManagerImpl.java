@@ -24,7 +24,7 @@ package com.vaticle.typedb.driver.connection;
 import com.vaticle.typedb.driver.api.database.Database;
 import com.vaticle.typedb.driver.api.database.DatabaseManager;
 import com.vaticle.typedb.driver.common.NativeObject;
-import com.vaticle.typedb.driver.common.NetworkIterator;
+import com.vaticle.typedb.driver.common.NativeIterator;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
 import java.util.List;
@@ -83,7 +83,7 @@ public class TypeDBDatabaseManagerImpl extends NativeObject<com.vaticle.typedb.d
     @Override
     public List<Database> all() {
         try {
-            return new NetworkIterator<>(databases_all(nativeObject)).stream().map(TypeDBDatabaseImpl::new).collect(toList());
+            return new NativeIterator<>(databases_all(nativeObject)).stream().map(TypeDBDatabaseImpl::new).collect(toList());
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

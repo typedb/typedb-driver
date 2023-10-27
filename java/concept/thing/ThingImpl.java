@@ -27,7 +27,7 @@ import com.vaticle.typedb.driver.api.concept.thing.Thing;
 import com.vaticle.typedb.driver.api.concept.type.AttributeType;
 import com.vaticle.typedb.driver.api.concept.type.RoleType;
 import com.vaticle.typedb.driver.api.concept.type.ThingType.Annotation;
-import com.vaticle.typedb.driver.common.NetworkIterator;
+import com.vaticle.typedb.driver.common.NativeIterator;
 import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.ConceptImpl;
@@ -90,7 +90,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
     public final Stream<AttributeImpl> getHas(TypeDBTransaction transaction, AttributeType... attributeTypes) {
         com.vaticle.typedb.driver.jni.Concept[] attributeTypesArray = Arrays.stream(attributeTypes).map(at -> ((AttributeTypeImpl) at).nativeObject).toArray(com.vaticle.typedb.driver.jni.Concept[]::new);
         try {
-            return new NetworkIterator<>(thing_get_has(nativeTransaction(transaction), nativeObject, attributeTypesArray, new com.vaticle.typedb.driver.jni.Annotation[0])).stream().map(AttributeImpl::new);
+            return new NativeIterator<>(thing_get_has(nativeTransaction(transaction), nativeObject, attributeTypesArray, new com.vaticle.typedb.driver.jni.Annotation[0])).stream().map(AttributeImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -100,7 +100,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
     public final Stream<AttributeImpl> getHas(TypeDBTransaction transaction, Set<Annotation> annotations) {
         com.vaticle.typedb.driver.jni.Annotation[] annotationsArray = annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.driver.jni.Annotation[]::new);
         try {
-            return new NetworkIterator<>(thing_get_has(nativeTransaction(transaction), nativeObject, new com.vaticle.typedb.driver.jni.Concept[0], annotationsArray)).stream().map(AttributeImpl::new);
+            return new NativeIterator<>(thing_get_has(nativeTransaction(transaction), nativeObject, new com.vaticle.typedb.driver.jni.Concept[0], annotationsArray)).stream().map(AttributeImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -110,7 +110,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
     public final Stream<RelationImpl> getRelations(TypeDBTransaction transaction, RoleType... roleTypes) {
         com.vaticle.typedb.driver.jni.Concept[] roleTypesArray = Arrays.stream(roleTypes).map(rt -> ((RoleTypeImpl) rt).nativeObject).toArray(com.vaticle.typedb.driver.jni.Concept[]::new);
         try {
-            return new NetworkIterator<>(thing_get_relations(nativeTransaction(transaction), nativeObject, roleTypesArray)).stream().map(RelationImpl::new);
+            return new NativeIterator<>(thing_get_relations(nativeTransaction(transaction), nativeObject, roleTypesArray)).stream().map(RelationImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -119,7 +119,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
     @Override
     public final Stream<RoleTypeImpl> getPlaying(TypeDBTransaction transaction) {
         try {
-            return new NetworkIterator<>(thing_get_playing(nativeTransaction(transaction), nativeObject)).stream().map(RoleTypeImpl::new);
+            return new NativeIterator<>(thing_get_playing(nativeTransaction(transaction), nativeObject)).stream().map(RoleTypeImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

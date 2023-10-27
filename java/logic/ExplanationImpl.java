@@ -25,7 +25,7 @@ import com.vaticle.typedb.driver.api.answer.ConceptMap;
 import com.vaticle.typedb.driver.api.logic.Explanation;
 import com.vaticle.typedb.driver.api.logic.Rule;
 import com.vaticle.typedb.driver.common.NativeObject;
-import com.vaticle.typedb.driver.common.NetworkIterator;
+import com.vaticle.typedb.driver.common.NativeIterator;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.answer.ConceptMapImpl;
 
@@ -66,13 +66,13 @@ public class ExplanationImpl extends NativeObject<com.vaticle.typedb.driver.jni.
 
     @Override
     public Set<String> queryVariables() {
-        return new NetworkIterator<>(explanation_get_mapped_variables(nativeObject)).stream().collect(Collectors.toSet());
+        return new NativeIterator<>(explanation_get_mapped_variables(nativeObject)).stream().collect(Collectors.toSet());
     }
 
     @Override
     public Set<String> queryVariableMapping(String var) {
         if (var == null || var.isEmpty()) throw new TypeDBDriverException(MISSING_VARIABLE);
-        return new NetworkIterator<>(explanation_get_mapping(nativeObject, var)).stream().collect(Collectors.toSet());
+        return new NativeIterator<>(explanation_get_mapping(nativeObject, var)).stream().collect(Collectors.toSet());
     }
 
     @Override
