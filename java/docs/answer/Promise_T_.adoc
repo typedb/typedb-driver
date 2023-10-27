@@ -22,21 +22,6 @@ public Promise​(java.util.function.Supplier<T> inner)
 .Returns
 `public`
 
-[#_Promise<T>_map_java_util_function_Supplier_java_util_function_Function]
-==== map
-
-[source,java]
-----
-public static <T,​U> Promise<U> map​(java.util.function.Supplier<T> promise,
-                                         java.util.function.Function<T,​U> fn)
-----
-
-
-
-[caption=""]
-.Returns
-`public static <T,​U> Promise<U>`
-
 [#_Promise<T>_resolve_]
 ==== resolve
 
