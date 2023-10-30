@@ -19,13 +19,15 @@
  * under the License.
  */
 
+use std::borrow::Cow;
+
 use cucumber::{gherkin::Step, given, then, when};
 use futures::TryStreamExt;
-use typedb_driver::{concept::Value, Result as TypeDBResult};
+use typedb_driver::{answer::JSON, concept::Value, Result as TypeDBResult};
 use typeql::parse_query;
 use util::{
-    equals_approximate, iter_table_map, match_answer_concept, match_answer_concept_map, match_answer_rule,
-    match_templated_answer,
+    equals_approximate, iter_table_map, jsons_equal_up_to_reorder, match_answer_concept, match_answer_concept_map,
+    match_answer_rule, match_templated_answer,
 };
 
 use crate::{
@@ -103,7 +105,7 @@ generic_step_impl! {
     }
 
     #[step(expr = "get answers of typeql get")]
-    pub async fn get_answers_typeql_match(context: &mut Context, step: &Step) -> TypeDBResult {
+    pub async fn get_answers_typeql_get(context: &mut Context, step: &Step) -> TypeDBResult {
         let parsed = parse_query(step.docstring().unwrap())?;
         context.answer = context.transaction().query().get(&parsed.to_string())?.try_collect::<Vec<_>>().await?;
         Ok(())
@@ -157,9 +159,9 @@ generic_step_impl! {
         let parsed = parse_query(step.docstring().unwrap());
         match parsed {
             Ok(_) => {
-                let matched = context.transaction().query().get(&parsed.unwrap().to_string());
-                if matched.is_ok() {
-                    let res = matched.unwrap().try_collect::<Vec<_>>().await;
+                let answers = context.transaction().query().get(&parsed.unwrap().to_string());
+                if answers.is_ok() {
+                    let res = answers.unwrap().try_collect::<Vec<_>>().await;
                     assert!(res.is_err());
                 }
             }
@@ -178,9 +180,9 @@ generic_step_impl! {
         let parsed = parse_query(step.docstring().unwrap());
         match parsed {
             Ok(_) => {
-                let matched = context.transaction().query().get(&parsed.unwrap().to_string());
-                if matched.is_ok() {
-                    let res = matched.unwrap().try_collect::<Vec<_>>().await;
+                let answers = context.transaction().query().get(&parsed.unwrap().to_string());
+                if answers.is_ok() {
+                    let res = answers.unwrap().try_collect::<Vec<_>>().await;
                     assert!(res.is_err());
                     assert!(res.unwrap_err().to_string().contains(&message));
                 }
@@ -206,8 +208,8 @@ generic_step_impl! {
 
     #[step(expr = "templated typeql get; throws exception")]
     async fn templated_typeql_get_throws(context: &mut Context, step: &Step) {
-        for answer in context.answer.clone() {
-            assert_err!(match_templated_answer(context, step, &answer).await);
+        for answer in &context.answer {
+            assert_err!(match_templated_answer(context, step, answer).await);
         }
     }
 
@@ -247,8 +249,8 @@ generic_step_impl! {
     async fn aggregate_value(context: &mut Context, expected_answer: f64) {
         assert!(context.value_answer.is_some(), "There is no stored answer from the previous query.");
         let answer: f64 = match *context.value_answer.as_ref().unwrap() {
-            Value::Long(value) => value as f64,
-            Value::Double(value) => value,
+            Some(Value::Long(value)) => value as f64,
+            Some(Value::Double(value)) => value,
             _ => panic!("Last answer is not a number."),
         };
         assert!(
@@ -260,7 +262,7 @@ generic_step_impl! {
     #[step(expr = "aggregate answer is not a number")]
     async fn aggregate_answer_is_nan(context: &mut Context) {
         assert!(context.value_answer.is_some(), "There is no stored answer from the previous query.");
-        assert!(!matches!(context.value_answer.as_ref().unwrap(), Value::Long(_) | Value::Double(_)));
+        assert!(!matches!(context.value_answer.as_ref().unwrap(), Some(Value::Long(_) | Value::Double(_))));
     }
 
     #[step(expr = "get answers of typeql get group")]
@@ -276,9 +278,9 @@ generic_step_impl! {
         let parsed = parse_query(step.docstring().unwrap());
         match parsed {
             Ok(_) => {
-                let matched = context.transaction().query().get_group(&parsed.unwrap().to_string());
-                if matched.is_ok() {
-                    let res = matched.unwrap().try_collect::<Vec<_>>().await;
+                let answers = context.transaction().query().get_group(&parsed.unwrap().to_string());
+                if answers.is_ok() {
+                    let res = answers.unwrap().try_collect::<Vec<_>>().await;
                     assert!(res.is_err(), "{res:?}");
                 }
             }
@@ -296,8 +298,7 @@ generic_step_impl! {
     async fn answer_groups_are(context: &mut Context, step: &Step) {
         let step_table = iter_table_map(step).collect::<Vec<_>>();
         let expected_answers = step_table.len();
-        let actual_answers: usize =
-            context.answer_group.clone().into_iter().map(|group| group.concept_maps.len()).sum();
+        let actual_answers: usize = context.answer_group.iter().map(|group| group.concept_maps.len()).sum();
         assert_eq!(
             actual_answers, expected_answers,
             "The number of identifier entries (rows) should match the number of answer groups, \
@@ -368,6 +369,64 @@ generic_step_impl! {
             "An identifier entry (row) should match 1-to-1 to an answer, but there are only {matched_rows} \
             matched entries of given {actual_answers}."
         );
+    }
+
+    #[step(expr = "get answers of typeql fetch")]
+    pub async fn get_answers_typeql_fetch(context: &mut Context, step: &Step) -> TypeDBResult {
+        let parsed = parse_query(step.docstring().unwrap())?;
+        context.fetch_answer = context.transaction().query().fetch(&parsed.to_string())?.try_collect::<Vec<_>>().await?;
+        Ok(())
+    }
+
+    #[step(expr = "typeql fetch; throws exception")]
+    async fn typeql_fetch_throws(context: &mut Context, step: &Step) {
+        let parsed = parse_query(step.docstring().unwrap());
+        match parsed {
+            Ok(_) => {
+                let answers = context.transaction().query().fetch(&parsed.unwrap().to_string());
+                if answers.is_ok() {
+                    let res = answers.unwrap().try_collect::<Vec<_>>().await;
+                    assert!(res.is_err());
+                }
+            }
+            // NOTE: We manually close transaction here, because we want to align with all non-rust and non-java drivers,
+            // where parsing happens at server-side which closes transaction if they fail
+            Err(_) => {
+                for session_tracker in &mut context.session_trackers {
+                    session_tracker.transactions_mut().clear();
+                }
+            }
+        }
+    }
+
+    #[step(expr = "fetch answers are")]
+    async fn fetch_answers_are(context: &mut Context, step: &Step) -> TypeDBResult {
+        fn serde_json_into_fetch_answer(json: serde_json::Value) -> JSON {
+            match json {
+                serde_json::Value::Null => unreachable!("nulls are not allowed in fetch results"),
+                serde_json::Value::Bool(bool) => JSON::Boolean(bool),
+                serde_json::Value::Number(number) => JSON::Number(number.as_f64().unwrap()),
+                serde_json::Value::String(string) => JSON::String(Cow::Owned(string)),
+                serde_json::Value::Array(array) => JSON::List(array.into_iter().map(serde_json_into_fetch_answer).collect()),
+                serde_json::Value::Object(object) => JSON::Object(
+                    object.into_iter().map(|(k, v)| (Cow::Owned(k), serde_json_into_fetch_answer(v))).collect()
+                ),
+            }
+        }
+
+        let expected: serde_json::Value = serde_json::from_str(step.docstring().unwrap().trim()).map_err(|e| {
+            format!("Could not parse expected fetch answer: {e:?}\n{}", step.docstring().unwrap().trim())
+        })?;
+        let expected = serde_json_into_fetch_answer(expected);
+
+        let actual = JSON::List(std::mem::take(&mut context.fetch_answer));
+
+        assert!(jsons_equal_up_to_reorder(&expected, &actual), "    lhs: {expected}\n    rhs: {actual}");
+
+        let JSON::List(fetch_answer) = actual else { unreachable!() };
+        context.fetch_answer = fetch_answer;
+
+        Ok(())
     }
 
     #[step(expr = "rules contain: {label}")]

@@ -36,7 +36,7 @@ use cucumber::{StatsWriter, World};
 use futures::future::try_join_all;
 use tokio::time::{sleep, Duration};
 use typedb_driver::{
-    answer::{ConceptMap, ConceptMapGroup, ValueGroup},
+    answer::{ConceptMap, ConceptMapGroup, ValueGroup, JSON},
     concept::{Attribute, AttributeType, Entity, EntityType, Relation, RelationType, Thing, Value},
     logic::Rule,
     Connection, Database, DatabaseManager, Result as TypeDBResult, Transaction, UserManager,
@@ -54,7 +54,8 @@ pub struct Context {
     pub things: HashMap<String, Option<Thing>>,
     pub answer: Vec<ConceptMap>,
     pub answer_group: Vec<ConceptMapGroup>,
-    pub value_answer: Option<Value>,
+    pub fetch_answer: Vec<JSON>,
+    pub value_answer: Option<Option<Value>>,
     pub value_answer_group: Vec<ValueGroup>,
 }
 
@@ -209,6 +210,7 @@ impl Context {
         self.session_trackers.clear();
         self.answer.clear();
         self.answer_group.clear();
+        self.fetch_answer.clear();
         self.value_answer = None;
         self.value_answer_group.clear();
     }
@@ -236,6 +238,7 @@ impl Default for Context {
             things: HashMap::new(),
             answer: Vec::new(),
             answer_group: Vec::new(),
+            fetch_answer: Vec::new(),
             value_answer: None,
             value_answer_group: Vec::new(),
         }

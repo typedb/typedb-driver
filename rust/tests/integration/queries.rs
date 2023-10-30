@@ -141,12 +141,12 @@ test_for_each_arg! {
 
         let transaction = session.transaction(Read).await?;
         let age_count = transaction.query().get_aggregate("match $x isa age; get; count;").await?;
-        assert_eq!(age_count, Value::Long(0));
+        assert_eq!(age_count, Some(Value::Long(0)));
 
         let with_inference = Options::new().infer(true);
         let transaction = session.transaction_with_options(Read, with_inference).await?;
         let age_count = transaction.query().get_aggregate("match $x isa age; get; count;").await?;
-        assert_eq!(age_count, Value::Long(1));
+        assert_eq!(age_count, Some(Value::Long(1)));
 
         Ok(())
     }
@@ -184,7 +184,7 @@ test_for_each_arg! {
 
         let transaction = session.transaction(Read).await?;
         let age_count = transaction.query().get_aggregate("match $age isa age; get; count;").await?;
-        assert_eq!(age_count, Value::Long(1));
+        assert_eq!(age_count, Some(Value::Long(1)));
         drop(transaction);
 
         let transaction = session.transaction(Write).await?;

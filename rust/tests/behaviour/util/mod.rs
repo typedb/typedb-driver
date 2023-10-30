@@ -19,7 +19,7 @@
  * under the License.
  */
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 mod steps;
 
@@ -32,7 +32,7 @@ use futures::{
 use regex::{Captures, Regex};
 use tokio::time::sleep;
 use typedb_driver::{
-    answer::ConceptMap,
+    answer::{ConceptMap, JSON},
     concept::{
         Annotation, Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,
     },
@@ -154,13 +154,51 @@ fn value_equals_str(value: &Value, expected: &str) -> bool {
     }
 }
 
+pub fn jsons_equal_up_to_reorder(lhs: &JSON, rhs: &JSON) -> bool {
+    match (lhs, rhs) {
+        (JSON::Object(lhs), JSON::Object(rhs)) => {
+            if lhs.len() != rhs.len() {
+                return false;
+            }
+            lhs.iter().all(|(key, lhs_value)| match rhs.get(key) {
+                Some(rhs_value) => jsons_equal_up_to_reorder(lhs_value, rhs_value),
+                None => false,
+            })
+        }
+        (JSON::List(lhs), JSON::List(rhs)) => {
+            if lhs.len() != rhs.len() {
+                return false;
+            }
+            let mut rhs_matches = HashSet::new();
+            for item in lhs {
+                match rhs
+                    .iter()
+                    .enumerate()
+                    .filter(|(i, _)| !rhs_matches.contains(i))
+                    .find_map(|(i, rhs_item)| jsons_equal_up_to_reorder(item, rhs_item).then_some(i))
+                {
+                    Some(idx) => {
+                        rhs_matches.insert(idx);
+                    }
+                    None => return false,
+                }
+            }
+            true
+        }
+        (JSON::String(lhs), JSON::String(rhs)) => lhs == rhs,
+        (&JSON::Number(lhs), &JSON::Number(rhs)) => equals_approximate(lhs, rhs),
+        (JSON::Boolean(lhs), JSON::Boolean(rhs)) => lhs == rhs,
+        _ => false,
+    }
+}
+
 pub fn equals_approximate(first: f64, second: f64) -> bool {
     const EPS: f64 = 1e-4;
     (first - second).abs() < EPS
 }
 
 pub async fn match_templated_answer(
-    context: &mut Context,
+    context: &Context,
     step: &Step,
     answer: &ConceptMap,
 ) -> TypeDBResult<Vec<ConceptMap>> {

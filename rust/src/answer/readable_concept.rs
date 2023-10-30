@@ -19,16 +19,20 @@
  * under the License.
  */
 
-use std::{borrow::Cow, collections::HashMap};
+use std::{
+    borrow::Cow,
+    collections::HashMap,
+    fmt::{self, Write},
+};
 
 use crate::concept::{Attribute, AttributeType, Concept, EntityType, RelationType, RoleType, RootThingType, Value};
 
+#[derive(Clone, Debug)]
 pub enum JSON {
     Object(HashMap<Cow<'static, str>, JSON>),
     List(Vec<JSON>),
     String(Cow<'static, str>),
     Number(f64),
-    Null,
     Boolean(bool),
 }
 
@@ -66,6 +70,37 @@ impl JSON {
                 [(VALUE, Self::String(Cow::Owned(datetime.to_string()))), (VALUE_TYPE, Self::String(DATETIME))].into(),
             ),
         }
+    }
+}
+
+impl fmt::Display for JSON {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            JSON::Object(object) => {
+                f.write_char('{')?;
+                for (i, (k, v)) in object.iter().enumerate() {
+                    if i > 0 {
+                        f.write_str(", ")?;
+                    }
+                    write!(f, r#""{}": {}"#, k, v)?;
+                }
+                f.write_char('}')?;
+            }
+            JSON::List(list) => {
+                f.write_char('[')?;
+                for (i, v) in list.iter().enumerate() {
+                    if i > 0 {
+                        f.write_str(", ")?;
+                    }
+                    write!(f, "{}", v)?;
+                }
+                f.write_char(']')?;
+            }
+            JSON::String(string) => write!(f, r#""{string}""#)?,
+            JSON::Number(number) => write!(f, "{number}")?,
+            JSON::Boolean(boolean) => write!(f, "{boolean}")?,
+        }
+        Ok(())
     }
 }
 
