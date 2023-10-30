@@ -19,14 +19,12 @@
  * under the License.
  */
 
-use std::borrow::Cow;
-
 use cucumber::{gherkin::Step, given, then, when};
 use futures::TryStreamExt;
 use typedb_driver::{answer::JSON, concept::Value, Result as TypeDBResult};
 use typeql::parse_query;
 use util::{
-    equals_approximate, iter_table_map, jsons_equal_up_to_reorder, match_answer_concept, match_answer_concept_map,
+    equals_approximate, iter_table_map, json_matches_str, match_answer_concept, match_answer_concept_map,
     match_answer_rule, match_templated_answer,
 };
 
@@ -374,7 +372,7 @@ generic_step_impl! {
     #[step(expr = "get answers of typeql fetch")]
     pub async fn get_answers_typeql_fetch(context: &mut Context, step: &Step) -> TypeDBResult {
         let parsed = parse_query(step.docstring().unwrap())?;
-        context.fetch_answer = context.transaction().query().fetch(&parsed.to_string())?.try_collect::<Vec<_>>().await?;
+        context.fetch_answer = Some(JSON::List(context.transaction().query().fetch(&parsed.to_string())?.try_collect().await?));
         Ok(())
     }
 
@@ -401,31 +399,9 @@ generic_step_impl! {
 
     #[step(expr = "fetch answers are")]
     async fn fetch_answers_are(context: &mut Context, step: &Step) -> TypeDBResult {
-        fn serde_json_into_fetch_answer(json: serde_json::Value) -> JSON {
-            match json {
-                serde_json::Value::Null => unreachable!("nulls are not allowed in fetch results"),
-                serde_json::Value::Bool(bool) => JSON::Boolean(bool),
-                serde_json::Value::Number(number) => JSON::Number(number.as_f64().unwrap()),
-                serde_json::Value::String(string) => JSON::String(Cow::Owned(string)),
-                serde_json::Value::Array(array) => JSON::List(array.into_iter().map(serde_json_into_fetch_answer).collect()),
-                serde_json::Value::Object(object) => JSON::Object(
-                    object.into_iter().map(|(k, v)| (Cow::Owned(k), serde_json_into_fetch_answer(v))).collect()
-                ),
-            }
-        }
-
-        let expected: serde_json::Value = serde_json::from_str(step.docstring().unwrap().trim()).map_err(|e| {
-            format!("Could not parse expected fetch answer: {e:?}\n{}", step.docstring().unwrap().trim())
-        })?;
-        let expected = serde_json_into_fetch_answer(expected);
-
-        let actual = JSON::List(std::mem::take(&mut context.fetch_answer));
-
-        assert!(jsons_equal_up_to_reorder(&expected, &actual), "    lhs: {expected}\n    rhs: {actual}");
-
-        let JSON::List(fetch_answer) = actual else { unreachable!() };
-        context.fetch_answer = fetch_answer;
-
+        let expected = step.docstring().unwrap();
+        let actual = context.fetch_answer.as_ref().expect("trying to assert on fetch answers without performing fetch first!");
+        assert!(json_matches_str(expected, actual)?, "expected: {}\nactual: {}", expected, actual);
         Ok(())
     }
 

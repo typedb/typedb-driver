@@ -19,7 +19,10 @@
  * under the License.
  */
 
-use std::collections::{HashMap, HashSet};
+use std::{
+    borrow::Cow,
+    collections::{HashMap, HashSet},
+};
 
 mod steps;
 
@@ -154,7 +157,32 @@ fn value_equals_str(value: &Value, expected: &str) -> bool {
     }
 }
 
-pub fn jsons_equal_up_to_reorder(lhs: &JSON, rhs: &JSON) -> bool {
+pub fn json_matches_str(string: &str, json: &JSON) -> TypeDBResult<bool> {
+    parse_json(string).map(|rhs| jsons_equal_up_to_reorder(json, &rhs))
+}
+
+fn parse_json(json: &str) -> TypeDBResult<JSON> {
+    fn serde_json_into_fetch_answer(json: serde_json::Value) -> JSON {
+        match json {
+            serde_json::Value::Null => unreachable!("nulls are not allowed in fetch results"),
+            serde_json::Value::Bool(bool) => JSON::Boolean(bool),
+            serde_json::Value::Number(number) => JSON::Number(number.as_f64().unwrap()),
+            serde_json::Value::String(string) => JSON::String(Cow::Owned(string)),
+            serde_json::Value::Array(array) => {
+                JSON::List(array.into_iter().map(serde_json_into_fetch_answer).collect())
+            }
+            serde_json::Value::Object(object) => JSON::Object(
+                object.into_iter().map(|(k, v)| (Cow::Owned(k), serde_json_into_fetch_answer(v))).collect(),
+            ),
+        }
+    }
+
+    serde_json::from_str(json)
+        .map(serde_json_into_fetch_answer)
+        .map_err(|e| format!("Could not parse expected fetch answer: {e:?}").into())
+}
+
+fn jsons_equal_up_to_reorder(lhs: &JSON, rhs: &JSON) -> bool {
     match (lhs, rhs) {
         (JSON::Object(lhs), JSON::Object(rhs)) => {
             if lhs.len() != rhs.len() {

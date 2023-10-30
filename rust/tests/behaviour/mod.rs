@@ -54,7 +54,7 @@ pub struct Context {
     pub things: HashMap<String, Option<Thing>>,
     pub answer: Vec<ConceptMap>,
     pub answer_group: Vec<ConceptMapGroup>,
-    pub fetch_answer: Vec<JSON>,
+    pub fetch_answer: Option<JSON>,
     pub value_answer: Option<Option<Value>>,
     pub value_answer_group: Vec<ValueGroup>,
 }
@@ -210,7 +210,7 @@ impl Context {
         self.session_trackers.clear();
         self.answer.clear();
         self.answer_group.clear();
-        self.fetch_answer.clear();
+        self.fetch_answer = None;
         self.value_answer = None;
         self.value_answer_group.clear();
     }
@@ -238,7 +238,7 @@ impl Default for Context {
             things: HashMap::new(),
             answer: Vec::new(),
             answer_group: Vec::new(),
-            fetch_answer: Vec::new(),
+            fetch_answer: None,
             value_answer: None,
             value_answer_group: Vec::new(),
         }
