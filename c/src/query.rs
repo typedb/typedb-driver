@@ -21,6 +21,8 @@
 
 use std::{ffi::c_char, ptr::addr_of_mut};
 
+use itertools::Itertools;
+
 use typedb_driver::{
     answer::{ConceptMap, ConceptMapGroup, Explainable, ValueGroup},
     box_stream,
@@ -33,7 +35,7 @@ use super::{
     iterator::{iterator_try_next, CIterator},
     memory::{borrow, free, string_view},
 };
-use crate::{concept::ConceptPromise, memory::release, promise::VoidPromise};
+use crate::{concept::ConceptPromise, memory::release, promise::VoidPromise, common::StringIterator};
 
 #[no_mangle]
 pub extern "C" fn query_define(
@@ -91,6 +93,20 @@ pub extern "C" fn query_get(
             .query()
             .get_with_options(string_view(query), borrow(options).clone())
             .map(|it| ConceptMapIterator(CIterator(box_stream(it)))),
+    )
+}
+
+#[no_mangle]
+pub extern "C" fn query_fetch(
+    transaction: *mut Transaction<'static>,
+    query: *const c_char,
+    options: *const Options,
+) -> *mut StringIterator {
+    try_release(
+        borrow(transaction)
+            .query()
+            .fetch_with_options(string_view(query), borrow(options).clone())
+            .map(|it| StringIterator(CIterator(box_stream(it.map_ok(|json| json.to_string())))))
     )
 }
 

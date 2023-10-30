@@ -21,47 +21,48 @@
 
 package com.vaticle.typedb.driver.concept.answer;
 
-import com.vaticle.typedb.driver.api.answer.Numeric;
-import com.vaticle.typedb.driver.api.answer.NumericGroup;
+import com.vaticle.typedb.driver.api.answer.ValueGroup;
 import com.vaticle.typedb.driver.api.concept.Concept;
+import com.vaticle.typedb.driver.api.concept.value.Value;
 import com.vaticle.typedb.driver.common.NativeObject;
 import com.vaticle.typedb.driver.concept.ConceptImpl;
+import com.vaticle.typedb.driver.concept.value.ValueImpl;
 
 import java.util.Objects;
 
-import static com.vaticle.typedb.driver.jni.typedb_driver.numeric_group_equals;
-import static com.vaticle.typedb.driver.jni.typedb_driver.numeric_group_get_numeric;
-import static com.vaticle.typedb.driver.jni.typedb_driver.numeric_group_get_owner;
-import static com.vaticle.typedb.driver.jni.typedb_driver.numeric_group_to_string;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_group_equals;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_group_get_value;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_group_get_owner;
+import static com.vaticle.typedb.driver.jni.typedb_driver.value_group_to_string;
 
-public class NumericGroupImpl extends NativeObject<com.vaticle.typedb.driver.jni.NumericGroup> implements NumericGroup {
+public class ValueGroupImpl extends NativeObject<com.vaticle.typedb.driver.jni.ValueGroup> implements ValueGroup {
     private int hash = 0;
 
-    public NumericGroupImpl(com.vaticle.typedb.driver.jni.NumericGroup numericGroup) {
-        super(numericGroup);
+    public ValueGroupImpl(com.vaticle.typedb.driver.jni.ValueGroup valueGroup) {
+        super(valueGroup);
     }
 
     @Override
     public Concept owner() {
-        return ConceptImpl.of(numeric_group_get_owner(nativeObject));
+        return ConceptImpl.of(value_group_get_owner(nativeObject));
     }
 
     @Override
-    public Numeric numeric() {
-        return new NumericImpl(numeric_group_get_numeric(nativeObject));
+    public Value value() {
+        return new ValueImpl(value_group_get_value(nativeObject));
     }
 
     @Override
     public String toString() {
-        return numeric_group_to_string(nativeObject);
+        return value_group_to_string(nativeObject);
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
-        NumericGroupImpl that = (NumericGroupImpl) obj;
-        return numeric_group_equals(this.nativeObject, that.nativeObject);
+        ValueGroupImpl that = (ValueGroupImpl) obj;
+        return value_group_equals(this.nativeObject, that.nativeObject);
     }
 
     @Override
@@ -71,6 +72,6 @@ public class NumericGroupImpl extends NativeObject<com.vaticle.typedb.driver.jni
     }
 
     private int computeHash() {
-        return Objects.hash(owner(), numeric());
+        return Objects.hash(owner(), value());
     }
 }

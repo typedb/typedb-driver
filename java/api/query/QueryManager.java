@@ -24,14 +24,15 @@ package com.vaticle.typedb.driver.api.query;
 import com.vaticle.typedb.driver.api.TypeDBOptions;
 import com.vaticle.typedb.driver.api.answer.ConceptMap;
 import com.vaticle.typedb.driver.api.answer.ConceptMapGroup;
-import com.vaticle.typedb.driver.api.answer.Numeric;
-import com.vaticle.typedb.driver.api.answer.NumericGroup;
+import com.vaticle.typedb.driver.api.answer.ValueGroup;
+import com.vaticle.typedb.driver.api.concept.value.Value;
 import com.vaticle.typedb.driver.api.logic.Explanation;
 import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typeql.lang.query.TypeQLDefine;
 import com.vaticle.typeql.lang.query.TypeQLDelete;
+import com.vaticle.typeql.lang.query.TypeQLFetch;
 import com.vaticle.typeql.lang.query.TypeQLInsert;
-import com.vaticle.typeql.lang.query.TypeQLMatch;
+import com.vaticle.typeql.lang.query.TypeQLGet;
 import com.vaticle.typeql.lang.query.TypeQLUndefine;
 import com.vaticle.typeql.lang.query.TypeQLUpdate;
 
@@ -43,147 +44,182 @@ import java.util.stream.Stream;
  */
 public interface QueryManager {
     /**
-     * Performs a TypeQL Match (Get) with default options.
+     * Performs a TypeQL Get (Get) with default options.
      *
-     * @see QueryManager#match(TypeQLMatch, TypeDBOptions)
+     * @see QueryManager#get(TypeQLGet, TypeDBOptions)
      */
     @CheckReturnValue
-    Stream<ConceptMap> match(TypeQLMatch query);
+    Stream<ConceptMap> get(TypeQLGet query);
 
     /**
-     * Performs a TypeQL Match (Get) query in the transaction.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * transaction.query().match(query, options)
-     * </pre>
-     *
-     * @param query The TypeQL Match (Get) query to be executed
-     * @param options Specify query options
-     */
-    @CheckReturnValue
-    Stream<ConceptMap> match(TypeQLMatch query, TypeDBOptions options);
-
-    /**
-     * Performs a TypeQL Match (Get) with default options.
-     * @see QueryManager#match(TypeQLMatch, TypeDBOptions)
-     */
-    @CheckReturnValue
-    Stream<ConceptMap> match(String query);
-
-    /**
-     * @see QueryManager#match(TypeQLMatch, TypeDBOptions)
-     */
-    @CheckReturnValue
-    Stream<ConceptMap> match(String query, TypeDBOptions options);
-
-    /**
-     * Performs a TypeQL Match Aggregate query with default options.
-     *
-     * @see QueryManager#match(TypeQLMatch.Aggregate, TypeDBOptions)
-     */
-    @CheckReturnValue
-    Promise<Numeric> match(TypeQLMatch.Aggregate query);
-
-    /**
-     * Performs a TypeQL Match Aggregate query in the transaction.
+     * Performs a TypeQL Get (Get) query in the transaction.
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.query().matchAggregate(query, options).resolve()
+     * transaction.query().get(query, options)
      * </pre>
      *
-     * @param query The TypeQL Match Aggregate query to be executed
+     * @param query The TypeQL Get (Get) query to be executed
      * @param options Specify query options
      */
     @CheckReturnValue
-    Promise<Numeric> match(TypeQLMatch.Aggregate query, TypeDBOptions options);
+    Stream<ConceptMap> get(TypeQLGet query, TypeDBOptions options);
 
     /**
-     * Performs a TypeQL Match Aggregate query with default options.
+     * Performs a TypeQL Get (Get) with default options.
+     * @see QueryManager#get(TypeQLGet, TypeDBOptions)
+     */
+    @CheckReturnValue
+    Stream<ConceptMap> get(String query);
+
+    /**
+     * @see QueryManager#get(TypeQLGet, TypeDBOptions)
+     */
+    @CheckReturnValue
+    Stream<ConceptMap> get(String query, TypeDBOptions options);
+
+    /**
+     * Performs a TypeQL Get Aggregate query with default options.
      *
-     * @see QueryManager#match(TypeQLMatch.Aggregate, TypeDBOptions)
+     * @see QueryManager#get(TypeQLGet.Aggregate, TypeDBOptions)
      */
     @CheckReturnValue
-    Promise<Numeric> matchAggregate(String query);
+    Promise<Value> get(TypeQLGet.Aggregate query);
 
     /**
-     * @see QueryManager#match(TypeQLMatch.Aggregate, TypeDBOptions)
-     */
-    @CheckReturnValue
-    Promise<Numeric> matchAggregate(String query, TypeDBOptions options);
-
-    /**
-     * Performs a TypeQL Match Group query with default options.
-     *
-     * @see QueryManager#match(TypeQLMatch.Group, TypeDBOptions)
-     */
-    @CheckReturnValue
-    Stream<ConceptMapGroup> match(TypeQLMatch.Group query);
-
-    /**
-     * Performs a TypeQL Match Group query in the transaction.
+     * Performs a TypeQL Get Aggregate query in the transaction.
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.query().matchGroup(query, options)
+     * transaction.query().getAggregate(query, options).resolve()
      * </pre>
      *
-     * @param query The TypeQL Match Group query to be executed
+     * @param query The TypeQL Get Aggregate query to be executed
      * @param options Specify query options
      */
     @CheckReturnValue
-    Stream<ConceptMapGroup> match(TypeQLMatch.Group query, TypeDBOptions options);
+    Promise<Value> get(TypeQLGet.Aggregate query, TypeDBOptions options);
 
     /**
-     * Performs a TypeQL Match Group query with default options.
+     * Performs a TypeQL Get Aggregate query with default options.
      *
-     * @see QueryManager#match(TypeQLMatch.Group, TypeDBOptions)
+     * @see QueryManager#get(TypeQLGet.Aggregate, TypeDBOptions)
      */
     @CheckReturnValue
-    Stream<ConceptMapGroup> matchGroup(String query);
+    Promise<Value> getAggregate(String query);
 
     /**
-     * @see QueryManager#match(TypeQLMatch.Group, TypeDBOptions)
+     * @see QueryManager#get(TypeQLGet.Aggregate, TypeDBOptions)
      */
     @CheckReturnValue
-    Stream<ConceptMapGroup> matchGroup(String query, TypeDBOptions options);
+    Promise<Value> getAggregate(String query, TypeDBOptions options);
 
     /**
-     * Performs a TypeQL Match Group Aggregate query with default options.
+     * Performs a TypeQL Get Group query with default options.
      *
-     * @see QueryManager#match(TypeQLMatch.Group.Aggregate, TypeDBOptions)
+     * @see QueryManager#get(TypeQLGet.Group, TypeDBOptions)
      */
     @CheckReturnValue
-    Stream<NumericGroup> match(TypeQLMatch.Group.Aggregate query);
+    Stream<ConceptMapGroup> get(TypeQLGet.Group query);
 
     /**
-     * Performs a TypeQL Match Group Aggregate query in the transaction.
+     * Performs a TypeQL Get Group query in the transaction.
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.query().matchGroupAggregate(query, options)
+     * transaction.query().getGroup(query, options)
      * </pre>
      *
-     * @param query The TypeQL Match Group Aggregate query to be executed
+     * @param query The TypeQL Get Group query to be executed
      * @param options Specify query options
      */
     @CheckReturnValue
-    Stream<NumericGroup> match(TypeQLMatch.Group.Aggregate query, TypeDBOptions options);
+    Stream<ConceptMapGroup> get(TypeQLGet.Group query, TypeDBOptions options);
 
     /**
-     * Performs a TypeQL Match Group Aggregate query with default options.
+     * Performs a TypeQL Get Group query with default options.
      *
-     * @see QueryManager#match(TypeQLMatch.Group.Aggregate, TypeDBOptions)
+     * @see QueryManager#get(TypeQLGet.Group, TypeDBOptions)
      */
     @CheckReturnValue
-    Stream<NumericGroup> matchGroupAggregate(String query);
+    Stream<ConceptMapGroup> getGroup(String query);
 
     /**
-     * @see QueryManager#match(TypeQLMatch.Group.Aggregate, TypeDBOptions)
+     * @see QueryManager#get(TypeQLGet.Group, TypeDBOptions)
      */
     @CheckReturnValue
-    Stream<NumericGroup> matchGroupAggregate(String query, TypeDBOptions options);
+    Stream<ConceptMapGroup> getGroup(String query, TypeDBOptions options);
+
+    /**
+     * Performs a TypeQL Get Group Aggregate query with default options.
+     *
+     * @see QueryManager#get(TypeQLGet.Group.Aggregate, TypeDBOptions)
+     */
+    @CheckReturnValue
+    Stream<ValueGroup> get(TypeQLGet.Group.Aggregate query);
+
+    /**
+     * Performs a TypeQL Get Group Aggregate query in the transaction.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * transaction.query().getGroupAggregate(query, options)
+     * </pre>
+     *
+     * @param query The TypeQL Get Group Aggregate query to be executed
+     * @param options Specify query options
+     */
+    @CheckReturnValue
+    Stream<ValueGroup> get(TypeQLGet.Group.Aggregate query, TypeDBOptions options);
+
+    /**
+     * Performs a TypeQL Get Group Aggregate query with default options.
+     *
+     * @see QueryManager#get(TypeQLGet.Group.Aggregate, TypeDBOptions)
+     */
+    @CheckReturnValue
+    Stream<ValueGroup> getGroupAggregate(String query);
+
+    /**
+     * @see QueryManager#get(TypeQLGet.Group.Aggregate, TypeDBOptions)
+     */
+    @CheckReturnValue
+    Stream<ValueGroup> getGroupAggregate(String query, TypeDBOptions options);
+
+    /**
+     * Performs a TypeQL Fetch (Fetch) with default options.
+     *
+     * @see QueryManager#fetch(TypeQLFetch, TypeDBOptions)
+     */
+    @CheckReturnValue
+    Stream<String> fetch(TypeQLFetch query);
+
+    /**
+     * Performs a TypeQL Fetch (Fetch) query in the transaction.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * transaction.query().fetch(query, options)
+     * </pre>
+     *
+     * @param query The TypeQL Fetch (Fetch) query to be executed
+     * @param options Specify query options
+     */
+    @CheckReturnValue
+    Stream<String> fetch(TypeQLFetch query, TypeDBOptions options);
+
+    /**
+     * Performs a TypeQL Fetch (Fetch) with default options.
+     * @see QueryManager#fetch(TypeQLFetch, TypeDBOptions)
+     */
+    @CheckReturnValue
+    Stream<String> fetch(String query);
+
+    /**
+     * @see QueryManager#fetch(TypeQLFetch, TypeDBOptions)
+     */
+    @CheckReturnValue
+    Stream<String> fetch(String query, TypeDBOptions options);
 
     /**
      * Performs a TypeQL Insert query with default options.

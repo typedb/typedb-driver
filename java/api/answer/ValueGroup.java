@@ -22,13 +22,14 @@
 package com.vaticle.typedb.driver.api.answer;
 
 import com.vaticle.typedb.driver.api.concept.Concept;
+import com.vaticle.typedb.driver.api.concept.value.Value;
 
 import javax.annotation.CheckReturnValue;
 
 /**
  * Contains an element of the group aggregate query result.
  */
-public interface NumericGroup {
+public interface ValueGroup {
     /**
      * Retrieves the concept that is the group owner.
      *
@@ -41,13 +42,13 @@ public interface NumericGroup {
     Concept owner();
 
     /**
-     * Retrieves the <code>Numeric</code> answer of the group.
+     * Retrieves the <code>Value</code> answer of the group.
      *
      * <h3>Examples</h3>
      * <pre>
-     * numericGroup.numeric();
+     * valueGroup.value();
      * </pre>
      */
     @CheckReturnValue
-    Numeric numeric();
+    Value value();
 }

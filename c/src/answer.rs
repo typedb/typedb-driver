@@ -43,7 +43,7 @@ pub extern "C" fn concept_map_drop(concept_map: *mut ConceptMap) {
 
 #[no_mangle]
 pub extern "C" fn concept_map_get_variables(concept_map: *const ConceptMap) -> *mut StringIterator {
-    release(StringIterator(CIterator(box_stream(borrow(concept_map).map.clone().into_keys()))))
+    release(StringIterator(CIterator(box_stream(borrow(concept_map).map.clone().into_keys().map(Ok)))))
 }
 
 #[no_mangle]
@@ -115,12 +115,12 @@ pub extern "C" fn explainables_get_ownership(
 
 #[no_mangle]
 pub extern "C" fn explainables_get_relations_keys(explainables: *const Explainables) -> *mut StringIterator {
-    release(StringIterator(CIterator(box_stream(borrow(explainables).relations.clone().into_keys()))))
+    release(StringIterator(CIterator(box_stream(borrow(explainables).relations.clone().into_keys().map(Ok)))))
 }
 
 #[no_mangle]
 pub extern "C" fn explainables_get_attributes_keys(explainables: *const Explainables) -> *mut StringIterator {
-    release(StringIterator(CIterator(box_stream(borrow(explainables).attributes.clone().into_keys()))))
+    release(StringIterator(CIterator(box_stream(borrow(explainables).attributes.clone().into_keys().map(Ok)))))
 }
 
 #[no_mangle]
@@ -175,13 +175,13 @@ pub extern "C" fn explanation_get_condition(explanation: *const Explanation) -> 
 
 #[no_mangle]
 pub extern "C" fn explanation_get_mapped_variables(explanation: *const Explanation) -> *mut StringIterator {
-    release(StringIterator(CIterator(box_stream(borrow(explanation).variable_mapping.keys().cloned()))))
+    release(StringIterator(CIterator(box_stream(borrow(explanation).variable_mapping.keys().cloned().map(Ok)))))
 }
 
 #[no_mangle]
 pub extern "C" fn explanation_get_mapping(explanation: *const Explanation, var: *const c_char) -> *mut StringIterator {
     release(StringIterator(CIterator(box_stream(
-        borrow(explanation).variable_mapping.get(string_view(var)).into_iter().flatten().cloned(),
+        borrow(explanation).variable_mapping.get(string_view(var)).into_iter().flatten().cloned().map(Ok),
     ))))
 }
 

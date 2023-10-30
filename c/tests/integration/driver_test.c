@@ -115,7 +115,7 @@ bool test_query_schema() {
         void_promise_resolve(query_define(transaction, "define name sub attribute, value string;", opts));
         if (FAILED()) goto cleanup;
 
-        ConceptMapIterator* it = query_match(transaction, "match $t sub thing;", opts);
+        ConceptMapIterator* it = query_get(transaction, "match $t sub thing; get;", opts);
         ConceptMap* conceptMap;
         bool foundName = false;
         while (NULL != (conceptMap = concept_map_iterator_next(it))) {
@@ -206,7 +206,7 @@ bool test_query_data() {
         if (FAILED()) goto cleanup;
         else concept_map_iterator_drop(insertResult);
 
-        ConceptMapIterator* it = query_match(transaction, "match $n isa name;", opts);
+        ConceptMapIterator* it = query_get(transaction, "match $n isa name; get;", opts);
         ConceptMap* conceptMap;
         bool foundJohn = false;
         while (NULL != (conceptMap = concept_map_iterator_next(it))) {

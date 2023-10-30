@@ -36,7 +36,7 @@ import com.vaticle.typeql.lang.TypeQL;
 import com.vaticle.typeql.lang.common.TypeQLArg;
 import com.vaticle.typeql.lang.query.TypeQLDefine;
 import com.vaticle.typeql.lang.query.TypeQLInsert;
-import com.vaticle.typeql.lang.query.TypeQLMatch;
+import com.vaticle.typeql.lang.query.TypeQLGet;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -318,8 +318,8 @@ public class DriverQueryTest {
             LOG.info("driverJavaE2E() - inserting pipeline-automation relations...");
 
             Stream.of(queries).parallel().forEach(x -> {
-                TypeQLMatch q = TypeQL.parseQuery(x).asMatch();
-                List<ConceptMap> res = tx.query().match(q).collect(toList());
+                TypeQLGet q = TypeQL.parseQuery(x).asGet();
+                List<ConceptMap> res = tx.query().get(q).collect(toList());
             });
 
             LOG.info("driverJavaE2E() - done.");
@@ -367,7 +367,7 @@ public class DriverQueryTest {
                             "$y isa person, has name 'Yasmin'; " +
                             "(husband: $x, wife: $y) isa marriage;"
             ).asInsert();
-            List<ConceptMap> answers = tx.query().match(TypeQL.parseQuery("match (friend: $p1, friend: $p2) isa friendship; $p1 has name $na;").asMatch()).collect(toList());
+            List<ConceptMap> answers = tx.query().get(TypeQL.parseQuery("match (friend: $p1, friend: $p2) isa friendship; $p1 has name $na; get;").asGet()).collect(toList());
 
             assertEquals(1, answers.get(0).explainables().relations().count());
             assertEquals(1, answers.get(1).explainables().relations().count());
@@ -390,7 +390,7 @@ public class DriverQueryTest {
             for (int i = 0; i < 50; i++) {
                 EntityType concept = tx.concepts().getEntityType("person").resolve();
                 List<? extends AttributeType> attributeTypes = concept.getOwns(tx).collect(toList());
-                Optional<ConceptMap> conceptMap = tx.query().match("match $x sub thing; limit 1;").findFirst();
+                Optional<ConceptMap> conceptMap = tx.query().get("match $x sub thing; get; limit 1;").findFirst();
             }
         }, READ, new TypeDBOptions().prefetch(true).prefetchSize(50));
     }
