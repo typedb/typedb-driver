@@ -19,18 +19,25 @@
 # under the License.
 #
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from typedb.api.concept.concept import Concept
+    from typedb.api.concept.value.value import Value
 
 
-class Numeric(ABC):
+class ValueGroup(ABC):
     """
-    Stores an aggregate query answer.
+    Contains an element of the group aggregate query result.
     """
 
     @abstractmethod
-    def is_int(self) -> bool:
+    def owner(self) -> Concept:
         """
-        Checks if the type of an aggregate answer is an integer.
+        Retrieves the concept that is the group owner.
 
         :return:
 
@@ -38,14 +45,14 @@ class Numeric(ABC):
         --------
         ::
 
-            numeric.is_int()
+            value_group.owner()
         """
         pass
 
     @abstractmethod
-    def is_float(self) -> bool:
+    def value(self) -> Value:
         """
-        Checks if the type of an aggregate answer is a float.
+        Retrieves the ``Value`` answer of the group.
 
         :return:
 
@@ -53,51 +60,6 @@ class Numeric(ABC):
         --------
         ::
 
-            numeric.is_float()
-        """
-        pass
-
-    @abstractmethod
-    def is_nan(self) -> bool:
-        """
-        Checks if the aggregate answer is not a number.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            numeric.is_nan()
-        """
-        pass
-
-    @abstractmethod
-    def as_int(self) -> int:
-        """
-        Retrieves numeric value of an aggregate answer as an integer.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            numeric.as_int()
-        """
-        pass
-
-    @abstractmethod
-    def as_float(self) -> float:
-        """
-        Retrieves numeric value of an aggregate answer as a float.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            numeric.as_float()
+            value_group.value()
         """
         pass

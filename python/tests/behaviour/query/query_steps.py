@@ -18,6 +18,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+import json
 import re
 from collections import defaultdict
 
@@ -26,6 +27,7 @@ from hamcrest import *
 
 from tests.behaviour.config.parameters import parse_bool, parse_int, parse_float, parse_datetime, parse_table, \
     parse_label, parse_value_type
+from tests.behaviour.util.util import json_matches
 from tests.behaviour.context import Context
 from typedb.api.concept.value.value import Value
 from typedb.driver import *
@@ -117,50 +119,50 @@ def step_impl(context: Context):
     context.answers = [answer for answer in context.tx().query.insert(query=context.text)]
 
 
-@step("get answers of typeql match")
+@step("get answers of typeql get")
 def step_impl(context: Context):
     context.clear_answers()
-    context.answers = [answer for answer in context.tx().query.match(query=context.text)]
+    context.answers = [answer for answer in context.tx().query.get(query=context.text)]
 
 
-@step("typeql match; throws exception")
+@step("typeql get; throws exception")
 def step_impl(context: Context):
-    assert_that(calling(next).with_args(context.tx().query.match(query=context.text)), raises(TypeDBDriverException))
+    assert_that(calling(next).with_args(context.tx().query.get(query=context.text)), raises(TypeDBDriverException))
 
 
-@step("typeql match; throws exception containing \"{pattern}\"")
+@step("typeql get; throws exception containing \"{pattern}\"")
 def step_impl(context: Context, pattern: str):
-    assert_that(calling(next).with_args(context.tx().query.match(query=context.text)),
+    assert_that(calling(next).with_args(context.tx().query.get(query=context.text)),
                 raises(TypeDBDriverException, re.escape(pattern)))
 
 
-@step("get answer of typeql match aggregate")
+@step("get answer of typeql get aggregate")
 def step_impl(context: Context):
     context.clear_answers()
-    context.numeric_answer = context.tx().query.match_aggregate(query=context.text).resolve()
+    context.value_answer = context.tx().query.get_aggregate(query=context.text).resolve()
 
 
-@step("typeql match aggregate; throws exception")
+@step("typeql get aggregate; throws exception")
 def step_impl(context: Context):
-    assert_that(calling(lambda query: context.tx().query.match_aggregate(query).resolve()).with_args(query=context.text), raises(TypeDBDriverException))
+    assert_that(calling(lambda query: context.tx().query.get_aggregate(query).resolve()).with_args(query=context.text), raises(TypeDBDriverException))
 
 
-@step("get answers of typeql match group")
+@step("get answers of typeql get group")
 def step_impl(context: Context):
     context.clear_answers()
-    context.answer_groups = [group for group in context.tx().query.match_group(query=context.text)]
+    context.answer_groups = [group for group in context.tx().query.get_group(query=context.text)]
 
 
-@step("typeql match group; throws exception")
+@step("typeql get group; throws exception")
 def step_impl(context: Context):
-    assert_that(calling(next).with_args(context.tx().query.match_group(query=context.text)),
+    assert_that(calling(next).with_args(context.tx().query.get_group(query=context.text)),
                 raises(TypeDBDriverException))
 
 
-@step("get answers of typeql match group aggregate")
+@step("get answers of typeql get group aggregate")
 def step_impl(context: Context):
     context.clear_answers()
-    context.numeric_answer_groups = [group for group in context.tx().query.match_group_aggregate(query=context.text)]
+    context.value_answer_groups = [group for group in context.tx().query.get_group_aggregate(query=context.text)]
 
 
 @step("answer size is: {expected_size:Int}")
@@ -168,6 +170,21 @@ def step_impl(context: Context, expected_size: int):
     assert_that(context.answers, has_length(expected_size),
                 "Expected [%d] answers, but got [%d]" % (expected_size, len(context.answers)))
 
+@step("get answers of typeql fetch")
+def get_answers_typeql_fetch(context: Context):
+    context.fetch_answer = list(context.tx().query.fetch(query=context.text))
+
+@step("typeql fetch; throws exception")
+def typeql_fetch_throws(context: Context):
+    assert_that(calling(next).with_args(context.tx().query.fetch(query=context.text)),
+                raises(TypeDBDriverException))
+
+@step("fetch answers are")
+def fetch_answers_are(context: Context):
+    expected = json.loads(context.text)
+    actual = context.fetch_answer
+    assert_that(json_matches(expected, actual), is_(True),
+                "expected: {}\nactual: {}".format(expected, actual))
 
 @step("rules contain: {rule_label}")
 def step_impl(context: Context, rule_label: str):
@@ -407,33 +424,23 @@ def step_impl(context: Context):
                         i, answer_identifier, result))
 
 
-def get_numeric_value(numeric: Numeric):
-    if numeric.is_int():
-        return numeric.as_int()
-    elif numeric.is_float():
-        return numeric.as_float()
-    else:
-        return None
-
-
-def assert_numeric_value(numeric: Numeric, expected_answer: Union[int, float], reason: Optional[str] = None):
-    if numeric.is_int():
-        assert_that(numeric.as_int(), is_(expected_answer), reason)
-    elif numeric.is_float():
-        assert_that(numeric.as_float(), is_(close_to(expected_answer, delta=0.001)), reason)
+def assert_value(value: Value, expected_answer: Union[int, float], reason: Optional[str] = None):
+    if value.is_long():
+        assert_that(value.as_long(), is_(expected_answer), reason)
+    elif value.is_double():
+        assert_that(value.as_double(), is_(close_to(expected_answer, delta=0.001)), reason)
     else:
         assert False
 
 
 @step("aggregate value is: {expected_answer:Float}")
 def step_impl(context: Context, expected_answer: float):
-    assert_that(context.numeric_answer is not None, reason="The last query executed was not an aggregate query.")
-    assert_numeric_value(context.numeric_answer, expected_answer)
+    assert_value(context.value_answer, expected_answer)
 
 
 @step("aggregate answer is not a number")
 def step_impl(context: Context):
-    assert_that(context.numeric_answer.is_nan())
+    assert_that(context.value_answer is None)
 
 
 class AnswerIdentifierGroup:
@@ -503,20 +510,20 @@ def step_impl(context: Context):
         expected_answer = parse_float(next(entry[1] for entry in raw_answer_identifier if entry[0] == "value"))
         expectations[owner] = expected_answer
 
-    assert_that(context.numeric_answer_groups, has_length(len(expectations)),
+    assert_that(context.value_answer_groups, has_length(len(expectations)),
                 reason="Expected [%d] answer groups, but found [%d]." % (
-                    len(expectations), len(context.numeric_answer_groups)))
+                    len(expectations), len(context.value_answer_groups)))
 
     for (owner_identifier, expected_answer) in expectations.items():
         identifier = parse_concept_identifier(owner_identifier)
-        numeric_group = next(
-            (group for group in context.numeric_answer_groups if identifier.match(context, group.owner()).matches),
+        value_group = next(
+            (group for group in context.value_answer_groups if identifier.match(context, group.owner()).matches),
             None)
-        assert_that(numeric_group is not None,
+        assert_that(value_group is not None,
                     reason="The group identifier [%s] does not match any of the answer group owners." % owner_identifier)
 
-        actual_answer = get_numeric_value(numeric_group.numeric())
-        assert_numeric_value(numeric_group.numeric(), expected_answer,
+        actual_answer = value_group.value().get()
+        assert_value(value_group.value(), expected_answer,
                              reason="Expected answer [%f] for group [%s], but got [%f]" % (
                                  expected_answer, owner_identifier, actual_answer))
 
@@ -552,11 +559,11 @@ def apply_query_template(template: str, answer: ConceptMap):
 def step_impl(context: Context):
     for answer in context.answers:
         query = apply_query_template(template=context.text, answer=answer)
-        assert_that(list(context.tx().query.match(query)), has_length(1))
+        assert_that(list(context.tx().query.get(query)), has_length(1))
 
 
-@step("templated typeql match; throws exception")
+@step("templated typeql get; throws exception")
 def step_impl(context: Context):
     for answer in context.answers:
         query = apply_query_template(template=context.text, answer=answer)
-        assert_that(calling(list).with_args(context.tx().query.match(query)), raises(TypeDBDriverException))
+        assert_that(calling(list).with_args(context.tx().query.get(query)), raises(TypeDBDriverException))

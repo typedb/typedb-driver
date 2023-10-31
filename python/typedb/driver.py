@@ -23,8 +23,7 @@ from typing import Iterable, Union
 
 from typedb.api.answer.concept_map import *  # noqa # pylint: disable=unused-import
 from typedb.api.answer.concept_map_group import *  # noqa # pylint: disable=unused-import
-from typedb.api.answer.numeric import *  # noqa # pylint: disable=unused-import
-from typedb.api.answer.numeric_group import *  # noqa # pylint: disable=unused-import
+from typedb.api.answer.value_group import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.concept import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.concept_manager import *  # noqa # pylint: disable=unused-import
 from typedb.api.concept.thing.attribute import *  # noqa # pylint: disable=unused-import

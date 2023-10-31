@@ -27,8 +27,8 @@ from typing import Iterator, Optional, TYPE_CHECKING
 if TYPE_CHECKING:
     from typedb.api.answer.concept_map import ConceptMap
     from typedb.api.answer.concept_map_group import ConceptMapGroup
-    from typedb.api.answer.numeric import Numeric
-    from typedb.api.answer.numeric_group import NumericGroup
+    from typedb.api.answer.value_group import ValueGroup
+    from typedb.api.concept.value.value import Value
     from typedb.api.connection.options import TypeDBOptions
     from typedb.api.logic.explanation import Explanation
     from typedb.common.promise import Promise
@@ -38,8 +38,9 @@ class QueryManager(ABC):
     """
     Provides methods for executing TypeQL queries in the transaction.
     """
+    
     @abstractmethod
-    def match(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[ConceptMap]:
+    def get(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[ConceptMap]:
         """
         Performs a TypeQL Match (Get) query in the transaction.
 
@@ -51,12 +52,12 @@ class QueryManager(ABC):
         --------
         ::
 
-            transaction.query.match(query, options)
+            transaction.query.get(query, options)
         """
         pass
 
     @abstractmethod
-    def match_aggregate(self, query: str, options: Optional[TypeDBOptions] = None) -> Promise[Numeric]:
+    def get_aggregate(self, query: str, options: Optional[TypeDBOptions] = None) -> Promise[Value]:
         """
         Performs a TypeQL Match Aggregate query in the transaction.
 
@@ -68,12 +69,12 @@ class QueryManager(ABC):
         --------
         ::
 
-            transaction.query.match_aggregate(query, options).resolve()
+            transaction.query.get_aggregate(query, options).resolve()
         """
         pass
 
     @abstractmethod
-    def match_group(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[ConceptMapGroup]:
+    def get_group(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[ConceptMapGroup]:
         """
         Performs a TypeQL Match Group query in the transaction.
 
@@ -85,12 +86,12 @@ class QueryManager(ABC):
         --------
         ::
 
-             transaction.query.match_group(query, options)
+             transaction.query.get_group(query, options)
         """
         pass
 
     @abstractmethod
-    def match_group_aggregate(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[NumericGroup]:
+    def get_group_aggregate(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[ValueGroup]:
         """
         Performs a TypeQL Match Group Aggregate query in the transaction.
 
@@ -102,7 +103,24 @@ class QueryManager(ABC):
         --------
         ::
 
-            transaction.query.match_group_aggregate(query, options)
+            transaction.query.get_group_aggregate(query, options)
+        """
+        pass
+
+    @abstractmethod
+    def fetch(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[dict]:
+        """
+        Performs a TypeQL Fetch query in the transaction.
+
+        :param query:   The TypeQL Fetch query to be executed
+        :param options: Specify query options
+        :return:
+
+        Examples
+        --------
+        ::
+
+            transaction.query.fetch(query, options)
         """
         pass
 

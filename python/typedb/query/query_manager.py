@@ -21,13 +21,15 @@
 
 from __future__ import annotations
 
+import json
+
 from typing import TYPE_CHECKING, Iterator, Optional
 
 from typedb.native_driver_wrapper import (
     Transaction as NativeTransaction, TypeDBDriverExceptionNative, concept_map_group_iterator_next, concept_map_iterator_next,
-    explanation_iterator_next, numeric_group_iterator_next, numeric_promise_resolve, query_define, query_delete, query_explain,
-    query_insert, query_match, query_match_aggregate, query_match_group, query_match_group_aggregate, query_undefine,
-    query_update, void_promise_resolve
+    concept_promise_resolve, explanation_iterator_next, query_define, query_delete, query_explain, query_fetch, query_get,
+    query_get_aggregate, query_get_group, query_get_group_aggregate, query_insert, query_undefine, query_update, string_iterator_next,
+    value_group_iterator_next, void_promise_resolve,
 )
 
 from typedb.api.connection.options import TypeDBOptions
@@ -38,15 +40,15 @@ from typedb.common.native_wrapper import NativeWrapper
 from typedb.common.promise import Promise
 from typedb.concept.answer.concept_map import _ConceptMap
 from typedb.concept.answer.concept_map_group import _ConceptMapGroup
-from typedb.concept.answer.numeric import _Numeric
-from typedb.concept.answer.numeric_group import _NumericGroup
+from typedb.concept.answer.value_group import _ValueGroup
+from typedb.concept.value.value import _Value
 from typedb.logic.explanation import _Explanation
 
 if TYPE_CHECKING:
     from typedb.api.answer.concept_map import ConceptMap
     from typedb.api.answer.concept_map_group import ConceptMapGroup
-    from typedb.api.answer.numeric import Numeric
-    from typedb.api.answer.numeric_group import NumericGroup
+    from typedb.api.answer.value_group import ValueGroup
+    from typedb.api.concept.value.value import Value
     from typedb.api.logic.explanation import Explanation
 
 
@@ -62,7 +64,7 @@ class _QueryManager(QueryManager, NativeWrapper[NativeTransaction]):
     def _native_transaction(self) -> NativeTransaction:
         return self.native_object
 
-    def match(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[ConceptMap]:
+    def get(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[ConceptMap]:
         if not query:
             raise TypeDBDriverException(MISSING_QUERY)
         if not options:
@@ -70,20 +72,20 @@ class _QueryManager(QueryManager, NativeWrapper[NativeTransaction]):
         try:
             return map(
                 _ConceptMap,
-                IteratorWrapper(query_match(self._native_transaction, query, options.native_object), concept_map_iterator_next)
+                IteratorWrapper(query_get(self._native_transaction, query, options.native_object), concept_map_iterator_next)
             )
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
 
-    def match_aggregate(self, query: str, options: Optional[TypeDBOptions] = None) -> Promise[Numeric]:
+    def get_aggregate(self, query: str, options: Optional[TypeDBOptions] = None) -> Promise[Value]:
         if not query:
             raise TypeDBDriverException(MISSING_QUERY)
         if not options:
             options = TypeDBOptions()
-        promise = query_match_aggregate(self._native_transaction, query, options.native_object)
-        return Promise.map(_Numeric, lambda: numeric_promise_resolve(promise))
+        promise = query_get_aggregate(self._native_transaction, query, options.native_object)
+        return Promise.map(_Value, lambda: concept_promise_resolve(promise))
 
-    def match_group(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[ConceptMapGroup]:
+    def get_group(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[ConceptMapGroup]:
         if not query:
             raise TypeDBDriverException(MISSING_QUERY)
         if not options:
@@ -92,24 +94,37 @@ class _QueryManager(QueryManager, NativeWrapper[NativeTransaction]):
             return map(
                 _ConceptMapGroup,
                 IteratorWrapper(
-                    query_match_group(self._native_transaction, query, options.native_object), concept_map_group_iterator_next
+                    query_get_group(self._native_transaction, query, options.native_object), concept_map_group_iterator_next
                 )
             )
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
 
-    def match_group_aggregate(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[NumericGroup]:
+    def get_group_aggregate(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[ValueGroup]:
         if not query:
             raise TypeDBDriverException(MISSING_QUERY)
         if not options:
             options = TypeDBOptions()
         try:
             return map(
-                _NumericGroup,
+                _ValueGroup,
                 IteratorWrapper(
-                    query_match_group_aggregate(self._native_transaction, query, options.native_object),
-                    numeric_group_iterator_next
+                    query_get_group_aggregate(self._native_transaction, query, options.native_object),
+                    value_group_iterator_next
                 )
+            )
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
+
+    def fetch(self, query: str, options: Optional[TypeDBOptions] = None) -> Iterator[dict]:
+        if not query:
+            raise TypeDBDriverException(MISSING_QUERY)
+        if not options:
+            options = TypeDBOptions()
+        try:
+            return map(
+                json.loads,
+                IteratorWrapper(query_fetch(self._native_transaction, query, options.native_object), string_iterator_next)
             )
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
