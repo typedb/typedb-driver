@@ -304,7 +304,7 @@ export interface ThingType extends Type {
 
 export namespace ThingType {
 
-    export const NAiME = "thing";
+    export const NAME = "thing";
 
     export function proto(thing_type: ThingType) {
         if (thing_type.isEntity()) return RequestBuilder.Type.ThingType.protoThingTypeEntityType(thing_type.label);

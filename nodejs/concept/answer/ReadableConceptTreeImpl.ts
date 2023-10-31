@@ -36,7 +36,7 @@ import {RelationType} from "../../api/concept/type/RelationType";
 import {EntityType} from "../../api/concept/type/EntityType";
 import {RoleType} from "../../api/concept/type/RoleType";
 import {ThingType} from "../../api/concept/type/ThingType";
-import {JSONArray, JSON} from "../../api/answer/JSON";
+import {JSONArray, JSONObject} from "../../api/answer/JSON";
 import {EntityTypeImpl} from "../type/EntityTypeImpl";
 import {RelationTypeImpl} from "../type/RelationTypeImpl";
 import {AttributeTypeImpl} from "../type/AttributeTypeImpl";
@@ -44,8 +44,9 @@ import {RoleTypeImpl} from "../type/RoleTypeImpl";
 import {AttributeImpl} from "../thing/AttributeImpl";
 import {ValueImpl} from "../value/ValueImpl";
 import {ThingTypeImpl} from "../type/ThingTypeImpl";
-import {ILLEGAL_STATE} from "../../common/errors/ErrorMessage";
 import {TypeDBDriverError} from "../../common/errors/TypeDBDriverError";
+import {ErrorMessage} from "../../common/errors/ErrorMessage";
+import ILLEGAL_STATE = ErrorMessage.Internal.ILLEGAL_STATE;
 
 export class ReadableConceptTreeImpl {
     private readonly _root: ReadableConceptTreeImpl.Node.NodeMap;
@@ -54,7 +55,7 @@ export class ReadableConceptTreeImpl {
         this._root = root;
     }
 
-    asJSON(): JSON {
+    asJSON(): JSONObject {
         return this._root.asObject();
     }
 }
@@ -90,8 +91,8 @@ export namespace ReadableConceptTreeImpl {
                 this.map = map;
             }
 
-            asObject(): JSON {
-                let asObject: JSON = {};
+            asObject(): JSONObject {
+                let asObject: JSONObject = {};
                 this.map.forEach((value, key) => {
                     if (value instanceof NodeMap) {
                         asObject[key] = value.asObject();
@@ -157,8 +158,8 @@ export namespace ReadableConceptTreeImpl {
                 this.concept = concept;
             }
 
-            asObject(): JSON {
-                let asObject: JSON = {}
+            asObject(): JSONObject {
+                let asObject: JSONObject = {}
                 let concept = this.concept as Concept;
                 if (concept.isType()) {
                     asObject = this.typeAsObject(concept.asType());
@@ -181,8 +182,8 @@ export namespace ReadableConceptTreeImpl {
                 return asObject;
             }
 
-            typeAsObject(type: Type): JSON {
-                let asObject: JSON = {};
+            typeAsObject(type: Type): JSONObject {
+                let asObject: JSONObject = {};
                 asObject[this.KEY_TYPE_LABEL] = type.label.scopedName;
                 let rootType;
                 if (type.isEntityType()) {

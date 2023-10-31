@@ -22,10 +22,10 @@
 import {Then, When} from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import {fail} from "assert";
-import {Attribute, Concept, ConceptMap, ConceptMapGroup, JSONObject, ThingType, Value, ValueGroup} from "../../../dist";
+import {Attribute, Concept, ConceptMap, ConceptMapGroup, JSONObject, JSONArray, JSON, ThingType, Value, ValueGroup} from "../../../dist";
 import {parseBool} from "../config/Parameters";
 import {tx} from "../connection/ConnectionStepsBase";
-import {JSONEqualsUnordered, assertThrows, assertThrowsWithMessage, splitString} from "../util/Util";
+import {JSONEqualsUnordered, assertThrows, assertThrowsWithMessage, splitString, JSONArrayEquals} from "../util/Util";
 import assert = require("assert");
 import Annotation = ThingType.Annotation;
 import ValueType = Concept.ValueType;
@@ -515,5 +515,5 @@ Then("templated typeql get; throws exception", async (template: string) => {
 
 Then("fetch answers are", async (answers: string) => {
     let jsonAnswers = JSON.parse(answers);
-    assert.ok(JSONEqualsUnordered(jsonAnswers, fetchAnswers));
+    assert.ok(JSONArrayEquals(jsonAnswers as JSONArray, fetchAnswers as JSONArray));
 })

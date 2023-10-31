@@ -26,7 +26,7 @@ import {ValueGroup} from "../answer/ValueGroup";
 import {TypeDBOptions} from "../connection/TypeDBOptions";
 import {Explanation} from "../logic/Explanation";
 import {Value} from "../concept/value/Value";
-import {JSON} from "../answer/JSON";
+import {JSONObject} from "../answer/JSON";
 
 /** Provides methods for executing TypeQL queries in the transaction. */
 export interface QueryManager {
@@ -99,7 +99,7 @@ export interface QueryManager {
      * @param query - The TypeQL Fetch query to be executed
      * @param options - Specify query options
      */
-    fetch(query: string, options?: TypeDBOptions): Stream<JSON>;
+    fetch(query: string, options?: TypeDBOptions): Stream<JSONObject>;
 
     /**
      * Performs a TypeQL Insert query in the transaction.

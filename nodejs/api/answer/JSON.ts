@@ -19,16 +19,16 @@
  * under the License.
  */
 
-export type JSONValue =
+export type JSON =
     | string
     | number
     | boolean
-    | JSON
+    | JSONObject
     | JSONArray;
 
-export interface JSON {
-    [x: string]: JSONValue;
+export interface JSONObject {
+    [x: string]: JSON;
 }
 
-export interface JSONArray extends Array<JSONValue> { }
+export interface JSONArray extends Array<JSON> { }
 

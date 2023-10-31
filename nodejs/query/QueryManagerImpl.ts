@@ -37,7 +37,7 @@ import {ConceptMapGroupImpl} from "../concept/answer/ConceptMapGroupImpl";
 import {ReadableConceptTreeImpl} from "../concept/answer/ReadableConceptTreeImpl";
 import {ExplanationImpl} from "../logic/ExplanationImpl";
 import {ValueImpl} from "../concept/value/ValueImpl";
-import {JSON} from "../api/answer/JSON";
+import {JSONObject} from "../api/answer/JSON";
 
 export class QueryManagerImpl implements QueryManager {
     private _transaction: TypeDBTransaction.Extended;
@@ -85,7 +85,7 @@ export class QueryManagerImpl implements QueryManager {
         );
     }
 
-    fetch(query: string, options?: TypeDBOptions): Stream<JSON> {
+    fetch(query: string, options?: TypeDBOptions): Stream<JSONObject> {
         if (!options) options = new TypeDBOptions();
         const request = RequestBuilder.QueryManager.fetchReq(query, options.proto());
         return this.stream(request).flatMap((queryResPart) =>
