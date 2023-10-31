@@ -57,7 +57,7 @@ impl fmt::Display for JSON {
                 }
                 f.write_char(']')?;
             }
-            JSON::String(string) => write!(f, r#""{string}""#)?,
+            JSON::String(string) => write!(f, "{:?}", string.as_ref())?,
             JSON::Number(number) => write!(f, "{number}")?,
             JSON::Boolean(boolean) => write!(f, "{boolean}")?,
         }
