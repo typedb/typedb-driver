@@ -318,6 +318,8 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         .factory/test-core.sh //java/test/behaviour/query/language/match/... --test_output=errors
         .factory/test-core.sh //java/test/behaviour/query/language/get/... --test_output=errors
+        .factory/test-core.sh //java/test/behaviour/query/language/fetch/... --test_output=errors
+        .factory/test-core.sh //java/test/behaviour/query/language/modifiers/... --test_output=errors
         .factory/test-core.sh //java/test/behaviour/query/language/expression/... --test_output=errors
 
     test-java-behaviour-match-enterprise:
@@ -334,6 +336,8 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         .factory/test-enterprise.sh //java/test/behaviour/query/language/match/... --test_output=errors
         .factory/test-enterprise.sh //java/test/behaviour/query/language/get/... --test_output=errors
+        .factory/test-enterprise.sh //java/test/behaviour/query/language/fetch/... --test_output=errors
+        .factory/test-enterprise.sh //java/test/behaviour/query/language/modifiers/... --test_output=errors
         .factory/test-enterprise.sh //java/test/behaviour/query/language/expression/... --test_output=errors
 
     test-java-behaviour-writable-core:
@@ -545,6 +549,8 @@ build:
         tool/test/start-core-server.sh &&
           .factory/test-core.sh //python/tests/behaviour/query/language/match/... --test_output=errors &&
           .factory/test-core.sh //python/tests/behaviour/query/language/get/... --test_output=errors &&
+          .factory/test-core.sh //python/tests/behaviour/query/language/fetch/... --test_output=errors &&
+          .factory/test-core.sh //python/tests/behaviour/query/language/modifiers/... --test_output=errors &&
           .factory/test-core.sh //python/tests/behaviour/query/language/expression/... --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-core-server.sh
@@ -571,6 +577,8 @@ build:
         source tool/test/start-enterprise-servers.sh &&  # use source to receive export vars
           .factory/test-enterprise.sh //python/tests/behaviour/query/language/match/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
           .factory/test-enterprise.sh //python/tests/behaviour/query/language/get/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-enterprise.sh //python/tests/behaviour/query/language/fetch/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-enterprise.sh //python/tests/behaviour/query/language/modifiers/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
           .factory/test-enterprise.sh //python/tests/behaviour/query/language/expression/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-enterprise-servers.sh
