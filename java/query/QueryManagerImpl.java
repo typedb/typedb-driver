@@ -24,6 +24,7 @@ package com.vaticle.typedb.driver.query;
 import com.vaticle.typedb.driver.api.TypeDBOptions;
 import com.vaticle.typedb.driver.api.answer.ConceptMap;
 import com.vaticle.typedb.driver.api.answer.ConceptMapGroup;
+import com.vaticle.typedb.driver.api.answer.JSON;
 import com.vaticle.typedb.driver.api.answer.ValueGroup;
 import com.vaticle.typedb.driver.api.concept.value.Value;
 import com.vaticle.typedb.driver.api.logic.Explanation;
@@ -174,26 +175,26 @@ public final class QueryManagerImpl implements QueryManager {
     }
 
     @Override
-    public Stream<String> fetch(TypeQLFetch query) {
+    public Stream<JSON> fetch(TypeQLFetch query) {
         return fetch(query.toString(false));
     }
 
     @Override
-    public Stream<String> fetch(TypeQLFetch query, TypeDBOptions options) {
+    public Stream<JSON> fetch(TypeQLFetch query, TypeDBOptions options) {
         return fetch(query.toString(false), options);
     }
 
     @Override
-    public Stream<String> fetch(String query) {
+    public Stream<JSON> fetch(String query) {
         return fetch(query, new TypeDBOptions());
     }
 
     @Override
-    public Stream<String> fetch(String query, TypeDBOptions options) {
+    public Stream<JSON> fetch(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBDriverException(MISSING_QUERY);
         try {
-            return new NativeIterator<>(query_fetch(nativeTransaction, query, options.nativeObject)).stream();
+            return new NativeIterator<>(query_fetch(nativeTransaction, query, options.nativeObject)).stream().map(JSON::parse);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

@@ -24,6 +24,7 @@ package com.vaticle.typedb.driver.api.query;
 import com.vaticle.typedb.driver.api.TypeDBOptions;
 import com.vaticle.typedb.driver.api.answer.ConceptMap;
 import com.vaticle.typedb.driver.api.answer.ConceptMapGroup;
+import com.vaticle.typedb.driver.api.answer.JSON;
 import com.vaticle.typedb.driver.api.answer.ValueGroup;
 import com.vaticle.typedb.driver.api.concept.value.Value;
 import com.vaticle.typedb.driver.api.logic.Explanation;
@@ -192,7 +193,7 @@ public interface QueryManager {
      * @see QueryManager#fetch(TypeQLFetch, TypeDBOptions)
      */
     @CheckReturnValue
-    Stream<String> fetch(TypeQLFetch query);
+    Stream<JSON> fetch(TypeQLFetch query);
 
     /**
      * Performs a TypeQL Fetch (Fetch) query in the transaction.
@@ -206,20 +207,20 @@ public interface QueryManager {
      * @param options Specify query options
      */
     @CheckReturnValue
-    Stream<String> fetch(TypeQLFetch query, TypeDBOptions options);
+    Stream<JSON> fetch(TypeQLFetch query, TypeDBOptions options);
 
     /**
      * Performs a TypeQL Fetch (Fetch) with default options.
      * @see QueryManager#fetch(TypeQLFetch, TypeDBOptions)
      */
     @CheckReturnValue
-    Stream<String> fetch(String query);
+    Stream<JSON> fetch(String query);
 
     /**
      * @see QueryManager#fetch(TypeQLFetch, TypeDBOptions)
      */
     @CheckReturnValue
-    Stream<String> fetch(String query, TypeDBOptions options);
+    Stream<JSON> fetch(String query, TypeDBOptions options);
 
     /**
      * Performs a TypeQL Insert query with default options.
