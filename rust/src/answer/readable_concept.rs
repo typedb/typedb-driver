@@ -19,90 +19,10 @@
  * under the License.
  */
 
-use std::{
-    borrow::Cow,
-    collections::HashMap,
-    fmt::{self, Write},
-};
+use std::{borrow::Cow, collections::HashMap};
 
+use super::JSON;
 use crate::concept::{Attribute, AttributeType, Concept, EntityType, RelationType, RoleType, RootThingType, Value};
-
-#[derive(Clone, Debug)]
-pub enum JSON {
-    Object(HashMap<Cow<'static, str>, JSON>),
-    List(Vec<JSON>),
-    String(Cow<'static, str>),
-    Number(f64),
-    Boolean(bool),
-}
-
-impl JSON {
-    fn type_(root: &'static str, label: Cow<'static, str>) -> Self {
-        const ROOT: Cow<'static, str> = Cow::Borrowed("root");
-        const LABEL: Cow<'static, str> = Cow::Borrowed("label");
-        Self::Object([(ROOT, Self::String(Cow::Borrowed(root))), (LABEL, Self::String(label))].into())
-    }
-
-    fn value(value: Value) -> Self {
-        const VALUE_TYPE: Cow<'static, str> = Cow::Borrowed("value_type");
-        const VALUE: Cow<'static, str> = Cow::Borrowed("value");
-
-        const BOOLEAN: Cow<'static, str> = Cow::Borrowed("boolean");
-        const DATETIME: Cow<'static, str> = Cow::Borrowed("datetime");
-        const DOUBLE: Cow<'static, str> = Cow::Borrowed("double");
-        const LONG: Cow<'static, str> = Cow::Borrowed("long");
-        const STRING: Cow<'static, str> = Cow::Borrowed("string");
-
-        match value {
-            Value::Boolean(bool) => {
-                Self::Object([(VALUE, Self::Boolean(bool)), (VALUE_TYPE, Self::String(BOOLEAN))].into())
-            }
-            Value::Double(double) => {
-                Self::Object([(VALUE, Self::Number(double)), (VALUE_TYPE, Self::String(DOUBLE))].into())
-            }
-            Value::Long(long) => {
-                Self::Object([(VALUE, Self::Number(long as f64)), (VALUE_TYPE, Self::String(LONG))].into())
-            }
-            Value::String(string) => {
-                Self::Object([(VALUE, Self::String(Cow::Owned(string))), (VALUE_TYPE, Self::String(STRING))].into())
-            }
-            Value::DateTime(datetime) => Self::Object(
-                [(VALUE, Self::String(Cow::Owned(datetime.to_string()))), (VALUE_TYPE, Self::String(DATETIME))].into(),
-            ),
-        }
-    }
-}
-
-impl fmt::Display for JSON {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            JSON::Object(object) => {
-                f.write_char('{')?;
-                for (i, (k, v)) in object.iter().enumerate() {
-                    if i > 0 {
-                        f.write_str(", ")?;
-                    }
-                    write!(f, r#""{}": {}"#, k, v)?;
-                }
-                f.write_char('}')?;
-            }
-            JSON::List(list) => {
-                f.write_char('[')?;
-                for (i, v) in list.iter().enumerate() {
-                    if i > 0 {
-                        f.write_str(", ")?;
-                    }
-                    write!(f, "{}", v)?;
-                }
-                f.write_char(']')?;
-            }
-            JSON::String(string) => write!(f, r#""{string}""#)?,
-            JSON::Number(number) => write!(f, "{number}")?,
-            JSON::Boolean(boolean) => write!(f, "{boolean}")?,
-        }
-        Ok(())
-    }
-}
 
 #[derive(Clone, Debug, PartialEq)]
 pub(crate) struct Tree {
@@ -130,33 +50,68 @@ impl Node {
             }
             Node::List(list) => JSON::List(list.into_iter().map(Node::into_json).collect()),
             Node::Leaf(Concept::RootThingType(_)) => {
-                JSON::type_(RootThingType::LABEL, Cow::Borrowed(RootThingType::LABEL))
+                json_type(RootThingType::LABEL, Cow::Borrowed(RootThingType::LABEL))
             }
             Node::Leaf(Concept::EntityType(EntityType { label, .. })) => {
-                JSON::type_(EntityType::ROOT_LABEL, Cow::Owned(label))
+                json_type(EntityType::ROOT_LABEL, Cow::Owned(label))
             }
             Node::Leaf(Concept::RelationType(RelationType { label, .. })) => {
-                JSON::type_(RelationType::ROOT_LABEL, Cow::Owned(label))
+                json_type(RelationType::ROOT_LABEL, Cow::Owned(label))
             }
             Node::Leaf(Concept::AttributeType(AttributeType { label, .. })) => {
-                JSON::type_(AttributeType::ROOT_LABEL, Cow::Owned(label))
+                json_type(AttributeType::ROOT_LABEL, Cow::Owned(label))
             }
 
             Node::Leaf(Concept::RoleType(RoleType { label, .. })) => {
-                JSON::type_("relation:role", Cow::Owned(label.to_string()))
+                json_type("relation:role", Cow::Owned(label.to_string()))
             }
 
             Node::Leaf(Concept::Attribute(Attribute { type_: AttributeType { label, .. }, value, .. })) => {
-                let JSON::Object(mut map) = JSON::value(value) else { unreachable!() };
-                map.insert(Cow::Borrowed("type"), JSON::type_(AttributeType::ROOT_LABEL, Cow::Owned(label)));
+                let JSON::Object(mut map) = json_value(value) else { unreachable!() };
+                map.insert(Cow::Borrowed("type"), json_type(AttributeType::ROOT_LABEL, Cow::Owned(label)));
                 JSON::Object(map)
             }
 
-            Node::Leaf(Concept::Value(value)) => JSON::value(value),
+            Node::Leaf(Concept::Value(value)) => json_value(value),
 
             Node::Leaf(concept @ (Concept::Entity(_) | Concept::Relation(_))) => {
                 unreachable!("Unexpected concept encountered in fetch response: {concept:?}")
             }
         }
+    }
+}
+
+fn json_type(root: &'static str, label: Cow<'static, str>) -> JSON {
+    const ROOT: Cow<'static, str> = Cow::Borrowed("root");
+    const LABEL: Cow<'static, str> = Cow::Borrowed("label");
+    JSON::Object([(ROOT, JSON::String(Cow::Borrowed(root))), (LABEL, JSON::String(label))].into())
+}
+
+fn json_value(value: Value) -> JSON {
+    const VALUE_TYPE: Cow<'static, str> = Cow::Borrowed("value_type");
+    const VALUE: Cow<'static, str> = Cow::Borrowed("value");
+
+    const BOOLEAN: Cow<'static, str> = Cow::Borrowed("boolean");
+    const DATETIME: Cow<'static, str> = Cow::Borrowed("datetime");
+    const DOUBLE: Cow<'static, str> = Cow::Borrowed("double");
+    const LONG: Cow<'static, str> = Cow::Borrowed("long");
+    const STRING: Cow<'static, str> = Cow::Borrowed("string");
+
+    match value {
+        Value::Boolean(bool) => {
+            JSON::Object([(VALUE, JSON::Boolean(bool)), (VALUE_TYPE, JSON::String(BOOLEAN))].into())
+        }
+        Value::Double(double) => {
+            JSON::Object([(VALUE, JSON::Number(double)), (VALUE_TYPE, JSON::String(DOUBLE))].into())
+        }
+        Value::Long(long) => {
+            JSON::Object([(VALUE, JSON::Number(long as f64)), (VALUE_TYPE, JSON::String(LONG))].into())
+        }
+        Value::String(string) => {
+            JSON::Object([(VALUE, JSON::String(Cow::Owned(string))), (VALUE_TYPE, JSON::String(STRING))].into())
+        }
+        Value::DateTime(datetime) => JSON::Object(
+            [(VALUE, JSON::String(Cow::Owned(datetime.to_string()))), (VALUE_TYPE, JSON::String(DATETIME))].into(),
+        ),
     }
 }
