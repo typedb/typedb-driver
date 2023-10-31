@@ -26,6 +26,7 @@ import com.eclipsesource.json.JsonValue;
 import com.vaticle.typedb.common.collection.Pair;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,6 +35,7 @@ import java.util.stream.StreamSupport;
 import static com.vaticle.typedb.common.util.Objects.className;
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
+import static java.util.stream.Collectors.joining;
 
 public abstract class JSON {
     public static JSON parse(java.lang.String string) {
@@ -95,6 +97,49 @@ public abstract class JSON {
 
     public boolean asBoolean() {
         throw new TypeDBDriverException(ILLEGAL_CAST, className(boolean.class));
+    }
+
+    @Override
+    public java.lang.String toString() {
+        if (isBoolean()) return java.lang.Boolean.toString(asBoolean());
+        else if (isNumber()) return Double.toString(asNumber());
+        else if (isString()) return '"' + asString() + '"';
+        else if (isArray()) {
+            java.lang.String content = asArray().stream().map(JSON::toString).collect(joining(",\n"));
+
+            return "[\n" + Arrays.stream(content.split("\n")).map(s -> "    " + s).collect(joining("\n")) + "\n]";
+        } else if (isObject()) {
+            java.lang.String content = asObject().keySet().stream().map(key -> {
+                StringBuilder sb = new StringBuilder("\"").append(key).append("\":");
+                var valueString = asObject().get(key).toString();
+                sb.append(" ").append(valueString);
+                return sb.toString();
+            }).collect(joining(",\n"));
+            return "{\n" + Arrays.stream(content.split("\n")).map(s -> "    " + s).collect(joining("\n")) + "\n}";
+        } else throw new TypeDBDriverException(ILLEGAL_STATE);
+    }
+
+    @Override
+    public boolean equals(java.lang.Object obj) {
+        if (obj == this) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        JSON that = (JSON)obj;
+        if (isBoolean() && that.isBoolean()) return asBoolean() == that.asBoolean();
+        else if (isNumber() && that.isNumber()) return asNumber() == that.asNumber();
+        else if (isString() && that.isString()) return asString().equals(that.asString());
+        else if (isArray() && that.isArray()) return asArray().equals(that.asArray());
+        else if (isObject() && that.isObject()) return asObject().equals(that.asObject());
+        else return false;
+    }
+
+    @Override
+    public int hashCode() {
+        if (isBoolean()) return java.lang.Boolean.hashCode(asBoolean());
+        else if (isNumber()) return Double.hashCode(asNumber());
+        else if (isString()) return asString().hashCode();
+        else if (isArray()) return asArray().hashCode();
+        else if (isObject()) return asObject().hashCode();
+        else throw new TypeDBDriverException(ILLEGAL_STATE);
     }
 
     private static class Object extends JSON {

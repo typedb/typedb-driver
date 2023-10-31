@@ -68,9 +68,7 @@ export namespace ReadableConceptTreeImpl {
         return new ReadableConceptTreeImpl(root);
     }
 
-    /* eslint no-empty-interface: "off" */
-    export interface Node {}
-
+    export type Node = Node.NodeMap | Node.NodeList | Node.ReadableConcept;
 
     export namespace Node {
 
@@ -83,7 +81,7 @@ export namespace ReadableConceptTreeImpl {
             }
         }
 
-        export class NodeMap implements Node {
+        export class NodeMap {
             private readonly map: Map<string, ReadableConceptTreeImpl.Node>;
 
             constructor(map: Map<string, Node>) {
@@ -116,7 +114,7 @@ export namespace ReadableConceptTreeImpl {
             }
         }
 
-        export class NodeList implements Node {
+        export class NodeList {
             private readonly list: ReadableConceptTreeImpl.Node[];
 
             constructor(list: Node[]) {
@@ -144,7 +142,7 @@ export namespace ReadableConceptTreeImpl {
             }
         }
 
-        export class ReadableConcept implements Node {
+        export class ReadableConcept {
             private readonly KEY_TYPE: string = "type";
             private readonly KEY_VALUE: string = "value";
             private readonly KEY_VALUE_TYPE: string = "value_type";
