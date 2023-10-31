@@ -51,14 +51,14 @@ public boolean asBoolean()
 
 [source,java]
 ----
-public float asNumber()
+public double asNumber()
 ----
 
 
 
 [caption=""]
 .Returns
-`public float`
+`public double`
 
 [#_JSON_asObject_]
 ==== asObject
