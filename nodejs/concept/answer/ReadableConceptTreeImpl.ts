@@ -68,7 +68,7 @@ export namespace ReadableConceptTreeImpl {
         return new ReadableConceptTreeImpl(root);
     }
 
-    // tslint:disable-next-line
+    /* eslint no-empty-interface: "off" */
     export interface Node {}
 
 
