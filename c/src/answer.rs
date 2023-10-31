@@ -236,5 +236,5 @@ pub extern "C" fn value_group_get_owner(value_group: *mut ValueGroup) -> *mut Co
 
 #[no_mangle]
 pub extern "C" fn value_group_get_value(value_group: *mut ValueGroup) -> *mut Concept {
-    release(Concept::Value(borrow(value_group).value.clone()))
+    release_optional(borrow(value_group).value.clone().map(Concept::Value))
 }

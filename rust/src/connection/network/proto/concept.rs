@@ -71,7 +71,7 @@ impl TryFromProto<ValueGroupProto> for ValueGroup {
     fn try_from_proto(proto: ValueGroupProto) -> Result<Self> {
         let ValueGroupProto { owner: owner_proto, value: value_proto } = proto;
         let owner = Concept::try_from_proto(owner_proto.ok_or(ConnectionError::MissingResponseField("owner"))?)?;
-        let value = Value::try_from_proto(value_proto.ok_or(ConnectionError::MissingResponseField("value"))?)?;
+        let value = value_proto.map(Value::try_from_proto).transpose()?;
         Ok(Self { owner, value })
     }
 }

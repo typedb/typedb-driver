@@ -26,5 +26,5 @@ pub struct ValueGroup {
     /// The concept that is the group owner.
     pub owner: Concept,
     // The `Value` answer of the group.
-    pub value: Value,
+    pub value: Option<Value>,
 }

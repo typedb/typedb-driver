@@ -49,7 +49,9 @@ public class ValueGroupImpl extends NativeObject<com.vaticle.typedb.driver.jni.V
 
     @Override
     public Value value() {
-        return new ValueImpl(value_group_get_value(nativeObject));
+        com.vaticle.typedb.driver.jni.Concept nativeValue = value_group_get_value(nativeObject);
+        if (nativeValue == null) return null;
+        else return new ValueImpl(nativeValue);
     }
 
     @Override

@@ -350,8 +350,8 @@ generic_step_impl! {
                 if match_answer_concept(context, table_row.get(Context::GROUP_COLUMN_NAME).unwrap(), &group.owner).await
                 {
                     let answer: f64 = match group.value {
-                        Value::Long(value) => value as f64,
-                        Value::Double(value) => value,
+                        Some(Value::Long(value)) => value as f64,
+                        Some(Value::Double(value)) => value,
                         _ => panic!("Last answer is not a number."),
                     };
                     let expected_value: f64 = table_row.get(Context::VALUE_COLUMN_NAME).unwrap().parse().unwrap();
