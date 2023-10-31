@@ -30,7 +30,7 @@ use super::{
     network::transmitter::TransactionTransmitter,
 };
 use crate::{
-    answer::{ConceptMap, ConceptMapGroup, ValueGroup, readable_concept},
+    answer::{readable_concept, ConceptMap, ConceptMapGroup, ValueGroup},
     common::{
         stream::{BoxStream, Stream},
         Promise, Result, IID,

@@ -31,4 +31,3 @@ async fn test() {
     // the working directory.
     assert!(Context::test("../vaticle_typedb_behaviour/query/language/modifiers.feature").await);
 }
-

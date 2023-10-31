@@ -22,7 +22,6 @@
 use std::{ffi::c_char, ptr::addr_of_mut};
 
 use itertools::Itertools;
-
 use typedb_driver::{
     answer::{ConceptMap, ConceptMapGroup, Explainable, ValueGroup},
     box_stream,
@@ -35,7 +34,7 @@ use super::{
     iterator::{iterator_try_next, CIterator},
     memory::{borrow, free, string_view},
 };
-use crate::{concept::ConceptPromise, memory::release, promise::VoidPromise, common::StringIterator};
+use crate::{common::StringIterator, concept::ConceptPromise, memory::release, promise::VoidPromise};
 
 #[no_mangle]
 pub extern "C" fn query_define(
@@ -106,7 +105,7 @@ pub extern "C" fn query_fetch(
         borrow(transaction)
             .query()
             .fetch_with_options(string_view(query), borrow(options).clone())
-            .map(|it| StringIterator(CIterator(box_stream(it.map_ok(|json| json.to_string())))))
+            .map(|it| StringIterator(CIterator(box_stream(it.map_ok(|json| json.to_string()))))),
     )
 }
 

@@ -22,8 +22,8 @@
 mod define;
 mod delete;
 mod expression;
-mod get;
 mod fetch;
+mod get;
 mod insert;
 mod match_;
 mod modifiers;

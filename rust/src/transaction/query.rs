@@ -21,10 +21,10 @@
 
 use std::pin::Pin;
 
-#[cfg(feature = "sync")]
-use itertools::Itertools;
 #[cfg(not(feature = "sync"))]
 use futures::TryStreamExt;
+#[cfg(feature = "sync")]
+use itertools::Itertools;
 
 use crate::{
     answer::{ConceptMap, ConceptMapGroup, Explainable, ValueGroup, JSON},
@@ -200,7 +200,11 @@ impl<'tx> QueryManager<'tx> {
     #[cfg_attr(feature = "sync", doc = "transaction.query().get_aggregate_with_options(query, options).resolve()")]
     #[cfg_attr(not(feature = "sync"), doc = "transaction.query().get_aggregate_with_options(query, options).await")]
     /// ```
-    pub fn get_aggregate_with_options(&self, query: &str, options: Options) -> impl Promise<'tx, Result<Option<Value>>> {
+    pub fn get_aggregate_with_options(
+        &self,
+        query: &str,
+        options: Options,
+    ) -> impl Promise<'tx, Result<Option<Value>>> {
         self.transaction_stream.get_ref().get_aggregate(query.to_string(), options)
     }
 
