@@ -514,6 +514,6 @@ Then("templated typeql get; throws exception", async (template: string) => {
 });
 
 Then("fetch answers are", async (answers: string) => {
-    let jsonAnswers = JSON.parse(answers);
+    const jsonAnswers = JSON.parse(answers);
     assert.ok(JSONArrayEquals(jsonAnswers as JSONArray, fetchAnswers as JSONArray));
 })

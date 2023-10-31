@@ -61,11 +61,11 @@ export function JSONEqualsUnordered(first: JSON, second: JSON): boolean {
 
 export function JSONArrayEquals(first: JSONArray, second: JSONArray): boolean {
     if (first.length != second.length) return false;
-    let secondCopy = [...second];
-    for (let f of first) {
+    const secondCopy = [...second];
+    for (const f of first) {
         let matched = false;
         for (let i = 0; i < secondCopy.length; i++) {
-            let s = secondCopy[i];
+            const s = secondCopy[i];
             if (JSONEqualsUnordered(f, s)) {
                 matched = true;
                 secondCopy.splice(i, 1);
@@ -80,8 +80,8 @@ export function JSONArrayEquals(first: JSONArray, second: JSONArray): boolean {
 export function JSONObjectEquals(first: JSONObject, second: JSONObject): boolean {
     if (Object.keys(first).length != Object.keys(second).length) return false;
     for (const key in first) {
-        let firstValue = first[key];
-        let secondValue = second[key];
+        const firstValue = first[key];
+        const secondValue = second[key];
         if (secondValue == null || !JSONEqualsUnordered(firstValue, secondValue)) {
             return false;
         }

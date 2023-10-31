@@ -64,13 +64,12 @@ export class ReadableConceptTreeImpl {
 export namespace ReadableConceptTreeImpl {
 
     export function of(proto: ReadableConceptTreeProto): ReadableConceptTreeImpl {
-        let root = Node.NodeMap.of(proto.root);
+        const root = Node.NodeMap.of(proto.root);
         return new ReadableConceptTreeImpl(root);
     }
 
-    export interface Node {
-
-    }
+    // tslint:disable-next-line
+    export interface Node {}
 
 
     export namespace Node {
@@ -92,7 +91,7 @@ export namespace ReadableConceptTreeImpl {
             }
 
             asObject(): JSONObject {
-                let asObject: JSONObject = {};
+                const asObject: JSONObject = {};
                 this.map.forEach((value, key) => {
                     if (value instanceof NodeMap) {
                         asObject[key] = value.asObject();
@@ -110,7 +109,7 @@ export namespace ReadableConceptTreeImpl {
 
         export namespace NodeMap {
 
-            export function of(proto: MapProto) {
+            export function of(proto: MapProto): NodeMap {
                 const nodeMap = new Map<string, Node>();
                 proto.map.forEach((proto: NodeProto, label: string) => nodeMap.set(label, Node.of(proto)));
                 return new NodeMap(nodeMap);
@@ -160,18 +159,18 @@ export namespace ReadableConceptTreeImpl {
 
             asObject(): JSONObject {
                 let asObject: JSONObject = {}
-                let concept = this.concept as Concept;
+                const concept = this.concept as Concept;
                 if (concept.isType()) {
                     asObject = this.typeAsObject(concept.asType());
                 } else if (concept.isAttribute()) {
                     asObject[this.KEY_TYPE] = this.typeAsObject(concept.asThing().type);
-                    let value = concept.asAttribute().value;
+                    const value = concept.asAttribute().value;
                     if (value instanceof Date) {
                         asObject[this.KEY_VALUE] = value.toISOString().slice(0, -1);
                     } else asObject[this.KEY_VALUE] = value;
                     asObject[this.KEY_VALUE_TYPE] = concept.asAttribute().valueType.name();
                 } else if (concept.isValue()) {
-                    let value = concept.asValue();
+                    const value = concept.asValue();
                     if (value.value instanceof Date) {
                         asObject[this.KEY_VALUE] = value.value.toISOString().slice(0, -1);
                     } else asObject[this.KEY_VALUE] = value.value;
@@ -183,7 +182,7 @@ export namespace ReadableConceptTreeImpl {
             }
 
             typeAsObject(type: Type): JSONObject {
-                let asObject: JSONObject = {};
+                const asObject: JSONObject = {};
                 asObject[this.KEY_TYPE_LABEL] = type.label.scopedName;
                 let rootType;
                 if (type.isEntityType()) {
