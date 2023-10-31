@@ -23,6 +23,7 @@ package com.vaticle.typedb.driver.test.behaviour.query;
 
 import com.vaticle.typedb.driver.api.answer.ConceptMap;
 import com.vaticle.typedb.driver.api.answer.ConceptMapGroup;
+import com.vaticle.typedb.driver.api.answer.JSON;
 import com.vaticle.typedb.driver.api.answer.ValueGroup;
 import com.vaticle.typedb.driver.api.concept.Concept;
 import com.vaticle.typedb.driver.api.concept.thing.Attribute;
@@ -34,6 +35,7 @@ import com.vaticle.typeql.lang.TypeQL;
 import com.vaticle.typeql.lang.common.exception.TypeQLException;
 import com.vaticle.typeql.lang.query.TypeQLDefine;
 import com.vaticle.typeql.lang.query.TypeQLDelete;
+import com.vaticle.typeql.lang.query.TypeQLFetch;
 import com.vaticle.typeql.lang.query.TypeQLInsert;
 import com.vaticle.typeql.lang.query.TypeQLGet;
 import com.vaticle.typeql.lang.query.TypeQLUndefine;
@@ -49,6 +51,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,19 +61,20 @@ import java.util.stream.Stream;
 import static com.vaticle.typedb.driver.api.concept.type.ThingType.Annotation.key;
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
 import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
+import static com.vaticle.typedb.driver.test.behaviour.util.Util.JSONListMatches;
+import static com.vaticle.typedb.driver.test.behaviour.util.Util.JSONMatches;
 import static com.vaticle.typedb.driver.test.behaviour.util.Util.assertThrows;
 import static com.vaticle.typedb.driver.test.behaviour.util.Util.assertThrowsWithMessage;
 import static com.vaticle.typedb.common.collection.Collections.set;
 import static com.vaticle.typedb.common.util.Double.equalsApproximate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class QuerySteps {
     private static List<ConceptMap> answers;
-    private static Value valueAnswer;
+    private static List<JSON> fetchAnswers;
+    private static Optional<Value> valueAnswer;
     private static List<ConceptMapGroup> answerGroups;
     private static List<ValueGroup> valueAnswerGroups;
     private Map<String, Map<String, String>> rules;
@@ -212,7 +216,7 @@ public class QuerySteps {
     public void typeql_get_aggregate(String typeQLQueryStatements) {
         TypeQLGet.Aggregate typeQLQuery = TypeQL.parseQuery(String.join("\n", typeQLQueryStatements)).asGetAggregate();
         clearAnswers();
-        valueAnswer = tx().query().getAggregate(String.join("\n", typeQLQueryStatements)).resolve();
+        valueAnswer = Optional.ofNullable(tx().query().getAggregate(String.join("\n", typeQLQueryStatements)).resolve());
     }
 
     @When("typeql get aggregate; throws exception")
@@ -286,14 +290,16 @@ public class QuerySteps {
     @Then("aggregate value is: {double}")
     public void aggregate_value_is(double expectedAnswer) {
         assertNotNull("The last executed query was not an aggregate query", valueAnswer);
-        double value = valueAnswer.isDouble() ? valueAnswer.asDouble() : valueAnswer.asLong();
+        assertTrue("The last executed aggregate query returned NaN", valueAnswer.isPresent());
+        double value = valueAnswer.get().isDouble() ? valueAnswer.get().asDouble() : valueAnswer.get().asLong();
         assertEquals(String.format("Expected answer to equal %f, but it was %f.", expectedAnswer, value),
                 expectedAnswer, value, 0.001);
     }
 
     @Then("aggregate answer is not a number")
     public void aggregate_answer_is_not_a_number() {
-        assertNull(valueAnswer);
+        assertNotNull("The last executed query was not an aggregate query", valueAnswer);
+        assertTrue(valueAnswer.isEmpty());
     }
 
     @Then("answer groups are")
@@ -448,6 +454,32 @@ public class QuerySteps {
             }
         }
         return true;
+    }
+
+    @When("get answers of typeql fetch")
+    public void typeql_fetch(String typeQLQueryStatements) {
+        try {
+            TypeQLFetch typeQLQuery = TypeQL.parseQuery(String.join("\n", typeQLQueryStatements)).asFetch();
+            clearAnswers();
+            fetchAnswers = tx().query().fetch(String.join("\n", typeQLQueryStatements)).collect(Collectors.toList());
+        } catch (TypeQLException e) {
+            // NOTE: We manually close transaction here, because we want to align with all non-java drivers,
+            // where parsing happens at server-side which closes transaction if they fail
+            tx().close();
+            throw e;
+        }
+    }
+
+    @Then("typeql fetch; throws exception")
+    public void typeql_fetch_throws_exception(String typeQLQueryStatements) {
+        assertThrows(() -> typeql_get(typeQLQueryStatements));
+    }
+
+    @Then("fetch answers are")
+    public void fetch_answers_are(String expectedJSON) {
+        JSON expected = JSON.parse(expectedJSON);
+        assertTrue("Fetch response is a list of JSON objects, but the behaviour test expects something else", expected.isArray());
+        assertTrue(JSONListMatches(fetchAnswers, expected.asArray()));
     }
 
     @Then("rules are")
