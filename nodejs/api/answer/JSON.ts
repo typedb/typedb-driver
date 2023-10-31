@@ -19,40 +19,16 @@
  * under the License.
  */
 
-/**
- * Stores an aggregate query answer.
- */
-export interface Numeric {
-    /**
-     * Checks if the type of an aggregate answer is a number.
-     *
-     * ### Examples
-     *
-     * ```ts
-     * numeric.isNumber()
-     * ```
-     */
-    isNumber(): boolean;
+export type JSONValue =
+    | string
+    | number
+    | boolean
+    | JSON
+    | JSONArray;
 
-    /**
-     * Checks if the aggregate answer is not a number.
-     *
-     * ### Examples
-     *
-     * ```ts
-     * numeric.isNan()
-     * ```
-     */
-    isNaN(): boolean;
-
-    /**
-     * Retrieves numeric value of an aggregate answer as a number.
-     *
-     * ### Examples
-     *
-     * ```ts
-     * numeric.asNumber()
-     * ```
-     */
-    asNumber(): number;
+export interface JSON {
+    [x: string]: JSONValue;
 }
+
+export interface JSONArray extends Array<JSONValue> { }
+

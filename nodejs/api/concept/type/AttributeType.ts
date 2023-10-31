@@ -192,6 +192,9 @@ export interface AttributeType extends ThingType {
 }
 
 export namespace AttributeType {
+
+    export const NAME: string = "attribute";
+
     export function proto(attributeType: AttributeType) {
         return RequestBuilder.Type.AttributeType.protoAttributeType(attributeType.label);
     }

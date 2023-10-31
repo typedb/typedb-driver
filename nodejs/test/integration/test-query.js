@@ -201,7 +201,7 @@ async function run() {
 
     try {
         tx = await session.transaction(TransactionType.READ, new TypeDBOptions({infer: true, explain: true}));
-        const answers = await tx.query.match("match $x has inferred-age $a;").collect();
+        const answers = await tx.query.get("match $x has inferred-age $a; get;").collect();
         const ans = answers[0];
         assert(ans.explainables.ownerships.size > 0);
         const firstExplanations = await tx.query.explain(ans.explainables.ownerships.values().next().value).collect();

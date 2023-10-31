@@ -23,8 +23,8 @@ import {QueryManagerRes, QueryManagerResPart} from "typedb-protocol/proto/query"
 import {TransactionReq} from "typedb-protocol/proto/transaction";
 import {ConceptMap} from "../api/answer/ConceptMap";
 import {ConceptMapGroup} from "../api/answer/ConceptMapGroup";
-import {Numeric} from "../api/answer/Numeric";
-import {NumericGroup} from "../api/answer/NumericGroup";
+import {ValueGroup} from "../api/answer/ValueGroup";
+import {Value} from "../api/concept/value/Value";
 import {TypeDBOptions} from "../api/connection/TypeDBOptions";
 import {TypeDBTransaction} from "../api/connection/TypeDBTransaction";
 import {Explanation} from "../api/logic/Explanation";
@@ -32,10 +32,12 @@ import {QueryManager} from "../api/query/QueryManager";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {Stream} from "../common/util/Stream";
 import {ConceptMapImpl} from "../concept/answer/ConceptMapImpl";
-import {NumericGroupImpl} from "../concept/answer/NumericGroupImpl";
+import {ValueGroupImpl} from "../concept/answer/ValueGroupImpl";
 import {ConceptMapGroupImpl} from "../concept/answer/ConceptMapGroupImpl";
-import {NumericImpl} from "../concept/answer/NumericImpl";
+import {ReadableConceptTreeImpl} from "../concept/answer/ReadableConceptTreeImpl";
 import {ExplanationImpl} from "../logic/ExplanationImpl";
+import {ValueImpl} from "../concept/value/ValueImpl";
+import {JSON} from "../api/answer/JSON";
 
 export class QueryManagerImpl implements QueryManager {
     private _transaction: TypeDBTransaction.Extended;
@@ -44,36 +46,51 @@ export class QueryManagerImpl implements QueryManager {
         this._transaction = transaction;
     }
 
-    match(query: string, options?: TypeDBOptions): Stream<ConceptMap> {
+    get(query: string, options?: TypeDBOptions): Stream<ConceptMap> {
         if (!options) options = new TypeDBOptions();
-        const request = RequestBuilder.QueryManager.matchReq(query, options.proto());
+        const request = RequestBuilder.QueryManager.getReq(query, options.proto());
         return this.stream(request).flatMap((queryResPart) =>
-            Stream.array(queryResPart.match_res_part.answers)
+            Stream.array(queryResPart.get_res_part.answers)
                 .map((conceptMapProto) => ConceptMapImpl.of(conceptMapProto))
         );
     }
 
-    matchAggregate(query: string, options?: TypeDBOptions): Promise<Numeric> {
+    getAggregate(query: string, options?: TypeDBOptions): Promise<Value | null> {
         if (!options) options = new TypeDBOptions();
-        const request = RequestBuilder.QueryManager.matchAggregateReq(query, options.proto());
-        return this.query(request).then((res) => NumericImpl.of(res.match_aggregate_res.answer));
+        const request = RequestBuilder.QueryManager.getAggregateReq(query, options.proto());
+        return this.query(request).then((res) => {
+            if (res.get_aggregate_res) {
+                return ValueImpl.ofValueProto(res.get_aggregate_res.answer);
+            } else {
+                return null;
+            }
+        });
     }
 
-    matchGroup(query: string, options?: TypeDBOptions): Stream<ConceptMapGroup> {
+    getGroup(query: string, options?: TypeDBOptions): Stream<ConceptMapGroup> {
         if (!options) options = new TypeDBOptions();
-        const request = RequestBuilder.QueryManager.matchGroupReq(query, options.proto());
+        const request = RequestBuilder.QueryManager.getGroupReq(query, options.proto());
         return this.stream(request).flatMap((queryResPart) =>
-            Stream.array(queryResPart.match_group_res_part.answers)
+            Stream.array(queryResPart.get_group_res_part.answers)
                 .map((conceptMapGroupProto) => ConceptMapGroupImpl.of(conceptMapGroupProto))
         );
     }
 
-    matchGroupAggregate(query: string, options?: TypeDBOptions): Stream<NumericGroup> {
+    getGroupAggregate(query: string, options?: TypeDBOptions): Stream<ValueGroup> {
         if (!options) options = new TypeDBOptions();
-        const request = RequestBuilder.QueryManager.matchGroupAggregateReq(query, options.proto());
+        const request = RequestBuilder.QueryManager.getGroupAggregateReq(query, options.proto());
         return this.stream(request).flatMap((queryResPart) =>
-            Stream.array(queryResPart.match_group_aggregate_res_part.answers)
-                .map((numericGroupArray) => NumericGroupImpl.of(numericGroupArray))
+            Stream.array(queryResPart.get_group_aggregate_res_part.answers)
+                .map((valueGroupProto) => ValueGroupImpl.of(valueGroupProto))
+        );
+    }
+
+    fetch(query: string, options?: TypeDBOptions): Stream<JSON> {
+        if (!options) options = new TypeDBOptions();
+        const request = RequestBuilder.QueryManager.fetchReq(query, options.proto());
+        return this.stream(request).flatMap((queryResPart) =>
+            Stream.array(queryResPart.fetch_res_part.answers)
+                .map((readableConceptTreeProto) => ReadableConceptTreeImpl.of(readableConceptTreeProto).asJSON())
         );
     }
 

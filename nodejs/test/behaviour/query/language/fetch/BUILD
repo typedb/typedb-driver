@@ -19,37 +19,22 @@
 # under the License.
 #
 
-load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//nodejs/test/behaviour:rules.bzl", "behaviour_test_ts_config")
-
-ts_project(
-    name = "util",
-    srcs = ["Util.ts"],
-    tsconfig = behaviour_test_ts_config(),
-    declaration = True,
-    deps = [
-        "//nodejs:driver-nodejs",
-
-        "//nodejs:node_modules/@types/node",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-ts_project(
-    name = "steps",
-    srcs = ["UtilSteps.ts"],
-    tsconfig = behaviour_test_ts_config(),
-    declaration = True,
-    deps = [
-        "//nodejs:node_modules/@cucumber/cucumber",
-        "//nodejs:node_modules/@types/node",
-    ],
-    visibility = ["//visibility:public"],
-)
+load("//nodejs/test/behaviour:rules.bzl", "typedb_behaviour_node_test")
 
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
     license_type = "apache-header",
+)
+
+typedb_behaviour_node_test(
+    name = "test",
+    features = ["@vaticle_typedb_behaviour//query/language:fetch.feature"],
+    data = [
+        "//nodejs/test/behaviour/connection/database:steps",
+        "//nodejs/test/behaviour/connection/session:steps",
+        "//nodejs/test/behaviour/connection/transaction:steps",
+        "//nodejs/test/behaviour/query:steps",
+    ],
 )

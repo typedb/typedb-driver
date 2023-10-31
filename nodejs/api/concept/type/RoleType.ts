@@ -120,6 +120,9 @@ export interface RoleType extends Type {
 }
 
 export namespace RoleType {
+
+    export const NAME = "relation:role";
+
     export function proto(roleType: RoleType) {
         return RequestBuilder.Type.RoleType.protoRoleType(roleType.label);
     }

@@ -20,31 +20,31 @@
  */
 
 import {Concept} from "../concept/Concept";
-import {Numeric} from "./Numeric";
+import {Value} from "../concept/value/Value";
 
 /**
  * Contains an element of the group aggregate query result.
  */
-export interface NumericGroup {
+export interface ValueGroup {
     /**
      * Retrieves the concept that is the group owner.
      *
      * ### Examples
      *
      * ```ts
-     * numericGroup.owner
+     * valueGroup.owner
      * ```
      */
     readonly owner: Concept;
 
     /**
-     * Retrieves the <code>Numeric</code> answer of the group.
+     * Retrieves the <code>Value</code> answer of the group, if there is one.
      *
      * ### Examples
      *
      * ```ts
-     * numericGroup.numeric
+     * valueGroup.value
      * ```
      */
-    readonly numeric: Numeric;
+    readonly value: Value | undefined;
 }

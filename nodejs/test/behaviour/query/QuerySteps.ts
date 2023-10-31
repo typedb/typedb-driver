@@ -22,24 +22,26 @@
 import {Then, When} from "@cucumber/cucumber";
 import DataTable from "@cucumber/cucumber/lib/models/data_table";
 import {fail} from "assert";
-import {Attribute, Concept, ConceptMap, ConceptMapGroup, Numeric, NumericGroup, ThingType, Value} from "../../../dist";
+import {Attribute, Concept, ConceptMap, ConceptMapGroup, JSONObject, ThingType, Value, ValueGroup} from "../../../dist";
 import {parseBool} from "../config/Parameters";
 import {tx} from "../connection/ConnectionStepsBase";
-import {assertThrows, assertThrowsWithMessage, splitString} from "../util/Util";
+import {JSONEqualsUnordered, assertThrows, assertThrowsWithMessage, splitString} from "../util/Util";
 import assert = require("assert");
 import Annotation = ThingType.Annotation;
 import ValueType = Concept.ValueType;
 
 export let answers: ConceptMap[] = [];
-let numericAnswer: Numeric;
+let fetchAnswers: JSONObject[] = [];
+let valueAnswer: Value | null;
 let answerGroups: ConceptMapGroup[] = []
-let numericAnswerGroups: NumericGroup[] = []
+let valueAnswerGroups: ValueGroup[] = []
 
 function clearAnswers() {
     answers.length = 0;
-    numericAnswer = null;
+    fetchAnswers.length = 0;
+    valueAnswer = null;
     answerGroups.length = 0;
-    numericAnswerGroups.length = 0;
+    valueAnswerGroups.length = 0;
 }
 
 When("typeql define", async (query: string) => {
@@ -112,40 +114,49 @@ When("get answers of typeql update", async (query: string) => {
     answers = await tx().query.update(query).collect();
 });
 
-When("get answers of typeql match", async (query: string) => {
+When("get answers of typeql get", async (query: string) => {
     clearAnswers();
-    answers = await tx().query.match(query).collect();
+    answers = await tx().query.get(query).collect();
 });
 
-Then("typeql match; throws exception", async (query: string) => {
-    await assertThrows(async () => await tx().query.match(query).first());
-});
-
-Then("typeql match; throws exception containing {string}", async (error: string, query: string) => {
-    await assertThrowsWithMessage(async () => await tx().query.match(query).first(), error);
-});
-
-When("get answer of typeql match aggregate", async (query: string) => {
+When("get answers of typeql fetch", async (query: string) => {
     clearAnswers();
-    numericAnswer = await tx().query.matchAggregate(query);
+    fetchAnswers = await tx().query.fetch(query).collect();
 });
 
-When("get answers of typeql match group", async (query: string) => {
+When("typeql fetch; throws exception", async (query: string) => {
+    await assertThrows(async () => await tx().query.fetch(query).collect());
+});
+
+Then("typeql get; throws exception", async (query: string) => {
+    await assertThrows(async () => await tx().query.get(query).first());
+});
+
+Then("typeql get; throws exception containing {string}", async (error: string, query: string) => {
+    await assertThrowsWithMessage(async () => await tx().query.get(query).first(), error);
+});
+
+When("get answer of typeql get aggregate", async (query: string) => {
     clearAnswers();
-    answerGroups = await tx().query.matchGroup(query).collect();
+    valueAnswer = await tx().query.getAggregate(query);
 });
 
-When("typeql match group; throws exception", async (query: string) => {
-    await assertThrows(async () => await tx().query.matchGroup(query).first());
+When("get answers of typeql get group", async (query: string) => {
+    clearAnswers();
+    answerGroups = await tx().query.getGroup(query).collect();
+});
+
+When("typeql get group; throws exception", async (query: string) => {
+    await assertThrows(async () => await tx().query.getGroup(query).first());
 })
 
-When("get answers of typeql match group aggregate", async (query: string) => {
+When("get answers of typeql get group aggregate", async (query: string) => {
     clearAnswers();
-    numericAnswerGroups = await tx().query.matchGroupAggregate(query).collect();
+    valueAnswerGroups = await tx().query.getGroupAggregate(query).collect();
 });
 
-When("typeql match aggregate; throws exception", async (query: string) => {
-    await assertThrows(async () => await tx().query.matchAggregate(query));
+When("typeql get aggregate; throws exception", async (query: string) => {
+    await assertThrows(async () => await tx().query.getAggregate(query));
 
 })
 
@@ -347,27 +358,29 @@ Then("order of answer concepts is", async (answerIdentifiersTable: DataTable) =>
     }
 });
 
-function getNumericValue(numeric: Numeric) {
-    if (numeric.isNumber()) return numeric.asNumber();
-    else if (numeric.isNaN()) return NaN;
-    else throw new Error(`Unexpected Numeric value: ${numeric}`);
+function getNumberFromValue(value: Value | null) {
+    if (value) {
+        if (value.isLong() || value.isDouble()) {
+            return value.value;
+        } else throw new Error(`Expected numerical Value, but got: ${value}`);
+    } else return NaN;
 }
 
-function assertNumericValue(numeric: Numeric, expectedAnswer: number, reason?: string) {
-    if (numeric.isNumber()) {
-        assert(Math.abs(expectedAnswer - numeric.asNumber()) < 0.001, reason);
+function assertValue(value: Value | null, expectedAnswer: number, reason?: string) {
+    if (value) {
+        assert(Math.abs(expectedAnswer - (value.value as number)) < 0.001, reason);
     } else {
         fail();
     }
 }
 
 Then("aggregate value is: {float}", async (expectedAnswer: number) => {
-    assert(numericAnswer != null, "The last query executed was not an aggregate query.");
-    assertNumericValue(numericAnswer, expectedAnswer);
+    assert(valueAnswer != null, "The last query executed was not an aggregate query.");
+    assertValue(valueAnswer, expectedAnswer);
 });
 
 Then("aggregate answer is not a number", async () => {
-    assert(numericAnswer.isNaN());
+    assert(!valueAnswer);
 });
 
 class AnswerIdentifierGroup {
@@ -440,22 +453,22 @@ Then("group aggregate values are", async (answerIdentifiersTable: DataTable) => 
         const owner = rawAnswerIdentifier[AnswerIdentifierGroup.GROUP_COLUMN_NAME];
         expectations[owner] = parseFloat(rawAnswerIdentifier.value);
     }
-    assert.strictEqual(numericAnswerGroups.length, Object.keys(expectations).length,
-        `Expected [${Object.keys(expectations).length}], but found [${numericAnswerGroups.length}].`);
+    assert.strictEqual(valueAnswerGroups.length, Object.keys(expectations).length,
+        `Expected [${Object.keys(expectations).length}], but found [${valueAnswerGroups.length}].`);
 
     for (const [ownerIdentifier, expectedAnswer] of Object.entries(expectations)) {
         const identifier = parseConceptIdentifier(ownerIdentifier);
-        let numericGroup;
-        for (const group of numericAnswerGroups) {
+        let valueGroup;
+        for (const group of valueAnswerGroups) {
             if (await identifier.matches(group.owner)) {
-                numericGroup = group;
+                valueGroup = group;
                 break;
             }
         }
-        assert(numericGroup, `The group identifier [${JSON.stringify(ownerIdentifier)}] does not match any of the answer group owners.`);
+        assert(valueGroup, `The group identifier [${JSON.stringify(ownerIdentifier)}] does not match any of the answer group owners.`);
 
-        const actualAnswer = getNumericValue(numericGroup.numeric);
-        assertNumericValue(numericGroup.numeric, expectedAnswer,
+        const actualAnswer = getNumberFromValue(valueGroup.value);
+        assertValue(valueGroup.numeric, expectedAnswer,
             `Expected answer [${expectedAnswer}] for group [${JSON.stringify(ownerIdentifier)}], but got [${actualAnswer}]`);
     }
 });
@@ -489,13 +502,18 @@ function applyQueryTemplate(template: string, answer: ConceptMap): string {
 Then("each answer satisfies", async (template: string) => {
     for (const answer of answers) {
         const query = applyQueryTemplate(template, answer);
-        assert.strictEqual((await tx().query.match(query).collect()).length, 1);
+        assert.strictEqual((await tx().query.get(query).collect()).length, 1);
     }
 });
 
-Then("templated typeql match; throws exception", async (template: string) => {
+Then("templated typeql get; throws exception", async (template: string) => {
     for (const answer of answers) {
         const query = applyQueryTemplate(template, answer);
-        await assertThrows(async () => await tx().query.match(query).collect());
+        await assertThrows(async () => await tx().query.get(query).collect());
     }
 });
+
+Then("fetch answers are", async (answers: string) => {
+    let jsonAnswers = JSON.parse(answers);
+    assert.ok(JSONEqualsUnordered(jsonAnswers, fetchAnswers));
+})

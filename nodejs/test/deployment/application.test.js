@@ -56,7 +56,7 @@ describe("Basic TypeDBDriver Tests", () => {
     test("match", async () => {
         let session = await driver.session("typedb", SessionType.DATA);
         let tx = await session.transaction(TransactionType.WRITE);
-        await tx.query.match("match $x sub thing;");
+        await tx.query.get("match $x sub thing; get;");
         await tx.close();
         return await session.close();
     });

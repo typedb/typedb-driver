@@ -22,68 +22,84 @@
 import {Stream} from "../../common/util/Stream";
 import {ConceptMap} from "../answer/ConceptMap";
 import {ConceptMapGroup} from "../answer/ConceptMapGroup";
-import {Numeric} from "../answer/Numeric";
-import {NumericGroup} from "../answer/NumericGroup";
+import {ValueGroup} from "../answer/ValueGroup";
 import {TypeDBOptions} from "../connection/TypeDBOptions";
 import {Explanation} from "../logic/Explanation";
+import {Value} from "../concept/value/Value";
+import {JSON} from "../answer/JSON";
 
 /** Provides methods for executing TypeQL queries in the transaction. */
 export interface QueryManager {
     /**
-     * Performs a TypeQL Match (Get) query in the transaction.
+     * Performs a TypeQL Get query in the transaction.
      *
      * ### Examples
      *
      * ```ts
-     * transaction.query.match(query, options)
+     * transaction.query.get(query, options)
      * ```
      *
-     * @param query - The TypeQL Match (Get) query to be executed
+     * @param query - The TypeQL Get query to be executed
      * @param options - Specify query options
      */
-    match(query: string, options?: TypeDBOptions): Stream<ConceptMap>;
+    get(query: string, options?: TypeDBOptions): Stream<ConceptMap>;
 
     /**
-     * Performs a TypeQL Match Aggregate query in the transaction.
+     * Performs a TypeQL Get Aggregate query in the transaction. Returns an empty promise if the aggregate
+     * was not well-defined (such as stddev of 0 elements).
      *
      * ### Examples
      *
      * ```ts
-     * transaction.query.matchAggregate(query, options)
+     * transaction.query.getAggregate(query, options)
      * ```
      *
-     * @param query - The TypeQL Match Aggregate query to be executed
+     * @param query - The TypeQL Get Aggregate query to be executed
      * @param options - Specify query options
      */
-    matchAggregate(query: string, options?: TypeDBOptions): Promise<Numeric>;
+    getAggregate(query: string, options?: TypeDBOptions): Promise<Value | undefined>;
 
     /**
-     * Performs a TypeQL Match Group query in the transaction.
+     * Performs a TypeQL Get Group query in the transaction.
      *
      * ### Examples
      *
      * ```ts
-     * transaction.query.matchGroup(query, options)
+     * transaction.query.getGroup(query, options)
      * ```
      *
-     * @param query - The TypeQL Match Group query to be executed
+     * @param query - The TypeQL Get Group query to be executed
      * @param options - Specify query options
      */
-    matchGroup(query: string, options?: TypeDBOptions): Stream<ConceptMapGroup>;
+    getGroup(query: string, options?: TypeDBOptions): Stream<ConceptMapGroup>;
 
     /**
-     * Performs a TypeQL Match Group Aggregate query in the transaction.
+     * Performs a TypeQL Get Group Aggregate query in the transaction.
      *
      * ### Examples
      *
      * ```ts
-     * transaction.query.matchGroupAggregate(query, options)
+     * transaction.query.getGroupAggregate(query, options)
      * ```
      *
-     * @param query - The TypeQL Match Group Aggregate query to be executed
+     * @param query - The TypeQL Get Group Aggregate query to be executed
      * @param options - Specify query options
      */
-    matchGroupAggregate(query: string, options?: TypeDBOptions): Stream<NumericGroup>;
+    getGroupAggregate(query: string, options?: TypeDBOptions): Stream<ValueGroup>;
+
+    /**
+     * Performs a TypeQL Fetch query in the transaction.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * transaction.query.fetch(query, options)
+     * ```
+     *
+     * @param query - The TypeQL Fetch query to be executed
+     * @param options - Specify query options
+     */
+    fetch(query: string, options?: TypeDBOptions): Stream<JSON>;
 
     /**
      * Performs a TypeQL Insert query in the transaction.
