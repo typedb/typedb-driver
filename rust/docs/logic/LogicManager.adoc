@@ -93,7 +93,7 @@ pub fn put_rule(
     &self,
     label: String,
     when: Conjunction,
-    then: Variable
+    then: Statement
 ) -> impl Promise<'tx, Result<Rule>>
 ----
 
@@ -107,7 +107,7 @@ Creates a new Rule if none exists with the given label, or replaces the existing
 |Name |Description |Type
 a| `label` a| The label of the Rule to create or replace a| `String`
 a| `when` a| The when body of the rule to create a| `Conjunction`
-a| `then` a| The then body of the rule to create a| `Variable`
+a| `then` a| The then body of the rule to create a| `Statement`
 |===
 
 [caption=""]
