@@ -85,8 +85,8 @@ public abstract class JSON {
         throw new TypeDBDriverException(ILLEGAL_CAST, className(List.class));
     }
 
-    public float asNumber() {
-        throw new TypeDBDriverException(ILLEGAL_CAST, className(float.class));
+    public double asNumber() {
+        throw new TypeDBDriverException(ILLEGAL_CAST, className(double.class));
     }
 
     public java.lang.String asString() {
@@ -131,9 +131,9 @@ public abstract class JSON {
     }
 
     private static class Number extends JSON {
-        private final float number;
+        private final double number;
 
-        Number(float number) {
+        Number(double number) {
             this.number = number;
         }
 
@@ -141,7 +141,7 @@ public abstract class JSON {
             return true;
         }
 
-        public float asNumber() {
+        public double asNumber() {
             return number;
         }
     }
