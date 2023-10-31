@@ -66,6 +66,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class QuerySteps {
     private static List<ConceptMap> answers;
@@ -285,8 +286,9 @@ public class QuerySteps {
     @Then("aggregate value is: {double}")
     public void aggregate_value_is(double expectedAnswer) {
         assertNotNull("The last executed query was not an aggregate query", valueAnswer);
-        assertEquals(String.format("Expected answer to equal %f, but it was %f.", expectedAnswer, valueAnswer.asDouble()),
-                expectedAnswer, valueAnswer.asDouble(), 0.001);
+        double value = valueAnswer.isDouble() ? valueAnswer.asDouble() : valueAnswer.asLong();
+        assertEquals(String.format("Expected answer to equal %f, but it was %f.", expectedAnswer, value),
+                expectedAnswer, value, 0.001);
     }
 
     @Then("aggregate answer is not a number")
@@ -387,7 +389,7 @@ public class QuerySteps {
                     .orElse(null);
             assertNotNull(String.format("The group identifier [%s] does not match any of the answer group owners.", expectation.getKey()), answerGroup);
 
-            double actualAnswer = answerGroup.value().asDouble();
+            double actualAnswer = answerGroup.value().isDouble() ? answerGroup.value().asDouble() : answerGroup.value().asLong();
             assertEquals(
                     String.format("Expected answer [%f] for group [%s], but got [%f]",
                             expectedAnswer, expectation.getKey(), actualAnswer),
