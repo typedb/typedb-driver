@@ -64,4 +64,3 @@ impl fmt::Display for JSON {
         Ok(())
     }
 }
-
