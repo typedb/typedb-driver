@@ -304,7 +304,7 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         .factory/test-enterprise.sh //java/test/behaviour/driver/query/... --test_output=errors
 
-    test-java-behaviour-match-core:
+    test-java-behaviour-read-core:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
@@ -322,7 +322,7 @@ build:
         .factory/test-core.sh //java/test/behaviour/query/language/modifiers/... --test_output=errors
         .factory/test-core.sh //java/test/behaviour/query/language/expression/... --test_output=errors
 
-    test-java-behaviour-match-enterprise:
+    test-java-behaviour-read-enterprise:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
@@ -528,7 +528,7 @@ build:
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
-    test-python-behaviour-match-core:
+    test-python-behaviour-read-core:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
@@ -556,7 +556,7 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    test-python-behaviour-match-enterprise:
+    test-python-behaviour-read-enterprise:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
