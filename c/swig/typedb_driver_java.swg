@@ -241,12 +241,6 @@
 %nojavaexception concept_map_group_to_string;
 %nojavaexception concept_map_group_equals;
 
-%nojavaexception value_get_double;
-%nojavaexception value_get_long;
-%nojavaexception value_is_double;
-%nojavaexception value_is_long;
-%nojavaexception value_is_nan;
-%nojavaexception value_to_string;
 %nojavaexception value_group_to_string;
 %nojavaexception value_group_equals;
 %nojavaexception value_group_get_owner;
@@ -279,9 +273,6 @@
 %nojavaexception ~Explainables;
 %nojavaexception ~Explanation;
 %nojavaexception ~ExplanationIterator;
-%nojavaexception ~Value;
-%nojavaexception ~ValueGroup;
-%nojavaexception ~ValueGroupIterator;
 %nojavaexception ~Options;
 %nojavaexception ~ReplicaInfo;
 %nojavaexception ~ReplicaInfoIterator;
@@ -301,6 +292,9 @@
 %nojavaexception ~User;
 %nojavaexception ~UserIterator;
 %nojavaexception ~UserManager;
+%nojavaexception ~Value;
+%nojavaexception ~ValueGroup;
+%nojavaexception ~ValueGroupIterator;
 
 /* one-shot network requests do not throw when first constructed, only when resolved */
 %nojavaexception concepts_get_entity_type;
