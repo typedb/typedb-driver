@@ -154,7 +154,7 @@ public abstract class JSON {
         }
 
         public boolean isString() {
-            return false;
+            return true;
         }
 
         public java.lang.String asString() {
