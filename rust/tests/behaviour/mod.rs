@@ -39,7 +39,7 @@ use typedb_driver::{
     answer::{ConceptMap, ConceptMapGroup, ValueGroup, JSON},
     concept::{Attribute, AttributeType, Entity, EntityType, Relation, RelationType, Thing, Value},
     logic::Rule,
-    Connection, Database, DatabaseManager, Result as TypeDBResult, Transaction, UserManager,
+    Connection, Credential, Database, DatabaseManager, Result as TypeDBResult, Transaction, UserManager,
 };
 
 use self::session_tracker::SessionTracker;
@@ -63,8 +63,8 @@ impl Context {
     const GROUP_COLUMN_NAME: &'static str = "owner";
     const VALUE_COLUMN_NAME: &'static str = "value";
     const DEFAULT_DATABASE: &'static str = "test";
-    // const ADMIN_USERNAME: &'static str = "admin";
-    // const ADMIN_PASSWORD: &'static str = "password";
+    const ADMIN_USERNAME: &'static str = "admin";
+    const ADMIN_PASSWORD: &'static str = "password";
     const STEP_REATTEMPT_SLEEP: Duration = Duration::from_millis(250);
     const STEP_REATTEMPT_LIMIT: u32 = 20;
 
@@ -96,13 +96,12 @@ impl Context {
 
     pub async fn after_scenario(&mut self) -> TypeDBResult {
         sleep(Context::STEP_REATTEMPT_SLEEP).await;
-        self.set_connection(Connection::new_core("localhost:1729")?);
-        // self.set_connection(Connection::new_enterprise(
-        //     &["localhost:11729", "localhost:21729", "localhost:31729"],
-        //     Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&self.tls_root_ca))?,
-        // )?);
+        self.set_connection(Connection::new_enterprise(
+            &["localhost:11729", "localhost:21729", "localhost:31729"],
+            Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&self.tls_root_ca))?,
+        )?);
         self.cleanup_databases().await;
-        // self.cleanup_users().await;
+        self.cleanup_users().await;
         Ok(())
     }
 
@@ -114,19 +113,19 @@ impl Context {
         try_join_all(self.databases.all().await.unwrap().into_iter().map(Database::delete)).await.ok();
     }
 
-    // pub async fn cleanup_users(&mut self) {
-    //     try_join_all(
-    //         self.users
-    //             .all()
-    //             .await
-    //             .unwrap()
-    //             .into_iter()
-    //             .filter(|user| user.username != Context::ADMIN_USERNAME)
-    //             .map(|user| self.users.delete(user.username)),
-    //     )
-    //     .await
-    //     .ok();
-    // }
+    pub async fn cleanup_users(&mut self) {
+        try_join_all(
+            self.users
+                .all()
+                .await
+                .unwrap()
+                .into_iter()
+                .filter(|user| user.username != Context::ADMIN_USERNAME)
+                .map(|user| self.users.delete(user.username)),
+        )
+        .await
+        .ok();
+    }
 
     pub fn transaction(&self) -> &Transaction {
         self.session_trackers.get(0).unwrap().transaction()
@@ -221,12 +220,11 @@ impl Default for Context {
         let tls_root_ca = PathBuf::from(
             std::env::var("ROOT_CA").expect("ROOT_CA environment variable needs to be set for enterprise tests to run"),
         );
-        let connection = Connection::new_core("localhost:1729").unwrap();
-        // let connection = Connection::new_enterprise(
-        //     &["localhost:11729", "localhost:21729", "localhost:31729"],
-        //     Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&tls_root_ca)).unwrap(),
-        // )
-        // .unwrap();
+        let connection = Connection::new_enterprise(
+            &["localhost:11729", "localhost:21729", "localhost:31729"],
+            Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&tls_root_ca)).unwrap(),
+        )
+        .unwrap();
         let databases = DatabaseManager::new(connection.clone());
         let users = UserManager::new(connection.clone());
         Self {
