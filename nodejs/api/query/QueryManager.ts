@@ -90,6 +90,9 @@ export interface QueryManager {
     /**
      * Performs a TypeQL Fetch query in the transaction.
      *
+     * Returns a stream of JSON Objects of strings to JSON.
+     * JSON can be: Arrays of JSON, Objects of strings to JSON, or primitives such as strings or numbers or booleans.
+     *
      * ### Examples
      *
      * ```ts

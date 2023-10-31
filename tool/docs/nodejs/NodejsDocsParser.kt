@@ -207,7 +207,7 @@ class NodejsDocParser : Callable<Unit> {
 
         return Method(
                 name = methodName,
-                anchor = "${classAnchor}_${replaceSymbolsForAnchor(methodName)}",
+                anchor = "${classAnchor}_${replaceSymbolsForAnchor(methodName + methodSignature)}",
                 signature = methodSignature,
                 args = methodArgs,
                 description = methodDescr,

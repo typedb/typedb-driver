@@ -48,7 +48,7 @@ Returns the string representation of the scoped name.
 .Returns
 `string`
 
-[#_Label_equals]
+[#_Label_equalsequals_that_:_boolean]
 ==== equals
 
 [source,nodejs]
@@ -71,7 +71,7 @@ a| `that` a| The label to compare to. a| `Label`
 .Returns
 `boolean`
 
-[#_Label_toString]
+[#_Label_toStringtoString__:_string]
 ==== toString
 
 [source,nodejs]

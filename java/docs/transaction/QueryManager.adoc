@@ -239,6 +239,456 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 transaction.query().explain(explainable, options)
 ----
 
+[#_QueryManager_fetch_com_vaticle_typeql_lang_query_TypeQLFetch]
+==== fetch
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<JSON> fetch​(com.vaticle.typeql.lang.query.TypeQLFetch query)
+----
+
+Performs a TypeQL Fetch (Fetch) with default options.
+
+
+See also: <<#_fetch_com_vaticle_typeql_lang_query_TypeQLFetch_com_vaticle_typedb_driver_api_TypeDBOptions,``fetch(TypeQLFetch, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<JSON>`
+
+[#_QueryManager_fetch_com_vaticle_typeql_lang_query_TypeQLFetch_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== fetch
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<JSON> fetch​(com.vaticle.typeql.lang.query.TypeQLFetch query,
+                                    TypeDBOptions options)
+----
+
+Performs a TypeQL Fetch (Fetch) query in the transaction. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Fetch (Fetch) query to be executed a| `com.vaticle.typeql.lang.query.TypeQLFetch`
+a| `options` a| Specify query options a| `TypeDBOptions`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<JSON>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+transaction.query().fetch(query, options)
+----
+
+[#_QueryManager_fetch_java_lang_String]
+==== fetch
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<JSON> fetch​(java.lang.String query)
+----
+
+Performs a TypeQL Fetch (Fetch) with default options.
+
+
+See also: <<#_fetch_com_vaticle_typeql_lang_query_TypeQLFetch_com_vaticle_typedb_driver_api_TypeDBOptions,``fetch(TypeQLFetch, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<JSON>`
+
+[#_QueryManager_fetch_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== fetch
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<JSON> fetch​(java.lang.String query,
+                                    TypeDBOptions options)
+----
+
+
+See also: <<#_fetch_com_vaticle_typeql_lang_query_TypeQLFetch_com_vaticle_typedb_driver_api_TypeDBOptions,``fetch(TypeQLFetch, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<JSON>`
+
+[#_QueryManager_get_com_vaticle_typeql_lang_query_TypeQLGet]
+==== get
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<ConceptMap> get​(com.vaticle.typeql.lang.query.TypeQLGet query)
+----
+
+Performs a TypeQL Get (Get) with default options.
+
+
+See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_com_vaticle_typedb_driver_api_TypeDBOptions,``get(TypeQLGet, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<ConceptMap>`
+
+[#_QueryManager_get_com_vaticle_typeql_lang_query_TypeQLGet_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== get
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<ConceptMap> get​(com.vaticle.typeql.lang.query.TypeQLGet query,
+                                        TypeDBOptions options)
+----
+
+Performs a TypeQL Get (Get) query in the transaction. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Get (Get) query to be executed a| `com.vaticle.typeql.lang.query.TypeQLGet`
+a| `options` a| Specify query options a| `TypeDBOptions`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<ConceptMap>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+transaction.query().get(query, options)
+----
+
+[#_QueryManager_get_java_lang_String]
+==== get
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<ConceptMap> get​(java.lang.String query)
+----
+
+Performs a TypeQL Get (Get) with default options.
+
+
+See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_com_vaticle_typedb_driver_api_TypeDBOptions,``get(TypeQLGet, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<ConceptMap>`
+
+[#_QueryManager_get_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== get
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<ConceptMap> get​(java.lang.String query,
+                                        TypeDBOptions options)
+----
+
+
+See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_com_vaticle_typedb_driver_api_TypeDBOptions,``get(TypeQLGet, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<ConceptMap>`
+
+[#_QueryManager_get_com_vaticle_typeql_lang_query_TypeQLGet_Aggregate]
+==== get
+
+[source,java]
+----
+@CheckReturnValue
+Promise<Value> get​(com.vaticle.typeql.lang.query.TypeQLGet.Aggregate query)
+----
+
+Performs a TypeQL Get Aggregate query with default options.
+
+
+See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions,``get(TypeQLGet.Aggregate, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`Promise<Value>`
+
+[#_QueryManager_get_com_vaticle_typeql_lang_query_TypeQLGet_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== get
+
+[source,java]
+----
+@CheckReturnValue
+Promise<Value> get​(com.vaticle.typeql.lang.query.TypeQLGet.Aggregate query,
+                   TypeDBOptions options)
+----
+
+Performs a TypeQL Get Aggregate query in the transaction. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Get Aggregate query to be executed a| `com.vaticle.typeql.lang.query.TypeQLGet.Aggregate`
+a| `options` a| Specify query options a| `TypeDBOptions`
+|===
+
+[caption=""]
+.Returns
+`Promise<Value>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+transaction.query().getAggregate(query, options).resolve()
+----
+
+[#_QueryManager_get_com_vaticle_typeql_lang_query_TypeQLGet_Group]
+==== get
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<ConceptMapGroup> get​(com.vaticle.typeql.lang.query.TypeQLGet.Group query)
+----
+
+Performs a TypeQL Get Group query with default options.
+
+
+See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Group_com_vaticle_typedb_driver_api_TypeDBOptions,``get(TypeQLGet.Group, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<ConceptMapGroup>`
+
+[#_QueryManager_get_com_vaticle_typeql_lang_query_TypeQLGet_Group_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== get
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<ConceptMapGroup> get​(com.vaticle.typeql.lang.query.TypeQLGet.Group query,
+                                             TypeDBOptions options)
+----
+
+Performs a TypeQL Get Group query in the transaction. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Get Group query to be executed a| `com.vaticle.typeql.lang.query.TypeQLGet.Group`
+a| `options` a| Specify query options a| `TypeDBOptions`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<ConceptMapGroup>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+transaction.query().getGroup(query, options)
+----
+
+[#_QueryManager_get_com_vaticle_typeql_lang_query_TypeQLGet_Group_Aggregate]
+==== get
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<ValueGroup> get​(com.vaticle.typeql.lang.query.TypeQLGet.Group.Aggregate query)
+----
+
+Performs a TypeQL Get Group Aggregate query with default options.
+
+
+See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Group_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions,``get(TypeQLGet.Group.Aggregate, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<ValueGroup>`
+
+[#_QueryManager_get_com_vaticle_typeql_lang_query_TypeQLGet_Group_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== get
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<ValueGroup> get​(com.vaticle.typeql.lang.query.TypeQLGet.Group.Aggregate query,
+                                        TypeDBOptions options)
+----
+
+Performs a TypeQL Get Group Aggregate query in the transaction. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `query` a| The TypeQL Get Group Aggregate query to be executed a| `com.vaticle.typeql.lang.query.TypeQLGet.Group.Aggregate`
+a| `options` a| Specify query options a| `TypeDBOptions`
+|===
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<ValueGroup>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+transaction.query().getGroupAggregate(query, options)
+----
+
+[#_QueryManager_getAggregate_java_lang_String]
+==== getAggregate
+
+[source,java]
+----
+@CheckReturnValue
+Promise<Value> getAggregate​(java.lang.String query)
+----
+
+Performs a TypeQL Get Aggregate query with default options.
+
+
+See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions,``get(TypeQLGet.Aggregate, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`Promise<Value>`
+
+[#_QueryManager_getAggregate_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== getAggregate
+
+[source,java]
+----
+@CheckReturnValue
+Promise<Value> getAggregate​(java.lang.String query,
+                            TypeDBOptions options)
+----
+
+
+See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions,``get(TypeQLGet.Aggregate, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`Promise<Value>`
+
+[#_QueryManager_getGroup_java_lang_String]
+==== getGroup
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<ConceptMapGroup> getGroup​(java.lang.String query)
+----
+
+Performs a TypeQL Get Group query with default options.
+
+
+See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Group_com_vaticle_typedb_driver_api_TypeDBOptions,``get(TypeQLGet.Group, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<ConceptMapGroup>`
+
+[#_QueryManager_getGroup_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== getGroup
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<ConceptMapGroup> getGroup​(java.lang.String query,
+                                                  TypeDBOptions options)
+----
+
+
+See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Group_com_vaticle_typedb_driver_api_TypeDBOptions,``get(TypeQLGet.Group, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<ConceptMapGroup>`
+
+[#_QueryManager_getGroupAggregate_java_lang_String]
+==== getGroupAggregate
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<ValueGroup> getGroupAggregate​(java.lang.String query)
+----
+
+Performs a TypeQL Get Group Aggregate query with default options.
+
+
+See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Group_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions,``get(TypeQLGet.Group.Aggregate, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<ValueGroup>`
+
+[#_QueryManager_getGroupAggregate_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== getGroupAggregate
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<ValueGroup> getGroupAggregate​(java.lang.String query,
+                                                      TypeDBOptions options)
+----
+
+
+See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Group_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions,``get(TypeQLGet.Group.Aggregate, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<ValueGroup>`
+
 [#_QueryManager_insert_com_vaticle_typeql_lang_query_TypeQLInsert]
 ==== insert
 
@@ -324,366 +774,6 @@ See also: <<#_insert_com_vaticle_typeql_lang_query_TypeQLInsert_com_vaticle_type
 [caption=""]
 .Returns
 `java.util.stream.Stream<ConceptMap>`
-
-[#_QueryManager_match_com_vaticle_typeql_lang_query_TypeQLMatch]
-==== match
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<ConceptMap> match​(com.vaticle.typeql.lang.query.TypeQLMatch query)
-----
-
-Performs a TypeQL Match (Get) with default options.
-
-
-See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_com_vaticle_typedb_driver_api_TypeDBOptions,``match(TypeQLMatch, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<ConceptMap>`
-
-[#_QueryManager_match_com_vaticle_typeql_lang_query_TypeQLMatch_com_vaticle_typedb_driver_api_TypeDBOptions]
-==== match
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<ConceptMap> match​(com.vaticle.typeql.lang.query.TypeQLMatch query,
-                                          TypeDBOptions options)
-----
-
-Performs a TypeQL Match (Get) query in the transaction. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `query` a| The TypeQL Match (Get) query to be executed a| `com.vaticle.typeql.lang.query.TypeQLMatch`
-a| `options` a| Specify query options a| `TypeDBOptions`
-|===
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<ConceptMap>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-transaction.query().match(query, options)
-----
-
-[#_QueryManager_match_java_lang_String]
-==== match
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<ConceptMap> match​(java.lang.String query)
-----
-
-Performs a TypeQL Match (Get) with default options.
-
-
-See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_com_vaticle_typedb_driver_api_TypeDBOptions,``match(TypeQLMatch, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<ConceptMap>`
-
-[#_QueryManager_match_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
-==== match
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<ConceptMap> match​(java.lang.String query,
-                                          TypeDBOptions options)
-----
-
-
-See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_com_vaticle_typedb_driver_api_TypeDBOptions,``match(TypeQLMatch, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<ConceptMap>`
-
-[#_QueryManager_match_com_vaticle_typeql_lang_query_TypeQLMatch_Aggregate]
-==== match
-
-[source,java]
-----
-@CheckReturnValue
-Promise<Numeric> match​(com.vaticle.typeql.lang.query.TypeQLMatch.Aggregate query)
-----
-
-Performs a TypeQL Match Aggregate query with default options.
-
-
-See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions,``match(TypeQLMatch.Aggregate, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`Promise<Numeric>`
-
-[#_QueryManager_match_com_vaticle_typeql_lang_query_TypeQLMatch_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions]
-==== match
-
-[source,java]
-----
-@CheckReturnValue
-Promise<Numeric> match​(com.vaticle.typeql.lang.query.TypeQLMatch.Aggregate query,
-                       TypeDBOptions options)
-----
-
-Performs a TypeQL Match Aggregate query in the transaction. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `query` a| The TypeQL Match Aggregate query to be executed a| `com.vaticle.typeql.lang.query.TypeQLMatch.Aggregate`
-a| `options` a| Specify query options a| `TypeDBOptions`
-|===
-
-[caption=""]
-.Returns
-`Promise<Numeric>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-transaction.query().matchAggregate(query, options).resolve()
-----
-
-[#_QueryManager_match_com_vaticle_typeql_lang_query_TypeQLMatch_Group]
-==== match
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<ConceptMapGroup> match​(com.vaticle.typeql.lang.query.TypeQLMatch.Group query)
-----
-
-Performs a TypeQL Match Group query with default options.
-
-
-See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Group_com_vaticle_typedb_driver_api_TypeDBOptions,``match(TypeQLMatch.Group, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<ConceptMapGroup>`
-
-[#_QueryManager_match_com_vaticle_typeql_lang_query_TypeQLMatch_Group_com_vaticle_typedb_driver_api_TypeDBOptions]
-==== match
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<ConceptMapGroup> match​(com.vaticle.typeql.lang.query.TypeQLMatch.Group query,
-                                               TypeDBOptions options)
-----
-
-Performs a TypeQL Match Group query in the transaction. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `query` a| The TypeQL Match Group query to be executed a| `com.vaticle.typeql.lang.query.TypeQLMatch.Group`
-a| `options` a| Specify query options a| `TypeDBOptions`
-|===
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<ConceptMapGroup>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-transaction.query().matchGroup(query, options)
-----
-
-[#_QueryManager_match_com_vaticle_typeql_lang_query_TypeQLMatch_Group_Aggregate]
-==== match
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<NumericGroup> match​(com.vaticle.typeql.lang.query.TypeQLMatch.Group.Aggregate query)
-----
-
-Performs a TypeQL Match Group Aggregate query with default options.
-
-
-See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Group_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions,``match(TypeQLMatch.Group.Aggregate, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<NumericGroup>`
-
-[#_QueryManager_match_com_vaticle_typeql_lang_query_TypeQLMatch_Group_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions]
-==== match
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<NumericGroup> match​(com.vaticle.typeql.lang.query.TypeQLMatch.Group.Aggregate query,
-                                            TypeDBOptions options)
-----
-
-Performs a TypeQL Match Group Aggregate query in the transaction. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `query` a| The TypeQL Match Group Aggregate query to be executed a| `com.vaticle.typeql.lang.query.TypeQLMatch.Group.Aggregate`
-a| `options` a| Specify query options a| `TypeDBOptions`
-|===
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<NumericGroup>`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-transaction.query().matchGroupAggregate(query, options)
-----
-
-[#_QueryManager_matchAggregate_java_lang_String]
-==== matchAggregate
-
-[source,java]
-----
-@CheckReturnValue
-Promise<Numeric> matchAggregate​(java.lang.String query)
-----
-
-Performs a TypeQL Match Aggregate query with default options.
-
-
-See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions,``match(TypeQLMatch.Aggregate, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`Promise<Numeric>`
-
-[#_QueryManager_matchAggregate_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
-==== matchAggregate
-
-[source,java]
-----
-@CheckReturnValue
-Promise<Numeric> matchAggregate​(java.lang.String query,
-                                TypeDBOptions options)
-----
-
-
-See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions,``match(TypeQLMatch.Aggregate, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`Promise<Numeric>`
-
-[#_QueryManager_matchGroup_java_lang_String]
-==== matchGroup
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<ConceptMapGroup> matchGroup​(java.lang.String query)
-----
-
-Performs a TypeQL Match Group query with default options.
-
-
-See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Group_com_vaticle_typedb_driver_api_TypeDBOptions,``match(TypeQLMatch.Group, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<ConceptMapGroup>`
-
-[#_QueryManager_matchGroup_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
-==== matchGroup
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<ConceptMapGroup> matchGroup​(java.lang.String query,
-                                                    TypeDBOptions options)
-----
-
-
-See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Group_com_vaticle_typedb_driver_api_TypeDBOptions,``match(TypeQLMatch.Group, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<ConceptMapGroup>`
-
-[#_QueryManager_matchGroupAggregate_java_lang_String]
-==== matchGroupAggregate
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<NumericGroup> matchGroupAggregate​(java.lang.String query)
-----
-
-Performs a TypeQL Match Group Aggregate query with default options.
-
-
-See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Group_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions,``match(TypeQLMatch.Group.Aggregate, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<NumericGroup>`
-
-[#_QueryManager_matchGroupAggregate_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
-==== matchGroupAggregate
-
-[source,java]
-----
-@CheckReturnValue
-java.util.stream.Stream<NumericGroup> matchGroupAggregate​(java.lang.String query,
-                                                          TypeDBOptions options)
-----
-
-
-See also: <<#_match_com_vaticle_typeql_lang_query_TypeQLMatch_Group_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions,``match(TypeQLMatch.Group.Aggregate, TypeDBOptions)``>>
-
-
-[caption=""]
-.Returns
-`java.util.stream.Stream<NumericGroup>`
 
 [#_QueryManager_undefine_com_vaticle_typeql_lang_query_TypeQLUndefine]
 ==== undefine

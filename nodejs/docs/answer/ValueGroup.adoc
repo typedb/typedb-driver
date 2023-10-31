@@ -1,0 +1,19 @@
+[#_ValueGroup]
+=== ValueGroup
+
+Contains an element of the group aggregate query result.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `owner` a| `Concept` a| Retrieves the concept that is the group owner. Examples valueGroup.owner
+Copy
+a| `value` a| `Value` a| Retrieves the Value answer of the group, if there is one. Examples valueGroup.value
+Copy
+|===
+// end::properties[]
+

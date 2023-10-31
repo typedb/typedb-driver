@@ -284,7 +284,7 @@ If set, specifies a timeout for killing transactions automatically, preventing m
 .Returns
 `void`
 
-[#_TypeDBOptions_new_TypeDBOptions]
+[#_TypeDBOptions_new_TypeDBOptionsnew_TypeDBOptions_obj?_:_TypeDBOptions]
 ==== new TypeDBOptions
 
 [source,nodejs]

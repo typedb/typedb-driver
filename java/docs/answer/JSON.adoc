@@ -1,0 +1,176 @@
+[#_JSON]
+=== JSON
+
+*Package*: `com.vaticle.typedb.driver.api.answer`
+
+// tag::methods[]
+[#_JSON__init__]
+==== JSON
+
+[source,java]
+----
+public JSON()
+----
+
+
+
+[caption=""]
+.Returns
+`public`
+
+[#_JSON_asArray_]
+==== asArray
+
+[source,java]
+----
+public java.util.List<JSON> asArray()
+----
+
+
+
+[caption=""]
+.Returns
+`public java.util.List<JSON>`
+
+[#_JSON_asBoolean_]
+==== asBoolean
+
+[source,java]
+----
+public boolean asBoolean()
+----
+
+
+
+[caption=""]
+.Returns
+`public boolean`
+
+[#_JSON_asNumber_]
+==== asNumber
+
+[source,java]
+----
+public float asNumber()
+----
+
+
+
+[caption=""]
+.Returns
+`public float`
+
+[#_JSON_asObject_]
+==== asObject
+
+[source,java]
+----
+public java.util.Map<java.lang.String,​JSON> asObject()
+----
+
+
+
+[caption=""]
+.Returns
+`public java.util.Map<java.lang.String,​JSON>`
+
+[#_JSON_asString_]
+==== asString
+
+[source,java]
+----
+public java.lang.String asString()
+----
+
+
+
+[caption=""]
+.Returns
+`public java.lang.String`
+
+[#_JSON_isArray_]
+==== isArray
+
+[source,java]
+----
+public boolean isArray()
+----
+
+
+
+[caption=""]
+.Returns
+`public boolean`
+
+[#_JSON_isBoolean_]
+==== isBoolean
+
+[source,java]
+----
+public boolean isBoolean()
+----
+
+
+
+[caption=""]
+.Returns
+`public boolean`
+
+[#_JSON_isNumber_]
+==== isNumber
+
+[source,java]
+----
+public boolean isNumber()
+----
+
+
+
+[caption=""]
+.Returns
+`public boolean`
+
+[#_JSON_isObject_]
+==== isObject
+
+[source,java]
+----
+public boolean isObject()
+----
+
+
+
+[caption=""]
+.Returns
+`public boolean`
+
+[#_JSON_isString_]
+==== isString
+
+[source,java]
+----
+public boolean isString()
+----
+
+
+
+[caption=""]
+.Returns
+`public boolean`
+
+[#_JSON_parse_java_lang_String]
+==== parse
+
+[source,java]
+----
+public static JSON parse​(java.lang.String string)
+----
+
+
+
+[caption=""]
+.Returns
+`public static JSON`
+
+// end::methods[]
+

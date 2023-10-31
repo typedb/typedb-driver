@@ -26,9 +26,8 @@ export type JSON =
     | JSONObject
     | JSONArray;
 
-export interface JSONObject {
+export type JSONObject = {
     [x: string]: JSON;
 }
 
-export interface JSONArray extends Array<JSON> { }
-
+export type JSONArray = Array<JSON>;

@@ -1,0 +1,56 @@
+[#_ValueGroup]
+=== ValueGroup
+
+*Package*: `com.vaticle.typedb.driver.api.answer`
+
+Contains an element of the group aggregate query result.
+
+// tag::methods[]
+[#_ValueGroup_owner_]
+==== owner
+
+[source,java]
+----
+@CheckReturnValue
+Concept owner()
+----
+
+Retrieves the concept that is the group owner. 
+
+
+[caption=""]
+.Returns
+`Concept`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+conceptMapGroup.owner()
+----
+
+[#_ValueGroup_value_]
+==== value
+
+[source,java]
+----
+@CheckReturnValue
+Value value()
+----
+
+Retrieves the ``Value`` answer of the group. 
+
+
+[caption=""]
+.Returns
+`Value`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+valueGroup.value();
+----
+
+// end::methods[]
+

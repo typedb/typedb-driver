@@ -4,7 +4,7 @@
 Provides access for all Concept API methods.
 
 // tag::methods[]
-[#_ConceptManager_getAttribute]
+[#_ConceptManager_getAttributegetAttribute_iid_:_Promise_Attribute]
 ==== getAttribute
 
 [source,nodejs]
@@ -34,7 +34,7 @@ a| `iid` a| The iid of the ``Attribute`` to retrieve a| `string`
 transaction.concepts().getAttribute(iid)
 ----
 
-[#_ConceptManager_getAttributeType]
+[#_ConceptManager_getAttributeTypegetAttributeType_label_:_Promise_AttributeType]
 ==== getAttributeType
 
 [source,nodejs]
@@ -64,7 +64,7 @@ a| `label` a| The label of the ``AttributeType`` to retrieve a| `string`
 transaction.concepts().getAttributeType(label)
 ----
 
-[#_ConceptManager_getEntity]
+[#_ConceptManager_getEntitygetEntity_iid_:_Promise_Entity]
 ==== getEntity
 
 [source,nodejs]
@@ -94,7 +94,7 @@ a| `iid` a| The iid of the ``Entity`` to retrieve a| `string`
 transaction.concepts().getEntity(iid)
 ----
 
-[#_ConceptManager_getEntityType]
+[#_ConceptManager_getEntityTypegetEntityType_label_:_Promise_EntityType]
 ==== getEntityType
 
 [source,nodejs]
@@ -124,7 +124,7 @@ a| `label` a| The label of the ``EntityType`` to retrieve a| `string`
 transaction.concepts().getEntityType(label)
 ----
 
-[#_ConceptManager_getRelation]
+[#_ConceptManager_getRelationgetRelation_iid_:_Promise_Relation]
 ==== getRelation
 
 [source,nodejs]
@@ -154,7 +154,7 @@ a| `iid` a| The iid of the ``Relation`` to retrieve a| `string`
 transaction.concepts().getRelation(iid)
 ----
 
-[#_ConceptManager_getRelationType]
+[#_ConceptManager_getRelationTypegetRelationType_label_:_Promise_RelationType]
 ==== getRelationType
 
 [source,nodejs]
@@ -184,7 +184,7 @@ a| `label` a| The label of the ``RelationType`` to retrieve a| `string`
 transaction.concepts().getRelationType(label)
 ----
 
-[#_ConceptManager_getRootAttributeType]
+[#_ConceptManager_getRootAttributeTypegetRootAttributeType__:_Promise_AttributeType]
 ==== getRootAttributeType
 
 [source,nodejs]
@@ -205,7 +205,7 @@ Retrieve the root ``AttributeType``, “attribute”.
 transaction.concepts().getRootAttributeType()
 ----
 
-[#_ConceptManager_getRootEntityType]
+[#_ConceptManager_getRootEntityTypegetRootEntityType__:_Promise_EntityType]
 ==== getRootEntityType
 
 [source,nodejs]
@@ -226,7 +226,7 @@ Retrieves the root ``EntityType``, “entity”.
 transaction.concepts().getRootEntityType()
 ----
 
-[#_ConceptManager_getRootRelationType]
+[#_ConceptManager_getRootRelationTypegetRootRelationType__:_Promise_RelationType]
 ==== getRootRelationType
 
 [source,nodejs]
@@ -247,7 +247,7 @@ Retrieve the root ``RelationType``, “relation”.
 transaction.concepts().getRootRelationType()
 ----
 
-[#_ConceptManager_getRootThingType]
+[#_ConceptManager_getRootThingTypegetRootThingType__:_Promise_ThingType]
 ==== getRootThingType
 
 [source,nodejs]
@@ -268,7 +268,7 @@ Retrieves the root ``ThingType``, “thing”.
 transaction.concepts().getRootThingType()
 ----
 
-[#_ConceptManager_getSchemaExceptions]
+[#_ConceptManager_getSchemaExceptionsgetSchemaExceptions__:_Promise_TypeDBDriverError__]
 ==== getSchemaExceptions
 
 [source,nodejs]
@@ -289,7 +289,7 @@ Retrieves a list of all schema exceptions for the current transaction.
 transaction.concepts().getSchemaException()
 ----
 
-[#_ConceptManager_putAttributeType]
+[#_ConceptManager_putAttributeTypeputAttributeType_label__valueType_:_Promise_AttributeType]
 ==== putAttributeType
 
 [source,nodejs]
@@ -320,7 +320,7 @@ a| `valueType` a| The value type of the ``AttributeType`` to create a| `ValueTyp
 await transaction.concepts().putAttributeType(label, valueType)
 ----
 
-[#_ConceptManager_putEntityType]
+[#_ConceptManager_putEntityTypeputEntityType_label_:_Promise_EntityType]
 ==== putEntityType
 
 [source,nodejs]
@@ -350,7 +350,7 @@ a| `label` a| The label of the ``EntityType`` to create or retrieve a| `string`
 transaction.concepts().putEntityType(label)
 ----
 
-[#_ConceptManager_putRelationType]
+[#_ConceptManager_putRelationTypeputRelationType_label_:_Promise_RelationType]
 ==== putRelationType
 
 [source,nodejs]
