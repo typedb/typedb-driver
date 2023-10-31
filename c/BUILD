@@ -62,7 +62,7 @@ checkstyle_test(
 )
 
 rustfmt_test(
-    name = "driver_rustfmt_test",
-    targets = ["typedb_driver_clib"],
+    name = "rustfmt_test",
+    targets = [":typedb_driver_clib"],
     size = "small",
 )

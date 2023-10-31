@@ -130,7 +130,7 @@ filegroup(
 )
 
 rustfmt_test(
-    name = "driver_rustfmt_test",
-    targets = ["typedb_driver"],
+    name = "rustfmt_test",
+    targets = [":typedb_driver"],
     size = "small",
 )
