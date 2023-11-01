@@ -57,10 +57,12 @@ checkstyle_test(
         "src/**/*",
         "swig/*",
     ]),
+    exclude = [".clang-format"],
     license_type = "apache-header",
 )
 
 rustfmt_test(
-    name = "driver_rustfmt_test",
-    targets = ["typedb_driver_clib"],
+    name = "rustfmt_test",
+    targets = [":typedb_driver_clib"],
+    size = "small",
 )

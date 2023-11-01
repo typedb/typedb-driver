@@ -25,3 +25,29 @@ from hamcrest import *
 
 def assert_collections_equal(collection1: list, collection2: list):
     assert_that(Counter(collection1), is_(equal_to(Counter(collection2))))
+
+
+def json_matches(lhs, rhs) -> bool:
+    if type(lhs) is dict:
+        if type(rhs) is not dict or len(lhs) != len(rhs):
+            return False
+        for key, lhs_value in lhs.items():
+            if key not in rhs:
+                return False
+            if not json_matches(lhs_value, rhs[key]):
+                return False
+        return True
+    elif type(lhs) is list:
+        if type(rhs) is not list or len(lhs) != len(rhs):
+            return False
+        rhs_matches = set()
+        for lhs_item in lhs:
+            for i, rhs_item in enumerate(rhs):
+                if i in rhs_matches:
+                    continue
+                if json_matches(lhs_item, rhs_item):
+                    rhs_matches.add(i)
+                    break
+        return len(rhs_matches) == len(rhs)
+    else:
+        return lhs == rhs

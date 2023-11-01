@@ -28,7 +28,7 @@ from typedb.native_driver_wrapper import concept_map_group_get_owner, concept_ma
     ConceptMapGroup as NativeConceptMapGroup
 
 from typedb.api.answer.concept_map_group import ConceptMapGroup
-from typedb.common.exception import TypeDBDriverExceptionExt, ILLEGAL_STATE, NULL_NATIVE_OBJECT
+from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, NULL_NATIVE_OBJECT
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.concept import concept_factory
@@ -43,12 +43,12 @@ class _ConceptMapGroup(ConceptMapGroup, NativeWrapper[NativeConceptMapGroup]):
 
     def __init__(self, concept_map_group: NativeConceptMapGroup):
         if not concept_map_group:
-            raise TypeDBDriverExceptionExt(NULL_NATIVE_OBJECT)
+            raise TypeDBDriverException(NULL_NATIVE_OBJECT)
         super().__init__(concept_map_group)
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
-        return TypeDBDriverExceptionExt.of(ILLEGAL_STATE)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverException:
+        return TypeDBDriverException(ILLEGAL_STATE)
 
     def owner(self) -> Concept:
         return concept_factory.wrap_concept(concept_map_group_get_owner(self.native_object))

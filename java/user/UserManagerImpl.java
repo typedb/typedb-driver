@@ -24,6 +24,7 @@ package com.vaticle.typedb.driver.user;
 import com.vaticle.typedb.driver.api.user.User;
 import com.vaticle.typedb.driver.api.user.UserManager;
 import com.vaticle.typedb.driver.common.NativeObject;
+import com.vaticle.typedb.driver.common.NativeIterator;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
 import java.util.Set;
@@ -40,7 +41,15 @@ import static com.vaticle.typedb.driver.jni.typedb_driver.users_set_password;
 
 public class UserManagerImpl extends NativeObject<com.vaticle.typedb.driver.jni.UserManager> implements UserManager {
     public UserManagerImpl(com.vaticle.typedb.driver.jni.Connection nativeConnection) {
-        super(user_manager_new(nativeConnection));
+        super(newNative(nativeConnection));
+    }
+
+    private static com.vaticle.typedb.driver.jni.UserManager newNative(com.vaticle.typedb.driver.jni.Connection nativeConnection) {
+        try {
+            return user_manager_new(nativeConnection);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     @Override
@@ -73,7 +82,7 @@ public class UserManagerImpl extends NativeObject<com.vaticle.typedb.driver.jni.
     @Override
     public Set<User> all() {
         try {
-            return users_all(nativeObject).stream().map(user -> new UserImpl(user, this)).collect(Collectors.toSet());
+            return new NativeIterator<>(users_all(nativeObject)).stream().map(user -> new UserImpl(user, this)).collect(Collectors.toSet());
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

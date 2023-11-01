@@ -27,12 +27,15 @@ import com.vaticle.typedb.driver.api.concept.thing.Thing;
 import com.vaticle.typedb.driver.api.concept.type.AttributeType;
 import com.vaticle.typedb.driver.api.concept.type.RoleType;
 import com.vaticle.typedb.driver.api.concept.type.ThingType.Annotation;
+import com.vaticle.typedb.driver.common.NativeIterator;
+import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.ConceptImpl;
 import com.vaticle.typedb.driver.concept.type.AttributeTypeImpl;
 import com.vaticle.typedb.driver.concept.type.RoleTypeImpl;
 import com.vaticle.typedb.driver.concept.type.ThingTypeImpl;
 
+import javax.annotation.CheckReturnValue;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -87,7 +90,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
     public final Stream<AttributeImpl> getHas(TypeDBTransaction transaction, AttributeType... attributeTypes) {
         com.vaticle.typedb.driver.jni.Concept[] attributeTypesArray = Arrays.stream(attributeTypes).map(at -> ((AttributeTypeImpl) at).nativeObject).toArray(com.vaticle.typedb.driver.jni.Concept[]::new);
         try {
-            return thing_get_has(nativeTransaction(transaction), nativeObject, attributeTypesArray, new com.vaticle.typedb.driver.jni.Annotation[0]).stream().map(AttributeImpl::new);
+            return new NativeIterator<>(thing_get_has(nativeTransaction(transaction), nativeObject, attributeTypesArray, new com.vaticle.typedb.driver.jni.Annotation[0])).stream().map(AttributeImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -97,7 +100,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
     public final Stream<AttributeImpl> getHas(TypeDBTransaction transaction, Set<Annotation> annotations) {
         com.vaticle.typedb.driver.jni.Annotation[] annotationsArray = annotations.stream().map(anno -> anno.nativeObject).toArray(com.vaticle.typedb.driver.jni.Annotation[]::new);
         try {
-            return thing_get_has(nativeTransaction(transaction), nativeObject, new com.vaticle.typedb.driver.jni.Concept[0], annotationsArray).stream().map(AttributeImpl::new);
+            return new NativeIterator<>(thing_get_has(nativeTransaction(transaction), nativeObject, new com.vaticle.typedb.driver.jni.Concept[0], annotationsArray)).stream().map(AttributeImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -107,7 +110,7 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
     public final Stream<RelationImpl> getRelations(TypeDBTransaction transaction, RoleType... roleTypes) {
         com.vaticle.typedb.driver.jni.Concept[] roleTypesArray = Arrays.stream(roleTypes).map(rt -> ((RoleTypeImpl) rt).nativeObject).toArray(com.vaticle.typedb.driver.jni.Concept[]::new);
         try {
-            return thing_get_relations(nativeTransaction(transaction), nativeObject, roleTypesArray).stream().map(RelationImpl::new);
+            return new NativeIterator<>(thing_get_relations(nativeTransaction(transaction), nativeObject, roleTypesArray)).stream().map(RelationImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -116,46 +119,34 @@ public abstract class ThingImpl extends ConceptImpl implements Thing {
     @Override
     public final Stream<RoleTypeImpl> getPlaying(TypeDBTransaction transaction) {
         try {
-            return thing_get_playing(nativeTransaction(transaction), nativeObject).stream().map(RoleTypeImpl::new);
+            return new NativeIterator<>(thing_get_playing(nativeTransaction(transaction), nativeObject)).stream().map(RoleTypeImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public final void setHas(TypeDBTransaction transaction, Attribute attribute) {
-        try {
-            thing_set_has(nativeTransaction(transaction), nativeObject, ((AttributeImpl) attribute).nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    @CheckReturnValue
+    public final Promise<Void> setHas(TypeDBTransaction transaction, Attribute attribute) {
+        return new Promise<>(thing_set_has(nativeTransaction(transaction), nativeObject, ((AttributeImpl) attribute).nativeObject));
     }
 
     @Override
-    public final void unsetHas(TypeDBTransaction transaction, Attribute attribute) {
-        try {
-            thing_unset_has(nativeTransaction(transaction), nativeObject, ((AttributeImpl) attribute).nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    @CheckReturnValue
+    public final Promise<Void> unsetHas(TypeDBTransaction transaction, Attribute attribute) {
+        return new Promise<>(thing_unset_has(nativeTransaction(transaction), nativeObject, ((AttributeImpl) attribute).nativeObject));
     }
 
     @Override
-    public final void delete(TypeDBTransaction transaction) {
-        try {
-            thing_delete(nativeTransaction(transaction), nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    @CheckReturnValue
+    public final Promise<Void> delete(TypeDBTransaction transaction) {
+        return new Promise<>(thing_delete(nativeTransaction(transaction), nativeObject));
     }
 
     @Override
-    public final boolean isDeleted(TypeDBTransaction transaction) {
-        try {
-            return thing_is_deleted(nativeTransaction(transaction), nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    @CheckReturnValue
+    public final Promise<Boolean> isDeleted(TypeDBTransaction transaction) {
+        return new Promise<>(thing_is_deleted(nativeTransaction(transaction), nativeObject));
     }
 
     @Override

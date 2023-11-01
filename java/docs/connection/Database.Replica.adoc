@@ -1,0 +1,70 @@
+[#_Database.Replica]
+=== Database.Replica
+
+*Package*: `com.vaticle.typedb.driver.api.database`
+
+The metadata and state of an individual raft replica of a database.
+
+// tag::methods[]
+[#_Database.Replica_address_]
+==== address
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String address()
+----
+
+Retrieves the address of the server hosting this replica
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[#_Database.Replica_isPreferred_]
+==== isPreferred
+
+[source,java]
+----
+@CheckReturnValue
+boolean isPreferred()
+----
+
+Checks whether this is the preferred replica of the raft cluster. If true, Operations which can be run on any replica will prefer to use this replica.
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Database.Replica_isPrimary_]
+==== isPrimary
+
+[source,java]
+----
+@CheckReturnValue
+boolean isPrimary()
+----
+
+Checks whether this is the primary replica of the raft cluster.
+
+[caption=""]
+.Returns
+`boolean`
+
+[#_Database.Replica_term_]
+==== term
+
+[source,java]
+----
+@CheckReturnValue
+long term()
+----
+
+The raft protocol ‘term’ of this replica.
+
+[caption=""]
+.Returns
+`long`
+
+// end::methods[]
+

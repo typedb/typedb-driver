@@ -21,6 +21,10 @@
 
 import {TypeDBDriverError} from "../errors/TypeDBDriverError";
 
+/**
+ * A stream of elements offering a functional interface to manipulate elements.
+ * Typically the elements are generated/retrieved lazily.
+ */
 export abstract class Stream<T> implements AsyncIterable<T> {
 
     // TODO why can't this be abstract?
@@ -29,10 +33,19 @@ export abstract class Stream<T> implements AsyncIterable<T> {
         throw new TypeDBDriverError("ILLEGAL STATE");
     }
 
+    // TODO: TODO DOCS: Add docs
     iterator(): AsyncIterator<T, any, undefined> {
         return this[Symbol.asyncIterator]();
     }
 
+    /**
+     * Collects all the answers from this stream into an array
+     * ### Examples
+     *
+     * ```ts
+     * results = transaction.query.match(query).collect().await;
+     * ```
+     */
     async collect(): Promise<T[]> {
         const answers: T[] = [];
         for await (const answer of this) {
@@ -41,6 +54,16 @@ export abstract class Stream<T> implements AsyncIterable<T> {
         return answers;
     }
 
+    /**
+     * Checks whether a condition is satisfied by ALL answers in this stream.
+     * @param callbackFn: The condition to evaluate.
+     * ### Examples
+     *
+     * ```ts
+     * // For a query "match $a isa age;", check if all results for $a are positive.
+     * results = transaction.query.match(query).every(cm => cm.get("a").value > 0).await;
+     * ```
+     */
     async every(callbackFn: (value: T) => unknown): Promise<boolean> {
         for await (const item of this) {
             if (!callbackFn(item)) return false;
@@ -48,6 +71,16 @@ export abstract class Stream<T> implements AsyncIterable<T> {
         return true;
     }
 
+    /**
+     * Checks whether a condition is satisfied by ANY answer in this stream.
+     * @param callbackFn: The condition to evaluate.
+     * ### Examples
+     *
+     * ```ts
+     * // For a query "match $a isa age;", check if any results for $a are negative.
+     * results = transaction.query.match(query).some(cm => cm.get("a").value < 0).await;
+     * ```
+     */
     async some(callbackFn: (value: T) => unknown): Promise<boolean> {
         for await (const item of this) {
             if (callbackFn(item)) return true;
@@ -55,24 +88,51 @@ export abstract class Stream<T> implements AsyncIterable<T> {
         return false;
     }
 
+    /**
+     * Returns a new stream from this stream consisting only of elements which satisfy a given condition.
+     * @param filter - The condition to evaluate.
+     * ### Examples
+     *
+     * ```ts
+     * // For a query "match $p isa person, has age $a;", only retrieve results having $a >= 60.
+     * results = transaction.query.match(query).filter(cm => cm.get("a").value > 60).collect();
+     * ```
+     */
     filter(filter: (value: T) => boolean): Stream<T> {
         return new Stream.Filtered<T>(this, filter);
     }
 
+    /**
+     * @param mapper - The mapping function to apply.
+     * Returns a new stream from this stream by applying the <code>mapper</code> function to each element.
+     */
     map<U>(mapper: (value: T) => U): Stream<U> {
         return new Stream.Mapped<T, U>(this, mapper);
     }
 
+    /**
+     * Given a function which accepts a single element of this stream and returns a new stream,
+     * This function returns a new stream obtained by applying the function to each element in the stream,
+     * and concatenating each result thus obtained
+     * @param mapper - The mapping function to apply. Must return a stream.
+     */
     flatMap<U>(mapper: (value: T) => Stream<U>): Stream<U> {
         return new Stream.FlatMapped<T, U, Stream<U>>(this, mapper);
     }
 
+    /**
+     * Executes the given function for each element in the stream.
+     * @param fn - The function to evaluate for each element.
+     */
     async forEach(fn: (value: T) => void): Promise<void> {
         for await (const val of this) {
             fn(val);
         }
     }
 
+    /**
+     * Returns the first element in the stream.
+     */
     async first(): Promise<T | null> {
         for await (const val of this) {
             return val;
@@ -81,6 +141,7 @@ export abstract class Stream<T> implements AsyncIterable<T> {
     }
 }
 
+/** @ignore */
 export namespace Stream {
 
     export function iterable<T>(iterable: AsyncIterable<T>) {

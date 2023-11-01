@@ -24,12 +24,14 @@ package com.vaticle.typedb.driver.logic;
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.logic.Rule;
 import com.vaticle.typedb.driver.common.NativeObject;
+import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
-import com.vaticle.typedb.driver.concept.ConceptManagerImpl;
 import com.vaticle.typeql.lang.TypeQL;
 import com.vaticle.typeql.lang.pattern.Conjunction;
 import com.vaticle.typeql.lang.pattern.Pattern;
-import com.vaticle.typeql.lang.pattern.variable.ThingVariable;
+import com.vaticle.typeql.lang.pattern.statement.ThingStatement;
+
+import javax.annotation.CheckReturnValue;
 
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.TRANSACTION_CLOSED;
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Concept.MISSING_LABEL;
@@ -45,12 +47,12 @@ public class RuleImpl extends NativeObject<com.vaticle.typedb.driver.jni.Rule> i
     private int hash = 0;
 
     private final Conjunction<? extends Pattern> when;
-    private final ThingVariable<?> then;
+    private final ThingStatement<?> then;
 
     RuleImpl(com.vaticle.typedb.driver.jni.Rule rule) {
         super(rule);
         when = TypeQL.parsePattern(rule_get_when(nativeObject)).asConjunction();
-        then = TypeQL.parseVariable(rule_get_then(nativeObject)).asThing();
+        then = TypeQL.parseStatement(rule_get_then(nativeObject)).asThing();
     }
 
     @Override
@@ -64,36 +66,27 @@ public class RuleImpl extends NativeObject<com.vaticle.typedb.driver.jni.Rule> i
     }
 
     @Override
-    public ThingVariable<?> getThen() {
+    public ThingStatement<?> getThen() {
         return then;
     }
 
     @Override
-    public void setLabel(TypeDBTransaction transaction, String newLabel) {
+    @CheckReturnValue
+    public Promise<Void> setLabel(TypeDBTransaction transaction, String newLabel) {
         if (newLabel == null || newLabel.isEmpty()) throw new TypeDBDriverException(MISSING_LABEL);
-        try {
-            rule_set_label(nativeTransaction(transaction), nativeObject, newLabel);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return new Promise<>(rule_set_label(nativeTransaction(transaction), nativeObject, newLabel));
     }
 
     @Override
-    public void delete(TypeDBTransaction transaction) {
-        try {
-            rule_delete(nativeTransaction(transaction), nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    @CheckReturnValue
+    public Promise<Void> delete(TypeDBTransaction transaction) {
+        return new Promise<>(rule_delete(nativeTransaction(transaction), nativeObject));
     }
 
     @Override
-    public final boolean isDeleted(TypeDBTransaction transaction) {
-        try {
-            return rule_is_deleted(nativeTransaction(transaction), nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+    @CheckReturnValue
+    public final Promise<Boolean> isDeleted(TypeDBTransaction transaction) {
+        return new Promise<>(rule_is_deleted(nativeTransaction(transaction), nativeObject));
     }
 
     private static com.vaticle.typedb.driver.jni.Transaction nativeTransaction(TypeDBTransaction transaction) {

@@ -1,0 +1,22 @@
+[#_struct_ValueGroup]
+=== ValueGroup
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `PartialEq<ValueGroup>`
+* `StructuralPartialEq`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `owner` a| `Concept` a| The concept that is the group owner.
+a| `value` a| `Option<Value>` a| 
+|===
+// end::properties[]
+

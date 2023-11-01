@@ -28,7 +28,7 @@ from typedb.native_driver_wrapper import explanation_get_rule, explanation_get_c
     explanation_get_mapping, explanation_to_string, explanation_equals, Explanation as NativeExplanation
 
 from typedb.api.logic.explanation import Explanation
-from typedb.common.exception import TypeDBDriverExceptionExt, ILLEGAL_STATE, MISSING_VARIABLE, NULL_NATIVE_OBJECT
+from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, MISSING_VARIABLE, NULL_NATIVE_OBJECT
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.concept.answer.concept_map import _ConceptMap
@@ -43,12 +43,12 @@ class _Explanation(Explanation, NativeWrapper[NativeExplanation]):
 
     def __init__(self, explanation: NativeExplanation):
         if not explanation:
-            raise TypeDBDriverExceptionExt(NULL_NATIVE_OBJECT)
+            raise TypeDBDriverException(NULL_NATIVE_OBJECT)
         super().__init__(explanation)
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
-        return TypeDBDriverExceptionExt.of(ILLEGAL_STATE)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverException:
+        return TypeDBDriverException(ILLEGAL_STATE)
 
     def rule(self) -> Rule:
         return _Rule(explanation_get_rule(self.native_object))
@@ -64,7 +64,7 @@ class _Explanation(Explanation, NativeWrapper[NativeExplanation]):
 
     def query_variable_mapping(self, var: str) -> set[str]:
         if not var:
-            raise TypeDBDriverExceptionExt(MISSING_VARIABLE)
+            raise TypeDBDriverException(MISSING_VARIABLE)
         return set(IteratorWrapper(explanation_get_mapping(self.native_object, var), string_iterator_next))
 
     def __repr__(self):

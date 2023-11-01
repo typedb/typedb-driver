@@ -28,28 +28,93 @@ import javax.annotation.CheckReturnValue;
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 
 public interface TypeDBSession extends AutoCloseable {
+
+    /**
+     * Checks whether this session is open.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * session.isOpen();
+     * </pre>
+     */
     @CheckReturnValue
     boolean isOpen();
 
+    /**
+     * The current session’s type (SCHEMA or DATA)
+     */
     @CheckReturnValue
     Type type();
 
+    /**
+     * Returns the name of the database of the session.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * session.databaseName();
+     * </pre>
+     */
     @CheckReturnValue
     String database_name();
 
+    /**
+     * Gets the options for the session
+     */
     @CheckReturnValue
     TypeDBOptions options();
 
+    /**
+     * Opens a transaction on the database connected to the session with default options.
+     * 
+     * @see TypeDBSession#transaction(TypeDBTransaction.Type, TypeDBOptions)
+     */
     @CheckReturnValue
     TypeDBTransaction transaction(TypeDBTransaction.Type type);
 
+    /**
+     * Opens a transaction to perform read or write queries on the database connected to the session.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * session.transaction(transactionType, options);
+     * </pre>
+     *
+     * @param type The type of transaction to be created (READ or WRITE)
+     * @param options Options for the session
+     */
     @CheckReturnValue
     TypeDBTransaction transaction(TypeDBTransaction.Type type, TypeDBOptions options);
 
+    /**
+     * Registers a callback function which will be executed when this session is closed.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * session.onClose(function)
+     * </pre>
+     *
+     * @param function The callback function.
+     */
     void onClose(Runnable function);
 
+    /**
+     * Closes the session. Before opening a new session, the session currently open should first be closed.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * session.close();
+     * </pre>
+     */
     void close();
 
+    /**
+     * Used to specify the type of the session.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.session(database, TypeDBSession.Type.SCHEMA);
+     * </pre>
+     */
     enum Type {
         DATA(0, com.vaticle.typedb.driver.jni.SessionType.Data),
         SCHEMA(1, com.vaticle.typedb.driver.jni.SessionType.Schema);

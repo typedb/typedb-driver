@@ -1,0 +1,19 @@
+[#_enum_InternalError]
+=== InternalError
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols="~"]
+[options="header"]
+|===
+|Variant
+a| `EnumOutOfBounds(i32, &'static str)`
+a| `RecvError()`
+a| `SendError()`
+a| `UnexpectedRequestType(String)`
+a| `UnexpectedResponseType(String)`
+a| `UnknownConnectionAddress(Address)`
+|===
+// end::enum_constants[]
+

@@ -25,7 +25,12 @@ from typing import Optional
 
 
 class Label:
+    """
+    A ``Label`` holds the uniquely identifying name of a type.
 
+    It consists of an optional ``scope``, and a ``name``, represented ``scope:name``.
+    The scope is used only used to distinguish between role-types of the same name declared in different relation types.
+    """
     def __init__(self, scope: Optional[str], name: str):
         self._scope = scope
         self._name = name
@@ -33,27 +38,45 @@ class Label:
     @staticmethod
     def of(*args: str) -> Label:
         """
-        Create a Label from a specified name, or scoped name.
+        Creates a Label from a specified name, or scoped name.
 
-        If a single string is provided, this is interpreted as the label name. If a pair of strings is provided,
-        the first string is the scope and the second string is the name.
+        :param args: If a single string is provided, this is interpreted as the label name.
+            If a pair of strings is provided, the first string is the scope and the second string is the name.
+        :return:
 
-        **Examples**
+        Examples
+        --------
 
-        - ``Label.of("entity")``
-        - ``Label.of("relation", "role")``
+        ::
+
+            Label.of("entity")
+            Label.of("relation", "role")
         """
         return Label(scope=args[0], name=args[1]) if len(args) == 2 else Label(scope=None, name=args[0])
 
     @property
     def scope(self) -> Optional[str]:
+        """ The scope part of the label """
         return self._scope
 
     @property
     def name(self) -> str:
+        """ The name part of the label """
         return self._name
 
     def scoped_name(self) -> str:
+        """
+        Returns the string representation of the scoped name.
+
+        :return:
+
+        Examples
+        --------
+
+        ::
+
+            label.scoped_name()
+        """
         return "%s:%s" % (self.scope, self.name) if self.scope else self.name
 
     def __str__(self):

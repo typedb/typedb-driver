@@ -89,10 +89,6 @@ export abstract class ThingImpl extends ConceptImpl implements Thing {
         return this;
     }
 
-    toJSONRecord(): Record<string, boolean | string | number> {
-        return {type: this.type.label.name};
-    }
-
     async delete(transaction: TypeDBTransaction): Promise<void> {
         const request = RequestBuilder.Thing.deleteReq(this.iid);
         await this.execute(transaction, request);

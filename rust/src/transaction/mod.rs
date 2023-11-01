@@ -21,80 +21,119 @@
 
 pub mod concept;
 pub mod logic;
-mod query;
+pub mod query;
 
-use std::{fmt, marker::PhantomData, sync::Arc};
+use std::{fmt, marker::PhantomData, pin::Pin};
 
 use self::{concept::ConceptManager, logic::LogicManager, query::QueryManager};
 use crate::{
-    common::{Result, TransactionType},
+    common::{Promise, Result, TransactionType},
     connection::TransactionStream,
     error::ConnectionError,
     Options,
 };
 
 pub struct Transaction<'a> {
+    /// The transaction’s type (READ or WRITE)
     type_: TransactionType,
+    /// The options for the transaction
     options: Options,
-
-    query: QueryManager,
-    concept: ConceptManager,
-    logic: LogicManager,
-    transaction_stream: Arc<TransactionStream>,
+    transaction_stream: Pin<Box<TransactionStream>>,
 
     _lifetime_guard: PhantomData<&'a ()>,
 }
 
 impl Transaction<'_> {
     pub(super) fn new(transaction_stream: TransactionStream) -> Self {
-        let transaction_stream = Arc::new(transaction_stream);
+        let transaction_stream = Box::pin(transaction_stream);
         Transaction {
             type_: transaction_stream.type_(),
             options: transaction_stream.options().clone(),
-            query: QueryManager::new(transaction_stream.clone()),
-            concept: ConceptManager::new(transaction_stream.clone()),
-            logic: LogicManager::new(transaction_stream.clone()),
             transaction_stream,
-            _lifetime_guard: PhantomData::default(),
+            _lifetime_guard: PhantomData,
         }
     }
 
+    /// Closes the transaction.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// transaction.close()
+    /// ```
     pub fn is_open(&self) -> bool {
         self.transaction_stream.is_open()
     }
 
+    /// Retrieves the transaction’s type (READ or WRITE).
     pub fn type_(&self) -> TransactionType {
         self.type_
     }
 
-    pub fn query(&self) -> &QueryManager {
-        &self.query
+    /// Retrieves the``QueryManager`` for this Transaction, from which any TypeQL query can be executed.
+    pub fn query(&self) -> QueryManager<'_> {
+        QueryManager::new(self.transaction_stream.as_ref())
     }
 
-    pub fn concept(&self) -> &ConceptManager {
-        &self.concept
+    /// The `ConceptManager` for this transaction, providing access to all Concept API methods.
+    pub fn concept(&self) -> ConceptManager<'_> {
+        ConceptManager::new(self.transaction_stream.as_ref())
     }
 
-    pub fn logic(&self) -> &LogicManager {
-        &self.logic
+    /// Retrieves the `LogicManager` for this Transaction, providing access to all Concept API - Logic methods.
+    pub fn logic(&self) -> LogicManager<'_> {
+        LogicManager::new(self.transaction_stream.as_ref())
     }
 
+    /// Registers a callback function which will be executed when this session is closed.
+    ///
+    /// # Arguments
+    ///
+    /// * `function` -- The callback function.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// transaction.on_close(function)
+    /// ```
     pub fn on_close(&self, callback: impl FnOnce(ConnectionError) + Send + Sync + 'static) {
         self.transaction_stream.on_close(callback)
     }
 
+    /// Closes the transaction.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// transaction.force_close()
+    /// ```
     pub fn force_close(&self) {
         self.transaction_stream.force_close();
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn commit(self) -> Result {
-        self.transaction_stream.commit().await
+    /// Commits the changes made via this transaction to the TypeDB database. Whether or not the transaction is commited successfully, it gets closed after the commit call.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "transaction.commit()")]
+    #[cfg_attr(not(feature = "sync"), doc = "transaction.commit().await")]
+    /// ```
+    pub fn commit(self) -> impl Promise<'static, Result> {
+        let stream = self.transaction_stream;
+        stream.commit()
     }
 
-    #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
-    pub async fn rollback(&self) -> Result {
-        self.transaction_stream.rollback().await
+    /// Rolls back the uncommitted changes made via this transaction.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "transaction.rollback()")]
+    #[cfg_attr(not(feature = "sync"), doc = "transaction.rollback().await")]
+    /// ```
+    pub fn rollback(&self) -> impl Promise<'_, Result> {
+        self.transaction_stream.rollback()
     }
 }
 

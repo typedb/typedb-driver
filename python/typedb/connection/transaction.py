@@ -25,11 +25,11 @@ from typing import TYPE_CHECKING
 
 from typedb.native_driver_wrapper import error_code, error_message, transaction_new, transaction_commit, \
     transaction_rollback, transaction_is_open, transaction_on_close, transaction_force_close, \
-    Transaction as NativeTransaction, TransactionCallbackDirector
+    Transaction as NativeTransaction, TransactionCallbackDirector, TypeDBDriverExceptionNative, void_promise_resolve
 
 from typedb.api.connection.options import TypeDBOptions
 from typedb.api.connection.transaction import TypeDBTransaction
-from typedb.common.exception import TypeDBDriverExceptionExt, TRANSACTION_CLOSED, TypeDBException
+from typedb.common.exception import TypeDBDriverException, TRANSACTION_CLOSED, TypeDBException
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.concept.concept_manager import _ConceptManager
 from typedb.logic.logic_manager import _LogicManager
@@ -48,14 +48,17 @@ class _Transaction(TypeDBTransaction, NativeWrapper[NativeTransaction]):
             options = TypeDBOptions()
         self._transaction_type = transaction_type
         self._options = options
-        super().__init__(transaction_new(session.native_object, transaction_type.value, options.native_object))
+        try:
+            super().__init__(transaction_new(session.native_object, transaction_type.value, options.native_object))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
         self._concept_manager = _ConceptManager(self._native_object)
         self._query_manager = _QueryManager(self._native_object)
         self._logic_manager = _LogicManager(self._native_object)
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
-        return TypeDBDriverExceptionExt.of(TRANSACTION_CLOSED)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverException:
+        return TypeDBDriverException(TRANSACTION_CLOSED)
 
     @property
     def transaction_type(self) -> TransactionType:
@@ -95,11 +98,17 @@ class _Transaction(TypeDBTransaction, NativeWrapper[NativeTransaction]):
             self._function(TypeDBException(error_code(error), error_message(error)))
 
     def commit(self):
-        self.native_object.thisown = 0
-        transaction_commit(self._native_object)
+        try:
+            self.native_object.thisown = 0
+            void_promise_resolve(transaction_commit(self._native_object))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def rollback(self):
-        transaction_rollback(self.native_object)
+        try:
+            void_promise_resolve(transaction_rollback(self.native_object))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def close(self):
         if self._native_object.thisown:

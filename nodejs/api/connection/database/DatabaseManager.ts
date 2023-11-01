@@ -21,12 +21,55 @@
 
 import {Database} from "./Database";
 
+/** Provides access to all database management methods. */
 export interface DatabaseManager {
+    /**
+     * Retrieve the database with the given name.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * driver.databases().get(name)
+     * ```
+     *
+     * @param name - The name of the database to retrieve
+     */
     get(name: string): Promise<Database>;
 
+    /**
+     * Retrieves all databases present on the TypeDB server
+     *
+     * ### Examples
+     *
+     * ```ts
+     * driver.databases().all()
+     * ```
+     */
     all(): Promise<Database[]>;
 
+    /**
+     * Checks if a database with the given name exists
+     *
+     * ### Examples
+     *
+     * ```ts
+     * driver.databases().contains(name)
+     * ```
+     *
+     * @param name - The database name to be checked
+     */
     contains(name: string): Promise<boolean>;
 
+    /**
+     * Create a database with the given name
+     *
+     * ### Examples
+     *
+     * ```ts
+     * driver.databases().create(name)
+     * ```
+     *
+     * @param name - The name of the database to be created
+     */
     create(name: string): Promise<void>;
 }

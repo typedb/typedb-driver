@@ -21,9 +21,10 @@
 
 mod concept;
 mod connection;
+mod driver;
 mod parameter;
+mod query;
 mod session_tracker;
-mod typeql;
 mod util;
 
 use std::{
@@ -35,8 +36,8 @@ use cucumber::{StatsWriter, World};
 use futures::future::try_join_all;
 use tokio::time::{sleep, Duration};
 use typedb_driver::{
-    answer::{ConceptMap, ConceptMapGroup, Numeric, NumericGroup},
-    concept::{Attribute, AttributeType, Entity, EntityType, Relation, RelationType, Thing},
+    answer::{ConceptMap, ConceptMapGroup, ValueGroup, JSON},
+    concept::{Attribute, AttributeType, Entity, EntityType, Relation, RelationType, Thing, Value},
     logic::Rule,
     Connection, Credential, Database, DatabaseManager, Result as TypeDBResult, Transaction, UserManager,
 };
@@ -53,8 +54,9 @@ pub struct Context {
     pub things: HashMap<String, Option<Thing>>,
     pub answer: Vec<ConceptMap>,
     pub answer_group: Vec<ConceptMapGroup>,
-    pub numeric_answer: Option<Numeric>,
-    pub numeric_answer_group: Vec<NumericGroup>,
+    pub fetch_answer: Option<JSON>,
+    pub value_answer: Option<Option<Value>>,
+    pub value_answer_group: Vec<ValueGroup>,
 }
 
 impl Context {
@@ -207,8 +209,9 @@ impl Context {
         self.session_trackers.clear();
         self.answer.clear();
         self.answer_group.clear();
-        self.numeric_answer = None;
-        self.numeric_answer_group.clear();
+        self.fetch_answer = None;
+        self.value_answer = None;
+        self.value_answer_group.clear();
     }
 }
 
@@ -233,8 +236,9 @@ impl Default for Context {
             things: HashMap::new(),
             answer: Vec::new(),
             answer_group: Vec::new(),
-            numeric_answer: None,
-            numeric_answer_group: Vec::new(),
+            fetch_answer: None,
+            value_answer: None,
+            value_answer_group: Vec::new(),
         }
     }
 }

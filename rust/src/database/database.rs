@@ -63,18 +63,44 @@ impl Database {
         })
     }
 
+    /// Retrieves the database name as a string.
     pub fn name(&self) -> &str {
         self.name.as_str()
     }
 
+    /// Returns the `Replica` instances for this database.
+    /// _Only works in TypeDB Enterprise_
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// database.replicas_info()
+    /// ```
     pub fn replicas_info(&self) -> Vec<ReplicaInfo> {
         self.replicas.read().unwrap().iter().map(Replica::to_info).collect()
     }
 
+    /// Returns the primary replica for this database.
+    /// _Only works in TypeDB Enterprise_
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// database.primary_replica_info()
+    /// ```
     pub fn primary_replica_info(&self) -> Option<ReplicaInfo> {
         self.primary_replica().map(|replica| replica.to_info())
     }
 
+    /// Returns the preferred replica for this database.
+    /// Operations which can be run on any replica will prefer to use this replica.
+    /// _Only works in TypeDB Enterprise_
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// database.preferred_replica_info();
+    /// ```
     pub fn preferred_replica_info(&self) -> Option<ReplicaInfo> {
         self.preferred_replica().map(|replica| replica.to_info())
     }
@@ -83,21 +109,53 @@ impl Database {
         &self.connection
     }
 
+    /// Deletes this database.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "database.delete();")]
+    #[cfg_attr(not(feature = "sync"), doc = "database.delete().await;")]
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn delete(self) -> Result {
         self.run_on_primary_replica(|database, _, _| database.delete()).await
     }
 
+    /// Returns a full schema text as a valid TypeQL define query string.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "database.schema();")]
+    #[cfg_attr(not(feature = "sync"), doc = "database.schema().await;")]
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn schema(&self) -> Result<String> {
         self.run_failsafe(|database, _, _| async move { database.schema().await }).await
     }
 
+    /// Returns the types in the schema as a valid TypeQL define query string.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "database.type_schema();")]
+    #[cfg_attr(not(feature = "sync"), doc = "database.type_schema().await;")]
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn type_schema(&self) -> Result<String> {
         self.run_failsafe(|database, _, _| async move { database.type_schema().await }).await
     }
 
+    /// Returns the rules in the schema as a valid TypeQL define query string.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "database.rule_schema();")]
+    #[cfg_attr(not(feature = "sync"), doc = "database.rule_schema().await;")]
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn rule_schema(&self) -> Result<String> {
         self.run_failsafe(|database, _, _| async move { database.rule_schema().await }).await
@@ -206,13 +264,20 @@ impl fmt::Debug for Database {
     }
 }
 
+/// The metadata and state of an individual raft replica of a database.
 #[derive(Clone)]
 pub(super) struct Replica {
+    /// Retrieves address of the server hosting this replica
     address: Address,
+    /// Retrieves the database name for which this is a replica
     database_name: String,
+    /// Checks whether this is the primary replica of the raft cluster.
     is_primary: bool,
+    /// The raft protocol ‘term’ of this replica.
     term: i64,
+    /// Checks whether this is the preferred replica of the raft cluster. If true, Operations which can be run on any replica will prefer to use this replica.
     is_preferred: bool,
+    /// Retrieves the database for which this is a replica
     database: ServerDatabase,
 }
 

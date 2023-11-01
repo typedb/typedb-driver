@@ -24,6 +24,7 @@ package com.vaticle.typedb.driver.connection;
 import com.vaticle.typedb.driver.api.database.Database;
 import com.vaticle.typedb.driver.api.database.DatabaseManager;
 import com.vaticle.typedb.driver.common.NativeObject;
+import com.vaticle.typedb.driver.common.NativeIterator;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
 import java.util.List;
@@ -37,8 +38,16 @@ import static com.vaticle.typedb.driver.jni.typedb_driver.databases_get;
 import static java.util.stream.Collectors.toList;
 
 public class TypeDBDatabaseManagerImpl extends NativeObject<com.vaticle.typedb.driver.jni.DatabaseManager> implements DatabaseManager {
-    public TypeDBDatabaseManagerImpl(com.vaticle.typedb.driver.jni.Connection connection) {
-        super(database_manager_new(connection));
+    public TypeDBDatabaseManagerImpl(com.vaticle.typedb.driver.jni.Connection nativeConnection) {
+        super(newNative(nativeConnection));
+    }
+
+    private static com.vaticle.typedb.driver.jni.DatabaseManager newNative(com.vaticle.typedb.driver.jni.Connection nativeConnection) {
+        try {
+            return database_manager_new(nativeConnection);
+        } catch (com.vaticle.typedb.driver.jni.Error e) {
+            throw new TypeDBDriverException(e);
+        }
     }
 
     @Override
@@ -74,7 +83,7 @@ public class TypeDBDatabaseManagerImpl extends NativeObject<com.vaticle.typedb.d
     @Override
     public List<Database> all() {
         try {
-            return databases_all(nativeObject).stream().map(TypeDBDatabaseImpl::new).collect(toList());
+            return new NativeIterator<>(databases_all(nativeObject)).stream().map(TypeDBDatabaseImpl::new).collect(toList());
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

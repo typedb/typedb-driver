@@ -34,11 +34,26 @@ from typedb.native_driver_wrapper import options_new, options_has_infer, options
     options_has_schema_lock_acquire_timeout_millis, options_set_schema_lock_acquire_timeout_millis, \
     options_set_read_any_replica, options_get_read_any_replica, options_has_read_any_replica, Options as NativeOptions
 
-from typedb.common.exception import TypeDBDriverExceptionExt, ILLEGAL_STATE, POSITIVE_VALUE_REQUIRED
+from typedb.common.exception import TypeDBDriverException, ILLEGAL_STATE, POSITIVE_VALUE_REQUIRED
 from typedb.common.native_wrapper import NativeWrapper
 
 
 class TypeDBOptions(NativeWrapper[NativeOptions]):
+    """
+    TypeDB session and transaction options. ``TypeDBOptions`` object
+    can be used to override the default server behaviour.
+
+    Options could be specified either as constructor arguments or using
+    properties assignment.
+
+    Examples
+    --------
+
+    ::
+
+      transaction_options = TypeDBOptions(infer=True, session_idle_timeout_millis=20000)
+      transaction_options.explain = True
+    """
 
     def __init__(self, *,
                  infer: Optional[bool] = None,
@@ -75,11 +90,15 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
             self.read_any_replica = read_any_replica
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
-        return TypeDBDriverExceptionExt.of(ILLEGAL_STATE)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverException:
+        return TypeDBDriverException(ILLEGAL_STATE)
 
     @property
     def infer(self) -> Optional[bool]:
+        """
+        If set to ``True``, enables inference for queries. Only settable at transaction level and above.
+        Only affects read transactions.
+        """
         return options_get_infer(self.native_object) if options_has_infer(self.native_object) else None
 
     @infer.setter
@@ -88,6 +107,10 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
 
     @property
     def trace_inference(self) -> Optional[bool]:
+        """
+        If set to ``True``, reasoning tracing graphs are output in the logging directory.
+        Should be used with ``parallel = False``.
+        """
         return options_get_trace_inference(self.native_object) if options_has_trace_inference(self.native_object) \
             else None
 
@@ -97,6 +120,9 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
 
     @property
     def explain(self) -> Optional[bool]:
+        """
+        If set to ``True``, enables explanations for queries. Only affects read transactions.
+        """
         return options_get_explain(self.native_object) if options_has_explain(self.native_object) else None
 
     @explain.setter
@@ -105,6 +131,9 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
 
     @property
     def parallel(self) -> Optional[bool]:
+        """
+        If set to ``True``, the server uses parallel instead of single-threaded execution.
+        """
         return options_get_parallel(self.native_object) if options_has_parallel(self.native_object) else None
 
     @parallel.setter
@@ -113,6 +142,10 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
 
     @property
     def prefetch(self) -> Optional[bool]:
+        """
+        If set to ``True``, the first batch of answers is streamed to the driver
+        even without an explicit request for it.
+        """
         return options_get_prefetch(self.native_object) if options_has_prefetch(self.native_object) else None
 
     @prefetch.setter
@@ -121,49 +154,69 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
 
     @property
     def prefetch_size(self) -> Optional[int]:
+        """
+        If set, specifies a guideline number of answers that the server should send
+        before the driver issues a fresh request.
+        """
         return options_get_prefetch_size(self.native_object) if options_has_prefetch_size(self.native_object) else None
 
     @prefetch_size.setter
     def prefetch_size(self, prefetch_size: int):
         if prefetch_size < 1:
-            raise TypeDBDriverExceptionExt.of(POSITIVE_VALUE_REQUIRED, prefetch_size)
+            raise TypeDBDriverException(POSITIVE_VALUE_REQUIRED, prefetch_size)
         options_set_prefetch_size(self.native_object, prefetch_size)
 
     @property
     def session_idle_timeout_millis(self) -> Optional[int]:
+        """
+        If set, specifies a timeout that allows the server to close sessions if the driver
+        terminates or becomes unresponsive.
+        """
         return options_get_session_idle_timeout_millis(self.native_object) \
             if options_has_session_idle_timeout_millis(self.native_object) else None
 
     @session_idle_timeout_millis.setter
     def session_idle_timeout_millis(self, session_idle_timeout_millis: int):
         if session_idle_timeout_millis < 1:
-            raise TypeDBDriverExceptionExt.of(POSITIVE_VALUE_REQUIRED, session_idle_timeout_millis)
+            raise TypeDBDriverException(POSITIVE_VALUE_REQUIRED, session_idle_timeout_millis)
         options_set_session_idle_timeout_millis(self.native_object, session_idle_timeout_millis)
 
     @property
     def transaction_timeout_millis(self) -> Optional[int]:
+        """
+        If set, specifies a timeout for killing transactions automatically, preventing
+        memory leaks in unclosed transactions.
+        """
         return options_get_transaction_timeout_millis(self.native_object) \
             if options_has_transaction_timeout_millis(self.native_object) else None
 
     @transaction_timeout_millis.setter
     def transaction_timeout_millis(self, transaction_timeout_millis: int):
         if transaction_timeout_millis < 1:
-            raise TypeDBDriverExceptionExt.of(POSITIVE_VALUE_REQUIRED, transaction_timeout_millis)
+            raise TypeDBDriverException(POSITIVE_VALUE_REQUIRED, transaction_timeout_millis)
         options_set_transaction_timeout_millis(self.native_object, transaction_timeout_millis)
 
     @property
     def schema_lock_acquire_timeout_millis(self) -> Optional[int]:
+        """
+        If set, specifies how long the driver should wait if opening a session or transaction
+        is blocked by a schema write lock.
+        """
         return options_get_schema_lock_acquire_timeout_millis(self.native_object) \
             if options_has_schema_lock_acquire_timeout_millis(self.native_object) else None
 
     @schema_lock_acquire_timeout_millis.setter
     def schema_lock_acquire_timeout_millis(self, schema_lock_acquire_timeout_millis: int):
         if schema_lock_acquire_timeout_millis < 1:
-            raise TypeDBDriverExceptionExt.of(POSITIVE_VALUE_REQUIRED, schema_lock_acquire_timeout_millis)
+            raise TypeDBDriverException(POSITIVE_VALUE_REQUIRED, schema_lock_acquire_timeout_millis)
         options_set_schema_lock_acquire_timeout_millis(self.native_object, schema_lock_acquire_timeout_millis)
 
     @property
     def read_any_replica(self) -> Optional[bool]:
+        """
+        If set to ``True``, enables reading data from any replica, potentially boosting
+        read throughput. Only settable in TypeDB Enterprise.
+        """
         return options_get_read_any_replica(self.native_object) if options_has_read_any_replica(self.native_object) \
             else None
 

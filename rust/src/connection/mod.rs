@@ -20,10 +20,11 @@
  */
 
 mod connection;
+mod credential;
 mod message;
 mod network;
 mod runtime;
 mod transaction_stream;
 
-pub use self::connection::Connection;
+pub use self::{connection::Connection, credential::Credential};
 pub(crate) use self::{connection::ServerConnection, transaction_stream::TransactionStream};

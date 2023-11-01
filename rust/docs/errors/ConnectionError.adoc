@@ -1,0 +1,32 @@
+[#_enum_ConnectionError]
+=== ConnectionError
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols="~"]
+[options="header"]
+|===
+|Variant
+a| `BrokenPipe()`
+a| `ConnectionIsClosed()`
+a| `ConnectionRefused()`
+a| `DatabaseDoesNotExist(String)`
+a| `EnterpriseAllNodesFailed(String)`
+a| `EnterpriseEndpointEncrypted()`
+a| `EnterpriseReplicaNotPrimary()`
+a| `EnterpriseSSLCertificateNotValidated()`
+a| `EnterpriseTokenCredentialInvalid()`
+a| `EnterpriseUnableToConnect(String)`
+a| `InvalidResponseField(&'static str)`
+a| `MissingResponseField(&'static str)`
+a| `RPCMethodUnavailable(String)`
+a| `SessionCloseFailed()`
+a| `SessionIsClosed()`
+a| `TransactionIsClosed()`
+a| `TransactionIsClosedWithErrors(String)`
+a| `UnableToConnect()`
+a| `UnknownRequestId(ID)`
+|===
+// end::enum_constants[]
+

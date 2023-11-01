@@ -1,0 +1,19 @@
+[#_Explanation]
+=== Explanation
+
+An explanation of which rule was used for inferring the explained concept, the condition of the rule, the conclusion of the rule, and the mapping of variables between the query and the rule’s conclusion.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `conclusion` a| `ConceptMap` a| The Conclusion for this Explanation.
+a| `condition` a| `ConceptMap` a| The Condition for this Explanation.
+a| `rule` a| `Rule` a| Retrieves the Rule for this Explanation.
+a| `variableMapping` a| `Map` a| Retrieves the query variables for this Explanation.
+|===
+// end::properties[]
+

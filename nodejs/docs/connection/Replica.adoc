@@ -1,0 +1,20 @@
+[#_Replica]
+=== Replica
+
+The metadata and state of an individual raft replica of a database.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `address` a| `string` a| The address of the server hosting this replica
+a| `databaseName` a| `string` a| The database for which this is a replica.
+a| `preferred` a| `boolean` a| Checks whether this is the preferred replica of the raft cluster. If true, Operations which can be run on any replica will prefer to use this replica.
+a| `primary` a| `boolean` a| Checks whether this is the primary replica of the raft cluster.
+a| `term` a| `number` a| The raft protocol ‘term’ of this replica.
+|===
+// end::properties[]
+

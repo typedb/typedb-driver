@@ -28,9 +28,11 @@ java_library(
     srcs = ["Util.java"],
     visibility = ["//visibility:public"],
     deps = [
+        # Package dependencies
+        "//java/api",
 
         # Internal Repository Dependencies
-        # "@vaticle_typedb_common//:common",
+        "@vaticle_typedb_common//:common",
 
         # External Maven Dependencies
         "@maven//:junit_junit",

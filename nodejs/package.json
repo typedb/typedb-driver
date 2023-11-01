@@ -41,6 +41,7 @@
     "properties-reader": "2.2.0",
     "rimraf": "3.0.2",
     "tmp": "0.1.0",
+    "typedoc": "^0.25.1",
     "typescript": "4.9.5"
   }
 }

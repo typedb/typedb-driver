@@ -40,60 +40,60 @@ import static org.junit.Assert.assertTrue;
 public class EntitySteps {
     @When("{var} = entity\\( ?{type_label} ?) create new instance")
     public void entity_type_create_new_instance(String var, String typeLabel) {
-        put(var, tx().concepts().getEntityType(typeLabel).create(tx()));
+        put(var, tx().concepts().getEntityType(typeLabel).resolve().create(tx()).resolve());
     }
 
     @When("entity\\( ?{type_label} ?) create new instance; throws exception")
     public void entity_type_create_new_instance_throws_exception(String typeLabel) {
-        assertThrows(() -> tx().concepts().getEntityType(typeLabel).create(tx()));
+        assertThrows(() -> tx().concepts().getEntityType(typeLabel).resolve().create(tx()).resolve());
     }
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {int}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, int keyValue) {
-        Attribute key = tx().concepts().getAttributeType(keyType).put(tx(), keyValue);
-        Entity entity = tx().concepts().getEntityType(type).create(tx());
-        entity.setHas(tx(), key);
+        Attribute key = tx().concepts().getAttributeType(keyType).resolve().put(tx(), keyValue).resolve();
+        Entity entity = tx().concepts().getEntityType(type).resolve().create(tx()).resolve();
+        entity.setHas(tx(), key).resolve();
         put(var, entity);
     }
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {word}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, String keyValue) {
-        Attribute key = tx().concepts().getAttributeType(keyType).put(tx(), keyValue);
-        Entity entity = tx().concepts().getEntityType(type).create(tx());
-        entity.setHas(tx(), key);
+        Attribute key = tx().concepts().getAttributeType(keyType).resolve().put(tx(), keyValue).resolve();
+        Entity entity = tx().concepts().getEntityType(type).resolve().create(tx()).resolve();
+        entity.setHas(tx(), key).resolve();
         put(var, entity);
     }
 
     @When("{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {datetime}")
     public void entity_type_create_new_instance_with_key(String var, String type, String keyType, LocalDateTime keyValue) {
-        Attribute key = tx().concepts().getAttributeType(keyType).put(tx(), keyValue);
-        Entity entity = tx().concepts().getEntityType(type).create(tx());
-        entity.setHas(tx(), key);
+        Attribute key = tx().concepts().getAttributeType(keyType).resolve().put(tx(), keyValue).resolve();
+        Entity entity = tx().concepts().getEntityType(type).resolve().create(tx()).resolve();
+        entity.setHas(tx(), key).resolve();
         put(var, entity);
     }
 
     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {long}")
     public void entity_type_get_instance_with_key(String var1, String type, String keyType, long keyValue) {
-        put(var1, tx().concepts().getAttributeType(keyType).get(tx(), keyValue).getOwners(tx()).filter(owner -> owner.getType().getLabel().equals(Label.of(type))).findFirst().orElse(null));
+        put(var1, tx().concepts().getAttributeType(keyType).resolve().get(tx(), keyValue).resolve().getOwners(tx()).filter(owner -> owner.getType().getLabel().equals(Label.of(type))).findFirst().orElse(null));
     }
 
     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {word}")
     public void entity_type_get_instance_with_key(String var1, String type, String keyType, String keyValue) {
-        put(var1, tx().concepts().getAttributeType(keyType).get(tx(), keyValue).getOwners(tx()).filter(owner -> owner.getType().getLabel().equals(Label.of(type))).findFirst().orElse(null));
+        put(var1, tx().concepts().getAttributeType(keyType).resolve().get(tx(), keyValue).resolve().getOwners(tx()).filter(owner -> owner.getType().getLabel().equals(Label.of(type))).findFirst().orElse(null));
     }
 
     @When("{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {datetime}")
     public void entity_type_get_instance_with_key(String var1, String type, String keyType, LocalDateTime keyValue) {
-        put(var1, tx().concepts().getAttributeType(keyType).get(tx(), keyValue).getOwners(tx()).filter(owner -> owner.getType().getLabel().equals(Label.of(type))).findFirst().orElse(null));
+        put(var1, tx().concepts().getAttributeType(keyType).resolve().get(tx(), keyValue).resolve().getOwners(tx()).filter(owner -> owner.getType().getLabel().equals(Label.of(type))).findFirst().orElse(null));
     }
 
     @Then("entity\\( ?{type_label} ?) get instances contain: {var}")
     public void entity_type_get_instances_contain(String typeLabel, String var) {
-        assertTrue(tx().concepts().getEntityType(typeLabel).getInstances(tx()).anyMatch(i -> i.equals(get(var))));
+        assertTrue(tx().concepts().getEntityType(typeLabel).resolve().getInstances(tx()).anyMatch(i -> i.equals(get(var))));
     }
 
     @Then("entity\\( ?{type_label} ?) get instances is empty")
     public void entity_type_get_instances_is_empty(String typeLabel) {
-        assertEquals(0, tx().concepts().getEntityType(typeLabel).getInstances(tx()).count());
+        assertEquals(0, tx().concepts().getEntityType(typeLabel).resolve().getInstances(tx()).count());
     }
 }

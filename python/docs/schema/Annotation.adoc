@@ -1,0 +1,90 @@
+[#_Annotation]
+=== Annotation
+
+// tag::methods[]
+[#_Annotation_is_key]
+==== is_key
+
+[source,python]
+----
+is_key() -> bool
+----
+
+Checks if this ``Annotation`` is a ``@key`` annotation.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+annotation.is_key()
+----
+
+[#_Annotation_is_unique]
+==== is_unique
+
+[source,python]
+----
+is_unique() -> bool
+----
+
+Checks if this ``Annotation`` is a ``@unique`` annotation.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+annotation.is_unique()
+----
+
+[#_Annotation_key]
+==== key
+
+[source,python]
+----
+static key() -> Annotation
+----
+
+Produces a ``@key`` annotation.
+
+[caption=""]
+.Returns
+`Annotation`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+Annotation.key()
+----
+
+[#_Annotation_unique]
+==== unique
+
+[source,python]
+----
+static unique() -> Annotation
+----
+
+Produces a ``@unique`` annotation.
+
+[caption=""]
+.Returns
+`Annotation`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+Annotation.unique()
+----
+
+// end::methods[]
+

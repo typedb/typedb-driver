@@ -20,19 +20,21 @@
  */
 
 pub(crate) mod address;
-mod credential;
 pub mod error;
 mod id;
 pub mod info;
 mod options;
+#[cfg_attr(not(feature = "sync"), path = "promise_async.rs")]
+#[cfg_attr(feature = "sync", path = "promise_sync.rs")]
+mod promise;
 #[cfg_attr(not(feature = "sync"), path = "stream_async.rs")]
 #[cfg_attr(feature = "sync", path = "stream_sync.rs")]
 pub mod stream;
 
 pub use self::{
-    credential::Credential,
     error::Error,
     options::Options,
+    promise::{box_promise, BoxPromise, Promise},
     stream::{box_stream, BoxStream},
 };
 
@@ -45,6 +47,13 @@ pub type IID = id::ID;
 pub(crate) type RequestID = id::ID;
 pub(crate) type SessionID = id::ID;
 
+/// This enum is used to specify the type of the session.
+///
+/// # Examples
+///
+/// ```rust
+/// Session::new(database, SessionType::Schema).await
+/// ```
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum SessionType {
@@ -52,6 +61,13 @@ pub enum SessionType {
     Schema = 1,
 }
 
+/// This enum is used to specify the type of transaction.
+///
+/// # Examples
+///
+/// ```rust
+/// session.transaction(TransactionType::READ)
+/// ```
 #[repr(C)]
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum TransactionType {

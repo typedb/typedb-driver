@@ -77,15 +77,15 @@
     free((char *) $1);
 }
 
-/* Introduce TypeDBDriverException and use it to wrap all native exceptions */
+/* Introduce TypeDBDriverExceptionNative and use it to wrap all native exceptions */
 %{
 static PyObject* PyExc_TypeDBDriverError;
 %}
 
 %init %{
-    PyExc_TypeDBDriverError = PyErr_NewException("native_driver_python.TypeDBDriverException", NULL, NULL);
+    PyExc_TypeDBDriverError = PyErr_NewException("native_driver_python.TypeDBDriverExceptionNative", NULL, NULL);
     Py_INCREF(PyExc_TypeDBDriverError);
-    PyModule_AddObject(m, "TypeDBDriverException", PyExc_TypeDBDriverError);
+    PyModule_AddObject(m, "TypeDBDriverExceptionNative", PyExc_TypeDBDriverError);
 %}
 
 %exception {
@@ -97,7 +97,7 @@ static PyObject* PyExc_TypeDBDriverError;
 }
 
 %pythoncode %{
-    TypeDBDriverException = native_driver_python.TypeDBDriverException
+    TypeDBDriverExceptionNative = native_driver_python.TypeDBDriverExceptionNative
 %}
 
 /* ValueType* needs special handling */

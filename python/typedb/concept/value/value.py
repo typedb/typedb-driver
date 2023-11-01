@@ -31,7 +31,7 @@ from typedb.native_driver_wrapper import value_new_boolean, value_new_long, valu
     value_get_date_time_as_millis
 
 from typedb.api.concept.value.value import Value, ValueType
-from typedb.common.exception import TypeDBDriverExceptionExt, UNEXPECTED_NATIVE_VALUE, ILLEGAL_STATE, MISSING_VALUE
+from typedb.common.exception import TypeDBDriverException, UNEXPECTED_NATIVE_VALUE, ILLEGAL_STATE, MISSING_VALUE
 from typedb.concept.concept import _Concept
 
 
@@ -39,7 +39,7 @@ class _Value(Value, _Concept):
 
     @singledispatchmethod
     def of(value):
-        raise TypeDBDriverExceptionExt.of(UNEXPECTED_NATIVE_VALUE)
+        raise TypeDBDriverException(UNEXPECTED_NATIVE_VALUE)
 
     @of.register
     def _(value: bool):
@@ -56,7 +56,7 @@ class _Value(Value, _Concept):
     @of.register
     def _(value: str):
         if not value:
-            raise TypeDBDriverExceptionExt(MISSING_VALUE)
+            raise TypeDBDriverException(MISSING_VALUE)
         return _Value(value_new_string(value))
 
     @of.register
@@ -79,7 +79,7 @@ class _Value(Value, _Concept):
         elif self.is_datetime():
             return ValueType.DATETIME
         else:
-            raise TypeDBDriverExceptionExt(ILLEGAL_STATE)
+            raise TypeDBDriverException(ILLEGAL_STATE)
 
     def get(self) -> Union[bool, int, float, str, datetime]:
         if self.is_boolean():
@@ -93,7 +93,7 @@ class _Value(Value, _Concept):
         elif self.is_datetime():
             return self.as_datetime()
         else:
-            raise TypeDBDriverExceptionExt(ILLEGAL_STATE)
+            raise TypeDBDriverException(ILLEGAL_STATE)
 
     def is_boolean(self) -> bool:
         return value_is_boolean(self.native_object)

@@ -21,12 +21,14 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@rules_rust//rust:defs.bzl", "rust_library", "rust_static_library", "rustfmt_test")
+load("@rules_rust//rust:defs.bzl", "rust_library", "rust_static_library", "rustfmt_test", "rust_doc")
 load("@vaticle_bazel_distribution//crates:rules.bzl", "assemble_crate", "deploy_crate")
 load("@vaticle_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
 load("@vaticle_dependencies//builder/swig:java.bzl", "swig_java")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//tool/docs:rust/rules.bzl", "rust_docs", "rustdoc_to_adoc")
+load("//rust:docs_structure.bzl", "dir_mapping")
 
 typedb_driver_srcs = glob(["src/**/*.rs"])
 typedb_driver_tags = ["crate-name=typedb-driver"]
@@ -46,7 +48,6 @@ typedb_driver_deps = [
     "@vaticle_typeql//rust:typeql",
 ]
 typedb_driver_proc_macro_deps = [
-    "@crates//:async-trait",
     "@crates//:maybe-async",
 ]
 
@@ -90,6 +91,23 @@ deploy_crate(
     target = ":assemble_crate",
 )
 
+rust_docs(
+    name = "docs_html_async",
+    feature = "async",
+)
+
+rust_docs(
+    name = "docs_html_sync",
+    feature = "sync",
+)
+
+rustdoc_to_adoc(
+    name = "docs_adoc",
+    data = [":docs_html_async", ":docs_html_sync"],
+    docs_dirs = dir_mapping,
+    modes = {":docs_html_async": "async", ":docs_html_sync": "sync"},
+)
+
 checkstyle_test(
     name = "checkstyle",
     size = "small",
@@ -101,6 +119,7 @@ checkstyle_test(
         "README.md",
         "**/Cargo.toml",
         "**/Cargo.lock",
+        "docs/**/*.adoc",
     ]),
     license_type = "apache-header",
 )
@@ -111,6 +130,7 @@ filegroup(
 )
 
 rustfmt_test(
-    name = "driver_rustfmt_test",
-    targets = ["typedb_driver"],
+    name = "rustfmt_test",
+    targets = [":typedb_driver"],
+    size = "small",
 )

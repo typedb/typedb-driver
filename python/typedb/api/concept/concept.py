@@ -25,7 +25,7 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import Mapping, Union, TYPE_CHECKING
 
-from typedb.common.exception import TypeDBDriverExceptionExt, INVALID_CONCEPT_CASTING
+from typedb.common.exception import TypeDBDriverException, INVALID_CONCEPT_CASTING
 
 if TYPE_CHECKING:
     from typedb.api.concept.thing.attribute import Attribute
@@ -44,71 +44,309 @@ if TYPE_CHECKING:
 class Concept(ABC):
 
     def is_type(self) -> bool:
+        """
+        Checks if the concept is a ``Type``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.is_type()
+        """
         return False
 
     def is_thing_type(self) -> bool:
+        """
+        Checks if the concept is a ``ThingType``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.is_thing_type()
+        """
         return False
 
     def is_entity_type(self) -> bool:
+        """
+        Checks if the concept is an ``EntityType``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.is_entity_type()
+        """
         return False
 
     def is_attribute_type(self) -> bool:
+        """
+        Checks if the concept is an ``AttributeType``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.is_attribute_type()
+        """
         return False
 
     def is_relation_type(self) -> bool:
+        """
+        Checks if the concept is a ``RelationType``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.is_relation_type()
+        """
         return False
 
     def is_role_type(self) -> bool:
+        """
+        Checks if the concept is a ``RoleType``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.is_role_type()
+        """
         return False
 
     def is_thing(self) -> bool:
+        """
+        Checks if the concept is a ``Thing``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.is_thing()
+        """
         return False
 
     def is_entity(self) -> bool:
+        """
+        Checks if the concept is an ``Entity``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.is_entity()
+        """
         return False
 
     def is_attribute(self) -> bool:
+        """
+        Checks if the concept is an ``Attribute``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.is_attribute()
+        """
         return False
 
     def is_relation(self) -> bool:
+        """
+        Checks if the concept is a ``Relation``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.is_relation()
+        """
         return False
 
     def is_value(self) -> bool:
+        """
+        Checks if the concept is a ``Value``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.is_value()
+        """
         return False
 
     def as_type(self) -> Type:
-        raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Type"))
+        """
+        Casts the concept to ``Type``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.as_type()
+        """
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Type"))
 
     def as_thing_type(self) -> ThingType:
-        raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "ThingType"))
+        """
+        Casts the concept to ``ThingType``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.as_thing_type()
+        """
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "ThingType"))
 
     def as_entity_type(self) -> EntityType:
-        raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "EntityType"))
+        """
+        Casts the concept to ``EntityType``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.as_entity_type()
+        """
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "EntityType"))
 
     def as_attribute_type(self) -> AttributeType:
-        raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "AttributeType"))
+        """
+        Casts the concept to ``AttributeType``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.as_attribute_type()
+        """
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "AttributeType"))
 
     def as_relation_type(self) -> RelationType:
-        raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "RelationType"))
+        """
+        Casts the concept to ``RelationType``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.as_relation_type()
+        """
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "RelationType"))
 
     def as_role_type(self) -> RoleType:
-        raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "RoleType"))
+        """
+        Casts the concept to ``RoleType``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.as_role_type()
+        """
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "RoleType"))
 
     def as_thing(self) -> Thing:
-        raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Thing"))
+        """
+        Casts the concept to ``Thing``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.as_thing()
+        """
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Thing"))
 
     def as_entity(self) -> Entity:
-        raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Entity"))
+        """
+        Casts the concept to ``Entity``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.as_entity()
+        """
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Entity"))
 
     def as_attribute(self) -> Attribute:
-        raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Attribute"))
+        """
+        Casts the concept to ``Attribute``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.as_attribute()
+        """
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Attribute"))
 
     def as_relation(self) -> Relation:
-        raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Relation"))
+        """
+        Casts the concept to ``Relation``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.as_relation()
+        """
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Relation"))
 
     def as_value(self) -> Value:
-        raise TypeDBDriverExceptionExt.of(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Value"))
+        """
+        Casts the concept to ``Value``.
 
-    @abstractmethod
-    def to_json(self) -> Mapping[str, Union[str, int, float, bool, datetime]]:
-        pass
+        :return:
+
+        Examples
+        --------
+        ::
+
+            concept.as_value()
+        """
+        raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Value"))

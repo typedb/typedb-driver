@@ -43,6 +43,12 @@ java_library(
     ],
 )
 
+filegroup(
+    name = "docs_source_files",
+    srcs = glob(["*.java", "*/*.java", "*/*/*.java"], exclude=["test/**"]),
+    visibility = ["//java:__pkg__"],
+)
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*", "*/*", "*/*/*"]),

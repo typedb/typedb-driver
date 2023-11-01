@@ -31,6 +31,13 @@ pub enum Value {
 }
 
 impl Value {
+    /// Retrieves the `ValueType` of this value concept.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// value.get_value_type();
+    /// ```
     pub fn get_type(&self) -> ValueType {
         match self {
             Self::Boolean(_) => ValueType::Boolean,

@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Concept.MISSING_VALUE;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.ILLEGAL_CAST;
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 import static com.vaticle.typedb.driver.jni.typedb_driver.value_get_boolean;
@@ -114,26 +115,31 @@ public class ValueImpl extends ConceptImpl implements Value {
 
     @Override
     public boolean asBoolean() {
+        if (!isBoolean()) throw new TypeDBDriverException(ILLEGAL_CAST, "boolean");
         return value_get_boolean(nativeObject);
     }
 
     @Override
     public long asLong() {
+        if (!isLong()) throw new TypeDBDriverException(ILLEGAL_CAST, "long");
         return value_get_long(nativeObject);
     }
 
     @Override
     public double asDouble() {
+        if (!isDouble()) throw new TypeDBDriverException(ILLEGAL_CAST, "double");
         return value_get_double(nativeObject);
     }
 
     @Override
     public String asString() {
+        if (!isString()) throw new TypeDBDriverException(ILLEGAL_CAST, "String");
         return value_get_string(nativeObject);
     }
 
     @Override
     public LocalDateTime asDateTime() {
+        if (!isDateTime()) throw new TypeDBDriverException(ILLEGAL_CAST, "LocalDateTime");
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(value_get_date_time_as_millis(nativeObject)), ZoneOffset.UTC);
     }
 

@@ -1,0 +1,50 @@
+[#_Explainable]
+=== Explainable
+
+Contains an explainable object.
+
+// tag::methods[]
+[#_Explainable_conjunction]
+==== conjunction
+
+[source,python]
+----
+conjunction() -> str
+----
+
+Retrieves the subquery of the original query that is actually being explained.
+
+[caption=""]
+.Returns
+`str`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+explainable.conjunction()
+----
+
+[#_Explainable_id]
+==== id
+
+[source,python]
+----
+id() -> int
+----
+
+Retrieves the unique ID that identifies this ``Explainable``.
+
+[caption=""]
+.Returns
+`int`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+explainable.id()
+----
+
+// end::methods[]
+

@@ -30,7 +30,7 @@ use super::{
 };
 
 #[no_mangle]
-pub extern "C" fn database_drop(database: *mut Database) {
+pub extern "C" fn database_close(database: *mut Database) {
     free(database);
 }
 

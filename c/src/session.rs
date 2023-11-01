@@ -21,24 +21,29 @@
 
 use std::ffi::c_char;
 
-use typedb_driver::{Database, Options, Session, SessionType};
+use typedb_driver::{DatabaseManager, Options, Session, SessionType};
 
 use super::{
     error::{try_release, unwrap_void},
-    memory::{borrow, borrow_mut, free, release_string, take_ownership},
+    memory::{borrow, borrow_mut, free, release_string, string_view},
 };
 
 #[no_mangle]
 pub extern "C" fn session_new(
-    database: *mut Database,
+    databases: *mut DatabaseManager,
+    database_name: *const c_char,
     session_type: SessionType,
     options: *const Options,
 ) -> *mut Session {
-    try_release(Session::new_with_options(take_ownership(database), session_type, borrow(options).clone()))
+    try_release(
+        borrow(databases)
+            .get(string_view(database_name))
+            .and_then(|db| Session::new_with_options(db, session_type, borrow(options).clone())),
+    )
 }
 
 #[no_mangle]
-pub extern "C" fn session_drop(session: *mut Session) {
+pub extern "C" fn session_close(session: *mut Session) {
     free(session);
 }
 

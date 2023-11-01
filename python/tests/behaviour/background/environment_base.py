@@ -45,8 +45,8 @@ def before_scenario(context: Context):
     context.get_thing_type = lambda root_label, type_label: _get_thing_type_impl(context, root_label, type_label)
     context.clear_answers = lambda: _clear_answers_impl(context)
     context.option_setters = {
-        "session-idle-timeout-millis": lambda options, value:  setattr(options, "session_idle_timeout_millis", value),
-        "transaction-timeout-millis": lambda options, value:  setattr(options, "transaction_timeout_millis", value),
+        "session-idle-timeout-millis": lambda options, value: setattr(options, "session_idle_timeout_millis", value),
+        "transaction-timeout-millis": lambda options, value: setattr(options, "transaction_timeout_millis", value),
     }
 
 
@@ -56,20 +56,21 @@ def _put_impl(context: Context, variable: str, thing: Thing):
 
 def _get_thing_type_impl(context: Context, root_label: RootLabel, type_label: str):
     if root_label == RootLabel.ENTITY:
-        return context.tx().concepts.get_entity_type(type_label)
+        return context.tx().concepts.get_entity_type(type_label).resolve()
     elif root_label == RootLabel.ATTRIBUTE:
-        return context.tx().concepts.get_attribute_type(type_label)
+        return context.tx().concepts.get_attribute_type(type_label).resolve()
     elif root_label == RootLabel.RELATION:
-        return context.tx().concepts.get_relation_type(type_label)
+        return context.tx().concepts.get_relation_type(type_label).resolve()
     else:
         raise ValueError("Unrecognised value")
 
 
 def _clear_answers_impl(context: Context):
     context.answers = None
-    context.numeric_answer = None
+    context.fetch_answers = None
     context.answer_groups = None
-    context.numeric_answer_groups = None
+    context.value_answer = None
+    context.value_answer_groups = None
 
 
 def after_scenario(context: Context, scenario):

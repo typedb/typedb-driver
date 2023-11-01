@@ -33,43 +33,243 @@ import {TypeTransitivity as TransitivityProto, ValueType as ValueTypeProto} from
 import {Value} from "./value/Value";
 
 export interface Concept {
+    /**
+     * Checks if the concept is a <code>Type</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.isType()
+     * ```
+     */
     isType(): boolean;
 
+    /**
+     * Checks if the concept is a <code>RoleType</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.isRoleType()
+     * ```
+     */
     isRoleType(): boolean;
+    /**
+     * Checks if the concept is a <code>ThingType</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.isThingType()
+     * ```
+     */
     isThingType(): boolean;
 
+    /**
+     * Checks if the concept is an <code>EntityType</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.isEntityType()
+     * ```
+     */
     isEntityType(): boolean;
+    /**
+     * Checks if the concept is a <code>RelationType</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.isRelationType()
+     * ```
+     */
     isRelationType(): boolean;
+    /**
+     * Checks if the concept is an <code>AttributeType</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.isAttributeType()
+     * ```
+     */
     isAttributeType(): boolean;
 
+    /**
+     * Checks if the concept is a <code>Thing</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.isThing()
+     * ```
+     */
     isThing(): boolean;
 
+    /**
+     * Checks if the concept is an <code>Entity</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.isEntity()
+     * ```
+     */
     isEntity(): boolean;
+    /**
+     * Checks if the concept is a <code>Relation</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.isRelation()
+     * ```
+     */
     isRelation(): boolean;
+    /**
+     * Checks if the concept is an <code>Attribute</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.isAttribute()
+     * ```
+     */
     isAttribute(): boolean;
 
+    /**
+     * Checks if the concept is a <code>Value</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.isValue()
+     * ```
+     */
     isValue(): boolean;
 
+    /**
+     * Casts the concept to <code>Type</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.asType()
+     * ```
+     */
     asType(): Type;
 
+    /**
+     * Casts the concept to <code>ThingType</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.asThingType()
+     * ```
+     */
     asThingType(): ThingType;
+    /**
+     * Casts the concept to <code>RoleType</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.asRoleType()
+     * ```
+     */
     asRoleType(): RoleType;
 
+    /**
+     * Casts the concept to <code>EntityType</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.asEntityType()
+     * ```
+     */
     asEntityType(): EntityType;
+    /**
+     * Casts the concept to <code>RelationType</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.asRelationType()
+     * ```
+     */
     asRelationType(): RelationType;
+    /**
+     * Casts the concept to <code>AttributeType</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.asAttributeType()
+     * ```
+     */
     asAttributeType(): AttributeType;
 
+    /**
+     * Casts the concept to <code>Thing</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.asThing()
+     * ```
+     */
     asThing(): Thing;
 
+    /**
+     * Casts the concept to <code>Entity</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.asEntity()
+     * ```
+     */
     asEntity(): Entity;
+    /**
+     * Casts the concept to <code>Relation</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.asRelation()
+     * ```
+     */
     asRelation(): Relation;
+    /**
+     * Casts the concept to <code>Attribute</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.asAttribute()
+     * ```
+     */
     asAttribute(): Attribute;
 
+    /**
+     * Casts the concept to <code>Value</code>.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * concept.asValue()
+     * ```
+     */
     asValue(): Value;
 
+    /**
+    * Checks if this concept is equal to the argument <code>concept</code>.
+    * @param concept - The concept to compare to.
+    */
     equals(concept: Concept): boolean;
-
-    toJSONRecord(): Record<string, boolean | string | number>;
 }
 
 export namespace Concept {
@@ -95,6 +295,7 @@ export namespace Concept {
         }
     }
 
+    /** TypeQL value types for attributes & value concepts. */
     export namespace ValueType {
         export const OBJECT = new ValueType(ValueTypeProto.OBJECT, "OBJECT");
         export const BOOLEAN = new ValueType(ValueTypeProto.BOOLEAN, "BOOLEAN");

@@ -31,13 +31,53 @@ if TYPE_CHECKING:
 
 
 class Entity(Thing, ABC):
+    """
+    Instance of data of an entity type, representing a standalone object
+    that exists in the data model independently.
+
+    Entity does not have a value. It is usually addressed by its ownership
+    over attribute instances and/or roles played in relation instances.
+    """
 
     def is_entity(self) -> bool:
+        """
+        Checks if the concept is an ``Entity``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            entity.is_entity()
+        """
         return True
 
     def as_entity(self) -> Entity:
+        """
+        Casts the concept to ``Entity``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            entity.as_entity()
+        """
         return self
 
     @abstractmethod
     def get_type(self) -> EntityType:
+        """
+        Retrieves the type which this ``Entity`` belongs to.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+            entity.get_type()
+        """
         pass

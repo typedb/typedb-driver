@@ -22,10 +22,44 @@
 import {Stream} from "../../common/util/Stream";
 import {Rule} from "./Rule";
 
+/** Provides methods for manipulating rules in the database. */
 export interface LogicManager {
+    /**
+     * Retrieves the Rule that has the given label.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * transaction.logic.getRule(label)
+     * ```
+     *
+     * @param label - The label of the Rule to create or retrieve
+     */
     getRule(label: string): Promise<Rule | undefined>;
 
+    /**
+     * Retrieves all rules.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * transaction.logic.getRules()
+     * ```
+     */
     getRules(): Stream<Rule>;
 
+    /**
+     * Creates a new Rule if none exists with the given label, or replaces the existing one.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * transaction.logic.putRule(label, when, then)
+     * ```
+     *
+     * @param label - The label of the Rule to create or replace
+     * @param when - The when body of the rule to create
+     * @param then - The then body of the rule to create
+     */
     putRule(label: string, when: string, then: string): Promise<Rule>;
 }

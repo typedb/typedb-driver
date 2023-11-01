@@ -23,8 +23,8 @@
 
 export * from "./api/answer/ConceptMap";
 export * from "./api/answer/ConceptMapGroup";
-export * from "./api/answer/Numeric";
-export * from "./api/answer/NumericGroup";
+export * from "./api/answer/ValueGroup";
+export * from "./api/answer/JSON";
 
 export * from "./api/concept/thing/Attribute";
 export * from "./api/concept/thing/Entity";

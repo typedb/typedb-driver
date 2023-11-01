@@ -22,29 +22,169 @@
 import {Stream} from "../../common/util/Stream";
 import {ConceptMap} from "../answer/ConceptMap";
 import {ConceptMapGroup} from "../answer/ConceptMapGroup";
-import {Numeric} from "../answer/Numeric";
-import {NumericGroup} from "../answer/NumericGroup";
+import {ValueGroup} from "../answer/ValueGroup";
 import {TypeDBOptions} from "../connection/TypeDBOptions";
 import {Explanation} from "../logic/Explanation";
+import {Value} from "../concept/value/Value";
+import {JSONObject} from "../answer/JSON";
 
+/** Provides methods for executing TypeQL queries in the transaction. */
 export interface QueryManager {
-    match(query: string, options?: TypeDBOptions): Stream<ConceptMap>;
+    /**
+     * Performs a TypeQL Get query in the transaction.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * transaction.query.get(query, options)
+     * ```
+     *
+     * @param query - The TypeQL Get query to be executed
+     * @param options - Specify query options
+     */
+    get(query: string, options?: TypeDBOptions): Stream<ConceptMap>;
 
-    matchAggregate(query: string, options?: TypeDBOptions): Promise<Numeric>;
+    /**
+     * Performs a TypeQL Get Aggregate query in the transaction. Returns an empty promise if the aggregate
+     * was not well-defined (such as stddev of 0 elements).
+     *
+     * ### Examples
+     *
+     * ```ts
+     * transaction.query.getAggregate(query, options)
+     * ```
+     *
+     * @param query - The TypeQL Get Aggregate query to be executed
+     * @param options - Specify query options
+     */
+    getAggregate(query: string, options?: TypeDBOptions): Promise<Value | undefined>;
 
-    matchGroup(query: string, options?: TypeDBOptions): Stream<ConceptMapGroup>;
+    /**
+     * Performs a TypeQL Get Group query in the transaction.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * transaction.query.getGroup(query, options)
+     * ```
+     *
+     * @param query - The TypeQL Get Group query to be executed
+     * @param options - Specify query options
+     */
+    getGroup(query: string, options?: TypeDBOptions): Stream<ConceptMapGroup>;
 
-    matchGroupAggregate(query: string, options?: TypeDBOptions): Stream<NumericGroup>;
+    /**
+     * Performs a TypeQL Get Group Aggregate query in the transaction.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * transaction.query.getGroupAggregate(query, options)
+     * ```
+     *
+     * @param query - The TypeQL Get Group Aggregate query to be executed
+     * @param options - Specify query options
+     */
+    getGroupAggregate(query: string, options?: TypeDBOptions): Stream<ValueGroup>;
 
+    /**
+     * Performs a TypeQL Fetch query in the transaction.
+     *
+     * Returns a stream of JSON Objects of strings to JSON.
+     * JSON can be: Arrays of JSON, Objects of strings to JSON, or primitives such as strings or numbers or booleans.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * transaction.query.fetch(query, options)
+     * ```
+     *
+     * @param query - The TypeQL Fetch query to be executed
+     * @param options - Specify query options
+     */
+    fetch(query: string, options?: TypeDBOptions): Stream<JSONObject>;
+
+    /**
+     * Performs a TypeQL Insert query in the transaction.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * transaction.query.insert(query, options)
+     * ```
+     *
+     * @param query - The TypeQL Insert query to be executed
+     * @param options - Specify query options
+     */
     insert(query: string, options?: TypeDBOptions): Stream<ConceptMap>;
 
+    /**
+     * Performs a TypeQL Delete query in the transaction.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * transaction.query.delete(query, options)
+     * ```
+     *
+     * @param query - The TypeQL Delete query to be executed
+     * @param options - Specify query options
+     */
     delete(query: string, options?: TypeDBOptions): Promise<void>;
 
+    /**
+     * Performs a TypeQL Update query in the transaction.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * transaction.query.update(query, options)
+     * ```
+     *
+     * @param query - The TypeQL Update query to be executed
+     * @param options - Specify query options
+     */
     update(query: string, options?: TypeDBOptions): Stream<ConceptMap>;
 
+    /**
+     * Performs a TypeQL Define query in the transaction.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * transaction.query.define(query, options)
+     * ```
+     *
+     * @param query - The TypeQL Define query to be executed
+     * @param options - Specify query options
+     */
     define(query: string, options?: TypeDBOptions): Promise<void>;
 
+    /**
+     * Performs a TypeQL Undefine query in the transaction.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * transaction.query.undefine(query, options)
+     * ```
+     *
+     * @param query - The TypeQL Undefine query to be executed
+     * @param options - Specify query options
+     */
     undefine(query: string, options?: TypeDBOptions): Promise<void>;
 
+    /**
+     * Performs a TypeQL Explain query in the transaction.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * transaction.query.explain(explainable, options)
+     * ```
+     *
+     * @param explainable - The Explainable to be explained
+     * @param options - Specify query options
+     */
     explain(explainable: ConceptMap.Explainable, options?: TypeDBOptions): Stream<Explanation>;
 }

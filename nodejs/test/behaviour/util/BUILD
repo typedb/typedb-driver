@@ -26,9 +26,11 @@ load("//nodejs/test/behaviour:rules.bzl", "behaviour_test_ts_config")
 ts_project(
     name = "util",
     srcs = ["Util.ts"],
-    tsconfig = {},
+    tsconfig = behaviour_test_ts_config(),
     declaration = True,
     deps = [
+        "//nodejs:driver-nodejs",
+
         "//nodejs:node_modules/@types/node",
     ],
     visibility = ["//visibility:public"],

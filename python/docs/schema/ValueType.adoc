@@ -1,0 +1,38 @@
+[#_ValueType]
+=== ValueType
+
+TypeQL value types for attributes and value concepts.
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols="~,~"]
+[options="header"]
+|===
+|Name |Value
+a| `BOOLEAN` a| `_ValueType(is_writable=True, is_keyable=False, 1)`
+a| `DATETIME` a| `_ValueType(is_writable=True, is_keyable=True, 5)`
+a| `DOUBLE` a| `_ValueType(is_writable=True, is_keyable=False, 3)`
+a| `LONG` a| `_ValueType(is_writable=True, is_keyable=True, 2)`
+a| `OBJECT` a| `_ValueType(is_writable=False, is_keyable=False, 0)`
+a| `STRING` a| `_ValueType(is_writable=True, is_keyable=True, 4)`
+|===
+// end::enum_constants[]
+
+// tag::methods[]
+[#_ValueType_of]
+==== of
+
+[source,python]
+----
+static of(value_type: Object | Boolean | Long | Double | String | DateTime) -> ValueType
+----
+
+
+
+[caption=""]
+.Returns
+`ValueType`
+
+// end::methods[]
+

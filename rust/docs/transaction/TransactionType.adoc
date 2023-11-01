@@ -1,0 +1,17 @@
+[#_enum_TransactionType]
+=== TransactionType
+
+This enum is used to specify the type of transaction.
+
+[caption=""]
+.Enum variants
+// tag::enum_constants[]
+[cols="~"]
+[options="header"]
+|===
+|Variant
+a| `Read`
+a| `Write`
+|===
+// end::enum_constants[]
+

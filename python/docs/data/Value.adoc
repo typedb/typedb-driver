@@ -1,0 +1,325 @@
+[#_Value]
+=== Value
+
+*Supertypes:*
+
+* `Concept`
+
+// tag::methods[]
+[#_Value_as_boolean]
+==== as_boolean
+
+[source,python]
+----
+as_boolean() -> bool
+----
+
+Returns a ``boolean`` value of this value concept. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.as_boolean()
+----
+
+[#_Value_as_datetime]
+==== as_datetime
+
+[source,python]
+----
+as_datetime() -> datetime
+----
+
+Returns a ``datetime`` value of this value concept. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`datetime`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.as_datetime()
+----
+
+[#_Value_as_double]
+==== as_double
+
+[source,python]
+----
+as_double() -> float
+----
+
+Returns a ``double`` value of this value concept. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`float`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.as_double()
+----
+
+[#_Value_as_long]
+==== as_long
+
+[source,python]
+----
+as_long() -> int
+----
+
+Returns a ``long`` value of this value concept. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`int`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.as_long()
+----
+
+[#_Value_as_string]
+==== as_string
+
+[source,python]
+----
+as_string() -> str
+----
+
+Returns a ``string`` value of this value concept. If the value has another type, raises an exception.
+
+[caption=""]
+.Returns
+`str`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.as_string()
+----
+
+[#_Value_as_value]
+==== as_value
+
+[source,python]
+----
+as_value() -> Value
+----
+
+Casts the concept to ``Value``.
+
+[caption=""]
+.Returns
+`Value`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.as_value()
+----
+
+[#_Value_get]
+==== get
+
+[source,python]
+----
+get() -> bool | int | float | str | datetime
+----
+
+Retrieves the value which this value concept holds.
+
+[caption=""]
+.Returns
+`bool | int | float | str | datetime`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.get()
+----
+
+[#_Value_get_value_type]
+==== get_value_type
+
+[source,python]
+----
+get_value_type() -> ValueType
+----
+
+Retrieves the ``ValueType`` of this value concept.
+
+[caption=""]
+.Returns
+`ValueType`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.get_value_type()
+----
+
+[#_Value_is_boolean]
+==== is_boolean
+
+[source,python]
+----
+is_boolean() -> bool
+----
+
+Returns ``True`` if the value which this value concept holds is of type ``boolean``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.is_boolean()
+----
+
+[#_Value_is_datetime]
+==== is_datetime
+
+[source,python]
+----
+is_datetime() -> bool
+----
+
+Returns ``True`` if the value which this value concept holds is of type ``datetime``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.is_datetime()
+----
+
+[#_Value_is_double]
+==== is_double
+
+[source,python]
+----
+is_double() -> bool
+----
+
+Returns ``True`` if the value which this value concept holds is of type ``double``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.is_double()
+----
+
+[#_Value_is_long]
+==== is_long
+
+[source,python]
+----
+is_long() -> bool
+----
+
+Returns ``True`` if the value which this value concept holds is of type ``long``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.is_long()
+----
+
+[#_Value_is_string]
+==== is_string
+
+[source,python]
+----
+is_string() -> bool
+----
+
+Returns ``True`` if the value which this value concept holds is of type ``string``. Otherwise, returns ``False``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.is_string()
+----
+
+[#_Value_is_value]
+==== is_value
+
+[source,python]
+----
+is_value() -> bool
+----
+
+Checks if the concept is a ``Value``.
+
+[caption=""]
+.Returns
+`bool`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.is_value()
+----
+
+[#_Value_to_json]
+==== to_json
+
+[source,python]
+----
+to_json() -> Mapping[str, str | int | float | bool]
+----
+
+Retrieves this value concept as JSON.
+
+[caption=""]
+.Returns
+`Mapping[str, str | int | float | bool]`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+value.to_json()
+----
+
+// end::methods[]
+

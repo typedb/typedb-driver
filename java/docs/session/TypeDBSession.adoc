@@ -1,0 +1,194 @@
+[#_TypeDBSession]
+=== TypeDBSession
+
+*Package*: `com.vaticle.typedb.driver.api`
+
+*Superinterfaces:*
+
+* `java.lang.AutoCloseable`
+
+// tag::methods[]
+[#_TypeDBSession_close_]
+==== close
+
+[source,java]
+----
+void close()
+----
+
+Closes the session. Before opening a new session, the session currently open should first be closed. 
+
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+session.close();
+----
+
+[#_TypeDBSession_database_name_]
+==== database_name
+
+[source,java]
+----
+@CheckReturnValue
+java.lang.String database_name()
+----
+
+Returns the name of the database of the session. 
+
+
+[caption=""]
+.Returns
+`java.lang.String`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+session.databaseName();
+----
+
+[#_TypeDBSession_isOpen_]
+==== isOpen
+
+[source,java]
+----
+@CheckReturnValue
+boolean isOpen()
+----
+
+Checks whether this session is open. 
+
+
+[caption=""]
+.Returns
+`boolean`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+session.isOpen();
+----
+
+[#_TypeDBSession_onClose_java_lang_Runnable]
+==== onClose
+
+[source,java]
+----
+void onClose​(java.lang.Runnable function)
+----
+
+Registers a callback function which will be executed when this session is closed. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `function` a| The callback function. a| `java.lang.Runnable`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+session.onClose(function)
+----
+
+[#_TypeDBSession_options_]
+==== options
+
+[source,java]
+----
+@CheckReturnValue
+TypeDBOptions options()
+----
+
+Gets the options for the session
+
+[caption=""]
+.Returns
+`TypeDBOptions`
+
+[#_TypeDBSession_transaction_com_vaticle_typedb_driver_api_TypeDBTransaction_Type]
+==== transaction
+
+[source,java]
+----
+@CheckReturnValue
+TypeDBTransaction transaction​(TypeDBTransaction.Type type)
+----
+
+Opens a transaction on the database connected to the session with default options.
+
+
+See also: <<#_transaction_com_vaticle_typedb_driver_api_TypeDBTransaction_Type_com_vaticle_typedb_driver_api_TypeDBOptions,``transaction(TypeDBTransaction.Type, TypeDBOptions)``>>
+
+
+[caption=""]
+.Returns
+`TypeDBTransaction`
+
+[#_TypeDBSession_transaction_com_vaticle_typedb_driver_api_TypeDBTransaction_Type_com_vaticle_typedb_driver_api_TypeDBOptions]
+==== transaction
+
+[source,java]
+----
+@CheckReturnValue
+TypeDBTransaction transaction​(TypeDBTransaction.Type type,
+                              TypeDBOptions options)
+----
+
+Opens a transaction to perform read or write queries on the database connected to the session. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `type` a| The type of transaction to be created (READ or WRITE) a| `TypeDBTransaction.Type`
+a| `options` a| Options for the session a| `TypeDBOptions`
+|===
+
+[caption=""]
+.Returns
+`TypeDBTransaction`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+session.transaction(transactionType, options);
+----
+
+[#_TypeDBSession_type_]
+==== type
+
+[source,java]
+----
+@CheckReturnValue
+TypeDBSession.Type type()
+----
+
+The current session’s type (SCHEMA or DATA)
+
+[caption=""]
+.Returns
+`TypeDBSession.Type`
+
+// end::methods[]
+

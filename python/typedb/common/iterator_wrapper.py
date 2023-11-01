@@ -21,6 +21,9 @@
 
 from typing import Callable
 
+from typedb.native_driver_wrapper import TypeDBDriverExceptionNative
+from typedb.common.exception import TypeDBDriverException
+
 
 class IteratorWrapper:
 
@@ -32,6 +35,9 @@ class IteratorWrapper:
         return self
 
     def __next__(self):
-        if next_item := self._next(self._iterator):
-            return next_item
-        raise StopIteration
+        try:
+            if next_item := self._next(self._iterator):
+                return next_item
+            raise StopIteration
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)

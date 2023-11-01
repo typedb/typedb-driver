@@ -65,7 +65,7 @@ typedb_java_test(
         "//java/test/behaviour/connection:steps-enterprise",
         "//java/test/behaviour/connection/session:steps",
         "//java/test/behaviour/connection/transaction:steps",
-        "//java/test/behaviour/typeql:steps",
+        "//java/test/behaviour/query:steps",
         "//java/test/behaviour/util:steps",
     ],
     deps = [

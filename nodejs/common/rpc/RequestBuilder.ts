@@ -129,10 +129,11 @@ import {
     QueryManagerDeleteReq,
     QueryManagerExplainReq,
     QueryManagerInsertReq,
-    QueryManagerMatchAggregateReq,
-    QueryManagerMatchGroupAggregateReq,
-    QueryManagerMatchGroupReq,
-    QueryManagerMatchReq,
+    QueryManagerGetAggregateReq,
+    QueryManagerGetGroupAggregateReq,
+    QueryManagerGetGroupReq,
+    QueryManagerGetReq,
+    QueryManagerFetchReq,
     QueryManagerReq,
     QueryManagerUndefineReq,
     QueryManagerUpdateReq
@@ -372,27 +373,33 @@ export namespace RequestBuilder {
             }), options);
         }
 
-        export function matchReq(query: string, options: Options) {
+        export function getReq(query: string, options: Options) {
             return queryManagerReq(new QueryManagerReq({
-                match_req: new QueryManagerMatchReq({query: query})
+                get_req: new QueryManagerGetReq({query: query})
             }), options);
         }
 
-        export function matchAggregateReq(query: string, options: Options) {
+        export function getAggregateReq(query: string, options: Options) {
             return queryManagerReq(new QueryManagerReq({
-                match_aggregate_req: new QueryManagerMatchAggregateReq({query: query})
+                get_aggregate_req: new QueryManagerGetAggregateReq({query: query})
             }), options);
         }
 
-        export function matchGroupReq(query: string, options: Options) {
+        export function getGroupReq(query: string, options: Options) {
             return queryManagerReq(new QueryManagerReq({
-                match_group_req: new QueryManagerMatchGroupReq({query: query})
+                get_group_req: new QueryManagerGetGroupReq({query: query})
             }), options);
         }
 
-        export function matchGroupAggregateReq(query: string, options: Options) {
+        export function getGroupAggregateReq(query: string, options: Options) {
             return queryManagerReq(new QueryManagerReq({
-                match_group_aggregate_req: new QueryManagerMatchGroupAggregateReq({query: query})
+                get_group_aggregate_req: new QueryManagerGetGroupAggregateReq({query: query})
+            }), options);
+        }
+
+        export function fetchReq(query: string, options: Options) {
+            return queryManagerReq(new QueryManagerReq({
+                fetch_req: new QueryManagerFetchReq({query: query})
             }), options);
         }
 

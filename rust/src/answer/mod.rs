@@ -21,12 +21,13 @@
 
 pub mod concept_map;
 mod concept_map_group;
-mod numeric;
-mod numeric_group;
+mod json;
+pub(crate) mod readable_concept;
+mod value_group;
 
 pub use self::{
     concept_map::{ConceptMap, Explainable, Explainables},
     concept_map_group::ConceptMapGroup,
-    numeric::Numeric,
-    numeric_group::NumericGroup,
+    json::JSON,
+    value_group::ValueGroup,
 };

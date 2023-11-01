@@ -19,7 +19,10 @@
  * under the License.
  */
 
-use std::collections::HashMap;
+use std::{
+    borrow::Cow,
+    collections::{HashMap, HashSet},
+};
 
 mod steps;
 
@@ -32,7 +35,7 @@ use futures::{
 use regex::{Captures, Regex};
 use tokio::time::sleep;
 use typedb_driver::{
-    answer::ConceptMap,
+    answer::{ConceptMap, JSON},
     concept::{
         Annotation, Attribute, AttributeType, Concept, Entity, EntityType, Relation, RelationType, RoleType, Value,
     },
@@ -40,7 +43,7 @@ use typedb_driver::{
     transaction::concept::api::ThingAPI,
     DatabaseManager, Result as TypeDBResult,
 };
-use typeql::{parse_patterns, parse_query, pattern::Variable};
+use typeql::{parse_pattern, parse_query, parse_statement, pattern::Statement};
 
 use crate::{assert_with_timeout, behaviour::Context};
 
@@ -154,19 +157,82 @@ fn value_equals_str(value: &Value, expected: &str) -> bool {
     }
 }
 
+pub fn json_matches_str(string: &str, json: &JSON) -> TypeDBResult<bool> {
+    parse_json(string).map(|rhs| jsons_equal_up_to_reorder(json, &rhs))
+}
+
+fn parse_json(json: &str) -> TypeDBResult<JSON> {
+    fn serde_json_into_fetch_answer(json: serde_json::Value) -> JSON {
+        match json {
+            serde_json::Value::Null => unreachable!("nulls are not allowed in fetch results"),
+            serde_json::Value::Bool(bool) => JSON::Boolean(bool),
+            serde_json::Value::Number(number) => JSON::Number(number.as_f64().unwrap()),
+            serde_json::Value::String(string) => JSON::String(Cow::Owned(string)),
+            serde_json::Value::Array(array) => {
+                JSON::Array(array.into_iter().map(serde_json_into_fetch_answer).collect())
+            }
+            serde_json::Value::Object(object) => JSON::Object(
+                object.into_iter().map(|(k, v)| (Cow::Owned(k), serde_json_into_fetch_answer(v))).collect(),
+            ),
+        }
+    }
+
+    serde_json::from_str(json)
+        .map(serde_json_into_fetch_answer)
+        .map_err(|e| format!("Could not parse expected fetch answer: {e:?}").into())
+}
+
+fn jsons_equal_up_to_reorder(lhs: &JSON, rhs: &JSON) -> bool {
+    match (lhs, rhs) {
+        (JSON::Object(lhs), JSON::Object(rhs)) => {
+            if lhs.len() != rhs.len() {
+                return false;
+            }
+            lhs.iter().all(|(key, lhs_value)| match rhs.get(key) {
+                Some(rhs_value) => jsons_equal_up_to_reorder(lhs_value, rhs_value),
+                None => false,
+            })
+        }
+        (JSON::Array(lhs), JSON::Array(rhs)) => {
+            if lhs.len() != rhs.len() {
+                return false;
+            }
+            let mut rhs_matches = HashSet::new();
+            for item in lhs {
+                match rhs
+                    .iter()
+                    .enumerate()
+                    .filter(|(i, _)| !rhs_matches.contains(i))
+                    .find_map(|(i, rhs_item)| jsons_equal_up_to_reorder(item, rhs_item).then_some(i))
+                {
+                    Some(idx) => {
+                        rhs_matches.insert(idx);
+                    }
+                    None => return false,
+                }
+            }
+            true
+        }
+        (JSON::String(lhs), JSON::String(rhs)) => lhs == rhs,
+        (&JSON::Number(lhs), &JSON::Number(rhs)) => equals_approximate(lhs, rhs),
+        (JSON::Boolean(lhs), JSON::Boolean(rhs)) => lhs == rhs,
+        _ => false,
+    }
+}
+
 pub fn equals_approximate(first: f64, second: f64) -> bool {
     const EPS: f64 = 1e-4;
     (first - second).abs() < EPS
 }
 
 pub async fn match_templated_answer(
-    context: &mut Context,
+    context: &Context,
     step: &Step,
     answer: &ConceptMap,
 ) -> TypeDBResult<Vec<ConceptMap>> {
     let query = apply_query_template(step.docstring().unwrap(), answer);
     let parsed = parse_query(&query)?;
-    context.transaction().query().match_(&parsed.to_string())?.try_collect::<Vec<_>>().await
+    context.transaction().query().get(&parsed.to_string())?.try_collect::<Vec<_>>().await
 }
 
 fn apply_query_template(query_template: &str, answer: &ConceptMap) -> String {
@@ -184,14 +250,12 @@ fn get_iid(concept: &Concept) -> String {
     iid.to_string()
 }
 
-pub async fn match_answer_rule(answer_identifiers: &HashMap<&str, &str>, answer: &Rule) -> bool {
-    let when_clause = answer_identifiers.get("when").unwrap().to_string();
-    let when = parse_patterns(when_clause.as_str()).unwrap()[0].clone().into_conjunction();
-    let then_clause = answer_identifiers.get("then").unwrap().to_string();
-    let then = parse_patterns(then_clause.as_str()).unwrap()[0].clone().into_variable();
-    *answer_identifiers.get("label").unwrap() == answer.label
+pub async fn match_answer_rule(answer_identifiers: &HashMap<&str, &str>, answer: &Rule) -> TypeDBResult<bool> {
+    let when = parse_pattern(answer_identifiers.get("when").unwrap())?.into_conjunction();
+    let then = parse_statement(answer_identifiers.get("then").unwrap())?;
+    Ok(*answer_identifiers.get("label").unwrap() == answer.label
         && when == answer.when
-        && then == Variable::Thing(answer.then.clone())
+        && then == Statement::Thing(answer.then.clone()))
 }
 
 pub async fn create_database_with_timeout(databases: &DatabaseManager, name: String) {

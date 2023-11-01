@@ -1,0 +1,17 @@
+[#_Explainable]
+=== Explainable
+
+Contains an explainable object.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `conjunction` a| `string` a| The subquery of the original query that is actually being explained.
+a| `id` a| `number` a| A unique ID that identifies this Explainable.
+|===
+// end::properties[]
+

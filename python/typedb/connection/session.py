@@ -24,11 +24,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Optional
 
 from typedb.native_driver_wrapper import session_new, session_on_close, session_force_close, session_is_open, \
-    session_get_database_name, SessionCallbackDirector, Session as NativeSession
+    session_get_database_name, SessionCallbackDirector, Session as NativeSession, TypeDBDriverExceptionNative
 
 from typedb.api.connection.options import TypeDBOptions
 from typedb.api.connection.session import TypeDBSession
-from typedb.common.exception import TypeDBDriverExceptionExt, SESSION_CLOSED
+from typedb.common.exception import TypeDBDriverException, SESSION_CLOSED
 from typedb.common.native_wrapper import NativeWrapper
 from typedb.connection.transaction import _Transaction
 
@@ -36,22 +36,24 @@ if TYPE_CHECKING:
     from typedb.api.connection.session import SessionType
     from typedb.api.connection.transaction import TypeDBTransaction, TransactionType
     from typedb.connection.database import _Database
+    from typedb.connection.database_manager import DatabaseManager
 
 
 class _Session(TypeDBSession, NativeWrapper[NativeSession]):
 
-    def __init__(self, database: _Database, session_type: SessionType, options: Optional[TypeDBOptions] = None):
+    def __init__(self, database_manager: DatabaseManager , database_name: str, session_type: SessionType, options: Optional[TypeDBOptions] = None):
         if not options:
             options = TypeDBOptions()
         self._type = session_type
         self._options = options
-        native_database = database.native_object
-        native_database.thisown = 0
-        super().__init__(session_new(native_database, session_type.value, options.native_object))
+        try:
+            super().__init__(session_new(database_manager.native_object, database_name, session_type.value, options.native_object))
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
-        return TypeDBDriverExceptionExt.of(SESSION_CLOSED)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverException:
+        return TypeDBDriverException(SESSION_CLOSED)
 
     def is_open(self) -> bool:
         return session_is_open(self.native_object)

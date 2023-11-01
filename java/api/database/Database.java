@@ -26,39 +26,119 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface Database {
+
+    /**
+     * The database name as a string.
+     */
     @CheckReturnValue
     String name();
 
+    /**
+     * A full schema text as a valid TypeQL define query string.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * database.schema()
+     * </pre>
+     */
     @CheckReturnValue
     String schema();
 
+    /**
+     * The types in the schema as a valid TypeQL define query string.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * database.typeSchema()
+     * </pre>
+     */
     @CheckReturnValue
     String typeSchema();
 
+    /**
+     * The rules in the schema as a valid TypeQL define query string.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * database.ruleSchema()
+     * </pre>
+     */
     @CheckReturnValue
     String ruleSchema();
 
+    /**
+     * Deletes this database.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * database.delete()
+     * </pre>
+     */
     void delete();
 
+    /**
+     * Set of <code>Replica</code> instances for this database.
+     * <b>Only works in TypeDB Enterprise</b>
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * database.replicas()
+     * </pre>
+     */
     @CheckReturnValue
     Set<? extends Replica> replicas();
 
+    /**
+     * Returns the primary replica for this database.
+     * _Only works in TypeDB Enterprise_
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * database.primaryReplica()
+     * </pre>
+     */
     @CheckReturnValue
     Optional<? extends Replica> primaryReplica();
 
+    /**
+     * Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica.
+     * _Only works in TypeDB Enterprise_
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * database.preferredReplica()
+     * </pre>
+     */
     @CheckReturnValue
     Optional<? extends Replica> preferredReplica();
 
+    /**
+     * The metadata and state of an individual raft replica of a database.
+     */
     interface Replica {
+
+        /**
+         * Retrieves the address of the server hosting this replica
+         */
         @CheckReturnValue
         String address();
 
+        /**
+         * Checks whether this is the primary replica of the raft cluster.
+         */
         @CheckReturnValue
         boolean isPrimary();
 
+        /**
+         * Checks whether this is the preferred replica of the raft cluster.
+         * If true, Operations which can be run on any replica will prefer to use this replica.
+         */
         @CheckReturnValue
         boolean isPreferred();
 
+        /**
+         * The raft protocol ‘term’ of this replica.
+         */
         @CheckReturnValue
         long term();
     }

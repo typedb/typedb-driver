@@ -34,11 +34,24 @@ pub struct DatabaseManager {
     connection: Connection,
 }
 
+/// Provides access to all database management methods.
 impl DatabaseManager {
     pub fn new(connection: Connection) -> Self {
         Self { connection }
     }
 
+    /// Retrieve the database with the given name.
+    ///
+    /// # Arguments
+    ///
+    /// * `name` -- The name of the database to retrieve
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.databases().get(name);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().get(name).await;")]
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn get(&self, name: impl Into<String>) -> Result<Database> {
         let name = name.into();
@@ -48,6 +61,18 @@ impl DatabaseManager {
         Database::get(name, self.connection.clone()).await
     }
 
+    /// Checks if a database with the given name exists
+    ///
+    /// # Arguments
+    ///
+    /// * `name` -- The database name to be checked
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.databases().contains(name);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().contains(name).await;")]
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn contains(&self, name: impl Into<String>) -> Result<bool> {
         let name = name.into();
@@ -55,6 +80,18 @@ impl DatabaseManager {
             .await
     }
 
+    /// Create a database with the given name
+    ///
+    /// # Arguments
+    ///
+    /// * `name` -- The name of the database to be created
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.databases().create(name);")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().create(name).await;")]
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn create(&self, name: impl Into<String>) -> Result {
         let name = name.into();
@@ -62,6 +99,14 @@ impl DatabaseManager {
             .await
     }
 
+    /// Retrieves all databases present on the TypeDB server
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    #[cfg_attr(feature = "sync", doc = "driver.databases().all();")]
+    #[cfg_attr(not(feature = "sync"), doc = "driver.databases().all().await;")]
+    /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn all(&self) -> Result<Vec<Database>> {
         let mut error_buffer = Vec::with_capacity(self.connection.server_count());

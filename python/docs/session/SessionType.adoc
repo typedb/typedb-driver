@@ -1,0 +1,59 @@
+[#_SessionType]
+=== SessionType
+
+This class is used to specify the type of the session.
+
+[caption=""]
+.SessionType examples
+====
+
+[source,python]
+----
+driver.session(database, SessionType.SCHEMA)
+----
+
+====
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols="~,~"]
+[options="header"]
+|===
+|Name |Value
+a| `DATA` a| `0`
+a| `SCHEMA` a| `1`
+|===
+// end::enum_constants[]
+
+// tag::methods[]
+[#_SessionType_is_data]
+==== is_data
+
+[source,python]
+----
+is_data() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_SessionType_is_schema]
+==== is_schema
+
+[source,python]
+----
+is_schema() -> bool
+----
+
+
+
+[caption=""]
+.Returns
+`bool`
+
+// end::methods[]
+

@@ -61,7 +61,7 @@ impl BackgroundRuntime {
         let callback_handler = Some(thread::Builder::new().name("Callback handler".to_owned()).spawn(move || {
             while let Ok((callback, response_sink)) = callback_handler_source.recv() {
                 callback();
-                response_sink.send(()).unwrap();
+                response_sink.send(()).ok();
             }
         })?);
 

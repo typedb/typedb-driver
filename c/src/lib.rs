@@ -30,6 +30,7 @@ mod iterator;
 mod logic;
 mod memory;
 mod options;
+mod promise;
 mod query;
 mod session;
 mod transaction;

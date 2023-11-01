@@ -24,16 +24,58 @@ package com.vaticle.typedb.driver.api.database;
 import javax.annotation.CheckReturnValue;
 import java.util.List;
 
+/**
+ * Provides access to all database management methods.
+ */
 public interface DatabaseManager {
+
+    /**
+     * Retrieve the database with the given name.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.databases().get(name)
+     * </pre>
+     *
+     * @param name The name of the database to retrieve
+     */
     @CheckReturnValue
     Database get(String name);
 
+    /**
+     * Checks if a database with the given name exists
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.databases().contains(name)
+     * </pre>
+     *
+     * @param name The database name to be checked
+     */
     @CheckReturnValue
     boolean contains(String name);
 
+    /**
+     * Create a database with the given name
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.databases().create(name)
+     * </pre>
+     *
+     * @param name The name of the database to be created
+     */
     // TODO: Return type should be 'Database' but right now that would require 2 server calls in Enterprise
     void create(String name);
 
+    /**
+     * Retrieves all databases present on the TypeDB server
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.databases().all()
+     * </pre>
+     */
     @CheckReturnValue
     List<Database> all();
 }

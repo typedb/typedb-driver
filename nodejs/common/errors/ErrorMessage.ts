@@ -21,6 +21,7 @@
 
 type Stringable = { toString: () => string; };
 
+/** Class defining the error-code and message template for <code>TypeDBDriverError</code>s */
 export abstract class ErrorMessage {
     private static knownErrors = new Map<string, Map<number, ErrorMessage>>();
     private static maxCodeNumber = 0;
@@ -45,6 +46,7 @@ export abstract class ErrorMessage {
         ErrorMessage.maxCodeDigits = String(ErrorMessage.maxCodeNumber).length;
     }
 
+    /** Retrieves the error-code for this ErrorMessage */
     public code(): string {
         if (this._code == null) {
             let zeros = "";
@@ -56,15 +58,21 @@ export abstract class ErrorMessage {
         return this._code;
     }
 
+    /**
+    * Generates the error message by substituting <code>args</code> into the messageTemplate
+    * @param args - The format arguments to the message-template.
+    */
     public message(...args: Stringable[]): string {
         return `[${this.code()}] ${this._messagePrefix}: ${this._messageBody(args)}`
     }
 
+    /** Summarises the error into a string */
     toString(): string {
         return `[${this.code()}] ${this._messagePrefix}: ${this._messageBody([])}`;
     }
 }
 
+/** @ignore */
 export namespace ErrorMessage {
     export class Driver extends ErrorMessage {
         constructor(code: number, message: (args?: Stringable[]) => string) {

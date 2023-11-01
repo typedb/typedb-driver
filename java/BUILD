@@ -28,6 +28,9 @@ load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@vaticle_dependencies//library/maven:artifacts.bzl", artifacts_org = "artifacts")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":rules.bzl", "swig_native_java_library")
+load("@google_bazel_common//tools/javadoc:javadoc.bzl", "javadoc_library")
+load("//tool/docs:java/rules.bzl", "javadoc_to_adoc")
+load("//java:docs_structure.bzl", "dir_mapping")
 
 java_library(
     name = "driver-java",
@@ -106,10 +109,42 @@ deploy_maven(
     target = ":assemble-maven-jni",
 )
 
+filegroup(
+    name = "docs_source_files",
+    srcs = [":TypeDB.java"],
+)
+
+javadoc_library(
+    name = "driver_docs_library",
+    srcs = [":docs_source_files", "//java/api:docs_source_files", "//java/common:docs_source_files"],
+    deps = [
+        "//java:driver-java",
+        "//java/api",
+        "//java/common",
+        "@vaticle_typedb_common//:common",
+    ],
+)
+
+genrule(
+    name = "docs_html",
+    srcs = [":driver_docs_library"],
+    outs = ["driver_docs_javadoc"],
+    cmd = "mkdir $@ && unzip $< -d $@",
+)
+
+javadoc_to_adoc(
+    name = "docs_adoc",
+    data = [":docs_html"],
+    docs_dirs = dir_mapping,
+)
+
 checkstyle_test(
     name = "checkstyle",
     size = "small",
     include = glob(["*"]),
-    exclude = ["README.md"],
+    exclude = glob([
+        "README.md",
+        "docs/**/*.adoc",
+    ]),
     license_type = "apache-header",
 )

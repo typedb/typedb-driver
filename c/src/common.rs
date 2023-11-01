@@ -21,16 +21,19 @@
 
 use std::{ffi::c_char, ptr::null_mut};
 
+use typedb_driver::Result;
+
 use super::{
     iterator::CIterator,
     memory::{borrow_mut, free, release_optional, release_string, string_free},
 };
+use crate::error::try_release_string;
 
-pub struct StringIterator(pub CIterator<String>);
+pub struct StringIterator(pub CIterator<Result<String>>);
 
 #[no_mangle]
 pub extern "C" fn string_iterator_next(it: *mut StringIterator) -> *mut c_char {
-    borrow_mut(it).0 .0.next().map(release_string).unwrap_or_else(null_mut)
+    borrow_mut(it).0 .0.next().map(try_release_string).unwrap_or_else(null_mut)
 }
 
 #[no_mangle]

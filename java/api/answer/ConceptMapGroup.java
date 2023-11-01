@@ -26,10 +26,29 @@ import com.vaticle.typedb.driver.api.concept.Concept;
 import javax.annotation.CheckReturnValue;
 import java.util.stream.Stream;
 
+/**
+ * Contains an element of the group query result.
+ */
 public interface ConceptMapGroup {
+    /**
+     * Retrieves the concept that is the group owner.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMapGroup.owner();
+     * </pre>
+     */
     @CheckReturnValue
     Concept owner();
 
+    /**
+     * Retrieves the <code>ConceptMap</code>s of the group.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMapGroup.conceptMaps();
+     * </pre>
+     */
     @CheckReturnValue
     Stream<ConceptMap> conceptMaps();
 }

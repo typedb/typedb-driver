@@ -1,0 +1,25 @@
+[#_struct_ScopedLabel]
+=== ScopedLabel
+
+*Implements traits:*
+
+* `Clone`
+* `Debug`
+* `Display`
+* `Eq`
+* `PartialEq<ScopedLabel>`
+* `StructuralEq`
+* `StructuralPartialEq`
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `name` a| `String` a| 
+a| `scope` a| `String` a| 
+|===
+// end::properties[]
+

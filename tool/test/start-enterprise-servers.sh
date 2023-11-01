@@ -22,6 +22,7 @@
 
 set -e
 
+export BAZEL_JAVA_HOME=$(bazel run //tool/test:echo-java-home)
 NODE_COUNT=${1:-1}
 
 peers=
@@ -32,7 +33,7 @@ for i in $(seq 1 $NODE_COUNT); do
 done
 
 function server_start() {
-  ./${1}/typedb enterprise \
+  JAVA_HOME=$BAZEL_JAVA_HOME ./${1}/typedb enterprise \
     --storage.data=server/data \
     --server.address=localhost:${1}1729 \
     --server.internal-address.zeromq=localhost:${1}1730 \

@@ -1,0 +1,23 @@
+[#_struct_ReplicaInfo]
+=== ReplicaInfo
+
+*Implements traits:*
+
+* `Debug`
+
+The metadata and state of an individual raft replica of a database.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `address` a| `Address` a| The address of the server hosting this replica
+a| `is_preferred` a| `bool` a| Whether this is the preferred replica of the raft cluster. If true, Operations which can be run on any replica will prefer to use this replica.
+a| `is_primary` a| `bool` a| Whether this is the primary replica of the raft cluster.
+a| `term` a| `i64` a| The raft protocol ‘term’ of this replica.
+|===
+// end::properties[]
+

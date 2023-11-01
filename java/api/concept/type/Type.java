@@ -21,60 +21,153 @@
 
 package com.vaticle.typedb.driver.api.concept.type;
 
-import com.eclipsesource.json.Json;
-import com.eclipsesource.json.JsonObject;
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.Concept;
 import com.vaticle.typedb.driver.common.Label;
+import com.vaticle.typedb.driver.common.Promise;
 
 import javax.annotation.CheckReturnValue;
-import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 public interface Type extends Concept {
+    /**
+     * Retrieves the unique label of the type.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * type.getLabel();
+     * </pre>
+     */
     @CheckReturnValue
     Label getLabel();
 
+    /**
+     * Checks if the type is a root type.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * type.isRoot();
+     * </pre>
+     */
     @CheckReturnValue
     boolean isRoot();
 
+    /**
+     * Checks if the type is prevented from having data instances (i.e., <code>abstract</code>).
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * type.isAbstract();
+     * </pre>
+     */
     @CheckReturnValue
     boolean isAbstract();
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @CheckReturnValue
     default boolean isType() {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @CheckReturnValue
     default Type asType() {
         return this;
     }
 
-    @Override
-    default JsonObject toJSON() {
-        return Json.object().add("label", getLabel().scopedName());
-    }
-
-    void setLabel(TypeDBTransaction transaction, String label);
-
-    @Nullable
+    /**
+     * Renames the label of the type. The new label must remain unique.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * type.setLabel(transaction, newLabel).resolve();
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param label The new <code>Label</code> to be given to the type.
+     */
     @CheckReturnValue
-    Type getSupertype(TypeDBTransaction transaction);
+    Promise<Void> setLabel(TypeDBTransaction transaction, String label);
 
+    /**
+     * Retrieves the most immediate supertype of the type.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * type.getSupertype(transaction).resolve();
+     * </pre>
+     *
+     * @param transaction The current transaction
+     */
+    @CheckReturnValue
+    Promise<? extends Type> getSupertype(TypeDBTransaction transaction);
+
+    /**
+     * Retrieves all supertypes of the type.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * type.getSupertypes(transaction);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     */
     @CheckReturnValue
     Stream<? extends Type> getSupertypes(TypeDBTransaction transaction);
 
+    /**
+     * Retrieves all direct and indirect subtypes of the type.
+     * Equivalent to <code>getSubtypes(transaction, Transitivity.TRANSITIVE)</code>
+     *
+     * @see Type#getSubtypes(TypeDBTransaction, Transitivity)
+     */
     @CheckReturnValue
     Stream<? extends Type> getSubtypes(TypeDBTransaction transaction);
 
+    /**
+     * Retrieves all direct and indirect (or direct only) subtypes of the type.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * type.getSubtypes(transaction);
+     * type.getSubtypes(transaction, Transitivity.EXPLICIT);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes, <code>Transitivity.EXPLICIT</code> for direct subtypes only
+     */
     @CheckReturnValue
     Stream<? extends Type> getSubtypes(TypeDBTransaction transaction, Transitivity transitivity);
 
-    void delete(TypeDBTransaction transaction);
-
+    /**
+     * Deletes this type from the database.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * type.delete(transaction).resolve();
+     * </pre>
+     *
+     * @param transaction The current transaction
+     */
     @CheckReturnValue
-    boolean isDeleted(TypeDBTransaction transaction);
+    Promise<Void> delete(TypeDBTransaction transaction);
+
+    /**
+     * Check if the concept has been deleted
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * type.isDeleted(transaction).resolve();
+     * </pre>
+     *
+     * @param transaction The current transaction
+     */
+    @CheckReturnValue
+    Promise<Boolean> isDeleted(TypeDBTransaction transaction);
 }

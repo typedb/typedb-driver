@@ -1,0 +1,133 @@
+[#_ConceptMap]
+=== ConceptMap
+
+*Package*: `com.vaticle.typedb.driver.api.answer`
+
+Contains a mapping of variables to concepts.
+
+// tag::methods[]
+[#_ConceptMap_concepts_]
+==== concepts
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<Concept> concepts()
+----
+
+Produces a stream over all concepts in this ``ConceptMap``. 
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<Concept>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+conceptMap.concepts();
+----
+
+[#_ConceptMap_explainables_]
+==== explainables
+
+[source,java]
+----
+ConceptMap.Explainables explainables()
+----
+
+Gets the ``Explainables`` object for this ``ConceptMap``, exposing which of the concepts in this ``ConceptMap`` are explainable. 
+
+
+[caption=""]
+.Returns
+`ConceptMap.Explainables`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+conceptMap.explainables();
+----
+
+[#_ConceptMap_get_java_lang_String]
+==== get
+
+[source,java]
+----
+@CheckReturnValue
+Concept get​(java.lang.String variable)
+----
+
+Retrieves a concept for a given variable name. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `variable` a| The string representation of a variable a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`Concept`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+conceptMap.get(variable);
+----
+
+[#_ConceptMap_toJSON_]
+==== toJSON
+
+[source,java]
+----
+@CheckReturnValue
+default com.eclipsesource.json.JsonObject toJSON()
+----
+
+Retrieves this ``ConceptMap`` as JSON. 
+
+
+[caption=""]
+.Returns
+`com.eclipsesource.json.JsonObject`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+conceptMap.toJSON();
+----
+
+[#_ConceptMap_variables_]
+==== variables
+
+[source,java]
+----
+@CheckReturnValue
+java.util.stream.Stream<java.lang.String> variables()
+----
+
+Produces a stream over all variables in this ``ConceptMap``. 
+
+
+[caption=""]
+.Returns
+`java.util.stream.Stream<java.lang.String>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+conceptMap.variables();
+----
+
+// end::methods[]
+

@@ -33,13 +33,22 @@ if TYPE_CHECKING:
 
 
 class SessionType(Enum):
+    """
+    This class is used to specify the type of the session.
+
+    Examples
+    --------
+    ::
+
+       driver.session(database, SessionType.SCHEMA)
+    """
     DATA = Data
     SCHEMA = Schema
 
-    def is_data(self):
+    def is_data(self) -> bool:
         return self is SessionType.DATA
 
-    def is_schema(self):
+    def is_schema(self) -> bool:
         return self is SessionType.SCHEMA
 
 
@@ -47,32 +56,97 @@ class TypeDBSession(ABC):
 
     @abstractmethod
     def is_open(self) -> bool:
+        """
+        Checks whether this session is open.
+
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            session.is_open()
+        """
         pass
 
     @property
     @abstractmethod
     def type(self) -> SessionType:
+        """
+        The current session’s type (SCHEMA or DATA)
+        """
         pass
 
     @abstractmethod
     def database_name(self) -> str:
+        """
+        Returns the name of the database of the session.
+
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            session.database_name()
+        """
         pass
 
     @property
     @abstractmethod
     def options(self) -> TypeDBOptions:
+        """
+        Gets the options for the session
+        """
         pass
 
     @abstractmethod
     def transaction(self, transaction_type: TransactionType, options: TypeDBOptions = None) -> TypeDBTransaction:
+        """
+        Opens a transaction to perform read or write queries on the database connected to the session.
+
+        :param transaction_type: The type of transaction to be created (READ or WRITE)
+        :param options: Options for the session
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            session.transaction(transaction_type, options)
+        """
         pass
 
     @abstractmethod
-    def on_close(self, function: callable):
+    def on_close(self, function: callable) -> None:
+        """
+        Registers a callback function which will be executed when this session is closed.
+
+        :param function: The callback function.
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            session.on_close(function)
+        """
         pass
 
     @abstractmethod
     def close(self) -> None:
+        """
+        Closes the session.
+        **Before opening a new session, the session currently open should first be closed.**
+
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            session.close()
+        """
         pass
 
     @abstractmethod

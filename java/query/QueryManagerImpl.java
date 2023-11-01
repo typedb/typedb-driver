@@ -24,23 +24,29 @@ package com.vaticle.typedb.driver.query;
 import com.vaticle.typedb.driver.api.TypeDBOptions;
 import com.vaticle.typedb.driver.api.answer.ConceptMap;
 import com.vaticle.typedb.driver.api.answer.ConceptMapGroup;
-import com.vaticle.typedb.driver.api.answer.Numeric;
-import com.vaticle.typedb.driver.api.answer.NumericGroup;
+import com.vaticle.typedb.driver.api.answer.JSON;
+import com.vaticle.typedb.driver.api.answer.ValueGroup;
+import com.vaticle.typedb.driver.api.concept.value.Value;
 import com.vaticle.typedb.driver.api.logic.Explanation;
 import com.vaticle.typedb.driver.api.query.QueryManager;
+import com.vaticle.typedb.driver.common.NativeIterator;
+import com.vaticle.typedb.driver.common.Promise;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.answer.ConceptMapGroupImpl;
 import com.vaticle.typedb.driver.concept.answer.ConceptMapImpl;
-import com.vaticle.typedb.driver.concept.answer.NumericGroupImpl;
-import com.vaticle.typedb.driver.concept.answer.NumericImpl;
+import com.vaticle.typedb.driver.concept.answer.ValueGroupImpl;
+import com.vaticle.typedb.driver.concept.value.ValueImpl;
 import com.vaticle.typedb.driver.logic.ExplanationImpl;
 import com.vaticle.typeql.lang.query.TypeQLDefine;
 import com.vaticle.typeql.lang.query.TypeQLDelete;
+import com.vaticle.typeql.lang.query.TypeQLFetch;
 import com.vaticle.typeql.lang.query.TypeQLInsert;
-import com.vaticle.typeql.lang.query.TypeQLMatch;
+import com.vaticle.typeql.lang.query.TypeQLGet;
 import com.vaticle.typeql.lang.query.TypeQLUndefine;
 import com.vaticle.typeql.lang.query.TypeQLUpdate;
 
+import javax.annotation.CheckReturnValue;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.TRANSACTION_CLOSED;
@@ -48,11 +54,12 @@ import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Query.MISS
 import static com.vaticle.typedb.driver.jni.typedb_driver.query_define;
 import static com.vaticle.typedb.driver.jni.typedb_driver.query_delete;
 import static com.vaticle.typedb.driver.jni.typedb_driver.query_explain;
+import static com.vaticle.typedb.driver.jni.typedb_driver.query_fetch;
 import static com.vaticle.typedb.driver.jni.typedb_driver.query_insert;
-import static com.vaticle.typedb.driver.jni.typedb_driver.query_match;
-import static com.vaticle.typedb.driver.jni.typedb_driver.query_match_aggregate;
-import static com.vaticle.typedb.driver.jni.typedb_driver.query_match_group;
-import static com.vaticle.typedb.driver.jni.typedb_driver.query_match_group_aggregate;
+import static com.vaticle.typedb.driver.jni.typedb_driver.query_get;
+import static com.vaticle.typedb.driver.jni.typedb_driver.query_get_aggregate;
+import static com.vaticle.typedb.driver.jni.typedb_driver.query_get_group;
+import static com.vaticle.typedb.driver.jni.typedb_driver.query_get_group_aggregate;
 import static com.vaticle.typedb.driver.jni.typedb_driver.query_undefine;
 import static com.vaticle.typedb.driver.jni.typedb_driver.query_update;
 
@@ -64,104 +71,135 @@ public final class QueryManagerImpl implements QueryManager {
     }
 
     @Override
-    public Stream<ConceptMap> match(TypeQLMatch query) {
-        return match(query.toString(false));
+    public Stream<ConceptMap> get(TypeQLGet query) {
+        return get(query.toString(false));
     }
 
     @Override
-    public Stream<ConceptMap> match(TypeQLMatch query, TypeDBOptions options) {
-        return match(query.toString(false), options);
+    public Stream<ConceptMap> get(TypeQLGet query, TypeDBOptions options) {
+        return get(query.toString(false), options);
     }
 
     @Override
-    public Stream<ConceptMap> match(String query) {
-        return match(query, new TypeDBOptions());
+    public Stream<ConceptMap> get(String query) {
+        return get(query, new TypeDBOptions());
     }
 
     @Override
-    public Stream<ConceptMap> match(String query, TypeDBOptions options) {
+    public Stream<ConceptMap> get(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBDriverException(MISSING_QUERY);
         try {
-            return query_match(nativeTransaction, query, options.nativeObject).stream().map(ConceptMapImpl::new);
+            return new NativeIterator<>(query_get(nativeTransaction, query, options.nativeObject)).stream().map(ConceptMapImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public Numeric match(TypeQLMatch.Aggregate query) {
-        return matchAggregate(query.toString(false));
+    @CheckReturnValue
+    public Promise<Optional<Value>> get(TypeQLGet.Aggregate query) {
+        return getAggregate(query.toString(false));
     }
 
     @Override
-    public Numeric match(TypeQLMatch.Aggregate query, TypeDBOptions options) {
-        return matchAggregate(query.toString(false), options);
+    @CheckReturnValue
+    public Promise<Optional<Value>> get(TypeQLGet.Aggregate query, TypeDBOptions options) {
+        return getAggregate(query.toString(false), options);
     }
 
     @Override
-    public Numeric matchAggregate(String query) {
-        return matchAggregate(query, new TypeDBOptions());
+    @CheckReturnValue
+    public Promise<Optional<Value>> getAggregate(String query) {
+        return getAggregate(query, new TypeDBOptions());
     }
 
     @Override
-    public Numeric matchAggregate(String query, TypeDBOptions options) {
+    @CheckReturnValue
+    public Promise<Optional<Value>> getAggregate(String query, TypeDBOptions options) {
+        if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
+        if (query == null || query.isEmpty()) throw new TypeDBDriverException(MISSING_QUERY);
+        com.vaticle.typedb.driver.jni.ConceptPromise promise = query_get_aggregate(nativeTransaction, query, options.nativeObject);
+        return new Promise<>(() -> {
+            var res = promise.get();
+            if (res == null) return Optional.empty();
+            else return Optional.of(new ValueImpl(res));
+        });
+    }
+
+    @Override
+    public Stream<ConceptMapGroup> get(TypeQLGet.Group query) {
+        return getGroup(query.toString(false));
+    }
+
+    @Override
+    public Stream<ConceptMapGroup> get(TypeQLGet.Group query, TypeDBOptions options) {
+        return getGroup(query.toString(false), options);
+    }
+
+    @Override
+    public Stream<ConceptMapGroup> getGroup(String query) {
+        return getGroup(query, new TypeDBOptions());
+    }
+
+    @Override
+    public Stream<ConceptMapGroup> getGroup(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBDriverException(MISSING_QUERY);
         try {
-            return new NumericImpl(query_match_aggregate(nativeTransaction, query, options.nativeObject));
+            return new NativeIterator<>(query_get_group(nativeTransaction, query, options.nativeObject)).stream().map(ConceptMapGroupImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public Stream<ConceptMapGroup> match(TypeQLMatch.Group query) {
-        return matchGroup(query.toString(false));
+    public Stream<ValueGroup> get(TypeQLGet.Group.Aggregate query) {
+        return getGroupAggregate(query.toString(false));
     }
 
     @Override
-    public Stream<ConceptMapGroup> match(TypeQLMatch.Group query, TypeDBOptions options) {
-        return matchGroup(query.toString(false), options);
+    public Stream<ValueGroup> get(TypeQLGet.Group.Aggregate query, TypeDBOptions options) {
+        return getGroupAggregate(query.toString(false), options);
     }
 
     @Override
-    public Stream<ConceptMapGroup> matchGroup(String query) {
-        return matchGroup(query, new TypeDBOptions());
+    public Stream<ValueGroup> getGroupAggregate(String query) {
+        return getGroupAggregate(query, new TypeDBOptions());
     }
 
     @Override
-    public Stream<ConceptMapGroup> matchGroup(String query, TypeDBOptions options) {
+    public Stream<ValueGroup> getGroupAggregate(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBDriverException(MISSING_QUERY);
         try {
-            return query_match_group(nativeTransaction, query, options.nativeObject).stream().map(ConceptMapGroupImpl::new);
+            return new NativeIterator<>(query_get_group_aggregate(nativeTransaction, query, options.nativeObject)).stream().map(ValueGroupImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public Stream<NumericGroup> match(TypeQLMatch.Group.Aggregate query) {
-        return matchGroupAggregate(query.toString(false));
+    public Stream<JSON> fetch(TypeQLFetch query) {
+        return fetch(query.toString(false));
     }
 
     @Override
-    public Stream<NumericGroup> match(TypeQLMatch.Group.Aggregate query, TypeDBOptions options) {
-        return matchGroupAggregate(query.toString(false), options);
+    public Stream<JSON> fetch(TypeQLFetch query, TypeDBOptions options) {
+        return fetch(query.toString(false), options);
     }
 
     @Override
-    public Stream<NumericGroup> matchGroupAggregate(String query) {
-        return matchGroupAggregate(query, new TypeDBOptions());
+    public Stream<JSON> fetch(String query) {
+        return fetch(query, new TypeDBOptions());
     }
 
     @Override
-    public Stream<NumericGroup> matchGroupAggregate(String query, TypeDBOptions options) {
+    public Stream<JSON> fetch(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBDriverException(MISSING_QUERY);
         try {
-            return query_match_group_aggregate(nativeTransaction, query, options.nativeObject).stream().map(NumericGroupImpl::new);
+            return new NativeIterator<>(query_fetch(nativeTransaction, query, options.nativeObject)).stream().map(JSON::parse);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -187,36 +225,36 @@ public final class QueryManagerImpl implements QueryManager {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBDriverException(MISSING_QUERY);
         try {
-            return query_insert(nativeTransaction, query, options.nativeObject).stream().map(ConceptMapImpl::new);
+            return new NativeIterator<>(query_insert(nativeTransaction, query, options.nativeObject)).stream().map(ConceptMapImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public void delete(TypeQLDelete query) {
-        delete(query.toString(false));
+    @CheckReturnValue
+    public Promise<Void> delete(TypeQLDelete query) {
+        return delete(query.toString(false));
     }
 
     @Override
-    public void delete(TypeQLDelete query, TypeDBOptions options) {
-        delete(query.toString(false), options);
+    @CheckReturnValue
+    public Promise<Void> delete(TypeQLDelete query, TypeDBOptions options) {
+        return delete(query.toString(false), options);
     }
 
     @Override
-    public void delete(String query) {
-        delete(query, new TypeDBOptions());
+    @CheckReturnValue
+    public Promise<Void> delete(String query) {
+        return delete(query, new TypeDBOptions());
     }
 
     @Override
-    public void delete(String query, TypeDBOptions options) {
+    @CheckReturnValue
+    public Promise<Void> delete(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBDriverException(MISSING_QUERY);
-        try {
-            query_delete(nativeTransaction, query, options.nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return new Promise<>(query_delete(nativeTransaction, query, options.nativeObject));
     }
 
     @Override
@@ -239,62 +277,62 @@ public final class QueryManagerImpl implements QueryManager {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBDriverException(MISSING_QUERY);
         try {
-            return query_update(nativeTransaction, query, options.nativeObject).stream().map(ConceptMapImpl::new);
+            return new NativeIterator<>(query_update(nativeTransaction, query, options.nativeObject)).stream().map(ConceptMapImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
     }
 
     @Override
-    public void define(TypeQLDefine query) {
-        define(query.toString(false));
+    @CheckReturnValue
+    public Promise<Void> define(TypeQLDefine query) {
+        return define(query.toString(false));
     }
 
     @Override
-    public void define(TypeQLDefine query, TypeDBOptions options) {
-        define(query.toString(false), options);
+    @CheckReturnValue
+    public Promise<Void> define(TypeQLDefine query, TypeDBOptions options) {
+        return define(query.toString(false), options);
     }
 
     @Override
-    public void define(String query) {
-        define(query, new TypeDBOptions());
+    @CheckReturnValue
+    public Promise<Void> define(String query) {
+        return define(query, new TypeDBOptions());
     }
 
     @Override
-    public void define(String query, TypeDBOptions options) {
+    @CheckReturnValue
+    public Promise<Void> define(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBDriverException(MISSING_QUERY);
-        try {
-            query_define(nativeTransaction, query, options.nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return new Promise<>(query_define(nativeTransaction, query, options.nativeObject));
     }
 
     @Override
-    public void undefine(TypeQLUndefine query) {
-        undefine(query.toString(false));
+    @CheckReturnValue
+    public Promise<Void> undefine(TypeQLUndefine query) {
+        return undefine(query.toString(false));
     }
 
     @Override
-    public void undefine(TypeQLUndefine query, TypeDBOptions options) {
-        undefine(query.toString(false), options);
+    @CheckReturnValue
+    public Promise<Void> undefine(TypeQLUndefine query, TypeDBOptions options) {
+        return undefine(query.toString(false), options);
     }
 
     @Override
-    public void undefine(String query) {
-        undefine(query, new TypeDBOptions());
+    @CheckReturnValue
+    public Promise<Void> undefine(String query) {
+        return undefine(query, new TypeDBOptions());
     }
 
     @Override
-    public void undefine(String query, TypeDBOptions options) {
+    @CheckReturnValue
+    public Promise<Void> undefine(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBDriverException(MISSING_QUERY);
-        try {
-            query_undefine(nativeTransaction, query, options.nativeObject);
-        } catch (com.vaticle.typedb.driver.jni.Error e) {
-            throw new TypeDBDriverException(e);
-        }
+        return new Promise<>(query_undefine(nativeTransaction, query, options.nativeObject));
     }
 
     @Override
@@ -306,7 +344,8 @@ public final class QueryManagerImpl implements QueryManager {
     public Stream<Explanation> explain(ConceptMap.Explainable explainable, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         try {
-            return query_explain(nativeTransaction, ((ConceptMapImpl.ExplainableImpl) explainable).nativeObject, options.nativeObject).stream().map(ExplanationImpl::new);
+            return new NativeIterator<>(query_explain(nativeTransaction, ((ConceptMapImpl.ExplainableImpl) explainable).nativeObject, options.nativeObject)).stream()
+                    .map(ExplanationImpl::new);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

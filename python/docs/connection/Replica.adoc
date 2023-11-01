@@ -1,0 +1,78 @@
+[#_Replica]
+=== Replica
+
+The metadata and state of an individual raft replica of a database.
+
+// tag::methods[]
+[#_Replica_address]
+==== address
+
+[source,python]
+----
+address() -> str
+----
+
+Retrieves address of the server hosting this replica
+
+[caption=""]
+.Returns
+`str`
+
+[#_Replica_database]
+==== database
+
+[source,python]
+----
+database() -> Database
+----
+
+Retrieves the database for which this is a replica
+
+[caption=""]
+.Returns
+`Database`
+
+[#_Replica_is_preferred]
+==== is_preferred
+
+[source,python]
+----
+is_preferred() -> bool
+----
+
+Checks whether this is the preferred replica of the raft cluster. If true, Operations which can be run on any replica will prefer to use this replica.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Replica_is_primary]
+==== is_primary
+
+[source,python]
+----
+is_primary() -> bool
+----
+
+Checks whether this is the primary replica of the raft cluster.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Replica_term]
+==== term
+
+[source,python]
+----
+term() -> int
+----
+
+The raft protocol ‘term’ of this replica.
+
+[caption=""]
+.Returns
+`int`
+
+// end::methods[]
+

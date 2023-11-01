@@ -27,7 +27,6 @@ import com.vaticle.typedb.driver.concept.type.EntityTypeImpl;
 import static com.vaticle.typedb.driver.jni.typedb_driver.entity_get_type;
 
 public class EntityImpl extends ThingImpl implements Entity {
-
     public EntityImpl(com.vaticle.typedb.driver.jni.Concept concept) {
         super(concept);
     }

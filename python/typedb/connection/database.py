@@ -26,10 +26,11 @@ from typing import Optional
 from typedb.native_driver_wrapper import database_get_name, database_schema, database_delete, database_rule_schema, \
     database_type_schema, ReplicaInfo, replica_info_get_address, replica_info_is_primary, replica_info_is_preferred, \
     replica_info_get_term, database_get_replicas_info, database_get_primary_replica_info, \
-    database_get_preferred_replica_info, replica_info_iterator_next, Database as NativeDatabase
+    database_get_preferred_replica_info, replica_info_iterator_next, Database as NativeDatabase, \
+    TypeDBDriverExceptionNative
 
 from typedb.api.connection.database import Database, Replica
-from typedb.common.exception import TypeDBDriverExceptionExt, DATABASE_DELETED, NULL_NATIVE_OBJECT
+from typedb.common.exception import TypeDBDriverException, DATABASE_DELETED, NULL_NATIVE_OBJECT
 from typedb.common.iterator_wrapper import IteratorWrapper
 from typedb.common.native_wrapper import NativeWrapper
 
@@ -38,13 +39,13 @@ class _Database(Database, NativeWrapper[NativeDatabase]):
 
     def __init__(self, database: NativeDatabase):
         if not database:
-            raise TypeDBDriverExceptionExt(NULL_NATIVE_OBJECT)
+            raise TypeDBDriverException(NULL_NATIVE_OBJECT)
         super().__init__(database)
         self._name = database_get_name(database)
 
     @property
-    def _native_object_not_owned_exception(self) -> TypeDBDriverExceptionExt:
-        return TypeDBDriverExceptionExt.of(DATABASE_DELETED)
+    def _native_object_not_owned_exception(self) -> TypeDBDriverException:
+        return TypeDBDriverException(DATABASE_DELETED)
 
     @property
     def name(self) -> str:
@@ -53,21 +54,36 @@ class _Database(Database, NativeWrapper[NativeDatabase]):
         return self._name
 
     def schema(self) -> str:
-        return database_schema(self.native_object)
+        try:
+            return database_schema(self.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def rule_schema(self) -> str:
-        return database_rule_schema(self.native_object)
+        try:
+            return database_rule_schema(self.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def type_schema(self) -> str:
-        return database_type_schema(self.native_object)
+        try:
+            return database_type_schema(self.native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def delete(self) -> None:
-        self.native_object.thisown = 0
-        database_delete(self._native_object)
+        try:
+            self.native_object.thisown = 0
+            database_delete(self._native_object)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def replicas(self) -> set[Replica]:
-        repl_iter = IteratorWrapper(database_get_replicas_info(self.native_object), replica_info_iterator_next)
-        return set(_Database.Replica(replica_info) for replica_info in repl_iter)
+        try:
+            repl_iter = IteratorWrapper(database_get_replicas_info(self.native_object), replica_info_iterator_next)
+            return set(_Database.Replica(replica_info) for replica_info in repl_iter)
+        except TypeDBDriverExceptionNative as e:
+            raise TypeDBDriverException.of(e)
 
     def primary_replica(self) -> Optional[Replica]:
         if res := database_get_primary_replica_info(self.native_object):
