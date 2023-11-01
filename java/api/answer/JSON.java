@@ -99,47 +99,6 @@ public abstract class JSON {
         throw new TypeDBDriverException(ILLEGAL_CAST, className(boolean.class));
     }
 
-    @Override
-    public java.lang.String toString() {
-        if (isBoolean()) return java.lang.Boolean.toString(asBoolean());
-        else if (isNumber()) return Double.toString(asNumber());
-        else if (isString()) return '"' + asString() + '"';
-        else if (isArray()) {
-            java.lang.String content = asArray().stream().map(JSON::toString).collect(joining(",\n"));
-
-            StringBuilder sb = new StringBuilder("[");
-            if (content.lines().count() > 1) sb.append("\n").append(indent(content)).append("\n");
-            else sb.append(" ").append(content).append(" ");
-            sb.append("]");
-
-            return sb.toString();
-        } else if (isObject()) {
-            Map<java.lang.String, JSON> jsonObject = asObject();
-            boolean singleLine = jsonObject.containsKey("root") // this is a type
-                    || jsonObject.containsKey("value");  // this is a value or an attribute
-
-            List<java.lang.String> orderedKeys = jsonObject.keySet().stream().sorted((s1, s2) -> {
-                if (s1.equals("type")) return 1; // type always comes last
-                else if (s2.equals("type")) return -1;
-                else return s1.compareTo(s2);
-            }).collect(Collectors.toList());
-
-            java.lang.String content = orderedKeys.stream().map(key -> {
-                StringBuilder sb = new StringBuilder("\"").append(key).append("\":");
-                java.lang.String valueString = jsonObject.get(key).toString();
-                sb.append(" ").append(valueString);
-                return sb.toString();
-            }).collect(joining(singleLine ? ", " : ",\n"));
-
-            StringBuilder sb = new StringBuilder("{");
-            if (content.lines().count() > 1) sb.append("\n").append(indent(content)).append("\n");
-            else sb.append(" ").append(content).append(" ");
-            sb.append("}");
-
-            return sb.toString();
-        } else throw new TypeDBDriverException(ILLEGAL_STATE);
-    }
-
     private static java.lang.String indent(java.lang.String string) {
         return Arrays.stream(string.split("\n")).map(s -> "    " + s).collect(joining("\n"));
     }
@@ -172,6 +131,33 @@ public abstract class JSON {
         public int hashCode() {
             return object.hashCode();
         }
+
+        @Override
+        public java.lang.String toString() {
+            Map<java.lang.String, JSON> jsonObject = asObject();
+            boolean singleLine = jsonObject.containsKey("root") // this is a type
+                    || jsonObject.containsKey("value");  // this is a value or an attribute
+
+            List<java.lang.String> orderedKeys = jsonObject.keySet().stream().sorted((s1, s2) -> {
+                if (s1.equals("type")) return 1; // type always comes last
+                else if (s2.equals("type")) return -1;
+                else return s1.compareTo(s2);
+            }).collect(Collectors.toList());
+
+            java.lang.String content = orderedKeys.stream().map(key -> {
+                StringBuilder sb = new StringBuilder("\"").append(key).append("\":");
+                java.lang.String valueString = jsonObject.get(key).toString();
+                sb.append(" ").append(valueString);
+                return sb.toString();
+            }).collect(joining(singleLine ? ", " : ",\n"));
+
+            StringBuilder sb = new StringBuilder("{");
+            if (content.lines().count() > 1) sb.append("\n").append(indent(content)).append("\n");
+            else sb.append(" ").append(content).append(" ");
+            sb.append("}");
+
+            return sb.toString();
+        }
     }
 
     private static class Array extends JSON {
@@ -200,6 +186,18 @@ public abstract class JSON {
         @Override
         public int hashCode() {
             return array.hashCode();
+        }
+
+        @Override
+        public java.lang.String toString() {
+            java.lang.String content = asArray().stream().map(JSON::toString).collect(joining(",\n"));
+
+            StringBuilder sb = new StringBuilder("[");
+            if (content.lines().count() > 1) sb.append("\n").append(indent(content)).append("\n");
+            else sb.append(" ").append(content).append(" ");
+            sb.append("]");
+
+            return sb.toString();
         }
     }
 
@@ -230,6 +228,11 @@ public abstract class JSON {
         public int hashCode() {
             return Double.hashCode(number);
         }
+
+        @Override
+        public java.lang.String toString() {
+            return Double.toString(number);
+        }
     }
 
     private static class String extends JSON {
@@ -259,6 +262,11 @@ public abstract class JSON {
         public int hashCode() {
             return string.hashCode();
         }
+
+        @Override
+        public java.lang.String toString() {
+            return '"' + string + '"';
+        }
     }
 
     private static class Boolean extends JSON {
@@ -287,6 +295,11 @@ public abstract class JSON {
         @Override
         public int hashCode() {
             return java.lang.Boolean.hashCode(aBoolean);
+        }
+
+        @Override
+        public java.lang.String toString() {
+            return java.lang.Boolean.toString(aBoolean);
         }
     }
 }
