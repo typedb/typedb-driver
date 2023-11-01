@@ -164,7 +164,7 @@ transaction.query.get(query, options)
 
 [source,python]
 ----
-get_aggregate(query: str, options: TypeDBOptions | None = None) -> Promise[Value]
+get_aggregate(query: str, options: TypeDBOptions | None = None) -> Promise[Value | None]
 ----
 
 Performs a TypeQL Match Aggregate query in the transaction.
@@ -181,7 +181,7 @@ a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
 
 [caption=""]
 .Returns
-`Promise[Value]`
+`Promise[Value | None]`
 
 [caption=""]
 .Code examples

@@ -35,7 +35,7 @@ conceptMapGroup.owner()
 [source,java]
 ----
 @CheckReturnValue
-Value value()
+java.util.Optional<Value> value()
 ----
 
 Retrieves the ``Value`` answer of the group. 
@@ -43,7 +43,7 @@ Retrieves the ``Value`` answer of the group.
 
 [caption=""]
 .Returns
-`Value`
+`java.util.Optional<Value>`
 
 [caption=""]
 .Code examples

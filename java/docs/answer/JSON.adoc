@@ -88,34 +88,6 @@ public java.lang.String asString()
 .Returns
 `public java.lang.String`
 
-[#_JSON_equals_java_lang_Object]
-==== equals
-
-[source,java]
-----
-public boolean equals​(java.lang.Object obj)
-----
-
-
-
-[caption=""]
-.Returns
-`public boolean`
-
-[#_JSON_hashCode_]
-==== hashCode
-
-[source,java]
-----
-public int hashCode()
-----
-
-
-
-[caption=""]
-.Returns
-`public int`
-
 [#_JSON_isArray_]
 ==== isArray
 
@@ -199,20 +171,6 @@ public static JSON parse​(java.lang.String string)
 [caption=""]
 .Returns
 `public static JSON`
-
-[#_JSON_toString_]
-==== toString
-
-[source,java]
-----
-public java.lang.String toString()
-----
-
-
-
-[caption=""]
-.Returns
-`public java.lang.String`
 
 // end::methods[]
 

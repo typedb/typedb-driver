@@ -30,14 +30,14 @@ value_group.owner()
 
 [source,python]
 ----
-value() -> Value
+value() -> Value | None
 ----
 
 Retrieves the ``Value`` answer of the group.
 
 [caption=""]
 .Returns
-`Value`
+`Value | None`
 
 [caption=""]
 .Code examples

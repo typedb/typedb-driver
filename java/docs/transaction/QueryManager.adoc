@@ -425,7 +425,7 @@ See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_com_vaticle_typedb_dri
 [source,java]
 ----
 @CheckReturnValue
-Promise<Value> get​(com.vaticle.typeql.lang.query.TypeQLGet.Aggregate query)
+Promise<java.util.Optional<Value>> get​(com.vaticle.typeql.lang.query.TypeQLGet.Aggregate query)
 ----
 
 Performs a TypeQL Get Aggregate query with default options.
@@ -436,7 +436,7 @@ See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Aggregate_com_vaticle_
 
 [caption=""]
 .Returns
-`Promise<Value>`
+`Promise<java.util.Optional<Value>>`
 
 [#_QueryManager_get_com_vaticle_typeql_lang_query_TypeQLGet_Aggregate_com_vaticle_typedb_driver_api_TypeDBOptions]
 ==== get
@@ -444,8 +444,8 @@ See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Aggregate_com_vaticle_
 [source,java]
 ----
 @CheckReturnValue
-Promise<Value> get​(com.vaticle.typeql.lang.query.TypeQLGet.Aggregate query,
-                   TypeDBOptions options)
+Promise<java.util.Optional<Value>> get​(com.vaticle.typeql.lang.query.TypeQLGet.Aggregate query,
+                                       TypeDBOptions options)
 ----
 
 Performs a TypeQL Get Aggregate query in the transaction. 
@@ -463,7 +463,7 @@ a| `options` a| Specify query options a| `TypeDBOptions`
 
 [caption=""]
 .Returns
-`Promise<Value>`
+`Promise<java.util.Optional<Value>>`
 
 [caption=""]
 .Code examples
@@ -584,7 +584,7 @@ transaction.query().getGroupAggregate(query, options)
 [source,java]
 ----
 @CheckReturnValue
-Promise<Value> getAggregate​(java.lang.String query)
+Promise<java.util.Optional<Value>> getAggregate​(java.lang.String query)
 ----
 
 Performs a TypeQL Get Aggregate query with default options.
@@ -595,7 +595,7 @@ See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Aggregate_com_vaticle_
 
 [caption=""]
 .Returns
-`Promise<Value>`
+`Promise<java.util.Optional<Value>>`
 
 [#_QueryManager_getAggregate_java_lang_String_com_vaticle_typedb_driver_api_TypeDBOptions]
 ==== getAggregate
@@ -603,8 +603,8 @@ See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Aggregate_com_vaticle_
 [source,java]
 ----
 @CheckReturnValue
-Promise<Value> getAggregate​(java.lang.String query,
-                            TypeDBOptions options)
+Promise<java.util.Optional<Value>> getAggregate​(java.lang.String query,
+                                                TypeDBOptions options)
 ----
 
 
@@ -613,7 +613,7 @@ See also: <<#_get_com_vaticle_typeql_lang_query_TypeQLGet_Aggregate_com_vaticle_
 
 [caption=""]
 .Returns
-`Promise<Value>`
+`Promise<java.util.Optional<Value>>`
 
 [#_QueryManager_getGroup_java_lang_String]
 ==== getGroup
