@@ -84,14 +84,6 @@ export class AttributeImpl extends ThingImpl implements Attribute {
             .flatMap((resPart) => Stream.array(resPart.attribute_get_owners_res_part.things))
             .map((thingProto) => ThingImpl.ofThingProto(thingProto));
     }
-
-    toJSONRecord(): Record<string, boolean | string | number> {
-        return {
-            type: this.type.label.name,
-            value_type: this.type.valueType.name(),
-            value: this._value.toJSONRecord()["value"]
-        };
-    }
 }
 
 export namespace AttributeImpl {

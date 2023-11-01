@@ -69,21 +69,6 @@ public interface ConceptMap {
     Concept get(String variable);
 
     /**
-     * Retrieves this <code>ConceptMap</code> as JSON.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * conceptMap.toJSON();
-     * </pre>
-     */
-    @CheckReturnValue
-    default JsonObject toJSON() {
-        JsonObject object = Json.object();
-        variables().forEach(resVar -> object.add(resVar, get(resVar).toJSON()));
-        return object;
-    }
-
-    /**
      * Gets the <code>Explainables</code> object for this <code>ConceptMap</code>, exposing
      * which of the concepts in this <code>ConceptMap</code> are explainable.
      *

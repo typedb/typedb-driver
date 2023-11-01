@@ -21,8 +21,6 @@
 
 package com.vaticle.typedb.driver.api.concept.thing;
 
-import com.eclipsesource.json.Json;
-import com.eclipsesource.json.JsonObject;
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.Concept;
 import com.vaticle.typedb.driver.api.concept.type.AttributeType;
@@ -95,19 +93,6 @@ public interface Thing extends Concept {
     @CheckReturnValue
     default Thing asThing() {
         return this;
-    }
-
-    /**
-     * Retrieves a <code>Thing</code> as JSON.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * thing.toJSON();
-     * </pre>
-     */
-    @Override
-    default JsonObject toJSON() {
-        return Json.object().add("type", getType().getLabel().scopedName());
     }
 
     /**

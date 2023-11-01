@@ -252,23 +252,6 @@ class Value(Concept, ABC):
         """
         pass
 
-    def to_json(self) -> Mapping[str, Union[str, int, float, bool]]:
-        """
-        Retrieves this value concept as JSON.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            value.to_json()
-        """
-        return {
-            "value_type": str(self.get_value_type()),
-            "value": self.get() if not self.is_datetime() else self.get().isoformat(timespec='milliseconds')
-        }
-
 
 class _ValueType:
 

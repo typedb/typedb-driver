@@ -111,20 +111,6 @@ class Thing(Concept, ABC):
         """
         return self
 
-    def to_json(self) -> Mapping[str, str]:
-        """
-        Retrieves a ``Thing`` as JSON.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            thing.to_json()
-        """
-        return {"type": self.get_type().get_label().name}
-
     @abstractmethod
     def set_has(self, transaction: TypeDBTransaction, attribute: Attribute) -> Promise[None]:
         """

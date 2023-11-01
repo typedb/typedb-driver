@@ -276,21 +276,6 @@ class Attribute(Thing, ABC):
         pass
 
     @abstractmethod
-    def to_json(self) -> Mapping[str, Union[str, int, float, bool]]:
-        """
-        Retrieves this ``Attribute`` as JSON.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            attribute.to_json()
-        """
-        pass
-
-    @abstractmethod
     def get_owners(self, transaction: TypeDBTransaction, owner_type: Optional[ThingType] = None) -> Iterator[Thing]:
         """
         Retrieves the instances that own this ``Attribute``.

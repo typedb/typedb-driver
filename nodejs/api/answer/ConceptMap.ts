@@ -66,16 +66,7 @@ export interface ConceptMap {
      */
     readonly explainables: ConceptMap.Explainables;
 
-    /**
-     * Retrieves this <code>ConceptMap</code> as JSON.
-     *
-     * ### Examples
-     *
-     * ```ts
-     * conceptMap.toJSONRecord()
-     * ```
-     */
-    toJSONRecord(): Record<string, Record<string, boolean | string | number>>;
+    ;
 }
 
 export namespace ConceptMap {

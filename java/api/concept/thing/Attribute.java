@@ -21,7 +21,6 @@
 
 package com.vaticle.typedb.driver.api.concept.thing;
 
-import com.eclipsesource.json.JsonObject;
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.value.Value;
 import com.vaticle.typedb.driver.api.concept.type.AttributeType;
@@ -85,19 +84,6 @@ public interface Attribute extends Thing {
      * </pre>
      */
     Value getValue();
-
-    /**
-     * Retrieves this <code>Attribute</code> as JSON.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * attribute.toJson();
-     * </pre>
-     */
-    @Override
-    default JsonObject toJSON() {
-        return getValue().toJSON().add("type", getType().getLabel().scopedName());
-    }
 
     /**
      * Retrieves the instances that own this <code>Attribute</code>.

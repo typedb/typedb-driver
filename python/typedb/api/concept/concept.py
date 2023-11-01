@@ -350,18 +350,3 @@ class Concept(ABC):
             concept.as_value()
         """
         raise TypeDBDriverException(INVALID_CONCEPT_CASTING, (self.__class__.__name__, "Value"))
-
-    @abstractmethod
-    def to_json(self) -> Mapping[str, Union[str, int, float, bool, datetime]]:
-        """
-        Retrieves the concept as JSON.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            concept.to_json()
-        """
-        pass

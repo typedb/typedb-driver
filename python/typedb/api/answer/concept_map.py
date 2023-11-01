@@ -95,20 +95,6 @@ class ConceptMap(ABC):
         """
         pass
 
-    def to_json(self) -> Mapping[str, Mapping[str, Union[str, int, float, bool]]]:
-        """
-        Retrieves this ``ConceptMap`` as JSON.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-          concept_map.to_json()
-        """
-        return {var: self.get(var).to_json() for var in self.variables()}
-
     class Explainables(ABC):
         """
         Contains explainable objects.

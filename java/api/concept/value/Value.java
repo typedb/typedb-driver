@@ -21,9 +21,6 @@
 
 package com.vaticle.typedb.driver.api.concept.value;
 
-import com.eclipsesource.json.Json;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
 import com.vaticle.typedb.driver.api.concept.Concept;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
@@ -31,7 +28,6 @@ import javax.annotation.CheckReturnValue;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.ILLEGAL_STATE;
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Internal.UNEXPECTED_NATIVE_VALUE;
 
 public interface Value extends Concept {
@@ -170,22 +166,6 @@ public interface Value extends Concept {
      * </pre>
      */
     LocalDateTime asDateTime();
-
-    @Override
-    default JsonObject toJSON() {
-        JsonValue value;
-        switch (getType()) {
-            case BOOLEAN: value = Json.value(asBoolean()); break;
-            case LONG: value = Json.value(asLong()); break;
-            case DOUBLE: value = Json.value(asDouble()); break;
-            case STRING: value = Json.value(asString()); break;
-            case DATETIME: value = Json.value(asDateTime().format(ISO_LOCAL_DATE_TIME_MILLIS)); break;
-            default: throw new TypeDBDriverException(ILLEGAL_STATE);
-        }
-        return Json.object()
-                .add("value_type", getType().name().toLowerCase())
-                .add("value", value);
-    }
 
     enum Type {
         OBJECT(Object.class, false, false, com.vaticle.typedb.driver.jni.ValueType.Object),

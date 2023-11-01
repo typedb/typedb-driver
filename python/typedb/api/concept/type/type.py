@@ -110,20 +110,6 @@ class Type(Concept, ABC):
         """
         return True
 
-    def to_json(self) -> Mapping[str, str]:
-        """
-        Retrieves the type as JSON.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            type_.to_json()
-        """
-        return {"label": self.get_label().scoped_name()}
-
     @abstractmethod
     def get_supertype(self, transaction: TypeDBTransaction) -> Promise[Optional[Type]]:
         """

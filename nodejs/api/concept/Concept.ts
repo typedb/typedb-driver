@@ -270,17 +270,6 @@ export interface Concept {
     * @param concept - The concept to compare to.
     */
     equals(concept: Concept): boolean;
-
-    /**
-     * Retrieves the concept as JSON.
-     *
-     * ### Examples
-     *
-     * ```ts
-     * concept.toJSONRecord()
-     * ```
-     */
-    toJSONRecord(): Record<string, boolean | string | number>;
 }
 
 export namespace Concept {

@@ -21,15 +21,12 @@
 
 package com.vaticle.typedb.driver.api.concept.type;
 
-import com.eclipsesource.json.Json;
-import com.eclipsesource.json.JsonObject;
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.driver.api.concept.Concept;
 import com.vaticle.typedb.driver.common.Label;
 import com.vaticle.typedb.driver.common.Promise;
 
 import javax.annotation.CheckReturnValue;
-import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 public interface Type extends Concept {
@@ -82,14 +79,6 @@ public interface Type extends Concept {
     @CheckReturnValue
     default Type asType() {
         return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    default JsonObject toJSON() {
-        return Json.object().add("label", getLabel().scopedName());
     }
 
     /**

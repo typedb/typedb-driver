@@ -74,10 +74,6 @@ export abstract class TypeImpl extends ConceptImpl implements Type {
 
     abstract getSubtypes(transaction: TypeDBTransaction): Stream<Type>;
 
-    toJSONRecord(): Record<string, string> {
-        return {label: this.label.scopedName};
-    }
-
     equals(concept: Concept): boolean {
         if (!concept.isType()) return false;
         return concept.asType().label.equals(this.label);

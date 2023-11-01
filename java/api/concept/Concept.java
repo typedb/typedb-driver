@@ -318,17 +318,6 @@ public interface Concept {
     }
 
     /**
-     * Retrieves the concept as JSON.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * concept.toJSON();
-     * </pre>
-     */
-    @CheckReturnValue
-    JsonObject toJSON();
-
-    /**
      * This class is used for specifying whether we need explicit or transitive subtyping, instances, etc.
      *
      * <h3>Examples</h3>
