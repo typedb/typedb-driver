@@ -713,26 +713,5 @@ Checks if the concept is a ``Value``.
 concept.isValue()
 ----
 
-[#_Value_toJSONRecordtoJSONRecord__:_Record_string__string_|_number_|_boolean]
-==== toJSONRecord
-
-[source,nodejs]
-----
-toJSONRecord(): Record<string, string | number | boolean>
-----
-
-Retrieves the concept as JSON.
-
-[caption=""]
-.Returns
-`Record<string, string | number | boolean>`
-
-[caption=""]
-.Code examples
-[source,nodejs]
-----
-concept.toJSONRecord()
-----
-
 // end::methods[]
 

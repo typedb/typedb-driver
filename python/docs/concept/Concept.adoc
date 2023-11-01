@@ -464,26 +464,5 @@ Checks if the concept is a ``Value``.
 concept.is_value()
 ----
 
-[#_Concept_to_json]
-==== to_json
-
-[source,python]
-----
-to_json() -> Mapping[str, str | int | float | bool | datetime]
-----
-
-Retrieves the concept as JSON.
-
-[caption=""]
-.Returns
-`Mapping[str, str | int | float | bool | datetime]`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-concept.to_json()
-----
-
 // end::methods[]
 

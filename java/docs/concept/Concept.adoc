@@ -499,28 +499,5 @@ Checks if the concept is a ``Value``.
 concept.isValue();
 ----
 
-[#_Concept_toJSON_]
-==== toJSON
-
-[source,java]
-----
-@CheckReturnValue
-com.eclipsesource.json.JsonObject toJSON()
-----
-
-Retrieves the concept as JSON. 
-
-
-[caption=""]
-.Returns
-`com.eclipsesource.json.JsonObject`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-concept.toJSON();
-----
-
 // end::methods[]
 

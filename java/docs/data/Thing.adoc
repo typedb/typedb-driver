@@ -807,28 +807,6 @@ a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute
 thing.setHas(transaction, attribute).resolve();
 ----
 
-[#_Thing_toJSON_]
-==== toJSON
-
-[source,java]
-----
-default com.eclipsesource.json.JsonObject toJSON()
-----
-
-Retrieves a ``Thing`` as JSON. 
-
-
-[caption=""]
-.Returns
-`com.eclipsesource.json.JsonObject`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-thing.toJSON();
-----
-
 [#_Thing_unsetHas_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_thing_Attribute]
 ==== unsetHas
 

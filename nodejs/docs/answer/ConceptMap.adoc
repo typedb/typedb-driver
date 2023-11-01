@@ -66,27 +66,6 @@ a| `variable` a| The string representation of a variable a| `string`
 conceptMap.get(variable)
 ----
 
-[#_ConceptMap_toJSONRecordtoJSONRecord__:_Record_string__Record_string__string_|_number_|_boolean_]
-==== toJSONRecord
-
-[source,nodejs]
-----
-toJSONRecord(): Record<string, Record<string, string | number | boolean>>
-----
-
-Retrieves this ``ConceptMap`` as JSON.
-
-[caption=""]
-.Returns
-`Record<string, Record<string, string | number | boolean>>`
-
-[caption=""]
-.Code examples
-[source,nodejs]
-----
-conceptMap.toJSONRecord()
-----
-
 [#_ConceptMap_variablesvariables__:_IterableIterator_string]
 ==== variables
 

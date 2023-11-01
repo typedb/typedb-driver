@@ -357,26 +357,5 @@ Returns ``True`` if the attribute value is of type ``string``. Otherwise, return
 attribute.is_string()
 ----
 
-[#_Attribute_to_json]
-==== to_json
-
-[source,python]
-----
-to_json() -> Mapping[str, str | int | float | bool]
-----
-
-Retrieves this ``Attribute`` as JSON.
-
-[caption=""]
-.Returns
-`Mapping[str, str | int | float | bool]`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-attribute.to_json()
-----
-
 // end::methods[]
 

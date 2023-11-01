@@ -298,27 +298,6 @@ a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute
 thing.set_has(transaction, attribute).resolve()
 ----
 
-[#_Thing_to_json]
-==== to_json
-
-[source,python]
-----
-to_json() -> Mapping[str, str]
-----
-
-Retrieves a ``Thing`` as JSON.
-
-[caption=""]
-.Returns
-`Mapping[str, str]`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-thing.to_json()
-----
-
 [#_Thing_unset_has]
 ==== unset_has
 
