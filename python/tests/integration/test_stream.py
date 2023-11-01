@@ -41,8 +41,12 @@ class TestStream(TestCase):
     def test_multiple_done_response_handling(self):
         with TypeDB.core_driver(TypeDB.DEFAULT_ADDRESS) as driver:
             with driver.session(TYPEDB, SCHEMA) as session, session.transaction(WRITE) as tx:
-                for i in range(51):
+                promises = [
                     tx.query.define(f"define person sub entity, owns name{i}; name{i} sub attribute, value string;")
+                    for i in range(51)
+                ]
+                for promise in promises:
+                    promise.resolve()
                 tx.commit()
             # With these options (the default in TypeDB at time of writing), the server may respond with:
             # 50 answers -> CONTINUE -> 1 answer [compensating for latency] -> DONE. The driver will respond to
@@ -53,7 +57,8 @@ class TestStream(TestCase):
                 with driver.session(TYPEDB, DATA) as session, session.transaction(READ, tx_options) as tx:
                     person_type = tx.concepts.get_entity_type("person").resolve()
                     _attrs = list(person_type.get_owns(tx, annotations={Annotation.key()}))
-                    next(tx.query.match("match $x sub thing; limit 1;"))
+                    next(tx.query.get("match $x sub thing; limit 1;"))
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
