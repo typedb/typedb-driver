@@ -468,7 +468,7 @@ Then("group aggregate values are", async (answerIdentifiersTable: DataTable) => 
         assert(valueGroup, `The group identifier [${JSON.stringify(ownerIdentifier)}] does not match any of the answer group owners.`);
 
         const actualAnswer = getNumberFromValue(valueGroup.value);
-        assertValue(valueGroup.numeric, expectedAnswer,
+        assertValue(valueGroup.value, expectedAnswer,
             `Expected answer [${expectedAnswer}] for group [${JSON.stringify(ownerIdentifier)}], but got [${actualAnswer}]`);
     }
 });
