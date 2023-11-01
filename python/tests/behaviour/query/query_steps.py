@@ -172,7 +172,7 @@ def step_impl(context: Context, expected_size: int):
 
 @step("get answers of typeql fetch")
 def get_answers_typeql_fetch(context: Context):
-    context.fetch_answer = list(context.tx().query.fetch(query=context.text))
+    context.fetch_answers = list(context.tx().query.fetch(query=context.text))
 
 @step("typeql fetch; throws exception")
 def typeql_fetch_throws(context: Context):
@@ -182,7 +182,7 @@ def typeql_fetch_throws(context: Context):
 @step("fetch answers are")
 def fetch_answers_are(context: Context):
     expected = json.loads(context.text)
-    actual = context.fetch_answer
+    actual = context.fetch_answers
     assert_that(json_matches(expected, actual), is_(True),
                 "expected: {}\nactual: {}".format(expected, actual))
 

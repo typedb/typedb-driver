@@ -55,7 +55,7 @@ class Context(behave.runner.Context):
         self.transaction_options: Optional[TypeDBOptions] = None
         self.things: dict[str, Thing] = {}
         self.answers: Optional[list[ConceptMap]] = None
-        self.fetch_answer: Optional[list[dict]] = None
+        self.fetch_answers: Optional[list[dict]] = None
         self.answer_groups: Optional[list[ConceptMapGroup]] = None
         self.value_answer: Optional[Value] = None
         self.value_answer_groups: Optional[list[ValueGroup]] = None

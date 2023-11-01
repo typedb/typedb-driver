@@ -67,7 +67,7 @@ def _get_thing_type_impl(context: Context, root_label: RootLabel, type_label: st
 
 def _clear_answers_impl(context: Context):
     context.answers = None
-    context.fetch_answer = None
+    context.fetch_answers = None
     context.answer_groups = None
     context.value_answer = None
     context.value_answer_groups = None
