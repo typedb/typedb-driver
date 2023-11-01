@@ -231,7 +231,12 @@ public abstract class JSON {
 
         @Override
         public java.lang.String toString() {
-            return Double.toString(number);
+            long integerPart = (long)number;
+            if ((double)integerPart == number) {
+                return Long.toString(integerPart);
+            } else {
+                return Double.toString(number);
+            }
         }
     }
 
