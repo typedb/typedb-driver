@@ -107,16 +107,41 @@ public abstract class JSON {
         else if (isArray()) {
             java.lang.String content = asArray().stream().map(JSON::toString).collect(joining(",\n"));
 
-            return "[\n" + Arrays.stream(content.split("\n")).map(s -> "    " + s).collect(joining("\n")) + "\n]";
+            StringBuilder sb = new StringBuilder("[");
+            if (content.lines().count() > 1) sb.append("\n").append(indent(content)).append("\n");
+            else sb.append(" ").append(content).append(" ");
+            sb.append("]");
+
+            return sb.toString();
         } else if (isObject()) {
-            java.lang.String content = asObject().keySet().stream().map(key -> {
+            Map<java.lang.String, JSON> jsonObject = asObject();
+            boolean singleLine = jsonObject.containsKey("root") // this is a type
+                    || jsonObject.containsKey("value");  // this is a value or an attribute
+
+            List<java.lang.String> orderedKeys = jsonObject.keySet().stream().sorted((s1, s2) -> {
+                if (s1.equals("type")) return 1; // type always comes last
+                else if (s2.equals("type")) return -1;
+                else return s1.compareTo(s2);
+            }).collect(Collectors.toList());
+
+            java.lang.String content = orderedKeys.stream().map(key -> {
                 StringBuilder sb = new StringBuilder("\"").append(key).append("\":");
-                var valueString = asObject().get(key).toString();
+                java.lang.String valueString = jsonObject.get(key).toString();
                 sb.append(" ").append(valueString);
                 return sb.toString();
-            }).collect(joining(",\n"));
-            return "{\n" + Arrays.stream(content.split("\n")).map(s -> "    " + s).collect(joining("\n")) + "\n}";
+            }).collect(joining(singleLine ? ", " : ",\n"));
+
+            StringBuilder sb = new StringBuilder("{");
+            if (content.lines().count() > 1) sb.append("\n").append(indent(content)).append("\n");
+            else sb.append(" ").append(content).append(" ");
+            sb.append("}");
+
+            return sb.toString();
         } else throw new TypeDBDriverException(ILLEGAL_STATE);
+    }
+
+    private static java.lang.String indent(java.lang.String string) {
+        return Arrays.stream(string.split("\n")).map(s -> "    " + s).collect(joining("\n"));
     }
 
     @Override
