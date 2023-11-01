@@ -57,7 +57,7 @@ class QueryManager(ABC):
         pass
 
     @abstractmethod
-    def get_aggregate(self, query: str, options: Optional[TypeDBOptions] = None) -> Promise[Value]:
+    def get_aggregate(self, query: str, options: Optional[TypeDBOptions] = None) -> Promise[Optional[Value]]:
         """
         Performs a TypeQL Match Aggregate query in the transaction.
 

@@ -77,7 +77,7 @@ class _QueryManager(QueryManager, NativeWrapper[NativeTransaction]):
         except TypeDBDriverExceptionNative as e:
             raise TypeDBDriverException.of(e)
 
-    def get_aggregate(self, query: str, options: Optional[TypeDBOptions] = None) -> Promise[Value]:
+    def get_aggregate(self, query: str, options: Optional[TypeDBOptions] = None) -> Promise[Optional[Value]]:
         if not query:
             raise TypeDBDriverException(MISSING_QUERY)
         if not options:
