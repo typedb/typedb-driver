@@ -66,7 +66,6 @@ export interface ConceptMap {
      */
     readonly explainables: ConceptMap.Explainables;
 
-    ;
 }
 
 export namespace ConceptMap {

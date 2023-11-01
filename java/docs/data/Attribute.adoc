@@ -577,27 +577,5 @@ Checks if the concept is a ``Value``.
 concept.isValue();
 ----
 
-[#_Attribute_toJSON_]
-==== toJSON
-
-[source,java]
-----
-default com.eclipsesource.json.JsonObject toJSON()
-----
-
-Retrieves this ``Attribute`` as JSON. 
-
-
-[caption=""]
-.Returns
-`com.eclipsesource.json.JsonObject`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-attribute.toJson();
-----
-
 // end::methods[]
 

@@ -300,26 +300,5 @@ Checks if the concept is a ``Value``.
 value.is_value()
 ----
 
-[#_Value_to_json]
-==== to_json
-
-[source,python]
-----
-to_json() -> Mapping[str, str | int | float | bool]
-----
-
-Retrieves this value concept as JSON.
-
-[caption=""]
-.Returns
-`Mapping[str, str | int | float | bool]`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-value.to_json()
-----
-
 // end::methods[]
 

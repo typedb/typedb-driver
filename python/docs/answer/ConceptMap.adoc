@@ -76,27 +76,6 @@ a| `variable` a| The string representation of a variable a| `str` a|
 concept_map.get(variable)
 ----
 
-[#_ConceptMap_to_json]
-==== to_json
-
-[source,python]
-----
-to_json() -> Mapping[str, Mapping[str, str | int | float | bool]]
-----
-
-Retrieves this ``ConceptMap`` as JSON.
-
-[caption=""]
-.Returns
-`Mapping[str, Mapping[str, str | int | float | bool]]`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-concept_map.to_json()
-----
-
 [#_ConceptMap_variables]
 ==== variables
 

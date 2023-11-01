@@ -243,26 +243,5 @@ a| `new_label` a| The new ``Label`` to be given to the type. a| `Label` a|
 type_.set_label(transaction, new_label).resolve()
 ----
 
-[#_Type_to_json]
-==== to_json
-
-[source,python]
-----
-to_json() -> Mapping[str, str]
-----
-
-Retrieves the type as JSON.
-
-[caption=""]
-.Returns
-`Mapping[str, str]`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-type_.to_json()
-----
-
 // end::methods[]
 

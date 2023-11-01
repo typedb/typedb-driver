@@ -83,29 +83,6 @@ a| `variable` a| The string representation of a variable a| `java.lang.String`
 conceptMap.get(variable);
 ----
 
-[#_ConceptMap_toJSON_]
-==== toJSON
-
-[source,java]
-----
-@CheckReturnValue
-default com.eclipsesource.json.JsonObject toJSON()
-----
-
-Retrieves this ``ConceptMap`` as JSON. 
-
-
-[caption=""]
-.Returns
-`com.eclipsesource.json.JsonObject`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-conceptMap.toJSON();
-----
-
 [#_ConceptMap_variables_]
 ==== variables
 

@@ -709,26 +709,5 @@ a| `label` a| The new ``Label`` to be given to the type. a| `string`
 type.setLabel(transaction, label)
 ----
 
-[#_Type_toJSONRecordtoJSONRecord__:_Record_string__string_|_number_|_boolean]
-==== toJSONRecord
-
-[source,nodejs]
-----
-toJSONRecord(): Record<string, string | number | boolean>
-----
-
-Retrieves the concept as JSON.
-
-[caption=""]
-.Returns
-`Record<string, string | number | boolean>`
-
-[caption=""]
-.Code examples
-[source,nodejs]
-----
-concept.toJSONRecord()
-----
-
 // end::methods[]
 
