@@ -169,7 +169,7 @@ fn parse_json(json: &str) -> TypeDBResult<JSON> {
             serde_json::Value::Number(number) => JSON::Number(number.as_f64().unwrap()),
             serde_json::Value::String(string) => JSON::String(Cow::Owned(string)),
             serde_json::Value::Array(array) => {
-                JSON::List(array.into_iter().map(serde_json_into_fetch_answer).collect())
+                JSON::Array(array.into_iter().map(serde_json_into_fetch_answer).collect())
             }
             serde_json::Value::Object(object) => JSON::Object(
                 object.into_iter().map(|(k, v)| (Cow::Owned(k), serde_json_into_fetch_answer(v))).collect(),
@@ -193,7 +193,7 @@ fn jsons_equal_up_to_reorder(lhs: &JSON, rhs: &JSON) -> bool {
                 None => false,
             })
         }
-        (JSON::List(lhs), JSON::List(rhs)) => {
+        (JSON::Array(lhs), JSON::Array(rhs)) => {
             if lhs.len() != rhs.len() {
                 return false;
             }

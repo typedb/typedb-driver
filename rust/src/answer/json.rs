@@ -28,7 +28,7 @@ use std::{
 #[derive(Clone, Debug)]
 pub enum JSON {
     Object(HashMap<Cow<'static, str>, JSON>),
-    List(Vec<JSON>),
+    Array(Vec<JSON>),
     String(Cow<'static, str>),
     Number(f64),
     Boolean(bool),
@@ -47,7 +47,7 @@ impl fmt::Display for JSON {
                 }
                 f.write_char('}')?;
             }
-            JSON::List(list) => {
+            JSON::Array(list) => {
                 f.write_char('[')?;
                 for (i, v) in list.iter().enumerate() {
                     if i > 0 {

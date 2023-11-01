@@ -48,7 +48,7 @@ impl Node {
             Node::Map(map) => {
                 JSON::Object(map.into_iter().map(|(var, node)| (Cow::Owned(var), node.into_json())).collect())
             }
-            Node::List(list) => JSON::List(list.into_iter().map(Node::into_json).collect()),
+            Node::List(list) => JSON::Array(list.into_iter().map(Node::into_json).collect()),
             Node::Leaf(Concept::RootThingType(_)) => {
                 json_type(RootThingType::LABEL, Cow::Borrowed(RootThingType::LABEL))
             }

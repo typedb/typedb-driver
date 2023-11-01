@@ -372,7 +372,7 @@ generic_step_impl! {
     #[step(expr = "get answers of typeql fetch")]
     pub async fn get_answers_typeql_fetch(context: &mut Context, step: &Step) -> TypeDBResult {
         let parsed = parse_query(step.docstring().unwrap())?;
-        context.fetch_answer = Some(JSON::List(context.transaction().query().fetch(&parsed.to_string())?.try_collect().await?));
+        context.fetch_answer = Some(JSON::Array(context.transaction().query().fetch(&parsed.to_string())?.try_collect().await?));
         Ok(())
     }
 
