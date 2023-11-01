@@ -22,7 +22,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from typedb.api.concept.concept import Concept
@@ -50,7 +50,7 @@ class ValueGroup(ABC):
         pass
 
     @abstractmethod
-    def value(self) -> Value:
+    def value(self) -> Optional[Value]:
         """
         Retrieves the ``Value`` answer of the group.
 

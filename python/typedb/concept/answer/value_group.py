@@ -21,7 +21,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from typedb.native_driver_wrapper import value_group_get_owner, value_group_get_value, \
     value_group_to_string, value_group_equals, ValueGroup as NativeValueGroup
@@ -51,8 +51,11 @@ class _ValueGroup(ValueGroup, NativeWrapper[NativeValueGroup]):
     def owner(self) -> Concept:
         return concept_factory.wrap_concept(value_group_get_owner(self.native_object))
 
-    def value(self) -> Value:
-        return _Value(value_group_get_value(self.native_object))
+    def value(self) -> Optional[Value]:
+        if native_value := value_group_get_value(self.native_object):
+            return _Value(native_value)
+        else:
+            return None
 
     def __repr__(self):
         return value_group_to_string(self.native_object)
