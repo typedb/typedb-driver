@@ -144,29 +144,6 @@ public abstract class JSON {
         return Arrays.stream(string.split("\n")).map(s -> "    " + s).collect(joining("\n"));
     }
 
-    @Override
-    public boolean equals(java.lang.Object obj) {
-        if (obj == this) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        JSON that = (JSON)obj;
-        if (isBoolean() && that.isBoolean()) return asBoolean() == that.asBoolean();
-        else if (isNumber() && that.isNumber()) return asNumber() == that.asNumber();
-        else if (isString() && that.isString()) return asString().equals(that.asString());
-        else if (isArray() && that.isArray()) return asArray().equals(that.asArray());
-        else if (isObject() && that.isObject()) return asObject().equals(that.asObject());
-        else return false;
-    }
-
-    @Override
-    public int hashCode() {
-        if (isBoolean()) return java.lang.Boolean.hashCode(asBoolean());
-        else if (isNumber()) return Double.hashCode(asNumber());
-        else if (isString()) return asString().hashCode();
-        else if (isArray()) return asArray().hashCode();
-        else if (isObject()) return asObject().hashCode();
-        else throw new TypeDBDriverException(ILLEGAL_STATE);
-    }
-
     private static class Object extends JSON {
         private final Map<java.lang.String, JSON> object;
 
@@ -181,6 +158,19 @@ public abstract class JSON {
         @Override
         public Map<java.lang.String, JSON> asObject() {
             return object;
+        }
+
+        @Override
+        public boolean equals(java.lang.Object obj) {
+            if (obj == this) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            JSON.Object that = (JSON.Object)obj;
+            return this.object.equals(that.object);
+        }
+
+        @Override
+        public int hashCode() {
+            return object.hashCode();
         }
     }
 
@@ -198,6 +188,19 @@ public abstract class JSON {
         public List<JSON> asArray() {
             return array;
         }
+
+        @Override
+        public boolean equals(java.lang.Object obj) {
+            if (obj == this) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            JSON.Array that = (JSON.Array)obj;
+            return this.array.equals(that.array);
+        }
+
+        @Override
+        public int hashCode() {
+            return array.hashCode();
+        }
     }
 
     private static class Number extends JSON {
@@ -213,6 +216,19 @@ public abstract class JSON {
 
         public double asNumber() {
             return number;
+        }
+
+        @Override
+        public boolean equals(java.lang.Object obj) {
+            if (obj == this) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            JSON.Number that = (JSON.Number)obj;
+            return this.number == that.number;
+        }
+
+        @Override
+        public int hashCode() {
+            return Double.hashCode(number);
         }
     }
 
@@ -230,6 +246,19 @@ public abstract class JSON {
         public java.lang.String asString() {
             return string;
         }
+
+        @Override
+        public boolean equals(java.lang.Object obj) {
+            if (obj == this) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            JSON.String that = (JSON.String)obj;
+            return this.string.equals(that.string);
+        }
+
+        @Override
+        public int hashCode() {
+            return string.hashCode();
+        }
     }
 
     private static class Boolean extends JSON {
@@ -245,6 +274,19 @@ public abstract class JSON {
 
         public boolean asBoolean() {
             return aBoolean;
+        }
+
+        @Override
+        public boolean equals(java.lang.Object obj) {
+            if (obj == this) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            JSON.Boolean that = (JSON.Boolean)obj;
+            return this.aBoolean == that.aBoolean;
+        }
+
+        @Override
+        public int hashCode() {
+            return java.lang.Boolean.hashCode(aBoolean);
         }
     }
 }
