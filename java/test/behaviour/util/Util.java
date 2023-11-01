@@ -81,13 +81,8 @@ public class Util {
         } else if (lhs.isNumber()) {
             if (!rhs.isNumber()) return false;
             return equalsApproximate(lhs.asNumber(), rhs.asNumber());
-        } else if (lhs.isString()) {
-            if (!rhs.isString()) return false;
-            return lhs.asString().equals(rhs.asString());
-        } else if (lhs.isBoolean()) {
-            if (!rhs.isBoolean()) return false;
-            return lhs.asBoolean() == rhs.asBoolean();
+        } else {
+            return lhs.equals(rhs);
         }
-        throw new IllegalStateException("Encountered unexpected JSON value");
     }
 }
