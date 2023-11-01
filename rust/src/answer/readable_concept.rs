@@ -111,7 +111,11 @@ fn json_value(value: Value) -> JSON {
             JSON::Object([(VALUE, JSON::String(Cow::Owned(string))), (VALUE_TYPE, JSON::String(STRING))].into())
         }
         Value::DateTime(datetime) => JSON::Object(
-            [(VALUE, JSON::String(Cow::Owned(datetime.to_string()))), (VALUE_TYPE, JSON::String(DATETIME))].into(),
+            [
+                (VALUE, JSON::String(Cow::Owned(datetime.format("%FT%T%.3f").to_string()))),
+                (VALUE_TYPE, JSON::String(DATETIME)),
+            ]
+            .into(),
         ),
     }
 }
