@@ -25,6 +25,7 @@ import com.vaticle.typedb.driver.api.concept.Concept;
 import com.vaticle.typedb.driver.api.concept.value.Value;
 
 import javax.annotation.CheckReturnValue;
+import java.util.Optional;
 
 /**
  * Contains an element of the group aggregate query result.
@@ -50,5 +51,5 @@ public interface ValueGroup {
      * </pre>
      */
     @CheckReturnValue
-    Value value();
+    Optional<Value> value();
 }

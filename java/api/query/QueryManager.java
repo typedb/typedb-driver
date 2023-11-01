@@ -38,6 +38,7 @@ import com.vaticle.typeql.lang.query.TypeQLUndefine;
 import com.vaticle.typeql.lang.query.TypeQLUpdate;
 
 import javax.annotation.CheckReturnValue;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -85,7 +86,7 @@ public interface QueryManager {
      * @see QueryManager#get(TypeQLGet.Aggregate, TypeDBOptions)
      */
     @CheckReturnValue
-    Promise<Value> get(TypeQLGet.Aggregate query);
+    Promise<Optional<Value>> get(TypeQLGet.Aggregate query);
 
     /**
      * Performs a TypeQL Get Aggregate query in the transaction.
@@ -99,7 +100,7 @@ public interface QueryManager {
      * @param options Specify query options
      */
     @CheckReturnValue
-    Promise<Value> get(TypeQLGet.Aggregate query, TypeDBOptions options);
+    Promise<Optional<Value>> get(TypeQLGet.Aggregate query, TypeDBOptions options);
 
     /**
      * Performs a TypeQL Get Aggregate query with default options.
@@ -107,13 +108,13 @@ public interface QueryManager {
      * @see QueryManager#get(TypeQLGet.Aggregate, TypeDBOptions)
      */
     @CheckReturnValue
-    Promise<Value> getAggregate(String query);
+    Promise<Optional<Value>> getAggregate(String query);
 
     /**
      * @see QueryManager#get(TypeQLGet.Aggregate, TypeDBOptions)
      */
     @CheckReturnValue
-    Promise<Value> getAggregate(String query, TypeDBOptions options);
+    Promise<Optional<Value>> getAggregate(String query, TypeDBOptions options);
 
     /**
      * Performs a TypeQL Get Group query with default options.

@@ -29,6 +29,7 @@ import com.vaticle.typedb.driver.concept.ConceptImpl;
 import com.vaticle.typedb.driver.concept.value.ValueImpl;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.vaticle.typedb.driver.jni.typedb_driver.value_group_equals;
 import static com.vaticle.typedb.driver.jni.typedb_driver.value_group_get_value;
@@ -48,10 +49,10 @@ public class ValueGroupImpl extends NativeObject<com.vaticle.typedb.driver.jni.V
     }
 
     @Override
-    public Value value() {
+    public Optional<Value> value() {
         com.vaticle.typedb.driver.jni.Concept nativeValue = value_group_get_value(nativeObject);
-        if (nativeValue == null) return null;
-        else return new ValueImpl(nativeValue);
+        if (nativeValue == null) return Optional.empty();
+        else return Optional.of(new ValueImpl(nativeValue));
     }
 
     @Override

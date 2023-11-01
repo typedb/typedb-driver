@@ -46,6 +46,7 @@ import com.vaticle.typeql.lang.query.TypeQLUndefine;
 import com.vaticle.typeql.lang.query.TypeQLUpdate;
 
 import javax.annotation.CheckReturnValue;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.TRANSACTION_CLOSED;
@@ -97,29 +98,33 @@ public final class QueryManagerImpl implements QueryManager {
 
     @Override
     @CheckReturnValue
-    public Promise<Value> get(TypeQLGet.Aggregate query) {
+    public Promise<Optional<Value>> get(TypeQLGet.Aggregate query) {
         return getAggregate(query.toString(false));
     }
 
     @Override
     @CheckReturnValue
-    public Promise<Value> get(TypeQLGet.Aggregate query, TypeDBOptions options) {
+    public Promise<Optional<Value>> get(TypeQLGet.Aggregate query, TypeDBOptions options) {
         return getAggregate(query.toString(false), options);
     }
 
     @Override
     @CheckReturnValue
-    public Promise<Value> getAggregate(String query) {
+    public Promise<Optional<Value>> getAggregate(String query) {
         return getAggregate(query, new TypeDBOptions());
     }
 
     @Override
     @CheckReturnValue
-    public Promise<Value> getAggregate(String query, TypeDBOptions options) {
+    public Promise<Optional<Value>> getAggregate(String query, TypeDBOptions options) {
         if (!nativeTransaction.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         if (query == null || query.isEmpty()) throw new TypeDBDriverException(MISSING_QUERY);
         com.vaticle.typedb.driver.jni.ConceptPromise promise = query_get_aggregate(nativeTransaction, query, options.nativeObject);
-        return Promise.map(promise, ValueImpl::new);
+        return new Promise<>(() -> {
+            var res = promise.get();
+            if (res == null) return Optional.empty();
+            else return Optional.of(new ValueImpl(res));
+        });
     }
 
     @Override
