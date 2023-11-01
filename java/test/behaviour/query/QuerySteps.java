@@ -216,7 +216,7 @@ public class QuerySteps {
     public void typeql_get_aggregate(String typeQLQueryStatements) {
         TypeQLGet.Aggregate typeQLQuery = TypeQL.parseQuery(String.join("\n", typeQLQueryStatements)).asGetAggregate();
         clearAnswers();
-        valueAnswer = Optional.ofNullable(tx().query().getAggregate(String.join("\n", typeQLQueryStatements)).resolve());
+        valueAnswer = tx().query().getAggregate(String.join("\n", typeQLQueryStatements)).resolve();
     }
 
     @When("typeql get aggregate; throws exception")
@@ -395,7 +395,8 @@ public class QuerySteps {
                     .orElse(null);
             assertNotNull(String.format("The group identifier [%s] does not match any of the answer group owners.", expectation.getKey()), answerGroup);
 
-            double actualAnswer = answerGroup.value().isDouble() ? answerGroup.value().asDouble() : answerGroup.value().asLong();
+            Value value = answerGroup.value().get();
+            double actualAnswer = value.isDouble() ? value.asDouble() : value.asLong();
             assertEquals(
                     String.format("Expected answer [%f] for group [%s], but got [%f]",
                             expectedAnswer, expectation.getKey(), actualAnswer),
