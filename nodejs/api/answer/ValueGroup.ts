@@ -19,35 +19,32 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.api.answer;
-
-import com.vaticle.typedb.driver.api.concept.Concept;
-
-import javax.annotation.CheckReturnValue;
+import {Concept} from "../concept/Concept";
+import {Value} from "../concept/value/Value";
 
 /**
  * Contains an element of the group aggregate query result.
  */
-public interface NumericGroup {
+export interface ValueGroup {
     /**
      * Retrieves the concept that is the group owner.
      *
-     * <h3>Examples</h3>
-     * <pre>
-     * conceptMapGroup.owner()
-     * </pre>
+     * ### Examples
+     *
+     * ```ts
+     * valueGroup.owner
+     * ```
      */
-    @CheckReturnValue
-    Concept owner();
+    readonly owner: Concept;
 
     /**
-     * Retrieves the <code>Numeric</code> answer of the group.
+     * Retrieves the <code>Value</code> answer of the group, if there is one.
      *
-     * <h3>Examples</h3>
-     * <pre>
-     * numericGroup.numeric();
-     * </pre>
+     * ### Examples
+     *
+     * ```ts
+     * valueGroup.value
+     * ```
      */
-    @CheckReturnValue
-    Numeric numeric();
+    readonly value: Value | undefined;
 }

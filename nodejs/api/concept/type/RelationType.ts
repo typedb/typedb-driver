@@ -124,6 +124,9 @@ export interface RelationType extends ThingType {
 }
 
 export namespace RelationType {
+
+    export const NAME = "relation";
+
     export function proto(relationType: RelationType) {
         return RequestBuilder.Type.RelationType.protoRelationType(relationType.label);
     }

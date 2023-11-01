@@ -19,21 +19,37 @@
  * under the License.
  */
 
-use std::fmt;
+package com.vaticle.typedb.driver.api.answer;
 
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum Numeric {
-    Long(i64),
-    Double(f64),
-    NaN,
-}
+import com.vaticle.typedb.driver.api.concept.Concept;
+import com.vaticle.typedb.driver.api.concept.value.Value;
 
-impl fmt::Display for Numeric {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Self::Long(long) => write!(f, "{long}"),
-            Self::Double(double) => write!(f, "{double}"),
-            Self::NaN => write!(f, "NaN"),
-        }
-    }
+import javax.annotation.CheckReturnValue;
+import java.util.Optional;
+
+/**
+ * Contains an element of the group aggregate query result.
+ */
+public interface ValueGroup {
+    /**
+     * Retrieves the concept that is the group owner.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMapGroup.owner()
+     * </pre>
+     */
+    @CheckReturnValue
+    Concept owner();
+
+    /**
+     * Retrieves the <code>Value</code> answer of the group.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * valueGroup.value();
+     * </pre>
+     */
+    @CheckReturnValue
+    Optional<Value> value();
 }

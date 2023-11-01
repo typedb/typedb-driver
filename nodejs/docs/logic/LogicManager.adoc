@@ -4,7 +4,7 @@
 Provides methods for manipulating rules in the database.
 
 // tag::methods[]
-[#_LogicManager_getRule]
+[#_LogicManager_getRulegetRule_label_:_Promise_Rule]
 ==== getRule
 
 [source,nodejs]
@@ -34,7 +34,7 @@ a| `label` a| The label of the Rule to create or retrieve a| `string`
 transaction.logic.getRule(label)
 ----
 
-[#_LogicManager_getRules]
+[#_LogicManager_getRulesgetRules__:_Stream_Rule]
 ==== getRules
 
 [source,nodejs]
@@ -55,7 +55,7 @@ Retrieves all rules.
 transaction.logic.getRules()
 ----
 
-[#_LogicManager_putRule]
+[#_LogicManager_putRuleputRule_label__when__then_:_Promise_Rule]
 ==== putRule
 
 [source,nodejs]

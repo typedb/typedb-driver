@@ -29,7 +29,7 @@ import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typeql.lang.TypeQL;
 import com.vaticle.typeql.lang.pattern.Conjunction;
 import com.vaticle.typeql.lang.pattern.Pattern;
-import com.vaticle.typeql.lang.pattern.variable.ThingVariable;
+import com.vaticle.typeql.lang.pattern.statement.ThingStatement;
 
 import javax.annotation.CheckReturnValue;
 
@@ -47,12 +47,12 @@ public class RuleImpl extends NativeObject<com.vaticle.typedb.driver.jni.Rule> i
     private int hash = 0;
 
     private final Conjunction<? extends Pattern> when;
-    private final ThingVariable<?> then;
+    private final ThingStatement<?> then;
 
     RuleImpl(com.vaticle.typedb.driver.jni.Rule rule) {
         super(rule);
         when = TypeQL.parsePattern(rule_get_when(nativeObject)).asConjunction();
-        then = TypeQL.parseVariable(rule_get_then(nativeObject)).asThing();
+        then = TypeQL.parseStatement(rule_get_then(nativeObject)).asThing();
     }
 
     @Override
@@ -66,7 +66,7 @@ public class RuleImpl extends NativeObject<com.vaticle.typedb.driver.jni.Rule> i
     }
 
     @Override
-    public ThingVariable<?> getThen() {
+    public ThingStatement<?> getThen() {
         return then;
     }
 

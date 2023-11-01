@@ -33,7 +33,7 @@ use crate::{
             transaction::steps::{session_opens_transaction_of_type, transaction_commits},
         },
         parameter::TransactionTypeParam,
-        query::language::steps::{answer_size, get_answers_typeql_match, typeql_define, typeql_insert},
+        query::language::steps::{answer_size, get_answers_typeql_get, typeql_define, typeql_insert},
         Context,
     },
     generic_step_impl,
@@ -68,7 +68,7 @@ generic_step_impl! {
         connection_open_data_session_for_database(context, Context::DEFAULT_DATABASE.to_string()).await;
         session_opens_transaction_of_type(context, TransactionTypeParam { transaction_type: TransactionType::Read })
             .await;
-        assert!(get_answers_typeql_match(context, step).await.is_ok());
+        assert!(get_answers_typeql_get(context, step).await.is_ok());
         connection_close_all_sessions(context).await;
     }
 

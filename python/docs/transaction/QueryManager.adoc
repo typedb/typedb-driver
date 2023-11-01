@@ -97,6 +97,161 @@ a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
 transaction.query.explain(explainable, options)
 ----
 
+[#_QueryManager_fetch]
+==== fetch
+
+[source,python]
+----
+fetch(query: str, options: TypeDBOptions | None = None) -> Iterator[dict]
+----
+
+Performs a TypeQL Fetch query in the transaction.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `query` a| The TypeQL Fetch query to be executed a| `str` a| 
+a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
+|===
+
+[caption=""]
+.Returns
+`Iterator[dict]`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+transaction.query.fetch(query, options)
+----
+
+[#_QueryManager_get]
+==== get
+
+[source,python]
+----
+get(query: str, options: TypeDBOptions | None = None) -> Iterator[ConceptMap]
+----
+
+Performs a TypeQL Match (Get) query in the transaction.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `query` a| The TypeQL Match (Get) query to be executed a| `str` a| 
+a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
+|===
+
+[caption=""]
+.Returns
+`Iterator[ConceptMap]`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+transaction.query.get(query, options)
+----
+
+[#_QueryManager_get_aggregate]
+==== get_aggregate
+
+[source,python]
+----
+get_aggregate(query: str, options: TypeDBOptions | None = None) -> Promise[Value | None]
+----
+
+Performs a TypeQL Match Aggregate query in the transaction.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `query` a| The TypeQL Match Aggregate query to be executed a| `str` a| 
+a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
+|===
+
+[caption=""]
+.Returns
+`Promise[Value | None]`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+transaction.query.get_aggregate(query, options).resolve()
+----
+
+[#_QueryManager_get_group]
+==== get_group
+
+[source,python]
+----
+get_group(query: str, options: TypeDBOptions | None = None) -> Iterator[ConceptMapGroup]
+----
+
+Performs a TypeQL Match Group query in the transaction.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `query` a| The TypeQL Match Group query to be executed a| `str` a| 
+a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
+|===
+
+[caption=""]
+.Returns
+`Iterator[ConceptMapGroup]`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+transaction.query.get_group(query, options)
+----
+
+[#_QueryManager_get_group_aggregate]
+==== get_group_aggregate
+
+[source,python]
+----
+get_group_aggregate(query: str, options: TypeDBOptions | None = None) -> Iterator[ValueGroup]
+----
+
+Performs a TypeQL Match Group Aggregate query in the transaction.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `query` a| The TypeQL Match Group Aggregate query to be executed a| `str` a| 
+a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
+|===
+
+[caption=""]
+.Returns
+`Iterator[ValueGroup]`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+transaction.query.get_group_aggregate(query, options)
+----
+
 [#_QueryManager_insert]
 ==== insert
 
@@ -126,130 +281,6 @@ a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
 [source,python]
 ----
 transaction.query.insert(query, options)
-----
-
-[#_QueryManager_match]
-==== match
-
-[source,python]
-----
-match(query: str, options: TypeDBOptions | None = None) -> Iterator[ConceptMap]
-----
-
-Performs a TypeQL Match (Get) query in the transaction.
-
-[caption=""]
-.Input parameters
-[cols="~,~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `query` a| The TypeQL Match (Get) query to be executed a| `str` a| 
-a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
-|===
-
-[caption=""]
-.Returns
-`Iterator[ConceptMap]`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-transaction.query.match(query, options)
-----
-
-[#_QueryManager_match_aggregate]
-==== match_aggregate
-
-[source,python]
-----
-match_aggregate(query: str, options: TypeDBOptions | None = None) -> Promise[Numeric]
-----
-
-Performs a TypeQL Match Aggregate query in the transaction.
-
-[caption=""]
-.Input parameters
-[cols="~,~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `query` a| The TypeQL Match Aggregate query to be executed a| `str` a| 
-a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
-|===
-
-[caption=""]
-.Returns
-`Promise[Numeric]`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-transaction.query.match_aggregate(query, options).resolve()
-----
-
-[#_QueryManager_match_group]
-==== match_group
-
-[source,python]
-----
-match_group(query: str, options: TypeDBOptions | None = None) -> Iterator[ConceptMapGroup]
-----
-
-Performs a TypeQL Match Group query in the transaction.
-
-[caption=""]
-.Input parameters
-[cols="~,~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `query` a| The TypeQL Match Group query to be executed a| `str` a| 
-a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
-|===
-
-[caption=""]
-.Returns
-`Iterator[ConceptMapGroup]`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-transaction.query.match_group(query, options)
-----
-
-[#_QueryManager_match_group_aggregate]
-==== match_group_aggregate
-
-[source,python]
-----
-match_group_aggregate(query: str, options: TypeDBOptions | None = None) -> Iterator[NumericGroup]
-----
-
-Performs a TypeQL Match Group Aggregate query in the transaction.
-
-[caption=""]
-.Input parameters
-[cols="~,~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `query` a| The TypeQL Match Group Aggregate query to be executed a| `str` a| 
-a| `options` a| Specify query options a| `TypeDBOptions \| None` a| `None`
-|===
-
-[caption=""]
-.Returns
-`Iterator[NumericGroup]`
-
-[caption=""]
-.Code examples
-[source,python]
-----
-transaction.query.match_group_aggregate(query, options)
 ----
 
 [#_QueryManager_undefine]

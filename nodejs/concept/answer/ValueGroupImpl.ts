@@ -19,33 +19,37 @@
  * under the License.
  */
 
-import {NumericGroup as NumericGroupProto} from "typedb-protocol/proto/answer";
-import {Numeric} from "../../api/answer/Numeric";
-import {NumericGroup} from "../../api/answer/NumericGroup";
+import {ValueGroup as ValueGroupProto} from "typedb-protocol/proto/answer";
+import {ValueGroup} from "../../api/answer/ValueGroup";
 import {Concept} from "../../api/concept/Concept";
-import {NumericImpl} from "./NumericImpl";
 import {ResponseReader} from "../../common/rpc/ResponseReader";
+import {Value} from "../../api/concept/value/Value";
+import {ValueImpl} from "../value/ValueImpl";
 
-export class NumericGroupImpl implements NumericGroup {
+export class ValueGroupImpl implements ValueGroup {
     private readonly _owner: Concept;
-    private readonly _numeric: Numeric;
+    private readonly _value: Value | null;
 
-    constructor(owner: Concept, numeric: Numeric) {
+    constructor(owner: Concept, value: Value) {
         this._owner = owner;
-        this._numeric = numeric;
+        this._value = value;
     }
 
     get owner(): Concept {
         return this._owner;
     }
 
-    get numeric(): Numeric {
-        return this._numeric;
+    get value(): Value | null {
+        return this._value;
     }
 }
 
-export namespace NumericGroupImpl {
-    export function of(numericGroupProto: NumericGroupProto) {
-        return new NumericGroupImpl(ResponseReader.Concept.of(numericGroupProto.owner), NumericImpl.of(numericGroupProto.number))
+export namespace ValueGroupImpl {
+    export function of(valueGroupProto: ValueGroupProto) {
+        if (valueGroupProto.value) {
+            return new ValueGroupImpl(ResponseReader.Concept.of(valueGroupProto.owner), ValueImpl.ofValueProto(valueGroupProto.value));
+        } else {
+            return new ValueGroupImpl(ResponseReader.Concept.of(valueGroupProto.owner), null);
+        }
     }
 }

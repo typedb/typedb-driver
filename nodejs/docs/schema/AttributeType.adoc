@@ -8,21 +8,18 @@
 Attribute types represent properties that other types can own. Attribute types have a value type. This value type is fixed and unique for every given instance of the attribute type. Other types can own an attribute type. That means that instances of these other types can own an instance of this attribute type. This usually means that an object in our domain has a property with the matching value. Multiple types can own the same attribute type, and different instances of the same type or different types can share ownership of the same attribute instance.
 
 [caption=""]
-.Fields
-// tag::properties[]
-[cols="~,~,~"]
+.Namespace variables
+// tag::enum_constants[]
+[cols="~"]
 [options="header"]
 |===
-|Name |Type |Description
-a| `abstract` a| `boolean` a| Whether the type is prevented from having data instances (i.e., abstract).
-a| `label` a| `Label` a| The unique label of the type.
-a| `root` a| `boolean` a| Whether the type is a root type.
-a| `valueType` a| `ValueType` a| The ValueType of this AttributeType.
+|Name
+a| `NAME`
 |===
-// end::properties[]
+// end::enum_constants[]
 
 // tag::methods[]
-[#_AttributeType_asAttribute]
+[#_AttributeType_asAttributeasAttribute__:_Attribute]
 ==== asAttribute
 
 [source,nodejs]
@@ -43,7 +40,7 @@ Casts the concept to ``Attribute``.
 concept.asAttribute()
 ----
 
-[#_AttributeType_asAttributeType]
+[#_AttributeType_asAttributeTypeasAttributeType__:_AttributeType]
 ==== asAttributeType
 
 [source,nodejs]
@@ -64,7 +61,7 @@ Casts the concept to ``AttributeType``.
 concept.asAttributeType()
 ----
 
-[#_AttributeType_asEntity]
+[#_AttributeType_asEntityasEntity__:_Entity]
 ==== asEntity
 
 [source,nodejs]
@@ -85,7 +82,7 @@ Casts the concept to ``Entity``.
 concept.asEntity()
 ----
 
-[#_AttributeType_asEntityType]
+[#_AttributeType_asEntityTypeasEntityType__:_EntityType]
 ==== asEntityType
 
 [source,nodejs]
@@ -106,7 +103,7 @@ Casts the concept to ``EntityType``.
 concept.asEntityType()
 ----
 
-[#_AttributeType_asRelation]
+[#_AttributeType_asRelationasRelation__:_Relation]
 ==== asRelation
 
 [source,nodejs]
@@ -127,7 +124,7 @@ Casts the concept to ``Relation``.
 concept.asRelation()
 ----
 
-[#_AttributeType_asRelationType]
+[#_AttributeType_asRelationTypeasRelationType__:_RelationType]
 ==== asRelationType
 
 [source,nodejs]
@@ -148,7 +145,7 @@ Casts the concept to ``RelationType``.
 concept.asRelationType()
 ----
 
-[#_AttributeType_asRoleType]
+[#_AttributeType_asRoleTypeasRoleType__:_RoleType]
 ==== asRoleType
 
 [source,nodejs]
@@ -169,7 +166,7 @@ Casts the concept to ``RoleType``.
 concept.asRoleType()
 ----
 
-[#_AttributeType_asThing]
+[#_AttributeType_asThingasThing__:_Thing]
 ==== asThing
 
 [source,nodejs]
@@ -190,7 +187,7 @@ Casts the concept to ``Thing``.
 concept.asThing()
 ----
 
-[#_AttributeType_asThingType]
+[#_AttributeType_asThingTypeasThingType__:_ThingType]
 ==== asThingType
 
 [source,nodejs]
@@ -211,7 +208,7 @@ Casts the concept to ``ThingType``.
 concept.asThingType()
 ----
 
-[#_AttributeType_asType]
+[#_AttributeType_asTypeasType__:_Type]
 ==== asType
 
 [source,nodejs]
@@ -232,7 +229,7 @@ Casts the concept to ``Type``.
 concept.asType()
 ----
 
-[#_AttributeType_asValue]
+[#_AttributeType_asValueasValue__:_Value]
 ==== asValue
 
 [source,nodejs]
@@ -253,7 +250,7 @@ Casts the concept to ``Value``.
 concept.asValue()
 ----
 
-[#_AttributeType_delete]
+[#_AttributeType_deletedelete_transaction_:_Promise_void]
 ==== delete
 
 [source,nodejs]
@@ -283,7 +280,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 type.delete(transaction)
 ----
 
-[#_AttributeType_equals]
+[#_AttributeType_equalsequals_concept_:_boolean]
 ==== equals
 
 [source,nodejs]
@@ -306,7 +303,7 @@ a| `concept` a| The concept to compare to. a| `Concept`
 .Returns
 `boolean`
 
-[#_AttributeType_get]
+[#_AttributeType_getget_transaction__value_:_Promise_Attribute]
 ==== get
 
 [source,nodejs]
@@ -337,7 +334,7 @@ a| `value` a| ``Attribute``’s value a| `Value`
 attribute = attributeType.get(transaction, value)
 ----
 
-[#_AttributeType_getBoolean]
+[#_AttributeType_getBooleangetBoolean_transaction__value_:_Promise_Attribute]
 ==== getBoolean
 
 [source,nodejs]
@@ -368,7 +365,7 @@ a| `value` a| ``Attribute``’s value a| `boolean`
 attribute = attributeType.get(transaction, value)
 ----
 
-[#_AttributeType_getDateTime]
+[#_AttributeType_getDateTimegetDateTime_transaction__value_:_Promise_Attribute]
 ==== getDateTime
 
 [source,nodejs]
@@ -399,7 +396,7 @@ a| `value` a| ``Attribute``’s value a| `Date`
 attribute = attributeType.get(transaction, value)
 ----
 
-[#_AttributeType_getDouble]
+[#_AttributeType_getDoublegetDouble_transaction__value_:_Promise_Attribute]
 ==== getDouble
 
 [source,nodejs]
@@ -430,7 +427,7 @@ a| `value` a| ``Attribute``’s value a| `number`
 attribute = attributeType.get(transaction, value)
 ----
 
-[#_AttributeType_getInstances]
+[#_AttributeType_getInstancesgetInstances_transaction__transitivity_:_Stream_Attribute]
 ==== getInstances
 
 [source,nodejs]
@@ -461,7 +458,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtype
 attributeType.getInstances(transaction) attributeType.getInstances(transaction, Transitivity.EXPLICIT)
 ----
 
-[#_AttributeType_getInstances]
+[#_AttributeType_getInstancesgetInstances_transaction_:_Stream_Attribute]
 ==== getInstances
 
 [source,nodejs]
@@ -491,7 +488,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thingType.getInstances(transaction, Transitivity.EXPLICIT)
 ----
 
-[#_AttributeType_getLong]
+[#_AttributeType_getLonggetLong_transaction__value_:_Promise_Attribute]
 ==== getLong
 
 [source,nodejs]
@@ -522,7 +519,7 @@ a| `value` a| ``Attribute``’s value a| `number`
 attribute = attributeType.get(transaction, value)
 ----
 
-[#_AttributeType_getOwners]
+[#_AttributeType_getOwnersgetOwners_transaction__annotations__transitivity_:_Stream_ThingType]
 ==== getOwners
 
 [source,nodejs]
@@ -554,7 +551,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited owners
 attributeType.getOwners(transaction) attributeType.getOwners(transaction, [Annotation.UNIQUE]) attributeType.getOwners(transaction, Transitivity.TRANSITIVE) attributeType.getOwners(transaction, [Annotation.UNIQUE], Transitivity.TRANSITIVE)
 ----
 
-[#_AttributeType_getOwners]
+[#_AttributeType_getOwnersgetOwners_transaction_:_Stream_ThingType]
 ==== getOwners
 
 [source,nodejs]
@@ -577,7 +574,7 @@ a| `transaction` a|  a| `TypeDBTransaction`
 .Returns
 `Stream<ThingType>`
 
-[#_AttributeType_getOwners]
+[#_AttributeType_getOwnersgetOwners_transaction__annotations_:_Stream_ThingType]
 ==== getOwners
 
 [source,nodejs]
@@ -601,7 +598,7 @@ a| `annotations` a|  a| `Annotation[]`
 .Returns
 `Stream<ThingType>`
 
-[#_AttributeType_getOwners]
+[#_AttributeType_getOwnersgetOwners_transaction__transitivity_:_Stream_ThingType]
 ==== getOwners
 
 [source,nodejs]
@@ -625,7 +622,7 @@ a| `transitivity` a|  a| `Transitivity`
 .Returns
 `Stream<ThingType>`
 
-[#_AttributeType_getOwns]
+[#_AttributeType_getOwnsgetOwns_transaction_:_Stream_AttributeType]
 ==== getOwns
 
 [source,nodejs]
@@ -655,7 +652,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
 ----
 
-[#_AttributeType_getOwns]
+[#_AttributeType_getOwnsgetOwns_transaction__valueType_:_Stream_AttributeType]
 ==== getOwns
 
 [source,nodejs]
@@ -686,7 +683,7 @@ a| `valueType` a| If specified, only attribute types of this ``ValueType`` will 
 thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
 ----
 
-[#_AttributeType_getOwns]
+[#_AttributeType_getOwnsgetOwns_transaction__annotations_:_Stream_AttributeType]
 ==== getOwns
 
 [source,nodejs]
@@ -717,7 +714,7 @@ a| `annotations` a| If specified, only attribute types of this ``ValueType`` wil
 thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
 ----
 
-[#_AttributeType_getOwns]
+[#_AttributeType_getOwnsgetOwns_transaction__valueType__annotations_:_Stream_AttributeType]
 ==== getOwns
 
 [source,nodejs]
@@ -749,7 +746,7 @@ a| `annotations` a| Only retrieve attribute types owned with annotations. a| `An
 thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
 ----
 
-[#_AttributeType_getOwns]
+[#_AttributeType_getOwnsgetOwns_transaction__transitivity_:_Stream_AttributeType]
 ==== getOwns
 
 [source,nodejs]
@@ -780,7 +777,7 @@ a| `transitivity` a| If specified, only attribute types of this ``ValueType`` wi
 thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
 ----
 
-[#_AttributeType_getOwns]
+[#_AttributeType_getOwnsgetOwns_transaction__valueType__transitivity_:_Stream_AttributeType]
 ==== getOwns
 
 [source,nodejs]
@@ -812,7 +809,7 @@ a| `transitivity` a| Only retrieve attribute types owned with annotations. a| `T
 thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
 ----
 
-[#_AttributeType_getOwns]
+[#_AttributeType_getOwnsgetOwns_transaction__annotations__transitivity_:_Stream_AttributeType]
 ==== getOwns
 
 [source,nodejs]
@@ -844,7 +841,7 @@ a| `transitivity` a| Only retrieve attribute types owned with annotations. a| `T
 thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
 ----
 
-[#_AttributeType_getOwns]
+[#_AttributeType_getOwnsgetOwns_transaction__valueType__annotations__transitivity_:_Stream_AttributeType]
 ==== getOwns
 
 [source,nodejs]
@@ -877,7 +874,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited owners
 thingType.getOwns(transaction) thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT,[Annotation.KEY])
 ----
 
-[#_AttributeType_getOwnsOverridden]
+[#_AttributeType_getOwnsOverriddengetOwnsOverridden_transaction__attributeType_:_Promise_AttributeType]
 ==== getOwnsOverridden
 
 [source,nodejs]
@@ -908,7 +905,7 @@ a| `attributeType` a| The ``AttributeType`` that overrides requested ``Attribute
 thingType.getOwnsOverridden(transaction, attributeType)
 ----
 
-[#_AttributeType_getPlays]
+[#_AttributeType_getPlaysgetPlays_transaction_:_Stream_RoleType]
 ==== getPlays
 
 [source,nodejs]
@@ -938,7 +935,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thingType.getPlays(transaction) thingType.getPlays(transaction, Transitivity.EXPLICIT)
 ----
 
-[#_AttributeType_getPlays]
+[#_AttributeType_getPlaysgetPlays_transaction__transitivity_:_Stream_RoleType]
 ==== getPlays
 
 [source,nodejs]
@@ -969,7 +966,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect playing
 thingType.getPlays(transaction) thingType.getPlays(transaction, Transitivity.EXPLICIT)
 ----
 
-[#_AttributeType_getPlaysOverridden]
+[#_AttributeType_getPlaysOverriddengetPlaysOverridden_transaction__role_:_Promise_RoleType]
 ==== getPlaysOverridden
 
 [source,nodejs]
@@ -1000,7 +997,7 @@ a| `role` a| The ``RoleType`` that overrides an inherited role a| `RoleType`
 thingType.getPlaysOverridden(transaction, role)
 ----
 
-[#_AttributeType_getRegex]
+[#_AttributeType_getRegexgetRegex_transaction_:_Promise_string]
 ==== getRegex
 
 [source,nodejs]
@@ -1030,7 +1027,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 attributeType.getRegex(transaction)
 ----
 
-[#_AttributeType_getString]
+[#_AttributeType_getStringgetString_transaction__value_:_Promise_Attribute]
 ==== getString
 
 [source,nodejs]
@@ -1061,7 +1058,7 @@ a| `value` a| ``Attribute``’s value a| `string`
 attribute = attributeType.get(transaction, value)
 ----
 
-[#_AttributeType_getSubtypes]
+[#_AttributeType_getSubtypesgetSubtypes_transaction_:_Stream_AttributeType]
 ==== getSubtypes
 
 [source,nodejs]
@@ -1091,7 +1088,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thingType.getSubtypes(transaction)
 ----
 
-[#_AttributeType_getSubtypes]
+[#_AttributeType_getSubtypesgetSubtypes_transaction__valueType_:_Stream_AttributeType]
 ==== getSubtypes
 
 [source,nodejs]
@@ -1122,7 +1119,7 @@ a| `valueType` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtypes, 
 thingType.getSubtypes(transaction, Transitivity.EXPLICIT)
 ----
 
-[#_AttributeType_getSubtypes]
+[#_AttributeType_getSubtypesgetSubtypes_transaction__transitivity_:_Stream_AttributeType]
 ==== getSubtypes
 
 [source,nodejs]
@@ -1146,7 +1143,7 @@ a| `transitivity` a|  a| `Transitivity`
 .Returns
 `Stream<AttributeType>`
 
-[#_AttributeType_getSubtypes]
+[#_AttributeType_getSubtypesgetSubtypes_transaction__valueType__transitivity_:_Stream_AttributeType]
 ==== getSubtypes
 
 [source,nodejs]
@@ -1171,7 +1168,7 @@ a| `transitivity` a|  a| `Transitivity`
 .Returns
 `Stream<AttributeType>`
 
-[#_AttributeType_getSupertype]
+[#_AttributeType_getSupertypegetSupertype_transaction_:_Promise_AttributeType]
 ==== getSupertype
 
 [source,nodejs]
@@ -1201,7 +1198,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thingType.getSupertype(transaction)
 ----
 
-[#_AttributeType_getSupertypes]
+[#_AttributeType_getSupertypesgetSupertypes_transaction_:_Stream_AttributeType]
 ==== getSupertypes
 
 [source,nodejs]
@@ -1231,7 +1228,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thingType.getSupertypes(transaction)
 ----
 
-[#_AttributeType_getSyntax]
+[#_AttributeType_getSyntaxgetSyntax_transaction_:_Promise_string]
 ==== getSyntax
 
 [source,nodejs]
@@ -1261,7 +1258,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thingType.getSyntax(transaction)
 ----
 
-[#_AttributeType_isAttribute]
+[#_AttributeType_isAttributeisAttribute__:_boolean]
 ==== isAttribute
 
 [source,nodejs]
@@ -1282,7 +1279,7 @@ Checks if the concept is an ``Attribute``.
 concept.isAttribute()
 ----
 
-[#_AttributeType_isAttributeType]
+[#_AttributeType_isAttributeTypeisAttributeType__:_boolean]
 ==== isAttributeType
 
 [source,nodejs]
@@ -1303,7 +1300,7 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType()
 ----
 
-[#_AttributeType_isDeleted]
+[#_AttributeType_isDeletedisDeleted_transaction_:_Promise_boolean]
 ==== isDeleted
 
 [source,nodejs]
@@ -1326,7 +1323,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 .Returns
 `Promise<boolean>`
 
-[#_AttributeType_isEntity]
+[#_AttributeType_isEntityisEntity__:_boolean]
 ==== isEntity
 
 [source,nodejs]
@@ -1347,7 +1344,7 @@ Checks if the concept is an ``Entity``.
 concept.isEntity()
 ----
 
-[#_AttributeType_isEntityType]
+[#_AttributeType_isEntityTypeisEntityType__:_boolean]
 ==== isEntityType
 
 [source,nodejs]
@@ -1368,7 +1365,7 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType()
 ----
 
-[#_AttributeType_isRelation]
+[#_AttributeType_isRelationisRelation__:_boolean]
 ==== isRelation
 
 [source,nodejs]
@@ -1389,7 +1386,7 @@ Checks if the concept is a ``Relation``.
 concept.isRelation()
 ----
 
-[#_AttributeType_isRelationType]
+[#_AttributeType_isRelationTypeisRelationType__:_boolean]
 ==== isRelationType
 
 [source,nodejs]
@@ -1410,7 +1407,7 @@ Checks if the concept is a ``RelationType``.
 concept.isRelationType()
 ----
 
-[#_AttributeType_isRoleType]
+[#_AttributeType_isRoleTypeisRoleType__:_boolean]
 ==== isRoleType
 
 [source,nodejs]
@@ -1431,7 +1428,7 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType()
 ----
 
-[#_AttributeType_isThing]
+[#_AttributeType_isThingisThing__:_boolean]
 ==== isThing
 
 [source,nodejs]
@@ -1452,7 +1449,7 @@ Checks if the concept is a ``Thing``.
 concept.isThing()
 ----
 
-[#_AttributeType_isThingType]
+[#_AttributeType_isThingTypeisThingType__:_boolean]
 ==== isThingType
 
 [source,nodejs]
@@ -1473,7 +1470,7 @@ Checks if the concept is a ``ThingType``.
 concept.isThingType()
 ----
 
-[#_AttributeType_isType]
+[#_AttributeType_isTypeisType__:_boolean]
 ==== isType
 
 [source,nodejs]
@@ -1494,7 +1491,7 @@ Checks if the concept is a ``Type``.
 concept.isType()
 ----
 
-[#_AttributeType_isValue]
+[#_AttributeType_isValueisValue__:_boolean]
 ==== isValue
 
 [source,nodejs]
@@ -1515,7 +1512,7 @@ Checks if the concept is a ``Value``.
 concept.isValue()
 ----
 
-[#_AttributeType_put]
+[#_AttributeType_putput_transaction__value_:_Promise_Attribute]
 ==== put
 
 [source,nodejs]
@@ -1546,7 +1543,7 @@ a| `value` a| New ``Attribute``’s value a| `Value`
 attribute = attributeType.put(transaction, value)
 ----
 
-[#_AttributeType_putBoolean]
+[#_AttributeType_putBooleanputBoolean_transaction__value_:_Promise_Attribute]
 ==== putBoolean
 
 [source,nodejs]
@@ -1577,7 +1574,7 @@ a| `value` a| New ``Attribute``’s value a| `boolean`
 attribute = attributeType.put(transaction, value)
 ----
 
-[#_AttributeType_putDateTime]
+[#_AttributeType_putDateTimeputDateTime_transaction__value_:_Promise_Attribute]
 ==== putDateTime
 
 [source,nodejs]
@@ -1608,7 +1605,7 @@ a| `value` a| New ``Attribute``’s value a| `Date`
 attribute = attributeType.put(transaction, value)
 ----
 
-[#_AttributeType_putDouble]
+[#_AttributeType_putDoubleputDouble_transaction__value_:_Promise_Attribute]
 ==== putDouble
 
 [source,nodejs]
@@ -1639,7 +1636,7 @@ a| `value` a| New ``Attribute``’s value a| `number`
 attribute = attributeType.put(transaction, value)
 ----
 
-[#_AttributeType_putLong]
+[#_AttributeType_putLongputLong_transaction__value_:_Promise_Attribute]
 ==== putLong
 
 [source,nodejs]
@@ -1670,7 +1667,7 @@ a| `value` a| New ``Attribute``’s value a| `number`
 attribute = attributeType.put(transaction, value)
 ----
 
-[#_AttributeType_putString]
+[#_AttributeType_putStringputString_transaction__value_:_Promise_Attribute]
 ==== putString
 
 [source,nodejs]
@@ -1701,7 +1698,7 @@ a| `value` a| New ``Attribute``’s value a| `string`
 attribute = attributeType.put(transaction, value)
 ----
 
-[#_AttributeType_setAbstract]
+[#_AttributeType_setAbstractsetAbstract_transaction_:_Promise_void]
 ==== setAbstract
 
 [source,nodejs]
@@ -1731,7 +1728,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thingType.setAbstract(transaction)
 ----
 
-[#_AttributeType_setLabel]
+[#_AttributeType_setLabelsetLabel_transaction__label_:_Promise_void]
 ==== setLabel
 
 [source,nodejs]
@@ -1762,7 +1759,7 @@ a| `label` a| The new ``Label`` to be given to the type. a| `string`
 type.setLabel(transaction, label)
 ----
 
-[#_AttributeType_setOwns]
+[#_AttributeType_setOwnssetOwns_transaction__attributeType_:_Promise_void]
 ==== setOwns
 
 [source,nodejs]
@@ -1793,7 +1790,7 @@ a| `attributeType` a| The ``AttributeType`` to be owned by the instances of this
 thingType.setOwns(transaction, attributeType) thingType.setOwns(transaction, attributeType, overriddenType,[Annotation.KEY])
 ----
 
-[#_AttributeType_setOwns]
+[#_AttributeType_setOwnssetOwns_transaction__attributeType__annotations_:_Promise_void]
 ==== setOwns
 
 [source,nodejs]
@@ -1825,7 +1822,7 @@ a| `annotations` a| The ``AttributeType`` that this attribute ownership override
 thingType.setOwns(transaction, attributeType) thingType.setOwns(transaction, attributeType, overriddenType,[Annotation.KEY])
 ----
 
-[#_AttributeType_setOwns]
+[#_AttributeType_setOwnssetOwns_transaction__attributeType__overriddenType_:_Promise_void]
 ==== setOwns
 
 [source,nodejs]
@@ -1857,7 +1854,7 @@ a| `overriddenType` a| The ``AttributeType`` that this attribute ownership overr
 thingType.setOwns(transaction, attributeType) thingType.setOwns(transaction, attributeType, overriddenType,[Annotation.KEY])
 ----
 
-[#_AttributeType_setOwns]
+[#_AttributeType_setOwnssetOwns_transaction__attributeType__overriddenType__annotations_:_Promise_void]
 ==== setOwns
 
 [source,nodejs]
@@ -1890,7 +1887,7 @@ a| `annotations` a| Adds annotations to the ownership. a| `Annotation[]`
 thingType.setOwns(transaction, attributeType) thingType.setOwns(transaction, attributeType, overriddenType,[Annotation.KEY])
 ----
 
-[#_AttributeType_setPlays]
+[#_AttributeType_setPlayssetPlays_transaction__role_:_Promise_void]
 ==== setPlays
 
 [source,nodejs]
@@ -1921,7 +1918,7 @@ a| `role` a| The role to be played by the instances of this type a| `RoleType`
 thingType.setPlays(transaction, role) thingType.setPlays(transaction, role, overriddenType)
 ----
 
-[#_AttributeType_setPlays]
+[#_AttributeType_setPlayssetPlays_transaction__role__overriddenType_:_Promise_void]
 ==== setPlays
 
 [source,nodejs]
@@ -1953,7 +1950,7 @@ a| `overriddenType` a| The role type that this role overrides, if applicable a| 
 thingType.setPlays(transaction, role) thingType.setPlays(transaction, role, overriddenType)
 ----
 
-[#_AttributeType_setRegex]
+[#_AttributeType_setRegexsetRegex_transaction__regex_:_Promise_void]
 ==== setRegex
 
 [source,nodejs]
@@ -1984,7 +1981,7 @@ a| `regex` a| Regular expression a| `string`
 attributeType.setRegex(transaction, regex)
 ----
 
-[#_AttributeType_setSupertype]
+[#_AttributeType_setSupertypesetSupertype_transaction__type_:_Promise_void]
 ==== setSupertype
 
 [source,nodejs]
@@ -2008,7 +2005,7 @@ a| `type` a|  a| `AttributeType`
 .Returns
 `Promise<void>`
 
-[#_AttributeType_toJSONRecord]
+[#_AttributeType_toJSONRecordtoJSONRecord__:_Record_string__string_|_number_|_boolean]
 ==== toJSONRecord
 
 [source,nodejs]
@@ -2029,7 +2026,7 @@ Retrieves the concept as JSON.
 concept.toJSONRecord()
 ----
 
-[#_AttributeType_unsetAbstract]
+[#_AttributeType_unsetAbstractunsetAbstract_transaction_:_Promise_void]
 ==== unsetAbstract
 
 [source,nodejs]
@@ -2059,7 +2056,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thingType.unsetAbstract(transaction)
 ----
 
-[#_AttributeType_unsetOwns]
+[#_AttributeType_unsetOwnsunsetOwns_transaction__attributeType_:_Promise_void]
 ==== unsetOwns
 
 [source,nodejs]
@@ -2090,7 +2087,7 @@ a| `attributeType` a| The ``AttributeType`` to not be owned by the type. a| `Att
 thingType.unsetOwns(transaction, attributeType)
 ----
 
-[#_AttributeType_unsetPlays]
+[#_AttributeType_unsetPlaysunsetPlays_transaction__role_:_Promise_void]
 ==== unsetPlays
 
 [source,nodejs]
@@ -2121,7 +2118,7 @@ a| `role` a| The role to not be played by the instances of this type. a| `RoleTy
 thingType.unsetPlays(transaction, role)
 ----
 
-[#_AttributeType_unsetRegex]
+[#_AttributeType_unsetRegexunsetRegex_transaction_:_Promise_void]
 ==== unsetRegex
 
 [source,nodejs]

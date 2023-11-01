@@ -1,11 +1,11 @@
-[#_struct_NumericGroup]
-=== NumericGroup
+[#_struct_ValueGroup]
+=== ValueGroup
 
 *Implements traits:*
 
 * `Clone`
 * `Debug`
-* `PartialEq<NumericGroup>`
+* `PartialEq<ValueGroup>`
 * `StructuralPartialEq`
 
 [caption=""]
@@ -15,8 +15,8 @@
 [options="header"]
 |===
 |Name |Type |Description
-a| `numeric` a| `Numeric` a| 
 a| `owner` a| `Concept` a| The concept that is the group owner.
+a| `value` a| `Option<Value>` a| 
 |===
 // end::properties[]
 

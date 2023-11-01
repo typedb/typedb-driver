@@ -72,9 +72,11 @@ pub struct EntityType {
 }
 
 impl EntityType {
+    pub(crate) const ROOT_LABEL: &'static str = "entity";
+
     /// Returns the root `EntityType`
     pub fn root() -> Self {
-        Self { label: "entity".to_owned(), is_root: true, is_abstract: true }
+        Self { label: Self::ROOT_LABEL.to_owned(), is_root: true, is_abstract: true }
     }
 }
 
@@ -92,9 +94,11 @@ pub struct RelationType {
 }
 
 impl RelationType {
+    pub(crate) const ROOT_LABEL: &'static str = "relation";
+
     /// Returns the root `RelationType`
     pub fn root() -> Self {
-        Self { label: "relation".to_owned(), is_root: true, is_abstract: true }
+        Self { label: Self::ROOT_LABEL.to_owned(), is_root: true, is_abstract: true }
     }
 }
 
@@ -118,9 +122,11 @@ pub struct AttributeType {
 }
 
 impl AttributeType {
+    pub(crate) const ROOT_LABEL: &'static str = "attribute";
+
     /// Returns the root `AttributeType`
     pub fn root() -> Self {
-        Self { label: "attribute".to_owned(), is_root: true, is_abstract: true, value_type: ValueType::Object }
+        Self { label: Self::ROOT_LABEL.to_owned(), is_root: true, is_abstract: true, value_type: ValueType::Object }
     }
 }
 

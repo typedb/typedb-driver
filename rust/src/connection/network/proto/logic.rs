@@ -21,8 +21,8 @@
 
 use typedb_protocol::Rule as RuleProto;
 use typeql::{
-    parse_pattern, parse_variable,
-    pattern::{Pattern, Variable},
+    parse_pattern, parse_statement,
+    pattern::{Pattern, Statement},
 };
 
 use super::{IntoProto, TryFromProto};
@@ -35,8 +35,8 @@ impl TryFromProto<RuleProto> for Rule {
             Pattern::Conjunction(conjunction) => conjunction,
             _ => return Err(ConnectionError::InvalidResponseField("when").into()),
         };
-        let then = match parse_variable(&then_proto) {
-            Ok(Variable::Thing(thing)) => thing,
+        let then = match parse_statement(&then_proto) {
+            Ok(Statement::Thing(thing)) => thing,
             Ok(_) => return Err(ConnectionError::InvalidResponseField("then").into()),
             Err(error) => return Err(error.into()),
         };

@@ -241,16 +241,10 @@
 %nojavaexception concept_map_group_to_string;
 %nojavaexception concept_map_group_equals;
 
-%nojavaexception numeric_get_double;
-%nojavaexception numeric_get_long;
-%nojavaexception numeric_is_double;
-%nojavaexception numeric_is_long;
-%nojavaexception numeric_is_nan;
-%nojavaexception numeric_to_string;
-%nojavaexception numeric_group_to_string;
-%nojavaexception numeric_group_equals;
-%nojavaexception numeric_group_get_owner;
-%nojavaexception numeric_group_get_numeric;
+%nojavaexception value_group_to_string;
+%nojavaexception value_group_equals;
+%nojavaexception value_group_get_owner;
+%nojavaexception value_group_get_value;
 
 %nojavaexception StringPair::_0;
 %nojavaexception StringPair::_1;
@@ -279,9 +273,6 @@
 %nojavaexception ~Explainables;
 %nojavaexception ~Explanation;
 %nojavaexception ~ExplanationIterator;
-%nojavaexception ~Numeric;
-%nojavaexception ~NumericGroup;
-%nojavaexception ~NumericGroupIterator;
 %nojavaexception ~Options;
 %nojavaexception ~ReplicaInfo;
 %nojavaexception ~ReplicaInfoIterator;
@@ -301,6 +292,9 @@
 %nojavaexception ~User;
 %nojavaexception ~UserIterator;
 %nojavaexception ~UserManager;
+%nojavaexception ~Value;
+%nojavaexception ~ValueGroup;
+%nojavaexception ~ValueGroupIterator;
 
 /* one-shot network requests do not throw when first constructed, only when resolved */
 %nojavaexception concepts_get_entity_type;
@@ -360,7 +354,7 @@
 %nojavaexception query_define;
 %nojavaexception query_undefine;
 %nojavaexception query_delete;
-%nojavaexception query_match_aggregate;
+%nojavaexception query_get_aggregate;
 %nojavaexception transaction_commit;
 %nojavaexception transaction_rollback;
 
@@ -400,7 +394,6 @@
 %enddef
 
 %promise(Concept, concept)
-%promise(Numeric, numeric)
 %promise(Rule, rule)
 %promise(String, string)
 
@@ -495,7 +488,7 @@
 %iterator(RolePlayer, role_player) 
 %iterator(ConceptMap, concept_map)
 %iterator(ConceptMapGroup, concept_map_group)
-%iterator(NumericGroup, numeric_group)
+%iterator(ValueGroup, value_group)
 %iterator(Explanation, explanation)
 %iterator(String, string)
 %iterator(StringPair, string_pair)

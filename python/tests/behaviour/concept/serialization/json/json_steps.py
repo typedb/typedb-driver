@@ -20,36 +20,17 @@
 #
 
 import json
-from collections import Counter
-from hamcrest.core.base_matcher import BaseMatcher
-from typing import TypeVar, Generic
 
 from behave import *
 from hamcrest import *
 
 from tests.behaviour.context import Context
-
-T = TypeVar('T')
-
-
-class UnorderedEqualTo(BaseMatcher, Generic[T]):
-    def __init__(self, expected: list[T]):
-        self.expected = Counter([json.dumps(item, sort_keys=True) for item in expected])
-
-    def _matches(self, actual: list[T]) -> bool:
-        actual = Counter([json.dumps(item, sort_keys=True) for item in actual])
-        return actual == self.expected
-
-    def describe_to(self, description):
-        description.append_text('is equal, in any order, to ').append_text(repr(self.expected))
-
-
-def unordered_equal_to(expected: list[T]) -> UnorderedEqualTo[T]:
-    return UnorderedEqualTo(expected)
+from tests.behaviour.util.util import json_matches
 
 
 @step("JSON serialization of answers matches")
 def step_impl(context: Context):
     expected = json.loads(context.text)
     actual = [answer.to_json() for answer in context.answers]
-    assert_that(actual, unordered_equal_to(expected))
+    assert_that(json_matches(expected, actual), is_(True),
+                "expected: {}\nactual: {}".format(expected, actual))

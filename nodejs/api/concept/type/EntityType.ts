@@ -48,6 +48,9 @@ export interface EntityType extends ThingType {
 }
 
 export namespace EntityType {
+
+    export const NAME = "entity";
+
     export function proto(entityType: EntityType) {
         return RequestBuilder.Type.EntityType.protoEntityType(entityType.label);
     }

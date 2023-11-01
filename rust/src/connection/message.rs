@@ -24,10 +24,10 @@ use std::time::Duration;
 use tokio::sync::mpsc::UnboundedSender;
 use tonic::Streaming;
 use typedb_protocol::transaction;
-use typeql::pattern::{Conjunction, Variable};
+use typeql::pattern::{Conjunction, Statement};
 
 use crate::{
-    answer::{ConceptMap, ConceptMapGroup, Numeric, NumericGroup},
+    answer::{readable_concept, ConceptMap, ConceptMapGroup, ValueGroup},
     common::{address::Address, info::DatabaseInfo, RequestID, SessionID, IID},
     concept::{
         Annotation, Attribute, AttributeType, Entity, EntityType, Relation, RelationType, RoleType, SchemaException,
@@ -163,16 +163,18 @@ pub(super) enum QueryRequest {
     Undefine { query: String, options: Options },
     Delete { query: String, options: Options },
 
-    Match { query: String, options: Options },
+    Get { query: String, options: Options },
     Insert { query: String, options: Options },
     Update { query: String, options: Options },
 
-    MatchAggregate { query: String, options: Options },
+    GetAggregate { query: String, options: Options },
+
+    GetGroup { query: String, options: Options },
+    GetGroupAggregate { query: String, options: Options },
+
+    Fetch { query: String, options: Options },
 
     Explain { explainable_id: i64, options: Options }, // TODO: ID type
-
-    MatchGroup { query: String, options: Options },
-    MatchGroupAggregate { query: String, options: Options },
 }
 
 #[derive(Debug)]
@@ -181,16 +183,18 @@ pub(super) enum QueryResponse {
     Undefine,
     Delete,
 
-    Match { answers: Vec<ConceptMap> },
+    Get { answers: Vec<ConceptMap> },
     Insert { answers: Vec<ConceptMap> },
     Update { answers: Vec<ConceptMap> },
 
-    MatchAggregate { answer: Numeric },
+    GetAggregate { answer: Option<Value> },
+
+    GetGroup { answers: Vec<ConceptMapGroup> },
+    GetGroupAggregate { answers: Vec<ValueGroup> },
+
+    Fetch { answers: Vec<readable_concept::Tree> },
 
     Explain { answers: Vec<Explanation> },
-
-    MatchGroup { answers: Vec<ConceptMapGroup> },
-    MatchGroupAggregate { answers: Vec<NumericGroup> },
 }
 
 #[derive(Debug)]
@@ -507,7 +511,7 @@ pub(super) enum RuleResponse {
 
 #[derive(Debug)]
 pub(super) enum LogicRequest {
-    PutRule { label: String, when: Conjunction, then: Variable },
+    PutRule { label: String, when: Conjunction, then: Statement },
     GetRule { label: String },
     GetRules,
 }

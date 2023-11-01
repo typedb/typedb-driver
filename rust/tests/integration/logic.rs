@@ -65,7 +65,7 @@ test_for_each_arg! {
                 "marriage-is-friendship".to_string(),
                 typeql::parse_pattern("{ $x isa person; $y isa person; (husband: $x, wife: $y) isa marriage; }")?
                     .into_conjunction(),
-                typeql::parse_variable("(friend: $x, friend: $y) isa friendship")?,
+                typeql::parse_statement("(friend: $x, friend: $y) isa friendship")?,
             ).await?;
             transaction.commit().await?;
         }
@@ -80,10 +80,11 @@ test_for_each_arg! {
 
         let with_inference_and_explanation = Options::new().infer(true).explain(true);
         let transaction = session.transaction_with_options(Read, with_inference_and_explanation).await?;
-        let answer_stream = transaction.query().match_(
+        let answer_stream = transaction.query().get(
             r#"match $p1 isa person;
             { (friend: $p1, friend: $p2) isa friendship;}
-            or { $p1 has name 'Zack'; };"#,
+            or { $p1 has name 'Zack'; };
+            get;"#,
         )?;
         let answers = answer_stream.try_collect::<Vec<ConceptMap>>().await?;
 
@@ -125,7 +126,7 @@ test_for_each_arg! {
                 "marriage-is-friendship".to_string(),
                 typeql::parse_pattern("{ $x isa person; $y isa person; (husband: $x, wife: $y) isa marriage; }")?
                     .into_conjunction(),
-                typeql::parse_variable("(friend: $x, friend: $y) isa friendship")?,
+                typeql::parse_statement("(friend: $x, friend: $y) isa friendship")?,
             ).await?;
             transaction.commit().await?;
         }
@@ -140,8 +141,8 @@ test_for_each_arg! {
 
         let with_inference_and_explanation = Options::new().infer(true).explain(true);
         let transaction = session.transaction_with_options(Read, with_inference_and_explanation).await?;
-        let answer_stream = transaction.query().match_(
-            r#"match (friend: $p1, friend: $p2) isa friendship; $p1 has name $na;"#,
+        let answer_stream = transaction.query().get(
+            r#"match (friend: $p1, friend: $p2) isa friendship; $p1 has name $na; get;"#,
         )?;
         let answers = answer_stream.try_collect::<Vec<ConceptMap>>().await?;
 
@@ -177,13 +178,13 @@ test_for_each_arg! {
                 "marriage-is-friendship".to_string(),
                 typeql::parse_pattern("{ $x isa person; $y isa person; (husband: $x, wife: $y) isa marriage; }")?
                     .into_conjunction(),
-                typeql::parse_variable("(friend: $x, friend: $y) isa friendship")?,
+                typeql::parse_statement("(friend: $x, friend: $y) isa friendship")?,
             ).await?;
             transaction.logic().put_rule(
                 "everyone-is-friends".to_string(),
                 typeql::parse_pattern("{ $x isa person; $y isa person; not { $x is $y; }; }")?
                     .into_conjunction(),
-                typeql::parse_variable("(friend: $x, friend: $y) isa friendship")?,
+                typeql::parse_statement("(friend: $x, friend: $y) isa friendship")?,
             ).await?;
             transaction.commit().await?;
         }
@@ -198,8 +199,8 @@ test_for_each_arg! {
 
         let with_inference_and_explanation = Options::new().infer(true).explain(true);
         let transaction = session.transaction_with_options(Read, with_inference_and_explanation).await?;
-        let answer_stream = transaction.query().match_(
-            r#"match (friend: $p1, friend: $p2) isa friendship; $p1 has name $na;"#,
+        let answer_stream = transaction.query().get(
+            r#"match (friend: $p1, friend: $p2) isa friendship; $p1 has name $na; get;"#,
         )?;
         let answers = answer_stream.try_collect::<Vec<ConceptMap>>().await?;
 
@@ -230,13 +231,13 @@ test_for_each_arg! {
                 "old-milk-is-not-good".to_string(),
                 typeql::parse_pattern("{ $x isa milk, has age-in-days <= 10; }")?
                     .into_conjunction(),
-                typeql::parse_variable("$x has is-still-good true")?,
+                typeql::parse_statement("$x has is-still-good true")?,
             ).await?;
             transaction.logic().put_rule(
                 "all-milk-is-good".to_string(),
                 typeql::parse_pattern("{ $x isa milk; }")?
                     .into_conjunction(),
-                typeql::parse_variable("$x has is-still-good true")?,
+                typeql::parse_statement("$x has is-still-good true")?,
             ).await?;
             transaction.commit().await?;
         }
@@ -253,8 +254,8 @@ test_for_each_arg! {
 
         let with_inference_and_explanation = Options::new().infer(true).explain(true);
         let transaction = session.transaction_with_options(Read, with_inference_and_explanation).await?;
-        let answer_stream = transaction.query().match_(
-            r#"match $x has is-still-good $a;"#,
+        let answer_stream = transaction.query().get(
+            r#"match $x has is-still-good $a; get;"#,
         )?;
         let answers = answer_stream.try_collect::<Vec<ConceptMap>>().await?;
 
@@ -292,7 +293,7 @@ async fn assert_explanations_count_and_projection_match(
     let explanations = get_explanations(explainables[0], transaction).await?;
     assert_eq!(explanations_count, explanations.len());
 
-    assert_explanation_concepts_match_projection(ans, explanations);
+    assert_explanation_concepts_get_projection(ans, explanations);
     Ok(())
 }
 
@@ -319,7 +320,7 @@ async fn get_explanations(explainable: &Explainable, transaction: &Transaction<'
     transaction.query().explain(explainable)?.try_collect::<Vec<_>>().await
 }
 
-fn assert_explanation_concepts_match_projection(ans: &ConceptMap, explanations: Vec<Explanation>) {
+fn assert_explanation_concepts_get_projection(ans: &ConceptMap, explanations: Vec<Explanation>) {
     for explanation in explanations {
         let mapping = explanation.variable_mapping;
         let projected = apply_mapping(&mapping, ans);

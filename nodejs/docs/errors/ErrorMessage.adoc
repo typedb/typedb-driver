@@ -4,7 +4,7 @@
 Class defining the error-code and message template for ``TypeDBDriverError``s
 
 // tag::methods[]
-[#_ErrorMessage_code]
+[#_ErrorMessage_codecode__:_string]
 ==== code
 
 [source,nodejs]
@@ -18,7 +18,7 @@ Retrieves the error-code for this ErrorMessage
 .Returns
 `string`
 
-[#_ErrorMessage_message]
+[#_ErrorMessage_messagemessage____args_:_string]
 ==== message
 
 [source,nodejs]
@@ -41,7 +41,7 @@ a| `args` a| The format arguments to the message-template. a| `Stringable[]`
 .Returns
 `string`
 
-[#_ErrorMessage_new_ErrorMessage]
+[#_ErrorMessage_new_ErrorMessagenew_ErrorMessage_codePrefix__codeNumber__messagePrefix__messageBody_:_ErrorMessage]
 ==== new ErrorMessage
 
 [source,nodejs]
@@ -67,7 +67,7 @@ a| `messageBody` a|  a| `((args) => string)`
 .Returns
 `ErrorMessage`
 
-[#_ErrorMessage_toString]
+[#_ErrorMessage_toStringtoString__:_string]
 ==== toString
 
 [source,nodejs]

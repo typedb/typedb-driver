@@ -90,10 +90,8 @@ struct Type {};
 %dropproxy(StringIterator, string_iterator)
 %dropproxy(StringPairIterator, string_pair_iterator)
 
-%dropproxy(Numeric, numeric)
-
-%dropproxy(NumericGroup, numeric_group)
-%dropproxy(NumericGroupIterator, numeric_group_iterator)
+%dropproxy(ValueGroup, value_group)
+%dropproxy(ValueGroupIterator, value_group_iterator)
 
 %dropproxy(Explanation, explanation)
 %dropproxy(ExplanationIterator, explanation_iterator)
@@ -110,7 +108,6 @@ struct Type {};
 
 %promiseproxy(BoolPromise, bool_promise)
 %promiseproxy(ConceptPromise, concept_promise)
-%promiseproxy(NumericPromise, numeric_promise)
 %promiseproxy(RulePromise, rule_promise)
 %promiseproxy(StringPromise, string_promise)
 %promiseproxy(VoidPromise, void_promise)
@@ -208,8 +205,8 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject concept_map_group_get_owner;
 %newobject concept_map_group_get_concept_maps;
 
-%newobject numeric_group_get_owner;
-%newobject numeric_group_get_numeric;
+%newobject value_group_get_owner;
+%newobject value_group_get_value;
 
 %newobject string_iterator_next;
 
@@ -361,7 +358,7 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject query_explain;
 
 %newobject concept_map_group_iterator_next;
-%newobject numeric_group_iterator_next;
+%newobject value_group_iterator_next;
 %newobject explanation_get_mapping;
 %newobject explanation_iterator_next;
 

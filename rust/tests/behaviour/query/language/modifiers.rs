@@ -19,40 +19,15 @@
  * under the License.
  */
 
-/**
- * Stores an aggregate query answer.
- */
-export interface Numeric {
-    /**
-     * Checks if the type of an aggregate answer is a number.
-     *
-     * ### Examples
-     *
-     * ```ts
-     * numeric.isNumber()
-     * ```
-     */
-    isNumber(): boolean;
+use serial_test::serial;
 
-    /**
-     * Checks if the aggregate answer is not a number.
-     *
-     * ### Examples
-     *
-     * ```ts
-     * numeric.isNan()
-     * ```
-     */
-    isNaN(): boolean;
+use crate::behaviour::Context;
 
-    /**
-     * Retrieves numeric value of an aggregate answer as a number.
-     *
-     * ### Examples
-     *
-     * ```ts
-     * numeric.asNumber()
-     * ```
-     */
-    asNumber(): number;
+#[tokio::test]
+#[serial]
+async fn test() {
+    // Bazel specific path: when running the test in bazel, the external data from
+    // @vaticle_typedb_behaviour is stored in a directory that is a sibling to
+    // the working directory.
+    assert!(Context::test("../vaticle_typedb_behaviour/query/language/modifiers.feature").await);
 }

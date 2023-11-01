@@ -19,32 +19,15 @@
  * under the License.
  */
 
-import {Concept} from "../concept/Concept";
-import {Numeric} from "./Numeric";
+use serial_test::serial;
 
-/**
- * Contains an element of the group aggregate query result.
- */
-export interface NumericGroup {
-    /**
-     * Retrieves the concept that is the group owner.
-     *
-     * ### Examples
-     *
-     * ```ts
-     * numericGroup.owner
-     * ```
-     */
-    readonly owner: Concept;
+use crate::behaviour::Context;
 
-    /**
-     * Retrieves the <code>Numeric</code> answer of the group.
-     *
-     * ### Examples
-     *
-     * ```ts
-     * numericGroup.numeric
-     * ```
-     */
-    readonly numeric: Numeric;
+#[tokio::test]
+#[serial]
+async fn test() {
+    // Bazel specific path: when running the test in bazel, the external data from
+    // @vaticle_typedb_behaviour is stored in a directory that is a sibling to
+    // the working directory.
+    assert!(Context::test("../vaticle_typedb_behaviour/query/language/fetch.feature").await);
 }

@@ -16,7 +16,7 @@ a| `WRITE`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_TransactionType_isRead]
+[#_TransactionType_isReadisRead__:_boolean]
 ==== isRead
 
 [source,nodejs]
@@ -30,7 +30,7 @@ Checks whether this is the READ TransactionType
 .Returns
 `boolean`
 
-[#_TransactionType_isWrite]
+[#_TransactionType_isWriteisWrite__:_boolean]
 ==== isWrite
 
 [source,nodejs]

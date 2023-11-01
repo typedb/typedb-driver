@@ -97,7 +97,7 @@ pub extern "C" fn logic_manager_put_rule(
         Ok::<_, Error>(borrow(transaction).logic().put_rule(
             string_view(label).to_owned(),
             typeql::parse_pattern(string_view(when))?.into_conjunction(),
-            typeql::parse_variable(string_view(then))?,
+            typeql::parse_statement(string_view(then))?,
         ))
     })();
     release(RulePromise(Box::new(|| promise?.resolve().map(Some))))

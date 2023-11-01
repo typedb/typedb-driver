@@ -19,47 +19,22 @@
 # under the License.
 #
 
-from __future__ import annotations
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//nodejs/test/behaviour:rules.bzl", "typedb_behaviour_node_test")
 
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
+checkstyle_test(
+    name = "checkstyle",
+    include = glob(["*"]),
+    license_type = "apache-header",
+)
 
-if TYPE_CHECKING:
-    from typedb.api.answer.numeric import Numeric
-    from typedb.api.concept.concept import Concept
-
-
-class NumericGroup(ABC):
-    """
-    Contains an element of the group aggregate query result.
-    """
-
-    @abstractmethod
-    def owner(self) -> Concept:
-        """
-        Retrieves the concept that is the group owner.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            numeric_group.owner()
-        """
-        pass
-
-    @abstractmethod
-    def numeric(self) -> Numeric:
-        """
-        Retrieves the ``Numeric`` answer of the group.
-
-        :return:
-
-        Examples
-        --------
-        ::
-
-            numeric_group.numeric()
-        """
-        pass
+typedb_behaviour_node_test(
+    name = "test",
+    features = ["@vaticle_typedb_behaviour//query/language:fetch.feature"],
+    data = [
+        "//nodejs/test/behaviour/connection/database:steps",
+        "//nodejs/test/behaviour/connection/session:steps",
+        "//nodejs/test/behaviour/connection/transaction:steps",
+        "//nodejs/test/behaviour/query:steps",
+    ],
+)

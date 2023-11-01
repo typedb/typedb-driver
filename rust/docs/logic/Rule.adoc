@@ -19,7 +19,7 @@ Rules are a part of schema and define embedded logic. The reasoning engine uses 
 |===
 |Name |Type |Description
 a| `label` a| `String` a| The unique label of the rule.
-a| `then` a| `ThingVariable` a| The single statement that constitutes the ‘then’ of the rule.
+a| `then` a| `ThingStatement` a| The single statement that constitutes the ‘then’ of the rule.
 a| `when` a| `Conjunction` a| The statements that constitute the ‘when’ of the rule.
 |===
 // end::properties[]

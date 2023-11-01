@@ -86,7 +86,7 @@ pub extern "C" fn value_get_boolean(value: *const Concept) -> bool {
     if let Value::Boolean(bool) = borrow_as_value(value) {
         *bool
     } else {
-        unreachable!()
+        unreachable!("Attempting to unwrap a non-boolean {:?} as boolean", borrow_as_value(value))
     }
 }
 
@@ -95,7 +95,7 @@ pub extern "C" fn value_get_long(value: *const Concept) -> i64 {
     if let Value::Long(long) = borrow_as_value(value) {
         *long
     } else {
-        unreachable!()
+        unreachable!("Attempting to unwrap a non-long {:?} as long", borrow_as_value(value))
     }
 }
 
@@ -104,7 +104,7 @@ pub extern "C" fn value_get_double(value: *const Concept) -> f64 {
     if let Value::Double(double) = borrow_as_value(value) {
         *double
     } else {
-        unreachable!()
+        unreachable!("Attempting to unwrap a non-double {:?} as double", borrow_as_value(value))
     }
 }
 
@@ -113,7 +113,7 @@ pub extern "C" fn value_get_string(value: *const Concept) -> *mut c_char {
     if let Value::String(string) = borrow_as_value(value) {
         release_string(string.clone())
     } else {
-        unreachable!()
+        unreachable!("Attempting to unwrap a non-string {:?} as string", borrow_as_value(value))
     }
 }
 
@@ -122,7 +122,7 @@ pub extern "C" fn value_get_date_time_as_millis(value: *const Concept) -> i64 {
     if let Value::DateTime(date_time) = borrow_as_value(value) {
         date_time.timestamp_millis()
     } else {
-        unreachable!()
+        unreachable!("Attempting to unwrap a non-datetime {:?} as datetime", borrow_as_value(value))
     }
 }
 

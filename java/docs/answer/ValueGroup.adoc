@@ -1,35 +1,12 @@
-[#_NumericGroup]
-=== NumericGroup
+[#_ValueGroup]
+=== ValueGroup
 
 *Package*: `com.vaticle.typedb.driver.api.answer`
 
 Contains an element of the group aggregate query result.
 
 // tag::methods[]
-[#_NumericGroup_numeric_]
-==== numeric
-
-[source,java]
-----
-@CheckReturnValue
-Numeric numeric()
-----
-
-Retrieves the ``Numeric`` answer of the group. 
-
-
-[caption=""]
-.Returns
-`Numeric`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-numericGroup.numeric();
-----
-
-[#_NumericGroup_owner_]
+[#_ValueGroup_owner_]
 ==== owner
 
 [source,java]
@@ -50,6 +27,29 @@ Retrieves the concept that is the group owner.
 [source,java]
 ----
 conceptMapGroup.owner()
+----
+
+[#_ValueGroup_value_]
+==== value
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Optional<Value> value()
+----
+
+Retrieves the ``Value`` answer of the group. 
+
+
+[caption=""]
+.Returns
+`java.util.Optional<Value>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+valueGroup.value();
 ----
 
 // end::methods[]

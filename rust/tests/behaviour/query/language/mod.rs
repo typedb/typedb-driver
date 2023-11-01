@@ -22,9 +22,11 @@
 mod define;
 mod delete;
 mod expression;
+mod fetch;
 mod get;
 mod insert;
 mod match_;
+mod modifiers;
 mod rule_validation;
 pub(crate) mod steps;
 mod undefine;

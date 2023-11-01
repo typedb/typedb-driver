@@ -19,12 +19,15 @@
  * under the License.
  */
 
-use crate::{answer::Numeric, concept::Concept};
+export type JSON =
+    | string
+    | number
+    | boolean
+    | JSONObject
+    | JSONArray;
 
-#[derive(Clone, Debug, PartialEq)]
-pub struct NumericGroup {
-    /// The concept that is the group owner.
-    pub owner: Concept,
-    // The `Numeric` answer of the group.
-    pub numeric: Numeric,
+export type JSONObject = {
+    [x: string]: JSON;
 }
+
+export type JSONArray = Array<JSON>;

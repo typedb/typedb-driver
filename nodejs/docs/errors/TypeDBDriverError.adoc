@@ -37,7 +37,7 @@ Returns the message template for this error.
 .Returns
 `ErrorMessage`
 
-[#_TypeDBDriverError_captureStackTrace]
+[#_TypeDBDriverError_captureStackTracecaptureStackTrace_targetObject__constructorOpt?_:_void]
 ==== captureStackTrace
 
 [source,nodejs]
@@ -61,7 +61,7 @@ a| `constructorOpt` a|  a| `Function`
 .Returns
 `void`
 
-[#_TypeDBDriverError_new_TypeDBDriverError]
+[#_TypeDBDriverError_new_TypeDBDriverErrornew_TypeDBDriverError_error_:_TypeDBDriverError]
 ==== new TypeDBDriverError
 
 [source,nodejs]
