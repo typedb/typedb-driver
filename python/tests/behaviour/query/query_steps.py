@@ -438,7 +438,7 @@ def step_impl(context: Context, expected_answer: float):
     assert_value(context.value_answer, expected_answer)
 
 
-@step("aggregate answer is not a number")
+@step("aggregate answer is empty")
 def step_impl(context: Context):
     assert_that(context.value_answer is None)
 
@@ -526,6 +526,12 @@ def step_impl(context: Context):
         assert_value(value_group.value(), expected_answer,
                              reason="Expected answer [%f] for group [%s], but got [%f]" % (
                                  expected_answer, owner_identifier, actual_answer))
+
+
+@step("group aggregate answer value is empty")
+def step_impl(context: Context):
+    assert_that(len(context.value_answer_groups) == 1, reason="This step only work with 1 group aggregate answer")
+    assert_that(context.value_answer_groups[0].value() is None)
 
 
 def variable_from_template_placeholder(placeholder: str):

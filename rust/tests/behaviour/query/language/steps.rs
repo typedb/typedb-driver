@@ -257,8 +257,8 @@ generic_step_impl! {
         );
     }
 
-    #[step(expr = "aggregate answer is not a number")]
-    async fn aggregate_answer_is_nan(context: &mut Context) {
+    #[step(expr = "aggregate answer is empty")]
+    async fn aggregate_answer_is_empty(context: &mut Context) {
         assert!(context.value_answer.is_some(), "There is no stored answer from the previous query.");
         assert!(!matches!(context.value_answer.as_ref().unwrap(), Some(Value::Long(_) | Value::Double(_))));
     }
@@ -367,6 +367,13 @@ generic_step_impl! {
             "An identifier entry (row) should match 1-to-1 to an answer, but there are only {matched_rows} \
             matched entries of given {actual_answers}."
         );
+    }
+
+    #[step(expr = "group aggregate answer value is empty")]
+    async fn group_aggregate_answer_value_is_empty(context: &mut Context) {
+        assert_eq!(context.value_answer_group.len(), 1, "This step only works with one answer group");
+        let is_empty = context.value_answer_group[0].value.is_none();
+        assert!(is_empty);
     }
 
     #[step(expr = "get answers of typeql fetch")]

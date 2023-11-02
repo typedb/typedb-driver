@@ -379,7 +379,7 @@ Then("aggregate value is: {float}", async (expectedAnswer: number) => {
     assertValue(valueAnswer, expectedAnswer);
 });
 
-Then("aggregate answer is not a number", async () => {
+Then("aggregate answer is empty", async () => {
     assert(!valueAnswer);
 });
 
@@ -472,6 +472,12 @@ Then("group aggregate values are", async (answerIdentifiersTable: DataTable) => 
             `Expected answer [${expectedAnswer}] for group [${JSON.stringify(ownerIdentifier)}], but got [${actualAnswer}]`);
     }
 });
+
+Then("group aggregate answer value is empty", async () => {
+    assert(valueAnswerGroups.length == 1);
+    assert(!valueAnswerGroups[0].value);
+});
+
 
 function variableFromTemplatePlaceholder(placeholder: string): string {
     if (placeholder.endsWith(".iid")) return placeholder.replace(".iid", "").replace("answer.", "");
