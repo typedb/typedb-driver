@@ -5,7 +5,7 @@ Documentation: https://typedb.com/docs/clients/overview
 #### Rust driver
 
 Available from https://crates.io/crates/typedb-driver
-Documentation: https://typedb.com/docs/clients/rust-driver/api-reference
+Documentation: https://typedb.com/docs/clients/rust-driver
 
 
 ```sh
@@ -16,7 +16,7 @@ cargo add typedb-driver@{version}
 ### Java driver
 
 Available through https://repo.vaticle.com
-Documentation: https://typedb.com/docs/clients/java-driver/api-reference
+Documentation: https://typedb.com/docs/clients/java-driver
 
 ```xml
 <repositories>
@@ -37,7 +37,7 @@ Documentation: https://typedb.com/docs/clients/java-driver/api-reference
 ### Python driver
 
 PyPI package: https://pypi.org/project/typedb-driver
-Documentation: https://typedb.com/docs/clients/python-driver/api-reference
+Documentation: https://typedb.com/docs/clients/python-driver
 
 Available through https://pypi.org
 
@@ -48,7 +48,7 @@ pip install typedb-driver=={version}
 ### NodeJS driver
 
 NPM package: https://www.npmjs.com/package/typedb-driver
-Documentation: https://typedb.com/docs/clients/nodejs-driver/api-reference
+Documentation: https://typedb.com/docs/clients/nodejs-driver
 
 ```
 npm install typedb-driver@{version}
