@@ -112,11 +112,7 @@ async::
 --
 [source,rust]
 ----
-pub async fn create(
-    &self,
-    username: impl Into<String>,
-    password: impl Into<String>
-) -> Result
+pub async fn create( &self, username: impl Into<String>, password: impl Into<String> ) -> Result
 ----
 
 --
@@ -126,11 +122,7 @@ sync::
 --
 [source,rust]
 ----
-pub fn create(
-    &self,
-    username: impl Into<String>,
-    password: impl Into<String>
-) -> Result
+pub fn create( &self, username: impl Into<String>, password: impl Into<String> ) -> Result
 ----
 
 --
@@ -316,11 +308,7 @@ async::
 --
 [source,rust]
 ----
-pub async fn set_password(
-    &self,
-    username: impl Into<String>,
-    password: impl Into<String>
-) -> Result
+pub async fn set_password( &self, username: impl Into<String>, password: impl Into<String> ) -> Result
 ----
 
 --
@@ -330,11 +318,7 @@ sync::
 --
 [source,rust]
 ----
-pub fn set_password(
-    &self,
-    username: impl Into<String>,
-    password: impl Into<String>
-) -> Result
+pub fn set_password( &self, username: impl Into<String>, password: impl Into<String> ) -> Result
 ----
 
 --

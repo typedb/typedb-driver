@@ -135,10 +135,7 @@ LogicManager<'_>
 
 [source,rust]
 ----
-pub fn on_close(
-    &self,
-    callback: impl FnOnce(ConnectionError) + Send + Sync + 'static
-)
+pub fn on_close( &self, callback: impl FnOnce(ConnectionError) + Send + Sync + 'static )
 ----
 
 Registers a callback function which will be executed when this session is closed.

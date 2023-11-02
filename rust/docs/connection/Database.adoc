@@ -136,7 +136,7 @@ database.primary_replica_info()
 
 [source,rust]
 ----
-pub fn replicas_info(&self) -> Vec<ReplicaInfo> <a href="#" class="notable-traits" data-ty="Vec">ⓘ
+pub fn replicas_info(&self) -> Vec<ReplicaInfo>
 ----
 
 Returns the ``Replica`` instances for this database. _Only works in TypeDB Enterprise_
@@ -145,7 +145,7 @@ Returns the ``Replica`` instances for this database. _Only works in TypeDB Enter
 .Returns
 [source,rust]
 ----
-Vec<ReplicaInfo> <a href="#" class="notable-traits" data-ty="Vec">ⓘ
+Vec<ReplicaInfo>
 ----
 
 [caption=""]

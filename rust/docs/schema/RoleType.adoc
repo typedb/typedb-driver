@@ -34,10 +34,7 @@ a| `label` a| `ScopedLabel` a|
 
 [source,rust]
 ----
-fn delete<'tx>(
-    &self,
-    transaction: &'tx Transaction<'tx>
-) -> BoxPromise<'tx, Result>
+fn delete<'tx>( &self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result>
 ----
 
 <<#_trait_RoleTypeAPI_method_delete,Read more>>
@@ -54,11 +51,7 @@ BoxPromise<'tx, Result>
 
 [source,rust]
 ----
-fn get_player_instances(
-    &self,
-    transaction: &Transaction<'_>,
-    transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<Thing>>>
+fn get_player_instances( &self, transaction: &Transaction<'_>, transitivity: Transitivity ) -> Result<BoxStream<'_, Result<Thing>>>
 ----
 
 <<#_trait_RoleTypeAPI_method_get_player_instances,Read more>>
@@ -75,11 +68,7 @@ Result<BoxStream<'_, Result<Thing>>>
 
 [source,rust]
 ----
-fn get_player_types(
-    &self,
-    transaction: &Transaction<'_>,
-    transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<ThingType>>>
+fn get_player_types( &self, transaction: &Transaction<'_>, transitivity: Transitivity ) -> Result<BoxStream<'_, Result<ThingType>>>
 ----
 
 <<#_trait_RoleTypeAPI_method_get_player_types,Read more>>
@@ -96,11 +85,7 @@ Result<BoxStream<'_, Result<ThingType>>>
 
 [source,rust]
 ----
-fn get_relation_instances(
-    &self,
-    transaction: &Transaction<'_>,
-    transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<Relation>>>
+fn get_relation_instances( &self, transaction: &Transaction<'_>, transitivity: Transitivity ) -> Result<BoxStream<'_, Result<Relation>>>
 ----
 
 <<#_trait_RoleTypeAPI_method_get_relation_instances,Read more>>
@@ -117,10 +102,7 @@ Result<BoxStream<'_, Result<Relation>>>
 
 [source,rust]
 ----
-fn get_relation_type<'tx>(
-    &self,
-    transaction: &'tx Transaction<'tx>
-) -> BoxPromise<'tx, Result<Option<RelationType>>>
+fn get_relation_type<'tx>( &self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result<Option<RelationType>>>
 ----
 
 <<#_trait_RoleTypeAPI_tymethod_get_relation_type,Read more>>
@@ -137,10 +119,7 @@ BoxPromise<'tx, Result<Option<RelationType>>>
 
 [source,rust]
 ----
-fn get_relation_types(
-    &self,
-    transaction: &Transaction<'_>
-) -> Result<BoxStream<'_, Result<RelationType>>>
+fn get_relation_types( &self, transaction: &Transaction<'_> ) -> Result<BoxStream<'_, Result<RelationType>>>
 ----
 
 <<#_trait_RoleTypeAPI_method_get_relation_types,Read more>>
@@ -157,11 +136,7 @@ Result<BoxStream<'_, Result<RelationType>>>
 
 [source,rust]
 ----
-fn get_subtypes(
-    &self,
-    transaction: &Transaction<'_>,
-    transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<RoleType>>>
+fn get_subtypes( &self, transaction: &Transaction<'_>, transitivity: Transitivity ) -> Result<BoxStream<'_, Result<RoleType>>>
 ----
 
 <<#_trait_RoleTypeAPI_method_get_subtypes,Read more>>
@@ -178,10 +153,7 @@ Result<BoxStream<'_, Result<RoleType>>>
 
 [source,rust]
 ----
-fn get_supertype<'tx>(
-    &self,
-    transaction: &'tx Transaction<'tx>
-) -> BoxPromise<'tx, Result<Option<RoleType>>>
+fn get_supertype<'tx>( &self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result<Option<RoleType>>>
 ----
 
 <<#_trait_RoleTypeAPI_method_get_supertype,Read more>>
@@ -198,10 +170,7 @@ BoxPromise<'tx, Result<Option<RoleType>>>
 
 [source,rust]
 ----
-fn get_supertypes(
-    &self,
-    transaction: &Transaction<'_>
-) -> Result<BoxStream<'_, Result<RoleType>>>
+fn get_supertypes( &self, transaction: &Transaction<'_> ) -> Result<BoxStream<'_, Result<RoleType>>>
 ----
 
 <<#_trait_RoleTypeAPI_method_get_supertypes,Read more>>
@@ -235,10 +204,7 @@ bool
 
 [source,rust]
 ----
-fn is_deleted<'tx>(
-    &self,
-    transaction: &'tx Transaction<'tx>
-) -> BoxPromise<'tx, Result<bool>>
+fn is_deleted<'tx>( &self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result<bool>>
 ----
 
 <<#_trait_RoleTypeAPI_tymethod_is_deleted,Read more>>
@@ -255,11 +221,7 @@ BoxPromise<'tx, Result<bool>>
 
 [source,rust]
 ----
-fn set_label<'tx>(
-    &self,
-    transaction: &'tx Transaction<'tx>,
-    new_label: String
-) -> BoxPromise<'tx, Result>
+fn set_label<'tx>( &self, transaction: &'tx Transaction<'tx>, new_label: String ) -> BoxPromise<'tx, Result>
 ----
 
 <<#_trait_RoleTypeAPI_method_set_label,Read more>>

@@ -89,12 +89,7 @@ transaction.logic.get_rules()
 
 [source,rust]
 ----
-pub fn put_rule(
-    &self,
-    label: String,
-    when: Conjunction,
-    then: Statement
-) -> impl Promise<'tx, Result<Rule>>
+pub fn put_rule( &self, label: String, when: Conjunction, then: Statement ) -> impl Promise<'tx, Result<Rule>>
 ----
 
 Creates a new Rule if none exists with the given label, or replaces the existing one.

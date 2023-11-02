@@ -93,10 +93,7 @@ Connection::new_core("127.0.0.1:1729")
 
 [source,rust]
 ----
-pub fn new_enterprise<T: AsRef<str> + Sync>(
-    init_addresses: &[T],
-    credential: Credential
-) -> Result<Self>
+pub fn new_enterprise<T: AsRef<str> + Sync>( init_addresses: &[T], credential: Credential ) -> Result<Self>
 ----
 
 Creates a new TypeDB Enterprise connection.

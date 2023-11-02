@@ -11,10 +11,7 @@
 
 [source,rust]
 ----
-fn delete<'tx>(
-    &mut self,
-    transaction: &'tx Transaction<'tx>
-) -> BoxPromise<'tx, Result>
+fn delete<'tx>( &mut self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result>
 ----
 
 Deletes this rule.
@@ -65,10 +62,7 @@ rule.delete(transaction).resolve()
 
 [source,rust]
 ----
-fn is_deleted<'tx>(
-    &self,
-    transaction: &'tx Transaction<'tx>
-) -> BoxPromise<'tx, Result<bool>>
+fn is_deleted<'tx>( &self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result<bool>>
 ----
 
 Check if this rule has been deleted.
@@ -136,11 +130,7 @@ Retrieves the unique label of the rule.
 
 [source,rust]
 ----
-fn set_label<'tx>(
-    &mut self,
-    transaction: &'tx Transaction<'tx>,
-    new_label: String
-) -> BoxPromise<'tx, Result>
+fn set_label<'tx>( &mut self, transaction: &'tx Transaction<'tx>, new_label: String ) -> BoxPromise<'tx, Result>
 ----
 
 Renames the label of the rule. The new label must remain unique.

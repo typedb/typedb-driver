@@ -11,11 +11,7 @@
 
 [source,rust]
 ----
-fn get<'tx>(
-    &self,
-    transaction: &'tx Transaction<'tx>,
-    value: Value
-) -> BoxPromise<'tx, Result<Option<Attribute>>>
+fn get<'tx>( &self, transaction: &'tx Transaction<'tx>, value: Value ) -> BoxPromise<'tx, Result<Option<Attribute>>>
 ----
 
 Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``.
@@ -67,11 +63,7 @@ attribute = attribute_type.get(transaction, value).resolve();
 
 [source,rust]
 ----
-fn get_instances(
-    &self,
-    transaction: &Transaction<'_>,
-    transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<Attribute>>>
+fn get_instances( &self, transaction: &Transaction<'_>, transitivity: Transitivity ) -> Result<BoxStream<'_, Result<Attribute>>>
 ----
 
 Retrieves all direct and indirect (or direct only) ``Attributes`` that are instances of this ``AttributeType``.
@@ -105,12 +97,7 @@ attribute_type.get_instances(transaction, transitivity)
 
 [source,rust]
 ----
-fn get_owners(
-    &self,
-    transaction: &Transaction<'_>,
-    transitivity: Transitivity,
-    annotations: Vec<Annotation>
-) -> Result<BoxStream<'_, Result<ThingType>>>
+fn get_owners( &self, transaction: &Transaction<'_>, transitivity: Transitivity, annotations: Vec<Annotation> ) -> Result<BoxStream<'_, Result<ThingType>>>
 ----
 
 Retrieve all ``Things`` that own an attribute of this ``AttributeType`` and have all given ``Annotation``s.
@@ -145,10 +132,7 @@ attribute_type.get_owners(transaction, transitivity, annotations)
 
 [source,rust]
 ----
-fn get_regex<'tx>(
-    &self,
-    transaction: &'tx Transaction<'tx>
-) -> BoxPromise<'tx, Result<Option<String>>>
+fn get_regex<'tx>( &self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result<Option<String>>>
 ----
 
 Retrieves the regular expression that is defined for this ``AttributeType``.
@@ -199,11 +183,7 @@ attribute_type.get_regex(transaction).resolve();
 
 [source,rust]
 ----
-fn get_subtypes(
-    &self,
-    transaction: &Transaction<'_>,
-    transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<AttributeType>>>
+fn get_subtypes( &self, transaction: &Transaction<'_>, transitivity: Transitivity ) -> Result<BoxStream<'_, Result<AttributeType>>>
 ----
 
 Retrieves all direct and indirect (or direct only) subtypes of this ``AttributeType``.
@@ -237,12 +217,7 @@ attribute_type.get_subtypes(transaction, transitivity)
 
 [source,rust]
 ----
-fn get_subtypes_with_value_type(
-    &self,
-    transaction: &Transaction<'_>,
-    value_type: ValueType,
-    transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<AttributeType>>>
+fn get_subtypes_with_value_type( &self, transaction: &Transaction<'_>, value_type: ValueType, transitivity: Transitivity ) -> Result<BoxStream<'_, Result<AttributeType>>>
 ----
 
 Retrieves all direct and indirect (or direct only) subtypes of this ``AttributeType`` with given ``ValueType``.
@@ -277,10 +252,7 @@ attribute_type.get_subtypes_with_value_type(transaction, value_type, transitivit
 
 [source,rust]
 ----
-fn get_supertype<'tx>(
-    &self,
-    transaction: &'tx Transaction<'tx>
-) -> BoxPromise<'tx, Result<Option<AttributeType>>>
+fn get_supertype<'tx>( &self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result<Option<AttributeType>>>
 ----
 
 Retrieves the most immediate supertype of this ``AttributeType``.
@@ -331,10 +303,7 @@ attribute_type.get_supertype(transaction).resolve();
 
 [source,rust]
 ----
-fn get_supertypes(
-    &self,
-    transaction: &Transaction<'_>
-) -> Result<BoxStream<'_, Result<AttributeType>>>
+fn get_supertypes( &self, transaction: &Transaction<'_> ) -> Result<BoxStream<'_, Result<AttributeType>>>
 ----
 
 Retrieves all supertypes of this ``AttributeType``.
@@ -367,11 +336,7 @@ attribute_type.get_supertypes(transaction)
 
 [source,rust]
 ----
-fn put<'tx>(
-    &self,
-    transaction: &'tx Transaction<'tx>,
-    value: Value
-) -> BoxPromise<'tx, Result<Attribute>>
+fn put<'tx>( &self, transaction: &'tx Transaction<'tx>, value: Value ) -> BoxPromise<'tx, Result<Attribute>>
 ----
 
 Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
@@ -423,11 +388,7 @@ attribute = attribute_type.put(transaction, value).resolve();
 
 [source,rust]
 ----
-fn set_regex<'tx>(
-    &self,
-    transaction: &'tx Transaction<'tx>,
-    regex: String
-) -> BoxPromise<'tx, Result>
+fn set_regex<'tx>( &self, transaction: &'tx Transaction<'tx>, regex: String ) -> BoxPromise<'tx, Result>
 ----
 
 Sets a regular expression as a constraint for this ``AttributeType``. ``Values`` of all ``Attribute``s of this type (inserted earlier or later) should match this regex.
@@ -481,11 +442,7 @@ attribute_type.set_regex(transaction, regex).resolve();
 
 [source,rust]
 ----
-fn set_supertype<'tx>(
-    &mut self,
-    transaction: &'tx Transaction<'tx>,
-    supertype: AttributeType
-) -> BoxPromise<'tx, Result>
+fn set_supertype<'tx>( &mut self, transaction: &'tx Transaction<'tx>, supertype: AttributeType ) -> BoxPromise<'tx, Result>
 ----
 
 Sets the supplied ``AttributeType`` as the supertype of the current ``AttributeType``.
@@ -537,10 +494,7 @@ attribute_type.set_supertype(transaction, supertype).resolve();
 
 [source,rust]
 ----
-fn unset_regex<'tx>(
-    &self,
-    transaction: &'tx Transaction<'tx>
-) -> BoxPromise<'tx, Result>
+fn unset_regex<'tx>( &self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result>
 ----
 
 Removes the regular expression that is defined for this ``AttributeType``.

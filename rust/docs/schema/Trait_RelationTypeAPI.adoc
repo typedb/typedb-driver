@@ -11,10 +11,7 @@
 
 [source,rust]
 ----
-fn create<'tx>(
-    &self,
-    transaction: &'tx Transaction<'tx>
-) -> BoxPromise<'tx, Result<Relation>>
+fn create<'tx>( &self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result<Relation>>
 ----
 
 Creates and returns an instance of this ``RelationType``.
@@ -65,11 +62,7 @@ relation_type.create(transaction).resolve();
 
 [source,rust]
 ----
-fn get_instances(
-    &self,
-    transaction: &Transaction<'_>,
-    transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<Relation>>>
+fn get_instances( &self, transaction: &Transaction<'_>, transitivity: Transitivity ) -> Result<BoxStream<'_, Result<Relation>>>
 ----
 
 Retrieves all direct and indirect (or direct only) ``Relation``s that are instances of this ``RelationType``.
@@ -103,11 +96,7 @@ relation_type.get_instances(transaction, Transitivity::Explicit);
 
 [source,rust]
 ----
-fn get_relates(
-    &self,
-    transaction: &Transaction<'_>,
-    transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<RoleType>>>
+fn get_relates( &self, transaction: &Transaction<'_>, transitivity: Transitivity ) -> Result<BoxStream<'_, Result<RoleType>>>
 ----
 
 Retrieves roles that this ``RelationType`` relates to directly or via inheritance.
@@ -141,11 +130,7 @@ relation_type.get_relates(transaction, Transitivity::Transitive);
 
 [source,rust]
 ----
-fn get_relates_for_role_label<'tx>(
-    &self,
-    transaction: &'tx Transaction<'tx>,
-    role_label: String
-) -> BoxPromise<'tx, Result<Option<RoleType>>>
+fn get_relates_for_role_label<'tx>( &self, transaction: &'tx Transaction<'tx>, role_label: String ) -> BoxPromise<'tx, Result<Option<RoleType>>>
 ----
 
 Retrieves role with a given ``role_label`` that this ``RelationType`` relates to.
@@ -197,11 +182,7 @@ relation_type.get_relates_for_role_label(transaction, role_label).resolve();
 
 [source,rust]
 ----
-fn get_relates_overridden<'tx>(
-    &self,
-    transaction: &'tx Transaction<'tx>,
-    overridden_role_label: String
-) -> BoxPromise<'tx, Result<Option<RoleType>>>
+fn get_relates_overridden<'tx>( &self, transaction: &'tx Transaction<'tx>, overridden_role_label: String ) -> BoxPromise<'tx, Result<Option<RoleType>>>
 ----
 
 Retrieves a ``RoleType`` that is overridden by the role with the ``overridden_role_label``.
@@ -253,11 +234,7 @@ relation_type.get_relates_overridden(transaction, overridden_role_label).resolve
 
 [source,rust]
 ----
-fn get_subtypes(
-    &self,
-    transaction: &Transaction<'_>,
-    transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<RelationType>>>
+fn get_subtypes( &self, transaction: &Transaction<'_>, transitivity: Transitivity ) -> Result<BoxStream<'_, Result<RelationType>>>
 ----
 
 Retrieves all direct and indirect (or direct only) subtypes of the ``RelationType``.
@@ -291,10 +268,7 @@ relation_type.get_subtypes(transaction, Transitivity::Transitive);
 
 [source,rust]
 ----
-fn get_supertype<'tx>(
-    &self,
-    transaction: &'tx Transaction<'tx>
-) -> BoxPromise<'tx, Result<Option<RelationType>>>
+fn get_supertype<'tx>( &self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result<Option<RelationType>>>
 ----
 
 Retrieves the most immediate supertype of the ``RelationType``.
@@ -345,10 +319,7 @@ relation_type.get_supertype(transaction).resolve();
 
 [source,rust]
 ----
-fn get_supertypes(
-    &self,
-    transaction: &Transaction<'_>
-) -> Result<BoxStream<'_, Result<RelationType>>>
+fn get_supertypes( &self, transaction: &Transaction<'_> ) -> Result<BoxStream<'_, Result<RelationType>>>
 ----
 
 Retrieves all supertypes of the ``RelationType``.
@@ -381,12 +352,7 @@ relation_type.get_supertypes(transaction);
 
 [source,rust]
 ----
-fn set_relates<'tx>(
-    &mut self,
-    transaction: &'tx Transaction<'tx>,
-    role_label: String,
-    overridden_role_label: Option<String>
-) -> BoxPromise<'tx, Result>
+fn set_relates<'tx>( &mut self, transaction: &'tx Transaction<'tx>, role_label: String, overridden_role_label: Option<String> ) -> BoxPromise<'tx, Result>
 ----
 
 Sets the new role that this ``RelationType`` relates to. If we are setting an overriding type this way, we have to also pass the overridden type as a second argument.
@@ -439,11 +405,7 @@ relation_type.set_relates(transaction, role_label, None).resolve();
 
 [source,rust]
 ----
-fn set_supertype<'tx>(
-    &mut self,
-    transaction: &'tx Transaction<'tx>,
-    supertype: RelationType
-) -> BoxPromise<'tx, Result>
+fn set_supertype<'tx>( &mut self, transaction: &'tx Transaction<'tx>, supertype: RelationType ) -> BoxPromise<'tx, Result>
 ----
 
 Sets the supplied ``RelationType`` as the supertype of the current ``RelationType``.
@@ -495,11 +457,7 @@ relation_type.set_supertype(transaction, super_relation_type).resolve();
 
 [source,rust]
 ----
-fn unset_relates<'tx>(
-    &mut self,
-    transaction: &'tx Transaction<'tx>,
-    role_label: String
-) -> BoxPromise<'tx, Result>
+fn unset_relates<'tx>( &mut self, transaction: &'tx Transaction<'tx>, role_label: String ) -> BoxPromise<'tx, Result>
 ----
 
 Disallows this ``RelationType`` from relating to the given role.
