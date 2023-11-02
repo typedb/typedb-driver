@@ -62,7 +62,6 @@ import static com.vaticle.typedb.driver.api.concept.type.ThingType.Annotation.ke
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Query.VARIABLE_DOES_NOT_EXIST;
 import static com.vaticle.typedb.driver.test.behaviour.connection.ConnectionStepsBase.tx;
 import static com.vaticle.typedb.driver.test.behaviour.util.Util.JSONListMatches;
-import static com.vaticle.typedb.driver.test.behaviour.util.Util.JSONMatches;
 import static com.vaticle.typedb.driver.test.behaviour.util.Util.assertThrows;
 import static com.vaticle.typedb.driver.test.behaviour.util.Util.assertThrowsWithMessage;
 import static com.vaticle.typedb.common.collection.Collections.set;
@@ -296,8 +295,8 @@ public class QuerySteps {
                 expectedAnswer, value, 0.001);
     }
 
-    @Then("aggregate answer is not a number")
-    public void aggregate_answer_is_not_a_number() {
+    @Then("aggregate answer is empty")
+    public void aggregate_answer_is_empty() {
         assertNotNull("The last executed query was not an aggregate query", valueAnswer);
         assertTrue(valueAnswer.isEmpty());
     }
@@ -425,6 +424,13 @@ public class QuerySteps {
                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
             }
         }
+    }
+
+
+    @Then("group aggregate answer value is empty")
+    public void group_aggregate_answer_value_not_a_number() {
+        assertEquals("Step requires exactly 1 grouped answer", 1, valueAnswerGroups.size());
+        assertTrue(valueAnswerGroups.get(0).value().isEmpty());
     }
 
     private boolean matchAnswerConcept(Map<String, String> answerIdentifiers, ConceptMap answer) {

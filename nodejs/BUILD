@@ -94,6 +94,7 @@ npm_package(
     srcs = [":driver-nodejs", "package.json"],
     include_runfiles = False,
     package = "typedb-driver",
+    replace_prefixes = { "dist/": "" },
     visibility = ["//visibility:public"],
 )
 

@@ -166,7 +166,7 @@ build:
       image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
       filter:
         owner: vaticle
-        branch: development
+        branch: [master, development]
       dependencies:
         - build
       command: |
@@ -190,7 +190,7 @@ build:
       image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
       filter:
         owner: vaticle
-        branch: development
+        branch: [master, development]
       dependencies:
         - build
       command: |
@@ -308,7 +308,7 @@ build:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
-        branch: development
+        branch: [master, development]
       dependencies:
         - build
       command: |
@@ -326,7 +326,7 @@ build:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
-        branch: development
+        branch: [master, development]
       dependencies:
         - build
       command: |
@@ -344,7 +344,7 @@ build:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
-        branch: development
+        branch: [master, development]
       dependencies:
         - build
       command: |
@@ -360,7 +360,7 @@ build:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
-        branch: development
+        branch: [master, development]
       dependencies:
         - build
       command: |
@@ -376,7 +376,7 @@ build:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
-        branch: development
+        branch: [master, development]
       dependencies:
         - build
       command: |
@@ -391,7 +391,7 @@ build:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
-        branch: development
+        branch: [master, development]
       dependencies:
         - build
       command: |
@@ -532,7 +532,7 @@ build:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
-        branch: development
+        branch: [master, development]
       dependencies:
         - build
       type: foreground
@@ -560,7 +560,7 @@ build:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
-        branch: development
+        branch: [master, development]
       dependencies:
         - build
       type: foreground
@@ -588,7 +588,7 @@ build:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
-        branch: development
+        branch: [master, development]
       dependencies:
         - build
       type: foreground
@@ -614,7 +614,7 @@ build:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
-        branch: development
+        branch: [master, development]
       dependencies:
         - build
       type: foreground
@@ -640,7 +640,7 @@ build:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
-        branch: development
+        branch: [master, development]
       dependencies:
         - build
       type: foreground
@@ -665,7 +665,7 @@ build:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
-        branch: development
+        branch: [master, development]
       dependencies:
         - build
       type: foreground
@@ -853,7 +853,7 @@ build:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
-        branch: development
+        branch: [master, development]
       dependencies:
         - build
       command: |
@@ -874,7 +874,7 @@ build:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
-        branch: development
+        branch: [master, development]
       dependencies:
         - build
       command: |
@@ -895,7 +895,7 @@ build:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
-        branch: development
+        branch: [master, development]
       dependencies:
         - build
       command: |
@@ -914,7 +914,7 @@ build:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
-        branch: development
+        branch: [master, development]
       dependencies:
         - build
       command: |
@@ -951,7 +951,7 @@ build:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
-        branch: development
+        branch: [master, development]
       dependencies:
         - build
       command: |
