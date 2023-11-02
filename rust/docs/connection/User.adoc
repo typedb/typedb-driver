@@ -31,12 +31,7 @@ async::
 --
 [source,rust]
 ----
-pub async fn password_update(
-    &self,
-    connection: &Connection,
-    password_old: impl Into<String>,
-    password_new: impl Into<String>
-) -> Result
+pub async fn password_update( &self, connection: &Connection, password_old: impl Into<String>, password_new: impl Into<String> ) -> Result
 ----
 
 --
@@ -46,12 +41,7 @@ sync::
 --
 [source,rust]
 ----
-pub fn password_update(
-    &self,
-    connection: &Connection,
-    password_old: impl Into<String>,
-    password_new: impl Into<String>
-) -> Result
+pub fn password_update( &self, connection: &Connection, password_old: impl Into<String>, password_new: impl Into<String> ) -> Result
 ----
 
 --

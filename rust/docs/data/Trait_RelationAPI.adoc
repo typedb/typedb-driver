@@ -11,12 +11,7 @@
 
 [source,rust]
 ----
-fn add_role_player<'tx>(
-    &'tx self,
-    transaction: &'tx Transaction<'tx>,
-    role_type: RoleType,
-    player: Thing
-) -> BoxPromise<'tx, Result>
+fn add_role_player<'tx>( &'tx self, transaction: &'tx Transaction<'tx>, role_type: RoleType, player: Thing ) -> BoxPromise<'tx, Result>
 ----
 
 Adds a new role player to play the given role in this ``Relation``.
@@ -69,11 +64,7 @@ relation.add_role_player(transaction, role_type, player).resolve();
 
 [source,rust]
 ----
-fn get_players_by_role_type(
-    &self,
-    transaction: &Transaction<'_>,
-    role_types: Vec<RoleType>
-) -> Result<BoxStream<'_, Result<Thing>>>
+fn get_players_by_role_type( &self, transaction: &Transaction<'_>, role_types: Vec<RoleType> ) -> Result<BoxStream<'_, Result<Thing>>>
 ----
 
 Retrieves all role players of this ``Relation``, optionally filtered by given role types.
@@ -107,10 +98,7 @@ relation.get_players_by_role_type(transaction, role_types);
 
 [source,rust]
 ----
-fn get_relating(
-    &self,
-    transaction: &Transaction<'_>
-) -> Result<BoxStream<'_, Result<RoleType>>>
+fn get_relating( &self, transaction: &Transaction<'_> ) -> Result<BoxStream<'_, Result<RoleType>>>
 ----
 
 Retrieves all role types currently played in this ``Relation``.
@@ -143,10 +131,7 @@ relation.get_relating(transaction)
 
 [source,rust]
 ----
-fn get_role_players(
-    &self,
-    transaction: &Transaction<'_>
-) -> Result<BoxStream<'_, Result<(RoleType, Thing)>>>
+fn get_role_players( &self, transaction: &Transaction<'_> ) -> Result<BoxStream<'_, Result<(RoleType, Thing)>>>
 ----
 
 Retrieves a mapping of all instances involved in the ``Relation`` and the role each play.
@@ -157,8 +142,7 @@ Retrieves a mapping of all instances involved in the ``Relation`` and the role e
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>
-) -> Result<BoxStream<'_`
+a| `transaction` a| The current transaction a| `&Transaction<'_> ) -> Result<BoxStream<'_`
 |===
 
 [caption=""]
@@ -180,12 +164,7 @@ relation.get_role_players(transaction)
 
 [source,rust]
 ----
-fn remove_role_player<'tx>(
-    &'tx self,
-    transaction: &'tx Transaction<'tx>,
-    role_type: RoleType,
-    player: Thing
-) -> BoxPromise<'tx, Result>
+fn remove_role_player<'tx>( &'tx self, transaction: &'tx Transaction<'tx>, role_type: RoleType, player: Thing ) -> BoxPromise<'tx, Result>
 ----
 
 Removes the association of the given instance that plays the given role in this ``Relation``.
