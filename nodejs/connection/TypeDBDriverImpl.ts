@@ -37,9 +37,11 @@ import {TypeDBStubImpl} from "./TypeDBStubImpl";
 import DRIVER_NOT_OPEN = ErrorMessage.Driver.DRIVER_NOT_OPEN;
 import ENTERPRISE_UNABLE_TO_CONNECT = ErrorMessage.Driver.ENTPERPRISE_UNABLE_TO_CONNECT;
 import SESSION_ID_EXISTS = ErrorMessage.Driver.SESSION_ID_EXISTS;
+import UNABLE_TO_CONNECT = ErrorMessage.Driver.UNABLE_TO_CONNECT;
 
 export class TypeDBDriverImpl implements TypeDBDriver {
     private _isOpen: boolean;
+    private _isEnterprise: boolean;
 
     private readonly _initAddresses: string[];
     private readonly _credential: TypeDBCredential;
@@ -57,7 +59,8 @@ export class TypeDBDriverImpl implements TypeDBDriver {
         this._initAddresses = addresses;
         this._credential = credential;
 
-        this._isOpen = false
+        this._isOpen = false;
+        this._isEnterprise = credential == null;
         this._serverDrivers = new Map([]);
         this._databases = new TypeDBDatabaseManagerImpl(this);
         this._database_cache = {};
@@ -65,7 +68,7 @@ export class TypeDBDriverImpl implements TypeDBDriver {
     }
 
     async open(): Promise<TypeDBDriver> {
-        const serverAddresses = await this.fetchEnterpriseServers();
+        const serverAddresses = await this.fetchServerAddresses();
         const openReqs: Promise<void>[] = []
         for (const addr of serverAddresses) {
             const serverStub = new TypeDBStubImpl(addr, this._credential);
@@ -75,14 +78,15 @@ export class TypeDBDriverImpl implements TypeDBDriver {
         try {
             await Promise.any(openReqs);
         } catch (e) {
-            throw new TypeDBDriverError(ENTERPRISE_UNABLE_TO_CONNECT.message(e));
+            if (this._isEnterprise) throw new TypeDBDriverError(ENTERPRISE_UNABLE_TO_CONNECT.message(e));
+            else throw new TypeDBDriverError(UNABLE_TO_CONNECT);
         }
         this._userManager = new UserManagerImpl(this);
         this._isOpen = true;
         return this;
     }
 
-    private async fetchEnterpriseServers(): Promise<string[]> {
+    private async fetchServerAddresses(): Promise<string[]> {
         for (const address of this._initAddresses) {
             try {
                 const stub = new TypeDBStubImpl(address, this._credential);
@@ -94,7 +98,8 @@ export class TypeDBDriverImpl implements TypeDBDriver {
                 console.error(`Fetching enterprise servers from ${address} failed.`, e);
             }
         }
-        throw new TypeDBDriverError(ENTERPRISE_UNABLE_TO_CONNECT.message(this._initAddresses.join(",")));
+        if (this._isEnterprise) throw new TypeDBDriverError(ENTERPRISE_UNABLE_TO_CONNECT.message(this._initAddresses.join(",")));
+        else throw new TypeDBDriverError(UNABLE_TO_CONNECT);
     }
 
     isOpen(): boolean {
