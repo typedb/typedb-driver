@@ -133,7 +133,11 @@ impl<'tx> QueryManager<'tx> {
     /// ```rust
     /// transaction.query().get_with_options(query, options)
     /// ```
-    pub fn get_with_options(&self, query: &str, options: Options) -> Result<impl Stream<Item = Result<ConceptMap>> + 'tx> {
+    pub fn get_with_options(
+        &self,
+        query: &str,
+        options: Options,
+    ) -> Result<impl Stream<Item = Result<ConceptMap>> + 'tx> {
         self.transaction_stream.get_ref().get(query.to_string(), options)
     }
 
@@ -155,7 +159,11 @@ impl<'tx> QueryManager<'tx> {
     /// ```rust
     /// transaction.query().insert_with_options(query, options)
     /// ```
-    pub fn insert_with_options(&self, query: &str, options: Options) -> Result<impl Stream<Item = Result<ConceptMap>> + 'tx> {
+    pub fn insert_with_options(
+        &self,
+        query: &str,
+        options: Options,
+    ) -> Result<impl Stream<Item = Result<ConceptMap>> + 'tx> {
         self.transaction_stream.get_ref().insert(query.to_string(), options)
     }
 
@@ -177,7 +185,11 @@ impl<'tx> QueryManager<'tx> {
     /// ```rust
     /// transaction.query().update_with_options(query, options)
     /// ```
-    pub fn update_with_options(&self, query: &str, options: Options) -> Result<impl Stream<Item = Result<ConceptMap>> + 'tx> {
+    pub fn update_with_options(
+        &self,
+        query: &str,
+        options: Options,
+    ) -> Result<impl Stream<Item = Result<ConceptMap>> + 'tx> {
         self.transaction_stream.get_ref().update(query.to_string(), options)
     }
 

@@ -329,7 +329,10 @@ pub trait RelationAPI: ThingAPI + Clone + Into<Relation> {
     /// ```rust
     /// relation.get_role_players(transaction)
     /// ```
-    fn get_role_players<'tx>(&self, transaction: &'tx Transaction<'_>) -> Result<BoxStream<'tx, Result<(RoleType, Thing)>>> {
+    fn get_role_players<'tx>(
+        &self,
+        transaction: &'tx Transaction<'_>,
+    ) -> Result<BoxStream<'tx, Result<(RoleType, Thing)>>> {
         transaction.transaction_stream.relation_get_role_players(self.clone().into()).map(box_stream)
     }
 
