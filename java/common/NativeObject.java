@@ -24,9 +24,12 @@ package com.vaticle.typedb.driver.common;
 import com.vaticle.typedb.driver.common.exception.ErrorMessage;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
+import static com.vaticle.typedb.driver.jni.typedb_driver.init_logging;
+
 public abstract class NativeObject<T> {
     static {
         Loader.loadNativeLibraries();
+        init_logging();
     }
 
     public final T nativeObject;

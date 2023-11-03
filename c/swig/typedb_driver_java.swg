@@ -83,6 +83,8 @@
     }
 }
 
+%nojavaexception init_logging;
+
 /* simple getters do not throw */
 %nojavaexception options_new;
 %nojavaexception options_get_infer;
