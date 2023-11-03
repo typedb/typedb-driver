@@ -40,7 +40,7 @@ a| `value_type` a| `ValueType` a|
 ----
 fn delete<'tx>(
     &mut self,
-    transaction: &'tx Transaction<'tx>
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result>
 ----
 
@@ -60,7 +60,7 @@ BoxPromise<'tx, Result>
 ----
 fn get<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     value: Value
 ) -> BoxPromise<'tx, Result<Option<Attribute>>>
 ----
@@ -79,11 +79,11 @@ BoxPromise<'tx, Result<Option<Attribute>>>
 
 [source,rust]
 ----
-fn get_instances(
+fn get_instances<'tx>(
     &self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'_>,
     transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<Attribute>>>
+) -> Result<BoxStream<'tx, Result<Attribute>>>
 ----
 
 <<#_trait_AttributeTypeAPI_method_get_instances,Read more>>
@@ -92,7 +92,7 @@ fn get_instances(
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<Attribute>>>
+Result<BoxStream<'tx, Result<Attribute>>>
 ----
 
 [#_struct_AttributeType_method_get_owners]
@@ -100,12 +100,12 @@ Result<BoxStream<'_, Result<Attribute>>>
 
 [source,rust]
 ----
-fn get_owners(
+fn get_owners<'tx>(
     &self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'_>,
     transitivity: Transitivity,
     annotations: Vec<Annotation>
-) -> Result<BoxStream<'_, Result<ThingType>>>
+) -> Result<BoxStream<'tx, Result<ThingType>>>
 ----
 
 <<#_trait_AttributeTypeAPI_method_get_owners,Read more>>
@@ -114,7 +114,7 @@ fn get_owners(
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<ThingType>>>
+Result<BoxStream<'tx, Result<ThingType>>>
 ----
 
 [#_struct_AttributeType_method_get_owns]
@@ -122,13 +122,13 @@ Result<BoxStream<'_, Result<ThingType>>>
 
 [source,rust]
 ----
-fn get_owns(
+fn get_owns<'tx>(
     &self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'_>,
     value_type: Option<ValueType>,
     transitivity: Transitivity,
     annotations: Vec<Annotation>
-) -> Result<BoxStream<'_, Result<AttributeType>>>
+) -> Result<BoxStream<'tx, Result<AttributeType>>>
 ----
 
 <<#_trait_ThingTypeAPI_method_get_owns,Read more>>
@@ -137,7 +137,7 @@ fn get_owns(
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<AttributeType>>>
+Result<BoxStream<'tx, Result<AttributeType>>>
 ----
 
 [#_struct_AttributeType_method_get_owns_overridden]
@@ -147,7 +147,7 @@ Result<BoxStream<'_, Result<AttributeType>>>
 ----
 fn get_owns_overridden<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     overridden_attribute_type: AttributeType
 ) -> BoxPromise<'tx, Result<Option<AttributeType>>>
 ----
@@ -166,11 +166,11 @@ BoxPromise<'tx, Result<Option<AttributeType>>>
 
 [source,rust]
 ----
-fn get_plays(
+fn get_plays<'tx>(
     &self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'_>,
     transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<RoleType>>>
+) -> Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
 <<#_trait_ThingTypeAPI_method_get_plays,Read more>>
@@ -179,7 +179,7 @@ fn get_plays(
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<RoleType>>>
+Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
 [#_struct_AttributeType_method_get_plays_overridden]
@@ -189,7 +189,7 @@ Result<BoxStream<'_, Result<RoleType>>>
 ----
 fn get_plays_overridden<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     overridden_role_type: RoleType
 ) -> BoxPromise<'tx, Result<Option<RoleType>>>
 ----
@@ -210,7 +210,7 @@ BoxPromise<'tx, Result<Option<RoleType>>>
 ----
 fn get_regex<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result<Option<String>>>
 ----
 
@@ -228,11 +228,11 @@ BoxPromise<'tx, Result<Option<String>>>
 
 [source,rust]
 ----
-fn get_subtypes(
+fn get_subtypes<'tx>(
     &self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'_>,
     transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<AttributeType>>>
+) -> Result<BoxStream<'tx, Result<AttributeType>>>
 ----
 
 <<#_trait_AttributeTypeAPI_method_get_subtypes,Read more>>
@@ -241,7 +241,7 @@ fn get_subtypes(
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<AttributeType>>>
+Result<BoxStream<'tx, Result<AttributeType>>>
 ----
 
 [#_struct_AttributeType_method_get_subtypes_with_value_type]
@@ -249,12 +249,12 @@ Result<BoxStream<'_, Result<AttributeType>>>
 
 [source,rust]
 ----
-fn get_subtypes_with_value_type(
+fn get_subtypes_with_value_type<'tx>(
     &self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'_>,
     value_type: ValueType,
     transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<AttributeType>>>
+) -> Result<BoxStream<'tx, Result<AttributeType>>>
 ----
 
 <<#_trait_AttributeTypeAPI_method_get_subtypes_with_value_type,Read more>>
@@ -263,7 +263,7 @@ fn get_subtypes_with_value_type(
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<AttributeType>>>
+Result<BoxStream<'tx, Result<AttributeType>>>
 ----
 
 [#_struct_AttributeType_method_get_supertype]
@@ -273,7 +273,7 @@ Result<BoxStream<'_, Result<AttributeType>>>
 ----
 fn get_supertype<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result<Option<AttributeType>>>
 ----
 
@@ -291,10 +291,10 @@ BoxPromise<'tx, Result<Option<AttributeType>>>
 
 [source,rust]
 ----
-fn get_supertypes(
+fn get_supertypes<'tx>(
     &self,
-    transaction: &Transaction<'_>
-) -> Result<BoxStream<'_, Result<AttributeType>>>
+    transaction: &'tx Transaction<'_>
+) -> Result<BoxStream<'tx, Result<AttributeType>>>
 ----
 
 <<#_trait_AttributeTypeAPI_method_get_supertypes,Read more>>
@@ -303,7 +303,7 @@ fn get_supertypes(
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<AttributeType>>>
+Result<BoxStream<'tx, Result<AttributeType>>>
 ----
 
 [#_struct_AttributeType_method_get_syntax]
@@ -313,7 +313,7 @@ Result<BoxStream<'_, Result<AttributeType>>>
 ----
 fn get_syntax<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result<String>>
 ----
 
@@ -350,7 +350,7 @@ bool
 ----
 fn is_deleted<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result<bool>>
 ----
 
@@ -404,7 +404,7 @@ fn label(&self) -> &str
 ----
 fn put<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     value: Value
 ) -> BoxPromise<'tx, Result<Attribute>>
 ----
@@ -442,7 +442,7 @@ Self
 ----
 fn set_abstract<'tx>(
     &mut self,
-    transaction: &'tx Transaction<'tx>
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result>
 ----
 
@@ -462,7 +462,7 @@ BoxPromise<'tx, Result>
 ----
 fn set_label<'tx>(
     &mut self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     new_label: String
 ) -> BoxPromise<'tx, Result>
 ----
@@ -483,7 +483,7 @@ BoxPromise<'tx, Result>
 ----
 fn set_owns<'tx>(
     &mut self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     attribute_type: AttributeType,
     overridden_attribute_type: Option<AttributeType>,
     annotations: Vec<Annotation>
@@ -506,7 +506,7 @@ BoxPromise<'tx, Result>
 ----
 fn set_plays<'tx>(
     &mut self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     role_type: RoleType,
     overridden_role_type: Option<RoleType>
 ) -> BoxPromise<'tx, Result>
@@ -528,7 +528,7 @@ BoxPromise<'tx, Result>
 ----
 fn set_regex<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     regex: String
 ) -> BoxPromise<'tx, Result>
 ----
@@ -549,7 +549,7 @@ BoxPromise<'tx, Result>
 ----
 fn set_supertype<'tx>(
     &mut self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     supertype: AttributeType
 ) -> BoxPromise<'tx, Result>
 ----
@@ -570,7 +570,7 @@ BoxPromise<'tx, Result>
 ----
 fn unset_abstract<'tx>(
     &mut self,
-    transaction: &'tx Transaction<'tx>
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result>
 ----
 
@@ -590,7 +590,7 @@ BoxPromise<'tx, Result>
 ----
 fn unset_owns<'tx>(
     &mut self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     attribute_type: AttributeType
 ) -> BoxPromise<'tx, Result>
 ----
@@ -611,7 +611,7 @@ BoxPromise<'tx, Result>
 ----
 fn unset_plays<'tx>(
     &mut self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     role_type: RoleType
 ) -> BoxPromise<'tx, Result>
 ----
@@ -632,7 +632,7 @@ BoxPromise<'tx, Result>
 ----
 fn unset_regex<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result>
 ----
 

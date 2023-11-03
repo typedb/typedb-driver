@@ -29,9 +29,6 @@ import javax.annotation.Nullable;
 public class TypeDBDriverException extends RuntimeException {
 
     @Nullable
-    private final com.vaticle.typedb.driver.jni.Error nativeError;
-
-    @Nullable
     private final ErrorMessage errorMessage;
 
     /**
@@ -40,7 +37,6 @@ public class TypeDBDriverException extends RuntimeException {
     public TypeDBDriverException(ErrorMessage error, Object... parameters) {
         super(error.message(parameters));
         assert !getMessage().contains("%s");
-        this.nativeError = null;
         this.errorMessage = error;
     }
 
@@ -49,7 +45,6 @@ public class TypeDBDriverException extends RuntimeException {
      */
     public TypeDBDriverException(String message, Throwable cause) {
         super(message, cause);
-        this.nativeError = null;
         this.errorMessage = null;
     }
 
@@ -59,8 +54,6 @@ public class TypeDBDriverException extends RuntimeException {
     public TypeDBDriverException(RuntimeException error) {
         super(error.getMessage());
         assert !getMessage().contains("%s");
-        if (error.getCause() instanceof com.vaticle.typedb.driver.jni.Error) this.nativeError = (com.vaticle.typedb.driver.jni.Error)error.getCause();
-        else this.nativeError = null;
         this.errorMessage = null;
     }
 
@@ -70,7 +63,6 @@ public class TypeDBDriverException extends RuntimeException {
     public TypeDBDriverException(com.vaticle.typedb.driver.jni.Error error) {
         super(error.getMessage());
         assert !getMessage().contains("%s");
-        this.nativeError = error;
         this.errorMessage = null;
     }
 

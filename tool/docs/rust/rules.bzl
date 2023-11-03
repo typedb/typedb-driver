@@ -24,19 +24,10 @@ load("@rules_rust//rust:defs.bzl", "rust_doc")
 
 
 def rust_docs(name, feature):
-    # rust_doc from rules_rust < 0.20 produces a zip-archive
     rust_doc(
-        name = "docs_html_zip_" + feature,
-        crate = ":typedb_driver",
-        # TODO: Replace with rustdoc_flags after upgrading rules_rust to >=0.20
-        rustc_flags = ["--cfg", "feature=\"" + feature + "\""],
-    )
-
-    native.genrule(
         name = "docs_html_" + feature,
-        srcs = [":docs_html_zip_" + feature],
-        outs = ["docs_html_rustdoc_" + feature],
-        cmd = "mkdir $@ && unzip $< -d $@",
+        crate = ":typedb_driver",
+        rustdoc_flags = ["--cfg", "feature=\"" + feature + "\""],
     )
 
 

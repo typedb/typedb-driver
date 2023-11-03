@@ -38,6 +38,7 @@ rust_static_library(
 
         "@crates//:chrono",
         "@crates//:itertools",
+        "@crates//:env_logger",
         "@crates//:log",
     ],
 )

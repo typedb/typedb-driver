@@ -81,7 +81,7 @@ impl<'tx> LogicManager<'tx> {
     /// ```rust
     /// transaction.logic.get_rules()
     /// ```
-    pub fn get_rules(&self) -> Result<impl Stream<Item = Result<Rule>>> {
+    pub fn get_rules(&self) -> Result<impl Stream<Item = Result<Rule>> + 'tx> {
         self.transaction_stream.get_ref().get_rules()
     }
 }

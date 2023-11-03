@@ -13,7 +13,7 @@
 ----
 fn delete<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result>
 ----
 
@@ -25,7 +25,7 @@ Deletes this type from the database.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 |===
 
 [caption=""]
@@ -65,11 +65,11 @@ role_type.delete(transaction).resolve();
 
 [source,rust]
 ----
-fn get_player_instances(
+fn get_player_instances<'tx>(
     &self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'_>,
     transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<Thing>>>
+) -> Result<BoxStream<'tx, Result<Thing>>>
 ----
 
 Retrieves the ``Thing`` instances that play this role.
@@ -80,7 +80,7 @@ Retrieves the ``Thing`` instances that play this role.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect playing, ``Transitivity::Explicit`` for direct playing only a| `Transitivity`
 |===
 
@@ -88,7 +88,7 @@ a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect playin
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<Thing>>>
+Result<BoxStream<'tx, Result<Thing>>>
 ----
 
 [caption=""]
@@ -103,11 +103,11 @@ role_type.get_player_instances(transaction, transitivity)
 
 [source,rust]
 ----
-fn get_player_types(
+fn get_player_types<'tx>(
     &self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'_>,
     transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<ThingType>>>
+) -> Result<BoxStream<'tx, Result<ThingType>>>
 ----
 
 Retrieves the ``ThingType``s whose instances play this role.
@@ -118,7 +118,7 @@ Retrieves the ``ThingType``s whose instances play this role.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect playing, ``Transitivity::Explicit`` for direct playing only a| `Transitivity`
 |===
 
@@ -126,7 +126,7 @@ a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect playin
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<ThingType>>>
+Result<BoxStream<'tx, Result<ThingType>>>
 ----
 
 [caption=""]
@@ -141,11 +141,11 @@ role_type.get_player_types(transaction, transitivity)
 
 [source,rust]
 ----
-fn get_relation_instances(
+fn get_relation_instances<'tx>(
     &self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'_>,
     transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<Relation>>>
+) -> Result<BoxStream<'tx, Result<Relation>>>
 ----
 
 Retrieves the ``Relation`` instances that this role is related to.
@@ -156,7 +156,7 @@ Retrieves the ``Relation`` instances that this role is related to.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect relation, ``Transitivity::Explicit`` for direct relation only a| `Transitivity`
 |===
 
@@ -164,7 +164,7 @@ a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect relati
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<Relation>>>
+Result<BoxStream<'tx, Result<Relation>>>
 ----
 
 [caption=""]
@@ -181,7 +181,7 @@ role_type.get_relation_instances(transaction, transitivity)
 ----
 fn get_relation_type<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result<Option<RelationType>>>
 ----
 
@@ -193,7 +193,7 @@ Retrieves the ``RelationType`` that this role is directly related to.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 |===
 
 [caption=""]
@@ -233,10 +233,10 @@ role_type.get_relation_type(transaction).resolve();
 
 [source,rust]
 ----
-fn get_relation_types(
+fn get_relation_types<'tx>(
     &self,
-    transaction: &Transaction<'_>
-) -> Result<BoxStream<'_, Result<RelationType>>>
+    transaction: &'tx Transaction<'_>
+) -> Result<BoxStream<'tx, Result<RelationType>>>
 ----
 
 Retrieves ``RelationType``s that this role is related to (directly or indirectly).
@@ -247,14 +247,14 @@ Retrieves ``RelationType``s that this role is related to (directly or indirectly
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 |===
 
 [caption=""]
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<RelationType>>>
+Result<BoxStream<'tx, Result<RelationType>>>
 ----
 
 [caption=""]
@@ -269,11 +269,11 @@ role_type.get_relation_types(transaction)
 
 [source,rust]
 ----
-fn get_subtypes(
+fn get_subtypes<'tx>(
     &self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'_>,
     transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<RoleType>>>
+) -> Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
 Retrieves all direct and indirect (or direct only) subtypes of the ``RoleType``.
@@ -284,7 +284,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the ``RoleType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity`
 |===
 
@@ -292,7 +292,7 @@ a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtyp
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<RoleType>>>
+Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
 [caption=""]
@@ -309,7 +309,7 @@ role_type.get_subtypes(transaction, transitivity)
 ----
 fn get_supertype<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result<Option<RoleType>>>
 ----
 
@@ -321,7 +321,7 @@ Retrieves the most immediate supertype of the ``RoleType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 |===
 
 [caption=""]
@@ -361,10 +361,10 @@ role_type.get_supertype(transaction).resolve();
 
 [source,rust]
 ----
-fn get_supertypes(
+fn get_supertypes<'tx>(
     &self,
-    transaction: &Transaction<'_>
-) -> Result<BoxStream<'_, Result<RoleType>>>
+    transaction: &'tx Transaction<'_>
+) -> Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
 Retrieves all supertypes of the ``RoleType``.
@@ -375,14 +375,14 @@ Retrieves all supertypes of the ``RoleType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 |===
 
 [caption=""]
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<RoleType>>>
+Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
 [caption=""]
@@ -423,7 +423,7 @@ role_type.is_abstract()
 ----
 fn is_deleted<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result<bool>>
 ----
 
@@ -435,7 +435,7 @@ Checks if this type is deleted.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 |===
 
 [caption=""]
@@ -477,7 +477,7 @@ role_type.is_deleted(transaction).resolve();
 ----
 fn set_label<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     new_label: String
 ) -> BoxPromise<'tx, Result>
 ----
@@ -490,7 +490,7 @@ Renames the label of the type. The new label must remain unique.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 a| `new_label` a| The new ``Label`` to be given to the type. a| `String`
 |===
 
