@@ -70,7 +70,7 @@ pub trait ThingTypeAPI: Sync + Send {
     #[cfg_attr(feature = "sync", doc = "thing_type.is_deleted(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.is_deleted(transaction).await;")]
     /// ```
-    fn is_deleted<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<bool>>;
+    fn is_deleted<'tx>(&self, transaction: &'tx Transaction<'_>) -> BoxPromise<'tx, Result<bool>>;
 
     /// Deletes this type from the database.
     ///
@@ -84,7 +84,7 @@ pub trait ThingTypeAPI: Sync + Send {
     #[cfg_attr(feature = "sync", doc = "thing_type.delete(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.delete(transaction).await;")]
     /// ```
-    fn delete<'tx>(&mut self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result> {
+    fn delete<'tx>(&mut self, transaction: &'tx Transaction<'_>) -> BoxPromise<'tx, Result> {
         box_promise(transaction.transaction_stream.thing_type_delete(self.to_thing_type_cloned()))
     }
 
@@ -101,7 +101,7 @@ pub trait ThingTypeAPI: Sync + Send {
     #[cfg_attr(feature = "sync", doc = "thing_type.set_label(transaction, new_label).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.set_label(transaction, new_label).await;")]
     /// ```
-    fn set_label<'tx>(&mut self, transaction: &'tx Transaction<'tx>, new_label: String) -> BoxPromise<'tx, Result> {
+    fn set_label<'tx>(&mut self, transaction: &'tx Transaction<'_>, new_label: String) -> BoxPromise<'tx, Result> {
         box_promise(transaction.transaction_stream.thing_type_set_label(self.to_thing_type_cloned(), new_label))
     }
 
@@ -117,7 +117,7 @@ pub trait ThingTypeAPI: Sync + Send {
     #[cfg_attr(feature = "sync", doc = "thing_type.set_abstract(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.set_abstract(transaction).await;")]
     /// ```
-    fn set_abstract<'tx>(&mut self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result> {
+    fn set_abstract<'tx>(&mut self, transaction: &'tx Transaction<'_>) -> BoxPromise<'tx, Result> {
         box_promise(transaction.transaction_stream.thing_type_set_abstract(self.to_thing_type_cloned()))
     }
 
@@ -133,7 +133,7 @@ pub trait ThingTypeAPI: Sync + Send {
     #[cfg_attr(feature = "sync", doc = "thing_type.unset_abstract(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.unset_abstract(transaction).await;")]
     /// ```
-    fn unset_abstract<'tx>(&mut self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result> {
+    fn unset_abstract<'tx>(&mut self, transaction: &'tx Transaction<'_>) -> BoxPromise<'tx, Result> {
         box_promise(transaction.transaction_stream.thing_type_unset_abstract(self.to_thing_type_cloned()))
     }
 
@@ -160,13 +160,13 @@ pub trait ThingTypeAPI: Sync + Send {
         doc = "thing_type.get_owns(transaction, Some(value_type), Transitivity::Explicit, vec![Annotation::Key]).await;"
     )]
     /// ```
-    fn get_owns(
+    fn get_owns<'tx>(
         &self,
-        transaction: &Transaction<'_>,
+        transaction: &'tx Transaction<'_>,
         value_type: Option<ValueType>,
         transitivity: Transitivity,
         annotations: Vec<Annotation>,
-    ) -> Result<BoxStream<'_, Result<AttributeType>>> {
+    ) -> Result<BoxStream<'tx, Result<AttributeType>>> {
         transaction
             .transaction_stream
             .thing_type_get_owns(self.to_thing_type_cloned(), value_type, transitivity, annotations)
@@ -189,7 +189,7 @@ pub trait ThingTypeAPI: Sync + Send {
     /// ```
     fn get_owns_overridden<'tx>(
         &self,
-        transaction: &'tx Transaction<'tx>,
+        transaction: &'tx Transaction<'_>,
         overridden_attribute_type: AttributeType,
     ) -> BoxPromise<'tx, Result<Option<AttributeType>>> {
         box_promise(
@@ -223,7 +223,7 @@ pub trait ThingTypeAPI: Sync + Send {
     /// ```
     fn set_owns<'tx>(
         &mut self,
-        transaction: &'tx Transaction<'tx>,
+        transaction: &'tx Transaction<'_>,
         attribute_type: AttributeType,
         overridden_attribute_type: Option<AttributeType>,
         annotations: Vec<Annotation>,
@@ -251,7 +251,7 @@ pub trait ThingTypeAPI: Sync + Send {
     /// ```
     fn unset_owns<'tx>(
         &mut self,
-        transaction: &'tx Transaction<'tx>,
+        transaction: &'tx Transaction<'_>,
         attribute_type: AttributeType,
     ) -> BoxPromise<'tx, Result> {
         box_promise(transaction.transaction_stream.thing_type_unset_owns(self.to_thing_type_cloned(), attribute_type))
@@ -272,11 +272,11 @@ pub trait ThingTypeAPI: Sync + Send {
     #[cfg_attr(feature = "sync", doc = "thing_type.get_plays(transaction, Transitivity::Explicit).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.get_plays(transaction, Transitivity::Explicit).await;")]
     /// ```
-    fn get_plays(
+    fn get_plays<'tx>(
         &self,
-        transaction: &Transaction<'_>,
+        transaction: &'tx Transaction<'_>,
         transitivity: Transitivity,
-    ) -> Result<BoxStream<'_, Result<RoleType>>> {
+    ) -> Result<BoxStream<'tx, Result<RoleType>>> {
         transaction.transaction_stream.thing_type_get_plays(self.to_thing_type_cloned(), transitivity).map(box_stream)
     }
 
@@ -295,7 +295,7 @@ pub trait ThingTypeAPI: Sync + Send {
     /// ```
     fn get_plays_overridden<'tx>(
         &self,
-        transaction: &'tx Transaction<'tx>,
+        transaction: &'tx Transaction<'_>,
         overridden_role_type: RoleType,
     ) -> BoxPromise<'tx, Result<Option<RoleType>>> {
         box_promise(
@@ -321,7 +321,7 @@ pub trait ThingTypeAPI: Sync + Send {
     /// ```
     fn set_plays<'tx>(
         &mut self,
-        transaction: &'tx Transaction<'tx>,
+        transaction: &'tx Transaction<'_>,
         role_type: RoleType,
         overridden_role_type: Option<RoleType>,
     ) -> BoxPromise<'tx, Result> {
@@ -345,7 +345,7 @@ pub trait ThingTypeAPI: Sync + Send {
     #[cfg_attr(feature = "sync", doc = "thing_type.unset_plays(transaction, role_type).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.unset_plays(transaction, role_type).await;")]
     /// ```
-    fn unset_plays<'tx>(&mut self, transaction: &'tx Transaction<'tx>, role_type: RoleType) -> BoxPromise<'tx, Result> {
+    fn unset_plays<'tx>(&mut self, transaction: &'tx Transaction<'_>, role_type: RoleType) -> BoxPromise<'tx, Result> {
         box_promise(transaction.transaction_stream.thing_type_unset_plays(self.to_thing_type_cloned(), role_type))
     }
 
@@ -361,7 +361,7 @@ pub trait ThingTypeAPI: Sync + Send {
     #[cfg_attr(feature = "sync", doc = "thing_type.get_syntax(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "thing_type.get_syntax(transaction).await;")]
     /// ```
-    fn get_syntax<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<String>> {
+    fn get_syntax<'tx>(&self, transaction: &'tx Transaction<'_>) -> BoxPromise<'tx, Result<String>> {
         box_promise(transaction.transaction_stream.thing_type_get_syntax(self.to_thing_type_cloned()))
     }
 }
@@ -383,7 +383,7 @@ impl ThingTypeAPI for RootThingType {
         ThingType::RootThingType(self.clone())
     }
 
-    fn is_deleted<'tx>(&self, _transaction: &Transaction<'tx>) -> BoxPromise<'tx, Result<bool>> {
+    fn is_deleted<'tx>(&self, _transaction: &'tx Transaction<'_>) -> BoxPromise<'tx, Result<bool>> {
         box_promise(promisify! { Ok(false) })
     }
 }
@@ -405,7 +405,7 @@ impl ThingTypeAPI for EntityType {
         ThingType::EntityType(self.clone())
     }
 
-    fn is_deleted<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<bool>> {
+    fn is_deleted<'tx>(&self, transaction: &'tx Transaction<'_>) -> BoxPromise<'tx, Result<bool>> {
         let promise = transaction.transaction_stream.get_entity_type(self.label().to_owned());
         box_promise(promisify! { resolve!(promise).map(|res| res.is_none()) })
     }
@@ -424,7 +424,7 @@ pub trait EntityTypeAPI: ThingTypeAPI + Clone + Into<EntityType> {
     #[cfg_attr(feature = "sync", doc = "entity_type.create(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "entity_type.create(transaction).await;")]
     /// ```
-    fn create<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<Entity>> {
+    fn create<'tx>(&self, transaction: &'tx Transaction<'_>) -> BoxPromise<'tx, Result<Entity>> {
         box_promise(transaction.transaction_stream.entity_type_create(self.clone().into()))
     }
 
@@ -440,7 +440,7 @@ pub trait EntityTypeAPI: ThingTypeAPI + Clone + Into<EntityType> {
     #[cfg_attr(feature = "sync", doc = "entity_type.get_supertype(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "entity_type.get_supertype(transaction).await;")]
     /// ```
-    fn get_supertype<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<Option<EntityType>>> {
+    fn get_supertype<'tx>(&self, transaction: &'tx Transaction<'_>) -> BoxPromise<'tx, Result<Option<EntityType>>> {
         box_promise(transaction.transaction_stream.entity_type_get_supertype(self.clone().into()))
     }
 
@@ -459,7 +459,7 @@ pub trait EntityTypeAPI: ThingTypeAPI + Clone + Into<EntityType> {
     /// ```
     fn set_supertype<'tx>(
         &mut self,
-        transaction: &'tx Transaction<'tx>,
+        transaction: &'tx Transaction<'_>,
         supertype: EntityType,
     ) -> BoxPromise<'tx, Result> {
         box_promise(transaction.transaction_stream.entity_type_set_supertype(self.clone().into(), supertype))
@@ -476,7 +476,7 @@ pub trait EntityTypeAPI: ThingTypeAPI + Clone + Into<EntityType> {
     /// ```rust
     /// entity_type.get_supertypes(transaction);
     /// ```
-    fn get_supertypes(&self, transaction: &Transaction<'_>) -> Result<BoxStream<'_, Result<EntityType>>> {
+    fn get_supertypes<'tx>(&self, transaction: &'tx Transaction<'_>) -> Result<BoxStream<'tx, Result<EntityType>>> {
         transaction.transaction_stream.entity_type_get_supertypes(self.clone().into()).map(box_stream)
     }
 
@@ -493,11 +493,11 @@ pub trait EntityTypeAPI: ThingTypeAPI + Clone + Into<EntityType> {
     /// ```rust
     /// entity_type.get_subtypes(transaction, Transitivity::Transitive);
     /// ```
-    fn get_subtypes(
+    fn get_subtypes<'tx>(
         &self,
-        transaction: &Transaction<'_>,
+        transaction: &'tx Transaction<'_>,
         transitivity: Transitivity,
-    ) -> Result<BoxStream<'_, Result<EntityType>>> {
+    ) -> Result<BoxStream<'tx, Result<EntityType>>> {
         transaction.transaction_stream.entity_type_get_subtypes(self.clone().into(), transitivity).map(box_stream)
     }
 
@@ -515,11 +515,11 @@ pub trait EntityTypeAPI: ThingTypeAPI + Clone + Into<EntityType> {
     /// ```rust
     /// entity_type.get_instances(transaction, Transitivity::Explicit);
     /// ```
-    fn get_instances(
+    fn get_instances<'tx>(
         &self,
-        transaction: &Transaction<'_>,
+        transaction: &'tx Transaction<'_>,
         transitivity: Transitivity,
-    ) -> Result<BoxStream<'_, Result<Entity>>> {
+    ) -> Result<BoxStream<'tx, Result<Entity>>> {
         transaction.transaction_stream.entity_type_get_instances(self.clone().into(), transitivity).map(box_stream)
     }
 }
@@ -543,7 +543,7 @@ impl ThingTypeAPI for RelationType {
         ThingType::RelationType(self.clone())
     }
 
-    fn is_deleted<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<bool>> {
+    fn is_deleted<'tx>(&self, transaction: &'tx Transaction<'_>) -> BoxPromise<'tx, Result<bool>> {
         let promise = transaction.transaction_stream.get_relation_type(self.label().to_owned());
         box_promise(promisify! { resolve!(promise).map(|res| res.is_none()) })
     }
@@ -562,7 +562,7 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     #[cfg_attr(feature = "sync", doc = "relation_type.create(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "relation_type.create(transaction).await;")]
     /// ```
-    fn create<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<Relation>> {
+    fn create<'tx>(&self, transaction: &'tx Transaction<'_>) -> BoxPromise<'tx, Result<Relation>> {
         box_promise(transaction.transaction_stream.relation_type_create(self.clone().into()))
     }
 
@@ -578,7 +578,7 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     #[cfg_attr(feature = "sync", doc = "relation_type.get_supertype(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "relation_type.get_supertype(transaction).await;")]
     /// ```
-    fn get_supertype<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<Option<RelationType>>> {
+    fn get_supertype<'tx>(&self, transaction: &'tx Transaction<'_>) -> BoxPromise<'tx, Result<Option<RelationType>>> {
         box_promise(transaction.transaction_stream.relation_type_get_supertype(self.clone().into()))
     }
 
@@ -597,7 +597,7 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// ```
     fn set_supertype<'tx>(
         &mut self,
-        transaction: &'tx Transaction<'tx>,
+        transaction: &'tx Transaction<'_>,
         supertype: RelationType,
     ) -> BoxPromise<'tx, Result> {
         box_promise(transaction.transaction_stream.relation_type_set_supertype(self.clone().into(), supertype))
@@ -614,7 +614,7 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// ```rust
     /// relation_type.get_supertypes(transaction);
     /// ```
-    fn get_supertypes(&self, transaction: &Transaction<'_>) -> Result<BoxStream<'_, Result<RelationType>>> {
+    fn get_supertypes<'tx>(&self, transaction: &'tx Transaction<'_>) -> Result<BoxStream<'tx, Result<RelationType>>> {
         transaction.transaction_stream.relation_type_get_supertypes(self.clone().into()).map(box_stream)
     }
 
@@ -631,11 +631,11 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// ```rust
     /// relation_type.get_subtypes(transaction, Transitivity::Transitive);
     /// ```
-    fn get_subtypes(
+    fn get_subtypes<'tx>(
         &self,
-        transaction: &Transaction<'_>,
+        transaction: &'tx Transaction<'_>,
         transitivity: Transitivity,
-    ) -> Result<BoxStream<'_, Result<RelationType>>> {
+    ) -> Result<BoxStream<'tx, Result<RelationType>>> {
         transaction.transaction_stream.relation_type_get_subtypes(self.clone().into(), transitivity).map(box_stream)
     }
 
@@ -653,11 +653,11 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// ```rust
     /// relation_type.get_instances(transaction, Transitivity::Explicit);
     /// ```
-    fn get_instances(
+    fn get_instances<'tx>(
         &self,
-        transaction: &Transaction<'_>,
+        transaction: &'tx Transaction<'_>,
         transitivity: Transitivity,
-    ) -> Result<BoxStream<'_, Result<Relation>>> {
+    ) -> Result<BoxStream<'tx, Result<Relation>>> {
         transaction.transaction_stream.relation_type_get_instances(self.clone().into(), transitivity).map(box_stream)
     }
 
@@ -674,11 +674,11 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// ```rust
     /// relation_type.get_relates(transaction, Transitivity::Transitive);
     /// ```
-    fn get_relates(
+    fn get_relates<'tx>(
         &self,
-        transaction: &Transaction<'_>,
+        transaction: &'tx Transaction<'_>,
         transitivity: Transitivity,
-    ) -> Result<BoxStream<'_, Result<RoleType>>> {
+    ) -> Result<BoxStream<'tx, Result<RoleType>>> {
         transaction.transaction_stream.relation_type_get_relates(self.clone().into(), transitivity).map(box_stream)
     }
 
@@ -697,7 +697,7 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// ```
     fn get_relates_for_role_label<'tx>(
         &self,
-        transaction: &'tx Transaction<'tx>,
+        transaction: &'tx Transaction<'_>,
         role_label: String,
     ) -> BoxPromise<'tx, Result<Option<RoleType>>> {
         box_promise(
@@ -726,7 +726,7 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// ```
     fn get_relates_overridden<'tx>(
         &self,
-        transaction: &'tx Transaction<'tx>,
+        transaction: &'tx Transaction<'_>,
         overridden_role_label: String,
     ) -> BoxPromise<'tx, Result<Option<RoleType>>> {
         box_promise(
@@ -753,7 +753,7 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     /// ```
     fn set_relates<'tx>(
         &mut self,
-        transaction: &'tx Transaction<'tx>,
+        transaction: &'tx Transaction<'_>,
         role_label: String,
         overridden_role_label: Option<String>,
     ) -> BoxPromise<'tx, Result> {
@@ -777,11 +777,7 @@ pub trait RelationTypeAPI: ThingTypeAPI + Clone + Into<RelationType> {
     #[cfg_attr(feature = "sync", doc = "relation_type.unset_relates(transaction, role_label).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "relation_type.unset_relates(transaction, role_label).await;")]
     /// ```
-    fn unset_relates<'tx>(
-        &mut self,
-        transaction: &'tx Transaction<'tx>,
-        role_label: String,
-    ) -> BoxPromise<'tx, Result> {
+    fn unset_relates<'tx>(&mut self, transaction: &'tx Transaction<'_>, role_label: String) -> BoxPromise<'tx, Result> {
         box_promise(transaction.transaction_stream.relation_type_unset_relates(self.clone().into(), role_label))
     }
 }
@@ -805,7 +801,7 @@ impl ThingTypeAPI for AttributeType {
         ThingType::AttributeType(self.clone())
     }
 
-    fn is_deleted<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<bool>> {
+    fn is_deleted<'tx>(&self, transaction: &'tx Transaction<'_>) -> BoxPromise<'tx, Result<bool>> {
         let promise = transaction.transaction_stream.get_attribute_type(self.label().to_owned());
         box_promise(promisify! { resolve!(promise).map(|res| res.is_none()) })
     }
@@ -834,7 +830,7 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     #[cfg_attr(feature = "sync", doc = "attribute = attribute_type.put(transaction, value).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "attribute = attribute_type.put(transaction, value).await;")]
     /// ```
-    fn put<'tx>(&self, transaction: &'tx Transaction<'tx>, value: Value) -> BoxPromise<'tx, Result<Attribute>> {
+    fn put<'tx>(&self, transaction: &'tx Transaction<'_>, value: Value) -> BoxPromise<'tx, Result<Attribute>> {
         box_promise(transaction.transaction_stream.attribute_type_put(self.clone().into(), value))
     }
 
@@ -852,7 +848,7 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     #[cfg_attr(feature = "sync", doc = "attribute = attribute_type.get(transaction, value).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "attribute = attribute_type.get(transaction, value).await;")]
     /// ```
-    fn get<'tx>(&self, transaction: &'tx Transaction<'tx>, value: Value) -> BoxPromise<'tx, Result<Option<Attribute>>> {
+    fn get<'tx>(&self, transaction: &'tx Transaction<'_>, value: Value) -> BoxPromise<'tx, Result<Option<Attribute>>> {
         box_promise(transaction.transaction_stream.attribute_type_get(self.clone().into(), value))
     }
 
@@ -868,7 +864,7 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     #[cfg_attr(feature = "sync", doc = "attribute_type.get_supertype(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "attribute_type.get_supertype(transaction).await;")]
     /// ```
-    fn get_supertype<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<Option<AttributeType>>> {
+    fn get_supertype<'tx>(&self, transaction: &'tx Transaction<'_>) -> BoxPromise<'tx, Result<Option<AttributeType>>> {
         box_promise(transaction.transaction_stream.attribute_type_get_supertype(self.clone().into()))
     }
 
@@ -887,7 +883,7 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// ```
     fn set_supertype<'tx>(
         &mut self,
-        transaction: &'tx Transaction<'tx>,
+        transaction: &'tx Transaction<'_>,
         supertype: AttributeType,
     ) -> BoxPromise<'tx, Result> {
         box_promise(transaction.transaction_stream.attribute_type_set_supertype(self.clone().into(), supertype))
@@ -904,7 +900,7 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// ```rust
     /// attribute_type.get_supertypes(transaction)
     /// ```
-    fn get_supertypes(&self, transaction: &Transaction<'_>) -> Result<BoxStream<'_, Result<AttributeType>>> {
+    fn get_supertypes<'tx>(&self, transaction: &'tx Transaction<'_>) -> Result<BoxStream<'tx, Result<AttributeType>>> {
         transaction.transaction_stream.attribute_type_get_supertypes(self.clone().into()).map(box_stream)
     }
 
@@ -921,11 +917,11 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// ```rust
     /// attribute_type.get_subtypes(transaction, transitivity)
     /// ```
-    fn get_subtypes(
+    fn get_subtypes<'tx>(
         &self,
-        transaction: &Transaction<'_>,
+        transaction: &'tx Transaction<'_>,
         transitivity: Transitivity,
-    ) -> Result<BoxStream<'_, Result<AttributeType>>> {
+    ) -> Result<BoxStream<'tx, Result<AttributeType>>> {
         // FIXME when None?
         transaction
             .transaction_stream
@@ -948,12 +944,12 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// ```rust
     /// attribute_type.get_subtypes_with_value_type(transaction, value_type, transitivity)
     /// ```
-    fn get_subtypes_with_value_type(
+    fn get_subtypes_with_value_type<'tx>(
         &self,
-        transaction: &Transaction<'_>,
+        transaction: &'tx Transaction<'_>,
         value_type: ValueType,
         transitivity: Transitivity,
-    ) -> Result<BoxStream<'_, Result<AttributeType>>> {
+    ) -> Result<BoxStream<'tx, Result<AttributeType>>> {
         transaction
             .transaction_stream
             .attribute_type_get_subtypes(self.clone().into(), transitivity, Some(value_type))
@@ -974,11 +970,11 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// ```rust
     /// attribute_type.get_instances(transaction, transitivity)
     /// ```
-    fn get_instances(
+    fn get_instances<'tx>(
         &self,
-        transaction: &Transaction<'_>,
+        transaction: &'tx Transaction<'_>,
         transitivity: Transitivity,
-    ) -> Result<BoxStream<'_, Result<Attribute>>> {
+    ) -> Result<BoxStream<'tx, Result<Attribute>>> {
         transaction
             .transaction_stream
             .attribute_type_get_instances(self.clone().into(), transitivity, Some(self.value_type()))
@@ -997,7 +993,7 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     #[cfg_attr(feature = "sync", doc = "attribute_type.get_regex(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "attribute_type.get_regex(transaction).await;")]
     /// ```
-    fn get_regex<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<Option<String>>> {
+    fn get_regex<'tx>(&self, transaction: &'tx Transaction<'_>) -> BoxPromise<'tx, Result<Option<String>>> {
         box_promise(transaction.transaction_stream.attribute_type_get_regex(self.clone().into()))
     }
 
@@ -1017,7 +1013,7 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     #[cfg_attr(feature = "sync", doc = "attribute_type.set_regex(transaction, regex).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "attribute_type.set_regex(transaction, regex).await;")]
     /// ```
-    fn set_regex<'tx>(&self, transaction: &'tx Transaction<'tx>, regex: String) -> BoxPromise<'tx, Result> {
+    fn set_regex<'tx>(&self, transaction: &'tx Transaction<'_>, regex: String) -> BoxPromise<'tx, Result> {
         box_promise(transaction.transaction_stream.attribute_type_set_regex(self.clone().into(), regex))
     }
 
@@ -1033,7 +1029,7 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     #[cfg_attr(feature = "sync", doc = "attribute_type.unset_regex(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "attribute_type.unset_regex(transaction).await;")]
     /// ```
-    fn unset_regex<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result> {
+    fn unset_regex<'tx>(&self, transaction: &'tx Transaction<'_>) -> BoxPromise<'tx, Result> {
         self.set_regex(transaction, String::new())
     }
 
@@ -1053,12 +1049,12 @@ pub trait AttributeTypeAPI: ThingTypeAPI + Clone + Into<AttributeType> {
     /// ```rust
     /// attribute_type.get_owners(transaction, transitivity, annotations)
     /// ```
-    fn get_owners(
+    fn get_owners<'tx>(
         &self,
-        transaction: &Transaction<'_>,
+        transaction: &'tx Transaction<'_>,
         transitivity: Transitivity,
         annotations: Vec<Annotation>,
-    ) -> Result<BoxStream<'_, Result<ThingType>>> {
+    ) -> Result<BoxStream<'tx, Result<ThingType>>> {
         transaction
             .transaction_stream
             .attribute_type_get_owners(self.clone().into(), transitivity, annotations)
@@ -1094,7 +1090,7 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     #[cfg_attr(feature = "sync", doc = "role_type.delete(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "role_type.delete(transaction).await;")]
     /// ```
-    fn delete<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result> {
+    fn delete<'tx>(&self, transaction: &'tx Transaction<'_>) -> BoxPromise<'tx, Result> {
         box_promise(transaction.transaction_stream.role_type_delete(self.clone().into()))
     }
 
@@ -1110,7 +1106,7 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     #[cfg_attr(feature = "sync", doc = "role_type.is_deleted(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "role_type.is_deleted(transaction).await;")]
     /// ```
-    fn is_deleted<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<bool>>;
+    fn is_deleted<'tx>(&self, transaction: &'tx Transaction<'_>) -> BoxPromise<'tx, Result<bool>>;
 
     /// Retrieves the `RelationType` that this role is directly related to.
     ///
@@ -1126,7 +1122,7 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// ```
     fn get_relation_type<'tx>(
         &self,
-        transaction: &'tx Transaction<'tx>,
+        transaction: &'tx Transaction<'_>,
     ) -> BoxPromise<'tx, Result<Option<RelationType>>>;
 
     /// Renames the label of the type. The new label must remain unique.
@@ -1142,7 +1138,7 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     #[cfg_attr(feature = "sync", doc = "role_type.set_label(transaction, new_label).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "role_type.set_label(transaction, new_label).await;")]
     /// ```
-    fn set_label<'tx>(&self, transaction: &'tx Transaction<'tx>, new_label: String) -> BoxPromise<'tx, Result> {
+    fn set_label<'tx>(&self, transaction: &'tx Transaction<'_>, new_label: String) -> BoxPromise<'tx, Result> {
         box_promise(transaction.transaction_stream.role_type_set_label(self.clone().into(), new_label))
     }
 
@@ -1158,7 +1154,7 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     #[cfg_attr(feature = "sync", doc = "role_type.get_supertype(transaction).resolve();")]
     #[cfg_attr(not(feature = "sync"), doc = "role_type.get_supertype(transaction).await;")]
     /// ```
-    fn get_supertype<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<Option<RoleType>>> {
+    fn get_supertype<'tx>(&self, transaction: &'tx Transaction<'_>) -> BoxPromise<'tx, Result<Option<RoleType>>> {
         box_promise(transaction.transaction_stream.role_type_get_supertype(self.clone().into()))
     }
 
@@ -1173,7 +1169,7 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// ```rust
     /// role_type.get_supertypes(transaction)
     /// ```
-    fn get_supertypes(&self, transaction: &Transaction<'_>) -> Result<BoxStream<'_, Result<RoleType>>> {
+    fn get_supertypes<'tx>(&self, transaction: &'tx Transaction<'_>) -> Result<BoxStream<'tx, Result<RoleType>>> {
         transaction.transaction_stream.role_type_get_supertypes(self.clone().into()).map(box_stream)
     }
 
@@ -1190,11 +1186,11 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// ```rust
     /// role_type.get_subtypes(transaction, transitivity)
     /// ```
-    fn get_subtypes(
+    fn get_subtypes<'tx>(
         &self,
-        transaction: &Transaction<'_>,
+        transaction: &'tx Transaction<'_>,
         transitivity: Transitivity,
-    ) -> Result<BoxStream<'_, Result<RoleType>>> {
+    ) -> Result<BoxStream<'tx, Result<RoleType>>> {
         transaction.transaction_stream.role_type_get_subtypes(self.clone().into(), transitivity).map(box_stream)
     }
 
@@ -1209,7 +1205,10 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// ```rust
     /// role_type.get_relation_types(transaction)
     /// ```
-    fn get_relation_types(&self, transaction: &Transaction<'_>) -> Result<BoxStream<'_, Result<RelationType>>> {
+    fn get_relation_types<'tx>(
+        &self,
+        transaction: &'tx Transaction<'_>,
+    ) -> Result<BoxStream<'tx, Result<RelationType>>> {
         transaction.transaction_stream.role_type_get_relation_types(self.clone().into()).map(box_stream)
     }
 
@@ -1226,11 +1225,11 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// ```rust
     /// role_type.get_player_types(transaction, transitivity)
     /// ```
-    fn get_player_types(
+    fn get_player_types<'tx>(
         &self,
-        transaction: &Transaction<'_>,
+        transaction: &'tx Transaction<'_>,
         transitivity: Transitivity,
-    ) -> Result<BoxStream<'_, Result<ThingType>>> {
+    ) -> Result<BoxStream<'tx, Result<ThingType>>> {
         transaction.transaction_stream.role_type_get_player_types(self.clone().into(), transitivity).map(box_stream)
     }
 
@@ -1247,11 +1246,11 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// ```rust
     /// role_type.get_relation_instances(transaction, transitivity)
     /// ```
-    fn get_relation_instances(
+    fn get_relation_instances<'tx>(
         &self,
-        transaction: &Transaction<'_>,
+        transaction: &'tx Transaction<'_>,
         transitivity: Transitivity,
-    ) -> Result<BoxStream<'_, Result<Relation>>> {
+    ) -> Result<BoxStream<'tx, Result<Relation>>> {
         transaction
             .transaction_stream
             .role_type_get_relation_instances(self.clone().into(), transitivity)
@@ -1271,11 +1270,11 @@ pub trait RoleTypeAPI: Clone + Into<RoleType> + Sync + Send {
     /// ```rust
     /// role_type.get_player_instances(transaction, transitivity)
     /// ```
-    fn get_player_instances(
+    fn get_player_instances<'tx>(
         &self,
-        transaction: &Transaction<'_>,
+        transaction: &'tx Transaction<'_>,
         transitivity: Transitivity,
-    ) -> Result<BoxStream<'_, Result<Thing>>> {
+    ) -> Result<BoxStream<'tx, Result<Thing>>> {
         transaction.transaction_stream.role_type_get_player_instances(self.clone().into(), transitivity).map(box_stream)
     }
 }
@@ -1287,12 +1286,12 @@ impl RoleTypeAPI for RoleType {
 
     fn get_relation_type<'tx>(
         &self,
-        transaction: &'tx Transaction<'tx>,
+        transaction: &'tx Transaction<'_>,
     ) -> BoxPromise<'tx, Result<Option<RelationType>>> {
         box_promise(transaction.transaction_stream.get_relation_type(self.label.scope.clone()))
     }
 
-    fn is_deleted<'tx>(&self, transaction: &'tx Transaction<'tx>) -> BoxPromise<'tx, Result<bool>> {
+    fn is_deleted<'tx>(&self, transaction: &'tx Transaction<'_>) -> BoxPromise<'tx, Result<bool>> {
         // FIXME only request get_relates_for_role_label() after NPE is fixed in core
         let relation_type_promise = self.get_relation_type(transaction);
         let role_name = self.label.name.clone();
