@@ -59,7 +59,7 @@
 
     public static class Unchecked extends RuntimeException {
         Unchecked(Error e) {
-            super(e);
+            super(e.getMessage());
         }
     }
 %}

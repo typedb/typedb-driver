@@ -43,7 +43,7 @@ use tokio::{
     },
     time::{sleep_until, Instant},
 };
-use tonic::Streaming;
+use tonic::{Status, Streaming};
 use typedb_protocol::transaction::{self, server::Server, stream::State};
 
 #[cfg(feature = "sync")]
@@ -259,7 +259,9 @@ impl TransactionTransmitter {
             match grpc_source.next().await {
                 Some(Ok(message)) => collector.collect(message).await,
                 Some(Err(err)) => {
-                    break collector.close(ConnectionError::TransactionIsClosedWithErrors(err.to_string())).await
+                    break collector
+                        .close(ConnectionError::TransactionIsClosedWithErrors(err.message().to_owned()))
+                        .await
                 }
                 None => break collector.close(ConnectionError::TransactionIsClosed()).await,
             }
