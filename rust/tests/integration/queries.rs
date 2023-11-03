@@ -180,6 +180,7 @@ test_for_each_arg! {
             let age = unwrap_long(age?.map.remove("age").unwrap());
             assert_eq!(age, 1);
         }
+        drop(ages);
         drop(transaction);
 
         let transaction = session.transaction(Read).await?;

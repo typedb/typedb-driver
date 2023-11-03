@@ -117,7 +117,7 @@ impl<'tx> QueryManager<'tx> {
 
     /// Performs a TypeQL Match (Get) query with default options.
     /// See [`QueryManager::get_with_options`]
-    pub fn get(&self, query: &str) -> Result<impl Stream<Item = Result<ConceptMap>>> {
+    pub fn get(&self, query: &str) -> Result<impl Stream<Item = Result<ConceptMap>> + 'tx> {
         self.get_with_options(query, Options::new())
     }
 
@@ -133,13 +133,13 @@ impl<'tx> QueryManager<'tx> {
     /// ```rust
     /// transaction.query().get_with_options(query, options)
     /// ```
-    pub fn get_with_options(&self, query: &str, options: Options) -> Result<impl Stream<Item = Result<ConceptMap>>> {
+    pub fn get_with_options(&self, query: &str, options: Options) -> Result<impl Stream<Item = Result<ConceptMap>> + 'tx> {
         self.transaction_stream.get_ref().get(query.to_string(), options)
     }
 
     /// Performs a TypeQL Insert query with default options.
     /// See [`QueryManager::insert_with_options`]
-    pub fn insert(&self, query: &str) -> Result<impl Stream<Item = Result<ConceptMap>>> {
+    pub fn insert(&self, query: &str) -> Result<impl Stream<Item = Result<ConceptMap>> + 'tx> {
         self.insert_with_options(query, Options::new())
     }
 
@@ -155,13 +155,13 @@ impl<'tx> QueryManager<'tx> {
     /// ```rust
     /// transaction.query().insert_with_options(query, options)
     /// ```
-    pub fn insert_with_options(&self, query: &str, options: Options) -> Result<impl Stream<Item = Result<ConceptMap>>> {
+    pub fn insert_with_options(&self, query: &str, options: Options) -> Result<impl Stream<Item = Result<ConceptMap>> + 'tx> {
         self.transaction_stream.get_ref().insert(query.to_string(), options)
     }
 
     /// Performs a TypeQL Update query with default options.
     /// See [`QueryManager::update_with_options`]
-    pub fn update(&self, query: &str) -> Result<impl Stream<Item = Result<ConceptMap>>> {
+    pub fn update(&self, query: &str) -> Result<impl Stream<Item = Result<ConceptMap>> + 'tx> {
         self.update_with_options(query, Options::new())
     }
 
@@ -177,7 +177,7 @@ impl<'tx> QueryManager<'tx> {
     /// ```rust
     /// transaction.query().update_with_options(query, options)
     /// ```
-    pub fn update_with_options(&self, query: &str, options: Options) -> Result<impl Stream<Item = Result<ConceptMap>>> {
+    pub fn update_with_options(&self, query: &str, options: Options) -> Result<impl Stream<Item = Result<ConceptMap>> + 'tx> {
         self.transaction_stream.get_ref().update(query.to_string(), options)
     }
 
@@ -210,7 +210,7 @@ impl<'tx> QueryManager<'tx> {
 
     /// Performs a TypeQL Match Group query with default options.
     /// See [`QueryManager::get_group`]
-    pub fn get_group(&self, query: &str) -> Result<impl Stream<Item = Result<ConceptMapGroup>>> {
+    pub fn get_group(&self, query: &str) -> Result<impl Stream<Item = Result<ConceptMapGroup>> + 'tx> {
         self.get_group_with_options(query, Options::new())
     }
 
@@ -230,13 +230,13 @@ impl<'tx> QueryManager<'tx> {
         &self,
         query: &str,
         options: Options,
-    ) -> Result<impl Stream<Item = Result<ConceptMapGroup>>> {
+    ) -> Result<impl Stream<Item = Result<ConceptMapGroup>> + 'tx> {
         self.transaction_stream.get_ref().get_group(query.to_string(), options)
     }
 
     /// Performs a TypeQL Match Group Aggregate query with default options.
     /// See [`QueryManager::get_group_aggregate_with_options`]
-    pub fn get_group_aggregate(&self, query: &str) -> Result<impl Stream<Item = Result<ValueGroup>>> {
+    pub fn get_group_aggregate(&self, query: &str) -> Result<impl Stream<Item = Result<ValueGroup>> + 'tx> {
         self.get_group_aggregate_with_options(query, Options::new())
     }
 
@@ -256,13 +256,13 @@ impl<'tx> QueryManager<'tx> {
         &self,
         query: &str,
         options: Options,
-    ) -> Result<impl Stream<Item = Result<ValueGroup>>> {
+    ) -> Result<impl Stream<Item = Result<ValueGroup>> + 'tx> {
         self.transaction_stream.get_ref().get_group_aggregate(query.to_string(), options)
     }
 
     /// Performs a TypeQL Fetch query with default options.
     /// See [`QueryManager::fetch_with_options`]
-    pub fn fetch(&self, query: &str) -> Result<impl Stream<Item = Result<JSON>>> {
+    pub fn fetch(&self, query: &str) -> Result<impl Stream<Item = Result<JSON>> + 'tx> {
         self.fetch_with_options(query, Options::new())
     }
 
@@ -278,13 +278,13 @@ impl<'tx> QueryManager<'tx> {
     /// ```rust
     /// transaction.query().fetch_with_options(query, options)
     /// ```
-    pub fn fetch_with_options(&self, query: &str, options: Options) -> Result<impl Stream<Item = Result<JSON>>> {
+    pub fn fetch_with_options(&self, query: &str, options: Options) -> Result<impl Stream<Item = Result<JSON>> + 'tx> {
         Ok(self.transaction_stream.get_ref().fetch(query.to_string(), options)?.map_ok(|tree| tree.into_json()))
     }
 
     /// Performs a TypeQL Explain query in the transaction.
     /// See [``QueryManager::explain_with_options]
-    pub fn explain(&self, explainable: &Explainable) -> Result<impl Stream<Item = Result<Explanation>>> {
+    pub fn explain(&self, explainable: &Explainable) -> Result<impl Stream<Item = Result<Explanation>> + 'tx> {
         self.explain_with_options(explainable, Options::new())
     }
 
@@ -304,7 +304,7 @@ impl<'tx> QueryManager<'tx> {
         &self,
         explainable: &Explainable,
         options: Options,
-    ) -> Result<impl Stream<Item = Result<Explanation>>> {
+    ) -> Result<impl Stream<Item = Result<Explanation>> + 'tx> {
         self.transaction_stream.get_ref().explain(explainable.id, options)
     }
 }
