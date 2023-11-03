@@ -14,7 +14,10 @@
 
 [source,rust]
 ----
-fn delete<'tx>( &mut self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result>
+fn delete<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result>
 ----
 
 Deletes this type from the database.
@@ -65,7 +68,13 @@ thing_type.delete(transaction).resolve();
 
 [source,rust]
 ----
-fn get_owns( &self, transaction: &Transaction<'_>, value_type: Option<ValueType>, transitivity: Transitivity, annotations: Vec<Annotation> ) -> Result<BoxStream<'_, Result<AttributeType>>>
+fn get_owns(
+    &self,
+    transaction: &Transaction<'_>,
+    value_type: Option<ValueType>,
+    transitivity: Transitivity,
+    annotations: Vec<Annotation>
+) -> Result<BoxStream<'_, Result<AttributeType>>>
 ----
 
 Retrieves ``AttributeType`` that the instances of this ``ThingType`` are allowed to own directly or via inheritance.
@@ -119,7 +128,11 @@ thing_type.get_owns(transaction, Some(value_type), Transitivity::Explicit, vec![
 
 [source,rust]
 ----
-fn get_owns_overridden<'tx>( &self, transaction: &'tx Transaction<'tx>, overridden_attribute_type: AttributeType ) -> BoxPromise<'tx, Result<Option<AttributeType>>>
+fn get_owns_overridden<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>,
+    overridden_attribute_type: AttributeType
+) -> BoxPromise<'tx, Result<Option<AttributeType>>>
 ----
 
 Retrieves an ``AttributeType``, ownership of which is overridden for this ``ThingType`` by a given ``attribute_type``.
@@ -171,7 +184,11 @@ thing_type.get_owns_overridden(transaction, attribute_type).resolve();
 
 [source,rust]
 ----
-fn get_plays( &self, transaction: &Transaction<'_>, transitivity: Transitivity ) -> Result<BoxStream<'_, Result<RoleType>>>
+fn get_plays(
+    &self,
+    transaction: &Transaction<'_>,
+    transitivity: Transitivity
+) -> Result<BoxStream<'_, Result<RoleType>>>
 ----
 
 Retrieves all direct and inherited (or direct only) roles that are allowed to be played by the instances of this ``ThingType``.
@@ -223,7 +240,11 @@ thing_type.get_plays(transaction, Transitivity::Explicit).resolve();
 
 [source,rust]
 ----
-fn get_plays_overridden<'tx>( &self, transaction: &'tx Transaction<'tx>, overridden_role_type: RoleType ) -> BoxPromise<'tx, Result<Option<RoleType>>>
+fn get_plays_overridden<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>,
+    overridden_role_type: RoleType
+) -> BoxPromise<'tx, Result<Option<RoleType>>>
 ----
 
 Retrieves a ``RoleType`` that is overridden by the given ``role_type`` for this ``ThingType``.
@@ -275,7 +296,10 @@ thing_type.get_plays_overridden(transaction, role_type).resolve();
 
 [source,rust]
 ----
-fn get_syntax<'tx>( &self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result<String>>
+fn get_syntax<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result<String>>
 ----
 
 Produces a pattern for creating this ``ThingType`` in a ``define`` query.
@@ -350,7 +374,10 @@ thing_type.is_abstract();
 
 [source,rust]
 ----
-fn is_deleted<'tx>( &self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result<bool>>
+fn is_deleted<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result<bool>>
 ----
 
 Checks if this type is deleted.
@@ -449,7 +476,10 @@ thing_type.label();
 
 [source,rust]
 ----
-fn set_abstract<'tx>( &mut self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result>
+fn set_abstract<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result>
 ----
 
 Set a type to be abstract, meaning it cannot have instances.
@@ -500,7 +530,11 @@ thing_type.set_abstract(transaction).resolve();
 
 [source,rust]
 ----
-fn set_label<'tx>( &mut self, transaction: &'tx Transaction<'tx>, new_label: String ) -> BoxPromise<'tx, Result>
+fn set_label<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>,
+    new_label: String
+) -> BoxPromise<'tx, Result>
 ----
 
 Renames the label of the type. The new label must remain unique.
@@ -552,7 +586,13 @@ thing_type.set_label(transaction, new_label).resolve();
 
 [source,rust]
 ----
-fn set_owns<'tx>( &mut self, transaction: &'tx Transaction<'tx>, attribute_type: AttributeType, overridden_attribute_type: Option<AttributeType>, annotations: Vec<Annotation> ) -> BoxPromise<'tx, Result>
+fn set_owns<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>,
+    attribute_type: AttributeType,
+    overridden_attribute_type: Option<AttributeType>,
+    annotations: Vec<Annotation>
+) -> BoxPromise<'tx, Result>
 ----
 
 Allows the instances of this ``ThingType`` to own the given ``AttributeType``.
@@ -606,7 +646,12 @@ thing_type.set_owns(transaction, attribute_type, Some(overridden_type), vec![Ann
 
 [source,rust]
 ----
-fn set_plays<'tx>( &mut self, transaction: &'tx Transaction<'tx>, role_type: RoleType, overridden_role_type: Option<RoleType> ) -> BoxPromise<'tx, Result>
+fn set_plays<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>,
+    role_type: RoleType,
+    overridden_role_type: Option<RoleType>
+) -> BoxPromise<'tx, Result>
 ----
 
 Allows the instances of this ``ThingType`` to play the given role.
@@ -659,7 +704,10 @@ thing_type.set_plays(transaction, role_type, None).resolve();
 
 [source,rust]
 ----
-fn unset_abstract<'tx>( &mut self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result>
+fn unset_abstract<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result>
 ----
 
 Set a type to be non-abstract, meaning it can have instances.
@@ -710,7 +758,11 @@ thing_type.unset_abstract(transaction).resolve();
 
 [source,rust]
 ----
-fn unset_owns<'tx>( &mut self, transaction: &'tx Transaction<'tx>, attribute_type: AttributeType ) -> BoxPromise<'tx, Result>
+fn unset_owns<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>,
+    attribute_type: AttributeType
+) -> BoxPromise<'tx, Result>
 ----
 
 Disallows the instances of this ``ThingType`` from owning the given ``AttributeType``.
@@ -762,7 +814,11 @@ thing_type.unset_owns(transaction, attribute_type).resolve();
 
 [source,rust]
 ----
-fn unset_plays<'tx>( &mut self, transaction: &'tx Transaction<'tx>, role_type: RoleType ) -> BoxPromise<'tx, Result>
+fn unset_plays<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>,
+    role_type: RoleType
+) -> BoxPromise<'tx, Result>
 ----
 
 Disallows the instances of this ``ThingType`` from playing the given role.

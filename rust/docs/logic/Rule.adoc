@@ -30,7 +30,10 @@ a| `when` a| `Conjunction` a| The statements that constitute the ‘when’ of t
 
 [source,rust]
 ----
-fn delete<'tx>( &mut self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result>
+fn delete<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result>
 ----
 
 <<#_trait_RuleAPI_tymethod_delete,Read more>>
@@ -47,7 +50,10 @@ BoxPromise<'tx, Result>
 
 [source,rust]
 ----
-fn is_deleted<'tx>( &self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result<bool>>
+fn is_deleted<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result<bool>>
 ----
 
 <<#_trait_RuleAPI_method_is_deleted,Read more>>
@@ -81,7 +87,11 @@ fn label(&self) -> &String
 
 [source,rust]
 ----
-fn set_label<'tx>( &mut self, transaction: &'tx Transaction<'tx>, new_label: String ) -> BoxPromise<'tx, Result>
+fn set_label<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>,
+    new_label: String
+) -> BoxPromise<'tx, Result>
 ----
 
 <<#_trait_RuleAPI_tymethod_set_label,Read more>>

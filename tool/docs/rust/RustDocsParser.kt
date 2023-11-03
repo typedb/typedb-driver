@@ -28,6 +28,8 @@ import com.vaticle.typedb.driver.tool.docs.dataclasses.Variable
 import com.vaticle.typedb.driver.tool.docs.util.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import org.jsoup.nodes.Node
+import org.jsoup.nodes.TextNode
 import picocli.CommandLine
 import picocli.CommandLine.Parameters
 import java.io.File
@@ -205,7 +207,7 @@ class RustDocParser : Callable<Unit> {
     }
 
     private fun parseMethod(element: Element, classAnchor: String, mode: String): Method {
-        val methodSignature = enhanceSignature(element.selectFirst("summary section h4")!!.html())
+        val methodSignature = enhanceSignature(element.selectFirst("summary section h4")!!.wholeText())
         val methodName = element.selectFirst("summary section h4 a.fn")!!.text()
         val methodAnchor = replaceSymbolsForAnchor(
             element.selectFirst("summary section h4 a.fn")!!.attr("href").substringAfter("#")
@@ -279,7 +281,7 @@ class RustDocParser : Callable<Unit> {
     }
 
     private fun enhanceSignature(signature: String): String {
-        return replaceHtmlSymbols(removeAllTags(replaceSpaces(dispatchNewlines(signature))))
+        return signature;
     }
 
     private fun dispatchNewlines(html: String): String {

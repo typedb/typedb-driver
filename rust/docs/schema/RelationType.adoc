@@ -37,7 +37,10 @@ a| `label` a| `String` a|
 
 [source,rust]
 ----
-fn create<'tx>( &self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result<Relation>>
+fn create<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result<Relation>>
 ----
 
 <<#_trait_RelationTypeAPI_method_create,Read more>>
@@ -54,7 +57,10 @@ BoxPromise<'tx, Result<Relation>>
 
 [source,rust]
 ----
-fn delete<'tx>( &mut self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result>
+fn delete<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result>
 ----
 
 <<#_trait_ThingTypeAPI_method_delete,Read more>>
@@ -71,7 +77,11 @@ BoxPromise<'tx, Result>
 
 [source,rust]
 ----
-fn get_instances( &self, transaction: &Transaction<'_>, transitivity: Transitivity ) -> Result<BoxStream<'_, Result<Relation>>>
+fn get_instances(
+    &self,
+    transaction: &Transaction<'_>,
+    transitivity: Transitivity
+) -> Result<BoxStream<'_, Result<Relation>>>
 ----
 
 <<#_trait_RelationTypeAPI_method_get_instances,Read more>>
@@ -88,7 +98,13 @@ Result<BoxStream<'_, Result<Relation>>>
 
 [source,rust]
 ----
-fn get_owns( &self, transaction: &Transaction<'_>, value_type: Option<ValueType>, transitivity: Transitivity, annotations: Vec<Annotation> ) -> Result<BoxStream<'_, Result<AttributeType>>>
+fn get_owns(
+    &self,
+    transaction: &Transaction<'_>,
+    value_type: Option<ValueType>,
+    transitivity: Transitivity,
+    annotations: Vec<Annotation>
+) -> Result<BoxStream<'_, Result<AttributeType>>>
 ----
 
 <<#_trait_ThingTypeAPI_method_get_owns,Read more>>
@@ -105,7 +121,11 @@ Result<BoxStream<'_, Result<AttributeType>>>
 
 [source,rust]
 ----
-fn get_owns_overridden<'tx>( &self, transaction: &'tx Transaction<'tx>, overridden_attribute_type: AttributeType ) -> BoxPromise<'tx, Result<Option<AttributeType>>>
+fn get_owns_overridden<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>,
+    overridden_attribute_type: AttributeType
+) -> BoxPromise<'tx, Result<Option<AttributeType>>>
 ----
 
 <<#_trait_ThingTypeAPI_method_get_owns_overridden,Read more>>
@@ -122,7 +142,11 @@ BoxPromise<'tx, Result<Option<AttributeType>>>
 
 [source,rust]
 ----
-fn get_plays( &self, transaction: &Transaction<'_>, transitivity: Transitivity ) -> Result<BoxStream<'_, Result<RoleType>>>
+fn get_plays(
+    &self,
+    transaction: &Transaction<'_>,
+    transitivity: Transitivity
+) -> Result<BoxStream<'_, Result<RoleType>>>
 ----
 
 <<#_trait_ThingTypeAPI_method_get_plays,Read more>>
@@ -139,7 +163,11 @@ Result<BoxStream<'_, Result<RoleType>>>
 
 [source,rust]
 ----
-fn get_plays_overridden<'tx>( &self, transaction: &'tx Transaction<'tx>, overridden_role_type: RoleType ) -> BoxPromise<'tx, Result<Option<RoleType>>>
+fn get_plays_overridden<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>,
+    overridden_role_type: RoleType
+) -> BoxPromise<'tx, Result<Option<RoleType>>>
 ----
 
 <<#_trait_ThingTypeAPI_method_get_plays_overridden,Read more>>
@@ -156,7 +184,11 @@ BoxPromise<'tx, Result<Option<RoleType>>>
 
 [source,rust]
 ----
-fn get_relates( &self, transaction: &Transaction<'_>, transitivity: Transitivity ) -> Result<BoxStream<'_, Result<RoleType>>>
+fn get_relates(
+    &self,
+    transaction: &Transaction<'_>,
+    transitivity: Transitivity
+) -> Result<BoxStream<'_, Result<RoleType>>>
 ----
 
 <<#_trait_RelationTypeAPI_method_get_relates,Read more>>
@@ -173,7 +205,11 @@ Result<BoxStream<'_, Result<RoleType>>>
 
 [source,rust]
 ----
-fn get_relates_for_role_label<'tx>( &self, transaction: &'tx Transaction<'tx>, role_label: String ) -> BoxPromise<'tx, Result<Option<RoleType>>>
+fn get_relates_for_role_label<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>,
+    role_label: String
+) -> BoxPromise<'tx, Result<Option<RoleType>>>
 ----
 
 <<#_trait_RelationTypeAPI_method_get_relates_for_role_label,Read more>>
@@ -190,7 +226,11 @@ BoxPromise<'tx, Result<Option<RoleType>>>
 
 [source,rust]
 ----
-fn get_relates_overridden<'tx>( &self, transaction: &'tx Transaction<'tx>, overridden_role_label: String ) -> BoxPromise<'tx, Result<Option<RoleType>>>
+fn get_relates_overridden<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>,
+    overridden_role_label: String
+) -> BoxPromise<'tx, Result<Option<RoleType>>>
 ----
 
 <<#_trait_RelationTypeAPI_method_get_relates_overridden,Read more>>
@@ -207,7 +247,11 @@ BoxPromise<'tx, Result<Option<RoleType>>>
 
 [source,rust]
 ----
-fn get_subtypes( &self, transaction: &Transaction<'_>, transitivity: Transitivity ) -> Result<BoxStream<'_, Result<RelationType>>>
+fn get_subtypes(
+    &self,
+    transaction: &Transaction<'_>,
+    transitivity: Transitivity
+) -> Result<BoxStream<'_, Result<RelationType>>>
 ----
 
 <<#_trait_RelationTypeAPI_method_get_subtypes,Read more>>
@@ -224,7 +268,10 @@ Result<BoxStream<'_, Result<RelationType>>>
 
 [source,rust]
 ----
-fn get_supertype<'tx>( &self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result<Option<RelationType>>>
+fn get_supertype<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result<Option<RelationType>>>
 ----
 
 <<#_trait_RelationTypeAPI_method_get_supertype,Read more>>
@@ -241,7 +288,10 @@ BoxPromise<'tx, Result<Option<RelationType>>>
 
 [source,rust]
 ----
-fn get_supertypes( &self, transaction: &Transaction<'_> ) -> Result<BoxStream<'_, Result<RelationType>>>
+fn get_supertypes(
+    &self,
+    transaction: &Transaction<'_>
+) -> Result<BoxStream<'_, Result<RelationType>>>
 ----
 
 <<#_trait_RelationTypeAPI_method_get_supertypes,Read more>>
@@ -258,7 +308,10 @@ Result<BoxStream<'_, Result<RelationType>>>
 
 [source,rust]
 ----
-fn get_syntax<'tx>( &self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result<String>>
+fn get_syntax<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result<String>>
 ----
 
 <<#_trait_ThingTypeAPI_method_get_syntax,Read more>>
@@ -292,7 +345,10 @@ bool
 
 [source,rust]
 ----
-fn is_deleted<'tx>( &self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result<bool>>
+fn is_deleted<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result<bool>>
 ----
 
 <<#_trait_ThingTypeAPI_tymethod_is_deleted,Read more>>
@@ -360,7 +416,10 @@ Self
 
 [source,rust]
 ----
-fn set_abstract<'tx>( &mut self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result>
+fn set_abstract<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result>
 ----
 
 <<#_trait_ThingTypeAPI_method_set_abstract,Read more>>
@@ -377,7 +436,11 @@ BoxPromise<'tx, Result>
 
 [source,rust]
 ----
-fn set_label<'tx>( &mut self, transaction: &'tx Transaction<'tx>, new_label: String ) -> BoxPromise<'tx, Result>
+fn set_label<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>,
+    new_label: String
+) -> BoxPromise<'tx, Result>
 ----
 
 <<#_trait_ThingTypeAPI_method_set_label,Read more>>
@@ -394,7 +457,13 @@ BoxPromise<'tx, Result>
 
 [source,rust]
 ----
-fn set_owns<'tx>( &mut self, transaction: &'tx Transaction<'tx>, attribute_type: AttributeType, overridden_attribute_type: Option<AttributeType>, annotations: Vec<Annotation> ) -> BoxPromise<'tx, Result>
+fn set_owns<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>,
+    attribute_type: AttributeType,
+    overridden_attribute_type: Option<AttributeType>,
+    annotations: Vec<Annotation>
+) -> BoxPromise<'tx, Result>
 ----
 
 <<#_trait_ThingTypeAPI_method_set_owns,Read more>>
@@ -411,7 +480,12 @@ BoxPromise<'tx, Result>
 
 [source,rust]
 ----
-fn set_plays<'tx>( &mut self, transaction: &'tx Transaction<'tx>, role_type: RoleType, overridden_role_type: Option<RoleType> ) -> BoxPromise<'tx, Result>
+fn set_plays<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>,
+    role_type: RoleType,
+    overridden_role_type: Option<RoleType>
+) -> BoxPromise<'tx, Result>
 ----
 
 <<#_trait_ThingTypeAPI_method_set_plays,Read more>>
@@ -428,7 +502,12 @@ BoxPromise<'tx, Result>
 
 [source,rust]
 ----
-fn set_relates<'tx>( &mut self, transaction: &'tx Transaction<'tx>, role_label: String, overridden_role_label: Option<String> ) -> BoxPromise<'tx, Result>
+fn set_relates<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>,
+    role_label: String,
+    overridden_role_label: Option<String>
+) -> BoxPromise<'tx, Result>
 ----
 
 <<#_trait_RelationTypeAPI_method_set_relates,Read more>>
@@ -445,7 +524,11 @@ BoxPromise<'tx, Result>
 
 [source,rust]
 ----
-fn set_supertype<'tx>( &mut self, transaction: &'tx Transaction<'tx>, supertype: RelationType ) -> BoxPromise<'tx, Result>
+fn set_supertype<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>,
+    supertype: RelationType
+) -> BoxPromise<'tx, Result>
 ----
 
 <<#_trait_RelationTypeAPI_method_set_supertype,Read more>>
@@ -462,7 +545,10 @@ BoxPromise<'tx, Result>
 
 [source,rust]
 ----
-fn unset_abstract<'tx>( &mut self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result>
+fn unset_abstract<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result>
 ----
 
 <<#_trait_ThingTypeAPI_method_unset_abstract,Read more>>
@@ -479,7 +565,11 @@ BoxPromise<'tx, Result>
 
 [source,rust]
 ----
-fn unset_owns<'tx>( &mut self, transaction: &'tx Transaction<'tx>, attribute_type: AttributeType ) -> BoxPromise<'tx, Result>
+fn unset_owns<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>,
+    attribute_type: AttributeType
+) -> BoxPromise<'tx, Result>
 ----
 
 <<#_trait_ThingTypeAPI_method_unset_owns,Read more>>
@@ -496,7 +586,11 @@ BoxPromise<'tx, Result>
 
 [source,rust]
 ----
-fn unset_plays<'tx>( &mut self, transaction: &'tx Transaction<'tx>, role_type: RoleType ) -> BoxPromise<'tx, Result>
+fn unset_plays<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>,
+    role_type: RoleType
+) -> BoxPromise<'tx, Result>
 ----
 
 <<#_trait_ThingTypeAPI_method_unset_plays,Read more>>
@@ -513,7 +607,11 @@ BoxPromise<'tx, Result>
 
 [source,rust]
 ----
-fn unset_relates<'tx>( &mut self, transaction: &'tx Transaction<'tx>, role_label: String ) -> BoxPromise<'tx, Result>
+fn unset_relates<'tx>(
+    &mut self,
+    transaction: &'tx Transaction<'tx>,
+    role_label: String
+) -> BoxPromise<'tx, Result>
 ----
 
 <<#_trait_RelationTypeAPI_method_unset_relates,Read more>>

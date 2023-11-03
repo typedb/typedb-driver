@@ -124,7 +124,11 @@ async::
 --
 [source,rust]
 ----
-pub async fn new_with_options( database: Database, session_type: SessionType, options: Options ) -> Result<Self>
+pub async fn new_with_options(
+    database: Database,
+    session_type: SessionType,
+    options: Options
+) -> Result<Self>
 ----
 
 --
@@ -134,7 +138,11 @@ sync::
 --
 [source,rust]
 ----
-pub fn new_with_options( database: Database, session_type: SessionType, options: Options ) -> Result<Self>
+pub fn new_with_options(
+    database: Database,
+    session_type: SessionType,
+    options: Options
+) -> Result<Self>
 ----
 
 --
@@ -228,7 +236,10 @@ async::
 --
 [source,rust]
 ----
-pub async fn transaction( &self, transaction_type: TransactionType ) -> Result<Transaction<'_>>
+pub async fn transaction(
+    &self,
+    transaction_type: TransactionType
+) -> Result<Transaction<'_>>
 ----
 
 --
@@ -238,7 +249,10 @@ sync::
 --
 [source,rust]
 ----
-pub fn transaction( &self, transaction_type: TransactionType ) -> Result<Transaction<'_>>
+pub fn transaction(
+    &self,
+    transaction_type: TransactionType
+) -> Result<Transaction<'_>>
 ----
 
 --
@@ -263,7 +277,11 @@ async::
 --
 [source,rust]
 ----
-pub async fn transaction_with_options( &self, transaction_type: TransactionType, options: Options ) -> Result<Transaction<'_>>
+pub async fn transaction_with_options(
+    &self,
+    transaction_type: TransactionType,
+    options: Options
+) -> Result<Transaction<'_>>
 ----
 
 --
@@ -273,7 +291,11 @@ sync::
 --
 [source,rust]
 ----
-pub fn transaction_with_options( &self, transaction_type: TransactionType, options: Options ) -> Result<Transaction<'_>>
+pub fn transaction_with_options(
+    &self,
+    transaction_type: TransactionType,
+    options: Options
+) -> Result<Transaction<'_>>
 ----
 
 --
