@@ -43,7 +43,6 @@ fn ok_record<T>(result: Result<T>) -> Option<T> {
     match result {
         Ok(value) => Some(value),
         Err(err) => {
-            trace!("recorded error {err}");
             record_error(err);
             None
         }
