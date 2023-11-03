@@ -43,7 +43,7 @@ use tokio::{
     },
     time::{sleep_until, Instant},
 };
-use tonic::{Status, Streaming};
+use tonic::Streaming;
 use typedb_protocol::transaction::{self, server::Server, stream::State};
 
 #[cfg(feature = "sync")]
