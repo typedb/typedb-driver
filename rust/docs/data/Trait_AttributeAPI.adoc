@@ -11,7 +11,11 @@
 
 [source,rust]
 ----
-fn get_owners( &self, transaction: &Transaction<'_>, thing_type: Option<ThingType> ) -> Result<BoxStream<'_, Result<Thing>>>
+fn get_owners(
+    &self,
+    transaction: &Transaction<'_>,
+    thing_type: Option<ThingType>
+) -> Result<BoxStream<'_, Result<Thing>>>
 ----
 
 Retrieves the instances that own this ``Attribute``.

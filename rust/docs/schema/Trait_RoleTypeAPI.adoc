@@ -11,7 +11,10 @@
 
 [source,rust]
 ----
-fn delete<'tx>( &self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result>
+fn delete<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result>
 ----
 
 Deletes this type from the database.
@@ -62,7 +65,11 @@ role_type.delete(transaction).resolve();
 
 [source,rust]
 ----
-fn get_player_instances( &self, transaction: &Transaction<'_>, transitivity: Transitivity ) -> Result<BoxStream<'_, Result<Thing>>>
+fn get_player_instances(
+    &self,
+    transaction: &Transaction<'_>,
+    transitivity: Transitivity
+) -> Result<BoxStream<'_, Result<Thing>>>
 ----
 
 Retrieves the ``Thing`` instances that play this role.
@@ -96,7 +103,11 @@ role_type.get_player_instances(transaction, transitivity)
 
 [source,rust]
 ----
-fn get_player_types( &self, transaction: &Transaction<'_>, transitivity: Transitivity ) -> Result<BoxStream<'_, Result<ThingType>>>
+fn get_player_types(
+    &self,
+    transaction: &Transaction<'_>,
+    transitivity: Transitivity
+) -> Result<BoxStream<'_, Result<ThingType>>>
 ----
 
 Retrieves the ``ThingType``s whose instances play this role.
@@ -130,7 +141,11 @@ role_type.get_player_types(transaction, transitivity)
 
 [source,rust]
 ----
-fn get_relation_instances( &self, transaction: &Transaction<'_>, transitivity: Transitivity ) -> Result<BoxStream<'_, Result<Relation>>>
+fn get_relation_instances(
+    &self,
+    transaction: &Transaction<'_>,
+    transitivity: Transitivity
+) -> Result<BoxStream<'_, Result<Relation>>>
 ----
 
 Retrieves the ``Relation`` instances that this role is related to.
@@ -164,7 +179,10 @@ role_type.get_relation_instances(transaction, transitivity)
 
 [source,rust]
 ----
-fn get_relation_type<'tx>( &self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result<Option<RelationType>>>
+fn get_relation_type<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result<Option<RelationType>>>
 ----
 
 Retrieves the ``RelationType`` that this role is directly related to.
@@ -215,7 +233,10 @@ role_type.get_relation_type(transaction).resolve();
 
 [source,rust]
 ----
-fn get_relation_types( &self, transaction: &Transaction<'_> ) -> Result<BoxStream<'_, Result<RelationType>>>
+fn get_relation_types(
+    &self,
+    transaction: &Transaction<'_>
+) -> Result<BoxStream<'_, Result<RelationType>>>
 ----
 
 Retrieves ``RelationType``s that this role is related to (directly or indirectly).
@@ -248,7 +269,11 @@ role_type.get_relation_types(transaction)
 
 [source,rust]
 ----
-fn get_subtypes( &self, transaction: &Transaction<'_>, transitivity: Transitivity ) -> Result<BoxStream<'_, Result<RoleType>>>
+fn get_subtypes(
+    &self,
+    transaction: &Transaction<'_>,
+    transitivity: Transitivity
+) -> Result<BoxStream<'_, Result<RoleType>>>
 ----
 
 Retrieves all direct and indirect (or direct only) subtypes of the ``RoleType``.
@@ -282,7 +307,10 @@ role_type.get_subtypes(transaction, transitivity)
 
 [source,rust]
 ----
-fn get_supertype<'tx>( &self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result<Option<RoleType>>>
+fn get_supertype<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result<Option<RoleType>>>
 ----
 
 Retrieves the most immediate supertype of the ``RoleType``.
@@ -333,7 +361,10 @@ role_type.get_supertype(transaction).resolve();
 
 [source,rust]
 ----
-fn get_supertypes( &self, transaction: &Transaction<'_> ) -> Result<BoxStream<'_, Result<RoleType>>>
+fn get_supertypes(
+    &self,
+    transaction: &Transaction<'_>
+) -> Result<BoxStream<'_, Result<RoleType>>>
 ----
 
 Retrieves all supertypes of the ``RoleType``.
@@ -390,7 +421,10 @@ role_type.is_abstract()
 
 [source,rust]
 ----
-fn is_deleted<'tx>( &self, transaction: &'tx Transaction<'tx> ) -> BoxPromise<'tx, Result<bool>>
+fn is_deleted<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>
+) -> BoxPromise<'tx, Result<bool>>
 ----
 
 Checks if this type is deleted.
@@ -441,7 +475,11 @@ role_type.is_deleted(transaction).resolve();
 
 [source,rust]
 ----
-fn set_label<'tx>( &self, transaction: &'tx Transaction<'tx>, new_label: String ) -> BoxPromise<'tx, Result>
+fn set_label<'tx>(
+    &self,
+    transaction: &'tx Transaction<'tx>,
+    new_label: String
+) -> BoxPromise<'tx, Result>
 ----
 
 Renames the label of the type. The new label must remain unique.

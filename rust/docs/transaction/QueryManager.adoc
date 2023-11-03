@@ -30,7 +30,11 @@ impl Promise<'tx, Result>
 
 [source,rust]
 ----
-pub fn define_with_options( &self, query: &str, options: Options ) -> impl Promise<'tx, Result>
+pub fn define_with_options(
+    &self,
+    query: &str,
+    options: Options
+) -> impl Promise<'tx, Result>
 ----
 
 Performs a TypeQL Define query in the transaction.
@@ -99,7 +103,11 @@ impl Promise<'tx, Result>
 
 [source,rust]
 ----
-pub fn delete_with_options( &self, query: &str, options: Options ) -> impl Promise<'tx, Result>
+pub fn delete_with_options(
+    &self,
+    query: &str,
+    options: Options
+) -> impl Promise<'tx, Result>
 ----
 
 Performs a TypeQL Delete query in the transaction.
@@ -151,7 +159,10 @@ transaction.query().delete_with_options(query, options).resolve()
 
 [source,rust]
 ----
-pub fn explain( &self, explainable: &Explainable ) -> Result<impl Stream<Item = Result<Explanation>>>
+pub fn explain(
+    &self,
+    explainable: &Explainable
+) -> Result<impl Stream<Item = Result<Explanation>>>
 ----
 
 Performs a TypeQL Explain query in the transaction. See ``QueryManager::explain_with_options
@@ -168,7 +179,11 @@ Result<impl Stream<Item = Result<Explanation>>>
 
 [source,rust]
 ----
-pub fn explain_with_options( &self, explainable: &Explainable, options: Options ) -> Result<impl Stream<Item = Result<Explanation>>>
+pub fn explain_with_options(
+    &self,
+    explainable: &Explainable,
+    options: Options
+) -> Result<impl Stream<Item = Result<Explanation>>>
 ----
 
 Performs a TypeQL Explain query in the transaction.
@@ -219,7 +234,11 @@ Result<impl Stream<Item = Result<JSON>>>
 
 [source,rust]
 ----
-pub fn fetch_with_options( &self, query: &str, options: Options ) -> Result<impl Stream<Item = Result<JSON>>>
+pub fn fetch_with_options(
+    &self,
+    query: &str,
+    options: Options
+) -> Result<impl Stream<Item = Result<JSON>>>
 ----
 
 Performs a TypeQL Match Group Aggregate query in the transaction.
@@ -270,7 +289,10 @@ Result<impl Stream<Item = Result<ConceptMap>>>
 
 [source,rust]
 ----
-pub fn get_aggregate( &self, query: &str ) -> impl Promise<'tx, Result<Option<Value>>>
+pub fn get_aggregate(
+    &self,
+    query: &str
+) -> impl Promise<'tx, Result<Option<Value>>>
 ----
 
 Performs a TypeQL Match Aggregate query with default options. See <<#_struct_QueryManager_method_get_aggregate,`QueryManager::get_aggregate`>>
@@ -287,7 +309,11 @@ impl Promise<'tx, Result<Option<Value>>>
 
 [source,rust]
 ----
-pub fn get_aggregate_with_options( &self, query: &str, options: Options ) -> impl Promise<'tx, Result<Option<Value>>>
+pub fn get_aggregate_with_options(
+    &self,
+    query: &str,
+    options: Options
+) -> impl Promise<'tx, Result<Option<Value>>>
 ----
 
 Performs a TypeQL Match Aggregate query in the transaction.
@@ -339,7 +365,10 @@ transaction.query().get_aggregate_with_options(query, options).resolve()
 
 [source,rust]
 ----
-pub fn get_group( &self, query: &str ) -> Result<impl Stream<Item = Result<ConceptMapGroup>>>
+pub fn get_group(
+    &self,
+    query: &str
+) -> Result<impl Stream<Item = Result<ConceptMapGroup>>>
 ----
 
 Performs a TypeQL Match Group query with default options. See <<#_struct_QueryManager_method_get_group,`QueryManager::get_group`>>
@@ -356,7 +385,10 @@ Result<impl Stream<Item = Result<ConceptMapGroup>>>
 
 [source,rust]
 ----
-pub fn get_group_aggregate( &self, query: &str ) -> Result<impl Stream<Item = Result<ValueGroup>>>
+pub fn get_group_aggregate(
+    &self,
+    query: &str
+) -> Result<impl Stream<Item = Result<ValueGroup>>>
 ----
 
 Performs a TypeQL Match Group Aggregate query with default options. See <<#_struct_QueryManager_method_get_group_aggregate_with_options,`QueryManager::get_group_aggregate_with_options`>>
@@ -373,7 +405,11 @@ Result<impl Stream<Item = Result<ValueGroup>>>
 
 [source,rust]
 ----
-pub fn get_group_aggregate_with_options( &self, query: &str, options: Options ) -> Result<impl Stream<Item = Result<ValueGroup>>>
+pub fn get_group_aggregate_with_options(
+    &self,
+    query: &str,
+    options: Options
+) -> Result<impl Stream<Item = Result<ValueGroup>>>
 ----
 
 Performs a TypeQL Match Group Aggregate query in the transaction.
@@ -407,7 +443,11 @@ transaction.query().get_group_aggregate_with_options(query, options)
 
 [source,rust]
 ----
-pub fn get_group_with_options( &self, query: &str, options: Options ) -> Result<impl Stream<Item = Result<ConceptMapGroup>>>
+pub fn get_group_with_options(
+    &self,
+    query: &str,
+    options: Options
+) -> Result<impl Stream<Item = Result<ConceptMapGroup>>>
 ----
 
 Performs a TypeQL Match Group query in the transaction.
@@ -441,7 +481,11 @@ transaction.query().get_group_with_options(query, options)
 
 [source,rust]
 ----
-pub fn get_with_options( &self, query: &str, options: Options ) -> Result<impl Stream<Item = Result<ConceptMap>>>
+pub fn get_with_options(
+    &self,
+    query: &str,
+    options: Options
+) -> Result<impl Stream<Item = Result<ConceptMap>>>
 ----
 
 Performs a TypeQL Match (Get) query in the transaction.
@@ -475,7 +519,10 @@ transaction.query().get_with_options(query, options)
 
 [source,rust]
 ----
-pub fn insert( &self, query: &str ) -> Result<impl Stream<Item = Result<ConceptMap>>>
+pub fn insert(
+    &self,
+    query: &str
+) -> Result<impl Stream<Item = Result<ConceptMap>>>
 ----
 
 Performs a TypeQL Insert query with default options. See <<#_struct_QueryManager_method_insert_with_options,`QueryManager::insert_with_options`>>
@@ -492,7 +539,11 @@ Result<impl Stream<Item = Result<ConceptMap>>>
 
 [source,rust]
 ----
-pub fn insert_with_options( &self, query: &str, options: Options ) -> Result<impl Stream<Item = Result<ConceptMap>>>
+pub fn insert_with_options(
+    &self,
+    query: &str,
+    options: Options
+) -> Result<impl Stream<Item = Result<ConceptMap>>>
 ----
 
 Performs a TypeQL Insert query in the transaction.
@@ -543,7 +594,11 @@ impl Promise<'tx, Result>
 
 [source,rust]
 ----
-pub fn undefine_with_options( &self, query: &str, options: Options ) -> impl Promise<'tx, Result>
+pub fn undefine_with_options(
+    &self,
+    query: &str,
+    options: Options
+) -> impl Promise<'tx, Result>
 ----
 
 Performs a TypeQL Undefine query in the transaction.
@@ -595,7 +650,10 @@ transaction.query().undefine_with_options(query, options).resolve()
 
 [source,rust]
 ----
-pub fn update( &self, query: &str ) -> Result<impl Stream<Item = Result<ConceptMap>>>
+pub fn update(
+    &self,
+    query: &str
+) -> Result<impl Stream<Item = Result<ConceptMap>>>
 ----
 
 Performs a TypeQL Update query with default options. See <<#_struct_QueryManager_method_update_with_options,`QueryManager::update_with_options`>>
@@ -612,7 +670,11 @@ Result<impl Stream<Item = Result<ConceptMap>>>
 
 [source,rust]
 ----
-pub fn update_with_options( &self, query: &str, options: Options ) -> Result<impl Stream<Item = Result<ConceptMap>>>
+pub fn update_with_options(
+    &self,
+    query: &str,
+    options: Options
+) -> Result<impl Stream<Item = Result<ConceptMap>>>
 ----
 
 Performs a TypeQL Update query in the transaction.
