@@ -60,7 +60,7 @@ export class TypeDBDriverImpl implements TypeDBDriver {
         this._credential = credential;
 
         this._isOpen = false;
-        this._isEnterprise = credential == null;
+        this._isEnterprise = credential != null;
         this._serverDrivers = new Map([]);
         this._databases = new TypeDBDatabaseManagerImpl(this);
         this._database_cache = {};
