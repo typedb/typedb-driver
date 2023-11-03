@@ -34,8 +34,8 @@ a| `type_` a| `RelationType` a| The type which this Relation belongs to
 [source,rust]
 ----
 fn add_role_player<'tx>(
-    &'tx self,
-    transaction: &'tx Transaction<'tx>,
+    &self,
+    transaction: &'tx Transaction<'_>,
     role_type: RoleType,
     player: Thing
 ) -> BoxPromise<'tx, Result>
@@ -56,8 +56,8 @@ BoxPromise<'tx, Result>
 [source,rust]
 ----
 fn delete<'tx>(
-    &'tx self,
-    transaction: &'tx Transaction<'tx>
+    &self,
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result>
 ----
 
@@ -75,12 +75,12 @@ BoxPromise<'tx, Result>
 
 [source,rust]
 ----
-fn get_has(
+fn get_has<'tx>(
     &self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'_>,
     attribute_types: Vec<AttributeType>,
     annotations: Vec<Annotation>
-) -> Result<BoxStream<'_, Result<Attribute>>>
+) -> Result<BoxStream<'tx, Result<Attribute>>>
 ----
 
 <<#_trait_ThingAPI_method_get_has,Read more>>
@@ -89,7 +89,7 @@ fn get_has(
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<Attribute>>>
+Result<BoxStream<'tx, Result<Attribute>>>
 ----
 
 [#_struct_Relation_method_get_players_by_role_type]
@@ -97,11 +97,11 @@ Result<BoxStream<'_, Result<Attribute>>>
 
 [source,rust]
 ----
-fn get_players_by_role_type(
+fn get_players_by_role_type<'tx>(
     &self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'_>,
     role_types: Vec<RoleType>
-) -> Result<BoxStream<'_, Result<Thing>>>
+) -> Result<BoxStream<'tx, Result<Thing>>>
 ----
 
 <<#_trait_RelationAPI_method_get_players_by_role_type,Read more>>
@@ -110,7 +110,7 @@ fn get_players_by_role_type(
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<Thing>>>
+Result<BoxStream<'tx, Result<Thing>>>
 ----
 
 [#_struct_Relation_method_get_playing]
@@ -118,10 +118,10 @@ Result<BoxStream<'_, Result<Thing>>>
 
 [source,rust]
 ----
-fn get_playing(
+fn get_playing<'tx>(
     &self,
-    transaction: &Transaction<'_>
-) -> Result<BoxStream<'_, Result<RoleType>>>
+    transaction: &'tx Transaction<'_>
+) -> Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
 <<#_trait_ThingAPI_method_get_playing,Read more>>
@@ -130,7 +130,7 @@ fn get_playing(
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<RoleType>>>
+Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
 [#_struct_Relation_method_get_relating]
@@ -138,10 +138,10 @@ Result<BoxStream<'_, Result<RoleType>>>
 
 [source,rust]
 ----
-fn get_relating(
+fn get_relating<'tx>(
     &self,
-    transaction: &Transaction<'_>
-) -> Result<BoxStream<'_, Result<RoleType>>>
+    transaction: &'tx Transaction<'_>
+) -> Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
 <<#_trait_RelationAPI_method_get_relating,Read more>>
@@ -150,7 +150,7 @@ fn get_relating(
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<RoleType>>>
+Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
 [#_struct_Relation_method_get_relations]
@@ -158,11 +158,11 @@ Result<BoxStream<'_, Result<RoleType>>>
 
 [source,rust]
 ----
-fn get_relations(
+fn get_relations<'tx>(
     &self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'_>,
     role_types: Vec<RoleType>
-) -> Result<BoxStream<'_, Result<Relation>>>
+) -> Result<BoxStream<'tx, Result<Relation>>>
 ----
 
 <<#_trait_ThingAPI_method_get_relations,Read more>>
@@ -171,7 +171,7 @@ fn get_relations(
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<Relation>>>
+Result<BoxStream<'tx, Result<Relation>>>
 ----
 
 [#_struct_Relation_method_get_role_players]
@@ -179,10 +179,10 @@ Result<BoxStream<'_, Result<Relation>>>
 
 [source,rust]
 ----
-fn get_role_players(
+fn get_role_players<'tx>(
     &self,
-    transaction: &Transaction<'_>
-) -> Result<BoxStream<'_, Result<(RoleType, Thing)>>>
+    transaction: &'tx Transaction<'_>
+) -> Result<BoxStream<'tx, Result<(RoleType, Thing)>>>
 ----
 
 <<#_trait_RelationAPI_method_get_role_players,Read more>>
@@ -191,7 +191,7 @@ fn get_role_players(
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<(RoleType, Thing)>>>
+Result<BoxStream<'tx, Result<(RoleType, Thing)>>>
 ----
 
 [#_struct_Relation_tymethod_iid]
@@ -217,8 +217,8 @@ fn iid(&self) -> &IID
 [source,rust]
 ----
 fn is_deleted<'tx>(
-    &'tx self,
-    transaction: &'tx Transaction<'tx>
+    &self,
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result<bool>>
 ----
 
@@ -254,8 +254,8 @@ bool
 [source,rust]
 ----
 fn remove_role_player<'tx>(
-    &'tx self,
-    transaction: &'tx Transaction<'tx>,
+    &self,
+    transaction: &'tx Transaction<'_>,
     role_type: RoleType,
     player: Thing
 ) -> BoxPromise<'tx, Result>
@@ -276,8 +276,8 @@ BoxPromise<'tx, Result>
 [source,rust]
 ----
 fn set_has<'tx>(
-    &'tx self,
-    transaction: &'tx Transaction<'tx>,
+    &self,
+    transaction: &'tx Transaction<'_>,
     attribute: Attribute
 ) -> BoxPromise<'tx, Result>
 ----
@@ -297,8 +297,8 @@ BoxPromise<'tx, Result>
 [source,rust]
 ----
 fn unset_has<'tx>(
-    &'tx self,
-    transaction: &'tx Transaction<'tx>,
+    &self,
+    transaction: &'tx Transaction<'_>,
     attribute: Attribute
 ) -> BoxPromise<'tx, Result>
 ----

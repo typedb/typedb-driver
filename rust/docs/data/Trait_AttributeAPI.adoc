@@ -11,11 +11,11 @@
 
 [source,rust]
 ----
-fn get_owners(
+fn get_owners<'tx>(
     &self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'_>,
     thing_type: Option<ThingType>
-) -> Result<BoxStream<'_, Result<Thing>>>
+) -> Result<BoxStream<'tx, Result<Thing>>>
 ----
 
 Retrieves the instances that own this ``Attribute``.
@@ -26,7 +26,7 @@ Retrieves the instances that own this ``Attribute``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 a| `owner_type` a| If specified, filter results for only owners of the given type a| 
 |===
 
@@ -34,7 +34,7 @@ a| `owner_type` a| If specified, filter results for only owners of the given typ
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<Thing>>>
+Result<BoxStream<'tx, Result<Thing>>>
 ----
 
 [caption=""]

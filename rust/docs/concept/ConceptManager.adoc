@@ -336,7 +336,7 @@ transaction.concepts().get_relation_type(label).resolve()
 ----
 pub fn get_schema_exceptions(
     &self
-) -> Result<impl Stream<Item = Result<SchemaException>>>
+) -> Result<impl Stream<Item = Result<SchemaException>> + 'tx>
 ----
 
 Retrieves a list of all schema exceptions for the current transaction.
@@ -345,7 +345,7 @@ Retrieves a list of all schema exceptions for the current transaction.
 .Returns
 [source,rust]
 ----
-Result<impl Stream<Item = Result<SchemaException>>>
+Result<impl Stream<Item = Result<SchemaException>> + 'tx>
 ----
 
 [caption=""]

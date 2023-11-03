@@ -65,7 +65,7 @@ transaction.logic().get_rule(label).resolve()
 
 [source,rust]
 ----
-pub fn get_rules(&self) -> Result<impl Stream<Item = Result<Rule>>>
+pub fn get_rules(&self) -> Result<impl Stream<Item = Result<Rule>> + 'tx>
 ----
 
 Retrieves all rules.
@@ -74,7 +74,7 @@ Retrieves all rules.
 .Returns
 [source,rust]
 ----
-Result<impl Stream<Item = Result<Rule>>>
+Result<impl Stream<Item = Result<Rule>> + 'tx>
 ----
 
 [caption=""]
