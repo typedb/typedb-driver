@@ -13,7 +13,7 @@
 ----
 fn create<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result<Entity>>
 ----
 
@@ -25,7 +25,7 @@ Creates and returns a new instance of this ``EntityType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 |===
 
 [caption=""]
@@ -65,11 +65,11 @@ entity_type.create(transaction).resolve();
 
 [source,rust]
 ----
-fn get_instances(
+fn get_instances<'tx>(
     &self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'_>,
     transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<Entity>>>
+) -> Result<BoxStream<'tx, Result<Entity>>>
 ----
 
 Retrieves all direct and indirect (or direct only) ``Entity`` objects that are instances of this ``EntityType``.
@@ -80,7 +80,7 @@ Retrieves all direct and indirect (or direct only) ``Entity`` objects that are i
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect instances, ``Transitivity::Explicit`` for direct instances only a| `Transitivity`
 |===
 
@@ -88,7 +88,7 @@ a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect instan
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<Entity>>>
+Result<BoxStream<'tx, Result<Entity>>>
 ----
 
 [caption=""]
@@ -103,11 +103,11 @@ entity_type.get_instances(transaction, Transitivity::Explicit);
 
 [source,rust]
 ----
-fn get_subtypes(
+fn get_subtypes<'tx>(
     &self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'_>,
     transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<EntityType>>>
+) -> Result<BoxStream<'tx, Result<EntityType>>>
 ----
 
 Retrieves all direct and indirect (or direct only) subtypes of the ``EntityType``.
@@ -118,7 +118,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the ``EntityType`
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity`
 |===
 
@@ -126,7 +126,7 @@ a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtyp
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<EntityType>>>
+Result<BoxStream<'tx, Result<EntityType>>>
 ----
 
 [caption=""]
@@ -143,7 +143,7 @@ entity_type.get_subtypes(transaction, Transitivity::Transitive);
 ----
 fn get_supertype<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result<Option<EntityType>>>
 ----
 
@@ -155,7 +155,7 @@ Retrieves the most immediate supertype of the ``EntityType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 |===
 
 [caption=""]
@@ -195,10 +195,10 @@ entity_type.get_supertype(transaction).resolve();
 
 [source,rust]
 ----
-fn get_supertypes(
+fn get_supertypes<'tx>(
     &self,
-    transaction: &Transaction<'_>
-) -> Result<BoxStream<'_, Result<EntityType>>>
+    transaction: &'tx Transaction<'_>
+) -> Result<BoxStream<'tx, Result<EntityType>>>
 ----
 
 Retrieves all supertypes of the ``EntityType``.
@@ -209,14 +209,14 @@ Retrieves all supertypes of the ``EntityType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 |===
 
 [caption=""]
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<EntityType>>>
+Result<BoxStream<'tx, Result<EntityType>>>
 ----
 
 [caption=""]
@@ -233,7 +233,7 @@ entity_type.get_supertypes(transaction);
 ----
 fn set_supertype<'tx>(
     &mut self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     supertype: EntityType
 ) -> BoxPromise<'tx, Result>
 ----
@@ -246,7 +246,7 @@ Sets the supplied ``EntityType`` as the supertype of the current ``EntityType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 a| `supertype` a| The ``EntityType`` to set as the supertype of this ``EntityType`` a| `EntityType`
 |===
 

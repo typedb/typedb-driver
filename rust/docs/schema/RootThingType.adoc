@@ -19,7 +19,7 @@
 ----
 fn delete<'tx>(
     &mut self,
-    transaction: &'tx Transaction<'tx>
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result>
 ----
 
@@ -37,13 +37,13 @@ BoxPromise<'tx, Result>
 
 [source,rust]
 ----
-fn get_owns(
+fn get_owns<'tx>(
     &self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'_>,
     value_type: Option<ValueType>,
     transitivity: Transitivity,
     annotations: Vec<Annotation>
-) -> Result<BoxStream<'_, Result<AttributeType>>>
+) -> Result<BoxStream<'tx, Result<AttributeType>>>
 ----
 
 <<#_trait_ThingTypeAPI_method_get_owns,Read more>>
@@ -52,7 +52,7 @@ fn get_owns(
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<AttributeType>>>
+Result<BoxStream<'tx, Result<AttributeType>>>
 ----
 
 [#_struct_RootThingType_method_get_owns_overridden]
@@ -62,7 +62,7 @@ Result<BoxStream<'_, Result<AttributeType>>>
 ----
 fn get_owns_overridden<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     overridden_attribute_type: AttributeType
 ) -> BoxPromise<'tx, Result<Option<AttributeType>>>
 ----
@@ -81,11 +81,11 @@ BoxPromise<'tx, Result<Option<AttributeType>>>
 
 [source,rust]
 ----
-fn get_plays(
+fn get_plays<'tx>(
     &self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'_>,
     transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<RoleType>>>
+) -> Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
 <<#_trait_ThingTypeAPI_method_get_plays,Read more>>
@@ -94,7 +94,7 @@ fn get_plays(
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<RoleType>>>
+Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
 [#_struct_RootThingType_method_get_plays_overridden]
@@ -104,7 +104,7 @@ Result<BoxStream<'_, Result<RoleType>>>
 ----
 fn get_plays_overridden<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     overridden_role_type: RoleType
 ) -> BoxPromise<'tx, Result<Option<RoleType>>>
 ----
@@ -125,7 +125,7 @@ BoxPromise<'tx, Result<Option<RoleType>>>
 ----
 fn get_syntax<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result<String>>
 ----
 
@@ -162,7 +162,7 @@ bool
 ----
 fn is_deleted<'tx>(
     &self,
-    _transaction: &Transaction<'tx>
+    _transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result<bool>>
 ----
 
@@ -216,7 +216,7 @@ fn label(&self) -> &str
 ----
 fn set_abstract<'tx>(
     &mut self,
-    transaction: &'tx Transaction<'tx>
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result>
 ----
 
@@ -236,7 +236,7 @@ BoxPromise<'tx, Result>
 ----
 fn set_label<'tx>(
     &mut self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     new_label: String
 ) -> BoxPromise<'tx, Result>
 ----
@@ -257,7 +257,7 @@ BoxPromise<'tx, Result>
 ----
 fn set_owns<'tx>(
     &mut self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     attribute_type: AttributeType,
     overridden_attribute_type: Option<AttributeType>,
     annotations: Vec<Annotation>
@@ -280,7 +280,7 @@ BoxPromise<'tx, Result>
 ----
 fn set_plays<'tx>(
     &mut self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     role_type: RoleType,
     overridden_role_type: Option<RoleType>
 ) -> BoxPromise<'tx, Result>
@@ -302,7 +302,7 @@ BoxPromise<'tx, Result>
 ----
 fn unset_abstract<'tx>(
     &mut self,
-    transaction: &'tx Transaction<'tx>
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result>
 ----
 
@@ -322,7 +322,7 @@ BoxPromise<'tx, Result>
 ----
 fn unset_owns<'tx>(
     &mut self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     attribute_type: AttributeType
 ) -> BoxPromise<'tx, Result>
 ----
@@ -343,7 +343,7 @@ BoxPromise<'tx, Result>
 ----
 fn unset_plays<'tx>(
     &mut self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     role_type: RoleType
 ) -> BoxPromise<'tx, Result>
 ----

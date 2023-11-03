@@ -13,7 +13,7 @@
 ----
 fn create<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result<Relation>>
 ----
 
@@ -25,7 +25,7 @@ Creates and returns an instance of this ``RelationType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 |===
 
 [caption=""]
@@ -65,11 +65,11 @@ relation_type.create(transaction).resolve();
 
 [source,rust]
 ----
-fn get_instances(
+fn get_instances<'tx>(
     &self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'_>,
     transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<Relation>>>
+) -> Result<BoxStream<'tx, Result<Relation>>>
 ----
 
 Retrieves all direct and indirect (or direct only) ``Relation``s that are instances of this ``RelationType``.
@@ -80,7 +80,7 @@ Retrieves all direct and indirect (or direct only) ``Relation``s that are instan
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect instances, ``Transitivity::Explicit`` for direct relates only a| `Transitivity`
 |===
 
@@ -88,7 +88,7 @@ a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect instan
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<Relation>>>
+Result<BoxStream<'tx, Result<Relation>>>
 ----
 
 [caption=""]
@@ -103,11 +103,11 @@ relation_type.get_instances(transaction, Transitivity::Explicit);
 
 [source,rust]
 ----
-fn get_relates(
+fn get_relates<'tx>(
     &self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'_>,
     transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<RoleType>>>
+) -> Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
 Retrieves roles that this ``RelationType`` relates to directly or via inheritance.
@@ -118,7 +118,7 @@ Retrieves roles that this ``RelationType`` relates to directly or via inheritanc
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 a| `transitivity` a| ``Transitivity::Transitive`` for direct and inherited relates, ``Transitivity::Explicit`` for direct relates only a| `Transitivity`
 |===
 
@@ -126,7 +126,7 @@ a| `transitivity` a| ``Transitivity::Transitive`` for direct and inherited relat
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<RoleType>>>
+Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
 [caption=""]
@@ -143,7 +143,7 @@ relation_type.get_relates(transaction, Transitivity::Transitive);
 ----
 fn get_relates_for_role_label<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     role_label: String
 ) -> BoxPromise<'tx, Result<Option<RoleType>>>
 ----
@@ -156,7 +156,7 @@ Retrieves role with a given ``role_label`` that this ``RelationType`` relates to
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 a| `role_label` a| Label of the role we wish to retrieve a| `String`
 |===
 
@@ -199,7 +199,7 @@ relation_type.get_relates_for_role_label(transaction, role_label).resolve();
 ----
 fn get_relates_overridden<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     overridden_role_label: String
 ) -> BoxPromise<'tx, Result<Option<RoleType>>>
 ----
@@ -212,7 +212,7 @@ Retrieves a ``RoleType`` that is overridden by the role with the ``overridden_ro
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 a| `overridden_role_label` a| Label of the role that overrides an inherited role a| `String`
 |===
 
@@ -253,11 +253,11 @@ relation_type.get_relates_overridden(transaction, overridden_role_label).resolve
 
 [source,rust]
 ----
-fn get_subtypes(
+fn get_subtypes<'tx>(
     &self,
-    transaction: &Transaction<'_>,
+    transaction: &'tx Transaction<'_>,
     transitivity: Transitivity
-) -> Result<BoxStream<'_, Result<RelationType>>>
+) -> Result<BoxStream<'tx, Result<RelationType>>>
 ----
 
 Retrieves all direct and indirect (or direct only) subtypes of the ``RelationType``.
@@ -268,7 +268,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the ``RelationTyp
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtypes, ``Transitivity::Explicit`` for direct subtypes only a| `Transitivity`
 |===
 
@@ -276,7 +276,7 @@ a| `transitivity` a| ``Transitivity::Transitive`` for direct and indirect subtyp
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<RelationType>>>
+Result<BoxStream<'tx, Result<RelationType>>>
 ----
 
 [caption=""]
@@ -293,7 +293,7 @@ relation_type.get_subtypes(transaction, Transitivity::Transitive);
 ----
 fn get_supertype<'tx>(
     &self,
-    transaction: &'tx Transaction<'tx>
+    transaction: &'tx Transaction<'_>
 ) -> BoxPromise<'tx, Result<Option<RelationType>>>
 ----
 
@@ -305,7 +305,7 @@ Retrieves the most immediate supertype of the ``RelationType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 |===
 
 [caption=""]
@@ -345,10 +345,10 @@ relation_type.get_supertype(transaction).resolve();
 
 [source,rust]
 ----
-fn get_supertypes(
+fn get_supertypes<'tx>(
     &self,
-    transaction: &Transaction<'_>
-) -> Result<BoxStream<'_, Result<RelationType>>>
+    transaction: &'tx Transaction<'_>
+) -> Result<BoxStream<'tx, Result<RelationType>>>
 ----
 
 Retrieves all supertypes of the ``RelationType``.
@@ -359,14 +359,14 @@ Retrieves all supertypes of the ``RelationType``.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&Transaction<'_>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 |===
 
 [caption=""]
 .Returns
 [source,rust]
 ----
-Result<BoxStream<'_, Result<RelationType>>>
+Result<BoxStream<'tx, Result<RelationType>>>
 ----
 
 [caption=""]
@@ -383,7 +383,7 @@ relation_type.get_supertypes(transaction);
 ----
 fn set_relates<'tx>(
     &mut self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     role_label: String,
     overridden_role_label: Option<String>
 ) -> BoxPromise<'tx, Result>
@@ -397,7 +397,7 @@ Sets the new role that this ``RelationType`` relates to. If we are setting an ov
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 a| `role_label` a| The new role for the ``RelationType`` to relate to a| `String`
 a| `overridden_role_label` a| The label being overridden, if applicable a| `Option<String>`
 |===
@@ -441,7 +441,7 @@ relation_type.set_relates(transaction, role_label, None).resolve();
 ----
 fn set_supertype<'tx>(
     &mut self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     supertype: RelationType
 ) -> BoxPromise<'tx, Result>
 ----
@@ -454,7 +454,7 @@ Sets the supplied ``RelationType`` as the supertype of the current ``RelationTyp
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 a| `supertype` a| The ``RelationType`` to set as the supertype of this ``RelationType`` a| `RelationType`
 |===
 
@@ -497,7 +497,7 @@ relation_type.set_supertype(transaction, super_relation_type).resolve();
 ----
 fn unset_relates<'tx>(
     &mut self,
-    transaction: &'tx Transaction<'tx>,
+    transaction: &'tx Transaction<'_>,
     role_label: String
 ) -> BoxPromise<'tx, Result>
 ----
@@ -510,7 +510,7 @@ Disallows this ``RelationType`` from relating to the given role.
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a| The current transaction a| `&'tx Transaction<'tx>`
+a| `transaction` a| The current transaction a| `&'tx Transaction<'_>`
 a| `role_label` a| The role to not relate to the relation type. a| `String`
 |===
 

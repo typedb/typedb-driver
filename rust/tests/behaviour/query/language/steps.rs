@@ -105,14 +105,16 @@ generic_step_impl! {
     #[step(expr = "get answers of typeql get")]
     pub async fn get_answers_typeql_get(context: &mut Context, step: &Step) -> TypeDBResult {
         let parsed = parse_query(step.docstring().unwrap())?;
-        context.answer = context.transaction().query().get(&parsed.to_string())?.try_collect::<Vec<_>>().await?;
+        let answer = context.transaction().query().get(&parsed.to_string())?.try_collect::<Vec<_>>().await?;
+        context.answer = answer;
         Ok(())
     }
 
     #[step(expr = "get answers of typeql insert")]
     async fn get_answers_typeql_insert(context: &mut Context, step: &Step) -> TypeDBResult {
         let parsed = parse_query(step.docstring().unwrap())?;
-        context.answer = context.transaction().query().insert(&parsed.to_string())?.try_collect::<Vec<_>>().await?;
+        let answer = context.transaction().query().insert(&parsed.to_string())?.try_collect::<Vec<_>>().await?;
+        context.answer = answer;
         Ok(())
     }
 
@@ -266,8 +268,8 @@ generic_step_impl! {
     #[step(expr = "get answers of typeql get group")]
     async fn get_answers_typeql_get_group(context: &mut Context, step: &Step) -> TypeDBResult {
         let parsed = parse_query(step.docstring().unwrap())?;
-        context.answer_group =
-            context.transaction().query().get_group(&parsed.to_string())?.try_collect::<Vec<_>>().await?;
+        let answer_group = context.transaction().query().get_group(&parsed.to_string())?.try_collect::<Vec<_>>().await?;
+        context.answer_group = answer_group;
         Ok(())
     }
 
@@ -329,8 +331,9 @@ generic_step_impl! {
     #[step(expr = "get answers of typeql get group aggregate")]
     async fn get_answers_typeql_get_group_aggregate(context: &mut Context, step: &Step) -> TypeDBResult {
         let parsed = parse_query(step.docstring().unwrap())?;
-        context.value_answer_group =
+        let value_answer_group =
             context.transaction().query().get_group_aggregate(&parsed.to_string())?.try_collect::<Vec<_>>().await?;
+        context.value_answer_group = value_answer_group;
         Ok(())
     }
 
@@ -379,7 +382,8 @@ generic_step_impl! {
     #[step(expr = "get answers of typeql fetch")]
     pub async fn get_answers_typeql_fetch(context: &mut Context, step: &Step) -> TypeDBResult {
         let parsed = parse_query(step.docstring().unwrap())?;
-        context.fetch_answer = Some(JSON::Array(context.transaction().query().fetch(&parsed.to_string())?.try_collect().await?));
+        let fetch_answer = Some(JSON::Array(context.transaction().query().fetch(&parsed.to_string())?.try_collect().await?));
+        context.fetch_answer = fetch_answer;
         Ok(())
     }
 

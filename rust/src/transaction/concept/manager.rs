@@ -192,7 +192,7 @@ impl<'tx> ConceptManager<'tx> {
     /// ```rust
     /// transaction.concepts().get_schema_exceptions()
     /// ```
-    pub fn get_schema_exceptions(&self) -> Result<impl Stream<Item = Result<SchemaException>>> {
+    pub fn get_schema_exceptions(&self) -> Result<impl Stream<Item = Result<SchemaException>> + 'tx> {
         self.transaction_stream.get_ref().get_schema_exceptions()
     }
 }

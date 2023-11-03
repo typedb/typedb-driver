@@ -59,7 +59,7 @@
 
     public static class Unchecked extends RuntimeException {
         Unchecked(Error e) {
-            super(e);
+            super(e.getMessage());
         }
     }
 %}
@@ -82,6 +82,8 @@
         return $null;
     }
 }
+
+%nojavaexception init_logging;
 
 /* simple getters do not throw */
 %nojavaexception options_new;
