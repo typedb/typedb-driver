@@ -34,6 +34,7 @@ load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
+load("@aspect_bazel_lib//lib:jq.bzl", "jq")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("//nodejs:tool/typedoc/rules.bzl", "typedoc_docs")
 load("//tool/docs:nodejs/rules.bzl", "typedoc_to_adoc")
@@ -89,9 +90,22 @@ ts_project(
     out_dir = "dist",
 )
 
+jq(
+    name = "package",
+    srcs = ["package.json"],
+    filter = "|".join([
+        # Don't directly reference $STAMP as it's only set when stamping
+        # This 'as' syntax results in $stamp being null in unstamped builds.
+        "$ARGS.named.STAMP as $stamp",
+        # Provide a default using the "alternative operator" in case $stamp is null.
+        ".dependencies[\"typedb-protocol\"] = ($stamp.STABLE_PROTOCOL_VERSION // .dependencies[\"typedb-protocol\"])",
+        ".version = ($stamp.STABLE_VERSION // \"0.0.0\")"
+    ]),
+)
+
 npm_package(
     name = "driver-nodejs-npm-package",
-    srcs = [":driver-nodejs", "package.json"],
+    srcs = [":driver-nodejs", ":package"],
     include_runfiles = False,
     package = "typedb-driver",
     replace_prefixes = { "dist/": "" },
