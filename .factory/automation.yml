@@ -1020,6 +1020,7 @@ build:
         npm install https://repo.vaticle.com/repository/npm-snapshot-group/typedb-driver/-/typedb-driver-0.0.0-$FACTORY_COMMIT.tgz
         sudo -H npm install jest --global
         jest --detectOpenHandles application.test.js && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        cd -
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
         
