@@ -98,7 +98,7 @@ jq(
         # This 'as' syntax results in $stamp being null in unstamped builds.
         "$ARGS.named.STAMP as $stamp",
         # Provide a default using the "alternative operator" in case $stamp is null.
-        ".dependencies[\"typedb-protocol\"] = ($stamp.STABLE_PROTOCOL_VERSION // .dependencies[\"typedb-protocol\"])",
+        ".dependencies[\"typedb-protocol\"] = $stamp.STABLE_PROTOCOL_VERSION",
         ".version = ($stamp.STABLE_VERSION // \"0.0.0\")"
     ]),
 )

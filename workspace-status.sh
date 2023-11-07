@@ -20,18 +20,22 @@
 # under the License.
 #
 
-tag=$(git describe --exact-match --tags $(git log -n1 --pretty='%h') 2>/dev/null)
-if [ ! -z "$tag" ]; then
-    echo STABLE_VERSION $tag
+TAG=$(git describe --exact-match --tags $(git log -n1 --pretty='%h') 2>/dev/null)
+if [ ! -z "$TAG" ]; then
+    echo STABLE_VERSION $TAG
 else
     echo STABLE_VERSION 0.0.0-$(git rev-parse HEAD)
 fi
 
-workspace=$(realpath $(readlink bazel-typedb-driver)/../..)
-workspace_refs=$workspace/external/vaticle_typedb_driver_workspace_refs/refs.json
-typedb_protocol_version=$(grep -o '"vaticle_typedb_protocol":"[^"]*"' $workspace_refs | sed 's/.*:"\(.*\)"/\1/')
-
-echo STABLE_PROTOCOL_VERSION $typedb_protocol_version
+TYPEDB_PROTOCOL_VERSION=$(grep -o 'VATICLE_TYPEDB_PROTOCOL_VERSION.*"[^"]*"' dependencies/vaticle/repositories.bzl | sed 's/.*"\(.*\)"/\1/')
+if [ -z "$TYPEDB_PROTOCOL_VERSION" ]; then
+  # the following line only prints when the script is run directly
+  echo "VATICLE_TYPEDB_PROTOCOL_VERSION not found in dependencies/vaticle/repositories.bzl, cannot stamp"
+  exit 1
+elif [[ "$TYPEDB_PROTOCOL_VERSION" =~ ^[0-9a-f]{40}$ ]]; then # SHA
+  TYPEDB_PROTOCOL_VERSION=0.0.0-$TYPEDB_PROTOCOL_VERSION
+fi
+echo STABLE_PROTOCOL_VERSION $TYPEDB_PROTOCOL_VERSION
 
 # TODO parse workspace refs (in jq?)
 #echo STABLE_WORKSPACE_REFS $(cat $workspace_refs)
