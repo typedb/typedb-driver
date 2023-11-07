@@ -36,6 +36,3 @@ elif [[ "$TYPEDB_PROTOCOL_VERSION" =~ ^[0-9a-f]{40}$ ]]; then # SHA
   TYPEDB_PROTOCOL_VERSION=0.0.0-$TYPEDB_PROTOCOL_VERSION
 fi
 echo STABLE_PROTOCOL_VERSION $TYPEDB_PROTOCOL_VERSION
-
-# TODO parse workspace refs (in jq?)
-#echo STABLE_WORKSPACE_REFS $(cat $workspace_refs)
