@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # Copyright (C) 2022 Vaticle
 #
@@ -19,16 +20,19 @@
 # under the License.
 #
 
-try-import ./.bazel-remote-cache.rc
+TAG=$(git describe --exact-match --tags $(git log -n1 --pretty='%h') 2>/dev/null)
+if [ ! -z "$TAG" ]; then
+    echo STABLE_VERSION $TAG
+else
+    echo STABLE_VERSION 0.0.0-$(git rev-parse HEAD)
+fi
 
-common --enable_platform_specific_config
-
-build --incompatible_strict_action_env --java_language_version=11 --javacopt='--release 11' --enable_runfiles
-run --incompatible_strict_action_env --java_runtime_version=remotejdk_11
-test --incompatible_strict_action_env --test_env=PATH --cache_test_results=no --java_runtime_version=remotejdk_11
-
-build:linux --stamp --workspace_status_command=$PWD/workspace-status.sh
-build:macos --stamp --workspace_status_command=$PWD/workspace-status.sh
-
-# TODO
-# build:windows --stamp --workspace_status_command=workspace-status.bat
+TYPEDB_PROTOCOL_VERSION=$(grep -o 'VATICLE_TYPEDB_PROTOCOL_VERSION.*"[^"]*"' dependencies/vaticle/repositories.bzl | sed 's/.*"\(.*\)"/\1/')
+if [ -z "$TYPEDB_PROTOCOL_VERSION" ]; then
+  # the following line only prints when the script is run directly
+  echo "VATICLE_TYPEDB_PROTOCOL_VERSION not found in dependencies/vaticle/repositories.bzl, cannot stamp"
+  exit 1
+elif [[ "$TYPEDB_PROTOCOL_VERSION" =~ ^[0-9a-f]{40}$ ]]; then # SHA
+  TYPEDB_PROTOCOL_VERSION=0.0.0-$TYPEDB_PROTOCOL_VERSION
+fi
+echo STABLE_PROTOCOL_VERSION $TYPEDB_PROTOCOL_VERSION

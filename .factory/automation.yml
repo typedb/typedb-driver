@@ -1006,6 +1006,23 @@ build:
         export DEPLOY_NPM_USERNAME=$REPO_VATICLE_USERNAME
         export DEPLOY_NPM_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run --define version=$(git rev-parse HEAD) //nodejs:deploy-npm -- snapshot
+
+    test-deployment-npm:
+      filter:
+        owner: vaticle
+        branch: [master, development]
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - deploy-npm-snapshot
+      command: |
+        tool/test/start-core-server.sh
+        cd nodejs/test/deployment/
+        npm install https://repo.vaticle.com/repository/npm-snapshot-group/typedb-driver/-/typedb-driver-0.0.0-$FACTORY_COMMIT.tgz
+        sudo -H npm install jest --global
+        jest --detectOpenHandles application.test.js && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        cd -
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
         
 # TODO: assembly tests for all drivers to run in factory
 

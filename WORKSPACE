@@ -237,6 +237,9 @@ rules_ts_dependencies(
     ts_version_from = "//nodejs:package.json",
 )
 
+load("@aspect_bazel_lib//lib:repositories.bzl", "register_jq_toolchains")
+register_jq_toolchains()
+
 ###############
 # Load @maven #
 ###############
