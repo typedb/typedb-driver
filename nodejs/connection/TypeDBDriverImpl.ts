@@ -68,7 +68,22 @@ export class TypeDBDriverImpl implements TypeDBDriver {
     }
 
     async open(): Promise<TypeDBDriver> {
-        const serverAddresses = await this.fetchServerAddresses();
+        if (this._isEnterprise) return this.openEnterprise()
+        else return this.openCore()
+    }
+
+    private async openCore(): Promise<TypeDBDriver> {
+        const serverAddress = this._initAddresses[0];
+        const serverStub = new TypeDBStubImpl(serverAddress, this._credential);
+        await serverStub.open();
+        const advertisedAddress = (await serverStub.serversAll(RequestBuilder.ServerManager.allReq())).servers[0].address;
+        this.serverDrivers.set(advertisedAddress, new ServerDriver(serverAddress, serverStub));
+        this._isOpen = true;
+        return this;
+    }
+
+    private async openEnterprise(): Promise<TypeDBDriver> {
+        const serverAddresses = await this.fetchEnterpriseServerAddresses();
         const openReqs: Promise<void>[] = []
         for (const addr of serverAddresses) {
             const serverStub = new TypeDBStubImpl(addr, this._credential);
@@ -78,15 +93,14 @@ export class TypeDBDriverImpl implements TypeDBDriver {
         try {
             await Promise.any(openReqs);
         } catch (e) {
-            if (this._isEnterprise) throw new TypeDBDriverError(ENTERPRISE_UNABLE_TO_CONNECT.message(e));
-            else throw new TypeDBDriverError(UNABLE_TO_CONNECT);
+            throw new TypeDBDriverError(ENTERPRISE_UNABLE_TO_CONNECT.message(e));
         }
         this._userManager = new UserManagerImpl(this);
         this._isOpen = true;
         return this;
     }
 
-    private async fetchServerAddresses(): Promise<string[]> {
+    private async fetchEnterpriseServerAddresses(): Promise<string[]> {
         for (const address of this._initAddresses) {
             try {
                 const stub = new TypeDBStubImpl(address, this._credential);
@@ -98,8 +112,7 @@ export class TypeDBDriverImpl implements TypeDBDriver {
                 console.error(`Fetching enterprise servers from ${address} failed.`, e);
             }
         }
-        if (this._isEnterprise) throw new TypeDBDriverError(ENTERPRISE_UNABLE_TO_CONNECT.message(this._initAddresses.join(",")));
-        else throw new TypeDBDriverError(UNABLE_TO_CONNECT);
+        throw new TypeDBDriverError(ENTERPRISE_UNABLE_TO_CONNECT.message(this._initAddresses.join(",")));
     }
 
     isOpen(): boolean {
