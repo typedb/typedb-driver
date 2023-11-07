@@ -984,9 +984,9 @@ build:
         bazel run --define version=$(git rev-parse HEAD) //rust:deploy_crate -- snapshot
 
     deploy-npm-snapshot:
-#      filter:
-#        owner: vaticle
-#        branch: [master, development]
+      filter:
+        owner: vaticle
+        branch: [master, development]
       image: vaticle-ubuntu-22.04
       dependencies:
         - build
@@ -1008,9 +1008,9 @@ build:
         bazel run --define version=$(git rev-parse HEAD) //nodejs:deploy-npm -- snapshot
 
     test-deployment-npm:
-#      filter:
-#        owner: vaticle
-#        branch: [master, development]
+      filter:
+        owner: vaticle
+        branch: [master, development]
       image: vaticle-ubuntu-22.04
       dependencies:
         - deploy-npm-snapshot
