@@ -83,6 +83,7 @@ commands:
   deploy-pip-snapshot-unix:
     steps:
       - run: |
+          ulimit -n 100000
           export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip39 -- snapshot
@@ -186,6 +187,7 @@ commands:
   deploy-maven-jni-snapshot-unix:
     steps:
       - run: |
+          ulimit -n 100000
           export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
@@ -253,6 +255,7 @@ commands:
   deploy-maven-jni-release-unix:
     steps:
       - run: |
+          ulimit -n 100000
           export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
