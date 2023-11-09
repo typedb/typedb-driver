@@ -9,7 +9,7 @@ Documentation: https://typedb.com/docs/clients/rust-driver
 
 
 ```sh
-cargo add typedb-driver@2.25.4
+cargo add typedb-driver@2.25.5
 ```
 
 
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/clients/java-driver
     <dependency>
         <groupid>com.vaticle.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>2.25.4</version>
+        <version>2.25.5</version>
     </dependency>
 </dependencies>
 ```
@@ -42,7 +42,7 @@ Documentation: https://typedb.com/docs/clients/python-driver
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==2.25.4
+pip install typedb-driver==2.25.5
 ```
 
 ### NodeJS driver
@@ -51,7 +51,7 @@ NPM package: https://www.npmjs.com/package/typedb-driver
 Documentation: https://typedb.com/docs/clients/nodejs-driver
 
 ```
-npm install typedb-driver@2.25.4
+npm install typedb-driver@2.25.5
 ```
 
 
