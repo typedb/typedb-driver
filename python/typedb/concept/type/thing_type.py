@@ -81,7 +81,7 @@ class _ThingType(ThingType, _Type, ABC):
         promise = thing_type_is_deleted(transaction.native_object, self.native_object)
         return Promise(lambda: bool_promise_resolve(promise))
 
-    def set_label(self, transaction: _Transaction, new_label: Label) -> Promise[None]:
+    def set_label(self, transaction: _Transaction, new_label: str) -> Promise[None]:
         promise = thing_type_set_label(transaction.native_object, self.native_object, new_label)
         return Promise(lambda: void_promise_resolve(promise))
 

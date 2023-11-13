@@ -349,6 +349,28 @@ Casts the concept to ``Type``.
 concept.asType();
 ----
 
+[#_Value_asUntyped_]
+==== asUntyped
+
+[source,java]
+----
+java.lang.Object asUntyped()
+----
+
+Returns an untyped ``Object`` value of this value concept. This is useful for value equality or printing without having to switch on the actual contained value. 
+
+
+[caption=""]
+.Returns
+`java.lang.Object`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+value.asUntyped();
+----
+
 [#_Value_asValue_]
 ==== asValue
 
