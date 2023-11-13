@@ -39,5 +39,5 @@ def vaticle_typedb_enterprise_artifact():
         artifact_name = "typedb-enterprise-all-{platform}-{version}.{ext}",
         tag_source = deployment_private["artifact.release"],
         commit_source = deployment_private["artifact.snapshot"],
-        commit = "fc127f880bf85fab134ddcd1e5409142d47a1c32",
+        commit = "97c3601236b9366784eb476c185577d80be6c2e3",
     )
