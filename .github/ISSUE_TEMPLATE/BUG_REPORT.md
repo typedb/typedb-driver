@@ -1,38 +1,42 @@
 ---
 name: Bug Report
 about: Report a bug here, or visit forum.typedb.com for troubleshooting discussions
+title: ''
 labels: bug
----
+assignees: ''
 
-Please replace every line in curly brackets { like this } with an appropriate description, and remove this line.
+---
 
 ## Description
 
-{ Please provide a clear and concise description of the bug. }
 
 ## Environment
 
-1. OS (where TypeDB Driver runs): { e.g. MacOS 10, Windows 10, Ubuntu 16.4, etc. }
-2. TypeDB version (and platform): { e.g. TypeDB 2.11.1, or TypeDB Enterprise 2.11.1 on Google Cloud }
-3. TypeDB Driver version: { e.g. typedb-driver 2.11.1 }
-4. Other environment details:
+1. TypeDB distribution: Core/Enterprise/Cloud
+2. TypeDB version: 
+3. Environment: Linux/Mac/Windows/TypeDB Cloud/Google Cloud/AWS/Azure
+4. Studio version: 
+5. Other details:
 
 ## Reproducible Steps
 
-Steps to create the smallest reproducible scenario:
-1. { e.g. Run ... }
-2. { e.g. Load ... }
-3. { e.g. Query ... }
-4. { e.g. See error ... }
+1. Set up
 
-## Expected Output
 
-{ Please describe what you expected to happen. }
+2. Execute
 
-## Actual Output
 
-{ Please describe what actually happened. }
- 
+3. Test/Query
+
+
+4. Unexpected result
+
+
+
+## Expected result
+
+
 ## Additional information
 
-{ Any additional information, including logs or screenshots if you have any. }
+Relevant logs from TypeDB or Driver:
+
