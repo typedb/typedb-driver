@@ -87,7 +87,7 @@ impl Context {
     }
 
     fn is_ignore_tag(t: &String) -> bool {
-        t == "ignore" || t == "ignore-typedb" || t == "ignore-driver-rust" || t == "ignore-typedb-driver-rust"
+        t == "ignore" || t == "ignore-typedb-driver" || t == "ignore-typedb-driver-rust"
     }
 
     pub async fn after_scenario(&mut self) -> TypeDBResult {

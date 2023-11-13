@@ -32,7 +32,7 @@ import org.junit.runner.RunWith;
         plugin = "pretty",
         glue = "com.vaticle.typedb.driver.test.behaviour",
         features = "external/vaticle_typedb_behaviour/query/language/get.feature",
-        tags = "not @ignore and not @ignore-typedb-driver-java"
+        tags = "not @ignore and not @ignore-driver and not @ignore-typedb-driver-java"
 )
 public class GetTest extends BehaviourTest {
     // ATTENTION:
