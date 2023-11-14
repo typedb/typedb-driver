@@ -22,6 +22,7 @@
 use cucumber::{gherkin::Step, given, then, when};
 use futures::{future::try_join_all, TryFutureExt};
 use typedb_driver::{Session, SessionType};
+use std::time::Duration;
 
 use crate::{
     behaviour::{util, Context},
@@ -33,21 +34,21 @@ generic_step_impl! {
     pub async fn connection_open_schema_session_for_database(context: &mut Context, name: String) {
         context
             .session_trackers
-            .push(Session::new(context.databases.get(name).await.unwrap(), SessionType::Schema).await.unwrap().into());
+            .push(Session::new_with_options(context.databases.get(name).await.unwrap(), SessionType::Schema, context.options).await.unwrap().into());
     }
 
     #[step(expr = "connection open (data )session for database: {word}")]
     pub async fn connection_open_data_session_for_database(context: &mut Context, name: String) {
         context
             .session_trackers
-            .push(Session::new(context.databases.get(name).await.unwrap(), SessionType::Data).await.unwrap().into());
+            .push(Session::new_with_options(context.databases.get(name).await.unwrap(), SessionType::Data, context.options).await.unwrap().into());
     }
 
     #[step(expr = "connection open schema session(s) for database(s):")]
     async fn connection_open_schema_sessions_for_databases(context: &mut Context, step: &Step) {
         for name in util::iter_table(step) {
             context.session_trackers.push(
-                Session::new(context.databases.get(name).await.unwrap(), SessionType::Schema).await.unwrap().into(),
+                Session::new_with_options(context.databases.get(name).await.unwrap(), SessionType::Schema, context.options).await.unwrap().into(),
             );
         }
     }
@@ -56,7 +57,7 @@ generic_step_impl! {
     async fn connection_open_data_sessions_for_databases(context: &mut Context, step: &Step) {
         for name in util::iter_table(step) {
             context.session_trackers.push(
-                Session::new(context.databases.get(name).await.unwrap(), SessionType::Data).await.unwrap().into(),
+                Session::new_with_options(context.databases.get(name).await.unwrap(), SessionType::Data, context.options).await.unwrap().into(),
             );
         }
     }
@@ -65,7 +66,7 @@ generic_step_impl! {
     async fn connection_open_data_sessions_in_parallel_for_databases(context: &mut Context, step: &Step) {
         let new_sessions = try_join_all(
             util::iter_table(step)
-                .map(|name| context.databases.get(name).and_then(|db| Session::new(db, SessionType::Data))),
+                .map(|name| context.databases.get(name).and_then(|db| Session::new_with_options(db, SessionType::Data, context.options))),
         )
         .await
         .unwrap();
@@ -107,10 +108,10 @@ generic_step_impl! {
 
     #[step(expr = "set session option {word} to: {word}")]
     async fn set_session_option_to(_context: &mut Context, _option: String, _value: String) {
-        todo!()
-        // if (!optionSetters.containsKey(option)) {
-        //     throw new RuntimeException("Unrecognised option: " + option);
-        // }
-        // optionSetters.get(option).accept(sessionOptions, value);
+        if _option == "session_timeout_millis" {
+            _context.options.session_idle_timeout = Some(Duration::from_millis(_value.parse().unwrap()));
+        } else {
+            todo!();
+        }
     }
 }

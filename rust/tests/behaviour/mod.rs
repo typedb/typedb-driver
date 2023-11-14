@@ -35,18 +35,14 @@ use std::{
 use cucumber::{StatsWriter, World};
 use futures::future::try_join_all;
 use tokio::time::{sleep, Duration};
-use typedb_driver::{
-    answer::{ConceptMap, ConceptMapGroup, ValueGroup, JSON},
-    concept::{Attribute, AttributeType, Entity, EntityType, Relation, RelationType, Thing, Value},
-    logic::Rule,
-    Connection, Credential, Database, DatabaseManager, Result as TypeDBResult, Transaction, UserManager,
-};
+use typedb_driver::{answer::{ConceptMap, ConceptMapGroup, ValueGroup, JSON}, concept::{Attribute, AttributeType, Entity, EntityType, Relation, RelationType, Thing, Value}, logic::Rule, Connection, Credential, Database, DatabaseManager, Result as TypeDBResult, Transaction, UserManager, Options};
 
 use self::session_tracker::SessionTracker;
 
 #[derive(Debug, World)]
 pub struct Context {
     pub tls_root_ca: PathBuf,
+    pub options: Options,
     pub connection: Connection,
     pub databases: DatabaseManager,
     pub users: UserManager,
@@ -96,6 +92,7 @@ impl Context {
 
     pub async fn after_scenario(&mut self) -> TypeDBResult {
         sleep(Context::STEP_REATTEMPT_SLEEP).await;
+        self.options = Options::new();
         self.set_connection(Connection::new_enterprise(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
             Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&self.tls_root_ca))?,
@@ -220,6 +217,7 @@ impl Default for Context {
         let tls_root_ca = PathBuf::from(
             std::env::var("ROOT_CA").expect("ROOT_CA environment variable needs to be set for enterprise tests to run"),
         );
+        let options = Options::new();
         let connection = Connection::new_enterprise(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
             Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&tls_root_ca)).unwrap(),
@@ -229,6 +227,7 @@ impl Default for Context {
         let users = UserManager::new(connection.clone());
         Self {
             tls_root_ca,
+            options,
             connection,
             databases,
             users,
