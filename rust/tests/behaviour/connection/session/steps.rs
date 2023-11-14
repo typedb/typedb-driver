@@ -108,9 +108,9 @@ generic_step_impl! {
     }
 
     #[step(expr = "set session option {word} to: {word}")]
-    async fn set_session_option_to(_context: &mut Context, _option: String, _value: String) {
-        if _option == "session_timeout_millis" {
-            _context.options.session_idle_timeout = Some(Duration::from_millis(_value.parse().unwrap()));
+    async fn set_session_option_to(context: &mut Context, option: String, value: String) {
+        if option == "session_timeout_millis" {
+            context.options.session_idle_timeout = Some(Duration::from_millis(value.parse().unwrap()));
         } else {
             todo!();
         }
