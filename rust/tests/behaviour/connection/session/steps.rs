@@ -19,10 +19,11 @@
  * under the License.
  */
 
+use std::time::Duration;
+
 use cucumber::{gherkin::Step, given, then, when};
 use futures::{future::try_join_all, TryFutureExt};
 use typedb_driver::{Session, SessionType};
-use std::time::Duration;
 
 use crate::{
     behaviour::{util, Context},

@@ -21,9 +21,9 @@
 
 use std::env;
 
+use cucumber::{given, then, when};
 use tokio::time::{sleep, Duration};
 
-use cucumber::{given, then, when};
 use crate::{behaviour::Context, generic_step_impl};
 
 generic_step_impl! {

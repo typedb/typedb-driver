@@ -35,7 +35,12 @@ use std::{
 use cucumber::{StatsWriter, World};
 use futures::future::try_join_all;
 use tokio::time::{sleep, Duration};
-use typedb_driver::{answer::{ConceptMap, ConceptMapGroup, ValueGroup, JSON}, concept::{Attribute, AttributeType, Entity, EntityType, Relation, RelationType, Thing, Value}, logic::Rule, Connection, Credential, Database, DatabaseManager, Result as TypeDBResult, Transaction, UserManager, Options};
+use typedb_driver::{
+    answer::{ConceptMap, ConceptMapGroup, ValueGroup, JSON},
+    concept::{Attribute, AttributeType, Entity, EntityType, Relation, RelationType, Thing, Value},
+    logic::Rule,
+    Connection, Credential, Database, DatabaseManager, Options, Result as TypeDBResult, Transaction, UserManager,
+};
 
 use self::session_tracker::SessionTracker;
 
