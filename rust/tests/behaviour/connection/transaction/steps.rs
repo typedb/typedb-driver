@@ -19,6 +19,7 @@
  * under the License.
  */
 
+use std::time::Duration;
 use cucumber::{gherkin::Step, given, then, when};
 use typedb_driver::TransactionType;
 
@@ -35,7 +36,7 @@ generic_step_impl! {
     #[step(expr = "(for each )session(,) open(s) transaction(s) of type: {transaction_type}")]
     pub async fn session_opens_transaction_of_type(context: &mut Context, type_: TransactionTypeParam) {
         for session_tracker in &mut context.session_trackers {
-            session_tracker.open_transaction(type_.transaction_type).await.unwrap();
+            session_tracker.open_transaction(type_.transaction_type, context.transaction_options.clone()).await.unwrap();
         }
     }
 
@@ -44,7 +45,7 @@ generic_step_impl! {
         for type_ in iter_table(step) {
             let transaction_type = type_.parse::<TransactionTypeParam>().unwrap().transaction_type;
             for session_tracker in &mut context.session_trackers {
-                session_tracker.open_transaction(transaction_type).await.unwrap();
+                session_tracker.open_transaction(transaction_type, context.transaction_options.clone()).await.unwrap();
             }
         }
     }
@@ -55,7 +56,7 @@ generic_step_impl! {
         type_: TransactionTypeParam,
     ) {
         for session_tracker in &mut context.session_trackers {
-            assert!(session_tracker.open_transaction(type_.transaction_type).await.is_err());
+            assert!(session_tracker.open_transaction(type_.transaction_type, context.transaction_options.clone()).await.is_err());
         }
     }
 
@@ -64,7 +65,7 @@ generic_step_impl! {
         for type_ in iter_table(step) {
             let transaction_type = type_.parse::<TransactionTypeParam>().unwrap().transaction_type;
             for session_tracker in &mut context.session_trackers {
-                assert!(session_tracker.open_transaction(transaction_type).await.is_err());
+                assert!(session_tracker.open_transaction(transaction_type, context.transaction_options.clone()).await.is_err());
             }
         }
     }
@@ -161,8 +162,17 @@ generic_step_impl! {
             let transaction_type = type_.parse::<TransactionTypeParam>().unwrap().transaction_type;
             for session_tracker in &mut context.session_trackers {
                 // FIXME parallel
-                session_tracker.open_transaction(transaction_type).await.unwrap();
+                session_tracker.open_transaction(transaction_type, context.transaction_options.clone()).await.unwrap();
             }
+        }
+    }
+
+    #[step(expr = "set transaction option {word} to: {word}")]
+    async fn set_transaction_option_to(context: &mut Context, option: String, value: String) {
+        if option == "transaction-timeout-millis" {
+            context.transaction_options.transaction_timeout = Some(Duration::from_millis(value.parse().unwrap()))
+        } else {
+            todo!("Transaction Option not recognised: {}", option);
         }
     }
 }
