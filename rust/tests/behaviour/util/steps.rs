@@ -34,6 +34,6 @@ generic_step_impl! {
 
     #[step(expr = "wait {word} seconds")]
     async fn wait_seconds(_context: &mut Context, seconds: String) {
-        sleep(Duration::from_seconds(seconds.parse().unwrap())).await
+        sleep(Duration::from_secs(seconds.parse().unwrap())).await
     }
 }
