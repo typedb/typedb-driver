@@ -48,12 +48,14 @@ error_messages! { ConnectionError
         11: "Received a response with unknown request id '{}'",
     InvalidResponseField(&'static str) =
         12: "Invalid field in message received from server: '{}'.",
+    ServerConnectionError(String) =
+        13: "Unable to connect to the server(s), received errors: \n{}",
     EnterpriseUnableToConnect(String) =
-        13: "Unable to connect to TypeDB Enterprise. Attempted connecting to the enterprise members, but none are available: '{}'.",
+        14: "Unable to connect to TypeDB Enterprise. Attempted connecting to the enterprise members, but none are available: '{}'.",
     EnterpriseReplicaNotPrimary() =
-        14: "The replica is not the primary replica.",
+        15: "The replica is not the primary replica.",
     EnterpriseAllNodesFailed(String) =
-        15: "Attempted connecting to all enterprise members, but the following errors occurred: \n{}.",
+        16: "Attempted connecting to all enterprise members, but the following errors occurred: \n{}.",
     EnterpriseTokenCredentialInvalid() =
         17: "Invalid token credential.",
     SessionCloseFailed() =

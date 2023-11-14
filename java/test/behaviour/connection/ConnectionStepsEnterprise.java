@@ -28,6 +28,7 @@ import com.vaticle.typedb.driver.api.TypeDBOptions;
 import com.vaticle.typedb.common.test.TypeDBRunner;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
 import com.vaticle.typedb.common.test.enterprise.TypeDBEnterpriseRunner;
+import com.vaticle.typedb.driver.api.database.Database;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
@@ -57,6 +58,13 @@ public class ConnectionStepsEnterprise extends ConnectionStepsBase {
     @After
     public synchronized void after() {
         super.after();
+        driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address());
+        driver.users().all().forEach(user -> {
+            if (!user.username().equals("admin")) {
+                driver.users().delete(user.username());
+            }
+        });
+        driver.close();
         try {
             // sleep for eventual consistency to catch up with database deletion on all servers
             Thread.sleep(100);

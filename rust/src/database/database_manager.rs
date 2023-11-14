@@ -118,7 +118,7 @@ impl DatabaseManager {
                 Err(err) => error_buffer.push(format!("- {}: {}", server_connection.address(), err)),
             }
         }
-        Err(ConnectionError::EnterpriseAllNodesFailed(error_buffer.join("\n")))?
+        Err(ConnectionError::ServerConnectionError(error_buffer.join("\n")))?
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -144,6 +144,6 @@ impl DatabaseManager {
                 Err(err) => error_buffer.push(format!("- {}: {}", server_connection.address(), err)),
             }
         }
-        Err(ConnectionError::EnterpriseAllNodesFailed(error_buffer.join("\n")))?
+        Err(ConnectionError::ServerConnectionError(error_buffer.join("\n")))?
     }
 }
