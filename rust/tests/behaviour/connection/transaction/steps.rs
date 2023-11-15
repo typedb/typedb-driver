@@ -20,6 +20,7 @@
  */
 
 use std::time::Duration;
+
 use cucumber::{gherkin::Step, given, then, when};
 use typedb_driver::TransactionType;
 

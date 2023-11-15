@@ -51,7 +51,11 @@ impl SessionTracker {
         &self.session
     }
 
-    pub async fn open_transaction(&mut self, transaction_type: TransactionType, transaction_options: Options) -> typedb_driver::Result {
+    pub async fn open_transaction(
+        &mut self,
+        transaction_type: TransactionType,
+        transaction_options: Options,
+    ) -> typedb_driver::Result {
         unsafe {
             // SAFETY: the transactions tracked by the SessionTracker instance borrow SessionTracker::session.
             // As long as SessionTracker is alive, the transactions are valid.
