@@ -91,14 +91,15 @@ export async function afterBase() {
 }
 
 Given('typedb has configuration', (table: any) => {
+    // empty
 })
 
 Given('typedb starts', async () => {
-
+    // empty
 })
 
 Given('typedb stops', async () => {
-
+    // empty
 })
 
 Given('connection opens with default authentication', async () => {
