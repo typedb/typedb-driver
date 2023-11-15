@@ -351,8 +351,8 @@ async function run() {
         const firstPlayer = playersByRoleType.next().value;
         assert(firstPlayer.label.scopedName === "lion-family:lion-cub");
         await firstLionFamily.removeRolePlayer(tx, lionCub, firstLion);
-        const lionFamilyCleanedUp = await firstLionFamily.isDeleted(tx);
-        assert(lionFamilyCleanedUp);
+        const emptyLionFamilyExists = !(await firstLionFamily.isDeleted(tx));
+        assert(emptyLionFamilyExists);
         await tx.rollback();
         await tx.close();
         console.log(`Relation methods - SUCCESS`);

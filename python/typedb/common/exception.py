@@ -85,7 +85,7 @@ class DriverErrorMessage(ErrorMessage):
     """
 
     def __init__(self, code: int, message: str):
-        super(DriverErrorMessage, self).__init__(code_prefix="CLI", code_number=code, message_prefix="Driver Error",
+        super(DriverErrorMessage, self).__init__(code_prefix="DRI", code_number=code, message_prefix="Driver Error",
                                                  message_body=message)
 
 

@@ -24,7 +24,7 @@ from typedb.driver import *
 from tests.behaviour.background import environment_base
 from tests.behaviour.context import Context
 
-IGNORE_TAGS = ["ignore", "ignore-driver-python", "ignore-typedb-driver-python"]
+IGNORE_TAGS = ["ignore", "ignore-typedb-driver", "ignore-typedb-driver-python"]
 
 
 def before_all(context: Context):

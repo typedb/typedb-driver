@@ -39,7 +39,7 @@ use typedb_driver::{
     answer::{ConceptMap, ConceptMapGroup, ValueGroup, JSON},
     concept::{Attribute, AttributeType, Entity, EntityType, Relation, RelationType, Thing, Value},
     logic::Rule,
-    Connection, Credential, Database, DatabaseManager, Result as TypeDBResult, Transaction, UserManager,
+    Connection, Credential, Database, DatabaseManager, Options, Result as TypeDBResult, Transaction, UserManager,
 };
 
 use self::session_tracker::SessionTracker;
@@ -47,6 +47,8 @@ use self::session_tracker::SessionTracker;
 #[derive(Debug, World)]
 pub struct Context {
     pub tls_root_ca: PathBuf,
+    pub session_options: Options,
+    pub transaction_options: Options,
     pub connection: Connection,
     pub databases: DatabaseManager,
     pub users: UserManager,
@@ -91,11 +93,13 @@ impl Context {
     }
 
     fn is_ignore_tag(t: &String) -> bool {
-        t == "ignore" || t == "ignore-typedb" || t == "ignore-driver-rust" || t == "ignore-typedb-driver-rust"
+        t == "ignore" || t == "ignore-typedb-driver" || t == "ignore-typedb-driver-rust"
     }
 
     pub async fn after_scenario(&mut self) -> TypeDBResult {
         sleep(Context::STEP_REATTEMPT_SLEEP).await;
+        self.session_options = Options::new();
+        self.transaction_options = Options::new();
         self.set_connection(Connection::new_enterprise(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
             Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&self.tls_root_ca))?,
@@ -220,6 +224,8 @@ impl Default for Context {
         let tls_root_ca = PathBuf::from(
             std::env::var("ROOT_CA").expect("ROOT_CA environment variable needs to be set for enterprise tests to run"),
         );
+        let session_options = Options::new();
+        let transaction_options = Options::new();
         let connection = Connection::new_enterprise(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
             Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&tls_root_ca)).unwrap(),
@@ -229,6 +235,8 @@ impl Default for Context {
         let users = UserManager::new(connection.clone());
         Self {
             tls_root_ca,
+            session_options,
+            transaction_options,
             connection,
             databases,
             users,

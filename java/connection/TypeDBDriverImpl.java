@@ -105,6 +105,7 @@ public class TypeDBDriverImpl extends NativeObject<com.vaticle.typedb.driver.jni
 
     @Override
     public void close() {
+        if (!isOpen()) return;
         try {
             connection_force_close(nativeObject);
         } catch (com.vaticle.typedb.driver.jni.Error error) {

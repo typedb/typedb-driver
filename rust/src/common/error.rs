@@ -38,22 +38,28 @@ error_messages! { ConnectionError
         4: "The transaction is closed and no further operation is allowed.",
     TransactionIsClosedWithErrors(String) =
         5: "The transaction is closed because of the error(s):\n{}",
-    UnableToConnect() =
-        6: "Unable to connect to TypeDB server.",
     DatabaseDoesNotExist(String) =
-        9: "The database '{}' does not exist.",
+        6: "The database '{}' does not exist.",
     MissingResponseField(&'static str) =
-        10: "Missing field in message received from server: '{}'.",
+        7: "Missing field in message received from server: '{}'.",
     UnknownRequestId(RequestID) =
-        11: "Received a response with unknown request id '{}'",
+        8: "Received a response with unknown request id '{}'",
     InvalidResponseField(&'static str) =
-        12: "Invalid field in message received from server: '{}'.",
-    EnterpriseUnableToConnect(String) =
-        13: "Unable to connect to TypeDB Enterprise. Attempted connecting to the enterprise members, but none are available: '{}'.",
+        9: "Invalid field in message received from server: '{}'.",
+    UnexpectedResponse(String) =
+        10: "Received unexpected response from server: '{}'.",
+    ServerConnectionFailed(String) =
+        11: "Unable to connect to TypeDB server(s) at: \n{}",
+    ServerConnectionFailedWithError(String) =
+        12: "Unable to connect to TypeDB server(s), received errors: \n{}",
+    ServerConnectionFailedStatusError(String) =
+        13: "Unable to connect to TypeDB server(s), received network error: \n{}",
+    UserManagementEnterpriseOnly() =
+        14: "User management is only available in TypeDB Enterprise servers.",
     EnterpriseReplicaNotPrimary() =
-        14: "The replica is not the primary replica.",
+        15: "The replica is not the primary replica.",
     EnterpriseAllNodesFailed(String) =
-        15: "Attempted connecting to all enterprise members, but the following errors occurred: \n{}.",
+        16: "Attempted connecting to all TypeDB Enterprise servers, but the following errors occurred: \n{}.",
     EnterpriseTokenCredentialInvalid() =
         17: "Invalid token credential.",
     SessionCloseFailed() =
@@ -65,7 +71,7 @@ error_messages! { ConnectionError
     BrokenPipe() =
         21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted enterprise instance using a TLS-enabled credential.",
     ConnectionRefused() =
-        22: "Connection refused. This could happen because of a misconfigured server SSL certificate, or network failures.",
+        22: "Connection refused. Please check the server is running and the address is accessible. Encrypted Enterprise endpoints may also have misconfigured SSL certificates.",
 }
 
 error_messages! { InternalError
@@ -132,7 +138,7 @@ impl Error {
         } else if status_message.contains("Connection refused") {
             Error::Connection(ConnectionError::ConnectionRefused())
         } else {
-            Error::Connection(ConnectionError::UnableToConnect())
+            Error::Connection(ConnectionError::ServerConnectionFailedStatusError(status_message.to_owned()))
         }
     }
 }
@@ -182,7 +188,7 @@ impl From<Status> for Error {
         if status.code() == Code::Unavailable {
             Self::parse_unavailable(status.message())
         } else if status.code() == Code::Unknown || is_rst_stream(&status) {
-            Self::Connection(ConnectionError::UnableToConnect())
+            Self::Connection(ConnectionError::ServerConnectionFailedStatusError(status.message().to_owned()))
         } else if status.code() == Code::Unimplemented {
             Self::Connection(ConnectionError::RPCMethodUnavailable(status.message().to_owned()))
         } else {
