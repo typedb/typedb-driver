@@ -139,7 +139,12 @@ impl Connection {
                 errors.into_iter().map(|err| err.to_string()).collect::<Vec<_>>().join("\n"),
             ))?
         } else {
-            Ok(Self { server_connections, background_runtime, username: Some(credential.username().to_string()), is_enterprise: true })
+            Ok(Self {
+                server_connections,
+                background_runtime,
+                username: Some(credential.username().to_string()),
+                is_enterprise: true,
+            })
         }
     }
 
@@ -155,15 +160,20 @@ impl Connection {
                 Ok(server_connection) => match server_connection.servers_all() {
                     Ok(servers) => return Ok(servers.into_iter().collect()),
                     Err(Error::Connection(
-                            ConnectionError::ServerConnectionFailedStatusError(_) | ConnectionError::ConnectionRefused(),
+                        ConnectionError::ServerConnectionFailedStatusError(_) | ConnectionError::ConnectionRefused(),
                     )) => (),
                     Err(err) => Err(err)?,
                 },
-                Err(Error::Connection(ConnectionError::ServerConnectionFailedStatusError(_) | ConnectionError::ConnectionRefused())) => (),
+                Err(Error::Connection(
+                    ConnectionError::ServerConnectionFailedStatusError(_) | ConnectionError::ConnectionRefused(),
+                )) => (),
                 Err(err) => Err(err)?,
             }
         }
-        Err(ConnectionError::ServerConnectionFailed(addresses.into_iter().map(|a| a.to_string()).collect::<Vec<_>>().join(",")).into())
+        Err(ConnectionError::ServerConnectionFailed(
+            addresses.into_iter().map(|a| a.to_string()).collect::<Vec<_>>().join(","),
+        )
+        .into())
     }
 
     /// Checks it this connection is opened.
