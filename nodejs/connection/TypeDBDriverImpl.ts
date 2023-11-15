@@ -35,13 +35,13 @@ import {TypeDBDatabaseManagerImpl} from "./TypeDBDatabaseManagerImpl";
 import {TypeDBSessionImpl} from "./TypeDBSessionImpl";
 import {TypeDBStubImpl} from "./TypeDBStubImpl";
 import DRIVER_NOT_OPEN = ErrorMessage.Driver.DRIVER_NOT_OPEN;
-import ENTERPRISE_UNABLE_TO_CONNECT = ErrorMessage.Driver.ENTPERPRISE_UNABLE_TO_CONNECT;
+import ENTERPRISE_UNABLE_TO_CONNECT = ErrorMessage.Driver.ENTERPRISE_UNABLE_TO_CONNECT;
 import SESSION_ID_EXISTS = ErrorMessage.Driver.SESSION_ID_EXISTS;
 import UNABLE_TO_CONNECT = ErrorMessage.Driver.UNABLE_TO_CONNECT;
 
 export class TypeDBDriverImpl implements TypeDBDriver {
     private _isOpen: boolean;
-    private _isEnterprise: boolean;
+    private readonly _isEnterprise: boolean;
 
     private readonly _initAddresses: string[];
     private readonly _credential: TypeDBCredential;
@@ -117,6 +117,10 @@ export class TypeDBDriverImpl implements TypeDBDriver {
 
     isOpen(): boolean {
         return this._isOpen;
+    }
+
+    isEnterprise(): boolean {
+        return this._isEnterprise;
     }
 
     async session(databaseName: string, type: SessionType, options?: TypeDBOptions): Promise<TypeDBSessionImpl> {

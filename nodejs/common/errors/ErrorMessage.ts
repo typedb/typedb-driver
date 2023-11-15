@@ -94,14 +94,15 @@ export namespace ErrorMessage {
         export const UNKNOWN_STREAM_STATE = new Driver(11, (args: Stringable[]) => `RPC transaction stream response '${args[0]}' is unknown.`);
         export const MISSING_RESPONSE = new Driver(12, (args: Stringable[]) => `The required field 'res' of type '${args[0]}' was not set.`);
         export const UNKNOWN_REQUEST_ID = new Driver(13, (args: Stringable[]) => `Received a response with unknown request id '${args[0]}'.`);
-        export const ENTPERPRISE_NO_PRIMARY_REPLICA_YET = new Driver(14, (args: Stringable[]) => `No replica has been marked as the primary replica for latest known term '${args[0]}'.`);
-        export const ENTPERPRISE_UNABLE_TO_CONNECT = new Driver(15, (args: Stringable[]) => `Unable to connect to TypeDB Enterprise. Attempted connecting to the enterprise nodes, but none are available: '${args[1]}'.`);
-        export const ENTPERPRISE_REPLICA_NOT_PRIMARY = new Driver(16, () => `The replica is not the primary replica.`);
-        export const ENTPERPRISE_ALL_NODES_FAILED = new Driver(17, (args: Stringable[]) => `Attempted connecting to all enterprise nodes, but the following errors occurred: \n'${args[0]}'`);
-        export const ENTPERPRISE_USER_DOES_NOT_EXIST = new Driver(18, (args: Stringable[]) => `The user '${args[0]}' does not exist.`);
-        export const ENTPERPRISE_TOKEN_CREDENTIAL_INVALID = new Driver(19, (args: Stringable[]) => `Invalid token credential.`);
-        export const ENTERPRISE_INVALID_ROOT_CA_PATH = new Driver(20, (args: Stringable[]) => `The provided Root CA path '${args[0]}' does not exist`);
-        export const UNRECOGNISED_SESSION_TYPE = new Driver(21, (args: Stringable[]) => `Session type '${args[1]}' was not recognised.`);
+        export const ENTERPRISE_NO_PRIMARY_REPLICA_YET = new Driver(14, (args: Stringable[]) => `No replica has been marked as the primary replica for latest known term '${args[0]}'.`);
+        export const ENTERPRISE_UNABLE_TO_CONNECT = new Driver(15, (args: Stringable[]) => `Unable to connect to TypeDB Enterprise. Attempted connecting to the enterprise nodes, but none are available: '${args[1]}'.`);
+        export const ENTERPRISE_REPLICA_NOT_PRIMARY = new Driver(16, () => `The replica is not the primary replica.`);
+        export const ENTERPRISE_ALL_NODES_FAILED = new Driver(17, (args: Stringable[]) => `Attempted connecting to all enterprise nodes, but the following errors occurred: \n'${args[0]}'`);
+        export const USER_MANAGEMENT_ENTERPRISE_ONLY = new Driver(18, (args: Stringable[]) => `User management is only available in TypeDB Enterprise servers.`);
+        export const ENTERPRISE_USER_DOES_NOT_EXIST = new Driver(19, (args: Stringable[]) => `The user '${args[0]}' does not exist.`);
+        export const ENTERPRISE_TOKEN_CREDENTIAL_INVALID = new Driver(20, (args: Stringable[]) => `Invalid token credential.`);
+        export const ENTERPRISE_INVALID_ROOT_CA_PATH = new Driver(21, (args: Stringable[]) => `The provided Root CA path '${args[0]}' does not exist`);
+        export const UNRECOGNISED_SESSION_TYPE = new Driver(22, (args: Stringable[]) => `Session type '${args[1]}' was not recognised.`);
     }
 
     export class Concept extends ErrorMessage {

@@ -60,6 +60,7 @@ pub struct Connection {
     server_connections: HashMap<Address, ServerConnection>,
     background_runtime: Arc<BackgroundRuntime>,
     username: Option<String>,
+    is_enterprise: bool,
 }
 
 impl Connection {
@@ -82,13 +83,14 @@ impl Connection {
             .servers_all()?
             .into_iter()
             .exactly_one()
-            .map_err(|_| ConnectionError::UnableToConnect())?;
+            .map_err(|e| ConnectionError::ServerConnectionFailedStatusError(e.to_string()))?;
         server_connection.set_address(address.clone());
         match server_connection.validate() {
             Ok(()) => Ok(Self {
                 server_connections: [(address, server_connection)].into(),
                 background_runtime,
                 username: None,
+                is_enterprise: false,
             }),
             Err(err) => Err(err),
         }
@@ -137,7 +139,7 @@ impl Connection {
                 errors.into_iter().map(|err| err.to_string()).collect::<Vec<_>>().join("\n"),
             ))?
         } else {
-            Ok(Self { server_connections, background_runtime, username: Some(credential.username().to_string()) })
+            Ok(Self { server_connections, background_runtime, username: Some(credential.username().to_string()), is_enterprise: true })
         }
     }
 
@@ -146,26 +148,26 @@ impl Connection {
         addresses: Vec<Address>,
         credential: Credential,
     ) -> Result<HashSet<Address>> {
-        for address in addresses {
+        for address in &addresses {
             let server_connection =
                 ServerConnection::new_enterprise(background_runtime.clone(), address.clone(), credential.clone());
             match server_connection {
                 Ok(server_connection) => match server_connection.servers_all() {
                     Ok(servers) => return Ok(servers.into_iter().collect()),
                     Err(Error::Connection(
-                        ConnectionError::UnableToConnect() | ConnectionError::ConnectionRefused(),
+                            ConnectionError::ServerConnectionFailedStatusError(_) | ConnectionError::ConnectionRefused(),
                     )) => (),
                     Err(err) => Err(err)?,
                 },
-                Err(Error::Connection(ConnectionError::UnableToConnect() | ConnectionError::ConnectionRefused())) => (),
+                Err(Error::Connection(ConnectionError::ServerConnectionFailedStatusError(_) | ConnectionError::ConnectionRefused())) => (),
                 Err(err) => Err(err)?,
             }
         }
-        Err(ConnectionError::UnableToConnect().into())
+        Err(ConnectionError::ServerConnectionFailed(addresses.into_iter().map(|a| a.to_string()).collect::<Vec<_>>().join(",")).into())
     }
 
     /// Checks it this connection is opened.
-    ///
+    //
     /// # Examples
     ///
     /// ```rust
@@ -173,6 +175,17 @@ impl Connection {
     /// ```
     pub fn is_open(&self) -> bool {
         self.background_runtime.is_open()
+    }
+
+    /// Check if the connection is to an Enterprise server.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// connection.is_enterprise()
+    /// ```
+    pub fn is_enterprise(&self) -> bool {
+        self.is_enterprise
     }
 
     /// Closes this connection.
@@ -211,8 +224,8 @@ impl Connection {
     }
 
     pub(crate) fn unable_to_connect_error(&self) -> Error {
-        Error::Connection(ConnectionError::EnterpriseUnableToConnect(
-            self.addresses().map(Address::to_string).collect::<Vec<_>>().join(","),
+        Error::Connection(ConnectionError::ServerConnectionFailedStatusError(
+            self.addresses().map(Address::to_string).collect::<Vec<_>>().join(", "),
         ))
     }
 }
@@ -250,7 +263,7 @@ impl ServerConnection {
     pub(crate) fn validate(&self) -> Result {
         match self.request_blocking(Request::ConnectionOpen)? {
             Response::ConnectionOpen => Ok(()),
-            _other => Err(ConnectionError::UnableToConnect().into()),
+            _other => Err(ConnectionError::UnexpectedResponse(format!("{_other:?}")).into()),
         }
     }
 

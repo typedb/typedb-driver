@@ -35,14 +35,14 @@ pub fn new_core_connection() -> typedb_driver::Result<Connection> {
 pub fn new_enterprise_connection() -> typedb_driver::Result<Connection> {
     Connection::new_enterprise(
         &["localhost:11729", "localhost:21729", "localhost:31729"],
-        Credential::without_tls(
+        Credential::with_tls(
             "admin",
             "password",
-            // Some(&PathBuf::from(
-            //     std::env::var("ROOT_CA")
-            //         .expect("ROOT_CA environment variable needs to be set for enterprise tests to run"),
-            // )),
-        ),
+            Some(&PathBuf::from(
+                std::env::var("ROOT_CA")
+                    .expect("ROOT_CA environment variable needs to be set for enterprise tests to run"),
+            )),
+        )?,
     )
 }
 

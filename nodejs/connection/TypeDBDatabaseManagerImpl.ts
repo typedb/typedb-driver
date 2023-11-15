@@ -26,8 +26,8 @@ import {TypeDBDriverError} from "../common/errors/TypeDBDriverError";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {ServerDriver, TypeDBDriverImpl} from "./TypeDBDriverImpl";
 import {TypeDBDatabaseImpl} from "./TypeDBDatabaseImpl";
-import ENTERPRISE_ALL_NODES_FAILED = ErrorMessage.Driver.ENTPERPRISE_ALL_NODES_FAILED;
-import ENTERPRISE_REPLICA_NOT_PRIMARY = ErrorMessage.Driver.ENTPERPRISE_REPLICA_NOT_PRIMARY;
+import ENTERPRISE_ALL_NODES_FAILED = ErrorMessage.Driver.ENTERPRISE_ALL_NODES_FAILED;
+import ENTERPRISE_REPLICA_NOT_PRIMARY = ErrorMessage.Driver.ENTERPRISE_REPLICA_NOT_PRIMARY;
 import DB_DOES_NOT_EXIST = ErrorMessage.Driver.DATABASE_DOES_NOT_EXIST;
 
 export class TypeDBDatabaseManagerImpl implements DatabaseManager {

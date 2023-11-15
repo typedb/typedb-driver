@@ -36,11 +36,11 @@ generic_step_impl! {
     async fn connection_opens_with_authentication(context: &mut Context, login: String, password: String) {
         let connection = Connection::new_enterprise(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
-            Credential::without_tls(
+            Credential::with_tls(
                 &login,
                 &password,
-                // Some(&context.tls_root_ca),
-            )
+                Some(&context.tls_root_ca),
+            ).unwrap()
         );
         context.set_connection(connection.unwrap());
     }

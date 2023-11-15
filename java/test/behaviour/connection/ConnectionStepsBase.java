@@ -100,11 +100,6 @@ public abstract class ConnectionStepsBase {
         sessionsParallelToTransactionsParallel.clear();
         driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address());
         driver.databases().all().forEach(Database::delete);
-        driver.users().all().forEach(user -> {
-            if (!user.username().equals("admin")) {
-                driver.users().delete(user.username());
-            }
-        });
         driver.close();
 
         System.out.println("ConnectionSteps.after");

@@ -22,7 +22,8 @@
 #[cfg(not(feature = "sync"))]
 use std::future::Future;
 
-use crate::{common::Result, connection::ServerConnection, Connection, DatabaseManager, User};
+use crate::{common::Result, connection::ServerConnection, Connection, DatabaseManager, User, Error};
+use crate::error::ConnectionError;
 
 /// Provides access to all user management methods.
 #[derive(Clone, Debug)]
@@ -85,7 +86,7 @@ impl UserManager {
             let username = username.clone();
             async move { server_connection.contains_user(username).await }
         })
-        .await
+            .await
     }
 
     /// Create a user with the given name &amp; password.
@@ -109,7 +110,7 @@ impl UserManager {
             let password = password.clone();
             async move { server_connection.create_user(username, password).await }
         })
-        .await
+            .await
     }
 
     /// Deletes a user with the given name.
@@ -130,7 +131,7 @@ impl UserManager {
             let username = username.clone();
             async move { server_connection.delete_user(username).await }
         })
-        .await
+            .await
     }
 
     /// Retrieve a user with the given name.
@@ -151,7 +152,7 @@ impl UserManager {
             let username = username.clone();
             async move { server_connection.get_user(username).await }
         })
-        .await
+            .await
     }
 
     /// Sets a new password for a user. This operation can only be performed by administrators.
@@ -175,19 +176,23 @@ impl UserManager {
             let password = password.clone();
             async move { server_connection.set_user_password(username, password).await }
         })
-        .await
+            .await
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn run_any_node<F, P, R>(&self, task: F) -> Result<R>
-    where
-        F: Fn(ServerConnection) -> P,
-        P: Future<Output = Result<R>>,
+        where
+            F: Fn(ServerConnection) -> P,
+            P: Future<Output=Result<R>>,
     {
-        DatabaseManager::new(self.connection.clone())
-            .get(Self::SYSTEM_DB)
-            .await?
-            .run_failsafe(|_, server_connection, _| task(server_connection))
-            .await
+        if !self.connection.is_enterprise() {
+            Err(Error::Connection(ConnectionError::UserManagementEnterpriseOnly()))
+        } else {
+            DatabaseManager::new(self.connection.clone())
+                .get(Self::SYSTEM_DB)
+                .await?
+                .run_failsafe(|_, server_connection, _| task(server_connection))
+                .await
+        }
     }
 }

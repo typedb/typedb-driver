@@ -22,8 +22,8 @@
 import {ServiceError} from "@grpc/grpc-js";
 import {Status} from "@grpc/grpc-js/build/src/constants";
 import {ErrorMessage} from "./ErrorMessage";
-import ENTERPRISE_REPLICA_NOT_PRIMARY = ErrorMessage.Driver.ENTPERPRISE_REPLICA_NOT_PRIMARY;
-import ENTERPRISE_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Driver.ENTPERPRISE_TOKEN_CREDENTIAL_INVALID;
+import ENTERPRISE_REPLICA_NOT_PRIMARY = ErrorMessage.Driver.ENTERPRISE_REPLICA_NOT_PRIMARY;
+import ENTERPRISE_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Driver.ENTERPRISE_TOKEN_CREDENTIAL_INVALID;
 import UNABLE_TO_CONNECT = ErrorMessage.Driver.UNABLE_TO_CONNECT;
 import RPC_METHOD_UNAVAILABLE = ErrorMessage.Driver.RPC_METHOD_UNAVAILABLE;
 
