@@ -71,7 +71,7 @@ error_messages! { ConnectionError
     BrokenPipe() =
         21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted enterprise instance using a TLS-enabled credential.",
     ConnectionRefused() =
-        22: "Connection refused. This could happen because of a misconfigured server SSL certificate or network failures.",
+        22: "Connection refused. Please check the server is running and the address is accessible. Encrypted Enterprise endpoints may also have misconfigured SSL certificates.",
 }
 
 error_messages! { InternalError
