@@ -26,7 +26,8 @@ import {UserImpl} from "../dependencies_internal";
 import {ServerDriver, TypeDBDriverImpl} from "../connection/TypeDBDriverImpl";
 import {TypeDBDatabaseImpl} from "../connection/TypeDBDatabaseImpl";
 import {TypeDBDriverError} from "../common/errors/TypeDBDriverError";
-import {USER_MANAGEMENT_ENTERPRISE_ONLY} from "../common/errors/ErrorMessage";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
+import USER_MANAGEMENT_ENTERPRISE_ONLY = ErrorMessage.Driver.USER_MANAGEMENT_ENTERPRISE_ONLY;
 
 export class UserManagerImpl implements UserManager {
     static _SYSTEM_DB = "_system";

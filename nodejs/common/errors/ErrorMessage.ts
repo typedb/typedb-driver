@@ -76,7 +76,7 @@ export abstract class ErrorMessage {
 export namespace ErrorMessage {
     export class Driver extends ErrorMessage {
         constructor(code: number, message: (args?: Stringable[]) => string) {
-            super("CLI", code, "Driver Error", message)
+            super("DRI", code, "Driver Error", message)
         }
     }
 
@@ -98,7 +98,7 @@ export namespace ErrorMessage {
         export const ENTERPRISE_UNABLE_TO_CONNECT = new Driver(15, (args: Stringable[]) => `Unable to connect to TypeDB Enterprise. Attempted connecting to the enterprise nodes, but none are available: '${args[1]}'.`);
         export const ENTERPRISE_REPLICA_NOT_PRIMARY = new Driver(16, () => `The replica is not the primary replica.`);
         export const ENTERPRISE_ALL_NODES_FAILED = new Driver(17, (args: Stringable[]) => `Attempted connecting to all enterprise nodes, but the following errors occurred: \n'${args[0]}'`);
-        export const USER_MANAGEMENT_ENTERPRISE_ONLY = new Driver(18, (args: Stringable[]) => `User management is only available in TypeDB Enterprise servers.`);
+        export const USER_MANAGEMENT_ENTERPRISE_ONLY = new Driver(18, () => `User management is only available in TypeDB Enterprise servers.`);
         export const ENTERPRISE_USER_DOES_NOT_EXIST = new Driver(19, (args: Stringable[]) => `The user '${args[0]}' does not exist.`);
         export const ENTERPRISE_TOKEN_CREDENTIAL_INVALID = new Driver(20, (args: Stringable[]) => `Invalid token credential.`);
         export const ENTERPRISE_INVALID_ROOT_CA_PATH = new Driver(21, (args: Stringable[]) => `The provided Root CA path '${args[0]}' does not exist`);
