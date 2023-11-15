@@ -84,7 +84,7 @@ export async function afterBase() {
         await driver.close();
     }
     await createDefaultDriver();
-    for (let db of (await driver.databases.all())) {
+    for (const db of (await driver.databases.all())) {
         await db.delete();
     }
     await driver.close();
