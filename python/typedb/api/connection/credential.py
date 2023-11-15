@@ -48,7 +48,7 @@ class TypeDBCredential(NativeWrapper[NativeCredential]):
     """
 
     def __init__(self, username: str, password: str, *, tls_root_ca_path: Optional[str] = None,
-                 tls_enabled: bool = True):
+                 tls_enabled: bool = False):
         if tls_root_ca_path is not None and not tls_enabled:
             raise TypeDBDriverException(ENTERPRISE_CREDENTIAL_INCONSISTENT)
         super().__init__(credential_new(username, password, tls_root_ca_path, tls_enabled))
