@@ -57,29 +57,44 @@ npm install typedb-driver@2.25.7
 
 ## New Features
 
-- **Add untyped value getter for Java values and fix Python type hints**
-
-  We add a simple untyped API to Java's `Value` concepts, which return the value inside of the Value regardless of its type (double/string/etc.). This value is returned as an Object, and useful for equality checks, printing, etc. Additionally, the same API exists in Python and Node already.
-
-  We also fix the Python hints for setting the name of a Type, which was incorrectly hinting the type 'Label' when it should have been a simple string.
 
 ## Bugs Fixed
+- **Add untyped value getter for Java values and fix Python type hints**
+  
+  We add a simple untyped API to Java's `Value` concepts, which return the value inside of the Value regardless of its type (double/string/etc.). This value is returned as an Object, and useful for equality checks, printing, etc. Additionally, the same API exists in Python and Node already.
+  
+  We also fix the Python hints for setting the name of a Type, which was incorrectly hinting the type 'Label' when it should have been a simple string.
+  
   
 
 ## Code Refactors
+- **Silence send errors in network callbacks when receiver dropped**
+  
+  Downgrade the "channel closed" `SendError` from ERROR to DEBUG when the receiving end of the stream is dropped before the stream is exhausted.
+  This used to occur when the network delivered messages to a dropped channel, for example when executing a `match-insert`
+  and the responses were not consumed explicitly.
+
+
+- **Optimise CI times by retaining server between Java BDD scenarios**
+
+  We optimise Java CI time by not shutting down the TypeDB server between scenarios. Instead, we delete the existing databases each test, which is much faster.
+
+  During this work, we also discovered some sub-par UX in terms of error messages thrown, and missing BDD steps that needed to be implemented.
+
+
 
 
 ## Other Improvements
-- **Optimise CI times by retaining server between Java BDD scenarios**
-  
-  We optimise Java CI time by not shutting down the TypeDB server between scenarios. Instead, we delete the existing databases each test, which is much faster. 
-  
-  During this work, we also discovered some sub-par UX in terms of error messages thrown, and missing BDD steps that needed to be implemented.
-  
-  
+- **Fix python BDD TLS connection configuration**
+
+- **Fix Rust BDD infer flag and python TLS default to false**
+
+- **Update VERSION and regenerate release notes**
+
 - **Increase ulimits on unix CircleCI machines**
 
 - **Update README links to docs**
 
-- **Simplify Github PR and issue templates**
+- **Simplify github PR and issue templates**
 
+    
