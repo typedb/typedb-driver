@@ -160,12 +160,12 @@ impl Connection {
                 Ok(server_connection) => match server_connection.servers_all() {
                     Ok(servers) => return Ok(servers.into_iter().collect()),
                     Err(Error::Connection(
-                        ConnectionError::ServerConnectionFailedStatusError(_) | ConnectionError::ConnectionRefused(),
+                        ConnectionError::ServerConnectionFailedStatusError(_) | ConnectionError::ConnectionFailed(),
                     )) => (),
                     Err(err) => Err(err)?,
                 },
                 Err(Error::Connection(
-                    ConnectionError::ServerConnectionFailedStatusError(_) | ConnectionError::ConnectionRefused(),
+                    ConnectionError::ServerConnectionFailedStatusError(_) | ConnectionError::ConnectionFailed(),
                 )) => (),
                 Err(err) => Err(err)?,
             }

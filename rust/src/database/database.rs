@@ -189,7 +189,7 @@ impl Database {
                 .await
             {
                 Err(Error::Connection(
-                    ConnectionError::ServerConnectionFailedStatusError(_) | ConnectionError::ConnectionRefused(),
+                    ConnectionError::ServerConnectionFailedStatusError(_) | ConnectionError::ConnectionFailed(),
                 )) => {
                     debug!("Unable to connect to {}. Attempting next server.", replica.address);
                 }
@@ -220,7 +220,7 @@ impl Database {
                 Err(Error::Connection(
                     ConnectionError::EnterpriseReplicaNotPrimary()
                     | ConnectionError::ServerConnectionFailedStatusError(_)
-                    | ConnectionError::ConnectionRefused(),
+                    | ConnectionError::ConnectionFailed(),
                 )) => {
                     debug!("Primary replica error, waiting...");
                     Self::wait_for_primary_replica_selection().await;
@@ -326,7 +326,7 @@ impl Replica {
                 Err(Error::Connection(
                     ConnectionError::DatabaseDoesNotExist(_)
                     | ConnectionError::ServerConnectionFailedStatusError(_)
-                    | ConnectionError::ConnectionRefused(),
+                    | ConnectionError::ConnectionFailed(),
                 )) => {
                     error!(
                         "Failed to fetch replica info for database '{}' from {}. Attempting next server.",

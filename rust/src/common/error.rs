@@ -70,8 +70,8 @@ error_messages! { ConnectionError
         20: "SSL handshake with TypeDB Enterprise failed: the server's identity could not be verified. Possible CA mismatch.",
     BrokenPipe() =
         21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted enterprise instance using a TLS-enabled credential.",
-    ConnectionRefused() =
-        22: "Connection refused. Please check the server is running and the address is accessible. Encrypted Enterprise endpoints may also have misconfigured SSL certificates.",
+    ConnectionFailed() =
+        22: "Connection failed. Please check the server is running and the address is accessible. Encrypted Enterprise endpoints may also have misconfigured SSL certificates.",
 }
 
 error_messages! { InternalError
@@ -136,7 +136,7 @@ impl Error {
         } else if status_message.contains("UnknownIssuer") {
             Error::Connection(ConnectionError::EnterpriseSSLCertificateNotValidated())
         } else if status_message.contains("Connection refused") {
-            Error::Connection(ConnectionError::ConnectionRefused())
+            Error::Connection(ConnectionError::ConnectionFailed())
         } else {
             Error::Connection(ConnectionError::ServerConnectionFailedStatusError(status_message.to_owned()))
         }
