@@ -325,6 +325,7 @@ jobs:
   deploy-pip-snapshot-windows-x86_64:
     executor:
       name: win/default
+      size: xlarge
       shell: cmd.exe
     working_directory: ~/typedb-driver
     steps:
@@ -360,6 +361,7 @@ jobs:
   test-pip-snapshot-windows-x86_64:
     executor:
       name: win/default
+      size: xlarge
       shell: cmd.exe
     working_directory: ~/typedb-driver
     steps:
@@ -439,6 +441,7 @@ jobs:
   deploy-pip-release-windows-x86_64:
     executor:
       name: win/default
+      size: xlarge
       shell: cmd.exe
     working_directory: ~/typedb-driver
     steps:
@@ -481,6 +484,7 @@ jobs:
   deploy-maven-jni-snapshot-windows-x86_64:
     executor:
       name: win/default
+      size: xlarge
       shell: cmd.exe
     working_directory: ~/typedb-driver
     steps:
@@ -524,6 +528,7 @@ jobs:
   test-maven-snapshot-windows-x86_64:
     executor:
       name: win/default
+      size: xlarge
       shell: cmd.exe
     working_directory: ~/typedb-driver
     steps:
@@ -583,6 +588,7 @@ jobs:
   deploy-maven-jni-release-windows-x86_64:
     executor:
       name: win/default
+      size: xlarge
       shell: cmd.exe
     working_directory: ~/typedb-driver
     steps:
