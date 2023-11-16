@@ -79,7 +79,7 @@ error_messages! { InternalError
     RecvError() =
         1: "Channel is closed.",
     SendError() =
-        2: "Channel is closed.",
+        2: "Unable to send response over callback channel (receiver dropped).",
     UnexpectedRequestType(String) =
         3: "Unexpected request type for remote procedure call: {}.",
     UnexpectedResponseType(String) =
@@ -215,8 +215,8 @@ impl From<tonic::transport::Error> for Error {
 }
 
 impl<T> From<tokio::sync::mpsc::error::SendError<T>> for Error {
-    fn from(err: tokio::sync::mpsc::error::SendError<T>) -> Self {
-        Self::Other(err.to_string())
+    fn from(_err: tokio::sync::mpsc::error::SendError<T>) -> Self {
+        Self::Internal(InternalError::SendError())
     }
 }
 
