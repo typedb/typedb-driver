@@ -20,7 +20,7 @@
  */
 
 use crossbeam::channel::Sender as SyncSender;
-use log::error;
+use log::{debug, error};
 use tokio::sync::{mpsc::UnboundedSender, oneshot::Sender as AsyncOneshotSender};
 
 use crate::{
@@ -43,8 +43,12 @@ impl<T> ResponseSink<T> {
             Self::BlockingOneShot(sink) => sink.send(response).map_err(Error::from),
             Self::Streamed(sink) => sink.send(response).map_err(Error::from),
         };
-        if let Err(err) = result {
-            error!("{}", err);
+        match result {
+            Err(Error::Internal(InternalError::SendError())) => {
+                debug!("Unable to send response over callback channel (receiver dropped)")
+            }
+            Err(err) => error!("{}", err),
+            Ok(()) => (),
         }
     }
 
@@ -53,8 +57,12 @@ impl<T> ResponseSink<T> {
             Self::Streamed(sink) => sink.send(response).map_err(Error::from),
             _ => unreachable!("attempted to stream over a one-shot callback"),
         };
-        if let Err(err) = result {
-            error!("{}", err);
+        match result {
+            Err(Error::Internal(InternalError::SendError())) => {
+                debug!("Unable to send response over callback channel (receiver dropped)")
+            }
+            Err(err) => error!("{}", err),
+            Ok(()) => (),
         }
     }
 
