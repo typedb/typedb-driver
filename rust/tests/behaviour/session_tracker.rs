@@ -51,15 +51,15 @@ impl SessionTracker {
         &self.session
     }
 
-    pub async fn open_transaction(&mut self, transaction_type: TransactionType) -> typedb_driver::Result {
-        let options = match transaction_type {
-            TransactionType::Write => Options::new(),
-            TransactionType::Read => Options::new().infer(true),
-        };
+    pub async fn open_transaction(
+        &mut self,
+        transaction_type: TransactionType,
+        transaction_options: Options,
+    ) -> typedb_driver::Result {
         unsafe {
             // SAFETY: the transactions tracked by the SessionTracker instance borrow SessionTracker::session.
             // As long as SessionTracker is alive, the transactions are valid.
-            let transaction = self.session.transaction_with_options(transaction_type, options).await?;
+            let transaction = self.session.transaction_with_options(transaction_type, transaction_options).await?;
             self.transactions.push(std::mem::transmute(transaction));
         }
         Ok(())

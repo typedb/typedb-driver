@@ -31,6 +31,30 @@ Result
 connection.force_close()
 ----
 
+[#_struct_Connection_method_is_enterprise]
+==== is_enterprise
+
+[source,rust]
+----
+pub fn is_enterprise(&self) -> bool
+----
+
+Check if the connection is to an Enterprise server.
+
+[caption=""]
+.Returns
+[source,rust]
+----
+bool
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+connection.is_enterprise()
+----
+
 [#_struct_Connection_method_is_open]
 ==== is_open
 

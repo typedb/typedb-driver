@@ -27,7 +27,7 @@ import {TypeDBStub} from "../common/rpc/TypeDBStub";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 import {TypeDBClient as GRPCStub} from "typedb-protocol/proto/typedb-service";
-import ENTERPRISE_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Driver.ENTPERPRISE_TOKEN_CREDENTIAL_INVALID;
+import ENTERPRISE_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Driver.ENTERPRISE_TOKEN_CREDENTIAL_INVALID;
 
 function isServiceError(e: any): e is ServiceError {
     return "code" in e;

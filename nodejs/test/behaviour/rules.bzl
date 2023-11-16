@@ -44,7 +44,7 @@ def node_cucumber_test(name, features, data, steps, **kwargs):
         no_copy_to_bin = features,
         fixed_args = [
             "--publish-quiet", "--strict",
-            "--tags 'not @ignore and not @ignore-typedb and not @ignore-typedb-driver-nodejs and not @ignore-driver-nodejs'",
+            "--tags 'not @ignore and not @ignore-typedb-driver and not @ignore-typedb-driver-nodejs'",
             "--require", "nodejs/test/**/*.js",
         ] + ["$(location {})".format(feature) for feature in features],
         **kwargs,

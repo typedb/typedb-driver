@@ -21,12 +21,12 @@
 
 package com.vaticle.typedb.driver.test.behaviour.connection;
 
-import com.vaticle.typedb.driver.TypeDB;
-import com.vaticle.typedb.driver.api.TypeDBDriver;
-import com.vaticle.typedb.driver.api.TypeDBOptions;
 import com.vaticle.typedb.common.test.TypeDBRunner;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
 import com.vaticle.typedb.common.test.core.TypeDBCoreRunner;
+import com.vaticle.typedb.driver.TypeDB;
+import com.vaticle.typedb.driver.api.TypeDBDriver;
+import com.vaticle.typedb.driver.api.TypeDBOptions;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
@@ -36,6 +36,13 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     @Override
     public void beforeAll() {
         super.beforeAll();
+        try {
+            TypeDBCoreRunner typeDBCoreRunner = new TypeDBCoreRunner();
+            TypeDBSingleton.setTypeDBRunner(typeDBCoreRunner);
+            typeDBCoreRunner.start();
+        } catch (InterruptedException | java.util.concurrent.TimeoutException | java.io.IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Before
@@ -63,20 +70,7 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
         TypeDBRunner runner = TypeDBSingleton.getTypeDBRunner();
         if (runner != null && runner.isStopped()) {
             runner.start();
-        } else {
-            try {
-                TypeDBCoreRunner typeDBCoreRunner = new TypeDBCoreRunner();
-                TypeDBSingleton.setTypeDBRunner(typeDBCoreRunner);
-                typeDBCoreRunner.start();
-            } catch (InterruptedException | java.util.concurrent.TimeoutException | java.io.IOException e) {
-                e.printStackTrace();
-            }
         }
-    }
-
-    @When("typedb stops")
-    public void typedb_stops() {
-        TypeDBSingleton.getTypeDBRunner().stop();
     }
 
     @Override

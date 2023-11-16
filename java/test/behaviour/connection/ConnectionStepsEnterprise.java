@@ -28,6 +28,7 @@ import com.vaticle.typedb.driver.api.TypeDBOptions;
 import com.vaticle.typedb.common.test.TypeDBRunner;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
 import com.vaticle.typedb.common.test.enterprise.TypeDBEnterpriseRunner;
+import com.vaticle.typedb.driver.api.database.Database;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
@@ -44,6 +45,9 @@ public class ConnectionStepsEnterprise extends ConnectionStepsBase {
     @Override
     public void beforeAll() {
         super.beforeAll();
+        TypeDBEnterpriseRunner enterpriseRunner = TypeDBEnterpriseRunner.create(Paths.get("."), 1);
+        TypeDBSingleton.setTypeDBRunner(enterpriseRunner);
+        enterpriseRunner.start();
     }
 
     @Before
@@ -54,6 +58,19 @@ public class ConnectionStepsEnterprise extends ConnectionStepsBase {
     @After
     public synchronized void after() {
         super.after();
+        driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address());
+        driver.users().all().forEach(user -> {
+            if (!user.username().equals("admin")) {
+                driver.users().delete(user.username());
+            }
+        });
+        driver.close();
+        try {
+            // sleep for eventual consistency to catch up with database deletion on all servers
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -98,6 +115,12 @@ public class ConnectionStepsEnterprise extends ConnectionStepsBase {
     }
 
     @Override
+    @Given("connection does not have any database")
+    public void connection_does_not_have_any_database() {
+        super.connection_does_not_have_any_database();
+    }
+
+    @Override
     @When("connection closes")
     public void connection_closes() {
         super.connection_closes();
@@ -105,13 +128,7 @@ public class ConnectionStepsEnterprise extends ConnectionStepsBase {
 
     @Given("typedb has configuration")
     public void typedb_has_configuration(Map<String, String> map) {
-        TypeDBSingleton.deleteTypeDBRunner();
-        Map<String, String> serverOpts = new HashMap<>();
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            serverOpts.put("--" + entry.getKey(), entry.getValue());
-        }
-        TypeDBEnterpriseRunner enterpriseRunner = TypeDBEnterpriseRunner.create(Paths.get("."), 1, serverOpts);
-        TypeDBSingleton.setTypeDBRunner(enterpriseRunner);
+        // no-op: configuration tests are only run on the backend themselves
     }
 
     @When("typedb starts")
@@ -119,22 +136,6 @@ public class ConnectionStepsEnterprise extends ConnectionStepsBase {
         TypeDBRunner runner = TypeDBSingleton.getTypeDBRunner();
         if (runner != null && runner.isStopped()) {
             runner.start();
-        } else {
-            TypeDBEnterpriseRunner enterpriseRunner = TypeDBEnterpriseRunner.create(Paths.get("."), 1);
-            TypeDBSingleton.setTypeDBRunner(enterpriseRunner);
-            enterpriseRunner.start();
         }
-    }
-
-    @When("typedb stops")
-    public void typedb_stops() {
-        TypeDBSingleton.getTypeDBRunner().stop();
-    }
-
-
-    @Override
-    @Given("connection does not have any database")
-    public void connection_does_not_have_any_database() {
-        super.connection_does_not_have_any_database();
     }
 }

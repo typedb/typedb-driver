@@ -22,7 +22,9 @@
 #[cfg(not(feature = "sync"))]
 use std::future::Future;
 
-use crate::{common::Result, connection::ServerConnection, Connection, DatabaseManager, User};
+use crate::{
+    common::Result, connection::ServerConnection, error::ConnectionError, Connection, DatabaseManager, Error, User,
+};
 
 /// Provides access to all user management methods.
 #[derive(Clone, Debug)]
@@ -184,10 +186,14 @@ impl UserManager {
         F: Fn(ServerConnection) -> P,
         P: Future<Output = Result<R>>,
     {
-        DatabaseManager::new(self.connection.clone())
-            .get(Self::SYSTEM_DB)
-            .await?
-            .run_failsafe(|_, server_connection, _| task(server_connection))
-            .await
+        if !self.connection.is_enterprise() {
+            Err(Error::Connection(ConnectionError::UserManagementEnterpriseOnly()))
+        } else {
+            DatabaseManager::new(self.connection.clone())
+                .get(Self::SYSTEM_DB)
+                .await?
+                .run_failsafe(|_, server_connection, _| task(server_connection))
+                .await
+        }
     }
 }

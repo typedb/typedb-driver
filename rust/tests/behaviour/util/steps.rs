@@ -22,6 +22,7 @@
 use std::env;
 
 use cucumber::{given, then, when};
+use tokio::time::{sleep, Duration};
 
 use crate::{behaviour::Context, generic_step_impl};
 
@@ -29,5 +30,10 @@ generic_step_impl! {
     #[step(expr = "set time-zone is: {word}")]
     async fn set_time_zone(_context: &mut Context, timezone: String) {
         env::set_var("TZ", timezone);
+    }
+
+    #[step(expr = "wait {word} seconds")]
+    async fn wait_seconds(_context: &mut Context, seconds: String) {
+        sleep(Duration::from_secs(seconds.parse().unwrap())).await
     }
 }

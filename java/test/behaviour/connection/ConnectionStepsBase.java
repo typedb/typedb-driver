@@ -26,6 +26,7 @@ import com.vaticle.typedb.driver.api.TypeDBOptions;
 import com.vaticle.typedb.driver.api.TypeDBSession;
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
+import com.vaticle.typedb.driver.api.database.Database;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,18 +80,11 @@ public abstract class ConnectionStepsBase {
         }
         sessionOptions = createOptions().infer(true);
         transactionOptions = createOptions().infer(true);
-        TypeDBSingleton.resetTypeDBRunner();
 
         System.out.println("ConnectionSteps.before");
     }
 
     void after() {
-        // TODO: Remove this once the server segfault issue is fixed (typedb#6135)
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         sessions.parallelStream().forEach(TypeDBSession::close);
         sessions.clear();
 
@@ -104,11 +98,9 @@ public abstract class ConnectionStepsBase {
         sessionsToTransactions.clear();
         sessionsToTransactionsParallel.clear();
         sessionsParallelToTransactionsParallel.clear();
-
-        TypeDBSingleton.resetTypeDBRunner();
-
-        // This will segfault if a double free happens in finalize() for whatever reason.
-        System.gc();
+        driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address());
+        driver.databases().all().forEach(Database::delete);
+        driver.close();
 
         System.out.println("ConnectionSteps.after");
     }

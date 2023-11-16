@@ -114,6 +114,16 @@ public class ValueImpl extends ConceptImpl implements Value {
     }
 
     @Override
+    public Object asUntyped() {
+        if (isBoolean()) return asBoolean();
+        else if (isLong()) return asLong();
+        else if (isDouble()) return asDouble();
+        else if (isString()) return asString();
+        else if (isDateTime()) return asDateTime();
+        throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
+    }
+
+    @Override
     public boolean asBoolean() {
         if (!isBoolean()) throw new TypeDBDriverException(ILLEGAL_CAST, "boolean");
         return value_get_boolean(nativeObject);
@@ -160,11 +170,6 @@ public class ValueImpl extends ConceptImpl implements Value {
     }
 
     private int computeHash() {
-        if (isBoolean()) return Boolean.hashCode(asBoolean());
-        else if (isLong()) return Long.hashCode(asLong());
-        else if (isDouble()) return Double.hashCode(asDouble());
-        else if (isString()) return asString().hashCode();
-        else if (isDateTime()) return asDateTime().hashCode();
-        return -1;
+        return asUntyped().hashCode();
     }
 }

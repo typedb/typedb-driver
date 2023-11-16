@@ -50,12 +50,12 @@ class Type(Concept, ABC):
         pass
 
     @abstractmethod
-    def set_label(self, transaction: TypeDBTransaction, new_label: Label) -> Promise[None]:
+    def set_label(self, transaction: TypeDBTransaction, new_label: str) -> Promise[None]:
         """
         Renames the label of the type. The new label must remain unique.
 
         :param transaction: The current transaction
-        :param new_label: The new ``Label`` to be given to the type.
+        :param new_label: The new name to be given to the type.
         :return:
 
         Examples

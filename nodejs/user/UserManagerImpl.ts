@@ -25,6 +25,9 @@ import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {UserImpl} from "../dependencies_internal";
 import {ServerDriver, TypeDBDriverImpl} from "../connection/TypeDBDriverImpl";
 import {TypeDBDatabaseImpl} from "../connection/TypeDBDatabaseImpl";
+import {TypeDBDriverError} from "../common/errors/TypeDBDriverError";
+import {ErrorMessage} from "../common/errors/ErrorMessage";
+import USER_MANAGEMENT_ENTERPRISE_ONLY = ErrorMessage.Driver.USER_MANAGEMENT_ENTERPRISE_ONLY;
 
 export class UserManagerImpl implements UserManager {
     static _SYSTEM_DB = "_system";
@@ -73,6 +76,7 @@ export class UserManagerImpl implements UserManager {
     }
 
     async runFailsafe<T>(task: (driver: ServerDriver) => Promise<T>): Promise<T> {
+        if (!this._driver.isEnterprise()) throw new TypeDBDriverError(USER_MANAGEMENT_ENTERPRISE_ONLY);
         return await (await TypeDBDatabaseImpl.get(UserManagerImpl._SYSTEM_DB, this._driver)).runOnPrimaryReplica(task);
     }
 }

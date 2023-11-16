@@ -25,7 +25,7 @@ from typedb.driver import *
 from tests.behaviour.background import environment_base
 from tests.behaviour.context import Context
 
-IGNORE_TAGS = ["ignore", "ignore-driver-python", "ignore-typedb-driver-python", "ignore-typedb-enterprise-driver-python"]
+IGNORE_TAGS = ["ignore", "ignore-typedb-driver", "ignore-typedb-driver-python"]
 
 
 def before_all(context: Context):
@@ -44,9 +44,9 @@ def before_scenario(context: Context, scenario):
 
 
 def setup_context_driver(context, username, password):
-    credential = TypeDBCredential(username, password, tls_root_ca_path=context.credential_root_ca_path)
+    credential = TypeDBCredential(username, password, tls_enabled=True, tls_root_ca_path=context.credential_root_ca_path)
     context.driver = TypeDB.enterprise_driver(addresses=["localhost:" + context.config.userdata["port"]],
-                                           credential=credential)
+                                              credential=credential)
     context.session_options = TypeDBOptions(infer=True)
     context.transaction_options = TypeDBOptions(infer=True)
 

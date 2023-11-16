@@ -40,7 +40,7 @@ generic_step_impl! {
                 &login,
                 &password,
                 Some(&context.tls_root_ca),
-            ).unwrap(),
+            ).unwrap()
         );
         context.set_connection(connection.unwrap());
     }

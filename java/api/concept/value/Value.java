@@ -115,6 +115,17 @@ public interface Value extends Concept {
     boolean isDateTime();
 
     /**
+     * Returns an untyped <code>Object</code> value of this value concept.
+     * This is useful for value equality or printing without having to switch on the actual contained value.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.asUntyped();
+     * </pre>
+     */
+    Object asUntyped();
+
+    /**
      * Returns a <code>boolean</code> value of this value concept.
      * If the value has another type, raises an exception.
      *

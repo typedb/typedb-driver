@@ -83,18 +83,23 @@ export async function afterBase() {
     if (driver.isOpen()) {
         await driver.close();
     }
+    await createDefaultDriver();
+    for (const db of (await driver.databases.all())) {
+        await db.delete();
+    }
+    await driver.close();
 }
 
 Given('typedb has configuration', (table: any) => {
-    // TODO: prepare a configuration through the TypeDB runner once it exists
+    // empty
 })
 
 Given('typedb starts', async () => {
-    // TODO: start TypeDB through the TypeDB runner once it exists
+    // empty
 })
 
 Given('typedb stops', async () => {
-    // TODO: stop TypeDB through the TypeDB runner once it exists
+    // empty
 })
 
 Given('connection opens with default authentication', async () => {

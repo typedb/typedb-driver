@@ -217,7 +217,7 @@ type_.is_type()
 
 [source,python]
 ----
-set_label(transaction: TypeDBTransaction, new_label: Label) -> Promise[None]
+set_label(transaction: TypeDBTransaction, new_label: str) -> Promise[None]
 ----
 
 Renames the label of the type. The new label must remain unique.
@@ -229,7 +229,7 @@ Renames the label of the type. The new label must remain unique.
 |===
 |Name |Description |Type |Default Value
 a| `transaction` a| The current transaction a| `TypeDBTransaction` a| 
-a| `new_label` a| The new ``Label`` to be given to the type. a| `Label` a| 
+a| `new_label` a| The new name to be given to the type. a| `str` a| 
 |===
 
 [caption=""]

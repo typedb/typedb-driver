@@ -30,7 +30,7 @@ import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 import UNABLE_TO_CONNECT = ErrorMessage.Driver.UNABLE_TO_CONNECT;
 import DATABASE_DOES_NOT_EXIST = ErrorMessage.Driver.DATABASE_DOES_NOT_EXIST;
-import ENTERPRISE_REPLICA_NOT_PRIMARY = ErrorMessage.Driver.ENTPERPRISE_REPLICA_NOT_PRIMARY;
+import ENTERPRISE_REPLICA_NOT_PRIMARY = ErrorMessage.Driver.ENTERPRISE_REPLICA_NOT_PRIMARY;
 
 const PRIMARY_REPLICA_TASK_MAX_RETRIES = 10;
 const FETCH_REPLICAS_MAX_RETRIES = 10;
