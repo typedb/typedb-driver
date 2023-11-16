@@ -44,10 +44,8 @@ impl<T> ResponseSink<T> {
             Self::Streamed(sink) => sink.send(response).map_err(Error::from),
         };
         match result {
-            Err(Error::Internal(InternalError::SendError())) => {
-                debug!("Unable to send response over callback channel (receiver dropped)")
-            }
-            Err(err) => error!("{}", err),
+            Err(Error::Internal(err @ InternalError::SendError())) => debug!("{err}"),
+            Err(err) => error!("{err}"),
             Ok(()) => (),
         }
     }
@@ -58,10 +56,8 @@ impl<T> ResponseSink<T> {
             _ => unreachable!("attempted to stream over a one-shot callback"),
         };
         match result {
-            Err(Error::Internal(InternalError::SendError())) => {
-                debug!("Unable to send response over callback channel (receiver dropped)")
-            }
-            Err(err) => error!("{}", err),
+            Err(Error::Internal(err @ InternalError::SendError())) => debug!("{err}"),
+            Err(err) => error!("{err}"),
             Ok(()) => (),
         }
     }
