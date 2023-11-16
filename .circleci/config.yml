@@ -22,7 +22,7 @@
 version: 2.1
 
 orbs:
-  win: circleci/windows@4.1.1
+  win: circleci/windows@2.0.0
   macos: circleci/macos@2.4.0
 
 executors:
@@ -325,7 +325,6 @@ jobs:
   deploy-pip-snapshot-windows-x86_64:
     executor:
       name: win/default
-      size: xlarge
       shell: cmd.exe
     working_directory: ~/typedb-driver
     steps:
@@ -361,7 +360,6 @@ jobs:
   test-pip-snapshot-windows-x86_64:
     executor:
       name: win/default
-      size: xlarge
       shell: cmd.exe
     working_directory: ~/typedb-driver
     steps:
@@ -441,7 +439,6 @@ jobs:
   deploy-pip-release-windows-x86_64:
     executor:
       name: win/default
-      size: xlarge
       shell: cmd.exe
     working_directory: ~/typedb-driver
     steps:
@@ -484,7 +481,6 @@ jobs:
   deploy-maven-jni-snapshot-windows-x86_64:
     executor:
       name: win/default
-      size: xlarge
       shell: cmd.exe
     working_directory: ~/typedb-driver
     steps:
@@ -528,7 +524,6 @@ jobs:
   test-maven-snapshot-windows-x86_64:
     executor:
       name: win/default
-      size: xlarge
       shell: cmd.exe
     working_directory: ~/typedb-driver
     steps:
@@ -588,7 +583,6 @@ jobs:
   deploy-maven-jni-release-windows-x86_64:
     executor:
       name: win/default
-      size: xlarge
       shell: cmd.exe
     working_directory: ~/typedb-driver
     steps:
