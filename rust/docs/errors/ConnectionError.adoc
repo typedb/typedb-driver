@@ -9,8 +9,8 @@
 |===
 |Variant
 a| `BrokenPipe()`
+a| `ConnectionFailed()`
 a| `ConnectionIsClosed()`
-a| `ConnectionRefused()`
 a| `DatabaseDoesNotExist(String)`
 a| `EnterpriseAllNodesFailed(String)`
 a| `EnterpriseEndpointEncrypted()`
