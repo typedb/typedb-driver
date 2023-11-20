@@ -28,6 +28,7 @@ import com.vaticle.typedb.driver.tool.docs.dataclasses.Variable
 import com.vaticle.typedb.driver.tool.docs.util.removeAllTags
 import com.vaticle.typedb.driver.tool.docs.util.replaceCodeTags
 import com.vaticle.typedb.driver.tool.docs.util.replaceEmTags
+import com.vaticle.typedb.driver.tool.docs.util.replaceSymbolsForAnchor
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import picocli.CommandLine
@@ -187,18 +188,18 @@ class PythonDocParser : Callable<Unit> {
         }
         val methodReturnDescr = element.select(".field-list > dt:contains(Returns) + dd p").text()
         val methodExamples = element.select("section:contains(Examples) .highlight").map { it.text() }
+        val methodAnchor = replaceSymbolsForAnchor("${classAnchor}_${methodName}_${methodArgs.map { it.shortString() }}")
 
         return Method(
             name = methodName,
             signature = methodSignature,
-            anchor = "${classAnchor}_$methodName",
+            anchor = methodAnchor,
             args = methodArgs,
             description = methodDescr,
             examples = methodExamples,
             returnDescription = methodReturnDescr,
             returnType = methodReturnType,
         )
-
     }
 
     private fun parseProperty(element: Element): Variable {

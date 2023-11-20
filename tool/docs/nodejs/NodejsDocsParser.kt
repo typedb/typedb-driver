@@ -151,7 +151,7 @@ class NodejsDocParser : Callable<Unit> {
             it.name != "proto"
         } + document.select("section.tsd-member-group:contains(Accessors)")
                 .select("section.tsd-member > .tsd-signatures > .tsd-signature").map {
-                    parseAccessor(it)
+                    parseAccessor(it, classAnchor)
                 }
 
         return Class(
@@ -204,10 +204,11 @@ class NodejsDocParser : Callable<Unit> {
                     description = it.selectFirst(".tsd-comment")?.let { reformatTextWithCode(it.html()) },
             )
         }
+        val methodAnchor = replaceSymbolsForAnchor("${classAnchor}_${methodName}_${methodArgs.map { it.shortString() }}")
 
         return Method(
                 name = methodName,
-                anchor = "${classAnchor}_${replaceSymbolsForAnchor(methodName + methodSignature)}",
+                anchor = methodAnchor,
                 signature = methodSignature,
                 args = methodArgs,
                 description = methodDescr,
@@ -216,7 +217,7 @@ class NodejsDocParser : Callable<Unit> {
         )
     }
 
-    private fun parseAccessor(element: Element): Method {
+    private fun parseAccessor(element: Element, classAnchor: String): Method {
         val methodSignature = element.text()
         val methodName = element.selectFirst(".tsd-signature")!!.textNodes().first()!!.text()
         val descrElement = element.nextElementSibling()
@@ -227,10 +228,22 @@ class NodejsDocParser : Callable<Unit> {
         val methodExamples = descrElement
                 .select(".tsd-description > .tsd-comment > :has(a[href*=examples]) + pre > :not(button)")
                 .map { it.text() }
+        val methodArgs = descrElement.select(
+                ".tsd-description > .tsd-parameters > .tsd-parameter-list > " +
+                        "li:not(.tsd-parameter-signature li)"
+        ).map {
+            Variable(
+                    name = it.selectFirst(".tsd-kind-parameter")!!.text(),
+                    type = it.selectFirst("h5")!!.text().substringAfter(": "),
+                    description = it.selectFirst(".tsd-comment")?.let { reformatTextWithCode(it.html()) },
+            )
+        }
+        val methodAnchor = replaceSymbolsForAnchor("${classAnchor}_${methodName}_${methodArgs.map { it.shortString() }}")
 
         return Method(
                 name = methodName,
                 signature = methodSignature,
+                anchor = methodAnchor,
                 description = methodDescr,
                 examples = methodExamples,
                 returnType = methodReturnType,

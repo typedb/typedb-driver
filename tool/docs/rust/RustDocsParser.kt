@@ -209,12 +209,8 @@ class RustDocParser : Callable<Unit> {
     private fun parseMethod(element: Element, classAnchor: String, mode: String): Method {
         val methodSignature = enhanceSignature(element.selectFirst("summary section h4")!!.wholeText())
         val methodName = element.selectFirst("summary section h4 a.fn")!!.text()
-        val methodAnchor = replaceSymbolsForAnchor(
-            element.selectFirst("summary section h4 a.fn")!!.attr("href").substringAfter("#")
-        )
         val allArgs = getArgsFromSignature(methodSignature)
         val methodReturnType = if (methodSignature.contains(" -> ")) methodSignature.split(" -> ").last() else null
-
         val methodDescr = if (element.select("div.docblock p").isNotEmpty()) {
             element.select("div.docblock p").map { reformatTextWithCode(it.html()) }
         } else {
@@ -222,9 +218,7 @@ class RustDocParser : Callable<Unit> {
                 "<<#_" + getAnchorFromUrl(it.attr("href")) + ",Read more>>"
             }
         }
-
         val methodExamples = element.select("div.docblock div.example-wrap pre").map { it.text() }
-
         val methodArgs = element.select("div.docblock ul li code:eq(0)").map {
             val argName = it.text().trim()
             assert(allArgs.contains(argName))
@@ -235,18 +229,18 @@ class RustDocParser : Callable<Unit> {
                 type = allArgs[argName]?.trim(),
             )
         }
+        val methodAnchor = replaceSymbolsForAnchor("${classAnchor}_${methodName}_${methodArgs.map { it.shortString() }}")
 
         return Method(
             name = methodName,
             signature = methodSignature,
-            anchor = "${classAnchor}_$methodAnchor",
+            anchor = methodAnchor,
             args = methodArgs,
             description = methodDescr,
             examples = methodExamples,
             mode = mode,
             returnType = methodReturnType,
         )
-
     }
 
     private fun parseField(element: Element, classAnchor: String): Variable {
