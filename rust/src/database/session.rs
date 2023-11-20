@@ -19,7 +19,8 @@
  * under the License.
  */
 
-use std::sync::RwLock;
+use core::fmt;
+use std::{sync::RwLock, sync::Mutex};
 
 use crossbeam::atomic::AtomicCell;
 use log::warn;
@@ -29,12 +30,24 @@ use crate::{
     Database, Options, Transaction,
 };
 
-#[derive(Debug)]
 pub struct Session {
     database: Database,
     server_session_info: RwLock<SessionInfo>,
     session_type: SessionType,
     is_open: AtomicCell<bool>,
+
+    on_reopen: Mutex<Vec<Box<dyn FnMut() + Send + 'static>>>,
+}
+
+impl fmt::Debug for Session {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Session")
+            .field("database", &self.database)
+            .field("session_type", &self.session_type)
+            .field("server_session_info", &self.server_session_info)
+            .field("is_open", &self.is_open)
+            .finish()
+    }
 }
 
 impl Drop for Session {
@@ -80,7 +93,13 @@ impl Session {
                 .await?,
         );
 
-        Ok(Self { database, session_type, server_session_info, is_open: AtomicCell::new(true) })
+        Ok(Self {
+            database,
+            session_type,
+            server_session_info,
+            is_open: AtomicCell::new(true),
+            on_reopen: Mutex::default(),
+        })
     }
 
     /// Returns the name of the database of the session.
@@ -142,6 +161,21 @@ impl Session {
         session_info.on_close_register_sink.send(Box::new(callback)).ok();
     }
 
+    /// Registers a callback function which will be executed when this session is reopened.
+    ///
+    /// # Arguments
+    ///
+    /// * `function` -- The callback function.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// session.on_reopen(function);
+    /// ```
+    pub fn on_reopen(&self, callback: impl FnMut() + Send + 'static) {
+        self.on_reopen.lock().unwrap().push(Box::new(callback));
+    }
+
     /// Opens a transaction to perform read or write queries on the database connected to the session.
     /// See [`Session::transaction_with_options`]
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -172,39 +206,52 @@ impl Session {
             return Err(ConnectionError::SessionIsClosed().into());
         }
 
-        let (session_info, (transaction_stream, shutdown_sink)) = self
-            .database
-            .run_failsafe(|database, _, is_first_run| {
-                let session_info = self.server_session_info.read().unwrap().clone();
-                let session_type = self.session_type;
-                let options = options.clone();
-                async move {
-                    let connection = database.connection();
-                    let session_info = if is_first_run {
-                        session_info
-                    } else {
-                        connection.open_session(database.name().to_owned(), session_type, options.clone()).await?
-                    };
-                    Ok((
-                        session_info.clone(),
-                        connection
-                            .open_transaction(
-                                session_info.session_id,
-                                transaction_type,
-                                options,
-                                session_info.network_latency,
-                            )
-                            .await?,
-                    ))
-                }
-            })
-            .await?;
+        let SessionInfo { address, session_id, network_latency, .. } = self.server_session_info.read().unwrap().clone();
+        let server_connection = &self.database.connection().connection(&address)?;
 
-        *self.server_session_info.write().unwrap() = session_info;
+        let (transaction_stream, shutdown_sink) = match server_connection
+            .open_transaction(session_id.clone(), transaction_type, options.clone(), network_latency)
+            .await
+        {
+            Ok((transaction_stream, shutdown_sink)) => (transaction_stream, shutdown_sink),
+            Err(_err) => {
+                self.is_open.store(false);
+                server_connection.close_session(session_id)?;
+                let (session_info, (transaction_stream, shutdown_sink)) = self
+                    .database
+                    .run_failsafe(|database, _, _| {
+                        let session_type = self.session_type;
+                        let options = options.clone();
+                        async move {
+                            let connection = database.connection();
+                            let session_info = connection
+                                .open_session(database.name().to_owned(), session_type, options.clone())
+                                .await?;
+                            Ok((
+                                session_info.clone(),
+                                connection
+                                    .open_transaction(
+                                        session_info.session_id,
+                                        transaction_type,
+                                        options,
+                                        session_info.network_latency,
+                                    )
+                                    .await?,
+                            ))
+                        }
+                    })
+                    .await?;
+                *self.server_session_info.write().unwrap() = session_info;
+                self.is_open.store(true);
+                self.on_reopen.lock().unwrap().iter_mut().for_each(|callback| (callback)());
+                (transaction_stream, shutdown_sink)
+            }
+        };
 
         self.on_close(move || {
             shutdown_sink.send(()).ok();
         });
+
         Ok(Transaction::new(transaction_stream))
     }
 }
