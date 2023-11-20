@@ -6,7 +6,7 @@
 * `Rule`
 
 // tag::methods[]
-[#_trait_RuleAPI_tymethod_delete]
+[#_trait_RuleAPI_delete__transaction_'tx_Transaction_'tx_]
 ==== delete
 
 [source,rust]
@@ -60,7 +60,7 @@ rule.delete(transaction).resolve()
 --
 ====
 
-[#_trait_RuleAPI_method_is_deleted]
+[#_trait_RuleAPI_is_deleted__transaction_'tx_Transaction_'tx_]
 ==== is_deleted
 
 [source,rust]
@@ -114,7 +114,7 @@ rule.is_deleted(transaction).resolve()
 --
 ====
 
-[#_trait_RuleAPI_tymethod_label]
+[#_trait_RuleAPI_label__]
 ==== label
 
 [source,rust]
@@ -131,7 +131,7 @@ Retrieves the unique label of the rule.
 &String
 ----
 
-[#_trait_RuleAPI_tymethod_set_label]
+[#_trait_RuleAPI_set_label__transaction_'tx_Transaction_'tx___new_label_String]
 ==== set_label
 
 [source,rust]

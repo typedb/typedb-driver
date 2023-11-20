@@ -7,7 +7,7 @@
 * `Debug`
 
 // tag::methods[]
-[#_struct_Connection_method_force_close]
+[#_struct_Connection_force_close__]
 ==== force_close
 
 [source,rust]
@@ -31,7 +31,7 @@ Result
 connection.force_close()
 ----
 
-[#_struct_Connection_method_is_enterprise]
+[#_struct_Connection_is_enterprise__]
 ==== is_enterprise
 
 [source,rust]
@@ -55,7 +55,7 @@ bool
 connection.is_enterprise()
 ----
 
-[#_struct_Connection_method_is_open]
+[#_struct_Connection_is_open__]
 ==== is_open
 
 [source,rust]
@@ -79,7 +79,7 @@ bool
 connection.is_open()
 ----
 
-[#_struct_Connection_method_new_core]
+[#_struct_Connection_new_core__address_impl_AsRef_str_]
 ==== new_core
 
 [source,rust]
@@ -112,7 +112,7 @@ Result<Self>
 Connection::new_core("127.0.0.1:1729")
 ----
 
-[#_struct_Connection_method_new_enterprise]
+[#_struct_Connection_new_enterprise__init_addresses__T___credential_Credential]
 ==== new_enterprise
 
 [source,rust]

@@ -4,7 +4,7 @@
 Provides access to all user management methods.
 
 // tag::methods[]
-[#_UserManager_allall__:_Promise_User__]
+[#_UserManager_all__]
 ==== all
 
 [source,nodejs]
@@ -25,7 +25,7 @@ Retrieves all users which exist on the TypeDB server.
 driver.users.all()
 ----
 
-[#_UserManager_containscontains_name_:_Promise_boolean]
+[#_UserManager_contains__name_string]
 ==== contains
 
 [source,nodejs]
@@ -55,7 +55,7 @@ a| `name` a|  a| `string`
 driver.users.contains(username)
 ----
 
-[#_UserManager_createcreate_name__password_:_Promise_void]
+[#_UserManager_create__name_string__password_string]
 ==== create
 
 [source,nodejs]
@@ -86,7 +86,7 @@ a| `password` a| The password of the user to be created a| `string`
 driver.users.create(username, password)
 ----
 
-[#_UserManager_deletedelete_name_:_Promise_void]
+[#_UserManager_delete__name_string]
 ==== delete
 
 [source,nodejs]
@@ -116,7 +116,7 @@ a| `name` a|  a| `string`
 driver.users.delete(username)
 ----
 
-[#_UserManager_getget_name_:_Promise_User]
+[#_UserManager_get__name_string]
 ==== get
 
 [source,nodejs]
@@ -146,7 +146,7 @@ a| `name` a|  a| `string`
 driver.users.get(username)
 ----
 
-[#_UserManager_passwordSetpasswordSet_name__password_:_Promise_void]
+[#_UserManager_passwordSet__name_string__password_string]
 ==== passwordSet
 
 [source,nodejs]

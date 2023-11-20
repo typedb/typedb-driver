@@ -12,7 +12,7 @@
 * `ThingTypeAPI`
 
 // tag::methods[]
-[#_struct_RootThingType_method_delete]
+[#_struct_RootThingType_delete__]
 ==== delete
 
 [source,rust]
@@ -32,7 +32,7 @@ fn delete<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_RootThingType_method_get_owns]
+[#_struct_RootThingType_get_owns__]
 ==== get_owns
 
 [source,rust]
@@ -55,7 +55,7 @@ fn get_owns<'tx>(
 Result<BoxStream<'tx, Result<AttributeType>>>
 ----
 
-[#_struct_RootThingType_method_get_owns_overridden]
+[#_struct_RootThingType_get_owns_overridden__]
 ==== get_owns_overridden
 
 [source,rust]
@@ -76,7 +76,7 @@ fn get_owns_overridden<'tx>(
 BoxPromise<'tx, Result<Option<AttributeType>>>
 ----
 
-[#_struct_RootThingType_method_get_plays]
+[#_struct_RootThingType_get_plays__]
 ==== get_plays
 
 [source,rust]
@@ -97,7 +97,7 @@ fn get_plays<'tx>(
 Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
-[#_struct_RootThingType_method_get_plays_overridden]
+[#_struct_RootThingType_get_plays_overridden__]
 ==== get_plays_overridden
 
 [source,rust]
@@ -118,7 +118,7 @@ fn get_plays_overridden<'tx>(
 BoxPromise<'tx, Result<Option<RoleType>>>
 ----
 
-[#_struct_RootThingType_method_get_syntax]
+[#_struct_RootThingType_get_syntax__]
 ==== get_syntax
 
 [source,rust]
@@ -138,7 +138,7 @@ fn get_syntax<'tx>(
 BoxPromise<'tx, Result<String>>
 ----
 
-[#_struct_RootThingType_tymethod_is_abstract]
+[#_struct_RootThingType_is_abstract__]
 ==== is_abstract
 
 [source,rust]
@@ -155,7 +155,7 @@ fn is_abstract(&self) -> bool
 bool
 ----
 
-[#_struct_RootThingType_tymethod_is_deleted]
+[#_struct_RootThingType_is_deleted__]
 ==== is_deleted
 
 [source,rust]
@@ -175,7 +175,7 @@ fn is_deleted<'tx>(
 BoxPromise<'tx, Result<bool>>
 ----
 
-[#_struct_RootThingType_tymethod_is_root]
+[#_struct_RootThingType_is_root__]
 ==== is_root
 
 [source,rust]
@@ -192,7 +192,7 @@ fn is_root(&self) -> bool
 bool
 ----
 
-[#_struct_RootThingType_tymethod_label]
+[#_struct_RootThingType_label__]
 ==== label
 
 [source,rust]
@@ -209,7 +209,7 @@ fn label(&self) -> &str
 &str
 ----
 
-[#_struct_RootThingType_method_set_abstract]
+[#_struct_RootThingType_set_abstract__]
 ==== set_abstract
 
 [source,rust]
@@ -229,7 +229,7 @@ fn set_abstract<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_RootThingType_method_set_label]
+[#_struct_RootThingType_set_label__]
 ==== set_label
 
 [source,rust]
@@ -250,7 +250,7 @@ fn set_label<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_RootThingType_method_set_owns]
+[#_struct_RootThingType_set_owns__]
 ==== set_owns
 
 [source,rust]
@@ -273,7 +273,7 @@ fn set_owns<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_RootThingType_method_set_plays]
+[#_struct_RootThingType_set_plays__]
 ==== set_plays
 
 [source,rust]
@@ -295,7 +295,7 @@ fn set_plays<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_RootThingType_method_unset_abstract]
+[#_struct_RootThingType_unset_abstract__]
 ==== unset_abstract
 
 [source,rust]
@@ -315,7 +315,7 @@ fn unset_abstract<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_RootThingType_method_unset_owns]
+[#_struct_RootThingType_unset_owns__]
 ==== unset_owns
 
 [source,rust]
@@ -336,7 +336,7 @@ fn unset_owns<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_RootThingType_method_unset_plays]
+[#_struct_RootThingType_unset_plays__]
 ==== unset_plays
 
 [source,rust]

@@ -33,7 +33,7 @@ a| `value_type` a| `ValueType` a|
 // end::properties[]
 
 // tag::methods[]
-[#_struct_AttributeType_method_delete]
+[#_struct_AttributeType_delete__]
 ==== delete
 
 [source,rust]
@@ -53,7 +53,7 @@ fn delete<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_AttributeType_method_get]
+[#_struct_AttributeType_get__]
 ==== get
 
 [source,rust]
@@ -74,7 +74,7 @@ fn get<'tx>(
 BoxPromise<'tx, Result<Option<Attribute>>>
 ----
 
-[#_struct_AttributeType_method_get_instances]
+[#_struct_AttributeType_get_instances__]
 ==== get_instances
 
 [source,rust]
@@ -95,7 +95,7 @@ fn get_instances<'tx>(
 Result<BoxStream<'tx, Result<Attribute>>>
 ----
 
-[#_struct_AttributeType_method_get_owners]
+[#_struct_AttributeType_get_owners__]
 ==== get_owners
 
 [source,rust]
@@ -117,7 +117,7 @@ fn get_owners<'tx>(
 Result<BoxStream<'tx, Result<ThingType>>>
 ----
 
-[#_struct_AttributeType_method_get_owns]
+[#_struct_AttributeType_get_owns__]
 ==== get_owns
 
 [source,rust]
@@ -140,7 +140,7 @@ fn get_owns<'tx>(
 Result<BoxStream<'tx, Result<AttributeType>>>
 ----
 
-[#_struct_AttributeType_method_get_owns_overridden]
+[#_struct_AttributeType_get_owns_overridden__]
 ==== get_owns_overridden
 
 [source,rust]
@@ -161,7 +161,7 @@ fn get_owns_overridden<'tx>(
 BoxPromise<'tx, Result<Option<AttributeType>>>
 ----
 
-[#_struct_AttributeType_method_get_plays]
+[#_struct_AttributeType_get_plays__]
 ==== get_plays
 
 [source,rust]
@@ -182,7 +182,7 @@ fn get_plays<'tx>(
 Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
-[#_struct_AttributeType_method_get_plays_overridden]
+[#_struct_AttributeType_get_plays_overridden__]
 ==== get_plays_overridden
 
 [source,rust]
@@ -203,7 +203,7 @@ fn get_plays_overridden<'tx>(
 BoxPromise<'tx, Result<Option<RoleType>>>
 ----
 
-[#_struct_AttributeType_method_get_regex]
+[#_struct_AttributeType_get_regex__]
 ==== get_regex
 
 [source,rust]
@@ -223,7 +223,7 @@ fn get_regex<'tx>(
 BoxPromise<'tx, Result<Option<String>>>
 ----
 
-[#_struct_AttributeType_method_get_subtypes]
+[#_struct_AttributeType_get_subtypes__]
 ==== get_subtypes
 
 [source,rust]
@@ -244,7 +244,7 @@ fn get_subtypes<'tx>(
 Result<BoxStream<'tx, Result<AttributeType>>>
 ----
 
-[#_struct_AttributeType_method_get_subtypes_with_value_type]
+[#_struct_AttributeType_get_subtypes_with_value_type__]
 ==== get_subtypes_with_value_type
 
 [source,rust]
@@ -266,7 +266,7 @@ fn get_subtypes_with_value_type<'tx>(
 Result<BoxStream<'tx, Result<AttributeType>>>
 ----
 
-[#_struct_AttributeType_method_get_supertype]
+[#_struct_AttributeType_get_supertype__]
 ==== get_supertype
 
 [source,rust]
@@ -286,7 +286,7 @@ fn get_supertype<'tx>(
 BoxPromise<'tx, Result<Option<AttributeType>>>
 ----
 
-[#_struct_AttributeType_method_get_supertypes]
+[#_struct_AttributeType_get_supertypes__]
 ==== get_supertypes
 
 [source,rust]
@@ -306,7 +306,7 @@ fn get_supertypes<'tx>(
 Result<BoxStream<'tx, Result<AttributeType>>>
 ----
 
-[#_struct_AttributeType_method_get_syntax]
+[#_struct_AttributeType_get_syntax__]
 ==== get_syntax
 
 [source,rust]
@@ -326,7 +326,7 @@ fn get_syntax<'tx>(
 BoxPromise<'tx, Result<String>>
 ----
 
-[#_struct_AttributeType_tymethod_is_abstract]
+[#_struct_AttributeType_is_abstract__]
 ==== is_abstract
 
 [source,rust]
@@ -343,7 +343,7 @@ fn is_abstract(&self) -> bool
 bool
 ----
 
-[#_struct_AttributeType_tymethod_is_deleted]
+[#_struct_AttributeType_is_deleted__]
 ==== is_deleted
 
 [source,rust]
@@ -363,7 +363,7 @@ fn is_deleted<'tx>(
 BoxPromise<'tx, Result<bool>>
 ----
 
-[#_struct_AttributeType_tymethod_is_root]
+[#_struct_AttributeType_is_root__]
 ==== is_root
 
 [source,rust]
@@ -380,7 +380,7 @@ fn is_root(&self) -> bool
 bool
 ----
 
-[#_struct_AttributeType_tymethod_label]
+[#_struct_AttributeType_label__]
 ==== label
 
 [source,rust]
@@ -397,7 +397,7 @@ fn label(&self) -> &str
 &str
 ----
 
-[#_struct_AttributeType_method_put]
+[#_struct_AttributeType_put__]
 ==== put
 
 [source,rust]
@@ -418,7 +418,7 @@ fn put<'tx>(
 BoxPromise<'tx, Result<Attribute>>
 ----
 
-[#_struct_AttributeType_method_root]
+[#_struct_AttributeType_root__]
 ==== root
 
 [source,rust]
@@ -435,7 +435,7 @@ Returns the root ``AttributeType``
 Self
 ----
 
-[#_struct_AttributeType_method_set_abstract]
+[#_struct_AttributeType_set_abstract__]
 ==== set_abstract
 
 [source,rust]
@@ -455,7 +455,7 @@ fn set_abstract<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_AttributeType_method_set_label]
+[#_struct_AttributeType_set_label__]
 ==== set_label
 
 [source,rust]
@@ -476,7 +476,7 @@ fn set_label<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_AttributeType_method_set_owns]
+[#_struct_AttributeType_set_owns__]
 ==== set_owns
 
 [source,rust]
@@ -499,7 +499,7 @@ fn set_owns<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_AttributeType_method_set_plays]
+[#_struct_AttributeType_set_plays__]
 ==== set_plays
 
 [source,rust]
@@ -521,7 +521,7 @@ fn set_plays<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_AttributeType_method_set_regex]
+[#_struct_AttributeType_set_regex__]
 ==== set_regex
 
 [source,rust]
@@ -542,7 +542,7 @@ fn set_regex<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_AttributeType_method_set_supertype]
+[#_struct_AttributeType_set_supertype__]
 ==== set_supertype
 
 [source,rust]
@@ -563,7 +563,7 @@ fn set_supertype<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_AttributeType_method_unset_abstract]
+[#_struct_AttributeType_unset_abstract__]
 ==== unset_abstract
 
 [source,rust]
@@ -583,7 +583,7 @@ fn unset_abstract<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_AttributeType_method_unset_owns]
+[#_struct_AttributeType_unset_owns__]
 ==== unset_owns
 
 [source,rust]
@@ -604,7 +604,7 @@ fn unset_owns<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_AttributeType_method_unset_plays]
+[#_struct_AttributeType_unset_plays__]
 ==== unset_plays
 
 [source,rust]
@@ -625,7 +625,7 @@ fn unset_plays<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_AttributeType_method_unset_regex]
+[#_struct_AttributeType_unset_regex__]
 ==== unset_regex
 
 [source,rust]
@@ -645,7 +645,7 @@ fn unset_regex<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_AttributeType_tymethod_value_type]
+[#_struct_AttributeType_value_type__]
 ==== value_type
 
 [source,rust]

@@ -6,7 +6,7 @@
 * `Attribute`
 
 // tag::methods[]
-[#_trait_AttributeAPI_method_get_owners]
+[#_trait_AttributeAPI_get_owners__transaction_'tx_Transaction_'____owner_type]
 ==== get_owners
 
 [source,rust]

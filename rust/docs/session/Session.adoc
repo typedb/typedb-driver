@@ -7,7 +7,7 @@
 * `Drop`
 
 // tag::methods[]
-[#_struct_Session_method_database_name]
+[#_struct_Session_database_name__]
 ==== database_name
 
 [source,rust]
@@ -31,7 +31,7 @@ Returns the name of the database of the session.
 session.database_name();
 ----
 
-[#_struct_Session_method_force_close]
+[#_struct_Session_force_close__]
 ==== force_close
 
 [source,rust]
@@ -55,7 +55,7 @@ Result
 session.force_close();
 ----
 
-[#_struct_Session_method_is_open]
+[#_struct_Session_is_open__]
 ==== is_open
 
 [source,rust]
@@ -79,7 +79,7 @@ bool
 session.is_open();
 ----
 
-[#_struct_Session_method_new]
+[#_struct_Session_new__]
 ==== new
 
 [tabs]
@@ -114,7 +114,7 @@ Opens a communication tunnel (session) to the given database with default option
 Result<Self>
 ----
 
-[#_struct_Session_method_new_with_options]
+[#_struct_Session_new_with_options__database_Database__session_type_SessionType__options_Options]
 ==== new_with_options
 
 [tabs]
@@ -193,7 +193,7 @@ Session::new_with_options(database, session_type, options);
 --
 ====
 
-[#_struct_Session_method_on_close]
+[#_struct_Session_on_close__function]
 ==== on_close
 
 [source,rust]
@@ -226,7 +226,7 @@ null
 session.on_close(function);
 ----
 
-[#_struct_Session_method_transaction]
+[#_struct_Session_transaction__]
 ==== transaction
 
 [tabs]
@@ -267,7 +267,7 @@ Opens a transaction to perform read or write queries on the database connected t
 Result<Transaction<'_>>
 ----
 
-[#_struct_Session_method_transaction_with_options]
+[#_struct_Session_transaction_with_options__transaction_type_TransactionType__options_Options]
 ==== transaction_with_options
 
 [tabs]
@@ -345,7 +345,7 @@ session.transaction_with_options(transaction_type, options);
 --
 ====
 
-[#_struct_Session_method_type]
+[#_struct_Session_type___]
 ==== type_
 
 [source,rust]

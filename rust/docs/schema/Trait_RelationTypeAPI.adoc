@@ -6,7 +6,7 @@
 * `RelationType`
 
 // tag::methods[]
-[#_trait_RelationTypeAPI_method_create]
+[#_trait_RelationTypeAPI_create__transaction_'tx_Transaction_'__]
 ==== create
 
 [source,rust]
@@ -60,7 +60,7 @@ relation_type.create(transaction).resolve();
 --
 ====
 
-[#_trait_RelationTypeAPI_method_get_instances]
+[#_trait_RelationTypeAPI_get_instances__transaction_'tx_Transaction_'____transitivity_Transitivity]
 ==== get_instances
 
 [source,rust]
@@ -98,7 +98,7 @@ Result<BoxStream<'tx, Result<Relation>>>
 relation_type.get_instances(transaction, Transitivity::Explicit);
 ----
 
-[#_trait_RelationTypeAPI_method_get_relates]
+[#_trait_RelationTypeAPI_get_relates__transaction_'tx_Transaction_'____transitivity_Transitivity]
 ==== get_relates
 
 [source,rust]
@@ -136,7 +136,7 @@ Result<BoxStream<'tx, Result<RoleType>>>
 relation_type.get_relates(transaction, Transitivity::Transitive);
 ----
 
-[#_trait_RelationTypeAPI_method_get_relates_for_role_label]
+[#_trait_RelationTypeAPI_get_relates_for_role_label__transaction_'tx_Transaction_'____role_label_String]
 ==== get_relates_for_role_label
 
 [source,rust]
@@ -192,7 +192,7 @@ relation_type.get_relates_for_role_label(transaction, role_label).resolve();
 --
 ====
 
-[#_trait_RelationTypeAPI_method_get_relates_overridden]
+[#_trait_RelationTypeAPI_get_relates_overridden__transaction_'tx_Transaction_'____overridden_role_label_String]
 ==== get_relates_overridden
 
 [source,rust]
@@ -248,7 +248,7 @@ relation_type.get_relates_overridden(transaction, overridden_role_label).resolve
 --
 ====
 
-[#_trait_RelationTypeAPI_method_get_subtypes]
+[#_trait_RelationTypeAPI_get_subtypes__transaction_'tx_Transaction_'____transitivity_Transitivity]
 ==== get_subtypes
 
 [source,rust]
@@ -286,7 +286,7 @@ Result<BoxStream<'tx, Result<RelationType>>>
 relation_type.get_subtypes(transaction, Transitivity::Transitive);
 ----
 
-[#_trait_RelationTypeAPI_method_get_supertype]
+[#_trait_RelationTypeAPI_get_supertype__transaction_'tx_Transaction_'__]
 ==== get_supertype
 
 [source,rust]
@@ -340,7 +340,7 @@ relation_type.get_supertype(transaction).resolve();
 --
 ====
 
-[#_trait_RelationTypeAPI_method_get_supertypes]
+[#_trait_RelationTypeAPI_get_supertypes__transaction_'tx_Transaction_'__]
 ==== get_supertypes
 
 [source,rust]
@@ -376,7 +376,7 @@ Result<BoxStream<'tx, Result<RelationType>>>
 relation_type.get_supertypes(transaction);
 ----
 
-[#_trait_RelationTypeAPI_method_set_relates]
+[#_trait_RelationTypeAPI_set_relates__transaction_'tx_Transaction_'____role_label_String__overridden_role_label_Option_String_]
 ==== set_relates
 
 [source,rust]
@@ -434,7 +434,7 @@ relation_type.set_relates(transaction, role_label, None).resolve();
 --
 ====
 
-[#_trait_RelationTypeAPI_method_set_supertype]
+[#_trait_RelationTypeAPI_set_supertype__transaction_'tx_Transaction_'____supertype_RelationType]
 ==== set_supertype
 
 [source,rust]
@@ -490,7 +490,7 @@ relation_type.set_supertype(transaction, super_relation_type).resolve();
 --
 ====
 
-[#_trait_RelationTypeAPI_method_unset_relates]
+[#_trait_RelationTypeAPI_unset_relates__transaction_'tx_Transaction_'____role_label_String]
 ==== unset_relates
 
 [source,rust]

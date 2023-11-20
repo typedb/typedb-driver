@@ -2,7 +2,7 @@
 === Concept
 
 // tag::methods[]
-[#_Concept_as_attribute]
+[#_Concept_as_attribute__]
 ==== as_attribute
 
 [source,python]
@@ -23,7 +23,7 @@ Casts the concept to ``Attribute``.
 concept.as_attribute()
 ----
 
-[#_Concept_as_attribute_type]
+[#_Concept_as_attribute_type__]
 ==== as_attribute_type
 
 [source,python]
@@ -44,7 +44,7 @@ Casts the concept to ``AttributeType``.
 concept.as_attribute_type()
 ----
 
-[#_Concept_as_entity]
+[#_Concept_as_entity__]
 ==== as_entity
 
 [source,python]
@@ -65,7 +65,7 @@ Casts the concept to ``Entity``.
 concept.as_entity()
 ----
 
-[#_Concept_as_entity_type]
+[#_Concept_as_entity_type__]
 ==== as_entity_type
 
 [source,python]
@@ -86,7 +86,7 @@ Casts the concept to ``EntityType``.
 concept.as_entity_type()
 ----
 
-[#_Concept_as_relation]
+[#_Concept_as_relation__]
 ==== as_relation
 
 [source,python]
@@ -107,7 +107,7 @@ Casts the concept to ``Relation``.
 concept.as_relation()
 ----
 
-[#_Concept_as_relation_type]
+[#_Concept_as_relation_type__]
 ==== as_relation_type
 
 [source,python]
@@ -128,7 +128,7 @@ Casts the concept to ``RelationType``.
 concept.as_relation_type()
 ----
 
-[#_Concept_as_role_type]
+[#_Concept_as_role_type__]
 ==== as_role_type
 
 [source,python]
@@ -149,7 +149,7 @@ Casts the concept to ``RoleType``.
 concept.as_role_type()
 ----
 
-[#_Concept_as_thing]
+[#_Concept_as_thing__]
 ==== as_thing
 
 [source,python]
@@ -170,7 +170,7 @@ Casts the concept to ``Thing``.
 concept.as_thing()
 ----
 
-[#_Concept_as_thing_type]
+[#_Concept_as_thing_type__]
 ==== as_thing_type
 
 [source,python]
@@ -191,7 +191,7 @@ Casts the concept to ``ThingType``.
 concept.as_thing_type()
 ----
 
-[#_Concept_as_type]
+[#_Concept_as_type__]
 ==== as_type
 
 [source,python]
@@ -212,7 +212,7 @@ Casts the concept to ``Type``.
 concept.as_type()
 ----
 
-[#_Concept_as_value]
+[#_Concept_as_value__]
 ==== as_value
 
 [source,python]
@@ -233,7 +233,7 @@ Casts the concept to ``Value``.
 concept.as_value()
 ----
 
-[#_Concept_is_attribute]
+[#_Concept_is_attribute__]
 ==== is_attribute
 
 [source,python]
@@ -254,7 +254,7 @@ Checks if the concept is an ``Attribute``.
 concept.is_attribute()
 ----
 
-[#_Concept_is_attribute_type]
+[#_Concept_is_attribute_type__]
 ==== is_attribute_type
 
 [source,python]
@@ -275,7 +275,7 @@ Checks if the concept is an ``AttributeType``.
 concept.is_attribute_type()
 ----
 
-[#_Concept_is_entity]
+[#_Concept_is_entity__]
 ==== is_entity
 
 [source,python]
@@ -296,7 +296,7 @@ Checks if the concept is an ``Entity``.
 concept.is_entity()
 ----
 
-[#_Concept_is_entity_type]
+[#_Concept_is_entity_type__]
 ==== is_entity_type
 
 [source,python]
@@ -317,7 +317,7 @@ Checks if the concept is an ``EntityType``.
 concept.is_entity_type()
 ----
 
-[#_Concept_is_relation]
+[#_Concept_is_relation__]
 ==== is_relation
 
 [source,python]
@@ -338,7 +338,7 @@ Checks if the concept is a ``Relation``.
 concept.is_relation()
 ----
 
-[#_Concept_is_relation_type]
+[#_Concept_is_relation_type__]
 ==== is_relation_type
 
 [source,python]
@@ -359,7 +359,7 @@ Checks if the concept is a ``RelationType``.
 concept.is_relation_type()
 ----
 
-[#_Concept_is_role_type]
+[#_Concept_is_role_type__]
 ==== is_role_type
 
 [source,python]
@@ -380,7 +380,7 @@ Checks if the concept is a ``RoleType``.
 concept.is_role_type()
 ----
 
-[#_Concept_is_thing]
+[#_Concept_is_thing__]
 ==== is_thing
 
 [source,python]
@@ -401,7 +401,7 @@ Checks if the concept is a ``Thing``.
 concept.is_thing()
 ----
 
-[#_Concept_is_thing_type]
+[#_Concept_is_thing_type__]
 ==== is_thing_type
 
 [source,python]
@@ -422,7 +422,7 @@ Checks if the concept is a ``ThingType``.
 concept.is_thing_type()
 ----
 
-[#_Concept_is_type]
+[#_Concept_is_type__]
 ==== is_type
 
 [source,python]
@@ -443,7 +443,7 @@ Checks if the concept is a ``Type``.
 concept.is_type()
 ----
 
-[#_Concept_is_value]
+[#_Concept_is_value__]
 ==== is_value
 
 [source,python]

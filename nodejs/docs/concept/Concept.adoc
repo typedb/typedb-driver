@@ -2,7 +2,7 @@
 === Concept
 
 // tag::methods[]
-[#_Concept_asAttributeasAttribute__:_Attribute]
+[#_Concept_asAttribute__]
 ==== asAttribute
 
 [source,nodejs]
@@ -23,7 +23,7 @@ Casts the concept to ``Attribute``.
 concept.asAttribute()
 ----
 
-[#_Concept_asAttributeTypeasAttributeType__:_AttributeType]
+[#_Concept_asAttributeType__]
 ==== asAttributeType
 
 [source,nodejs]
@@ -44,7 +44,7 @@ Casts the concept to ``AttributeType``.
 concept.asAttributeType()
 ----
 
-[#_Concept_asEntityasEntity__:_Entity]
+[#_Concept_asEntity__]
 ==== asEntity
 
 [source,nodejs]
@@ -65,7 +65,7 @@ Casts the concept to ``Entity``.
 concept.asEntity()
 ----
 
-[#_Concept_asEntityTypeasEntityType__:_EntityType]
+[#_Concept_asEntityType__]
 ==== asEntityType
 
 [source,nodejs]
@@ -86,7 +86,7 @@ Casts the concept to ``EntityType``.
 concept.asEntityType()
 ----
 
-[#_Concept_asRelationasRelation__:_Relation]
+[#_Concept_asRelation__]
 ==== asRelation
 
 [source,nodejs]
@@ -107,7 +107,7 @@ Casts the concept to ``Relation``.
 concept.asRelation()
 ----
 
-[#_Concept_asRelationTypeasRelationType__:_RelationType]
+[#_Concept_asRelationType__]
 ==== asRelationType
 
 [source,nodejs]
@@ -128,7 +128,7 @@ Casts the concept to ``RelationType``.
 concept.asRelationType()
 ----
 
-[#_Concept_asRoleTypeasRoleType__:_RoleType]
+[#_Concept_asRoleType__]
 ==== asRoleType
 
 [source,nodejs]
@@ -149,7 +149,7 @@ Casts the concept to ``RoleType``.
 concept.asRoleType()
 ----
 
-[#_Concept_asThingasThing__:_Thing]
+[#_Concept_asThing__]
 ==== asThing
 
 [source,nodejs]
@@ -170,7 +170,7 @@ Casts the concept to ``Thing``.
 concept.asThing()
 ----
 
-[#_Concept_asThingTypeasThingType__:_ThingType]
+[#_Concept_asThingType__]
 ==== asThingType
 
 [source,nodejs]
@@ -191,7 +191,7 @@ Casts the concept to ``ThingType``.
 concept.asThingType()
 ----
 
-[#_Concept_asTypeasType__:_Type]
+[#_Concept_asType__]
 ==== asType
 
 [source,nodejs]
@@ -212,7 +212,7 @@ Casts the concept to ``Type``.
 concept.asType()
 ----
 
-[#_Concept_asValueasValue__:_Value]
+[#_Concept_asValue__]
 ==== asValue
 
 [source,nodejs]
@@ -233,7 +233,7 @@ Casts the concept to ``Value``.
 concept.asValue()
 ----
 
-[#_Concept_equalsequals_concept_:_boolean]
+[#_Concept_equals__concept_Concept]
 ==== equals
 
 [source,nodejs]
@@ -256,7 +256,7 @@ a| `concept` a| The concept to compare to. a| `Concept`
 .Returns
 `boolean`
 
-[#_Concept_isAttributeisAttribute__:_boolean]
+[#_Concept_isAttribute__]
 ==== isAttribute
 
 [source,nodejs]
@@ -277,7 +277,7 @@ Checks if the concept is an ``Attribute``.
 concept.isAttribute()
 ----
 
-[#_Concept_isAttributeTypeisAttributeType__:_boolean]
+[#_Concept_isAttributeType__]
 ==== isAttributeType
 
 [source,nodejs]
@@ -298,7 +298,7 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType()
 ----
 
-[#_Concept_isEntityisEntity__:_boolean]
+[#_Concept_isEntity__]
 ==== isEntity
 
 [source,nodejs]
@@ -319,7 +319,7 @@ Checks if the concept is an ``Entity``.
 concept.isEntity()
 ----
 
-[#_Concept_isEntityTypeisEntityType__:_boolean]
+[#_Concept_isEntityType__]
 ==== isEntityType
 
 [source,nodejs]
@@ -340,7 +340,7 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType()
 ----
 
-[#_Concept_isRelationisRelation__:_boolean]
+[#_Concept_isRelation__]
 ==== isRelation
 
 [source,nodejs]
@@ -361,7 +361,7 @@ Checks if the concept is a ``Relation``.
 concept.isRelation()
 ----
 
-[#_Concept_isRelationTypeisRelationType__:_boolean]
+[#_Concept_isRelationType__]
 ==== isRelationType
 
 [source,nodejs]
@@ -382,7 +382,7 @@ Checks if the concept is a ``RelationType``.
 concept.isRelationType()
 ----
 
-[#_Concept_isRoleTypeisRoleType__:_boolean]
+[#_Concept_isRoleType__]
 ==== isRoleType
 
 [source,nodejs]
@@ -403,7 +403,7 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType()
 ----
 
-[#_Concept_isThingisThing__:_boolean]
+[#_Concept_isThing__]
 ==== isThing
 
 [source,nodejs]
@@ -424,7 +424,7 @@ Checks if the concept is a ``Thing``.
 concept.isThing()
 ----
 
-[#_Concept_isThingTypeisThingType__:_boolean]
+[#_Concept_isThingType__]
 ==== isThingType
 
 [source,nodejs]
@@ -445,7 +445,7 @@ Checks if the concept is a ``ThingType``.
 concept.isThingType()
 ----
 
-[#_Concept_isTypeisType__:_boolean]
+[#_Concept_isType__]
 ==== isType
 
 [source,nodejs]
@@ -466,7 +466,7 @@ Checks if the concept is a ``Type``.
 concept.isType()
 ----
 
-[#_Concept_isValueisValue__:_boolean]
+[#_Concept_isValue__]
 ==== isValue
 
 [source,nodejs]

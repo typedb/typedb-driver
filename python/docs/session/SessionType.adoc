@@ -27,7 +27,7 @@ a| `SCHEMA` a| `1`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_SessionType_is_data]
+[#_SessionType_is_data__]
 ==== is_data
 
 [source,python]
@@ -41,7 +41,7 @@ is_data() -> bool
 .Returns
 `bool`
 
-[#_SessionType_is_schema]
+[#_SessionType_is_schema__]
 ==== is_schema
 
 [source,python]

@@ -18,7 +18,7 @@ a| `scope` a| `str \| None` a| The scope part of the label
 // end::properties[]
 
 // tag::methods[]
-[#_Label_of]
+[#_Label_of__args_str]
 ==== of
 
 [source,python]
@@ -49,7 +49,7 @@ Label.of("entity")
 Label.of("relation", "role")
 ----
 
-[#_Label_scoped_name]
+[#_Label_scoped_name__]
 ==== scoped_name
 
 [source,python]

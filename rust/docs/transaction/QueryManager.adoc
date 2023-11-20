@@ -8,7 +8,7 @@
 Provides methods for executing TypeQL queries in the transaction.
 
 // tag::methods[]
-[#_struct_QueryManager_method_define]
+[#_struct_QueryManager_define__]
 ==== define
 
 [source,rust]
@@ -25,7 +25,7 @@ Performs a TypeQL Define query with default options. See <<#_struct_QueryManager
 impl Promise<'tx, Result>
 ----
 
-[#_struct_QueryManager_method_define_with_options]
+[#_struct_QueryManager_define_with_options__query_str__options_Options]
 ==== define_with_options
 
 [source,rust]
@@ -81,7 +81,7 @@ transaction.query().define_with_options(query, options).resolve()
 --
 ====
 
-[#_struct_QueryManager_method_delete]
+[#_struct_QueryManager_delete__]
 ==== delete
 
 [source,rust]
@@ -98,7 +98,7 @@ Performs a TypeQL Delete query with default options. See <<#_struct_QueryManager
 impl Promise<'tx, Result>
 ----
 
-[#_struct_QueryManager_method_delete_with_options]
+[#_struct_QueryManager_delete_with_options__query_str__options_Options]
 ==== delete_with_options
 
 [source,rust]
@@ -154,7 +154,7 @@ transaction.query().delete_with_options(query, options).resolve()
 --
 ====
 
-[#_struct_QueryManager_method_explain]
+[#_struct_QueryManager_explain__]
 ==== explain
 
 [source,rust]
@@ -174,7 +174,7 @@ Performs a TypeQL Explain query in the transaction. See ``QueryManager::explain_
 Result<impl Stream<Item = Result<Explanation>> + 'tx>
 ----
 
-[#_struct_QueryManager_method_explain_with_options]
+[#_struct_QueryManager_explain_with_options__explainable_Explainable__options_Options]
 ==== explain_with_options
 
 [source,rust]
@@ -212,7 +212,7 @@ Result<impl Stream<Item = Result<Explanation>> + 'tx>
 transaction.query().explain_with_options(explainable, options)
 ----
 
-[#_struct_QueryManager_method_fetch]
+[#_struct_QueryManager_fetch__]
 ==== fetch
 
 [source,rust]
@@ -232,7 +232,7 @@ Performs a TypeQL Fetch query with default options. See <<#_struct_QueryManager_
 Result<impl Stream<Item = Result<JSON>> + 'tx>
 ----
 
-[#_struct_QueryManager_method_fetch_with_options]
+[#_struct_QueryManager_fetch_with_options__query_str__options_Options]
 ==== fetch_with_options
 
 [source,rust]
@@ -270,7 +270,7 @@ Result<impl Stream<Item = Result<JSON>> + 'tx>
 transaction.query().fetch_with_options(query, options)
 ----
 
-[#_struct_QueryManager_method_get]
+[#_struct_QueryManager_get__]
 ==== get
 
 [source,rust]
@@ -290,7 +290,7 @@ Performs a TypeQL Match (Get) query with default options. See <<#_struct_QueryMa
 Result<impl Stream<Item = Result<ConceptMap>> + 'tx>
 ----
 
-[#_struct_QueryManager_method_get_aggregate]
+[#_struct_QueryManager_get_aggregate__]
 ==== get_aggregate
 
 [source,rust]
@@ -310,7 +310,7 @@ Performs a TypeQL Match Aggregate query with default options. See <<#_struct_Que
 impl Promise<'tx, Result<Option<Value>>>
 ----
 
-[#_struct_QueryManager_method_get_aggregate_with_options]
+[#_struct_QueryManager_get_aggregate_with_options__query_str__options_Options]
 ==== get_aggregate_with_options
 
 [source,rust]
@@ -366,7 +366,7 @@ transaction.query().get_aggregate_with_options(query, options).resolve()
 --
 ====
 
-[#_struct_QueryManager_method_get_group]
+[#_struct_QueryManager_get_group__]
 ==== get_group
 
 [source,rust]
@@ -386,7 +386,7 @@ Performs a TypeQL Match Group query with default options. See <<#_struct_QueryMa
 Result<impl Stream<Item = Result<ConceptMapGroup>> + 'tx>
 ----
 
-[#_struct_QueryManager_method_get_group_aggregate]
+[#_struct_QueryManager_get_group_aggregate__]
 ==== get_group_aggregate
 
 [source,rust]
@@ -406,7 +406,7 @@ Performs a TypeQL Match Group Aggregate query with default options. See <<#_stru
 Result<impl Stream<Item = Result<ValueGroup>> + 'tx>
 ----
 
-[#_struct_QueryManager_method_get_group_aggregate_with_options]
+[#_struct_QueryManager_get_group_aggregate_with_options__query_str__options_Options]
 ==== get_group_aggregate_with_options
 
 [source,rust]
@@ -444,7 +444,7 @@ Result<impl Stream<Item = Result<ValueGroup>> + 'tx>
 transaction.query().get_group_aggregate_with_options(query, options)
 ----
 
-[#_struct_QueryManager_method_get_group_with_options]
+[#_struct_QueryManager_get_group_with_options__query_str__options_Options]
 ==== get_group_with_options
 
 [source,rust]
@@ -482,7 +482,7 @@ Result<impl Stream<Item = Result<ConceptMapGroup>> + 'tx>
 transaction.query().get_group_with_options(query, options)
 ----
 
-[#_struct_QueryManager_method_get_with_options]
+[#_struct_QueryManager_get_with_options__query_str__options_Options]
 ==== get_with_options
 
 [source,rust]
@@ -520,7 +520,7 @@ Result<impl Stream<Item = Result<ConceptMap>> + 'tx>
 transaction.query().get_with_options(query, options)
 ----
 
-[#_struct_QueryManager_method_insert]
+[#_struct_QueryManager_insert__]
 ==== insert
 
 [source,rust]
@@ -540,7 +540,7 @@ Performs a TypeQL Insert query with default options. See <<#_struct_QueryManager
 Result<impl Stream<Item = Result<ConceptMap>> + 'tx>
 ----
 
-[#_struct_QueryManager_method_insert_with_options]
+[#_struct_QueryManager_insert_with_options__query_str__options_Options]
 ==== insert_with_options
 
 [source,rust]
@@ -578,7 +578,7 @@ Result<impl Stream<Item = Result<ConceptMap>> + 'tx>
 transaction.query().insert_with_options(query, options)
 ----
 
-[#_struct_QueryManager_method_undefine]
+[#_struct_QueryManager_undefine__]
 ==== undefine
 
 [source,rust]
@@ -595,7 +595,7 @@ Performs a TypeQL Undefine query with default options See <<#_struct_QueryManage
 impl Promise<'tx, Result>
 ----
 
-[#_struct_QueryManager_method_undefine_with_options]
+[#_struct_QueryManager_undefine_with_options__query_str__options_Options]
 ==== undefine_with_options
 
 [source,rust]
@@ -651,7 +651,7 @@ transaction.query().undefine_with_options(query, options).resolve()
 --
 ====
 
-[#_struct_QueryManager_method_update]
+[#_struct_QueryManager_update__]
 ==== update
 
 [source,rust]
@@ -671,7 +671,7 @@ Performs a TypeQL Update query with default options. See <<#_struct_QueryManager
 Result<impl Stream<Item = Result<ConceptMap>> + 'tx>
 ----
 
-[#_struct_QueryManager_method_update_with_options]
+[#_struct_QueryManager_update_with_options__query_str__options_Options]
 ==== update_with_options
 
 [source,rust]

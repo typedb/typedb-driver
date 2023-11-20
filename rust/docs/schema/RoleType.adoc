@@ -29,7 +29,7 @@ a| `label` a| `ScopedLabel` a|
 // end::properties[]
 
 // tag::methods[]
-[#_struct_RoleType_method_delete]
+[#_struct_RoleType_delete__]
 ==== delete
 
 [source,rust]
@@ -49,7 +49,7 @@ fn delete<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_RoleType_method_get_player_instances]
+[#_struct_RoleType_get_player_instances__]
 ==== get_player_instances
 
 [source,rust]
@@ -70,7 +70,7 @@ fn get_player_instances<'tx>(
 Result<BoxStream<'tx, Result<Thing>>>
 ----
 
-[#_struct_RoleType_method_get_player_types]
+[#_struct_RoleType_get_player_types__]
 ==== get_player_types
 
 [source,rust]
@@ -91,7 +91,7 @@ fn get_player_types<'tx>(
 Result<BoxStream<'tx, Result<ThingType>>>
 ----
 
-[#_struct_RoleType_method_get_relation_instances]
+[#_struct_RoleType_get_relation_instances__]
 ==== get_relation_instances
 
 [source,rust]
@@ -112,7 +112,7 @@ fn get_relation_instances<'tx>(
 Result<BoxStream<'tx, Result<Relation>>>
 ----
 
-[#_struct_RoleType_tymethod_get_relation_type]
+[#_struct_RoleType_get_relation_type__]
 ==== get_relation_type
 
 [source,rust]
@@ -132,7 +132,7 @@ fn get_relation_type<'tx>(
 BoxPromise<'tx, Result<Option<RelationType>>>
 ----
 
-[#_struct_RoleType_method_get_relation_types]
+[#_struct_RoleType_get_relation_types__]
 ==== get_relation_types
 
 [source,rust]
@@ -152,7 +152,7 @@ fn get_relation_types<'tx>(
 Result<BoxStream<'tx, Result<RelationType>>>
 ----
 
-[#_struct_RoleType_method_get_subtypes]
+[#_struct_RoleType_get_subtypes__]
 ==== get_subtypes
 
 [source,rust]
@@ -173,7 +173,7 @@ fn get_subtypes<'tx>(
 Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
-[#_struct_RoleType_method_get_supertype]
+[#_struct_RoleType_get_supertype__]
 ==== get_supertype
 
 [source,rust]
@@ -193,7 +193,7 @@ fn get_supertype<'tx>(
 BoxPromise<'tx, Result<Option<RoleType>>>
 ----
 
-[#_struct_RoleType_method_get_supertypes]
+[#_struct_RoleType_get_supertypes__]
 ==== get_supertypes
 
 [source,rust]
@@ -213,7 +213,7 @@ fn get_supertypes<'tx>(
 Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
-[#_struct_RoleType_tymethod_is_abstract]
+[#_struct_RoleType_is_abstract__]
 ==== is_abstract
 
 [source,rust]
@@ -230,7 +230,7 @@ fn is_abstract(&self) -> bool
 bool
 ----
 
-[#_struct_RoleType_tymethod_is_deleted]
+[#_struct_RoleType_is_deleted__]
 ==== is_deleted
 
 [source,rust]
@@ -250,7 +250,7 @@ fn is_deleted<'tx>(
 BoxPromise<'tx, Result<bool>>
 ----
 
-[#_struct_RoleType_method_set_label]
+[#_struct_RoleType_set_label__]
 ==== set_label
 
 [source,rust]

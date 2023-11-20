@@ -13,7 +13,7 @@ a| `name` a| `str` a| The database name as a string.
 // end::properties[]
 
 // tag::methods[]
-[#_Database_delete]
+[#_Database_delete__]
 ==== delete
 
 [source,python]
@@ -34,7 +34,7 @@ Deletes this database.
 database.delete()
 ----
 
-[#_Database_preferred_replica]
+[#_Database_preferred_replica__]
 ==== preferred_replica
 
 [source,python]
@@ -55,7 +55,7 @@ Returns the preferred replica for this database. Operations which can be run on 
 database.preferred_replica()
 ----
 
-[#_Database_primary_replica]
+[#_Database_primary_replica__]
 ==== primary_replica
 
 [source,python]
@@ -76,7 +76,7 @@ Returns the primary replica for this database. _Only works in TypeDB Enterprise_
 database.primary_replica()
 ----
 
-[#_Database_replicas]
+[#_Database_replicas__]
 ==== replicas
 
 [source,python]
@@ -97,7 +97,7 @@ Set of ``Replica`` instances for this database. _Only works in TypeDB Enterprise
 database.replicas()
 ----
 
-[#_Database_rule_schema]
+[#_Database_rule_schema__]
 ==== rule_schema
 
 [source,python]
@@ -118,7 +118,7 @@ Returns the rules in the schema as a valid TypeQL define query string.
 database.rule_schema()
 ----
 
-[#_Database_schema]
+[#_Database_schema__]
 ==== schema
 
 [source,python]
@@ -139,7 +139,7 @@ Returns a full schema text as a valid TypeQL define query string.
 database.schema()
 ----
 
-[#_Database_type_schema]
+[#_Database_type_schema__]
 ==== type_schema
 
 [source,python]

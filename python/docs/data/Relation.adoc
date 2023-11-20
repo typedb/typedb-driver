@@ -8,7 +8,7 @@
 Relation is an instance of a relation type and can be uniquely addressed by a combination of its type, owned attributes and role players.
 
 // tag::methods[]
-[#_Relation_add_player]
+[#_Relation_add_player__transaction_TypeDBTransaction__role_type_RoleType__player_Thing]
 ==== add_player
 
 [source,python]
@@ -40,7 +40,7 @@ a| `player` a| The thing to play the role a| `Thing` a|
 relation.add_player(transaction, role_type, player).resolve()
 ----
 
-[#_Relation_as_relation]
+[#_Relation_as_relation__]
 ==== as_relation
 
 [source,python]
@@ -61,7 +61,7 @@ Casts the concept to ``Relation``.
 relation.as_relation()
 ----
 
-[#_Relation_get_players]
+[#_Relation_get_players__transaction_TypeDBTransaction]
 ==== get_players
 
 [source,python]
@@ -91,7 +91,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 relation.get_players(transaction)
 ----
 
-[#_Relation_get_players_by_role_type]
+[#_Relation_get_players_by_role_type__transaction_TypeDBTransaction__role_types_RoleType]
 ==== get_players_by_role_type
 
 [source,python]
@@ -123,7 +123,7 @@ relation.get_players_by_role_type(transaction)
 relation.get_players_by_role_type(transaction, role_type1, role_type2)
 ----
 
-[#_Relation_get_relating]
+[#_Relation_get_relating__transaction_TypeDBTransaction]
 ==== get_relating
 
 [source,python]
@@ -153,7 +153,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 relation.get_relating(transaction)
 ----
 
-[#_Relation_get_type]
+[#_Relation_get_type__]
 ==== get_type
 
 [source,python]
@@ -174,7 +174,7 @@ Retrieves the type which this ``Relation`` belongs to.
 relation.get_type()
 ----
 
-[#_Relation_is_relation]
+[#_Relation_is_relation__]
 ==== is_relation
 
 [source,python]
@@ -195,7 +195,7 @@ Checks if the concept is a ``Relation``.
 relation.is_relation()
 ----
 
-[#_Relation_remove_player]
+[#_Relation_remove_player__transaction_TypeDBTransaction__role_type_RoleType__player_Thing]
 ==== remove_player
 
 [source,python]
