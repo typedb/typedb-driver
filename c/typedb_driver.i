@@ -123,11 +123,16 @@ struct SessionCallbackDirector {
 
 %{
 #include <memory>
+#include <iostream>
 #include <unordered_map>
 static std::unordered_map<size_t, SessionCallbackDirector*> sessionOnCloseCallbacks {};
-static void session_callback_execute(size_t ID) {
-    sessionOnCloseCallbacks.at(ID)->callback();
-    sessionOnCloseCallbacks.erase(ID);
+static void session_on_close_callback_execute(size_t ID) {
+    try {
+        sessionOnCloseCallbacks.at(ID)->callback();
+        sessionOnCloseCallbacks.erase(ID);
+    } catch (std::exception const& e) {
+        std::cerr << "[ERROR] " << e.what() << std::endl;
+    }
 }
 %}
 
@@ -139,7 +144,40 @@ void session_on_close_register(const Session* session, SessionCallbackDirector* 
     static std::atomic_size_t nextID;
     std::size_t ID = nextID.fetch_add(1);
     sessionOnCloseCallbacks.insert({ID, handler});
-    session_on_close(session, ID, &session_callback_execute);
+    session_on_close(session, ID, &session_on_close_callback_execute);
+}
+%}
+
+%{
+#include <memory>
+#include <iostream>
+#include <unordered_map>
+static std::unordered_map<size_t, SessionCallbackDirector*> sessionOnReopenCallbacks {};
+static void session_on_reopen_callback_execute(size_t ID) {
+    try {
+        sessionOnReopenCallbacks.at(ID)->callback();
+    } catch (std::exception const& e) {
+        std::cerr << "[ERROR] " << e.what() << std::endl;
+    }
+}
+static void session_on_reopen_callback_erase(size_t ID) {
+    try {
+        sessionOnReopenCallbacks.erase(ID);
+    } catch (std::exception const& e) {
+        std::cerr << "[ERROR] " << e.what() << std::endl;
+    }
+}
+%}
+
+%rename(session_on_reopen) session_on_reopen_register;
+%ignore session_on_reopen;
+%inline %{
+#include <atomic>
+void session_on_reopen_register(const Session* session, SessionCallbackDirector* handler) {
+    static std::atomic_size_t nextID;
+    std::size_t ID = nextID.fetch_add(1);
+    sessionOnReopenCallbacks.insert({ID, handler});
+    session_on_reopen(session, ID, &session_on_reopen_callback_execute, &session_on_reopen_callback_erase);
 }
 %}
 
@@ -154,11 +192,16 @@ struct TransactionCallbackDirector {
 
 %{
 #include <memory>
+#include <iostream>
 #include <unordered_map>
 static std::unordered_map<size_t, TransactionCallbackDirector*> transactionOnCloseCallbacks {};
 static void transaction_callback_execute(size_t ID, Error* error) {
-    transactionOnCloseCallbacks.at(ID)->callback(error);
-    transactionOnCloseCallbacks.erase(ID);
+    try {
+        transactionOnCloseCallbacks.at(ID)->callback(error);
+        transactionOnCloseCallbacks.erase(ID);
+    } catch (std::exception const& e) {
+        std::cerr << "[ERROR] " << e.what() << std::endl;
+    }
 }
 %}
 

@@ -66,3 +66,37 @@ pub extern "C" fn session_force_close(session: *mut Session) {
 pub extern "C" fn session_on_close(session: *const Session, callback_id: usize, callback: extern "C" fn(usize)) {
     borrow(session).on_close(move || callback(callback_id));
 }
+
+mod private {
+    use std::mem::ManuallyDrop;
+
+    pub(super) struct ForeignOnReopenCallback<Callback, Destroy: FnOnce()> {
+        pub(super) callback: Callback,
+        destroy: ManuallyDrop<Destroy>,
+    }
+
+    impl<Callback, Destroy: FnOnce()> ForeignOnReopenCallback<Callback, Destroy> {
+        pub(super) fn new(callback: Callback, destroy: Destroy) -> Self {
+            Self { callback, destroy: ManuallyDrop::new(destroy) }
+        }
+    }
+
+    impl<Callback, Destroy: FnOnce()> Drop for ForeignOnReopenCallback<Callback, Destroy> {
+        fn drop(&mut self) {
+            // SAFETY: `destroy` is inaccessible outside of `new()`, where it is initialized, and
+            // `drop()`, where it is consumed.
+            unsafe { (ManuallyDrop::take(&mut self.destroy))() }
+        }
+    }
+}
+
+#[no_mangle]
+pub extern "C" fn session_on_reopen(
+    session: *const Session,
+    callback_id: usize,
+    callback: extern "C" fn(usize),
+    destroy: extern "C" fn(usize),
+) {
+    let callback = private::ForeignOnReopenCallback::new(move || callback(callback_id), move || destroy(callback_id));
+    borrow(session).on_reopen(move || (callback.callback)())
+}

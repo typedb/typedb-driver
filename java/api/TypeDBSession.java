@@ -98,6 +98,18 @@ public interface TypeDBSession extends AutoCloseable {
     void onClose(Runnable function);
 
     /**
+     * Registers a callback function which will be executed when this session is reopened.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * session.onReopen(function)
+     * </pre>
+     *
+     * @param function The callback function.
+     */
+    void onReopen(Runnable function);
+
+    /**
      * Closes the session. Before opening a new session, the session currently open should first be closed.
      *
      * <h3>Examples</h3>

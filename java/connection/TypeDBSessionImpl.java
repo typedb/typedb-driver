@@ -24,7 +24,6 @@ package com.vaticle.typedb.driver.connection;
 import com.vaticle.typedb.driver.api.TypeDBOptions;
 import com.vaticle.typedb.driver.api.TypeDBSession;
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
-import com.vaticle.typedb.driver.api.database.Database;
 import com.vaticle.typedb.driver.api.database.DatabaseManager;
 import com.vaticle.typedb.driver.common.NativeObject;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
@@ -37,12 +36,13 @@ import static com.vaticle.typedb.driver.jni.typedb_driver.session_get_database_n
 import static com.vaticle.typedb.driver.jni.typedb_driver.session_is_open;
 import static com.vaticle.typedb.driver.jni.typedb_driver.session_new;
 import static com.vaticle.typedb.driver.jni.typedb_driver.session_on_close;
+import static com.vaticle.typedb.driver.jni.typedb_driver.session_on_reopen;
 
 public class TypeDBSessionImpl extends NativeObject<com.vaticle.typedb.driver.jni.Session> implements TypeDBSession {
     private final Type type;
     private final TypeDBOptions options;
 
-    private final List<SessionOnClose> callbacks;
+    private final List<SessionCallback> callbacks;
 
     TypeDBSessionImpl(DatabaseManager databaseManager, String database, Type type, TypeDBOptions options) {
         super(newNative(databaseManager, database, type, options));
@@ -93,9 +93,20 @@ public class TypeDBSessionImpl extends NativeObject<com.vaticle.typedb.driver.jn
     @Override
     public void onClose(Runnable function) {
         try {
-            SessionOnClose callback = new SessionOnClose(function);
+            SessionCallback callback = new SessionCallback(function);
             callbacks.add(callback);
             session_on_close(nativeObject, callback.released());
+        } catch (com.vaticle.typedb.driver.jni.Error error) {
+            throw new TypeDBDriverException(error);
+        }
+    }
+
+    @Override
+    public void onReopen(Runnable function) {
+        try {
+            SessionCallback callback = new SessionCallback(function);
+            callbacks.add(callback);
+            session_on_reopen(nativeObject, callback.released());
         } catch (com.vaticle.typedb.driver.jni.Error error) {
             throw new TypeDBDriverException(error);
         }
@@ -112,10 +123,10 @@ public class TypeDBSessionImpl extends NativeObject<com.vaticle.typedb.driver.jn
         }
     }
 
-    static class SessionOnClose extends com.vaticle.typedb.driver.jni.SessionCallbackDirector {
+    static class SessionCallback extends com.vaticle.typedb.driver.jni.SessionCallbackDirector {
         private final Runnable function;
 
-        SessionOnClose(Runnable function) throws com.vaticle.typedb.driver.jni.Error {
+        SessionCallback(Runnable function) throws com.vaticle.typedb.driver.jni.Error {
             this.function = function;
         }
 
