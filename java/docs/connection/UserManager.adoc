@@ -6,7 +6,7 @@
 Provides access to all user management methods.
 
 // tag::methods[]
-[#_UserManager_all_]
+[#_UserManager_all__]
 ==== all
 
 [source,java]
@@ -28,7 +28,7 @@ Retrieves all users which exist on the TypeDB server.
 driver.users().all();
 ----
 
-[#_UserManager_contains_java_lang_String]
+[#_UserManager_contains__java_lang_String]
 ==== contains
 
 [source,java]
@@ -60,7 +60,7 @@ a| `username` a| The user name to be checked a| `java.lang.String`
 driver.users().contains(username);
 ----
 
-[#_UserManager_create_java_lang_String_java_lang_String]
+[#_UserManager_create__java_lang_String__java_lang_String]
 ==== create
 
 [source,java]
@@ -93,7 +93,7 @@ a| `password` a| The password of the user to be created a| `java.lang.String`
 driver.users().create(username, password);
 ----
 
-[#_UserManager_delete_java_lang_String]
+[#_UserManager_delete__java_lang_String]
 ==== delete
 
 [source,java]
@@ -124,7 +124,7 @@ a| `username` a| The name of the user to be deleted a| `java.lang.String`
 driver.users().delete(username);
 ----
 
-[#_UserManager_get_java_lang_String]
+[#_UserManager_get__java_lang_String]
 ==== get
 
 [source,java]
@@ -156,7 +156,7 @@ a| `username` a| The name of the user to retrieve a| `java.lang.String`
 driver.users().get(username);
 ----
 
-[#_UserManager_passwordSet_java_lang_String_java_lang_String]
+[#_UserManager_passwordSet__java_lang_String__java_lang_String]
 ==== passwordSet
 
 [source,java]

@@ -1,4 +1,4 @@
-[#_TypeDBTransaction.Type]
+[#_TypeDBTransaction_Type]
 === TypeDBTransaction.Type
 
 *Package*: `com.vaticle.typedb.driver.api`
@@ -30,7 +30,7 @@ a| `WRITE`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_TypeDBTransaction.Type_id_]
+[#_TypeDBTransaction_Type_id__]
 ==== id
 
 [source,java]
@@ -44,7 +44,7 @@ public int id()
 .Returns
 `public int`
 
-[#_TypeDBTransaction.Type_isRead_]
+[#_TypeDBTransaction_Type_isRead__]
 ==== isRead
 
 [source,java]
@@ -58,7 +58,7 @@ public boolean isRead()
 .Returns
 `public boolean`
 
-[#_TypeDBTransaction.Type_isWrite_]
+[#_TypeDBTransaction_Type_isWrite__]
 ==== isWrite
 
 [source,java]
@@ -72,7 +72,7 @@ public boolean isWrite()
 .Returns
 `public boolean`
 
-[#_TypeDBTransaction.Type_of_com_vaticle_typedb_driver_jni_TransactionType]
+[#_TypeDBTransaction_Type_of__com_vaticle_typedb_driver_jni_TransactionType]
 ==== of
 
 [source,java]
@@ -86,7 +86,7 @@ public static TypeDBTransaction.Type of​(com.vaticle.typedb.driver.jni.Transac
 .Returns
 `public static TypeDBTransaction.Type`
 
-[#_TypeDBTransaction.Type_valueOf_java_lang_String]
+[#_TypeDBTransaction_Type_valueOf__java_lang_String]
 ==== valueOf
 
 [source,java]
@@ -109,7 +109,7 @@ a| `name` a| the name of the enum constant to be returned. a| `java.lang.String`
 .Returns
 `public static TypeDBTransaction.Type`
 
-[#_TypeDBTransaction.Type_values_]
+[#_TypeDBTransaction_Type_values__]
 ==== values
 
 [source,java]

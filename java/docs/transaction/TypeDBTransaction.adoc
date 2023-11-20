@@ -8,7 +8,7 @@
 * `java.lang.AutoCloseable`
 
 // tag::methods[]
-[#_TypeDBTransaction_close_]
+[#_TypeDBTransaction_close__]
 ==== close
 
 [source,java]
@@ -30,7 +30,7 @@ Closes the transaction.
 transaction.close()
 ----
 
-[#_TypeDBTransaction_commit_]
+[#_TypeDBTransaction_commit__]
 ==== commit
 
 [source,java]
@@ -52,7 +52,7 @@ Commits the changes made via this transaction to the TypeDB database. Whether or
 transaction.commit()
 ----
 
-[#_TypeDBTransaction_concepts_]
+[#_TypeDBTransaction_concepts__]
 ==== concepts
 
 [source,java]
@@ -67,7 +67,7 @@ The ``ConceptManager`` for this transaction, providing access to all Concept API
 .Returns
 `ConceptManager`
 
-[#_TypeDBTransaction_isOpen_]
+[#_TypeDBTransaction_isOpen__]
 ==== isOpen
 
 [source,java]
@@ -90,7 +90,7 @@ Checks whether this transaction is open.
 transaction.isOpen();
 ----
 
-[#_TypeDBTransaction_logic_]
+[#_TypeDBTransaction_logic__]
 ==== logic
 
 [source,java]
@@ -105,7 +105,7 @@ The ``LogicManager`` for this Transaction, providing access to all Concept API -
 .Returns
 `LogicManager`
 
-[#_TypeDBTransaction_onClose_java_util_function_Consumer]
+[#_TypeDBTransaction_onClose__java_util_function_Consumer_java_lang_Throwable_]
 ==== onClose
 
 [source,java]
@@ -136,7 +136,7 @@ a| `function` a| The callback function. a| `java.util.function.Consumer<java.lan
 transaction.onClose(function);
 ----
 
-[#_TypeDBTransaction_options_]
+[#_TypeDBTransaction_options__]
 ==== options
 
 [source,java]
@@ -151,7 +151,7 @@ The options for the transaction
 .Returns
 `TypeDBOptions`
 
-[#_TypeDBTransaction_query_]
+[#_TypeDBTransaction_query__]
 ==== query
 
 [source,java]
@@ -166,7 +166,7 @@ The````QueryManager```` for this Transaction, from which any TypeQL query can be
 .Returns
 `QueryManager`
 
-[#_TypeDBTransaction_rollback_]
+[#_TypeDBTransaction_rollback__]
 ==== rollback
 
 [source,java]
@@ -188,7 +188,7 @@ Rolls back the uncommitted changes made via this transaction.
 transaction.rollback()
 ----
 
-[#_TypeDBTransaction_type_]
+[#_TypeDBTransaction_type__]
 ==== type
 
 [source,java]

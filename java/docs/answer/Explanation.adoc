@@ -6,7 +6,7 @@
 An explanation of which rule was used for inferring the explained concept, the condition of the rule, the conclusion of the rule, and the mapping of variables between the query and the rule’s conclusion.
 
 // tag::methods[]
-[#_Explanation_conclusion_]
+[#_Explanation_conclusion__]
 ==== conclusion
 
 [source,java]
@@ -28,7 +28,7 @@ Retrieves the Conclusion for this Explanation.
 explanation.conclusion()
 ----
 
-[#_Explanation_condition_]
+[#_Explanation_condition__]
 ==== condition
 
 [source,java]
@@ -50,7 +50,7 @@ Retrieves the Condition for this Explanation.
 explanation.condition()
 ----
 
-[#_Explanation_queryVariableMapping_java_lang_String]
+[#_Explanation_queryVariableMapping__java_lang_String]
 ==== queryVariableMapping
 
 [source,java]
@@ -81,7 +81,7 @@ a| `var` a| The query variable to map to rule variables. a| `java.lang.String`
 explanation.variableMapping(var)
 ----
 
-[#_Explanation_queryVariables_]
+[#_Explanation_queryVariables__]
 ==== queryVariables
 
 [source,java]
@@ -103,7 +103,7 @@ Retrieves the query variables for this ``Explanation``.
 explanation.queryVariables()
 ----
 
-[#_Explanation_rule_]
+[#_Explanation_rule__]
 ==== rule
 
 [source,java]

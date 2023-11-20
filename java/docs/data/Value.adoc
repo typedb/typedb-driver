@@ -19,7 +19,7 @@ a| `ISO_LOCAL_DATE_TIME_MILLIS` a| `static java.time.format.DateTimeFormatter` a
 // end::properties[]
 
 // tag::methods[]
-[#_Value_asAttribute_]
+[#_Value_asAttribute__]
 ==== asAttribute
 
 [source,java]
@@ -41,7 +41,7 @@ Casts the concept to ``Attribute``.
 concept.asAttribute();
 ----
 
-[#_Value_asAttributeType_]
+[#_Value_asAttributeType__]
 ==== asAttributeType
 
 [source,java]
@@ -63,7 +63,7 @@ Casts the concept to ``AttributeType``.
 concept.asAttributeType();
 ----
 
-[#_Value_asBoolean_]
+[#_Value_asBoolean__]
 ==== asBoolean
 
 [source,java]
@@ -85,7 +85,7 @@ Returns a ``boolean`` value of this value concept. If the value has another type
 value.asBoolean();
 ----
 
-[#_Value_asDateTime_]
+[#_Value_asDateTime__]
 ==== asDateTime
 
 [source,java]
@@ -107,7 +107,7 @@ Returns a ``datetime`` value of this value concept. If the value has another typ
 value.asDatetime();
 ----
 
-[#_Value_asDouble_]
+[#_Value_asDouble__]
 ==== asDouble
 
 [source,java]
@@ -129,7 +129,7 @@ Returns a ``double`` value of this value concept. If the value has another type,
 value.asDouble();
 ----
 
-[#_Value_asEntity_]
+[#_Value_asEntity__]
 ==== asEntity
 
 [source,java]
@@ -151,7 +151,7 @@ Casts the concept to ``Entity``.
 concept.asEntity();
 ----
 
-[#_Value_asEntityType_]
+[#_Value_asEntityType__]
 ==== asEntityType
 
 [source,java]
@@ -173,7 +173,7 @@ Casts the concept to ``EntityType``.
 concept.asEntityType();
 ----
 
-[#_Value_asLong_]
+[#_Value_asLong__]
 ==== asLong
 
 [source,java]
@@ -195,7 +195,7 @@ Returns a ``long`` value of this value concept. If the value has another type, r
 value.asLong();
 ----
 
-[#_Value_asRelation_]
+[#_Value_asRelation__]
 ==== asRelation
 
 [source,java]
@@ -217,7 +217,7 @@ Casts the concept to ``Relation``.
 concept.asRelation();
 ----
 
-[#_Value_asRelationType_]
+[#_Value_asRelationType__]
 ==== asRelationType
 
 [source,java]
@@ -239,7 +239,7 @@ Casts the concept to ``RelationType``.
 concept.asRelationType();
 ----
 
-[#_Value_asRoleType_]
+[#_Value_asRoleType__]
 ==== asRoleType
 
 [source,java]
@@ -261,7 +261,7 @@ Casts the concept to ``RoleType``.
 concept.asRoleType();
 ----
 
-[#_Value_asString_]
+[#_Value_asString__]
 ==== asString
 
 [source,java]
@@ -283,7 +283,7 @@ Returns a ``string`` value of this value concept. If the value has another type,
 value.asString();
 ----
 
-[#_Value_asThing_]
+[#_Value_asThing__]
 ==== asThing
 
 [source,java]
@@ -305,7 +305,7 @@ Casts the concept to ``Thing``.
 concept.asThing();
 ----
 
-[#_Value_asThingType_]
+[#_Value_asThingType__]
 ==== asThingType
 
 [source,java]
@@ -327,7 +327,7 @@ Casts the concept to ``ThingType``.
 concept.asThingType();
 ----
 
-[#_Value_asType_]
+[#_Value_asType__]
 ==== asType
 
 [source,java]
@@ -349,7 +349,7 @@ Casts the concept to ``Type``.
 concept.asType();
 ----
 
-[#_Value_asUntyped_]
+[#_Value_asUntyped__]
 ==== asUntyped
 
 [source,java]
@@ -371,7 +371,7 @@ Returns an untyped ``Object`` value of this value concept. This is useful for va
 value.asUntyped();
 ----
 
-[#_Value_asValue_]
+[#_Value_asValue__]
 ==== asValue
 
 [source,java]
@@ -393,7 +393,7 @@ Casts the concept to ``Value``.
 concept.asValue();
 ----
 
-[#_Value_getType_]
+[#_Value_getType__]
 ==== getType
 
 [source,java]
@@ -415,7 +415,7 @@ Retrieves the ``Value.Type`` of this value concept.
 value.getType()
 ----
 
-[#_Value_isAttribute_]
+[#_Value_isAttribute__]
 ==== isAttribute
 
 [source,java]
@@ -438,7 +438,7 @@ Checks if the concept is an ``Attribute``.
 concept.isAttribute();
 ----
 
-[#_Value_isAttributeType_]
+[#_Value_isAttributeType__]
 ==== isAttributeType
 
 [source,java]
@@ -461,7 +461,7 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType();
 ----
 
-[#_Value_isBoolean_]
+[#_Value_isBoolean__]
 ==== isBoolean
 
 [source,java]
@@ -483,7 +483,7 @@ Returns ``True`` if the value which this value concept holds is of type ``boolea
 value.isBoolean()
 ----
 
-[#_Value_isDateTime_]
+[#_Value_isDateTime__]
 ==== isDateTime
 
 [source,java]
@@ -505,7 +505,7 @@ Returns ``True`` if the value which this value concept holds is of type ``dateti
 value.isDatetime();
 ----
 
-[#_Value_isDouble_]
+[#_Value_isDouble__]
 ==== isDouble
 
 [source,java]
@@ -527,7 +527,7 @@ Returns ``True`` if the value which this value concept holds is of type ``double
 value.isDouble();
 ----
 
-[#_Value_isEntity_]
+[#_Value_isEntity__]
 ==== isEntity
 
 [source,java]
@@ -550,7 +550,7 @@ Checks if the concept is an ``Entity``.
 concept.isEntity();
 ----
 
-[#_Value_isEntityType_]
+[#_Value_isEntityType__]
 ==== isEntityType
 
 [source,java]
@@ -573,7 +573,7 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType();
 ----
 
-[#_Value_isLong_]
+[#_Value_isLong__]
 ==== isLong
 
 [source,java]
@@ -595,7 +595,7 @@ Returns ``True`` if the value which this value concept holds is of type ``long``
 value.isLong();
 ----
 
-[#_Value_isRelation_]
+[#_Value_isRelation__]
 ==== isRelation
 
 [source,java]
@@ -618,7 +618,7 @@ Checks if the concept is a ``Relation``.
 concept.isRelation();
 ----
 
-[#_Value_isRelationType_]
+[#_Value_isRelationType__]
 ==== isRelationType
 
 [source,java]
@@ -641,7 +641,7 @@ Checks if the concept is a ``RelationType``.
 concept.isRelationType();
 ----
 
-[#_Value_isRoleType_]
+[#_Value_isRoleType__]
 ==== isRoleType
 
 [source,java]
@@ -664,7 +664,7 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType();
 ----
 
-[#_Value_isString_]
+[#_Value_isString__]
 ==== isString
 
 [source,java]
@@ -686,7 +686,7 @@ Returns ``True`` if the value which this value concept holds is of type ``string
 value.isString();
 ----
 
-[#_Value_isThing_]
+[#_Value_isThing__]
 ==== isThing
 
 [source,java]
@@ -709,7 +709,7 @@ Checks if the concept is a ``Thing``.
 concept.isThing();
 ----
 
-[#_Value_isThingType_]
+[#_Value_isThingType__]
 ==== isThingType
 
 [source,java]
@@ -732,7 +732,7 @@ Checks if the concept is a ``ThingType``.
 concept.isThingType();
 ----
 
-[#_Value_isType_]
+[#_Value_isType__]
 ==== isType
 
 [source,java]
@@ -755,7 +755,7 @@ Checks if the concept is a ``Type``.
 concept.isType();
 ----
 
-[#_Value_isValue_]
+[#_Value_isValue__]
 ==== isValue
 
 [source,java]
