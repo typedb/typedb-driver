@@ -97,7 +97,7 @@ class JavaDocParser : Callable<Unit> {
 
     private fun parseClass(document: Element, currentDirName: String): Class {
         val className = document.selectFirst(".contentContainer .description pre .typeNameLabel")!!.text()
-        val classAnchor = className
+        val classAnchor = replaceSymbolsForAnchor(className)
         val classDescr: List<String> = document.selectFirst(".contentContainer .description pre + div")
             ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
         val packagePath = document.selectFirst(".packageLabelInType + a")?.text()
@@ -137,7 +137,7 @@ class JavaDocParser : Callable<Unit> {
 
     private fun parseEnum(document: Element): Class {
         val className = document.selectFirst(".contentContainer .description pre .typeNameLabel")!!.text()
-        val classAnchor = className
+        val classAnchor = replaceSymbolsForAnchor(className)
         val classDescr: List<String> = document.selectFirst(".contentContainer .description pre + div")
             ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
         val packagePath = document.selectFirst(".packageLabelInType + a")?.text()
@@ -177,10 +177,10 @@ class JavaDocParser : Callable<Unit> {
     }
 
     private fun parseMethod(element: Element, classAnchor: String): Method {
-        val methodAnchor = replaceSymbolsForAnchor(element.parent()!!.previousElementSibling()!!.id())
         val methodName = element.selectFirst("h4")!!.text()
         val methodSignature = element.selectFirst("li.blockList > pre")!!.text()
-        val allArgs = getArgsFromSignature(methodSignature)
+        val argsList = getArgsFromSignature(methodSignature)
+        val argsMap = argsList.toMap()
         val methodReturnType = getReturnTypeFromSignature(methodSignature)
         var methodDescr: List<String> = element.selectFirst("li.blockList > pre ~ div:not(div:has(.descfrmTypeLabel))")
             ?.let { splitToParagraphs(it.html()) }
@@ -194,21 +194,21 @@ class JavaDocParser : Callable<Unit> {
             )
             .map {
                 val arg_name = it.selectFirst("code")!!.text()
-                assert(allArgs.contains(arg_name))
+                assert(argsMap.contains(arg_name))
                 Variable(
                     name = arg_name,
-                    type = allArgs[arg_name]?.replace("...", "[]"),
+                    type = argsMap[arg_name]?.replace("...", "[]"),
                     description = reformatTextWithCode(it.html().substringAfter(" - ")),
                 )
             }
-
+        val methodAnchor = replaceSymbolsForAnchor("${classAnchor}_${methodName}_${argsList.map{ it.second }}")
         val seeAlso = element.selectFirst("dt:has(.seeLabel) + dd")?.let { reformatTextWithCode(it.html()) }
         seeAlso?.let { methodDescr += "\nSee also: $seeAlso\n" }
 
         return Method(
             name = methodName,
             signature = enhanceSignature(methodSignature),
-            anchor = "${classAnchor}_$methodAnchor",
+            anchor = methodAnchor,
             args = methodArgs,
             description = methodDescr,
             examples = methodExamples,
@@ -235,13 +235,14 @@ class JavaDocParser : Callable<Unit> {
         )
     }
 
-    private fun getArgsFromSignature(methodSignature: String): Map<String, String?> {
+    private fun getArgsFromSignature(methodSignature: String): List<Pair<String, String>> {
         return methodSignature
             .replace("\\s+".toRegex(), " ")
             .substringAfter("(").substringBefore(")")
             .split(",\\s".toRegex()).map {
                 it.split("\u00a0").let { it.last() to it.dropLast(1).joinToString(" ") }
-            }.toMap()
+            }.filter { !it.first.isEmpty() || !it.second.isEmpty()}
+            .toList()
     }
 
     private fun reformatTextWithCode(html: String): String {

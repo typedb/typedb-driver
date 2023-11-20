@@ -11,7 +11,7 @@
 Relation is an instance of a relation type and can be uniquely addressed by a combination of its type, owned attributes and role players.
 
 // tag::methods[]
-[#_Relation_addPlayer_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType_com_vaticle_typedb_driver_api_concept_thing_Thing]
+[#_Relation_addPlayer__TypeDBTransaction__RoleType__Thing]
 ==== addPlayer
 
 [source,java]
@@ -47,7 +47,7 @@ a| `player` a| The thing to play the role a| `Thing`
 relation.addPlayer(transaction, roleType, player).resolve();
 ----
 
-[#_Relation_asAttribute_]
+[#_Relation_asAttribute__]
 ==== asAttribute
 
 [source,java]
@@ -69,7 +69,7 @@ Casts the concept to ``Attribute``.
 concept.asAttribute();
 ----
 
-[#_Relation_asAttributeType_]
+[#_Relation_asAttributeType__]
 ==== asAttributeType
 
 [source,java]
@@ -91,7 +91,7 @@ Casts the concept to ``AttributeType``.
 concept.asAttributeType();
 ----
 
-[#_Relation_asEntity_]
+[#_Relation_asEntity__]
 ==== asEntity
 
 [source,java]
@@ -113,7 +113,7 @@ Casts the concept to ``Entity``.
 concept.asEntity();
 ----
 
-[#_Relation_asEntityType_]
+[#_Relation_asEntityType__]
 ==== asEntityType
 
 [source,java]
@@ -135,7 +135,7 @@ Casts the concept to ``EntityType``.
 concept.asEntityType();
 ----
 
-[#_Relation_asRelation_]
+[#_Relation_asRelation__]
 ==== asRelation
 
 [source,java]
@@ -158,7 +158,7 @@ Casts the concept to ``Relation``.
 relation.asRelation();
 ----
 
-[#_Relation_asRelationType_]
+[#_Relation_asRelationType__]
 ==== asRelationType
 
 [source,java]
@@ -180,7 +180,7 @@ Casts the concept to ``RelationType``.
 concept.asRelationType();
 ----
 
-[#_Relation_asRoleType_]
+[#_Relation_asRoleType__]
 ==== asRoleType
 
 [source,java]
@@ -202,7 +202,7 @@ Casts the concept to ``RoleType``.
 concept.asRoleType();
 ----
 
-[#_Relation_asThingType_]
+[#_Relation_asThingType__]
 ==== asThingType
 
 [source,java]
@@ -224,7 +224,7 @@ Casts the concept to ``ThingType``.
 concept.asThingType();
 ----
 
-[#_Relation_asType_]
+[#_Relation_asType__]
 ==== asType
 
 [source,java]
@@ -246,7 +246,7 @@ Casts the concept to ``Type``.
 concept.asType();
 ----
 
-[#_Relation_asValue_]
+[#_Relation_asValue__]
 ==== asValue
 
 [source,java]
@@ -268,7 +268,7 @@ Casts the concept to ``Value``.
 concept.asValue();
 ----
 
-[#_Relation_getPlayers_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_Relation_getPlayers__TypeDBTransaction]
 ==== getPlayers
 
 [source,java]
@@ -300,7 +300,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 relation.getPlayers(transaction)
 ----
 
-[#_Relation_getPlayersByRoleType_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType___]
+[#_Relation_getPlayersByRoleType__TypeDBTransaction__RoleType___]
 ==== getPlayersByRoleType
 
 [source,java]
@@ -334,7 +334,7 @@ a| `roleTypes` a| 0 or more role types a| `RoleType[]`
 relation.getPlayersByRoleType(transaction, roleTypes);
 ----
 
-[#_Relation_getRelating_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_Relation_getRelating__TypeDBTransaction]
 ==== getRelating
 
 [source,java]
@@ -366,7 +366,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 relation.getRelating(transaction);
 ----
 
-[#_Relation_getType_]
+[#_Relation_getType__]
 ==== getType
 
 [source,java]
@@ -389,7 +389,7 @@ Retrieves the type which this ``Relation`` belongs to.
 relation.getType();
 ----
 
-[#_Relation_isAttribute_]
+[#_Relation_isAttribute__]
 ==== isAttribute
 
 [source,java]
@@ -412,7 +412,7 @@ Checks if the concept is an ``Attribute``.
 concept.isAttribute();
 ----
 
-[#_Relation_isAttributeType_]
+[#_Relation_isAttributeType__]
 ==== isAttributeType
 
 [source,java]
@@ -435,7 +435,7 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType();
 ----
 
-[#_Relation_isEntity_]
+[#_Relation_isEntity__]
 ==== isEntity
 
 [source,java]
@@ -458,7 +458,7 @@ Checks if the concept is an ``Entity``.
 concept.isEntity();
 ----
 
-[#_Relation_isEntityType_]
+[#_Relation_isEntityType__]
 ==== isEntityType
 
 [source,java]
@@ -481,7 +481,7 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType();
 ----
 
-[#_Relation_isRelation_]
+[#_Relation_isRelation__]
 ==== isRelation
 
 [source,java]
@@ -504,7 +504,7 @@ Checks if the concept is a ``Relation``.
 relation.isRelation();
 ----
 
-[#_Relation_isRelationType_]
+[#_Relation_isRelationType__]
 ==== isRelationType
 
 [source,java]
@@ -527,7 +527,7 @@ Checks if the concept is a ``RelationType``.
 concept.isRelationType();
 ----
 
-[#_Relation_isRoleType_]
+[#_Relation_isRoleType__]
 ==== isRoleType
 
 [source,java]
@@ -550,7 +550,7 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType();
 ----
 
-[#_Relation_isThingType_]
+[#_Relation_isThingType__]
 ==== isThingType
 
 [source,java]
@@ -573,7 +573,7 @@ Checks if the concept is a ``ThingType``.
 concept.isThingType();
 ----
 
-[#_Relation_isType_]
+[#_Relation_isType__]
 ==== isType
 
 [source,java]
@@ -596,7 +596,7 @@ Checks if the concept is a ``Type``.
 concept.isType();
 ----
 
-[#_Relation_isValue_]
+[#_Relation_isValue__]
 ==== isValue
 
 [source,java]
@@ -619,7 +619,7 @@ Checks if the concept is a ``Value``.
 concept.isValue();
 ----
 
-[#_Relation_removePlayer_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType_com_vaticle_typedb_driver_api_concept_thing_Thing]
+[#_Relation_removePlayer__TypeDBTransaction__RoleType__Thing]
 ==== removePlayer
 
 [source,java]

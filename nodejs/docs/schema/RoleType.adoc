@@ -19,7 +19,7 @@ a| `NAME`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_RoleType_asAttributeasAttribute__:_Attribute]
+[#_RoleType_asAttribute__]
 ==== asAttribute
 
 [source,nodejs]
@@ -40,7 +40,7 @@ Casts the concept to ``Attribute``.
 concept.asAttribute()
 ----
 
-[#_RoleType_asAttributeTypeasAttributeType__:_AttributeType]
+[#_RoleType_asAttributeType__]
 ==== asAttributeType
 
 [source,nodejs]
@@ -61,7 +61,7 @@ Casts the concept to ``AttributeType``.
 concept.asAttributeType()
 ----
 
-[#_RoleType_asEntityasEntity__:_Entity]
+[#_RoleType_asEntity__]
 ==== asEntity
 
 [source,nodejs]
@@ -82,7 +82,7 @@ Casts the concept to ``Entity``.
 concept.asEntity()
 ----
 
-[#_RoleType_asEntityTypeasEntityType__:_EntityType]
+[#_RoleType_asEntityType__]
 ==== asEntityType
 
 [source,nodejs]
@@ -103,7 +103,7 @@ Casts the concept to ``EntityType``.
 concept.asEntityType()
 ----
 
-[#_RoleType_asRelationasRelation__:_Relation]
+[#_RoleType_asRelation__]
 ==== asRelation
 
 [source,nodejs]
@@ -124,7 +124,7 @@ Casts the concept to ``Relation``.
 concept.asRelation()
 ----
 
-[#_RoleType_asRelationTypeasRelationType__:_RelationType]
+[#_RoleType_asRelationType__]
 ==== asRelationType
 
 [source,nodejs]
@@ -145,7 +145,7 @@ Casts the concept to ``RelationType``.
 concept.asRelationType()
 ----
 
-[#_RoleType_asRoleTypeasRoleType__:_RoleType]
+[#_RoleType_asRoleType__]
 ==== asRoleType
 
 [source,nodejs]
@@ -166,7 +166,7 @@ Casts the concept to ``RoleType``.
 concept.asRoleType()
 ----
 
-[#_RoleType_asThingasThing__:_Thing]
+[#_RoleType_asThing__]
 ==== asThing
 
 [source,nodejs]
@@ -187,7 +187,7 @@ Casts the concept to ``Thing``.
 concept.asThing()
 ----
 
-[#_RoleType_asThingTypeasThingType__:_ThingType]
+[#_RoleType_asThingType__]
 ==== asThingType
 
 [source,nodejs]
@@ -208,7 +208,7 @@ Casts the concept to ``ThingType``.
 concept.asThingType()
 ----
 
-[#_RoleType_asTypeasType__:_Type]
+[#_RoleType_asType__]
 ==== asType
 
 [source,nodejs]
@@ -229,7 +229,7 @@ Casts the concept to ``Type``.
 concept.asType()
 ----
 
-[#_RoleType_asValueasValue__:_Value]
+[#_RoleType_asValue__]
 ==== asValue
 
 [source,nodejs]
@@ -250,7 +250,7 @@ Casts the concept to ``Value``.
 concept.asValue()
 ----
 
-[#_RoleType_deletedelete_transaction_:_Promise_void]
+[#_RoleType_delete__transaction_TypeDBTransaction]
 ==== delete
 
 [source,nodejs]
@@ -280,7 +280,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 type.delete(transaction)
 ----
 
-[#_RoleType_equalsequals_concept_:_boolean]
+[#_RoleType_equals__concept_Concept]
 ==== equals
 
 [source,nodejs]
@@ -303,7 +303,7 @@ a| `concept` a| The concept to compare to. a| `Concept`
 .Returns
 `boolean`
 
-[#_RoleType_getPlayerInstancesgetPlayerInstances_transaction_:_Stream_Thing]
+[#_RoleType_getPlayerInstances__transaction_TypeDBTransaction]
 ==== getPlayerInstances
 
 [source,nodejs]
@@ -333,7 +333,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 roleType.getPlayerInstances(transaction, transitivity)
 ----
 
-[#_RoleType_getPlayerInstancesgetPlayerInstances_transaction__transitivity_:_Stream_Thing]
+[#_RoleType_getPlayerInstances__transaction_TypeDBTransaction__transitivity_Transitivity]
 ==== getPlayerInstances
 
 [source,nodejs]
@@ -364,7 +364,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect playing
 roleType.getPlayerInstances(transaction, transitivity)
 ----
 
-[#_RoleType_getPlayerTypesgetPlayerTypes_transaction_:_Stream_ThingType]
+[#_RoleType_getPlayerTypes__transaction_TypeDBTransaction]
 ==== getPlayerTypes
 
 [source,nodejs]
@@ -394,7 +394,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 roleType.getPlayerTypes(transaction, transitivity)
 ----
 
-[#_RoleType_getPlayerTypesgetPlayerTypes_transaction__transitivity_:_Stream_ThingType]
+[#_RoleType_getPlayerTypes__transaction_TypeDBTransaction__transitivity_Transitivity]
 ==== getPlayerTypes
 
 [source,nodejs]
@@ -425,7 +425,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect playing
 roleType.getPlayerTypes(transaction, transitivity)
 ----
 
-[#_RoleType_getRelationInstancesgetRelationInstances_transaction_:_Stream_Relation]
+[#_RoleType_getRelationInstances__transaction_TypeDBTransaction]
 ==== getRelationInstances
 
 [source,nodejs]
@@ -455,7 +455,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 roleType.getRelationInstances(transaction, transitivity)
 ----
 
-[#_RoleType_getRelationInstancesgetRelationInstances_transaction__transitivity_:_Stream_Relation]
+[#_RoleType_getRelationInstances__transaction_TypeDBTransaction__transitivity_Transitivity]
 ==== getRelationInstances
 
 [source,nodejs]
@@ -486,7 +486,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect relatio
 roleType.getRelationInstances(transaction, transitivity)
 ----
 
-[#_RoleType_getRelationTypegetRelationType_transaction_:_Promise_RelationType]
+[#_RoleType_getRelationType__transaction_TypeDBTransaction]
 ==== getRelationType
 
 [source,nodejs]
@@ -516,7 +516,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 roleType.getRelationType(transaction)
 ----
 
-[#_RoleType_getRelationTypesgetRelationTypes_transaction_:_Stream_RelationType]
+[#_RoleType_getRelationTypes__transaction_TypeDBTransaction]
 ==== getRelationTypes
 
 [source,nodejs]
@@ -546,7 +546,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 roleType.getRelationTypes(transaction)
 ----
 
-[#_RoleType_getSubtypesgetSubtypes_transaction_:_Stream_RoleType]
+[#_RoleType_getSubtypes__transaction_TypeDBTransaction]
 ==== getSubtypes
 
 [source,nodejs]
@@ -576,7 +576,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 type.getSubtypes(transaction) type.getSubtypes(transaction, Transitivity.EXPLICIT)
 ----
 
-[#_RoleType_getSupertypegetSupertype_transaction_:_Promise_RoleType]
+[#_RoleType_getSupertype__transaction_TypeDBTransaction]
 ==== getSupertype
 
 [source,nodejs]
@@ -606,7 +606,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 type.getSupertype(transaction)
 ----
 
-[#_RoleType_getSupertypesgetSupertypes_transaction_:_Stream_RoleType]
+[#_RoleType_getSupertypes__transaction_TypeDBTransaction]
 ==== getSupertypes
 
 [source,nodejs]
@@ -636,7 +636,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 type.getSupertypes(transaction)
 ----
 
-[#_RoleType_isAttributeisAttribute__:_boolean]
+[#_RoleType_isAttribute__]
 ==== isAttribute
 
 [source,nodejs]
@@ -657,7 +657,7 @@ Checks if the concept is an ``Attribute``.
 concept.isAttribute()
 ----
 
-[#_RoleType_isAttributeTypeisAttributeType__:_boolean]
+[#_RoleType_isAttributeType__]
 ==== isAttributeType
 
 [source,nodejs]
@@ -678,7 +678,7 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType()
 ----
 
-[#_RoleType_isDeletedisDeleted_transaction_:_Promise_boolean]
+[#_RoleType_isDeleted__transaction_TypeDBTransaction]
 ==== isDeleted
 
 [source,nodejs]
@@ -701,7 +701,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 .Returns
 `Promise<boolean>`
 
-[#_RoleType_isEntityisEntity__:_boolean]
+[#_RoleType_isEntity__]
 ==== isEntity
 
 [source,nodejs]
@@ -722,7 +722,7 @@ Checks if the concept is an ``Entity``.
 concept.isEntity()
 ----
 
-[#_RoleType_isEntityTypeisEntityType__:_boolean]
+[#_RoleType_isEntityType__]
 ==== isEntityType
 
 [source,nodejs]
@@ -743,7 +743,7 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType()
 ----
 
-[#_RoleType_isRelationisRelation__:_boolean]
+[#_RoleType_isRelation__]
 ==== isRelation
 
 [source,nodejs]
@@ -764,7 +764,7 @@ Checks if the concept is a ``Relation``.
 concept.isRelation()
 ----
 
-[#_RoleType_isRelationTypeisRelationType__:_boolean]
+[#_RoleType_isRelationType__]
 ==== isRelationType
 
 [source,nodejs]
@@ -785,7 +785,7 @@ Checks if the concept is a ``RelationType``.
 concept.isRelationType()
 ----
 
-[#_RoleType_isRoleTypeisRoleType__:_boolean]
+[#_RoleType_isRoleType__]
 ==== isRoleType
 
 [source,nodejs]
@@ -806,7 +806,7 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType()
 ----
 
-[#_RoleType_isThingisThing__:_boolean]
+[#_RoleType_isThing__]
 ==== isThing
 
 [source,nodejs]
@@ -827,7 +827,7 @@ Checks if the concept is a ``Thing``.
 concept.isThing()
 ----
 
-[#_RoleType_isThingTypeisThingType__:_boolean]
+[#_RoleType_isThingType__]
 ==== isThingType
 
 [source,nodejs]
@@ -848,7 +848,7 @@ Checks if the concept is a ``ThingType``.
 concept.isThingType()
 ----
 
-[#_RoleType_isTypeisType__:_boolean]
+[#_RoleType_isType__]
 ==== isType
 
 [source,nodejs]
@@ -869,7 +869,7 @@ Checks if the concept is a ``Type``.
 concept.isType()
 ----
 
-[#_RoleType_isValueisValue__:_boolean]
+[#_RoleType_isValue__]
 ==== isValue
 
 [source,nodejs]
@@ -890,7 +890,7 @@ Checks if the concept is a ``Value``.
 concept.isValue()
 ----
 
-[#_RoleType_setLabelsetLabel_transaction__label_:_Promise_void]
+[#_RoleType_setLabel__transaction_TypeDBTransaction__label_string]
 ==== setLabel
 
 [source,nodejs]

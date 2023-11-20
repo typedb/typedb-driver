@@ -6,7 +6,7 @@
 TypeDB session and transaction options. ``TypeDBOptions`` object can be used to override the default server behaviour.
 
 // tag::methods[]
-[#_TypeDBOptions__init__]
+[#_TypeDBOptions_TypeDBOptions__]
 ==== TypeDBOptions
 
 [source,java]
@@ -28,7 +28,7 @@ Produces a new ``TypeDBOptions`` object.
 TypeDBOptions options = TypeDBOptions();
 ----
 
-[#_TypeDBOptions_explain_]
+[#_TypeDBOptions_explain__]
 ==== explain
 
 [source,java]
@@ -51,7 +51,7 @@ Returns the value set for the explanation in this ``TypeDBOptions`` object. If s
 options.explain();
 ----
 
-[#_TypeDBOptions_explain_boolean]
+[#_TypeDBOptions_explain__boolean]
 ==== explain
 
 [source,java]
@@ -82,7 +82,7 @@ a| `explain` a| Explicitly enable or disable explanations a| `boolean`
 options.explain(explain);
 ----
 
-[#_TypeDBOptions_infer_]
+[#_TypeDBOptions_infer__]
 ==== infer
 
 [source,java]
@@ -105,7 +105,7 @@ Returns the value set for the inference in this ``TypeDBOptions`` object.
 options.infer();
 ----
 
-[#_TypeDBOptions_infer_boolean]
+[#_TypeDBOptions_infer__boolean]
 ==== infer
 
 [source,java]
@@ -136,7 +136,7 @@ a| `infer` a| Explicitly enable or disable inference a| `boolean`
 options.infer(infer);
 ----
 
-[#_TypeDBOptions_parallel_]
+[#_TypeDBOptions_parallel__]
 ==== parallel
 
 [source,java]
@@ -159,7 +159,7 @@ Returns the value set for the parallel execution in this ``TypeDBOptions`` objec
 options.parallel();
 ----
 
-[#_TypeDBOptions_parallel_boolean]
+[#_TypeDBOptions_parallel__boolean]
 ==== parallel
 
 [source,java]
@@ -190,7 +190,7 @@ a| `parallel` a| Explicitly enable or disable parallel execution a| `boolean`
 options.parallel(parallel);
 ----
 
-[#_TypeDBOptions_prefetch_]
+[#_TypeDBOptions_prefetch__]
 ==== prefetch
 
 [source,java]
@@ -213,7 +213,7 @@ Returns the value set for the prefetching in this ``TypeDBOptions`` object. If s
 options.prefetch();
 ----
 
-[#_TypeDBOptions_prefetch_boolean]
+[#_TypeDBOptions_prefetch__boolean]
 ==== prefetch
 
 [source,java]
@@ -244,7 +244,7 @@ a| `prefetch` a| Explicitly enable or disable prefetching a| `boolean`
 options.prefetch(prefetch);
 ----
 
-[#_TypeDBOptions_prefetchSize_]
+[#_TypeDBOptions_prefetchSize__]
 ==== prefetchSize
 
 [source,java]
@@ -267,7 +267,7 @@ Returns the value set for the prefetch size in this ``TypeDBOptions`` object. If
 options.prefetchSize();
 ----
 
-[#_TypeDBOptions_prefetchSize_int]
+[#_TypeDBOptions_prefetchSize__int]
 ==== prefetchSize
 
 [source,java]
@@ -298,7 +298,7 @@ a| `prefetchSize` a| Number of answers that the server should send before the dr
 options.prefetchSize(prefetchSize);
 ----
 
-[#_TypeDBOptions_readAnyReplica_]
+[#_TypeDBOptions_readAnyReplica__]
 ==== readAnyReplica
 
 [source,java]
@@ -321,7 +321,7 @@ Returns the value set for reading data from any replica in this ``TypeDBOptions`
 options.readAnyReplica();
 ----
 
-[#_TypeDBOptions_readAnyReplica_boolean]
+[#_TypeDBOptions_readAnyReplica__boolean]
 ==== readAnyReplica
 
 [source,java]
@@ -352,7 +352,7 @@ a| `readAnyReplica` a| Explicitly enable or disable reading data from any replic
 options.readAnyReplica(readAnyReplica);
 ----
 
-[#_TypeDBOptions_schemaLockAcquireTimeoutMillis_]
+[#_TypeDBOptions_schemaLockAcquireTimeoutMillis__]
 ==== schemaLockAcquireTimeoutMillis
 
 [source,java]
@@ -374,7 +374,7 @@ Returns the value set for the schema lock acquire timeout in this ``TypeDBOption
 options.schemaLockAcquireTimeoutMillis();
 ----
 
-[#_TypeDBOptions_schemaLockAcquireTimeoutMillis_int]
+[#_TypeDBOptions_schemaLockAcquireTimeoutMillis__int]
 ==== schemaLockAcquireTimeoutMillis
 
 [source,java]
@@ -405,7 +405,7 @@ a| `schemaLockAcquireTimeoutMillis` a| How long the driver should wait if openin
 options.schemaLockAcquireTimeoutMillis(schemaLockAcquireTimeoutMillis);
 ----
 
-[#_TypeDBOptions_sessionIdleTimeoutMillis_]
+[#_TypeDBOptions_sessionIdleTimeoutMillis__]
 ==== sessionIdleTimeoutMillis
 
 [source,java]
@@ -428,7 +428,7 @@ Returns the value set for the session idle timeout in this ``TypeDBOptions`` obj
 options.sessionIdleTimeoutMillis();
 ----
 
-[#_TypeDBOptions_sessionIdleTimeoutMillis_int]
+[#_TypeDBOptions_sessionIdleTimeoutMillis__int]
 ==== sessionIdleTimeoutMillis
 
 [source,java]
@@ -459,7 +459,7 @@ a| `sessionIdleTimeoutMillis` a| timeout that allows the server to close session
 options.sessionIdleTimeoutMillis(sessionIdleTimeoutMillis);
 ----
 
-[#_TypeDBOptions_traceInference_]
+[#_TypeDBOptions_traceInference__]
 ==== traceInference
 
 [source,java]
@@ -482,7 +482,7 @@ Returns the value set for reasoning tracing in this ``TypeDBOptions`` object. If
 options.traceInference();
 ----
 
-[#_TypeDBOptions_traceInference_boolean]
+[#_TypeDBOptions_traceInference__boolean]
 ==== traceInference
 
 [source,java]
@@ -513,7 +513,7 @@ a| `traceInference` a| Explicitly enable or disable reasoning tracing a| `boolea
 options.traceInference(traceInference);
 ----
 
-[#_TypeDBOptions_transactionTimeoutMillis_]
+[#_TypeDBOptions_transactionTimeoutMillis__]
 ==== transactionTimeoutMillis
 
 [source,java]
@@ -536,7 +536,7 @@ Returns the value set for the transaction timeout in this ``TypeDBOptions`` obje
 options.transactionTimeoutMillis();
 ----
 
-[#_TypeDBOptions_transactionTimeoutMillis_int]
+[#_TypeDBOptions_transactionTimeoutMillis__int]
 ==== transactionTimeoutMillis
 
 [source,java]

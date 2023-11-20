@@ -12,7 +12,7 @@
 Relation types (or subtypes of the relation root type) represent relationships between types. Relation types have roles. Other types can play roles in relations if it’s mentioned in their definition. A relation type must specify at least one role.
 
 // tag::methods[]
-[#_RelationType_asAttribute_]
+[#_RelationType_asAttribute__]
 ==== asAttribute
 
 [source,java]
@@ -34,7 +34,7 @@ Casts the concept to ``Attribute``.
 concept.asAttribute();
 ----
 
-[#_RelationType_asAttributeType_]
+[#_RelationType_asAttributeType__]
 ==== asAttributeType
 
 [source,java]
@@ -56,7 +56,7 @@ Casts the concept to ``AttributeType``.
 concept.asAttributeType();
 ----
 
-[#_RelationType_asEntity_]
+[#_RelationType_asEntity__]
 ==== asEntity
 
 [source,java]
@@ -78,7 +78,7 @@ Casts the concept to ``Entity``.
 concept.asEntity();
 ----
 
-[#_RelationType_asEntityType_]
+[#_RelationType_asEntityType__]
 ==== asEntityType
 
 [source,java]
@@ -100,7 +100,7 @@ Casts the concept to ``EntityType``.
 concept.asEntityType();
 ----
 
-[#_RelationType_asRelation_]
+[#_RelationType_asRelation__]
 ==== asRelation
 
 [source,java]
@@ -122,7 +122,7 @@ Casts the concept to ``Relation``.
 concept.asRelation();
 ----
 
-[#_RelationType_asRelationType_]
+[#_RelationType_asRelationType__]
 ==== asRelationType
 
 [source,java]
@@ -145,7 +145,7 @@ Casts the concept to ``RelationType``.
 concept.asRelationType();
 ----
 
-[#_RelationType_asRoleType_]
+[#_RelationType_asRoleType__]
 ==== asRoleType
 
 [source,java]
@@ -167,7 +167,7 @@ Casts the concept to ``RoleType``.
 concept.asRoleType();
 ----
 
-[#_RelationType_asThing_]
+[#_RelationType_asThing__]
 ==== asThing
 
 [source,java]
@@ -189,7 +189,7 @@ Casts the concept to ``Thing``.
 concept.asThing();
 ----
 
-[#_RelationType_asValue_]
+[#_RelationType_asValue__]
 ==== asValue
 
 [source,java]
@@ -211,7 +211,7 @@ Casts the concept to ``Value``.
 concept.asValue();
 ----
 
-[#_RelationType_create_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_RelationType_create__TypeDBTransaction]
 ==== create
 
 [source,java]
@@ -243,7 +243,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 relationType.create(transaction).resolve();
 ----
 
-[#_RelationType_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_RelationType_getInstances__TypeDBTransaction]
 ==== getInstances
 
 [source,java]
@@ -262,7 +262,7 @@ See also: <<#_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_v
 .Returns
 `java.util.stream.Stream<? extends Relation>`
 
-[#_RelationType_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+[#_RelationType_getInstances__TypeDBTransaction__Concept_Transitivity]
 ==== getInstances
 
 [source,java]
@@ -296,7 +296,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect instanc
 relationType.getInstances(transaction, transitivity)
 ----
 
-[#_RelationType_getRelates_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_RelationType_getRelates__TypeDBTransaction]
 ==== getRelates
 
 [source,java]
@@ -315,7 +315,7 @@ See also: <<#_getRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vat
 .Returns
 `java.util.stream.Stream<? extends RoleType>`
 
-[#_RelationType_getRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+[#_RelationType_getRelates__TypeDBTransaction__Concept_Transitivity]
 ==== getRelates
 
 [source,java]
@@ -349,7 +349,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited relate
 relationType.getRelates(transaction, transitivity);
 ----
 
-[#_RelationType_getRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
+[#_RelationType_getRelates__TypeDBTransaction__java_lang_String]
 ==== getRelates
 
 [source,java]
@@ -383,7 +383,7 @@ a| `roleLabel` a| Label of the role we wish to retrieve a| `java.lang.String`
 relationType.getRelates(transaction, roleLabel).resolve();
 ----
 
-[#_RelationType_getRelatesOverridden_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType]
+[#_RelationType_getRelatesOverridden__TypeDBTransaction__RoleType]
 ==== getRelatesOverridden
 
 [source,java]
@@ -399,7 +399,7 @@ Promise<? extends RoleType> getRelatesOverridden​(TypeDBTransaction transactio
 .Returns
 `Promise<? extends RoleType>`
 
-[#_RelationType_getRelatesOverridden_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
+[#_RelationType_getRelatesOverridden__TypeDBTransaction__java_lang_String]
 ==== getRelatesOverridden
 
 [source,java]
@@ -433,7 +433,7 @@ a| `roleLabel` a| Label of the role that overrides an inherited role a| `java.la
 relationType.getRelatesOverridden(transaction, roleLabel).resolve();
 ----
 
-[#_RelationType_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_RelationType_getSubtypes__TypeDBTransaction]
 ==== getSubtypes
 
 [source,java]
@@ -452,7 +452,7 @@ See also: <<#_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_va
 .Returns
 `java.util.stream.Stream<? extends RelationType>`
 
-[#_RelationType_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+[#_RelationType_getSubtypes__TypeDBTransaction__Concept_Transitivity]
 ==== getSubtypes
 
 [source,java]
@@ -486,7 +486,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtype
 relationType.getSubtypes(transaction, transitivity).resolve();
 ----
 
-[#_RelationType_isAttribute_]
+[#_RelationType_isAttribute__]
 ==== isAttribute
 
 [source,java]
@@ -509,7 +509,7 @@ Checks if the concept is an ``Attribute``.
 concept.isAttribute();
 ----
 
-[#_RelationType_isAttributeType_]
+[#_RelationType_isAttributeType__]
 ==== isAttributeType
 
 [source,java]
@@ -532,7 +532,7 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType();
 ----
 
-[#_RelationType_isEntity_]
+[#_RelationType_isEntity__]
 ==== isEntity
 
 [source,java]
@@ -555,7 +555,7 @@ Checks if the concept is an ``Entity``.
 concept.isEntity();
 ----
 
-[#_RelationType_isEntityType_]
+[#_RelationType_isEntityType__]
 ==== isEntityType
 
 [source,java]
@@ -578,7 +578,7 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType();
 ----
 
-[#_RelationType_isRelation_]
+[#_RelationType_isRelation__]
 ==== isRelation
 
 [source,java]
@@ -601,7 +601,7 @@ Checks if the concept is a ``Relation``.
 concept.isRelation();
 ----
 
-[#_RelationType_isRelationType_]
+[#_RelationType_isRelationType__]
 ==== isRelationType
 
 [source,java]
@@ -624,7 +624,7 @@ Checks if the concept is a ``RelationType``.
 concept.isRelationType();
 ----
 
-[#_RelationType_isRoleType_]
+[#_RelationType_isRoleType__]
 ==== isRoleType
 
 [source,java]
@@ -647,7 +647,7 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType();
 ----
 
-[#_RelationType_isThing_]
+[#_RelationType_isThing__]
 ==== isThing
 
 [source,java]
@@ -670,7 +670,7 @@ Checks if the concept is a ``Thing``.
 concept.isThing();
 ----
 
-[#_RelationType_isValue_]
+[#_RelationType_isValue__]
 ==== isValue
 
 [source,java]
@@ -693,7 +693,7 @@ Checks if the concept is a ``Value``.
 concept.isValue();
 ----
 
-[#_RelationType_setRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
+[#_RelationType_setRelates__TypeDBTransaction__java_lang_String]
 ==== setRelates
 
 [source,java]
@@ -713,7 +713,7 @@ See also: <<#_setRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_la
 .Returns
 `Promise<java.lang.Void>`
 
-[#_RelationType_setRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String_com_vaticle_typedb_driver_api_concept_type_RoleType]
+[#_RelationType_setRelates__TypeDBTransaction__java_lang_String__RoleType]
 ==== setRelates
 
 [source,java]
@@ -734,7 +734,7 @@ See also: <<#_setRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_la
 .Returns
 `Promise<java.lang.Void>`
 
-[#_RelationType_setRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String_java_lang_String]
+[#_RelationType_setRelates__TypeDBTransaction__java_lang_String__java_lang_String]
 ==== setRelates
 
 [source,java]
@@ -771,7 +771,7 @@ relationType.setRelates(transaction, roleLabel).resolve();
  relationType.setRelates(transaction, roleLabel, overriddenLabel).resolve();
 ----
 
-[#_RelationType_setSupertype_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RelationType]
+[#_RelationType_setSupertype__TypeDBTransaction__RelationType]
 ==== setSupertype
 
 [source,java]
@@ -805,7 +805,7 @@ a| `superRelationType` a| The ``RelationType`` to set as the supertype of this `
 relationType.setSupertype(transaction, superRelationType).resolve();
 ----
 
-[#_RelationType_unsetRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType]
+[#_RelationType_unsetRelates__TypeDBTransaction__RoleType]
 ==== unsetRelates
 
 [source,java]
@@ -825,7 +825,7 @@ See also: <<#_unsetRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_
 .Returns
 `Promise<java.lang.Void>`
 
-[#_RelationType_unsetRelates_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
+[#_RelationType_unsetRelates__TypeDBTransaction__java_lang_String]
 ==== unsetRelates
 
 [source,java]

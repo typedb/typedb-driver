@@ -1,4 +1,4 @@
-[#_TypeDBSession.Type]
+[#_TypeDBSession_Type]
 === TypeDBSession.Type
 
 *Package*: `com.vaticle.typedb.driver.api`
@@ -30,7 +30,7 @@ a| `SCHEMA`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_TypeDBSession.Type_id_]
+[#_TypeDBSession_Type_id__]
 ==== id
 
 [source,java]
@@ -44,7 +44,7 @@ public int id()
 .Returns
 `public int`
 
-[#_TypeDBSession.Type_isData_]
+[#_TypeDBSession_Type_isData__]
 ==== isData
 
 [source,java]
@@ -58,7 +58,7 @@ public boolean isData()
 .Returns
 `public boolean`
 
-[#_TypeDBSession.Type_isSchema_]
+[#_TypeDBSession_Type_isSchema__]
 ==== isSchema
 
 [source,java]
@@ -72,7 +72,7 @@ public boolean isSchema()
 .Returns
 `public boolean`
 
-[#_TypeDBSession.Type_of_com_vaticle_typedb_driver_jni_SessionType]
+[#_TypeDBSession_Type_of__com_vaticle_typedb_driver_jni_SessionType]
 ==== of
 
 [source,java]
@@ -86,7 +86,7 @@ public static TypeDBSession.Type of​(com.vaticle.typedb.driver.jni.SessionType
 .Returns
 `public static TypeDBSession.Type`
 
-[#_TypeDBSession.Type_valueOf_java_lang_String]
+[#_TypeDBSession_Type_valueOf__java_lang_String]
 ==== valueOf
 
 [source,java]
@@ -109,7 +109,7 @@ a| `name` a| the name of the enum constant to be returned. a| `java.lang.String`
 .Returns
 `public static TypeDBSession.Type`
 
-[#_TypeDBSession.Type_values_]
+[#_TypeDBSession_Type_values__]
 ==== values
 
 [source,java]

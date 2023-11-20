@@ -17,7 +17,7 @@ a| `String(String)`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_enum_Value_method_get_type]
+[#_enum_Value_get_type__]
 ==== get_type
 
 [source,rust]

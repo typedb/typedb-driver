@@ -4,7 +4,7 @@
 Provides access to all database management methods.
 
 // tag::methods[]
-[#_DatabaseManager_allall__:_Promise_Database__]
+[#_DatabaseManager_all__]
 ==== all
 
 [source,nodejs]
@@ -25,7 +25,7 @@ Retrieves all databases present on the TypeDB server
 driver.databases().all()
 ----
 
-[#_DatabaseManager_containscontains_name_:_Promise_boolean]
+[#_DatabaseManager_contains__name_string]
 ==== contains
 
 [source,nodejs]
@@ -55,7 +55,7 @@ a| `name` a| The database name to be checked a| `string`
 driver.databases().contains(name)
 ----
 
-[#_DatabaseManager_createcreate_name_:_Promise_void]
+[#_DatabaseManager_create__name_string]
 ==== create
 
 [source,nodejs]
@@ -85,7 +85,7 @@ a| `name` a| The name of the database to be created a| `string`
 driver.databases().create(name)
 ----
 
-[#_DatabaseManager_getget_name_:_Promise_Database]
+[#_DatabaseManager_get__name_string]
 ==== get
 
 [source,nodejs]

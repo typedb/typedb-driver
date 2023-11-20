@@ -34,6 +34,16 @@ import java.util.function.Supplier;
 public class Promise<T> {
     private final Supplier<T> inner;
 
+    /**
+     * Promise constructor
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * new Promise(supplier)
+     * </pre>
+     *
+     * @param inner The supplier to function to wrap into the promise
+     */
     public Promise(Supplier<T> inner) {
         this.inner = inner;
     }
@@ -55,7 +65,15 @@ public class Promise<T> {
     }
 
     /**
-     * @hidden
+     * Helper function to map promises.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * Promise.map(supplier, mapper);
+     * </pre>
+     *
+     * @param promise The supplier function to wrap into the promise
+     * @param fn The mapping function
      */
     static public<T, U> Promise<U> map(Supplier<T> promise, Function<T, U> fn) {
         return new Promise<>(() -> {

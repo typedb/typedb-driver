@@ -21,7 +21,7 @@ a| `username` a| `String` a| Returns the name of this user.
 // end::properties[]
 
 // tag::methods[]
-[#_struct_User_method_password_update]
+[#_struct_User_password_update__connection_Connection__password_old_impl_Into_String___password_new_impl_Into_String_]
 ==== password_update
 
 [tabs]

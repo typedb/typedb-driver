@@ -1,4 +1,4 @@
-[#_Concept.Transitivity]
+[#_Concept_Transitivity]
 === Concept.Transitivity
 
 *Package*: `com.vaticle.typedb.driver.api.concept`
@@ -30,7 +30,7 @@ a| `TRANSITIVE`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_Concept.Transitivity_of_com_vaticle_typedb_driver_jni_Transitivity]
+[#_Concept_Transitivity_of__com_vaticle_typedb_driver_jni_Transitivity]
 ==== of
 
 [source,java]
@@ -44,7 +44,7 @@ public static Concept.Transitivity of​(com.vaticle.typedb.driver.jni.Transitiv
 .Returns
 `public static Concept.Transitivity`
 
-[#_Concept.Transitivity_valueOf_java_lang_String]
+[#_Concept_Transitivity_valueOf__java_lang_String]
 ==== valueOf
 
 [source,java]
@@ -67,7 +67,7 @@ a| `name` a| the name of the enum constant to be returned. a| `java.lang.String`
 .Returns
 `public static Concept.Transitivity`
 
-[#_Concept.Transitivity_values_]
+[#_Concept_Transitivity_values__]
 ==== values
 
 [source,java]

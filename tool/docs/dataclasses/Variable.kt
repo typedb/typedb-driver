@@ -45,4 +45,9 @@ data class Variable(
         }
         return result.toList()
     }
+
+    fun shortString(): String {
+        if (type == null) return name;
+        else return name + "_" + type;
+    }
 }

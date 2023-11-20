@@ -20,7 +20,7 @@ a| `STRING` a| `_ValueType(is_writable=True, is_keyable=True, 4)`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_ValueType_of]
+[#_ValueType_of__]
 ==== of
 
 [source,python]

@@ -7,7 +7,7 @@
 * `Debug`
 
 // tag::methods[]
-[#_struct_DatabaseManager_method_all]
+[#_struct_DatabaseManager_all__]
 ==== all
 
 [tabs]
@@ -67,7 +67,7 @@ driver.databases().all();
 --
 ====
 
-[#_struct_DatabaseManager_method_contains]
+[#_struct_DatabaseManager_contains__name_impl_Into_String_]
 ==== contains
 
 [tabs]
@@ -136,7 +136,7 @@ driver.databases().contains(name);
 --
 ====
 
-[#_struct_DatabaseManager_method_create]
+[#_struct_DatabaseManager_create__name_impl_Into_String_]
 ==== create
 
 [tabs]
@@ -205,7 +205,7 @@ driver.databases().create(name);
 --
 ====
 
-[#_struct_DatabaseManager_method_get]
+[#_struct_DatabaseManager_get__name_impl_Into_String_]
 ==== get
 
 [tabs]

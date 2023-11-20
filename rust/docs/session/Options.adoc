@@ -30,7 +30,7 @@ a| `transaction_timeout` a| `Option<Duration>` a| If set, specifies a timeout fo
 // end::properties[]
 
 // tag::methods[]
-[#_struct_Options_method_explain]
+[#_struct_Options_explain__]
 ==== explain
 
 [source,rust]
@@ -47,7 +47,7 @@ If set to ``True``, enables explanations for queries. Only affects read transact
 Self
 ----
 
-[#_struct_Options_method_infer]
+[#_struct_Options_infer__]
 ==== infer
 
 [source,rust]
@@ -64,7 +64,7 @@ If set to ``True``, enables inference for queries. Only settable at transaction 
 Self
 ----
 
-[#_struct_Options_method_parallel]
+[#_struct_Options_parallel__]
 ==== parallel
 
 [source,rust]
@@ -81,7 +81,7 @@ If set to ``True``, the server uses parallel instead of single-threaded executio
 Self
 ----
 
-[#_struct_Options_method_prefetch]
+[#_struct_Options_prefetch__]
 ==== prefetch
 
 [source,rust]
@@ -98,7 +98,7 @@ If set to ``True``, the first batch of answers is streamed to the driver even wi
 Self
 ----
 
-[#_struct_Options_method_prefetch_size]
+[#_struct_Options_prefetch_size__]
 ==== prefetch_size
 
 [source,rust]
@@ -115,7 +115,7 @@ If set, specifies a guideline number of answers that the server should send befo
 Self
 ----
 
-[#_struct_Options_method_read_any_replica]
+[#_struct_Options_read_any_replica__]
 ==== read_any_replica
 
 [source,rust]
@@ -132,7 +132,7 @@ If set to ``True``, enables reading data from any replica, potentially boosting 
 Self
 ----
 
-[#_struct_Options_method_schema_lock_acquire_timeout]
+[#_struct_Options_schema_lock_acquire_timeout__]
 ==== schema_lock_acquire_timeout
 
 [source,rust]
@@ -149,7 +149,7 @@ If set, specifies how long the driver should wait if opening a session or transa
 Self
 ----
 
-[#_struct_Options_method_session_idle_timeout]
+[#_struct_Options_session_idle_timeout__]
 ==== session_idle_timeout
 
 [source,rust]
@@ -166,7 +166,7 @@ If set, specifies a timeout that allows the server to close sessions if the driv
 Self
 ----
 
-[#_struct_Options_method_trace_inference]
+[#_struct_Options_trace_inference__]
 ==== trace_inference
 
 [source,rust]
@@ -183,7 +183,7 @@ If set to ``True``, reasoning tracing graphs are output in the logging directory
 Self
 ----
 
-[#_struct_Options_method_transaction_timeout]
+[#_struct_Options_transaction_timeout__]
 ==== transaction_timeout
 
 [source,rust]

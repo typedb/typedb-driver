@@ -4,7 +4,7 @@
 The metadata and state of an individual raft replica of a database.
 
 // tag::methods[]
-[#_Replica_address]
+[#_Replica_address__]
 ==== address
 
 [source,python]
@@ -18,7 +18,7 @@ Retrieves address of the server hosting this replica
 .Returns
 `str`
 
-[#_Replica_database]
+[#_Replica_database__]
 ==== database
 
 [source,python]
@@ -32,7 +32,7 @@ Retrieves the database for which this is a replica
 .Returns
 `Database`
 
-[#_Replica_is_preferred]
+[#_Replica_is_preferred__]
 ==== is_preferred
 
 [source,python]
@@ -46,7 +46,7 @@ Checks whether this is the preferred replica of the raft cluster. If true, Opera
 .Returns
 `bool`
 
-[#_Replica_is_primary]
+[#_Replica_is_primary__]
 ==== is_primary
 
 [source,python]
@@ -60,7 +60,7 @@ Checks whether this is the primary replica of the raft cluster.
 .Returns
 `bool`
 
-[#_Replica_term]
+[#_Replica_term__]
 ==== term
 
 [source,python]

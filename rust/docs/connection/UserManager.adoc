@@ -9,7 +9,7 @@
 Provides access to all user management methods.
 
 // tag::methods[]
-[#_struct_UserManager_method_all]
+[#_struct_UserManager_all__]
 ==== all
 
 [tabs]
@@ -51,7 +51,7 @@ Result<Vec<User>>
 driver.users.all().await;
 ----
 
-[#_struct_UserManager_method_contains]
+[#_struct_UserManager_contains__username_impl_Into_String_]
 ==== contains
 
 [tabs]
@@ -102,7 +102,7 @@ Result<bool>
 driver.users.contains(username).await;
 ----
 
-[#_struct_UserManager_method_create]
+[#_struct_UserManager_create__username_impl_Into_String___password_impl_Into_String_]
 ==== create
 
 [tabs]
@@ -162,7 +162,7 @@ Result
 driver.users.create(username, password).await;
 ----
 
-[#_struct_UserManager_method_current_user]
+[#_struct_UserManager_current_user__]
 ==== current_user
 
 [tabs]
@@ -204,7 +204,7 @@ Result<Option<User>>
 driver.users.current_user().await;
 ----
 
-[#_struct_UserManager_method_delete]
+[#_struct_UserManager_delete__username_impl_Into_String_]
 ==== delete
 
 [tabs]
@@ -255,7 +255,7 @@ Result
 driver.users.delete(username).await;
 ----
 
-[#_struct_UserManager_method_get]
+[#_struct_UserManager_get__username_impl_Into_String_]
 ==== get
 
 [tabs]
@@ -306,7 +306,7 @@ Result<Option<User>>
 driver.users.get(username).await;
 ----
 
-[#_struct_UserManager_method_set_password]
+[#_struct_UserManager_set_password__username_impl_Into_String___password_impl_Into_String_]
 ==== set_password
 
 [tabs]

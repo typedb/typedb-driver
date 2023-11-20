@@ -18,7 +18,7 @@ Other types can own an attribute type. That means that instances of these other 
 Multiple types can own the same attribute type, and different instances of the same type or different types can share ownership of the same attribute instance.
 
 // tag::methods[]
-[#_AttributeType_asAttribute_]
+[#_AttributeType_asAttribute__]
 ==== asAttribute
 
 [source,java]
@@ -40,7 +40,7 @@ Casts the concept to ``Attribute``.
 concept.asAttribute();
 ----
 
-[#_AttributeType_asAttributeType_]
+[#_AttributeType_asAttributeType__]
 ==== asAttributeType
 
 [source,java]
@@ -63,7 +63,7 @@ Casts the concept to ``AttributeType``.
 concept.asAttributeType();
 ----
 
-[#_AttributeType_asEntity_]
+[#_AttributeType_asEntity__]
 ==== asEntity
 
 [source,java]
@@ -85,7 +85,7 @@ Casts the concept to ``Entity``.
 concept.asEntity();
 ----
 
-[#_AttributeType_asEntityType_]
+[#_AttributeType_asEntityType__]
 ==== asEntityType
 
 [source,java]
@@ -107,7 +107,7 @@ Casts the concept to ``EntityType``.
 concept.asEntityType();
 ----
 
-[#_AttributeType_asRelation_]
+[#_AttributeType_asRelation__]
 ==== asRelation
 
 [source,java]
@@ -129,7 +129,7 @@ Casts the concept to ``Relation``.
 concept.asRelation();
 ----
 
-[#_AttributeType_asRelationType_]
+[#_AttributeType_asRelationType__]
 ==== asRelationType
 
 [source,java]
@@ -151,7 +151,7 @@ Casts the concept to ``RelationType``.
 concept.asRelationType();
 ----
 
-[#_AttributeType_asRoleType_]
+[#_AttributeType_asRoleType__]
 ==== asRoleType
 
 [source,java]
@@ -173,7 +173,7 @@ Casts the concept to ``RoleType``.
 concept.asRoleType();
 ----
 
-[#_AttributeType_asThing_]
+[#_AttributeType_asThing__]
 ==== asThing
 
 [source,java]
@@ -195,7 +195,7 @@ Casts the concept to ``Thing``.
 concept.asThing();
 ----
 
-[#_AttributeType_asValue_]
+[#_AttributeType_asValue__]
 ==== asValue
 
 [source,java]
@@ -217,7 +217,7 @@ Casts the concept to ``Value``.
 concept.asValue();
 ----
 
-[#_AttributeType_get_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value]
+[#_AttributeType_get__TypeDBTransaction__Value]
 ==== get
 
 [source,java]
@@ -251,7 +251,7 @@ a| `value` a| ``Attribute``’s value a| `Value`
 attributeType.get(transaction, value).resolve();
 ----
 
-[#_AttributeType_get_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
+[#_AttributeType_get__TypeDBTransaction__java_lang_String]
 ==== get
 
 [source,java]
@@ -285,7 +285,7 @@ a| `value` a| ``Attribute``’s value a| `java.lang.String`
 attributeType.get(transaction, value).resolve();
 ----
 
-[#_AttributeType_get_com_vaticle_typedb_driver_api_TypeDBTransaction_long]
+[#_AttributeType_get__TypeDBTransaction__long]
 ==== get
 
 [source,java]
@@ -319,7 +319,7 @@ a| `value` a| ``Attribute``’s value a| `long`
 attributeType.get(transaction, value).resolve();
 ----
 
-[#_AttributeType_get_com_vaticle_typedb_driver_api_TypeDBTransaction_double]
+[#_AttributeType_get__TypeDBTransaction__double]
 ==== get
 
 [source,java]
@@ -353,7 +353,7 @@ a| `value` a| ``Attribute``’s value a| `double`
 attributeType.get(transaction, value).resolve();
 ----
 
-[#_AttributeType_get_com_vaticle_typedb_driver_api_TypeDBTransaction_boolean]
+[#_AttributeType_get__TypeDBTransaction__boolean]
 ==== get
 
 [source,java]
@@ -387,7 +387,7 @@ a| `value` a| ``Attribute``’s value a| `boolean`
 attributeType.get(transaction, value).resolve();
 ----
 
-[#_AttributeType_get_com_vaticle_typedb_driver_api_TypeDBTransaction_java_time_LocalDateTime]
+[#_AttributeType_get__TypeDBTransaction__java_time_LocalDateTime]
 ==== get
 
 [source,java]
@@ -421,7 +421,7 @@ a| `value` a| ``Attribute``’s value a| `java.time.LocalDateTime`
 attributeType.get(transaction, value).resolve();
 ----
 
-[#_AttributeType_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_AttributeType_getInstances__TypeDBTransaction]
 ==== getInstances
 
 [source,java]
@@ -457,7 +457,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 attributeType.getInstances(transaction);
 ----
 
-[#_AttributeType_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+[#_AttributeType_getInstances__TypeDBTransaction__Concept_Transitivity]
 ==== getInstances
 
 [source,java]
@@ -491,7 +491,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtype
 attributeType.getInstances(transaction, transitivity);
 ----
 
-[#_AttributeType_getOwners_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_AttributeType_getOwners__TypeDBTransaction]
 ==== getOwners
 
 [source,java]
@@ -523,7 +523,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 attributeType.getOwners(transaction);
 ----
 
-[#_AttributeType_getOwners_com_vaticle_typedb_driver_api_TypeDBTransaction_java_util_Set]
+[#_AttributeType_getOwners__TypeDBTransaction__java_util_Set_ThingType_Annotation_]
 ==== getOwners
 
 [source,java]
@@ -557,7 +557,7 @@ a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this 
 attributeType.getOwners(transaction, annotations);
 ----
 
-[#_AttributeType_getOwners_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+[#_AttributeType_getOwners__TypeDBTransaction__Concept_Transitivity]
 ==== getOwners
 
 [source,java]
@@ -591,7 +591,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited owners
 attributeType.getOwners(transaction, transitivity);
 ----
 
-[#_AttributeType_getOwners_com_vaticle_typedb_driver_api_TypeDBTransaction_java_util_Set_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+[#_AttributeType_getOwners__TypeDBTransaction__java_util_Set_ThingType_Annotation___Concept_Transitivity]
 ==== getOwners
 
 [source,java]
@@ -627,7 +627,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and inherited owners
 attributeType.getOwners(transaction, annotations, transitivity);
 ----
 
-[#_AttributeType_getRegex_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_AttributeType_getRegex__TypeDBTransaction]
 ==== getRegex
 
 [source,java]
@@ -659,7 +659,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 attributeType.getRegex(transaction).resolve();
 ----
 
-[#_AttributeType_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_AttributeType_getSubtypes__TypeDBTransaction]
 ==== getSubtypes
 
 [source,java]
@@ -695,7 +695,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 attributeType.getSubtypes(transaction);
 ----
 
-[#_AttributeType_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type]
+[#_AttributeType_getSubtypes__TypeDBTransaction__Value_Type]
 ==== getSubtypes
 
 [source,java]
@@ -729,7 +729,7 @@ a| `valueType` a| ``Value.Type`` for retrieving subtypes a| `Value.Type`
 attributeType.getSubtypes(transaction, valueType);
 ----
 
-[#_AttributeType_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+[#_AttributeType_getSubtypes__TypeDBTransaction__Value_Type__Concept_Transitivity]
 ==== getSubtypes
 
 [source,java]
@@ -765,7 +765,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtype
 attributeType.getSubtypes(transaction, valueType, transitivity);
 ----
 
-[#_AttributeType_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+[#_AttributeType_getSubtypes__TypeDBTransaction__Concept_Transitivity]
 ==== getSubtypes
 
 [source,java]
@@ -799,7 +799,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtype
 attributeType.getSubtypes(transaction, transitivity);
 ----
 
-[#_AttributeType_getValueType_]
+[#_AttributeType_getValueType__]
 ==== getValueType
 
 [source,java]
@@ -822,7 +822,7 @@ Retrieves the ``Value.Type`` of this ``AttributeType``.
 attributeType.getValueType();
 ----
 
-[#_AttributeType_isAttribute_]
+[#_AttributeType_isAttribute__]
 ==== isAttribute
 
 [source,java]
@@ -845,7 +845,7 @@ Checks if the concept is an ``Attribute``.
 concept.isAttribute();
 ----
 
-[#_AttributeType_isAttributeType_]
+[#_AttributeType_isAttributeType__]
 ==== isAttributeType
 
 [source,java]
@@ -868,7 +868,7 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType();
 ----
 
-[#_AttributeType_isBoolean_]
+[#_AttributeType_isBoolean__]
 ==== isBoolean
 
 [source,java]
@@ -891,7 +891,7 @@ Returns ``True`` if the value for attributes of this type is of type ``boolean``
 attributeType.isBoolean();
 ----
 
-[#_AttributeType_isDateTime_]
+[#_AttributeType_isDateTime__]
 ==== isDateTime
 
 [source,java]
@@ -914,7 +914,7 @@ Returns ``True`` if the value for attributes of this type is of type ``datetime`
 attributeType.isDatetime();
 ----
 
-[#_AttributeType_isDouble_]
+[#_AttributeType_isDouble__]
 ==== isDouble
 
 [source,java]
@@ -937,7 +937,7 @@ Returns ``True`` if the value for attributes of this type is of type ``double``.
 attributeType.isDouble();
 ----
 
-[#_AttributeType_isEntity_]
+[#_AttributeType_isEntity__]
 ==== isEntity
 
 [source,java]
@@ -960,7 +960,7 @@ Checks if the concept is an ``Entity``.
 concept.isEntity();
 ----
 
-[#_AttributeType_isEntityType_]
+[#_AttributeType_isEntityType__]
 ==== isEntityType
 
 [source,java]
@@ -983,7 +983,7 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType();
 ----
 
-[#_AttributeType_isLong_]
+[#_AttributeType_isLong__]
 ==== isLong
 
 [source,java]
@@ -1006,7 +1006,7 @@ Returns ``True`` if the value for attributes of this type is of type ``long``. O
 attributeType.isLong();
 ----
 
-[#_AttributeType_isRelation_]
+[#_AttributeType_isRelation__]
 ==== isRelation
 
 [source,java]
@@ -1029,7 +1029,7 @@ Checks if the concept is a ``Relation``.
 concept.isRelation();
 ----
 
-[#_AttributeType_isRelationType_]
+[#_AttributeType_isRelationType__]
 ==== isRelationType
 
 [source,java]
@@ -1052,7 +1052,7 @@ Checks if the concept is a ``RelationType``.
 concept.isRelationType();
 ----
 
-[#_AttributeType_isRoleType_]
+[#_AttributeType_isRoleType__]
 ==== isRoleType
 
 [source,java]
@@ -1075,7 +1075,7 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType();
 ----
 
-[#_AttributeType_isString_]
+[#_AttributeType_isString__]
 ==== isString
 
 [source,java]
@@ -1098,7 +1098,7 @@ Returns ``True`` if the value for attributes of this type is of type ``string``.
 attributeType.isString();
 ----
 
-[#_AttributeType_isThing_]
+[#_AttributeType_isThing__]
 ==== isThing
 
 [source,java]
@@ -1121,7 +1121,7 @@ Checks if the concept is a ``Thing``.
 concept.isThing();
 ----
 
-[#_AttributeType_isValue_]
+[#_AttributeType_isValue__]
 ==== isValue
 
 [source,java]
@@ -1144,7 +1144,7 @@ Checks if the concept is a ``Value``.
 concept.isValue();
 ----
 
-[#_AttributeType_put_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value]
+[#_AttributeType_put__TypeDBTransaction__Value]
 ==== put
 
 [source,java]
@@ -1178,7 +1178,7 @@ a| `value` a| New ``Attribute``’s value a| `Value`
 attributeType.put(transaction, value).resolve();
 ----
 
-[#_AttributeType_put_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
+[#_AttributeType_put__TypeDBTransaction__java_lang_String]
 ==== put
 
 [source,java]
@@ -1212,7 +1212,7 @@ a| `value` a| New ``Attribute``’s value a| `java.lang.String`
 attributeType.put(transaction, value).resolve();
 ----
 
-[#_AttributeType_put_com_vaticle_typedb_driver_api_TypeDBTransaction_long]
+[#_AttributeType_put__TypeDBTransaction__long]
 ==== put
 
 [source,java]
@@ -1246,7 +1246,7 @@ a| `value` a| New ``Attribute``’s value a| `long`
 attributeType.put(transaction, value).resolve();
 ----
 
-[#_AttributeType_put_com_vaticle_typedb_driver_api_TypeDBTransaction_double]
+[#_AttributeType_put__TypeDBTransaction__double]
 ==== put
 
 [source,java]
@@ -1280,7 +1280,7 @@ a| `value` a| New ``Attribute``’s value a| `double`
 attributeType.put(transaction, value).resolve();
 ----
 
-[#_AttributeType_put_com_vaticle_typedb_driver_api_TypeDBTransaction_boolean]
+[#_AttributeType_put__TypeDBTransaction__boolean]
 ==== put
 
 [source,java]
@@ -1314,7 +1314,7 @@ a| `value` a| New ``Attribute``’s value a| `boolean`
 attributeType.put(transaction, value).resolve();
 ----
 
-[#_AttributeType_put_com_vaticle_typedb_driver_api_TypeDBTransaction_java_time_LocalDateTime]
+[#_AttributeType_put__TypeDBTransaction__java_time_LocalDateTime]
 ==== put
 
 [source,java]
@@ -1348,7 +1348,7 @@ a| `value` a| New ``Attribute``’s value a| `java.time.LocalDateTime`
 attributeType.put(transaction, value).resolve();
 ----
 
-[#_AttributeType_setRegex_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
+[#_AttributeType_setRegex__TypeDBTransaction__java_lang_String]
 ==== setRegex
 
 [source,java]
@@ -1384,7 +1384,7 @@ a| `regex` a| Regular expression a| `java.lang.String`
 attributeType.setRegex(transaction, regex).resolve();
 ----
 
-[#_AttributeType_setSupertype_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType]
+[#_AttributeType_setSupertype__TypeDBTransaction__AttributeType]
 ==== setSupertype
 
 [source,java]
@@ -1418,7 +1418,7 @@ a| `attributeType` a| The ``AttributeType`` to set as the supertype of this ``At
 attributeType.setSupertype(transaction, superType).resolve();
 ----
 
-[#_AttributeType_unsetRegex_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_AttributeType_unsetRegex__TypeDBTransaction]
 ==== unsetRegex
 
 [source,java]

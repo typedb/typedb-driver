@@ -6,7 +6,7 @@
 * `Type`
 
 // tag::methods[]
-[#_ThingType_get_instances]
+[#_ThingType_get_instances__transaction_TypeDBTransaction__transitivity_Transitivity]
 ==== get_instances
 
 [source,python]
@@ -38,7 +38,7 @@ thing_type.get_instances(transaction)
 thing_type.get_instances(transaction, Transitivity.EXPLICIT)
 ----
 
-[#_ThingType_get_owns]
+[#_ThingType_get_owns__transaction_TypeDBTransaction__value_type_ValueType__None__transitivity_Transitivity__annotations_set_Annotation___None]
 ==== get_owns
 
 [source,python]
@@ -74,7 +74,7 @@ thing_type.get_owns(transaction, value_type,
                     annotations={Annotation.key()})
 ----
 
-[#_ThingType_get_owns_overridden]
+[#_ThingType_get_owns_overridden__transaction_TypeDBTransaction__attribute_type_AttributeType]
 ==== get_owns_overridden
 
 [source,python]
@@ -105,7 +105,7 @@ a| `attribute_type` a| The ``AttributeType`` that overrides requested ``Attribut
 thing_type.get_owns_overridden(transaction, attribute_type).resolve()
 ----
 
-[#_ThingType_get_plays]
+[#_ThingType_get_plays__transaction_TypeDBTransaction__transitivity_Transitivity]
 ==== get_plays
 
 [source,python]
@@ -137,7 +137,7 @@ thing_type.get_plays(transaction)
 thing_type.get_plays(transaction, Transitivity.EXPLICIT)
 ----
 
-[#_ThingType_get_plays_overridden]
+[#_ThingType_get_plays_overridden__transaction_TypeDBTransaction__role_type_RoleType]
 ==== get_plays_overridden
 
 [source,python]
@@ -168,7 +168,7 @@ a| `role_type` a| The ``RoleType`` that overrides an inherited role a| `RoleType
 thing_type.get_plays_overridden(transaction, role_type).resolve()
 ----
 
-[#_ThingType_get_subtypes]
+[#_ThingType_get_subtypes__transaction_TypeDBTransaction__transitivity_Transitivity]
 ==== get_subtypes
 
 [source,python]
@@ -200,7 +200,7 @@ thing_type.get_subtypes(transaction)
 thing_type.get_subtypes(transaction, Transitivity.EXPLICIT)
 ----
 
-[#_ThingType_get_supertype]
+[#_ThingType_get_supertype__transaction_TypeDBTransaction]
 ==== get_supertype
 
 [source,python]
@@ -230,7 +230,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 thing_type.get_supertype(transaction).resolve()
 ----
 
-[#_ThingType_get_supertypes]
+[#_ThingType_get_supertypes__transaction_TypeDBTransaction]
 ==== get_supertypes
 
 [source,python]
@@ -260,7 +260,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 thing_type.get_supertypes(transaction)
 ----
 
-[#_ThingType_get_syntax]
+[#_ThingType_get_syntax__transaction_TypeDBTransaction]
 ==== get_syntax
 
 [source,python]
@@ -290,7 +290,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 thing_type.get_syntax(transaction).resolve()
 ----
 
-[#_ThingType_is_thing_type]
+[#_ThingType_is_thing_type__]
 ==== is_thing_type
 
 [source,python]
@@ -311,7 +311,7 @@ Checks if the concept is a ``ThingType``.
 thing_type.is_thing_type()
 ----
 
-[#_ThingType_set_abstract]
+[#_ThingType_set_abstract__transaction_TypeDBTransaction]
 ==== set_abstract
 
 [source,python]
@@ -341,7 +341,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 thing_type.set_abstract(transaction).resolve()
 ----
 
-[#_ThingType_set_owns]
+[#_ThingType_set_owns__transaction_TypeDBTransaction__attribute_type_AttributeType__overridden_type_AttributeType__None__annotations_set_Annotation___None]
 ==== set_owns
 
 [source,python]
@@ -377,7 +377,7 @@ thing_type.set_owns(transaction, attribute_type,
                     annotations={Annotation.key()}).resolve()
 ----
 
-[#_ThingType_set_plays]
+[#_ThingType_set_plays__transaction_TypeDBTransaction__role_type_RoleType__overriden_type_RoleType__None]
 ==== set_plays
 
 [source,python]
@@ -410,7 +410,7 @@ thing_type.set_plays(transaction, role_type).resolve()
 thing_type.set_plays(transaction, role_type, overridden_type).resolve()
 ----
 
-[#_ThingType_unset_abstract]
+[#_ThingType_unset_abstract__transaction_TypeDBTransaction]
 ==== unset_abstract
 
 [source,python]
@@ -440,7 +440,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 thing_type.unset_abstract(transaction).resolve()
 ----
 
-[#_ThingType_unset_owns]
+[#_ThingType_unset_owns__transaction_TypeDBTransaction__attribute_type_AttributeType]
 ==== unset_owns
 
 [source,python]
@@ -471,7 +471,7 @@ a| `attribute_type` a| The ``AttributeType`` to not be owned by the type. a| `At
 thing_type.unset_owns(transaction, attribute_type).resolve()
 ----
 
-[#_ThingType_unset_plays]
+[#_ThingType_unset_plays__transaction_TypeDBTransaction__role_type_RoleType]
 ==== unset_plays
 
 [source,python]

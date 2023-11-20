@@ -4,7 +4,7 @@
 *Package*: `com.vaticle.typedb.driver.api.database`
 
 // tag::methods[]
-[#_Database_delete_]
+[#_Database_delete__]
 ==== delete
 
 [source,java]
@@ -26,7 +26,7 @@ Deletes this database.
 database.delete()
 ----
 
-[#_Database_name_]
+[#_Database_name__]
 ==== name
 
 [source,java]
@@ -41,7 +41,7 @@ The database name as a string.
 .Returns
 `java.lang.String`
 
-[#_Database_preferredReplica_]
+[#_Database_preferredReplica__]
 ==== preferredReplica
 
 [source,java]
@@ -64,7 +64,7 @@ Returns the preferred replica for this database. Operations which can be run on 
 database.preferredReplica()
 ----
 
-[#_Database_primaryReplica_]
+[#_Database_primaryReplica__]
 ==== primaryReplica
 
 [source,java]
@@ -87,7 +87,7 @@ Returns the primary replica for this database. _Only works in TypeDB Enterprise_
 database.primaryReplica()
 ----
 
-[#_Database_replicas_]
+[#_Database_replicas__]
 ==== replicas
 
 [source,java]
@@ -110,7 +110,7 @@ Set of ``Replica`` instances for this database. Only works in TypeDB Enterprise
 database.replicas()
 ----
 
-[#_Database_ruleSchema_]
+[#_Database_ruleSchema__]
 ==== ruleSchema
 
 [source,java]
@@ -133,7 +133,7 @@ The rules in the schema as a valid TypeQL define query string.
 database.ruleSchema()
 ----
 
-[#_Database_schema_]
+[#_Database_schema__]
 ==== schema
 
 [source,java]
@@ -156,7 +156,7 @@ A full schema text as a valid TypeQL define query string.
 database.schema()
 ----
 
-[#_Database_typeSchema_]
+[#_Database_typeSchema__]
 ==== typeSchema
 
 [source,java]

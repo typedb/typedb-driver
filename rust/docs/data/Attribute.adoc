@@ -27,7 +27,7 @@ a| `value` a| `Value` a| The value which this Attribute instance holds.
 // end::properties[]
 
 // tag::methods[]
-[#_struct_Attribute_method_delete]
+[#_struct_Attribute_delete__]
 ==== delete
 
 [source,rust]
@@ -47,7 +47,7 @@ fn delete<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_Attribute_method_get_has]
+[#_struct_Attribute_get_has__]
 ==== get_has
 
 [source,rust]
@@ -69,7 +69,7 @@ fn get_has<'tx>(
 Result<BoxStream<'tx, Result<Attribute>>>
 ----
 
-[#_struct_Attribute_method_get_owners]
+[#_struct_Attribute_get_owners__]
 ==== get_owners
 
 [source,rust]
@@ -90,7 +90,7 @@ fn get_owners<'tx>(
 Result<BoxStream<'tx, Result<Thing>>>
 ----
 
-[#_struct_Attribute_method_get_playing]
+[#_struct_Attribute_get_playing__]
 ==== get_playing
 
 [source,rust]
@@ -110,7 +110,7 @@ fn get_playing<'tx>(
 Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
-[#_struct_Attribute_method_get_relations]
+[#_struct_Attribute_get_relations__]
 ==== get_relations
 
 [source,rust]
@@ -131,7 +131,7 @@ fn get_relations<'tx>(
 Result<BoxStream<'tx, Result<Relation>>>
 ----
 
-[#_struct_Attribute_tymethod_iid]
+[#_struct_Attribute_iid__]
 ==== iid
 
 [source,rust]
@@ -148,7 +148,7 @@ fn iid(&self) -> &IID
 &IID
 ----
 
-[#_struct_Attribute_tymethod_is_deleted]
+[#_struct_Attribute_is_deleted__]
 ==== is_deleted
 
 [source,rust]
@@ -168,7 +168,7 @@ fn is_deleted<'tx>(
 BoxPromise<'tx, Result<bool>>
 ----
 
-[#_struct_Attribute_tymethod_is_inferred]
+[#_struct_Attribute_is_inferred__]
 ==== is_inferred
 
 [source,rust]
@@ -185,7 +185,7 @@ fn is_inferred(&self) -> bool
 bool
 ----
 
-[#_struct_Attribute_method_set_has]
+[#_struct_Attribute_set_has__]
 ==== set_has
 
 [source,rust]
@@ -206,7 +206,7 @@ fn set_has<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_Attribute_method_unset_has]
+[#_struct_Attribute_unset_has__]
 ==== unset_has
 
 [source,rust]

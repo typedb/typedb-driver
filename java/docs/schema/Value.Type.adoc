@@ -1,4 +1,4 @@
-[#_Value.Type]
+[#_Value_Type]
 === Value.Type
 
 *Package*: `com.vaticle.typedb.driver.api.concept.value`
@@ -20,7 +20,7 @@ a| `STRING`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_Value.Type_isKeyable_]
+[#_Value_Type_isKeyable__]
 ==== isKeyable
 
 [source,java]
@@ -35,7 +35,7 @@ public boolean isKeyable()
 .Returns
 `public boolean`
 
-[#_Value.Type_isWritable_]
+[#_Value_Type_isWritable__]
 ==== isWritable
 
 [source,java]
@@ -50,7 +50,7 @@ public boolean isWritable()
 .Returns
 `public boolean`
 
-[#_Value.Type_of_com_vaticle_typedb_driver_jni_ValueType]
+[#_Value_Type_of__com_vaticle_typedb_driver_jni_ValueType]
 ==== of
 
 [source,java]
@@ -65,7 +65,7 @@ public static Value.Type of​(com.vaticle.typedb.driver.jni.ValueType valueType
 .Returns
 `public static Value.Type`
 
-[#_Value.Type_valueClass_]
+[#_Value_Type_valueClass__]
 ==== valueClass
 
 [source,java]
@@ -80,7 +80,7 @@ public java.lang.Class<?> valueClass()
 .Returns
 `public java.lang.Class<?>`
 
-[#_Value.Type_valueOf_java_lang_String]
+[#_Value_Type_valueOf__java_lang_String]
 ==== valueOf
 
 [source,java]
@@ -103,7 +103,7 @@ a| `name` a| the name of the enum constant to be returned. a| `java.lang.String`
 .Returns
 `public static Value.Type`
 
-[#_Value.Type_values_]
+[#_Value_Type_values__]
 ==== values
 
 [source,java]

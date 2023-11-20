@@ -4,7 +4,7 @@
 Provides access for all Concept API methods.
 
 // tag::methods[]
-[#_ConceptManager_get_attribute]
+[#_ConceptManager_get_attribute__iid_str]
 ==== get_attribute
 
 [source,python]
@@ -34,7 +34,7 @@ a| `iid` a| The iid of the ``Attribute`` to retrieve a| `str` a|
 transaction.concepts.get_attribute(iid).resolve()
 ----
 
-[#_ConceptManager_get_attribute_type]
+[#_ConceptManager_get_attribute_type__label_str]
 ==== get_attribute_type
 
 [source,python]
@@ -64,7 +64,7 @@ a| `label` a| The label of the ``AttributeType`` to retrieve a| `str` a|
 transaction.concepts.get_attribute_type(label).resolve()
 ----
 
-[#_ConceptManager_get_entity]
+[#_ConceptManager_get_entity__iid_str]
 ==== get_entity
 
 [source,python]
@@ -94,7 +94,7 @@ a| `iid` a| The iid of the ``Entity`` to retrieve a| `str` a|
 transaction.concepts.get_entity(iid).resolve()
 ----
 
-[#_ConceptManager_get_entity_type]
+[#_ConceptManager_get_entity_type__label_str]
 ==== get_entity_type
 
 [source,python]
@@ -124,7 +124,7 @@ a| `label` a| The label of the ``EntityType`` to retrieve a| `str` a|
 transaction.concepts.get_entity_type(label).resolve()
 ----
 
-[#_ConceptManager_get_relation]
+[#_ConceptManager_get_relation__iid_str]
 ==== get_relation
 
 [source,python]
@@ -154,7 +154,7 @@ a| `iid` a| The iid of the ``Relation`` to retrieve a| `str` a|
 transaction.concepts.get_relation(iid).resolve()
 ----
 
-[#_ConceptManager_get_relation_type]
+[#_ConceptManager_get_relation_type__label_str]
 ==== get_relation_type
 
 [source,python]
@@ -184,7 +184,7 @@ a| `label` a| The label of the ``RelationType`` to retrieve a| `str` a|
 transaction.concepts.get_relation_type(label).resolve()
 ----
 
-[#_ConceptManager_get_root_attribute_type]
+[#_ConceptManager_get_root_attribute_type__]
 ==== get_root_attribute_type
 
 [source,python]
@@ -205,7 +205,7 @@ Retrieve the root ``AttributeType``, “attribute”.
 transaction.concepts.get_root_attribute_type()
 ----
 
-[#_ConceptManager_get_root_entity_type]
+[#_ConceptManager_get_root_entity_type__]
 ==== get_root_entity_type
 
 [source,python]
@@ -226,7 +226,7 @@ Retrieves the root ``EntityType``, “entity”.
 transaction.concepts.get_root_entity_type()
 ----
 
-[#_ConceptManager_get_root_relation_type]
+[#_ConceptManager_get_root_relation_type__]
 ==== get_root_relation_type
 
 [source,python]
@@ -247,7 +247,7 @@ Retrieve the root ``RelationType``, “relation”.
 transaction.concepts.get_root_relation_type()
 ----
 
-[#_ConceptManager_get_schema_exception]
+[#_ConceptManager_get_schema_exception__]
 ==== get_schema_exception
 
 [source,python]
@@ -268,7 +268,7 @@ Retrieves a list of all schema exceptions for the current transaction.
 transaction.concepts.get_schema_exception()
 ----
 
-[#_ConceptManager_put_attribute_type]
+[#_ConceptManager_put_attribute_type__label_str__value_type_ValueType]
 ==== put_attribute_type
 
 [source,python]
@@ -299,7 +299,7 @@ a| `value_type` a| The value type of the ``AttributeType`` to create or retrieve
 transaction.concepts.put_attribute_type(label, value_type).resolve()
 ----
 
-[#_ConceptManager_put_entity_type]
+[#_ConceptManager_put_entity_type__label_str]
 ==== put_entity_type
 
 [source,python]
@@ -329,7 +329,7 @@ a| `label` a| The label of the ``EntityType`` to create or retrieve a| `str` a|
 transaction.concepts.put_entity_type(label).resolve()
 ----
 
-[#_ConceptManager_put_relation_type]
+[#_ConceptManager_put_relation_type__label_str]
 ==== put_relation_type
 
 [source,python]

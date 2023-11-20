@@ -16,7 +16,7 @@ a| `username` a| `string` a| The name of this user.
 // end::properties[]
 
 // tag::methods[]
-[#_User_passwordUpdatepasswordUpdate_oldPassword__newPassword_:_Promise_void]
+[#_User_passwordUpdate__oldPassword_string__newPassword_string]
 ==== passwordUpdate
 
 [source,nodejs]

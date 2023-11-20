@@ -4,7 +4,7 @@
 TypeDB session and transaction options. ``TypeDBOptions`` object can be used to override the default server behaviour. Options could be specified either as constructor arguments or using setters.
 
 // tag::methods[]
-[#__explain]
+[#_TypeDBOptions__explain__]
 ====  explain
 
 [source,nodejs]
@@ -18,7 +18,7 @@ If set to ``True``, enables explanations for queries. Only affects read transact
 .Returns
 `boolean`
 
-[#__explain]
+[#_TypeDBOptions__explain__value_boolean]
 ====  explain
 
 [source,nodejs]
@@ -32,7 +32,7 @@ If set to ``True``, enables explanations for queries. Only affects read transact
 .Returns
 `void`
 
-[#__infer]
+[#_TypeDBOptions__infer__]
 ====  infer
 
 [source,nodejs]
@@ -46,7 +46,7 @@ If set to ``True``, enables inference for queries. Only settable at transaction 
 .Returns
 `boolean`
 
-[#__infer]
+[#_TypeDBOptions__infer__value_boolean]
 ====  infer
 
 [source,nodejs]
@@ -60,7 +60,7 @@ If set to ``True``, enables inference for queries. Only settable at transaction 
 .Returns
 `void`
 
-[#__parallel]
+[#_TypeDBOptions__parallel__]
 ====  parallel
 
 [source,nodejs]
@@ -74,7 +74,7 @@ If set to ``True``, the server uses parallel instead of single-threaded executio
 .Returns
 `boolean`
 
-[#__parallel]
+[#_TypeDBOptions__parallel__value_boolean]
 ====  parallel
 
 [source,nodejs]
@@ -88,7 +88,7 @@ If set to ``True``, the server uses parallel instead of single-threaded executio
 .Returns
 `void`
 
-[#__prefetch]
+[#_TypeDBOptions__prefetch__]
 ====  prefetch
 
 [source,nodejs]
@@ -102,7 +102,7 @@ If set to ``True``, the first batch of answers is streamed to the driver even wi
 .Returns
 `boolean`
 
-[#__prefetch]
+[#_TypeDBOptions__prefetch__value_boolean]
 ====  prefetch
 
 [source,nodejs]
@@ -116,7 +116,7 @@ If set to ``True``, the first batch of answers is streamed to the driver even wi
 .Returns
 `void`
 
-[#__prefetchSize]
+[#_TypeDBOptions__prefetchSize__]
 ====  prefetchSize
 
 [source,nodejs]
@@ -130,7 +130,7 @@ If set, specifies a guideline number of answers that the server should send befo
 .Returns
 `number`
 
-[#__prefetchSize]
+[#_TypeDBOptions__prefetchSize__value_number]
 ====  prefetchSize
 
 [source,nodejs]
@@ -144,7 +144,7 @@ If set, specifies a guideline number of answers that the server should send befo
 .Returns
 `void`
 
-[#__readAnyReplica]
+[#_TypeDBOptions__readAnyReplica__]
 ====  readAnyReplica
 
 [source,nodejs]
@@ -158,7 +158,7 @@ If set to ``True``, enables reading data from any replica, potentially boosting 
 .Returns
 `boolean`
 
-[#__readAnyReplica]
+[#_TypeDBOptions__readAnyReplica__value_boolean]
 ====  readAnyReplica
 
 [source,nodejs]
@@ -172,7 +172,7 @@ If set to ``True``, enables reading data from any replica, potentially boosting 
 .Returns
 `void`
 
-[#__schemaLockAcquireTimeoutMillis]
+[#_TypeDBOptions__schemaLockAcquireTimeoutMillis__]
 ====  schemaLockAcquireTimeoutMillis
 
 [source,nodejs]
@@ -186,7 +186,7 @@ If set, specifies how long the driver should wait if opening a session or transa
 .Returns
 `number`
 
-[#__schemaLockAcquireTimeoutMillis]
+[#_TypeDBOptions__schemaLockAcquireTimeoutMillis__value_number]
 ====  schemaLockAcquireTimeoutMillis
 
 [source,nodejs]
@@ -200,7 +200,7 @@ If set, specifies how long the driver should wait if opening a session or transa
 .Returns
 `void`
 
-[#__sessionIdleTimeoutMillis]
+[#_TypeDBOptions__sessionIdleTimeoutMillis__]
 ====  sessionIdleTimeoutMillis
 
 [source,nodejs]
@@ -214,7 +214,7 @@ If set, specifies a timeout that allows the server to close sessions if the driv
 .Returns
 `number`
 
-[#__sessionIdleTimeoutMillis]
+[#_TypeDBOptions__sessionIdleTimeoutMillis__millis_number]
 ====  sessionIdleTimeoutMillis
 
 [source,nodejs]
@@ -228,7 +228,7 @@ If set, specifies a timeout that allows the server to close sessions if the driv
 .Returns
 `void`
 
-[#__traceInference]
+[#_TypeDBOptions__traceInference__]
 ====  traceInference
 
 [source,nodejs]
@@ -242,7 +242,7 @@ If set to ``True``, reasoning tracing graphs are output in the logging directory
 .Returns
 `boolean`
 
-[#__traceInference]
+[#_TypeDBOptions__traceInference__value_boolean]
 ====  traceInference
 
 [source,nodejs]
@@ -256,7 +256,7 @@ If set to ``True``, reasoning tracing graphs are output in the logging directory
 .Returns
 `void`
 
-[#__transactionTimeoutMillis]
+[#_TypeDBOptions__transactionTimeoutMillis__]
 ====  transactionTimeoutMillis
 
 [source,nodejs]
@@ -270,7 +270,7 @@ If set, specifies a timeout for killing transactions automatically, preventing m
 .Returns
 `number`
 
-[#__transactionTimeoutMillis]
+[#_TypeDBOptions__transactionTimeoutMillis__millis_number]
 ====  transactionTimeoutMillis
 
 [source,nodejs]
@@ -284,7 +284,7 @@ If set, specifies a timeout for killing transactions automatically, preventing m
 .Returns
 `void`
 
-[#_TypeDBOptions_new_TypeDBOptionsnew_TypeDBOptions_obj?_:_TypeDBOptions]
+[#_TypeDBOptions_new_TypeDBOptions__obj__explain_boolean_infer_boolean_parallel_boolean_prefetch_boolean_prefetchSize_number_readAnyReplica_boolean_schemaLockAcquireTimeoutMillis_number_sessionIdleTimeoutMillis_number_traceInference_boolean_transactionTimeoutMillis_number___]
 ==== new TypeDBOptions
 
 [source,nodejs]

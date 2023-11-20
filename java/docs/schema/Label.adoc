@@ -8,7 +8,7 @@ A ``Label`` holds the uniquely identifying name of a type.
 It consists of an optional ``scope``, and a ``name``, represented ``scope:name``. The scope is used only used to distinguish between role-types of the same name declared in different relation types.
 
 // tag::methods[]
-[#_Label_equals_java_lang_Object]
+[#_Label_equals__java_lang_Object]
 ==== equals
 
 [source,java]
@@ -39,7 +39,7 @@ a| `obj` a| Object to compare with a| `java.lang.Object`
 label.equals(obj);
 ----
 
-[#_Label_name_]
+[#_Label_name__]
 ==== name
 
 [source,java]
@@ -61,7 +61,7 @@ Returns the name of this Label.
 label.name();
 ----
 
-[#_Label_of_java_lang_String]
+[#_Label_of__java_lang_String]
 ==== of
 
 [source,java]
@@ -92,7 +92,7 @@ a| `name` a| Label name a| `java.lang.String`
 Label.of("entity");
 ----
 
-[#_Label_of_java_lang_String_java_lang_String]
+[#_Label_of__java_lang_String__java_lang_String]
 ==== of
 
 [source,java]
@@ -125,7 +125,7 @@ a| `name` a| Label name a| `java.lang.String`
 Label.of("relation", "role");
 ----
 
-[#_Label_scope_]
+[#_Label_scope__]
 ==== scope
 
 [source,java]
@@ -147,7 +147,7 @@ Returns the scope of this Label.
 label.scope();
 ----
 
-[#_Label_scopedName_]
+[#_Label_scopedName__]
 ==== scopedName
 
 [source,java]
@@ -169,7 +169,7 @@ Returns the string representation of the scoped name.
 label.scoped_name();
 ----
 
-[#_Label_toString_]
+[#_Label_toString__]
 ==== toString
 
 [source,java]

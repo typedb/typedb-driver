@@ -4,7 +4,7 @@
 Contains an element of the group query result.
 
 // tag::methods[]
-[#_ConceptMapGroup_concept_maps]
+[#_ConceptMapGroup_concept_maps__]
 ==== concept_maps
 
 [source,python]
@@ -25,7 +25,7 @@ Retrieves the ConceptMaps of the group.
 concept_map_group.concept_maps()
 ----
 
-[#_ConceptMapGroup_owner]
+[#_ConceptMapGroup_owner__]
 ==== owner
 
 [source,python]
