@@ -216,7 +216,7 @@ impl Session {
             Ok((transaction_stream, shutdown_sink)) => (transaction_stream, shutdown_sink),
             Err(_err) => {
                 self.is_open.store(false);
-                server_connection.close_session(session_id)?;
+                server_connection.close_session(session_id).ok();
                 let (session_info, (transaction_stream, shutdown_sink)) = self
                     .database
                     .run_failsafe(|database, _, _| {
