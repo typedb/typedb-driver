@@ -5,8 +5,71 @@
 
 * `Relation`
 
+[tabs]
+====
+Trait RelationAPI async examples::
++
+--
+[source,rust]
+----
+relation.add_role_player(transaction, role_type, player).await;
+----
+
+, [source,rust]
+----
+relation.remove_role_player(transaction, role_type, player).await;
+----
+
+, [source,rust]
+----
+relation.get_players_by_role_type(transaction, role_types);
+----
+
+, [source,rust]
+----
+relation.get_role_players(transaction)
+----
+
+, [source,rust]
+----
+relation.get_relating(transaction)
+----
+
+--
+
+Trait RelationAPI sync examples::
++
+--
+[source,rust]
+----
+relation.add_role_player(transaction, role_type, player).resolve();
+----
+
+, [source,rust]
+----
+relation.remove_role_player(transaction, role_type, player).resolve();
+----
+
+, [source,rust]
+----
+relation.get_players_by_role_type(transaction, role_types);
+----
+
+, [source,rust]
+----
+relation.get_role_players(transaction)
+----
+
+, [source,rust]
+----
+relation.get_relating(transaction)
+----
+
+--
+====
+
 // tag::methods[]
-[#_trait_RelationAPI_add_role_player__transaction_'tx_Transaction_'____role_type_RoleType__player_Thing]
+[#_trait_RelationAPI_add_role_player__transaction_&'tx_Transaction_'____role_type_RoleType__player_Thing]
 ==== add_role_player
 
 [source,rust]
@@ -64,7 +127,7 @@ relation.add_role_player(transaction, role_type, player).resolve();
 --
 ====
 
-[#_trait_RelationAPI_get_players_by_role_type__transaction_'tx_Transaction_'____role_types_Vec_RoleType_]
+[#_trait_RelationAPI_get_players_by_role_type__transaction_&'tx_Transaction_'____role_types_Vec_RoleType_]
 ==== get_players_by_role_type
 
 [source,rust]
@@ -102,7 +165,7 @@ Result<BoxStream<'tx, Result<Thing>>>
 relation.get_players_by_role_type(transaction, role_types);
 ----
 
-[#_trait_RelationAPI_get_relating__transaction_'tx_Transaction_'__]
+[#_trait_RelationAPI_get_relating__transaction_&'tx_Transaction_'__]
 ==== get_relating
 
 [source,rust]
@@ -138,7 +201,7 @@ Result<BoxStream<'tx, Result<RoleType>>>
 relation.get_relating(transaction)
 ----
 
-[#_trait_RelationAPI_get_role_players__transaction_'tx_Transaction_'_____-__Result_BoxStream_'tx]
+[#_trait_RelationAPI_get_role_players__transaction_&'tx_Transaction_'_____-__Result_BoxStream_'tx]
 ==== get_role_players
 
 [source,rust]
@@ -175,7 +238,7 @@ Result<BoxStream<'tx, Result<(RoleType, Thing)>>>
 relation.get_role_players(transaction)
 ----
 
-[#_trait_RelationAPI_remove_role_player__transaction_'tx_Transaction_'____role_type_RoleType__player_Thing]
+[#_trait_RelationAPI_remove_role_player__transaction_&'tx_Transaction_'____role_type_RoleType__player_Thing]
 ==== remove_role_player
 
 [source,rust]

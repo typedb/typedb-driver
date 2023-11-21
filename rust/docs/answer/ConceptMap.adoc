@@ -50,7 +50,7 @@ impl Iterator<Item = &Concept>
 concept_map.concepts()
 ----
 
-[#_struct_ConceptMap_get__var_name_str]
+[#_struct_ConceptMap_get__var_name_&str]
 ==== get
 
 [source,rust]

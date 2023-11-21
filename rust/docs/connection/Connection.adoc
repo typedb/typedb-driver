@@ -112,7 +112,7 @@ Result<Self>
 Connection::new_core("127.0.0.1:1729")
 ----
 
-[#_struct_Connection_new_enterprise__init_addresses__T___credential_Credential]
+[#_struct_Connection_new_enterprise__init_addresses_&_T___credential_Credential]
 ==== new_enterprise
 
 [source,rust]

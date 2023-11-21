@@ -25,11 +25,12 @@ import com.vaticle.typedb.driver.tool.docs.dataclasses.Class
 import com.vaticle.typedb.driver.tool.docs.dataclasses.EnumConstant
 import com.vaticle.typedb.driver.tool.docs.dataclasses.Method
 import com.vaticle.typedb.driver.tool.docs.dataclasses.Variable
-import com.vaticle.typedb.driver.tool.docs.util.*
+import com.vaticle.typedb.driver.tool.docs.util.removeAllTags
+import com.vaticle.typedb.driver.tool.docs.util.replaceCodeTags
+import com.vaticle.typedb.driver.tool.docs.util.replaceEmTags
+import com.vaticle.typedb.driver.tool.docs.util.replaceSymbolsForAnchor
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-import org.jsoup.nodes.Node
-import org.jsoup.nodes.TextNode
 import picocli.CommandLine
 import picocli.CommandLine.Parameters
 import java.io.File
@@ -158,12 +159,14 @@ class RustDocParser : Callable<Unit> {
             fields = fields,
             methods = methods,
             superClasses = traits,
+            mode = mode,
         )
     }
 
     private fun parseTrait(document: Element, classAnchor: String, mode: String): Class {
         val className = document.selectFirst(".main-heading h1 a.trait")!!.text()
         val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { it.html() }
+        val examples = document.select(".docblock .example-wrap").map{ it.text() }
 
         val methods =
             document.select("#required-methods + .methods details[class*=method-toggle]:has(summary section.method)")
@@ -182,9 +185,11 @@ class RustDocParser : Callable<Unit> {
         return Class(
             name = "Trait $className",
             anchor = classAnchor,
+            examples = examples,
             description = classDescr,
             methods = methods,
             traitImplementors = implementors,
+            mode = mode,
         )
     }
 
@@ -203,6 +208,7 @@ class RustDocParser : Callable<Unit> {
             description = classDescr,
             enumConstants = variants,
             methods = methods,
+            mode = mode,
         )
     }
 
@@ -248,7 +254,7 @@ class RustDocParser : Callable<Unit> {
         val descr = element.nextElementSibling()?.selectFirst(".docblock")?.let { reformatTextWithCode(it.html()) }
         return Variable(
             name = nameAndType[0],
-            anchor = "${classAnchor}_${nameAndType[0]}",
+            anchor = replaceSymbolsForAnchor("${classAnchor}_${nameAndType[0]}"),
             description = descr,
             type = nameAndType[1],
         )

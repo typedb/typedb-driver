@@ -36,6 +36,7 @@ data class Class(
         val packagePath: String? = null,
         val superClasses: List<String> = listOf(),
         val traitImplementors: List<String> = listOf(),
+        val mode: String? = null,
 ) {
     fun merge(other: Class): Class {
         assert(this.name == other.name)
@@ -49,6 +50,7 @@ data class Class(
             methods = this.methods + other.methods,
             packagePath = this.packagePath ?: other.packagePath,
             superClasses = this.superClasses.ifEmpty { other.superClasses },
+            mode = this.mode ?: other.mode,
         )
     }
 
@@ -61,7 +63,7 @@ data class Class(
                 || superClasses.isNotEmpty()
     }
 
-    fun toAsciiDoc(language: String, otherClass: Class? = null): String {
+    fun toAsciiDoc(language: String, mergeWith: Class? = null): String {
         val builder = AsciiDocBuilder()
         var result = ""
         result += builder.anchor(this.anchor ?: replaceSymbolsForAnchor(this.name))
@@ -88,15 +90,33 @@ data class Class(
         }
 
         if (this.description.isNotEmpty()) {
-            result += "${this.description.joinToString("\n\n")}\n\n"
+            if (mergeWith != null) {
+                result += builder.tabsIfNotEqual(listOf(
+                        Pair("Description - ${this.mode}", "${this.description.joinToString("\n\n")}\n\n"),
+                        Pair("Description - ${mergeWith.mode}", "${mergeWith.description.joinToString("\n\n")}\n\n"),
+                ))
+            } else {
+                result += "${this.description.joinToString("\n\n")}\n\n"
+            }
         }
 
         if (this.examples.isNotEmpty()) {
-            result += builder.captionedBlock("${this.name} examples",
-                this.examples.joinToString {
-                    builder.codeBlock(it, language)
-                }
-            )
+            if (mergeWith != null) {
+                result += builder.tabsIfNotEqual(listOf(
+                        Pair("${this.name} ${this.mode} examples", this.examples.joinToString {
+                            builder.codeBlock(it, language)
+                        }),
+                        Pair("${this.name} ${mergeWith.mode} examples", mergeWith.examples.joinToString {
+                            builder.codeBlock(it, language)
+                        }),
+                ))
+            } else {
+                result += builder.captionedBlock("${this.name} examples",
+                        this.examples.joinToString {
+                            builder.codeBlock(it, language)
+                        }
+                )
+            }
         }
 
         if (this.enumConstants.isNotEmpty()) {
@@ -139,13 +159,13 @@ data class Class(
 
         if (this.methods.isNotEmpty()) {
             result += builder.tagBegin("methods")
-            if (otherClass == null) {
+            if (mergeWith == null) {
                 this.methods.sortedBy { it.name }.forEach { result += it.toAsciiDoc(language) }
             } else {
-                val otherMethods = otherClass.methods.associateBy {
+                val mergeMethods = mergeWith.methods.associateBy {
                     it.name
                 }
-                this.methods.sortedBy { it.name }.forEach { result += it.toAsciiDocFeaturesMerged(otherMethods[it.name]!!) }
+                this.methods.sortedBy { it.name }.forEach { result += it.toAsciiDocFeaturesMerged(mergeMethods[it.name]!!) }
             }
             result += builder.tagEnd("methods")
         }

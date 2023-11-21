@@ -5,8 +5,51 @@
 
 * `Rule`
 
+[tabs]
+====
+Trait RuleAPI async examples::
++
+--
+[source,rust]
+----
+rule.delete(transaction).await
+----
+
+, [source,rust]
+----
+rule.set_label(transaction, new_label).await
+----
+
+, [source,rust]
+----
+rule.is_deleted(transaction).await
+----
+
+--
+
+Trait RuleAPI sync examples::
++
+--
+[source,rust]
+----
+rule.delete(transaction).resolve()
+----
+
+, [source,rust]
+----
+rule.set_label(transaction, new_label).resolve()
+----
+
+, [source,rust]
+----
+rule.is_deleted(transaction).resolve()
+----
+
+--
+====
+
 // tag::methods[]
-[#_trait_RuleAPI_delete__transaction_'tx_Transaction_'tx_]
+[#_trait_RuleAPI_delete__transaction_&'tx_Transaction_'tx_]
 ==== delete
 
 [source,rust]
@@ -60,7 +103,7 @@ rule.delete(transaction).resolve()
 --
 ====
 
-[#_trait_RuleAPI_is_deleted__transaction_'tx_Transaction_'tx_]
+[#_trait_RuleAPI_is_deleted__transaction_&'tx_Transaction_'tx_]
 ==== is_deleted
 
 [source,rust]
@@ -131,7 +174,7 @@ Retrieves the unique label of the rule.
 &String
 ----
 
-[#_trait_RuleAPI_set_label__transaction_'tx_Transaction_'tx___new_label_String]
+[#_trait_RuleAPI_set_label__transaction_&'tx_Transaction_'tx___new_label_String]
 ==== set_label
 
 [source,rust]

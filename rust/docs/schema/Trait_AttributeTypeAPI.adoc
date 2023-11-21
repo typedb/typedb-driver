@@ -5,8 +5,151 @@
 
 * `AttributeType`
 
+[tabs]
+====
+Trait AttributeTypeAPI async examples::
++
+--
+[source,rust]
+----
+attribute_type.value_type()
+----
+
+, [source,rust]
+----
+attribute = attribute_type.put(transaction, value).await;
+----
+
+, [source,rust]
+----
+attribute = attribute_type.get(transaction, value).await;
+----
+
+, [source,rust]
+----
+attribute_type.get_supertype(transaction).await;
+----
+
+, [source,rust]
+----
+attribute_type.set_supertype(transaction, supertype).await;
+----
+
+, [source,rust]
+----
+attribute_type.get_supertypes(transaction)
+----
+
+, [source,rust]
+----
+attribute_type.get_subtypes(transaction, transitivity)
+----
+
+, [source,rust]
+----
+attribute_type.get_subtypes_with_value_type(transaction, value_type, transitivity)
+----
+
+, [source,rust]
+----
+attribute_type.get_instances(transaction, transitivity)
+----
+
+, [source,rust]
+----
+attribute_type.get_regex(transaction).await;
+----
+
+, [source,rust]
+----
+attribute_type.set_regex(transaction, regex).await;
+----
+
+, [source,rust]
+----
+attribute_type.unset_regex(transaction).await;
+----
+
+, [source,rust]
+----
+attribute_type.get_owners(transaction, transitivity, annotations)
+----
+
+--
+
+Trait AttributeTypeAPI sync examples::
++
+--
+[source,rust]
+----
+attribute_type.value_type()
+----
+
+, [source,rust]
+----
+attribute = attribute_type.put(transaction, value).resolve();
+----
+
+, [source,rust]
+----
+attribute = attribute_type.get(transaction, value).resolve();
+----
+
+, [source,rust]
+----
+attribute_type.get_supertype(transaction).resolve();
+----
+
+, [source,rust]
+----
+attribute_type.set_supertype(transaction, supertype).resolve();
+----
+
+, [source,rust]
+----
+attribute_type.get_supertypes(transaction)
+----
+
+, [source,rust]
+----
+attribute_type.get_subtypes(transaction, transitivity)
+----
+
+, [source,rust]
+----
+attribute_type.get_subtypes_with_value_type(transaction, value_type, transitivity)
+----
+
+, [source,rust]
+----
+attribute_type.get_instances(transaction, transitivity)
+----
+
+, [source,rust]
+----
+attribute_type.get_regex(transaction).resolve();
+----
+
+, [source,rust]
+----
+attribute_type.set_regex(transaction, regex).resolve();
+----
+
+, [source,rust]
+----
+attribute_type.unset_regex(transaction).resolve();
+----
+
+, [source,rust]
+----
+attribute_type.get_owners(transaction, transitivity, annotations)
+----
+
+--
+====
+
 // tag::methods[]
-[#_trait_AttributeTypeAPI_get__transaction_'tx_Transaction_'____value_Value]
+[#_trait_AttributeTypeAPI_get__transaction_&'tx_Transaction_'____value_Value]
 ==== get
 
 [source,rust]
@@ -62,7 +205,7 @@ attribute = attribute_type.get(transaction, value).resolve();
 --
 ====
 
-[#_trait_AttributeTypeAPI_get_instances__transaction_'tx_Transaction_'____transitivity_Transitivity]
+[#_trait_AttributeTypeAPI_get_instances__transaction_&'tx_Transaction_'____transitivity_Transitivity]
 ==== get_instances
 
 [source,rust]
@@ -100,7 +243,7 @@ Result<BoxStream<'tx, Result<Attribute>>>
 attribute_type.get_instances(transaction, transitivity)
 ----
 
-[#_trait_AttributeTypeAPI_get_owners__transaction_'tx_Transaction_'____transitivity_Transitivity__annotations_Vec_Annotation_]
+[#_trait_AttributeTypeAPI_get_owners__transaction_&'tx_Transaction_'____transitivity_Transitivity__annotations_Vec_Annotation_]
 ==== get_owners
 
 [source,rust]
@@ -140,7 +283,7 @@ Result<BoxStream<'tx, Result<ThingType>>>
 attribute_type.get_owners(transaction, transitivity, annotations)
 ----
 
-[#_trait_AttributeTypeAPI_get_regex__transaction_'tx_Transaction_'__]
+[#_trait_AttributeTypeAPI_get_regex__transaction_&'tx_Transaction_'__]
 ==== get_regex
 
 [source,rust]
@@ -194,7 +337,7 @@ attribute_type.get_regex(transaction).resolve();
 --
 ====
 
-[#_trait_AttributeTypeAPI_get_subtypes__transaction_'tx_Transaction_'____transitivity_Transitivity]
+[#_trait_AttributeTypeAPI_get_subtypes__transaction_&'tx_Transaction_'____transitivity_Transitivity]
 ==== get_subtypes
 
 [source,rust]
@@ -232,7 +375,7 @@ Result<BoxStream<'tx, Result<AttributeType>>>
 attribute_type.get_subtypes(transaction, transitivity)
 ----
 
-[#_trait_AttributeTypeAPI_get_subtypes_with_value_type__transaction_'tx_Transaction_'____value_type_ValueType__transitivity_Transitivity]
+[#_trait_AttributeTypeAPI_get_subtypes_with_value_type__transaction_&'tx_Transaction_'____value_type_ValueType__transitivity_Transitivity]
 ==== get_subtypes_with_value_type
 
 [source,rust]
@@ -272,7 +415,7 @@ Result<BoxStream<'tx, Result<AttributeType>>>
 attribute_type.get_subtypes_with_value_type(transaction, value_type, transitivity)
 ----
 
-[#_trait_AttributeTypeAPI_get_supertype__transaction_'tx_Transaction_'__]
+[#_trait_AttributeTypeAPI_get_supertype__transaction_&'tx_Transaction_'__]
 ==== get_supertype
 
 [source,rust]
@@ -326,7 +469,7 @@ attribute_type.get_supertype(transaction).resolve();
 --
 ====
 
-[#_trait_AttributeTypeAPI_get_supertypes__transaction_'tx_Transaction_'__]
+[#_trait_AttributeTypeAPI_get_supertypes__transaction_&'tx_Transaction_'__]
 ==== get_supertypes
 
 [source,rust]
@@ -362,7 +505,7 @@ Result<BoxStream<'tx, Result<AttributeType>>>
 attribute_type.get_supertypes(transaction)
 ----
 
-[#_trait_AttributeTypeAPI_put__transaction_'tx_Transaction_'____value_Value]
+[#_trait_AttributeTypeAPI_put__transaction_&'tx_Transaction_'____value_Value]
 ==== put
 
 [source,rust]
@@ -418,7 +561,7 @@ attribute = attribute_type.put(transaction, value).resolve();
 --
 ====
 
-[#_trait_AttributeTypeAPI_set_regex__transaction_'tx_Transaction_'____regex_String]
+[#_trait_AttributeTypeAPI_set_regex__transaction_&'tx_Transaction_'____regex_String]
 ==== set_regex
 
 [source,rust]
@@ -476,7 +619,7 @@ attribute_type.set_regex(transaction, regex).resolve();
 --
 ====
 
-[#_trait_AttributeTypeAPI_set_supertype__transaction_'tx_Transaction_'____supertype_AttributeType]
+[#_trait_AttributeTypeAPI_set_supertype__transaction_&'tx_Transaction_'____supertype_AttributeType]
 ==== set_supertype
 
 [source,rust]
@@ -532,7 +675,7 @@ attribute_type.set_supertype(transaction, supertype).resolve();
 --
 ====
 
-[#_trait_AttributeTypeAPI_unset_regex__transaction_'tx_Transaction_'__]
+[#_trait_AttributeTypeAPI_unset_regex__transaction_&'tx_Transaction_'__]
 ==== unset_regex
 
 [source,rust]

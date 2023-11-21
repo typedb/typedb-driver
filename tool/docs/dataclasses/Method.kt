@@ -73,8 +73,8 @@ data class Method(
         return result
     }
 
-    fun toAsciiDocFeaturesMerged(vararg other_methods: Method): String {
-        val methods = other_methods.toList() + listOf(this)
+    fun toAsciiDocFeaturesMerged(vararg otherMethods: Method): String {
+        val methods = otherMethods.toList() + listOf(this)
         val builder = AsciiDocBuilder()
         val language = "rust"
         var result = ""

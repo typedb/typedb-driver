@@ -9,8 +9,8 @@
 |===
 |Variant
 a| `EnumOutOfBounds(i32, &'static str)`
-a| `RecvError()`
-a| `SendError()`
+a| `RecvError(/* private fields */)`
+a| `SendError(/* private fields */)`
 a| `UnexpectedRequestType(String)`
 a| `UnexpectedResponseType(String)`
 a| `UnknownConnectionAddress(Address)`
