@@ -98,5 +98,8 @@ pub extern "C" fn session_on_reopen(
     destroy: extern "C" fn(usize),
 ) {
     let callback = private::ForeignOnReopenCallback::new(move || callback(callback_id), move || destroy(callback_id));
-    borrow(session).on_reopen(move || (callback.callback)())
+    borrow(session).on_reopen(move || {
+        let callback = &callback;
+        (callback.callback)()
+    })
 }
