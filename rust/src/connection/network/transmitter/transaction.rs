@@ -116,6 +116,7 @@ impl TransactionTransmitter {
 
     pub(in crate::connection) fn force_close(&self) {
         if self.is_open.compare_exchange(true, false).is_ok() {
+            *self.error.write().unwrap() = Some(ConnectionError::TransactionIsClosed());
             self.shutdown_sink.send(()).ok();
         }
     }
@@ -137,7 +138,7 @@ impl TransactionTransmitter {
         let (res_sink, recv) = oneshot();
         let send_result = self.request_sink.send((req, Some(ResponseSink::AsyncOneShot(res_sink))));
         box_promise(async move {
-            send_result?;
+            send_result.map_err(|_| ConnectionError::TransactionIsClosed())?;
             recv.await?.map(Into::into)
         })
     }
@@ -154,7 +155,7 @@ impl TransactionTransmitter {
         }
         let (res_sink, recv) = oneshot();
         let send_result = self.request_sink.send((req, Some(ResponseSink::BlockingOneShot(res_sink))));
-        box_promise(move || send_result.map_err(Error::from).and_then(|_| recv.recv()?))
+        box_promise(move || send_result.map_err(|_| ConnectionError::TransactionIsClosed().into()).and_then(|_| recv.recv()?))
     }
 
     pub(in crate::connection) fn stream(
@@ -167,7 +168,7 @@ impl TransactionTransmitter {
             return Err(error.clone().unwrap().into());
         }
         let (res_part_sink, recv) = unbounded_async();
-        self.request_sink.send((req, Some(ResponseSink::Streamed(res_part_sink))))?;
+        self.request_sink.send((req, Some(ResponseSink::Streamed(res_part_sink)))).map_err(|_| ConnectionError::TransactionIsClosed())?;
         Ok(NetworkStream::new(recv).map_ok(Into::into))
     }
 
