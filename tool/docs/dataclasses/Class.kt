@@ -89,34 +89,18 @@ data class Class(
             result += "\n\n"
         }
 
-        if (this.description.isNotEmpty()) {
-            if (mergeWith != null) {
-                result += builder.tabsIfNotEqual(listOf(
-                        Pair("Description - ${this.mode}", "${this.description.joinToString("\n\n")}\n\n"),
-                        Pair("Description - ${mergeWith.mode}", "${mergeWith.description.joinToString("\n\n")}\n\n"),
-                ))
-            } else {
-                result += "${this.description.joinToString("\n\n")}\n\n"
-            }
-        }
+        val thisDescriptionExample = (if (this.description.isNotEmpty()) "${this.description.joinToString("\n\n")}\n\n" else "") +
+                        (if (this.examples.isNotEmpty()) "${builder.caption("Examples")}${this.examples.joinToString { builder.codeBlock(it, language) }}" else "")
 
-        if (this.examples.isNotEmpty()) {
-            if (mergeWith != null) {
-                result += builder.tabsIfNotEqual(listOf(
-                        Pair("${this.name} ${this.mode} examples", this.examples.joinToString {
-                            builder.codeBlock(it, language)
-                        }),
-                        Pair("${this.name} ${mergeWith.mode} examples", mergeWith.examples.joinToString {
-                            builder.codeBlock(it, language)
-                        }),
-                ))
-            } else {
-                result += builder.captionedBlock("${this.name} examples",
-                        this.examples.joinToString {
-                            builder.codeBlock(it, language)
-                        }
-                )
-            }
+        if (mergeWith != null) {
+            val mergeDescriptionExample =  (if (mergeWith.description.isNotEmpty()) "${mergeWith.description.joinToString("\n\n")}\n\n" else "") +
+                    (if (mergeWith.examples.isNotEmpty()) "${builder.caption("Examples")}${mergeWith.examples.joinToString { builder.codeBlock(it, language) }}" else "")
+            result += builder.tabsIfNotEqual(listOf(
+                    Pair(this.mode!!, thisDescriptionExample),
+                    Pair(mergeWith.mode!!, mergeDescriptionExample),
+            ))
+        } else {
+            result += thisDescriptionExample
         }
 
         if (this.enumConstants.isNotEmpty()) {

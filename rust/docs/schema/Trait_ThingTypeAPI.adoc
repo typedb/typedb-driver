@@ -10,9 +10,11 @@
 
 [tabs]
 ====
-Trait ThingTypeAPI async examples::
+async::
 +
 --
+[caption=""]
+.Examples
 [source,rust]
 ----
 thing_type.label();
@@ -100,9 +102,11 @@ thing_type.get_syntax(transaction).await;
 
 --
 
-Trait ThingTypeAPI sync examples::
+sync::
 +
 --
+[caption=""]
+.Examples
 [source,rust]
 ----
 thing_type.label();

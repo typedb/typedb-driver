@@ -7,9 +7,11 @@
 
 [tabs]
 ====
-Trait AttributeTypeAPI async examples::
+async::
 +
 --
+[caption=""]
+.Examples
 [source,rust]
 ----
 attribute_type.value_type()
@@ -77,9 +79,11 @@ attribute_type.get_owners(transaction, transitivity, annotations)
 
 --
 
-Trait AttributeTypeAPI sync examples::
+sync::
 +
 --
+[caption=""]
+.Examples
 [source,rust]
 ----
 attribute_type.value_type()

@@ -7,9 +7,11 @@
 
 [tabs]
 ====
-Trait RelationAPI async examples::
+async::
 +
 --
+[caption=""]
+.Examples
 [source,rust]
 ----
 relation.add_role_player(transaction, role_type, player).await;
@@ -37,9 +39,11 @@ relation.get_relating(transaction)
 
 --
 
-Trait RelationAPI sync examples::
+sync::
 +
 --
+[caption=""]
+.Examples
 [source,rust]
 ----
 relation.add_role_player(transaction, role_type, player).resolve();

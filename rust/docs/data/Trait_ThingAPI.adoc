@@ -9,9 +9,11 @@
 
 [tabs]
 ====
-Trait ThingAPI async examples::
+async::
 +
 --
+[caption=""]
+.Examples
 [source,rust]
 ----
 thing.iid();
@@ -59,9 +61,11 @@ thing.get_playing(transaction);
 
 --
 
-Trait ThingAPI sync examples::
+sync::
 +
 --
+[caption=""]
+.Examples
 [source,rust]
 ----
 thing.iid();

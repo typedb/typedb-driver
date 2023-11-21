@@ -5,6 +5,8 @@
 
 * `Attribute`
 
+[caption=""]
+.Examples
 [source,rust]
 ----
 attribute.get_owners(transaction, Some(owner_type));

@@ -7,9 +7,11 @@
 
 [tabs]
 ====
-Trait RoleTypeAPI async examples::
+async::
 +
 --
+[caption=""]
+.Examples
 [source,rust]
 ----
 role_type.is_abstract()
@@ -72,9 +74,11 @@ role_type.get_player_instances(transaction, transitivity)
 
 --
 
-Trait RoleTypeAPI sync examples::
+sync::
 +
 --
+[caption=""]
+.Examples
 [source,rust]
 ----
 role_type.is_abstract()

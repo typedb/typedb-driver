@@ -7,9 +7,11 @@
 
 [tabs]
 ====
-Trait EntityTypeAPI async examples::
+async::
 +
 --
+[caption=""]
+.Examples
 [source,rust]
 ----
 entity_type.create(transaction).await;
@@ -42,9 +44,11 @@ entity_type.get_instances(transaction, Transitivity::Explicit);
 
 --
 
-Trait EntityTypeAPI sync examples::
+sync::
 +
 --
+[caption=""]
+.Examples
 [source,rust]
 ----
 entity_type.create(transaction).resolve();

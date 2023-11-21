@@ -7,7 +7,7 @@
 * `Debug`
 * `Default`
 
-TypeDB session and transaction options. <code>TypeDBOptions</code> object can be used to override the default server behaviour. Options are specified using properties assignment.
+TypeDB session and transaction options. ``TypeDBOptions`` object can be used to override the default server behaviour. Options are specified using properties assignment.
 
 [caption=""]
 .Fields

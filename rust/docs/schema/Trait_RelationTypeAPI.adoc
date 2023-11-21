@@ -7,9 +7,11 @@
 
 [tabs]
 ====
-Trait RelationTypeAPI async examples::
+async::
 +
 --
+[caption=""]
+.Examples
 [source,rust]
 ----
 relation_type.create(transaction).await;
@@ -67,9 +69,11 @@ relation_type.unset_relates(transaction, role_label).await;
 
 --
 
-Trait RelationTypeAPI sync examples::
+sync::
 +
 --
+[caption=""]
+.Examples
 [source,rust]
 ----
 relation_type.create(transaction).resolve();
