@@ -20,7 +20,7 @@
  */
 
 use core::fmt;
-use std::{sync::RwLock, sync::Mutex};
+use std::sync::{Arc, Mutex, RwLock};
 
 use crossbeam::atomic::AtomicCell;
 use log::warn;
@@ -30,13 +30,16 @@ use crate::{
     Database, Options, Transaction,
 };
 
+type Callback = Box<dyn FnMut() + Send>;
+
 pub struct Session {
     database: Database,
     server_session_info: RwLock<SessionInfo>,
     session_type: SessionType,
     is_open: AtomicCell<bool>,
 
-    on_reopen: Mutex<Vec<Box<dyn FnMut() + Send + 'static>>>,
+    on_close: Arc<Mutex<Vec<Callback>>>,
+    on_reopen: Mutex<Vec<Callback>>,
 }
 
 impl fmt::Debug for Session {
@@ -82,22 +85,21 @@ impl Session {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn new_with_options(database: Database, session_type: SessionType, options: Options) -> Result<Self> {
-        let server_session_info = RwLock::new(
-            database
-                .run_failsafe(|database, _, _| {
-                    let options = options.clone();
-                    async move {
-                        database.connection().open_session(database.name().to_owned(), session_type, options).await
-                    }
-                })
-                .await?,
-        );
+        let server_session_info = database
+            .run_failsafe(|database, _, _| async move {
+                database.connection().open_session(database.name().to_owned(), session_type, options).await
+            })
+            .await?;
+
+        let on_close: Arc<Mutex<Vec<Callback>>> = Arc::default();
+        register_persistent_on_close(&server_session_info, on_close.clone());
 
         Ok(Self {
             database,
             session_type,
-            server_session_info,
+            server_session_info: RwLock::new(server_session_info),
             is_open: AtomicCell::new(true),
+            on_close,
             on_reopen: Mutex::default(),
         })
     }
@@ -156,7 +158,11 @@ impl Session {
     /// ```rust
     /// session.on_close(function);
     /// ```
-    pub fn on_close(&self, callback: impl FnOnce() + Send + 'static) {
+    pub fn on_close(&self, callback: impl FnMut() + Send + 'static) {
+        self.on_close.lock().unwrap().push(Box::new(callback));
+    }
+
+    fn on_server_session_close(&self, callback: impl FnOnce() + Send + 'static) {
         let session_info = self.server_session_info.write().unwrap();
         session_info.on_close_register_sink.send(Box::new(callback)).ok();
     }
@@ -174,6 +180,12 @@ impl Session {
     /// ```
     pub fn on_reopen(&self, callback: impl FnMut() + Send + 'static) {
         self.on_reopen.lock().unwrap().push(Box::new(callback));
+    }
+
+    fn reopened(&self) {
+        self.on_reopen.lock().unwrap().iter_mut().for_each(|callback| (callback)());
+        let session_info = self.server_session_info.write().unwrap();
+        register_persistent_on_close(&session_info, self.on_close.clone());
     }
 
     /// Opens a transaction to perform read or write queries on the database connected to the session.
@@ -209,24 +221,22 @@ impl Session {
         let SessionInfo { address, session_id, network_latency, .. } = self.server_session_info.read().unwrap().clone();
         let server_connection = &self.database.connection().connection(&address)?;
 
-        let (transaction_stream, shutdown_sink) = match server_connection
-            .open_transaction(session_id.clone(), transaction_type, options.clone(), network_latency)
+        let (transaction_stream, transaction_shutdown_sink) = match server_connection
+            .open_transaction(session_id.clone(), transaction_type, options, network_latency)
             .await
         {
-            Ok((transaction_stream, shutdown_sink)) => (transaction_stream, shutdown_sink),
+            Ok((transaction_stream, transaction_shutdown_sink)) => (transaction_stream, transaction_shutdown_sink),
             Err(_err) => {
                 self.is_open.store(false);
                 server_connection.close_session(session_id).ok();
-                let (session_info, (transaction_stream, shutdown_sink)) = self
+                let (session_info, (transaction_stream, transaction_shutdown_sink)) = self
                     .database
                     .run_failsafe(|database, _, _| {
                         let session_type = self.session_type;
-                        let options = options.clone();
                         async move {
                             let connection = database.connection();
-                            let session_info = connection
-                                .open_session(database.name().to_owned(), session_type, options.clone())
-                                .await?;
+                            let database_name = database.name().to_owned();
+                            let session_info = connection.open_session(database_name, session_type, options).await?;
                             Ok((
                                 session_info.clone(),
                                 connection
@@ -243,15 +253,22 @@ impl Session {
                     .await?;
                 *self.server_session_info.write().unwrap() = session_info;
                 self.is_open.store(true);
-                self.on_reopen.lock().unwrap().iter_mut().for_each(|callback| (callback)());
-                (transaction_stream, shutdown_sink)
+                self.reopened();
+                (transaction_stream, transaction_shutdown_sink)
             }
         };
 
-        self.on_close(move || {
-            shutdown_sink.send(()).ok();
+        self.on_server_session_close(move || {
+            transaction_shutdown_sink.send(()).ok();
         });
 
         Ok(Transaction::new(transaction_stream))
     }
+}
+
+fn register_persistent_on_close(server_session_info: &SessionInfo, callbacks: Arc<Mutex<Vec<Callback>>>) {
+    server_session_info
+        .on_close_register_sink
+        .send(Box::new(move || callbacks.lock().unwrap().iter_mut().for_each(|callback| (callback)())))
+        .ok();
 }
