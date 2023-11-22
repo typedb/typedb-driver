@@ -30,7 +30,7 @@ use std::time::Duration;
 /// ```rust
 /// let options = Options::new().infer(true).explain(true);
 /// ```
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct Options {
     /// If set to `True`, enables inference for queries. Only settable at transaction level and above. Only affects read transactions.
     pub infer: Option<bool>,

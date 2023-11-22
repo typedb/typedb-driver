@@ -426,7 +426,7 @@ impl ServerConnection {
             .request(Request::Transaction(TransactionRequest::Open {
                 session_id,
                 transaction_type,
-                options: options.clone(),
+                options,
                 network_latency,
             }))
             .await?

@@ -75,8 +75,8 @@ impl TransactionStream {
         self.type_
     }
 
-    pub(crate) fn options(&self) -> &Options {
-        &self.options
+    pub(crate) fn options(&self) -> Options {
+        self.options
     }
 
     pub(crate) fn on_close(&self, callback: impl FnOnce(ConnectionError) + Send + Sync + 'static) {

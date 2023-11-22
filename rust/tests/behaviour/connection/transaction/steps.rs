@@ -37,7 +37,7 @@ generic_step_impl! {
     #[step(expr = "(for each )session(,) open(s) transaction(s) of type: {transaction_type}")]
     pub async fn session_opens_transaction_of_type(context: &mut Context, type_: TransactionTypeParam) {
         for session_tracker in &mut context.session_trackers {
-            session_tracker.open_transaction(type_.transaction_type, context.transaction_options.clone()).await.unwrap();
+            session_tracker.open_transaction(type_.transaction_type, context.transaction_options).await.unwrap();
         }
     }
 
@@ -46,7 +46,7 @@ generic_step_impl! {
         for type_ in iter_table(step) {
             let transaction_type = type_.parse::<TransactionTypeParam>().unwrap().transaction_type;
             for session_tracker in &mut context.session_trackers {
-                session_tracker.open_transaction(transaction_type, context.transaction_options.clone()).await.unwrap();
+                session_tracker.open_transaction(transaction_type, context.transaction_options).await.unwrap();
             }
         }
     }
@@ -57,7 +57,7 @@ generic_step_impl! {
         type_: TransactionTypeParam,
     ) {
         for session_tracker in &mut context.session_trackers {
-            assert!(session_tracker.open_transaction(type_.transaction_type, context.transaction_options.clone()).await.is_err());
+            assert!(session_tracker.open_transaction(type_.transaction_type, context.transaction_options).await.is_err());
         }
     }
 
@@ -66,7 +66,7 @@ generic_step_impl! {
         for type_ in iter_table(step) {
             let transaction_type = type_.parse::<TransactionTypeParam>().unwrap().transaction_type;
             for session_tracker in &mut context.session_trackers {
-                assert!(session_tracker.open_transaction(transaction_type, context.transaction_options.clone()).await.is_err());
+                assert!(session_tracker.open_transaction(transaction_type, context.transaction_options).await.is_err());
             }
         }
     }
@@ -163,7 +163,7 @@ generic_step_impl! {
             let transaction_type = type_.parse::<TransactionTypeParam>().unwrap().transaction_type;
             for session_tracker in &mut context.session_trackers {
                 // FIXME parallel
-                session_tracker.open_transaction(transaction_type, context.transaction_options.clone()).await.unwrap();
+                session_tracker.open_transaction(transaction_type, context.transaction_options).await.unwrap();
             }
         }
     }
