@@ -99,6 +99,7 @@ public interface TypeDBSession extends AutoCloseable {
 
     /**
      * Registers a callback function which will be executed when this session is reopened.
+     * A session is reopened automatically when opening a new transaction.
      *
      * <h3>Examples</h3>
      * <pre>

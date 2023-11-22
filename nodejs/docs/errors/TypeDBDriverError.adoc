@@ -61,7 +61,7 @@ a| `constructorOpt` a|  a| `Function`
 .Returns
 `void`
 
-[#_TypeDBDriverError_new_TypeDBDriverError__error_string__ErrorMessage__Error__ServiceError]
+[#_TypeDBDriverError_new_TypeDBDriverError__error_string_|_ErrorMessage_|_Error_|_ServiceError]
 ==== new TypeDBDriverError
 
 [source,nodejs]

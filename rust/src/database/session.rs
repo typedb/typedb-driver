@@ -168,6 +168,7 @@ impl Session {
     }
 
     /// Registers a callback function which will be executed when this session is reopened.
+    /// A closed session is reopened automatically when opening a new transaction.
     ///
     /// # Arguments
     ///

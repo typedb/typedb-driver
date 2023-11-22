@@ -38,7 +38,7 @@ thing_type.get_instances(transaction)
 thing_type.get_instances(transaction, Transitivity.EXPLICIT)
 ----
 
-[#_ThingType_get_owns__transaction_TypeDBTransaction__value_type_ValueType__None__transitivity_Transitivity__annotations_set_Annotation___None]
+[#_ThingType_get_owns__transaction_TypeDBTransaction__value_type_ValueType_|_None__transitivity_Transitivity__annotations_set_Annotation__|_None]
 ==== get_owns
 
 [source,python]
@@ -341,7 +341,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction` a|
 thing_type.set_abstract(transaction).resolve()
 ----
 
-[#_ThingType_set_owns__transaction_TypeDBTransaction__attribute_type_AttributeType__overridden_type_AttributeType__None__annotations_set_Annotation___None]
+[#_ThingType_set_owns__transaction_TypeDBTransaction__attribute_type_AttributeType__overridden_type_AttributeType_|_None__annotations_set_Annotation__|_None]
 ==== set_owns
 
 [source,python]
@@ -377,7 +377,7 @@ thing_type.set_owns(transaction, attribute_type,
                     annotations={Annotation.key()}).resolve()
 ----
 
-[#_ThingType_set_plays__transaction_TypeDBTransaction__role_type_RoleType__overriden_type_RoleType__None]
+[#_ThingType_set_plays__transaction_TypeDBTransaction__role_type_RoleType__overriden_type_RoleType_|_None]
 ==== set_plays
 
 [source,python]

@@ -35,7 +35,7 @@ Casts the concept to ``AttributeType``.
 attribute.as_attribute_type()
 ----
 
-[#_AttributeType_get__transaction_TypeDBTransaction__value_Value__bool__int__float__str__datetime]
+[#_AttributeType_get__transaction_TypeDBTransaction__value_Value_|_bool_|_int_|_float_|_str_|_datetime]
 ==== get
 
 [source,python]
@@ -98,7 +98,7 @@ attribute_type.get_instances(transaction)
 attribute_type.get_instances(transaction, Transitivity.EXPLICIT)
 ----
 
-[#_AttributeType_get_owners__transaction_TypeDBTransaction__annotations_set_Annotation___None__transitivity_Transitivity]
+[#_AttributeType_get_owners__transaction_TypeDBTransaction__annotations_set_Annotation__|_None__transitivity_Transitivity]
 ==== get_owners
 
 [source,python]
@@ -342,7 +342,7 @@ Returns ``True`` if the value for attributes of this type is of type ``string``.
 attribute_type.is_string()
 ----
 
-[#_AttributeType_put__transaction_TypeDBTransaction__value_Value__bool__int__float__str__datetime]
+[#_AttributeType_put__transaction_TypeDBTransaction__value_Value_|_bool_|_int_|_float_|_str_|_datetime]
 ==== put
 
 [source,python]

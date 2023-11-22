@@ -4,6 +4,7 @@
 *Implements traits:*
 
 * `Clone`
+* `Copy`
 * `Debug`
 * `Default`
 

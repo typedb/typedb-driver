@@ -39,7 +39,7 @@ Collects all the answers from this stream into an array
 results = transaction.query.match(query).collect().await;
 ----
 
-[#_Stream_T_every__callbackFn___value____unknown_]
+[#_Stream_T_every__callbackFn___value__=__unknown_]
 ==== every
 
 [source,nodejs]
@@ -62,7 +62,7 @@ a| `callbackFn` a|  a| `((value) => unknown)`
 .Returns
 `Promise<boolean>`
 
-[#_Stream_T_filter__filter___value____boolean_]
+[#_Stream_T_filter__filter___value__=__boolean_]
 ==== filter
 
 [source,nodejs]
@@ -102,7 +102,7 @@ Returns the first element in the stream.
 .Returns
 `Promise<T>`
 
-[#_Stream_T_flatMap__mapper___value____Stream_U__]
+[#_Stream_T_flatMap__mapper___value__=__Stream_U__]
 ==== flatMap
 
 [source,nodejs]
@@ -125,7 +125,7 @@ a| `mapper` a| The mapping function to apply. Must return a stream. a| `((value)
 .Returns
 `Stream<U>`
 
-[#_Stream_T_forEach__fn___value____void_]
+[#_Stream_T_forEach__fn___value__=__void_]
 ==== forEach
 
 [source,nodejs]
@@ -162,7 +162,7 @@ iterator(): AsyncIterator<T, any, undefined>
 .Returns
 `AsyncIterator<T, any, undefined>`
 
-[#_Stream_T_map__mapper___value____U_]
+[#_Stream_T_map__mapper___value__=__U_]
 ==== map
 
 [source,nodejs]
@@ -199,7 +199,7 @@ new Stream<T>(): Stream<T>
 .Returns
 `Stream<T>`
 
-[#_Stream_T_some__callbackFn___value____unknown_]
+[#_Stream_T_some__callbackFn___value__=__unknown_]
 ==== some
 
 [source,nodejs]

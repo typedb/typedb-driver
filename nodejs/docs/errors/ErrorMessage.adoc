@@ -41,7 +41,7 @@ a| `args` a| The format arguments to the message-template. a| `Stringable[]`
 .Returns
 `string`
 
-[#_ErrorMessage_new_ErrorMessage__codePrefix_string__codeNumber_number__messagePrefix_string__messageBody___args____string_]
+[#_ErrorMessage_new_ErrorMessage__codePrefix_string__codeNumber_number__messagePrefix_string__messageBody___args__=__string_]
 ==== new ErrorMessage
 
 [source,nodejs]
