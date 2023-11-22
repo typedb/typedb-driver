@@ -121,15 +121,32 @@ struct SessionCallbackDirector {
 };
 %}
 
-%{
+%inline %{
+#include <atomic>
 #include <memory>
 #include <iostream>
 #include <unordered_map>
-static std::unordered_map<size_t, SessionCallbackDirector*> sessionOnCloseCallbacks {};
-static void session_on_close_callback_execute(size_t ID) {
+
+static std::unordered_map<std::uintptr_t, SessionCallbackDirector*> sessionCallbacks {};
+
+std::uintptr_t session_callback_register(SessionCallbackDirector* handler) {
+    static std::atomic_uintptr_t nextID;
+    std::uintptr_t ID = nextID.fetch_add(1);
+    sessionCallbacks.insert({ID, handler});
+    return ID;
+}
+
+static void session_callback_execute(void* ID) {
     try {
-        sessionOnCloseCallbacks.at(ID)->callback();
-        sessionOnCloseCallbacks.erase(ID);
+        sessionCallbacks.at(reinterpret_cast<std::uintptr_t>(ID))->callback();
+    } catch (std::exception const& e) {
+        std::cerr << "[ERROR] " << e.what() << std::endl;
+    }
+}
+
+static void session_callback_erase(void* ID) {
+    try {
+        sessionCallbacks.erase(reinterpret_cast<std::uintptr_t>(ID));
     } catch (std::exception const& e) {
         std::cerr << "[ERROR] " << e.what() << std::endl;
     }
@@ -138,46 +155,17 @@ static void session_on_close_callback_execute(size_t ID) {
 
 %rename(session_on_close) session_on_close_register;
 %ignore session_on_close;
-%inline %{
-#include <atomic>
-void session_on_close_register(const Session* session, SessionCallbackDirector* handler) {
-    static std::atomic_size_t nextID;
-    std::size_t ID = nextID.fetch_add(1);
-    sessionOnCloseCallbacks.insert({ID, handler});
-    session_on_close(session, ID, &session_on_close_callback_execute);
-}
-%}
-
-%{
-#include <memory>
-#include <iostream>
-#include <unordered_map>
-static std::unordered_map<size_t, SessionCallbackDirector*> sessionOnReopenCallbacks {};
-static void session_on_reopen_callback_execute(size_t ID) {
-    try {
-        sessionOnReopenCallbacks.at(ID)->callback();
-    } catch (std::exception const& e) {
-        std::cerr << "[ERROR] " << e.what() << std::endl;
-    }
-}
-static void session_on_reopen_callback_erase(size_t ID) {
-    try {
-        sessionOnReopenCallbacks.erase(ID);
-    } catch (std::exception const& e) {
-        std::cerr << "[ERROR] " << e.what() << std::endl;
-    }
-}
-%}
-
 %rename(session_on_reopen) session_on_reopen_register;
 %ignore session_on_reopen;
 %inline %{
-#include <atomic>
+void session_on_close_register(const Session* session, SessionCallbackDirector* handler) {
+    std::uintptr_t ID = session_callback_register(handler);
+    session_on_close(session, reinterpret_cast<void*>(ID), &session_callback_execute, &session_callback_erase);
+}
+
 void session_on_reopen_register(const Session* session, SessionCallbackDirector* handler) {
-    static std::atomic_size_t nextID;
-    std::size_t ID = nextID.fetch_add(1);
-    sessionOnReopenCallbacks.insert({ID, handler});
-    session_on_reopen(session, ID, &session_on_reopen_callback_execute, &session_on_reopen_callback_erase);
+    std::uintptr_t ID = session_callback_register(handler);
+    session_on_reopen(session, reinterpret_cast<void*>(ID), &session_callback_execute, &session_callback_erase);
 }
 %}
 

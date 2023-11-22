@@ -19,7 +19,7 @@
  * under the License.
  */
 
-use std::ffi::c_char;
+use std::ffi::{c_char, c_void};
 
 use typedb_driver::{DatabaseManager, Options, Session, SessionType};
 
@@ -62,44 +62,59 @@ pub extern "C" fn session_force_close(session: *mut Session) {
     unwrap_void(borrow_mut(session).force_close())
 }
 
-#[no_mangle]
-pub extern "C" fn session_on_close(session: *const Session, callback_id: usize, callback: extern "C" fn(usize)) {
-    borrow(session).on_close(move || callback(callback_id));
+mod private {
+    use std::{ffi::c_void, mem::ManuallyDrop};
+
+    struct SendPtr(*mut c_void);
+    unsafe impl Send for SendPtr {}
+
+    pub(super) struct ForeignCallback<Callback, Finished: FnOnce(*mut c_void)> {
+        data: SendPtr,
+        callback: Callback,
+        finished: ManuallyDrop<Finished>,
+    }
+
+    impl<Callback, Finished: FnOnce(*mut c_void)> ForeignCallback<Callback, Finished> {
+        pub(super) fn new(data: *mut c_void, callback: Callback, finished: Finished) -> Self {
+            Self { data: SendPtr(data), callback, finished: ManuallyDrop::new(finished) }
+        }
+    }
+
+    impl<Callback: FnMut(*mut c_void), Finished: FnOnce(*mut c_void)> ForeignCallback<Callback, Finished> {
+        pub(super) fn call(&mut self) {
+            (self.callback)(self.data.0)
+        }
+    }
+
+    impl<Callback, Finished: FnOnce(*mut c_void)> Drop for ForeignCallback<Callback, Finished> {
+        fn drop(&mut self) {
+            // SAFETY: `finished` is inaccessible outside of `new()`, where it is initialized, and
+            // `drop()`, where it is consumed.
+            unsafe { (ManuallyDrop::take(&mut self.finished))(self.data.0) }
+        }
+    }
 }
 
-mod private {
-    use std::mem::ManuallyDrop;
-
-    pub(super) struct ForeignOnReopenCallback<Callback, Destroy: FnOnce()> {
-        pub(super) callback: Callback,
-        destroy: ManuallyDrop<Destroy>,
-    }
-
-    impl<Callback, Destroy: FnOnce()> ForeignOnReopenCallback<Callback, Destroy> {
-        pub(super) fn new(callback: Callback, destroy: Destroy) -> Self {
-            Self { callback, destroy: ManuallyDrop::new(destroy) }
-        }
-    }
-
-    impl<Callback, Destroy: FnOnce()> Drop for ForeignOnReopenCallback<Callback, Destroy> {
-        fn drop(&mut self) {
-            // SAFETY: `destroy` is inaccessible outside of `new()`, where it is initialized, and
-            // `drop()`, where it is consumed.
-            unsafe { (ManuallyDrop::take(&mut self.destroy))() }
-        }
-    }
+#[no_mangle]
+pub extern "C" fn session_on_close(
+    session: *const Session,
+    data: *mut c_void,
+    callback: extern "C" fn(*mut c_void),
+    finished: extern "C" fn(*mut c_void),
+) {
+    #[allow(clippy::redundant_closure)]
+    let mut callback = private::ForeignCallback::new(data, move |data| callback(data), move |data| finished(data));
+    borrow(session).on_close(move || callback.call())
 }
 
 #[no_mangle]
 pub extern "C" fn session_on_reopen(
     session: *const Session,
-    callback_id: usize,
-    callback: extern "C" fn(usize),
-    destroy: extern "C" fn(usize),
+    data: *mut c_void,
+    callback: extern "C" fn(*mut c_void),
+    finished: extern "C" fn(*mut c_void),
 ) {
-    let callback = private::ForeignOnReopenCallback::new(move || callback(callback_id), move || destroy(callback_id));
-    borrow(session).on_reopen(move || {
-        let callback = &callback;
-        (callback.callback)()
-    })
+    #[allow(clippy::redundant_closure)]
+    let mut callback = private::ForeignCallback::new(data, move |data| callback(data), move |data| finished(data));
+    borrow(session).on_reopen(move || callback.call())
 }
