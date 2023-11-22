@@ -166,7 +166,7 @@ class RustDocParser : Callable<Unit> {
     private fun parseTrait(document: Element, classAnchor: String, mode: String): Class {
         val className = document.selectFirst(".main-heading h1 a.trait")!!.text()
         val classDescr = document.select(".item-decl + details.top-doc .docblock p").map { reformatTextWithCode(it.html()) }
-        val examples = document.select(".docblock .example-wrap").map{ it.text() }
+        val examples = document.select(".top-doc .docblock .example-wrap").map{ it.text() }
 
         val methods =
             document.select("#required-methods + .methods details[class*=method-toggle]:has(summary section.method)")

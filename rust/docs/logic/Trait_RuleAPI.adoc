@@ -5,53 +5,6 @@
 
 * `Rule`
 
-[tabs]
-====
-async::
-+
---
-[caption=""]
-.Examples
-[source,rust]
-----
-rule.delete(transaction).await
-----
-
-, [source,rust]
-----
-rule.set_label(transaction, new_label).await
-----
-
-, [source,rust]
-----
-rule.is_deleted(transaction).await
-----
-
---
-
-sync::
-+
---
-[caption=""]
-.Examples
-[source,rust]
-----
-rule.delete(transaction).resolve()
-----
-
-, [source,rust]
-----
-rule.set_label(transaction, new_label).resolve()
-----
-
-, [source,rust]
-----
-rule.is_deleted(transaction).resolve()
-----
-
---
-====
-
 // tag::methods[]
 [#_trait_RuleAPI_delete__transaction_&'tx_Transaction_'tx_]
 ==== delete
