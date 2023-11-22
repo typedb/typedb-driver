@@ -69,6 +69,10 @@ export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
         this._session.closed(this);
     }
 
+    public onClose(callback: (error?: Error | string) => void) {
+        this._bidirectionalStream.onClose(callback)
+    }
+
     public async commit(): Promise<void> {
         const commitReq = RequestBuilder.Transaction.commitReq();
         try {

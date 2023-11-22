@@ -48,6 +48,7 @@ export class BidirectionalStream {
     private _stub: TypeDBStub;
     private _isOpen: boolean;
     private _error: Error | string;
+    private _onClose: ((error?: Error | string) => void)[]
 
     constructor(stub: TypeDBStub, requestTransmitter: RequestTransmitter) {
         this._requestTransmitter = requestTransmitter;
@@ -91,6 +92,13 @@ export class BidirectionalStream {
         this._responseCollector.close(error);
         this._responsePartCollector.close(error);
         this._dispatcher.close();
+        for (const callback of this._onClose) {
+            callback(error);
+        }
+    }
+
+    onClose(callback: (error?: Error | string) => void) {
+        this._onClose.push(callback)
     }
 
     registerObserver(transactionStream: ClientDuplexStream<TransactionClient, TransactionServer>): void {

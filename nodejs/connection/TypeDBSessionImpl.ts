@@ -45,6 +45,8 @@ export class TypeDBSessionImpl implements TypeDBSession {
     private _pulse: NodeJS.Timeout;
     private _networkLatencyMillis: number;
     private _transactions: Set<TypeDBTransaction.Extended>;
+    private _onClose: (() => void)[]
+    private _onReopen: (() => void)[]
 
     constructor(databaseName: string, type: SessionType, options: TypeDBOptions, driver: TypeDBDriverImpl) {
         this._databaseName = databaseName;
@@ -58,6 +60,13 @@ export class TypeDBSessionImpl implements TypeDBSession {
     async open(): Promise<void> {
         this._database = await this._driver.databases.get(this._databaseName) as TypeDBDatabaseImpl;
         await this._database.runFailsafe(serverDriver => this.openAt(serverDriver));
+    }
+
+    private async reopenAt(serverDriver: ServerDriver): Promise<void> {
+        await this.openAt(serverDriver);
+        for (const callback of this._onReopen) {
+            callback();
+        }
     }
 
     private async openAt(serverDriver: ServerDriver): Promise<void> {
@@ -74,11 +83,22 @@ export class TypeDBSessionImpl implements TypeDBSession {
         this._pulse = setTimeout(() => this.pulse(), 5000);
     }
 
+    public onClose(callback: () => void) {
+        this._onClose.push(callback)
+    }
+
+    public onReopen(callback: () => void) {
+        this._onReopen.push(callback)
+    }
+
     async close(): Promise<void> {
         if (this._isOpen) {
             this._isOpen = false;
             for (const tx of this._transactions) {
                 await tx.close();
+            }
+            for (const callback of this._onClose) {
+                callback();
             }
             this._driver.closeSession(this);
             clearTimeout(this._pulse);
@@ -97,7 +117,7 @@ export class TypeDBSessionImpl implements TypeDBSession {
         return this._database.runFailsafe(async (serverDriver, _db, isFirstRun) => {
             if (!isFirstRun){
                 await this.close();
-                await this.openAt(serverDriver);
+                await this.reopenAt(serverDriver);
             }
             const transaction = new TypeDBTransactionImpl(this, type, options);
             await transaction.open();
