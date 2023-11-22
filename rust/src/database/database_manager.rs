@@ -134,7 +134,7 @@ impl DatabaseManager {
                 Err(Error::Connection(ConnectionError::EnterpriseReplicaNotPrimary())) => {
                     return Database::get(name, self.connection.clone())
                         .await?
-                        .run_on_primary_replica(|database, server_connection, _| {
+                        .run_on_primary_replica(|database, server_connection| {
                             let task = &task;
                             async move { task(server_connection, database.name().to_owned()).await }
                         })

@@ -86,7 +86,7 @@ impl Session {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn new_with_options(database: Database, session_type: SessionType, options: Options) -> Result<Self> {
         let server_session_info = database
-            .run_failsafe(|database, _, _| async move {
+            .run_failsafe(|database, _| async move {
                 database.connection().open_session(database.name().to_owned(), session_type, options).await
             })
             .await?;
@@ -231,7 +231,7 @@ impl Session {
                 server_connection.close_session(session_id).ok();
                 let (session_info, (transaction_stream, transaction_shutdown_sink)) = self
                     .database
-                    .run_failsafe(|database, _, _| {
+                    .run_failsafe(|database, _| {
                         let session_type = self.session_type;
                         async move {
                             let connection = database.connection();

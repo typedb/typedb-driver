@@ -192,7 +192,7 @@ impl UserManager {
             DatabaseManager::new(self.connection.clone())
                 .get(Self::SYSTEM_DB)
                 .await?
-                .run_failsafe(|_, server_connection, _| task(server_connection))
+                .run_failsafe(|_, server_connection| task(server_connection))
                 .await
         }
     }

@@ -119,7 +119,7 @@ impl Database {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn delete(self) -> Result {
-        self.run_on_primary_replica(|database, _, _| database.delete()).await
+        self.run_on_primary_replica(|database, _| database.delete()).await
     }
 
     /// Returns a full schema text as a valid TypeQL define query string.
@@ -132,7 +132,7 @@ impl Database {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn schema(&self) -> Result<String> {
-        self.run_failsafe(|database, _, _| async move { database.schema().await }).await
+        self.run_failsafe(|database, _| async move { database.schema().await }).await
     }
 
     /// Returns the types in the schema as a valid TypeQL define query string.
@@ -145,7 +145,7 @@ impl Database {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn type_schema(&self) -> Result<String> {
-        self.run_failsafe(|database, _, _| async move { database.type_schema().await }).await
+        self.run_failsafe(|database, _| async move { database.type_schema().await }).await
     }
 
     /// Returns the rules in the schema as a valid TypeQL define query string.
@@ -158,13 +158,13 @@ impl Database {
     /// ```
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub async fn rule_schema(&self) -> Result<String> {
-        self.run_failsafe(|database, _, _| async move { database.rule_schema().await }).await
+        self.run_failsafe(|database, _| async move { database.rule_schema().await }).await
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(crate) async fn run_failsafe<F, P, R>(&self, task: F) -> Result<R>
     where
-        F: Fn(ServerDatabase, ServerConnection, bool) -> P,
+        F: Fn(ServerDatabase, ServerConnection) -> P,
         P: Future<Output = Result<R>>,
     {
         match self.run_on_any_replica(&task).await {
@@ -179,15 +179,12 @@ impl Database {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(super) async fn run_on_any_replica<F, P, R>(&self, task: F) -> Result<R>
     where
-        F: Fn(ServerDatabase, ServerConnection, bool) -> P,
+        F: Fn(ServerDatabase, ServerConnection) -> P,
         P: Future<Output = Result<R>>,
     {
-        let mut is_first_run = true;
         let replicas = self.replicas.read().unwrap().clone();
         for replica in replicas {
-            match task(replica.database.clone(), self.connection.connection(&replica.address)?.clone(), is_first_run)
-                .await
-            {
+            match task(replica.database.clone(), self.connection.connection(&replica.address)?.clone()).await {
                 Err(Error::Connection(
                     ConnectionError::ServerConnectionFailedStatusError(_) | ConnectionError::ConnectionFailed(),
                 )) => {
@@ -195,7 +192,6 @@ impl Database {
                 }
                 res => return res,
             }
-            is_first_run = false;
         }
         Err(self.connection.unable_to_connect_error())
     }
@@ -203,19 +199,15 @@ impl Database {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     pub(super) async fn run_on_primary_replica<F, P, R>(&self, task: F) -> Result<R>
     where
-        F: Fn(ServerDatabase, ServerConnection, bool) -> P,
+        F: Fn(ServerDatabase, ServerConnection) -> P,
         P: Future<Output = Result<R>>,
     {
         let mut primary_replica =
             if let Some(replica) = self.primary_replica() { replica } else { self.seek_primary_replica().await? };
 
-        for retry in 0..Self::PRIMARY_REPLICA_TASK_MAX_RETRIES {
-            match task(
-                primary_replica.database.clone(),
-                self.connection.connection(&primary_replica.address)?.clone(),
-                retry == 0,
-            )
-            .await
+        for _ in 0..Self::PRIMARY_REPLICA_TASK_MAX_RETRIES {
+            match task(primary_replica.database.clone(), self.connection.connection(&primary_replica.address)?.clone())
+                .await
             {
                 Err(Error::Connection(
                     ConnectionError::EnterpriseReplicaNotPrimary()
