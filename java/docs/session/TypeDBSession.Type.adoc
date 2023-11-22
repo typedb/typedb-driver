@@ -7,15 +7,11 @@ Used to specify the type of the session.
 
 
 [caption=""]
-.TypeDBSession.Type examples
-====
-
+.Examples
 [source,java]
 ----
 driver.session(database, TypeDBSession.Type.SCHEMA);
 ----
-
-====
 
 [caption=""]
 .Enum constants

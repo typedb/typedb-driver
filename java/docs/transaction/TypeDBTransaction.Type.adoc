@@ -7,15 +7,11 @@ Used to specify the type of transaction.
 
 
 [caption=""]
-.TypeDBTransaction.Type examples
-====
-
+.Examples
 [source,java]
 ----
 session.transaction(TransactionType.READ);
 ----
-
-====
 
 [caption=""]
 .Enum constants

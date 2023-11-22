@@ -4,15 +4,11 @@
 This class is used for specifying whether we need explicit or transitive subtyping, instances, etc.
 
 [caption=""]
-.Transitivity examples
-====
-
+.Examples
 [source,python]
 ----
 attribute_type.get_owners(transaction, annotations=annotations, transitivity=Transitivity.EXPLICIT)
 ----
-
-====
 
 [caption=""]
 .Enum constants

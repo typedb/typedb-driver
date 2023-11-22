@@ -4,15 +4,11 @@
 This class is used to specify the type of the session.
 
 [caption=""]
-.SessionType examples
-====
-
+.Examples
 [source,python]
 ----
 driver.session(database, SessionType.SCHEMA)
 ----
-
-====
 
 [caption=""]
 .Enum constants

@@ -25,7 +25,7 @@ Performs a TypeQL Define query with default options. See <<#_struct_QueryManager
 impl Promise<'tx, Result>
 ----
 
-[#_struct_QueryManager_define_with_options__query_&str__options_Options]
+[#_struct_QueryManager_define_with_options__query_str__options_Options]
 ==== define_with_options
 
 [source,rust]
@@ -98,7 +98,7 @@ Performs a TypeQL Delete query with default options. See <<#_struct_QueryManager
 impl Promise<'tx, Result>
 ----
 
-[#_struct_QueryManager_delete_with_options__query_&str__options_Options]
+[#_struct_QueryManager_delete_with_options__query_str__options_Options]
 ==== delete_with_options
 
 [source,rust]
@@ -174,7 +174,7 @@ Performs a TypeQL Explain query in the transaction. See ``QueryManager::explain_
 Result<impl Stream<Item = Result<Explanation>> + 'tx>
 ----
 
-[#_struct_QueryManager_explain_with_options__explainable_&Explainable__options_Options]
+[#_struct_QueryManager_explain_with_options__explainable_Explainable__options_Options]
 ==== explain_with_options
 
 [source,rust]
@@ -232,7 +232,7 @@ Performs a TypeQL Fetch query with default options. See <<#_struct_QueryManager_
 Result<impl Stream<Item = Result<JSON>> + 'tx>
 ----
 
-[#_struct_QueryManager_fetch_with_options__query_&str__options_Options]
+[#_struct_QueryManager_fetch_with_options__query_str__options_Options]
 ==== fetch_with_options
 
 [source,rust]
@@ -310,7 +310,7 @@ Performs a TypeQL Match Aggregate query with default options. See <<#_struct_Que
 impl Promise<'tx, Result<Option<Value>>>
 ----
 
-[#_struct_QueryManager_get_aggregate_with_options__query_&str__options_Options]
+[#_struct_QueryManager_get_aggregate_with_options__query_str__options_Options]
 ==== get_aggregate_with_options
 
 [source,rust]
@@ -406,7 +406,7 @@ Performs a TypeQL Match Group Aggregate query with default options. See <<#_stru
 Result<impl Stream<Item = Result<ValueGroup>> + 'tx>
 ----
 
-[#_struct_QueryManager_get_group_aggregate_with_options__query_&str__options_Options]
+[#_struct_QueryManager_get_group_aggregate_with_options__query_str__options_Options]
 ==== get_group_aggregate_with_options
 
 [source,rust]
@@ -444,7 +444,7 @@ Result<impl Stream<Item = Result<ValueGroup>> + 'tx>
 transaction.query().get_group_aggregate_with_options(query, options)
 ----
 
-[#_struct_QueryManager_get_group_with_options__query_&str__options_Options]
+[#_struct_QueryManager_get_group_with_options__query_str__options_Options]
 ==== get_group_with_options
 
 [source,rust]
@@ -482,7 +482,7 @@ Result<impl Stream<Item = Result<ConceptMapGroup>> + 'tx>
 transaction.query().get_group_with_options(query, options)
 ----
 
-[#_struct_QueryManager_get_with_options__query_&str__options_Options]
+[#_struct_QueryManager_get_with_options__query_str__options_Options]
 ==== get_with_options
 
 [source,rust]
@@ -540,7 +540,7 @@ Performs a TypeQL Insert query with default options. See <<#_struct_QueryManager
 Result<impl Stream<Item = Result<ConceptMap>> + 'tx>
 ----
 
-[#_struct_QueryManager_insert_with_options__query_&str__options_Options]
+[#_struct_QueryManager_insert_with_options__query_str__options_Options]
 ==== insert_with_options
 
 [source,rust]
@@ -595,7 +595,7 @@ Performs a TypeQL Undefine query with default options See <<#_struct_QueryManage
 impl Promise<'tx, Result>
 ----
 
-[#_struct_QueryManager_undefine_with_options__query_&str__options_Options]
+[#_struct_QueryManager_undefine_with_options__query_str__options_Options]
 ==== undefine_with_options
 
 [source,rust]
@@ -671,7 +671,7 @@ Performs a TypeQL Update query with default options. See <<#_struct_QueryManager
 Result<impl Stream<Item = Result<ConceptMap>> + 'tx>
 ----
 
-[#_struct_QueryManager_update_with_options__query_&str__options_Options]
+[#_struct_QueryManager_update_with_options__query_str__options_Options]
 ==== update_with_options
 
 [source,rust]

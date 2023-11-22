@@ -4,15 +4,11 @@
 This class is used to specify the type of transaction.
 
 [caption=""]
-.TransactionType examples
-====
-
+.Examples
 [source,python]
 ----
 session.transaction(TransactionType.READ)
 ----
-
-====
 
 [caption=""]
 .Enum constants
