@@ -31,7 +31,7 @@ use futures::StreamExt;
 use futures::TryStreamExt;
 #[cfg(feature = "sync")]
 use itertools::Itertools;
-use log::error;
+use log::{debug, error};
 use prost::Message;
 #[cfg(not(feature = "sync"))]
 use tokio::sync::oneshot::channel as oneshot;
@@ -131,9 +131,8 @@ impl TransactionTransmitter {
         req: TransactionRequest,
     ) -> impl Promise<'static, Result<TransactionResponse>> {
         if !self.is_open() {
-            let error = self.error.read().unwrap().clone();
-            assert!(error.is_some());
-            return box_promise(async move { Err(error.unwrap().into()) });
+            let error = self.error();
+            return box_promise(async move { Err(error.into()) });
         }
         let (res_sink, recv) = oneshot();
         let send_result = self.request_sink.send((req, Some(ResponseSink::AsyncOneShot(res_sink))));
@@ -149,9 +148,8 @@ impl TransactionTransmitter {
         req: TransactionRequest,
     ) -> impl Promise<'static, Result<TransactionResponse>> {
         if !self.is_open() {
-            let error = self.error.read().unwrap().clone();
-            assert!(error.is_some());
-            return box_promise(|| Err(error.unwrap().into()));
+            let error = self.error();
+            return box_promise(|| Err(error.into()));
         }
         let (res_sink, recv) = oneshot();
         let send_result = self.request_sink.send((req, Some(ResponseSink::BlockingOneShot(res_sink))));
@@ -165,15 +163,23 @@ impl TransactionTransmitter {
         req: TransactionRequest,
     ) -> Result<impl Stream<Item = Result<TransactionResponse>>> {
         if !self.is_open() {
-            let error = self.error.read().unwrap();
-            assert!(error.is_some());
-            return Err(error.clone().unwrap().into());
+            return Err(self.error().into());
         }
         let (res_part_sink, recv) = unbounded_async();
         self.request_sink
             .send((req, Some(ResponseSink::Streamed(res_part_sink))))
             .map_err(|_| ConnectionError::TransactionIsClosed())?;
         Ok(NetworkStream::new(recv).map_ok(Into::into))
+    }
+
+    fn error(&self) -> ConnectionError {
+        match self.error.read().unwrap().as_ref() {
+            Some(err) => err.clone(),
+            None => {
+                debug!("Transaction is closed with no message.");
+                ConnectionError::TransactionIsClosed()
+            }
+        }
     }
 
     async fn start_workers(
