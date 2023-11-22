@@ -78,6 +78,9 @@ class _Session(TypeDBSession, NativeWrapper[NativeSession]):
     def on_close(self, function: callable):
         session_on_close(self.native_object, _Session.Callback(function).__disown__())
 
+    def on_reopen(self, function: callable):
+        session_on_reopen(self.native_object, _Session.Callback(function).__disown__())
+
     class Callback(SessionCallbackDirector):
 
         def __init__(self, function: callable):
