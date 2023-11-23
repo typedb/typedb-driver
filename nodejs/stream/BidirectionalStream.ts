@@ -48,13 +48,14 @@ export class BidirectionalStream {
     private _stub: TypeDBStub;
     private _isOpen: boolean;
     private _error: Error | string;
-    private _onClose: ((error?: Error | string) => void)[]
+    private readonly _onClose: ((error?: Error | string) => void)[]
 
     constructor(stub: TypeDBStub, requestTransmitter: RequestTransmitter) {
         this._requestTransmitter = requestTransmitter;
         this._responseCollector = new ResponseCollector();
         this._responsePartCollector = new ResponseCollector();
         this._stub = stub;
+        this._onClose = []
     }
 
     async open() {

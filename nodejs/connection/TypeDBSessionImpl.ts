@@ -44,9 +44,9 @@ export class TypeDBSessionImpl implements TypeDBSession {
     private _serverDriver?: ServerDriver;
     private _pulse: NodeJS.Timeout;
     private _networkLatencyMillis: number;
-    private _transactions: Set<TypeDBTransaction.Extended>;
-    private _onClose: (() => void)[]
-    private _onReopen: (() => void)[]
+    private readonly _transactions: Set<TypeDBTransaction.Extended>;
+    private readonly _onClose: (() => void)[]
+    private readonly _onReopen: (() => void)[]
 
     constructor(databaseName: string, type: SessionType, options: TypeDBOptions, driver: TypeDBDriverImpl) {
         this._databaseName = databaseName;
@@ -55,6 +55,8 @@ export class TypeDBSessionImpl implements TypeDBSession {
         this._driver = driver;
         this._isOpen = false;
         this._transactions = new Set();
+        this._onClose = []
+        this._onReopen = []
     }
 
     async open(): Promise<void> {
