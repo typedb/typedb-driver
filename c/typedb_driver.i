@@ -259,6 +259,9 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject concepts_get_entity_type;
 %newobject concepts_get_relation_type;
 %newobject concepts_get_attribute_type;
+%newobject concepts_get_root_entity_type;
+%newobject concepts_get_root_relation_type;
+%newobject concepts_get_root_attribute_type;
 %newobject concepts_put_entity_type;
 %newobject concepts_put_relation_type;
 %newobject concepts_put_attribute_type;
