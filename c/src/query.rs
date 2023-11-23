@@ -43,7 +43,7 @@ pub extern "C" fn query_define(
     options: *const Options,
 ) -> *mut VoidPromise {
     release(VoidPromise(Box::new(
-        borrow(transaction).query().define_with_options(string_view(query), borrow(options).clone()),
+        borrow(transaction).query().define_with_options(string_view(query), *borrow(options)),
     )))
 }
 
@@ -54,7 +54,7 @@ pub extern "C" fn query_undefine(
     options: *const Options,
 ) -> *mut VoidPromise {
     release(VoidPromise(Box::new(
-        borrow(transaction).query().undefine_with_options(string_view(query), borrow(options).clone()),
+        borrow(transaction).query().undefine_with_options(string_view(query), *borrow(options)),
     )))
 }
 
@@ -65,7 +65,7 @@ pub extern "C" fn query_delete(
     options: *const Options,
 ) -> *mut VoidPromise {
     release(VoidPromise(Box::new(
-        borrow(transaction).query().delete_with_options(string_view(query), borrow(options).clone()),
+        borrow(transaction).query().delete_with_options(string_view(query), *borrow(options)),
     )))
 }
 
@@ -90,7 +90,7 @@ pub extern "C" fn query_get(
     try_release(
         borrow(transaction)
             .query()
-            .get_with_options(string_view(query), borrow(options).clone())
+            .get_with_options(string_view(query), *borrow(options))
             .map(|it| ConceptMapIterator(CIterator(box_stream(it)))),
     )
 }
@@ -104,7 +104,7 @@ pub extern "C" fn query_fetch(
     try_release(
         borrow(transaction)
             .query()
-            .fetch_with_options(string_view(query), borrow(options).clone())
+            .fetch_with_options(string_view(query), *borrow(options))
             .map(|it| StringIterator(CIterator(box_stream(it.map_ok(|json| json.to_string()))))),
     )
 }
@@ -118,7 +118,7 @@ pub extern "C" fn query_insert(
     try_release(
         borrow(transaction)
             .query()
-            .insert_with_options(string_view(query), borrow(options).clone())
+            .insert_with_options(string_view(query), *borrow(options))
             .map(|it| ConceptMapIterator(CIterator(box_stream(it)))),
     )
 }
@@ -132,7 +132,7 @@ pub extern "C" fn query_update(
     try_release(
         borrow(transaction)
             .query()
-            .update_with_options(string_view(query), borrow(options).clone())
+            .update_with_options(string_view(query), *borrow(options))
             .map(|it| ConceptMapIterator(CIterator(box_stream(it)))),
     )
 }
@@ -144,7 +144,7 @@ pub extern "C" fn query_get_aggregate(
     options: *const Options,
 ) -> *mut ConceptPromise {
     release(ConceptPromise::value(
-        borrow(transaction).query().get_aggregate_with_options(string_view(query), borrow(options).clone()),
+        borrow(transaction).query().get_aggregate_with_options(string_view(query), *borrow(options)),
     ))
 }
 
@@ -169,7 +169,7 @@ pub extern "C" fn query_get_group(
     try_release(
         borrow(transaction)
             .query()
-            .get_group_with_options(string_view(query), borrow(options).clone())
+            .get_group_with_options(string_view(query), *borrow(options))
             .map(|it| ConceptMapGroupIterator(CIterator(box_stream(it)))),
     )
 }
@@ -195,7 +195,7 @@ pub extern "C" fn query_get_group_aggregate(
     try_release(
         borrow(transaction)
             .query()
-            .get_group_aggregate_with_options(string_view(query), borrow(options).clone())
+            .get_group_aggregate_with_options(string_view(query), *borrow(options))
             .map(|it| ValueGroupIterator(CIterator(box_stream(it)))),
     )
 }
@@ -221,7 +221,7 @@ pub extern "C" fn query_explain(
     try_release(
         borrow(transaction)
             .query()
-            .explain_with_options(borrow(explainable), borrow(options).clone())
+            .explain_with_options(borrow(explainable), *borrow(options))
             .map(|it| ExplanationIterator(CIterator(box_stream(it)))),
     )
 }
