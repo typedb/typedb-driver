@@ -115,7 +115,9 @@ test_for_each_arg! {
 
         transaction.on_close({
             let session = session.clone();
-            move |_| { session.force_close().ok(); }
+            move |_| {
+                session.force_close().ok();
+            }
         });
         transaction.force_close();
 
@@ -270,7 +272,12 @@ test_for_each_arg! {
 
         let transaction = session.transaction(Write).await;
         assert!(transaction.is_err());
-        assert!(matches!(transaction, Err(Error::Connection(ConnectionError::ConnectionIsClosed()))));
+        assert!(
+            matches!(
+                transaction,
+                Err(Error::Connection(ConnectionError::ConnectionIsClosed() | ConnectionError::SessionIsClosed()))
+            ),
+        );
 
         let session = Session::new(database, Data).await;
         assert!(session.is_err());
@@ -342,7 +349,10 @@ test_for_each_arg! {
                 }
                 idx += 1;
                 if idx == 100_000 {
-                    println!("iteration {i}: retrieved and summed 100k attrs in {}ms", start_time.elapsed().as_millis());
+                    println!(
+                        "iteration {i}: retrieved and summed 100k attrs in {}ms",
+                        start_time.elapsed().as_millis()
+                    );
                     start_time = Instant::now();
                 }
             }

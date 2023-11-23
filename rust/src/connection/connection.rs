@@ -530,11 +530,11 @@ async fn session_pulse(
     loop {
         select! {
             _ = sleep_until(next_pulse) => {
-                request_transmitter
-                    .request_async(Request::SessionPulse { session_id: session_id.clone() })
-                    .await
-                    .ok();
-                next_pulse += PULSE_INTERVAL;
+                match request_transmitter.request_async(Request::SessionPulse { session_id: session_id.clone() }).await
+                {
+                    Ok(_) => next_pulse += PULSE_INTERVAL,
+                    Err(_) => break,
+                }
             }
             callback = on_close_callback_source.recv() => {
                 if let Some(callback) = callback {

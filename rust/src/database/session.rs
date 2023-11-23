@@ -36,7 +36,7 @@ pub struct Session {
     database: Database,
     server_session_info: RwLock<SessionInfo>,
     session_type: SessionType,
-    is_open: AtomicCell<bool>,
+    is_open: Arc<AtomicCell<bool>>,
 
     on_close: Arc<Mutex<Vec<Callback>>>,
     on_reopen: Mutex<Vec<Callback>>,
@@ -91,14 +91,18 @@ impl Session {
             })
             .await?;
 
-        let on_close: Arc<Mutex<Vec<Callback>>> = Arc::default();
+        let is_open = Arc::new(AtomicCell::new(true));
+        let on_close: Arc<Mutex<Vec<Callback>>> = Arc::new(Mutex::new(vec![Box::new({
+            let is_open = is_open.clone();
+            move || is_open.store(false)
+        })]));
         register_persistent_on_close(&server_session_info, on_close.clone());
 
         Ok(Self {
             database,
             session_type,
             server_session_info: RwLock::new(server_session_info),
-            is_open: AtomicCell::new(true),
+            is_open,
             on_close,
             on_reopen: Mutex::default(),
         })
