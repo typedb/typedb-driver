@@ -29,7 +29,9 @@ import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.concept.ConceptImpl;
 import com.vaticle.typedb.common.collection.Pair;
 
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -56,6 +58,7 @@ import static com.vaticle.typedb.driver.jni.typedb_driver.explainables_to_string
 
 public class ConceptMapImpl extends NativeObject<com.vaticle.typedb.driver.jni.ConceptMap> implements ConceptMap {
     private int hash = 0;
+    private Map<String, Concept> cachedMap = null;
 
     public ConceptMapImpl(com.vaticle.typedb.driver.jni.ConceptMap concept_map) {
         super(concept_map);
@@ -69,6 +72,12 @@ public class ConceptMapImpl extends NativeObject<com.vaticle.typedb.driver.jni.C
     @Override
     public Stream<Concept> concepts() {
         return new NativeIterator<>(concept_map_get_values(nativeObject)).stream().map(ConceptImpl::of);
+    }
+
+    @Override
+    public Map<String, Concept> map() {
+        if (cachedMap == null) cachedMap = variables().collect(Collectors.toUnmodifiableMap(v -> v, this::get));
+        return cachedMap;
     }
 
     @Override
@@ -104,7 +113,7 @@ public class ConceptMapImpl extends NativeObject<com.vaticle.typedb.driver.jni.C
     }
 
     private int computeHash() {
-        return Objects.hash(variables().collect(Collectors.toList()), concepts().collect(Collectors.toList()));
+        return map().hashCode();
     }
 
     public static class ExplainablesImpl extends NativeObject<com.vaticle.typedb.driver.jni.Explainables> implements Explainables {

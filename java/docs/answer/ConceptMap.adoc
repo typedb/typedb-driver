@@ -83,6 +83,29 @@ a| `variable` a| The string representation of a variable a| `java.lang.String`
 conceptMap.get(variable);
 ----
 
+[#_ConceptMap_map__]
+==== map
+
+[source,java]
+----
+@CheckReturnValue
+java.util.Map<java.lang.String,​Concept> map()
+----
+
+Returns the inner ``Map`` where keys are query variables, and values are concepts. 
+
+
+[caption=""]
+.Returns
+`java.util.Map<java.lang.String,​Concept>`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+conceptMap.map();
+----
+
 [#_ConceptMap_variables__]
 ==== variables
 
