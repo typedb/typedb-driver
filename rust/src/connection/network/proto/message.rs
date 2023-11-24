@@ -318,8 +318,8 @@ impl FromProto<session::open::Res> for Response {
 }
 
 impl FromProto<session::pulse::Res> for Response {
-    fn from_proto(_proto: session::pulse::Res) -> Self {
-        Self::SessionPulse
+    fn from_proto(proto: session::pulse::Res) -> Self {
+        Self::SessionPulse { is_alive: proto.alive }
     }
 }
 

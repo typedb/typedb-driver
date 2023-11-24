@@ -27,6 +27,7 @@ use std::{
 };
 
 use crossbeam::channel::Sender;
+use futures::future::join_all;
 use itertools::Itertools;
 use tokio::{
     select,
@@ -526,14 +527,16 @@ async fn session_pulse(
 ) {
     const PULSE_INTERVAL: Duration = Duration::from_secs(5);
     let mut next_pulse = Instant::now();
-    let mut on_close = vec![];
+    let mut on_close = Vec::new();
     loop {
         select! {
             _ = sleep_until(next_pulse) => {
-                match request_transmitter.request_async(Request::SessionPulse { session_id: session_id.clone() }).await
-                {
-                    Ok(_) => next_pulse += PULSE_INTERVAL,
-                    Err(_) => break,
+                let session_id = session_id.clone();
+                match request_transmitter.request_async(Request::SessionPulse { session_id }).await {
+                    Ok(Response::SessionPulse { is_alive: true }) => {
+                        next_pulse = (next_pulse + PULSE_INTERVAL).max(Instant::now())
+                    }
+                    _ => break,
                 }
             }
             callback = on_close_callback_source.recv() => {
@@ -544,9 +547,11 @@ async fn session_pulse(
             _ = shutdown_source.recv() => break,
         }
     }
-    for callback in on_close {
+
+    join_all(on_close.into_iter().map(|callback| {
         let (response_sink, response) = oneshot_async();
         callback_handler_sink.send((Box::new(callback), response_sink)).unwrap();
-        response.await.ok();
-    }
+        response
+    }))
+    .await;
 }
