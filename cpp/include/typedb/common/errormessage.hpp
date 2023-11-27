@@ -30,45 +30,45 @@ struct ErrorMessage {
 
 namespace DriverError {
 
-extern ErrorMessage DRIVER_CLOSED;
-extern ErrorMessage SESSION_CLOSED;
-extern ErrorMessage TRANSACTION_CLOSED;
-extern ErrorMessage TRANSACTION_CLOSED_WITH_ERRORS;
-extern ErrorMessage DATABASE_DELETED;
-extern ErrorMessage POSITIVE_VALUE_REQUIRED;
-extern ErrorMessage MISSING_DB_NAME;
+extern const ErrorMessage DRIVER_CLOSED;
+extern const ErrorMessage SESSION_CLOSED;
+extern const ErrorMessage TRANSACTION_CLOSED;
+extern const ErrorMessage TRANSACTION_CLOSED_WITH_ERRORS;
+extern const ErrorMessage DATABASE_DELETED;
+extern const ErrorMessage POSITIVE_VALUE_REQUIRED;
+extern const ErrorMessage MISSING_DB_NAME;
 
 }  // namespace DriverError
 
 namespace ConceptError {
 
-extern ErrorMessage INVALID_CONCEPT_CASTING;
-extern ErrorMessage MISSING_TRANSACTION;
-extern ErrorMessage MISSING_IID;
-extern ErrorMessage MISSING_LABEL;
-extern ErrorMessage MISSING_VARIABLE;
-extern ErrorMessage MISSING_VALUE;
-extern ErrorMessage NONEXISTENT_EXPLAINABLE_CONCEPT;
-extern ErrorMessage NONEXISTENT_EXPLAINABLE_OWNERSHIP;
-extern ErrorMessage UNRECOGNISED_ANNOTATION;
+extern const ErrorMessage INVALID_CONCEPT_CASTING;
+extern const ErrorMessage MISSING_TRANSACTION;
+extern const ErrorMessage MISSING_IID;
+extern const ErrorMessage MISSING_LABEL;
+extern const ErrorMessage MISSING_VARIABLE;
+extern const ErrorMessage MISSING_VALUE;
+extern const ErrorMessage NONEXISTENT_EXPLAINABLE_CONCEPT;
+extern const ErrorMessage NONEXISTENT_EXPLAINABLE_OWNERSHIP;
+extern const ErrorMessage UNRECOGNISED_ANNOTATION;
 
 }  // namespace ConceptError
 
 namespace QueryError {
 
-extern ErrorMessage VARIABLE_DOES_NOT_EXIST;
-extern ErrorMessage MISSING_QUERY;
+extern const ErrorMessage VARIABLE_DOES_NOT_EXIST;
+extern const ErrorMessage MISSING_QUERY;
 
 }  // namespace QueryError
 
 namespace InternalError {
 
-extern ErrorMessage UNEXPECTED_NATIVE_VALUE;
-extern ErrorMessage ILLEGAL_STATE;
-extern ErrorMessage ILLEGAL_CAST;
-extern ErrorMessage NULL_NATIVE_VALUE;
-extern ErrorMessage INVALID_NATIVE_HANDLE;
-extern ErrorMessage ITERATOR_INVALIDATED;
+extern const ErrorMessage UNEXPECTED_NATIVE_VALUE;
+extern const ErrorMessage ILLEGAL_STATE;
+extern const ErrorMessage ILLEGAL_CAST;
+extern const ErrorMessage NULL_NATIVE_VALUE;
+extern const ErrorMessage INVALID_NATIVE_HANDLE;
+extern const ErrorMessage ITERATOR_INVALIDATED;
 
 }  // namespace InternalError
 

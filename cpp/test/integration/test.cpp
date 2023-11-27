@@ -28,9 +28,6 @@
 #include "typedb/concept/all.hpp"
 #include "typedb/connection/driver.hpp"
 
-
-#define NULLSAFE(X) ((X) ? (X) : "null")
-
 using namespace TypeDB;
 
 
