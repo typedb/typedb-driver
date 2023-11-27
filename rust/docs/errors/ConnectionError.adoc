@@ -8,28 +8,28 @@
 [options="header"]
 |===
 |Variant
-a| `BrokenPipe(/* private fields */)`
-a| `ConnectionFailed(/* private fields */)`
-a| `ConnectionIsClosed(/* private fields */)`
-a| `DatabaseDoesNotExist(String)`
-a| `EnterpriseAllNodesFailed(String)`
-a| `EnterpriseEndpointEncrypted(/* private fields */)`
-a| `EnterpriseReplicaNotPrimary(/* private fields */)`
-a| `EnterpriseSSLCertificateNotValidated(/* private fields */)`
-a| `EnterpriseTokenCredentialInvalid(/* private fields */)`
-a| `InvalidResponseField(&'static str)`
-a| `MissingResponseField(&'static str)`
-a| `RPCMethodUnavailable(String)`
-a| `ServerConnectionFailed(String)`
-a| `ServerConnectionFailedStatusError(String)`
-a| `ServerConnectionFailedWithError(String)`
-a| `SessionCloseFailed(/* private fields */)`
-a| `SessionIsClosed(/* private fields */)`
-a| `TransactionIsClosed(/* private fields */)`
-a| `TransactionIsClosedWithErrors(String)`
-a| `UnexpectedResponse(String)`
-a| `UnknownRequestId(ID)`
-a| `UserManagementEnterpriseOnly(/* private fields */)`
+a| `BrokenPipe`
+a| `ConnectionFailed`
+a| `ConnectionIsClosed`
+a| `DatabaseDoesNotExist`
+a| `EnterpriseAllNodesFailed`
+a| `EnterpriseEndpointEncrypted`
+a| `EnterpriseReplicaNotPrimary`
+a| `EnterpriseSSLCertificateNotValidated`
+a| `EnterpriseTokenCredentialInvalid`
+a| `InvalidResponseField`
+a| `MissingResponseField`
+a| `RPCMethodUnavailable`
+a| `ServerConnectionFailed`
+a| `ServerConnectionFailedStatusError`
+a| `ServerConnectionFailedWithError`
+a| `SessionCloseFailed`
+a| `SessionIsClosed`
+a| `TransactionIsClosed`
+a| `TransactionIsClosedWithErrors`
+a| `UnexpectedResponse`
+a| `UnknownRequestId`
+a| `UserManagementEnterpriseOnly`
 |===
 // end::enum_constants[]
 

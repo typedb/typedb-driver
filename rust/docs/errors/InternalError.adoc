@@ -8,12 +8,12 @@
 [options="header"]
 |===
 |Variant
-a| `EnumOutOfBounds(i32, &'static str)`
-a| `RecvError(/* private fields */)`
-a| `SendError(/* private fields */)`
-a| `UnexpectedRequestType(String)`
-a| `UnexpectedResponseType(String)`
-a| `UnknownConnectionAddress(Address)`
+a| `EnumOutOfBounds`
+a| `RecvError`
+a| `SendError`
+a| `UnexpectedRequestType`
+a| `UnexpectedResponseType`
+a| `UnknownConnectionAddress`
 |===
 // end::enum_constants[]
 
