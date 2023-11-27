@@ -7,111 +7,8 @@
 * `Entity`
 * `Relation`
 
-[tabs]
-====
-Trait ThingAPI async examples::
-+
---
-[source,rust]
-----
-thing.iid();
-----
-
-, [source,rust]
-----
-thing.is_inferred();
-----
-
-, [source,rust]
-----
-thing.is_deleted(transaction).await;
-----
-
-, [source,rust]
-----
-thing.delete(transaction).await;
-----
-
-, [source,rust]
-----
-thing.get_has(transaction, attribute_type, annotations=vec![Annotation::Key]);
-----
-
-, [source,rust]
-----
-thing.set_has(transaction, attribute).await;
-----
-
-, [source,rust]
-----
-thing.unset_has(transaction, attribute).await;
-----
-
-, [source,rust]
-----
-thing.get_relations(transaction, role_types);
-----
-
-, [source,rust]
-----
-thing.get_playing(transaction);
-----
-
---
-
-Trait ThingAPI sync examples::
-+
---
-[source,rust]
-----
-thing.iid();
-----
-
-, [source,rust]
-----
-thing.is_inferred();
-----
-
-, [source,rust]
-----
-thing.is_deleted(transaction).resolve();
-----
-
-, [source,rust]
-----
-thing.delete(transaction).resolve();
-----
-
-, [source,rust]
-----
-thing.get_has(transaction, attribute_type, annotations=vec![Annotation::Key]);
-----
-
-, [source,rust]
-----
-thing.set_has(transaction, attribute).resolve();
-----
-
-, [source,rust]
-----
-thing.unset_has(transaction, attribute).resolve();
-----
-
-, [source,rust]
-----
-thing.get_relations(transaction, role_types);
-----
-
-, [source,rust]
-----
-thing.get_playing(transaction);
-----
-
---
-====
-
 // tag::methods[]
-[#_trait_ThingAPI_delete__transaction_&'tx_Transaction_'__]
+[#_trait_ThingAPI_delete__transaction_tx_Transaction___]
 ==== delete
 
 [source,rust]
@@ -165,7 +62,7 @@ thing.delete(transaction).resolve();
 --
 ====
 
-[#_trait_ThingAPI_get_has__transaction_&'tx_Transaction_'____attribute_type__attribute_types_Vec_AttributeType___annotations_Vec_Annotation_]
+[#_trait_ThingAPI_get_has__transaction_tx_Transaction_____attribute_type__attribute_types_Vec_AttributeType___annotations_Vec_Annotation_]
 ==== get_has
 
 [source,rust]
@@ -206,7 +103,7 @@ Result<BoxStream<'tx, Result<Attribute>>>
 thing.get_has(transaction, attribute_type, annotations=vec![Annotation::Key]);
 ----
 
-[#_trait_ThingAPI_get_playing__transaction_&'tx_Transaction_'__]
+[#_trait_ThingAPI_get_playing__transaction_tx_Transaction___]
 ==== get_playing
 
 [source,rust]
@@ -242,7 +139,7 @@ Result<BoxStream<'tx, Result<RoleType>>>
 thing.get_playing(transaction);
 ----
 
-[#_trait_ThingAPI_get_relations__transaction_&'tx_Transaction_'____role_types_Vec_RoleType_]
+[#_trait_ThingAPI_get_relations__transaction_tx_Transaction_____role_types_Vec_RoleType_]
 ==== get_relations
 
 [source,rust]
@@ -304,7 +201,7 @@ Retrieves the unique id of the ``Thing``.
 thing.iid();
 ----
 
-[#_trait_ThingAPI_is_deleted__transaction_&'tx_Transaction_'__]
+[#_trait_ThingAPI_is_deleted__transaction_tx_Transaction___]
 ==== is_deleted
 
 [source,rust]
@@ -382,7 +279,7 @@ bool
 thing.is_inferred();
 ----
 
-[#_trait_ThingAPI_set_has__transaction_&'tx_Transaction_'____attribute_Attribute]
+[#_trait_ThingAPI_set_has__transaction_tx_Transaction_____attribute_Attribute]
 ==== set_has
 
 [source,rust]
@@ -438,7 +335,7 @@ thing.set_has(transaction, attribute).resolve();
 --
 ====
 
-[#_trait_ThingAPI_unset_has__transaction_&'tx_Transaction_'____attribute_Attribute]
+[#_trait_ThingAPI_unset_has__transaction_tx_Transaction_____attribute_Attribute]
 ==== unset_has
 
 [source,rust]

@@ -5,81 +5,8 @@
 
 * `EntityType`
 
-[tabs]
-====
-Trait EntityTypeAPI async examples::
-+
---
-[source,rust]
-----
-entity_type.create(transaction).await;
-----
-
-, [source,rust]
-----
-entity_type.get_supertype(transaction).await;
-----
-
-, [source,rust]
-----
-entity_type.set_supertype(transaction, super_entity_type).await;
-----
-
-, [source,rust]
-----
-entity_type.get_supertypes(transaction);
-----
-
-, [source,rust]
-----
-entity_type.get_subtypes(transaction, Transitivity::Transitive);
-----
-
-, [source,rust]
-----
-entity_type.get_instances(transaction, Transitivity::Explicit);
-----
-
---
-
-Trait EntityTypeAPI sync examples::
-+
---
-[source,rust]
-----
-entity_type.create(transaction).resolve();
-----
-
-, [source,rust]
-----
-entity_type.get_supertype(transaction).resolve();
-----
-
-, [source,rust]
-----
-entity_type.set_supertype(transaction, super_entity_type).resolve();
-----
-
-, [source,rust]
-----
-entity_type.get_supertypes(transaction);
-----
-
-, [source,rust]
-----
-entity_type.get_subtypes(transaction, Transitivity::Transitive);
-----
-
-, [source,rust]
-----
-entity_type.get_instances(transaction, Transitivity::Explicit);
-----
-
---
-====
-
 // tag::methods[]
-[#_trait_EntityTypeAPI_create__transaction_&'tx_Transaction_'__]
+[#_trait_EntityTypeAPI_create__transaction_tx_Transaction___]
 ==== create
 
 [source,rust]
@@ -133,7 +60,7 @@ entity_type.create(transaction).resolve();
 --
 ====
 
-[#_trait_EntityTypeAPI_get_instances__transaction_&'tx_Transaction_'____transitivity_Transitivity]
+[#_trait_EntityTypeAPI_get_instances__transaction_tx_Transaction_____transitivity_Transitivity]
 ==== get_instances
 
 [source,rust]
@@ -171,7 +98,7 @@ Result<BoxStream<'tx, Result<Entity>>>
 entity_type.get_instances(transaction, Transitivity::Explicit);
 ----
 
-[#_trait_EntityTypeAPI_get_subtypes__transaction_&'tx_Transaction_'____transitivity_Transitivity]
+[#_trait_EntityTypeAPI_get_subtypes__transaction_tx_Transaction_____transitivity_Transitivity]
 ==== get_subtypes
 
 [source,rust]
@@ -209,7 +136,7 @@ Result<BoxStream<'tx, Result<EntityType>>>
 entity_type.get_subtypes(transaction, Transitivity::Transitive);
 ----
 
-[#_trait_EntityTypeAPI_get_supertype__transaction_&'tx_Transaction_'__]
+[#_trait_EntityTypeAPI_get_supertype__transaction_tx_Transaction___]
 ==== get_supertype
 
 [source,rust]
@@ -263,7 +190,7 @@ entity_type.get_supertype(transaction).resolve();
 --
 ====
 
-[#_trait_EntityTypeAPI_get_supertypes__transaction_&'tx_Transaction_'__]
+[#_trait_EntityTypeAPI_get_supertypes__transaction_tx_Transaction___]
 ==== get_supertypes
 
 [source,rust]
@@ -299,7 +226,7 @@ Result<BoxStream<'tx, Result<EntityType>>>
 entity_type.get_supertypes(transaction);
 ----
 
-[#_trait_EntityTypeAPI_set_supertype__transaction_&'tx_Transaction_'____supertype_EntityType]
+[#_trait_EntityTypeAPI_set_supertype__transaction_tx_Transaction_____supertype_EntityType]
 ==== set_supertype
 
 [source,rust]

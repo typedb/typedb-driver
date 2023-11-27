@@ -8,191 +8,8 @@
 * `RelationType`
 * `RootThingType`
 
-[tabs]
-====
-Trait ThingTypeAPI async examples::
-+
---
-[source,rust]
-----
-thing_type.label();
-----
-
-, [source,rust]
-----
-thing_type.is_abstract();
-----
-
-, [source,rust]
-----
-thing_type.is_root();
-----
-
-, [source,rust]
-----
-thing_type.is_deleted(transaction).await;
-----
-
-, [source,rust]
-----
-thing_type.delete(transaction).await;
-----
-
-, [source,rust]
-----
-thing_type.set_label(transaction, new_label).await;
-----
-
-, [source,rust]
-----
-thing_type.set_abstract(transaction).await;
-----
-
-, [source,rust]
-----
-thing_type.unset_abstract(transaction).await;
-----
-
-, [source,rust]
-----
-thing_type.get_owns(transaction, Some(value_type), Transitivity::Explicit, vec![Annotation::Key]).await;
-----
-
-, [source,rust]
-----
-thing_type.get_owns_overridden(transaction, attribute_type).await;
-----
-
-, [source,rust]
-----
-thing_type.set_owns(transaction, attribute_type, Some(overridden_type), vec![Annotation::Key]).await;
-----
-
-, [source,rust]
-----
-thing_type.unset_owns(transaction, attribute_type).await;
-----
-
-, [source,rust]
-----
-thing_type.get_plays(transaction, Transitivity::Explicit).await;
-----
-
-, [source,rust]
-----
-thing_type.get_plays_overridden(transaction, role_type).await;
-----
-
-, [source,rust]
-----
-thing_type.set_plays(transaction, role_type, None).await;
-----
-
-, [source,rust]
-----
-thing_type.unset_plays(transaction, role_type).await;
-----
-
-, [source,rust]
-----
-thing_type.get_syntax(transaction).await;
-----
-
---
-
-Trait ThingTypeAPI sync examples::
-+
---
-[source,rust]
-----
-thing_type.label();
-----
-
-, [source,rust]
-----
-thing_type.is_abstract();
-----
-
-, [source,rust]
-----
-thing_type.is_root();
-----
-
-, [source,rust]
-----
-thing_type.is_deleted(transaction).resolve();
-----
-
-, [source,rust]
-----
-thing_type.delete(transaction).resolve();
-----
-
-, [source,rust]
-----
-thing_type.set_label(transaction, new_label).resolve();
-----
-
-, [source,rust]
-----
-thing_type.set_abstract(transaction).resolve();
-----
-
-, [source,rust]
-----
-thing_type.unset_abstract(transaction).resolve();
-----
-
-, [source,rust]
-----
-thing_type.get_owns(transaction, Some(value_type), Transitivity::Explicit, vec![Annotation::Key]);
-----
-
-, [source,rust]
-----
-thing_type.get_owns_overridden(transaction, attribute_type).resolve();
-----
-
-, [source,rust]
-----
-thing_type.set_owns(transaction, attribute_type, Some(overridden_type), vec![Annotation::Key]);
-----
-
-, [source,rust]
-----
-thing_type.unset_owns(transaction, attribute_type).resolve();
-----
-
-, [source,rust]
-----
-thing_type.get_plays(transaction, Transitivity::Explicit).resolve();
-----
-
-, [source,rust]
-----
-thing_type.get_plays_overridden(transaction, role_type).resolve();
-----
-
-, [source,rust]
-----
-thing_type.set_plays(transaction, role_type, None).resolve();
-----
-
-, [source,rust]
-----
-thing_type.unset_plays(transaction, role_type).resolve();
-----
-
-, [source,rust]
-----
-thing_type.get_syntax(transaction).resolve();
-----
-
---
-====
-
 // tag::methods[]
-[#_trait_ThingTypeAPI_delete__transaction_&'tx_Transaction_'__]
+[#_trait_ThingTypeAPI_delete__transaction_tx_Transaction___]
 ==== delete
 
 [source,rust]
@@ -246,7 +63,7 @@ thing_type.delete(transaction).resolve();
 --
 ====
 
-[#_trait_ThingTypeAPI_get_owns__transaction_&'tx_Transaction_'____value_type_Option_ValueType___transitivity_Transitivity__annotations_Vec_Annotation_]
+[#_trait_ThingTypeAPI_get_owns__transaction_tx_Transaction_____value_type_Option_ValueType___transitivity_Transitivity__annotations_Vec_Annotation_]
 ==== get_owns
 
 [source,rust]
@@ -306,7 +123,7 @@ thing_type.get_owns(transaction, Some(value_type), Transitivity::Explicit, vec![
 --
 ====
 
-[#_trait_ThingTypeAPI_get_owns_overridden__transaction_&'tx_Transaction_'____overridden_attribute_type_AttributeType]
+[#_trait_ThingTypeAPI_get_owns_overridden__transaction_tx_Transaction_____overridden_attribute_type_AttributeType]
 ==== get_owns_overridden
 
 [source,rust]
@@ -362,7 +179,7 @@ thing_type.get_owns_overridden(transaction, attribute_type).resolve();
 --
 ====
 
-[#_trait_ThingTypeAPI_get_plays__transaction_&'tx_Transaction_'____transitivity_Transitivity]
+[#_trait_ThingTypeAPI_get_plays__transaction_tx_Transaction_____transitivity_Transitivity]
 ==== get_plays
 
 [source,rust]
@@ -418,7 +235,7 @@ thing_type.get_plays(transaction, Transitivity::Explicit).resolve();
 --
 ====
 
-[#_trait_ThingTypeAPI_get_plays_overridden__transaction_&'tx_Transaction_'____overridden_role_type_RoleType]
+[#_trait_ThingTypeAPI_get_plays_overridden__transaction_tx_Transaction_____overridden_role_type_RoleType]
 ==== get_plays_overridden
 
 [source,rust]
@@ -474,7 +291,7 @@ thing_type.get_plays_overridden(transaction, role_type).resolve();
 --
 ====
 
-[#_trait_ThingTypeAPI_get_syntax__transaction_&'tx_Transaction_'__]
+[#_trait_ThingTypeAPI_get_syntax__transaction_tx_Transaction___]
 ==== get_syntax
 
 [source,rust]
@@ -552,7 +369,7 @@ bool
 thing_type.is_abstract();
 ----
 
-[#_trait_ThingTypeAPI_is_deleted__transaction_&'tx_Transaction_'__]
+[#_trait_ThingTypeAPI_is_deleted__transaction_tx_Transaction___]
 ==== is_deleted
 
 [source,rust]
@@ -654,7 +471,7 @@ Retrieves the unique label of the type.
 thing_type.label();
 ----
 
-[#_trait_ThingTypeAPI_set_abstract__transaction_&'tx_Transaction_'__]
+[#_trait_ThingTypeAPI_set_abstract__transaction_tx_Transaction___]
 ==== set_abstract
 
 [source,rust]
@@ -708,7 +525,7 @@ thing_type.set_abstract(transaction).resolve();
 --
 ====
 
-[#_trait_ThingTypeAPI_set_label__transaction_&'tx_Transaction_'____new_label_String]
+[#_trait_ThingTypeAPI_set_label__transaction_tx_Transaction_____new_label_String]
 ==== set_label
 
 [source,rust]
@@ -764,7 +581,7 @@ thing_type.set_label(transaction, new_label).resolve();
 --
 ====
 
-[#_trait_ThingTypeAPI_set_owns__transaction_&'tx_Transaction_'____attribute_type_AttributeType__overridden_attribute_type_Option_AttributeType___annotations_Vec_Annotation_]
+[#_trait_ThingTypeAPI_set_owns__transaction_tx_Transaction_____attribute_type_AttributeType__overridden_attribute_type_Option_AttributeType___annotations_Vec_Annotation_]
 ==== set_owns
 
 [source,rust]
@@ -824,7 +641,7 @@ thing_type.set_owns(transaction, attribute_type, Some(overridden_type), vec![Ann
 --
 ====
 
-[#_trait_ThingTypeAPI_set_plays__transaction_&'tx_Transaction_'____role_type_RoleType__overridden_role_type_Option_RoleType_]
+[#_trait_ThingTypeAPI_set_plays__transaction_tx_Transaction_____role_type_RoleType__overridden_role_type_Option_RoleType_]
 ==== set_plays
 
 [source,rust]
@@ -882,7 +699,7 @@ thing_type.set_plays(transaction, role_type, None).resolve();
 --
 ====
 
-[#_trait_ThingTypeAPI_unset_abstract__transaction_&'tx_Transaction_'__]
+[#_trait_ThingTypeAPI_unset_abstract__transaction_tx_Transaction___]
 ==== unset_abstract
 
 [source,rust]
@@ -936,7 +753,7 @@ thing_type.unset_abstract(transaction).resolve();
 --
 ====
 
-[#_trait_ThingTypeAPI_unset_owns__transaction_&'tx_Transaction_'____attribute_type_AttributeType]
+[#_trait_ThingTypeAPI_unset_owns__transaction_tx_Transaction_____attribute_type_AttributeType]
 ==== unset_owns
 
 [source,rust]
@@ -992,7 +809,7 @@ thing_type.unset_owns(transaction, attribute_type).resolve();
 --
 ====
 
-[#_trait_ThingTypeAPI_unset_plays__transaction_&'tx_Transaction_'____role_type_RoleType]
+[#_trait_ThingTypeAPI_unset_plays__transaction_tx_Transaction_____role_type_RoleType]
 ==== unset_plays
 
 [source,rust]

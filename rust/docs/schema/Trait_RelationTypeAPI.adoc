@@ -5,131 +5,8 @@
 
 * `RelationType`
 
-[tabs]
-====
-Trait RelationTypeAPI async examples::
-+
---
-[source,rust]
-----
-relation_type.create(transaction).await;
-----
-
-, [source,rust]
-----
-relation_type.get_supertype(transaction).await;
-----
-
-, [source,rust]
-----
-relation_type.set_supertype(transaction, super_relation_type).await;
-----
-
-, [source,rust]
-----
-relation_type.get_supertypes(transaction);
-----
-
-, [source,rust]
-----
-relation_type.get_subtypes(transaction, Transitivity::Transitive);
-----
-
-, [source,rust]
-----
-relation_type.get_instances(transaction, Transitivity::Explicit);
-----
-
-, [source,rust]
-----
-relation_type.get_relates(transaction, Transitivity::Transitive);
-----
-
-, [source,rust]
-----
-relation_type.get_relates_for_role_label(transaction, role_label).await;
-----
-
-, [source,rust]
-----
-relation_type.get_relates_overridden(transaction, overridden_role_label).await;
-----
-
-, [source,rust]
-----
-relation_type.set_relates(transaction, role_label, None).await;
-----
-
-, [source,rust]
-----
-relation_type.unset_relates(transaction, role_label).await;
-----
-
---
-
-Trait RelationTypeAPI sync examples::
-+
---
-[source,rust]
-----
-relation_type.create(transaction).resolve();
-----
-
-, [source,rust]
-----
-relation_type.get_supertype(transaction).resolve();
-----
-
-, [source,rust]
-----
-relation_type.set_supertype(transaction, super_relation_type).resolve();
-----
-
-, [source,rust]
-----
-relation_type.get_supertypes(transaction);
-----
-
-, [source,rust]
-----
-relation_type.get_subtypes(transaction, Transitivity::Transitive);
-----
-
-, [source,rust]
-----
-relation_type.get_instances(transaction, Transitivity::Explicit);
-----
-
-, [source,rust]
-----
-relation_type.get_relates(transaction, Transitivity::Transitive);
-----
-
-, [source,rust]
-----
-relation_type.get_relates_for_role_label(transaction, role_label).resolve();
-----
-
-, [source,rust]
-----
-relation_type.get_relates_overridden(transaction, overridden_role_label).resolve();
-----
-
-, [source,rust]
-----
-relation_type.set_relates(transaction, role_label, None).resolve();
-----
-
-, [source,rust]
-----
-relation_type.unset_relates(transaction, role_label).resolve();
-----
-
---
-====
-
 // tag::methods[]
-[#_trait_RelationTypeAPI_create__transaction_&'tx_Transaction_'__]
+[#_trait_RelationTypeAPI_create__transaction_tx_Transaction___]
 ==== create
 
 [source,rust]
@@ -183,7 +60,7 @@ relation_type.create(transaction).resolve();
 --
 ====
 
-[#_trait_RelationTypeAPI_get_instances__transaction_&'tx_Transaction_'____transitivity_Transitivity]
+[#_trait_RelationTypeAPI_get_instances__transaction_tx_Transaction_____transitivity_Transitivity]
 ==== get_instances
 
 [source,rust]
@@ -221,7 +98,7 @@ Result<BoxStream<'tx, Result<Relation>>>
 relation_type.get_instances(transaction, Transitivity::Explicit);
 ----
 
-[#_trait_RelationTypeAPI_get_relates__transaction_&'tx_Transaction_'____transitivity_Transitivity]
+[#_trait_RelationTypeAPI_get_relates__transaction_tx_Transaction_____transitivity_Transitivity]
 ==== get_relates
 
 [source,rust]
@@ -259,7 +136,7 @@ Result<BoxStream<'tx, Result<RoleType>>>
 relation_type.get_relates(transaction, Transitivity::Transitive);
 ----
 
-[#_trait_RelationTypeAPI_get_relates_for_role_label__transaction_&'tx_Transaction_'____role_label_String]
+[#_trait_RelationTypeAPI_get_relates_for_role_label__transaction_tx_Transaction_____role_label_String]
 ==== get_relates_for_role_label
 
 [source,rust]
@@ -315,7 +192,7 @@ relation_type.get_relates_for_role_label(transaction, role_label).resolve();
 --
 ====
 
-[#_trait_RelationTypeAPI_get_relates_overridden__transaction_&'tx_Transaction_'____overridden_role_label_String]
+[#_trait_RelationTypeAPI_get_relates_overridden__transaction_tx_Transaction_____overridden_role_label_String]
 ==== get_relates_overridden
 
 [source,rust]
@@ -371,7 +248,7 @@ relation_type.get_relates_overridden(transaction, overridden_role_label).resolve
 --
 ====
 
-[#_trait_RelationTypeAPI_get_subtypes__transaction_&'tx_Transaction_'____transitivity_Transitivity]
+[#_trait_RelationTypeAPI_get_subtypes__transaction_tx_Transaction_____transitivity_Transitivity]
 ==== get_subtypes
 
 [source,rust]
@@ -409,7 +286,7 @@ Result<BoxStream<'tx, Result<RelationType>>>
 relation_type.get_subtypes(transaction, Transitivity::Transitive);
 ----
 
-[#_trait_RelationTypeAPI_get_supertype__transaction_&'tx_Transaction_'__]
+[#_trait_RelationTypeAPI_get_supertype__transaction_tx_Transaction___]
 ==== get_supertype
 
 [source,rust]
@@ -463,7 +340,7 @@ relation_type.get_supertype(transaction).resolve();
 --
 ====
 
-[#_trait_RelationTypeAPI_get_supertypes__transaction_&'tx_Transaction_'__]
+[#_trait_RelationTypeAPI_get_supertypes__transaction_tx_Transaction___]
 ==== get_supertypes
 
 [source,rust]
@@ -499,7 +376,7 @@ Result<BoxStream<'tx, Result<RelationType>>>
 relation_type.get_supertypes(transaction);
 ----
 
-[#_trait_RelationTypeAPI_set_relates__transaction_&'tx_Transaction_'____role_label_String__overridden_role_label_Option_String_]
+[#_trait_RelationTypeAPI_set_relates__transaction_tx_Transaction_____role_label_String__overridden_role_label_Option_String_]
 ==== set_relates
 
 [source,rust]
@@ -557,7 +434,7 @@ relation_type.set_relates(transaction, role_label, None).resolve();
 --
 ====
 
-[#_trait_RelationTypeAPI_set_supertype__transaction_&'tx_Transaction_'____supertype_RelationType]
+[#_trait_RelationTypeAPI_set_supertype__transaction_tx_Transaction_____supertype_RelationType]
 ==== set_supertype
 
 [source,rust]
@@ -613,7 +490,7 @@ relation_type.set_supertype(transaction, super_relation_type).resolve();
 --
 ====
 
-[#_trait_RelationTypeAPI_unset_relates__transaction_&'tx_Transaction_'____role_label_String]
+[#_trait_RelationTypeAPI_unset_relates__transaction_tx_Transaction_____role_label_String]
 ==== unset_relates
 
 [source,rust]
