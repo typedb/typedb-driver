@@ -23,6 +23,8 @@ load("@vaticle_dependencies//builder/cpp:rules.bzl", "clang_format_test")
 load("@vaticle_bazel_distribution//common:rules.bzl", "assemble_targz", "assemble_zip", "checksum", "assemble_versioned")
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
+load("@vaticle_bazel_distribution//platform:constraints.bzl", "constraint_linux_arm64", "constraint_linux_x86_64",
+     "constraint_mac_arm64", "constraint_mac_x86_64", "constraint_win_x86_64")
 
 cc_library(
     name = "typedb-driver-lib",
@@ -68,6 +70,7 @@ assemble_targz(
         ":typedb-driver-cpp-tar"
     ],
     output_filename = "typedb-driver-cpp-linux-arm64",
+    target_compatible_with = constraint_linux_arm64,
 )
 
 assemble_targz(
@@ -76,6 +79,7 @@ assemble_targz(
         ":typedb-driver-cpp-tar"
     ],
     output_filename = "typedb-driver-cpp-linux-x86_64",
+    target_compatible_with = constraint_linux_x86_64,
 )
 
 assemble_zip(
@@ -84,6 +88,7 @@ assemble_zip(
         ":typedb-driver-cpp-tar"
     ],
     output_filename = "typedb-driver-cpp-mac-arm64",
+    target_compatible_with = constraint_mac_arm64,
 )
 
 assemble_zip(
@@ -92,6 +97,7 @@ assemble_zip(
         ":typedb-driver-cpp-tar"
     ],
     output_filename = "typedb-driver-cpp-mac-x86_64",
+    target_compatible_with = constraint_mac_x86_64,
 )
 
 assemble_zip(
@@ -100,8 +106,8 @@ assemble_zip(
         ":typedb-driver-cpp-tar"
     ],
     output_filename = "typedb-driver-cpp-windows-x86_64",
+    target_compatible_with = constraint_win_x86_64,
 )
-
 
 clang_format_test(
     name = "clang_format",
