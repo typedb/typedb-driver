@@ -17,32 +17,33 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-#
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@vaticle_dependencies//builder/cpp:rules.bzl", "clang_format_test")
 
-filegroup(
-    name = "certificates",
-    srcs = [
-        ":encryption/ext-grpc-root-ca.pem",
-        ":encryption/ext-grpc-private-key.pem",
-        ":encryption/ext-grpc-certificate.pem",
-        ":encryption/int-grpc-root-ca.pem",
-        ":encryption/int-grpc-private-key.pem",
-        ":encryption/int-grpc-certificate.pem",
-        ":encryption/int-zmq-private-key",
-        ":encryption/int-zmq-public-key",
-        ":encryption/keystore.pkcs12"
+cc_test(
+    name = "test-cpp-driver",
+    srcs = ["test.cpp"],
+    deps = [
+        "//cpp:typedb-driver-lib",
+
+        # External
+        "@gtest//:gtest",
+        "@gtest//:gtest_main"
     ],
-    visibility = [
-        "//cpp/test:__subpackages__",
-        "//common/test/encryption:__subpackages__"
-    ],
+    copts = ["-std=c++17"],
+    env = {"RUST_BACKTRACE": "full"},
+)
+
+clang_format_test(
+    name = "clang_format",
+    include = glob(["**/*"]),
+    exclude = ["BUILD"]
 )
 
 checkstyle_test(
     name = "checkstyle",
-    include = glob(["*"]),
-    exclude = glob(["encryption/*"]),
+    size = "small",
+    include = glob(["*/*"]),
     license_type = "apache-header",
 )

@@ -286,6 +286,49 @@ commands:
           export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run --define version=$(cat VERSION) //java:deploy-maven --compilation_mode=opt -- release
 
+  ########################
+  # C++ deployment steps #
+  ########################
+
+  deploy-cpp-release-mac-arm64:
+    executor: mac-arm64
+    steps:
+      -run: |
+        mkdir -p ~/dist
+        bazel build --define version=$(cat VERSION) //cpp:assemble-mac-arm64-zip
+        cp bazel-bin/cpp/typedb-driver-cpp-mac-arm64.zip ~/dist
+  deploy-cpp-release-mac-x86_64:
+    executor: mac-arm64
+    steps:
+      - macos/install-rosetta
+      -run: |
+        mkdir -p ~/dist
+        bazel build --define version=$(cat VERSION) //cpp:assemble-mac-x86_64-zip
+        cp bazel-bin/cpp/typedb-driver-cpp-mac-x86_64.zip ~/dist
+  deploy-cpp-release-linux-arm64:
+    executor: linux-arm64
+    steps:
+      - run: |
+          mkdir -p ~/dist
+          bazel build --define version=$(cat VERSION) //cpp:assemble-linux-arm64-targz
+          cp bazel-bin/cpp/typedb-driver-cpp-linuxt-arm64.zip ~/dist
+  deploy-cpp-release-linux-x86_64:
+    executor: linux-x86_64
+    steps:
+      - run: |
+          mkdir -p ~/dist
+          bazel build --define version=$(cat VERSION) //cpp:assemble-linux-x86_64-targz
+          cp bazel-bin/cpp/typedb-driver-cpp-mac-linux_64.zip ~/dist
+  deploy-cpp-release-windows-x86_64:
+    executor:
+      name: win/default
+      shell: cmd.exe
+    working_directory: ~/typedb-driver
+    steps:
+      - run: |
+          mkdir -p ~/dist
+          bazel build --define version=$(cat VERSION) //cpp:assemble-windows-x86_64-zip
+          
 
 jobs:
 
@@ -860,6 +903,11 @@ workflows:
             - deploy-pip-release-linux-arm64
             - deploy-pip-release-linux-x86_64
             - deploy-pip-release-windows-x86_64
+            - deploy-cpp-release-mac-arm64
+            - deploy-cpp-release-mac-x86_64
+            - deploy-cpp-release-linux-arm64
+            - deploy-cpp-release-linux-x86_64
+            - deploy-cpp-release-windows-x86_64
             - deploy-maven-release
             - deploy-crate-release
             - deploy-npm-release

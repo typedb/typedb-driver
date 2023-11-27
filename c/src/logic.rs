@@ -106,7 +106,7 @@ pub extern "C" fn logic_manager_put_rule(
 #[no_mangle]
 pub extern "C" fn logic_manager_get_rule(
     transaction: *mut Transaction<'static>,
-    label: *mut c_char,
+    label: *const c_char,
 ) -> *mut RulePromise {
     release(RulePromise(Box::new(borrow(transaction).logic().get_rule(string_view(label).to_owned()))))
 }

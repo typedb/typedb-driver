@@ -17,32 +17,20 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-#
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-filegroup(
-    name = "certificates",
-    srcs = [
-        ":encryption/ext-grpc-root-ca.pem",
-        ":encryption/ext-grpc-private-key.pem",
-        ":encryption/ext-grpc-certificate.pem",
-        ":encryption/int-grpc-root-ca.pem",
-        ":encryption/int-grpc-private-key.pem",
-        ":encryption/int-grpc-certificate.pem",
-        ":encryption/int-zmq-private-key",
-        ":encryption/int-zmq-public-key",
-        ":encryption/keystore.pkcs12"
-    ],
-    visibility = [
-        "//cpp/test:__subpackages__",
-        "//common/test/encryption:__subpackages__"
-    ],
+# TODO: Create typedb_behaviour_cpp_test rule
+cc_test(
+    name = "query-test",
+    deps = ["//cpp/test/behaviour/steps:core-steps"],
+    data = ["@vaticle_typedb_behaviour//driver:query.feature"],
+    args = ["$(location @vaticle_typedb_behaviour//driver:query.feature)"]
 )
 
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
-    exclude = glob(["encryption/*"]),
     license_type = "apache-header",
+    size = "small",
 )
