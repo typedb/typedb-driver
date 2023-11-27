@@ -165,7 +165,7 @@ export class TypeDBSessionImpl implements TypeDBSession {
         const pulse = RequestBuilder.Session.pulseReq(this._id);
         try {
             const isAlive = await this._serverDriver.stub.sessionPulse(pulse);
-            if (!isAlive) this._isOpen = false;
+            if (!isAlive) await this.close();
             else this._pulse = setTimeout(() => this.pulse(), 5000);
         } catch (e) {
             this._isOpen = false;
