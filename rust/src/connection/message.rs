@@ -104,7 +104,9 @@ pub(super) enum Response {
         session_id: SessionID,
         server_duration: Duration,
     },
-    SessionPulse { is_alive: bool },
+    SessionPulse {
+        is_alive: bool,
+    },
     SessionClose,
 
     TransactionOpen {
