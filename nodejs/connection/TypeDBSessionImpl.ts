@@ -116,16 +116,23 @@ export class TypeDBSessionImpl implements TypeDBSession {
     async transaction(type: TransactionType, options?: TypeDBOptions): Promise<TypeDBTransaction> {
         if (!this.isOpen()) throw new TypeDBDriverError(SESSION_CLOSED);
         if (!options) options = new TypeDBOptions();
-        return this._database.runFailsafe(async (serverDriver, _db, isFirstRun) => {
-            if (!isFirstRun){
-                await this.close();
-                await this.reopenAt(serverDriver);
-            }
-            const transaction = new TypeDBTransactionImpl(this, type, options);
+        let transaction;
+        try {
+            transaction = new TypeDBTransactionImpl(this, type, options);
             await transaction.open();
-            this._transactions.add(transaction);
-            return transaction;
-        });
+        } catch (e) {
+            console.info(`Session closed on remote server: ${e}`);
+            console.info("Attempting to reconnect...");
+            await this.close();
+            await this._database.runFailsafe(async serverDriver => {
+                await this.reopenAt(serverDriver);
+                transaction = new TypeDBTransactionImpl(this, type, options);
+                await transaction.open();
+                console.info("Successfully reconnected to remote server");
+            });
+        }
+        this._transactions.add(transaction);
+        return transaction;
     }
 
     get database(): Database {
