@@ -168,7 +168,7 @@ impl Database {
         P: Future<Output = Result<R>>,
     {
         match self.run_on_any_replica(&task).await {
-            Err(Error::Connection(ConnectionError::EnterpriseReplicaNotPrimary())) => {
+            Err(Error::Connection(ConnectionError::EnterpriseReplicaNotPrimary)) => {
                 debug!("Attempted to run on a non-primary replica, retrying on primary...");
                 self.run_on_primary_replica(&task).await
             }
@@ -186,7 +186,7 @@ impl Database {
         for replica in replicas {
             match task(replica.database.clone(), self.connection.connection(&replica.address)?.clone()).await {
                 Err(Error::Connection(
-                    ConnectionError::ServerConnectionFailedStatusError(_) | ConnectionError::ConnectionFailed(),
+                    ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
                 )) => {
                     debug!("Unable to connect to {}. Attempting next server.", replica.address);
                 }
@@ -210,9 +210,9 @@ impl Database {
                 .await
             {
                 Err(Error::Connection(
-                    ConnectionError::EnterpriseReplicaNotPrimary()
-                    | ConnectionError::ServerConnectionFailedStatusError(_)
-                    | ConnectionError::ConnectionFailed(),
+                    ConnectionError::EnterpriseReplicaNotPrimary
+                    | ConnectionError::ServerConnectionFailedStatusError { .. }
+                    | ConnectionError::ConnectionFailed,
                 )) => {
                     debug!("Primary replica error, waiting...");
                     Self::wait_for_primary_replica_selection().await;
@@ -316,9 +316,9 @@ impl Replica {
                     return Self::try_from_info(info, &connection);
                 }
                 Err(Error::Connection(
-                    ConnectionError::DatabaseDoesNotExist(_)
-                    | ConnectionError::ServerConnectionFailedStatusError(_)
-                    | ConnectionError::ConnectionFailed(),
+                    ConnectionError::DatabaseDoesNotExist { .. }
+                    | ConnectionError::ServerConnectionFailedStatusError { .. }
+                    | ConnectionError::ConnectionFailed,
                 )) => {
                     error!(
                         "Failed to fetch replica info for database '{}' from {}. Attempting next server.",

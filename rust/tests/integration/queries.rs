@@ -264,24 +264,24 @@ test_for_each_arg! {
 
         let schema = database.schema().await;
         assert!(schema.is_err());
-        assert!(matches!(schema, Err(Error::Connection(ConnectionError::ConnectionIsClosed()))));
+        assert!(matches!(schema, Err(Error::Connection(ConnectionError::ConnectionIsClosed))));
 
         let database2 = databases.get(common::TEST_DATABASE).await;
         assert!(database2.is_err());
-        assert!(matches!(database2, Err(Error::Connection(ConnectionError::ConnectionIsClosed()))));
+        assert!(matches!(database2, Err(Error::Connection(ConnectionError::ConnectionIsClosed))));
 
         let transaction = session.transaction(Write).await;
         assert!(transaction.is_err());
         assert!(
             matches!(
                 transaction,
-                Err(Error::Connection(ConnectionError::ConnectionIsClosed() | ConnectionError::SessionIsClosed()))
+                Err(Error::Connection(ConnectionError::ConnectionIsClosed | ConnectionError::SessionIsClosed))
             ),
         );
 
         let session = Session::new(database, Data).await;
         assert!(session.is_err());
-        assert!(matches!(session, Err(Error::Connection(ConnectionError::ConnectionIsClosed()))));
+        assert!(matches!(session, Err(Error::Connection(ConnectionError::ConnectionIsClosed))));
 
         Ok(())
     }
@@ -302,7 +302,7 @@ test_for_each_arg! {
 
         let transaction = session.transaction(Write).await;
         assert!(transaction.is_err());
-        assert!(matches!(transaction, Err(Error::Connection(ConnectionError::SessionIsClosed()))));
+        assert!(matches!(transaction, Err(Error::Connection(ConnectionError::SessionIsClosed))));
 
         assert!(Session::new(databases.get(common::TEST_DATABASE).await?, Data).await.is_ok());
 

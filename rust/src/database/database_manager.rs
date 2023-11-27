@@ -56,7 +56,7 @@ impl DatabaseManager {
     pub async fn get(&self, name: impl Into<String>) -> Result<Database> {
         let name = name.into();
         if !self.contains(name.clone()).await? {
-            return Err(ConnectionError::DatabaseDoesNotExist(name).into());
+            return Err(ConnectionError::DatabaseDoesNotExist { name }.into());
         }
         Database::get(name, self.connection.clone()).await
     }
@@ -118,7 +118,7 @@ impl DatabaseManager {
                 Err(err) => error_buffer.push(format!("- {}: {}", server_connection.address(), err)),
             }
         }
-        Err(ConnectionError::ServerConnectionFailedWithError(error_buffer.join("\n")))?
+        Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
     }
 
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
@@ -131,7 +131,7 @@ impl DatabaseManager {
         for server_connection in self.connection.connections() {
             match task(server_connection.clone(), name.clone()).await {
                 Ok(res) => return Ok(res),
-                Err(Error::Connection(ConnectionError::EnterpriseReplicaNotPrimary())) => {
+                Err(Error::Connection(ConnectionError::EnterpriseReplicaNotPrimary)) => {
                     return Database::get(name, self.connection.clone())
                         .await?
                         .run_on_primary_replica(|database, server_connection| {
@@ -140,10 +140,10 @@ impl DatabaseManager {
                         })
                         .await
                 }
-                err @ Err(Error::Connection(ConnectionError::ConnectionIsClosed())) => return err,
+                err @ Err(Error::Connection(ConnectionError::ConnectionIsClosed)) => return err,
                 Err(err) => error_buffer.push(format!("- {}: {}", server_connection.address(), err)),
             }
         }
-        Err(ConnectionError::ServerConnectionFailedWithError(error_buffer.join("\n")))?
+        Err(ConnectionError::ServerConnectionFailedWithError { error: error_buffer.join("\n") })?
     }
 }

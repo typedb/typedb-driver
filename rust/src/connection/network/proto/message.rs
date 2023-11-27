@@ -50,7 +50,7 @@ impl TryIntoProto<connection::open::Req> for Request {
     fn try_into_proto(self) -> Result<connection::open::Req> {
         match self {
             Self::ConnectionOpen => Ok(connection::open::Req { version: Version.into() }),
-            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
@@ -59,7 +59,7 @@ impl TryIntoProto<server_manager::all::Req> for Request {
     fn try_into_proto(self) -> Result<server_manager::all::Req> {
         match self {
             Self::ServersAll => Ok(server_manager::all::Req {}),
-            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
@@ -68,7 +68,7 @@ impl TryIntoProto<database_manager::contains::Req> for Request {
     fn try_into_proto(self) -> Result<database_manager::contains::Req> {
         match self {
             Self::DatabasesContains { database_name } => Ok(database_manager::contains::Req { name: database_name }),
-            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
@@ -77,7 +77,7 @@ impl TryIntoProto<database_manager::create::Req> for Request {
     fn try_into_proto(self) -> Result<database_manager::create::Req> {
         match self {
             Self::DatabaseCreate { database_name } => Ok(database_manager::create::Req { name: database_name }),
-            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
@@ -86,7 +86,7 @@ impl TryIntoProto<database_manager::get::Req> for Request {
     fn try_into_proto(self) -> Result<database_manager::get::Req> {
         match self {
             Self::DatabaseGet { database_name } => Ok(database_manager::get::Req { name: database_name }),
-            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
@@ -95,7 +95,7 @@ impl TryIntoProto<database_manager::all::Req> for Request {
     fn try_into_proto(self) -> Result<database_manager::all::Req> {
         match self {
             Self::DatabasesAll => Ok(database_manager::all::Req {}),
-            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
@@ -104,7 +104,7 @@ impl TryIntoProto<database::delete::Req> for Request {
     fn try_into_proto(self) -> Result<database::delete::Req> {
         match self {
             Self::DatabaseDelete { database_name } => Ok(database::delete::Req { name: database_name }),
-            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
@@ -113,7 +113,7 @@ impl TryIntoProto<database::schema::Req> for Request {
     fn try_into_proto(self) -> Result<database::schema::Req> {
         match self {
             Self::DatabaseSchema { database_name } => Ok(database::schema::Req { name: database_name }),
-            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
@@ -122,7 +122,7 @@ impl TryIntoProto<database::type_schema::Req> for Request {
     fn try_into_proto(self) -> Result<database::type_schema::Req> {
         match self {
             Self::DatabaseTypeSchema { database_name } => Ok(database::type_schema::Req { name: database_name }),
-            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
@@ -131,7 +131,7 @@ impl TryIntoProto<database::rule_schema::Req> for Request {
     fn try_into_proto(self) -> Result<database::rule_schema::Req> {
         match self {
             Self::DatabaseRuleSchema { database_name } => Ok(database::rule_schema::Req { name: database_name }),
-            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
@@ -144,7 +144,7 @@ impl TryIntoProto<session::open::Req> for Request {
                 r#type: session_type.into_proto(),
                 options: Some(options.into_proto()),
             }),
-            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
@@ -153,7 +153,7 @@ impl TryIntoProto<session::pulse::Req> for Request {
     fn try_into_proto(self) -> Result<session::pulse::Req> {
         match self {
             Self::SessionPulse { session_id } => Ok(session::pulse::Req { session_id: session_id.into() }),
-            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
@@ -162,7 +162,7 @@ impl TryIntoProto<session::close::Req> for Request {
     fn try_into_proto(self) -> Result<session::close::Req> {
         match self {
             Self::SessionClose { session_id } => Ok(session::close::Req { session_id: session_id.into() }),
-            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
@@ -171,7 +171,7 @@ impl TryIntoProto<transaction::Client> for Request {
     fn try_into_proto(self) -> Result<transaction::Client> {
         match self {
             Self::Transaction(transaction_req) => Ok(transaction::Client { reqs: vec![transaction_req.into_proto()] }),
-            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
@@ -180,7 +180,7 @@ impl TryIntoProto<user_manager::all::Req> for Request {
     fn try_into_proto(self) -> Result<user_manager::all::Req> {
         match self {
             Self::UsersAll => Ok(user_manager::all::Req {}),
-            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
@@ -189,7 +189,7 @@ impl TryIntoProto<user_manager::contains::Req> for Request {
     fn try_into_proto(self) -> Result<user_manager::contains::Req> {
         match self {
             Self::UsersContain { username } => Ok(user_manager::contains::Req { username }),
-            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
@@ -198,7 +198,7 @@ impl TryIntoProto<user_manager::create::Req> for Request {
     fn try_into_proto(self) -> Result<user_manager::create::Req> {
         match self {
             Self::UsersCreate { username, password } => Ok(user_manager::create::Req { username, password }),
-            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
@@ -207,7 +207,7 @@ impl TryIntoProto<user_manager::delete::Req> for Request {
     fn try_into_proto(self) -> Result<user_manager::delete::Req> {
         match self {
             Self::UsersDelete { username } => Ok(user_manager::delete::Req { username }),
-            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
@@ -216,7 +216,7 @@ impl TryIntoProto<user_manager::get::Req> for Request {
     fn try_into_proto(self) -> Result<user_manager::get::Req> {
         match self {
             Self::UsersGet { username } => Ok(user_manager::get::Req { username }),
-            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
@@ -225,7 +225,7 @@ impl TryIntoProto<user_manager::password_set::Req> for Request {
     fn try_into_proto(self) -> Result<user_manager::password_set::Req> {
         match self {
             Self::UsersPasswordSet { username, password } => Ok(user_manager::password_set::Req { username, password }),
-            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
@@ -236,7 +236,7 @@ impl TryIntoProto<user::password_update::Req> for Request {
             Self::UserPasswordUpdate { username, password_old, password_new } => {
                 Ok(user::password_update::Req { username, password_old, password_new })
             }
-            other => Err(InternalError::UnexpectedRequestType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }
 }
@@ -270,7 +270,7 @@ impl TryFromProto<database_manager::get::Res> for Response {
     fn try_from_proto(proto: database_manager::get::Res) -> Result<Self> {
         Ok(Self::DatabaseGet {
             database: DatabaseInfo::try_from_proto(
-                proto.database.ok_or(ConnectionError::MissingResponseField("database"))?,
+                proto.database.ok_or(ConnectionError::MissingResponseField { field: "database" })?,
             )?,
         })
     }
@@ -382,12 +382,12 @@ impl TryFromProto<transaction::Res> for TransactionResponse {
                 Ok(Self::RoleType(RoleTypeResponse::try_from_proto(res)?))
             }
             Some(transaction::res::Res::TypeRes(r#type::Res { res: None })) => {
-                Err(ConnectionError::MissingResponseField("res").into())
+                Err(ConnectionError::MissingResponseField { field: "res" }.into())
             }
             Some(transaction::res::Res::ThingRes(res)) => Ok(Self::Thing(ThingResponse::try_from_proto(res)?)),
             Some(transaction::res::Res::RuleRes(res)) => Ok(Self::Rule(RuleResponse::try_from_proto(res)?)),
             Some(transaction::res::Res::LogicManagerRes(res)) => Ok(Self::Logic(LogicResponse::try_from_proto(res)?)),
-            None => Err(ConnectionError::MissingResponseField("res").into()),
+            None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
         }
     }
 }
@@ -405,14 +405,14 @@ impl TryFromProto<transaction::ResPart> for TransactionResponse {
                 res: Some(r#type::res_part::Res::RoleTypeResPart(res)),
             })) => Ok(Self::RoleType(RoleTypeResponse::try_from_proto(res)?)),
             Some(transaction::res_part::Res::TypeResPart(r#type::ResPart { res: None })) => {
-                Err(ConnectionError::MissingResponseField("res").into())
+                Err(ConnectionError::MissingResponseField { field: "res" }.into())
             }
             Some(transaction::res_part::Res::ThingResPart(res)) => Ok(Self::Thing(ThingResponse::try_from_proto(res)?)),
             Some(transaction::res_part::Res::LogicManagerResPart(res)) => {
                 Ok(Self::Logic(LogicResponse::try_from_proto(res)?))
             }
             Some(transaction::res_part::Res::StreamResPart(_)) => unreachable!(),
-            None => Err(ConnectionError::MissingResponseField("res").into()),
+            None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
         }
     }
 }
@@ -515,7 +515,7 @@ impl TryFromProto<query_manager::Res> for QueryResponse {
             Some(query_manager::res::Res::GetAggregateRes(res)) => {
                 Ok(Self::GetAggregate { answer: res.answer.map(Value::try_from_proto).transpose()? })
             }
-            None => Err(ConnectionError::MissingResponseField("res").into()),
+            None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
         }
     }
 }
@@ -544,7 +544,7 @@ impl TryFromProto<query_manager::ResPart> for QueryResponse {
             Some(query_manager::res_part::Res::ExplainResPart(res)) => Ok(Self::Explain {
                 answers: res.explanations.into_iter().map(Explanation::try_from_proto).try_collect()?,
             }),
-            None => Err(ConnectionError::MissingResponseField("res").into()),
+            None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
         }
     }
 }
@@ -608,21 +608,21 @@ impl TryFromProto<concept_manager::Res> for ConceptResponse {
                 entity_type,
             })) => Ok(Self::PutEntityType {
                 entity_type: EntityType::from_proto(
-                    entity_type.ok_or(ConnectionError::MissingResponseField("entity_type"))?,
+                    entity_type.ok_or(ConnectionError::MissingResponseField { field: "entity_type" })?,
                 ),
             }),
             Some(concept_manager::res::Res::PutRelationTypeRes(concept_manager::put_relation_type::Res {
                 relation_type,
             })) => Ok(Self::PutRelationType {
                 relation_type: RelationType::from_proto(
-                    relation_type.ok_or(ConnectionError::MissingResponseField("relation_type"))?,
+                    relation_type.ok_or(ConnectionError::MissingResponseField { field: "relation_type" })?,
                 ),
             }),
             Some(concept_manager::res::Res::PutAttributeTypeRes(concept_manager::put_attribute_type::Res {
                 attribute_type,
             })) => Ok(Self::PutAttributeType {
                 attribute_type: AttributeType::try_from_proto(
-                    attribute_type.ok_or(ConnectionError::MissingResponseField("attribute_type"))?,
+                    attribute_type.ok_or(ConnectionError::MissingResponseField { field: "attribute_type" })?,
                 )?,
             }),
             Some(concept_manager::res::Res::GetEntityRes(concept_manager::get_entity::Res { entity })) => {
@@ -639,7 +639,7 @@ impl TryFromProto<concept_manager::Res> for ConceptResponse {
             })) => Ok(Self::GetSchemaExceptions {
                 exceptions: exceptions.into_iter().map(SchemaException::from_proto).collect(),
             }),
-            None => Err(ConnectionError::MissingResponseField("res").into()),
+            None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
         }
     }
 }
@@ -887,7 +887,9 @@ impl TryFromProto<thing_type::Res> for ThingTypeResponse {
             }
             Some(thing_type::res::Res::EntityTypeCreateRes(entity_type::create::Res { entity })) => {
                 Ok(Self::EntityTypeCreate {
-                    entity: Entity::try_from_proto(entity.ok_or(ConnectionError::MissingResponseField("entity"))?)?,
+                    entity: Entity::try_from_proto(
+                        entity.ok_or(ConnectionError::MissingResponseField { field: "entity" })?,
+                    )?,
                 })
             }
             Some(thing_type::res::Res::EntityTypeGetSupertypeRes(entity_type::get_supertype::Res { entity_type })) => {
@@ -897,7 +899,7 @@ impl TryFromProto<thing_type::Res> for ThingTypeResponse {
             Some(thing_type::res::Res::RelationTypeCreateRes(relation_type::create::Res { relation })) => {
                 Ok(Self::RelationTypeCreate {
                     relation: Relation::try_from_proto(
-                        relation.ok_or(ConnectionError::MissingResponseField("relation"))?,
+                        relation.ok_or(ConnectionError::MissingResponseField { field: "relation" })?,
                     )?,
                 })
             }
@@ -916,7 +918,7 @@ impl TryFromProto<thing_type::Res> for ThingTypeResponse {
             Some(thing_type::res::Res::AttributeTypePutRes(attribute_type::put::Res { attribute })) => {
                 Ok(Self::AttributeTypePut {
                     attribute: Attribute::try_from_proto(
-                        attribute.ok_or(ConnectionError::MissingResponseField("attribute"))?,
+                        attribute.ok_or(ConnectionError::MissingResponseField { field: "attribute" })?,
                     )?,
                 })
             }
@@ -933,7 +935,7 @@ impl TryFromProto<thing_type::Res> for ThingTypeResponse {
                 Ok(Self::AttributeTypeGetRegex { regex: Some(regex).filter(|s| !s.is_empty()) })
             }
             Some(thing_type::res::Res::AttributeTypeSetRegexRes(_)) => Ok(Self::AttributeTypeSetRegex),
-            None => Err(ConnectionError::MissingResponseField("res").into()),
+            None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
         }
     }
 }
@@ -1006,7 +1008,7 @@ impl TryFromProto<thing_type::ResPart> for ThingTypeResponse {
             })) => Ok(Self::AttributeTypeGetOwners {
                 thing_types: thing_types.into_iter().map(ThingType::try_from_proto).try_collect()?,
             }),
-            None => Err(ConnectionError::MissingResponseField("res").into()),
+            None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
         }
     }
 }
@@ -1074,7 +1076,7 @@ impl TryFromProto<role_type::Res> for RoleTypeResponse {
             Some(role_type::res::Res::RoleTypeGetSupertypeRes(role_type::get_supertype::Res { role_type })) => {
                 Ok(Self::GetSupertype { role_type: role_type.map(RoleType::from_proto) })
             }
-            None => Err(ConnectionError::MissingResponseField("res").into()),
+            None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
         }
     }
 }
@@ -1106,7 +1108,7 @@ impl TryFromProto<role_type::ResPart> for RoleTypeResponse {
             Some(role_type::res_part::Res::RoleTypeGetPlayerInstancesResPart(
                 role_type::get_player_instances::ResPart { things },
             )) => Ok(Self::GetPlayerInstances { things: things.into_iter().map(Thing::try_from_proto).try_collect()? }),
-            None => Err(ConnectionError::MissingResponseField("res").into()),
+            None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
         }
     }
 }
@@ -1190,7 +1192,7 @@ impl TryFromProto<thing::Res> for ThingResponse {
             Some(thing::res::Res::ThingUnsetHasRes(_)) => Ok(Self::ThingUnsetHas),
             Some(thing::res::Res::RelationAddRolePlayerRes(_)) => Ok(Self::RelationAddRolePlayer),
             Some(thing::res::Res::RelationRemoveRolePlayerRes(_)) => Ok(Self::RelationRemoveRolePlayer),
-            None => Err(ConnectionError::MissingResponseField("res").into()),
+            None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
         }
     }
 }
@@ -1222,8 +1224,9 @@ impl TryFromProto<thing::ResPart> for ThingResponse {
                 role_players: role_players
                     .into_iter()
                     .map(|relation::RolePlayer { role_type, player }| -> Result<_> {
-                        let role_type = role_type.ok_or(ConnectionError::MissingResponseField("role_type"))?;
-                        let player = player.ok_or(ConnectionError::MissingResponseField("player"))?;
+                        let role_type =
+                            role_type.ok_or(ConnectionError::MissingResponseField { field: "role_type" })?;
+                        let player = player.ok_or(ConnectionError::MissingResponseField { field: "player" })?;
                         Ok((RoleType::from_proto(role_type), Thing::try_from_proto(player)?))
                     })
                     .try_collect()?,
@@ -1234,7 +1237,7 @@ impl TryFromProto<thing::ResPart> for ThingResponse {
             Some(thing::res_part::Res::AttributeGetOwnersResPart(attribute::get_owners::ResPart { things })) => {
                 Ok(Self::AttributeGetOwners { owners: things.into_iter().map(Thing::try_from_proto).try_collect()? })
             }
-            None => Err(ConnectionError::MissingResponseField("res").into()),
+            None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
         }
     }
 }
@@ -1256,7 +1259,7 @@ impl TryFromProto<rule::Res> for RuleResponse {
         match proto.res {
             Some(rule::res::Res::RuleDeleteRes(_)) => Ok(Self::Delete),
             Some(rule::res::Res::RuleSetLabelRes(_)) => Ok(Self::SetLabel),
-            None => Err(ConnectionError::MissingResponseField("res").into()),
+            None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
         }
     }
 }
@@ -1280,12 +1283,12 @@ impl TryFromProto<logic_manager::Res> for LogicResponse {
     fn try_from_proto(proto: logic_manager::Res) -> Result<Self> {
         match proto.res {
             Some(logic_manager::res::Res::PutRuleRes(logic_manager::put_rule::Res { rule })) => Ok(Self::PutRule {
-                rule: Rule::try_from_proto(rule.ok_or(ConnectionError::MissingResponseField("rule"))?)?,
+                rule: Rule::try_from_proto(rule.ok_or(ConnectionError::MissingResponseField { field: "rule" })?)?,
             }),
             Some(logic_manager::res::Res::GetRuleRes(logic_manager::get_rule::Res { rule })) => {
                 Ok(Self::GetRule { rule: rule.map(Rule::try_from_proto).transpose()? })
             }
-            None => Err(ConnectionError::MissingResponseField("res").into()),
+            None => Err(ConnectionError::MissingResponseField { field: "res" }.into()),
         }
     }
 }
@@ -1296,7 +1299,7 @@ impl TryFromProto<logic_manager::ResPart> for LogicResponse {
             Some(logic_manager::get_rules::ResPart { rules }) => {
                 Ok(Self::GetRules { rules: rules.into_iter().map(Rule::try_from_proto).try_collect()? })
             }
-            None => Err(ConnectionError::MissingResponseField("get_rules_res_part").into()),
+            None => Err(ConnectionError::MissingResponseField { field: "get_rules_res_part" }.into()),
         }
     }
 }

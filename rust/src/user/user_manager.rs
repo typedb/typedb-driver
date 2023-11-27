@@ -187,7 +187,7 @@ impl UserManager {
         P: Future<Output = Result<R>>,
     {
         if !self.connection.is_enterprise() {
-            Err(Error::Connection(ConnectionError::UserManagementEnterpriseOnly()))
+            Err(Error::Connection(ConnectionError::UserManagementEnterpriseOnly))
         } else {
             DatabaseManager::new(self.connection.clone())
                 .get(Self::SYSTEM_DB)

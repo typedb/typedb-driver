@@ -39,12 +39,12 @@ pub(super) enum ResponseSink<T> {
 impl<T> ResponseSink<T> {
     pub(super) fn finish(self, response: Result<T>) {
         let result = match self {
-            Self::AsyncOneShot(sink) => sink.send(response).map_err(|_| InternalError::SendError().into()),
+            Self::AsyncOneShot(sink) => sink.send(response).map_err(|_| InternalError::SendError.into()),
             Self::BlockingOneShot(sink) => sink.send(response).map_err(Error::from),
             Self::Streamed(sink) => sink.send(response).map_err(Error::from),
         };
         match result {
-            Err(Error::Internal(err @ InternalError::SendError())) => debug!("{err}"),
+            Err(Error::Internal(err @ InternalError::SendError)) => debug!("{err}"),
             Err(err) => error!("{err}"),
             Ok(()) => (),
         }
@@ -56,7 +56,7 @@ impl<T> ResponseSink<T> {
             _ => unreachable!("attempted to stream over a one-shot callback"),
         };
         match result {
-            Err(Error::Internal(err @ InternalError::SendError())) => debug!("{err}"),
+            Err(Error::Internal(err @ InternalError::SendError)) => debug!("{err}"),
             Err(err) => error!("{err}"),
             Ok(()) => (),
         }

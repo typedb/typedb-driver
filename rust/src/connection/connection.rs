@@ -84,7 +84,7 @@ impl Connection {
             .servers_all()?
             .into_iter()
             .exactly_one()
-            .map_err(|e| ConnectionError::ServerConnectionFailedStatusError(e.to_string()))?;
+            .map_err(|e| ConnectionError::ServerConnectionFailedStatusError { error: e.to_string() })?;
         server_connection.set_address(address.clone());
         match server_connection.validate() {
             Ok(()) => Ok(Self {
@@ -136,9 +136,9 @@ impl Connection {
         let errors: Vec<Error> =
             server_connections.values().map(|conn| conn.validate()).filter_map(Result::err).collect();
         if errors.len() == server_connections.len() {
-            Err(ConnectionError::EnterpriseAllNodesFailed(
-                errors.into_iter().map(|err| err.to_string()).collect::<Vec<_>>().join("\n"),
-            ))?
+            Err(ConnectionError::EnterpriseAllNodesFailed {
+                errors: errors.into_iter().map(|err| err.to_string()).collect::<Vec<_>>().join("\n"),
+            })?
         } else {
             Ok(Self {
                 server_connections,
@@ -161,19 +161,19 @@ impl Connection {
                 Ok(server_connection) => match server_connection.servers_all() {
                     Ok(servers) => return Ok(servers.into_iter().collect()),
                     Err(Error::Connection(
-                        ConnectionError::ServerConnectionFailedStatusError(_) | ConnectionError::ConnectionFailed(),
+                        ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
                     )) => (),
                     Err(err) => Err(err)?,
                 },
                 Err(Error::Connection(
-                    ConnectionError::ServerConnectionFailedStatusError(_) | ConnectionError::ConnectionFailed(),
+                    ConnectionError::ServerConnectionFailedStatusError { .. } | ConnectionError::ConnectionFailed,
                 )) => (),
                 Err(err) => Err(err)?,
             }
         }
-        Err(ConnectionError::ServerConnectionFailed(
-            addresses.into_iter().map(|a| a.to_string()).collect::<Vec<_>>().join(","),
-        )
+        Err(ConnectionError::ServerConnectionFailed {
+            addresses: addresses.into_iter().map(|a| a.to_string()).collect::<Vec<_>>().join(","),
+        }
         .into())
     }
 
@@ -223,7 +223,7 @@ impl Connection {
     pub(crate) fn connection(&self, address: &Address) -> Result<&ServerConnection> {
         self.server_connections
             .get(address)
-            .ok_or_else(|| InternalError::UnknownConnectionAddress(address.clone()).into())
+            .ok_or_else(|| InternalError::UnknownConnectionAddress { address: address.clone() }.into())
     }
 
     pub(crate) fn connections(&self) -> impl Iterator<Item = &ServerConnection> + '_ {
@@ -235,9 +235,9 @@ impl Connection {
     }
 
     pub(crate) fn unable_to_connect_error(&self) -> Error {
-        Error::Connection(ConnectionError::ServerConnectionFailedStatusError(
-            self.addresses().map(Address::to_string).collect::<Vec<_>>().join(", "),
-        ))
+        Error::Connection(ConnectionError::ServerConnectionFailedStatusError {
+            error: self.addresses().map(Address::to_string).collect::<Vec<_>>().join(", "),
+        })
     }
 }
 
@@ -274,7 +274,7 @@ impl ServerConnection {
     pub(crate) fn validate(&self) -> Result {
         match self.request_blocking(Request::ConnectionOpen)? {
             Response::ConnectionOpen => Ok(()),
-            _other => Err(ConnectionError::UnexpectedResponse(format!("{_other:?}")).into()),
+            other => Err(ConnectionError::UnexpectedResponse { response: format!("{other:?}") }.into()),
         }
     }
 
@@ -289,14 +289,14 @@ impl ServerConnection {
     #[cfg_attr(feature = "sync", maybe_async::must_be_sync)]
     async fn request(&self, request: Request) -> Result<Response> {
         if !self.background_runtime.is_open() {
-            return Err(ConnectionError::ConnectionIsClosed().into());
+            return Err(ConnectionError::ConnectionIsClosed.into());
         }
         self.request_transmitter.request(request).await
     }
 
     fn request_blocking(&self, request: Request) -> Result<Response> {
         if !self.background_runtime.is_open() {
-            return Err(ConnectionError::ConnectionIsClosed().into());
+            return Err(ConnectionError::ConnectionIsClosed.into());
         }
         self.request_transmitter.request_blocking(request)
     }
@@ -312,7 +312,7 @@ impl ServerConnection {
     pub(crate) fn servers_all(&self) -> Result<Vec<Address>> {
         match self.request_blocking(Request::ServersAll)? {
             Response::ServersAll { servers } => Ok(servers),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
 
@@ -320,7 +320,7 @@ impl ServerConnection {
     pub(crate) async fn database_exists(&self, database_name: String) -> Result<bool> {
         match self.request(Request::DatabasesContains { database_name }).await? {
             Response::DatabasesContains { contains } => Ok(contains),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
 
@@ -334,7 +334,7 @@ impl ServerConnection {
     pub(crate) async fn get_database_replicas(&self, database_name: String) -> Result<DatabaseInfo> {
         match self.request(Request::DatabaseGet { database_name }).await? {
             Response::DatabaseGet { database } => Ok(database),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
 
@@ -342,7 +342,7 @@ impl ServerConnection {
     pub(crate) async fn all_databases(&self) -> Result<Vec<DatabaseInfo>> {
         match self.request(Request::DatabasesAll).await? {
             Response::DatabasesAll { databases } => Ok(databases),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
 
@@ -350,7 +350,7 @@ impl ServerConnection {
     pub(crate) async fn database_schema(&self, database_name: String) -> Result<String> {
         match self.request(Request::DatabaseSchema { database_name }).await? {
             Response::DatabaseSchema { schema } => Ok(schema),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
 
@@ -358,7 +358,7 @@ impl ServerConnection {
     pub(crate) async fn database_type_schema(&self, database_name: String) -> Result<String> {
         match self.request(Request::DatabaseTypeSchema { database_name }).await? {
             Response::DatabaseTypeSchema { schema } => Ok(schema),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
 
@@ -366,7 +366,7 @@ impl ServerConnection {
     pub(crate) async fn database_rule_schema(&self, database_name: String) -> Result<String> {
         match self.request(Request::DatabaseRuleSchema { database_name }).await? {
             Response::DatabaseRuleSchema { schema } => Ok(schema),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
 
@@ -403,7 +403,7 @@ impl ServerConnection {
                     on_close_register_sink,
                 })
             }
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
 
@@ -443,7 +443,7 @@ impl ServerConnection {
                 let transaction_stream = TransactionStream::new(transaction_type, options, transmitter);
                 Ok((transaction_stream, transmitter_shutdown_sink))
             }
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
 
@@ -451,7 +451,7 @@ impl ServerConnection {
     pub(crate) async fn all_users(&self) -> Result<Vec<User>> {
         match self.request(Request::UsersAll).await? {
             Response::UsersAll { users } => Ok(users),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
 
@@ -459,7 +459,7 @@ impl ServerConnection {
     pub(crate) async fn contains_user(&self, username: String) -> Result<bool> {
         match self.request(Request::UsersContain { username }).await? {
             Response::UsersContain { contains } => Ok(contains),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
 
@@ -467,7 +467,7 @@ impl ServerConnection {
     pub(crate) async fn create_user(&self, username: String, password: String) -> Result {
         match self.request(Request::UsersCreate { username, password }).await? {
             Response::UsersCreate => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
 
@@ -475,7 +475,7 @@ impl ServerConnection {
     pub(crate) async fn delete_user(&self, username: String) -> Result {
         match self.request(Request::UsersDelete { username }).await? {
             Response::UsersDelete => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
 
@@ -483,7 +483,7 @@ impl ServerConnection {
     pub(crate) async fn get_user(&self, username: String) -> Result<Option<User>> {
         match self.request(Request::UsersGet { username }).await? {
             Response::UsersGet { user } => Ok(user),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
 
@@ -491,7 +491,7 @@ impl ServerConnection {
     pub(crate) async fn set_user_password(&self, username: String, password: String) -> Result {
         match self.request(Request::UsersPasswordSet { username, password }).await? {
             Response::UsersPasswordSet => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
 
@@ -504,7 +504,7 @@ impl ServerConnection {
     ) -> Result {
         match self.request(Request::UserPasswordUpdate { username, password_old, password_new }).await? {
             Response::UserPasswordUpdate => Ok(()),
-            other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
         }
     }
 }

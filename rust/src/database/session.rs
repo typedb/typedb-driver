@@ -220,7 +220,7 @@ impl Session {
         options: Options,
     ) -> Result<Transaction<'_>> {
         if !self.is_open() {
-            return Err(ConnectionError::SessionIsClosed().into());
+            return Err(ConnectionError::SessionIsClosed.into());
         }
 
         let SessionInfo { address, session_id, network_latency, .. } = self.server_session_info.read().unwrap().clone();

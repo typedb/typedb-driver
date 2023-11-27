@@ -70,7 +70,8 @@ impl IntoProto<AnnotationProto> for Annotation {
 impl TryFromProto<ValueGroupProto> for ValueGroup {
     fn try_from_proto(proto: ValueGroupProto) -> Result<Self> {
         let ValueGroupProto { owner: owner_proto, value: value_proto } = proto;
-        let owner = Concept::try_from_proto(owner_proto.ok_or(ConnectionError::MissingResponseField("owner"))?)?;
+        let owner =
+            Concept::try_from_proto(owner_proto.ok_or(ConnectionError::MissingResponseField { field: "owner" })?)?;
         let value = value_proto.map(Value::try_from_proto).transpose()?;
         Ok(Self { owner, value })
     }
@@ -79,7 +80,8 @@ impl TryFromProto<ValueGroupProto> for ValueGroup {
 impl TryFromProto<ConceptMapGroupProto> for ConceptMapGroup {
     fn try_from_proto(proto: ConceptMapGroupProto) -> Result<Self> {
         let ConceptMapGroupProto { owner: owner_proto, concept_maps: concept_maps_proto } = proto;
-        let owner = Concept::try_from_proto(owner_proto.ok_or(ConnectionError::MissingResponseField("owner"))?)?;
+        let owner =
+            Concept::try_from_proto(owner_proto.ok_or(ConnectionError::MissingResponseField { field: "owner" })?)?;
         let concept_maps = concept_maps_proto.into_iter().map(ConceptMap::try_from_proto).try_collect()?;
         Ok(Self { owner, concept_maps })
     }
@@ -89,8 +91,8 @@ impl TryFromProto<ConceptMapProto> for ConceptMap {
     fn try_from_proto(proto: ConceptMapProto) -> Result<Self> {
         let ConceptMapProto { map: map_proto, explainables: explainables_proto } = proto;
         let map = map_proto.into_iter().map(|(k, v)| Concept::try_from_proto(v).map(|v| (k, v))).try_collect()?;
-        let explainables =
-            explainables_proto.ok_or::<ConnectionError>(ConnectionError::MissingResponseField("explainables"))?;
+        let explainables = explainables_proto
+            .ok_or::<ConnectionError>(ConnectionError::MissingResponseField { field: "explainables" })?;
         Ok(Self { map, explainables: Explainables::from_proto(explainables) })
     }
 }
@@ -124,7 +126,7 @@ impl TryFromProto<ConceptProto> for Concept {
             Some(concept::Concept::Value(value_proto)) => Value::try_from_proto(value_proto).map(Self::Value),
 
             Some(concept::Concept::ThingTypeRoot(_)) => Ok(Self::RootThingType(RootThingType)),
-            None => Err(ConnectionError::MissingResponseField("concept").into()),
+            None => Err(ConnectionError::MissingResponseField { field: "concept" }.into()),
         }
     }
 }
@@ -132,7 +134,9 @@ impl TryFromProto<ConceptProto> for Concept {
 impl TryFromProto<ReadableConceptTreeProto> for readable_concept::Tree {
     fn try_from_proto(proto: ReadableConceptTreeProto) -> Result<Self> {
         let ReadableConceptTreeProto { root: root_proto } = proto;
-        Ok(Self { root: HashMap::try_from_proto(root_proto.ok_or(ConnectionError::MissingResponseField("root"))?)? })
+        Ok(Self {
+            root: HashMap::try_from_proto(root_proto.ok_or(ConnectionError::MissingResponseField { field: "root" })?)?,
+        })
     }
 }
 
@@ -144,7 +148,7 @@ impl TryFromProto<readable_concept_tree::Node> for readable_concept::Node {
             Some(readable_concept_tree::node::Node::ReadableConcept(leaf)) => {
                 Ok(Self::Leaf(Concept::try_from_proto(leaf)?))
             }
-            None => Err(ConnectionError::MissingResponseField("node").into()),
+            None => Err(ConnectionError::MissingResponseField { field: "node" }.into()),
         }
     }
 }
@@ -189,7 +193,7 @@ impl TryFromProto<readable_concept_tree::node::ReadableConcept> for Concept {
             Some(ReadableConceptProto::Value(value_proto)) => Value::try_from_proto(value_proto).map(Self::Value),
 
             Some(ReadableConceptProto::ThingTypeRoot(_)) => Ok(Self::RootThingType(RootThingType)),
-            None => Err(ConnectionError::MissingResponseField("readable_concept").into()),
+            None => Err(ConnectionError::MissingResponseField { field: "readable_concept" }.into()),
         }
     }
 }
@@ -207,7 +211,7 @@ impl TryFromProto<ThingTypeProto> for ThingType {
                 AttributeType::try_from_proto(attribute_type_proto).map(Self::AttributeType)
             }
             Some(thing_type::Type::ThingTypeRoot(_)) => Ok(Self::RootThingType(RootThingType)),
-            None => Err(ConnectionError::MissingResponseField("type").into()),
+            None => Err(ConnectionError::MissingResponseField { field: "type" }.into()),
         }
     }
 }
@@ -274,7 +278,7 @@ impl TryFromProto<i32> for ValueType {
             Some(ValueTypeProto::Double) => Ok(Self::Double),
             Some(ValueTypeProto::String) => Ok(Self::String),
             Some(ValueTypeProto::Datetime) => Ok(Self::DateTime),
-            None => Err(InternalError::EnumOutOfBounds(proto, "ValueType").into()),
+            None => Err(InternalError::EnumOutOfBounds { value: proto, enum_name: "ValueType" }.into()),
         }
     }
 }
@@ -316,7 +320,7 @@ impl TryFromProto<ThingProto> for Thing {
             Some(thing::Thing::Attribute(attribute_proto)) => {
                 Attribute::try_from_proto(attribute_proto).map(Self::Attribute)
             }
-            None => Err(ConnectionError::MissingResponseField("thing").into()),
+            None => Err(ConnectionError::MissingResponseField { field: "thing" }.into()),
         }
     }
 }
@@ -337,7 +341,9 @@ impl TryFromProto<EntityProto> for Entity {
         let EntityProto { iid, entity_type, inferred } = proto;
         Ok(Self {
             iid: iid.into(),
-            type_: EntityType::from_proto(entity_type.ok_or(ConnectionError::MissingResponseField("entity_type"))?),
+            type_: EntityType::from_proto(
+                entity_type.ok_or(ConnectionError::MissingResponseField { field: "entity_type" })?,
+            ),
             is_inferred: inferred,
         })
     }
@@ -356,7 +362,7 @@ impl TryFromProto<RelationProto> for Relation {
         Ok(Self {
             iid: iid.into(),
             type_: RelationType::from_proto(
-                relation_type.ok_or(ConnectionError::MissingResponseField("relation_type"))?,
+                relation_type.ok_or(ConnectionError::MissingResponseField { field: "relation_type" })?,
             ),
             is_inferred: inferred,
         })
@@ -376,9 +382,9 @@ impl TryFromProto<AttributeProto> for Attribute {
         Ok(Self {
             iid: iid.into(),
             type_: AttributeType::try_from_proto(
-                attribute_type.ok_or(ConnectionError::MissingResponseField("attribute_type"))?,
+                attribute_type.ok_or(ConnectionError::MissingResponseField { field: "attribute_type" })?,
             )?,
-            value: Value::try_from_proto(value.ok_or(ConnectionError::MissingResponseField("value"))?)?,
+            value: Value::try_from_proto(value.ok_or(ConnectionError::MissingResponseField { field: "value" })?)?,
             is_inferred: inferred,
         })
     }
@@ -406,7 +412,7 @@ impl TryFromProto<ValueProto> for Value {
             Some(ValueProtoInner::DateTime(millis)) => {
                 Ok(Self::DateTime(NaiveDateTime::from_timestamp_millis(millis).unwrap()))
             }
-            None => Err(ConnectionError::MissingResponseField("value").into()),
+            None => Err(ConnectionError::MissingResponseField { field: "value" }.into()),
         }
     }
 }
@@ -457,12 +463,12 @@ impl TryFromProto<ExplanationProto> for Explanation {
         let ExplanationProto { rule, conclusion, condition, var_mapping } = proto;
         let variable_mapping = var_mapping.iter().map(|(k, v)| (k.clone(), v.clone().vars)).collect();
         Ok(Self {
-            rule: Rule::try_from_proto(rule.ok_or(ConnectionError::MissingResponseField("rule"))?)?,
+            rule: Rule::try_from_proto(rule.ok_or(ConnectionError::MissingResponseField { field: "rule" })?)?,
             conclusion: ConceptMap::try_from_proto(
-                conclusion.ok_or(ConnectionError::MissingResponseField("conclusion"))?,
+                conclusion.ok_or(ConnectionError::MissingResponseField { field: "conclusion" })?,
             )?,
             condition: ConceptMap::try_from_proto(
-                condition.ok_or(ConnectionError::MissingResponseField("condition"))?,
+                condition.ok_or(ConnectionError::MissingResponseField { field: "condition" })?,
             )?,
             variable_mapping,
         })
