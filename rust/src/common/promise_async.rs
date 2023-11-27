@@ -22,7 +22,6 @@
 pub use futures::future::BoxFuture as BoxPromise;
 use futures::future::Future;
 
-
 pub fn box_promise<'a, T>(future: impl Promise<'a, T>) -> BoxPromise<'a, T> {
     Box::pin(future)
 }
