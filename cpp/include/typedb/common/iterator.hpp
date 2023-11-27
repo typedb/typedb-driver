@@ -22,28 +22,20 @@
 #pragma once
 #include <cassert>
 #include <iostream>
-#include <optional>
 #include <iterator>
+#include <optional>
 
 #include "typedb/common/exception.hpp"
 #include "typedb/common/native.hpp"
 
 namespace TypeDB {
-template <
-    typename NATIVE_ITER,
-    typename NATIVE_T,
-    typename T,
-    typename HELPER>
+template <typename NATIVE_ITER, typename NATIVE_T, typename T, typename HELPER>
 class TypeDBIterable;
 
 template <typename NATIVE_ITER, typename NATIVE_T, typename T>
 class TypeDBIteratorHelper;
 
-template <
-    typename NATIVE_ITER,
-    typename NATIVE_T,
-    typename T,
-    typename HELPER = TypeDBIteratorHelper<NATIVE_ITER, NATIVE_T, T> >
+template <typename NATIVE_ITER, typename NATIVE_T, typename T, typename HELPER = TypeDBIteratorHelper<NATIVE_ITER, NATIVE_T, T>>
 class TypeDBIterator {  // Does not support range-based for loops yet.
 
     using SELF = TypeDBIterator<NATIVE_ITER, NATIVE_T, T>;
@@ -114,11 +106,7 @@ class TypeDBIterator {  // Does not support range-based for loops yet.
     friend class TypeDBIterable<NATIVE_ITER, NATIVE_T, T, HELPER>;
 };
 
-template <
-    typename NATIVE_ITER,
-    typename NATIVE_T,
-    typename T,
-    typename HELPER = TypeDBIteratorHelper<NATIVE_ITER, NATIVE_T, T> >
+template <typename NATIVE_ITER, typename NATIVE_T, typename T, typename HELPER = TypeDBIteratorHelper<NATIVE_ITER, NATIVE_T, T>>
 class TypeDBIterable {
     using SELF = TypeDBIterable<NATIVE_ITER, NATIVE_T, T>;
     using ITERATOR = TypeDBIterator<NATIVE_ITER, NATIVE_T, T, HELPER>;

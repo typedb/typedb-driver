@@ -22,8 +22,8 @@
 #pragma once
 
 #include <iostream>
-#include <optional>
 #include <iterator>
+#include <optional>
 
 #include "typedb/common/exception.hpp"
 #include "typedb/common/native.hpp"

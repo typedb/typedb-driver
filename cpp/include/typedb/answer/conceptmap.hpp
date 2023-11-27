@@ -48,14 +48,7 @@ class ConceptMap {
 };
 
 // ConceptMapIterator
-using ConceptMapIterator = TypeDBIterator<
-    _native::ConceptMapIterator,
-    _native::ConceptMap,
-    TypeDB::ConceptMap>;
-
-using ConceptMapIterable = TypeDBIterable<
-    _native::ConceptMapIterator,
-    _native::ConceptMap,
-    TypeDB::ConceptMap>;
+using ConceptMapIterator = TypeDBIterator<_native::ConceptMapIterator, _native::ConceptMap, TypeDB::ConceptMap>;
+using ConceptMapIterable = TypeDBIterable<_native::ConceptMapIterator, _native::ConceptMap, TypeDB::ConceptMap>;
 
 }  // namespace TypeDB
