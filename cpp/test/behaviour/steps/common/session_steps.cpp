@@ -51,7 +51,7 @@ cucumber_bdd::StepCollection<Context> sessionSteps = {
     BDD_STEP("connection open data session for database: (\\w+)", {
         context.setSession(context.driver.session(matches[1], TypeDB::SessionType::DATA, context.sessionOptions));
     }),
-    BDD_STEP("connection open(?: data)? sessions for database:", {
+    BDD_STEP("connection open(?: data)? sessions for database[s]?:", {
         std::function<TypeDB::Session(pickle_table_row*)> fn = [&](pickle_table_row* row) { return context.driver.session(row->cells[0].value, TypeDB::SessionType::DATA, context.sessionOptions); };
         context.sessions = apply_serial(step.argument->data_table->rows, fn);
     }),
@@ -104,6 +104,8 @@ cucumber_bdd::StepCollection<Context> sessionSteps = {
         assert(matches[1] == "session-idle-timeout-millis");
         context.sessionOptions.sessionIdleTimeoutMillis(atoi(matches[2].str().c_str()));
     }),
+    
+
 };
 
 }  // namespace TypeDB::BDD

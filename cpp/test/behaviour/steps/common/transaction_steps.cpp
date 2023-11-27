@@ -91,15 +91,15 @@ cucumber_bdd::StepCollection<Context> transactionSteps = {
         };
         foreach_serial(context.sessions, fn);
     }),
-    BDD_STEP("for each session, transaction(s are|is) null: (true|false)", {  // overload
+    BDD_STEP("for each session, transaction[s]? (?:are|is) null: (true|false)", {  // overload
         std::function<void(TypeDB::Transaction*)> fn = [&](TypeDB::Transaction* tx) { ASSERT_EQ(parseBoolean(matches[1]), !tx->isOpen()); };
         forEachSessionTransaction_serial(context, fn);
     }),
-    BDD_STEP("for each session, transaction(s are|is) open: (true|false)", {  // overload
+    BDD_STEP("for each session, transaction[s]? (?:are|is) open: (true|false)", {  // overload
         std::function<void(TypeDB::Transaction*)> fn = [&](TypeDB::Transaction* tx) -> void { ASSERT_EQ(parseBoolean(matches[1]), tx->isOpen()); };
         forEachSessionTransaction_serial(context, fn);
     }),
-    BDD_STEP("for each session, transaction[s]? commit", {  // overload
+    BDD_STEP("for each session, transaction[s]? commit[s]?", {  // overload
         std::function<void(TypeDB::Transaction*)> fn = [&](TypeDB::Transaction* transaction) { transaction->commit(); };
         forEachSessionTransaction_serial(context, fn);
     }),
