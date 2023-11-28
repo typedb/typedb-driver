@@ -166,7 +166,6 @@ export namespace ReadableConceptTreeImpl {
                     if (value instanceof Date) {
                         asObject[this.KEY_VALUE] = value.toISOString().slice(0, -1);
                     } else asObject[this.KEY_VALUE] = value;
-                    asObject[this.KEY_VALUE_TYPE] = concept.asAttribute().valueType.name();
                 } else if (concept.isValue()) {
                     const value = concept.asValue();
                     if (value.value instanceof Date) {
@@ -189,6 +188,7 @@ export namespace ReadableConceptTreeImpl {
                     rootType = RelationType.NAME;
                 } else if (type.isAttributeType()) {
                     rootType = AttributeType.NAME;
+                    asObject[this.KEY_VALUE_TYPE] = type.asAttributeType().valueType.name();
                 } else if (type.isRoleType()) {
                     rootType = RoleType.NAME;
                 } else if (type.isThingType() && type.root) {
