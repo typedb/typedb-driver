@@ -57,10 +57,47 @@ impl fmt::Display for JSON {
                 }
                 f.write_char(']')?;
             }
-            JSON::String(string) => write!(f, "{:?}", string.as_ref())?,
+            JSON::String(string) => write_escaped_string(string, f)?,
             JSON::Number(number) => write!(f, "{number}")?,
             JSON::Boolean(boolean) => write!(f, "{boolean}")?,
         }
         Ok(())
     }
+}
+
+fn write_escaped_string(string: &str, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    const HEX: u8 = b'u';
+    const RAW: u8 = 0;
+
+    const BSP: u8 = b'b';
+    const TAB: u8 = b't';
+    const LF_: u8 = b'n';
+    const FF_: u8 = b'f';
+    const CR_: u8 = b'r';
+
+    const ASCII_CONTROL_MAX: usize = 0x1F;
+
+    const CTRL: [u8; ASCII_CONTROL_MAX + 1] = [
+        HEX, HEX, HEX, HEX, HEX, HEX, HEX, HEX, //
+        BSP, TAB, LF_, HEX, FF_, CR_, HEX, HEX, //
+        HEX, HEX, HEX, HEX, HEX, HEX, HEX, HEX, //
+        HEX, HEX, HEX, HEX, HEX, HEX, HEX, HEX, //
+    ];
+
+    f.write_char('"')?;
+    for char in string.chars() {
+        if char as usize <= ASCII_CONTROL_MAX {
+            match CTRL[char as usize] {
+                RAW => f.write_char(char)?,
+                HEX => write!(f, "\\u{:04x}", char as u8)?,
+                special => write!(f, "\\{}", special as char)?,
+            }
+        } else {
+            match char {
+                '"' | '\\' => write!(f, "\\{}", char)?,
+                _ => f.write_char(char)?,
+            }
+        }
+    }
+    f.write_char('"')
 }
