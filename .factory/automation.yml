@@ -88,6 +88,7 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         bazel test //rust:typedb_driver_unit_tests --test_output=streamed || exit 1
+        export CORE_FAILED=
         tool/test/start-core-server.sh &&
           bazel test //rust/tests --test_output=streamed --test_arg=-- \
             --test_arg=integration::queries::core || export CORE_FAILED=1
