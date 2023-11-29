@@ -72,26 +72,21 @@ TEST(TestExplanations, TestExplainableOwnership) {
     {
         auto sess = driver.session(dbName, TypeDB::SessionType::SCHEMA, options);
         auto tx = sess.transaction(TypeDB::TransactionType::WRITE, options);
-        TypeDBDriverException::check_and_throw();
         std::string schema =
             " define attr sub attribute, value long, owns attr;"
             "rule " +
             ruleLabel + ": when { " + when + " } then { " + then + "; }; ";
         tx.query.define(schema, options).wait();
-        TypeDBDriverException::check_and_throw();
+
         tx.commit();
     }
 
     {
         auto sess = driver.session(dbName, TypeDB::SessionType::DATA, options);
         auto tx = sess.transaction(TypeDB::TransactionType::WRITE, options);
-        TypeDBDriverException::check_and_throw();
 
-        auto res = tx.query.insert("insert $o 42 isa attr;", options);
-        // auto res = tx.query.insert("insert $o " + std::to_string(attrValue) + " isa attr;", options);
-        for (auto& it : res)
-            ;
-        TypeDBDriverException::check_and_throw();
+        auto res = tx.query.insert("insert $o " + std::to_string(attrValue) + " isa attr;", options);
+        for (auto& it : res);
         tx.commit();
     }
 
@@ -101,7 +96,6 @@ TEST(TestExplanations, TestExplainableOwnership) {
 
         auto sess = driver.session(dbName, TypeDB::SessionType::DATA, options);
         auto tx = sess.transaction(TypeDB::TransactionType::READ, explainOptions);
-        TypeDBDriverException::check_and_throw();
 
         auto res = tx.query.get("match $o1 has $o2; get;", options);
         for (TypeDB::ConceptMap& cm : res) {
@@ -130,7 +124,6 @@ TEST(TestExplanations, TestExplainableOwnership) {
                 }
             }
         }
-        TypeDBDriverException::check_and_throw();
     }
 }
 
