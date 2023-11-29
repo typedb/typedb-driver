@@ -29,9 +29,9 @@
 
 namespace TypeDB {
 
-RulePtrFuture LogicManager::getRule(const std::string& label) const {
+OptionalRuleFuture LogicManager::getRule(const std::string& label) const {
     CHECK_NATIVE(parentTransaction);
-    WRAPPED_NATIVE_CALL(RulePtrFuture, _native::logic_manager_get_rule(parentTransaction->getNative(), label.c_str()));
+    WRAPPED_NATIVE_CALL(OptionalRuleFuture, _native::logic_manager_get_rule(parentTransaction->getNative(), label.c_str()));
 }
 
 RuleIterable LogicManager::getRules() const {

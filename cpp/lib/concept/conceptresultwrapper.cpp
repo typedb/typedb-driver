@@ -24,7 +24,6 @@
 
 #include "inc/conceptfactory.hpp"
 #include "inc/conceptresultwrapper.hpp"
-#include "typedb/concept/templatespecialisation.hpp"
 
 
 namespace TypeDB {

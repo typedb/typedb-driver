@@ -204,7 +204,7 @@ cucumber_bdd::StepCollection<Context> querySteps = {
         ASSERT_EQ(matches[1].str(), context.transaction().logic.getRule(matches[1].str()).get()->label());
     }),
     BDD_STEP("rules do not contain: ([A-Za-z_\\-]+)", {
-        ASSERT_EQ(nullptr, context.transaction().logic.getRule(matches[1].str()).get());
+        ASSERT_FALSE(context.transaction().logic.getRule(matches[1].str()).get().has_value());
     }),
 
     BDD_STEP("get answers of typeql fetch", {

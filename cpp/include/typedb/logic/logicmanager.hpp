@@ -37,7 +37,7 @@ class LogicManager {
     LogicManager(const LogicManager&) = delete;
     LogicManager& operator=(const LogicManager&) = delete;
 
-    RulePtrFuture getRule(const std::string& label) const;
+    OptionalRuleFuture getRule(const std::string& label) const;
     RuleIterable getRules() const;
     [[nodiscard]] RuleFuture putRule(const std::string& label, const std::string& when, const std::string& then) const;
 

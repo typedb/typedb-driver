@@ -22,7 +22,6 @@
 #pragma once
 
 #include "typedb/common/future.hpp"
-#include "typedb/concept/templatespecialisation.hpp"
 #include "typedb/concept/type/thingtype.hpp"
 
 namespace TypeDB {

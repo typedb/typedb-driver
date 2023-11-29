@@ -29,9 +29,4 @@ namespace TypeDB {
 using AggregateResult = std::optional<std::unique_ptr<Value>>;
 using AggregateFuture = Future<AggregateResult, _native::ConceptPromise>;
 
-#ifndef _MSC_VER
-template <>
-std::function<AggregateResult(_native::ConceptPromise*)> AggregateFuture::fn_nativePromiseResolve;
-#endif
-
 }  // namespace TypeDB

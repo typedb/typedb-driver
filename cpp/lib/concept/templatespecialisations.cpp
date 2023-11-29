@@ -25,7 +25,6 @@
 #include "inc/conceptfactory.hpp"
 #include "inc/conceptresultwrapper.hpp"
 #include "inc/macros.hpp"
-#include "typedb/concept/templatespecialisation.hpp"
 
 namespace TypeDB {
 
@@ -59,32 +58,22 @@ std::unique_ptr<T> resolveConceptPtrPromise(ConceptFutureWrapper* wrapper) {
     }
 }
 
-template <>
-std::function<std::unique_ptr<Type>(ConceptFutureWrapper*)> ConceptPtrFuture<Type>::fn_nativePromiseResolve = resolveConceptPtrPromise<Type>;
+#define CONCEPT_FUTURE_HELPER(T) \
+    TYPEDB_FUTURE_HELPER(std::unique_ptr<T>, ConceptFutureWrapper, resolveConceptPtrPromise<T>);
 
-template <>
-std::function<std::unique_ptr<RoleType>(ConceptFutureWrapper*)> ConceptPtrFuture<RoleType>::fn_nativePromiseResolve = resolveConceptPtrPromise<RoleType>;
 
-template <>
-std::function<std::unique_ptr<ThingType>(ConceptFutureWrapper*)> ConceptPtrFuture<ThingType>::fn_nativePromiseResolve = resolveConceptPtrPromise<ThingType>;
+CONCEPT_FUTURE_HELPER(Type);
+CONCEPT_FUTURE_HELPER(RoleType);
 
-template <>
-std::function<std::unique_ptr<EntityType>(ConceptFutureWrapper*)> ConceptPtrFuture<EntityType>::fn_nativePromiseResolve = resolveConceptPtrPromise<EntityType>;
-template <>
-std::function<std::unique_ptr<AttributeType>(ConceptFutureWrapper*)> ConceptPtrFuture<AttributeType>::fn_nativePromiseResolve = resolveConceptPtrPromise<AttributeType>;
-template <>
-std::function<std::unique_ptr<RelationType>(ConceptFutureWrapper*)> ConceptPtrFuture<RelationType>::fn_nativePromiseResolve = resolveConceptPtrPromise<RelationType>;
+CONCEPT_FUTURE_HELPER(ThingType);
+CONCEPT_FUTURE_HELPER(AttributeType);
+CONCEPT_FUTURE_HELPER(EntityType);
+CONCEPT_FUTURE_HELPER(RelationType);
 
-template <>
-std::function<std::unique_ptr<Thing>(ConceptFutureWrapper*)> ConceptPtrFuture<Thing>::fn_nativePromiseResolve = resolveConceptPtrPromise<Thing>;
-
-template <>
-std::function<std::unique_ptr<Entity>(ConceptFutureWrapper*)> ConceptPtrFuture<Entity>::fn_nativePromiseResolve = resolveConceptPtrPromise<Entity>;
-template <>
-std::function<std::unique_ptr<Attribute>(ConceptFutureWrapper*)> ConceptPtrFuture<Attribute>::fn_nativePromiseResolve = resolveConceptPtrPromise<Attribute>;
-template <>
-std::function<std::unique_ptr<Relation>(ConceptFutureWrapper*)> ConceptPtrFuture<Relation>::fn_nativePromiseResolve = resolveConceptPtrPromise<Relation>;
-
+CONCEPT_FUTURE_HELPER(Thing);
+CONCEPT_FUTURE_HELPER(Attribute);
+CONCEPT_FUTURE_HELPER(Entity);
+CONCEPT_FUTURE_HELPER(Relation);
 
 // ConceptIterator Helper
 void conceptIteratorWrapperDrop(ConceptIteratorWrapper* it) {

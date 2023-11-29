@@ -31,19 +31,22 @@
 namespace TypeDB {
 
 template <typename RETURN, typename NATIVE_PROMISE>
+class FutureHelper;
+
+template <typename RETURN, typename NATIVE_PROMISE, typename HELPER = FutureHelper<RETURN, NATIVE_PROMISE> >
 class Future {
     using SELF = Future<RETURN, NATIVE_PROMISE>;
 
    public:
     Future(NATIVE_PROMISE* promiseNative)
-        : promiseNative(promiseNative, SELF::fn_nativePromiseResolve) {}
+        : promiseNative(promiseNative, &HELPER::resolve) {}
 
     RETURN get() {
         if constexpr (std::is_same_v<RETURN, void>) {
-            fn_nativePromiseResolve(promiseNative.release());
+            HELPER::resolve(promiseNative.release());
             TypeDBDriverException::check_and_throw();
         } else {
-            auto t = fn_nativePromiseResolve(promiseNative.release());
+            auto t = HELPER::resolve(promiseNative.release());
             TypeDBDriverException::check_and_throw();
             return t;
         }
@@ -54,26 +57,21 @@ class Future {
     }
 
    private:
-    static std::function<RETURN(NATIVE_PROMISE*)> fn_nativePromiseResolve;
-
     NativePointer<NATIVE_PROMISE> promiseNative;
 };
 
+template <typename RETURN, typename NATIVE_PROMISE>
+class FutureHelper {
+    using SELF = FutureHelper<RETURN, NATIVE_PROMISE>;
+   private:
+    static RETURN resolve(NATIVE_PROMISE* nativePromise);
+
+    friend class Future<RETURN, NATIVE_PROMISE, SELF>;
+};
 
 using VoidFuture = Future<void, _native::VoidPromise>;
 using BoolFuture = Future<bool, _native::BoolPromise>;
 using StringFuture = Future<std::string, _native::StringPromise>;
 using OptionalStringFuture = Future<std::optional<std::string>, _native::StringPromise>;
-
-#ifndef _MSC_VER
-template <>
-std::function<void(_native::VoidPromise*)> VoidFuture::fn_nativePromiseResolve;
-template <>
-std::function<bool(_native::BoolPromise*)> BoolFuture::fn_nativePromiseResolve;
-template <>
-std::function<std::string(_native::StringPromise*)> StringFuture::fn_nativePromiseResolve;
-template <>
-std::function<std::optional<std::string>(_native::StringPromise*)> OptionalStringFuture::fn_nativePromiseResolve;
-#endif
 
 }  // namespace TypeDB

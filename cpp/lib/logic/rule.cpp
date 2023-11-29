@@ -53,22 +53,14 @@ std::string Rule::then() {
     return Utils::stringAndFree(_native::rule_get_then(ruleNative.get()));
 }
 
-Rule ruleFutureResolve(_native::RulePromise* promiseNative) {
+template<>
+std::optional<Rule> FutureHelper<std::optional<Rule>, _native::RulePromise>::resolve(_native::RulePromise* promiseNative) {
     _native::Rule* ruleNative = _native::rule_promise_resolve(promiseNative);
     TypeDBDriverException::check_and_throw();
-    return Rule(ruleNative);
+    return (nullptr != ruleNative) ? std::optional<Rule>(Rule(ruleNative)) : std::optional<Rule>();
 }
 
-std::unique_ptr<Rule> rulePtrFutureResolve(_native::RulePromise* promiseNative) {
-    _native::Rule* ruleNative = _native::rule_promise_resolve(promiseNative);
-    TypeDBDriverException::check_and_throw();
-    return (nullptr != ruleNative) ? std::unique_ptr<Rule>(new Rule(ruleNative)) : nullptr;
-}
-
-template <>
-std::function<Rule(_native::RulePromise*)> RuleFuture::fn_nativePromiseResolve = ruleFutureResolve;
-template <>
-std::function<std::unique_ptr<Rule>(_native::RulePromise*)> RulePtrFuture::fn_nativePromiseResolve = rulePtrFutureResolve;
+TYPEDB_FUTURE_HELPER_1(Rule, _native::RulePromise, _native::rule_promise_resolve, Rule);
 
 TYPEDB_ITERATOR_HELPER(
     _native::RuleIterator,

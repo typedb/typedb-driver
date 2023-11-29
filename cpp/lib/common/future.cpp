@@ -21,6 +21,8 @@
 #include "typedb/common/future.hpp"
 #include "typedb/common/native.hpp"
 
+#include "inc/macros.hpp"
+
 namespace TypeDB {
 
 std::optional<std::string> optional_string_promise_resolve_wrapper(_native::StringPromise* promise) {
@@ -35,12 +37,13 @@ std::string string_promise_resolve_wrapper(_native::StringPromise* promise) {
 }
 
 template <>
-std::function<void(_native::VoidPromise*)> VoidFuture::fn_nativePromiseResolve = _native::void_promise_resolve;
-template <>
-std::function<bool(_native::BoolPromise*)> BoolFuture::fn_nativePromiseResolve = _native::bool_promise_resolve;
-template <>
-std::function<std::string(_native::StringPromise*)> StringFuture::fn_nativePromiseResolve = string_promise_resolve_wrapper;
-template <>
-std::function<std::optional<std::string>(_native::StringPromise*)> OptionalStringFuture::fn_nativePromiseResolve = optional_string_promise_resolve_wrapper;
+void FutureHelper<void, _native::VoidPromise>::resolve(_native::VoidPromise* promiseNative) {
+    _native::void_promise_resolve(promiseNative);
+    TypeDBDriverException::check_and_throw();
+}
+
+TYPEDB_FUTURE_HELPER(bool, _native::BoolPromise, _native::bool_promise_resolve);
+TYPEDB_FUTURE_HELPER(std::string, _native::StringPromise, string_promise_resolve_wrapper);
+TYPEDB_FUTURE_HELPER(std::optional<std::string>, _native::StringPromise, optional_string_promise_resolve_wrapper);
 
 }  // namespace TypeDB

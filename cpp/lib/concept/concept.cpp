@@ -133,7 +133,7 @@ bool Concept::isValue() {
 }
 
 ThingType* Concept::asThingType() {
-    if (!isEntityType()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], "thingType");
+    if (!isThingType()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], "thingType");
     return dynamic_cast<ThingType*>(this);
 }
 

@@ -32,13 +32,10 @@ class Explanation;  // Forward declaration for friendship
 class Rule;
 
 using RuleFuture = Future<Rule, _native::RulePromise>;
-using RulePtrFuture = Future<std::unique_ptr<Rule>, _native::RulePromise>;
+using OptionalRuleFuture = Future<std::optional<Rule>, _native::RulePromise>;
 
 using RuleIterable = TypeDBIterable<_native::RuleIterator, _native::Rule, Rule>;
 using RuleIterator = TypeDBIterator<_native::RuleIterator, _native::Rule, Rule>;
-
-Rule ruleFutureResolve(_native::RulePromise* promiseNative);
-std::unique_ptr<Rule> rulePtrFutureResolve(_native::RulePromise* promiseNative);
 
 class Rule {
    public:
@@ -58,16 +55,8 @@ class Rule {
 
     friend class Explanation;
     friend class TypeDBIteratorHelper<_native::RuleIterator, _native::Rule, Rule>;
-    friend class Future<Rule, _native::RulePromise>;
-    friend Rule ruleFutureResolve(_native::RulePromise* promiseNative);
-    friend std::unique_ptr<Rule> rulePtrFutureResolve(_native::RulePromise* promiseNative);
+    friend class FutureHelper<Rule, _native::RulePromise>;
+    friend class FutureHelper<std::optional<Rule>, _native::RulePromise>;
 };
-
-#ifndef _MSC_VER
-template <>
-std::function<Rule(_native::RulePromise*)> RuleFuture::fn_nativePromiseResolve;
-template <>
-std::function<std::unique_ptr<Rule>(_native::RulePromise*)> RulePtrFuture::fn_nativePromiseResolve;
-#endif
 
 }  // namespace TypeDB

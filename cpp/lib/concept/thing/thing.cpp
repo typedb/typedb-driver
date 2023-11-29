@@ -22,7 +22,6 @@
 
 #include "typedb/concept/thing/thing.hpp"
 #include "typedb/common/exception.hpp"
-#include "typedb/concept/templatespecialisation.hpp"
 #include "typedb/connection/transaction.hpp"
 
 #include "inc/conceptfactory.hpp"

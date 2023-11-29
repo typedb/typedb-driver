@@ -31,6 +31,17 @@
     { throw TypeDB::Utils::exception(&TypeDB::InternalError::ILLEGAL_STATE, __FILE__, __LINE__); }
 
 // Helper for TypeDBIteratorHelper
+#define TYPEDB_FUTURE_HELPER_1(RETURN, NATIVE_PROMISE, NATIVE_PROMISE_RESOLVE, INSTANTIATE) \
+    template <>                                                                             \
+    RETURN FutureHelper<RETURN, NATIVE_PROMISE>::resolve(NATIVE_PROMISE* promiseNative) {   \
+        auto p = NATIVE_PROMISE_RESOLVE(promiseNative);                                     \
+        TypeDBDriverException::check_and_throw();                                           \
+        return INSTANTIATE(p);                                                              \
+    }
+
+#define TYPEDB_FUTURE_HELPER(RETURN, NATIVE_PROMISE, NATIVE_PROMISE_RESOLVE) \
+    TYPEDB_FUTURE_HELPER_1(RETURN, NATIVE_PROMISE, NATIVE_PROMISE_RESOLVE, RETURN_IDENTITY)
+
 #define TYPEDB_ITERATOR_HELPER_1(NATIVE_ITER, NATIVE_T, T, NATIVE_ITER_DROP, NATIVE_ITER_NEXT, NATIVE_T_DROP, INSTANTIATE) \
     template <>                                                                                                            \
     void TypeDBIteratorHelper<NATIVE_ITER, NATIVE_T, T>::nativeIterDrop(NATIVE_ITER* it) {                                 \
@@ -52,8 +63,8 @@
 // Helpers for Wrapping native calls
 #define RETURN_IDENTITY(X) (X)
 
-#define CHECK_NATIVE(PTR)                                                                                   \
-    {                                                                                                       \
+#define CHECK_NATIVE(PTR)                                                                          \
+    {                                                                                              \
         if (nullptr == PTR) throw Utils::exception(&TypeDB::InternalError::INVALID_NATIVE_HANDLE); \
     }
 
@@ -65,11 +76,11 @@
     }
 
 // Specific to concept-api
-#define CONCEPTAPI_CALL(RET_TYPE, NATIVE_CALL)                                                                \
-    {                                                                                                         \
+#define CONCEPTAPI_CALL(RET_TYPE, NATIVE_CALL)                                                       \
+    {                                                                                                \
         if (!transaction.isOpen()) throw Utils::exception(&TypeDB::DriverError::TRANSACTION_CLOSED); \
-        CHECK_NATIVE(conceptNative.get());                                                                    \
-        WRAPPED_NATIVE_CALL(RET_TYPE, NATIVE_CALL);                                                           \
+        CHECK_NATIVE(conceptNative.get());                                                           \
+        WRAPPED_NATIVE_CALL(RET_TYPE, NATIVE_CALL);                                                  \
     }
 
 #define CONCEPTAPI_FUTURE(RET_TYPE, NATIVE_CALL) CONCEPTAPI_CALL(ConceptPtrFuture<RET_TYPE>, new ConceptFutureWrapperSimple(NATIVE_CALL))

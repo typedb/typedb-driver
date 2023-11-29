@@ -20,11 +20,14 @@
  */
 
 #include "typedb/answer/valuefuture.hpp"
+
 #include "inc/conceptfactory.hpp"
+#include "inc/macros.hpp"
 
 namespace TypeDB {
 
-AggregateResult aggregateFutureWrapper(_native::ConceptPromise* conceptPromiseNative) {
+template<>
+AggregateResult FutureHelper<AggregateResult, _native::ConceptPromise>::resolve(_native::ConceptPromise* conceptPromiseNative) {
     _native::Concept* conceptNative = _native::concept_promise_resolve(conceptPromiseNative);
     if (conceptNative != nullptr) {
         return AggregateResult(ConceptFactory::value(conceptNative));
@@ -32,8 +35,5 @@ AggregateResult aggregateFutureWrapper(_native::ConceptPromise* conceptPromiseNa
         return AggregateResult();
     }
 }
-
-template <>
-std::function<AggregateResult(_native::ConceptPromise*)> AggregateFuture::fn_nativePromiseResolve = aggregateFutureWrapper;
 
 }  // namespace TypeDB

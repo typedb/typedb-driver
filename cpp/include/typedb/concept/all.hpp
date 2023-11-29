@@ -37,4 +37,3 @@
 
 #include "typedb/concept/value/value.hpp"
 
-#include "typedb/concept/templatespecialisation.hpp"
