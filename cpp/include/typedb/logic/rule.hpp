@@ -31,8 +31,8 @@ namespace TypeDB {
 class Explanation;  // Forward declaration for friendship
 class Rule;
 
-using RuleFuture = TypeDBFuture<Rule, _native::RulePromise>;
-using RulePtrFuture = TypeDBFuture<std::unique_ptr<Rule>, _native::RulePromise>;
+using RuleFuture = Future<Rule, _native::RulePromise>;
+using RulePtrFuture = Future<std::unique_ptr<Rule>, _native::RulePromise>;
 
 using RuleIterable = TypeDBIterable<_native::RuleIterator, _native::Rule, Rule>;
 using RuleIterator = TypeDBIterator<_native::RuleIterator, _native::Rule, Rule>;
@@ -58,7 +58,7 @@ class Rule {
 
     friend class Explanation;
     friend class TypeDBIteratorHelper<_native::RuleIterator, _native::Rule, Rule>;
-    friend class TypeDBFuture<Rule, _native::RulePromise>;
+    friend class Future<Rule, _native::RulePromise>;
     friend Rule ruleFutureResolve(_native::RulePromise* promiseNative);
     friend std::unique_ptr<Rule> rulePtrFutureResolve(_native::RulePromise* promiseNative);
 };

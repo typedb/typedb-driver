@@ -136,7 +136,7 @@ class ConceptFutureWrapper;
 class ConceptIteratorWrapper;
 
 template <typename T>
-using ConceptPtrFuture = TypeDBFuture<std::unique_ptr<T>, ConceptFutureWrapper>;
+using ConceptPtrFuture = Future<std::unique_ptr<T>, ConceptFutureWrapper>;
 
 template <typename T>
 using ConceptIterable = TypeDBIterable<ConceptIteratorWrapper, _native::Concept, std::unique_ptr<T>>;

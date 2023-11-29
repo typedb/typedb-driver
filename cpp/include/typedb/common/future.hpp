@@ -31,11 +31,11 @@
 namespace TypeDB {
 
 template <typename RETURN, typename NATIVE_PROMISE>
-class TypeDBFuture {
-    using SELF = TypeDBFuture<RETURN, NATIVE_PROMISE>;
+class Future {
+    using SELF = Future<RETURN, NATIVE_PROMISE>;
 
    public:
-    TypeDBFuture(NATIVE_PROMISE* promiseNative)
+    Future(NATIVE_PROMISE* promiseNative)
         : promiseNative(promiseNative, SELF::fn_nativePromiseResolve) {}
 
     RETURN get() {
@@ -60,10 +60,10 @@ class TypeDBFuture {
 };
 
 
-using VoidFuture = TypeDBFuture<void, _native::VoidPromise>;
-using BoolFuture = TypeDBFuture<bool, _native::BoolPromise>;
-using StringFuture = TypeDBFuture<std::string, _native::StringPromise>;
-using OptionalStringFuture = TypeDBFuture<std::optional<std::string>, _native::StringPromise>;
+using VoidFuture = Future<void, _native::VoidPromise>;
+using BoolFuture = Future<bool, _native::BoolPromise>;
+using StringFuture = Future<std::string, _native::StringPromise>;
+using OptionalStringFuture = Future<std::optional<std::string>, _native::StringPromise>;
 
 #ifndef _MSC_VER
 template <>
