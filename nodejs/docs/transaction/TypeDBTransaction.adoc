@@ -80,7 +80,7 @@ Checks whether this transaction is open.
 transaction.isOpen()
 ----
 
-[#_TypeDBTransaction_onClose__callback___error?__=__void_]
+[#_TypeDBTransaction_onClose__callback___error____void_]
 ==== onClose
 
 [source,nodejs]

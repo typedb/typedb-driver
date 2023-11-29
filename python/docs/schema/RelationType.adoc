@@ -94,7 +94,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect instanc
 relation_type.get_instances(transaction, transitivity)
 ----
 
-[#_RelationType_get_relates__transaction_TypeDBTransaction__role_label_str_|_None__transitivity_Transitivity]
+[#_RelationType_get_relates__transaction_TypeDBTransaction__role_label_str__None__transitivity_Transitivity]
 ==== get_relates
 
 [source,python]
@@ -210,7 +210,7 @@ Checks if the concept is a ``RelationType``.
 relation_type.is_relation_type()
 ----
 
-[#_RelationType_set_relates__transaction_TypeDBTransaction__role_label_str__overridden_label_str_|_None]
+[#_RelationType_set_relates__transaction_TypeDBTransaction__role_label_str__overridden_label_str__None]
 ==== set_relates
 
 [source,python]

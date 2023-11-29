@@ -58,7 +58,7 @@ Checks whether this session is open.
 session.isOpen()
 ----
 
-[#_TypeDBSession_onClose__callback_____=__void_]
+[#_TypeDBSession_onClose__callback_______void_]
 ==== onClose
 
 [source,nodejs]
@@ -88,7 +88,7 @@ a| `callback` a| The callback function. a| `(() => void)`
 session.onClose(function)
 ----
 
-[#_TypeDBSession_onReopen__callback_____=__void_]
+[#_TypeDBSession_onReopen__callback_______void_]
 ==== onReopen
 
 [source,nodejs]

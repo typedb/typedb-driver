@@ -136,7 +136,7 @@ Returns a ``string`` value of the attribute. If the value has another type, rais
 attribute.as_boolean()
 ----
 
-[#_Attribute_get_owners__transaction_TypeDBTransaction__owner_type_ThingType_|_None]
+[#_Attribute_get_owners__transaction_TypeDBTransaction__owner_type_ThingType__None]
 ==== get_owners
 
 [source,python]

@@ -25,7 +25,7 @@ a| `address` a| Address of the TypeDB server. a| `str` a|
 .Returns
 `TypeDBDriver`
 
-[#_TypeDB_enterprise_driver__addresses_Iterable_str__|_str__credential_TypeDBCredential]
+[#_TypeDB_enterprise_driver__addresses_Iterable_str___str__credential_TypeDBCredential]
 ==== enterprise_driver
 
 [source,python]

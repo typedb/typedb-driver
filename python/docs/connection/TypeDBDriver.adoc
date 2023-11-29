@@ -56,7 +56,7 @@ Checks whether this connection is presently open.
 driver.is_open()
 ----
 
-[#_TypeDBDriver_session__database_name_str__session_type_SessionType__options_TypeDBOptions_|_None]
+[#_TypeDBDriver_session__database_name_str__session_type_SessionType__options_TypeDBOptions__None]
 ==== session
 
 [source,python]
