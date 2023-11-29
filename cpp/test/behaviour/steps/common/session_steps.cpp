@@ -102,7 +102,6 @@ cucumber_bdd::StepCollection<Context> sessionSteps = {
         assert(matches[1] == "session-idle-timeout-millis");
         context.sessionOptions.sessionIdleTimeoutMillis(atoi(matches[2].str().c_str()));
     }),
-    
 
 };
 

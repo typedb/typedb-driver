@@ -82,7 +82,8 @@ TEST(TestExplanations, TestExplainableOwnership) {
         auto tx = sess.transaction(TypeDB::TransactionType::WRITE, options);
 
         auto res = tx.query.insert("insert $o " + std::to_string(attrValue) + " isa attr;", options);
-        for (auto& it : res);
+        for (auto& it : res)
+            ;
         tx.commit();
     }
 
