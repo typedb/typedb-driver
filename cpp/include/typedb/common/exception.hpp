@@ -29,10 +29,12 @@
 
 namespace TypeDB {
 
+template <typename NATIVE_ITER, typename NATIVE_T, typename T>
+class TypeDBIteratorHelper;
+
 class TypeDBDriverException : public std::runtime_error {
    public:
     TypeDBDriverException(const char* code, const char* message);
-    TypeDBDriverException(_native::SchemaException* schemaExceptionNative);
     
     TypeDBDriverException(const TypeDBDriverException& from) = default;
     TypeDBDriverException& operator=(const TypeDBDriverException& from) = default;
@@ -45,8 +47,12 @@ class TypeDBDriverException : public std::runtime_error {
     
    private:
     TypeDBDriverException(_native::Error* errorNative);
+    TypeDBDriverException(_native::SchemaException* schemaExceptionNative);
+
     size_t errorCodeLength;
     size_t messageLength;
+
+    friend class TypeDBIteratorHelper<_native::SchemaExceptionIterator, _native::SchemaException, TypeDBDriverException>;
 };
 
 
