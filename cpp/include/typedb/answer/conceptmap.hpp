@@ -22,7 +22,7 @@
 
 #include "typedb/common/iterator.hpp"
 #include "typedb/common/native.hpp"
-#include "typedb/concept/all.hpp"
+#include "typedb/concept/concept.hpp"
 #include "typedb/logic/explainable.hpp"
 
 namespace TypeDB {

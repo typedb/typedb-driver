@@ -22,8 +22,6 @@
 #pragma once
 
 #include "common.hpp"
-#include "typedb/concept/all.hpp"
-
 namespace TypeDB::BDD {
 
 template <typename T>

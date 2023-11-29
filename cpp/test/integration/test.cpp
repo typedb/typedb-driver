@@ -24,11 +24,7 @@
 
 #include "gtest/gtest.h"
 
-#include "typedb/common/exception.hpp"
-#include "typedb/concept/all.hpp"
-#include "typedb/connection/driver.hpp"
-
-#include "typedb/common/errormessage.hpp"
+#include "typedb/driver.hpp"
 
 using namespace TypeDB;
 

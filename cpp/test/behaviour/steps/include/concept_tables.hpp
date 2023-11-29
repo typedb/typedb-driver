@@ -23,8 +23,6 @@
 
 #include "utils.hpp"
 
-#include "typedb/concept/all.hpp"
-
 using namespace TypeDB;
 
 namespace TypeDB::BDD {

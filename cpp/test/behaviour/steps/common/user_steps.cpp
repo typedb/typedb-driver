@@ -25,9 +25,6 @@
 #include "steps.hpp"
 #include "utils.hpp"
 
-#include "typedb/connection/driver.hpp"
-#include "typedb/user/usermanager.hpp"
-
 namespace TypeDB::BDD {
 
 using namespace cucumber::messages;

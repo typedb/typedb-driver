@@ -31,8 +31,6 @@
 #include "steps.hpp"
 #include "utils.hpp"
 
-#include "typedb/query/querymanager.hpp"
-
 
 using namespace cucumber::messages;
 

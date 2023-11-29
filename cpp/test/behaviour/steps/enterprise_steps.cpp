@@ -25,9 +25,6 @@
 #include "steps.hpp"
 #include "utils.hpp"
 
-#include "typedb/common/exception.hpp"
-#include "typedb/connection/driver.hpp"
-
 namespace TypeDB::BDD {
 
 const std::vector<std::string> DEFAULT_ENTERPRISE_ADDRESSES = {"localhost:11729", "localhost:21729", "localhost:31729"};

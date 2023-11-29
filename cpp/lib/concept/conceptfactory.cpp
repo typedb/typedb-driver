@@ -22,8 +22,23 @@
 #include "inc/conceptfactory.hpp"
 
 #include "typedb/common/exception.hpp"
-#include "typedb/concept/all.hpp"
 #include "typedb/connection/transaction.hpp"
+
+#include "typedb/concept/type/type.hpp"
+
+#include "typedb/concept/type/roletype.hpp"
+#include "typedb/concept/type/thingtype.hpp"
+#include "typedb/concept/type/thingtype.hpp"
+#include "typedb/concept/type/attributetype.hpp"
+#include "typedb/concept/type/entitytype.hpp"
+#include "typedb/concept/type/relationtype.hpp"
+
+#include "typedb/concept/thing/thing.hpp"
+#include "typedb/concept/thing/attribute.hpp"
+#include "typedb/concept/thing/entity.hpp"
+#include "typedb/concept/thing/relation.hpp"
+
+#include "typedb/concept/value/value.hpp"
 
 #include "inc/macros.hpp"
 

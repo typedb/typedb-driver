@@ -23,8 +23,6 @@
 #include "steps.hpp"
 #include "utils.hpp"
 
-#include "typedb/common/exception.hpp"
-
 namespace TypeDB::BDD {
 
 const std::string DEFAULT_CORE_ADDRESS = "127.0.0.1:1729";

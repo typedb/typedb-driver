@@ -23,7 +23,13 @@
 #include "typedb/common/future.hpp"
 #include "typedb/common/native.hpp"
 
-#include "typedb/concept/all.hpp"
+#include "typedb/concept/type/attributetype.hpp"
+#include "typedb/concept/type/entitytype.hpp"
+#include "typedb/concept/type/relationtype.hpp"
+
+#include "typedb/concept/thing/attribute.hpp"
+#include "typedb/concept/thing/entity.hpp"
+#include "typedb/concept/thing/relation.hpp"
 
 namespace TypeDB {
 

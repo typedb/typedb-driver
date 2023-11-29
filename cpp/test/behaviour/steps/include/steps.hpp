@@ -25,9 +25,6 @@
 #include "cucumber_bdd/step.hpp"
 #include "cucumber_bdd/testrun.hpp"
 
-#include "typedb/common/exception.hpp"
-#include "typedb/connection/driver.hpp"
-
 #include <iostream>
 
 #define BDD_STEP(REGEX, IMPL) (cucumber_bdd::StepDefinition<TypeDB::BDD::Context>{std::regex("\\s*" REGEX "\\s*"), [](Context& context, cucumber::messages::pickle_step& step, const std::smatch& matches) { IMPL }})

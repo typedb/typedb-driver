@@ -22,12 +22,10 @@
 #pragma once
 #include <future>
 #include <vector>
+
+#include "typedb/driver.hpp"
+
 #include "cucumber/messages/pickle_table.hpp"
-#include "typedb/common/native.hpp"
-
-#include "typedb/concept/all.hpp"
-#include "typedb/connection/session.hpp"
-
 #define THROW_ILLEGAL_STATE(SOMESTRING) \
     { throw std::runtime_error("ILLEGAL STATE! " + std::string(SOMESTRING)); }
 

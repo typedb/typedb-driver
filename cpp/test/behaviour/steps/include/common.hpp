@@ -24,12 +24,11 @@
 #include <memory>
 #include <vector>
 
+#include "typedb/driver.hpp"
+
 #include "cucumber_bdd/runner.hpp"
 #include "cucumber_bdd/step.hpp"
 #include "cucumber_bdd/testrun.hpp"
-
-#include "typedb/answer/conceptmap.hpp"
-#include "typedb/connection/driver.hpp"
 
 namespace TypeDB::BDD {
 

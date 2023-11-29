@@ -25,8 +25,6 @@
 #include "steps.hpp"
 #include "utils.hpp"
 
-#include "typedb/connection/session.hpp"
-
 using namespace cucumber::messages;
 
 namespace TypeDB::BDD {

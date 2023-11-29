@@ -23,8 +23,6 @@
 #include "steps.hpp"
 #include "utils.hpp"
 
-#include "typedb/common/exception.hpp"
-
 namespace TypeDB::BDD {
 
 cucumber_bdd::StepCollection<Context> connectionSteps = {

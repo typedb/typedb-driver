@@ -22,7 +22,7 @@
 #include "typedb/common/exception.hpp"
 
 #include "inc/conceptfactory.hpp"
-#include "typedb/concept/all.hpp"
+#include "typedb/concept/concept.hpp"
 
 namespace TypeDB {
 const char* ConceptTypeNames[9] = {
