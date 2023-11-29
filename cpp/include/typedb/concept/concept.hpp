@@ -60,6 +60,8 @@ enum class ConceptType {
     VALUE,
 };
 
+extern const char* ConceptTypeNames[9];
+
 // Forward declarations
 class Transaction;
 

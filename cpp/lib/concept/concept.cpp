@@ -25,6 +25,21 @@
 #include "typedb/concept/all.hpp"
 
 namespace TypeDB {
+const char* ConceptTypeNames[9] = {
+    "root_thing_type",
+
+    "entity_type",
+    "attribute_type",
+    "relation_type",
+    "role_type",
+
+    "entity",
+    "attribute",
+    "relation",
+
+    "value",
+};
+
 // Annotation
 Annotation::Annotation(_native::Annotation* annotationNative)
     : annotationNative(annotationNative, _native::annotation_drop) {}
@@ -118,45 +133,55 @@ bool Concept::isValue() {
 }
 
 ThingType* Concept::asThingType() {
-    return static_cast<ThingType*>(this);
+    if (!isEntityType()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], "thingType");
+    return dynamic_cast<ThingType*>(this);
 }
 
 EntityType* Concept::asEntityType() {
-    return static_cast<EntityType*>(this);
+    if (!isEntityType()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::ENTITY_TYPE]);
+    return dynamic_cast<EntityType*>(this);
 }
 
 AttributeType* Concept::asAttributeType() {
-    return static_cast<AttributeType*>(this);
+    if (!isAttributeType()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::ATTRIBUTE_TYPE]);
+    return dynamic_cast<AttributeType*>(this);
 }
 
 RelationType* Concept::asRelationType() {
-    return static_cast<RelationType*>(this);
+    if (!isRelationType()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::RELATION_TYPE]);
+    return dynamic_cast<RelationType*>(this);
 }
 
 RoleType* Concept::asRoleType() {
-    return static_cast<RoleType*>(this);
+    if (!isRoleType()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::ROLE_TYPE]);
+    return dynamic_cast<RoleType*>(this);
 }
 
 
 Thing* Concept::asThing() {
-    return static_cast<Thing*>(this);
+    if (!isThing()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], "thing");
+    return dynamic_cast<Thing*>(this);
 }
 
 Attribute* Concept::asAttribute() {
-    return static_cast<Attribute*>(this);
+    if (!isAttribute()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::ATTRIBUTE]);
+    return dynamic_cast<Attribute*>(this);
 }
 
 Entity* Concept::asEntity() {
-    return static_cast<Entity*>(this);
+    if (!isEntity()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::ENTITY]);
+    return dynamic_cast<Entity*>(this);
 }
 
 Relation* Concept::asRelation() {
-    return static_cast<Relation*>(this);
+    if (!isRelation()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::RELATION]);
+    return dynamic_cast<Relation*>(this);
 }
 
 
 Value* Concept::asValue() {
-    return static_cast<Value*>(this);
+    if (!isValue()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::VALUE]);
+    return dynamic_cast<Value*>(this);
 }
 
 bool Concept::operator==(const Concept& other) {
