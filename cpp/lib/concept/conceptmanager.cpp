@@ -90,26 +90,15 @@ ConceptPtrFuture<Attribute> ConceptManager::getAttribute(const std::string& iid)
     CONCEPTMANAGER_THING(Attribute, _native::concepts_get_attribute);
 }
 
-struct SchemaExceptionWrapper {
-    std::string code;
-    std::string message;
-    SchemaExceptionWrapper(_native::SchemaException* e) {
-        CHECK_NATIVE(e);
-        code = Utils::stringAndFree(_native::schema_exception_code(e));
-        message = Utils::stringAndFree(_native::schema_exception_message(e));
-        _native::schema_exception_drop(e);
-    }
-};
-
-using SchemaExceptionIterator = TypeDBIterator<_native::SchemaExceptionIterator, _native::SchemaException, SchemaExceptionWrapper>;
-using SchemaExceptionIterable = TypeDBIterable<_native::SchemaExceptionIterator, _native::SchemaException, SchemaExceptionWrapper>;
+using SchemaExceptionIterator = TypeDBIterator<_native::SchemaExceptionIterator, _native::SchemaException, TypeDBDriverException>;
+using SchemaExceptionIterable = TypeDBIterable<_native::SchemaExceptionIterator, _native::SchemaException, TypeDBDriverException>;
 
 std::vector<TypeDBDriverException> ConceptManager::getSchemaExceptions() {
     CHECK_NATIVE(parentTransaction);
     std::vector<TypeDBDriverException> exceptions;
     SchemaExceptionIterable exIterable(_native::concepts_get_schema_exceptions(parentTransaction->getNative()));
-    for (SchemaExceptionWrapper& exWrapped : exIterable) {
-        exceptions.push_back(TypeDBDriverException(exWrapped.code.c_str(), exWrapped.message.c_str()));
+    for (TypeDBDriverException& ex : exIterable) {
+        exceptions.push_back(ex);
     }
     return exceptions;
 }
@@ -117,7 +106,7 @@ std::vector<TypeDBDriverException> ConceptManager::getSchemaExceptions() {
 TYPEDB_ITERATOR_HELPER(
     _native::SchemaExceptionIterator,
     _native::SchemaException,
-    SchemaExceptionWrapper,
+    TypeDBDriverException,
     _native::schema_exception_iterator_drop,
     _native::schema_exception_iterator_next,
     _native::schema_exception_drop);

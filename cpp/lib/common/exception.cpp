@@ -22,35 +22,44 @@
 #include "typedb/common/exception.hpp"
 #include "typedb/common/native.hpp"
 
+#include "inc/utils.hpp"
+
 namespace TypeDB {
 
 TypeDBDriverException::TypeDBDriverException(const char* code, const char* message)
     : std::runtime_error(""),
-      errCode(code),
-      errMsg(message) {}
+      errorCode(code),
+      errorMessage(message) {}
+
+TypeDBDriverException::TypeDBDriverException(_native::Error* errorNative)
+    : std::runtime_error(""),
+      errorCode(Utils::stringAndFree(_native::error_code(errorNative))),
+      errorMessage(Utils::stringAndFree(_native::error_message(errorNative))) {
+    _native::error_drop(errorNative);
+}
+
+TypeDBDriverException::TypeDBDriverException(_native::SchemaException* schemaExceptionNative)
+    : std::runtime_error(""),
+      errorCode(Utils::stringAndFree(_native::schema_exception_code(schemaExceptionNative))),
+      errorMessage(Utils::stringAndFree(_native::schema_exception_message(schemaExceptionNative))) {
+    _native::schema_exception_drop(schemaExceptionNative);
+}
 
 const std::string& TypeDBDriverException::code() {
-    return errCode;
+    return errorCode;
 }
 
 const std::string& TypeDBDriverException::message() {
-    return errMsg;
+    return errorMessage;
 }
 
 const char* TypeDBDriverException::what() const noexcept {
-    return errMsg.c_str();
+    return errorMessage.c_str();
 }
-
 
 void TypeDBDriverException::check_and_throw() {
     if (_native::check_error()) {
-        _native::Error* error = _native::get_last_error();
-        char* errcode = _native::error_code(error);
-        char* errmsg = _native::error_message(error);
-        TypeDBDriverException exception(errcode, errmsg);
-        _native::string_free(errmsg);
-        _native::string_free(errcode);
-        _native::error_drop(error);
+        TypeDBDriverException exception(_native::get_last_error());
         throw exception;
     }
 }
