@@ -66,38 +66,48 @@ impl fmt::Display for JSON {
 }
 
 fn write_escaped_string(string: &str, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    const HEX: u8 = b'u';
-    const RAW: u8 = 0;
-
+    const HEX: u8 = 0;
     const BSP: u8 = b'b';
     const TAB: u8 = b't';
     const LF_: u8 = b'n';
     const FF_: u8 = b'f';
     const CR_: u8 = b'r';
 
-    const ASCII_CONTROL_MAX: usize = 0x1F;
+    const ASCII_CONTROL: usize = 0x20;
 
-    const CTRL: [u8; ASCII_CONTROL_MAX + 1] = [
+    const ESCAPE: [u8; ASCII_CONTROL] = [
         HEX, HEX, HEX, HEX, HEX, HEX, HEX, HEX, //
         BSP, TAB, LF_, HEX, FF_, CR_, HEX, HEX, //
         HEX, HEX, HEX, HEX, HEX, HEX, HEX, HEX, //
         HEX, HEX, HEX, HEX, HEX, HEX, HEX, HEX, //
     ];
 
-    f.write_char('"')?;
-    for char in string.chars() {
-        if char as usize <= ASCII_CONTROL_MAX {
-            match CTRL[char as usize] {
-                RAW => f.write_char(char)?,
-                HEX => write!(f, "\\u{:04x}", char as u8)?,
-                special => write!(f, "\\{}", special as char)?,
+    const HEX_DIGITS: &[u8; 0x10] = b"0123456789abcdef";
+
+    let mut buf = Vec::with_capacity(string.len());
+
+    for byte in string.bytes() {
+        if (byte as usize) < ASCII_CONTROL {
+            match ESCAPE[byte as usize] {
+                HEX => {
+                    buf.extend_from_slice(&[
+                        b'\\',
+                        b'u',
+                        b'0',
+                        b'0',
+                        HEX_DIGITS[(byte as usize & 0xF0) >> 4],
+                        HEX_DIGITS[byte as usize & 0x0F],
+                    ]);
+                }
+                special => buf.extend_from_slice(&[b'\\', special]),
             }
         } else {
-            match char {
-                '"' | '\\' => write!(f, "\\{}", char)?,
-                _ => f.write_char(char)?,
+            match byte {
+                b'"' | b'\\' => buf.extend_from_slice(&[b'\\', byte]),
+                _ => buf.push(byte),
             }
         }
     }
-    f.write_char('"')
+
+    write!(f, r#""{}""#, unsafe { String::from_utf8_unchecked(buf) })
 }
