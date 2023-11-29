@@ -35,7 +35,7 @@ struct RolePlayer {
     std::unique_ptr<RoleType> role;
     std::unique_ptr<Thing> player;
 
-    RolePlayer(_native::RolePlayer* rolePlayeNative);  // frees rolePlayernative
+    RolePlayer(_native::RolePlayer* rolePlayerNative);  // frees rolePlayernative
 };
 
 using RolePlayerIterator = TypeDBIterator<_native::RolePlayerIterator, _native::RolePlayer, RolePlayer>;

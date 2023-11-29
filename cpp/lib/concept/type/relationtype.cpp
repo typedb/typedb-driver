@@ -82,7 +82,7 @@ ConceptIterable<RelationType> RelationType::getSubtypes(Transaction& transaction
 }
 
 VoidFuture RelationType::setSupertype(Transaction& transaction, RelationType* superRelationType) {
-    // CHECK_NATIVE(superRelationType);
+    CHECK_NATIVE(superRelationType);
     CONCEPTAPI_CALL(VoidFuture, _native::relation_type_set_supertype(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::getNative(superRelationType)));
 }
 

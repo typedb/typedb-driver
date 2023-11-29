@@ -47,7 +47,6 @@ std::unique_ptr<Value> Attribute::getValue() {
     WRAPPED_NATIVE_CALL(ConceptFactory::value, _native::attribute_get_value(conceptNative.get()));
 }
 
-
 ConceptIterable<Thing> Attribute::getOwners(Transaction& transaction) {
     return getOwners(transaction, nullptr);
 }
