@@ -53,7 +53,7 @@ std::string Rule::then() {
     return Utils::stringFromNative(_native::rule_get_then(ruleNative.get()));
 }
 
-template<>
+template <>
 std::optional<Rule> FutureHelper<std::optional<Rule>, _native::RulePromise>::resolve(_native::RulePromise* promiseNative) {
     _native::Rule* ruleNative = _native::rule_promise_resolve(promiseNative);
     TypeDBDriverException::check_and_throw();

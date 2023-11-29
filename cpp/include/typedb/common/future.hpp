@@ -63,6 +63,7 @@ class Future {
 template <typename RETURN, typename NATIVE_PROMISE>
 class FutureHelper {
     using SELF = FutureHelper<RETURN, NATIVE_PROMISE>;
+
    private:
     static RETURN resolve(NATIVE_PROMISE* nativePromise);
 

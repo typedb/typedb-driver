@@ -35,16 +35,16 @@ class TypeDBIteratorHelper;
 class TypeDBDriverException : public std::runtime_error {
    public:
     TypeDBDriverException(const char* code, const char* message);
-    
+
     TypeDBDriverException(const TypeDBDriverException& from) = default;
     TypeDBDriverException& operator=(const TypeDBDriverException& from) = default;
 
     const std::string_view code();
     const std::string_view message();
-    
+
     static void check_and_throw();
     static TypeDBDriverException of(const ErrorMessage* message, ...);
-    
+
    private:
     TypeDBDriverException(_native::Error* errorNative);
     TypeDBDriverException(_native::SchemaException* schemaExceptionNative);

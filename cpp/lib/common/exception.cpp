@@ -31,19 +31,17 @@ TypeDBDriverException::TypeDBDriverException(const char* code, const char* messa
       errorCodeLength(strlen(code)),
       messageLength(strlen(message)) {}
 
-TypeDBDriverException::TypeDBDriverException(_native::Error* errorNative) 
+TypeDBDriverException::TypeDBDriverException(_native::Error* errorNative)
     : TypeDBDriverException(
-        Utils::stringFromNative(_native::error_code(errorNative)).c_str(), 
-        Utils::stringFromNative(_native::error_message(errorNative)).c_str()
-    ) {
+          Utils::stringFromNative(_native::error_code(errorNative)).c_str(),
+          Utils::stringFromNative(_native::error_message(errorNative)).c_str()) {
     _native::error_drop(errorNative);
 }
 
 TypeDBDriverException::TypeDBDriverException(_native::SchemaException* schemaExceptionNative)
     : TypeDBDriverException(
-        Utils::stringFromNative(_native::schema_exception_code(schemaExceptionNative)).c_str(), 
-        Utils::stringFromNative(_native::schema_exception_message(schemaExceptionNative)).c_str()
-    ) {
+          Utils::stringFromNative(_native::schema_exception_code(schemaExceptionNative)).c_str(),
+          Utils::stringFromNative(_native::schema_exception_message(schemaExceptionNative)).c_str()) {
     _native::schema_exception_drop(schemaExceptionNative);
 }
 

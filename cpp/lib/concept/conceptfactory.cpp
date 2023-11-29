@@ -26,27 +26,26 @@
 
 #include "typedb/concept/type/type.hpp"
 
-#include "typedb/concept/type/roletype.hpp"
-#include "typedb/concept/type/thingtype.hpp"
-#include "typedb/concept/type/thingtype.hpp"
 #include "typedb/concept/type/attributetype.hpp"
 #include "typedb/concept/type/entitytype.hpp"
 #include "typedb/concept/type/relationtype.hpp"
+#include "typedb/concept/type/roletype.hpp"
+#include "typedb/concept/type/thingtype.hpp"
 
-#include "typedb/concept/thing/thing.hpp"
 #include "typedb/concept/thing/attribute.hpp"
 #include "typedb/concept/thing/entity.hpp"
 #include "typedb/concept/thing/relation.hpp"
+#include "typedb/concept/thing/thing.hpp"
 
 #include "typedb/concept/value/value.hpp"
 
 #include "inc/macros.hpp"
 
-#define CHECK_NATIVE_CONCEPT(PTR)                                               \
-    {                                                                           \
-        if (PTR == nullptr) {                                                   \
+#define CHECK_NATIVE_CONCEPT(PTR)                                      \
+    {                                                                  \
+        if (PTR == nullptr) {                                          \
             throw Utils::exception(&InternalError::NULL_NATIVE_VALUE); \
-        }                                                                       \
+        }                                                              \
     }
 
 namespace TypeDB {

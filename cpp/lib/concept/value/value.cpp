@@ -93,8 +93,8 @@ ValueType Value::valueType() {
     } else throw Utils::exception(&InternalError::UNEXPECTED_NATIVE_VALUE);
 }
 
-#define CHECK_CAST(EXPECTED)                                                                                         \
-    {                                                                                                                \
+#define CHECK_CAST(EXPECTED)                                                                                \
+    {                                                                                                       \
         if (EXPECTED != this->valueType()) throw Utils::exception(&InternalError::ILLEGAL_CAST, #EXPECTED); \
     }
 

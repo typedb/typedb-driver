@@ -26,7 +26,7 @@
 
 namespace TypeDB {
 
-template<>
+template <>
 AggregateResult FutureHelper<AggregateResult, _native::ConceptPromise>::resolve(_native::ConceptPromise* conceptPromiseNative) {
     _native::Concept* conceptNative = _native::concept_promise_resolve(conceptPromiseNative);
     if (conceptNative != nullptr) {
