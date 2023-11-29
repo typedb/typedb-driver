@@ -31,7 +31,7 @@ Credential::Credential(const std::string& username, const std::string& password,
     const char* customRootCA = customRootCAStr != "" ? customRootCAStr.c_str() : nullptr;
     auto p = _native::credential_new(username.c_str(), password.c_str(), customRootCA, withTLS);
     TypeDBDriverException::check_and_throw();
-    credentialNative = std::move(NativePointer<_native::Credential>(p, _native::credential_drop));
+    credentialNative = NativePointer<_native::Credential>(p, _native::credential_drop);
 }
 
 _native::Credential* Credential::getNative() const {

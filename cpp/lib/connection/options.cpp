@@ -25,6 +25,7 @@
 #include "typedb/connection/options.hpp"
 
 #include "inc/macros.hpp"
+#include "inc/utils.hpp"
 
 namespace TypeDB {
 

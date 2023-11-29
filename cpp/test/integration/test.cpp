@@ -28,6 +28,8 @@
 #include "typedb/concept/all.hpp"
 #include "typedb/connection/driver.hpp"
 
+#include "typedb/common/errormessage.hpp"
+
 using namespace TypeDB;
 
 

@@ -30,7 +30,7 @@
 #define CHECK_NATIVE_CONCEPT(PTR)                                               \
     {                                                                           \
         if (PTR == nullptr) {                                                   \
-            throw TypeDBDriverException::of(&InternalError::NULL_NATIVE_VALUE); \
+            throw Utils::exception(&InternalError::NULL_NATIVE_VALUE); \
         }                                                                       \
     }
 
@@ -71,7 +71,7 @@ std::unique_ptr<Concept> ConceptFactory::ofNative(_native::Concept* conceptNativ
 
     else if (_native::concept_is_value(conceptNative)) return ConceptFactory::value(conceptNative);
 
-    else throw TypeDBDriverException::of(&InternalError::UNEXPECTED_NATIVE_VALUE);
+    else throw Utils::exception(&InternalError::UNEXPECTED_NATIVE_VALUE);
 }
 
 std::unique_ptr<EntityType> ConceptFactory::entityType(_native::Concept* conceptNative) {
@@ -130,7 +130,7 @@ std::unique_ptr<Thing> ConceptFactory::thing(_native::Concept* conceptNative) {
     if (_native::concept_is_entity(conceptNative)) return ConceptFactory::entity(conceptNative);
     else if (_native::concept_is_relation(conceptNative)) return ConceptFactory::relation(conceptNative);
     else if (_native::concept_is_attribute(conceptNative)) return ConceptFactory::attribute(conceptNative);
-    else throw TypeDBDriverException::of(&InternalError::UNEXPECTED_NATIVE_VALUE);
+    else throw Utils::exception(&InternalError::UNEXPECTED_NATIVE_VALUE);
 }
 
 std::unique_ptr<Type> ConceptFactory::type(_native::Concept* conceptNative) {
@@ -140,7 +140,7 @@ std::unique_ptr<Type> ConceptFactory::type(_native::Concept* conceptNative) {
     else if (_native::concept_is_attribute_type(conceptNative)) return ConceptFactory::attributeType(conceptNative);
     else if (_native::concept_is_role_type(conceptNative)) return ConceptFactory::roleType(conceptNative);
     else if (_native::concept_is_root_thing_type(conceptNative)) return ConceptFactory::rootThingType(conceptNative);
-    else throw TypeDBDriverException::of(&InternalError::UNEXPECTED_NATIVE_VALUE);
+    else throw Utils::exception(&InternalError::UNEXPECTED_NATIVE_VALUE);
 }
 
 std::unique_ptr<ThingType> ConceptFactory::thingType(_native::Concept* conceptNative) {
@@ -149,7 +149,7 @@ std::unique_ptr<ThingType> ConceptFactory::thingType(_native::Concept* conceptNa
     else if (_native::concept_is_relation_type(conceptNative)) return ConceptFactory::relationType(conceptNative);
     else if (_native::concept_is_attribute_type(conceptNative)) return ConceptFactory::attributeType(conceptNative);
     else if (_native::concept_is_root_thing_type(conceptNative)) return ConceptFactory::rootThingType(conceptNative);
-    else throw TypeDBDriverException::of(&InternalError::UNEXPECTED_NATIVE_VALUE);
+    else throw Utils::exception(&InternalError::UNEXPECTED_NATIVE_VALUE);
 }
 
 };  // namespace TypeDB

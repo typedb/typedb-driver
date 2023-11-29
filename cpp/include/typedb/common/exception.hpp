@@ -30,6 +30,7 @@ namespace TypeDB {
 
 class TypeDBDriverException : public std::runtime_error {
    public:
+    TypeDBDriverException(const char* code, const char* message);
     TypeDBDriverException(_native::SchemaException* schemaExceptionNative);
     
     TypeDBDriverException(const TypeDBDriverException& from) = default;
@@ -40,15 +41,15 @@ class TypeDBDriverException : public std::runtime_error {
     const char* what() const noexcept override;
 
     static void check_and_throw();
-    static TypeDBDriverException of(const ErrorMessage* message, ...);    
-
+    static TypeDBDriverException of(const ErrorMessage* message, ...);
+    
    private:
     TypeDBDriverException(_native::Error* errorNative);
-    TypeDBDriverException(const char* code, const char* message);
     
     std::string errorCode;
     std::string errorMessage;
     
 };
+
 
 }  // namespace TypeDB

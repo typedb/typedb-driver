@@ -64,13 +64,4 @@ void TypeDBDriverException::check_and_throw() {
     }
 }
 
-TypeDBDriverException TypeDBDriverException::of(const ErrorMessage* errMsg, ...) {
-    va_list args;
-    char buffer[2048];
-    va_start(args, errMsg);
-    vsnprintf(buffer, sizeof(buffer), errMsg->formatString, args);
-    va_end(args);
-    return TypeDBDriverException(errMsg->code, buffer);
-}
-
 }  // namespace TypeDB

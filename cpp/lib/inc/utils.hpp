@@ -33,5 +33,16 @@ std::unique_ptr<T> makeUnique(NATIVE_T* nativePointer) {
     return std::unique_ptr<T>(new T(nativePointer));
 }
 
+template <class... Args>
+TypeDBDriverException exception(const ErrorMessage* errMsg, Args... args) {
+    size_t sizeRequired = snprintf(nullptr, 0, errMsg->formatString, args...);
+    char* buffer = new char[sizeRequired];
+    snprintf(buffer, sizeRequired, errMsg->formatString, args...);
+    TypeDBDriverException exception(errMsg->code, buffer);
+    delete[] buffer;
+    return exception;
+}
+
+
 }  // namespace Utils
 }  // namespace TypeDB

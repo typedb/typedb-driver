@@ -31,7 +31,7 @@
 
 #define CHECK_QUERY(QUERY)                                                              \
     {                                                                                   \
-        if ("" == (QUERY)) throw TypeDBDriverException::of(&QueryError::MISSING_QUERY); \
+        if ("" == (QUERY)) throw Utils::exception(&QueryError::MISSING_QUERY); \
     }
 
 namespace TypeDB {

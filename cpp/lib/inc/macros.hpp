@@ -28,7 +28,7 @@
 #define NO_DISCARD [[nodiscard]]
 
 #define ILLEGAL_STATE \
-    { throw TypeDB::TypeDBDriverException::of(&TypeDB::InternalError::ILLEGAL_STATE, __FILE__, __LINE__); }
+    { throw TypeDB::Utils::exception(&TypeDB::InternalError::ILLEGAL_STATE, __FILE__, __LINE__); }
 
 // Helper for TypeDBIteratorHelper
 #define TYPEDB_ITERATOR_HELPER_1(NATIVE_ITER, NATIVE_T, T, NATIVE_ITER_DROP, NATIVE_ITER_NEXT, NATIVE_T_DROP, INSTANTIATE) \
@@ -54,7 +54,7 @@
 
 #define CHECK_NATIVE(PTR)                                                                                   \
     {                                                                                                       \
-        if (nullptr == PTR) throw TypeDBDriverException::of(&TypeDB::InternalError::INVALID_NATIVE_HANDLE); \
+        if (nullptr == PTR) throw Utils::exception(&TypeDB::InternalError::INVALID_NATIVE_HANDLE); \
     }
 
 #define WRAPPED_NATIVE_CALL(TYPE, NATIVE_CALL)    \
@@ -67,7 +67,7 @@
 // Specific to concept-api
 #define CONCEPTAPI_CALL(RET_TYPE, NATIVE_CALL)                                                                \
     {                                                                                                         \
-        if (!transaction.isOpen()) throw TypeDBDriverException::of(&TypeDB::DriverError::TRANSACTION_CLOSED); \
+        if (!transaction.isOpen()) throw Utils::exception(&TypeDB::DriverError::TRANSACTION_CLOSED); \
         CHECK_NATIVE(conceptNative.get());                                                                    \
         WRAPPED_NATIVE_CALL(RET_TYPE, NATIVE_CALL);                                                           \
     }

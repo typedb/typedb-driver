@@ -61,7 +61,7 @@ std::unique_ptr<Concept> ConceptMap::get(const std::string& variableName) {
     auto p = _native::concept_map_get(conceptMapNative.get(), variableName.c_str());
     TypeDBDriverException::check_and_throw();
     if (p == nullptr) {
-        throw TypeDBDriverException::of(&QueryError::VARIABLE_DOES_NOT_EXIST, variableName.c_str());
+        throw Utils::exception(&QueryError::VARIABLE_DOES_NOT_EXIST, variableName.c_str());
     }
     return ConceptFactory::ofNative(p);
 }

@@ -90,12 +90,12 @@ ValueType Value::valueType() {
         return ValueType::STRING;
     } else if (_native::value_is_date_time(conceptNative.get())) {
         return ValueType::DATETIME;
-    } else throw TypeDBDriverException::of(&InternalError::UNEXPECTED_NATIVE_VALUE);
+    } else throw Utils::exception(&InternalError::UNEXPECTED_NATIVE_VALUE);
 }
 
 #define CHECK_CAST(EXPECTED)                                                                                         \
     {                                                                                                                \
-        if (EXPECTED != this->valueType()) throw TypeDBDriverException::of(&InternalError::ILLEGAL_CAST, #EXPECTED); \
+        if (EXPECTED != this->valueType()) throw Utils::exception(&InternalError::ILLEGAL_CAST, #EXPECTED); \
     }
 
 bool Value::asBoolean() {

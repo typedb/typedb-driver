@@ -55,7 +55,7 @@ std::unique_ptr<T> resolveConceptPtrPromise(ConceptFutureWrapper* wrapper) {
         }
 
     } else {
-        throw TypeDBDriverException::of(&InternalError::INVALID_NATIVE_HANDLE);
+        throw Utils::exception(&InternalError::INVALID_NATIVE_HANDLE);
     }
 }
 
