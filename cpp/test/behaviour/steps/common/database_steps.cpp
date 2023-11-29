@@ -46,7 +46,7 @@ cucumber_bdd::StepCollection<Context> databaseSteps = {
     }),
 
     BDD_STEP("connection delete database; throws exception: (\\w+)", {
-        DRIVER_THROWS(matches[1], { context.driver.databases.get(matches[1]).drop(); });
+        DRIVER_THROWS(matches[1].str(), { context.driver.databases.get(matches[1]).drop(); });
     }),
 
     // multi

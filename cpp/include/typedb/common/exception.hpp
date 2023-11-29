@@ -22,6 +22,7 @@
 
 #include <stdexcept>
 #include <string>
+#include <string_view>
 
 #include "typedb/common/errormessage.hpp"
 #include "typedb/common/native.hpp"
@@ -36,19 +37,16 @@ class TypeDBDriverException : public std::runtime_error {
     TypeDBDriverException(const TypeDBDriverException& from) = default;
     TypeDBDriverException& operator=(const TypeDBDriverException& from) = default;
 
-    const std::string& code();
-    const std::string& message();
-    const char* what() const noexcept override;
-
+    const std::string_view code();
+    const std::string_view message();
+    
     static void check_and_throw();
     static TypeDBDriverException of(const ErrorMessage* message, ...);
     
    private:
     TypeDBDriverException(_native::Error* errorNative);
-    
-    std::string errorCode;
-    std::string errorMessage;
-    
+    size_t errorCodeLength;
+    size_t messageLength;
 };
 
 

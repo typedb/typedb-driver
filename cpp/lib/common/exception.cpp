@@ -27,34 +27,32 @@
 namespace TypeDB {
 
 TypeDBDriverException::TypeDBDriverException(const char* code, const char* message)
-    : std::runtime_error(""),
-      errorCode(code),
-      errorMessage(message) {}
+    : std::runtime_error(std::string(code) + std::string(message)),
+      errorCodeLength(strlen(code)),
+      messageLength(strlen(message)) {}
 
-TypeDBDriverException::TypeDBDriverException(_native::Error* errorNative)
-    : std::runtime_error(""),
-      errorCode(Utils::stringAndFree(_native::error_code(errorNative))),
-      errorMessage(Utils::stringAndFree(_native::error_message(errorNative))) {
+TypeDBDriverException::TypeDBDriverException(_native::Error* errorNative) 
+    : TypeDBDriverException(
+        Utils::stringAndFree(_native::error_code(errorNative)).c_str(), 
+        Utils::stringAndFree(_native::error_message(errorNative)).c_str()
+    ) {
     _native::error_drop(errorNative);
 }
 
 TypeDBDriverException::TypeDBDriverException(_native::SchemaException* schemaExceptionNative)
-    : std::runtime_error(""),
-      errorCode(Utils::stringAndFree(_native::schema_exception_code(schemaExceptionNative))),
-      errorMessage(Utils::stringAndFree(_native::schema_exception_message(schemaExceptionNative))) {
+    : TypeDBDriverException(
+        Utils::stringAndFree(_native::schema_exception_code(schemaExceptionNative)).c_str(), 
+        Utils::stringAndFree(_native::schema_exception_message(schemaExceptionNative)).c_str()
+    ) {
     _native::schema_exception_drop(schemaExceptionNative);
 }
 
-const std::string& TypeDBDriverException::code() {
-    return errorCode;
+const std::string_view TypeDBDriverException::code() {
+    return std::string_view(what(), errorCodeLength);
 }
 
-const std::string& TypeDBDriverException::message() {
-    return errorMessage;
-}
-
-const char* TypeDBDriverException::what() const noexcept {
-    return errorMessage.c_str();
+const std::string_view TypeDBDriverException::message() {
+    return std::string_view(what() + errorCodeLength, messageLength);
 }
 
 void TypeDBDriverException::check_and_throw() {
