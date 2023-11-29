@@ -28,52 +28,30 @@
 
 namespace TypeDB {
 
-// ConceptFuture
-template <typename T>
-std::unique_ptr<T> resolveConceptPtrPromise(ConceptFutureWrapper* wrapper) {
-    if (wrapper != nullptr) {
-        auto p = wrapper->resolve();
-        if (p == nullptr) return std::unique_ptr<T>();  // nullptr
-        if constexpr (std::is_same_v<T, Type>) return ConceptFactory::type(p);
-        else if constexpr (std::is_same_v<T, RoleType>) return ConceptFactory::roleType(p);
-
-        else if constexpr (std::is_same_v<T, ThingType>) return ConceptFactory::thingType(p);
-        else if constexpr (std::is_same_v<T, AttributeType>) return ConceptFactory::attributeType(p);
-        else if constexpr (std::is_same_v<T, EntityType>) return ConceptFactory::entityType(p);
-        else if constexpr (std::is_same_v<T, RelationType>) return ConceptFactory::relationType(p);
-
-        else if constexpr (std::is_same_v<T, Thing>) return ConceptFactory::thing(p);
-        else if constexpr (std::is_same_v<T, Attribute>) return ConceptFactory::attribute(p);
-        else if constexpr (std::is_same_v<T, Entity>) return ConceptFactory::entity(p);
-        else if constexpr (std::is_same_v<T, Relation>) return ConceptFactory::relation(p);
-
-        else if constexpr (std::is_same_v<T, Value>) return ConceptFactory::value(p);
-        else if constexpr (std::is_same_v<T, Concept>) return ConceptFactory::ofNative(p);
-        else {
-            static_assert(std::is_same_v<T, Concept>);  // Fail to compile with a nice message
-        }
-
-    } else {
-        throw Utils::exception(&InternalError::INVALID_NATIVE_HANDLE);
+#define CONCEPT_FUTURE_HELPER(T, INSTANTIATE)                                                                           \
+    template <>                                                                                                         \
+    std::unique_ptr<T> FutureHelper<std::unique_ptr<T>, ConceptFutureWrapper>::resolve(ConceptFutureWrapper* wrapper) { \
+        if (wrapper != nullptr) {                                                                                       \
+            auto p = wrapper->resolve();                                                                                \
+            if (p == nullptr) return std::unique_ptr<T>();                                                              \
+            return INSTANTIATE(p);                                                                                      \
+        } else {                                                                                                        \
+            throw Utils::exception(&InternalError::INVALID_NATIVE_HANDLE);                                              \
+        }                                                                                                               \
     }
-}
 
-#define CONCEPT_FUTURE_HELPER(T) \
-    TYPEDB_FUTURE_HELPER(std::unique_ptr<T>, ConceptFutureWrapper, resolveConceptPtrPromise<T>);
+CONCEPT_FUTURE_HELPER(Type, ConceptFactory::type);
+CONCEPT_FUTURE_HELPER(RoleType, ConceptFactory::roleType);
 
+CONCEPT_FUTURE_HELPER(ThingType, ConceptFactory::thingType);
+CONCEPT_FUTURE_HELPER(AttributeType, ConceptFactory::attributeType);
+CONCEPT_FUTURE_HELPER(EntityType, ConceptFactory::entityType);
+CONCEPT_FUTURE_HELPER(RelationType, ConceptFactory::relationType);
 
-CONCEPT_FUTURE_HELPER(Type);
-CONCEPT_FUTURE_HELPER(RoleType);
-
-CONCEPT_FUTURE_HELPER(ThingType);
-CONCEPT_FUTURE_HELPER(AttributeType);
-CONCEPT_FUTURE_HELPER(EntityType);
-CONCEPT_FUTURE_HELPER(RelationType);
-
-CONCEPT_FUTURE_HELPER(Thing);
-CONCEPT_FUTURE_HELPER(Attribute);
-CONCEPT_FUTURE_HELPER(Entity);
-CONCEPT_FUTURE_HELPER(Relation);
+CONCEPT_FUTURE_HELPER(Thing, ConceptFactory::thing);
+CONCEPT_FUTURE_HELPER(Attribute, ConceptFactory::attribute);
+CONCEPT_FUTURE_HELPER(Entity, ConceptFactory::entity);
+CONCEPT_FUTURE_HELPER(Relation, ConceptFactory::relation);
 
 // Wrapper implementations:
 ConceptIteratorWrapper::~ConceptIteratorWrapper() {}
