@@ -36,7 +36,7 @@ Thing::Thing(ConceptType conceptType, _native::Concept* conceptNative)
 
 std::string Thing::getIID() {
     CHECK_NATIVE(conceptNative);
-    return Utils::stringAndFree(_native::thing_get_iid(conceptNative.get()));
+    return Utils::stringFromNative(_native::thing_get_iid(conceptNative.get()));
 }
 
 std::unique_ptr<ThingType> Thing::getType() {

@@ -40,17 +40,17 @@ Rule& Rule::operator=(Rule&& from) {
 
 std::string Rule::label() {
     CHECK_NATIVE(ruleNative);
-    return Utils::stringAndFree(_native::rule_get_label(ruleNative.get()));
+    return Utils::stringFromNative(_native::rule_get_label(ruleNative.get()));
 }
 
 std::string Rule::when() {
     CHECK_NATIVE(ruleNative);
-    return Utils::stringAndFree(_native::rule_get_when(ruleNative.get()));
+    return Utils::stringFromNative(_native::rule_get_when(ruleNative.get()));
 }
 
 std::string Rule::then() {
     CHECK_NATIVE(ruleNative);
-    return Utils::stringAndFree(_native::rule_get_then(ruleNative.get()));
+    return Utils::stringFromNative(_native::rule_get_then(ruleNative.get()));
 }
 
 template<>

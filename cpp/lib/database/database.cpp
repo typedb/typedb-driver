@@ -47,7 +47,7 @@ bool Database::operator==(const Database& other) {
 
 std::string Database::name() const {
     CHECK_NATIVE(databaseNative);
-    return Utils::stringAndFree(_native::database_get_name(databaseNative.get()));
+    return Utils::stringFromNative(_native::database_get_name(databaseNative.get()));
 }
 
 void Database::drop() {

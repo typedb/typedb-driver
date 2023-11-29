@@ -26,12 +26,7 @@
 namespace TypeDB {
 namespace Utils {
 
-std::string stringAndFree(char* c);
-
-template <typename T, typename NATIVE_T>
-std::unique_ptr<T> makeUnique(NATIVE_T* nativePointer) {
-    return std::unique_ptr<T>(new T(nativePointer));
-}
+std::string stringFromNative(char* c);
 
 template <class... Args>
 TypeDBDriverException exception(const ErrorMessage* errMsg, Args... args) {

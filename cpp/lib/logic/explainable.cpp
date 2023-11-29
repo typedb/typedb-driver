@@ -41,7 +41,7 @@ int64_t Explainable::explainableId() {
 
 std::string Explainable::conjunction() {
     CHECK_NATIVE(explainableNative);
-    return Utils::stringAndFree(_native::explainable_get_conjunction(explainableNative.get()));
+    return Utils::stringFromNative(_native::explainable_get_conjunction(explainableNative.get()));
 }
 
 Explainables::Explainables(_native::Explainables* explainablesNative)

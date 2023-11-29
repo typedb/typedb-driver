@@ -36,12 +36,12 @@ RoleType::RoleType(_native::Concept* conceptNative)
 
 std::string RoleType::getName() {
     CHECK_NATIVE(conceptNative);
-    return Utils::stringAndFree(_native::role_type_get_name(conceptNative.get()));
+    return Utils::stringFromNative(_native::role_type_get_name(conceptNative.get()));
 }
 
 std::string RoleType::getScope() {
     CHECK_NATIVE(conceptNative);
-    return Utils::stringAndFree(_native::role_type_get_scope(conceptNative.get()));
+    return Utils::stringFromNative(_native::role_type_get_scope(conceptNative.get()));
 }
 
 std::string RoleType::getLabel() {

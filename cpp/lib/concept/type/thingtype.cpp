@@ -36,7 +36,7 @@ ThingType::ThingType(ConceptType conceptType, _native::Concept* conceptNative)
 
 std::string ThingType::getLabel() {
     CHECK_NATIVE(conceptNative);
-    return Utils::stringAndFree(_native::thing_type_get_label(conceptNative.get()));
+    return Utils::stringFromNative(_native::thing_type_get_label(conceptNative.get()));
 }
 
 VoidFuture ThingType::drop(Transaction& transaction) {

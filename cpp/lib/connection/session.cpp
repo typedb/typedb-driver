@@ -53,7 +53,7 @@ void Session::close() {
 
 std::string Session::databaseName() const {
     CHECK_NATIVE(sessionNative);
-    return Utils::stringAndFree(_native::session_get_database_name(sessionNative.get()));
+    return Utils::stringFromNative(_native::session_get_database_name(sessionNative.get()));
 }
 
 Transaction Session::transaction(TransactionType type, const Options& options) const {

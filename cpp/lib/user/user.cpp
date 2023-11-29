@@ -44,7 +44,7 @@ User& User::operator=(User&& from) {
 
 std::string User::username() {
     CHECK_NATIVE(userNative);
-    WRAPPED_NATIVE_CALL(Utils::stringAndFree, _native::user_get_username(userNative.get()));
+    WRAPPED_NATIVE_CALL(Utils::stringFromNative, _native::user_get_username(userNative.get()));
 }
 
 std::optional<int64_t> User::passwordExpirySeconds() {
