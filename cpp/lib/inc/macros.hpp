@@ -24,8 +24,9 @@
 #include <cassert>
 #include "typedb/common/errormessage.hpp"
 #include "typedb/common/exception.hpp"
-// Decorator for methods which
-#define NO_DISCARD [[nodiscard]]
+
+#include "inc/conceptfuture.hpp"
+#include "inc/conceptiterator.hpp"
 
 #define ILLEGAL_STATE \
     { throw TypeDB::Utils::exception(&TypeDB::InternalError::ILLEGAL_STATE, __FILE__, __LINE__); }

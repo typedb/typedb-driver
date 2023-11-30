@@ -23,7 +23,7 @@
 #include "typedb/connection/transaction.hpp"
 
 #include "inc/conceptfactory.hpp"
-#include "inc/conceptresultwrapper.hpp"
+#include "inc/conceptfuture.hpp"
 #include "inc/macros.hpp"
 #include "inc/utils.hpp"
 

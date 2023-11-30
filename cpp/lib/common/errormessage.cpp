@@ -20,7 +20,7 @@
  */
 #include "typedb/common/errormessage.hpp"
 
-#define ERRMSG(CODE, PREFIX, ID, MSG) {"[" CODE "]", PREFIX ": " MSG};
+#define ERRMSG(CODE, PREFIX, ID, MSG) {"[" CODE #ID "]", PREFIX ": " MSG};
 
 namespace TypeDB {
 

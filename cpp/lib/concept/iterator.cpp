@@ -23,7 +23,7 @@
 #include "typedb/common/native.hpp"
 
 #include "inc/conceptfactory.hpp"
-#include "inc/conceptresultwrapper.hpp"
+#include "inc/conceptiterator.hpp"
 #include "inc/macros.hpp"
 
 namespace TypeDB {

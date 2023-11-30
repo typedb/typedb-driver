@@ -26,30 +26,6 @@
 
 namespace TypeDB {
 
-class ConceptFutureWrapper {
-   public:
-    virtual _native::Concept* resolve() = 0;
-};
-
-class ConceptFutureWrapperSimple : public ConceptFutureWrapper {
-   public:
-    virtual _native::Concept* resolve() override;
-    ConceptFutureWrapperSimple(_native::ConceptPromise* promise);
-
-   private:
-    _native::ConceptPromise* nativePromise;
-};
-
-class ConceptFutureWrapperExplicit : public ConceptFutureWrapper {
-   public:
-    virtual _native::Concept* resolve() override;
-    ConceptFutureWrapperExplicit(_native::Concept* concept);
-
-   private:
-    _native::Concept* nativeConcept;
-};
-
-
 class ConceptIteratorWrapper {
    public:
     virtual ~ConceptIteratorWrapper() = 0;

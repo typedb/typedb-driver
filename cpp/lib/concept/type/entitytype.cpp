@@ -25,7 +25,6 @@
 #include "typedb/connection/transaction.hpp"
 
 #include "inc/conceptfactory.hpp"
-#include "inc/conceptresultwrapper.hpp"
 #include "inc/macros.hpp"
 
 namespace TypeDB {
