@@ -20,10 +20,7 @@ promise.await
 sync::
 +
 --
-A resolvable promise that can be resolved at a later time. a ``BoxPromise`` is in practical terms a Box
- and resolves with 
- ``.resolve()``.
-
+A resolvable promise that can be resolved at a later time. a ``BoxPromise`` is in practical terms a ``Box&lt;dyn Promise&gt;`` and resolves with ``.resolve()``.
 
 [caption=""]
 .Examples
