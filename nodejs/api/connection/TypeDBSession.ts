@@ -78,7 +78,7 @@ export interface TypeDBSession {
      *
      * @param callback The callback function.
      */
-    onClose(callback: () => void): void;
+    onClose(callback: () => Promise<void>): void;
 
     /**
      * Registers a callback function which will be executed when this session is reopened.
@@ -93,7 +93,7 @@ export interface TypeDBSession {
      *
      * @param callback The callback function.
      */
-    onReopen(callback: () => void): void;
+    onReopen(callback: () => Promise<void>): void;
 
     /**
      * Closes the session. Before opening a new session, the session currently open should first be closed.

@@ -45,8 +45,8 @@ export class TypeDBSessionImpl implements TypeDBSession {
     private _pulse: NodeJS.Timeout;
     private _networkLatencyMillis: number;
     private readonly _transactions: Set<TypeDBTransaction.Extended>;
-    private readonly _onClose: (() => void)[]
-    private readonly _onReopen: (() => void)[]
+    private readonly _onClose: (() => Promise<void>)[]
+    private readonly _onReopen: (() => Promise<void>)[]
 
     constructor(databaseName: string, type: SessionType, options: TypeDBOptions, driver: TypeDBDriverImpl) {
         this._databaseName = databaseName;
@@ -67,7 +67,7 @@ export class TypeDBSessionImpl implements TypeDBSession {
     private async reopenAt(serverDriver: ServerDriver): Promise<void> {
         await this.openAt(serverDriver);
         for (const callback of this._onReopen) {
-            callback();
+            await callback();
         }
     }
 
@@ -85,11 +85,11 @@ export class TypeDBSessionImpl implements TypeDBSession {
         this._pulse = setTimeout(() => this.pulse(), 5000);
     }
 
-    public onClose(callback: () => void) {
+    public onClose(callback: () => Promise<void>) {
         this._onClose.push(callback)
     }
 
-    public onReopen(callback: () => void) {
+    public onReopen(callback: () => Promise<void>) {
         this._onReopen.push(callback)
     }
 
@@ -100,7 +100,7 @@ export class TypeDBSessionImpl implements TypeDBSession {
                 await tx.close();
             }
             for (const callback of this._onClose) {
-                callback();
+                await callback();
             }
             this._driver.closeSession(this);
             clearTimeout(this._pulse);
