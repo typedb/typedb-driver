@@ -70,7 +70,7 @@ export interface TypeDBTransaction {
      *
      * @param callback The callback function.
      */
-    onClose(callback: (error?: Error | string) => void): void;
+    onClose(callback: (error?: Error | string) => Promise<void>): void;
 
     /**
      * Commits the changes made via this transaction to the TypeDB database. Whether or not the transaction is commited successfully, it gets closed after the commit call.

@@ -69,7 +69,7 @@ export class TypeDBTransactionImpl implements TypeDBTransaction.Extended {
         this._session.closed(this);
     }
 
-    public onClose(callback: (error?: Error | string) => void) {
+    public onClose(callback: (error?: Error | string) => Promise<void>) {
         this._bidirectionalStream.onClose(callback)
     }
 

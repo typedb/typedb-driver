@@ -48,7 +48,7 @@ export class BidirectionalStream {
     private _stub: TypeDBStub;
     private _isOpen: boolean;
     private _error: Error | string;
-    private readonly _onClose: ((error?: Error | string) => void)[]
+    private readonly _onClose: ((error?: Error | string) => Promise<void>)[]
 
     constructor(stub: TypeDBStub, requestTransmitter: RequestTransmitter) {
         this._requestTransmitter = requestTransmitter;
@@ -94,11 +94,11 @@ export class BidirectionalStream {
         this._responsePartCollector.close(error);
         this._dispatcher.close();
         for (const callback of this._onClose) {
-            callback(error);
+            await callback(error);
         }
     }
 
-    onClose(callback: (error?: Error | string) => void) {
+    onClose(callback: (error?: Error | string) => Promise<void>) {
         this._onClose.push(callback)
     }
 
