@@ -80,7 +80,7 @@ Checks whether this transaction is open.
 transaction.isOpen()
 ----
 
-[#_TypeDBTransaction_onClose__callback___error____void_]
+[#_TypeDBTransaction_onClose__callback___error____Promise_void__]
 ==== onClose
 
 [source,nodejs]
@@ -96,7 +96,7 @@ Registers a callback function which will be executed when this transaction is cl
 [options="header"]
 |===
 |Name |Description |Type
-a| `callback` a| The callback function. a| `((error?) => void)`
+a| `callback` a| The callback function. a| `((error?) => Promise<void>)`
 |===
 
 [caption=""]
