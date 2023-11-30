@@ -61,7 +61,7 @@ class ConceptManager {
     std::vector<TypeDBDriverException> getSchemaExceptions();
 
    private:
-    TypeDB::Transaction* const parentTransaction;
+    TypeDB::Transaction* const transaction;
     ConceptManager(TypeDB::Transaction*);
 
     friend class TypeDB::Transaction;

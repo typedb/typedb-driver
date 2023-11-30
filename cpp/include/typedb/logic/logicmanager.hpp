@@ -42,7 +42,7 @@ class LogicManager {
     [[nodiscard]] RuleFuture putRule(const std::string& label, const std::string& when, const std::string& then) const;
 
    private:
-    TypeDB::Transaction* const parentTransaction;
+    TypeDB::Transaction* const transaction;
     LogicManager(TypeDB::Transaction*);
     friend class TypeDB::Transaction;
 };

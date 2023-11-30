@@ -60,7 +60,7 @@ class QueryManager {
     [[nodiscard]] ExplanationIterable explain(const Explainable& explainable, const Options& options) const;
 
    private:
-    TypeDB::Transaction* const parentTransaction;
+    TypeDB::Transaction* const transaction;
     QueryManager(TypeDB::Transaction*);
 
     friend class TypeDB::Transaction;

@@ -31,16 +31,16 @@ namespace TypeDB {
 
 #define CONCEPTMANAGER_CALL(TYPE, NATIVE_FUNC, ...)                                                                                            \
     {                                                                                                                                          \
-        CHECK_NATIVE(parentTransaction);                                                                                                       \
-        WRAPPED_NATIVE_CALL(ConceptPtrFuture<TYPE>, new ConceptFutureWrapperSimple(NATIVE_FUNC(parentTransaction->getNative(), __VA_ARGS__))); \
+        CHECK_NATIVE(transaction);                                                                                                       \
+        WRAPPED_NATIVE_CALL(ConceptPtrFuture<TYPE>, new ConceptFutureWrapperSimple(NATIVE_FUNC(transaction->getNative(), __VA_ARGS__))); \
     }
 
 #define CONCEPTMANAGER_TYPE(TYPE, NATIVE_FUNC) CONCEPTMANAGER_CALL(TYPE, NATIVE_FUNC, label.c_str())
 #define CONCEPTMANAGER_THING(TYPE, NATIVE_FUNC) CONCEPTMANAGER_CALL(TYPE, NATIVE_FUNC, iid.c_str())
 
 
-ConceptManager::ConceptManager(TypeDB::Transaction* parentTransaction)
-    : parentTransaction(parentTransaction) {}
+ConceptManager::ConceptManager(TypeDB::Transaction* transaction)
+    : transaction(transaction) {}
 
 std::unique_ptr<EntityType> ConceptManager::getRootEntityType() const {
     return ConceptFactory::entityType(_native::concepts_get_root_entity_type());
@@ -94,9 +94,9 @@ using SchemaExceptionIterator = TypeDBIterator<_native::SchemaExceptionIterator,
 using SchemaExceptionIterable = TypeDBIterable<_native::SchemaExceptionIterator, _native::SchemaException, TypeDBDriverException>;
 
 std::vector<TypeDBDriverException> ConceptManager::getSchemaExceptions() {
-    CHECK_NATIVE(parentTransaction);
+    CHECK_NATIVE(transaction);
     std::vector<TypeDBDriverException> exceptions;
-    SchemaExceptionIterable exIterable(_native::concepts_get_schema_exceptions(parentTransaction->getNative()));
+    SchemaExceptionIterable exIterable(_native::concepts_get_schema_exceptions(transaction->getNative()));
     for (TypeDBDriverException& ex : exIterable) {
         exceptions.push_back(ex);
     }

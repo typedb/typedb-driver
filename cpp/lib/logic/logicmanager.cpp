@@ -30,21 +30,21 @@
 namespace TypeDB {
 
 OptionalRuleFuture LogicManager::getRule(const std::string& label) const {
-    CHECK_NATIVE(parentTransaction);
-    WRAPPED_NATIVE_CALL(OptionalRuleFuture, _native::logic_manager_get_rule(parentTransaction->getNative(), label.c_str()));
+    CHECK_NATIVE(transaction);
+    WRAPPED_NATIVE_CALL(OptionalRuleFuture, _native::logic_manager_get_rule(transaction->getNative(), label.c_str()));
 }
 
 RuleIterable LogicManager::getRules() const {
-    CHECK_NATIVE(parentTransaction);
-    WRAPPED_NATIVE_CALL(RuleIterable, _native::logic_manager_get_rules(parentTransaction->getNative()));
+    CHECK_NATIVE(transaction);
+    WRAPPED_NATIVE_CALL(RuleIterable, _native::logic_manager_get_rules(transaction->getNative()));
 }
 
 RuleFuture LogicManager::putRule(const std::string& label, const std::string& when, const std::string& then) const {
-    CHECK_NATIVE(parentTransaction);
-    WRAPPED_NATIVE_CALL(RuleFuture, _native::logic_manager_put_rule(parentTransaction->getNative(), label.c_str(), when.c_str(), then.c_str()));
+    CHECK_NATIVE(transaction);
+    WRAPPED_NATIVE_CALL(RuleFuture, _native::logic_manager_put_rule(transaction->getNative(), label.c_str(), when.c_str(), then.c_str()));
 }
 
-LogicManager::LogicManager(TypeDB::Transaction* parentTransaction)
-    : parentTransaction(parentTransaction) {}
+LogicManager::LogicManager(TypeDB::Transaction* transaction)
+    : transaction(transaction) {}
 
 }  // namespace TypeDB
