@@ -58,7 +58,7 @@ Checks whether this session is open.
 session.isOpen()
 ----
 
-[#_TypeDBSession_onClose__callback_______void_]
+[#_TypeDBSession_onClose__callback_______Promise_void__]
 ==== onClose
 
 [source,nodejs]
@@ -74,7 +74,7 @@ Registers a callback function which will be executed when this session is closed
 [options="header"]
 |===
 |Name |Description |Type
-a| `callback` a| The callback function. a| `(() => void)`
+a| `callback` a| The callback function. a| `(() => Promise<void>)`
 |===
 
 [caption=""]
@@ -88,7 +88,7 @@ a| `callback` a| The callback function. a| `(() => void)`
 session.onClose(function)
 ----
 
-[#_TypeDBSession_onReopen__callback_______void_]
+[#_TypeDBSession_onReopen__callback_______Promise_void__]
 ==== onReopen
 
 [source,nodejs]
@@ -104,7 +104,7 @@ Registers a callback function which will be executed when this session is reopen
 [options="header"]
 |===
 |Name |Description |Type
-a| `callback` a| The callback function. a| `(() => void)`
+a| `callback` a| The callback function. a| `(() => Promise<void>)`
 |===
 
 [caption=""]
