@@ -85,7 +85,7 @@ impl Transaction<'_> {
         LogicManager::new(self.transaction_stream.as_ref())
     }
 
-    /// Registers a callback function which will be executed when this session is closed.
+    /// Registers a callback function which will be executed when this transaction is closed.
     ///
     /// # Arguments
     ///

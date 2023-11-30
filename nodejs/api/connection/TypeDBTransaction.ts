@@ -60,7 +60,7 @@ export interface TypeDBTransaction {
     readonly query: QueryManager;
 
     /**
-     * Registers a callback function which will be executed when this session is closed.
+     * Registers a callback function which will be executed when this transaction is closed.
      *
      * ### Examples
      *
