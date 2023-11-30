@@ -32,15 +32,6 @@ namespace TypeDB {
 Database::Database(_native::Database* db) noexcept
     : databaseNative(db, _native::database_close) {}
 
-Database::Database(Database&& from) noexcept {
-    *this = std::move(from);
-}
-
-Database& Database::operator=(Database&& from) {
-    databaseNative = std::move(from.databaseNative);
-    return *this;
-}
-
 bool Database::operator==(const Database& other) {
     return databaseNative == other.databaseNative;
 }

@@ -30,15 +30,6 @@ namespace TypeDB {
 ConceptMapGroup::ConceptMapGroup(_native::ConceptMapGroup* conceptMapGroupNative)
     : conceptMapGroupNative(conceptMapGroupNative, _native::concept_map_group_drop) {}
 
-ConceptMapGroup::ConceptMapGroup(ConceptMapGroup&& from) {
-    *this = std::move(from);
-}
-
-ConceptMapGroup& ConceptMapGroup::operator=(ConceptMapGroup&& from) {
-    conceptMapGroupNative = std::move(from.conceptMapGroupNative);
-    return *this;
-}
-
 std::unique_ptr<Concept> ConceptMapGroup::owner() {
     CHECK_NATIVE(conceptMapGroupNative);
     WRAPPED_NATIVE_CALL(ConceptFactory::ofNative, _native::concept_map_group_get_owner(conceptMapGroupNative.get()));

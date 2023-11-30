@@ -32,6 +32,10 @@ class QueryManager;
 class Options {
    public:
     Options();
+    Options(const Options&) = delete;
+    Options(Options&&) = default;
+    Options& operator=(const Options&) = delete;
+    Options& operator=(Options&&) = default;
 
     std::optional<bool> infer();
 

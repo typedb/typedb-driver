@@ -28,8 +28,8 @@ namespace TypeDB {
 
 class Explanation {
    public:
-    Explanation(Explanation&&);
-    Explanation& operator=(Explanation&&);
+    Explanation(Explanation&&) = default;
+    Explanation& operator=(Explanation&&) = default;
 
     Rule rule();
     ConceptMap conclusion();

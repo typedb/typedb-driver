@@ -31,10 +31,11 @@ class ConceptMap {
    public:
     ConceptMap(_native::ConceptMap*);
     ConceptMap(const ConceptMap&) = delete;
-    ConceptMap(ConceptMap&&);
+    ConceptMap(ConceptMap&&) = default;
 
     ConceptMap& operator=(const ConceptMap&) = delete;
-    ConceptMap& operator=(ConceptMap&&);
+    ConceptMap& operator=(ConceptMap&&) = default;
+    ~ConceptMap() = default;
 
     StringIterable variables();
     ConceptIterable<Concept> concepts();

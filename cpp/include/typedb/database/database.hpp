@@ -30,10 +30,10 @@ class DatabaseManager;
 class Database {
    public:
     Database(const Database&) = delete;
-    Database(Database&&) noexcept;
+    Database(Database&&) =  default;
 
     Database& operator=(const Database&) = delete;
-    Database& operator=(Database&&);
+    Database& operator=(Database&&) = default;
 
     bool operator==(const Database& other);
 

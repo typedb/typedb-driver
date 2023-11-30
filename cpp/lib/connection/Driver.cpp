@@ -73,19 +73,6 @@ Driver::Driver(_native::Connection* conn) noexcept
       databases(this->connectionNative.get()),
       users(this->connectionNative.get()) {}
 
-Driver::Driver(Driver&& from)
-    : connectionNative(std::move(from.connectionNative)),
-      databases(std::move(from.databases)),
-      users(std::move(from.users)) {}
-
-Driver& Driver::operator=(Driver&& from) {
-    connectionNative = std::move(from.connectionNative);
-    from.connectionNative = nullptr;
-    databases = std::move(from.databases);
-    users = std::move(from.users);
-    return *this;
-}
-
 bool Driver::isOpen() {
     return connectionNative != nullptr && _native::connection_is_open(connectionNative.get());
 }

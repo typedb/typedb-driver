@@ -47,15 +47,6 @@ std::string Explainable::conjunction() {
 Explainables::Explainables(_native::Explainables* explainablesNative)
     : explainablesNative(explainablesNative, _native::explainables_drop) {}
 
-Explainables::Explainables(Explainables&& from) {
-    *this = std::move(from);
-}
-
-Explainables& Explainables::operator=(Explainables&& from) {
-    explainablesNative = std::move(from.explainablesNative);
-    return *this;
-}
-
 Explainable Explainables::relation(std::string& variable) {
     CHECK_NATIVE(explainablesNative);
     WRAPPED_NATIVE_CALL(Explainable, _native::explainables_get_relation(explainablesNative.get(), variable.c_str()));

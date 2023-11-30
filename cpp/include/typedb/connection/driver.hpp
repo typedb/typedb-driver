@@ -34,10 +34,16 @@ class Driver;
 class Credential {
    public:
     Credential(const std::string& username, const std::string& password, bool withTLS, const std::string& customRootCAStr = "");
+    Credential(const Credential&) = delete;
+    Credential& operator=(const Credential&) = delete;
+    Credential(Credential&&) = default;
+    Credential& operator=(Credential&&) = default;
 
    private:
     NativePointer<_native::Credential> credentialNative;
+
     _native::Credential* getNative() const;
+
     friend class Driver;
 };
 
@@ -54,10 +60,10 @@ class Driver {
     Driver(const std::string& coreAddress);
     Driver(const std::vector<std::string>& enterpriseAddresses, const Credential& credential);
     Driver(const Driver&) = delete;
-    Driver(Driver&& from);
+    Driver(Driver&& from) = default;
 
     Driver& operator=(Driver& from) = delete;
-    Driver& operator=(Driver&& from);
+    Driver& operator=(Driver&& from) = default;
 
     bool isOpen();
     void close();

@@ -28,8 +28,8 @@ namespace TypeDB {
 
 class Annotation {
    public:
-    Annotation(Annotation&&);
-    Annotation& operator=(Annotation&&);
+    Annotation(Annotation&&) = default;
+    Annotation& operator=(Annotation&&) = default;
     static Annotation key();
     static Annotation unique();
 

@@ -33,8 +33,8 @@ class User {
     User& operator=(const User&) = delete;
 
     User(_native::User*);
-    User(User&&) noexcept;
-    User& operator=(User&&);
+    User(User&&) = default;
+    User& operator=(User&&) = default;
 
     std::string username();
     std::optional<int64_t> passwordExpirySeconds();

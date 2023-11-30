@@ -32,15 +32,6 @@ namespace TypeDB {
 ConceptMap::ConceptMap(_native::ConceptMap* conceptMapNative)
     : conceptMapNative(conceptMapNative, _native::concept_map_drop) {}
 
-ConceptMap::ConceptMap(ConceptMap&& from) {
-    *this = std::move(from);
-}
-
-ConceptMap& ConceptMap::operator=(ConceptMap&& from) {
-    conceptMapNative = std::move(from.conceptMapNative);
-    return *this;
-}
-
 StringIterable ConceptMap::variables() {
     CHECK_NATIVE(conceptMapNative);
     WRAPPED_NATIVE_CALL(StringIterable, _native::concept_map_get_variables(conceptMapNative.get()));

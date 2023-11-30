@@ -61,8 +61,8 @@ using OwnerAttributePairIterable = TypeDBIterable<_native::StringPairIterator, _
 
 class Explainables {
    public:
-    Explainables(Explainables&&);
-    Explainables& operator=(Explainables&&);
+    Explainables(Explainables&&) = default;
+    Explainables& operator=(Explainables&&) = default;
 
     Explainable relation(std::string& variable);
     Explainable attribute(std::string& variable);

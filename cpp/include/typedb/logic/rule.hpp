@@ -39,8 +39,8 @@ using RuleIterator = TypeDBIterator<_native::RuleIterator, _native::Rule, Rule>;
 
 class Rule {
    public:
-    Rule(Rule&&);
-    Rule& operator=(Rule&&);
+    Rule(Rule&&) = default;
+    Rule& operator=(Rule&&) = default;
 
     std::string label();
     std::string when();

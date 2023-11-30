@@ -34,4 +34,4 @@ TYPEDB_ITERATOR_HELPER(
     _native::string_iterator_next,
     _native::string_free);
 
-}
+}  // namespace TypeDB

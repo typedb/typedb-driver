@@ -31,10 +31,11 @@ class ConceptMapGroup {
    public:
     ConceptMapGroup(_native::ConceptMapGroup*);
     ConceptMapGroup(const ConceptMapGroup&) = delete;
-    ConceptMapGroup(ConceptMapGroup&&);
+    ConceptMapGroup(ConceptMapGroup&&) = default;
 
     ConceptMapGroup& operator=(const ConceptMapGroup&) = delete;
-    ConceptMapGroup& operator=(ConceptMapGroup&&);
+    ConceptMapGroup& operator=(ConceptMapGroup&&) = default;
+    ~ConceptMapGroup() = default;
 
     std::unique_ptr<Concept> owner();
     ConceptMapIterable conceptMaps();

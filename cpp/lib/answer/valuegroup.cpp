@@ -30,15 +30,6 @@ namespace TypeDB {
 ValueGroup::ValueGroup(_native::ValueGroup* valueGroupNative)
     : valueGroupNative(valueGroupNative, _native::value_group_drop) {}
 
-ValueGroup::ValueGroup(ValueGroup&& from) {
-    *this = std::move(from);
-}
-
-ValueGroup& ValueGroup::operator=(ValueGroup&& from) {
-    valueGroupNative = std::move(from.valueGroupNative);
-    return *this;
-}
-
 std::unique_ptr<Concept> ValueGroup::owner() {
     CHECK_NATIVE(valueGroupNative);
     WRAPPED_NATIVE_CALL(ConceptFactory::ofNative, _native::value_group_get_owner(valueGroupNative.get()));

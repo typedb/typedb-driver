@@ -31,10 +31,11 @@ class ValueGroup {
    public:
     ValueGroup(_native::ValueGroup*);
     ValueGroup(const ValueGroup&) = delete;
-    ValueGroup(ValueGroup&&);
+    ValueGroup(ValueGroup&&) = default;
+    ~ValueGroup() = default;
 
     ValueGroup& operator=(const ValueGroup&) = delete;
-    ValueGroup& operator=(ValueGroup&&);
+    ValueGroup& operator=(ValueGroup&&) = default;
 
     std::unique_ptr<Concept> owner();
     AggregateResult value();

@@ -47,8 +47,8 @@ class UserManager {
     NativePointer<_native::UserManager> userManagerNative;
 
     UserManager(const _native::Connection*);
-    UserManager(UserManager&&) noexcept;
-    UserManager& operator=(UserManager&&);
+    UserManager(UserManager&&) = default;
+    UserManager& operator=(UserManager&&) = default;
 
     _native::UserManager* getNative() const;
 

@@ -33,16 +33,6 @@ Session::Session()
 Session::Session(_native::Session* sessionNative)
     : sessionNative(sessionNative, _native::session_close) {}
 
-
-Session::Session(Session&& from) {
-    *this = std::move(from);
-}
-
-Session& Session::operator=(Session&& from) {
-    sessionNative = std::move(from.sessionNative);
-    return *this;
-}
-
 bool Session::isOpen() const {
     return sessionNative != nullptr && _native::session_is_open(sessionNative.get());
 }

@@ -31,7 +31,7 @@ class Session {
    public:
     Session();
     Session(const Session&) = delete;
-    Session(Session&&);
+    Session(Session&&) = default;
 
     Session& operator=(const Session&) = delete;
     Session& operator=(Session&&);

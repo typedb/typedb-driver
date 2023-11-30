@@ -32,16 +32,6 @@ namespace TypeDB {
 User::User(_native::User* userNative)
     : userNative(userNative, _native::user_drop) {}
 
-User::User(User&& from) noexcept {
-    *this = std::move(from);
-}
-
-User& User::operator=(User&& from) {
-    userNative = std::move(from.userNative);
-
-    return *this;
-}
-
 std::string User::username() {
     CHECK_NATIVE(userNative);
     WRAPPED_NATIVE_CALL(Utils::stringFromNative, _native::user_get_username(userNative.get()));

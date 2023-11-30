@@ -51,8 +51,8 @@ class DatabaseManager {
     NativePointer<_native::DatabaseManager> databaseManagerNative;
 
     DatabaseManager(_native::Connection*);
-    DatabaseManager(DatabaseManager&&) noexcept;
-    DatabaseManager& operator=(DatabaseManager&&);
+    DatabaseManager(DatabaseManager&&) noexcept = default;
+    DatabaseManager& operator=(DatabaseManager&&) = default;
 
     Session session(const std::string& database, SessionType sessionType, const Options& options);
 

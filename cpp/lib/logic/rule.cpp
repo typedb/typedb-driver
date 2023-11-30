@@ -29,15 +29,6 @@ namespace TypeDB {
 Rule::Rule(_native::Rule* ruleNative)
     : ruleNative(ruleNative, _native::rule_drop) {}
 
-Rule::Rule(Rule&& from) {
-    *this = std::move(from);
-}
-
-Rule& Rule::operator=(Rule&& from) {
-    ruleNative = std::move(from.ruleNative);
-    return *this;
-}
-
 std::string Rule::label() {
     CHECK_NATIVE(ruleNative);
     return Utils::stringFromNative(_native::rule_get_label(ruleNative.get()));

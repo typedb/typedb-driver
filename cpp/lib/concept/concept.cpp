@@ -44,15 +44,6 @@ const char* ConceptTypeNames[9] = {
 Annotation::Annotation(_native::Annotation* annotationNative)
     : annotationNative(annotationNative, _native::annotation_drop) {}
 
-Annotation::Annotation(Annotation&& from) {
-    *this = std::move(from);
-}
-
-Annotation& Annotation::operator=(Annotation&& from) {
-    annotationNative = std::move(from.annotationNative);
-    return *this;
-}
-
 Annotation Annotation::key() {
     return Annotation(_native::annotation_new_key());
 }

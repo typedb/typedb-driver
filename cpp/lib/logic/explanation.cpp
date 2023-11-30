@@ -27,15 +27,6 @@ namespace TypeDB {
 Explanation::Explanation(_native::Explanation* explanationNative)
     : explanationNative(explanationNative, _native::explanation_drop) {}
 
-
-Explanation::Explanation(Explanation&& from) {
-    *this = std::move(from);
-}
-Explanation& Explanation::operator=(Explanation&& from) {
-    explanationNative = std::move(from.explanationNative);
-    return *this;
-}
-
 Rule Explanation::rule() {
     CHECK_NATIVE(explanationNative);
     WRAPPED_NATIVE_CALL(Rule, _native::explanation_get_rule(explanationNative.get()));

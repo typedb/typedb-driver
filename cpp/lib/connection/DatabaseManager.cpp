@@ -39,15 +39,6 @@ DatabaseManager::DatabaseManager(_native::Connection* connectionNative) {
     databaseManagerNative = connectionNative ? NativePointer<_native::DatabaseManager>(_native::database_manager_new(connectionNative), _native::database_manager_drop) : NativePointer<_native::DatabaseManager>(nullptr);
 }
 
-DatabaseManager::DatabaseManager(DatabaseManager&& from) noexcept {
-    *this = std::move(from);
-}
-
-DatabaseManager& DatabaseManager::operator=(DatabaseManager&& from) {
-    databaseManagerNative = std::move(from.databaseManagerNative);
-    return *this;
-}
-
 void DatabaseManager::create(const std::string& name) const {
     CHECK_NATIVE(databaseManagerNative);
     _native::databases_create(databaseManagerNative.get(), name.c_str());

@@ -34,15 +34,6 @@ UserManager::UserManager(const _native::Connection* connectionNative) {
             : NativePointer<_native::UserManager>(nullptr);
 }
 
-UserManager::UserManager(UserManager&& from) noexcept {
-    *this = std::move(from);
-}
-
-UserManager& UserManager::operator=(UserManager&& from) {
-    userManagerNative = std::move(from.userManagerNative);
-    return *this;
-}
-
 bool UserManager::contains(const std::string& username) const {
     CHECK_NATIVE(userManagerNative);
     WRAPPED_NATIVE_CALL(RETURN_IDENTITY, _native::users_contains(userManagerNative.get(), username.c_str()));
