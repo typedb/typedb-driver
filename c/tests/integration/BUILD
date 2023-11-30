@@ -21,6 +21,7 @@
 
 package(default_visibility = ["//visibility:public"])
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@vaticle_dependencies//builder/cpp:rules.bzl", "clang_format_test")
 
 cc_library(
     name = "lib-test-driver",
@@ -47,6 +48,11 @@ cc_test(
         "@gtest//:gtest_main"
     ],
     env = {"RUST_BACKTRACE": "full"}
+)
+
+clang_format_test(
+    name = "clang_format",
+    include = glob(["*.c", "*.h"])
 )
 
 checkstyle_test(
