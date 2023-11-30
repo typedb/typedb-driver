@@ -37,7 +37,6 @@ pub struct Session {
     server_session_info: RwLock<SessionInfo>,
     session_type: SessionType,
     is_open: Arc<AtomicCell<bool>>,
-
     on_close: Arc<Mutex<Vec<Callback>>>,
     on_reopen: Mutex<Vec<Callback>>,
 }
