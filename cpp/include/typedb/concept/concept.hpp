@@ -86,6 +86,11 @@ class ConceptFactory;
 class Concept {
    public:
     virtual ~Concept();
+    Concept(const Concept&) = delete;
+    Concept(Concept&&) = default;
+    Concept& operator=(const Concept&) = delete;
+    Concept& operator=(Concept&&) = default;
+
     ConceptType getConceptType();
 
     bool isThingType();

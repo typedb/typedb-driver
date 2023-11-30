@@ -34,7 +34,7 @@ class Session {
     Session(Session&&) = default;
 
     Session& operator=(const Session&) = delete;
-    Session& operator=(Session&&);
+    Session& operator=(Session&&) = default;
 
     bool isOpen() const;
     void close();
