@@ -39,34 +39,24 @@ _native::Credential* Credential::getNative() const {
 }
 
 
-_native::Connection* connectToCore(const std::string& coreAddress) {
+Driver Driver::coreDriver(const std::string& coreAddress) {
     auto p = _native::connection_open_core(coreAddress.c_str());
     TypeDBDriverException::check_and_throw();
-    return p;
+    return Driver(p);
 }
 
-_native::Connection* connectToEnterprise(const std::vector<std::string>& enterpriseAddresses, _native::Credential* nativeCredential) {
+Driver Driver::enterpriseDriver(const std::vector<std::string>& enterpriseAddresses, const Credential& credential) {
     std::vector<const char*> addressesNative;
     for (auto& addr : enterpriseAddresses)
         addressesNative.push_back(addr.c_str());
     addressesNative.push_back(nullptr);
-    auto p = _native::connection_open_enterprise(addressesNative.data(), nativeCredential);
+    auto p = _native::connection_open_enterprise(addressesNative.data(), credential.getNative());
     TypeDBDriverException::check_and_throw();
-    return p;
+    return Driver(p);
 }
 
 Driver::Driver()
     : Driver(nullptr) {}
-
-Driver::Driver(const std::string& coreAddress)
-    : Driver(connectToCore(coreAddress)) {
-    TypeDBDriverException::check_and_throw();
-}
-
-Driver::Driver(const std::vector<std::string>& enterpriseAddresses, const Credential& credential)
-    : Driver(connectToEnterprise(enterpriseAddresses, credential.getNative())) {
-    TypeDBDriverException::check_and_throw();
-}
 
 Driver::Driver(_native::Connection* conn) noexcept
     : connectionNative(conn, _native::connection_close),

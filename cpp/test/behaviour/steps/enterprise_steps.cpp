@@ -61,11 +61,11 @@ void TestHooks::afterScenario(Context& context, const cucumber_bdd::Scenario<Con
 const TestHooks testHooks;
 
 TypeDB::Driver CoreOrEnterpriseConnection::defaultConnection() {
-    return TypeDB::Driver(DEFAULT_ENTERPRISE_ADDRESSES, TypeDB::Credential(DEFAULT_ENTERPRISE_USER, DEFAULT_ENTERPRISE_PASSWORD, false));
+    return TypeDB::Driver::enterpriseDriver(DEFAULT_ENTERPRISE_ADDRESSES, TypeDB::Credential(DEFAULT_ENTERPRISE_USER, DEFAULT_ENTERPRISE_PASSWORD, false));
 }
 
 TypeDB::Driver CoreOrEnterpriseConnection::connectWithAuthentication(const std::string& username, const std::string& password) {
-    return TypeDB::Driver(DEFAULT_ENTERPRISE_ADDRESSES, TypeDB::Credential(username, password, true, std::getenv("ROOT_CA")));
+    return TypeDB::Driver::enterpriseDriver(DEFAULT_ENTERPRISE_ADDRESSES, TypeDB::Credential(username, password, true, std::getenv("ROOT_CA")));
 }
 
 }  // namespace TypeDB::BDD

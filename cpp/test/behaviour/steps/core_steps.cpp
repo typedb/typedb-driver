@@ -53,7 +53,7 @@ void TestHooks::afterScenario(Context& context, const cucumber_bdd::Scenario<Con
 const TestHooks testHooks;
 
 TypeDB::Driver CoreOrEnterpriseConnection::defaultConnection() {
-    return TypeDB::Driver(DEFAULT_CORE_ADDRESS);
+    return TypeDB::Driver::coreDriver(DEFAULT_CORE_ADDRESS);
 }
 
 TypeDB::Driver CoreOrEnterpriseConnection::connectWithAuthentication(const std::string&, const std::string&) {

@@ -37,7 +37,7 @@ void delete_if_exists(const TypeDB::Driver& driver, const std::string& name) {
 
 TEST(TestConceptAPI, TestData) {
     std::string dbName = "hello_from_cpp";
-    TypeDB::Driver driver("127.0.0.1:1729");
+    TypeDB::Driver driver = TypeDB::Driver::coreDriver("127.0.0.1:1729");
     delete_if_exists(driver, dbName);
     EXPECT_FALSE(_native::check_error());
     driver.databases.create(dbName);
@@ -53,7 +53,7 @@ TEST(TestConceptAPI, TestData) {
 
 TEST(TestExplanations, TestExplainableOwnership) {
     std::string dbName = "test_explanations";
-    TypeDB::Driver driver("127.0.0.1:1729");
+    TypeDB::Driver driver = TypeDB::Driver::coreDriver("127.0.0.1:1729");
     int attrValue = 42;
     std::string ruleLabel = "ownership-generation";
     std::string then = "$a has $a";
