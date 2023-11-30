@@ -69,22 +69,19 @@ _native::Concept* ConceptIteratorWrapperSimple::next() {
     return p;
 }
 
-ConceptIteratorWrapperExplicit::ConceptIteratorWrapperExplicit(std::initializer_list<_native::Concept*> concepts)
-    : nativeConcepts(concepts.begin(), concepts.end()) {}
+ConceptPromiseWrappingIterator::ConceptPromiseWrappingIterator(_native::ConceptPromise* conceptPromise)
+    : conceptPromiseNative(conceptPromise) {}
 
-ConceptIteratorWrapperExplicit::~ConceptIteratorWrapperExplicit() {
-    while (!nativeConcepts.empty()) {
-        _native::concept_drop(nativeConcepts.back());
-        nativeConcepts.pop_back();
-    }
+ConceptPromiseWrappingIterator::~ConceptPromiseWrappingIterator() {
+    if (nullptr != conceptPromiseNative) _native::concept_promise_resolve(conceptPromiseNative);
 }
 
-_native::Concept* ConceptIteratorWrapperExplicit::next() {
-    if (nativeConcepts.empty()) return nullptr;
+_native::Concept* ConceptPromiseWrappingIterator::next() {
+    if (nullptr == conceptPromiseNative) return nullptr;
     else {
-        _native::Concept* ret = nativeConcepts.back();
-        nativeConcepts.pop_back();
-        return ret;
+        auto p = conceptPromiseNative;
+        conceptPromiseNative = nullptr;
+        return _native::concept_promise_resolve(p);
     }
 }
 

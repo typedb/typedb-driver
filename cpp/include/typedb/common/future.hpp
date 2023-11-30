@@ -41,6 +41,18 @@ class Future {
     Future(NATIVE_PROMISE* promiseNative)
         : promiseNative(promiseNative, &HELPER::resolve) {}
 
+    Future(const SELF& from) = delete;
+    Future(SELF&& from) {
+        *this = std::move(from);
+    }
+
+    Future& operator=(const SELF& from) = delete;
+
+    Future& operator=(SELF&& from) {
+        promiseNative = std::move(from.promiseNative);
+        return *this;
+    }
+
     RETURN get() {
         if constexpr (std::is_same_v<RETURN, void>) {
             HELPER::resolve(promiseNative.release());

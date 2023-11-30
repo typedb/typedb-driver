@@ -69,9 +69,6 @@ ConceptFutureWrapperExplicit::ConceptFutureWrapperExplicit(_native::Concept* con
     : nativeConcept(concept) {}
 
 _native::Concept* ConceptFutureWrapperExplicit::resolve() {
-    if (nativeConcept == nullptr) {
-        throw Utils::exception(&InternalError::INVALID_NATIVE_HANDLE);
-    }
     auto t = nativeConcept;
     nativeConcept = nullptr;
     return t;

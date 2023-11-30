@@ -70,12 +70,11 @@ ConceptIteratorWrapper* getSubtypesIteratorNativeForRootThingType(Transaction& t
 }
 
 ConceptIteratorWrapper* getSupertypesIteratorNativeForRootThingType(Transaction& transaction) {
-    // Actually does sync work rather than returning an async Iterator
     auto rootEntity = _native::concepts_get_root_entity_type();
-    auto rootThingType = _native::concept_promise_resolve(_native::entity_type_get_supertype(ConceptFactory::getNative(transaction), rootEntity));
+    auto rootThingTypePromise = _native::entity_type_get_supertype(ConceptFactory::getNative(transaction), rootEntity);
     TypeDBDriverException::check_and_throw();
     _native::concept_drop(rootEntity);
-    return new ConceptIteratorWrapperExplicit({rootThingType});
+    return new ConceptPromiseWrappingIterator(rootThingTypePromise);
 }
 
 

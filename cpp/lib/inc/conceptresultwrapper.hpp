@@ -76,6 +76,15 @@ class ConceptIteratorWrapperExplicit : public ConceptIteratorWrapper {
     std::vector<_native::Concept*> nativeConcepts;
 };
 
+class ConceptPromiseWrappingIterator : public ConceptIteratorWrapper {
+   public:
+    ConceptPromiseWrappingIterator(_native::ConceptPromise* conceptPromise);
+    virtual ~ConceptPromiseWrappingIterator() override;
+    virtual _native::Concept* next() override;
+   private:
+    _native::ConceptPromise* conceptPromiseNative;
+};
+
 class ConceptIteratorWrapperChained : public ConceptIteratorWrapper {
    public:
     ConceptIteratorWrapperChained(std::initializer_list<_native::ConceptIterator*> iterators);
