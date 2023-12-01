@@ -30,7 +30,7 @@ class DatabaseManager;
 class Database {
    public:
     Database(const Database&) = delete;
-    Database(Database&&) =  default;
+    Database(Database&&) = default;
     ~Database() = default;
 
     Database& operator=(const Database&) = delete;

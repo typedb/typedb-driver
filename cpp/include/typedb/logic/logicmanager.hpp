@@ -45,7 +45,7 @@ class LogicManager {
     LogicManager& operator=(LogicManager&&) = delete;
     LogicManager(const LogicManager&) = delete;
     LogicManager& operator=(const LogicManager&) = delete;
-    
+
     friend class TypeDB::Transaction;
 };
 

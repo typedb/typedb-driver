@@ -29,8 +29,8 @@
 
 namespace TypeDB {
 
-#define CONCEPTMANAGER_CALL(TYPE, NATIVE_FUNC, ...)                                                                                            \
-    {                                                                                                                                          \
+#define CONCEPTMANAGER_CALL(TYPE, NATIVE_FUNC, ...)                                                                                      \
+    {                                                                                                                                    \
         CHECK_NATIVE(transaction);                                                                                                       \
         WRAPPED_NATIVE_CALL(ConceptPtrFuture<TYPE>, new ConceptFutureWrapperSimple(NATIVE_FUNC(transaction->getNative(), __VA_ARGS__))); \
     }

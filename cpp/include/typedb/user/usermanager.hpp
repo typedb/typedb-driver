@@ -33,7 +33,7 @@ using UserIterable = TypeDBIterable<_native::UserIterator, _native::User, User>;
 class UserManager {
    public:
     ~UserManager() = default;
-    
+
     bool contains(const std::string& username) const;
     void create(const std::string& username, const std::string& password) const;
     void drop(const std::string& username) const;

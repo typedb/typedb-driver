@@ -45,7 +45,7 @@ class Explainable {
     Explainable(const Explainable&) = delete;
     Explainable(Explainable&&) = default;
     ~Explainable() = default;
-    
+
     int64_t explainableId();
     std::string conjunction();
 

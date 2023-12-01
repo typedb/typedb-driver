@@ -57,6 +57,7 @@ class ConceptPromiseWrappingIterator : public ConceptIteratorWrapper {
     ConceptPromiseWrappingIterator(_native::ConceptPromise* conceptPromise);
     virtual ~ConceptPromiseWrappingIterator() override;
     virtual _native::Concept* next() override;
+
    private:
     _native::ConceptPromise* conceptPromiseNative;
 };
