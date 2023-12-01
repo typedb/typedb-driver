@@ -31,6 +31,7 @@ class Database {
    public:
     Database(const Database&) = delete;
     Database(Database&&) =  default;
+    ~Database() = default;
 
     Database& operator=(const Database&) = delete;
     Database& operator=(Database&&) = default;

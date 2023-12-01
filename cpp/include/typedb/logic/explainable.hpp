@@ -42,11 +42,17 @@ struct OwnerAttributePair {
 
 class Explainable {
    public:
+    Explainable(const Explainable&) = delete;
+    Explainable(Explainable&&) = default;
+    ~Explainable() = default;
+    
     int64_t explainableId();
     std::string conjunction();
 
    private:
     Explainable(_native::Explainable* explainableNative);
+    Explainable& operator=(const Explainable&) = delete;
+    Explainable& operator=(Explainable&&) = default;
     _native::Explainable* getNative() const;
 
     NativePointer<_native::Explainable> explainableNative;
@@ -63,6 +69,7 @@ class Explainables {
    public:
     Explainables(Explainables&&) = default;
     Explainables& operator=(Explainables&&) = default;
+    ~Explainables() = default;
 
     Explainable relation(std::string& variable);
     Explainable attribute(std::string& variable);

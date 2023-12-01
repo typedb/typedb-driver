@@ -47,6 +47,7 @@ class Transaction {
     Transaction();
     Transaction(const Transaction&) = delete;
     Transaction(Transaction&&);
+    ~Transaction() = default;
 
     Transaction& operator=(const Transaction&) = delete;
     Transaction& operator=(Transaction&&);

@@ -55,7 +55,7 @@ class ConceptFactory {
 
     template <typename T>
     static std::vector<_native::Concept*> toNativeArray(const std::vector<T*>& concepts) {
-        std::vector<_native::Concept*> v();
+        std::vector<_native::Concept*> v;
         v.reserve(concepts.size() + 1);
         for (auto& c : concepts)
             v.push_back(ConceptFactory::getNative(c));

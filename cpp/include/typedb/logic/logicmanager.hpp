@@ -32,10 +32,7 @@ class Transaction;
 
 class LogicManager {
    public:
-    LogicManager(LogicManager&&) noexcept = delete;
-    LogicManager& operator=(LogicManager&&) = delete;
-    LogicManager(const LogicManager&) = delete;
-    LogicManager& operator=(const LogicManager&) = delete;
+    ~LogicManager() = default;
 
     OptionalRuleFuture getRule(const std::string& label) const;
     RuleIterable getRules() const;
@@ -44,6 +41,11 @@ class LogicManager {
    private:
     TypeDB::Transaction* const transaction;
     LogicManager(TypeDB::Transaction*);
+    LogicManager(LogicManager&&) noexcept = delete;
+    LogicManager& operator=(LogicManager&&) = delete;
+    LogicManager(const LogicManager&) = delete;
+    LogicManager& operator=(const LogicManager&) = delete;
+    
     friend class TypeDB::Transaction;
 };
 

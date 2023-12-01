@@ -41,6 +41,7 @@ class DatabaseManager {
    public:
     DatabaseManager(const DatabaseManager&) = delete;
     DatabaseManager& operator=(const DatabaseManager&) = delete;
+    ~DatabaseManager() = default;
 
     void create(const std::string&) const;
     bool contains(const std::string&) const;

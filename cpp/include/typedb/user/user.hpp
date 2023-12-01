@@ -29,12 +29,10 @@ class UserManager;
 
 class User {
    public:
-    User(const User&) = delete;
-    User& operator=(const User&) = delete;
-
     User(_native::User*);
     User(User&&) = default;
     User& operator=(User&&) = default;
+    ~User() = default;
 
     std::string username();
     std::optional<int64_t> passwordExpirySeconds();
@@ -42,6 +40,8 @@ class User {
 
    private:
     NativePointer<_native::User> userNative;
+    User(const User&) = delete;
+    User& operator=(const User&) = delete;
 
     friend class UserManager;
     friend TypeDBIteratorHelper<_native::UserIterator, _native::User, User>;

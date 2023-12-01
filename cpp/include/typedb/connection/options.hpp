@@ -36,6 +36,7 @@ class Options {
     Options(Options&&) = default;
     Options& operator=(const Options&) = delete;
     Options& operator=(Options&&) = default;
+    ~Options() = default;
 
     std::optional<bool> infer();
 

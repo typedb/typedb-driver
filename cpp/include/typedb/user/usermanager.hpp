@@ -32,9 +32,8 @@ using UserIterable = TypeDBIterable<_native::UserIterator, _native::User, User>;
 
 class UserManager {
    public:
-    UserManager(const UserManager&) = delete;
-    UserManager& operator=(const UserManager&) = delete;
-
+    ~UserManager() = default;
+    
     bool contains(const std::string& username) const;
     void create(const std::string& username, const std::string& password) const;
     void drop(const std::string& username) const;
@@ -49,6 +48,8 @@ class UserManager {
     UserManager(const _native::Connection*);
     UserManager(UserManager&&) = default;
     UserManager& operator=(UserManager&&) = default;
+    UserManager(const UserManager&) = delete;
+    UserManager& operator=(const UserManager&) = delete;
 
     _native::UserManager* getNative() const;
 

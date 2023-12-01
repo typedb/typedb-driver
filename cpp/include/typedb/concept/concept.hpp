@@ -30,6 +30,7 @@ class Annotation {
    public:
     Annotation(Annotation&&) = default;
     Annotation& operator=(Annotation&&) = default;
+    ~Annotation() = default;
     static Annotation key();
     static Annotation unique();
 
@@ -85,7 +86,7 @@ class ConceptFactory;
 
 class Concept {
    public:
-    virtual ~Concept();
+    virtual ~Concept() = default;
     Concept(const Concept&) = delete;
     Concept(Concept&&) = default;
     Concept& operator=(const Concept&) = delete;

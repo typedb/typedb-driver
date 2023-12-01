@@ -42,10 +42,7 @@ class Transaction;
 
 class QueryManager {
    public:
-    QueryManager(QueryManager&&) noexcept = delete;
-    QueryManager& operator=(QueryManager&&) = delete;
-    QueryManager(const QueryManager&) = delete;
-    QueryManager& operator=(const QueryManager&) = delete;
+    ~QueryManager() = default;
 
     [[nodiscard]] VoidFuture define(const std::string& query, const Options& options) const;
     [[nodiscard]] VoidFuture undefine(const std::string& query, const Options& options) const;
@@ -62,6 +59,10 @@ class QueryManager {
    private:
     TypeDB::Transaction* const transaction;
     QueryManager(TypeDB::Transaction*);
+    QueryManager(QueryManager&&) noexcept = delete;
+    QueryManager& operator=(QueryManager&&) = delete;
+    QueryManager(const QueryManager&) = delete;
+    QueryManager& operator=(const QueryManager&) = delete;
 
     friend class TypeDB::Transaction;
 };

@@ -30,6 +30,7 @@ class Explanation {
    public:
     Explanation(Explanation&&) = default;
     Explanation& operator=(Explanation&&) = default;
+    ~Explanation() = default;
 
     Rule rule();
     ConceptMap conclusion();

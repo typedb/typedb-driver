@@ -61,6 +61,7 @@ class Driver {
     Driver();
     Driver(const Driver&) = delete;
     Driver(Driver&& from) = default;
+    ~Driver() = default;
 
     Driver& operator=(Driver& from) = delete;
     Driver& operator=(Driver&& from) = default;

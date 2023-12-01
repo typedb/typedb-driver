@@ -32,6 +32,7 @@ class Session {
     Session();
     Session(const Session&) = delete;
     Session(Session&&) = default;
+    ~Session() = default;
 
     Session& operator=(const Session&) = delete;
     Session& operator=(Session&&) = default;

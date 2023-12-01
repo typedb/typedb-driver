@@ -41,6 +41,7 @@ class ConceptManager {
     ConceptManager& operator=(ConceptManager&&) = delete;
     ConceptManager(const ConceptManager&) = delete;
     ConceptManager& operator=(const ConceptManager&) = delete;
+    ~ConceptManager() = default;
 
     [[nodiscard]] ConceptPtrFuture<EntityType> putEntityType(const std::string& label) const;
     [[nodiscard]] ConceptPtrFuture<RelationType> putRelationType(const std::string& label) const;

@@ -41,6 +41,7 @@ class Rule {
    public:
     Rule(Rule&&) = default;
     Rule& operator=(Rule&&) = default;
+    ~Rule() = default;
 
     std::string label();
     std::string when();

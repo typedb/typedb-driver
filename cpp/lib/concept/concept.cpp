@@ -61,8 +61,6 @@ Concept::Concept(ConceptType conceptType, _native::Concept* conceptNative)
     : conceptType(conceptType), conceptNative(conceptNative, _native::concept_drop) {
 }
 
-Concept::~Concept() {}
-
 ConceptType Concept::getConceptType() {
     return conceptType;
 }
