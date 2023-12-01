@@ -107,6 +107,37 @@ a| `function` a| The callback function. a| `java.lang.Runnable`
 session.onClose(function)
 ----
 
+[#_TypeDBSession_onReopen__java_lang_Runnable]
+==== onReopen
+
+[source,java]
+----
+void onReopen​(java.lang.Runnable function)
+----
+
+Registers a callback function which will be executed when this session is reopened. A session may be closed if it times out, or loses the connection to the database. In such situations, the session is reopened automatically when opening a new transaction. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `function` a| The callback function. a| `java.lang.Runnable`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+session.onReopen(function)
+----
+
 [#_TypeDBSession_options__]
 ==== options
 

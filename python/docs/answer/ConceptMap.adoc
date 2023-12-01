@@ -76,6 +76,27 @@ a| `variable` a| The string representation of a variable a| `str` a|
 concept_map.get(variable)
 ----
 
+[#_ConceptMap_map__]
+==== map
+
+[source,python]
+----
+map() -> Mapping[str, Concept]
+----
+
+Returns the inner ``Mapping`` where keys are query variables, and values are concepts.
+
+[caption=""]
+.Returns
+`Mapping[str, Concept]`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+concept_map.concepts()
+----
+
 [#_ConceptMap_variables__]
 ==== variables
 

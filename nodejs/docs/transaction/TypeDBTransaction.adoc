@@ -80,6 +80,36 @@ Checks whether this transaction is open.
 transaction.isOpen()
 ----
 
+[#_TypeDBTransaction_onClose__callback___error____Promise_void__]
+==== onClose
+
+[source,nodejs]
+----
+onClose(callback): void
+----
+
+Registers a callback function which will be executed when this transaction is closed.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `callback` a| The callback function. a| `((error?) => Promise<void>)`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+transaction.onClose(function);
+----
+
 [#_TypeDBTransaction_rollback__]
 ==== rollback
 

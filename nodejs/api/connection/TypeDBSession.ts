@@ -68,6 +68,34 @@ export interface TypeDBSession {
     transaction(type: TransactionType, options?: TypeDBOptions): Promise<TypeDBTransaction>;
 
     /**
+     * Registers a callback function which will be executed when this session is closed.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * session.onClose(function)
+     * ```
+     *
+     * @param callback The callback function.
+     */
+    onClose(callback: () => Promise<void>): void;
+
+    /**
+     * Registers a callback function which will be executed when this session is reopened.
+     * A session may be closed if it times out, or loses the connection to the database.
+     * In such situations, the session is reopened automatically when opening a new transaction.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * session.onReopen(function)
+     * ```
+     *
+     * @param callback The callback function.
+     */
+    onReopen(callback: () => Promise<void>): void;
+
+    /**
      * Closes the session. Before opening a new session, the session currently open should first be closed.
      *
      * ### Examples

@@ -107,6 +107,36 @@ a| `function` a| The callback function. a| `callable` a|
 session.on_close(function)
 ----
 
+[#_TypeDBSession_on_reopen__function_callable]
+==== on_reopen
+
+[source,python]
+----
+on_reopen(function: callable) -> None
+----
+
+Registers a callback function which will be executed when this session is reopened. A session may be closed if it times out, or loses the connection to the database. In such situations, the session is reopened automatically when opening a new transaction.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `function` a| The callback function. a| `callable` a| 
+|===
+
+[caption=""]
+.Returns
+`None`
+
+[caption=""]
+.Code examples
+[source,python]
+----
+session.on_close(function)
+----
+
 [#_TypeDBSession_transaction__transaction_type_TransactionType__options_TypeDBOptions]
 ==== transaction
 

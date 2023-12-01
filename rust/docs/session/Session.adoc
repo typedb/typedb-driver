@@ -198,7 +198,7 @@ Session::new_with_options(database, session_type, options);
 
 [source,rust]
 ----
-pub fn on_close(&self, callback: impl FnOnce() + Send + 'static)
+pub fn on_close(&self, callback: impl FnMut() + Send + 'static)
 ----
 
 Registers a callback function which will be executed when this session is closed.
@@ -224,6 +224,39 @@ null
 [source,rust]
 ----
 session.on_close(function);
+----
+
+[#_struct_Session_on_reopen__function]
+==== on_reopen
+
+[source,rust]
+----
+pub fn on_reopen(&self, callback: impl FnMut() + Send + 'static)
+----
+
+Registers a callback function which will be executed when this session is reopened. A session may be closed if it times out, or loses the connection to the database. In such situations, the session is reopened automatically when opening a new transaction.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `function` a| The callback function. a| 
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+null
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+session.on_reopen(function);
 ----
 
 [#_struct_Session_transaction__]

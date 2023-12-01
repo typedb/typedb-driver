@@ -49,6 +49,10 @@ export class ConceptMapImpl implements ConceptMap {
         return this._concepts.values();
     }
 
+    map(): Map<string, Concept> {
+        return this._concepts;
+    }
+
     get(variable: string): Concept {
         return this._concepts.get(variable);
     }

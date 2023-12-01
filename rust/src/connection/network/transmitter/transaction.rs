@@ -31,7 +31,7 @@ use futures::StreamExt;
 use futures::TryStreamExt;
 #[cfg(feature = "sync")]
 use itertools::Itertools;
-use log::error;
+use log::{debug, error};
 use prost::Message;
 #[cfg(not(feature = "sync"))]
 use tokio::sync::oneshot::channel as oneshot;
@@ -49,8 +49,6 @@ use typedb_protocol::transaction::{self, server::Server, stream::State};
 #[cfg(feature = "sync")]
 use super::oneshot_blocking as oneshot;
 use super::response_sink::ResponseSink;
-#[cfg(feature = "sync")]
-use crate::Error;
 use crate::{
     common::{
         box_promise,
@@ -116,6 +114,7 @@ impl TransactionTransmitter {
 
     pub(in crate::connection) fn force_close(&self) {
         if self.is_open.compare_exchange(true, false).is_ok() {
+            *self.error.write().unwrap() = Some(ConnectionError::TransactionIsClosed);
             self.shutdown_sink.send(()).ok();
         }
     }
@@ -130,14 +129,13 @@ impl TransactionTransmitter {
         req: TransactionRequest,
     ) -> impl Promise<'static, Result<TransactionResponse>> {
         if !self.is_open() {
-            let error = self.error.read().unwrap().clone();
-            assert!(error.is_some());
-            return box_promise(async move { Err(error.unwrap().into()) });
+            let error = self.error();
+            return box_promise(async move { Err(error.into()) });
         }
         let (res_sink, recv) = oneshot();
         let send_result = self.request_sink.send((req, Some(ResponseSink::AsyncOneShot(res_sink))));
         box_promise(async move {
-            send_result?;
+            send_result.map_err(|_| ConnectionError::TransactionIsClosed)?;
             recv.await?.map(Into::into)
         })
     }
@@ -148,13 +146,14 @@ impl TransactionTransmitter {
         req: TransactionRequest,
     ) -> impl Promise<'static, Result<TransactionResponse>> {
         if !self.is_open() {
-            let error = self.error.read().unwrap().clone();
-            assert!(error.is_some());
-            return box_promise(|| Err(error.unwrap().into()));
+            let error = self.error();
+            return box_promise(|| Err(error.into()));
         }
         let (res_sink, recv) = oneshot();
         let send_result = self.request_sink.send((req, Some(ResponseSink::BlockingOneShot(res_sink))));
-        box_promise(move || send_result.map_err(Error::from).and_then(|_| recv.recv()?))
+        box_promise(move || {
+            send_result.map_err(|_| ConnectionError::TransactionIsClosed.into()).and_then(|_| recv.recv()?)
+        })
     }
 
     pub(in crate::connection) fn stream(
@@ -162,13 +161,23 @@ impl TransactionTransmitter {
         req: TransactionRequest,
     ) -> Result<impl Stream<Item = Result<TransactionResponse>>> {
         if !self.is_open() {
-            let error = self.error.read().unwrap();
-            assert!(error.is_some());
-            return Err(error.clone().unwrap().into());
+            return Err(self.error().into());
         }
         let (res_part_sink, recv) = unbounded_async();
-        self.request_sink.send((req, Some(ResponseSink::Streamed(res_part_sink))))?;
+        self.request_sink
+            .send((req, Some(ResponseSink::Streamed(res_part_sink))))
+            .map_err(|_| ConnectionError::TransactionIsClosed)?;
         Ok(NetworkStream::new(recv).map_ok(Into::into))
+    }
+
+    fn error(&self) -> ConnectionError {
+        match self.error.read().unwrap().as_ref() {
+            Some(err) => err.clone(),
+            None => {
+                debug!("Transaction is closed with no message.");
+                ConnectionError::TransactionIsClosed
+            }
+        }
     }
 
     async fn start_workers(
@@ -260,10 +269,10 @@ impl TransactionTransmitter {
                 Some(Ok(message)) => collector.collect(message).await,
                 Some(Err(err)) => {
                     break collector
-                        .close(ConnectionError::TransactionIsClosedWithErrors(err.message().to_owned()))
+                        .close(ConnectionError::TransactionIsClosedWithErrors { errors: err.message().to_owned() })
                         .await
                 }
-                None => break collector.close(ConnectionError::TransactionIsClosed()).await,
+                None => break collector.close(ConnectionError::TransactionIsClosed).await,
             }
         }
         shutdown_sink.send(()).ok();
@@ -315,7 +324,7 @@ impl ResponseCollector {
         match message.server {
             Some(Server::Res(res)) => self.collect_res(res),
             Some(Server::ResPart(res_part)) => self.collect_res_part(res_part).await,
-            None => error!("{}", ConnectionError::MissingResponseField("server")),
+            None => error!("{}", ConnectionError::MissingResponseField { field: "server" }),
         }
     }
 
@@ -324,10 +333,10 @@ impl ResponseCollector {
             // Transaction::Open responses don't need to be collected.
             return;
         }
-        let req_id = res.req_id.clone().into();
-        match self.callbacks.write().unwrap().remove(&req_id) {
+        let request_id = res.req_id.clone().into();
+        match self.callbacks.write().unwrap().remove(&request_id) {
             Some(sink) => sink.finish(TransactionResponse::try_from_proto(res)),
-            _ => error!("{}", ConnectionError::UnknownRequestId(req_id)),
+            _ => error!("{}", ConnectionError::UnknownRequestId { request_id }),
         }
     }
 
@@ -344,7 +353,7 @@ impl ResponseCollector {
                         match self.request_sink.send((TransactionRequest::Stream { request_id }, None)) {
                             Err(SendError((TransactionRequest::Stream { request_id }, None))) => {
                                 let callback = self.callbacks.write().unwrap().remove(&request_id).unwrap();
-                                callback.error(ConnectionError::TransactionIsClosed());
+                                callback.error(ConnectionError::TransactionIsClosed);
                             }
                             _ => (),
                         }
@@ -353,9 +362,9 @@ impl ResponseCollector {
             }
             Some(_) => match self.callbacks.read().unwrap().get(&request_id) {
                 Some(sink) => sink.send(TransactionResponse::try_from_proto(res_part)),
-                _ => error!("{}", ConnectionError::UnknownRequestId(request_id)),
+                _ => error!("{}", ConnectionError::UnknownRequestId { request_id }),
             },
-            None => error!("{}", ConnectionError::MissingResponseField("res_part.res")),
+            None => error!("{}", ConnectionError::MissingResponseField { field: "res_part.res" }),
         }
     }
 

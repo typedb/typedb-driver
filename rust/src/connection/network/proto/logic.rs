@@ -33,11 +33,11 @@ impl TryFromProto<RuleProto> for Rule {
         let RuleProto { label: label_proto, when: when_proto, then: then_proto } = proto;
         let when = match parse_pattern(&when_proto)? {
             Pattern::Conjunction(conjunction) => conjunction,
-            _ => return Err(ConnectionError::InvalidResponseField("when").into()),
+            _ => return Err(ConnectionError::InvalidResponseField { name: "when" }.into()),
         };
         let then = match parse_statement(&then_proto) {
             Ok(Statement::Thing(thing)) => thing,
-            Ok(_) => return Err(ConnectionError::InvalidResponseField("then").into()),
+            Ok(_) => return Err(ConnectionError::InvalidResponseField { name: "then" }.into()),
             Err(error) => return Err(error.into()),
         };
         Ok(Self::new(label_proto, when, then))

@@ -117,40 +117,36 @@ export class TypeDBDatabaseImpl implements Database {
         return this._name;
     }
 
-    async runFailsafe<T>(task: (serverDriver: ServerDriver, serverDatabase: ServerDatabase, isFirstRun: boolean) => Promise<T>): Promise<T> {
+    async runFailsafe<T>(task: (serverDriver: ServerDriver, serverDatabase: ServerDatabase) => Promise<T>): Promise<T> {
         try {
             return await this.runOnAnyReplica(task);
         } catch (e) {
             if (e instanceof TypeDBDriverError && ENTERPRISE_REPLICA_NOT_PRIMARY === e.messageTemplate) {
-                // debug!("Attempted to run on a non-primary replica, retrying on primary...");
                 return this.runOnPrimaryReplica(task);
             } else throw e;
         }
     }
 
-    async runOnAnyReplica<T>(task: (serverDriver: ServerDriver, serverDatabase: ServerDatabase, isFirstRun: boolean) => Promise<T>): Promise<T> {
-        let isFirstRun = true;
+    async runOnAnyReplica<T>(task: (serverDriver: ServerDriver, serverDatabase: ServerDatabase) => Promise<T>): Promise<T> {
         for (const replica of this.replicas) {
             try {
-                return await task(this._driver.serverDrivers.get(replica.address), replica.database, isFirstRun);
+                return await task(this._driver.serverDrivers.get(replica.address), replica.database);
             } catch (e) {
                 if (e instanceof TypeDBDriverError && UNABLE_TO_CONNECT === e.messageTemplate) {
                     // TODO log
                 } else throw e;
-                isFirstRun = false;
             }
         }
         throw new TypeDBDriverError(UNABLE_TO_CONNECT.message());
     }
 
-    async runOnPrimaryReplica<T>(task: (serverDriver: ServerDriver, serverDatabase: ServerDatabase, isFirstRun: boolean) => Promise<T>): Promise<T> {
+    async runOnPrimaryReplica<T>(task: (serverDriver: ServerDriver, serverDatabase: ServerDatabase) => Promise<T>): Promise<T> {
         if (!this.primaryReplica) {
             await this.seekPrimaryReplica();
         }
-        let isFirstRun = true;
         for (const _ of Array(PRIMARY_REPLICA_TASK_MAX_RETRIES)) {
             try {
-                return await task(this._driver.serverDrivers.get(this.primaryReplica.address), this.primaryReplica.database, isFirstRun);
+                return await task(this._driver.serverDrivers.get(this.primaryReplica.address), this.primaryReplica.database);
             } catch (e) {
                 if (e instanceof TypeDBDriverError &&
                     (UNABLE_TO_CONNECT === e.messageTemplate || ENTERPRISE_REPLICA_NOT_PRIMARY === e.messageTemplate)
@@ -159,7 +155,6 @@ export class TypeDBDatabaseImpl implements Database {
                     await this.seekPrimaryReplica();
                 } else throw e;
             }
-            isFirstRun = false;
         }
         throw new TypeDBDriverError(UNABLE_TO_CONNECT.message());
     }

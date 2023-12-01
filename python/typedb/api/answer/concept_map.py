@@ -22,7 +22,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Mapping, Union, Iterator, TYPE_CHECKING
+from typing import Mapping, Iterator, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typedb.api.concept.concept import Concept
@@ -52,6 +52,21 @@ class ConceptMap(ABC):
     def concepts(self) -> Iterator[Concept]:
         """
         Produces an iterator over all concepts in this ``ConceptMap``.
+
+        :return:
+
+        Examples
+        --------
+        ::
+
+          concept_map.concepts()
+        """
+        pass
+
+    @abstractmethod
+    def map(self) -> Mapping[str, Concept]:
+        """
+        Returns the inner ``Mapping`` where keys are query variables, and values are concepts.
 
         :return:
 
