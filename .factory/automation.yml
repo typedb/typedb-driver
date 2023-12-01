@@ -88,10 +88,10 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         bazel test //rust:typedb_driver_unit_tests --test_output=streamed || exit 1
-        export CORE_FAILED=
         tool/test/start-core-server.sh &&
           bazel test //rust/tests --test_output=streamed --test_arg=-- \
-            --test_arg=integration::queries::core || export CORE_FAILED=1
+            --test_arg=integration::queries::core && 
+          export CORE_FAILED= || export CORE_FAILED=1
         tool/test/stop-core-server.sh
         if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
@@ -99,9 +99,9 @@ build:
           bazel test //rust/tests --test_output=streamed --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
             --test_arg=integration::queries::enterprise \
             --test_arg=integration::runtimes &&
-          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+          export ENTERPRISE_FAILED= || export ENTERPRISE_FAILED=1
         tool/test/stop-enterprise-servers.sh
-        exit $TEST_SUCCESS
+        if [[ -n "$ENTERPRISE_FAILED" ]]; then exit 1; fi
 
     test-rust-behaviour-concept:
       image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
