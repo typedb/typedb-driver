@@ -29,7 +29,7 @@
 #include "inc/conceptiterator.hpp"
 
 #define ILLEGAL_STATE \
-    { throw TypeDB::Utils::exception(&TypeDB::InternalError::ILLEGAL_STATE, __FILE__, __LINE__); }
+    { throw TypeDB::Utils::exception(TypeDB::InternalError::ILLEGAL_STATE, __FILE__, __LINE__); }
 
 // Helper for TypeDBIteratorHelper
 #define TYPEDB_FUTURE_HELPER_1(RETURN, NATIVE_PROMISE, NATIVE_PROMISE_RESOLVE, INSTANTIATE) \
@@ -66,7 +66,7 @@
 
 #define CHECK_NATIVE(PTR)                                                                          \
     {                                                                                              \
-        if (nullptr == PTR) throw Utils::exception(&TypeDB::InternalError::INVALID_NATIVE_HANDLE); \
+        if (nullptr == PTR) throw Utils::exception(TypeDB::InternalError::INVALID_NATIVE_HANDLE); \
     }
 
 #define WRAPPED_NATIVE_CALL(TYPE, NATIVE_CALL)    \
@@ -79,7 +79,7 @@
 // Specific to concept-api
 #define CONCEPTAPI_CALL(RET_TYPE, NATIVE_CALL)                                                       \
     {                                                                                                \
-        if (!transaction.isOpen()) throw Utils::exception(&TypeDB::DriverError::TRANSACTION_CLOSED); \
+        if (!transaction.isOpen()) throw Utils::exception(TypeDB::DriverError::TRANSACTION_CLOSED); \
         CHECK_NATIVE(conceptNative.get());                                                           \
         WRAPPED_NATIVE_CALL(RET_TYPE, NATIVE_CALL);                                                  \
     }

@@ -36,7 +36,7 @@ namespace TypeDB {
             if (p == nullptr) return std::unique_ptr<T>();                                                              \
             return INSTANTIATE(p);                                                                                      \
         } else {                                                                                                        \
-            throw Utils::exception(&InternalError::INVALID_NATIVE_HANDLE);                                              \
+            throw Utils::exception(InternalError::INVALID_NATIVE_HANDLE);                                              \
         }                                                                                                               \
     }
 

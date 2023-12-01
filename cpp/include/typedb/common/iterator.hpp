@@ -85,7 +85,7 @@ class TypeDBIterator {  // Does not support range-based for loops yet.
 
     T& operator*() {
         if ((*this) == SELF()) {
-            throw Utils::exception(&InternalError::ITERATOR_INVALIDATED);
+            throw Utils::exception(InternalError::ITERATOR_INVALIDATED);
         }
         assert(obj.has_value());
         return obj.value();
@@ -93,7 +93,7 @@ class TypeDBIterator {  // Does not support range-based for loops yet.
 
     T* operator->() {
         if ((*this) == SELF()) {
-            throw Utils::exception(&InternalError::ITERATOR_INVALIDATED);
+            throw Utils::exception(InternalError::ITERATOR_INVALIDATED);
         }
         assert(obj.has_value());
         return &obj.value();

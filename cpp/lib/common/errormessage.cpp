@@ -34,6 +34,7 @@ const ErrorMessage TRANSACTION_CLOSED_WITH_ERRORS = ERR_DRIVER(7, "The transacti
 const ErrorMessage DATABASE_DELETED = ERR_DRIVER(8, "The database has been deleted and no further operation is allowed.");
 const ErrorMessage POSITIVE_VALUE_REQUIRED = ERR_DRIVER(9, "Value cannot be less than 1, was: '%d'.");
 const ErrorMessage MISSING_DB_NAME = ERR_DRIVER(10, "Database name cannot be null.");
+const ErrorMessage INVALID_JSON_CAST = ERR_DRIVER(11, "An invalid cast from json type '%s' to '%s' was attempted.");
 #undef ERR_DRIVER
 
 }  // namespace DriverError

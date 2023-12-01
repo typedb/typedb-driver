@@ -122,54 +122,54 @@ bool Concept::isValue() {
 }
 
 ThingType* Concept::asThingType() {
-    if (!isThingType()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], "thingType");
+    if (!isThingType()) throw Utils::exception(ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], "thingType");
     return dynamic_cast<ThingType*>(this);
 }
 
 EntityType* Concept::asEntityType() {
-    if (!isEntityType()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::ENTITY_TYPE]);
+    if (!isEntityType()) throw Utils::exception(ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::ENTITY_TYPE]);
     return dynamic_cast<EntityType*>(this);
 }
 
 AttributeType* Concept::asAttributeType() {
-    if (!isAttributeType()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::ATTRIBUTE_TYPE]);
+    if (!isAttributeType()) throw Utils::exception(ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::ATTRIBUTE_TYPE]);
     return dynamic_cast<AttributeType*>(this);
 }
 
 RelationType* Concept::asRelationType() {
-    if (!isRelationType()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::RELATION_TYPE]);
+    if (!isRelationType()) throw Utils::exception(ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::RELATION_TYPE]);
     return dynamic_cast<RelationType*>(this);
 }
 
 RoleType* Concept::asRoleType() {
-    if (!isRoleType()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::ROLE_TYPE]);
+    if (!isRoleType()) throw Utils::exception(ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::ROLE_TYPE]);
     return dynamic_cast<RoleType*>(this);
 }
 
 
 Thing* Concept::asThing() {
-    if (!isThing()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], "thing");
+    if (!isThing()) throw Utils::exception(ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], "thing");
     return dynamic_cast<Thing*>(this);
 }
 
 Attribute* Concept::asAttribute() {
-    if (!isAttribute()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::ATTRIBUTE]);
+    if (!isAttribute()) throw Utils::exception(ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::ATTRIBUTE]);
     return dynamic_cast<Attribute*>(this);
 }
 
 Entity* Concept::asEntity() {
-    if (!isEntity()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::ENTITY]);
+    if (!isEntity()) throw Utils::exception(ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::ENTITY]);
     return dynamic_cast<Entity*>(this);
 }
 
 Relation* Concept::asRelation() {
-    if (!isRelation()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::RELATION]);
+    if (!isRelation()) throw Utils::exception(ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::RELATION]);
     return dynamic_cast<Relation*>(this);
 }
 
 
 Value* Concept::asValue() {
-    if (!isValue()) throw Utils::exception(&ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::VALUE]);
+    if (!isValue()) throw Utils::exception(ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::VALUE]);
     return dynamic_cast<Value*>(this);
 }
 
