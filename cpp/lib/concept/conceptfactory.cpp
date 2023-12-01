@@ -66,6 +66,7 @@ _native::Annotation* ConceptFactory::getNative(const Annotation& annotation) {
 
 std::vector<const _native::Annotation*> ConceptFactory::toNativeArray(const std::vector<Annotation>& annotations) {
     std::vector<const _native::Annotation*> nativeAnnotations;
+    nativeAnnotations.reserve(annotations.size() + 1);
     for (auto& annotation : annotations)
         nativeAnnotations.push_back(ConceptFactory::getNative(annotation));
     nativeAnnotations.push_back(nullptr);

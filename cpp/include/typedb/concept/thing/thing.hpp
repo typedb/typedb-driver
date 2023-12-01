@@ -39,10 +39,12 @@ class Thing : public Concept {
 
     ConceptIterable<Attribute> getHas(Transaction& transaction);
     ConceptIterable<Attribute> getHas(Transaction& transaction, const AttributeType* attribute);
+    ConceptIterable<Attribute> getHas(Transaction& transaction, const std::vector<std::unique_ptr<AttributeType>>& attributeTypes);
     ConceptIterable<Attribute> getHas(Transaction& transaction, const std::vector<const AttributeType*>& attributeTypes);
     ConceptIterable<Attribute> getHas(Transaction& transaction, const std::vector<Annotation>& annotations);
 
     ConceptIterable<Relation> getRelations(Transaction& transaction);
+    ConceptIterable<Relation> getRelations(Transaction& transaction, const std::vector<std::unique_ptr<RoleType>>& roleTypes);
     ConceptIterable<Relation> getRelations(Transaction& transaction, const std::vector<RoleType*>& roleTypes);
     ConceptIterable<RoleType> getPlaying(Transaction& transaction);
 

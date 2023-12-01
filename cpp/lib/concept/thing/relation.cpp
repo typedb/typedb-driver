@@ -60,6 +60,10 @@ ConceptIterable<Thing> Relation::getPlayersByRoleType(Transaction& transaction, 
     CONCEPTAPI_ITER(Thing, _native::relation_get_players_by_role_type(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::toNativeArray(roleTypes).data()));
 }
 
+ConceptIterable<Thing> Relation::getPlayersByRoleType(Transaction& transaction, const std::vector<std::unique_ptr<RoleType>>& roleTypes) {
+    CONCEPTAPI_ITER(Thing, _native::relation_get_players_by_role_type(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::toNativeArray(roleTypes).data()));
+}
+
 std::map<std::unique_ptr<RoleType>, std::unique_ptr<Thing>> Relation::getPlayers(Transaction& transaction) {
     auto rolePlayerIterableNative = _native::relation_get_role_players(ConceptFactory::getNative(transaction), conceptNative.get());
     TypeDBDriverException::check_and_throw();

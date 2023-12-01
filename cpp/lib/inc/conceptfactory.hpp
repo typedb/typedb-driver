@@ -52,14 +52,27 @@ class ConceptFactory {
     static _native::Concept* getNative(const Concept*);
     static _native::Annotation* getNative(const Annotation& annotation);
     static std::vector<const _native::Annotation*> toNativeArray(const std::vector<Annotation>& annotations);
+
     template <typename T>
     static std::vector<_native::Concept*> toNativeArray(const std::vector<T*>& concepts) {
-        std::vector<_native::Concept*> v;
+        std::vector<_native::Concept*> v();
+        v.reserve(concepts.size() + 1);
         for (auto& c : concepts)
             v.push_back(ConceptFactory::getNative(c));
         v.push_back(nullptr);
         return v;
     }
+
+    template <typename T>
+    static std::vector<_native::Concept*> toNativeArray(const std::vector<std::unique_ptr<T>>& concepts) {
+        std::vector<_native::Concept*> v;
+        v.reserve(concepts.size() + 1);
+        for (auto& c : concepts)
+            v.push_back(ConceptFactory::getNative(c.get()));
+        v.push_back(nullptr);
+        return v;
+    }
+
 
     // Factory methods
     static std::unique_ptr<Concept> ofNative(_native::Concept*);

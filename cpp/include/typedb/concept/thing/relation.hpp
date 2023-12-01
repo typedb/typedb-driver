@@ -36,6 +36,7 @@ class Relation : public Thing {
     [[nodiscard]] VoidFuture removePlayer(Transaction& transaction, RoleType* roleType, Thing* player);
 
     ConceptIterable<RoleType> getRelating(Transaction& transaction);
+    ConceptIterable<Thing> getPlayersByRoleType(Transaction& transaction, const std::vector<std::unique_ptr<RoleType>>& roleTypes);
     ConceptIterable<Thing> getPlayersByRoleType(Transaction& transaction, const std::vector<RoleType*>& roleTypes);
     std::map<std::unique_ptr<RoleType>, std::unique_ptr<Thing>> getPlayers(Transaction& transaction);
 

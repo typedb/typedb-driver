@@ -68,6 +68,12 @@ ConceptIterable<Attribute> Thing::getHas(Transaction& transaction, const std::ve
     CONCEPTAPI_ITER(Attribute, _native::thing_get_has(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::toNativeArray(attributeTypes).data(), nativeAnnotations));
 }
 
+ConceptIterable<Attribute> Thing::getHas(Transaction& transaction, const std::vector<std::unique_ptr<AttributeType>>& attributeTypes) {
+    const _native::Annotation* nativeAnnotations[1] = {nullptr};
+    CONCEPTAPI_ITER(Attribute, _native::thing_get_has(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::toNativeArray(attributeTypes).data(), nativeAnnotations));
+}
+
+
 ConceptIterable<Attribute> Thing::getHas(Transaction& transaction, const std::vector<Annotation>& annotations) {
     const _native::Concept* nativeConcepts[1] = {nullptr};
     CONCEPTAPI_ITER(Attribute, _native::thing_get_has(ConceptFactory::getNative(transaction), conceptNative.get(), nativeConcepts, ConceptFactory::toNativeArray(annotations).data()));
@@ -87,6 +93,10 @@ ConceptIterable<Relation> Thing::getRelations(Transaction& transaction) {
 }
 
 ConceptIterable<Relation> Thing::getRelations(Transaction& transaction, const std::vector<RoleType*>& roleTypes) {
+    CONCEPTAPI_ITER(Relation, _native::thing_get_relations(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::toNativeArray(roleTypes).data()));
+}
+
+ConceptIterable<Relation> Thing::getRelations(Transaction& transaction, const std::vector<std::unique_ptr<RoleType>>& roleTypes) {
     CONCEPTAPI_ITER(Relation, _native::thing_get_relations(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::toNativeArray(roleTypes).data()));
 }
 
