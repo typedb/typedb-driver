@@ -37,6 +37,7 @@ extern const ErrorMessage TRANSACTION_CLOSED_WITH_ERRORS;
 extern const ErrorMessage DATABASE_DELETED;
 extern const ErrorMessage POSITIVE_VALUE_REQUIRED;
 extern const ErrorMessage MISSING_DB_NAME;
+extern const ErrorMessage INVALID_JSON_CAST;
 
 }  // namespace DriverError
 

@@ -22,8 +22,6 @@
 #include <algorithm>
 #include <sstream>
 
-#include <nlohmann/json.hpp>
-
 #include "concept_tables.hpp"
 #include "utils.hpp"
 
@@ -283,33 +281,37 @@ bool compareRow(TABLE_ROW& tableRow, CONCEPT_ROW& conceptRow) {
     return true;
 }
 
-bool compareJSON(nlohmann::json& first, nlohmann::json& second);
+bool compareJSON(const TypeDB::JSON& first, const TypeDB::JSON& second);
 
-bool compareJSONArrayUnordered(nlohmann::json& first, nlohmann::json& second) {
-    // WE have
-    assert(first.is_array() && second.is_array());
+bool compareJSONArrayUnordered(const TypeDB::JSONArray& first, const TypeDB::JSONArray& second) {
     if (first.size() != second.size()) return false;
-    for (auto& f : first) {
-        if (std::none_of(second.begin(), second.end(), [&](auto& s) { return compareJSON(f, s); })) {
+    for (const TypeDB::JSON& f : first) {
+        if (std::none_of(second.begin(), second.end(), [&](const TypeDB::JSON& s) { return compareJSON(f, s); })) {
             return false;
         }
     }
     return true;
 }
 
-bool compareJSON(nlohmann::json& first, nlohmann::json& second) {
+bool compareJSONMap(const TypeDB::JSONMap& first, const TypeDB::JSONMap& second) {
+    if (first.size() != second.size()) return false;
+    return std::all_of(first.begin(), first.end(), [&](auto& item) { 
+        return second.find(item.first) != second.end() && compareJSON(item.second, first.at(item.first));
+    });
+}
+
+bool compareJSON(const TypeDB::JSON& first, const TypeDB::JSON& second) {
     if (first.type() != second.type()) return false;
 
-    if (first.is_primitive()) {
-        return first == second;
-    } else if (first.is_array()) {
-        return compareJSONArrayUnordered(first, second);
-    } else if (first.is_object()) {
-        if (first.size() != second.size()) return false;
-        std::map<std::string, nlohmann::json*> idx;
-        std::transform(second.items().begin(), second.items().end(), std::inserter(idx, idx.end()), [](auto& item) { return std::make_pair(item.key(), &item.value()); });
-        return std::all_of(first.items().begin(), first.items().end(), [&](auto& item) { return idx.find(item.key()) != idx.end() && compareJSON(item.value(), *idx[item.key()]); });
-    } else throw std::runtime_error("UNIMPLEMENTED");
+    switch (first.type()) {
+        case TypeDB::JSONType::BOOLEAN: return first.boolValue() == second.boolValue();
+        case TypeDB::JSONType::LONG: return first.longValue() == second.longValue();
+        case TypeDB::JSONType::DOUBLE: return first.doubleValue() == second.doubleValue();
+        case TypeDB::JSONType::STRING: return first.stringValue() == second.stringValue();
+        case TypeDB::JSONType::ARRAY: return compareJSONArrayUnordered(first.array(), second.array());
+        case TypeDB::JSONType::MAP: return compareJSONMap(first.map(), second.map());
+        default: throw std::runtime_error("UNIMPLEMENTED");    
+    }
 }
 
 bool compareResults(ResultTable<TableEntry>& table, ResultTable<ConceptEntry>& result) {
@@ -331,11 +333,12 @@ bool compareResults(ResultTable<TableEntry>& table, ResultTable<ConceptEntry>& r
 }
 
 bool compareResults(std::string& expectedUnparsed, std::vector<JSONString>& actualVector) {
-    using namespace nlohmann;
-    json expected = json::parse(expectedUnparsed);
-    json actual = json::array();
-    std::transform(actualVector.begin(), actualVector.end(), std::back_inserter(actual), [](auto& a) { return json::parse(a); });
-    return compareJSONArrayUnordered(expected, actual);
+    TypeDB::JSON expected = TypeDB::JSON::parse(expectedUnparsed);
+    std::vector<TypeDB::JSON> actual;
+    for (auto& a: actualVector) {
+        actual.push_back(TypeDB::JSON::parse(a));
+    }
+    return compareJSONArrayUnordered(expected.array(), actual);
 }
 
 bool compareResultsValueGroup(ResultTable<TableEntry>& table, ResultTable<ConceptEntry>& result) {

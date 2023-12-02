@@ -37,7 +37,8 @@ cc_library(
     includes = ["lib/"], # private includes - # TODO: Check if these are indeed private.
     deps = [
         "//c:typedb_driver_clib",
-        "//c:typedb_driver_clib_headers"
+        "//c:typedb_driver_clib_headers",
+        "@nlohmann_json//:json",
     ],
     visibility = ["//visibility:public"],
     copts = ["-g -std=c++17"], # TODO:  Remove -g?

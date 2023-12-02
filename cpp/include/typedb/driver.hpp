@@ -46,6 +46,7 @@
 
 #include "typedb/answer/conceptmap.hpp"
 #include "typedb/answer/conceptmapgroup.hpp"
+#include "typedb/answer/json.hpp"
 #include "typedb/answer/valuefuture.hpp"
 #include "typedb/answer/valuegroup.hpp"
 

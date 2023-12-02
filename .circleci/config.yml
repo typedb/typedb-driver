@@ -311,14 +311,14 @@ commands:
       - run: |
           mkdir -p ~/dist
           bazel build --define version=$(cat VERSION) //cpp:assemble-linux-arm64-targz
-          cp bazel-bin/cpp/typedb-driver-cpp-linuxt-arm64.zip ~/dist
+          cp bazel-bin/cpp/typedb-driver-cpp-linux-arm64.zip ~/dist
   deploy-cpp-release-linux-x86_64:
     executor: linux-x86_64
     steps:
       - run: |
           mkdir -p ~/dist
           bazel build --define version=$(cat VERSION) //cpp:assemble-linux-x86_64-targz
-          cp bazel-bin/cpp/typedb-driver-cpp-mac-linux_64.zip ~/dist
+          cp bazel-bin/cpp/typedb-driver-cpp-linux-x86_64.zip ~/dist
   deploy-cpp-release-windows-x86_64:
     executor:
       name: win/default
