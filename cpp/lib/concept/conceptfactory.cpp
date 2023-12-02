@@ -41,11 +41,11 @@
 
 #include "inc/macros.hpp"
 
-#define CHECK_NATIVE_CONCEPT(PTR)                                      \
-    {                                                                  \
-        if (PTR == nullptr) {                                          \
+#define CHECK_NATIVE_CONCEPT(PTR)                                     \
+    {                                                                 \
+        if (PTR == nullptr) {                                         \
             throw Utils::exception(InternalError::NULL_NATIVE_VALUE); \
-        }                                                              \
+        }                                                             \
     }
 
 namespace TypeDB {

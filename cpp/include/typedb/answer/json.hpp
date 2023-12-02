@@ -27,16 +27,43 @@
 namespace TypeDB {
 
 
-namespace Keys {
-    const std::string VALUE_TYPE = "value_type";  // TODO
-}
+namespace JSONKey {
+
+const std::string VALUE = "value";
+const std::string VALUE_TYPE = "value_type";
+const std::string TYPE = "type";
+
+namespace Type {
+const std::string TYPE = "root";
+const std::string TYPE = "label";
+}  // namespace Type
+
+}  // namespace JSONKey
+
+namespace JSONConstant {
+
+namespace ValueTypes {
+const std::string BOOLEAN = "boolean";
+const std::string LONG = "long";
+const std::string DOUBLE = "double";
+const std::string STRING = "string";
+const std::string DATETIME = "datetime";
+}  // namespace ValueTypes
+
+namespace Root {
+const std::string ENTITY = "entity";
+const std::string RELATION = "relation";
+const std::string ATTRIBUTE = "attribute";
+}  // namespace Root
+
+}  // namespace JSONConstant
 
 enum class JSONType {
     NONE,
 
     MAP,
     ARRAY,
-    
+
     BOOLEAN,
     LONG,
     DOUBLE,
@@ -90,7 +117,7 @@ class JSON {
     JSON& operator=(const JSON&);
     JSON(JSON&&);
     JSON& operator=(JSON&&);
-    
+
     JSONType type() const;
 
     bool isMap() const;

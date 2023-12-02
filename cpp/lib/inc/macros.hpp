@@ -64,8 +64,8 @@
 // Helpers for Wrapping native calls
 #define RETURN_IDENTITY(X) (X)
 
-#define CHECK_NATIVE(PTR)                                                                          \
-    {                                                                                              \
+#define CHECK_NATIVE(PTR)                                                                         \
+    {                                                                                             \
         if (nullptr == PTR) throw Utils::exception(TypeDB::InternalError::INVALID_NATIVE_HANDLE); \
     }
 
@@ -77,11 +77,11 @@
     }
 
 // Specific to concept-api
-#define CONCEPTAPI_CALL(RET_TYPE, NATIVE_CALL)                                                       \
-    {                                                                                                \
+#define CONCEPTAPI_CALL(RET_TYPE, NATIVE_CALL)                                                      \
+    {                                                                                               \
         if (!transaction.isOpen()) throw Utils::exception(TypeDB::DriverError::TRANSACTION_CLOSED); \
-        CHECK_NATIVE(conceptNative.get());                                                           \
-        WRAPPED_NATIVE_CALL(RET_TYPE, NATIVE_CALL);                                                  \
+        CHECK_NATIVE(conceptNative.get());                                                          \
+        WRAPPED_NATIVE_CALL(RET_TYPE, NATIVE_CALL);                                                 \
     }
 
 #define CONCEPTAPI_FUTURE(RET_TYPE, NATIVE_CALL) CONCEPTAPI_CALL(ConceptPtrFuture<RET_TYPE>, new ConceptFutureWrapperSimple(NATIVE_CALL))

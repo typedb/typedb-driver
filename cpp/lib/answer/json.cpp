@@ -55,18 +55,18 @@ JSON::JSON(const JSON& from) {
 
 JSON& JSON::operator=(const JSON& from) {
     switch (from._type) {
-       case JSONType::STRING: {
-            new(&_stringValue) JSONString();
+        case JSONType::STRING: {
+            new (&_stringValue) JSONString();
             _stringValue = from._stringValue;
             break;
         }
         case JSONType::ARRAY: {
-            new(&_array) JSONArray();
+            new (&_array) JSONArray();
             _array = from._array;
             break;
         }
         case JSONType::MAP: {
-            new(&_map) JSONMap();
+            new (&_map) JSONMap();
             _map = from._map;
             break;
         }
@@ -97,18 +97,18 @@ JSON::JSON(JSON&& from) {
 
 JSON& JSON::operator=(JSON&& from) {
     switch (from._type) {
-       case JSONType::STRING: {
-            new(&_stringValue) JSONString();
+        case JSONType::STRING: {
+            new (&_stringValue) JSONString();
             _stringValue = std::move(from._stringValue);
             break;
         }
         case JSONType::ARRAY: {
-            new(&_array) JSONArray();
+            new (&_array) JSONArray();
             _array = std::move(from._array);
             break;
         }
         case JSONType::MAP: {
-            new(&_map) JSONMap();
+            new (&_map) JSONMap();
             _map = std::move(from._map);
             break;
         }

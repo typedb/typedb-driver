@@ -29,8 +29,8 @@
 
 #include "../inc/macros.hpp"
 
-#define CHECK_QUERY(QUERY)                                                     \
-    {                                                                          \
+#define CHECK_QUERY(QUERY)                                                    \
+    {                                                                         \
         if ("" == (QUERY)) throw Utils::exception(QueryError::MISSING_QUERY); \
     }
 
