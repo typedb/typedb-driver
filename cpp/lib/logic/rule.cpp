@@ -60,5 +60,4 @@ TYPEDB_ITERATOR_HELPER(
     _native::rule_iterator_drop,
     _native::rule_iterator_next,
     _native::rule_drop);
-
 }  // namespace TypeDB

@@ -28,6 +28,7 @@
 #include "typedb/answer/conceptmapgroup.hpp"
 #include "typedb/answer/valuefuture.hpp"
 #include "typedb/answer/valuegroup.hpp"
+#include "typedb/answer/json.hpp"
 #include "typedb/concept/concept.hpp"
 
 #include "typedb/logic/explainable.hpp"
@@ -35,8 +36,7 @@
 
 namespace TypeDB {
 
-typedef std::string JSONString;
-using JSONIterable = TypeDB::StringIterable;
+using JSONIterable = TypeDBIterable<_native::StringIterator, char, JSON>;
 
 class Transaction;
 

@@ -46,7 +46,7 @@ struct Context {
     TypeDB::AggregateResult lastAggregateResult;
     std::vector<TypeDB::ConceptMapGroup> lastConceptMapGroupResult;
     std::vector<TypeDB::ValueGroup> lastValueGroupResult;
-    std::vector<TypeDB::JSONString> lastFetchResult;
+    std::vector<TypeDB::JSON> lastFetchResult;
 
     std::map<std::string, std::unique_ptr<Concept>> vars;
 
@@ -97,7 +97,7 @@ struct Context {
 
     void setResult(TypeDB::JSONIterable&& results) {
         lastFetchResult.clear();
-        for (TypeDB::JSONString& result : results) {
+        for (TypeDB::JSON& result : results) {
             lastFetchResult.push_back(result);
         }
     }

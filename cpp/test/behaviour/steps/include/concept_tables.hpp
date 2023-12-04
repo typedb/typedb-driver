@@ -83,7 +83,7 @@ std::vector<std::string> getVarsFromDataTable(ResultTable<TableEntry>& dataTable
 
 bool compareRow(std::map<std::string, TableEntry>& tableRow, std::map<std::string, ConceptEntry>& conceptRow);
 bool compareResults(ResultTable<TableEntry>& table, ResultTable<ConceptEntry>& result);
-bool compareResults(std::string& expectedUnparsed, std::vector<JSONString>& actual);
+bool compareResults(std::string& expectedUnparsed, std::vector<JSON>& actual);
 bool compareResultsValueGroup(ResultTable<TableEntry>& table, ResultTable<ConceptEntry>& result);
 
 };  // namespace TypeDB::BDD

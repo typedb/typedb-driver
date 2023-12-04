@@ -28,7 +28,7 @@
 #include "inc/conceptfuture.hpp"
 #include "inc/conceptiterator.hpp"
 
-#define ILLEGAL_STATE \
+#define THROW_ILLEGAL_STATE \
     { throw TypeDB::Utils::exception(TypeDB::InternalError::ILLEGAL_STATE, __FILE__, __LINE__); }
 
 // Helper for TypeDBIteratorHelper

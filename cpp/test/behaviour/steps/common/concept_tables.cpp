@@ -332,13 +332,8 @@ bool compareResults(ResultTable<TableEntry>& table, ResultTable<ConceptEntry>& r
     return true;
 }
 
-bool compareResults(std::string& expectedUnparsed, std::vector<JSONString>& actualVector) {
-    TypeDB::JSON expected = TypeDB::JSON::parse(expectedUnparsed);
-    std::vector<TypeDB::JSON> actual;
-    for (auto& a: actualVector) {
-        actual.push_back(TypeDB::JSON::parse(a));
-    }
-    return compareJSONArrayUnordered(expected.array(), actual);
+bool compareResults(std::string& expectedUnparsed, std::vector<JSON>& actual) {
+    return compareJSONArrayUnordered(TypeDB::JSON::parse(expectedUnparsed).array(), actual);
 }
 
 bool compareResultsValueGroup(ResultTable<TableEntry>& table, ResultTable<ConceptEntry>& result) {

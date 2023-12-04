@@ -93,7 +93,7 @@ _native::ConceptPromise* getSuperTypeFutureNativeFor(_native::Transaction* tx, C
         case ConceptType::RELATION_TYPE:
             return _native::relation_type_get_supertype(tx, concept);
         default:
-            ILLEGAL_STATE;
+            THROW_ILLEGAL_STATE;
     }
 }
 
@@ -111,7 +111,7 @@ _native::ConceptIterator* getSupertypesIteratorNativeFor(_native::Transaction* t
         case ConceptType::RELATION_TYPE:
             return _native::relation_type_get_supertypes(tx, concept);
         default:
-            ILLEGAL_STATE;
+            THROW_ILLEGAL_STATE;
     }
 }
 _native::ConceptIterator* getSubtypesIteratorNativeFor(_native::Transaction* tx, ConceptType conceptType, _native::Concept* concept, _native::Transitivity transitivity) {
@@ -128,7 +128,7 @@ _native::ConceptIterator* getSubtypesIteratorNativeFor(_native::Transaction* tx,
         case ConceptType::RELATION_TYPE:
             return _native::relation_type_get_subtypes(tx, concept, transitivity);
         default:
-            ILLEGAL_STATE;
+            THROW_ILLEGAL_STATE;
     }
 }
 

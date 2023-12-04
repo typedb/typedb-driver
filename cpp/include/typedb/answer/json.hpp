@@ -34,8 +34,8 @@ const std::string VALUE_TYPE = "value_type";
 const std::string TYPE = "type";
 
 namespace Type {
-const std::string TYPE = "root";
-const std::string TYPE = "label";
+const std::string ROOT = "root";
+const std::string LABEL = "label";
 }  // namespace Type
 
 }  // namespace JSONKey
