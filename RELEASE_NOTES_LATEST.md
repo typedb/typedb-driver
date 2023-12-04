@@ -9,7 +9,7 @@ Documentation: https://typedb.com/docs/clients/rust-driver
 
 
 ```sh
-cargo add typedb-driver@2.25.7
+cargo add typedb-driver@2.25.8
 ```
 
 
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/clients/java-driver
     <dependency>
         <groupid>com.vaticle.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>2.25.7</version>
+        <version>2.25.8</version>
     </dependency>
 </dependencies>
 ```
@@ -42,7 +42,7 @@ Documentation: https://typedb.com/docs/clients/python-driver
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==2.25.7
+pip install typedb-driver==2.25.8
 ```
 
 ### NodeJS driver
@@ -51,50 +51,83 @@ NPM package: https://www.npmjs.com/package/typedb-driver
 Documentation: https://typedb.com/docs/clients/nodejs-driver
 
 ```
-npm install typedb-driver@2.25.7
+npm install typedb-driver@2.25.8
 ```
+
+## API Changes
+
+1. 'Fetch' attribute value type moves from the outer layer to the 'type' - see 'Code Refactors'
+2. TypeDB Core sessions automatically and lazily reconnect on network failure or timeout on the server-side
 
 
 ## New Features
-
+- **Session callbacks: on reopen, persistent on close; FFI bug fixes**
+  
+  **Session callbacks**
+  - All drivers:
+    - implement session reopen callbacks, executed when a session closed on the server side successfully reconnects;
+    - core session now attempts to reconnect if it is closed on the remote server, in line with enterprise behaviour;
+    - `Session::on_close()` callbacks are now executed each time the session closes (rather than just once);
+  - NodeJS:
+    - implement session and transaction callbacks (`onClose()`, `Session::onReopen()`);
+  
+  **Miscellaneous fixes**
+  - Java, Python:
+    - prevent exceptions in callbacks from crashing the native layer;
+    - fix the issue where static root types could not be used with Concept APi;
+    - reintroduce `ConceptMap.map()` to retrieve the full mapping;
+  - Rust:
+    - convert error messages from tuple enum variants to struct, allowing the fields to be named;
+  - All drivers:
+    -  fix the issue where session closed on remote server would not register automatically on the client side until a transaction open attempt.
+  
+  
 
 ## Bugs Fixed
-- **Add untyped value getter for Java values and fix Python type hints**
-  
-  We add a simple untyped API to Java's `Value` concepts, which return the value inside of the Value regardless of its type (double/string/etc.). This value is returned as an Object, and useful for equality checks, printing, etc. Additionally, the same API exists in Python and Node already.
-  
-  We also fix the Python hints for setting the name of a Type, which was incorrectly hinting the type 'Label' when it should have been a simple string.
-  
-  
+
 
 ## Code Refactors
-- **Silence send errors in network callbacks when receiver dropped**
+- **Fetch value type**
   
-  Downgrade the "channel closed" `SendError` from ERROR to DEBUG when the receiving end of the stream is dropped before the stream is exhausted.
-  This used to occur when the network delivered messages to a dropped channel, for example when executing a `match-insert`
-  and the responses were not consumed explicitly.
-
-
-- **Optimise CI times by retaining server between Java BDD scenarios**
-
-  We optimise Java CI time by not shutting down the TypeDB server between scenarios. Instead, we delete the existing databases each test, which is much faster.
-
-  During this work, we also discovered some sub-par UX in terms of error messages thrown, and missing BDD steps that needed to be implemented.
-
-
-
+  We update the expected output of TypeQL Fetch queries: attribute type serialization now includes its value_type.
+  This change makes the output symmetric between raw values and attributes.
+  
+  Old output format:
+  ```json
+  {
+      "attribute_type": { "label": "T", "root": "attribute" },
+      "raw_value": { "value": "...", "value_type": "string" },
+      "attribute": { "value": "...", "value_type": "string", "type": { "label": "T", "root": "attribute" } }
+  }
+  ```
+  New output format:
+  ```json
+  {
+      "attribute_type": { "label": "T", "value_type": "string", "root": "attribute" },
+      "raw_value": { "value": "...", "value_type": "string" },
+      "attribute": { "value": "...", "type": { "label": "T", "value_type": "string", "root": "attribute" } }
+  }
+  ```
+  
+  We also fix related JSON string serialization issue in which the hexadecimal escape sequences were not conformant to the JSON standard (`\u0000`).
+  
+  
 
 ## Other Improvements
-- **Fix python BDD TLS connection configuration**
+- **Generate Rust documentation tabs and italics correctly**
+  
+  We generate documentation using the correct syntax for code examples, fixing errors in the generated Rust examples.
+  
+  
+- **Fix documentation and for Trait Promise**
 
-- **Fix Rust BDD infer flag and python TLS default to false**
+- **Update vaticle_dependencies with upgraded rules_rust**
 
-- **Update VERSION and regenerate release notes**
-
-- **Increase ulimits on unix CircleCI machines**
-
-- **Update README links to docs**
-
-- **Simplify github PR and issue templates**
+- **Generate unique documentation anchors**
+  
+  Documentation generation now produces strictly unique anchors, using a combination of class/struct name, method name, and arguments signature as part of the anchor. This strategies means that all overloads and variations of method, for example in Java, now have uniquely referrable links.
+  
+  
+- **Increase CircleCI windows machine sizes from medium to xlarge**
 
     
