@@ -27,6 +27,26 @@ namespace TypeDB {
 
 class DatabaseManager;
 
+class ReplicaInfo {
+   public:
+    ReplicaInfo(const ReplicaInfo&) = delete;
+    ReplicaInfo(ReplicaInfo&&) = default;
+    ReplicaInfo& operator=(const ReplicaInfo&) = delete;
+    ReplicaInfo& operator=(ReplicaInfo&&) = default;
+
+    std::string address();
+    bool replica_info_is_primary();
+    bool replica_info_is_preferred();
+    int64_t replica_info_get_term();
+
+   private:
+    NativePointer<_native::ReplicaInfo> replicaInfoNative;
+    ReplicaInfo(_native::ReplicaInfo*);
+};
+
+using ReplicaInfoIterable = TypeDBIterable<_native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo>;
+using ReplicaInfoIterator = TypeDBIterator<_native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo>;
+
 class Database {
    public:
     Database(const Database&) = delete;
@@ -39,6 +59,7 @@ class Database {
     bool operator==(const Database& other);
 
     std::string name() const;
+    ReplicaInfoIterable replicas();
     void drop();
 
    private:

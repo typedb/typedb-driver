@@ -30,6 +30,29 @@ using namespace TypeDB;
 
 namespace TypeDB {
 
+std::string ReplicaInfo::address() {
+    CHECK_NATIVE(replicaInfoNative);
+    return Utils::stringFromNative(_native::replica_info_get_address(replicaInfoNative.get()));
+}
+
+bool ReplicaInfo::replica_info_is_primary() {
+    CHECK_NATIVE(replicaInfoNative);
+    return _native::replica_info_is_primary(replicaInfoNative.get());
+}
+
+bool ReplicaInfo::replica_info_is_preferred() {
+    CHECK_NATIVE(replicaInfoNative);
+    return _native::replica_info_is_preferred(replicaInfoNative.get());
+}
+
+int64_t ReplicaInfo::replica_info_get_term() {
+    CHECK_NATIVE(replicaInfoNative);
+    return _native::replica_info_get_term(replicaInfoNative.get());
+}
+
+ReplicaInfo::ReplicaInfo(_native::ReplicaInfo* replicaInfoNative)
+    : replicaInfoNative(replicaInfoNative) {}
+
 Database::Database(_native::Database* db) noexcept
     : databaseNative(db, _native::database_close) {}
 
@@ -42,10 +65,16 @@ std::string Database::name() const {
     return Utils::stringFromNative(_native::database_get_name(databaseNative.get()));
 }
 
+ReplicaInfoIterable Database::replicas() {
+    CHECK_NATIVE(databaseNative);
+    WRAPPED_NATIVE_CALL(ReplicaInfoIterable, _native::database_get_replicas_info(databaseNative.get()));
+}
+
 void Database::drop() {
     CHECK_NATIVE(databaseNative);
     _native::database_delete(databaseNative.get());
-    databaseNative.release();  // Dangling pointer. Release avoids invoking the deleter (database_close)
+    TypeDBDriverException::check_and_throw();
+    databaseNative.release();  //  Release avoids the dangling pointer invoking the deleter
 }
 
 }  // namespace TypeDB
