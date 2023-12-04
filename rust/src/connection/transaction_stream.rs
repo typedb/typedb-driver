@@ -75,8 +75,8 @@ impl TransactionStream {
         self.type_
     }
 
-    pub(crate) fn options(&self) -> &Options {
-        &self.options
+    pub(crate) fn options(&self) -> Options {
+        self.options
     }
 
     pub(crate) fn on_close(&self, callback: impl FnOnce(ConnectionError) + Send + Sync + 'static) {
@@ -115,7 +115,9 @@ impl TransactionStream {
         let stream = self.query_stream(QueryRequest::Get { query, options })?;
         Ok(stream.flat_map(|result| match result {
             Ok(QueryResponse::Get { answers }) => stream_iter(answers.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -124,7 +126,9 @@ impl TransactionStream {
         let stream = self.query_stream(QueryRequest::Insert { query, options })?;
         Ok(stream.flat_map(|result| match result {
             Ok(QueryResponse::Insert { answers }) => stream_iter(answers.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -133,7 +137,9 @@ impl TransactionStream {
         let stream = self.query_stream(QueryRequest::Update { query, options })?;
         Ok(stream.flat_map(|result| match result {
             Ok(QueryResponse::Update { answers }) => stream_iter(answers.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -143,7 +149,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 QueryResponse::GetAggregate { answer } => Ok(answer),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -156,7 +162,9 @@ impl TransactionStream {
         let stream = self.query_stream(QueryRequest::GetGroup { query, options })?;
         Ok(stream.flat_map(|result| match result {
             Ok(QueryResponse::GetGroup { answers }) => stream_iter(answers.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -169,7 +177,9 @@ impl TransactionStream {
         let stream = self.query_stream(QueryRequest::GetGroupAggregate { query, options })?;
         Ok(stream.flat_map(|result| match result {
             Ok(QueryResponse::GetGroupAggregate { answers }) => stream_iter(answers.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -182,7 +192,9 @@ impl TransactionStream {
         let stream = self.query_stream(QueryRequest::Fetch { query, options })?;
         Ok(stream.flat_map(|result| match result {
             Ok(QueryResponse::Fetch { answers }) => stream_iter(answers.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -192,7 +204,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ConceptResponse::GetEntityType { entity_type } => Ok(entity_type),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -202,7 +214,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ConceptResponse::GetRelationType { relation_type } => Ok(relation_type),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -212,7 +224,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ConceptResponse::GetAttributeType { attribute_type } => Ok(attribute_type),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -222,7 +234,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ConceptResponse::PutEntityType { entity_type } => Ok(entity_type),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -232,7 +244,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ConceptResponse::PutRelationType { relation_type } => Ok(relation_type),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -246,7 +258,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ConceptResponse::PutAttributeType { attribute_type } => Ok(attribute_type),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -256,7 +268,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ConceptResponse::GetEntity { entity } => Ok(entity),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -266,7 +278,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ConceptResponse::GetRelation { relation } => Ok(relation),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -276,7 +288,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ConceptResponse::GetAttribute { attribute } => Ok(attribute),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -285,7 +297,9 @@ impl TransactionStream {
         let stream = self.concept_stream(ConceptRequest::GetSchemaExceptions)?;
         Ok(stream.flat_map(|result| match result {
             Ok(ConceptResponse::GetSchemaExceptions { exceptions }) => stream_iter(exceptions.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -295,7 +309,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::ThingTypeDelete => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -305,7 +319,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::ThingTypeSetLabel => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -315,7 +329,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::ThingTypeSetAbstract => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -325,7 +339,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::ThingTypeUnsetAbstract => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -347,7 +361,9 @@ impl TransactionStream {
             Ok(ThingTypeResponse::ThingTypeGetOwns { attribute_types }) => {
                 stream_iter(attribute_types.into_iter().map(Ok))
             }
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -362,7 +378,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::ThingTypeGetOwnsOverridden { attribute_type } => Ok(attribute_type),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -383,7 +399,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::ThingTypeSetOwns => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -398,7 +414,7 @@ impl TransactionStream {
             match resolve!(promise)?
             {
                 ThingTypeResponse::ThingTypeUnsetOwns => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -411,7 +427,9 @@ impl TransactionStream {
         let stream = self.thing_type_stream(ThingTypeRequest::ThingTypeGetPlays { thing_type, transitivity })?;
         Ok(stream.flat_map(|result| match result {
             Ok(ThingTypeResponse::ThingTypeGetPlays { role_types }) => stream_iter(role_types.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -426,7 +444,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::ThingTypeGetPlaysOverridden { role_type } => Ok(role_type),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -442,7 +460,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::ThingTypeSetPlays => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -456,7 +474,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::ThingTypeUnsetPlays => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -466,7 +484,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::ThingTypeGetSyntax { syntax } => Ok(syntax),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -476,7 +494,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::EntityTypeCreate { entity } => Ok(entity),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -489,7 +507,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::EntityTypeGetSupertype { entity_type } => Ok(entity_type),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -504,7 +522,7 @@ impl TransactionStream {
             match resolve!(promise)?
             {
                 ThingTypeResponse::EntityTypeSetSupertype => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -518,7 +536,9 @@ impl TransactionStream {
             Ok(ThingTypeResponse::EntityTypeGetSupertypes { entity_types }) => {
                 stream_iter(entity_types.into_iter().map(Ok))
             }
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -533,7 +553,9 @@ impl TransactionStream {
             Ok(ThingTypeResponse::EntityTypeGetSubtypes { entity_types }) => {
                 stream_iter(entity_types.into_iter().map(Ok))
             }
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -546,7 +568,9 @@ impl TransactionStream {
         let stream = self.thing_type_stream(ThingTypeRequest::EntityTypeGetInstances { entity_type, transitivity })?;
         Ok(stream.flat_map(|result| match result {
             Ok(ThingTypeResponse::EntityTypeGetInstances { entities }) => stream_iter(entities.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -556,7 +580,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::RelationTypeCreate { relation } => Ok(relation),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -569,7 +593,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::RelationTypeGetSupertype { relation_type } => Ok(relation_type),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -583,7 +607,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::RelationTypeSetSupertype => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -597,7 +621,9 @@ impl TransactionStream {
             Ok(ThingTypeResponse::RelationTypeGetSupertypes { relation_types }) => {
                 stream_iter(relation_types.into_iter().map(Ok))
             }
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -613,7 +639,9 @@ impl TransactionStream {
             Ok(ThingTypeResponse::RelationTypeGetSubtypes { relation_types }) => {
                 stream_iter(relation_types.into_iter().map(Ok))
             }
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -627,7 +655,9 @@ impl TransactionStream {
             self.thing_type_stream(ThingTypeRequest::RelationTypeGetInstances { relation_type, transitivity })?;
         Ok(stream.flat_map(|result| match result {
             Ok(ThingTypeResponse::RelationTypeGetInstances { relations }) => stream_iter(relations.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -641,7 +671,9 @@ impl TransactionStream {
             self.thing_type_stream(ThingTypeRequest::RelationTypeGetRelates { relation_type, transitivity })?;
         Ok(stream.flat_map(|result| match result {
             Ok(ThingTypeResponse::RelationTypeGetRelates { role_types }) => stream_iter(role_types.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -656,7 +688,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::RelationTypeGetRelatesForRoleLabel { role_type } => Ok(role_type),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -673,7 +705,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::RelationTypeGetRelatesOverridden { role_type } => Ok(role_type),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -692,7 +724,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::RelationTypeSetRelates => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -706,7 +738,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::RelationTypeUnsetRelates => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -720,7 +752,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::AttributeTypePut { attribute } => Ok(attribute),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -734,7 +766,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::AttributeTypeGet { attribute } => Ok(attribute),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -747,7 +779,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::AttributeTypeGetSupertype { attribute_type } => Ok(attribute_type),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -761,7 +793,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::AttributeTypeSetSupertype => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -775,7 +807,9 @@ impl TransactionStream {
             Ok(ThingTypeResponse::AttributeTypeGetSupertypes { attribute_types }) => {
                 stream_iter(attribute_types.into_iter().map(Ok))
             }
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -795,7 +829,9 @@ impl TransactionStream {
             Ok(ThingTypeResponse::AttributeTypeGetSubtypes { attribute_types }) => {
                 stream_iter(attribute_types.into_iter().map(Ok))
             }
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -815,7 +851,9 @@ impl TransactionStream {
             Ok(ThingTypeResponse::AttributeTypeGetInstances { attributes }) => {
                 stream_iter(attributes.into_iter().map(Ok))
             }
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -828,7 +866,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::AttributeTypeGetRegex { regex } => Ok(regex),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -842,7 +880,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingTypeResponse::AttributeTypeSetRegex => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -862,7 +900,9 @@ impl TransactionStream {
             Ok(ThingTypeResponse::AttributeTypeGetOwners { thing_types }) => {
                 stream_iter(thing_types.into_iter().map(Ok))
             }
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -872,7 +912,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 RoleTypeResponse::Delete => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -882,7 +922,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 RoleTypeResponse::SetLabel => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -892,7 +932,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 RoleTypeResponse::GetSupertype { role_type } => Ok(role_type),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -901,7 +941,9 @@ impl TransactionStream {
         let stream = self.role_type_stream(RoleTypeRequest::GetSupertypes { role_type })?;
         Ok(stream.flat_map(|result| match result {
             Ok(RoleTypeResponse::GetSupertypes { role_types }) => stream_iter(role_types.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -914,7 +956,9 @@ impl TransactionStream {
         let stream = self.role_type_stream(RoleTypeRequest::GetSubtypes { role_type, transitivity })?;
         Ok(stream.flat_map(|result| match result {
             Ok(RoleTypeResponse::GetSubtypes { role_types }) => stream_iter(role_types.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -928,7 +972,9 @@ impl TransactionStream {
             Ok(RoleTypeResponse::GetRelationTypes { relation_types }) => {
                 stream_iter(relation_types.into_iter().map(Ok))
             }
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -941,7 +987,9 @@ impl TransactionStream {
         let stream = self.role_type_stream(RoleTypeRequest::GetPlayerTypes { role_type, transitivity })?;
         Ok(stream.flat_map(|result| match result {
             Ok(RoleTypeResponse::GetPlayerTypes { thing_types }) => stream_iter(thing_types.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -954,7 +1002,9 @@ impl TransactionStream {
         let stream = self.role_type_stream(RoleTypeRequest::GetRelationInstances { role_type, transitivity })?;
         Ok(stream.flat_map(|result| match result {
             Ok(RoleTypeResponse::GetRelationInstances { relations }) => stream_iter(relations.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -967,7 +1017,9 @@ impl TransactionStream {
         let stream = self.role_type_stream(RoleTypeRequest::GetPlayerInstances { role_type, transitivity })?;
         Ok(stream.flat_map(|result| match result {
             Ok(RoleTypeResponse::GetPlayerInstances { things }) => stream_iter(things.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -977,7 +1029,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingResponse::ThingDelete {} => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -991,7 +1043,9 @@ impl TransactionStream {
         let stream = self.thing_stream(ThingRequest::ThingGetHas { thing, attribute_types, annotations })?;
         Ok(stream.flat_map(|result| match result {
             Ok(ThingResponse::ThingGetHas { attributes }) => stream_iter(attributes.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -1001,7 +1055,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingResponse::ThingSetHas {} => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -1011,7 +1065,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingResponse::ThingUnsetHas {} => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -1024,7 +1078,9 @@ impl TransactionStream {
         let stream = self.thing_stream(ThingRequest::ThingGetRelations { thing, role_types })?;
         Ok(stream.flat_map(|result| match result {
             Ok(ThingResponse::ThingGetRelations { relations }) => stream_iter(relations.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -1033,7 +1089,9 @@ impl TransactionStream {
         let stream = self.thing_stream(ThingRequest::ThingGetPlaying { thing })?;
         Ok(stream.flat_map(|result| match result {
             Ok(ThingResponse::ThingGetPlaying { role_types }) => stream_iter(role_types.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -1048,7 +1106,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingResponse::RelationAddRolePlayer {} => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -1063,7 +1121,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 ThingResponse::RelationRemoveRolePlayer {} => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -1078,7 +1136,9 @@ impl TransactionStream {
             Ok(ThingResponse::RelationGetPlayersByRoleType { things: players }) => {
                 stream_iter(players.into_iter().map(Ok))
             }
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -1092,7 +1152,9 @@ impl TransactionStream {
             Ok(ThingResponse::RelationGetRolePlayers { role_players: players }) => {
                 stream_iter(players.into_iter().map(Ok))
             }
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -1101,7 +1163,9 @@ impl TransactionStream {
         let stream = self.thing_stream(ThingRequest::RelationGetRelating { relation })?;
         Ok(stream.flat_map(|result| match result {
             Ok(ThingResponse::RelationGetRelating { role_types }) => stream_iter(role_types.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -1114,7 +1178,9 @@ impl TransactionStream {
         let stream = self.thing_stream(ThingRequest::AttributeGetOwners { attribute, thing_type })?;
         Ok(stream.flat_map(|result| match result {
             Ok(ThingResponse::AttributeGetOwners { owners }) => stream_iter(owners.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -1124,7 +1190,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 RuleResponse::Delete => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -1134,7 +1200,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 RuleResponse::SetLabel => Ok(()),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -1144,7 +1210,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 LogicResponse::PutRule { rule } => Ok(rule),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -1154,7 +1220,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 LogicResponse::GetRule { rule } => Ok(rule),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -1163,7 +1229,9 @@ impl TransactionStream {
         let stream = self.logic_stream(LogicRequest::GetRules {})?;
         Ok(stream.flat_map(|result| match result {
             Ok(LogicResponse::GetRules { rules }) => stream_iter(rules.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -1176,7 +1244,9 @@ impl TransactionStream {
         let stream = self.query_stream(QueryRequest::Explain { explainable_id, options })?;
         Ok(stream.flat_map(|result| match result {
             Ok(QueryResponse::Explain { answers }) => stream_iter(answers.into_iter().map(Ok)),
-            Ok(other) => stream_once(Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into())),
+            Ok(other) => {
+                stream_once(Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()))
+            }
             Err(err) => stream_once(Err(err)),
         }))
     }
@@ -1190,7 +1260,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 TransactionResponse::Query(res) => Ok(res),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -1200,7 +1270,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 TransactionResponse::Concept(res) => Ok(res),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -1210,7 +1280,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 TransactionResponse::ThingType(res) => Ok(res),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -1220,7 +1290,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 TransactionResponse::RoleType(res) => Ok(res),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -1230,7 +1300,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 TransactionResponse::Thing(res) => Ok(res),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -1240,7 +1310,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 TransactionResponse::Rule(res) => Ok(res),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -1250,7 +1320,7 @@ impl TransactionStream {
         promisify! {
             match resolve!(promise)? {
                 TransactionResponse::Logic(res) => Ok(res),
-                other => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+                other => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             }
         }
     }
@@ -1262,7 +1332,7 @@ impl TransactionStream {
     fn query_stream(&self, req: QueryRequest) -> Result<impl Stream<Item = Result<QueryResponse>>> {
         Ok(self.stream(TransactionRequest::Query(req))?.map(|response| match response {
             Ok(TransactionResponse::Query(res)) => Ok(res),
-            Ok(other) => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            Ok(other) => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             Err(err) => Err(err),
         }))
     }
@@ -1270,7 +1340,7 @@ impl TransactionStream {
     fn concept_stream(&self, req: ConceptRequest) -> Result<impl Stream<Item = Result<ConceptResponse>>> {
         Ok(self.stream(TransactionRequest::Concept(req))?.map(|response| match response {
             Ok(TransactionResponse::Concept(res)) => Ok(res),
-            Ok(other) => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            Ok(other) => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             Err(err) => Err(err),
         }))
     }
@@ -1278,7 +1348,7 @@ impl TransactionStream {
     fn thing_type_stream(&self, req: ThingTypeRequest) -> Result<impl Stream<Item = Result<ThingTypeResponse>>> {
         Ok(self.stream(TransactionRequest::ThingType(req))?.map(|response| match response {
             Ok(TransactionResponse::ThingType(res)) => Ok(res),
-            Ok(other) => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            Ok(other) => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             Err(err) => Err(err),
         }))
     }
@@ -1286,7 +1356,7 @@ impl TransactionStream {
     fn role_type_stream(&self, req: RoleTypeRequest) -> Result<impl Stream<Item = Result<RoleTypeResponse>>> {
         Ok(self.stream(TransactionRequest::RoleType(req))?.map(|response| match response {
             Ok(TransactionResponse::RoleType(res)) => Ok(res),
-            Ok(other) => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            Ok(other) => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             Err(err) => Err(err),
         }))
     }
@@ -1294,7 +1364,7 @@ impl TransactionStream {
     fn thing_stream(&self, req: ThingRequest) -> Result<impl Stream<Item = Result<ThingResponse>>> {
         Ok(self.stream(TransactionRequest::Thing(req))?.map(|response| match response {
             Ok(TransactionResponse::Thing(res)) => Ok(res),
-            Ok(other) => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            Ok(other) => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             Err(err) => Err(err),
         }))
     }
@@ -1302,7 +1372,7 @@ impl TransactionStream {
     fn logic_stream(&self, req: LogicRequest) -> Result<impl Stream<Item = Result<LogicResponse>>> {
         Ok(self.stream(TransactionRequest::Logic(req))?.map(|response| match response {
             Ok(TransactionResponse::Logic(res)) => Ok(res),
-            Ok(other) => Err(InternalError::UnexpectedResponseType(format!("{other:?}")).into()),
+            Ok(other) => Err(InternalError::UnexpectedResponseType { response_type: format!("{other:?}") }.into()),
             Err(err) => Err(err),
         }))
     }

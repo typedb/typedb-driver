@@ -20,7 +20,7 @@ a| `STRING`
 // end::enum_constants[]
 
 // tag::methods[]
-[#_ValueType_namename__:_string]
+[#_ValueType_name__]
 ==== name
 
 [source,nodejs]
@@ -34,7 +34,7 @@ name(): string
 .Returns
 `string`
 
-[#_ValueType_new_ValueTypenew_ValueType_type__name_:_ValueType]
+[#_ValueType_new_ValueType__type_ValueType__name_string]
 ==== new ValueType
 
 [source,nodejs]
@@ -58,7 +58,7 @@ a| `name` a|  a| `string`
 .Returns
 `ValueType`
 
-[#_ValueType_toStringtoString__:_string]
+[#_ValueType_toString__]
 ==== toString
 
 [source,nodejs]

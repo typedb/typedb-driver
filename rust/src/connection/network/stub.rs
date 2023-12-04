@@ -56,7 +56,7 @@ impl<Channel: GRPCChannel> RPCStub<Channel> {
         for<'a> F: Fn(&'a mut Self) -> BoxFuture<'a, Result<R>>,
     {
         match call(self).await {
-            Err(Error::Connection(ConnectionError::EnterpriseTokenCredentialInvalid())) => {
+            Err(Error::Connection(ConnectionError::EnterpriseTokenCredentialInvalid)) => {
                 debug!("Request rejected because token credential was invalid. Renewing token...");
                 self.renew_token().await?;
                 call(self).await

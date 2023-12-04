@@ -8,7 +8,7 @@
 * `Concept`
 
 // tag::methods[]
-[#_Type_asAttribute_]
+[#_Type_asAttribute__]
 ==== asAttribute
 
 [source,java]
@@ -30,7 +30,7 @@ Casts the concept to ``Attribute``.
 concept.asAttribute();
 ----
 
-[#_Type_asAttributeType_]
+[#_Type_asAttributeType__]
 ==== asAttributeType
 
 [source,java]
@@ -52,7 +52,7 @@ Casts the concept to ``AttributeType``.
 concept.asAttributeType();
 ----
 
-[#_Type_asEntity_]
+[#_Type_asEntity__]
 ==== asEntity
 
 [source,java]
@@ -74,7 +74,7 @@ Casts the concept to ``Entity``.
 concept.asEntity();
 ----
 
-[#_Type_asEntityType_]
+[#_Type_asEntityType__]
 ==== asEntityType
 
 [source,java]
@@ -96,7 +96,7 @@ Casts the concept to ``EntityType``.
 concept.asEntityType();
 ----
 
-[#_Type_asRelation_]
+[#_Type_asRelation__]
 ==== asRelation
 
 [source,java]
@@ -118,7 +118,7 @@ Casts the concept to ``Relation``.
 concept.asRelation();
 ----
 
-[#_Type_asRelationType_]
+[#_Type_asRelationType__]
 ==== asRelationType
 
 [source,java]
@@ -140,7 +140,7 @@ Casts the concept to ``RelationType``.
 concept.asRelationType();
 ----
 
-[#_Type_asRoleType_]
+[#_Type_asRoleType__]
 ==== asRoleType
 
 [source,java]
@@ -162,7 +162,7 @@ Casts the concept to ``RoleType``.
 concept.asRoleType();
 ----
 
-[#_Type_asThing_]
+[#_Type_asThing__]
 ==== asThing
 
 [source,java]
@@ -184,7 +184,7 @@ Casts the concept to ``Thing``.
 concept.asThing();
 ----
 
-[#_Type_asThingType_]
+[#_Type_asThingType__]
 ==== asThingType
 
 [source,java]
@@ -206,7 +206,7 @@ Casts the concept to ``ThingType``.
 concept.asThingType();
 ----
 
-[#_Type_asType_]
+[#_Type_asType__]
 ==== asType
 
 [source,java]
@@ -229,7 +229,7 @@ Casts the concept to ``Type``.
 concept.asType();
 ----
 
-[#_Type_asValue_]
+[#_Type_asValue__]
 ==== asValue
 
 [source,java]
@@ -251,7 +251,7 @@ Casts the concept to ``Value``.
 concept.asValue();
 ----
 
-[#_Type_delete_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_Type_delete__TypeDBTransaction]
 ==== delete
 
 [source,java]
@@ -283,7 +283,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 type.delete(transaction).resolve();
 ----
 
-[#_Type_getLabel_]
+[#_Type_getLabel__]
 ==== getLabel
 
 [source,java]
@@ -306,7 +306,7 @@ Retrieves the unique label of the type.
 type.getLabel();
 ----
 
-[#_Type_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_Type_getSubtypes__TypeDBTransaction]
 ==== getSubtypes
 
 [source,java]
@@ -325,7 +325,7 @@ See also: <<#_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_va
 .Returns
 `java.util.stream.Stream<? extends Type>`
 
-[#_Type_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+[#_Type_getSubtypes__TypeDBTransaction__Concept_Transitivity]
 ==== getSubtypes
 
 [source,java]
@@ -360,7 +360,7 @@ type.getSubtypes(transaction);
  type.getSubtypes(transaction, Transitivity.EXPLICIT);
 ----
 
-[#_Type_getSupertype_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_Type_getSupertype__TypeDBTransaction]
 ==== getSupertype
 
 [source,java]
@@ -392,7 +392,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 type.getSupertype(transaction).resolve();
 ----
 
-[#_Type_getSupertypes_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_Type_getSupertypes__TypeDBTransaction]
 ==== getSupertypes
 
 [source,java]
@@ -424,7 +424,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 type.getSupertypes(transaction);
 ----
 
-[#_Type_isAbstract_]
+[#_Type_isAbstract__]
 ==== isAbstract
 
 [source,java]
@@ -447,7 +447,7 @@ Checks if the type is prevented from having data instances (i.e., ``abstract``).
 type.isAbstract();
 ----
 
-[#_Type_isAttribute_]
+[#_Type_isAttribute__]
 ==== isAttribute
 
 [source,java]
@@ -470,7 +470,7 @@ Checks if the concept is an ``Attribute``.
 concept.isAttribute();
 ----
 
-[#_Type_isAttributeType_]
+[#_Type_isAttributeType__]
 ==== isAttributeType
 
 [source,java]
@@ -493,7 +493,7 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType();
 ----
 
-[#_Type_isDeleted_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_Type_isDeleted__TypeDBTransaction]
 ==== isDeleted
 
 [source,java]
@@ -525,7 +525,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 type.isDeleted(transaction).resolve();
 ----
 
-[#_Type_isEntity_]
+[#_Type_isEntity__]
 ==== isEntity
 
 [source,java]
@@ -548,7 +548,7 @@ Checks if the concept is an ``Entity``.
 concept.isEntity();
 ----
 
-[#_Type_isEntityType_]
+[#_Type_isEntityType__]
 ==== isEntityType
 
 [source,java]
@@ -571,7 +571,7 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType();
 ----
 
-[#_Type_isRelation_]
+[#_Type_isRelation__]
 ==== isRelation
 
 [source,java]
@@ -594,7 +594,7 @@ Checks if the concept is a ``Relation``.
 concept.isRelation();
 ----
 
-[#_Type_isRelationType_]
+[#_Type_isRelationType__]
 ==== isRelationType
 
 [source,java]
@@ -617,7 +617,7 @@ Checks if the concept is a ``RelationType``.
 concept.isRelationType();
 ----
 
-[#_Type_isRoleType_]
+[#_Type_isRoleType__]
 ==== isRoleType
 
 [source,java]
@@ -640,7 +640,7 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType();
 ----
 
-[#_Type_isRoot_]
+[#_Type_isRoot__]
 ==== isRoot
 
 [source,java]
@@ -663,7 +663,7 @@ Checks if the type is a root type.
 type.isRoot();
 ----
 
-[#_Type_isThing_]
+[#_Type_isThing__]
 ==== isThing
 
 [source,java]
@@ -686,7 +686,7 @@ Checks if the concept is a ``Thing``.
 concept.isThing();
 ----
 
-[#_Type_isThingType_]
+[#_Type_isThingType__]
 ==== isThingType
 
 [source,java]
@@ -709,7 +709,7 @@ Checks if the concept is a ``ThingType``.
 concept.isThingType();
 ----
 
-[#_Type_isType_]
+[#_Type_isType__]
 ==== isType
 
 [source,java]
@@ -732,7 +732,7 @@ Checks if the concept is a ``Type``.
 concept.isType();
 ----
 
-[#_Type_isValue_]
+[#_Type_isValue__]
 ==== isValue
 
 [source,java]
@@ -755,7 +755,7 @@ Checks if the concept is a ``Value``.
 concept.isValue();
 ----
 
-[#_Type_setLabel_com_vaticle_typedb_driver_api_TypeDBTransaction_java_lang_String]
+[#_Type_setLabel__TypeDBTransaction__java_lang_String]
 ==== setLabel
 
 [source,java]

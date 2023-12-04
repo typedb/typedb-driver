@@ -4,7 +4,7 @@
 *Package*: `com.vaticle.typedb.driver.api.concept`
 
 // tag::methods[]
-[#_Concept_asAttribute_]
+[#_Concept_asAttribute__]
 ==== asAttribute
 
 [source,java]
@@ -26,7 +26,7 @@ Casts the concept to ``Attribute``.
 concept.asAttribute();
 ----
 
-[#_Concept_asAttributeType_]
+[#_Concept_asAttributeType__]
 ==== asAttributeType
 
 [source,java]
@@ -48,7 +48,7 @@ Casts the concept to ``AttributeType``.
 concept.asAttributeType();
 ----
 
-[#_Concept_asEntity_]
+[#_Concept_asEntity__]
 ==== asEntity
 
 [source,java]
@@ -70,7 +70,7 @@ Casts the concept to ``Entity``.
 concept.asEntity();
 ----
 
-[#_Concept_asEntityType_]
+[#_Concept_asEntityType__]
 ==== asEntityType
 
 [source,java]
@@ -92,7 +92,7 @@ Casts the concept to ``EntityType``.
 concept.asEntityType();
 ----
 
-[#_Concept_asRelation_]
+[#_Concept_asRelation__]
 ==== asRelation
 
 [source,java]
@@ -114,7 +114,7 @@ Casts the concept to ``Relation``.
 concept.asRelation();
 ----
 
-[#_Concept_asRelationType_]
+[#_Concept_asRelationType__]
 ==== asRelationType
 
 [source,java]
@@ -136,7 +136,7 @@ Casts the concept to ``RelationType``.
 concept.asRelationType();
 ----
 
-[#_Concept_asRoleType_]
+[#_Concept_asRoleType__]
 ==== asRoleType
 
 [source,java]
@@ -158,7 +158,7 @@ Casts the concept to ``RoleType``.
 concept.asRoleType();
 ----
 
-[#_Concept_asThing_]
+[#_Concept_asThing__]
 ==== asThing
 
 [source,java]
@@ -180,7 +180,7 @@ Casts the concept to ``Thing``.
 concept.asThing();
 ----
 
-[#_Concept_asThingType_]
+[#_Concept_asThingType__]
 ==== asThingType
 
 [source,java]
@@ -202,7 +202,7 @@ Casts the concept to ``ThingType``.
 concept.asThingType();
 ----
 
-[#_Concept_asType_]
+[#_Concept_asType__]
 ==== asType
 
 [source,java]
@@ -224,7 +224,7 @@ Casts the concept to ``Type``.
 concept.asType();
 ----
 
-[#_Concept_asValue_]
+[#_Concept_asValue__]
 ==== asValue
 
 [source,java]
@@ -246,7 +246,7 @@ Casts the concept to ``Value``.
 concept.asValue();
 ----
 
-[#_Concept_isAttribute_]
+[#_Concept_isAttribute__]
 ==== isAttribute
 
 [source,java]
@@ -269,7 +269,7 @@ Checks if the concept is an ``Attribute``.
 concept.isAttribute();
 ----
 
-[#_Concept_isAttributeType_]
+[#_Concept_isAttributeType__]
 ==== isAttributeType
 
 [source,java]
@@ -292,7 +292,7 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType();
 ----
 
-[#_Concept_isEntity_]
+[#_Concept_isEntity__]
 ==== isEntity
 
 [source,java]
@@ -315,7 +315,7 @@ Checks if the concept is an ``Entity``.
 concept.isEntity();
 ----
 
-[#_Concept_isEntityType_]
+[#_Concept_isEntityType__]
 ==== isEntityType
 
 [source,java]
@@ -338,7 +338,7 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType();
 ----
 
-[#_Concept_isRelation_]
+[#_Concept_isRelation__]
 ==== isRelation
 
 [source,java]
@@ -361,7 +361,7 @@ Checks if the concept is a ``Relation``.
 concept.isRelation();
 ----
 
-[#_Concept_isRelationType_]
+[#_Concept_isRelationType__]
 ==== isRelationType
 
 [source,java]
@@ -384,7 +384,7 @@ Checks if the concept is a ``RelationType``.
 concept.isRelationType();
 ----
 
-[#_Concept_isRoleType_]
+[#_Concept_isRoleType__]
 ==== isRoleType
 
 [source,java]
@@ -407,7 +407,7 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType();
 ----
 
-[#_Concept_isThing_]
+[#_Concept_isThing__]
 ==== isThing
 
 [source,java]
@@ -430,7 +430,7 @@ Checks if the concept is a ``Thing``.
 concept.isThing();
 ----
 
-[#_Concept_isThingType_]
+[#_Concept_isThingType__]
 ==== isThingType
 
 [source,java]
@@ -453,7 +453,7 @@ Checks if the concept is a ``ThingType``.
 concept.isThingType();
 ----
 
-[#_Concept_isType_]
+[#_Concept_isType__]
 ==== isType
 
 [source,java]
@@ -476,7 +476,7 @@ Checks if the concept is a ``Type``.
 concept.isType();
 ----
 
-[#_Concept_isValue_]
+[#_Concept_isValue__]
 ==== isValue
 
 [source,java]

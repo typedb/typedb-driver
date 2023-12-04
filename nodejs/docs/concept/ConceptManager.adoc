@@ -4,7 +4,7 @@
 Provides access for all Concept API methods.
 
 // tag::methods[]
-[#_ConceptManager_getAttributegetAttribute_iid_:_Promise_Attribute]
+[#_ConceptManager_getAttribute__iid_string]
 ==== getAttribute
 
 [source,nodejs]
@@ -34,7 +34,7 @@ a| `iid` a| The iid of the ``Attribute`` to retrieve a| `string`
 transaction.concepts().getAttribute(iid)
 ----
 
-[#_ConceptManager_getAttributeTypegetAttributeType_label_:_Promise_AttributeType]
+[#_ConceptManager_getAttributeType__label_string]
 ==== getAttributeType
 
 [source,nodejs]
@@ -64,7 +64,7 @@ a| `label` a| The label of the ``AttributeType`` to retrieve a| `string`
 transaction.concepts().getAttributeType(label)
 ----
 
-[#_ConceptManager_getEntitygetEntity_iid_:_Promise_Entity]
+[#_ConceptManager_getEntity__iid_string]
 ==== getEntity
 
 [source,nodejs]
@@ -94,7 +94,7 @@ a| `iid` a| The iid of the ``Entity`` to retrieve a| `string`
 transaction.concepts().getEntity(iid)
 ----
 
-[#_ConceptManager_getEntityTypegetEntityType_label_:_Promise_EntityType]
+[#_ConceptManager_getEntityType__label_string]
 ==== getEntityType
 
 [source,nodejs]
@@ -124,7 +124,7 @@ a| `label` a| The label of the ``EntityType`` to retrieve a| `string`
 transaction.concepts().getEntityType(label)
 ----
 
-[#_ConceptManager_getRelationgetRelation_iid_:_Promise_Relation]
+[#_ConceptManager_getRelation__iid_string]
 ==== getRelation
 
 [source,nodejs]
@@ -154,7 +154,7 @@ a| `iid` a| The iid of the ``Relation`` to retrieve a| `string`
 transaction.concepts().getRelation(iid)
 ----
 
-[#_ConceptManager_getRelationTypegetRelationType_label_:_Promise_RelationType]
+[#_ConceptManager_getRelationType__label_string]
 ==== getRelationType
 
 [source,nodejs]
@@ -184,7 +184,7 @@ a| `label` a| The label of the ``RelationType`` to retrieve a| `string`
 transaction.concepts().getRelationType(label)
 ----
 
-[#_ConceptManager_getRootAttributeTypegetRootAttributeType__:_Promise_AttributeType]
+[#_ConceptManager_getRootAttributeType__]
 ==== getRootAttributeType
 
 [source,nodejs]
@@ -205,7 +205,7 @@ Retrieve the root ``AttributeType``, “attribute”.
 transaction.concepts().getRootAttributeType()
 ----
 
-[#_ConceptManager_getRootEntityTypegetRootEntityType__:_Promise_EntityType]
+[#_ConceptManager_getRootEntityType__]
 ==== getRootEntityType
 
 [source,nodejs]
@@ -226,7 +226,7 @@ Retrieves the root ``EntityType``, “entity”.
 transaction.concepts().getRootEntityType()
 ----
 
-[#_ConceptManager_getRootRelationTypegetRootRelationType__:_Promise_RelationType]
+[#_ConceptManager_getRootRelationType__]
 ==== getRootRelationType
 
 [source,nodejs]
@@ -247,7 +247,7 @@ Retrieve the root ``RelationType``, “relation”.
 transaction.concepts().getRootRelationType()
 ----
 
-[#_ConceptManager_getRootThingTypegetRootThingType__:_Promise_ThingType]
+[#_ConceptManager_getRootThingType__]
 ==== getRootThingType
 
 [source,nodejs]
@@ -268,7 +268,7 @@ Retrieves the root ``ThingType``, “thing”.
 transaction.concepts().getRootThingType()
 ----
 
-[#_ConceptManager_getSchemaExceptionsgetSchemaExceptions__:_Promise_TypeDBDriverError__]
+[#_ConceptManager_getSchemaExceptions__]
 ==== getSchemaExceptions
 
 [source,nodejs]
@@ -289,7 +289,7 @@ Retrieves a list of all schema exceptions for the current transaction.
 transaction.concepts().getSchemaException()
 ----
 
-[#_ConceptManager_putAttributeTypeputAttributeType_label__valueType_:_Promise_AttributeType]
+[#_ConceptManager_putAttributeType__label_string__valueType_ValueType]
 ==== putAttributeType
 
 [source,nodejs]
@@ -320,7 +320,7 @@ a| `valueType` a| The value type of the ``AttributeType`` to create a| `ValueTyp
 await transaction.concepts().putAttributeType(label, valueType)
 ----
 
-[#_ConceptManager_putEntityTypeputEntityType_label_:_Promise_EntityType]
+[#_ConceptManager_putEntityType__label_string]
 ==== putEntityType
 
 [source,nodejs]
@@ -350,7 +350,7 @@ a| `label` a| The label of the ``EntityType`` to create or retrieve a| `string`
 transaction.concepts().putEntityType(label)
 ----
 
-[#_ConceptManager_putRelationTypeputRelationType_label_:_Promise_RelationType]
+[#_ConceptManager_putRelationType__label_string]
 ==== putRelationType
 
 [source,nodejs]

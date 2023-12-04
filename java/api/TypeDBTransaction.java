@@ -74,7 +74,7 @@ public interface TypeDBTransaction extends AutoCloseable {
     QueryManager query();
 
     /**
-     * Registers a callback function which will be executed when this session is closed.
+     * Registers a callback function which will be executed when this transaction is closed.
      *
      * <h3>Examples</h3>
      * <pre>

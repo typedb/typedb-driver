@@ -35,21 +35,21 @@ generic_step_impl! {
     pub async fn connection_open_schema_session_for_database(context: &mut Context, name: String) {
         context
             .session_trackers
-            .push(Session::new_with_options(context.databases.get(name).await.unwrap(), SessionType::Schema, context.session_options.clone()).await.unwrap().into());
+            .push(Session::new_with_options(context.databases.get(name).await.unwrap(), SessionType::Schema, context.session_options).await.unwrap().into());
     }
 
     #[step(expr = "connection open (data )session for database: {word}")]
     pub async fn connection_open_data_session_for_database(context: &mut Context, name: String) {
         context
             .session_trackers
-            .push(Session::new_with_options(context.databases.get(name).await.unwrap(), SessionType::Data, context.session_options.clone()).await.unwrap().into());
+            .push(Session::new_with_options(context.databases.get(name).await.unwrap(), SessionType::Data, context.session_options).await.unwrap().into());
     }
 
     #[step(expr = "connection open schema session(s) for database(s):")]
     async fn connection_open_schema_sessions_for_databases(context: &mut Context, step: &Step) {
         for name in util::iter_table(step) {
             context.session_trackers.push(
-                Session::new_with_options(context.databases.get(name).await.unwrap(), SessionType::Schema, context.session_options.clone()).await.unwrap().into(),
+                Session::new_with_options(context.databases.get(name).await.unwrap(), SessionType::Schema, context.session_options).await.unwrap().into(),
             );
         }
     }
@@ -58,7 +58,7 @@ generic_step_impl! {
     async fn connection_open_data_sessions_for_databases(context: &mut Context, step: &Step) {
         for name in util::iter_table(step) {
             context.session_trackers.push(
-                Session::new_with_options(context.databases.get(name).await.unwrap(), SessionType::Data, context.session_options.clone()).await.unwrap().into(),
+                Session::new_with_options(context.databases.get(name).await.unwrap(), SessionType::Data, context.session_options).await.unwrap().into(),
             );
         }
     }
@@ -67,7 +67,7 @@ generic_step_impl! {
     async fn connection_open_data_sessions_in_parallel_for_databases(context: &mut Context, step: &Step) {
         let new_sessions = try_join_all(
             util::iter_table(step)
-                .map(|name| context.databases.get(name).and_then(|db| Session::new_with_options(db, SessionType::Data, context.session_options.clone()))),
+                .map(|name| context.databases.get(name).and_then(|db| Session::new_with_options(db, SessionType::Data, context.session_options))),
         )
         .await
         .unwrap();

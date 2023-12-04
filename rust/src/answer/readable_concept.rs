@@ -22,7 +22,9 @@
 use std::{borrow::Cow, collections::HashMap};
 
 use super::JSON;
-use crate::concept::{Attribute, AttributeType, Concept, EntityType, RelationType, RoleType, RootThingType, Value};
+use crate::concept::{
+    Attribute, AttributeType, Concept, EntityType, RelationType, RoleType, RootThingType, Value, ValueType,
+};
 
 #[derive(Clone, Debug, PartialEq)]
 pub(crate) struct Tree {
@@ -58,21 +60,23 @@ impl Node {
             Node::Leaf(Concept::RelationType(RelationType { label, .. })) => {
                 json_type(RelationType::ROOT_LABEL, Cow::Owned(label))
             }
-            Node::Leaf(Concept::AttributeType(AttributeType { label, .. })) => {
-                json_type(AttributeType::ROOT_LABEL, Cow::Owned(label))
+            Node::Leaf(Concept::AttributeType(AttributeType { label, value_type, .. })) => {
+                json_attribute_type(Cow::Owned(label), value_type)
             }
 
             Node::Leaf(Concept::RoleType(RoleType { label, .. })) => {
                 json_type("relation:role", Cow::Owned(label.to_string()))
             }
 
-            Node::Leaf(Concept::Attribute(Attribute { type_: AttributeType { label, .. }, value, .. })) => {
-                let JSON::Object(mut map) = json_value(value) else { unreachable!() };
-                map.insert(Cow::Borrowed("type"), json_type(AttributeType::ROOT_LABEL, Cow::Owned(label)));
-                JSON::Object(map)
-            }
+            Node::Leaf(Concept::Attribute(Attribute {
+                type_: AttributeType { label, value_type, .. }, value, ..
+            })) => JSON::Object(
+                [(TYPE, json_attribute_type(Cow::Owned(label), value_type)), (VALUE, json_value(value))].into(),
+            ),
 
-            Node::Leaf(Concept::Value(value)) => json_value(value),
+            Node::Leaf(Concept::Value(value)) => {
+                JSON::Object([(VALUE_TYPE, json_value_type(value.get_type())), (VALUE, json_value(value))].into())
+            }
 
             Node::Leaf(concept @ (Concept::Entity(_) | Concept::Relation(_))) => {
                 unreachable!("Unexpected concept encountered in fetch response: {concept:?}")
@@ -81,41 +85,52 @@ impl Node {
     }
 }
 
+const TYPE: Cow<'static, str> = Cow::Borrowed("type");
+const ROOT: Cow<'static, str> = Cow::Borrowed("root");
+const LABEL: Cow<'static, str> = Cow::Borrowed("label");
+
+const VALUE_TYPE: Cow<'static, str> = Cow::Borrowed("value_type");
+const VALUE: Cow<'static, str> = Cow::Borrowed("value");
+
 fn json_type(root: &'static str, label: Cow<'static, str>) -> JSON {
-    const ROOT: Cow<'static, str> = Cow::Borrowed("root");
-    const LABEL: Cow<'static, str> = Cow::Borrowed("label");
     JSON::Object([(ROOT, JSON::String(Cow::Borrowed(root))), (LABEL, JSON::String(label))].into())
 }
 
-fn json_value(value: Value) -> JSON {
-    const VALUE_TYPE: Cow<'static, str> = Cow::Borrowed("value_type");
-    const VALUE: Cow<'static, str> = Cow::Borrowed("value");
+fn json_attribute_type(label: Cow<'static, str>, value_type: ValueType) -> JSON {
+    JSON::Object(
+        [
+            (ROOT, JSON::String(Cow::Borrowed(AttributeType::ROOT_LABEL))),
+            (LABEL, JSON::String(label)),
+            (VALUE_TYPE, json_value_type(value_type)),
+        ]
+        .into(),
+    )
+}
 
+fn json_value_type(value_type: ValueType) -> JSON {
     const BOOLEAN: Cow<'static, str> = Cow::Borrowed("boolean");
     const DATETIME: Cow<'static, str> = Cow::Borrowed("datetime");
     const DOUBLE: Cow<'static, str> = Cow::Borrowed("double");
     const LONG: Cow<'static, str> = Cow::Borrowed("long");
     const STRING: Cow<'static, str> = Cow::Borrowed("string");
+    const OBJECT: Cow<'static, str> = Cow::Borrowed("object");
 
+    match value_type {
+        ValueType::Boolean => JSON::String(BOOLEAN),
+        ValueType::Double => JSON::String(DOUBLE),
+        ValueType::Long => JSON::String(LONG),
+        ValueType::String => JSON::String(STRING),
+        ValueType::DateTime => JSON::String(DATETIME),
+        ValueType::Object => JSON::String(OBJECT),
+    }
+}
+
+fn json_value(value: Value) -> JSON {
     match value {
-        Value::Boolean(bool) => {
-            JSON::Object([(VALUE, JSON::Boolean(bool)), (VALUE_TYPE, JSON::String(BOOLEAN))].into())
-        }
-        Value::Double(double) => {
-            JSON::Object([(VALUE, JSON::Number(double)), (VALUE_TYPE, JSON::String(DOUBLE))].into())
-        }
-        Value::Long(long) => {
-            JSON::Object([(VALUE, JSON::Number(long as f64)), (VALUE_TYPE, JSON::String(LONG))].into())
-        }
-        Value::String(string) => {
-            JSON::Object([(VALUE, JSON::String(Cow::Owned(string))), (VALUE_TYPE, JSON::String(STRING))].into())
-        }
-        Value::DateTime(datetime) => JSON::Object(
-            [
-                (VALUE, JSON::String(Cow::Owned(datetime.format("%FT%T%.3f").to_string()))),
-                (VALUE_TYPE, JSON::String(DATETIME)),
-            ]
-            .into(),
-        ),
+        Value::Boolean(bool) => JSON::Boolean(bool),
+        Value::Double(double) => JSON::Number(double),
+        Value::Long(long) => JSON::Number(long as f64),
+        Value::String(string) => JSON::String(Cow::Owned(string)),
+        Value::DateTime(datetime) => JSON::String(Cow::Owned(datetime.format("%FT%T%.3f").to_string())),
     }
 }

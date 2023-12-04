@@ -4,7 +4,7 @@
 Provides access to all database management methods.
 
 // tag::methods[]
-[#_DatabaseManager_all]
+[#_DatabaseManager_all__]
 ==== all
 
 [source,python]
@@ -25,7 +25,7 @@ Retrieves all databases present on the TypeDB server
 driver.databases.all()
 ----
 
-[#_DatabaseManager_contains]
+[#_DatabaseManager_contains__name_str]
 ==== contains
 
 [source,python]
@@ -55,7 +55,7 @@ a| `name` a| The database name to be checked a| `str` a|
 driver.databases.contains(name)
 ----
 
-[#_DatabaseManager_create]
+[#_DatabaseManager_create__name_str]
 ==== create
 
 [source,python]
@@ -85,7 +85,7 @@ a| `name` a| The name of the database to be created a| `str` a|
 driver.databases.create(name)
 ----
 
-[#_DatabaseManager_get]
+[#_DatabaseManager_get__name_str]
 ==== get
 
 [source,python]

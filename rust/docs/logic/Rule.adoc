@@ -25,7 +25,7 @@ a| `when` a| `Conjunction` a| The statements that constitute the ‘when’ of t
 // end::properties[]
 
 // tag::methods[]
-[#_struct_Rule_tymethod_delete]
+[#_struct_Rule_delete__]
 ==== delete
 
 [source,rust]
@@ -45,7 +45,7 @@ fn delete<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_Rule_method_is_deleted]
+[#_struct_Rule_is_deleted__]
 ==== is_deleted
 
 [source,rust]
@@ -65,7 +65,7 @@ fn is_deleted<'tx>(
 BoxPromise<'tx, Result<bool>>
 ----
 
-[#_struct_Rule_tymethod_label]
+[#_struct_Rule_label__]
 ==== label
 
 [source,rust]
@@ -82,7 +82,7 @@ fn label(&self) -> &String
 &String
 ----
 
-[#_struct_Rule_tymethod_set_label]
+[#_struct_Rule_set_label__]
 ==== set_label
 
 [source,rust]

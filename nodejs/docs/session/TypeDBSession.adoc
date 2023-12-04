@@ -16,7 +16,7 @@ a| `type` a| `SessionType` a| The current session’s type (SCHEMA or DATA)
 // end::properties[]
 
 // tag::methods[]
-[#_TypeDBSession_closeclose__:_Promise_void]
+[#_TypeDBSession_close__]
 ==== close
 
 [source,nodejs]
@@ -37,7 +37,7 @@ Closes the session. Before opening a new session, the session currently open sho
 session.close()
 ----
 
-[#_TypeDBSession_isOpenisOpen__:_boolean]
+[#_TypeDBSession_isOpen__]
 ==== isOpen
 
 [source,nodejs]
@@ -58,7 +58,67 @@ Checks whether this session is open.
 session.isOpen()
 ----
 
-[#_TypeDBSession_transactiontransaction_type__options?_:_Promise_TypeDBTransaction]
+[#_TypeDBSession_onClose__callback_______Promise_void__]
+==== onClose
+
+[source,nodejs]
+----
+onClose(callback): void
+----
+
+Registers a callback function which will be executed when this session is closed.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `callback` a| The callback function. a| `(() => Promise<void>)`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+session.onClose(function)
+----
+
+[#_TypeDBSession_onReopen__callback_______Promise_void__]
+==== onReopen
+
+[source,nodejs]
+----
+onReopen(callback): void
+----
+
+Registers a callback function which will be executed when this session is reopened. A session may be closed if it times out, or loses the connection to the database. In such situations, the session is reopened automatically when opening a new transaction.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `callback` a| The callback function. a| `(() => Promise<void>)`
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+session.onReopen(function)
+----
+
+[#_TypeDBSession_transaction__type_TransactionType__options_TypeDBOptions]
 ==== transaction
 
 [source,nodejs]

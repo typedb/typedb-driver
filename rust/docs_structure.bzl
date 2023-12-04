@@ -29,6 +29,7 @@ dir_mapping = {
     "ConceptMap.adoc": "answer",
     "ValueGroup.adoc": "answer",
     "ConceptMapGroup.adoc": "answer",
+    "Trait_Promise.adoc": "answer",
     "JSON.adoc": "answer",
     "Connection.adoc": "connection",
     "UserManager.adoc": "connection",

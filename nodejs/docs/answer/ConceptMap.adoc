@@ -15,7 +15,7 @@ a| `explainables` a| `Explainables` a| The Explainables object for this ConceptM
 // end::properties[]
 
 // tag::methods[]
-[#_ConceptMap_conceptsconcepts__:_IterableIterator_Concept]
+[#_ConceptMap_concepts__]
 ==== concepts
 
 [source,nodejs]
@@ -36,7 +36,7 @@ Produces an iterator over all concepts in this ``ConceptMap``.
 conceptMap.concepts()
 ----
 
-[#_ConceptMap_getget_variable_:_Concept]
+[#_ConceptMap_get__variable_string]
 ==== get
 
 [source,nodejs]
@@ -66,7 +66,28 @@ a| `variable` a| The string representation of a variable a| `string`
 conceptMap.get(variable)
 ----
 
-[#_ConceptMap_variablesvariables__:_IterableIterator_string]
+[#_ConceptMap_map__]
+==== map
+
+[source,nodejs]
+----
+map(): Map<string, Concept>
+----
+
+Returns the inner ``Map`` where keys are query variables, and values are concepts.
+
+[caption=""]
+.Returns
+`Map<string, Concept>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+conceptMap.map()
+----
+
+[#_ConceptMap_variables__]
 ==== variables
 
 [source,nodejs]

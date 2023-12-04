@@ -134,6 +134,24 @@ class TypeDBSession(ABC):
         pass
 
     @abstractmethod
+    def on_reopen(self, function: callable) -> None:
+        """
+        Registers a callback function which will be executed when this session is reopened.
+        A session may be closed if it times out, or loses the connection to the database.
+        In such situations, the session is reopened automatically when opening a new transaction.
+
+        :param function: The callback function.
+        :return:
+
+        Examples:
+        ---------
+        ::
+
+            session.on_close(function)
+        """
+        pass
+
+    @abstractmethod
     def close(self) -> None:
         """
         Closes the session.

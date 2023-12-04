@@ -47,6 +47,18 @@ export interface ConceptMap {
      */
     concepts(): IterableIterator<Concept>
 
+
+    /**
+     * Returns the inner <code>Map</code> where keys are query variables, and values are concepts.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * conceptMap.map()
+     * ```
+     */
+    map(): Map<string, Concept>
+
     /**
      * Retrieves a concept for a given variable name.
      *

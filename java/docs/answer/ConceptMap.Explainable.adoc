@@ -1,4 +1,4 @@
-[#_ConceptMap.Explainable]
+[#_ConceptMap_Explainable]
 === ConceptMap.Explainable
 
 *Package*: `com.vaticle.typedb.driver.api.answer`
@@ -6,7 +6,7 @@
 Contains an explainable object.
 
 // tag::methods[]
-[#_ConceptMap.Explainable_conjunction_]
+[#_ConceptMap_Explainable_conjunction__]
 ==== conjunction
 
 [source,java]
@@ -28,7 +28,7 @@ Retrieves the subquery of the original query that is actually being explained.
 explainable.conjunction();
 ----
 
-[#_ConceptMap.Explainable_id_]
+[#_ConceptMap_Explainable_id__]
 ==== id
 
 [source,java]

@@ -32,14 +32,48 @@ import static com.vaticle.typedb.common.collection.Collections.set;
 public class TypeDB {
     public static final String DEFAULT_ADDRESS = "localhost:1729";
 
+    /**
+     * Open a TypeDB Driver to a TypeDB Core server available at the provided address.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * TypeDB.coreDriver(address);
+     * </pre>
+     *
+     * @param address The address of the TypeDB server
+     */
     public static TypeDBDriver coreDriver(String address) {
         return new TypeDBDriverImpl(address);
     }
 
+    /**
+     * Open a TypeDB Driver to a TypeDB Enterprise server available at the provided address, using
+     * the provided credential.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * TypeDB.enterpriseDriver(address, credential);
+     * </pre>
+     *
+     * @param address The address of the TypeDB server
+     * @param credential The credential to connect with
+     */
     public static TypeDBDriver enterpriseDriver(String address, TypeDBCredential credential) {
         return enterpriseDriver(set(address), credential);
     }
 
+    /**
+     * Open a TypeDB Driver to TypeDB Enterprise server(s) available at the provided addresses, using
+     * the provided credential.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * TypeDB.enterpriseDriver(addresses, credential);
+     * </pre>
+     *
+     * @param addresses The address(es) of the TypeDB server(s)
+     * @param credential The credential to connect with
+     */
     public static TypeDBDriver enterpriseDriver(Set<String> addresses, TypeDBCredential credential) {
         return new TypeDBDriverImpl(addresses, credential);
     }

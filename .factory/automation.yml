@@ -78,7 +78,7 @@ build:
         git add $DOCS_DIRS
         git diff --exit-code HEAD $DOCS_DIRS
 
-    test-rust-integration-core:
+    test-rust-unit-integration:
       image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
       dependencies:
         - build
@@ -87,30 +87,21 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        bazel test //rust:typedb_driver_unit_tests --test_output=streamed || exit 1
         tool/test/start-core-server.sh &&
           bazel test //rust/tests --test_output=streamed --test_arg=-- \
-            --test_arg=integration::queries::core &&
-          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+            --test_arg=integration::queries::core && 
+          export CORE_FAILED= || export CORE_FAILED=1
         tool/test/stop-core-server.sh
-        exit $TEST_SUCCESS
+        if [[ -n "$CORE_FAILED" ]]; then exit 1; fi
 
-    test-rust-integration-enterprise:
-      machine: 4-core-16-gb
-      image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
-      dependencies:
-        - build
-      command: |
-        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         source tool/test/start-enterprise-servers.sh 3 && # use source to receive export vars
           bazel test //rust/tests --test_output=streamed --test_env=ROOT_CA=$ROOT_CA --test_arg=-- \
             --test_arg=integration::queries::enterprise \
             --test_arg=integration::runtimes &&
-          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+          export ENTERPRISE_FAILED= || export ENTERPRISE_FAILED=1
         tool/test/stop-enterprise-servers.sh
-        exit $TEST_SUCCESS
+        if [[ -n "$ENTERPRISE_FAILED" ]]; then exit 1; fi
 
     test-rust-behaviour-concept:
       image: vaticle-ubuntu-20.04 # Ubuntu 20.04 has GLIBC version 2.31 (2020) which we should verify to compile against
@@ -972,8 +963,7 @@ build:
       image: vaticle-ubuntu-22.04
       dependencies:
         - build
-        - test-rust-integration-core
-        - test-rust-integration-enterprise
+        - test-rust-unit-integration
         - test-rust-behaviour-concept
         - test-rust-behaviour-connection
         - test-rust-behaviour-query-read

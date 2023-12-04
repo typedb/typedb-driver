@@ -23,7 +23,7 @@ a| `stackTraceLimit` a| `number` a|
 // end::properties[]
 
 // tag::methods[]
-[#__messageTemplate]
+[#_TypeDBDriverError__messageTemplate__]
 ====  messageTemplate
 
 [source,nodejs]
@@ -37,7 +37,7 @@ Returns the message template for this error.
 .Returns
 `ErrorMessage`
 
-[#_TypeDBDriverError_captureStackTracecaptureStackTrace_targetObject__constructorOpt?_:_void]
+[#_TypeDBDriverError_captureStackTrace__targetObject_object__constructorOpt_Function]
 ==== captureStackTrace
 
 [source,nodejs]
@@ -61,7 +61,7 @@ a| `constructorOpt` a|  a| `Function`
 .Returns
 `void`
 
-[#_TypeDBDriverError_new_TypeDBDriverErrornew_TypeDBDriverError_error_:_TypeDBDriverError]
+[#_TypeDBDriverError_new_TypeDBDriverError__error_string__ErrorMessage__Error__ServiceError]
 ==== new TypeDBDriverError
 
 [source,nodejs]

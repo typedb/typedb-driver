@@ -6,7 +6,7 @@
 * `Relation`
 
 // tag::methods[]
-[#_trait_RelationAPI_method_add_role_player]
+[#_trait_RelationAPI_add_role_player__transaction_tx_Transaction_____role_type_RoleType__player_Thing]
 ==== add_role_player
 
 [source,rust]
@@ -64,7 +64,7 @@ relation.add_role_player(transaction, role_type, player).resolve();
 --
 ====
 
-[#_trait_RelationAPI_method_get_players_by_role_type]
+[#_trait_RelationAPI_get_players_by_role_type__transaction_tx_Transaction_____role_types_Vec_RoleType_]
 ==== get_players_by_role_type
 
 [source,rust]
@@ -102,7 +102,7 @@ Result<BoxStream<'tx, Result<Thing>>>
 relation.get_players_by_role_type(transaction, role_types);
 ----
 
-[#_trait_RelationAPI_method_get_relating]
+[#_trait_RelationAPI_get_relating__transaction_tx_Transaction___]
 ==== get_relating
 
 [source,rust]
@@ -138,7 +138,7 @@ Result<BoxStream<'tx, Result<RoleType>>>
 relation.get_relating(transaction)
 ----
 
-[#_trait_RelationAPI_method_get_role_players]
+[#_trait_RelationAPI_get_role_players__transaction_tx_Transaction______-__Result_BoxStream_tx]
 ==== get_role_players
 
 [source,rust]
@@ -175,7 +175,7 @@ Result<BoxStream<'tx, Result<(RoleType, Thing)>>>
 relation.get_role_players(transaction)
 ----
 
-[#_trait_RelationAPI_method_remove_role_player]
+[#_trait_RelationAPI_remove_role_player__transaction_tx_Transaction_____role_type_RoleType__player_Thing]
 ==== remove_role_player
 
 [source,rust]

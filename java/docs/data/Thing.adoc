@@ -8,7 +8,7 @@
 * `Concept`
 
 // tag::methods[]
-[#_Thing_asAttribute_]
+[#_Thing_asAttribute__]
 ==== asAttribute
 
 [source,java]
@@ -30,7 +30,7 @@ Casts the concept to ``Attribute``.
 concept.asAttribute();
 ----
 
-[#_Thing_asAttributeType_]
+[#_Thing_asAttributeType__]
 ==== asAttributeType
 
 [source,java]
@@ -52,7 +52,7 @@ Casts the concept to ``AttributeType``.
 concept.asAttributeType();
 ----
 
-[#_Thing_asEntity_]
+[#_Thing_asEntity__]
 ==== asEntity
 
 [source,java]
@@ -74,7 +74,7 @@ Casts the concept to ``Entity``.
 concept.asEntity();
 ----
 
-[#_Thing_asEntityType_]
+[#_Thing_asEntityType__]
 ==== asEntityType
 
 [source,java]
@@ -96,7 +96,7 @@ Casts the concept to ``EntityType``.
 concept.asEntityType();
 ----
 
-[#_Thing_asRelation_]
+[#_Thing_asRelation__]
 ==== asRelation
 
 [source,java]
@@ -118,7 +118,7 @@ Casts the concept to ``Relation``.
 concept.asRelation();
 ----
 
-[#_Thing_asRelationType_]
+[#_Thing_asRelationType__]
 ==== asRelationType
 
 [source,java]
@@ -140,7 +140,7 @@ Casts the concept to ``RelationType``.
 concept.asRelationType();
 ----
 
-[#_Thing_asRoleType_]
+[#_Thing_asRoleType__]
 ==== asRoleType
 
 [source,java]
@@ -162,7 +162,7 @@ Casts the concept to ``RoleType``.
 concept.asRoleType();
 ----
 
-[#_Thing_asThing_]
+[#_Thing_asThing__]
 ==== asThing
 
 [source,java]
@@ -185,7 +185,7 @@ Casts the concept to ``Thing``.
 thing.asThing();
 ----
 
-[#_Thing_asThingType_]
+[#_Thing_asThingType__]
 ==== asThingType
 
 [source,java]
@@ -207,7 +207,7 @@ Casts the concept to ``ThingType``.
 concept.asThingType();
 ----
 
-[#_Thing_asType_]
+[#_Thing_asType__]
 ==== asType
 
 [source,java]
@@ -229,7 +229,7 @@ Casts the concept to ``Type``.
 concept.asType();
 ----
 
-[#_Thing_asValue_]
+[#_Thing_asValue__]
 ==== asValue
 
 [source,java]
@@ -251,7 +251,7 @@ Casts the concept to ``Value``.
 concept.asValue();
 ----
 
-[#_Thing_delete_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_Thing_delete__TypeDBTransaction]
 ==== delete
 
 [source,java]
@@ -283,7 +283,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thing.delete(transaction).resolve();
 ----
 
-[#_Thing_getHas_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType___]
+[#_Thing_getHas__TypeDBTransaction__AttributeType___]
 ==== getHas
 
 [source,java]
@@ -318,7 +318,7 @@ thing.getHas(transaction);
  thing.getHas(transaction, attributeType);
 ----
 
-[#_Thing_getHas_com_vaticle_typedb_driver_api_TypeDBTransaction_java_util_Set]
+[#_Thing_getHas__TypeDBTransaction__java_util_Set_ThingType_Annotation_]
 ==== getHas
 
 [source,java]
@@ -353,7 +353,7 @@ thing.getHas(transaction);
  thing.getHas(transaction, set(Annotation.key()));
 ----
 
-[#_Thing_getIID_]
+[#_Thing_getIID__]
 ==== getIID
 
 [source,java]
@@ -376,7 +376,7 @@ Retrieves the unique id of the ``Thing``.
 thing.getIID();
 ----
 
-[#_Thing_getPlaying_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_Thing_getPlaying__TypeDBTransaction]
 ==== getPlaying
 
 [source,java]
@@ -408,7 +408,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thing.getPlaying(transaction);
 ----
 
-[#_Thing_getRelations_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType___]
+[#_Thing_getRelations__TypeDBTransaction__RoleType___]
 ==== getRelations
 
 [source,java]
@@ -442,7 +442,7 @@ a| `roleTypes` a| The array of roles to filter the relations by. a| `RoleType[]`
 thing.getRelations(transaction, roleTypes);
 ----
 
-[#_Thing_getType_]
+[#_Thing_getType__]
 ==== getType
 
 [source,java]
@@ -465,7 +465,7 @@ Retrieves the type which this ``Thing`` belongs to.
 thing.getType();
 ----
 
-[#_Thing_isAttribute_]
+[#_Thing_isAttribute__]
 ==== isAttribute
 
 [source,java]
@@ -488,7 +488,7 @@ Checks if the concept is an ``Attribute``.
 concept.isAttribute();
 ----
 
-[#_Thing_isAttributeType_]
+[#_Thing_isAttributeType__]
 ==== isAttributeType
 
 [source,java]
@@ -511,7 +511,7 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType();
 ----
 
-[#_Thing_isDeleted_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_Thing_isDeleted__TypeDBTransaction]
 ==== isDeleted
 
 [source,java]
@@ -543,7 +543,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thing.isDeleted(transaction).resolve();
 ----
 
-[#_Thing_isEntity_]
+[#_Thing_isEntity__]
 ==== isEntity
 
 [source,java]
@@ -566,7 +566,7 @@ Checks if the concept is an ``Entity``.
 concept.isEntity();
 ----
 
-[#_Thing_isEntityType_]
+[#_Thing_isEntityType__]
 ==== isEntityType
 
 [source,java]
@@ -589,7 +589,7 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType();
 ----
 
-[#_Thing_isInferred_]
+[#_Thing_isInferred__]
 ==== isInferred
 
 [source,java]
@@ -612,7 +612,7 @@ Checks if this ``Thing`` is inferred by a [Reasoning Rule].
 thing.isInferred();
 ----
 
-[#_Thing_isRelation_]
+[#_Thing_isRelation__]
 ==== isRelation
 
 [source,java]
@@ -635,7 +635,7 @@ Checks if the concept is a ``Relation``.
 concept.isRelation();
 ----
 
-[#_Thing_isRelationType_]
+[#_Thing_isRelationType__]
 ==== isRelationType
 
 [source,java]
@@ -658,7 +658,7 @@ Checks if the concept is a ``RelationType``.
 concept.isRelationType();
 ----
 
-[#_Thing_isRoleType_]
+[#_Thing_isRoleType__]
 ==== isRoleType
 
 [source,java]
@@ -681,7 +681,7 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType();
 ----
 
-[#_Thing_isThing_]
+[#_Thing_isThing__]
 ==== isThing
 
 [source,java]
@@ -704,7 +704,7 @@ Checks if the concept is a ``Thing``.
 thing.isThing();
 ----
 
-[#_Thing_isThingType_]
+[#_Thing_isThingType__]
 ==== isThingType
 
 [source,java]
@@ -727,7 +727,7 @@ Checks if the concept is a ``ThingType``.
 concept.isThingType();
 ----
 
-[#_Thing_isType_]
+[#_Thing_isType__]
 ==== isType
 
 [source,java]
@@ -750,7 +750,7 @@ Checks if the concept is a ``Type``.
 concept.isType();
 ----
 
-[#_Thing_isValue_]
+[#_Thing_isValue__]
 ==== isValue
 
 [source,java]
@@ -773,7 +773,7 @@ Checks if the concept is a ``Value``.
 concept.isValue();
 ----
 
-[#_Thing_setHas_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_thing_Attribute]
+[#_Thing_setHas__TypeDBTransaction__Attribute]
 ==== setHas
 
 [source,java]
@@ -807,7 +807,7 @@ a| `attribute` a| The ``Attribute`` to be owned by this ``Thing``. a| `Attribute
 thing.setHas(transaction, attribute).resolve();
 ----
 
-[#_Thing_unsetHas_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_thing_Attribute]
+[#_Thing_unsetHas__TypeDBTransaction__Attribute]
 ==== unsetHas
 
 [source,java]

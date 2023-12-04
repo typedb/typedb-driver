@@ -6,7 +6,7 @@
 TypeDB user information
 
 // tag::methods[]
-[#_User_passwordExpirySeconds_]
+[#_User_passwordExpirySeconds__]
 ==== passwordExpirySeconds
 
 [source,java]
@@ -20,7 +20,7 @@ Returns the number of seconds remaining till this user’s current password expi
 .Returns
 `java.util.Optional<java.lang.Long>`
 
-[#_User_passwordUpdate_java_lang_String_java_lang_String]
+[#_User_passwordUpdate__java_lang_String__java_lang_String]
 ==== passwordUpdate
 
 [source,java]
@@ -45,7 +45,7 @@ a| `passwordNew` a| The new password a| `java.lang.String`
 .Returns
 `void`
 
-[#_User_username_]
+[#_User_username__]
 ==== username
 
 [source,java]

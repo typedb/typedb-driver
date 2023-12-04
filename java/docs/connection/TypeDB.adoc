@@ -15,7 +15,7 @@ a| `DEFAULT_ADDRESS` a| `static java.lang.String` a|
 // end::properties[]
 
 // tag::methods[]
-[#_TypeDB__init__]
+[#_TypeDB_TypeDB__]
 ==== TypeDB
 
 [source,java]
@@ -29,7 +29,7 @@ public TypeDB()
 .Returns
 `public`
 
-[#_TypeDB_coreDriver_java_lang_String]
+[#_TypeDB_coreDriver__java_lang_String]
 ==== coreDriver
 
 [source,java]
@@ -37,13 +37,30 @@ public TypeDB()
 public static TypeDBDriver coreDriver​(java.lang.String address)
 ----
 
+Open a TypeDB Driver to a TypeDB Core server available at the provided address. 
 
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `address` a| The address of the TypeDB server a| `java.lang.String`
+|===
 
 [caption=""]
 .Returns
 `public static TypeDBDriver`
 
-[#_TypeDB_enterpriseDriver_java_lang_String_com_vaticle_typedb_driver_api_TypeDBCredential]
+[caption=""]
+.Code examples
+[source,java]
+----
+TypeDB.coreDriver(address);
+----
+
+[#_TypeDB_enterpriseDriver__java_lang_String__TypeDBCredential]
 ==== enterpriseDriver
 
 [source,java]
@@ -52,13 +69,31 @@ public static TypeDBDriver enterpriseDriver​(java.lang.String address,
                                             TypeDBCredential credential)
 ----
 
+Open a TypeDB Driver to a TypeDB Enterprise server available at the provided address, using the provided credential. 
 
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `address` a| The address of the TypeDB server a| `java.lang.String`
+a| `credential` a| The credential to connect with a| `TypeDBCredential`
+|===
 
 [caption=""]
 .Returns
 `public static TypeDBDriver`
 
-[#_TypeDB_enterpriseDriver_java_util_Set_com_vaticle_typedb_driver_api_TypeDBCredential]
+[caption=""]
+.Code examples
+[source,java]
+----
+TypeDB.enterpriseDriver(address, credential);
+----
+
+[#_TypeDB_enterpriseDriver__java_util_Set_java_lang_String___TypeDBCredential]
 ==== enterpriseDriver
 
 [source,java]
@@ -67,11 +102,29 @@ public static TypeDBDriver enterpriseDriver​(java.util.Set<java.lang.String> a
                                             TypeDBCredential credential)
 ----
 
+Open a TypeDB Driver to TypeDB Enterprise server(s) available at the provided addresses, using the provided credential. 
 
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `addresses` a| The address(es) of the TypeDB server(s) a| `java.util.Set<java.lang.String>`
+a| `credential` a| The credential to connect with a| `TypeDBCredential`
+|===
 
 [caption=""]
 .Returns
 `public static TypeDBDriver`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+TypeDB.enterpriseDriver(addresses, credential);
+----
 
 // end::methods[]
 

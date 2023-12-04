@@ -27,6 +27,7 @@ import com.vaticle.typedb.driver.api.concept.Concept;
 import com.vaticle.typedb.common.collection.Pair;
 
 import javax.annotation.CheckReturnValue;
+import java.util.Map;
 import java.util.stream.Stream;
 
 /**
@@ -54,6 +55,17 @@ public interface ConceptMap {
      */
     @CheckReturnValue
     Stream<Concept> concepts();
+
+    /**
+     * Returns the inner <code>Map</code> where keys are query variables, and values are concepts.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMap.map();
+     * </pre>
+     */
+    @CheckReturnValue
+    Map<String, Concept> map();
 
     /**
      * Retrieves a concept for a given variable name.

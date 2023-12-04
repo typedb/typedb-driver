@@ -30,6 +30,7 @@ import {ConceptManager} from "../concept/ConceptManager";
 import {LogicManager} from "../logic/LogicManager";
 import {QueryManager} from "../query/QueryManager";
 import {TypeDBOptions} from "./TypeDBOptions";
+import {TypeDBDriverError} from "../../common/errors/TypeDBDriverError";
 
 export interface TypeDBTransaction {
     /**
@@ -55,8 +56,21 @@ export interface TypeDBTransaction {
     /** The <code>LogicManager</code> for this Transaction, providing access to all Concept API - Logic methods. */
     readonly logic: LogicManager;
 
-    /** The<code></code>QueryManager<code></code> for this Transaction, from which any TypeQL query can be executed. */
+    /** The<code>QueryManager</code> for this Transaction, from which any TypeQL query can be executed. */
     readonly query: QueryManager;
+
+    /**
+     * Registers a callback function which will be executed when this transaction is closed.
+     *
+     * ### Examples
+     *
+     * ```ts
+     * transaction.onClose(function);
+     * ```
+     *
+     * @param callback The callback function.
+     */
+    onClose(callback: (error?: Error | string) => Promise<void>): void;
 
     /**
      * Commits the changes made via this transaction to the TypeDB database. Whether or not the transaction is commited successfully, it gets closed after the commit call.

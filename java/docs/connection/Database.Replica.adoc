@@ -1,4 +1,4 @@
-[#_Database.Replica]
+[#_Database_Replica]
 === Database.Replica
 
 *Package*: `com.vaticle.typedb.driver.api.database`
@@ -6,7 +6,7 @@
 The metadata and state of an individual raft replica of a database.
 
 // tag::methods[]
-[#_Database.Replica_address_]
+[#_Database_Replica_address__]
 ==== address
 
 [source,java]
@@ -21,7 +21,7 @@ Retrieves the address of the server hosting this replica
 .Returns
 `java.lang.String`
 
-[#_Database.Replica_isPreferred_]
+[#_Database_Replica_isPreferred__]
 ==== isPreferred
 
 [source,java]
@@ -36,7 +36,7 @@ Checks whether this is the preferred replica of the raft cluster. If true, Opera
 .Returns
 `boolean`
 
-[#_Database.Replica_isPrimary_]
+[#_Database_Replica_isPrimary__]
 ==== isPrimary
 
 [source,java]
@@ -51,7 +51,7 @@ Checks whether this is the primary replica of the raft cluster.
 .Returns
 `boolean`
 
-[#_Database.Replica_term_]
+[#_Database_Replica_term__]
 ==== term
 
 [source,java]

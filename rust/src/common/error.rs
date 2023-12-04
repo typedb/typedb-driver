@@ -28,66 +28,66 @@ use super::{address::Address, RequestID};
 
 error_messages! { ConnectionError
     code: "CXN", type: "Connection Error",
-    RPCMethodUnavailable(String) =
-        1: "The server does not support this method, please check the driver-server compatibility:\n'{}'.",
-    ConnectionIsClosed() =
+    RPCMethodUnavailable { message: String } =
+        1: "The server does not support this method, please check the driver-server compatibility:\n'{message}'.",
+    ConnectionIsClosed =
         2: "The connection has been closed and no further operation is allowed.",
-    SessionIsClosed() =
+    SessionIsClosed =
         3: "The session is closed and no further operation is allowed.",
-    TransactionIsClosed() =
+    TransactionIsClosed =
         4: "The transaction is closed and no further operation is allowed.",
-    TransactionIsClosedWithErrors(String) =
-        5: "The transaction is closed because of the error(s):\n{}",
-    DatabaseDoesNotExist(String) =
-        6: "The database '{}' does not exist.",
-    MissingResponseField(&'static str) =
-        7: "Missing field in message received from server: '{}'.",
-    UnknownRequestId(RequestID) =
-        8: "Received a response with unknown request id '{}'",
-    InvalidResponseField(&'static str) =
-        9: "Invalid field in message received from server: '{}'.",
-    UnexpectedResponse(String) =
-        10: "Received unexpected response from server: '{}'.",
-    ServerConnectionFailed(String) =
-        11: "Unable to connect to TypeDB server(s) at: \n{}",
-    ServerConnectionFailedWithError(String) =
-        12: "Unable to connect to TypeDB server(s), received errors: \n{}",
-    ServerConnectionFailedStatusError(String) =
-        13: "Unable to connect to TypeDB server(s), received network error: \n{}",
-    UserManagementEnterpriseOnly() =
+    TransactionIsClosedWithErrors { errors: String } =
+        5: "The transaction is closed because of the error(s):\n{errors}",
+    DatabaseDoesNotExist { name: String } =
+        6: "The database '{name}' does not exist.",
+    MissingResponseField { field: &'static str } =
+        7: "Missing field in message received from server: '{field}'.",
+    UnknownRequestId { request_id: RequestID } =
+        8: "Received a response with unknown request id '{request_id}'",
+    InvalidResponseField { name: &'static str } =
+        9: "Invalid field in message received from server: '{name}'.",
+    UnexpectedResponse { response: String } =
+        10: "Received unexpected response from server: '{response}'.",
+    ServerConnectionFailed { addresses: String } =
+        11: "Unable to connect to TypeDB server(s) at: \n{addresses}",
+    ServerConnectionFailedWithError { error: String } =
+        12: "Unable to connect to TypeDB server(s), received errors: \n{error}",
+    ServerConnectionFailedStatusError { error: String } =
+        13: "Unable to connect to TypeDB server(s), received network error: \n{error}",
+    UserManagementEnterpriseOnly =
         14: "User management is only available in TypeDB Enterprise servers.",
-    EnterpriseReplicaNotPrimary() =
+    EnterpriseReplicaNotPrimary =
         15: "The replica is not the primary replica.",
-    EnterpriseAllNodesFailed(String) =
-        16: "Attempted connecting to all TypeDB Enterprise servers, but the following errors occurred: \n{}.",
-    EnterpriseTokenCredentialInvalid() =
+    EnterpriseAllNodesFailed { errors: String } =
+        16: "Attempted connecting to all TypeDB Enterprise servers, but the following errors occurred: \n{errors}.",
+    EnterpriseTokenCredentialInvalid =
         17: "Invalid token credential.",
-    SessionCloseFailed() =
+    SessionCloseFailed =
         18: "Failed to close session. It may still be open on the server: or it may already have been closed previously.",
-    EnterpriseEndpointEncrypted() =
+    EnterpriseEndpointEncrypted =
         19: "Unable to connect to TypeDB Enterprise: attempting an unencrypted connection to an encrypted endpoint.",
-    EnterpriseSSLCertificateNotValidated() =
+    EnterpriseSSLCertificateNotValidated =
         20: "SSL handshake with TypeDB Enterprise failed: the server's identity could not be verified. Possible CA mismatch.",
-    BrokenPipe() =
+    BrokenPipe =
         21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted enterprise instance using a TLS-enabled credential.",
-    ConnectionFailed() =
+    ConnectionFailed =
         22: "Connection failed. Please check the server is running and the address is accessible. Encrypted Enterprise endpoints may also have misconfigured SSL certificates.",
 }
 
 error_messages! { InternalError
     code: "INT", type: "Internal Error",
-    RecvError() =
+    RecvError =
         1: "Channel is closed.",
-    SendError() =
+    SendError =
         2: "Unable to send response over callback channel (receiver dropped).",
-    UnexpectedRequestType(String) =
-        3: "Unexpected request type for remote procedure call: {}.",
-    UnexpectedResponseType(String) =
-        4: "Unexpected response type for remote procedure call: {}.",
-    UnknownConnectionAddress(Address) =
-        5: "Received unrecognized address from the server: {}.",
-    EnumOutOfBounds(i32, &'static str) =
-        6: "Value '{}' is out of bounds for enum '{}'.",
+    UnexpectedRequestType { request_type: String } =
+        3: "Unexpected request type for remote procedure call: {request_type}.",
+    UnexpectedResponseType { response_type: String } =
+        4: "Unexpected response type for remote procedure call: {response_type}.",
+    UnknownConnectionAddress { address: Address } =
+        5: "Received unrecognized address from the server: {address}.",
+    EnumOutOfBounds { value: i32, enum_name: &'static str } =
+        6: "Value '{value}' is out of bounds for enum '{enum_name}'.",
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -119,26 +119,26 @@ impl Error {
 
     fn from_message(message: &str) -> Self {
         match message.split_ascii_whitespace().next() {
-            Some("[RPL01]") => Self::Connection(ConnectionError::EnterpriseReplicaNotPrimary()),
-            Some("[CLS08]") => Self::Connection(ConnectionError::EnterpriseTokenCredentialInvalid()),
-            Some("[DBS06]") => Self::Connection(ConnectionError::DatabaseDoesNotExist(
-                message.split('\'').nth(1).unwrap_or("{unknown}").to_owned(),
-            )),
+            Some("[RPL01]") => Self::Connection(ConnectionError::EnterpriseReplicaNotPrimary),
+            Some("[CLS08]") => Self::Connection(ConnectionError::EnterpriseTokenCredentialInvalid),
+            Some("[DBS06]") => Self::Connection(ConnectionError::DatabaseDoesNotExist {
+                name: message.split('\'').nth(1).unwrap_or("{unknown}").to_owned(),
+            }),
             _ => Self::Other(message.to_owned()),
         }
     }
 
     fn parse_unavailable(status_message: &str) -> Error {
         if status_message == "broken pipe" {
-            Error::Connection(ConnectionError::BrokenPipe())
+            Error::Connection(ConnectionError::BrokenPipe)
         } else if status_message.contains("received corrupt message") {
-            Error::Connection(ConnectionError::EnterpriseEndpointEncrypted())
+            Error::Connection(ConnectionError::EnterpriseEndpointEncrypted)
         } else if status_message.contains("UnknownIssuer") {
-            Error::Connection(ConnectionError::EnterpriseSSLCertificateNotValidated())
+            Error::Connection(ConnectionError::EnterpriseSSLCertificateNotValidated)
         } else if status_message.contains("Connection refused") {
-            Error::Connection(ConnectionError::ConnectionFailed())
+            Error::Connection(ConnectionError::ConnectionFailed)
         } else {
-            Error::Connection(ConnectionError::ServerConnectionFailedStatusError(status_message.to_owned()))
+            Error::Connection(ConnectionError::ServerConnectionFailedStatusError { error: status_message.to_owned() })
         }
     }
 }
@@ -188,9 +188,9 @@ impl From<Status> for Error {
         if status.code() == Code::Unavailable {
             Self::parse_unavailable(status.message())
         } else if status.code() == Code::Unknown || is_rst_stream(&status) {
-            Self::Connection(ConnectionError::ServerConnectionFailedStatusError(status.message().to_owned()))
+            Self::Connection(ConnectionError::ServerConnectionFailedStatusError { error: status.message().to_owned() })
         } else if status.code() == Code::Unimplemented {
-            Self::Connection(ConnectionError::RPCMethodUnavailable(status.message().to_owned()))
+            Self::Connection(ConnectionError::RPCMethodUnavailable { message: status.message().to_owned() })
         } else {
             Self::from_message(status.message())
         }
@@ -216,25 +216,25 @@ impl From<tonic::transport::Error> for Error {
 
 impl<T> From<tokio::sync::mpsc::error::SendError<T>> for Error {
     fn from(_err: tokio::sync::mpsc::error::SendError<T>) -> Self {
-        Self::Internal(InternalError::SendError())
+        Self::Internal(InternalError::SendError)
     }
 }
 
 impl From<tokio::sync::oneshot::error::RecvError> for Error {
     fn from(_err: tokio::sync::oneshot::error::RecvError) -> Self {
-        Self::Internal(InternalError::RecvError())
+        Self::Internal(InternalError::RecvError)
     }
 }
 
 impl From<crossbeam::channel::RecvError> for Error {
     fn from(_err: crossbeam::channel::RecvError) -> Self {
-        Self::Internal(InternalError::RecvError())
+        Self::Internal(InternalError::RecvError)
     }
 }
 
 impl<T> From<crossbeam::channel::SendError<T>> for Error {
     fn from(_err: crossbeam::channel::SendError<T>) -> Self {
-        Self::Internal(InternalError::SendError())
+        Self::Internal(InternalError::SendError)
     }
 }
 

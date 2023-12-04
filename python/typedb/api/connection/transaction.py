@@ -144,7 +144,7 @@ class TypeDBTransaction(ABC):
     @abstractmethod
     def on_close(self, function: callable) -> None:
         """
-        Registers a callback function which will be executed when this session is closed.
+        Registers a callback function which will be executed when this transaction is closed.
 
         :param function: The callback function.
         :return:

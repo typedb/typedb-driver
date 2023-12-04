@@ -26,7 +26,7 @@ a| `map` a| `HashMap<String, Concept>` a| The ``HashMap`` where keys are query v
 // end::properties[]
 
 // tag::methods[]
-[#_struct_ConceptMap_method_concepts]
+[#_struct_ConceptMap_concepts__]
 ==== concepts
 
 [source,rust]
@@ -50,7 +50,7 @@ impl Iterator<Item = &Concept>
 concept_map.concepts()
 ----
 
-[#_struct_ConceptMap_method_get]
+[#_struct_ConceptMap_get__var_name_str]
 ==== get
 
 [source,rust]

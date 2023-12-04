@@ -9,7 +9,7 @@
 * `Type`
 
 // tag::methods[]
-[#_ThingType_asAttribute_]
+[#_ThingType_asAttribute__]
 ==== asAttribute
 
 [source,java]
@@ -31,7 +31,7 @@ Casts the concept to ``Attribute``.
 concept.asAttribute();
 ----
 
-[#_ThingType_asAttributeType_]
+[#_ThingType_asAttributeType__]
 ==== asAttributeType
 
 [source,java]
@@ -53,7 +53,7 @@ Casts the concept to ``AttributeType``.
 concept.asAttributeType();
 ----
 
-[#_ThingType_asEntity_]
+[#_ThingType_asEntity__]
 ==== asEntity
 
 [source,java]
@@ -75,7 +75,7 @@ Casts the concept to ``Entity``.
 concept.asEntity();
 ----
 
-[#_ThingType_asEntityType_]
+[#_ThingType_asEntityType__]
 ==== asEntityType
 
 [source,java]
@@ -97,7 +97,7 @@ Casts the concept to ``EntityType``.
 concept.asEntityType();
 ----
 
-[#_ThingType_asRelation_]
+[#_ThingType_asRelation__]
 ==== asRelation
 
 [source,java]
@@ -119,7 +119,7 @@ Casts the concept to ``Relation``.
 concept.asRelation();
 ----
 
-[#_ThingType_asRelationType_]
+[#_ThingType_asRelationType__]
 ==== asRelationType
 
 [source,java]
@@ -141,7 +141,7 @@ Casts the concept to ``RelationType``.
 concept.asRelationType();
 ----
 
-[#_ThingType_asRoleType_]
+[#_ThingType_asRoleType__]
 ==== asRoleType
 
 [source,java]
@@ -163,7 +163,7 @@ Casts the concept to ``RoleType``.
 concept.asRoleType();
 ----
 
-[#_ThingType_asThing_]
+[#_ThingType_asThing__]
 ==== asThing
 
 [source,java]
@@ -185,7 +185,7 @@ Casts the concept to ``Thing``.
 concept.asThing();
 ----
 
-[#_ThingType_asThingType_]
+[#_ThingType_asThingType__]
 ==== asThingType
 
 [source,java]
@@ -208,7 +208,7 @@ Casts the concept to ``ThingType``.
 concept.asThingType();
 ----
 
-[#_ThingType_asValue_]
+[#_ThingType_asValue__]
 ==== asValue
 
 [source,java]
@@ -230,7 +230,7 @@ Casts the concept to ``Value``.
 concept.asValue();
 ----
 
-[#_ThingType_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_ThingType_getInstances__TypeDBTransaction]
 ==== getInstances
 
 [source,java]
@@ -249,7 +249,7 @@ See also: <<#_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_v
 .Returns
 `java.util.stream.Stream<? extends Thing>`
 
-[#_ThingType_getInstances_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+[#_ThingType_getInstances__TypeDBTransaction__Concept_Transitivity]
 ==== getInstances
 
 [source,java]
@@ -284,7 +284,7 @@ thingType.getInstances(transaction);
  thingType.getInstances(transaction, Transitivity.EXPLICIT);
 ----
 
-[#_ThingType_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_ThingType_getOwns__TypeDBTransaction]
 ==== getOwns
 
 [source,java]
@@ -303,7 +303,7 @@ See also: <<#_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticl
 .Returns
 `java.util.stream.Stream<? extends AttributeType>`
 
-[#_ThingType_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type]
+[#_ThingType_getOwns__TypeDBTransaction__Value_Type]
 ==== getOwns
 
 [source,java]
@@ -323,7 +323,7 @@ See also: <<#_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticl
 .Returns
 `java.util.stream.Stream<? extends AttributeType>`
 
-[#_ThingType_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_java_util_Set]
+[#_ThingType_getOwns__TypeDBTransaction__java_util_Set_ThingType_Annotation_]
 ==== getOwns
 
 [source,java]
@@ -343,7 +343,7 @@ See also: <<#_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticl
 .Returns
 `java.util.stream.Stream<? extends AttributeType>`
 
-[#_ThingType_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type_java_util_Set]
+[#_ThingType_getOwns__TypeDBTransaction__Value_Type__java_util_Set_ThingType_Annotation_]
 ==== getOwns
 
 [source,java]
@@ -364,7 +364,7 @@ See also: <<#_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticl
 .Returns
 `java.util.stream.Stream<? extends AttributeType>`
 
-[#_ThingType_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+[#_ThingType_getOwns__TypeDBTransaction__Concept_Transitivity]
 ==== getOwns
 
 [source,java]
@@ -384,7 +384,7 @@ See also: <<#_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticl
 .Returns
 `java.util.stream.Stream<? extends AttributeType>`
 
-[#_ThingType_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+[#_ThingType_getOwns__TypeDBTransaction__Value_Type__Concept_Transitivity]
 ==== getOwns
 
 [source,java]
@@ -405,7 +405,7 @@ See also: <<#_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticl
 .Returns
 `java.util.stream.Stream<? extends AttributeType>`
 
-[#_ThingType_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_java_util_Set_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+[#_ThingType_getOwns__TypeDBTransaction__java_util_Set_ThingType_Annotation___Concept_Transitivity]
 ==== getOwns
 
 [source,java]
@@ -426,7 +426,7 @@ See also: <<#_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticl
 .Returns
 `java.util.stream.Stream<? extends AttributeType>`
 
-[#_ThingType_getOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_value_Value_Type_java_util_Set_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+[#_ThingType_getOwns__TypeDBTransaction__Value_Type__java_util_Set_ThingType_Annotation___Concept_Transitivity]
 ==== getOwns
 
 [source,java]
@@ -465,7 +465,7 @@ thingType.getOwns(transaction);
  thingType.getOwns(transaction, valueType, Transitivity.EXPLICIT, Collections.singleton(Annotation.key()));
 ----
 
-[#_ThingType_getOwnsOverridden_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType]
+[#_ThingType_getOwnsOverridden__TypeDBTransaction__AttributeType]
 ==== getOwnsOverridden
 
 [source,java]
@@ -499,7 +499,7 @@ a| `attributeType` a| The ``AttributeType`` that overrides requested ``Attribute
 thingType.getOwnsOverridden(transaction, attributeType).resolve();
 ----
 
-[#_ThingType_getPlays_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_ThingType_getPlays__TypeDBTransaction]
 ==== getPlays
 
 [source,java]
@@ -518,7 +518,7 @@ See also: <<#_getPlays_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vatic
 .Returns
 `java.util.stream.Stream<? extends RoleType>`
 
-[#_ThingType_getPlays_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+[#_ThingType_getPlays__TypeDBTransaction__Concept_Transitivity]
 ==== getPlays
 
 [source,java]
@@ -553,7 +553,7 @@ thingType.getPlays(transaction).resolve();
  thingType.getPlays(transaction, Transitivity.EXPLICIT).resolve();
 ----
 
-[#_ThingType_getPlaysOverridden_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType]
+[#_ThingType_getPlaysOverridden__TypeDBTransaction__RoleType]
 ==== getPlaysOverridden
 
 [source,java]
@@ -587,7 +587,7 @@ a| `roleType` a| The ``RoleType`` that overrides an inherited role a| `RoleType`
 thingType.getPlaysOverridden(transaction, roleType).resolve();
 ----
 
-[#_ThingType_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_ThingType_getSubtypes__TypeDBTransaction]
 ==== getSubtypes
 
 [source,java]
@@ -606,7 +606,7 @@ See also: ``Type.getSubtypes(TypeDBTransaction, Transitivity)``
 .Returns
 `java.util.stream.Stream<? extends ThingType>`
 
-[#_ThingType_getSubtypes_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_Concept_Transitivity]
+[#_ThingType_getSubtypes__TypeDBTransaction__Concept_Transitivity]
 ==== getSubtypes
 
 [source,java]
@@ -641,7 +641,7 @@ type.getSubtypes(transaction);
  type.getSubtypes(transaction, Transitivity.EXPLICIT);
 ----
 
-[#_ThingType_getSupertype_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_ThingType_getSupertype__TypeDBTransaction]
 ==== getSupertype
 
 [source,java]
@@ -673,7 +673,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 type.getSupertype(transaction).resolve();
 ----
 
-[#_ThingType_getSupertypes_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_ThingType_getSupertypes__TypeDBTransaction]
 ==== getSupertypes
 
 [source,java]
@@ -705,7 +705,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 type.getSupertypes(transaction);
 ----
 
-[#_ThingType_getSyntax_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_ThingType_getSyntax__TypeDBTransaction]
 ==== getSyntax
 
 [source,java]
@@ -737,7 +737,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thingType.getSyntax(transaction).resolve();
 ----
 
-[#_ThingType_isAttribute_]
+[#_ThingType_isAttribute__]
 ==== isAttribute
 
 [source,java]
@@ -760,7 +760,7 @@ Checks if the concept is an ``Attribute``.
 concept.isAttribute();
 ----
 
-[#_ThingType_isAttributeType_]
+[#_ThingType_isAttributeType__]
 ==== isAttributeType
 
 [source,java]
@@ -783,7 +783,7 @@ Checks if the concept is an ``AttributeType``.
 concept.isAttributeType();
 ----
 
-[#_ThingType_isEntity_]
+[#_ThingType_isEntity__]
 ==== isEntity
 
 [source,java]
@@ -806,7 +806,7 @@ Checks if the concept is an ``Entity``.
 concept.isEntity();
 ----
 
-[#_ThingType_isEntityType_]
+[#_ThingType_isEntityType__]
 ==== isEntityType
 
 [source,java]
@@ -829,7 +829,7 @@ Checks if the concept is an ``EntityType``.
 concept.isEntityType();
 ----
 
-[#_ThingType_isRelation_]
+[#_ThingType_isRelation__]
 ==== isRelation
 
 [source,java]
@@ -852,7 +852,7 @@ Checks if the concept is a ``Relation``.
 concept.isRelation();
 ----
 
-[#_ThingType_isRelationType_]
+[#_ThingType_isRelationType__]
 ==== isRelationType
 
 [source,java]
@@ -875,7 +875,7 @@ Checks if the concept is a ``RelationType``.
 concept.isRelationType();
 ----
 
-[#_ThingType_isRoleType_]
+[#_ThingType_isRoleType__]
 ==== isRoleType
 
 [source,java]
@@ -898,7 +898,7 @@ Checks if the concept is a ``RoleType``.
 concept.isRoleType();
 ----
 
-[#_ThingType_isThing_]
+[#_ThingType_isThing__]
 ==== isThing
 
 [source,java]
@@ -921,7 +921,7 @@ Checks if the concept is a ``Thing``.
 concept.isThing();
 ----
 
-[#_ThingType_isThingType_]
+[#_ThingType_isThingType__]
 ==== isThingType
 
 [source,java]
@@ -944,7 +944,7 @@ Checks if the concept is a ``ThingType``.
 concept.isThingType();
 ----
 
-[#_ThingType_isValue_]
+[#_ThingType_isValue__]
 ==== isValue
 
 [source,java]
@@ -967,7 +967,7 @@ Checks if the concept is a ``Value``.
 concept.isValue();
 ----
 
-[#_ThingType_setAbstract_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_ThingType_setAbstract__TypeDBTransaction]
 ==== setAbstract
 
 [source,java]
@@ -999,7 +999,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thingType.setAbstract(transaction).resolve();
 ----
 
-[#_ThingType_setOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType_com_vaticle_typedb_driver_api_concept_type_AttributeType_java_util_Set]
+[#_ThingType_setOwns__TypeDBTransaction__AttributeType__AttributeType__java_util_Set_ThingType_Annotation_]
 ==== setOwns
 
 [source,java]
@@ -1038,7 +1038,7 @@ thingType.setOwns(transaction, attributeType).resolve();
  thingType.setOwns(transaction, attributeType, overriddenType, Collections.singleton(Annotation.key())).resolve();
 ----
 
-[#_ThingType_setOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType_com_vaticle_typedb_driver_api_concept_type_AttributeType]
+[#_ThingType_setOwns__TypeDBTransaction__AttributeType__AttributeType]
 ==== setOwns
 
 [source,java]
@@ -1059,7 +1059,7 @@ See also: <<#_setOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticl
 .Returns
 `Promise<java.lang.Void>`
 
-[#_ThingType_setOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType_java_util_Set]
+[#_ThingType_setOwns__TypeDBTransaction__AttributeType__java_util_Set_ThingType_Annotation_]
 ==== setOwns
 
 [source,java]
@@ -1080,7 +1080,7 @@ See also: <<#_setOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticl
 .Returns
 `Promise<java.lang.Void>`
 
-[#_ThingType_setOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType]
+[#_ThingType_setOwns__TypeDBTransaction__AttributeType]
 ==== setOwns
 
 [source,java]
@@ -1100,7 +1100,7 @@ See also: <<#_setOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticl
 .Returns
 `Promise<java.lang.Void>`
 
-[#_ThingType_setPlays_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType]
+[#_ThingType_setPlays__TypeDBTransaction__RoleType]
 ==== setPlays
 
 [source,java]
@@ -1120,7 +1120,7 @@ See also: <<#_setPlays_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vatic
 .Returns
 `Promise<java.lang.Void>`
 
-[#_ThingType_setPlays_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType_com_vaticle_typedb_driver_api_concept_type_RoleType]
+[#_ThingType_setPlays__TypeDBTransaction__RoleType__RoleType]
 ==== setPlays
 
 [source,java]
@@ -1157,7 +1157,7 @@ thingType.setPlays(transaction, roleType).resolve();
  thingType.setPlays(transaction, roleType, overriddenType).resolve();
 ----
 
-[#_ThingType_unsetAbstract_com_vaticle_typedb_driver_api_TypeDBTransaction]
+[#_ThingType_unsetAbstract__TypeDBTransaction]
 ==== unsetAbstract
 
 [source,java]
@@ -1189,7 +1189,7 @@ a| `transaction` a| The current transaction a| `TypeDBTransaction`
 thingType.unsetAbstract(transaction).resolve();
 ----
 
-[#_ThingType_unsetOwns_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_AttributeType]
+[#_ThingType_unsetOwns__TypeDBTransaction__AttributeType]
 ==== unsetOwns
 
 [source,java]
@@ -1223,7 +1223,7 @@ a| `attributeType` a| The ``AttributeType`` to not be owned by the type. a| `Att
 thingType.unsetOwns(transaction, attributeType).resolve();
 ----
 
-[#_ThingType_unsetPlays_com_vaticle_typedb_driver_api_TypeDBTransaction_com_vaticle_typedb_driver_api_concept_type_RoleType]
+[#_ThingType_unsetPlays__TypeDBTransaction__RoleType]
 ==== unsetPlays
 
 [source,java]

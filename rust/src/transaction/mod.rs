@@ -48,7 +48,7 @@ impl Transaction<'_> {
         let transaction_stream = Box::pin(transaction_stream);
         Transaction {
             type_: transaction_stream.type_(),
-            options: transaction_stream.options().clone(),
+            options: transaction_stream.options(),
             transaction_stream,
             _lifetime_guard: PhantomData,
         }
@@ -85,7 +85,7 @@ impl Transaction<'_> {
         LogicManager::new(self.transaction_stream.as_ref())
     }
 
-    /// Registers a callback function which will be executed when this session is closed.
+    /// Registers a callback function which will be executed when this transaction is closed.
     ///
     /// # Arguments
     ///

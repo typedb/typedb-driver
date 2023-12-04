@@ -25,6 +25,14 @@ pub fn box_promise<'a, T>(promise: impl Promise<'a, T> + 'a) -> BoxPromise<'a, T
     Box::new(promise)
 }
 
+/// A resolvable promise that can be resolved at a later time.
+/// a `BoxPromise` is in practical terms a `Box<dyn Promise>` and resolves with `.resolve()`.
+///
+/// # Examples
+///
+/// ```rust
+/// promise.resolve()
+/// ```
 pub trait Promise<'a, T>: FnOnce() -> T + 'a {
     fn resolve(self) -> T;
 }

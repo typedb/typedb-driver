@@ -54,6 +54,7 @@ class _ConceptMap(ConceptMap, NativeWrapper[NativeConceptMap]):
         if not concept_map:
             raise TypeDBDriverException(NULL_NATIVE_OBJECT)
         super().__init__(concept_map)
+        self.cached_map = None
 
     @property
     def _native_object_not_owned_exception(self) -> TypeDBDriverException:
@@ -65,6 +66,12 @@ class _ConceptMap(ConceptMap, NativeWrapper[NativeConceptMap]):
     def concepts(self) -> Iterator[Concept]:
         return map(concept_factory.wrap_concept, IteratorWrapper(concept_map_get_values(self.native_object),
                                                                  concept_iterator_next))
+
+    @property
+    def map(self) -> Mapping[str, Concept]:
+        if self.cached_map is None:
+            self.cached_map = {v: self.get(v) for v in self.variables()}
+        return self.cached_map
 
     def get(self, variable: str) -> Concept:
         concept = concept_map_get(self.native_object, _not_blank_var(variable))

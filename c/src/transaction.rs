@@ -33,7 +33,7 @@ pub extern "C" fn transaction_new(
     type_: TransactionType,
     options: *const Options,
 ) -> *mut Transaction<'static> {
-    try_release(borrow(session).transaction_with_options(type_, borrow(options).clone()))
+    try_release(borrow(session).transaction_with_options(type_, *borrow(options)))
 }
 
 #[no_mangle]

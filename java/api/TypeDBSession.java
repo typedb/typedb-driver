@@ -98,6 +98,20 @@ public interface TypeDBSession extends AutoCloseable {
     void onClose(Runnable function);
 
     /**
+     * Registers a callback function which will be executed when this session is reopened.
+     * A session may be closed if it times out, or loses the connection to the database.
+     * In such situations, the session is reopened automatically when opening a new transaction.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * session.onReopen(function)
+     * </pre>
+     *
+     * @param function The callback function.
+     */
+    void onReopen(Runnable function);
+
+    /**
      * Closes the session. Before opening a new session, the session currently open should first be closed.
      *
      * <h3>Examples</h3>

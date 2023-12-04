@@ -26,6 +26,14 @@ pub fn box_promise<'a, T>(future: impl Promise<'a, T>) -> BoxPromise<'a, T> {
     Box::pin(future)
 }
 
+/// Async promise, an alias for Rust's built-in Future.
+/// A `BoxPromise` is an alias for Rust's built-in BoxFuture.
+///
+/// # Examples
+///
+/// ```rust
+/// promise.await
+/// ```
 pub trait Promise<'a, T>: Future<Output = T> + Send + 'a {}
 impl<'a, T, U: Future<Output = T> + Send + 'a> Promise<'a, T> for U {}
 

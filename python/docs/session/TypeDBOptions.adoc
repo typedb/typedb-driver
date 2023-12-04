@@ -6,16 +6,12 @@ TypeDB session and transaction options. ``TypeDBOptions`` object can be used to 
 Options could be specified either as constructor arguments or using properties assignment.
 
 [caption=""]
-.TypeDBOptions examples
-====
-
+.Examples
 [source,python]
 ----
 transaction_options = TypeDBOptions(infer=True, session_idle_timeout_millis=20000)
 transaction_options.explain = True
 ----
-
-====
 
 [caption=""]
 .Properties

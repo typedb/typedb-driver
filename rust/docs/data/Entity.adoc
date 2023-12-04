@@ -28,7 +28,7 @@ a| `type_` a| `EntityType` a| The type which this Entity belongs to
 // end::properties[]
 
 // tag::methods[]
-[#_struct_Entity_method_delete]
+[#_struct_Entity_delete__]
 ==== delete
 
 [source,rust]
@@ -48,7 +48,7 @@ fn delete<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_Entity_method_get_has]
+[#_struct_Entity_get_has__]
 ==== get_has
 
 [source,rust]
@@ -70,7 +70,7 @@ fn get_has<'tx>(
 Result<BoxStream<'tx, Result<Attribute>>>
 ----
 
-[#_struct_Entity_method_get_playing]
+[#_struct_Entity_get_playing__]
 ==== get_playing
 
 [source,rust]
@@ -90,7 +90,7 @@ fn get_playing<'tx>(
 Result<BoxStream<'tx, Result<RoleType>>>
 ----
 
-[#_struct_Entity_method_get_relations]
+[#_struct_Entity_get_relations__]
 ==== get_relations
 
 [source,rust]
@@ -111,7 +111,7 @@ fn get_relations<'tx>(
 Result<BoxStream<'tx, Result<Relation>>>
 ----
 
-[#_struct_Entity_tymethod_iid]
+[#_struct_Entity_iid__]
 ==== iid
 
 [source,rust]
@@ -128,7 +128,7 @@ fn iid(&self) -> &IID
 &IID
 ----
 
-[#_struct_Entity_tymethod_is_deleted]
+[#_struct_Entity_is_deleted__]
 ==== is_deleted
 
 [source,rust]
@@ -148,7 +148,7 @@ fn is_deleted<'tx>(
 BoxPromise<'tx, Result<bool>>
 ----
 
-[#_struct_Entity_tymethod_is_inferred]
+[#_struct_Entity_is_inferred__]
 ==== is_inferred
 
 [source,rust]
@@ -165,7 +165,7 @@ fn is_inferred(&self) -> bool
 bool
 ----
 
-[#_struct_Entity_method_set_has]
+[#_struct_Entity_set_has__]
 ==== set_has
 
 [source,rust]
@@ -186,7 +186,7 @@ fn set_has<'tx>(
 BoxPromise<'tx, Result>
 ----
 
-[#_struct_Entity_method_unset_has]
+[#_struct_Entity_unset_has__]
 ==== unset_has
 
 [source,rust]

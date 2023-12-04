@@ -26,10 +26,7 @@ assignees: ''
 2. Execute
 
 
-3. Test/Query
-
-
-4. Unexpected result
+3. Unexpected result
 
 
 

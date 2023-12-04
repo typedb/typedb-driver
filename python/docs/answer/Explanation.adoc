@@ -4,7 +4,7 @@
 An explanation of which rule was used for inferring the explained concept, the condition of the rule, the conclusion of the rule, and the mapping of variables between the query and the rule’s conclusion.
 
 // tag::methods[]
-[#_Explanation_conclusion]
+[#_Explanation_conclusion__]
 ==== conclusion
 
 [source,python]
@@ -25,7 +25,7 @@ Retrieves the Conclusion for this Explanation.
 explanation.conclusion()
 ----
 
-[#_Explanation_condition]
+[#_Explanation_condition__]
 ==== condition
 
 [source,python]
@@ -46,7 +46,7 @@ Retrieves the Condition for this Explanation.
 explanation.condition()
 ----
 
-[#_Explanation_query_variable_mapping]
+[#_Explanation_query_variable_mapping__var_str]
 ==== query_variable_mapping
 
 [source,python]
@@ -76,7 +76,7 @@ a| `var` a| The query variable to map to rule variables. a| `str` a|
 explanation.variable_mapping(var)
 ----
 
-[#_Explanation_query_variables]
+[#_Explanation_query_variables__]
 ==== query_variables
 
 [source,python]
@@ -97,7 +97,7 @@ Retrieves the query variables for this ``Explanation``.
 explanation.query_variables()
 ----
 
-[#_Explanation_rule]
+[#_Explanation_rule__]
 ==== rule
 
 [source,python]

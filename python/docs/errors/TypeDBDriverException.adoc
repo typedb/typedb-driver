@@ -8,9 +8,7 @@
 Exceptions raised by the driver.
 
 [caption=""]
-.TypeDBDriverException examples
-====
-
+.Examples
 [source,python]
 ----
 try:
@@ -18,6 +16,4 @@ try:
 except TypeDBDriverException as err:
     print("Error:", err)
 ----
-
-====
 
