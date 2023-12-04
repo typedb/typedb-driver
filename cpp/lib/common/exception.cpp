@@ -21,8 +21,8 @@
 
 #include "typedb/common/exception.hpp"
 
-#include "./native.hpp"
 #include "../common/utils.hpp"
+#include "./native.hpp"
 
 namespace TypeDB {
 

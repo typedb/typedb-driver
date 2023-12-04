@@ -33,8 +33,8 @@
 namespace TypeDB {
 
 namespace _native {
-// Forward declare all relevant native types
 
+// Forward declare all relevant native types
 struct Annotation;
 struct BoolPromise;
 struct Concept;
@@ -77,7 +77,7 @@ struct ValueGroupIterator;
 struct VoidPromise;
 struct StringPair;
 
-}
+}  // namespace _native
 
 template <typename T>
 using NativePointer = std::unique_ptr<T, std::function<void(T*)> >;

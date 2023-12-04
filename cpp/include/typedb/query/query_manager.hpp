@@ -26,9 +26,9 @@
 
 #include "typedb/answer/concept_map.hpp"
 #include "typedb/answer/concept_map_group.hpp"
+#include "typedb/answer/json.hpp"
 #include "typedb/answer/value_future.hpp"
 #include "typedb/answer/value_group.hpp"
-#include "typedb/answer/json.hpp"
 #include "typedb/concept/concept.hpp"
 
 #include "typedb/logic/explainable.hpp"

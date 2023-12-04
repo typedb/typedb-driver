@@ -24,7 +24,7 @@ load("@vaticle_dependencies//builder/cpp:rules.bzl", "clang_format_test")
 cc_library(
     name = "core-steps",
     deps = [
-        "//cpp:typedb-driver-lib",
+        "//cpp:typedb-driver",
         "//cpp/test/cucumber:cucumber-cpp",
 
         # External

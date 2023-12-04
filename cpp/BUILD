@@ -27,14 +27,14 @@ load("@vaticle_bazel_distribution//platform:constraints.bzl", "constraint_linux_
      "constraint_mac_arm64", "constraint_mac_x86_64", "constraint_win_x86_64")
 
 cc_library(
-    name = "typedb-driver-lib",
+    name = "typedb-driver",
     srcs = glob([
         "lib/**/*.cpp",
         "lib/**/*.hpp"
     ]),
     hdrs = glob(["include/**/*"]),
     strip_include_prefix = "include",
-    includes = ["lib/"], # private includes - # TODO: Check if these are indeed private.
+    includes = ["include/"],
     deps = [
         "//c:typedb_driver_clib",
         "//c:typedb_driver_clib_headers",
@@ -46,17 +46,24 @@ cc_library(
         "@vaticle_bazel_distribution//platform:is_windows": ["ntdll.lib", "secur32.lib", "crypt32.lib", "ncrypt.lib"],
         "//conditions:default": [],
     }),
+    alwayslink = True
+)
+
+cc_binary(
+    name = "typedb-driver-cpp",
+    srcs = [":typedb-driver", "//c:typedb_driver_clib"],
+    linkshared = True,
 )
 
 pkg_files(
-    name = "typedb-driver-cpp-lib",
+    name = "typedb-driver-cpp-headers",
     srcs = glob(["include/**/*"]),
     strip_prefix = ""
 )
 
 pkg_files(
-    name = "typedb-driver-cpp-headers",
-    srcs = [":typedb-driver-lib"],
+    name = "typedb-driver-cpp-lib",
+    srcs = [":typedb-driver-cpp"],
     prefix = "lib"
 )
 

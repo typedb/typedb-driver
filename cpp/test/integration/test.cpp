@@ -39,7 +39,6 @@ TEST(TestConceptAPI, TestData) {
     std::string dbName = "hello_from_cpp";
     TypeDB::Driver driver = TypeDB::Driver::coreDriver("127.0.0.1:1729");
     delete_if_exists(driver, dbName);
-    EXPECT_FALSE(_native::check_error());
     driver.databases.create(dbName);
 
     try {
@@ -61,7 +60,7 @@ TEST(TestExplanations, TestExplainableOwnership) {
     std::regex whenRegex = std::regex("\\{\\s*\\$a isa attr;\\s*\\}");
 
     delete_if_exists(driver, dbName);
-    EXPECT_FALSE(_native::check_error());
+    
     driver.databases.create(dbName);
     TypeDB::Options options;
 
