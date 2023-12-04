@@ -51,7 +51,7 @@ int64_t ReplicaInfo::replica_info_get_term() {
 }
 
 ReplicaInfo::ReplicaInfo(_native::ReplicaInfo* replicaInfoNative)
-    : replicaInfoNative(replicaInfoNative) {}
+    : replicaInfoNative(replicaInfoNative, _native::replica_info_drop) {}
 
 Database::Database(_native::Database* db) noexcept
     : databaseNative(db, _native::database_close) {}
@@ -76,5 +76,14 @@ void Database::drop() {
     TypeDBDriverException::check_and_throw();
     databaseNative.release();  //  Release avoids the dangling pointer invoking the deleter
 }
+
+TYPEDB_ITERATOR_HELPER(
+    _native::ReplicaInfoIterator,
+    _native::ReplicaInfo,
+    ReplicaInfo,
+    _native::replica_info_iterator_drop,
+    _native::replica_info_iterator_next,
+    _native::replica_info_drop
+)
 
 }  // namespace TypeDB

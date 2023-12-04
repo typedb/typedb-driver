@@ -42,6 +42,8 @@ class ReplicaInfo {
    private:
     NativePointer<_native::ReplicaInfo> replicaInfoNative;
     ReplicaInfo(_native::ReplicaInfo*);
+
+    friend class TypeDBIteratorHelper<_native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo>;
 };
 
 using ReplicaInfoIterable = TypeDBIterable<_native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo>;

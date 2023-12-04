@@ -20,7 +20,7 @@
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_dependencies//builder/cpp:rules.bzl", "clang_format_test")
-
+load("//cpp:build_opts.bzl", "cxxopts")
 
 cc_library(
     name = "cucumber-cpp",
@@ -30,7 +30,10 @@ cc_library(
         "@gherkin_cpp//:gherkin-lib",
         "@gtest//:gtest",
     ],
-    copts = ["-Iexternal/gherkin_cpp/include  -std=c++17"],
+    copts = cxxopts + select({
+        "@vaticle_bazel_distribution//platform:is_windows": ["/I \"external\\gherkin_cpp\\include\""],
+        "//conditions:default": ["-Iexternal/gherkin_cpp/include"],
+    }),
     strip_include_prefix = "include",
     #  additional_linker_inputs = ["@gherkin_cpp//:gherkin-lib"], # Need it for runtime if using .so
     visibility = ["//visibility:public"],

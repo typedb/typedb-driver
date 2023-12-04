@@ -20,6 +20,7 @@
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_dependencies//builder/cpp:rules.bzl", "clang_format_test")
+load("//cpp:build_opts.bzl", "cxxopts")
 
 cc_library(
     name = "core-steps",
@@ -33,7 +34,10 @@ cc_library(
         "@gtest//:gtest_main",
 
     ],
-    copts = ["-g -Iexternal/gherkin_cpp/include -std=c++17"],
+    copts = cxxopts + select({
+        "@vaticle_bazel_distribution//platform:is_windows": ["/I \"external\\gherkin_cpp\\include\""],
+        "//conditions:default": ["-Iexternal/gherkin_cpp/include"],
+    }),
     srcs = glob(["main.cpp", "core_steps.cpp", "common/**/*.cpp"]),
     hdrs = glob(["include/*.hpp"]),
     strip_include_prefix = "include",

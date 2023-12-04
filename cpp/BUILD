@@ -25,6 +25,7 @@ load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
 load("@vaticle_bazel_distribution//platform:constraints.bzl", "constraint_linux_arm64", "constraint_linux_x86_64",
      "constraint_mac_arm64", "constraint_mac_x86_64", "constraint_win_x86_64")
+load(":build_opts.bzl", "cxxopts")
 
 cc_library(
     name = "typedb-driver",
@@ -41,12 +42,15 @@ cc_library(
         "@nlohmann_json//:json",
     ],
     visibility = ["//visibility:public"],
-    copts = ["-g -std=c++17"], # TODO:  Remove -g?
+    copts = cxxopts,
     linkopts = select({
         "@vaticle_bazel_distribution//platform:is_windows": ["ntdll.lib", "secur32.lib", "crypt32.lib", "ncrypt.lib"],
         "//conditions:default": [],
     }),
-    alwayslink = True
+    alwayslink = select({
+        "@vaticle_bazel_distribution//platform:is_windows": False,
+        "//conditions:default": True,
+    })
 )
 
 cc_binary(

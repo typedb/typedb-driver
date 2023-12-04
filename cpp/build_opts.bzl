@@ -18,33 +18,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_dependencies//builder/cpp:rules.bzl", "clang_format_test")
-load("//cpp:build_opts.bzl", "cxxopts")
-
-cc_test(
-    name = "test-cpp-driver",
-    srcs = ["test.cpp"],
-    deps = [
-        "//cpp:typedb-driver",
-
-        # External
-        "@gtest//:gtest",
-        "@gtest//:gtest_main"
-    ],
-    copts = cxxopts,
-    env = {"RUST_BACKTRACE": "full"},
-)
-
-clang_format_test(
-    name = "clang_format",
-    include = glob(["**/*"]),
-    exclude = ["BUILD"]
-)
-
-checkstyle_test(
-    name = "checkstyle",
-    size = "small",
-    include = glob(["*/*"]),
-    license_type = "apache-header",
-)
+cxxopts = select({
+    "@vaticle_bazel_distribution//platform:is_windows": ["/std:c++17"],
+    "//conditions:default": ["-std=c++17"],
+})
