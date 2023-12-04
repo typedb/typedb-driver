@@ -21,7 +21,7 @@
 
 #include "typedb/common/exception.hpp"
 
-#include "inc/conceptfactory.hpp"
+#include "inc/concept_factory.hpp"
 #include "typedb/concept/concept.hpp"
 
 namespace TypeDB {

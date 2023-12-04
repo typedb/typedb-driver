@@ -24,7 +24,7 @@
 #include <string>
 #include <string_view>
 
-#include "typedb/common/errormessage.hpp"
+#include "typedb/common/error_message.hpp"
 #include "typedb/common/native.hpp"
 
 namespace TypeDB {

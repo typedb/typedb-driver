@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "typedb/concept/type/thingtype.hpp"
+#include "typedb/concept/type/thing_type.hpp"
 
 namespace TypeDB {
 

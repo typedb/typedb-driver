@@ -22,12 +22,12 @@
 
 #include "typedb/concept/thing/attribute.hpp"
 #include "typedb/common/exception.hpp"
-#include "typedb/concept/type/attributetype.hpp"
+#include "typedb/concept/type/attribute_type.hpp"
 #include "typedb/concept/value/value.hpp"
 
 #include "typedb/connection/transaction.hpp"
 
-#include "inc/conceptfactory.hpp"
+#include "inc/concept_factory.hpp"
 #include "inc/macros.hpp"
 
 namespace TypeDB {

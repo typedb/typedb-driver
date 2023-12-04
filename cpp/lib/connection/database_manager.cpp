@@ -19,7 +19,7 @@
  * under the License.
  */
 
-#include "typedb/connection/databasemanager.hpp"
+#include "typedb/connection/database_manager.hpp"
 #include "typedb/common/exception.hpp"
 
 #include "../inc/macros.hpp"

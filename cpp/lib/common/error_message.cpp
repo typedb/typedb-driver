@@ -18,7 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-#include "typedb/common/errormessage.hpp"
+#include "typedb/common/error_message.hpp"
 
 #define ERRMSG(CODE, PREFIX, ID, MSG) {"[" CODE #ID "]", PREFIX ": " MSG};
 

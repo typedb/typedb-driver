@@ -22,7 +22,7 @@
 #pragma once
 
 #include "typedb/concept/thing/thing.hpp"
-#include "typedb/concept/type/entitytype.hpp"
+#include "typedb/concept/type/entity_type.hpp"
 
 namespace TypeDB {
 

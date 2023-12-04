@@ -18,28 +18,35 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 #pragma once
 
 #include "typedb/common/future.hpp"
-#include "typedb/concept/type/thingtype.hpp"
+
+#include "typedb/answer/concept_map.hpp"
+#include "typedb/common/native.hpp"
+#include "typedb/logic/rule.hpp"
 
 namespace TypeDB {
 
-class Entity;
+class Transaction;
 
-class EntityType : public ThingType {
+class LogicManager {
    public:
-    [[nodiscard]] ConceptPtrFuture<Entity> create(Transaction& transaction);
-    [[nodiscard]] VoidFuture setSupertype(Transaction& transaction, EntityType* superEntityType);
+    ~LogicManager() = default;
 
-    ConceptIterable<Entity> getInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);
-    ConceptIterable<EntityType> getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);  // Mimic overriding from Type
+    OptionalRuleFuture getRule(const std::string& label) const;
+    RuleIterable getRules() const;
+    [[nodiscard]] RuleFuture putRule(const std::string& label, const std::string& when, const std::string& then) const;
 
    private:
-    EntityType(_native::Concept* conceptNative);
+    TypeDB::Transaction* const transaction;
+    LogicManager(TypeDB::Transaction*);
+    LogicManager(LogicManager&&) noexcept = delete;
+    LogicManager& operator=(LogicManager&&) = delete;
+    LogicManager(const LogicManager&) = delete;
+    LogicManager& operator=(const LogicManager&) = delete;
 
-    friend class ConceptFactory;
+    friend class TypeDB::Transaction;
 };
 
 }  // namespace TypeDB

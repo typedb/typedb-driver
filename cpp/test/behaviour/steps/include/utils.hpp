@@ -23,7 +23,7 @@
 #include <future>
 #include <vector>
 
-#include "typedb/driver.hpp"
+#include "typedb.hpp"
 
 #include "cucumber/messages/pickle_table.hpp"
 #define THROW_ILLEGAL_STATE(SOMESTRING) \

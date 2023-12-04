@@ -19,10 +19,10 @@
  * under the License.
  */
 
-#include "typedb/answer/valuegroup.hpp"
+#include "typedb/answer/value_group.hpp"
 #include "typedb/common/exception.hpp"
 
-#include "../inc/conceptfactory.hpp"
+#include "../inc/concept_factory.hpp"
 #include "../inc/macros.hpp"
 
 namespace TypeDB {

@@ -20,11 +20,11 @@
  * under the License.
  */
 
-#include "typedb/concept/type/thingtype.hpp"
+#include "typedb/concept/type/thing_type.hpp"
 #include "typedb/common/exception.hpp"
 #include "typedb/connection/transaction.hpp"
 
-#include "inc/conceptfactory.hpp"
+#include "inc/concept_factory.hpp"
 #include "inc/macros.hpp"
 #include "inc/utils.hpp"
 

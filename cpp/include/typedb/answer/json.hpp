@@ -79,32 +79,6 @@ typedef long JSONLong;
 typedef double JSONDouble;
 typedef std::string JSONString;
 
-// class JSONMap {
-//    private:
-//     std::map<std::string, JSON> contents;
-// };
-
-// class JSONArray {
-//    private:
-//     std::vector<JSON> contents;
-// };
-
-// class JSONBoolean {
-//    const bool value;
-// };
-
-// class JSONLong {
-//    const long value;
-// };
-
-// class JSONDouble {
-//    const double value;
-// };
-
-// class JSONString {
-//     const std::string value;
-// };
-
 class JSONBuilder;
 
 class JSON {

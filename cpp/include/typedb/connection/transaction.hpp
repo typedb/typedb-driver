@@ -21,10 +21,10 @@
 #pragma once
 
 #include "typedb/common/native.hpp"
-#include "typedb/concept/conceptmanager.hpp"
+#include "typedb/concept/concept_manager.hpp"
 #include "typedb/connection/options.hpp"
-#include "typedb/logic/logicmanager.hpp"
-#include "typedb/query/querymanager.hpp"
+#include "typedb/logic/logic_manager.hpp"
+#include "typedb/query/query_manager.hpp"
 
 namespace TypeDB {
 

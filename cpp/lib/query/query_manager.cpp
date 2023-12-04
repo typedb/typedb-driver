@@ -19,8 +19,8 @@
  * under the License.
  */
 
-#include "typedb/query/querymanager.hpp"
-#include "typedb/common/errormessage.hpp"
+#include "typedb/query/query_manager.hpp"
+#include "typedb/common/error_message.hpp"
 #include "typedb/common/exception.hpp"
 #include "typedb/common/future.hpp"
 #include "typedb/connection/transaction.hpp"
@@ -57,7 +57,6 @@ ConceptMapIterable QueryManager::get(const std::string& query, const Options& op
     WRAPPED_NATIVE_CALL(ConceptMapIterable, _native::query_get(transaction->getNative(), query.c_str(), options.getNative()));
 }
 
-#pragma message("You still have to do JSON")
 JSONIterable QueryManager::fetch(const std::string& query, const Options& options) const {
     CHECK_NATIVE(transaction);
     CHECK_QUERY(query);

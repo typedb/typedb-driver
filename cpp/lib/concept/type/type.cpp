@@ -23,9 +23,9 @@
 #include "typedb/concept/type/type.hpp"
 #include "typedb/common/exception.hpp"
 
-#include "inc/conceptfactory.hpp"
-#include "inc/conceptfuture.hpp"
-#include "inc/conceptiterator.hpp"
+#include "inc/concept_factory.hpp"
+#include "inc/concept_future.hpp"
+#include "inc/concept_iterator.hpp"
 #include "inc/macros.hpp"
 #include "typedb/connection/transaction.hpp"
 

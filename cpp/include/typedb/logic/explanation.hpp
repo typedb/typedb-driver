@@ -20,7 +20,7 @@
  */
 #pragma once
 
-#include "typedb/answer/conceptmap.hpp"
+#include "typedb/answer/concept_map.hpp"
 #include "typedb/common/native.hpp"
 #include "typedb/logic/rule.hpp"
 

@@ -19,12 +19,12 @@
  * under the License.
  */
 
-#include "typedb/answer/conceptmap.hpp"
-#include "typedb/common/errormessage.hpp"
+#include "typedb/answer/concept_map.hpp"
+#include "typedb/common/error_message.hpp"
 #include "typedb/common/exception.hpp"
 
-#include "inc/conceptfactory.hpp"
-#include "inc/conceptiterator.hpp"
+#include "inc/concept_factory.hpp"
+#include "inc/concept_iterator.hpp"
 #include "inc/macros.hpp"
 
 namespace TypeDB {

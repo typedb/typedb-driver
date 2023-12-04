@@ -20,13 +20,13 @@
  * under the License.
  */
 
-#include "typedb/concept/type/relationtype.hpp"
+#include "typedb/concept/type/relation_type.hpp"
 #include "typedb/common/exception.hpp"
 #include "typedb/concept/thing/relation.hpp"
 
 #include "typedb/connection/transaction.hpp"
 
-#include "inc/conceptfactory.hpp"
+#include "inc/concept_factory.hpp"
 #include "inc/macros.hpp"
 
 namespace TypeDB {

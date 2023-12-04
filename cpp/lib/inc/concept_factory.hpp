@@ -24,11 +24,11 @@
 
 #include "typedb/concept/concept.hpp"
 
-#include "typedb/concept/type/attributetype.hpp"
-#include "typedb/concept/type/entitytype.hpp"
-#include "typedb/concept/type/relationtype.hpp"
-#include "typedb/concept/type/roletype.hpp"
-#include "typedb/concept/type/thingtype.hpp"
+#include "typedb/concept/type/attribute_type.hpp"
+#include "typedb/concept/type/entity_type.hpp"
+#include "typedb/concept/type/relation_type.hpp"
+#include "typedb/concept/type/role_type.hpp"
+#include "typedb/concept/type/thing_type.hpp"
 
 #include "typedb/concept/thing/attribute.hpp"
 #include "typedb/concept/thing/entity.hpp"

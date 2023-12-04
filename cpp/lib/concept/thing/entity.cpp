@@ -22,9 +22,9 @@
 
 #include "typedb/concept/thing/entity.hpp"
 #include "typedb/common/exception.hpp"
-#include "typedb/concept/type/entitytype.hpp"
+#include "typedb/concept/type/entity_type.hpp"
 
-#include "inc/conceptfactory.hpp"
+#include "inc/concept_factory.hpp"
 #include "inc/macros.hpp"
 
 namespace TypeDB {

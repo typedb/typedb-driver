@@ -19,7 +19,7 @@
  * under the License.
  */
 
-#include "typedb/logic/logicmanager.hpp"
+#include "typedb/logic/logic_manager.hpp"
 #include "typedb/common/exception.hpp"
 #include "typedb/connection/transaction.hpp"
 

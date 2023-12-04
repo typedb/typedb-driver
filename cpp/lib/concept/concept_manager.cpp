@@ -19,11 +19,11 @@
  * under the License.
  */
 
-#include "typedb/concept/conceptmanager.hpp"
+#include "typedb/concept/concept_manager.hpp"
 #include "typedb/connection/transaction.hpp"
 
-#include "inc/conceptfactory.hpp"
-#include "inc/conceptfuture.hpp"
+#include "inc/concept_factory.hpp"
+#include "inc/concept_future.hpp"
 #include "inc/macros.hpp"
 #include "inc/utils.hpp"
 

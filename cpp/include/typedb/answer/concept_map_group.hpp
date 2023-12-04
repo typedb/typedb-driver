@@ -20,34 +20,34 @@
  */
 #pragma once
 
-#include "typedb/answer/valuefuture.hpp"
+#include "typedb/answer/concept_map.hpp"
 #include "typedb/common/iterator.hpp"
 #include "typedb/common/native.hpp"
 #include "typedb/concept/concept.hpp"
 
 namespace TypeDB {
 
-class ValueGroup {
+class ConceptMapGroup {
    public:
-    ValueGroup(_native::ValueGroup*);
-    ValueGroup(const ValueGroup&) = delete;
-    ValueGroup(ValueGroup&&) = default;
-    ~ValueGroup() = default;
+    ConceptMapGroup(_native::ConceptMapGroup*);
+    ConceptMapGroup(const ConceptMapGroup&) = delete;
+    ConceptMapGroup(ConceptMapGroup&&) = default;
 
-    ValueGroup& operator=(const ValueGroup&) = delete;
-    ValueGroup& operator=(ValueGroup&&) = default;
+    ConceptMapGroup& operator=(const ConceptMapGroup&) = delete;
+    ConceptMapGroup& operator=(ConceptMapGroup&&) = default;
+    ~ConceptMapGroup() = default;
 
     std::unique_ptr<Concept> owner();
-    AggregateResult value();
+    ConceptMapIterable conceptMaps();
 
    private:
-    NativePointer<_native::ValueGroup> valueGroupNative;
+    NativePointer<_native::ConceptMapGroup> conceptMapGroupNative;
 
-    friend class TypeDBIteratorHelper<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>;
+    friend class TypeDBIteratorHelper<_native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup>;
 };
 
-// For ValueGroup
-using ValueGroupIterable = TypeDBIterable<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>;
-using ValueGroupIterator = TypeDBIterator<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>;
+// For ConceptMapGroup
+using ConceptMapGroupIterable = TypeDBIterable<_native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup>;
+using ConceptMapGroupIterator = TypeDBIterator<_native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup>;
 
 }  // namespace TypeDB

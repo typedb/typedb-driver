@@ -32,7 +32,7 @@ cc_library(
         "lib/**/*.cpp",
         "lib/inc/*.hpp"
     ]),
-    hdrs = glob(["include/typedb/**/*"]),
+    hdrs = glob(["include/**/*"]),
     strip_include_prefix = "include",
     includes = ["lib/"], # private includes - # TODO: Check if these are indeed private.
     deps = [

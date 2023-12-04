@@ -19,21 +19,27 @@
  * under the License.
  */
 
-#include "typedb/answer/valuefuture.hpp"
+#pragma once
 
-#include "inc/conceptfactory.hpp"
-#include "inc/macros.hpp"
+#include "typedb/common/future.hpp"
+#include "typedb/concept/type/thing_type.hpp"
 
 namespace TypeDB {
 
-template <>
-AggregateResult FutureHelper<AggregateResult, _native::ConceptPromise>::resolve(_native::ConceptPromise* conceptPromiseNative) {
-    _native::Concept* conceptNative = _native::concept_promise_resolve(conceptPromiseNative);
-    if (conceptNative != nullptr) {
-        return AggregateResult(ConceptFactory::value(conceptNative));
-    } else {
-        return AggregateResult();
-    }
-}
+class Entity;
+
+class EntityType : public ThingType {
+   public:
+    [[nodiscard]] ConceptPtrFuture<Entity> create(Transaction& transaction);
+    [[nodiscard]] VoidFuture setSupertype(Transaction& transaction, EntityType* superEntityType);
+
+    ConceptIterable<Entity> getInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);
+    ConceptIterable<EntityType> getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);  // Mimic overriding from Type
+
+   private:
+    EntityType(_native::Concept* conceptNative);
+
+    friend class ConceptFactory;
+};
 
 }  // namespace TypeDB

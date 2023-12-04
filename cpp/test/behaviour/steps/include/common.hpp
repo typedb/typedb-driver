@@ -24,7 +24,7 @@
 #include <memory>
 #include <vector>
 
-#include "typedb/driver.hpp"
+#include "typedb.hpp"
 
 #include "cucumber_bdd/runner.hpp"
 #include "cucumber_bdd/step.hpp"

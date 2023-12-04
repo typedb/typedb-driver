@@ -24,10 +24,10 @@
 #include "typedb/common/native.hpp"
 #include "typedb/connection/options.hpp"
 
-#include "typedb/answer/conceptmap.hpp"
-#include "typedb/answer/conceptmapgroup.hpp"
-#include "typedb/answer/valuefuture.hpp"
-#include "typedb/answer/valuegroup.hpp"
+#include "typedb/answer/concept_map.hpp"
+#include "typedb/answer/concept_map_group.hpp"
+#include "typedb/answer/value_future.hpp"
+#include "typedb/answer/value_group.hpp"
 #include "typedb/answer/json.hpp"
 #include "typedb/concept/concept.hpp"
 

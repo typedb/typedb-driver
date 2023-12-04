@@ -24,7 +24,7 @@ help *
 #include "typedb/common/native.hpp"
 #include "typedb/answer/json.hpp"
 
-#include "typedb/common/errormessage.hpp"
+#include "typedb/common/error_message.hpp"
 
 #include "inc/utils.hpp"
 #include "inc/macros.hpp"

@@ -22,11 +22,11 @@
 #pragma once
 
 #include <cassert>
-#include "typedb/common/errormessage.hpp"
+#include "typedb/common/error_message.hpp"
 #include "typedb/common/exception.hpp"
 
-#include "inc/conceptfuture.hpp"
-#include "inc/conceptiterator.hpp"
+#include "inc/concept_future.hpp"
+#include "inc/concept_iterator.hpp"
 
 #define THROW_ILLEGAL_STATE \
     { throw TypeDB::Utils::exception(TypeDB::InternalError::ILLEGAL_STATE, __FILE__, __LINE__); }

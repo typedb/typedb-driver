@@ -18,35 +18,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-#pragma once
 
-#include "typedb/common/future.hpp"
+#include "typedb/answer/value_future.hpp"
 
-#include "typedb/answer/conceptmap.hpp"
-#include "typedb/common/native.hpp"
-#include "typedb/logic/rule.hpp"
+#include "inc/concept_factory.hpp"
+#include "inc/macros.hpp"
 
 namespace TypeDB {
 
-class Transaction;
-
-class LogicManager {
-   public:
-    ~LogicManager() = default;
-
-    OptionalRuleFuture getRule(const std::string& label) const;
-    RuleIterable getRules() const;
-    [[nodiscard]] RuleFuture putRule(const std::string& label, const std::string& when, const std::string& then) const;
-
-   private:
-    TypeDB::Transaction* const transaction;
-    LogicManager(TypeDB::Transaction*);
-    LogicManager(LogicManager&&) noexcept = delete;
-    LogicManager& operator=(LogicManager&&) = delete;
-    LogicManager(const LogicManager&) = delete;
-    LogicManager& operator=(const LogicManager&) = delete;
-
-    friend class TypeDB::Transaction;
-};
+template <>
+AggregateResult FutureHelper<AggregateResult, _native::ConceptPromise>::resolve(_native::ConceptPromise* conceptPromiseNative) {
+    _native::Concept* conceptNative = _native::concept_promise_resolve(conceptPromiseNative);
+    if (conceptNative != nullptr) {
+        return AggregateResult(ConceptFactory::value(conceptNative));
+    } else {
+        return AggregateResult();
+    }
+}
 
 }  // namespace TypeDB

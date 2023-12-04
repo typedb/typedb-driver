@@ -21,9 +21,9 @@
 #pragma once
 
 #include "typedb/common/native.hpp"
-#include "typedb/connection/databasemanager.hpp"
+#include "typedb/connection/database_manager.hpp"
 #include "typedb/connection/session.hpp"
-#include "typedb/user/usermanager.hpp"
+#include "typedb/user/user_manager.hpp"
 
 #include <string>
 

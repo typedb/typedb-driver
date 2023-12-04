@@ -19,7 +19,7 @@
  * under the License.
  */
 
-#include "typedb/user/usermanager.hpp"
+#include "typedb/user/user_manager.hpp"
 #include "inc/macros.hpp"
 #include "typedb/common/exception.hpp"
 
