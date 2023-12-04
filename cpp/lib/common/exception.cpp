@@ -20,8 +20,8 @@
  */
 
 #include "typedb/common/exception.hpp"
-#include "typedb/common/native.hpp"
 
+#include "./native.hpp"
 #include "../common/utils.hpp"
 
 namespace TypeDB {

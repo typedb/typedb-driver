@@ -24,8 +24,9 @@
 #include "typedb/common/exception.hpp"
 #include "typedb/concept/type/entity_type.hpp"
 
-#include "../concept_factory.hpp"
 #include "../../common/macros.hpp"
+#include "../../common/native.hpp"
+#include "../concept_factory.hpp"
 
 namespace TypeDB {
 

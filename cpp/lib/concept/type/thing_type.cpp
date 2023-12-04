@@ -24,9 +24,10 @@
 #include "typedb/common/exception.hpp"
 #include "typedb/connection/transaction.hpp"
 
-#include "../concept_factory.hpp"
 #include "../../common/macros.hpp"
+#include "../../common/native.hpp"
 #include "../../common/utils.hpp"
+#include "../concept_factory.hpp"
 
 namespace TypeDB {
 

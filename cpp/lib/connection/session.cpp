@@ -23,9 +23,13 @@
 #include "typedb/common/exception.hpp"
 
 #include "../common/macros.hpp"
+#include "../common/native.hpp"
 #include "../common/utils.hpp"
 
 namespace TypeDB {
+
+static_assert(static_cast<int>(SessionType::DATA) == _native::Data);
+static_assert(static_cast<int>(SessionType::SCHEMA) == _native::Schema);
 
 Session::Session()
     : Session(nullptr) {}

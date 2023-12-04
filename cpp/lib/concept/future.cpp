@@ -20,11 +20,11 @@
  */
 
 #include "typedb/common/exception.hpp"
-#include "typedb/common/native.hpp"
 
+#include "../common/macros.hpp"
+#include "../common/native.hpp"
 #include "./concept_factory.hpp"
 #include "./future.hpp"
-#include "../common/macros.hpp"
 
 namespace TypeDB {
 

@@ -19,13 +19,25 @@
  * under the License.
  */
 
-#include "typedb/common/exception.hpp"
 #include "typedb/concept/concept.hpp"
+#include "typedb/common/exception.hpp"
 
-#include "./concept_factory.hpp"
+#include "../common/native.hpp"
 #include "../common/utils.hpp"
+#include "./concept_factory.hpp"
 
 namespace TypeDB {
+
+static_assert(static_cast<int>(Transitivity::EXPLICIT) == _native::Explicit);
+static_assert(static_cast<int>(Transitivity::TRANSITIVE) == _native::Transitive);
+
+static_assert(static_cast<int>(ValueType::OBJECT) == _native::Object);
+static_assert(static_cast<int>(ValueType::BOOLEAN) == _native::Boolean);
+static_assert(static_cast<int>(ValueType::LONG) == _native::Long);
+static_assert(static_cast<int>(ValueType::DOUBLE) == _native::Double);
+static_assert(static_cast<int>(ValueType::DATETIME) == _native::DateTime);
+static_assert(static_cast<int>(ValueType::STRING) == _native::String);
+
 const char* ConceptTypeNames[9] = {
     "root_thing_type",
 

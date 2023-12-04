@@ -28,7 +28,10 @@
 
 namespace TypeDB {
 
-class Transaction;
+enum class TransactionType {
+    READ,
+    WRITE,
+};
 
 // forward declaration for friendship
 class Session;

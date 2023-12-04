@@ -23,6 +23,7 @@
 #include "typedb/common/exception.hpp"
 
 #include "../common/macros.hpp"
+#include "../common/native.hpp"
 
 namespace TypeDB {
 

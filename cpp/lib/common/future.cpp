@@ -19,9 +19,9 @@
  * under the License.
  */
 #include "typedb/common/future.hpp"
-#include "typedb/common/native.hpp"
 
 #include "../common/macros.hpp"
+#include "./native.hpp"
 
 namespace TypeDB {
 

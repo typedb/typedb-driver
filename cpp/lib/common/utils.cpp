@@ -20,9 +20,9 @@
  */
 
 #include "typedb/common/iterator.hpp"
-#include "typedb/common/native.hpp"
 
 #include "../common/macros.hpp"
+#include "./native.hpp"
 
 namespace TypeDB {
 namespace Utils {

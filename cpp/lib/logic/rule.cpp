@@ -22,6 +22,7 @@
 #include "typedb/logic/rule.hpp"
 
 #include "../common/macros.hpp"
+#include "../common/native.hpp"
 #include "../common/utils.hpp"
 
 namespace TypeDB {

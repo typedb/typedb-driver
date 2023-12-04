@@ -23,6 +23,7 @@
 
 #include <iostream>
 #include "../common/macros.hpp"
+#include "../common/native.hpp"
 #include "../common/utils.hpp"
 
 using namespace TypeDB;

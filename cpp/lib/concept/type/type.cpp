@@ -22,12 +22,13 @@
 
 #include "typedb/concept/type/type.hpp"
 #include "typedb/common/exception.hpp"
+#include "typedb/connection/transaction.hpp"
 
+#include "../../common/macros.hpp"
+#include "../../common/native.hpp"
 #include "../concept_factory.hpp"
 #include "../future.hpp"
 #include "../iterator.hpp"
-#include "../../common/macros.hpp"
-#include "typedb/connection/transaction.hpp"
 
 namespace TypeDB {
 

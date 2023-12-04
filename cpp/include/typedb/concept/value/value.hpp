@@ -28,8 +28,6 @@
 
 namespace TypeDB {
 
-class Value;
-
 typedef std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds> DateTime;
 
 class Value : public Concept {

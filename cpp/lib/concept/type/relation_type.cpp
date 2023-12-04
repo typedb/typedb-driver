@@ -26,8 +26,9 @@
 
 #include "typedb/connection/transaction.hpp"
 
-#include "../concept_factory.hpp"
 #include "../../common/macros.hpp"
+#include "../../common/native.hpp"
+#include "../concept_factory.hpp"
 
 namespace TypeDB {
 

@@ -20,8 +20,6 @@
  */
 #pragma once
 
-#include "typedb/common/native.hpp"
-
 #include "typedb/concept/concept.hpp"
 
 #include "typedb/concept/type/attribute_type.hpp"
@@ -34,6 +32,8 @@
 #include "typedb/concept/thing/entity.hpp"
 #include "typedb/concept/thing/relation.hpp"
 #include "typedb/concept/thing/thing.hpp"
+
+#include "../common/native.hpp"
 
 namespace TypeDB {
 // Forward declarations for friendship

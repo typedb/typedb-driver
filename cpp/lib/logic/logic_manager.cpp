@@ -26,6 +26,7 @@
 #include "typedb/concept/value/value.hpp"
 
 #include "../common/macros.hpp"
+#include "../common/native.hpp"
 
 namespace TypeDB {
 

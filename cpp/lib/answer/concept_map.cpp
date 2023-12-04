@@ -23,9 +23,10 @@
 #include "typedb/common/error_message.hpp"
 #include "typedb/common/exception.hpp"
 
+#include "../common/macros.hpp"
+#include "../common/native.hpp"
 #include "../concept/concept_factory.hpp"
 #include "../concept/iterator.hpp"
-#include "../common/macros.hpp"
 
 namespace TypeDB {
 

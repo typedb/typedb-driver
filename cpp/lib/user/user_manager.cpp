@@ -20,8 +20,10 @@
  */
 
 #include "typedb/user/user_manager.hpp"
-#include "../common/macros.hpp"
 #include "typedb/common/exception.hpp"
+
+#include "../common/macros.hpp"
+#include "../common/native.hpp"
 
 using namespace TypeDB;
 

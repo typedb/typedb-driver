@@ -25,6 +25,7 @@
 #include "typedb/common/error_message.hpp"
 #include "typedb/common/exception.hpp"
 
+#include "./native.hpp"
 #include "../concept/future.hpp"
 #include "../concept/iterator.hpp"
 #include "./utils.hpp"

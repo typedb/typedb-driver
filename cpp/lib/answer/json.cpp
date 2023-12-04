@@ -21,16 +21,13 @@ help *
 
 #include "nlohmann/json.hpp"
 
-#include "typedb/common/native.hpp"
 #include "typedb/answer/json.hpp"
 
 #include "typedb/common/error_message.hpp"
 
-#include "../common/utils.hpp"
 #include "../common/macros.hpp"
-
-#include <iostream>
-#include <sstream>
+#include "../common/native.hpp"
+#include "../common/utils.hpp"
 
 namespace TypeDB {
 
@@ -303,43 +300,7 @@ JSON JSONBuilder::buildArray(const nlohmann::json& from) {
     return JSON(std::move(a));
 }
 
-std::string JSON::toString() const {
-    std::stringstream ss;
-    switch (_type) {
-        case JSONType::STRING: {
-            ss << _stringValue;
-            break;
-        }
-        case JSONType::ARRAY: {
-            ss << "<array>";
-            break;
-        }
-        case JSONType::MAP: {
-            ss << "<map>";
-            break;
-        }
-        case JSONType::BOOLEAN: {
-            ss << _boolValue;
-            break;
-        }
-        case JSONType::LONG: {
-            ss << _longValue;
-            break;
-        }
-        case JSONType::DOUBLE: {
-            ss << _doubleValue;
-            break;
-        }
-        case JSONType::NONE: {
-            ss << "<NONE>";
-            break;
-        }
-    }
-    return ss.str();
-}
-
 // JSONIterable
-
 TYPEDB_ITERATOR_HELPER_1(
     _native::StringIterator,
     char,

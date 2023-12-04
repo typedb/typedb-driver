@@ -33,38 +33,53 @@
 namespace TypeDB {
 
 namespace _native {
+// Forward declare all relevant native types
 
-extern "C" {
-#include "c/typedb_driver.h"
+struct Annotation;
+struct BoolPromise;
+struct Concept;
+struct ConceptIterator;
+struct ConceptMap;
+struct ConceptMapGroup;
+struct ConceptMapGroupIterator;
+struct ConceptMapIterator;
+struct ConceptPromise;
+struct Connection;
+struct Credential;
+struct Database;
+struct DatabaseIterator;
+struct DatabaseManager;
+struct Error;
+struct Explainable;
+struct Explainables;
+struct Explanation;
+struct ExplanationIterator;
+struct Options;
+struct ReplicaInfo;
+struct ReplicaInfoIterator;
+struct RolePlayer;
+struct RolePlayerIterator;
+struct Rule;
+struct RuleIterator;
+struct RulePromise;
+struct SchemaException;
+struct SchemaExceptionIterator;
+struct Session;
+struct StringIterator;
+struct StringPairIterator;
+struct StringPromise;
+struct Transaction;
+struct User;
+struct UserIterator;
+struct UserManager;
+struct ValueGroup;
+struct ValueGroupIterator;
+struct VoidPromise;
+struct StringPair;
+
 }
-
-}  // namespace _native
 
 template <typename T>
 using NativePointer = std::unique_ptr<T, std::function<void(T*)> >;
-
-enum class ValueType {
-    OBJECT = _native::Object,
-    BOOLEAN = _native::Boolean,
-    LONG = _native::Long,
-    DOUBLE = _native::Double,
-    DATETIME = _native::DateTime,
-    STRING = _native::String,
-};
-
-enum class SessionType {
-    DATA = _native::Data,
-    SCHEMA = _native::Schema,
-};
-
-enum class TransactionType {
-    READ = _native::Read,
-    WRITE = _native::Write,
-};
-
-enum class Transitivity {
-    EXPLICIT = _native::Explicit,
-    TRANSITIVE = _native::Transitive,
-};
 
 }  // namespace TypeDB

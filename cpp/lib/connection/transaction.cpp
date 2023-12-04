@@ -24,8 +24,12 @@
 #include "typedb/common/future.hpp"
 
 #include "../common/macros.hpp"
+#include "../common/native.hpp"
 
 namespace TypeDB {
+
+static_assert(static_cast<int>(TransactionType::READ) == _native::Read);
+static_assert(static_cast<int>(TransactionType::WRITE) == _native::Write);
 
 Transaction::Transaction()
     : Transaction(nullptr, TypeDB::TransactionType::READ) {}

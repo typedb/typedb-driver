@@ -61,6 +61,20 @@ enum class ConceptType {
     VALUE,
 };
 
+enum class ValueType {
+    OBJECT,
+    BOOLEAN,
+    LONG,
+    DOUBLE,
+    STRING,
+    DATETIME,
+};
+
+enum class Transitivity {
+    EXPLICIT,
+    TRANSITIVE,
+};
+
 extern const char* ConceptTypeNames[9];
 
 // Forward declarations

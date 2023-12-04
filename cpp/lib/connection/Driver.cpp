@@ -22,6 +22,7 @@
 #include "typedb/connection/driver.hpp"
 
 #include "../common/macros.hpp"
+#include "../common/native.hpp"
 
 using namespace TypeDB;
 

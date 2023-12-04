@@ -25,6 +25,11 @@
 
 namespace TypeDB {
 
+enum class SessionType {
+    DATA,
+    SCHEMA,
+};
+
 class DatabaseManager;  // forward declaration for friendship
 
 class Session {

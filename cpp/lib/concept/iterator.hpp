@@ -21,8 +21,9 @@
 #pragma once
 #include <vector>
 
-#include "typedb/common/native.hpp"
 #include "typedb/concept/concept.hpp"
+
+#include "../common/native.hpp"
 
 namespace TypeDB {
 

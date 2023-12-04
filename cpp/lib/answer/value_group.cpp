@@ -22,8 +22,9 @@
 #include "typedb/answer/value_group.hpp"
 #include "typedb/common/exception.hpp"
 
-#include "../concept/concept_factory.hpp"
 #include "../common/macros.hpp"
+#include "../common/native.hpp"
+#include "../concept/concept_factory.hpp"
 
 namespace TypeDB {
 
