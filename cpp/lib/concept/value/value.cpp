@@ -27,7 +27,7 @@
 #include "typedb/common/exception.hpp"
 #include "typedb/concept/value/value.hpp"
 
-#include "inc/macros.hpp"
+#include "../../common/macros.hpp"
 
 namespace TypeDB {
 

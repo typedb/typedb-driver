@@ -21,7 +21,7 @@
 #include "typedb/common/future.hpp"
 #include "typedb/common/native.hpp"
 
-#include "inc/macros.hpp"
+#include "../common/macros.hpp"
 
 namespace TypeDB {
 

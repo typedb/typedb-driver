@@ -23,7 +23,7 @@
 #include "typedb/common/exception.hpp"
 #include "typedb/common/future.hpp"
 
-#include "inc/macros.hpp"
+#include "../common/macros.hpp"
 
 namespace TypeDB {
 

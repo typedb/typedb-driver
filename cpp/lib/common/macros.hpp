@@ -25,8 +25,9 @@
 #include "typedb/common/error_message.hpp"
 #include "typedb/common/exception.hpp"
 
-#include "inc/concept_future.hpp"
-#include "inc/concept_iterator.hpp"
+#include "../concept/future.hpp"
+#include "../concept/iterator.hpp"
+#include "./utils.hpp"
 
 #define THROW_ILLEGAL_STATE \
     { throw TypeDB::Utils::exception(TypeDB::InternalError::ILLEGAL_STATE, __FILE__, __LINE__); }

@@ -22,8 +22,8 @@
 #include "typedb/user/user.hpp"
 #include "typedb/user/user_manager.hpp"
 
-#include "inc/macros.hpp"
-#include "inc/utils.hpp"
+#include "../common/macros.hpp"
+#include "../common/utils.hpp"
 
 using namespace TypeDB;
 

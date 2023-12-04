@@ -21,8 +21,8 @@
 
 #include "typedb/answer/value_future.hpp"
 
-#include "inc/concept_factory.hpp"
-#include "inc/macros.hpp"
+#include "../concept/concept_factory.hpp"
+#include "../common/macros.hpp"
 
 namespace TypeDB {
 

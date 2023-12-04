@@ -22,7 +22,7 @@
 #include "typedb/connection/database_manager.hpp"
 #include "typedb/common/exception.hpp"
 
-#include "../inc/macros.hpp"
+#include "../common/macros.hpp"
 
 namespace TypeDB {
 

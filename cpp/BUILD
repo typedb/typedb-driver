@@ -30,7 +30,7 @@ cc_library(
     name = "typedb-driver-lib",
     srcs = glob([
         "lib/**/*.cpp",
-        "lib/inc/*.hpp"
+        "lib/**/*.hpp"
     ]),
     hdrs = glob(["include/**/*"]),
     strip_include_prefix = "include",

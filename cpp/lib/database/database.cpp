@@ -22,8 +22,8 @@
 #include "typedb/database/database.hpp"
 
 #include <iostream>
-#include "inc/macros.hpp"
-#include "inc/utils.hpp"
+#include "../common/macros.hpp"
+#include "../common/utils.hpp"
 
 using namespace TypeDB;
 

@@ -20,9 +20,10 @@
  */
 
 #include "typedb/common/exception.hpp"
-
-#include "inc/concept_factory.hpp"
 #include "typedb/concept/concept.hpp"
+
+#include "./concept_factory.hpp"
+#include "../common/utils.hpp"
 
 namespace TypeDB {
 const char* ConceptTypeNames[9] = {

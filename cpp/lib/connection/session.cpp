@@ -22,8 +22,8 @@
 #include "typedb/connection/session.hpp"
 #include "typedb/common/exception.hpp"
 
-#include "inc/macros.hpp"
-#include "inc/utils.hpp"
+#include "../common/macros.hpp"
+#include "../common/utils.hpp"
 
 namespace TypeDB {
 

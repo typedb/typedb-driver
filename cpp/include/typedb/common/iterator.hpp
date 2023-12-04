@@ -28,8 +28,6 @@
 #include "typedb/common/exception.hpp"
 #include "typedb/common/native.hpp"
 
-#include "inc/utils.hpp"
-
 namespace TypeDB {
 template <typename NATIVE_ITER, typename NATIVE_T, typename T, typename HELPER>
 class TypeDBIterable;
@@ -85,7 +83,7 @@ class TypeDBIterator {  // Does not support range-based for loops yet.
 
     T& operator*() {
         if ((*this) == SELF()) {
-            throw Utils::exception(InternalError::ITERATOR_INVALIDATED);
+            throw TypeDBDriverException(InternalError::ITERATOR_INVALIDATED.code, InternalError::ITERATOR_INVALIDATED.formatString);
         }
         assert(obj.has_value());
         return obj.value();
@@ -93,7 +91,7 @@ class TypeDBIterator {  // Does not support range-based for loops yet.
 
     T* operator->() {
         if ((*this) == SELF()) {
-            throw Utils::exception(InternalError::ITERATOR_INVALIDATED);
+            throw TypeDBDriverException(InternalError::ITERATOR_INVALIDATED.code, InternalError::ITERATOR_INVALIDATED.formatString);
         }
         assert(obj.has_value());
         return &obj.value();

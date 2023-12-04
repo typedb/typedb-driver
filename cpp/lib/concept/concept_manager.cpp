@@ -22,10 +22,10 @@
 #include "typedb/concept/concept_manager.hpp"
 #include "typedb/connection/transaction.hpp"
 
-#include "inc/concept_factory.hpp"
-#include "inc/concept_future.hpp"
-#include "inc/macros.hpp"
-#include "inc/utils.hpp"
+#include "./concept_factory.hpp"
+#include "./future.hpp"
+#include "../common/utils.hpp"
+#include "../common/macros.hpp"
 
 namespace TypeDB {
 

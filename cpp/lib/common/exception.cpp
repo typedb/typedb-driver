@@ -22,7 +22,7 @@
 #include "typedb/common/exception.hpp"
 #include "typedb/common/native.hpp"
 
-#include "inc/utils.hpp"
+#include "../common/utils.hpp"
 
 namespace TypeDB {
 

@@ -27,7 +27,7 @@
 
 #include "typedb/concept/value/value.hpp"
 
-#include "../inc/macros.hpp"
+#include "../common/macros.hpp"
 
 #define CHECK_QUERY(QUERY)                                                    \
     {                                                                         \

@@ -19,7 +19,7 @@
  * under the License.
  */
 
-#include "inc/concept_factory.hpp"
+#include "./concept_factory.hpp"
 
 #include "typedb/common/exception.hpp"
 #include "typedb/connection/transaction.hpp"
@@ -39,7 +39,7 @@
 
 #include "typedb/concept/value/value.hpp"
 
-#include "inc/macros.hpp"
+#include "../common/macros.hpp"
 
 #define CHECK_NATIVE_CONCEPT(PTR)                                     \
     {                                                                 \

@@ -22,7 +22,7 @@
 #include "typedb/common/iterator.hpp"
 #include "typedb/common/native.hpp"
 
-#include "inc/macros.hpp"
+#include "../common/macros.hpp"
 
 namespace TypeDB {
 namespace Utils {

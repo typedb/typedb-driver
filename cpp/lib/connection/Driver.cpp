@@ -21,7 +21,7 @@
 
 #include "typedb/connection/driver.hpp"
 
-#include "inc/macros.hpp"
+#include "../common/macros.hpp"
 
 using namespace TypeDB;
 

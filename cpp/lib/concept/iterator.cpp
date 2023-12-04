@@ -22,9 +22,9 @@
 #include "typedb/common/exception.hpp"
 #include "typedb/common/native.hpp"
 
-#include "inc/concept_factory.hpp"
-#include "inc/concept_iterator.hpp"
-#include "inc/macros.hpp"
+#include "./concept_factory.hpp"
+#include "./iterator.hpp"
+#include "../common/macros.hpp"
 
 namespace TypeDB {
 

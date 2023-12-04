@@ -26,8 +26,8 @@ help *
 
 #include "typedb/common/error_message.hpp"
 
-#include "inc/utils.hpp"
-#include "inc/macros.hpp"
+#include "../common/utils.hpp"
+#include "../common/macros.hpp"
 
 #include <iostream>
 #include <sstream>

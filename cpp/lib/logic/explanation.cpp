@@ -21,7 +21,7 @@
 
 #include "typedb/logic/explanation.hpp"
 
-#include "inc/macros.hpp"
+#include "../common/macros.hpp"
 
 namespace TypeDB {
 Explanation::Explanation(_native::Explanation* explanationNative)
