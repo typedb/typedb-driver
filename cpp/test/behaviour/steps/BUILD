@@ -25,7 +25,7 @@ load("//cpp:build_opts.bzl", "cxxopts")
 cc_library(
     name = "core-steps",
     deps = [
-        "//cpp:typedb-driver",
+        "//cpp:typedb-driver-cpp",
         "//cpp/test/cucumber:cucumber-cpp",
 
         # External
@@ -38,16 +38,17 @@ cc_library(
         "@vaticle_bazel_distribution//platform:is_windows": ["/I \"external\\gherkin_cpp\\include\""],
         "//conditions:default": ["-Iexternal/gherkin_cpp/include"],
     }),
-    srcs = glob(["main.cpp", "core_steps.cpp", "common/**/*.cpp"]),
+    srcs = glob(["main.cpp", "core_steps.cpp", "common/**/*.cpp"]) + ["//cpp:typedb-driver-cpp-lib"],
     hdrs = glob(["include/*.hpp"]),
     strip_include_prefix = "include",
     visibility = ["//cpp/test/behaviour:__subpackages__"],
+    linkstatic = False, # Avoids dependency on dylib
 )
 
 cc_library(
     name = "enterprise-steps",
     deps = [
-        "//cpp:typedb-driver-lib",
+        "//cpp:typedb-driver-cpp",
         "//cpp/test/cucumber:cucumber-cpp",
 
         # External
@@ -57,10 +58,11 @@ cc_library(
 
     ],
     copts = ["-g -Iexternal/gherkin_cpp/include -std=c++17"],
-    srcs = glob(["main.cpp", "enterprise_steps.cpp", "common/**/*.cpp"]),
+    srcs = glob(["main.cpp", "enterprise_steps.cpp", "common/**/*.cpp"]) + ["//cpp:typedb-driver-cpp-lib"],
     hdrs = glob(["include/*.hpp"]),
     strip_include_prefix = "include",
     visibility = ["//cpp/test/behaviour:__subpackages__"],
+    linkstatic = False, # Avoids dependency on dylib
 )
 
 

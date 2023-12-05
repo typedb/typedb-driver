@@ -30,7 +30,8 @@ load(":build_opts.bzl", "cxxopts")
 pkg_files(
     name = "typedb-driver-cpp-headers",
     srcs = glob(["include/**/*"]),
-    strip_prefix = ""
+    strip_prefix = "",
+    visibility = ["//visibility:public"],
 )
 
 cc_binary(
@@ -54,12 +55,13 @@ cc_binary(
     
     local_defines = ["_COMPILING_TYPEDB_DRIVER"],
     linkshared = True,
-    # linkstatic = True
 )
+
 pkg_files(
     name = "typedb-driver-cpp-lib",
     srcs = [":typedb-driver-cpp"],
-    prefix = "lib"
+    prefix = "lib",
+    visibility = ["//visibility:public"],
 )
 
 pkg_tar(
