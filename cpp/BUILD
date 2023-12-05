@@ -50,7 +50,8 @@ cc_library(
     alwayslink = select({
         "@vaticle_bazel_distribution//platform:is_windows": False,
         "//conditions:default": True,
-    })
+    }),
+    local_defines = ["_COMPILING_TYPEDB_DRIVER"]
 )
 
 cc_binary(

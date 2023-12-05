@@ -43,7 +43,6 @@ class TypeDBDriverException : public std::runtime_error {
     const std::string_view message();
 
     static void check_and_throw();
-    static TypeDBDriverException of(const ErrorMessage* message, ...);
 
    private:
     TypeDBDriverException(_native::Error* errorNative);

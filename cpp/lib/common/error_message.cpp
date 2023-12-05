@@ -20,6 +20,12 @@
  */
 #include "typedb/common/error_message.hpp"
 
+#ifdef _MSC_VER
+#define DECLSPEC_DLL __declspec(dllexport)
+#else
+#define DECLSPEC_DLL
+#endif
+
 #define ERRMSG(CODE, PREFIX, ID, MSG) {"[" CODE #ID "]", PREFIX ": " MSG};
 
 namespace TypeDB {
@@ -27,14 +33,14 @@ namespace TypeDB {
 namespace DriverError {
 
 #define ERR_DRIVER(ID, MSG) ERRMSG("CCL", "Driver Error", ID, MSG)
-const ErrorMessage DRIVER_CLOSED = ERR_DRIVER(4, "The driver has been closed and no further operation is allowed.");
-const ErrorMessage SESSION_CLOSED = ERR_DRIVER(5, "The session has been closed and no further operation is allowed.");
-const ErrorMessage TRANSACTION_CLOSED = ERR_DRIVER(6, "The transaction has been closed and no further operation is allowed.");
-const ErrorMessage TRANSACTION_CLOSED_WITH_ERRORS = ERR_DRIVER(7, "The transaction has been closed with error(s): \n%s.");
-const ErrorMessage DATABASE_DELETED = ERR_DRIVER(8, "The database has been deleted and no further operation is allowed.");
-const ErrorMessage POSITIVE_VALUE_REQUIRED = ERR_DRIVER(9, "Value cannot be less than 1, was: '%d'.");
-const ErrorMessage MISSING_DB_NAME = ERR_DRIVER(10, "Database name cannot be null.");
-const ErrorMessage INVALID_JSON_CAST = ERR_DRIVER(11, "An invalid cast from json type '%s' to '%s' was attempted.");
+DECLSPEC_DLL const ErrorMessage DRIVER_CLOSED = ERR_DRIVER(4, "The driver has been closed and no further operation is allowed.");
+DECLSPEC_DLL const ErrorMessage SESSION_CLOSED = ERR_DRIVER(5, "The session has been closed and no further operation is allowed.");
+DECLSPEC_DLL const ErrorMessage TRANSACTION_CLOSED = ERR_DRIVER(6, "The transaction has been closed and no further operation is allowed.");
+DECLSPEC_DLL const ErrorMessage TRANSACTION_CLOSED_WITH_ERRORS = ERR_DRIVER(7, "The transaction has been closed with error(s): \n%s.");
+DECLSPEC_DLL const ErrorMessage DATABASE_DELETED = ERR_DRIVER(8, "The database has been deleted and no further operation is allowed.");
+DECLSPEC_DLL const ErrorMessage POSITIVE_VALUE_REQUIRED = ERR_DRIVER(9, "Value cannot be less than 1, was: '%d'.");
+DECLSPEC_DLL const ErrorMessage MISSING_DB_NAME = ERR_DRIVER(10, "Database name cannot be null.");
+DECLSPEC_DLL const ErrorMessage INVALID_JSON_CAST = ERR_DRIVER(11, "An invalid cast from json type '%s' to '%s' was attempted.");
 #undef ERR_DRIVER
 
 }  // namespace DriverError
@@ -42,15 +48,15 @@ const ErrorMessage INVALID_JSON_CAST = ERR_DRIVER(11, "An invalid cast from json
 namespace ConceptError {
 
 #define ERR_CONCEPT(ID, MSG) ERRMSG("CCO", "Concept Error", ID, MSG)
-const ErrorMessage INVALID_CONCEPT_CASTING = ERR_CONCEPT(1, "Invalid concept conversion from '%s' to '%s'.");
-const ErrorMessage MISSING_TRANSACTION = ERR_CONCEPT(2, "Transaction cannot be null.");
-const ErrorMessage MISSING_IID = ERR_CONCEPT(3, "IID cannot be null or empty.");
-const ErrorMessage MISSING_LABEL = ERR_CONCEPT(4, "Label cannot be null or empty.");
-const ErrorMessage MISSING_VARIABLE = ERR_CONCEPT(5, "Variable name cannot be null or empty.");
-const ErrorMessage MISSING_VALUE = ERR_CONCEPT(6, "Value cannot be null.");
-const ErrorMessage NONEXISTENT_EXPLAINABLE_CONCEPT = ERR_CONCEPT(7, "The concept identified by '%s' is not explainable.");
-const ErrorMessage NONEXISTENT_EXPLAINABLE_OWNERSHIP = ERR_CONCEPT(8, "The ownership by owner '%s' of attribute '%s' is not explainable.");
-const ErrorMessage UNRECOGNISED_ANNOTATION = ERR_CONCEPT(9, "The annotation '%s' is not recognised");
+DECLSPEC_DLL const ErrorMessage INVALID_CONCEPT_CASTING = ERR_CONCEPT(1, "Invalid concept conversion from '%s' to '%s'.");
+DECLSPEC_DLL const ErrorMessage MISSING_TRANSACTION = ERR_CONCEPT(2, "Transaction cannot be null.");
+DECLSPEC_DLL const ErrorMessage MISSING_IID = ERR_CONCEPT(3, "IID cannot be null or empty.");
+DECLSPEC_DLL const ErrorMessage MISSING_LABEL = ERR_CONCEPT(4, "Label cannot be null or empty.");
+DECLSPEC_DLL const ErrorMessage MISSING_VARIABLE = ERR_CONCEPT(5, "Variable name cannot be null or empty.");
+DECLSPEC_DLL const ErrorMessage MISSING_VALUE = ERR_CONCEPT(6, "Value cannot be null.");
+DECLSPEC_DLL const ErrorMessage NONEXISTENT_EXPLAINABLE_CONCEPT = ERR_CONCEPT(7, "The concept identified by '%s' is not explainable.");
+DECLSPEC_DLL const ErrorMessage NONEXISTENT_EXPLAINABLE_OWNERSHIP = ERR_CONCEPT(8, "The ownership by owner '%s' of attribute '%s' is not explainable.");
+DECLSPEC_DLL const ErrorMessage UNRECOGNISED_ANNOTATION = ERR_CONCEPT(9, "The annotation '%s' is not recognised");
 #undef ERR_CONCEPT
 
 }  // namespace ConceptError
@@ -58,8 +64,8 @@ const ErrorMessage UNRECOGNISED_ANNOTATION = ERR_CONCEPT(9, "The annotation '%s'
 namespace QueryError {
 
 #define ERR_QUERY(ID, MSG) ERRMSG("CQY", "Query Error", ID, MSG)
-const ErrorMessage VARIABLE_DOES_NOT_EXIST = ERR_QUERY(1, "The variable '%s' does not exist.");
-const ErrorMessage MISSING_QUERY = ERR_QUERY(2, "Query cannot be null or empty");
+DECLSPEC_DLL const ErrorMessage VARIABLE_DOES_NOT_EXIST = ERR_QUERY(1, "The variable '%s' does not exist.");
+DECLSPEC_DLL const ErrorMessage MISSING_QUERY = ERR_QUERY(2, "Query cannot be null or empty");
 #undef ERR_QUERY
 
 }  // namespace QueryError
@@ -67,15 +73,16 @@ const ErrorMessage MISSING_QUERY = ERR_QUERY(2, "Query cannot be null or empty")
 namespace InternalError {
 
 #define ERR_INTERNAL(ID, MSG) ERRMSG("CIN", "C++ Internal Error", ID, MSG)
-const ErrorMessage UNEXPECTED_NATIVE_VALUE = ERR_INTERNAL(1, "Unexpected native value encountered!");
-const ErrorMessage ILLEGAL_STATE = ERR_INTERNAL(2, "Illegal state has been reached! (%s : %d)");
-const ErrorMessage ILLEGAL_CAST = ERR_INTERNAL(3, "Illegal casting operation to '%s'.");
-const ErrorMessage NULL_NATIVE_VALUE = ERR_INTERNAL(4, "Unhandled null pointer to a native object encountered!");
-const ErrorMessage INVALID_NATIVE_HANDLE = ERR_INTERNAL(5, "The object does not have a valid native handle. It may have been:  uninitialised, moved or disposed.");
-const ErrorMessage ITERATOR_INVALIDATED = ERR_INTERNAL(6, "Dereferenced iterator which has reached end (or was invalidated by a move).");
+DECLSPEC_DLL const ErrorMessage UNEXPECTED_NATIVE_VALUE = ERR_INTERNAL(1, "Unexpected native value encountered!");
+DECLSPEC_DLL const ErrorMessage ILLEGAL_STATE = ERR_INTERNAL(2, "Illegal state has been reached! (%s : %d)");
+DECLSPEC_DLL const ErrorMessage ILLEGAL_CAST = ERR_INTERNAL(3, "Illegal casting operation to '%s'.");
+DECLSPEC_DLL const ErrorMessage NULL_NATIVE_VALUE = ERR_INTERNAL(4, "Unhandled null pointer to a native object encountered!");
+DECLSPEC_DLL const ErrorMessage INVALID_NATIVE_HANDLE = ERR_INTERNAL(5, "The object does not have a valid native handle. It may have been:  uninitialised, moved or disposed.");
+DECLSPEC_DLL const ErrorMessage ITERATOR_INVALIDATED = ERR_INTERNAL(6, "Dereferenced iterator which has reached end (or was invalidated by a move).");
 #undef ERR_INTERNAL
 
 }  // namespace InternalError
 
 }  // namespace TypeDB
 #undef ERRMSG
+#undef DECLSPEC_DLL

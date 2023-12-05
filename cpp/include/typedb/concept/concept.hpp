@@ -75,8 +75,6 @@ enum class Transitivity {
     TRANSITIVE,
 };
 
-extern const char* ConceptTypeNames[9];
-
 // Forward declarations
 class Transaction;
 

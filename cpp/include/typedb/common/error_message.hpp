@@ -21,56 +21,68 @@
 
 #pragma once
 
+#ifdef _MSC_VER
+#ifdef _COMPILING_TYPEDB_DRIVER
+    #pragma message("Yes, that worked")
+    #define DECLSPEC_DLL __declspec(dllexport)
+#else 
+    #define DECLSPEC_DLL __declspec(dllimport)
+#endif
+#else 
+#define DECLSPEC_DLL 
+#endif
+
 namespace TypeDB {
 
-struct ErrorMessage {
+struct DECLSPEC_DLL ErrorMessage {
     const char* code;
     const char* formatString;
 };
 
 namespace DriverError {
 
-extern const ErrorMessage DRIVER_CLOSED;
-extern const ErrorMessage SESSION_CLOSED;
-extern const ErrorMessage TRANSACTION_CLOSED;
-extern const ErrorMessage TRANSACTION_CLOSED_WITH_ERRORS;
-extern const ErrorMessage DATABASE_DELETED;
-extern const ErrorMessage POSITIVE_VALUE_REQUIRED;
-extern const ErrorMessage MISSING_DB_NAME;
-extern const ErrorMessage INVALID_JSON_CAST;
+DECLSPEC_DLL extern const ErrorMessage DRIVER_CLOSED;
+DECLSPEC_DLL extern const ErrorMessage SESSION_CLOSED;
+DECLSPEC_DLL extern const ErrorMessage TRANSACTION_CLOSED;
+DECLSPEC_DLL extern const ErrorMessage TRANSACTION_CLOSED_WITH_ERRORS;
+DECLSPEC_DLL extern const ErrorMessage DATABASE_DELETED;
+DECLSPEC_DLL extern const ErrorMessage POSITIVE_VALUE_REQUIRED;
+DECLSPEC_DLL extern const ErrorMessage MISSING_DB_NAME;
+DECLSPEC_DLL extern const ErrorMessage INVALID_JSON_CAST;
 
 }  // namespace DriverError
 
 namespace ConceptError {
 
-extern const ErrorMessage INVALID_CONCEPT_CASTING;
-extern const ErrorMessage MISSING_TRANSACTION;
-extern const ErrorMessage MISSING_IID;
-extern const ErrorMessage MISSING_LABEL;
-extern const ErrorMessage MISSING_VARIABLE;
-extern const ErrorMessage MISSING_VALUE;
-extern const ErrorMessage NONEXISTENT_EXPLAINABLE_CONCEPT;
-extern const ErrorMessage NONEXISTENT_EXPLAINABLE_OWNERSHIP;
-extern const ErrorMessage UNRECOGNISED_ANNOTATION;
+DECLSPEC_DLL extern const ErrorMessage INVALID_CONCEPT_CASTING;
+DECLSPEC_DLL extern const ErrorMessage MISSING_TRANSACTION;
+DECLSPEC_DLL extern const ErrorMessage MISSING_IID;
+DECLSPEC_DLL extern const ErrorMessage MISSING_LABEL;
+DECLSPEC_DLL extern const ErrorMessage MISSING_VARIABLE;
+DECLSPEC_DLL extern const ErrorMessage MISSING_VALUE;
+DECLSPEC_DLL extern const ErrorMessage NONEXISTENT_EXPLAINABLE_CONCEPT;
+DECLSPEC_DLL extern const ErrorMessage NONEXISTENT_EXPLAINABLE_OWNERSHIP;
+DECLSPEC_DLL extern const ErrorMessage UNRECOGNISED_ANNOTATION;
 
 }  // namespace ConceptError
 
 namespace QueryError {
 
-extern const ErrorMessage VARIABLE_DOES_NOT_EXIST;
-extern const ErrorMessage MISSING_QUERY;
+DECLSPEC_DLL extern const ErrorMessage VARIABLE_DOES_NOT_EXIST;
+DECLSPEC_DLL extern const ErrorMessage MISSING_QUERY;
 
 }  // namespace QueryError
 
 namespace InternalError {
 
-extern const ErrorMessage UNEXPECTED_NATIVE_VALUE;
-extern const ErrorMessage ILLEGAL_STATE;
-extern const ErrorMessage ILLEGAL_CAST;
-extern const ErrorMessage NULL_NATIVE_VALUE;
-extern const ErrorMessage INVALID_NATIVE_HANDLE;
-extern const ErrorMessage ITERATOR_INVALIDATED;
+DECLSPEC_DLL extern const ErrorMessage UNEXPECTED_NATIVE_VALUE;
+DECLSPEC_DLL extern const ErrorMessage ILLEGAL_STATE;
+DECLSPEC_DLL extern const ErrorMessage ILLEGAL_CAST;
+DECLSPEC_DLL extern const ErrorMessage NULL_NATIVE_VALUE;
+DECLSPEC_DLL extern const ErrorMessage INVALID_NATIVE_HANDLE;
+DECLSPEC_DLL extern const ErrorMessage ITERATOR_INVALIDATED;
 
 }  // namespace InternalError
 
 }  // namespace TypeDB
+#undef DECLSPEC_DLL
