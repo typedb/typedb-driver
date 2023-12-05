@@ -19,6 +19,8 @@
  * under the License.
  */
 
+#include <cstring>
+
 #include "typedb/common/exception.hpp"
 
 #include "../common/utils.hpp"
