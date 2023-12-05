@@ -27,15 +27,19 @@ load("@vaticle_bazel_distribution//platform:constraints.bzl", "constraint_linux_
      "constraint_mac_arm64", "constraint_mac_x86_64", "constraint_win_x86_64")
 load(":build_opts.bzl", "cxxopts")
 
-cc_library(
-    name = "typedb-driver",
+pkg_files(
+    name = "typedb-driver-cpp-headers",
+    srcs = glob(["include/**/*"]),
+    strip_prefix = ""
+)
+
+cc_binary(
+    name = "typedb-driver-cpp",
     srcs = glob([
         "lib/**/*.cpp",
-        "lib/**/*.hpp"
-    ]),
-    hdrs = glob(["include/**/*"]),
-    strip_include_prefix = "include",
-    includes = ["include/"],
+        "lib/**/*.hpp",
+    ]) + [":typedb-driver-cpp-headers"],
+    includes = ["include"], 
     deps = [
         "//c:typedb_driver_clib",
         "//c:typedb_driver_clib_headers",
@@ -47,25 +51,11 @@ cc_library(
         "@vaticle_bazel_distribution//platform:is_windows": ["ntdll.lib", "secur32.lib", "crypt32.lib", "ncrypt.lib"],
         "//conditions:default": [],
     }),
-    alwayslink = select({
-        "@vaticle_bazel_distribution//platform:is_windows": False,
-        "//conditions:default": True,
-    }),
-    local_defines = ["_COMPILING_TYPEDB_DRIVER"]
-)
-
-cc_binary(
-    name = "typedb-driver-cpp",
-    srcs = [":typedb-driver", "//c:typedb_driver_clib"],
+    
+    local_defines = ["_COMPILING_TYPEDB_DRIVER"],
     linkshared = True,
+    # linkstatic = True
 )
-
-pkg_files(
-    name = "typedb-driver-cpp-headers",
-    srcs = glob(["include/**/*"]),
-    strip_prefix = ""
-)
-
 pkg_files(
     name = "typedb-driver-cpp-lib",
     srcs = [":typedb-driver-cpp"],

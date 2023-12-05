@@ -26,7 +26,7 @@ cc_test(
     name = "test-cpp-driver",
     srcs = ["test.cpp"],
     deps = [
-        "//cpp:typedb-driver",
+        "//cpp:typedb-driver-cpp",
 
         # External
         "@gtest//:gtest",
@@ -34,6 +34,7 @@ cc_test(
     ],
     copts = cxxopts,
     env = {"RUST_BACKTRACE": "full"},
+    # linkstatic = True
 )
 
 clang_format_test(
