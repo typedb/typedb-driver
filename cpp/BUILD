@@ -56,6 +56,7 @@ cc_binary(
     linkshared = True,
 )
 
+# cc_binary outputs don't contain the .if.lib by default. This adds a target to it.
 filegroup(
     name = "typedb-driver-cpp.if.lib",
     srcs = [":typedb-driver-cpp-shared"],
@@ -63,20 +64,15 @@ filegroup(
 )
 
 cc_import(
-    name = "typedb-driver-cpp-import",
+    name = "typedb-driver-cpp",
     interface_library = ":typedb-driver-cpp.if.lib",
     shared_library = ":typedb-driver-cpp-shared",
-    includes = ["include"]
-)
-
-cc_library(
-    name = "typedb-driver-cpp",
-    deps = [":typedb-driver-cpp-import"],
     hdrs = [":typedb-driver-cpp-headers"],
+    includes = ["cpp/include"],
     visibility = ["//visibility:public"],
-    includes = ["include"]
 )
 
+# Targets for distribution.
 pkg_files(
     name = "typedb-driver-cpp-lib",
     srcs = [":typedb-driver-cpp-shared", ":typedb-driver-cpp.if.lib"],

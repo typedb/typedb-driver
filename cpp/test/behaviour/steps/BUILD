@@ -32,17 +32,13 @@ cc_library(
         "@gherkin_cpp//:gherkin-lib",
         "@gtest//:gtest",
         "@gtest//:gtest_main",
-
     ],
-    copts = cxxopts + select({
-        "@vaticle_bazel_distribution//platform:is_windows": ["/I \"external\\gherkin_cpp\\include\""],
-        "//conditions:default": ["-Iexternal/gherkin_cpp/include"],
-    }),
-    srcs = glob(["main.cpp", "core_steps.cpp", "common/**/*.cpp"]) + ["//cpp:typedb-driver-cpp-lib"],
+    copts = cxxopts,
+    includes = ["external/gherkin_cpp/include"],
+    srcs = glob(["main.cpp", "core_steps.cpp", "common/**/*.cpp"]),
     hdrs = glob(["include/*.hpp"]),
     strip_include_prefix = "include",
     visibility = ["//cpp/test/behaviour:__subpackages__"],
-    linkstatic = False, # Avoids dependency on dylib
 )
 
 cc_library(
@@ -55,16 +51,13 @@ cc_library(
         "@gherkin_cpp//:gherkin-lib",
         "@gtest//:gtest",
         "@gtest//:gtest_main",
-
     ],
     copts = ["-g -Iexternal/gherkin_cpp/include -std=c++17"],
-    srcs = glob(["main.cpp", "enterprise_steps.cpp", "common/**/*.cpp"]) + ["//cpp:typedb-driver-cpp-lib"],
+    srcs = glob(["main.cpp", "enterprise_steps.cpp", "common/**/*.cpp"]),
     hdrs = glob(["include/*.hpp"]),
     strip_include_prefix = "include",
     visibility = ["//cpp/test/behaviour:__subpackages__"],
-    linkstatic = False, # Avoids dependency on dylib
 )
-
 
 clang_format_test(
     name = "clang_format",
