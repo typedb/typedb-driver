@@ -78,9 +78,9 @@ OwnerAttributePairIterable Explainables::ownerships() {
     WRAPPED_NATIVE_CALL(OwnerAttributePairIterable, _native::explainables_get_ownerships_keys(explainablesNative.get()));
 }
 
-OwnerAttributePair::OwnerAttributePair(_native::StringPair* stringPairNative) {
-    owner = std::string(stringPairNative->_0);
-    attribute = std::string(stringPairNative->_1);
+OwnerAttributePair::OwnerAttributePair(_native::StringPair* stringPairNative)
+    : owner(std::string(stringPairNative->_0)),
+      attribute(std::string(stringPairNative->_1)) {
     _native::string_pair_drop(stringPairNative);
 }
 

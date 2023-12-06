@@ -33,11 +33,14 @@ class ConceptMap;
 class QueryManager;
 class Explainables;
 
-struct OwnerAttributePair {
+class OwnerAttributePair {
+   public:
     std::string owner;
     std::string attribute;
-
+   private:
     OwnerAttributePair(_native::StringPair* stringPairNative);
+
+    friend class TypeDBIteratorHelper<_native::StringPairIterator, _native::StringPair, OwnerAttributePair>;
 };
 
 class Explainable {
