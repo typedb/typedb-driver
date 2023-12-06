@@ -57,9 +57,15 @@ cc_binary(
     linkshared = True,
 )
 
+filegroup(
+    name = "typedb-driver-cpp.if.lib",
+    srcs = [":typedb-driver-cpp"],
+    output_group = "interface_library",
+)
+
 pkg_files(
     name = "typedb-driver-cpp-lib",
-    srcs = [":typedb-driver-cpp"],
+    srcs = [":typedb-driver-cpp", ":typedb-driver-cpp.if.lib"],
     prefix = "lib",
     visibility = ["//visibility:public"],
 )
