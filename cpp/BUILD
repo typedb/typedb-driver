@@ -35,7 +35,7 @@ pkg_files(
 )
 
 cc_binary(
-    name = "typedb-driver-cpp",
+    name = "typedb-driver-cpp-shared",
     srcs = glob([
         "lib/**/*.cpp",
         "lib/**/*.hpp",
@@ -46,28 +46,41 @@ cc_binary(
         "//c:typedb_driver_clib_headers",
         "@nlohmann_json//:json",
     ],
-    visibility = ["//visibility:public"],
     copts = cxxopts,
     linkopts = select({
         "@vaticle_bazel_distribution//platform:is_windows": ["ntdll.lib", "secur32.lib", "crypt32.lib", "ncrypt.lib"],
         "//conditions:default": [],
     }),
-    
     local_defines = ["_COMPILING_TYPEDB_DRIVER"],
+    features = ["windows_export_all_symbols"],
     linkshared = True,
 )
 
 filegroup(
     name = "typedb-driver-cpp.if.lib",
-    srcs = [":typedb-driver-cpp"],
+    srcs = [":typedb-driver-cpp-shared"],
     output_group = "interface_library",
+)
+
+cc_import(
+    name = "typedb-driver-cpp-import",
+    interface_library = ":typedb-driver-cpp.if.lib",
+    shared_library = ":typedb-driver-cpp-shared",
+    includes = ["include"]
+)
+
+cc_library(
+    name = "typedb-driver-cpp",
+    deps = [":typedb-driver-cpp-import"],
+    hdrs = [":typedb-driver-cpp-headers"],
+    visibility = ["//visibility:public"],
+    includes = ["include"]
 )
 
 pkg_files(
     name = "typedb-driver-cpp-lib",
-    srcs = [":typedb-driver-cpp", ":typedb-driver-cpp.if.lib"],
+    srcs = [":typedb-driver-cpp-shared", ":typedb-driver-cpp.if.lib"],
     prefix = "lib",
-    visibility = ["//visibility:public"],
 )
 
 pkg_tar(

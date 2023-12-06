@@ -24,10 +24,9 @@ load("//cpp:build_opts.bzl", "cxxopts")
 
 cc_test(
     name = "test-cpp-driver",
-    srcs = ["test.cpp"] + ["//cpp:typedb-driver-cpp-headers"] + ["//cpp:typedb-driver-cpp-lib"],
+    srcs = ["test.cpp"],
     deps = [
         "//cpp:typedb-driver-cpp",
-
         # External
         "@gtest//:gtest",
         "@gtest//:gtest_main"
@@ -35,7 +34,6 @@ cc_test(
     copts = cxxopts,
     includes = ["include"],
     env = {"RUST_BACKTRACE": "full"},
-    # linkopts = ["-llibtypedb-driver-cpp.dylib", "-Lbazel-out/darwin_arm64-fastbuild/bin/cpp"],
     linkstatic = True
 )
 
