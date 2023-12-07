@@ -1,6 +1,4 @@
 #
-# Copyright (C) 2022 Vaticle
-#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -19,6 +17,12 @@
 # under the License.
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//cpp/test/behaviour:tests.bzl", "typedb_behaviour_cpp_test")
+
+typedb_behaviour_cpp_test(
+    name = "test",
+    feature = "@vaticle_typedb_behaviour//connection:database.feature"
+)
 
 checkstyle_test(
     name = "checkstyle",

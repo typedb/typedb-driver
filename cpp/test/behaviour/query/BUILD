@@ -19,60 +19,10 @@
 # under the License.
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//cpp/test/behaviour:tests.bzl", "typedb_behaviour_cpp_test")
 
-# TODO: Create typedb_behaviour_cpp_test rule
-typedb_behaviour_cpp_test(
-    name = "define-test",
-    feature = "@vaticle_typedb_behaviour//query/language:define.feature"
-)
-
-typedb_behaviour_cpp_test(
-    name = "undefine-test",
-    feature = "@vaticle_typedb_behaviour//query/language:undefine.feature"
-)
-
-typedb_behaviour_cpp_test(
-    name = "rule-validation-test",
-    feature = "@vaticle_typedb_behaviour//query/language:rule-validation.feature"
-)
-
-typedb_behaviour_cpp_test(
-    name = "insert-test",
-    feature = "@vaticle_typedb_behaviour//query/language:insert.feature"
-)
-
-typedb_behaviour_cpp_test(
-    name = "delete-test",
-    feature = "@vaticle_typedb_behaviour//query/language:delete.feature"
-)
-
-typedb_behaviour_cpp_test(
-    name = "update-test",
-    feature = "@vaticle_typedb_behaviour//query/language:update.feature"
-)
-
-typedb_behaviour_cpp_test(
-    name = "get-test",
-    feature = "@vaticle_typedb_behaviour//query/language:get.feature"
-)
-
-typedb_behaviour_cpp_test(
-    name = "fetch-test",
-    feature = "@vaticle_typedb_behaviour//query/language:fetch.feature"
-)
-
-typedb_behaviour_cpp_test(
-    name = "match-test",
-    feature = "@vaticle_typedb_behaviour//query/language:match.feature"
-)
-
-typedb_behaviour_cpp_test(
-    name = "modifiers-test",
-    feature = "@vaticle_typedb_behaviour//query/language:modifiers.feature"
-)
-
-typedb_behaviour_cpp_test(
-    name = "expression-test",
-    feature = "@vaticle_typedb_behaviour//query/language:expression.feature"
+checkstyle_test(
+    name = "checkstyle",
+    size = "small",
+    include = glob(["*/*"]),
+    license_type = "apache-header",
 )

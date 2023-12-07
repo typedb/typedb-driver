@@ -19,42 +19,6 @@
 # under the License.
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//cpp/test/behaviour:tests.bzl", "typedb_behaviour_cpp_test")
-
-typedb_behaviour_cpp_test(
-    name = "rule-test",
-    feature = "@vaticle_typedb_behaviour//concept/rule:rule.feature"
-)
-
-typedb_behaviour_cpp_test(
-    name = "attribute-test",
-    feature = "@vaticle_typedb_behaviour//concept/thing:attribute.feature"
-)
-
-typedb_behaviour_cpp_test(
-    name = "entity-test",
-    feature = "@vaticle_typedb_behaviour//concept/thing:entity.feature"
-)
-
-typedb_behaviour_cpp_test(
-    name = "relation-test",
-    feature = "@vaticle_typedb_behaviour//concept/thing:relation.feature"
-)
-
-typedb_behaviour_cpp_test(
-    name = "attributetype-test",
-    feature = "@vaticle_typedb_behaviour//concept/type:attributetype.feature"
-)
-
-typedb_behaviour_cpp_test(
-    name = "entitytype-test",
-    feature = "@vaticle_typedb_behaviour//concept/type:entitytype.feature"
-)
-
-typedb_behaviour_cpp_test(
-    name = "relationtype-test",
-    feature = "@vaticle_typedb_behaviour//concept/type:relationtype.feature"
-)
 
 checkstyle_test(
     name = "checkstyle",

@@ -19,6 +19,12 @@
 # under the License.
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//cpp/test/behaviour:tests.bzl", "typedb_behaviour_cpp_test")
+
+typedb_behaviour_cpp_test(
+    name = "test",
+    feature = "@vaticle_typedb_behaviour//concept/thing:entity-type.feature"
+)
 
 checkstyle_test(
     name = "checkstyle",

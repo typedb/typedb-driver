@@ -19,10 +19,16 @@
 # under the License.
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//cpp/test/behaviour:tests.bzl", "typedb_behaviour_cpp_test")
+
+typedb_behaviour_cpp_test(
+    name = "test",
+    feature = "@vaticle_typedb_behaviour//query/language:match.feature"
+)
 
 checkstyle_test(
     name = "checkstyle",
-    include = glob(["*"]),
-    license_type = "apache-header",
     size = "small",
+    include = glob(["*/*"]),
+    license_type = "apache-header",
 )

@@ -19,31 +19,6 @@
 # under the License.
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//cpp/test/behaviour:tests.bzl", "typedb_behaviour_cpp_test")
-
-# TODO: Create typedb_behaviour_cpp_test rule
-typedb_behaviour_cpp_test(
-    name = "database-test",
-    feature = "@vaticle_typedb_behaviour//connection:database.feature"
-)
-
-typedb_behaviour_cpp_test(
-    name = "session-test",
-    feature = "@vaticle_typedb_behaviour//connection:session.feature"
-)
-
-typedb_behaviour_cpp_test(
-    name = "transaction-test",
-    feature = "@vaticle_typedb_behaviour//connection:transaction.feature"
-)
-
-cc_test(
-    name = "user-test-enterprise",
-    deps = ["//cpp/test/behaviour/steps:enterprise-steps"],
-    data = ["@vaticle_typedb_behaviour//connection:user.feature", "//tool/test/resources:certificates"],
-    env = {"ROOT_CA": "tool/test/resources/encryption/ext-grpc-root-ca.pem"},
-    args = ["$(location @vaticle_typedb_behaviour//connection:user.feature)"]
-)
 
 checkstyle_test(
     name = "checkstyle",
