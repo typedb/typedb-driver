@@ -19,27 +19,22 @@
 # under the License.
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//cpp/test/behaviour:tests.bzl", "typedb_behaviour_cpp_test")
 
 # TODO: Create typedb_behaviour_cpp_test rule
-cc_test(
+typedb_behaviour_cpp_test(
     name = "database-test",
-    deps = ["//cpp/test/behaviour/steps:core-steps"],
-    data = ["@vaticle_typedb_behaviour//connection:database.feature"],
-    args = ["$(location @vaticle_typedb_behaviour//connection:database.feature)"]
+    feature = "@vaticle_typedb_behaviour//connection:database.feature"
 )
 
-cc_test(
+typedb_behaviour_cpp_test(
     name = "session-test",
-    deps = ["//cpp/test/behaviour/steps:core-steps"],
-    data = ["@vaticle_typedb_behaviour//connection:session.feature"],
-    args = ["$(location @vaticle_typedb_behaviour//connection:session.feature)"]
+    feature = "@vaticle_typedb_behaviour//connection:session.feature"
 )
 
-cc_test(
+typedb_behaviour_cpp_test(
     name = "transaction-test",
-    deps = ["//cpp/test/behaviour/steps:core-steps"],
-    data = ["@vaticle_typedb_behaviour//connection:transaction.feature"],
-    args = ["$(location @vaticle_typedb_behaviour//connection:transaction.feature)"]
+    feature = "@vaticle_typedb_behaviour//connection:transaction.feature"
 )
 
 cc_test(

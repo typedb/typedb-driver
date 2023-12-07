@@ -19,17 +19,27 @@
 # under the License.
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//cpp/test/behaviour:tests.bzl", "typedb_behaviour_cpp_test")
-load("//cpp/test/behaviour:tests.bzl", "typedb_behaviour_cpp_test")
-# TODO: Create typedb_behaviour_cpp_test rule
-typedb_behaviour_cpp_test(
-    name = "query-test",
-    feature = "@vaticle_typedb_behaviour//driver:query.feature"
-)
 
-checkstyle_test(
-    name = "checkstyle",
-    include = glob(["*"]),
-    license_type = "apache-header",
-    size = "small",
-)
+def typedb_behaviour_cpp_test(
+    name,
+    feature,
+    deps = [],
+    data = [],
+    args = [],
+    env = {}
+):
+    native.cc_test(
+        name = name + "-core",
+        deps = ["//cpp/test/behaviour/steps:core-steps"] + deps,
+        data = [feature] + data,
+        args = ["$(location " + feature + ")"] + args,
+        env = env
+    )
+    
+    native.cc_test(
+        name = name + "-enterprise",
+        deps = ["//cpp/test/behaviour/steps:enterprise-steps"] + deps,
+        data = [feature, "//tool/test/resources:certificates"] + data,
+        args = ["$(location " + feature + ")"] + args,
+        env = {"ROOT_CA": "tool/test/resources/encryption/ext-grpc-root-ca.pem"} | env,
+    )

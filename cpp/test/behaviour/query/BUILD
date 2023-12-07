@@ -19,81 +19,60 @@
 # under the License.
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//cpp/test/behaviour:tests.bzl", "typedb_behaviour_cpp_test")
 
 # TODO: Create typedb_behaviour_cpp_test rule
-cc_test(
+typedb_behaviour_cpp_test(
     name = "define-test",
-    deps = ["//cpp/test/behaviour/steps:core-steps"],
-    data = ["@vaticle_typedb_behaviour//query/language:define.feature"],
-    args = ["$(location @vaticle_typedb_behaviour//query/language:define.feature)"]
+    feature = "@vaticle_typedb_behaviour//query/language:define.feature"
 )
 
-cc_test(
+typedb_behaviour_cpp_test(
     name = "undefine-test",
-    deps = ["//cpp/test/behaviour/steps:core-steps"],
-    data = ["@vaticle_typedb_behaviour//query/language:undefine.feature"],
-    args = ["$(location @vaticle_typedb_behaviour//query/language:undefine.feature)"]
+    feature = "@vaticle_typedb_behaviour//query/language:undefine.feature"
 )
 
-cc_test(
+typedb_behaviour_cpp_test(
     name = "rule-validation-test",
-    deps = ["//cpp/test/behaviour/steps:core-steps"],
-    data = ["@vaticle_typedb_behaviour//query/language:rule-validation.feature"],
-    args = ["$(location @vaticle_typedb_behaviour//query/language:rule-validation.feature)"]
+    feature = "@vaticle_typedb_behaviour//query/language:rule-validation.feature"
 )
 
-cc_test(
+typedb_behaviour_cpp_test(
     name = "insert-test",
-    deps = ["//cpp/test/behaviour/steps:core-steps"],
-    data = ["@vaticle_typedb_behaviour//query/language:insert.feature"],
-    args = ["$(location @vaticle_typedb_behaviour//query/language:insert.feature)"]
+    feature = "@vaticle_typedb_behaviour//query/language:insert.feature"
 )
 
-cc_test(
+typedb_behaviour_cpp_test(
     name = "delete-test",
-    deps = ["//cpp/test/behaviour/steps:core-steps"],
-    data = ["@vaticle_typedb_behaviour//query/language:delete.feature"],
-    args = ["$(location @vaticle_typedb_behaviour//query/language:delete.feature)"]
+    feature = "@vaticle_typedb_behaviour//query/language:delete.feature"
 )
 
-cc_test(
+typedb_behaviour_cpp_test(
     name = "update-test",
-    deps = ["//cpp/test/behaviour/steps:core-steps"],
-    data = ["@vaticle_typedb_behaviour//query/language:update.feature"],
-    args = ["$(location @vaticle_typedb_behaviour//query/language:update.feature)"]
+    feature = "@vaticle_typedb_behaviour//query/language:update.feature"
 )
 
-cc_test(
+typedb_behaviour_cpp_test(
     name = "get-test",
-    deps = ["//cpp/test/behaviour/steps:core-steps"],
-    data = ["@vaticle_typedb_behaviour//query/language:get.feature"],
-    args = ["$(location @vaticle_typedb_behaviour//query/language:get.feature)"]
+    feature = "@vaticle_typedb_behaviour//query/language:get.feature"
 )
 
-cc_test(
+typedb_behaviour_cpp_test(
     name = "fetch-test",
-    deps = ["//cpp/test/behaviour/steps:core-steps"],
-    data = ["@vaticle_typedb_behaviour//query/language:fetch.feature"],
-    args = ["$(location @vaticle_typedb_behaviour//query/language:fetch.feature)"]
+    feature = "@vaticle_typedb_behaviour//query/language:fetch.feature"
 )
 
-cc_test(
+typedb_behaviour_cpp_test(
     name = "match-test",
-    deps = ["//cpp/test/behaviour/steps:core-steps"],
-    data = ["@vaticle_typedb_behaviour//query/language:match.feature"],
-    args = ["$(location @vaticle_typedb_behaviour//query/language:match.feature)"]
+    feature = "@vaticle_typedb_behaviour//query/language:match.feature"
 )
 
-cc_test(
+typedb_behaviour_cpp_test(
     name = "modifiers-test",
-    deps = ["//cpp/test/behaviour/steps:core-steps"],
-    data = ["@vaticle_typedb_behaviour//query/language:modifiers.feature"],
-    args = ["$(location @vaticle_typedb_behaviour//query/language:modifiers.feature)"]
+    feature = "@vaticle_typedb_behaviour//query/language:modifiers.feature"
 )
 
-cc_test(
+typedb_behaviour_cpp_test(
     name = "expression-test",
-    deps = ["//cpp/test/behaviour/steps:core-steps"],
-    data = ["@vaticle_typedb_behaviour//query/language:expression.feature"],
-    args = ["$(location @vaticle_typedb_behaviour//query/language:expression.feature)"]
+    feature = "@vaticle_typedb_behaviour//query/language:expression.feature"
 )

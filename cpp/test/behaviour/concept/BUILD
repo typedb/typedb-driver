@@ -19,56 +19,42 @@
 # under the License.
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//cpp/test/behaviour:tests.bzl", "typedb_behaviour_cpp_test")
 
-cc_test(
+typedb_behaviour_cpp_test(
     name = "rule-test",
-    deps = ["//cpp/test/behaviour/steps:core-steps"],
-    data = ["@vaticle_typedb_behaviour//concept/rule:rule.feature"],
-    args = ["$(location @vaticle_typedb_behaviour//concept/rule:rule.feature)"]
+    feature = "@vaticle_typedb_behaviour//concept/rule:rule.feature"
 )
 
-cc_test(
+typedb_behaviour_cpp_test(
     name = "attribute-test",
-    deps = ["//cpp/test/behaviour/steps:core-steps"],
-    data = ["@vaticle_typedb_behaviour//concept/thing:attribute.feature"],
-    args = ["$(location @vaticle_typedb_behaviour//concept/thing:attribute.feature)"]
+    feature = "@vaticle_typedb_behaviour//concept/thing:attribute.feature"
 )
 
-cc_test(
+typedb_behaviour_cpp_test(
     name = "entity-test",
-    deps = ["//cpp/test/behaviour/steps:core-steps"],
-    data = ["@vaticle_typedb_behaviour//concept/thing:entity.feature"],
-    args = ["$(location @vaticle_typedb_behaviour//concept/thing:entity.feature)"]
+    feature = "@vaticle_typedb_behaviour//concept/thing:entity.feature"
 )
 
-cc_test(
+typedb_behaviour_cpp_test(
     name = "relation-test",
-    deps = ["//cpp/test/behaviour/steps:core-steps"],
-    data = ["@vaticle_typedb_behaviour//concept/thing:relation.feature"],
-    args = ["$(location @vaticle_typedb_behaviour//concept/thing:relation.feature)"]
+    feature = "@vaticle_typedb_behaviour//concept/thing:relation.feature"
 )
 
-cc_test(
+typedb_behaviour_cpp_test(
     name = "attributetype-test",
-    deps = ["//cpp/test/behaviour/steps:core-steps"],
-    data = ["@vaticle_typedb_behaviour//concept/type:attributetype.feature"],
-    args = ["$(location @vaticle_typedb_behaviour//concept/type:attributetype.feature)"]
+    feature = "@vaticle_typedb_behaviour//concept/type:attributetype.feature"
 )
 
-cc_test(
+typedb_behaviour_cpp_test(
     name = "entitytype-test",
-    deps = ["//cpp/test/behaviour/steps:core-steps"],
-    data = ["@vaticle_typedb_behaviour//concept/type:entitytype.feature"],
-    args = ["$(location @vaticle_typedb_behaviour//concept/type:entitytype.feature)"]
+    feature = "@vaticle_typedb_behaviour//concept/type:entitytype.feature"
 )
 
-cc_test(
+typedb_behaviour_cpp_test(
     name = "relationtype-test",
-    deps = ["//cpp/test/behaviour/steps:core-steps"],
-    data = ["@vaticle_typedb_behaviour//concept/type:relationtype.feature"],
-    args = ["$(location @vaticle_typedb_behaviour//concept/type:relationtype.feature)"]
+    feature = "@vaticle_typedb_behaviour//concept/type:relationtype.feature"
 )
-
 
 checkstyle_test(
     name = "checkstyle",
