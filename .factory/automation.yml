@@ -956,6 +956,252 @@ build:
         tool/test/stop-enterprise-servers.sh
         exit $TEST_SUCCESS
 
+    test-cpp-behaviour-connection-core:
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        tool/test/start-core-server.sh &&
+          .factory/test-core.sh //cpp/test/behaviour/connection/database/... --test_output=streamed --jobs=1 &&
+          .factory/test-core.sh //cpp/test/behaviour/connection/session/... --test_output=streamed --jobs=1 &&
+          .factory/test-core.sh //cpp/test/behaviour/connection/transaction/... --test_output=streamed --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
+
+    test-cpp-behaviour-connection-enterprise:
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        tool/test/start-enterprise-servers.sh &&
+          .factory/test-enterprise.sh //cpp/test/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-enterprise.sh //cpp/test/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-enterprise.sh //cpp/test/behaviour/connection/transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-enterprise.sh //cpp/test/behaviour/connection/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-enterprise-servers.sh
+        exit $TEST_SUCCESS
+
+    test-cpp-behaviour-concept-core:
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        tool/test/start-core-server.sh &&
+          .factory/test-core.sh //cpp/test/behaviour/concept/... --test_output=errors --jobs=1 && 
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
+
+    test-cpp-behaviour-concept-enterprise:
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        source tool/test/start-enterprise-servers.sh &&  # use source to receive export vars
+          .factory/test-enterprise.sh //cpp/test/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-enterprise-servers.sh
+        exit $TEST_SUCCESS
+
+    test-cpp-behaviour-driver-core:
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        tool/test/start-core-server.sh &&
+          .factory/test-core.sh //cpp/test/behaviour/driver/query/... --test_output=errors &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
+
+    test-cpp-behaviour-driver-enterprise:
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        tool/test/start-enterprise-servers.sh &&
+          .factory/test-enterprise.sh //cpp/test/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-enterprise-servers.sh
+        exit $TEST_SUCCESS
+
+    test-cpp-behaviour-read-core:
+      image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: [master, development]
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        tool/test/start-core-server.sh &&
+          .factory/test-core.sh //cpp/test/behaviour/query/language/match/... --test_output=errors &&
+          .factory/test-core.sh //cpp/test/behaviour/query/language/get/... --test_output=errors &&
+          .factory/test-core.sh //cpp/test/behaviour/query/language/fetch/... --test_output=errors &&
+          .factory/test-core.sh //cpp/test/behaviour/query/language/modifiers/... --test_output=errors &&
+          .factory/test-core.sh //cpp/test/behaviour/query/language/expression/... --test_output=errors &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
+
+    test-cpp-behaviour-read-enterprise:
+      image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: [master, development]
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        source tool/test/start-enterprise-servers.sh &&  # use source to receive export vars
+          .factory/test-enterprise.sh //cpp/test/behaviour/query/language/match/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-enterprise.sh //cpp/test/behaviour/query/language/get/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-enterprise.sh //cpp/test/behaviour/query/language/fetch/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-enterprise.sh //cpp/test/behaviour/query/language/modifiers/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-enterprise.sh //cpp/test/behaviour/query/language/expression/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-enterprise-servers.sh
+        exit $TEST_SUCCESS
+
+    test-cpp-behaviour-writable-core:
+      image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: [master, development]
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        tool/test/start-core-server.sh &&
+          .factory/test-core.sh //cpp/test/behaviour/query/language/insert/... --test_output=errors &&
+          .factory/test-core.sh //cpp/test/behaviour/query/language/delete/... --test_output=errors &&
+          .factory/test-core.sh //cpp/test/behaviour/query/language/update/... --test_output=errors &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
+
+    test-cpp-behaviour-writable-enterprise:
+      image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: [master, development]
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        tool/test/start-enterprise-servers.sh &&
+          .factory/test-enterprise.sh //cpp/test/behaviour/query/language/insert/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-enterprise.sh //cpp/test/behaviour/query/language/delete/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-enterprise.sh //cpp/test/behaviour/query/language/update/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-enterprise-servers.sh
+        exit $TEST_SUCCESS
+
+    test-cpp-behaviour-definable-core:
+      image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: [master, development]
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        tool/test/start-core-server.sh &&
+          .factory/test-core.sh //cpp/test/behaviour/query/language/define/... --test_output=errors &&
+          .factory/test-core.sh //cpp/test/behaviour/query/language/undefine/... --test_output=errors &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
+
+    test-cpp-behaviour-definable-enterprise:
+      image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: [master, development]
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        tool/test/start-enterprise-servers.sh &&
+          .factory/test-enterprise.sh //cpp/test/behaviour/query/language/define/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-enterprise.sh //cpp/test/behaviour/query/language/undefine/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-enterprise-servers.sh
+        exit $TEST_SUCCESS
+
+    test-cpp-integration-core:
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+      type: foreground
+      command: |
+        export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+        export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run @vaticle_dependencies//distribution/artifact:create-netrc
+        tool/test/start-core-server.sh &&
+          bazel test //cpp/test/integration/... --test_output=streamed --jobs=1 &&
+          export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
+
+
     deploy-crate-snapshot:
       filter:
         owner: vaticle
@@ -1013,7 +1259,7 @@ build:
         cd -
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
-        
+
 # TODO: assembly tests for all drivers to run in factory
 
 release:
