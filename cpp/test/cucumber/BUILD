@@ -64,6 +64,6 @@ checkstyle_test(
     name = "checkstyle",
     size = "small",
     include = glob(["**/*"]),
-    exclude = ["test.feature"],
+    exclude = ["test/test.feature"],
     license_type = "apache-header",
 )
