@@ -32,7 +32,6 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
@@ -75,15 +74,24 @@ public class Loader {
         }
         String platformString = DRIVER_JNI_JAR_NAME.get(platform);
         ClassLoader loader = Loader.class.getClassLoader();
-        URL jniURL = null;
         Iterator<URL> resourceIterator = loader.getResources(DRIVER_JNI_LIBRARY_NAME).asIterator();
+
+        URL jniURL = null;
+        boolean isValid = true;
+
         while (resourceIterator.hasNext()) {
             URL resource = resourceIterator.next();
+
+            if (jniURL == null) jniURL = resource;
+            else isValid = false; // encountered more than one: not valid...
+
             if (resource.getPath().contains(platformString)) {
+                isValid = true; // ... unless it explicitly includes the platform string
                 jniURL = resource;
+                break;
             }
         }
-        assert jniURL != null;
+        assert jniURL != null && isValid;
         try {
             return unpackNativeResources(jniURL.toURI());
         } catch (URISyntaxException e) {
