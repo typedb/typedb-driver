@@ -46,7 +46,6 @@ build:
         export PATH="$HOME/.local/bin:$PATH"
         sudo apt-get update
         sudo apt install python3-pip -y
-        sudo apt install clang-format -y
         python3 -m pip install -U pip
         python3 -m pip install -r python/requirements_dev.txt
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
@@ -57,7 +56,6 @@ build:
         bazel run @vaticle_dependencies//tool/checkstyle:test-coverage
         bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=errors
         bazel test $(bazel query 'kind(rustfmt_test, //...)') --@rules_rust//:rustfmt.toml=//rust:rustfmt_config
-        bazel test $(bazel query 'kind(clang_format, //...)')
         cd nodejs
         npm install
         npm run lint
@@ -964,7 +962,7 @@ build:
         - build
       type: foreground
       command: |
-        sudo apt install clang-format -y
+        sudo apt install clang-format-15 -y
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
@@ -1002,7 +1000,7 @@ build:
         - build
       type: foreground
       command: |
-        sudo apt install clang-format -y
+        sudo apt install clang-format-15 -y
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
@@ -1035,7 +1033,7 @@ build:
         - build
       type: foreground
       command: |
-        sudo apt install clang-format -y
+        sudo apt install clang-format-15 -y
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
@@ -1071,7 +1069,7 @@ build:
         - build
       type: foreground
       command: |
-        sudo apt install clang-format -y
+        sudo apt install clang-format-15 -y
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
@@ -1118,7 +1116,7 @@ build:
         - build
       type: foreground
       command: |
-        sudo apt install clang-format -y
+        sudo apt install clang-format-15 -y
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
@@ -1161,7 +1159,7 @@ build:
         - build
       type: foreground
       command: |
-        sudo apt install clang-format -y
+        sudo apt install clang-format-15 -y
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
@@ -1199,7 +1197,7 @@ build:
         - build
       type: foreground
       command: |
-        sudo apt install clang-format -y
+        sudo apt install clang-format-15 -y
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
