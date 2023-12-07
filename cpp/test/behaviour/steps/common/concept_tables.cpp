@@ -295,7 +295,7 @@ bool compareJSONArrayUnordered(const TypeDB::JSONArray& first, const TypeDB::JSO
 
 bool compareJSONMap(const TypeDB::JSONMap& first, const TypeDB::JSONMap& second) {
     if (first.size() != second.size()) return false;
-    return std::all_of(first.begin(), first.end(), [&](auto& item) { 
+    return std::all_of(first.begin(), first.end(), [&](auto& item) {
         return second.find(item.first) != second.end() && compareJSON(item.second, first.at(item.first));
     });
 }
@@ -304,13 +304,20 @@ bool compareJSON(const TypeDB::JSON& first, const TypeDB::JSON& second) {
     if (first.type() != second.type()) return false;
 
     switch (first.type()) {
-        case TypeDB::JSONType::BOOLEAN: return first.boolValue() == second.boolValue();
-        case TypeDB::JSONType::LONG: return first.longValue() == second.longValue();
-        case TypeDB::JSONType::DOUBLE: return first.doubleValue() == second.doubleValue();
-        case TypeDB::JSONType::STRING: return first.stringValue() == second.stringValue();
-        case TypeDB::JSONType::ARRAY: return compareJSONArrayUnordered(first.array(), second.array());
-        case TypeDB::JSONType::MAP: return compareJSONMap(first.map(), second.map());
-        default: throw std::runtime_error("UNIMPLEMENTED");    
+        case TypeDB::JSONType::BOOLEAN:
+            return first.boolValue() == second.boolValue();
+        case TypeDB::JSONType::LONG:
+            return first.longValue() == second.longValue();
+        case TypeDB::JSONType::DOUBLE:
+            return first.doubleValue() == second.doubleValue();
+        case TypeDB::JSONType::STRING:
+            return first.stringValue() == second.stringValue();
+        case TypeDB::JSONType::ARRAY:
+            return compareJSONArrayUnordered(first.array(), second.array());
+        case TypeDB::JSONType::MAP:
+            return compareJSONMap(first.map(), second.map());
+        default:
+            throw std::runtime_error("UNIMPLEMENTED");
     }
 }
 

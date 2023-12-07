@@ -37,6 +37,7 @@ class OwnerAttributePair {
    public:
     std::string owner;
     std::string attribute;
+
    private:
     OwnerAttributePair(_native::StringPair* stringPairNative);
 

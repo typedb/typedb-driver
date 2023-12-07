@@ -23,12 +23,12 @@
 
 #ifdef _MSC_VER
 #ifdef _COMPILING_TYPEDB_DRIVER
-    #define DECLSPEC_DLL __declspec(dllexport)
-#else 
-    #define DECLSPEC_DLL __declspec(dllimport)
+#define DECLSPEC_DLL __declspec(dllexport)
+#else
+#define DECLSPEC_DLL __declspec(dllimport)
 #endif
-#else 
-#define DECLSPEC_DLL __attribute__((visibility ("default")))
+#else
+#define DECLSPEC_DLL __attribute__((visibility("default")))
 #endif
 
 namespace TypeDB {

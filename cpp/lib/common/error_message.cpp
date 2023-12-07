@@ -23,7 +23,7 @@
 #ifdef _MSC_VER
 #define DECLSPEC_DLL __declspec(dllexport)
 #else
-#define DECLSPEC_DLL __attribute__((visibility ("default")))
+#define DECLSPEC_DLL __attribute__((visibility("default")))
 #endif
 
 #define ERRMSG(CODE, PREFIX, ID, MSG) {"[" CODE #ID "]", PREFIX ": " MSG};

@@ -83,7 +83,6 @@ TYPEDB_ITERATOR_HELPER(
     ReplicaInfo,
     _native::replica_info_iterator_drop,
     _native::replica_info_iterator_next,
-    _native::replica_info_drop
-)
+    _native::replica_info_drop)
 
 }  // namespace TypeDB
