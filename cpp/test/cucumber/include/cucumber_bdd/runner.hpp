@@ -46,7 +46,7 @@ template <typename CTX>
 class TestRunner : public TestRunnerBase {
    private:
     const TestHooks<CTX>* hooks;
-    std::vector<const StepDefinition<CTX>> steps;
+    std::vector<StepDefinition<CTX>> steps;
 
    public:
     TestRunner(std::initializer_list<StepCollection<CTX>> stepLists, const TestHooks<CTX>* hooks = nullptr)
