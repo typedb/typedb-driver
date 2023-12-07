@@ -46,6 +46,6 @@ clang_format_test(
 checkstyle_test(
     name = "checkstyle",
     size = "small",
-    include = glob(["*/*"]),
+    include = glob(["*"]),
     license_type = "apache-header",
 )

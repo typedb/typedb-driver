@@ -23,6 +23,6 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 checkstyle_test(
     name = "checkstyle",
     size = "small",
-    include = glob(["*/*"]),
+    include = glob(["*"]),
     license_type = "apache-header",
 )
