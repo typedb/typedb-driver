@@ -23,7 +23,7 @@ load("//cpp/test/behaviour:tests.bzl", "typedb_behaviour_cpp_test")
 
 typedb_behaviour_cpp_test(
     name = "test",
-    feature = "@vaticle_typedb_behaviour//concept/thing:relation-type.feature"
+    feature = "@vaticle_typedb_behaviour//concept/type:relationtype.feature"
 )
 
 checkstyle_test(
