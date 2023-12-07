@@ -129,7 +129,7 @@ class TypeDBIterable {
     ITERATOR begin() {
         ITERATOR it = ITERATOR(iteratorNative.release());
         ++it;  // initialises it
-        return std::move(it);
+        return it;
     }
 
     ITERATOR end() {

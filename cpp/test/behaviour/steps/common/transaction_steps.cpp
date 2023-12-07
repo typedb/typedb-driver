@@ -117,7 +117,7 @@ cucumber_bdd::StepCollection<Context> transactionSteps = {
             }
         }
         ASSERT_EQ(step.argument->data_table->rows.size(), transactions.size());
-        for (int i = 0; i < transactions.size(); i++) {
+        for (size_t i = 0; i < transactions.size(); i++) {
             ASSERT_EQ(parseTransactionType(step.argument->data_table->rows[i].cells[0].value), transactions[i]->type());
         }
     }),
@@ -125,7 +125,7 @@ cucumber_bdd::StepCollection<Context> transactionSteps = {
         std::vector<TypeDB::Transaction*> transactions;
         for (auto& session : context.sessions) {
             ASSERT_EQ(step.argument->data_table->rows.size(), context.sessionTransactions[&session].size());
-            for (int i = 0; i < step.argument->data_table->rows.size(); i++) {
+            for (size_t i = 0; i < step.argument->data_table->rows.size(); i++) {
                 ASSERT_EQ(parseTransactionType(step.argument->data_table->rows[i].cells[0].value), context.sessionTransactions[&session][i].type());
             }
         }
@@ -137,7 +137,7 @@ cucumber_bdd::StepCollection<Context> transactionSteps = {
 
     BDD_STEP("for each session, open transactions in parallel of type:", {
         std::vector<int> nums;
-        for (int i = 0; i < step.argument->data_table->rows.size(); i++)
+        for (size_t i = 0; i < step.argument->data_table->rows.size(); i++)
             nums.push_back(i);
 
         for (TypeDB::Session& session : context.sessions) {

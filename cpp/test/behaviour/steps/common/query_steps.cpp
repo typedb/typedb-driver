@@ -194,7 +194,7 @@ cucumber_bdd::StepCollection<Context> querySteps = {
         auto varNames = getVarsFromDataTable(expected);
         auto actual = conceptMapResultToMap(context.transaction(), context.lastConceptMapResult, varNames);
         ASSERT_EQ(expected.size(), actual.size());
-        for (int i = 0; i < expected.size(); i++) {
+        for (size_t i = 0; i < expected.size(); i++) {
             compareRow(expected[i], actual[i]);
         }
     }),

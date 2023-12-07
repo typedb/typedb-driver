@@ -96,7 +96,7 @@ template <typename T>
 std::vector<zipped<T>> zip(std::vector<cucumber::messages::pickle_table_row>& rows, std::vector<T>& objs) {  // Important that these are by reference.
     assert(rows.size() == objs.size());
     std::vector<zipped<T>> z;
-    for (int i = 0; i < rows.size(); i++) {
+    for (size_t i = 0; i < rows.size(); i++) {
         z.push_back(zipped<T>{&rows[i], &objs[i]});
     }
     return z;

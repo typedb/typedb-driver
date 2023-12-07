@@ -91,7 +91,7 @@ class TestRunner : public TestRunnerBase {
     }
 
     const StepDefinition<CTX>* resolveStep(pickle_step& toResolve) {
-        for (int i = 0; i < steps.size(); i++) {
+        for (size_t i = 0; i < steps.size(); i++) {
             if (std::regex_match(toResolve.text, steps[i].regex)) {
                 return &steps[i];
             }
