@@ -198,7 +198,7 @@ clang_format_test(
 checkstyle_test(
     name = "checkstyle",
     size = "small",
-    include = glob(["include/**/*", "lib/**/*"]),
+    include = glob(["*", "include/**/*", "lib/**/*"]),
     exclude = ["README.md"],
     license_type = "apache-header",
 )
