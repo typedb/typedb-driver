@@ -43,6 +43,14 @@ ConceptIterable<Concept> ConceptMap::concepts() {
     WRAPPED_NATIVE_CALL(ConceptIterable<Concept>, new ConceptIteratorWrapperSimple(_native::concept_map_get_values(conceptMapNative.get())));
 }
 
+std::map<std::string, std::unique_ptr<Concept>> ConceptMap::map() {
+    std::map<std::string, std::unique_ptr<Concept>> m;
+    for (auto &v : variables()) {
+        m.emplace(std::move(v), get(v));
+    }
+    return m;
+}
+
 Explainables ConceptMap::explainables() {
     CHECK_NATIVE(conceptMapNative);
     WRAPPED_NATIVE_CALL(Explainables, _native::concept_map_get_explainables(conceptMapNative.get()));

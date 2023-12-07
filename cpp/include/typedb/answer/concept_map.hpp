@@ -20,6 +20,8 @@
  */
 #pragma once
 
+#include <map>
+
 #include "typedb/common/iterator.hpp"
 #include "typedb/common/native.hpp"
 #include "typedb/concept/concept.hpp"
@@ -39,6 +41,7 @@ class ConceptMap {
 
     StringIterable variables();
     ConceptIterable<Concept> concepts();
+    std::map<std::string, std::unique_ptr<Concept>> map();
     Explainables explainables();
     std::unique_ptr<Concept> get(const std::string& variableName);
 
