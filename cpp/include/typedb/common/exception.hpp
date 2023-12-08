@@ -30,14 +30,14 @@
 namespace TypeDB {
 
 template <typename NATIVE_ITER, typename NATIVE_T, typename T>
-class TypeDBIteratorHelper;
+class IteratorHelper;
 
-class TypeDBDriverException : public std::runtime_error {
+class DriverException : public std::runtime_error {
    public:
-    TypeDBDriverException(const char* code, const char* message);
+    DriverException(const char* code, const char* message);
 
-    TypeDBDriverException(const TypeDBDriverException& from) = default;
-    TypeDBDriverException& operator=(const TypeDBDriverException& from) = default;
+    DriverException(const DriverException& from) = default;
+    DriverException& operator=(const DriverException& from) = default;
 
     const std::string_view code();
     const std::string_view message();
@@ -45,13 +45,13 @@ class TypeDBDriverException : public std::runtime_error {
     static void check_and_throw();
 
    private:
-    TypeDBDriverException(_native::Error* errorNative);
-    TypeDBDriverException(_native::SchemaException* schemaExceptionNative);
+    DriverException(_native::Error* errorNative);
+    DriverException(_native::SchemaException* schemaExceptionNative);
 
     size_t errorCodeLength;
     size_t messageLength;
 
-    friend class TypeDBIteratorHelper<_native::SchemaExceptionIterator, _native::SchemaException, TypeDBDriverException>;
+    friend class IteratorHelper<_native::SchemaExceptionIterator, _native::SchemaException, DriverException>;
 };
 
 

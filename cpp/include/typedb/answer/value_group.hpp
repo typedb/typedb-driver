@@ -43,11 +43,11 @@ class ValueGroup {
    private:
     NativePointer<_native::ValueGroup> valueGroupNative;
 
-    friend class TypeDBIteratorHelper<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>;
+    friend class IteratorHelper<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>;
 };
 
 // For ValueGroup
-using ValueGroupIterable = TypeDBIterable<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>;
-using ValueGroupIterator = TypeDBIterator<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>;
+using ValueGroupIterable = Iterable<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>;
+using ValueGroupIterator = Iterator<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>;
 
 }  // namespace TypeDB

@@ -37,8 +37,8 @@ struct RolePlayer {
     RolePlayer(_native::RolePlayer* rolePlayerNative);  // frees rolePlayernative
 };
 
-using RolePlayerIterator = TypeDBIterator<_native::RolePlayerIterator, _native::RolePlayer, RolePlayer>;
-using RolePlayerIterable = TypeDBIterable<_native::RolePlayerIterator, _native::RolePlayer, RolePlayer>;
+using RolePlayerIterator = Iterator<_native::RolePlayerIterator, _native::RolePlayer, RolePlayer>;
+using RolePlayerIterable = Iterable<_native::RolePlayerIterator, _native::RolePlayer, RolePlayer>;
 
 Relation::Relation(_native::Concept* conceptNative)
     : Thing(ConceptType::RELATION, conceptNative) {}
@@ -66,7 +66,7 @@ ConceptIterable<Thing> Relation::getPlayersByRoleType(Transaction& transaction, 
 
 std::map<std::unique_ptr<RoleType>, std::unique_ptr<Thing>> Relation::getPlayers(Transaction& transaction) {
     auto rolePlayerIterableNative = _native::relation_get_role_players(ConceptFactory::getNative(transaction), conceptNative.get());
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
     std::map<std::unique_ptr<RoleType>, std::unique_ptr<Thing>> rolePlayerMap;
     for (RolePlayer& rp : RolePlayerIterable(rolePlayerIterableNative)) {
         rolePlayerMap[std::move(rp.role)] = std::move(rp.player);

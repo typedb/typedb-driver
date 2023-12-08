@@ -43,11 +43,11 @@ class ReplicaInfo {
     NativePointer<_native::ReplicaInfo> replicaInfoNative;
     ReplicaInfo(_native::ReplicaInfo*);
 
-    friend class TypeDBIteratorHelper<_native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo>;
+    friend class IteratorHelper<_native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo>;
 };
 
-using ReplicaInfoIterable = TypeDBIterable<_native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo>;
-using ReplicaInfoIterator = TypeDBIterator<_native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo>;
+using ReplicaInfoIterable = Iterable<_native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo>;
+using ReplicaInfoIterator = Iterator<_native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo>;
 
 class Database {
    public:
@@ -69,7 +69,7 @@ class Database {
     Database(_native::Database*) noexcept;
 
     friend class DatabaseManager;
-    friend class TypeDBIteratorHelper<_native::DatabaseIterator, _native::Database, Database>;
+    friend class IteratorHelper<_native::DatabaseIterator, _native::Database, Database>;
 };
 
 }  // namespace TypeDB

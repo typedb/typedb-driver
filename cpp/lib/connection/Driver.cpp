@@ -31,7 +31,7 @@ namespace TypeDB {
 Credential::Credential(const std::string& username, const std::string& password, bool withTLS, const std::string& customRootCAStr) {
     const char* customRootCA = customRootCAStr != "" ? customRootCAStr.c_str() : nullptr;
     auto p = _native::credential_new(username.c_str(), password.c_str(), customRootCA, withTLS);
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
     credentialNative = NativePointer<_native::Credential>(p, _native::credential_drop);
 }
 
@@ -42,7 +42,7 @@ _native::Credential* Credential::getNative() const {
 
 Driver Driver::coreDriver(const std::string& coreAddress) {
     auto p = _native::connection_open_core(coreAddress.c_str());
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
     return Driver(p);
 }
 
@@ -52,7 +52,7 @@ Driver Driver::enterpriseDriver(const std::vector<std::string>& enterpriseAddres
         addressesNative.push_back(addr.c_str());
     addressesNative.push_back(nullptr);
     auto p = _native::connection_open_enterprise(addressesNative.data(), credential.getNative());
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
     return Driver(p);
 }
 

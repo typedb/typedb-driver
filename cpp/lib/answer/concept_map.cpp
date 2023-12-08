@@ -59,7 +59,7 @@ Explainables ConceptMap::explainables() {
 std::unique_ptr<Concept> ConceptMap::get(const std::string& variableName) {
     CHECK_NATIVE(conceptMapNative);
     auto p = _native::concept_map_get(conceptMapNative.get(), variableName.c_str());
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
     if (p == nullptr) {
         throw Utils::exception(QueryError::VARIABLE_DOES_NOT_EXIST, variableName.c_str());
     }

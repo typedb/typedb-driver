@@ -73,17 +73,17 @@ void Transaction::forceClose() {
 void Transaction::commit() {
     CHECK_NATIVE(transactionNative);
     VoidFuture p = _native::transaction_commit(transactionNative.release());
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
     p.wait();
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
 }
 
 void Transaction::rollback() {
     CHECK_NATIVE(transactionNative);
     VoidFuture p = _native::transaction_rollback(transactionNative.release());
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
     p.wait();
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
 }
 
 }  // namespace TypeDB

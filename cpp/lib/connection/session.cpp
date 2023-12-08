@@ -53,7 +53,7 @@ std::string Session::databaseName() const {
 Transaction Session::transaction(TransactionType type, const Options& options) const {
     CHECK_NATIVE(sessionNative);
     _native::Transaction* p = _native::transaction_new(sessionNative.get(), (_native::TransactionType)type, options.getNative());
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
     return Transaction(p, type);  // No std::move for copy-elision
 }
 

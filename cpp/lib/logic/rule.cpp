@@ -48,7 +48,7 @@ std::string Rule::then() {
 template <>
 std::optional<Rule> FutureHelper<std::optional<Rule>, _native::RulePromise>::resolve(_native::RulePromise* promiseNative) {
     _native::Rule* ruleNative = _native::rule_promise_resolve(promiseNative);
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
     return (nullptr != ruleNative) ? std::optional<Rule>(Rule(ruleNative)) : std::optional<Rule>();
 }
 

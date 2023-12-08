@@ -31,11 +31,11 @@ namespace Utils {
 std::string stringFromNative(char* c);
 
 template <class... Args>
-TypeDBDriverException exception(const ErrorMessage& errMsg, Args... args) {
+DriverException exception(const ErrorMessage& errMsg, Args... args) {
     size_t sizeRequired = snprintf(nullptr, 0, errMsg.formatString, args...);
     char* buffer = new char[sizeRequired];
     snprintf(buffer, sizeRequired, errMsg.formatString, args...);
-    TypeDBDriverException exception(errMsg.code, buffer);
+    DriverException exception(errMsg.code, buffer);
     delete[] buffer;
     return exception;
 }

@@ -27,8 +27,8 @@ namespace TypeDB {
 
 class Driver;  // forward declaration for friendship
 
-using UserIterator = TypeDBIterator<_native::UserIterator, _native::User, User>;
-using UserIterable = TypeDBIterable<_native::UserIterator, _native::User, User>;
+using UserIterator = Iterator<_native::UserIterator, _native::User, User>;
+using UserIterable = Iterable<_native::UserIterator, _native::User, User>;
 
 class UserManager {
    public:

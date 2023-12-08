@@ -33,9 +33,9 @@ namespace TypeDB {
 
 class Driver;  // Forward declaration for friendship
 
-using DatabaseIterator = TypeDBIterator<_native::DatabaseIterator, _native::Database, TypeDB::Database>;
+using DatabaseIterator = Iterator<_native::DatabaseIterator, _native::Database, TypeDB::Database>;
 
-using DatabaseIterable = TypeDBIterable<_native::DatabaseIterator, _native::Database, TypeDB::Database>;
+using DatabaseIterable = Iterable<_native::DatabaseIterator, _native::Database, TypeDB::Database>;
 
 class DatabaseManager {
    public:

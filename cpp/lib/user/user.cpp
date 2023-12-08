@@ -41,14 +41,14 @@ std::string User::username() {
 std::optional<int64_t> User::passwordExpirySeconds() {
     CHECK_NATIVE(userNative);
     int64_t expiryNative = _native::user_get_password_expiry_seconds(userNative.get());
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
     return expiryNative >= 0 ? std::optional<int64_t>(expiryNative) : std::optional<int64_t>();
 }
 
 void User::passwordUpdate(const UserManager& userManager, const std::string& passwordOld, const std::string& passwordNew) {
     CHECK_NATIVE(userNative);
     _native::user_password_update(userNative.get(), userManager.getNative(), passwordOld.c_str(), passwordNew.c_str());
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
 }
 
 }  // namespace TypeDB

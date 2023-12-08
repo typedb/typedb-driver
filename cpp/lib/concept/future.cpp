@@ -61,7 +61,7 @@ ConceptFutureWrapperSimple::ConceptFutureWrapperSimple(_native::ConceptPromise* 
 
 _native::Concept* ConceptFutureWrapperSimple::resolve() {
     auto p = _native::concept_promise_resolve(nativePromise);
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
     return p;
 }
 

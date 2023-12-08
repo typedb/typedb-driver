@@ -53,7 +53,7 @@ void TestHooks::beforeAll() const {
 }
 
 void TestHooks::afterScenario(Context& context, const cucumber_bdd::Scenario<Context>* scenario) const {
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
     context.driver.close();
     wipeDatabases(CoreOrEnterpriseConnection::connectWithAuthentication("admin", "password"));
 }

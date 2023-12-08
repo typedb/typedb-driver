@@ -39,7 +39,7 @@ std::string string_promise_resolve_wrapper(_native::StringPromise* promise) {
 template <>
 void FutureHelper<void, _native::VoidPromise>::resolve(_native::VoidPromise* promiseNative) {
     _native::void_promise_resolve(promiseNative);
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
 }
 
 TYPEDB_FUTURE_HELPER(bool, _native::BoolPromise, _native::bool_promise_resolve);

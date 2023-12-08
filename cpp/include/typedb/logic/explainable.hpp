@@ -41,7 +41,7 @@ class OwnerAttributePair {
    private:
     OwnerAttributePair(_native::StringPair* stringPairNative);
 
-    friend class TypeDBIteratorHelper<_native::StringPairIterator, _native::StringPair, OwnerAttributePair>;
+    friend class IteratorHelper<_native::StringPairIterator, _native::StringPair, OwnerAttributePair>;
 };
 
 class Explainable {
@@ -66,8 +66,8 @@ class Explainable {
 };
 
 
-using OwnerAttributePairIterator = TypeDBIterator<_native::StringPairIterator, _native::StringPair, OwnerAttributePair>;
-using OwnerAttributePairIterable = TypeDBIterable<_native::StringPairIterator, _native::StringPair, OwnerAttributePair>;
+using OwnerAttributePairIterator = Iterator<_native::StringPairIterator, _native::StringPair, OwnerAttributePair>;
+using OwnerAttributePairIterable = Iterable<_native::StringPairIterator, _native::StringPair, OwnerAttributePair>;
 
 class Explainables {
    public:

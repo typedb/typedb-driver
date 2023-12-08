@@ -58,11 +58,11 @@ ConceptIteratorWrapper* getSubtypesIteratorNativeForRootThingType(Transaction& t
     auto rootRelation = _native::concepts_get_root_relation_type();
 
     auto entitySubtypeIterator = _native::entity_type_get_subtypes(nativeTransaction, rootEntity, (_native::Transitivity)transitivity);
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
     auto attributeSubtypeIterator = _native::attribute_type_get_subtypes(nativeTransaction, rootAttribute, (_native::Transitivity)transitivity);
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
     auto relationSubtypeIterator = _native::relation_type_get_subtypes(nativeTransaction, rootRelation, (_native::Transitivity)transitivity);
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
 
     _native::concept_drop(rootEntity);
     _native::concept_drop(rootAttribute);
@@ -73,7 +73,7 @@ ConceptIteratorWrapper* getSubtypesIteratorNativeForRootThingType(Transaction& t
 ConceptIteratorWrapper* getSupertypesIteratorNativeForRootThingType(Transaction& transaction) {
     auto rootEntity = _native::concepts_get_root_entity_type();
     auto rootThingTypePromise = _native::entity_type_get_supertype(ConceptFactory::getNative(transaction), rootEntity);
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
     _native::concept_drop(rootEntity);
     return new ConceptPromiseWrappingIterator(rootThingTypePromise);
 }
@@ -140,7 +140,7 @@ ConceptFutureWrapper* Type::getSuperTypeFutureNative(Transaction& transaction) {
         return getSuperTypeFutureNativeforRootThingType(transaction);
     } else {
         _native::ConceptPromise* promiseNative = getSuperTypeFutureNativeFor(ConceptFactory::getNative(transaction), conceptType, conceptNative.get());
-        TypeDBDriverException::check_and_throw();
+        DriverException::check_and_throw();
         return new ConceptFutureWrapperSimple(promiseNative);
     }
 }
@@ -153,7 +153,7 @@ ConceptIteratorWrapper* Type::getSubtypesIteratorNative(Transaction& transaction
         return getSubtypesIteratorNativeForRootThingType(transaction, transitivity);
     } else {
         _native::ConceptIterator* iteratorNative = getSubtypesIteratorNativeFor(ConceptFactory::getNative(transaction), conceptType, conceptNative.get(), (_native::Transitivity)transitivity);
-        TypeDBDriverException::check_and_throw();
+        DriverException::check_and_throw();
         return new ConceptIteratorWrapperSimple(iteratorNative);
     }
 }
@@ -166,7 +166,7 @@ ConceptIteratorWrapper* Type::getSupertypesIteratorNative(Transaction& transacti
         return getSupertypesIteratorNativeForRootThingType(transaction);
     } else {
         _native::ConceptIterator* iteratorNative = getSupertypesIteratorNativeFor(ConceptFactory::getNative(transaction), conceptType, conceptNative.get());
-        TypeDBDriverException::check_and_throw();
+        DriverException::check_and_throw();
         return new ConceptIteratorWrapperSimple(iteratorNative);
     }
 }

@@ -39,7 +39,7 @@ std::unique_ptr<Concept> ValueGroup::owner() {
 AggregateResult ValueGroup::value() {
     CHECK_NATIVE(valueGroupNative);
     _native::Concept* p = _native::value_group_get_value(valueGroupNative.get());
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
     if (p != nullptr) {
         return AggregateResult(ConceptFactory::value(p));
     } else {

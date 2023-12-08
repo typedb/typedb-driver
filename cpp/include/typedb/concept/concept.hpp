@@ -157,9 +157,9 @@ template <typename T>
 using ConceptPtrFuture = Future<std::unique_ptr<T>, ConceptFutureWrapper>;
 
 template <typename T>
-using ConceptIterable = TypeDBIterable<ConceptIteratorWrapper, _native::Concept, std::unique_ptr<T>>;
+using ConceptIterable = Iterable<ConceptIteratorWrapper, _native::Concept, std::unique_ptr<T>>;
 template <typename T>
-using ConceptIterator = TypeDBIterator<ConceptIteratorWrapper, _native::Concept, std::unique_ptr<T>>;
+using ConceptIterator = Iterator<ConceptIteratorWrapper, _native::Concept, std::unique_ptr<T>>;
 
 
 }  // namespace TypeDB

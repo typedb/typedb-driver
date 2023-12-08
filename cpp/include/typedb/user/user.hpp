@@ -44,7 +44,7 @@ class User {
     User& operator=(const User&) = delete;
 
     friend class UserManager;
-    friend TypeDBIteratorHelper<_native::UserIterator, _native::User, User>;
+    friend IteratorHelper<_native::UserIterator, _native::User, User>;
 };
 
 }  // namespace TypeDB

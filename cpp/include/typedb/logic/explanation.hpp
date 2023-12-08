@@ -44,10 +44,10 @@ class Explanation {
     NativePointer<_native::Explanation> explanationNative;
 
 
-    friend class TypeDBIteratorHelper<_native::ExplanationIterator, _native::Explanation, Explanation>;
+    friend class IteratorHelper<_native::ExplanationIterator, _native::Explanation, Explanation>;
 };
 
-using ExplanationIterator = TypeDBIterator<_native::ExplanationIterator, _native::Explanation, Explanation>;
-using ExplanationIterable = TypeDBIterable<_native::ExplanationIterator, _native::Explanation, Explanation>;
+using ExplanationIterator = Iterator<_native::ExplanationIterator, _native::Explanation, Explanation>;
+using ExplanationIterable = Iterable<_native::ExplanationIterator, _native::Explanation, Explanation>;
 
 }  // namespace TypeDB

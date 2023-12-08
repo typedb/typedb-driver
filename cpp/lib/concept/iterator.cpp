@@ -65,7 +65,7 @@ ConceptIteratorWrapperSimple::~ConceptIteratorWrapperSimple() {
 
 _native::Concept* ConceptIteratorWrapperSimple::next() {
     auto p = _native::concept_iterator_next(nativeIterator);
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
     return p;
 }
 
@@ -98,11 +98,11 @@ ConceptIteratorWrapperChained::~ConceptIteratorWrapperChained() {
 _native::Concept* ConceptIteratorWrapperChained::next() {
     _native::Concept* nextConcept = nullptr;
     while (!nativeIterators.empty() && nullptr == (nextConcept = _native::concept_iterator_next(nativeIterators.back()))) {
-        TypeDBDriverException::check_and_throw();
+        DriverException::check_and_throw();
         _native::concept_iterator_drop(nativeIterators.back());
         nativeIterators.pop_back();
     }
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
     return nextConcept;
 }
 

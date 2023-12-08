@@ -121,7 +121,7 @@ std::string Value::asString() {
 DateTime Value::asDateTime() {
     CHECK_CAST(ValueType::DATETIME);
     int64_t dateTimeAsMillis = _native::value_get_date_time_as_millis(conceptNative.get());
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
     return DateTime(std::chrono::milliseconds{dateTimeAsMillis});
 }
 

@@ -44,13 +44,13 @@ bool UserManager::contains(const std::string& username) const {
 void UserManager::create(const std::string& username, const std::string& password) const {
     CHECK_NATIVE(userManagerNative);
     _native::users_create(userManagerNative.get(), username.c_str(), password.c_str());
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
 }
 
 void UserManager::drop(const std::string& username) const {
     CHECK_NATIVE(userManagerNative);
     _native::users_delete(userManagerNative.get(), username.c_str());
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
 }
 
 UserIterable UserManager::all() const {
@@ -61,14 +61,14 @@ UserIterable UserManager::all() const {
 std::unique_ptr<User> UserManager::get(const std::string& username) const {
     CHECK_NATIVE(userManagerNative);
     auto p = _native::users_get(userManagerNative.get(), username.c_str());
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
     return std::unique_ptr<User>(new User(p));
 }
 
 void UserManager::passwordSet(const std::string& username, const std::string& password) const {
     CHECK_NATIVE(userManagerNative);
     _native::users_set_password(userManagerNative.get(), username.c_str(), password.c_str());
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
 }
 
 User UserManager::getCurrentUser() const {

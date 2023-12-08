@@ -56,10 +56,10 @@ class Future {
     RETURN get() {
         if constexpr (std::is_same_v<RETURN, void>) {
             HELPER::resolve(promiseNative.release());
-            TypeDBDriverException::check_and_throw();
+            DriverException::check_and_throw();
         } else {
             auto t = HELPER::resolve(promiseNative.release());
-            TypeDBDriverException::check_and_throw();
+            DriverException::check_and_throw();
             return t;
         }
     }

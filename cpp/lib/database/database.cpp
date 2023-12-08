@@ -73,7 +73,7 @@ ReplicaInfoIterable Database::replicas() {
 void Database::drop() {
     CHECK_NATIVE(databaseNative);
     _native::database_delete(databaseNative.get());
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
     databaseNative.release();  //  Release avoids the dangling pointer invoking the deleter
 }
 

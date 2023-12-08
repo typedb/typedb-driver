@@ -34,8 +34,8 @@ class Rule;
 using RuleFuture = Future<Rule, _native::RulePromise>;
 using OptionalRuleFuture = Future<std::optional<Rule>, _native::RulePromise>;
 
-using RuleIterable = TypeDBIterable<_native::RuleIterator, _native::Rule, Rule>;
-using RuleIterator = TypeDBIterator<_native::RuleIterator, _native::Rule, Rule>;
+using RuleIterable = Iterable<_native::RuleIterator, _native::Rule, Rule>;
+using RuleIterator = Iterator<_native::RuleIterator, _native::Rule, Rule>;
 
 class Rule {
    public:
@@ -55,7 +55,7 @@ class Rule {
     NativePointer<_native::Rule> ruleNative;
 
     friend class Explanation;
-    friend class TypeDBIteratorHelper<_native::RuleIterator, _native::Rule, Rule>;
+    friend class IteratorHelper<_native::RuleIterator, _native::Rule, Rule>;
     friend class FutureHelper<Rule, _native::RulePromise>;
     friend class FutureHelper<std::optional<Rule>, _native::RulePromise>;
 };

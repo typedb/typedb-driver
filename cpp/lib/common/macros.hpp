@@ -33,12 +33,12 @@
 #define THROW_ILLEGAL_STATE \
     { throw TypeDB::Utils::exception(TypeDB::InternalError::ILLEGAL_STATE, __FILE__, __LINE__); }
 
-// Helper for TypeDBIteratorHelper
+// Helper for IteratorHelper
 #define TYPEDB_FUTURE_HELPER_1(RETURN, NATIVE_PROMISE, NATIVE_PROMISE_RESOLVE, INSTANTIATE) \
     template <>                                                                             \
     RETURN FutureHelper<RETURN, NATIVE_PROMISE>::resolve(NATIVE_PROMISE* promiseNative) {   \
         auto p = NATIVE_PROMISE_RESOLVE(promiseNative);                                     \
-        TypeDBDriverException::check_and_throw();                                           \
+        DriverException::check_and_throw();                                                 \
         return INSTANTIATE(p);                                                              \
     }
 
@@ -47,15 +47,15 @@
 
 #define TYPEDB_ITERATOR_HELPER_1(NATIVE_ITER, NATIVE_T, T, NATIVE_ITER_DROP, NATIVE_ITER_NEXT, NATIVE_T_DROP, INSTANTIATE) \
     template <>                                                                                                            \
-    void TypeDBIteratorHelper<NATIVE_ITER, NATIVE_T, T>::nativeIterDrop(NATIVE_ITER* it) {                                 \
+    void IteratorHelper<NATIVE_ITER, NATIVE_T, T>::nativeIterDrop(NATIVE_ITER* it) {                                       \
         NATIVE_ITER_DROP(it);                                                                                              \
     }                                                                                                                      \
     template <>                                                                                                            \
-    NATIVE_T* TypeDBIteratorHelper<NATIVE_ITER, NATIVE_T, T>::nativeIterNext(NATIVE_ITER* it) {                            \
+    NATIVE_T* IteratorHelper<NATIVE_ITER, NATIVE_T, T>::nativeIterNext(NATIVE_ITER* it) {                                  \
         return NATIVE_ITER_NEXT(it);                                                                                       \
     }                                                                                                                      \
     template <>                                                                                                            \
-    T TypeDBIteratorHelper<NATIVE_ITER, NATIVE_T, T>::instantiate(NATIVE_T* tNative) {                                     \
+    T IteratorHelper<NATIVE_ITER, NATIVE_T, T>::instantiate(NATIVE_T* tNative) {                                           \
         return INSTANTIATE(tNative);                                                                                       \
     }
 
@@ -71,11 +71,11 @@
         if (nullptr == PTR) throw Utils::exception(TypeDB::InternalError::INVALID_NATIVE_HANDLE); \
     }
 
-#define WRAPPED_NATIVE_CALL(TYPE, NATIVE_CALL)    \
-    {                                             \
-        auto p = NATIVE_CALL;                     \
-        TypeDBDriverException::check_and_throw(); \
-        return TYPE(p);                           \
+#define WRAPPED_NATIVE_CALL(TYPE, NATIVE_CALL) \
+    {                                          \
+        auto p = NATIVE_CALL;                  \
+        DriverException::check_and_throw();    \
+        return TYPE(p);                        \
     }
 
 // Specific to concept-api

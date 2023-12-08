@@ -43,11 +43,11 @@ class ConceptMapGroup {
    private:
     NativePointer<_native::ConceptMapGroup> conceptMapGroupNative;
 
-    friend class TypeDBIteratorHelper<_native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup>;
+    friend class IteratorHelper<_native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup>;
 };
 
 // For ConceptMapGroup
-using ConceptMapGroupIterable = TypeDBIterable<_native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup>;
-using ConceptMapGroupIterator = TypeDBIterator<_native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup>;
+using ConceptMapGroupIterable = Iterable<_native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup>;
+using ConceptMapGroupIterator = Iterator<_native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup>;
 
 }  // namespace TypeDB

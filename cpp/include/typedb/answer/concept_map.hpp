@@ -48,11 +48,11 @@ class ConceptMap {
    private:
     NativePointer<_native::ConceptMap> conceptMapNative;
 
-    friend class TypeDBIteratorHelper<_native::ConceptMapIterator, _native::ConceptMap, ConceptMap>;
+    friend class IteratorHelper<_native::ConceptMapIterator, _native::ConceptMap, ConceptMap>;
 };
 
 // ConceptMapIterator
-using ConceptMapIterator = TypeDBIterator<_native::ConceptMapIterator, _native::ConceptMap, TypeDB::ConceptMap>;
-using ConceptMapIterable = TypeDBIterable<_native::ConceptMapIterator, _native::ConceptMap, TypeDB::ConceptMap>;
+using ConceptMapIterator = Iterator<_native::ConceptMapIterator, _native::ConceptMap, TypeDB::ConceptMap>;
+using ConceptMapIterable = Iterable<_native::ConceptMapIterator, _native::ConceptMap, TypeDB::ConceptMap>;
 
 }  // namespace TypeDB

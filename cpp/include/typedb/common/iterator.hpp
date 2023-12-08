@@ -30,24 +30,24 @@
 
 namespace TypeDB {
 template <typename NATIVE_ITER, typename NATIVE_T, typename T, typename HELPER>
-class TypeDBIterable;
+class Iterable;
 
 template <typename NATIVE_ITER, typename NATIVE_T, typename T>
-class TypeDBIteratorHelper;
+class IteratorHelper;
 
-template <typename NATIVE_ITER, typename NATIVE_T, typename T, typename HELPER = TypeDBIteratorHelper<NATIVE_ITER, NATIVE_T, T>>
-class TypeDBIterator {  // Does not support range-based for loops yet.
+template <typename NATIVE_ITER, typename NATIVE_T, typename T, typename HELPER = IteratorHelper<NATIVE_ITER, NATIVE_T, T>>
+class Iterator {  // Does not support range-based for loops yet.
 
-    using SELF = TypeDBIterator<NATIVE_ITER, NATIVE_T, T>;
+    using SELF = Iterator<NATIVE_ITER, NATIVE_T, T>;
 
    public:
-    TypeDBIterator(NATIVE_ITER* iteratorNative)
+    Iterator(NATIVE_ITER* iteratorNative)
         : iteratorNative(iteratorNative, &HELPER::nativeIterDrop),
           obj() {}
 
-    TypeDBIterator(const SELF& from) = delete;
+    Iterator(const SELF& from) = delete;
 
-    TypeDBIterator(SELF&& from)
+    Iterator(SELF&& from)
         : iteratorNative(std::move(from.iteratorNative)), obj(std::move(from.obj)) {}
 
     SELF& operator=(const SELF& from) = delete;
@@ -70,7 +70,7 @@ class TypeDBIterator {  // Does not support range-based for loops yet.
 
     SELF& operator++() {
         NATIVE_T* p = HELPER::nativeIterNext(iteratorNative.get());
-        TypeDBDriverException::check_and_throw();
+        DriverException::check_and_throw();
 
         if (p == nullptr) {
             iteratorNative.reset();  // Makes it equal to end.
@@ -83,7 +83,7 @@ class TypeDBIterator {  // Does not support range-based for loops yet.
 
     T& operator*() {
         if ((*this) == SELF()) {
-            throw TypeDBDriverException(InternalError::ITERATOR_INVALIDATED.code, InternalError::ITERATOR_INVALIDATED.formatString);
+            throw DriverException(InternalError::ITERATOR_INVALIDATED.code, InternalError::ITERATOR_INVALIDATED.formatString);
         }
         assert(obj.has_value());
         return obj.value();
@@ -91,37 +91,37 @@ class TypeDBIterator {  // Does not support range-based for loops yet.
 
     T* operator->() {
         if ((*this) == SELF()) {
-            throw TypeDBDriverException(InternalError::ITERATOR_INVALIDATED.code, InternalError::ITERATOR_INVALIDATED.formatString);
+            throw DriverException(InternalError::ITERATOR_INVALIDATED.code, InternalError::ITERATOR_INVALIDATED.formatString);
         }
         assert(obj.has_value());
         return &obj.value();
     }
 
    private:
-    TypeDBIterator()
+    Iterator()
         : iteratorNative(nullptr), obj() {}
     NativePointer<NATIVE_ITER> iteratorNative;
     std::optional<T> obj;
 
-    friend class TypeDBIterable<NATIVE_ITER, NATIVE_T, T, HELPER>;
+    friend class Iterable<NATIVE_ITER, NATIVE_T, T, HELPER>;
 };
 
-template <typename NATIVE_ITER, typename NATIVE_T, typename T, typename HELPER = TypeDBIteratorHelper<NATIVE_ITER, NATIVE_T, T>>
-class TypeDBIterable {
-    using SELF = TypeDBIterable<NATIVE_ITER, NATIVE_T, T>;
-    using ITERATOR = TypeDBIterator<NATIVE_ITER, NATIVE_T, T, HELPER>;
+template <typename NATIVE_ITER, typename NATIVE_T, typename T, typename HELPER = IteratorHelper<NATIVE_ITER, NATIVE_T, T>>
+class Iterable {
+    using SELF = Iterable<NATIVE_ITER, NATIVE_T, T>;
+    using ITERATOR = Iterator<NATIVE_ITER, NATIVE_T, T, HELPER>;
 
    public:
-    TypeDBIterable(NATIVE_ITER* iteratorNative)
+    Iterable(NATIVE_ITER* iteratorNative)
         : iteratorNative(iteratorNative, HELPER::nativeIterDrop) {}
-    TypeDBIterable(SELF& from) = delete;
-    TypeDBIterable(SELF&& from) {
+    Iterable(SELF& from) = delete;
+    Iterable(SELF&& from) {
         *this = std::move(from);
     }
 
-    TypeDBIterable& operator=(const SELF& from) = delete;
+    Iterable& operator=(const SELF& from) = delete;
 
-    TypeDBIterable& operator=(SELF&& from) {
+    Iterable& operator=(SELF&& from) {
         iteratorNative = std::move(from.iteratorNative);
         return *this;
     }
@@ -141,19 +141,19 @@ class TypeDBIterable {
 };
 
 template <typename NATIVE_ITER, typename NATIVE_T, typename T>
-class TypeDBIteratorHelper {
-    using SELF = TypeDBIteratorHelper<NATIVE_ITER, NATIVE_T, T>;
+class IteratorHelper {
+    using SELF = IteratorHelper<NATIVE_ITER, NATIVE_T, T>;
 
    private:
     static void nativeIterDrop(NATIVE_ITER* it);
     static NATIVE_T* nativeIterNext(NATIVE_ITER* it);
     static T instantiate(NATIVE_T* element);
 
-    friend class TypeDBIterator<NATIVE_ITER, NATIVE_T, T, SELF>;
-    friend class TypeDBIterable<NATIVE_ITER, NATIVE_T, T, SELF>;
+    friend class Iterator<NATIVE_ITER, NATIVE_T, T, SELF>;
+    friend class Iterable<NATIVE_ITER, NATIVE_T, T, SELF>;
 };
 
-using StringIterable = TypeDBIterable<_native::StringIterator, char, std::string>;
-using StringIterator = TypeDBIterator<_native::StringIterator, char, std::string>;
+using StringIterable = Iterable<_native::StringIterator, char, std::string>;
+using StringIterator = Iterator<_native::StringIterator, char, std::string>;
 
 }  // namespace TypeDB

@@ -43,7 +43,7 @@ DatabaseManager::DatabaseManager(_native::Connection* connectionNative) {
 void DatabaseManager::create(const std::string& name) const {
     CHECK_NATIVE(databaseManagerNative);
     _native::databases_create(databaseManagerNative.get(), name.c_str());
-    TypeDBDriverException::check_and_throw();
+    DriverException::check_and_throw();
 }
 
 bool DatabaseManager::contains(const std::string& name) const {

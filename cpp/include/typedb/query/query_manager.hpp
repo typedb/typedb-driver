@@ -36,7 +36,7 @@
 
 namespace TypeDB {
 
-using JSONIterable = TypeDBIterable<_native::StringIterator, char, JSON>;
+using JSONIterable = Iterable<_native::StringIterator, char, JSON>;
 
 class Transaction;
 

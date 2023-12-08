@@ -59,7 +59,7 @@ class ConceptManager {
     ConceptPtrFuture<Relation> getRelation(const std::string& iid) const;
     ConceptPtrFuture<Attribute> getAttribute(const std::string& iid) const;
 
-    std::vector<TypeDBDriverException> getSchemaExceptions();
+    std::vector<DriverException> getSchemaExceptions();
 
    private:
     TypeDB::Transaction* const transaction;

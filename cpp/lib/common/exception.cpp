@@ -28,36 +28,36 @@
 
 namespace TypeDB {
 
-TypeDBDriverException::TypeDBDriverException(const char* code, const char* message)
+DriverException::DriverException(const char* code, const char* message)
     : std::runtime_error(std::string(code) + std::string(message)),
       errorCodeLength(strlen(code)),
       messageLength(strlen(message)) {}
 
-TypeDBDriverException::TypeDBDriverException(_native::Error* errorNative)
-    : TypeDBDriverException(
+DriverException::DriverException(_native::Error* errorNative)
+    : DriverException(
           Utils::stringFromNative(_native::error_code(errorNative)).c_str(),
           Utils::stringFromNative(_native::error_message(errorNative)).c_str()) {
     _native::error_drop(errorNative);
 }
 
-TypeDBDriverException::TypeDBDriverException(_native::SchemaException* schemaExceptionNative)
-    : TypeDBDriverException(
+DriverException::DriverException(_native::SchemaException* schemaExceptionNative)
+    : DriverException(
           Utils::stringFromNative(_native::schema_exception_code(schemaExceptionNative)).c_str(),
           Utils::stringFromNative(_native::schema_exception_message(schemaExceptionNative)).c_str()) {
     _native::schema_exception_drop(schemaExceptionNative);
 }
 
-const std::string_view TypeDBDriverException::code() {
+const std::string_view DriverException::code() {
     return std::string_view(what(), errorCodeLength);
 }
 
-const std::string_view TypeDBDriverException::message() {
+const std::string_view DriverException::message() {
     return std::string_view(what() + errorCodeLength, messageLength);
 }
 
-void TypeDBDriverException::check_and_throw() {
+void DriverException::check_and_throw() {
     if (_native::check_error()) {
-        TypeDBDriverException exception(_native::get_last_error());
+        DriverException exception(_native::get_last_error());
         throw exception;
     }
 }

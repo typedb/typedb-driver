@@ -47,7 +47,7 @@ bool compareStringWithDouble(std::string& first, double second);
 bool compareStringWithDateTime(std::string&, TypeDB::DateTime);
 
 template <typename _1, typename _2, typename _3, typename T>
-std::vector<T> collect(TypeDBIterable<_1, _2, T, _3> it) {
+std::vector<T> collect(Iterable<_1, _2, T, _3> it) {
     std::vector<T> v;
     for (auto& x : it)
         v.push_back(std::move(x));
@@ -68,7 +68,7 @@ bool containsInstance(const std::vector<std::unique_ptr<T1>>& instanceList, Conc
 }
 
 template <typename _1, typename _2, typename _3, typename IN, typename OUT>
-std::vector<OUT> transform(TypeDB::TypeDBIterable<_1, _2, IN, _3> it, std::function<OUT(const IN&)> fn) {
+std::vector<OUT> transform(TypeDB::Iterable<_1, _2, IN, _3> it, std::function<OUT(const IN&)> fn) {
     std::vector<OUT> v;
     for (auto& in : it) {
         v.push_back(fn(in));
@@ -78,7 +78,7 @@ std::vector<OUT> transform(TypeDB::TypeDBIterable<_1, _2, IN, _3> it, std::funct
 
 
 template <typename _1, typename _2, typename _3, typename IN, typename OUT>
-std::vector<OUT> transform(TypeDB::TypeDBIterable<_1, _2, IN, _3> it, OUT (*fn)(const IN&)) {
+std::vector<OUT> transform(TypeDB::Iterable<_1, _2, IN, _3> it, OUT (*fn)(const IN&)) {
     std::vector<OUT> v;
     for (auto& in : it)
         v.push_back(fn(in));
