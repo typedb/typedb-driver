@@ -31,7 +31,7 @@ using namespace cucumber::messages;
 
 cucumber_bdd::StepCollection<Context> sessionSteps = {
     BDD_STEP("connection open session for database: (\\w+)", {
-        context.setSession(context.driver.session(matches[1], TypeDB::SessionType::DATA, context.sessionOptions));
+        context.setSession(context.driver->session(matches[1], TypeDB::SessionType::DATA, context.sessionOptions));
     }),
     BDD_STEP("session is null: (true|false)", {
         ASSERT_EQ(parseBoolean(matches[1]), !context.session().isOpen());
@@ -44,17 +44,17 @@ cucumber_bdd::StepCollection<Context> sessionSteps = {
     }),
 
     BDD_STEP("connection open schema session for database: (\\w+)", {
-        context.setSession(context.driver.session(matches[1], TypeDB::SessionType::SCHEMA, context.sessionOptions));
+        context.setSession(context.driver->session(matches[1], TypeDB::SessionType::SCHEMA, context.sessionOptions));
     }),
     BDD_STEP("connection open data session for database: (\\w+)", {
-        context.setSession(context.driver.session(matches[1], TypeDB::SessionType::DATA, context.sessionOptions));
+        context.setSession(context.driver->session(matches[1], TypeDB::SessionType::DATA, context.sessionOptions));
     }),
     BDD_STEP("connection open(?: data)? sessions for database[s]?:", {
-        std::function<TypeDB::Session(pickle_table_row*)> fn = [&](pickle_table_row* row) { return context.driver.session(row->cells[0].value, TypeDB::SessionType::DATA, context.sessionOptions); };
+        std::function<TypeDB::Session(pickle_table_row*)> fn = [&](pickle_table_row* row) { return context.driver->session(row->cells[0].value, TypeDB::SessionType::DATA, context.sessionOptions); };
         context.sessions = apply_serial(step.argument->data_table->rows, fn);
     }),
     BDD_STEP("connection open(?: data)? sessions in parallel for databases:", {
-        std::function<TypeDB::Session(pickle_table_row*)> fn = [&](pickle_table_row* row) { return context.driver.session(row->cells[0].value, TypeDB::SessionType::DATA, context.sessionOptions); };
+        std::function<TypeDB::Session(pickle_table_row*)> fn = [&](pickle_table_row* row) { return context.driver->session(row->cells[0].value, TypeDB::SessionType::DATA, context.sessionOptions); };
         context.sessions = apply_parallel(step.argument->data_table->rows, fn);
     }),
     BDD_STEP("connection close all sessions", {

@@ -31,9 +31,6 @@ namespace TypeDB {
 static_assert(static_cast<int>(SessionType::DATA) == _native::Data);
 static_assert(static_cast<int>(SessionType::SCHEMA) == _native::Schema);
 
-Session::Session()
-    : Session(nullptr) {}
-
 Session::Session(_native::Session* sessionNative)
     : sessionNative(sessionNative, _native::session_close) {}
 

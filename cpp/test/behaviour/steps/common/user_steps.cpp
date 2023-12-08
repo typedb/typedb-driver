@@ -31,35 +31,35 @@ using namespace cucumber::messages;
 
 cucumber_bdd::StepCollection<Context> userSteps = {
     BDD_STEP_AND_THROWS("users get all", {
-        for (auto& it : context.driver.users.all())
+        for (auto& it : context.driver->users.all())
             ;
     }),
     BDD_STEP_AND_THROWS("users get user: (\\S+)", {
-        ASSERT_FALSE(nullptr == context.driver.users.get(matches[1].str()));
+        ASSERT_FALSE(nullptr == context.driver->users.get(matches[1].str()));
     }),
     BDD_STEP_AND_THROWS("users contains: (\\S+)", {
-        ASSERT_TRUE(context.driver.users.contains(matches[1].str()));
+        ASSERT_TRUE(context.driver->users.contains(matches[1].str()));
     }),
     BDD_STEP("users not contains: (\\S+)", {
-        ASSERT_FALSE(context.driver.users.contains(matches[1].str()));
+        ASSERT_FALSE(context.driver->users.contains(matches[1].str()));
     }),
     BDD_STEP_AND_THROWS("users create: (\\S+), (\\S+)", {
-        context.driver.users.create(matches[1].str(), matches[2].str());
+        context.driver->users.create(matches[1].str(), matches[2].str());
     }),
     BDD_STEP_AND_THROWS("users password set: (\\S+), (\\S+)", {
-        context.driver.users.passwordSet(matches[1].str(), matches[2].str());
+        context.driver->users.passwordSet(matches[1].str(), matches[2].str());
     }),
     BDD_STEP_AND_THROWS("users delete: (\\S+)", {
-        context.driver.users.drop(matches[1].str());
+        context.driver->users.drop(matches[1].str());
     }),
     BDD_STEP("\\s*get connected user\\s*", {
-        auto ignored = context.driver.users.getCurrentUser();
+        auto ignored = context.driver->users.getCurrentUser();
     }),
     BDD_STEP_AND_THROWS("user password update: (\\S+), (\\S+)", {
-        context.driver.users.getCurrentUser().passwordUpdate(context.driver.users, matches[1].str(), matches[2].str());
+        context.driver->users.getCurrentUser().passwordUpdate(context.driver->users, matches[1].str(), matches[2].str());
     }),
     BDD_STEP_AND_THROWS("user expiry-seconds", {
-        ASSERT_TRUE(context.driver.users.getCurrentUser().passwordExpirySeconds().has_value());
+        ASSERT_TRUE(context.driver->users.getCurrentUser().passwordExpirySeconds().has_value());
     }),
 };
 

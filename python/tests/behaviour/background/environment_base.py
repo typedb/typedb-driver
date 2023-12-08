@@ -76,8 +76,8 @@ def _clear_answers_impl(context: Context):
 def after_scenario(context: Context, scenario):
     if scenario.status == Status.skipped:
         return
-    if context.driver.is_open():
-        context.driver.close()
+    if context.driver->is_open():
+        context.driver->close()
 
 
 def after_all(context: Context):

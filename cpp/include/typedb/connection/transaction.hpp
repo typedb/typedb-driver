@@ -47,7 +47,6 @@ class Transaction {
     const ConceptManager concepts;
     const LogicManager logic;
 
-    Transaction();
     Transaction(const Transaction&) = delete;
     Transaction(Transaction&&);
     ~Transaction() = default;

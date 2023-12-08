@@ -37,16 +37,16 @@ cucumber_bdd::StepCollection<Context> connectionSteps = {
     }),
 
     BDD_STEP("connection has been opened", {
-        ASSERT_TRUE(context.driver.isOpen());
+        ASSERT_TRUE(context.driver->isOpen());
     }),
 
     BDD_STEP("connection does not have any database", {
-        DatabaseIterable databases = context.driver.databases.all();
+        DatabaseIterable databases = context.driver->databases.all();
         ASSERT_TRUE(databases.begin() == databases.end());
     }),
 
     BDD_STEP("connection closes", {
-        context.driver.close();
+        context.driver->close();
     }),
 
     BDD_NOOP("typedb stops"),

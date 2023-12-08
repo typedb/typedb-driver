@@ -58,12 +58,11 @@ class Driver {
     static Driver coreDriver(const std::string& coreAddress);
     static Driver enterpriseDriver(const std::vector<std::string>& enterpriseAddresses, const Credential& credential);
 
-    Driver();
     Driver(const Driver&) = delete;
     Driver(Driver&& from) = default;
     ~Driver() = default;
 
-    Driver& operator=(Driver& from) = delete;
+    Driver& operator=(const Driver& from) = delete;
     Driver& operator=(Driver&& from) = default;
 
     bool isOpen();

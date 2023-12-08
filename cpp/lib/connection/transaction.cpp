@@ -31,9 +31,6 @@ namespace TypeDB {
 static_assert(static_cast<int>(TransactionType::READ) == _native::Read);
 static_assert(static_cast<int>(TransactionType::WRITE) == _native::Write);
 
-Transaction::Transaction()
-    : Transaction(nullptr, TypeDB::TransactionType::READ) {}
-
 Transaction::Transaction(_native::Transaction* transactionNative, TypeDB::TransactionType txnType)
     : transactionNative(transactionNative, _native::transaction_close), txnType(txnType), query(this), concepts(this), logic(this) {}
 

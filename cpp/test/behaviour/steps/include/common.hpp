@@ -34,7 +34,7 @@ namespace TypeDB::BDD {
 
 
 struct Context {
-    TypeDB::Driver driver;  // TODO: All these optional, so the null checks are meaningful?
+    std::optional<TypeDB::Driver> driver;  // TODO: All these optional, so the null checks are meaningful?
 
     std::vector<TypeDB::Session> sessions;
     std::map<TypeDB::Session*, std::vector<TypeDB::Transaction>> sessionTransactions;  // Brittle: We strongly assume the session will always live in Context.sessions

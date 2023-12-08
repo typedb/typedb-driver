@@ -34,7 +34,6 @@ class DatabaseManager;  // forward declaration for friendship
 
 class Session {
    public:
-    Session();
     Session(const Session&) = delete;
     Session(Session&&) = default;
     ~Session() = default;

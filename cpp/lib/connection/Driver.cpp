@@ -56,9 +56,6 @@ Driver Driver::enterpriseDriver(const std::vector<std::string>& enterpriseAddres
     return Driver(p);
 }
 
-Driver::Driver()
-    : Driver(nullptr) {}
-
 Driver::Driver(_native::Connection* conn) noexcept
     : connectionNative(conn, _native::connection_close),
       databases(this->connectionNative.get()),
