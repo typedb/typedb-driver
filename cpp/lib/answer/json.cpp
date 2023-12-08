@@ -45,9 +45,6 @@ const char* jsonTypeNames[] = {
 
 #define NAME(X) jsonTypeNames[(int)(X)]
 
-JSON::JSON()
-    : _type(JSONType::NONE), _longValue(0L) {}
-
 JSON::JSON(const JSON& from) {
     *this = from;
 }
@@ -55,30 +52,30 @@ JSON::JSON(const JSON& from) {
 JSON& JSON::operator=(const JSON& from) {
     switch (from._type) {
         case JSONType::STRING: {
-            new (&_stringValue) JSONString();
-            _stringValue = from._stringValue;
+            new (&stringValue) JSONString();
+            stringValue = from.stringValue;
             break;
         }
         case JSONType::ARRAY: {
-            new (&_array) JSONArray();
-            _array = from._array;
+            new (&arrayValue) JSONArray();
+            arrayValue = from.arrayValue;
             break;
         }
         case JSONType::MAP: {
-            new (&_map) JSONMap();
-            _map = from._map;
+            new (&mapValue) JSONMap();
+            mapValue = from.mapValue;
             break;
         }
         case JSONType::BOOLEAN: {
-            _boolValue = from._boolValue;
+            boolValue = from.boolValue;
             break;
         }
         case JSONType::LONG: {
-            _longValue = from._longValue;
+            longValue = from.longValue;
             break;
         }
         case JSONType::DOUBLE: {
-            _doubleValue = from._doubleValue;
+            doubleValue = from.doubleValue;
             break;
         }
         case JSONType::NONE: {
@@ -97,30 +94,30 @@ JSON::JSON(JSON&& from) {
 JSON& JSON::operator=(JSON&& from) {
     switch (from._type) {
         case JSONType::STRING: {
-            new (&_stringValue) JSONString();
-            _stringValue = std::move(from._stringValue);
+            new (&stringValue) JSONString();
+            stringValue = std::move(from.stringValue);
             break;
         }
         case JSONType::ARRAY: {
-            new (&_array) JSONArray();
-            _array = std::move(from._array);
+            new (&arrayValue) JSONArray();
+            arrayValue = std::move(from.arrayValue);
             break;
         }
         case JSONType::MAP: {
-            new (&_map) JSONMap();
-            _map = std::move(from._map);
+            new (&mapValue) JSONMap();
+            mapValue = std::move(from.mapValue);
             break;
         }
         case JSONType::BOOLEAN: {
-            _boolValue = std::move(from._boolValue);
+            boolValue = std::move(from.boolValue);
             break;
         }
         case JSONType::LONG: {
-            _longValue = std::move(from._longValue);
+            longValue = std::move(from.longValue);
             break;
         }
         case JSONType::DOUBLE: {
-            _doubleValue = std::move(from._doubleValue);
+            doubleValue = std::move(from.doubleValue);
             break;
         }
         case JSONType::NONE: {
@@ -133,50 +130,50 @@ JSON& JSON::operator=(JSON&& from) {
 }
 
 JSON::JSON(JSONBoolean b)
-    : _type(JSONType::BOOLEAN), _boolValue(b) {
+    : _type(JSONType::BOOLEAN), boolValue(b) {
 }
 
 JSON::JSON(JSONLong l)
-    : _type(JSONType::LONG), _longValue(l) {
+    : _type(JSONType::LONG), longValue(l) {
 }
 
 JSON::JSON(JSONDouble d)
-    : _type(JSONType::DOUBLE), _doubleValue(d) {
+    : _type(JSONType::DOUBLE), doubleValue(d) {
 }
 
 JSON::JSON(const JSONString& str)
-    : _type(JSONType::STRING), _stringValue(str) {
+    : _type(JSONType::STRING), stringValue(str) {
 }
 
 JSON::JSON(const JSONMap& from)
-    : _type(JSONType::MAP), _map(from) {}
+    : _type(JSONType::MAP), mapValue(from) {}
 
 JSON::JSON(const JSONArray& from)
-    : _type(JSONType::ARRAY), _array(from) {}
+    : _type(JSONType::ARRAY), arrayValue(from) {}
 
 
 JSON::JSON(JSONString&& str)
-    : _type(JSONType::STRING), _stringValue(std::move(str)) {
+    : _type(JSONType::STRING), stringValue(std::move(str)) {
 }
 JSON::JSON(JSONMap&& from)
-    : _type(JSONType::MAP), _map(std::move(from)) {}
+    : _type(JSONType::MAP), mapValue(std::move(from)) {}
 
 JSON::JSON(JSONArray&& from)
-    : _type(JSONType::ARRAY), _array(std::move(from)) {}
+    : _type(JSONType::ARRAY), arrayValue(std::move(from)) {}
 
 
 JSON::~JSON() {
     switch (_type) {
         case JSONType::STRING: {
-            _stringValue.~JSONString();
+            stringValue.~JSONString();
             break;
         }
         case JSONType::ARRAY: {
-            _array.~JSONArray();
+            arrayValue.~JSONArray();
             break;
         }
         case JSONType::MAP: {
-            _map.~JSONMap();
+            mapValue.~JSONMap();
             break;
         }
         case JSONType::NONE:
@@ -218,29 +215,29 @@ bool JSON::isString() const {
     return _type == JSONType::STRING;
 }
 
-const JSONMap& JSON::map() const {
+const JSONMap& JSON::asMap() const {
     if (!isMap()) throw Utils::exception(DriverError::INVALID_JSON_CAST, NAME(_type), NAME(JSONType::MAP));
-    return _map;
+    return mapValue;
 }
-const JSONArray& JSON::array() const {
+const JSONArray& JSON::asArray() const {
     if (!isArray()) throw Utils::exception(DriverError::INVALID_JSON_CAST, NAME(_type), NAME(JSONType::ARRAY));
-    return _array;
+    return arrayValue;
 }
-const JSONBoolean& JSON::boolValue() const {
+const JSONBoolean& JSON::asBoolean() const {
     if (!isBoolean()) throw Utils::exception(DriverError::INVALID_JSON_CAST, NAME(_type), NAME(JSONType::BOOLEAN));
-    return _boolValue;
+    return boolValue;
 }
-const JSONLong& JSON::longValue() const {
+const JSONLong& JSON::asLong() const {
     if (!isLong()) throw Utils::exception(DriverError::INVALID_JSON_CAST, NAME(_type), NAME(JSONType::LONG));
-    return _longValue;
+    return longValue;
 }
-const JSONDouble& JSON::doubleValue() const {
+const JSONDouble& JSON::asDouble() const {
     if (!isDouble()) throw Utils::exception(DriverError::INVALID_JSON_CAST, NAME(_type), NAME(JSONType::DOUBLE));
-    return _doubleValue;
+    return doubleValue;
 }
-const JSONString& JSON::stringValue() const {
+const JSONString& JSON::asString() const {
     if (!isString()) throw Utils::exception(DriverError::INVALID_JSON_CAST, NAME(_type), NAME(JSONType::STRING));
-    return _stringValue;
+    return stringValue;
 }
 
 class JSONBuilder {

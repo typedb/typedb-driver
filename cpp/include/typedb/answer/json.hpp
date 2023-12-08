@@ -84,7 +84,6 @@ class JSONBuilder;
 class JSON {
    public:
     static JSON parse(const std::string& string);
-    JSON();
     ~JSON();
 
     JSON(const JSON&);
@@ -101,23 +100,22 @@ class JSON {
     bool isDouble() const;
     bool isString() const;
 
-    const JSONMap& map() const;
-    const JSONArray& array() const;
-    const JSONBoolean& boolValue() const;
-    const JSONLong& longValue() const;
-    const JSONDouble& doubleValue() const;
-    const JSONString& stringValue() const;
-    std::string toString() const;
+    const JSONMap& asMap() const;
+    const JSONArray& asArray() const;
+    const JSONBoolean& asBoolean() const;
+    const JSONLong& asLong() const;
+    const JSONDouble& asDouble() const;
+    const JSONString& asString() const;
 
    private:
     JSONType _type;
     const union {
-        JSONMap _map;
-        JSONArray _array;
-        JSONString _stringValue;
-        JSONBoolean _boolValue;
-        JSONLong _longValue;
-        JSONDouble _doubleValue;
+        JSONMap mapValue;
+        JSONArray arrayValue;
+        JSONString stringValue;
+        JSONBoolean boolValue;
+        JSONLong longValue;
+        JSONDouble doubleValue;
     };
 
     JSON(JSONBoolean);

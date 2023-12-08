@@ -305,17 +305,17 @@ bool compareJSON(const TypeDB::JSON& first, const TypeDB::JSON& second) {
 
     switch (first.type()) {
         case TypeDB::JSONType::BOOLEAN:
-            return first.boolValue() == second.boolValue();
+            return first.asBoolean() == second.asBoolean();
         case TypeDB::JSONType::LONG:
-            return first.longValue() == second.longValue();
+            return first.asLong() == second.asLong();
         case TypeDB::JSONType::DOUBLE:
-            return first.doubleValue() == second.doubleValue();
+            return first.asDouble() == second.asDouble();
         case TypeDB::JSONType::STRING:
-            return first.stringValue() == second.stringValue();
+            return first.asString() == second.asString();
         case TypeDB::JSONType::ARRAY:
-            return compareJSONArrayUnordered(first.array(), second.array());
+            return compareJSONArrayUnordered(first.asArray(), second.asArray());
         case TypeDB::JSONType::MAP:
-            return compareJSONMap(first.map(), second.map());
+            return compareJSONMap(first.asMap(), second.asMap());
         default:
             throw std::runtime_error("UNIMPLEMENTED");
     }
@@ -340,7 +340,7 @@ bool compareResults(ResultTable<TableEntry>& table, ResultTable<ConceptEntry>& r
 }
 
 bool compareResults(std::string& expectedUnparsed, std::vector<JSON>& actual) {
-    return compareJSONArrayUnordered(TypeDB::JSON::parse(expectedUnparsed).array(), actual);
+    return compareJSONArrayUnordered(TypeDB::JSON::parse(expectedUnparsed).asArray(), actual);
 }
 
 bool compareResultsValueGroup(ResultTable<TableEntry>& table, ResultTable<ConceptEntry>& result) {

@@ -45,7 +45,7 @@ ConceptIterable<Concept> ConceptMap::concepts() {
 
 std::map<std::string, std::unique_ptr<Concept>> ConceptMap::map() {
     std::map<std::string, std::unique_ptr<Concept>> m;
-    for (auto &v : variables()) {
+    for (auto& v : variables()) {
         m.emplace(std::move(v), get(v));
     }
     return m;
