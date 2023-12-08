@@ -36,6 +36,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.JNI_LIBRARY_NOT_FOUND;
+import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.JNI_PLATFORM_LIBRARY_NOT_FOUND;
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.UNRECOGNISED_ARCH;
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.UNRECOGNISED_OS;
 import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.UNRECOGNISED_OS_ARCH;
@@ -45,13 +47,9 @@ public class Loader {
     private static final String DRIVER_JNI_LIB_RESOURCE = "typedb_driver_jni";
     private static final String DRIVER_JNI_LIBRARY_NAME = System.mapLibraryName(DRIVER_JNI_LIB_RESOURCE);
 
-    private static final Map<Pair<OS, Arch>, String> DRIVER_JNI_JAR_NAME = Map.of(
-            new Pair<>(OS.WINDOWS, Arch.x86_64), "windows-x86_64",
-            new Pair<>(OS.MAC, Arch.x86_64), "macosx-x86_64",
-            new Pair<>(OS.MAC, Arch.ARM64), "macosx-arm64",
-            new Pair<>(OS.LINUX, Arch.x86_64), "linux-x86_64",
-            new Pair<>(OS.LINUX, Arch.ARM64), "linux-arm64"
-    );
+    private static final Map<Pair<OS, Arch>, String> DRIVER_JNI_JAR_NAME = Map.of(new Pair<>(OS.WINDOWS, Arch.x86_64), "windows-x86_64",
+            new Pair<>(OS.MAC, Arch.x86_64), "macosx-x86_64", new Pair<>(OS.MAC, Arch.ARM64), "macosx-arm64", new Pair<>(OS.LINUX, Arch.x86_64),
+            "linux-x86_64", new Pair<>(OS.LINUX, Arch.ARM64), "linux-arm64");
 
     private static boolean loaded = false;
 
@@ -76,22 +74,26 @@ public class Loader {
         ClassLoader loader = Loader.class.getClassLoader();
         Iterator<URL> resourceIterator = loader.getResources(DRIVER_JNI_LIBRARY_NAME).asIterator();
 
-        URL jniURL = null;
-        boolean isValid = true;
-
-        while (resourceIterator.hasNext()) {
-            URL resource = resourceIterator.next();
-
-            if (jniURL == null) jniURL = resource;
-            else isValid = false; // encountered more than one: not valid...
-
-            if (resource.getPath().contains(platformString)) {
-                isValid = true; // ... unless it explicitly includes the platform string
-                jniURL = resource;
-                break;
+        if (!resourceIterator.hasNext()) {
+            throw new TypeDBDriverException(JNI_LIBRARY_NOT_FOUND, DRIVER_JNI_LIBRARY_NAME);
+        }
+        URL jniURL = resourceIterator.next();
+        if (resourceIterator.hasNext()) {
+            if (!jniURL.getPath().contains(platformString)) {
+                jniURL = null;
+                while (resourceIterator.hasNext()) {
+                    URL resource = resourceIterator.next();
+                    if (resource.getPath().contains(platformString)) {
+                        jniURL = resource;
+                        break;
+                    }
+                }
             }
         }
-        assert jniURL != null && isValid;
+        if (jniURL == null) {
+            throw new TypeDBDriverException(JNI_PLATFORM_LIBRARY_NOT_FOUND, DRIVER_JNI_LIBRARY_NAME, platformString);
+        }
+
         try {
             return unpackNativeResources(jniURL.toURI());
         } catch (URISyntaxException e) {
