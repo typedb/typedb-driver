@@ -120,7 +120,9 @@ impl Error {
     fn from_message(message: &str) -> Self {
         match message.split_ascii_whitespace().next() {
             Some("[RPL01]") => Self::Connection(ConnectionError::EnterpriseReplicaNotPrimary),
+            // TODO: CLS and ENT are synonyms which we can simplify on protocol change
             Some("[CLS08]") => Self::Connection(ConnectionError::EnterpriseTokenCredentialInvalid),
+            Some("[ENT08]") => Self::Connection(ConnectionError::EnterpriseTokenCredentialInvalid),
             Some("[DBS06]") => Self::Connection(ConnectionError::DatabaseDoesNotExist {
                 name: message.split('\'').nth(1).unwrap_or("{unknown}").to_owned(),
             }),

@@ -32,7 +32,8 @@ function isReplicaNotPrimaryError(e: ServiceError): boolean {
 }
 
 function isTokenCredentialInvalidError(e: ServiceError): boolean {
-    return e.message.includes("[CLS08]");
+    // TODO: CLS and ENT are synonyms which we can simplify on protocol change
+    return e.message.includes("[CLS08]") || e.message.includes("[ENT08]");
 }
 
 function isServiceError(e: Error | ServiceError): e is ServiceError {
