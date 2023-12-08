@@ -37,7 +37,7 @@ pkg_files(
 )
 
 cc_binary(
-    name = "typedb-driver-cpp-shared",
+    name = "typedb-driver-cpp",
     srcs = glob([
         "lib/**/*.cpp",
         "lib/**/*.hpp",
@@ -61,14 +61,14 @@ cc_binary(
 # cc_binary outputs don't contain the .if.lib by default. This adds a target to it.
 filegroup(
     name = "typedb-driver-cpp.if.lib",
-    srcs = [":typedb-driver-cpp-shared"],
+    srcs = [":typedb-driver-cpp"],
     output_group = "interface_library",
 )
 
 cc_import(
-    name = "typedb-driver-cpp",
+    name = "typedb-driver-cpp-import",
     interface_library = ":typedb-driver-cpp.if.lib",
-    shared_library = ":typedb-driver-cpp-shared",
+    shared_library = ":typedb-driver-cpp",
     hdrs = [":typedb-driver-cpp-headers"],
     includes = ["cpp/include"],
     visibility = ["//visibility:public"],
@@ -76,14 +76,14 @@ cc_import(
 
 # Assembly & distribution
 pkg_files(
-    name = "typedb-driver-cpp-lib",
-    srcs = [":typedb-driver-cpp-shared", ":typedb-driver-cpp.if.lib"],
+    name = "typedb-driver-cpp-libraries",
+    srcs = [":typedb-driver-cpp", ":typedb-driver-cpp.if.lib"],
     prefix = "lib",
 )
 
 pkg_tar(
     name = "typedb-driver-cpp-tar",
-    srcs = [":typedb-driver-cpp-headers", ":typedb-driver-cpp-lib"],
+    srcs = [":typedb-driver-cpp-headers", ":typedb-driver-cpp-libraries"],
 )
 
 assemble_targz(

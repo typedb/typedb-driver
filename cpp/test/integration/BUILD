@@ -26,7 +26,7 @@ cc_test(
     name = "test-cpp-driver",
     srcs = ["test.cpp"],
     deps = [
-        "//cpp:typedb-driver-cpp",
+        "//cpp:typedb-driver-cpp-import",
         # External
         "@gtest//:gtest",
         "@gtest//:gtest_main"

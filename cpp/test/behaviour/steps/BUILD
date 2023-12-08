@@ -26,7 +26,7 @@ load("//cpp:build_opts.bzl", "cxxopts")
 cc_library(
     name = "core-steps",
     deps = [
-        "//cpp:typedb-driver-cpp",
+        "//cpp:typedb-driver-cpp-import",
         "//cpp/test/cucumber:cucumber-cpp",
 
         # External
@@ -45,7 +45,7 @@ cc_library(
 cc_library(
     name = "enterprise-steps",
     deps = [
-        "//cpp:typedb-driver-cpp",
+        "//cpp:typedb-driver-cpp-import",
         "//cpp/test/cucumber:cucumber-cpp",
 
         # External
