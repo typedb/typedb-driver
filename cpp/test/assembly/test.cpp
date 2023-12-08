@@ -24,15 +24,14 @@
 #include <typedb.hpp>
 
 int main() {
-	TypeDB::Driver driver = TypeDB::Driver::coreDriver("127.0.0.1:1729");
-	std::string dbName = "testAssembly";
-	if (driver.databases.contains(dbName)) {
-		driver.databases.get("testAssembly").drop();
-	}
-	if (driver.databases.contains(dbName)) return 1;
-	driver.databases.create(dbName);
-	if (!driver.databases.contains(dbName)) return 1;
-	std::cout << "Success!" << std::endl;
-	return 0;
+    TypeDB::Driver driver = TypeDB::Driver::coreDriver("127.0.0.1:1729");
+    std::string dbName = "testAssembly";
+    if (driver.databases.contains(dbName)) {
+        driver.databases.get("testAssembly").drop();
+    }
+    if (driver.databases.contains(dbName)) return 1;
+    driver.databases.create(dbName);
+    if (!driver.databases.contains(dbName)) return 1;
+    std::cout << "Success!" << std::endl;
+    return 0;
 }
-
