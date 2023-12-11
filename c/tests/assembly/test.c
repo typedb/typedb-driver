@@ -92,5 +92,5 @@ cleanup:
     connection_close(connection);
 
     printf("Success: %s\n", success ? "true" : "false");
-    return 0;
+    return success ? 0 : 1;
 }
