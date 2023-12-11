@@ -30,28 +30,28 @@ using namespace TypeDB;
 
 namespace TypeDB {
 
+ReplicaInfo::ReplicaInfo(_native::ReplicaInfo* replicaInfoNative)
+    : replicaInfoNative(replicaInfoNative, _native::replica_info_drop) {}
+
 std::string ReplicaInfo::address() {
     CHECK_NATIVE(replicaInfoNative);
     return Utils::stringFromNative(_native::replica_info_get_address(replicaInfoNative.get()));
 }
 
-bool ReplicaInfo::replica_info_is_primary() {
+bool ReplicaInfo::isPrimary() {
     CHECK_NATIVE(replicaInfoNative);
     return _native::replica_info_is_primary(replicaInfoNative.get());
 }
 
-bool ReplicaInfo::replica_info_is_preferred() {
+bool ReplicaInfo::isPreferred() {
     CHECK_NATIVE(replicaInfoNative);
     return _native::replica_info_is_preferred(replicaInfoNative.get());
 }
 
-int64_t ReplicaInfo::replica_info_get_term() {
+int64_t ReplicaInfo::term() {
     CHECK_NATIVE(replicaInfoNative);
     return _native::replica_info_get_term(replicaInfoNative.get());
 }
-
-ReplicaInfo::ReplicaInfo(_native::ReplicaInfo* replicaInfoNative)
-    : replicaInfoNative(replicaInfoNative, _native::replica_info_drop) {}
 
 Database::Database(_native::Database* db) noexcept
     : databaseNative(db, _native::database_close) {}

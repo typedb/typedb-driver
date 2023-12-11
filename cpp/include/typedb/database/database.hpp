@@ -35,9 +35,9 @@ class ReplicaInfo {
     ReplicaInfo& operator=(ReplicaInfo&&) = default;
 
     std::string address();
-    bool replica_info_is_primary();
-    bool replica_info_is_preferred();
-    int64_t replica_info_get_term();
+    bool isPrimary();
+    bool isPreferred();
+    int64_t term();
 
    private:
     NativePointer<_native::ReplicaInfo> replicaInfoNative;
