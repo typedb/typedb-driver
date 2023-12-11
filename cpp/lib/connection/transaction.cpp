@@ -31,6 +31,25 @@ namespace TypeDB {
 static_assert(static_cast<int>(TransactionType::READ) == _native::Read);
 static_assert(static_cast<int>(TransactionType::WRITE) == _native::Write);
 
+std::atomic_uintptr_t nextTxCallbackId = 0;
+std::unordered_map<std::uintptr_t, std::function<void(const std::optional<DriverException>&)>> transactionOnCloseCallbacks;
+
+void transaction_callback_execute(std::uintptr_t ID, _native::Error* error) {
+    try {
+        transactionOnCloseCallbacks.at(ID)(error != nullptr ? std::optional<DriverException>(DriverException(error)) : std::optional<DriverException>());
+        transactionOnCloseCallbacks.erase(ID);
+    } catch (std::exception const& e) {
+        throw Utils::exception(DriverError::CALLBACK_EXCEPTION, e.what());
+    }
+}
+
+uintptr_t registerCallback(std::function<void(const std::optional<DriverException>&)> callback) {
+    std::uintptr_t last = nextTxCallbackId.load();
+    std::uintptr_t id = ++nextTxCallbackId;
+    transactionOnCloseCallbacks.emplace(id, callback);
+    return id;
+}
+
 Transaction::Transaction(_native::Transaction* transactionNative, TypeDB::TransactionType txnType)
     : transactionNative(transactionNative, _native::transaction_close), txnType(txnType), query(this), concepts(this), logic(this) {}
 
@@ -80,6 +99,13 @@ void Transaction::rollback() {
     VoidFuture p = _native::transaction_rollback(transactionNative.release());
     DriverException::check_and_throw();
     p.wait();
+    DriverException::check_and_throw();
+}
+
+void Transaction::onClose(std::function<void(const std::optional<DriverException>&)> callback) {
+    CHECK_NATIVE(transactionNative);
+    std::uintptr_t id = registerCallback(callback);
+    _native::transaction_on_close(transactionNative.get(), id, &transaction_callback_execute);
     DriverException::check_and_throw();
 }
 

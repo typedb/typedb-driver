@@ -19,8 +19,11 @@
  * under the License.
  */
 
+#include <atomic>
+#include <chrono>
 #include <iostream>
 #include <regex>
+#include <thread>
 
 #include "gtest/gtest.h"
 
@@ -120,6 +123,30 @@ TEST(TestExplanations, TestExplainableOwnership) {
             }
         }
     }
+}
+
+TEST(TestCallbacks, TestCallbacks) {
+    std::string dbName = "test-integration-callbacks";
+    TypeDB::Driver driver = TypeDB::Driver::coreDriver("127.0.0.1:1729");
+    TypeDB::Options options;
+    delete_if_exists(driver, dbName);
+    driver.databases.create(dbName);
+    bool txCalled = false;
+    bool sessCalled = false;
+    {
+        auto sess = driver.session(dbName, TypeDB::SessionType::DATA, options);
+        sess.onClose([&]() { sessCalled = true; });
+        {
+            auto tx = sess.transaction(TypeDB::TransactionType::READ, options);
+            tx.onClose([&](const std::optional<DriverException>& e) { txCalled = true; });
+            ASSERT_FALSE(txCalled);
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        ASSERT_TRUE(txCalled);
+        ASSERT_FALSE(sessCalled);
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    ASSERT_TRUE(sessCalled);
 }
 
 int main(int argc, char** argv) {

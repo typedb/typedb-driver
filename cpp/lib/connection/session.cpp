@@ -19,8 +19,10 @@
  * under the License.
  */
 
-#include "typedb/connection/session.hpp"
+#include <atomic>
+
 #include "typedb/common/exception.hpp"
+#include "typedb/connection/session.hpp"
 
 #include "../common/macros.hpp"
 #include "../common/native.hpp"
@@ -30,6 +32,31 @@ namespace TypeDB {
 
 static_assert(static_cast<int>(SessionType::DATA) == _native::Data);
 static_assert(static_cast<int>(SessionType::SCHEMA) == _native::Schema);
+
+std::atomic_uintptr_t nextSessionCallbackId = 0;
+std::unordered_map<std::uintptr_t, std::function<void()>> sessionCallbacks;
+
+static void session_callback_execute(void* ID) {
+    try {
+        sessionCallbacks.at(reinterpret_cast<std::uintptr_t>(ID))();
+    } catch (std::exception const& e) {
+        throw Utils::exception(DriverError::CALLBACK_EXCEPTION, e.what());
+    }
+}
+
+static void session_callback_erase(void* ID) {
+    try {
+        sessionCallbacks.erase(reinterpret_cast<std::uintptr_t>(ID));
+    } catch (std::exception const& e) {
+        throw Utils::exception(DriverError::CALLBACK_EXCEPTION, e.what());
+    }
+}
+
+uintptr_t registerCallback(std::function<void()> callback) {
+    std::uintptr_t id = ++nextSessionCallbackId;
+    sessionCallbacks.emplace(id, callback);
+    return id;
+}
 
 Session::Session(_native::Session* sessionNative)
     : sessionNative(sessionNative, _native::session_close) {}
@@ -52,6 +79,20 @@ Transaction Session::transaction(TransactionType type, const Options& options) c
     _native::Transaction* p = _native::transaction_new(sessionNative.get(), (_native::TransactionType)type, options.getNative());
     DriverException::check_and_throw();
     return Transaction(p, type);  // No std::move for copy-elision
+}
+
+void Session::onClose(std::function<void()> callback) {
+    CHECK_NATIVE(sessionNative);
+    std::uintptr_t id = registerCallback(callback);
+    _native::session_on_close(sessionNative.get(), reinterpret_cast<void*>(id), &session_callback_execute, &session_callback_erase);
+    DriverException::check_and_throw();
+}
+
+void Session::onReopen(std::function<void()> callback) {
+    CHECK_NATIVE(sessionNative);
+    std::uintptr_t id = registerCallback(callback);
+    _native::session_on_reopen(sessionNative.get(), reinterpret_cast<void*>(id), &session_callback_execute, &session_callback_erase);
+    DriverException::check_and_throw();
 }
 
 }  // namespace TypeDB

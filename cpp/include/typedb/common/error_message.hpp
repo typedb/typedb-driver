@@ -48,6 +48,7 @@ DECLSPEC_DLL extern const ErrorMessage DATABASE_DELETED;
 DECLSPEC_DLL extern const ErrorMessage POSITIVE_VALUE_REQUIRED;
 DECLSPEC_DLL extern const ErrorMessage MISSING_DB_NAME;
 DECLSPEC_DLL extern const ErrorMessage INVALID_JSON_CAST;
+DECLSPEC_DLL extern const ErrorMessage CALLBACK_EXCEPTION;
 
 }  // namespace DriverError
 

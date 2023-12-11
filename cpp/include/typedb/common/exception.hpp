@@ -34,6 +34,7 @@ class IteratorHelper;
 
 class DriverException : public std::runtime_error {
    public:
+    DriverException(_native::Error* errorNative);
     DriverException(const char* code, const char* message);
 
     DriverException(const DriverException& from) = default;
@@ -45,7 +46,6 @@ class DriverException : public std::runtime_error {
     static void check_and_throw();
 
    private:
-    DriverException(_native::Error* errorNative);
     DriverException(_native::SchemaException* schemaExceptionNative);
 
     size_t errorCodeLength;

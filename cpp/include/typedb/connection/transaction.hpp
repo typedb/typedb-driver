@@ -66,6 +66,8 @@ class Transaction {
 
     void rollback();
 
+    void onClose(std::function<void(const std::optional<DriverException>&)> callback);
+
    private:
     Transaction(_native::Transaction*, TypeDB::TransactionType);
     _native::Transaction* getNative();

@@ -46,6 +46,9 @@ class Session {
     std::string databaseName() const;
     Transaction transaction(TransactionType type, const Options& options) const;
 
+    void onClose(std::function<void()> callback);
+    void onReopen(std::function<void()> callback);
+
    private:
     NativePointer<_native::Session> sessionNative;
     Session(_native::Session*);

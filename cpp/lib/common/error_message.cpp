@@ -33,14 +33,15 @@ namespace TypeDB {
 namespace DriverError {
 
 #define ERR_DRIVER(ID, MSG) ERRMSG("CCL", "Driver Error", ID, MSG)
-DECLSPEC_DLL extern const ErrorMessage DRIVER_CLOSED = ERR_DRIVER(4, "The driver has been closed and no further operation is allowed.");
-DECLSPEC_DLL extern const ErrorMessage SESSION_CLOSED = ERR_DRIVER(5, "The session has been closed and no further operation is allowed.");
-DECLSPEC_DLL extern const ErrorMessage TRANSACTION_CLOSED = ERR_DRIVER(6, "The transaction has been closed and no further operation is allowed.");
-DECLSPEC_DLL extern const ErrorMessage TRANSACTION_CLOSED_WITH_ERRORS = ERR_DRIVER(7, "The transaction has been closed with error(s): \n%s.");
-DECLSPEC_DLL extern const ErrorMessage DATABASE_DELETED = ERR_DRIVER(8, "The database has been deleted and no further operation is allowed.");
-DECLSPEC_DLL extern const ErrorMessage POSITIVE_VALUE_REQUIRED = ERR_DRIVER(9, "Value cannot be less than 1, was: '%d'.");
-DECLSPEC_DLL extern const ErrorMessage MISSING_DB_NAME = ERR_DRIVER(10, "Database name cannot be null.");
-DECLSPEC_DLL extern const ErrorMessage INVALID_JSON_CAST = ERR_DRIVER(11, "An invalid cast from json type '%s' to '%s' was attempted.");
+DECLSPEC_DLL extern const ErrorMessage DRIVER_CLOSED = ERR_DRIVER(1, "The driver has been closed and no further operation is allowed.");
+DECLSPEC_DLL extern const ErrorMessage SESSION_CLOSED = ERR_DRIVER(2, "The session has been closed and no further operation is allowed.");
+DECLSPEC_DLL extern const ErrorMessage TRANSACTION_CLOSED = ERR_DRIVER(3, "The transaction has been closed and no further operation is allowed.");
+DECLSPEC_DLL extern const ErrorMessage TRANSACTION_CLOSED_WITH_ERRORS = ERR_DRIVER(4, "The transaction has been closed with error(s): \n%s.");
+DECLSPEC_DLL extern const ErrorMessage DATABASE_DELETED = ERR_DRIVER(5, "The database has been deleted and no further operation is allowed.");
+DECLSPEC_DLL extern const ErrorMessage POSITIVE_VALUE_REQUIRED = ERR_DRIVER(6, "Value cannot be less than 1, was: '%d'.");
+DECLSPEC_DLL extern const ErrorMessage MISSING_DB_NAME = ERR_DRIVER(7, "Database name cannot be null.");
+DECLSPEC_DLL extern const ErrorMessage INVALID_JSON_CAST = ERR_DRIVER(8, "An invalid cast from json type '%s' to '%s' was attempted.");
+DECLSPEC_DLL extern const ErrorMessage CALLBACK_EXCEPTION = ERR_DRIVER(9, "An exception occurred when executing a callback: %s");
 #undef ERR_DRIVER
 
 }  // namespace DriverError
