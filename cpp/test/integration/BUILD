@@ -39,7 +39,7 @@ cc_test(
 
 clang_format_test(
     name = "clang_format",
-    include = glob(["**/*"]),
+    include = glob(["*"]),
     exclude = ["BUILD"]
 )
 
