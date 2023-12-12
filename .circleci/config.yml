@@ -329,8 +329,8 @@ commands:
           export ASSEMBLY=<<parameters.assembly>>
           export ASSEMBLY_BASE=$(echo $ASSEMBLY | cut -f 1 -d '.')
           mkdir -p test_assembly_clib
-          tar -xf bazel-bin/clib/$ASSEMBLY --directory test_assembly_clib
-          ( cd test_assembly_clib && cmake ../clib/test/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY_BASE && cmake --build . --config release )
+          tar -xf bazel-bin/c/$ASSEMBLY --directory test_assembly_clib
+          ( cd test_assembly_clib && cmake ../c/test/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY_BASE && cmake --build . --config release )
           
           tool/test/start-core-server.sh
           sleep 3
@@ -826,7 +826,7 @@ jobs:
           arch: arm64
       - run: |
           mkdir -p ~/dist
-          cp bazel-bin/clib/typedb-driver-clib-mac-arm64.zip ~/dist
+          cp bazel-bin/c/typedb-driver-clib-mac-arm64.zip ~/dist
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]
@@ -839,7 +839,7 @@ jobs:
           arch: amd64
       - run: |
           mkdir -p ~/dist
-          cp bazel-bin/clib/typedb-driver-clib-mac-x86_64.zip ~/dist
+          cp bazel-bin/c/typedb-driver-clib-mac-x86_64.zip ~/dist
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]
@@ -851,7 +851,7 @@ jobs:
           arch: arm64
       - run: |
           mkdir -p ~/dist
-          cp bazel-bin/clib/typedb-driver-clib-linux-arm64.zip ~/dist
+          cp bazel-bin/c/typedb-driver-clib-linux-arm64.zip ~/dist
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]
@@ -863,7 +863,7 @@ jobs:
           arch: amd64
       - run: |
           mkdir -p ~/dist
-          cp bazel-bin/clib/typedb-driver-clib-linux-x86_64.zip ~/dist
+          cp bazel-bin/c/typedb-driver-clib-linux-x86_64.zip ~/dist
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]
