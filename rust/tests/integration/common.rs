@@ -39,8 +39,7 @@ pub fn new_cloud_connection() -> typedb_driver::Result<Connection> {
             "admin",
             "password",
             Some(&PathBuf::from(
-                std::env::var("ROOT_CA")
-                    .expect("ROOT_CA environment variable needs to be set for cloud tests to run"),
+                std::env::var("ROOT_CA").expect("ROOT_CA environment variable needs to be set for cloud tests to run"),
             )),
         )?,
     )

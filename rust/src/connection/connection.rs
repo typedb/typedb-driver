@@ -261,11 +261,7 @@ impl ServerConnection {
         Ok(Self { address, background_runtime, open_sessions: Default::default(), request_transmitter })
     }
 
-    fn new_cloud(
-        background_runtime: Arc<BackgroundRuntime>,
-        address: Address,
-        credential: Credential,
-    ) -> Result<Self> {
+    fn new_cloud(background_runtime: Arc<BackgroundRuntime>, address: Address, credential: Credential) -> Result<Self> {
         let request_transmitter =
             Arc::new(RPCTransmitter::start_cloud(address.clone(), credential, &background_runtime)?);
         Ok(Self { address, background_runtime, open_sessions: Default::default(), request_transmitter })
