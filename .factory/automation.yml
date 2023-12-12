@@ -986,7 +986,7 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        tool/test/start-cloud-servers.sh &&
+        source tool/test/start-cloud-servers.sh &&
           .factory/test-cloud.sh //cpp/test/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
           .factory/test-cloud.sh //cpp/test/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
           .factory/test-cloud.sh //cpp/test/behaviour/connection/transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
@@ -1057,7 +1057,7 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        tool/test/start-cloud-servers.sh &&
+        source tool/test/start-cloud-servers.sh &&
           .factory/test-cloud.sh //cpp/test/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
         tool/test/stop-cloud-servers.sh
@@ -1147,7 +1147,7 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        tool/test/start-cloud-servers.sh &&
+        source tool/test/start-cloud-servers.sh &&
           .factory/test-cloud.sh //cpp/test/behaviour/query/language/insert/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
           .factory/test-cloud.sh //cpp/test/behaviour/query/language/delete/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
           .factory/test-cloud.sh //cpp/test/behaviour/query/language/update/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
@@ -1190,7 +1190,7 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        tool/test/start-cloud-servers.sh &&
+        source tool/test/start-cloud-servers.sh &&
           .factory/test-cloud.sh //cpp/test/behaviour/query/language/define/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
           .factory/test-cloud.sh //cpp/test/behaviour/query/language/undefine/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
