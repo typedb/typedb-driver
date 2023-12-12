@@ -21,9 +21,9 @@
 
 #include <atomic>
 
-#include "typedb/connection/transaction.hpp"
 #include "typedb/common/exception.hpp"
 #include "typedb/common/future.hpp"
+#include "typedb/connection/transaction.hpp"
 
 #include "../common/macros.hpp"
 #include "../common/native.hpp"
