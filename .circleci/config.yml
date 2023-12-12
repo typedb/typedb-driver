@@ -330,7 +330,7 @@ commands:
           export ASSEMBLY_BASE=$(echo $ASSEMBLY | cut -f 1 -d '.')
           mkdir -p test_assembly_clib
           tar -xf bazel-bin/c/$ASSEMBLY --directory test_assembly_clib
-          ( cd test_assembly_clib && cmake ../c/test/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY_BASE && cmake --build . --config release )
+          ( cd test_assembly_clib && cmake ../c/tests/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY_BASE && cmake --build . --config release )
           
           tool/test/start-core-server.sh
           sleep 3
@@ -342,7 +342,7 @@ commands:
   deploy-clib-release-unix:
     steps:
       - run: |
-          ulimit -n 100000
+          ulimit -n 250000
           export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
