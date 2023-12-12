@@ -20,6 +20,8 @@
  */
 #pragma once
 
+#include <vector>
+
 #include "typedb/common/future.hpp"
 #include "typedb/common/iterator.hpp"
 #include "typedb/common/native.hpp"

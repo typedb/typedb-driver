@@ -286,6 +286,89 @@ commands:
           export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run --define version=$(cat VERSION) //java:deploy-maven --compilation_mode=opt -- release
 
+  ########################
+  # C++ deployment steps #
+  ########################
+  deploy-cpp-snapshot-unix:
+    steps:
+      - run: |
+          ulimit -n 100000
+          export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+          export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+          bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+          bazel run --define version=$(git rev-parse HEAD) //cpp:deploy-cpp-driver --compilation_mode=opt -- snapshot
+
+  deploy-cpp-snapshot-linux:
+    parameters:
+      arch:
+        type: string
+    steps:
+      - checkout
+      - install-bazel-linux:
+          arch: "<<parameters.arch>>"
+      - deploy-cpp-snapshot-unix
+      
+  deploy-cpp-snapshot-mac:
+    parameters:
+      arch:
+        type: string
+    steps:
+      - checkout
+      - install-bazel-mac:
+          arch: "<<parameters.arch>>"
+      - install-maven-mac
+      - deploy-cpp-snapshot-unix
+
+  test-cpp-assembly-unix:
+    parameters:
+      assembly:
+        type: string
+    steps:
+      - run: |
+          ulimit -n 250000
+          bazel build //cpp:assemble-cpp-driver
+          export ASSEMBLY=<<parameters.assembly>>
+          export ASSEMBLY_BASE=$(echo $ASSEMBLY | cut -f 1 -d '.')
+          mkdir -p test_assembly_cpp
+          tar -xf bazel-bin/cpp/$ASSEMBLY --directory test_assembly_cpp
+          ( cd test_assembly_cpp && cmake ../cpp/test/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY_BASE && cmake --build . --config release )
+          
+          tool/test/start-core-server.sh
+          sleep 3
+          export TYPEDB_LIB_PATH=$ASSEMBLY_BASE/lib
+          ( cd test_assembly_cpp && DYLD_LIBRARY_PATH=$TYPEDB_LIB_PATH LD_LIBRARY_PATH=$TYPEDB_LIB_PATH ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
+          tool/test/stop-core-server.sh
+          exit $TEST_SUCCESS
+  
+  deploy-cpp-release-unix:
+    steps:
+      - run: |
+          ulimit -n 100000
+          export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+          export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+          bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+          bazel run --define version=$(cat VERSION) //cpp:deploy-cpp-driver --compilation_mode=opt -- release
+
+  deploy-cpp-release-linux:
+    parameters:
+      arch:
+        type: string
+    steps:
+      - checkout
+      - install-bazel-linux:
+          arch: "<<parameters.arch>>"
+      - deploy-cpp-release-unix
+
+  deploy-cpp-release-mac:
+    parameters:
+      arch:
+        type: string
+    steps:
+      - checkout
+      - install-bazel-mac:
+          arch: "<<parameters.arch>>"
+      - install-maven-mac
+      - deploy-cpp-release-unix
 
 jobs:
 
@@ -602,6 +685,118 @@ jobs:
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]
+  # 
+  # C++ jobs
+  # 
+
+  deploy-cpp-snapshot-mac-arm64:
+    executor: mac-arm64
+    steps:
+      - deploy-cpp-snapshot-mac:
+          arch: arm64
+      - run: brew install cmake
+      - test-cpp-assembly-unix:
+          assembly: typedb-driver-cpp-mac-arm64.zip
+      
+  deploy-cpp-snapshot-mac-x86_64:
+    executor: mac-arm64
+    steps:
+      - macos/install-rosetta
+      - deploy-cpp-snapshot-mac:
+          arch: amd64
+      - run: brew install cmake
+      - test-cpp-assembly-unix:
+          assembly: typedb-driver-cpp-mac-x86_64.zip
+          
+
+  deploy-cpp-snapshot-linux-arm64:
+    executor: linux-arm64
+    steps:
+      - deploy-cpp-snapshot-linux:
+          arch: arm64
+      - test-cpp-assembly-unix:
+          assembly: typedb-driver-cpp-linux-arm64.tar.gz
+      
+  deploy-cpp-snapshot-linux-x86_64:
+    executor: linux-x86_64
+    steps:
+      - deploy-cpp-snapshot-linux:
+          arch: amd64
+      - test-cpp-assembly-unix:
+          assembly: typedb-driver-cpp-linux-x86_64.tar.gz
+      
+  deploy-cpp-snapshot-windows-x86_64:
+    executor:
+      name: win/default
+      shell: cmd.exe
+    working_directory: ~/typedb-driver
+    steps:
+      - checkout
+      - run: .circleci\windows\prepare.bat
+      - run: .circleci\windows\cpp\deploy_snapshot.bat
+      - run: .circleci\windows\cpp\test_assembly.bat
+    
+  deploy-cpp-release-mac-arm64:
+    executor: mac-arm64
+    steps:
+      - deploy-cpp-release-mac:
+          arch: arm64
+      - run: |
+          mkdir -p ~/dist
+          cp bazel-bin/cpp/typedb-driver-cpp-mac-arm64.zip ~/dist
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
+    
+  deploy-cpp-release-mac-x86_64:
+    executor: mac-arm64
+    steps:
+      - macos/install-rosetta
+      - deploy-cpp-release-mac:
+          arch: amd64
+      - run: |
+          mkdir -p ~/dist
+          cp bazel-bin/cpp/typedb-driver-cpp-mac-x86_64.zip ~/dist
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
+
+  deploy-cpp-release-linux-arm64:
+    executor: linux-arm64
+    steps:
+      - deploy-cpp-release-linux:
+          arch: arm64
+      - run: |
+          mkdir -p ~/dist
+          cp bazel-bin/cpp/typedb-driver-cpp-linux-arm64.zip ~/dist
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
+
+  deploy-cpp-release-linux-x86_64:
+    executor: linux-x86_64
+    steps:
+      - deploy-cpp-release-linux:
+          arch: amd64
+      - run: |
+          mkdir -p ~/dist
+          cp bazel-bin/cpp/typedb-driver-cpp-linux-x86_64.zip ~/dist
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
+  
+  deploy-cpp-release-windows-x86_64:
+    executor:
+      name: win/default
+      shell: cmd.exe
+    working_directory: ~/typedb-driver
+    steps:
+      - checkout
+      - run: .circleci\windows\prepare.bat
+      - run: .circleci\windows\cpp\deploy_release.bat
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
 
   ################################
   # Final release deployment job #
@@ -785,7 +980,29 @@ workflows:
           requires:
             - deploy-maven-snapshot
 
-
+  typedb-driver-cpp-snapshot:
+    jobs:
+      - deploy-cpp-snapshot-linux-arm64:
+          filters:
+            branches:
+              only: [master, development]
+      - deploy-cpp-snapshot-linux-x86_64:
+          filters:
+            branches:
+              only: [master, development]
+      - deploy-cpp-snapshot-mac-arm64:
+          filters:
+            branches:
+              only: [master, development]
+      - deploy-cpp-snapshot-mac-x86_64:
+          filters:
+            branches:
+              only: [master, development]
+      - deploy-cpp-snapshot-windows-x86_64:
+          filters:
+            branches:
+              only: [master, development]
+    
   release:
     jobs:
       - deploy-pip-release-linux-arm64:
@@ -846,6 +1063,27 @@ workflows:
               only: [release]
 
       - deploy-npm-release:
+          filters:
+            branches:
+              only: [release]
+
+      - deploy-cpp-release-linux-arm64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-cpp-release-linux-x86_64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-cpp-release-mac-arm64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-cpp-release-mac-x86_64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-cpp-release-windows-x86_64:
           filters:
             branches:
               only: [release]
