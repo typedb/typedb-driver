@@ -1180,23 +1180,23 @@ workflows:
       - deploy-clib-snapshot-linux-arm64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, "cpp-driver-circleci--c-driver"]
       - deploy-clib-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, "cpp-driver-circleci--c-driver"]
       - deploy-clib-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, "cpp-driver-circleci--c-driver"]
       - deploy-clib-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, "cpp-driver-circleci--c-driver"]
       - deploy-clib-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, "cpp-driver-circleci--c-driver"]
 
   typedb-driver-cpp-snapshot:
     jobs:
