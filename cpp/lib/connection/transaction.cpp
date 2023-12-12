@@ -46,7 +46,6 @@ void transaction_callback_execute(std::uintptr_t ID, _native::Error* error) {
 }
 
 uintptr_t registerCallback(std::function<void(const std::optional<DriverException>&)> callback) {
-    std::uintptr_t last = nextTxCallbackId.load();
     std::uintptr_t id = ++nextTxCallbackId;
     transactionOnCloseCallbacks.emplace(id, callback);
     return id;
