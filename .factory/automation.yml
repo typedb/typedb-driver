@@ -1202,7 +1202,7 @@ build:
       type: foreground
       command: |
         sudo apt-get update
-        sudo apt install clang-format-15 -y && ln -s $(which clang-format-15) /usr/bin/clang-format
+        sudo apt install clang-format-15 -y && sudo ln -s $(which clang-format-15) /usr/bin/clang-format
         export ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
