@@ -1001,7 +1001,7 @@ workflows:
       - deploy-cpp-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, development, cpp-driver-circleci]
+              only: [master, development]
     
   release:
     jobs:

@@ -26,14 +26,14 @@ def typedb_behaviour_cpp_test(
     deps = [],
     data = [],
     args = [],
-    env = {}
+    **kwargs
 ):
     native.cc_test(
         name = name + "-core",
         deps = ["//cpp/test/behaviour/steps:core-steps"] + deps,
         data = [feature] + data,
         args = ["$(location " + feature + ")"] + args,
-        env = env
+        **kwargs,
     )
     
     native.cc_test(
@@ -41,5 +41,5 @@ def typedb_behaviour_cpp_test(
         deps = ["//cpp/test/behaviour/steps:cloud-steps"] + deps,
         data = [feature, "//tool/test/resources:certificates"] + data,
         args = ["$(location " + feature + ")"] + args,
-        env = {"ROOT_CA": "tool/test/resources/encryption/ext-grpc-root-ca.pem"} | env,
+        **kwargs,
     )
