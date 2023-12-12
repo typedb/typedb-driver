@@ -19,6 +19,8 @@
  * under the License.
  */
 
+#include <atomic>
+
 #include "typedb/connection/transaction.hpp"
 #include "typedb/common/exception.hpp"
 #include "typedb/common/future.hpp"
