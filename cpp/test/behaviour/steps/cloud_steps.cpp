@@ -27,9 +27,9 @@
 
 namespace TypeDB::BDD {
 
-const std::vector<std::string> DEFAULT_ENTERPRISE_ADDRESSES = {"localhost:11729", "localhost:21729", "localhost:31729"};
-const std::string DEFAULT_ENTERPRISE_USER = "admin";
-const std::string DEFAULT_ENTERPRISE_PASSWORD = "password";
+const std::vector<std::string> DEFAULT_CLOUD_ADDRESSES = {"localhost:11729", "localhost:21729", "localhost:31729"};
+const std::string DEFAULT_CLOUD_USER = "admin";
+const std::string DEFAULT_CLOUD_PASSWORD = "password";
 
 void wipeDatabases(const TypeDB::Driver& driver) {
     DatabaseIterable dbIterable = driver.databases.all();
@@ -49,23 +49,23 @@ bool TestHooks::skipScenario(const cucumber::messages::pickle& scenario) const {
 }
 
 void TestHooks::beforeAll() const {
-    wipeDatabases(CoreOrEnterpriseConnection::connectWithAuthentication("admin", "password"));
+    wipeDatabases(CoreOrCloudConnection::connectWithAuthentication("admin", "password"));
 }
 
 void TestHooks::afterScenario(Context& context, const cucumber_bdd::Scenario<Context>* scenario) const {
     DriverException::check_and_throw();
     context.driver->close();
-    wipeDatabases(CoreOrEnterpriseConnection::connectWithAuthentication("admin", "password"));
+    wipeDatabases(CoreOrCloudConnection::connectWithAuthentication("admin", "password"));
 }
 
 const TestHooks testHooks;
 
-TypeDB::Driver CoreOrEnterpriseConnection::defaultConnection() {
-    return TypeDB::Driver::enterpriseDriver(DEFAULT_ENTERPRISE_ADDRESSES, TypeDB::Credential(DEFAULT_ENTERPRISE_USER, DEFAULT_ENTERPRISE_PASSWORD, true, std::getenv("ROOT_CA")));
+TypeDB::Driver CoreOrCloudConnection::defaultConnection() {
+    return TypeDB::Driver::cloudDriver(DEFAULT_CLOUD_ADDRESSES, TypeDB::Credential(DEFAULT_CLOUD_USER, DEFAULT_CLOUD_PASSWORD, true, std::getenv("ROOT_CA")));
 }
 
-TypeDB::Driver CoreOrEnterpriseConnection::connectWithAuthentication(const std::string& username, const std::string& password) {
-    return TypeDB::Driver::enterpriseDriver(DEFAULT_ENTERPRISE_ADDRESSES, TypeDB::Credential(username, password, true, std::getenv("ROOT_CA")));
+TypeDB::Driver CoreOrCloudConnection::connectWithAuthentication(const std::string& username, const std::string& password) {
+    return TypeDB::Driver::cloudDriver(DEFAULT_CLOUD_ADDRESSES, TypeDB::Credential(username, password, true, std::getenv("ROOT_CA")));
 }
 
 }  // namespace TypeDB::BDD

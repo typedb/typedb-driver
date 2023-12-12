@@ -34,10 +34,10 @@ import {
 
 BeforeAll(async () => {
     setDefaultDriverFn(async () =>
-        TypeDB.enterpriseDriver("127.0.0.1:11729", new TypeDBCredential("admin", "password", process.env.ROOT_CA))
+        TypeDB.cloudDriver("127.0.0.1:11729", new TypeDBCredential("admin", "password", process.env.ROOT_CA))
     )
     setDriverFn(async (username, password) => {
-        return TypeDB.enterpriseDriver("127.0.0.1:11729", new TypeDBCredential(username, password, process.env.ROOT_CA))
+        return TypeDB.cloudDriver("127.0.0.1:11729", new TypeDBCredential(username, password, process.env.ROOT_CA))
     });
     setSessionOptions(new TypeDBOptions({"infer": true}));
     setTransactionOptions(new TypeDBOptions({"infer": true}));

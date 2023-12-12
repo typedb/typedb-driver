@@ -215,7 +215,7 @@ class TypeDBOptions(NativeWrapper[NativeOptions]):
     def read_any_replica(self) -> Optional[bool]:
         """
         If set to ``True``, enables reading data from any replica, potentially boosting
-        read throughput. Only settable in TypeDB Enterprise.
+        read throughput. Only settable in TypeDB Cloud.
         """
         return options_get_read_any_replica(self.native_object) if options_has_read_any_replica(self.native_object) \
             else None

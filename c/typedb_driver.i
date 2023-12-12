@@ -338,7 +338,7 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject role_type_get_player_instances;
 
 %newobject connection_open_core;
-%newobject connection_open_enterprise;
+%newobject connection_open_cloud;
 
 %newobject credential_new;
 

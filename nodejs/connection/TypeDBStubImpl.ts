@@ -27,7 +27,7 @@ import {TypeDBStub} from "../common/rpc/TypeDBStub";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 import {TypeDBClient as GRPCStub} from "typedb-protocol/proto/typedb-service";
-import ENTERPRISE_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Driver.ENTERPRISE_TOKEN_CREDENTIAL_INVALID;
+import CLOUD_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Driver.CLOUD_TOKEN_CREDENTIAL_INVALID;
 
 function isServiceError(e: any): e is ServiceError {
     return "code" in e;
@@ -91,7 +91,7 @@ export class TypeDBStubImpl extends TypeDBStub {
             return await fn();
         } catch (e) {
             if (!this._credential) throw e;  // core stub
-            if (e instanceof TypeDBDriverError && ENTERPRISE_TOKEN_CREDENTIAL_INVALID === e.messageTemplate) {
+            if (e instanceof TypeDBDriverError && CLOUD_TOKEN_CREDENTIAL_INVALID === e.messageTemplate) {
                 console.log(`token '${this._token}' expired. renewing...`);
                 this._token = null;
                 const req = RequestBuilder.User.tokenReq(this._credential.username);

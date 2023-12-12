@@ -46,12 +46,12 @@ Driver Driver::coreDriver(const std::string& coreAddress) {
     return Driver(p);
 }
 
-Driver Driver::enterpriseDriver(const std::vector<std::string>& enterpriseAddresses, const Credential& credential) {
+Driver Driver::cloudDriver(const std::vector<std::string>& cloudAddresses, const Credential& credential) {
     std::vector<const char*> addressesNative;
-    for (auto& addr : enterpriseAddresses)
+    for (auto& addr : cloudAddresses)
         addressesNative.push_back(addr.c_str());
     addressesNative.push_back(nullptr);
-    auto p = _native::connection_open_enterprise(addressesNative.data(), credential.getNative());
+    auto p = _native::connection_open_cloud(addressesNative.data(), credential.getNative());
     DriverException::check_and_throw();
     return Driver(p);
 }

@@ -29,11 +29,11 @@ cucumber_bdd::StepCollection<Context> connectionSteps = {
     BDD_STEP("typedb starts", {}),
 
     BDD_STEP("connection opens with default authentication", {
-        context.driver = CoreOrEnterpriseConnection::defaultConnection();
+        context.driver = CoreOrCloudConnection::defaultConnection();
     }),
 
     BDD_STEP_AND_THROWS("connection opens with authentication: (\\S+), (\\S+)", {
-        context.driver = CoreOrEnterpriseConnection::connectWithAuthentication(matches[1].str(), matches[2].str());
+        context.driver = CoreOrCloudConnection::connectWithAuthentication(matches[1].str(), matches[2].str());
     }),
 
     BDD_STEP("connection has been opened", {

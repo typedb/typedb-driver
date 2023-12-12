@@ -100,7 +100,7 @@ impl Context {
         sleep(Context::STEP_REATTEMPT_SLEEP).await;
         self.session_options = Options::new();
         self.transaction_options = Options::new().infer(true);
-        self.set_connection(Connection::new_enterprise(
+        self.set_connection(Connection::new_cloud(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
             Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&self.tls_root_ca))?,
         )?);
@@ -222,11 +222,11 @@ impl Context {
 impl Default for Context {
     fn default() -> Self {
         let tls_root_ca = PathBuf::from(
-            std::env::var("ROOT_CA").expect("ROOT_CA environment variable needs to be set for enterprise tests to run"),
+            std::env::var("ROOT_CA").expect("ROOT_CA environment variable needs to be set for cloud tests to run"),
         );
         let session_options = Options::new();
         let transaction_options = Options::new().infer(true);
-        let connection = Connection::new_enterprise(
+        let connection = Connection::new_cloud(
             &["localhost:11729", "localhost:21729", "localhost:31729"],
             Credential::with_tls(Context::ADMIN_USERNAME, Context::ADMIN_PASSWORD, Some(&tls_root_ca)).unwrap(),
         )

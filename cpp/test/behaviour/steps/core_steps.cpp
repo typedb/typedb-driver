@@ -41,22 +41,22 @@ bool TestHooks::skipScenario(const cucumber::messages::pickle& scenario) const {
 }
 
 void TestHooks::beforeAll() const {
-    wipeDatabases(CoreOrEnterpriseConnection::defaultConnection());
+    wipeDatabases(CoreOrCloudConnection::defaultConnection());
 }
 
 void TestHooks::afterScenario(Context& context, const cucumber_bdd::Scenario<Context>* scenario) const {
     DriverException::check_and_throw();
     context.driver->close();
-    wipeDatabases(CoreOrEnterpriseConnection::defaultConnection());
+    wipeDatabases(CoreOrCloudConnection::defaultConnection());
 }
 
 const TestHooks testHooks;
 
-TypeDB::Driver CoreOrEnterpriseConnection::defaultConnection() {
+TypeDB::Driver CoreOrCloudConnection::defaultConnection() {
     return TypeDB::Driver::coreDriver(DEFAULT_CORE_ADDRESS);
 }
 
-TypeDB::Driver CoreOrEnterpriseConnection::connectWithAuthentication(const std::string&, const std::string&) {
+TypeDB::Driver CoreOrCloudConnection::connectWithAuthentication(const std::string&, const std::string&) {
     THROW_ILLEGAL_STATE("Core does not support authentication steps");
 }
 

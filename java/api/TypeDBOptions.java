@@ -400,7 +400,7 @@ public class TypeDBOptions extends NativeObject<com.vaticle.typedb.driver.jni.Op
     /**
      * Explicitly enables or disables reading data from any replica.
      * If set to <code>True</code>, enables reading data from any replica, potentially boosting read throughput.
-     * Only settable in TypeDB Enterprise.
+     * Only settable in TypeDB Cloud.
      *
      * <h3>Examples</h3>
      * <pre>

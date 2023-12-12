@@ -21,4 +21,4 @@
 #
 
 set -ex
-bazel test $(bazel query "filter('^.*enterprise.*$', kind(.*_test, $1))") "${@:2}"
+bazel test $(bazel query "filter('^.*cloud.*$', kind(.*_test, $1))") "${@:2}"

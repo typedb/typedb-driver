@@ -61,7 +61,7 @@ pub struct Connection {
     server_connections: HashMap<Address, ServerConnection>,
     background_runtime: Arc<BackgroundRuntime>,
     username: Option<String>,
-    is_enterprise: bool,
+    is_cloud: bool,
 }
 
 impl Connection {
@@ -91,35 +91,35 @@ impl Connection {
                 server_connections: [(address, server_connection)].into(),
                 background_runtime,
                 username: None,
-                is_enterprise: false,
+                is_cloud: false,
             }),
             Err(err) => Err(err),
         }
     }
 
-    /// Creates a new TypeDB Enterprise connection.
+    /// Creates a new TypeDB Cloud connection.
     ///
     /// # Arguments
     ///
-    /// * `init_addresses` -- Addresses (host:port) on which TypeDB Enterprise nodes are running
+    /// * `init_addresses` -- Addresses (host:port) on which TypeDB Cloud nodes are running
     /// * `credential` -- User credential and TLS encryption setting
     ///
     /// # Examples
     ///
     /// ```rust
-    /// Connection::new_enterprise(
+    /// Connection::new_cloud(
     ///     &["localhost:11729", "localhost:21729", "localhost:31729"],
     ///     Credential::with_tls(
     ///         "admin",
     ///         "password",
     ///         Some(&PathBuf::from(
     ///             std::env::var("ROOT_CA")
-    ///                 .expect("ROOT_CA environment variable needs to be set for enterprise tests to run"),
+    ///                 .expect("ROOT_CA environment variable needs to be set for cloud tests to run"),
     ///         )),
     ///     )?,
     /// )
     /// ```
-    pub fn new_enterprise<T: AsRef<str> + Sync>(init_addresses: &[T], credential: Credential) -> Result<Self> {
+    pub fn new_cloud<T: AsRef<str> + Sync>(init_addresses: &[T], credential: Credential) -> Result<Self> {
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
 
         let init_addresses = init_addresses.iter().map(|addr| addr.as_ref().parse()).try_collect()?;
@@ -128,7 +128,7 @@ impl Connection {
         let server_connections: HashMap<Address, ServerConnection> = addresses
             .into_iter()
             .map(|address| {
-                ServerConnection::new_enterprise(background_runtime.clone(), address.clone(), credential.clone())
+                ServerConnection::new_cloud(background_runtime.clone(), address.clone(), credential.clone())
                     .map(|server_connection| (address, server_connection))
             })
             .try_collect()?;
@@ -136,7 +136,7 @@ impl Connection {
         let errors: Vec<Error> =
             server_connections.values().map(|conn| conn.validate()).filter_map(Result::err).collect();
         if errors.len() == server_connections.len() {
-            Err(ConnectionError::EnterpriseAllNodesFailed {
+            Err(ConnectionError::CloudAllNodesFailed {
                 errors: errors.into_iter().map(|err| err.to_string()).collect::<Vec<_>>().join("\n"),
             })?
         } else {
@@ -144,7 +144,7 @@ impl Connection {
                 server_connections,
                 background_runtime,
                 username: Some(credential.username().to_string()),
-                is_enterprise: true,
+                is_cloud: true,
             })
         }
     }
@@ -156,7 +156,7 @@ impl Connection {
     ) -> Result<HashSet<Address>> {
         for address in &addresses {
             let server_connection =
-                ServerConnection::new_enterprise(background_runtime.clone(), address.clone(), credential.clone());
+                ServerConnection::new_cloud(background_runtime.clone(), address.clone(), credential.clone());
             match server_connection {
                 Ok(server_connection) => match server_connection.servers_all() {
                     Ok(servers) => return Ok(servers.into_iter().collect()),
@@ -188,15 +188,15 @@ impl Connection {
         self.background_runtime.is_open()
     }
 
-    /// Check if the connection is to an Enterprise server.
+    /// Check if the connection is to an Cloud server.
     ///
     /// # Examples
     ///
     /// ```rust
-    /// connection.is_enterprise()
+    /// connection.is_cloud()
     /// ```
-    pub fn is_enterprise(&self) -> bool {
-        self.is_enterprise
+    pub fn is_cloud(&self) -> bool {
+        self.is_cloud
     }
 
     /// Closes this connection.
@@ -261,13 +261,9 @@ impl ServerConnection {
         Ok(Self { address, background_runtime, open_sessions: Default::default(), request_transmitter })
     }
 
-    fn new_enterprise(
-        background_runtime: Arc<BackgroundRuntime>,
-        address: Address,
-        credential: Credential,
-    ) -> Result<Self> {
+    fn new_cloud(background_runtime: Arc<BackgroundRuntime>, address: Address, credential: Credential) -> Result<Self> {
         let request_transmitter =
-            Arc::new(RPCTransmitter::start_enterprise(address.clone(), credential, &background_runtime)?);
+            Arc::new(RPCTransmitter::start_cloud(address.clone(), credential, &background_runtime)?);
         Ok(Self { address, background_runtime, open_sessions: Default::default(), request_transmitter })
     }
 

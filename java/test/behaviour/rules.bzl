@@ -24,7 +24,7 @@ load("@vaticle_typedb_common//test:rules.bzl", "typedb_java_test")
 def typedb_behaviour_java_test(
         name,
         connection_steps_core,
-        connection_steps_enterprise,
+        connection_steps_cloud,
         steps,
         runtime_deps = [],
         **kwargs):
@@ -43,14 +43,14 @@ def typedb_behaviour_java_test(
     )
 
     typedb_java_test(
-        name = name + "-enterprise",
+        name = name + "-cloud",
         server_artifacts = {
-            "@vaticle_bazel_distribution//platform:is_linux_arm64": "@vaticle_typedb_enterprise_artifact_linux-arm64//file",
-            "@vaticle_bazel_distribution//platform:is_linux_x86_64": "@vaticle_typedb_enterprise_artifact_linux-x86_64//file",
-            "@vaticle_bazel_distribution//platform:is_mac_arm64": "@vaticle_typedb_enterprise_artifact_mac-arm64//file",
-            "@vaticle_bazel_distribution//platform:is_mac_x86_64": "@vaticle_typedb_enterprise_artifact_mac-x86_64//file",
-            "@vaticle_bazel_distribution//platform:is_windows_x86_64": "@vaticle_typedb_enterprise_artifact_windows-x86_64//file",
+            "@vaticle_bazel_distribution//platform:is_linux_arm64": "@vaticle_typedb_cloud_artifact_linux-arm64//file",
+            "@vaticle_bazel_distribution//platform:is_linux_x86_64": "@vaticle_typedb_cloud_artifact_linux-x86_64//file",
+            "@vaticle_bazel_distribution//platform:is_mac_arm64": "@vaticle_typedb_cloud_artifact_mac-arm64//file",
+            "@vaticle_bazel_distribution//platform:is_mac_x86_64": "@vaticle_typedb_cloud_artifact_mac-x86_64//file",
+            "@vaticle_bazel_distribution//platform:is_windows_x86_64": "@vaticle_typedb_cloud_artifact_windows-x86_64//file",
         },
-        runtime_deps = runtime_deps + [connection_steps_enterprise] + steps,
+        runtime_deps = runtime_deps + [connection_steps_cloud] + steps,
         **kwargs,
     )

@@ -30,7 +30,7 @@ import java.nio.file.Path;
 import static com.vaticle.typedb.driver.jni.typedb_driver.credential_new;
 
 /**
- * User credentials and TLS encryption settings for connecting to TypeDB Enterprise.
+ * User credentials and TLS encryption settings for connecting to TypeDB Cloud.
  *
  * <h3>Examples</h3>
  * <pre>
@@ -46,7 +46,7 @@ public class TypeDBCredential extends NativeObject<com.vaticle.typedb.driver.jni
      *
      * @param username The name of the user to connect as
      * @param password The password for the user
-     * @param tlsEnabled Specify whether the connection to TypeDB Enterprise must be done over TLS
+     * @param tlsEnabled Specify whether the connection to TypeDB Cloud must be done over TLS
      */
     public TypeDBCredential(String username, String password, boolean tlsEnabled) {
         this(username, password, null, tlsEnabled);

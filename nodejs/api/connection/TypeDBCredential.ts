@@ -22,10 +22,10 @@
 import * as fs from "fs";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import {TypeDBDriverError} from "../../common/errors/TypeDBDriverError";
-import ENTERPRISE_INVALID_ROOT_CA_PATH = ErrorMessage.Driver.ENTERPRISE_INVALID_ROOT_CA_PATH;
+import CLOUD_INVALID_ROOT_CA_PATH = ErrorMessage.Driver.CLOUD_INVALID_ROOT_CA_PATH;
 
 /**
- * User credentials and TLS encryption settings for connecting to TypeDB Enterprise.
+ * User credentials and TLS encryption settings for connecting to TypeDB Cloud.
  *
  * ### Examples
  *
@@ -48,7 +48,7 @@ export class TypeDBCredential {
         this._password = password;
 
         if (tlsRootCAPath != null && !fs.existsSync(tlsRootCAPath)) {
-            throw new TypeDBDriverError(ENTERPRISE_INVALID_ROOT_CA_PATH.message(tlsRootCAPath));
+            throw new TypeDBDriverError(CLOUD_INVALID_ROOT_CA_PATH.message(tlsRootCAPath));
         }
         this._tlsRootCAPath = tlsRootCAPath;
     }

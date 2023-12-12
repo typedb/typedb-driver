@@ -23,18 +23,18 @@ from typing import Optional
 
 from typedb.native_driver_wrapper import credential_new, Credential as NativeCredential
 
-from typedb.common.exception import TypeDBDriverException, ENTERPRISE_CREDENTIAL_INCONSISTENT, ILLEGAL_STATE
+from typedb.common.exception import TypeDBDriverException, CLOUD_CREDENTIAL_INCONSISTENT, ILLEGAL_STATE
 from typedb.common.native_wrapper import NativeWrapper
 
 
 class TypeDBCredential(NativeWrapper[NativeCredential]):
     """
-    User credentials and TLS encryption settings for connecting to TypeDB Enterprise.
+    User credentials and TLS encryption settings for connecting to TypeDB Cloud.
 
     :param username: The name of the user to connect as
     :param password: The password for the user
     :param tls_root_ca_path: Path to the CA certificate to use for authenticating server certificates.
-    :param tls_enabled: Specify whether the connection to TypeDB Enterprise must be done over TLS
+    :param tls_enabled: Specify whether the connection to TypeDB Cloud must be done over TLS
 
     Examples:
     --------
@@ -50,7 +50,7 @@ class TypeDBCredential(NativeWrapper[NativeCredential]):
     def __init__(self, username: str, password: str, *, tls_root_ca_path: Optional[str] = None,
                  tls_enabled: bool = False):
         if tls_root_ca_path is not None and not tls_enabled:
-            raise TypeDBDriverException(ENTERPRISE_CREDENTIAL_INCONSISTENT)
+            raise TypeDBDriverException(CLOUD_CREDENTIAL_INCONSISTENT)
         super().__init__(credential_new(username, password, tls_root_ca_path, tls_enabled))
 
     @property

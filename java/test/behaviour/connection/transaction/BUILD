@@ -57,7 +57,7 @@ typedb_behaviour_java_test(
         "@vaticle_typedb_behaviour//connection:transaction.feature",
     ],
     connection_steps_core = "//java/test/behaviour/connection:steps-core",
-    connection_steps_enterprise = "//java/test/behaviour/connection:steps-enterprise",
+    connection_steps_cloud = "//java/test/behaviour/connection:steps-cloud",
     steps = [
         ":steps",
         "//java/test/behaviour/connection/database:steps",

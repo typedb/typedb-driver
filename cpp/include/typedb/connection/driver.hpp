@@ -56,7 +56,7 @@ public:
     UserManager users;
 
     static Driver coreDriver(const std::string& coreAddress);
-    static Driver enterpriseDriver(const std::vector<std::string>& enterpriseAddresses, const Credential& credential);
+    static Driver cloudDriver(const std::vector<std::string>& cloudAddresses, const Credential& credential);
 
     Driver(const Driver&) = delete;
     Driver(Driver&& from) = default;

@@ -96,14 +96,14 @@ class TypeDBDriver(ABC):
     def users(self) -> UserManager:
         """
         The ``UserManager`` instance for this connection, providing access to user management methods.
-        Only for TypeDB Enterprise.
+        Only for TypeDB Cloud.
         """
         pass
 
     @abstractmethod
     def user(self) -> User:
         """
-        Returns the logged-in user for the connection. Only for TypeDB Enterprise.
+        Returns the logged-in user for the connection. Only for TypeDB Cloud.
 
         :return:
 

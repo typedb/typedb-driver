@@ -33,7 +33,7 @@ for i in $(seq 1 $NODE_COUNT); do
 done
 
 function server_start() {
-  JAVA_HOME=$BAZEL_JAVA_HOME ./${1}/typedb enterprise \
+  JAVA_HOME=$BAZEL_JAVA_HOME ./${1}/typedb server \
     --storage.data=server/data \
     --server.address=localhost:${1}1729 \
     --server.internal-address.zeromq=localhost:${1}1730 \
@@ -51,14 +51,14 @@ function server_start() {
     --server.encryption.file.internal-zmq.public-key=`realpath tool/test/resources/encryption/int-zmq-public-key`
 }
 
-rm -rf $(seq 1 $NODE_COUNT) typedb-enterprise-all
+rm -rf $(seq 1 $NODE_COUNT) typedb-cloud-all
 
-bazel run //tool/test:typedb-enterprise-extractor -- typedb-enterprise-all
+bazel run //tool/test:typedb-cloud-extractor -- typedb-cloud-all
 echo Successfully unarchived TypeDB distribution. Creating $NODE_COUNT copies.
 for i in $(seq 1 $NODE_COUNT); do
-  cp -r typedb-enterprise-all $i || exit 1
+  cp -r typedb-cloud-all $i || exit 1
 done
-echo Starting a enterprise consisting of $NODE_COUNT servers...
+echo Starting a cloud consisting of $NODE_COUNT servers...
 for i in $(seq 1 $NODE_COUNT); do
   server_start $i &
 done
@@ -72,7 +72,7 @@ RETRY_NUM=0
 while [[ $RETRY_NUM -lt $MAX_RETRIES ]]; do
   RETRY_NUM=$(($RETRY_NUM + 1))
   if [[ $(($RETRY_NUM % 4)) -eq 0 ]]; then
-    echo Waiting for TypeDB Enterprise servers to start \($(($RETRY_NUM / 2))s\)...
+    echo Waiting for TypeDB Cloud servers to start \($(($RETRY_NUM / 2))s\)...
   fi
   ALL_STARTED=1
   for i in $(seq 1 $NODE_COUNT); do
@@ -84,7 +84,7 @@ while [[ $RETRY_NUM -lt $MAX_RETRIES ]]; do
   sleep $POLL_INTERVAL_SECS
 done
 if (( ! $ALL_STARTED )); then
-  echo Failed to start one or more TypeDB Enterprise servers
+  echo Failed to start one or more TypeDB Cloud servers
   exit 1
 fi
-echo $NODE_COUNT TypeDB Enterprise database servers started
+echo $NODE_COUNT TypeDB Cloud database servers started

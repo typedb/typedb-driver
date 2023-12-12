@@ -186,8 +186,8 @@ impl UserManager {
         F: Fn(ServerConnection) -> P,
         P: Future<Output = Result<R>>,
     {
-        if !self.connection.is_enterprise() {
-            Err(Error::Connection(ConnectionError::UserManagementEnterpriseOnly))
+        if !self.connection.is_cloud() {
+            Err(Error::Connection(ConnectionError::UserManagementCloudOnly))
         } else {
             DatabaseManager::new(self.connection.clone())
                 .get(Self::SYSTEM_DB)
