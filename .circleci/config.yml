@@ -329,9 +329,13 @@ commands:
           bazel build //cpp:assemble-cpp-driver
           export ASSEMBLY=<<parameters.assembly>>
           export ASSEMBLY_BASE=$(echo $ASSEMBLY | cut -f 1 -d '.')
+          export OSX_ARCH=$(echo $ASSEMBLY_BASE | cut -f 5 -d '-')
           mkdir -p test_assembly_cpp
           tar -xf bazel-bin/cpp/$ASSEMBLY --directory test_assembly_cpp
-          ( cd test_assembly_cpp && cmake ../cpp/test/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY_BASE && cmake --build . --config release )
+          (
+            cd test_assembly_cpp &&
+            cmake ../cpp/test/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY_BASE -DCMAKE_OSX_ARCHITECTURES=$OSX_ARCH && 
+            cmake --build . --config release )
           
           tool/test/start-core-server.sh
           sleep 3
