@@ -79,39 +79,6 @@ bool
 connection.is_open()
 ----
 
-[#_struct_Connection_new_core__address_impl_AsRef_str_]
-==== new_core
-
-[source,rust]
-----
-pub fn new_core(address: impl AsRef<str>) -> Result<Self>
-----
-
-Creates a new TypeDB Server connection.
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `address` a| The address (host:port) on which the TypeDB Server is running a| `impl AsRef<str>`
-|===
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result<Self>
-----
-
-[caption=""]
-.Code examples
-[source,rust]
-----
-Connection::new_core("127.0.0.1:1729")
-----
-
 [#_struct_Connection_new_cloud__init_addresses__T___credential_Credential]
 ==== new_cloud
 
@@ -157,6 +124,39 @@ Connection::new_cloud(
         )),
     )?,
 )
+----
+
+[#_struct_Connection_new_core__address_impl_AsRef_str_]
+==== new_core
+
+[source,rust]
+----
+pub fn new_core(address: impl AsRef<str>) -> Result<Self>
+----
+
+Creates a new TypeDB Server connection.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `address` a| The address (host:port) on which the TypeDB Server is running a| `impl AsRef<str>`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Self>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+Connection::new_core("127.0.0.1:1729")
 ----
 
 // end::methods[]

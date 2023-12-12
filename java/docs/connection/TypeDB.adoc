@@ -29,44 +29,13 @@ public TypeDB()
 .Returns
 `public`
 
-[#_TypeDB_coreDriver__java_lang_String]
-==== coreDriver
-
-[source,java]
-----
-public static TypeDBDriver coreDriver​(java.lang.String address)
-----
-
-Open a TypeDB Driver to a TypeDB Core server available at the provided address. 
-
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `address` a| The address of the TypeDB server a| `java.lang.String`
-|===
-
-[caption=""]
-.Returns
-`public static TypeDBDriver`
-
-[caption=""]
-.Code examples
-[source,java]
-----
-TypeDB.coreDriver(address);
-----
-
 [#_TypeDB_cloudDriver__java_lang_String__TypeDBCredential]
 ==== cloudDriver
 
 [source,java]
 ----
 public static TypeDBDriver cloudDriver​(java.lang.String address,
-                                            TypeDBCredential credential)
+                                       TypeDBCredential credential)
 ----
 
 Open a TypeDB Driver to a TypeDB Cloud server available at the provided address, using the provided credential. 
@@ -99,7 +68,7 @@ TypeDB.cloudDriver(address, credential);
 [source,java]
 ----
 public static TypeDBDriver cloudDriver​(java.util.Set<java.lang.String> addresses,
-                                            TypeDBCredential credential)
+                                       TypeDBCredential credential)
 ----
 
 Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using the provided credential. 
@@ -124,6 +93,37 @@ a| `credential` a| The credential to connect with a| `TypeDBCredential`
 [source,java]
 ----
 TypeDB.cloudDriver(addresses, credential);
+----
+
+[#_TypeDB_coreDriver__java_lang_String]
+==== coreDriver
+
+[source,java]
+----
+public static TypeDBDriver coreDriver​(java.lang.String address)
+----
+
+Open a TypeDB Driver to a TypeDB Core server available at the provided address. 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `address` a| The address of the TypeDB server a| `java.lang.String`
+|===
+
+[caption=""]
+.Returns
+`public static TypeDBDriver`
+
+[caption=""]
+.Code examples
+[source,java]
+----
+TypeDB.coreDriver(address);
 ----
 
 // end::methods[]

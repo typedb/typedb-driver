@@ -9,14 +9,14 @@
 |===
 |Variant
 a| `BrokenPipe`
-a| `ConnectionFailed`
-a| `ConnectionIsClosed`
-a| `DatabaseDoesNotExist`
 a| `CloudAllNodesFailed`
 a| `CloudEndpointEncrypted`
 a| `CloudReplicaNotPrimary`
 a| `CloudSSLCertificateNotValidated`
 a| `CloudTokenCredentialInvalid`
+a| `ConnectionFailed`
+a| `ConnectionIsClosed`
+a| `DatabaseDoesNotExist`
 a| `InvalidResponseField`
 a| `MissingResponseField`
 a| `RPCMethodUnavailable`
