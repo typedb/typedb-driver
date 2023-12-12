@@ -20,8 +20,9 @@
  */
 
 #include <chrono>
-#include <iomanip>
 #include <ctime>
+#include <iomanip>
+#include <sstream>
 
 #include "typedb/common/exception.hpp"
 #include "typedb/concept/value/value.hpp"
@@ -40,11 +41,13 @@ std::string Value::formatDateTime(DateTime t) {
 
 DateTime Value::parseDateTime(const std::string& s) {
     std::tm tm = {};
-    if (s.find("T") != std::string::npos) {
-        strptime(s.c_str(), "%Y-%m-%dT%H:%M:%S", &tm);
-    } else {
-        strptime(s.c_str(),"%Y-%m-%d", &tm);
-    }
+    const char* format = s.find("T") != std::string::npos ? "%Y-%m-%dT%H:%M:%S" : "%Y-%m-%d";
+#ifdef _MSC_VER
+    std::stringstream ss(s);
+    ss >> std::get_time(&tm, format);
+#else
+    strptime(s.c_str(), format, &tm);
+#endif
     return TypeDB::DateTime(std::chrono::seconds{std::mktime(&tm)});
 }
 

@@ -407,7 +407,7 @@ commands:
         type: string
     steps:
       - run: |
-          ulimit -n 250000
+          ulimit -n 500000
           bazel build //cpp:assemble-cpp-driver
           export ASSEMBLY=<<parameters.assembly>>
           export ASSEMBLY_BASE=$(echo $ASSEMBLY | cut -f 1 -d '.')
@@ -1181,34 +1181,34 @@ workflows:
       - deploy-clib-snapshot-linux-arm64:
           filters:
             branches:
-              only: [master, development, cpp-driver-circleci]
+              only: [master, development]
       - deploy-clib-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master, development, cpp-driver-circleci]
+              only: [master, development]
       - deploy-clib-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master, development, cpp-driver-circleci]
+              only: [master, development]
       - deploy-clib-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, development, cpp-driver-circleci]
+              only: [master, development]
       - deploy-clib-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, development, cpp-driver-circleci]
+              only: [master, development]
 
   typedb-driver-cpp-snapshot:
     jobs:
       - deploy-cpp-snapshot-linux-arm64:
           filters:
             branches:
-              only: [master, development, cpp-driver-circleci]
+              only: [master, development]
       - deploy-cpp-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master, development, cpp-driver-circleci]
+              only: [master, development]
       - deploy-cpp-snapshot-mac-arm64:
           filters:
             branches:
