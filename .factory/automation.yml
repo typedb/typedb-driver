@@ -976,7 +976,7 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    test-cpp-behaviour-connection-enterprise:
+    test-cpp-behaviour-connection-cloud:
       image: vaticle-ubuntu-22.04
       dependencies:
         - build
@@ -986,13 +986,13 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        tool/test/start-enterprise-servers.sh &&
-          .factory/test-enterprise.sh //cpp/test/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-          .factory/test-enterprise.sh //cpp/test/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-          .factory/test-enterprise.sh //cpp/test/behaviour/connection/transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
-          .factory/test-enterprise.sh //cpp/test/behaviour/connection/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+        tool/test/start-cloud-servers.sh &&
+          .factory/test-cloud.sh //cpp/test/behaviour/connection/database/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cloud.sh //cpp/test/behaviour/connection/session/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cloud.sh //cpp/test/behaviour/connection/transaction/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
+          .factory/test-cloud.sh //cpp/test/behaviour/connection/user/... --test_env=ROOT_CA=$ROOT_CA --test_output=streamed --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        tool/test/stop-enterprise-servers.sh
+        tool/test/stop-cloud-servers.sh
         exit $TEST_SUCCESS
 
     test-cpp-behaviour-concept-core:
@@ -1013,7 +1013,7 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    test-cpp-behaviour-concept-enterprise:
+    test-cpp-behaviour-concept-cloud:
       image: vaticle-ubuntu-22.04
       dependencies:
         - build
@@ -1023,10 +1023,10 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        source tool/test/start-enterprise-servers.sh &&  # use source to receive export vars
-          .factory/test-enterprise.sh //cpp/test/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
+        source tool/test/start-cloud-servers.sh &&  # use source to receive export vars
+          .factory/test-cloud.sh //cpp/test/behaviour/concept/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors --jobs=1 &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        tool/test/stop-enterprise-servers.sh
+        tool/test/stop-cloud-servers.sh
         exit $TEST_SUCCESS
 
     test-cpp-behaviour-driver-core:
@@ -1047,7 +1047,7 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    test-cpp-behaviour-driver-enterprise:
+    test-cpp-behaviour-driver-cloud:
       image: vaticle-ubuntu-22.04
       dependencies:
         - build
@@ -1057,10 +1057,10 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        tool/test/start-enterprise-servers.sh &&
-          .factory/test-enterprise.sh //cpp/test/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+        tool/test/start-cloud-servers.sh &&
+          .factory/test-cloud.sh //cpp/test/behaviour/driver/query/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        tool/test/stop-enterprise-servers.sh
+        tool/test/stop-cloud-servers.sh
         exit $TEST_SUCCESS
 
     test-cpp-behaviour-read-core:
@@ -1088,7 +1088,7 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    test-cpp-behaviour-read-enterprise:
+    test-cpp-behaviour-read-cloud:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
@@ -1101,14 +1101,14 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        source tool/test/start-enterprise-servers.sh &&  # use source to receive export vars
-          .factory/test-enterprise.sh //cpp/test/behaviour/query/language/match/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-enterprise.sh //cpp/test/behaviour/query/language/get/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-enterprise.sh //cpp/test/behaviour/query/language/fetch/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-enterprise.sh //cpp/test/behaviour/query/language/modifiers/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-enterprise.sh //cpp/test/behaviour/query/language/expression/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+        source tool/test/start-cloud-servers.sh &&  # use source to receive export vars
+          .factory/test-cloud.sh //cpp/test/behaviour/query/language/match/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cloud.sh //cpp/test/behaviour/query/language/get/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cloud.sh //cpp/test/behaviour/query/language/fetch/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cloud.sh //cpp/test/behaviour/query/language/modifiers/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cloud.sh //cpp/test/behaviour/query/language/expression/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        tool/test/stop-enterprise-servers.sh
+        tool/test/stop-cloud-servers.sh
         exit $TEST_SUCCESS
 
     test-cpp-behaviour-writable-core:
@@ -1134,7 +1134,7 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    test-cpp-behaviour-writable-enterprise:
+    test-cpp-behaviour-writable-cloud:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
@@ -1147,12 +1147,12 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        tool/test/start-enterprise-servers.sh &&
-          .factory/test-enterprise.sh //cpp/test/behaviour/query/language/insert/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-enterprise.sh //cpp/test/behaviour/query/language/delete/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-enterprise.sh //cpp/test/behaviour/query/language/update/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+        tool/test/start-cloud-servers.sh &&
+          .factory/test-cloud.sh //cpp/test/behaviour/query/language/insert/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cloud.sh //cpp/test/behaviour/query/language/delete/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cloud.sh //cpp/test/behaviour/query/language/update/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        tool/test/stop-enterprise-servers.sh
+        tool/test/stop-cloud-servers.sh
         exit $TEST_SUCCESS
 
     test-cpp-behaviour-definable-core:
@@ -1177,7 +1177,7 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    test-cpp-behaviour-definable-enterprise:
+    test-cpp-behaviour-definable-cloud:
       image: vaticle-ubuntu-22.04
       filter:
         owner: vaticle
@@ -1190,11 +1190,11 @@ build:
         export ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
-        tool/test/start-enterprise-servers.sh &&
-          .factory/test-enterprise.sh //cpp/test/behaviour/query/language/define/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
-          .factory/test-enterprise.sh //cpp/test/behaviour/query/language/undefine/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+        tool/test/start-cloud-servers.sh &&
+          .factory/test-cloud.sh //cpp/test/behaviour/query/language/define/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
+          .factory/test-cloud.sh //cpp/test/behaviour/query/language/undefine/... --test_env=ROOT_CA=$ROOT_CA --test_output=errors &&
           export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        tool/test/stop-enterprise-servers.sh
+        tool/test/stop-cloud-servers.sh
         exit $TEST_SUCCESS
 
     test-cpp-integration-core:
