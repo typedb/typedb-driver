@@ -46,7 +46,7 @@ TEST(TestConceptAPI, TestData) {
     try {
         driver.databases.create(dbName);
         FAIL();  // "Exception not thrown"
-    } catch (DriverException e) {
+    } catch (DriverException& e) {
         std::cout << "Caught exception with message: " << e.message() << std::endl;
     }
 }

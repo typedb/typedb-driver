@@ -183,7 +183,6 @@ JSON::~JSON() {
             break;
         }
     }
-    memset(this, 0, sizeof(JSON));
     _type = JSONType::NONE;
 }
 
