@@ -10,7 +10,7 @@ include_directories(${TYPEDB_ASSEMBLY}/include)
 
 add_executable(test_assembly test.c)
 IF (WIN32)
-    target_link_libraries(test_assembly typedb-driver-clib.dll.lib)
+    target_link_libraries(test_assembly typedb_driver_clib.dll.lib)
 ELSE()
     target_link_libraries(test_assembly typedb_driver_clib)
 ENDIF()
