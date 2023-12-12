@@ -40,7 +40,7 @@ def step_impl(context):
 @step(u'connection opens with default authentication')
 def step_impl(context):
     context.setup_context_driver_fn()
-    for database in context.driver->databases.all():
+    for database in context.driver.databases.all():
         database.delete()
 
 
@@ -60,7 +60,7 @@ def step_impl(context, username: str, password: str):
 
 @step(u'connection closes')
 def step_impl(context):
-    context.driver->close()
+    context.driver.close()
 
 
 @step(u'typedb stops')
@@ -71,9 +71,9 @@ def step_impl(context):
 
 @step("connection has been opened")
 def step_impl(context: Context):
-    assert context.driver and context.driver->is_open()
+    assert context.driver and context.driver.is_open()
 
 
 @step("connection does not have any database")
 def step_impl(context: Context):
-    assert len(context.driver->databases.all()) == 0
+    assert len(context.driver.databases.all()) == 0

@@ -35,7 +35,7 @@ DATA = SessionType.DATA
 
 def open_sessions_for_databases(context: Context, names: list, session_type):
     for name in names:
-        sess = context.driver->session(name, session_type, context.session_options)
+        sess = context.driver.session(name, session_type, context.session_options)
         context.sessions.append(sess)
 
 
@@ -79,7 +79,7 @@ def step_impl(context: Context):
     assert_that(len(names), is_(less_than_or_equal_to(context.THREAD_POOL_SIZE)))
     with ThreadPoolExecutor(max_workers=context.THREAD_POOL_SIZE) as executor:
         for name in names:
-            context.sessions_parallel.append(executor.submit(partial(context.driver->session, name, DATA)))
+            context.sessions_parallel.append(executor.submit(partial(context.driver.session, name, DATA)))
 
 
 @step("connection close all sessions")
