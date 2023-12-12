@@ -48,7 +48,7 @@ function getServerPID(port) {
 
 function serverStart(idx) {
     const encryptionResourceDir = process.env.ROOT_CA.replace(/\/[^\/]*$/, "/");
-    let node = spawn(`./${idx}/typedb`, ["cloud",
+    let node = spawn(`./${idx}/typedb`, ["server",
         "--storage.data", "server/data",
         "--server.address", `localhost:${idx}1729`,
         "--server.internal-address.zeromq", `localhost:${idx}1730`,
