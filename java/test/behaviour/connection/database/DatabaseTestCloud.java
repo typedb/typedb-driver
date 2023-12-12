@@ -34,18 +34,18 @@ import org.junit.runner.RunWith;
         features = "external/vaticle_typedb_behaviour/connection/database.feature",
         tags = "not @ignore and not @ignore-typedb-driver and not @ignore-typedb-driver-java"
 )
-public class DatabaseTestEnterprise extends BehaviourTest {
+public class DatabaseTestCloud extends BehaviourTest {
     // ATTENTION:
     // When you click RUN from within this class through Intellij IDE, it will fail.
     // You can fix it by doing:
     //
     // 1) Go to 'Run'
     // 2) Select 'Edit Configurations...'
-    // 3) Select 'Bazel test DatabaseTestEnterprise'
+    // 3) Select 'Bazel test DatabaseTestCloud'
     //
     // 4) Ensure 'Target Expression' is set correctly:
     //    a) Use '//<this>/<package>/<name>:test-core' to test against typedb
-    //    b) Use '//<this>/<package>/<name>:test-enterprise' to test against typedb-enterprise
+    //    b) Use '//<this>/<package>/<name>:test-cloud' to test against typedb-cloud
     //
     // 5) Update 'Bazel Flags':
     //    a) Remove the line that says: '--test_filter=com.vaticle.typedb.driver.*'

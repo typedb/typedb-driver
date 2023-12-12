@@ -54,24 +54,24 @@ error_messages! { ConnectionError
         12: "Unable to connect to TypeDB server(s), received errors: \n{error}",
     ServerConnectionFailedStatusError { error: String } =
         13: "Unable to connect to TypeDB server(s), received network error: \n{error}",
-    UserManagementEnterpriseOnly =
-        14: "User management is only available in TypeDB Enterprise servers.",
-    EnterpriseReplicaNotPrimary =
+    UserManagementCloudOnly =
+        14: "User management is only available in TypeDB Cloud servers.",
+    CloudReplicaNotPrimary =
         15: "The replica is not the primary replica.",
-    EnterpriseAllNodesFailed { errors: String } =
-        16: "Attempted connecting to all TypeDB Enterprise servers, but the following errors occurred: \n{errors}.",
-    EnterpriseTokenCredentialInvalid =
+    CloudAllNodesFailed { errors: String } =
+        16: "Attempted connecting to all TypeDB Cloud servers, but the following errors occurred: \n{errors}.",
+    CloudTokenCredentialInvalid =
         17: "Invalid token credential.",
     SessionCloseFailed =
         18: "Failed to close session. It may still be open on the server: or it may already have been closed previously.",
-    EnterpriseEndpointEncrypted =
-        19: "Unable to connect to TypeDB Enterprise: attempting an unencrypted connection to an encrypted endpoint.",
-    EnterpriseSSLCertificateNotValidated =
-        20: "SSL handshake with TypeDB Enterprise failed: the server's identity could not be verified. Possible CA mismatch.",
+    CloudEndpointEncrypted =
+        19: "Unable to connect to TypeDB Cloud: attempting an unencrypted connection to an encrypted endpoint.",
+    CloudSSLCertificateNotValidated =
+        20: "SSL handshake with TypeDB Cloud failed: the server's identity could not be verified. Possible CA mismatch.",
     BrokenPipe =
-        21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted enterprise instance using a TLS-enabled credential.",
+        21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted cloud instance using a TLS-enabled credential.",
     ConnectionFailed =
-        22: "Connection failed. Please check the server is running and the address is accessible. Encrypted Enterprise endpoints may also have misconfigured SSL certificates.",
+        22: "Connection failed. Please check the server is running and the address is accessible. Encrypted Cloud endpoints may also have misconfigured SSL certificates.",
 }
 
 error_messages! { InternalError
@@ -119,10 +119,10 @@ impl Error {
 
     fn from_message(message: &str) -> Self {
         match message.split_ascii_whitespace().next() {
-            Some("[RPL01]") => Self::Connection(ConnectionError::EnterpriseReplicaNotPrimary),
+            Some("[RPL01]") => Self::Connection(ConnectionError::CloudReplicaNotPrimary),
             // TODO: CLS and ENT are synonyms which we can simplify on protocol change
-            Some("[CLS08]") => Self::Connection(ConnectionError::EnterpriseTokenCredentialInvalid),
-            Some("[ENT08]") => Self::Connection(ConnectionError::EnterpriseTokenCredentialInvalid),
+            Some("[CLS08]") => Self::Connection(ConnectionError::CloudTokenCredentialInvalid),
+            Some("[ENT08]") => Self::Connection(ConnectionError::CloudTokenCredentialInvalid),
             Some("[DBS06]") => Self::Connection(ConnectionError::DatabaseDoesNotExist {
                 name: message.split('\'').nth(1).unwrap_or("{unknown}").to_owned(),
             }),
@@ -134,9 +134,9 @@ impl Error {
         if status_message == "broken pipe" {
             Error::Connection(ConnectionError::BrokenPipe)
         } else if status_message.contains("received corrupt message") {
-            Error::Connection(ConnectionError::EnterpriseEndpointEncrypted)
+            Error::Connection(ConnectionError::CloudEndpointEncrypted)
         } else if status_message.contains("UnknownIssuer") {
-            Error::Connection(ConnectionError::EnterpriseSSLCertificateNotValidated)
+            Error::Connection(ConnectionError::CloudSSLCertificateNotValidated)
         } else if status_message.contains("Connection refused") {
             Error::Connection(ConnectionError::ConnectionFailed)
         } else {

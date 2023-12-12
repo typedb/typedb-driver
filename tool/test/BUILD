@@ -51,15 +51,15 @@ native_typedb_artifact(
 )
 
 native_typedb_artifact(
-    name = "native-typedb-enterprise-artifact",
+    name = "native-typedb-cloud-artifact",
     native_artifacts = {
-        "@vaticle_bazel_distribution//platform:is_linux_arm64": ["@vaticle_typedb_enterprise_artifact_linux-arm64//file"],
-        "@vaticle_bazel_distribution//platform:is_linux_x86_64": ["@vaticle_typedb_enterprise_artifact_linux-x86_64//file"],
-        "@vaticle_bazel_distribution//platform:is_mac_arm64": ["@vaticle_typedb_enterprise_artifact_mac-arm64//file"],
-        "@vaticle_bazel_distribution//platform:is_mac_x86_64": ["@vaticle_typedb_enterprise_artifact_mac-x86_64//file"],
-        "@vaticle_bazel_distribution//platform:is_windows_x86_64": ["@vaticle_typedb_enterprise_artifact_windows-x86_64//file"],
+        "@vaticle_bazel_distribution//platform:is_linux_arm64": ["@vaticle_typedb_cloud_artifact_linux-arm64//file"],
+        "@vaticle_bazel_distribution//platform:is_linux_x86_64": ["@vaticle_typedb_cloud_artifact_linux-x86_64//file"],
+        "@vaticle_bazel_distribution//platform:is_mac_arm64": ["@vaticle_typedb_cloud_artifact_mac-arm64//file"],
+        "@vaticle_bazel_distribution//platform:is_mac_x86_64": ["@vaticle_typedb_cloud_artifact_mac-x86_64//file"],
+        "@vaticle_bazel_distribution//platform:is_windows_x86_64": ["@vaticle_typedb_cloud_artifact_windows-x86_64//file"],
     },
-    output = "typedb-enterprise-artifact.tar.gz",
+    output = "typedb-cloud-artifact.tar.gz",
     visibility = ["//visibility:public"],
 )
 
@@ -69,6 +69,6 @@ artifact_extractor(
 )
 
 artifact_extractor(
-    name = "typedb-enterprise-extractor",
-    artifact = ":native-typedb-enterprise-artifact",
+    name = "typedb-cloud-extractor",
+    artifact = ":native-typedb-cloud-artifact",
 )

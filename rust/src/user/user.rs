@@ -63,6 +63,6 @@ impl User {
                 Err(err) => error_buffer.push(format!("- {}: {}", server_connection.address(), err)),
             }
         }
-        Err(ConnectionError::EnterpriseAllNodesFailed { errors: error_buffer.join("\n") })?
+        Err(ConnectionError::CloudAllNodesFailed { errors: error_buffer.join("\n") })?
     }
 }

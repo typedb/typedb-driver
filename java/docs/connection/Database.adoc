@@ -50,7 +50,7 @@ The database name as a string.
 java.util.Optional<? extends Database.Replica> preferredReplica()
 ----
 
-Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Enterprise_ 
+Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Cloud_ 
 
 
 [caption=""]
@@ -73,7 +73,7 @@ database.preferredReplica()
 java.util.Optional<? extends Database.Replica> primaryReplica()
 ----
 
-Returns the primary replica for this database. _Only works in TypeDB Enterprise_ 
+Returns the primary replica for this database. _Only works in TypeDB Cloud_ 
 
 
 [caption=""]
@@ -96,7 +96,7 @@ database.primaryReplica()
 java.util.Set<? extends Database.Replica> replicas()
 ----
 
-Set of ``Replica`` instances for this database. Only works in TypeDB Enterprise
+Set of ``Replica`` instances for this database. Only works in TypeDB Cloud
 
 
 [caption=""]

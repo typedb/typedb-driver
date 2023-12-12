@@ -36,7 +36,7 @@ import java.util.Set;
 
 import static com.vaticle.typedb.driver.jni.typedb_driver.connection_force_close;
 import static com.vaticle.typedb.driver.jni.typedb_driver.connection_is_open;
-import static com.vaticle.typedb.driver.jni.typedb_driver.connection_open_enterprise;
+import static com.vaticle.typedb.driver.jni.typedb_driver.connection_open_cloud;
 import static com.vaticle.typedb.driver.jni.typedb_driver.connection_open_core;
 
 public class TypeDBDriverImpl extends NativeObject<com.vaticle.typedb.driver.jni.Connection> implements TypeDBDriver {
@@ -48,7 +48,7 @@ public class TypeDBDriverImpl extends NativeObject<com.vaticle.typedb.driver.jni
     }
 
     public TypeDBDriverImpl(Set<String> initAddresses, TypeDBCredential credential) throws TypeDBDriverException {
-        this(openEnterprise(initAddresses, credential));
+        this(openCloud(initAddresses, credential));
     }
 
     private TypeDBDriverImpl(com.vaticle.typedb.driver.jni.Connection connection) {
@@ -65,9 +65,9 @@ public class TypeDBDriverImpl extends NativeObject<com.vaticle.typedb.driver.jni
         }
     }
 
-    private static com.vaticle.typedb.driver.jni.Connection openEnterprise(Set<String> initAddresses, TypeDBCredential credential) {
+    private static com.vaticle.typedb.driver.jni.Connection openCloud(Set<String> initAddresses, TypeDBCredential credential) {
         try {
-            return connection_open_enterprise(initAddresses.toArray(new String[0]), credential.nativeObject);
+            return connection_open_cloud(initAddresses.toArray(new String[0]), credential.nativeObject);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

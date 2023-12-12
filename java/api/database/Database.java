@@ -78,7 +78,7 @@ public interface Database {
 
     /**
      * Set of <code>Replica</code> instances for this database.
-     * <b>Only works in TypeDB Enterprise</b>
+     * <b>Only works in TypeDB Cloud</b>
      *
      * <h3>Examples</h3>
      * <pre>
@@ -90,7 +90,7 @@ public interface Database {
 
     /**
      * Returns the primary replica for this database.
-     * _Only works in TypeDB Enterprise_
+     * _Only works in TypeDB Cloud_
      *
      * <h3>Examples</h3>
      * <pre>
@@ -102,7 +102,7 @@ public interface Database {
 
     /**
      * Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica.
-     * _Only works in TypeDB Enterprise_
+     * _Only works in TypeDB Cloud_
      *
      * <h3>Examples</h3>
      * <pre>

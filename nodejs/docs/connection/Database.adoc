@@ -9,9 +9,9 @@
 |===
 |Name |Type |Description
 a| `name` a| `string` a| The database name as a string.
-a| `preferredReplica` a| `Replica` a| The preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. Only works in TypeDB Enterprise
-a| `primaryReplica` a| `Replica` a| The primary replica for this database. Only works in TypeDB Enterprise
-a| `replicas` a| `Replica` a| The Replica instances for this database. Only works in TypeDB Enterprise
+a| `preferredReplica` a| `Replica` a| The preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. Only works in TypeDB Cloud
+a| `primaryReplica` a| `Replica` a| The primary replica for this database. Only works in TypeDB Cloud
+a| `replicas` a| `Replica` a| The Replica instances for this database. Only works in TypeDB Cloud
 |===
 // end::properties[]
 

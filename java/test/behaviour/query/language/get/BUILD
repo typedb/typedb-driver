@@ -33,7 +33,7 @@ typedb_behaviour_java_test(
         "@vaticle_typedb_behaviour//query/language:get.feature",
     ],
     connection_steps_core = "//java/test/behaviour/connection:steps-core",
-    connection_steps_enterprise = "//java/test/behaviour/connection:steps-enterprise",
+    connection_steps_cloud = "//java/test/behaviour/connection:steps-cloud",
     steps = [
         "//java/test/behaviour/query:steps",
         "//java/test/behaviour/connection/session:steps",

@@ -95,7 +95,7 @@ TRANSACTION_CLOSED = DriverErrorMessage(3, "The transaction has been closed and 
 DATABASE_DELETED = DriverErrorMessage(4, "The database '%s' has been deleted and no further operation is allowed.")
 MISSING_DB_NAME = DriverErrorMessage(5, "Database name cannot be empty.")
 POSITIVE_VALUE_REQUIRED = DriverErrorMessage(6, "Value should be positive, was: '%d'.")
-ENTERPRISE_CREDENTIAL_INCONSISTENT = DriverErrorMessage(7, "TLS disabled but the Root CA path provided.")
+CLOUD_CREDENTIAL_INCONSISTENT = DriverErrorMessage(7, "TLS disabled but the Root CA path provided.")
 
 
 class ConceptErrorMessage(ErrorMessage):

@@ -44,8 +44,8 @@ ts_project(
 )
 
 node_cucumber_test(
-    name = "test-enterprise",
-    steps = "@//nodejs/test/behaviour/connection:steps-enterprise",
+    name = "test-cloud",
+    steps = "@//nodejs/test/behaviour/connection:steps-cloud",
     features = ["@vaticle_typedb_behaviour//connection:user.feature"],
     data = [
         ":steps",

@@ -152,7 +152,7 @@ If set, specifies a guideline number of answers that the server should send befo
 get readAnyReplica(): boolean
 ----
 
-If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise.
+If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Cloud.
 
 [caption=""]
 .Returns
@@ -166,7 +166,7 @@ If set to ``True``, enables reading data from any replica, potentially boosting 
 set readAnyReplica(value): void
 ----
 
-If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise.
+If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Cloud.
 
 [caption=""]
 .Returns

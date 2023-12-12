@@ -60,7 +60,7 @@ impl RPCTransmitter {
         Ok(Self { request_sink, shutdown_sink })
     }
 
-    pub(in crate::connection) fn start_enterprise(
+    pub(in crate::connection) fn start_cloud(
         address: Address,
         credential: Credential,
         runtime: &BackgroundRuntime,

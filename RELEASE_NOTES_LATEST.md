@@ -66,7 +66,7 @@ npm install typedb-driver@2.25.8
   **Session callbacks**
   - All drivers:
     - implement session reopen callbacks, executed when a session closed on the server side successfully reconnects;
-    - core session now attempts to reconnect if it is closed on the remote server, in line with enterprise behaviour;
+    - core session now attempts to reconnect if it is closed on the remote server, in line with cloud behaviour;
     - `Session::on_close()` callbacks are now executed each time the session closes (rather than just once);
   - NodeJS:
     - implement session and transaction callbacks (`onClose()`, `Session::onReopen()`);

@@ -131,7 +131,7 @@ impl DatabaseManager {
         for server_connection in self.connection.connections() {
             match task(server_connection.clone(), name.clone()).await {
                 Ok(res) => return Ok(res),
-                Err(Error::Connection(ConnectionError::EnterpriseReplicaNotPrimary)) => {
+                Err(Error::Connection(ConnectionError::CloudReplicaNotPrimary)) => {
                     return Database::get(name, self.connection.clone())
                         .await?
                         .run_on_primary_replica(|database, server_connection| {

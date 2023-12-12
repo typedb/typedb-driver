@@ -12,11 +12,11 @@ a| `BrokenPipe`
 a| `ConnectionFailed`
 a| `ConnectionIsClosed`
 a| `DatabaseDoesNotExist`
-a| `EnterpriseAllNodesFailed`
-a| `EnterpriseEndpointEncrypted`
-a| `EnterpriseReplicaNotPrimary`
-a| `EnterpriseSSLCertificateNotValidated`
-a| `EnterpriseTokenCredentialInvalid`
+a| `CloudAllNodesFailed`
+a| `CloudEndpointEncrypted`
+a| `CloudReplicaNotPrimary`
+a| `CloudSSLCertificateNotValidated`
+a| `CloudTokenCredentialInvalid`
 a| `InvalidResponseField`
 a| `MissingResponseField`
 a| `RPCMethodUnavailable`
@@ -29,7 +29,7 @@ a| `TransactionIsClosed`
 a| `TransactionIsClosedWithErrors`
 a| `UnexpectedResponse`
 a| `UnknownRequestId`
-a| `UserManagementEnterpriseOnly`
+a| `UserManagementCloudOnly`
 |===
 // end::enum_constants[]
 

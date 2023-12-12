@@ -33,7 +33,7 @@ pub struct Credential {
     tls_config: Option<ClientTlsConfig>,
 }
 
-/// User credentials and TLS encryption settings for connecting to TypeDB Enterprise.
+/// User credentials and TLS encryption settings for connecting to TypeDB Cloud.
 impl Credential {
     /// Creates a credential with username and password. Specifies the connection must use TLS
     ///

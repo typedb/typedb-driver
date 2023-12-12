@@ -54,9 +54,9 @@ java_library(
 )
 
 java_library(
-    name = "steps-enterprise",
+    name = "steps-cloud",
     srcs = [
-        "ConnectionStepsEnterprise.java",
+        "ConnectionStepsCloud.java",
     ],
     visibility = ["//visibility:public"],
     deps = [

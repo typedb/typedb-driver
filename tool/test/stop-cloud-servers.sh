@@ -22,7 +22,7 @@
 
 set -e
 
-procs=$(ps aux | awk '/TypeDBEnterpriseServe[r]/ {print $2}' | paste -sd " " -)
+procs=$(ps aux | awk '/TypeDBCloudServe[r]/ {print $2}' | paste -sd " " -)
 echo $procs
 if [ -n "$procs" ]; then
     kill $procs

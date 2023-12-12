@@ -60,16 +60,16 @@ a| `address` a| The address of the TypeDB server a| `java.lang.String`
 TypeDB.coreDriver(address);
 ----
 
-[#_TypeDB_enterpriseDriver__java_lang_String__TypeDBCredential]
-==== enterpriseDriver
+[#_TypeDB_cloudDriver__java_lang_String__TypeDBCredential]
+==== cloudDriver
 
 [source,java]
 ----
-public static TypeDBDriver enterpriseDriver​(java.lang.String address,
+public static TypeDBDriver cloudDriver​(java.lang.String address,
                                             TypeDBCredential credential)
 ----
 
-Open a TypeDB Driver to a TypeDB Enterprise server available at the provided address, using the provided credential. 
+Open a TypeDB Driver to a TypeDB Cloud server available at the provided address, using the provided credential. 
 
 
 [caption=""]
@@ -90,19 +90,19 @@ a| `credential` a| The credential to connect with a| `TypeDBCredential`
 .Code examples
 [source,java]
 ----
-TypeDB.enterpriseDriver(address, credential);
+TypeDB.cloudDriver(address, credential);
 ----
 
-[#_TypeDB_enterpriseDriver__java_util_Set_java_lang_String___TypeDBCredential]
-==== enterpriseDriver
+[#_TypeDB_cloudDriver__java_util_Set_java_lang_String___TypeDBCredential]
+==== cloudDriver
 
 [source,java]
 ----
-public static TypeDBDriver enterpriseDriver​(java.util.Set<java.lang.String> addresses,
+public static TypeDBDriver cloudDriver​(java.util.Set<java.lang.String> addresses,
                                             TypeDBCredential credential)
 ----
 
-Open a TypeDB Driver to TypeDB Enterprise server(s) available at the provided addresses, using the provided credential. 
+Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using the provided credential. 
 
 
 [caption=""]
@@ -123,7 +123,7 @@ a| `credential` a| The credential to connect with a| `TypeDBCredential`
 .Code examples
 [source,java]
 ----
-TypeDB.enterpriseDriver(addresses, credential);
+TypeDB.cloudDriver(addresses, credential);
 ----
 
 // end::methods[]

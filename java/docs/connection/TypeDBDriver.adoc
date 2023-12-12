@@ -133,7 +133,7 @@ driver.session(database, sessionType, options);
 User user()
 ----
 
-The ``UserManager`` instance for this connection, providing access to user management methods. Only for TypeDB Enterprise.
+The ``UserManager`` instance for this connection, providing access to user management methods. Only for TypeDB Cloud.
 
 [caption=""]
 .Returns
@@ -148,7 +148,7 @@ The ``UserManager`` instance for this connection, providing access to user manag
 UserManager users()
 ----
 
-Returns the logged-in user for the connection. Only for TypeDB Enterprise. 
+Returns the logged-in user for the connection. Only for TypeDB Cloud. 
 
 
 [caption=""]

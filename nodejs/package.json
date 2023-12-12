@@ -17,7 +17,7 @@
     "test-concept": "node test/integration/test-concept.js",
     "test-connection": "node test/integration/test-connection.js",
     "test-query": "node test/integration/test-query.js",
-    "test-enterprise-failover": "npm run build && node test/integration/test-enterprise-failover.js",
+    "test-cloud-failover": "npm run build && node test/integration/test-cloud-failover.js",
     "test-stream": "node test/integration/test-stream.js",
     "lint": "eslint . --ext .ts"
   },

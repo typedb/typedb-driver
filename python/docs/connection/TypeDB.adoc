@@ -25,15 +25,15 @@ a| `address` a| Address of the TypeDB server. a| `str` a|
 .Returns
 `TypeDBDriver`
 
-[#_TypeDB_enterprise_driver__addresses_Iterable_str___str__credential_TypeDBCredential]
-==== enterprise_driver
+[#_TypeDB_cloud_driver__addresses_Iterable_str___str__credential_TypeDBCredential]
+==== cloud_driver
 
 [source,python]
 ----
-static enterprise_driver(addresses: Iterable[str] | str, credential: TypeDBCredential) -> TypeDBDriver
+static cloud_driver(addresses: Iterable[str] | str, credential: TypeDBCredential) -> TypeDBDriver
 ----
 
-Creates a connection to TypeDB Enterprise, authenticating with the provided credentials.
+Creates a connection to TypeDB Cloud, authenticating with the provided credentials.
 
 [caption=""]
 .Input parameters

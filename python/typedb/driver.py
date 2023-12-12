@@ -71,9 +71,9 @@ class TypeDB:
         return _Driver([address])
 
     @staticmethod
-    def enterprise_driver(addresses: Union[Iterable[str], str], credential: TypeDBCredential) -> TypeDBDriver:
+    def cloud_driver(addresses: Union[Iterable[str], str], credential: TypeDBCredential) -> TypeDBDriver:
         """
-        Creates a connection to TypeDB Enterprise, authenticating with the provided credentials.
+        Creates a connection to TypeDB Cloud, authenticating with the provided credentials.
 
         :param addresses:
         :param credential:

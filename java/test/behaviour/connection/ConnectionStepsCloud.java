@@ -27,7 +27,7 @@ import com.vaticle.typedb.driver.api.TypeDBCredential;
 import com.vaticle.typedb.driver.api.TypeDBOptions;
 import com.vaticle.typedb.common.test.TypeDBRunner;
 import com.vaticle.typedb.common.test.TypeDBSingleton;
-import com.vaticle.typedb.common.test.enterprise.TypeDBEnterpriseRunner;
+import com.vaticle.typedb.common.test.cloud.TypeDBCloudRunner;
 import com.vaticle.typedb.driver.api.database.Database;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
@@ -40,14 +40,14 @@ import java.util.Map;
 
 import static com.vaticle.typedb.driver.test.behaviour.util.Util.assertThrows;
 
-public class ConnectionStepsEnterprise extends ConnectionStepsBase {
+public class ConnectionStepsCloud extends ConnectionStepsBase {
 
     @Override
     public void beforeAll() {
         super.beforeAll();
-        TypeDBEnterpriseRunner enterpriseRunner = TypeDBEnterpriseRunner.create(Paths.get("."), 1);
-        TypeDBSingleton.setTypeDBRunner(enterpriseRunner);
-        enterpriseRunner.start();
+        TypeDBCloudRunner cloudRunner = TypeDBCloudRunner.create(Paths.get("."), 1);
+        TypeDBSingleton.setTypeDBRunner(cloudRunner);
+        cloudRunner.start();
     }
 
     @Before
@@ -79,7 +79,7 @@ public class ConnectionStepsEnterprise extends ConnectionStepsBase {
     }
 
     TypeDBDriver createTypeDBDriver(String address, String username, String password, boolean tlsEnabled) {
-        return TypeDB.enterpriseDriver(address, new TypeDBCredential(username, password, tlsEnabled));
+        return TypeDB.cloudDriver(address, new TypeDBCredential(username, password, tlsEnabled));
     }
 
     @Override
