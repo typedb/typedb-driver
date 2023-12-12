@@ -21,7 +21,7 @@
 
 #include <chrono>
 #include <iomanip>
-#include <sstream>
+#include <ctime>
 
 #include "typedb/common/exception.hpp"
 #include "typedb/concept/value/value.hpp"
@@ -32,19 +32,18 @@
 namespace TypeDB {
 
 std::string Value::formatDateTime(DateTime t) {
-    std::time_t epochSeconds = std::chrono::time_point_cast<std::chrono::seconds>(t).time_since_epoch().count();
-    std::stringstream ss;
-    ss << std::put_time(std::localtime(&epochSeconds), "%FT%T");
-    return ss.str();
+    std::time_t epochSeconds = std::chrono::system_clock::to_time_t(t);
+    char buf[32];
+    strftime(buf, 32, "%Y-%m-%dT%H:%M:%S", std::gmtime(&epochSeconds));
+    return std::string(buf);
 }
 
 DateTime Value::parseDateTime(const std::string& s) {
     std::tm tm = {};
-    std::stringstream ss(s);
     if (s.find("T") != std::string::npos) {
-        ss >> std::get_time(&tm, "%FT%T");
+        strptime(s.c_str(), "%Y-%m-%dT%H:%M:%S", &tm);
     } else {
-        ss >> std::get_time(&tm, "%F");
+        strptime(s.c_str(),"%Y-%m-%d", &tm);
     }
     return TypeDB::DateTime(std::chrono::seconds{std::mktime(&tm)});
 }
