@@ -316,7 +316,6 @@ commands:
       - checkout
       - install-bazel-mac:
           arch: "<<parameters.arch>>"
-      - install-maven-mac
       - deploy-cpp-snapshot-unix
 
   test-cpp-assembly-unix:
@@ -371,7 +370,6 @@ commands:
       - checkout
       - install-bazel-mac:
           arch: "<<parameters.arch>>"
-      - install-maven-mac
       - deploy-cpp-release-unix
 
 jobs:
