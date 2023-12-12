@@ -35,7 +35,7 @@ filegroup(
         ":encryption/keystore.pkcs12"
     ],
     visibility = [
-        "//test:__subpackages__",
+        "//cpp/test:__subpackages__",
         "//common/test/encryption:__subpackages__"
     ],
 )
