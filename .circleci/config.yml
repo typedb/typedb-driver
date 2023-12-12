@@ -292,7 +292,7 @@ commands:
   deploy-clib-snapshot-unix:
     steps:
       - run: |
-          ulimit -n 100000
+          ulimit -n 250000
           export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
