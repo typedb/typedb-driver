@@ -788,7 +788,7 @@ jobs:
       - macos/install-rosetta
       - deploy-clib-snapshot-mac:
           arch: amd64
-      - run: arch -x86_64 brew install cmake
+      - run: brew install cmake
       - test-clib-assembly-unix:
           assembly: typedb-driver-clib-mac-x86_64.zip
           
@@ -1196,7 +1196,7 @@ workflows:
       - deploy-clib-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, development, "cpp-driver-circleci--c-driver"]
+              only: [master, development]
 
   typedb-driver-cpp-snapshot:
     jobs:
