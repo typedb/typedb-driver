@@ -241,11 +241,11 @@ const JSONString& JSON::asString() const {
 }
 
 class JSONBuilder {
-   public:
+public:
     JSONBuilder();
     JSON build(const nlohmann::json& from);
 
-   private:
+private:
     JSON buildMap(const nlohmann::json& from);
     JSON buildArray(const nlohmann::json& from);
 };

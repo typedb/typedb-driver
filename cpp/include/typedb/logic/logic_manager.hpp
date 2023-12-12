@@ -31,14 +31,14 @@ namespace TypeDB {
 class Transaction;
 
 class LogicManager {
-   public:
+public:
     ~LogicManager() = default;
 
     OptionalRuleFuture getRule(const std::string& label) const;
     RuleIterable getRules() const;
     [[nodiscard]] RuleFuture putRule(const std::string& label, const std::string& when, const std::string& then) const;
 
-   private:
+private:
     TypeDB::Transaction* const transaction;
     LogicManager(TypeDB::Transaction*);
     LogicManager(LogicManager&&) noexcept = delete;

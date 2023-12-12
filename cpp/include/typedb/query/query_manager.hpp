@@ -41,7 +41,7 @@ using JSONIterable = Iterable<_native::StringIterator, char, JSON>;
 class Transaction;
 
 class QueryManager {
-   public:
+public:
     ~QueryManager() = default;
 
     [[nodiscard]] VoidFuture define(const std::string& query, const Options& options) const;
@@ -56,7 +56,7 @@ class QueryManager {
     [[nodiscard]] ValueGroupIterable getGroupAggregate(const std::string& query, const Options& options) const;
     [[nodiscard]] ExplanationIterable explain(const Explainable& explainable, const Options& options) const;
 
-   private:
+private:
     TypeDB::Transaction* const transaction;
     QueryManager(TypeDB::Transaction*);
     QueryManager(QueryManager&&) noexcept = delete;

@@ -28,7 +28,7 @@
 namespace TypeDB {
 
 class ConceptMapGroup {
-   public:
+public:
     ConceptMapGroup(_native::ConceptMapGroup*);
     ConceptMapGroup(const ConceptMapGroup&) = delete;
     ConceptMapGroup(ConceptMapGroup&&) = default;
@@ -40,7 +40,7 @@ class ConceptMapGroup {
     std::unique_ptr<Concept> owner();
     ConceptMapIterable conceptMaps();
 
-   private:
+private:
     NativePointer<_native::ConceptMapGroup> conceptMapGroupNative;
 
     friend class IteratorHelper<_native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup>;

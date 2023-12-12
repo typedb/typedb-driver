@@ -29,14 +29,14 @@ namespace TypeDB {
 class Entity;
 
 class EntityType : public ThingType {
-   public:
+public:
     [[nodiscard]] ConceptPtrFuture<Entity> create(Transaction& transaction);
     [[nodiscard]] VoidFuture setSupertype(Transaction& transaction, EntityType* superEntityType);
 
     ConceptIterable<Entity> getInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);
     ConceptIterable<EntityType> getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);  // Mimic overriding from Type
 
-   private:
+private:
     EntityType(_native::Concept* conceptNative);
 
     friend class ConceptFactory;

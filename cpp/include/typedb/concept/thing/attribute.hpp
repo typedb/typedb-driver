@@ -26,16 +26,16 @@
 namespace TypeDB {
 
 class Attribute : public Thing {
-   public:
+public:
     std::unique_ptr<Value> getValue();
     std::unique_ptr<AttributeType> getType();
     ConceptIterable<Thing> getOwners(Transaction& transaction);
     ConceptIterable<Thing> getOwners(Transaction& transaction, const ThingType* ownerType);
 
-   protected:
+protected:
     virtual _native::Concept* getTypeNative() override;
 
-   private:
+private:
     Attribute(_native::Concept* conceptNative);
 
     friend class ConceptFactory;

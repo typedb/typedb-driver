@@ -28,48 +28,48 @@
 namespace TypeDB {
 
 class ConceptIteratorWrapper {
-   public:
+public:
     virtual ~ConceptIteratorWrapper() = 0;
     virtual _native::Concept* next() = 0;
 };
 
 class ConceptIteratorWrapperSimple : public ConceptIteratorWrapper {
-   public:
+public:
     ConceptIteratorWrapperSimple(_native::ConceptIterator* iterator);
     virtual ~ConceptIteratorWrapperSimple() override;
     virtual _native::Concept* next() override;
 
-   private:
+private:
     _native::ConceptIterator* nativeIterator;
 };
 
 class ConceptIteratorWrapperExplicit : public ConceptIteratorWrapper {
-   public:
+public:
     ConceptIteratorWrapperExplicit(std::initializer_list<_native::Concept*> concepts);
     virtual ~ConceptIteratorWrapperExplicit() override;
     virtual _native::Concept* next() override;
 
-   private:
+private:
     std::vector<_native::Concept*> nativeConcepts;
 };
 
 class ConceptPromiseWrappingIterator : public ConceptIteratorWrapper {
-   public:
+public:
     ConceptPromiseWrappingIterator(_native::ConceptPromise* conceptPromise);
     virtual ~ConceptPromiseWrappingIterator() override;
     virtual _native::Concept* next() override;
 
-   private:
+private:
     _native::ConceptPromise* conceptPromiseNative;
 };
 
 class ConceptIteratorWrapperChained : public ConceptIteratorWrapper {
-   public:
+public:
     ConceptIteratorWrapperChained(std::initializer_list<_native::ConceptIterator*> iterators);
     virtual ~ConceptIteratorWrapperChained() override;
     virtual _native::Concept* next() override;
 
-   private:
+private:
     std::vector<_native::ConceptIterator*> nativeIterators;
 };
 

@@ -30,7 +30,7 @@ namespace TypeDB {
 typedef std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds> DateTime;
 
 class Value : public Concept {
-   public:
+public:
     ValueType valueType();
 
     bool isBoolean();
@@ -54,7 +54,7 @@ class Value : public Concept {
     static std::unique_ptr<Value> of(const std::string& value);
     static std::unique_ptr<Value> of(DateTime value);
 
-   private:
+private:
     Value(_native::Concept* conceptNative);
 
     friend class ConceptFactory;

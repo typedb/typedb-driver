@@ -36,7 +36,7 @@ namespace TypeDB {
 class Transaction;
 
 class ConceptManager {
-   public:
+public:
     ConceptManager(ConceptManager&&) noexcept = delete;
     ConceptManager& operator=(ConceptManager&&) = delete;
     ConceptManager(const ConceptManager&) = delete;
@@ -61,7 +61,7 @@ class ConceptManager {
 
     std::vector<DriverException> getSchemaExceptions();
 
-   private:
+private:
     TypeDB::Transaction* const transaction;
     ConceptManager(TypeDB::Transaction*);
 

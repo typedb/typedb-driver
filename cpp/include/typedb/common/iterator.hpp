@@ -40,7 +40,7 @@ class Iterator {  // Does not support range-based for loops yet.
 
     using SELF = Iterator<NATIVE_ITER, NATIVE_T, T>;
 
-   public:
+public:
     Iterator(NATIVE_ITER* iteratorNative)
         : iteratorNative(iteratorNative, &HELPER::nativeIterDrop),
           obj() {}
@@ -97,7 +97,7 @@ class Iterator {  // Does not support range-based for loops yet.
         return &obj.value();
     }
 
-   private:
+private:
     Iterator()
         : iteratorNative(nullptr), obj() {}
     NativePointer<NATIVE_ITER> iteratorNative;
@@ -111,7 +111,7 @@ class Iterable {
     using SELF = Iterable<NATIVE_ITER, NATIVE_T, T>;
     using ITERATOR = Iterator<NATIVE_ITER, NATIVE_T, T, HELPER>;
 
-   public:
+public:
     Iterable(NATIVE_ITER* iteratorNative)
         : iteratorNative(iteratorNative, HELPER::nativeIterDrop) {}
     Iterable(SELF& from) = delete;
@@ -136,7 +136,7 @@ class Iterable {
         return ITERATOR();
     }
 
-   private:
+private:
     NativePointer<NATIVE_ITER> iteratorNative;
 };
 
@@ -144,7 +144,7 @@ template <typename NATIVE_ITER, typename NATIVE_T, typename T>
 class IteratorHelper {
     using SELF = IteratorHelper<NATIVE_ITER, NATIVE_T, T>;
 
-   private:
+private:
     static void nativeIterDrop(NATIVE_ITER* it);
     static NATIVE_T* nativeIterNext(NATIVE_ITER* it);
     static T instantiate(NATIVE_T* element);

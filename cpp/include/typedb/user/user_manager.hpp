@@ -31,7 +31,7 @@ using UserIterator = Iterator<_native::UserIterator, _native::User, User>;
 using UserIterable = Iterable<_native::UserIterator, _native::User, User>;
 
 class UserManager {
-   public:
+public:
     ~UserManager() = default;
 
     bool contains(const std::string& username) const;
@@ -42,7 +42,7 @@ class UserManager {
     void passwordSet(const std::string& username, const std::string& password) const;
     User getCurrentUser() const;
 
-   private:
+private:
     NativePointer<_native::UserManager> userManagerNative;
 
     UserManager(const _native::Connection*);

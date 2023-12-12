@@ -27,7 +27,7 @@
 namespace TypeDB {
 
 class Annotation {
-   public:
+public:
     Annotation(Annotation&&) = default;
     Annotation& operator=(Annotation&&) = default;
     ~Annotation() = default;
@@ -36,7 +36,7 @@ class Annotation {
 
     static const std::vector<Annotation> NONE;
 
-   private:
+private:
     Annotation(_native::Annotation*);
     Annotation(const Annotation&) = delete;
     Annotation& operator=(const Annotation&) = delete;
@@ -97,7 +97,7 @@ class Value;
 class ConceptFactory;
 
 class Concept {
-   public:
+public:
     virtual ~Concept() = default;
     Concept(const Concept&) = delete;
     Concept(Concept&&) = default;
@@ -138,7 +138,7 @@ class Concept {
     bool operator==(const Concept& other);
     static bool equals(Concept* first, Concept* second);
 
-   protected:
+protected:
     ConceptType conceptType;
     NativePointer<_native::Concept> conceptNative;
 

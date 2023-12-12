@@ -26,7 +26,7 @@
 namespace TypeDB {
 
 class RelationType : public ThingType {
-   public:
+public:
     [[nodiscard]] ConceptPtrFuture<Relation> create(Transaction& transaction);
     [[nodiscard]] VoidFuture setSupertype(Transaction& transaction, RelationType* superRelationType);
 
@@ -45,7 +45,7 @@ class RelationType : public ThingType {
     ConceptPtrFuture<RoleType> getRelatesOverridden(Transaction& transaction, RoleType* roleType);
     ConceptPtrFuture<RoleType> getRelatesOverridden(Transaction& transaction, const std::string& roleLabel);
 
-   private:
+private:
     RelationType(_native::Concept* conceptNative);
 
     friend class ConceptFactory;

@@ -38,7 +38,7 @@ using RuleIterable = Iterable<_native::RuleIterator, _native::Rule, Rule>;
 using RuleIterator = Iterator<_native::RuleIterator, _native::Rule, Rule>;
 
 class Rule {
-   public:
+public:
     Rule(Rule&&) = default;
     Rule& operator=(Rule&&) = default;
     ~Rule() = default;
@@ -47,7 +47,7 @@ class Rule {
     std::string when();
     std::string then();
 
-   private:
+private:
     Rule(_native::Rule*);
     Rule(const Rule&) = delete;
     Rule& operator=(const Rule&) = delete;

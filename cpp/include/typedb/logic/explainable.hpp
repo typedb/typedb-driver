@@ -34,18 +34,18 @@ class QueryManager;
 class Explainables;
 
 class OwnerAttributePair {
-   public:
+public:
     std::string owner;
     std::string attribute;
 
-   private:
+private:
     OwnerAttributePair(_native::StringPair* stringPairNative);
 
     friend class IteratorHelper<_native::StringPairIterator, _native::StringPair, OwnerAttributePair>;
 };
 
 class Explainable {
-   public:
+public:
     Explainable(const Explainable&) = delete;
     Explainable(Explainable&&) = default;
     ~Explainable() = default;
@@ -53,7 +53,7 @@ class Explainable {
     int64_t explainableId();
     std::string conjunction();
 
-   private:
+private:
     Explainable(_native::Explainable* explainableNative);
     Explainable& operator=(const Explainable&) = delete;
     Explainable& operator=(Explainable&&) = default;
@@ -70,7 +70,7 @@ using OwnerAttributePairIterator = Iterator<_native::StringPairIterator, _native
 using OwnerAttributePairIterable = Iterable<_native::StringPairIterator, _native::StringPair, OwnerAttributePair>;
 
 class Explainables {
-   public:
+public:
     Explainables(Explainables&&) = default;
     Explainables& operator=(Explainables&&) = default;
     ~Explainables() = default;
@@ -83,7 +83,7 @@ class Explainables {
     OwnerAttributePairIterable ownerships();
 
 
-   private:
+private:
     NativePointer<_native::Explainables> explainablesNative;
 
     Explainables(_native::Explainables*);

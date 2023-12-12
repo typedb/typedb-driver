@@ -30,7 +30,7 @@ namespace TypeDB {
 class Attribute;
 
 class AttributeType : public ThingType {
-   public:
+public:
     ValueType getValueType();
 
     [[nodiscard]] VoidFuture setSupertype(Transaction& transaction, AttributeType* attributeType);
@@ -59,7 +59,7 @@ class AttributeType : public ThingType {
     ConceptIterable<ThingType> getOwners(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);
     ConceptIterable<ThingType> getOwners(Transaction& transaction, const std::vector<Annotation>& annotations, Transitivity transitivity = Transitivity::TRANSITIVE);
 
-   private:
+private:
     AttributeType(_native::Concept* conceptNative);
 
     ConceptPtrFuture<Attribute> putNative(Transaction& transaction, _native::Concept* valueNative);

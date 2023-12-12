@@ -25,7 +25,7 @@
 namespace TypeDB {
 
 class Type : public Concept {
-   public:
+public:
     // We don't make these virtual so we can emulate returning iterators to the subtypes.
     ConceptPtrFuture<Type> getSupertype(Transaction& transaction);
     ConceptIterable<Type> getSupertypes(Transaction& transaction);
@@ -38,7 +38,7 @@ class Type : public Concept {
     virtual BoolFuture isDeleted(Transaction& transaction) = 0;
     [[nodiscard]] virtual VoidFuture drop(Transaction& transaction) = 0;
 
-   protected:
+protected:
     Type(ConceptType conceptType, _native::Concept* conceptNative);
 
     ConceptFutureWrapper* getSuperTypeFutureNative(Transaction& transaction);

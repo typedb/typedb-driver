@@ -27,7 +27,7 @@
 namespace TypeDB {
 
 class Explanation {
-   public:
+public:
     Explanation(Explanation&&) = default;
     Explanation& operator=(Explanation&&) = default;
     ~Explanation() = default;
@@ -36,7 +36,7 @@ class Explanation {
     ConceptMap conclusion();
     ConceptMap condition();
 
-   private:
+private:
     Explanation(_native::Explanation*);
     Explanation(const Explanation&) = delete;
     Explanation& operator=(const Explanation&) = delete;

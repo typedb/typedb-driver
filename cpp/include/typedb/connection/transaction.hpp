@@ -38,11 +38,11 @@ class Session;
 class Concept;
 
 class Transaction {
-   private:
+private:
     NativePointer<_native::Transaction> transactionNative;
     TypeDB::TransactionType txnType;
 
-   public:
+public:
     const QueryManager query;
     const ConceptManager concepts;
     const LogicManager logic;
@@ -68,7 +68,7 @@ class Transaction {
 
     void onClose(std::function<void(const std::optional<DriverException>&)> callback);
 
-   private:
+private:
     Transaction(_native::Transaction*, TypeDB::TransactionType);
     _native::Transaction* getNative();
 

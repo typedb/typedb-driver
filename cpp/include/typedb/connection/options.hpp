@@ -30,7 +30,7 @@ class Transaction;
 class QueryManager;
 
 class Options {
-   public:
+public:
     Options();
     Options(const Options&) = delete;
     Options(Options&&) = default;
@@ -79,7 +79,7 @@ class Options {
 
     Options& readAnyReplica(bool readAnyReplica);
 
-   private:
+private:
     NativePointer<_native::Options> optionsNative;
     _native::Options* getNative() const;
 

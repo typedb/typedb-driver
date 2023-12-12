@@ -28,7 +28,7 @@
 namespace TypeDB {
 
 class ValueGroup {
-   public:
+public:
     ValueGroup(_native::ValueGroup*);
     ValueGroup(const ValueGroup&) = delete;
     ValueGroup(ValueGroup&&) = default;
@@ -40,7 +40,7 @@ class ValueGroup {
     std::unique_ptr<Concept> owner();
     AggregateResult value();
 
-   private:
+private:
     NativePointer<_native::ValueGroup> valueGroupNative;
 
     friend class IteratorHelper<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>;

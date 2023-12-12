@@ -37,7 +37,7 @@ template <typename RETURN, typename NATIVE_PROMISE, typename HELPER = FutureHelp
 class Future {
     using SELF = Future<RETURN, NATIVE_PROMISE>;
 
-   public:
+public:
     Future(NATIVE_PROMISE* promiseNative)
         : promiseNative(promiseNative, &HELPER::resolve) {}
 
@@ -68,7 +68,7 @@ class Future {
         get();
     }
 
-   private:
+private:
     NativePointer<NATIVE_PROMISE> promiseNative;
 };
 
@@ -76,7 +76,7 @@ template <typename RETURN, typename NATIVE_PROMISE>
 class FutureHelper {
     using SELF = FutureHelper<RETURN, NATIVE_PROMISE>;
 
-   private:
+private:
     static RETURN resolve(NATIVE_PROMISE* nativePromise);
 
     friend class Future<RETURN, NATIVE_PROMISE, SELF>;

@@ -26,7 +26,7 @@
 namespace TypeDB {
 
 class Thing : public Concept {
-   public:
+public:
     std::string getIID();
     std::unique_ptr<ThingType> getType();
     bool isInferred();
@@ -47,7 +47,7 @@ class Thing : public Concept {
     ConceptIterable<Relation> getRelations(Transaction& transaction, const std::vector<RoleType*>& roleTypes);
     ConceptIterable<RoleType> getPlaying(Transaction& transaction);
 
-   protected:
+protected:
     Thing(ConceptType conceptType, _native::Concept* conceptNative);
     virtual _native::Concept* getTypeNative() = 0;
 

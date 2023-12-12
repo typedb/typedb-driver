@@ -33,7 +33,7 @@ template <typename NATIVE_ITER, typename NATIVE_T, typename T>
 class IteratorHelper;
 
 class DriverException : public std::runtime_error {
-   public:
+public:
     DriverException(_native::Error* errorNative);
     DriverException(const char* code, const char* message);
 
@@ -45,7 +45,7 @@ class DriverException : public std::runtime_error {
 
     static void check_and_throw();
 
-   private:
+private:
     DriverException(_native::SchemaException* schemaExceptionNative);
 
     size_t errorCodeLength;

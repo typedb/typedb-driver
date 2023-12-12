@@ -33,7 +33,7 @@ enum class SessionType {
 class DatabaseManager;  // forward declaration for friendship
 
 class Session {
-   public:
+public:
     Session(const Session&) = delete;
     Session(Session&&) = default;
     ~Session() = default;
@@ -49,7 +49,7 @@ class Session {
     void onClose(std::function<void()> callback);
     void onReopen(std::function<void()> callback);
 
-   private:
+private:
     NativePointer<_native::Session> sessionNative;
     Session(_native::Session*);
 

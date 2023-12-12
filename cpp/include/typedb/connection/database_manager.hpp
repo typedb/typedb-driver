@@ -38,7 +38,7 @@ using DatabaseIterator = Iterator<_native::DatabaseIterator, _native::Database, 
 using DatabaseIterable = Iterable<_native::DatabaseIterator, _native::Database, TypeDB::Database>;
 
 class DatabaseManager {
-   public:
+public:
     DatabaseManager(const DatabaseManager&) = delete;
     DatabaseManager& operator=(const DatabaseManager&) = delete;
     ~DatabaseManager() = default;
@@ -48,7 +48,7 @@ class DatabaseManager {
     Database get(const std::string&) const;
     DatabaseIterable all() const;
 
-   private:
+private:
     NativePointer<_native::DatabaseManager> databaseManagerNative;
 
     DatabaseManager(_native::Connection*);

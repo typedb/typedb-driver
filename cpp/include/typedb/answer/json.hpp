@@ -72,17 +72,17 @@ enum class JSONType {
 
 class JSON;
 
-typedef std::map<std::string, JSON> JSONMap;
-typedef std::vector<JSON> JSONArray;
-typedef bool JSONBoolean;
-typedef long JSONLong;
-typedef double JSONDouble;
-typedef std::string JSONString;
+using JSONMap = std::map<std::string, JSON>;
+using JSONArray = std::vector<JSON>;
+using JSONBoolean = bool;
+using JSONLong = long;
+using JSONDouble = double;
+using JSONString = std::string;
 
 class JSONBuilder;
 
 class JSON {
-   public:
+public:
     static JSON parse(const std::string& string);
     ~JSON();
 
@@ -107,7 +107,7 @@ class JSON {
     const JSONDouble& asDouble() const;
     const JSONString& asString() const;
 
-   private:
+private:
     JSONType _type;
     const union {
         JSONMap mapValue;

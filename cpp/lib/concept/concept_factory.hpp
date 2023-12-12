@@ -46,7 +46,7 @@ class ValueGroup;
 std::optional<std::unique_ptr<Value>> aggregateFutureWrapper(_native::ConceptPromise* conceptPromiseNative);
 
 class ConceptFactory {
-   public:
+public:
     // for concept api methods.
     static _native::Transaction* getNative(Transaction&);
     static _native::Concept* getNative(const Concept*);

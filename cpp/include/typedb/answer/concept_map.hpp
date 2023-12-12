@@ -30,7 +30,7 @@
 namespace TypeDB {
 
 class ConceptMap {
-   public:
+public:
     ConceptMap(_native::ConceptMap*);
     ConceptMap(const ConceptMap&) = delete;
     ConceptMap(ConceptMap&&) = default;
@@ -45,7 +45,7 @@ class ConceptMap {
     Explainables explainables();
     std::unique_ptr<Concept> get(const std::string& variableName);
 
-   private:
+private:
     NativePointer<_native::ConceptMap> conceptMapNative;
 
     friend class IteratorHelper<_native::ConceptMapIterator, _native::ConceptMap, ConceptMap>;

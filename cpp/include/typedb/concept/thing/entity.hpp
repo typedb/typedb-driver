@@ -27,13 +27,13 @@
 namespace TypeDB {
 
 class Entity : public Thing {
-   public:
+public:
     std::unique_ptr<EntityType> getType();
 
-   protected:
+protected:
     virtual _native::Concept* getTypeNative() override;
 
-   private:
+private:
     Entity(_native::Concept* conceptNative);
 
     friend class ConceptFactory;

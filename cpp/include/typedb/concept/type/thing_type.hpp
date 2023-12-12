@@ -26,7 +26,7 @@
 namespace TypeDB {
 
 class ThingType : public Type {
-   public:
+public:
     virtual std::string getLabel() override;
     [[nodiscard]] virtual VoidFuture setLabel(Transaction& transaction, const std::string& newLabel) override;
     bool isRoot();
@@ -63,10 +63,10 @@ class ThingType : public Type {
     ConceptIterable<ThingType> getSupertypes(Transaction& transaction);
     ConceptIterable<ThingType> getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);
 
-   protected:
+protected:
     ThingType(ConceptType conceptType, _native::Concept* conceptNative);
 
-   private:
+private:
     VoidFuture setOwnsNative(Transaction& transaction, AttributeType* attributeType, AttributeType* overriddenTypeNative, const std::vector<Annotation>& annotations);
     ConceptIterable<AttributeType> getOwnsNative(Transaction& transaction, ValueType* valueType, const std::vector<Annotation>& annotations, Transitivity transitivity);
 
@@ -74,7 +74,7 @@ class ThingType : public Type {
 };
 
 class RootThingType : public ThingType {
-   protected:
+protected:
     RootThingType(_native::Concept* conceptNative);
 
     friend class ConceptFactory;

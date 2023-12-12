@@ -28,7 +28,7 @@
 namespace TypeDB {
 
 class Relation : public Thing {
-   public:
+public:
     std::unique_ptr<RelationType> getType();
 
     [[nodiscard]] VoidFuture addPlayer(Transaction& transaction, RoleType* roleType, Thing* player);
@@ -39,10 +39,10 @@ class Relation : public Thing {
     ConceptIterable<Thing> getPlayersByRoleType(Transaction& transaction, const std::vector<RoleType*>& roleTypes);
     std::map<std::unique_ptr<RoleType>, std::unique_ptr<Thing>> getPlayers(Transaction& transaction);
 
-   protected:
+protected:
     virtual _native::Concept* getTypeNative() override;
 
-   private:
+private:
     Relation(_native::Concept* conceptNative);
 
     friend class ConceptFactory;

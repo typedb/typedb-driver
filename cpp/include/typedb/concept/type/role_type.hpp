@@ -25,7 +25,7 @@
 namespace TypeDB {
 
 class RoleType : public Type {
-   public:
+public:
     std::string getName();
     std::string getScope();
 
@@ -48,7 +48,7 @@ class RoleType : public Type {
     ConceptIterable<Relation> getRelationInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);
     ConceptIterable<Thing> getPlayerInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);
 
-   private:
+private:
     RoleType(_native::Concept* conceptNative);
 
     friend class ConceptFactory;

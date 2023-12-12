@@ -28,7 +28,7 @@ namespace TypeDB {
 class DatabaseManager;
 
 class ReplicaInfo {
-   public:
+public:
     ReplicaInfo(const ReplicaInfo&) = delete;
     ReplicaInfo(ReplicaInfo&&) = default;
     ReplicaInfo& operator=(const ReplicaInfo&) = delete;
@@ -39,7 +39,7 @@ class ReplicaInfo {
     bool isPreferred();
     int64_t term();
 
-   private:
+private:
     NativePointer<_native::ReplicaInfo> replicaInfoNative;
     ReplicaInfo(_native::ReplicaInfo*);
 
@@ -50,7 +50,7 @@ using ReplicaInfoIterable = Iterable<_native::ReplicaInfoIterator, _native::Repl
 using ReplicaInfoIterator = Iterator<_native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo>;
 
 class Database {
-   public:
+public:
     Database(const Database&) = delete;
     Database(Database&&) = default;
     ~Database() = default;
@@ -64,7 +64,7 @@ class Database {
     ReplicaInfoIterable replicas();
     void drop();
 
-   private:
+private:
     NativePointer<_native::Database> databaseNative;
     Database(_native::Database*) noexcept;
 

@@ -32,14 +32,14 @@ namespace TypeDB {
 class Driver;
 
 class Credential {
-   public:
+public:
     Credential(const std::string& username, const std::string& password, bool withTLS, const std::string& customRootCAStr = "");
     Credential(const Credential&) = delete;
     Credential& operator=(const Credential&) = delete;
     Credential(Credential&&) = default;
     Credential& operator=(Credential&&) = default;
 
-   private:
+private:
     NativePointer<_native::Credential> credentialNative;
 
     _native::Credential* getNative() const;
@@ -48,10 +48,10 @@ class Credential {
 };
 
 class Driver {
-   private:
+private:
     NativePointer<_native::Connection> connectionNative;  // Remains on top for construction order
 
-   public:
+public:
     DatabaseManager databases;
     UserManager users;
 
@@ -70,7 +70,7 @@ class Driver {
     Session session(const std::string& database, SessionType sessionType, const Options& options);
     User user();
 
-   private:
+private:
     Driver(TypeDB::_native::Connection* conn) noexcept;
 };
 

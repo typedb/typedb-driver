@@ -28,7 +28,7 @@ namespace TypeDB {
 class UserManager;
 
 class User {
-   public:
+public:
     User(_native::User*);
     User(User&&) = default;
     User& operator=(User&&) = default;
@@ -38,7 +38,7 @@ class User {
     std::optional<int64_t> passwordExpirySeconds();
     void passwordUpdate(const UserManager& userManager, const std::string& passwordOld, const std::string& passwordNew);
 
-   private:
+private:
     NativePointer<_native::User> userNative;
     User(const User&) = delete;
     User& operator=(const User&) = delete;
