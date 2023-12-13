@@ -1290,6 +1290,10 @@ release:
       command: |
         export NOTES_VALIDATE_TOKEN=$REPO_GITHUB_TOKEN
         bazel run @vaticle_dependencies//tool/release/notes:validate --test_output=streamed -- $FACTORY_OWNER $FACTORY_REPO RELEASE_NOTES_LATEST.md
+    validate-versions:
+      image: vaticle-ubuntu-22.04
+      command: |
+        find . -name VERSION -type f | xargs -n 1 diff -qs VERSION
 
   deployment:
     trigger-release-circleci:
