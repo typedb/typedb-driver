@@ -1185,11 +1185,11 @@ workflows:
       - deploy-clib-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master, development, cpp-driver-circleci]
+              only: [master, development]
       - deploy-clib-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, development, cpp-driver-circleci]
+              only: [master, development]
       - deploy-clib-snapshot-windows-x86_64:
           filters:
             branches:
@@ -1208,11 +1208,11 @@ workflows:
       - deploy-cpp-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master, development, cpp-driver-circleci]
+              only: [master, development]
       - deploy-cpp-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, development, cpp-driver-circleci]
+              only: [master, development]
       - deploy-cpp-snapshot-windows-x86_64:
           filters:
             branches:
