@@ -889,7 +889,7 @@ jobs:
           bazel-arch: arm64
       - run: |
           mkdir -p ~/dist
-          cp bazel-bin/c/typedb-driver-clib-linux-arm64.zip ~/dist
+          cp bazel-bin/c/typedb-driver-clib-linux-arm64.tar.gz ~/dist
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]
@@ -901,7 +901,7 @@ jobs:
           bazel-arch: amd64
       - run: |
           mkdir -p ~/dist
-          cp bazel-bin/c/typedb-driver-clib-linux-x86_64.zip ~/dist
+          cp bazel-bin/c/typedb-driver-clib-linux-x86_64.tar.gz ~/dist
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]
@@ -1001,7 +1001,7 @@ jobs:
           bazel-arch: arm64
       - run: |
           mkdir -p ~/dist
-          cp bazel-bin/cpp/typedb-driver-cpp-linux-arm64.zip ~/dist
+          cp bazel-bin/cpp/typedb-driver-cpp-linux-arm64.tar.gz ~/dist
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]
@@ -1013,7 +1013,7 @@ jobs:
           bazel-arch: amd64
       - run: |
           mkdir -p ~/dist
-          cp bazel-bin/cpp/typedb-driver-cpp-linux-x86_64.zip ~/dist
+          cp bazel-bin/cpp/typedb-driver-cpp-linux-x86_64.tar.gz ~/dist
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]
