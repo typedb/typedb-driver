@@ -32,10 +32,17 @@ load("@google_bazel_common//tools/javadoc:javadoc.bzl", "javadoc_library")
 load("//tool/docs:java/rules.bzl", "javadoc_to_adoc")
 load("//java:docs_structure.bzl", "dir_mapping")
 
+genrule(
+    name = "version-resource",
+    outs = ["TYPEDB_DRIVER_VERSION"],
+    srcs = ["//:VERSION"],
+    cmd = "cp $< $@",
+)
+
 java_library(
     name = "driver-java",
     srcs = glob(["*.java"]),
-    resources = ["//:LICENSE"],
+    resources = ["//:LICENSE", ":version-resource"],
     tags = ["maven_coordinates=com.vaticle.typedb:typedb-driver:{pom_version}"],
     deps = [
         # Internal dependencies

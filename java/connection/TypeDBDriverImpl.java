@@ -28,6 +28,7 @@ import com.vaticle.typedb.driver.api.TypeDBSession;
 import com.vaticle.typedb.driver.api.database.DatabaseManager;
 import com.vaticle.typedb.driver.api.user.User;
 import com.vaticle.typedb.driver.api.user.UserManager;
+import com.vaticle.typedb.driver.common.Loader;
 import com.vaticle.typedb.driver.common.NativeObject;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 import com.vaticle.typedb.driver.user.UserManagerImpl;
@@ -36,12 +37,15 @@ import java.util.Set;
 
 import static com.vaticle.typedb.driver.jni.typedb_driver.connection_force_close;
 import static com.vaticle.typedb.driver.jni.typedb_driver.connection_is_open;
-import static com.vaticle.typedb.driver.jni.typedb_driver.connection_open_cloud;
-import static com.vaticle.typedb.driver.jni.typedb_driver.connection_open_core;
+import static com.vaticle.typedb.driver.jni.typedb_driver.connection_open_cloud_with_id;
+import static com.vaticle.typedb.driver.jni.typedb_driver.connection_open_core_with_id;
 
 public class TypeDBDriverImpl extends NativeObject<com.vaticle.typedb.driver.jni.Connection> implements TypeDBDriver {
     private final UserManagerImpl userMgr;
     private final DatabaseManager databaseMgr;
+
+    private static final String driverName = "Java";
+    private static final String driverVersion = Loader.getDriverVersion();
 
     public TypeDBDriverImpl(String address) throws TypeDBDriverException {
         this(openCore(address));
@@ -59,7 +63,7 @@ public class TypeDBDriverImpl extends NativeObject<com.vaticle.typedb.driver.jni
 
     private static com.vaticle.typedb.driver.jni.Connection openCore(String address) {
         try {
-            return connection_open_core(address);
+            return connection_open_core_with_id(address, driverName, driverVersion);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -67,7 +71,7 @@ public class TypeDBDriverImpl extends NativeObject<com.vaticle.typedb.driver.jni
 
     private static com.vaticle.typedb.driver.jni.Connection openCloud(Set<String> initAddresses, TypeDBCredential credential) {
         try {
-            return connection_open_cloud(initAddresses.toArray(new String[0]), credential.nativeObject);
+            return connection_open_cloud_with_id(initAddresses.toArray(new String[0]), credential.nativeObject, driverName, driverVersion);
         } catch (com.vaticle.typedb.driver.jni.Error e) {
             throw new TypeDBDriverException(e);
         }

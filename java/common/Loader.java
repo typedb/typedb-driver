@@ -24,7 +24,10 @@ package com.vaticle.typedb.driver.common;
 import com.vaticle.typedb.common.collection.Pair;
 import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -46,6 +49,8 @@ public class Loader {
 
     private static final String DRIVER_JNI_LIB_RESOURCE = "typedb_driver_jni";
     private static final String DRIVER_JNI_LIBRARY_NAME = System.mapLibraryName(DRIVER_JNI_LIB_RESOURCE);
+
+    private static final String DRIVER_VERSION_RESOURCE = "/TYPEDB_DRIVER_VERSION";
 
     private static final Map<Pair<OS, Arch>, String> DRIVER_JNI_JAR_NAME = Map.of(new Pair<>(OS.WINDOWS, Arch.x86_64), "windows-x86_64",
             new Pair<>(OS.MAC, Arch.x86_64), "macosx-x86_64", new Pair<>(OS.MAC, Arch.ARM64), "macosx-arm64", new Pair<>(OS.LINUX, Arch.x86_64),
@@ -142,6 +147,20 @@ public class Loader {
             } else {
                 throw new TypeDBDriverException(UNRECOGNISED_ARCH, arch);
             }
+        }
+    }
+
+    public static String getDriverVersion() {
+        try (InputStream versionResource = Loader.class.getResourceAsStream(DRIVER_VERSION_RESOURCE)) {
+            if (versionResource == null) {
+                return "UNKNOWN";
+            } else {
+                try (InputStreamReader isr = new InputStreamReader(versionResource); BufferedReader reader = new BufferedReader(isr)) {
+                    return reader.readLine();
+                }
+            }
+        } catch (IOException e) {
+            return "UNKNOWN";
         }
     }
 }
