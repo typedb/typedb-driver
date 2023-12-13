@@ -317,28 +317,50 @@ commands:
           arch: "<<parameters.arch>>"
       - deploy-clib-snapshot-unix
 
-  test-clib-assembly-unix:
+  test-clib-assembly-linux:
     parameters:
-      assembly:
+      arch:
+        type: string
+    steps:
+      - run: |
+          ulimit -n 100000      
+          bazel build //c:assemble-linux-<<parameters.arch>>-targz
+          export ASSEMBLY=typedb-driver-clib-linux-<<parameters.arch>>
+          mkdir -p test_assembly_clib
+          tar -xf bazel-bin/c/$ASSEMBLY.tar.gz --directory test_assembly_clib
+          ( 
+            cd test_assembly_clib &&
+            cmake ../c/tests/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY &&
+            cmake --build . --config release
+          )       
+          tool/test/start-core-server.sh
+          sleep 3
+          (cd test_assembly_clib && LD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
+          tool/test/stop-core-server.sh
+          exit $TEST_SUCCESS
+
+  test-clib-assembly-mac:
+    parameters:
+      arch:
         type: string
     steps:
       - run: |
           ulimit -n 100000
-          bazel build //c:assemble-clib-driver
-          export ASSEMBLY=<<parameters.assembly>>
-          export ASSEMBLY_BASE=$(echo $ASSEMBLY | cut -f 1 -d '.')
-          export OSX_ARCH=$(echo $ASSEMBLY_BASE | cut -f 5 -d '-')
+          bazel build //c:assemble-mac-<<parameters.arch>>-zip
+          export ASSEMBLY=typedb-driver-clib-mac-<<parameters.arch>>
           mkdir -p test_assembly_clib
-          tar -xf bazel-bin/c/$ASSEMBLY --directory test_assembly_clib
-          ( cd test_assembly_clib && cmake ../c/tests/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY_BASE -DCMAKE_OSX_ARCHITECTURES=$OSX_ARCH && cmake --build . --config release )
-          
+          tar -xf bazel-bin/c/$ASSEMBLY.zip --directory test_assembly_clib
+          ( 
+            cd test_assembly_clib &&
+            cmake ../c/tests/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY  -DCMAKE_OSX_ARCHITECTURES=<<parameters.arch>> &&
+            cmake --build . --config release
+          )
           tool/test/start-core-server.sh
           sleep 3
-          export TYPEDB_LIB_PATH=$ASSEMBLY_BASE/lib
-          ( cd test_assembly_clib && DYLD_LIBRARY_PATH=$TYPEDB_LIB_PATH LD_LIBRARY_PATH=$TYPEDB_LIB_PATH ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
+          (cd test_assembly_clib && DYLD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
           tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
-  
+
   deploy-clib-release-unix:
     steps:
       - run: |
@@ -398,28 +420,47 @@ commands:
           arch: "<<parameters.arch>>"
       - deploy-cpp-snapshot-unix
 
-  test-cpp-assembly-unix:
+  test-cpp-assembly-linux:
     parameters:
-      assembly:
+      arch:
         type: string
     steps:
       - run: |
           ulimit -n 100000
-          bazel build //cpp:assemble-cpp-driver
-          export ASSEMBLY=<<parameters.assembly>>
-          export ASSEMBLY_BASE=$(echo $ASSEMBLY | cut -f 1 -d '.')
-          export OSX_ARCH=$(echo $ASSEMBLY_BASE | cut -f 5 -d '-')
+          bazel build //cpp:assemble-linux-<<parameters.arch>>-targz
+          export ASSEMBLY=typedb-driver-cpp-linux-<<parameters.arch>>
           mkdir -p test_assembly_cpp
-          tar -xf bazel-bin/cpp/$ASSEMBLY --directory test_assembly_cpp
+          tar -xf bazel-bin/cpp/$ASSEMBLY.tar.gz --directory test_assembly_cpp
           (
             cd test_assembly_cpp &&
-            cmake ../cpp/test/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY_BASE -DCMAKE_OSX_ARCHITECTURES=$OSX_ARCH && 
-            cmake --build . --config release )
-          
+            cmake ../cpp/test/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY && 
+            cmake --build . --config release
+          )
           tool/test/start-core-server.sh
           sleep 3
-          export TYPEDB_LIB_PATH=$ASSEMBLY_BASE/lib
-          ( cd test_assembly_cpp && DYLD_LIBRARY_PATH=$TYPEDB_LIB_PATH LD_LIBRARY_PATH=$TYPEDB_LIB_PATH ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
+          ( cd test_assembly_cpp && LD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
+          tool/test/stop-core-server.sh
+          exit $TEST_SUCCESS
+
+  test-cpp-assembly-mac:
+    parameters:
+      arch:
+        type: string
+    steps:
+      - run: |
+          ulimit -n 100000
+          bazel build //cpp:assemble-mac-<<parameters.arch>>-zip
+          export ASSEMBLY=typedb-driver-cpp-mac-<<parameters.arch>>
+          mkdir -p test_assembly_cpp
+          tar -xf bazel-bin/cpp/$ASSEMBLY.zip --directory test_assembly_cpp
+          (
+            cd test_assembly_cpp &&
+            cmake ../cpp/test/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY -DCMAKE_OSX_ARCHITECTURES=<<parameters.arch>> &&
+            cmake --build . --config release
+          )
+          tool/test/start-core-server.sh
+          sleep 3
+          (cd test_assembly_cpp && LD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
           tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
   
@@ -776,8 +817,8 @@ jobs:
       - deploy-clib-snapshot-mac:
           arch: arm64
       - run: brew install cmake
-      - test-clib-assembly-unix:
-          assembly: typedb-driver-clib-mac-arm64.zip
+      - test-clib-assembly-mac:
+          arch: arm64
       
   deploy-clib-snapshot-mac-x86_64:
     executor: mac-arm64
@@ -786,24 +827,24 @@ jobs:
       - deploy-clib-snapshot-mac:
           arch: amd64
       - run: brew install cmake
-      - test-clib-assembly-unix:
-          assembly: typedb-driver-clib-mac-x86_64.zip
+      - test-clib-assembly-mac:
+          arch: x86_64
           
   deploy-clib-snapshot-linux-arm64:
     executor: linux-arm64
     steps:
       - deploy-clib-snapshot-linux:
           arch: arm64
-      - test-clib-assembly-unix:
-          assembly: typedb-driver-clib-linux-arm64.tar.gz
+      - test-clib-assembly-linux:
+          arch: arm64
       
   deploy-clib-snapshot-linux-x86_64:
     executor: linux-x86_64
     steps:
       - deploy-clib-snapshot-linux:
           arch: amd64
-      - test-clib-assembly-unix:
-          assembly: typedb-driver-clib-linux-x86_64.tar.gz
+      - test-clib-assembly-linux:
+          arch: x86_64
       
   deploy-clib-snapshot-windows-x86_64:
     executor:
@@ -887,8 +928,8 @@ jobs:
       - deploy-cpp-snapshot-mac:
           arch: arm64
       - run: brew install cmake
-      - test-cpp-assembly-unix:
-          assembly: typedb-driver-cpp-mac-arm64.zip
+      - test-cpp-assembly-mac:
+          arch: arm64
       
   deploy-cpp-snapshot-mac-x86_64:
     executor: mac-arm64
@@ -897,8 +938,8 @@ jobs:
       - deploy-cpp-snapshot-mac:
           arch: amd64
       - run: brew install cmake
-      - test-cpp-assembly-unix:
-          assembly: typedb-driver-cpp-mac-x86_64.zip
+      - test-cpp-assembly-mac:
+          arch: x86_64
           
 
   deploy-cpp-snapshot-linux-arm64:
@@ -906,16 +947,16 @@ jobs:
     steps:
       - deploy-cpp-snapshot-linux:
           arch: arm64
-      - test-cpp-assembly-unix:
-          assembly: typedb-driver-cpp-linux-arm64.tar.gz
+      - test-cpp-assembly-linux:
+          arch: arm64
       
   deploy-cpp-snapshot-linux-x86_64:
     executor: linux-x86_64
     steps:
       - deploy-cpp-snapshot-linux:
           arch: amd64
-      - test-cpp-assembly-unix:
-          assembly: typedb-driver-cpp-linux-x86_64.tar.gz
+      - test-cpp-assembly-linux:
+          arch: x86_64
       
   deploy-cpp-snapshot-windows-x86_64:
     executor:
