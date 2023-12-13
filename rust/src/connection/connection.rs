@@ -80,7 +80,7 @@ impl Connection {
     /// Connection::new_core("127.0.0.1:1729")
     /// ```
     pub fn new_core(address: impl AsRef<str>) -> Result<Self> {
-        Self::new_core_with_id(address, DEFAULT_NAME, DRIVER_VERSION)
+        Self::new_core_with_id(address, DEFAULT_NAME, DRIVER_VERSION.trim())
     }
 
     #[doc(hidden)]
@@ -128,7 +128,7 @@ impl Connection {
     /// )
     /// ```
     pub fn new_cloud<T: AsRef<str> + Sync>(init_addresses: &[T], credential: Credential) -> Result<Self> {
-        Self::new_cloud_with_id(init_addresses, credential, DEFAULT_NAME, DRIVER_VERSION)
+        Self::new_cloud_with_id(init_addresses, credential, DEFAULT_NAME, DRIVER_VERSION.trim())
     }
 
     #[doc(hidden)]
