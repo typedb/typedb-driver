@@ -1099,52 +1099,52 @@ workflows:
       - deploy-pip-snapshot-linux-arm64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
       - deploy-pip-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
       - deploy-pip-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
       - deploy-pip-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
       - deploy-pip-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
 
       - test-pip-snapshot-linux-arm64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
           requires:
             - deploy-pip-snapshot-linux-arm64
       - test-pip-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
           requires:
             - deploy-pip-snapshot-linux-x86_64
       - test-pip-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
           requires:
             - deploy-pip-snapshot-mac-arm64
       - test-pip-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
           requires:
             - deploy-pip-snapshot-mac-x86_64
       - test-pip-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
           requires:
             - deploy-pip-snapshot-windows-x86_64
 
@@ -1154,27 +1154,27 @@ workflows:
       - deploy-maven-jni-snapshot-linux-arm64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
       - deploy-maven-jni-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
       - deploy-maven-jni-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
       - deploy-maven-jni-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
       - deploy-maven-jni-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
       - deploy-maven-snapshot:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
           requires:
             - deploy-maven-jni-snapshot-linux-arm64
             - deploy-maven-jni-snapshot-linux-x86_64
@@ -1185,31 +1185,31 @@ workflows:
       - test-maven-snapshot-linux-arm64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
           requires:
             - deploy-maven-snapshot
       - test-maven-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
           requires:
             - deploy-maven-snapshot
       - test-maven-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
           requires:
             - deploy-maven-snapshot
       - test-maven-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
           requires:
             - deploy-maven-snapshot
       - test-maven-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
           requires:
             - deploy-maven-snapshot
             
@@ -1218,46 +1218,46 @@ workflows:
       - deploy-clib-snapshot-linux-arm64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
       - deploy-clib-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
       - deploy-clib-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
       - deploy-clib-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
       - deploy-clib-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
 
   typedb-driver-cpp-snapshot:
     jobs:
       - deploy-cpp-snapshot-linux-arm64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
       - deploy-cpp-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
       - deploy-cpp-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
       - deploy-cpp-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
       - deploy-cpp-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
     
   release:
     jobs:
