@@ -28,7 +28,7 @@
 namespace TypeDB {
 namespace Utils {
 
-std::string stringFromNative(const char* c);
+std::string stringFromNative(char* c);
 
 template <class... Args>
 DriverException exception(const ErrorMessage& errMsg, Args... args) {
@@ -39,7 +39,6 @@ DriverException exception(const ErrorMessage& errMsg, Args... args) {
     delete[] buffer;
     return exception;
 }
-
 
 }  // namespace Utils
 }  // namespace TypeDB
