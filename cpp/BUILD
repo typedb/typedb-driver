@@ -29,6 +29,14 @@ load("@vaticle_bazel_distribution//platform:constraints.bzl", "constraint_linux_
      "constraint_mac_arm64", "constraint_mac_x86_64", "constraint_win_x86_64")
 load(":build_opts.bzl", "cxxopts")
 
+genrule(
+    name = "version-header",
+    outs = ["include/typedb/common/version.hpp"],
+    srcs = ["//:VERSION"],
+    cmd_bash = "echo \"static const char* const TYPEDB_DRIVER_VERSION = \\\"$$(cat $<)\\\";\" > $@",
+    cmd_bat = "ECHO \"static const char* const TYPEDB_DRIVER_VERSION = \\\"\" > $@; TYPE $< >> $@; ECHO \"\\\";\" >> $@",
+)
+
 pkg_files(
     name = "typedb-driver-cpp-headers",
     srcs = glob(["include/**/*"]),
@@ -41,7 +49,7 @@ cc_binary(
     srcs = glob([
         "lib/**/*.cpp",
         "lib/**/*.hpp",
-    ]) + [":typedb-driver-cpp-headers"],
+    ]) + [":typedb-driver-cpp-headers", ":version-header"],
     includes = ["include"], 
     deps = [
         "//c:typedb_driver_clib",

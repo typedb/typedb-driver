@@ -21,6 +21,7 @@
 
 #include "typedb/connection/driver.hpp"
 
+#include "typedb/common/version.hpp"
 #include "../common/macros.hpp"
 #include "../common/native.hpp"
 
@@ -41,7 +42,7 @@ _native::Credential* Credential::getNative() const {
 
 
 Driver Driver::coreDriver(const std::string& coreAddress) {
-    auto p = _native::connection_open_core(coreAddress.c_str());
+    auto p = _native::connection_open_core_with_id(coreAddress.c_str(), "C++", TYPEDB_DRIVER_VERSION);
     DriverException::check_and_throw();
     return Driver(p);
 }
@@ -51,7 +52,7 @@ Driver Driver::cloudDriver(const std::vector<std::string>& cloudAddresses, const
     for (auto& addr : cloudAddresses)
         addressesNative.push_back(addr.c_str());
     addressesNative.push_back(nullptr);
-    auto p = _native::connection_open_cloud(addressesNative.data(), credential.getNative());
+    auto p = _native::connection_open_cloud_with_id(addressesNative.data(), credential.getNative(), "C++", TYPEDB_DRIVER_VERSION);
     DriverException::check_and_throw();
     return Driver(p);
 }
