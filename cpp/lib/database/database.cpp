@@ -70,7 +70,7 @@ ReplicaInfoIterable Database::replicas() {
     WRAPPED_NATIVE_CALL(ReplicaInfoIterable, _native::database_get_replicas_info(databaseNative.get()));
 }
 
-void Database::drop() {
+void Database::deleteDatabase() {
     CHECK_NATIVE(databaseNative);
     _native::database_delete(databaseNative.get());
     DriverException::check_and_throw();

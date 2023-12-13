@@ -34,11 +34,11 @@ const std::string DEFAULT_CLOUD_PASSWORD = "password";
 void wipeDatabases(const TypeDB::Driver& driver) {
     DatabaseIterable dbIterable = driver.databases.all();
     for (DatabaseIterator it = dbIterable.begin(); it != dbIterable.end(); ++it) {
-        (*it).drop();
+        (*it).deleteDatabase();
     }
     UserIterable userIterable = driver.users.all();
     for (UserIterator it = userIterable.begin(); it != userIterable.end(); ++it) {
-        if (it->username() != "admin") driver.users.drop(it->username());
+        if (it->username() != "admin") driver.users.deleteUser(it->username());
     }
 }
 

@@ -31,7 +31,7 @@ public:
     std::unique_ptr<ThingType> getType();
     bool isInferred();
     BoolFuture isDeleted(Transaction& transaction);
-    VoidFuture drop(Transaction& transaction);
+    VoidFuture deleteThing(Transaction& transaction);
 
     [[nodiscard]] VoidFuture setHas(Transaction& transaction, Attribute* attribute);
     [[nodiscard]] VoidFuture unsetHas(Transaction& transaction, Attribute* attribute);

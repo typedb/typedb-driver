@@ -42,11 +42,11 @@ cucumber_bdd::StepCollection<Context> databaseSteps = {
     }),
 
     BDD_STEP("connection delete database: (\\w+)", {
-        context.driver->databases.get(matches[1]).drop();
+        context.driver->databases.get(matches[1]).deleteDatabase();
     }),
 
     BDD_STEP("connection delete database; throws exception: (\\w+)", {
-        DRIVER_THROWS(matches[1].str(), { context.driver->databases.get(matches[1]).drop(); });
+        DRIVER_THROWS(matches[1].str(), { context.driver->databases.get(matches[1]).deleteDatabase(); });
     }),
 
     // multi
@@ -66,7 +66,7 @@ cucumber_bdd::StepCollection<Context> databaseSteps = {
     }),
 
     BDD_STEP("connection delete databases:", {
-        std::function<void(pickle_table_row*)> fn = [&](pickle_table_row* row) { context.driver->databases.get(row->cells[0].value).drop(); };
+        std::function<void(pickle_table_row*)> fn = [&](pickle_table_row* row) { context.driver->databases.get(row->cells[0].value).deleteDatabase(); };
         foreach_serial(step.argument->data_table->rows, fn);
     }),
 
@@ -77,7 +77,7 @@ cucumber_bdd::StepCollection<Context> databaseSteps = {
     }),
 
     BDD_STEP("connection delete databases in parallel:", {
-        std::function<void(pickle_table_row*)> fn = [&](pickle_table_row* row) { context.driver->databases.get(row->cells[0].value).drop(); };
+        std::function<void(pickle_table_row*)> fn = [&](pickle_table_row* row) { context.driver->databases.get(row->cells[0].value).deleteDatabase(); };
         foreach_parallel(step.argument->data_table->rows, fn);
     }),
 };

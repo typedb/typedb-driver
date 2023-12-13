@@ -38,7 +38,7 @@ std::string ThingType::getLabel() {
     return Utils::stringFromNative(_native::thing_type_get_label(conceptNative.get()));
 }
 
-VoidFuture ThingType::drop(Transaction& transaction) {
+VoidFuture ThingType::deleteType(Transaction& transaction) {
     CONCEPTAPI_CALL(VoidFuture, _native::thing_type_delete(ConceptFactory::getNative(transaction), conceptNative.get()));
 }
 

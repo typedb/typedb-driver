@@ -50,7 +50,7 @@ cucumber_bdd::StepCollection<Context> userSteps = {
         context.driver->users.passwordSet(matches[1].str(), matches[2].str());
     }),
     BDD_STEP_AND_THROWS("users delete: (\\S+)", {
-        context.driver->users.drop(matches[1].str());
+        context.driver->users.deleteUser(matches[1].str());
     }),
     BDD_STEP("\\s*get connected user\\s*", {
         auto ignored = context.driver->users.getCurrentUser();

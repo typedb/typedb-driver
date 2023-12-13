@@ -47,7 +47,7 @@ void UserManager::create(const std::string& username, const std::string& passwor
     DriverException::check_and_throw();
 }
 
-void UserManager::drop(const std::string& username) const {
+void UserManager::deleteUser(const std::string& username) const {
     CHECK_NATIVE(userManagerNative);
     _native::users_delete(userManagerNative.get(), username.c_str());
     DriverException::check_and_throw();

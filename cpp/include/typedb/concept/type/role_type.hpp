@@ -34,7 +34,7 @@ public:
     [[nodiscard]] virtual VoidFuture setLabel(Transaction& transaction, const std::string& newLabel) override;
     virtual bool isAbstract() override;
 
-    [[nodiscard]] virtual VoidFuture drop(Transaction& transaction) override;
+    [[nodiscard]] virtual VoidFuture deleteType(Transaction& transaction) override;
     [[nodiscard]] virtual BoolFuture isDeleted(Transaction& transaction) override;
 
     // Mimic overriding from Type

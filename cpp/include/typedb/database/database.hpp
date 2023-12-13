@@ -62,7 +62,7 @@ public:
 
     std::string name() const;
     ReplicaInfoIterable replicas();
-    void drop();
+    void deleteDatabase();
 
 private:
     NativePointer<_native::Database> databaseNative;

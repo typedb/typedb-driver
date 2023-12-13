@@ -47,7 +47,7 @@ bool Thing::isInferred() {
     return _native::thing_get_is_inferred(conceptNative.get());
 }
 
-VoidFuture Thing::drop(Transaction& transaction){
+VoidFuture Thing::deleteThing(Transaction& transaction){
     CONCEPTAPI_CALL(VoidFuture, _native::thing_delete(ConceptFactory::getNative(transaction), conceptNative.get()))}
 
 BoolFuture Thing::isDeleted(Transaction& transaction){

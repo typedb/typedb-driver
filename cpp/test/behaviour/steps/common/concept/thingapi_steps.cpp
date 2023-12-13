@@ -43,7 +43,7 @@ cucumber_bdd::StepCollection<Context> thingAPISteps = {
     }),
 
     BDD_STEP("delete (attribute|entity|relation): \\$(\\S+)", {
-        context.vars[matches[2].str()]->asThing()->drop(context.transaction()).wait();
+        context.vars[matches[2].str()]->asThing()->deleteThing(context.transaction()).wait();
     }),
     BDD_STEP("(attribute|entity|relation) \\$(\\S+) is deleted: (true|false)", {
         ASSERT_EQ(parseBoolean(matches[3].str()), context.vars[matches[2].str()]->asThing()->isDeleted(context.transaction()).get());

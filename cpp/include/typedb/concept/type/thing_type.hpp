@@ -32,7 +32,7 @@ public:
     bool isRoot();
     virtual bool isAbstract() override;
     virtual BoolFuture isDeleted(Transaction& transaction) override;
-    [[nodiscard]] virtual VoidFuture drop(Transaction& transaction) override;
+    [[nodiscard]] virtual VoidFuture deleteType(Transaction& transaction) override;
 
     [[nodiscard]] VoidFuture setAbstract(Transaction& transaction);
     [[nodiscard]] VoidFuture unsetAbstract(Transaction& transaction);
