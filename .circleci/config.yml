@@ -292,10 +292,9 @@ commands:
   deploy-clib-snapshot-unix:
     steps:
       - run: |
-          ulimit -n 250000
+          ulimit -n 100000
           export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
           bazel run --define version=$(git rev-parse HEAD) //c:deploy-clib-driver --compilation_mode=opt -- snapshot
 
   deploy-clib-snapshot-linux:
@@ -324,7 +323,7 @@ commands:
         type: string
     steps:
       - run: |
-          ulimit -n 250000
+          ulimit -n 100000
           bazel build //c:assemble-clib-driver
           export ASSEMBLY=<<parameters.assembly>>
           export ASSEMBLY_BASE=$(echo $ASSEMBLY | cut -f 1 -d '.')
@@ -343,10 +342,9 @@ commands:
   deploy-clib-release-unix:
     steps:
       - run: |
-          ulimit -n 250000
+          ulimit -n 100000
           export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
           bazel run --define version=$(cat VERSION) //c:deploy-clib-driver --compilation_mode=opt -- release
 
   deploy-clib-release-linux:
@@ -375,10 +373,9 @@ commands:
   deploy-cpp-snapshot-unix:
     steps:
       - run: |
-          ulimit -n 250000
+          ulimit -n 100000
           export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
           bazel run --define version=$(git rev-parse HEAD) //cpp:deploy-cpp-driver --compilation_mode=opt -- snapshot
 
   deploy-cpp-snapshot-linux:
@@ -407,7 +404,7 @@ commands:
         type: string
     steps:
       - run: |
-          ulimit -n 500000
+          ulimit -n 100000
           bazel build //cpp:assemble-cpp-driver
           export ASSEMBLY=<<parameters.assembly>>
           export ASSEMBLY_BASE=$(echo $ASSEMBLY | cut -f 1 -d '.')
@@ -429,10 +426,9 @@ commands:
   deploy-cpp-release-unix:
     steps:
       - run: |
-          ulimit -n 250000
+          ulimit -n 100000
           export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
           bazel run --define version=$(cat VERSION) //cpp:deploy-cpp-driver --compilation_mode=opt -- release
 
   deploy-cpp-release-linux:
@@ -1189,11 +1185,11 @@ workflows:
       - deploy-clib-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
       - deploy-clib-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, cpp-driver-circleci]
       - deploy-clib-snapshot-windows-x86_64:
           filters:
             branches:
@@ -1220,7 +1216,7 @@ workflows:
       - deploy-cpp-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, development, cpp-driver-circleci]
+              only: [master, development]
     
   release:
     jobs:

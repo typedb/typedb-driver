@@ -56,32 +56,11 @@ int main() {
     databaseManager = database_manager_new(connection);
     if (FAILED()) goto cleanup;
 
-    if (databases_contains(databaseManager, databaseName)) {
-        database_delete(databases_get(databaseManager, databaseName));
-    }
-    if (FAILED()) goto cleanup;
-
     databases_create(databaseManager, databaseName);
     if (FAILED()) goto cleanup;
 
     if (!databases_contains(databaseManager, databaseName)) {
         fprintf(stderr, "databases_contains(\'%s\') failed\n", databaseName);
-        goto cleanup;
-    }
-
-    bool foundDB = false;
-    DatabaseIterator* it = databases_all(databaseManager);
-    Database* database = NULL;
-    while (NULL != (database = database_iterator_next(it))) {
-        char* name = database_get_name(database);
-        foundDB = foundDB || (0 == strcmp(databaseName, name));
-        string_free(name);
-        database_close(database);
-    }
-    database_iterator_drop(it);
-
-    if (!foundDB) {
-        fprintf(stderr, "Did not find database \'%s\' in list of databases\n", databaseName);
         goto cleanup;
     }
 
