@@ -31,7 +31,9 @@ load("//tool/docs:rust/rules.bzl", "rust_docs", "rustdoc_to_adoc")
 load("//rust:docs_structure.bzl", "dir_mapping")
 
 typedb_driver_srcs = glob(["src/**/*.rs"])
-typedb_driver_compile_data = ["src/VERSION"]
+typedb_driver_compile_data = [
+    "src/VERSION",
+]
 typedb_driver_tags = ["crate-name=typedb-driver"]
 typedb_driver_deps = [
     "@crates//:chrono",

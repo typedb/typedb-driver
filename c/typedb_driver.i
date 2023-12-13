@@ -339,6 +339,8 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 
 %newobject connection_open_core;
 %newobject connection_open_cloud;
+%newobject connection_open_core_with_id;
+%newobject connection_open_cloud_with_id;
 
 %newobject credential_new;
 

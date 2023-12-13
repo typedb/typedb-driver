@@ -28,9 +28,29 @@ use super::{
     memory::{borrow, free, release, string_array_view, string_view},
 };
 
+static DEFAULT_NAME: &str = "FFI";
+static DRIVER_VERSION: &str = include_str!("VERSION");
+
 #[no_mangle]
 pub extern "C" fn connection_open_core(address: *const c_char) -> *mut Connection {
-    try_release(Connection::new_core(string_view(address)))
+    try_release(Connection::new_core_with_id(
+        string_view(address),
+        DEFAULT_NAME,
+        DRIVER_VERSION,
+    ))
+}
+
+#[no_mangle]
+pub extern "C" fn connection_open_core_with_id(
+    address: *const c_char,
+    driver_name: *const c_char,
+    driver_version: *const c_char,
+) -> *mut Connection {
+    try_release(Connection::new_core_with_id(
+        string_view(address),
+        string_view(driver_name),
+        string_view(driver_version),
+    ))
 }
 
 #[no_mangle]
@@ -39,7 +59,28 @@ pub extern "C" fn connection_open_cloud(
     credential: *const Credential,
 ) -> *mut Connection {
     let addresses: Vec<&str> = string_array_view(addresses).collect();
-    try_release(Connection::new_cloud(&addresses, borrow(credential).clone()))
+    try_release(Connection::new_cloud_with_id(
+        &addresses,
+        borrow(credential).clone(),
+        DEFAULT_NAME,
+        DRIVER_VERSION,
+    ))
+}
+
+#[no_mangle]
+pub extern "C" fn connection_open_cloud_with_id(
+    addresses: *const *const c_char,
+    credential: *const Credential,
+    driver_name: *const c_char,
+    driver_version: *const c_char,
+) -> *mut Connection {
+    let addresses: Vec<&str> = string_array_view(addresses).collect();
+    try_release(Connection::new_cloud_with_id(
+        &addresses,
+        borrow(credential).clone(),
+        string_view(driver_name),
+        string_view(driver_version),
+    ))
 }
 
 #[no_mangle]

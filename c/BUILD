@@ -38,6 +38,7 @@ clib_srcs = glob(["src/**/*.rs"])
 rust_static_library(
     name = "typedb_driver_clib",
     srcs = clib_srcs,
+    compile_data = ["src/VERSION"],
     aliases = {
         "//rust:typedb_driver_sync": "typedb_driver",
     },
