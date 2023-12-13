@@ -66,6 +66,10 @@ std::unique_ptr<Concept> ConceptMap::get(const std::string& variableName) {
     return ConceptFactory::ofNative(p);
 }
 
+std::string ConceptMap::toString() {
+    TO_STRING(conceptMapNative, _native::concept_map_to_string);
+}
+
 // ConceptMapIterator
 TYPEDB_ITERATOR_HELPER(
     _native::ConceptMapIterator,

@@ -81,7 +81,7 @@ public:
     StringIterable relations();
     StringIterable attributes();
     OwnerAttributePairIterable ownerships();
-
+    std::string toString();
 
 private:
     NativePointer<_native::Explainables> explainablesNative;

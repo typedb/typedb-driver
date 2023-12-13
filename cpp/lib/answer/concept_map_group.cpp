@@ -41,6 +41,10 @@ ConceptMapIterable ConceptMapGroup::conceptMaps() {
     WRAPPED_NATIVE_CALL(ConceptMapIterable, _native::concept_map_group_get_concept_maps(conceptMapGroupNative.get()));
 }
 
+std::string ConceptMapGroup::toString() {
+    TO_STRING(conceptMapGroupNative, _native::concept_map_group_to_string);
+}
+
 // For ConceptMapGroupIterator
 TYPEDB_ITERATOR_HELPER(
     _native::ConceptMapGroupIterator,

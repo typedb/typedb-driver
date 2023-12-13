@@ -46,6 +46,7 @@ public:
     std::string label();
     std::string when();
     std::string then();
+    std::string toString();
 
 private:
     Rule(_native::Rule*);

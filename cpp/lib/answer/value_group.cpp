@@ -47,6 +47,10 @@ AggregateResult ValueGroup::value() {
     }
 }
 
+std::string ValueGroup::toString() {
+    TO_STRING(valueGroupNative, _native::value_group_to_string);
+}
+
 // For ValueGroupIterator
 TYPEDB_ITERATOR_HELPER(
     _native::ValueGroupIterator,

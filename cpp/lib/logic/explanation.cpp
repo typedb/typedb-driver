@@ -43,6 +43,10 @@ ConceptMap Explanation::condition() {
     WRAPPED_NATIVE_CALL(ConceptMap, _native::explanation_get_condition(explanationNative.get()));
 }
 
+std::string Explanation::toString() {
+    TO_STRING(explanationNative, _native::explanation_to_string);
+}
+
 TYPEDB_ITERATOR_HELPER(
     _native::ExplanationIterator,
     _native::Explanation,

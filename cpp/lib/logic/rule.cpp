@@ -45,6 +45,10 @@ std::string Rule::then() {
     return Utils::stringFromNative(_native::rule_get_then(ruleNative.get()));
 }
 
+std::string Rule::toString() {
+    TO_STRING(ruleNative, _native::rule_to_string);
+}
+
 template <>
 std::optional<Rule> FutureHelper<std::optional<Rule>, _native::RulePromise>::resolve(_native::RulePromise* promiseNative) {
     _native::Rule* ruleNative = _native::rule_promise_resolve(promiseNative);

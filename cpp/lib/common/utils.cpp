@@ -27,7 +27,7 @@
 namespace TypeDB {
 namespace Utils {
 
-std::string stringFromNative(char* c) {
+std::string stringFromNative(const char* c) {
     std::string s(c);
     _native::string_free(c);
     return s;

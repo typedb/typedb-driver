@@ -28,7 +28,7 @@
 namespace TypeDB {
 namespace Utils {
 
-std::string stringFromNative(char* c);
+std::string stringFromNative(const char* c);
 
 template <class... Args>
 DriverException exception(const ErrorMessage& errMsg, Args... args) {

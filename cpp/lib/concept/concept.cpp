@@ -22,6 +22,7 @@
 #include "typedb/concept/concept.hpp"
 #include "typedb/common/exception.hpp"
 
+#include "../common/macros.hpp"
 #include "../common/native.hpp"
 #include "../common/utils.hpp"
 #include "./concept_factory.hpp"
@@ -62,6 +63,10 @@ Annotation Annotation::key() {
 }
 Annotation Annotation::unique() {
     return Annotation(_native::annotation_new_unique());
+}
+
+std::string Annotation::toString() {
+    TO_STRING(annotationNative, _native::annotation_to_string);
 }
 
 const std::vector<Annotation> Annotation::NONE = {};
@@ -184,6 +189,10 @@ Relation* Concept::asRelation() {
 Value* Concept::asValue() {
     if (!isValue()) throw Utils::exception(ConceptError::INVALID_CONCEPT_CASTING, ConceptTypeNames[(int)conceptType], ConceptTypeNames[(int)ConceptType::VALUE]);
     return dynamic_cast<Value*>(this);
+}
+
+std::string Concept::toString() {
+    TO_STRING(conceptNative, _native::concept_to_string);
 }
 
 bool Concept::operator==(const Concept& other) {

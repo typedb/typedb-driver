@@ -35,6 +35,7 @@ public:
     ~Annotation() = default;
     static Annotation key();
     static Annotation unique();
+    std::string toString();
 
     static const std::vector<Annotation> NONE;
 
@@ -137,6 +138,7 @@ public:
 
     Value* asValue();
 
+    std::string toString();
     bool operator==(const Concept& other);
     static bool equals(Concept* first, Concept* second);
 

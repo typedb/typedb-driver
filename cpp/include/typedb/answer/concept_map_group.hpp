@@ -39,6 +39,7 @@ public:
 
     std::unique_ptr<Concept> owner();
     ConceptMapIterable conceptMaps();
+    std::string toString();
 
 private:
     NativePointer<_native::ConceptMapGroup> conceptMapGroupNative;
