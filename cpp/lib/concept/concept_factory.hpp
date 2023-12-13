@@ -20,6 +20,8 @@
  */
 #pragma once
 
+#include <vector>
+
 #include "typedb/concept/concept.hpp"
 
 #include "typedb/concept/type/attribute_type.hpp"

@@ -20,6 +20,7 @@
  */
 
 #include <atomic>
+#include <unordered_map>
 
 #include "typedb/common/exception.hpp"
 #include "typedb/common/future.hpp"

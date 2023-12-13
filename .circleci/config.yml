@@ -52,22 +52,22 @@ commands:
 
   install-bazel-linux:
     parameters:
-      arch:
+      bazel-arch:
         type: string
     steps:
       - run: |
-          curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.arch>>"
-          sudo mv "bazelisk-linux-<<parameters.arch>>" /usr/local/bin/bazel
+          curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
+          sudo mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
 
   install-bazel-mac:
     parameters:
-      arch:
+      bazel-arch:
         type: string
     steps:
       - run: |
-          curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-darwin-<<parameters.arch>>"
-          sudo mv "bazelisk-darwin-<<parameters.arch>>" /usr/local/bin/bazel
+          curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-darwin-<<parameters.bazel-arch>>"
+          sudo mv "bazelisk-darwin-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
 
   ###########################
@@ -92,23 +92,23 @@ commands:
 
   deploy-pip-snapshot-linux:
     parameters:
-      arch:
+      bazel-arch:
         type: string
     steps:
       - checkout
       - install-bazel-linux:
-          arch: "<<parameters.arch>>"
+          bazel-arch: "<<parameters.bazel-arch>>"
       - install-pip-requirements
       - deploy-pip-snapshot-unix
 
   deploy-pip-snapshot-mac:
     parameters:
-      arch:
+      bazel-arch:
         type: string
     steps:
       - checkout
       - install-bazel-mac:
-          arch: "<<parameters.arch>>"
+          bazel-arch: "<<parameters.bazel-arch>>"
       - install-pip-requirements
       - deploy-pip-snapshot-unix
 
@@ -125,23 +125,23 @@ commands:
 
   test-pip-snapshot-linux:
     parameters:
-      arch:
+      bazel-arch:
         type: string
     steps:
       - checkout
       - install-bazel-linux:
-          arch: "<<parameters.arch>>"
+          bazel-arch: "<<parameters.bazel-arch>>"
       - install-pip-requirements
       - test-pip-snapshot-unix
 
   test-pip-snapshot-mac:
     parameters:
-      arch:
+      bazel-arch:
         type: string
     steps:
       - checkout
       - install-bazel-mac:
-          arch: "<<parameters.arch>>"
+          bazel-arch: "<<parameters.bazel-arch>>"
       - install-pip-requirements
       - test-pip-snapshot-unix
 
@@ -156,23 +156,23 @@ commands:
 
   deploy-pip-release-linux:
     parameters:
-      arch:
+      bazel-arch:
         type: string
     steps:
       - checkout
       - install-bazel-linux:
-          arch: "<<parameters.arch>>"
+          bazel-arch: "<<parameters.bazel-arch>>"
       - install-pip-requirements
       - deploy-pip-release-unix
 
   deploy-pip-release-mac:
     parameters:
-      arch:
+      bazel-arch:
         type: string
     steps:
       - checkout
       - install-bazel-mac:
-          arch: "<<parameters.arch>>"
+          bazel-arch: "<<parameters.bazel-arch>>"
       - install-pip-requirements
       - deploy-pip-release-unix
 
@@ -194,22 +194,22 @@ commands:
 
   deploy-maven-jni-snapshot-linux:
     parameters:
-      arch:
+      bazel-arch:
         type: string
     steps:
       - checkout
       - install-bazel-linux:
-          arch: "<<parameters.arch>>"
+          bazel-arch: "<<parameters.bazel-arch>>"
       - deploy-maven-jni-snapshot-unix
 
   deploy-maven-jni-snapshot-mac:
     parameters:
-      arch:
+      bazel-arch:
         type: string
     steps:
       - checkout
       - install-bazel-mac:
-          arch: "<<parameters.arch>>"
+          bazel-arch: "<<parameters.bazel-arch>>"
       - install-maven-mac
       - deploy-maven-jni-snapshot-unix
 
@@ -231,22 +231,22 @@ commands:
 
   test-maven-snapshot-linux:
     parameters:
-      arch:
+      bazel-arch:
         type: string
     steps:
       - checkout
       - install-bazel-linux:
-          arch: "<<parameters.arch>>"
+          bazel-arch: "<<parameters.bazel-arch>>"
       - test-maven-snapshot-unix
 
   test-maven-snapshot-mac:
     parameters:
-      arch:
+      bazel-arch:
         type: string
     steps:
       - checkout
       - install-bazel-mac:
-          arch: "<<parameters.arch>>"
+          bazel-arch: "<<parameters.bazel-arch>>"
       - install-maven-mac
       - test-maven-snapshot-unix
 
@@ -260,22 +260,22 @@ commands:
 
   deploy-maven-jni-release-linux:
     parameters:
-      arch:
+      bazel-arch:
         type: string
     steps:
       - checkout
       - install-bazel-linux:
-          arch: "<<parameters.arch>>"
+          bazel-arch: "<<parameters.bazel-arch>>"
       - deploy-maven-jni-release-unix
 
   deploy-maven-jni-release-mac:
     parameters:
-      arch:
+      bazel-arch:
         type: string
     steps:
       - checkout
       - install-bazel-mac:
-          arch: "<<parameters.arch>>"
+          bazel-arch: "<<parameters.bazel-arch>>"
       - install-maven-mac
       - deploy-maven-jni-release-unix
 
@@ -286,6 +286,211 @@ commands:
           export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run --define version=$(cat VERSION) //java:deploy-maven --compilation_mode=opt -- release
 
+  #############################
+  # C driver deployment steps #
+  #############################
+  deploy-clib-snapshot-unix:
+    steps:
+      - run: |
+          ulimit -n 100000
+          export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+          export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+          bazel run --define version=$(git rev-parse HEAD) //c:deploy-clib-driver --compilation_mode=opt -- snapshot
+
+  deploy-clib-snapshot-linux:
+    parameters:
+      bazel-arch:
+        type: string
+    steps:
+      - checkout
+      - install-bazel-linux:
+          bazel-arch: "<<parameters.bazel-arch>>"
+      - deploy-clib-snapshot-unix
+      
+  deploy-clib-snapshot-mac:
+    parameters:
+      bazel-arch:
+        type: string
+    steps:
+      - checkout
+      - install-bazel-mac:
+          bazel-arch: "<<parameters.bazel-arch>>"
+      - deploy-clib-snapshot-unix
+
+  test-clib-assembly-linux:
+    parameters:
+      target-arch:
+        type: string
+    steps:
+      - run: |
+          ulimit -n 100000      
+          bazel build //c:assemble-linux-<<parameters.target-arch>>-targz
+          export ASSEMBLY=typedb-driver-clib-linux-<<parameters.target-arch>>
+          mkdir -p test_assembly_clib
+          tar -xf bazel-bin/c/$ASSEMBLY.tar.gz --directory test_assembly_clib
+          ( 
+            cd test_assembly_clib &&
+            cmake ../c/tests/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY &&
+            cmake --build . --config release
+          )       
+          tool/test/start-core-server.sh
+          sleep 3
+          (cd test_assembly_clib && LD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
+          tool/test/stop-core-server.sh
+          exit $TEST_SUCCESS
+
+  test-clib-assembly-mac:
+    parameters:
+      target-arch:
+        type: string
+    steps:
+      - run: |
+          ulimit -n 100000
+          bazel build //c:assemble-mac-<<parameters.target-arch>>-zip
+          export ASSEMBLY=typedb-driver-clib-mac-<<parameters.target-arch>>
+          mkdir -p test_assembly_clib
+          tar -xf bazel-bin/c/$ASSEMBLY.zip --directory test_assembly_clib
+          ( 
+            cd test_assembly_clib &&
+            cmake ../c/tests/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY  -DCMAKE_OSX_ARCHITECTURES=<<parameters.target-arch>> &&
+            cmake --build . --config release
+          )
+          tool/test/start-core-server.sh
+          sleep 3
+          (cd test_assembly_clib && DYLD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
+          tool/test/stop-core-server.sh
+          exit $TEST_SUCCESS
+
+  deploy-clib-release-unix:
+    steps:
+      - run: |
+          ulimit -n 100000
+          export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+          export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+          bazel run --define version=$(cat VERSION) //c:deploy-clib-driver --compilation_mode=opt -- release
+
+  deploy-clib-release-linux:
+    parameters:
+      bazel-arch:
+        type: string
+    steps:
+      - checkout
+      - install-bazel-linux:
+          bazel-arch: "<<parameters.bazel-arch>>"
+      - deploy-clib-release-unix
+
+  deploy-clib-release-mac:
+    parameters:
+      bazel-arch:
+        type: string
+    steps:
+      - checkout
+      - install-bazel-mac:
+          bazel-arch: "<<parameters.bazel-arch>>"
+      - deploy-clib-release-unix
+
+  ########################
+  # C++ deployment steps #
+  ########################
+  deploy-cpp-snapshot-unix:
+    steps:
+      - run: |
+          ulimit -n 100000
+          export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+          export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+          bazel run --define version=$(git rev-parse HEAD) //cpp:deploy-cpp-driver --compilation_mode=opt -- snapshot
+
+  deploy-cpp-snapshot-linux:
+    parameters:
+      bazel-arch:
+        type: string
+    steps:
+      - checkout
+      - install-bazel-linux:
+          bazel-arch: "<<parameters.bazel-arch>>"
+      - deploy-cpp-snapshot-unix
+      
+  deploy-cpp-snapshot-mac:
+    parameters:
+      bazel-arch:
+        type: string
+    steps:
+      - checkout
+      - install-bazel-mac:
+          bazel-arch: "<<parameters.bazel-arch>>"
+      - deploy-cpp-snapshot-unix
+
+  test-cpp-assembly-linux:
+    parameters:
+      target-arch:
+        type: string
+    steps:
+      - run: |
+          ulimit -n 100000
+          bazel build //cpp:assemble-linux-<<parameters.target-arch>>-targz
+          export ASSEMBLY=typedb-driver-cpp-linux-<<parameters.target-arch>>
+          mkdir -p test_assembly_cpp
+          tar -xf bazel-bin/cpp/$ASSEMBLY.tar.gz --directory test_assembly_cpp
+          (
+            cd test_assembly_cpp &&
+            cmake ../cpp/test/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY && 
+            cmake --build . --config release
+          )
+          tool/test/start-core-server.sh
+          sleep 3
+          ( cd test_assembly_cpp && LD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
+          tool/test/stop-core-server.sh
+          exit $TEST_SUCCESS
+
+  test-cpp-assembly-mac:
+    parameters:
+      target-arch:
+        type: string
+    steps:
+      - run: |
+          ulimit -n 100000
+          bazel build //cpp:assemble-mac-<<parameters.target-arch>>-zip
+          export ASSEMBLY=typedb-driver-cpp-mac-<<parameters.target-arch>>
+          mkdir -p test_assembly_cpp
+          tar -xf bazel-bin/cpp/$ASSEMBLY.zip --directory test_assembly_cpp
+          (
+            cd test_assembly_cpp &&
+            cmake ../cpp/test/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY -DCMAKE_OSX_ARCHITECTURES=<<parameters.target-arch>> &&
+            cmake --build . --config release
+          )
+          tool/test/start-core-server.sh
+          sleep 3
+          (cd test_assembly_cpp && LD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
+          tool/test/stop-core-server.sh
+          exit $TEST_SUCCESS
+  
+  deploy-cpp-release-unix:
+    steps:
+      - run: |
+          ulimit -n 100000
+          export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
+          export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+          bazel run --define version=$(cat VERSION) //cpp:deploy-cpp-driver --compilation_mode=opt -- release
+
+  deploy-cpp-release-linux:
+    parameters:
+      bazel-arch:
+        type: string
+    steps:
+      - checkout
+      - install-bazel-linux:
+          bazel-arch: "<<parameters.bazel-arch>>"
+      - deploy-cpp-release-unix
+
+  deploy-cpp-release-mac:
+    parameters:
+      bazel-arch:
+        type: string
+    steps:
+      - checkout
+      - install-bazel-mac:
+          bazel-arch: "<<parameters.bazel-arch>>"
+      - deploy-cpp-release-unix
 
 jobs:
 
@@ -297,26 +502,26 @@ jobs:
     executor: linux-arm64
     steps:
       - deploy-pip-snapshot-linux:
-          arch: arm64
+          bazel-arch: arm64
 
   deploy-pip-snapshot-linux-x86_64:
     executor: linux-x86_64
     steps:
       - deploy-pip-snapshot-linux:
-          arch: amd64
+          bazel-arch: amd64
 
   deploy-pip-snapshot-mac-arm64:
     executor: mac-arm64
     steps:
       - deploy-pip-snapshot-mac:
-          arch: arm64
+          bazel-arch: arm64
 
   deploy-pip-snapshot-mac-x86_64:
     executor: mac-arm64
     steps:
       - macos/install-rosetta
       - deploy-pip-snapshot-mac:
-          arch: amd64
+          bazel-arch: amd64
 
   deploy-pip-snapshot-windows-x86_64:
     executor:
@@ -332,26 +537,26 @@ jobs:
     executor: linux-arm64
     steps:
       - test-pip-snapshot-linux:
-          arch: arm64
+          bazel-arch: arm64
 
   test-pip-snapshot-linux-x86_64:
     executor: linux-x86_64
     steps:
       - test-pip-snapshot-linux:
-          arch: amd64
+          bazel-arch: amd64
 
   test-pip-snapshot-mac-arm64:
     executor: mac-arm64
     steps:
       - test-pip-snapshot-mac:
-          arch: arm64
+          bazel-arch: arm64
 
   test-pip-snapshot-mac-x86_64:
     executor: mac-arm64
     steps:
       - macos/install-rosetta
       - test-pip-snapshot-mac:
-          arch: amd64
+          bazel-arch: amd64
 
   test-pip-snapshot-windows-x86_64:
     executor:
@@ -367,7 +572,7 @@ jobs:
     executor: linux-arm64
     steps:
       - deploy-pip-release-linux:
-          arch: arm64
+          bazel-arch: arm64
       - run: |
           mkdir -p ~/dist
           for f in bazel-bin/python/*.whl; do
@@ -384,7 +589,7 @@ jobs:
     executor: linux-x86_64
     steps:
       - deploy-pip-release-linux:
-          arch: amd64
+          bazel-arch: amd64
       - run: |
           mkdir -p ~/dist
           for f in bazel-bin/python/*.whl; do
@@ -401,7 +606,7 @@ jobs:
     executor: mac-arm64
     steps:
       - deploy-pip-release-mac:
-          arch: arm64
+          bazel-arch: arm64
       - run: |
           mkdir -p ~/dist
           for f in bazel-bin/python/*.whl; do
@@ -419,7 +624,7 @@ jobs:
     steps:
       - macos/install-rosetta
       - deploy-pip-release-mac:
-          arch: amd64
+          bazel-arch: amd64
       - run: |
           mkdir -p ~/dist
           for f in bazel-bin/python/*.whl; do
@@ -453,26 +658,26 @@ jobs:
     executor: linux-arm64
     steps:
       - deploy-maven-jni-snapshot-linux:
-          arch: arm64
+          bazel-arch: arm64
 
   deploy-maven-jni-snapshot-linux-x86_64:
     executor: linux-x86_64
     steps:
       - deploy-maven-jni-snapshot-linux:
-          arch: amd64
+          bazel-arch: amd64
 
   deploy-maven-jni-snapshot-mac-arm64:
     executor: mac-arm64
     steps:
       - deploy-maven-jni-snapshot-mac:
-          arch: arm64
+          bazel-arch: arm64
 
   deploy-maven-jni-snapshot-mac-x86_64:
     executor: mac-arm64
     steps:
       - macos/install-rosetta
       - deploy-maven-jni-snapshot-mac:
-          arch: amd64
+          bazel-arch: amd64
 
   deploy-maven-jni-snapshot-windows-x86_64:
     executor:
@@ -489,33 +694,33 @@ jobs:
     steps:
       - checkout
       - install-bazel-linux:
-          arch: amd64
+          bazel-arch: amd64
       - deploy-maven-snapshot-unix
 
   test-maven-snapshot-linux-arm64:
     executor: linux-arm64
     steps:
       - test-maven-snapshot-linux:
-          arch: arm64
+          bazel-arch: arm64
 
   test-maven-snapshot-linux-x86_64:
     executor: linux-x86_64
     steps:
       - test-maven-snapshot-linux:
-          arch: amd64
+          bazel-arch: amd64
 
   test-maven-snapshot-mac-arm64:
     executor: mac-arm64
     steps:
       - test-maven-snapshot-mac:
-          arch: arm64
+          bazel-arch: arm64
 
   test-maven-snapshot-mac-x86_64:
     executor: mac-arm64
     steps:
       - macos/install-rosetta
       - test-maven-snapshot-mac:
-          arch: amd64
+          bazel-arch: amd64
 
   test-maven-snapshot-windows-x86_64:
     executor:
@@ -531,7 +736,7 @@ jobs:
     executor: linux-arm64
     steps:
       - deploy-maven-jni-release-linux:
-          arch: arm64
+          bazel-arch: arm64
       - run: |
           mkdir -p ~/dist
           cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-linux-arm64.jar ~/dist/typedb-driver-jni-linux-arm64.jar
@@ -543,7 +748,7 @@ jobs:
     executor: linux-x86_64
     steps:
       - deploy-maven-jni-release-linux:
-          arch: amd64
+          bazel-arch: amd64
       - run: |
           mkdir -p ~/dist
           cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-linux-x86_64.jar ~/dist/typedb-driver-jni-linux-x86_64.jar
@@ -555,7 +760,7 @@ jobs:
     executor: mac-arm64
     steps:
       - deploy-maven-jni-release-mac:
-          arch: arm64
+          bazel-arch: arm64
       - run: |
           mkdir -p ~/dist
           cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-macosx-arm64.jar ~/dist/typedb-driver-jni-macosx-arm64.jar
@@ -568,7 +773,7 @@ jobs:
     steps:
       - macos/install-rosetta
       - deploy-maven-jni-release-mac:
-          arch: amd64
+          bazel-arch: amd64
       - run: |
           mkdir -p ~/dist
           cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-macosx-x86_64.jar ~/dist/typedb-driver-jni-macosx-x86_64.jar
@@ -594,11 +799,234 @@ jobs:
     steps:
       - checkout
       - install-bazel-linux:
-          arch: amd64
+          bazel-arch: amd64
       - deploy-maven-release-unix
       - run: |
           mkdir -p ~/dist
           cp bazel-bin/java/libdriver-java.jar ~/dist/typedb-driver.jar
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
+
+  #################
+  # C driver jobs #
+  #################
+  deploy-clib-snapshot-mac-arm64:
+    executor: mac-arm64
+    steps:
+      - deploy-clib-snapshot-mac:
+          bazel-arch: arm64
+      - run: brew install cmake
+      - test-clib-assembly-mac:
+          target-arch: arm64
+      
+  deploy-clib-snapshot-mac-x86_64:
+    executor: mac-arm64
+    steps:
+      - macos/install-rosetta
+      - deploy-clib-snapshot-mac:
+          bazel-arch: amd64
+      - run: brew install cmake
+      - test-clib-assembly-mac:
+          target-arch: x86_64
+          
+  deploy-clib-snapshot-linux-arm64:
+    executor: linux-arm64
+    steps:
+      - deploy-clib-snapshot-linux:
+          bazel-arch: arm64
+      - test-clib-assembly-linux:
+          target-arch: arm64
+      
+  deploy-clib-snapshot-linux-x86_64:
+    executor: linux-x86_64
+    steps:
+      - deploy-clib-snapshot-linux:
+          bazel-arch: amd64
+      - test-clib-assembly-linux:
+          target-arch: x86_64
+      
+  deploy-clib-snapshot-windows-x86_64:
+    executor:
+      name: win/default
+      shell: cmd.exe
+    working_directory: ~/typedb-driver
+    steps:
+      - checkout
+      - run: .circleci\windows\prepare.bat
+      - run: .circleci\windows\clib\deploy_snapshot.bat
+      - run: .circleci\windows\clib\test_assembly.bat
+    
+  deploy-clib-release-mac-arm64:
+    executor: mac-arm64
+    steps:
+      - deploy-clib-release-mac:
+          bazel-arch: arm64
+      - run: |
+          mkdir -p ~/dist
+          cp bazel-bin/c/typedb-driver-clib-mac-arm64.zip ~/dist
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
+    
+  deploy-clib-release-mac-x86_64:
+    executor: mac-arm64
+    steps:
+      - macos/install-rosetta
+      - deploy-clib-release-mac:
+          bazel-arch: amd64
+      - run: |
+          mkdir -p ~/dist
+          cp bazel-bin/c/typedb-driver-clib-mac-x86_64.zip ~/dist
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
+
+  deploy-clib-release-linux-arm64:
+    executor: linux-arm64
+    steps:
+      - deploy-clib-release-linux:
+          bazel-arch: arm64
+      - run: |
+          mkdir -p ~/dist
+          cp bazel-bin/c/typedb-driver-clib-linux-arm64.tar.gz ~/dist
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
+
+  deploy-clib-release-linux-x86_64:
+    executor: linux-x86_64
+    steps:
+      - deploy-clib-release-linux:
+          bazel-arch: amd64
+      - run: |
+          mkdir -p ~/dist
+          cp bazel-bin/c/typedb-driver-clib-linux-x86_64.tar.gz ~/dist
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
+  
+  deploy-clib-release-windows-x86_64:
+    executor:
+      name: win/default
+      shell: cmd.exe
+    working_directory: ~/typedb-driver
+    steps:
+      - checkout
+      - run: .circleci\windows\prepare.bat
+      - run: .circleci\windows\clib\deploy_release.bat
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
+
+  ############
+  # C++ jobs #
+  ############
+  deploy-cpp-snapshot-mac-arm64:
+    executor: mac-arm64
+    steps:
+      - deploy-cpp-snapshot-mac:
+          bazel-arch: arm64
+      - run: brew install cmake
+      - test-cpp-assembly-mac:
+          target-arch: arm64
+      
+  deploy-cpp-snapshot-mac-x86_64:
+    executor: mac-arm64
+    steps:
+      - macos/install-rosetta
+      - deploy-cpp-snapshot-mac:
+          bazel-arch: amd64
+      - run: brew install cmake
+      - test-cpp-assembly-mac:
+          target-arch: x86_64
+          
+
+  deploy-cpp-snapshot-linux-arm64:
+    executor: linux-arm64
+    steps:
+      - deploy-cpp-snapshot-linux:
+          bazel-arch: arm64
+      - test-cpp-assembly-linux:
+          target-arch: arm64
+      
+  deploy-cpp-snapshot-linux-x86_64:
+    executor: linux-x86_64
+    steps:
+      - deploy-cpp-snapshot-linux:
+          bazel-arch: amd64
+      - test-cpp-assembly-linux:
+          target-arch: x86_64
+      
+  deploy-cpp-snapshot-windows-x86_64:
+    executor:
+      name: win/default
+      shell: cmd.exe
+    working_directory: ~/typedb-driver
+    steps:
+      - checkout
+      - run: .circleci\windows\prepare.bat
+      - run: .circleci\windows\cpp\deploy_snapshot.bat
+      - run: .circleci\windows\cpp\test_assembly.bat
+    
+  deploy-cpp-release-mac-arm64:
+    executor: mac-arm64
+    steps:
+      - deploy-cpp-release-mac:
+          bazel-arch: arm64
+      - run: |
+          mkdir -p ~/dist
+          cp bazel-bin/cpp/typedb-driver-cpp-mac-arm64.zip ~/dist
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
+    
+  deploy-cpp-release-mac-x86_64:
+    executor: mac-arm64
+    steps:
+      - macos/install-rosetta
+      - deploy-cpp-release-mac:
+          bazel-arch: amd64
+      - run: |
+          mkdir -p ~/dist
+          cp bazel-bin/cpp/typedb-driver-cpp-mac-x86_64.zip ~/dist
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
+
+  deploy-cpp-release-linux-arm64:
+    executor: linux-arm64
+    steps:
+      - deploy-cpp-release-linux:
+          bazel-arch: arm64
+      - run: |
+          mkdir -p ~/dist
+          cp bazel-bin/cpp/typedb-driver-cpp-linux-arm64.tar.gz ~/dist
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
+
+  deploy-cpp-release-linux-x86_64:
+    executor: linux-x86_64
+    steps:
+      - deploy-cpp-release-linux:
+          bazel-arch: amd64
+      - run: |
+          mkdir -p ~/dist
+          cp bazel-bin/cpp/typedb-driver-cpp-linux-x86_64.tar.gz ~/dist
+      - persist_to_workspace:
+          root: ~/dist
+          paths: ["./*"]
+  
+  deploy-cpp-release-windows-x86_64:
+    executor:
+      name: win/default
+      shell: cmd.exe
+    working_directory: ~/typedb-driver
+    steps:
+      - checkout
+      - run: .circleci\windows\prepare.bat
+      - run: .circleci\windows\cpp\deploy_release.bat
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]
@@ -612,7 +1040,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-linux:
-          arch: amd64
+          bazel-arch: amd64
       - run: |
           export DEPLOY_CRATE_TOKEN=$REPO_CRATES_TOKEN
           bazel run --define version=$(cat VERSION) //rust:deploy_crate --compilation_mode=opt -- release
@@ -627,7 +1055,7 @@ jobs:
     steps:
       - checkout
       - install-bazel-linux:
-          arch: amd64
+          bazel-arch: amd64
       - run: |
           wget -q -O - https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
           wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
@@ -648,7 +1076,7 @@ jobs:
           at: ~/dist
       - checkout
       - install-bazel-linux:
-          arch: amd64
+          bazel-arch: amd64
       - run:
           name: "Publish Draft Release on GitHub"
           command: |
@@ -784,8 +1212,53 @@ workflows:
               only: [master, development]
           requires:
             - deploy-maven-snapshot
+            
+  typedb-driver-clib-snapshot:
+    jobs:
+      - deploy-clib-snapshot-linux-arm64:
+          filters:
+            branches:
+              only: [master, development]
+      - deploy-clib-snapshot-linux-x86_64:
+          filters:
+            branches:
+              only: [master, development]
+      - deploy-clib-snapshot-mac-arm64:
+          filters:
+            branches:
+              only: [master, development]
+      - deploy-clib-snapshot-mac-x86_64:
+          filters:
+            branches:
+              only: [master, development]
+      - deploy-clib-snapshot-windows-x86_64:
+          filters:
+            branches:
+              only: [master, development]
 
-
+  typedb-driver-cpp-snapshot:
+    jobs:
+      - deploy-cpp-snapshot-linux-arm64:
+          filters:
+            branches:
+              only: [master, development]
+      - deploy-cpp-snapshot-linux-x86_64:
+          filters:
+            branches:
+              only: [master, development]
+      - deploy-cpp-snapshot-mac-arm64:
+          filters:
+            branches:
+              only: [master, development]
+      - deploy-cpp-snapshot-mac-x86_64:
+          filters:
+            branches:
+              only: [master, development]
+      - deploy-cpp-snapshot-windows-x86_64:
+          filters:
+            branches:
+              only: [master, development]
+    
   release:
     jobs:
       - deploy-pip-release-linux-arm64:
@@ -850,6 +1323,48 @@ workflows:
             branches:
               only: [release]
 
+      - deploy-clib-release-linux-arm64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-clib-release-linux-x86_64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-clib-release-mac-arm64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-clib-release-mac-x86_64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-clib-release-windows-x86_64:
+          filters:
+            branches:
+              only: [release]
+
+      - deploy-cpp-release-linux-arm64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-cpp-release-linux-x86_64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-cpp-release-mac-arm64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-cpp-release-mac-x86_64:
+          filters:
+            branches:
+              only: [release]
+      - deploy-cpp-release-windows-x86_64:
+          filters:
+            branches:
+              only: [release]
+
       - deploy-github:
           filters:
             branches:
@@ -860,6 +1375,16 @@ workflows:
             - deploy-pip-release-linux-arm64
             - deploy-pip-release-linux-x86_64
             - deploy-pip-release-windows-x86_64
+            - deploy-clib-release-mac-arm64
+            - deploy-clib-release-mac-x86_64
+            - deploy-clib-release-linux-arm64
+            - deploy-clib-release-linux-x86_64
+            - deploy-clib-release-windows-x86_64
+            - deploy-cpp-release-mac-arm64
+            - deploy-cpp-release-mac-x86_64
+            - deploy-cpp-release-linux-arm64
+            - deploy-cpp-release-linux-x86_64
+            - deploy-cpp-release-windows-x86_64
             - deploy-maven-release
             - deploy-crate-release
             - deploy-npm-release

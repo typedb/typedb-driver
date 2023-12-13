@@ -20,26 +20,10 @@
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-def typedb_behaviour_cpp_test(
-    name,
-    feature,
-    deps = [],
-    data = [],
-    args = [],
-    **kwargs
-):
-    native.cc_test(
-        name = name + "-core",
-        deps = ["//cpp/test/behaviour/steps:core-steps"] + deps,
-        data = [feature] + data,
-        args = ["$(location " + feature + ")"] + args,
-        **kwargs,
-    )
-    
-    native.cc_test(
-        name = name + "-cloud",
-        deps = ["//cpp/test/behaviour/steps:cloud-steps"] + deps,
-        data = [feature, "//tool/test/resources:certificates"] + data,
-        args = ["$(location " + feature + ")"] + args,
-        **kwargs,
-    )
+checkstyle_test(
+    name = "checkstyle",
+    size = "small",
+    include = glob(["*"]),
+    exclude = ["README.md"],
+    license_type = "apache-header",
+)

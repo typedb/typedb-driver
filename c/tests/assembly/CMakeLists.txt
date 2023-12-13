@@ -18,28 +18,19 @@
 # specific language governing permissions and limitations
 # under the License.
 
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+cmake_minimum_required(VERSION 3.15)
+if(NOT DEFINED TYPEDB_ASSEMBLY)
+    message(FATAL_ERROR "TYPEDB_ASSEMBLY is not set")
+ENDIF()
 
-def typedb_behaviour_cpp_test(
-    name,
-    feature,
-    deps = [],
-    data = [],
-    args = [],
-    **kwargs
-):
-    native.cc_test(
-        name = name + "-core",
-        deps = ["//cpp/test/behaviour/steps:core-steps"] + deps,
-        data = [feature] + data,
-        args = ["$(location " + feature + ")"] + args,
-        **kwargs,
-    )
-    
-    native.cc_test(
-        name = name + "-cloud",
-        deps = ["//cpp/test/behaviour/steps:cloud-steps"] + deps,
-        data = [feature, "//tool/test/resources:certificates"] + data,
-        args = ["$(location " + feature + ")"] + args,
-        **kwargs,
-    )
+project (TestAssembly C)
+
+link_directories(${TYPEDB_ASSEMBLY}/lib)
+include_directories(${TYPEDB_ASSEMBLY}/include)
+
+add_executable(test_assembly test.c)
+IF (WIN32)
+    target_link_libraries(test_assembly typedb_driver_clib.dll.lib)
+ELSE()
+    target_link_libraries(test_assembly typedb_driver_clib)
+ENDIF()
