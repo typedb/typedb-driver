@@ -33,9 +33,11 @@ load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
 load("@vaticle_bazel_distribution//platform:constraints.bzl", "constraint_linux_arm64", "constraint_linux_x86_64",
      "constraint_mac_arm64", "constraint_mac_x86_64", "constraint_win_x86_64")
 
+clib_srcs = glob(["src/**/*.rs"])
+
 rust_static_library(
     name = "typedb_driver_clib",
-    srcs = glob(["src/**/*.rs"]),
+    srcs = clib_srcs,
     aliases = {
         "//rust:typedb_driver_sync": "typedb_driver",
     },
@@ -62,7 +64,7 @@ rust_cbindgen(
 # Assembly & distribution
 rust_shared_library(
     name = "typedb-driver-clib",
-    srcs = glob(["src/**/*.rs"]),
+    srcs = clib_srcs,
     aliases = {
         "//rust:typedb_driver_sync": "typedb_driver",
     },
