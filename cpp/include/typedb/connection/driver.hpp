@@ -55,6 +55,7 @@ public:
     DatabaseManager databases;
     UserManager users;
 
+    static void initLogging();
     static Driver coreDriver(const std::string& coreAddress);
     static Driver cloudDriver(const std::vector<std::string>& cloudAddresses, const Credential& credential);
 
