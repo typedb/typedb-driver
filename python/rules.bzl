@@ -25,7 +25,7 @@ load("@vaticle_dependencies//builder/swig:python.bzl", "swig_python", "py_native
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 
 
-def native_driver_versioned(python_versions):
+def native_driver_versioned(python_versions, driver_version_file):
     for version in python_versions:
         swig_python(
             name = "native_driver_python_wrapper" + version["suffix"],
@@ -57,7 +57,7 @@ def native_driver_versioned(python_versions):
 
         native.py_library(
             name = "driver_python" + version["suffix"],
-            srcs = native.glob(["typedb/**/*.py"]) + [":native-driver-wrapper" + version["suffix"]],
+            srcs = native.glob(["typedb/**/*.py"]) + [":native-driver-wrapper" + version["suffix"], driver_version_file],
             data = [":native-driver-binary" + version["suffix"]],
             deps = [":native_driver_python_wrapper" + version["suffix"]],
             imports = ["."],

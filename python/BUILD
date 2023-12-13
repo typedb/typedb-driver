@@ -28,7 +28,15 @@ load("//python:docs_structure.bzl", "dir_mapping")
 load("//python:rules.bzl", "native_driver_versioned")
 load("//python:python_versions.bzl", "python_versions")
 
-native_driver_versioned(python_versions = python_versions)
+genrule(
+    name = "driver_version_file",
+    outs = ["typedb/_version.py"],
+    srcs = ["//:VERSION"],
+    cmd_bash = "echo \"__version__ = '''$$(cat $<)'''\" > $@",
+    cmd_bat = "ECHO \"__version__ = '''\" > $@; TYPE $< >> $@; ECHO \"'''\" >> $@",
+)
+
+native_driver_versioned(python_versions, ":driver_version_file")
 
 alias(
     name = "driver_python",

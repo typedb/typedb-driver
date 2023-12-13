@@ -21,6 +21,7 @@
 
 from typing import Iterable, Union
 
+from typedb._version import __version__
 from typedb.api.answer.concept_map import *  # noqa # pylint: disable=unused-import
 from typedb.api.answer.concept_map_group import *  # noqa # pylint: disable=unused-import
 from typedb.api.answer.value_group import *  # noqa # pylint: disable=unused-import
