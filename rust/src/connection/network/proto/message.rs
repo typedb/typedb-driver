@@ -49,7 +49,11 @@ use crate::{
 impl TryIntoProto<connection::open::Req> for Request {
     fn try_into_proto(self) -> Result<connection::open::Req> {
         match self {
-            Self::ConnectionOpen => Ok(connection::open::Req { version: Version.into() }),
+            Self::ConnectionOpen { driver_name, driver_version } => Ok(connection::open::Req {
+                version: Version.into(),
+                driver_name: Some(driver_name),
+                driver_version: Some(driver_version),
+            }),
             other => Err(InternalError::UnexpectedRequestType { request_type: format!("{other:?}") }.into()),
         }
     }

@@ -64,6 +64,9 @@ pub struct Connection {
     is_cloud: bool,
 }
 
+static DEFAULT_NAME: &str = "Rust";
+static DRIVER_VERSION: &str = include_str!("../VERSION");
+
 impl Connection {
     /// Creates a new TypeDB Server connection.
     ///
@@ -77,6 +80,11 @@ impl Connection {
     /// Connection::new_core("127.0.0.1:1729")
     /// ```
     pub fn new_core(address: impl AsRef<str>) -> Result<Self> {
+        Self::new_core_with_id(address, DEFAULT_NAME, DRIVER_VERSION)
+    }
+
+    #[doc(hidden)]
+    pub fn new_core_with_id(address: impl AsRef<str>, driver_name: &str, driver_version: &str) -> Result<Self> {
         let address: Address = address.as_ref().parse()?;
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
         let mut server_connection = ServerConnection::new_core(background_runtime.clone(), address)?;
@@ -86,7 +94,7 @@ impl Connection {
             .exactly_one()
             .map_err(|e| ConnectionError::ServerConnectionFailedStatusError { error: e.to_string() })?;
         server_connection.set_address(address.clone());
-        match server_connection.validate() {
+        match server_connection.validate(driver_name, driver_version) {
             Ok(()) => Ok(Self {
                 server_connections: [(address, server_connection)].into(),
                 background_runtime,
@@ -120,6 +128,16 @@ impl Connection {
     /// )
     /// ```
     pub fn new_cloud<T: AsRef<str> + Sync>(init_addresses: &[T], credential: Credential) -> Result<Self> {
+        Self::new_cloud_with_id(init_addresses, credential, DEFAULT_NAME, DRIVER_VERSION)
+    }
+
+    #[doc(hidden)]
+    pub fn new_cloud_with_id<T: AsRef<str> + Sync>(
+        init_addresses: &[T],
+        credential: Credential,
+        driver_name: &str,
+        driver_version: &str,
+    ) -> Result<Self> {
         let background_runtime = Arc::new(BackgroundRuntime::new()?);
 
         let init_addresses = init_addresses.iter().map(|addr| addr.as_ref().parse()).try_collect()?;
@@ -133,8 +151,11 @@ impl Connection {
             })
             .try_collect()?;
 
-        let errors: Vec<Error> =
-            server_connections.values().map(|conn| conn.validate()).filter_map(Result::err).collect();
+        let errors: Vec<Error> = server_connections
+            .values()
+            .map(|conn| conn.validate(driver_name, driver_version))
+            .filter_map(Result::err)
+            .collect();
         if errors.len() == server_connections.len() {
             Err(ConnectionError::CloudAllNodesFailed {
                 errors: errors.into_iter().map(|err| err.to_string()).collect::<Vec<_>>().join("\n"),
@@ -267,8 +288,11 @@ impl ServerConnection {
         Ok(Self { address, background_runtime, open_sessions: Default::default(), request_transmitter })
     }
 
-    pub(crate) fn validate(&self) -> Result {
-        match self.request_blocking(Request::ConnectionOpen)? {
+    pub(crate) fn validate(&self, driver_name: &str, driver_version: &str) -> Result {
+        match self.request_blocking(Request::ConnectionOpen {
+            driver_name: driver_name.to_owned(),
+            driver_version: driver_version.to_owned(),
+        })? {
             Response::ConnectionOpen => Ok(()),
             other => Err(ConnectionError::UnexpectedResponse { response: format!("{other:?}") }.into()),
         }

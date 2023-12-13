@@ -40,7 +40,7 @@ use crate::{
 
 #[derive(Debug)]
 pub(super) enum Request {
-    ConnectionOpen,
+    ConnectionOpen { driver_name: String, driver_version: String },
 
     ServersAll,
 
