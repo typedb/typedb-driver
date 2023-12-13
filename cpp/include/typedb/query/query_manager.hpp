@@ -44,6 +44,18 @@ class QueryManager {
 public:
     ~QueryManager() = default;
 
+    [[nodiscard]] VoidFuture define(const std::string& query) const;
+    [[nodiscard]] VoidFuture undefine(const std::string& query) const;
+    [[nodiscard]] ConceptMapIterable get(const std::string& query) const;
+    [[nodiscard]] JSONIterable fetch(const std::string& query) const;
+    [[nodiscard]] ConceptMapIterable insert(const std::string& query) const;
+    [[nodiscard]] VoidFuture matchDelete(const std::string& query) const;
+    [[nodiscard]] ConceptMapIterable update(const std::string& query) const;
+    [[nodiscard]] AggregateFuture getAggregate(const std::string& query) const;
+    [[nodiscard]] ConceptMapGroupIterable getGroup(const std::string& query) const;
+    [[nodiscard]] ValueGroupIterable getGroupAggregate(const std::string& query) const;
+    [[nodiscard]] ExplanationIterable explain(const Explainable& explainable) const;
+
     [[nodiscard]] VoidFuture define(const std::string& query, const Options& options) const;
     [[nodiscard]] VoidFuture undefine(const std::string& query, const Options& options) const;
     [[nodiscard]] ConceptMapIterable get(const std::string& query, const Options& options) const;

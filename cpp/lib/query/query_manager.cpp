@@ -40,6 +40,50 @@ namespace TypeDB {
 QueryManager::QueryManager(TypeDB::Transaction* transaction)
     : transaction(transaction) {}
 
+VoidFuture QueryManager::define(const std::string& query) const {
+    define(query, Options());
+}
+
+VoidFuture QueryManager::undefine(const std::string& query) const {
+    undefine(query, Options());
+}
+
+ConceptMapIterable QueryManager::get(const std::string& query) const {
+    get(query, Options());
+}
+
+JSONIterable QueryManager::fetch(const std::string& query) const {
+    fetch(query, Options());
+}
+
+ConceptMapIterable QueryManager::insert(const std::string& query) const {
+    insert(query, Options());
+}
+
+VoidFuture QueryManager::matchDelete(const std::string& query) const {
+    matchDelete(query, Options());
+}
+
+ConceptMapIterable QueryManager::update(const std::string& query) const {
+    update(query, Options());
+}
+
+AggregateFuture QueryManager::getAggregate(const std::string& query) const {
+    getAggregate(query, Options());
+}
+
+ConceptMapGroupIterable QueryManager::getGroup(const std::string& query) const {
+    getGroup(query, Options());
+}
+
+ValueGroupIterable QueryManager::getGroupAggregate(const std::string& query) const {
+    getGroupAggregate(query, Options());
+}
+
+ExplanationIterable QueryManager::explain(const Explainable& explainable) const {
+    explain(explainable, Options());
+}
+
 VoidFuture QueryManager::define(const std::string& query, const Options& options) const {
     CHECK_NATIVE(transaction);
     CHECK_QUERY(query);
