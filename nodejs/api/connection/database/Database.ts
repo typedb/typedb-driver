@@ -25,13 +25,13 @@ export interface Database {
     /** The database name as a string. */
     readonly name: string;
 
-    /** The <code>Replica</code> instances for this database. _Only works in TypeDB Enterprise_ */
+    /** The <code>Replica</code> instances for this database. _Only works in TypeDB Cloud_ */
     readonly replicas: Replica[];
 
-    /** The primary replica for this database. _Only works in TypeDB Enterprise_*/
+    /** The primary replica for this database. _Only works in TypeDB Cloud_*/
     readonly primaryReplica: Replica;
 
-     /** The preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Enterprise_ */
+     /** The preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Cloud_ */
     readonly preferredReplica: Replica;
 
     /**

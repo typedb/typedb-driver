@@ -35,13 +35,13 @@ import {TypeDBDatabaseManagerImpl} from "./TypeDBDatabaseManagerImpl";
 import {TypeDBSessionImpl} from "./TypeDBSessionImpl";
 import {TypeDBStubImpl} from "./TypeDBStubImpl";
 import DRIVER_NOT_OPEN = ErrorMessage.Driver.DRIVER_NOT_OPEN;
-import ENTERPRISE_UNABLE_TO_CONNECT = ErrorMessage.Driver.ENTERPRISE_UNABLE_TO_CONNECT;
+import CLOUD_UNABLE_TO_CONNECT = ErrorMessage.Driver.CLOUD_UNABLE_TO_CONNECT;
 import SESSION_ID_EXISTS = ErrorMessage.Driver.SESSION_ID_EXISTS;
 import UNABLE_TO_CONNECT = ErrorMessage.Driver.UNABLE_TO_CONNECT;
 
 export class TypeDBDriverImpl implements TypeDBDriver {
     private _isOpen: boolean;
-    private readonly _isEnterprise: boolean;
+    private readonly _isCloud: boolean;
 
     private readonly _initAddresses: string[];
     private readonly _credential: TypeDBCredential;
@@ -60,7 +60,7 @@ export class TypeDBDriverImpl implements TypeDBDriver {
         this._credential = credential;
 
         this._isOpen = false;
-        this._isEnterprise = credential != null;
+        this._isCloud = credential != null;
         this._serverDrivers = new Map([]);
         this._databases = new TypeDBDatabaseManagerImpl(this);
         this._database_cache = {};
@@ -68,7 +68,7 @@ export class TypeDBDriverImpl implements TypeDBDriver {
     }
 
     async open(): Promise<TypeDBDriver> {
-        if (this._isEnterprise) return this.openEnterprise()
+        if (this._isCloud) return this.openCloud()
         else return this.openCore()
     }
 
@@ -82,8 +82,8 @@ export class TypeDBDriverImpl implements TypeDBDriver {
         return this;
     }
 
-    private async openEnterprise(): Promise<TypeDBDriver> {
-        const serverAddresses = await this.fetchEnterpriseServerAddresses();
+    private async openCloud(): Promise<TypeDBDriver> {
+        const serverAddresses = await this.fetchCloudServerAddresses();
         const openReqs: Promise<void>[] = []
         for (const addr of serverAddresses) {
             const serverStub = new TypeDBStubImpl(addr, this._credential);
@@ -93,14 +93,14 @@ export class TypeDBDriverImpl implements TypeDBDriver {
         try {
             await Promise.any(openReqs);
         } catch (e) {
-            throw new TypeDBDriverError(ENTERPRISE_UNABLE_TO_CONNECT.message(e));
+            throw new TypeDBDriverError(CLOUD_UNABLE_TO_CONNECT.message(e));
         }
         this._userManager = new UserManagerImpl(this);
         this._isOpen = true;
         return this;
     }
 
-    private async fetchEnterpriseServerAddresses(): Promise<string[]> {
+    private async fetchCloudServerAddresses(): Promise<string[]> {
         for (const address of this._initAddresses) {
             try {
                 const stub = new TypeDBStubImpl(address, this._credential);
@@ -109,18 +109,18 @@ export class TypeDBDriverImpl implements TypeDBDriver {
                 const members = res.servers.map(x => x.address);
                 return members;
             } catch (e) {
-                console.error(`Fetching enterprise servers from ${address} failed.`, e);
+                console.error(`Fetching cloud servers from ${address} failed.`, e);
             }
         }
-        throw new TypeDBDriverError(ENTERPRISE_UNABLE_TO_CONNECT.message(this._initAddresses.join(",")));
+        throw new TypeDBDriverError(CLOUD_UNABLE_TO_CONNECT.message(this._initAddresses.join(",")));
     }
 
     isOpen(): boolean {
         return this._isOpen;
     }
 
-    isEnterprise(): boolean {
-        return this._isEnterprise;
+    isCloud(): boolean {
+        return this._isCloud;
     }
 
     async session(databaseName: string, type: SessionType, options?: TypeDBOptions): Promise<TypeDBSessionImpl> {

@@ -31,15 +31,15 @@ Result
 connection.force_close()
 ----
 
-[#_struct_Connection_is_enterprise__]
-==== is_enterprise
+[#_struct_Connection_is_cloud__]
+==== is_cloud
 
 [source,rust]
 ----
-pub fn is_enterprise(&self) -> bool
+pub fn is_cloud(&self) -> bool
 ----
 
-Check if the connection is to an Enterprise server.
+Check if the connection is to an Cloud server.
 
 [caption=""]
 .Returns
@@ -52,7 +52,7 @@ bool
 .Code examples
 [source,rust]
 ----
-connection.is_enterprise()
+connection.is_cloud()
 ----
 
 [#_struct_Connection_is_open__]
@@ -77,6 +77,53 @@ bool
 [source,rust]
 ----
 connection.is_open()
+----
+
+[#_struct_Connection_new_cloud__init_addresses__T___credential_Credential]
+==== new_cloud
+
+[source,rust]
+----
+pub fn new_cloud<T: AsRef<str> + Sync>(
+    init_addresses: &[T],
+    credential: Credential
+) -> Result<Self>
+----
+
+Creates a new TypeDB Cloud connection.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `init_addresses` a| Addresses (host:port) on which TypeDB Cloud nodes are running a| `&[T]`
+a| `credential` a| User credential and TLS encryption setting a| `Credential`
+|===
+
+[caption=""]
+.Returns
+[source,rust]
+----
+Result<Self>
+----
+
+[caption=""]
+.Code examples
+[source,rust]
+----
+Connection::new_cloud(
+    &["localhost:11729", "localhost:21729", "localhost:31729"],
+    Credential::with_tls(
+        "admin",
+        "password",
+        Some(&PathBuf::from(
+            std::env::var("ROOT_CA")
+                .expect("ROOT_CA environment variable needs to be set for cloud tests to run"),
+        )),
+    )?,
+)
 ----
 
 [#_struct_Connection_new_core__address_impl_AsRef_str_]
@@ -110,53 +157,6 @@ Result<Self>
 [source,rust]
 ----
 Connection::new_core("127.0.0.1:1729")
-----
-
-[#_struct_Connection_new_enterprise__init_addresses__T___credential_Credential]
-==== new_enterprise
-
-[source,rust]
-----
-pub fn new_enterprise<T: AsRef<str> + Sync>(
-    init_addresses: &[T],
-    credential: Credential
-) -> Result<Self>
-----
-
-Creates a new TypeDB Enterprise connection.
-
-[caption=""]
-.Input parameters
-[cols="~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type
-a| `init_addresses` a| Addresses (host:port) on which TypeDB Enterprise nodes are running a| `&[T]`
-a| `credential` a| User credential and TLS encryption setting a| `Credential`
-|===
-
-[caption=""]
-.Returns
-[source,rust]
-----
-Result<Self>
-----
-
-[caption=""]
-.Code examples
-[source,rust]
-----
-Connection::new_enterprise(
-    &["localhost:11729", "localhost:21729", "localhost:31729"],
-    Credential::with_tls(
-        "admin",
-        "password",
-        Some(&PathBuf::from(
-            std::env::var("ROOT_CA")
-                .expect("ROOT_CA environment variable needs to be set for enterprise tests to run"),
-        )),
-    )?,
-)
 ----
 
 // end::methods[]

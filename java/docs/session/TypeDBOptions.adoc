@@ -329,7 +329,7 @@ options.readAnyReplica();
 public TypeDBOptions readAnyReplica​(boolean readAnyReplica)
 ----
 
-Explicitly enables or disables reading data from any replica. If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Enterprise. 
+Explicitly enables or disables reading data from any replica. If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Cloud. 
 
 
 [caption=""]

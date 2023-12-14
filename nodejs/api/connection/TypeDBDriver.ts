@@ -55,12 +55,12 @@ export interface TypeDBDriver {
 
     /**
      * The <code>UserManager</code> instance for this connection, providing access to user management methods.
-     * Only for TypeDB Enterprise.
+     * Only for TypeDB Cloud.
      */
     readonly users: UserManager;
 
     /**
-     * Returns the logged-in user for the connection. Only for TypeDB Enterprise.
+     * Returns the logged-in user for the connection. Only for TypeDB Cloud.
      *
      * ### Examples
      *

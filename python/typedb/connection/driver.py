@@ -23,7 +23,7 @@ from __future__ import annotations
 
 from typing import Optional, TYPE_CHECKING
 
-from typedb.native_driver_wrapper import connection_open_core, connection_open_enterprise, connection_is_open, \
+from typedb.native_driver_wrapper import connection_open_core, connection_open_cloud, connection_is_open, \
     connection_force_close, Connection as NativeConnection, TypeDBDriverExceptionNative
 
 from typedb.api.connection.driver import TypeDBDriver
@@ -45,7 +45,7 @@ class _Driver(TypeDBDriver, NativeWrapper[NativeConnection]):
     def __init__(self, addresses: list[str], credential: Optional[TypeDBCredential] = None):
         if credential:
             try:
-                native_connection = connection_open_enterprise(addresses, credential.native_object)
+                native_connection = connection_open_cloud(addresses, credential.native_object)
             except TypeDBDriverExceptionNative as e:
                 raise TypeDBDriverException.of(e)
         else:

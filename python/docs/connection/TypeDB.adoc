@@ -2,6 +2,30 @@
 === TypeDB
 
 // tag::methods[]
+[#_TypeDB_cloud_driver__addresses_Iterable_str___str__credential_TypeDBCredential]
+==== cloud_driver
+
+[source,python]
+----
+static cloud_driver(addresses: Iterable[str] | str, credential: TypeDBCredential) -> TypeDBDriver
+----
+
+Creates a connection to TypeDB Cloud, authenticating with the provided credentials.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type |Default Value
+a| `addresses` a|  – a| `Iterable[str] \| str` a| 
+a| `credential` a|  – a| `TypeDBCredential` a| 
+|===
+
+[caption=""]
+.Returns
+`TypeDBDriver`
+
 [#_TypeDB_core_driver__address_str]
 ==== core_driver
 
@@ -19,30 +43,6 @@ Creates a connection to TypeDB.
 |===
 |Name |Description |Type |Default Value
 a| `address` a| Address of the TypeDB server. a| `str` a| 
-|===
-
-[caption=""]
-.Returns
-`TypeDBDriver`
-
-[#_TypeDB_enterprise_driver__addresses_Iterable_str___str__credential_TypeDBCredential]
-==== enterprise_driver
-
-[source,python]
-----
-static enterprise_driver(addresses: Iterable[str] | str, credential: TypeDBCredential) -> TypeDBDriver
-----
-
-Creates a connection to TypeDB Enterprise, authenticating with the provided credentials.
-
-[caption=""]
-.Input parameters
-[cols="~,~,~,~"]
-[options="header"]
-|===
-|Name |Description |Type |Default Value
-a| `addresses` a|  – a| `Iterable[str] \| str` a| 
-a| `credential` a|  – a| `TypeDBCredential` a| 
 |===
 
 [caption=""]

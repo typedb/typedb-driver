@@ -39,7 +39,7 @@ use crate::test_for_each_arg;
 test_for_each_arg! {
     {
         core => common::new_core_connection().unwrap(),
-        enterprise => common::new_enterprise_connection().unwrap(),
+        cloud => common::new_cloud_connection().unwrap(),
     }
 
     async fn basic(connection: Connection) -> typedb_driver::Result {

@@ -30,7 +30,7 @@ import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {ErrorMessage} from "../common/errors/ErrorMessage";
 import UNABLE_TO_CONNECT = ErrorMessage.Driver.UNABLE_TO_CONNECT;
 import DATABASE_DOES_NOT_EXIST = ErrorMessage.Driver.DATABASE_DOES_NOT_EXIST;
-import ENTERPRISE_REPLICA_NOT_PRIMARY = ErrorMessage.Driver.ENTERPRISE_REPLICA_NOT_PRIMARY;
+import CLOUD_REPLICA_NOT_PRIMARY = ErrorMessage.Driver.CLOUD_REPLICA_NOT_PRIMARY;
 
 const PRIMARY_REPLICA_TASK_MAX_RETRIES = 10;
 const FETCH_REPLICAS_MAX_RETRIES = 10;
@@ -121,7 +121,7 @@ export class TypeDBDatabaseImpl implements Database {
         try {
             return await this.runOnAnyReplica(task);
         } catch (e) {
-            if (e instanceof TypeDBDriverError && ENTERPRISE_REPLICA_NOT_PRIMARY === e.messageTemplate) {
+            if (e instanceof TypeDBDriverError && CLOUD_REPLICA_NOT_PRIMARY === e.messageTemplate) {
                 return this.runOnPrimaryReplica(task);
             } else throw e;
         }
@@ -149,7 +149,7 @@ export class TypeDBDatabaseImpl implements Database {
                 return await task(this._driver.serverDrivers.get(this.primaryReplica.address), this.primaryReplica.database);
             } catch (e) {
                 if (e instanceof TypeDBDriverError &&
-                    (UNABLE_TO_CONNECT === e.messageTemplate || ENTERPRISE_REPLICA_NOT_PRIMARY === e.messageTemplate)
+                    (UNABLE_TO_CONNECT === e.messageTemplate || CLOUD_REPLICA_NOT_PRIMARY === e.messageTemplate)
                 ) {
                     await this.waitForPrimaryReplicaSelection();
                     await this.seekPrimaryReplica();

@@ -51,7 +51,16 @@ NPM package: https://www.npmjs.com/package/typedb-driver
 Documentation: https://typedb.com/docs/clients/nodejs-driver
 
 ```
-npm install typedb-driver@{version}
+npm install typedb-driver@
 ```
+
+### C++ driver
+
+Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/{version}
+
+### C driver
+
+Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/{version}
+
 
 { release notes }

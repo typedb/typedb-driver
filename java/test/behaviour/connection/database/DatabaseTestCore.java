@@ -45,7 +45,7 @@ public class DatabaseTestCore extends BehaviourTest {
     //
     // 4) Ensure 'Target Expression' is set correctly:
     //    a) Use '//<this>/<package>/<name>:test-core' to test against typedb
-    //    b) Use '//<this>/<package>/<name>:test-enterprise' to test against typedb-enterprise
+    //    b) Use '//<this>/<package>/<name>:test-cloud' to test against typedb-cloud
     //
     // 5) Update 'Bazel Flags':
     //    a) Remove the line that says: '--test_filter=com.vaticle.typedb.driver.*'

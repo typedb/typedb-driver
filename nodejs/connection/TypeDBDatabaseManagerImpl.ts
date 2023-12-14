@@ -26,8 +26,8 @@ import {TypeDBDriverError} from "../common/errors/TypeDBDriverError";
 import {RequestBuilder} from "../common/rpc/RequestBuilder";
 import {ServerDriver, TypeDBDriverImpl} from "./TypeDBDriverImpl";
 import {TypeDBDatabaseImpl} from "./TypeDBDatabaseImpl";
-import ENTERPRISE_ALL_NODES_FAILED = ErrorMessage.Driver.ENTERPRISE_ALL_NODES_FAILED;
-import ENTERPRISE_REPLICA_NOT_PRIMARY = ErrorMessage.Driver.ENTERPRISE_REPLICA_NOT_PRIMARY;
+import CLOUD_ALL_NODES_FAILED = ErrorMessage.Driver.CLOUD_ALL_NODES_FAILED;
+import CLOUD_REPLICA_NOT_PRIMARY = ErrorMessage.Driver.CLOUD_REPLICA_NOT_PRIMARY;
 import DB_DOES_NOT_EXIST = ErrorMessage.Driver.DATABASE_DOES_NOT_EXIST;
 
 export class TypeDBDatabaseManagerImpl implements DatabaseManager {
@@ -70,7 +70,7 @@ export class TypeDBDatabaseManagerImpl implements DatabaseManager {
                 errors += `- ${serverDriver.address}: ${e}\n`;
             }
         }
-        throw new TypeDBDriverError(ENTERPRISE_ALL_NODES_FAILED.message(errors));
+        throw new TypeDBDriverError(CLOUD_ALL_NODES_FAILED.message(errors));
     }
 
     private async runFailsafe<T>(name: string, task: (driver: ServerDriver) => Promise<T>): Promise<T> {
@@ -79,11 +79,11 @@ export class TypeDBDatabaseManagerImpl implements DatabaseManager {
             try {
                 return await task(serverDriver);
             } catch (e) {
-                if (e instanceof TypeDBDriverError && ENTERPRISE_REPLICA_NOT_PRIMARY === e.messageTemplate) {
+                if (e instanceof TypeDBDriverError && CLOUD_REPLICA_NOT_PRIMARY === e.messageTemplate) {
                     return await (await TypeDBDatabaseImpl.get(name, this._driver)).runOnPrimaryReplica(task);
                 } else errors += `- ${serverDriver.address}: ${e}\n`;
             }
         }
-        throw new TypeDBDriverError(ENTERPRISE_ALL_NODES_FAILED.message(errors));
+        throw new TypeDBDriverError(CLOUD_ALL_NODES_FAILED.message(errors));
     }
 }

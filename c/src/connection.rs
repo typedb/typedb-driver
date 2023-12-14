@@ -34,12 +34,12 @@ pub extern "C" fn connection_open_core(address: *const c_char) -> *mut Connectio
 }
 
 #[no_mangle]
-pub extern "C" fn connection_open_enterprise(
+pub extern "C" fn connection_open_cloud(
     addresses: *const *const c_char,
     credential: *const Credential,
 ) -> *mut Connection {
     let addresses: Vec<&str> = string_array_view(addresses).collect();
-    try_release(Connection::new_enterprise(&addresses, borrow(credential).clone()))
+    try_release(Connection::new_cloud(&addresses, borrow(credential).clone()))
 }
 
 #[no_mangle]

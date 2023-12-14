@@ -30,7 +30,7 @@ use super::{
 };
 
 #[no_mangle]
-pub extern "C" fn user_manager_new(connection: *mut Connection) -> *mut UserManager {
+pub extern "C" fn user_manager_new(connection: *const Connection) -> *mut UserManager {
     release(UserManager::new(borrow(connection).clone()))
 }
 

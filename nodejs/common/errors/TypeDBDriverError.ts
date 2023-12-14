@@ -22,8 +22,8 @@
 import {ServiceError} from "@grpc/grpc-js";
 import {Status} from "@grpc/grpc-js/build/src/constants";
 import {ErrorMessage} from "./ErrorMessage";
-import ENTERPRISE_REPLICA_NOT_PRIMARY = ErrorMessage.Driver.ENTERPRISE_REPLICA_NOT_PRIMARY;
-import ENTERPRISE_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Driver.ENTERPRISE_TOKEN_CREDENTIAL_INVALID;
+import CLOUD_REPLICA_NOT_PRIMARY = ErrorMessage.Driver.CLOUD_REPLICA_NOT_PRIMARY;
+import CLOUD_TOKEN_CREDENTIAL_INVALID = ErrorMessage.Driver.CLOUD_TOKEN_CREDENTIAL_INVALID;
 import UNABLE_TO_CONNECT = ErrorMessage.Driver.UNABLE_TO_CONNECT;
 import RPC_METHOD_UNAVAILABLE = ErrorMessage.Driver.RPC_METHOD_UNAVAILABLE;
 
@@ -32,7 +32,8 @@ function isReplicaNotPrimaryError(e: ServiceError): boolean {
 }
 
 function isTokenCredentialInvalidError(e: ServiceError): boolean {
-    return e.message.includes("[CLS08]");
+    // TODO: CLS and ENT are synonyms which we can simplify on protocol change
+    return e.message.includes("[CLS08]") || e.message.includes("[ENT08]");
 }
 
 function isServiceError(e: Error | ServiceError): e is ServiceError {
@@ -58,11 +59,11 @@ export class TypeDBDriverError extends Error {
                 super(UNABLE_TO_CONNECT.message());
                 this._messageTemplate = UNABLE_TO_CONNECT;
             } else if (isReplicaNotPrimaryError(error)) {
-                super(ENTERPRISE_REPLICA_NOT_PRIMARY.message());
-                this._messageTemplate = ENTERPRISE_REPLICA_NOT_PRIMARY;
+                super(CLOUD_REPLICA_NOT_PRIMARY.message());
+                this._messageTemplate = CLOUD_REPLICA_NOT_PRIMARY;
             } else if (isTokenCredentialInvalidError(error)) {
-                super(ENTERPRISE_TOKEN_CREDENTIAL_INVALID.message());
-                this._messageTemplate = ENTERPRISE_TOKEN_CREDENTIAL_INVALID;
+                super(CLOUD_TOKEN_CREDENTIAL_INVALID.message());
+                this._messageTemplate = CLOUD_TOKEN_CREDENTIAL_INVALID;
             } else if (error.code === Status.INTERNAL) super(error.details)
             else super(error.toString());
         } else super(error.toString());

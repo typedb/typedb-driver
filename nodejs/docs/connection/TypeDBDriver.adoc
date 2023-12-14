@@ -9,7 +9,7 @@
 |===
 |Name |Type |Description
 a| `databases` a| `DatabaseManager` a| The DatabaseManager for this connection, providing access to database management methods.
-a| `users` a| `UserManager` a| The UserManager instance for this connection, providing access to user management methods. Only for TypeDB Enterprise.
+a| `users` a| `UserManager` a| The UserManager instance for this connection, providing access to user management methods. Only for TypeDB Cloud.
 |===
 // end::properties[]
 
@@ -89,7 +89,7 @@ a| `options` a|  a| `TypeDBOptions`
 user(): Promise<User>
 ----
 
-Returns the logged-in user for the connection. Only for TypeDB Enterprise.
+Returns the logged-in user for the connection. Only for TypeDB Cloud.
 
 [caption=""]
 .Returns

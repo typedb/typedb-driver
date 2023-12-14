@@ -81,23 +81,23 @@ typedb_java_test(
 )
 
 typedb_java_test(
-    name = "test-enterprise",
+    name = "test-cloud",
     srcs = [
-        "DatabaseTestEnterprise.java",
+        "DatabaseTestCloud.java",
     ],
-    test_class = "com.vaticle.typedb.driver.test.behaviour.connection.database.DatabaseTestEnterprise",
+    test_class = "com.vaticle.typedb.driver.test.behaviour.connection.database.DatabaseTestCloud",
     data = [
         "@vaticle_typedb_behaviour//connection:database.feature",
     ],
     server_artifacts = {
-        "@vaticle_bazel_distribution//platform:is_linux_arm64": "@vaticle_typedb_enterprise_artifact_linux-arm64//file",
-        "@vaticle_bazel_distribution//platform:is_linux_x86_64": "@vaticle_typedb_enterprise_artifact_linux-x86_64//file",
-        "@vaticle_bazel_distribution//platform:is_mac_arm64": "@vaticle_typedb_enterprise_artifact_mac-arm64//file",
-        "@vaticle_bazel_distribution//platform:is_mac_x86_64": "@vaticle_typedb_enterprise_artifact_mac-x86_64//file",
-        "@vaticle_bazel_distribution//platform:is_windows_x86_64": "@vaticle_typedb_enterprise_artifact_windows-x86_64//file",
+        "@vaticle_bazel_distribution//platform:is_linux_arm64": "@vaticle_typedb_cloud_artifact_linux-arm64//file",
+        "@vaticle_bazel_distribution//platform:is_linux_x86_64": "@vaticle_typedb_cloud_artifact_linux-x86_64//file",
+        "@vaticle_bazel_distribution//platform:is_mac_arm64": "@vaticle_typedb_cloud_artifact_mac-arm64//file",
+        "@vaticle_bazel_distribution//platform:is_mac_x86_64": "@vaticle_typedb_cloud_artifact_mac-x86_64//file",
+        "@vaticle_bazel_distribution//platform:is_windows_x86_64": "@vaticle_typedb_cloud_artifact_windows-x86_64//file",
     },
     runtime_deps = [
-        "//java/test/behaviour/connection:steps-enterprise",
+        "//java/test/behaviour/connection:steps-cloud",
 
         ":steps",
         "//java/test/behaviour/connection/session:steps",

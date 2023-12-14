@@ -36,8 +36,8 @@ py_library(
 )
 
 py_library(
-    name = "enterprise",
-    srcs = ["enterprise/environment.py"],
+    name = "cloud",
+    srcs = ["cloud/environment.py"],
     deps = [],
 )
 

@@ -235,9 +235,11 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 
 %newobject concept_map_group_get_owner;
 %newobject concept_map_group_get_concept_maps;
+%newobject concept_map_group_to_string;
 
 %newobject value_group_get_owner;
 %newobject value_group_get_value;
+%newobject value_group_to_string;
 
 %newobject string_iterator_next;
 
@@ -338,7 +340,7 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 %newobject role_type_get_player_instances;
 
 %newobject connection_open_core;
-%newobject connection_open_enterprise;
+%newobject connection_open_cloud;
 
 %newobject credential_new;
 

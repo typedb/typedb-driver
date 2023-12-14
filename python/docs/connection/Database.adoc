@@ -42,7 +42,7 @@ database.delete()
 preferred_replica() -> Replica | None
 ----
 
-Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Enterprise_
+Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica. _Only works in TypeDB Cloud_
 
 [caption=""]
 .Returns
@@ -63,7 +63,7 @@ database.preferred_replica()
 primary_replica() -> Replica | None
 ----
 
-Returns the primary replica for this database. _Only works in TypeDB Enterprise_
+Returns the primary replica for this database. _Only works in TypeDB Cloud_
 
 [caption=""]
 .Returns
@@ -84,7 +84,7 @@ database.primary_replica()
 replicas() -> Set[Replica]
 ----
 
-Set of ``Replica`` instances for this database. _Only works in TypeDB Enterprise_
+Set of ``Replica`` instances for this database. _Only works in TypeDB Cloud_
 
 [caption=""]
 .Returns
