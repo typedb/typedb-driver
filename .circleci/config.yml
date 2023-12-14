@@ -460,7 +460,7 @@ commands:
           )
           tool/test/start-core-server.sh
           sleep 3
-          (cd test_assembly_cpp && LD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
+          (cd test_assembly_cpp && DYLD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
           tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
   
