@@ -328,14 +328,14 @@ commands:
           export ASSEMBLY=typedb-driver-clib-linux-<<parameters.target-arch>>
           mkdir -p test_assembly_clib
           tar -xf bazel-bin/c/$ASSEMBLY.tar.gz --directory test_assembly_clib
-          ( 
-            cd test_assembly_clib &&
+           
+          cd test_assembly_clib &&
             cmake ../c/tests/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY &&
             cmake --build . --config release
-          )       
+
           tool/test/start-core-server.sh
           sleep 3
-          (cd test_assembly_clib && LD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
+          cd test_assembly_clib && LD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
 
@@ -350,14 +350,14 @@ commands:
           export ASSEMBLY=typedb-driver-clib-mac-<<parameters.target-arch>>
           mkdir -p test_assembly_clib
           tar -xf bazel-bin/c/$ASSEMBLY.zip --directory test_assembly_clib
-          ( 
-            cd test_assembly_clib &&
+
+          cd test_assembly_clib &&
             cmake ../c/tests/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY  -DCMAKE_OSX_ARCHITECTURES=<<parameters.target-arch>> &&
             cmake --build . --config release
-          )
+          
           tool/test/start-core-server.sh
           sleep 3
-          (cd test_assembly_clib && DYLD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
+          cd test_assembly_clib && DYLD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
 
@@ -431,14 +431,14 @@ commands:
           export ASSEMBLY=typedb-driver-cpp-linux-<<parameters.target-arch>>
           mkdir -p test_assembly_cpp
           tar -xf bazel-bin/cpp/$ASSEMBLY.tar.gz --directory test_assembly_cpp
-          (
-            cd test_assembly_cpp &&
+          
+          cd test_assembly_cpp &&
             cmake ../cpp/test/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY && 
             cmake --build . --config release
-          )
+          
           tool/test/start-core-server.sh
           sleep 3
-          ( cd test_assembly_cpp && LD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
+          cd test_assembly_cpp && LD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
 
@@ -453,14 +453,14 @@ commands:
           export ASSEMBLY=typedb-driver-cpp-mac-<<parameters.target-arch>>
           mkdir -p test_assembly_cpp
           tar -xf bazel-bin/cpp/$ASSEMBLY.zip --directory test_assembly_cpp
-          (
-            cd test_assembly_cpp &&
+          
+          cd test_assembly_cpp &&
             cmake ../cpp/test/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY -DCMAKE_OSX_ARCHITECTURES=<<parameters.target-arch>> &&
             cmake --build . --config release
-          )
+          
           tool/test/start-core-server.sh
           sleep 3
-          (cd test_assembly_cpp && DYLD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
+          cd test_assembly_cpp && DYLD_LIBRARY_PATH=$ASSEMBLY/lib ./test_assembly && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
   
