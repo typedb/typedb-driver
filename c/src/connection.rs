@@ -33,11 +33,7 @@ static DRIVER_VERSION: &str = include_str!("VERSION");
 
 #[no_mangle]
 pub extern "C" fn connection_open_core(address: *const c_char) -> *mut Connection {
-    try_release(Connection::new_core_with_id(
-        string_view(address),
-        DEFAULT_NAME,
-        DRIVER_VERSION,
-    ))
+    try_release(Connection::new_core_with_id(string_view(address), DEFAULT_NAME, DRIVER_VERSION))
 }
 
 #[no_mangle]
@@ -59,12 +55,7 @@ pub extern "C" fn connection_open_cloud(
     credential: *const Credential,
 ) -> *mut Connection {
     let addresses: Vec<&str> = string_array_view(addresses).collect();
-    try_release(Connection::new_cloud_with_id(
-        &addresses,
-        borrow(credential).clone(),
-        DEFAULT_NAME,
-        DRIVER_VERSION,
-    ))
+    try_release(Connection::new_cloud_with_id(&addresses, borrow(credential).clone(), DEFAULT_NAME, DRIVER_VERSION))
 }
 
 #[no_mangle]
