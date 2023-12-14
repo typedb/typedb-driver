@@ -32,6 +32,9 @@ namespace TypeDB {
 template <typename NATIVE_ITER, typename NATIVE_T, typename T, typename HELPER>
 class Iterable;
 
+/**
+ * \private
+*/
 template <typename NATIVE_ITER, typename NATIVE_T, typename T>
 class IteratorHelper;
 
@@ -166,6 +169,9 @@ private:
     NativePointer<NATIVE_ITER> iteratorNative;
 };
 
+/**
+ * \internal
+*/
 template <typename NATIVE_ITER, typename NATIVE_T, typename T>
 class IteratorHelper {
     using SELF = IteratorHelper<NATIVE_ITER, NATIVE_T, T>;

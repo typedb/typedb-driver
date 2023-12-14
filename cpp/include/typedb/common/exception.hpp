@@ -45,11 +45,28 @@ public:
 
     /**
      * Retrieves the error code.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * try { ... }
+     * catch (TypeDB::DriverException& e){
+     *     if ("[CXN11]" == e.code()) { ... } 
+     * }
+     * </pre>
     */
     const std::string_view code();
 
     /**
      * Retrieves the descriptive error message.
+     * 
+     * <h3>Examples</h3>
+     * <pre>
+     * try { ... }
+     * catch (TypeDB::DriverException& e){
+     *     logError(e.message());
+     *     throw e;
+     * }
+     * </pre>
     */
     const std::string_view message();
 

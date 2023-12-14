@@ -83,6 +83,9 @@ private:
     NativePointer<NATIVE_PROMISE> promiseNative;
 };
 
+/**
+ * \private
+*/
 template <typename RETURN, typename NATIVE_PROMISE>
 class FutureHelper {
     using SELF = FutureHelper<RETURN, NATIVE_PROMISE>;
