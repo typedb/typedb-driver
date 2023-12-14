@@ -457,7 +457,7 @@ commands:
           mkdir -p test_assembly_cpp
           tar -xf bazel-bin/cpp/$ASSEMBLY.zip --directory test_assembly_cpp
           pushd test_assembly_cpp
-            cmake ../cpp/test/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY &&
+            cmake ../cpp/test/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY -DCMAKE_OSX_ARCHITECTURES=<<parameters.target-arch>> &&
             cmake --build . --config release
           popd
           tool/test/start-core-server.sh
