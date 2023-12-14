@@ -37,7 +37,7 @@ void delete_if_exists(const TypeDB::Driver& driver, const std::string& name) {
     }
 }
 
-TEST(TestConceptAPI, TestData) {
+TEST(TestDatabaseManager, TestCreateTwice) {
     std::string dbName = "hello_from_cpp";
     TypeDB::Driver driver = TypeDB::Driver::coreDriver("127.0.0.1:1729");
     delete_if_exists(driver, dbName);
