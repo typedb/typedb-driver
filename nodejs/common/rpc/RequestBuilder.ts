@@ -264,13 +264,14 @@ export namespace RequestBuilder {
     export namespace Connection {
         export function openReq() {
             const VERSION_FILE_PATH = path.resolve(__dirname, "../../VERSION");
+            const DRIVER_NAME = "NodeJS";
             let DRIVER_VERSION: string;
             try {
                 DRIVER_VERSION = fs.readFileSync(VERSION_FILE_PATH).toString().trim();
             } catch {
                 DRIVER_VERSION = "UNKNOWN";
             }
-            return new ConnectionOpenReq({version: Version.VERSION, driver_name: "NodeJS", driver_version: DRIVER_VERSION})
+            return new ConnectionOpenReq({version: Version.VERSION, driver_name: DRIVER_NAME, driver_version: DRIVER_VERSION})
         }
     }
 

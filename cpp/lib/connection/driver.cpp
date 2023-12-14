@@ -40,9 +40,10 @@ _native::Credential* Credential::getNative() const {
     return credentialNative.get();
 }
 
+const char* const DRIVER_NAME = "C++";
 
 Driver Driver::coreDriver(const std::string& coreAddress) {
-    auto p = _native::connection_open_core_with_id(coreAddress.c_str(), "C++", TYPEDB_DRIVER_VERSION);
+    auto p = _native::connection_open_core_with_id(coreAddress.c_str(), DRIVER_NAME, TYPEDB_DRIVER_VERSION);
     DriverException::check_and_throw();
     return Driver(p);
 }
@@ -52,7 +53,7 @@ Driver Driver::cloudDriver(const std::vector<std::string>& cloudAddresses, const
     for (auto& addr : cloudAddresses)
         addressesNative.push_back(addr.c_str());
     addressesNative.push_back(nullptr);
-    auto p = _native::connection_open_cloud_with_id(addressesNative.data(), credential.getNative(), "C++", TYPEDB_DRIVER_VERSION);
+    auto p = _native::connection_open_cloud_with_id(addressesNative.data(), credential.getNative(), DRIVER_NAME, TYPEDB_DRIVER_VERSION);
     DriverException::check_and_throw();
     return Driver(p);
 }
