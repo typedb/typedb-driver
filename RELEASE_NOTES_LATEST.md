@@ -9,7 +9,7 @@ Documentation: https://typedb.com/docs/clients/rust-driver
 
 
 ```sh
-cargo add typedb-driver@2.25.8
+cargo add typedb-driver@2.26.0
 ```
 
 
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/clients/java-driver
     <dependency>
         <groupid>com.vaticle.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>2.25.8</version>
+        <version>2.26.0</version>
     </dependency>
 </dependencies>
 ```
@@ -42,7 +42,7 @@ Documentation: https://typedb.com/docs/clients/python-driver
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==2.25.8
+pip install typedb-driver==2.26.0
 ```
 
 ### NodeJS driver
@@ -51,83 +51,73 @@ NPM package: https://www.npmjs.com/package/typedb-driver
 Documentation: https://typedb.com/docs/clients/nodejs-driver
 
 ```
-npm install typedb-driver@2.25.8
+npm install typedb-driver@
 ```
 
-## API Changes
+### C++ driver
 
-1. 'Fetch' attribute value type moves from the outer layer to the 'type' - see 'Code Refactors'
-2. TypeDB Core sessions automatically and lazily reconnect on network failure or timeout on the server-side
+Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/2.26.0
+
+### C driver
+
+Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/2.26.0
+
 
 
 ## New Features
-- **Session callbacks: on reopen, persistent on close; FFI bug fixes**
+- **Introduce C++ driver**
+  Introduce the C++ driver for TypeDB. It is built against the C++17 standard and distributed as an archive containing the headers (under `/include` & a shared library under `/lib`). 
   
-  **Session callbacks**
-  - All drivers:
-    - implement session reopen callbacks, executed when a session closed on the server side successfully reconnects;
-    - core session now attempts to reconnect if it is closed on the remote server, in line with cloud behaviour;
-    - `Session::on_close()` callbacks are now executed each time the session closes (rather than just once);
-  - NodeJS:
-    - implement session and transaction callbacks (`onClose()`, `Session::onReopen()`);
+  **Usage:** As usual, add the headers paths to your include path in the compile step & the library to your link step. For windows, the 'import-lib' `typedb-driver-cpp-<platform>.if.lib` is included to link against.
   
-  **Miscellaneous fixes**
-  - Java, Python:
-    - prevent exceptions in callbacks from crashing the native layer;
-    - fix the issue where static root types could not be used with Concept APi;
-    - reintroduce `ConceptMap.map()` to retrieve the full mapping;
-  - Rust:
-    - convert error messages from tuple enum variants to struct, allowing the fields to be named;
-  - All drivers:
-    -  fix the issue where session closed on remote server would not register automatically on the client side until a transaction open attempt.
+  **Architecture:** The C++ driver is a thin wrapper around the TypeDB rust driver, introducing classes for a more intuitive interface. Each C++ object holds a unique pointer to the corresponding native rust object and is the unique owner of that rust object. To ensure this, we enforce move-semantics on the C++ objects. The rust object is freed when the C++ object owning it is destructed. Any error encountered will throw a `TypeDB::DriverException`. Note that methods which return `Iterable` or `Future` which encounter a server-side error will only throw when they are evaluated (using `begin` or `get` respectively).
+  
+  **Example:**
+  ```cpp
+  // All files are included from typedb.hpp
+  #include <typedb.hpp>
+  
+  int main() {
+      TypeDB::Driver driver = TypeDB::Driver::coreDriver("127.0.0.1:1729");
+      std::string dbName = "move-example";
+      TypeDB::Driver driver = TypeDB::Driver::coreDriver("127.0.0.1:1729");
+  
+      driver.databases.create(dbName); 
+      TypeDB::Database db = driver.databases.get(dbName);
+      // Database db1 = db; // Copying is disabled: Produces a compiler error.
+      TypeDB::Database db1 = std::move(db); // Moves ownership from db to db1
+      try {
+          std::cout << db.name() << std::endl; // db is no longer valid
+      } catch (TypeDB::DriverException e) {
+          // C++ Internal Error: The object does not have a valid native handle. It may have been:  uninitialised, moved or disposed
+          std::cerr << "Caught exception: " << e.message() << std::endl;
+      }
+      std::cout << "db.name(): " << db1.name() << std::endl; // Ok: Prints 'move-objects'
+      return 0;
+  }
+  ```
   
   
 
 ## Bugs Fixed
-
+- **Java JNI library loading: fallback when platform not specified**
+  
+  Previously, the JNI library would be selected based on if the containing JAR contains the expected platform string. When TypeDB Driver Java is repackaged by the end user, the JNI library is relocated and is likely missing the platform specification in its path. Now, if only one native library candidate is found in classpath, we attempt to use that rather than fail.
+  
+  
 
 ## Code Refactors
-- **Fetch value type**
+- **Replace all instances of 'enterprise' with 'cloud'**
   
-  We update the expected output of TypeQL Fetch queries: attribute type serialization now includes its value_type.
-  This change makes the output symmetric between raw values and attributes.
-  
-  Old output format:
-  ```json
-  {
-      "attribute_type": { "label": "T", "root": "attribute" },
-      "raw_value": { "value": "...", "value_type": "string" },
-      "attribute": { "value": "...", "value_type": "string", "type": { "label": "T", "root": "attribute" } }
-  }
-  ```
-  New output format:
-  ```json
-  {
-      "attribute_type": { "label": "T", "value_type": "string", "root": "attribute" },
-      "raw_value": { "value": "...", "value_type": "string" },
-      "attribute": { "value": "...", "type": { "label": "T", "value_type": "string", "root": "attribute" } }
-  }
-  ```
-  
-  We also fix related JSON string serialization issue in which the hexadecimal escape sequences were not conformant to the JSON standard (`\u0000`).
+  We replace the term 'enterprise' with 'cloud', to reflect the new consistent terminology used throughout Vaticle.
   
   
 
 ## Other Improvements
-- **Generate Rust documentation tabs and italics correctly**
-  
-  We generate documentation using the correct syntax for code examples, fixing errors in the generated Rust examples.
-  
-  
-- **Fix documentation and for Trait Promise**
-
-- **Update vaticle_dependencies with upgraded rules_rust**
-
-- **Generate unique documentation anchors**
-  
-  Documentation generation now produces strictly unique anchors, using a combination of class/struct name, method name, and arguments signature as part of the anchor. This strategies means that all overloads and variations of method, for example in Java, now have uniquely referrable links.
+- **Release pipeline for C++ driver**
+  Introduce build targets & jobs for the release pipeline of the C++ driver
   
   
-- **Increase CircleCI windows machine sizes from medium to xlarge**
+- **Add CLS and ENT as enterprise error message synonyms**
 
     
