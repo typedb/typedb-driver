@@ -66,6 +66,7 @@ rust_cbindgen(
 rust_shared_library(
     name = "typedb-driver-clib",
     srcs = clib_srcs,
+    compile_data = ["src/VERSION"],
     aliases = {
         "//rust:typedb_driver_sync": "typedb_driver",
     },
