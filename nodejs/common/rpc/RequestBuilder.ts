@@ -19,6 +19,8 @@
  * under the License.
  */
 
+import * as fs from "fs";
+import * as path from "path";
 import {
     Attribute as AttributeProto,
     AttributeGetOwnersReq,
@@ -261,7 +263,14 @@ export namespace RequestBuilder {
 
     export namespace Connection {
         export function openReq() {
-            return new ConnectionOpenReq({version: Version.VERSION})
+            const VERSION_FILE_PATH = path.resolve(__dirname, "../../VERSION");
+            let DRIVER_VERSION: string;
+            try {
+                DRIVER_VERSION = fs.readFileSync(VERSION_FILE_PATH).toString().trim();
+            } catch {
+                DRIVER_VERSION = "UNKNOWN";
+            }
+            return new ConnectionOpenReq({version: Version.VERSION, driver_name: "NodeJS", driver_version: DRIVER_VERSION})
         }
     }
 

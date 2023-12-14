@@ -23,9 +23,6 @@ exports_files([
     "pnpm-lock.yaml",
     "package.json",
     "tsconfig.json",
-    "package-lock.json",
-    "RELEASE_TEMPLATE.md",
-    "VERSION",
 ])
 
 load("@vaticle_bazel_distribution//npm:rules.bzl", "assemble_npm", "deploy_npm")
@@ -58,6 +55,13 @@ genrule(
     visibility = ["//visibility:public"],
 )
 
+genrule(
+    name = "version",
+    outs = ["dist/VERSION"],
+    srcs = ["//:VERSION"],
+    cmd = "cp $< $@",
+)
+
 ts_project(
     name = "driver-nodejs",
     srcs = glob([
@@ -86,6 +90,7 @@ ts_project(
         ":node_modules/uuid",
         ":node_modules/@types/uuid",
     ],
+    assets = [":version"],
     visibility = ["//visibility:public"],
     out_dir = "dist",
 )
@@ -105,7 +110,7 @@ jq(
 
 npm_package(
     name = "driver-nodejs-npm-package",
-    srcs = [":driver-nodejs", ":package"],
+    srcs = [":driver-nodejs", ":package", ":version"],
     include_runfiles = False,
     package = "typedb-driver",
     replace_prefixes = { "dist/": "" },
