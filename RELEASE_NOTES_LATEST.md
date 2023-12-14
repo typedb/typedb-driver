@@ -65,6 +65,7 @@ Compiled distributions comprising headers and shared libraries available at: htt
 
 
 ## New Features
+  
 - **Introduce C++ driver**
   Introduce the C++ driver for TypeDB. It is built against the C++17 standard and distributed as an archive containing the headers (under `/include` & a shared library under `/lib`). 
   
@@ -110,10 +111,19 @@ Compiled distributions comprising headers and shared libraries available at: htt
 - **Replace all instances of 'enterprise' with 'cloud'**
   
   We replace the term 'enterprise' with 'cloud', to reflect the new consistent terminology used throughout Vaticle.
-  
-  
+
+- **C++ driver UX improvements**
+  Add a few missing APIs, and easier-to-use function variants.
+
+
 
 ## Other Improvements
+- **Fix circleci assembly tests for C++ driver**
+  Fix assembly test paths broken in previous commit
+  
+  
+- **Update dependencies and VERSION to 2.26.0**
+
 - **Release pipeline for C++ driver**
   Introduce build targets & jobs for the release pipeline of the C++ driver
   
