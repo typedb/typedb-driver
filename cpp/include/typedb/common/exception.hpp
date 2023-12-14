@@ -32,6 +32,9 @@ namespace TypeDB {
 template <typename NATIVE_ITER, typename NATIVE_T, typename T>
 class IteratorHelper;
 
+/**
+ * Exceptions raised by the driver.
+ */
 class DriverException : public std::runtime_error {
 public:
     DriverException(_native::Error* errorNative);
@@ -40,7 +43,14 @@ public:
     DriverException(const DriverException& from) = default;
     DriverException& operator=(const DriverException& from) = default;
 
+    /**
+     * Retrieves the error code.
+    */
     const std::string_view code();
+
+    /**
+     * Retrieves the descriptive error message.
+    */
     const std::string_view message();
 
     static void check_and_throw();

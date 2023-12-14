@@ -90,7 +90,10 @@ public:
     JSON& operator=(const JSON&);
     JSON(JSON&&);
     JSON& operator=(JSON&&);
-
+    
+    /**
+     * Retrieves the <code>JSONType</code> of the json element.
+    */
     JSONType type() const;
 
     bool isMap() const;

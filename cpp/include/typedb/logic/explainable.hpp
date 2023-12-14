@@ -69,18 +69,85 @@ private:
 using OwnerAttributePairIterator = Iterator<_native::StringPairIterator, _native::StringPair, OwnerAttributePair>;
 using OwnerAttributePairIterable = Iterable<_native::StringPairIterator, _native::StringPair, OwnerAttributePair>;
 
+/**
+ * Contains explainable objects.
+ */
 class Explainables {
 public:
     Explainables(Explainables&&) = default;
     Explainables& operator=(Explainables&&) = default;
     ~Explainables() = default;
 
+    /**
+     * Retrieves the explainable relation with the given variable name.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMap.explainables().relation(variable);
+     * </pre>
+     *
+     * @param variable The string representation of a variable
+     */
     Explainable relation(std::string& variable);
+
+    /**
+     * Retrieves the explainable attribute with the given variable name.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMap.explainables().attribute(variable);
+     * </pre>
+     *
+     * @param variable The string representation of a variable
+     */
     Explainable attribute(std::string& variable);
+
+    /**
+     * Retrieves the explainable attribute ownership with the pair of (owner, attribute) variable names.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMap.explainables().ownership(owner, attribute);
+     * </pre>
+     *
+     * @param owner The string representation of the owner variable
+     * @param attribute The string representation of the attribute variable
+     */
     Explainable ownership(std::string& owner, std::string& attribute);
+
+    /**
+     * Retrieves all of this <code>ConceptMap</code>’s explainable relations.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMap.explainables().relations();
+     * </pre>
+     */
     StringIterable relations();
+
+    /**
+     * Retrieves all of this <code>ConceptMap</code>’s explainable attributes.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMap.explainables().attributes();
+     * </pre>
+     */
     StringIterable attributes();
+
+    /**
+     * Retrieves all of this <code>ConceptMap</code>’s explainable ownerships.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMap.explainables().ownerships();
+     * </pre>
+     */
     OwnerAttributePairIterable ownerships();
+
+    /**
+     * A string representation of this object.
+    */
     std::string toString();
 
 private:

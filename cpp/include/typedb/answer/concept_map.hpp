@@ -31,7 +31,6 @@ namespace TypeDB {
 
 class ConceptMap {
 public:
-    ConceptMap(_native::ConceptMap*);
     ConceptMap(const ConceptMap&) = delete;
     ConceptMap(ConceptMap&&) = default;
 
@@ -39,16 +38,70 @@ public:
     ConceptMap& operator=(ConceptMap&&) = default;
     ~ConceptMap() = default;
 
+     
+     /**
+     * Produces an <code>Iterator</code> stream over all variables in this <code>ConceptMap</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMap.variables();
+     * </pre>
+     */
     StringIterable variables();
+
+    /**
+     * Produces an <code>Iterator</code> over all concepts in this <code>ConceptMap</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMap.concepts();
+     * </pre>
+     */
     ConceptIterable<Concept> concepts();
+
+    /**
+     * Returns the inner <code>Map</code> where keys are query variables, and values are concepts.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMap.map();
+     * </pre>
+     */
     std::map<std::string, std::unique_ptr<Concept>> map();
+
+    /**
+     * Gets the <code>Explainables</code> object for this <code>ConceptMap</code>, exposing
+     * which of the concepts in this <code>ConceptMap</code> are explainable.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMap.explainables();
+     * </pre>
+     */
     Explainables explainables();
+
+    /**
+     * Retrieves a concept for a given variable name.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMap.get(variable);
+     * </pre>
+     *
+     * @param variable The string representation of a variable
+     */
     std::unique_ptr<Concept> get(const std::string& variableName);
+
+    /**
+     * A string representation of this ConceptMap.
+    */
     std::string toString();
 
 private:
     NativePointer<_native::ConceptMap> conceptMapNative;
-
+    ConceptMap(_native::ConceptMap*);
+    
+    friend class Explanation;
     friend class IteratorHelper<_native::ConceptMapIterator, _native::ConceptMap, ConceptMap>;
 };
 
