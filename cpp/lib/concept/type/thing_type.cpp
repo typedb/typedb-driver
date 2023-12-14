@@ -106,7 +106,8 @@ ConceptPtrFuture<RoleType> ThingType::getPlaysOverridden(Transaction& transactio
 }
 
 ConceptIterable<AttributeType> ThingType::getOwns(Transaction& transaction, Transitivity transitivity) {
-    return getOwnsNative(conceptNative, transaction, nullptr, {}, transitivity);
+    std::initializer_list<Annotation> annotations = {};
+    return getOwnsNative(conceptNative, transaction, nullptr, &annotations, transitivity);
 }
 
 ConceptIterable<AttributeType> ThingType::getOwns(Transaction& transaction, const std::initializer_list<Annotation>& annotations, Transitivity transitivity) {
@@ -118,7 +119,8 @@ ConceptIterable<AttributeType> ThingType::getOwns(Transaction& transaction, cons
 }
 
 ConceptIterable<AttributeType> ThingType::getOwns(Transaction& transaction, ValueType valueType, Transitivity transitivity) {
-    return getOwnsNative(conceptNative, transaction, &valueType, {}, transitivity);
+    std::initializer_list<Annotation> annotations = {};
+    return getOwnsNative(conceptNative, transaction, &valueType, &annotations, transitivity);
 }
 
 ConceptIterable<AttributeType> ThingType::getOwns(Transaction& transaction, ValueType valueType, const std::initializer_list<Annotation>& annotations, Transitivity transitivity) {
