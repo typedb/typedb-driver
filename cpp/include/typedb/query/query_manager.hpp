@@ -43,30 +43,17 @@ class Transaction;
 class QueryManager {
 public:
     ~QueryManager() = default;
-
-    [[nodiscard]] VoidFuture define(const std::string& query) const;
-    [[nodiscard]] VoidFuture undefine(const std::string& query) const;
-    [[nodiscard]] ConceptMapIterable get(const std::string& query) const;
-    [[nodiscard]] JSONIterable fetch(const std::string& query) const;
-    [[nodiscard]] ConceptMapIterable insert(const std::string& query) const;
-    [[nodiscard]] VoidFuture matchDelete(const std::string& query) const;
-    [[nodiscard]] ConceptMapIterable update(const std::string& query) const;
-    [[nodiscard]] AggregateFuture getAggregate(const std::string& query) const;
-    [[nodiscard]] ConceptMapGroupIterable getGroup(const std::string& query) const;
-    [[nodiscard]] ValueGroupIterable getGroupAggregate(const std::string& query) const;
-    [[nodiscard]] ExplanationIterable explain(const Explainable& explainable) const;
-
-    [[nodiscard]] VoidFuture define(const std::string& query, const Options& options) const;
-    [[nodiscard]] VoidFuture undefine(const std::string& query, const Options& options) const;
-    [[nodiscard]] ConceptMapIterable get(const std::string& query, const Options& options) const;
-    [[nodiscard]] JSONIterable fetch(const std::string& query, const Options& options) const;
-    [[nodiscard]] ConceptMapIterable insert(const std::string& query, const Options& options) const;
-    [[nodiscard]] VoidFuture matchDelete(const std::string& query, const Options& options) const;
-    [[nodiscard]] ConceptMapIterable update(const std::string& query, const Options& options) const;
-    [[nodiscard]] AggregateFuture getAggregate(const std::string& query, const Options& options) const;
-    [[nodiscard]] ConceptMapGroupIterable getGroup(const std::string& query, const Options& options) const;
-    [[nodiscard]] ValueGroupIterable getGroupAggregate(const std::string& query, const Options& options) const;
-    [[nodiscard]] ExplanationIterable explain(const Explainable& explainable, const Options& options) const;
+    [[nodiscard]] VoidFuture define(const std::string& query, const Options& options = Options()) const;
+    [[nodiscard]] VoidFuture undefine(const std::string& query, const Options& options = Options()) const;
+    [[nodiscard]] ConceptMapIterable get(const std::string& query, const Options& options = Options()) const;
+    [[nodiscard]] JSONIterable fetch(const std::string& query, const Options& options = Options()) const;
+    [[nodiscard]] ConceptMapIterable insert(const std::string& query, const Options& options = Options()) const;
+    [[nodiscard]] VoidFuture matchDelete(const std::string& query, const Options& options = Options()) const;
+    [[nodiscard]] ConceptMapIterable update(const std::string& query, const Options&  = Options()) const;
+    [[nodiscard]] AggregateFuture getAggregate(const std::string& query, const Options&  = Options()) const;
+    [[nodiscard]] ConceptMapGroupIterable getGroup(const std::string& query, const Options&  = Options()) const;
+    [[nodiscard]] ValueGroupIterable getGroupAggregate(const std::string& query, const Options&  = Options()) const;
+    [[nodiscard]] ExplanationIterable explain(const Explainable& explainable, const Options&  = Options()) const;
 
 private:
     TypeDB::Transaction* const transaction;
