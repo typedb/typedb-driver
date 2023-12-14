@@ -19,6 +19,8 @@
  * under the License.
  */
 
+#include <variant>
+
 #include "typedb/concept/type/thing_type.hpp"
 #include "typedb/common/exception.hpp"
 #include "typedb/connection/transaction.hpp"
