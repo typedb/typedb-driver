@@ -57,11 +57,11 @@ VoidFuture Relation::removePlayer(Transaction& transaction, RoleType* roleType, 
 }
 
 ConceptIterable<Thing> Relation::getPlayersByRoleType(Transaction& transaction, const std::vector<RoleType*>& roleTypes) {
-    CONCEPTAPI_ITER(Thing, _native::relation_get_players_by_role_type(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::toNativeArray(roleTypes).data()));
+    CONCEPTAPI_ITER(Thing, _native::relation_get_players_by_role_type(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::nativeConceptArray(roleTypes).data()));
 }
 
 ConceptIterable<Thing> Relation::getPlayersByRoleType(Transaction& transaction, const std::vector<std::unique_ptr<RoleType>>& roleTypes) {
-    CONCEPTAPI_ITER(Thing, _native::relation_get_players_by_role_type(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::toNativeArray(roleTypes).data()));
+    CONCEPTAPI_ITER(Thing, _native::relation_get_players_by_role_type(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::nativeConceptArray(roleTypes).data()));
 }
 
 std::map<std::unique_ptr<RoleType>, std::unique_ptr<Thing>> Relation::getPlayers(Transaction& transaction) {

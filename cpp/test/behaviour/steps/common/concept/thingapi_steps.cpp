@@ -78,15 +78,14 @@ cucumber_bdd::StepCollection<Context> thingAPISteps = {
     }),
 
     BDD_STEP("(attribute|entity|relation) \\$(\\S+) get keys contain: \\$(\\S+)", {
-        std::vector<Annotation> annotations;
-        annotations.push_back(Annotation::key());
-        auto keys = collect(context.vars[matches[2].str()]->asThing()->getHas(context.transaction(), annotations));
+        auto keys = collect(context.vars[matches[2].str()]->asThing()->getHas(context.transaction(), {Annotation::key()}));
         ASSERT_TRUE(containsInstance(keys, context.vars[matches[3].str()].get()));
     }),
+
     BDD_STEP("(attribute|entity|relation) \\$(\\S+) get keys do not contain: \\$(\\S+)", {
         std::vector<Annotation> annotations;
         annotations.push_back(Annotation::key());
-        auto keys = collect(context.vars[matches[2].str()]->asThing()->getHas(context.transaction(), annotations));
+        auto keys = collect(context.vars[matches[2].str()]->asThing()->getHas(context.transaction(), annotations)); // Use the other variant just for coverage
         ASSERT_FALSE(containsInstance(keys, context.vars[matches[3].str()].get()));
     }),
 

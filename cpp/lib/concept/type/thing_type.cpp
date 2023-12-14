@@ -30,6 +30,9 @@
 
 namespace TypeDB {
 
+VoidFuture setOwnsNative(const NativePointer<_native::Concept>& conceptNative, Transaction& transaction, AttributeType* attributeType, AttributeType* overriddenType, std::variant<const std::vector<Annotation>*, const std::initializer_list<Annotation>*> annotations);
+ConceptIterable<AttributeType> getOwnsNative(const NativePointer<_native::Concept>& conceptNative, Transaction& transaction, ValueType* valueType, std::variant<const std::vector<Annotation>*, const std::initializer_list<Annotation>*> annotations, Transitivity transitivity);
+
 ThingType::ThingType(ConceptType conceptType, _native::Concept* conceptNative)
     : Type(conceptType, conceptNative) {}
 
@@ -76,20 +79,20 @@ VoidFuture ThingType::setPlays(Transaction& transaction, RoleType* roleType, Rol
     CONCEPTAPI_CALL(VoidFuture, _native::thing_type_set_plays(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::getNative(roleType), nativeOverriddenRoleType));
 }
 
-VoidFuture ThingType::setOwns(Transaction& transaction, AttributeType* attributeType) {
-    return setOwnsNative(transaction, attributeType, nullptr, Annotation::NONE);
+VoidFuture ThingType::setOwns(Transaction& transaction, AttributeType* attributeType, const std::initializer_list<Annotation>& annotations) {
+    return setOwnsNative(conceptNative, transaction, attributeType, nullptr, &annotations);
 }
 
 VoidFuture ThingType::setOwns(Transaction& transaction, AttributeType* attributeType, const std::vector<Annotation>& annotations) {
-    return setOwnsNative(transaction, attributeType, nullptr, annotations);
+    return setOwnsNative(conceptNative, transaction, attributeType, nullptr, &annotations);
 }
 
-VoidFuture ThingType::setOwns(Transaction& transaction, AttributeType* attributeType, AttributeType* overriddenType) {
-    return setOwnsNative(transaction, attributeType, overriddenType, Annotation::NONE);
+VoidFuture ThingType::setOwns(Transaction& transaction, AttributeType* attributeType, AttributeType* overriddenType, const std::initializer_list<Annotation>& annotations) {
+    return setOwnsNative(conceptNative, transaction, attributeType, overriddenType, &annotations);
 }
 
 VoidFuture ThingType::setOwns(Transaction& transaction, AttributeType* attributeType, AttributeType* overriddenType, const std::vector<Annotation>& annotations) {
-    return setOwnsNative(transaction, attributeType, overriddenType, annotations);
+    return setOwnsNative(conceptNative, transaction, attributeType, overriddenType, &annotations);
 }
 
 ConceptIterable<RoleType> ThingType::getPlays(Transaction& transaction, Transitivity transitivity) {
@@ -101,16 +104,27 @@ ConceptPtrFuture<RoleType> ThingType::getPlaysOverridden(Transaction& transactio
 }
 
 ConceptIterable<AttributeType> ThingType::getOwns(Transaction& transaction, Transitivity transitivity) {
-    return getOwnsNative(transaction, nullptr, Annotation::NONE, transitivity);
+    return getOwnsNative(conceptNative, transaction, nullptr, {}, transitivity);
 }
+
+ConceptIterable<AttributeType> ThingType::getOwns(Transaction& transaction, const std::initializer_list<Annotation>& annotations, Transitivity transitivity) {
+    return getOwnsNative(conceptNative, transaction, nullptr, &annotations, transitivity);
+}
+
 ConceptIterable<AttributeType> ThingType::getOwns(Transaction& transaction, const std::vector<Annotation>& annotations, Transitivity transitivity) {
-    return getOwnsNative(transaction, nullptr, annotations, transitivity);
+    return getOwnsNative(conceptNative, transaction, nullptr, &annotations, transitivity);
 }
+
 ConceptIterable<AttributeType> ThingType::getOwns(Transaction& transaction, ValueType valueType, Transitivity transitivity) {
-    return getOwnsNative(transaction, &valueType, Annotation::NONE, transitivity);
+    return getOwnsNative(conceptNative, transaction, &valueType, {}, transitivity);
 }
+
+ConceptIterable<AttributeType> ThingType::getOwns(Transaction& transaction, ValueType valueType, const std::initializer_list<Annotation>& annotations, Transitivity transitivity) {
+    return getOwnsNative(conceptNative, transaction, &valueType, &annotations, transitivity);
+}
+
 ConceptIterable<AttributeType> ThingType::getOwns(Transaction& transaction, ValueType valueType, const std::vector<Annotation>& annotations, Transitivity transitivity) {
-    return getOwnsNative(transaction, &valueType, annotations, transitivity);
+    return getOwnsNative(conceptNative, transaction, &valueType, &annotations, transitivity);
 }
 
 ConceptPtrFuture<AttributeType> ThingType::getOwnsOverridden(Transaction& transaction, AttributeType* attributeType) {
@@ -140,17 +154,19 @@ ConceptIterable<ThingType> ThingType::getSubtypes(Transaction& transaction, Tran
 }
 
 // private
-VoidFuture ThingType::setOwnsNative(Transaction& transaction, AttributeType* attributeType, AttributeType* overriddenType, const std::vector<Annotation>& annotations) {
+VoidFuture setOwnsNative(const NativePointer<_native::Concept>& conceptNative, Transaction& transaction, AttributeType* attributeType, AttributeType* overriddenType, std::variant<const std::vector<Annotation>*, const std::initializer_list<Annotation>*> annotations) {
     auto overriddenTypeNative = overriddenType != nullptr ? ConceptFactory::getNative(overriddenType) : nullptr;
+    std::vector<const _native::Annotation*> nativeAnnotations = (0 == annotations.index()) ? ConceptFactory::nativeAnnotationArray(std::get<0>(annotations)) : ConceptFactory::nativeAnnotationArray(std::get<1>(annotations));
     CONCEPTAPI_CALL(VoidFuture, _native::thing_type_set_owns(ConceptFactory::getNative(transaction), conceptNative.get(),
-                                                             ConceptFactory::getNative(attributeType), overriddenTypeNative, ConceptFactory::toNativeArray(annotations).data()));
+                                                             ConceptFactory::getNative(attributeType), overriddenTypeNative, nativeAnnotations.data()));
 }
 
-ConceptIterable<AttributeType> ThingType::getOwnsNative(Transaction& transaction, ValueType* valueType, const std::vector<Annotation>& annotations, Transitivity transitivity) {
+ConceptIterable<AttributeType> getOwnsNative(const NativePointer<_native::Concept>& conceptNative, Transaction& transaction, ValueType* valueType, std::variant<const std::vector<Annotation>*, const std::initializer_list<Annotation>*> annotations, Transitivity transitivity) {
+    std::vector<const _native::Annotation*> nativeAnnotations = (0 == annotations.index()) ? ConceptFactory::nativeAnnotationArray(std::get<0>(annotations)) : ConceptFactory::nativeAnnotationArray(std::get<1>(annotations));
     CONCEPTAPI_ITER(
         AttributeType,
         _native::thing_type_get_owns(ConceptFactory::getNative(transaction), conceptNative.get(),
-                                     (_native::ValueType*)valueType, (_native::Transitivity)transitivity, ConceptFactory::toNativeArray(annotations).data()));
+                                     (_native::ValueType*)valueType, (_native::Transitivity)transitivity, nativeAnnotations.data()));
 }
 
 // protected

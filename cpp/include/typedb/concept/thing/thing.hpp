@@ -36,7 +36,7 @@ public:
     [[nodiscard]] VoidFuture setHas(Transaction& transaction, Attribute* attribute);
     [[nodiscard]] VoidFuture unsetHas(Transaction& transaction, Attribute* attribute);
 
-    ConceptIterable<Attribute> getHas(Transaction& transaction);
+    ConceptIterable<Attribute> getHas(Transaction& transaction, const std::initializer_list<Annotation>& annotations = {});
     ConceptIterable<Attribute> getHas(Transaction& transaction, const AttributeType* attribute);
     ConceptIterable<Attribute> getHas(Transaction& transaction, const std::vector<std::unique_ptr<AttributeType>>& attributeTypes);
     ConceptIterable<Attribute> getHas(Transaction& transaction, const std::vector<const AttributeType*>& attributeTypes);

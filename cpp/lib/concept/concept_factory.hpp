@@ -52,11 +52,12 @@ public:
     // for concept api methods.
     static _native::Transaction* getNative(Transaction&);
     static _native::Concept* getNative(const Concept*);
-    static _native::Annotation* getNative(const Annotation& annotation);
-    static std::vector<const _native::Annotation*> toNativeArray(const std::vector<Annotation>& annotations);
+    static _native::Annotation* getNative(const Annotation* annotation);
+    static std::vector<const _native::Annotation*> nativeAnnotationArray(const std::vector<Annotation>* annotations);
+    static std::vector<const _native::Annotation*> nativeAnnotationArray(const std::initializer_list<Annotation>* annotations);
 
     template <typename T>
-    static std::vector<_native::Concept*> toNativeArray(const std::vector<T*>& concepts) {
+    static std::vector<_native::Concept*> nativeConceptArray(const std::vector<T*>& concepts) {
         std::vector<_native::Concept*> v;
         v.reserve(concepts.size() + 1);
         for (auto& c : concepts)
@@ -66,7 +67,7 @@ public:
     }
 
     template <typename T>
-    static std::vector<_native::Concept*> toNativeArray(const std::vector<std::unique_ptr<T>>& concepts) {
+    static std::vector<_native::Concept*> nativeConceptArray(const std::vector<std::unique_ptr<T>>& concepts) {
         std::vector<_native::Concept*> v;
         v.reserve(concepts.size() + 1);
         for (auto& c : concepts)

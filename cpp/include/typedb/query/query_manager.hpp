@@ -49,11 +49,11 @@ public:
     [[nodiscard]] JSONIterable fetch(const std::string& query, const Options& options = Options()) const;
     [[nodiscard]] ConceptMapIterable insert(const std::string& query, const Options& options = Options()) const;
     [[nodiscard]] VoidFuture matchDelete(const std::string& query, const Options& options = Options()) const;
-    [[nodiscard]] ConceptMapIterable update(const std::string& query, const Options&  = Options()) const;
-    [[nodiscard]] AggregateFuture getAggregate(const std::string& query, const Options&  = Options()) const;
-    [[nodiscard]] ConceptMapGroupIterable getGroup(const std::string& query, const Options&  = Options()) const;
-    [[nodiscard]] ValueGroupIterable getGroupAggregate(const std::string& query, const Options&  = Options()) const;
-    [[nodiscard]] ExplanationIterable explain(const Explainable& explainable, const Options&  = Options()) const;
+    [[nodiscard]] ConceptMapIterable update(const std::string& query, const Options& = Options()) const;
+    [[nodiscard]] AggregateFuture getAggregate(const std::string& query, const Options& = Options()) const;
+    [[nodiscard]] ConceptMapGroupIterable getGroup(const std::string& query, const Options& = Options()) const;
+    [[nodiscard]] ValueGroupIterable getGroupAggregate(const std::string& query, const Options& = Options()) const;
+    [[nodiscard]] ExplanationIterable explain(const Explainable& explainable, const Options& = Options()) const;
 
 private:
     TypeDB::Transaction* const transaction;

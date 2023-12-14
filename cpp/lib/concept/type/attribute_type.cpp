@@ -30,6 +30,11 @@
 
 namespace TypeDB {
 
+ConceptPtrFuture<Attribute> putNative(const NativePointer<_native::Concept>& conceptNative, Transaction& transaction, _native::Concept* valueNative);
+ConceptPtrFuture<Attribute> putNativeAndFree(const NativePointer<_native::Concept>& conceptNative, Transaction& transaction, _native::Concept* valueNative);
+ConceptPtrFuture<Attribute> getNative(const NativePointer<_native::Concept>& conceptNative, Transaction& transaction, _native::Concept* valueNative);
+ConceptPtrFuture<Attribute> getNativeAndFree(const NativePointer<_native::Concept>& conceptNative, Transaction& transaction, _native::Concept* valueNative);
+
 // AttributeType
 AttributeType::AttributeType(_native::Concept* conceptNative)
     : ThingType(ConceptType::ATTRIBUTE_TYPE, conceptNative) {}
@@ -41,51 +46,51 @@ ValueType AttributeType::getValueType() {
 
 ConceptPtrFuture<Attribute> AttributeType::put(Transaction& transaction, Value* value) {
     CHECK_NATIVE(value);
-    return putNative(transaction, ConceptFactory::getNative(value));
+    return putNative(conceptNative, transaction, ConceptFactory::getNative(value));
 }
 
 ConceptPtrFuture<Attribute> AttributeType::put(Transaction& transaction, const std::string& value) {
-    return putNativeAndFree(transaction, _native::value_new_string(value.c_str()));
+    return putNativeAndFree(conceptNative, transaction, _native::value_new_string(value.c_str()));
 }
 
 ConceptPtrFuture<Attribute> AttributeType::put(Transaction& transaction, int64_t value) {
-    return putNativeAndFree(transaction, _native::value_new_long(value));
+    return putNativeAndFree(conceptNative, transaction, _native::value_new_long(value));
 }
 
 ConceptPtrFuture<Attribute> AttributeType::put(Transaction& transaction, double value) {
-    return putNativeAndFree(transaction, _native::value_new_double(value));
+    return putNativeAndFree(conceptNative, transaction, _native::value_new_double(value));
 }
 
 ConceptPtrFuture<Attribute> AttributeType::put(Transaction& transaction, bool value) {
-    return putNativeAndFree(transaction, _native::value_new_boolean(value));
+    return putNativeAndFree(conceptNative, transaction, _native::value_new_boolean(value));
 }
 
 ConceptPtrFuture<Attribute> AttributeType::put(Transaction& transaction, DateTime value) {
-    return putNativeAndFree(transaction, _native::value_new_date_time_from_millis(value.time_since_epoch().count()));
+    return putNativeAndFree(conceptNative, transaction, _native::value_new_date_time_from_millis(value.time_since_epoch().count()));
 }
 
 ConceptPtrFuture<Attribute> AttributeType::get(Transaction& transaction, Value* value) {
-    return getNative(transaction, ConceptFactory::getNative(value));
+    return getNative(conceptNative, transaction, ConceptFactory::getNative(value));
 }
 
 ConceptPtrFuture<Attribute> AttributeType::get(Transaction& transaction, const std::string& value) {
-    return getNativeAndFree(transaction, _native::value_new_string(value.c_str()));
+    return getNativeAndFree(conceptNative, transaction, _native::value_new_string(value.c_str()));
 }
 
 ConceptPtrFuture<Attribute> AttributeType::get(Transaction& transaction, int64_t value) {
-    return getNativeAndFree(transaction, _native::value_new_long(value));
+    return getNativeAndFree(conceptNative, transaction, _native::value_new_long(value));
 }
 
 ConceptPtrFuture<Attribute> AttributeType::get(Transaction& transaction, double value) {
-    return getNativeAndFree(transaction, _native::value_new_double(value));
+    return getNativeAndFree(conceptNative, transaction, _native::value_new_double(value));
 }
 
 ConceptPtrFuture<Attribute> AttributeType::get(Transaction& transaction, bool value) {
-    return getNativeAndFree(transaction, _native::value_new_boolean(value));
+    return getNativeAndFree(conceptNative, transaction, _native::value_new_boolean(value));
 }
 
 ConceptPtrFuture<Attribute> AttributeType::get(Transaction& transaction, DateTime value) {
-    return getNativeAndFree(transaction, _native::value_new_date_time_from_millis(value.time_since_epoch().count()));
+    return getNativeAndFree(conceptNative, transaction, _native::value_new_date_time_from_millis(value.time_since_epoch().count()));
 }
 
 OptionalStringFuture AttributeType::getRegex(Transaction& transaction) {
@@ -125,24 +130,29 @@ ConceptIterable<ThingType> AttributeType::getOwners(Transaction& transaction, Tr
 
 ConceptIterable<ThingType> AttributeType::getOwners(Transaction& transaction, const std::vector<Annotation>& annotations, Transitivity transitivity) {
     CONCEPTAPI_ITER(ThingType,
-                    _native::attribute_type_get_owners(ConceptFactory::getNative(transaction), conceptNative.get(), (_native::Transitivity)transitivity, ConceptFactory::toNativeArray(annotations).data()));
+                    _native::attribute_type_get_owners(ConceptFactory::getNative(transaction), conceptNative.get(), (_native::Transitivity)transitivity, ConceptFactory::nativeAnnotationArray(&annotations).data()));
 }
 
-ConceptPtrFuture<Attribute> AttributeType::putNative(Transaction& transaction, _native::Concept* valueNative) {
+ConceptIterable<ThingType> AttributeType::getOwners(Transaction& transaction, const std::initializer_list<Annotation>& annotations, Transitivity transitivity) {
+    CONCEPTAPI_ITER(ThingType,
+                    _native::attribute_type_get_owners(ConceptFactory::getNative(transaction), conceptNative.get(), (_native::Transitivity)transitivity, ConceptFactory::nativeAnnotationArray(&annotations).data()));
+}
+
+ConceptPtrFuture<Attribute> putNative(const NativePointer<_native::Concept>& conceptNative, Transaction& transaction, _native::Concept* valueNative) {
     CONCEPTAPI_FUTURE(Attribute, _native::attribute_type_put(ConceptFactory::getNative(transaction), conceptNative.get(), valueNative));
 }
 
-ConceptPtrFuture<Attribute> AttributeType::putNativeAndFree(Transaction& transaction, _native::Concept* valueNative) {
-    auto ret = putNative(transaction, valueNative);
+ConceptPtrFuture<Attribute> putNativeAndFree(const NativePointer<_native::Concept>& conceptNative, Transaction& transaction, _native::Concept* valueNative) {
+    auto ret = putNative(conceptNative, transaction, valueNative);
     _native::concept_drop(valueNative);
     return ret;
 }
-ConceptPtrFuture<Attribute> AttributeType::getNative(Transaction& transaction, _native::Concept* valueNative) {
+ConceptPtrFuture<Attribute> getNative(const NativePointer<_native::Concept>& conceptNative, Transaction& transaction, _native::Concept* valueNative) {
     CONCEPTAPI_FUTURE(Attribute, _native::attribute_type_get(ConceptFactory::getNative(transaction), conceptNative.get(), valueNative));
 }
 
-ConceptPtrFuture<Attribute> AttributeType::getNativeAndFree(Transaction& transaction, _native::Concept* valueNative) {
-    auto ret = getNative(transaction, valueNative);
+ConceptPtrFuture<Attribute> getNativeAndFree(const NativePointer<_native::Concept>& conceptNative, Transaction& transaction, _native::Concept* valueNative) {
+    auto ret = getNative(conceptNative, transaction, valueNative);
     _native::concept_drop(valueNative);
     return ret;
 }
