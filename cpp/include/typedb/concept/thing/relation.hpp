@@ -48,7 +48,9 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * relation.addPlayer(transaction, roleType, player).resolve();
+     * std::unique_ptr<Relation> r = ...;
+     * std::unique_ptr<Entity> player = ...;
+     * r->addPlayer(tx, r->type()->getRelates(tx, "roleType").get().get(), player.get()).get();
      * </pre>
      *
      * @param transaction The current transaction
@@ -62,7 +64,9 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * relation.removePlayer(transaction, roleType, player).resolve();
+     * std::unique_ptr<Relation> r = ...;
+     * std::unique_ptr<Entity> player = ...;
+     * r->removePlayer(tx, r->type()->getRelates(tx, "roleType").get(), player.get()).get();
      * </pre>
      *
      * @param transaction The current transaction
@@ -97,7 +101,7 @@ public:
     ConceptIterable<Thing> getPlayersByRoleType(Transaction& transaction, const std::vector<std::unique_ptr<RoleType>>& roleTypes);
 
     /**
-     * \ref Relation::getPlayersByRoleType(Transaction&, const std::vector<std::unique_ptr<RoleType>>&)
+     * See \ref Relation::getPlayersByRoleType(Transaction&, const std::vector<std::unique_ptr<RoleType>>&) "getPlayersByRoleType"
     */
     ConceptIterable<Thing> getPlayersByRoleType(Transaction& transaction, const std::vector<RoleType*>& roleTypes);
 

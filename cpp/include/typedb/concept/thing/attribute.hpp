@@ -69,7 +69,8 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * attribute.getOwners(transaction, ownerType);
+     * std::unique_ptr<Attribute> a = ...;
+     * a->getOwners(tx, tx.concepts.getAttributeType("ownerType").get().get());
      * </pre>
      *
      * @param transaction The current transaction
