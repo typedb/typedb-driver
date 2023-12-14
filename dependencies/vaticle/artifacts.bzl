@@ -29,7 +29,7 @@ def vaticle_typedb_artifact():
         artifact_name = "typedb-server-{platform}-{version}.{ext}",
         tag_source = deployment["artifact.release"],
         commit_source = deployment["artifact.snapshot"],
-        tag = "2.25.7",
+        commit = "0d07053929a95736b34d76a275c509709abffc07",
     )
 
 def vaticle_typedb_cloud_artifact():
