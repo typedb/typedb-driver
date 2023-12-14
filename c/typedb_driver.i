@@ -235,9 +235,11 @@ void transaction_on_close_register(const Transaction* transaction, TransactionCa
 
 %newobject concept_map_group_get_owner;
 %newobject concept_map_group_get_concept_maps;
+%newobject concept_map_group_to_string;
 
 %newobject value_group_get_owner;
 %newobject value_group_get_value;
+%newobject value_group_to_string;
 
 %newobject string_iterator_next;
 
