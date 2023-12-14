@@ -128,6 +128,7 @@ checkstyle_test(
     ]),
     exclude = glob([
         "README.md",
+        "src/VERSION",
         "**/Cargo.toml",
         "**/Cargo.lock",
         "docs/**/*.adoc",
