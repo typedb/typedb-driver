@@ -48,9 +48,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * std::unique_ptr<Relation> r = ...;
-     * std::unique_ptr<Entity> player = ...;
-     * r->addPlayer(tx, r->type()->getRelates(tx, "roleType").get().get(), player.get()).get();
+     * relation.addPlayer(transaction, roleType, player).resolve();
      * </pre>
      *
      * @param transaction The current transaction
@@ -64,9 +62,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * std::unique_ptr<Relation> r = ...;
-     * std::unique_ptr<Entity> player = ...;
-     * r->removePlayer(tx, r->type()->getRelates(tx, "roleType").get(), player.get()).get();
+     * relation.removePlayer(transaction, roleType, player).resolve();
      * </pre>
      *
      * @param transaction The current transaction

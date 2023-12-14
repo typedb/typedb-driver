@@ -57,7 +57,7 @@ public:
      */
     bool isInferred();
 
-    
+
     /**
      * Checks if this <code>Thing</code> is deleted.
      *
@@ -87,7 +87,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * thing.setHas(transaction, attribute.get()).get();
+     * thing.setHas(transaction, attribute).get();
      * </pre>
      *
      * @param transaction The current transaction
@@ -100,7 +100,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * thing.unsetHas(transaction, attribute).resolve();
+     * thing.unsetHas(transaction, attribute).get();
      * </pre>
      *
      * @param transaction The current transaction
@@ -122,8 +122,8 @@ public:
      * @param annotations Only retrieve attributes with all given <code>Annotation</code>s
      */
     ConceptIterable<Attribute> getHas(Transaction& transaction, const std::initializer_list<Annotation>& annotations = {});
-    
-    
+
+
     ConceptIterable<Attribute> getHas(Transaction& transaction, const AttributeType* attribute);
 
     /**
@@ -141,18 +141,46 @@ public:
     ConceptIterable<Attribute> getHas(Transaction& transaction, const std::vector<std::unique_ptr<AttributeType>>& attributeTypes);
 
     /**
-     * TODO
-    */
+     * See \ref getHas(Transaction& transaction, const std::vector<std::unique_ptr<AttributeType>>& attributeTypes) getHas
+     */
     ConceptIterable<Attribute> getHas(Transaction& transaction, const std::vector<const AttributeType*>& attributeTypes);
 
     /**
-     * TODO
-    */
+     * See \ref getHas(Transaction& transaction, const std::initializer_list<Annotation>& annotations = {}) "getHas"
+     */
     ConceptIterable<Attribute> getHas(Transaction& transaction, const std::vector<Annotation>& annotations);
 
-    ConceptIterable<Relation> getRelations(Transaction& transaction);
-    ConceptIterable<Relation> getRelations(Transaction& transaction, const std::vector<std::unique_ptr<RoleType>>& roleTypes);
+
+    /**
+     * Retrieves all the <code>Relations</code> which this <code>Thing</code> plays a role in,
+     * optionally filtered by one or more given roles.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thing.getRelations(transaction);
+     * thing.getRelations(transaction, roleTypes);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param roleTypes The array of roles to filter the relations by.
+     */
+    ConceptIterable<Relation> getRelations(Transaction& transaction, const std::vector<std::unique_ptr<RoleType>>& roleTypes = {});
+
+    /**
+     * See \ref getRelations(Transaction& transaction, const std::vector<std::unique_ptr<RoleType>>& roleTypes) "getRelations"
+     */
     ConceptIterable<Relation> getRelations(Transaction& transaction, const std::vector<RoleType*>& roleTypes);
+
+    /**
+     * Retrieves the roles that this <code>Thing</code> is currently playing.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * thing.getPlaying(transaction);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     */
     ConceptIterable<RoleType> getPlaying(Transaction& transaction);
 
 protected:
