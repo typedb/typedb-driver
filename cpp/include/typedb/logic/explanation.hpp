@@ -35,6 +35,7 @@ public:
     Rule rule();
     ConceptMap conclusion();
     ConceptMap condition();
+    std::string toString();
 
 private:
     Explanation(_native::Explanation*);

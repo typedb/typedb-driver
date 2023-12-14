@@ -47,14 +47,15 @@ bool Thing::isInferred() {
     return _native::thing_get_is_inferred(conceptNative.get());
 }
 
-VoidFuture Thing::drop(Transaction& transaction){
+VoidFuture Thing::deleteThing(Transaction& transaction){
     CONCEPTAPI_CALL(VoidFuture, _native::thing_delete(ConceptFactory::getNative(transaction), conceptNative.get()))}
 
 BoolFuture Thing::isDeleted(Transaction& transaction){
     CONCEPTAPI_CALL(BoolFuture, _native::thing_is_deleted(ConceptFactory::getNative(transaction), conceptNative.get()))}
 
-ConceptIterable<Attribute> Thing::getHas(Transaction& transaction) {
-    return getHas(transaction, Annotation::NONE);
+ConceptIterable<Attribute> Thing::getHas(Transaction& transaction, const std::initializer_list<Annotation>& annotations) {
+    const _native::Concept* nativeConcepts[1] = {nullptr};
+    CONCEPTAPI_ITER(Attribute, _native::thing_get_has(ConceptFactory::getNative(transaction), conceptNative.get(), nativeConcepts, ConceptFactory::nativeAnnotationArray(&annotations).data()));
 }
 
 ConceptIterable<Attribute> Thing::getHas(Transaction& transaction, const AttributeType* attribute) {
@@ -65,18 +66,17 @@ ConceptIterable<Attribute> Thing::getHas(Transaction& transaction, const Attribu
 
 ConceptIterable<Attribute> Thing::getHas(Transaction& transaction, const std::vector<const AttributeType*>& attributeTypes) {
     const _native::Annotation* nativeAnnotations[1] = {nullptr};
-    CONCEPTAPI_ITER(Attribute, _native::thing_get_has(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::toNativeArray(attributeTypes).data(), nativeAnnotations));
+    CONCEPTAPI_ITER(Attribute, _native::thing_get_has(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::nativeConceptArray(attributeTypes).data(), nativeAnnotations));
 }
 
 ConceptIterable<Attribute> Thing::getHas(Transaction& transaction, const std::vector<std::unique_ptr<AttributeType>>& attributeTypes) {
     const _native::Annotation* nativeAnnotations[1] = {nullptr};
-    CONCEPTAPI_ITER(Attribute, _native::thing_get_has(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::toNativeArray(attributeTypes).data(), nativeAnnotations));
+    CONCEPTAPI_ITER(Attribute, _native::thing_get_has(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::nativeConceptArray(attributeTypes).data(), nativeAnnotations));
 }
-
 
 ConceptIterable<Attribute> Thing::getHas(Transaction& transaction, const std::vector<Annotation>& annotations) {
     const _native::Concept* nativeConcepts[1] = {nullptr};
-    CONCEPTAPI_ITER(Attribute, _native::thing_get_has(ConceptFactory::getNative(transaction), conceptNative.get(), nativeConcepts, ConceptFactory::toNativeArray(annotations).data()));
+    CONCEPTAPI_ITER(Attribute, _native::thing_get_has(ConceptFactory::getNative(transaction), conceptNative.get(), nativeConcepts, ConceptFactory::nativeAnnotationArray(&annotations).data()));
 }
 
 VoidFuture Thing::setHas(Transaction& transaction, Attribute* attribute) {
@@ -93,11 +93,11 @@ ConceptIterable<Relation> Thing::getRelations(Transaction& transaction) {
 }
 
 ConceptIterable<Relation> Thing::getRelations(Transaction& transaction, const std::vector<RoleType*>& roleTypes) {
-    CONCEPTAPI_ITER(Relation, _native::thing_get_relations(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::toNativeArray(roleTypes).data()));
+    CONCEPTAPI_ITER(Relation, _native::thing_get_relations(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::nativeConceptArray(roleTypes).data()));
 }
 
 ConceptIterable<Relation> Thing::getRelations(Transaction& transaction, const std::vector<std::unique_ptr<RoleType>>& roleTypes) {
-    CONCEPTAPI_ITER(Relation, _native::thing_get_relations(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::toNativeArray(roleTypes).data()));
+    CONCEPTAPI_ITER(Relation, _native::thing_get_relations(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::nativeConceptArray(roleTypes).data()));
 }
 
 ConceptIterable<RoleType> Thing::getPlaying(Transaction& transaction) {

@@ -36,7 +36,7 @@ public:
 
     bool contains(const std::string& username) const;
     void create(const std::string& username, const std::string& password) const;
-    void drop(const std::string& username) const;
+    void deleteUser(const std::string& username) const;
     UserIterable all() const;
     std::unique_ptr<User> get(const std::string& username) const;
     void passwordSet(const std::string& username, const std::string& password) const;

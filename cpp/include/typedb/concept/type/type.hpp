@@ -36,7 +36,7 @@ public:
     [[nodiscard]] virtual VoidFuture setLabel(Transaction& transaction, const std::string& newLabel) = 0;
 
     virtual BoolFuture isDeleted(Transaction& transaction) = 0;
-    [[nodiscard]] virtual VoidFuture drop(Transaction& transaction) = 0;
+    [[nodiscard]] virtual VoidFuture deleteType(Transaction& transaction) = 0;
 
 protected:
     Type(ConceptType conceptType, _native::Concept* conceptNative);

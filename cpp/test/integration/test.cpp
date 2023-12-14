@@ -33,11 +33,11 @@ using namespace TypeDB;
 
 void delete_if_exists(const TypeDB::Driver& driver, const std::string& name) {
     if (driver.databases.contains(name)) {
-        driver.databases.get(name).drop();
+        driver.databases.get(name).deleteDatabase();
     }
 }
 
-TEST(TestConceptAPI, TestData) {
+TEST(TestDatabaseManager, TestCreateTwice) {
     std::string dbName = "hello_from_cpp";
     TypeDB::Driver driver = TypeDB::Driver::coreDriver("127.0.0.1:1729");
     delete_if_exists(driver, dbName);

@@ -69,7 +69,7 @@ std::vector<std::string> playsLabels(Context& context, const std::string& thingC
 cucumber_bdd::StepCollection<Context> thingTypeSteps = {
     // Basic
     BDD_STEP_AND_THROWS("delete (attribute|entity|relation) type: (\\S+)", {
-        asThingType(context, matches[1].str(), matches[2].str())->drop(context.transaction()).wait();
+        asThingType(context, matches[1].str(), matches[2].str())->deleteType(context.transaction()).wait();
     }),
 
     BDD_STEP("(attribute|entity|relation)\\((\\S+)\\) set label: (\\S+)", {

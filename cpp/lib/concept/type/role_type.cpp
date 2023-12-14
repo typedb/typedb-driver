@@ -56,7 +56,7 @@ bool RoleType::isAbstract() {
     return _native::role_type_is_abstract(conceptNative.get());
 }
 
-VoidFuture RoleType::drop(Transaction& transaction) {
+VoidFuture RoleType::deleteType(Transaction& transaction) {
     CONCEPTAPI_CALL(VoidFuture, _native::role_type_delete(ConceptFactory::getNative(transaction), conceptNative.get()));
 }
 

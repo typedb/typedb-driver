@@ -205,7 +205,7 @@ pub extern "C" fn concept_map_group_get_concept_maps(
 }
 
 #[no_mangle]
-pub extern "C" fn concept_map_group_to_string(concept_map_group: *const ConceptMapGroup) -> *const c_char {
+pub extern "C" fn concept_map_group_to_string(concept_map_group: *const ConceptMapGroup) -> *mut c_char {
     release_string(format!("{:?}", borrow(concept_map_group)))
 }
 
@@ -220,7 +220,7 @@ pub extern "C" fn value_group_drop(value_group: *mut ValueGroup) {
 }
 
 #[no_mangle]
-pub extern "C" fn value_group_to_string(value_group: *const ValueGroup) -> *const c_char {
+pub extern "C" fn value_group_to_string(value_group: *const ValueGroup) -> *mut c_char {
     release_string(format!("{:?}", borrow(value_group)))
 }
 

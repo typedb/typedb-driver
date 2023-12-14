@@ -44,6 +44,7 @@ public:
     std::map<std::string, std::unique_ptr<Concept>> map();
     Explainables explainables();
     std::unique_ptr<Concept> get(const std::string& variableName);
+    std::string toString();
 
 private:
     NativePointer<_native::ConceptMap> conceptMapNative;

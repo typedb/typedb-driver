@@ -32,14 +32,14 @@ public:
     bool isRoot();
     virtual bool isAbstract() override;
     virtual BoolFuture isDeleted(Transaction& transaction) override;
-    [[nodiscard]] virtual VoidFuture drop(Transaction& transaction) override;
+    [[nodiscard]] virtual VoidFuture deleteType(Transaction& transaction) override;
 
     [[nodiscard]] VoidFuture setAbstract(Transaction& transaction);
     [[nodiscard]] VoidFuture unsetAbstract(Transaction& transaction);
 
-    [[nodiscard]] VoidFuture setOwns(Transaction& transaction, AttributeType* attributeType);
+    [[nodiscard]] VoidFuture setOwns(Transaction& transaction, AttributeType* attributeType, const std::initializer_list<Annotation>& annotations = {});
     [[nodiscard]] VoidFuture setOwns(Transaction& transaction, AttributeType* attributeType, const std::vector<Annotation>& annotations);
-    [[nodiscard]] VoidFuture setOwns(Transaction& transaction, AttributeType* attributeType, AttributeType* overriddenType);
+    [[nodiscard]] VoidFuture setOwns(Transaction& transaction, AttributeType* attributeType, AttributeType* overriddenType, const std::initializer_list<Annotation>& annotations = {});
     [[nodiscard]] VoidFuture setOwns(Transaction& transaction, AttributeType* attributeType, AttributeType* overriddenType, const std::vector<Annotation>& annotations);
     [[nodiscard]] VoidFuture unsetOwns(Transaction& transaction, AttributeType* attributeType);
 
@@ -51,8 +51,10 @@ public:
     ConceptPtrFuture<RoleType> getPlaysOverridden(Transaction& transaction, RoleType* roleType);
 
     ConceptIterable<AttributeType> getOwns(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);
-    ConceptIterable<AttributeType> getOwns(Transaction& transaction, ValueType valueType, Transitivity transitivity = Transitivity::TRANSITIVE);
+    ConceptIterable<AttributeType> getOwns(Transaction& transaction, const std::initializer_list<Annotation>& annotations, Transitivity transitivity = Transitivity::TRANSITIVE);
     ConceptIterable<AttributeType> getOwns(Transaction& transaction, const std::vector<Annotation>& annotations, Transitivity transitivity = Transitivity::TRANSITIVE);
+    ConceptIterable<AttributeType> getOwns(Transaction& transaction, ValueType valueType, Transitivity transitivity = Transitivity::TRANSITIVE);
+    ConceptIterable<AttributeType> getOwns(Transaction& transaction, ValueType valueType, const std::initializer_list<Annotation>& annotations, Transitivity transitivity = Transitivity::TRANSITIVE);
     ConceptIterable<AttributeType> getOwns(Transaction& transaction, ValueType valueType, const std::vector<Annotation>& annotations, Transitivity transitivity = Transitivity::TRANSITIVE);
     ConceptPtrFuture<AttributeType> getOwnsOverridden(Transaction& transaction, AttributeType* attributeType);
 
@@ -65,10 +67,6 @@ public:
 
 protected:
     ThingType(ConceptType conceptType, _native::Concept* conceptNative);
-
-private:
-    VoidFuture setOwnsNative(Transaction& transaction, AttributeType* attributeType, AttributeType* overriddenTypeNative, const std::vector<Annotation>& annotations);
-    ConceptIterable<AttributeType> getOwnsNative(Transaction& transaction, ValueType* valueType, const std::vector<Annotation>& annotations, Transitivity transitivity);
 
     friend class ConceptFactory;
 };

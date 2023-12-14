@@ -39,6 +39,9 @@ _native::Credential* Credential::getNative() const {
     return credentialNative.get();
 }
 
+void Driver::initLogging() {
+    _native::init_logging();
+}
 
 Driver Driver::coreDriver(const std::string& coreAddress) {
     auto p = _native::connection_open_core(coreAddress.c_str());

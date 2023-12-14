@@ -30,7 +30,7 @@ const std::string DEFAULT_CORE_ADDRESS = "127.0.0.1:1729";
 void wipeDatabases(const TypeDB::Driver& driver) {
     DatabaseIterable dbIterable = driver.databases.all();
     for (DatabaseIterator it = dbIterable.begin(); it != dbIterable.end(); ++it) {
-        (*it).drop();
+        (*it).deleteDatabase();
     }
 }
 

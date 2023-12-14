@@ -60,16 +60,25 @@ _native::Concept* ConceptFactory::getNative(const Concept* concept) {
     return concept->conceptNative.get();
 }
 
-_native::Annotation* ConceptFactory::getNative(const Annotation& annotation) {
-    CHECK_NATIVE(annotation.annotationNative);
-    return annotation.annotationNative.get();
+_native::Annotation* ConceptFactory::getNative(const Annotation* annotation) {
+    CHECK_NATIVE(annotation->annotationNative);
+    return annotation->annotationNative.get();
 }
 
-std::vector<const _native::Annotation*> ConceptFactory::toNativeArray(const std::vector<Annotation>& annotations) {
+std::vector<const _native::Annotation*> ConceptFactory::nativeAnnotationArray(const std::vector<Annotation>* annotations) {
     std::vector<const _native::Annotation*> nativeAnnotations;
-    nativeAnnotations.reserve(annotations.size() + 1);
-    for (auto& annotation : annotations)
-        nativeAnnotations.push_back(ConceptFactory::getNative(annotation));
+    nativeAnnotations.reserve(annotations->size() + 1);
+    for (auto& annotation : *annotations)
+        nativeAnnotations.push_back(ConceptFactory::getNative(&annotation));
+    nativeAnnotations.push_back(nullptr);
+    return nativeAnnotations;
+}
+
+std::vector<const _native::Annotation*> ConceptFactory::nativeAnnotationArray(const std::initializer_list<Annotation>* annotations) {
+    std::vector<const _native::Annotation*> nativeAnnotations;
+    nativeAnnotations.reserve(annotations->size() + 1);
+    for (auto& annotation : *annotations)
+        nativeAnnotations.push_back(ConceptFactory::getNative(&annotation));
     nativeAnnotations.push_back(nullptr);
     return nativeAnnotations;
 }

@@ -39,6 +39,7 @@ public:
 
     std::unique_ptr<Concept> owner();
     AggregateResult value();
+    std::string toString();
 
 private:
     NativePointer<_native::ValueGroup> valueGroupNative;

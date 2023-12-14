@@ -53,19 +53,15 @@ public:
     ConceptPtrFuture<Attribute> get(Transaction& transaction, DateTime value);
     OptionalStringFuture getRegex(Transaction& transaction);
 
-    ConceptIterable<AttributeType> getSubtypes(Transaction& transaction, ValueType valueType, Transitivity transitivity = Transitivity::TRANSITIVE);
     ConceptIterable<AttributeType> getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);  // Mimic overriding from Type
+    ConceptIterable<AttributeType> getSubtypes(Transaction& transaction, ValueType valueType, Transitivity transitivity = Transitivity::TRANSITIVE);
     ConceptIterable<Attribute> getInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);
     ConceptIterable<ThingType> getOwners(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);
+    ConceptIterable<ThingType> getOwners(Transaction& transaction, const std::initializer_list<Annotation>& annotations, Transitivity transitivity = Transitivity::TRANSITIVE);
     ConceptIterable<ThingType> getOwners(Transaction& transaction, const std::vector<Annotation>& annotations, Transitivity transitivity = Transitivity::TRANSITIVE);
 
 private:
     AttributeType(_native::Concept* conceptNative);
-
-    ConceptPtrFuture<Attribute> putNative(Transaction& transaction, _native::Concept* valueNative);
-    ConceptPtrFuture<Attribute> putNativeAndFree(Transaction& transaction, _native::Concept* valueNative);
-    ConceptPtrFuture<Attribute> getNative(Transaction& transaction, _native::Concept* valueNative);
-    ConceptPtrFuture<Attribute> getNativeAndFree(Transaction& transaction, _native::Concept* valueNative);
 
     friend class ConceptFactory;
 };

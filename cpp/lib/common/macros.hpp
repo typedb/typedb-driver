@@ -89,3 +89,9 @@
 #define CONCEPTAPI_FUTURE(RET_TYPE, NATIVE_CALL) CONCEPTAPI_CALL(ConceptPtrFuture<RET_TYPE>, new ConceptFutureWrapperSimple(NATIVE_CALL))
 
 #define CONCEPTAPI_ITER(RET_TYPE, NATIVE_CALL) CONCEPTAPI_CALL(ConceptIterable<RET_TYPE>, new ConceptIteratorWrapperSimple(NATIVE_CALL))
+
+#define TO_STRING(NATIVE_PTR, NATIVE_FN)                             \
+    {                                                                \
+        CHECK_NATIVE(NATIVE_PTR);                                    \
+        return Utils::stringFromNative(NATIVE_FN(NATIVE_PTR.get())); \
+    }

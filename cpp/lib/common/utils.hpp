@@ -40,6 +40,5 @@ DriverException exception(const ErrorMessage& errMsg, Args... args) {
     return exception;
 }
 
-
 }  // namespace Utils
 }  // namespace TypeDB

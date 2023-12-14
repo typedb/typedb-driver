@@ -41,6 +41,13 @@ class Iterator {  // Does not support range-based for loops yet.
     using SELF = Iterator<NATIVE_ITER, NATIVE_T, T>;
 
 public:
+
+    using value_type = T;
+    using difference_type = std::ptrdiff_t;
+    using pointer = T*;
+    using reference = T&;
+    using iterator_category = std::input_iterator_tag;
+
     Iterator(NATIVE_ITER* iteratorNative)
         : iteratorNative(iteratorNative, &HELPER::nativeIterDrop),
           obj() {}
