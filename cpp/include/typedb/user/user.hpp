@@ -34,8 +34,22 @@ public:
     User& operator=(User&&) = default;
     ~User() = default;
 
+    /**
+     * Returns the name of this user.
+     */
     std::string username();
+
+    /**
+     * Returns the number of seconds remaining till this user’s current password expires.
+     */
     std::optional<int64_t> passwordExpirySeconds();
+
+    /**
+     * Updates the password for this user.
+     *
+     * @param passwordOld The current password of this user
+     * @param passwordNew The new password
+     */
     void passwordUpdate(const UserManager& userManager, const std::string& passwordOld, const std::string& passwordNew);
 
 private:

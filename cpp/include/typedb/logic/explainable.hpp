@@ -44,13 +44,34 @@ private:
     friend class IteratorHelper<_native::StringPairIterator, _native::StringPair, OwnerAttributePair>;
 };
 
+
+/**
+ * \brief Contains an explainable object.
+ */
 class Explainable {
 public:
     Explainable(const Explainable&) = delete;
     Explainable(Explainable&&) = default;
     ~Explainable() = default;
 
+    /**
+     * Retrieves the unique ID that identifies this <code>Explainable</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * explainable.id();
+     * </pre>
+     */
     int64_t explainableId();
+
+    /**
+     * Retrieves the subquery of the original query that is actually being explained.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * explainable.conjunction();
+     * </pre>
+     */
     std::string conjunction();
 
 private:
@@ -70,7 +91,7 @@ using OwnerAttributePairIterator = Iterator<_native::StringPairIterator, _native
 using OwnerAttributePairIterable = Iterable<_native::StringPairIterator, _native::StringPair, OwnerAttributePair>;
 
 /**
- * Contains explainable objects.
+ * \brief Contains explainable objects.
  */
 class Explainables {
 public:
@@ -147,7 +168,7 @@ public:
 
     /**
      * A string representation of this object.
-    */
+     */
     std::string toString();
 
 private:
