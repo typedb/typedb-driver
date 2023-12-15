@@ -28,17 +28,6 @@ using namespace TypeDB;
 
 namespace TypeDB {
 
-Credential::Credential(const std::string& username, const std::string& password, bool withTLS, const std::string& customRootCAStr) {
-    const char* customRootCA = customRootCAStr != "" ? customRootCAStr.c_str() : nullptr;
-    auto p = _native::credential_new(username.c_str(), password.c_str(), customRootCA, withTLS);
-    DriverException::check_and_throw();
-    credentialNative = NativePointer<_native::Credential>(p, _native::credential_drop);
-}
-
-_native::Credential* Credential::getNative() const {
-    return credentialNative.get();
-}
-
 void Driver::initLogging() {
     _native::init_logging();
 }
@@ -80,6 +69,17 @@ Session Driver::session(const std::string& database, SessionType sessionType, co
 User Driver::user() {
     CHECK_NATIVE(connectionNative);
     return users.getCurrentUser();
+}
+
+Credential::Credential(const std::string& username, const std::string& password, bool withTLS, const std::string& customRootCAPath) {
+    const char* customRootCA = customRootCAPath != "" ? customRootCAPath.c_str() : nullptr;
+    auto p = _native::credential_new(username.c_str(), password.c_str(), customRootCA, withTLS);
+    DriverException::check_and_throw();
+    credentialNative = NativePointer<_native::Credential>(p, _native::credential_drop);
+}
+
+_native::Credential* Credential::getNative() const {
+    return credentialNative.get();
 }
 
 }  // namespace TypeDB

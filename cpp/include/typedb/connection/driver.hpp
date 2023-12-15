@@ -29,42 +29,7 @@
 
 namespace TypeDB {
 
-class Driver;
-
-/**
- * \brief User credentials and TLS encryption settings for connecting to TypeDB Cloud.
- *
- * <h3>Examples</h3>
- * <pre>
- * // Creates a credential as above, but the connection will be made over TLS.
- * Credential credential = new TypeDBCredential(username, password, true);
- *
- * // Creates a credential as above, but TLS will use the specified CA to authenticate server certificates.
- * Credential credential = new TypeDBCredential(username, password, Path.of("path/to/ca-certificate.pem"));
- * </pre>
- */
-class Credential {
-public:
-    /**
-     *
-     * @param username The name of the user to connect as
-     * @param password The password for the user
-     * @param tlsEnabled Specify whether the connection to TypeDB Cloud must be done over TLS
-     * @param tlsRootCAPath Optional, Path to a custom CA certificate to use for authenticating server certificates.
-     */
-    Credential(const std::string& username, const std::string& password, bool withTLS, const std::string& customRootCAStr = "");
-    Credential(const Credential&) = delete;
-    Credential& operator=(const Credential&) = delete;
-    Credential(Credential&&) = default;
-    Credential& operator=(Credential&&) = default;
-
-private:
-    NativePointer<_native::Credential> credentialNative;
-
-    _native::Credential* getNative() const;
-
-    friend class Driver;
-};
+class Credential;
 
 /**
  * \brief A connection to a TypeDB server which serves as the starting point for all interaction.
@@ -167,6 +132,41 @@ public:
 
 private:
     Driver(TypeDB::_native::Connection* conn) noexcept;
+};
+
+/**
+ * \brief User credentials and TLS encryption settings for connecting to TypeDB Cloud.
+ *
+ * <h3>Examples</h3>
+ * <pre>
+ * // Creates a credential as above, but the connection will be made over TLS.
+ * Credential credential(username, password, true);
+ *
+ * // Creates a credential as above, but TLS will use the specified CA to authenticate server certificates.
+ * Credential credential(username, password, "path/to/ca-certificate.pem");
+ * </pre>
+ */
+class Credential {
+public:
+    /**
+     *
+     * @param username The name of the user to connect as
+     * @param password The password for the user
+     * @param withTLS Specify whether the connection to TypeDB Cloud must be done over TLS
+     * @param customRootCAPath Optional, Path to a custom CA certificate to use for authenticating server certificates.
+     */
+    Credential(const std::string& username, const std::string& password, bool withTLS, const std::string& customRootCAPath = "");
+    Credential(const Credential&) = delete;
+    Credential& operator=(const Credential&) = delete;
+    Credential(Credential&&) = default;
+    Credential& operator=(Credential&&) = default;
+
+private:
+    NativePointer<_native::Credential> credentialNative;
+
+    _native::Credential* getNative() const;
+
+    friend class Driver;
 };
 
 }  // namespace TypeDB
