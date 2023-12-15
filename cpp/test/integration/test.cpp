@@ -27,7 +27,7 @@
 
 #include "gtest/gtest.h"
 
-#include "typedb.hpp"
+#include "typedb_driver.hpp"
 
 using namespace TypeDB;
 
