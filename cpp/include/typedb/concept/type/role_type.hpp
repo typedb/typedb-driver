@@ -30,22 +30,125 @@ public:
     std::string getScope();
 
     // Inherited
+    
+    /// \copydoc Type::getLabel()
     virtual std::string getLabel() override;
+
+    /// \copydoc Type::setLabel(Transaction&, const std::string&)
     [[nodiscard]] virtual VoidFuture setLabel(Transaction& transaction, const std::string& newLabel) override;
+
+    /// \copydoc Type::isAbstract()
     virtual bool isAbstract() override;
 
+    /// \copydoc Type::deleteType(Transaction&)
     [[nodiscard]] virtual VoidFuture deleteType(Transaction& transaction) override;
+
+     /// \copydoc Type::isDeleted(Transaction&)
     [[nodiscard]] virtual BoolFuture isDeleted(Transaction& transaction) override;
 
     // Mimic overriding from Type
+    /**
+     * Retrieves the most immediate supertype of the <code>RoleType</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * roleType.getSupertype(transaction).get();
+     * </pre>
+     *
+     * @param transaction The current transaction
+     */
     ConceptPtrFuture<RoleType> getSupertype(Transaction& transaction);
+
+    /**
+     * Retrieves all supertypes of the <code>RoleType</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * roleType.getSupertypes(transaction);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     */
     ConceptIterable<RoleType> getSupertypes(Transaction& transaction);
+
+    /**
+     * Retrieves all direct and indirect (or direct only) subtypes of the <code>RoleType</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * roleType.getSubtypes(transaction, transitivity);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param transitivity <code>Transitivity::TRANSITIVE</code> for direct and indirect subtypes,
+     *                     <code>Transitivity::EXPLICIT</code> for direct subtypes only
+     */
     ConceptIterable<RoleType> getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);
 
+    /**
+     * Retrieves the <code>RelationType</code> that this role is directly related to.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * roleType.getRelationType(transaction).get();
+     * </pre>
+     *
+     * @param transaction The current transaction
+     */
     ConceptPtrFuture<RelationType> getRelationType(Transaction& transaction);
+
+    /**
+     * Retrieves <code>RelationType</code>s that this role is related to (directly or indirectly).
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * roleType.getRelationTypes(transaction);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     */
     ConceptIterable<RelationType> getRelationTypes(Transaction& transaction);
+
+    /**
+     * Retrieves the <code>ThingType</code>s whose instances play this role.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * roleType.getPlayerTypes(transaction, transitivity)
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect playing,
+     *                     <code>Transitivity.EXPLICIT</code> for direct playing only
+     */
     ConceptIterable<ThingType> getPlayerTypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);
+
+    /**
+     * Retrieves the <code>Relation</code> instances that this role is related to.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * roleType.getRelationInstances(transaction, transitivity)
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param transitivity <code>Transitivity::TRANSITIVE</code> for direct and indirect relation,
+     *                     <code>Transitivity::EXPLICIT</code> for direct relation only
+     */
     ConceptIterable<Relation> getRelationInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);
+
+    /**
+     * Retrieves the <code>Thing</code> instances that play this role.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * roleType.getPlayerInstances(transaction, transitivity);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param transitivity <code>Transitivity::TRANSITIVE</code> for direct and indirect playing,
+     *                     <code>Transitivity::EXPLICIT</code> for direct playing only
+     */
     ConceptIterable<Thing> getPlayerInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);
 
 private:

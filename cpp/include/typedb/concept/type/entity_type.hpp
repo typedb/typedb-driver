@@ -30,10 +30,48 @@ class Entity;
 
 class EntityType : public ThingType {
 public:
+
+    /**
+     * Creates and returns a new instance of this <code>EntityType</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * entityType.create(transaction).get();
+     * </pre>
+     *
+     * @param transaction The current transaction
+     */
     [[nodiscard]] ConceptPtrFuture<Entity> create(Transaction& transaction);
+
     [[nodiscard]] VoidFuture setSupertype(Transaction& transaction, EntityType* superEntityType);
 
+    /**
+     * Retrieves <code>Entity</code> objects that are instances of this exact <code>EntityType</code> OR
+     * this <code>EntityType</code> and any of its subtypes.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * entityType.getInstances(transaction, transitivity);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param transitivity <code>Transitivity::EXPLICIT</code> for direct instances only,
+     *                     <code>Transitivity::TRANSITIVE</code> to include subtypes
+     */
     ConceptIterable<Entity> getInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);
+    
+    /**
+     * Retrieves all direct and indirect (or direct only) subtypes of the <code>EntityType</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * entityType.getSubtypes(transaction, transitivity);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param transitivity <code>Transitivity::TRANSITIVE</code> for direct and indirect subtypes,
+     *                     <code>Transitivity::EXPLICIT</code> for direct subtypes only
+     */
     ConceptIterable<EntityType> getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);  // Mimic overriding from Type
 
 private:

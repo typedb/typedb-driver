@@ -31,18 +31,125 @@ typedef std::chrono::time_point<std::chrono::system_clock, std::chrono::millisec
 
 class Value : public Concept {
 public:
+    /**
+     * Retrieves the <code>ValueType</code> of this value concept.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.getType()
+     * </pre>
+     */
     ValueType valueType();
 
+    /**
+     * Returns <code>true</code> if the value which this value concept holds is of type <code>boolean</code>.
+     * Otherwise, returns <code>false</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.isBoolean()
+     * </pre>
+     */
     bool isBoolean();
+
+    /**
+     * Returns <code>true</code> if the value which this value concept holds is of type <code>long</code>.
+     * Otherwise, returns <code>false</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.isLong()
+     * </pre>
+     */
     bool isLong();
+
+        /**
+     * Returns <code>true</code> if the value which this value concept holds is of type <code>double</code>.
+     * Otherwise, returns <code>false</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.isDouble();
+     * </pre>
+     */
     bool isDouble();
+
+    /**
+     * Returns <code>true</code> if the value which this value concept holds is of type <code>string</code>.
+     * Otherwise, returns <code>false</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.isString();
+     * </pre>
+     */
     bool isString();
+
+    /**
+     * Returns <code>True</code> if the value which this value concept holds is of type <code>DateTime</code>.
+     * Otherwise, returns <code>false</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.isDatetime();
+     * </pre>
+     */
     bool isDateTime();
 
+
+    /**
+     * Returns a <code>boolean</code> value of this value concept.
+     * If the value has another type, raises an exception.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.asBoolean();
+     * </pre>
+     */
     bool asBoolean();
+
+    /**
+     * Returns a <code>long</code> value of this value concept.
+     *  If the value has another type, raises an exception.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.asLong();
+     * </pre>
+     */
     int64_t asLong();
+
+    /**
+     * Returns a <code>double</code> value of this value concept.
+     * If the value has another type, raises an exception.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.asDouble();
+     * </pre>
+     */
     double asDouble();
+
+    /**
+     * Returns a <code>string</code> value of this value concept.
+     *  If the value has another type, raises an exception.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.asString();
+     * </pre>
+     */
     std::string asString();
+
+    /**
+     * Returns a <code>DateTime</code> value of this value concept.
+     * If the value has another type, raises an exception.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * value.asDatetime();
+     * </pre>
+     */
     DateTime asDateTime();
 
     static std::string formatDateTime(DateTime t);
