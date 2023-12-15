@@ -920,7 +920,7 @@ jobs:
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\clib\deploy_release.bat
       - persist_to_workspace:
-          root: ~/dist
+          root: dist
           paths: ["./*"]
 
   ############
@@ -1032,7 +1032,7 @@ jobs:
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\cpp\deploy_release.bat
       - persist_to_workspace:
-          root: ~/dist
+          root: dist
           paths: ["./*"]
 
   ################################

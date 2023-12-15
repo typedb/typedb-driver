@@ -9,7 +9,7 @@ Documentation: https://typedb.com/docs/clients/rust-driver
 
 
 ```sh
-cargo add typedb-driver@2.26.0
+cargo add typedb-driver@2.26.1
 ```
 
 
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/clients/java-driver
     <dependency>
         <groupid>com.vaticle.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>2.26.0</version>
+        <version>2.26.1</version>
     </dependency>
 </dependencies>
 ```
@@ -42,7 +42,7 @@ Documentation: https://typedb.com/docs/clients/python-driver
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==2.26.0
+pip install typedb-driver==2.26.1
 ```
 
 ### NodeJS driver
@@ -56,11 +56,11 @@ npm install typedb-driver@
 
 ### C++ driver
 
-Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/2.26.0
+Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/2.26.1
 
 ### C driver
 
-Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/2.26.0
+Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/2.26.1
 
 
 
@@ -118,16 +118,10 @@ Compiled distributions comprising headers and shared libraries available at: htt
 
 
 ## Other Improvements
+  
 - **Fix circleci assembly tests for C++ driver**
   Fix assembly test paths broken in previous commit
   
-  
-- **Update dependencies and VERSION to 2.26.0**
-
 - **Release pipeline for C++ driver**
   Introduce build targets & jobs for the release pipeline of the C++ driver
   
-  
-- **Add CLS and ENT as enterprise error message synonyms**
-
-    
