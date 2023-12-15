@@ -31,7 +31,7 @@ namespace TypeDB {
 class Transaction;
 
 /**
- * \brief Provides methods for manipulating rules in the database.
+ * \brief Provides methods for manipulating <code>Rule</code>s in the database.
  */
 class LogicManager {
 public:

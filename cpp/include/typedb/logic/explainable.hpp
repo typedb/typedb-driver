@@ -34,7 +34,7 @@ class QueryManager;
 class Explainables;
 
 /**
- * \brief Simple class holding owner & attribute identifying an explainable ownership.
+ * \brief Simple class holding the owner concept & owned attribute identifying an explainable ownership.
 */
 class OwnerAttributePair {
 public:

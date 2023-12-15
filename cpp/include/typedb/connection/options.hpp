@@ -30,7 +30,7 @@ class Transaction;
 class QueryManager;
 
 /**
- * \brief TypeDB session and transaction options.
+ * \brief TypeDB Session and Transaction options.
  *
  * <code>Options</code> can be used to override the default server behaviour.
  */
