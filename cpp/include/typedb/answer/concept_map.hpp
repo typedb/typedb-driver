@@ -29,6 +29,10 @@
 
 namespace TypeDB {
 
+
+/**
+ * \brief Contains a mapping of variables to concepts.
+ */
 class ConceptMap {
 public:
     ConceptMap(const ConceptMap&) = delete;

@@ -25,6 +25,13 @@
 
 namespace TypeDB {
 
+/**
+ * \brief Relation types (or subtypes of the relation root type) represent relationships between types.
+ * 
+ * Relation types have roles.
+ * Other types can play roles in relations if it’s mentioned in their definition.
+ * A relation type must specify at least one role.
+ */
 class RelationType : public ThingType {
 public:
     

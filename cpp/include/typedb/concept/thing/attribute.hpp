@@ -26,9 +26,10 @@
 namespace TypeDB {
 
 /**
- * <p>Attribute is an instance of the attribute type and has a value.
- * This value is fixed and unique for every given instance of the attribute type.</p>
- * <p>Attributes can be uniquely addressed by their type and value.</p>
+ * \brief Attribute is an instance of the attribute type and has a value.
+ * 
+ * This value is fixed and unique for every given instance of the attribute type.
+ * Attributes can be uniquely addressed by their type and value.
  */
 class Attribute : public Thing {
 public:

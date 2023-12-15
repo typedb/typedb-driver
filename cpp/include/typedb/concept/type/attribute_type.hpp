@@ -31,7 +31,8 @@ class Attribute;
 
 
 /**
- * Attribute types represent properties that other types can own.
+ * \brief Attribute types represent properties that other types can own.
+ * 
  * <p>Attribute types have a value type. This value type is fixed and unique for every given instance
  * of the attribute type.
  * <p>Other types can own an attribute type. That means that instances of these other types can own an instance

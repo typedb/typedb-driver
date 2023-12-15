@@ -25,6 +25,7 @@
 
 namespace TypeDB {
 
+/// Common super-type of EntityType, RelationType, and AttributeType
 class ThingType : public Type {
 public:
     /// \copydoc Type::getLabel()

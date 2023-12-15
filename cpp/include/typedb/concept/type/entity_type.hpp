@@ -28,6 +28,9 @@ namespace TypeDB {
 
 class Entity;
 
+/**
+ * \brief Entity types represent the classification of independent objects in the data model of the business domain.
+ */
 class EntityType : public ThingType {
 public:
 

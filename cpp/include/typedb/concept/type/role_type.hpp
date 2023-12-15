@@ -24,6 +24,13 @@
 
 namespace TypeDB {
 
+/**
+ * \brief Defines a role an instance can play in a Relation.
+ * 
+ * Roles are special internal types used by relations. We can not create an instance of a role in a database. 
+ * But we can set an instance of another type (role player) to play a role in a particular instance of a relation type.
+ * Roles allow a schema to enforce logical constraints on types of role players.
+ */
 class RoleType : public Type {
 public:
     std::string getName();

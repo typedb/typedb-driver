@@ -33,7 +33,7 @@ template <typename NATIVE_ITER, typename NATIVE_T, typename T>
 class IteratorHelper;
 
 /**
- * Exceptions raised by the driver.
+ *  \brief Exceptions raised by the driver.
  */
 class DriverException : public std::runtime_error {
 public:

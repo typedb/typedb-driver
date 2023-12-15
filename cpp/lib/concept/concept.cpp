@@ -61,8 +61,19 @@ Annotation::Annotation(_native::Annotation* annotationNative)
 Annotation Annotation::key() {
     return Annotation(_native::annotation_new_key());
 }
+
 Annotation Annotation::unique() {
     return Annotation(_native::annotation_new_unique());
+}
+
+bool Annotation::isKey() {
+    CHECK_NATIVE(annotationNative);
+    return _native::annotation_is_key(annotationNative.get());
+}
+
+bool Annotation::isUnique() {
+    CHECK_NATIVE(annotationNative);
+    return _native::annotation_is_unique(annotationNative.get());
 }
 
 std::string Annotation::toString() {

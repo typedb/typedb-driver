@@ -25,6 +25,7 @@
 
 namespace TypeDB {
 
+/// Common super-type of Entity, Relation, and Attribute
 class Thing : public Concept {
 public:
     /**

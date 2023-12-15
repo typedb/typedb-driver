@@ -34,7 +34,8 @@ template <typename RETURN, typename NATIVE_PROMISE>
 class FutureHelper;
 
 /**
- * A structure emulating std::future, used as result of an asynchronous call to the server.
+ * \brief A structure emulating std::future, used as result of an asynchronous call to the server.
+ * 
  * Note that a future must be evaluated for any server-side exceptions to be raised.
 */
 template <typename RETURN, typename NATIVE_PROMISE, typename HELPER = FutureHelper<RETURN, NATIVE_PROMISE> >

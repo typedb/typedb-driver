@@ -28,7 +28,7 @@
 namespace TypeDB {
 
 /**
- * Contains an element of the group query result.
+ * \brief Contains an element of the group query result.
  */
 class ConceptMapGroup {
 public:

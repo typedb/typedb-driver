@@ -28,7 +28,7 @@
 namespace TypeDB {
 
 /**
- * Contains an element of the group aggregate query result.
+ *  \brief Contains an element of the group aggregate query result.
  */
 class ValueGroup {
 public:
