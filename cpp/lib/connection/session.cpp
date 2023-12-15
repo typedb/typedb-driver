@@ -59,8 +59,12 @@ uintptr_t registerCallback(std::function<void()> callback) {
     return id;
 }
 
-Session::Session(_native::Session* sessionNative)
-    : sessionNative(sessionNative, _native::session_close) {}
+Session::Session(_native::Session* sessionNative, SessionType type)
+    : sessionNative(sessionNative, _native::session_close), sessionType(type) {}
+
+SessionType Session::type() const {
+    return sessionType;
+}
 
 bool Session::isOpen() const {
     return sessionNative != nullptr && _native::session_is_open(sessionNative.get());
