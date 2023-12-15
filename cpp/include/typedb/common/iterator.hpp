@@ -177,7 +177,7 @@ private:
 };
 
 /**
- * \internal
+ * \private
 */
 template <typename NATIVE_ITER, typename NATIVE_T, typename T>
 class IteratorHelper {

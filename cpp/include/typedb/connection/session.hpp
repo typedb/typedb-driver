@@ -40,6 +40,9 @@ enum class SessionType {
 
 class DatabaseManager;  // forward declaration for friendship
 
+/**
+ * \brief A session with a TypeDB database.
+*/
 class Session {
 public:
     Session(const Session&) = delete;

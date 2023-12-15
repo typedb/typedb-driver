@@ -66,6 +66,9 @@ private:
     friend class Driver;
 };
 
+/**
+ * \brief A connection to a TypeDB server which serves as the starting point for all interaction.
+*/
 class Driver {
 private:
     NativePointer<_native::Connection> connectionNative;  // Remains on top for construction order

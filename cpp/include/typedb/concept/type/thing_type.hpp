@@ -260,6 +260,7 @@ protected:
     friend class ConceptFactory;
 };
 
+/// \private
 class RootThingType : public ThingType {
 protected:
     RootThingType(_native::Concept* conceptNative);

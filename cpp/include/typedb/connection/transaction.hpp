@@ -45,6 +45,10 @@ enum class TransactionType {
 class Session;
 class Concept;
 
+
+/**
+ * \brief A transaction with a TypeDB database.
+*/
 class Transaction {
 private:
     NativePointer<_native::Transaction> transactionNative;

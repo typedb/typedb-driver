@@ -31,7 +31,7 @@ class DatabaseManager;
 class Database;
 
 /**
- * The metadata and state of an individual raft replica of a database.
+ * \brief The metadata and state of an individual raft replica of a database.
  */
 class ReplicaInfo {
 public:
@@ -72,6 +72,9 @@ private:
 using ReplicaInfoIterable = Iterable<_native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo>;
 using ReplicaInfoIterator = Iterator<_native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo>;
 
+/**
+ * \brief A TypeDB database
+*/
 class Database {
 public:
     Database(const Database&) = delete;

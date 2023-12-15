@@ -27,6 +27,9 @@ namespace TypeDB {
 
 class UserManager;
 
+/**
+ * \brief TypeDB user information
+ */
 class User {
 public:
     User(_native::User*);

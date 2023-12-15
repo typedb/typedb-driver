@@ -29,6 +29,9 @@ namespace TypeDB {
 
 typedef std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds> DateTime;
 
+/**
+ * \brief A primitive value. Holds the value of an attribute, or the result of an expression in a query.
+ */
 class Value : public Concept {
 public:
     /**

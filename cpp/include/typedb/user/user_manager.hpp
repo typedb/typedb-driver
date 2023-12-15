@@ -30,6 +30,9 @@ class Driver;  // forward declaration for friendship
 using UserIterator = Iterator<_native::UserIterator, _native::User, User>;
 using UserIterable = Iterable<_native::UserIterator, _native::User, User>;
 
+/**
+ * \brief Provides access to all user management methods.
+ */
 class UserManager {
 public:
     ~UserManager() = default;

@@ -81,6 +81,9 @@ using JSONString = std::string;
 
 class JSONBuilder;
 
+/**
+ * \brief Simple JSON structure for results of fetch queries.
+*/
 class JSON {
 public:
     static JSON parse(const std::string& string);
@@ -93,18 +96,64 @@ public:
 
     JSONType type() const;
 
+    /**
+     * true if this JSON object holds a map, else false
+    */
     bool isMap() const;
+
+    /**
+     * true if this JSON object holds an array, else false
+    */
     bool isArray() const;
+
+    /**
+     * true if this JSON object holds a boolean value, else false
+    */
     bool isBoolean() const;
+
+    /**
+     * true if this JSON object holds a long value, else false
+    */
     bool isLong() const;
+
+    /**
+     * true if this JSON object holds a double value, else false
+    */
     bool isDouble() const;
+
+    /**
+     * true if this JSON object holds a string value, else false
+    */
     bool isString() const;
 
+    /**
+     * if this JSON object holds a map, returns the underlying map. Else throws an exception
+    */
     const JSONMap& asMap() const;
+
+    /**
+     * if this JSON object holds an array, returns the underlying array. Else throws an exception
+    */
     const JSONArray& asArray() const;
+
+    /**
+     * if this JSON object holds a boolean value, returns the value. Else throws an exception
+    */
     const JSONBoolean& asBoolean() const;
+    
+    /**
+     * if this JSON object holds a long value, returns the value. Else throws an exception
+    */
     const JSONLong& asLong() const;
+
+    /**
+     * if this JSON object holds a double value, returns the value. Else throws an exception
+    */
     const JSONDouble& asDouble() const;
+
+    /**
+     * if this JSON object holds a string value, returns the value. Else throws an exception
+    */
     const JSONString& asString() const;
 
 private:

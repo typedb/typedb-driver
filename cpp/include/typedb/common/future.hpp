@@ -30,6 +30,9 @@
 
 namespace TypeDB {
 
+/**
+ * \private
+*/
 template <typename RETURN, typename NATIVE_PROMISE>
 class FutureHelper;
 

@@ -33,10 +33,13 @@ class ConceptMap;
 class QueryManager;
 class Explainables;
 
+/**
+ * \brief Simple class holding owner & attribute identifying an explainable ownership.
+*/
 class OwnerAttributePair {
 public:
-    std::string owner;
-    std::string attribute;
+    const std::string owner;
+    const std::string attribute;
 
 private:
     OwnerAttributePair(_native::StringPair* stringPairNative);
