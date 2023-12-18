@@ -29,6 +29,7 @@ load("@vaticle_bazel_distribution//platform:constraints.bzl", "constraint_linux_
      "constraint_mac_arm64", "constraint_mac_x86_64", "constraint_win_x86_64")
 load("//tool/docs:cpp/rules.bzl", "doxygen_to_adoc")
 load(":build_opts.bzl", "cxxopts")
+load("//cpp:docs_structure.bzl", "dir_mapping")
 
 pkg_files(
     name = "typedb-driver-cpp-headers",
@@ -211,7 +212,7 @@ doxygen_docs(
 doxygen_to_adoc(
     name = "docs_adoc",
     data = [":docs_html"],
-    docs_dirs = {"a": "b"}
+    docs_dirs = dir_mapping
 )
 
 # Formatting tests

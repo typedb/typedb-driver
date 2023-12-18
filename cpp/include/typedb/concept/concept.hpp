@@ -93,7 +93,7 @@ private:
 };
 
 /**
- * \brief The exact type of a Concept object. Use for downcasting to the appropriate type.
+ * The exact type of a Concept object. Use for downcasting to the appropriate type.
  */
 enum class ConceptType {
     ROOT_THING_TYPE,
@@ -111,7 +111,7 @@ enum class ConceptType {
 };
 
 /**
- * \brief What type of primitive value is held by a Value or Attribute.
+ * What type of primitive value is held by a Value or Attribute.
  */
 enum class ValueType {
     OBJECT,
@@ -124,7 +124,7 @@ enum class ValueType {
 };
 
 /**
- * \brief Used in ConceptAPI to specify whether to query only explicit schema constraints
+ * Used in ConceptAPI to specify whether to query only explicit schema constraints
  * or also include transitive ones
  */
 enum class Transitivity {
