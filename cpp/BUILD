@@ -19,7 +19,7 @@
 # under the License.
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_dependencies//builder/cpp:rules.bzl", "clang_format_test")
+load("@vaticle_dependencies//builder/cpp:rules.bzl", "doxygen_docs", "clang_format_test")
 load("@vaticle_bazel_distribution//common:rules.bzl", "assemble_targz", "assemble_zip", "checksum", "assemble_versioned")
 load("@vaticle_bazel_distribution//artifact:rules.bzl", "deploy_artifact")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
@@ -197,6 +197,14 @@ alias(
         "@vaticle_bazel_distribution//platform:is_mac_x86_64" : ":deploy-mac-x86_64-zip",
         "@vaticle_bazel_distribution//platform:is_windows_x86_64" : ":deploy-windows-x86_64-zip"
     })
+)
+
+# docs
+doxygen_docs(
+    name = "cpp-driver-docs",
+    project_name = "TypeDB C++ Driver",
+    sources = glob(["include/**/*"]),
+    main_page_md = ":README.md",
 )
 
 # Formatting tests
