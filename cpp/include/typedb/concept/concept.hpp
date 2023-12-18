@@ -92,6 +92,9 @@ private:
     friend class ConceptFactory;
 };
 
+/**
+ * \brief The exact type of a Concept object. Use for downcasting to the appropriate type.
+ */
 enum class ConceptType {
     ROOT_THING_TYPE,
 
@@ -107,8 +110,12 @@ enum class ConceptType {
     VALUE,
 };
 
+/**
+ * \brief What type of primitive value is held by a Value or Attribute.
+ */
 enum class ValueType {
     OBJECT,
+
     BOOLEAN,
     LONG,
     DOUBLE,
@@ -116,6 +123,10 @@ enum class ValueType {
     DATETIME,
 };
 
+/**
+ * \brief Used in ConceptAPI to specify whether to query only explicit schema constraints
+ * or also include transitive ones
+ */
 enum class Transitivity {
     EXPLICIT,
     TRANSITIVE,

@@ -58,6 +58,9 @@ const std::string ATTRIBUTE = "attribute";
 
 }  // namespace JSONConstant
 
+/**
+ * \brief Specifies the exact type of this JSON object
+ */
 enum class JSONType {
     NONE,
 
