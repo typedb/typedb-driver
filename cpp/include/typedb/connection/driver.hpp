@@ -58,6 +58,14 @@ public:
      */
     UserManager users;
 
+    /**
+     * Enables logging in the TypeDB driver.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * Driver::initLogging();
+     * </pre>
+     */
     static void initLogging();
 
     /**

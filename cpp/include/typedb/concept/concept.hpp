@@ -164,6 +164,14 @@ public:
     Concept& operator=(const Concept&) = delete;
     Concept& operator=(Concept&&) = default;
 
+    /**
+    * Returns the ConceptType of this concept.
+    *
+    * <h3>Examples</h3>
+    * <pre>
+    * switch(concept.getConceptType()) { ... }
+    * </pre>
+    */
     ConceptType getConceptType();
 
     /**
@@ -383,12 +391,12 @@ public:
     static bool equals(Concept* first, Concept* second);
 
 protected:
+    /// \private
     ConceptType conceptType;
+    /// \private
     NativePointer<_native::Concept> conceptNative;
 
     Concept(ConceptType conceptType, _native::Concept* conceptNative);
-
-    static std::unique_ptr<Concept> ofNative(_native::Concept* conceptNative);
 
     friend class ConceptFactory;
 };
@@ -404,6 +412,5 @@ template <typename T>
 using ConceptIterable = Iterable<ConceptIteratorWrapper, _native::Concept, std::unique_ptr<T>>;
 template <typename T>
 using ConceptIterator = Iterator<ConceptIteratorWrapper, _native::Concept, std::unique_ptr<T>>;
-
 
 }  // namespace TypeDB

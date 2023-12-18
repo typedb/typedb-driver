@@ -129,9 +129,11 @@ public:
 
 protected:
     Type(ConceptType conceptType, _native::Concept* conceptNative);
-
+    /// \private
     ConceptFutureWrapper* getSuperTypeFutureNative(Transaction& transaction);
+    /// \private
     ConceptIteratorWrapper* getSubtypesIteratorNative(Transaction& transaction, Transitivity transitivity);
+    /// \private
     ConceptIteratorWrapper* getSupertypesIteratorNative(Transaction& transaction);
 };
 

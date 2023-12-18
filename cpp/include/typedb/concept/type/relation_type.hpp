@@ -85,7 +85,23 @@ public:
      */
     [[nodiscard]] VoidFuture setRelates(Transaction& transaction, const std::string& roleLabel, const std::string& overriddenLabel);
 
+    /**
+     * Variant of \ref unsetRelates(Transaction& transaction, const std::string& roleLabel) "unsetRelates"
+     * where the RoleType is specified directly rather than the label.
+     */
     [[nodiscard]] VoidFuture unsetRelates(Transaction& transaction, RoleType* roleType);
+
+    /**
+     * Disallows this <code>RelationType</code> from relating to the given role.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * relationType.unsetRelates(transaction, roleLabel).get();
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param roleLabel The role to not relate to the relation type.
+     */
     [[nodiscard]] VoidFuture unsetRelates(Transaction& transaction, const std::string& roleLabel);
 
     /**

@@ -38,9 +38,9 @@ class Explainables;
 */
 class OwnerAttributePair {
 public:
-     /// \brief The owner concept
+     /// \brief The owner concept \details .
     const std::string owner;
-    /// \brief The owned attribute
+    /// \brief The owned attribute \details .
     const std::string attribute;
 
 private:

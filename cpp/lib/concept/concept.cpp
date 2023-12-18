@@ -80,10 +80,6 @@ std::string Annotation::toString() {
     TO_STRING(annotationNative, _native::annotation_to_string);
 }
 
-std::unique_ptr<Concept> Concept::ofNative(_native::Concept* conceptNative) {
-    return ConceptFactory::ofNative(conceptNative);
-}
-
 Concept::Concept(ConceptType conceptType, _native::Concept* conceptNative)
     : conceptType(conceptType), conceptNative(conceptNative, _native::concept_drop) {
 }

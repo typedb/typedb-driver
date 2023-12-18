@@ -33,7 +33,25 @@ namespace TypeDB {
  */
 class RoleType : public Type {
 public:
+
+    /**
+    * Returns the name of this role type's label.
+    *
+    * <h3>Examples</h3>
+    * <pre>
+    * label.getName();
+    * </pre>
+    */
     std::string getName();
+
+    /**
+     * Returns the scope part of this role type's label.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * label.getScope();
+     * </pre>
+     */
     std::string getScope();
 
     // Inherited

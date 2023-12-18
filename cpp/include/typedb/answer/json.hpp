@@ -89,6 +89,9 @@ class JSONBuilder;
 */
 class JSON {
 public:
+    /**
+    * Parses a JSON string into a <code>JSON</code> object.
+    */
     static JSON parse(const std::string& string);
     ~JSON();
 
@@ -97,6 +100,13 @@ public:
     JSON(JSON&&);
     JSON& operator=(JSON&&);
 
+    /*
+     * The JSONType of this JSON object
+     * <h3>Examples</h3>
+     * <pre>
+     * switch(json.type() { ... }
+     * </pre>
+     */
     JSONType type() const;
 
     /**
