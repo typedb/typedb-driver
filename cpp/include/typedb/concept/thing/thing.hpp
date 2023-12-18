@@ -124,7 +124,9 @@ public:
      */
     ConceptIterable<Attribute> getHas(Transaction& transaction, const std::initializer_list<Annotation>& annotations = {});
 
-
+    /**
+     * See \ref getHas(Transaction&, const std::vector<std::unique_ptr<AttributeType>>&) "getHas"
+    */
     ConceptIterable<Attribute> getHas(Transaction& transaction, const AttributeType* attribute);
 
     /**

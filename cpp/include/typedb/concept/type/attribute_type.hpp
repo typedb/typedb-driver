@@ -52,6 +52,17 @@ public:
      */
     ValueType getValueType();
 
+    /**
+     * Sets the supplied <code>AttributeType</code> as the supertype of the current <code>AttributeType</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * attributeType.setSupertype(transaction, superType).resolve();
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param attributeType The <code>AttributeType</code> to set as the supertype of this <code>AttributeType</code>
+     */
     [[nodiscard]] VoidFuture setSupertype(Transaction& transaction, AttributeType* attributeType);
 
     /**

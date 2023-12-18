@@ -27,6 +27,7 @@ load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
 load("@vaticle_bazel_distribution//platform:constraints.bzl", "constraint_linux_arm64", "constraint_linux_x86_64",
      "constraint_mac_arm64", "constraint_mac_x86_64", "constraint_win_x86_64")
+load("//tool/docs:cpp/rules.bzl", "doxygen_to_adoc")
 load(":build_opts.bzl", "cxxopts")
 
 pkg_files(
@@ -201,10 +202,16 @@ alias(
 
 # docs
 doxygen_docs(
-    name = "cpp-driver-docs",
+    name = "docs_html",
     project_name = "TypeDB C++ Driver",
     sources = glob(["include/**/*"]),
     main_page_md = ":README.md",
+)
+
+doxygen_to_adoc(
+    name = "docs_adoc",
+    data = [":docs_html"],
+    docs_dirs = {"a": "b"}
 )
 
 # Formatting tests

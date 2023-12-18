@@ -475,7 +475,7 @@ Promise<? extends AttributeType> getOwnsOverridden​(TypeDBTransaction transact
                                                    AttributeType attributeType)
 ----
 
-Retrieves an ``AttributeType``, ownership of which is overridden for this ``ThingType`` by a given ``attribute_type``. 
+Retrieves an ``AttributeType``, ownership of which is overridden for this ``ThingType`` by a given ``AttributeType``. 
 
 
 [caption=""]

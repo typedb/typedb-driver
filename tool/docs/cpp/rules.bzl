@@ -19,16 +19,25 @@
 # under the License.
 #
 
-try-import ./.bazel-remote-cache.rc
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
 
-common --enable_platform_specific_config
-
-build --incompatible_strict_action_env --java_language_version=11 --javacopt='--release 11' --enable_runfiles  --java_runtime_version=remotejdk_11
-run --incompatible_strict_action_env --java_runtime_version=remotejdk_11
-test --incompatible_strict_action_env --test_env=PATH --cache_test_results=no --java_runtime_version=remotejdk_11
-
-build:linux --stamp --workspace_status_command=$PWD/workspace-status.sh
-build:macos --stamp --workspace_status_command=$PWD/workspace-status.sh
-
-# TODO
-# build:windows --stamp --workspace_status_command=workspace-status.bat
+def doxygen_to_adoc(name, data, docs_dirs):
+    args = ["$(location %s)" % target for target in data] + [
+        "--output",
+        "cpp/docs",
+    ] + ["--dir=%s=%s" % (filename, docs_dirs[filename]) for filename in docs_dirs]
+    kt_jvm_binary(
+        name = name,
+        srcs = [
+            "//tool/docs:cpp/DoxygenParser.kt",
+        ],
+        main_class = "com.vaticle.typedb.driver.tool.docs.cpp.DoxygenParserKt",
+        args = args,
+        deps = [
+            "//tool/docs:html_docs_to_adoc_lib",
+            "@maven//:org_jsoup_jsoup",
+            "@maven//:info_picocli_picocli",
+        ],
+        data = data,
+        visibility = ["//visibility:public"],
+    )

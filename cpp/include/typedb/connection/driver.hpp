@@ -27,6 +27,10 @@
 
 #include <string>
 
+// The namespace comment is needed to document enums.
+/**
+ * \brief Namespace encapsulating everything in TypeDB
+ */
 namespace TypeDB {
 
 class Credential;

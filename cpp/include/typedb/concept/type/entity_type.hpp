@@ -46,6 +46,17 @@ public:
      */
     [[nodiscard]] ConceptPtrFuture<Entity> create(Transaction& transaction);
 
+    /**
+     * Sets the supplied <code>EntityType</code> as the supertype of the current <code>EntityType</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * entityType.setSupertype(transaction, entityType).get();
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param superEntityType The <code>EntityType</code> to set as the supertype of this <code>EntityType</code>
+     */
     [[nodiscard]] VoidFuture setSupertype(Transaction& transaction, EntityType* superEntityType);
 
     /**

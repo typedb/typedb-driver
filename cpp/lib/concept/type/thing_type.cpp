@@ -52,7 +52,8 @@ BoolFuture ThingType::isDeleted(Transaction& transaction) {
 }
 
 bool ThingType::isRoot() {
-    return conceptType == ConceptType::ROOT_THING_TYPE;
+    CHECK_NATIVE(conceptNative);
+    return _native::thing_type_is_root(conceptNative.get());
 }
 
 bool ThingType::isAbstract() {

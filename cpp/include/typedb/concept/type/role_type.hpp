@@ -44,6 +44,16 @@ public:
     /// \copydoc Type::setLabel(Transaction&, const std::string&)
     [[nodiscard]] virtual VoidFuture setLabel(Transaction& transaction, const std::string& newLabel) override;
 
+    /**
+     * Checks if the type is a root type.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * type.isRoot();
+     * </pre>
+     */
+    bool isRoot();
+
     /// \copydoc Type::isAbstract()
     virtual bool isAbstract() override;
 
