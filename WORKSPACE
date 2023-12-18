@@ -248,7 +248,12 @@ register_jq_toolchains()
 load("@vaticle_dependencies//tool/common:deps.bzl", vaticle_dependencies_tool_maven_artifacts = "maven_artifacts")
 load("@vaticle_typedb_common//dependencies/maven:artifacts.bzl", vaticle_typedb_common_maven_artifacts = "artifacts")
 load("@vaticle_typeql//dependencies/maven:artifacts.bzl", vaticle_typeql_maven_artifacts = "artifacts")
-load("//dependencies/maven:artifacts.bzl", vaticle_typedb_driver_java_maven_artifacts = "artifacts", vaticle_typedb_driver_java_maven_overrides = "overrides")
+load(
+    "//dependencies/maven:artifacts.bzl",
+    vaticle_typedb_driver_java_maven_artifacts = "artifacts",
+    vaticle_typedb_driver_java_maven_overrides = "overrides",
+    vaticle_typedb_driver_java_internal_artifacts = "internal_artifacts",
+)
 load("@vaticle_bazel_distribution//maven:deps.bzl", vaticle_bazel_distribution_maven_artifacts = "maven_artifacts")
 
 load("@vaticle_dependencies//library/maven:rules.bzl", "maven")
@@ -258,7 +263,8 @@ maven(
     vaticle_dependencies_tool_maven_artifacts +
     vaticle_typedb_driver_java_maven_artifacts +
     vaticle_bazel_distribution_maven_artifacts,
-    vaticle_typedb_driver_java_maven_overrides
+    internal_artifacts = vaticle_typedb_driver_java_internal_artifacts,
+    override_targets = vaticle_typedb_driver_java_maven_overrides,
 )
 
 ################################################

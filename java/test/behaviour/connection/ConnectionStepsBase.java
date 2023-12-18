@@ -21,11 +21,11 @@
 
 package com.vaticle.typedb.driver.test.behaviour.connection;
 
+import com.vaticle.typedb.core.test.runner.TypeDBSingleton;
 import com.vaticle.typedb.driver.api.TypeDBDriver;
 import com.vaticle.typedb.driver.api.TypeDBOptions;
 import com.vaticle.typedb.driver.api.TypeDBSession;
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
-import com.vaticle.typedb.common.test.TypeDBSingleton;
 import com.vaticle.typedb.driver.api.database.Database;
 
 import java.util.ArrayList;

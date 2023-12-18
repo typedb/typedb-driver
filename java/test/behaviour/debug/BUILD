@@ -43,7 +43,7 @@ typedb_java_test(
     runtime_deps = [
         "//java/test/behaviour/connection:steps-core",
         "//java/test/behaviour/config:parameters",
-        "//java/test/behaviour/typeql:steps",
+        "//java/test/behaviour/query:steps",
         "//java/test/behaviour/connection/session:steps",
     ],
     data = [
