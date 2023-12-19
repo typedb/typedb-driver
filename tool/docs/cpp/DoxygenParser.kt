@@ -32,7 +32,6 @@ import picocli.CommandLine
 import picocli.CommandLine.Parameters
 import java.io.File
 import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.concurrent.Callable
 import kotlin.system.exitProcess
@@ -75,23 +74,8 @@ class DoxygenParser : Callable<Unit> {
                 element.text().startsWith("enum class")
             }.map { element -> element.parents().select(".memitem").first() }.forEach {
                 val parsedEnum = parseEnum(it!!)
-                System.out.println("TODO: Enum:" + parsedEnum.name)
-            }
-        }
-
-        System.out.println(dirs)
-        // class files
-        File(inputDirectoryName).walkTopDown().filter {
-            it.toString().startsWith("cpp/doxygen_docs/html/class_type_") && it.toString().endsWith(".html")
-                    && !it.toString().contains("-members")
-        }.forEach {
-            val html = File(it.path).readText(Charsets.UTF_8)
-            val parsed = Jsoup.parse(html)
-            val parsedClass = parseClass(parsed, it.parent)
-            System.out.println("TODO: Class:" + parsedClass.name)
-            if (parsedClass.isNotEmpty()) {
-                val parsedClassAsciiDoc = parsedClass.toAsciiDoc("cpp")
-                val fileName = "${generateFilename(parsedClass.name)}.adoc"
+                val parsedClassAsciiDoc = parsedEnum.toAsciiDoc("cpp")
+                val fileName = "${generateFilename(parsedEnum.name)}.adoc"
                 val fileDir = docsDir.resolve(dirs[fileName]
                     ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided"))
                 if (!fileDir.toFile().exists()) {
@@ -102,9 +86,32 @@ class DoxygenParser : Callable<Unit> {
                 outputFile.writeText(parsedClassAsciiDoc)
             }
         }
+
+        // class files
+        File(inputDirectoryName).walkTopDown().filter {
+            it.toString().startsWith("cpp/doxygen_docs/html/class_type_") && it.toString().endsWith(".html")
+                    && !it.toString().contains("-members")
+        }.forEach {
+            val html = File(it.path).readText(Charsets.UTF_8)
+            val parsed = Jsoup.parse(html)
+            val parsedClass = parseClass(parsed, it.parent)
+            if (parsedClass.isNotEmpty()) {
+                val parsedEnumAsciiDoc = parsedClass.toAsciiDoc("cpp")
+                val fileName = "${generateFilename(parsedClass.name)}.adoc"
+                val fileDir = docsDir.resolve(dirs[fileName]
+                    ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided"))
+                if (!fileDir.toFile().exists()) {
+                    Files.createDirectory(fileDir)
+                }
+                val outputFile = fileDir.resolve(fileName).toFile()
+                outputFile.createNewFile()
+                outputFile.writeText(parsedEnumAsciiDoc)
+            }
+        }
     }
 
     private fun parseMemberDecls(document: Element): Map<String, List<Element>> {
+        var missingDeclarations : MutableList<String> = ArrayList()
         var map: MutableMap<String, List<Element>> = HashMap();
         document.select("table.memberdecls").forEach { table ->
             val heading: String = table.selectFirst("tr.heading > td > h2 > a")!!.id()
@@ -117,12 +124,15 @@ class DoxygenParser : Callable<Unit> {
                 val methodDetails =
                     document.selectFirst("div.contents > a#" + id)?.nextElementSibling()?.nextElementSibling()
                 if (methodDetails == null) {
-                    System.err.println("Member details not found: " + document.selectFirst("#r_" + id)!!.text())
+                    missingDeclarations.add(document.selectFirst("#r_" + id)!!.text())
                 } else {
                     members.add(methodDetails!!)
                 }
             }
             map[heading] = members
+        }
+        if (!missingDeclarations.isEmpty()) {
+            System.out.println("Missing some member declarations:\n\t-" + missingDeclarations.joinToString("\n\t-"))
         }
         return map;
     }
@@ -138,7 +148,6 @@ class DoxygenParser : Callable<Unit> {
         val classExamples = document.select("div.textblock > pre").map { replaceSpaces(it.text()) }
 
         val memberDecls = parseMemberDecls(document)
-        System.out.println("--- " + className + " ---")
         val superClasses = document.select("tr.inherit_header")
             .map { it.text().substringAfter("inherited from ") }
             .toSet().toList()
@@ -151,7 +160,6 @@ class DoxygenParser : Callable<Unit> {
                 parseMethod(it!!, classAnchor)
             }
 
-        System.out.println(superClasses)
         return Class(
             name = className,
             anchor = classAnchor,
@@ -166,7 +174,8 @@ class DoxygenParser : Callable<Unit> {
 
     private fun parseEnum(element: Element): Class {
         val id = element.previousElementSibling()?.previousElementSibling()?.id()!!
-        val className = element.select("td.memname > a").text()
+        val fullyQualifiedName = element.select("td.memname > a").text()
+        val className = fullyQualifiedName.substringAfterLast("::")
         val classAnchor = replaceSymbolsForAnchor(className)
         val classDescr: List<String> = element.selectFirst("div.memdoc")
             ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
