@@ -1,0 +1,19 @@
+[#_Iterator__NATIVE_ITER__NATIVE_T__T__HELPER_]
+=== Iterator< NATIVE_ITER, NATIVE_T, T, HELPER >
+
+*Package*: `TypeDB`
+
+
+ template&lt;typename NATIVE_ITER, typename NATIVE_T, typename T, typename HELPER = IteratorHelper&lt;NATIVE_ITER, NATIVE_T, T&gt;&gt;
+ 
+  class TypeDB::Iterator&lt; NATIVE_ITER, NATIVE_T, T, HELPER &gt;
+
+
+A structure emulating std::iterator, used for streaming of query results from the server.
+
+It is an ``input_iterator``, meaning it can only be consumed once. Valid operations are ``++it`` and ``*it`` 
+
+Note that ``it++`` is deleted, and ``*it`` can only be called once per iterator position, owing to the move semantics of the returned data.
+
+Also see ``Iterable``
+

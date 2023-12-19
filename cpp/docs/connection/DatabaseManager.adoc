@@ -1,0 +1,107 @@
+[#_DatabaseManager]
+=== DatabaseManager
+
+*Package*: `TypeDB`
+
+
+
+Provides access to all database management methods.
+
+// tag::methods[]
+[#_abdfbdffdc21072b92e1b57be43043d47]
+==== all
+
+[source,cpp]
+----
+DatabaseIterable TypeDB::DatabaseManager::all() const
+----
+
+
+
+Retrieves all databases present on the TypeDB server
+
+
+[caption=""]
+.Returns
+`DatabaseIterable`
+
+[#_a13639baabe89a271328c878df28d237a]
+==== contains
+
+[source,cpp]
+----
+bool TypeDB::DatabaseManager::contains(const std::string&) const
+----
+
+
+
+Checks if a database with the given name exists
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| The database name to be checked a| 
+|===
+
+[caption=""]
+.Returns
+`bool`
+
+[#_a03a65e63018714b6e1c579ab3f356d0c]
+==== create
+
+[source,cpp]
+----
+void TypeDB::DatabaseManager::create(const std::string&) const
+----
+
+
+
+Create a database with the given name
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| The name of the database to be created a| 
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[#_a4909291504c38f08022fc38f7e0cf56a]
+==== get
+
+[source,cpp]
+----
+Database TypeDB::DatabaseManager::get(const std::string&) const
+----
+
+
+
+Retrieve the database with the given name.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `name` a| The name of the database to retrieve a| 
+|===
+
+[caption=""]
+.Returns
+`Database`
+
+// end::methods[]
+

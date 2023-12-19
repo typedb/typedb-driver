@@ -1,0 +1,157 @@
+[#_Rule]
+=== Rule
+
+*Package*: `TypeDB`
+
+
+
+Rules are a part of schema and define embedded logic.
+
+The reasoning engine uses rules as a set of logic to infer new data. A rule consists of a condition and a conclusion, and is uniquely identified by a label.
+
+// tag::methods[]
+[#_a6525ac3db39e38400021b70eb73b39eb]
+==== deleteRule
+
+[source,cpp]
+----
+VoidFuture TypeDB::Rule::deleteRule(Transaction& transaction)
+----
+
+
+
+Deletes this rule.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current ``Transaction`` a| 
+|===
+
+[caption=""]
+.Returns
+`VoidFuture`
+
+[#_a5ed602145823258b39b4d854913a56e1]
+==== isDeleted
+
+[source,cpp]
+----
+BoolFuture TypeDB::Rule::isDeleted(Transaction& transaction)
+----
+
+
+
+Check if this rule has been deleted.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current ``Transaction`` a| 
+|===
+
+[caption=""]
+.Returns
+`BoolFuture`
+
+[#_a1bdc672360530ff16be3c39cd7c44b16]
+==== label
+
+[source,cpp]
+----
+std::string TypeDB::Rule::label()
+----
+
+
+
+Retrieves the unique label of the rule.
+
+[caption=""]
+.Returns
+`std::string`
+
+[#_a5c5f8edf5dc709aeb80e511aa4f35708]
+==== setLabel
+
+[source,cpp]
+----
+VoidFuture TypeDB::Rule::setLabel(Transaction& transaction, const std::string& label)
+----
+
+
+
+Renames the label of the rule. The new label must remain unique.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current ``Transaction`` a| 
+a| `label` a| The new label to be given to the rule a| 
+|===
+
+[caption=""]
+.Returns
+`VoidFuture`
+
+[#_a7b03637b0511015d032538b9ce98ff3a]
+==== then
+
+[source,cpp]
+----
+std::string TypeDB::Rule::then()
+----
+
+
+
+The single statement that constitutes the ‘then’ of the rule.
+
+[caption=""]
+.Returns
+`std::string`
+
+[#_a40dffe620259231bfbde88be61f39492]
+==== toString
+
+[source,cpp]
+----
+std::string TypeDB::Rule::toString()
+----
+
+
+
+A string representation of this Rule.
+
+[caption=""]
+.Returns
+`std::string`
+
+[#_a275b42491dac8a568124d795ec640538]
+==== when
+
+[source,cpp]
+----
+std::string TypeDB::Rule::when()
+----
+
+
+
+The statements that constitute the ‘when’ of the rule.
+
+[caption=""]
+.Returns
+`std::string`
+
+// end::methods[]
+

@@ -1,0 +1,220 @@
+[#_JSON]
+=== JSON
+
+*Package*: `TypeDB`
+
+
+
+Simple JSON structure for results of fetch queries.
+
+// tag::methods[]
+[#_aac1347b00044b88dea390e779bb2c21a]
+==== asArray
+
+[source,cpp]
+----
+const JSONArray& TypeDB::JSON::asArray() const
+----
+
+
+
+if this JSON object holds an array, returns the underlying array. Else throws an exception
+
+[caption=""]
+.Returns
+`const JSONArray&`
+
+[#_a22b24ea4edcad0b3a7e822ccb77eca67]
+==== asBoolean
+
+[source,cpp]
+----
+const JSONBoolean& TypeDB::JSON::asBoolean() const
+----
+
+
+
+if this JSON object holds a boolean value, returns the value. Else throws an exception
+
+[caption=""]
+.Returns
+`const JSONBoolean&`
+
+[#_abab68d02483a6b94f212c1b6d48a48d4]
+==== asDouble
+
+[source,cpp]
+----
+const JSONDouble& TypeDB::JSON::asDouble() const
+----
+
+
+
+if this JSON object holds a double value, returns the value. Else throws an exception
+
+[caption=""]
+.Returns
+`const JSONDouble&`
+
+[#_a895c5419aa3b82275f3bb822a5b35b4c]
+==== asLong
+
+[source,cpp]
+----
+const JSONLong& TypeDB::JSON::asLong() const
+----
+
+
+
+if this JSON object holds a long value, returns the value. Else throws an exception
+
+[caption=""]
+.Returns
+`const JSONLong&`
+
+[#_aae655af5f950ce983fcd82e2de7dbc4e]
+==== asMap
+
+[source,cpp]
+----
+const JSONMap& TypeDB::JSON::asMap() const
+----
+
+
+
+if this JSON object holds a map, returns the underlying map. Else throws an exception
+
+[caption=""]
+.Returns
+`const JSONMap&`
+
+[#_a33b5bff5b4c86874400acd6214f3ecd1]
+==== asString
+
+[source,cpp]
+----
+const JSONString& TypeDB::JSON::asString() const
+----
+
+
+
+if this JSON object holds a string value, returns the value. Else throws an exception
+
+[caption=""]
+.Returns
+`const JSONString&`
+
+[#_a419d60e5a26870b0fb36bdd0ccd1a6f5]
+==== isArray
+
+[source,cpp]
+----
+bool TypeDB::JSON::isArray() const
+----
+
+
+
+true if this JSON object holds an array, else false
+
+[caption=""]
+.Returns
+`bool`
+
+[#_a14c7132a8e9b8feb77a18d870f491221]
+==== isBoolean
+
+[source,cpp]
+----
+bool TypeDB::JSON::isBoolean() const
+----
+
+
+
+true if this JSON object holds a boolean value, else false
+
+[caption=""]
+.Returns
+`bool`
+
+[#_a8d85e9d0e08acd2fe63c05f68902c5c6]
+==== isDouble
+
+[source,cpp]
+----
+bool TypeDB::JSON::isDouble() const
+----
+
+
+
+true if this JSON object holds a double value, else false
+
+[caption=""]
+.Returns
+`bool`
+
+[#_aa6ec960840bc7c0fef89de2149f1f7b5]
+==== isLong
+
+[source,cpp]
+----
+bool TypeDB::JSON::isLong() const
+----
+
+
+
+true if this JSON object holds a long value, else false
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ac3856d405d4a859911bae38ea00eeea7]
+==== isMap
+
+[source,cpp]
+----
+bool TypeDB::JSON::isMap() const
+----
+
+
+
+true if this JSON object holds a map, else false
+
+[caption=""]
+.Returns
+`bool`
+
+[#_a8d9a53eab52b25450958e5dac7971d16]
+==== isString
+
+[source,cpp]
+----
+bool TypeDB::JSON::isString() const
+----
+
+
+
+true if this JSON object holds a string value, else false
+
+[caption=""]
+.Returns
+`bool`
+
+[#_a80bc5a961a935fd08c5942d5d7d2a132]
+==== parse
+
+[source,cpp]
+----
+static JSON TypeDB::JSON::parse(const std::string& string) static
+----
+
+
+
+Parses a JSON string into a ``JSON`` object.
+
+[caption=""]
+.Returns
+`static JSON`
+
+// end::methods[]
+

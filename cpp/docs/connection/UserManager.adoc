@@ -1,0 +1,161 @@
+[#_UserManager]
+=== UserManager
+
+*Package*: `TypeDB`
+
+
+
+Provides access to all user management methods.
+
+// tag::methods[]
+[#_aae3c54d8958508a127a49666bb38df93]
+==== all
+
+[source,cpp]
+----
+UserIterable TypeDB::UserManager::all() const
+----
+
+
+
+Retrieves all users which exist on the TypeDB server.
+
+
+[caption=""]
+.Returns
+`UserIterable`
+
+[#_a52e0a8dcbd3590c87c66568621735a2e]
+==== contains
+
+[source,cpp]
+----
+bool TypeDB::UserManager::contains(const std::string& username) const
+----
+
+
+
+Checks if a user with the given name exists.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The user name to be checked a| 
+|===
+
+[caption=""]
+.Returns
+`bool`
+
+[#_a6424b6d4a367716643e3d3e8ce490eda]
+==== create
+
+[source,cpp]
+----
+void TypeDB::UserManager::create(const std::string& username, const std::string& password) const
+----
+
+
+
+Creates a user with the given name &amp; password.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to be created a| 
+a| `password` a| The password of the user to be created a| 
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[#_a3d4c0e9b08ad6d7a3feda5ff19f4b053]
+==== deleteUser
+
+[source,cpp]
+----
+void TypeDB::UserManager::deleteUser(const std::string& username) const
+----
+
+
+
+Deletes a user with the given name.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to be deleted a| 
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[#_a3b05355061b1100a2b63a5082599432d]
+==== get
+
+[source,cpp]
+----
+std::unique_ptr< User > TypeDB::UserManager::get(const std::string& username) const
+----
+
+
+
+Retrieves a user with the given name.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to retrieve a| 
+|===
+
+[caption=""]
+.Returns
+`std::unique_ptr< User >`
+
+[#_acea7c14d75167957d05a6dbdb7d713d6]
+==== passwordSet
+
+[source,cpp]
+----
+void TypeDB::UserManager::passwordSet(const std::string& username, const std::string& password) const
+----
+
+
+
+Sets a new password for a user. This operation can only be performed by administrators.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `username` a| The name of the user to set the password of a| 
+a| `password` a| The new password a| 
+|===
+
+[caption=""]
+.Returns
+`void`
+
+// end::methods[]
+

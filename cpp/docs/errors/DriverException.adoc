@@ -1,0 +1,46 @@
+[#_DriverException]
+=== DriverException
+
+*Package*: `TypeDB`
+
+
+
+Exceptions raised by the driver.
+
+// tag::methods[]
+[#_a2878db987bf5e9b3be3094b2c1320fd1]
+==== code
+
+[source,cpp]
+----
+const std::string_view TypeDB::DriverException::code()
+----
+
+
+
+Retrieves the error code.
+
+
+[caption=""]
+.Returns
+`const std::string_view`
+
+[#_a673eaa1331e3ce8c34371bf8677df5e5]
+==== message
+
+[source,cpp]
+----
+const std::string_view TypeDB::DriverException::message()
+----
+
+
+
+Retrieves the descriptive error message.
+
+
+[caption=""]
+.Returns
+`const std::string_view`
+
+// end::methods[]
+

@@ -1,0 +1,96 @@
+[#_Annotation]
+=== Annotation
+
+*Package*: `TypeDB`
+
+
+
+Annotations are used to specify extra schema constraints.
+
+// tag::methods[]
+[#_a58fa094838a58c2deb1ed8e0adde90e5]
+==== isKey
+
+[source,cpp]
+----
+bool TypeDB::Annotation::isKey()
+----
+
+
+
+Checks if this ``Annotation`` is a ``@key`` annotation.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_a98f01432e4f935404a36ae7ed74c914c]
+==== isUnique
+
+[source,cpp]
+----
+bool TypeDB::Annotation::isUnique()
+----
+
+
+
+Checks if this ``Annotation`` is a ``@unique`` annotation.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_a946402733736d1dc65397f1c14f3f591]
+==== key
+
+[source,cpp]
+----
+static Annotation TypeDB::Annotation::key() static
+----
+
+
+
+Produces a ``@key`` annotation.
+
+
+[caption=""]
+.Returns
+`static Annotation`
+
+[#_a714ab90c6688860c1c3dbf4cf6c73347]
+==== toString
+
+[source,cpp]
+----
+std::string TypeDB::Annotation::toString()
+----
+
+
+
+A string representation of this Annotation.
+
+[caption=""]
+.Returns
+`std::string`
+
+[#_ac2801009a30540a8f62368f1eea4c8da]
+==== unique
+
+[source,cpp]
+----
+static Annotation TypeDB::Annotation::unique() static
+----
+
+
+
+Produces a ``@unique`` annotation.
+
+
+[caption=""]
+.Returns
+`static Annotation`
+
+// end::methods[]
+

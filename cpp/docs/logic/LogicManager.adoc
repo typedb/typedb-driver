@@ -1,0 +1,83 @@
+[#_LogicManager]
+=== LogicManager
+
+*Package*: `TypeDB`
+
+
+
+Provides methods for manipulating ``Rule``s in the database.
+
+// tag::methods[]
+[#_a8e1fe9a41e6211a0b4d23306dff4fd91]
+==== getRule
+
+[source,cpp]
+----
+OptionalRuleFuture TypeDB::LogicManager::getRule(const std::string& label) const
+----
+
+
+
+Retrieves the Rule that has the given label.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the Rule to create or retrieve a| 
+|===
+
+[caption=""]
+.Returns
+`OptionalRuleFuture`
+
+[#_ad55988a139cece28085e84352aa1dcfb]
+==== getRules
+
+[source,cpp]
+----
+RuleIterable TypeDB::LogicManager::getRules() const
+----
+
+
+
+Retrieves all rules.
+
+
+[caption=""]
+.Returns
+`RuleIterable`
+
+[#_a991b28042fe882a9827d28a1126d243c]
+==== putRule
+
+[source,cpp]
+----
+RuleFuture TypeDB::LogicManager::putRule(const std::string& label, const std::string& when, const std::string& then) const
+----
+
+
+
+Creates a new Rule if none exists with the given label, or replaces the existing one.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the Rule to create or replace a| 
+a| `when` a| The when body of the rule to create a| 
+a| `then` a| The then body of the rule to create a| 
+|===
+
+[caption=""]
+.Returns
+`RuleFuture`
+
+// end::methods[]
+

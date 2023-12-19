@@ -1,0 +1,125 @@
+[#_EntityType]
+=== EntityType
+
+*Package*: `TypeDB`
+
+*Supertypes:*
+
+* `TypeDB::ThingType`
+* `TypeDB::Type`
+* `TypeDB::Concept`
+
+
+
+Entity types represent the classification of independent objects in the data model of the business domain.
+
+// tag::methods[]
+[#_a92b4681b384b0e5bb06ac180a42490fc]
+==== create
+
+[source,cpp]
+----
+ConceptPtrFuture< Entity > TypeDB::EntityType::create(Transaction& transaction)
+----
+
+
+
+Creates and returns a new instance of this ``EntityType``.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< Entity >`
+
+[#_a92553427d085ac3c21ba2096c58ab8b6]
+==== getInstances
+
+[source,cpp]
+----
+ConceptIterable< Entity > TypeDB::EntityType::getInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+----
+
+
+
+Retrieves ``Entity`` objects that are instances of this exact ``EntityType`` OR this ``EntityType`` and any of its subtypes.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `transitivity` a| ``Transitivity::EXPLICIT`` for direct instances only, ``Transitivity::TRANSITIVE`` to include subtypes a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptIterable< Entity >`
+
+[#_aa574b7836f6db8e87f70d0adcc5f92b7]
+==== getSubtypes
+
+[source,cpp]
+----
+ConceptIterable< EntityType > TypeDB::EntityType::getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+----
+
+
+
+Retrieves all direct and indirect (or direct only) subtypes of the ``EntityType``.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtypes, ``Transitivity::EXPLICIT`` for direct subtypes only a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptIterable< EntityType >`
+
+[#_aef74680b34cab1104fd748f3cc010c4d]
+==== setSupertype
+
+[source,cpp]
+----
+VoidFuture TypeDB::EntityType::setSupertype(Transaction& transaction, EntityType* superEntityType)
+----
+
+
+
+Sets the supplied ``EntityType`` as the supertype of the current ``EntityType``.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `superEntityType` a| The ``EntityType`` to set as the supertype of this ``EntityType`` a| 
+|===
+
+[caption=""]
+.Returns
+`VoidFuture`
+
+// end::methods[]
+

@@ -1,0 +1,318 @@
+[#_Value]
+=== Value
+
+*Package*: `TypeDB`
+
+*Supertypes:*
+
+* `TypeDB::Concept`
+
+// tag::methods[]
+[#_a23342c18e17b460177a8fb98afb05784]
+==== asBoolean
+
+[source,cpp]
+----
+bool TypeDB::Value::asBoolean()
+----
+
+
+
+Returns a ``boolean`` value of this value concept. If the value has another type, raises an exception.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_a8af7df0f73137804b091d23099714aef]
+==== asDateTime
+
+[source,cpp]
+----
+DateTime TypeDB::Value::asDateTime()
+----
+
+
+
+Returns a ``DateTime`` value of this value concept. If the value has another type, raises an exception.
+
+
+[caption=""]
+.Returns
+`DateTime`
+
+[#_a0961709f38118b122f574fa1de09d172]
+==== asDouble
+
+[source,cpp]
+----
+double TypeDB::Value::asDouble()
+----
+
+
+
+Returns a ``double`` value of this value concept. If the value has another type, raises an exception.
+
+
+[caption=""]
+.Returns
+`double`
+
+[#_a801c569ac31476964e98e47455d78b30]
+==== asLong
+
+[source,cpp]
+----
+int64_t TypeDB::Value::asLong()
+----
+
+
+
+Returns a ``long`` value of this value concept. If the value has another type, raises an exception.
+
+
+[caption=""]
+.Returns
+`int64_t`
+
+[#_aa0c5de79239fa0d44757cf04d53880ad]
+==== asString
+
+[source,cpp]
+----
+std::string TypeDB::Value::asString()
+----
+
+
+
+Returns a ``string`` value of this value concept. If the value has another type, raises an exception.
+
+
+[caption=""]
+.Returns
+`std::string`
+
+[#_afa5e3047d1d80926916c2d5ae25d78bb]
+==== formatDateTime
+
+[source,cpp]
+----
+static std::string TypeDB::Value::formatDateTime(DateTime t) static
+----
+
+
+
+Returns a string in the TypeQL DateTime format corresponding to the specified DateTime (yyyy-mm-dd'T'HH:MM:SS)
+
+
+[caption=""]
+.Returns
+`static std::string`
+
+[#_af2024bfc30c74db3dffb9bfdad5c7ed2]
+==== isBoolean
+
+[source,cpp]
+----
+bool TypeDB::Value::isBoolean()
+----
+
+
+
+Returns ``true`` if the value which this value concept holds is of type ``boolean``. Otherwise, returns ``false``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ac25baeba3a07bebed2edcd8ba2485674]
+==== isDateTime
+
+[source,cpp]
+----
+bool TypeDB::Value::isDateTime()
+----
+
+
+
+Returns ``True`` if the value which this value concept holds is of type ``DateTime``. Otherwise, returns ``false``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ab8536a2edf8143d171a3f9dabd8e409d]
+==== isDouble
+
+[source,cpp]
+----
+bool TypeDB::Value::isDouble()
+----
+
+
+
+Returns ``true`` if the value which this value concept holds is of type ``double``. Otherwise, returns ``false``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_a6564c54d4abc542375e9dbd3047d8722]
+==== isLong
+
+[source,cpp]
+----
+bool TypeDB::Value::isLong()
+----
+
+
+
+Returns ``true`` if the value which this value concept holds is of type ``long``. Otherwise, returns ``false``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_a40de7d9aed87b0dc11785c5e826592df]
+==== isString
+
+[source,cpp]
+----
+bool TypeDB::Value::isString()
+----
+
+
+
+Returns ``true`` if the value which this value concept holds is of type ``string``. Otherwise, returns ``false``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_a1faa8a8586b4a94d87420a050c337ce8]
+==== of
+
+[source,cpp]
+----
+static std::unique_ptr< Value > TypeDB::Value::of(bool value) static
+----
+
+
+
+Creates a new Value object of the specified boolean value.
+
+
+[caption=""]
+.Returns
+`static std::unique_ptr< Value >`
+
+[#_a548ac90ea45edafce210d7b5c9e098a4]
+==== of
+
+[source,cpp]
+----
+static std::unique_ptr< Value > TypeDB::Value::of(int64_t value) static
+----
+
+
+
+Creates a new Value object of the specified long value.
+
+
+[caption=""]
+.Returns
+`static std::unique_ptr< Value >`
+
+[#_aec3fb46077e3ea37b145464920271628]
+==== of
+
+[source,cpp]
+----
+static std::unique_ptr< Value > TypeDB::Value::of(double value) static
+----
+
+
+
+Creates a new Value object of the specified double value.
+
+
+[caption=""]
+.Returns
+`static std::unique_ptr< Value >`
+
+[#_ad34bea626b3cfa1b4979df203c4a47e6]
+==== of
+
+[source,cpp]
+----
+static std::unique_ptr< Value > TypeDB::Value::of(const std::string& value) static
+----
+
+
+
+Creates a new Value object of the specified string value.
+
+
+[caption=""]
+.Returns
+`static std::unique_ptr< Value >`
+
+[#_aa205f8b882235377dbdccde8bc2f19a4]
+==== of
+
+[source,cpp]
+----
+static std::unique_ptr< Value > TypeDB::Value::of(DateTime value) static
+----
+
+
+
+Creates a new Value object of the specified DateTime value.
+
+
+[caption=""]
+.Returns
+`static std::unique_ptr< Value >`
+
+[#_a87b5d3fc01a245e93f14068a5c753485]
+==== parseDateTime
+
+[source,cpp]
+----
+static DateTime TypeDB::Value::parseDateTime(const std::string& s) static
+----
+
+
+
+Parses a DateTime from a string in the TypeQL DateTime format (yyyy-mm-dd'T'HH:MM:SS)
+
+
+[caption=""]
+.Returns
+`static DateTime`
+
+[#_aac172d10e3337be045b2bec11bbb0640]
+==== valueType
+
+[source,cpp]
+----
+ValueType TypeDB::Value::valueType()
+----
+
+
+
+Retrieves the ``ValueType`` of this value concept.
+
+
+[caption=""]
+.Returns
+`ValueType`
+
+// end::methods[]
+

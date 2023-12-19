@@ -1,0 +1,158 @@
+[#_Explainables]
+=== Explainables
+
+*Package*: `TypeDB`
+
+
+
+Contains explainable objects.
+
+// tag::methods[]
+[#_a749996b9746637b33549c43c939fad0b]
+==== attribute
+
+[source,cpp]
+----
+Explainable TypeDB::Explainables::attribute(std::string& variable)
+----
+
+
+
+Retrieves the explainable attribute with the given variable name.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `variable` a| The string representation of a variable a| 
+|===
+
+[caption=""]
+.Returns
+`Explainable`
+
+[#_a5ccc44ad19a64935f2f0254e8f3ee441]
+==== attributes
+
+[source,cpp]
+----
+StringIterable TypeDB::Explainables::attributes()
+----
+
+
+
+Retrieves all of this ``ConceptMap``’s explainable attributes.
+
+
+[caption=""]
+.Returns
+`StringIterable`
+
+[#_a921b37d602032fd4370af459f0e1e72b]
+==== ownership
+
+[source,cpp]
+----
+Explainable TypeDB::Explainables::ownership(std::string& owner, std::string& attribute)
+----
+
+
+
+Retrieves the explainable attribute ownership with the pair of (owner, attribute) variable names.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `owner` a| The string representation of the owner variable a| 
+a| `attribute` a| The string representation of the attribute variable a| 
+|===
+
+[caption=""]
+.Returns
+`Explainable`
+
+[#_a577eadf72e00aa9b86ce13bfc3b2a5be]
+==== ownerships
+
+[source,cpp]
+----
+OwnerAttributePairIterable TypeDB::Explainables::ownerships()
+----
+
+
+
+Retrieves all of this ``ConceptMap``’s explainable ownerships.
+
+
+[caption=""]
+.Returns
+`OwnerAttributePairIterable`
+
+[#_ad3883f2b8331c10f57064e0170798d71]
+==== relation
+
+[source,cpp]
+----
+Explainable TypeDB::Explainables::relation(std::string& variable)
+----
+
+
+
+Retrieves the explainable relation with the given variable name.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `variable` a| The string representation of a variable a| 
+|===
+
+[caption=""]
+.Returns
+`Explainable`
+
+[#_a8dff2fc7c33a237067717c5d8f199401]
+==== relations
+
+[source,cpp]
+----
+StringIterable TypeDB::Explainables::relations()
+----
+
+
+
+Retrieves all of this ``ConceptMap``’s explainable relations.
+
+
+[caption=""]
+.Returns
+`StringIterable`
+
+[#_a21d41dfb7d5102bd9d75b72aa8b7281c]
+==== toString
+
+[source,cpp]
+----
+std::string TypeDB::Explainables::toString()
+----
+
+
+
+A string representation of this object.
+
+[caption=""]
+.Returns
+`std::string`
+
+// end::methods[]
+

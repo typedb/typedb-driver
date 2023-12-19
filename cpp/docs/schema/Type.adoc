@@ -1,0 +1,218 @@
+[#_Type]
+=== Type
+
+*Package*: `TypeDB`
+
+*Supertypes:*
+
+* `TypeDB::Concept`
+
+
+
+Common super-type of RoleType &amp; ThingType.
+
+// tag::methods[]
+[#_a02c119fea52d0812b451b2dc630788f2]
+==== deleteType
+
+[source,cpp]
+----
+virtual VoidFuture TypeDB::Type::deleteType(Transaction& transaction) pure virtual
+----
+
+
+
+Deletes this type from the database.
+
+
+Implemented in <<#_a7d93305987f2b8879ece741d6dcdd63a,TypeDB::RoleType>>, and <<#_a5399fecb5b90485c03922b496f53a835,TypeDB::ThingType>>.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+|===
+
+[caption=""]
+.Returns
+`virtual VoidFuture`
+
+[#_a22b6129c06b689a1dcc29f80f5825a5f]
+==== getLabel
+
+[source,cpp]
+----
+virtual std::string TypeDB::Type::getLabel() pure virtual
+----
+
+
+
+Retrieves the unique label of the type.
+
+
+Implemented in <<#_a05c129cbbf22af3a1481dcd70a271403,TypeDB::RoleType>>, and <<#_ae1c92d79118b5f0f245d4e478770f418,TypeDB::ThingType>>.
+
+[caption=""]
+.Returns
+`virtual std::string`
+
+[#_aa78665ab81ec7041a38b573487a2b20c]
+==== getSubtypes
+
+[source,cpp]
+----
+ConceptIterable< Type > TypeDB::Type::getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+----
+
+
+
+Retrieves all direct and indirect (or direct only) subtypes of the type.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtypes, ``Transitivity.EXPLICIT`` for direct subtypes only a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptIterable< Type >`
+
+[#_a1609ec5e0d2c51ef2914aa3e17ac921b]
+==== getSupertype
+
+[source,cpp]
+----
+ConceptPtrFuture< Type > TypeDB::Type::getSupertype(Transaction& transaction)
+----
+
+
+
+Retrieves the most immediate supertype of the type.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< Type >`
+
+[#_ab9a2bf75c555c5c0c399b86b4c1a196b]
+==== getSupertypes
+
+[source,cpp]
+----
+ConceptIterable< Type > TypeDB::Type::getSupertypes(Transaction& transaction)
+----
+
+
+
+Retrieves all supertypes of the type.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptIterable< Type >`
+
+[#_a551a46cdbc57083c935408b9c2dcea92]
+==== isAbstract
+
+[source,cpp]
+----
+virtual bool TypeDB::Type::isAbstract() pure virtual
+----
+
+
+
+Checks if the type is prevented from having data instances (i.e., ``abstract``).
+
+
+Implemented in <<#_a5a2d563f46a211a3695c408e98e4ada0,TypeDB::RoleType>>, and <<#_adb713b84d84a6c09519a5289ee0c28bb,TypeDB::ThingType>>.
+
+[caption=""]
+.Returns
+`virtual bool`
+
+[#_ab74287ca83400d5482e86ba75db86643]
+==== isDeleted
+
+[source,cpp]
+----
+virtual BoolFuture TypeDB::Type::isDeleted(Transaction& transaction) pure virtual
+----
+
+
+
+Check if the type has been deleted
+
+
+Implemented in <<#_a4d13099f460750c832b81fd642d33c23,TypeDB::RoleType>>, and <<#_a041a80538323ae62571c3c213b3fc1d7,TypeDB::ThingType>>.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+|===
+
+[caption=""]
+.Returns
+`virtual BoolFuture`
+
+[#_ae1a337de1b42d3a0feabda9cf2121a2a]
+==== setLabel
+
+[source,cpp]
+----
+virtual VoidFuture TypeDB::Type::setLabel(Transaction& transaction, const std::string& newLabel) pure virtual
+----
+
+
+
+Renames the label of the type. The new label must remain unique.
+
+
+Implemented in <<#_a7db4f837e7c8343502288a7455884491,TypeDB::RoleType>>, and <<#_a13732daa9c717d18ed3ee850f9b3a69e,TypeDB::ThingType>>.
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `label` a| The new ``Label`` to be given to the type. a| 
+|===
+
+[caption=""]
+.Returns
+`virtual VoidFuture`
+
+// end::methods[]
+

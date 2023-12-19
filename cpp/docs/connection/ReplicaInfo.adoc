@@ -1,0 +1,76 @@
+[#_ReplicaInfo]
+=== ReplicaInfo
+
+*Package*: `TypeDB`
+
+
+
+The metadata and state of an individual raft replica of a database.
+
+// tag::methods[]
+[#_a80a536f73ca13fadf6a9da0ac8b3522e]
+==== address
+
+[source,cpp]
+----
+std::string TypeDB::ReplicaInfo::address()
+----
+
+
+
+Retrieves the address of the server hosting this replica
+
+[caption=""]
+.Returns
+`std::string`
+
+[#_a00a0165e5674731f0d7e975e8ab783df]
+==== isPreferred
+
+[source,cpp]
+----
+bool TypeDB::ReplicaInfo::isPreferred()
+----
+
+
+
+Checks whether this is the preferred replica of the raft cluster. If true, Operations which can be run on any replica will prefer to use this replica.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_a4c46b2be4c2ba40e3cde9a6156e8dc67]
+==== isPrimary
+
+[source,cpp]
+----
+bool TypeDB::ReplicaInfo::isPrimary()
+----
+
+
+
+Checks whether this is the primary replica of the raft cluster.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ae8a39981df9630e990ce5632b7c655d1]
+==== term
+
+[source,cpp]
+----
+int64_t TypeDB::ReplicaInfo::term()
+----
+
+
+
+The raft protocol ‘term’ of this replica.
+
+[caption=""]
+.Returns
+`int64_t`
+
+// end::methods[]
+

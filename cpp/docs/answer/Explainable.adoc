@@ -1,0 +1,46 @@
+[#_Explainable]
+=== Explainable
+
+*Package*: `TypeDB`
+
+
+
+Contains an explainable object.
+
+// tag::methods[]
+[#_a86f7c6fe92a1588906a2a2f733b866b8]
+==== conjunction
+
+[source,cpp]
+----
+std::string TypeDB::Explainable::conjunction()
+----
+
+
+
+Retrieves the subquery of the original query that is actually being explained.
+
+
+[caption=""]
+.Returns
+`std::string`
+
+[#_aa4d5064c9dab625b0ddaf656180cd502]
+==== explainableId
+
+[source,cpp]
+----
+int64_t TypeDB::Explainable::explainableId()
+----
+
+
+
+Retrieves the unique ID that identifies this ``Explainable``.
+
+
+[caption=""]
+.Returns
+`int64_t`
+
+// end::methods[]
+

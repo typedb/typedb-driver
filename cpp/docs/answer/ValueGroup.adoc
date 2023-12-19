@@ -1,0 +1,62 @@
+[#_ValueGroup]
+=== ValueGroup
+
+*Package*: `TypeDB`
+
+
+
+Contains an element of the group aggregate query result.
+
+// tag::methods[]
+[#_aef68ccb406cc30359b36b88299ed7892]
+==== owner
+
+[source,cpp]
+----
+std::unique_ptr< Concept > TypeDB::ValueGroup::owner()
+----
+
+
+
+Retrieves the concept that is the group owner.
+
+
+[caption=""]
+.Returns
+`std::unique_ptr< Concept >`
+
+[#_af956b544be87afa2bc9c3186f41d0f6a]
+==== toString
+
+[source,cpp]
+----
+std::string TypeDB::ValueGroup::toString()
+----
+
+
+
+A string representation of this ConceptMap.
+
+[caption=""]
+.Returns
+`std::string`
+
+[#_afb367c772f2404cb0830ee693b942301]
+==== value
+
+[source,cpp]
+----
+AggregateResult TypeDB::ValueGroup::value()
+----
+
+
+
+Retrieves the ``Value`` answer of the group.
+
+
+[caption=""]
+.Returns
+`AggregateResult`
+
+// end::methods[]
+

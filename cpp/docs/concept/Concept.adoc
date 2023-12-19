@@ -1,0 +1,417 @@
+[#_Concept]
+=== Concept
+
+*Package*: `TypeDB`
+
+
+
+The fundamental TypeQL object. A Concept is either a Type, Thing, or Value.
+
+// tag::methods[]
+[#_a02f7b8e707e2a7fc38c77815a93b08ae]
+==== asAttribute
+
+[source,cpp]
+----
+Attribute* TypeDB::Concept::asAttribute()
+----
+
+
+
+Casts the concept to ``Attribute``.
+
+
+[caption=""]
+.Returns
+`Attribute*`
+
+[#_a88c88830e0f96dbacb378e301eb35e29]
+==== asAttributeType
+
+[source,cpp]
+----
+AttributeType* TypeDB::Concept::asAttributeType()
+----
+
+
+
+Casts the concept to ``EntityType``.
+
+
+[caption=""]
+.Returns
+`AttributeType*`
+
+[#_a220fa7f491cacfd38f05761d5d65af6b]
+==== asEntity
+
+[source,cpp]
+----
+Entity* TypeDB::Concept::asEntity()
+----
+
+
+
+Casts the concept to ``Entity``.
+
+
+[caption=""]
+.Returns
+`Entity*`
+
+[#_aad9300c5ce3dd25cc6776d32726ca220]
+==== asEntityType
+
+[source,cpp]
+----
+EntityType* TypeDB::Concept::asEntityType()
+----
+
+
+
+Casts the concept to ``EntityType``.
+
+
+[caption=""]
+.Returns
+`EntityType*`
+
+[#_a840ae53226b18db012daa762f5f675cf]
+==== asRelation
+
+[source,cpp]
+----
+Relation* TypeDB::Concept::asRelation()
+----
+
+
+
+Casts the concept to ``Relation``.
+
+
+[caption=""]
+.Returns
+`Relation*`
+
+[#_aa74792bf382032fdd61b76739e90ab46]
+==== asRelationType
+
+[source,cpp]
+----
+RelationType* TypeDB::Concept::asRelationType()
+----
+
+
+
+Casts the concept to ``RelationType``.
+
+
+[caption=""]
+.Returns
+`RelationType*`
+
+[#_a332f355d0b850e2a7639264f9e994ad9]
+==== asRoleType
+
+[source,cpp]
+----
+RoleType* TypeDB::Concept::asRoleType()
+----
+
+
+
+Casts the concept to ``RoleType``.
+
+
+[caption=""]
+.Returns
+`RoleType*`
+
+[#_af3e293bcbf020a2b0f0f15b3757c2d55]
+==== asThing
+
+[source,cpp]
+----
+Thing* TypeDB::Concept::asThing()
+----
+
+
+
+Casts the concept to ``Thing``.
+
+
+[caption=""]
+.Returns
+`Thing*`
+
+[#_abba3ee6549ab20fd20f1210b867766fb]
+==== asThingType
+
+[source,cpp]
+----
+ThingType* TypeDB::Concept::asThingType()
+----
+
+
+
+Casts the concept to ``ThingType``.
+
+
+[caption=""]
+.Returns
+`ThingType*`
+
+[#_ac4eceeadea7169508e85d6ea3b500a06]
+==== asValue
+
+[source,cpp]
+----
+Value* TypeDB::Concept::asValue()
+----
+
+
+
+Casts the concept to ``Value``.
+
+
+[caption=""]
+.Returns
+`Value*`
+
+[#_a85d170717eb9e3a919ce04a111ce29af]
+==== equals
+
+[source,cpp]
+----
+static bool TypeDB::Concept::equals(Concept* first, Concept* second) static
+----
+
+
+
+Checks equality of two concepts.
+
+[caption=""]
+.Returns
+`static bool`
+
+[#_a01bc7dc41badf2184131754f8b502969]
+==== getConceptType
+
+[source,cpp]
+----
+ConceptType TypeDB::Concept::getConceptType()
+----
+
+
+
+Returns the ConceptType of this concept.
+
+
+[caption=""]
+.Returns
+`ConceptType`
+
+[#_a6888d48c2a56d2dd38b4691442ef5b00]
+==== isAttribute
+
+[source,cpp]
+----
+bool TypeDB::Concept::isAttribute()
+----
+
+
+
+Checks if the concept is a ``Relation``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_a00f50385b11a7ecc6fd5703099c12744]
+==== isAttributeType
+
+[source,cpp]
+----
+bool TypeDB::Concept::isAttributeType()
+----
+
+
+
+Checks if the concept is an ``AttributeType``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_aa48e7d3824dc3a97e94159cec08265ef]
+==== isEntity
+
+[source,cpp]
+----
+bool TypeDB::Concept::isEntity()
+----
+
+
+
+Checks if the concept is an ``Entity``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_a89cb248d75c8b239084617e81d3c5a0a]
+==== isEntityType
+
+[source,cpp]
+----
+bool TypeDB::Concept::isEntityType()
+----
+
+
+
+Checks if the concept is an ``EntityType``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_a85f05be141002b32774c412406503433]
+==== isRelation
+
+[source,cpp]
+----
+bool TypeDB::Concept::isRelation()
+----
+
+
+
+Checks if the concept is a ``Value``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ac910f614980abb45a5bfcc1bd2fd2019]
+==== isRelationType
+
+[source,cpp]
+----
+bool TypeDB::Concept::isRelationType()
+----
+
+
+
+Checks if the concept is a ``RelationType``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_a7b8f376b94354340d383b21e01e5d348]
+==== isRoleType
+
+[source,cpp]
+----
+bool TypeDB::Concept::isRoleType()
+----
+
+
+
+Checks if the concept is a ``RoleType``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_a50b88d08fe69e1cc44ede4eded495551]
+==== isThing
+
+[source,cpp]
+----
+bool TypeDB::Concept::isThing()
+----
+
+
+
+Checks if the concept is a ``Thing``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_ae585a53444adcbf393950d4367496357]
+==== isThingType
+
+[source,cpp]
+----
+bool TypeDB::Concept::isThingType()
+----
+
+
+
+Checks if the concept is a ``ThingType``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_afa6260680e301d253ed63da3a2ffab35]
+==== isValue
+
+[source,cpp]
+----
+bool TypeDB::Concept::isValue()
+----
+
+
+
+Checks if the concept is a ``Value``.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_a8fe23e9efc3cfe7d27f9c93f1cd0ff7a]
+==== operator==
+
+[source,cpp]
+----
+bool TypeDB::Concept::operator==(const Concept& other)
+----
+
+
+
+Checks equality with the ``other`` concept.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_acab19ef6d8d9d71a996e83e06cc1c9b8]
+==== toString
+
+[source,cpp]
+----
+std::string TypeDB::Concept::toString()
+----
+
+
+
+A string representation of this Concept.
+
+[caption=""]
+.Returns
+`std::string`
+
+// end::methods[]
+

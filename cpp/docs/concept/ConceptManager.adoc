@@ -1,0 +1,315 @@
+[#_ConceptManager]
+=== ConceptManager
+
+*Package*: `TypeDB`
+
+
+
+Provides access for all Concept API methods.
+
+// tag::methods[]
+[#_a067d7fbe9d134450a0e51b458f08eb00]
+==== getAttribute
+
+[source,cpp]
+----
+ConceptPtrFuture< Attribute > TypeDB::ConceptManager::getAttribute(const std::string& iid) const
+----
+
+
+
+Retrieves an ``Attribute`` by its iid.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `iid` a| The iid of the ``Attribute`` to retrieve a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< Attribute >`
+
+[#_ad17f54bcf2526a9a57064ed7dc422b72]
+==== getAttributeType
+
+[source,cpp]
+----
+ConceptPtrFuture< AttributeType > TypeDB::ConceptManager::getAttributeType(const std::string& label) const
+----
+
+
+
+Retrieves an ``AttributeType`` by its label.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the ``AttributeType`` to retrieve a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< AttributeType >`
+
+[#_a09986a562b481cbb918138ebf72a5618]
+==== getEntity
+
+[source,cpp]
+----
+ConceptPtrFuture< Entity > TypeDB::ConceptManager::getEntity(const std::string& iid) const
+----
+
+
+
+Retrieves an ``Entity`` by its iid.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `iid` a| The iid of the ``Entity`` to retrieve a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< Entity >`
+
+[#_aaf353187ce6b0e0bef5ceb138ed8c28f]
+==== getEntityType
+
+[source,cpp]
+----
+ConceptPtrFuture< EntityType > TypeDB::ConceptManager::getEntityType(const std::string& label) const
+----
+
+
+
+Retrieves an ``EntityType`` by its label.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the ``EntityType`` to retrieve a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< EntityType >`
+
+[#_a3509b86fb992a7f280c938b865cddf4d]
+==== getRelation
+
+[source,cpp]
+----
+ConceptPtrFuture< Relation > TypeDB::ConceptManager::getRelation(const std::string& iid) const
+----
+
+
+
+Retrieves a ``Relation`` by its iid.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `iid` a| The iid of the ``Relation`` to retrieve a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< Relation >`
+
+[#_a5981d15504240a8f95a9c6502269c72b]
+==== getRelationType
+
+[source,cpp]
+----
+ConceptPtrFuture< RelationType > TypeDB::ConceptManager::getRelationType(const std::string& label) const
+----
+
+
+
+Retrieves a ``RelationType`` by its label.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the ``RelationType`` to retrieve a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< RelationType >`
+
+[#_af9d616cce40bc839fcb1f6a8c36dffc4]
+==== getRootAttributeType
+
+[source,cpp]
+----
+std::unique_ptr< AttributeType > TypeDB::ConceptManager::getRootAttributeType() const
+----
+
+
+
+Retrieve the root ``AttributeType``, “attribute”.
+
+
+[caption=""]
+.Returns
+`std::unique_ptr< AttributeType >`
+
+[#_ab7ac836c467178598cb05bd6fe0a3c35]
+==== getRootEntityType
+
+[source,cpp]
+----
+std::unique_ptr< EntityType > TypeDB::ConceptManager::getRootEntityType() const
+----
+
+
+
+Retrieves the root ``EntityType``, “entity”.
+
+
+[caption=""]
+.Returns
+`std::unique_ptr< EntityType >`
+
+[#_a8fa453214050ae8eccbcadbbdc2db9f9]
+==== getRootRelationType
+
+[source,cpp]
+----
+std::unique_ptr< RelationType > TypeDB::ConceptManager::getRootRelationType() const
+----
+
+
+
+Retrieve the root ``RelationType``, “relation”.
+
+
+[caption=""]
+.Returns
+`std::unique_ptr< RelationType >`
+
+[#_a27945ca1c556304c766e2f700cfc22b8]
+==== getSchemaExceptions
+
+[source,cpp]
+----
+std::vector< DriverException > TypeDB::ConceptManager::getSchemaExceptions()
+----
+
+
+
+Retrieves a list of all schema exceptions for the current transaction.
+
+
+[caption=""]
+.Returns
+`std::vector< DriverException >`
+
+[#_af872c55d793dbe378bb6ee00c9502b1c]
+==== putAttributeType
+
+[source,cpp]
+----
+ConceptPtrFuture< AttributeType > TypeDB::ConceptManager::putAttributeType(const std::string& label, ValueType valueType) const
+----
+
+
+
+Creates a new ``AttributeType`` if none exists with the given label, or retrieves the existing one.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the ``AttributeType`` to create or retrieve a| 
+a| `valueType` a| The value type of the ``AttributeType`` to create a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< AttributeType >`
+
+[#_ab175f0fc04a11c873822017f938d4459]
+==== putEntityType
+
+[source,cpp]
+----
+ConceptPtrFuture< EntityType > TypeDB::ConceptManager::putEntityType(const std::string& label) const
+----
+
+
+
+Creates a new ``EntityType`` if none exists with the given label, otherwise retrieves the existing one.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the ``EntityType`` to create or retrieve a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< EntityType >`
+
+[#_a07679ac034e3332c401d89cba8575be3]
+==== putRelationType
+
+[source,cpp]
+----
+ConceptPtrFuture< RelationType > TypeDB::ConceptManager::putRelationType(const std::string& label) const
+----
+
+
+
+Creates a new ``RelationType`` if none exists with the given label, otherwise retrieves the existing one.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the ``RelationType`` to create or retrieve a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< RelationType >`
+
+// end::methods[]
+

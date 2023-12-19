@@ -1,0 +1,187 @@
+[#_Relation]
+=== Relation
+
+*Package*: `TypeDB`
+
+*Supertypes:*
+
+* `TypeDB::Thing`
+* `TypeDB::Concept`
+
+
+
+Relation is an instance of a relation type.
+
+Relation is an instance of a relation type and can be uniquely addressed by a combination of its type, owned attributes and role players.
+
+// tag::methods[]
+[#_a5066ea129c875010ecbd8e287cb61650]
+==== addPlayer
+
+[source,cpp]
+----
+VoidFuture TypeDB::Relation::addPlayer(Transaction& transaction, RoleType* roleType, Thing* player)
+----
+
+
+
+Adds a new role player to play the given role in this ``Relation``.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `roleType` a| The role to be played by the ``player`` a| 
+a| `player` a| The thing to play the role a| 
+|===
+
+[caption=""]
+.Returns
+`VoidFuture`
+
+[#_a60326781d5b2778ff13fe006ca4040f2]
+==== getPlayers
+
+[source,cpp]
+----
+std::map< std::unique_ptr< RoleType >, std::unique_ptr< Thing > > TypeDB::Relation::getPlayers(Transaction& transaction)
+----
+
+
+
+Retrieves a mapping of all instances involved in the ``Relation`` and the role each play.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+|===
+
+[caption=""]
+.Returns
+`std::map< std::unique_ptr< RoleType >, std::unique_ptr< Thing > >`
+
+[#_a22a90b14c98d5875e0c55dcb4abe33ef]
+==== getPlayersByRoleType
+
+[source,cpp]
+----
+ConceptIterable< Thing > TypeDB::Relation::getPlayersByRoleType(Transaction& transaction, const std::vector< std::unique_ptr< RoleType > >& roleTypes)
+----
+
+
+
+Retrieves all role players of this ``Relation``, optionally filtered by given role types.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `roleTypes` a| 0 or more role types a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptIterable< Thing >`
+
+[#_af17ccf48af088f44f42a715f2007983a]
+==== getPlayersByRoleType
+
+[source,cpp]
+----
+ConceptIterable< Thing > TypeDB::Relation::getPlayersByRoleType(Transaction& transaction, const std::vector< RoleType* >& roleTypes)
+----
+
+
+
+See <<#_a22a90b14c98d5875e0c55dcb4abe33ef,getPlayersByRoleType>>
+
+[caption=""]
+.Returns
+`ConceptIterable< Thing >`
+
+[#_ac4e92f128a31da1bc65b13b53aafc9e6]
+==== getRelating
+
+[source,cpp]
+----
+ConceptIterable< RoleType > TypeDB::Relation::getRelating(Transaction& transaction)
+----
+
+
+
+Retrieves all role types currently played in this ``Relation``.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptIterable< RoleType >`
+
+[#_a9f6f53b8849e4b5aeda23f5e30b6a939]
+==== getType
+
+[source,cpp]
+----
+std::unique_ptr< RelationType > TypeDB::Relation::getType()
+----
+
+
+
+Retrieves the type which this ``Relation`` belongs to.
+
+
+[caption=""]
+.Returns
+`std::unique_ptr< RelationType >`
+
+[#_a3a1c3443f49f619a67e887aadb35d721]
+==== removePlayer
+
+[source,cpp]
+----
+VoidFuture TypeDB::Relation::removePlayer(Transaction& transaction, RoleType* roleType, Thing* player)
+----
+
+
+
+Removes the association of the given instance that plays the given role in this ``Relation``.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `roleType` a| The role to no longer be played by the thing in this ``Relation`` a| 
+a| `player` a| The instance to no longer play the role in this ``Relation`` a| 
+|===
+
+[caption=""]
+.Returns
+`VoidFuture`
+
+// end::methods[]
+

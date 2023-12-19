@@ -1,0 +1,158 @@
+[#_Session]
+=== Session
+
+*Package*: `TypeDB`
+
+
+
+A session with a TypeDB database.
+
+// tag::methods[]
+[#_a0f725cead1729093406c80d9e02492a0]
+==== close
+
+[source,cpp]
+----
+void TypeDB::Session::close()
+----
+
+
+
+Closes the session. Before opening a new session, the session currently open should first be closed.
+
+
+[caption=""]
+.Returns
+`void`
+
+[#_a2b9b3e6ed942d4af33b779b5c48b273b]
+==== databaseName
+
+[source,cpp]
+----
+std::string TypeDB::Session::databaseName() const
+----
+
+
+
+Returns the name of the database of the session.
+
+
+[caption=""]
+.Returns
+`std::string`
+
+[#_a9051397ca68e0706574ee770d641ab7a]
+==== isOpen
+
+[source,cpp]
+----
+bool TypeDB::Session::isOpen() const
+----
+
+
+
+Checks whether this session is open.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_a6ae6fd3fb247c7430f203c983140c578]
+==== onClose
+
+[source,cpp]
+----
+void TypeDB::Session::onClose(std::function< void()> callback)
+----
+
+
+
+Registers a callback function which will be executed when this session is closed.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `function` a| The callback function. a| 
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[#_abac760560c6bb74948b58474106756e3]
+==== onReopen
+
+[source,cpp]
+----
+void TypeDB::Session::onReopen(std::function< void()> callback)
+----
+
+
+
+Registers a callback function which will be executed when this session is reopened. A session may be closed if it times out, or loses the connection to the database. In such situations, the session is reopened automatically when opening a new transaction.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `function` a| The callback function. a| 
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[#_ad7e88c9e1bf53f25337a8c58bb9b1566]
+==== transaction
+
+[source,cpp]
+----
+Transaction TypeDB::Session::transaction(TransactionType type, const Options& options) const
+----
+
+
+
+Opens a transaction to perform read or write queries on the database connected to the session.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `type` a| The type of transaction to be created (READ or WRITE) a| 
+a| `options` a| Options for the session a| 
+|===
+
+[caption=""]
+.Returns
+`Transaction`
+
+[#_a10159abaea1fe48921c49538a81b64b2]
+==== type
+
+[source,cpp]
+----
+SessionType TypeDB::Session::type() const
+----
+
+
+
+The current session’s type (SCHEMA or DATA)
+
+[caption=""]
+.Returns
+`SessionType`
+
+// end::methods[]
+

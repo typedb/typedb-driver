@@ -1,0 +1,610 @@
+[#_AttributeType]
+=== AttributeType
+
+*Package*: `TypeDB`
+
+*Supertypes:*
+
+* `TypeDB::ThingType`
+* `TypeDB::Type`
+* `TypeDB::Concept`
+
+
+
+Attribute types represent properties that other types can own.
+
+Attribute types have a value type. This value type is fixed and unique for every given instance of the attribute type.
+
+Other types can own an attribute type. That means that instances of these other types can own an instance of this attribute type. This usually means that an object in our domain has a property with the matching value.
+
+Multiple types can own the same attribute type, and different instances of the same type or different types can share ownership of the same attribute instance.
+
+// tag::methods[]
+[#_a202a108a523bb4c781b84050e94e0665]
+==== get
+
+[source,cpp]
+----
+ConceptPtrFuture< Attribute > TypeDB::AttributeType::get(Transaction& transaction, Value* value)
+----
+
+
+
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``nullptr``.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `value` a| ``Attribute``’s value a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< Attribute >`
+
+[#_abd21bbdf28e7053baa08fe719e08b5fb]
+==== get
+
+[source,cpp]
+----
+ConceptPtrFuture< Attribute > TypeDB::AttributeType::get(Transaction& transaction, const std::string& value)
+----
+
+
+
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``nullptr``.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `value` a| ``Attribute``’s value a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< Attribute >`
+
+[#_a65448b705fb9b3503e42f0b19d7c2e93]
+==== get
+
+[source,cpp]
+----
+ConceptPtrFuture< Attribute > TypeDB::AttributeType::get(Transaction& transaction, int64_t value)
+----
+
+
+
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``nullptr``.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `value` a| ``Attribute``’s value a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< Attribute >`
+
+[#_a4fcca82cbdabfa2fac913190f9e7da4b]
+==== get
+
+[source,cpp]
+----
+ConceptPtrFuture< Attribute > TypeDB::AttributeType::get(Transaction& transaction, double value)
+----
+
+
+
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``nullptr``.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `value` a| ``Attribute``’s value a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< Attribute >`
+
+[#_ac1ea63fd99a17afeb1c42b3506de96a4]
+==== get
+
+[source,cpp]
+----
+ConceptPtrFuture< Attribute > TypeDB::AttributeType::get(Transaction& transaction, bool value)
+----
+
+
+
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``nullptr``.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `value` a| ``Attribute``’s value a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< Attribute >`
+
+[#_a6612c33dedd39ad14bc3ed848e4cf339]
+==== get
+
+[source,cpp]
+----
+ConceptPtrFuture< Attribute > TypeDB::AttributeType::get(Transaction& transaction, DateTime value)
+----
+
+
+
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``nullptr``.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `value` a| ``Attribute``’s value a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< Attribute >`
+
+[#_a82cf2f5b1dcc99dd071c2dd45b000265]
+==== getInstances
+
+[source,cpp]
+----
+ConceptIterable< Attribute > TypeDB::AttributeType::getInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+----
+
+
+
+Retrieves all direct and indirect ``Attributes`` that are instances of this ``AttributeType``.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtypes, ``Transitivity::EXPLICIT`` for direct subtypes only a| 
+a| `transaction` a| The current transaction a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptIterable< Attribute >`
+
+[#_a0f1f5ef2323ab0062c5995b7357bd8d7]
+==== getOwners
+
+[source,cpp]
+----
+ConceptIterable< ThingType > TypeDB::AttributeType::getOwners(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+----
+
+
+
+Retrieve all ``Things`` that own an attribute of this ``AttributeType`` directly or through inheritance.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtypes, ``Transitivity::EXPLICIT`` for direct subtypes only a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptIterable< ThingType >`
+
+[#_a8edc6446df5f042fc2e25b9d9b97f4ea]
+==== getOwners
+
+[source,cpp]
+----
+ConceptIterable< ThingType > TypeDB::AttributeType::getOwners(Transaction& transaction, const std::vector< Annotation >& annotations, Transitivity transitivity = Transitivity::TRANSITIVE)
+----
+
+
+
+Variant of <<#_a0f1f5ef2323ab0062c5995b7357bd8d7,getOwners>>(Transaction&amp; transaction, const std::vector&lt;Annotation&gt;&amp; annotations, Transitivity transitivity = Transitivity::TRANSITIVE) for convenience
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `annotations` a| Only retrieve ``ThingTypes`` that have an attribute of this ``AttributeType`` with all given ``Annotation``s a| 
+a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtypes, ``Transitivity::EXPLICIT`` for direct subtypes only a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptIterable< ThingType >`
+
+[#_a6d8cd6da96b77ffe03f32a05dfe00abc]
+==== getRegex
+
+[source,cpp]
+----
+OptionalStringFuture TypeDB::AttributeType::getRegex(Transaction& transaction)
+----
+
+
+
+Retrieves the regular expression that is defined for this ``AttributeType``.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+|===
+
+[caption=""]
+.Returns
+`OptionalStringFuture`
+
+[#_a0bc59956872e288ad5fc862bfb3c5d7d]
+==== getSubtypes
+
+[source,cpp]
+----
+ConceptIterable< AttributeType > TypeDB::AttributeType::getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+----
+
+
+
+Retrieves all direct and indirect subtypes of this ``AttributeType``.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtypes, ``Transitivity::EXPLICIT`` for direct subtypes only a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptIterable< AttributeType >`
+
+[#_a5340a70ec5b303f4b73e0bcfce1eb0bc]
+==== getSubtypes
+
+[source,cpp]
+----
+ConceptIterable< AttributeType > TypeDB::AttributeType::getSubtypes(Transaction& transaction, ValueType valueType, Transitivity transitivity = Transitivity::TRANSITIVE)
+----
+
+
+
+Retrieves all direct and indirect (or direct only) subtypes of this ``AttributeType`` with given ``Value.Type``.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `valueType` a| ``Value.Type`` for retrieving subtypes a| 
+a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtypes, ``Transitivity::EXPLICIT`` for direct subtypes only a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptIterable< AttributeType >`
+
+[#_a4134f90f52875a3f240ca1cfa38dcef3]
+==== getValueType
+
+[source,cpp]
+----
+ValueType TypeDB::AttributeType::getValueType()
+----
+
+
+
+Retrieves the ``Value.Type`` of this ``AttributeType``.
+
+
+[caption=""]
+.Returns
+`ValueType`
+
+[#_a6effe1669f73a9000736ac48172a94f0]
+==== put
+
+[source,cpp]
+----
+ConceptPtrFuture< Attribute > TypeDB::AttributeType::put(Transaction& transaction, Value* value)
+----
+
+
+
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given value.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `value` a| New ``Attribute``’s value a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< Attribute >`
+
+[#_a830737145bdb85dbec21253bb9c87d4c]
+==== put
+
+[source,cpp]
+----
+ConceptPtrFuture< Attribute > TypeDB::AttributeType::put(Transaction& transaction, const std::string& value)
+----
+
+
+
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``String`` value.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `value` a| New ``Attribute``’s value a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< Attribute >`
+
+[#_a4534f4290cf4e1857585287760920230]
+==== put
+
+[source,cpp]
+----
+ConceptPtrFuture< Attribute > TypeDB::AttributeType::put(Transaction& transaction, int64_t value)
+----
+
+
+
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``long`` value.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `value` a| New ``Attribute``’s value a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< Attribute >`
+
+[#_af8dc5ad2e6ad23b6344fa8b6b568f301]
+==== put
+
+[source,cpp]
+----
+ConceptPtrFuture< Attribute > TypeDB::AttributeType::put(Transaction& transaction, double value)
+----
+
+
+
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``double`` value.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `value` a| New ``Attribute``’s value a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< Attribute >`
+
+[#_acf8a0d746a8fcfd2e5b020fe94e8f955]
+==== put
+
+[source,cpp]
+----
+ConceptPtrFuture< Attribute > TypeDB::AttributeType::put(Transaction& transaction, bool value)
+----
+
+
+
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``bool`` value.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `value` a| New ``Attribute``’s value a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< Attribute >`
+
+[#_a985d867518b5b8de5362e4f3b2aa5bc0]
+==== put
+
+[source,cpp]
+----
+ConceptPtrFuture< Attribute > TypeDB::AttributeType::put(Transaction& transaction, DateTime value)
+----
+
+
+
+Adds and returns an ``Attribute`` of this ``AttributeType`` with the given ``DateTime`` value.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `value` a| New ``Attribute``’s value a| 
+|===
+
+[caption=""]
+.Returns
+`ConceptPtrFuture< Attribute >`
+
+[#_a454212d2dccbcde02c419644e3a7b6c2]
+==== setRegex
+
+[source,cpp]
+----
+VoidFuture TypeDB::AttributeType::setRegex(Transaction& transaction, const std::string& regex)
+----
+
+
+
+Sets a regular expression as a constraint for this ``AttributeType``. ``Values`` of all ``Attribute``s of this type (inserted earlier or later) should match this regex.
+
+Can only be applied for ``AttributeType``s with a ``string`` value type.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `regex` a| Regular expression a| 
+|===
+
+[caption=""]
+.Returns
+`VoidFuture`
+
+[#_a92445437384be9fc83a2b3ba84f4056a]
+==== setSupertype
+
+[source,cpp]
+----
+VoidFuture TypeDB::AttributeType::setSupertype(Transaction& transaction, AttributeType* attributeType)
+----
+
+
+
+Sets the supplied ``AttributeType`` as the supertype of the current ``AttributeType``.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+a| `attributeType` a| The ``AttributeType`` to set as the supertype of this ``AttributeType`` a| 
+|===
+
+[caption=""]
+.Returns
+`VoidFuture`
+
+[#_a9ad13a62e0411770023f66aeced552ff]
+==== unsetRegex
+
+[source,cpp]
+----
+VoidFuture TypeDB::AttributeType::unsetRegex(Transaction& transaction)
+----
+
+
+
+Removes the regular expression that is defined for this ``AttributeType``.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `transaction` a| The current transaction a| 
+|===
+
+[caption=""]
+.Returns
+`VoidFuture`
+
+// end::methods[]
+

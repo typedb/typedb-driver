@@ -1,0 +1,60 @@
+[#_Iterable__NATIVE_ITER__NATIVE_T__T__HELPER_]
+=== Iterable< NATIVE_ITER, NATIVE_T, T, HELPER >
+
+*Package*: `TypeDB`
+
+
+ template&lt;typename NATIVE_ITER, typename NATIVE_T, typename T, typename HELPER = IteratorHelper&lt;NATIVE_ITER, NATIVE_T, T&gt;&gt;
+ 
+  class TypeDB::Iterable&lt; NATIVE_ITER, NATIVE_T, T, HELPER &gt;
+
+
+Result representing a stream of query results.
+
+Exposes ``<<#_ab3800ab6b6e5e3ad59406ba2864b4a07,begin()>>`` to get an iterator over the results and ``<<#_ac92448bacc324dd7862580d6be8ce00b,end()>>`` to check if the end has been reached.
+  Note: <<#_ab3800ab6b6e5e3ad59406ba2864b4a07,begin()>> must be called for any server-side exceptions encountered while evaluating the query to be thrown
+
+
+[caption=""]
+.Examples
+[source,cpp]
+----
+for (auto& element : iterable) { ... }
+for (auto it = iterable.begin(); it != iterable.end(); ++it ) { ... } // Note: it++ is deleted.
+----
+
+// tag::methods[]
+[#_ab3800ab6b6e5e3ad59406ba2864b4a07]
+==== begin
+
+[source,cpp]
+----
+template<typename NATIVE_ITER , typename NATIVE_T , typename T , typename HELPER = IteratorHelper<NATIVE_ITER, NATIVE_T, T>> ITERATOR TypeDB::Iterable< NATIVE_ITER, NATIVE_T, T, HELPER >::begin() inline
+----
+
+
+
+Returns an iterator pointing to the first element.
+
+[caption=""]
+.Returns
+`template<typename NATIVE_ITER , typename NATIVE_T , typename T , typename HELPER = IteratorHelper<NATIVE_ITER, NATIVE_T, T>> ITERATOR TypeDB::Iterable< NATIVE_ITER, NATIVE_T, T, HELPER`
+
+[#_ac92448bacc324dd7862580d6be8ce00b]
+==== end
+
+[source,cpp]
+----
+template<typename NATIVE_ITER , typename NATIVE_T , typename T , typename HELPER = IteratorHelper<NATIVE_ITER, NATIVE_T, T>> ITERATOR TypeDB::Iterable< NATIVE_ITER, NATIVE_T, T, HELPER >::end() inline
+----
+
+
+
+Returns an iterator equivalent to the result of advancing past the last element.
+
+[caption=""]
+.Returns
+`template<typename NATIVE_ITER , typename NATIVE_T , typename T , typename HELPER = IteratorHelper<NATIVE_ITER, NATIVE_T, T>> ITERATOR TypeDB::Iterable< NATIVE_ITER, NATIVE_T, T, HELPER`
+
+// end::methods[]
+
