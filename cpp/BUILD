@@ -19,7 +19,7 @@
 # under the License.
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_dependencies//builder/cpp:rules.bzl", "doxygen_docs", "clang_format_test")
+load("@vaticle_dependencies//builder/cpp:rules.bzl", "clang_format_test")
 load("@vaticle_bazel_distribution//common:rules.bzl", "assemble_targz", "assemble_zip", "checksum", "assemble_versioned")
 load("@vaticle_bazel_distribution//artifact:rules.bzl", "deploy_artifact")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
@@ -27,7 +27,7 @@ load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
 load("@vaticle_bazel_distribution//platform:constraints.bzl", "constraint_linux_arm64", "constraint_linux_x86_64",
      "constraint_mac_arm64", "constraint_mac_x86_64", "constraint_win_x86_64")
-load("//tool/docs:cpp/rules.bzl", "doxygen_to_adoc")
+load("//tool/docs:cpp/rules.bzl", "doxygen_docs", "doxygen_to_adoc")
 load(":build_opts.bzl", "cxxopts")
 load("//cpp:docs_structure.bzl", "dir_mapping")
 

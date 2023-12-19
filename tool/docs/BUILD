@@ -20,6 +20,7 @@
 #
 
 exports_files(glob(["**/*.kt"]))
+exports_files(["cpp/doxyfile.template", "cpp/doxyfile_templater.py"])
 
 load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
