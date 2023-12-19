@@ -200,6 +200,7 @@ class DoxygenParser : Callable<Unit> {
     }
 
     private fun parseMethod(element: Element, classAnchor: String): Method {
+        val id = element.previousElementSibling()?.previousElementSibling()?.id()!!
         val methodName = element.previousElementSibling()!!.text().substringBefore("()").substringAfter(" ")
         val methodSignature = element.selectFirst("div.memproto")!!.text()
         val argsList = getArgsFromSignature(methodSignature)
@@ -224,7 +225,7 @@ class DoxygenParser : Callable<Unit> {
 //                    description = reformatTextWithCode(it.html().substringAfter(" - ")),
 //                )
 //            }
-        val methodAnchor = replaceSymbolsForAnchor("${classAnchor}_${methodName}_${argsList.map { it.second }}")
+        val methodAnchor = id
 //        val seeAlso = element.selectFirst("dt:has(.seeLabel) + dd")?.let { reformatTextWithCode(it.html()) }
 //        seeAlso?.let { methodDescr += "\nSee also: $seeAlso\n" }
 
@@ -243,7 +244,7 @@ class DoxygenParser : Callable<Unit> {
     private fun parseField(element: Element): Variable {
         val type = element.selectFirst("td.memname")!!.text().substringBeforeLast("::")
         val name = element.selectFirst("td.memname")!!.text().substringAfterLast("::")
-        val descr = element.selectFirst("div.memdoc")!!.text()
+        val descr = reformatTextWithCode(element.selectFirst("div.memdoc")!!.html())
         return Variable(
             name = name,
             description = descr,
@@ -285,18 +286,8 @@ class DoxygenParser : Callable<Unit> {
     }
 
     private fun replaceLocalLinks(html: String): String {
-        val fragments: MutableList<String> = Regex("<a\\shref=\"#([^\"]*)\">([^<]*)</a>")
-            .replace(html, "<<#_~$1~,$2>>").split("~").toMutableList()
-        if (fragments.size > 1) {
-            val iterator = fragments.listIterator()
-            while (iterator.hasNext()) {
-                val value = iterator.next()
-                if (!value.contains("<<") && !value.contains(">>")) {
-                    iterator.set(replaceSymbolsForAnchor(value))
-                }
-            }
-        }
-        return fragments.joinToString("")
+        return Regex("<a class=\"el\" href=\"[^\"^#]*#([^\"]*)\">([^<]*)</a>")
+            .replace(html, "<<#_$1,$2>>")
     }
 
     private fun generateFilename(className: String): String {
