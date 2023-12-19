@@ -335,7 +335,7 @@ public:
     ConceptIterable<ThingType> getOwners(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);
 
     /**
-     * Variant of \ref getOwners(Transaction& transaction, const std::vector<Annotation>& annotations, Transitivity transitivity = Transitivity::TRANSITIVE) "getOwners"
+     * Variant of \ref getOwners(Transaction& transaction, const std::vector<Annotation>& annotations, Transitivity transitivity = Transitivity::TRANSITIVE)
      * for convenience
      *
      * <h3>Examples</h3>

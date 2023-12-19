@@ -202,7 +202,7 @@ class DoxygenParser : Callable<Unit> {
     private fun parseMethod(element: Element, classAnchor: String): Method {
         val id = element.previousElementSibling()?.previousElementSibling()?.id()!!
         val methodName = element.previousElementSibling()!!.text().substringBefore("()").substringAfter(" ")
-        val methodSignature = element.selectFirst("div.memproto")!!.text()
+        val methodSignature = enhanceSignature(element.selectFirst("div.memproto")!!.text())
         val argsList = getArgsFromSignature(methodSignature)
         val argsMap = argsList.toMap()
         val methodReturnType = getReturnTypeFromSignature(methodSignature)
@@ -231,7 +231,7 @@ class DoxygenParser : Callable<Unit> {
 
         return Method(
             name = methodName,
-            signature = enhanceSignature(methodSignature),
+            signature = methodSignature,
             anchor = methodAnchor,
 //            args = methodArgs,
             description = methodDescr,
@@ -271,14 +271,14 @@ class DoxygenParser : Callable<Unit> {
     }
 
     private fun enhanceSignature(signature: String): String {
-        return replaceSpaces(signature)
+        var enhanced =  replaceSpaces(signature)
+        enhanced = Regex("\\s([\\(\\)\\*&])").replace(enhanced, "$1")
+        enhanced = Regex("([\\(])\\s").replace(enhanced, "$1")
+        return enhanced
     }
 
     private fun getReturnTypeFromSignature(signature: String): String {
-        return Regex("@[^\\s]*\\s|default ").replace(
-            signature.substringBefore("(")
-                .substringBeforeLast("\u00a0"), ""
-        )
+        return signature.substringBefore("(").substringBeforeLast(" ")
     }
 
     private fun splitToParagraphs(html: String): List<String> {
@@ -286,6 +286,7 @@ class DoxygenParser : Callable<Unit> {
     }
 
     private fun replaceLocalLinks(html: String): String {
+        // The Intellij preview messes up nested templates & The '>>' used for cross links.
         return Regex("<a class=\"el\" href=\"[^\"^#]*#([^\"]*)\">([^<]*)</a>")
             .replace(html, "<<#_$1,$2>>")
     }

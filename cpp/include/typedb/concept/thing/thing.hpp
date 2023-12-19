@@ -125,7 +125,7 @@ public:
     ConceptIterable<Attribute> getHas(Transaction& transaction, const std::initializer_list<Annotation>& annotations = {});
 
     /**
-     * See \ref getHas(Transaction&, const std::vector<std::unique_ptr<AttributeType>>&) "getHas"
+     * See \ref getHas(Transaction&, const std::vector<std::unique_ptr<AttributeType>>&)
      */
     ConceptIterable<Attribute> getHas(Transaction& transaction, const AttributeType* attribute);
 
@@ -144,12 +144,12 @@ public:
     ConceptIterable<Attribute> getHas(Transaction& transaction, const std::vector<std::unique_ptr<AttributeType>>& attributeTypes);
 
     /**
-     * See \ref getHas(Transaction& transaction, const std::vector<std::unique_ptr<AttributeType>>& attributeTypes) "getHas"
+     * See \ref getHas(Transaction& transaction, const std::vector<std::unique_ptr<AttributeType>>& attributeTypes)
      */
     ConceptIterable<Attribute> getHas(Transaction& transaction, const std::vector<const AttributeType*>& attributeTypes);
 
     /**
-     * See \ref getHas(Transaction& transaction, const std::initializer_list<Annotation>& annotations = {}) "getHas"
+     * See \ref getHas(Transaction&, const std::initializer_list<Annotation>&)
      */
     ConceptIterable<Attribute> getHas(Transaction& transaction, const std::vector<Annotation>& annotations);
 
@@ -170,7 +170,7 @@ public:
     ConceptIterable<Relation> getRelations(Transaction& transaction, const std::vector<std::unique_ptr<RoleType>>& roleTypes = {});
 
     /**
-     * See \ref getRelations(Transaction& transaction, const std::vector<std::unique_ptr<RoleType>>& roleTypes) "getRelations"
+     * See \ref getRelations(Transaction& transaction, const std::vector<std::unique_ptr<RoleType>>& roleTypes)
      */
     ConceptIterable<Relation> getRelations(Transaction& transaction, const std::vector<RoleType*>& roleTypes);
 

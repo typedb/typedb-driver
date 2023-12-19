@@ -82,12 +82,12 @@ public:
     [[nodiscard]] VoidFuture setOwns(Transaction& transaction, AttributeType* attributeType, const std::initializer_list<Annotation>& annotations = {});
 
     /**
-     * Variant of \ref setOwns(Transaction&, AttributeType*, AttributeType*, const std::vector<Annotation>&) "setOwns"
+     * Variant of \ref setOwns(Transaction&, AttributeType*, AttributeType*, const std::vector<Annotation>&)
      * with no overridden attribute type
      * */
     [[nodiscard]] VoidFuture setOwns(Transaction& transaction, AttributeType* attributeType, const std::vector<Annotation>& annotations);
 
-    /** See \ref setOwns(Transaction&, AttributeType*, AttributeType*, const std::vector<Annotation>&) "setOwns" */
+    /** See \ref setOwns(Transaction&, AttributeType*, AttributeType*, const std::vector<Annotation>&) */
     [[nodiscard]] VoidFuture setOwns(Transaction& transaction, AttributeType* attributeType, AttributeType* overriddenType, const std::initializer_list<Annotation>& annotations = {});
 
     /**
@@ -122,7 +122,7 @@ public:
     [[nodiscard]] VoidFuture unsetOwns(Transaction& transaction, AttributeType* attributeType);
 
     /**
-     * Variant of \ref setPlays(Transaction&, RoleType*, RoleType*) "setPlays" with no overridden role type.
+     * Variant of \ref setPlays(Transaction&, RoleType*, RoleType*) with no overridden role type.
      */
     [[nodiscard]] VoidFuture setPlays(Transaction& transaction, RoleType* roleType);
 
@@ -186,7 +186,7 @@ public:
     ConceptPtrFuture<RoleType> getPlaysOverridden(Transaction& transaction, RoleType* roleType);
 
     /**
-     * Variant of \ref getOwns(Transaction&, ValueType, const std::vector<Annotation>&, Transitivity) "getOwns"
+     * Variant of \ref getOwns(Transaction&, ValueType, const std::vector<Annotation>&, Transitivity)
      * without filtering on <code>ValueType</code> or <code>Annotation</code>s
      */
     ConceptIterable<AttributeType> getOwns(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);
@@ -195,18 +195,18 @@ public:
     ConceptIterable<AttributeType> getOwns(Transaction& transaction, const std::initializer_list<Annotation>& annotations, Transitivity transitivity = Transitivity::TRANSITIVE);
 
     /**
-     * Variant of \ref getOwns(Transaction&, ValueType, const std::vector<Annotation>&, Transitivity) "getOwns"
+     * Variant of \ref getOwns(Transaction&, ValueType, const std::vector<Annotation>&, Transitivity)
      * without filtering on <code>ValueType</code>
      */
     ConceptIterable<AttributeType> getOwns(Transaction& transaction, const std::vector<Annotation>& annotations, Transitivity transitivity = Transitivity::TRANSITIVE);
 
     /**
-     * Variant of \ref getOwns(Transaction&, ValueType, const std::vector<Annotation>&, Transitivity) "getOwns"
+     * Variant of \ref getOwns(Transaction&, ValueType, const std::vector<Annotation>&, Transitivity)
      * without filtering on <code>Annotation</code>s
      */
     ConceptIterable<AttributeType> getOwns(Transaction& transaction, ValueType valueType, Transitivity transitivity = Transitivity::TRANSITIVE);
 
-    /** See \ref getOwns(Transaction&, ValueType, const std::vector<Annotation>&, Transitivity) "getOwns" */
+    /** See \ref getOwns(Transaction&, ValueType, const std::vector<Annotation>&, Transitivity) */
     ConceptIterable<AttributeType> getOwns(Transaction& transaction, ValueType valueType, const std::initializer_list<Annotation>& annotations, Transitivity transitivity = Transitivity::TRANSITIVE);
 
     /**

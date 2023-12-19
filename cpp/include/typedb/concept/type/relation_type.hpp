@@ -60,13 +60,13 @@ public:
     [[nodiscard]] VoidFuture setSupertype(Transaction& transaction, RelationType* superRelationType);
 
     /**
-     * Variant of \ref setRelates(Transaction& transaction, const std::string& roleLabel, const std::string& overriddenLabel) "setRelates"
+     * Variant of \ref setRelates(Transaction& transaction, const std::string& roleLabel, const std::string& overriddenLabel)
      * where the RoleType does not override an existing role.
      */
     [[nodiscard]] VoidFuture setRelates(Transaction& transaction, const std::string& roleLabel);
 
     /**
-     * Variant of \ref setRelates(Transaction& transaction, const std::string& roleLabel, const std::string& overriddenLabel) "setRelates"
+     * Variant of \ref setRelates(Transaction& transaction, const std::string& roleLabel, const std::string& overriddenLabel)
      * where the RoleType is specified directly rather than the label.
      */
     [[nodiscard]] VoidFuture setRelates(Transaction& transaction, const std::string& roleLabel, RoleType* overriddenType);
@@ -85,7 +85,7 @@ public:
     [[nodiscard]] VoidFuture setRelates(Transaction& transaction, const std::string& roleLabel, const std::string& overriddenLabel);
 
     /**
-     * Variant of \ref unsetRelates(Transaction& transaction, const std::string& roleLabel) "unsetRelates"
+     * Variant of \ref unsetRelates(Transaction& transaction, const std::string& roleLabel)
      * where the RoleType is specified directly rather than the label.
      */
     [[nodiscard]] VoidFuture unsetRelates(Transaction& transaction, RoleType* roleType);
