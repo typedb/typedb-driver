@@ -210,30 +210,24 @@ class DoxygenParser : Callable<Unit> {
             ?.let { splitToParagraphs(it.html()) }
             ?.map { replaceSpaces(reformatTextWithCode(it.substringBefore("<h"))) } ?: listOf()
         val methodExamples = element.select("td.memdoc > pre + div pre").map { replaceSpaces(it.text()) }
-//
-//        val methodArgs = element
-//            .select(
-//                "dt:has(.paramLabel) " +
-//                        "~ dd:not(dt:has(.returnLabel) ~ dd, dt:has(.throwsLabel) ~ dd, dt:has(.seeLabel) ~ dd)"
-//            )
-//            .map {
-//                val arg_name = it.selectFirst("code")!!.text()
-//                assert(argsMap.contains(arg_name))
-//                Variable(
-//                    name = arg_name,
-//                    type = argsMap[arg_name]?.replace("...", "[]"),
-//                    description = reformatTextWithCode(it.html().substringAfter(" - ")),
-//                )
-//            }
+
+        val methodArgs = element.select("table.params > tbody > tr")
+            .map {
+                val arg_name = it.child(0).text()
+                assert(argsMap.contains(arg_name))
+                Variable(
+                    name = arg_name,
+                    type = argsMap[arg_name],
+                    description = reformatTextWithCode(it.child(1).html()),
+                )
+            }
         val methodAnchor = id
-//        val seeAlso = element.selectFirst("dt:has(.seeLabel) + dd")?.let { reformatTextWithCode(it.html()) }
-//        seeAlso?.let { methodDescr += "\nSee also: $seeAlso\n" }
 
         return Method(
             name = methodName,
             signature = methodSignature,
             anchor = methodAnchor,
-//            args = methodArgs,
+            args = methodArgs,
             description = methodDescr,
             examples = methodExamples,
             returnType = methodReturnType,
