@@ -22,15 +22,11 @@
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 def vaticle_dependencies():
-    native.local_repository(
+    git_repository(
         name = "vaticle_dependencies",
-        path = "/Users/krishnangovindraj/code/vaticle_minor/dependencies",
+        remote = "https://github.com/krishnangovindraj/dependencies",
+        commit = "b9e146bd7096c3a8f314ff98e2ad9a45af80048c", # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_dependencies
     )
-#    git_repository(
-#        name = "vaticle_dependencies",
-#        remote = "https://github.com/krishnangovindraj/dependencies",
-#        commit = "26c480855a348538cfca2a8eae514ce680423fea", # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_dependencies
-#    )
 
 def vaticle_typedb_common():
     git_repository(
