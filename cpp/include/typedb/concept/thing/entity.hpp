@@ -28,7 +28,7 @@ namespace TypeDB {
 
 /**
  * \brief Instance of data of an entity type, representing a standalone object that exists in the data model independently.
- * 
+ *
  * Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles
  * played in relation instances.
  */

@@ -38,11 +38,11 @@
 
 #include "typedb/query/query_manager.hpp"
 
-#include "typedb/logic/explainable.hpp"
 #include "typedb/logic/explanation.hpp"
 #include "typedb/logic/logic_manager.hpp"
 #include "typedb/logic/rule.hpp"
 
+#include "typedb/answer/explainable.hpp"
 #include "typedb/answer/concept_map.hpp"
 #include "typedb/answer/concept_map_group.hpp"
 #include "typedb/answer/json.hpp"

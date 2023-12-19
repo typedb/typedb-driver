@@ -74,7 +74,7 @@ using ReplicaInfoIterator = Iterator<_native::ReplicaInfoIterator, _native::Repl
 
 /**
  * \brief A TypeDB database
-*/
+ */
 class Database {
 public:
     Database(const Database&) = delete;

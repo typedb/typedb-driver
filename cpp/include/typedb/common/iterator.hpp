@@ -34,18 +34,20 @@ class Iterable;
 
 /**
  * \private
-*/
+ */
 template <typename NATIVE_ITER, typename NATIVE_T, typename T>
 class IteratorHelper;
 
 /**
  * \brief A structure emulating std::iterator, used for streaming of query results from the server.
- * 
- * It is an <code>input_iterator</code>, meaning it cannot only be consumed once.
+ *
+ * It is an <code>input_iterator</code>, meaning it can only be consumed once.
  * Valid operations are <code>++it</code> and <code>*it</code> <br/>
- * 
- * Note that <code>it++</code> is deleted, and 
+ *
+ * Note that <code>it++</code> is deleted, and
  * <code>*it</code> can only be called once per iterator position, owing to the move semantics of the returned data.
+ *
+ * Also see <code>Iterable</code>
  */
 template <typename NATIVE_ITER, typename NATIVE_T, typename T, typename HELPER = IteratorHelper<NATIVE_ITER, NATIVE_T, T>>
 class Iterator {  // Does not support range-based for loops yet.
@@ -126,7 +128,7 @@ private:
 
 /**
  * \brief Result representing a stream of query results.
- * 
+ *
  * Exposes <code>begin()</code> to get an iterator over the results and <code>end()</code> to check if the end has been reached.<br/>
  * Note: begin() must be called for any server-side exceptions encountered while evaluating the query to be thrown
  *
@@ -178,7 +180,7 @@ private:
 
 /**
  * \private
-*/
+ */
 template <typename NATIVE_ITER, typename NATIVE_T, typename T>
 class IteratorHelper {
     using SELF = IteratorHelper<NATIVE_ITER, NATIVE_T, T>;

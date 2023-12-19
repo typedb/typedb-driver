@@ -58,10 +58,10 @@ public:
      * </pre>
      */
     AggregateResult value();
-    
+
     /**
      * A string representation of this ConceptMap.
-    */
+     */
     std::string toString();
 
 private:

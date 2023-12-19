@@ -29,7 +29,7 @@ namespace TypeDB {
 
 /**
  * \brief Relation is an instance of a relation type.
- * 
+ *
  * Relation is an instance of a relation type and can be uniquely addressed
  * by a combination of its type, owned attributes and role players.
  */
@@ -100,7 +100,7 @@ public:
 
     /**
      * See \ref Relation::getPlayersByRoleType(Transaction&, const std::vector<std::unique_ptr<RoleType>>&) "getPlayersByRoleType"
-    */
+     */
     ConceptIterable<Thing> getPlayersByRoleType(Transaction& transaction, const std::vector<RoleType*>& roleTypes);
 
     /**

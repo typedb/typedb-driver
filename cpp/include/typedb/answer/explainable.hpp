@@ -35,10 +35,10 @@ class Explainables;
 
 /**
  * \brief Simple class holding the owner concept & owned attribute identifying an explainable ownership.
-*/
+ */
 class OwnerAttributePair {
 public:
-     /// \brief The owner concept \details .
+    /// \brief The owner concept \details .
     const std::string owner;
     /// \brief The owned attribute \details .
     const std::string attribute;

@@ -28,7 +28,7 @@ namespace TypeDB {
 
 /**
  * \brief An explanation of which rule was used to infer the concept and the satisfying ConceptMaps.
- * 
+ *
  * An explanation of which rule was used for inferring the explained concept, the condition of the rule,
  * the conclusion of the rule, and the mapping of variables between the query and the rule’s conclusion.
  */

@@ -26,22 +26,21 @@ namespace TypeDB {
 
 /**
  * \brief Defines a role an instance can play in a Relation.
- * 
- * Roles are special internal types used by relations. We can not create an instance of a role in a database. 
+ *
+ * Roles are special internal types used by relations. We can not create an instance of a role in a database.
  * But we can set an instance of another type (role player) to play a role in a particular instance of a relation type.
  * Roles allow a schema to enforce logical constraints on types of role players.
  */
 class RoleType : public Type {
 public:
-
     /**
-    * Returns the name of this role type's label.
-    *
-    * <h3>Examples</h3>
-    * <pre>
-    * label.getName();
-    * </pre>
-    */
+     * Returns the name of this role type's label.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * label.getName();
+     * </pre>
+     */
     std::string getName();
 
     /**
@@ -55,7 +54,7 @@ public:
     std::string getScope();
 
     // Inherited
-    
+
     /// \copydoc Type::getLabel()
     virtual std::string getLabel() override;
 
@@ -78,7 +77,7 @@ public:
     /// \copydoc Type::deleteType(Transaction&)
     [[nodiscard]] virtual VoidFuture deleteType(Transaction& transaction) override;
 
-     /// \copydoc Type::isDeleted(Transaction&)
+    /// \copydoc Type::isDeleted(Transaction&)
     [[nodiscard]] virtual BoolFuture isDeleted(Transaction& transaction) override;
 
     // Mimic overriding from Type

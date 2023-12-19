@@ -21,8 +21,8 @@
 
 #include <variant>
 
-#include "typedb/concept/type/thing_type.hpp"
 #include "typedb/common/exception.hpp"
+#include "typedb/concept/type/thing_type.hpp"
 #include "typedb/connection/transaction.hpp"
 
 #include "../../common/macros.hpp"

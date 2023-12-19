@@ -32,15 +32,15 @@ namespace TypeDB {
 
 /**
  * \private
-*/
+ */
 template <typename RETURN, typename NATIVE_PROMISE>
 class FutureHelper;
 
 /**
  * \brief A structure emulating std::future, used as result of an asynchronous call to the server.
- * 
+ *
  * Note that a future must be evaluated for any server-side exceptions to be raised.
-*/
+ */
 template <typename RETURN, typename NATIVE_PROMISE, typename HELPER = FutureHelper<RETURN, NATIVE_PROMISE> >
 class Future {
     using SELF = Future<RETURN, NATIVE_PROMISE>;
@@ -62,8 +62,8 @@ public:
     }
 
     /**
-     * Waits for the call to complete and returns the result. 
-    */
+     * Waits for the call to complete and returns the result.
+     */
     RETURN get() {
         if constexpr (std::is_same_v<RETURN, void>) {
             HELPER::resolve(promiseNative.release());
@@ -76,9 +76,9 @@ public:
     }
 
     /**
-     * Waits for the call to complete and ignores the result. 
+     * Waits for the call to complete and ignores the result.
      * Any exceptions will still be thrown.
-    */
+     */
     void wait() {
         get();
     }
@@ -89,7 +89,7 @@ private:
 
 /**
  * \private
-*/
+ */
 template <typename RETURN, typename NATIVE_PROMISE>
 class FutureHelper {
     using SELF = FutureHelper<RETURN, NATIVE_PROMISE>;

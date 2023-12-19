@@ -32,7 +32,7 @@ class Attribute;
 
 /**
  * \brief Attribute types represent properties that other types can own.
- * 
+ *
  * <p>Attribute types have a value type. This value type is fixed and unique for every given instance
  * of the attribute type.
  * <p>Other types can own an attribute type. That means that instances of these other types can own an instance
@@ -337,11 +337,11 @@ public:
     /**
      * Variant of \ref getOwners(Transaction& transaction, const std::vector<Annotation>& annotations, Transitivity transitivity = Transitivity::TRANSITIVE) "getOwners"
      * for convenience
-     * 
+     *
      * <h3>Examples</h3>
      * <pre>
      * attributeType.getOwners(transaction, {Annotation::key()}, transitivity);
-    */
+     */
     ConceptIterable<ThingType> getOwners(Transaction& transaction, const std::initializer_list<Annotation>& annotations, Transitivity transitivity = Transitivity::TRANSITIVE);
 
     /**

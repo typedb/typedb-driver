@@ -76,10 +76,10 @@ public:
      * </pre>
      */
     bool isUnique();
-    
+
     /**
      * A string representation of this Annotation.
-    */
+     */
     std::string toString();
 
 private:
@@ -165,13 +165,13 @@ public:
     Concept& operator=(Concept&&) = default;
 
     /**
-    * Returns the ConceptType of this concept.
-    *
-    * <h3>Examples</h3>
-    * <pre>
-    * switch(concept.getConceptType()) { ... }
-    * </pre>
-    */
+     * Returns the ConceptType of this concept.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * switch(concept.getConceptType()) { ... }
+     * </pre>
+     */
     ConceptType getConceptType();
 
     /**

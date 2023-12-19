@@ -33,7 +33,6 @@ class Entity;
  */
 class EntityType : public ThingType {
 public:
-
     /**
      * Creates and returns a new instance of this <code>EntityType</code>.
      *
@@ -73,7 +72,7 @@ public:
      *                     <code>Transitivity::TRANSITIVE</code> to include subtypes
      */
     ConceptIterable<Entity> getInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);
-    
+
     /**
      * Retrieves all direct and indirect (or direct only) subtypes of the <code>EntityType</code>.
      *

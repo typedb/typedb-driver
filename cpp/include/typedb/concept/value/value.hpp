@@ -63,7 +63,7 @@ public:
      */
     bool isLong();
 
-        /**
+    /**
      * Returns <code>true</code> if the value which this value concept holds is of type <code>double</code>.
      * Otherwise, returns <code>false</code>.
      *
@@ -179,7 +179,7 @@ public:
      * <pre>
      * Value::of(value);
      * </pre>
-    */
+     */
     static std::unique_ptr<Value> of(bool value);
 
     /**
@@ -189,7 +189,7 @@ public:
      * <pre>
      * Value::of(value);
      * </pre>
-    */
+     */
     static std::unique_ptr<Value> of(int64_t value);
 
     /**
@@ -199,7 +199,7 @@ public:
      * <pre>
      * Value::of(value);
      * </pre>
-    */
+     */
     static std::unique_ptr<Value> of(double value);
 
     /**
@@ -209,7 +209,7 @@ public:
      * <pre>
      * Value::of(value);
      * </pre>
-    */
+     */
     static std::unique_ptr<Value> of(const std::string& value);
 
     /**
@@ -219,7 +219,7 @@ public:
      * <pre>
      * Value::of(value);
      * </pre>
-    */
+     */
     static std::unique_ptr<Value> of(DateTime value);
 
 private:

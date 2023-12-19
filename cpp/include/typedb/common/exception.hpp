@@ -31,7 +31,7 @@ namespace TypeDB {
 
 /**
  * \private
-*/
+ */
 template <typename NATIVE_ITER, typename NATIVE_T, typename T>
 class IteratorHelper;
 
@@ -53,15 +53,15 @@ public:
      * <pre>
      * try { ... }
      * catch (TypeDB::DriverException& e){
-     *     if ("[CXN11]" == e.code()) { ... } 
+     *     if ("[CXN11]" == e.code()) { ... }
      * }
      * </pre>
-    */
+     */
     const std::string_view code();
 
     /**
      * Retrieves the descriptive error message.
-     * 
+     *
      * <h3>Examples</h3>
      * <pre>
      * try { ... }
@@ -70,7 +70,7 @@ public:
      *     throw e;
      * }
      * </pre>
-    */
+     */
     const std::string_view message();
 
     static void check_and_throw();

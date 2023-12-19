@@ -35,7 +35,7 @@ namespace TypeDB {
 
 /**
  * \private
-*/
+ */
 struct DECLSPEC_DLL ErrorMessage {
     const char* code;
     const char* formatString;

@@ -25,8 +25,8 @@
 namespace TypeDB {
 
 /**
- * \brief Common super-type of RoleType & ThingType. 
-*/
+ * \brief Common super-type of RoleType & ThingType.
+ */
 class Type : public Concept {
 public:
     // We don't make these virtual so we can emulate returning iterators to the subtypes.

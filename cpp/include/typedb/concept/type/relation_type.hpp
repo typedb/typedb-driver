@@ -27,14 +27,13 @@ namespace TypeDB {
 
 /**
  * \brief Relation types (or subtypes of the relation root type) represent relationships between types.
- * 
+ *
  * Relation types have roles.
  * Other types can play roles in relations if it’s mentioned in their definition.
  * A relation type must specify at least one role.
  */
 class RelationType : public ThingType {
 public:
-    
     /**
      * Creates and returns an instance of this <code>RelationType</code>.
      *
@@ -63,15 +62,15 @@ public:
     /**
      * Variant of \ref setRelates(Transaction& transaction, const std::string& roleLabel, const std::string& overriddenLabel) "setRelates"
      * where the RoleType does not override an existing role.
-    */
+     */
     [[nodiscard]] VoidFuture setRelates(Transaction& transaction, const std::string& roleLabel);
 
     /**
      * Variant of \ref setRelates(Transaction& transaction, const std::string& roleLabel, const std::string& overriddenLabel) "setRelates"
      * where the RoleType is specified directly rather than the label.
-    */
+     */
     [[nodiscard]] VoidFuture setRelates(Transaction& transaction, const std::string& roleLabel, RoleType* overriddenType);
-    
+
     /**
      * Sets the supplied <code>RelationType</code> as the supertype of the current <code>RelationType</code>.
      *
@@ -147,7 +146,7 @@ public:
      *                     <code>Transitivity::EXPLICIT</code> for direct relates only
      */
     ConceptIterable<RoleType> getRelates(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);
-    
+
     /**
      * Retrieves roles that this <code>RelationType</code> relates to directly or via inheritance.
      * If <code>role_label</code> is given, returns a corresponding <code>RoleType</code> or <code>nullptr</code>.
@@ -174,7 +173,7 @@ public:
      * @param roleLabel Label of the role that overrides an inherited role
      */
     ConceptPtrFuture<RoleType> getRelatesOverridden(Transaction& transaction, RoleType* roleType);
-    
+
     /**
      * Retrieves a <code>RoleType</code> that is overridden by the role with the <code>role_label</code>.
      *

@@ -61,14 +61,14 @@ public:
 
     /**
      * A string representation of this ConceptMapGroup.
-    */
+     */
     std::string toString();
 
 private:
     NativePointer<_native::ConceptMapGroup> conceptMapGroupNative;
 
     ConceptMapGroup(_native::ConceptMapGroup*);
-    
+
     friend class IteratorHelper<_native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup>;
 };
 

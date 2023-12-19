@@ -22,10 +22,10 @@
 
 #include <map>
 
+#include "typedb/answer/explainable.hpp"
 #include "typedb/common/iterator.hpp"
 #include "typedb/common/native.hpp"
 #include "typedb/concept/concept.hpp"
-#include "typedb/logic/explainable.hpp"
 
 namespace TypeDB {
 
@@ -42,8 +42,8 @@ public:
     ConceptMap& operator=(ConceptMap&&) = default;
     ~ConceptMap() = default;
 
-     
-     /**
+
+    /**
      * Produces an <code>Iterator</code> stream over all variables in this <code>ConceptMap</code>.
      *
      * <h3>Examples</h3>
@@ -98,13 +98,13 @@ public:
 
     /**
      * A string representation of this ConceptMap.
-    */
+     */
     std::string toString();
 
 private:
     NativePointer<_native::ConceptMap> conceptMapNative;
     ConceptMap(_native::ConceptMap*);
-    
+
     friend class Explanation;
     friend class IteratorHelper<_native::ConceptMapIterator, _native::ConceptMap, ConceptMap>;
 };

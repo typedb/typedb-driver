@@ -126,7 +126,7 @@ public:
 
     /**
      * See \ref getHas(Transaction&, const std::vector<std::unique_ptr<AttributeType>>&) "getHas"
-    */
+     */
     ConceptIterable<Attribute> getHas(Transaction& transaction, const AttributeType* attribute);
 
     /**
@@ -144,7 +144,7 @@ public:
     ConceptIterable<Attribute> getHas(Transaction& transaction, const std::vector<std::unique_ptr<AttributeType>>& attributeTypes);
 
     /**
-     * See \ref getHas(Transaction& transaction, const std::vector<std::unique_ptr<AttributeType>>& attributeTypes) getHas
+     * See \ref getHas(Transaction& transaction, const std::vector<std::unique_ptr<AttributeType>>& attributeTypes) "getHas"
      */
     ConceptIterable<Attribute> getHas(Transaction& transaction, const std::vector<const AttributeType*>& attributeTypes);
 
