@@ -66,7 +66,7 @@ class DoxygenParser : Callable<Unit> {
 
         // Namespace file for the enums
         run {
-            val namespacefile = File(inputDirectoryName).resolve("html/namespace_type_d_b.html");
+            val namespacefile = File(inputDirectoryName).resolve("html/namespace_type_d_b.html")
             assert(namespacefile.exists())
             val html = File(namespacefile.path).readText(Charsets.UTF_8)
             val parsed = Jsoup.parse(html)
@@ -76,8 +76,10 @@ class DoxygenParser : Callable<Unit> {
                 val parsedEnum = parseEnum(it!!)
                 val parsedClassAsciiDoc = parsedEnum.toAsciiDoc("cpp")
                 val fileName = "${generateFilename(parsedEnum.name)}.adoc"
-                val fileDir = docsDir.resolve(dirs[fileName]
-                    ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided"))
+                val fileDir = docsDir.resolve(
+                    dirs[fileName]
+                        ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided")
+                )
                 if (!fileDir.toFile().exists()) {
                     Files.createDirectory(fileDir)
                 }
@@ -94,12 +96,14 @@ class DoxygenParser : Callable<Unit> {
         }.forEach {
             val html = File(it.path).readText(Charsets.UTF_8)
             val parsed = Jsoup.parse(html)
-            val parsedClass = parseClass(parsed, it.parent)
+            val parsedClass = parseClass(parsed)
             if (parsedClass.isNotEmpty()) {
                 val parsedEnumAsciiDoc = parsedClass.toAsciiDoc("cpp")
                 val fileName = "${generateFilename(parsedClass.name)}.adoc"
-                val fileDir = docsDir.resolve(dirs[fileName]
-                    ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided"))
+                val fileDir = docsDir.resolve(
+                    dirs[fileName]
+                        ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided")
+                )
                 if (!fileDir.toFile().exists()) {
                     Files.createDirectory(fileDir)
                 }
@@ -111,8 +115,8 @@ class DoxygenParser : Callable<Unit> {
     }
 
     private fun parseMemberDecls(document: Element): Map<String, List<Element>> {
-        var missingDeclarations : MutableList<String> = ArrayList()
-        var map: MutableMap<String, List<Element>> = HashMap();
+        val missingDeclarations: MutableList<String> = ArrayList()
+        val map: MutableMap<String, List<Element>> = HashMap()
         document.select("table.memberdecls").forEach { table ->
             val heading: String = table.selectFirst("tr.heading > td > h2 > a")!!.id()
             val members: MutableList<Element> = ArrayList()
@@ -122,25 +126,26 @@ class DoxygenParser : Callable<Unit> {
                 element.className().substringAfter("memitem:")
             }.forEach { id ->
                 val methodDetails =
-                    document.selectFirst("div.contents > a#" + id)?.nextElementSibling()?.nextElementSibling()
+                    document.selectFirst("div.contents > a#$id")?.nextElementSibling()?.nextElementSibling()
                 if (methodDetails == null) {
-                    missingDeclarations.add(document.selectFirst("#r_" + id)!!.text())
+                    missingDeclarations.add(document.selectFirst("#r_$id")!!.text())
                 } else {
-                    members.add(methodDetails!!)
+                    members.add(methodDetails)
                 }
             }
             map[heading] = members
         }
-        if (!missingDeclarations.isEmpty()) {
-            System.out.println("Missing some member declarations:\n\t-" + missingDeclarations.joinToString("\n\t-"))
+        if (missingDeclarations.isNotEmpty()) {
+            println("Missing some member declarations:\n\t-" + missingDeclarations.joinToString("\n\t-"))
         }
-        return map;
+        return map
     }
 
-    private fun parseClass(document: Element, currentDirName: String): Class {
+    private fun parseClass(document: Element): Class {
+        // If we want inherited members, consider doxygen's INLINE_INHERITED_MEMB instead of the javadoc approach
         val fullyQualifiedName = document.selectFirst("div .title")!!.text()
             .replace(Regex("Class(?: Template)? Reference.*"), "").trim()
-        val packagePath = fullyQualifiedName
+        val packagePath = fullyQualifiedName.substringBeforeLast("::")
         val className = fullyQualifiedName.substringAfterLast("::")
         val classAnchor = replaceSymbolsForAnchor(className)
         val classDescr: List<String> = document.selectFirst("div.textblock")
@@ -155,9 +160,9 @@ class DoxygenParser : Callable<Unit> {
         val fields = memberDecls.getOrDefault("pub-attribs", listOf()).map { parseField(it) }
         val methods: List<Method> = (
                 memberDecls.getOrDefault("pub-methods", listOf()) +
-                memberDecls.getOrDefault("pub-static-methods", listOf())
-            ).map {
-                parseMethod(it!!, classAnchor)
+                        memberDecls.getOrDefault("pub-static-methods", listOf())
+                ).map {
+                parseMethod(it)
             }
 
         return Class(
@@ -182,13 +187,13 @@ class DoxygenParser : Callable<Unit> {
         val classExamples = element.select("div.memdoc > pre").map { replaceSpaces(it.text()) }
         val enumConstants =
             element.parents().select("div.contents").first()!!
-                .select("table.memberdecls > tbody > tr#r_" + id + " > td.memItemRight ").first()!!
+                .select("table.memberdecls > tbody > tr#r_$id > td.memItemRight ").first()!!
                 .text().substringAfter("{").substringBefore("}")
                 .split(",")
                 .map {
                     EnumConstant(it)
                 }
-        val packagePath = "TypeDB::" + className
+        val packagePath = fullyQualifiedName.substringBeforeLast("::")
         return Class(
             name = className,
             anchor = classAnchor,
@@ -199,29 +204,28 @@ class DoxygenParser : Callable<Unit> {
         )
     }
 
-    private fun parseMethod(element: Element, classAnchor: String): Method {
-        val id = element.previousElementSibling()?.previousElementSibling()?.id()!!
+    private fun parseMethod(element: Element): Method {
+        val methodAnchor = element.previousElementSibling()?.previousElementSibling()?.id()!! // Re-use doxygen id
         val methodName = element.previousElementSibling()!!.text().substringBefore("()").substringAfter(" ")
         val methodSignature = enhanceSignature(element.selectFirst("div.memproto")!!.text())
         val argsList = getArgsFromSignature(methodSignature)
         val argsMap = argsList.toMap()
         val methodReturnType = getReturnTypeFromSignature(methodSignature)
-        var methodDescr: List<String> = element.selectFirst("div.memdoc")
+        val methodDescr: List<String> = element.selectFirst("div.memdoc")
             ?.let { splitToParagraphs(it.html()) }
             ?.map { replaceSpaces(reformatTextWithCode(it.substringBefore("<h"))) } ?: listOf()
         val methodExamples = element.select("td.memdoc > pre + div pre").map { replaceSpaces(it.text()) }
 
         val methodArgs = element.select("table.params > tbody > tr")
             .map {
-                val arg_name = it.child(0).text()
-                assert(argsMap.contains(arg_name))
+                val argName = it.child(0).text()
+                assert(argsMap.contains(argName))
                 Variable(
-                    name = arg_name,
-                    type = argsMap[arg_name],
+                    name = argName,
+                    type = argsMap[argName],
                     description = reformatTextWithCode(it.child(1).html()),
                 )
             }
-        val methodAnchor = id
 
         return Method(
             name = methodName,
@@ -250,9 +254,9 @@ class DoxygenParser : Callable<Unit> {
         return methodSignature
             .replace("\\s+".toRegex(), " ")
             .substringAfter("(").substringBefore(")")
-            .split(",\\s".toRegex()).map {
-                it.split("\u00a0").let { it.last() to it.dropLast(1).joinToString(" ") }
-            }.filter { !it.first.isEmpty() || !it.second.isEmpty() }
+            .split(",\\s".toRegex()).map {arg ->
+                arg.split("\u00a0").let { it.last() to it.dropLast(1).joinToString(" ") }
+            }.filter { it.first.isNotEmpty() || it.second.isNotEmpty() }
             .toList()
     }
 
@@ -265,9 +269,9 @@ class DoxygenParser : Callable<Unit> {
     }
 
     private fun enhanceSignature(signature: String): String {
-        var enhanced =  replaceSpaces(signature)
-        enhanced = Regex("\\s([\\(\\)\\*&])").replace(enhanced, "$1")
-        enhanced = Regex("([\\(])\\s").replace(enhanced, "$1")
+        var enhanced = replaceSpaces(signature)
+        enhanced = enhanced.replace("( ", "(")
+        enhanced = Regex("\\s([()*&])").replace(enhanced, "$1")
         return enhanced
     }
 
