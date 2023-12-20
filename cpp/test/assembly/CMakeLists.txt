@@ -18,7 +18,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.10)
 if(NOT DEFINED TYPEDB_ASSEMBLY)
     message(FATAL_ERROR "TYPEDB_ASSEMBLY is not set")
 ENDIF()
