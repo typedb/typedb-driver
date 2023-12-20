@@ -26,7 +26,10 @@ use itertools::Itertools;
 use typedb_protocol::{
     concept,
     r#type::{annotation, Annotation as AnnotationProto, Transitivity as TransitivityProto},
-    readable_concept_tree::{self, node::readable_concept::ReadableConcept as ReadableConceptProto},
+    readable_concept_tree::{
+        self,
+        node::readable_concept::{ReadableConcept as ReadableConceptProto, ReadableConcept},
+    },
     thing, thing_type,
     value::Value as ValueProtoInner,
     Attribute as AttributeProto, AttributeType as AttributeTypeProto, Concept as ConceptProto,
@@ -36,7 +39,6 @@ use typedb_protocol::{
     RelationType as RelationTypeProto, RoleType as RoleTypeProto, Thing as ThingProto, ThingType as ThingTypeProto,
     Value as ValueProto, ValueGroup as ValueGroupProto, ValueType as ValueTypeProto,
 };
-use typedb_protocol::readable_concept_tree::node::readable_concept::ReadableConcept;
 
 use super::{FromProto, IntoProto, TryFromProto};
 use crate::{
@@ -176,27 +178,24 @@ impl TryFromProto<readable_concept_tree::node::ReadableConcept> for Option<Conce
         match proto.readable_concept {
             Some(ReadableConceptProto::EntityType(entity_type_proto)) => {
                 Ok(Some(Concept::EntityType(EntityType::from_proto(entity_type_proto))))
-            },
+            }
             Some(ReadableConceptProto::RelationType(relation_type_proto)) => {
                 Ok(Some(Concept::RelationType(RelationType::from_proto(relation_type_proto))))
-            },
+            }
             Some(ReadableConceptProto::AttributeType(attribute_type_proto)) => {
                 AttributeType::try_from_proto(attribute_type_proto)
                     .map(|attr_type| Some(Concept::AttributeType(attr_type)))
-            },
+            }
             Some(ReadableConceptProto::RoleType(role_type_proto)) => {
                 Ok(Some(Concept::RoleType(RoleType::from_proto(role_type_proto))))
-            },
+            }
             Some(ReadableConceptProto::Attribute(attribute_proto)) => {
-                Attribute::try_from_proto(attribute_proto)
-                    .map(|attr| Some(Concept::Attribute(attr)))
-            },
+                Attribute::try_from_proto(attribute_proto).map(|attr| Some(Concept::Attribute(attr)))
+            }
             Some(ReadableConceptProto::Value(value_proto)) => {
                 Value::try_from_proto(value_proto).map(|value| Some(Concept::Value(value)))
-            },
-            Some(ReadableConceptProto::ThingTypeRoot(_)) => {
-                Ok(Some(Concept::RootThingType(RootThingType)))
-            },
+            }
+            Some(ReadableConceptProto::ThingTypeRoot(_)) => Ok(Some(Concept::RootThingType(RootThingType))),
             None => Ok(None),
         }
     }
