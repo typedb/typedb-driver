@@ -175,26 +175,28 @@ impl TryFromProto<readable_concept_tree::node::ReadableConcept> for Option<Conce
     fn try_from_proto(proto: readable_concept_tree::node::ReadableConcept) -> Result<Self> {
         match proto.readable_concept {
             Some(ReadableConceptProto::EntityType(entity_type_proto)) => {
-                Ok(Self::EntityType(EntityType::from_proto(entity_type_proto)))
-            }
+                Ok(Some(Concept::EntityType(EntityType::from_proto(entity_type_proto))))
+            },
             Some(ReadableConceptProto::RelationType(relation_type_proto)) => {
-                Ok(Self::RelationType(RelationType::from_proto(relation_type_proto)))
-            }
+                Ok(Some(Concept::RelationType(RelationType::from_proto(relation_type_proto))))
+            },
             Some(ReadableConceptProto::AttributeType(attribute_type_proto)) => {
-                AttributeType::try_from_proto(attribute_type_proto).map(Self::AttributeType)
-            }
-
+                AttributeType::try_from_proto(attribute_type_proto)
+                    .map(|attr_type| Some(Concept::AttributeType(attr_type)))
+            },
             Some(ReadableConceptProto::RoleType(role_type_proto)) => {
-                Ok(Self::RoleType(RoleType::from_proto(role_type_proto)))
-            }
-
+                Ok(Some(Concept::RoleType(RoleType::from_proto(role_type_proto))))
+            },
             Some(ReadableConceptProto::Attribute(attribute_proto)) => {
-                Attribute::try_from_proto(attribute_proto).map(Self::Attribute)
-            }
-
-            Some(ReadableConceptProto::Value(value_proto)) => Value::try_from_proto(value_proto).map(Self::Value),
-
-            Some(ReadableConceptProto::ThingTypeRoot(_)) => Ok(Self::RootThingType(RootThingType)),
+                Attribute::try_from_proto(attribute_proto)
+                    .map(|attr| Some(Concept::Attribute(attr)))
+            },
+            Some(ReadableConceptProto::Value(value_proto)) => {
+                Value::try_from_proto(value_proto).map(|value| Some(Concept::Value(value)))
+            },
+            Some(ReadableConceptProto::ThingTypeRoot(_)) => {
+                Ok(Some(Concept::RootThingType(RootThingType)))
+            },
             None => Ok(None),
         }
     }

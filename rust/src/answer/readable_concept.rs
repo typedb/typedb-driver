@@ -60,7 +60,7 @@ impl Node {
             Node::Leaf(Some(Concept::RelationType(RelationType { label, .. }))) => {
                 json_type(RelationType::ROOT_LABEL, Cow::Owned(label))
             },
-            Node::Leaf(Some(Concept::AttributeType(AttributeType { label, value_type, .. }))) => {Some(
+            Node::Leaf(Some(Concept::AttributeType(AttributeType { label, value_type, .. }))) => {
                 json_attribute_type(Cow::Owned(label), value_type)
             },
             Node::Leaf(Some(Concept::RoleType(RoleType { label, .. }))) => {
@@ -77,6 +77,7 @@ impl Node {
             Node::Leaf(None) => JSON::Null,
             Node::Leaf(Some(concept @ (Concept::Entity(_) | Concept::Relation(_)))) => {
                 unreachable!("Unexpected concept encountered in fetch response: {concept:?}")
+            }
         }
     }
 }
