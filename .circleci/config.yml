@@ -56,6 +56,8 @@ commands:
         type: string
     steps:
       - run: |
+          apt-get -y update
+          apt-get -y install curl build-essential
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
           sudo mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
