@@ -27,14 +27,14 @@ orbs:
 
 executors:
   linux-arm64:
-    machine:
-      image: ubuntu-2004:current
-      resource_class: arm.medium
+    docker:
+      image: ubuntu:18.04
+    resource_class: arm.medium
     working_directory: ~/typedb-driver
 
   linux-x86_64:
-    machine:
-      image: ubuntu-2004:current
+    docker:
+      image: ubuntu:18.04
     working_directory: ~/typedb-driver
 
   mac-arm64:
