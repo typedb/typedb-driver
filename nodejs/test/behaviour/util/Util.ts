@@ -50,7 +50,9 @@ export function splitString(value: string, separator: string, limit: number): st
 
 
 export function JSONEqualsUnordered(first: JSON, second: JSON): boolean {
-    if (Array.isArray(first) && Array.isArray(second)) {
+    if (first == null && second == null) {
+        return true;
+    } else if (Array.isArray(first) && Array.isArray(second)) {
         return JSONArrayEquals(first, second);
     } else if (first instanceof Object && second instanceof Object) {
         return JSONObjectEquals(first as JSONObject, second as JSONObject);
@@ -60,6 +62,10 @@ export function JSONEqualsUnordered(first: JSON, second: JSON): boolean {
 }
 
 export function JSONArrayEquals(first: JSONArray, second: JSONArray): boolean {
+    console.log("Checking equality?")
+    console.log(first);
+    console.log(second);
+    console.log("\n");
     if (first.length != second.length) return false;
     const secondCopy = [...second];
     for (const f of first) {
@@ -82,7 +88,7 @@ export function JSONObjectEquals(first: JSONObject, second: JSONObject): boolean
     for (const key in first) {
         const firstValue = first[key];
         const secondValue = second[key];
-        if (secondValue == null || !JSONEqualsUnordered(firstValue, secondValue)) {
+        if (!JSONEqualsUnordered(firstValue, secondValue)) {
             return false;
         }
     }
