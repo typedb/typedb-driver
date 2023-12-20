@@ -293,7 +293,7 @@ commands:
       - run: |
           export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --jobs=16 --define version=$(git rev-parse HEAD) //c:deploy-clib-driver --compilation_mode=opt -- snapshot
+          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //c:deploy-clib-driver --compilation_mode=opt -- snapshot
 
   deploy-clib-snapshot-linux:
     parameters:
