@@ -20,7 +20,7 @@
 #
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_typedb_common//test:rules.bzl", "typedb_java_test")
+load("@vaticle_dependencies//builder/java:rules.bzl", "typedb_java_test")
 
 typedb_java_test(
     name = "test-driver-query",

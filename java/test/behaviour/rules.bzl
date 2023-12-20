@@ -19,7 +19,7 @@
 # under the License.
 #
 
-load("@vaticle_typedb_common//test:rules.bzl", "typedb_java_test")
+load("@vaticle_dependencies//builder/java:rules.bzl", "typedb_java_test")
 
 def typedb_behaviour_java_test(
         name,

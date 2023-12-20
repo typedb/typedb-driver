@@ -26,8 +26,6 @@ java_library(
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        # Vaticle Dependencies
-#        "@vaticle_typedb_common//test:typedb-runner",
         # External Maven Dependencies
         "@maven//:junit_junit",
         "@maven//:com_vaticle_typedb_typedb_runner",
