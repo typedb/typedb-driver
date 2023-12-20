@@ -85,7 +85,6 @@ commands:
   deploy-pip-snapshot-unix:
     steps:
       - run: |
-          ulimit -n 100000
           export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip39 -- snapshot
@@ -189,7 +188,6 @@ commands:
   deploy-maven-jni-snapshot-unix:
     steps:
       - run: |
-          ulimit -n 100000
           export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run --define version=$(git rev-parse HEAD) //java:deploy-maven-jni -- snapshot
@@ -255,7 +253,6 @@ commands:
   deploy-maven-jni-release-unix:
     steps:
       - run: |
-          ulimit -n 100000
           export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run --define version=$(cat VERSION) //java:deploy-maven-jni --compilation_mode=opt -- release
@@ -294,7 +291,6 @@ commands:
   deploy-clib-snapshot-unix:
     steps:
       - run: |
-          ulimit -n 100000
           export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run --define version=$(git rev-parse HEAD) //c:deploy-clib-driver --compilation_mode=opt -- snapshot
@@ -325,7 +321,6 @@ commands:
         type: string
     steps:
       - run: |
-          ulimit -n 100000      
           bazel build //c:assemble-linux-<<parameters.target-arch>>-targz
           export ASSEMBLY=typedb-driver-clib-linux-<<parameters.target-arch>>
           mkdir -p test_assembly_clib
@@ -368,7 +363,6 @@ commands:
   deploy-clib-release-unix:
     steps:
       - run: |
-          ulimit -n 100000
           export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run --define version=$(cat VERSION) //c:deploy-clib-driver --compilation_mode=opt -- release
@@ -399,7 +393,6 @@ commands:
   deploy-cpp-snapshot-unix:
     steps:
       - run: |
-          ulimit -n 100000
           export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run --define version=$(git rev-parse HEAD) //cpp:deploy-cpp-driver --compilation_mode=opt -- snapshot
@@ -430,7 +423,6 @@ commands:
         type: string
     steps:
       - run: |
-          ulimit -n 100000
           bazel build //cpp:assemble-linux-<<parameters.target-arch>>-targz
           export ASSEMBLY=typedb-driver-cpp-linux-<<parameters.target-arch>>
           mkdir -p test_assembly_cpp
@@ -473,7 +465,6 @@ commands:
   deploy-cpp-release-unix:
     steps:
       - run: |
-          ulimit -n 100000
           export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run --define version=$(cat VERSION) //cpp:deploy-cpp-driver --compilation_mode=opt -- release
