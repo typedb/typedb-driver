@@ -164,7 +164,7 @@ pub fn json_matches_str(string: &str, json: &JSON) -> TypeDBResult<bool> {
 fn parse_json(json: &str) -> TypeDBResult<JSON> {
     fn serde_json_into_fetch_answer(json: serde_json::Value) -> JSON {
         match json {
-            serde_json::Value::Null => unreachable!("nulls are not allowed in fetch results"),
+            serde_json::Value::Null => JSON::Null,
             serde_json::Value::Bool(bool) => JSON::Boolean(bool),
             serde_json::Value::Number(number) => JSON::Number(number.as_f64().unwrap()),
             serde_json::Value::String(string) => JSON::String(Cow::Owned(string)),
@@ -216,6 +216,7 @@ fn jsons_equal_up_to_reorder(lhs: &JSON, rhs: &JSON) -> bool {
         (JSON::String(lhs), JSON::String(rhs)) => lhs == rhs,
         (&JSON::Number(lhs), &JSON::Number(rhs)) => equals_approximate(lhs, rhs),
         (JSON::Boolean(lhs), JSON::Boolean(rhs)) => lhs == rhs,
+        (JSON::Null, JSON::Null) => true,
         _ => false,
     }
 }

@@ -36,6 +36,7 @@ use typedb_protocol::{
     RelationType as RelationTypeProto, RoleType as RoleTypeProto, Thing as ThingProto, ThingType as ThingTypeProto,
     Value as ValueProto, ValueGroup as ValueGroupProto, ValueType as ValueTypeProto,
 };
+use typedb_protocol::readable_concept_tree::node::readable_concept::ReadableConcept;
 
 use super::{FromProto, IntoProto, TryFromProto};
 use crate::{
@@ -146,7 +147,8 @@ impl TryFromProto<readable_concept_tree::Node> for readable_concept::Node {
             Some(readable_concept_tree::node::Node::Map(map)) => Ok(Self::Map(HashMap::try_from_proto(map)?)),
             Some(readable_concept_tree::node::Node::List(list)) => Ok(Self::List(Vec::try_from_proto(list)?)),
             Some(readable_concept_tree::node::Node::ReadableConcept(leaf)) => {
-                Ok(Self::Leaf(Concept::try_from_proto(leaf)?))
+                let result: Result<Option<Concept>> = Option::try_from_proto(leaf);
+                Ok(Self::Leaf(result?))
             }
             None => Err(ConnectionError::MissingResponseField { field: "node" }.into()),
         }
@@ -169,7 +171,7 @@ impl TryFromProto<readable_concept_tree::node::List> for Vec<readable_concept::N
     }
 }
 
-impl TryFromProto<readable_concept_tree::node::ReadableConcept> for Concept {
+impl TryFromProto<readable_concept_tree::node::ReadableConcept> for Option<Concept> {
     fn try_from_proto(proto: readable_concept_tree::node::ReadableConcept) -> Result<Self> {
         match proto.readable_concept {
             Some(ReadableConceptProto::EntityType(entity_type_proto)) => {
@@ -193,7 +195,7 @@ impl TryFromProto<readable_concept_tree::node::ReadableConcept> for Concept {
             Some(ReadableConceptProto::Value(value_proto)) => Value::try_from_proto(value_proto).map(Self::Value),
 
             Some(ReadableConceptProto::ThingTypeRoot(_)) => Ok(Self::RootThingType(RootThingType)),
-            None => Err(ConnectionError::MissingResponseField { field: "readable_concept" }.into()),
+            None => Ok(None),
         }
     }
 }
