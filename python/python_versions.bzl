@@ -48,4 +48,4 @@ python_versions = [
 
 def register_all_toolchains():
     for version in python_versions:
-        python_register_toolchains(name=version["name"], python_version=version["python_version"])
+        python_register_toolchains(name=version["name"], python_version=version["python_version"], ignore_root_user_error = True)
