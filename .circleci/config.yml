@@ -321,7 +321,7 @@ commands:
         type: string
     steps:
       - run: |
-          bazel build --jobs=16 //c:assemble-linux-<<parameters.target-arch>>-targz
+          bazel build --jobs=8 //c:assemble-linux-<<parameters.target-arch>>-targz
           export ASSEMBLY=typedb-driver-clib-linux-<<parameters.target-arch>>
           mkdir -p test_assembly_clib
           tar -xf bazel-bin/c/$ASSEMBLY.tar.gz --directory test_assembly_clib
