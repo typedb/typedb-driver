@@ -59,7 +59,7 @@ commands:
           apt-get -y update
           apt-get -y install curl build-essential
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
-          sudo mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
+          mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
 
   install-bazel-mac:
@@ -1063,10 +1063,10 @@ jobs:
       - install-bazel-linux:
           bazel-arch: amd64
       - run: |
-          wget -q -O - https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
-          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          sudo apt update -y
-          sudo apt install -y expect
+          wget -q -O - https://cli-assets.heroku.com/apt/release.key | apt-key add -
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+          apt update -y
+          apt install -y expect
           export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN
           bazel run --define version=$(cat VERSION) //nodejs:deploy-npm --compilation_mode=opt -- release
           mkdir -p ~/dist
