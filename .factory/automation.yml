@@ -71,6 +71,8 @@
      build-docs:
        image: vaticle-ubuntu-22.04
        command: |
+         sudo apt-get update
+         sudo apt install doxygen -y
          bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
          DOCS_DIRS="java/docs nodejs/docs python/docs rust/docs cpp/docs"
          rm -rf $DOCS_DIRS
