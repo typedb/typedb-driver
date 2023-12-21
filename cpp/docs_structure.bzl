@@ -20,6 +20,7 @@
 #
 
 dir_mapping = {
+    "typedefs.adoc" : "common",
     "Transaction.adoc": "transaction",
     "TransactionType.adoc": "transaction",
     "QueryManager.adoc": "transaction",

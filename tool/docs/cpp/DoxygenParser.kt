@@ -32,6 +32,7 @@ import picocli.CommandLine
 import picocli.CommandLine.Parameters
 import java.io.File
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.concurrent.Callable
 import kotlin.system.exitProcess
@@ -63,29 +64,33 @@ class DoxygenParser : Callable<Unit> {
         if (!docsDir.toFile().exists()) {
             Files.createDirectory(docsDir)
         }
-
-        // Namespace file for the enums
+        val classes: MutableList<Class> = ArrayList()
+        // Namespace file for the enums & typedefs
         run {
             val namespacefile = File(inputDirectoryName).resolve("html/namespace_type_d_b.html")
             assert(namespacefile.exists())
             val html = File(namespacefile.path).readText(Charsets.UTF_8)
             val parsed = Jsoup.parse(html)
+
+            // Typedefs
+            val typeDefFile = getFile(docsDir, "typedefs.adoc")
+            typeDefFile.writeText("")
+            val typeDefTBody =
+                parsed.select("tr.heading").filter { element -> element.text().equals("Typedefs") }.first().parent()!!
+            typeDefTBody.select("tr").filter { tr ->
+                tr.className().startsWith("memitem")
+            }.map {
+                parseTypeDef(it!!)
+            }.forEach {
+                if (it.isNotEmpty()) typeDefFile.appendText(it.toAsciiDoc("cpp"))
+            }
+
+            // Enums
             parsed.select("td.memname").filter { element ->
                 element.text().startsWith("enum class")
             }.map { element -> element.parents().select(".memitem").first() }.forEach {
                 val parsedEnum = parseEnum(it!!)
-                val parsedClassAsciiDoc = parsedEnum.toAsciiDoc("cpp")
-                val fileName = "${generateFilename(parsedEnum.name)}.adoc"
-                val fileDir = docsDir.resolve(
-                    dirs[fileName]
-                        ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided")
-                )
-                if (!fileDir.toFile().exists()) {
-                    Files.createDirectory(fileDir)
-                }
-                val outputFile = fileDir.resolve(fileName).toFile()
-                outputFile.createNewFile()
-                outputFile.writeText(parsedClassAsciiDoc)
+                if (parsedEnum.isNotEmpty()) classes.add(parsedEnum)
             }
         }
 
@@ -97,21 +102,27 @@ class DoxygenParser : Callable<Unit> {
             val html = File(it.path).readText(Charsets.UTF_8)
             val parsed = Jsoup.parse(html)
             val parsedClass = parseClass(parsed)
-            if (parsedClass.isNotEmpty()) {
-                val parsedEnumAsciiDoc = parsedClass.toAsciiDoc("cpp")
-                val fileName = "${generateFilename(parsedClass.name)}.adoc"
-                val fileDir = docsDir.resolve(
-                    dirs[fileName]
-                        ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided")
-                )
-                if (!fileDir.toFile().exists()) {
-                    Files.createDirectory(fileDir)
-                }
-                val outputFile = fileDir.resolve(fileName).toFile()
-                outputFile.createNewFile()
-                outputFile.writeText(parsedEnumAsciiDoc)
-            }
+            if (parsedClass.isNotEmpty()) classes.add(parsedClass)
         }
+
+        classes.forEach { parsedClass ->
+            val parsedClassAsciiDoc = parsedClass.toAsciiDoc("cpp")
+            val outputFile = getFile(docsDir, "${generateFilename(parsedClass.name)}.adoc")
+            outputFile.writeText(parsedClassAsciiDoc)
+        }
+    }
+
+    private fun getFile(docsDir: Path, fileName: String): File {
+        val fileDir = docsDir.resolve(
+            dirs[fileName]
+                ?: throw IllegalArgumentException("Output directory for '$fileName' was not provided")
+        )
+        if (!fileDir.toFile().exists()) {
+            Files.createDirectory(fileDir)
+        }
+        val outputFile = fileDir.resolve(fileName).toFile()
+        outputFile.createNewFile()
+        return outputFile
     }
 
     private fun parseMemberDecls(document: Element): Map<String, List<Element>> {
@@ -139,6 +150,33 @@ class DoxygenParser : Callable<Unit> {
             println("Missing some member declarations:\n\t-" + missingDeclarations.joinToString("\n\t-"))
         }
         return map
+    }
+
+    private fun parseTypeDef(element: Element): Class {
+        THE LINKS AREN'T LOCAL
+        val anchor = element.className().substringAfter(":")
+        val memItemLeft = element.selectFirst("td.memItemLeft")
+        if (memItemLeft != null) {
+            if (memItemLeft.text().startsWith("typedef")) {
+                val actual = element.selectFirst("td.memItemLeft")!!.text().substringAfter("typedef ")
+                val alias = element.selectFirst("td.memItemRight")!!.text()
+                return Class(
+                    name = alias,
+                    anchor = anchor,
+                    description = listOf("Alias for ${replaceLocalLinks(actual)}"),
+                )
+            } else if (memItemLeft!!.text().startsWith("using")) {
+                val usingEquality = element.selectFirst("td.memItemRight")!!
+                val actual = replaceLocalLinks(usingEquality.html().substringAfter("=").trim())
+                val alias = usingEquality.text().substringBefore("=").trim()
+                return Class(
+                    name = alias,
+                    anchor = anchor,
+                    description = listOf("Alias for ${actual}")
+                )
+            }
+        }
+        return Class("")
     }
 
     private fun parseClass(document: Element): Class {
@@ -254,7 +292,7 @@ class DoxygenParser : Callable<Unit> {
         return methodSignature
             .replace("\\s+".toRegex(), " ")
             .substringAfter("(").substringBefore(")")
-            .split(",\\s".toRegex()).map {arg ->
+            .split(",\\s".toRegex()).map { arg ->
                 arg.split("\u00a0").let { it.last() to it.dropLast(1).joinToString(" ") }
             }.filter { it.first.isNotEmpty() || it.second.isNotEmpty() }
             .toList()
