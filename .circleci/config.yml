@@ -71,7 +71,7 @@ commands:
       - run: |
           apt-get -y update
           DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
-          apt-get -y install curl build-essential git python3 default-jre lsof cmake
+          apt-get -y install curl build-essential git python3 python3-pip default-jre lsof cmake
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
           mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
@@ -90,19 +90,18 @@ commands:
   # Python deployment steps #
   ###########################
 
-  install-pip-requirements-build:
+  install-pip-requirements-linux:
     steps:
       - run: |
-          apt install -y software-properties-common && add-apt-repository -y ppa:deadsnakes/ppa && apt update && apt install -y python3.7 python3-pip
+          apt install -y software-properties-common && add-apt-repository -y ppa:deadsnakes/ppa && apt update && apt install -y python3.7
           update-alternatives --install /usr/bin/python python /usr/bin/python3.7 2
           update-alternatives --install /usr/bin/python3 python /usr/bin/python3.7 2
           python3 -m pip install pip==21.3.1
           python3 -m pip install -r python/requirements_dev.txt
 
-  install-pip-requirements-test:
+  install-pip-requirements-mac:
     steps:
       - run: |
-          apt install -y python3-pip
           python3 -m pip install pip==21.3.1
           python3 -m pip install -r python/requirements_dev.txt
 
@@ -123,7 +122,7 @@ commands:
       - checkout
       - install-bazel-linux:
           bazel-arch: "<<parameters.bazel-arch>>"
-      - install-pip-requirements-build
+      - install-pip-requirements-linux
       - deploy-pip-snapshot-unix
 
   deploy-pip-snapshot-mac:
@@ -134,7 +133,7 @@ commands:
       - checkout
       - install-bazel-mac:
           bazel-arch: "<<parameters.bazel-arch>>"
-      - install-pip-requirements-build
+      - install-pip-requirements-mac
       - deploy-pip-snapshot-unix
 
   test-pip-snapshot-unix:
@@ -156,7 +155,7 @@ commands:
       - checkout
       - install-bazel-linux:
           bazel-arch: "<<parameters.bazel-arch>>"
-      - install-pip-requirements-test
+      - install-pip-requirements-linux
       - test-pip-snapshot-unix
 
   test-pip-snapshot-mac:
@@ -167,7 +166,7 @@ commands:
       - checkout
       - install-bazel-mac:
           bazel-arch: "<<parameters.bazel-arch>>"
-      - install-pip-requirements-test
+      - install-pip-requirements-mac
       - test-pip-snapshot-unix
 
   deploy-pip-release-unix:
@@ -187,7 +186,7 @@ commands:
       - checkout
       - install-bazel-linux:
           bazel-arch: "<<parameters.bazel-arch>>"
-      - install-pip-requirements-build
+      - install-pip-requirements-linux
       - deploy-pip-release-unix
 
   deploy-pip-release-mac:
@@ -198,7 +197,7 @@ commands:
       - checkout
       - install-bazel-mac:
           bazel-arch: "<<parameters.bazel-arch>>"
-      - install-pip-requirements-build
+      - install-pip-requirements-mac
       - deploy-pip-release-unix
 
   #########################
