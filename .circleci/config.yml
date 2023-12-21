@@ -26,15 +26,28 @@ orbs:
   macos: circleci/macos@2.4.0
 
 executors:
-  linux-arm64:
+  linux-arm64-ubuntu-1804:
     docker:
       - image: ubuntu:18.04
-    resource_class: arm.medium
+    resource_class: arm.large
     working_directory: ~/typedb-driver
 
-  linux-x86_64:
+  linux-arm64-ubuntu-2004:
+    docker:
+      - image: ubuntu:20.04
+    resource_class: arm.large
+    working_directory: ~/typedb-driver
+
+  linux-x86_64-ubuntu-1804:
     docker:
       - image: ubuntu:18.04
+    resource_class: large
+    working_directory: ~/typedb-driver
+
+  linux-x86_64-ubuntu-2004:
+    docker:
+      - image: ubuntu:20.04
+    resource_class: large
     working_directory: ~/typedb-driver
 
   mac-arm64:
@@ -57,6 +70,7 @@ commands:
     steps:
       - run: |
           apt-get -y update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
           apt-get -y install curl build-essential git python3 default-jre lsof cmake
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
           mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
@@ -76,10 +90,20 @@ commands:
   # Python deployment steps #
   ###########################
 
-  install-pip-requirements:
+  install-pip-requirements-build:
     steps:
       - run: |
-          python3 -m pip install pip==23.2.1
+          apt install -y software-properties-common && add-apt-repository -y ppa:deadsnakes/ppa && apt update && apt install -y python3.7 python3-pip
+          update-alternatives --install /usr/bin/python python /usr/bin/python3.7 2
+          update-alternatives --install /usr/bin/python3 python /usr/bin/python3.7 2
+          python3 -m pip install pip==21.3.1
+          python3 -m pip install -r python/requirements_dev.txt
+
+  install-pip-requirements-test:
+    steps:
+      - run: |
+          apt install -y python3-pip
+          python3 -m pip install pip==21.3.1
           python3 -m pip install -r python/requirements_dev.txt
 
   deploy-pip-snapshot-unix:
@@ -99,7 +123,7 @@ commands:
       - checkout
       - install-bazel-linux:
           bazel-arch: "<<parameters.bazel-arch>>"
-      - install-pip-requirements
+      - install-pip-requirements-build
       - deploy-pip-snapshot-unix
 
   deploy-pip-snapshot-mac:
@@ -110,14 +134,14 @@ commands:
       - checkout
       - install-bazel-mac:
           bazel-arch: "<<parameters.bazel-arch>>"
-      - install-pip-requirements
+      - install-pip-requirements-build
       - deploy-pip-snapshot-unix
 
   test-pip-snapshot-unix:
     steps:
       - run: |
           tool/test/start-core-server.sh
-          python3 -m pip install wheel
+          python3 -m pip install wheel 
           python3 -m pip install --extra-index-url https://repo.vaticle.com/repository/pypi-snapshot/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
           sleep 3
           (cd python/tests/deployment/ && python3 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
@@ -132,7 +156,7 @@ commands:
       - checkout
       - install-bazel-linux:
           bazel-arch: "<<parameters.bazel-arch>>"
-      - install-pip-requirements
+      - install-pip-requirements-test
       - test-pip-snapshot-unix
 
   test-pip-snapshot-mac:
@@ -143,7 +167,7 @@ commands:
       - checkout
       - install-bazel-mac:
           bazel-arch: "<<parameters.bazel-arch>>"
-      - install-pip-requirements
+      - install-pip-requirements-test
       - test-pip-snapshot-unix
 
   deploy-pip-release-unix:
@@ -163,7 +187,7 @@ commands:
       - checkout
       - install-bazel-linux:
           bazel-arch: "<<parameters.bazel-arch>>"
-      - install-pip-requirements
+      - install-pip-requirements-build
       - deploy-pip-release-unix
 
   deploy-pip-release-mac:
@@ -174,7 +198,7 @@ commands:
       - checkout
       - install-bazel-mac:
           bazel-arch: "<<parameters.bazel-arch>>"
-      - install-pip-requirements
+      - install-pip-requirements-build
       - deploy-pip-release-unix
 
   #########################
@@ -184,6 +208,10 @@ commands:
   install-maven-mac:
     steps:
       - run: brew install maven
+
+  install-maven-linux:
+    steps:
+      - run: apt-get -y update && apt-get -y install maven
 
   deploy-maven-jni-snapshot-unix:
     steps:
@@ -237,6 +265,7 @@ commands:
       - checkout
       - install-bazel-linux:
           bazel-arch: "<<parameters.bazel-arch>>"
+      - install-maven-linux
       - test-maven-snapshot-unix
 
   test-maven-snapshot-mac:
@@ -496,13 +525,13 @@ jobs:
   ###############
 
   deploy-pip-snapshot-linux-arm64:
-    executor: linux-arm64
+    executor: linux-arm64-ubuntu-1804
     steps:
       - deploy-pip-snapshot-linux:
           bazel-arch: arm64
 
   deploy-pip-snapshot-linux-x86_64:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - deploy-pip-snapshot-linux:
           bazel-arch: amd64
@@ -531,13 +560,13 @@ jobs:
       - run: .circleci\windows\python\deploy_snapshot.bat
 
   test-pip-snapshot-linux-arm64:
-    executor: linux-arm64
+    executor: linux-arm64-ubuntu-2004
     steps:
       - test-pip-snapshot-linux:
           bazel-arch: arm64
 
   test-pip-snapshot-linux-x86_64:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-2004
     steps:
       - test-pip-snapshot-linux:
           bazel-arch: amd64
@@ -566,7 +595,7 @@ jobs:
       - run: .circleci\windows\python\test_deploy_snapshot.bat
 
   deploy-pip-release-linux-arm64:
-    executor: linux-arm64
+    executor: linux-arm64-ubuntu-1804
     steps:
       - deploy-pip-release-linux:
           bazel-arch: arm64
@@ -583,7 +612,7 @@ jobs:
           paths: ["./*"]
 
   deploy-pip-release-linux-x86_64:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - deploy-pip-release-linux:
           bazel-arch: amd64
@@ -652,13 +681,13 @@ jobs:
   #############
 
   deploy-maven-jni-snapshot-linux-arm64:
-    executor: linux-arm64
+    executor: linux-arm64-ubuntu-1804
     steps:
       - deploy-maven-jni-snapshot-linux:
           bazel-arch: arm64
 
   deploy-maven-jni-snapshot-linux-x86_64:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - deploy-maven-jni-snapshot-linux:
           bazel-arch: amd64
@@ -687,7 +716,7 @@ jobs:
       - run: .circleci\windows\java\deploy_snapshot.bat
 
   deploy-maven-snapshot:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - checkout
       - install-bazel-linux:
@@ -695,13 +724,13 @@ jobs:
       - deploy-maven-snapshot-unix
 
   test-maven-snapshot-linux-arm64:
-    executor: linux-arm64
+    executor: linux-arm64-ubuntu-1804
     steps:
       - test-maven-snapshot-linux:
           bazel-arch: arm64
 
   test-maven-snapshot-linux-x86_64:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - test-maven-snapshot-linux:
           bazel-arch: amd64
@@ -730,7 +759,7 @@ jobs:
       - run: .circleci\windows\java\test_deploy_snapshot.bat
 
   deploy-maven-jni-release-linux-arm64:
-    executor: linux-arm64
+    executor: linux-arm64-ubuntu-1804
     steps:
       - deploy-maven-jni-release-linux:
           bazel-arch: arm64
@@ -742,7 +771,7 @@ jobs:
           paths: ["./*"]
 
   deploy-maven-jni-release-linux-x86_64:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - deploy-maven-jni-release-linux:
           bazel-arch: amd64
@@ -792,7 +821,7 @@ jobs:
           paths: ["./*"]
 
   deploy-maven-release:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - checkout
       - install-bazel-linux:
@@ -828,7 +857,7 @@ jobs:
           target-arch: x86_64
           
   deploy-clib-snapshot-linux-arm64:
-    executor: linux-arm64
+    executor: linux-arm64-ubuntu-1804
     steps:
       - deploy-clib-snapshot-linux:
           bazel-arch: arm64
@@ -836,7 +865,7 @@ jobs:
           target-arch: arm64
       
   deploy-clib-snapshot-linux-x86_64:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - deploy-clib-snapshot-linux:
           bazel-arch: amd64
@@ -880,7 +909,7 @@ jobs:
           paths: ["./*"]
 
   deploy-clib-release-linux-arm64:
-    executor: linux-arm64
+    executor: linux-arm64-ubuntu-1804
     steps:
       - deploy-clib-release-linux:
           bazel-arch: arm64
@@ -892,7 +921,7 @@ jobs:
           paths: ["./*"]
 
   deploy-clib-release-linux-x86_64:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - deploy-clib-release-linux:
           bazel-arch: amd64
@@ -940,7 +969,7 @@ jobs:
           
 
   deploy-cpp-snapshot-linux-arm64:
-    executor: linux-arm64
+    executor: linux-arm64-ubuntu-1804
     steps:
       - deploy-cpp-snapshot-linux:
           bazel-arch: arm64
@@ -948,7 +977,7 @@ jobs:
           target-arch: arm64
       
   deploy-cpp-snapshot-linux-x86_64:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - deploy-cpp-snapshot-linux:
           bazel-arch: amd64
@@ -992,7 +1021,7 @@ jobs:
           paths: ["./*"]
 
   deploy-cpp-release-linux-arm64:
-    executor: linux-arm64
+    executor: linux-arm64-ubuntu-1804
     steps:
       - deploy-cpp-release-linux:
           bazel-arch: arm64
@@ -1004,7 +1033,7 @@ jobs:
           paths: ["./*"]
 
   deploy-cpp-release-linux-x86_64:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - deploy-cpp-release-linux:
           bazel-arch: amd64
@@ -1033,7 +1062,7 @@ jobs:
   ################################
 
   deploy-crate-release:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - checkout
       - install-bazel-linux:
@@ -1048,7 +1077,7 @@ jobs:
           paths: ["./*"]
 
   deploy-npm-release:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - checkout
       - install-bazel-linux:
@@ -1067,7 +1096,7 @@ jobs:
           paths: ["./*"]
 
   deploy-github:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - attach_workspace:
           at: ~/dist
@@ -1084,7 +1113,7 @@ jobs:
               -c ${CIRCLE_SHA1} -delete -draft $(cat VERSION) ~/dist/
 
   release-cleanup:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - checkout
       - run: git push --delete https://$REPO_GITHUB_TOKEN@github.com/vaticle/typedb-driver.git $CIRCLE_BRANCH
