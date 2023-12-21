@@ -62,10 +62,6 @@ export function JSONEqualsUnordered(first: JSON, second: JSON): boolean {
 }
 
 export function JSONArrayEquals(first: JSONArray, second: JSONArray): boolean {
-    console.log("Checking equality?")
-    console.log(first);
-    console.log(second);
-    console.log("\n");
     if (first.length != second.length) return false;
     const secondCopy = [...second];
     for (const f of first) {
