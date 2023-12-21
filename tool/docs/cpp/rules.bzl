@@ -50,34 +50,25 @@ def _doxygen_docs_impl(ctx):
 
     replacements = {
         "PROJECT_NAME": ctx.attr.project_name,
-        "OUTPUT_DIRECTORY" : output_directory.path
+        "PROJECT_NUMBER" : ctx.attr.version,
+        "PROJECT_BRIEF" : ctx.attr.desc,
+        "OUTPUT_DIRECTORY" : output_directory.path,
+        "STRIP_FROM_PATH": ctx.attr.strip_prefix,
     }
-    if ctx.attr.strip_from_path != None:
-            replacements["STRIP_FROM_PATH"] =ctx.attr.strip_from_path
-
     if ctx.file.main_page_md != None:
         files.append(ctx.file.main_page_md)
         replacements["USE_MDFILE_AS_MAINPAGE"] = ctx.file.main_page_md.path
 
     replacements["INPUT"] = " ".join([f.path for f in files])
 
-    # Prepare doxyfile replacements
-    replacements_file = ctx.actions.declare_file("%s.replacements" % ctx.attr.name)
-    ctx.actions.write(
-        output = replacements_file,
-        content = "\n".join([(k + " = " +replacements[k]) for k in replacements]),
-        is_executable = False,
-    )
-
     # Prepare doxyfile
     doxyfile = ctx.actions.declare_file("%s.doxyfile" % ctx.attr.name)
-    ctx.actions.run(
-        inputs = [ctx.file._templater_script, ctx.file._doxyfile_template, replacements_file],
-        outputs = [doxyfile],
-        arguments = [ctx.file._templater_script.path, ctx.file._doxyfile_template.path, replacements_file.path, doxyfile.path],
-        executable = "python3",
-        use_default_shell_env = True
+    ctx.actions.expand_template(
+        template = ctx.file._doxyfile_template,
+        output = doxyfile,
+        substitutions = {"##{{%s}}"%k : replacements[k] for k in replacements}
     )
+
     files = [doxyfile] + files
     print(doxyfile.path)
     ctx.actions.run(
@@ -98,14 +89,22 @@ doxygen_docs = rule(
             doc = "The project name for the doxygen docs",
             mandatory = True,
         ),
+        "version" : attr.string(
+            doc = "The version of the project being documented",
+            default = ""
+        ),
+        "desc" : attr.string(
+            doc = "A description for the project",
+            default = ""
+        ),
         "sources" : attr.label_list(
             doc = "A list of files made available to doxygen. This is NOT automatically included in the doxyfile",
             mandatory = True,
             allow_files = True,
         ),
-        "strip_from_path" : attr.string(
+        "strip_prefix" : attr.string(
             doc = "Prefix to strip from path of files being processed",
-            mandatory = False
+            default = ""
         ),
         "main_page_md" : attr.label(
             doc = "The file to use as main page for the generate docs",
@@ -120,10 +119,6 @@ doxygen_docs = rule(
          "_output_directory" : attr.string(
              doc = "The output directory for the doxygen docs",
              default = "doxygen_docs"
-         ),
-         "_templater_script": attr.label(
-             default = "//tool/docs:cpp/doxyfile_templater.py",
-             allow_single_file = True,
          )
     },
 )
