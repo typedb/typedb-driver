@@ -29,7 +29,7 @@ for (auto it = iterable.begin(); it != iterable.end(); ++it ) { ... } // Note: i
 
 [source,cpp]
 ----
-template<typename NATIVE_ITER , typename NATIVE_T , typename T , typename HELPER = IteratorHelper<NATIVE_ITER, NATIVE_T, T>> ITERATOR TypeDB::Iterable< NATIVE_ITER, NATIVE_T, T, HELPER >::begin() inline
+ITERATOR TypeDB::Iterable< NATIVE_ITER, NATIVE_T, T, HELPER >::begin()
 ----
 
 
@@ -38,14 +38,14 @@ Returns an iterator pointing to the first element.
 
 [caption=""]
 .Returns
-`template<typename NATIVE_ITER , typename NATIVE_T , typename T , typename HELPER = IteratorHelper<NATIVE_ITER, NATIVE_T, T>> ITERATOR TypeDB::Iterable< NATIVE_ITER, NATIVE_T, T, HELPER`
+`ITERATOR`
 
 [#_ac92448bacc324dd7862580d6be8ce00b]
 ==== end
 
 [source,cpp]
 ----
-template<typename NATIVE_ITER , typename NATIVE_T , typename T , typename HELPER = IteratorHelper<NATIVE_ITER, NATIVE_T, T>> ITERATOR TypeDB::Iterable< NATIVE_ITER, NATIVE_T, T, HELPER >::end() inline
+ITERATOR TypeDB::Iterable< NATIVE_ITER, NATIVE_T, T, HELPER >::end()
 ----
 
 
@@ -54,7 +54,7 @@ Returns an iterator equivalent to the result of advancing past the last element.
 
 [caption=""]
 .Returns
-`template<typename NATIVE_ITER , typename NATIVE_T , typename T , typename HELPER = IteratorHelper<NATIVE_ITER, NATIVE_T, T>> ITERATOR TypeDB::Iterable< NATIVE_ITER, NATIVE_T, T, HELPER`
+`ITERATOR`
 
 // end::methods[]
 

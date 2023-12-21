@@ -47,7 +47,7 @@ Checks if this ``Annotation`` is a ``@unique`` annotation.
 
 [source,cpp]
 ----
-static Annotation TypeDB::Annotation::key() static
+static Annotation TypeDB::Annotation::key()
 ----
 
 
@@ -80,7 +80,7 @@ A string representation of this Annotation.
 
 [source,cpp]
 ----
-static Annotation TypeDB::Annotation::unique() static
+static Annotation TypeDB::Annotation::unique()
 ----
 
 

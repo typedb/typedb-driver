@@ -20,7 +20,7 @@ Roles are special internal types used by relations. We can not create an instanc
 
 [source,cpp]
 ----
-virtual VoidFuture TypeDB::RoleType::deleteType(Transaction& transaction) overridevirtual
+virtual VoidFuture TypeDB::RoleType::deleteType(Transaction& transaction)
 ----
 
 
@@ -50,7 +50,7 @@ a| `transaction` a| The current transaction a|
 
 [source,cpp]
 ----
-virtual std::string TypeDB::RoleType::getLabel() overridevirtual
+virtual std::string TypeDB::RoleType::getLabel()
 ----
 
 
@@ -317,7 +317,7 @@ a| `transaction` a| The current transaction a|
 
 [source,cpp]
 ----
-virtual bool TypeDB::RoleType::isAbstract() overridevirtual
+virtual bool TypeDB::RoleType::isAbstract()
 ----
 
 
@@ -338,7 +338,7 @@ Implements <<#_a551a46cdbc57083c935408b9c2dcea92,TypeDB::Type>>.
 
 [source,cpp]
 ----
-virtual BoolFuture TypeDB::RoleType::isDeleted(Transaction& transaction) overridevirtual
+virtual BoolFuture TypeDB::RoleType::isDeleted(Transaction& transaction)
 ----
 
 
@@ -385,7 +385,7 @@ Checks if the type is a root type.
 
 [source,cpp]
 ----
-virtual VoidFuture TypeDB::RoleType::setLabel(Transaction& transaction, const std::string& newLabel) overridevirtual
+virtual VoidFuture TypeDB::RoleType::setLabel(Transaction& transaction, const std::string& newLabel)
 ----
 
 

@@ -205,7 +205,7 @@ true if this JSON object holds a string value, else false
 
 [source,cpp]
 ----
-static JSON TypeDB::JSON::parse(const std::string& string) static
+static JSON TypeDB::JSON::parse(const std::string& string)
 ----
 
 

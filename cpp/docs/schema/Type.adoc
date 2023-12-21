@@ -17,7 +17,7 @@ Common super-type of RoleType &amp; ThingType.
 
 [source,cpp]
 ----
-virtual VoidFuture TypeDB::Type::deleteType(Transaction& transaction) pure virtual
+virtual VoidFuture TypeDB::Type::deleteType(Transaction& transaction)
 ----
 
 
@@ -45,7 +45,7 @@ a| `transaction` a| The current transaction a|
 
 [source,cpp]
 ----
-virtual std::string TypeDB::Type::getLabel() pure virtual
+virtual std::string TypeDB::Type::getLabel()
 ----
 
 
@@ -143,7 +143,7 @@ a| `transaction` a| The current transaction a|
 
 [source,cpp]
 ----
-virtual bool TypeDB::Type::isAbstract() pure virtual
+virtual bool TypeDB::Type::isAbstract()
 ----
 
 
@@ -162,7 +162,7 @@ Implemented in <<#_a5a2d563f46a211a3695c408e98e4ada0,TypeDB::RoleType>>, and <<#
 
 [source,cpp]
 ----
-virtual BoolFuture TypeDB::Type::isDeleted(Transaction& transaction) pure virtual
+virtual BoolFuture TypeDB::Type::isDeleted(Transaction& transaction)
 ----
 
 
@@ -190,7 +190,7 @@ a| `transaction` a| The current transaction a|
 
 [source,cpp]
 ----
-virtual VoidFuture TypeDB::Type::setLabel(Transaction& transaction, const std::string& newLabel) pure virtual
+virtual VoidFuture TypeDB::Type::setLabel(Transaction& transaction, const std::string& newLabel)
 ----
 
 

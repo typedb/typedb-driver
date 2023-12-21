@@ -183,7 +183,7 @@ Casts the concept to ``Value``.
 
 [source,cpp]
 ----
-static bool TypeDB::Concept::equals(Concept* first, Concept* second) static
+static bool TypeDB::Concept::equals(Concept* first, Concept* second)
 ----
 
 

@@ -207,7 +207,7 @@ class DoxygenParser : Callable<Unit> {
     private fun parseMethod(element: Element): Method {
         val methodAnchor = element.previousElementSibling()?.previousElementSibling()?.id()!! // Re-use doxygen id
         val methodName = element.previousElementSibling()!!.text().substringBefore("()").substringAfter(" ")
-        val methodSignature = enhanceSignature(element.selectFirst("div.memproto")!!.text())
+        val methodSignature = enhanceSignature(element.selectFirst("table.memname")!!.text())
         val argsList = getArgsFromSignature(methodSignature)
         val argsMap = argsList.toMap()
         val methodReturnType = getReturnTypeFromSignature(methodSignature)
@@ -276,7 +276,9 @@ class DoxygenParser : Callable<Unit> {
     }
 
     private fun getReturnTypeFromSignature(signature: String): String {
-        return signature.substringBefore("(").substringBeforeLast(" ")
+        return signature.replace(", ", ",").replace("< ", "<").replace(" >", ">")
+            .substringBefore("(").substringBeforeLast(" ")
+            .replace(",", ", ").replace("<", "< ").replace(">", " >")
     }
 
     private fun splitToParagraphs(html: String): List<String> {

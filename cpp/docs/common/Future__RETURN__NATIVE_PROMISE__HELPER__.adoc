@@ -19,7 +19,7 @@ Note that a future must be evaluated for any server-side exceptions to be raised
 
 [source,cpp]
 ----
-template<typename RETURN , typename NATIVE_PROMISE , typename HELPER = FutureHelper<RETURN, NATIVE_PROMISE>> RETURN TypeDB::Future< RETURN, NATIVE_PROMISE, HELPER >::get() inline
+RETURN TypeDB::Future< RETURN, NATIVE_PROMISE, HELPER >::get()
 ----
 
 
@@ -28,14 +28,14 @@ Waits for the call to complete and returns the result.
 
 [caption=""]
 .Returns
-`template<typename RETURN , typename NATIVE_PROMISE , typename HELPER = FutureHelper<RETURN, NATIVE_PROMISE>> RETURN TypeDB::Future< RETURN, NATIVE_PROMISE, HELPER`
+`RETURN`
 
 [#_a4c334dd7bb19bbfd9e56038ce7dc5c8d]
 ==== wait
 
 [source,cpp]
 ----
-template<typename RETURN , typename NATIVE_PROMISE , typename HELPER = FutureHelper<RETURN, NATIVE_PROMISE>> void TypeDB::Future< RETURN, NATIVE_PROMISE, HELPER >::wait() inline
+void TypeDB::Future< RETURN, NATIVE_PROMISE, HELPER >::wait()
 ----
 
 
@@ -44,7 +44,7 @@ Waits for the call to complete and ignores the result. Any exceptions will still
 
 [caption=""]
 .Returns
-`template<typename RETURN , typename NATIVE_PROMISE , typename HELPER = FutureHelper<RETURN, NATIVE_PROMISE>> void TypeDB::Future< RETURN, NATIVE_PROMISE, HELPER`
+`void`
 
 // end::methods[]
 

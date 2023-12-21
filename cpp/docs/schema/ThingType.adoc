@@ -18,7 +18,7 @@ Common super-type of EntityType, RelationType, and AttributeType.
 
 [source,cpp]
 ----
-virtual VoidFuture TypeDB::ThingType::deleteType(Transaction& transaction) overridevirtual
+virtual VoidFuture TypeDB::ThingType::deleteType(Transaction& transaction)
 ----
 
 
@@ -48,7 +48,7 @@ a| `transaction` a| The current transaction a|
 
 [source,cpp]
 ----
-virtual std::string TypeDB::ThingType::getLabel() overridevirtual
+virtual std::string TypeDB::ThingType::getLabel()
 ----
 
 
@@ -372,7 +372,7 @@ a| `transaction` a| The current transaction a|
 
 [source,cpp]
 ----
-virtual bool TypeDB::ThingType::isAbstract() overridevirtual
+virtual bool TypeDB::ThingType::isAbstract()
 ----
 
 
@@ -393,7 +393,7 @@ Implements <<#_a551a46cdbc57083c935408b9c2dcea92,TypeDB::Type>>.
 
 [source,cpp]
 ----
-virtual BoolFuture TypeDB::ThingType::isDeleted(Transaction& transaction) overridevirtual
+virtual BoolFuture TypeDB::ThingType::isDeleted(Transaction& transaction)
 ----
 
 
@@ -466,7 +466,7 @@ a| `transaction` a| The current transaction a|
 
 [source,cpp]
 ----
-virtual VoidFuture TypeDB::ThingType::setLabel(Transaction& transaction, const std::string& newLabel) overridevirtual
+virtual VoidFuture TypeDB::ThingType::setLabel(Transaction& transaction, const std::string& newLabel)
 ----
 
 

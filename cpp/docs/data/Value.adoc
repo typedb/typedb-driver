@@ -98,7 +98,7 @@ Returns a ``string`` value of this value concept. If the value has another type,
 
 [source,cpp]
 ----
-static std::string TypeDB::Value::formatDateTime(DateTime t) static
+static std::string TypeDB::Value::formatDateTime(DateTime t)
 ----
 
 
@@ -200,7 +200,7 @@ Returns ``true`` if the value which this value concept holds is of type ``string
 
 [source,cpp]
 ----
-static std::unique_ptr< Value > TypeDB::Value::of(bool value) static
+static std::unique_ptr< Value > TypeDB::Value::of(bool value)
 ----
 
 
@@ -217,7 +217,7 @@ Creates a new Value object of the specified boolean value.
 
 [source,cpp]
 ----
-static std::unique_ptr< Value > TypeDB::Value::of(int64_t value) static
+static std::unique_ptr< Value > TypeDB::Value::of(int64_t value)
 ----
 
 
@@ -234,7 +234,7 @@ Creates a new Value object of the specified long value.
 
 [source,cpp]
 ----
-static std::unique_ptr< Value > TypeDB::Value::of(double value) static
+static std::unique_ptr< Value > TypeDB::Value::of(double value)
 ----
 
 
@@ -251,7 +251,7 @@ Creates a new Value object of the specified double value.
 
 [source,cpp]
 ----
-static std::unique_ptr< Value > TypeDB::Value::of(const std::string& value) static
+static std::unique_ptr< Value > TypeDB::Value::of(const std::string& value)
 ----
 
 
@@ -268,7 +268,7 @@ Creates a new Value object of the specified string value.
 
 [source,cpp]
 ----
-static std::unique_ptr< Value > TypeDB::Value::of(DateTime value) static
+static std::unique_ptr< Value > TypeDB::Value::of(DateTime value)
 ----
 
 
@@ -285,7 +285,7 @@ Creates a new Value object of the specified DateTime value.
 
 [source,cpp]
 ----
-static DateTime TypeDB::Value::parseDateTime(const std::string& s) static
+static DateTime TypeDB::Value::parseDateTime(const std::string& s)
 ----
 
 
