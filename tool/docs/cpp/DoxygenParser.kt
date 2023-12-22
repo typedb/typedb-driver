@@ -153,7 +153,6 @@ class DoxygenParser : Callable<Unit> {
     }
 
     private fun parseTypeDef(element: Element): Class {
-        THE LINKS AREN'T LOCAL
         val anchor = element.className().substringAfter(":")
         val memItemLeft = element.selectFirst("td.memItemLeft")
         if (memItemLeft != null) {
@@ -167,7 +166,7 @@ class DoxygenParser : Callable<Unit> {
                 )
             } else if (memItemLeft!!.text().startsWith("using")) {
                 val usingEquality = element.selectFirst("td.memItemRight")!!
-                val actual = replaceLocalLinks(usingEquality.html().substringAfter("=").trim())
+                val actual = usingEquality.text().substringAfter("=").trim()
                 val alias = usingEquality.text().substringBefore("=").trim()
                 return Class(
                     name = alias,

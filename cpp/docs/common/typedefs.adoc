@@ -1,42 +1,42 @@
 [#_a49fe254bd60916f2368f5ab49313480b]
 === ConceptMapIterator
 
-Alias for <a class="el" href="class_type_d_b_1_1_iterator.html">Iterator</a>&lt; _native::ConceptMapIterator, _native::ConceptMap, <a class="el" href="class_type_d_b_1_1_concept_map.html">TypeDB::ConceptMap</a> &gt;
+Alias for Iterator< _native::ConceptMapIterator, _native::ConceptMap, TypeDB::ConceptMap >
 
 [#_a5615653709ee9f4cf10a20fd5f184029]
 === ConceptMapIterable
 
-Alias for <a class="el" href="class_type_d_b_1_1_iterable.html">Iterable</a>&lt; _native::ConceptMapIterator, _native::ConceptMap, <a class="el" href="class_type_d_b_1_1_concept_map.html">TypeDB::ConceptMap</a> &gt;
+Alias for Iterable< _native::ConceptMapIterator, _native::ConceptMap, TypeDB::ConceptMap >
 
 [#_a44adc8208ca0909b14b41efa00c7ca71]
 === ConceptMapGroupIterable
 
-Alias for <a class="el" href="class_type_d_b_1_1_iterable.html">Iterable</a>&lt; _native::ConceptMapGroupIterator, _native::ConceptMapGroup, <a class="el" href="class_type_d_b_1_1_concept_map_group.html">TypeDB::ConceptMapGroup</a> &gt;
+Alias for Iterable< _native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup >
 
 [#_a37e57381cac8196f98332bd41bb46315]
 === ConceptMapGroupIterator
 
-Alias for <a class="el" href="class_type_d_b_1_1_iterator.html">Iterator</a>&lt; _native::ConceptMapGroupIterator, _native::ConceptMapGroup, <a class="el" href="class_type_d_b_1_1_concept_map_group.html">TypeDB::ConceptMapGroup</a> &gt;
+Alias for Iterator< _native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup >
 
 [#_afe5c2b36ca248ca79ea070e5692133b4]
 === OwnerAttributePairIterator
 
-Alias for <a class="el" href="class_type_d_b_1_1_iterator.html">Iterator</a>&lt; _native::StringPairIterator, _native::StringPair, <a class="el" href="class_type_d_b_1_1_owner_attribute_pair.html">OwnerAttributePair</a> &gt;
+Alias for Iterator< _native::StringPairIterator, _native::StringPair, OwnerAttributePair >
 
 [#_ae772c3fa73f4684749de63a48fd5cbe6]
 === OwnerAttributePairIterable
 
-Alias for <a class="el" href="class_type_d_b_1_1_iterable.html">Iterable</a>&lt; _native::StringPairIterator, _native::StringPair, <a class="el" href="class_type_d_b_1_1_owner_attribute_pair.html">OwnerAttributePair</a> &gt;
+Alias for Iterable< _native::StringPairIterator, _native::StringPair, OwnerAttributePair >
 
 [#_ad447c68c38b3fc16315bff1cd914d806]
 === JSONMap
 
-Alias for std::map&lt; std::string, <a class="el" href="class_type_d_b_1_1_j_s_o_n.html">JSON</a> &gt;
+Alias for std::map< std::string, JSON >
 
 [#_a4202a22caf17c94c24a3088e6c2e4d2b]
 === JSONArray
 
-Alias for std::vector&lt; <a class="el" href="class_type_d_b_1_1_j_s_o_n.html">JSON</a> &gt;
+Alias for std::vector< JSON >
 
 [#_ad603d7d2abee0cf97bf2413b992e1a8b]
 === JSONBoolean
@@ -61,52 +61,52 @@ Alias for std::string
 [#_af9a7b9fb24b5b5d8a6494030e9ad427d]
 === AggregateResult
 
-Alias for std::optional&lt; std::unique_ptr&lt; <a class="el" href="class_type_d_b_1_1_value.html">Value</a> &gt; &gt;
+Alias for std::optional< std::unique_ptr< Value > >
 
 [#_a8ce4b05128b61e983d8f93c84c41bc65]
 === AggregateFuture
 
-Alias for <a class="el" href="class_type_d_b_1_1_future.html">Future</a>&lt; AggregateResult, _native::ConceptPromise &gt;
+Alias for Future< AggregateResult, _native::ConceptPromise >
 
 [#_afb0980f8f640d9e74cb1983a1efcd607]
 === ValueGroupIterable
 
-Alias for <a class="el" href="class_type_d_b_1_1_iterable.html">Iterable</a>&lt; _native::ValueGroupIterator, _native::ValueGroup, <a class="el" href="class_type_d_b_1_1_value_group.html">TypeDB::ValueGroup</a> &gt;
+Alias for Iterable< _native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup >
 
 [#_ae1b63914b13c172aef5d8f7cb60dc413]
 === ValueGroupIterator
 
-Alias for <a class="el" href="class_type_d_b_1_1_iterator.html">Iterator</a>&lt; _native::ValueGroupIterator, _native::ValueGroup, <a class="el" href="class_type_d_b_1_1_value_group.html">TypeDB::ValueGroup</a> &gt;
+Alias for Iterator< _native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup >
 
 [#_aa182777241b40e326fb0f70e7c64bd02]
 === VoidFuture
 
-Alias for <a class="el" href="class_type_d_b_1_1_future.html">Future</a>&lt; void, _native::VoidPromise &gt;
+Alias for Future< void, _native::VoidPromise >
 
 [#_acd31b9b74182f807ba374b47f228d4d2]
 === BoolFuture
 
-Alias for <a class="el" href="class_type_d_b_1_1_future.html">Future</a>&lt; bool, _native::BoolPromise &gt;
+Alias for Future< bool, _native::BoolPromise >
 
 [#_a6080488d36e1615e93c398e4c4c14f54]
 === StringFuture
 
-Alias for <a class="el" href="class_type_d_b_1_1_future.html">Future</a>&lt; std::string, _native::StringPromise &gt;
+Alias for Future< std::string, _native::StringPromise >
 
 [#_a31fcaa0f4f9c37cbdcf3a3573ae6139b]
 === OptionalStringFuture
 
-Alias for <a class="el" href="class_type_d_b_1_1_future.html">Future</a>&lt; std::optional&lt; std::string &gt;, _native::StringPromise &gt;
+Alias for Future< std::optional< std::string >, _native::StringPromise >
 
 [#_a7262d174a247dfc49e19004521885034]
 === StringIterable
 
-Alias for <a class="el" href="class_type_d_b_1_1_iterable.html">Iterable</a>&lt; _native::StringIterator, char, std::string &gt;
+Alias for Iterable< _native::StringIterator, char, std::string >
 
 [#_aecba7bff350f0a7bacb229f500c5171e]
 === StringIterator
 
-Alias for <a class="el" href="class_type_d_b_1_1_iterator.html">Iterator</a>&lt; _native::StringIterator, char, std::string &gt;
+Alias for Iterator< _native::StringIterator, char, std::string >
 
 [#_a33dc49234de177ab107c546252106f21]
 === DateTime
@@ -116,65 +116,65 @@ Alias for std::chrono::time_point< std::chrono::system_clock, std::chrono::milli
 [#_a92dd2b454d14ff379196a793b0776540]
 === DatabaseIterator
 
-Alias for <a class="el" href="class_type_d_b_1_1_iterator.html">Iterator</a>&lt; _native::DatabaseIterator, _native::Database, <a class="el" href="class_type_d_b_1_1_database.html">TypeDB::Database</a> &gt;
+Alias for Iterator< _native::DatabaseIterator, _native::Database, TypeDB::Database >
 
 [#_ad93a27f45471bc343c824a29d209c1d1]
 === DatabaseIterable
 
-Alias for <a class="el" href="class_type_d_b_1_1_iterable.html">Iterable</a>&lt; _native::DatabaseIterator, _native::Database, <a class="el" href="class_type_d_b_1_1_database.html">TypeDB::Database</a> &gt;
+Alias for Iterable< _native::DatabaseIterator, _native::Database, TypeDB::Database >
 
 [#_abcbe95a044940383129069bb13d639a8]
 === ReplicaInfoIterable
 
-Alias for <a class="el" href="class_type_d_b_1_1_iterable.html">Iterable</a>&lt; _native::ReplicaInfoIterator, _native::ReplicaInfo, <a class="el" href="class_type_d_b_1_1_replica_info.html">ReplicaInfo</a> &gt;
+Alias for Iterable< _native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo >
 
 [#_aeaae9d0cb81e5843c80b831f7d9403b5]
 === ReplicaInfoIterator
 
-Alias for <a class="el" href="class_type_d_b_1_1_iterator.html">Iterator</a>&lt; _native::ReplicaInfoIterator, _native::ReplicaInfo, <a class="el" href="class_type_d_b_1_1_replica_info.html">ReplicaInfo</a> &gt;
+Alias for Iterator< _native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo >
 
 [#_aa6fa6640b127b43322a2b547309031e1]
 === ExplanationIterator
 
-Alias for <a class="el" href="class_type_d_b_1_1_iterator.html">Iterator</a>&lt; _native::ExplanationIterator, _native::Explanation, <a class="el" href="class_type_d_b_1_1_explanation.html">Explanation</a> &gt;
+Alias for Iterator< _native::ExplanationIterator, _native::Explanation, Explanation >
 
 [#_a40e556c74d06f48a65f9bcfea04584bc]
 === ExplanationIterable
 
-Alias for <a class="el" href="class_type_d_b_1_1_iterable.html">Iterable</a>&lt; _native::ExplanationIterator, _native::Explanation, <a class="el" href="class_type_d_b_1_1_explanation.html">Explanation</a> &gt;
+Alias for Iterable< _native::ExplanationIterator, _native::Explanation, Explanation >
 
 [#_a7951c5fa34942c5ed6969697acd711e3]
 === RuleFuture
 
-Alias for <a class="el" href="class_type_d_b_1_1_future.html">Future</a>&lt; <a class="el" href="class_type_d_b_1_1_rule.html">Rule</a>, _native::RulePromise &gt;
+Alias for Future< Rule, _native::RulePromise >
 
 [#_aa180638ea11190181e17941aa10d51e5]
 === OptionalRuleFuture
 
-Alias for <a class="el" href="class_type_d_b_1_1_future.html">Future</a>&lt; std::optional&lt; <a class="el" href="class_type_d_b_1_1_rule.html">Rule</a> &gt;, _native::RulePromise &gt;
+Alias for Future< std::optional< Rule >, _native::RulePromise >
 
 [#_a38d98f9d8e612a1d2e81a74973c55ebe]
 === RuleIterable
 
-Alias for <a class="el" href="class_type_d_b_1_1_iterable.html">Iterable</a>&lt; _native::RuleIterator, _native::Rule, <a class="el" href="class_type_d_b_1_1_rule.html">Rule</a> &gt;
+Alias for Iterable< _native::RuleIterator, _native::Rule, Rule >
 
 [#_a4c07b48678a6b58a6b819069acdf6f14]
 === RuleIterator
 
-Alias for <a class="el" href="class_type_d_b_1_1_iterator.html">Iterator</a>&lt; _native::RuleIterator, _native::Rule, <a class="el" href="class_type_d_b_1_1_rule.html">Rule</a> &gt;
+Alias for Iterator< _native::RuleIterator, _native::Rule, Rule >
 
 [#_acc32600f911734291456b9247a0c8805]
 === JSONIterable
 
-Alias for <a class="el" href="class_type_d_b_1_1_iterable.html">Iterable</a>&lt; _native::StringIterator, char, <a class="el" href="class_type_d_b_1_1_j_s_o_n.html">JSON</a> &gt;
+Alias for Iterable< _native::StringIterator, char, JSON >
 
 [#_ac0322f5b24c35584c776d9ab0e438d5c]
 === UserIterator
 
-Alias for <a class="el" href="class_type_d_b_1_1_iterator.html">Iterator</a>&lt; _native::UserIterator, _native::User, <a class="el" href="class_type_d_b_1_1_user.html">User</a> &gt;
+Alias for Iterator< _native::UserIterator, _native::User, User >
 
 [#_ae8d420eec0028d277bba235e5837bd54]
 === UserIterable
 
-Alias for <a class="el" href="class_type_d_b_1_1_iterable.html">Iterable</a>&lt; _native::UserIterator, _native::User, <a class="el" href="class_type_d_b_1_1_user.html">User</a> &gt;
+Alias for Iterable< _native::UserIterator, _native::User, User >
 
