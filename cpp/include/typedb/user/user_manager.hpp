@@ -42,7 +42,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.users().contains(username);
+     * driver.users.contains(username);
      * </pre>
      *
      * @param username The user name to be checked
@@ -54,7 +54,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.users().create(username, password);
+     * driver.users.create(username, password);
      * </pre>
      *
      * @param username The name of the user to be created
@@ -79,7 +79,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.users().all();
+     * driver.users.all();
      * </pre>
      */
     UserIterable all() const;
@@ -89,7 +89,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.users().get(username);
+     * driver.users.get(username);
      * </pre>
      *
      * @param username The name of the user to retrieve
@@ -101,7 +101,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.users().passwordSet(username, password);
+     * driver.users.passwordSet(username, password);
      * </pre>
      *
      * @param username The name of the user to set the password of

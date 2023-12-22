@@ -52,7 +52,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.databases().create(name)
+     * driver.databases.create(name)
      * </pre>
      *
      * @param name The name of the database to be created
@@ -64,7 +64,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.databases().contains(name)
+     * driver.databases.contains(name)
      * </pre>
      *
      * @param name The database name to be checked
@@ -76,7 +76,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.databases().get(name)
+     * driver.databases.get(name)
      * </pre>
      *
      * @param name The name of the database to retrieve
@@ -88,7 +88,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.databases().all()
+     * driver.databases.all()
      * </pre>
      */
     DatabaseIterable all() const;

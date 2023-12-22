@@ -42,7 +42,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.logic().getRule(label).get();
+     * transaction.logic.getRule(label).get();
      * </pre>
      *
      * @param label The label of the Rule to create or retrieve
@@ -54,7 +54,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.logic().getRules()
+     * transaction.logic.getRules()
      * </pre>
      */
     RuleIterable getRules() const;
@@ -64,7 +64,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.logic().putRule(label, when, then).get();
+     * transaction.logic.putRule(label, when, then).get();
      * </pre>
      *
      * @param label The label of the Rule to create or replace

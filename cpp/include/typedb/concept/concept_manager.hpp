@@ -52,7 +52,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().putEntityType(label).get();
+     * transaction.concepts.putEntityType(label).get();
      * </pre>
      *
      * @param label The label of the <code>EntityType</code> to create or retrieve
@@ -65,7 +65,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().putRelationType(label).get();
+     * transaction.concepts.putRelationType(label).get();
      * </pre>
      *
      * @param label The label of the <code>RelationType</code> to create or retrieve
@@ -78,7 +78,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * await transaction.concepts().putAttributeType(label, valueType).get();
+     * transaction.concepts.putAttributeType(label, valueType).get();
      * </pre>
      *
      * @param label The label of the <code>AttributeType</code> to create or retrieve
@@ -91,7 +91,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getRootEntityType();
+     * transaction.concepts.getRootEntityType();
      * </pre>
      */
     std::unique_ptr<EntityType> getRootEntityType() const;
@@ -101,7 +101,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getRootRelationType();
+     * transaction.concepts.getRootRelationType();
      * </pre>
      */
     std::unique_ptr<RelationType> getRootRelationType() const;
@@ -111,7 +111,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getRootAttributeType();
+     * transaction.concepts.getRootAttributeType();
      * </pre>
      */
     std::unique_ptr<AttributeType> getRootAttributeType() const;
@@ -121,7 +121,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getEntityType(label).get();
+     * transaction.concepts.getEntityType(label).get();
      * </pre>
      *
      * @param label The label of the <code>EntityType</code> to retrieve
@@ -133,7 +133,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getRelationType(label).get();
+     * transaction.concepts.getRelationType(label).get();
      * </pre>
      *
      * @param label The label of the <code>RelationType</code> to retrieve
@@ -145,7 +145,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getAttributeType(label).get();
+     * transaction.concepts.getAttributeType(label).get();
      * </pre>
      *
      * @param label The label of the <code>AttributeType</code> to retrieve
@@ -157,7 +157,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getEntity(iid).get();
+     * transaction.concepts.getEntity(iid).get();
      * </pre>
      *
      * @param iid The iid of the <code>Entity</code> to retrieve
@@ -169,7 +169,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getRelation(iid).get();
+     * transaction.concepts.getRelation(iid).get();
      * </pre>
      *
      * @param iid The iid of the <code>Relation</code> to retrieve
@@ -181,7 +181,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getAttribute(iid).get();
+     * transaction.concepts.getAttribute(iid).get();
      * </pre>
      *
      * @param iid The iid of the <code>Attribute</code> to retrieve
@@ -193,7 +193,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getSchemaException();
+     * transaction.concepts.getSchemaExceptions();
      * </pre>
      */
     std::vector<DriverException> getSchemaExceptions();

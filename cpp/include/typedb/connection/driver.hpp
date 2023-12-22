@@ -49,12 +49,8 @@ public:
     DatabaseManager databases;
 
     /**
-     * Returns the logged-in user for the connection. Only for TypeDB Cloud.
-     *
-     * <h3>Examples</h3>
-     * <pre>
-     * driver.user();
-     * </pre>
+     * The <code>UserManager</code> instance for this connection, providing access to user management methods.
+     * Only for TypeDB Cloud.
      */
     UserManager users;
 
@@ -137,8 +133,12 @@ public:
     Session session(const std::string& database, SessionType sessionType, const Options& options);
 
     /**
-     * The <code>UserManager</code> instance for this connection, providing access to user management methods.
-     * Only for TypeDB Cloud.
+     * Returns the logged-in user for the connection. Only for TypeDB Cloud.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.user();
+     * </pre>
      */
     User user();
 

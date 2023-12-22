@@ -15,14 +15,7 @@ A connection to a TypeDB server which serves as the starting point for all inter
 |===
 |Name |Type |Description
 a| `databases` a| `DatabaseManager TypeDB::Driver` a| The ``DatabaseManager`` for this connection, providing access to database management methods.
-a| `users` a| `UserManager TypeDB::Driver` a| Returns the logged-in user for the connection. Only for TypeDB Cloud.
-Examples
-[source,java]
-----
-driver.user();
-
-----
-
+a| `users` a| `UserManager TypeDB::Driver` a| The ``UserManager`` instance for this connection, providing access to user management methods. Only for TypeDB Cloud.
 |===
 // end::properties[]
 
@@ -169,7 +162,8 @@ User TypeDB::Driver::user()
 
 
 
-The ``UserManager`` instance for this connection, providing access to user management methods. Only for TypeDB Cloud.
+Returns the logged-in user for the connection. Only for TypeDB Cloud.
+
 
 [caption=""]
 .Returns

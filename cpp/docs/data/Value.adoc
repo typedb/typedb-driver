@@ -7,6 +7,10 @@
 
 * `TypeDB::Concept`
 
+
+
+A primitive value. Holds the value of an attribute, or the result of an expression in a query.
+
 // tag::methods[]
 [#_a23342c18e17b460177a8fb98afb05784]
 ==== asBoolean
