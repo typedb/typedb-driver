@@ -202,17 +202,20 @@ alias(
 )
 
 # docs
+# TODO: Not hermetic - requires doxygen on the host
 doxygen_docs(
     name = "docs_html",
     project_name = "TypeDB C++ Driver",
     sources = glob(["include/**/*"]),
     main_page_md = ":README.md",
+    tags = ["manual"]
 )
 
 doxygen_to_adoc(
     name = "docs_adoc",
     data = [":docs_html"],
-    docs_dirs = dir_mapping
+    docs_dirs = dir_mapping,
+    tags = ["manual"]
 )
 
 # Formatting tests

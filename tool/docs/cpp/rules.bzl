@@ -21,7 +21,7 @@
 
 load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
 
-def doxygen_to_adoc(name, data, docs_dirs):
+def doxygen_to_adoc(name, data, docs_dirs, **kwargs):
     args = ["$(location %s)" % target for target in data] + [
         "--output",
         "cpp/docs",
@@ -40,6 +40,7 @@ def doxygen_to_adoc(name, data, docs_dirs):
         ],
         data = data,
         visibility = ["//visibility:public"],
+        **kwargs
     )
 
 def _doxygen_docs_impl(ctx):
