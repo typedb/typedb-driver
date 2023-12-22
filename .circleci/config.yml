@@ -90,7 +90,7 @@ commands:
   # Python deployment steps #
   ###########################
 
-  install-pip-requirements-linux:
+  install-pip-requirements-linux-py37:
     steps:
       - run: |
           apt install -y software-properties-common && add-apt-repository -y ppa:deadsnakes/ppa && apt update && apt install -y python3.7
@@ -99,7 +99,7 @@ commands:
           python3 -m pip install pip==21.3.1
           python3 -m pip install -r python/requirements_dev.txt
 
-  install-pip-requirements-mac:
+  install-pip-requirements:
     steps:
       - run: |
           python3 -m pip install pip==21.3.1
@@ -122,7 +122,7 @@ commands:
       - checkout
       - install-bazel-linux:
           bazel-arch: "<<parameters.bazel-arch>>"
-      - install-pip-requirements-linux
+      - install-pip-requirements-linux-py37
       - deploy-pip-snapshot-unix
 
   deploy-pip-snapshot-mac:
@@ -133,7 +133,7 @@ commands:
       - checkout
       - install-bazel-mac:
           bazel-arch: "<<parameters.bazel-arch>>"
-      - install-pip-requirements-mac
+      - install-pip-requirements
       - deploy-pip-snapshot-unix
 
   test-pip-snapshot-unix:
@@ -155,7 +155,7 @@ commands:
       - checkout
       - install-bazel-linux:
           bazel-arch: "<<parameters.bazel-arch>>"
-      - install-pip-requirements-linux
+      - install-pip-requirements
       - test-pip-snapshot-unix
 
   test-pip-snapshot-mac:
@@ -166,7 +166,7 @@ commands:
       - checkout
       - install-bazel-mac:
           bazel-arch: "<<parameters.bazel-arch>>"
-      - install-pip-requirements-mac
+      - install-pip-requirements
       - test-pip-snapshot-unix
 
   deploy-pip-release-unix:
@@ -186,7 +186,7 @@ commands:
       - checkout
       - install-bazel-linux:
           bazel-arch: "<<parameters.bazel-arch>>"
-      - install-pip-requirements-linux
+      - install-pip-requirements-linux-py37
       - deploy-pip-release-unix
 
   deploy-pip-release-mac:
@@ -197,7 +197,7 @@ commands:
       - checkout
       - install-bazel-mac:
           bazel-arch: "<<parameters.bazel-arch>>"
-      - install-pip-requirements-mac
+      - install-pip-requirements
       - deploy-pip-release-unix
 
   #########################
