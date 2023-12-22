@@ -59,7 +59,7 @@ const std::string ATTRIBUTE = "attribute";
 }  // namespace JSONConstant
 
 enum class JSONType {
-    NONE,
+    INVALID,
 
     MAP,
     ARRAY,
@@ -67,10 +67,13 @@ enum class JSONType {
     BOOLEAN,
     LONG,
     DOUBLE,
-    STRING
+    STRING,
+
+    NULL_VALUE
 };
 
 class JSON;
+class JSONNull{};
 
 using JSONMap = std::map<std::string, JSON>;
 using JSONArray = std::vector<JSON>;
@@ -99,6 +102,7 @@ public:
     bool isLong() const;
     bool isDouble() const;
     bool isString() const;
+    bool isNull() const;
 
     const JSONMap& asMap() const;
     const JSONArray& asArray() const;
@@ -106,6 +110,7 @@ public:
     const JSONLong& asLong() const;
     const JSONDouble& asDouble() const;
     const JSONString& asString() const;
+    const JSONNull& asNull() const;
 
 private:
     JSONType _type;
@@ -116,11 +121,13 @@ private:
         JSONBoolean boolValue;
         JSONLong longValue;
         JSONDouble doubleValue;
+        JSONNull nullValue;
     };
 
     JSON(JSONBoolean);
     JSON(JSONLong);
     JSON(JSONDouble);
+    JSON(JSONNull);
 
     JSON(const JSONString&);
     JSON(const JSONMap&);

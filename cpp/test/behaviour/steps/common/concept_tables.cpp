@@ -316,6 +316,8 @@ bool compareJSON(const TypeDB::JSON& first, const TypeDB::JSON& second) {
             return compareJSONArrayUnordered(first.asArray(), second.asArray());
         case TypeDB::JSONType::MAP:
             return compareJSONMap(first.asMap(), second.asMap());
+        case TypeDB::JSONType::NULL_VALUE:
+            return second.isNull();
         default:
             throw std::runtime_error("UNIMPLEMENTED");
     }

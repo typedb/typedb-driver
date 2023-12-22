@@ -36,7 +36,7 @@ import {RelationType} from "../../api/concept/type/RelationType";
 import {EntityType} from "../../api/concept/type/EntityType";
 import {RoleType} from "../../api/concept/type/RoleType";
 import {ThingType} from "../../api/concept/type/ThingType";
-import {JSONArray, JSONObject} from "../../api/answer/JSON";
+import {JSON, JSONArray, JSONObject} from "../../api/answer/JSON";
 import {EntityTypeImpl} from "../type/EntityTypeImpl";
 import {RelationTypeImpl} from "../type/RelationTypeImpl";
 import {AttributeTypeImpl} from "../type/AttributeTypeImpl";
@@ -47,6 +47,7 @@ import {ThingTypeImpl} from "../type/ThingTypeImpl";
 import {TypeDBDriverError} from "../../common/errors/TypeDBDriverError";
 import {ErrorMessage} from "../../common/errors/ErrorMessage";
 import ILLEGAL_STATE = ErrorMessage.Internal.ILLEGAL_STATE;
+import {Readable} from "stream";
 
 export class ReadableConceptTreeImpl {
     private readonly _root: ReadableConceptTreeImpl.Node.NodeMap;
@@ -68,15 +69,16 @@ export namespace ReadableConceptTreeImpl {
         return new ReadableConceptTreeImpl(root);
     }
 
-    export type Node = Node.NodeMap | Node.NodeList | Node.ReadableConcept;
+    export type Node = Node.NodeMap | Node.NodeList | Node.Leaf;
 
     export namespace Node {
 
         export function of(proto: NodeProto): Node {
             if (proto.has_map) return NodeMap.of(proto.map);
             else if (proto.has_list) return NodeList.of(proto.list);
-            else if (proto.has_readable_concept) return ReadableConcept.of(proto.readable_concept);
-            else {
+            else if (proto.has_readable_concept) {
+                return Leaf.of(proto.readable_concept);
+            } else {
                 throw new TypeDBDriverError(ILLEGAL_STATE.message());
             }
         }
@@ -95,8 +97,8 @@ export namespace ReadableConceptTreeImpl {
                         asObject[key] = value.asObject();
                     } else if (value instanceof NodeList) {
                         asObject[key] = value.asArray();
-                    } else if (value instanceof ReadableConcept) {
-                        asObject[key] = value.asObject();
+                    } else if (value instanceof Leaf) {
+                        asObject[key] = value.asJSON();
                     } else {
                         throw new TypeDBDriverError(ILLEGAL_STATE.message());
                     }
@@ -127,8 +129,8 @@ export namespace ReadableConceptTreeImpl {
                         return node.asObject();
                     } else if (node instanceof NodeList) {
                         return node.asArray();
-                    } else if (node instanceof ReadableConcept) {
-                        return node.asObject();
+                    } else if (node instanceof Leaf) {
+                        return node.asJSON();
                     } else {
                         throw new TypeDBDriverError(ILLEGAL_STATE.message());
                     }
@@ -139,6 +141,25 @@ export namespace ReadableConceptTreeImpl {
         export namespace NodeList {
             export function of(proto: ListProto): NodeList {
                 return new NodeList(proto.list.map((nodeProto: NodeProto) => Node.of(nodeProto)));
+            }
+        }
+
+        export class Leaf {
+            private readonly readableConcept: ReadableConcept | null;
+
+            constructor(readableConcept: ReadableConcept | null) {
+                this.readableConcept = readableConcept;
+            }
+
+            asJSON(): JSON {
+                if (this.readableConcept == null) return null;
+                else return this.readableConcept.asObject();
+            }
+        }
+
+        export namespace Leaf {
+            export function of(proto: ReadableConceptProto): Leaf {
+                return new Leaf(ReadableConcept.of(proto));
             }
         }
 
@@ -203,9 +224,8 @@ export namespace ReadableConceptTreeImpl {
 
         export namespace ReadableConcept {
 
-            export function of(proto: ReadableConceptProto): ReadableConcept {
+            export function of(proto: ReadableConceptProto): ReadableConcept | null {
                 let concept: Type | Attribute | Value;
-
                 if (proto.has_entity_type) {
                     concept = EntityTypeImpl.ofEntityTypeProto(proto.entity_type);
                 } else if (proto.has_relation_type) {
@@ -221,7 +241,7 @@ export namespace ReadableConceptTreeImpl {
                 } else if (proto.has_thing_type_root) {
                     concept = ThingTypeImpl.Root.ofThingTypeRootProto(proto.thing_type_root);
                 } else {
-                    throw new TypeDBDriverError(ILLEGAL_STATE.message());
+                    return null;
                 }
                 return new ReadableConcept(concept);
             }

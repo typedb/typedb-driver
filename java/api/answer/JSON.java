@@ -54,6 +54,8 @@ public abstract class JSON {
             return new JSON.Number(value.asFloat());
         } else if (value.isBoolean()) {
             return new JSON.Boolean(value.asBoolean());
+        } else if (value.isNull()) {
+            return new JSON.Null();
         } else {
             throw new TypeDBDriverException(ILLEGAL_STATE);
         }
@@ -123,7 +125,7 @@ public abstract class JSON {
         public boolean equals(java.lang.Object obj) {
             if (obj == this) return true;
             if (obj == null || getClass() != obj.getClass()) return false;
-            JSON.Object that = (JSON.Object)obj;
+            JSON.Object that = (JSON.Object) obj;
             return this.object.equals(that.object);
         }
 
@@ -179,7 +181,7 @@ public abstract class JSON {
         public boolean equals(java.lang.Object obj) {
             if (obj == this) return true;
             if (obj == null || getClass() != obj.getClass()) return false;
-            JSON.Array that = (JSON.Array)obj;
+            JSON.Array that = (JSON.Array) obj;
             return this.array.equals(that.array);
         }
 
@@ -220,7 +222,7 @@ public abstract class JSON {
         public boolean equals(java.lang.Object obj) {
             if (obj == this) return true;
             if (obj == null || getClass() != obj.getClass()) return false;
-            JSON.Number that = (JSON.Number)obj;
+            JSON.Number that = (JSON.Number) obj;
             return this.number == that.number;
         }
 
@@ -231,8 +233,8 @@ public abstract class JSON {
 
         @Override
         public java.lang.String toString() {
-            long integerPart = (long)number;
-            if ((double)integerPart == number) {
+            long integerPart = (long) number;
+            if ((double) integerPart == number) {
                 return Long.toString(integerPart);
             } else {
                 return Double.toString(number);
@@ -259,7 +261,7 @@ public abstract class JSON {
         public boolean equals(java.lang.Object obj) {
             if (obj == this) return true;
             if (obj == null || getClass() != obj.getClass()) return false;
-            JSON.String that = (JSON.String)obj;
+            JSON.String that = (JSON.String) obj;
             return this.string.equals(that.string);
         }
 
@@ -293,7 +295,7 @@ public abstract class JSON {
         public boolean equals(java.lang.Object obj) {
             if (obj == this) return true;
             if (obj == null || getClass() != obj.getClass()) return false;
-            JSON.Boolean that = (JSON.Boolean)obj;
+            JSON.Boolean that = (JSON.Boolean) obj;
             return this.aBoolean == that.aBoolean;
         }
 
@@ -305,6 +307,25 @@ public abstract class JSON {
         @Override
         public java.lang.String toString() {
             return java.lang.Boolean.toString(aBoolean);
+        }
+    }
+
+    private static class Null extends JSON {
+
+        @Override
+        public boolean equals(java.lang.Object obj) {
+            if (obj == this) return true;
+            return obj != null && getClass() == obj.getClass();
+        }
+
+        @Override
+        public int hashCode() {
+            return 0;
+        }
+
+        @Override
+        public java.lang.String toString() {
+            return "null";
         }
     }
 }

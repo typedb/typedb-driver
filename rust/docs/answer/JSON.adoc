@@ -10,6 +10,7 @@
 |Variant
 a| `Array(Vec<JSON>)`
 a| `Boolean(bool)`
+a| `Null`
 a| `Number(f64)`
 a| `Object(HashMap<Cow<'static, str>, JSON>)`
 a| `String(Cow<'static, str>)`

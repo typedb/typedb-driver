@@ -32,9 +32,9 @@ executors:
     resource_class: arm.large
     working_directory: ~/typedb-driver
 
-  linux-arm64-ubuntu-2004:
+  linux-arm64-ubuntu-2204:
     docker:
-      - image: ubuntu:20.04
+      - image: ubuntu:22.04
     resource_class: arm.large
     working_directory: ~/typedb-driver
 
@@ -44,9 +44,9 @@ executors:
     resource_class: large
     working_directory: ~/typedb-driver
 
-  linux-x86_64-ubuntu-2004:
+  linux-x86_64-ubuntu-2204:
     docker:
-      - image: ubuntu:20.04
+      - image: ubuntu:22.04
     resource_class: large
     working_directory: ~/typedb-driver
 
@@ -559,13 +559,13 @@ jobs:
       - run: .circleci\windows\python\deploy_snapshot.bat
 
   test-pip-snapshot-linux-arm64:
-    executor: linux-arm64-ubuntu-2004
+    executor: linux-arm64-ubuntu-2204
     steps:
       - test-pip-snapshot-linux:
           bazel-arch: arm64
 
   test-pip-snapshot-linux-x86_64:
-    executor: linux-x86_64-ubuntu-2004
+    executor: linux-x86_64-ubuntu-2204
     steps:
       - test-pip-snapshot-linux:
           bazel-arch: amd64

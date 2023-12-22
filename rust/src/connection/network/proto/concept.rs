@@ -26,7 +26,10 @@ use itertools::Itertools;
 use typedb_protocol::{
     concept,
     r#type::{annotation, Annotation as AnnotationProto, Transitivity as TransitivityProto},
-    readable_concept_tree::{self, node::readable_concept::ReadableConcept as ReadableConceptProto},
+    readable_concept_tree::{
+        self,
+        node::readable_concept::{ReadableConcept as ReadableConceptProto, ReadableConcept},
+    },
     thing, thing_type,
     value::Value as ValueProtoInner,
     Attribute as AttributeProto, AttributeType as AttributeTypeProto, Concept as ConceptProto,
@@ -146,7 +149,8 @@ impl TryFromProto<readable_concept_tree::Node> for readable_concept::Node {
             Some(readable_concept_tree::node::Node::Map(map)) => Ok(Self::Map(HashMap::try_from_proto(map)?)),
             Some(readable_concept_tree::node::Node::List(list)) => Ok(Self::List(Vec::try_from_proto(list)?)),
             Some(readable_concept_tree::node::Node::ReadableConcept(leaf)) => {
-                Ok(Self::Leaf(Concept::try_from_proto(leaf)?))
+                let result: Result<Option<Concept>> = Option::try_from_proto(leaf);
+                Ok(Self::Leaf(result?))
             }
             None => Err(ConnectionError::MissingResponseField { field: "node" }.into()),
         }
@@ -169,31 +173,30 @@ impl TryFromProto<readable_concept_tree::node::List> for Vec<readable_concept::N
     }
 }
 
-impl TryFromProto<readable_concept_tree::node::ReadableConcept> for Concept {
+impl TryFromProto<readable_concept_tree::node::ReadableConcept> for Option<Concept> {
     fn try_from_proto(proto: readable_concept_tree::node::ReadableConcept) -> Result<Self> {
         match proto.readable_concept {
             Some(ReadableConceptProto::EntityType(entity_type_proto)) => {
-                Ok(Self::EntityType(EntityType::from_proto(entity_type_proto)))
+                Ok(Some(Concept::EntityType(EntityType::from_proto(entity_type_proto))))
             }
             Some(ReadableConceptProto::RelationType(relation_type_proto)) => {
-                Ok(Self::RelationType(RelationType::from_proto(relation_type_proto)))
+                Ok(Some(Concept::RelationType(RelationType::from_proto(relation_type_proto))))
             }
             Some(ReadableConceptProto::AttributeType(attribute_type_proto)) => {
-                AttributeType::try_from_proto(attribute_type_proto).map(Self::AttributeType)
+                AttributeType::try_from_proto(attribute_type_proto)
+                    .map(|attr_type| Some(Concept::AttributeType(attr_type)))
             }
-
             Some(ReadableConceptProto::RoleType(role_type_proto)) => {
-                Ok(Self::RoleType(RoleType::from_proto(role_type_proto)))
+                Ok(Some(Concept::RoleType(RoleType::from_proto(role_type_proto))))
             }
-
             Some(ReadableConceptProto::Attribute(attribute_proto)) => {
-                Attribute::try_from_proto(attribute_proto).map(Self::Attribute)
+                Attribute::try_from_proto(attribute_proto).map(|attr| Some(Concept::Attribute(attr)))
             }
-
-            Some(ReadableConceptProto::Value(value_proto)) => Value::try_from_proto(value_proto).map(Self::Value),
-
-            Some(ReadableConceptProto::ThingTypeRoot(_)) => Ok(Self::RootThingType(RootThingType)),
-            None => Err(ConnectionError::MissingResponseField { field: "readable_concept" }.into()),
+            Some(ReadableConceptProto::Value(value_proto)) => {
+                Value::try_from_proto(value_proto).map(|value| Some(Concept::Value(value)))
+            }
+            Some(ReadableConceptProto::ThingTypeRoot(_)) => Ok(Some(Concept::RootThingType(RootThingType))),
+            None => Ok(None),
         }
     }
 }
