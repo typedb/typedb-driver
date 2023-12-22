@@ -39,9 +39,9 @@ class Explainables;
 class OwnerAttributePair {
 public:
     /// The owner concept
-    const std::string owner;
+    std::string owner;
     /// The owned attribute
-    const std::string attribute;
+    std::string attribute;
 
 private:
     OwnerAttributePair(_native::StringPair* stringPairNative);
