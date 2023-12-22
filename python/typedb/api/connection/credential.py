@@ -40,11 +40,11 @@ class TypeDBCredential(NativeWrapper[NativeCredential]):
     --------
     ::
 
-        # Creates a credential using the specified username and password. Specifies that TLS must be used.
+        # Creates a credential using the specified username and password.
         credential = TypeDBCredential(username, password)
 
-        # Creates a credential as above, but TLS will use the specified CA to authenticate server certificates.
-        credential = TypeDBCredential(username, password, tls_root_ca_path="path/to/ca-certificate.pem")
+        # Creates a credential as above, but with TLS and the specified CA to authenticate server certificates.
+        credential = TypeDBCredential(username, password, tls_enabled=True, tls_root_ca_path="path/to/ca-certificate.pem")
     """
 
     def __init__(self, username: str, password: str, *, tls_root_ca_path: Optional[str] = None,
