@@ -129,7 +129,7 @@ class DoxygenParser : Callable<Unit> {
         val missingDeclarations: MutableList<String> = ArrayList()
         val map: MutableMap<String, List<Element>> = HashMap()
         document.select("table.memberdecls").forEach { table ->
-            val heading: String = table.selectFirst("tr.heading > td > h2 > a")!!.id()
+            val heading: String = table.selectFirst("tr.heading > td > h2 > a")!!.attr("name")
             val members: MutableList<Element> = ArrayList()
             table.select("tr").filter { element ->
                 element.className().matches(Regex("memitem:[a-f0-9]+"))
@@ -138,7 +138,6 @@ class DoxygenParser : Callable<Unit> {
                 val methodDetails =
                     document.selectFirst("div.contents > a#$id")?.nextElementSibling()?.nextElementSibling()
                 if (methodDetails == null) {
-                    println(element.text())
                     missingDeclarations.add(element.selectFirst("td.memItemRight")!!.text())
                 } else {
                     members.add(methodDetails)
