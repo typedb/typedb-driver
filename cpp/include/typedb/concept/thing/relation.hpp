@@ -50,7 +50,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * relation.addPlayer(transaction, roleType, player).resolve();
+     * relation.addPlayer(transaction, roleType, player).get();
      * </pre>
      *
      * @param transaction The current transaction
@@ -64,7 +64,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * relation.removePlayer(transaction, roleType, player).resolve();
+     * relation.removePlayer(transaction, roleType, player).get();
      * </pre>
      *
      * @param transaction The current transaction

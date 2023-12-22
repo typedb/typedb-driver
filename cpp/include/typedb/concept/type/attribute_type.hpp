@@ -57,7 +57,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * attributeType.setSupertype(transaction, superType).resolve();
+     * attributeType.setSupertype(transaction, superType).get();
      * </pre>
      *
      * @param transaction The current transaction

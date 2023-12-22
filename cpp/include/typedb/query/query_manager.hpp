@@ -64,7 +64,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.query.undefine(query, options).resolve()
+     * transaction.query.undefine(query, options).get()
      * </pre>
      *
      * @param query The TypeQL Undefine query to be executed

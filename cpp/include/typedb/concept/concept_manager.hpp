@@ -52,7 +52,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().putEntityType(label).resolve();
+     * transaction.concepts().putEntityType(label).get();
      * </pre>
      *
      * @param label The label of the <code>EntityType</code> to create or retrieve
@@ -65,7 +65,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().putRelationType(label).resolve();
+     * transaction.concepts().putRelationType(label).get();
      * </pre>
      *
      * @param label The label of the <code>RelationType</code> to create or retrieve
@@ -78,7 +78,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * await transaction.concepts().putAttributeType(label, valueType).resolve();
+     * await transaction.concepts().putAttributeType(label, valueType).get();
      * </pre>
      *
      * @param label The label of the <code>AttributeType</code> to create or retrieve
@@ -121,7 +121,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getEntityType(label).resolve();
+     * transaction.concepts().getEntityType(label).get();
      * </pre>
      *
      * @param label The label of the <code>EntityType</code> to retrieve
@@ -133,7 +133,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getRelationType(label).resolve();
+     * transaction.concepts().getRelationType(label).get();
      * </pre>
      *
      * @param label The label of the <code>RelationType</code> to retrieve
@@ -145,7 +145,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getAttributeType(label).resolve();
+     * transaction.concepts().getAttributeType(label).get();
      * </pre>
      *
      * @param label The label of the <code>AttributeType</code> to retrieve
@@ -157,7 +157,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getEntity(iid).resolve();
+     * transaction.concepts().getEntity(iid).get();
      * </pre>
      *
      * @param iid The iid of the <code>Entity</code> to retrieve
@@ -169,7 +169,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getRelation(iid).resolve();
+     * transaction.concepts().getRelation(iid).get();
      * </pre>
      *
      * @param iid The iid of the <code>Relation</code> to retrieve
@@ -181,7 +181,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * transaction.concepts().getAttribute(iid).resolve();
+     * transaction.concepts().getAttribute(iid).get();
      * </pre>
      *
      * @param iid The iid of the <code>Attribute</code> to retrieve

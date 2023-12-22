@@ -36,7 +36,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * type.getSupertype(transaction).resolve();
+     * type.getSupertype(transaction).get();
      * </pre>
      *
      * @param transaction The current transaction
@@ -95,7 +95,7 @@ public:
      *
      * <h3>Examples</h3>
      * <pre>
-     * type.setLabel(transaction, newLabel).resolve();
+     * type.setLabel(transaction, newLabel).get();
      * </pre>
      *
      * @param transaction The current transaction
