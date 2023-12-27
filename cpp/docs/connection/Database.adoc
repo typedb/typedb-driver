@@ -41,12 +41,12 @@ The database name as a string.
 .Returns
 `std::string`
 
-[#_af709878d1dc613da4245778ce27073bd]
+[#_a1c8287c3c7a236660ea19ec69ce9ea70]
 ==== preferredReplica
 
 [source,cpp]
 ----
-std::optional< ReplicaInfo > TypeDB::Database::preferredReplica()
+std::optional<ReplicaInfo> TypeDB::Database::preferredReplica()
 ----
 
 
@@ -58,12 +58,12 @@ Returns the preferred replica for this database. Operations which can be run on 
 .Returns
 `std::optional< ReplicaInfo >`
 
-[#_aa0bf5a33a2e6c93b2439bd2e4cdd5380]
+[#_ae13d5fe0404061de4f564fded2e663d7]
 ==== primaryReplica
 
 [source,cpp]
 ----
-std::optional< ReplicaInfo > TypeDB::Database::primaryReplica()
+std::optional<ReplicaInfo> TypeDB::Database::primaryReplica()
 ----
 
 

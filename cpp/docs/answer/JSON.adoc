@@ -8,7 +8,7 @@
 Simple JSON structure for results of fetch queries.
 
 // tag::methods[]
-[#_aac1347b00044b88dea390e779bb2c21a]
+[#_a2098936f80396f4ec929459ce366207c]
 ==== asArray
 
 [source,cpp]
@@ -24,7 +24,7 @@ if this JSON object holds an array, returns the underlying array. Else throws an
 .Returns
 `const JSONArray&`
 
-[#_a22b24ea4edcad0b3a7e822ccb77eca67]
+[#_ab0e4a2cecd13e58de143da1819f1b3af]
 ==== asBoolean
 
 [source,cpp]
@@ -40,7 +40,7 @@ if this JSON object holds a boolean value, returns the value. Else throws an exc
 .Returns
 `const JSONBoolean&`
 
-[#_abab68d02483a6b94f212c1b6d48a48d4]
+[#_a2b5fa5382142c1f84c4d01bd2abae225]
 ==== asDouble
 
 [source,cpp]
@@ -56,7 +56,7 @@ if this JSON object holds a double value, returns the value. Else throws an exce
 .Returns
 `const JSONDouble&`
 
-[#_a895c5419aa3b82275f3bb822a5b35b4c]
+[#_a0c9953282695015768defdb226ab63d7]
 ==== asLong
 
 [source,cpp]
@@ -72,7 +72,7 @@ if this JSON object holds a long value, returns the value. Else throws an except
 .Returns
 `const JSONLong&`
 
-[#_aae655af5f950ce983fcd82e2de7dbc4e]
+[#_ad90ecedbb2cf4452713bc1afae89ab62]
 ==== asMap
 
 [source,cpp]
@@ -88,7 +88,7 @@ if this JSON object holds a map, returns the underlying map. Else throws an exce
 .Returns
 `const JSONMap&`
 
-[#_a33b5bff5b4c86874400acd6214f3ecd1]
+[#_ad921ddf2e0305ae8781cc1d06f0f449c]
 ==== asString
 
 [source,cpp]

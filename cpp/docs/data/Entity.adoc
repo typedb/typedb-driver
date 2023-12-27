@@ -15,12 +15,12 @@ Instance of data of an entity type, representing a standalone object that exists
 Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles played in relation instances.
 
 // tag::methods[]
-[#_a8a266ce3ab2e0409175c0bb529f1b432]
+[#_ae427fb92eb3014f3f946fefeca53bd3c]
 ==== getType
 
 [source,cpp]
 ----
-std::unique_ptr< EntityType > TypeDB::Entity::getType()
+std::unique_ptr<EntityType> TypeDB::Entity::getType()
 ----
 
 

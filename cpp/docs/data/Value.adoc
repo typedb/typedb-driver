@@ -199,12 +199,12 @@ Returns ``true`` if the value which this value concept holds is of type ``string
 .Returns
 `bool`
 
-[#_a1faa8a8586b4a94d87420a050c337ce8]
+[#_aa0fe4a5ed400838b56f0ce203a7c2253]
 ==== of
 
 [source,cpp]
 ----
-static std::unique_ptr< Value > TypeDB::Value::of(bool value)
+static std::unique_ptr<Value> TypeDB::Value::of(bool value)
 ----
 
 
@@ -216,12 +216,12 @@ Creates a new Value object of the specified boolean value.
 .Returns
 `static std::unique_ptr< Value >`
 
-[#_a548ac90ea45edafce210d7b5c9e098a4]
+[#_a12b7f4af1270dbec3e0f4773055ffc54]
 ==== of
 
 [source,cpp]
 ----
-static std::unique_ptr< Value > TypeDB::Value::of(int64_t value)
+static std::unique_ptr<Value> TypeDB::Value::of(int64_t value)
 ----
 
 
@@ -233,12 +233,12 @@ Creates a new Value object of the specified long value.
 .Returns
 `static std::unique_ptr< Value >`
 
-[#_aec3fb46077e3ea37b145464920271628]
+[#_a5842e1fc2bd23737094ea6ee2f12a42a]
 ==== of
 
 [source,cpp]
 ----
-static std::unique_ptr< Value > TypeDB::Value::of(double value)
+static std::unique_ptr<Value> TypeDB::Value::of(double value)
 ----
 
 
@@ -250,12 +250,12 @@ Creates a new Value object of the specified double value.
 .Returns
 `static std::unique_ptr< Value >`
 
-[#_ad34bea626b3cfa1b4979df203c4a47e6]
+[#_aea12755e46e946cbe22faa16142b3038]
 ==== of
 
 [source,cpp]
 ----
-static std::unique_ptr< Value > TypeDB::Value::of(const std::string& value)
+static std::unique_ptr<Value> TypeDB::Value::of(const std::string& value)
 ----
 
 
@@ -267,12 +267,12 @@ Creates a new Value object of the specified string value.
 .Returns
 `static std::unique_ptr< Value >`
 
-[#_aa205f8b882235377dbdccde8bc2f19a4]
+[#_a1f3c3b27ca6f5e351247802e9e6f758d]
 ==== of
 
 [source,cpp]
 ----
-static std::unique_ptr< Value > TypeDB::Value::of(DateTime value)
+static std::unique_ptr<Value> TypeDB::Value::of(DateTime value)
 ----
 
 

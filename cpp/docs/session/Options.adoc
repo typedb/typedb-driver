@@ -27,12 +27,12 @@ Produces a new ``Options`` object.
 .Returns
 `TypeDB::Options::Options`
 
-[#_a5cd068289934494033a095a10f182bc2]
+[#_a25eba1c41df7bd92dffc934718639732]
 ==== explain
 
 [source,cpp]
 ----
-std::optional< bool > TypeDB::Options::explain()
+std::optional<bool> TypeDB::Options::explain()
 ----
 
 
@@ -44,7 +44,7 @@ Returns the value set for the explanation in this ``TypeDBOptions`` object. If s
 .Returns
 `std::optional< bool >`
 
-[#_a0bc1660a183e71ea7119472edd8cd3ad]
+[#_a4b9eddb9257d037ae8132806328f62a5]
 ==== explain
 
 [source,cpp]
@@ -70,12 +70,12 @@ a| `explain` a| Explicitly enable or disable explanations a|
 .Returns
 `Options&`
 
-[#_a9c6ec1f4bc5e8fa8dab6a431b70e915e]
+[#_a628c4b22a7c58af816cf48b8474f1320]
 ==== infer
 
 [source,cpp]
 ----
-std::optional< bool > TypeDB::Options::infer()
+std::optional<bool> TypeDB::Options::infer()
 ----
 
 
@@ -87,7 +87,7 @@ Returns the value set for the inference in this ``TypeDBOptions`` object.
 .Returns
 `std::optional< bool >`
 
-[#_ac0617800194ebaa6c0390b88bcd7ddb5]
+[#_a95609d81c02401bb12d1434db88080cc]
 ==== infer
 
 [source,cpp]
@@ -113,12 +113,12 @@ a| `infer` a| Explicitly enable or disable inference a|
 .Returns
 `Options&`
 
-[#_a2b966eee50449f16b9b5a736188cf04e]
+[#_a5d40c07960a9560cd8873415f1b3b578]
 ==== parallel
 
 [source,cpp]
 ----
-std::optional< bool > TypeDB::Options::parallel()
+std::optional<bool> TypeDB::Options::parallel()
 ----
 
 
@@ -130,7 +130,7 @@ Returns the value set for the parallel execution in this ``TypeDBOptions`` objec
 .Returns
 `std::optional< bool >`
 
-[#_a36d964ca89a21f5bc286835783a37c92]
+[#_ac978aeb54c431c4558b5cb21f0ee41a2]
 ==== parallel
 
 [source,cpp]
@@ -156,12 +156,12 @@ a| `parallel` a| Explicitly enable or disable parallel execution a|
 .Returns
 `Options&`
 
-[#_adc76e9261a943e41d75b6622585646d5]
+[#_a9daa488dfb58b9a9634e2272de9eaf5a]
 ==== prefetch
 
 [source,cpp]
 ----
-std::optional< bool > TypeDB::Options::prefetch()
+std::optional<bool> TypeDB::Options::prefetch()
 ----
 
 
@@ -173,7 +173,7 @@ Returns the value set for the prefetching in this ``TypeDBOptions`` object. If s
 .Returns
 `std::optional< bool >`
 
-[#_a2123817d2c5699d23a9380a8886f5165]
+[#_a033e3bc9a27a83d401a6bb67a7ecd971]
 ==== prefetch
 
 [source,cpp]
@@ -199,12 +199,12 @@ a| `prefetch` a| Explicitly enable or disable prefetching a|
 .Returns
 `Options&`
 
-[#_aa62f021ac375707cce153d39601a4881]
+[#_ac1d57dd513acdee4868369bd44723f98]
 ==== prefetchSize
 
 [source,cpp]
 ----
-std::optional< int32_t > TypeDB::Options::prefetchSize()
+std::optional<int32_t> TypeDB::Options::prefetchSize()
 ----
 
 
@@ -216,7 +216,7 @@ Returns the value set for the prefetch size in this ``TypeDBOptions`` object. If
 .Returns
 `std::optional< int32_t >`
 
-[#_a7cabf537e501943d94f0de50b3b66bee]
+[#_a3fe142577420f0d1c1f2a5f8df6eb0f3]
 ==== prefetchSize
 
 [source,cpp]
@@ -242,12 +242,12 @@ a| `prefetchSize` a| Number of answers that the server should send before the dr
 .Returns
 `Options&`
 
-[#_afb40c1fc968e50a0345fbeaf3d906c2f]
+[#_a65b5c4a88cffc056bcbbf1e1740d1b24]
 ==== readAnyReplica
 
 [source,cpp]
 ----
-std::optional< bool > TypeDB::Options::readAnyReplica()
+std::optional<bool> TypeDB::Options::readAnyReplica()
 ----
 
 
@@ -259,7 +259,7 @@ Returns the value set for reading data from any replica in this ``TypeDBOptions`
 .Returns
 `std::optional< bool >`
 
-[#_a02d830a3bf17554f626498f2f5b618d7]
+[#_ad02332d37a10f90fef9e35cd2e537264]
 ==== readAnyReplica
 
 [source,cpp]
@@ -285,12 +285,12 @@ a| `readAnyReplica` a| Explicitly enable or disable reading data from any replic
 .Returns
 `Options&`
 
-[#_a126fd7270db16998fbcb337778ff203d]
+[#_a0dde0c8ffa6d70c3184cc2b14e85d0a9]
 ==== schemaLockAcquireTimeoutMillis
 
 [source,cpp]
 ----
-std::optional< int64_t > TypeDB::Options::schemaLockAcquireTimeoutMillis()
+std::optional<int64_t> TypeDB::Options::schemaLockAcquireTimeoutMillis()
 ----
 
 
@@ -302,7 +302,7 @@ Returns the value set for the schema lock acquire timeout in this ``TypeDBOption
 .Returns
 `std::optional< int64_t >`
 
-[#_a9b8fa870d7e9a0d455c0d6ea08ba8ffa]
+[#_ac2e2656da85fe30c9d67032184b5403f]
 ==== schemaLockAcquireTimeoutMillis
 
 [source,cpp]
@@ -328,12 +328,12 @@ a| `schemaLockAcquireTimeoutMillis` a| How long the driver should wait if openin
 .Returns
 `Options&`
 
-[#_a865caf8a6875b51474d11d6550f834fe]
+[#_a5c4d52c50cf9703f464b8041b80312f8]
 ==== sessionIdleTimeoutMillis
 
 [source,cpp]
 ----
-std::optional< int64_t > TypeDB::Options::sessionIdleTimeoutMillis()
+std::optional<int64_t> TypeDB::Options::sessionIdleTimeoutMillis()
 ----
 
 
@@ -345,7 +345,7 @@ Returns the value set for the session idle timeout in this ``TypeDBOptions`` obj
 .Returns
 `std::optional< int64_t >`
 
-[#_ad0b1dcf5ae603202930203900e266cf5]
+[#_a3d9fddc7c9d8b13eec1ca21dd465ff36]
 ==== sessionIdleTimeoutMillis
 
 [source,cpp]
@@ -371,12 +371,12 @@ a| `sessionIdleTimeoutMillis` a| timeout that allows the server to close session
 .Returns
 `Options&`
 
-[#_accde97e01848a349e3573529b3c20b40]
+[#_ac395d1712502cee629884ebcfa16573b]
 ==== traceInference
 
 [source,cpp]
 ----
-std::optional< bool > TypeDB::Options::traceInference()
+std::optional<bool> TypeDB::Options::traceInference()
 ----
 
 
@@ -388,7 +388,7 @@ Returns the value set for reasoning tracing in this ``TypeDBOptions`` object. If
 .Returns
 `std::optional< bool >`
 
-[#_ad4cb61b535b405c9bfba1bac4c62cad8]
+[#_a70d8c7436bb86fa36ba45289a7d08216]
 ==== traceInference
 
 [source,cpp]
@@ -414,12 +414,12 @@ a| `traceInference` a| Explicitly enable or disable reasoning tracing a|
 .Returns
 `Options&`
 
-[#_a21de879af1157ca17a00cc88c3dfe938]
+[#_ac592e89ce3d29725e81b40d3fbd9b980]
 ==== transactionTimeoutMillis
 
 [source,cpp]
 ----
-std::optional< int64_t > TypeDB::Options::transactionTimeoutMillis()
+std::optional<int64_t> TypeDB::Options::transactionTimeoutMillis()
 ----
 
 
@@ -431,7 +431,7 @@ Returns the value set for the transaction timeout in this ``TypeDBOptions`` obje
 .Returns
 `std::optional< int64_t >`
 
-[#_a4917a59ea9aac5fa5b85c858b38594f4]
+[#_a8d2f0fc6edeeec82013c828e084dbb22]
 ==== transactionTimeoutMillis
 
 [source,cpp]

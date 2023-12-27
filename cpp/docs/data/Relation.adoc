@@ -43,12 +43,12 @@ a| `player` a| The thing to play the role a|
 .Returns
 `VoidFuture`
 
-[#_a60326781d5b2778ff13fe006ca4040f2]
+[#_a84e5dae0546488cf87c66946a92a768a]
 ==== getPlayers
 
 [source,cpp]
 ----
-std::map< std::unique_ptr< RoleType >, std::unique_ptr< Thing > > TypeDB::Relation::getPlayers(Transaction& transaction)
+std::map<std::unique_ptr<RoleType>, std::unique_ptr<Thing> > TypeDB::Relation::getPlayers(Transaction& transaction)
 ----
 
 
@@ -69,12 +69,12 @@ a| `transaction` a| The current transaction a|
 .Returns
 `std::map< std::unique_ptr< RoleType >, std::unique_ptr< Thing > >`
 
-[#_a22a90b14c98d5875e0c55dcb4abe33ef]
+[#_a35fe4dc016e155b6d0a81753260cce62]
 ==== getPlayersByRoleType
 
 [source,cpp]
 ----
-ConceptIterable< Thing > TypeDB::Relation::getPlayersByRoleType(Transaction& transaction, const std::vector< std::unique_ptr< RoleType > >& roleTypes)
+ConceptIterable<Thing> TypeDB::Relation::getPlayersByRoleType(Transaction& transaction, const std::vector< std::unique_ptr< RoleType >>& roleTypes)
 ----
 
 
@@ -96,28 +96,28 @@ a| `roleTypes` a| 0 or more role types a|
 .Returns
 `ConceptIterable< Thing >`
 
-[#_af17ccf48af088f44f42a715f2007983a]
+[#_a44f2df5bd85bb52c19d13fe0d03e39c5]
 ==== getPlayersByRoleType
 
 [source,cpp]
 ----
-ConceptIterable< Thing > TypeDB::Relation::getPlayersByRoleType(Transaction& transaction, const std::vector< RoleType* >& roleTypes)
+ConceptIterable<Thing> TypeDB::Relation::getPlayersByRoleType(Transaction& transaction, const std::vector< RoleType* >& roleTypes)
 ----
 
 
 
-See <<#_a22a90b14c98d5875e0c55dcb4abe33ef,getPlayersByRoleType>>
+See <<#_a35fe4dc016e155b6d0a81753260cce62,getPlayersByRoleType>>
 
 [caption=""]
 .Returns
 `ConceptIterable< Thing >`
 
-[#_ac4e92f128a31da1bc65b13b53aafc9e6]
+[#_a7d42087ddf62721d002942434553ba8e]
 ==== getRelating
 
 [source,cpp]
 ----
-ConceptIterable< RoleType > TypeDB::Relation::getRelating(Transaction& transaction)
+ConceptIterable<RoleType> TypeDB::Relation::getRelating(Transaction& transaction)
 ----
 
 
@@ -138,12 +138,12 @@ a| `transaction` a| The current transaction a|
 .Returns
 `ConceptIterable< RoleType >`
 
-[#_a9f6f53b8849e4b5aeda23f5e30b6a939]
+[#_abe3856d999a510c40e3a441d23ccc951]
 ==== getType
 
 [source,cpp]
 ----
-std::unique_ptr< RelationType > TypeDB::Relation::getType()
+std::unique_ptr<RelationType> TypeDB::Relation::getType()
 ----
 
 

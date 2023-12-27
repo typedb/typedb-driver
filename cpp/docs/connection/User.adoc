@@ -8,12 +8,12 @@
 TypeDB user information.
 
 // tag::methods[]
-[#_a2b865393b559b3a23e24b043acb74c52]
+[#_a6aae5abf36e1d0dfb15275c84e7a629c]
 ==== passwordExpirySeconds
 
 [source,cpp]
 ----
-std::optional< int64_t > TypeDB::User::passwordExpirySeconds()
+std::optional<int64_t> TypeDB::User::passwordExpirySeconds()
 ----
 
 

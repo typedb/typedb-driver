@@ -8,7 +8,7 @@
 The fundamental TypeQL object. A Concept is either a Type, Thing, or Value.
 
 // tag::methods[]
-[#_a02f7b8e707e2a7fc38c77815a93b08ae]
+[#_a3ff34554e947a6d9462afc8349b47a31]
 ==== asAttribute
 
 [source,cpp]
@@ -25,7 +25,7 @@ Casts the concept to ``Attribute``.
 .Returns
 `Attribute*`
 
-[#_a88c88830e0f96dbacb378e301eb35e29]
+[#_a5791fadd10d3eae72e378433b6a64053]
 ==== asAttributeType
 
 [source,cpp]
@@ -42,7 +42,7 @@ Casts the concept to ``EntityType``.
 .Returns
 `AttributeType*`
 
-[#_a220fa7f491cacfd38f05761d5d65af6b]
+[#_aa8f5add2f528da3b338f4b3f3123f7de]
 ==== asEntity
 
 [source,cpp]
@@ -59,7 +59,7 @@ Casts the concept to ``Entity``.
 .Returns
 `Entity*`
 
-[#_aad9300c5ce3dd25cc6776d32726ca220]
+[#_adf25097c326d6e3b59547a7a976d8a79]
 ==== asEntityType
 
 [source,cpp]
@@ -76,7 +76,7 @@ Casts the concept to ``EntityType``.
 .Returns
 `EntityType*`
 
-[#_a840ae53226b18db012daa762f5f675cf]
+[#_a3b12ca731a11d235d0541d19606c6c72]
 ==== asRelation
 
 [source,cpp]
@@ -93,7 +93,7 @@ Casts the concept to ``Relation``.
 .Returns
 `Relation*`
 
-[#_aa74792bf382032fdd61b76739e90ab46]
+[#_ac3160ca5a38b90eddedf96c17a5446e8]
 ==== asRelationType
 
 [source,cpp]
@@ -110,7 +110,7 @@ Casts the concept to ``RelationType``.
 .Returns
 `RelationType*`
 
-[#_a332f355d0b850e2a7639264f9e994ad9]
+[#_a4a17ea1c125a1a9534a28837574c45dc]
 ==== asRoleType
 
 [source,cpp]
@@ -127,7 +127,7 @@ Casts the concept to ``RoleType``.
 .Returns
 `RoleType*`
 
-[#_af3e293bcbf020a2b0f0f15b3757c2d55]
+[#_a003f207be0481d3fa13d501e2693b5f2]
 ==== asThing
 
 [source,cpp]
@@ -144,7 +144,7 @@ Casts the concept to ``Thing``.
 .Returns
 `Thing*`
 
-[#_abba3ee6549ab20fd20f1210b867766fb]
+[#_aca504ccfe9d24ee241a966525d21a91c]
 ==== asThingType
 
 [source,cpp]
@@ -161,7 +161,7 @@ Casts the concept to ``ThingType``.
 .Returns
 `ThingType*`
 
-[#_ac4eceeadea7169508e85d6ea3b500a06]
+[#_ae58295f0f43ba357e72cf0f9fdcf0230]
 ==== asValue
 
 [source,cpp]

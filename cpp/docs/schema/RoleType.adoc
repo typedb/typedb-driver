@@ -83,12 +83,12 @@ Returns the name of this role type's label.
 .Returns
 `std::string`
 
-[#_a5ae69aa29f7df2c972a03befb1e5a953]
+[#_ac8a135b55d2bf28517244075ba5d82f4]
 ==== getPlayerInstances
 
 [source,cpp]
 ----
-ConceptIterable< Thing > TypeDB::RoleType::getPlayerInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable<Thing> TypeDB::RoleType::getPlayerInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
@@ -110,12 +110,12 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect playin
 .Returns
 `ConceptIterable< Thing >`
 
-[#_af46871c3f84222d5de5327ad97cc43c8]
+[#_a07b07c522699d5ea13e27d806f981efa]
 ==== getPlayerTypes
 
 [source,cpp]
 ----
-ConceptIterable< ThingType > TypeDB::RoleType::getPlayerTypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable<ThingType> TypeDB::RoleType::getPlayerTypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
@@ -137,12 +137,12 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect playing
 .Returns
 `ConceptIterable< ThingType >`
 
-[#_a328f639926a25734532645f924d61830]
+[#_a2c5261e19a25c32bfe4bf1d86fc8b7ef]
 ==== getRelationInstances
 
 [source,cpp]
 ----
-ConceptIterable< Relation > TypeDB::RoleType::getRelationInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable<Relation> TypeDB::RoleType::getRelationInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
@@ -164,12 +164,12 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect relati
 .Returns
 `ConceptIterable< Relation >`
 
-[#_ae1794ad33400d745051cc837ffbbdeb8]
+[#_aee375cb48b5b0bf0f61495e21896843e]
 ==== getRelationType
 
 [source,cpp]
 ----
-ConceptPtrFuture< RelationType > TypeDB::RoleType::getRelationType(Transaction& transaction)
+ConceptPtrFuture<RelationType> TypeDB::RoleType::getRelationType(Transaction& transaction)
 ----
 
 
@@ -190,12 +190,12 @@ a| `transaction` a| The current transaction a|
 .Returns
 `ConceptPtrFuture< RelationType >`
 
-[#_adb3f77c70b5ab0ce257df383e70430b4]
+[#_a8842f5087b96a1c1e161f04bdcd9e9b7]
 ==== getRelationTypes
 
 [source,cpp]
 ----
-ConceptIterable< RelationType > TypeDB::RoleType::getRelationTypes(Transaction& transaction)
+ConceptIterable<RelationType> TypeDB::RoleType::getRelationTypes(Transaction& transaction)
 ----
 
 
@@ -233,12 +233,12 @@ Returns the scope part of this role type's label.
 .Returns
 `std::string`
 
-[#_aa7907680b52898e40735c648673b0dc5]
+[#_aabcaeb827d5fa7c9cf6b1c203b7fd831]
 ==== getSubtypes
 
 [source,cpp]
 ----
-ConceptIterable< RoleType > TypeDB::RoleType::getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable<RoleType> TypeDB::RoleType::getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
@@ -260,12 +260,12 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtyp
 .Returns
 `ConceptIterable< RoleType >`
 
-[#_aaf6d54ca24a5920f07dde4b14473430d]
+[#_a1484fcc5e0c0272d682e2e276ddb5e3c]
 ==== getSupertype
 
 [source,cpp]
 ----
-ConceptPtrFuture< RoleType > TypeDB::RoleType::getSupertype(Transaction& transaction)
+ConceptPtrFuture<RoleType> TypeDB::RoleType::getSupertype(Transaction& transaction)
 ----
 
 
@@ -286,12 +286,12 @@ a| `transaction` a| The current transaction a|
 .Returns
 `ConceptPtrFuture< RoleType >`
 
-[#_acdc4ef2a3c33515d37805aa876971548]
+[#_af122798e58d262b219f63b8594b3e3b1]
 ==== getSupertypes
 
 [source,cpp]
 ----
-ConceptIterable< RoleType > TypeDB::RoleType::getSupertypes(Transaction& transaction)
+ConceptIterable<RoleType> TypeDB::RoleType::getSupertypes(Transaction& transaction)
 ----
 
 

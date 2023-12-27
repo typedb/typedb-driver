@@ -59,12 +59,12 @@ Implemented in <<#_a05c129cbbf22af3a1481dcd70a271403,TypeDB::RoleType>>, and <<#
 .Returns
 `virtual std::string`
 
-[#_aa78665ab81ec7041a38b573487a2b20c]
+[#_ad371f38de0ac8c80fb8b123d6a3ca170]
 ==== getSubtypes
 
 [source,cpp]
 ----
-ConceptIterable< Type > TypeDB::Type::getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable<Type> TypeDB::Type::getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
@@ -86,12 +86,12 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtyp
 .Returns
 `ConceptIterable< Type >`
 
-[#_a1609ec5e0d2c51ef2914aa3e17ac921b]
+[#_a341990fe7b8383497e8f0890cce8d62a]
 ==== getSupertype
 
 [source,cpp]
 ----
-ConceptPtrFuture< Type > TypeDB::Type::getSupertype(Transaction& transaction)
+ConceptPtrFuture<Type> TypeDB::Type::getSupertype(Transaction& transaction)
 ----
 
 
@@ -112,12 +112,12 @@ a| `transaction` a| The current transaction a|
 .Returns
 `ConceptPtrFuture< Type >`
 
-[#_ab9a2bf75c555c5c0c399b86b4c1a196b]
+[#_ac71d33726bd2681d7c2c59f4e79c6346]
 ==== getSupertypes
 
 [source,cpp]
 ----
-ConceptIterable< Type > TypeDB::Type::getSupertypes(Transaction& transaction)
+ConceptIterable<Type> TypeDB::Type::getSupertypes(Transaction& transaction)
 ----
 
 

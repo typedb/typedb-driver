@@ -8,12 +8,12 @@
 Contains a mapping of variables to concepts.
 
 // tag::methods[]
-[#_a03461a44a3e60960f2b88cc67316bc24]
+[#_a756190f2a355ea2f14a452109886b68d]
 ==== concepts
 
 [source,cpp]
 ----
-ConceptIterable< Concept > TypeDB::ConceptMap::concepts()
+ConceptIterable<Concept> TypeDB::ConceptMap::concepts()
 ----
 
 
@@ -42,12 +42,12 @@ Gets the ``Explainables`` object for this ``ConceptMap``, exposing which of the 
 .Returns
 `Explainables`
 
-[#_a8f29ce5780ce17b7bec316c23e654a38]
+[#_a0fa297e604563be1336294b35240b712]
 ==== get
 
 [source,cpp]
 ----
-std::unique_ptr< Concept > TypeDB::ConceptMap::get(const std::string& variableName)
+std::unique_ptr<Concept> TypeDB::ConceptMap::get(const std::string& variableName)
 ----
 
 
@@ -68,12 +68,12 @@ a| `variable` a| The string representation of a variable a|
 .Returns
 `std::unique_ptr< Concept >`
 
-[#_a4efef43c65cf998814a81083e389ea93]
+[#_ada95f2d55ec36ef07a00b73d4d99d031]
 ==== map
 
 [source,cpp]
 ----
-std::map< std::string, std::unique_ptr< Concept > > TypeDB::ConceptMap::map()
+std::map<std::string, std::unique_ptr<Concept> > TypeDB::ConceptMap::map()
 ----
 
 
