@@ -87,7 +87,7 @@ class DoxygenParser : Callable<Unit> {
 
             // Enums
             parsed.select("td.memname").filter { element ->
-                element.text().startsWith("enum class")
+                element.text().startsWith("enum")
             }.map { element -> element.parents().select(".memitem").first() }.forEach {
                 val parsedEnum = parseEnum(it!!)
                 if (parsedEnum.isNotEmpty()) classes.add(parsedEnum)
