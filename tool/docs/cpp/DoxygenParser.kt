@@ -125,9 +125,10 @@ class DoxygenParser : Callable<Unit> {
         return outputFile
     }
 
-    private fun parseMemberDecls(document: Element): Map<String, List<Element>> {
+    private fun parseMemberDecls(document: Element): Pair<Map<String, List<Element>>, Map<String,String>> {
         val missingDeclarations: MutableList<String> = ArrayList()
         val map: MutableMap<String, List<Element>> = HashMap()
+        val idToAnchor: MutableMap<String, String> = HashMap()
         document.select("table.memberdecls").forEach { table ->
             val heading: String = table.selectFirst("tr.heading > td > h2 > a")!!.attr("name")
             val members: MutableList<Element> = ArrayList()
@@ -141,6 +142,7 @@ class DoxygenParser : Callable<Unit> {
                     missingDeclarations.add(element.selectFirst("td.memItemRight")!!.text())
                 } else {
                     members.add(methodDetails)
+                    idToAnchor[id] = replaceSymbolsForAnchor(methodDetails.select("td.memname > a").text())
                 }
             }
             map[heading] = members
@@ -148,7 +150,7 @@ class DoxygenParser : Callable<Unit> {
         if (missingDeclarations.isNotEmpty()) {
             println("Missing some member declarations:\n\t-" + missingDeclarations.joinToString("\n\t-"))
         }
-        return map
+        return Pair(map, idToAnchor)
     }
 
     private fun parseTypeDef(element: Element): Class {
@@ -161,7 +163,7 @@ class DoxygenParser : Callable<Unit> {
                 return Class(
                     name = alias,
                     anchor = anchor,
-                    description = listOf("Alias for ${replaceLocalLinks(actual)}"),
+                    description = listOf("Alias for ${replaceLocalLinks(HashMap(), actual)}"),
                 )
             } else if (memItemLeft!!.text().startsWith("using")) {
                 val usingEquality = element.selectFirst("td.memItemRight")!!
@@ -184,21 +186,21 @@ class DoxygenParser : Callable<Unit> {
         val packagePath = fullyQualifiedName.substringBeforeLast("::")
         val className = fullyQualifiedName.substringAfterLast("::")
         val classAnchor = replaceSymbolsForAnchor(className)
-        val classDescr: List<String> = document.selectFirst("div.textblock")
-            ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
         val classExamples = document.select("div.textblock > pre").map { replaceSpaces(it.text()) }
-
-        val memberDecls = parseMemberDecls(document)
         val superClasses = document.select("tr.inherit_header")
             .map { it.text().substringAfter("inherited from ") }
             .toSet().toList()
 
-        val fields = memberDecls.getOrDefault("pub-attribs", listOf()).map { parseField(it) }
+        val (memberDecls, idToAnchor) = parseMemberDecls(document)
+        val classDescr: List<String> = document.selectFirst("div.textblock")
+            ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h"), idToAnchor) } ?: listOf()
+
+        val fields = memberDecls.getOrDefault("pub-attribs", listOf()).map { parseField(it, idToAnchor) }
         val methods: List<Method> = (
                 memberDecls.getOrDefault("pub-methods", listOf()) +
                         memberDecls.getOrDefault("pub-static-methods", listOf())
                 ).map {
-                parseMethod(it)
+                parseMethod(it, idToAnchor)
             }
 
         return Class(
@@ -219,7 +221,7 @@ class DoxygenParser : Callable<Unit> {
         val className = fullyQualifiedName.substringAfterLast("::")
         val classAnchor = replaceSymbolsForAnchor(className)
         val classDescr: List<String> = element.selectFirst("div.memdoc")
-            ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
+            ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h"), HashMap()) } ?: listOf()
         val classExamples = element.select("div.memdoc > pre").map { replaceSpaces(it.text()) }
         val enumConstants =
             element.parents().select("div.contents").first()!!
@@ -240,8 +242,9 @@ class DoxygenParser : Callable<Unit> {
         )
     }
 
-    private fun parseMethod(element: Element): Method {
-        val methodAnchor = element.previousElementSibling()?.previousElementSibling()?.id()!! // Re-use doxygen id
+    private fun parseMethod(element: Element, idToAnchor: Map<String, String>): Method {
+        val id = element.previousElementSibling()?.previousElementSibling()?.id()!!
+        val methodAnchor = idToAnchor[id]
         val methodName = element.previousElementSibling()!!.text().substringBefore("()").substringAfter(" ")
         val methodSignature = enhanceSignature(element.selectFirst("table.memname")!!.text())
         val argsList = getArgsFromSignature(methodSignature)
@@ -249,7 +252,7 @@ class DoxygenParser : Callable<Unit> {
         val methodReturnType = getReturnTypeFromSignature(methodSignature)
         val methodDescr: List<String> = element.selectFirst("div.memdoc")
             ?.let { splitToParagraphs(it.html()) }
-            ?.map { replaceSpaces(reformatTextWithCode(it.substringBefore("<h"))) } ?: listOf()
+            ?.map { replaceSpaces(reformatTextWithCode(it.substringBefore("<h"), idToAnchor)) } ?: listOf()
         val methodExamples = element.select("td.memdoc > pre + div pre").map { replaceSpaces(it.text()) }
 
         val methodArgs = element.select("table.params > tbody > tr")
@@ -259,7 +262,7 @@ class DoxygenParser : Callable<Unit> {
                 Variable(
                     name = argName,
                     type = argsMap[argName],
-                    description = reformatTextWithCode(it.child(1).html()),
+                    description = reformatTextWithCode(it.child(1).html(), idToAnchor),
                 )
             }
 
@@ -275,10 +278,10 @@ class DoxygenParser : Callable<Unit> {
 
     }
 
-    private fun parseField(element: Element): Variable {
+    private fun parseField(element: Element, idToAnchor: Map<String, String>): Variable {
         val type = element.selectFirst("td.memname")!!.text().substringBeforeLast("::")
         val name = element.selectFirst("td.memname")!!.text().substringAfterLast("::")
-        val descr = reformatTextWithCode(element.selectFirst("div.memdoc")!!.html())
+        val descr = reformatTextWithCode(element.selectFirst("div.memdoc")!!.html(), idToAnchor)
         return Variable(
             name = name,
             description = descr,
@@ -296,8 +299,8 @@ class DoxygenParser : Callable<Unit> {
             .toList()
     }
 
-    private fun reformatTextWithCode(html: String): String {
-        return removeAllTags(replaceLocalLinks(replaceEmTags(replacePreTags(replaceCodeTags(html)))))
+    private fun reformatTextWithCode(html: String, idToAnchor: Map<String, String>): String {
+        return removeAllTags(replaceLocalLinks(idToAnchor, replaceEmTags(replacePreTags(replaceCodeTags(html)))))
     }
 
     private fun replacePreTags(html: String): String {
@@ -321,10 +324,15 @@ class DoxygenParser : Callable<Unit> {
         return html.replace("</p>", "").split("\\s*<p>\\s*".toRegex()).map { it.trim() }
     }
 
-    private fun replaceLocalLinks(html: String): String {
+
+    private fun replaceLocalLinks(idToAnchor: Map<String, String>, html: String): String {
         // The Intellij preview messes up nested templates & The '>>' used for cross links.
         return Regex("<a class=\"el\" href=\"[^\"^#]*#([^\"]*)\">([^<]*)</a>")
-            .replace(html, "<<#_$1,$2>>")
+            .replace(html,{
+                if (idToAnchor.containsKey(it.groupValues[1]))
+                "<<#%s,%s>>".format(idToAnchor.get(it.groupValues[1]), it.groupValues[2])
+                else "%s".format(it.groupValues[2])
+            })
     }
 
     private fun generateFilename(className: String): String {
