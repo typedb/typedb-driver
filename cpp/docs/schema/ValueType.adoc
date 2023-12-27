@@ -14,12 +14,12 @@ What type of primitive value is held by a Value or Attribute.
 [options="header"]
 |===
 |Name
-a| ` BOOLEAN `
+a| ` BOOLEAN`
 a| ` DATETIME `
-a| ` DOUBLE `
-a| ` LONG `
-a| ` OBJECT `
-a| ` STRING `
+a| ` DOUBLE`
+a| ` LONG`
+a| ` OBJECT`
+a| ` STRING`
 |===
 // end::enum_constants[]
 

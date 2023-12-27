@@ -223,7 +223,7 @@ class DoxygenParser : Callable<Unit> {
         val classExamples = element.select("div.memdoc > pre").map { replaceSpaces(it.text()) }
         val enumConstants =
             element.parents().select("div.contents").first()!!
-                .select("table.memberdecls > tbody > tr#r_$id > td.memItemRight ").first()!!
+                .select("table.memberdecls > tbody > tr[class=memitem:$id] > td.memItemRight ").first()!!
                 .text().substringAfter("{").substringBefore("}")
                 .split(",")
                 .map {

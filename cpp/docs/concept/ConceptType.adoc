@@ -14,14 +14,14 @@ The exact type of a Concept object. Use for downcasting to the appropriate type.
 [options="header"]
 |===
 |Name
-a| ` ATTRIBUTE `
-a| ` ATTRIBUTE_TYPE `
-a| ` ENTITY `
-a| ` ENTITY_TYPE `
-a| ` RELATION `
-a| ` RELATION_TYPE `
-a| ` ROLE_TYPE `
-a| ` ROOT_THING_TYPE `
+a| ` ATTRIBUTE`
+a| ` ATTRIBUTE_TYPE`
+a| ` ENTITY`
+a| ` ENTITY_TYPE`
+a| ` RELATION`
+a| ` RELATION_TYPE`
+a| ` ROLE_TYPE`
+a| ` ROOT_THING_TYPE`
 a| ` VALUE `
 |===
 // end::enum_constants[]
