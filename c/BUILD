@@ -225,7 +225,7 @@ checkstyle_test(
         "src/**/*",
         "swig/*",
     ]),
-    exclude = [".clang-format"],
+    exclude = [".clang-format", "README.md"],
     license_type = "apache-header",
 )
 
