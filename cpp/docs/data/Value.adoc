@@ -12,7 +12,7 @@
 A primitive value. Holds the value of an attribute, or the result of an expression in a query.
 
 // tag::methods[]
-[#_a23342c18e17b460177a8fb98afb05784]
+[#_bool_TypeDBValueasBoolean___]
 ==== asBoolean
 
 [source,cpp]
@@ -29,7 +29,7 @@ Returns a ``boolean`` value of this value concept. If the value has another type
 .Returns
 `bool`
 
-[#_a8af7df0f73137804b091d23099714aef]
+[#_DateTime_TypeDBValueasDateTime___]
 ==== asDateTime
 
 [source,cpp]
@@ -46,7 +46,7 @@ Returns a ``DateTime`` value of this value concept. If the value has another typ
 .Returns
 `DateTime`
 
-[#_a0961709f38118b122f574fa1de09d172]
+[#_double_TypeDBValueasDouble___]
 ==== asDouble
 
 [source,cpp]
@@ -63,7 +63,7 @@ Returns a ``double`` value of this value concept. If the value has another type,
 .Returns
 `double`
 
-[#_a801c569ac31476964e98e47455d78b30]
+[#_int64_t_TypeDBValueasLong___]
 ==== asLong
 
 [source,cpp]
@@ -80,7 +80,7 @@ Returns a ``long`` value of this value concept. If the value has another type, r
 .Returns
 `int64_t`
 
-[#_aa0c5de79239fa0d44757cf04d53880ad]
+[#_stdstring_TypeDBValueasString___]
 ==== asString
 
 [source,cpp]
@@ -97,7 +97,7 @@ Returns a ``string`` value of this value concept. If the value has another type,
 .Returns
 `std::string`
 
-[#_afa5e3047d1d80926916c2d5ae25d78bb]
+[#_static_stdstring_TypeDBValueformatDateTime___DateTime_t_]
 ==== formatDateTime
 
 [source,cpp]
@@ -114,7 +114,7 @@ Returns a string in the TypeQL DateTime format corresponding to the specified Da
 .Returns
 `static std::string`
 
-[#_af2024bfc30c74db3dffb9bfdad5c7ed2]
+[#_bool_TypeDBValueisBoolean___]
 ==== isBoolean
 
 [source,cpp]
@@ -131,7 +131,7 @@ Returns ``true`` if the value which this value concept holds is of type ``boolea
 .Returns
 `bool`
 
-[#_ac25baeba3a07bebed2edcd8ba2485674]
+[#_bool_TypeDBValueisDateTime___]
 ==== isDateTime
 
 [source,cpp]
@@ -148,7 +148,7 @@ Returns ``True`` if the value which this value concept holds is of type ``DateTi
 .Returns
 `bool`
 
-[#_ab8536a2edf8143d171a3f9dabd8e409d]
+[#_bool_TypeDBValueisDouble___]
 ==== isDouble
 
 [source,cpp]
@@ -165,7 +165,7 @@ Returns ``true`` if the value which this value concept holds is of type ``double
 .Returns
 `bool`
 
-[#_a6564c54d4abc542375e9dbd3047d8722]
+[#_bool_TypeDBValueisLong___]
 ==== isLong
 
 [source,cpp]
@@ -182,7 +182,7 @@ Returns ``true`` if the value which this value concept holds is of type ``long``
 .Returns
 `bool`
 
-[#_a40de7d9aed87b0dc11785c5e826592df]
+[#_bool_TypeDBValueisString___]
 ==== isString
 
 [source,cpp]
@@ -199,12 +199,12 @@ Returns ``true`` if the value which this value concept holds is of type ``string
 .Returns
 `bool`
 
-[#_aa0fe4a5ed400838b56f0ce203a7c2253]
+[#_static_stdunique_ptr__Value___TypeDBValueof___bool_value_]
 ==== of
 
 [source,cpp]
 ----
-static std::unique_ptr<Value> TypeDB::Value::of(bool value)
+static std::unique_ptr< Value > TypeDB::Value::of(bool value)
 ----
 
 
@@ -216,12 +216,12 @@ Creates a new Value object of the specified boolean value.
 .Returns
 `static std::unique_ptr< Value >`
 
-[#_a12b7f4af1270dbec3e0f4773055ffc54]
+[#_static_stdunique_ptr__Value___TypeDBValueof___int64_t_value_]
 ==== of
 
 [source,cpp]
 ----
-static std::unique_ptr<Value> TypeDB::Value::of(int64_t value)
+static std::unique_ptr< Value > TypeDB::Value::of(int64_t value)
 ----
 
 
@@ -233,12 +233,12 @@ Creates a new Value object of the specified long value.
 .Returns
 `static std::unique_ptr< Value >`
 
-[#_a5842e1fc2bd23737094ea6ee2f12a42a]
+[#_static_stdunique_ptr__Value___TypeDBValueof___double_value_]
 ==== of
 
 [source,cpp]
 ----
-static std::unique_ptr<Value> TypeDB::Value::of(double value)
+static std::unique_ptr< Value > TypeDB::Value::of(double value)
 ----
 
 
@@ -250,12 +250,12 @@ Creates a new Value object of the specified double value.
 .Returns
 `static std::unique_ptr< Value >`
 
-[#_aea12755e46e946cbe22faa16142b3038]
+[#_static_stdunique_ptr__Value___TypeDBValueof___const_stdstring__value_]
 ==== of
 
 [source,cpp]
 ----
-static std::unique_ptr<Value> TypeDB::Value::of(const std::string& value)
+static std::unique_ptr< Value > TypeDB::Value::of(const std::string& value)
 ----
 
 
@@ -267,12 +267,12 @@ Creates a new Value object of the specified string value.
 .Returns
 `static std::unique_ptr< Value >`
 
-[#_a1f3c3b27ca6f5e351247802e9e6f758d]
+[#_static_stdunique_ptr__Value___TypeDBValueof___DateTime_value_]
 ==== of
 
 [source,cpp]
 ----
-static std::unique_ptr<Value> TypeDB::Value::of(DateTime value)
+static std::unique_ptr< Value > TypeDB::Value::of(DateTime value)
 ----
 
 
@@ -284,7 +284,7 @@ Creates a new Value object of the specified DateTime value.
 .Returns
 `static std::unique_ptr< Value >`
 
-[#_a87b5d3fc01a245e93f14068a5c753485]
+[#_static_DateTime_TypeDBValueparseDateTime___const_stdstring__s_]
 ==== parseDateTime
 
 [source,cpp]
@@ -301,7 +301,7 @@ Parses a DateTime from a string in the TypeQL DateTime format (yyyy-mm-dd'T'HH:M
 .Returns
 `static DateTime`
 
-[#_aac172d10e3337be045b2bec11bbb0640]
+[#_ValueType_TypeDBValuevalueType___]
 ==== valueType
 
 [source,cpp]

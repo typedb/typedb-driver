@@ -8,12 +8,12 @@
 Contains an element of the group aggregate query result.
 
 // tag::methods[]
-[#_ae1cd3fa68bb4f724fa6138c151ff74d5]
+[#_stdunique_ptr__Concept___TypeDBValueGroupowner___]
 ==== owner
 
 [source,cpp]
 ----
-std::unique_ptr<Concept> TypeDB::ValueGroup::owner()
+std::unique_ptr< Concept > TypeDB::ValueGroup::owner()
 ----
 
 
@@ -25,7 +25,7 @@ Retrieves the concept that is the group owner.
 .Returns
 `std::unique_ptr< Concept >`
 
-[#_af956b544be87afa2bc9c3186f41d0f6a]
+[#_stdstring_TypeDBValueGrouptoString___]
 ==== toString
 
 [source,cpp]
@@ -41,7 +41,7 @@ A string representation of this ConceptMap.
 .Returns
 `std::string`
 
-[#_afb367c772f2404cb0830ee693b942301]
+[#_AggregateResult_TypeDBValueGroupvalue___]
 ==== value
 
 [source,cpp]

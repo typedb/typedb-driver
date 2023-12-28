@@ -12,7 +12,7 @@
 Common super-type of RoleType &amp; ThingType.
 
 // tag::methods[]
-[#_a02c119fea52d0812b451b2dc630788f2]
+[#_virtual_VoidFuture_TypeDBTypedeleteType___Transaction__transaction_]
 ==== deleteType
 
 [source,cpp]
@@ -25,7 +25,7 @@ virtual VoidFuture TypeDB::Type::deleteType(Transaction& transaction)
 Deletes this type from the database.
 
 
-Implemented in <<#_a7d93305987f2b8879ece741d6dcdd63a,TypeDB::RoleType>>, and <<#_a5399fecb5b90485c03922b496f53a835,TypeDB::ThingType>>.
+Implemented in TypeDB::RoleType, and TypeDB::ThingType.
 
 [caption=""]
 .Input parameters
@@ -40,7 +40,7 @@ a| `transaction` a| The current transaction a|
 .Returns
 `virtual VoidFuture`
 
-[#_a22b6129c06b689a1dcc29f80f5825a5f]
+[#_virtual_stdstring_TypeDBTypegetLabel___]
 ==== getLabel
 
 [source,cpp]
@@ -53,18 +53,18 @@ virtual std::string TypeDB::Type::getLabel()
 Retrieves the unique label of the type.
 
 
-Implemented in <<#_a05c129cbbf22af3a1481dcd70a271403,TypeDB::RoleType>>, and <<#_ae1c92d79118b5f0f245d4e478770f418,TypeDB::ThingType>>.
+Implemented in TypeDB::RoleType, and TypeDB::ThingType.
 
 [caption=""]
 .Returns
 `virtual std::string`
 
-[#_ad371f38de0ac8c80fb8b123d6a3ca170]
+[#_ConceptIterable__Type___TypeDBTypegetSubtypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getSubtypes
 
 [source,cpp]
 ----
-ConceptIterable<Type> TypeDB::Type::getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable< Type > TypeDB::Type::getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
@@ -86,12 +86,12 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtyp
 .Returns
 `ConceptIterable< Type >`
 
-[#_a341990fe7b8383497e8f0890cce8d62a]
+[#_ConceptPtrFuture__Type___TypeDBTypegetSupertype___Transaction__transaction_]
 ==== getSupertype
 
 [source,cpp]
 ----
-ConceptPtrFuture<Type> TypeDB::Type::getSupertype(Transaction& transaction)
+ConceptPtrFuture< Type > TypeDB::Type::getSupertype(Transaction& transaction)
 ----
 
 
@@ -112,12 +112,12 @@ a| `transaction` a| The current transaction a|
 .Returns
 `ConceptPtrFuture< Type >`
 
-[#_ac71d33726bd2681d7c2c59f4e79c6346]
+[#_ConceptIterable__Type___TypeDBTypegetSupertypes___Transaction__transaction_]
 ==== getSupertypes
 
 [source,cpp]
 ----
-ConceptIterable<Type> TypeDB::Type::getSupertypes(Transaction& transaction)
+ConceptIterable< Type > TypeDB::Type::getSupertypes(Transaction& transaction)
 ----
 
 
@@ -138,7 +138,7 @@ a| `transaction` a| The current transaction a|
 .Returns
 `ConceptIterable< Type >`
 
-[#_a551a46cdbc57083c935408b9c2dcea92]
+[#_virtual_bool_TypeDBTypeisAbstract___]
 ==== isAbstract
 
 [source,cpp]
@@ -151,13 +151,13 @@ virtual bool TypeDB::Type::isAbstract()
 Checks if the type is prevented from having data instances (i.e., ``abstract``).
 
 
-Implemented in <<#_a5a2d563f46a211a3695c408e98e4ada0,TypeDB::RoleType>>, and <<#_adb713b84d84a6c09519a5289ee0c28bb,TypeDB::ThingType>>.
+Implemented in TypeDB::RoleType, and TypeDB::ThingType.
 
 [caption=""]
 .Returns
 `virtual bool`
 
-[#_ab74287ca83400d5482e86ba75db86643]
+[#_virtual_BoolFuture_TypeDBTypeisDeleted___Transaction__transaction_]
 ==== isDeleted
 
 [source,cpp]
@@ -170,7 +170,7 @@ virtual BoolFuture TypeDB::Type::isDeleted(Transaction& transaction)
 Check if the type has been deleted
 
 
-Implemented in <<#_a4d13099f460750c832b81fd642d33c23,TypeDB::RoleType>>, and <<#_a041a80538323ae62571c3c213b3fc1d7,TypeDB::ThingType>>.
+Implemented in TypeDB::RoleType, and TypeDB::ThingType.
 
 [caption=""]
 .Input parameters
@@ -185,7 +185,7 @@ a| `transaction` a| The current transaction a|
 .Returns
 `virtual BoolFuture`
 
-[#_ae1a337de1b42d3a0feabda9cf2121a2a]
+[#_virtual_VoidFuture_TypeDBTypesetLabel___Transaction__transaction__const_stdstring__newLabel_]
 ==== setLabel
 
 [source,cpp]
@@ -198,7 +198,7 @@ virtual VoidFuture TypeDB::Type::setLabel(Transaction& transaction, const std::s
 Renames the label of the type. The new label must remain unique.
 
 
-Implemented in <<#_a7db4f837e7c8343502288a7455884491,TypeDB::RoleType>>, and <<#_a13732daa9c717d18ed3ee850f9b3a69e,TypeDB::ThingType>>.
+Implemented in TypeDB::RoleType, and TypeDB::ThingType.
 
 [caption=""]
 .Input parameters

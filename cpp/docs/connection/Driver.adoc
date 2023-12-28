@@ -20,7 +20,7 @@ a| `users` a| `UserManager TypeDB::Driver` a| The ``UserManager`` instance for t
 // end::properties[]
 
 // tag::methods[]
-[#_a44604ccc44f573109edfff21e4916bf5]
+[#_void_TypeDBDriverclose___]
 ==== close
 
 [source,cpp]
@@ -37,7 +37,7 @@ Closes the driver. Before instantiating a new driver, the driver that’s curren
 .Returns
 `void`
 
-[#_a8849a1fa0a91a320f5fa94695673ac60]
+[#_static_Driver_TypeDBDrivercloudDriver___const_stdvector__stdstring____cloudAddresses__const_Credential__credential_]
 ==== cloudDriver
 
 [source,cpp]
@@ -64,7 +64,7 @@ a| `credential` a| The Credential to connect with a|
 .Returns
 `static Driver`
 
-[#_ab959129d72b038c9b13745b9235d083c]
+[#_static_Driver_TypeDBDrivercoreDriver___const_stdstring__coreAddress_]
 ==== coreDriver
 
 [source,cpp]
@@ -90,7 +90,7 @@ a| `address` a| The address of the TypeDB server a|
 .Returns
 `static Driver`
 
-[#_abcdaad79abd69e5207dafee2189d8731]
+[#_static_void_TypeDBDriverinitLogging___]
 ==== initLogging
 
 [source,cpp]
@@ -107,7 +107,7 @@ Enables logging in the TypeDB driver.
 .Returns
 `static void`
 
-[#_ad780cecfa9442a1cb143f8004c830730]
+[#_bool_TypeDBDriverisOpen___]
 ==== isOpen
 
 [source,cpp]
@@ -124,7 +124,7 @@ Checks whether this connection is presently open.
 .Returns
 `bool`
 
-[#_a5eedf328093e30a275a04b19d7cc608f]
+[#_Session_TypeDBDriversession___const_stdstring__database__SessionType_sessionType__const_Options__options_]
 ==== session
 
 [source,cpp]
@@ -152,7 +152,7 @@ a| `options` a| ``TypeDBOptions`` for the session a|
 .Returns
 `Session`
 
-[#_af4aad2e510a66bd91f4aad85def84b27]
+[#_User_TypeDBDriveruser___]
 ==== user
 
 [source,cpp]

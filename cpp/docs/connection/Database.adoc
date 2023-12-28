@@ -8,7 +8,7 @@
 A TypeDB database.
 
 // tag::methods[]
-[#_aaab52fc7442027a9c3812ea7fee37b24]
+[#_void_TypeDBDatabasedeleteDatabase___]
 ==== deleteDatabase
 
 [source,cpp]
@@ -25,7 +25,7 @@ Deletes this database.
 .Returns
 `void`
 
-[#_ac523de36171069dbf688ba6108c495d9]
+[#_stdstring_TypeDBDatabasename_____const]
 ==== name
 
 [source,cpp]
@@ -41,12 +41,12 @@ The database name as a string.
 .Returns
 `std::string`
 
-[#_a1c8287c3c7a236660ea19ec69ce9ea70]
+[#_stdoptional__ReplicaInfo___TypeDBDatabasepreferredReplica___]
 ==== preferredReplica
 
 [source,cpp]
 ----
-std::optional<ReplicaInfo> TypeDB::Database::preferredReplica()
+std::optional< ReplicaInfo > TypeDB::Database::preferredReplica()
 ----
 
 
@@ -58,12 +58,12 @@ Returns the preferred replica for this database. Operations which can be run on 
 .Returns
 `std::optional< ReplicaInfo >`
 
-[#_ae13d5fe0404061de4f564fded2e663d7]
+[#_stdoptional__ReplicaInfo___TypeDBDatabaseprimaryReplica___]
 ==== primaryReplica
 
 [source,cpp]
 ----
-std::optional<ReplicaInfo> TypeDB::Database::primaryReplica()
+std::optional< ReplicaInfo > TypeDB::Database::primaryReplica()
 ----
 
 
@@ -75,7 +75,7 @@ Returns the primary replica for this database. _Only works in TypeDB Cloud_
 .Returns
 `std::optional< ReplicaInfo >`
 
-[#_a3faf7d65aadf608416cb5cbbb0693d00]
+[#_ReplicaInfoIterable_TypeDBDatabasereplicas___]
 ==== replicas
 
 [source,cpp]
@@ -92,7 +92,7 @@ Set of ``Replica`` instances for this database. Only works in TypeDB Cloud
 .Returns
 `ReplicaInfoIterable`
 
-[#_ab49350e1691b89d2abbec44f5157721c]
+[#_stdstring_TypeDBDatabaseruleSchema___]
 ==== ruleSchema
 
 [source,cpp]
@@ -109,7 +109,7 @@ The rules in the schema as a valid TypeQL define query string.
 .Returns
 `std::string`
 
-[#_a450cca51ecb54c5a5856e4e0e48fccbd]
+[#_stdstring_TypeDBDatabaseschema___]
 ==== schema
 
 [source,cpp]
@@ -126,7 +126,7 @@ A full schema text as a valid TypeQL define query string.
 .Returns
 `std::string`
 
-[#_abe1a292d6829727bf6330698b49a47dd]
+[#_stdstring_TypeDBDatabasetypeSchema___]
 ==== typeSchema
 
 [source,cpp]

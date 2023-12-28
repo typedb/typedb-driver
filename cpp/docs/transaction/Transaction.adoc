@@ -21,7 +21,7 @@ a| `query` a| `const QueryManager TypeDB::Transaction` a| The````QueryManager```
 // end::properties[]
 
 // tag::methods[]
-[#_a72b95076b272216dbaa8429ce8099cf1]
+[#_void_TypeDBTransactionclose___]
 ==== close
 
 [source,cpp]
@@ -38,7 +38,7 @@ Closes the transaction.
 .Returns
 `void`
 
-[#_ae08dac47fd65d68598b56473f706519f]
+[#_void_TypeDBTransactioncommit___]
 ==== commit
 
 [source,cpp]
@@ -55,7 +55,7 @@ Commits the changes made via this transaction to the TypeDB database. Whether or
 .Returns
 `void`
 
-[#_a7f9a154ee5f9b23afdcbfd5386b7d071]
+[#_void_TypeDBTransactionforceClose___]
 ==== forceClose
 
 [source,cpp]
@@ -72,7 +72,7 @@ Closes the transaction.
 .Returns
 `void`
 
-[#_ae27c571ce26376e474ef587c65d15e24]
+[#_bool_TypeDBTransactionisOpen_____const]
 ==== isOpen
 
 [source,cpp]
@@ -89,7 +89,7 @@ Checks whether this transaction is open.
 .Returns
 `bool`
 
-[#_a3acde5cc7b85e8dabedd46d07b1c5863]
+[#_void_TypeDBTransactiononClose___stdfunction__void_const_stdoptional__DriverException______callback_]
 ==== onClose
 
 [source,cpp]
@@ -115,7 +115,7 @@ a| `function` a| The callback function. a|
 .Returns
 `void`
 
-[#_adcb322bac345023cf69332c4aa736e76]
+[#_void_TypeDBTransactionrollback___]
 ==== rollback
 
 [source,cpp]
@@ -132,7 +132,7 @@ Rolls back the uncommitted changes made via this transaction.
 .Returns
 `void`
 
-[#_a7d3d9b771b4464a44a4bba6e98c8c592]
+[#_TypeDBTransactionType_TypeDBTransactiontype_____const]
 ==== type
 
 [source,cpp]

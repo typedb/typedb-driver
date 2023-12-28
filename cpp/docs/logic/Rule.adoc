@@ -10,7 +10,7 @@ Rules are a part of schema and define embedded logic.
 The reasoning engine uses rules as a set of logic to infer new data. A rule consists of a condition and a conclusion, and is uniquely identified by a label.
 
 // tag::methods[]
-[#_a6525ac3db39e38400021b70eb73b39eb]
+[#_VoidFuture_TypeDBRuledeleteRule___Transaction__transaction_]
 ==== deleteRule
 
 [source,cpp]
@@ -36,7 +36,7 @@ a| `transaction` a| The current ``Transaction`` a|
 .Returns
 `VoidFuture`
 
-[#_a5ed602145823258b39b4d854913a56e1]
+[#_BoolFuture_TypeDBRuleisDeleted___Transaction__transaction_]
 ==== isDeleted
 
 [source,cpp]
@@ -62,7 +62,7 @@ a| `transaction` a| The current ``Transaction`` a|
 .Returns
 `BoolFuture`
 
-[#_a1bdc672360530ff16be3c39cd7c44b16]
+[#_stdstring_TypeDBRulelabel___]
 ==== label
 
 [source,cpp]
@@ -78,7 +78,7 @@ Retrieves the unique label of the rule.
 .Returns
 `std::string`
 
-[#_a5c5f8edf5dc709aeb80e511aa4f35708]
+[#_VoidFuture_TypeDBRulesetLabel___Transaction__transaction__const_stdstring__label_]
 ==== setLabel
 
 [source,cpp]
@@ -105,7 +105,7 @@ a| `label` a| The new label to be given to the rule a|
 .Returns
 `VoidFuture`
 
-[#_a7b03637b0511015d032538b9ce98ff3a]
+[#_stdstring_TypeDBRulethen___]
 ==== then
 
 [source,cpp]
@@ -121,7 +121,7 @@ The single statement that constitutes the ‘then’ of the rule.
 .Returns
 `std::string`
 
-[#_a40dffe620259231bfbde88be61f39492]
+[#_stdstring_TypeDBRuletoString___]
 ==== toString
 
 [source,cpp]
@@ -137,7 +137,7 @@ A string representation of this Rule.
 .Returns
 `std::string`
 
-[#_a275b42491dac8a568124d795ec640538]
+[#_stdstring_TypeDBRulewhen___]
 ==== when
 
 [source,cpp]

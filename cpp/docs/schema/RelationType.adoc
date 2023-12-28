@@ -16,12 +16,12 @@ Relation types (or subtypes of the relation root type) represent relationships b
 Relation types have roles. Other types can play roles in relations if it’s mentioned in their definition. A relation type must specify at least one role.
 
 // tag::methods[]
-[#_a90d42dcc537b51ee8feffce6073992f0]
+[#_ConceptPtrFuture__Relation___TypeDBRelationTypecreate___Transaction__transaction_]
 ==== create
 
 [source,cpp]
 ----
-ConceptPtrFuture<Relation> TypeDB::RelationType::create(Transaction& transaction)
+ConceptPtrFuture< Relation > TypeDB::RelationType::create(Transaction& transaction)
 ----
 
 
@@ -42,12 +42,12 @@ a| `transaction` a| The current transaction a|
 .Returns
 `ConceptPtrFuture< Relation >`
 
-[#_a839f4434d5e15df55daace14140b2ff7]
+[#_ConceptIterable__Relation___TypeDBRelationTypegetInstances___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getInstances
 
 [source,cpp]
 ----
-ConceptIterable<Relation> TypeDB::RelationType::getInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable< Relation > TypeDB::RelationType::getInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
@@ -69,12 +69,12 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect instan
 .Returns
 `ConceptIterable< Relation >`
 
-[#_aa4b18be068bb0d7ed907ebb296038d05]
+[#_ConceptIterable__RoleType___TypeDBRelationTypegetRelates___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getRelates
 
 [source,cpp]
 ----
-ConceptIterable<RoleType> TypeDB::RelationType::getRelates(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable< RoleType > TypeDB::RelationType::getRelates(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
@@ -96,12 +96,12 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and inherited relat
 .Returns
 `ConceptIterable< RoleType >`
 
-[#_a904c8725cee60a7ead1e0bdae35e1925]
+[#_ConceptPtrFuture__RoleType___TypeDBRelationTypegetRelates___Transaction__transaction__const_stdstring__roleLabel_]
 ==== getRelates
 
 [source,cpp]
 ----
-ConceptPtrFuture<RoleType> TypeDB::RelationType::getRelates(Transaction& transaction, const std::string& roleLabel)
+ConceptPtrFuture< RoleType > TypeDB::RelationType::getRelates(Transaction& transaction, const std::string& roleLabel)
 ----
 
 
@@ -123,12 +123,12 @@ a| `roleLabel` a| Label of the role we wish to retrieve a|
 .Returns
 `ConceptPtrFuture< RoleType >`
 
-[#_ac1099fa8430cd63b6282fb425c356b43]
+[#_ConceptPtrFuture__RoleType___TypeDBRelationTypegetRelatesOverridden___Transaction__transaction__RoleType__ptr__roleType_]
 ==== getRelatesOverridden
 
 [source,cpp]
 ----
-ConceptPtrFuture<RoleType> TypeDB::RelationType::getRelatesOverridden(Transaction& transaction, RoleType* roleType)
+ConceptPtrFuture< RoleType > TypeDB::RelationType::getRelatesOverridden(Transaction& transaction, RoleType* roleType)
 ----
 
 
@@ -150,12 +150,12 @@ a| `roleLabel` a| Label of the role that overrides an inherited role a|
 .Returns
 `ConceptPtrFuture< RoleType >`
 
-[#_afbe81ef2b342607c8940afe2a1624793]
+[#_ConceptPtrFuture__RoleType___TypeDBRelationTypegetRelatesOverridden___Transaction__transaction__const_stdstring__roleLabel_]
 ==== getRelatesOverridden
 
 [source,cpp]
 ----
-ConceptPtrFuture<RoleType> TypeDB::RelationType::getRelatesOverridden(Transaction& transaction, const std::string& roleLabel)
+ConceptPtrFuture< RoleType > TypeDB::RelationType::getRelatesOverridden(Transaction& transaction, const std::string& roleLabel)
 ----
 
 
@@ -177,12 +177,12 @@ a| `roleLabel` a| Label of the role that overrides an inherited role a|
 .Returns
 `ConceptPtrFuture< RoleType >`
 
-[#_ac1ad248d425233c86a0075ca3b940a6f]
+[#_ConceptIterable__RelationType___TypeDBRelationTypegetSubtypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getSubtypes
 
 [source,cpp]
 ----
-ConceptIterable<RelationType> TypeDB::RelationType::getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable< RelationType > TypeDB::RelationType::getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
@@ -204,7 +204,7 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtyp
 .Returns
 `ConceptIterable< RelationType >`
 
-[#_a73df8dbdbbe880076d8c16d0549b6bc3]
+[#_VoidFuture_TypeDBRelationTypesetRelates___Transaction__transaction__const_stdstring__roleLabel_]
 ==== setRelates
 
 [source,cpp]
@@ -214,13 +214,13 @@ VoidFuture TypeDB::RelationType::setRelates(Transaction& transaction, const std:
 
 
 
-Variant of <<#_a04279572696f3de39b74d90ac29e2b15,setRelates(Transaction&amp; transaction, const std::string&amp; roleLabel, const std::string&amp; overriddenLabel)>> where the RoleType does not override an existing role.
+Variant of <<#_VoidFuture_TypeDBRelationTypesetRelates___Transaction__transaction__const_stdstring__roleLabel__const_stdstring__overriddenLabel_,setRelates(Transaction&amp; transaction, const std::string&amp; roleLabel, const std::string&amp; overriddenLabel)>> where the RoleType does not override an existing role.
 
 [caption=""]
 .Returns
 `VoidFuture`
 
-[#_a27018f86db0f8a3bcd17456356dd17dd]
+[#_VoidFuture_TypeDBRelationTypesetRelates___Transaction__transaction__const_stdstring__roleLabel__RoleType__ptr__overriddenType_]
 ==== setRelates
 
 [source,cpp]
@@ -230,13 +230,13 @@ VoidFuture TypeDB::RelationType::setRelates(Transaction& transaction, const std:
 
 
 
-Variant of <<#_a04279572696f3de39b74d90ac29e2b15,setRelates(Transaction&amp; transaction, const std::string&amp; roleLabel, const std::string&amp; overriddenLabel)>> where the RoleType is specified directly rather than the label.
+Variant of <<#_VoidFuture_TypeDBRelationTypesetRelates___Transaction__transaction__const_stdstring__roleLabel__const_stdstring__overriddenLabel_,setRelates(Transaction&amp; transaction, const std::string&amp; roleLabel, const std::string&amp; overriddenLabel)>> where the RoleType is specified directly rather than the label.
 
 [caption=""]
 .Returns
 `VoidFuture`
 
-[#_a04279572696f3de39b74d90ac29e2b15]
+[#_VoidFuture_TypeDBRelationTypesetRelates___Transaction__transaction__const_stdstring__roleLabel__const_stdstring__overriddenLabel_]
 ==== setRelates
 
 [source,cpp]
@@ -263,7 +263,7 @@ a| `superRelationType` a| The ``RelationType`` to set as the supertype of this `
 .Returns
 `VoidFuture`
 
-[#_ae159fd8003a0101382dd8e4c0378b6fb]
+[#_VoidFuture_TypeDBRelationTypesetSupertype___Transaction__transaction__RelationType__ptr__superRelationType_]
 ==== setSupertype
 
 [source,cpp]
@@ -290,7 +290,7 @@ a| `superRelationType` a| The ``RelationType`` to set as the supertype of this `
 .Returns
 `VoidFuture`
 
-[#_a2f6a14555d2cfc7f8b4944c044f38315]
+[#_VoidFuture_TypeDBRelationTypeunsetRelates___Transaction__transaction__RoleType__ptr__roleType_]
 ==== unsetRelates
 
 [source,cpp]
@@ -300,13 +300,13 @@ VoidFuture TypeDB::RelationType::unsetRelates(Transaction& transaction, RoleType
 
 
 
-Variant of <<#_a81fa9845e3d0e0e319a20f1e95a61f00,unsetRelates(Transaction&amp; transaction, const std::string&amp; roleLabel)>> where the RoleType is specified directly rather than the label.
+Variant of <<#_VoidFuture_TypeDBRelationTypeunsetRelates___Transaction__transaction__const_stdstring__roleLabel_,unsetRelates(Transaction&amp; transaction, const std::string&amp; roleLabel)>> where the RoleType is specified directly rather than the label.
 
 [caption=""]
 .Returns
 `VoidFuture`
 
-[#_a81fa9845e3d0e0e319a20f1e95a61f00]
+[#_VoidFuture_TypeDBRelationTypeunsetRelates___Transaction__transaction__const_stdstring__roleLabel_]
 ==== unsetRelates
 
 [source,cpp]

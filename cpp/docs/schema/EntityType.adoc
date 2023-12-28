@@ -14,12 +14,12 @@
 Entity types represent the classification of independent objects in the data model of the business domain.
 
 // tag::methods[]
-[#_a136a9302e7cde78f37cb042707833d5d]
+[#_ConceptPtrFuture__Entity___TypeDBEntityTypecreate___Transaction__transaction_]
 ==== create
 
 [source,cpp]
 ----
-ConceptPtrFuture<Entity> TypeDB::EntityType::create(Transaction& transaction)
+ConceptPtrFuture< Entity > TypeDB::EntityType::create(Transaction& transaction)
 ----
 
 
@@ -40,12 +40,12 @@ a| `transaction` a| The current transaction a|
 .Returns
 `ConceptPtrFuture< Entity >`
 
-[#_ae95a2736368a02f27b0fcd8c85524455]
+[#_ConceptIterable__Entity___TypeDBEntityTypegetInstances___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getInstances
 
 [source,cpp]
 ----
-ConceptIterable<Entity> TypeDB::EntityType::getInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable< Entity > TypeDB::EntityType::getInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
@@ -67,12 +67,12 @@ a| `transitivity` a| ``Transitivity::EXPLICIT`` for direct instances only, ``Tra
 .Returns
 `ConceptIterable< Entity >`
 
-[#_ae9884d2bc698d670d782e527e6eee18c]
+[#_ConceptIterable__EntityType___TypeDBEntityTypegetSubtypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getSubtypes
 
 [source,cpp]
 ----
-ConceptIterable<EntityType> TypeDB::EntityType::getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable< EntityType > TypeDB::EntityType::getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
@@ -94,7 +94,7 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtyp
 .Returns
 `ConceptIterable< EntityType >`
 
-[#_aef74680b34cab1104fd748f3cc010c4d]
+[#_VoidFuture_TypeDBEntityTypesetSupertype___Transaction__transaction__EntityType__ptr__superEntityType_]
 ==== setSupertype
 
 [source,cpp]

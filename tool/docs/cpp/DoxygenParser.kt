@@ -142,7 +142,7 @@ class DoxygenParser : Callable<Unit> {
                     missingDeclarations.add(element.selectFirst("td.memItemRight")!!.text())
                 } else {
                     members.add(methodDetails)
-                    idToAnchor[id] = replaceSymbolsForAnchor(methodDetails.select("td.memname > a").text())
+                    idToAnchor[id] = replaceSymbolsForAnchor(methodDetails.select("table.memname").text())
                 }
             }
             map[heading] = members
@@ -330,7 +330,7 @@ class DoxygenParser : Callable<Unit> {
         return Regex("<a class=\"el\" href=\"[^\"^#]*#([^\"]*)\">([^<]*)</a>")
             .replace(html,{
                 if (idToAnchor.containsKey(it.groupValues[1]))
-                "<<#%s,%s>>".format(idToAnchor.get(it.groupValues[1]), it.groupValues[2])
+                "<<#_%s,%s>>".format(idToAnchor.get(it.groupValues[1]), it.groupValues[2])
                 else "%s".format(it.groupValues[2])
             })
     }

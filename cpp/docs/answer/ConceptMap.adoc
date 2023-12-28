@@ -8,12 +8,12 @@
 Contains a mapping of variables to concepts.
 
 // tag::methods[]
-[#_a756190f2a355ea2f14a452109886b68d]
+[#_ConceptIterable__Concept___TypeDBConceptMapconcepts___]
 ==== concepts
 
 [source,cpp]
 ----
-ConceptIterable<Concept> TypeDB::ConceptMap::concepts()
+ConceptIterable< Concept > TypeDB::ConceptMap::concepts()
 ----
 
 
@@ -25,7 +25,7 @@ Produces an ``Iterator`` over all concepts in this ``ConceptMap``.
 .Returns
 `ConceptIterable< Concept >`
 
-[#_a6375fe2c20401d026265ea2ba8704368]
+[#_Explainables_TypeDBConceptMapexplainables___]
 ==== explainables
 
 [source,cpp]
@@ -42,12 +42,12 @@ Gets the ``Explainables`` object for this ``ConceptMap``, exposing which of the 
 .Returns
 `Explainables`
 
-[#_a0fa297e604563be1336294b35240b712]
+[#_stdunique_ptr__Concept___TypeDBConceptMapget___const_stdstring__variableName_]
 ==== get
 
 [source,cpp]
 ----
-std::unique_ptr<Concept> TypeDB::ConceptMap::get(const std::string& variableName)
+std::unique_ptr< Concept > TypeDB::ConceptMap::get(const std::string& variableName)
 ----
 
 
@@ -68,12 +68,12 @@ a| `variable` a| The string representation of a variable a|
 .Returns
 `std::unique_ptr< Concept >`
 
-[#_ada95f2d55ec36ef07a00b73d4d99d031]
+[#_stdmap__stdstring__stdunique_ptr__Concept_____TypeDBConceptMapmap___]
 ==== map
 
 [source,cpp]
 ----
-std::map<std::string, std::unique_ptr<Concept> > TypeDB::ConceptMap::map()
+std::map< std::string, std::unique_ptr< Concept > > TypeDB::ConceptMap::map()
 ----
 
 
@@ -85,7 +85,7 @@ Returns the inner ``Map`` where keys are query variables, and values are concept
 .Returns
 `std::map< std::string, std::unique_ptr< Concept > >`
 
-[#_a4fd571d238734f410012f186252d4ee7]
+[#_stdstring_TypeDBConceptMaptoString___]
 ==== toString
 
 [source,cpp]
@@ -101,7 +101,7 @@ A string representation of this ConceptMap.
 .Returns
 `std::string`
 
-[#_a4e8ef2223116dca58e4b2556c61413ef]
+[#_StringIterable_TypeDBConceptMapvariables___]
 ==== variables
 
 [source,cpp]

@@ -4,13 +4,17 @@
 *Package*: `TypeDB`
 
 
+ template&lt;typename RETURN, typename NATIVE_PROMISE, typename HELPER = FutureHelper&lt;RETURN, NATIVE_PROMISE&gt;&gt;
+ 
+  class TypeDB::Future&lt; RETURN, NATIVE_PROMISE, HELPER &gt;
+
 
 A structure emulating std::future, used as result of an asynchronous call to the server.
 
 Note that a future must be evaluated for any server-side exceptions to be raised.
 
 // tag::methods[]
-[#_a7ab3dddb8c95aa8333f409116ad8f0d3]
+[#_RETURN_TypeDBFuture__RETURN__NATIVE_PROMISE__HELPER__get___]
 ==== get
 
 [source,cpp]
@@ -26,7 +30,7 @@ Waits for the call to complete and returns the result.
 .Returns
 `RETURN`
 
-[#_a4c334dd7bb19bbfd9e56038ce7dc5c8d]
+[#_void_TypeDBFuture__RETURN__NATIVE_PROMISE__HELPER__wait___]
 ==== wait
 
 [source,cpp]

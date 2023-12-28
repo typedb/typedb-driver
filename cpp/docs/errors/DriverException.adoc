@@ -8,7 +8,7 @@
 Exceptions raised by the driver.
 
 // tag::methods[]
-[#_a2878db987bf5e9b3be3094b2c1320fd1]
+[#_const_stdstring_view_TypeDBDriverExceptioncode___]
 ==== code
 
 [source,cpp]
@@ -25,7 +25,7 @@ Retrieves the error code.
 .Returns
 `const std::string_view`
 
-[#_a673eaa1331e3ce8c34371bf8677df5e5]
+[#_const_stdstring_view_TypeDBDriverExceptionmessage___]
 ==== message
 
 [source,cpp]

@@ -10,7 +10,7 @@ An explanation of which rule was used to infer the concept and the satisfying Co
 An explanation of which rule was used for inferring the explained concept, the condition of the rule, the conclusion of the rule, and the mapping of variables between the query and the rule’s conclusion.
 
 // tag::methods[]
-[#_a75409380ab712cb37df0dfaffd022f8a]
+[#_ConceptMap_TypeDBExplanationconclusion___]
 ==== conclusion
 
 [source,cpp]
@@ -27,7 +27,7 @@ Retrieves the Conclusion for this Explanation.
 .Returns
 `ConceptMap`
 
-[#_a43533e53b46d791130fc234ed3d6ed8b]
+[#_ConceptMap_TypeDBExplanationcondition___]
 ==== condition
 
 [source,cpp]
@@ -44,12 +44,12 @@ Retrieves the Condition for this Explanation.
 .Returns
 `ConceptMap`
 
-[#_aa5d56a4e9f18e37f78bb17a0f6d9e600]
+[#_stdvector__stdstring___TypeDBExplanationqueryVariableMapping___const_stdstring__var_]
 ==== queryVariableMapping
 
 [source,cpp]
 ----
-std::vector<std::string> TypeDB::Explanation::queryVariableMapping(const std::string& var)
+std::vector< std::string > TypeDB::Explanation::queryVariableMapping(const std::string& var)
 ----
 
 
@@ -70,12 +70,12 @@ a| `var` a| The query variable to map to rule variables. a|
 .Returns
 `std::vector< std::string >`
 
-[#_a31622e232561526cc7f801862aacae7d]
+[#_stdvector__stdstring___TypeDBExplanationqueryVariables___]
 ==== queryVariables
 
 [source,cpp]
 ----
-std::vector<std::string> TypeDB::Explanation::queryVariables()
+std::vector< std::string > TypeDB::Explanation::queryVariables()
 ----
 
 
@@ -87,7 +87,7 @@ Retrieves the query variables for this ``Explanation``.
 .Returns
 `std::vector< std::string >`
 
-[#_ade2c442a1ab379a2c68a829b52e09d57]
+[#_Rule_TypeDBExplanationrule___]
 ==== rule
 
 [source,cpp]
@@ -104,7 +104,7 @@ Retrieves the Rule for this Explanation.
 .Returns
 `Rule`
 
-[#_ae6cdbec3d05e3f790ca9ec598a2a62f9]
+[#_stdstring_TypeDBExplanationtoString___]
 ==== toString
 
 [source,cpp]

@@ -8,7 +8,7 @@
 Annotations are used to specify extra schema constraints.
 
 // tag::methods[]
-[#_a58fa094838a58c2deb1ed8e0adde90e5]
+[#_bool_TypeDBAnnotationisKey___]
 ==== isKey
 
 [source,cpp]
@@ -25,7 +25,7 @@ Checks if this ``Annotation`` is a ``@key`` annotation.
 .Returns
 `bool`
 
-[#_a98f01432e4f935404a36ae7ed74c914c]
+[#_bool_TypeDBAnnotationisUnique___]
 ==== isUnique
 
 [source,cpp]
@@ -42,7 +42,7 @@ Checks if this ``Annotation`` is a ``@unique`` annotation.
 .Returns
 `bool`
 
-[#_a946402733736d1dc65397f1c14f3f591]
+[#_static_Annotation_TypeDBAnnotationkey___]
 ==== key
 
 [source,cpp]
@@ -59,7 +59,7 @@ Produces a ``@key`` annotation.
 .Returns
 `static Annotation`
 
-[#_a714ab90c6688860c1c3dbf4cf6c73347]
+[#_stdstring_TypeDBAnnotationtoString___]
 ==== toString
 
 [source,cpp]
@@ -75,7 +75,7 @@ A string representation of this Annotation.
 .Returns
 `std::string`
 
-[#_ac2801009a30540a8f62368f1eea4c8da]
+[#_static_Annotation_TypeDBAnnotationunique___]
 ==== unique
 
 [source,cpp]

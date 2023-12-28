@@ -8,7 +8,7 @@
 Provides methods for executing TypeQL queries in the transaction.
 
 // tag::methods[]
-[#_a730553d491e3a1feb08f1b12804861eb]
+[#_VoidFuture_TypeDBQueryManagerdefine___const_stdstring__query__const_Options__options__Options_____const]
 ==== define
 
 [source,cpp]
@@ -35,7 +35,7 @@ a| `options` a| Specify query options a|
 .Returns
 `VoidFuture`
 
-[#_a3d04852ac62b3c93c3af5ee7830069a4]
+[#_ExplanationIterable_TypeDBQueryManagerexplain___const_Explainable__explainable__const_Options___Options_____const]
 ==== explain
 
 [source,cpp]
@@ -62,7 +62,7 @@ a| `options` a| Specify query options a|
 .Returns
 `ExplanationIterable`
 
-[#_a5e0dff39702ebeca0386b5825d4d46a7]
+[#_JSONIterable_TypeDBQueryManagerfetch___const_stdstring__query__const_Options__options__Options_____const]
 ==== fetch
 
 [source,cpp]
@@ -89,7 +89,7 @@ a| `options` a| Specify query options a|
 .Returns
 `JSONIterable`
 
-[#_afdf40c3a101625e8ac0fa76671ac3696]
+[#_ConceptMapIterable_TypeDBQueryManagerget___const_stdstring__query__const_Options__options__Options_____const]
 ==== get
 
 [source,cpp]
@@ -116,7 +116,7 @@ a| `options` a| Specify query options a|
 .Returns
 `ConceptMapIterable`
 
-[#_a527000a169865c097a4b0d9a436bf2e6]
+[#_AggregateFuture_TypeDBQueryManagergetAggregate___const_stdstring__query__const_Options___Options_____const]
 ==== getAggregate
 
 [source,cpp]
@@ -143,7 +143,7 @@ a| `options` a| Specify query options a|
 .Returns
 `AggregateFuture`
 
-[#_a8eade8379b967da5a13d342b3974f725]
+[#_ConceptMapGroupIterable_TypeDBQueryManagergetGroup___const_stdstring__query__const_Options___Options_____const]
 ==== getGroup
 
 [source,cpp]
@@ -170,7 +170,7 @@ a| `options` a| Specify query options a|
 .Returns
 `ConceptMapGroupIterable`
 
-[#_a2a464c315cba60d906c066fe0d3fd957]
+[#_ValueGroupIterable_TypeDBQueryManagergetGroupAggregate___const_stdstring__query__const_Options___Options_____const]
 ==== getGroupAggregate
 
 [source,cpp]
@@ -197,7 +197,7 @@ a| `options` a| Specify query options a|
 .Returns
 `ValueGroupIterable`
 
-[#_ae43e746a66a58f5f9b1bddccc4d5f6a0]
+[#_ConceptMapIterable_TypeDBQueryManagerinsert___const_stdstring__query__const_Options__options__Options_____const]
 ==== insert
 
 [source,cpp]
@@ -224,7 +224,7 @@ a| `options` a| Specify query options a|
 .Returns
 `ConceptMapIterable`
 
-[#_ae3f3240f800c49d34e8d84d51993b173]
+[#_VoidFuture_TypeDBQueryManagermatchDelete___const_stdstring__query__const_Options__options__Options_____const]
 ==== matchDelete
 
 [source,cpp]
@@ -251,7 +251,7 @@ a| `options` a| Specify query options a|
 .Returns
 `VoidFuture`
 
-[#_aad5516f19190f2ceb6a84295e5d48024]
+[#_VoidFuture_TypeDBQueryManagerundefine___const_stdstring__query__const_Options__options__Options_____const]
 ==== undefine
 
 [source,cpp]
@@ -278,7 +278,7 @@ a| `options` a| Specify query options a|
 .Returns
 `VoidFuture`
 
-[#_a228f4986414e36e2b8875544a6b28222]
+[#_ConceptMapIterable_TypeDBQueryManagerupdate___const_stdstring__query__const_Options___Options_____const]
 ==== update
 
 [source,cpp]

@@ -8,7 +8,7 @@
 Contains an explainable object.
 
 // tag::methods[]
-[#_a86f7c6fe92a1588906a2a2f733b866b8]
+[#_stdstring_TypeDBExplainableconjunction___]
 ==== conjunction
 
 [source,cpp]
@@ -25,7 +25,7 @@ Retrieves the subquery of the original query that is actually being explained.
 .Returns
 `std::string`
 
-[#_aa4d5064c9dab625b0ddaf656180cd502]
+[#_int64_t_TypeDBExplainableexplainableId___]
 ==== explainableId
 
 [source,cpp]

@@ -8,7 +8,7 @@
 Provides access to all user management methods.
 
 // tag::methods[]
-[#_aae3c54d8958508a127a49666bb38df93]
+[#_UserIterable_TypeDBUserManagerall_____const]
 ==== all
 
 [source,cpp]
@@ -25,7 +25,7 @@ Retrieves all users which exist on the TypeDB server.
 .Returns
 `UserIterable`
 
-[#_a52e0a8dcbd3590c87c66568621735a2e]
+[#_bool_TypeDBUserManagercontains___const_stdstring__username___const]
 ==== contains
 
 [source,cpp]
@@ -51,7 +51,7 @@ a| `username` a| The user name to be checked a|
 .Returns
 `bool`
 
-[#_a6424b6d4a367716643e3d3e8ce490eda]
+[#_void_TypeDBUserManagercreate___const_stdstring__username__const_stdstring__password___const]
 ==== create
 
 [source,cpp]
@@ -78,7 +78,7 @@ a| `password` a| The password of the user to be created a|
 .Returns
 `void`
 
-[#_a3d4c0e9b08ad6d7a3feda5ff19f4b053]
+[#_void_TypeDBUserManagerdeleteUser___const_stdstring__username___const]
 ==== deleteUser
 
 [source,cpp]
@@ -104,12 +104,12 @@ a| `username` a| The name of the user to be deleted a|
 .Returns
 `void`
 
-[#_ae0cb3c6e34b1aef6fd912cf5b39d0128]
+[#_stdunique_ptr__User___TypeDBUserManagerget___const_stdstring__username___const]
 ==== get
 
 [source,cpp]
 ----
-std::unique_ptr<User> TypeDB::UserManager::get(const std::string& username) const
+std::unique_ptr< User > TypeDB::UserManager::get(const std::string& username) const
 ----
 
 
@@ -130,7 +130,7 @@ a| `username` a| The name of the user to retrieve a|
 .Returns
 `std::unique_ptr< User >`
 
-[#_acea7c14d75167957d05a6dbdb7d713d6]
+[#_void_TypeDBUserManagerpasswordSet___const_stdstring__username__const_stdstring__password___const]
 ==== passwordSet
 
 [source,cpp]
