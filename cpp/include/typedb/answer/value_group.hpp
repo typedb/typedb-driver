@@ -71,7 +71,7 @@ private:
     friend class IteratorHelper<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>;
 };
 
-// For ValueGroup
+// For ValueGroupIterator
 using ValueGroupIterable = Iterable<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>;
 using ValueGroupIterator = Iterator<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>;
 

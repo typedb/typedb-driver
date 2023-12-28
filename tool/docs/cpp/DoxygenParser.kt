@@ -154,7 +154,6 @@ class DoxygenParser : Callable<Unit> {
     }
 
     private fun parseTypeDef(element: Element): Class {
-        val anchor = element.className().substringAfter(":")
         val memItemLeft = element.selectFirst("td.memItemLeft")
         if (memItemLeft != null) {
             if (memItemLeft.text().startsWith("typedef")) {
@@ -162,7 +161,7 @@ class DoxygenParser : Callable<Unit> {
                 val alias = element.selectFirst("td.memItemRight")!!.text()
                 return Class(
                     name = alias,
-                    anchor = anchor,
+                    anchor = replaceSymbolsForAnchor(alias),
                     description = listOf("Alias for ${replaceLocalLinks(HashMap(), actual)}"),
                 )
             } else if (memItemLeft!!.text().startsWith("using")) {
@@ -171,7 +170,7 @@ class DoxygenParser : Callable<Unit> {
                 val alias = usingEquality.text().substringBefore("=").trim()
                 return Class(
                     name = alias,
-                    anchor = anchor,
+                    anchor = replaceSymbolsForAnchor(alias),
                     description = listOf("Alias for ${actual}")
                 )
             }
