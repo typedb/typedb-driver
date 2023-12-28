@@ -20,12 +20,12 @@ Other types can own an attribute type. That means that instances of these other 
 Multiple types can own the same attribute type, and different instances of the same type or different types can share ownership of the same attribute instance.
 
 // tag::methods[]
-[#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeget___Transaction__transaction__Value__ptr__value_]
+[#_ConceptPtrFuture_Attribute__TypeDBAttributeTypeget___Transaction__transaction__Value__ptr__value_]
 ==== get
 
 [source,cpp]
 ----
-ConceptPtrFuture< Attribute > TypeDB::AttributeType::get(Transaction& transaction, Value* value)
+ConceptPtrFuture<Attribute> TypeDB::AttributeType::get(Transaction& transaction, Value* value)
 ----
 
 
@@ -47,12 +47,12 @@ a| `value` a| ``Attribute``’s value a|
 .Returns
 `ConceptPtrFuture< Attribute >`
 
-[#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeget___Transaction__transaction__const_stdstring__value_]
+[#_ConceptPtrFuture_Attribute__TypeDBAttributeTypeget___Transaction__transaction__const_stdstring__value_]
 ==== get
 
 [source,cpp]
 ----
-ConceptPtrFuture< Attribute > TypeDB::AttributeType::get(Transaction& transaction, const std::string& value)
+ConceptPtrFuture<Attribute> TypeDB::AttributeType::get(Transaction& transaction, const std::string& value)
 ----
 
 
@@ -74,12 +74,12 @@ a| `value` a| ``Attribute``’s value a|
 .Returns
 `ConceptPtrFuture< Attribute >`
 
-[#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeget___Transaction__transaction__int64_t_value_]
+[#_ConceptPtrFuture_Attribute__TypeDBAttributeTypeget___Transaction__transaction__int64_t_value_]
 ==== get
 
 [source,cpp]
 ----
-ConceptPtrFuture< Attribute > TypeDB::AttributeType::get(Transaction& transaction, int64_t value)
+ConceptPtrFuture<Attribute> TypeDB::AttributeType::get(Transaction& transaction, int64_t value)
 ----
 
 
@@ -101,12 +101,12 @@ a| `value` a| ``Attribute``’s value a|
 .Returns
 `ConceptPtrFuture< Attribute >`
 
-[#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeget___Transaction__transaction__double_value_]
+[#_ConceptPtrFuture_Attribute__TypeDBAttributeTypeget___Transaction__transaction__double_value_]
 ==== get
 
 [source,cpp]
 ----
-ConceptPtrFuture< Attribute > TypeDB::AttributeType::get(Transaction& transaction, double value)
+ConceptPtrFuture<Attribute> TypeDB::AttributeType::get(Transaction& transaction, double value)
 ----
 
 
@@ -128,12 +128,12 @@ a| `value` a| ``Attribute``’s value a|
 .Returns
 `ConceptPtrFuture< Attribute >`
 
-[#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeget___Transaction__transaction__bool_value_]
+[#_ConceptPtrFuture_Attribute__TypeDBAttributeTypeget___Transaction__transaction__bool_value_]
 ==== get
 
 [source,cpp]
 ----
-ConceptPtrFuture< Attribute > TypeDB::AttributeType::get(Transaction& transaction, bool value)
+ConceptPtrFuture<Attribute> TypeDB::AttributeType::get(Transaction& transaction, bool value)
 ----
 
 
@@ -155,12 +155,12 @@ a| `value` a| ``Attribute``’s value a|
 .Returns
 `ConceptPtrFuture< Attribute >`
 
-[#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeget___Transaction__transaction__DateTime_value_]
+[#_ConceptPtrFuture_Attribute__TypeDBAttributeTypeget___Transaction__transaction__DateTime_value_]
 ==== get
 
 [source,cpp]
 ----
-ConceptPtrFuture< Attribute > TypeDB::AttributeType::get(Transaction& transaction, DateTime value)
+ConceptPtrFuture<Attribute> TypeDB::AttributeType::get(Transaction& transaction, DateTime value)
 ----
 
 
@@ -182,12 +182,12 @@ a| `value` a| ``Attribute``’s value a|
 .Returns
 `ConceptPtrFuture< Attribute >`
 
-[#_ConceptIterable__Attribute___TypeDBAttributeTypegetInstances___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable_Attribute__TypeDBAttributeTypegetInstances___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getInstances
 
 [source,cpp]
 ----
-ConceptIterable< Attribute > TypeDB::AttributeType::getInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable<Attribute> TypeDB::AttributeType::getInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
@@ -209,12 +209,12 @@ a| `transaction` a| The current transaction a|
 .Returns
 `ConceptIterable< Attribute >`
 
-[#_ConceptIterable__ThingType___TypeDBAttributeTypegetOwners___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable_ThingType__TypeDBAttributeTypegetOwners___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getOwners
 
 [source,cpp]
 ----
-ConceptIterable< ThingType > TypeDB::AttributeType::getOwners(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable<ThingType> TypeDB::AttributeType::getOwners(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
@@ -236,17 +236,17 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtyp
 .Returns
 `ConceptIterable< ThingType >`
 
-[#_ConceptIterable__ThingType___TypeDBAttributeTypegetOwners___Transaction__transaction__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable_ThingType__TypeDBAttributeTypegetOwners___Transaction__transaction__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getOwners
 
 [source,cpp]
 ----
-ConceptIterable< ThingType > TypeDB::AttributeType::getOwners(Transaction& transaction, const std::vector< Annotation >& annotations, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable<ThingType> TypeDB::AttributeType::getOwners(Transaction& transaction, const std::vector< Annotation >& annotations, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
 
-Variant of <<#_ConceptIterable__ThingType___TypeDBAttributeTypegetOwners___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwners>>(Transaction&amp; transaction, const std::vector&lt;Annotation&gt;&amp; annotations, Transitivity transitivity = Transitivity::TRANSITIVE) for convenience
+Variant of <<#_ConceptIterable_ThingType__TypeDBAttributeTypegetOwners___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwners>>(Transaction&amp; transaction, const std::vector&lt;Annotation&gt;&amp; annotations, Transitivity transitivity = Transitivity::TRANSITIVE) for convenience
 
 
 [caption=""]
@@ -290,12 +290,12 @@ a| `transaction` a| The current transaction a|
 .Returns
 `OptionalStringFuture`
 
-[#_ConceptIterable__AttributeType___TypeDBAttributeTypegetSubtypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable_AttributeType__TypeDBAttributeTypegetSubtypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getSubtypes
 
 [source,cpp]
 ----
-ConceptIterable< AttributeType > TypeDB::AttributeType::getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable<AttributeType> TypeDB::AttributeType::getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
@@ -317,12 +317,12 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtyp
 .Returns
 `ConceptIterable< AttributeType >`
 
-[#_ConceptIterable__AttributeType___TypeDBAttributeTypegetSubtypes___Transaction__transaction__ValueType_valueType__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable_AttributeType__TypeDBAttributeTypegetSubtypes___Transaction__transaction__ValueType_valueType__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getSubtypes
 
 [source,cpp]
 ----
-ConceptIterable< AttributeType > TypeDB::AttributeType::getSubtypes(Transaction& transaction, ValueType valueType, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable<AttributeType> TypeDB::AttributeType::getSubtypes(Transaction& transaction, ValueType valueType, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
@@ -362,12 +362,12 @@ Retrieves the ``Value.Type`` of this ``AttributeType``.
 .Returns
 `ValueType`
 
-[#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeput___Transaction__transaction__Value__ptr__value_]
+[#_ConceptPtrFuture_Attribute__TypeDBAttributeTypeput___Transaction__transaction__Value__ptr__value_]
 ==== put
 
 [source,cpp]
 ----
-ConceptPtrFuture< Attribute > TypeDB::AttributeType::put(Transaction& transaction, Value* value)
+ConceptPtrFuture<Attribute> TypeDB::AttributeType::put(Transaction& transaction, Value* value)
 ----
 
 
@@ -389,12 +389,12 @@ a| `value` a| New ``Attribute``’s value a|
 .Returns
 `ConceptPtrFuture< Attribute >`
 
-[#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeput___Transaction__transaction__const_stdstring__value_]
+[#_ConceptPtrFuture_Attribute__TypeDBAttributeTypeput___Transaction__transaction__const_stdstring__value_]
 ==== put
 
 [source,cpp]
 ----
-ConceptPtrFuture< Attribute > TypeDB::AttributeType::put(Transaction& transaction, const std::string& value)
+ConceptPtrFuture<Attribute> TypeDB::AttributeType::put(Transaction& transaction, const std::string& value)
 ----
 
 
@@ -416,12 +416,12 @@ a| `value` a| New ``Attribute``’s value a|
 .Returns
 `ConceptPtrFuture< Attribute >`
 
-[#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeput___Transaction__transaction__int64_t_value_]
+[#_ConceptPtrFuture_Attribute__TypeDBAttributeTypeput___Transaction__transaction__int64_t_value_]
 ==== put
 
 [source,cpp]
 ----
-ConceptPtrFuture< Attribute > TypeDB::AttributeType::put(Transaction& transaction, int64_t value)
+ConceptPtrFuture<Attribute> TypeDB::AttributeType::put(Transaction& transaction, int64_t value)
 ----
 
 
@@ -443,12 +443,12 @@ a| `value` a| New ``Attribute``’s value a|
 .Returns
 `ConceptPtrFuture< Attribute >`
 
-[#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeput___Transaction__transaction__double_value_]
+[#_ConceptPtrFuture_Attribute__TypeDBAttributeTypeput___Transaction__transaction__double_value_]
 ==== put
 
 [source,cpp]
 ----
-ConceptPtrFuture< Attribute > TypeDB::AttributeType::put(Transaction& transaction, double value)
+ConceptPtrFuture<Attribute> TypeDB::AttributeType::put(Transaction& transaction, double value)
 ----
 
 
@@ -470,12 +470,12 @@ a| `value` a| New ``Attribute``’s value a|
 .Returns
 `ConceptPtrFuture< Attribute >`
 
-[#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeput___Transaction__transaction__bool_value_]
+[#_ConceptPtrFuture_Attribute__TypeDBAttributeTypeput___Transaction__transaction__bool_value_]
 ==== put
 
 [source,cpp]
 ----
-ConceptPtrFuture< Attribute > TypeDB::AttributeType::put(Transaction& transaction, bool value)
+ConceptPtrFuture<Attribute> TypeDB::AttributeType::put(Transaction& transaction, bool value)
 ----
 
 
@@ -497,12 +497,12 @@ a| `value` a| New ``Attribute``’s value a|
 .Returns
 `ConceptPtrFuture< Attribute >`
 
-[#_ConceptPtrFuture__Attribute___TypeDBAttributeTypeput___Transaction__transaction__DateTime_value_]
+[#_ConceptPtrFuture_Attribute__TypeDBAttributeTypeput___Transaction__transaction__DateTime_value_]
 ==== put
 
 [source,cpp]
 ----
-ConceptPtrFuture< Attribute > TypeDB::AttributeType::put(Transaction& transaction, DateTime value)
+ConceptPtrFuture<Attribute> TypeDB::AttributeType::put(Transaction& transaction, DateTime value)
 ----
 
 

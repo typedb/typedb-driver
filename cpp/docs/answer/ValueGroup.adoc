@@ -8,12 +8,12 @@
 Contains an element of the group aggregate query result.
 
 // tag::methods[]
-[#_stdunique_ptr__Concept___TypeDBValueGroupowner___]
+[#_stdunique_ptr_Concept__TypeDBValueGroupowner___]
 ==== owner
 
 [source,cpp]
 ----
-std::unique_ptr< Concept > TypeDB::ValueGroup::owner()
+std::unique_ptr<Concept> TypeDB::ValueGroup::owner()
 ----
 
 

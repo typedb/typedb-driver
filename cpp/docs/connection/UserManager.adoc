@@ -104,12 +104,12 @@ a| `username` a| The name of the user to be deleted a|
 .Returns
 `void`
 
-[#_stdunique_ptr__User___TypeDBUserManagerget___const_stdstring__username___const]
+[#_stdunique_ptr_User__TypeDBUserManagerget___const_stdstring__username___const]
 ==== get
 
 [source,cpp]
 ----
-std::unique_ptr< User > TypeDB::UserManager::get(const std::string& username) const
+std::unique_ptr<User> TypeDB::UserManager::get(const std::string& username) const
 ----
 
 

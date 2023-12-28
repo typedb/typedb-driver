@@ -14,12 +14,12 @@
 Entity types represent the classification of independent objects in the data model of the business domain.
 
 // tag::methods[]
-[#_ConceptPtrFuture__Entity___TypeDBEntityTypecreate___Transaction__transaction_]
+[#_ConceptPtrFuture_Entity__TypeDBEntityTypecreate___Transaction__transaction_]
 ==== create
 
 [source,cpp]
 ----
-ConceptPtrFuture< Entity > TypeDB::EntityType::create(Transaction& transaction)
+ConceptPtrFuture<Entity> TypeDB::EntityType::create(Transaction& transaction)
 ----
 
 
@@ -40,12 +40,12 @@ a| `transaction` a| The current transaction a|
 .Returns
 `ConceptPtrFuture< Entity >`
 
-[#_ConceptIterable__Entity___TypeDBEntityTypegetInstances___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable_Entity__TypeDBEntityTypegetInstances___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getInstances
 
 [source,cpp]
 ----
-ConceptIterable< Entity > TypeDB::EntityType::getInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable<Entity> TypeDB::EntityType::getInstances(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
@@ -67,12 +67,12 @@ a| `transitivity` a| ``Transitivity::EXPLICIT`` for direct instances only, ``Tra
 .Returns
 `ConceptIterable< Entity >`
 
-[#_ConceptIterable__EntityType___TypeDBEntityTypegetSubtypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable_EntityType__TypeDBEntityTypegetSubtypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getSubtypes
 
 [source,cpp]
 ----
-ConceptIterable< EntityType > TypeDB::EntityType::getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable<EntityType> TypeDB::EntityType::getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 

@@ -25,12 +25,12 @@ Retrieves the ``ConceptMap``s of the group.
 .Returns
 `ConceptMapIterable`
 
-[#_stdunique_ptr__Concept___TypeDBConceptMapGroupowner___]
+[#_stdunique_ptr_Concept__TypeDBConceptMapGroupowner___]
 ==== owner
 
 [source,cpp]
 ----
-std::unique_ptr< Concept > TypeDB::ConceptMapGroup::owner()
+std::unique_ptr<Concept> TypeDB::ConceptMapGroup::owner()
 ----
 
 

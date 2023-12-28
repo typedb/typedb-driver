@@ -8,7 +8,7 @@
 Simple JSON structure for results of fetch queries.
 
 // tag::methods[]
-[#_const_JSONArray__TypeDBJSONasArray_____const]
+[#_const_JSONArray_TypeDBJSONasArray_____const]
 ==== asArray
 
 [source,cpp]
@@ -24,7 +24,7 @@ if this JSON object holds an array, returns the underlying array. Else throws an
 .Returns
 `const JSONArray&`
 
-[#_const_JSONBoolean__TypeDBJSONasBoolean_____const]
+[#_const_JSONBoolean_TypeDBJSONasBoolean_____const]
 ==== asBoolean
 
 [source,cpp]
@@ -40,7 +40,7 @@ if this JSON object holds a boolean value, returns the value. Else throws an exc
 .Returns
 `const JSONBoolean&`
 
-[#_const_JSONDouble__TypeDBJSONasDouble_____const]
+[#_const_JSONDouble_TypeDBJSONasDouble_____const]
 ==== asDouble
 
 [source,cpp]
@@ -56,7 +56,7 @@ if this JSON object holds a double value, returns the value. Else throws an exce
 .Returns
 `const JSONDouble&`
 
-[#_const_JSONLong__TypeDBJSONasLong_____const]
+[#_const_JSONLong_TypeDBJSONasLong_____const]
 ==== asLong
 
 [source,cpp]
@@ -72,7 +72,7 @@ if this JSON object holds a long value, returns the value. Else throws an except
 .Returns
 `const JSONLong&`
 
-[#_const_JSONMap__TypeDBJSONasMap_____const]
+[#_const_JSONMap_TypeDBJSONasMap_____const]
 ==== asMap
 
 [source,cpp]
@@ -88,7 +88,7 @@ if this JSON object holds a map, returns the underlying map. Else throws an exce
 .Returns
 `const JSONMap&`
 
-[#_const_JSONString__TypeDBJSONasString_____const]
+[#_const_JSONString_TypeDBJSONasString_____const]
 ==== asString
 
 [source,cpp]

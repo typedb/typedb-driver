@@ -43,12 +43,12 @@ a| `player` a| The thing to play the role a|
 .Returns
 `VoidFuture`
 
-[#_stdmap__stdunique_ptr__RoleType____stdunique_ptr__Thing_____TypeDBRelationgetPlayers___Transaction__transaction_]
+[#_stdmap_stdunique_ptr_RoleType___stdunique_ptr_Thing____TypeDBRelationgetPlayers___Transaction__transaction_]
 ==== getPlayers
 
 [source,cpp]
 ----
-std::map< std::unique_ptr< RoleType >, std::unique_ptr< Thing > > TypeDB::Relation::getPlayers(Transaction& transaction)
+std::map<std::unique_ptr<RoleType>, std::unique_ptr<Thing> > TypeDB::Relation::getPlayers(Transaction& transaction)
 ----
 
 
@@ -69,12 +69,12 @@ a| `transaction` a| The current transaction a|
 .Returns
 `std::map< std::unique_ptr< RoleType >, std::unique_ptr< Thing > >`
 
-[#_ConceptIterable__Thing___TypeDBRelationgetPlayersByRoleType___Transaction__transaction__const_stdvector__stdunique_ptr__RoleType______roleTypes_]
+[#_ConceptIterable_Thing__TypeDBRelationgetPlayersByRoleType___Transaction__transaction__const_stdvector__stdunique_ptr__RoleType_____roleTypes_]
 ==== getPlayersByRoleType
 
 [source,cpp]
 ----
-ConceptIterable< Thing > TypeDB::Relation::getPlayersByRoleType(Transaction& transaction, const std::vector< std::unique_ptr< RoleType > >& roleTypes)
+ConceptIterable<Thing> TypeDB::Relation::getPlayersByRoleType(Transaction& transaction, const std::vector< std::unique_ptr< RoleType >>& roleTypes)
 ----
 
 
@@ -96,28 +96,28 @@ a| `roleTypes` a| 0 or more role types a|
 .Returns
 `ConceptIterable< Thing >`
 
-[#_ConceptIterable__Thing___TypeDBRelationgetPlayersByRoleType___Transaction__transaction__const_stdvector__RoleType__ptr_____roleTypes_]
+[#_ConceptIterable_Thing__TypeDBRelationgetPlayersByRoleType___Transaction__transaction__const_stdvector__RoleType__ptr_____roleTypes_]
 ==== getPlayersByRoleType
 
 [source,cpp]
 ----
-ConceptIterable< Thing > TypeDB::Relation::getPlayersByRoleType(Transaction& transaction, const std::vector< RoleType* >& roleTypes)
+ConceptIterable<Thing> TypeDB::Relation::getPlayersByRoleType(Transaction& transaction, const std::vector< RoleType* >& roleTypes)
 ----
 
 
 
-See <<#_ConceptIterable__Thing___TypeDBRelationgetPlayersByRoleType___Transaction__transaction__const_stdvector__stdunique_ptr__RoleType______roleTypes_,getPlayersByRoleType>>
+See <<#_ConceptIterable_Thing__TypeDBRelationgetPlayersByRoleType___Transaction__transaction__const_stdvector__stdunique_ptr__RoleType_____roleTypes_,getPlayersByRoleType>>
 
 [caption=""]
 .Returns
 `ConceptIterable< Thing >`
 
-[#_ConceptIterable__RoleType___TypeDBRelationgetRelating___Transaction__transaction_]
+[#_ConceptIterable_RoleType__TypeDBRelationgetRelating___Transaction__transaction_]
 ==== getRelating
 
 [source,cpp]
 ----
-ConceptIterable< RoleType > TypeDB::Relation::getRelating(Transaction& transaction)
+ConceptIterable<RoleType> TypeDB::Relation::getRelating(Transaction& transaction)
 ----
 
 
@@ -138,12 +138,12 @@ a| `transaction` a| The current transaction a|
 .Returns
 `ConceptIterable< RoleType >`
 
-[#_stdunique_ptr__RelationType___TypeDBRelationgetType___]
+[#_stdunique_ptr_RelationType__TypeDBRelationgetType___]
 ==== getType
 
 [source,cpp]
 ----
-std::unique_ptr< RelationType > TypeDB::Relation::getType()
+std::unique_ptr<RelationType> TypeDB::Relation::getType()
 ----
 
 
