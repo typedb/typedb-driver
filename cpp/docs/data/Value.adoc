@@ -199,12 +199,12 @@ Returns ``true`` if the value which this value concept holds is of type ``string
 .Returns
 `bool`
 
-[#_static_stdunique_ptr_Value__TypeDBValueof___bool_value_]
+[#_static_stdunique_ptr__Value___TypeDBValueof___bool_value_]
 ==== of
 
 [source,cpp]
 ----
-static std::unique_ptr<Value> TypeDB::Value::of(bool value)
+static std::unique_ptr< Value > TypeDB::Value::of(bool value)
 ----
 
 
@@ -216,12 +216,12 @@ Creates a new Value object of the specified boolean value.
 .Returns
 `static std::unique_ptr< Value >`
 
-[#_static_stdunique_ptr_Value__TypeDBValueof___int64_t_value_]
+[#_static_stdunique_ptr__Value___TypeDBValueof___int64_t_value_]
 ==== of
 
 [source,cpp]
 ----
-static std::unique_ptr<Value> TypeDB::Value::of(int64_t value)
+static std::unique_ptr< Value > TypeDB::Value::of(int64_t value)
 ----
 
 
@@ -233,12 +233,12 @@ Creates a new Value object of the specified long value.
 .Returns
 `static std::unique_ptr< Value >`
 
-[#_static_stdunique_ptr_Value__TypeDBValueof___double_value_]
+[#_static_stdunique_ptr__Value___TypeDBValueof___double_value_]
 ==== of
 
 [source,cpp]
 ----
-static std::unique_ptr<Value> TypeDB::Value::of(double value)
+static std::unique_ptr< Value > TypeDB::Value::of(double value)
 ----
 
 
@@ -250,12 +250,12 @@ Creates a new Value object of the specified double value.
 .Returns
 `static std::unique_ptr< Value >`
 
-[#_static_stdunique_ptr_Value__TypeDBValueof___const_stdstring__value_]
+[#_static_stdunique_ptr__Value___TypeDBValueof___const_stdstring__value_]
 ==== of
 
 [source,cpp]
 ----
-static std::unique_ptr<Value> TypeDB::Value::of(const std::string& value)
+static std::unique_ptr< Value > TypeDB::Value::of(const std::string& value)
 ----
 
 
@@ -267,12 +267,12 @@ Creates a new Value object of the specified string value.
 .Returns
 `static std::unique_ptr< Value >`
 
-[#_static_stdunique_ptr_Value__TypeDBValueof___DateTime_value_]
+[#_static_stdunique_ptr__Value___TypeDBValueof___DateTime_value_]
 ==== of
 
 [source,cpp]
 ----
-static std::unique_ptr<Value> TypeDB::Value::of(DateTime value)
+static std::unique_ptr< Value > TypeDB::Value::of(DateTime value)
 ----
 
 

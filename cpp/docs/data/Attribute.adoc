@@ -15,12 +15,12 @@ Attribute is an instance of the attribute type and has a value.
 This value is fixed and unique for every given instance of the attribute type. Attributes can be uniquely addressed by their type and value.
 
 // tag::methods[]
-[#_ConceptIterable_Thing__TypeDBAttributegetOwners___Transaction__transaction_]
+[#_ConceptIterable__Thing___TypeDBAttributegetOwners___Transaction__transaction_]
 ==== getOwners
 
 [source,cpp]
 ----
-ConceptIterable<Thing> TypeDB::Attribute::getOwners(Transaction& transaction)
+ConceptIterable< Thing > TypeDB::Attribute::getOwners(Transaction& transaction)
 ----
 
 
@@ -41,12 +41,12 @@ a| `transaction` a| The current transaction a|
 .Returns
 `ConceptIterable< Thing >`
 
-[#_ConceptIterable_Thing__TypeDBAttributegetOwners___Transaction__transaction__const_ThingType__ptr__ownerType_]
+[#_ConceptIterable__Thing___TypeDBAttributegetOwners___Transaction__transaction__const_ThingType__ptr__ownerType_]
 ==== getOwners
 
 [source,cpp]
 ----
-ConceptIterable<Thing> TypeDB::Attribute::getOwners(Transaction& transaction, const ThingType* ownerType)
+ConceptIterable< Thing > TypeDB::Attribute::getOwners(Transaction& transaction, const ThingType* ownerType)
 ----
 
 
@@ -68,12 +68,12 @@ a| `ownerType` a| Filter results for only owners of the given type a|
 .Returns
 `ConceptIterable< Thing >`
 
-[#_stdunique_ptr_AttributeType__TypeDBAttributegetType___]
+[#_stdunique_ptr__AttributeType___TypeDBAttributegetType___]
 ==== getType
 
 [source,cpp]
 ----
-std::unique_ptr<AttributeType> TypeDB::Attribute::getType()
+std::unique_ptr< AttributeType > TypeDB::Attribute::getType()
 ----
 
 
@@ -85,12 +85,12 @@ Retrieves the type which this ``Attribute`` belongs to.
 .Returns
 `std::unique_ptr< AttributeType >`
 
-[#_stdunique_ptr_Value__TypeDBAttributegetValue___]
+[#_stdunique_ptr__Value___TypeDBAttributegetValue___]
 ==== getValue
 
 [source,cpp]
 ----
-std::unique_ptr<Value> TypeDB::Attribute::getValue()
+std::unique_ptr< Value > TypeDB::Attribute::getValue()
 ----
 
 

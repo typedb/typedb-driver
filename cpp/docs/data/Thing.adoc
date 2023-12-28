@@ -38,12 +38,12 @@ a| `transaction` a| The current transaction a|
 .Returns
 `VoidFuture`
 
-[#_ConceptIterable_Attribute__TypeDBThinggetHas___Transaction__transaction__const_stdinitializer_list__Annotation____annotations___]
+[#_ConceptIterable__Attribute___TypeDBThinggetHas___Transaction__transaction__const_stdinitializer_list__Annotation____annotations___]
 ==== getHas
 
 [source,cpp]
 ----
-ConceptIterable<Attribute> TypeDB::Thing::getHas(Transaction& transaction, const std::initializer_list< Annotation >& annotations = {})
+ConceptIterable< Attribute > TypeDB::Thing::getHas(Transaction& transaction, const std::initializer_list< Annotation >& annotations = {})
 ----
 
 
@@ -65,28 +65,28 @@ a| `annotations` a| Only retrieve attributes with all given ``Annotation``s a|
 .Returns
 `ConceptIterable< Attribute >`
 
-[#_ConceptIterable_Attribute__TypeDBThinggetHas___Transaction__transaction__const_AttributeType__ptr__attribute_]
+[#_ConceptIterable__Attribute___TypeDBThinggetHas___Transaction__transaction__const_AttributeType__ptr__attribute_]
 ==== getHas
 
 [source,cpp]
 ----
-ConceptIterable<Attribute> TypeDB::Thing::getHas(Transaction& transaction, const AttributeType* attribute)
+ConceptIterable< Attribute > TypeDB::Thing::getHas(Transaction& transaction, const AttributeType* attribute)
 ----
 
 
 
-See <<#_ConceptIterable_Attribute__TypeDBThinggetHas___Transaction__transaction__const_stdvector__stdunique_ptr__AttributeType_____attributeTypes_,getHas(Transaction&amp;, const std::vector&lt;std::unique_ptr&lt;AttributeType&gt;&gt;&amp;)>>
+See <<#_ConceptIterable__Attribute___TypeDBThinggetHas___Transaction__transaction__const_stdvector__stdunique_ptr__AttributeType______attributeTypes_,getHas(Transaction&amp;, const std::vector&lt;std::unique_ptr&lt;AttributeType&gt;&gt;&amp;)>>
 
 [caption=""]
 .Returns
 `ConceptIterable< Attribute >`
 
-[#_ConceptIterable_Attribute__TypeDBThinggetHas___Transaction__transaction__const_stdvector__stdunique_ptr__AttributeType_____attributeTypes_]
+[#_ConceptIterable__Attribute___TypeDBThinggetHas___Transaction__transaction__const_stdvector__stdunique_ptr__AttributeType______attributeTypes_]
 ==== getHas
 
 [source,cpp]
 ----
-ConceptIterable<Attribute> TypeDB::Thing::getHas(Transaction& transaction, const std::vector< std::unique_ptr< AttributeType >>& attributeTypes)
+ConceptIterable< Attribute > TypeDB::Thing::getHas(Transaction& transaction, const std::vector< std::unique_ptr< AttributeType > >& attributeTypes)
 ----
 
 
@@ -108,33 +108,33 @@ a| `attributeTypes` a| The ``AttributeType``s to filter the attributes by a|
 .Returns
 `ConceptIterable< Attribute >`
 
-[#_ConceptIterable_Attribute__TypeDBThinggetHas___Transaction__transaction__const_stdvector__const_AttributeType__ptr_____attributeTypes_]
+[#_ConceptIterable__Attribute___TypeDBThinggetHas___Transaction__transaction__const_stdvector__const_AttributeType__ptr_____attributeTypes_]
 ==== getHas
 
 [source,cpp]
 ----
-ConceptIterable<Attribute> TypeDB::Thing::getHas(Transaction& transaction, const std::vector< const AttributeType* >& attributeTypes)
+ConceptIterable< Attribute > TypeDB::Thing::getHas(Transaction& transaction, const std::vector< const AttributeType* >& attributeTypes)
 ----
 
 
 
-See <<#_ConceptIterable_Attribute__TypeDBThinggetHas___Transaction__transaction__const_stdvector__stdunique_ptr__AttributeType_____attributeTypes_,getHas(Transaction&amp; transaction, const std::vector&lt;std::unique_ptr&lt;AttributeType&gt;&gt;&amp; attributeTypes)>>
+See <<#_ConceptIterable__Attribute___TypeDBThinggetHas___Transaction__transaction__const_stdvector__stdunique_ptr__AttributeType______attributeTypes_,getHas(Transaction&amp; transaction, const std::vector&lt;std::unique_ptr&lt;AttributeType&gt;&gt;&amp; attributeTypes)>>
 
 [caption=""]
 .Returns
 `ConceptIterable< Attribute >`
 
-[#_ConceptIterable_Attribute__TypeDBThinggetHas___Transaction__transaction__const_stdvector__Annotation____annotations_]
+[#_ConceptIterable__Attribute___TypeDBThinggetHas___Transaction__transaction__const_stdvector__Annotation____annotations_]
 ==== getHas
 
 [source,cpp]
 ----
-ConceptIterable<Attribute> TypeDB::Thing::getHas(Transaction& transaction, const std::vector< Annotation >& annotations)
+ConceptIterable< Attribute > TypeDB::Thing::getHas(Transaction& transaction, const std::vector< Annotation >& annotations)
 ----
 
 
 
-See <<#_ConceptIterable_Attribute__TypeDBThinggetHas___Transaction__transaction__const_stdinitializer_list__Annotation____annotations___,getHas(Transaction&amp;, const std::initializer_list&lt;Annotation&gt;&amp;)>>
+See <<#_ConceptIterable__Attribute___TypeDBThinggetHas___Transaction__transaction__const_stdinitializer_list__Annotation____annotations___,getHas(Transaction&amp;, const std::initializer_list&lt;Annotation&gt;&amp;)>>
 
 [caption=""]
 .Returns
@@ -157,12 +157,12 @@ Retrieves the unique id of the ``Thing``.
 .Returns
 `std::string`
 
-[#_ConceptIterable_RoleType__TypeDBThinggetPlaying___Transaction__transaction_]
+[#_ConceptIterable__RoleType___TypeDBThinggetPlaying___Transaction__transaction_]
 ==== getPlaying
 
 [source,cpp]
 ----
-ConceptIterable<RoleType> TypeDB::Thing::getPlaying(Transaction& transaction)
+ConceptIterable< RoleType > TypeDB::Thing::getPlaying(Transaction& transaction)
 ----
 
 
@@ -183,12 +183,12 @@ a| `transaction` a| The current transaction a|
 .Returns
 `ConceptIterable< RoleType >`
 
-[#_ConceptIterable_Relation__TypeDBThinggetRelations___Transaction__transaction__const_stdvector__stdunique_ptr__RoleType_____roleTypes___]
+[#_ConceptIterable__Relation___TypeDBThinggetRelations___Transaction__transaction__const_stdvector__stdunique_ptr__RoleType______roleTypes___]
 ==== getRelations
 
 [source,cpp]
 ----
-ConceptIterable<Relation> TypeDB::Thing::getRelations(Transaction& transaction, const std::vector< std::unique_ptr< RoleType >>& roleTypes = {})
+ConceptIterable< Relation > TypeDB::Thing::getRelations(Transaction& transaction, const std::vector< std::unique_ptr< RoleType > >& roleTypes = {})
 ----
 
 
@@ -210,28 +210,28 @@ a| `roleTypes` a| The array of roles to filter the relations by. a|
 .Returns
 `ConceptIterable< Relation >`
 
-[#_ConceptIterable_Relation__TypeDBThinggetRelations___Transaction__transaction__const_stdvector__RoleType__ptr_____roleTypes_]
+[#_ConceptIterable__Relation___TypeDBThinggetRelations___Transaction__transaction__const_stdvector__RoleType__ptr_____roleTypes_]
 ==== getRelations
 
 [source,cpp]
 ----
-ConceptIterable<Relation> TypeDB::Thing::getRelations(Transaction& transaction, const std::vector< RoleType* >& roleTypes)
+ConceptIterable< Relation > TypeDB::Thing::getRelations(Transaction& transaction, const std::vector< RoleType* >& roleTypes)
 ----
 
 
 
-See <<#_ConceptIterable_Relation__TypeDBThinggetRelations___Transaction__transaction__const_stdvector__stdunique_ptr__RoleType_____roleTypes___,getRelations(Transaction&amp; transaction, const std::vector&lt;std::unique_ptr&lt;RoleType&gt;&gt;&amp; roleTypes)>>
+See <<#_ConceptIterable__Relation___TypeDBThinggetRelations___Transaction__transaction__const_stdvector__stdunique_ptr__RoleType______roleTypes___,getRelations(Transaction&amp; transaction, const std::vector&lt;std::unique_ptr&lt;RoleType&gt;&gt;&amp; roleTypes)>>
 
 [caption=""]
 .Returns
 `ConceptIterable< Relation >`
 
-[#_stdunique_ptr_ThingType__TypeDBThinggetType___]
+[#_stdunique_ptr__ThingType___TypeDBThinggetType___]
 ==== getType
 
 [source,cpp]
 ----
-std::unique_ptr<ThingType> TypeDB::Thing::getType()
+std::unique_ptr< ThingType > TypeDB::Thing::getType()
 ----
 
 

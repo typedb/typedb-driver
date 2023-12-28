@@ -64,94 +64,94 @@ Implements TypeDB::Type.
 .Returns
 `virtual std::string`
 
-[#_ConceptIterable_AttributeType__TypeDBThingTypegetOwns___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getOwns
 
 [source,cpp]
 ----
-ConceptIterable<AttributeType> TypeDB::ThingType::getOwns(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable< AttributeType > TypeDB::ThingType::getOwns(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
 
-Variant of <<#_ConceptIterable_AttributeType__TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwns(Transaction&amp;, ValueType, const std::vector&lt;Annotation&gt;&amp;, Transitivity)>> without filtering on ``ValueType`` or ``Annotation``s
+Variant of <<#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwns(Transaction&amp;, ValueType, const std::vector&lt;Annotation&gt;&amp;, Transitivity)>> without filtering on ``ValueType`` or ``Annotation``s
 
 [caption=""]
 .Returns
 `ConceptIterable< AttributeType >`
 
-[#_ConceptIterable_AttributeType__TypeDBThingTypegetOwns___Transaction__transaction__const_stdinitializer_list__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__const_stdinitializer_list__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getOwns
 
 [source,cpp]
 ----
-ConceptIterable<AttributeType> TypeDB::ThingType::getOwns(Transaction& transaction, const std::initializer_list< Annotation >& annotations, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable< AttributeType > TypeDB::ThingType::getOwns(Transaction& transaction, const std::initializer_list< Annotation >& annotations, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
 
 
 
-Variant of <<#_ConceptIterable_AttributeType__TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwns(Transaction&amp;, ValueType, const std::vector&lt;Annotation&gt;&amp;, Transitivity)>> without filtering on ``ValueType``
+Variant of <<#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwns(Transaction&amp;, ValueType, const std::vector&lt;Annotation&gt;&amp;, Transitivity)>> without filtering on ``ValueType``
 
 [caption=""]
 .Returns
 `ConceptIterable< AttributeType >`
 
-[#_ConceptIterable_AttributeType__TypeDBThingTypegetOwns___Transaction__transaction__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getOwns
 
 [source,cpp]
 ----
-ConceptIterable<AttributeType> TypeDB::ThingType::getOwns(Transaction& transaction, const std::vector< Annotation >& annotations, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable< AttributeType > TypeDB::ThingType::getOwns(Transaction& transaction, const std::vector< Annotation >& annotations, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
 
-Variant of <<#_ConceptIterable_AttributeType__TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwns(Transaction&amp;, ValueType, const std::vector&lt;Annotation&gt;&amp;, Transitivity)>> without filtering on ``ValueType``
+Variant of <<#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwns(Transaction&amp;, ValueType, const std::vector&lt;Annotation&gt;&amp;, Transitivity)>> without filtering on ``ValueType``
 
 [caption=""]
 .Returns
 `ConceptIterable< AttributeType >`
 
-[#_ConceptIterable_AttributeType__TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getOwns
 
 [source,cpp]
 ----
-ConceptIterable<AttributeType> TypeDB::ThingType::getOwns(Transaction& transaction, ValueType valueType, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable< AttributeType > TypeDB::ThingType::getOwns(Transaction& transaction, ValueType valueType, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
 
-Variant of <<#_ConceptIterable_AttributeType__TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwns(Transaction&amp;, ValueType, const std::vector&lt;Annotation&gt;&amp;, Transitivity)>> without filtering on ``Annotation``s
+Variant of <<#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwns(Transaction&amp;, ValueType, const std::vector&lt;Annotation&gt;&amp;, Transitivity)>> without filtering on ``Annotation``s
 
 [caption=""]
 .Returns
 `ConceptIterable< AttributeType >`
 
-[#_ConceptIterable_AttributeType__TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdinitializer_list__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdinitializer_list__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getOwns
 
 [source,cpp]
 ----
-ConceptIterable<AttributeType> TypeDB::ThingType::getOwns(Transaction& transaction, ValueType valueType, const std::initializer_list< Annotation >& annotations, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable< AttributeType > TypeDB::ThingType::getOwns(Transaction& transaction, ValueType valueType, const std::initializer_list< Annotation >& annotations, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
 
-See <<#_ConceptIterable_AttributeType__TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwns(Transaction&amp;, ValueType, const std::vector&lt;Annotation&gt;&amp;, Transitivity)>>
+See <<#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_,getOwns(Transaction&amp;, ValueType, const std::vector&lt;Annotation&gt;&amp;, Transitivity)>>
 
 [caption=""]
 .Returns
 `ConceptIterable< AttributeType >`
 
-[#_ConceptIterable_AttributeType__TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable__AttributeType___TypeDBThingTypegetOwns___Transaction__transaction__ValueType_valueType__const_stdvector__Annotation____annotations__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getOwns
 
 [source,cpp]
 ----
-ConceptIterable<AttributeType> TypeDB::ThingType::getOwns(Transaction& transaction, ValueType valueType, const std::vector< Annotation >& annotations, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable< AttributeType > TypeDB::ThingType::getOwns(Transaction& transaction, ValueType valueType, const std::vector< Annotation >& annotations, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
@@ -175,12 +175,12 @@ a| `annotations` a| Only retrieve attribute types owned with annotations. a|
 .Returns
 `ConceptIterable< AttributeType >`
 
-[#_ConceptPtrFuture_AttributeType__TypeDBThingTypegetOwnsOverridden___Transaction__transaction__AttributeType__ptr__attributeType_]
+[#_ConceptPtrFuture__AttributeType___TypeDBThingTypegetOwnsOverridden___Transaction__transaction__AttributeType__ptr__attributeType_]
 ==== getOwnsOverridden
 
 [source,cpp]
 ----
-ConceptPtrFuture<AttributeType> TypeDB::ThingType::getOwnsOverridden(Transaction& transaction, AttributeType* attributeType)
+ConceptPtrFuture< AttributeType > TypeDB::ThingType::getOwnsOverridden(Transaction& transaction, AttributeType* attributeType)
 ----
 
 
@@ -202,12 +202,12 @@ a| `attributeType` a| The ``AttributeType`` that overrides requested ``Attribute
 .Returns
 `ConceptPtrFuture< AttributeType >`
 
-[#_ConceptIterable_RoleType__TypeDBThingTypegetPlays___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable__RoleType___TypeDBThingTypegetPlays___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getPlays
 
 [source,cpp]
 ----
-ConceptIterable<RoleType> TypeDB::ThingType::getPlays(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable< RoleType > TypeDB::ThingType::getPlays(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
@@ -229,12 +229,12 @@ a| `transitivity` a| transitivity: ``Transitivity::TRANSITIVE`` for direct and i
 .Returns
 `ConceptIterable< RoleType >`
 
-[#_ConceptPtrFuture_RoleType__TypeDBThingTypegetPlaysOverridden___Transaction__transaction__RoleType__ptr__roleType_]
+[#_ConceptPtrFuture__RoleType___TypeDBThingTypegetPlaysOverridden___Transaction__transaction__RoleType__ptr__roleType_]
 ==== getPlaysOverridden
 
 [source,cpp]
 ----
-ConceptPtrFuture<RoleType> TypeDB::ThingType::getPlaysOverridden(Transaction& transaction, RoleType* roleType)
+ConceptPtrFuture< RoleType > TypeDB::ThingType::getPlaysOverridden(Transaction& transaction, RoleType* roleType)
 ----
 
 
@@ -256,12 +256,12 @@ a| `roleType` a| The ``RoleType`` that overrides an inherited role a|
 .Returns
 `ConceptPtrFuture< RoleType >`
 
-[#_ConceptIterable_ThingType__TypeDBThingTypegetSubtypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
+[#_ConceptIterable__ThingType___TypeDBThingTypegetSubtypes___Transaction__transaction__Transitivity_transitivity__TransitivityTRANSITIVE_]
 ==== getSubtypes
 
 [source,cpp]
 ----
-ConceptIterable<ThingType> TypeDB::ThingType::getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
+ConceptIterable< ThingType > TypeDB::ThingType::getSubtypes(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE)
 ----
 
 
@@ -285,12 +285,12 @@ a| `transitivity` a| ``Transitivity::TRANSITIVE`` for direct and indirect subtyp
 .Returns
 `ConceptIterable< ThingType >`
 
-[#_ConceptPtrFuture_ThingType__TypeDBThingTypegetSupertype___Transaction__transaction_]
+[#_ConceptPtrFuture__ThingType___TypeDBThingTypegetSupertype___Transaction__transaction_]
 ==== getSupertype
 
 [source,cpp]
 ----
-ConceptPtrFuture<ThingType> TypeDB::ThingType::getSupertype(Transaction& transaction)
+ConceptPtrFuture< ThingType > TypeDB::ThingType::getSupertype(Transaction& transaction)
 ----
 
 
@@ -313,12 +313,12 @@ a| `transaction` a| The current transaction a|
 .Returns
 `ConceptPtrFuture< ThingType >`
 
-[#_ConceptIterable_ThingType__TypeDBThingTypegetSupertypes___Transaction__transaction_]
+[#_ConceptIterable__ThingType___TypeDBThingTypegetSupertypes___Transaction__transaction_]
 ==== getSupertypes
 
 [source,cpp]
 ----
-ConceptIterable<ThingType> TypeDB::ThingType::getSupertypes(Transaction& transaction)
+ConceptIterable< ThingType > TypeDB::ThingType::getSupertypes(Transaction& transaction)
 ----
 
 

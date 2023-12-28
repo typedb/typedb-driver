@@ -8,7 +8,7 @@
 The fundamental TypeQL object. A Concept is either a Type, Thing, or Value.
 
 // tag::methods[]
-[#_Attribute_ptr__TypeDBConceptasAttribute___]
+[#_Attribute__ptr__TypeDBConceptasAttribute___]
 ==== asAttribute
 
 [source,cpp]
@@ -25,7 +25,7 @@ Casts the concept to ``Attribute``.
 .Returns
 `Attribute*`
 
-[#_AttributeType_ptr__TypeDBConceptasAttributeType___]
+[#_AttributeType__ptr__TypeDBConceptasAttributeType___]
 ==== asAttributeType
 
 [source,cpp]
@@ -42,7 +42,7 @@ Casts the concept to ``EntityType``.
 .Returns
 `AttributeType*`
 
-[#_Entity_ptr__TypeDBConceptasEntity___]
+[#_Entity__ptr__TypeDBConceptasEntity___]
 ==== asEntity
 
 [source,cpp]
@@ -59,7 +59,7 @@ Casts the concept to ``Entity``.
 .Returns
 `Entity*`
 
-[#_EntityType_ptr__TypeDBConceptasEntityType___]
+[#_EntityType__ptr__TypeDBConceptasEntityType___]
 ==== asEntityType
 
 [source,cpp]
@@ -76,7 +76,7 @@ Casts the concept to ``EntityType``.
 .Returns
 `EntityType*`
 
-[#_Relation_ptr__TypeDBConceptasRelation___]
+[#_Relation__ptr__TypeDBConceptasRelation___]
 ==== asRelation
 
 [source,cpp]
@@ -93,7 +93,7 @@ Casts the concept to ``Relation``.
 .Returns
 `Relation*`
 
-[#_RelationType_ptr__TypeDBConceptasRelationType___]
+[#_RelationType__ptr__TypeDBConceptasRelationType___]
 ==== asRelationType
 
 [source,cpp]
@@ -110,7 +110,7 @@ Casts the concept to ``RelationType``.
 .Returns
 `RelationType*`
 
-[#_RoleType_ptr__TypeDBConceptasRoleType___]
+[#_RoleType__ptr__TypeDBConceptasRoleType___]
 ==== asRoleType
 
 [source,cpp]
@@ -127,7 +127,7 @@ Casts the concept to ``RoleType``.
 .Returns
 `RoleType*`
 
-[#_Thing_ptr__TypeDBConceptasThing___]
+[#_Thing__ptr__TypeDBConceptasThing___]
 ==== asThing
 
 [source,cpp]
@@ -144,7 +144,7 @@ Casts the concept to ``Thing``.
 .Returns
 `Thing*`
 
-[#_ThingType_ptr__TypeDBConceptasThingType___]
+[#_ThingType__ptr__TypeDBConceptasThingType___]
 ==== asThingType
 
 [source,cpp]
@@ -161,7 +161,7 @@ Casts the concept to ``ThingType``.
 .Returns
 `ThingType*`
 
-[#_Value_ptr__TypeDBConceptasValue___]
+[#_Value__ptr__TypeDBConceptasValue___]
 ==== asValue
 
 [source,cpp]

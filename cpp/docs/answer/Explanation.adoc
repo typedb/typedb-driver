@@ -44,12 +44,12 @@ Retrieves the Condition for this Explanation.
 .Returns
 `ConceptMap`
 
-[#_stdvector_stdstring__TypeDBExplanationqueryVariableMapping___const_stdstring__var_]
+[#_stdvector__stdstring___TypeDBExplanationqueryVariableMapping___const_stdstring__var_]
 ==== queryVariableMapping
 
 [source,cpp]
 ----
-std::vector<std::string> TypeDB::Explanation::queryVariableMapping(const std::string& var)
+std::vector< std::string > TypeDB::Explanation::queryVariableMapping(const std::string& var)
 ----
 
 
@@ -70,12 +70,12 @@ a| `var` a| The query variable to map to rule variables. a|
 .Returns
 `std::vector< std::string >`
 
-[#_stdvector_stdstring__TypeDBExplanationqueryVariables___]
+[#_stdvector__stdstring___TypeDBExplanationqueryVariables___]
 ==== queryVariables
 
 [source,cpp]
 ----
-std::vector<std::string> TypeDB::Explanation::queryVariables()
+std::vector< std::string > TypeDB::Explanation::queryVariables()
 ----
 
 

@@ -1,180 +1,180 @@
-[#_a49fe254bd60916f2368f5ab49313480b]
+[#_ConceptMapIterator]
 === ConceptMapIterator
 
-Alias for Iterator< _native::ConceptMapIterator, _native::ConceptMap, TypeDB::ConceptMap >
+Alias for Iterator<_native::ConceptMapIterator, _native::ConceptMap, TypeDB::ConceptMap>
 
-[#_a5615653709ee9f4cf10a20fd5f184029]
+[#_ConceptMapIterable]
 === ConceptMapIterable
 
-Alias for Iterable< _native::ConceptMapIterator, _native::ConceptMap, TypeDB::ConceptMap >
+Alias for Iterable<_native::ConceptMapIterator, _native::ConceptMap, TypeDB::ConceptMap>
 
-[#_a44adc8208ca0909b14b41efa00c7ca71]
+[#_ConceptMapGroupIterable]
 === ConceptMapGroupIterable
 
-Alias for Iterable< _native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup >
+Alias for Iterable<_native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup>
 
-[#_a37e57381cac8196f98332bd41bb46315]
+[#_ConceptMapGroupIterator]
 === ConceptMapGroupIterator
 
-Alias for Iterator< _native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup >
+Alias for Iterator<_native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup>
 
-[#_afe5c2b36ca248ca79ea070e5692133b4]
+[#_OwnerAttributePairIterator]
 === OwnerAttributePairIterator
 
-Alias for Iterator< _native::StringPairIterator, _native::StringPair, OwnerAttributePair >
+Alias for Iterator<_native::StringPairIterator, _native::StringPair, OwnerAttributePair>
 
-[#_ae772c3fa73f4684749de63a48fd5cbe6]
+[#_OwnerAttributePairIterable]
 === OwnerAttributePairIterable
 
-Alias for Iterable< _native::StringPairIterator, _native::StringPair, OwnerAttributePair >
+Alias for Iterable<_native::StringPairIterator, _native::StringPair, OwnerAttributePair>
 
-[#_ad447c68c38b3fc16315bff1cd914d806]
+[#_JSONMap]
 === JSONMap
 
-Alias for std::map< std::string, JSON >
+Alias for std::map<std::string, JSON>
 
-[#_a4202a22caf17c94c24a3088e6c2e4d2b]
+[#_JSONArray]
 === JSONArray
 
-Alias for std::vector< JSON >
+Alias for std::vector<JSON>
 
-[#_ad603d7d2abee0cf97bf2413b992e1a8b]
+[#_JSONBoolean]
 === JSONBoolean
 
 Alias for bool
 
-[#_aced684e6cb9e339b03d26bfaef4b270b]
+[#_JSONLong]
 === JSONLong
 
 Alias for long
 
-[#_a6989fba84de94dc1bf977c71620b653f]
+[#_JSONDouble]
 === JSONDouble
 
 Alias for double
 
-[#_a3b3faa1248ec6807dbb29aba9c0e9a6f]
+[#_JSONString]
 === JSONString
 
 Alias for std::string
 
-[#_af9a7b9fb24b5b5d8a6494030e9ad427d]
+[#_AggregateResult]
 === AggregateResult
 
-Alias for std::optional< std::unique_ptr< Value > >
+Alias for std::optional<std::unique_ptr<Value>>
 
-[#_a8ce4b05128b61e983d8f93c84c41bc65]
+[#_AggregateFuture]
 === AggregateFuture
 
-Alias for Future< AggregateResult, _native::ConceptPromise >
+Alias for Future<AggregateResult, _native::ConceptPromise>
 
-[#_afb0980f8f640d9e74cb1983a1efcd607]
+[#_ValueGroupIterable]
 === ValueGroupIterable
 
-Alias for Iterable< _native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup >
+Alias for Iterable<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>
 
-[#_ae1b63914b13c172aef5d8f7cb60dc413]
+[#_ValueGroupIterator]
 === ValueGroupIterator
 
-Alias for Iterator< _native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup >
+Alias for Iterator<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>
 
-[#_aa182777241b40e326fb0f70e7c64bd02]
+[#_VoidFuture]
 === VoidFuture
 
-Alias for Future< void, _native::VoidPromise >
+Alias for Future<void, _native::VoidPromise>
 
-[#_acd31b9b74182f807ba374b47f228d4d2]
+[#_BoolFuture]
 === BoolFuture
 
-Alias for Future< bool, _native::BoolPromise >
+Alias for Future<bool, _native::BoolPromise>
 
-[#_a6080488d36e1615e93c398e4c4c14f54]
+[#_StringFuture]
 === StringFuture
 
-Alias for Future< std::string, _native::StringPromise >
+Alias for Future<std::string, _native::StringPromise>
 
-[#_a31fcaa0f4f9c37cbdcf3a3573ae6139b]
+[#_OptionalStringFuture]
 === OptionalStringFuture
 
-Alias for Future< std::optional< std::string >, _native::StringPromise >
+Alias for Future<std::optional<std::string>, _native::StringPromise>
 
-[#_a7262d174a247dfc49e19004521885034]
+[#_StringIterable]
 === StringIterable
 
-Alias for Iterable< _native::StringIterator, char, std::string >
+Alias for Iterable<_native::StringIterator, char, std::string>
 
-[#_aecba7bff350f0a7bacb229f500c5171e]
+[#_StringIterator]
 === StringIterator
 
-Alias for Iterator< _native::StringIterator, char, std::string >
+Alias for Iterator<_native::StringIterator, char, std::string>
 
-[#_a33dc49234de177ab107c546252106f21]
+[#_DateTime]
 === DateTime
 
 Alias for std::chrono::time_point< std::chrono::system_clock, std::chrono::milliseconds >
 
-[#_a92dd2b454d14ff379196a793b0776540]
+[#_DatabaseIterator]
 === DatabaseIterator
 
-Alias for Iterator< _native::DatabaseIterator, _native::Database, TypeDB::Database >
+Alias for Iterator<_native::DatabaseIterator, _native::Database, TypeDB::Database>
 
-[#_ad93a27f45471bc343c824a29d209c1d1]
+[#_DatabaseIterable]
 === DatabaseIterable
 
-Alias for Iterable< _native::DatabaseIterator, _native::Database, TypeDB::Database >
+Alias for Iterable<_native::DatabaseIterator, _native::Database, TypeDB::Database>
 
-[#_abcbe95a044940383129069bb13d639a8]
+[#_ReplicaInfoIterable]
 === ReplicaInfoIterable
 
-Alias for Iterable< _native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo >
+Alias for Iterable<_native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo>
 
-[#_aeaae9d0cb81e5843c80b831f7d9403b5]
+[#_ReplicaInfoIterator]
 === ReplicaInfoIterator
 
-Alias for Iterator< _native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo >
+Alias for Iterator<_native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo>
 
-[#_aa6fa6640b127b43322a2b547309031e1]
+[#_ExplanationIterator]
 === ExplanationIterator
 
-Alias for Iterator< _native::ExplanationIterator, _native::Explanation, Explanation >
+Alias for Iterator<_native::ExplanationIterator, _native::Explanation, Explanation>
 
-[#_a40e556c74d06f48a65f9bcfea04584bc]
+[#_ExplanationIterable]
 === ExplanationIterable
 
-Alias for Iterable< _native::ExplanationIterator, _native::Explanation, Explanation >
+Alias for Iterable<_native::ExplanationIterator, _native::Explanation, Explanation>
 
-[#_a7951c5fa34942c5ed6969697acd711e3]
+[#_RuleFuture]
 === RuleFuture
 
-Alias for Future< Rule, _native::RulePromise >
+Alias for Future<Rule, _native::RulePromise>
 
-[#_aa180638ea11190181e17941aa10d51e5]
+[#_OptionalRuleFuture]
 === OptionalRuleFuture
 
-Alias for Future< std::optional< Rule >, _native::RulePromise >
+Alias for Future<std::optional<Rule>, _native::RulePromise>
 
-[#_a38d98f9d8e612a1d2e81a74973c55ebe]
+[#_RuleIterable]
 === RuleIterable
 
-Alias for Iterable< _native::RuleIterator, _native::Rule, Rule >
+Alias for Iterable<_native::RuleIterator, _native::Rule, Rule>
 
-[#_a4c07b48678a6b58a6b819069acdf6f14]
+[#_RuleIterator]
 === RuleIterator
 
-Alias for Iterator< _native::RuleIterator, _native::Rule, Rule >
+Alias for Iterator<_native::RuleIterator, _native::Rule, Rule>
 
-[#_acc32600f911734291456b9247a0c8805]
+[#_JSONIterable]
 === JSONIterable
 
-Alias for Iterable< _native::StringIterator, char, JSON >
+Alias for Iterable<_native::StringIterator, char, JSON>
 
-[#_ac0322f5b24c35584c776d9ab0e438d5c]
+[#_UserIterator]
 === UserIterator
 
-Alias for Iterator< _native::UserIterator, _native::User, User >
+Alias for Iterator<_native::UserIterator, _native::User, User>
 
-[#_ae8d420eec0028d277bba235e5837bd54]
+[#_UserIterable]
 === UserIterable
 
-Alias for Iterable< _native::UserIterator, _native::User, User >
+Alias for Iterable<_native::UserIterator, _native::User, User>
 
