@@ -22,8 +22,8 @@ session.transaction(TransactionType.READ);
 [options="header"]
 |===
 |Name
-a| ` READ`
-a| ` WRITE `
+a| `READ`
+a| `WRITE`
 |===
 // end::enum_constants[]
 

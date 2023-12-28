@@ -14,13 +14,13 @@ Specifies the exact type of this JSON object
 [options="header"]
 |===
 |Name
-a| ` ARRAY`
-a| ` BOOLEAN`
-a| ` DOUBLE`
-a| ` LONG`
-a| ` MAP`
-a| ` NONE`
-a| ` STRING `
+a| `ARRAY`
+a| `BOOLEAN`
+a| `DOUBLE`
+a| `LONG`
+a| `MAP`
+a| `NONE`
+a| `STRING`
 |===
 // end::enum_constants[]
 

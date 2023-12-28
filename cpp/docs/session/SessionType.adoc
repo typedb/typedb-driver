@@ -22,8 +22,8 @@ driver.session(database, TypeDBSession.Type.SCHEMA);
 [options="header"]
 |===
 |Name
-a| ` DATA`
-a| ` SCHEMA `
+a| `DATA`
+a| `SCHEMA`
 |===
 // end::enum_constants[]
 

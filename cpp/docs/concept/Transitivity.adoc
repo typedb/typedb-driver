@@ -14,8 +14,8 @@ Used in ConceptAPI to specify whether to query only explicit schema constraints 
 [options="header"]
 |===
 |Name
-a| ` EXPLICIT`
-a| ` TRANSITIVE `
+a| `EXPLICIT`
+a| `TRANSITIVE`
 |===
 // end::enum_constants[]
 
