@@ -227,7 +227,7 @@ class DoxygenParser : Callable<Unit> {
                 .text().substringAfter("{").substringBefore("}")
                 .split(",")
                 .map {
-                    EnumConstant(it)
+                    EnumConstant(it.trim())
                 }
         val packagePath = fullyQualifiedName.substringBeforeLast("::")
         return Class(
