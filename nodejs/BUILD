@@ -28,6 +28,7 @@ exports_files([
     "VERSION",
 ])
 
+load("@vaticle_bazel_distribution//docs:nodejs/rules.bzl", "typedoc_to_adoc")
 load("@vaticle_bazel_distribution//npm:rules.bzl", "assemble_npm", "deploy_npm")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
@@ -37,7 +38,6 @@ load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
 load("@aspect_bazel_lib//lib:jq.bzl", "jq")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("//nodejs:tool/typedoc/rules.bzl", "typedoc_docs")
-load("//tool/docs:nodejs/rules.bzl", "typedoc_to_adoc")
 load("//nodejs:docs_structure.bzl", "dir_mapping")
 
 npm_link_all_packages(

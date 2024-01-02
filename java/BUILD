@@ -29,7 +29,7 @@ load("@vaticle_dependencies//library/maven:artifacts.bzl", artifacts_org = "arti
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":rules.bzl", "swig_native_java_library")
 load("@google_bazel_common//tools/javadoc:javadoc.bzl", "javadoc_library")
-load("//tool/docs:java/rules.bzl", "javadoc_to_adoc")
+load("@vaticle_bazel_distribution//docs:java/rules.bzl", "javadoc_to_adoc")
 load("//java:docs_structure.bzl", "dir_mapping")
 
 java_library(
