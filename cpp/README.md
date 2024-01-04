@@ -6,7 +6,7 @@ The driver is distributed as an archive containing the headers & a shared librar
 ```
 |- README.md
 |- include/
-|  |- typedb.hpp
+|  |- typedb_driver.hpp
 |  |- ...
 |
 |- lib/
@@ -52,8 +52,8 @@ Any error encountered will throw a `TypeDB::DriverException`. Note that methods 
 
 ## Examples
 ```cpp
-// All files are included from typedb.hpp
-#include <typedb.hpp>
+// All files are included from typedb_driver.hpp
+#include <typedb_driver.hpp>
 
 int main() {
     TypeDB::Driver driver = TypeDB::Driver::coreDriver("127.0.0.1:1729");

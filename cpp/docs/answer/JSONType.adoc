@@ -1,0 +1,26 @@
+[#_JSONType]
+=== JSONType
+
+*Package*: `TypeDB`
+
+
+
+Specifies the exact type of this JSON object
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols="~"]
+[options="header"]
+|===
+|Name
+a| `ARRAY`
+a| `BOOLEAN`
+a| `DOUBLE`
+a| `LONG`
+a| `MAP`
+a| `NONE`
+a| `STRING`
+|===
+// end::enum_constants[]
+

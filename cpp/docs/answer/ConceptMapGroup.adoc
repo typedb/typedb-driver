@@ -1,0 +1,62 @@
+[#_ConceptMapGroup]
+=== ConceptMapGroup
+
+*Package*: `TypeDB`
+
+
+
+Contains an element of the group query result.
+
+// tag::methods[]
+[#_ConceptMapIterable_TypeDBConceptMapGroupconceptMaps___]
+==== conceptMaps
+
+[source,cpp]
+----
+ConceptMapIterable TypeDB::ConceptMapGroup::conceptMaps()
+----
+
+
+
+Retrieves the ``ConceptMap``s of the group.
+
+
+[caption=""]
+.Returns
+`ConceptMapIterable`
+
+[#_stdunique_ptr__Concept___TypeDBConceptMapGroupowner___]
+==== owner
+
+[source,cpp]
+----
+std::unique_ptr< Concept > TypeDB::ConceptMapGroup::owner()
+----
+
+
+
+Retrieves the concept that is the group owner.
+
+
+[caption=""]
+.Returns
+`std::unique_ptr< Concept >`
+
+[#_stdstring_TypeDBConceptMapGrouptoString___]
+==== toString
+
+[source,cpp]
+----
+std::string TypeDB::ConceptMapGroup::toString()
+----
+
+
+
+A string representation of this ConceptMapGroup.
+
+[caption=""]
+.Returns
+`std::string`
+
+// end::methods[]
+

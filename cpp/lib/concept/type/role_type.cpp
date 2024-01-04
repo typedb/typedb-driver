@@ -51,6 +51,11 @@ VoidFuture RoleType::setLabel(Transaction& transaction, const std::string& newLa
     CONCEPTAPI_CALL(VoidFuture, _native::role_type_set_label(ConceptFactory::getNative(transaction), conceptNative.get(), newLabel.c_str()));
 }
 
+bool RoleType::isRoot() {
+    CHECK_NATIVE(conceptNative);
+    return _native::role_type_is_root(conceptNative.get());
+}
+
 bool RoleType::isAbstract() {
     CHECK_NATIVE(conceptNative);
     return _native::role_type_is_abstract(conceptNative.get());

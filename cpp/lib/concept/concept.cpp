@@ -61,16 +61,23 @@ Annotation::Annotation(_native::Annotation* annotationNative)
 Annotation Annotation::key() {
     return Annotation(_native::annotation_new_key());
 }
+
 Annotation Annotation::unique() {
     return Annotation(_native::annotation_new_unique());
 }
 
-std::string Annotation::toString() {
-    TO_STRING(annotationNative, _native::annotation_to_string);
+bool Annotation::isKey() {
+    CHECK_NATIVE(annotationNative);
+    return _native::annotation_is_key(annotationNative.get());
 }
 
-std::unique_ptr<Concept> Concept::ofNative(_native::Concept* conceptNative) {
-    return ConceptFactory::ofNative(conceptNative);
+bool Annotation::isUnique() {
+    CHECK_NATIVE(annotationNative);
+    return _native::annotation_is_unique(annotationNative.get());
+}
+
+std::string Annotation::toString() {
+    TO_STRING(annotationNative, _native::annotation_to_string);
 }
 
 Concept::Concept(ConceptType conceptType, _native::Concept* conceptNative)

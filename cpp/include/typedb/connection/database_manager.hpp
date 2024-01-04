@@ -37,15 +37,60 @@ using DatabaseIterator = Iterator<_native::DatabaseIterator, _native::Database, 
 
 using DatabaseIterable = Iterable<_native::DatabaseIterator, _native::Database, TypeDB::Database>;
 
+
+/**
+ * \brief Provides access to all database management methods.
+ */
 class DatabaseManager {
 public:
     DatabaseManager(const DatabaseManager&) = delete;
     DatabaseManager& operator=(const DatabaseManager&) = delete;
     ~DatabaseManager() = default;
 
+    /**
+     * Create a database with the given name
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.databases.create(name)
+     * </pre>
+     *
+     * @param name The name of the database to be created
+     */
     void create(const std::string&) const;
+
+    /**
+     * Checks if a database with the given name exists
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.databases.contains(name)
+     * </pre>
+     *
+     * @param name The database name to be checked
+     */
     bool contains(const std::string&) const;
+
+    /**
+     * Retrieve the database with the given name.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.databases.get(name)
+     * </pre>
+     *
+     * @param name The name of the database to retrieve
+     */
     Database get(const std::string&) const;
+
+    /**
+     * Retrieves all databases present on the TypeDB server
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.databases.all()
+     * </pre>
+     */
     DatabaseIterable all() const;
 
 private:

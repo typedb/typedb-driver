@@ -43,7 +43,12 @@ fun replaceHtmlSymbols(html: String): String {
 }
 
 fun replaceSymbolsForAnchor(name: String): String {
-    return name.replace("['&{}?|;:=]".toRegex(), "").replace("[\\.,\\(\\)\\s#<>\\[\\]]".toRegex(), "_").removeSuffix("_")
+    return name
+        .replace("['&{}?|;:=]".toRegex(), "")
+        .replace("[\\.,\\(\\)\\s#<>\\[\\]]".toRegex(), "_")
+        .replace("*", "_ptr_")
+        .replace("&", "_amp_")
+        .removeSuffix("_")
 }
 
 fun escape(text: String): String {

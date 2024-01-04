@@ -47,6 +47,23 @@ std::string Explanation::toString() {
     TO_STRING(explanationNative, _native::explanation_to_string);
 }
 
+std::vector<std::string> Explanation::queryVariables() {
+    CHECK_NATIVE(explanationNative)
+    std::vector<std::string> v;
+    for (auto& s : StringIterable(_native::explanation_get_mapped_variables(explanationNative.get()))) {
+        v.push_back(s);
+    }
+    return v;
+}
+
+std::vector<std::string> Explanation::queryVariableMapping(const std::string& var) {
+    std::vector<std::string> v;
+    for (auto& s : StringIterable(_native::explanation_get_mapping(explanationNative.get(), var.c_str()))) {
+        v.push_back(s);
+    }
+    return v;
+}
+
 TYPEDB_ITERATOR_HELPER(
     _native::ExplanationIterator,
     _native::Explanation,

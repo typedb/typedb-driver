@@ -27,9 +27,11 @@
 
 namespace TypeDB {
 
+/**
+ *  \brief Contains an element of the group aggregate query result.
+ */
 class ValueGroup {
 public:
-    ValueGroup(_native::ValueGroup*);
     ValueGroup(const ValueGroup&) = delete;
     ValueGroup(ValueGroup&&) = default;
     ~ValueGroup() = default;
@@ -37,17 +39,39 @@ public:
     ValueGroup& operator=(const ValueGroup&) = delete;
     ValueGroup& operator=(ValueGroup&&) = default;
 
+    /**
+     * Retrieves the concept that is the group owner.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMapGroup.owner()
+     * </pre>
+     */
     std::unique_ptr<Concept> owner();
+
+    /**
+     * Retrieves the <code>Value</code> answer of the group.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * valueGroup.value();
+     * </pre>
+     */
     AggregateResult value();
+
+    /**
+     * A string representation of this ConceptMap.
+     */
     std::string toString();
 
 private:
+    ValueGroup(_native::ValueGroup*);
     NativePointer<_native::ValueGroup> valueGroupNative;
 
     friend class IteratorHelper<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>;
 };
 
-// For ValueGroup
+// For ValueGroupIterator
 using ValueGroupIterable = Iterable<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>;
 using ValueGroupIterator = Iterator<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>;
 

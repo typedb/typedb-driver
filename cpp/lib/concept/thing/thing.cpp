@@ -87,16 +87,11 @@ VoidFuture Thing::unsetHas(Transaction& transaction, Attribute* attribute) {
     CONCEPTAPI_CALL(VoidFuture, _native::thing_unset_has(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::getNative(attribute)));
 }
 
-
-ConceptIterable<Relation> Thing::getRelations(Transaction& transaction) {
-    return getRelations(transaction, std::vector<RoleType*>());
-}
-
-ConceptIterable<Relation> Thing::getRelations(Transaction& transaction, const std::vector<RoleType*>& roleTypes) {
+ConceptIterable<Relation> Thing::getRelations(Transaction& transaction, const std::vector<std::unique_ptr<RoleType>>& roleTypes) {
     CONCEPTAPI_ITER(Relation, _native::thing_get_relations(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::nativeConceptArray(roleTypes).data()));
 }
 
-ConceptIterable<Relation> Thing::getRelations(Transaction& transaction, const std::vector<std::unique_ptr<RoleType>>& roleTypes) {
+ConceptIterable<Relation> Thing::getRelations(Transaction& transaction, const std::vector<RoleType*>& roleTypes) {
     CONCEPTAPI_ITER(Relation, _native::thing_get_relations(ConceptFactory::getNative(transaction), conceptNative.get(), ConceptFactory::nativeConceptArray(roleTypes).data()));
 }
 

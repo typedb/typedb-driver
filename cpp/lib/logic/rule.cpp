@@ -24,6 +24,7 @@
 #include "../common/macros.hpp"
 #include "../common/native.hpp"
 #include "../common/utils.hpp"
+#include "../concept/concept_factory.hpp"
 
 namespace TypeDB {
 
@@ -43,6 +44,21 @@ std::string Rule::when() {
 std::string Rule::then() {
     CHECK_NATIVE(ruleNative);
     return Utils::stringFromNative(_native::rule_get_then(ruleNative.get()));
+}
+
+VoidFuture Rule::setLabel(Transaction& transaction, const std::string& label) {
+    CHECK_NATIVE(ruleNative);
+    WRAPPED_NATIVE_CALL(VoidFuture, _native::rule_set_label(ConceptFactory::getNative(transaction), ruleNative.get(), label.c_str()));
+}
+
+VoidFuture Rule::deleteRule(Transaction& transaction) {
+    CHECK_NATIVE(ruleNative);
+    WRAPPED_NATIVE_CALL(VoidFuture, _native::rule_delete(ConceptFactory::getNative(transaction), ruleNative.get()));
+}
+
+BoolFuture Rule::isDeleted(Transaction& transaction) {
+    CHECK_NATIVE(ruleNative);
+    WRAPPED_NATIVE_CALL(BoolFuture, _native::rule_is_deleted(ConceptFactory::getNative(transaction), ruleNative.get()));
 }
 
 std::string Rule::toString() {

@@ -328,7 +328,7 @@ public interface ThingType extends Type {
 
     /**
      * Retrieves an <code>AttributeType</code>, ownership of which is overridden
-     * for this <code>ThingType</code> by a given <code>attribute_type</code>.
+     * for this <code>ThingType</code> by a given <code>AttributeType</code>.
      *
      * <h3>Examples</h3>
      * <pre>

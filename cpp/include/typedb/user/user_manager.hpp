@@ -30,17 +30,84 @@ class Driver;  // forward declaration for friendship
 using UserIterator = Iterator<_native::UserIterator, _native::User, User>;
 using UserIterable = Iterable<_native::UserIterator, _native::User, User>;
 
+/**
+ * \brief Provides access to all user management methods.
+ */
 class UserManager {
 public:
     ~UserManager() = default;
 
+    /**
+     * Checks if a user with the given name exists.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.users.contains(username);
+     * </pre>
+     *
+     * @param username The user name to be checked
+     */
     bool contains(const std::string& username) const;
+
+    /**
+     * Creates a user with the given name &amp; password.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.users.create(username, password);
+     * </pre>
+     *
+     * @param username The name of the user to be created
+     * @param password The password of the user to be created
+     */
     void create(const std::string& username, const std::string& password) const;
+
+    /**
+     * Deletes a user with the given name.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.users.deleteUser(username);
+     * </pre>
+     *
+     * @param username The name of the user to be deleted
+     */
     void deleteUser(const std::string& username) const;
+
+    /**
+     * Retrieves all users which exist on the TypeDB server.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.users.all();
+     * </pre>
+     */
     UserIterable all() const;
+
+    /**
+     * Retrieves a user with the given name.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.users.get(username);
+     * </pre>
+     *
+     * @param username The name of the user to retrieve
+     */
     std::unique_ptr<User> get(const std::string& username) const;
+
+    /**
+     * Sets a new password for a user. This operation can only be performed by administrators.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.users.passwordSet(username, password);
+     * </pre>
+     *
+     * @param username The name of the user to set the password of
+     * @param password The new password
+     */
     void passwordSet(const std::string& username, const std::string& password) const;
-    User getCurrentUser() const;
 
 private:
     NativePointer<_native::UserManager> userManagerNative;
@@ -52,6 +119,7 @@ private:
     UserManager& operator=(const UserManager&) = delete;
 
     _native::UserManager* getNative() const;
+    User getCurrentUser() const;
 
     friend class TypeDB::Driver;
     friend class User;

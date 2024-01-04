@@ -27,7 +27,9 @@ load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
 load("@vaticle_bazel_distribution//platform:constraints.bzl", "constraint_linux_arm64", "constraint_linux_x86_64",
      "constraint_mac_arm64", "constraint_mac_x86_64", "constraint_win_x86_64")
+load("//tool/docs:cpp/rules.bzl", "doxygen_docs", "doxygen_to_adoc")
 load(":build_opts.bzl", "cxxopts")
+load("//cpp:docs_structure.bzl", "dir_mapping")
 
 pkg_files(
     name = "typedb-driver-cpp-headers",
@@ -199,6 +201,23 @@ alias(
     })
 )
 
+# docs
+# TODO: Not hermetic - requires doxygen on the host
+doxygen_docs(
+    name = "docs_html",
+    project_name = "TypeDB C++ Driver",
+    sources = glob(["include/**/*"]),
+    main_page_md = ":README.md",
+    tags = ["manual"]
+)
+
+doxygen_to_adoc(
+    name = "docs_adoc",
+    data = [":docs_html"],
+    docs_dirs = dir_mapping,
+    tags = ["manual"]
+)
+
 # Formatting tests
 clang_format_test(
     name = "clang_format",
@@ -210,6 +229,6 @@ checkstyle_test(
     name = "checkstyle",
     size = "small",
     include = glob(["*", "include/**/*", "lib/**/*"]),
-    exclude = ["README.md"],
+    exclude = glob(["README.md", "docs/**/*.adoc"]),
     license_type = "apache-header",
 )

@@ -64,7 +64,9 @@ DatabaseIterable DatabaseManager::all() const {
 // Private
 Session DatabaseManager::session(const std::string& database, SessionType sessionType, const Options& options) {
     CHECK_NATIVE(databaseManagerNative);
-    WRAPPED_NATIVE_CALL(Session, _native::session_new(databaseManagerNative.get(), database.c_str(), (_native::SessionType)sessionType, options.getNative()));
+    auto p = _native::session_new(databaseManagerNative.get(), database.c_str(), (_native::SessionType)sessionType, options.getNative());
+    DriverException::check_and_throw();
+    return Session(p, sessionType);
 }
 
 }  // namespace TypeDB

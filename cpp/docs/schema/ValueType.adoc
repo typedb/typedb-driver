@@ -1,0 +1,25 @@
+[#_ValueType]
+=== ValueType
+
+*Package*: `TypeDB`
+
+
+
+What type of primitive value is held by a Value or Attribute.
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols="~"]
+[options="header"]
+|===
+|Name
+a| `BOOLEAN`
+a| `DATETIME`
+a| `DOUBLE`
+a| `LONG`
+a| `OBJECT`
+a| `STRING`
+|===
+// end::enum_constants[]
+
