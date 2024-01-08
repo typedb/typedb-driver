@@ -332,7 +332,7 @@ commands:
       - install-bazel-linux:
           bazel-arch: "<<parameters.bazel-arch>>"
       - deploy-clib-snapshot-unix
-      
+
   deploy-clib-snapshot-mac:
     parameters:
       bazel-arch:
@@ -434,7 +434,7 @@ commands:
       - install-bazel-linux:
           bazel-arch: "<<parameters.bazel-arch>>"
       - deploy-cpp-snapshot-unix
-      
+
   deploy-cpp-snapshot-mac:
     parameters:
       bazel-arch:
@@ -489,7 +489,7 @@ commands:
           popd
           tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
-  
+
   deploy-cpp-release-unix:
     steps:
       - run: |
@@ -598,51 +598,18 @@ jobs:
     steps:
       - deploy-pip-release-linux:
           bazel-arch: arm64
-      - run: |
-          mkdir -p ~/dist
-          for f in bazel-bin/python/*.whl; do
-              fname=$(basename $f)
-              base=${fname%.*}
-              pyversion=${base#typedb-driver}
-              cp $f ~/dist/typedb_driver-py${pyversion}-none-manylinux_2_17_aarch64.whl
-          done
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   deploy-pip-release-linux-x86_64:
     executor: linux-x86_64-ubuntu-1804
     steps:
       - deploy-pip-release-linux:
           bazel-arch: amd64
-      - run: |
-          mkdir -p ~/dist
-          for f in bazel-bin/python/*.whl; do
-              fname=$(basename $f)
-              base=${fname%.*}
-              pyversion=${base#typedb-driver}
-              cp $f ~/dist/typedb_driver-py${pyversion}-none-manylinux_2_17_x86_64.whl
-          done
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   deploy-pip-release-mac-arm64:
     executor: mac-arm64
     steps:
       - deploy-pip-release-mac:
           bazel-arch: arm64
-      - run: |
-          mkdir -p ~/dist
-          for f in bazel-bin/python/*.whl; do
-              fname=$(basename $f)
-              base=${fname%.*}
-              pyversion=${base#typedb-driver}
-              cp $f ~/dist/typedb_driver-py${pyversion}-none-macosx_11_0_arm64.whl
-          done
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   deploy-pip-release-mac-x86_64:
     executor: mac-arm64
@@ -650,17 +617,6 @@ jobs:
       - macos/install-rosetta
       - deploy-pip-release-mac:
           bazel-arch: amd64
-      - run: |
-          mkdir -p ~/dist
-          for f in bazel-bin/python/*.whl; do
-              fname=$(basename $f)
-              base=${fname%.*}
-              pyversion=${base#typedb-driver}
-              cp $f ~/dist/typedb_driver-py${pyversion}-none-macosx_11_0_x86_64.whl
-          done
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   deploy-pip-release-windows-x86_64:
     executor:
@@ -671,9 +627,6 @@ jobs:
       - checkout
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\python\deploy_release.bat
-      - persist_to_workspace:
-          root: dist
-          paths: ["./*"]
 
   #############
   # Java jobs #
@@ -762,36 +715,18 @@ jobs:
     steps:
       - deploy-maven-jni-release-linux:
           bazel-arch: arm64
-      - run: |
-          mkdir -p ~/dist
-          cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-linux-arm64.jar ~/dist/typedb-driver-jni-linux-arm64.jar
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   deploy-maven-jni-release-linux-x86_64:
     executor: linux-x86_64-ubuntu-1804
     steps:
       - deploy-maven-jni-release-linux:
           bazel-arch: amd64
-      - run: |
-          mkdir -p ~/dist
-          cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-linux-x86_64.jar ~/dist/typedb-driver-jni-linux-x86_64.jar
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   deploy-maven-jni-release-mac-arm64:
     executor: mac-arm64
     steps:
       - deploy-maven-jni-release-mac:
           bazel-arch: arm64
-      - run: |
-          mkdir -p ~/dist
-          cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-macosx-arm64.jar ~/dist/typedb-driver-jni-macosx-arm64.jar
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   deploy-maven-jni-release-mac-x86_64:
     executor: mac-arm64
@@ -799,12 +734,6 @@ jobs:
       - macos/install-rosetta
       - deploy-maven-jni-release-mac:
           bazel-arch: amd64
-      - run: |
-          mkdir -p ~/dist
-          cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-macosx-x86_64.jar ~/dist/typedb-driver-jni-macosx-x86_64.jar
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   deploy-maven-jni-release-windows-x86_64:
     executor:
@@ -815,9 +744,6 @@ jobs:
       - checkout
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\java\deploy_release.bat
-      - persist_to_workspace:
-          root: dist
-          paths: ["./*"]
 
   deploy-maven-release:
     executor: linux-x86_64-ubuntu-1804
@@ -826,12 +752,6 @@ jobs:
       - install-bazel-linux:
           bazel-arch: amd64
       - deploy-maven-release-unix
-      - run: |
-          mkdir -p ~/dist
-          cp bazel-bin/java/libdriver-java.jar ~/dist/typedb-driver.jar
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   #################
   # C driver jobs #
@@ -844,7 +764,7 @@ jobs:
       - run: brew install cmake
       - test-clib-assembly-mac:
           target-arch: arm64
-      
+
   deploy-clib-snapshot-mac-x86_64:
     executor: mac-arm64
     steps:
@@ -854,7 +774,7 @@ jobs:
       - run: brew install cmake
       - test-clib-assembly-mac:
           target-arch: x86_64
-          
+
   deploy-clib-snapshot-linux-arm64:
     executor: linux-arm64-ubuntu-1804
     steps:
@@ -862,7 +782,7 @@ jobs:
           bazel-arch: arm64
       - test-clib-assembly-linux:
           target-arch: arm64
-      
+
   deploy-clib-snapshot-linux-x86_64:
     executor: linux-x86_64-ubuntu-1804
     steps:
@@ -870,7 +790,7 @@ jobs:
           bazel-arch: amd64
       - test-clib-assembly-linux:
           target-arch: x86_64
-      
+
   deploy-clib-snapshot-windows-x86_64:
     executor:
       name: win/default
@@ -881,56 +801,32 @@ jobs:
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\clib\deploy_snapshot.bat
       - run: .circleci\windows\clib\test_assembly.bat
-    
+
   deploy-clib-release-mac-arm64:
     executor: mac-arm64
     steps:
       - deploy-clib-release-mac:
           bazel-arch: arm64
-      - run: |
-          mkdir -p ~/dist
-          cp bazel-bin/c/typedb-driver-clib-mac-arm64.zip ~/dist
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
-    
+
   deploy-clib-release-mac-x86_64:
     executor: mac-arm64
     steps:
       - macos/install-rosetta
       - deploy-clib-release-mac:
           bazel-arch: amd64
-      - run: |
-          mkdir -p ~/dist
-          cp bazel-bin/c/typedb-driver-clib-mac-x86_64.zip ~/dist
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   deploy-clib-release-linux-arm64:
     executor: linux-arm64-ubuntu-1804
     steps:
       - deploy-clib-release-linux:
           bazel-arch: arm64
-      - run: |
-          mkdir -p ~/dist
-          cp bazel-bin/c/typedb-driver-clib-linux-arm64.tar.gz ~/dist
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   deploy-clib-release-linux-x86_64:
     executor: linux-x86_64-ubuntu-1804
     steps:
       - deploy-clib-release-linux:
           bazel-arch: amd64
-      - run: |
-          mkdir -p ~/dist
-          cp bazel-bin/c/typedb-driver-clib-linux-x86_64.tar.gz ~/dist
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
-  
+
   deploy-clib-release-windows-x86_64:
     executor:
       name: win/default
@@ -940,9 +836,6 @@ jobs:
       - checkout
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\clib\deploy_release.bat
-      - persist_to_workspace:
-          root: dist
-          paths: ["./*"]
 
   ############
   # C++ jobs #
@@ -955,7 +848,7 @@ jobs:
       - run: brew install cmake
       - test-cpp-assembly-mac:
           target-arch: arm64
-      
+
   deploy-cpp-snapshot-mac-x86_64:
     executor: mac-arm64
     steps:
@@ -965,7 +858,7 @@ jobs:
       - run: brew install cmake
       - test-cpp-assembly-mac:
           target-arch: x86_64
-          
+
 
   deploy-cpp-snapshot-linux-arm64:
     executor: linux-arm64-ubuntu-1804
@@ -974,7 +867,7 @@ jobs:
           bazel-arch: arm64
       - test-cpp-assembly-linux:
           target-arch: arm64
-      
+
   deploy-cpp-snapshot-linux-x86_64:
     executor: linux-x86_64-ubuntu-1804
     steps:
@@ -982,7 +875,7 @@ jobs:
           bazel-arch: amd64
       - test-cpp-assembly-linux:
           target-arch: x86_64
-      
+
   deploy-cpp-snapshot-windows-x86_64:
     executor:
       name: win/default
@@ -993,56 +886,32 @@ jobs:
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\cpp\deploy_snapshot.bat
       - run: .circleci\windows\cpp\test_assembly.bat
-    
+
   deploy-cpp-release-mac-arm64:
     executor: mac-arm64
     steps:
       - deploy-cpp-release-mac:
           bazel-arch: arm64
-      - run: |
-          mkdir -p ~/dist
-          cp bazel-bin/cpp/typedb-driver-cpp-mac-arm64.zip ~/dist
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
-    
+
   deploy-cpp-release-mac-x86_64:
     executor: mac-arm64
     steps:
       - macos/install-rosetta
       - deploy-cpp-release-mac:
           bazel-arch: amd64
-      - run: |
-          mkdir -p ~/dist
-          cp bazel-bin/cpp/typedb-driver-cpp-mac-x86_64.zip ~/dist
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   deploy-cpp-release-linux-arm64:
     executor: linux-arm64-ubuntu-1804
     steps:
       - deploy-cpp-release-linux:
           bazel-arch: arm64
-      - run: |
-          mkdir -p ~/dist
-          cp bazel-bin/cpp/typedb-driver-cpp-linux-arm64.tar.gz ~/dist
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   deploy-cpp-release-linux-x86_64:
     executor: linux-x86_64-ubuntu-1804
     steps:
       - deploy-cpp-release-linux:
           bazel-arch: amd64
-      - run: |
-          mkdir -p ~/dist
-          cp bazel-bin/cpp/typedb-driver-cpp-linux-x86_64.tar.gz ~/dist
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
-  
+
   deploy-cpp-release-windows-x86_64:
     executor:
       name: win/default
@@ -1052,9 +921,6 @@ jobs:
       - checkout
       - run: .circleci\windows\prepare.bat
       - run: .circleci\windows\cpp\deploy_release.bat
-      - persist_to_workspace:
-          root: dist
-          paths: ["./*"]
 
   ################################
   # Final release deployment job #
@@ -1069,11 +935,6 @@ jobs:
       - run: |
           export DEPLOY_CRATE_TOKEN=$REPO_CRATES_TOKEN
           bazel run --jobs=8 --define version=$(cat VERSION) //rust:deploy_crate --compilation_mode=opt -- release
-          mkdir -p ~/dist
-          cp bazel-bin/rust/assemble_crate.crate ~/dist/typedb-driver.crate
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   deploy-npm-release:
     executor: linux-x86_64-ubuntu-1804
@@ -1088,28 +949,21 @@ jobs:
           apt install -y expect npm
           export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN
           bazel run --jobs=8 --define version=$(cat VERSION) //nodejs:deploy-npm --compilation_mode=opt -- release
-          mkdir -p ~/dist
-          cp bazel-bin/nodejs/assemble-npm.tar.gz ~/dist/typedb-driver-node.tar.gz
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   deploy-github:
     executor: linux-x86_64-ubuntu-1804
     steps:
-      - attach_workspace:
-          at: ~/dist
       - checkout
       - install-bazel-linux:
           bazel-arch: amd64
       - run:
-          name: "Publish Draft Release on GitHub"
+          name: "Publish Release on GitHub"
           command: |
             wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
             tar -xf ghr_v0.12.1_linux_amd64.tar.gz
             ghr_v0.12.1_linux_amd64/ghr -t ${REPO_GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} \
               -r ${CIRCLE_PROJECT_REPONAME} -n "TypeDB Driver $(cat VERSION)" -b "$(cat ./RELEASE_NOTES_LATEST.md)" \
-              -c ${CIRCLE_SHA1} -delete -draft $(cat VERSION) ~/dist/
+              -c ${CIRCLE_SHA1} -delete $(cat VERSION)
 
   release-cleanup:
     executor: linux-x86_64-ubuntu-1804
@@ -1237,7 +1091,7 @@ workflows:
               only: [master, development]
           requires:
             - deploy-maven-snapshot
-            
+
   typedb-driver-clib-snapshot:
     jobs:
       - deploy-clib-snapshot-linux-arm64:
@@ -1283,7 +1137,7 @@ workflows:
           filters:
             branches:
               only: [master, development]
-    
+
   release:
     jobs:
       - deploy-pip-release-linux-arm64:

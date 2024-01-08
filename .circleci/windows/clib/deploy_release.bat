@@ -30,6 +30,3 @@ SET DEPLOY_ARTIFACT_PASSWORD=%REPO_VATICLE_PASSWORD%
 SET /p VER=<VERSION
 bazel --output_user_root=C:\bazel run --verbose_failures --define version=%VER% //c:deploy-windows-x86_64-zip --compilation_mode=opt -- release
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
-
-MD dist
-COPY bazel-bin\c\typedb-driver-clib-windows-x86_64.zip dist\typedb-driver-clib-windows-x86_64.zip
