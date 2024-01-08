@@ -24,13 +24,6 @@ load("@rules_python//python:repositories.bzl", "python_register_toolchains")
 
 python_versions = [
     {
-        "name": "python37",
-        "python_version": "3.7",
-        "python_headers": "@python37//:python_headers",
-        "libpython": "@python37//:libpython",
-        "suffix": "37",
-    },
-    {
         "name": "python38",
         "python_version": "3.8",
         "python_headers": "@python38//:python_headers",
