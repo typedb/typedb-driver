@@ -54,6 +54,7 @@ import java.util.stream.Stream;
 import static com.vaticle.typedb.driver.api.TypeDBSession.Type.DATA;
 import static com.vaticle.typedb.driver.api.TypeDBTransaction.Type.READ;
 import static com.vaticle.typedb.driver.api.TypeDBTransaction.Type.WRITE;
+import static com.vaticle.typedb.driver.test.behaviour.util.Util.assertThrowsWithMessage;
 import static com.vaticle.typeql.lang.TypeQL.and;
 import static com.vaticle.typeql.lang.TypeQL.cVar;
 import static com.vaticle.typeql.lang.TypeQL.rel;
@@ -393,6 +394,15 @@ public class DriverQueryTest {
                 Optional<ConceptMap> conceptMap = tx.query().get("match $x sub thing; get; limit 1;").findFirst();
             }
         }, READ, new TypeDBOptions().prefetch(true).prefetchSize(50));
+    }
+
+    @Test
+    public void testMissingPortInURL() {
+        assertThrowsWithMessage(() -> {
+            String address = typedb.address();
+            String addressWithoutPort = address.substring(0, address.lastIndexOf(':'));
+            TypeDB.coreDriver(addressWithoutPort);
+        }, "missing port")
     }
 
     private String[] lionNames() {
