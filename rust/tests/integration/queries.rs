@@ -28,13 +28,23 @@ use tokio::sync::mpsc;
 use typedb_driver::{
     concept::{Attribute, Concept, Value},
     error::ConnectionError,
-    Connection, DatabaseManager, Error, Options, Session,
+    Connection, Credential, DatabaseManager, Error, Options, Session,
     SessionType::{Data, Schema},
     TransactionType::{Read, Write},
 };
 
 use super::common;
 use crate::test_for_each_arg;
+
+#[tokio::test]
+#[serial]
+async fn missing_port() {
+    assert!(matches!(Connection::new_core("localhost"), Err(Error::Connection(ConnectionError::MissingPort))));
+    assert!(matches!(
+        Connection::new_cloud(&["localhost"], Credential::without_tls("admin", "password")),
+        Err(Error::Connection(ConnectionError::MissingPort))
+    ));
+}
 
 test_for_each_arg! {
     {
