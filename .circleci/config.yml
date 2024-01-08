@@ -60,6 +60,7 @@ commands:
           apt-get -y update
           DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
           apt-get -y install curl build-essential git python3 python3-pip python3.8 default-jre lsof cmake file wget
+          python3.8 -m pip install pip==21.3.1
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
           mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
