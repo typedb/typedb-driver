@@ -32,21 +32,9 @@ executors:
     resource_class: arm.large
     working_directory: ~/typedb-driver
 
-  linux-arm64-ubuntu-2204:
-    docker:
-      - image: ubuntu:22.04
-    resource_class: arm.large
-    working_directory: ~/typedb-driver
-
   linux-x86_64-ubuntu-1804:
     docker:
       - image: ubuntu:18.04
-    resource_class: large
-    working_directory: ~/typedb-driver
-
-  linux-x86_64-ubuntu-2204:
-    docker:
-      - image: ubuntu:22.04
     resource_class: large
     working_directory: ~/typedb-driver
 
@@ -71,7 +59,7 @@ commands:
       - run: |
           apt-get -y update
           DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
-          apt-get -y install curl build-essential git python3 python3-pip default-jre lsof cmake file wget
+          apt-get -y install curl build-essential git python3 python3-pip python3.8 python3.8-pip default-jre lsof cmake file wget
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
           mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
@@ -82,6 +70,7 @@ commands:
         type: string
     steps:
       - run: |
+          brew install python@3.8
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-darwin-<<parameters.bazel-arch>>"
           sudo mv "bazelisk-darwin-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
