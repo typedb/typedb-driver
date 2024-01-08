@@ -30,7 +30,7 @@ from typedb.driver import *
 class TestDebug(TestCase):
 
     def test_missing_port(self):
-        assert_that(calling(lambda: TypeDB.core_driver("localhost"), raises(TypeDBDriverException))
+        assert_that(calling(lambda: TypeDB.core_driver("localhost")), raises(TypeDBDriverException))
 
 
 
