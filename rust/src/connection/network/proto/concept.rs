@@ -26,10 +26,7 @@ use itertools::Itertools;
 use typedb_protocol::{
     concept,
     r#type::{annotation, Annotation as AnnotationProto, Transitivity as TransitivityProto},
-    readable_concept_tree::{
-        self,
-        node::readable_concept::{ReadableConcept as ReadableConceptProto, ReadableConcept},
-    },
+    readable_concept_tree::{self, node::readable_concept::ReadableConcept as ReadableConceptProto},
     thing, thing_type,
     value::Value as ValueProtoInner,
     Attribute as AttributeProto, AttributeType as AttributeTypeProto, Concept as ConceptProto,
