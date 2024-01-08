@@ -87,6 +87,18 @@ async function run() {
         console.error(`driver.close - ERROR: ${err.stack || err}`);
         process.exit(1);
     }
+
+    try {
+        const driver = await TypeDB.coreDriver("localhost");
+        console.error("driver open with missing port successful - FAILURE");
+        process.exit(1);
+    } catch (err) {
+        if (err.toString().includes("missing port")) console.error("driver open with missing port expected error - SUCCESS");
+        else {
+            console.error(`driver open with missing port - unexpected ERROR: ${err.stack || err}`);
+            process.exit(1);
+        }
+    }
 }
 
 run();
