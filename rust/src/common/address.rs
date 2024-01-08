@@ -49,7 +49,7 @@ impl FromStr for Address {
             format!("http://{address}").parse::<Uri>()?
         };
         if uri.port().is_none() {
-            return Err(Error::Connection(ConnectionError::MissingPort));
+            return Err(Error::Connection(ConnectionError::MissingPort { address: address.to_owned() }));
         }
         Ok(Self { uri })
     }
