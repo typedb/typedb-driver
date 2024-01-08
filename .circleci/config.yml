@@ -59,7 +59,7 @@ commands:
       - run: |
           apt-get -y update
           DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
-          apt-get -y install curl build-essential git python3 python3-pip python3.8 python3.8-pip default-jre lsof cmake file wget
+          apt-get -y install curl build-essential git python3 python3-pip python3.8 default-jre lsof cmake file wget
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
           mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
