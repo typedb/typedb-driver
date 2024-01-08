@@ -367,8 +367,6 @@ jobs:
       - test-pip-snapshot-unix
 
       - deploy-maven-jni-snapshot-unix
-      - install-maven-linux
-      - test-maven-snapshot-unix
 
       - deploy-clib-snapshot-linux
       - test-clib-assembly-linux:
@@ -389,8 +387,6 @@ jobs:
       - test-pip-snapshot-unix
 
       - deploy-maven-jni-snapshot-unix
-      - install-maven-linux
-      - test-maven-snapshot-unix
 
       - deploy-clib-snapshot-linux
       - test-clib-assembly-linux:
@@ -411,8 +407,6 @@ jobs:
       - test-pip-snapshot-unix
 
       - deploy-maven-jni-snapshot-unix
-      - install-maven-mac
-      - test-maven-snapshot-unix
 
       - run: brew install cmake
 
@@ -436,8 +430,6 @@ jobs:
       - test-pip-snapshot-unix
 
       - deploy-maven-jni-snapshot-unix
-      - install-maven-mac
-      - test-maven-snapshot-unix
 
       - run: brew install cmake
 
@@ -477,6 +469,8 @@ jobs:
       - install-bazel-linux:
           bazel-arch: amd64
       - deploy-maven-snapshot-unix
+      - install-maven-linux
+      - test-maven-snapshot-unix
 
   ################
   # Release jobs #
