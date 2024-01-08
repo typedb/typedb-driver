@@ -18,6 +18,7 @@ a| `ConnectionFailed`
 a| `ConnectionIsClosed`
 a| `DatabaseDoesNotExist`
 a| `InvalidResponseField`
+a| `MissingPort`
 a| `MissingResponseField`
 a| `RPCMethodUnavailable`
 a| `ServerConnectionFailed`
