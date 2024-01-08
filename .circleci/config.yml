@@ -208,9 +208,10 @@ commands:
           export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run --jobs=8 --define version=$(cat VERSION) //java:deploy-maven --compilation_mode=opt -- release
 
-  #############################
-  # C driver deployment steps #
-  #############################
+  ######################
+  # C deployment steps #
+  ######################
+
   deploy-clib-snapshot-unix:
     steps:
       - run: |
