@@ -573,7 +573,10 @@ jobs:
     executor: linux-x86_64-ubuntu-1804
     steps:
       - checkout
-      - run: git push --delete https://$REPO_GITHUB_TOKEN@github.com/vaticle/typedb-driver.git $CIRCLE_BRANCH
+      - run: |
+          apt update -y
+          apt install -y git
+          git push --delete https://$REPO_GITHUB_TOKEN@github.com/vaticle/typedb-driver.git $CIRCLE_BRANCH
 
 
 workflows:
