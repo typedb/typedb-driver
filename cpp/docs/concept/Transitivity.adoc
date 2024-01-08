@@ -1,0 +1,21 @@
+[#_Transitivity]
+=== Transitivity
+
+*Package*: `TypeDB`
+
+
+
+Used in ConceptAPI to specify whether to query only explicit schema constraints or also include transitive ones
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols="~"]
+[options="header"]
+|===
+|Name
+a| `EXPLICIT`
+a| `TRANSITIVE`
+|===
+// end::enum_constants[]
+

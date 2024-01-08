@@ -19,7 +19,7 @@
  * under the License.
  */
 
-#include "typedb/logic/explainable.hpp"
+#include "typedb/answer/explainable.hpp"
 
 #include "../common/macros.hpp"
 #include "../common/native.hpp"

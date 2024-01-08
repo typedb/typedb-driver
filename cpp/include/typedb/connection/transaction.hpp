@@ -28,6 +28,14 @@
 
 namespace TypeDB {
 
+/**
+ * Used to specify the type of transaction.
+ *
+ * <h3>Examples</h3>
+ * <pre>
+ * session.transaction(TransactionType.READ);
+ * </pre>
+ */
 enum class TransactionType {
     READ,
     WRITE,
@@ -37,14 +45,29 @@ enum class TransactionType {
 class Session;
 class Concept;
 
+
+/**
+ * \brief A transaction with a TypeDB database.
+ */
 class Transaction {
 private:
     NativePointer<_native::Transaction> transactionNative;
     TypeDB::TransactionType txnType;
 
 public:
+    /**
+     * The<code></code>QueryManager<code></code> for this Transaction, from which any TypeQL query can be executed.
+     */
     const QueryManager query;
+
+    /**
+     * The <code>ConceptManager</code> for this transaction, providing access to all Concept API methods.
+     */
     const ConceptManager concepts;
+
+    /**
+     * The <code>LogicManager</code> for this Transaction, providing access to all Concept API - Logic methods.
+     */
     const LogicManager logic;
 
     Transaction(const Transaction&) = delete;
@@ -54,18 +77,72 @@ public:
     Transaction& operator=(const Transaction&) = delete;
     Transaction& operator=(Transaction&&);
 
+    /**
+     * The transaction’s type (READ or WRITE)
+     */
     TypeDB::TransactionType type() const;
 
+    /**
+     * Checks whether this transaction is open.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * transaction.isOpen();
+     * </pre>
+     */
     bool isOpen() const;
 
+    /**
+     * Closes the transaction.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * transaction.close()
+     * </pre>
+     */
     void close();
 
+    /**
+     * Closes the transaction.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * transaction.close()
+     * </pre>
+     */
     void forceClose();
 
+    /**
+     * Commits the changes made via this transaction to the TypeDB database.
+     * Whether or not the transaction is commited successfully, it gets closed after the commit call.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * transaction.commit()
+     * </pre>
+     */
     void commit();
 
+    /**
+     * Rolls back the uncommitted changes made via this transaction.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * transaction.rollback()
+     * </pre>
+     */
     void rollback();
 
+    /**
+     * Registers a callback function which will be executed when this transaction is closed.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * transaction.onClose(function);
+     * </pre>
+     *
+     * @param function The callback function.
+     */
     void onClose(std::function<void(const std::optional<DriverException>&)> callback);
 
 private:

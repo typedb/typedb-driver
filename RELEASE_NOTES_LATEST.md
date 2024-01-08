@@ -9,7 +9,7 @@ Documentation: https://typedb.com/docs/clients/rust-driver
 
 
 ```sh
-cargo add typedb-driver@2.26.1
+cargo add typedb-driver@2.26.2
 ```
 
 
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/clients/java-driver
     <dependency>
         <groupid>com.vaticle.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>2.26.1</version>
+        <version>2.26.2</version>
     </dependency>
 </dependencies>
 ```
@@ -42,7 +42,7 @@ Documentation: https://typedb.com/docs/clients/python-driver
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==2.26.1
+pip install typedb-driver==2.26.2
 ```
 
 ### NodeJS driver
@@ -56,72 +56,68 @@ npm install typedb-driver@
 
 ### C++ driver
 
-Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/2.26.1
+Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/2.26.2
 
 ### C driver
 
-Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/2.26.1
+Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/2.26.2
 
 
 
 ## New Features
+
+
+## Bugs Fixed
+- **Fix fetch sub-query aggregation null pointer**
   
-- **Introduce C++ driver**
-  Introduce the C++ driver for TypeDB. It is built against the C++17 standard and distributed as an archive containing the headers (under `/include` & a shared library under `/lib`). 
+  We fix a bug where a Fetch query with a Get-Aggregate subquery that returned an empty (ie. undefined) answer throw a null pointer exception.
   
-  **Usage:** As usual, add the headers paths to your include path in the compile step & the library to your link step. For windows, the 'import-lib' `typedb-driver-cpp-<platform>.if.lib` is included to link against.
+  For example this used to incorrectly throw an exception if 'Alice' doesn't have any salaries in the database, since a 'sum' is undefined for 0 entries.
+  ```
+  match
+  $x isa person, has name $n; $n == "Alice";
+  fetch
+  $n as "name";
+  total-salary: {
+    match $x has salary $s;
+    get $s; 
+    sum $s;
+  };
+  ```
   
-  **Architecture:** The C++ driver is a thin wrapper around the TypeDB rust driver, introducing classes for a more intuitive interface. Each C++ object holds a unique pointer to the corresponding native rust object and is the unique owner of that rust object. To ensure this, we enforce move-semantics on the C++ objects. The rust object is freed when the C++ object owning it is destructed. Any error encountered will throw a `TypeDB::DriverException`. Note that methods which return `Iterable` or `Future` which encounter a server-side error will only throw when they are evaluated (using `begin` or `get` respectively).
-  
-  **Example:**
-  ```cpp
-  // All files are included from typedb.hpp
-  #include <typedb.hpp>
-  
-  int main() {
-      TypeDB::Driver driver = TypeDB::Driver::coreDriver("127.0.0.1:1729");
-      std::string dbName = "move-example";
-      TypeDB::Driver driver = TypeDB::Driver::coreDriver("127.0.0.1:1729");
-  
-      driver.databases.create(dbName); 
-      TypeDB::Database db = driver.databases.get(dbName);
-      // Database db1 = db; // Copying is disabled: Produces a compiler error.
-      TypeDB::Database db1 = std::move(db); // Moves ownership from db to db1
-      try {
-          std::cout << db.name() << std::endl; // db is no longer valid
-      } catch (TypeDB::DriverException e) {
-          // C++ Internal Error: The object does not have a valid native handle. It may have been:  uninitialised, moved or disposed
-          std::cerr << "Caught exception: " << e.message() << std::endl;
-      }
-      std::cout << "db.name(): " << db1.name() << std::endl; // Ok: Prints 'move-objects'
-      return 0;
-  }
+  We now correctly return the following JSON structure
+  ```
+  [
+    {
+      "name": {"value": "Alice",  "type":  {"label": "name", "root": "attribute", "value_type": "string"}},
+      "total-salary": null
+    }
+  ]
   ```
   
   
-
-## Bugs Fixed
-- **Java JNI library loading: fallback when platform not specified**
+- **Update to tonic 1.28**
   
-  Previously, the JNI library would be selected based on if the containing JAR contains the expected platform string. When TypeDB Driver Java is repackaged by the end user, the JNI library is relocated and is likely missing the platform specification in its path. Now, if only one native library candidate is found in classpath, we attempt to use that rather than fail.
+  We fix a bug in the installation of the latest typedb-driver Rust by upgrading `tonic` to version 1.28.
   
   
 
 ## Code Refactors
-- **Replace all instances of 'enterprise' with 'cloud'**
+- **Release with Ubuntu 18.04 in to lower GLIBC requirement to 2.27.0**
   
-  We replace the term 'enterprise' with 'cloud', to reflect the new consistent terminology used throughout Vaticle.
+  We downgrade from Ubuntu 20.04 to 18.04 in CircleCI assembly and deployment jobs, using a Docker image. This lowers the minimum supported glibc version from 2.31 to 2.27.
 
-- **C++ driver UX improvements**
-  Add a few missing APIs, and easier-to-use function variants.
-
-
+- **Rename typedb.hpp to typedb_driver.hpp**
+  
 
 ## Other Improvements
+- **C++ driver documentation and add missing APIs**
+  Documents the C++ code & adds ascii docs generated via doxygen. Adds a few methods to the classes which were missing.
   
-- **Fix circleci assembly tests for C++ driver**
-  Fix assembly test paths broken in previous commit
-  
-- **Release pipeline for C++ driver**
-  Introduce build targets & jobs for the release pipeline of the C++ driver
+- **Update python credential documentation**
+
+- **Update C and CPP entry in README.md**
+
+- **Update C++ readme with new 'cloud' terminology**
+
   

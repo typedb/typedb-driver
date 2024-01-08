@@ -27,9 +27,11 @@
 
 namespace TypeDB {
 
+/**
+ * \brief Contains an element of the group query result.
+ */
 class ConceptMapGroup {
 public:
-    ConceptMapGroup(_native::ConceptMapGroup*);
     ConceptMapGroup(const ConceptMapGroup&) = delete;
     ConceptMapGroup(ConceptMapGroup&&) = default;
 
@@ -37,12 +39,35 @@ public:
     ConceptMapGroup& operator=(ConceptMapGroup&&) = default;
     ~ConceptMapGroup() = default;
 
+    /**
+     * Retrieves the concept that is the group owner.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMapGroup.owner();
+     * </pre>
+     */
     std::unique_ptr<Concept> owner();
+
+    /**
+     * Retrieves the <code>ConceptMap</code>s of the group.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * conceptMapGroup.conceptMaps();
+     * </pre>
+     */
     ConceptMapIterable conceptMaps();
+
+    /**
+     * A string representation of this ConceptMapGroup.
+     */
     std::string toString();
 
 private:
     NativePointer<_native::ConceptMapGroup> conceptMapGroupNative;
+
+    ConceptMapGroup(_native::ConceptMapGroup*);
 
     friend class IteratorHelper<_native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup>;
 };

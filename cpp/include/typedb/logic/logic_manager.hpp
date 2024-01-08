@@ -30,12 +30,47 @@ namespace TypeDB {
 
 class Transaction;
 
+/**
+ * \brief Provides methods for manipulating <code>Rule</code>s in the database.
+ */
 class LogicManager {
 public:
     ~LogicManager() = default;
 
+    /**
+     * Retrieves the Rule that has the given label.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * transaction.logic.getRule(label).get();
+     * </pre>
+     *
+     * @param label The label of the Rule to create or retrieve
+     */
     OptionalRuleFuture getRule(const std::string& label) const;
+
+    /**
+     * Retrieves all rules.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * transaction.logic.getRules()
+     * </pre>
+     */
     RuleIterable getRules() const;
+
+    /**
+     * Creates a new Rule if none exists with the given label, or replaces the existing one.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * transaction.logic.putRule(label, when, then).get();
+     * </pre>
+     *
+     * @param label The label of the Rule to create or replace
+     * @param when The when body of the rule to create
+     * @param then The then body of the rule to create
+     */
     [[nodiscard]] RuleFuture putRule(const std::string& label, const std::string& when, const std::string& then) const;
 
 private:

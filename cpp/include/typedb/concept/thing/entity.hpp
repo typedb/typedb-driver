@@ -26,8 +26,22 @@
 
 namespace TypeDB {
 
+/**
+ * \brief Instance of data of an entity type, representing a standalone object that exists in the data model independently.
+ *
+ * Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles
+ * played in relation instances.
+ */
 class Entity : public Thing {
 public:
+    /**
+     * Retrieves the type which this <code>Entity</code> belongs to.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * entity.getType();
+     * </pre>
+     */
     std::unique_ptr<EntityType> getType();
 
 protected:

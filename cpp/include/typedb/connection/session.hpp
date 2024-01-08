@@ -25,6 +25,14 @@
 
 namespace TypeDB {
 
+/**
+ * Used to specify the type of the session.
+ *
+ * <h3>Examples</h3>
+ * <pre>
+ * driver.session(database, TypeDBSession.Type.SCHEMA);
+ * </pre>
+ */
 enum class SessionType {
     DATA,
     SCHEMA,
@@ -32,6 +40,9 @@ enum class SessionType {
 
 class DatabaseManager;  // forward declaration for friendship
 
+/**
+ * \brief A session with a TypeDB database.
+ */
 class Session {
 public:
     Session(const Session&) = delete;
@@ -41,17 +52,84 @@ public:
     Session& operator=(const Session&) = delete;
     Session& operator=(Session&&) = default;
 
+    /**
+     * The current session’s type (SCHEMA or DATA)
+     */
+    SessionType type() const;
+
+    /**
+     * Checks whether this session is open.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * session.isOpen();
+     * </pre>
+     */
     bool isOpen() const;
+
+    /**
+     * Closes the session. Before opening a new session, the session currently open should first be closed.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * session.close();
+     * </pre>
+     */
     void close();
+
+    /**
+     * Returns the name of the database of the session.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * session.databaseName();
+     * </pre>
+     */
     std::string databaseName() const;
+
+    /**
+     * Opens a transaction to perform read or write queries on the database connected to the session.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * session.transaction(transactionType, options);
+     * </pre>
+     *
+     * @param type The type of transaction to be created (READ or WRITE)
+     * @param options Options for the session
+     */
     Transaction transaction(TransactionType type, const Options& options) const;
 
+    /**
+     * Registers a callback function which will be executed when this session is closed.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * session.onClose(function)
+     * </pre>
+     *
+     * @param function The callback function.
+     */
     void onClose(std::function<void()> callback);
+
+    /**
+     * Registers a callback function which will be executed when this session is reopened.
+     * A session may be closed if it times out, or loses the connection to the database.
+     * In such situations, the session is reopened automatically when opening a new transaction.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * session.onReopen(function)
+     * </pre>
+     *
+     * @param function The callback function.
+     */
     void onReopen(std::function<void()> callback);
 
 private:
     NativePointer<_native::Session> sessionNative;
-    Session(_native::Session*);
+    SessionType sessionType;
+    Session(_native::Session*, SessionType);
 
     friend class TypeDB::DatabaseManager;
 };

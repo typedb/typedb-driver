@@ -1,0 +1,180 @@
+[#_ConceptMapIterator]
+=== ConceptMapIterator
+
+Alias for Iterator<_native::ConceptMapIterator, _native::ConceptMap, TypeDB::ConceptMap>
+
+[#_ConceptMapIterable]
+=== ConceptMapIterable
+
+Alias for Iterable<_native::ConceptMapIterator, _native::ConceptMap, TypeDB::ConceptMap>
+
+[#_ConceptMapGroupIterable]
+=== ConceptMapGroupIterable
+
+Alias for Iterable<_native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup>
+
+[#_ConceptMapGroupIterator]
+=== ConceptMapGroupIterator
+
+Alias for Iterator<_native::ConceptMapGroupIterator, _native::ConceptMapGroup, TypeDB::ConceptMapGroup>
+
+[#_OwnerAttributePairIterator]
+=== OwnerAttributePairIterator
+
+Alias for Iterator<_native::StringPairIterator, _native::StringPair, OwnerAttributePair>
+
+[#_OwnerAttributePairIterable]
+=== OwnerAttributePairIterable
+
+Alias for Iterable<_native::StringPairIterator, _native::StringPair, OwnerAttributePair>
+
+[#_JSONMap]
+=== JSONMap
+
+Alias for std::map<std::string, JSON>
+
+[#_JSONArray]
+=== JSONArray
+
+Alias for std::vector<JSON>
+
+[#_JSONBoolean]
+=== JSONBoolean
+
+Alias for bool
+
+[#_JSONLong]
+=== JSONLong
+
+Alias for long
+
+[#_JSONDouble]
+=== JSONDouble
+
+Alias for double
+
+[#_JSONString]
+=== JSONString
+
+Alias for std::string
+
+[#_AggregateResult]
+=== AggregateResult
+
+Alias for std::optional<std::unique_ptr<Value>>
+
+[#_AggregateFuture]
+=== AggregateFuture
+
+Alias for Future<AggregateResult, _native::ConceptPromise>
+
+[#_ValueGroupIterable]
+=== ValueGroupIterable
+
+Alias for Iterable<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>
+
+[#_ValueGroupIterator]
+=== ValueGroupIterator
+
+Alias for Iterator<_native::ValueGroupIterator, _native::ValueGroup, TypeDB::ValueGroup>
+
+[#_VoidFuture]
+=== VoidFuture
+
+Alias for Future<void, _native::VoidPromise>
+
+[#_BoolFuture]
+=== BoolFuture
+
+Alias for Future<bool, _native::BoolPromise>
+
+[#_StringFuture]
+=== StringFuture
+
+Alias for Future<std::string, _native::StringPromise>
+
+[#_OptionalStringFuture]
+=== OptionalStringFuture
+
+Alias for Future<std::optional<std::string>, _native::StringPromise>
+
+[#_StringIterable]
+=== StringIterable
+
+Alias for Iterable<_native::StringIterator, char, std::string>
+
+[#_StringIterator]
+=== StringIterator
+
+Alias for Iterator<_native::StringIterator, char, std::string>
+
+[#_DateTime]
+=== DateTime
+
+Alias for std::chrono::time_point< std::chrono::system_clock, std::chrono::milliseconds >
+
+[#_DatabaseIterator]
+=== DatabaseIterator
+
+Alias for Iterator<_native::DatabaseIterator, _native::Database, TypeDB::Database>
+
+[#_DatabaseIterable]
+=== DatabaseIterable
+
+Alias for Iterable<_native::DatabaseIterator, _native::Database, TypeDB::Database>
+
+[#_ReplicaInfoIterable]
+=== ReplicaInfoIterable
+
+Alias for Iterable<_native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo>
+
+[#_ReplicaInfoIterator]
+=== ReplicaInfoIterator
+
+Alias for Iterator<_native::ReplicaInfoIterator, _native::ReplicaInfo, ReplicaInfo>
+
+[#_ExplanationIterator]
+=== ExplanationIterator
+
+Alias for Iterator<_native::ExplanationIterator, _native::Explanation, Explanation>
+
+[#_ExplanationIterable]
+=== ExplanationIterable
+
+Alias for Iterable<_native::ExplanationIterator, _native::Explanation, Explanation>
+
+[#_RuleFuture]
+=== RuleFuture
+
+Alias for Future<Rule, _native::RulePromise>
+
+[#_OptionalRuleFuture]
+=== OptionalRuleFuture
+
+Alias for Future<std::optional<Rule>, _native::RulePromise>
+
+[#_RuleIterable]
+=== RuleIterable
+
+Alias for Iterable<_native::RuleIterator, _native::Rule, Rule>
+
+[#_RuleIterator]
+=== RuleIterator
+
+Alias for Iterator<_native::RuleIterator, _native::Rule, Rule>
+
+[#_JSONIterable]
+=== JSONIterable
+
+Alias for Iterable<_native::StringIterator, char, JSON>
+
+[#_UserIterator]
+=== UserIterator
+
+Alias for Iterator<_native::UserIterator, _native::User, User>
+
+[#_UserIterable]
+=== UserIterable
+
+Alias for Iterable<_native::UserIterator, _native::User, User>
+

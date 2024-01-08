@@ -41,7 +41,7 @@ impl Tree {
 pub(crate) enum Node {
     Map(HashMap<String, Node>),
     List(Vec<Node>),
-    Leaf(Concept),
+    Leaf(Option<Concept>),
 }
 
 impl Node {
@@ -51,34 +51,33 @@ impl Node {
                 JSON::Object(map.into_iter().map(|(var, node)| (Cow::Owned(var), node.into_json())).collect())
             }
             Node::List(list) => JSON::Array(list.into_iter().map(Node::into_json).collect()),
-            Node::Leaf(Concept::RootThingType(_)) => {
+            Node::Leaf(Some(Concept::RootThingType(_))) => {
                 json_type(RootThingType::LABEL, Cow::Borrowed(RootThingType::LABEL))
             }
-            Node::Leaf(Concept::EntityType(EntityType { label, .. })) => {
+            Node::Leaf(Some(Concept::EntityType(EntityType { label, .. }))) => {
                 json_type(EntityType::ROOT_LABEL, Cow::Owned(label))
             }
-            Node::Leaf(Concept::RelationType(RelationType { label, .. })) => {
+            Node::Leaf(Some(Concept::RelationType(RelationType { label, .. }))) => {
                 json_type(RelationType::ROOT_LABEL, Cow::Owned(label))
             }
-            Node::Leaf(Concept::AttributeType(AttributeType { label, value_type, .. })) => {
+            Node::Leaf(Some(Concept::AttributeType(AttributeType { label, value_type, .. }))) => {
                 json_attribute_type(Cow::Owned(label), value_type)
             }
-
-            Node::Leaf(Concept::RoleType(RoleType { label, .. })) => {
+            Node::Leaf(Some(Concept::RoleType(RoleType { label, .. }))) => {
                 json_type("relation:role", Cow::Owned(label.to_string()))
             }
-
-            Node::Leaf(Concept::Attribute(Attribute {
-                type_: AttributeType { label, value_type, .. }, value, ..
-            })) => JSON::Object(
+            Node::Leaf(Some(Concept::Attribute(Attribute {
+                type_: AttributeType { label, value_type, .. },
+                value,
+                ..
+            }))) => JSON::Object(
                 [(TYPE, json_attribute_type(Cow::Owned(label), value_type)), (VALUE, json_value(value))].into(),
             ),
-
-            Node::Leaf(Concept::Value(value)) => {
+            Node::Leaf(Some(Concept::Value(value))) => {
                 JSON::Object([(VALUE_TYPE, json_value_type(value.get_type())), (VALUE, json_value(value))].into())
             }
-
-            Node::Leaf(concept @ (Concept::Entity(_) | Concept::Relation(_))) => {
+            Node::Leaf(None) => JSON::Null,
+            Node::Leaf(Some(concept @ (Concept::Entity(_) | Concept::Relation(_)))) => {
                 unreachable!("Unexpected concept encountered in fetch response: {concept:?}")
             }
         }

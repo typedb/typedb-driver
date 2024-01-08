@@ -32,6 +32,7 @@ pub enum JSON {
     String(Cow<'static, str>),
     Number(f64),
     Boolean(bool),
+    Null,
 }
 
 impl fmt::Display for JSON {
@@ -60,6 +61,7 @@ impl fmt::Display for JSON {
             JSON::String(string) => write_escaped_string(string, f)?,
             JSON::Number(number) => write!(f, "{number}")?,
             JSON::Boolean(boolean) => write!(f, "{boolean}")?,
+            JSON::Null => write!(f, "null")?,
         }
         Ok(())
     }

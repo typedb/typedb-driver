@@ -53,13 +53,13 @@ cucumber_bdd::StepCollection<Context> userSteps = {
         context.driver->users.deleteUser(matches[1].str());
     }),
     BDD_STEP("\\s*get connected user\\s*", {
-        auto ignored = context.driver->users.getCurrentUser();
+        auto ignored = context.driver->user();
     }),
     BDD_STEP_AND_THROWS("user password update: (\\S+), (\\S+)", {
-        context.driver->users.getCurrentUser().passwordUpdate(context.driver->users, matches[1].str(), matches[2].str());
+        context.driver->user().passwordUpdate(context.driver->users, matches[1].str(), matches[2].str());
     }),
     BDD_STEP_AND_THROWS("user expiry-seconds", {
-        ASSERT_TRUE(context.driver->users.getCurrentUser().passwordExpirySeconds().has_value());
+        ASSERT_TRUE(context.driver->user().passwordExpirySeconds().has_value());
     }),
 };
 

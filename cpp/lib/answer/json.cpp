@@ -32,7 +32,7 @@ help *
 namespace TypeDB {
 
 const char* jsonTypeNames[] = {
-    "JSONType::NONE",
+    "JSONType::INVALID",
 
     "JSONType::MAP",
     "JSONType::ARRAY",
@@ -41,6 +41,7 @@ const char* jsonTypeNames[] = {
     "JSONType::LONG",
     "JSONType::DOUBLE",
     "JSONType::STRING",
+    "JSONType::NULL_VALUE",
 };
 
 #define NAME(X) jsonTypeNames[(int)(X)]
@@ -78,7 +79,11 @@ JSON& JSON::operator=(const JSON& from) {
             doubleValue = from.doubleValue;
             break;
         }
-        case JSONType::NONE: {
+        case JSONType::NULL_VALUE: {
+            nullValue = from.nullValue;
+            break;
+        }
+        case JSONType::INVALID: {
             break;
         }
     }
@@ -120,12 +125,16 @@ JSON& JSON::operator=(JSON&& from) {
             doubleValue = std::move(from.doubleValue);
             break;
         }
-        case JSONType::NONE: {
+        case JSONType::NULL_VALUE: {
+            nullValue = std::move(from.nullValue);
+            break;
+        }
+        case JSONType::INVALID: {
             break;
         }
     }
     _type = from._type;
-    from._type = JSONType::NONE;
+    from._type = JSONType::INVALID;
     return *this;
 }
 
@@ -139,6 +148,10 @@ JSON::JSON(JSONLong l)
 
 JSON::JSON(JSONDouble d)
     : _type(JSONType::DOUBLE), doubleValue(d) {
+}
+
+JSON::JSON(JSONNull n)
+    : _type(JSONType::NULL_VALUE), nullValue(n) {
 }
 
 JSON::JSON(const JSONString& str)
@@ -176,14 +189,15 @@ JSON::~JSON() {
             mapValue.~JSONMap();
             break;
         }
-        case JSONType::NONE:
+        case JSONType::INVALID:
         case JSONType::BOOLEAN:
         case JSONType::LONG:
-        case JSONType::DOUBLE: {
+        case JSONType::DOUBLE:
+        case JSONType::NULL_VALUE: {
             break;
         }
     }
-    _type = JSONType::NONE;
+    _type = JSONType::INVALID;
 }
 
 JSONType JSON::type() const {
@@ -214,6 +228,10 @@ bool JSON::isString() const {
     return _type == JSONType::STRING;
 }
 
+bool JSON::isNull() const {
+    return _type == JSONType::NULL_VALUE;
+}
+
 const JSONMap& JSON::asMap() const {
     if (!isMap()) throw Utils::exception(DriverError::INVALID_JSON_CAST, NAME(_type), NAME(JSONType::MAP));
     return mapValue;
@@ -237,6 +255,10 @@ const JSONDouble& JSON::asDouble() const {
 const JSONString& JSON::asString() const {
     if (!isString()) throw Utils::exception(DriverError::INVALID_JSON_CAST, NAME(_type), NAME(JSONType::STRING));
     return stringValue;
+}
+const JSONNull& JSON::asNull() const {
+    if (!isNull()) throw Utils::exception(DriverError::INVALID_JSON_CAST, NAME(_type), NAME(JSONType::NULL_VALUE));
+    return nullValue;
 }
 
 class JSONBuilder {
@@ -273,6 +295,9 @@ JSON JSONBuilder::build(const nlohmann::json& from) {
             return buildMap(from);
         case nlohmann::json::value_t::array:
             return buildArray(from);
+
+       case nlohmann::json::value_t::null:
+            return JSON(JSONNull());
 
         default:
             THROW_ILLEGAL_STATE;

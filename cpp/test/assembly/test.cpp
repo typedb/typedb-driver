@@ -21,7 +21,7 @@
 
 #include <iostream>
 
-#include <typedb.hpp>
+#include <typedb_driver.hpp>
 
 int main() {
     try {

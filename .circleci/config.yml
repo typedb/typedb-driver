@@ -26,15 +26,28 @@ orbs:
   macos: circleci/macos@2.4.0
 
 executors:
-  linux-arm64:
-    machine:
-      image: ubuntu-2004:current
-      resource_class: arm.medium
+  linux-arm64-ubuntu-1804:
+    docker:
+      - image: ubuntu:18.04
+    resource_class: arm.large
     working_directory: ~/typedb-driver
 
-  linux-x86_64:
-    machine:
-      image: ubuntu-2004:current
+  linux-arm64-ubuntu-2204:
+    docker:
+      - image: ubuntu:22.04
+    resource_class: arm.large
+    working_directory: ~/typedb-driver
+
+  linux-x86_64-ubuntu-1804:
+    docker:
+      - image: ubuntu:18.04
+    resource_class: large
+    working_directory: ~/typedb-driver
+
+  linux-x86_64-ubuntu-2204:
+    docker:
+      - image: ubuntu:22.04
+    resource_class: large
     working_directory: ~/typedb-driver
 
   mac-arm64:
@@ -56,8 +69,11 @@ commands:
         type: string
     steps:
       - run: |
+          apt-get -y update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+          apt-get -y install curl build-essential git python3 python3-pip default-jre lsof cmake file
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
-          sudo mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
+          mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
 
   install-bazel-mac:
@@ -74,21 +90,29 @@ commands:
   # Python deployment steps #
   ###########################
 
+  install-pip-requirements-linux-py37:
+    steps:
+      - run: |
+          apt install -y software-properties-common && add-apt-repository -y ppa:deadsnakes/ppa && apt update && apt install -y python3.7
+          update-alternatives --install /usr/bin/python python /usr/bin/python3.7 2
+          update-alternatives --install /usr/bin/python3 python /usr/bin/python3.7 2
+          python3 -m pip install pip==21.3.1
+          python3 -m pip install -r python/requirements_dev.txt
+
   install-pip-requirements:
     steps:
       - run: |
-          python3 -m pip install pip==23.2.1
+          python3 -m pip install pip==21.3.1
           python3 -m pip install -r python/requirements_dev.txt
 
   deploy-pip-snapshot-unix:
     steps:
       - run: |
-          ulimit -n 100000
           export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip39 -- snapshot
-          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip310 -- snapshot
-          bazel run --define version=$(git rev-parse HEAD) //python:deploy-pip311 -- snapshot
+          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip39 -- snapshot
+          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip310 -- snapshot
+          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip311 -- snapshot
 
   deploy-pip-snapshot-linux:
     parameters:
@@ -98,7 +122,7 @@ commands:
       - checkout
       - install-bazel-linux:
           bazel-arch: "<<parameters.bazel-arch>>"
-      - install-pip-requirements
+      - install-pip-requirements-linux-py37
       - deploy-pip-snapshot-unix
 
   deploy-pip-snapshot-mac:
@@ -116,7 +140,7 @@ commands:
     steps:
       - run: |
           tool/test/start-core-server.sh
-          python3 -m pip install wheel
+          python3 -m pip install wheel 
           python3 -m pip install --extra-index-url https://repo.vaticle.com/repository/pypi-snapshot/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
           sleep 3
           (cd python/tests/deployment/ && python3 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
@@ -150,9 +174,9 @@ commands:
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_PYPI_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_PYPI_PASSWORD
-          bazel run --define version=$(cat VERSION) //python:deploy-pip39 --compilation_mode=opt -- release
-          bazel run --define version=$(cat VERSION) //python:deploy-pip310 --compilation_mode=opt -- release
-          bazel run --define version=$(cat VERSION) //python:deploy-pip311 --compilation_mode=opt -- release
+          bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip39 --compilation_mode=opt -- release
+          bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip310 --compilation_mode=opt -- release
+          bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip311 --compilation_mode=opt -- release
 
   deploy-pip-release-linux:
     parameters:
@@ -162,7 +186,7 @@ commands:
       - checkout
       - install-bazel-linux:
           bazel-arch: "<<parameters.bazel-arch>>"
-      - install-pip-requirements
+      - install-pip-requirements-linux-py37
       - deploy-pip-release-unix
 
   deploy-pip-release-mac:
@@ -184,13 +208,16 @@ commands:
     steps:
       - run: brew install maven
 
+  install-maven-linux:
+    steps:
+      - run: apt-get -y update && apt-get -y install maven
+
   deploy-maven-jni-snapshot-unix:
     steps:
       - run: |
-          ulimit -n 100000
           export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --define version=$(git rev-parse HEAD) //java:deploy-maven-jni -- snapshot
+          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //java:deploy-maven-jni -- snapshot
 
   deploy-maven-jni-snapshot-linux:
     parameters:
@@ -218,7 +245,7 @@ commands:
       - run: |
           export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --define version=$(git rev-parse HEAD) //java:deploy-maven -- snapshot
+          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //java:deploy-maven -- snapshot
 
   test-maven-snapshot-unix:
     steps:
@@ -237,6 +264,7 @@ commands:
       - checkout
       - install-bazel-linux:
           bazel-arch: "<<parameters.bazel-arch>>"
+      - install-maven-linux
       - test-maven-snapshot-unix
 
   test-maven-snapshot-mac:
@@ -253,10 +281,9 @@ commands:
   deploy-maven-jni-release-unix:
     steps:
       - run: |
-          ulimit -n 100000
           export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --define version=$(cat VERSION) //java:deploy-maven-jni --compilation_mode=opt -- release
+          bazel run --jobs=8 --define version=$(cat VERSION) //java:deploy-maven-jni --compilation_mode=opt -- release
 
   deploy-maven-jni-release-linux:
     parameters:
@@ -284,7 +311,7 @@ commands:
       - run: |
           export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --define version=$(cat VERSION) //java:deploy-maven --compilation_mode=opt -- release
+          bazel run --jobs=8 --define version=$(cat VERSION) //java:deploy-maven --compilation_mode=opt -- release
 
   #############################
   # C driver deployment steps #
@@ -292,10 +319,9 @@ commands:
   deploy-clib-snapshot-unix:
     steps:
       - run: |
-          ulimit -n 100000
           export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --define version=$(git rev-parse HEAD) //c:deploy-clib-driver --compilation_mode=opt -- snapshot
+          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //c:deploy-clib-driver --compilation_mode=opt -- snapshot
 
   deploy-clib-snapshot-linux:
     parameters:
@@ -323,8 +349,7 @@ commands:
         type: string
     steps:
       - run: |
-          ulimit -n 100000      
-          bazel build //c:assemble-linux-<<parameters.target-arch>>-targz
+          bazel build --jobs=8 //c:assemble-linux-<<parameters.target-arch>>-targz
           export ASSEMBLY=typedb-driver-clib-linux-<<parameters.target-arch>>
           mkdir -p test_assembly_clib
           tar -xf bazel-bin/c/$ASSEMBLY.tar.gz --directory test_assembly_clib
@@ -366,10 +391,9 @@ commands:
   deploy-clib-release-unix:
     steps:
       - run: |
-          ulimit -n 100000
           export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --define version=$(cat VERSION) //c:deploy-clib-driver --compilation_mode=opt -- release
+          bazel run --jobs=8 --define version=$(cat VERSION) //c:deploy-clib-driver --compilation_mode=opt -- release
 
   deploy-clib-release-linux:
     parameters:
@@ -397,10 +421,9 @@ commands:
   deploy-cpp-snapshot-unix:
     steps:
       - run: |
-          ulimit -n 100000
           export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --define version=$(git rev-parse HEAD) //cpp:deploy-cpp-driver --compilation_mode=opt -- snapshot
+          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //cpp:deploy-cpp-driver --compilation_mode=opt -- snapshot
 
   deploy-cpp-snapshot-linux:
     parameters:
@@ -428,8 +451,7 @@ commands:
         type: string
     steps:
       - run: |
-          ulimit -n 100000
-          bazel build //cpp:assemble-linux-<<parameters.target-arch>>-targz
+          bazel build --jobs=8 //cpp:assemble-linux-<<parameters.target-arch>>-targz
           export ASSEMBLY=typedb-driver-cpp-linux-<<parameters.target-arch>>
           mkdir -p test_assembly_cpp
           tar -xf bazel-bin/cpp/$ASSEMBLY.tar.gz --directory test_assembly_cpp
@@ -471,10 +493,9 @@ commands:
   deploy-cpp-release-unix:
     steps:
       - run: |
-          ulimit -n 100000
           export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --define version=$(cat VERSION) //cpp:deploy-cpp-driver --compilation_mode=opt -- release
+          bazel run --jobs=8 --define version=$(cat VERSION) //cpp:deploy-cpp-driver --compilation_mode=opt -- release
 
   deploy-cpp-release-linux:
     parameters:
@@ -503,13 +524,13 @@ jobs:
   ###############
 
   deploy-pip-snapshot-linux-arm64:
-    executor: linux-arm64
+    executor: linux-arm64-ubuntu-1804
     steps:
       - deploy-pip-snapshot-linux:
           bazel-arch: arm64
 
   deploy-pip-snapshot-linux-x86_64:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - deploy-pip-snapshot-linux:
           bazel-arch: amd64
@@ -538,13 +559,13 @@ jobs:
       - run: .circleci\windows\python\deploy_snapshot.bat
 
   test-pip-snapshot-linux-arm64:
-    executor: linux-arm64
+    executor: linux-arm64-ubuntu-2204
     steps:
       - test-pip-snapshot-linux:
           bazel-arch: arm64
 
   test-pip-snapshot-linux-x86_64:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-2204
     steps:
       - test-pip-snapshot-linux:
           bazel-arch: amd64
@@ -573,7 +594,7 @@ jobs:
       - run: .circleci\windows\python\test_deploy_snapshot.bat
 
   deploy-pip-release-linux-arm64:
-    executor: linux-arm64
+    executor: linux-arm64-ubuntu-1804
     steps:
       - deploy-pip-release-linux:
           bazel-arch: arm64
@@ -590,7 +611,7 @@ jobs:
           paths: ["./*"]
 
   deploy-pip-release-linux-x86_64:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - deploy-pip-release-linux:
           bazel-arch: amd64
@@ -659,13 +680,13 @@ jobs:
   #############
 
   deploy-maven-jni-snapshot-linux-arm64:
-    executor: linux-arm64
+    executor: linux-arm64-ubuntu-1804
     steps:
       - deploy-maven-jni-snapshot-linux:
           bazel-arch: arm64
 
   deploy-maven-jni-snapshot-linux-x86_64:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - deploy-maven-jni-snapshot-linux:
           bazel-arch: amd64
@@ -694,7 +715,7 @@ jobs:
       - run: .circleci\windows\java\deploy_snapshot.bat
 
   deploy-maven-snapshot:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - checkout
       - install-bazel-linux:
@@ -702,13 +723,13 @@ jobs:
       - deploy-maven-snapshot-unix
 
   test-maven-snapshot-linux-arm64:
-    executor: linux-arm64
+    executor: linux-arm64-ubuntu-1804
     steps:
       - test-maven-snapshot-linux:
           bazel-arch: arm64
 
   test-maven-snapshot-linux-x86_64:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - test-maven-snapshot-linux:
           bazel-arch: amd64
@@ -737,7 +758,7 @@ jobs:
       - run: .circleci\windows\java\test_deploy_snapshot.bat
 
   deploy-maven-jni-release-linux-arm64:
-    executor: linux-arm64
+    executor: linux-arm64-ubuntu-1804
     steps:
       - deploy-maven-jni-release-linux:
           bazel-arch: arm64
@@ -749,7 +770,7 @@ jobs:
           paths: ["./*"]
 
   deploy-maven-jni-release-linux-x86_64:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - deploy-maven-jni-release-linux:
           bazel-arch: amd64
@@ -799,7 +820,7 @@ jobs:
           paths: ["./*"]
 
   deploy-maven-release:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - checkout
       - install-bazel-linux:
@@ -835,7 +856,7 @@ jobs:
           target-arch: x86_64
           
   deploy-clib-snapshot-linux-arm64:
-    executor: linux-arm64
+    executor: linux-arm64-ubuntu-1804
     steps:
       - deploy-clib-snapshot-linux:
           bazel-arch: arm64
@@ -843,7 +864,7 @@ jobs:
           target-arch: arm64
       
   deploy-clib-snapshot-linux-x86_64:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - deploy-clib-snapshot-linux:
           bazel-arch: amd64
@@ -887,7 +908,7 @@ jobs:
           paths: ["./*"]
 
   deploy-clib-release-linux-arm64:
-    executor: linux-arm64
+    executor: linux-arm64-ubuntu-1804
     steps:
       - deploy-clib-release-linux:
           bazel-arch: arm64
@@ -899,7 +920,7 @@ jobs:
           paths: ["./*"]
 
   deploy-clib-release-linux-x86_64:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - deploy-clib-release-linux:
           bazel-arch: amd64
@@ -947,7 +968,7 @@ jobs:
           
 
   deploy-cpp-snapshot-linux-arm64:
-    executor: linux-arm64
+    executor: linux-arm64-ubuntu-1804
     steps:
       - deploy-cpp-snapshot-linux:
           bazel-arch: arm64
@@ -955,7 +976,7 @@ jobs:
           target-arch: arm64
       
   deploy-cpp-snapshot-linux-x86_64:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - deploy-cpp-snapshot-linux:
           bazel-arch: amd64
@@ -999,7 +1020,7 @@ jobs:
           paths: ["./*"]
 
   deploy-cpp-release-linux-arm64:
-    executor: linux-arm64
+    executor: linux-arm64-ubuntu-1804
     steps:
       - deploy-cpp-release-linux:
           bazel-arch: arm64
@@ -1011,7 +1032,7 @@ jobs:
           paths: ["./*"]
 
   deploy-cpp-release-linux-x86_64:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - deploy-cpp-release-linux:
           bazel-arch: amd64
@@ -1040,14 +1061,14 @@ jobs:
   ################################
 
   deploy-crate-release:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - checkout
       - install-bazel-linux:
           bazel-arch: amd64
       - run: |
           export DEPLOY_CRATE_TOKEN=$REPO_CRATES_TOKEN
-          bazel run --define version=$(cat VERSION) //rust:deploy_crate --compilation_mode=opt -- release
+          bazel run --jobs=8 --define version=$(cat VERSION) //rust:deploy_crate --compilation_mode=opt -- release
           mkdir -p ~/dist
           cp bazel-bin/rust/assemble_crate.crate ~/dist/typedb-driver.crate
       - persist_to_workspace:
@@ -1055,18 +1076,18 @@ jobs:
           paths: ["./*"]
 
   deploy-npm-release:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - checkout
       - install-bazel-linux:
           bazel-arch: amd64
       - run: |
-          wget -q -O - https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
-          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          sudo apt update -y
-          sudo apt install -y expect
+          wget -q -O - https://cli-assets.heroku.com/apt/release.key | apt-key add -
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+          apt update -y
+          apt install -y expect
           export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN
-          bazel run --define version=$(cat VERSION) //nodejs:deploy-npm --compilation_mode=opt -- release
+          bazel run --jobs=8 --define version=$(cat VERSION) //nodejs:deploy-npm --compilation_mode=opt -- release
           mkdir -p ~/dist
           cp bazel-bin/nodejs/assemble-npm.tar.gz ~/dist/typedb-driver-node.tar.gz
       - persist_to_workspace:
@@ -1074,7 +1095,7 @@ jobs:
           paths: ["./*"]
 
   deploy-github:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - attach_workspace:
           at: ~/dist
@@ -1091,7 +1112,7 @@ jobs:
               -c ${CIRCLE_SHA1} -delete -draft $(cat VERSION) ~/dist/
 
   release-cleanup:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - checkout
       - run: git push --delete https://$REPO_GITHUB_TOKEN@github.com/vaticle/typedb-driver.git $CIRCLE_BRANCH

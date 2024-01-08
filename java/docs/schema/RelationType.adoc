@@ -483,7 +483,7 @@ a| `transitivity` a| ``Transitivity.TRANSITIVE`` for direct and indirect subtype
 .Code examples
 [source,java]
 ----
-relationType.getSubtypes(transaction, transitivity).resolve();
+relationType.getSubtypes(transaction, transitivity);
 ----
 
 [#_RelationType_isAttribute__]

@@ -1,0 +1,173 @@
+[#_Driver]
+=== Driver
+
+*Package*: `TypeDB`
+
+
+
+A connection to a TypeDB server which serves as the starting point for all interaction.
+
+[caption=""]
+.Fields
+// tag::properties[]
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Type |Description
+a| `databases` a| `DatabaseManager TypeDB::Driver` a| The ``DatabaseManager`` for this connection, providing access to database management methods.
+a| `users` a| `UserManager TypeDB::Driver` a| The ``UserManager`` instance for this connection, providing access to user management methods. Only for TypeDB Cloud.
+|===
+// end::properties[]
+
+// tag::methods[]
+[#_void_TypeDBDriverclose___]
+==== close
+
+[source,cpp]
+----
+void TypeDB::Driver::close()
+----
+
+
+
+Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
+
+
+[caption=""]
+.Returns
+`void`
+
+[#_static_Driver_TypeDBDrivercloudDriver___const_stdvector__stdstring____cloudAddresses__const_Credential__credential_]
+==== cloudDriver
+
+[source,cpp]
+----
+static Driver TypeDB::Driver::cloudDriver(const std::vector< std::string >& cloudAddresses, const Credential& credential)
+----
+
+
+
+Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using the provided credential.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `addresses` a| The address(es) of the TypeDB server(s) a| 
+a| `credential` a| The Credential to connect with a| 
+|===
+
+[caption=""]
+.Returns
+`static Driver`
+
+[#_static_Driver_TypeDBDrivercoreDriver___const_stdstring__coreAddress_]
+==== coreDriver
+
+[source,cpp]
+----
+static Driver TypeDB::Driver::coreDriver(const std::string& coreAddress)
+----
+
+
+
+Open a TypeDB Driver to a TypeDB Core server available at the provided address.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `address` a| The address of the TypeDB server a| 
+|===
+
+[caption=""]
+.Returns
+`static Driver`
+
+[#_static_void_TypeDBDriverinitLogging___]
+==== initLogging
+
+[source,cpp]
+----
+static void TypeDB::Driver::initLogging()
+----
+
+
+
+Enables logging in the TypeDB driver.
+
+
+[caption=""]
+.Returns
+`static void`
+
+[#_bool_TypeDBDriverisOpen___]
+==== isOpen
+
+[source,cpp]
+----
+bool TypeDB::Driver::isOpen()
+----
+
+
+
+Checks whether this connection is presently open.
+
+
+[caption=""]
+.Returns
+`bool`
+
+[#_Session_TypeDBDriversession___const_stdstring__database__SessionType_sessionType__const_Options__options_]
+==== session
+
+[source,cpp]
+----
+Session TypeDB::Driver::session(const std::string& database, SessionType sessionType, const Options& options)
+----
+
+
+
+Opens a communication tunnel (session) to the given database on the running TypeDB server. For more information on the methods, available with sessions, see the ``TypeDBSession`` section.
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `database` a| The name of the database with which the session connects a| 
+a| `type` a| The type of session to be created (DATA or SCHEMA) a| 
+a| `options` a| ``TypeDBOptions`` for the session a| 
+|===
+
+[caption=""]
+.Returns
+`Session`
+
+[#_User_TypeDBDriveruser___]
+==== user
+
+[source,cpp]
+----
+User TypeDB::Driver::user()
+----
+
+
+
+Returns the logged-in user for the connection. Only for TypeDB Cloud.
+
+
+[caption=""]
+.Returns
+`User`
+
+// end::methods[]
+

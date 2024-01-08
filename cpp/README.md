@@ -6,7 +6,7 @@ The driver is distributed as an archive containing the headers & a shared librar
 ```
 |- README.md
 |- include/
-|  |- typedb.hpp
+|  |- typedb_driver.hpp
 |  |- ...
 |
 |- lib/
@@ -52,8 +52,8 @@ Any error encountered will throw a `TypeDB::DriverException`. Note that methods 
 
 ## Examples
 ```cpp
-// All files are included from typedb.hpp
-#include <typedb.hpp>
+// All files are included from typedb_driver.hpp
+#include <typedb_driver.hpp>
 
 int main() {
     TypeDB::Driver driver = TypeDB::Driver::coreDriver("127.0.0.1:1729");
@@ -165,14 +165,14 @@ Functions returning concepts are exceptional in that they return `std::unique_pt
     }
 ```
 
-### TypeDB Enterprise
-Connect to TypeDB enterprise instances using `TypeDB::Driver::enterpriseDriver`
+### TypeDB Cloud 
+Connect to TypeDB cloud instances using `TypeDB::Driver::cloudDriver`
 ```cpp
-    std::string dbName = "enteprise-database";
+    std::string dbName = "cloud-database";
     // Since we're using a self-signed certificate for encryption, we pass the path to the root-ca through an environment variable
     TypeDB::Credential creds("admin", "password", true, std::getenv("PATH_TO_ROOT_CA"));
-    TypeDB::Driver driver = TypeDB::Driver::enterpriseDriver({"localhost:11729"}, creds);
-    // You can also specify all node addresses TypeDB::Driver::enterpriseDriver({"localhost:11729, localhost:21729, localhost:31729"}, creds);
+    TypeDB::Driver driver = TypeDB::Driver::cloudDriver({"localhost:11729"}, creds);
+    // You can also specify all node addresses TypeDB::Driver::cloudDriver({"localhost:11729, localhost:21729, localhost:31729"}, creds);
 
     driver.databases.create(dbName);
     TypeDB::Database db = driver.databases.get(dbName);

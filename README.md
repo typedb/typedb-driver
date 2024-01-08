@@ -16,4 +16,5 @@ See the table below for links to README files, documentation, and source code.
 | Python | [README](https://github.com/vaticle/typedb-driver/tree/development/python/README.md) | [Documentation](https://typedb.com/docs/clients/python-driver)   | [`python/`](https://github.com/vaticle/typedb-driver/tree/development/python) |
 | Node.js | [README](https://github.com/vaticle/typedb-driver/tree/development/nodejs/README.md) | [Documentation](https://typedb.com/docs/clients/nodejs-driver) | [`nodejs/`](https://github.com/vaticle/typedb-driver/tree/development/nodejs) |
 | Java | [README](https://github.com/vaticle/typedb-driver/tree/development/java/README.md) | [Documentation](https://typedb.com/docs/clients/java-driver)       | [`java/`](https://github.com/vaticle/typedb-driver/tree/development/java)     |
-| C | Coming soon | Coming soon                                                                   | [`c/`](https://github.com/vaticle/typedb-driver/tree/development/c)   |
+| C | Coming soon | Coming soon | [`c/`](https://github.com/vaticle/typedb-driver/tree/development/c)   |
+| C++ | [README](https://github.com/vaticle/typedb-driver/tree/development/cpp/README.md) | Coming soon | [`cpp/`](https://github.com/vaticle/typedb-driver/tree/development/cpp)   |

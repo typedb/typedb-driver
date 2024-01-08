@@ -71,8 +71,10 @@ build:
     build-docs:
       image: vaticle-ubuntu-22.04
       command: |
+        curl -L https://github.com/doxygen/doxygen/releases/download/Release_1_10_0/doxygen-1.10.0.linux.bin.tar.gz | tar xzO doxygen-1.10.0/bin/doxygen > /var/tmp/doxygen &&
+          sudo mv /var/tmp/doxygen /usr/local/bin/ && sudo chmod +x /usr/local/bin/doxygen
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        DOCS_DIRS="java/docs nodejs/docs python/docs rust/docs"
+        DOCS_DIRS="java/docs nodejs/docs python/docs rust/docs cpp/docs"
         rm -rf $DOCS_DIRS
         tool/docs/update.sh
         git add $DOCS_DIRS

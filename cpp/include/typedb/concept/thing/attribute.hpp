@@ -25,11 +25,57 @@
 
 namespace TypeDB {
 
+/**
+ * \brief Attribute is an instance of the attribute type and has a value.
+ *
+ * This value is fixed and unique for every given instance of the attribute type.
+ * Attributes can be uniquely addressed by their type and value.
+ */
 class Attribute : public Thing {
 public:
+    /**
+     * Retrieves the value which the <code>Attribute</code> instance holds.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * attribute.getValue();
+     * </pre>
+     */
     std::unique_ptr<Value> getValue();
+
+    /**
+     * Retrieves the type which this <code>Attribute</code> belongs to.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * attribute.getType();
+     * </pre>
+     */
     std::unique_ptr<AttributeType> getType();
+
+    /**
+     * Retrieves the instances that own this <code>Attribute</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * attribute.getOwners(transaction);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     */
     ConceptIterable<Thing> getOwners(Transaction& transaction);
+
+    /**
+     * Retrieves the instances that own this <code>Attribute</code>.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * attribute.getOwners(transaction, ownerType);
+     * </pre>
+     *
+     * @param transaction The current transaction
+     * @param ownerType Filter results for only owners of the given type
+     */
     ConceptIterable<Thing> getOwners(Transaction& transaction, const ThingType* ownerType);
 
 protected:

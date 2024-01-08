@@ -1,0 +1,50 @@
+[#_Future__RETURN__NATIVE_PROMISE__HELPER_]
+=== Future< RETURN, NATIVE_PROMISE, HELPER >
+
+*Package*: `TypeDB`
+
+
+ template&lt;typename RETURN, typename NATIVE_PROMISE, typename HELPER = FutureHelper&lt;RETURN, NATIVE_PROMISE&gt;&gt;
+ 
+  class TypeDB::Future&lt; RETURN, NATIVE_PROMISE, HELPER &gt;
+
+
+A structure emulating std::future, used as result of an asynchronous call to the server.
+
+Note that a future must be evaluated for any server-side exceptions to be raised.
+
+// tag::methods[]
+[#_RETURN_TypeDBFuture__RETURN__NATIVE_PROMISE__HELPER__get___]
+==== get
+
+[source,cpp]
+----
+RETURN TypeDB::Future< RETURN, NATIVE_PROMISE, HELPER >::get()
+----
+
+
+
+Waits for the call to complete and returns the result.
+
+[caption=""]
+.Returns
+`RETURN`
+
+[#_void_TypeDBFuture__RETURN__NATIVE_PROMISE__HELPER__wait___]
+==== wait
+
+[source,cpp]
+----
+void TypeDB::Future< RETURN, NATIVE_PROMISE, HELPER >::wait()
+----
+
+
+
+Waits for the call to complete and ignores the result. Any exceptions will still be thrown.
+
+[caption=""]
+.Returns
+`void`
+
+// end::methods[]
+

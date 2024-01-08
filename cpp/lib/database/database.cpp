@@ -65,16 +65,45 @@ std::string Database::name() const {
     return Utils::stringFromNative(_native::database_get_name(databaseNative.get()));
 }
 
-ReplicaInfoIterable Database::replicas() {
-    CHECK_NATIVE(databaseNative);
-    WRAPPED_NATIVE_CALL(ReplicaInfoIterable, _native::database_get_replicas_info(databaseNative.get()));
-}
-
 void Database::deleteDatabase() {
     CHECK_NATIVE(databaseNative);
     _native::database_delete(databaseNative.get());
     DriverException::check_and_throw();
     databaseNative.release();  //  Release avoids the dangling pointer invoking the deleter
+}
+
+std::string Database::schema() {
+    CHECK_NATIVE(databaseNative);
+    WRAPPED_NATIVE_CALL(Utils::stringFromNative, _native::database_schema(databaseNative.get()));
+}
+
+std::string Database::typeSchema() {
+    CHECK_NATIVE(databaseNative);
+    WRAPPED_NATIVE_CALL(Utils::stringFromNative, _native::database_type_schema(databaseNative.get()));
+}
+
+std::string Database::ruleSchema() {
+    CHECK_NATIVE(databaseNative);
+    WRAPPED_NATIVE_CALL(Utils::stringFromNative, _native::database_rule_schema(databaseNative.get()));
+}
+
+ReplicaInfoIterable Database::replicas() {
+    CHECK_NATIVE(databaseNative);
+    WRAPPED_NATIVE_CALL(ReplicaInfoIterable, _native::database_get_replicas_info(databaseNative.get()));
+}
+
+std::optional<ReplicaInfo> Database::primaryReplica() {
+    CHECK_NATIVE(databaseNative);
+    auto p = _native::database_get_primary_replica_info(databaseNative.get());
+    DriverException::check_and_throw();
+    return p != nullptr ? std::optional<ReplicaInfo>(ReplicaInfo(p)) : std::optional<ReplicaInfo>();
+}
+
+std::optional<ReplicaInfo> Database::preferredReplica() {
+    CHECK_NATIVE(databaseNative);
+    auto p = _native::database_get_preferred_replica_info(databaseNative.get());
+    DriverException::check_and_throw();
+    return p != nullptr ? std::optional<ReplicaInfo>(ReplicaInfo(p)) : std::optional<ReplicaInfo>();
 }
 
 TYPEDB_ITERATOR_HELPER(

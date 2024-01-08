@@ -24,3 +24,4 @@ bazel run //java:docs_adoc
 bazel run //nodejs:docs_adoc
 bazel run //python:docs_adoc
 bazel run //rust:docs_adoc
+bazel run //cpp:docs_adoc

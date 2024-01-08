@@ -217,7 +217,7 @@ public interface RelationType extends ThingType {
      *
      * <h3>Examples</h3>
      * <pre>
-     * relationType.getSubtypes(transaction, transitivity).resolve();
+     * relationType.getSubtypes(transaction, transitivity);
      * </pre>
      *
      * @param transaction The current transaction
