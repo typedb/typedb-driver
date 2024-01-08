@@ -23,19 +23,20 @@ load("//dependencies/vaticle:repositories.bzl", "vaticle_dependencies")
 load("@rules_python//python:repositories.bzl", "python_register_toolchains")
 
 python_versions = [
-    {
-        "name": "python38",
-        "python_version": "3.8",
-        "python_headers": "@python38//:python_headers",
-        "libpython": "@python38//:libpython",
-        "suffix": "38",
-    },
+    # Order matters! First python toolchain that is registered is used by Bazel's py_binary. Sphinx is incompatible with py3.8.
     {
         "name": "python39",
         "python_version": "3.9",
         "python_headers": "@python39//:python_headers",
         "libpython": "@python39//:libpython",
         "suffix": "39",
+    },
+    {
+        "name": "python38",
+        "python_version": "3.8",
+        "python_headers": "@python38//:python_headers",
+        "libpython": "@python38//:libpython",
+        "suffix": "38",
     },
     {
         "name": "python310",
