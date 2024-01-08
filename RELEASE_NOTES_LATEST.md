@@ -9,7 +9,7 @@ Documentation: https://typedb.com/docs/clients/rust-driver
 
 
 ```sh
-cargo add typedb-driver@2.26.2
+cargo add typedb-driver@2.26.3
 ```
 
 
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/clients/java-driver
     <dependency>
         <groupid>com.vaticle.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>2.26.2</version>
+        <version>2.26.3</version>
     </dependency>
 </dependencies>
 ```
@@ -42,7 +42,7 @@ Documentation: https://typedb.com/docs/clients/python-driver
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==2.26.2
+pip install typedb-driver==2.26.3
 ```
 
 ### NodeJS driver
@@ -56,11 +56,11 @@ npm install typedb-driver@
 
 ### C++ driver
 
-Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/2.26.2
+Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/2.26.3
 
 ### C driver
 
-Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/2.26.2
+Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/2.26.3
 
 
 
