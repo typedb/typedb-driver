@@ -406,8 +406,9 @@ jobs:
       - install-maven-mac
       - test-maven-snapshot-unix
 
-      - deploy-clib-snapshot-mac
       - run: brew install cmake
+
+      - deploy-clib-snapshot-mac
       - test-clib-assembly-mac:
           target-arch: arm64
 
@@ -429,8 +430,9 @@ jobs:
       - install-maven-mac
       - test-maven-snapshot-unix
 
-      - deploy-clib-snapshot-mac
       - run: brew install cmake
+
+      - deploy-clib-snapshot-mac
       - test-clib-assembly-mac:
           target-arch: x86_64
 
