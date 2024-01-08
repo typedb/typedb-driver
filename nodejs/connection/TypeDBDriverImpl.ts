@@ -58,7 +58,7 @@ export class TypeDBDriverImpl implements TypeDBDriver {
     constructor(addresses: string | string[], credential?: TypeDBCredential) {
         if (typeof addresses === 'string') addresses = [addresses];
 
-        for (address of addresses)
+        for (const address of addresses)
             if (!/:\d+/.test(address))
                 throw new TypeDBDriverError(MISSING_PORT.message(address));
 
