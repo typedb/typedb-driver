@@ -54,7 +54,6 @@ import java.util.stream.Stream;
 import static com.vaticle.typedb.driver.api.TypeDBSession.Type.DATA;
 import static com.vaticle.typedb.driver.api.TypeDBTransaction.Type.READ;
 import static com.vaticle.typedb.driver.api.TypeDBTransaction.Type.WRITE;
-import static com.vaticle.typedb.driver.test.behaviour.util.Util.assertThrowsWithMessage;
 import static com.vaticle.typeql.lang.TypeQL.and;
 import static com.vaticle.typeql.lang.TypeQL.cVar;
 import static com.vaticle.typeql.lang.TypeQL.rel;
@@ -62,6 +61,7 @@ import static com.vaticle.typeql.lang.TypeQL.rule;
 import static com.vaticle.typeql.lang.TypeQL.type;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @SuppressWarnings("Duplicates")
 public class DriverQueryTest {
@@ -398,11 +398,14 @@ public class DriverQueryTest {
 
     @Test
     public void testMissingPortInURL() {
-        assertThrowsWithMessage(() -> {
+        try {
             String address = typedb.address();
             String addressWithoutPort = address.substring(0, address.lastIndexOf(':'));
             TypeDB.coreDriver(addressWithoutPort);
-        }, "missing port");
+            fail();
+        } catch (RuntimeException e) {
+            assert e.toString().toLowerCase().contains("missing port");
+        }
     }
 
     private String[] lionNames() {
