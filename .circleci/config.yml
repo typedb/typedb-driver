@@ -354,6 +354,7 @@ jobs:
   deploy-snapshot-linux-arm64:
     executor: linux-arm64-ubuntu-1804
     steps:
+      - checkout
       - install-bazel-linux:
           bazel-arch: arm64
 
@@ -375,6 +376,7 @@ jobs:
   deploy-snapshot-linux-x86_64:
     executor: linux-x86_64-ubuntu-1804
     steps:
+      - checkout
       - install-bazel-linux:
           bazel-arch: amd64
 
@@ -396,6 +398,7 @@ jobs:
   deploy-snapshot-mac-arm64:
     executor: mac-arm64
     steps:
+      - checkout
       - install-bazel-mac:
           bazel-arch: arm64
 
@@ -420,6 +423,7 @@ jobs:
     executor: mac-arm64
     steps:
       - macos/install-rosetta
+      - checkout
       - install-bazel-mac:
           bazel-arch: amd64
 
@@ -476,6 +480,7 @@ jobs:
   deploy-release-linux-arm64:
     executor: linux-arm64-ubuntu-1804
     steps:
+      - checkout
       - install-bazel-linux:
           bazel-arch: arm64
       - deploy-pip-release-linux
@@ -486,6 +491,7 @@ jobs:
   deploy-release-linux-x86_64:
     executor: linux-x86_64-ubuntu-1804
     steps:
+      - checkout
       - install-bazel-linux:
           bazel-arch: amd64
       - deploy-pip-release-linux
@@ -496,6 +502,7 @@ jobs:
   deploy-release-mac-arm64:
     executor: mac-arm64
     steps:
+      - checkout
       - install-bazel-mac:
           bazel-arch: arm64
       - deploy-pip-release-mac
@@ -506,6 +513,7 @@ jobs:
   deploy-release-mac-x86_64:
     executor: mac-arm64
     steps:
+      - checkout
       - macos/install-rosetta
       - install-bazel-mac:
           bazel-arch: amd64
