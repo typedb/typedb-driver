@@ -402,7 +402,7 @@ public class DriverQueryTest {
             String address = typedb.address();
             String addressWithoutPort = address.substring(0, address.lastIndexOf(':'));
             TypeDB.coreDriver(addressWithoutPort);
-        }, "missing port")
+        }, "missing port");
     }
 
     private String[] lionNames() {
