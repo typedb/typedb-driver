@@ -110,6 +110,8 @@ commands:
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
+          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip37 -- snapshot
+          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip38 -- snapshot
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip39 -- snapshot
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip310 -- snapshot
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip311 -- snapshot
@@ -141,6 +143,8 @@ commands:
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_PYPI_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_PYPI_PASSWORD
+          bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip37 --compilation_mode=opt -- release
+          bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip38 --compilation_mode=opt -- release
           bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip39 --compilation_mode=opt -- release
           bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip310 --compilation_mode=opt -- release
           bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip311 --compilation_mode=opt -- release
