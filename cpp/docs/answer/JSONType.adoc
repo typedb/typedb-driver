@@ -17,9 +17,10 @@ Specifies the exact type of this JSON object
 a| `ARRAY`
 a| `BOOLEAN`
 a| `DOUBLE`
+a| `INVALID`
 a| `LONG`
 a| `MAP`
-a| `NONE`
+a| `NULL_VALUE`
 a| `STRING`
 |===
 // end::enum_constants[]
