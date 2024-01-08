@@ -38,6 +38,7 @@ import DRIVER_NOT_OPEN = ErrorMessage.Driver.DRIVER_NOT_OPEN;
 import CLOUD_UNABLE_TO_CONNECT = ErrorMessage.Driver.CLOUD_UNABLE_TO_CONNECT;
 import SESSION_ID_EXISTS = ErrorMessage.Driver.SESSION_ID_EXISTS;
 import UNABLE_TO_CONNECT = ErrorMessage.Driver.UNABLE_TO_CONNECT;
+import MISSING_PORT = ErrorMessage.Driver.MISSING_PORT;
 
 export class TypeDBDriverImpl implements TypeDBDriver {
     private _isOpen: boolean;
@@ -56,6 +57,11 @@ export class TypeDBDriverImpl implements TypeDBDriver {
 
     constructor(addresses: string | string[], credential?: TypeDBCredential) {
         if (typeof addresses === 'string') addresses = [addresses];
+
+        for (address of addresses)
+            if (!/:\d+/.test(address))
+                throw new TypeDBDriverError(MISSING_PORT.message(address));
+
         this._initAddresses = addresses;
         this._credential = credential;
 

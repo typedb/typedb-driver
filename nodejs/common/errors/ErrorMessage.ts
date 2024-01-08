@@ -103,6 +103,7 @@ export namespace ErrorMessage {
         export const CLOUD_TOKEN_CREDENTIAL_INVALID = new Driver(20, (args: Stringable[]) => `Invalid token credential.`);
         export const CLOUD_INVALID_ROOT_CA_PATH = new Driver(21, (args: Stringable[]) => `The provided Root CA path '${args[0]}' does not exist`);
         export const UNRECOGNISED_SESSION_TYPE = new Driver(22, (args: Stringable[]) => `Session type '${args[1]}' was not recognised.`);
+        export const MISSING_PORT = new Driver(23, (args: Stringable[]) => `Invalid URL '${args[1]}': missing port.`);
     }
 
     export class Concept extends ErrorMessage {
