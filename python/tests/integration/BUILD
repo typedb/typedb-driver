@@ -35,6 +35,16 @@ typedb_cloud_py_test(
 )
 
 py_test(
+    name = "test_connection",
+    srcs = ["test_connection.py"],
+    deps = [
+        "//python:driver_python",
+    ],
+    data = ["//python:native-driver-binary-link", "//python:native-driver-wrapper-link"],
+    python_version = "PY3"
+)
+
+py_test(
     name = "test_debug",
     srcs = ["test_debug.py"],
     deps = [
