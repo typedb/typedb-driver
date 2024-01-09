@@ -26,15 +26,15 @@ orbs:
   macos: circleci/macos@2.4.0
 
 executors:
-  linux-arm64-ubuntu-1804:
+  linux-arm64-amazonlinux-2:
     docker:
-      - image: ubuntu:18.04
+      - image: amazonlinux:2
     resource_class: arm.large
     working_directory: ~/typedb-driver
 
-  linux-x86_64-ubuntu-1804:
+  linux-x86_64-amazonlinux-2:
     docker:
-      - image: ubuntu:18.04
+      - image: amazonlinux:2
     resource_class: large
     working_directory: ~/typedb-driver
 
@@ -57,10 +57,9 @@ commands:
         type: string
     steps:
       - run: |
-          apt-get -y update
-          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
-          apt-get -y install curl build-essential git python3 python3-pip python3.8 default-jre lsof cmake file wget
-          python3.8 -m pip install pip==21.3.1
+          amazon-linux-extras install python3.8 -y
+          yum install -y git tar java-1.8.0-openjdk gcc gcc-c++ file lsof which procps
+          ln -s /usr/bin/python3.8 /usr/bin/python3
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
           mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
@@ -79,15 +78,15 @@ commands:
   ###########################
   # Python deployment steps #
   ###########################
-
-  install-pip-requirements-linux-py37:
-    steps:
-      - run: |
-          apt install -y software-properties-common && add-apt-repository -y ppa:deadsnakes/ppa && apt update && apt install -y python3.7
-          update-alternatives --install /usr/bin/python python /usr/bin/python3.7 2
-          update-alternatives --install /usr/bin/python3 python /usr/bin/python3.7 2
-          python3 -m pip install pip==21.3.1
-          python3 -m pip install -r python/requirements_dev.txt
+#
+#  install-pip-requirements-linux-py37:
+#    steps:
+#      - run: |
+#          apt install -y software-properties-common && add-apt-repository -y ppa:deadsnakes/ppa && apt update && apt install -y python3.7
+#          update-alternatives --install /usr/bin/python python /usr/bin/python3.7 2
+#          update-alternatives --install /usr/bin/python3 python /usr/bin/python3.7 2
+#          python3 -m pip install pip==21.3.1
+#          python3 -m pip install -r python/requirements_dev.txt
 
   install-pip-requirements:
     steps:
@@ -97,6 +96,7 @@ commands:
 
   deploy-pip-snapshot-unix:
     steps:
+      - install-pip-requirements
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -104,16 +104,6 @@ commands:
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip39 -- snapshot
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip310 -- snapshot
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip311 -- snapshot
-
-  deploy-pip-snapshot-linux:
-    steps:
-      - install-pip-requirements-linux-py37
-      - deploy-pip-snapshot-unix
-
-  deploy-pip-snapshot-mac:
-    steps:
-      - install-pip-requirements
-      - deploy-pip-snapshot-unix
 
   test-pip-snapshot-unix:
     steps:
@@ -129,6 +119,7 @@ commands:
 
   deploy-pip-release-unix:
     steps:
+      - install-pip-requirements
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_PYPI_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_PYPI_PASSWORD
@@ -137,15 +128,6 @@ commands:
           bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip310 --compilation_mode=opt -- release
           bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip311 --compilation_mode=opt -- release
 
-  deploy-pip-release-linux:
-    steps:
-      - install-pip-requirements-linux-py37
-      - deploy-pip-release-unix
-
-  deploy-pip-release-mac:
-    steps:
-      - install-pip-requirements
-      - deploy-pip-release-unix
 
   #########################
   # Java deployment steps #
@@ -329,13 +311,13 @@ jobs:
   #################
 
   deploy-snapshot-linux-arm64:
-    executor: linux-arm64-ubuntu-1804
+    executor: linux-arm64-amazonlinux-2
     steps:
       - checkout
       - install-bazel-linux:
           bazel-arch: arm64
 
-      - deploy-pip-snapshot-linux
+      - deploy-pip-snapshot-unix
 
       - deploy-maven-jni-snapshot-unix
 
@@ -348,13 +330,13 @@ jobs:
           target-arch: arm64
 
   deploy-snapshot-linux-x86_64:
-    executor: linux-x86_64-ubuntu-1804
+    executor: linux-x86_64-amazonlinux-2
     steps:
       - checkout
       - install-bazel-linux:
           bazel-arch: amd64
 
-      - deploy-pip-snapshot-linux
+      - deploy-pip-snapshot-unix
 
       - deploy-maven-jni-snapshot-unix
 
@@ -373,7 +355,7 @@ jobs:
       - install-bazel-mac:
           bazel-arch: arm64
 
-      - deploy-pip-snapshot-mac
+      - deploy-pip-snapshot-unix
 
       - deploy-maven-jni-snapshot-unix
 
@@ -395,7 +377,7 @@ jobs:
       - install-bazel-mac:
           bazel-arch: amd64
 
-      - deploy-pip-snapshot-mac
+      - deploy-pip-snapshot-unix
 
       - deploy-maven-jni-snapshot-unix
 
@@ -429,7 +411,7 @@ jobs:
       - run: .circleci\windows\cpp\test_assembly.bat
 
   deploy-maven-snapshot:
-    executor: linux-x86_64-ubuntu-1804
+    executor: linux-x86_64-amazonlinux-2
     steps:
       - checkout
       - install-bazel-linux:
@@ -438,7 +420,7 @@ jobs:
 
 
   test-snapshot-linux-arm64:
-    executor: linux-arm64-ubuntu-1804
+    executor: linux-arm64-amazonlinux-2
     steps:
       - checkout
       - install-bazel-linux:
@@ -448,7 +430,7 @@ jobs:
       - test-maven-snapshot-unix
 
   test-snapshot-linux-x86_64:
-    executor: linux-x86_64-ubuntu-1804
+    executor: linux-x86_64-amazonlinux-2
     steps:
       - checkout
       - install-bazel-linux:
@@ -494,12 +476,12 @@ jobs:
   ################
 
   deploy-release-linux-arm64:
-    executor: linux-arm64-ubuntu-1804
+    executor: linux-arm64-amazonlinux-2
     steps:
       - checkout
       - install-bazel-linux:
           bazel-arch: arm64
-      - deploy-pip-release-linux
+      - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
@@ -519,12 +501,12 @@ jobs:
           paths: ["./*"]
 
   deploy-release-linux-x86_64:
-    executor: linux-x86_64-ubuntu-1804
+    executor: linux-x86_64-amazonlinux-2
     steps:
       - checkout
       - install-bazel-linux:
           bazel-arch: amd64
-      - deploy-pip-release-linux
+      - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
@@ -550,7 +532,7 @@ jobs:
       - checkout
       - install-bazel-mac:
           bazel-arch: arm64
-      - deploy-pip-release-mac
+      - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
@@ -577,7 +559,7 @@ jobs:
       - macos/install-rosetta
       - install-bazel-mac:
           bazel-arch: amd64
-      - deploy-pip-release-mac
+      - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
@@ -613,7 +595,7 @@ jobs:
           paths: ["./*"]
 
   deploy-maven-release:
-    executor: linux-x86_64-ubuntu-1804
+    executor: linux-x86_64-amazonlinux-2
     steps:
       - checkout
       - install-bazel-linux:
@@ -627,7 +609,7 @@ jobs:
           paths: ["./*"]
 
   deploy-crate-release:
-    executor: linux-x86_64-ubuntu-1804
+    executor: linux-x86_64-amazonlinux-2
     steps:
       - checkout
       - install-bazel-linux:
@@ -642,7 +624,7 @@ jobs:
           paths: ["./*"]
 
   deploy-npm-release:
-    executor: linux-x86_64-ubuntu-1804
+    executor: linux-x86_64-amazonlinux-2
     steps:
       - checkout
       - install-bazel-linux:
@@ -661,7 +643,7 @@ jobs:
           paths: ["./*"]
 
   deploy-github:
-    executor: linux-x86_64-ubuntu-1804
+    executor: linux-x86_64-amazonlinux-2
     steps:
       - attach_workspace:
           at: ~/dist
@@ -678,7 +660,7 @@ jobs:
               -c ${CIRCLE_SHA1} -delete $(cat VERSION) ~/dist/
 
   release-cleanup:
-    executor: linux-x86_64-ubuntu-1804
+    executor: linux-x86_64-amazonlinux-2
     steps:
       - checkout
       - run: |
@@ -693,28 +675,28 @@ workflows:
       - deploy-snapshot-linux-arm64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, circleci-build-amazonlinux-2]
       - deploy-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, circleci-build-amazonlinux-2]
       - deploy-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, circleci-build-amazonlinux-2]
       - deploy-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, circleci-build-amazonlinux-2]
       - deploy-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, circleci-build-amazonlinux-2]
 
       - deploy-maven-snapshot:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, circleci-build-amazonlinux-2]
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-snapshot-linux-x86_64
@@ -725,35 +707,35 @@ workflows:
       - test-snapshot-linux-arm64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, circleci-build-amazonlinux-2]
           requires:
             - deploy-snapshot-linux-arm64
             - deploy-maven-snapshot
       - test-snapshot-linux-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, circleci-build-amazonlinux-2]
           requires:
             - deploy-snapshot-linux-x86_64
             - deploy-maven-snapshot
       - test-snapshot-mac-arm64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, circleci-build-amazonlinux-2]
           requires:
             - deploy-snapshot-mac-arm64
             - deploy-maven-snapshot
       - test-snapshot-mac-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, circleci-build-amazonlinux-2]
           requires:
             - deploy-snapshot-mac-x86_64
             - deploy-maven-snapshot
       - test-snapshot-windows-x86_64:
           filters:
             branches:
-              only: [master, development]
+              only: [master, development, circleci-build-amazonlinux-2]
           requires:
             - deploy-snapshot-windows-x86_64
             - deploy-maven-snapshot
