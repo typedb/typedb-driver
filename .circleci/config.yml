@@ -63,8 +63,8 @@ commands:
         type: string
     steps:
       - run: |
-          amazon-linux-extras install python3.8 -y
-          yum install -y git tar java-1.8.0-openjdk gcc gcc-c++ file lsof which procps
+          amazon-linux-extras install python3.8 java-openjdk11 -y
+          yum install -y git tar gcc gcc-c++ file lsof which procps
           ln -s /usr/bin/python3.8 /usr/bin/python3
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
           mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
