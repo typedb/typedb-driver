@@ -38,6 +38,12 @@ executors:
     resource_class: large
     working_directory: ~/typedb-driver
 
+  linux-x86_64-ubuntu-1804:
+    docker:
+      - image: ubuntu:18.04
+    resource_class: medium
+    working_directory: ~/typedb-driver
+
   mac-arm64:
     macos:
       xcode: "13.4.1"
@@ -51,7 +57,7 @@ commands:
   # common setup steps #
   ######################
 
-  install-bazel-linux:
+  install-bazel-yum:
     parameters:
       bazel-arch:
         type: string
@@ -64,7 +70,19 @@ commands:
           mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
 
-  install-bazel-mac:
+  install-bazel-apt:
+    parameters:
+      bazel-arch:
+        type: string
+    steps:
+      - run: |
+          apt-get -y update
+          apt-get -y install curl build-essential git python3 python3-pip default-jre lsof cmake file wget
+          curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
+          mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
+          chmod a+x /usr/local/bin/bazel
+  
+  install-bazel-brew:
     parameters:
       bazel-arch:
         type: string
@@ -130,7 +148,7 @@ commands:
 
   install-maven-linux:
     steps:
-      - run: apt-get -y update && apt-get -y install maven
+      - run: yum install -y maven
 
   deploy-maven-jni-snapshot-unix:
     steps:
@@ -307,7 +325,7 @@ jobs:
     executor: linux-arm64-amazonlinux-2
     steps:
       - checkout
-      - install-bazel-linux:
+      - install-bazel-yum:
           bazel-arch: arm64
 
       - deploy-pip-snapshot-unix
@@ -326,7 +344,7 @@ jobs:
     executor: linux-x86_64-amazonlinux-2
     steps:
       - checkout
-      - install-bazel-linux:
+      - install-bazel-yum:
           bazel-arch: amd64
 
       - deploy-pip-snapshot-unix
@@ -345,7 +363,7 @@ jobs:
     executor: mac-arm64
     steps:
       - checkout
-      - install-bazel-mac:
+      - install-bazel-brew:
           bazel-arch: arm64
 
       - deploy-pip-snapshot-unix
@@ -367,7 +385,7 @@ jobs:
     steps:
       - macos/install-rosetta
       - checkout
-      - install-bazel-mac:
+      - install-bazel-brew:
           bazel-arch: amd64
 
       - deploy-pip-snapshot-unix
@@ -408,7 +426,7 @@ jobs:
     executor: linux-x86_64-amazonlinux-2
     steps:
       - checkout
-      - install-bazel-linux:
+      - install-bazel-yum:
           bazel-arch: amd64
       - deploy-maven-snapshot-unix
 
@@ -417,7 +435,7 @@ jobs:
     executor: linux-arm64-amazonlinux-2
     steps:
       - checkout
-      - install-bazel-linux:
+      - install-bazel-yum:
           bazel-arch: arm64
       - test-pip-snapshot-unix
       - install-maven-linux
@@ -427,7 +445,7 @@ jobs:
     executor: linux-x86_64-amazonlinux-2
     steps:
       - checkout
-      - install-bazel-linux:
+      - install-bazel-yum:
           bazel-arch: amd64
       - test-pip-snapshot-unix
       - install-maven-linux
@@ -437,7 +455,7 @@ jobs:
     executor: mac-arm64
     steps:
       - checkout
-      - install-bazel-mac:
+      - install-bazel-brew:
           bazel-arch: arm64
       - test-pip-snapshot-unix
       - install-maven-mac
@@ -448,7 +466,7 @@ jobs:
     steps:
       - macos/install-rosetta
       - checkout
-      - install-bazel-mac:
+      - install-bazel-brew:
           bazel-arch: amd64
       - test-pip-snapshot-unix
       - install-maven-mac
@@ -474,7 +492,7 @@ jobs:
     executor: linux-arm64-amazonlinux-2
     steps:
       - checkout
-      - install-bazel-linux:
+      - install-bazel-yum:
           bazel-arch: arm64
       - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
@@ -499,7 +517,7 @@ jobs:
     executor: linux-x86_64-amazonlinux-2
     steps:
       - checkout
-      - install-bazel-linux:
+      - install-bazel-yum:
           bazel-arch: amd64
       - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
@@ -525,7 +543,7 @@ jobs:
     executor: mac-arm64
     steps:
       - checkout
-      - install-bazel-mac:
+      - install-bazel-brew:
           bazel-arch: arm64
       - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
@@ -552,7 +570,7 @@ jobs:
     steps:
       - checkout
       - macos/install-rosetta
-      - install-bazel-mac:
+      - install-bazel-brew:
           bazel-arch: amd64
       - deploy-pip-release-unix
       - deploy-maven-jni-release-unix
@@ -594,7 +612,7 @@ jobs:
     executor: linux-x86_64-amazonlinux-2
     steps:
       - checkout
-      - install-bazel-linux:
+      - install-bazel-yum:
           bazel-arch: amd64
       - deploy-maven-release-unix
       - run: |
@@ -605,10 +623,10 @@ jobs:
           paths: ["./*"]
 
   deploy-crate-release:
-    executor: linux-x86_64-amazonlinux-2
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - checkout
-      - install-bazel-linux:
+      - install-bazel-apt:
           bazel-arch: amd64
       - run: |
           export DEPLOY_CRATE_TOKEN=$REPO_CRATES_TOKEN
@@ -620,10 +638,10 @@ jobs:
           paths: ["./*"]
 
   deploy-npm-release:
-    executor: linux-x86_64-amazonlinux-2
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - checkout
-      - install-bazel-linux:
+      - install-bazel-apt:
           bazel-arch: amd64
       - run: |
           wget -q -O - https://cli-assets.heroku.com/apt/release.key | apt-key add -
@@ -639,12 +657,12 @@ jobs:
           paths: ["./*"]
 
   deploy-github:
-    executor: linux-x86_64-amazonlinux-2
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - attach_workspace:
           at: ~/dist
       - checkout
-      - install-bazel-linux:
+      - install-bazel-apt:
           bazel-arch: amd64
       - run:
           name: "Publish Release on GitHub"
@@ -656,7 +674,7 @@ jobs:
               -c ${CIRCLE_SHA1} -delete $(cat VERSION) ~/dist/
 
   release-cleanup:
-    executor: linux-x86_64-amazonlinux-2
+    executor: linux-x86_64-ubuntu-1804
     steps:
       - checkout
       - run: |
