@@ -22,7 +22,7 @@
 version: 2.1
 
 orbs:
-  win: circleci/windows@2.0.0
+  win: circleci/windows@5.0
   macos: circleci/macos@2.4.0
 
 executors:
@@ -387,6 +387,7 @@ jobs:
   deploy-snapshot-windows-x86_64:
     executor:
       name: win/default
+      size: 2xlarge
       shell: cmd.exe
     working_directory: ~/typedb-driver
     steps:
@@ -456,6 +457,7 @@ jobs:
   test-snapshot-windows-x86_64:
     executor:
       name: win/default
+      size: 2xlarge
       shell: cmd.exe
     working_directory: ~/typedb-driver
     steps:
@@ -574,6 +576,7 @@ jobs:
   deploy-release-windows-x86_64:
     executor:
       name: win/default
+      size: 2xlarge
       shell: cmd.exe
     working_directory: ~/typedb-driver
     steps:
