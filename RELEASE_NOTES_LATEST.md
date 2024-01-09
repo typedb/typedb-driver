@@ -9,7 +9,7 @@ Documentation: https://typedb.com/docs/clients/rust-driver
 
 
 ```sh
-cargo add typedb-driver@2.26.3
+cargo add typedb-driver@2.26.4
 ```
 
 
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/clients/java-driver
     <dependency>
         <groupid>com.vaticle.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>2.26.3</version>
+        <version>2.26.4</version>
     </dependency>
 </dependencies>
 ```
@@ -42,7 +42,7 @@ Documentation: https://typedb.com/docs/clients/python-driver
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==2.26.3
+pip install typedb-driver==2.26.4
 ```
 
 ### NodeJS driver
@@ -56,68 +56,50 @@ npm install typedb-driver@
 
 ### C++ driver
 
-Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/2.26.3
+Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/2.26.4
 
 ### C driver
 
-Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/2.26.3
+Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/2.26.4
 
 
 
 ## New Features
-
+- **Check server URL contains port**
+  
+  Fail with a sensible error message when attempting to connect to a TypeDB instance using an address without explicit port.
+  
+  
 
 ## Bugs Fixed
-- **Fix fetch sub-query aggregation null pointer**
-  
-  We fix a bug where a Fetch query with a Get-Aggregate subquery that returned an empty (ie. undefined) answer throw a null pointer exception.
-  
-  For example this used to incorrectly throw an exception if 'Alice' doesn't have any salaries in the database, since a 'sum' is undefined for 0 entries.
-  ```
-  match
-  $x isa person, has name $n; $n == "Alice";
-  fetch
-  $n as "name";
-  total-salary: {
-    match $x has salary $s;
-    get $s; 
-    sum $s;
-  };
-  ```
-  
-  We now correctly return the following JSON structure
-  ```
-  [
-    {
-      "name": {"value": "Alice",  "type":  {"label": "name", "root": "attribute", "value_type": "string"}},
-      "total-salary": null
-    }
-  ]
-  ```
-  
-  
-- **Update to tonic 1.28**
-  
-  We fix a bug in the installation of the latest typedb-driver Rust by upgrading `tonic` to version 1.28.
-  
-  
+
 
 ## Code Refactors
-- **Release with Ubuntu 18.04 in to lower GLIBC requirement to 2.27.0**
+- **Increase size of Windows executor in CircleCI to XL**
   
-  We downgrade from Ubuntu 20.04 to 18.04 in CircleCI assembly and deployment jobs, using a Docker image. This lowers the minimum supported glibc version from 2.31 to 2.27.
-
-- **Rename typedb.hpp to typedb_driver.hpp**
+  We increase the size of the Windows executor in CircleCI deployment job from medium to xlarge. This change necessitated upgrade from windows orb v2.0.0 to v5.0, and reduced CI time from ~40 minutes to ~20 minutes.
+  
+  
+- **Release from Amazon Linux to support GLIBC 2.26**
+  
+  We migrate release jobs in CircleCI from Ubuntu-18.04 to Amazon Linux 2 docker image (RedHat-based), in order to downgrade the GLIBC dependency from 2.27 to 2.26. This approach will enable many users who use Amazon Linux 2 to be sure that they can use TypeDB drivers to connect to TypeDB.
+  
+  
+  
+- **Merge CircleCI jobs per platform**
+  
+  We reduce the number of CircleCI jobs by combining all jobs running on the same executor (ie. per platform) into one. This reduces overhead associated with spinning up a new executor for each job and streamlines the release process.
+  
+  CircleCI now loosely has one deploy job platform, and one test job per platform in both snapshot and release pipelines.
+  
+  Jobs that do not require native compilation, are unchanged.
+  
   
 
 ## Other Improvements
-- **C++ driver documentation and add missing APIs**
-  Documents the C++ code & adds ascii docs generated via doxygen. Adds a few methods to the classes which were missing.
+
+- **Merge 2.26.3 release changes to development**
   
-- **Update python credential documentation**
-
-- **Update C and CPP entry in README.md**
-
-- **Update C++ readme with new 'cloud' terminology**
-
+  We merge changes made to CI pipelines for the 2.26.3 release back to development.
   
+    
