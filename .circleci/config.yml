@@ -684,20 +684,10 @@ workflows:
           filters:
             branches:
               only: [master, development]
-      - deploy-snapshot-windows-x86_64:
-          filters:
-            branches:
-              only: [master, development]
+      - deploy-snapshot-windows-x86_64
 
       - deploy-maven-snapshot:
-          filters:
-            branches:
-              only: [master, development]
           requires:
-            - deploy-snapshot-linux-arm64
-            - deploy-snapshot-linux-x86_64
-            - deploy-snapshot-mac-arm64
-            - deploy-snapshot-mac-x86_64
             - deploy-snapshot-windows-x86_64
 
       - test-snapshot-linux-arm64:
@@ -729,9 +719,6 @@ workflows:
             - deploy-snapshot-mac-x86_64
             - deploy-maven-snapshot
       - test-snapshot-windows-x86_64:
-          filters:
-            branches:
-              only: [master, development]
           requires:
             - deploy-snapshot-windows-x86_64
             - deploy-maven-snapshot
