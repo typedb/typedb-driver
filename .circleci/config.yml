@@ -387,7 +387,7 @@ jobs:
   deploy-snapshot-windows-x86_64:
     executor:
       name: win/default
-      size: large
+      size: xlarge
       shell: cmd.exe
     working_directory: ~/typedb-driver
     steps:
@@ -457,7 +457,7 @@ jobs:
   test-snapshot-windows-x86_64:
     executor:
       name: win/default
-      size: large
+      size: xlarge
       shell: cmd.exe
     working_directory: ~/typedb-driver
     steps:
@@ -576,7 +576,7 @@ jobs:
   deploy-release-windows-x86_64:
     executor:
       name: win/default
-      size: large
+      size: xlarge
       shell: cmd.exe
     working_directory: ~/typedb-driver
     steps:
