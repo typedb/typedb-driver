@@ -38,9 +38,9 @@ executors:
     resource_class: large
     working_directory: ~/typedb-driver
 
-  linux-x86_64-ubuntu-1804:
+  linux-x86_64-ubuntu-2204:
     docker:
-      - image: ubuntu:18.04
+      - image: ubuntu:22.04
     resource_class: medium
     working_directory: ~/typedb-driver
 
@@ -623,7 +623,7 @@ jobs:
           paths: ["./*"]
 
   deploy-crate-release:
-    executor: linux-x86_64-ubuntu-1804
+    executor: linux-x86_64-ubuntu-2204
     steps:
       - checkout
       - install-bazel-apt:
@@ -638,7 +638,7 @@ jobs:
           paths: ["./*"]
 
   deploy-npm-release:
-    executor: linux-x86_64-ubuntu-1804
+    executor: linux-x86_64-ubuntu-2204
     steps:
       - checkout
       - install-bazel-apt:
@@ -657,7 +657,7 @@ jobs:
           paths: ["./*"]
 
   deploy-github:
-    executor: linux-x86_64-ubuntu-1804
+    executor: linux-x86_64-ubuntu-2204
     steps:
       - attach_workspace:
           at: ~/dist
@@ -674,7 +674,7 @@ jobs:
               -c ${CIRCLE_SHA1} -delete $(cat VERSION) ~/dist/
 
   release-cleanup:
-    executor: linux-x86_64-ubuntu-1804
+    executor: linux-x86_64-ubuntu-2204
     steps:
       - checkout
       - run: |
