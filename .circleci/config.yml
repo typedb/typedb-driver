@@ -195,13 +195,14 @@ commands:
         type: string
     steps:
       - run: |
-          bazel build --jobs=8 //c:assemble-linux-<<parameters.target-arch>>-targz
-          export ASSEMBLY=typedb-driver-clib-linux-<<parameters.target-arch>>
+          yum install -y cmake3 make
+          bazel build --jobs=8 //c:assemble-linux-x86_64-targz
+          export ASSEMBLY=typedb-driver-clib-linux-x86_64
           mkdir -p test_assembly_clib
           tar -xf bazel-bin/c/$ASSEMBLY.tar.gz --directory test_assembly_clib
           pushd test_assembly_clib
-            cmake ../c/tests/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY &&
-            cmake --build . --config release
+            cmake3 ../c/tests/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY &&
+            cmake3 --build . --config release
           popd
           tool/test/start-core-server.sh
           sleep 3
@@ -258,13 +259,14 @@ commands:
         type: string
     steps:
       - run: |
+          yum install -y cmake3 make
           bazel build --jobs=8 //cpp:assemble-linux-<<parameters.target-arch>>-targz
           export ASSEMBLY=typedb-driver-cpp-linux-<<parameters.target-arch>>
           mkdir -p test_assembly_cpp
           tar -xf bazel-bin/cpp/$ASSEMBLY.tar.gz --directory test_assembly_cpp
           pushd test_assembly_cpp
-            cmake ../cpp/test/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY &&
-            cmake --build . --config release
+            cmake3 ../cpp/test/assembly -DTYPEDB_ASSEMBLY=$(pwd)/$ASSEMBLY &&
+            cmake3 --build . --config release
           popd
           tool/test/start-core-server.sh
           sleep 3
