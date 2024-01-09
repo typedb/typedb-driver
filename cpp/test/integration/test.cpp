@@ -149,6 +149,17 @@ TEST(TestCallbacks, TestCallbacks) {
     ASSERT_TRUE(sessCalled);
 }
 
+TEST(TestConnection, TestMissingPort) {
+    std::string dbName = "hello_from_cpp";
+
+    try {
+        TypeDB::Driver driver = TypeDB::Driver::coreDriver("127.0.0.1");
+        FAIL();  // "Exception not thrown"
+    } catch (DriverException& e) {
+        ASSERT_TRUE(e.message().find("missing port") != std::string::npos);
+    }
+}
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
