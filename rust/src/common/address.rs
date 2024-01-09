@@ -23,7 +23,10 @@ use std::{fmt, str::FromStr};
 
 use http::Uri;
 
-use crate::common::{Error, Result};
+use crate::{
+    common::{Error, Result},
+    error::ConnectionError,
+};
 
 #[derive(Clone, Debug, Hash, PartialEq, Eq)]
 pub struct Address {
@@ -45,6 +48,9 @@ impl FromStr for Address {
         } else {
             format!("http://{address}").parse::<Uri>()?
         };
+        if uri.port().is_none() {
+            return Err(Error::Connection(ConnectionError::MissingPort { address: address.to_owned() }));
+        }
         Ok(Self { uri })
     }
 }

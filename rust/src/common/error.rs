@@ -72,6 +72,8 @@ error_messages! { ConnectionError
         21: "Stream closed because of a broken pipe. This could happen if you are attempting to connect to an unencrypted cloud instance using a TLS-enabled credential.",
     ConnectionFailed =
         22: "Connection failed. Please check the server is running and the address is accessible. Encrypted Cloud endpoints may also have misconfigured SSL certificates.",
+    MissingPort { address: String } =
+        23: "Invalid URL '{address}': missing port.",
 }
 
 error_messages! { InternalError

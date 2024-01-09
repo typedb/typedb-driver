@@ -61,6 +61,7 @@ import static com.vaticle.typeql.lang.TypeQL.rule;
 import static com.vaticle.typeql.lang.TypeQL.type;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @SuppressWarnings("Duplicates")
 public class DriverQueryTest {
@@ -393,6 +394,18 @@ public class DriverQueryTest {
                 Optional<ConceptMap> conceptMap = tx.query().get("match $x sub thing; get; limit 1;").findFirst();
             }
         }, READ, new TypeDBOptions().prefetch(true).prefetchSize(50));
+    }
+
+    @Test
+    public void testMissingPortInURL() {
+        try {
+            String address = typedb.address();
+            String addressWithoutPort = address.substring(0, address.lastIndexOf(':'));
+            TypeDB.coreDriver(addressWithoutPort);
+            fail();
+        } catch (RuntimeException e) {
+            assert e.toString().toLowerCase().contains("missing port");
+        }
     }
 
     private String[] lionNames() {

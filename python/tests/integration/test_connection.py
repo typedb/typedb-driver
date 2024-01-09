@@ -19,21 +19,21 @@
 # under the License.
 #
 
-try-import ./.bazel-remote-cache.rc
+import unittest
+from unittest import TestCase
 
-common --enable_platform_specific_config
+from hamcrest import *
 
-build --incompatible_strict_action_env --java_language_version=11 --javacopt='--release 11' --enable_runfiles
+from typedb.driver import *
 
-# Don't depend on a JAVA_HOME pointing at a system JDK
-# see https://github.com/bazelbuild/rules_jvm_external/issues/445
-build --repo_env=JAVA_HOME=../bazel_tools/jdk
 
-run --incompatible_strict_action_env --java_runtime_version=remotejdk_11
-test --incompatible_strict_action_env --test_env=PATH --cache_test_results=no --java_runtime_version=remotejdk_11
+class TestDebug(TestCase):
 
-build:linux --stamp --workspace_status_command=$PWD/workspace-status.sh
-build:macos --stamp --workspace_status_command=$PWD/workspace-status.sh
+    def test_missing_port(self):
+        assert_that(calling(lambda: TypeDB.core_driver("localhost")), raises(TypeDBDriverException))
 
-# TODO
-# build:windows --stamp --workspace_status_command=workspace-status.bat
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)
+
