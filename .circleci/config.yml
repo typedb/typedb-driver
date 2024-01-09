@@ -207,14 +207,6 @@ commands:
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //c:deploy-clib-driver --compilation_mode=opt -- snapshot
 
-  deploy-clib-snapshot-linux:
-    steps:
-      - deploy-clib-snapshot-unix
-
-  deploy-clib-snapshot-mac:
-    steps:
-      - deploy-clib-snapshot-unix
-
   test-clib-assembly-linux:
     parameters:
       target-arch:
@@ -266,14 +258,6 @@ commands:
           export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
           bazel run --jobs=8 --define version=$(cat VERSION) //c:deploy-clib-driver --compilation_mode=opt -- release
-
-  deploy-clib-release-linux:
-    steps:
-      - deploy-clib-release-unix
-
-  deploy-clib-release-mac:
-    steps:
-      - deploy-clib-release-unix
 
   ########################
   # C++ deployment steps #
@@ -355,7 +339,7 @@ jobs:
 
       - deploy-maven-jni-snapshot-unix
 
-      - deploy-clib-snapshot-linux
+      - deploy-clib-snapshot-unix
       - test-clib-assembly-linux:
           target-arch: arm64
 
@@ -374,7 +358,7 @@ jobs:
 
       - deploy-maven-jni-snapshot-unix
 
-      - deploy-clib-snapshot-linux
+      - deploy-clib-snapshot-unix
       - test-clib-assembly-linux:
           target-arch: x86_64
 
@@ -395,7 +379,7 @@ jobs:
 
       - run: brew install cmake
 
-      - deploy-clib-snapshot-mac
+      - deploy-clib-snapshot-unix
       - test-clib-assembly-mac:
           target-arch: arm64
 
@@ -417,7 +401,7 @@ jobs:
 
       - run: brew install cmake
 
-      - deploy-clib-snapshot-mac
+      - deploy-clib-snapshot-unix
       - test-clib-assembly-mac:
           target-arch: x86_64
 
@@ -517,7 +501,7 @@ jobs:
           bazel-arch: arm64
       - deploy-pip-release-linux
       - deploy-maven-jni-release-unix
-      - deploy-clib-release-linux
+      - deploy-clib-release-unix
       - deploy-cpp-release-unix
 
   deploy-release-linux-x86_64:
@@ -528,7 +512,7 @@ jobs:
           bazel-arch: amd64
       - deploy-pip-release-linux
       - deploy-maven-jni-release-unix
-      - deploy-clib-release-linux
+      - deploy-clib-release-unix
       - deploy-cpp-release-unix
 
   deploy-release-mac-arm64:
@@ -539,7 +523,7 @@ jobs:
           bazel-arch: arm64
       - deploy-pip-release-mac
       - deploy-maven-jni-release-unix
-      - deploy-clib-release-mac
+      - deploy-clib-release-unix
       - deploy-cpp-release-unix
 
   deploy-release-mac-x86_64:
@@ -551,7 +535,7 @@ jobs:
           bazel-arch: amd64
       - deploy-pip-release-mac
       - deploy-maven-jni-release-unix
-      - deploy-clib-release-mac
+      - deploy-clib-release-unix
       - deploy-cpp-release-unix
 
   deploy-release-windows-x86_64:
