@@ -1218,65 +1218,6 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-
-    deploy-crate-snapshot:
-      filter:
-        owner: vaticle
-        branch: [master, development]
-      image: vaticle-ubuntu-22.04
-      dependencies:
-        - build
-        - test-rust-unit-integration
-        - test-rust-behaviour-concept
-        - test-rust-behaviour-connection
-        - test-rust-behaviour-query-read
-        - test-rust-behaviour-query-write
-      command: |
-        export DEPLOY_CRATE_TOKEN=$REPO_VATICLE_CRATES_TOKEN
-        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
-        bazel run --define version=$(git rev-parse HEAD) //rust:deploy_crate -- snapshot
-
-    deploy-npm-snapshot:
-      filter:
-        owner: vaticle
-        branch: [master, development]
-      image: vaticle-ubuntu-22.04
-      dependencies:
-        - build
-        - test-nodejs-integration
-        - test-nodejs-cloud-failover
-        - test-nodejs-behaviour-connection-core
-        - test-nodejs-behaviour-connection-cloud
-        - test-nodejs-behaviour-concept-core
-        - test-nodejs-behaviour-concept-cloud
-        - test-nodejs-behaviour-read-core
-        - test-nodejs-behaviour-read-cloud
-        - test-nodejs-behaviour-writable-core
-        - test-nodejs-behaviour-writable-cloud
-        - test-nodejs-behaviour-definable-core
-        - test-nodejs-behaviour-definable-cloud
-      command: |
-        export DEPLOY_NPM_USERNAME=$REPO_VATICLE_USERNAME
-        export DEPLOY_NPM_PASSWORD=$REPO_VATICLE_PASSWORD
-        bazel run --define version=$(git rev-parse HEAD) //nodejs:deploy-npm -- snapshot
-
-    test-deployment-npm:
-      filter:
-        owner: vaticle
-        branch: [master, development]
-      image: vaticle-ubuntu-22.04
-      dependencies:
-        - deploy-npm-snapshot
-      command: |
-        tool/test/start-core-server.sh
-        cd nodejs/test/deployment/
-        npm install https://repo.vaticle.com/repository/npm-snapshot-group/typedb-driver/-/typedb-driver-0.0.0-$FACTORY_COMMIT.tgz
-        sudo -H npm install jest --global
-        jest --detectOpenHandles application.test.js && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-        cd -
-        tool/test/stop-core-server.sh
-        exit $TEST_SUCCESS
-
 # TODO: assembly tests for all drivers to run in factory
 
 release:
