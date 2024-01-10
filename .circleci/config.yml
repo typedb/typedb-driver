@@ -110,10 +110,10 @@ commands:
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip38 -- snapshot
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip39 -- snapshot
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip310 -- snapshot
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip311 -- snapshot
+          bazel build --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip38 -- snapshot
+          bazel build --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip39 -- snapshot
+          bazel build --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip310 -- snapshot
+          bazel build --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip311 -- snapshot
 
   test-pip-snapshot-unix:
     steps:
@@ -133,10 +133,10 @@ commands:
       - run: |
           export DEPLOY_PIP_USERNAME=$REPO_PYPI_USERNAME
           export DEPLOY_PIP_PASSWORD=$REPO_PYPI_PASSWORD
-          bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip38 --compilation_mode=opt -- release
-          bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip39 --compilation_mode=opt -- release
-          bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip310 --compilation_mode=opt -- release
-          bazel run --jobs=8 --define version=$(cat VERSION) //python:deploy-pip311 --compilation_mode=opt -- release
+          bazel build --jobs=8 --define version=$(cat VERSION) //python:deploy-pip38 --compilation_mode=opt -- release
+          bazel build --jobs=8 --define version=$(cat VERSION) //python:deploy-pip39 --compilation_mode=opt -- release
+          bazel build --jobs=8 --define version=$(cat VERSION) //python:deploy-pip310 --compilation_mode=opt -- release
+          bazel build --jobs=8 --define version=$(cat VERSION) //python:deploy-pip311 --compilation_mode=opt -- release
 
 
   #########################
@@ -156,14 +156,14 @@ commands:
       - run: |
           export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //java:deploy-maven-jni -- snapshot
+          bazel build --jobs=8 --define version=$(git rev-parse HEAD) //java:deploy-maven-jni -- snapshot
 
   deploy-maven-snapshot-unix:
     steps:
       - run: |
           export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //java:deploy-maven -- snapshot
+          bazel build --jobs=8 --define version=$(git rev-parse HEAD) //java:deploy-maven -- snapshot
 
   test-maven-snapshot-unix:
     steps:
@@ -179,14 +179,14 @@ commands:
       - run: |
           export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --jobs=8 --define version=$(cat VERSION) //java:deploy-maven-jni --compilation_mode=opt -- release
+          bazel build --jobs=8 --define version=$(cat VERSION) //java:deploy-maven-jni --compilation_mode=opt -- release
 
   deploy-maven-release-unix:
     steps:
       - run: |
           export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --jobs=8 --define version=$(cat VERSION) //java:deploy-maven --compilation_mode=opt -- release
+          bazel build --jobs=8 --define version=$(cat VERSION) //java:deploy-maven --compilation_mode=opt -- release
 
   ######################
   # C deployment steps #
@@ -197,7 +197,7 @@ commands:
       - run: |
           export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //c:deploy-clib-driver --compilation_mode=opt -- snapshot
+          bazel build --jobs=8 --define version=$(git rev-parse HEAD) //c:deploy-clib-driver --compilation_mode=opt -- snapshot
 
   test-clib-assembly-linux:
     parameters:
@@ -250,7 +250,7 @@ commands:
       - run: |
           export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --jobs=8 --define version=$(cat VERSION) //c:deploy-clib-driver --compilation_mode=opt -- release
+          bazel build --jobs=8 --define version=$(cat VERSION) //c:deploy-clib-driver --compilation_mode=opt -- release
 
   ########################
   # C++ deployment steps #
@@ -261,7 +261,7 @@ commands:
       - run: |
           export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //cpp:deploy-cpp-driver --compilation_mode=opt -- snapshot
+          bazel build --jobs=8 --define version=$(git rev-parse HEAD) //cpp:deploy-cpp-driver --compilation_mode=opt -- snapshot
 
   test-cpp-assembly-linux:
     parameters:
@@ -314,7 +314,7 @@ commands:
       - run: |
           export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --jobs=8 --define version=$(cat VERSION) //cpp:deploy-cpp-driver --compilation_mode=opt -- release
+          bazel build --jobs=8 --define version=$(cat VERSION) //cpp:deploy-cpp-driver --compilation_mode=opt -- release
 
 jobs:
 
@@ -631,7 +631,7 @@ jobs:
           bazel-arch: amd64
       - run: |
           export DEPLOY_CRATE_TOKEN=$REPO_CRATES_TOKEN
-          bazel run --jobs=8 --define version=$(cat VERSION) //rust:deploy_crate --compilation_mode=opt -- release
+          bazel build --jobs=8 --define version=$(cat VERSION) //rust:deploy_crate --compilation_mode=opt -- release
           mkdir -p ~/dist
           cp bazel-bin/rust/assemble_crate.crate ~/dist/typedb-driver.crate
       - persist_to_workspace:
@@ -645,10 +645,13 @@ jobs:
       - install-bazel-apt:
           bazel-arch: amd64
       - run: |
+          apt update -y
+          apt install -y expect
+          npm install -g n
+          n lts
+      - run: |
           wget -q -O - https://cli-assets.heroku.com/apt/release.key | apt-key add -
           wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
-          apt update -y
-          apt install -y expect npm
           export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN
           bazel run --jobs=8 --define version=$(cat VERSION) //nodejs:deploy-npm --compilation_mode=opt -- release
           mkdir -p ~/dist
