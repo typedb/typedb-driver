@@ -21,7 +21,7 @@
 
 try-import ./.bazel-remote-cache.rc
 
-common --enable_platform_specific_config
+common --enable_platform_specific_config --java_runtime_version=remotejdk_11
 
 build --incompatible_strict_action_env --java_language_version=11 --javacopt='--release 11' --enable_runfiles
 
@@ -29,8 +29,8 @@ build --incompatible_strict_action_env --java_language_version=11 --javacopt='--
 # see https://github.com/bazelbuild/rules_jvm_external/issues/445
 build --repo_env=JAVA_HOME=../bazel_tools/jdk
 
-run --incompatible_strict_action_env --java_runtime_version=remotejdk_11
-test --incompatible_strict_action_env --test_env=PATH --cache_test_results=no --java_runtime_version=remotejdk_11
+run --incompatible_strict_action_env
+test --incompatible_strict_action_env --test_env=PATH --cache_test_results=no
 
 build:linux --stamp --workspace_status_command=$PWD/workspace-status.sh
 build:macos --stamp --workspace_status_command=$PWD/workspace-status.sh

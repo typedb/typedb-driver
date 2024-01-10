@@ -77,6 +77,7 @@ commands:
     steps:
       - run: |
           apt-get -y update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
           apt-get -y install curl build-essential git python3 python3-pip default-jre lsof cmake file wget
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
           mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
@@ -644,10 +645,13 @@ jobs:
       - install-bazel-apt:
           bazel-arch: amd64
       - run: |
-          wget -q -O - https://cli-assets.heroku.com/apt/release.key | apt-key add -
-          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
           apt update -y
           apt install -y expect npm
+          npm install -g n
+          n lts
+      - run: |
+          wget -q -O - https://cli-assets.heroku.com/apt/release.key | apt-key add -
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
           export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN
           bazel run --jobs=8 --define version=$(cat VERSION) //nodejs:deploy-npm --compilation_mode=opt -- release
           mkdir -p ~/dist
