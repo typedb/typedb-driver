@@ -64,8 +64,8 @@ rules_antlr_dependencies(antlr_version, JAVA)
 load("@vaticle_dependencies//builder/cpp:deps.bzl", cpp_deps = "deps")
 cpp_deps()
 
-# Load //builder/grpc
-load("@vaticle_dependencies//builder/grpc:deps.bzl", grpc_deps = "deps")
+# Load //builder/proto_grpc
+load("@vaticle_dependencies//builder/proto_grpc:deps.bzl", grpc_deps = "deps")
 grpc_deps()
 
 load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", com_github_grpc_grpc_deps = "grpc_deps")
