@@ -653,7 +653,7 @@ jobs:
           wget -q -O - https://cli-assets.heroku.com/apt/release.key | apt-key add -
           wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
           export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN
-          bazel run --jobs=8 --define version=$(cat VERSION) //nodejs:deploy-npm --compilation_mode=opt -- release
+          bazel build --jobs=8 --define version=$(cat VERSION) //nodejs:deploy-npm --compilation_mode=opt
           mkdir -p ~/dist
           cp bazel-bin/nodejs/assemble-npm.tar.gz ~/dist/typedb-driver-node.tar.gz
       - persist_to_workspace:
