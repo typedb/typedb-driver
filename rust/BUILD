@@ -27,8 +27,8 @@ load("@vaticle_dependencies//builder/rust:rules.bzl", "rust_cbindgen")
 load("@vaticle_dependencies//builder/swig:java.bzl", "swig_java")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//tool/docs:rust/rules.bzl", "rust_docs", "rustdoc_to_adoc")
 load("//rust:docs_structure.bzl", "dir_mapping")
+load("//tool/docs:rust/rules.bzl", "rust_docs", "rustdoc_to_adoc")
 
 typedb_driver_srcs = glob(["src/**/*.rs"])
 typedb_driver_tags = ["crate-name=typedb-driver"]
