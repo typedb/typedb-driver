@@ -22,7 +22,7 @@
 package(default_visibility = ["//java/test/behaviour:__subpackages__"])
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_typedb_common//test:rules.bzl", "typedb_java_test")
+load("@vaticle_dependencies//builder/java:rules.bzl", "typedb_java_test")
 
 java_library(
     name = "steps",

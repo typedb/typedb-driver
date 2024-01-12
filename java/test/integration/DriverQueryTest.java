@@ -21,6 +21,7 @@
 
 package com.vaticle.typedb.driver.test.integration;
 
+import com.vaticle.typedb.core.test.runner.TypeDBCoreRunner;
 import com.vaticle.typedb.driver.TypeDB;
 import com.vaticle.typedb.driver.api.TypeDBDriver;
 import com.vaticle.typedb.driver.api.TypeDBOptions;
@@ -31,7 +32,6 @@ import com.vaticle.typedb.driver.api.concept.type.AttributeType;
 import com.vaticle.typedb.driver.api.concept.type.EntityType;
 import com.vaticle.typedb.driver.api.logic.Explanation;
 import com.vaticle.typedb.common.collection.Pair;
-import com.vaticle.typedb.common.test.core.TypeDBCoreRunner;
 import com.vaticle.typeql.lang.TypeQL;
 import com.vaticle.typeql.lang.common.TypeQLArg;
 import com.vaticle.typeql.lang.query.TypeQLDefine;

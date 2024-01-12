@@ -15,6 +15,8 @@
 @maven//:com_google_http_client_google_http_client_1_34_2
 @maven//:com_google_j2objc_j2objc_annotations_1_3
 @maven//:com_google_protobuf_protobuf_java_3_21_1
+@maven//:com_vaticle_typedb_typedb_cloud_runner_1e0400ba243914013225a3820e37e19bb85d5798
+@maven//:com_vaticle_typedb_typedb_runner_95a72636d35355c564fe03c41f0341e9a03e1a17
 @maven//:commons_codec_commons_codec_1_11
 @maven//:commons_io_commons_io_2_3
 @maven//:commons_logging_commons_logging_1_2
