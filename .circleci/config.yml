@@ -350,7 +350,7 @@ commands:
       - run: |
           export DEPLOY_NPM_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_NPM_PASSWORD=$REPO_VATICLE_PASSWORD
-          bazel run --define version=$(git rev-parse HEAD) //nodejs:deploy-npm -- snapshot
+          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //nodejs:deploy-npm -- snapshot
 
   test-npm-snapshot-unix:
     steps:
