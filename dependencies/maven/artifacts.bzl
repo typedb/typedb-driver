@@ -65,5 +65,5 @@ overrides = {
 
 vaticle_artifacts = {
     'com.vaticle.typedb:typedb-runner': '95a72636d35355c564fe03c41f0341e9a03e1a17',
-    'com.vaticle.typedb:typedb-cloud-runner': 'd0373508b6e97b61e6fd5799e9d3d5ae26680f60',
+    'com.vaticle.typedb:typedb-cloud-runner': '1e0400ba243914013225a3820e37e19bb85d5798',
 }
