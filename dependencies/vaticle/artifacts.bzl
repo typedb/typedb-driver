@@ -41,3 +41,8 @@ def vaticle_typedb_cloud_artifact():
         commit_source = deployment_private["artifact.snapshot"],
         commit = "332275dfce4d02c8293216251a35a23c2e991f33",
     )
+
+maven_artifacts = {
+    'com.vaticle.typedb:typedb-runner': '95a72636d35355c564fe03c41f0341e9a03e1a17',
+    'com.vaticle.typedb:typedb-cloud-runner': '1e0400ba243914013225a3820e37e19bb85d5798',
+}
