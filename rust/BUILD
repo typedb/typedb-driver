@@ -92,8 +92,8 @@ assemble_crate(
 
 deploy_crate(
     name = "deploy_crate",
-    release = deployment["crate.release"],
-    snapshot = deployment["crate.snapshot"],
+    release = deployment['crate']['release'],
+    snapshot = deployment['crate']['snapshot'],
     target = ":assemble_crate",
 )
 

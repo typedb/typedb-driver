@@ -25,21 +25,21 @@ load("@vaticle_dependencies//distribution:deployment.bzl", "deployment", "deploy
 def vaticle_typedb_artifact():
     native_artifact_files(
         name = "vaticle_typedb_artifact",
-        group_name = "vaticle_typedb",
+        group_name = "typedb-server-{platform}",
         artifact_name = "typedb-server-{platform}-{version}.{ext}",
-        tag_source = deployment["artifact.release"],
-        commit_source = deployment["artifact.snapshot"],
-        commit = "e0941f2f70988fa0a7fe9510b175e91d55126db4",
+        tag_source = deployment["artifact"]["release"]["download"],
+        commit_source = deployment["artifact"]["snapshot"]["download"],
+        commit = "ec2389722fdca18ba91b3ce868426253fc460e33",
     )
 
 def vaticle_typedb_cloud_artifact():
     native_artifact_files(
         name = "vaticle_typedb_cloud_artifact",
-        group_name = "vaticle_typedb_cloud",
-        artifact_name = "typedb-cloud-all-{platform}-{version}.{ext}",
-        tag_source = deployment_private["artifact.release"],
-        commit_source = deployment_private["artifact.snapshot"],
-        commit = "332275dfce4d02c8293216251a35a23c2e991f33",
+        group_name = "typedb-cloud-server-{platform}",
+        artifact_name = "typedb-cloud-server-{platform}-{version}.{ext}",
+        tag_source = deployment_private["artifact"]["release"]["download"],
+        commit_source = deployment_private["artifact"]["snapshot"]["download"],
+        commit = "edde901db7683f9309fdbb300f1d5bb67d420372",
     )
 
 maven_artifacts = {

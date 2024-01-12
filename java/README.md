@@ -11,8 +11,8 @@ To learn about the methods available for executing queries and retrieving their 
 ```xml
 <repositories>
     <repository>
-        <id>repo.vaticle.com</id>
-        <url>https://repo.vaticle.com/repository/maven/</url>
+        <id>repo.typedb.com</id>
+        <url>https://repo.typedb.com/public/public/maven/</url>
     </repository>
 </repositories>
 

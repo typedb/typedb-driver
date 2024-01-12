@@ -108,8 +108,8 @@ commands:
     steps:
       - install-pip-requirements
       - run: |
-          export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
-          export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
+          export DEPLOY_PIP_USERNAME=$REPO_TYPEDB_USERNAME
+          export DEPLOY_PIP_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip38 -- snapshot
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip39 -- snapshot
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip310 -- snapshot
@@ -121,9 +121,11 @@ commands:
       - run: |
           tool/test/start-core-server.sh
           python3.8 -m pip install wheel 
-          python3.8 -m pip install --extra-index-url https://repo.vaticle.com/repository/pypi-snapshot/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
+          python3.8 -m pip install --extra-index-url https://repo.typedb.com/public/public-snapshot/python/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
           sleep 3
-          (cd python/tests/deployment/ && python3.8 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
+          pushd python/tests/deployment/
+            python3.8 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+          popd
           tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
 
@@ -154,15 +156,15 @@ commands:
   deploy-maven-jni-snapshot-unix:
     steps:
       - run: |
-          export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
-          export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
+          export DEPLOY_MAVEN_USERNAME=$REPO_TYPEDB_USERNAME
+          export DEPLOY_MAVEN_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //java:deploy-maven-jni -- snapshot
 
   deploy-maven-snapshot-unix:
     steps:
       - run: |
-          export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
-          export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
+          export DEPLOY_MAVEN_USERNAME=$REPO_TYPEDB_USERNAME
+          export DEPLOY_MAVEN_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //java:deploy-maven -- snapshot
 
   test-maven-snapshot-unix:
@@ -177,15 +179,15 @@ commands:
   deploy-maven-jni-release-unix:
     steps:
       - run: |
-          export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
-          export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
+          export DEPLOY_MAVEN_USERNAME=$REPO_TYPEDB_USERNAME
+          export DEPLOY_MAVEN_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(cat VERSION) //java:deploy-maven-jni --compilation_mode=opt -- release
 
   deploy-maven-release-unix:
     steps:
       - run: |
-          export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
-          export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
+          export DEPLOY_MAVEN_USERNAME=$REPO_TYPEDB_USERNAME
+          export DEPLOY_MAVEN_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(cat VERSION) //java:deploy-maven --compilation_mode=opt -- release
 
   ######################
@@ -195,8 +197,8 @@ commands:
   deploy-clib-snapshot-unix:
     steps:
       - run: |
-          export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-          export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+          export DEPLOY_ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+          export DEPLOY_ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //c:deploy-clib-driver --compilation_mode=opt -- snapshot
 
   test-clib-assembly-linux:
@@ -248,8 +250,8 @@ commands:
   deploy-clib-release-unix:
     steps:
       - run: |
-          export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-          export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+          export DEPLOY_ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+          export DEPLOY_ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(cat VERSION) //c:deploy-clib-driver --compilation_mode=opt -- release
 
   ########################
@@ -259,8 +261,8 @@ commands:
   deploy-cpp-snapshot-unix:
     steps:
       - run: |
-          export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-          export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+          export DEPLOY_ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+          export DEPLOY_ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //cpp:deploy-cpp-driver --compilation_mode=opt -- snapshot
 
   test-cpp-assembly-linux:
@@ -312,8 +314,8 @@ commands:
   deploy-cpp-release-unix:
     steps:
       - run: |
-          export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-          export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+          export DEPLOY_ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+          export DEPLOY_ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(cat VERSION) //cpp:deploy-cpp-driver --compilation_mode=opt -- release
 
   #########################
@@ -323,7 +325,7 @@ commands:
   deploy-crate-snapshot-unix:
     steps:
       - run: |
-          export DEPLOY_CRATE_TOKEN=$REPO_VATICLE_CRATES_TOKEN
+          export DEPLOY_CRATE_TOKEN=$REPO_TYPEDB_CRATES_TOKEN
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //rust:deploy_crate -- snapshot
 
   deploy-crate-release-unix:
@@ -339,8 +341,8 @@ commands:
   deploy-npm-snapshot-unix:
     steps:
       - run: |
-          export DEPLOY_NPM_USERNAME=$REPO_VATICLE_USERNAME
-          export DEPLOY_NPM_PASSWORD=$REPO_VATICLE_PASSWORD
+          export DEPLOY_NPM_USERNAME=$REPO_TYPEDB_USERNAME
+          export DEPLOY_NPM_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --define version=$(git rev-parse HEAD) //nodejs:deploy-npm -- snapshot
 
   test-npm-snapshot-unix:
@@ -348,7 +350,7 @@ commands:
       - run: |
           tool/test/start-core-server.sh
           cd nodejs/test/deployment/
-          npm install https://repo.vaticle.com/repository/npm-snapshot-group/typedb-driver/-/typedb-driver-0.0.0-$FACTORY_COMMIT.tgz
+          npm install --registry https://npm.cloudsmith.io/typedb/public-snapshot/ "typedb-driver@0.0.0-$FACTORY_COMMIT"
           sudo -H npm install jest --global
           jest --detectOpenHandles application.test.js && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           cd -

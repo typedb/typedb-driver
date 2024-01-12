@@ -15,14 +15,14 @@ cargo add typedb-driver@{version}
 
 ### Java driver
 
-Available through https://repo.vaticle.com
+Available through https://repo.typedb.com
 Documentation: https://typedb.com/docs/clients/java-driver
 
 ```xml
 <repositories>
     <repository>
-        <id>repo.vaticle.com</id>
-        <url>https://repo.vaticle.com/repository/maven/</url>
+        <id>repo.typedb.com</id>
+        <url>https://repo.typedb.com/public/public/maven/</url>
     </repository>
 </repositories>
 <dependencies>
