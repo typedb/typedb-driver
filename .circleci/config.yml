@@ -484,10 +484,10 @@ jobs:
       - run: .circleci\windows\cpp\test_assembly.bat
 
   deploy-snapshot-any:
-    executor: linux-x86_64-amazonlinux-2
+    executor: linux-x86_64-ubuntu-2204
     steps:
       - checkout
-      - install-bazel-yum:
+      - install-bazel-apt:
           bazel-arch: amd64
       - deploy-crate-snapshot-unix
       - deploy-maven-snapshot-unix
@@ -548,10 +548,10 @@ jobs:
       - run: .circleci\windows\java\test_deploy_snapshot.bat
 
   test-snapshot-any:
-    executor: linux-x86_64-amazonlinux-2
+    executor: linux-x86_64-ubuntu-2204
     steps:
       - checkout
-      - install-bazel-yum:
+      - install-bazel-apt:
           bazel-arch: amd64
       - test-npm-snapshot-unix
 
