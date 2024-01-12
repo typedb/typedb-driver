@@ -336,8 +336,17 @@ commands:
   # Node deployment steps #
   #########################
 
+  install-npm-unix:
+    steps:
+      - run: |
+          wget -q -O - https://cli-assets.heroku.com/apt/release.key | apt-key add -
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+          apt update -y
+          apt install -y expect npm
+
   deploy-npm-snapshot-unix:
     steps:
+      - install-npm-unix
       - run: |
           export DEPLOY_NPM_USERNAME=$REPO_VATICLE_USERNAME
           export DEPLOY_NPM_PASSWORD=$REPO_VATICLE_PASSWORD
@@ -345,6 +354,7 @@ commands:
 
   test-npm-snapshot-unix:
     steps:
+      - install-npm-unix
       - run: |
           tool/test/start-core-server.sh
           cd nodejs/test/deployment/
@@ -357,6 +367,7 @@ commands:
 
   deploy-npm-release-unix:
     steps:
+      - install-npm-unix
       - run: |
           wget -q -O - https://cli-assets.heroku.com/apt/release.key | apt-key add -
           wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
