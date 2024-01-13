@@ -21,7 +21,7 @@
 
 package com.vaticle.typedb.driver.test.behaviour;
 
-import com.vaticle.typedb.core.test.runner.TypeDBSingleton;
+import com.vaticle.typedb.common.test.TypeDBSingleton;
 import org.junit.AfterClass;
 
 public abstract class BehaviourTest {
