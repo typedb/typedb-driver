@@ -32,7 +32,7 @@ under the License.
         <repository>
             <id>repo.typedb.com.release</id>
             <name>repo.typedb.com</name>
-            <url>https://repo.typedb.com/public/public/maven/</url>
+            <url>https://repo.typedb.com/public/public-release/maven/</url>
         </repository>
         <repository>
             <id>repo.typedb.com.snapshot</id>

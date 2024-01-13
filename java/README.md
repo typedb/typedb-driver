@@ -12,7 +12,7 @@ To learn about the methods available for executing queries and retrieving their 
 <repositories>
     <repository>
         <id>repo.typedb.com</id>
-        <url>https://repo.typedb.com/public/public/maven/</url>
+        <url>https://repo.typedb.com/public/public-release/maven/</url>
     </repository>
 </repositories>
 
