@@ -240,11 +240,11 @@ rules_ts_dependencies(
 load("@aspect_bazel_lib//lib:repositories.bzl", "register_jq_toolchains")
 register_jq_toolchains()
 
-# Load @vaticle_bazel_distribution_cloudsmith
-load("@vaticle_bazel_distribution//common/cloudsmith:deps.bzl", cloudsmith_deps = "deps")
-cloudsmith_deps()
-load("@vaticle_bazel_distribution_cloudsmith//:requirements.bzl", install_cloudsmith_deps = "install_deps")
-install_cloudsmith_deps()
+# Load @vaticle_bazel_distribution_uploader
+load("@vaticle_bazel_distribution//common/uploader:deps.bzl", uploader_deps = "deps")
+uploader_deps()
+load("@vaticle_bazel_distribution_uploader//:requirements.bzl", install_uploader_deps = "install_deps")
+install_uploader_deps()
 
 ###############
 # Load @maven #
