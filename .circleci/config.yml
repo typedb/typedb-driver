@@ -475,15 +475,18 @@ jobs:
       - run: .circleci\windows\cpp\test_assembly.bat
 
   deploy-snapshot-any:
-    executor: linux-x86_64-amazonlinux-2
+    executor: linux-x86_64-ubuntu-2204
     steps:
       - checkout
-      - install-bazel-yum:
+      - install-bazel-apt:
           bazel-arch: amd64
       - deploy-crate-snapshot-unix
       - deploy-maven-snapshot-unix
+      - run: |
+          apt update -y && apt install -y expect npm
+          npm install -g n
+          n lts
       - deploy-npm-snapshot-unix
-
 
   test-snapshot-linux-arm64:
     executor: linux-arm64-amazonlinux-2
@@ -600,7 +603,6 @@ jobs:
           root: ~/dist
           paths: ["./*"]
 
-
   deploy-release-mac-arm64:
     executor: mac-arm64
     steps:
@@ -625,7 +627,6 @@ jobs:
       - persist_to_workspace:
           root: ~/dist
           paths: ["./*"]
-
 
   deploy-release-mac-x86_64:
     executor: mac-arm64
@@ -678,6 +679,10 @@ jobs:
           bazel-arch: amd64
       - deploy-crate-release-unix
       - deploy-maven-release-unix
+      - run: |
+          apt update -y && apt install -y expect npm
+          npm install -g n
+          n lts
       - deploy-npm-release-unix
       - run: |
           mkdir -p ~/dist
