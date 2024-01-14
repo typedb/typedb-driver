@@ -21,7 +21,7 @@
 
 package com.vaticle.typedb.driver.test.behaviour.connection;
 
-import com.vaticle.typedb.common.test.TypeDBSingleton;
+import com.vaticle.typedb.core.tool.runner.TypeDBSingleton;
 import com.vaticle.typedb.driver.api.TypeDBDriver;
 import com.vaticle.typedb.driver.api.TypeDBOptions;
 import com.vaticle.typedb.driver.api.TypeDBSession;
