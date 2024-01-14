@@ -5,6 +5,7 @@
 [![Discussion Forum](https://img.shields.io/discourse/https/forum.typedb.com/topics.svg)](https://forum.typedb.com)
 [![Stack Overflow](https://img.shields.io/badge/stackoverflow-typedb-796de3.svg)](https://stackoverflow.com/questions/tagged/typedb)
 [![Stack Overflow](https://img.shields.io/badge/stackoverflow-typeql-3dce8c.svg)](https://stackoverflow.com/questions/tagged/typeql)
+[![Hosted By: Cloudsmith](https://img.shields.io/badge/OSS%20hosting%20by-cloudsmith-blue?logo=cloudsmith&style=flat)](https://cloudsmith.com)
 
 This repository stores all TypeDB Drivers built by Vaticle.
 
@@ -18,3 +19,9 @@ See the table below for links to README files, documentation, and source code.
 | Java | [README](https://github.com/vaticle/typedb-driver/tree/development/java/README.md) | [Documentation](https://typedb.com/docs/clients/java-driver)       | [`java/`](https://github.com/vaticle/typedb-driver/tree/development/java)     |
 | C | Coming soon | Coming soon | [`c/`](https://github.com/vaticle/typedb-driver/tree/development/c)   |
 | C++ | [README](https://github.com/vaticle/typedb-driver/tree/development/cpp/README.md) | Coming soon | [`cpp/`](https://github.com/vaticle/typedb-driver/tree/development/cpp)   |
+
+### Package hosting
+Package repository hosting is graciously provided by  [Cloudsmith](https://cloudsmith.com).
+Cloudsmith is the only fully hosted, cloud-native, universal package management solution, that
+enables your organization to create, store and share packages in any format, to any place, with total
+confidence.

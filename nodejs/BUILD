@@ -120,8 +120,8 @@ assemble_npm(
 deploy_npm(
     name = "deploy-npm",
     target = ":assemble-npm",
-    snapshot = deployment["npm.snapshot"],
-    release = deployment["npm.release"],
+    snapshot = deployment['npm']['snapshot'],
+    release = deployment['npm']['release'],
 )
 
 # This rule should be in tool/typedoc, but there is a problem with the path configurations

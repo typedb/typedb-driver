@@ -92,8 +92,8 @@ def native_driver_versioned(python_versions):
         deploy_pip(
             name = "deploy-pip" + version["suffix"],
             target = ":assemble-pip" + version["suffix"],
-            snapshot = deployment["pypi.snapshot"],
-            release = deployment["pypi.release"],
+            snapshot = deployment['pypi']['snapshot'],
+            release = deployment['pypi']['release'],
             suffix = version["suffix"],
             distribution_tag = select({
                 "@vaticle_bazel_distribution//platform:is_mac_arm64": "py" + version["suffix"] + "-none-macosx_11_0_arm64",

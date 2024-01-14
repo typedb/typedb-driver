@@ -24,8 +24,8 @@ REM by Chocolatey in prepare.bat is accessible
 CALL refreshenv
 
 ECHO Building and deploying windows package...
-SET DEPLOY_MAVEN_USERNAME=%REPO_VATICLE_USERNAME%
-SET DEPLOY_MAVEN_PASSWORD=%REPO_VATICLE_PASSWORD%
+SET DEPLOY_MAVEN_USERNAME=%REPO_TYPEDB_USERNAME%
+SET DEPLOY_MAVEN_PASSWORD=%REPO_TYPEDB_PASSWORD%
 
 git rev-parse HEAD > version_snapshot.txt
 set /p VER=<version_snapshot.txt

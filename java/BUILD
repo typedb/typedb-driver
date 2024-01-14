@@ -69,8 +69,8 @@ assemble_maven(
 
 deploy_maven(
     name = "deploy-maven",
-    release = deployment["maven.release"],
-    snapshot = deployment["maven.snapshot"],
+    release = deployment['maven']['release']['upload'],
+    snapshot = deployment['maven']['snapshot']['upload'],
     target = ":assemble-maven",
 )
 
@@ -104,8 +104,8 @@ assemble_maven(
 
 deploy_maven(
     name = "deploy-maven-jni",
-    release = deployment["maven.release"],
-    snapshot = deployment["maven.snapshot"],
+    release = deployment['maven']['release']['upload'],
+    snapshot = deployment['maven']['snapshot']['upload'],
     target = ":assemble-maven-jni",
 )
 

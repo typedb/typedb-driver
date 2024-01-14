@@ -19,6 +19,6 @@
 # under the License.
 #
 
---extra-index-url https://repo.vaticle.com/repository/pypi-snapshot/simple
+--extra-index-url https://repo.typedb.com/public/public-snapshot/python/simple
 
 typedb-driver==DRIVER_PYTHON_VERSION_MARKER

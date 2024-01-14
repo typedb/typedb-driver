@@ -24,8 +24,8 @@ REM by Chocolatey in prepare.bat is accessible
 CALL refreshenv
 
 ECHO Building and deploying windows package...
-SET DEPLOY_PIP_USERNAME=%REPO_VATICLE_USERNAME%
-SET DEPLOY_PIP_PASSWORD=%REPO_VATICLE_PASSWORD%
+SET DEPLOY_PIP_USERNAME=%REPO_TYPEDB_USERNAME%
+SET DEPLOY_PIP_PASSWORD=%REPO_TYPEDB_PASSWORD%
 python.exe -m pip install twine==3.3.0 importlib-metadata==3.4.0
 git rev-parse HEAD > version_temp.txt
 set /p VER=<version_temp.txt

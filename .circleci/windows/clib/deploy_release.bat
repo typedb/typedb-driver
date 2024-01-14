@@ -24,8 +24,8 @@ REM by Chocolatey in prepare.bat is accessible
 CALL refreshenv
 
 ECHO Building and deploying windows package...
-SET DEPLOY_ARTIFACT_USERNAME=%REPO_VATICLE_USERNAME%
-SET DEPLOY_ARTIFACT_PASSWORD=%REPO_VATICLE_PASSWORD%
+SET DEPLOY_ARTIFACT_USERNAME=%REPO_TYPEDB_USERNAME%
+SET DEPLOY_ARTIFACT_PASSWORD=%REPO_TYPEDB_PASSWORD%
 
 SET /p VER=<VERSION
 bazel --output_user_root=C:\bazel run --verbose_failures --define version=%VER% //c:deploy-windows-x86_64-zip --compilation_mode=opt -- release

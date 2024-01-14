@@ -21,7 +21,7 @@
 
 package com.vaticle.typedb.driver.test.integration;
 
-import com.vaticle.typedb.core.test.runner.TypeDBCoreRunner;
+import com.vaticle.typedb.core.tool.runner.TypeDBCoreRunner;
 import com.vaticle.typedb.driver.TypeDB;
 import com.vaticle.typedb.driver.api.TypeDBDriver;
 import com.vaticle.typedb.driver.api.TypeDBOptions;

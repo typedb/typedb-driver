@@ -25,30 +25,30 @@ def vaticle_dependencies():
     git_repository(
         name = "vaticle_dependencies",
         remote = "https://github.com/vaticle/dependencies",
-        commit = "1d4919aa905a180dbe97b145d6861881893724e9", # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_dependencies
+        commit = "a4a3bac9515fd51365e02f6aad762f67357e49a5", # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_dependencies
     )
 
 def vaticle_typedb_common():
     git_repository(
         name = "vaticle_typedb_common",
         remote = "https://github.com/vaticle/typedb-common",
-        commit = "1f0f1ec07c9869423b5698271fcca76fde4b4f9e",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_common
+        commit = "dbc333528ecdafa5b571344237e831619c3fa5f0",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_common
     )
 
 def vaticle_typeql():
     git_repository(
         name = "vaticle_typeql",
         remote = "https://github.com/vaticle/typeql",
-        tag = "2.25.8",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typeql
+        commit = "3a523f4d7d40b0c5d3b9af68f31a3859215fa671",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typeql
     )
 
 def vaticle_typedb_protocol():
     # needed for workspace status
-    VATICLE_TYPEDB_PROTOCOL_VERSION = "9575d084bf4a8618175b70c316b476a8d3984cab" # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_protocol
+    VATICLE_TYPEDB_PROTOCOL_VERSION = "a1ebf01a761268dc28c6fd2ab8b6cd825431f3d4" # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_protocol
     git_repository(
         name = "vaticle_typedb_protocol",
         remote = "https://github.com/vaticle/typedb-protocol",
-        commit = VATICLE_TYPEDB_PROTOCOL_VERSION
+        commit = "7b223fe459f9f0d1358ca3a71e531308aa328b7e"
     )
 
 def vaticle_typedb_behaviour():
