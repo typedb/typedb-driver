@@ -360,7 +360,7 @@ commands:
           tool/test/start-core-server.sh
           cd nodejs/test/deployment/
           npm install --registry https://npm.cloudsmith.io/typedb/public-snapshot/ "typedb-driver@0.0.0-$CIRCLE_SHA1"
-          sudo -H npm install jest --global
+          npm install jest --global
           jest --detectOpenHandles application.test.js && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           cd -
           tool/test/stop-core-server.sh
