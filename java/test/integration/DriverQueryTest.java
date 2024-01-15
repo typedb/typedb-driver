@@ -44,7 +44,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
@@ -71,7 +73,9 @@ public class DriverQueryTest {
 
     @BeforeClass
     public static void setUpClass() throws InterruptedException, IOException, TimeoutException {
-        typedb = new TypeDBCoreRunner();
+        Map<String, String> options = new HashMap<>();
+        options.put("--diagnostics.reporting.enable", "false");
+        typedb = new TypeDBCoreRunner(options);
         typedb.start();
         typedbDriver = TypeDB.coreDriver(typedb.address());
         if (typedbDriver.databases().contains("typedb")) typedbDriver.databases().get("typedb").delete();

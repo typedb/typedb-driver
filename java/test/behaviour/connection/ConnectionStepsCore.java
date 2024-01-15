@@ -37,7 +37,7 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     public void beforeAll() {
         super.beforeAll();
         try {
-            TypeDBCoreRunner typeDBCoreRunner = new TypeDBCoreRunner();
+            TypeDBCoreRunner typeDBCoreRunner = new TypeDBCoreRunner(serverOptions);
             TypeDBSingleton.setTypeDBRunner(typeDBCoreRunner);
             typeDBCoreRunner.start();
         } catch (InterruptedException | java.util.concurrent.TimeoutException | java.io.IOException e) {

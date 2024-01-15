@@ -62,6 +62,10 @@ public abstract class ConnectionStepsBase {
             pair("transaction-timeout-millis", (option, val) -> option.transactionTimeoutMillis(Integer.parseInt(val)))
     );
 
+    public static final Map<String, String> serverOptions = map(
+            pair("diagnostics.reporting.enable", "false")
+    );
+
     public static TypeDBTransaction tx() {
         return sessionsToTransactions.get(sessions.get(0)).get(0);
     }

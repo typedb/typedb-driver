@@ -45,7 +45,7 @@ public class ConnectionStepsCloud extends ConnectionStepsBase {
     @Override
     public void beforeAll() {
         super.beforeAll();
-        TypeDBCloudRunner cloudRunner = TypeDBCloudRunner.create(Paths.get("."), 1);
+        TypeDBCloudRunner cloudRunner = TypeDBCloudRunner.create(Paths.get("."), 1, serverOptions);
         TypeDBSingleton.setTypeDBRunner(cloudRunner);
         cloudRunner.start();
     }
