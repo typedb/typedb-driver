@@ -41,7 +41,7 @@ executors:
   linux-x86_64-ubuntu-2204:
     docker:
       - image: ubuntu:22.04
-    resource_class: medium
+    resource_class: large
     working_directory: ~/typedb-driver
 
   mac-arm64:
