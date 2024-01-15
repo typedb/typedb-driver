@@ -542,11 +542,15 @@ jobs:
       - run: .circleci\windows\java\test_deploy_snapshot.bat
 
   test-snapshot-any:
-    executor: linux-x86_64-amazonlinux-2
+    executor: linux-x86_64-ubuntu-2204
     steps:
       - checkout
-      - install-bazel-yum:
+      - install-bazel-apt:
           bazel-arch: amd64
+      - run: |
+          apt update -y && apt install -y expect npm
+          npm install -g n
+          n lts
       - test-npm-snapshot-unix
 
   ################
