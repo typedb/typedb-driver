@@ -338,19 +338,28 @@ commands:
   # Node deployment steps #
   #########################
 
+  install-npm-apt:
+    steps:
+      - run: |
+          wget -q -O - https://cli-assets.heroku.com/apt/release.key | apt-key add -
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+          apt update -y && apt install -y expect npm
+          npm install -g n
+          n lts
+
   deploy-npm-snapshot-unix:
     steps:
       - run: |
           export DEPLOY_NPM_USERNAME=$REPO_TYPEDB_USERNAME
           export DEPLOY_NPM_PASSWORD=$REPO_TYPEDB_PASSWORD
-          bazel run --define version=$(git rev-parse HEAD) //nodejs:deploy-npm -- snapshot
+          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //nodejs:deploy-npm -- snapshot
 
   test-npm-snapshot-unix:
     steps:
       - run: |
           tool/test/start-core-server.sh
           cd nodejs/test/deployment/
-          npm install --registry https://npm.cloudsmith.io/typedb/public-snapshot/ "typedb-driver@0.0.0-$FACTORY_COMMIT"
+          npm install --registry https://npm.cloudsmith.io/typedb/public-snapshot/ "typedb-driver@0.0.0-$CIRCLE_SHA1"
           sudo -H npm install jest --global
           jest --detectOpenHandles application.test.js && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           cd -
@@ -362,8 +371,6 @@ commands:
       - run: |
           wget -q -O - https://cli-assets.heroku.com/apt/release.key | apt-key add -
           wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
-          apt update -y
-          apt install -y expect npm
           export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN
           bazel run --jobs=8 --define version=$(cat VERSION) //nodejs:deploy-npm --compilation_mode=opt -- release
 
@@ -482,10 +489,7 @@ jobs:
           bazel-arch: amd64
       - deploy-crate-snapshot-unix
       - deploy-maven-snapshot-unix
-      - run: |
-          apt update -y && apt install -y expect npm
-          npm install -g n
-          n lts
+      - install-npm-apt
       - deploy-npm-snapshot-unix
 
   test-snapshot-linux-arm64:
@@ -547,10 +551,7 @@ jobs:
       - checkout
       - install-bazel-apt:
           bazel-arch: amd64
-      - run: |
-          apt update -y && apt install -y expect npm
-          npm install -g n
-          n lts
+      - install-npm-apt
       - test-npm-snapshot-unix
 
   ################
@@ -683,10 +684,7 @@ jobs:
           bazel-arch: amd64
       - deploy-crate-release-unix
       - deploy-maven-release-unix
-      - run: |
-          apt update -y && apt install -y expect npm
-          npm install -g n
-          n lts
+      - install-npm-apt
       - deploy-npm-release-unix
       - run: |
           mkdir -p ~/dist
