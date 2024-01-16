@@ -11,16 +11,17 @@ This repository stores all TypeDB Drivers built by Vaticle.
 
 See the table below for links to README files, documentation, and source code.
 
-| Driver  | Readme | Documentation                                                                 | Driver location                                                               |
-|---------|--------|-------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
-| Rust | [README](https://github.com/vaticle/typedb-driver/tree/development/rust/README.md) | [Documentation](https://typedb.com/docs/clients/rust-driver)       | [`rust/`](https://github.com/vaticle/typedb-driver/tree/development/rust)     |
-| Python | [README](https://github.com/vaticle/typedb-driver/tree/development/python/README.md) | [Documentation](https://typedb.com/docs/clients/python-driver)   | [`python/`](https://github.com/vaticle/typedb-driver/tree/development/python) |
-| Node.js | [README](https://github.com/vaticle/typedb-driver/tree/development/nodejs/README.md) | [Documentation](https://typedb.com/docs/clients/nodejs-driver) | [`nodejs/`](https://github.com/vaticle/typedb-driver/tree/development/nodejs) |
-| Java | [README](https://github.com/vaticle/typedb-driver/tree/development/java/README.md) | [Documentation](https://typedb.com/docs/clients/java-driver)       | [`java/`](https://github.com/vaticle/typedb-driver/tree/development/java)     |
-| C | Coming soon | Coming soon | [`c/`](https://github.com/vaticle/typedb-driver/tree/development/c)   |
-| C++ | [README](https://github.com/vaticle/typedb-driver/tree/development/cpp/README.md) | Coming soon | [`cpp/`](https://github.com/vaticle/typedb-driver/tree/development/cpp)   |
+| Driver  | Readme                                                                               | Documentation                                                    | Driver location                                                               |
+|---------|--------------------------------------------------------------------------------------|------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| Rust    | [README](https://github.com/vaticle/typedb-driver/tree/development/rust/README.md)   | [Documentation](https://typedb.com/docs/drivers/rust/overview)   | [`rust/`](https://github.com/vaticle/typedb-driver/tree/development/rust)     |
+| Python  | [README](https://github.com/vaticle/typedb-driver/tree/development/python/README.md) | [Documentation](https://typedb.com/docs/drivers/python/overview) | [`python/`](https://github.com/vaticle/typedb-driver/tree/development/python) |
+| Node.js | [README](https://github.com/vaticle/typedb-driver/tree/development/nodejs/README.md) | [Documentation](https://typedb.com/docs/drivers/nodejs/overview) | [`nodejs/`](https://github.com/vaticle/typedb-driver/tree/development/nodejs) |
+| Java    | [README](https://github.com/vaticle/typedb-driver/tree/development/java/README.md)   | [Documentation](https://typedb.com/docs/drivers/java/overview)   | [`java/`](https://github.com/vaticle/typedb-driver/tree/development/java)     |
+| C       | [README](https://github.com/vaticle/typedb-driver/tree/development/c/README.md)      | -                                                                | [`c/`](https://github.com/vaticle/typedb-driver/tree/development/c)           |
+| C++     | [README](https://github.com/vaticle/typedb-driver/tree/development/cpp/README.md)    | [Documentation](https://typedb.com/docs/drivers/cpp/overview)    | [`cpp/`](https://github.com/vaticle/typedb-driver/tree/development/cpp)       |
 
 ### Package hosting
+
 Package repository hosting is graciously provided by  [Cloudsmith](https://cloudsmith.com).
 Cloudsmith is the only fully hosted, cloud-native, universal package management solution, that
 enables your organization to create, store and share packages in any format, to any place, with total
