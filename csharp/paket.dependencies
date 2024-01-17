@@ -1,0 +1,8 @@
+# Not used for now!
+
+group test_deps
+    framework: net5.0
+    storage: none
+    source https://api.nuget.org/v3/index.json
+
+    nuget MySql.Data 8.2.0
