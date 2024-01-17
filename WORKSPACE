@@ -64,6 +64,22 @@ rules_antlr_dependencies(antlr_version, JAVA)
 load("@vaticle_dependencies//builder/cpp:deps.bzl", cpp_deps = "deps")
 cpp_deps()
 
+# Load //builder/csharp
+load("@vaticle_dependencies//builder/csharp:deps.bzl", dotnet_deps = "deps")
+dotnet_deps()
+load(
+    "@rules_dotnet//dotnet:repositories.bzl",
+    "dotnet_register_toolchains",
+    "rules_dotnet_dependencies",
+)
+rules_dotnet_dependencies()
+
+dotnet_register_toolchains("dotnet", "6.0.413")
+load("@rules_dotnet//dotnet:paket.rules_dotnet_nuget_packages.bzl", "rules_dotnet_nuget_packages")
+rules_dotnet_nuget_packages()
+load("@rules_dotnet//dotnet:paket.paket2bazel_dependencies.bzl", "paket2bazel_dependencies")
+paket2bazel_dependencies()
+
 # Load //builder/proto_grpc
 load("@vaticle_dependencies//builder/proto_grpc:deps.bzl", grpc_deps = "deps")
 grpc_deps()
