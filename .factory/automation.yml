@@ -1218,6 +1218,141 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
+    deploy-crate-snapshot:
+      filter:
+        owner: vaticle
+        branch: [master, development]
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+        - test-rust-unit-integration
+        - test-rust-behaviour-concept
+        - test-rust-behaviour-connection
+        - test-rust-behaviour-query-read
+        - test-rust-behaviour-query-write
+      command: |
+        export DEPLOY_CRATE_TOKEN=$REPO_VATICLE_CRATES_TOKEN
+        bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
+        bazel run --define version=$(git rev-parse HEAD) //rust:deploy_crate -- snapshot
+
+    deploy-npm-snapshot:
+      filter:
+        owner: vaticle
+        branch: [master, development]
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - build
+        - test-nodejs-integration
+        - test-nodejs-cloud-failover
+        - test-nodejs-behaviour-connection-core
+        - test-nodejs-behaviour-connection-cloud
+        - test-nodejs-behaviour-concept-core
+        - test-nodejs-behaviour-concept-cloud
+        - test-nodejs-behaviour-read-core
+        - test-nodejs-behaviour-read-cloud
+        - test-nodejs-behaviour-writable-core
+        - test-nodejs-behaviour-writable-cloud
+        - test-nodejs-behaviour-definable-core
+        - test-nodejs-behaviour-definable-cloud
+      command: |
+        export DEPLOY_NPM_USERNAME=$REPO_VATICLE_USERNAME
+        export DEPLOY_NPM_PASSWORD=$REPO_VATICLE_PASSWORD
+        bazel run --define version=$(git rev-parse HEAD) //nodejs:deploy-npm -- snapshot
+
+    test-deployment-npm:
+      filter:
+        owner: vaticle
+        branch: [master, development]
+      image: vaticle-ubuntu-22.04
+      dependencies:
+        - deploy-npm-snapshot
+      command: |
+        tool/test/start-core-server.sh
+        cd nodejs/test/deployment/
+        npm install https://repo.vaticle.com/repository/npm-snapshot-group/typedb-driver/-/typedb-driver-0.0.0-$FACTORY_COMMIT.tgz
+        sudo -H npm install jest --global
+        jest --detectOpenHandles application.test.js && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+        cd -
+        tool/test/stop-core-server.sh
+        exit $TEST_SUCCESS
+
+    sync-dependencies:
+      image: vaticle-ubuntu-22.04
+      filter:
+        owner: vaticle
+        branch: [master, development]
+      dependencies:
+        - build
+        - build-dependency
+        - build-docs
+        - test-rust-unit-integration
+        - test-rust-behaviour-concept
+        - test-rust-behaviour-connection
+        - test-rust-behaviour-driver
+        - test-rust-behaviour-query-read
+        - test-rust-behaviour-query-write
+        - test-c-integration
+        - test-java-integration
+        - test-java-behaviour-connection-core
+        - test-java-behaviour-connection-cloud
+        - test-java-behaviour-concept-core
+        - test-java-behaviour-concept-cloud
+        - test-java-behaviour-driver-core
+        - test-java-behaviour-driver-cloud
+        - test-java-behaviour-read-core
+        - test-java-behaviour-read-cloud
+        - test-java-behaviour-writable-core
+        - test-java-behaviour-writable-cloud
+        - test-java-behaviour-definable-core
+        - test-java-behaviour-definable-cloud
+        - test-python-behaviour-connection-core
+        - test-python-behaviour-connection-cloud
+        - test-python-behaviour-concept-core
+        - test-python-behaviour-concept-cloud
+        - test-python-behaviour-driver-core
+        - test-python-behaviour-driver-cloud
+        - test-python-behaviour-read-core
+        - test-python-behaviour-read-cloud
+        - test-python-behaviour-writable-core
+        - test-python-behaviour-writable-cloud
+        - test-python-behaviour-definable-core
+        - test-python-behaviour-definable-cloud
+        - test-python-integration-core
+        - test-nodejs-integration
+        - test-nodejs-cloud-failover
+        - test-nodejs-behaviour-connection-core
+        - test-nodejs-behaviour-connection-cloud
+        - test-nodejs-behaviour-concept-core
+        - test-nodejs-behaviour-concept-cloud
+        - test-nodejs-behaviour-driver-core
+        - test-nodejs-behaviour-driver-cloud
+        - test-nodejs-behaviour-read-core
+        - test-nodejs-behaviour-read-cloud
+        - test-nodejs-behaviour-writable-core
+        - test-nodejs-behaviour-writable-cloud
+        - test-nodejs-behaviour-definable-core
+        - test-nodejs-behaviour-definable-cloud
+        - test-cpp-behaviour-connection-core
+        - test-cpp-behaviour-connection-cloud
+        - test-cpp-behaviour-concept-core
+        - test-cpp-behaviour-concept-cloud
+        - test-cpp-behaviour-driver-core
+        - test-cpp-behaviour-driver-cloud
+        - test-cpp-behaviour-read-core
+        - test-cpp-behaviour-read-cloud
+        - test-cpp-behaviour-writable-core
+        - test-cpp-behaviour-writable-cloud
+        - test-cpp-behaviour-definable-core
+        - test-cpp-behaviour-definable-cloud
+        - test-cpp-integration-core
+        - deploy-crate-snapshot
+        - deploy-npm-snapshot
+        - test-deployment-npm
+    trigger-release-circleci:
+      command: |
+          export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
+          bazel run @vaticle_dependencies//tool/sync:dependencies -- --source ${FACTORY_REPO}@${FACTORY_COMMIT}
+
 # TODO: assembly tests for all drivers to run in factory
 
 release:
