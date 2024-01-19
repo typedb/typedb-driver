@@ -18,11 +18,25 @@
 # specific language governing permissions and limitations
 # under the License.
 
-group csharp_deps
-    framework: net6.0
-    storage: none
-    source https://api.nuget.org/v3/index.json
+load("@rules_dotnet//dotnet:defs.bzl", "csharp_binary", "csharp_library")
 
-    nuget XUnit.Gherkin.Quick 4.3.0
-    nuget xunit.runner.utility 2.6.4
-    nuget Gherkin 5.0.0
+load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
+package(default_visibility = ["//visibility:public"])
+
+csharp_library(
+    name = "hello-lib",
+    srcs = ["Lib.cs"],
+    runtime_identifier = "any",
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
+)
+
+csharp_binary(
+    name = "hello",
+    srcs = ["Hello.cs"],
+    runtime_identifier = "any",
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
+    deps = [":hello-lib"],
+)
+
