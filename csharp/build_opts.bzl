@@ -18,11 +18,5 @@
 # specific language governing permissions and limitations
 # under the License.
 
-group csharp_deps
-    framework: net6.0
-    storage: none
-    source https://api.nuget.org/v3/index.json
-
-    nuget XUnit.Gherkin.Quick 4.3.0
-    nuget xunit.runner.utility 2.6.4
-    nuget Gherkin 5.0.0
+target_frameworks = ["net6.0"]
+targeting_packs = ["@paket.rules_dotnet_nuget_packages//microsoft.netcore.app.ref"]
