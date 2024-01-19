@@ -17,12 +17,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+#
 
-group csharp_deps
-    framework: net6.0
-    storage: none
-    source https://api.nuget.org/v3/index.json
-
-    nuget XUnit.Gherkin.Quick 4.3.0
-    nuget xunit.runner.utility 2.6.4
-    nuget Gherkin 5.0.0
+ paket install
+ bazel run @rules_dotnet//tools/paket2bazel:paket2bazel.exe -- --dependencies-file $(pwd)/paket.dependencies  --output-folder $(pwd)
