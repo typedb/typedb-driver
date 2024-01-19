@@ -24,9 +24,9 @@
 #include <sstream>
 #include <string>
 
-#include <gherkin/parser.hpp>
-#include <gherkin/pickle_compiler.hpp>
-#include <gherkin/utils.hpp>
+#include <cucumber/gherkin/parser.hpp>
+#include <cucumber/gherkin/pickle_compiler.hpp>
+#include <cucumber/gherkin/utils.hpp>
 
 #include "cucumber_bdd/runner.hpp"
 
@@ -44,10 +44,10 @@ std::string type_name();
 
 void TestRunnerBase::loadFeature(const std::string& path) {
     // std::regex testFilter = std::regex(::testing::GTEST_FLAG(filter), std::regex::extended);
-    std::string featureContents = gherkin::slurp(path);
-    gherkin::parser parser;
+    std::string featureContents = cucumber::gherkin::slurp(path);
+    cucumber::gherkin::parser parser;
     cucumber::messages::gherkin_document doc = parser.parse(path, featureContents);
-    gherkin::pickle_compiler compiler;
+    cucumber::gherkin::pickle_compiler compiler;
 
     if (doc.feature.has_value()) {
         for (cucumber::messages::pickle scenario : compiler.compile(doc, path)) {
