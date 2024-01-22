@@ -20,7 +20,7 @@
 #
 
 dir_mapping = {
-    "typedefs.adoc" : "common",
+    "typedefs.adoc" : "answer",
     "Transaction.adoc": "transaction",
     "TransactionType.adoc": "transaction",
     "QueryManager.adoc": "transaction",
@@ -33,9 +33,9 @@ dir_mapping = {
     "JSONType.adoc": "answer",
     "ValueGroup.adoc": "answer",
     "OwnerAttributePair.adoc": "answer",
-    "Future__RETURN__NATIVE_PROMISE__HELPER__.adoc": "common",
-    "Iterable__NATIVE_ITER__NATIVE_T__T__HELPER__.adoc" : "common",
-    "Iterator__NATIVE_ITER__NATIVE_T__T__HELPER__.adoc" : "common",
+    "Future__RETURN__NATIVE_PROMISE__HELPER__.adoc": "answer",
+    "Iterable__NATIVE_ITER__NATIVE_T__T__HELPER__.adoc" : "answer",
+    "Iterator__NATIVE_ITER__NATIVE_T__T__HELPER__.adoc" : "answer",
     "Driver.adoc": "connection",
     "Credential.adoc": "connection",
     "UserManager.adoc": "connection",
