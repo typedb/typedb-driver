@@ -78,5 +78,6 @@ filegroup(
         "@vaticle_dependencies//tool/sonarcloud:code-analysis",
         "@vaticle_dependencies//tool/unuseddeps:unused-deps",
         "@rust_analyzer_toolchain_tools//lib/rustlib/src:rustc_srcs"
+        "@vaticle_dependencies//tool/sync:dependencies",
     ],
 )

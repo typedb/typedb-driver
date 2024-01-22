@@ -716,8 +716,8 @@ jobs:
     executor: linux-x86_64
     steps:
       - checkout
-      - install-bazel-linux:
-          arch: amd64
+      - install-bazel-apt:
+          bazel-arch: amd64
       - run:
           command: |
               export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
