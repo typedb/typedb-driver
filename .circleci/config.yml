@@ -712,6 +712,17 @@ jobs:
               -r ${CIRCLE_PROJECT_REPONAME} -n "TypeDB Driver $(cat VERSION)" -b "$(cat ./RELEASE_NOTES_LATEST.md)" \
               -c ${CIRCLE_SHA1} -delete $(cat VERSION) ~/dist/
 
+  sync-dependencies:
+    executor: linux-x86_64
+    steps:
+      - checkout
+      - install-bazel-linux:
+          arch: amd64
+      - run:
+          command: |
+              export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
+              bazel run @vaticle_dependencies//tool/sync:dependencies -- --source ${CIRCLE_PROJECT_REPONAME}@$(cat VERSION)
+
   release-cleanup:
     executor: linux-x86_64-ubuntu-2204
     steps:
@@ -846,9 +857,15 @@ workflows:
             - deploy-release-windows-x86_64
             - deploy-release-any
 
-      - release-cleanup:
+      - sync-dependencies:
           filters:
             branches:
               only: [release]
           requires:
             - deploy-github
+      - release-cleanup:
+          filters:
+            branches:
+              only: [release]
+          requires:
+            - sync-dependencies
