@@ -19,34 +19,24 @@
 # under the License.
 
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_binary", "csharp_library")
-load(":build_opts.bzl", "target_frameworks", "targeting_packs")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
 
 csharp_library(
-    name = "hello-lib",
+    name = "helloer-lib",
     srcs = ["Lib.cs"],
     runtime_identifier = "any",
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
+    visibility = ["//visibility:public"],
 )
 
 csharp_binary(
-    name = "hello",
+    name = "helloer",
     srcs = ["Hello.cs"],
     runtime_identifier = "any",
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
-    deps = [":hello-lib"],
-)
-
-checkstyle_test(
-    name = "checkstyle",
-    size = "small",
-    include = glob(["*"]),
-    exclude = glob([
-        "README.md",
-        "docs/**/*.adoc",
-    ]),
-    license_type = "apache-header",
+    deps = [":helloer-lib"],
+    visibility = ["//visibility:public"],
 )
 

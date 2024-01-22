@@ -17,26 +17,12 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+#
 
-load("@rules_dotnet//dotnet:defs.bzl", "csharp_binary", "csharp_library")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
-package(default_visibility = ["//visibility:public"])
-
-csharp_library(
-    name = "hello-lib",
-    srcs = ["Lib.cs"],
-    runtime_identifier = "any",
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
+checkstyle_test(
+    name = "checkstyle",
+    include = glob(["*"]),
+    license_type = "apache-header",
 )
-
-csharp_binary(
-    name = "hello",
-    srcs = ["Hello.cs"],
-    runtime_identifier = "any",
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-    deps = [":hello-lib"],
-)
-
