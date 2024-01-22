@@ -1287,7 +1287,6 @@ build:
         - test-cpp-behaviour-definable-core
         - test-cpp-behaviour-definable-cloud
         - test-cpp-integration-core
-    trigger-release-circleci:
       command: |
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
           bazel run @vaticle_dependencies//tool/sync:dependencies -- --source ${FACTORY_REPO}@${FACTORY_COMMIT}
