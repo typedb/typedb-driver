@@ -1,11 +1,11 @@
-Documentation: https://typedb.com/docs/clients/overview
+Documentation: https://typedb.com/docs/drivers/overview
 
 ## Distribution
 
 #### Rust driver
 
 Available from https://crates.io/crates/typedb-driver
-Documentation: https://typedb.com/docs/clients/rust-driver
+Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
@@ -16,7 +16,7 @@ cargo add typedb-driver@{version}
 ### Java driver
 
 Available through https://repo.typedb.com
-Documentation: https://typedb.com/docs/clients/java-driver
+Documentation: https://typedb.com/docs/drivers/java/overview
 
 ```xml
 <repositories>
@@ -37,7 +37,7 @@ Documentation: https://typedb.com/docs/clients/java-driver
 ### Python driver
 
 PyPI package: https://pypi.org/project/typedb-driver
-Documentation: https://typedb.com/docs/clients/python-driver
+Documentation: https://typedb.com/docs/drivers/python/overview
 
 Available through https://pypi.org
 
@@ -48,19 +48,19 @@ pip install typedb-driver=={version}
 ### NodeJS driver
 
 NPM package: https://www.npmjs.com/package/typedb-driver
-Documentation: https://typedb.com/docs/clients/nodejs-driver
+Documentation: https://typedb.com/docs/drivers/nodejs/overview
 
 ```
-npm install typedb-driver@
+npm install typedb-driver@{version}
 ```
 
 ### C++ driver
 
-Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/{version}
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name%3A%5Etypedb-driver-cpp+version%3A{version}
 
 ### C driver
 
-Compiled distributions comprising headers and shared libraries available at: https://github.com/vaticle/typedb-driver/releases/tag/{version}
-
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name%3A%5Etypedb-driver-clib+version%3A{version}
+Documentation: https://typedb.com/docs/drivers/cpp/overview
 
 { release notes }
