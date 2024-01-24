@@ -56,11 +56,11 @@ npm install typedb-driver@{version}
 
 ### C++ driver
 
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name%3A%5Etypedb-driver-cpp+version%3A{version}
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-cpp+version:{version}
 
 ### C driver
 
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name%3A%5Etypedb-driver-clib+version%3A{version}
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:{version}
 Documentation: https://typedb.com/docs/drivers/cpp/overview
 
 { release notes }
