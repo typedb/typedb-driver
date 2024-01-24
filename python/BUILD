@@ -31,14 +31,14 @@ native_driver_versioned(python_versions = python_versions)
 
 alias(
     name = "driver_python",
-    actual = ":driver_python39",
+    actual = ":driver_python311",
     visibility = ["//visibility:public"],
 )
 
 genrule(
     name = "native-driver-wrapper-link",
     outs = ["typedb/native_driver_wrapper.py"],
-    srcs = [":native-driver-wrapper39"],
+    srcs = [":native-driver-wrapper311"],
     cmd = "cp $< $@",
     visibility = ["//visibility:public"]
 )
@@ -46,13 +46,13 @@ genrule(
 py_native_lib_rename(
     name = "native-driver-binary-link",
     out = "typedb/native_driver_python",
-    src = ":native_driver_python39",
+    src = ":native_driver_python311",
     visibility = ["//visibility:public"]
 )
 
 sphinx_docs(
     name = "docs_html",
-    target = ":assemble-pip39",
+    target = ":assemble-pip311",
     out = "driver_docs_sphinx",
     sphinx_conf = "conf.py",
     sphinx_rst = "index.rst",

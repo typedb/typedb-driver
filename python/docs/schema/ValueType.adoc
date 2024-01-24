@@ -19,20 +19,3 @@ a| `STRING` a| `_ValueType(is_writable=True, is_keyable=True, 4)`
 |===
 // end::enum_constants[]
 
-// tag::methods[]
-[#_ValueType_of__]
-==== of
-
-[source,python]
-----
-static of(value_type: Object | Boolean | Long | Double | String | DateTime) -> ValueType
-----
-
-
-
-[caption=""]
-.Returns
-`ValueType`
-
-// end::methods[]
-
