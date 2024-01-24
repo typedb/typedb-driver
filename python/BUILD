@@ -52,7 +52,7 @@ py_native_lib_rename(
 
 sphinx_docs(
     name = "docs_html",
-    target = ":assemble-pip39",
+    target = ":assemble-pip311",
     out = "driver_docs_sphinx",
     sphinx_conf = "conf.py",
     sphinx_rst = "index.rst",

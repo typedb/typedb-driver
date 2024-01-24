@@ -25,7 +25,7 @@ a| `STRING` a| `_ValueType(is_writable=True, is_keyable=True, 4)`
 
 [source,python]
 ----
-static of(value_type: Object | Boolean | Long | Double | String | DateTime) -> ValueType
+static of(value_type: 0 | 1 | 2 | 3 | 4 | 5) -> ValueType
 ----
 
 
