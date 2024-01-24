@@ -21,6 +21,7 @@
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_binary", "csharp_library")
 load(":build_opts.bzl", "target_frameworks", "targeting_packs")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load(":rules.bzl", "swig_native_csharp_library")
 
 csharp_library(
     name = "hello-lib",
@@ -50,3 +51,44 @@ checkstyle_test(
     license_type = "apache-header",
 )
 
+# The following code is the WIP for the actual build file.
+
+csharp_library(
+    name = "driver-csharp",
+    srcs = glob(["*.cs"]),
+    resources = ["//:LICENSE"],
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
+    deps = [
+        # Internal dependencies
+        "//csharp/api",
+        "//csharp/connection",
+    ],
+)
+
+swig_native_csharp_library(
+    name = "typedb_driver_pinvoke",
+    lib = "//c:typedb_driver_clib_headers",
+    namespace = "com.vaticle.typedb.driver.pinvoke",
+    interface = "//c:typedb_driver.i",
+    includes = ["//c:swig/typedb_driver_csharp.swg"],
+    enable_cxx = True,
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
+#    platforms = { # TODO: We'll need to build for different platforms?
+#        "@vaticle_bazel_distribution//platform:is_linux_arm64": "linux-arm64",
+#        "@vaticle_bazel_distribution//platform:is_linux_x86_64": "linux-x86_64",
+#        "@vaticle_bazel_distribution//platform:is_mac_arm64": "macosx-arm64",
+#        "@vaticle_bazel_distribution//platform:is_mac_x86_64": "macosx-x86_64",
+#        "@vaticle_bazel_distribution//platform:is_windows_x86_64": "windows-x86_64",
+#    },
+)
+
+csharp_binary(
+    name = "valuetype",
+    srcs = ["poc-examples/valuetype/Main.cs"],
+    runtime_identifier = "any",
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
+    deps = [":typedb_driver_pinvoke"],
+)

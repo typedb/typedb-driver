@@ -37,6 +37,10 @@ extern "C" {
 %include "swig/typedb_driver_python.swg"
 #endif
 
+#ifdef SWIGCSHARP
+%include "swig/typedb_driver_csharp.swg"
+#endif
+
 %nodefaultctor;
 
 %define %dropproxy(Type, function_prefix)

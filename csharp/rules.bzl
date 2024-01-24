@@ -17,26 +17,22 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+#
 
-load("@rules_dotnet//dotnet:defs.bzl", "csharp_binary", "csharp_library")
-load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
+load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
+load("@vaticle_dependencies//builder/swig:csharp.bzl", "swig_csharp")
 
-csharp_library(
-    name = "helloer-lib",
-    srcs = ["Lib.cs"],
-    runtime_identifier = "any",
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-    visibility = ["//visibility:public"],
-)
+def swig_native_csharp_library(name, target_frameworks, targeting_packs, tags=[], **kwargs):
+    swig_csharp(
+        name = "__" + name,
+        target_frameworks = target_frameworks,
+        targeting_packs = targeting_packs,
+        shared_lib_name = name,
+        tags = tags, # TODO: Will we need it?
+        **kwargs,
+    )
 
-csharp_binary(
-    name = "helloer",
-    srcs = ["src.cs/Hello.cs"],
-    runtime_identifier = "any",
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-    deps = [":helloer-lib"],
-    visibility = ["//visibility:public"],
-)
-
+    native.alias(
+        name = name,
+        actual = "__" + name
+    )
