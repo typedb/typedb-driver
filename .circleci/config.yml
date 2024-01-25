@@ -713,15 +713,16 @@ jobs:
               -c ${CIRCLE_SHA1} -delete $(cat VERSION) ~/dist/
 
   sync-dependencies:
-    executor: linux-x86_64
+    executor: linux-x86_64-ubuntu-2204
     steps:
       - checkout
       - install-bazel-apt:
           bazel-arch: amd64
-      - run:
-          command: |
-              export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
-              bazel run @vaticle_dependencies//tool/sync:dependencies -- --source ${CIRCLE_PROJECT_REPONAME}@$(cat VERSION)
+      - run: |
+          apt update && apt install -y python3.11 python3-pip
+          python3.11 -m pip install -U cffi
+          export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
+          bazel run @vaticle_dependencies//tool/sync:dependencies -- --source ${CIRCLE_PROJECT_REPONAME}@$(cat VERSION)
 
   release-cleanup:
     executor: linux-x86_64-ubuntu-2204

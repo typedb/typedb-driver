@@ -1288,6 +1288,8 @@ build:
         - test-cpp-behaviour-definable-cloud
         - test-cpp-integration-core
       command: |
+          sudo apt update && sudo apt install -y python3.11 python3-pip
+          python3.11 -m pip install -U cffi
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
           bazel run @vaticle_dependencies//tool/sync:dependencies -- --source ${FACTORY_REPO}@${FACTORY_COMMIT}
 
