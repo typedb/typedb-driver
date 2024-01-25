@@ -568,20 +568,6 @@ jobs:
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
-      - run: |
-          mkdir -p ~/dist
-          for f in bazel-bin/python/*.whl; do
-              fname=$(basename $f)
-              base=${fname%.*}
-              pyversion=${base#typedb-driver}
-              cp $f ~/dist/typedb_driver-py${pyversion}-none-manylinux_2_17_aarch64.whl
-          done
-          cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-linux-arm64.jar ~/dist/typedb-driver-jni-linux-arm64.jar
-          cp bazel-bin/c/typedb-driver-clib-linux-arm64.tar.gz ~/dist
-          cp bazel-bin/cpp/typedb-driver-cpp-linux-arm64.tar.gz ~/dist
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   deploy-release-linux-x86_64:
     executor: linux-x86_64-amazonlinux-2
@@ -593,20 +579,6 @@ jobs:
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
-      - run: |
-          mkdir -p ~/dist
-          for f in bazel-bin/python/*.whl; do
-              fname=$(basename $f)
-              base=${fname%.*}
-              pyversion=${base#typedb-driver}
-              cp $f ~/dist/typedb_driver-py${pyversion}-none-manylinux_2_17_x86_64.whl
-          done
-          cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-linux-x86_64.jar ~/dist/typedb-driver-jni-linux-x86_64.jar
-          cp bazel-bin/c/typedb-driver-clib-linux-x86_64.tar.gz ~/dist
-          cp bazel-bin/cpp/typedb-driver-cpp-linux-x86_64.tar.gz ~/dist
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   deploy-release-mac-arm64:
     executor: mac-arm64
@@ -618,20 +590,6 @@ jobs:
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
-      - run: |
-          mkdir -p ~/dist
-          for f in bazel-bin/python/*.whl; do
-              fname=$(basename $f)
-              base=${fname%.*}
-              pyversion=${base#typedb-driver}
-              cp $f ~/dist/typedb_driver-py${pyversion}-none-macosx_11_0_arm64.whl
-          done
-          cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-macosx-arm64.jar ~/dist/typedb-driver-jni-macosx-arm64.jar
-          cp bazel-bin/c/typedb-driver-clib-mac-arm64.tar.gz ~/dist
-          cp bazel-bin/cpp/typedb-driver-cpp-mac-arm64.tar.gz ~/dist
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   deploy-release-mac-x86_64:
     executor: mac-arm64
@@ -644,20 +602,6 @@ jobs:
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
-      - run: |
-          mkdir -p ~/dist
-          for f in bazel-bin/python/*.whl; do
-              fname=$(basename $f)
-              base=${fname%.*}
-              pyversion=${base#typedb-driver}
-              cp $f ~/dist/typedb_driver-py${pyversion}-none-macosx_11_0_x86_64.whl
-          done
-          cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-macosx-x86_64.jar ~/dist/typedb-driver-jni-macosx-x86_64.jar
-          cp bazel-bin/c/typedb-driver-clib-mac-x86_64.tar.gz ~/dist
-          cp bazel-bin/cpp/typedb-driver-cpp-mac-x86_64.tar.gz ~/dist
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   deploy-release-windows-x86_64:
     executor:
@@ -672,9 +616,6 @@ jobs:
       - run: .circleci\windows\java\deploy_release.bat
       - run: .circleci\windows\clib\deploy_release.bat
       - run: .circleci\windows\cpp\deploy_release.bat
-      - persist_to_workspace:
-          root: dist
-          paths: ["./*"]
 
   deploy-release-any:
     executor: linux-x86_64-ubuntu-2204
@@ -686,20 +627,10 @@ jobs:
       - deploy-maven-release-unix
       - install-npm-apt
       - deploy-npm-release-unix
-      - run: |
-          mkdir -p ~/dist
-          cp bazel-bin/rust/assemble_crate.crate ~/dist/typedb-driver.crate
-          cp bazel-bin/java/libdriver-java.jar ~/dist/typedb-driver.jar
-          cp bazel-bin/nodejs/assemble-npm.tar.gz ~/dist/typedb-driver-node.tar.gz
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   deploy-github:
     executor: linux-x86_64-ubuntu-2204
     steps:
-      - attach_workspace:
-          at: ~/dist
       - checkout
       - install-bazel-apt:
           bazel-arch: amd64
@@ -710,7 +641,7 @@ jobs:
             tar -xf ghr_v0.12.1_linux_amd64.tar.gz
             ghr_v0.12.1_linux_amd64/ghr -t ${REPO_GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} \
               -r ${CIRCLE_PROJECT_REPONAME} -n "TypeDB Driver $(cat VERSION)" -b "$(cat ./RELEASE_NOTES_LATEST.md)" \
-              -c ${CIRCLE_SHA1} -delete $(cat VERSION) ~/dist/
+              -c ${CIRCLE_SHA1} -delete $(cat VERSION)
 
   sync-dependencies:
     executor: linux-x86_64-ubuntu-2204
