@@ -22,13 +22,14 @@
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
 load("@vaticle_dependencies//builder/swig:csharp.bzl", "swig_csharp")
 
+
 def swig_native_csharp_library(name, target_frameworks, targeting_packs, tags=[], **kwargs):
     swig_csharp(
         name = "__" + name,
         target_frameworks = target_frameworks,
         targeting_packs = targeting_packs,
         shared_lib_name = name,
-        tags = tags, # TODO: Will we need it?
+        tags = tags,
         **kwargs,
     )
 
