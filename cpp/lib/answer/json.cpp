@@ -25,6 +25,7 @@
 #include "../common/macros.hpp"
 #include "../common/native.hpp"
 #include "../common/utils.hpp"
+#include <sstream>
 
 namespace TypeDB {
 
@@ -369,7 +370,9 @@ void JSON::appendToString(std::stringstream& ss, const JSON& json) const {
             break;
         }
         case JSONType::INVALID: {
+            // Handle invalid case - what's invalid case?
             throw Utils::exception(DriverError::INVALID_JSON_CAST, NAME(_type), NAME(JSONType::STRING));
+            //THROW_ILLEGAL_STATE;
             break;
         }
     }
