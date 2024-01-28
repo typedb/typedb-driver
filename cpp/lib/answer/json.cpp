@@ -26,6 +26,7 @@
 #include "../common/macros.hpp"
 #include "../common/native.hpp"
 #include "../common/utils.hpp"
+#include <sstream>
 
 namespace TypeDB {
 
@@ -254,6 +255,13 @@ const JSONString& JSON::asString() const {
     if (!isString()) throw Utils::exception(DriverError::INVALID_JSON_CAST, NAME(_type), NAME(JSONType::STRING));
     return stringValue;
 }
+
+const JSONString JSON::toString() const {
+    std::stringstream ss;
+    appendToString(ss, *this);
+    return JSONString(ss.str());
+}
+
 const JSONNull& JSON::asNull() const {
     if (!isNull()) throw Utils::exception(DriverError::INVALID_JSON_CAST, NAME(_type), NAME(JSONType::NULL_VALUE));
     return nullValue;
@@ -317,6 +325,58 @@ JSON JSONBuilder::buildArray(const nlohmann::json& from) {
         a.emplace_back(build(item));
     }
     return JSON(std::move(a));
+}
+
+void JSON::appendToString(std::stringstream& ss, const JSON& json) const {
+    switch (json.type()) {
+        case JSONType::STRING: {
+            ss << "\"" << json.asString() << "\"";
+            break;
+        }
+        case JSONType::ARRAY:{
+            ss << "[";
+            for (size_t i = 0; i < json.asArray().size(); ++i) {
+                if (i > 0) ss << ", ";
+                appendToString(ss, json.asArray()[i]);
+            }
+            ss << "]";
+            break;
+        }
+        case JSONType::MAP: {
+            ss << "{";
+            bool first = true;
+            for (const auto& pair : json.asMap()) {
+                if (!first) ss << ", ";
+                ss << "\"" << pair.first << "\": ";
+                appendToString(ss, pair.second);
+                first = false;
+            }
+            ss << "}";
+            break;
+        }
+        case JSONType::BOOLEAN: {
+            ss << (json.asBoolean() ? "true" : "false");
+            break;
+        }
+        case JSONType::LONG: {
+            ss << json.asLong();
+            break;
+        }
+        case JSONType::DOUBLE: {
+            ss << json.asDouble();
+            break;
+        }
+        case JSONType::NULL_VALUE: {
+            ss << "null";
+            break;
+        }
+        case JSONType::INVALID: {
+            // Handle invalid case - what's invalid case?
+            throw Utils::exception(DriverError::INVALID_JSON_CAST, NAME(_type), NAME(JSONType::STRING));
+            //THROW_ILLEGAL_STATE;
+            break;
+        }
+    }
 }
 
 // JSONIterable
