@@ -681,10 +681,7 @@ workflows:
           filters:
             branches:
               only: [master, development]
-      - deploy-snapshot-mac-x86_64:
-          filters:
-            branches:
-              only: [master, development]
+      - deploy-snapshot-mac-x86_64
       - deploy-snapshot-windows-x86_64:
           filters:
             branches:
