@@ -89,8 +89,7 @@ commands:
         type: string
     steps:
       - run: |
-          brew install python@3.8 python@3.11
-          python3.11 -m pip install -U chardet
+          brew install python@3.8
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-darwin-<<parameters.bazel-arch>>"
           sudo mv "bazelisk-darwin-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
