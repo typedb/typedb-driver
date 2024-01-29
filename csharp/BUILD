@@ -84,6 +84,7 @@ swig_native_csharp_library(
 #    },
 )
 
+# Test binary just for testing the dependencies!
 csharp_binary(
     name = "valuetype",
     srcs = ["poc-examples/valuetype/Main.cs"],
