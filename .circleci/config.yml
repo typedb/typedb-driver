@@ -650,8 +650,9 @@ jobs:
       - install-bazel-apt:
           bazel-arch: amd64
       - run: |
-          apt update && apt install -y python3.11 python3-pip
-          python3.11 -m pip install -U cffi
+          add-apt-repository ppa:deadsnakes/ppa
+          apt update && apt install -y python3.9 python3.9-distutils python3-pip
+          python3.9 -m pip install -U cffi
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
           bazel run @vaticle_dependencies//tool/sync:dependencies -- --source ${CIRCLE_PROJECT_REPONAME}@$(cat VERSION)
 
