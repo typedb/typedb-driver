@@ -19,5 +19,11 @@
 # under the License.
 #
 
- paket install
- bazel run @rules_dotnet//tools/paket2bazel:paket2bazel.exe -- --dependencies-file $(pwd)/paket.dependencies  --output-folder $(pwd)
+# To update the required dependencies, follow these steps:
+# 1. Add the desired nuget packages into the 'paket.dependencies' file.
+# 2. Run this shell script.
+# 3. Check the fetched packages in the regenerated 'paket.csharp_deps.bzl' file.
+# 4. Reference this packages in your BUILD files via '@paket.csharp_deps//{package.name.in.lowercase}'.
+
+paket install
+bazel run @rules_dotnet//tools/paket2bazel:paket2bazel.exe -- --dependencies-file $(pwd)/paket.dependencies  --output-folder $(pwd)
