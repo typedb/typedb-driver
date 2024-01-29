@@ -8,7 +8,6 @@ namespace com.vaticle.typedb.driver.pinvoke.TypeDB
 {
     public static class ValueTyper
     {
-
         public static int Main()
         {
             System.Console.WriteLine("Begin!");
