@@ -61,7 +61,6 @@ release_validate_deps(
     name = "release-validate-deps",
     refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
     tagged_deps = [
-        "@vaticle_typedb_common",
         "@vaticle_typeql",
     ],
     tags = ["manual"],  # in order for bazel test //... to not fail

@@ -174,8 +174,7 @@ install_deps()
 ##############################
 
 # Load repositories
-load("//dependencies/vaticle:repositories.bzl", "vaticle_typedb_common", "vaticle_typeql", "vaticle_typedb_behaviour", "vaticle_typedb_protocol")
-vaticle_typedb_common()
+load("//dependencies/vaticle:repositories.bzl", "vaticle_typeql", "vaticle_typedb_behaviour", "vaticle_typedb_protocol")
 vaticle_typeql()
 vaticle_typedb_behaviour()
 vaticle_typedb_protocol()
@@ -252,7 +251,6 @@ install_uploader_deps()
 
 # Load maven artifacts
 load("@vaticle_dependencies//tool/common:deps.bzl", vaticle_dependencies_tool_maven_artifacts = "maven_artifacts")
-load("@vaticle_typedb_common//dependencies/maven:artifacts.bzl", vaticle_typedb_common_maven_artifacts = "artifacts")
 load("@vaticle_typeql//dependencies/maven:artifacts.bzl", vaticle_typeql_maven_artifacts = "artifacts")
 load(
     "//dependencies/maven:artifacts.bzl",
@@ -266,7 +264,6 @@ load("//dependencies/vaticle:artifacts.bzl", vaticle_typedb_driver_vaticle_maven
 
 load("@vaticle_dependencies//library/maven:rules.bzl", "maven")
 maven(
-    vaticle_typedb_common_maven_artifacts +
     vaticle_typeql_maven_artifacts +
     vaticle_dependencies_tool_maven_artifacts +
     vaticle_typedb_driver_maven_artifacts +

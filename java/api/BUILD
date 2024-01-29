@@ -33,7 +33,7 @@ java_library(
         "//java:typedb_driver_jni",
 
         # External dependencies from @vaticle
-        "@vaticle_typedb_common//:common",
+        "@vaticle_typeql//common/java:common",
         "@vaticle_typeql//java/pattern",
         "@vaticle_typeql//java/query",
 
