@@ -25,11 +25,11 @@ load("@rules_python//python:repositories.bzl", "python_register_toolchains")
 python_versions = [
     # Order matters! First python toolchain that is registered is used by Bazel's py_binary. Sphinx is incompatible with py3.8.
     {
-        "name": "python311",
-        "python_version": "3.11",
-        "python_headers": "@python311//:python_headers",
-        "libpython": "@python311//:libpython",
-        "suffix": "311",
+        "name": "python39",
+        "python_version": "3.9",
+        "python_headers": "@python39//:python_headers",
+        "libpython": "@python39//:libpython",
+        "suffix": "39",
     },
     {
         "name": "python38",
@@ -39,18 +39,18 @@ python_versions = [
         "suffix": "38",
     },
     {
-        "name": "python39",
-        "python_version": "3.9",
-        "python_headers": "@python39//:python_headers",
-        "libpython": "@python39//:libpython",
-        "suffix": "39",
-    },
-    {
         "name": "python310",
         "python_version": "3.10",
         "python_headers": "@python310//:python_headers",
         "libpython": "@python310//:libpython",
         "suffix": "310",
+    },
+    {
+        "name": "python311",
+        "python_version": "3.11",
+        "python_headers": "@python311//:python_headers",
+        "libpython": "@python311//:libpython",
+        "suffix": "311",
     },
 ]
 
