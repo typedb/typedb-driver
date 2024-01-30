@@ -75,6 +75,7 @@ swig_native_csharp_library(
     enable_cxx = True,
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
+    visibility = ["//visibility:public"],
 #    platforms = { # TODO: We'll need to build for different platforms?
 #        "@vaticle_bazel_distribution//platform:is_linux_arm64": "linux-arm64",
 #        "@vaticle_bazel_distribution//platform:is_linux_x86_64": "linux-x86_64",

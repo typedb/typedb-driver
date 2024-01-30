@@ -24,10 +24,24 @@ load("//csharp:rules.bzl", "csharp_behaviour_test")
 
 
 csharp_behaviour_test(
-    name = "test",
+    name = "simple-test",
     steps = ["DatabaseTest.cs"],
     features = ["@vaticle_typedb_behaviour//connection:database.feature"],
     deps = [],
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
+)
+
+csharp_behaviour_test(
+    name = "complex-test",
+    steps = ["DatabaseSteps.cs"],
+    features = ["@vaticle_typedb_behaviour//connection:database.feature"],
+    deps = [
+        "//csharp/test/behaviour/connection:steps-base",
+        "//csharp/test/behaviour/connection:steps-core",
+        "//csharp/api",
+        "//csharp/common",
+    ],
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
 )

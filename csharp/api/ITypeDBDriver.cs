@@ -21,6 +21,9 @@
 
 using System;
 
+using com.vaticle.typedb.driver.Api;
+using com.vaticle.typedb.driver.Api.Databases;
+
 namespace com.vaticle.typedb.driver.Api
 {
     public interface ITypeDBDriver: IDisposable // TODO: IDisposable instead of Java's AutoCloseable, check and implement later.
@@ -43,13 +46,13 @@ namespace com.vaticle.typedb.driver.Api
         /**
          * Opens a session to the given database with default options.
          *
-         * @see TypeDBDriver#Session(string, TypeDBSession.Type, TypeDBOptions)
+         * @see TypeDBDriver#Session(string, ITypeDBSession.Type, TypeDBOptions)
          */
-        ITypeDBSession Session(string database, TypeDBSession.Type type);
+        ITypeDBSession Session(string database, ITypeDBSession.Type type);
 
         /**
          * Opens a communication tunnel (session) to the given database on the running TypeDB server.
-         * For more information on the methods, available with sessions, see the <code>TypeDBSession</code> section.
+         * For more information on the methods, available with sessions, see the <code>ITypeDBSession</code> section.
          *
          * <h3>Examples</h3>
          * <pre>
@@ -60,7 +63,7 @@ namespace com.vaticle.typedb.driver.Api
          * @param type The type of session to be created (DATA or SCHEMA)
          * @param options <code>TypeDBOptions</code> for the session
          */
-        ITypeDBSession Session(string database, TypeDBSession.Type type, TypeDBOptions options);
+        ITypeDBSession Session(string database, ITypeDBSession.Type type, TypeDBOptions options);
 
         /**
          * Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
@@ -76,7 +79,7 @@ namespace com.vaticle.typedb.driver.Api
          * The <code>UserManager</code> instance for this connection, providing access to user management methods.
          * Only for TypeDB Cloud.
          */
-        User User();
+//        IUser User(); // TODO
 
         /**
          * Returns the logged-in user for the connection. Only for TypeDB Cloud.
@@ -86,6 +89,6 @@ namespace com.vaticle.typedb.driver.Api
          * driver.Users();
          * </pre>
          */
-        IUserManager Users();
+//        IUserManager Users(); // TODO
     }
 }

@@ -18,29 +18,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 using com.vaticle.typedb.driver.pinvoke;
-using com.vaticle.typedb.driver.Common.Exception;
+//using com.vaticle.typedb.driver.Common.Exception;
 
 namespace com.vaticle.typedb.driver.Common
 {
-    public abstract class NativeObject<T>
+    public abstract class NativeObjectWrapper<T>
     {
-        static NativeObject()
-        {
-            pinvoke.init_logging();
-        }
-
         public readonly T? NativeObject;
 
-        protected NativeObject(T? nativeObject)
+        static NativeObjectWrapper()
         {
-            if (nativeObject == null)
+            pinvoke.typedb_driver.init_logging();
+        }
+
+        protected NativeObjectWrapper(T? NativeObject)
+        {
+            if (NativeObject == null)
             {
-                throw new TypeDBDriverException(ErrorMessage.Internal.NULL_NATIVE_VALUE);
+//                throw new TypeDBDriverException(ErrorMessage.Internal.NULL_NATIVE_VALUE);
             }
 
-            this.nativeObject = nativeObject;
+            this.NativeObject = NativeObject;
         }
     }
 }

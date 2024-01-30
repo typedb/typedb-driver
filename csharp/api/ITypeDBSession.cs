@@ -20,14 +20,14 @@
  */
 
 using System;
-using System.Containers.Generic;
+using System.Collections.Generic;
 
-com.vaticle.typedb.driver.pinvoke;
-using com.vaticle.typedb.driver.Common.Exception;
+using com.vaticle.typedb.driver.pinvoke;
+//using com.vaticle.typedb.driver.Common.Exception;
 
 namespace com.vaticle.typedb.driver.Api
 {
-    public interface TypeDBSession: IDisposable
+    public interface ITypeDBSession: IDisposable
     {
 
         /**
@@ -43,7 +43,7 @@ namespace com.vaticle.typedb.driver.Api
         /**
          * The current session’s type (Schema or Data).
          */
-        Type Type();
+        Type SessionType();
 
         /**
          * Returns the name of the database of the session.
@@ -139,8 +139,9 @@ namespace com.vaticle.typedb.driver.Api
                 {
                     return resultType;
                 }
-
-                throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
+                return resultType; // Temp
+// TODO:
+//                throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
             }
 
             public int Id() // TODO: Maybe rename to Value
@@ -160,10 +161,10 @@ namespace com.vaticle.typedb.driver.Api
 
             private Type(Value value, pinvoke.SessionType nativeObject)
             {
-                targetType._value = value;
+                _value = value;
 
-                targetType.NativeObject = NativeObject;
-                targetType._isSchema = NativeObject == pinvoke.SessionType.Schema;
+                NativeObject = nativeObject;
+                _isSchema = NativeObject == pinvoke.SessionType.Schema;
             }
 
             private readonly Value _value;
@@ -171,9 +172,9 @@ namespace com.vaticle.typedb.driver.Api
             public readonly pinvoke.SessionType NativeObject;
 
             private static Dictionary<pinvoke.SessionType, Type> s_allNativeSessionTypesToTypes =
-            {
-                {pinvoke.SessionType.Data: Type(Value.Data, pinvoke.SessionType.Data)},
-                {pinvoke.SessionType.Schema: Type(Value.Schema, pinvoke.SessionType.Schema)}
+            new Dictionary<pinvoke.SessionType, Type>{ // TODO:
+//                {pinvoke.SessionType.Data, new Type(Value.Data, pinvoke.SessionType.Data)},
+//                {pinvoke.SessionType.Schema, new Type(Value.Schema, pinvoke.SessionType.Schema)}
             };
         }
     }

@@ -19,114 +19,109 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.connection;
-
-import com.vaticle.typedb.driver.api.TypeDBOptions;
-import com.vaticle.typedb.driver.api.TypeDBSession;
-import com.vaticle.typedb.driver.api.TypeDBTransaction;
-import com.vaticle.typedb.driver.api.database.DatabaseManager;
-import com.vaticle.typedb.driver.common.NativeObject;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
-
-import java.util.ArrayList;
-import java.util.List;
+using com.vaticle.typedb.driver.Api;
+using com.vaticle.typedb.driver.Common;
+//import com.vaticle.typedb.driver.Common.Exception;
 
 // TODO:
-public class TypeDBSessionImpl extends NativeObject<pinvoke.Session> implements TypeDBSession {
-    private final Type type;
-    private final TypeDBOptions options;
+namespace com.vaticle.typedb.driver.connection;
+{
+    public class TypeDBSessionImpl extends NativeObject<pinvoke.Session> implements TypeDBSession {
+        private final Type type;
+        private final TypeDBOptions options;
 
-    private final List<SessionCallback> callbacks;
+        private final List<SessionCallback> callbacks;
 
-    TypeDBSessionImpl(DatabaseManager databaseManager, String database, Type type, TypeDBOptions options) {
-        super(newNative(databaseManager, database, type, options));
-        this.type = type;
-        this.options = options;
+        TypeDBSessionImpl(DatabaseManager databaseManager, String database, Type type, TypeDBOptions options) {
+            super(newNative(databaseManager, database, type, options));
+            this.type = type;
+            this.options = options;
 
-        callbacks = new ArrayList<>();
-    }
-
-    private static pinvoke.Session newNative(DatabaseManager databaseManager, String database, Type type, TypeDBOptions options) {
-        try {
-            return session_new(((TypeDBDatabaseManagerImpl)databaseManager).nativeObject, database, type.nativeObject, options.nativeObject);
-        } catch (pinvoke.Error e) {
-            throw new TypeDBDriverException(e);
+            callbacks = new ArrayList<>();
         }
-    }
 
-    @Override
-    public boolean isOpen() {
-        return session_is_open(nativeObject);
-    }
-
-    @Override
-    public Type type() {
-        return type;
-    }
-
-    @Override
-    public String database_name() {
-        return session_get_database_name(nativeObject);
-    }
-
-    @Override
-    public TypeDBOptions options() {
-        return options;
-    }
-
-    @Override
-    public TypeDBTransaction transaction(TypeDBTransaction.Type type) {
-        return transaction(type, new TypeDBOptions());
-    }
-
-    @Override
-    public TypeDBTransaction transaction(TypeDBTransaction.Type type, TypeDBOptions options) {
-        return new TypeDBTransactionImpl(this, type, options);
-    }
-
-    @Override
-    public void onClose(Runnable function) {
-        try {
-            SessionCallback callback = new SessionCallback(function);
-            callbacks.add(callback);
-            session_on_close(nativeObject, callback.released());
-        } catch (pinvoke.Error error) {
-            throw new TypeDBDriverException(error);
-        }
-    }
-
-    @Override
-    public void onReopen(Runnable function) {
-        try {
-            SessionCallback callback = new SessionCallback(function);
-            callbacks.add(callback);
-            session_on_reopen(nativeObject, callback.released());
-        } catch (pinvoke.Error error) {
-            throw new TypeDBDriverException(error);
-        }
-    }
-
-    @Override
-    public void close() {
-        try {
-            session_force_close(nativeObject);
-        } catch (pinvoke.Error error) {
-            throw new TypeDBDriverException(error);
-        } finally {
-            callbacks.clear();
-        }
-    }
-
-    static class SessionCallback extends pinvoke.SessionCallbackDirector {
-        private final Runnable function;
-
-        SessionCallback(Runnable function) throws pinvoke.Error {
-            this.function = function;
+        private static pinvoke.Session newNative(DatabaseManager databaseManager, String database, Type type, TypeDBOptions options) {
+            try {
+                return session_new(((TypeDBDatabaseManagerImpl)databaseManager).NativeObject, database, type.NativeObject, options.NativeObject);
+            } catch (pinvoke.Error e) {
+                throw new TypeDBDriverException(e);
+            }
         }
 
         @Override
-        public void callback() {
-            function.run();
+        public boolean isOpen() {
+            return session_is_open(NativeObject);
+        }
+
+        @Override
+        public Type type() {
+            return type;
+        }
+
+        @Override
+        public String database_name() {
+            return session_get_database_name(NativeObject);
+        }
+
+        @Override
+        public TypeDBOptions options() {
+            return options;
+        }
+
+        @Override
+        public TypeDBTransaction transaction(TypeDBTransaction.Type type) {
+            return transaction(type, new TypeDBOptions());
+        }
+
+        @Override
+        public TypeDBTransaction transaction(TypeDBTransaction.Type type, TypeDBOptions options) {
+            return new TypeDBTransactionImpl(this, type, options);
+        }
+
+        @Override
+        public void onClose(Runnable function) {
+            try {
+                SessionCallback callback = new SessionCallback(function);
+                callbacks.add(callback);
+                session_on_close(NativeObject, callback.released());
+            } catch (pinvoke.Error error) {
+                throw new TypeDBDriverException(error);
+            }
+        }
+
+        @Override
+        public void onReopen(Runnable function) {
+            try {
+                SessionCallback callback = new SessionCallback(function);
+                callbacks.add(callback);
+                session_on_reopen(NativeObject, callback.released());
+            } catch (pinvoke.Error error) {
+                throw new TypeDBDriverException(error);
+            }
+        }
+
+        @Override
+        public void close() {
+            try {
+                session_force_close(NativeObject);
+            } catch (pinvoke.Error error) {
+                throw new TypeDBDriverException(error);
+            } finally {
+                callbacks.clear();
+            }
+        }
+
+        static class SessionCallback extends pinvoke.SessionCallbackDirector {
+            private final Runnable function;
+
+            SessionCallback(Runnable function) throws pinvoke.Error {
+                this.function = function;
+            }
+
+            @Override
+            public void callback() {
+                function.run();
+            }
         }
     }
 }

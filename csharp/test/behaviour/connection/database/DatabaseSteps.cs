@@ -1,56 +1,37 @@
+/*
+ * Copyright (C) 2022 Vaticle
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 using DataTable = Gherkin.Ast.DataTable;
 using System;
 using System.Collections.Generic;
 using Xunit.Gherkin.Quick;
 
 using com.vaticle.typedb.driver;
+using com.vaticle.typedb.driver.Test.Behaviour.Connection;
 
 namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
 {
     [FeatureFile("external/vaticle_typedb_behaviour/connection/database.feature")]
-    public sealed class DatabaseTest: Feature
+    public class DatabaseSteps: ConnectionStepsCore
     {
-        private string _result;
-
-        [Given(@"typedb starts")]
-        public void TypeDBStarts()
-        {
-            Console.WriteLine("TypeDB Starts!");
-//            TypeDBRunner runner = TypeDBSingleton.getTypeDBRunner();
-//            if (runner != null && runner.isStopped()) {
-//                runner.start();
-//            }
-        }
-
-        [Given(@"connection opens with default authentication")]
-        public void ConnectionOpensWithDefaultAuthentication()
-        {
-            Console.WriteLine("Connection opens with default authentication!");
-//            driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address());
-        }
-
-        [When(@"connection closes")]
-        public void ConnectionCloses()
-        {
-            Console.WriteLine("Connection closes!");
-//            super.connection_closes();
-        }
-
-        [Given(@"connection has been opened")]
-        public void ConnectionHasBeenOpened()
-        {
-            Console.WriteLine("Connection has been opened!");
-//            super.connection_has_been_opened();
-        }
-
-        [Given(@"connection does not have any database")]
-        [Then(@"connection does not have any database")]
-        public void ConnectionDoesNotHaveAnyDatabase()
-        {
-            Console.WriteLine("Connection does not have any database!");
-//            super.connection_does_not_have_any_database();
-        }
-
         [Given(@"connection create database: {word}")]
         [When(@"connection create database: {word}")]
         public void ConnectionCreateDatabase(string name)

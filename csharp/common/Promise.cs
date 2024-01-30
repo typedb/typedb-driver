@@ -21,7 +21,7 @@
 
 using System;
 
-using com.vaticle.typedb.driver.Common.Exception;
+//using com.vaticle.typedb.driver.Common.Exception;
 
 namespace com.vaticle.typedb.driver.Common
 {
@@ -44,7 +44,7 @@ namespace com.vaticle.typedb.driver.Common
          *
          * @param promise The function to wrap into the promise
          */
-        public Promise(Func<T> promise)
+        public Promise(Func<T> inner)
         {
             _inner = inner;
         }
@@ -59,14 +59,15 @@ namespace com.vaticle.typedb.driver.Common
          */
         public T Resolve()
         {
-            try
-            {
-                return _inner();
-            }
-            catch (pinvoke.Error.Unchecked e)
-            {
-                throw new TypeDBDriverException(e);
-            }
+        return _inner();
+//            try
+//            {
+//                return _inner();
+//            }
+//            catch (pinvoke.Error.Unchecked e)
+//            {
+//                throw new TypeDBDriverException(e);
+//            }
         }
 
         /**
@@ -79,19 +80,19 @@ namespace com.vaticle.typedb.driver.Common
          *
          * @param promise The function to wrap into the promise
          * @param fn The mapping function
-         */
-        static public<T, U> Promise<U> Map(Func<T> promise, Func<T, U> fn)
-        {
-            return new Promise<>(() ->
-                {
-                    T res = promise();
-                    if (res != null)
-                    {
-                        return fn(res);
-                    }
-
-                    return null;
-                });
-        }
+         */ // TODO:
+//        static public<T, U> Promise<U> Map(Func<T> promise, Func<T, U> fn)
+//        {
+//            return new Promise<>(() ->
+//                {
+//                    T res = promise();
+//                    if (res != null)
+//                    {
+//                        return fn(res);
+//                    }
+//
+//                    return null;
+//                });
+//        }
     }
 }

@@ -34,9 +34,9 @@ namespace com.vaticle.typedb.driver.Common
 
         private Label(string? scope, string name)
         {
-            this.scope = scope;
-            this.name = name;
-            this.hash = Objects.hash(name, scope);
+            _scope = scope;
+            _name = name;
+            _hash = 0; // TODO: Objects.hash(name, scope);
         }
 
         /**
@@ -106,7 +106,7 @@ namespace com.vaticle.typedb.driver.Common
          */
         public string ScopedName()
         {
-            if (scope == null)
+            if (_scope == null)
             {
                 return _name;
             }
@@ -137,29 +137,29 @@ namespace com.vaticle.typedb.driver.Common
          *
          * @param obj Object to compare with
          */ // TODO: Implement for C#
-        public override bool Equals(Object obj)
-        {
-            if (this == obj)
-            {
-                return true;
-            }
-
-            if (obj == null || getClass() != obj.getClass())
-            {
-                return false;
-            }
-
-            Label that = (Label)obj;
-
-            return this.name.equals(that.name) && Objects.equals(this.scope, that.scope);
-        }
+//        public override bool Equals(Object obj)
+//        {
+//            if (this == obj)
+//            {
+//                return true;
+//            }
+//
+//            if (obj == null || getClass() != obj.getClass())
+//            {
+//                return false;
+//            }
+//
+//            Label that = (Label)obj;
+//
+//            return this.name.equals(that.name) && Objects.equals(this.scope, that.scope);
+//        }
 
         /**
          * @hidden
-         */
-        public override int HashCode()
-        {
-            return hash;
-        }
+         */ // TODO:
+//        public override int HashCode()
+//        {
+//            return hash;
+//        }
     }
 }
