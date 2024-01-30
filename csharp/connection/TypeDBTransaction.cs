@@ -60,16 +60,16 @@ public class TypeDBTransactionImpl extends NativeObject<pinvoke.Transaction> imp
         this.type = type;
         this.options = options;
 
-        conceptManager = new ConceptManagerImpl(nativeObject);
-        logicManager = new LogicManagerImpl(nativeObject);
-        queryManager = new QueryManagerImpl(nativeObject);
+        conceptManager = new ConceptManagerImpl(NativeObject);
+        logicManager = new LogicManagerImpl(NativeObject);
+        queryManager = new QueryManagerImpl(NativeObject);
 
         callbacks = new ArrayList<>();
     }
 
     private static pinvoke.Transaction newNative(TypeDBSessionImpl session, Type type, TypeDBOptions options) {
         try {
-            return transaction_new(session.nativeObject, type.nativeObject, options.nativeObject);
+            return transaction_new(session.NativeObject, type.NativeObject, options.NativeObject);
         } catch (pinvoke.Error e) {
             throw new TypeDBDriverException(e);
         }
@@ -87,8 +87,8 @@ public class TypeDBTransactionImpl extends NativeObject<pinvoke.Transaction> imp
 
     @Override
     public boolean isOpen() {
-        if (!nativeObject.isOwned()) return false;
-        else return transaction_is_open(nativeObject);
+        if (!NativeObject.isOwned()) return false;
+        else return transaction_is_open(NativeObject);
     }
 
     @Override
@@ -108,11 +108,11 @@ public class TypeDBTransactionImpl extends NativeObject<pinvoke.Transaction> imp
 
     @Override
     public void onClose(Consumer<Throwable> function) {
-        if (!nativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
+        if (!NativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         try {
             TransactionOnClose callback = new TransactionOnClose(function);
             callbacks.add(callback);
-            transaction_on_close(nativeObject, callback.released());
+            transaction_on_close(NativeObject, callback.released());
         } catch (pinvoke.Error error) {
             throw new TypeDBDriverException(error);
         }
@@ -120,10 +120,10 @@ public class TypeDBTransactionImpl extends NativeObject<pinvoke.Transaction> imp
 
     @Override
     public void commit() {
-        if (!nativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
+        if (!NativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         try {
             // NOTE: .released() relinquishes ownership of the native object to the Rust side
-            transaction_commit(nativeObject.released()).get();
+            transaction_commit(NativeObject.released()).get();
         } catch (pinvoke.Error.Unchecked e) {
             throw new TypeDBDriverException(e);
         }
@@ -131,9 +131,9 @@ public class TypeDBTransactionImpl extends NativeObject<pinvoke.Transaction> imp
 
     @Override
     public void rollback() {
-        if (!nativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
+        if (!NativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
         try {
-            transaction_rollback(nativeObject).get();
+            transaction_rollback(NativeObject).get();
         } catch (pinvoke.Error.Unchecked e) {
             throw new TypeDBDriverException(e);
         }
@@ -141,9 +141,9 @@ public class TypeDBTransactionImpl extends NativeObject<pinvoke.Transaction> imp
 
     @Override
     public void close() {
-        if (nativeObject.isOwned()) {
+        if (NativeObject.isOwned()) {
             try {
-                transaction_force_close(nativeObject);
+                transaction_force_close(NativeObject);
             } catch (pinvoke.Error error) {
                 throw new TypeDBDriverException(error);
             } finally {

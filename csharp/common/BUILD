@@ -21,24 +21,22 @@
 
 package(default_visibility = ["//visibility:public"])
 
+load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
+load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 csharp_library(
     name = "common",
-    srcs = glob(
-        [
+    srcs = glob([
             "*.cs",
             "*/*.cs",
         ],
         exclude = ["test/**"],
     ),
-    deps = [],
-)
-
-filegroup(
-    name = "docs_source_files",
-    srcs = ["Label.cs", "Promise.cs", "exception/TypeDBDriverException.cs"],
-    visibility = ["//cs:__pkg__"],
+    deps = ["//csharp:typedb_driver_pinvoke",],
+    runtime_identifier = "any",
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
 )
 
 checkstyle_test(

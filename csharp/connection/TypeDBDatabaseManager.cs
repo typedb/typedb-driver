@@ -29,7 +29,7 @@ using com.vaticle.typedb.driver.Common.Exception;
 
 namespace com.vaticle.typedb.driver.Connection
 {
-    public class TypeDBDatabaseManager: NativeObject<pinvoke.DatabaseManager>, IDatabaseManager
+    public class TypeDBDatabaseManager: NativeObjectWrapper<pinvoke.DatabaseManager>, IDatabaseManager
     {
         public TypeDBDatabaseManager(pinvoke.Connection nativeConnection)
             : base(newNative(nativeConnection))
@@ -56,7 +56,7 @@ namespace com.vaticle.typedb.driver.Connection
 
             try
             {
-                return new TypeDBDatabase(pinvoke.databases_get(nativeObject, name));
+                return new TypeDBDatabase(pinvoke.databases_get(NativeObject, name));
             }
             catch (pinvoke.Error e)
             {
@@ -73,7 +73,7 @@ namespace com.vaticle.typedb.driver.Connection
 
             try
             {
-                return pinvoke.databases_contains(nativeObject, name);
+                return pinvoke.databases_contains(NativeObject, name);
             }
             catch (pinvoke.Error e)
             {
@@ -90,7 +90,7 @@ namespace com.vaticle.typedb.driver.Connection
 
             try
             {
-                pinvoke.databases_create(nativeObject, name);
+                pinvoke.databases_create(NativeObject, name);
             }
             catch (pinvoke.Error e)
             {
@@ -104,7 +104,7 @@ namespace com.vaticle.typedb.driver.Connection
             {
             // TODO:
                 return List<IDatabase>();
-//                return new NativeIterator<>(databases_all(nativeObject)).stream().map(TypeDBDatabaseImpl::new).collect(toList());
+//                return new NativeIterator<>(databases_all(NativeObject)).stream().map(TypeDBDatabaseImpl::new).collect(toList());
             }
             catch (pinvoke.Error e)
             {

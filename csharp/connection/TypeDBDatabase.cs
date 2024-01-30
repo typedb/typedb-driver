@@ -29,7 +29,7 @@ using com.vaticle.typedb.driver.Api.Databases;
 
 namespace com.vaticle.typedb.driver.Connection
 {
-    public class TypeDBDatabase: NativeObject<pinvoke.Database>, IDatabase
+    public class TypeDBDatabase: NativeObjectWrapper<pinvoke.Database>, IDatabase
     {
         public TypeDBDatabase(pinvoke.Database database)
             : base(database)
@@ -37,24 +37,24 @@ namespace com.vaticle.typedb.driver.Connection
 
         public override string Name()
         {
-            if (!nativeObject.IsOwned())
+            if (!NativeObject.IsOwned())
             {
                 throw new TypeDBDriverException(DATABASE_DELETED);
             }
 
-            return pinvoke.database_get_name(nativeObject);
+            return pinvoke.database_get_name(NativeObject);
         }
 
         public override string Schema()
         {
-            if (!nativeObject.IsOwned())
+            if (!NativeObject.IsOwned())
             {
                 throw new TypeDBDriverException(DATABASE_DELETED);
             }
 
             try
             {
-                return pinvoke.database_schema(nativeObject);
+                return pinvoke.database_schema(NativeObject);
             }
             catch (pinvoke.Error e)
             {
@@ -64,14 +64,14 @@ namespace com.vaticle.typedb.driver.Connection
 
         public override string TypeSchema()
         {
-            if (!nativeObject.IsOwned())
+            if (!NativeObject.IsOwned())
             {
                 throw new TypeDBDriverException(DATABASE_DELETED);
             }
 
             try
             {
-                return database_type_schema(nativeObject);
+                return database_type_schema(NativeObject);
             }
             catch (pinvoke.Error e)
             {
@@ -81,14 +81,14 @@ namespace com.vaticle.typedb.driver.Connection
 
         public override string RuleSchema()
         {
-            if (!nativeObject.IsOwned())
+            if (!NativeObject.IsOwned())
             {
                 throw new TypeDBDriverException(DATABASE_DELETED);
             }
 
             try
             {
-                return database_rule_schema(nativeObject);
+                return database_rule_schema(NativeObject);
             }
             catch (pinvoke.Error e)
             {
@@ -98,7 +98,7 @@ namespace com.vaticle.typedb.driver.Connection
 
         public override void Delete()
         {
-            if (!nativeObject.IsOwned())
+            if (!NativeObject.IsOwned())
             {
                 throw new TypeDBDriverException(DATABASE_DELETED);
             }
@@ -106,7 +106,7 @@ namespace com.vaticle.typedb.driver.Connection
             try
             {
                 // NOTE: .released() relinquishes ownership of the native object to the Rust side
-                database_delete(nativeObject.released());
+                database_delete(NativeObject.released());
             }
             catch (pinvoke.Error e)
             {
@@ -121,24 +121,24 @@ namespace com.vaticle.typedb.driver.Connection
 
         public override HashSet<Database.IReplica> Replicas()
         {
-            if (!nativeObject.IsOwned())
+            if (!NativeObject.IsOwned())
             {
                 throw new TypeDBDriverException(DATABASE_DELETED);
             }
 
             // TODO:
             return HashSet<Database.IReplica>();
-//            return new NativeIterator<>(database_get_replicas_info(nativeObject)).stream().map(Replica::new).collect(Collectors.toSet());
+//            return new NativeIterator<>(database_get_replicas_info(NativeObject)).stream().map(Replica::new).collect(Collectors.toSet());
         }
 
         public override IReplica? PrimaryReplica() 
         {
-            if (!nativeObject.IsOwned())
+            if (!NativeObject.IsOwned())
             {
                 throw new TypeDBDriverException(DATABASE_DELETED);
             }
 
-            pinvoke.ReplicaInfo replicaInfo = database_get_primary_replica_info(nativeObject);
+            pinvoke.ReplicaInfo replicaInfo = database_get_primary_replica_info(NativeObject);
             if (replicaInfo == null)
             {
                 return null
@@ -149,12 +149,12 @@ namespace com.vaticle.typedb.driver.Connection
 
         public override IReplica? PreferredReplica() 
         {
-            if (!nativeObject.IsOwned()) 
+            if (!NativeObject.IsOwned())
             {
                 throw new TypeDBDriverException(DATABASE_DELETED);
             }
             
-            pinvoke.ReplicaInfo replicaInfo = database_get_preferred_replica_info(nativeObject);
+            pinvoke.ReplicaInfo replicaInfo = database_get_preferred_replica_info(NativeObject);
             if (replicaInfo == null)
             {
                 return null;
@@ -163,7 +163,7 @@ namespace com.vaticle.typedb.driver.Connection
             return new Replica(replicaInfo);
         }
 
-        public static class Replica: NativeObject<pinvoke.ReplicaInfo>, Database.IReplica
+        public static class Replica: NativeObjectWrapper<pinvoke.ReplicaInfo>, Database.IReplica
         {
             Replica(pinvoke.ReplicaInfo replicaInfo)
                 : base(replicaInfo)
@@ -171,22 +171,22 @@ namespace com.vaticle.typedb.driver.Connection
 
             public override string Address()
             {
-                return pinvoke.replica_info_get_address(nativeObject);
+                return pinvoke.replica_info_get_address(NativeObject);
             }
 
             public override bool IsPrimary()
             {
-                return pinvoke.replica_info_is_primary(nativeObject);
+                return pinvoke.replica_info_is_primary(NativeObject);
             }
 
             public override bool IsPreferred()
             {
-                return pinvoke.replica_info_is_preferred(nativeObject);
+                return pinvoke.replica_info_is_preferred(NativeObject);
             }
 
             public override long Term()
             {
-                return pinvoke.replica_info_get_term(nativeObject);
+                return pinvoke.replica_info_get_term(NativeObject);
             }
         }
     }

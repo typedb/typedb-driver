@@ -21,9 +21,8 @@
 
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_library", "csharp_test")
 load("@vaticle_dependencies//builder/swig:csharp.bzl", "swig_csharp")
-load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
 
-def swig_native_csharp_library(name, target_frameworks, targeting_packs, tags=[], **kwargs):
+def swig_native_csharp_library(name, target_frameworks, targeting_packs, visibility, tags=[], **kwargs):
     swig_csharp(
         name = "__" + name,
         target_frameworks = target_frameworks,
@@ -35,7 +34,8 @@ def swig_native_csharp_library(name, target_frameworks, targeting_packs, tags=[]
 
     native.alias(
         name = name,
-        actual = "__" + name
+        actual = "__" + name,
+        visibility = visibility,
     )
 
 
