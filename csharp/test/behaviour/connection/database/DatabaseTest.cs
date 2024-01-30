@@ -5,42 +5,27 @@ using com.vaticle.typedb.driver;
 
 namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
 {
-    [FeatureFile("csharp/test/behaviour/poc-example/Features/HelloLib.feature")]
-    public sealed class HelloerStepsDefinition : Feature
+    [FeatureFile("csharp/test/behaviour/connection/database/connection/database.feature")]
+    public sealed class DatabaseTest : Feature
     {
-        private struct Helper
-        {
-            public int? NumberValue {get; set;}
-            public string StringValue {get; set;}
-        };
-        private Helper _helper;
         private string _result;
 
         [Given(@"the name is (.+)")]
         public void GivenNumber(string number)
         {
-            _helper.StringValue = number;
+            Console.WriteLine("Fine");
         }
 
-        [When(@"they meet Helloer")]
-        public void WhenTheyMeetHelloer()
+        [When(@"th")]
+        public void When()
         {
-            if (_helper.NumberValue.HasValue)
-            {
-                _result = Helloer.SayHello(_helper.NumberValue.Value);
-            }
-            else
-            {
-                _result = Helloer.SayHello(_helper.StringValue);
-            }
+            Console.WriteLine("When");
         }
 
-        [Then(@"he says '(.+)'")]
-        public void ThenTheResultShouldBe(string expectedResult)
+        [Then(@"aa'(.+)'")]
+        public void ThenAa(string expectedResult)
         {
-            if (_result != expectedResult) {
-                throw new InvalidOperationException("Bad" + _result + " vs " + expectedResult);
-            }
+            Console.WriteLine("Res" + expectedResult);
         }
     }
 }

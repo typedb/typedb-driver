@@ -19,21 +19,15 @@
 # under the License.
 #
 
-load("@rules_dotnet//dotnet:defs.bzl", "csharp_test")
 load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
+load("//csharp:rules.bzl", "csharp_behaviour_test")
 
-csharp_test(
-    name = "database-test",
-    srcs = ["Main.cs", "DatabaseTest.cs"],
-    data = ["Features/HelloLib.feature"],
-    deps = [
-        "@paket.csharp_deps//gherkin",
-        "@paket.csharp_deps//xunit.runner.utility",
-        "@paket.csharp_deps//xunit.gherkin.quick",
-        "//csharp/poc-examples/helloer:helloer-lib",
-    ],
-    runtime_identifier = "any",
-    visibility = ["//visibility:public"],
+
+csharp_behaviour_test(
+    name = "test",
+    steps = ["DatabaseTest.cs"],
+    features = ["@vaticle_typedb_behaviour//connection:database.feature", "@vaticle_typedb_behaviour//connection:session.feature"],
+    deps = [],
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
 )
