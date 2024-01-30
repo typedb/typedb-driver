@@ -1,8 +1,8 @@
 using System;
-using System.Threading;
-using Xunit.Runners;
 using System.IO;
 using System.Reflection;
+using System.Threading;
+using Xunit.Runners;
 
 namespace TestRunner
 {
@@ -12,10 +12,10 @@ namespace TestRunner
         // consistent console output.
         static object consoleLock = new object();
 
-        // Use an event to know when we're done
+        // Use an event to know when we're done.
         static ManualResetEvent finished = new ManualResetEvent(false);
 
-        // Start out assuming success; we'll set this to 1 if we get a failed test
+        // Start out assuming success; we'll set this to 1 if we get a failed test.
         static int result = 0;
 
         static int Main(string[] args)
@@ -44,13 +44,19 @@ namespace TestRunner
         static void OnDiscoveryComplete(DiscoveryCompleteInfo info)
         {
             lock (consoleLock)
+            {
                 Console.WriteLine($"Running {info.TestCasesToRun} of {info.TestCasesDiscovered} tests...");
+            }
         }
 
         static void OnExecutionComplete(ExecutionCompleteInfo info)
         {
             lock (consoleLock)
-                Console.WriteLine($"Finished: {info.TotalTests} tests in {Math.Round(info.ExecutionTime, 3)}s ({info.TestsFailed} failed, {info.TestsSkipped} skipped)");
+            {
+                Console.WriteLine(
+                    $"Finished: {info.TotalTests} tests in {Math.Round(info.ExecutionTime, 3)}s "
+                        + $"({info.TestsFailed} failed, {info.TestsSkipped} skipped)");
+            }
 
             finished.Set();
         }
@@ -63,7 +69,9 @@ namespace TestRunner
 
                 Console.WriteLine("[FAIL] {0}: {1}", info.TestDisplayName, info.ExceptionMessage);
                 if (info.ExceptionStackTrace != null)
+                {
                     Console.WriteLine(info.ExceptionStackTrace);
+                }
 
                 Console.ResetColor();
             }
