@@ -40,7 +40,7 @@ def vaticle_typedb_protocol():
         name = "vaticle_typedb_protocol",
         remote = "https://github.com/vaticle/typedb-protocol",
         # NOTE: the sync-marker is also used for workspace status by Bazel!
-        commit = "db18f9fda7d606ed6ca7222cb576dd1f5e5895e1",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_protocol
+        tag = "2.26.6-rc0",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typedb_protocol
     )
 
 def vaticle_typedb_behaviour():
