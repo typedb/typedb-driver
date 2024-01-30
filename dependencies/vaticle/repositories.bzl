@@ -24,8 +24,8 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 def vaticle_dependencies():
     git_repository(
         name = "vaticle_dependencies",
-        remote = "https://github.com/vaticle/dependencies",
-        commit = "3bd3fbcda4567dcea41f941eb6073b8673ba2a17", # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_dependencies
+        remote = "https://github.com/lolski/dependencies",
+        commit = "66d0a3d594eccb4d2e4a7452b2e5e4f5c6d23f2b", # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_dependencies
     )
 
 def vaticle_typedb_common():
@@ -38,8 +38,8 @@ def vaticle_typedb_common():
 def vaticle_typeql():
     git_repository(
         name = "vaticle_typeql",
-        remote = "https://github.com/vaticle/typeql",
-        commit = "230842fe545c6ebab59b976df834552d198c6dee",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typeql
+        remote = "https://github.com/jamesreprise/typeql",
+        commit = "ec46eb3c3f3d99ec9f3294f8cfae843f3da25735",  # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_typeql
     )
 
 def vaticle_typedb_protocol():
