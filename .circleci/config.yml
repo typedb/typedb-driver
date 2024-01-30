@@ -171,7 +171,7 @@ commands:
     steps:
       - run: |
           tool/test/start-core-server.sh
-          sed -i -e "s/DRIVER_JAVA_VERSION_MARKER/$CIRCLE_SHA1/g" java/test/deployment/pom.xml
+          sed -i -e "s/DRIVER_JAVA_VERSION_MARKER/0.0.0-$CIRCLE_SHA1/g" java/test/deployment/pom.xml
           cat java/test/deployment/pom.xml
           (cd java/test/deployment && mvn test)
           tool/test/stop-core-server.sh
@@ -637,9 +637,9 @@ jobs:
       - run:
           name: "Publish Release on GitHub"
           command: |
-            wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
-            tar -xf ghr_v0.12.1_linux_amd64.tar.gz
-            ghr_v0.12.1_linux_amd64/ghr -t ${REPO_GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} \
+            wget https://github.com/tcnksm/ghr/releases/download/v0.16.2/ghr_v0.16.2_linux_amd64.tar.gz
+            tar -xf ghr_v0.16.2_linux_amd64.tar.gz
+            ghr_v0.16.2_linux_amd64/ghr -t ${REPO_GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} \
               -r ${CIRCLE_PROJECT_REPONAME} -n "TypeDB Driver $(cat VERSION)" -b "$(cat ./RELEASE_NOTES_LATEST.md)" \
               -c ${CIRCLE_SHA1} -delete $(cat VERSION)
 
