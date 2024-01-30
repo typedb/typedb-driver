@@ -29,7 +29,7 @@ using com.vaticle.typedb.driver.Api;
 
 namespace com.vaticle.typedb.driver.Connection
 {
-    public class TypeDBDriver: NativeObject<pinvoke.Connection>, ITypeDBDriver
+    public class TypeDBDriver: NativeObjectWrapper<pinvoke.Connection>, ITypeDBDriver
     {
         private sealed readonly IUserManager userMgr;
         private sealed readonly IDatabaseManager databaseMgr;
@@ -45,8 +45,8 @@ namespace com.vaticle.typedb.driver.Connection
         private TypeDBDriver(pinvoke.Connection connection)
             : base(connection)
         {
-            databaseMgr = new TypeDBDatabaseManager(this.nativeObject);
-            userMgr = new UserManager(this.nativeObject);
+            databaseMgr = new TypeDBDatabaseManager(this.NativeObject);
+            userMgr = new UserManager(this.NativeObject);
         }
 
         private static pinvoke.Connection openCore(String address)
@@ -65,7 +65,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             try
             {
-                return pinvoke.connection_open_cloud(initAddresses.toArray(new string[0]), credential.nativeObject);
+                return pinvoke.connection_open_cloud(initAddresses.toArray(new string[0]), credential.NativeObject);
             }
             catch (pinvoke.Error e)
             {
@@ -75,7 +75,7 @@ namespace com.vaticle.typedb.driver.Connection
 
         public override bool IsOpen()
         {
-            return pinvoke.connection_is_open(nativeObject);
+            return pinvoke.connection_is_open(NativeObject);
         }
 
         public override User user()
@@ -112,7 +112,7 @@ namespace com.vaticle.typedb.driver.Connection
 
             try
             {
-                connection_force_close(nativeObject);
+                connection_force_close(NativeObject);
             }
             catch (pinvoke.Error error)
             {

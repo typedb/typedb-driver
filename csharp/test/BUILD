@@ -23,10 +23,6 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 checkstyle_test(
     name = "checkstyle",
-    include = glob([
-        "*",
-        "deployment/pom.xml",
-        "deployment/src/test/**/*",
-    ]),
+    include = glob(["*"]),
     license_type = "apache-header",
 )

@@ -38,7 +38,7 @@ namespace com.vaticle.typedb.driver.Api
      * TypeDBCredential credential = new TypeDBCredential(username, password, Path.of("path/to/ca-certificate.pem"));
      * </pre>
      */
-    public class TypeDBCredential: NativeObject<pinvoke.Credential>
+    public class TypeDBCredential: NativeObjectWrapper<pinvoke.Credential>
     {
         /**
          *
@@ -56,9 +56,9 @@ namespace com.vaticle.typedb.driver.Api
          * @param password The password for the user
          * @param tlsRootCAPath Path to the CA certificate to use for authenticating server certificates.
          */
-        public TypeDBCredential(string username, string password, Path tlsRootCAPath) // TODO: Path
-            : this(username, password, tlsRootCAPath.ToString(), true)
-        {}
+//        public TypeDBCredential(string username, string password, Path tlsRootCAPath) // TODO: Path
+//            : this(username, password, tlsRootCAPath.ToString(), true)
+//        {}
 
         private TypeDBCredential(string username, string password, string? tlsRootCAPath, bool tlsEnabled)
             : base(NativeCredential(username, password, tlsRootCAPath, tlsEnabled))
@@ -68,15 +68,16 @@ namespace com.vaticle.typedb.driver.Api
             string username, string password, string? tlsRootCAPath, bool tlsEnabled)
         {
             Debug.Assert(tlsEnabled || tlsRootCAPath == null);
-
-            try
-            {
-                return pinvoke.credential_new(username, password, tlsRootCAPath, tlsEnabled);
-            }
-            catch (pinvoke.Error error)
-            {
-                throw new TypeDBDriverException(error);
-            }
+// TODO:
+            return pinvoke.typedb_driver.credential_new(username, password, tlsRootCAPath, tlsEnabled); // temp
+//            try
+//            {
+//                return pinvoke.credential_new(username, password, tlsRootCAPath, tlsEnabled);
+//            }
+//            catch (pinvoke.Error error)
+//            {
+//                throw new TypeDBDriverException(error);
+//            }
         }
     }
 }
