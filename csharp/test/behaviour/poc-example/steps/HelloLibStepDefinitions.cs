@@ -3,7 +3,7 @@ using System;
 
 namespace Lib.Specs.Steps
 {
-    [FeatureFile("csharp/test/behaviour/poc-example/Features/HelloLib.feature")]
+    [FeatureFile("csharp/test/behaviour/poc-example/features/HelloLib.feature")]
     public sealed class HelloerStepsDefinition : Feature
     {
         private struct Helper
