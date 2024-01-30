@@ -21,9 +21,9 @@
 
 package com.vaticle.typedb.driver.test.behaviour.connection;
 
-import com.vaticle.typedb.common.test.TypeDBRunner;
-import com.vaticle.typedb.common.test.TypeDBSingleton;
-import com.vaticle.typedb.common.test.core.TypeDBCoreRunner;
+import com.vaticle.typedb.core.tool.runner.TypeDBRunner;
+import com.vaticle.typedb.core.tool.runner.TypeDBSingleton;
+import com.vaticle.typedb.core.tool.runner.TypeDBCoreRunner;
 import com.vaticle.typedb.driver.TypeDB;
 import com.vaticle.typedb.driver.api.TypeDBDriver;
 import com.vaticle.typedb.driver.api.TypeDBOptions;
@@ -37,7 +37,7 @@ public class ConnectionStepsCore extends ConnectionStepsBase {
     public void beforeAll() {
         super.beforeAll();
         try {
-            TypeDBCoreRunner typeDBCoreRunner = new TypeDBCoreRunner();
+            TypeDBCoreRunner typeDBCoreRunner = new TypeDBCoreRunner(serverOptions);
             TypeDBSingleton.setTypeDBRunner(typeDBCoreRunner);
             typeDBCoreRunner.start();
         } catch (InterruptedException | java.util.concurrent.TimeoutException | java.io.IOException e) {

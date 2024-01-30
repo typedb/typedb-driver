@@ -37,8 +37,8 @@ load("@aspect_rules_js//npm:defs.bzl", "npm_link_package", "npm_package")
 load("@aspect_bazel_lib//lib:jq.bzl", "jq")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("//nodejs:tool/typedoc/rules.bzl", "typedoc_docs")
-load("//tool/docs:nodejs/rules.bzl", "typedoc_to_adoc")
 load("//nodejs:docs_structure.bzl", "dir_mapping")
+load("//tool/docs:nodejs/rules.bzl", "typedoc_to_adoc")
 
 npm_link_all_packages(
     name = "node_modules",
@@ -120,8 +120,8 @@ assemble_npm(
 deploy_npm(
     name = "deploy-npm",
     target = ":assemble-npm",
-    snapshot = deployment["npm.snapshot"],
-    release = deployment["npm.release"],
+    snapshot = deployment['npm']['snapshot'],
+    release = deployment['npm']['release'],
 )
 
 # This rule should be in tool/typedoc, but there is a problem with the path configurations

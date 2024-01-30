@@ -20,7 +20,7 @@
 #
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_typedb_common//test:rules.bzl", "typedb_java_test")
+load("@vaticle_dependencies//builder/java:rules.bzl", "typedb_java_test")
 
 typedb_java_test(
     name = "test-driver-query",
@@ -39,11 +39,12 @@ typedb_java_test(
         "//java/api",
 
         # External dependencies from @vaticle
-        "@vaticle_typedb_common//:common",
+        "@vaticle_typeql//common/java:common",
         "@vaticle_typeql//java:typeql-lang",
         "@vaticle_typeql//java/common",
         "@vaticle_typeql//java/query",
         "@maven//:org_slf4j_slf4j_api",
+        "@maven//:com_vaticle_typedb_typedb_runner",
     ],
 )
 

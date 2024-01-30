@@ -64,8 +64,8 @@ rules_antlr_dependencies(antlr_version, JAVA)
 load("@vaticle_dependencies//builder/cpp:deps.bzl", cpp_deps = "deps")
 cpp_deps()
 
-# Load //builder/grpc
-load("@vaticle_dependencies//builder/grpc:deps.bzl", grpc_deps = "deps")
+# Load //builder/proto_grpc
+load("@vaticle_dependencies//builder/proto_grpc:deps.bzl", grpc_deps = "deps")
 grpc_deps()
 
 load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", com_github_grpc_grpc_deps = "grpc_deps")
@@ -123,17 +123,6 @@ sonarcloud_dependencies()
 load("@vaticle_dependencies//tool/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
 unuseddeps_deps()
 
-# Load //tool/docs
-load("@vaticle_dependencies//tool/docs:python_deps.bzl", docs_deps = "deps")
-docs_deps()
-load("@vaticle_dependencies_tool_docs//:requirements.bzl", install_doc_deps = "install_deps")
-install_doc_deps()
-
-load("@vaticle_dependencies//tool/docs:java_deps.bzl", java_doc_deps = "deps")
-java_doc_deps()
-load("@google_bazel_common//:workspace_defs.bzl", "google_common_workspace_rules")
-google_common_workspace_rules()
-
 ####################################
 # Load @vaticle_bazel_distribution #
 ####################################
@@ -157,6 +146,17 @@ pip_deps()
 load("@vaticle_bazel_distribution_pip//:requirements.bzl", install_pip_deps = "install_deps")
 install_pip_deps()
 
+# Load //docs
+load("@vaticle_bazel_distribution//docs:python/deps.bzl", docs_deps = "deps")
+docs_deps()
+load("@vaticle_dependencies_tool_docs//:requirements.bzl", install_doc_deps = "install_deps")
+install_doc_deps()
+
+load("@vaticle_bazel_distribution//docs:java/deps.bzl", java_doc_deps = "deps")
+java_doc_deps()
+load("@google_bazel_common//:workspace_defs.bzl", "google_common_workspace_rules")
+google_common_workspace_rules()
+
 ######################################
 # Load @vaticle_typedb_driver_python #
 ######################################
@@ -174,8 +174,7 @@ install_deps()
 ##############################
 
 # Load repositories
-load("//dependencies/vaticle:repositories.bzl", "vaticle_typedb_common", "vaticle_typeql", "vaticle_typedb_behaviour", "vaticle_typedb_protocol")
-vaticle_typedb_common()
+load("//dependencies/vaticle:repositories.bzl", "vaticle_typeql", "vaticle_typedb_behaviour", "vaticle_typedb_protocol")
 vaticle_typeql()
 vaticle_typedb_behaviour()
 vaticle_typedb_protocol()
@@ -240,25 +239,37 @@ rules_ts_dependencies(
 load("@aspect_bazel_lib//lib:repositories.bzl", "register_jq_toolchains")
 register_jq_toolchains()
 
+# Load @vaticle_bazel_distribution_uploader
+load("@vaticle_bazel_distribution//common/uploader:deps.bzl", uploader_deps = "deps")
+uploader_deps()
+load("@vaticle_bazel_distribution_uploader//:requirements.bzl", install_uploader_deps = "install_deps")
+install_uploader_deps()
+
 ###############
 # Load @maven #
 ###############
 
 # Load maven artifacts
 load("@vaticle_dependencies//tool/common:deps.bzl", vaticle_dependencies_tool_maven_artifacts = "maven_artifacts")
-load("@vaticle_typedb_common//dependencies/maven:artifacts.bzl", vaticle_typedb_common_maven_artifacts = "artifacts")
 load("@vaticle_typeql//dependencies/maven:artifacts.bzl", vaticle_typeql_maven_artifacts = "artifacts")
-load("//dependencies/maven:artifacts.bzl", vaticle_typedb_driver_java_maven_artifacts = "artifacts", vaticle_typedb_driver_java_maven_overrides = "overrides")
+load(
+    "//dependencies/maven:artifacts.bzl",
+    vaticle_typedb_driver_maven_artifacts = "artifacts",
+    vaticle_typedb_driver_maven_overrides = "overrides",
+)
 load("@vaticle_bazel_distribution//maven:deps.bzl", vaticle_bazel_distribution_maven_artifacts = "maven_artifacts")
+
+# Load Vaticle maven artifacts
+load("//dependencies/vaticle:artifacts.bzl", vaticle_typedb_driver_vaticle_maven_artifacts = "maven_artifacts")
 
 load("@vaticle_dependencies//library/maven:rules.bzl", "maven")
 maven(
-    vaticle_typedb_common_maven_artifacts +
     vaticle_typeql_maven_artifacts +
     vaticle_dependencies_tool_maven_artifacts +
-    vaticle_typedb_driver_java_maven_artifacts +
+    vaticle_typedb_driver_maven_artifacts +
     vaticle_bazel_distribution_maven_artifacts,
-    vaticle_typedb_driver_java_maven_overrides
+    internal_artifacts = vaticle_typedb_driver_vaticle_maven_artifacts,
+    override_targets = vaticle_typedb_driver_maven_overrides,
 )
 
 ################################################

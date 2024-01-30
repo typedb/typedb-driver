@@ -19,14 +19,13 @@
 # under the License.
 #
 
+load("@vaticle_bazel_distribution//docs:python/rules.bzl", "sphinx_docs")
 load("@vaticle_dependencies//builder/swig:python.bzl", "py_native_lib_rename")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//python/tool/sphinx:rules.bzl", "sphinx_docs")
-load("//tool/docs:python/rules.bzl", "sphinx_to_adoc")
-load("//python:docs_structure.bzl", "dir_mapping")
-
 load("//python:rules.bzl", "native_driver_versioned")
 load("//python:python_versions.bzl", "python_versions")
+load("//python:docs_structure.bzl", "dir_mapping")
+load("//tool/docs:python/rules.bzl",  "sphinx_to_adoc")
 
 native_driver_versioned(python_versions = python_versions)
 
@@ -77,7 +76,6 @@ checkstyle_test(
         "WORKSPACE",
         "requirements*.txt",
         "typedb/**/*",
-        "tool/sphinx/*",
     ]),
     exclude = glob([
         "conf.py",

@@ -41,7 +41,7 @@ executors:
   linux-x86_64-ubuntu-2204:
     docker:
       - image: ubuntu:22.04
-    resource_class: medium
+    resource_class: large
     working_directory: ~/typedb-driver
 
   mac-arm64:
@@ -77,6 +77,7 @@ commands:
     steps:
       - run: |
           apt-get -y update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
           apt-get -y install curl build-essential git python3 python3-pip default-jre lsof cmake file wget
           curl -OL "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/bazelisk-linux-<<parameters.bazel-arch>>"
           mv "bazelisk-linux-<<parameters.bazel-arch>>" /usr/local/bin/bazel
@@ -107,8 +108,8 @@ commands:
     steps:
       - install-pip-requirements
       - run: |
-          export DEPLOY_PIP_USERNAME=$REPO_VATICLE_USERNAME
-          export DEPLOY_PIP_PASSWORD=$REPO_VATICLE_PASSWORD
+          export DEPLOY_PIP_USERNAME=$REPO_TYPEDB_USERNAME
+          export DEPLOY_PIP_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip38 -- snapshot
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip39 -- snapshot
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //python:deploy-pip310 -- snapshot
@@ -120,9 +121,11 @@ commands:
       - run: |
           tool/test/start-core-server.sh
           python3.8 -m pip install wheel 
-          python3.8 -m pip install --extra-index-url https://repo.vaticle.com/repository/pypi-snapshot/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
+          python3.8 -m pip install --extra-index-url https://repo.typedb.com/public/public-snapshot/python/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
           sleep 3
-          (cd python/tests/deployment/ && python3.8 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1)
+          pushd python/tests/deployment/
+            python3.8 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+          popd
           tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
 
@@ -153,15 +156,15 @@ commands:
   deploy-maven-jni-snapshot-unix:
     steps:
       - run: |
-          export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
-          export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
+          export DEPLOY_MAVEN_USERNAME=$REPO_TYPEDB_USERNAME
+          export DEPLOY_MAVEN_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //java:deploy-maven-jni -- snapshot
 
   deploy-maven-snapshot-unix:
     steps:
       - run: |
-          export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
-          export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
+          export DEPLOY_MAVEN_USERNAME=$REPO_TYPEDB_USERNAME
+          export DEPLOY_MAVEN_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //java:deploy-maven -- snapshot
 
   test-maven-snapshot-unix:
@@ -176,15 +179,15 @@ commands:
   deploy-maven-jni-release-unix:
     steps:
       - run: |
-          export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
-          export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
+          export DEPLOY_MAVEN_USERNAME=$REPO_TYPEDB_USERNAME
+          export DEPLOY_MAVEN_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(cat VERSION) //java:deploy-maven-jni --compilation_mode=opt -- release
 
   deploy-maven-release-unix:
     steps:
       - run: |
-          export DEPLOY_MAVEN_USERNAME=$REPO_VATICLE_USERNAME
-          export DEPLOY_MAVEN_PASSWORD=$REPO_VATICLE_PASSWORD
+          export DEPLOY_MAVEN_USERNAME=$REPO_TYPEDB_USERNAME
+          export DEPLOY_MAVEN_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(cat VERSION) //java:deploy-maven --compilation_mode=opt -- release
 
   ######################
@@ -194,8 +197,8 @@ commands:
   deploy-clib-snapshot-unix:
     steps:
       - run: |
-          export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-          export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+          export DEPLOY_ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+          export DEPLOY_ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //c:deploy-clib-driver --compilation_mode=opt -- snapshot
 
   test-clib-assembly-linux:
@@ -247,8 +250,8 @@ commands:
   deploy-clib-release-unix:
     steps:
       - run: |
-          export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-          export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+          export DEPLOY_ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+          export DEPLOY_ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(cat VERSION) //c:deploy-clib-driver --compilation_mode=opt -- release
 
   ########################
@@ -258,8 +261,8 @@ commands:
   deploy-cpp-snapshot-unix:
     steps:
       - run: |
-          export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-          export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+          export DEPLOY_ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+          export DEPLOY_ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(git rev-parse HEAD) //cpp:deploy-cpp-driver --compilation_mode=opt -- snapshot
 
   test-cpp-assembly-linux:
@@ -311,9 +314,65 @@ commands:
   deploy-cpp-release-unix:
     steps:
       - run: |
-          export DEPLOY_ARTIFACT_USERNAME=$REPO_VATICLE_USERNAME
-          export DEPLOY_ARTIFACT_PASSWORD=$REPO_VATICLE_PASSWORD
+          export DEPLOY_ARTIFACT_USERNAME=$REPO_TYPEDB_USERNAME
+          export DEPLOY_ARTIFACT_PASSWORD=$REPO_TYPEDB_PASSWORD
           bazel run --jobs=8 --define version=$(cat VERSION) //cpp:deploy-cpp-driver --compilation_mode=opt -- release
+
+  #########################
+  # Rust deployment steps #
+  #########################
+
+  deploy-crate-snapshot-unix:
+    steps:
+      - run: |
+          export DEPLOY_CRATE_TOKEN=$REPO_TYPEDB_CRATES_TOKEN
+          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //rust:deploy_crate -- snapshot
+
+  deploy-crate-release-unix:
+    steps:
+      - run: |
+          export DEPLOY_CRATE_TOKEN=$REPO_CRATES_TOKEN
+          bazel run --jobs=8 --define version=$(cat VERSION) //rust:deploy_crate --compilation_mode=opt -- release
+
+  #########################
+  # Node deployment steps #
+  #########################
+
+  install-npm-apt:
+    steps:
+      - run: |
+          wget -q -O - https://cli-assets.heroku.com/apt/release.key | apt-key add -
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+          apt update -y && apt install -y expect npm
+          npm install -g n
+          n lts
+
+  deploy-npm-snapshot-unix:
+    steps:
+      - run: |
+          export DEPLOY_NPM_USERNAME=$REPO_TYPEDB_USERNAME
+          export DEPLOY_NPM_PASSWORD=$REPO_TYPEDB_PASSWORD
+          bazel run --jobs=8 --define version=$(git rev-parse HEAD) //nodejs:deploy-npm -- snapshot
+
+  test-npm-snapshot-unix:
+    steps:
+      - run: |
+          tool/test/start-core-server.sh
+          cd nodejs/test/deployment/
+          npm install --registry https://npm.cloudsmith.io/typedb/public-snapshot/ "typedb-driver@0.0.0-$CIRCLE_SHA1"
+          npm install jest --global
+          jest --detectOpenHandles application.test.js && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+          cd -
+          tool/test/stop-core-server.sh
+          exit $TEST_SUCCESS
+
+  deploy-npm-release-unix:
+    steps:
+      - run: |
+          wget -q -O - https://cli-assets.heroku.com/apt/release.key | apt-key add -
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+          export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN
+          bazel run --jobs=8 --define version=$(cat VERSION) //nodejs:deploy-npm --compilation_mode=opt -- release
 
 jobs:
 
@@ -422,14 +481,16 @@ jobs:
       - run: .circleci\windows\cpp\deploy_snapshot.bat
       - run: .circleci\windows\cpp\test_assembly.bat
 
-  deploy-maven-snapshot:
-    executor: linux-x86_64-amazonlinux-2
+  deploy-snapshot-any:
+    executor: linux-x86_64-ubuntu-2204
     steps:
       - checkout
-      - install-bazel-yum:
+      - install-bazel-apt:
           bazel-arch: amd64
+      - deploy-crate-snapshot-unix
       - deploy-maven-snapshot-unix
-
+      - install-npm-apt
+      - deploy-npm-snapshot-unix
 
   test-snapshot-linux-arm64:
     executor: linux-arm64-amazonlinux-2
@@ -484,6 +545,15 @@ jobs:
       - run: .circleci\windows\python\test_deploy_snapshot.bat
       - run: .circleci\windows\java\test_deploy_snapshot.bat
 
+  test-snapshot-any:
+    executor: linux-x86_64-ubuntu-2204
+    steps:
+      - checkout
+      - install-bazel-apt:
+          bazel-arch: amd64
+      - install-npm-apt
+      - test-npm-snapshot-unix
+
   ################
   # Release jobs #
   ################
@@ -498,20 +568,6 @@ jobs:
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
-      - run: |
-          mkdir -p ~/dist
-          for f in bazel-bin/python/*.whl; do
-              fname=$(basename $f)
-              base=${fname%.*}
-              pyversion=${base#typedb-driver}
-              cp $f ~/dist/typedb_driver-py${pyversion}-none-manylinux_2_17_aarch64.whl
-          done
-          cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-linux-arm64.jar ~/dist/typedb-driver-jni-linux-arm64.jar
-          cp bazel-bin/c/typedb-driver-clib-linux-arm64.tar.gz ~/dist
-          cp bazel-bin/cpp/typedb-driver-cpp-linux-arm64.tar.gz ~/dist
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   deploy-release-linux-x86_64:
     executor: linux-x86_64-amazonlinux-2
@@ -523,21 +579,6 @@ jobs:
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
-      - run: |
-          mkdir -p ~/dist
-          for f in bazel-bin/python/*.whl; do
-              fname=$(basename $f)
-              base=${fname%.*}
-              pyversion=${base#typedb-driver}
-              cp $f ~/dist/typedb_driver-py${pyversion}-none-manylinux_2_17_x86_64.whl
-          done
-          cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-linux-x86_64.jar ~/dist/typedb-driver-jni-linux-x86_64.jar
-          cp bazel-bin/c/typedb-driver-clib-linux-x86_64.tar.gz ~/dist
-          cp bazel-bin/cpp/typedb-driver-cpp-linux-x86_64.tar.gz ~/dist
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
-
 
   deploy-release-mac-arm64:
     executor: mac-arm64
@@ -549,21 +590,6 @@ jobs:
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
-      - run: |
-          mkdir -p ~/dist
-          for f in bazel-bin/python/*.whl; do
-              fname=$(basename $f)
-              base=${fname%.*}
-              pyversion=${base#typedb-driver}
-              cp $f ~/dist/typedb_driver-py${pyversion}-none-macosx_11_0_arm64.whl
-          done
-          cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-macosx-arm64.jar ~/dist/typedb-driver-jni-macosx-arm64.jar
-          cp bazel-bin/c/typedb-driver-clib-mac-arm64.tar.gz ~/dist
-          cp bazel-bin/cpp/typedb-driver-cpp-mac-arm64.tar.gz ~/dist
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
-
 
   deploy-release-mac-x86_64:
     executor: mac-arm64
@@ -576,20 +602,6 @@ jobs:
       - deploy-maven-jni-release-unix
       - deploy-clib-release-unix
       - deploy-cpp-release-unix
-      - run: |
-          mkdir -p ~/dist
-          for f in bazel-bin/python/*.whl; do
-              fname=$(basename $f)
-              base=${fname%.*}
-              pyversion=${base#typedb-driver}
-              cp $f ~/dist/typedb_driver-py${pyversion}-none-macosx_11_0_x86_64.whl
-          done
-          cp bazel-bin/java/com.vaticle.typedb-typedb-driver-jni-macosx-x86_64.jar ~/dist/typedb-driver-jni-macosx-x86_64.jar
-          cp bazel-bin/c/typedb-driver-clib-mac-x86_64.tar.gz ~/dist
-          cp bazel-bin/cpp/typedb-driver-cpp-mac-x86_64.tar.gz ~/dist
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
 
   deploy-release-windows-x86_64:
     executor:
@@ -604,63 +616,21 @@ jobs:
       - run: .circleci\windows\java\deploy_release.bat
       - run: .circleci\windows\clib\deploy_release.bat
       - run: .circleci\windows\cpp\deploy_release.bat
-      - persist_to_workspace:
-          root: dist
-          paths: ["./*"]
 
-  deploy-maven-release:
-    executor: linux-x86_64-amazonlinux-2
+  deploy-release-any:
+    executor: linux-x86_64-ubuntu-2204
     steps:
       - checkout
-      - install-bazel-yum:
+      - install-bazel-apt:
           bazel-arch: amd64
+      - deploy-crate-release-unix
       - deploy-maven-release-unix
-      - run: |
-          mkdir -p ~/dist
-          cp bazel-bin/java/libdriver-java.jar ~/dist/typedb-driver.jar
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
-
-  deploy-crate-release:
-    executor: linux-x86_64-ubuntu-2204
-    steps:
-      - checkout
-      - install-bazel-apt:
-          bazel-arch: amd64
-      - run: |
-          export DEPLOY_CRATE_TOKEN=$REPO_CRATES_TOKEN
-          bazel run --jobs=8 --define version=$(cat VERSION) //rust:deploy_crate --compilation_mode=opt -- release
-          mkdir -p ~/dist
-          cp bazel-bin/rust/assemble_crate.crate ~/dist/typedb-driver.crate
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
-
-  deploy-npm-release:
-    executor: linux-x86_64-ubuntu-2204
-    steps:
-      - checkout
-      - install-bazel-apt:
-          bazel-arch: amd64
-      - run: |
-          wget -q -O - https://cli-assets.heroku.com/apt/release.key | apt-key add -
-          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
-          apt update -y
-          apt install -y expect npm
-          export DEPLOY_NPM_TOKEN=$REPO_NPM_TOKEN
-          bazel run --jobs=8 --define version=$(cat VERSION) //nodejs:deploy-npm --compilation_mode=opt -- release
-          mkdir -p ~/dist
-          cp bazel-bin/nodejs/assemble-npm.tar.gz ~/dist/typedb-driver-node.tar.gz
-      - persist_to_workspace:
-          root: ~/dist
-          paths: ["./*"]
+      - install-npm-apt
+      - deploy-npm-release-unix
 
   deploy-github:
     executor: linux-x86_64-ubuntu-2204
     steps:
-      - attach_workspace:
-          at: ~/dist
       - checkout
       - install-bazel-apt:
           bazel-arch: amd64
@@ -671,7 +641,20 @@ jobs:
             tar -xf ghr_v0.12.1_linux_amd64.tar.gz
             ghr_v0.12.1_linux_amd64/ghr -t ${REPO_GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} \
               -r ${CIRCLE_PROJECT_REPONAME} -n "TypeDB Driver $(cat VERSION)" -b "$(cat ./RELEASE_NOTES_LATEST.md)" \
-              -c ${CIRCLE_SHA1} -delete $(cat VERSION) ~/dist/
+              -c ${CIRCLE_SHA1} -delete $(cat VERSION)
+
+  sync-dependencies:
+    executor: linux-x86_64-ubuntu-2204
+    steps:
+      - checkout
+      - install-bazel-apt:
+          bazel-arch: amd64
+      - run: |
+          add-apt-repository ppa:deadsnakes/ppa
+          apt update && apt install -y python3.9 python3.9-distutils python3-pip
+          python3.9 -m pip install -U cffi
+          export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
+          bazel run @vaticle_dependencies//tool/sync:dependencies -- --source ${CIRCLE_PROJECT_REPONAME}@$(cat VERSION)
 
   release-cleanup:
     executor: linux-x86_64-ubuntu-2204
@@ -707,7 +690,7 @@ workflows:
             branches:
               only: [master, development]
 
-      - deploy-maven-snapshot:
+      - deploy-snapshot-any:
           filters:
             branches:
               only: [master, development]
@@ -724,35 +707,42 @@ workflows:
               only: [master, development]
           requires:
             - deploy-snapshot-linux-arm64
-            - deploy-maven-snapshot
+            - deploy-snapshot-any
       - test-snapshot-linux-x86_64:
           filters:
             branches:
               only: [master, development]
           requires:
             - deploy-snapshot-linux-x86_64
-            - deploy-maven-snapshot
+            - deploy-snapshot-any
       - test-snapshot-mac-arm64:
           filters:
             branches:
               only: [master, development]
           requires:
             - deploy-snapshot-mac-arm64
-            - deploy-maven-snapshot
+            - deploy-snapshot-any
       - test-snapshot-mac-x86_64:
           filters:
             branches:
               only: [master, development]
           requires:
             - deploy-snapshot-mac-x86_64
-            - deploy-maven-snapshot
+            - deploy-snapshot-any
       - test-snapshot-windows-x86_64:
           filters:
             branches:
               only: [master, development]
           requires:
             - deploy-snapshot-windows-x86_64
-            - deploy-maven-snapshot
+            - deploy-snapshot-any
+
+      - test-snapshot-any:
+          filters:
+            branches:
+              only: [master, development]
+          requires:
+            - deploy-snapshot-any
 
   release:
     jobs:
@@ -777,7 +767,7 @@ workflows:
             branches:
               only: [release]
 
-      - deploy-maven-release:
+      - deploy-release-any:
           filters:
             branches:
               only: [release]
@@ -787,16 +777,6 @@ workflows:
             - deploy-release-mac-arm64
             - deploy-release-mac-x86_64
             - deploy-release-windows-x86_64
-
-      - deploy-crate-release:
-          filters:
-            branches:
-              only: [release]
-
-      - deploy-npm-release:
-          filters:
-            branches:
-              only: [release]
 
       - deploy-github:
           filters:
@@ -808,13 +788,17 @@ workflows:
             - deploy-release-linux-arm64
             - deploy-release-linux-x86_64
             - deploy-release-windows-x86_64
-            - deploy-maven-release
-            - deploy-crate-release
-            - deploy-npm-release
+            - deploy-release-any
 
-      - release-cleanup:
+      - sync-dependencies:
           filters:
             branches:
               only: [release]
           requires:
             - deploy-github
+      - release-cleanup:
+          filters:
+            branches:
+              only: [release]
+          requires:
+            - sync-dependencies

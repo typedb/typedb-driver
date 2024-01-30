@@ -21,11 +21,11 @@
 
 package com.vaticle.typedb.driver.test.behaviour.connection;
 
+import com.vaticle.typedb.core.tool.runner.TypeDBSingleton;
 import com.vaticle.typedb.driver.api.TypeDBDriver;
 import com.vaticle.typedb.driver.api.TypeDBOptions;
 import com.vaticle.typedb.driver.api.TypeDBSession;
 import com.vaticle.typedb.driver.api.TypeDBTransaction;
-import com.vaticle.typedb.common.test.TypeDBSingleton;
 import com.vaticle.typedb.driver.api.database.Database;
 
 import java.util.ArrayList;
@@ -60,6 +60,10 @@ public abstract class ConnectionStepsBase {
     public static final Map<String, BiConsumer<TypeDBOptions, String>> optionSetters = map(
             pair("session-idle-timeout-millis", (option, val) -> option.sessionIdleTimeoutMillis(Integer.parseInt(val))),
             pair("transaction-timeout-millis", (option, val) -> option.transactionTimeoutMillis(Integer.parseInt(val)))
+    );
+
+    public static final Map<String, String> serverOptions = map(
+            pair("--diagnostics.reporting.enable", "false")
     );
 
     public static TypeDBTransaction tx() {

@@ -22,7 +22,7 @@
 package(default_visibility = ["//java/test/behaviour:__subpackages__"])
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_typedb_common//test:rules.bzl", "typedb_java_test")
+load("@vaticle_dependencies//builder/java:rules.bzl", "typedb_java_test")
 
 java_library(
     name = "steps",
@@ -36,7 +36,7 @@ java_library(
         "//java/test/behaviour/connection:steps-base",
 
         # Internal Repository Dependencies
-        "@vaticle_typedb_common//:common",
+        "@vaticle_typeql//common/java:common",
 
         # External Maven Dependencies
         "@maven//:junit_junit",

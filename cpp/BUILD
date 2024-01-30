@@ -21,15 +21,16 @@
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_dependencies//builder/cpp:rules.bzl", "clang_format_test")
 load("@vaticle_bazel_distribution//common:rules.bzl", "assemble_targz", "assemble_zip", "checksum", "assemble_versioned")
+load("@vaticle_bazel_distribution//docs:cpp/rules.bzl", "doxygen_docs")
 load("@vaticle_bazel_distribution//artifact:rules.bzl", "deploy_artifact")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
 load("@vaticle_bazel_distribution//platform:constraints.bzl", "constraint_linux_arm64", "constraint_linux_x86_64",
      "constraint_mac_arm64", "constraint_mac_x86_64", "constraint_win_x86_64")
-load("//tool/docs:cpp/rules.bzl", "doxygen_docs", "doxygen_to_adoc")
 load(":build_opts.bzl", "cxxopts")
 load("//cpp:docs_structure.bzl", "dir_mapping")
+load("//tool/docs:cpp/rules.bzl", "doxygen_to_adoc")
 
 pkg_files(
     name = "typedb-driver-cpp-headers",
@@ -133,50 +134,50 @@ assemble_zip(
     target_compatible_with = constraint_win_x86_64,
 )
 
-# Deployment to repo.vaticle.com
+# Deployment to repo.typedb.com
 deploy_artifact(
     name = "deploy-linux-arm64-targz",
     target = ":assemble-linux-arm64-targz",
-    artifact_group = "vaticle_typedb_driver_cpp",
+    artifact_group = "typedb-driver-cpp-linux-arm64",
     artifact_name = "typedb-driver-cpp-linux-arm64-{version}.tar.gz",
-    release = deployment['artifact.release'],
-    snapshot = deployment['artifact.snapshot'],
+    release = deployment['artifact']['release']['upload'],
+    snapshot = deployment['artifact']['snapshot']['upload'],
 )
 
 deploy_artifact(
     name = "deploy-linux-x86_64-targz",
     target = ":assemble-linux-x86_64-targz",
-    artifact_group = "vaticle_typedb_driver_cpp",
+    artifact_group = "typedb-driver-cpp-linux-x86_64",
     artifact_name = "typedb-driver-cpp-linux-x86_64-{version}.tar.gz",
-    release = deployment['artifact.release'],
-    snapshot = deployment['artifact.snapshot'],
+    release = deployment['artifact']['release']['upload'],
+    snapshot = deployment['artifact']['snapshot']['upload'],
 )
 
 deploy_artifact(
     name = "deploy-mac-arm64-zip",
     target = ":assemble-mac-arm64-zip",
-    artifact_group = "vaticle_typedb_driver_cpp",
+    artifact_group = "typedb-driver-cpp-mac-arm64",
     artifact_name = "typedb-driver-cpp-mac-arm64-{version}.zip",
-    release = deployment['artifact.release'],
-    snapshot = deployment['artifact.snapshot'],
+    release = deployment['artifact']['release']['upload'],
+    snapshot = deployment['artifact']['snapshot']['upload'],
 )
 
 deploy_artifact(
     name = "deploy-mac-x86_64-zip",
     target = ":assemble-mac-x86_64-zip",
-    artifact_group = "vaticle_typedb_driver_cpp",
+    artifact_group = "typedb-driver-cpp-mac-x86_64",
     artifact_name = "typedb-driver-cpp-mac-x86_64-{version}.zip",
-    release = deployment['artifact.release'],
-    snapshot = deployment['artifact.snapshot'],
+    release = deployment['artifact']['release']['upload'],
+    snapshot = deployment['artifact']['snapshot']['upload'],
 )
 
 deploy_artifact(
     name = "deploy-windows-x86_64-zip",
     target = ":assemble-windows-x86_64-zip",
-    artifact_group = "vaticle_typedb_driver_cpp",
+    artifact_group = "typedb-driver-cpp-windows-x86_64",
     artifact_name = "typedb-driver-cpp-windows-x86_64-{version}.zip",
-    release = deployment['artifact.release'],
-    snapshot = deployment['artifact.snapshot'],
+    release = deployment['artifact']['release']['upload'],
+    snapshot = deployment['artifact']['snapshot']['upload'],
 )
 
 alias(

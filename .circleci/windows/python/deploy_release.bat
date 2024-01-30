@@ -26,7 +26,7 @@ CALL refreshenv
 ECHO Building and deploying windows package...
 SET DEPLOY_PIP_USERNAME=%REPO_PYPI_USERNAME%
 SET DEPLOY_PIP_PASSWORD=%REPO_PYPI_PASSWORD%
-python.exe -m pip install twine
+python.exe -m pip install twine==3.3.0 importlib-metadata==3.4.0
 SET /p VER=<VERSION
 
 bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip38 --compilation_mode=opt -- release
@@ -40,9 +40,3 @@ IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
 
 bazel --output_user_root=C:/tmp run --verbose_failures --define version=%VER% //python:deploy-pip311 --compilation_mode=opt -- release
 IF %errorlevel% NEQ 0 EXIT /b %errorlevel%
-
-MD dist
-COPY bazel-bin\python\typedb-driver38.whl dist\typedb_driver-py38-none-win_amd64.whl
-COPY bazel-bin\python\typedb-driver39.whl dist\typedb_driver-py39-none-win_amd64.whl
-COPY bazel-bin\python\typedb-driver310.whl dist\typedb_driver-py310-none-win_amd64.whl
-COPY bazel-bin\python\typedb-driver311.whl dist\typedb_driver-py311-none-win_amd64.whl

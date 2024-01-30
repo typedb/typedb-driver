@@ -19,24 +19,6 @@
 # under the License.
 #
 
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("@vaticle_dependencies_tool_docs//:requirements.bzl", docs_requirement = "requirement")
+*.bat   text eol=crlf
 
-py_binary(
-    name = "sphinx_runner",
-    srcs = [
-        "sphinx_html_builder.py",
-    ],
-    main = "sphinx_html_builder.py",
-    deps = [docs_requirement("sphinx")],
-    visibility = ["//visibility:public"]
-)
 
-checkstyle_test(
-    name = "checkstyle",
-    include = glob([
-        "*",
-    ]),
-    license_type = "apache-header",
-    size = "small",
-)

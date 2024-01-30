@@ -22,7 +22,7 @@
 
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load("@vaticle_bazel_distribution//artifact:rules.bzl", "artifact_extractor")
-load("@vaticle_typedb_common//test:rules.bzl", "native_typedb_artifact")
+load("@vaticle_dependencies//builder/java:rules.bzl", "native_typedb_artifact")
 
 checkstyle_test(
     name = "checkstyle",
