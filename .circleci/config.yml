@@ -171,7 +171,7 @@ commands:
     steps:
       - run: |
           tool/test/start-core-server.sh
-          sed -i -e "s/DRIVER_JAVA_VERSION_MARKER/$CIRCLE_SHA1/g" java/test/deployment/pom.xml
+          sed -i -e "s/DRIVER_JAVA_VERSION_MARKER/0.0.0-$CIRCLE_SHA1/g" java/test/deployment/pom.xml
           cat java/test/deployment/pom.xml
           (cd java/test/deployment && mvn test)
           tool/test/stop-core-server.sh
