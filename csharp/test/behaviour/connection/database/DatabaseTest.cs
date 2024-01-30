@@ -5,7 +5,7 @@ using com.vaticle.typedb.driver;
 
 namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
 {
-    [FeatureFile("csharp/test/behaviour/connection/database/connection/database.feature")]
+    [FeatureFile("external/vaticle_typedb_behaviour/connection/database.feature")]
     public sealed class DatabaseTest : Feature
     {
         private string _result;
