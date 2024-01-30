@@ -21,7 +21,7 @@
 
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_library", "csharp_test")
 load("@vaticle_dependencies//builder/swig:csharp.bzl", "swig_csharp")
-
+load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
 
 def swig_native_csharp_library(name, target_frameworks, targeting_packs, tags=[], **kwargs):
     swig_csharp(
@@ -40,10 +40,24 @@ def swig_native_csharp_library(name, target_frameworks, targeting_packs, tags=[]
 
 
 def csharp_behaviour_test(name, steps, features, deps, target_frameworks, targeting_packs, **kwargs):
+    copied_features = []
+    for feature in features:
+        new_feature = extract_feature_name(feature)
+        if new_feature != feature:
+            copy_file(
+                name = new_feature,
+                src = feature,
+                out = new_feature,
+                is_executable = False,
+                allow_symlink = False,
+            )
+
+        copied_features.append(":{}".format(new_feature))
+
     csharp_test(
         name = name,
         srcs = steps + ["//csharp/test/behaviour/util:TestRunner.cs"],
-        data = features,
+        data = copied_features,
         deps = deps + [
             "@paket.csharp_deps//gherkin",
             "@paket.csharp_deps//xunit.runner.utility",
@@ -55,3 +69,14 @@ def csharp_behaviour_test(name, steps, features, deps, target_frameworks, target
         visibility = ["//visibility:public"],
         **kwargs,
     )
+
+
+def extract_feature_name(name):
+    if not name or name[0] != '@':
+        return name
+
+    lowest_dir_index = name.rfind('/') + 1
+    if lowest_dir_index:
+        name = name[lowest_dir_index:]
+
+    return name.replace(':', "/")
