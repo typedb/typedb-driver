@@ -1,7 +1,9 @@
 using Xunit.Gherkin.Quick;
 using System;
 
-namespace Lib.Specs.Steps
+using com.vaticle.typedb.driver;
+
+namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
 {
     [FeatureFile("csharp/test/behaviour/poc-example/Features/HelloLib.feature")]
     public sealed class HelloerStepsDefinition : Feature
