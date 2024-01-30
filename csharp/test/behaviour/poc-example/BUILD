@@ -1,18 +1,12 @@
-load("@rules_dotnet//dotnet:defs.bzl", "csharp_test")
 load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
+load("//csharp:rules.bzl", "csharp_behaviour_test")
 
-csharp_test(
+
+csharp_behaviour_test(
     name = "test",
-    srcs = ["Main.cs", "Steps/HelloLibStepDefinitions.cs"],
-    data = ["Features/HelloLib.feature"],
-    deps = [
-        "@paket.csharp_deps//gherkin",
-        "@paket.csharp_deps//xunit.runner.utility",
-        "@paket.csharp_deps//xunit.gherkin.quick",
-        "//csharp/poc-examples/helloer:helloer-lib",
-    ],
-    runtime_identifier = "any",
-    visibility = ["//visibility:public"],
+    steps = ["Steps/HelloLibStepDefinitions.cs"],
+    features = ["Features/HelloLib.feature"],
+    deps = ["//csharp/poc-examples/helloer:helloer-lib"],
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
 )
