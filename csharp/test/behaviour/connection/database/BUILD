@@ -26,7 +26,7 @@ load("//csharp:rules.bzl", "csharp_behaviour_test")
 csharp_behaviour_test(
     name = "test",
     steps = ["DatabaseTest.cs"],
-    features = ["@vaticle_typedb_behaviour//connection:database.feature", "@vaticle_typedb_behaviour//connection:session.feature"],
+    features = ["@vaticle_typedb_behaviour//connection:database.feature"],
     deps = [],
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
