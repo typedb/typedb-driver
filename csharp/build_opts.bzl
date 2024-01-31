@@ -17,6 +17,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+#
 
 target_frameworks = ["net6.0"]
 targeting_packs = ["@paket.rules_dotnet_nuget_packages//microsoft.netcore.app.ref"]

@@ -4,7 +4,8 @@ using System.Reflection;
 using System.Threading;
 using Xunit.Runners;
 
-namespace TestRunner
+// TODO: Remove all or reduce WriteLines to Console if we don't want to see them.
+namespace com.vaticle.typedb.driver.Test.TestRunner
 {
     class Program
     {
@@ -30,6 +31,8 @@ namespace TestRunner
                 runner.OnExecutionComplete = OnExecutionComplete;
                 runner.OnTestFailed = OnTestFailed;
                 runner.OnTestSkipped = OnTestSkipped;
+                runner.OnTestPassed = OnTestPassed;
+                runner.OnTestStarting = OnTestStarting;
 
                 Console.WriteLine("Discovering...");
                 runner.Start(typeName);
@@ -46,6 +49,24 @@ namespace TestRunner
             lock (consoleLock)
             {
                 Console.WriteLine($"Running {info.TestCasesToRun} of {info.TestCasesDiscovered} tests...");
+            }
+        }
+
+        static void OnTestStarting(TestStartingInfo info)
+        {
+            lock (consoleLock)
+            {
+                Console.WriteLine(
+                    $"Starting test {info.TestDisplayName}...");
+            }
+        }
+
+        static void OnTestPassed(TestPassedInfo info)
+        {
+            lock (consoleLock)
+            {
+                Console.WriteLine(
+                    $"[PASSED] {info.TestDisplayName}");
             }
         }
 

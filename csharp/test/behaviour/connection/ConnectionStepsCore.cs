@@ -30,7 +30,7 @@ using com.vaticle.typedb.driver.Test.Behaviour.Connection;
 
 namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 {
-    public class ConnectionStepsCore: ConnectionStepsBase
+    public class ConnectionSteps: ConnectionStepsBase
     {
         protected override void BeforeAllOnce()
         {
@@ -48,7 +48,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
             Console.WriteLine("CORE Before All!");
         }
 
-        public ConnectionStepsCore()
+        public ConnectionSteps()
             : base()
         {Console.WriteLine("Core constr!");}
 

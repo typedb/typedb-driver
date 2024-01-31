@@ -22,6 +22,7 @@
 package(default_visibility = ["//csharp/test/behaviour:__subpackages__"])
 
 load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
+load("//csharp/test:build_opts.bzl", "behaviour_tests_deps")
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
@@ -29,54 +30,42 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 csharp_library(
     name = "steps-base",
     srcs = ["ConnectionStepsBase.cs"],
-    deps = [
+    deps = behaviour_tests_deps + [
         "//csharp/api",
         "//csharp/common",
-
-        "@paket.csharp_deps//gherkin",
-        "@paket.csharp_deps//xunit.runner.utility",
-        "@paket.csharp_deps//xunit.gherkin.quick",
     ],
     runtime_identifier = "any",
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
 )
+
 
 csharp_library(
     name = "steps-core",
     srcs = [
         "ConnectionStepsCore.cs",
     ],
-    deps = [
+    deps = behaviour_tests_deps + [
         ":steps-base",
         "//csharp/api",
         "//csharp/common",
-
-        "@paket.csharp_deps//gherkin",
-        "@paket.csharp_deps//xunit.runner.utility",
-        "@paket.csharp_deps//xunit.gherkin.quick",
     ],
-    visibility = ["//visibility:public"],
     runtime_identifier = "any",
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
 )
+
 
 csharp_library(
     name = "steps-cloud",
     srcs = [
         "ConnectionStepsCloud.cs",
     ],
-    deps = [
+    deps = behaviour_tests_deps + [
         ":steps-base",
         "//csharp/api",
         "//csharp/common",
-
-        "@paket.csharp_deps//gherkin",
-        "@paket.csharp_deps//xunit.runner.utility",
-        "@paket.csharp_deps//xunit.gherkin.quick",
     ],
-    visibility = ["//visibility:public"],
     runtime_identifier = "any",
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
