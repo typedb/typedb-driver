@@ -29,7 +29,7 @@ using com.vaticle.typedb.driver.Test.Behaviour.Connection;
 
 namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 {
-    public class ConnectionStepsCloud: ConnectionStepsBase
+    public class ConnectionSteps: ConnectionStepsBase
     {
         protected override void BeforeAllOnce()
         {
@@ -40,7 +40,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
             Console.WriteLine("CLOUD Before All!");
         }
 
-        public ConnectionStepsCloud()
+        public ConnectionSteps()
             : base()
         {Console.WriteLine("CLOUD Constr!");}
 
@@ -80,12 +80,14 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 //            return TypeDB.CloudDriver(address, new TypeDBCredential(username, password, tlsEnabled));
         }
 
+        [Given(@"typedb starts")]
         [When(@"typedb starts")]
         public override void TypeDBStarts()
         {
             base.TypeDBStarts();
         }
 
+        [Given(@"connection opens with default authentication")]
         [When(@"connection opens with default authentication")]
         public override void ConnectionOpensWithDefaultAuthentication()
         {
@@ -126,6 +128,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
         }
 
         [Given(@"connection does not have any database")]
+        [Then(@"connection does not have any database")]
         public override void ConnectionDoesNotHaveAnyDatabase()
         {
             base.ConnectionDoesNotHaveAnyDatabase();

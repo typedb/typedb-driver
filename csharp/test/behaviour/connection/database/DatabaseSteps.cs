@@ -22,6 +22,7 @@
 using DataTable = Gherkin.Ast.DataTable;
 using System;
 using System.Collections.Generic;
+using Xunit;
 using Xunit.Gherkin.Quick;
 
 using com.vaticle.typedb.driver;
@@ -30,14 +31,14 @@ using com.vaticle.typedb.driver.Test.Behaviour.Connection;
 namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
 {
     [FeatureFile("external/vaticle_typedb_behaviour/connection/database.feature")]
-    public class DatabaseSteps: ConnectionStepsCore
+    public class DatabaseSteps: ConnectionSteps
     {
         [Given(@"connection create database: {word}")]
         [When(@"connection create database: {word}")]
         public void ConnectionCreateDatabase(string name)
         {
             Console.WriteLine("Connection create database!" + name);
-//            connection_create_databases(list(name));
+//            ConnectionCreateDatabase(list(name));
         }
 
         [Given(@"connection create databases:")]
@@ -53,7 +54,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
             }
 //            foreach (string name in names)
 //            {
-//                driver.databases().create(name);
+//                driver.Databases().Create(name);
 //            }
         }
 
@@ -104,6 +105,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
         public void ConnectionDeleteDatabaseThrowsException(string name)
         {
             Console.WriteLine("ConnectionDeleteDatabaseThrowsException: " + name);
+//            Assert.Equal(true, false);
 //            connection_delete_databases_throws_exception(list(name));
         }
 

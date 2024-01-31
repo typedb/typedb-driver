@@ -19,21 +19,13 @@
 # under the License.
 #
 
-load("@vaticle_dependencies//builder/swig:csharp.bzl", "swig_csharp")
+integration_tests_deps = [
+    "@paket.csharp_deps//xunit"
+]
 
-
-def swig_native_csharp_library(name, target_frameworks, targeting_packs, visibility, tags=[], **kwargs):
-    swig_csharp(
-        name = "__" + name,
-        target_frameworks = target_frameworks,
-        targeting_packs = targeting_packs,
-        shared_lib_name = name,
-        tags = tags,
-        **kwargs,
-    )
-
-    native.alias(
-        name = name,
-        actual = "__" + name,
-        visibility = visibility,
-    )
+behaviour_tests_deps = [
+    "@paket.csharp_deps//gherkin",
+    "@paket.csharp_deps//xunit.assert",
+    "@paket.csharp_deps//xunit.gherkin.quick",
+    "@paket.csharp_deps//xunit.runner.utility",
+]
