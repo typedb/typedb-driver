@@ -48,6 +48,7 @@ def csharp_behaviour_test(name, steps, features, deps, target_frameworks, target
             "@paket.csharp_deps//gherkin",
             "@paket.csharp_deps//xunit.runner.utility",
             "@paket.csharp_deps//xunit.gherkin.quick",
+            "@paket.csharp_deps//xunit.assert",
         ],
         target_frameworks = target_frameworks,
         targeting_packs = targeting_packs,
