@@ -19,21 +19,19 @@
 # under the License.
 #
 
-load("@vaticle_dependencies//builder/swig:csharp.bzl", "swig_csharp")
+load("@rules_dotnet//dotnet:defs.bzl", "csharp_library", "csharp_test")
+load("//csharp/test:build_opts.bzl", "behaviour_tests_deps")
 
 
-def swig_native_csharp_library(name, target_frameworks, targeting_packs, visibility, tags=[], **kwargs):
-    swig_csharp(
-        name = "__" + name,
+def csharp_behaviour_test(name, steps, features, deps, target_frameworks, targeting_packs, **kwargs):
+    csharp_test(
+        name = name,
+        srcs = steps + ["//csharp/test/behaviour/util:TestRunner.cs"],
+        data = features,
+        deps = deps + behaviour_tests_deps,
         target_frameworks = target_frameworks,
         targeting_packs = targeting_packs,
-        shared_lib_name = name,
-        tags = tags,
+        runtime_identifier = "any",
+        visibility = ["//visibility:public"],
         **kwargs,
-    )
-
-    native.alias(
-        name = name,
-        actual = "__" + name,
-        visibility = visibility,
     )

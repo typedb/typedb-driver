@@ -1,5 +1,5 @@
 load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
-load("//csharp:rules.bzl", "csharp_behaviour_test")
+load("//csharp/test:rules.bzl", "csharp_behaviour_test")
 
 
 csharp_behaviour_test(

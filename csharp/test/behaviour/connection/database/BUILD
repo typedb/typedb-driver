@@ -20,28 +20,43 @@
 #
 
 load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
-load("//csharp:rules.bzl", "csharp_behaviour_test")
+load("//csharp/test:rules.bzl", "csharp_behaviour_test")
+load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 
 csharp_behaviour_test(
-    name = "simple-test",
-    steps = ["DatabaseTest.cs"],
-    features = ["@vaticle_typedb_behaviour//connection:database.feature"],
-    deps = [],
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-)
-
-csharp_behaviour_test(
-    name = "complex-test",
+    name = "test-core",
     steps = ["DatabaseSteps.cs"],
     features = ["@vaticle_typedb_behaviour//connection:database.feature"],
     deps = [
-        "//csharp/test/behaviour/connection:steps-base",
         "//csharp/test/behaviour/connection:steps-core",
+        "//csharp/test/behaviour/connection:steps-base",
         "//csharp/api",
         "//csharp/common",
     ],
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
+)
+
+
+csharp_behaviour_test(
+    name = "test-cloud",
+    steps = ["DatabaseSteps.cs"],
+    features = ["@vaticle_typedb_behaviour//connection:database.feature"],
+    deps = [
+        "//csharp/test/behaviour/connection:steps-cloud",
+        "//csharp/test/behaviour/connection:steps-base",
+        "//csharp/api",
+        "//csharp/common",
+    ],
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
+)
+
+
+checkstyle_test(
+    name = "checkstyle",
+    include = glob(["*"]),
+    license_type = "apache-header",
 )
