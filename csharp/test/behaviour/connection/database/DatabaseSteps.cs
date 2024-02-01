@@ -23,6 +23,8 @@ using DataTable = Gherkin.Ast.DataTable;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
@@ -38,7 +40,6 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
         [When(@"connection create database: {word}")]
         public void ConnectionCreateDatabase(string name)
         {
-            Console.WriteLine("Connection create database: " + name);
             Driver.Databases().Create(name);
         }
 
@@ -50,7 +51,6 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
             {
                 foreach (var cell in row.Cells)
                 {
-                    Console.WriteLine("ConnectionCreateDatabases: " + cell.Value);
                     ConnectionCreateDatabase(cell.Value);
                 }
             }
@@ -65,26 +65,31 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
             {
                 foreach (var cell in row.Cells)
                 {
-                    Console.WriteLine("ConnectionCreateDatabasesInParallel: " + cell.Value);
                     collectedNames.Add(cell.Value);
                 }
             }
 
-            Assert.True(false);
-            // TODO: Not implemented. Use collectedNames further!
-//            assertTrue(THREAD_POOL_SIZE >= names.size());
-//
-//            CompletableFuture[] creations = names.stream()
-//                    .map(name -> CompletableFuture.runAsync(() -> driver.databases().create(name), threadPool))
-//                    .toArray(CompletableFuture[]::new);
-//
-//            CompletableFuture.allOf(creations).join();
+            int workerThreads;
+            int ioThreads;
+            ThreadPool.GetAvailableThreads(out workerThreads, out ioThreads);
+            Assert.True(workerThreads > collectedNames.Count);
+
+            Task[] taskArray = new Task[collectedNames.Count];
+            for (int i = 0; i < taskArray.Length; i++)
+            {
+                var name = collectedNames[i];
+                taskArray[i] = Task.Factory.StartNew(() =>
+                    {
+                        ConnectionCreateDatabase(name);
+                    });
+            }
+
+            Task.WaitAll(taskArray);
         }
 
         [When(@"connection delete database: {word}")]
         public void ConnectionDeleteDatabase(string name)
         {
-            Console.WriteLine("ConnectionDeleteDatabase: " + name);
             Driver.Databases().Get(name).Delete();
         }
 
@@ -95,7 +100,6 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
             {
                 foreach (var cell in row.Cells)
                 {
-                    Console.WriteLine("ConnectionDeleteDatabases: " + cell.Value);
                     ConnectionDeleteDatabase(cell.Value);
                 }
             }
@@ -106,30 +110,8 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
         {
             Console.WriteLine("ConnectionDeleteDatabaseThrowsException: " + name);
             // TODO: Not implemented!
-//            Assert.Equal(true, false);
+            Assert.True(false);
 //            connection_delete_databases_throws_exception(list(name));
-        }
-
-        [Then(@"connection delete database(s); throws exception")]
-        public void ConnectionDeleteDatabasesThrowsException(DataTable names)
-        {
-            foreach (var row in names.Rows)
-            {
-                foreach (var cell in row.Cells)
-                {
-                    Console.WriteLine("ConnectionDeleteDatabasesThrowsException: " + cell.Value);
-                }
-            }
-            // TODO: Not Implemented!
-//            foreach (string databaseName in names)
-//            {
-//                try {
-//                    driver.databases().get(databaseName).delete();
-//                    fail();
-//                } catch (Exception e) {
-//                    // successfully failed
-//                }
-//            }
         }
 
         [When(@"connection delete databases in parallel:")]
@@ -140,24 +122,31 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
             {
                 foreach (var cell in row.Cells)
                 {
-                    Console.WriteLine("ConnectionDeleteDatabasesInParallel: " + cell.Value);
                     collectedNames.Add(cell.Value);
                 }
             }
-            // TODO: Not Implemented!
-//            assertTrue(THREAD_POOL_SIZE >= names.size());
-//
-//            CompletableFuture[] deletions = names.stream()
-//                    .map(name -> CompletableFuture.runAsync(() -> driver.databases().get(name).delete(), threadPool))
-//                    .toArray(CompletableFuture[]::new);
-//
-//            CompletableFuture.allOf(deletions).join();
+
+            int workerThreads;
+            int ioThreads;
+            ThreadPool.GetAvailableThreads(out workerThreads, out ioThreads);
+            Assert.True(workerThreads > collectedNames.Count);
+
+            Task[] taskArray = new Task[collectedNames.Count];
+            for (int i = 0; i < collectedNames.Count; ++i)
+            {
+                var name = collectedNames[i];
+                taskArray[i] = Task.Factory.StartNew(() =>
+                    {
+                        ConnectionDeleteDatabase(name);
+                    });
+            }
+
+            Task.WaitAll(taskArray);
         }
 
         [Then(@"connection has database: {word}")]
         public void ConnectionHasDatabase(string name)
         {
-            Console.WriteLine("ConnectionHasDatabase: " + name);
             Assert.True(Driver.Databases().Contains(name));
         }
 
@@ -170,7 +159,6 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
             {
                 foreach (var cell in row.Cells)
                 {
-                    Console.WriteLine("ConnectionHasDatabases: " + cell.Value);
                     ConnectionHasDatabase(cell.Value);
                     expectedDatabasesSize++;
                 }
@@ -183,7 +171,6 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
         [Then(@"connection does not have database: {word}")]
         public void ConnectionDoesNotHaveDatabase(string name)
         {
-            Console.WriteLine("ConnectionDoesNotHaveDatabase: " + name);
             Assert.False(Driver.Databases().Contains(name));
         }
 
@@ -194,7 +181,6 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
             {
                 foreach (var cell in row.Cells)
                 {
-                    Console.WriteLine("ConnectionDoesNotHaveDatabases: " + cell.Value);
                     ConnectionDoesNotHaveDatabase(cell.Value);
                 }
             }
