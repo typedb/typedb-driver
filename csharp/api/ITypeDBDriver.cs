@@ -22,11 +22,11 @@
 using System;
 
 using com.vaticle.typedb.driver.Api;
-using com.vaticle.typedb.driver.Api.Databases;
+using com.vaticle.typedb.driver.Api.Database;
 
 namespace com.vaticle.typedb.driver.Api
 {
-    public interface ITypeDBDriver: IDisposable // TODO: IDisposable instead of Java's AutoCloseable, check and implement later.
+    public interface ITypeDBDriver : IDisposable
     {
         /**
          * Checks whether this connection is presently open.
@@ -46,9 +46,9 @@ namespace com.vaticle.typedb.driver.Api
         /**
          * Opens a session to the given database with default options.
          *
-         * @see TypeDBDriver#Session(string, ITypeDBSession.Type, TypeDBOptions)
+         * @see TypeDBDriver#Session(string, ITypeDBSession.SessionType, TypeDBOptions)
          */
-        ITypeDBSession Session(string database, ITypeDBSession.Type type);
+        ITypeDBSession Session(string database, ITypeDBSession.SessionType type);
 
         /**
          * Opens a communication tunnel (session) to the given database on the running TypeDB server.
@@ -63,7 +63,7 @@ namespace com.vaticle.typedb.driver.Api
          * @param type The type of session to be created (DATA or SCHEMA)
          * @param options <code>TypeDBOptions</code> for the session
          */
-        ITypeDBSession Session(string database, ITypeDBSession.Type type, TypeDBOptions options);
+        ITypeDBSession Session(string database, ITypeDBSession.SessionType type, TypeDBOptions options);
 
         /**
          * Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.

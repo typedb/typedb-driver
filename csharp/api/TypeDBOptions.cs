@@ -20,7 +20,7 @@
  */
 using com.vaticle.typedb.driver.pinvoke;
 using com.vaticle.typedb.driver.Common;
-//using com.vaticle.typedb.driver.Common.Exception;
+using com.vaticle.typedb.driver.Common.Exception;
 
 namespace com.vaticle.typedb.driver.Api
 {
@@ -28,7 +28,7 @@ namespace com.vaticle.typedb.driver.Api
      * TypeDB session and transaction options. <code>TypeDBOptions</code> object can be used to override
      * the default server behaviour.
      */
-    public class TypeDBOptions: NativeObjectWrapper<pinvoke.Options>
+    public class TypeDBOptions : NativeObjectWrapper<pinvoke.Options>
     {
         /**
          * Produces a new <code>TypeDBOptions</code> object.

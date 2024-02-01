@@ -29,7 +29,7 @@ using com.vaticle.typedb.driver.Test.Behaviour.Connection;
 
 namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 {
-    public class ConnectionSteps: ConnectionStepsBase
+    public class ConnectionSteps : ConnectionStepsBase
     {
         protected override void BeforeAllOnce()
         {
@@ -69,15 +69,14 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
             Console.WriteLine("CLOUD Dispose!");
         }
 
-        // TODO: Void instead of ITypeDBDriver for now
-        public override void CreateTypeDBDriver(string address)
+        public override ITypeDBDriver CreateTypeDBDriver(string address)
         {
-//            return CreateTypeDBDriver(address, "admin", "password", false);
+            return CreateTypeDBDriver(address, "admin", "password", false);
         }
 
-        private void CreateTypeDBDriver(string address, string username, string password, bool tlsEnabled)
+        private ITypeDBDriver CreateTypeDBDriver(string address, string username, string password, bool tlsEnabled)
         {
-//            return TypeDB.CloudDriver(address, new TypeDBCredential(username, password, tlsEnabled));
+            return TypeDB.CloudDriver(address, new TypeDBCredential(username, password, tlsEnabled));
         }
 
         [Given(@"typedb starts")]

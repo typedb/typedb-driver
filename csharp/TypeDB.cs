@@ -19,16 +19,18 @@
  * under the License.
  */
 
+
 using System.Collections.Generic;
 
 using com.vaticle.typedb.driver.pinvoke;
 using com.vaticle.typedb.driver.Api;
+using com.vaticle.typedb.driver.Connection;
 
 namespace com.vaticle.typedb.driver
 {
     public static class TypeDB
     {
-        public static const string s_DefaultAddress = "localhost:1729";
+        public const string s_DefaultAddress = "localhost:1729";
 
         /**
          * Open a TypeDB Driver to a TypeDB Core server available at the provided address.
@@ -59,7 +61,7 @@ namespace com.vaticle.typedb.driver
          */
         public static ITypeDBDriver CloudDriver(string address, TypeDBCredential credential)
         {
-            return CloudDriver(HashSet<string>(address), credential);
+            return CloudDriver(new HashSet<string>(){address}, credential);
         }
 
         /**
@@ -74,7 +76,7 @@ namespace com.vaticle.typedb.driver
          * @param addresses The address(es) of the TypeDB server(s)
          * @param credential The credential to connect with
          */
-        public static ITypeDBDriver CloudDriver(ISet<string> addresses, TypeDBCredential credential)
+        public static ITypeDBDriver CloudDriver(ICollection<string> addresses, TypeDBCredential credential)
         {
             return new TypeDBDriver(addresses, credential);
         }

@@ -20,25 +20,28 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 
+using com.vaticle.typedb.driver.pinvoke;
 using com.vaticle.typedb.driver.Api;
-// TODO:
-//import com.vaticle.typedb.driver.Common;
-//import com.vaticle.typedb.driver.Common.Exception;
-//import com.vaticle.typedb.driver.User;
+using com.vaticle.typedb.driver.Api.Database;
+using com.vaticle.typedb.driver.Common;
+using com.vaticle.typedb.driver.Common.Exception;
+using com.vaticle.typedb.driver.Connection;
 
 namespace com.vaticle.typedb.driver.Connection
 {
-    public class TypeDBDriver: NativeObjectWrapper<pinvoke.Connection>, ITypeDBDriver
+    public class TypeDBDriver : NativeObjectWrapper<pinvoke.Connection>, ITypeDBDriver
     {
-        private sealed readonly IUserManager userMgr;
-        private sealed readonly IDatabaseManager databaseMgr;
+    // TODO:
+//        private readonly IUserManager userMgr;
+        private readonly IDatabaseManager databaseMgr;
 
-        public TypeDBDriverImpl(string address)
+        public TypeDBDriver(string address)
             : this(OpenCore(address))
         {}
 
-        public TypeDBDriver(HashSet<string> initAddresses, TypeDBCredential credential)
+        public TypeDBDriver(ICollection<string> initAddresses, TypeDBCredential credential)
             : this(OpenCloud(initAddresses, credential))
         {}
 
@@ -46,14 +49,14 @@ namespace com.vaticle.typedb.driver.Connection
             : base(connection)
         {
             databaseMgr = new TypeDBDatabaseManager(this.NativeObject);
-            userMgr = new UserManager(this.NativeObject);
+//            userMgr = new UserManager(this.NativeObject);
         }
 
-        private static pinvoke.Connection openCore(String address)
+        private static pinvoke.Connection OpenCore(string address)
         {
             try
             {
-                return pinvoke.connection_open_core(address);
+                return pinvoke.typedb_driver.connection_open_core(address);
             }
             catch (pinvoke.Error e)
             {
@@ -61,11 +64,13 @@ namespace com.vaticle.typedb.driver.Connection
             }
         }
 
-        private static pinvoke.Connection OpenCloud(HashSet<string> initAddresses, TypeDBCredential credential)
+        private static pinvoke.Connection OpenCloud(ICollection<string> initAddresses, TypeDBCredential credential)
         {
+        // TODO: Implement after dealing with arrays, remove throw under this line.
+            throw new TypeDBDriverException();
             try
             {
-                return pinvoke.connection_open_cloud(initAddresses.toArray(new string[0]), credential.NativeObject);
+//                return pinvoke.typedb_driver.connection_open_cloud(initAddresses.ToArray(), credential.NativeObject);
             }
             catch (pinvoke.Error e)
             {
@@ -73,37 +78,39 @@ namespace com.vaticle.typedb.driver.Connection
             }
         }
 
-        public override bool IsOpen()
+        public bool IsOpen()
         {
-            return pinvoke.connection_is_open(NativeObject);
+            return pinvoke.typedb_driver.connection_is_open(NativeObject);
         }
+        // TODO:
+//
+//        public override User User()
+//        {
+//            return userMgr.GetCurrentUser();
+//        }
+//
+//        public override IUserManager Users()
+//        {
+//            return userMgr;
+//        }
 
-        public override User user()
-        {
-            return userMgr.GetCurrentUser();
-        }
-
-        public override IUserManager Users()
-        {
-            return userMgr;
-        }
-
-        public override IDatabaseManager Databases()
+        public IDatabaseManager Databases()
         {
             return databaseMgr;
         }
 
-        public override ITypeDBSession Session(string database, TypeDBSession.Type type)
+        public ITypeDBSession Session(string database, ITypeDBSession.SessionType type)
         {
             return Session(database, type, new TypeDBOptions());
         }
 
-        public override ITypeDBSession Session(string database, TypeDBSession.Type type, TypeDBOptions options)
+        public ITypeDBSession Session(
+            string database, ITypeDBSession.SessionType type, TypeDBOptions options)
         {
-            return new TypeDBSession(databases(), database, type, options);
+            return new TypeDBSession(Databases(), database, type, options);
         }
 
-        public override void Close()
+        public void Close()
         {
             if (!IsOpen())
             {
@@ -112,12 +119,16 @@ namespace com.vaticle.typedb.driver.Connection
 
             try
             {
-                connection_force_close(NativeObject);
+                pinvoke.typedb_driver.connection_force_close(NativeObject);
             }
-            catch (pinvoke.Error error)
+            catch (pinvoke.Error e)
             {
-                throw new TypeDBDriverException(error);
+                throw new TypeDBDriverException(e);
             }
+        }
+
+        public void Dispose()
+        {
         }
     }
 }
