@@ -1,0 +1,131 @@
+/*
+ * Copyright (C) 2022 Vaticle
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+using NUnit.Framework;
+using System;
+
+using com.vaticle.typedb.driver;
+using com.vaticle.typedb.driver.Api;
+using com.vaticle.typedb.driver.Api.Database;
+using com.vaticle.typedb.driver.Common;
+
+namespace com.vaticle.typedb.driver.Test.Integration
+{
+    public static class Utils
+    {
+        public static ITypeDBDriver OpenConnection()
+        {
+            ITypeDBDriver driver = TypeDB.CoreDriver(TypeDB.s_DefaultAddress);
+            Assert.IsNotNull(driver);
+            Assert.True(driver.IsOpen());
+
+            return driver;
+        }
+
+        public static void CloseConnection(ITypeDBDriver driver)
+        {
+            driver.Close();
+            Assert.False(driver.IsOpen());
+        }
+
+        public static void CreateDatabaseNoChecks(IDatabaseManager dbManager, string expectedDbName)
+        {
+            dbManager.Create(expectedDbName);
+        }
+
+        public static IDatabase CreateAndGetDatabase(
+            IDatabaseManager dbManager, string expectedDbName, bool checkAbsence = true)
+        {
+            if (checkAbsence)
+            {
+                Assert.False(dbManager.Contains(expectedDbName));
+            }
+
+            CreateDatabaseNoChecks(dbManager, expectedDbName);
+            Assert.True(dbManager.Contains(expectedDbName));
+
+            IDatabase db = dbManager.Get(expectedDbName);
+            Assert.IsNotNull(db);
+
+            string realDbName = db.Name();
+            Assert.AreEqual(expectedDbName, realDbName);
+
+            return db;
+        }
+
+        public static void DeleteDatabase(IDatabaseManager dbManager, IDatabase db)
+        {
+            string dbName = db.Name();
+            db.Delete();
+            Assert.False(dbManager.Contains(dbName));
+        }
+    }
+
+    [TestFixture]
+    public class ConnectionTestFixture
+    {
+        [Test]
+        public void OpenAndCloseConnection()
+        {
+            ITypeDBDriver driver = Utils.OpenConnection();
+            Utils.CloseConnection(driver);
+        }
+
+        [Test]
+        public void CreateAndDeleteDatabase()
+        {
+            string expectedDbName = "hello_from_csharp";
+
+            ITypeDBDriver driver = Utils.OpenConnection();
+
+            Assert.False(driver.Databases().Contains(""));
+
+            IDatabaseManager dbManager = driver.Databases();
+            IDatabase db = Utils.CreateAndGetDatabase(dbManager, expectedDbName);
+
+            Assert.False(dbManager.Contains(expectedDbName + "1"));
+            Assert.False(dbManager.Contains(expectedDbName.Substring(1)));
+            Assert.False(dbManager.Contains(expectedDbName.Remove(expectedDbName.Length - 1)));
+            Assert.False(dbManager.Contains(""));
+
+            Utils.DeleteDatabase(dbManager, db);
+            Utils.CloseConnection(driver);
+        }
+
+        [Test]
+        public void FailCreateTwoDatabasesWithSameName()
+        {
+            string expectedDbName = "hello_from_csharp";
+
+            ITypeDBDriver driver = Utils.OpenConnection();
+            IDatabaseManager dbManager = driver.Databases();
+
+            IDatabase db1 = Utils.CreateAndGetDatabase(dbManager, expectedDbName);
+
+            // TODO: This has to start failing after we implement exceptions!
+            Utils.CreateDatabaseNoChecks(dbManager, expectedDbName);
+
+
+            Utils.DeleteDatabase(dbManager, db1);
+            Utils.CloseConnection(driver);
+        }
+    }
+}

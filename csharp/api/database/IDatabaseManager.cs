@@ -64,18 +64,17 @@ namespace com.vaticle.typedb.driver.Api.Database
          *
          * @param name The name of the database to be created
          */
-        // TODO: Return type should be 'Database' but right now that would require 2 server calls in Cloud
         void Create(string name);
 
         /**
-         * Retrieves all databases present on the TypeDB server
+         * Retrieves all databases present on the TypeDB server.
          *
          * <h3>Examples</h3>
          * <pre>
-         * driver.Databases().All()
+         * driver.Databases().GetAll()
          * </pre>
          */
-        List<IDatabase> All();
+        List<IDatabase> GetAll();
     }
 }
 
