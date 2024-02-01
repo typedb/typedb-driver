@@ -114,6 +114,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 
         public virtual void TypeDBStarts()
         {
+            CreateTypeDBDriver(TypeDB.s_DefaultAddress);
 //            TypeDBRunner runner = TypeDBSingleton.getTypeDBRunner();
 //            if (runner != null && runner.isStopped())
 //            {

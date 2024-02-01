@@ -19,60 +19,22 @@
 # under the License.
 #
 
-package(default_visibility = ["//csharp/test/behaviour:__subpackages__"])
-
 load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
-load("//csharp/test:build_opts.bzl", "behaviour_tests_deps")
-load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
+load("//csharp/test:rules.bzl", "csharp_integration_test")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 
-csharp_library(
-    name = "steps-base",
-    srcs = ["ConnectionStepsBase.cs"],
-    deps = behaviour_tests_deps + [
+csharp_integration_test(
+    name = "test",
+    srcs = ["ConnectionTest.cs"],
+    deps = [
         "//csharp:driver-csharp",
         "//csharp/api",
         "//csharp/common",
     ],
-    runtime_identifier = "any",
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
 )
-
-
-csharp_library(
-    name = "steps-core",
-    srcs = [
-        "ConnectionStepsCore.cs",
-    ],
-    deps = behaviour_tests_deps + [
-        ":steps-base",
-        "//csharp:driver-csharp",
-        "//csharp/api",
-        "//csharp/common",
-    ],
-    runtime_identifier = "any",
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-)
-
-
-csharp_library(
-    name = "steps-cloud",
-    srcs = [
-        "ConnectionStepsCloud.cs",
-    ],
-    deps = behaviour_tests_deps + [
-        ":steps-base",
-        "//csharp/api",
-        "//csharp/common",
-    ],
-    runtime_identifier = "any",
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-)
-
 
 checkstyle_test(
     name = "checkstyle",
