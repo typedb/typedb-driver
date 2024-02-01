@@ -22,6 +22,7 @@
 using DataTable = Gherkin.Ast.DataTable;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
@@ -31,7 +32,7 @@ using com.vaticle.typedb.driver.Test.Behaviour.Connection;
 namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
 {
     [FeatureFile("external/vaticle_typedb_behaviour/connection/database.feature")]
-    public class DatabaseSteps: ConnectionSteps
+    public class DatabaseSteps : ConnectionSteps
     {
         [Given(@"connection create database: {word}")]
         [When(@"connection create database: {word}")]
@@ -54,7 +55,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
             }
 //            foreach (string name in names)
 //            {
-//                driver.Databases().Create(name);
+//                Driver.Databases().Create(name);
 //            }
         }
 
@@ -167,6 +168,10 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
                     Console.WriteLine("ConnectionHasDatabases: " + cell.Value);
                 }
             }
+
+//            Assert.Equal(
+//                List<string>(names),
+//                Driver.Databases().All().Select(obj => obj.Name()).ToList<string>());
 //            assertEquals(set(names), driver.databases().all().stream().map(Database::name).collect(Collectors.toSet()));
         }
 
@@ -178,19 +183,20 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
         }
 
         [Then(@"connection does not have databases:")]
-        public void ConnectionDoesNotHaveDatabases(DataTable names)
+        public void ConnectionDoesNotHaveDatabases(DataTable notExpectedNames)
         {
-            foreach (var row in names.Rows)
+            foreach (var row in notExpectedNames.Rows)
             {
                 foreach (var cell in row.Cells)
                 {
                     Console.WriteLine("ConnectionDoesNotHaveDatabases: " + cell.Value);
                 }
             }
-//            Set<String> databases = driver.databases().all().stream().map(Database::name).collect(Collectors.toSet());
-//            foreach (string databaseName in names)
+
+//            HashSet<string> databaseNames = Driver.Databases().All().Select(obj => obj.Name()).ToHashSet<string>();
+//            foreach (string databaseName in notExpectedNames)
 //            {
-//                assertFalse(databases.contains(databaseName));
+//                Assert.False(databaseNames.contains(notExpectedName));
 //            }
         }
     }

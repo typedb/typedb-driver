@@ -19,28 +19,38 @@
  * under the License.
  */
 
-using com.vaticle.typedb.driver.pinvoke;
+using System.Collections;
+using System.Collections.Generic;
+
 using com.vaticle.typedb.driver.Common.Exception;
 
 namespace com.vaticle.typedb.driver.Common
 {
-    public abstract class NativeObjectWrapper<T>
+    public class NativeEnumerable<T> : IEnumerable<T>
     {
-        public readonly T? NativeObject;
+        private readonly IEnumerator<T> _enumerator;
+        private bool _enumeratorUsed;
 
-        static NativeObjectWrapper()
+        public NativeEnumerable(IEnumerator<T> enumerator)
         {
-            pinvoke.typedb_driver.init_logging();
+            _enumerator = enumerator;
+            _enumeratorUsed = false;
         }
 
-        protected NativeObjectWrapper(T? NativeObject)
+        public IEnumerator<T> GetEnumerator()
         {
-            if (NativeObject == null)
+            if (_enumeratorUsed)
             {
-//                throw new TypeDBDriverException(ErrorMessage.Internal.NULL_NATIVE_VALUE);
+                // TODO: throw something?
             }
 
-            this.NativeObject = NativeObject;
+            _enumeratorUsed = true;
+            return _enumerator;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
     }
 }

@@ -19,16 +19,23 @@
  * under the License.
  */
 
+#nullable enable
+
 using System.Collections.Generic;
 
-namespace com.vaticle.typedb.driver.Api.Databases
+namespace com.vaticle.typedb.driver.Api.Database
 {
     public interface IDatabase
     {
         /**
          * The database name as a string.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * database.Name()
+         * </pre>
          */
-        string Name();
+        public string Name();
 
         /**
          * A full schema text as a valid TypeQL define query string.
@@ -38,7 +45,7 @@ namespace com.vaticle.typedb.driver.Api.Databases
          * database.Schema()
          * </pre>
          */
-        string Schema();
+        public string Schema();
 
         /**
          * The types in the schema as a valid TypeQL define query string.
@@ -48,7 +55,7 @@ namespace com.vaticle.typedb.driver.Api.Databases
          * database.TypeSchema()
          * </pre>
          */
-        string TypeSchema();
+        public string TypeSchema();
 
         /**
          * The rules in the schema as a valid TypeQL define query string.
@@ -58,7 +65,7 @@ namespace com.vaticle.typedb.driver.Api.Databases
          * database.RuleSchema()
          * </pre>
          */
-        string RuleSchema();
+        public string RuleSchema();
 
         /**
          * Deletes this database.
@@ -68,7 +75,7 @@ namespace com.vaticle.typedb.driver.Api.Databases
          * database.Delete()
          * </pre>
          */
-        void Delete();
+        public void Delete();
 
         /**
          * Set of <code>Replica</code> instances for this database.
@@ -79,7 +86,7 @@ namespace com.vaticle.typedb.driver.Api.Databases
          * database.Replicas()
          * </pre>
          */
-        HashSet<IReplica> Replicas();
+        public HashSet<IReplica> Replicas();
 
         /**
          * Returns the primary replica for this database.
@@ -90,7 +97,7 @@ namespace com.vaticle.typedb.driver.Api.Databases
          * database.PrimaryReplica()
          * </pre>
          */
-        IReplica? PrimaryReplica();
+        public IReplica? PrimaryReplica();
 
         /**
          * Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica.
@@ -101,33 +108,33 @@ namespace com.vaticle.typedb.driver.Api.Databases
          * database.PreferredReplica()
          * </pre>
          */
-        IReplica? PreferredReplica();
+        public IReplica? PreferredReplica();
 
         /**
          * The metadata and state of an individual raft replica of a database.
          */
-        interface IReplica
+        public interface IReplica
         {
             /**
              * Retrieves the address of the server hosting this replica.
              */
-            string Address();
+            public string Address();
 
             /**
              * Checks whether this is the primary replica of the raft cluster.
              */
-            bool IsPrimary();
+            public bool IsPrimary();
 
             /**
              * Checks whether this is the preferred replica of the raft cluster.
              * If true, Operations which can be run on any replica will prefer to use this replica.
              */
-            bool IsPreferred();
+            public bool IsPreferred();
 
             /**
              * The raft protocol ‘term’ of this replica.
              */
-            long Term();
+            public long Term();
         }
     }
 }

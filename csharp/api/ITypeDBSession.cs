@@ -23,11 +23,13 @@ using System;
 using System.Collections.Generic;
 
 using com.vaticle.typedb.driver.pinvoke;
-//using com.vaticle.typedb.driver.Common.Exception;
+using com.vaticle.typedb.driver.Common.Exception;
 
 namespace com.vaticle.typedb.driver.Api
 {
-    public interface ITypeDBSession: IDisposable
+    using SessionTypeNativeToOwn = Dictionary<pinvoke.SessionType, ITypeDBSession.SessionType>;
+
+    public interface ITypeDBSession : IDisposable
     {
 
         /**
@@ -43,7 +45,7 @@ namespace com.vaticle.typedb.driver.Api
         /**
          * The current session’s type (Schema or Data).
          */
-        Type SessionType();
+        SessionType Type();
 
         /**
          * Returns the name of the database of the session.
@@ -63,9 +65,9 @@ namespace com.vaticle.typedb.driver.Api
         /**
          * Opens a transaction on the database connected to the session with default options.
          *
-         * @see ITypeDBSession#Transaction(ITypeDBTransaction.Type, TypeDBOptions)
+         * @see ITypeDBSession#Transaction(ITypeDBTransaction.TransactionType, TypeDBOptions)
          */
-        ITypeDBTransaction Transaction(ITypeDBTransaction.Type type);
+        ITypeDBTransaction Transaction(ITypeDBTransaction.TransactionType type);
 
         /**
          * Opens a transaction to perform read or write queries on the database connected to the session.
@@ -78,7 +80,7 @@ namespace com.vaticle.typedb.driver.Api
          * @param type The type of transaction to be created (READ or WRITE)
          * @param options Options for the session
          */
-        ITypeDBTransaction Transaction(ITypeDBTransaction.Type type, TypeDBOptions options);
+        ITypeDBTransaction Transaction(ITypeDBTransaction.TransactionType type, TypeDBOptions options);
 
         /**
          * Registers a callback function which will be executed when this session is closed.
@@ -99,7 +101,7 @@ namespace com.vaticle.typedb.driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * session.onReopen(function)
+         * session.OnReopen(function)
          * </pre>
          *
          * @param function The callback function.
@@ -121,21 +123,21 @@ namespace com.vaticle.typedb.driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * driver.Session(database, ITypeDBSession.Type.Schema);
+         * driver.Session(database, ITypeDBSession.SessionType.Value.Schema);
          * </pre>
          */
-        public struct Type
+        public struct SessionType
         {
-            public enum Value: int
+            public enum Value : int
             {
                 Data = 0,
                 Schema = 1
             }
 
-            public static Type Of(pinvoke.SessionType sessionType)
+            static SessionType Of(pinvoke.SessionType sessionType)
             {
-                Type resultType;
-                if (s_allNativeSessionTypesToTypes.TryGetValue(sessionType, out resultType))
+                SessionType resultType;
+                if (s_sessionTypeNativeToOwnAll.TryGetValue(sessionType, out resultType))
                 {
                     return resultType;
                 }
@@ -144,22 +146,22 @@ namespace com.vaticle.typedb.driver.Api
 //                throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
             }
 
-            public int Id() // TODO: Maybe rename to Value
+            int Id() // TODO: Maybe rename to Value
             {
                 return (int)_value;
             }
 
-            public bool IsData()
+            bool IsData()
             {
                 return !_isSchema;
             }
 
-            public bool IsSchema()
+            bool IsSchema()
             {
                 return _isSchema;
             }
 
-            private Type(Value value, pinvoke.SessionType nativeObject)
+            private SessionType(Value value, pinvoke.SessionType nativeObject)
             {
                 _value = value;
 
@@ -171,11 +173,12 @@ namespace com.vaticle.typedb.driver.Api
             private readonly bool _isSchema;
             public readonly pinvoke.SessionType NativeObject;
 
-            private static Dictionary<pinvoke.SessionType, Type> s_allNativeSessionTypesToTypes =
-            new Dictionary<pinvoke.SessionType, Type>{ // TODO:
-//                {pinvoke.SessionType.Data, new Type(Value.Data, pinvoke.SessionType.Data)},
-//                {pinvoke.SessionType.Schema, new Type(Value.Schema, pinvoke.SessionType.Schema)}
-            };
+            private static SessionTypeNativeToOwn s_sessionTypeNativeToOwnAll =
+                new SessionTypeNativeToOwn()
+                {
+                    {pinvoke.SessionType.Data, new SessionType(Value.Data, pinvoke.SessionType.Data)},
+                    {pinvoke.SessionType.Schema, new SessionType(Value.Schema, pinvoke.SessionType.Schema)}
+                };
         }
     }
 }

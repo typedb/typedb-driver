@@ -23,11 +23,13 @@ using System;
 using System.Collections.Generic;
 
 using com.vaticle.typedb.driver.Api;
-//using com.vaticle.typedb.driver.Common.Exception;
+using com.vaticle.typedb.driver.Common.Exception;
 
 namespace com.vaticle.typedb.driver.Api
 {
-    public interface ITypeDBTransaction: IDisposable
+    using TransactionTypeNativeToOwn = Dictionary<pinvoke.TransactionType, ITypeDBTransaction.TransactionType>;
+
+    public interface ITypeDBTransaction : IDisposable
     {
         /**
          * Checks whether this transaction is open.
@@ -42,12 +44,12 @@ namespace com.vaticle.typedb.driver.Api
         /**
          * The transaction’s type (Read or Write).
          */
-        Type TransactionType();
+        TransactionType Type();
 
         /**
          * The options for the transaction.
          */
-        TypeDBOptions Options();
+        public TypeDBOptions Options();
 
         /**
          * The <code>ConceptManager</code> for this transaction, providing access to all Concept API methods.
@@ -112,21 +114,21 @@ namespace com.vaticle.typedb.driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * session.Transaction(TransactionType.Read);
+         * session.Transaction(TransactionType.Value.Read);
          * </pre>
          */
-        public struct Type
+        public struct TransactionType
         {
-            public enum Value: int
+            public enum Value : int
             {
                 Read = 0,
                 Write = 1
             }
 
-            public static Type Of(pinvoke.TransactionType transactionType)
+            static TransactionType Of(pinvoke.TransactionType transactionType)
             {
-                Type resultType;
-                if (s_allNativeTransactionTypesToTypes.TryGetValue(transactionType, out resultType))
+                TransactionType resultType;
+                if (s_transactionTypeNativeToOwnAll.TryGetValue(transactionType, out resultType))
                 {
                     return resultType;
                 }
@@ -135,22 +137,22 @@ namespace com.vaticle.typedb.driver.Api
 //                throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
             }
 
-            public int Id() // TODO: Maybe rename to Value
+            int Id() // TODO: Maybe rename to Value
             {
                 return (int)_value;
             }
 
-            public bool IsRead()
+            bool IsRead()
             {
                 return !_isWrite;
             }
 
-            public bool IsWrite()
+            bool IsWrite()
             {
                 return _isWrite;
             }
 
-            public Type(Value value, pinvoke.TransactionType nativeObject)
+            private TransactionType(Value value, pinvoke.TransactionType nativeObject)
             {
                 _value = value;
                 NativeObject = nativeObject;
@@ -161,11 +163,12 @@ namespace com.vaticle.typedb.driver.Api
             private readonly bool _isWrite;
             public readonly pinvoke.TransactionType NativeObject;
 
-            private static Dictionary<pinvoke.TransactionType, Type> s_allNativeTransactionTypesToTypes =
-            new Dictionary<pinvoke.TransactionType, Type>{ // TODO:
-//                {pinvoke.TransactionType.Read, new Type(Value.Read, pinvoke.TransactionType.Read)},
-//                {pinvoke.TransactionType.Write, new Type(Value.Write, pinvoke.TransactionType.Write)}
-            };
+            private static TransactionTypeNativeToOwn s_transactionTypeNativeToOwnAll =
+                new TransactionTypeNativeToOwn()
+                {
+                    {pinvoke.TransactionType.Read, new TransactionType(Value.Read, pinvoke.TransactionType.Read)},
+                    {pinvoke.TransactionType.Write, new TransactionType(Value.Write, pinvoke.TransactionType.Write)}
+                };
         }
     }
 }

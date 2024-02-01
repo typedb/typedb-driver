@@ -19,7 +19,10 @@
  * under the License.
  */
 
+#nullable enable
+
 using System.Diagnostics;
+using System.IO;
 
 using com.vaticle.typedb.driver.pinvoke;
 using com.vaticle.typedb.driver.Common;
@@ -38,7 +41,7 @@ namespace com.vaticle.typedb.driver.Api
      * TypeDBCredential credential = new TypeDBCredential(username, password, Path.of("path/to/ca-certificate.pem"));
      * </pre>
      */
-    public class TypeDBCredential: NativeObjectWrapper<pinvoke.Credential>
+    public class TypeDBCredential : NativeObjectWrapper<pinvoke.Credential>
     {
         /**
          *
@@ -54,11 +57,11 @@ namespace com.vaticle.typedb.driver.Api
          *
          * @param username The name of the user to connect as
          * @param password The password for the user
-         * @param tlsRootCAPath Path to the CA certificate to use for authenticating server certificates.
+         * @param tlsRootCAPath Path to the CA certificate to use for authenticating server certificates
          */
-//        public TypeDBCredential(string username, string password, Path tlsRootCAPath) // TODO: Path
-//            : this(username, password, tlsRootCAPath.ToString(), true)
-//        {}
+        public TypeDBCredential(string username, string password, string? tlsRootCAPath)
+            : this(username, password, tlsRootCAPath, true)
+        {}
 
         private TypeDBCredential(string username, string password, string? tlsRootCAPath, bool tlsEnabled)
             : base(NativeCredential(username, password, tlsRootCAPath, tlsEnabled))
@@ -68,16 +71,16 @@ namespace com.vaticle.typedb.driver.Api
             string username, string password, string? tlsRootCAPath, bool tlsEnabled)
         {
             Debug.Assert(tlsEnabled || tlsRootCAPath == null);
-// TODO:
-            return pinvoke.typedb_driver.credential_new(username, password, tlsRootCAPath, tlsEnabled); // temp
-//            try
-//            {
-//                return pinvoke.credential_new(username, password, tlsRootCAPath, tlsEnabled);
-//            }
-//            catch (pinvoke.Error error)
-//            {
+            try
+            {
+                return pinvoke.typedb_driver.credential_new(username, password, tlsRootCAPath, tlsEnabled);
+            }
+            catch (pinvoke.Error error)
+            {
+            return null;
+                // TODO:
 //                throw new TypeDBDriverException(error);
-//            }
+            }
         }
     }
 }
