@@ -74,7 +74,7 @@ namespace com.vaticle.typedb.driver.Api.Database
          * driver.Databases().GetAll()
          * </pre>
          */
-        List<IDatabase> GetAll();
+        ICollection<IDatabase> GetAll();
     }
 }
 

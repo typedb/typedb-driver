@@ -33,9 +33,8 @@ namespace com.vaticle.typedb.driver.Connection
 {
     public class TypeDBDriver : NativeObjectWrapper<pinvoke.Connection>, ITypeDBDriver
     {
-    // TODO:
-//        private readonly IUserManager userMgr;
         private readonly IDatabaseManager databaseMgr;
+//        private readonly IUserManager userMgr; // TODO
 
         public TypeDBDriver(string address)
             : this(OpenCore(address))

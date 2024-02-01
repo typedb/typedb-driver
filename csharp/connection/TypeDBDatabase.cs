@@ -122,7 +122,7 @@ namespace com.vaticle.typedb.driver.Connection
             return Name();
         }
 
-        public HashSet<IDatabase.IReplica> Replicas()
+        public ICollection<IDatabase.IReplica> Replicas()
         {
             if (!NativeObject.IsOwned())
             {

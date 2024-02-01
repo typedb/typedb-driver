@@ -21,6 +21,7 @@
 
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 
 using com.vaticle.typedb.driver;
 using com.vaticle.typedb.driver.Api;
@@ -77,6 +78,17 @@ namespace com.vaticle.typedb.driver.Test.Integration
             db.Delete();
             Assert.False(dbManager.Contains(dbName));
         }
+
+        public static void CheckAllDatabases(IDatabaseManager dbManager, ICollection<string> expectedDbNames)
+        {
+            var allDbs = dbManager.GetAll();
+            Assert.AreEqual(expectedDbNames.Count, allDbs.Count);
+
+            foreach (var db in allDbs)
+            {
+                Assert.True(expectedDbNames.Contains(db.Name()));
+            }
+        }
     }
 
     [TestFixture]
@@ -90,23 +102,30 @@ namespace com.vaticle.typedb.driver.Test.Integration
         }
 
         [Test]
-        public void CreateAndDeleteDatabase()
+        public void CreateAndDeleteAndRecreateDatabase()
         {
             string expectedDbName = "hello_from_csharp";
 
             ITypeDBDriver driver = Utils.OpenConnection();
-
-            Assert.False(driver.Databases().Contains(""));
-
             IDatabaseManager dbManager = driver.Databases();
-            IDatabase db = Utils.CreateAndGetDatabase(dbManager, expectedDbName);
 
+            Assert.False(dbManager.Contains(""));
+            Utils.CheckAllDatabases(dbManager, new HashSet<string>());
+
+            IDatabase db1 = Utils.CreateAndGetDatabase(dbManager, expectedDbName);
+
+            Utils.CheckAllDatabases(dbManager, new HashSet<string>(){expectedDbName});
             Assert.False(dbManager.Contains(expectedDbName + "1"));
             Assert.False(dbManager.Contains(expectedDbName.Substring(1)));
             Assert.False(dbManager.Contains(expectedDbName.Remove(expectedDbName.Length - 1)));
             Assert.False(dbManager.Contains(""));
 
-            Utils.DeleteDatabase(dbManager, db);
+            Utils.DeleteDatabase(dbManager, db1);
+
+            IDatabase db2 = Utils.CreateAndGetDatabase(dbManager, expectedDbName);
+
+            Utils.CheckAllDatabases(dbManager, new HashSet<string>(){expectedDbName});
+            Utils.DeleteDatabase(dbManager, db2);
             Utils.CloseConnection(driver);
         }
 
@@ -122,7 +141,6 @@ namespace com.vaticle.typedb.driver.Test.Integration
 
             // TODO: This has to start failing after we implement exceptions!
             Utils.CreateDatabaseNoChecks(dbManager, expectedDbName);
-
 
             Utils.DeleteDatabase(dbManager, db1);
             Utils.CloseConnection(driver);
