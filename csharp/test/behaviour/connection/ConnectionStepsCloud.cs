@@ -39,13 +39,10 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 
         public ConnectionSteps()
             : base()
-        {
-            Console.WriteLine("CLOUD: BEFORE!");
-        }
+        {}
 
         public override void Dispose()
         {
-            Console.WriteLine("CLOUD: AFTER!");
             base.Dispose();
         }
 
@@ -111,12 +108,6 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
         public override void ConnectionDoesNotHaveAnyDatabase()
         {
             base.ConnectionDoesNotHaveAnyDatabase();
-        }
-
-        [Given(@"typedb has configuration")]
-        public void TypeDBHasConfiguration(Dictionary<string, string> map)
-        {   // TODO: Do we need it?
-            // no-op: configuration tests are only run on the backend themselves
         }
 
         private const string s_defaultUsername = "admin";

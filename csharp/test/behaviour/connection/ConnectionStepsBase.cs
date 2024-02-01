@@ -51,19 +51,16 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
             s_isBeforeAllRan = true;
         }
 
-        protected ConnectionStepsBase()
+        protected ConnectionStepsBase() // "Before"
         {
-            Console.WriteLine("BASE: BEFORE!");
             BeforeAllOnce();
 
             SessionOptions = CreateOptions().Infer(true);
             TransactionOptions = CreateOptions().Infer(true);
         }
 
-        public virtual void Dispose()
+        public virtual void Dispose() // "After"
         {
-            Console.WriteLine("BASE: AFTER!");
-
             foreach (var db in Driver.Databases().GetAll())
             {
                 db.Delete();
@@ -83,21 +80,18 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 
         public virtual void ConnectionHasBeenOpened()
         {
-            Console.WriteLine("BASE: ConnectionHasBeenOpened");
             Assert.NotNull(Driver);
             Assert.True(Driver.IsOpen());
         }
 
         public virtual void ConnectionCloses()
         {
-            Console.WriteLine("BASE: ConnectionCloses");
             Driver.Close();
             Driver = null;
         }
 
         public virtual void ConnectionDoesNotHaveAnyDatabase()
         {
-            Console.WriteLine("BASE: ConnectionDoesNotHaveAnyDatabase");
             Assert.NotNull(Driver);
             Assert.True(Driver.IsOpen());
             Assert.Equal(0, Driver.Databases().GetAll().Count);

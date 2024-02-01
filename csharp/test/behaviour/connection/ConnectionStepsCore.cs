@@ -39,13 +39,10 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 
         public ConnectionSteps()
             : base()
-        {
-            Console.WriteLine("CORE: BEFORE!");
-        }
+        {}
 
         public override void Dispose()
         {
-            Console.WriteLine("CORE: AFTER!");
             base.Dispose();
         }
 
@@ -65,7 +62,6 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
         [When(@"connection opens with default authentication")]
         public override void ConnectionOpensWithDefaultAuthentication()
         {
-            Console.WriteLine("CORE: ConnectionOpensWithDefaultAuthentication");
             Driver = CreateTypeDBDriver(TypeDB.s_DefaultAddress);
         }
 
