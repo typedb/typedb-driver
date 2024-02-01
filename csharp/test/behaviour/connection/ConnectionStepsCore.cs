@@ -21,7 +21,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using Xunit.Gherkin.Quick;
 
 using com.vaticle.typedb.driver;
@@ -35,28 +34,19 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
         protected override void BeforeAllOnce()
         {
             base.BeforeAllOnce();
-            // TODO:
-//            try
-//            {
-//                TypeDBCoreRunner typeDBCoreRunner = new TypeDBCoreRunner(serverOptions);
-//                TypeDBSingleton.setTypeDBRunner(typeDBCoreRunner);
-//                typeDBCoreRunner.start();
-//            }
-//            catch (InterruptedException | java.util.concurrent.TimeoutException | java.io.IOException e)
-//            {
-//                e.printStackTrace();
-//            }
-            Console.WriteLine("CORE Before All!");
+            Console.WriteLine("CORE: This method could be used to set some global things up once!");
         }
 
         public ConnectionSteps()
             : base()
-        {Console.WriteLine("Core constr!");}
+        {
+            Console.WriteLine("CORE: BEFORE!");
+        }
 
         public override void Dispose()
         {
+            Console.WriteLine("CORE: AFTER!");
             base.Dispose();
-            Console.WriteLine("Core Dispose!");
         }
 
         public override ITypeDBDriver CreateTypeDBDriver(string address)
@@ -68,15 +58,15 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
         [When(@"typedb starts")]
         public override void TypeDBStarts()
         {
-            base.TypeDBStarts();
+            Console.WriteLine("CORE: TypeDB Starts, nothing here for now..."); // TODO
         }
 
         [Given(@"connection opens with default authentication")]
         [When(@"connection opens with default authentication")]
         public override void ConnectionOpensWithDefaultAuthentication()
         {
-//            Driver = CreateTypeDBDriver(TypeDBSingleton.GetTypeDBRunner().Address());
-            Console.WriteLine("Core: ConnectionOpensWithDefaultAuthentication");
+            Console.WriteLine("CORE: ConnectionOpensWithDefaultAuthentication");
+            Driver = CreateTypeDBDriver(TypeDB.s_DefaultAddress);
         }
 
         [Given(@"connection has been opened")]

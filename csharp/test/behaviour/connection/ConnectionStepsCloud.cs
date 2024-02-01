@@ -21,10 +21,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using Xunit.Gherkin.Quick;
 
 using com.vaticle.typedb.driver;
+using com.vaticle.typedb.driver.Api;
 using com.vaticle.typedb.driver.Test.Behaviour.Connection;
 
 namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
@@ -34,44 +34,24 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
         protected override void BeforeAllOnce()
         {
             base.BeforeAllOnce();
-//            TypeDBCloudRunner cloudRunner = TypeDBCloudRunner.create(Paths.get("."), 1, serverOptions);
-//            TypeDBSingleton.setTypeDBRunner(cloudRunner);
-//            cloudRunner.start();
-            Console.WriteLine("CLOUD Before All!");
+            Console.WriteLine("CLOUD: This method could be used to set some global things up once!");
         }
 
         public ConnectionSteps()
             : base()
-        {Console.WriteLine("CLOUD Constr!");}
+        {
+            Console.WriteLine("CLOUD: BEFORE!");
+        }
 
         public override void Dispose()
         {
+            Console.WriteLine("CLOUD: AFTER!");
             base.Dispose();
-
-//            driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address());
-//            driver.users().all().forEach(user -> {
-//                if (!user.username().equals("admin")) {
-//                    driver.users().delete(user.username());
-//                }
-//            });
-//
-//            driver.close();
-//            try
-//            {
-//                // sleep for eventual consistency to catch up with database deletion on all servers
-//                Thread.sleep(100);
-//            }
-//            catch (InterruptedException e)
-//            {
-//                throw new RuntimeException(e);
-//            }
-
-            Console.WriteLine("CLOUD Dispose!");
         }
 
         public override ITypeDBDriver CreateTypeDBDriver(string address)
         {
-            return CreateTypeDBDriver(address, "admin", "password", false);
+            return CreateTypeDBDriver(address, s_defaultUsername, s_defaultPassword, false);
         }
 
         private ITypeDBDriver CreateTypeDBDriver(string address, string username, string password, bool tlsEnabled)
@@ -83,35 +63,35 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
         [When(@"typedb starts")]
         public override void TypeDBStarts()
         {
-            base.TypeDBStarts();
+            Console.WriteLine("CLOUD: TypeDB Starts, nothing here for now..."); // TODO
         }
 
         [Given(@"connection opens with default authentication")]
         [When(@"connection opens with default authentication")]
         public override void ConnectionOpensWithDefaultAuthentication()
         {
-//            driver = CreateTypeDBDriver(TypeDBSingleton.GetTypeDBRunner().Address());
-            Console.WriteLine("Cloud: ConnectionOpensWithDefaultAuthentication");
+            Console.WriteLine("CLOUD: ConnectionOpensWithDefaultAuthentication");
+            Driver = CreateTypeDBDriver(TypeDB.s_DefaultAddress);
         }
 
         [When(@"connection opens with authentication: {word}, {word}")]
         public void ConnectionOpensWithAuthentication(string username, string password)
         {
-//            if (driver != null)
-//            {
-//                driver.close();
-//                driver = null;
-//            }
-//
-//            driver = CreateTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address(), username, password, false);
-            Console.WriteLine("Cloud: ConnectionOpensWithAuthentication");
+            Console.WriteLine("CLOUD: ConnectionOpensWithAuthentication");
+            if (Driver != null)
+            {
+                Driver.Close();
+                Driver = null;
+            }
+
+            Driver = CreateTypeDBDriver(TypeDB.s_DefaultAddress, username, password, false);
         }
 
         [When(@"connection opens with authentication: {word}, {word}; throws exception")]
         public void ConnectionOpensWithAuthenticationThrowsException(string username, string password)
         {
+            Console.WriteLine("CLOUD: ConnectionOpensWithAuthenticationThrowsException");
 //            assertThrows(() -> createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address(), username, password, false));
-            Console.WriteLine("Cloud: ConnectionOpensWithAuthenticationThrowsException");
         }
 
         [Given(@"connection has been opened")]
@@ -138,5 +118,8 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
         {   // TODO: Do we need it?
             // no-op: configuration tests are only run on the backend themselves
         }
+
+        private const string s_defaultUsername = "admin";
+        private const string s_defaultPassword = "password";
     }
 }
