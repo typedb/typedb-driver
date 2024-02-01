@@ -21,7 +21,10 @@
 
 package(default_visibility = ["//visibility:public"])
 
+load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
+load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+
 
 csharp_library(
     name = "connection",
@@ -30,18 +33,21 @@ csharp_library(
             "*.cs",
             "*/*.cs",
         ],
-        exclude = ["test/**"],
     ),
     deps = [
-        # Internal dependencies
         "//csharp/api",
         "//csharp/common",
-        "//csharp/concept",
-        "//csharp/logic",
-        "//csharp/query",
-        "//csharp/user",
+#        "//csharp/concept",
+#        "//csharp/logic",
+#        "//csharp/query",
+#        "//csharp/user",
+
+        "//csharp:typedb_driver_pinvoke",
     ],
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
 )
+
 
 checkstyle_test(
     name = "checkstyle",

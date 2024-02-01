@@ -30,11 +30,12 @@ using com.vaticle.typedb.driver.Test.Behaviour.Connection;
 
 namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 {
-    public class ConnectionSteps: ConnectionStepsBase
+    public class ConnectionSteps : ConnectionStepsBase
     {
         protected override void BeforeAllOnce()
         {
             base.BeforeAllOnce();
+            // TODO:
 //            try
 //            {
 //                TypeDBCoreRunner typeDBCoreRunner = new TypeDBCoreRunner(serverOptions);
@@ -58,10 +59,9 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
             Console.WriteLine("Core Dispose!");
         }
 
-// TODO: Void instead of ITypeDBDriver for now
-        public override void CreateTypeDBDriver(string address)
+        public override ITypeDBDriver CreateTypeDBDriver(string address)
         {
-//            return TypeDB.CoreDriver(address);
+            return TypeDB.CoreDriver(address);
         }
 
         [Given(@"typedb starts")]
@@ -75,7 +75,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
         [When(@"connection opens with default authentication")]
         public override void ConnectionOpensWithDefaultAuthentication()
         {
-//            driver = CreateTypeDBDriver(TypeDBSingleton.GetTypeDBRunner().Address());
+//            Driver = CreateTypeDBDriver(TypeDBSingleton.GetTypeDBRunner().Address());
             Console.WriteLine("Core: ConnectionOpensWithDefaultAuthentication");
         }
 

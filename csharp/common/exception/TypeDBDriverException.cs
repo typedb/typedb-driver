@@ -19,28 +19,38 @@
  * under the License.
  */
 
+using System;
+using System.Diagnostics;
+
 using com.vaticle.typedb.driver.pinvoke;
-using com.vaticle.typedb.driver.Common.Exception;
 
-namespace com.vaticle.typedb.driver.Common
+/**
+ * Exceptions raised by the driver.
+ */
+namespace com.vaticle.typedb.driver.Common.Exception
 {
-    public abstract class NativeObjectWrapper<T>
+    public class TypeDBDriverException : System.Exception
     {
-        public readonly T? NativeObject;
-
-        static NativeObjectWrapper()
+        /**
+         * @hidden
+         */
+        public TypeDBDriverException()
         {
-            pinvoke.typedb_driver.init_logging();
         }
 
-        protected NativeObjectWrapper(T? NativeObject)
+        /**
+         * @hidden
+         */
+        public TypeDBDriverException(string message)
+            : base(message)
         {
-            if (NativeObject == null)
-            {
-//                throw new TypeDBDriverException(ErrorMessage.Internal.NULL_NATIVE_VALUE);
-            }
+        }
 
-            this.NativeObject = NativeObject;
+        public TypeDBDriverException(pinvoke.Error nativeError)
+            : base(nativeError.Message)
+        {
+            Debug.Assert(Message.Contains("%s"));
+//            this.message = null;
         }
     }
 }

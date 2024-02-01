@@ -33,7 +33,7 @@ csharp_library(
         ],
         exclude = ["test/**"],
     ),
-    deps = ["//csharp:typedb_driver_pinvoke",],
+    deps = ["//csharp:typedb_driver_pinvoke"],
     runtime_identifier = "any",
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,

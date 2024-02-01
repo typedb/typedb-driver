@@ -23,48 +23,6 @@ load(":build_opts.bzl", "target_frameworks", "targeting_packs")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":rules.bzl", "swig_native_csharp_library")
 
-csharp_library(
-    name = "hello-lib",
-    srcs = ["Lib.cs"],
-    runtime_identifier = "any",
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-)
-
-csharp_binary(
-    name = "hello",
-    srcs = ["Hello.cs"],
-    runtime_identifier = "any",
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-    deps = [":hello-lib"],
-)
-
-checkstyle_test(
-    name = "checkstyle",
-    size = "small",
-    include = glob(["*"]),
-    exclude = glob([
-        "README.md",
-        "docs/**/*.adoc",
-    ]),
-    license_type = "apache-header",
-)
-
-# The following code is the WIP for the actual build file.
-
-csharp_library(
-    name = "driver-csharp",
-    srcs = glob(["*.cs"]),
-    resources = ["//:LICENSE"],
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-    deps = [
-        # Internal dependencies
-        "//csharp/api",
-        "//csharp/connection",
-    ],
-)
 
 swig_native_csharp_library(
     name = "typedb_driver_pinvoke",
@@ -84,6 +42,54 @@ swig_native_csharp_library(
 #        "@vaticle_bazel_distribution//platform:is_windows_x86_64": "windows-x86_64",
 #    },
 )
+
+
+csharp_library(
+    name = "driver-csharp",
+    srcs = glob(["*.cs"]),
+    resources = ["//:LICENSE"],
+    deps = [
+        "//csharp/api",
+        "//csharp/common",
+        "//csharp/connection",
+        "//csharp:typedb_driver_pinvoke",
+    ],
+    visibility = ["//visibility:public"],
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
+)
+
+
+checkstyle_test(
+    name = "checkstyle",
+    size = "small",
+    include = glob(["*"]),
+    exclude = glob([
+        "README.md",
+        "docs/**/*.adoc",
+    ]),
+    license_type = "apache-header",
+)
+
+
+## TODO: POC, remove later:
+csharp_library(
+    name = "hello-lib",
+    srcs = ["Lib.cs"],
+    runtime_identifier = "any",
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
+)
+
+csharp_binary(
+    name = "hello",
+    srcs = ["Hello.cs"],
+    runtime_identifier = "any",
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
+    deps = [":hello-lib"],
+)
+
 
 # Test binary just for testing the dependencies!
 csharp_binary(

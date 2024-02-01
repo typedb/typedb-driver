@@ -20,41 +20,43 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 
 using com.vaticle.typedb.driver.pinvoke;
-using com.vaticle.typedb.driver.Api.Databases;
-// TODO:
-//using com.vaticle.typedb.driver.Common;
-//using com.vaticle.typedb.driver.Common.Exception;
+using com.vaticle.typedb.driver.Api.Database;
+using com.vaticle.typedb.driver.Common;
+using com.vaticle.typedb.driver.Common.Exception;
 
 namespace com.vaticle.typedb.driver.Connection
 {
-    public class TypeDBDatabase: NativeObjectWrapper<pinvoke.Database>, IDatabase
+    public class TypeDBDatabase : NativeObjectWrapper<pinvoke.Database>, IDatabase
     {
         public TypeDBDatabase(pinvoke.Database database)
             : base(database)
         {}
 
-        public override string Name()
+        public string Name()
         {
             if (!NativeObject.IsOwned())
             {
-                throw new TypeDBDriverException(DATABASE_DELETED);
+            // TODO:
+//                throw new TypeDBDriverException(DATABASE_DELETED);
             }
 
-            return pinvoke.database_get_name(NativeObject);
+            return pinvoke.typedb_driver.database_get_name(NativeObject);
         }
 
-        public override string Schema()
+        public string Schema()
         {
             if (!NativeObject.IsOwned())
             {
-                throw new TypeDBDriverException(DATABASE_DELETED);
+            // TODO:
+//                throw new TypeDBDriverException(DATABASE_DELETED);
             }
 
             try
             {
-                return pinvoke.database_schema(NativeObject);
+                return pinvoke.typedb_driver.database_schema(NativeObject);
             }
             catch (pinvoke.Error e)
             {
@@ -62,16 +64,17 @@ namespace com.vaticle.typedb.driver.Connection
             }
         }
 
-        public override string TypeSchema()
+        public string TypeSchema()
         {
             if (!NativeObject.IsOwned())
             {
-                throw new TypeDBDriverException(DATABASE_DELETED);
+            // TODO:
+//                throw new TypeDBDriverException(DATABASE_DELETED);
             }
 
             try
             {
-                return database_type_schema(NativeObject);
+                return pinvoke.typedb_driver.database_type_schema(NativeObject);
             }
             catch (pinvoke.Error e)
             {
@@ -79,16 +82,16 @@ namespace com.vaticle.typedb.driver.Connection
             }
         }
 
-        public override string RuleSchema()
+        public string RuleSchema()
         {
             if (!NativeObject.IsOwned())
-            {
-                throw new TypeDBDriverException(DATABASE_DELETED);
+            {// TODO:
+//                throw new TypeDBDriverException(DATABASE_DELETED);
             }
 
             try
             {
-                return database_rule_schema(NativeObject);
+                return pinvoke.typedb_driver.database_rule_schema(NativeObject);
             }
             catch (pinvoke.Error e)
             {
@@ -96,17 +99,17 @@ namespace com.vaticle.typedb.driver.Connection
             }
         }
 
-        public override void Delete()
+        public void Delete()
         {
             if (!NativeObject.IsOwned())
             {
-                throw new TypeDBDriverException(DATABASE_DELETED);
+            // TODO:
+//                throw new TypeDBDriverException(DATABASE_DELETED);
             }
 
             try
             {
-                // NOTE: .released() relinquishes ownership of the native object to the Rust side
-                database_delete(NativeObject.released());
+                pinvoke.typedb_driver.database_delete(NativeObject.Released());
             }
             catch (pinvoke.Error e)
             {
@@ -119,42 +122,29 @@ namespace com.vaticle.typedb.driver.Connection
             return Name();
         }
 
-        public override HashSet<Database.IReplica> Replicas()
+        public HashSet<IDatabase.IReplica> Replicas()
         {
             if (!NativeObject.IsOwned())
             {
-                throw new TypeDBDriverException(DATABASE_DELETED);
-            }
-
             // TODO:
-            return HashSet<Database.IReplica>();
-//            return new NativeIterator<>(database_get_replicas_info(NativeObject)).stream().map(Replica::new).collect(Collectors.toSet());
+//                throw new TypeDBDriverException(DATABASE_DELETED);
+            }
+
+            return new NativeEnumerable<pinvoke.ReplicaInfo>(
+                pinvoke.typedb_driver.database_get_replicas_info(NativeObject))
+                .Select(obj => new Replica(obj))
+                .ToHashSet<IDatabase.IReplica>();
         }
 
-        public override IReplica? PrimaryReplica() 
+        public IDatabase.IReplica? PrimaryReplica()
         {
             if (!NativeObject.IsOwned())
             {
-                throw new TypeDBDriverException(DATABASE_DELETED);
+            // TODO:
+//                throw new TypeDBDriverException(DATABASE_DELETED);
             }
 
-            pinvoke.ReplicaInfo replicaInfo = database_get_primary_replica_info(NativeObject);
-            if (replicaInfo == null)
-            {
-                return null
-            }
-
-            return new Replica(replicaInfo);
-        }
-
-        public override IReplica? PreferredReplica() 
-        {
-            if (!NativeObject.IsOwned())
-            {
-                throw new TypeDBDriverException(DATABASE_DELETED);
-            }
-            
-            pinvoke.ReplicaInfo replicaInfo = database_get_preferred_replica_info(NativeObject);
+            pinvoke.ReplicaInfo replicaInfo = pinvoke.typedb_driver.database_get_primary_replica_info(NativeObject);
             if (replicaInfo == null)
             {
                 return null;
@@ -163,30 +153,47 @@ namespace com.vaticle.typedb.driver.Connection
             return new Replica(replicaInfo);
         }
 
-        public static class Replica: NativeObjectWrapper<pinvoke.ReplicaInfo>, Database.IReplica
+        public IDatabase.IReplica? PreferredReplica()
         {
-            Replica(pinvoke.ReplicaInfo replicaInfo)
+            if (!NativeObject.IsOwned())
+            {
+            // TODO:
+//                throw new TypeDBDriverException(DATABASE_DELETED);
+            }
+            
+            pinvoke.ReplicaInfo replicaInfo = pinvoke.typedb_driver.database_get_preferred_replica_info(NativeObject);
+            if (replicaInfo == null)
+            {
+                return null;
+            }
+
+            return new Replica(replicaInfo);
+        }
+
+        public class Replica : NativeObjectWrapper<pinvoke.ReplicaInfo>, IDatabase.IReplica
+        {
+            public Replica(pinvoke.ReplicaInfo replicaInfo)
                 : base(replicaInfo)
             {}
 
-            public override string Address()
+            public string Address()
             {
-                return pinvoke.replica_info_get_address(NativeObject);
+                return pinvoke.typedb_driver.replica_info_get_address(NativeObject);
             }
 
-            public override bool IsPrimary()
+            public bool IsPrimary()
             {
-                return pinvoke.replica_info_is_primary(NativeObject);
+                return pinvoke.typedb_driver.replica_info_is_primary(NativeObject);
             }
 
-            public override bool IsPreferred()
+            public bool IsPreferred()
             {
-                return pinvoke.replica_info_is_preferred(NativeObject);
+                return pinvoke.typedb_driver.replica_info_is_preferred(NativeObject);
             }
 
-            public override long Term()
+            public long Term()
             {
-                return pinvoke.replica_info_get_term(NativeObject);
+                return pinvoke.typedb_driver.replica_info_get_term(NativeObject);
             }
         }
     }

@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Xunit;
 using Xunit.Gherkin.Quick;
 
 using com.vaticle.typedb.driver;
@@ -31,16 +32,17 @@ using com.vaticle.typedb.driver.Test.Behaviour.Connection;
 
 namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 {
-    public abstract class ConnectionStepsBase: Feature, IDisposable
+    public abstract class ConnectionStepsBase : Feature, IDisposable
     {
         // TODO: ThreadPool is static and doesn't seem to require setting specific value!
 //        public static int ThreadPoolSize = 32;
         public static ITypeDBDriver Driver;
         public static List<ITypeDBSession> Sessions = new List<ITypeDBSession>();
 //        public static List<CompletableFuture<TypeDBSession>> sessionsParallel = new ArrayList<>();
-//        public static Dictionary<TypeDBSession, List<TypeDBTransaction>> sessionsToTransactions = new HashMap<>();
-//        public static Dictionary<TypeDBSession, List<CompletableFuture<TypeDBTransaction>>> sessionsToTransactionsParallel = new HashMap<>();
-//        public static Dictionary<CompletableFuture<TypeDBSession>, List<CompletableFuture<TypeDBTransaction>>> sessionsParallelToTransactionsParallel = new HashMap<>();
+        public static Dictionary<ITypeDBSession, List<ITypeDBTransaction>> SessionsToTransactions =
+            new Dictionary<ITypeDBSession, List<ITypeDBTransaction>>();
+//        public static Dictionary<TypeDBSession, List<CompletableFuture<TypeDBTransaction>>> SessionsToTransactionsParallel = new HashMap<>();
+//        public static Dictionary<CompletableFuture<TypeDBSession>, List<CompletableFuture<TypeDBTransaction>>> SessionsParallelToTransactionsParallel = new HashMap<>();
         public static TypeDBOptions SessionOptions;
         public static TypeDBOptions TransactionOptions;
         private static bool s_isBeforeAllRan = false;
@@ -51,14 +53,14 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 //        );
 
         public static readonly Dictionary<string, string> ServerOptions =
-        new Dictionary<string, string>{
-            {"--diagnostics.reporting.enable", "false"},
-        };
+            new Dictionary<string, string>{
+                {"--diagnostics.reporting.enable", "false"},
+            };
 
-//        public static TypeDBTransaction Tx()
-//        {
-//            return SessionsToTransactions.Get(sessions.get(0)).get(0);
-//        }
+        public static ITypeDBTransaction Tx()
+        {
+            return SessionsToTransactions[Sessions[0]][0];
+        }
 
         protected ConnectionStepsBase()
         {
@@ -103,7 +105,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
             Console.WriteLine("ConnectionSteps.After");
         }
 
-        public abstract void CreateTypeDBDriver(string address);
+        public abstract ITypeDBDriver CreateTypeDBDriver(string address);
 
         internal TypeDBOptions CreateOptions()
         {
@@ -124,8 +126,8 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 
         public virtual void ConnectionHasBeenOpened()
         {
-//            assertNotNull(driver);
-//            assertTrue(driver.isOpen());
+            Assert.NotNull(Driver);
+            Assert.True(Driver.IsOpen());
 Console.WriteLine("ConnectionSteps.ConnectionHasBeenOpened");
         }
 
@@ -138,9 +140,9 @@ Console.WriteLine("ConnectionSteps.ConnectionHasBeenOpened");
 
         public virtual void ConnectionDoesNotHaveAnyDatabase()
         {
-//            assertNotNull(driver);
-//            assertTrue(driver.isOpen());
-//            assertTrue(driver.databases().all().isEmpty());
+            Assert.NotNull(Driver);
+            Assert.True(Driver.IsOpen());
+            Assert.Equal(Driver.Databases().All().Count, 0);
 Console.WriteLine("ConnectionSteps.ConnectionDoesNotHaveAnyDatabase");
         }
     }

@@ -19,149 +19,185 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.connection;
+using System;
+using System.Collections.Generic;
 
-import com.vaticle.typedb.driver.api.TypeDBOptions;
-import com.vaticle.typedb.driver.api.TypeDBTransaction;
-import com.vaticle.typedb.driver.api.concept.ConceptManager;
-import com.vaticle.typedb.driver.api.logic.LogicManager;
-import com.vaticle.typedb.driver.api.query.QueryManager;
-import com.vaticle.typedb.driver.common.NativeObject;
-import com.vaticle.typedb.driver.common.exception.TypeDBDriverException;
-import com.vaticle.typedb.driver.concept.ConceptManagerImpl;
-import com.vaticle.typedb.driver.logic.LogicManagerImpl;
-import com.vaticle.typedb.driver.query.QueryManagerImpl;
+using com.vaticle.typedb.driver.pinvoke;
+using com.vaticle.typedb.driver.Api;
+using com.vaticle.typedb.driver.Api.Database;
+using com.vaticle.typedb.driver.Common;
+using com.vaticle.typedb.driver.Common.Exception;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
-import static com.vaticle.typedb.driver.common.exception.ErrorMessage.Driver.TRANSACTION_CLOSED;
-import static pinvoke.typedb_driver.transaction_commit;
-import static pinvoke.typedb_driver.transaction_force_close;
-import static pinvoke.typedb_driver.transaction_is_open;
-import static pinvoke.typedb_driver.transaction_new;
-import static pinvoke.typedb_driver.transaction_on_close;
-import static pinvoke.typedb_driver.transaction_rollback;
+namespace com.vaticle.typedb.driver.Connection
+{
+    public class TypeDBTransaction : NativeObjectWrapper<pinvoke.Transaction>, ITypeDBTransaction
+    {
+        private readonly ITypeDBTransaction.TransactionType _type;
+        private readonly TypeDBOptions _options;
 
 // TODO:
-public class TypeDBTransactionImpl extends NativeObject<pinvoke.Transaction> implements TypeDBTransaction {
-    private final TypeDBTransaction.Type type;
-    private final TypeDBOptions options;
+//        private readonly IConceptManager _conceptManager;
+//        private readonly ILogicManager _logicManager;
+//        private readonly IQueryManager _queryManager;
 
-    private final ConceptManager conceptManager;
-    private final LogicManager logicManager;
-    private final QueryManager queryManager;
+        private readonly List<TransactionOnClose> _callbacks;
 
-    private final List<TransactionOnClose> callbacks;
+        public TypeDBTransaction(TypeDBSession session, ITypeDBTransaction.TransactionType type, TypeDBOptions options)
+            : base(NewNative(session, type, options))
+        {
+            _type = type;
+            _options = options;
 
-    TypeDBTransactionImpl(TypeDBSessionImpl session, Type type, TypeDBOptions options) {
-        super(newNative(session, type, options));
-        this.type = type;
-        this.options = options;
+//            _conceptManager = new ConceptManager(NativeObject);
+//            _logicManager = new LogicManager(NativeObject);
+//            _queryManager = new QueryManager(NativeObject);
 
-        conceptManager = new ConceptManagerImpl(NativeObject);
-        logicManager = new LogicManagerImpl(NativeObject);
-        queryManager = new QueryManagerImpl(NativeObject);
-
-        callbacks = new ArrayList<>();
-    }
-
-    private static pinvoke.Transaction newNative(TypeDBSessionImpl session, Type type, TypeDBOptions options) {
-        try {
-            return transaction_new(session.NativeObject, type.NativeObject, options.NativeObject);
-        } catch (pinvoke.Error e) {
-            throw new TypeDBDriverException(e);
+            _callbacks = new List<TransactionOnClose>();
         }
-    }
 
-    @Override
-    public Type type() {
-        return type;
-    }
-
-    @Override
-    public TypeDBOptions options() {
-        return options;
-    }
-
-    @Override
-    public boolean isOpen() {
-        if (!NativeObject.isOwned()) return false;
-        else return transaction_is_open(NativeObject);
-    }
-
-    @Override
-    public ConceptManager concepts() {
-        return conceptManager;
-    }
-
-    @Override
-    public LogicManager logic() {
-        return logicManager;
-    }
-
-    @Override
-    public QueryManager query() {
-        return queryManager;
-    }
-
-    @Override
-    public void onClose(Consumer<Throwable> function) {
-        if (!NativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        try {
-            TransactionOnClose callback = new TransactionOnClose(function);
-            callbacks.add(callback);
-            transaction_on_close(NativeObject, callback.released());
-        } catch (pinvoke.Error error) {
-            throw new TypeDBDriverException(error);
-        }
-    }
-
-    @Override
-    public void commit() {
-        if (!NativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        try {
-            // NOTE: .released() relinquishes ownership of the native object to the Rust side
-            transaction_commit(NativeObject.released()).get();
-        } catch (pinvoke.Error.Unchecked e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    @Override
-    public void rollback() {
-        if (!NativeObject.isOwned()) throw new TypeDBDriverException(TRANSACTION_CLOSED);
-        try {
-            transaction_rollback(NativeObject).get();
-        } catch (pinvoke.Error.Unchecked e) {
-            throw new TypeDBDriverException(e);
-        }
-    }
-
-    @Override
-    public void close() {
-        if (NativeObject.isOwned()) {
-            try {
-                transaction_force_close(NativeObject);
-            } catch (pinvoke.Error error) {
-                throw new TypeDBDriverException(error);
-            } finally {
-                callbacks.clear();
+        private static pinvoke.Transaction NewNative(
+            TypeDBSession session, ITypeDBTransaction.TransactionType type, TypeDBOptions options)
+        {
+            try
+            {
+                return pinvoke.typedb_driver.transaction_new(
+                    session.NativeObject, type.NativeObject, options.NativeObject);
+            }
+            catch (pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
             }
         }
-    }
 
-    static class TransactionOnClose extends pinvoke.TransactionCallbackDirector {
-        private final Consumer<Throwable> function;
-
-        public TransactionOnClose(Consumer<Throwable> function) {
-            this.function = function;
+        public ITypeDBTransaction.TransactionType Type()
+        {
+            return _type;
         }
 
-        @Override
-        public void callback(pinvoke.Error e) {
-            function.accept(e);
+        public TypeDBOptions Options()
+        {
+            return _options;
+        }
+
+        public bool IsOpen()
+        {
+            if (!NativeObject.IsOwned())
+            {
+                return false;
+            }
+
+            return pinvoke.typedb_driver.transaction_is_open(NativeObject);
+        }
+// TODO:
+//        public IConceptManager Concepts()
+//        {
+//            return _conceptManager;
+//        }
+//
+//        public ILogicManager Logic()
+//        {
+//            return _logicManager;
+//        }
+//
+//        public IQueryManager Query()
+//        {
+//            return _queryManager;
+//        }
+
+        public void OnClose(Action<Exception> function)
+        {
+            if (!NativeObject.IsOwned())
+            {
+            // TODO:
+//                throw new TypeDBDriverException(TRANSACTION_CLOSED);
+            }
+
+            try
+            {
+                TransactionOnClose callback = new TransactionOnClose(function);
+                _callbacks.Add(callback);
+                pinvoke.typedb_driver.transaction_on_close(NativeObject, callback.Released());
+            }
+            catch (pinvoke.Error error)
+            {
+                throw new TypeDBDriverException(error);
+            }
+        }
+
+        public void Commit()
+        {
+            if (!NativeObject.IsOwned())
+            {
+            // TODO:
+//                throw new TypeDBDriverException(TRANSACTION_CLOSED);
+            }
+
+            try
+            {
+                // TODO: released()
+//                pinvoke.typedb_driver.transaction_commit(NativeObject.released()).get();
+            }
+            catch (pinvoke.Error e)  // TODO: .Unchecked
+            {
+                throw new TypeDBDriverException(e);
+            }
+        }
+
+        public void Rollback()
+        {
+            if (!NativeObject.IsOwned())
+            {
+//                throw new TypeDBDriverException(TRANSACTION_CLOSED);
+            }
+
+            try
+            {
+                pinvoke.typedb_driver.transaction_rollback(NativeObject); // TODO: .Get() after implementing VoidPromises
+            }
+            catch (pinvoke.Error e) // TODO: .Unchecked
+            {
+                throw new TypeDBDriverException(e);
+            }
+        }
+
+        public void Close()
+        {
+            if (!NativeObject.IsOwned())
+            {
+                return;
+            }
+
+            try
+            {
+                pinvoke.typedb_driver.transaction_force_close(NativeObject);
+            }
+            catch (pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
+            }
+            finally
+            {
+                _callbacks.Clear();
+            }
+        }
+
+        public void Dispose()
+        {
+        }
+
+        private class TransactionOnClose : pinvoke.TransactionCallbackDirector
+        {
+            private readonly Action<Exception> _function;
+
+            public TransactionOnClose(Action<Exception> function)
+            {
+                _function = function;
+            }
+
+            public override void callback(pinvoke.Error e)
+            {
+                _function(e);
+            }
         }
     }
 }

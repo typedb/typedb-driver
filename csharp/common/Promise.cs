@@ -21,7 +21,7 @@
 
 using System;
 
-//using com.vaticle.typedb.driver.Common.Exception;
+using com.vaticle.typedb.driver.Common.Exception;
 
 namespace com.vaticle.typedb.driver.Common
 {
@@ -59,15 +59,14 @@ namespace com.vaticle.typedb.driver.Common
          */
         public T Resolve()
         {
-        return _inner();
-//            try
-//            {
-//                return _inner();
-//            }
-//            catch (pinvoke.Error.Unchecked e)
-//            {
-//                throw new TypeDBDriverException(e);
-//            }
+            try
+            {
+                return _inner();
+            }
+            catch (pinvoke.Error e) // TODO: .Unchecked
+            {
+                throw new TypeDBDriverException(e);
+            }
         }
 
         /**
