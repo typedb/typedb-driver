@@ -20,6 +20,7 @@
 #
 
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_library", "csharp_test")
+load("@rules_dotnet//dotnet:defs.bzl", "csharp_nunit_test")
 load("//csharp/test:build_opts.bzl", "behaviour_tests_deps")
 
 
@@ -29,6 +30,18 @@ def csharp_behaviour_test(name, steps, features, deps, target_frameworks, target
         srcs = steps + ["//csharp/test/behaviour/util:TestRunner.cs"],
         data = features,
         deps = deps + behaviour_tests_deps,
+        target_frameworks = target_frameworks,
+        targeting_packs = targeting_packs,
+        runtime_identifier = "any",
+        visibility = ["//visibility:public"],
+        **kwargs,
+    )
+
+def csharp_integration_test(name, srcs, deps, target_frameworks, targeting_packs, **kwargs):
+    csharp_nunit_test(
+        name = name,
+        srcs = srcs,
+        deps = deps,
         target_frameworks = target_frameworks,
         targeting_packs = targeting_packs,
         runtime_identifier = "any",

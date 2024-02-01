@@ -102,7 +102,7 @@ namespace com.vaticle.typedb.driver.Connection
             }
         }
 
-        public List<IDatabase> All()
+        public List<IDatabase> GetAll()
         {
             try
             {
