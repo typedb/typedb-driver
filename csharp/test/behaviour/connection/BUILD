@@ -65,6 +65,7 @@ csharp_library(
     ],
     deps = behaviour_tests_deps + [
         ":steps-base",
+        "//csharp:driver-csharp",
         "//csharp/api",
         "//csharp/common",
     ],

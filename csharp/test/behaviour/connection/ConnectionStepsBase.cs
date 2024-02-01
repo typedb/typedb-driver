@@ -34,117 +34,73 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 {
     public abstract class ConnectionStepsBase : Feature, IDisposable
     {
-        // TODO: ThreadPool is static and doesn't seem to require setting specific value!
-//        public static int ThreadPoolSize = 32;
         public static ITypeDBDriver Driver;
-        public static List<ITypeDBSession> Sessions = new List<ITypeDBSession>();
-//        public static List<CompletableFuture<TypeDBSession>> sessionsParallel = new ArrayList<>();
-        public static Dictionary<ITypeDBSession, List<ITypeDBTransaction>> SessionsToTransactions =
-            new Dictionary<ITypeDBSession, List<ITypeDBTransaction>>();
-//        public static Dictionary<TypeDBSession, List<CompletableFuture<TypeDBTransaction>>> SessionsToTransactionsParallel = new HashMap<>();
-//        public static Dictionary<CompletableFuture<TypeDBSession>, List<CompletableFuture<TypeDBTransaction>>> SessionsParallelToTransactionsParallel = new HashMap<>();
-        public static TypeDBOptions SessionOptions;
+        public static TypeDBOptions SessionOptions; // TODO: For the future tests.
         public static TypeDBOptions TransactionOptions;
         private static bool s_isBeforeAllRan = false;
 
-//        public static readonly Dictionary<string, BiConsumer<TypeDBOptions, String>> optionSetters = map(
-//                pair("session-idle-timeout-millis", (option, val) -> option.sessionIdleTimeoutMillis(Integer.parseInt(val))),
-//                pair("transaction-timeout-millis", (option, val) -> option.transactionTimeoutMillis(Integer.parseInt(val)))
-//        );
-
-        public static readonly Dictionary<string, string> ServerOptions =
-            new Dictionary<string, string>{
-                {"--diagnostics.reporting.enable", "false"},
-            };
-
-        public static ITypeDBTransaction Tx()
-        {
-            return SessionsToTransactions[Sessions[0]][0];
-        }
-
-        protected ConnectionStepsBase()
-        {
-            BeforeAllOnce();
-
-            SessionOptions = CreateOptions().Infer(true);
-            TransactionOptions = CreateOptions().Infer(true);
-
-            Console.WriteLine("ConnectionSteps.Before");
-        }
-
         protected virtual void BeforeAllOnce()
         {
+            Console.WriteLine("BASE: This method could be used to set some global things up once!");
+
             if (s_isBeforeAllRan)
             {
                 return;
             }
 
             s_isBeforeAllRan = true;
-//            TypeDBSingleton.deleteTypeDBRunner();
+        }
+
+        protected ConnectionStepsBase()
+        {
+            Console.WriteLine("BASE: BEFORE!");
+            BeforeAllOnce();
+
+            SessionOptions = CreateOptions().Infer(true);
+            TransactionOptions = CreateOptions().Infer(true);
         }
 
         public virtual void Dispose()
         {
-//            Sessions.ParallelStream().forEach(TypeDBSession::close);
-//            Sessions.Clear();
-//
-//            Stream<CompletableFuture<Void>> closures = sessionsParallel
-//                    .stream().map(futureSession -> futureSession.thenApplyAsync(session -> {
-//                        session.close();
-//                        return null;
-//                    }));
-//            CompletableFuture.allOf(closures.toArray(CompletableFuture[]::new)).join();
-//            sessionsParallel.clear();
-//            sessionsToTransactions.clear();
-//            sessionsToTransactionsParallel.clear();
-//            sessionsParallelToTransactionsParallel.clear();
-//            driver = createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address());
-//            driver.databases().all().forEach(Database::delete);
-//            driver.close();
+            Console.WriteLine("BASE: AFTER!");
 
-            Console.WriteLine("ConnectionSteps.After");
+            foreach (var db in Driver.Databases().GetAll())
+            {
+                db.Delete();
+            }
         }
 
         public abstract ITypeDBDriver CreateTypeDBDriver(string address);
 
-        internal TypeDBOptions CreateOptions()
+        private TypeDBOptions CreateOptions()
         {
             return new TypeDBOptions();
         }
 
-        public virtual void TypeDBStarts()
-        {
-            CreateTypeDBDriver(TypeDB.s_DefaultAddress);
-//            TypeDBRunner runner = TypeDBSingleton.getTypeDBRunner();
-//            if (runner != null && runner.isStopped())
-//            {
-//                runner.start();
-//            }
-            Console.WriteLine("TYPEDBSTARTS!");
-        }
+        public abstract void TypeDBStarts();
 
         public abstract void ConnectionOpensWithDefaultAuthentication();
 
         public virtual void ConnectionHasBeenOpened()
         {
+            Console.WriteLine("BASE: ConnectionHasBeenOpened");
             Assert.NotNull(Driver);
             Assert.True(Driver.IsOpen());
-Console.WriteLine("ConnectionSteps.ConnectionHasBeenOpened");
         }
 
         public virtual void ConnectionCloses()
         {
+            Console.WriteLine("BASE: ConnectionCloses");
             Driver.Close();
             Driver = null;
-            Console.WriteLine("ConnectionCloses");
         }
 
         public virtual void ConnectionDoesNotHaveAnyDatabase()
         {
+            Console.WriteLine("BASE: ConnectionDoesNotHaveAnyDatabase");
             Assert.NotNull(Driver);
             Assert.True(Driver.IsOpen());
-            Assert.Equal(Driver.Databases().All().Count, 0);
-Console.WriteLine("ConnectionSteps.ConnectionDoesNotHaveAnyDatabase");
+            Assert.Equal(0, Driver.Databases().GetAll().Count);
         }
     }
 }

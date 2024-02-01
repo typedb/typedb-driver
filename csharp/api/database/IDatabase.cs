@@ -86,7 +86,7 @@ namespace com.vaticle.typedb.driver.Api.Database
          * database.Replicas()
          * </pre>
          */
-        public HashSet<IReplica> Replicas();
+        public ICollection<IReplica> Replicas();
 
         /**
          * Returns the primary replica for this database.

@@ -18,6 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 using com.vaticle.typedb.driver.pinvoke;
 using com.vaticle.typedb.driver.Common;
 using com.vaticle.typedb.driver.Common.Exception;
