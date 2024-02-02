@@ -75,11 +75,11 @@ namespace com.vaticle.typedb.driver.Api
             {
                 return pinvoke.typedb_driver.credential_new(username, password, tlsRootCAPath, tlsEnabled);
             }
-            catch (pinvoke.Error error)
+            catch (pinvoke.Error e)
             {
             return null;
                 // TODO:
-//                throw new TypeDBDriverException(error);
+//                throw new TypeDBDriverException(e);
             }
         }
     }
