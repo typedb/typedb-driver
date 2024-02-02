@@ -19,15 +19,17 @@
 # under the License.
 #
 
+
 package(default_visibility = ["//visibility:public"])
 
+
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+
 
 csharp_library(
     name = "query",
     srcs = glob(["*.cs"], exclude=["test/**"]),
     deps = [
-        # Internal dependencies
         "//csharp/api:api",
         "//csharp/common:common",
         "//csharp/concept:concept",
@@ -35,9 +37,9 @@ csharp_library(
     ],
 )
 
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
     license_type = "apache-header",
-    size = "small",
 )
