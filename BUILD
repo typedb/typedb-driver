@@ -61,7 +61,6 @@ release_validate_deps(
     name = "release-validate-deps",
     refs = "@vaticle_typedb_driver_workspace_refs//:refs.json",
     tagged_deps = [
-        "@vaticle_typedb_common",
         "@vaticle_typeql",
     ],
     tags = ["manual"],  # in order for bazel test //... to not fail
@@ -77,6 +76,7 @@ filegroup(
         "@vaticle_dependencies//tool/ide:rust_sync",
         "@vaticle_dependencies//tool/sonarcloud:code-analysis",
         "@vaticle_dependencies//tool/unuseddeps:unused-deps",
-        "@rust_analyzer_toolchain_tools//lib/rustlib/src:rustc_srcs"
+        "@rust_analyzer_toolchain_tools//lib/rustlib/src:rustc_srcs",
+        "@vaticle_dependencies//tool/sync:dependencies",
     ],
 )

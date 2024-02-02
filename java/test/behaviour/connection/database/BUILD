@@ -36,7 +36,7 @@ java_library(
         "//java/test/behaviour/connection:steps-base",
 
         # Internal Repository Dependencies
-        "@vaticle_typedb_common//:common",
+        "@vaticle_typeql//common/java:common",
 
         # External Maven Dependencies
         "@maven//:junit_junit",

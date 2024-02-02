@@ -295,6 +295,9 @@ class ValueType(Enum):
 
     @staticmethod
     def of(value_type: Union[Object, Boolean, Long, Double, String, DateTime]) -> ValueType:
+        """
+        :meta private:
+        """
         for type_ in ValueType:
             if type_.native_object == value_type:
                 return type_

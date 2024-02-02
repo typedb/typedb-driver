@@ -32,7 +32,7 @@ java_library(
         "//java/api",
 
         # Internal Repository Dependencies
-        "@vaticle_typedb_common//:common",
+        "@vaticle_typeql//common/java:common",
 
         # External Maven Dependencies
         "@maven//:junit_junit",

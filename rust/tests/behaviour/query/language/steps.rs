@@ -90,6 +90,11 @@ generic_step_impl! {
         assert_err!(typeql_delete(context, step).await);
     }
 
+    #[step(expr = "typeql delete; throws exception containing {string}")]
+    async fn typeql_delete_throws_containing(context: &mut Context, step: &Step, exception: String) {
+        assert!(typeql_delete(context, step).await.unwrap_err().to_string().contains(&exception));
+    }
+
     #[step(expr = "typeql update")]
     async fn typeql_update(context: &mut Context, step: &Step) -> TypeDBResult {
         let parsed = parse_query(step.docstring().unwrap())?;
