@@ -23,6 +23,10 @@
 
 %include "enums.swg"
 
+//%pragma(csharp) modulecode=%{ // TODO: Using this generates even more warnings, because SWIG doesn't use explicit "?"
+//   #nullable enable
+//%}
+
 %typemap(cscode) SWIGTYPE %{
     public $csclassname Released()
     {

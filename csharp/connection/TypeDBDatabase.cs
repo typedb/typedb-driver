@@ -19,6 +19,8 @@
  * under the License.
  */
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -37,7 +39,7 @@ namespace com.vaticle.typedb.driver.Connection
 
         public string Name()
         {
-            if (!NativeObject.IsOwned())
+            if (NativeObject == null || !NativeObject.IsOwned())
             {
             // TODO:
 //                throw new TypeDBDriverException(DATABASE_DELETED);
@@ -48,7 +50,7 @@ namespace com.vaticle.typedb.driver.Connection
 
         public string Schema()
         {
-            if (!NativeObject.IsOwned())
+            if (NativeObject == null || !NativeObject.IsOwned())
             {
             // TODO:
 //                throw new TypeDBDriverException(DATABASE_DELETED);
@@ -66,7 +68,7 @@ namespace com.vaticle.typedb.driver.Connection
 
         public string TypeSchema()
         {
-            if (!NativeObject.IsOwned())
+            if (NativeObject == null || !NativeObject.IsOwned())
             {
             // TODO:
 //                throw new TypeDBDriverException(DATABASE_DELETED);
@@ -84,7 +86,7 @@ namespace com.vaticle.typedb.driver.Connection
 
         public string RuleSchema()
         {
-            if (!NativeObject.IsOwned())
+            if (NativeObject == null || !NativeObject.IsOwned())
             {// TODO:
 //                throw new TypeDBDriverException(DATABASE_DELETED);
             }
@@ -101,7 +103,7 @@ namespace com.vaticle.typedb.driver.Connection
 
         public void Delete()
         {
-            if (!NativeObject.IsOwned())
+            if (NativeObject == null || !NativeObject.IsOwned())
             {
             // TODO:
 //                throw new TypeDBDriverException(DATABASE_DELETED);
@@ -109,7 +111,7 @@ namespace com.vaticle.typedb.driver.Connection
 
             try
             {
-                pinvoke.typedb_driver.database_delete(NativeObject.Released());
+                pinvoke.typedb_driver.database_delete(NativeObject?.Released());
             }
             catch (pinvoke.Error e)
             {
@@ -124,7 +126,7 @@ namespace com.vaticle.typedb.driver.Connection
 
         public ICollection<IDatabase.IReplica> Replicas()
         {
-            if (!NativeObject.IsOwned())
+            if (NativeObject == null || !NativeObject.IsOwned())
             {
             // TODO:
 //                throw new TypeDBDriverException(DATABASE_DELETED);
@@ -138,7 +140,7 @@ namespace com.vaticle.typedb.driver.Connection
 
         public IDatabase.IReplica? PrimaryReplica()
         {
-            if (!NativeObject.IsOwned())
+            if (NativeObject == null || !NativeObject.IsOwned())
             {
             // TODO:
 //                throw new TypeDBDriverException(DATABASE_DELETED);
@@ -155,7 +157,7 @@ namespace com.vaticle.typedb.driver.Connection
 
         public IDatabase.IReplica? PreferredReplica()
         {
-            if (!NativeObject.IsOwned())
+            if (NativeObject == null || !NativeObject.IsOwned())
             {
             // TODO:
 //                throw new TypeDBDriverException(DATABASE_DELETED);
