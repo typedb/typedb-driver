@@ -48,12 +48,26 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 
         public override ITypeDBDriver CreateTypeDBDriver(string address)
         {
-            return CreateTypeDBDriver(address, s_defaultUsername, s_defaultPassword, false);
+            return CreateTypeDBDriver(address);
         }
 
-        private ITypeDBDriver CreateTypeDBDriver(string address, string username, string password, bool tlsEnabled)
+        private ITypeDBDriver CreateTypeDBDriver(
+            ICollection<string> addresses = null,
+            string username = null,
+            string password = null,
+            string certificatesPath = null)
         {
-            return TypeDB.CloudDriver(address, new TypeDBCredential(username, password, tlsEnabled));
+            return TypeDB.CloudDriver(
+                addresses ?? s_defaultAddresses,
+                new TypeDBCredential(
+                    username ?? _DefaultUsername,
+                    password ?? _DefaultPassword,
+                    certificatesPath ?? s_defaultCertificatesPath));
+        }
+
+        private ITypeDBDriver CreateTypeDBDriver(string address, string username = null, string password = null)
+        {
+            return CreateTypeDBDriver(new string[]{address}, username, password);
         }
 
         [Given(@"typedb starts")]
@@ -68,7 +82,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
         public override void ConnectionOpensWithDefaultAuthentication()
         {
             Console.WriteLine("CLOUD: ConnectionOpensWithDefaultAuthentication");
-            Driver = CreateTypeDBDriver(TypeDB.s_DefaultAddress);
+            Driver = CreateTypeDBDriver();
         }
 
         [When(@"connection opens with authentication: {word}, {word}")]
@@ -81,13 +95,14 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
                 Driver = null;
             }
 
-            Driver = CreateTypeDBDriver(TypeDB.s_DefaultAddress, username, password, false);
+            Driver = CreateTypeDBDriver(TypeDB.s_DefaultAddress, username, password);
         }
 
         [When(@"connection opens with authentication: {word}, {word}; throws exception")]
         public void ConnectionOpensWithAuthenticationThrowsException(string username, string password)
         {
             Console.WriteLine("CLOUD: ConnectionOpensWithAuthenticationThrowsException");
+            // TODO:
 //            assertThrows(() -> createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address(), username, password, false));
         }
 
@@ -110,7 +125,14 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
             base.ConnectionDoesNotHaveAnyDatabase();
         }
 
-        private const string s_defaultUsername = "admin";
-        private const string s_defaultPassword = "password";
+        private static readonly string[] s_defaultAddresses =
+        {
+            "localhost:11729",
+//            "localhost:21729", // Should run only with one address!
+//            "localhost:31729"
+        };
+        private static readonly string s_defaultCertificatesPath = Environment.GetEnvironmentVariable("ROOT_CA");
+        private const string _DefaultUsername = "admin";
+        private const string _DefaultPassword = "password";
     }
 }

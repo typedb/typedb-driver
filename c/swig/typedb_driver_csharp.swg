@@ -23,6 +23,8 @@
 
 %include "enums.swg"
 
+%include "arrays_csharp.i"
+
 //%pragma(csharp) modulecode=%{ // TODO: Using this generates even more warnings, because SWIG doesn't use explicit "?"
 //   #nullable enable
 //%}
@@ -271,44 +273,24 @@
 //%array(Concept)
 //%array(ValueType)
 
-// TODO: char** ?
-/* char** needs special handling */
-%typemap(in) char ** (jint size) {
-    int i = 0;
-    size = jenv->GetArrayLength($input);
-    $1 = (char **) malloc((size+1)*sizeof(char *));
-    /* make a copy of each string */
-    for (i = 0; i<size; i++) {
-        jstring j_string = (jstring)jenv->GetObjectArrayElement($input, i);
-        const char * c_string = jenv->GetStringUTFChars(j_string, 0);
-        $1[i] = (char*)malloc((strlen(c_string)+1)*sizeof(char));
-        strcpy($1[i], c_string);
-        jenv->ReleaseStringUTFChars(j_string, c_string);
-        jenv->DeleteLocalRef(j_string);
-    }
-    $1[i] = 0;
-}
-
-%typemap(freearg) char ** {
-    int i;
-    for (i=0; i<size$argnum-1; i++)
-        free($1[i]);
-    free($1);
-}
-
-%typemap(ctype) char ** "void*"
-%typemap(imtype) char ** "global::System.IntPtr"
-%typemap(cstype) char ** "string[]"
+%typemap(ctype) char ** "char**" // "void*" ?
+%typemap(cstype) char ** "string[]" // "global::System.IntPtr" ?
+%typemap(imtype, inattributes = "[global::System.Runtime.InteropServices.In, global::System.Runtime.InteropServices.Out, global::System.Runtime.InteropServices.MarshalAs(global::System.Runtime.InteropServices.UnmanagedType.LPArray)]") char** "string[]"
 
 %typemap(csin) char ** "$csinput"
-%typemap(csout) char ** {
+%typemap(csout) char **
+{
     return $imcall;
 }
 
+%typemap(in)      char ** "$1 = $input;" // TODO: No memory work for sure?
+%typemap(freearg) char ** "" // TODO: No memory work for sure?
+
 /* ValueType* needs special handling */
 %typemap(in) enum ValueType * {
-    if ($input >= 0) {
-        $1 = (enum ValueType *) malloc(sizeof(enum ValueType));
+    if ($input >= 0)
+    {
+        $1 = (enum ValueType *)malloc(sizeof(enum ValueType));
         *$1 = (enum ValueType)$input;
     }
 }
