@@ -24,11 +24,13 @@ load("@rules_dotnet//dotnet:defs.bzl", "csharp_nunit_test")
 load("//csharp/test:build_opts.bzl", "behaviour_tests_deps")
 
 
-def csharp_behaviour_test(name, steps, features, deps, target_frameworks, targeting_packs, **kwargs):
+def csharp_behaviour_test(name, steps, features, deps, target_frameworks, targeting_packs, add_certificates = False, **kwargs):
+    certificates = ["//tool/test/resources:certificates"] if add_certificates else []
+
     csharp_test(
         name = name,
         srcs = steps + ["//csharp/test/behaviour/util:TestRunner.cs"],
-        data = features,
+        data = features + certificates,
         deps = deps + behaviour_tests_deps,
         target_frameworks = target_frameworks,
         targeting_packs = targeting_packs,

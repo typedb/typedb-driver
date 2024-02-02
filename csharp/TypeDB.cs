@@ -60,7 +60,7 @@ namespace com.vaticle.typedb.driver
          */
         public static ITypeDBDriver CloudDriver(string address, TypeDBCredential credential)
         {
-            return CloudDriver(new HashSet<string>(){address}, credential);
+            return CloudDriver(new string[]{address}, credential);
         }
 
         /**

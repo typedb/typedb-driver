@@ -36,6 +36,7 @@ filegroup(
     ],
     visibility = [
         "//cpp/test:__subpackages__",
+        "//csharp/test:__subpackages__",
         "//common/test/encryption:__subpackages__"
     ],
 )
