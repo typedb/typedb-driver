@@ -21,7 +21,9 @@
 
 package(default_visibility = ["//visibility:public"])
 
+
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+
 
 java_library(
     name = "concept",
@@ -33,9 +35,9 @@ java_library(
     ],
 )
 
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*", "*/*"]),
     license_type = "apache-header",
-    size = "small",
 )
