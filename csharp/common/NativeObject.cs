@@ -19,6 +19,8 @@
  * under the License.
  */
 
+#nullable enable
+
 using com.vaticle.typedb.driver.pinvoke;
 using com.vaticle.typedb.driver.Common.Exception;
 

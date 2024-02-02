@@ -46,6 +46,9 @@ namespace com.vaticle.typedb.driver.Common.Exception
         {
         }
 
+        /**
+         * TODO
+         */
         public TypeDBDriverException(pinvoke.Error nativeError)
             : base(nativeError.Message)
         {

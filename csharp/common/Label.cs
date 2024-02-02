@@ -19,16 +19,19 @@
  * under the License.
  */
 
+#nullable enable
+
 namespace com.vaticle.typedb.driver.Common
 {
     /**
      * A <code>Label</code> holds the uniquely identifying name of a type.
      * <p>It consists of an optional <code>scope</code>, and a <code>name</code>, represented <code>scope:name</code>.
-     * The scope is used only used to distinguish between role-types of the same name declared in different relation types.
+     * The scope is used only used to distinguish between role-types of the same name declared in different
+     * relation types.</p>
      */
     public class Label
     {
-        private readonly string _scope;
+        private readonly string? _scope;
         private readonly string _name;
         private readonly int _hash;
 
@@ -156,10 +159,10 @@ namespace com.vaticle.typedb.driver.Common
 
         /**
          * @hidden
-         */ // TODO:
+         */ //TODO:
 //        public override int HashCode()
 //        {
-//            return hash;
+//            return _hash;
 //        }
     }
 }
