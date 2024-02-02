@@ -50,6 +50,7 @@ csharp_behaviour_test(
         "//csharp/api",
         "//csharp/common",
     ],
+    add_certificates = True,
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
 )

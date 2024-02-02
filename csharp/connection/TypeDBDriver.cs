@@ -65,11 +65,9 @@ namespace com.vaticle.typedb.driver.Connection
 
         private static pinvoke.Connection OpenCloud(ICollection<string> initAddresses, TypeDBCredential credential)
         {
-        // TODO: Implement after dealing with arrays, remove throw under this line.
-            throw new TypeDBDriverException();
             try
             {
-//                return pinvoke.typedb_driver.connection_open_cloud(initAddresses.ToArray(), credential.NativeObject);
+                return pinvoke.typedb_driver.connection_open_cloud(initAddresses.ToArray(), credential.NativeObject);
             }
             catch (pinvoke.Error e)
             {
