@@ -19,7 +19,6 @@
  * under the License.
  */
 
-
 using System.Collections.Generic;
 
 using com.vaticle.typedb.driver.pinvoke;

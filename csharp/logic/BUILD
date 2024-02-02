@@ -21,22 +21,23 @@
 
 package(default_visibility = ["//visibility:public"])
 
+
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+
 
 csharp_library(
     name = "logic",
-    srcs = glob(["*.cs"], exclude=["test/**"]),
+    srcs = glob(["*.cs"]),
     deps = [
-        # Internal dependencies
         "//csharp/api:api",
         "//csharp/common:common",
         "//csharp/concept:concept",
     ],
 )
 
+
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
     license_type = "apache-header",
-    size = "small",
 )
