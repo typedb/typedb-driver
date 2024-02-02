@@ -242,7 +242,6 @@
 %iterator(ReplicaInfo, ReplicaInfo, replica_info)
 %iterator(SchemaException, SchemaException, schema_exception)
 
-// TODO: Arrays?
 //%define %array(Type)
 //%typemap(in) Type ** (jint size) {
 //    int i = 0;
@@ -273,59 +272,58 @@
 //%array(ValueType)
 
 // TODO: char** ?
-///* char** needs special handling */
-//%typemap(in) char ** (jint size) {
-//    int i = 0;
-//    size = jenv->GetArrayLength($input);
-//    $1 = (char **) malloc((size+1)*sizeof(char *));
-//    /* make a copy of each string */
-//    for (i = 0; i<size; i++) {
-//        jstring j_string = (jstring)jenv->GetObjectArrayElement($input, i);
-//        const char * c_string = jenv->GetStringUTFChars(j_string, 0);
-//        $1[i] = (char*)malloc((strlen(c_string)+1)*sizeof(char));
-//        strcpy($1[i], c_string);
-//        jenv->ReleaseStringUTFChars(j_string, c_string);
-//        jenv->DeleteLocalRef(j_string);
-//    }
-//    $1[i] = 0;
-//}
-//
-//%typemap(freearg) char ** {
-//    int i;
-//    for (i=0; i<size$argnum-1; i++)
-//        free($1[i]);
-//    free($1);
-//}
-//
-//%typemap(ctype) char ** "jobjectArray"
-//%typemap(imtype) char ** "String[]"
-//%typemap(cstype) char ** "String[]"
-//
-//%typemap(csin) char ** "$csinput"
-//%typemap(csout) char ** {
-//    return $imcall;
-//}
+/* char** needs special handling */
+%typemap(in) char ** (jint size) {
+    int i = 0;
+    size = jenv->GetArrayLength($input);
+    $1 = (char **) malloc((size+1)*sizeof(char *));
+    /* make a copy of each string */
+    for (i = 0; i<size; i++) {
+        jstring j_string = (jstring)jenv->GetObjectArrayElement($input, i);
+        const char * c_string = jenv->GetStringUTFChars(j_string, 0);
+        $1[i] = (char*)malloc((strlen(c_string)+1)*sizeof(char));
+        strcpy($1[i], c_string);
+        jenv->ReleaseStringUTFChars(j_string, c_string);
+        jenv->DeleteLocalRef(j_string);
+    }
+    $1[i] = 0;
+}
 
-// TODO: ValueType* ?
-///* ValueType* needs special handling */
-//%typemap(in) enum ValueType * {
-//    if ($input >= 0) {
-//        $1 = (enum ValueType *) malloc(sizeof(enum ValueType));
-//        *$1 = (enum ValueType)$input;
-//    }
-//}
-//
-///* This cleans up the memory we malloc'd before the function call */
-//%typemap(freearg) enum ValueType * { free($1); }
-//
-///* These 3 typemaps tell SWIG what JNI and Java types to use */
-//%typemap(ctype) enum ValueType * "int"
-//%typemap(imtype) enum ValueType * "int"
-//%typemap(cstype) enum ValueType * "ValueType"
-//
-///* These 2 typemaps handle the conversion of the imtype to cstype typemap type
-//      and vice versa */
-//%typemap(csin) enum ValueType * "$csinput == null ? -1 : $csinput.swigValue()"
-//%typemap(csout) enum ValueType * {
-//    return $imcall;
-//}
+%typemap(freearg) char ** {
+    int i;
+    for (i=0; i<size$argnum-1; i++)
+        free($1[i]);
+    free($1);
+}
+
+%typemap(ctype) char ** "void*"
+%typemap(imtype) char ** "global::System.IntPtr"
+%typemap(cstype) char ** "string[]"
+
+%typemap(csin) char ** "$csinput"
+%typemap(csout) char ** {
+    return $imcall;
+}
+
+/* ValueType* needs special handling */
+%typemap(in) enum ValueType * {
+    if ($input >= 0) {
+        $1 = (enum ValueType *) malloc(sizeof(enum ValueType));
+        *$1 = (enum ValueType)$input;
+    }
+}
+
+/* This cleans up the memory we malloc'd before the function call */
+%typemap(freearg) enum ValueType * { free($1); }
+
+/* These 3 typemaps tell SWIG what intermediate (pinvoke) and C# types to use */
+%typemap(ctype) enum ValueType * "int"
+%typemap(imtype) enum ValueType * "int"
+%typemap(cstype) enum ValueType * "ValueType"
+
+/* These 2 typemaps handle the conversion of the imtype to cstype typemap type
+      and vice versa */
+%typemap(csin) enum ValueType * "(int)$csinput"
+%typemap(csout) enum ValueType * {
+    return $imcall;
+}
