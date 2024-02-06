@@ -534,8 +534,6 @@ jobs:
       - install-bazel-brew:
           bazel-arch: amd64
       - test-pip-snapshot-mac-rosetta
-      - install-maven-mac
-      - test-maven-snapshot-unix
 
   test-snapshot-windows-x86_64:
     executor:
