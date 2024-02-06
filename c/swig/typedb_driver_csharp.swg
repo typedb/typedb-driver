@@ -24,9 +24,11 @@
 %include "enums.swg"
 %include "arrays_csharp.i"
 
+
 //%pragma(csharp) modulecode=%{ // TODO: Using this generates even more warnings, because SWIG doesn't use explicit "?"
 //   #nullable enable
 //%}
+
 
 %typemap(cscode) SWIGTYPE %{
     public $csclassname Released()
@@ -46,6 +48,7 @@
         return swigCMemOwn;
     }
 %}
+
 
 %typemap(csbase) Error "System.Exception";
 %typemap(csbody) Error %{
@@ -67,78 +70,77 @@
             : obj.swigCPtr;
     }
 
-    internal static global::System.Runtime.InteropServices.HandleRef swigRelease(Error obj) {
-      if (obj != null) {
-        if (!obj.swigCMemOwn)
-          throw new global::System.ApplicationException("Cannot release ownership as memory is not owned");
-        global::System.Runtime.InteropServices.HandleRef ptr = obj.swigCPtr;
-        obj.swigCMemOwn = false;
-        obj.Dispose();
-        return ptr;
-      } else {
-        return new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);
-      }
-    }
-
-    public class Unchecked : System.Exception
+    internal static global::System.Runtime.InteropServices.HandleRef swigRelease(Error obj)
     {
-        Unchecked(Error e)
-            : base(e.ToString())
-        {
-        }
+      if (obj == null)
+      {
+          return new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);
+      }
+
+      if (!obj.swigCMemOwn)
+      {
+        throw new global::System.ApplicationException("Cannot release ownership as memory is not owned");
+      }
+
+      global::System.Runtime.InteropServices.HandleRef ptr = obj.swigCPtr;
+      obj.swigCMemOwn = false;
+      obj.Dispose();
+
+      return ptr;
     }
 %}
 
 %insert(runtime) %{
-  // Code to handle throwing of C# CustomApplicationException from C/C++ code.
-  // The equivalent delegate to the callback, CSharpExceptionCallback_t, is CustomExceptionDelegate
-  // and the equivalent customExceptionCallback instance is customDelegate
-  typedef void (SWIGSTDCALL* CSharpExceptionCallback_t)(int*);
-  CSharpExceptionCallback_t customExceptionCallback = NULL;
+    // Code to handle throwing of C# CustomApplicationException from C/C++ code.
+    // The equivalent delegate to the callback, CSharpExceptionCallback_t, is NativeExceptionDelegate
+    // and the equivalent nativeExceptionCallback instance is nativeDelegate
+    typedef void (SWIGSTDCALL* CSharpExceptionCallback_t)(int*);
+    CSharpExceptionCallback_t nativeExceptionCallback = NULL;
 
-  extern "C" SWIGEXPORT
-  void SWIGSTDCALL CustomExceptionRegisterCallback(CSharpExceptionCallback_t customCallback) {
-    customExceptionCallback = customCallback;
-  }
+    extern "C" SWIGEXPORT
+    void SWIGSTDCALL NativeExceptionRegisterCallback(CSharpExceptionCallback_t nativeCallback)
+    {
+        nativeExceptionCallback = nativeCallback;
+    }
 
-  // Note that SWIG detects any method calls named starting with
-  // SWIG_CSharpSetPendingException for warning 845
-  static void SWIG_CSharpSetPendingExceptionCustom(int* error) {
-    customExceptionCallback(error);
-  }
+    // Note that SWIG detects any method calls named starting with
+    // SWIG_CSharpSetPendingException and warns if its exception is not used where needed.
+    static void SWIG_CSharpSetPendingExceptionNative(int* error)
+    {
+        nativeExceptionCallback(error);
+    }
 %}
 
 %pragma(csharp) imclasscode=%{
-  class CustomExceptionHelper {
-    // C# delegate for the C/C++ customExceptionCallback
-    public delegate void CustomExceptionDelegate(global::System.IntPtr error);
-    static CustomExceptionDelegate customDelegate =
-                                   new CustomExceptionDelegate(SetPendingCustomException);
+    class NativeExceptionHelper
+    {
+        // C# delegate for the C/C++ nativeExceptionCallback
+        public delegate void NativeExceptionDelegate(global::System.IntPtr error);
+        static NativeExceptionDelegate s_nativeDelegate =
+            new NativeExceptionDelegate(SetPendingNativeException);
 
-    [global::System.Runtime.InteropServices.DllImport("$dllimport", EntryPoint="CustomExceptionRegisterCallback")]
-    public static extern
-           void CustomExceptionRegisterCallback(CustomExceptionDelegate customCallback);
+        [global::System.Runtime.InteropServices.DllImport("$dllimport", EntryPoint="NativeExceptionRegisterCallback")]
+        public static extern void NativeExceptionRegisterCallback(NativeExceptionDelegate nativeCallback);
 
-    static void SetPendingCustomException(global::System.IntPtr error) {
-      SWIGPendingException.Set(new Error(error, true));
+        static void SetPendingNativeException(global::System.IntPtr error)
+        {
+            SWIGPendingException.Set(new Error(error, true));
+        }
+
+        static NativeExceptionHelper()
+        {
+            NativeExceptionRegisterCallback(s_nativeDelegate);
+        }
     }
 
-    static CustomExceptionHelper() {
-      CustomExceptionRegisterCallback(customDelegate);
-    }
-  }
-  static CustomExceptionHelper exceptionHelper = new CustomExceptionHelper();
+    static NativeExceptionHelper exceptionHelper = new NativeExceptionHelper();
 %}
-
 
 %exception %{
     $action
     if (check_error())
     {
-        Error* error = get_last_error();
-        //const char* error_msg = error_message(error);
-        SWIG_CSharpSetPendingExceptionCustom((int*)error);
-
+        SWIG_CSharpSetPendingExceptionNative((int*)get_last_error());
         // return $null; // TODO: This line is probably needed for potential memory cleanup, but there could be
                          // TODO: dangerous calls after the error check. Delete later.
     }
@@ -523,7 +525,7 @@
         {
             if (_current == null)
             {
-                // TODO: Throw here: throw new Error.Unchecked(e);
+                throw new System.IndexOutOfRangeException("Enumerator's Current element is out of range");
             }
 
             return _current;
@@ -549,8 +551,7 @@
 
     public void Reset()
     {
-        // We don't need and don't support Reset().
-        // TODO: Throw here: throw new Error.Unchecked(e);
+        throw new System.NotSupportedException("This Enumerator does not support Reset");
     }
 %}
 %enddef
