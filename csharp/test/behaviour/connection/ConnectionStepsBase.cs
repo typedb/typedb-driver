@@ -61,6 +61,11 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 
         public virtual void Dispose() // "After"
         {
+            if (Driver == null)
+            {
+                return;
+            }
+
             foreach (var db in Driver.Databases().GetAll())
             {
                 db.Delete();

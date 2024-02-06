@@ -93,7 +93,7 @@
   // Code to handle throwing of C# CustomApplicationException from C/C++ code.
   // The equivalent delegate to the callback, CSharpExceptionCallback_t, is CustomExceptionDelegate
   // and the equivalent customExceptionCallback instance is customDelegate
-  typedef void (SWIGSTDCALL* CSharpExceptionCallback_t)(const char*);
+  typedef void (SWIGSTDCALL* CSharpExceptionCallback_t)(int*);
   CSharpExceptionCallback_t customExceptionCallback = NULL;
 
   extern "C" SWIGEXPORT
@@ -103,24 +103,15 @@
 
   // Note that SWIG detects any method calls named starting with
   // SWIG_CSharpSetPendingException for warning 845
-  static void SWIG_CSharpSetPendingExceptionCustom(const char* error) {
+  static void SWIG_CSharpSetPendingExceptionCustom(int* error) {
     customExceptionCallback(error);
   }
 %}
 
 %pragma(csharp) imclasscode=%{
-// Custom C# Exception
-public class SuperCustomExceptionOmg : global::System.Exception {
-  public SuperCustomExceptionOmg(string message)
-    : base(message.Trim()) {
-  }
-}
-%}
-
-%pragma(csharp) imclasscode=%{
   class CustomExceptionHelper {
     // C# delegate for the C/C++ customExceptionCallback
-    public delegate void CustomExceptionDelegate(string error);
+    public delegate void CustomExceptionDelegate(global::System.IntPtr error);
     static CustomExceptionDelegate customDelegate =
                                    new CustomExceptionDelegate(SetPendingCustomException);
 
@@ -128,8 +119,8 @@ public class SuperCustomExceptionOmg : global::System.Exception {
     public static extern
            void CustomExceptionRegisterCallback(CustomExceptionDelegate customCallback);
 
-    static void SetPendingCustomException(string error) {
-      SWIGPendingException.Set(new SuperCustomExceptionOmg(error));
+    static void SetPendingCustomException(global::System.IntPtr error) {
+      SWIGPendingException.Set(new Error(error, true));
     }
 
     static CustomExceptionHelper() {
@@ -145,8 +136,8 @@ public class SuperCustomExceptionOmg : global::System.Exception {
     if (check_error())
     {
         Error* error = get_last_error();
-        const char* error_msg = error_message(error);
-        SWIG_CSharpSetPendingExceptionCustom(error_msg);
+        //const char* error_msg = error_message(error);
+        SWIG_CSharpSetPendingExceptionCustom((int*)error);
 
         // return $null; // TODO: This line is probably needed for potential memory cleanup, but there could be
                          // TODO: dangerous calls after the error check. Delete later.
