@@ -131,16 +131,17 @@ commands:
 
   test-pip-snapshot-mac-rosetta:
     steps:
-      - install-pip-requirements
       - run: |
           arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-          arch -x86_64 brew install python@3.8
+          /usr/local/bin/brew install python@3.8
           tool/test/start-core-server.sh
-          arch -x86_64 python3.8 -m pip install wheel 
-          arch -x86_64 python3.8 -m pip install --extra-index-url https://repo.typedb.com/public/public-snapshot/python/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
+          /usr/local/bin/python3.8 -m pip install wheel 
+          /usr/local/bin/python3 -m pip install pip==21.3.1
+          /usr/local/bin/python3 -m pip install -r python/requirements_dev.txt
+          /usr/local/bin/python3.8 -m pip install --extra-index-url https://repo.typedb.com/public/public-snapshot/python/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
           sleep 3
           pushd python/tests/deployment/
-            arch -x86_64 python3.8 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+            /usr/local/bin/python3.8 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
           poppd
           tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
