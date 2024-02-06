@@ -118,7 +118,7 @@ NONEXISTENT_EXPLAINABLE_OWNERSHIP = ConceptErrorMessage(7, "The ownership by own
                                                         "is not explainable.")
 GET_HAS_WITH_MULTIPLE_FILTERS = ConceptErrorMessage(8, "Only one filter can be applied at a time to get_has. "
                                                     "The possible filters are: [attribute_type, attribute_types, "
-                                                    "annotations]")
+                                                    "annotations].")
 UNRECOGNISED_ANNOTATION = ConceptErrorMessage(9, "The annotation '%s' is not recognised.")
 
 
