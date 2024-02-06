@@ -136,8 +136,8 @@ commands:
           /usr/local/bin/brew install python@3.8
           tool/test/start-core-server.sh
           /usr/local/bin/python3.8 -m pip install wheel 
-          /usr/local/bin/python3 -m pip install pip==21.3.1
-          /usr/local/bin/python3 -m pip install -r python/requirements_dev.txt
+          /usr/local/bin/python3.8 -m pip install pip==21.3.1
+          /usr/local/bin/python3.8 -m pip install -r python/requirements_dev.txt
           /usr/local/bin/python3.8 -m pip install --extra-index-url https://repo.typedb.com/public/public-snapshot/python/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
           sleep 3
           pushd python/tests/deployment/
