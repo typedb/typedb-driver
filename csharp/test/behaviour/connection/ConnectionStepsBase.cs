@@ -21,40 +21,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using Xunit;
-using Xunit.Gherkin.Quick;
 
 using com.vaticle.typedb.driver;
 using com.vaticle.typedb.driver.Api;
 using com.vaticle.typedb.driver.Common;
-using com.vaticle.typedb.driver.Test.Behaviour.Connection;
 
 namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 {
-    public abstract class ConnectionStepsBase : Feature, IDisposable
+    public abstract class ConnectionStepsBase : IDisposable
     {
-        public static ITypeDBDriver Driver;
-        public static TypeDBOptions SessionOptions; // TODO: For the future tests.
-        public static TypeDBOptions TransactionOptions;
-        private static bool s_isBeforeAllRan = false;
-
-        protected virtual void BeforeAllOnce()
-        {
-            Console.WriteLine("BASE: This method could be used to set some global things up once!");
-
-            if (s_isBeforeAllRan)
-            {
-                return;
-            }
-
-            s_isBeforeAllRan = true;
-        }
-
         protected ConnectionStepsBase() // "Before"
         {
-            BeforeAllOnce();
-
             SessionOptions = CreateOptions().Infer(true);
             TransactionOptions = CreateOptions().Infer(true);
         }
@@ -95,11 +73,9 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
             Driver = null;
         }
 
-        public virtual void ConnectionDoesNotHaveAnyDatabase()
-        {
-            Assert.NotNull(Driver);
-            Assert.True(Driver.IsOpen());
-            Assert.Equal(0, Driver.Databases().GetAll().Count);
-        }
+        public static ITypeDBDriver Driver;
+        public static List<ITypeDBSession?> Sessions = new List<ITypeDBSession?>();
+        public static TypeDBOptions SessionOptions; // TODO: For the future tests.
+        public static TypeDBOptions TransactionOptions;
     }
 }

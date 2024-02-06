@@ -20,8 +20,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using Xunit.Gherkin.Quick;
 
 using com.vaticle.typedb.driver;
 using com.vaticle.typedb.driver.Api;
@@ -31,12 +29,6 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 {
     public class ConnectionSteps : ConnectionStepsBase
     {
-        protected override void BeforeAllOnce()
-        {
-            base.BeforeAllOnce();
-            Console.WriteLine("CORE: This method could be used to set some global things up once!");
-        }
-
         public ConnectionSteps()
             : base()
         {}
@@ -51,37 +43,19 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
             return TypeDB.CoreDriver(address);
         }
 
-        [Given(@"typedb starts")]
-        [When(@"typedb starts")]
         public override void TypeDBStarts()
         {
             Console.WriteLine("CORE: TypeDB Starts, nothing here for now..."); // TODO
         }
 
-        [Given(@"connection opens with default authentication")]
-        [When(@"connection opens with default authentication")]
         public override void ConnectionOpensWithDefaultAuthentication()
         {
             Driver = CreateTypeDBDriver(TypeDB.s_DefaultAddress);
         }
 
-        [Given(@"connection has been opened")]
-        public override void ConnectionHasBeenOpened()
+        public void ConnectionOpensWithAuthentication(string username, string password)
         {
-            base.ConnectionHasBeenOpened();
-        }
-
-        [When(@"connection closes")]
-        public override void ConnectionCloses()
-        {
-            base.ConnectionCloses();
-        }
-
-        [Given(@"connection does not have any database")]
-        [Then(@"connection does not have any database")]
-        public override void ConnectionDoesNotHaveAnyDatabase()
-        {
-            base.ConnectionDoesNotHaveAnyDatabase();
+            throw new NotImplementedException("Do not use this method for Core tests");
         }
     }
 }
