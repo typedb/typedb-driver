@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using Xunit.Gherkin.Quick;
 
 using com.vaticle.typedb.driver;
+using com.vaticle.typedb.driver.pinvoke;
 using com.vaticle.typedb.driver.Api;
 using com.vaticle.typedb.driver.Test.Behaviour.Connection;
 
@@ -62,7 +63,16 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
         [When(@"connection opens with default authentication")]
         public override void ConnectionOpensWithDefaultAuthentication()
         {
+            try
+            {
             Driver = CreateTypeDBDriver(TypeDB.s_DefaultAddress);
+            }
+            catch (System.Exception e)
+            {
+            Console.WriteLine("CUSTOM EXCEPTION CAUGHT! " + e.ToString());
+            throw e;
+            }
+
         }
 
         [Given(@"connection has been opened")]
