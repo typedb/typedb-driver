@@ -57,7 +57,7 @@ DECLSPEC_DLL extern const ErrorMessage MISSING_VARIABLE = ERR_CONCEPT(5, "Variab
 DECLSPEC_DLL extern const ErrorMessage MISSING_VALUE = ERR_CONCEPT(6, "Value cannot be null.");
 DECLSPEC_DLL extern const ErrorMessage NONEXISTENT_EXPLAINABLE_CONCEPT = ERR_CONCEPT(7, "The concept identified by '%s' is not explainable.");
 DECLSPEC_DLL extern const ErrorMessage NONEXISTENT_EXPLAINABLE_OWNERSHIP = ERR_CONCEPT(8, "The ownership by owner '%s' of attribute '%s' is not explainable.");
-DECLSPEC_DLL extern const ErrorMessage UNRECOGNISED_ANNOTATION = ERR_CONCEPT(9, "The annotation '%s' is not recognised");
+DECLSPEC_DLL extern const ErrorMessage UNRECOGNISED_ANNOTATION = ERR_CONCEPT(9, "The annotation '%s' is not recognised.");
 #undef ERR_CONCEPT
 
 }  // namespace ConceptError
@@ -66,7 +66,7 @@ namespace QueryError {
 
 #define ERR_QUERY(ID, MSG) ERRMSG("CQY", "Query Error", ID, MSG)
 DECLSPEC_DLL extern const ErrorMessage VARIABLE_DOES_NOT_EXIST = ERR_QUERY(1, "The variable '%s' does not exist.");
-DECLSPEC_DLL extern const ErrorMessage MISSING_QUERY = ERR_QUERY(2, "Query cannot be null or empty");
+DECLSPEC_DLL extern const ErrorMessage MISSING_QUERY = ERR_QUERY(2, "Query cannot be null or empty.");
 #undef ERR_QUERY
 
 }  // namespace QueryError
@@ -75,7 +75,7 @@ namespace InternalError {
 
 #define ERR_INTERNAL(ID, MSG) ERRMSG("CIN", "C++ Internal Error", ID, MSG)
 DECLSPEC_DLL extern const ErrorMessage UNEXPECTED_NATIVE_VALUE = ERR_INTERNAL(1, "Unexpected native value encountered!");
-DECLSPEC_DLL extern const ErrorMessage ILLEGAL_STATE = ERR_INTERNAL(2, "Illegal state has been reached! (%s : %d)");
+DECLSPEC_DLL extern const ErrorMessage ILLEGAL_STATE = ERR_INTERNAL(2, "Illegal state has been reached! (%s : %d).");
 DECLSPEC_DLL extern const ErrorMessage ILLEGAL_CAST = ERR_INTERNAL(3, "Illegal casting operation to '%s'.");
 DECLSPEC_DLL extern const ErrorMessage NULL_NATIVE_VALUE = ERR_INTERNAL(4, "Unhandled null pointer to a native object encountered!");
 DECLSPEC_DLL extern const ErrorMessage INVALID_NATIVE_HANDLE = ERR_INTERNAL(5, "The object does not have a valid native handle. It may have been:  uninitialised, moved or disposed.");

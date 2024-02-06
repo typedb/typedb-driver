@@ -19,14 +19,14 @@
  * under the License.
  */
 
+#nullable enable
+
 using System;
 using System.Diagnostics;
 
 using com.vaticle.typedb.driver.pinvoke;
+using com.vaticle.typedb.driver.Common.Exception;
 
-/**
- * Exceptions raised by the driver.
- */
 namespace com.vaticle.typedb.driver.Common.Exception
 {
     public class TypeDBDriverException : System.Exception
@@ -34,8 +34,11 @@ namespace com.vaticle.typedb.driver.Common.Exception
         /**
          * @hidden
          */
-        public TypeDBDriverException()
+        public TypeDBDriverException(ErrorMessage error)
+            : base(error.ToString())
         {
+            Debug.Assert(!Message.Contains("%s"));
+            this.errorMessage = error;
         }
 
         /**
@@ -44,16 +47,40 @@ namespace com.vaticle.typedb.driver.Common.Exception
         public TypeDBDriverException(string message)
             : base(message)
         {
+            Debug.Assert(!Message.Contains("%s"));
+            _errorMessage = null;
         }
 
         /**
-         * TODO
+         * @hidden
+         */
+        public TypeDBDriverException(System.Exception error)
+            : base(error.Message)
+        {
+            Debug.Assert(!Message.Contains("%s"));
+            _errorMessage = null;
+        }
+
+        /**
+         * @hidden
          */
         public TypeDBDriverException(pinvoke.Error nativeError)
             : base(nativeError.Message)
         {
-            Debug.Assert(Message.Contains("%s"));
-//            this.message = null;
+            Debug.Assert(!Message.Contains("%s"));
+            _errorMessage = null;
         }
+
+        public string GetName()
+        {
+            return this.GetType().Name;
+        }
+
+        public ErrorMessage GetErrorMessage()
+        {
+            return _errorMessage;
+        }
+
+        private readonly ErrorMessage? _errorMessage;
     }
 }
