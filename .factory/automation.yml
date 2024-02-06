@@ -209,7 +209,7 @@ build:
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         .factory/test-core.sh //java/test/behaviour/connection/... --test_output=errors --jobs=1
-    # TODO: delete --jobs=1 if we fix the issue with excess memory usage
+        # TODO: delete --jobs=1 if we fix the issue with excess memory usage
         .factory/test-core.sh //java/test/behaviour/concept/... --test_output=errors
         .factory/test-core.sh //java/test/behaviour/driver/query/... --test_output=errors
         .factory/test-core.sh //java/test/behaviour/query/language/match/... --test_output=errors
@@ -233,7 +233,7 @@ build:
         bazel run @vaticle_dependencies//tool/bazelinstall:remote_cache_setup.sh
         bazel run @vaticle_dependencies//distribution/artifact:create-netrc
         .factory/test-cloud.sh //java/test/behaviour/connection/... --test_output=errors --jobs=1
-    # TODO: delete --jobs=1 if we fix the issue with excess memory usage
+        # TODO: delete --jobs=1 if we fix the issue with excess memory usage
         .factory/test-cloud.sh //java/test/behaviour/concept/... --test_output=errors
         .factory/test-cloud.sh //java/test/behaviour/driver/query/... --test_output=errors
         .factory/test-cloud.sh //java/test/behaviour/query/language/match/... --test_output=errors
