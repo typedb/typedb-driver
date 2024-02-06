@@ -36,7 +36,8 @@ namespace Lib.Specs.Steps
         [Then(@"he says '(.+)'")]
         public void ThenTheResultShouldBe(string expectedResult)
         {
-            if (_result != expectedResult) {
+            if (_result != expectedResult)
+            {
                 throw new InvalidOperationException("Bad" + _result + " vs " + expectedResult);
             }
         }
