@@ -106,12 +106,18 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
         }
 
         [When(@"connection delete database; throws exception: {word}")]
-        public void ConnectionDeleteDatabaseThrowsException(string name)
+        public void ConnectionDeleteDatabaseThrowsException(string databaseName)
         {
-            Console.WriteLine("ConnectionDeleteDatabaseThrowsException: " + name);
-            // TODO: Not implemented!
-            Assert.True(false);
-//            connection_delete_databases_throws_exception(list(name));
+            try
+            {
+                Driver.Databases().Get(databaseName).Delete();
+            }
+            catch (System.Exception e)
+            {
+                return; // Successfully failed.
+            }
+
+            Assert.True(false); // Should not reach this line.
         }
 
         [When(@"connection delete databases in parallel:")]
