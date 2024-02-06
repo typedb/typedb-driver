@@ -142,7 +142,7 @@ commands:
           sleep 3
           pushd python/tests/deployment/
             /usr/local/bin/python3.8 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
-          poppd
+          popd
           tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
 
