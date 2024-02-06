@@ -26,46 +26,38 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
-using Xunit.Gherkin.Quick;
 
 using com.vaticle.typedb.driver;
 using com.vaticle.typedb.driver.Test.Behaviour.Connection;
 
 namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
 {
-    [FeatureFile("external/vaticle_typedb_behaviour/connection/database.feature")]
-    public class DatabaseSteps : ConnectionSteps
+    public class DatabaseSteps
     {
-        [Given(@"connection create database: {word}")]
-        [When(@"connection create database: {word}")]
         public void ConnectionCreateDatabase(string name)
         {
-            Driver.Databases().Create(name);
+            ConnectionStepsBase.Driver.Databases().Create(name);
         }
 
-        [Given(@"connection create databases:")]
-        [When(@"connection create databases:")]
         public void ConnectionCreateDatabases(DataTable names)
         {
             foreach (var row in names.Rows)
             {
-                foreach (var cell in row.Cells)
+                foreach (var name in row.Cells)
                 {
-                    ConnectionCreateDatabase(cell.Value);
+                    ConnectionCreateDatabase(name.Value);
                 }
             }
         }
 
-        [Given(@"connection create databases in parallel:")]
-        [When(@"connection create databases in parallel:")]
         public void ConnectionCreateDatabasesInParallel(DataTable names)
         {
             var collectedNames = new List<string>();
             foreach (var row in names.Rows)
             {
-                foreach (var cell in row.Cells)
+                foreach (var name in row.Cells)
                 {
-                    collectedNames.Add(cell.Value);
+                    collectedNames.Add(name.Value);
                 }
             }
 
@@ -87,30 +79,27 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
             Task.WaitAll(taskArray);
         }
 
-        [When(@"connection delete database: {word}")]
         public void ConnectionDeleteDatabase(string name)
         {
-            Driver.Databases().Get(name).Delete();
+            ConnectionStepsBase.Driver.Databases().Get(name).Delete();
         }
 
-        [When(@"connection delete databases:")]
         public void ConnectionDeleteDatabases(DataTable names)
         {
             foreach (var row in names.Rows)
             {
-                foreach (var cell in row.Cells)
+                foreach (var name in row.Cells)
                 {
-                    ConnectionDeleteDatabase(cell.Value);
+                    ConnectionDeleteDatabase(name.Value);
                 }
             }
         }
 
-        [When(@"connection delete database; throws exception: {word}")]
         public void ConnectionDeleteDatabaseThrowsException(string databaseName)
         {
             try
             {
-                Driver.Databases().Get(databaseName).Delete();
+                ConnectionStepsBase.Driver.Databases().Get(databaseName).Delete();
             }
             catch (System.Exception e)
             {
@@ -120,15 +109,14 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
             Assert.True(false); // Should not reach this line.
         }
 
-        [When(@"connection delete databases in parallel:")]
         public void ConnectionDeleteDatabasesInParallel(DataTable names)
         {
             var collectedNames = new List<string>();
             foreach (var row in names.Rows)
             {
-                foreach (var cell in row.Cells)
+                foreach (var name in row.Cells)
                 {
-                    collectedNames.Add(cell.Value);
+                    collectedNames.Add(name.Value);
                 }
             }
 
@@ -150,46 +138,49 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
             Task.WaitAll(taskArray);
         }
 
-        [Then(@"connection has database: {word}")]
         public void ConnectionHasDatabase(string name)
         {
-            Assert.True(Driver.Databases().Contains(name));
+            Assert.True(ConnectionStepsBase.Driver.Databases().Contains(name));
         }
 
-        [Then(@"connection has databases:")]
         public void ConnectionHasDatabases(DataTable names)
         {
             int expectedDatabasesSize = 0;
 
             foreach (var row in names.Rows)
             {
-                foreach (var cell in row.Cells)
+                foreach (var name in row.Cells)
                 {
-                    ConnectionHasDatabase(cell.Value);
+                    ConnectionHasDatabase(name.Value);
                     expectedDatabasesSize++;
                 }
             }
 
             // TODO: Could there be just == ? The description is more like >=!
-            Assert.True(expectedDatabasesSize >= Driver.Databases().GetAll().Count);
+            Assert.True(expectedDatabasesSize >= ConnectionStepsBase.Driver.Databases().GetAll().Count);
         }
 
-        [Then(@"connection does not have database: {word}")]
         public void ConnectionDoesNotHaveDatabase(string name)
         {
-            Assert.False(Driver.Databases().Contains(name));
+            Assert.False(ConnectionStepsBase.Driver.Databases().Contains(name));
         }
 
-        [Then(@"connection does not have databases:")]
         public void ConnectionDoesNotHaveDatabases(DataTable names)
         {
             foreach (var row in names.Rows)
             {
-                foreach (var cell in row.Cells)
+                foreach (var name in row.Cells)
                 {
-                    ConnectionDoesNotHaveDatabase(cell.Value);
+                    ConnectionDoesNotHaveDatabase(name.Value);
                 }
             }
+        }
+
+        public void ConnectionDoesNotHaveAnyDatabase()
+        {
+            Assert.NotNull(ConnectionStepsBase.Driver);
+            Assert.True(ConnectionStepsBase.Driver.IsOpen());
+            Assert.Equal(0, ConnectionStepsBase.Driver.Databases().GetAll().Count);
         }
     }
 }

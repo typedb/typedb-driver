@@ -28,4 +28,5 @@ behaviour_tests_deps = [
     "@paket.csharp_deps//xunit.assert",
     "@paket.csharp_deps//xunit.gherkin.quick",
     "@paket.csharp_deps//xunit.runner.utility",
+    "@paket.csharp_deps//xunit.extensibility.core",
 ]
