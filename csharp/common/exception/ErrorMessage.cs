@@ -19,6 +19,8 @@
  * under the License.
  */
 
+using System;
+
 namespace com.vaticle.typedb.driver.Common.Exception
 {
     public abstract class ErrorMessage
@@ -27,18 +29,19 @@ namespace com.vaticle.typedb.driver.Common.Exception
             string codePrefix, int codeNumber, string messagePrefix, string messageBody)
         {
             _codePrefix = codePrefix;
-            _codeNumber = codeNumber;
+            _codeNumber = codeNumber.ToString("D2");
             _messagePrefix = messagePrefix;
             _messageBody = messageBody;
         }
 
-        public override string ToString()
+        public string ToString(params object?[] errorParams)
         {
-            return $"[{_codePrefix}{_codeNumber}] {_messagePrefix}: {_messageBody}"; // TODO: Do we need additional zeros before the code?
+            var formattedBody = String.Format(_messageBody, errorParams);
+            return $"[{_codePrefix}{_codeNumber}]{_messagePrefix}: {formattedBody}";
         }
 
         private readonly string _codePrefix;
-        private readonly int _codeNumber;
+        private readonly string _codeNumber;
         private readonly string _messagePrefix;
         private readonly string _messageBody;
     }
@@ -65,11 +68,11 @@ namespace com.vaticle.typedb.driver.Common.Exception
             public static readonly DriverErrorMessage s_TransactionClosed =
                 new DriverErrorMessage(3, "The transaction has been closed and no further operation is allowed.");
             public static readonly DriverErrorMessage s_TransactionClosedWithErrors =
-                new DriverErrorMessage(4, "The transaction has been closed with error(s): \n%s.");
+                new DriverErrorMessage(4, "The transaction has been closed with error(s): \n{}.");
             public static readonly DriverErrorMessage s_DatabaseDeleted =
                 new DriverErrorMessage(5, "The database has been deleted and no further operation is allowed.");
             public static readonly DriverErrorMessage s_PositiveValueRequired =
-                new DriverErrorMessage(6, "Value cannot be less than 1, was: '%d'.");
+                new DriverErrorMessage(6, "Value cannot be less than 1, was: {}.");
             public static readonly DriverErrorMessage s_MissingDbName =
                 new DriverErrorMessage(7, "Database name cannot be null.");
         }
@@ -88,7 +91,7 @@ namespace com.vaticle.typedb.driver.Common.Exception
         public static class Concept
         {
             public static readonly ConceptErrorMessage s_InvalidConceptCasting =
-                new ConceptErrorMessage(1, "Invalid concept conversion from '%s' to '%s'.");
+                new ConceptErrorMessage(1, "Invalid concept conversion from {} to {}.");
             public static readonly ConceptErrorMessage s_MissingTransaction =
                 new ConceptErrorMessage(2, "Transaction cannot be null.");
             public static readonly ConceptErrorMessage s_MissingIID =
@@ -100,11 +103,11 @@ namespace com.vaticle.typedb.driver.Common.Exception
             public static readonly ConceptErrorMessage s_MissingValue =
                 new ConceptErrorMessage(6, "Value cannot be null.");
             public static readonly ConceptErrorMessage s_NonexistentExplainableConcept =
-                new ConceptErrorMessage(7, "The concept identified by '%s' is not explainable.");
+                new ConceptErrorMessage(7, "The concept identified by {} is not explainable.");
             public static readonly ConceptErrorMessage s_NonexistentExplainableOwnership =
-                new ConceptErrorMessage(8, "The ownership by owner '%s' of attribute '%s' is not explainable.");
+                new ConceptErrorMessage(8, "The ownership by owner {} of attribute {} is not explainable.");
             public static readonly ConceptErrorMessage s_UnrecognisedAnnotation =
-                new ConceptErrorMessage(9, "The annotation '%s' is not recognised.");
+                new ConceptErrorMessage(9, "The annotation {} is not recognised.");
         }
 
         public class QueryErrorMessage : ErrorMessage
@@ -121,7 +124,7 @@ namespace com.vaticle.typedb.driver.Common.Exception
         public static class Query
         {
             public static readonly QueryErrorMessage s_VariableDoesntExist =
-                new QueryErrorMessage(1, "The variable '%s' does not exist.");
+                new QueryErrorMessage(1, "The variable {} does not exist.");
             public static readonly QueryErrorMessage s_MissingQuery =
                 new QueryErrorMessage(2, "Query cannot be null or empty.");
         }
@@ -142,9 +145,9 @@ namespace com.vaticle.typedb.driver.Common.Exception
             public static readonly InternalErrorMessage s_UnexpectedNativeValue =
                 new InternalErrorMessage(1, "Unexpected native value encountered!");
             public static readonly InternalErrorMessage s_IllegalState =
-                new InternalErrorMessage(2, "Illegal state has been reached! (%s : %d).");
+                new InternalErrorMessage(2, "Illegal state has been reached! ({} : {}).");
             public static readonly InternalErrorMessage s_IllegalCast =
-                new InternalErrorMessage(3, "Illegal casting operation to '%s'.");
+                new InternalErrorMessage(3, "Illegal casting operation to {}.");
             public static readonly InternalErrorMessage s_NullNativeValue =
                 new InternalErrorMessage(4, "Unhandled null pointer to a native object encountered!");
             public static readonly InternalErrorMessage s_InvalidNativeHandle =

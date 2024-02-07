@@ -20,6 +20,7 @@
  */
 
 using DataTable = Gherkin.Ast.DataTable;
+using DocString = Gherkin.Ast.DocString;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,21 +40,23 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Query
             // TODO ???
         }
 
-        public void TypeqlDefine(string defineQueryStatements)
+        public void TypeqlDefine(DocString defineQueryStatements)
         {
+            string query = defineQueryStatements.Content;
+            Console.WriteLine("Define CONTENT: " + query);
             throw new Exception("Not implemented yet =)");
         // TODO: Implement!
 //            TypeQLDefine typeQLQuery = TypeQL.parseQuery(String.join("\n", defineQueryStatements));
 //            tx().query().define(String.join("\n", defineQueryStatements)).resolve();
         }
 
-        public void TypeqlDefineThrowsException(string defineQueryStatements)
+        public void TypeqlDefineThrowsException(DocString defineQueryStatements)
         {
             Assert.Throws<Common.Exception.TypeDBDriverException>(
                 () => TypeqlDefine(defineQueryStatements));
         }
 
-        public void TypeqlDefineThrowsExceptionContaining(string expectedMessage, string defineQueryStatements)
+        public void TypeqlDefineThrowsExceptionContaining(string expectedMessage, DocString defineQueryStatements)
         {
             var exception = Assert.Throws<Common.Exception.TypeDBDriverException>(
                 () => TypeqlDefine(defineQueryStatements));
@@ -61,19 +64,21 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Query
             Assert.Equal(expectedMessage, exception.Message);
         }
 
-        public void TypeqlInsert(string insertQueryStatements)
+        public void TypeqlInsert(DocString insertQueryStatements)
         {
+            string query = insertQueryStatements.Content;
+            Console.WriteLine("Insert CONTENT: " + query);
             throw new Exception("Not implemented yet =)");
         // TODO: Implement!
         }
 
-        public void TypeqlInsertThrowsException(string insertQueryStatements)
+        public void TypeqlInsertThrowsException(DocString insertQueryStatements)
         {
             Assert.Throws<Common.Exception.TypeDBDriverException>(
                 () => TypeqlInsert(insertQueryStatements));
         }
 
-        public void TypeqlInsertThrowsExceptionContaining(string expectedMessage, string insertQueryStatements)
+        public void TypeqlInsertThrowsExceptionContaining(string expectedMessage, DocString insertQueryStatements)
         {
             var exception = Assert.Throws<Common.Exception.TypeDBDriverException>(
                 () => TypeqlInsert(insertQueryStatements));

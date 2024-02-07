@@ -112,8 +112,7 @@ namespace com.vaticle.typedb.driver.Connection
             {
                 SessionCallback callback = new SessionCallback(function);
                 _callbacks.Add(callback);
-                // TODO: released()
-//                pinvoke.typedb_driver.session_on_reopen(NativeObject, callback.released());
+                pinvoke.typedb_driver.session_on_reopen(NativeObject, callback.Released());
             }
             catch (pinvoke.Error e)
             {

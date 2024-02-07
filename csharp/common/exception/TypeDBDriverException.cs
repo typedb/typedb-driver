@@ -34,10 +34,9 @@ namespace com.vaticle.typedb.driver.Common.Exception
         /**
          * @hidden
          */
-        public TypeDBDriverException(ErrorMessage error)
-            : base(error.ToString())
+        public TypeDBDriverException(ErrorMessage error, params object?[] errorParams)
+            : base(error.ToString(errorParams))
         {
-            Debug.Assert(!Message.Contains("%s"));
             _errorMessage = error;
         }
 
@@ -47,7 +46,6 @@ namespace com.vaticle.typedb.driver.Common.Exception
         public TypeDBDriverException(string message)
             : base(message)
         {
-            Debug.Assert(!Message.Contains("%s"));
             _errorMessage = null;
         }
 
@@ -57,7 +55,6 @@ namespace com.vaticle.typedb.driver.Common.Exception
         public TypeDBDriverException(System.Exception error)
             : base(error.Message)
         {
-            Debug.Assert(!Message.Contains("%s"));
             _errorMessage = null;
         }
 
@@ -67,7 +64,6 @@ namespace com.vaticle.typedb.driver.Common.Exception
         public TypeDBDriverException(pinvoke.Error nativeError)
             : base(nativeError.Message)
         {
-            Debug.Assert(!Message.Contains("%s"));
             _errorMessage = null;
         }
 
@@ -81,6 +77,6 @@ namespace com.vaticle.typedb.driver.Common.Exception
             return _errorMessage;
         }
 
-        private readonly ErrorMessage? _errorMessage;
+        private readonly ErrorMessage? _errorMessage; // TODO: Looks like it is used in Java only for a test...
     }
 }

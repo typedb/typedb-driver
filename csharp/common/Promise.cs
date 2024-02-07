@@ -63,7 +63,7 @@ namespace com.vaticle.typedb.driver.Common
             {
                 return _inner();
             }
-            catch (pinvoke.Error e) // TODO: .Unchecked
+            catch (pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
