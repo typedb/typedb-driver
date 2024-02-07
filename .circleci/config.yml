@@ -743,6 +743,7 @@ workflows:
       - test-snapshot-mac-x86_64:
           requires:
             - deploy-snapshot-mac-x86_64
+            - deploy-snapshot-any
       - test-snapshot-windows-x86_64:
           filters:
             branches:
