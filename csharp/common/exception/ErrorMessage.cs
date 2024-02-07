@@ -152,8 +152,8 @@ namespace com.vaticle.typedb.driver.Common.Exception
                 new InternalErrorMessage(4, "Unhandled null pointer to a native object encountered!");
             public static readonly InternalErrorMessage s_InvalidNativeHandle =
                 new InternalErrorMessage(5, "The object does not have a valid native handle. It may have been:  uninitialised, moved or disposed.");
-            public static readonly InternalErrorMessage s_IteratorInvalidated =
-                new InternalErrorMessage(6, "Dereferenced iterator which has reached end (or was invalidated by a move).");
+            public static readonly InternalErrorMessage s_EnumeratorExcessiveAccess =
+                new InternalErrorMessage(6, "Such Enumerables support Enumerator's getting only once.");
             public static readonly InternalErrorMessage s_UnexpectedInternalValue =
                 new InternalErrorMessage(7, "Unexpected internal value encountered!");
         }
