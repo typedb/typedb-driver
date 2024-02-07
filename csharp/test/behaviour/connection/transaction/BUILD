@@ -29,8 +29,8 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 
 csharp_library(
-    name = "steps-session", # Steps libraries should have different names for the C# output compilation config!
-    srcs = ["SessionSteps.cs"],
+    name = "steps-transaction", # Steps libraries should have different names for the C# output compilation config!
+    srcs = ["TransactionSteps.cs"],
     deps = behaviour_tests_deps + [
         "//csharp/test/behaviour/connection:steps-base",
         "//csharp:driver-csharp",
@@ -45,12 +45,11 @@ csharp_library(
 
 csharp_behaviour_test(
     name = "test-core",
-    test_files = ["SessionTest.cs"],
-    features = ["@vaticle_typedb_behaviour//connection:session.feature"],
+    test_files = ["TransactionTest.cs"],
+    features = ["@vaticle_typedb_behaviour//connection:transaction.feature"],
     steps_deps = [
-        ":steps-session",
-        "//csharp/test/behaviour/query:steps-query",
-        "//csharp/test/behaviour/connection/transaction:steps-transaction",
+        ":steps-transaction",
+        "//csharp/test/behaviour/connection/database:steps-session",
         "//csharp/test/behaviour/connection/database:steps-database",
         "//csharp/test/behaviour/connection:steps-core",
         "//csharp/test/behaviour/connection:steps-base",
@@ -66,12 +65,11 @@ csharp_behaviour_test(
 
 csharp_behaviour_test(
     name = "test-cloud",
-    test_files = ["SessionTest.cs"],
-    features = ["@vaticle_typedb_behaviour//connection:session.feature"],
+    test_files = ["TransactionTest.cs"],
+    features = ["@vaticle_typedb_behaviour//connection:transaction.feature"],
     steps_deps = [
-        ":steps-session",
-        "//csharp/test/behaviour/query:steps-query",
-        "//csharp/test/behaviour/connection/transaction:steps-transaction",
+        ":steps-transaction",
+        "//csharp/test/behaviour/connection/database:steps-session",
         "//csharp/test/behaviour/connection/database:steps-database",
         "//csharp/test/behaviour/connection:steps-cloud",
         "//csharp/test/behaviour/connection:steps-base",

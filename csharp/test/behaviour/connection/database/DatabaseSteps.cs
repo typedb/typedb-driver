@@ -97,16 +97,8 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
 
         public void ConnectionDeleteDatabaseThrowsException(string databaseName)
         {
-            try
-            {
-                ConnectionStepsBase.Driver.Databases().Get(databaseName).Delete();
-            }
-            catch (System.Exception e)
-            {
-                return; // Successfully failed.
-            }
-
-            Assert.True(false); // Should not reach this line.
+            Assert.Throws<Common.Exception.TypeDBDriverException>(
+                () => ConnectionStepsBase.Driver.Databases().Get(databaseName).Delete());
         }
 
         public void ConnectionDeleteDatabasesInParallel(DataTable names)

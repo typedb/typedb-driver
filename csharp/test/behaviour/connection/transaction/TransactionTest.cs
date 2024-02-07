@@ -26,28 +26,25 @@ using Xunit.Gherkin.Quick;
 
 using com.vaticle.typedb.driver.Test.Behaviour.Connection;
 using com.vaticle.typedb.driver.Test.Behaviour.Connection.Database;
-using com.vaticle.typedb.driver.Test.Behaviour.Connection.Transaction;
-using com.vaticle.typedb.driver.Test.Behaviour.Query;
 using com.vaticle.typedb.driver.Test.Behaviour.Connection.Session;
+using com.vaticle.typedb.driver.Test.Behaviour.Connection.Transaction;
 
-namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Session
+namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Transaction
 {
-    [FeatureFile("external/vaticle_typedb_behaviour/connection/session.feature")]
-    public class SessionTest
+    [FeatureFile("external/vaticle_typedb_behaviour/connection/transaction.feature")]
+    public class TransactionTest
         : Feature
         , IDisposable
-        , IClassFixture<SessionSteps>
-        , IClassFixture<QuerySteps>
         , IClassFixture<TransactionSteps>
+        , IClassFixture<SessionSteps>
         , IClassFixture<DatabaseSteps>
         , IClassFixture<ConnectionSteps>
     {
-        public SessionTest()
+        public TransactionTest()
             : base()
         {
-            _sessionSteps = new SessionSteps();
-            _querySteps = new QuerySteps();
             _transactionSteps = new TransactionSteps();
+            _sessionSteps = new SessionSteps();
             _connectionSteps = new ConnectionSteps();
             _databaseSteps = new DatabaseSteps();
         }
@@ -131,10 +128,6 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Session
         public void ConnectionDoesNotHaveAnyDatabase()
             => _databaseSteps.ConnectionDoesNotHaveAnyDatabase();
 
-        [When(@"session opens transaction of type: {word}")]
-        public void ForEachSessionOpenTransactionsOfType(string type)
-            => _transactionSteps.ForEachSessionOpenTransactionsOfType(type);
-
         [Given(@"connection open schema session for database: {word}")]
         [When(@"connection open schema session for database: {word}")]
         public void ConnectionOpenSchemaSessionForDatabase(string name)
@@ -199,18 +192,96 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Session
         public void SetSessionOptionTo(string option, string value)
             => _sessionSteps.SetSessionOptionTo(option, value);
 
-        public void TypeqlDefine(string defineQueryStatements)
-           => _querySteps.TypeqlDefine(defineQueryStatements);
+        [When(@"(for each )session(,) open(s) transaction(s) of type: {word}")]
+        public void ForEachSessionOpenTransactionsOfType(string type)
+            => _transactionSteps.ForEachSessionOpenTransactionsOfType(type);
 
-        public void TypeqlDefineThrowsExceptionContaining(string expectedMessage, string defineQueryStatements)
-            => _querySteps.TypeqlDefineThrowsExceptionContaining(expectedMessage, defineQueryStatements);
+        [When(@"(for each )session(,) open transaction(s) of type:")]
+        public void ForEachSessionOpenTransactionsOfType(DataTable types)
+            => _transactionSteps.ForEachSessionOpenTransactionsOfType(types);
 
-        public void TypeqlInsertThrowsExceptionContaining(string expectedMessage, string insertQueryStatements)
-            => _querySteps.TypeqlInsertThrowsExceptionContaining(expectedMessage, insertQueryStatements);
+        [When(@"(for each )session(,) open transaction(s) of type; throws exception: {word}")]
+        public void ForEachSessionOpenTransactionsOfTypeThrowsException(string type)
+            => _transactionSteps.ForEachSessionOpenTransactionsOfTypeThrowsException(type);
 
-        private readonly SessionSteps _sessionSteps;
-        private readonly QuerySteps _querySteps;
+        [Then(@"(for each )session(,) open transaction(s) of type; throws exception")]
+        public void ForEachSessionOpenTransactionsOfTypeThrowsException(DataTable types)
+            => _transactionSteps.ForEachSessionOpenTransactionsOfTypeThrowsException(types);
+
+        [Then(@"(for each )session(,) transaction(s) is/are null: {}")]
+        public void ForEachSessionTransactionsAreNull(bool expectedNull)
+            => _transactionSteps.ForEachSessionTransactionsAreNull(expectedNull);
+
+        [Then(@"(for each )session(,) transaction(s) is/are open: {}")]
+        public void ForEachSessionTransactionsAreOpen(bool expectedOpen)
+            => _transactionSteps.ForEachSessionTransactionsAreOpen(expectedOpen);
+
+        [Then(@"transaction commits")]
+        public void TransactionCommits()
+            => _transactionSteps.TransactionCommits();
+
+        [Then(@"transaction commits; throws exception")]
+        public void TransactionCommitsThrowsException()
+            => _transactionSteps.TransactionCommitsThrowsException();
+
+        [Then(@"transaction commits; throws exception containing {string}")]
+        public void TransactionCommitsThrowsException(string expectedMessage)
+            => _transactionSteps.TransactionCommitsThrowsException(expectedMessage);
+
+        [Then(@"(for each )session(,) transaction(s) commit(s)")]
+        public void ForEachSessionTransactionsCommit()
+            => _transactionSteps.ForEachSessionTransactionsCommit();
+
+        [Then(@"(for each )session(,) transaction(s) commit(s); throws exception")]
+        public void ForEachSessionTransactionsCommitThrowsException()
+            => _transactionSteps.ForEachSessionTransactionsCommitThrowsException();
+
+        [Then(@"(for each )session(,) transaction close(s)")]
+        public void ForEachSessionTransactionCloses()
+            => _transactionSteps.ForEachSessionTransactionCloses();
+
+        [Then(@"(for each )session(,) transaction(s) has/have type: {word}")]
+        public void ForEachSessionTransactionsHaveType(string type)
+            => _transactionSteps.ForEachSessionTransactionsHaveType(type);
+
+        [Then(@"(for each )session(,) transaction(s) has/have type:")]
+        public void ForEachSessionTransactionsHaveType(DataTable types)
+            => _transactionSteps.ForEachSessionTransactionsHaveType(types);
+
+        [When(@"for each session, open transaction(s) in parallel of type:")]
+        public void ForEachSessionOpenTransactionsInParallelOfType(DataTable types)
+            => _transactionSteps.ForEachSessionOpenTransactionsInParallelOfType(types);
+
+        [Then(@"for each session, transactions in parallel are null: {}")]
+        public void ForEachSessionTransactionsInParallelAreNull(bool expectedNull)
+            => _transactionSteps.ForEachSessionTransactionsInParallelAreNull(expectedNull);
+
+        [Then(@"for each session, transactions in parallel are open: {}")]
+        public void ForEachSessionTransactionsInParallelAreOpen(bool expectedOpen)
+            => _transactionSteps.ForEachSessionTransactionsInParallelAreOpen(expectedOpen);
+
+        [Then(@"for each session, transactions in parallel have type:")]
+        public void ForEachSessionTransactionsInParallelHaveType(DataTable types)
+            => _transactionSteps.ForEachSessionTransactionsInParallelHaveType(types);
+
+        [Then(@"for each session in parallel, transactions in parallel are null: {}")]
+        public void ForEachSessionInParallelTransactionsInParallelAreNull(bool expectedNull)
+            => _transactionSteps.ForEachSessionInParallelTransactionsInParallelAreNull(expectedNull);
+
+        [Then(@"for each session in parallel, transactions in parallel are open: {}")]
+        public void ForEachSessionInParallelTransactionsInParallelAreOpen(bool expectedOpen)
+            => _transactionSteps.ForEachSessionInParallelTransactionsInParallelAreOpen(expectedOpen);
+
+        [Given(@"set transaction option {word} to: {word}")]
+        public void SetTransactionOptionTo(string option, string value)
+            => _transactionSteps.SetTransactionOptionTo(option, value);
+
+        [Then(@"for each transaction, define query; throws exception containing {string}")]
+        public void ForEachTransactionExecuteDefineThrowsException(string expectedMessage, string defineQueryStatements)
+            => _transactionSteps.ForEachTransactionExecuteDefineThrowsException(expectedMessage, defineQueryStatements);
+
         private readonly TransactionSteps _transactionSteps;
+        private readonly SessionSteps _sessionSteps;
         private readonly DatabaseSteps _databaseSteps;
         private readonly ConnectionSteps _connectionSteps;
     }

@@ -74,7 +74,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Session
             }
         }
 
-        public void ConnectionOpenDataSessionsInParallelForDatabases(DataTable names)
+        public void ConnectionOpenSessionsInParallelForDatabases(DataTable names)
         {
             throw new NotImplementedException("Not yet for parallel!"); // TODO
             foreach (var row in names.Rows)
