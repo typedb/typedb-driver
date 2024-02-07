@@ -54,12 +54,12 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Transaction
         {
             TransactionType transactionType = StringToTransactionType(type);
             
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            foreach (ITypeDBSession session in ConnectionFixture.Sessions)
             {
                 ITypeDBTransaction transaction =
-                    session.Transaction(transactionType, ConnectionStepsBase.TransactionOptions);
+                    session.Transaction(transactionType, ConnectionFixture.TransactionOptions);
 
-                ConnectionStepsBase.SaveTransaction(transaction, session);
+                ConnectionFixture.SaveTransaction(transaction, session);
             }
         }
 
@@ -78,7 +78,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Transaction
         {
             TransactionType transactionType = StringToTransactionType(type);
 
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            foreach (ITypeDBSession session in ConnectionFixture.Sessions)
             {
                 Assert.Throws<Common.Exception.TypeDBDriverException>(
                     () => session.Transaction(transactionType));
@@ -98,9 +98,9 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Transaction
 
         public void ForEachSessionTransactionsAreNull(bool expectedNull)
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            foreach (ITypeDBSession session in ConnectionFixture.Sessions)
             {
-                foreach (ITypeDBTransaction transaction in ConnectionStepsBase.SessionsToTransactions[session])
+                foreach (ITypeDBTransaction transaction in ConnectionFixture.SessionsToTransactions[session])
                 {
                     Assert.Equal(expectedNull, transaction == null);
                 }
@@ -109,9 +109,9 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Transaction
 
         public void ForEachSessionTransactionsAreOpen(bool expectedOpen)
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            foreach (ITypeDBSession session in ConnectionFixture.Sessions)
             {
-                foreach (ITypeDBTransaction transaction in ConnectionStepsBase.SessionsToTransactions[session])
+                foreach (ITypeDBTransaction transaction in ConnectionFixture.SessionsToTransactions[session])
                 {
                     Assert.Equal(expectedOpen, transaction.IsOpen());
                 }
@@ -120,7 +120,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Transaction
 
         public void TransactionCommits()
         {
-            ConnectionStepsBase.SessionsToTransactions[ConnectionStepsBase.Sessions[0]][0].Commit();
+            ConnectionFixture.SessionsToTransactions[ConnectionFixture.Sessions[0]][0].Commit();
         }
 
         public void TransactionCommitsThrowsException()
@@ -139,9 +139,9 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Transaction
 
         public void ForEachSessionTransactionsCommit()
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            foreach (ITypeDBSession session in ConnectionFixture.Sessions)
             {
-                foreach (ITypeDBTransaction transaction in ConnectionStepsBase.SessionsToTransactions[session])
+                foreach (ITypeDBTransaction transaction in ConnectionFixture.SessionsToTransactions[session])
                 {
                     transaction.Commit();
                 }
@@ -150,9 +150,9 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Transaction
 
         public void ForEachSessionTransactionsCommitThrowsException()
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            foreach (ITypeDBSession session in ConnectionFixture.Sessions)
             {
-                foreach (ITypeDBTransaction transaction in ConnectionStepsBase.SessionsToTransactions[session])
+                foreach (ITypeDBTransaction transaction in ConnectionFixture.SessionsToTransactions[session])
                 {
                     Assert.Throws<Common.Exception.TypeDBDriverException>(
                         () => transaction.Commit());
@@ -162,9 +162,9 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Transaction
 
         public void ForEachSessionTransactionCloses()
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            foreach (ITypeDBSession session in ConnectionFixture.Sessions)
             {
-                foreach (ITypeDBTransaction transaction in ConnectionStepsBase.SessionsToTransactions[session])
+                foreach (ITypeDBTransaction transaction in ConnectionFixture.SessionsToTransactions[session])
                 {
                     transaction.Close();
                 }
@@ -173,9 +173,9 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Transaction
 
         private void ForEachSessionTransactionsHaveType(List<string> types)
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            foreach (ITypeDBSession session in ConnectionFixture.Sessions)
             {
-                List<ITypeDBTransaction?> transactions = ConnectionStepsBase.SessionsToTransactions[session];
+                List<ITypeDBTransaction?> transactions = ConnectionFixture.SessionsToTransactions[session];
                 Assert.Equal(types.Count, transactions.Count);
 
                 IEnumerator<string> typesEnumerator = types.GetEnumerator();
@@ -212,7 +212,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Transaction
 
         public void ForEachSessionOpenTransactionsInParallelOfType(DataTable types)
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            foreach (ITypeDBSession session in ConnectionFixture.Sessions)
             {
                 throw new System.Exception("Parallel test is not ready yet!"); // TODO
             }
@@ -220,7 +220,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Transaction
 
         public void ForEachSessionTransactionsInParallelAreNull(bool expectedNull)
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            foreach (ITypeDBSession session in ConnectionFixture.Sessions)
             {
                 throw new System.Exception("Parallel Null test is not ready yet!"); // TODO
             }
@@ -228,7 +228,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Transaction
 
         public void ForEachSessionTransactionsInParallelAreOpen(bool expectedOpen)
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            foreach (ITypeDBSession session in ConnectionFixture.Sessions)
             {
                 throw new System.Exception("Parallel Open test is not ready yet!"); // TODO
             }
@@ -236,7 +236,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Transaction
 
         public void ForEachSessionTransactionsInParallelHaveType(DataTable types)
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            foreach (ITypeDBSession session in ConnectionFixture.Sessions)
             {
                 throw new System.Exception("Parallel HaveType test is not ready yet!"); // TODO
             }
@@ -259,9 +259,9 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Transaction
 
         public void ForEachTransactionExecuteDefineThrowsException(string expectedMessage, string defineQueryStatements)
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            foreach (ITypeDBSession session in ConnectionFixture.Sessions)
             {
-                foreach (ITypeDBTransaction transaction in ConnectionStepsBase.SessionsToTransactions[session])
+                foreach (ITypeDBTransaction transaction in ConnectionFixture.SessionsToTransactions[session])
                 {
                     throw new Exception("Not ready for this test as well!"); // TODO
 //                    try

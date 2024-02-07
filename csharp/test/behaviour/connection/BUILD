@@ -28,8 +28,8 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 
 csharp_library(
-    name = "steps-base",
-    srcs = ["ConnectionStepsBase.cs"],
+    name = "fixture-connection",
+    srcs = ["ConnectionFixture.cs"],
     deps = behaviour_tests_deps + [
         "//csharp:driver-csharp",
         "//csharp/api",
@@ -47,7 +47,7 @@ csharp_library(
         "ConnectionStepsCore.cs",
     ],
     deps = behaviour_tests_deps + [
-        ":steps-base",
+        ":fixture-connection",
         "//csharp:driver-csharp",
         "//csharp/api",
         "//csharp/common",
@@ -64,7 +64,7 @@ csharp_library(
         "ConnectionStepsCloud.cs",
     ],
     deps = behaviour_tests_deps + [
-        ":steps-base",
+        ":fixture-connection",
         "//csharp:driver-csharp",
         "//csharp/api",
         "//csharp/common",
