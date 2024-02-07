@@ -48,12 +48,12 @@ namespace com.vaticle.typedb.driver.Common.Exception
         public class DriverErrorMessage : ErrorMessage
         {
             public DriverErrorMessage(int codeNumber, string message)
-                : base(s_codePrefix, codeNumber, s_MessagePrefix, message)
+                : base(s_codePrefix, codeNumber, s_messagePrefix, message)
             {
             }
 
             private static readonly string s_codePrefix = "CCL";
-            private static readonly string s_MessagePrefix = "DriverErrorMessage Error";
+            private static readonly string s_messagePrefix = "DriverErrorMessage Error";
         }
 
         public static class Driver
@@ -77,12 +77,12 @@ namespace com.vaticle.typedb.driver.Common.Exception
         public class ConceptErrorMessage : ErrorMessage
         {
             public ConceptErrorMessage(int codeNumber, string message)
-                : base(s_codePrefix, codeNumber, s_MessagePrefix, message)
+                : base(s_codePrefix, codeNumber, s_messagePrefix, message)
             {
             }
 
             private static readonly string s_codePrefix = "CCO";
-            private static readonly string s_MessagePrefix = "ConceptErrorMessage Error";
+            private static readonly string s_messagePrefix = "ConceptErrorMessage Error";
         }
 
         public static class Concept
@@ -110,12 +110,12 @@ namespace com.vaticle.typedb.driver.Common.Exception
         public class QueryErrorMessage : ErrorMessage
         {
             public QueryErrorMessage(int codeNumber, string message)
-                : base(s_codePrefix, codeNumber, s_MessagePrefix, message)
+                : base(s_codePrefix, codeNumber, s_messagePrefix, message)
             {
             }
 
             private static readonly string s_codePrefix = "CQY";
-            private static readonly string s_MessagePrefix = "Query Error";
+            private static readonly string s_messagePrefix = "Query Error";
         }
 
         public static class Query
@@ -129,12 +129,12 @@ namespace com.vaticle.typedb.driver.Common.Exception
         public class InternalErrorMessage : ErrorMessage
         {
             public InternalErrorMessage(int codeNumber, string message)
-                : base(s_codePrefix, codeNumber, s_MessagePrefix, message)
+                : base(s_codePrefix, codeNumber, s_messagePrefix, message)
             {
             }
 
             private static readonly string s_codePrefix = "CIN";
-            private static readonly string s_MessagePrefix = "C# InternalErrorMessage Error";
+            private static readonly string s_messagePrefix = "C# InternalErrorMessage Error";
         }
 
         public static class Internal
@@ -151,6 +151,8 @@ namespace com.vaticle.typedb.driver.Common.Exception
                 new InternalErrorMessage(5, "The object does not have a valid native handle. It may have been:  uninitialised, moved or disposed.");
             public static readonly InternalErrorMessage s_IteratorInvalidated =
                 new InternalErrorMessage(6, "Dereferenced iterator which has reached end (or was invalidated by a move).");
+            public static readonly InternalErrorMessage s_UnexpectedInternalValue =
+                new InternalErrorMessage(7, "Unexpected internal value encountered!");
         }
     }
 }

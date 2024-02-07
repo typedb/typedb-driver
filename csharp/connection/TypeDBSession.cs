@@ -22,7 +22,7 @@
 using System;
 using System.Collections.Generic;
 
-using com.vaticle.typedb.driver.pinvoke;
+using com.vaticle.typedb.driver;
 using com.vaticle.typedb.driver.Api;
 using com.vaticle.typedb.driver.Api.Database;
 using com.vaticle.typedb.driver.Common;
@@ -32,12 +32,12 @@ namespace com.vaticle.typedb.driver.Connection
 {
     public class TypeDBSession : NativeObjectWrapper<pinvoke.Session>, ITypeDBSession
     {
-        private readonly ITypeDBSession.SessionType _type;
+        private readonly SessionType _type;
         private readonly TypeDBOptions _options;
 
         private readonly List<SessionCallback> _callbacks;
 
-        public TypeDBSession(IDatabaseManager databaseManager, string database, ITypeDBSession.SessionType type, TypeDBOptions options)
+        public TypeDBSession(IDatabaseManager databaseManager, string database, SessionType type, TypeDBOptions options)
             : base(NewNative(databaseManager, database, type, options))
         {
             _type = type;
@@ -46,14 +46,14 @@ namespace com.vaticle.typedb.driver.Connection
         }
 
         private static pinvoke.Session NewNative(
-            IDatabaseManager databaseManager, string database, ITypeDBSession.SessionType type, TypeDBOptions options)
+            IDatabaseManager databaseManager, string database, SessionType type, TypeDBOptions options)
         {
             try
             {
                 return pinvoke.typedb_driver.session_new(
                     ((TypeDBDatabaseManager)databaseManager).NativeObject,
                     database,
-                    type.NativeObject,
+                    SessionTypeGetter.ToNative(type),
                     options.NativeObject);
             }
             catch (pinvoke.Error e)
@@ -67,7 +67,7 @@ namespace com.vaticle.typedb.driver.Connection
             return pinvoke.typedb_driver.session_is_open(NativeObject);
         }
 
-        public ITypeDBSession.SessionType Type()
+        public SessionType Type()
         {
             return _type;
         }
@@ -82,12 +82,12 @@ namespace com.vaticle.typedb.driver.Connection
             return _options;
         }
 
-        public ITypeDBTransaction Transaction(ITypeDBTransaction.TransactionType type)
+        public ITypeDBTransaction Transaction(TransactionType type)
         {
             return Transaction(type, new TypeDBOptions());
         }
 
-        public ITypeDBTransaction Transaction(ITypeDBTransaction.TransactionType type, TypeDBOptions options)
+        public ITypeDBTransaction Transaction(TransactionType type, TypeDBOptions options)
         {
             return new TypeDBTransaction(this, type, options);
         }

@@ -24,7 +24,7 @@
 using System;
 using System.Diagnostics;
 
-using com.vaticle.typedb.driver.pinvoke;
+using com.vaticle.typedb.driver;
 using com.vaticle.typedb.driver.Common.Exception;
 
 namespace com.vaticle.typedb.driver.Common.Exception
@@ -76,7 +76,7 @@ namespace com.vaticle.typedb.driver.Common.Exception
             return this.GetType().Name;
         }
 
-        public ErrorMessage GetErrorMessage()
+        public ErrorMessage? GetErrorMessage()
         {
             return _errorMessage;
         }

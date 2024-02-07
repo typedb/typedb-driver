@@ -1,3 +1,24 @@
+/*
+ * Copyright (C) 2022 Vaticle
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 using DataTable = Gherkin.Ast.DataTable;
 using System;
 using System.Collections.Generic;
@@ -14,21 +35,26 @@ using com.vaticle.typedb.driver.Test.Behaviour.Connection.Session;
 namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Session
 {
     [FeatureFile("external/vaticle_typedb_behaviour/connection/session.feature")]
-    public class SessionTest : Feature, IDisposable, IClassFixture<DatabaseSteps>, IClassFixture<ConnectionSteps>, IClassFixture<SessionSteps>
+    public class SessionTest
+        : Feature
+        , IDisposable
+        , IClassFixture<SessionSteps>
+        , IClassFixture<DatabaseSteps>
+        , IClassFixture<ConnectionSteps>
     {
-        public DatabaseTest() 
+        public SessionTest()
             : base()
         {
-            _connectionSteps = new ConnectionSteps();
             _sessionSteps = new SessionSteps();
+            _connectionSteps = new ConnectionSteps();
             _databaseSteps = new DatabaseSteps();
         }
-        
+
         public void Dispose()
         {
             _connectionSteps.Dispose();
         }
-        
+
         [Given(@"typedb starts")]
         [When(@"typedb starts")]
         public void TypeDBStarts()
@@ -103,62 +129,63 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Session
         public void ConnectionDoesNotHaveAnyDatabase()
             => _databaseSteps.ConnectionDoesNotHaveAnyDatabase();
 
-        @When("connection open schema session for database: {word}")
+        [When(@"connection open schema session for database: {word}")]
         public void ConnectionOpenSchemaSessionForDatabase(string name)
             => _sessionSteps.ConnectionOpenSchemaSessionForDatabase(name);
 
-        @When("connection open (data )session for database: {word}")
+        [When(@"connection open (data )session for database: {word}")]
         public void ConnectionOpenSchemaSessionForDatabases(DataTable names)
             => _sessionSteps.ConnectionOpenSchemaSessionForDatabases(names);
 
-        @When("connection open schema session(s) for database(s):")
+        [When(@"connection open schema session(s) for database(s):")]
         public void ConnectionOpenDataSessionForDatabase(string name)
             => _sessionSteps.ConnectionOpenDataSessionForDatabase(name);
 
-        @When("connection open (data )session(s) for database(s):")
+        [When(@"connection open (data )session(s) for database(s):")]
         public void ConnectionOpenDataSessionForDatabases(DataTable names)
             => _sessionSteps.ConnectionOpenDataSessionForDatabases(names);
 
-        @When("connection open (data )sessions in parallel for databases:")
+        [When(@"connection open (data )sessions in parallel for databases:")]
         public void ConnectionOpenDataSessionsInParallelForDatabases(DataTable names)
             => _sessionSteps.ConnectionOpenDataSessionsInParallelForDatabases(names);
 
-        @When("connection close all sessions")
+        [When(@"connection close all sessions")]
         public void ConnectionCloseAllSessions()
             => _sessionSteps.ConnectionCloseAllSessions();
 
-        @Then("session(s) is/are null: {bool}")
+        [Then(@"session(s) is/are null: {bool}")]
         public void SessionsAreNull(bool expectedNull)
             => _sessionSteps.SessionsAreNull(expectedNull);
 
-        @Then("sessions in parallel are null: {bool}")
+        [Then(@"sessions in parallel are null: {bool}")]
         public void SessionsInParallelAreNull(bool expectedNull)
             => _sessionSteps.SessionsInParallelAreNull(expectedNull);
 
-        @Then("session(s) is/are open: {bool}")
+        [Then(@"session(s) is/are open: {bool}")]
         public void SessionsAreOpen(bool expectedOpen)
             => _sessionSteps.SessionsAreOpen(expectedOpen);
 
-        @Then("sessions in parallel are open: {bool}")
+        [Then(@"sessions in parallel are open: {bool}")]
         public void SessionsInParallelAreOpen(bool expectedNull)
             => _sessionSteps.SessionsInParallelAreOpen(expectedNull);
 
-        @Then("session(s) has/have database: {word}")
+        [Then(@"session(s) has/have database: {word}")]
         public void SessionsHaveDatabase(string name)
             => _sessionSteps.SessionsHaveDatabase(name);
 
-        @Then("session(s) has/have database(s):")
+        [Then(@"session(s) has/have database(s):")]
         public void SessionsHaveDatabases(DataTable names)
             => _sessionSteps.SessionsHaveDatabases(names);
 
-        @Then("sessions in parallel have databases:")
+        [Then(@"sessions in parallel have databases:")]
         public void SessionsInParallelHaveDatabases(DataTable names)
             => _sessionSteps.SessionsInParallelHaveDatabases(names);
 
-        @Given("set session option {word} to: {word}")
+        [Given(@"set session option {word} to: {word}")]
         public void SetSessionOptionTo(string option, string value)
             => _sessionSteps.SetSessionOptionTo(option, value);
 
+        private readonly SessionSteps _sessionSteps;
         private readonly DatabaseSteps _databaseSteps;
         private readonly ConnectionSteps _connectionSteps;
     }

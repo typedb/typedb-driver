@@ -21,8 +21,9 @@
 
 #nullable enable
 
-using com.vaticle.typedb.driver.pinvoke;
+using com.vaticle.typedb.driver;
 using com.vaticle.typedb.driver.Common.Exception;
+using InternalError = com.vaticle.typedb.driver.Common.Exception.Error.Internal;
 
 namespace com.vaticle.typedb.driver.Common
 {
@@ -39,8 +40,7 @@ namespace com.vaticle.typedb.driver.Common
         {
             if (NativeObject == null)
             {
-            // TODO:
-//                throw new TypeDBDriverException(ErrorMessage.Internal.NULL_NATIVE_VALUE);
+                throw new TypeDBDriverException(InternalError.s_NullNativeValue);
             }
 
             this.NativeObject = NativeObject;
