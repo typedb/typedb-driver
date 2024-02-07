@@ -28,7 +28,7 @@ using com.vaticle.typedb.driver.Test.Behaviour.Connection;
 
 namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 {
-    public class ConnectionSteps : ConnectionStepsBase
+    public class ConnectionSteps : ConnectionFixture
     {
         public ConnectionSteps()
             : base()
@@ -77,7 +77,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
         {
             if (Driver != null)
             {
-                Console.WriteLine("Driver was created!!!!!!"); // TODO!!
+                Console.WriteLine("Driver was created!!!!!!"); // TODO (needed for debug RN)
                 Driver.Close();
                 Driver = null;
             }
@@ -88,6 +88,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
         public void ConnectionOpensWithAuthenticationThrowsException(string username, string password)
         {
             Console.WriteLine("CLOUD: ConnectionOpensWithAuthenticationThrowsException");
+            throw new Exception("This test method is not ready");
             // TODO:
 //            assertThrows(() -> createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address(), username, password, false));
         }

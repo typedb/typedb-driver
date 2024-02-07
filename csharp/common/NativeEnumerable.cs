@@ -23,6 +23,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using com.vaticle.typedb.driver.Common.Exception;
+using InternalError = com.vaticle.typedb.driver.Common.Exception.Error.Internal;
 
 namespace com.vaticle.typedb.driver.Common
 {
@@ -41,7 +42,8 @@ namespace com.vaticle.typedb.driver.Common
         {
             if (_enumeratorUsed)
             {
-                // TODO: throw something?
+                // TODO: Maybe need to allow it (+ swig)!
+                throw new TypeDBDriverException(InternalError.s_EnumeratorExcessiveAccess);
             }
 
             _enumeratorUsed = true;

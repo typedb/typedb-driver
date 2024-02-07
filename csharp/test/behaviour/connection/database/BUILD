@@ -32,7 +32,7 @@ csharp_library(
     name = "steps-database", # Steps libraries should have different names for the C# output compilation config!
     srcs = ["DatabaseSteps.cs"],
     deps = behaviour_tests_deps + [
-        "//csharp/test/behaviour/connection:steps-base",
+        "//csharp/test/behaviour/connection:fixture-connection",
         "//csharp:driver-csharp",
         "//csharp/api",
         "//csharp/common",
@@ -50,7 +50,7 @@ csharp_behaviour_test(
     steps_deps = [
         ":steps-database",
         "//csharp/test/behaviour/connection:steps-core",
-        "//csharp/test/behaviour/connection:steps-base",
+        "//csharp/test/behaviour/connection:fixture-connection",
     ],
     deps = [
         "//csharp/api",
@@ -68,7 +68,7 @@ csharp_behaviour_test(
     steps_deps = [
         ":steps-database",
         "//csharp/test/behaviour/connection:steps-cloud",
-        "//csharp/test/behaviour/connection:steps-base",
+        "//csharp/test/behaviour/connection:fixture-connection",
     ],
     deps = [
         "//csharp/api",
