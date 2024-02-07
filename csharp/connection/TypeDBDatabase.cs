@@ -24,10 +24,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using com.vaticle.typedb.driver.pinvoke;
+using com.vaticle.typedb.driver;
 using com.vaticle.typedb.driver.Api.Database;
 using com.vaticle.typedb.driver.Common;
 using com.vaticle.typedb.driver.Common.Exception;
+using DriverError = com.vaticle.typedb.driver.Common.Exception.Error.Driver;
 
 namespace com.vaticle.typedb.driver.Connection
 {
@@ -41,8 +42,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (NativeObject == null || !NativeObject.IsOwned())
             {
-            // TODO:
-//                throw new TypeDBDriverException(DATABASE_DELETED);
+                throw new TypeDBDriverException(DriverError.s_DatabaseDeleted);
             }
 
             return pinvoke.typedb_driver.database_get_name(NativeObject);
@@ -52,8 +52,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (NativeObject == null || !NativeObject.IsOwned())
             {
-            // TODO:
-//                throw new TypeDBDriverException(DATABASE_DELETED);
+                throw new TypeDBDriverException(DriverError.s_DatabaseDeleted);
             }
 
             try
@@ -70,8 +69,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (NativeObject == null || !NativeObject.IsOwned())
             {
-            // TODO:
-//                throw new TypeDBDriverException(DATABASE_DELETED);
+                throw new TypeDBDriverException(DriverError.s_DatabaseDeleted);
             }
 
             try
@@ -87,8 +85,8 @@ namespace com.vaticle.typedb.driver.Connection
         public string RuleSchema()
         {
             if (NativeObject == null || !NativeObject.IsOwned())
-            {// TODO:
-//                throw new TypeDBDriverException(DATABASE_DELETED);
+            {
+                throw new TypeDBDriverException(DriverError.s_DatabaseDeleted);
             }
 
             try
@@ -105,8 +103,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (NativeObject == null || !NativeObject.IsOwned())
             {
-            // TODO:
-//                throw new TypeDBDriverException(DATABASE_DELETED);
+                throw new TypeDBDriverException(DriverError.s_DatabaseDeleted);
             }
 
             try
@@ -128,8 +125,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (NativeObject == null || !NativeObject.IsOwned())
             {
-            // TODO:
-//                throw new TypeDBDriverException(DATABASE_DELETED);
+                throw new TypeDBDriverException(DriverError.s_DatabaseDeleted);
             }
 
             return new NativeEnumerable<pinvoke.ReplicaInfo>(
@@ -142,8 +138,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (NativeObject == null || !NativeObject.IsOwned())
             {
-            // TODO:
-//                throw new TypeDBDriverException(DATABASE_DELETED);
+                throw new TypeDBDriverException(DriverError.s_DatabaseDeleted);
             }
 
             pinvoke.ReplicaInfo replicaInfo = pinvoke.typedb_driver.database_get_primary_replica_info(NativeObject);
@@ -159,8 +154,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (NativeObject == null || !NativeObject.IsOwned())
             {
-            // TODO:
-//                throw new TypeDBDriverException(DATABASE_DELETED);
+                throw new TypeDBDriverException(DriverError.s_DatabaseDeleted);
             }
             
             pinvoke.ReplicaInfo replicaInfo = pinvoke.typedb_driver.database_get_preferred_replica_info(NativeObject);

@@ -19,6 +19,8 @@
 # under the License.
 #
 
+package(default_visibility = ["//csharp/test/behaviour:__subpackages__"])
+
 load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
 load("//csharp/test:build_opts.bzl", "behaviour_tests_deps")
 load("//csharp/test:rules.bzl", "csharp_behaviour_test")
@@ -27,7 +29,7 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 
 csharp_library(
-    name = "steps-database",
+    name = "steps",
     srcs = ["DatabaseSteps.cs"],
     deps = behaviour_tests_deps + [
         "//csharp/test/behaviour/connection:steps-base",
@@ -46,7 +48,7 @@ csharp_behaviour_test(
     test_files = ["DatabaseTest.cs"],
     features = ["@vaticle_typedb_behaviour//connection:database.feature"],
     steps_deps = [
-        ":steps-database",
+        ":steps",
         "//csharp/test/behaviour/connection:steps-core",
         "//csharp/test/behaviour/connection:steps-base",
     ],
@@ -64,7 +66,7 @@ csharp_behaviour_test(
     test_files = ["DatabaseTest.cs"],
     features = ["@vaticle_typedb_behaviour//connection:database.feature"],
     steps_deps = [
-        ":steps-database",
+        ":steps",
         "//csharp/test/behaviour/connection:steps-cloud",
         "//csharp/test/behaviour/connection:steps-base",
     ],

@@ -22,7 +22,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using com.vaticle.typedb.driver.pinvoke;
+using com.vaticle.typedb.driver;
 using com.vaticle.typedb.driver.Api;
 using com.vaticle.typedb.driver.Api.Database;
 using com.vaticle.typedb.driver.Common;
@@ -96,13 +96,13 @@ namespace com.vaticle.typedb.driver.Connection
             return databaseMgr;
         }
 
-        public ITypeDBSession Session(string database, ITypeDBSession.SessionType type)
+        public ITypeDBSession Session(string database, SessionType type)
         {
             return Session(database, type, new TypeDBOptions());
         }
 
         public ITypeDBSession Session(
-            string database, ITypeDBSession.SessionType type, TypeDBOptions options)
+            string database, SessionType type, TypeDBOptions options)
         {
             return new TypeDBSession(Databases(), database, type, options);
         }

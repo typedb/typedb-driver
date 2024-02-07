@@ -19,6 +19,8 @@
 # under the License.
 #
 
+package(default_visibility = ["//csharp/test/behaviour:__subpackages__"])
+
 load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
 load("//csharp/test:build_opts.bzl", "behaviour_tests_deps")
 load("//csharp/test:rules.bzl", "csharp_behaviour_test")
@@ -47,6 +49,7 @@ csharp_behaviour_test(
     features = ["@vaticle_typedb_behaviour//connection:session.feature"],
     steps_deps = [
         ":steps-session",
+        "//csharp/test/behaviour/connection/database:steps",
         "//csharp/test/behaviour/connection:steps-core",
         "//csharp/test/behaviour/connection:steps-base",
     ],
@@ -65,6 +68,7 @@ csharp_behaviour_test(
     features = ["@vaticle_typedb_behaviour//connection:session.feature"],
     steps_deps = [
         ":steps-session",
+        "//csharp/test/behaviour/connection/database:steps",
         "//csharp/test/behaviour/connection:steps-cloud",
         "//csharp/test/behaviour/connection:steps-base",
     ],

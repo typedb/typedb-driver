@@ -28,11 +28,9 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 csharp_library(
     name = "common",
     srcs = glob([
-            "*.cs",
-            "*/*.cs",
-        ],
-        exclude = ["test/**"],
-    ),
+        "*.cs",
+        "*/*.cs",
+    ]),
     deps = ["//csharp:typedb_driver_pinvoke"],
     runtime_identifier = "any",
     target_frameworks = target_frameworks,

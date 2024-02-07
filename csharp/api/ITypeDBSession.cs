@@ -22,13 +22,12 @@
 using System;
 using System.Collections.Generic;
 
-using com.vaticle.typedb.driver.pinvoke;
+using com.vaticle.typedb.driver;
 using com.vaticle.typedb.driver.Common.Exception;
+using InternalError = com.vaticle.typedb.driver.Common.Exception.Error.Internal;
 
 namespace com.vaticle.typedb.driver.Api
 {
-    using SessionTypeNativeToOwn = Dictionary<pinvoke.SessionType, ITypeDBSession.SessionType>;
-
     public interface ITypeDBSession : IDisposable
     {
 
@@ -65,9 +64,9 @@ namespace com.vaticle.typedb.driver.Api
         /**
          * Opens a transaction on the database connected to the session with default options.
          *
-         * @see ITypeDBSession#Transaction(ITypeDBTransaction.TransactionType, TypeDBOptions)
+         * @see ITypeDBSession#Transaction(TransactionType, TypeDBOptions)
          */
-        ITypeDBTransaction Transaction(ITypeDBTransaction.TransactionType type);
+        ITypeDBTransaction Transaction(TransactionType type);
 
         /**
          * Opens a transaction to perform read or write queries on the database connected to the session.
@@ -80,7 +79,7 @@ namespace com.vaticle.typedb.driver.Api
          * @param type The type of transaction to be created (READ or WRITE)
          * @param options Options for the session
          */
-        ITypeDBTransaction Transaction(ITypeDBTransaction.TransactionType type, TypeDBOptions options);
+        ITypeDBTransaction Transaction(TransactionType type, TypeDBOptions options);
 
         /**
          * Registers a callback function which will be executed when this session is closed.
@@ -117,68 +116,67 @@ namespace com.vaticle.typedb.driver.Api
          * </pre>
          */
         void Close();
-
-        /**
-         * Used to specify the type of the session.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * driver.Session(database, ITypeDBSession.SessionType.Value.Schema);
-         * </pre>
-         */
-        public struct SessionType
-        {
-            public enum Value : int
-            {
-                Data = 0,
-                Schema = 1
-            }
-
-            static SessionType Of(pinvoke.SessionType sessionType)
-            {
-                SessionType resultType;
-                if (s_sessionTypeNativeToOwnAll.TryGetValue(sessionType, out resultType))
-                {
-                    return resultType;
-                }
-                return resultType; // Temp
-// TODO:
-//                throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
-            }
-
-            int Id() // TODO: Maybe rename to Value
-            {
-                return (int)_value;
-            }
-
-            bool IsData()
-            {
-                return !_isSchema;
-            }
-
-            bool IsSchema()
-            {
-                return _isSchema;
-            }
-
-            private SessionType(Value value, pinvoke.SessionType nativeObject)
-            {
-                _value = value;
-
-                NativeObject = nativeObject;
-                _isSchema = NativeObject == pinvoke.SessionType.Schema;
-            }
-
-            private readonly Value _value;
-            private readonly bool _isSchema;
-            public readonly pinvoke.SessionType NativeObject;
-
-            private static SessionTypeNativeToOwn s_sessionTypeNativeToOwnAll =
-                new SessionTypeNativeToOwn()
-                {
-                    {pinvoke.SessionType.Data, new SessionType(Value.Data, pinvoke.SessionType.Data)},
-                    {pinvoke.SessionType.Schema, new SessionType(Value.Schema, pinvoke.SessionType.Schema)}
-                };
         }
+
+    /**
+     * Used to specify the type of the session.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * driver.Session(database, SessionType.Schema);
+     * </pre>
+     */
+    public enum SessionType : int
+    {
+        Data = 0,
+        Schema = 1
+    }
+
+    public static class SessionTypeGetter // TODO: Come up with a better naming?
+    {
+        public static SessionType FromNative(pinvoke.SessionType nativeSessionType)
+        {
+            foreach (var sessionTypeInfo in s_allSessionTypeInfos)
+            {
+                if (sessionTypeInfo.NativeObject == nativeSessionType)
+                {
+                    return sessionTypeInfo.Type;
+                }
+            }
+
+            throw new TypeDBDriverException(InternalError.s_UnexpectedNativeValue);
+        }
+
+        public static pinvoke.SessionType ToNative(SessionType sessionType)
+        {
+            foreach (var sessionTypeInfo in s_allSessionTypeInfos)
+            {
+                if (sessionTypeInfo.Type == sessionType)
+                {
+                    return sessionTypeInfo.NativeObject;
+                }
+            }
+
+            throw new TypeDBDriverException(InternalError.s_UnexpectedInternalValue);
+        }
+
+        private struct SessionTypeInfo
+        {
+            public SessionTypeInfo(SessionType type, pinvoke.SessionType nativeObject)
+            {
+                Type = type;
+                NativeObject = nativeObject;
+            }
+
+            public readonly SessionType Type;
+            public readonly pinvoke.SessionType NativeObject;
+        }
+
+        private static List<SessionTypeInfo> s_allSessionTypeInfos =
+            new List<SessionTypeInfo>()
+            {
+                new SessionTypeInfo(SessionType.Data, pinvoke.SessionType.Data),
+                new SessionTypeInfo(SessionType.Schema, pinvoke.SessionType.Schema)
+            };
     }
 }

@@ -24,7 +24,7 @@
 using System.Diagnostics;
 using System.IO;
 
-using com.vaticle.typedb.driver.pinvoke;
+using com.vaticle.typedb.driver;
 using com.vaticle.typedb.driver.Common;
 
 namespace com.vaticle.typedb.driver.Api

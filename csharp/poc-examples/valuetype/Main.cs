@@ -1,4 +1,4 @@
-using com.vaticle.typedb.driver.pinvoke;
+using com.vaticle.typedb.driver;
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;

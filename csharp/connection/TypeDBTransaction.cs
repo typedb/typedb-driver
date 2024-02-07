@@ -22,17 +22,18 @@
 using System;
 using System.Collections.Generic;
 
-using com.vaticle.typedb.driver.pinvoke;
+using com.vaticle.typedb.driver;
 using com.vaticle.typedb.driver.Api;
 using com.vaticle.typedb.driver.Api.Database;
 using com.vaticle.typedb.driver.Common;
 using com.vaticle.typedb.driver.Common.Exception;
+using DriverError = com.vaticle.typedb.driver.Common.Exception.Error.Driver;
 
 namespace com.vaticle.typedb.driver.Connection
 {
     public class TypeDBTransaction : NativeObjectWrapper<pinvoke.Transaction>, ITypeDBTransaction
     {
-        private readonly ITypeDBTransaction.TransactionType _type;
+        private readonly TransactionType _type;
         private readonly TypeDBOptions _options;
 
 // TODO:
@@ -42,7 +43,7 @@ namespace com.vaticle.typedb.driver.Connection
 
         private readonly List<TransactionOnClose> _callbacks;
 
-        public TypeDBTransaction(TypeDBSession session, ITypeDBTransaction.TransactionType type, TypeDBOptions options)
+        public TypeDBTransaction(TypeDBSession session, TransactionType type, TypeDBOptions options)
             : base(NewNative(session, type, options))
         {
             _type = type;
@@ -56,12 +57,12 @@ namespace com.vaticle.typedb.driver.Connection
         }
 
         private static pinvoke.Transaction NewNative(
-            TypeDBSession session, ITypeDBTransaction.TransactionType type, TypeDBOptions options)
+            TypeDBSession session, TransactionType type, TypeDBOptions options)
         {
             try
             {
                 return pinvoke.typedb_driver.transaction_new(
-                    session.NativeObject, type.NativeObject, options.NativeObject);
+                    session.NativeObject, TransactionTypeGetter.ToNative(type), options.NativeObject);
             }
             catch (pinvoke.Error e)
             {
@@ -69,7 +70,7 @@ namespace com.vaticle.typedb.driver.Connection
             }
         }
 
-        public ITypeDBTransaction.TransactionType Type()
+        public TransactionType Type()
         {
             return _type;
         }
@@ -108,8 +109,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (!NativeObject.IsOwned())
             {
-            // TODO:
-//                throw new TypeDBDriverException(TRANSACTION_CLOSED);
+                throw new TypeDBDriverException(DriverError.s_TransactionClosed);
             }
 
             try
@@ -128,16 +128,14 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (!NativeObject.IsOwned())
             {
-            // TODO:
-//                throw new TypeDBDriverException(TRANSACTION_CLOSED);
+                throw new TypeDBDriverException(DriverError.s_TransactionClosed);
             }
 
             try
             {
-                // TODO: released()
-//                pinvoke.typedb_driver.transaction_commit(NativeObject.released()).get();
+                pinvoke.typedb_driver.transaction_commit(NativeObject.Released());  // TODO: .Get() after implementing VoidPromises
             }
-            catch (pinvoke.Error e)  // TODO: .Unchecked
+            catch (pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
@@ -147,7 +145,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (!NativeObject.IsOwned())
             {
-//                throw new TypeDBDriverException(TRANSACTION_CLOSED);
+                throw new TypeDBDriverException(DriverError.s_TransactionClosed);
             }
 
             try

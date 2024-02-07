@@ -35,7 +35,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Session
 {
     public class SessionSteps
     {
-        private void ConnectionOpenSessionForDatabase(string name, ITypeDBSession.SessionType.Value sessionType)
+        private void ConnectionOpenSessionForDatabase(string name, SessionType sessionType)
         {
             ConnectionStepsBase.Sessions.Add(
                 ConnectionStepsBase.Driver.Session(
@@ -44,7 +44,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Session
 
         public void ConnectionOpenSchemaSessionForDatabase(string name)
         {
-            ConnectionOpenSessionForDatabase(name, ITypeDBSession.SessionType.Value.Schema);
+            ConnectionOpenSessionForDatabase(name, SessionType.Schema);
         }
 
         public void ConnectionOpenSchemaSessionForDatabases(DataTable names)
@@ -60,7 +60,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Session
 
         public void ConnectionOpenDataSessionForDatabase(string name)
         {
-            ConnectionOpenSessionForDatabase(name, ITypeDBSession.SessionType.Value.Data);
+            ConnectionOpenSessionForDatabase(name, SessionType.Data);
         }
 
         public void ConnectionOpenDataSessionForDatabases(DataTable names)
