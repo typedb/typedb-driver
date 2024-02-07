@@ -38,7 +38,7 @@ namespace com.vaticle.typedb.driver.Common.Exception
             : base(error.ToString())
         {
             Debug.Assert(!Message.Contains("%s"));
-            this.errorMessage = error;
+            _errorMessage = error;
         }
 
         /**
