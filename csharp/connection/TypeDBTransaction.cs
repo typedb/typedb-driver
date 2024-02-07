@@ -118,9 +118,9 @@ namespace com.vaticle.typedb.driver.Connection
                 _callbacks.Add(callback);
                 pinvoke.typedb_driver.transaction_on_close(NativeObject, callback.Released());
             }
-            catch (pinvoke.Error error)
+            catch (pinvoke.Error e)
             {
-                throw new TypeDBDriverException(error);
+                throw new TypeDBDriverException(e);
             }
         }
 
@@ -152,7 +152,7 @@ namespace com.vaticle.typedb.driver.Connection
             {
                 pinvoke.typedb_driver.transaction_rollback(NativeObject); // TODO: .Get() after implementing VoidPromises
             }
-            catch (pinvoke.Error e) // TODO: .Unchecked
+            catch (pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }

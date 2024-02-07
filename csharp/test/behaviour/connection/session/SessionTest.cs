@@ -20,6 +20,7 @@
  */
 
 using DataTable = Gherkin.Ast.DataTable;
+using DocString = Gherkin.Ast.DocString;
 using System;
 using Xunit;
 using Xunit.Gherkin.Quick;
@@ -199,13 +200,16 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Session
         public void SetSessionOptionTo(string option, string value)
             => _sessionSteps.SetSessionOptionTo(option, value);
 
-        public void TypeqlDefine(string defineQueryStatements)
+        [Then(@"typeql define")]
+        public void TypeqlDefine(DocString defineQueryStatements)
            => _querySteps.TypeqlDefine(defineQueryStatements);
 
-        public void TypeqlDefineThrowsExceptionContaining(string expectedMessage, string defineQueryStatements)
+        [Then(@"typeql define; throws exception containing {string}")]
+        public void TypeqlDefineThrowsExceptionContaining(string expectedMessage, DocString defineQueryStatements)
             => _querySteps.TypeqlDefineThrowsExceptionContaining(expectedMessage, defineQueryStatements);
 
-        public void TypeqlInsertThrowsExceptionContaining(string expectedMessage, string insertQueryStatements)
+        [Then(@"typeql insert; throws exception containing {string}")]
+        public void TypeqlInsertThrowsExceptionContaining(string expectedMessage, DocString insertQueryStatements)
             => _querySteps.TypeqlInsertThrowsExceptionContaining(expectedMessage, insertQueryStatements);
 
         private readonly SessionSteps _sessionSteps;
