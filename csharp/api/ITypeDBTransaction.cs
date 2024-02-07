@@ -24,11 +24,10 @@ using System.Collections.Generic;
 
 using com.vaticle.typedb.driver.Api;
 using com.vaticle.typedb.driver.Common.Exception;
+using InternalError = com.vaticle.typedb.driver.Common.Exception.Error.Internal;
 
 namespace com.vaticle.typedb.driver.Api
 {
-    using TransactionTypeNativeToOwn = Dictionary<pinvoke.TransactionType, ITypeDBTransaction.TransactionType>;
-
     public interface ITypeDBTransaction : IDisposable
     {
         /**
@@ -108,67 +107,67 @@ namespace com.vaticle.typedb.driver.Api
          * </pre>
          */
         void Close();
+    }
 
-        /**
-         * Used to specify the type of transaction.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * session.Transaction(TransactionType.Value.Read);
-         * </pre>
-         */
-        public struct TransactionType
+    /**
+     * Used to specify the type of transaction.
+     *
+     * <h3>Examples</h3>
+     * <pre>
+     * session.Transaction(TransactionType.Read);
+     * </pre>
+     */
+    public enum TransactionType : int
+    {
+        Read = 0,
+        Write = 1
+    }
+
+    public static class TransactionTypeGetter // TODO: Come up with a better naming?
+    {
+        public static TransactionType FromNative(pinvoke.TransactionType nativeTransactionType)
         {
-            public enum Value : int
+            foreach (var transactionTypeInfo in s_allTransactionTypeInfos)
             {
-                Read = 0,
-                Write = 1
-            }
-
-            static TransactionType Of(pinvoke.TransactionType transactionType)
-            {
-                TransactionType resultType;
-                if (s_transactionTypeNativeToOwnAll.TryGetValue(transactionType, out resultType))
+                if (transactionTypeInfo.NativeObject == nativeTransactionType)
                 {
-                    return resultType;
+                    return transactionTypeInfo.Type;
                 }
-                return resultType; // Temp
-// TODO:
-//                throw new TypeDBDriverException(UNEXPECTED_NATIVE_VALUE);
             }
 
-            int Id() // TODO: Maybe rename to Value
-            {
-                return (int)_value;
-            }
-
-            bool IsRead()
-            {
-                return !_isWrite;
-            }
-
-            bool IsWrite()
-            {
-                return _isWrite;
-            }
-
-            private TransactionType(Value value, pinvoke.TransactionType nativeObject)
-            {
-                _value = value;
-                NativeObject = nativeObject;
-                _isWrite = NativeObject == pinvoke.TransactionType.Write;
-            }
-
-            private readonly Value _value;
-            private readonly bool _isWrite;
-            public readonly pinvoke.TransactionType NativeObject;
-
-            private static TransactionTypeNativeToOwn s_transactionTypeNativeToOwnAll =
-                new TransactionTypeNativeToOwn()
-                {
-                    {pinvoke.TransactionType.Read, new TransactionType(Value.Read, pinvoke.TransactionType.Read)},
-                    {pinvoke.TransactionType.Write, new TransactionType(Value.Write, pinvoke.TransactionType.Write)}
-                };
+            throw new TypeDBDriverException(InternalError.s_UnexpectedNativeValue);
         }
+
+        public static pinvoke.TransactionType ToNative(TransactionType transactionType)
+        {
+            foreach (var transactionTypeInfo in s_allTransactionTypeInfos)
+            {
+                if (transactionTypeInfo.Type == transactionType)
+                {
+                    return transactionTypeInfo.NativeObject;
+                }
+            }
+
+            throw new TypeDBDriverException(InternalError.s_UnexpectedInternalValue);
+        }
+
+        private struct TransactionTypeInfo
+        {
+            public TransactionTypeInfo(TransactionType type, pinvoke.TransactionType nativeObject)
+            {
+                Type = type;
+                NativeObject = nativeObject;
+            }
+
+            public readonly TransactionType Type;
+            public readonly pinvoke.TransactionType NativeObject;
+        }
+
+        private static TransactionTypeInfo[] s_allTransactionTypeInfos =
+            new TransactionTypeInfo[]
+            {
+                new TransactionTypeInfo(TransactionType.Read, pinvoke.TransactionType.Read),
+                new TransactionTypeInfo(TransactionType.Write, pinvoke.TransactionType.Write)
+            };
     }
 }

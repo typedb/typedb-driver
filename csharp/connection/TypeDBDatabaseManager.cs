@@ -23,10 +23,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using com.vaticle.typedb.driver.pinvoke;
+using com.vaticle.typedb.driver;
 using com.vaticle.typedb.driver.Api.Database;
 using com.vaticle.typedb.driver.Common;
 using com.vaticle.typedb.driver.Common.Exception;
+using DriverError = com.vaticle.typedb.driver.Common.Exception.Error.Driver;
 
 namespace com.vaticle.typedb.driver.Connection
 {
@@ -52,8 +53,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (String.IsNullOrEmpty(name))
             {
-            // TODO:
-//                throw new TypeDBDriverException(MISSING_DB_NAME);
+                throw new TypeDBDriverException(DriverError.s_MissingDbName);
             }
 
             try
@@ -70,8 +70,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (String.IsNullOrEmpty(name))
             {
-            // TODO:
-//                throw new TypeDBDriverException(MISSING_DB_NAME);
+                throw new TypeDBDriverException(DriverError.s_MissingDbName);
             }
 
             try
@@ -88,8 +87,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (String.IsNullOrEmpty(name))
             {
-            // TODO:
-//                throw new TypeDBDriverException(MISSING_DB_NAME);
+                throw new TypeDBDriverException(DriverError.s_MissingDbName);
             }
 
             try

@@ -29,7 +29,7 @@ using com.vaticle.typedb.driver.Common;
 
 namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 {
-    public abstract class ConnectionStepsBase : IDisposable
+    public abstract class ConnectionStepsBase : IDisposable // TODO: Rename to get a more beautiful reference to the static fields
     {
         protected ConnectionStepsBase() // "Before"
         {
