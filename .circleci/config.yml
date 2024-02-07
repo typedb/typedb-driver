@@ -484,6 +484,18 @@ jobs:
 
       - deploy-pip-snapshot-unix
 
+      - deploy-maven-jni-snapshot-unix
+
+      - run: brew install cmake
+
+      - deploy-clib-snapshot-unix
+      - test-clib-assembly-mac:
+          target-arch: x86_64
+
+      - deploy-cpp-snapshot-unix
+      - test-cpp-assembly-mac:
+          target-arch: x86_64
+
   deploy-snapshot-windows-x86_64:
     executor:
       name: win/default
