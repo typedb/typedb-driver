@@ -21,7 +21,7 @@
 
 using System.Collections.Generic;
 
-using com.vaticle.typedb.driver.pinvoke;
+using com.vaticle.typedb.driver;
 using com.vaticle.typedb.driver.Api;
 using com.vaticle.typedb.driver.Connection;
 
