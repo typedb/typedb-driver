@@ -26,6 +26,7 @@ using System.IO;
 
 using com.vaticle.typedb.driver;
 using com.vaticle.typedb.driver.Common;
+using com.vaticle.typedb.driver.Common.Exception;
 
 namespace com.vaticle.typedb.driver.Api
 {
@@ -77,9 +78,7 @@ namespace com.vaticle.typedb.driver.Api
             }
             catch (pinvoke.Error e)
             {
-            return null;
-                // TODO:
-//                throw new TypeDBDriverException(e);
+                throw new TypeDBDriverException(e);
             }
         }
     }

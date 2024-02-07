@@ -22,6 +22,7 @@
 using com.vaticle.typedb.driver;
 using com.vaticle.typedb.driver.Common;
 using com.vaticle.typedb.driver.Common.Exception;
+using DriverError = com.vaticle.typedb.driver.Common.Exception.Error.Driver;
 
 namespace com.vaticle.typedb.driver.Api
 {
@@ -255,8 +256,7 @@ namespace com.vaticle.typedb.driver.Api
         {
             if (prefetchSize < 1)
             {
-            // TODO:
-//                throw new TypeDBDriverException(POSITIVE_VALUE_REQUIRED, prefetchSize);
+                throw new TypeDBDriverException(DriverError.s_PositiveValueRequired, prefetchSize);
             }
 
             pinvoke.typedb_driver.options_set_prefetch_size(NativeObject, prefetchSize);
@@ -299,8 +299,7 @@ namespace com.vaticle.typedb.driver.Api
         {
             if (sessionIdleTimeoutMillis < 1)
             {
-            // TODO:
-//                throw new TypeDBDriverException(POSITIVE_VALUE_REQUIRED, sessionIdleTimeoutMillis);
+                throw new TypeDBDriverException(DriverError.s_PositiveValueRequired, sessionIdleTimeoutMillis);
             }
 
             pinvoke.typedb_driver.options_set_session_idle_timeout_millis(NativeObject, sessionIdleTimeoutMillis);
@@ -342,8 +341,7 @@ namespace com.vaticle.typedb.driver.Api
         {
             if (transactionTimeoutMillis < 1)
             {
-            // TODO:
-//                throw new TypeDBDriverException(POSITIVE_VALUE_REQUIRED, transactionTimeoutMillis);
+                throw new TypeDBDriverException(DriverError.s_PositiveValueRequired, transactionTimeoutMillis);
             }
 
             pinvoke.typedb_driver.options_set_transaction_timeout_millis(NativeObject, transactionTimeoutMillis);
@@ -386,8 +384,7 @@ namespace com.vaticle.typedb.driver.Api
         {
             if (schemaLockAcquireTimeoutMillis < 1)
             {
-            // TODO:
-//                throw new TypeDBDriverException(POSITIVE_VALUE_REQUIRED, schemaLockAcquireTimeoutMillis);
+                throw new TypeDBDriverException(DriverError.s_PositiveValueRequired, schemaLockAcquireTimeoutMillis);
             }
 
             pinvoke.typedb_driver.options_set_schema_lock_acquire_timeout_millis(NativeObject, schemaLockAcquireTimeoutMillis);
