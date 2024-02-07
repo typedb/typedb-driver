@@ -34,7 +34,7 @@ namespace com.vaticle.typedb.driver.Common.Exception
 
         public override string ToString()
         {
-            return $"[{_codePrefix}{_codeNumber}] {_messagePrefix}: {_messageBody}";
+            return $"[{_codePrefix}{_codeNumber}] {_messagePrefix}: {_messageBody}"; // TODO: Do we need additional zeros before the code?
         }
 
         private readonly string _codePrefix;
