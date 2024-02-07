@@ -19,6 +19,8 @@
  * under the License.
  */
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -73,9 +75,25 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
             Driver = null;
         }
 
+        public static void SaveTransaction(ITypeDBTransaction? transaction, ITypeDBSession? session)
+        {
+            Transactions.Add(transaction);
+
+            if (!SessionsToTransactions.ContainsKey(session))
+            {
+                SessionsToTransactions[session] = new List<ITypeDBTransaction?>();
+            }
+
+            SessionsToTransactions[session].Add(transaction);
+        }
+
         public static ITypeDBDriver Driver;
+
         public static List<ITypeDBSession?> Sessions = new List<ITypeDBSession?>();
-        public static TypeDBOptions SessionOptions; // TODO: For the future tests.
+        public static List<ITypeDBTransaction?> Transactions = new List<ITypeDBTransaction?>();
+        public static TypeDBOptions SessionOptions;
         public static TypeDBOptions TransactionOptions;
+        public static Dictionary<ITypeDBSession, List<ITypeDBTransaction?>> SessionsToTransactions =
+            new Dictionary<ITypeDBSession, List<ITypeDBTransaction?>>();
     }
 }

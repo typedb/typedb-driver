@@ -29,52 +29,14 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 
 csharp_library(
-    name = "steps-database", # Steps libraries should have different names for the C# output compilation config!
-    srcs = ["DatabaseSteps.cs"],
+    name = "steps-query", # Steps libraries should have different names for the C# output compilation config!
+    srcs = ["QuerySteps.cs"],
     deps = behaviour_tests_deps + [
-        "//csharp/test/behaviour/connection:steps-base",
         "//csharp:driver-csharp",
         "//csharp/api",
         "//csharp/common",
     ],
     runtime_identifier = "any",
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-)
-
-
-csharp_behaviour_test(
-    name = "test-core",
-    test_files = ["DatabaseTest.cs"],
-    features = ["@vaticle_typedb_behaviour//connection:database.feature"],
-    steps_deps = [
-        ":steps-database",
-        "//csharp/test/behaviour/connection:steps-core",
-        "//csharp/test/behaviour/connection:steps-base",
-    ],
-    deps = [
-        "//csharp/api",
-        "//csharp/common",
-    ],
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-)
-
-
-csharp_behaviour_test(
-    name = "test-cloud",
-    test_files = ["DatabaseTest.cs"],
-    features = ["@vaticle_typedb_behaviour//connection:database.feature"],
-    steps_deps = [
-        ":steps-database",
-        "//csharp/test/behaviour/connection:steps-cloud",
-        "//csharp/test/behaviour/connection:steps-base",
-    ],
-    deps = [
-        "//csharp/api",
-        "//csharp/common",
-    ],
-    add_certificates = True,
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
 )
