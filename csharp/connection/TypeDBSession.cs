@@ -22,15 +22,15 @@
 using System;
 using System.Collections.Generic;
 
-using com.vaticle.typedb.driver;
-using com.vaticle.typedb.driver.Api;
-using com.vaticle.typedb.driver.Api.Database;
-using com.vaticle.typedb.driver.Common;
-using com.vaticle.typedb.driver.Common.Exception;
+using Vaticle.Typedb.Driver;
+using Vaticle.Typedb.Driver.Api;
+using Vaticle.Typedb.Driver.Api.Database;
+using Vaticle.Typedb.Driver.Common;
+using Vaticle.Typedb.Driver.Common.Exception;
 
-namespace com.vaticle.typedb.driver.Connection
+namespace Vaticle.Typedb.Driver.Connection
 {
-    public class TypeDBSession : NativeObjectWrapper<pinvoke.Session>, ITypeDBSession
+    public class TypeDBSession : NativeObjectWrapper<Pinvoke.Session>, ITypeDBSession
     {
         private readonly SessionType _type;
         private readonly TypeDBOptions _options;
@@ -45,18 +45,18 @@ namespace com.vaticle.typedb.driver.Connection
             _callbacks = new List<SessionCallback>();
         }
 
-        private static pinvoke.Session NewNative(
+        private static Pinvoke.Session NewNative(
             IDatabaseManager databaseManager, string database, SessionType type, TypeDBOptions options)
         {
             try
             {
-                return pinvoke.typedb_driver.session_new(
+                return Pinvoke.typedb_driver.session_new(
                     ((TypeDBDatabaseManager)databaseManager).NativeObject,
                     database,
                     type.NativeObject,
                     options.NativeObject);
             }
-            catch (pinvoke.Error e)
+            catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
@@ -64,7 +64,7 @@ namespace com.vaticle.typedb.driver.Connection
 
         public bool IsOpen()
         {
-            return pinvoke.typedb_driver.session_is_open(NativeObject);
+            return Pinvoke.typedb_driver.session_is_open(NativeObject);
         }
 
         public SessionType Type()
@@ -74,7 +74,7 @@ namespace com.vaticle.typedb.driver.Connection
 
         public string DatabaseName()
         {
-            return pinvoke.typedb_driver.session_get_database_name(NativeObject);
+            return Pinvoke.typedb_driver.session_get_database_name(NativeObject);
         }
 
         public TypeDBOptions Options()
@@ -98,9 +98,9 @@ namespace com.vaticle.typedb.driver.Connection
             {
                 SessionCallback callback = new SessionCallback(function);
                 _callbacks.Add(callback);
-                pinvoke.typedb_driver.session_on_close(NativeObject, callback.Released());
+                Pinvoke.typedb_driver.session_on_close(NativeObject, callback.Released());
             }
-            catch (pinvoke.Error e)
+            catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
@@ -112,9 +112,9 @@ namespace com.vaticle.typedb.driver.Connection
             {
                 SessionCallback callback = new SessionCallback(function);
                 _callbacks.Add(callback);
-                pinvoke.typedb_driver.session_on_reopen(NativeObject, callback.Released());
+                Pinvoke.typedb_driver.session_on_reopen(NativeObject, callback.Released());
             }
-            catch (pinvoke.Error e)
+            catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
@@ -124,9 +124,9 @@ namespace com.vaticle.typedb.driver.Connection
         {
             try
             {
-                pinvoke.typedb_driver.session_force_close(NativeObject);
+                Pinvoke.typedb_driver.session_force_close(NativeObject);
             }
-            catch (pinvoke.Error e)
+            catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
@@ -140,7 +140,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
         }
 
-        private class SessionCallback : pinvoke.SessionCallbackDirector
+        private class SessionCallback : Pinvoke.SessionCallbackDirector
         {
             private readonly Action _function;
 

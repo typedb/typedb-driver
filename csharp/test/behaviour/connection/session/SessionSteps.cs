@@ -28,11 +28,11 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
-using com.vaticle.typedb.driver;
-using com.vaticle.typedb.driver.Api;
-using com.vaticle.typedb.driver.Test.Behaviour;
+using Vaticle.Typedb.Driver;
+using Vaticle.Typedb.Driver.Api;
+using Vaticle.Typedb.Driver.Test.Behaviour;
 
-namespace com.vaticle.typedb.driver.Test.Behaviour
+namespace Vaticle.Typedb.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {
@@ -84,14 +84,32 @@ namespace com.vaticle.typedb.driver.Test.Behaviour
         [When(@"connection open sessions in parallel for databases:")]
         public void ConnectionOpenSessionsInParallelForDatabases(DataTable names)
         {
-            throw new NotImplementedException("Not yet for parallel!"); // TODO
+            var collectedNames = new List<string>();
             foreach (var row in names.Rows)
             {
                 foreach (var name in row.Cells)
                 {
-                    //ConnectionOpenDataSessionForDatabase(name.Value);
+                    collectedNames.Add(name.Value);
                 }
             }
+
+            int workerThreads;
+            int ioThreads;
+            ThreadPool.GetAvailableThreads(out workerThreads, out ioThreads);
+            Assert.True(workerThreads > collectedNames.Count);
+
+            Task[] taskArray = new Task[collectedNames.Count];
+            for (int i = 0; i < taskArray.Length; i++)
+            {
+                var name = collectedNames[i];
+                taskArray[i] = Task.Factory.StartNew(() =>
+                    {
+                        ConnectionStepsBase.Driver.Session(
+                            name, SessionType.DATA, ConnectionStepsBase.SessionOptions);
+                    });
+            }
+
+            Task.WaitAll(taskArray);
         }
 
         [When(@"connection close all sessions")]

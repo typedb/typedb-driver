@@ -19,18 +19,18 @@
  * under the License.
  */
 
-using com.vaticle.typedb.driver;
-using com.vaticle.typedb.driver.Common;
-using com.vaticle.typedb.driver.Common.Exception;
-using DriverError = com.vaticle.typedb.driver.Common.Exception.Error.Driver;
+using Vaticle.Typedb.Driver;
+using Vaticle.Typedb.Driver.Common;
+using Vaticle.Typedb.Driver.Common.Exception;
+using DriverError = Vaticle.Typedb.Driver.Common.Exception.Error.Driver;
 
-namespace com.vaticle.typedb.driver.Api
+namespace Vaticle.Typedb.Driver.Api
 {
     /**
      * TypeDB session and transaction options. <code>TypeDBOptions</code> object can be used to override
      * the default server behaviour.
      */
-    public class TypeDBOptions : NativeObjectWrapper<pinvoke.Options>
+    public class TypeDBOptions : NativeObjectWrapper<Pinvoke.Options>
     {
         /**
          * Produces a new <code>TypeDBOptions</code> object.
@@ -41,7 +41,7 @@ namespace com.vaticle.typedb.driver.Api
          * </pre>
          */
         public TypeDBOptions()
-            : base(pinvoke.typedb_driver.options_new())
+            : base(Pinvoke.typedb_driver.options_new())
         {}
 
         /**
@@ -54,9 +54,9 @@ namespace com.vaticle.typedb.driver.Api
          */
         public bool? Infer() 
         {
-            if (pinvoke.typedb_driver.options_has_infer(NativeObject))
+            if (Pinvoke.typedb_driver.options_has_infer(NativeObject))
             {
-                return pinvoke.typedb_driver.options_get_infer(NativeObject);
+                return Pinvoke.typedb_driver.options_get_infer(NativeObject);
             }
             return null;
         }
@@ -74,7 +74,7 @@ namespace com.vaticle.typedb.driver.Api
          */
         public TypeDBOptions Infer(bool infer)
         {
-            pinvoke.typedb_driver.options_set_infer(NativeObject, infer);
+            Pinvoke.typedb_driver.options_set_infer(NativeObject, infer);
             return this;
         }
 
@@ -89,9 +89,9 @@ namespace com.vaticle.typedb.driver.Api
          */
         public bool? TraceInference()
         {
-            if (pinvoke.typedb_driver.options_has_trace_inference(NativeObject))
+            if (Pinvoke.typedb_driver.options_has_trace_inference(NativeObject))
             {
-                return pinvoke.typedb_driver.options_get_trace_inference(NativeObject);
+                return Pinvoke.typedb_driver.options_get_trace_inference(NativeObject);
             }
             return null;
         }
@@ -110,7 +110,7 @@ namespace com.vaticle.typedb.driver.Api
          */
         public TypeDBOptions TraceInference(bool traceInference)
         {
-            pinvoke.typedb_driver.options_set_trace_inference(NativeObject, traceInference);
+            Pinvoke.typedb_driver.options_set_trace_inference(NativeObject, traceInference);
             return this;
         }
 
@@ -125,9 +125,9 @@ namespace com.vaticle.typedb.driver.Api
          */
         public bool? Explain()
         {
-            if (pinvoke.typedb_driver.options_has_explain(NativeObject))
+            if (Pinvoke.typedb_driver.options_has_explain(NativeObject))
             {
-                return pinvoke.typedb_driver.options_get_explain(NativeObject);
+                return Pinvoke.typedb_driver.options_get_explain(NativeObject);
             }
             return null;
         }
@@ -145,7 +145,7 @@ namespace com.vaticle.typedb.driver.Api
          */
         public TypeDBOptions Explain(bool explain)
         {
-            pinvoke.typedb_driver.options_set_explain(NativeObject, explain);
+            Pinvoke.typedb_driver.options_set_explain(NativeObject, explain);
             return this;
         }
 
@@ -160,9 +160,9 @@ namespace com.vaticle.typedb.driver.Api
          */
         public bool? Parallel()
         {
-            if (pinvoke.typedb_driver.options_has_parallel(NativeObject))
+            if (Pinvoke.typedb_driver.options_has_parallel(NativeObject))
             {
-                return pinvoke.typedb_driver.options_get_parallel(NativeObject);
+                return Pinvoke.typedb_driver.options_get_parallel(NativeObject);
             }
             return null;
         }
@@ -180,7 +180,7 @@ namespace com.vaticle.typedb.driver.Api
          */
         public TypeDBOptions Parallel(bool parallel)
         {
-            pinvoke.typedb_driver.options_set_parallel(NativeObject, parallel);
+            Pinvoke.typedb_driver.options_set_parallel(NativeObject, parallel);
             return this;
         }
 
@@ -196,9 +196,9 @@ namespace com.vaticle.typedb.driver.Api
          */
         public bool? Prefetch()
         {
-            if (pinvoke.typedb_driver.options_has_prefetch(NativeObject))
+            if (Pinvoke.typedb_driver.options_has_prefetch(NativeObject))
             {
-                return pinvoke.typedb_driver.options_get_prefetch(NativeObject);
+                return Pinvoke.typedb_driver.options_get_prefetch(NativeObject);
             }
             return null;
         }
@@ -217,7 +217,7 @@ namespace com.vaticle.typedb.driver.Api
          */
         public TypeDBOptions Prefetch(bool prefetch)
         {
-            pinvoke.typedb_driver.options_set_prefetch(NativeObject, prefetch);
+            Pinvoke.typedb_driver.options_set_prefetch(NativeObject, prefetch);
             return this;
         }
 
@@ -233,9 +233,9 @@ namespace com.vaticle.typedb.driver.Api
          */
         public int? PrefetchSize()
         {
-            if (pinvoke.typedb_driver.options_has_prefetch_size(NativeObject))
+            if (Pinvoke.typedb_driver.options_has_prefetch_size(NativeObject))
             {
-                return pinvoke.typedb_driver.options_get_prefetch_size(NativeObject);
+                return Pinvoke.typedb_driver.options_get_prefetch_size(NativeObject);
             }
             return null;
         }
@@ -259,7 +259,7 @@ namespace com.vaticle.typedb.driver.Api
                 throw new TypeDBDriverException(DriverError.POSITIVE_VALUE_REQUIRED, prefetchSize);
             }
 
-            pinvoke.typedb_driver.options_set_prefetch_size(NativeObject, prefetchSize);
+            Pinvoke.typedb_driver.options_set_prefetch_size(NativeObject, prefetchSize);
             return this;
         }
 
@@ -275,9 +275,9 @@ namespace com.vaticle.typedb.driver.Api
          */
         public int? SessionIdleTimeoutMillis()
         {
-            if (pinvoke.typedb_driver.options_has_session_idle_timeout_millis(NativeObject))
+            if (Pinvoke.typedb_driver.options_has_session_idle_timeout_millis(NativeObject))
             {
-                return (int)pinvoke.typedb_driver.options_get_session_idle_timeout_millis(NativeObject);
+                return (int)Pinvoke.typedb_driver.options_get_session_idle_timeout_millis(NativeObject);
             }
             return null;
         }
@@ -302,7 +302,7 @@ namespace com.vaticle.typedb.driver.Api
                 throw new TypeDBDriverException(DriverError.POSITIVE_VALUE_REQUIRED, sessionIdleTimeoutMillis);
             }
 
-            pinvoke.typedb_driver.options_set_session_idle_timeout_millis(NativeObject, sessionIdleTimeoutMillis);
+            Pinvoke.typedb_driver.options_set_session_idle_timeout_millis(NativeObject, sessionIdleTimeoutMillis);
             return this;
         }
 
@@ -318,9 +318,9 @@ namespace com.vaticle.typedb.driver.Api
          */
         public int? TransactionTimeoutMillis()
         {
-            if (pinvoke.typedb_driver.options_has_transaction_timeout_millis(NativeObject))
+            if (Pinvoke.typedb_driver.options_has_transaction_timeout_millis(NativeObject))
             {
-                return (int)pinvoke.typedb_driver.options_get_transaction_timeout_millis(NativeObject);
+                return (int)Pinvoke.typedb_driver.options_get_transaction_timeout_millis(NativeObject);
             }
             return null;
         }
@@ -344,7 +344,7 @@ namespace com.vaticle.typedb.driver.Api
                 throw new TypeDBDriverException(DriverError.POSITIVE_VALUE_REQUIRED, transactionTimeoutMillis);
             }
 
-            pinvoke.typedb_driver.options_set_transaction_timeout_millis(NativeObject, transactionTimeoutMillis);
+            Pinvoke.typedb_driver.options_set_transaction_timeout_millis(NativeObject, transactionTimeoutMillis);
             return this;
         }
 
@@ -360,9 +360,9 @@ namespace com.vaticle.typedb.driver.Api
          */
         public int? SchemaLockAcquireTimeoutMillis()
         {
-            if (pinvoke.typedb_driver.options_has_schema_lock_acquire_timeout_millis(NativeObject))
+            if (Pinvoke.typedb_driver.options_has_schema_lock_acquire_timeout_millis(NativeObject))
             {
-                return (int)pinvoke.typedb_driver.options_get_schema_lock_acquire_timeout_millis(NativeObject);
+                return (int)Pinvoke.typedb_driver.options_get_schema_lock_acquire_timeout_millis(NativeObject);
             }
             return null;
         }
@@ -387,7 +387,7 @@ namespace com.vaticle.typedb.driver.Api
                 throw new TypeDBDriverException(DriverError.POSITIVE_VALUE_REQUIRED, schemaLockAcquireTimeoutMillis);
             }
 
-            pinvoke.typedb_driver.options_set_schema_lock_acquire_timeout_millis(NativeObject, schemaLockAcquireTimeoutMillis);
+            Pinvoke.typedb_driver.options_set_schema_lock_acquire_timeout_millis(NativeObject, schemaLockAcquireTimeoutMillis);
             return this;
         }
 
@@ -402,9 +402,9 @@ namespace com.vaticle.typedb.driver.Api
          */
         public bool? ReadAnyReplica()
         {
-            if (pinvoke.typedb_driver.options_has_read_any_replica(NativeObject))
+            if (Pinvoke.typedb_driver.options_has_read_any_replica(NativeObject))
             {
-                return pinvoke.typedb_driver.options_get_read_any_replica(NativeObject);
+                return Pinvoke.typedb_driver.options_get_read_any_replica(NativeObject);
             }
             return null;
         }
@@ -423,7 +423,7 @@ namespace com.vaticle.typedb.driver.Api
          */
         public TypeDBOptions ReadAnyReplica(bool readAnyReplica)
         {
-            pinvoke.typedb_driver.options_set_read_any_replica(NativeObject, readAnyReplica);
+            Pinvoke.typedb_driver.options_set_read_any_replica(NativeObject, readAnyReplica);
             return this;
         }
     }

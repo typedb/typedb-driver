@@ -31,7 +31,7 @@ csharp_library(
         "*.cs",
         "*/*.cs",
     ]),
-    deps = ["//csharp:typedb_driver_pinvoke"],
+    deps = ["//csharp:typedb_driver_Pinvoke"],
     runtime_identifier = "any",
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,

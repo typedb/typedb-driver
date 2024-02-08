@@ -19,7 +19,7 @@
  * under the License.
  */
 
-namespace com.vaticle.typedb.driver.Common.Exception
+namespace Vaticle.Typedb.Driver.Common.Exception
 {
     public class TypeDBException : System.Exception
     {

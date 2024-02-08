@@ -21,10 +21,10 @@
 
 using System;
 
-using com.vaticle.typedb.driver.Api;
-using com.vaticle.typedb.driver.Api.Database;
+using Vaticle.Typedb.Driver.Api;
+using Vaticle.Typedb.Driver.Api.Database;
 
-namespace com.vaticle.typedb.driver.Api
+namespace Vaticle.Typedb.Driver.Api
 {
     public interface ITypeDBDriver : IDisposable
     {

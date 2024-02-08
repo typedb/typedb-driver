@@ -24,11 +24,11 @@
 using System.Diagnostics;
 using System.IO;
 
-using com.vaticle.typedb.driver;
-using com.vaticle.typedb.driver.Common;
-using com.vaticle.typedb.driver.Common.Exception;
+using Vaticle.Typedb.Driver;
+using Vaticle.Typedb.Driver.Common;
+using Vaticle.Typedb.Driver.Common.Exception;
 
-namespace com.vaticle.typedb.driver.Api
+namespace Vaticle.Typedb.Driver.Api
 {
     /**
      * User credentials and TLS encryption settings for connecting to TypeDB Cloud.
@@ -42,7 +42,7 @@ namespace com.vaticle.typedb.driver.Api
      * TypeDBCredential credential = new TypeDBCredential(username, password, Path.of("path/to/ca-certificate.pem"));
      * </pre>
      */
-    public class TypeDBCredential : NativeObjectWrapper<pinvoke.Credential>
+    public class TypeDBCredential : NativeObjectWrapper<Pinvoke.Credential>
     {
         /**
          *
@@ -68,15 +68,15 @@ namespace com.vaticle.typedb.driver.Api
             : base(NativeCredential(username, password, tlsRootCAPath, tlsEnabled))
         {}
 
-        private static pinvoke.Credential NativeCredential(
+        private static Pinvoke.Credential NativeCredential(
             string username, string password, string? tlsRootCAPath, bool tlsEnabled)
         {
             Debug.Assert(tlsEnabled || tlsRootCAPath == null);
             try
             {
-                return pinvoke.typedb_driver.credential_new(username, password, tlsRootCAPath, tlsEnabled);
+                return Pinvoke.typedb_driver.credential_new(username, password, tlsRootCAPath, tlsEnabled);
             }
-            catch (pinvoke.Error e)
+            catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }

@@ -22,16 +22,16 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using com.vaticle.typedb.driver;
-using com.vaticle.typedb.driver.Api;
-using com.vaticle.typedb.driver.Api.Database;
-using com.vaticle.typedb.driver.Common;
-using com.vaticle.typedb.driver.Common.Exception;
-using com.vaticle.typedb.driver.Connection;
+using Vaticle.Typedb.Driver;
+using Vaticle.Typedb.Driver.Api;
+using Vaticle.Typedb.Driver.Api.Database;
+using Vaticle.Typedb.Driver.Common;
+using Vaticle.Typedb.Driver.Common.Exception;
+using Vaticle.Typedb.Driver.Connection;
 
-namespace com.vaticle.typedb.driver.Connection
+namespace Vaticle.Typedb.Driver.Connection
 {
-    public class TypeDBDriver : NativeObjectWrapper<pinvoke.Connection>, ITypeDBDriver
+    public class TypeDBDriver : NativeObjectWrapper<Pinvoke.Connection>, ITypeDBDriver
     {
         private readonly IDatabaseManager databaseMgr;
 //        private readonly IUserManager userMgr; // TODO
@@ -44,32 +44,32 @@ namespace com.vaticle.typedb.driver.Connection
             : this(OpenCloud(initAddresses, credential))
         {}
 
-        private TypeDBDriver(pinvoke.Connection connection)
+        private TypeDBDriver(Pinvoke.Connection connection)
             : base(connection)
         {
             databaseMgr = new TypeDBDatabaseManager(this.NativeObject);
 //            userMgr = new UserManager(this.NativeObject);
         }
 
-        private static pinvoke.Connection OpenCore(string address)
+        private static Pinvoke.Connection OpenCore(string address)
         {
             try
             {
-                return pinvoke.typedb_driver.connection_open_core(address);
+                return Pinvoke.typedb_driver.connection_open_core(address);
             }
-            catch (pinvoke.Error e)
+            catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
         }
 
-        private static pinvoke.Connection OpenCloud(ICollection<string> initAddresses, TypeDBCredential credential)
+        private static Pinvoke.Connection OpenCloud(ICollection<string> initAddresses, TypeDBCredential credential)
         {
             try
             {
-                return pinvoke.typedb_driver.connection_open_cloud(initAddresses.ToArray(), credential.NativeObject);
+                return Pinvoke.typedb_driver.connection_open_cloud(initAddresses.ToArray(), credential.NativeObject);
             }
-            catch (pinvoke.Error e)
+            catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
@@ -77,7 +77,7 @@ namespace com.vaticle.typedb.driver.Connection
 
         public bool IsOpen()
         {
-            return pinvoke.typedb_driver.connection_is_open(NativeObject);
+            return Pinvoke.typedb_driver.connection_is_open(NativeObject);
         }
         // TODO:
 //
@@ -116,9 +116,9 @@ namespace com.vaticle.typedb.driver.Connection
 
             try
             {
-                pinvoke.typedb_driver.connection_force_close(NativeObject);
+                Pinvoke.typedb_driver.connection_force_close(NativeObject);
             }
-            catch (pinvoke.Error e)
+            catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }

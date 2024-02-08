@@ -22,10 +22,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-using com.vaticle.typedb.driver.Common.Exception;
-using InternalError = com.vaticle.typedb.driver.Common.Exception.Error.Internal;
+using Vaticle.Typedb.Driver.Common.Exception;
+using InternalError = Vaticle.Typedb.Driver.Common.Exception.Error.Internal;
 
-namespace com.vaticle.typedb.driver.Common
+namespace Vaticle.Typedb.Driver.Common
 {
     public class NativeEnumerable<T> : IEnumerable<T>
     {
