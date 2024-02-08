@@ -51,11 +51,11 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
             string certificatesPath = null)
         {
             return TypeDB.CloudDriver(
-                addresses ?? s_defaultAddresses,
+                addresses ?? DEFAULT_ADDRESSES,
                 new TypeDBCredential(
-                    username ?? _DefaultUsername,
-                    password ?? _DefaultPassword,
-                    certificatesPath ?? s_defaultCertificatesPath));
+                    username ?? DEFAULT_USERNAME,
+                    password ?? DEFAULT_PASSWORD,
+                    certificatesPath ?? DEFAULT_CERTIFICATES_PATH));
         }
 
         private ITypeDBDriver CreateTypeDBDriver(string address, string username = null, string password = null)
@@ -82,7 +82,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
                 Driver = null;
             }
 
-            Driver = CreateTypeDBDriver(TypeDB.s_DefaultAddress, username, password);
+            Driver = CreateTypeDBDriver(TypeDB.DEFAULT_ADDRESS, username, password);
         }
 
         public void ConnectionOpensWithAuthenticationThrowsException(string username, string password)
@@ -93,15 +93,15 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 //            assertThrows(() -> createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address(), username, password, false));
         }
 
-        private static readonly string[] s_defaultAddresses =
+        private static readonly string[] DEFAULT_ADDRESSES =
         {
             "localhost:11729",
 //            "localhost:21729", // Should run only with one address!
 //            "localhost:31729"
         };
 
-        private static readonly string s_defaultCertificatesPath = Environment.GetEnvironmentVariable("ROOT_CA");
-        private const string _DefaultUsername = "admin";
-        private const string _DefaultPassword = "password";
+        private static readonly string DEFAULT_CERTIFICATES_PATH = Environment.GetEnvironmentVariable("ROOT_CA");
+        private static readonly string DEFAULT_USERNAME = "admin";
+        private static readonly string DEFAULT_PASSWORD = "password";
     }
 }

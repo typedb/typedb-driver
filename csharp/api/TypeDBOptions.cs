@@ -256,7 +256,7 @@ namespace com.vaticle.typedb.driver.Api
         {
             if (prefetchSize < 1)
             {
-                throw new TypeDBDriverException(DriverError.s_PositiveValueRequired, prefetchSize);
+                throw new TypeDBDriverException(DriverError.POSITIVE_VALUE_REQUIRED, prefetchSize);
             }
 
             pinvoke.typedb_driver.options_set_prefetch_size(NativeObject, prefetchSize);
@@ -299,7 +299,7 @@ namespace com.vaticle.typedb.driver.Api
         {
             if (sessionIdleTimeoutMillis < 1)
             {
-                throw new TypeDBDriverException(DriverError.s_PositiveValueRequired, sessionIdleTimeoutMillis);
+                throw new TypeDBDriverException(DriverError.POSITIVE_VALUE_REQUIRED, sessionIdleTimeoutMillis);
             }
 
             pinvoke.typedb_driver.options_set_session_idle_timeout_millis(NativeObject, sessionIdleTimeoutMillis);
@@ -341,7 +341,7 @@ namespace com.vaticle.typedb.driver.Api
         {
             if (transactionTimeoutMillis < 1)
             {
-                throw new TypeDBDriverException(DriverError.s_PositiveValueRequired, transactionTimeoutMillis);
+                throw new TypeDBDriverException(DriverError.POSITIVE_VALUE_REQUIRED, transactionTimeoutMillis);
             }
 
             pinvoke.typedb_driver.options_set_transaction_timeout_millis(NativeObject, transactionTimeoutMillis);
@@ -384,7 +384,7 @@ namespace com.vaticle.typedb.driver.Api
         {
             if (schemaLockAcquireTimeoutMillis < 1)
             {
-                throw new TypeDBDriverException(DriverError.s_PositiveValueRequired, schemaLockAcquireTimeoutMillis);
+                throw new TypeDBDriverException(DriverError.POSITIVE_VALUE_REQUIRED, schemaLockAcquireTimeoutMillis);
             }
 
             pinvoke.typedb_driver.options_set_schema_lock_acquire_timeout_millis(NativeObject, schemaLockAcquireTimeoutMillis);

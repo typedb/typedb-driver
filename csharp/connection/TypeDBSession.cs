@@ -53,7 +53,7 @@ namespace com.vaticle.typedb.driver.Connection
                 return pinvoke.typedb_driver.session_new(
                     ((TypeDBDatabaseManager)databaseManager).NativeObject,
                     database,
-                    SessionTypeGetter.ToNative(type),
+                    type.NativeObject,
                     options.NativeObject);
             }
             catch (pinvoke.Error e)

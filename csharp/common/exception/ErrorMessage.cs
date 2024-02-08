@@ -48,114 +48,102 @@ namespace com.vaticle.typedb.driver.Common.Exception
 
     namespace Error
     {
-        public class DriverErrorMessage : ErrorMessage
+        public class Driver : ErrorMessage
         {
-            public DriverErrorMessage(int codeNumber, string message)
-                : base(s_codePrefix, codeNumber, s_messagePrefix, message)
+            public Driver(int codeNumber, string message)
+                : base(CODE_PREFIX, codeNumber, MESSAGE_PREFIX, message)
             {
             }
 
-            private static readonly string s_codePrefix = "CCL";
-            private static readonly string s_messagePrefix = "DriverErrorMessage Error";
+            public static readonly Driver DRIVER_CLOSED =
+                new Driver(1, "The driver has been closed and no further operation is allowed.");
+            public static readonly Driver SESSION_CLOSED =
+                new Driver(2, "The session has been closed and no further operation is allowed.");
+            public static readonly Driver TRANSACTION_CLOSED =
+                new Driver(3, "The transaction has been closed and no further operation is allowed.");
+            public static readonly Driver TRANSACTION_CLOSED_WITH_ERRORS =
+                new Driver(4, "The transaction has been closed with error(s): \n{}.");
+            public static readonly Driver DATABASE_DELETED =
+                new Driver(5, "The database has been deleted and no further operation is allowed.");
+            public static readonly Driver POSITIVE_VALUE_REQUIRED =
+                new Driver(6, "Value cannot be less than 1, was: {}.");
+            public static readonly Driver MISSING_DB_NAME =
+                new Driver(7, "Database name cannot be null.");
+
+            private static readonly string CODE_PREFIX = "CSCL";
+            private static readonly string MESSAGE_PREFIX = "Driver Error";
         }
 
-        public static class Driver
+        public class Concept : ErrorMessage
         {
-            public static readonly DriverErrorMessage s_DriverClosed =
-                new DriverErrorMessage(1, "The driver has been closed and no further operation is allowed.");
-            public static readonly DriverErrorMessage s_SessionClosed =
-                new DriverErrorMessage(2, "The session has been closed and no further operation is allowed.");
-            public static readonly DriverErrorMessage s_TransactionClosed =
-                new DriverErrorMessage(3, "The transaction has been closed and no further operation is allowed.");
-            public static readonly DriverErrorMessage s_TransactionClosedWithErrors =
-                new DriverErrorMessage(4, "The transaction has been closed with error(s): \n{}.");
-            public static readonly DriverErrorMessage s_DatabaseDeleted =
-                new DriverErrorMessage(5, "The database has been deleted and no further operation is allowed.");
-            public static readonly DriverErrorMessage s_PositiveValueRequired =
-                new DriverErrorMessage(6, "Value cannot be less than 1, was: {}.");
-            public static readonly DriverErrorMessage s_MissingDbName =
-                new DriverErrorMessage(7, "Database name cannot be null.");
-        }
-
-        public class ConceptErrorMessage : ErrorMessage
-        {
-            public ConceptErrorMessage(int codeNumber, string message)
-                : base(s_codePrefix, codeNumber, s_messagePrefix, message)
+            public Concept(int codeNumber, string message)
+                : base(CODE_PREFIX, codeNumber, MESSAGE_PREFIX, message)
             {
             }
 
-            private static readonly string s_codePrefix = "CCO";
-            private static readonly string s_messagePrefix = "ConceptErrorMessage Error";
+            public static readonly Concept INVALID_CONCEPT_CASTING =
+                new Concept(1, "Invalid concept conversion from {} to {}.");
+            public static readonly Concept MISSING_TRANSACTION =
+                new Concept(2, "Transaction cannot be null.");
+            public static readonly Concept MISSING_IID =
+                new Concept(3, "IID cannot be null or empty.");
+            public static readonly Concept MISSING_LABEL =
+                new Concept(4, "Label cannot be null or empty.");
+            public static readonly Concept MISSING_VARIABLE =
+                new Concept(5, "Variable name cannot be null or empty.");
+            public static readonly Concept MISSING_VALUE =
+                new Concept(6, "Value cannot be null.");
+            public static readonly Concept NONEXISTENT_EXPLAINABLE_CONCEPT =
+                new Concept(7, "The concept identified by {} is not explainable.");
+            public static readonly Concept NONEXISTENT_EXPLAINABLE_OWNERSHIP =
+                new Concept(8, "The ownership by owner {} of attribute {} is not explainable.");
+            public static readonly Concept UNRECOGNISED_ANNOTATION =
+                new Concept(9, "The annotation {} is not recognised.");
+
+            private static readonly string CODE_PREFIX = "CSCO";
+            private static readonly string MESSAGE_PREFIX = "Concept Error";
         }
 
-        public static class Concept
+        public class Query : ErrorMessage
         {
-            public static readonly ConceptErrorMessage s_InvalidConceptCasting =
-                new ConceptErrorMessage(1, "Invalid concept conversion from {} to {}.");
-            public static readonly ConceptErrorMessage s_MissingTransaction =
-                new ConceptErrorMessage(2, "Transaction cannot be null.");
-            public static readonly ConceptErrorMessage s_MissingIID =
-                new ConceptErrorMessage(3, "IID cannot be null or empty.");
-            public static readonly ConceptErrorMessage s_MissingLabel =
-                new ConceptErrorMessage(4, "Label cannot be null or empty.");
-            public static readonly ConceptErrorMessage s_MissingVariable =
-                new ConceptErrorMessage(5, "Variable name cannot be null or empty.");
-            public static readonly ConceptErrorMessage s_MissingValue =
-                new ConceptErrorMessage(6, "Value cannot be null.");
-            public static readonly ConceptErrorMessage s_NonexistentExplainableConcept =
-                new ConceptErrorMessage(7, "The concept identified by {} is not explainable.");
-            public static readonly ConceptErrorMessage s_NonexistentExplainableOwnership =
-                new ConceptErrorMessage(8, "The ownership by owner {} of attribute {} is not explainable.");
-            public static readonly ConceptErrorMessage s_UnrecognisedAnnotation =
-                new ConceptErrorMessage(9, "The annotation {} is not recognised.");
-        }
-
-        public class QueryErrorMessage : ErrorMessage
-        {
-            public QueryErrorMessage(int codeNumber, string message)
-                : base(s_codePrefix, codeNumber, s_messagePrefix, message)
+            public Query(int codeNumber, string message)
+                : base(CODE_PREFIX, codeNumber, MESSAGE_PREFIX, message)
             {
             }
 
-            private static readonly string s_codePrefix = "CQY";
-            private static readonly string s_messagePrefix = "Query Error";
+            public static readonly Query VARIABLE_DOESNT_EXIST =
+                new Query(1, "The variable {} does not exist.");
+            public static readonly Query MISSING_QUERY =
+                new Query(2, "Query cannot be null or empty.");
+
+            private static readonly string CODE_PREFIX = "CSQY";
+            private static readonly string MESSAGE_PREFIX = "Query Error";
         }
 
-        public static class Query
+        public class Internal : ErrorMessage
         {
-            public static readonly QueryErrorMessage s_VariableDoesntExist =
-                new QueryErrorMessage(1, "The variable {} does not exist.");
-            public static readonly QueryErrorMessage s_MissingQuery =
-                new QueryErrorMessage(2, "Query cannot be null or empty.");
-        }
-
-        public class InternalErrorMessage : ErrorMessage
-        {
-            public InternalErrorMessage(int codeNumber, string message)
-                : base(s_codePrefix, codeNumber, s_messagePrefix, message)
+            public Internal(int codeNumber, string message)
+                : base(CODE_PREFIX, codeNumber, MESSAGE_PREFIX, message)
             {
             }
 
-            private static readonly string s_codePrefix = "CIN";
-            private static readonly string s_messagePrefix = "C# InternalErrorMessage Error";
-        }
+            public static readonly Internal UNEXPECTED_NATIVE_VALUE =
+                new Internal(1, "Unexpected native value encountered!");
+            public static readonly Internal ILLEGAL_STATE =
+                new Internal(2, "Illegal state has been reached! ({} : {}).");
+            public static readonly Internal ILLEGAL_CAST =
+                new Internal(3, "Illegal casting operation to {}.");
+            public static readonly Internal NULL_NATIVE_VALUE =
+                new Internal(4, "Unhandled null pointer to a native object encountered!");
+            public static readonly Internal INVALID_NATIVE_HANDLE =
+                new Internal(5, "The object does not have a valid native handle. It may have been:  uninitialised, moved or disposed.");
+            public static readonly Internal ENUMERATOR_EXCESSIVE_ACCESS =
+                new Internal(6, "Such Enumerables support Enumerator's getting only once.");
+            public static readonly Internal UNEXPECTED_INTERNAL_VALUE =
+                new Internal(7, "Unexpected internal value encountered!");
 
-        public static class Internal
-        {
-            public static readonly InternalErrorMessage s_UnexpectedNativeValue =
-                new InternalErrorMessage(1, "Unexpected native value encountered!");
-            public static readonly InternalErrorMessage s_IllegalState =
-                new InternalErrorMessage(2, "Illegal state has been reached! ({} : {}).");
-            public static readonly InternalErrorMessage s_IllegalCast =
-                new InternalErrorMessage(3, "Illegal casting operation to {}.");
-            public static readonly InternalErrorMessage s_NullNativeValue =
-                new InternalErrorMessage(4, "Unhandled null pointer to a native object encountered!");
-            public static readonly InternalErrorMessage s_InvalidNativeHandle =
-                new InternalErrorMessage(5, "The object does not have a valid native handle. It may have been:  uninitialised, moved or disposed.");
-            public static readonly InternalErrorMessage s_EnumeratorExcessiveAccess =
-                new InternalErrorMessage(6, "Such Enumerables support Enumerator's getting only once.");
-            public static readonly InternalErrorMessage s_UnexpectedInternalValue =
-                new InternalErrorMessage(7, "Unexpected internal value encountered!");
+            private static readonly string CODE_PREFIX = "CSIN";
+            private static readonly string MESSAGE_PREFIX = "C# Internal Error";
         }
     }
 }

@@ -50,7 +50,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 
         public override void ConnectionOpensWithDefaultAuthentication()
         {
-            Driver = CreateTypeDBDriver(TypeDB.s_DefaultAddress);
+            Driver = CreateTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
         }
 
         public void ConnectionOpensWithAuthentication(string username, string password)

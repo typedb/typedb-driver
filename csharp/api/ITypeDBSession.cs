@@ -42,7 +42,7 @@ namespace com.vaticle.typedb.driver.Api
         bool IsOpen();
 
         /**
-         * The current session’s type (Schema or Data).
+         * The current session’s type (SCHEMA or DATA).
          */
         SessionType Type();
 
@@ -123,60 +123,21 @@ namespace com.vaticle.typedb.driver.Api
      *
      * <h3>Examples</h3>
      * <pre>
-     * driver.Session(database, SessionType.Schema);
+     * driver.Session(database, SessionType.SCHEMA);
      * </pre>
      */
-    public enum SessionType : int
+    public class SessionType
     {
-        Data = 0,
-        Schema = 1
-    }
+        public readonly int Id;
+        public readonly pinvoke.SessionType NativeObject;
 
-    public static class SessionTypeGetter // TODO: Come up with a better naming?
-    {
-        public static SessionType FromNative(pinvoke.SessionType nativeSessionType)
+        public static readonly SessionType DATA = new SessionType(1, pinvoke.SessionType.Data);
+        public static readonly SessionType SCHEMA = new SessionType(2, pinvoke.SessionType.Schema);
+
+        private SessionType(int id, pinvoke.SessionType nativeObject)
         {
-            foreach (var sessionTypeInfo in s_allSessionTypeInfos)
-            {
-                if (sessionTypeInfo.NativeObject == nativeSessionType)
-                {
-                    return sessionTypeInfo.Type;
-                }
-            }
-
-            throw new TypeDBDriverException(InternalError.s_UnexpectedNativeValue);
+            Id = id;
+            NativeObject = nativeObject;
         }
-
-        public static pinvoke.SessionType ToNative(SessionType sessionType)
-        {
-            foreach (var sessionTypeInfo in s_allSessionTypeInfos)
-            {
-                if (sessionTypeInfo.Type == sessionType)
-                {
-                    return sessionTypeInfo.NativeObject;
-                }
-            }
-
-            throw new TypeDBDriverException(InternalError.s_UnexpectedInternalValue);
-        }
-
-        private struct SessionTypeInfo
-        {
-            public SessionTypeInfo(SessionType type, pinvoke.SessionType nativeObject)
-            {
-                Type = type;
-                NativeObject = nativeObject;
-            }
-
-            public readonly SessionType Type;
-            public readonly pinvoke.SessionType NativeObject;
-        }
-
-        private static List<SessionTypeInfo> s_allSessionTypeInfos =
-            new List<SessionTypeInfo>()
-            {
-                new SessionTypeInfo(SessionType.Data, pinvoke.SessionType.Data),
-                new SessionTypeInfo(SessionType.Schema, pinvoke.SessionType.Schema)
-            };
     }
 }
