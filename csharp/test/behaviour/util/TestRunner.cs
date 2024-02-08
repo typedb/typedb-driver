@@ -5,7 +5,7 @@ using System.Threading;
 using Xunit.Runners;
 
 // TODO: Remove all or reduce WriteLines to Console if we don't want to see them.
-namespace com.vaticle.typedb.driver.Test.TestRunner
+namespace Vaticle.Typedb.Driver.Test.TestRunner
 {
     class Program
     {

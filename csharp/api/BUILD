@@ -32,7 +32,7 @@ csharp_library(
     srcs = glob(["*.cs", "*/*.cs", "*/*/*.cs"]),
     deps = [
         "//csharp/common",
-        "//csharp:typedb_driver_pinvoke",
+        "//csharp:typedb_driver_Pinvoke",
     ],
     runtime_identifier = "any",
     target_frameworks = target_frameworks,

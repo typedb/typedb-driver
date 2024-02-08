@@ -26,11 +26,11 @@ using System.Collections.Generic;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
-using com.vaticle.typedb.driver;
-using com.vaticle.typedb.driver.Api;
-using com.vaticle.typedb.driver.Common;
+using Vaticle.Typedb.Driver;
+using Vaticle.Typedb.Driver.Api;
+using Vaticle.Typedb.Driver.Common;
 
-namespace com.vaticle.typedb.driver.Test.Behaviour
+namespace Vaticle.Typedb.Driver.Test.Behaviour
 {
     public abstract class ConnectionStepsBase : Feature, IDisposable
     {
@@ -50,6 +50,17 @@ namespace com.vaticle.typedb.driver.Test.Behaviour
             foreach (var db in Driver.Databases().GetAll())
             {
                 db.Delete();
+            }
+
+            foreach (var session in Sessions)
+            {
+                session.Close();
+            }
+            Sessions.Clear();
+
+            if (Driver.IsOpen())
+            {
+                Driver.Close();
             }
         }
 
@@ -80,8 +91,6 @@ namespace com.vaticle.typedb.driver.Test.Behaviour
 
         public static void SaveTransaction(ITypeDBTransaction? transaction, ITypeDBSession? session)
         {
-            Transactions.Add(transaction);
-
             if (!SessionsToTransactions.ContainsKey(session))
             {
                 SessionsToTransactions[session] = new List<ITypeDBTransaction?>();
@@ -91,9 +100,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour
         }
 
         public static ITypeDBDriver Driver;
-
         public static List<ITypeDBSession?> Sessions = new List<ITypeDBSession?>();
-        public static List<ITypeDBTransaction?> Transactions = new List<ITypeDBTransaction?>();
         public static TypeDBOptions SessionOptions;
         public static TypeDBOptions TransactionOptions;
         public static Dictionary<ITypeDBSession, List<ITypeDBTransaction?>> SessionsToTransactions =

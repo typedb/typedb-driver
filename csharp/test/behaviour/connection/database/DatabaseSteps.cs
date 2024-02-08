@@ -28,10 +28,10 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
-using com.vaticle.typedb.driver;
-using com.vaticle.typedb.driver.Test.Behaviour;
+using Vaticle.Typedb.Driver;
+using Vaticle.Typedb.Driver.Test.Behaviour;
 
-namespace com.vaticle.typedb.driver.Test.Behaviour
+namespace Vaticle.Typedb.Driver.Test.Behaviour
 {
     public partial class BehaviourSteps
     {

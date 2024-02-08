@@ -21,29 +21,29 @@
 
 #nullable enable
 
-using com.vaticle.typedb.driver;
-using com.vaticle.typedb.driver.Common.Exception;
-using InternalError = com.vaticle.typedb.driver.Common.Exception.Error.Internal;
+using Vaticle.Typedb.Driver;
+using Vaticle.Typedb.Driver.Common.Exception;
+using InternalError = Vaticle.Typedb.Driver.Common.Exception.Error.Internal;
 
-namespace com.vaticle.typedb.driver.Common
+namespace Vaticle.Typedb.Driver.Common
 {
     public abstract class NativeObjectWrapper<T>
     {
-        public readonly T? NativeObject;
+        public T? NativeObject { get; }
 
         static NativeObjectWrapper()
         {
-            pinvoke.typedb_driver.init_logging();
+            Pinvoke.typedb_driver.init_logging();
         }
 
-        protected NativeObjectWrapper(T? NativeObject)
+        protected NativeObjectWrapper(T? nativeObject)
         {
-            if (NativeObject == null)
+            if (nativeObject == null)
             {
                 throw new TypeDBDriverException(InternalError.NULL_NATIVE_VALUE);
             }
 
-            this.NativeObject = NativeObject;
+            this.NativeObject = nativeObject;
         }
     }
 }

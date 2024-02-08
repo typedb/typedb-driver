@@ -24,10 +24,10 @@
 using System;
 using System.Diagnostics;
 
-using com.vaticle.typedb.driver;
-using com.vaticle.typedb.driver.Common.Exception;
+using Vaticle.Typedb.Driver;
+using Vaticle.Typedb.Driver.Common.Exception;
 
-namespace com.vaticle.typedb.driver.Common.Exception
+namespace Vaticle.Typedb.Driver.Common.Exception
 {
     public class TypeDBDriverException : System.Exception
     {
@@ -61,7 +61,7 @@ namespace com.vaticle.typedb.driver.Common.Exception
         /**
          * @hidden
          */
-        public TypeDBDriverException(pinvoke.Error nativeError)
+        public TypeDBDriverException(Pinvoke.Error nativeError)
             : base(nativeError.Message)
         {
             _errorMessage = null;

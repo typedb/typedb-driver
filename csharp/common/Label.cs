@@ -21,7 +21,7 @@
 
 #nullable enable
 
-namespace com.vaticle.typedb.driver.Common
+namespace Vaticle.Typedb.Driver.Common
 {
     /**
      * A <code>Label</code> holds the uniquely identifying name of a type.
@@ -29,13 +29,20 @@ namespace com.vaticle.typedb.driver.Common
      * The scope is used only used to distinguish between role-types of the same name declared in different
      * relation types.</p>
      */
-    public class Label
+    public struct Label
     {
-        private readonly string? _scope;
-        private readonly string _name;
-        private readonly int _hash;
-
-        private Label(string? scope, string name)
+        /**
+         * Creates a Label from a specified scope and name.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * new Label("relation", "role");
+         * </pre>
+         *
+         * @param scope Label scope
+         * @param name Label name
+         */
+        public Label(string? scope, string name)
         {
             _scope = scope;
             _name = name;
@@ -47,30 +54,14 @@ namespace com.vaticle.typedb.driver.Common
          *
          * <h3>Examples</h3>
          * <pre>
-         * Label.Of("entity");
+         * new Label("entity");
          * </pre>
          *
          * @param name Label name
          */
-        public static Label Of(string name)
+        public Label(string name)
+            : this(null, name)
         {
-            return new Label(null, name);
-        }
-
-        /**
-         * Creates a Label from a specified scope and name.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * Label.Of("relation", "role");
-         * </pre>
-         *
-         * @param scope Label scope
-         * @param name Label name
-         */
-        public static Label of(string scope, string name)
-        {
-            return new Label(scope, name);
         }
 
         /**
@@ -81,9 +72,9 @@ namespace com.vaticle.typedb.driver.Common
          * label.Scope();
          * </pre>
          */
-        public string? Scope()
+        public string? Scope
         {
-            return _scope;
+            get => _scope;
         }
 
         /**
@@ -91,12 +82,12 @@ namespace com.vaticle.typedb.driver.Common
          *
          * <h3>Examples</h3>
          * <pre>
-         * label.Name();
+         * label.Name;
          * </pre>
          */
-        public string Name()
+        public string Name
         {
-            return _name;
+            get => _name;
         }
 
         /**
@@ -104,17 +95,12 @@ namespace com.vaticle.typedb.driver.Common
          *
          * <h3>Examples</h3>
          * <pre>
-         * label.ScopedName();
+         * label.ScopedName;
          * </pre>
          */
-        public string ScopedName()
+        public string ScopedName
         {
-            if (_scope == null)
-            {
-                return _name;
-            }
-
-            return _scope + ":" + _name;
+            get => Scope == null ? Name : Scope + ":" + Name;
         }
 
         /**
@@ -127,7 +113,7 @@ namespace com.vaticle.typedb.driver.Common
          */
         public override string ToString()
         {
-            return ScopedName();
+            return ScopedName;
         }
 
         /**
@@ -164,5 +150,9 @@ namespace com.vaticle.typedb.driver.Common
 //        {
 //            return _hash;
 //        }
+
+        private readonly string? _scope;
+        private readonly string _name;
+        private readonly int _hash;
     }
 }

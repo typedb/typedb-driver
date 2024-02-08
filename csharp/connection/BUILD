@@ -42,7 +42,7 @@ csharp_library(
 #        "//csharp/query",
 #        "//csharp/user",
 
-        "//csharp:typedb_driver_pinvoke",
+        "//csharp:typedb_driver_Pinvoke",
     ],
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,

@@ -22,11 +22,11 @@
 using System;
 using System.Collections.Generic;
 
-using com.vaticle.typedb.driver.Api;
-using com.vaticle.typedb.driver.Common.Exception;
-using InternalError = com.vaticle.typedb.driver.Common.Exception.Error.Internal;
+using Vaticle.Typedb.Driver.Api;
+using Vaticle.Typedb.Driver.Common.Exception;
+using InternalError = Vaticle.Typedb.Driver.Common.Exception.Error.Internal;
 
-namespace com.vaticle.typedb.driver.Api
+namespace Vaticle.Typedb.Driver.Api
 {
     public interface ITypeDBTransaction : IDisposable
     {
@@ -119,13 +119,13 @@ namespace com.vaticle.typedb.driver.Api
      */
     public class TransactionType
     {
-        public readonly int Id;
-        public readonly pinvoke.TransactionType NativeObject;
+        public int Id { get; }
+        public Pinvoke.TransactionType NativeObject { get; }
 
-        public static readonly TransactionType READ = new TransactionType(1, pinvoke.TransactionType.Read);
-        public static readonly TransactionType WRITE = new TransactionType(2, pinvoke.TransactionType.Write);
+        public static readonly TransactionType READ = new TransactionType(1, Pinvoke.TransactionType.Read);
+        public static readonly TransactionType WRITE = new TransactionType(2, Pinvoke.TransactionType.Write);
 
-        private TransactionType(int id, pinvoke.TransactionType nativeObject)
+        private TransactionType(int id, Pinvoke.TransactionType nativeObject)
         {
             Id = id;
             NativeObject = nativeObject;

@@ -24,78 +24,144 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using com.vaticle.typedb.driver;
-using com.vaticle.typedb.driver.Api.Database;
-using com.vaticle.typedb.driver.Common;
-using com.vaticle.typedb.driver.Common.Exception;
-using DriverError = com.vaticle.typedb.driver.Common.Exception.Error.Driver;
+using Vaticle.Typedb.Driver;
+using Vaticle.Typedb.Driver.Api.Database;
+using Vaticle.Typedb.Driver.Common;
+using Vaticle.Typedb.Driver.Common.Exception;
+using DriverError = Vaticle.Typedb.Driver.Common.Exception.Error.Driver;
 
-namespace com.vaticle.typedb.driver.Connection
+namespace Vaticle.Typedb.Driver.Connection
 {
-    public class TypeDBDatabase : NativeObjectWrapper<pinvoke.Database>, IDatabase
+    public class TypeDBDatabase : NativeObjectWrapper<Pinvoke.Database>, IDatabase
     {
-        public TypeDBDatabase(pinvoke.Database database)
+        public TypeDBDatabase(Pinvoke.Database database)
             : base(database)
         {}
 
-        public string Name()
+        public string Name
         {
-            if (NativeObject == null || !NativeObject.IsOwned()) // TODO: Wrap in a method (and other similar places), consider providing an exception to it.
+            get
             {
-                throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
-            }
+                if (NativeObject == null || !NativeObject.IsOwned()) // TODO: Wrap in a method (and other similar places), consider providing an exception to it.
+                {
+                    throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
+                }
 
-            return pinvoke.typedb_driver.database_get_name(NativeObject);
-        }
-
-        public string Schema()
-        {
-            if (NativeObject == null || !NativeObject.IsOwned())
-            {
-                throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
-            }
-
-            try
-            {
-                return pinvoke.typedb_driver.database_schema(NativeObject);
-            }
-            catch (pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
+                return Pinvoke.typedb_driver.database_get_name(NativeObject);
             }
         }
 
-        public string TypeSchema()
+        public string Schema
         {
-            if (NativeObject == null || !NativeObject.IsOwned())
+            get
             {
-                throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
-            }
+                if (NativeObject == null || !NativeObject.IsOwned())
+                {
+                    throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
+                }
 
-            try
-            {
-                return pinvoke.typedb_driver.database_type_schema(NativeObject);
-            }
-            catch (pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
+                try
+                {
+                    return Pinvoke.typedb_driver.database_schema(NativeObject);
+                }
+                catch (Pinvoke.Error e)
+                {
+                    throw new TypeDBDriverException(e);
+                }
             }
         }
 
-        public string RuleSchema()
+        public string TypeSchema
         {
-            if (NativeObject == null || !NativeObject.IsOwned())
+            get
             {
-                throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
-            }
+                if (NativeObject == null || !NativeObject.IsOwned())
+                {
+                    throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
+                }
 
-            try
-            {
-                return pinvoke.typedb_driver.database_rule_schema(NativeObject);
+                try
+                {
+                    return Pinvoke.typedb_driver.database_type_schema(NativeObject);
+                }
+                catch (Pinvoke.Error e)
+                {
+                    throw new TypeDBDriverException(e);
+                }
             }
-            catch (pinvoke.Error e)
+        }
+
+        public string RuleSchema
+        {
+            get
             {
-                throw new TypeDBDriverException(e);
+                if (NativeObject == null || !NativeObject.IsOwned())
+                {
+                    throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
+                }
+
+                try
+                {
+                    return Pinvoke.typedb_driver.database_rule_schema(NativeObject);
+                }
+                catch (Pinvoke.Error e)
+                {
+                    throw new TypeDBDriverException(e);
+                }
+            }
+        }
+
+        public ICollection<IDatabase.IReplica> Replicas
+        {
+            get
+            {
+                if (NativeObject == null || !NativeObject.IsOwned())
+                {
+                    throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
+                }
+
+                return new NativeEnumerable<Pinvoke.ReplicaInfo>(
+                    Pinvoke.typedb_driver.database_get_replicas_info(NativeObject))
+                    .Select(obj => new Replica(obj))
+                    .ToHashSet<IDatabase.IReplica>();
+            }
+        }
+
+        public IDatabase.IReplica? PrimaryReplica
+        {
+            get
+            {
+                if (NativeObject == null || !NativeObject.IsOwned())
+                {
+                    throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
+                }
+
+                Pinvoke.ReplicaInfo replicaInfo = Pinvoke.typedb_driver.database_get_primary_replica_info(NativeObject);
+                if (replicaInfo == null)
+                {
+                    return null;
+                }
+
+                return new Replica(replicaInfo);
+            }
+        }
+
+        public IDatabase.IReplica? PreferredReplica
+        {
+            get
+            {
+                if (NativeObject == null || !NativeObject.IsOwned())
+                {
+                    throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
+                }
+
+                Pinvoke.ReplicaInfo replicaInfo = Pinvoke.typedb_driver.database_get_preferred_replica_info(NativeObject);
+                if (replicaInfo == null)
+                {
+                    return null;
+                }
+
+                return new Replica(replicaInfo);
             }
         }
 
@@ -108,9 +174,9 @@ namespace com.vaticle.typedb.driver.Connection
 
             try
             {
-                pinvoke.typedb_driver.database_delete(NativeObject?.Released());
+                Pinvoke.typedb_driver.database_delete(NativeObject?.Released());
             }
-            catch (pinvoke.Error e)
+            catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
@@ -118,78 +184,33 @@ namespace com.vaticle.typedb.driver.Connection
 
         public override string ToString()
         {
-            return Name();
+            return Name;
         }
 
-        public ICollection<IDatabase.IReplica> Replicas()
+        public class Replica : NativeObjectWrapper<Pinvoke.ReplicaInfo>, IDatabase.IReplica
         {
-            if (NativeObject == null || !NativeObject.IsOwned())
-            {
-                throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
-            }
-
-            return new NativeEnumerable<pinvoke.ReplicaInfo>(
-                pinvoke.typedb_driver.database_get_replicas_info(NativeObject))
-                .Select(obj => new Replica(obj))
-                .ToHashSet<IDatabase.IReplica>();
-        }
-
-        public IDatabase.IReplica? PrimaryReplica()
-        {
-            if (NativeObject == null || !NativeObject.IsOwned())
-            {
-                throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
-            }
-
-            pinvoke.ReplicaInfo replicaInfo = pinvoke.typedb_driver.database_get_primary_replica_info(NativeObject);
-            if (replicaInfo == null)
-            {
-                return null;
-            }
-
-            return new Replica(replicaInfo);
-        }
-
-        public IDatabase.IReplica? PreferredReplica()
-        {
-            if (NativeObject == null || !NativeObject.IsOwned())
-            {
-                throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
-            }
-            
-            pinvoke.ReplicaInfo replicaInfo = pinvoke.typedb_driver.database_get_preferred_replica_info(NativeObject);
-            if (replicaInfo == null)
-            {
-                return null;
-            }
-
-            return new Replica(replicaInfo);
-        }
-
-        public class Replica : NativeObjectWrapper<pinvoke.ReplicaInfo>, IDatabase.IReplica
-        {
-            public Replica(pinvoke.ReplicaInfo replicaInfo)
+            public Replica(Pinvoke.ReplicaInfo replicaInfo)
                 : base(replicaInfo)
             {}
 
-            public string Address()
+            public string Address
             {
-                return pinvoke.typedb_driver.replica_info_get_address(NativeObject);
+                get { return Pinvoke.typedb_driver.replica_info_get_address(NativeObject); }
             }
 
-            public bool IsPrimary()
+            public bool IsPrimary
             {
-                return pinvoke.typedb_driver.replica_info_is_primary(NativeObject);
+                get { return Pinvoke.typedb_driver.replica_info_is_primary(NativeObject); }
             }
 
-            public bool IsPreferred()
+            public bool IsPreferred
             {
-                return pinvoke.typedb_driver.replica_info_is_preferred(NativeObject);
+                get { return Pinvoke.typedb_driver.replica_info_is_preferred(NativeObject); }
             }
 
-            public long Term()
+            public long Term
             {
-                return pinvoke.typedb_driver.replica_info_get_term(NativeObject);
+                get { return Pinvoke.typedb_driver.replica_info_get_term(NativeObject); }
             }
         }
     }

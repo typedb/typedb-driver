@@ -23,27 +23,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using com.vaticle.typedb.driver;
-using com.vaticle.typedb.driver.Api.Database;
-using com.vaticle.typedb.driver.Common;
-using com.vaticle.typedb.driver.Common.Exception;
-using DriverError = com.vaticle.typedb.driver.Common.Exception.Error.Driver;
+using Vaticle.Typedb.Driver;
+using Vaticle.Typedb.Driver.Api.Database;
+using Vaticle.Typedb.Driver.Common;
+using Vaticle.Typedb.Driver.Common.Exception;
+using DriverError = Vaticle.Typedb.Driver.Common.Exception.Error.Driver;
 
-namespace com.vaticle.typedb.driver.Connection
+namespace Vaticle.Typedb.Driver.Connection
 {
-    public class TypeDBDatabaseManager : NativeObjectWrapper<pinvoke.DatabaseManager>, IDatabaseManager
+    public class TypeDBDatabaseManager : NativeObjectWrapper<Pinvoke.DatabaseManager>, IDatabaseManager
     {
-        public TypeDBDatabaseManager(pinvoke.Connection nativeConnection)
+        public TypeDBDatabaseManager(Pinvoke.Connection nativeConnection)
             : base(NewNative(nativeConnection))
         {}
 
-        private static pinvoke.DatabaseManager NewNative(pinvoke.Connection nativeConnection)
+        private static Pinvoke.DatabaseManager NewNative(Pinvoke.Connection nativeConnection)
         {
             try
             {
-                return pinvoke.typedb_driver.database_manager_new(nativeConnection);
+                return Pinvoke.typedb_driver.database_manager_new(nativeConnection);
             }
-            catch (pinvoke.Error e)
+            catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
@@ -51,16 +51,16 @@ namespace com.vaticle.typedb.driver.Connection
 
         public IDatabase Get(string name)
         {
-            if (String.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
             {
                 throw new TypeDBDriverException(DriverError.MISSING_DB_NAME);
             }
 
             try
             {
-                return new TypeDBDatabase(pinvoke.typedb_driver.databases_get(NativeObject, name));
+                return new TypeDBDatabase(Pinvoke.typedb_driver.databases_get(NativeObject, name));
             }
-            catch (pinvoke.Error e)
+            catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
@@ -68,16 +68,16 @@ namespace com.vaticle.typedb.driver.Connection
 
         public bool Contains(string name)
         {
-            if (String.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
             {
                 throw new TypeDBDriverException(DriverError.MISSING_DB_NAME);
             }
 
             try
             {
-                return pinvoke.typedb_driver.databases_contains(NativeObject, name);
+                return Pinvoke.typedb_driver.databases_contains(NativeObject, name);
             }
-            catch (pinvoke.Error e)
+            catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
@@ -85,16 +85,16 @@ namespace com.vaticle.typedb.driver.Connection
 
         public void Create(string name)
         {
-            if (String.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
             {
                 throw new TypeDBDriverException(DriverError.MISSING_DB_NAME);
             }
 
             try
             {
-                pinvoke.typedb_driver.databases_create(NativeObject, name);
+                Pinvoke.typedb_driver.databases_create(NativeObject, name);
             }
-            catch (pinvoke.Error e)
+            catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
@@ -104,12 +104,12 @@ namespace com.vaticle.typedb.driver.Connection
         {
             try
             {
-                return new NativeEnumerable<pinvoke.Database>(
-                    pinvoke.typedb_driver.databases_all(NativeObject))
+                return new NativeEnumerable<Pinvoke.Database>(
+                    Pinvoke.typedb_driver.databases_all(NativeObject))
                     .Select(obj => new TypeDBDatabase(obj))
                     .ToList<IDatabase>();
             }
-            catch (pinvoke.Error e)
+            catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
