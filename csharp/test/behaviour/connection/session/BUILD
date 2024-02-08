@@ -22,42 +22,32 @@
 package(default_visibility = ["//csharp/test/behaviour:__subpackages__"])
 
 load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
-load("//csharp/test:build_opts.bzl", "behaviour_tests_deps")
 load("//csharp/test:rules.bzl", "csharp_behaviour_test")
-load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 
-csharp_library(
-    name = "steps-session", # Note: ensure all libraries used together have unique names to prevent compiled DLL name clashes
+filegroup(
+    name = "steps-session",
     srcs = ["SessionSteps.cs"],
-    deps = behaviour_tests_deps + [
-        "//csharp/test/behaviour/connection:fixture-connection",
-        "//csharp:driver-csharp",
-        "//csharp/api",
-        "//csharp/common",
-    ],
-    runtime_identifier = "any",
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
+    visibility = ["//csharp/test/behaviour:__subpackages__"],
 )
 
 
 csharp_behaviour_test(
     name = "test-core",
     test_files = ["SessionTest.cs"],
-    features = ["@vaticle_typedb_behaviour//connection:session.feature"],
-    steps_deps = [
+    steps_files = [
         ":steps-session",
         "//csharp/test/behaviour/query:steps-query",
         "//csharp/test/behaviour/connection/transaction:steps-transaction",
         "//csharp/test/behaviour/connection/database:steps-database",
-        "//csharp/test/behaviour/connection:steps-core",
-        "//csharp/test/behaviour/connection:fixture-connection",
+        "//csharp/test/behaviour/connection:steps-connection-core",
     ],
+    features = ["@vaticle_typedb_behaviour//connection:session.feature"],
     deps = [
         "//csharp/api",
         "//csharp/common",
+        "//csharp:driver-csharp",
     ],
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
@@ -67,18 +57,17 @@ csharp_behaviour_test(
 csharp_behaviour_test(
     name = "test-cloud",
     test_files = ["SessionTest.cs"],
-    features = ["@vaticle_typedb_behaviour//connection:session.feature"],
-    steps_deps = [
+    steps_files = [
         ":steps-session",
-        "//csharp/test/behaviour/query:steps-query",
         "//csharp/test/behaviour/connection/transaction:steps-transaction",
         "//csharp/test/behaviour/connection/database:steps-database",
-        "//csharp/test/behaviour/connection:steps-cloud",
-        "//csharp/test/behaviour/connection:fixture-connection",
+        "//csharp/test/behaviour/connection:steps-connection-cloud",
     ],
+    features = ["@vaticle_typedb_behaviour//connection:session.feature"],
     deps = [
         "//csharp/api",
         "//csharp/common",
+        "//csharp:driver-csharp",
     ],
     add_certificates = True,
     target_frameworks = target_frameworks,

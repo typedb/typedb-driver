@@ -20,16 +20,17 @@
  */
 
 using System;
+using Xunit.Gherkin.Quick;
 
 using com.vaticle.typedb.driver;
 using com.vaticle.typedb.driver.Api;
-using com.vaticle.typedb.driver.Test.Behaviour.Connection;
+using com.vaticle.typedb.driver.Test.Behaviour;
 
-namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
+namespace com.vaticle.typedb.driver.Test.Behaviour
 {
-    public class ConnectionSteps : ConnectionFixture
+    public partial class BehaviourSteps : ConnectionFixture
     {
-        public ConnectionSteps()
+        public BehaviourSteps()
             : base()
         {}
 
@@ -43,16 +44,21 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
             return TypeDB.CoreDriver(address);
         }
 
+        [Given(@"typedb starts")]
+        [When(@"typedb starts")]
         public override void TypeDBStarts()
         {
             Console.WriteLine("CORE: TypeDB Starts, nothing here for now..."); // TODO
         }
 
+        [Given(@"connection opens with default authentication")]
+        [When(@"connection opens with default authentication")]
         public override void ConnectionOpensWithDefaultAuthentication()
         {
             Driver = CreateTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
         }
 
+        [When(@"connection opens with authentication: {word}, {word}")]
         public void ConnectionOpensWithAuthentication(string username, string password)
         {
             throw new NotImplementedException("Do not use this method for Core tests");

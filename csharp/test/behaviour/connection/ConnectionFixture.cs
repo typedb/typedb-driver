@@ -24,14 +24,15 @@
 using System;
 using System.Collections.Generic;
 using Xunit;
+using Xunit.Gherkin.Quick;
 
 using com.vaticle.typedb.driver;
 using com.vaticle.typedb.driver.Api;
 using com.vaticle.typedb.driver.Common;
 
-namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
+namespace com.vaticle.typedb.driver.Test.Behaviour
 {
-    public abstract class ConnectionFixture : IDisposable
+    public abstract class ConnectionFixture : Feature, IDisposable
     {
         protected ConnectionFixture() // "Before"
         {
@@ -63,12 +64,14 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
 
         public abstract void ConnectionOpensWithDefaultAuthentication();
 
+        [Given(@"connection has been opened")]
         public virtual void ConnectionHasBeenOpened()
         {
             Assert.NotNull(Driver);
             Assert.True(Driver.IsOpen());
         }
 
+        [When(@"connection closes")]
         public virtual void ConnectionCloses()
         {
             Driver.Close();
