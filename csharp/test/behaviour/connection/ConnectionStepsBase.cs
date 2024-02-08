@@ -32,9 +32,9 @@ using com.vaticle.typedb.driver.Common;
 
 namespace com.vaticle.typedb.driver.Test.Behaviour
 {
-    public abstract class ConnectionFixture : Feature, IDisposable
+    public abstract class ConnectionStepsBase : Feature, IDisposable
     {
-        protected ConnectionFixture() // "Before"
+        protected ConnectionStepsBase() // "Before"
         {
             SessionOptions = CreateOptions().Infer(true);
             TransactionOptions = CreateOptions().Infer(true);

@@ -39,7 +39,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour
         [When(@"connection create database: {word}")]
         public void ConnectionCreateDatabase(string name)
         {
-            ConnectionFixture.Driver.Databases().Create(name);
+            ConnectionStepsBase.Driver.Databases().Create(name);
         }
 
         [Given(@"connection create databases:")]
@@ -89,7 +89,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour
         [When(@"connection delete database: {word}")]
         public void ConnectionDeleteDatabase(string name)
         {
-            ConnectionFixture.Driver.Databases().Get(name).Delete();
+            ConnectionStepsBase.Driver.Databases().Get(name).Delete();
         }
 
         [When(@"connection delete databases:")]
@@ -108,7 +108,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour
         public void ConnectionDeleteDatabaseThrowsException(string databaseName)
         {
             Assert.Throws<Common.Exception.TypeDBDriverException>(
-                () => ConnectionFixture.Driver.Databases().Get(databaseName).Delete());
+                () => ConnectionStepsBase.Driver.Databases().Get(databaseName).Delete());
         }
 
         [When(@"connection delete databases in parallel:")]
@@ -144,7 +144,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour
         [Then(@"connection has database: {word}")]
         public void ConnectionHasDatabase(string name)
         {
-            Assert.True(ConnectionFixture.Driver.Databases().Contains(name));
+            Assert.True(ConnectionStepsBase.Driver.Databases().Contains(name));
         }
 
         [Then(@"connection has databases:")]
@@ -162,13 +162,13 @@ namespace com.vaticle.typedb.driver.Test.Behaviour
             }
 
             // TODO: Could there be just == ? The description is more like >=!
-            Assert.True(expectedDatabasesSize >= ConnectionFixture.Driver.Databases().GetAll().Count);
+            Assert.True(expectedDatabasesSize >= ConnectionStepsBase.Driver.Databases().GetAll().Count);
         }
 
         [Then(@"connection does not have database: {word}")]
         public void ConnectionDoesNotHaveDatabase(string name)
         {
-            Assert.False(ConnectionFixture.Driver.Databases().Contains(name));
+            Assert.False(ConnectionStepsBase.Driver.Databases().Contains(name));
         }
 
         [Then(@"connection does not have databases:")]
@@ -187,9 +187,9 @@ namespace com.vaticle.typedb.driver.Test.Behaviour
         [Then(@"connection does not have any database")]
         public void ConnectionDoesNotHaveAnyDatabase()
         {
-            Assert.NotNull(ConnectionFixture.Driver);
-            Assert.True(ConnectionFixture.Driver.IsOpen());
-            Assert.Equal(0, ConnectionFixture.Driver.Databases().GetAll().Count);
+            Assert.NotNull(ConnectionStepsBase.Driver);
+            Assert.True(ConnectionStepsBase.Driver.IsOpen());
+            Assert.Equal(0, ConnectionStepsBase.Driver.Databases().GetAll().Count);
         }
     }
 }

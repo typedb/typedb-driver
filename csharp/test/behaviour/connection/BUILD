@@ -29,14 +29,14 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 filegroup(
     name = "steps-connection-core",
-    srcs = ["ConnectionFixture.cs", "ConnectionStepsCore.cs"],
+    srcs = ["ConnectionStepsBase.cs", "ConnectionStepsCore.cs"],
     visibility = ["//csharp/test/behaviour:__subpackages__"],
 )
 
 
 filegroup(
     name = "steps-connection-cloud",
-    srcs = ["ConnectionFixture.cs", "ConnectionStepsCloud.cs"],
+    srcs = ["ConnectionStepsBase.cs", "ConnectionStepsCloud.cs"],
     visibility = ["//csharp/test/behaviour:__subpackages__"],
 )
 

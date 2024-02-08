@@ -38,9 +38,9 @@ namespace com.vaticle.typedb.driver.Test.Behaviour
     {
         private void ConnectionOpenSessionForDatabase(string name, SessionType sessionType)
         {
-            ConnectionFixture.Sessions.Add(
-                ConnectionFixture.Driver.Session(
-                    name, sessionType, ConnectionFixture.SessionOptions));
+            ConnectionStepsBase.Sessions.Add(
+                ConnectionStepsBase.Driver.Session(
+                    name, sessionType, ConnectionStepsBase.SessionOptions));
         }
 
         [Given(@"connection open schema session for database: {word}")]
@@ -97,18 +97,18 @@ namespace com.vaticle.typedb.driver.Test.Behaviour
         [When(@"connection close all sessions")]
         public void ConnectionCloseAllSessions()
         {
-            foreach (var session in ConnectionFixture.Sessions)
+            foreach (var session in ConnectionStepsBase.Sessions)
             {
                 session.Close();
             }
 
-            ConnectionFixture.Sessions.Clear();
+            ConnectionStepsBase.Sessions.Clear();
         }
 
         [Then(@"session[s]? [is|are]+ null: {}")]
         public void SessionsAreNull(bool expectedNull)
         {
-            foreach (var session in ConnectionFixture.Sessions)
+            foreach (var session in ConnectionStepsBase.Sessions)
             {
                 Assert.Equal(expectedNull, session == null);
             }
@@ -118,7 +118,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour
         public void SessionsInParallelAreNull(bool expectedNull)
         {
             throw new NotImplementedException("Not yet for parallel null!"); // TODO
-            foreach (var session in ConnectionFixture.Sessions)
+            foreach (var session in ConnectionStepsBase.Sessions)
             {
 //                Assert.Equal(expectedNull, session == null);
             }
@@ -127,7 +127,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour
         [Then(@"session[s]? [is|are]+ open: {}")]
         public void SessionsAreOpen(bool expectedOpen)
         {
-            foreach (var session in ConnectionFixture.Sessions)
+            foreach (var session in ConnectionStepsBase.Sessions)
             {
                 Assert.Equal(expectedOpen, session.IsOpen());
             }
@@ -137,7 +137,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour
         public void SessionsInParallelAreOpen(bool expectedOpen)
         {
             throw new NotImplementedException("Not yet for parallel open!"); // TODO
-            foreach (var session in ConnectionFixture.Sessions)
+            foreach (var session in ConnectionStepsBase.Sessions)
             {
 //                Assert.Equal(expectedOpen, session.IsOpen());
             }
@@ -161,7 +161,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour
                 }
             }
 
-            Assert.Equal(expectedNames.Count, ConnectionFixture.Sessions.Count);
+            Assert.Equal(expectedNames.Count, ConnectionStepsBase.Sessions.Count);
             throw new NotImplementedException("Not yet for ITERATOR!"); // TODO
         }
 
