@@ -28,7 +28,7 @@ using com.vaticle.typedb.driver.Test.Behaviour;
 
 namespace com.vaticle.typedb.driver.Test.Behaviour
 {
-    public partial class BehaviourSteps : ConnectionFixture
+    public partial class BehaviourSteps : ConnectionStepsBase
     {
         public BehaviourSteps()
             : base()
