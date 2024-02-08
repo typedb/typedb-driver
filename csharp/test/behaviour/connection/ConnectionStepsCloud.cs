@@ -21,16 +21,17 @@
 
 using System;
 using System.Collections.Generic;
+using Xunit.Gherkin.Quick;
 
 using com.vaticle.typedb.driver;
 using com.vaticle.typedb.driver.Api;
-using com.vaticle.typedb.driver.Test.Behaviour.Connection;
+using com.vaticle.typedb.driver.Test.Behaviour;
 
-namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
+namespace com.vaticle.typedb.driver.Test.Behaviour
 {
-    public class ConnectionSteps : ConnectionFixture
+    public partial class BehaviourSteps : ConnectionFixture
     {
-        public ConnectionSteps()
+        public BehaviourSteps()
             : base()
         {}
 
@@ -63,16 +64,21 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection
             return CreateTypeDBDriver(new string[]{address}, username, password);
         }
 
+        [Given(@"typedb starts")]
+        [When(@"typedb starts")]
         public override void TypeDBStarts()
         {
             Console.WriteLine("CLOUD: TypeDB Starts, nothing here for now..."); // TODO
         }
 
+        [Given(@"connection opens with default authentication")]
+        [When(@"connection opens with default authentication")]
         public override void ConnectionOpensWithDefaultAuthentication()
         {
             Driver = CreateTypeDBDriver();
         }
 
+        [When(@"connection opens with authentication: {word}, {word}")]
         public void ConnectionOpensWithAuthentication(string username, string password)
         {
             if (Driver != null)

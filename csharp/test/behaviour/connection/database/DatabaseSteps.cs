@@ -26,19 +26,24 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Gherkin.Quick;
 
 using com.vaticle.typedb.driver;
-using com.vaticle.typedb.driver.Test.Behaviour.Connection;
+using com.vaticle.typedb.driver.Test.Behaviour;
 
-namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
+namespace com.vaticle.typedb.driver.Test.Behaviour
 {
-    public class DatabaseSteps
+    public partial class BehaviourSteps
     {
+        [Given(@"connection create database: {word}")]
+        [When(@"connection create database: {word}")]
         public void ConnectionCreateDatabase(string name)
         {
             ConnectionFixture.Driver.Databases().Create(name);
         }
 
+        [Given(@"connection create databases:")]
+        [When(@"connection create databases:")]
         public void ConnectionCreateDatabases(DataTable names)
         {
             foreach (var row in names.Rows)
@@ -50,6 +55,8 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
             }
         }
 
+        [Given(@"connection create databases in parallel:")]
+        [When(@"connection create databases in parallel:")]
         public void ConnectionCreateDatabasesInParallel(DataTable names)
         {
             var collectedNames = new List<string>();
@@ -79,11 +86,13 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
             Task.WaitAll(taskArray);
         }
 
+        [When(@"connection delete database: {word}")]
         public void ConnectionDeleteDatabase(string name)
         {
             ConnectionFixture.Driver.Databases().Get(name).Delete();
         }
 
+        [When(@"connection delete databases:")]
         public void ConnectionDeleteDatabases(DataTable names)
         {
             foreach (var row in names.Rows)
@@ -95,12 +104,14 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
             }
         }
 
+        [When(@"connection delete database; throws exception: {word}")]
         public void ConnectionDeleteDatabaseThrowsException(string databaseName)
         {
             Assert.Throws<Common.Exception.TypeDBDriverException>(
                 () => ConnectionFixture.Driver.Databases().Get(databaseName).Delete());
         }
 
+        [When(@"connection delete databases in parallel:")]
         public void ConnectionDeleteDatabasesInParallel(DataTable names)
         {
             var collectedNames = new List<string>();
@@ -130,11 +141,13 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
             Task.WaitAll(taskArray);
         }
 
+        [Then(@"connection has database: {word}")]
         public void ConnectionHasDatabase(string name)
         {
             Assert.True(ConnectionFixture.Driver.Databases().Contains(name));
         }
 
+        [Then(@"connection has databases:")]
         public void ConnectionHasDatabases(DataTable names)
         {
             int expectedDatabasesSize = 0;
@@ -152,11 +165,13 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
             Assert.True(expectedDatabasesSize >= ConnectionFixture.Driver.Databases().GetAll().Count);
         }
 
+        [Then(@"connection does not have database: {word}")]
         public void ConnectionDoesNotHaveDatabase(string name)
         {
             Assert.False(ConnectionFixture.Driver.Databases().Contains(name));
         }
 
+        [Then(@"connection does not have databases:")]
         public void ConnectionDoesNotHaveDatabases(DataTable names)
         {
             foreach (var row in names.Rows)
@@ -168,6 +183,8 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Database
             }
         }
 
+        [Given(@"connection does not have any database")]
+        [Then(@"connection does not have any database")]
         public void ConnectionDoesNotHaveAnyDatabase()
         {
             Assert.NotNull(ConnectionFixture.Driver);

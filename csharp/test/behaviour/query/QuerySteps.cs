@@ -27,19 +27,21 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Gherkin.Quick;
 
 using com.vaticle.typedb.driver;
 using com.vaticle.typedb.driver.Api;
 
-namespace com.vaticle.typedb.driver.Test.Behaviour.Query
+namespace com.vaticle.typedb.driver.Test.Behaviour
 {
-    public class QuerySteps
+    public partial class BehaviourSteps
     {
         public void IntegrityIsValidated()
         {
             // TODO ???
         }
 
+        [Then(@"typeql define")]
         public void TypeqlDefine(DocString defineQueryStatements)
         {
             string query = defineQueryStatements.Content;
@@ -56,6 +58,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Query
                 () => TypeqlDefine(defineQueryStatements));
         }
 
+        [Then(@"typeql define; throws exception containing {string}")]
         public void TypeqlDefineThrowsExceptionContaining(string expectedMessage, DocString defineQueryStatements)
         {
             var exception = Assert.Throws<Common.Exception.TypeDBDriverException>(
@@ -78,6 +81,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Query
                 () => TypeqlInsert(insertQueryStatements));
         }
 
+        [Then(@"typeql insert; throws exception containing {string}")]
         public void TypeqlInsertThrowsExceptionContaining(string expectedMessage, DocString insertQueryStatements)
         {
             var exception = Assert.Throws<Common.Exception.TypeDBDriverException>(

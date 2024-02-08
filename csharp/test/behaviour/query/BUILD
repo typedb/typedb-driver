@@ -22,23 +22,14 @@
 package(default_visibility = ["//csharp/test/behaviour:__subpackages__"])
 
 load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
-load("//csharp/test:build_opts.bzl", "behaviour_tests_deps")
 load("//csharp/test:rules.bzl", "csharp_behaviour_test")
-load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 
-csharp_library(
-    name = "steps-query", # Note: ensure all libraries used together have unique names to prevent compiled DLL name clashes
+filegroup(
+    name = "steps-query",
     srcs = ["QuerySteps.cs"],
-    deps = behaviour_tests_deps + [
-        "//csharp:driver-csharp",
-        "//csharp/api",
-        "//csharp/common",
-    ],
-    runtime_identifier = "any",
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
+    visibility = ["//csharp/test/behaviour:__subpackages__"],
 )
 
 
