@@ -27,51 +27,17 @@ load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 
-csharp_library(
-    name = "fixture-connection",
-    srcs = ["ConnectionFixture.cs"],
-    deps = behaviour_tests_deps + [
-        "//csharp:driver-csharp",
-        "//csharp/api",
-        "//csharp/common",
-    ],
-    runtime_identifier = "any",
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
+filegroup(
+    name = "steps-connection-core",
+    srcs = ["ConnectionFixture.cs", "ConnectionStepsCore.cs"],
+    visibility = ["//csharp/test/behaviour:__subpackages__"],
 )
 
 
-csharp_library(
-    name = "steps-core",
-    srcs = [
-        "ConnectionStepsCore.cs",
-    ],
-    deps = behaviour_tests_deps + [
-        ":fixture-connection",
-        "//csharp:driver-csharp",
-        "//csharp/api",
-        "//csharp/common",
-    ],
-    runtime_identifier = "any",
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-)
-
-
-csharp_library(
-    name = "steps-cloud",
-    srcs = [
-        "ConnectionStepsCloud.cs",
-    ],
-    deps = behaviour_tests_deps + [
-        ":fixture-connection",
-        "//csharp:driver-csharp",
-        "//csharp/api",
-        "//csharp/common",
-    ],
-    runtime_identifier = "any",
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
+filegroup(
+    name = "steps-connection-cloud",
+    srcs = ["ConnectionFixture.cs", "ConnectionStepsCloud.cs"],
+    visibility = ["//csharp/test/behaviour:__subpackages__"],
 )
 
 

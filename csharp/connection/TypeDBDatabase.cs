@@ -40,7 +40,7 @@ namespace com.vaticle.typedb.driver.Connection
 
         public string Name()
         {
-            if (NativeObject == null || !NativeObject.IsOwned())
+            if (NativeObject == null || !NativeObject.IsOwned()) // TODO: Wrap in a method (and other similar places), consider providing an exception to it.
             {
                 throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
             }
