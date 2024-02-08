@@ -22,16 +22,16 @@
 using System;
 using System.Collections.Generic;
 
-using com.vaticle.typedb.driver;
-using com.vaticle.typedb.driver.Api;
-using com.vaticle.typedb.driver.Api.Database;
-using com.vaticle.typedb.driver.Common;
-using com.vaticle.typedb.driver.Common.Exception;
-using DriverError = com.vaticle.typedb.driver.Common.Exception.Error.Driver;
+using Vaticle.Typedb.Driver;
+using Vaticle.Typedb.Driver.Api;
+using Vaticle.Typedb.Driver.Api.Database;
+using Vaticle.Typedb.Driver.Common;
+using Vaticle.Typedb.Driver.Common.Exception;
+using DriverError = Vaticle.Typedb.Driver.Common.Exception.Error.Driver;
 
-namespace com.vaticle.typedb.driver.Connection
+namespace Vaticle.Typedb.Driver.Connection
 {
-    public class TypeDBTransaction : NativeObjectWrapper<pinvoke.Transaction>, ITypeDBTransaction
+    public class TypeDBTransaction : NativeObjectWrapper<Pinvoke.Transaction>, ITypeDBTransaction
     {
         private readonly TransactionType _type;
         private readonly TypeDBOptions _options;
@@ -56,15 +56,15 @@ namespace com.vaticle.typedb.driver.Connection
             _callbacks = new List<TransactionOnClose>();
         }
 
-        private static pinvoke.Transaction NewNative(
+        private static Pinvoke.Transaction NewNative(
             TypeDBSession session, TransactionType type, TypeDBOptions options)
         {
             try
             {
-                return pinvoke.typedb_driver.transaction_new(
+                return Pinvoke.typedb_driver.transaction_new(
                     session.NativeObject, type.NativeObject, options.NativeObject);
             }
-            catch (pinvoke.Error e)
+            catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
@@ -87,7 +87,7 @@ namespace com.vaticle.typedb.driver.Connection
                 return false;
             }
 
-            return pinvoke.typedb_driver.transaction_is_open(NativeObject);
+            return Pinvoke.typedb_driver.transaction_is_open(NativeObject);
         }
 // TODO:
 //        public IConceptManager Concepts()
@@ -116,9 +116,9 @@ namespace com.vaticle.typedb.driver.Connection
             {
                 TransactionOnClose callback = new TransactionOnClose(function);
                 _callbacks.Add(callback);
-                pinvoke.typedb_driver.transaction_on_close(NativeObject, callback.Released());
+                Pinvoke.typedb_driver.transaction_on_close(NativeObject, callback.Released());
             }
-            catch (pinvoke.Error e)
+            catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
@@ -133,9 +133,9 @@ namespace com.vaticle.typedb.driver.Connection
 
             try
             {
-                pinvoke.typedb_driver.transaction_commit(NativeObject.Released());  // TODO: .Get() after implementing VoidPromises
+                Pinvoke.typedb_driver.transaction_commit(NativeObject.Released());  // TODO: .Get() after implementing VoidPromises
             }
-            catch (pinvoke.Error e)
+            catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
@@ -150,9 +150,9 @@ namespace com.vaticle.typedb.driver.Connection
 
             try
             {
-                pinvoke.typedb_driver.transaction_rollback(NativeObject); // TODO: .Get() after implementing VoidPromises
+                Pinvoke.typedb_driver.transaction_rollback(NativeObject); // TODO: .Get() after implementing VoidPromises
             }
-            catch (pinvoke.Error e)
+            catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
@@ -167,9 +167,9 @@ namespace com.vaticle.typedb.driver.Connection
 
             try
             {
-                pinvoke.typedb_driver.transaction_force_close(NativeObject);
+                Pinvoke.typedb_driver.transaction_force_close(NativeObject);
             }
-            catch (pinvoke.Error e)
+            catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }
@@ -183,7 +183,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
         }
 
-        private class TransactionOnClose : pinvoke.TransactionCallbackDirector
+        private class TransactionOnClose : Pinvoke.TransactionCallbackDirector
         {
             private readonly Action<Exception> _function;
 
@@ -192,7 +192,7 @@ namespace com.vaticle.typedb.driver.Connection
                 _function = function;
             }
 
-            public override void callback(pinvoke.Error e)
+            public override void callback(Pinvoke.Error e)
             {
                 _function(e);
             }

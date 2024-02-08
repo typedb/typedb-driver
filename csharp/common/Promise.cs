@@ -21,9 +21,9 @@
 
 using System;
 
-using com.vaticle.typedb.driver.Common.Exception;
+using Vaticle.Typedb.Driver.Common.Exception;
 
-namespace com.vaticle.typedb.driver.Common
+namespace Vaticle.Typedb.Driver.Common
 {
     /**
      * A <code>Promise</code> represents an asynchronous network operation.
@@ -63,7 +63,7 @@ namespace com.vaticle.typedb.driver.Common
             {
                 return _inner();
             }
-            catch (pinvoke.Error e)
+            catch (Pinvoke.Error e)
             {
                 throw new TypeDBDriverException(e);
             }

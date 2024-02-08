@@ -22,11 +22,11 @@
 using System;
 using System.Collections.Generic;
 
-using com.vaticle.typedb.driver;
-using com.vaticle.typedb.driver.Common.Exception;
-using InternalError = com.vaticle.typedb.driver.Common.Exception.Error.Internal;
+using Vaticle.Typedb.Driver;
+using Vaticle.Typedb.Driver.Common.Exception;
+using InternalError = Vaticle.Typedb.Driver.Common.Exception.Error.Internal;
 
-namespace com.vaticle.typedb.driver.Api
+namespace Vaticle.Typedb.Driver.Api
 {
     public interface ITypeDBSession : IDisposable
     {
@@ -128,13 +128,13 @@ namespace com.vaticle.typedb.driver.Api
      */
     public class SessionType
     {
-        public readonly int Id;
-        public readonly pinvoke.SessionType NativeObject;
+        public int Id { get; }
+        public Pinvoke.SessionType NativeObject { get; }
 
-        public static readonly SessionType DATA = new SessionType(1, pinvoke.SessionType.Data);
-        public static readonly SessionType SCHEMA = new SessionType(2, pinvoke.SessionType.Schema);
+        public static readonly SessionType DATA = new SessionType(1, Pinvoke.SessionType.Data);
+        public static readonly SessionType SCHEMA = new SessionType(2, Pinvoke.SessionType.Schema);
 
-        private SessionType(int id, pinvoke.SessionType nativeObject)
+        private SessionType(int id, Pinvoke.SessionType nativeObject)
         {
             Id = id;
             NativeObject = nativeObject;

@@ -23,7 +23,7 @@
 
 using System.Collections.Generic;
 
-namespace com.vaticle.typedb.driver.Api.Database
+namespace Vaticle.Typedb.Driver.Api.Database
 {
     public interface IDatabase
     {
@@ -32,40 +32,73 @@ namespace com.vaticle.typedb.driver.Api.Database
          *
          * <h3>Examples</h3>
          * <pre>
-         * database.Name()
+         * database.Name
          * </pre>
          */
-        public string Name();
+        public string Name { get; }
 
         /**
          * A full schema text as a valid TypeQL define query string.
          *
          * <h3>Examples</h3>
          * <pre>
-         * database.Schema()
+         * database.Schema
          * </pre>
          */
-        public string Schema();
+        public string Schema { get; }
 
         /**
          * The types in the schema as a valid TypeQL define query string.
          *
          * <h3>Examples</h3>
          * <pre>
-         * database.TypeSchema()
+         * database.TypeSchema
          * </pre>
          */
-        public string TypeSchema();
+        public string TypeSchema { get; }
 
         /**
          * The rules in the schema as a valid TypeQL define query string.
          *
          * <h3>Examples</h3>
          * <pre>
-         * database.RuleSchema()
+         * database.RuleSchema
          * </pre>
          */
-        public string RuleSchema();
+        public string RuleSchema { get; }
+
+        /**
+         * Set of <code>Replica</code> instances for this database.
+         * <b>Only works in TypeDB Cloud</b>
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * database.Replicas
+         * </pre>
+         */
+        public ICollection<IReplica> Replicas { get; }
+
+        /**
+         * Returns the primary replica for this database.
+         * _Only works in TypeDB Cloud_
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * database.PrimaryReplica
+         * </pre>
+         */
+        public IReplica? PrimaryReplica { get; }
+
+        /**
+         * Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica.
+         * _Only works in TypeDB Cloud_
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * database.PreferredReplica
+         * </pre>
+         */
+        public IReplica? PreferredReplica { get; }
 
         /**
          * Deletes this database.
@@ -78,39 +111,6 @@ namespace com.vaticle.typedb.driver.Api.Database
         public void Delete();
 
         /**
-         * Set of <code>Replica</code> instances for this database.
-         * <b>Only works in TypeDB Cloud</b>
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * database.Replicas()
-         * </pre>
-         */
-        public ICollection<IReplica> Replicas();
-
-        /**
-         * Returns the primary replica for this database.
-         * _Only works in TypeDB Cloud_
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * database.PrimaryReplica()
-         * </pre>
-         */
-        public IReplica? PrimaryReplica();
-
-        /**
-         * Returns the preferred replica for this database. Operations which can be run on any replica will prefer to use this replica.
-         * _Only works in TypeDB Cloud_
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * database.PreferredReplica()
-         * </pre>
-         */
-        public IReplica? PreferredReplica();
-
-        /**
          * The metadata and state of an individual raft replica of a database.
          */
         public interface IReplica
@@ -118,23 +118,23 @@ namespace com.vaticle.typedb.driver.Api.Database
             /**
              * Retrieves the address of the server hosting this replica.
              */
-            public string Address();
+            public string Address { get; }
 
             /**
              * Checks whether this is the primary replica of the raft cluster.
              */
-            public bool IsPrimary();
+            public bool IsPrimary { get; }
 
             /**
              * Checks whether this is the preferred replica of the raft cluster.
              * If true, Operations which can be run on any replica will prefer to use this replica.
              */
-            public bool IsPreferred();
+            public bool IsPreferred { get; }
 
             /**
              * The raft protocol ‘term’ of this replica.
              */
-            public long Term();
+            public long Term { get; }
         }
     }
 }

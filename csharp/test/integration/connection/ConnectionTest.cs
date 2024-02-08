@@ -23,12 +23,12 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 
-using com.vaticle.typedb.driver;
-using com.vaticle.typedb.driver.Api;
-using com.vaticle.typedb.driver.Api.Database;
-using com.vaticle.typedb.driver.Common;
+using Vaticle.Typedb.Driver;
+using Vaticle.Typedb.Driver.Api;
+using Vaticle.Typedb.Driver.Api.Database;
+using Vaticle.Typedb.Driver.Common;
 
-namespace com.vaticle.typedb.driver.Test.Integration
+namespace Vaticle.Typedb.Driver.Test.Integration
 {
     public static class Utils
     {
