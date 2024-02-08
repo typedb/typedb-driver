@@ -53,7 +53,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (String.IsNullOrEmpty(name))
             {
-                throw new TypeDBDriverException(DriverError.s_MissingDbName);
+                throw new TypeDBDriverException(DriverError.MISSING_DB_NAME);
             }
 
             try
@@ -70,7 +70,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (String.IsNullOrEmpty(name))
             {
-                throw new TypeDBDriverException(DriverError.s_MissingDbName);
+                throw new TypeDBDriverException(DriverError.MISSING_DB_NAME);
             }
 
             try
@@ -87,7 +87,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (String.IsNullOrEmpty(name))
             {
-                throw new TypeDBDriverException(DriverError.s_MissingDbName);
+                throw new TypeDBDriverException(DriverError.MISSING_DB_NAME);
             }
 
             try

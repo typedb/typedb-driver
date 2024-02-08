@@ -42,9 +42,9 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Transaction
             switch (value)
             {
                 case "read":
-                    return TransactionType.Read;
+                    return TransactionType.READ;
                 case "write":
-                    return TransactionType.Write;
+                    return TransactionType.WRITE;
                 default:
                     throw new Exception($"The test value {value} passed to StringToTransactionType is invalid!");
             }

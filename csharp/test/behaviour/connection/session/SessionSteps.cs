@@ -44,7 +44,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Session
 
         public void ConnectionOpenSchemaSessionForDatabase(string name)
         {
-            ConnectionOpenSessionForDatabase(name, SessionType.Schema);
+            ConnectionOpenSessionForDatabase(name, SessionType.SCHEMA);
         }
 
         public void ConnectionOpenSchemaSessionForDatabases(DataTable names)
@@ -60,7 +60,7 @@ namespace com.vaticle.typedb.driver.Test.Behaviour.Connection.Session
 
         public void ConnectionOpenDataSessionForDatabase(string name)
         {
-            ConnectionOpenSessionForDatabase(name, SessionType.Data);
+            ConnectionOpenSessionForDatabase(name, SessionType.DATA);
         }
 
         public void ConnectionOpenDataSessionForDatabases(DataTable names)

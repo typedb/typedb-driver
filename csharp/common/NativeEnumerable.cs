@@ -43,7 +43,7 @@ namespace com.vaticle.typedb.driver.Common
             if (_enumeratorUsed)
             {
                 // TODO: Maybe need to allow it (+ swig)!
-                throw new TypeDBDriverException(InternalError.s_EnumeratorExcessiveAccess);
+                throw new TypeDBDriverException(InternalError.ENUMERATOR_EXCESSIVE_ACCESS);
             }
 
             _enumeratorUsed = true;

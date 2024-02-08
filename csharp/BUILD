@@ -70,33 +70,3 @@ checkstyle_test(
     ]),
     license_type = "apache-header",
 )
-
-
-## TODO: POC, remove later:
-csharp_library(
-    name = "hello-lib",
-    srcs = ["Lib.cs"],
-    runtime_identifier = "any",
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-)
-
-csharp_binary(
-    name = "hello",
-    srcs = ["Hello.cs"],
-    runtime_identifier = "any",
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-    deps = [":hello-lib"],
-)
-
-
-# Test binary just for testing the dependencies!
-csharp_binary(
-    name = "valuetype",
-    srcs = ["poc-examples/valuetype/Main.cs"],
-    runtime_identifier = "any",
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-    deps = [":typedb_driver_pinvoke"],
-)
