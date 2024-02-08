@@ -40,7 +40,7 @@ namespace com.vaticle.typedb.driver.Common
         {
             if (NativeObject == null)
             {
-                throw new TypeDBDriverException(InternalError.s_NullNativeValue);
+                throw new TypeDBDriverException(InternalError.NULL_NATIVE_VALUE);
             }
 
             this.NativeObject = NativeObject;

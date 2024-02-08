@@ -41,7 +41,7 @@ namespace com.vaticle.typedb.driver.Api
         bool IsOpen();
 
         /**
-         * The transaction’s type (Read or Write).
+         * The transaction’s type (READ or WRITE).
          */
         TransactionType Type();
 
@@ -114,60 +114,21 @@ namespace com.vaticle.typedb.driver.Api
      *
      * <h3>Examples</h3>
      * <pre>
-     * session.Transaction(TransactionType.Read);
+     * session.Transaction(TransactionType.READ);
      * </pre>
      */
-    public enum TransactionType : int
+    public class TransactionType
     {
-        Read = 0,
-        Write = 1
-    }
+        public readonly int Id;
+        public readonly pinvoke.TransactionType NativeObject;
 
-    public static class TransactionTypeGetter // TODO: Come up with a better naming?
-    {
-        public static TransactionType FromNative(pinvoke.TransactionType nativeTransactionType)
+        public static readonly TransactionType READ = new TransactionType(1, pinvoke.TransactionType.Read);
+        public static readonly TransactionType WRITE = new TransactionType(2, pinvoke.TransactionType.Write);
+
+        private TransactionType(int id, pinvoke.TransactionType nativeObject)
         {
-            foreach (var transactionTypeInfo in s_allTransactionTypeInfos)
-            {
-                if (transactionTypeInfo.NativeObject == nativeTransactionType)
-                {
-                    return transactionTypeInfo.Type;
-                }
-            }
-
-            throw new TypeDBDriverException(InternalError.s_UnexpectedNativeValue);
+            Id = id;
+            NativeObject = nativeObject;
         }
-
-        public static pinvoke.TransactionType ToNative(TransactionType transactionType)
-        {
-            foreach (var transactionTypeInfo in s_allTransactionTypeInfos)
-            {
-                if (transactionTypeInfo.Type == transactionType)
-                {
-                    return transactionTypeInfo.NativeObject;
-                }
-            }
-
-            throw new TypeDBDriverException(InternalError.s_UnexpectedInternalValue);
-        }
-
-        private struct TransactionTypeInfo
-        {
-            public TransactionTypeInfo(TransactionType type, pinvoke.TransactionType nativeObject)
-            {
-                Type = type;
-                NativeObject = nativeObject;
-            }
-
-            public readonly TransactionType Type;
-            public readonly pinvoke.TransactionType NativeObject;
-        }
-
-        private static TransactionTypeInfo[] s_allTransactionTypeInfos =
-            new TransactionTypeInfo[]
-            {
-                new TransactionTypeInfo(TransactionType.Read, pinvoke.TransactionType.Read),
-                new TransactionTypeInfo(TransactionType.Write, pinvoke.TransactionType.Write)
-            };
     }
 }

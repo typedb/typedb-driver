@@ -29,7 +29,7 @@ namespace com.vaticle.typedb.driver
 {
     public static class TypeDB
     {
-        public const string s_DefaultAddress = "localhost:1729";
+        public const string DEFAULT_ADDRESS = "localhost:1729";
 
         /**
          * Open a TypeDB Driver to a TypeDB Core server available at the provided address.

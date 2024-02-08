@@ -34,7 +34,7 @@ namespace com.vaticle.typedb.driver.Test.Integration
     {
         public static ITypeDBDriver OpenConnection()
         {
-            ITypeDBDriver driver = TypeDB.CoreDriver(TypeDB.s_DefaultAddress);
+            ITypeDBDriver driver = TypeDB.CoreDriver(TypeDB.DEFAULT_ADDRESS);
             Assert.IsNotNull(driver);
             Assert.True(driver.IsOpen());
 

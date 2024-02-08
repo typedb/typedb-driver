@@ -62,7 +62,7 @@ namespace com.vaticle.typedb.driver.Connection
             try
             {
                 return pinvoke.typedb_driver.transaction_new(
-                    session.NativeObject, TransactionTypeGetter.ToNative(type), options.NativeObject);
+                    session.NativeObject, type.NativeObject, options.NativeObject);
             }
             catch (pinvoke.Error e)
             {
@@ -109,7 +109,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (!NativeObject.IsOwned())
             {
-                throw new TypeDBDriverException(DriverError.s_TransactionClosed);
+                throw new TypeDBDriverException(DriverError.TRANSACTION_CLOSED);
             }
 
             try
@@ -128,7 +128,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (!NativeObject.IsOwned())
             {
-                throw new TypeDBDriverException(DriverError.s_TransactionClosed);
+                throw new TypeDBDriverException(DriverError.TRANSACTION_CLOSED);
             }
 
             try
@@ -145,7 +145,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (!NativeObject.IsOwned())
             {
-                throw new TypeDBDriverException(DriverError.s_TransactionClosed);
+                throw new TypeDBDriverException(DriverError.TRANSACTION_CLOSED);
             }
 
             try

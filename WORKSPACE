@@ -78,7 +78,7 @@ load("@rules_dotnet//dotnet:paket.rules_dotnet_nuget_packages.bzl", "rules_dotne
 rules_dotnet_nuget_packages()
 load("@rules_dotnet//dotnet:paket.paket2bazel_dependencies.bzl", "paket2bazel_dependencies")
 paket2bazel_dependencies()
-load("//csharp:paket.csharp_deps.bzl", csharp_deps = "csharp_deps")
+load("//csharp/nuget:paket.csharp_deps.bzl", csharp_deps = "csharp_deps")
 csharp_deps()
 
 # Load //builder/proto_grpc

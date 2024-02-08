@@ -42,7 +42,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (NativeObject == null || !NativeObject.IsOwned())
             {
-                throw new TypeDBDriverException(DriverError.s_DatabaseDeleted);
+                throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
             }
 
             return pinvoke.typedb_driver.database_get_name(NativeObject);
@@ -52,7 +52,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (NativeObject == null || !NativeObject.IsOwned())
             {
-                throw new TypeDBDriverException(DriverError.s_DatabaseDeleted);
+                throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
             }
 
             try
@@ -69,7 +69,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (NativeObject == null || !NativeObject.IsOwned())
             {
-                throw new TypeDBDriverException(DriverError.s_DatabaseDeleted);
+                throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
             }
 
             try
@@ -86,7 +86,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (NativeObject == null || !NativeObject.IsOwned())
             {
-                throw new TypeDBDriverException(DriverError.s_DatabaseDeleted);
+                throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
             }
 
             try
@@ -103,7 +103,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (NativeObject == null || !NativeObject.IsOwned())
             {
-                throw new TypeDBDriverException(DriverError.s_DatabaseDeleted);
+                throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
             }
 
             try
@@ -125,7 +125,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (NativeObject == null || !NativeObject.IsOwned())
             {
-                throw new TypeDBDriverException(DriverError.s_DatabaseDeleted);
+                throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
             }
 
             return new NativeEnumerable<pinvoke.ReplicaInfo>(
@@ -138,7 +138,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (NativeObject == null || !NativeObject.IsOwned())
             {
-                throw new TypeDBDriverException(DriverError.s_DatabaseDeleted);
+                throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
             }
 
             pinvoke.ReplicaInfo replicaInfo = pinvoke.typedb_driver.database_get_primary_replica_info(NativeObject);
@@ -154,7 +154,7 @@ namespace com.vaticle.typedb.driver.Connection
         {
             if (NativeObject == null || !NativeObject.IsOwned())
             {
-                throw new TypeDBDriverException(DriverError.s_DatabaseDeleted);
+                throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
             }
             
             pinvoke.ReplicaInfo replicaInfo = pinvoke.typedb_driver.database_get_preferred_replica_info(NativeObject);

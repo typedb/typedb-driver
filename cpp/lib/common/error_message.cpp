@@ -32,7 +32,7 @@ namespace TypeDB {
 
 namespace DriverError {
 
-#define ERR_DRIVER(ID, MSG) ERRMSG("CCL", "Driver Error", ID, MSG)
+#define ERR_DRIVER(ID, MSG) ERRMSG("CCCL", "Driver Error", ID, MSG)
 DECLSPEC_DLL extern const ErrorMessage DRIVER_CLOSED = ERR_DRIVER(1, "The driver has been closed and no further operation is allowed.");
 DECLSPEC_DLL extern const ErrorMessage SESSION_CLOSED = ERR_DRIVER(2, "The session has been closed and no further operation is allowed.");
 DECLSPEC_DLL extern const ErrorMessage TRANSACTION_CLOSED = ERR_DRIVER(3, "The transaction has been closed and no further operation is allowed.");

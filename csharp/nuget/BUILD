@@ -17,26 +17,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
-load("@rules_dotnet//dotnet:defs.bzl", "csharp_binary", "csharp_library")
-load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
-
-csharp_library(
-    name = "helloer-lib",
-    srcs = ["Lib.cs"],
-    runtime_identifier = "any",
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-    visibility = ["//visibility:public"],
-)
-
-csharp_binary(
-    name = "helloer",
-    srcs = ["src.cs/Hello.cs"],
-    runtime_identifier = "any",
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-    deps = [":helloer-lib"],
-    visibility = ["//visibility:public"],
-)
-
+#

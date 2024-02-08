@@ -29,7 +29,7 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 
 csharp_library(
-    name = "steps-database", # Steps libraries should have different names for the C# output compilation config!
+    name = "steps-database", # Note: ensure all libraries used together have unique names to prevent compiled DLL name clashes
     srcs = ["DatabaseSteps.cs"],
     deps = behaviour_tests_deps + [
         "//csharp/test/behaviour/connection:fixture-connection",
