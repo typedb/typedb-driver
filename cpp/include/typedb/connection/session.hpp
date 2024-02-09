@@ -98,7 +98,7 @@ public:
      * @param type The type of transaction to be created (READ or WRITE)
      * @param options Options for the session
      */
-    Transaction transaction(TransactionType type, const Options& options) const;
+    Transaction transaction(TransactionType type, const Options& options=Options()) const;
 
     /**
      * Registers a callback function which will be executed when this session is closed.
