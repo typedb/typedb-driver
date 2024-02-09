@@ -38,7 +38,6 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
     {
         public void IntegrityIsValidated()
         {
-            // TODO ???
         }
 
         [Then(@"typeql define")]

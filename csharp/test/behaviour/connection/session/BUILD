@@ -59,6 +59,7 @@ csharp_behaviour_test(
     test_files = ["SessionTest.cs"],
     steps_files = [
         ":steps-session",
+        "//csharp/test/behaviour/query:steps-query",
         "//csharp/test/behaviour/connection/transaction:steps-transaction",
         "//csharp/test/behaviour/connection/database:steps-database",
         "//csharp/test/behaviour/connection:steps-connection-cloud",
