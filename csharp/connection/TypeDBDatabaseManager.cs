@@ -100,18 +100,21 @@ namespace Vaticle.Typedb.Driver.Connection
             }
         }
 
-        public ICollection<IDatabase> GetAll()
+        public ICollection<IDatabase> All
         {
-            try
+            get
             {
-                return new NativeEnumerable<Pinvoke.Database>(
-                    Pinvoke.typedb_driver.databases_all(NativeObject))
-                    .Select(obj => new TypeDBDatabase(obj))
-                    .ToList<IDatabase>();
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
+                try
+                {
+                    return new NativeEnumerable<Pinvoke.Database>(
+                        Pinvoke.typedb_driver.databases_all(NativeObject))
+                        .Select(obj => new TypeDBDatabase(obj))
+                        .ToList<IDatabase>();
+                }
+                catch (Pinvoke.Error e)
+                {
+                    throw new TypeDBDriverException(e);
+                }
             }
         }
     }

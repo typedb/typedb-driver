@@ -51,7 +51,7 @@ namespace Vaticle.Typedb.Driver.Api.Logic
          * explanation.Conclusion
          * </pre>
          */
-        ConceptMap Conclusion { get; }
+        ConceptDictionary Conclusion { get; }
 
         /**
          * Retrieves the Condition for this Explanation.
@@ -61,7 +61,7 @@ namespace Vaticle.Typedb.Driver.Api.Logic
          * explanation.Condition
          * </pre>
          */
-        ConceptMap Condition { get; }
+        ConceptDictionary Condition { get; }
 
         /**
          * Retrieves the query variables for this <code>Explanation</code>.

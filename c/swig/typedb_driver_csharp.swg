@@ -424,41 +424,37 @@
 %noexception transaction_rollback;
 
 
-// TODO: Reimplement for C#
-//%define %promise(Type, function_prefix)
-//%typemap(csinterfaces) Type ## Promise "java.util.function.Supplier<Type>";
-//%typemap(csbody) Type ## Promise %{
-//    [ScriptIgnore]
-//    private long swigCPtr;
-//
-//    [ScriptIgnore]
-//    protected bool swigCMemOwn;
-//
-//    protected $csclassname(long cPtr, boolean cMemoryOwn) {
-//        swigCMemOwn = cMemoryOwn;
-//        swigCPtr = cPtr;
-//    }
-//
-//    protected static long getCPtr($csclassname obj) {
-//        return (obj == null) ? 0 : obj.swigCPtr;
-//    }
-//
-//    public override Type get() {
-//        swigCMemOwn = false;
-//        try {
-//            return typedb_driver.function_prefix ## _promise_resolve(this);
-//        } catch (Error e) {
-//            throw new Error.Unchecked(e);
-//        }
-//    }
-//%}
-//%enddef
-//
-//%promise(Concept, concept)
-//%promise(Rule, rule)
-//%promise(String, string)
+%define %promise(Type, function_prefix)
+%typemap(csbody) Type ## Promise %{
+    private global::System.Runtime.InteropServices.HandleRef swigCPtr;
+    protected bool swigCMemOwn;
 
-// TODO: Reimplement for C#
+    internal $csclassname(global::System.IntPtr cPtr, bool cMemoryOwn)
+    {
+        swigCMemOwn = cMemoryOwn;
+        swigCPtr = new global::System.Runtime.InteropServices.HandleRef(this, cPtr);
+    }
+
+    internal static global::System.Runtime.InteropServices.HandleRef getCPtr($csclassname obj)
+    {
+        return (obj == null)
+            ? new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero)
+            : obj.swigCPtr;
+    }
+
+    public Type Resolve()
+    {
+        swigCMemOwn = false;
+        return typedb_driver.function_prefix ## _promise_resolve(this); // TODO: This should throw errors seen in the C# Code!
+    }
+%}
+%enddef
+
+%promise(Concept, concept)
+%promise(Rule, rule)
+%promise(String, string)
+
+// TODO: Reimplement for C# -- ask Dmitrii why do we need dispose in java version here.
 ///* void promises require special handling */
 //%typemap(csinterfaces) VoidPromise "java.util.function.Supplier<Void>";
 //%typemap(cscode) VoidPromise %{

@@ -34,7 +34,7 @@ namespace Vaticle.Typedb.Driver.Api.Query
          *
          * @see IQueryManager#Get(string, TypeDBOptions)
          */
-        ICollection<ConceptMap> Get(string query);
+        ICollection<IConceptDictionary> Get(string query);
     
         /**
          * Performs a TypeQL Get (Get) query in the transaction.
@@ -47,7 +47,7 @@ namespace Vaticle.Typedb.Driver.Api.Query
          * @param query The TypeQL Get (Get) query to be executed
          * @param options Specify query options
          */
-        ICollection<ConceptMap> Get(string query, TypeDBOptions options);
+        ICollection<IConceptDictionary> Get(string query, TypeDBOptions options);
     
         /**
          * Performs a TypeQL Get Aggregate query with default options.
@@ -74,7 +74,7 @@ namespace Vaticle.Typedb.Driver.Api.Query
          *
          * @see IQueryManager#GetGroup(string, TypeDBOptions)
          */
-        ICollection<ConceptMapGroup> GetGroup(string query);
+        ICollection<IConceptDictionaryGroup> GetGroup(string query);
     
         /**
          * Performs a TypeQL Get Group query in the transaction.
@@ -87,7 +87,7 @@ namespace Vaticle.Typedb.Driver.Api.Query
          * @param query The TypeQL Get Group query to be executed
          * @param options Specify query options
          */
-        ICollection<ConceptMapGroup> GetGroup(string query, TypeDBOptions options);
+        ICollection<IConceptDictionaryGroup> GetGroup(string query, TypeDBOptions options);
 
         /**
          * Performs a TypeQL Get Group Aggregate query with default options.
@@ -114,7 +114,7 @@ namespace Vaticle.Typedb.Driver.Api.Query
          *
          * @see IQueryManager#Fetch(string, TypeDBOptions)
          */
-        ICollection<JSON> Fetch(string query);
+//        ICollection<JSON> Fetch(string query); // TODO: Return after implementing JSON
     
         /**
          * Performs a TypeQL Fetch (Fetch) query in the transaction.
@@ -127,14 +127,14 @@ namespace Vaticle.Typedb.Driver.Api.Query
          * @param query The TypeQL Fetch (Fetch) query to be executed
          * @param options Specify query options
          */
-        ICollection<JSON> Fetch(string query, TypeDBOptions options);
+//        ICollection<JSON> Fetch(string query, TypeDBOptions options); // TODO: Return after implementing JSON
 
         /**
          * Performs a TypeQL Insert query with default options.
          *
          * @see IQueryManager#Insert(string, TypeDBOptions)
          */
-        ICollection<ConceptMap> Insert(string query);
+        ICollection<IConceptDictionary> Insert(string query);
     
         /**
          * Performs a TypeQL Insert query in the transaction.
@@ -147,14 +147,14 @@ namespace Vaticle.Typedb.Driver.Api.Query
          * @param query The TypeQL Insert query to be executed
          * @param options Specify query options
          */
-        ICollection<ConceptMap> Insert(string query, TypeDBOptions options);
+        ICollection<IConceptDictionary> Insert(string query, TypeDBOptions options);
 
         /**
          * Performs a TypeQL Delete query with default options.
          *
          * @see IQueryManager#Delete(string, TypeDBOptions)
          */
-        Promise<void> Delete(string query);
+        VoidPromise Delete(string query);
     
         /**
          * Performs a TypeQL Delete query in the transaction.
@@ -167,14 +167,14 @@ namespace Vaticle.Typedb.Driver.Api.Query
          * @param query The TypeQL Delete query to be executed
          * @param options Specify query options
          */
-        Promise<void> Delete(string query, TypeDBOptions options);
+        VoidPromise Delete(string query, TypeDBOptions options);
 
         /**
          * Performs a TypeQL Update query with default options.
          *
          * @see IQueryManager#Update(string, TypeDBOptions)
          */
-        ICollection<ConceptMap> Update(string query);
+        ICollection<IConceptDictionary> Update(string query);
     
         /**
          * Performs a TypeQL Update query in the transaction.
@@ -187,14 +187,14 @@ namespace Vaticle.Typedb.Driver.Api.Query
          * @param query The TypeQL Update query to be executed
          * @param options Specify query options
          */
-        ICollection<ConceptMap> Update(string query, TypeDBOptions options);
+        ICollection<IConceptDictionary> Update(string query, TypeDBOptions options);
     
         /**
          * Performs a TypeQL Define query with default options.
          *
          * @see IQueryManager#Define(string, TypeDBOptions)
          */
-        Promise<void> Define(string query);
+        VoidPromise Define(string query);
     
         /**
          * Performs a TypeQL Define query in the transaction.
@@ -207,14 +207,14 @@ namespace Vaticle.Typedb.Driver.Api.Query
          * @param query The TypeQL Define query to be executed
          * @param options Specify query options
          */
-        Promise<void> Define(string query, TypeDBOptions options);
+        VoidPromise Define(string query, TypeDBOptions options);
 
         /**
          * Performs a TypeQL Undefine query with default options.
          *
          * @see IQueryManager#Undefine(string, TypeDBOptions)
          */
-        Promise<void> Undefine(string query);
+        VoidPromise Undefine(string query);
     
         /**
          * Performs a TypeQL Undefine query in the transaction.
@@ -227,14 +227,14 @@ namespace Vaticle.Typedb.Driver.Api.Query
          * @param query The TypeQL Undefine query to be executed
          * @param options Specify query options
          */
-        Promise<void> Undefine(string query, TypeDBOptions options);
+        VoidPromise Undefine(string query, TypeDBOptions options);
     
         /**
          * Performs a TypeQL Explain query with default options.
          *
-         * @see IQueryManager#Explain(ConceptMap.Explainable, TypeDBOptions)
+         * @see IQueryManager#Explain(IConceptDictionary.Explainable, TypeDBOptions)
          */
-        ICollection<Explanation> Explain(ConceptMap.Explainable explainable);
+        ICollection<Explanation> Explain(IConceptDictionary.Explainable explainable);
     
         /**
          * Performs a TypeQL Explain query in the transaction.
@@ -247,6 +247,6 @@ namespace Vaticle.Typedb.Driver.Api.Query
          * @param explainable The Explainable to be explained
          * @param options Specify query options
          */
-        ICollection<Explanation> Explain(ConceptMap.Explainable explainable, TypeDBOptions options);
+        ICollection<Explanation> Explain(IConceptDictionary.Explainable explainable, TypeDBOptions options);
     }
 }

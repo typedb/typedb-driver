@@ -146,14 +146,14 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          *
          * @see IRelationType#SetRelates(ITypeDBTransaction, string, string)
          */
-        Promise<void> SetRelates(ITypeDBTransaction transaction, string roleLabel);
+        VoidPromise SetRelates(ITypeDBTransaction transaction, string roleLabel);
     
         /**
          * Sets the new role that this <code>IRelationType</code> relates to.
          *
          * @see IRelationType#SetRelates(ITypeDBTransaction, string, string)
          */
-        Promise<void> SetRelates(ITypeDBTransaction transaction, string roleLabel, IRoleType overriddenType);
+        VoidPromise SetRelates(ITypeDBTransaction transaction, string roleLabel, IRoleType overriddenType);
     
         /**
          * Sets the new role that this <code>IRelationType</code> relates to.
@@ -169,14 +169,14 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param roleLabel The new role for the <code>IRelationType</code> to relate to
          * @param overriddenLabel The label being overridden, if applicable
          */
-        Promise<void> SetRelates(ITypeDBTransaction transaction, string roleLabel, string overriddenLabel);
+        VoidPromise SetRelates(ITypeDBTransaction transaction, string roleLabel, string overriddenLabel);
     
         /**
          * Disallows this <code>IRelationType</code> from relating to the given role.
          *
          * @see IRelationType#UnsetRelates(ITypeDBTransaction, string)
          */
-        Promise<void> UnsetRelates(ITypeDBTransaction transaction, RoleType roleType);
+        VoidPromise UnsetRelates(ITypeDBTransaction transaction, RoleType roleType);
     
         /**
          * Disallows this <code>IRelationType</code> from relating to the given role.
@@ -189,7 +189,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transaction The current transaction
          * @param roleLabel The role to not relate to the relation type.
          */
-        Promise<void> UnsetRelates(ITypeDBTransaction transaction, string roleLabel);
+        VoidPromise UnsetRelates(ITypeDBTransaction transaction, string roleLabel);
     
         /**
          * Retrieves all direct and indirect subtypes of the <code>IRelationType</code>.
@@ -223,6 +223,6 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transaction The current transaction
          * @param superRelationType The <code>IRelationType</code> to set as the supertype of this <code>IRelationType</code>
          */
-        Promise<void> SetSupertype(ITypeDBTransaction transaction, IRelationType superRelationType);
+        VoidPromise SetSupertype(ITypeDBTransaction transaction, IRelationType superRelationType);
     }
 }

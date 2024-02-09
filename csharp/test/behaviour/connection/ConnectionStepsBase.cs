@@ -67,7 +67,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
             if (Driver != null)
             {
-                foreach (var db in Driver.Databases.GetAll())
+                foreach (var db in Driver.Databases.All)
                 {
                     db.Delete();
                 }

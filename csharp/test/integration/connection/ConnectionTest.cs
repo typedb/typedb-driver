@@ -81,7 +81,7 @@ namespace Vaticle.Typedb.Driver.Test.Integration
 
         public static void CheckAllDatabases(IDatabaseManager dbManager, ICollection<string> expectedDbNames)
         {
-            var allDbs = dbManager.GetAll();
+            var allDbs = dbManager.All;
             Assert.AreEqual(expectedDbNames.Count, allDbs.Count);
 
             foreach (var db in allDbs)
