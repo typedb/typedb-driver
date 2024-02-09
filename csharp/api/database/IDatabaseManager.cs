@@ -35,7 +35,7 @@ namespace Vaticle.Typedb.Driver.Api.Database
          *
          * <h3>Examples</h3>
          * <pre>
-         * driver.Databases().Get(name)
+         * driver.Databases.Get(name)
          * </pre>
          *
          * @param name The name of the database to retrieve
@@ -47,7 +47,7 @@ namespace Vaticle.Typedb.Driver.Api.Database
          *
          * <h3>Examples</h3>
          * <pre>
-         * driver.Databases().Contains(name)
+         * driver.Databases.Contains(name)
          * </pre>
          *
          * @param name The database name to be checked
@@ -59,7 +59,7 @@ namespace Vaticle.Typedb.Driver.Api.Database
          *
          * <h3>Examples</h3>
          * <pre>
-         * driver.Databases().Create(name)
+         * driver.Databases.Create(name)
          * </pre>
          *
          * @param name The name of the database to be created
@@ -71,7 +71,7 @@ namespace Vaticle.Typedb.Driver.Api.Database
          *
          * <h3>Examples</h3>
          * <pre>
-         * driver.Databases().GetAll()
+         * driver.Databases.GetAll()
          * </pre>
          */
         ICollection<IDatabase> GetAll();

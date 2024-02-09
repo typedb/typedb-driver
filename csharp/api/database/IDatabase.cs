@@ -19,8 +19,6 @@
  * under the License.
  */
 
-#nullable enable
-
 using System.Collections.Generic;
 
 namespace Vaticle.Typedb.Driver.Api.Database

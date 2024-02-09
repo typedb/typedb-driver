@@ -70,39 +70,39 @@ namespace Vaticle.Typedb.Driver.Connection
             }
         }
 
-        public TransactionType Type()
+        public TransactionType Type
         {
-            return _type;
+            get { return _type; }
         }
 
-        public TypeDBOptions Options()
+        public TypeDBOptions Options
         {
-            return _options;
+            get { return _options; }
         }
 
-        public bool IsOpen()
+        public bool IsOpen
         {
-            if (!NativeObject.IsOwned())
+            get
             {
-                return false;
+                return NativeObject.IsOwned()
+                    ? Pinvoke.typedb_driver.transaction_is_open(NativeObject)
+                    : false;
             }
-
-            return Pinvoke.typedb_driver.transaction_is_open(NativeObject);
         }
 // TODO:
-//        public IConceptManager Concepts()
+//        public IConceptManager Concepts
 //        {
-//            return _conceptManager;
+//            get { return _conceptManager; }
 //        }
 //
-//        public ILogicManager Logic()
+//        public ILogicManager Logic
 //        {
-//            return _logicManager;
+//            get { return _logicManager; }
 //        }
 //
-//        public IQueryManager Query()
+//        public IQueryManager Query
 //        {
-//            return _queryManager;
+//            get { return _queryManager; }
 //        }
 
         public void OnClose(Action<Exception> function)

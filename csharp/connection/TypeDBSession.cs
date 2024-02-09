@@ -62,24 +62,24 @@ namespace Vaticle.Typedb.Driver.Connection
             }
         }
 
-        public bool IsOpen()
+        public bool IsOpen
         {
-            return Pinvoke.typedb_driver.session_is_open(NativeObject);
+            get { return Pinvoke.typedb_driver.session_is_open(NativeObject); }
         }
 
-        public SessionType Type()
+        public SessionType Type
         {
-            return _type;
+            get { return _type; }
         }
 
-        public string DatabaseName()
+        public string DatabaseName
         {
-            return Pinvoke.typedb_driver.session_get_database_name(NativeObject);
+            get { return Pinvoke.typedb_driver.session_get_database_name(NativeObject); }
         }
 
-        public TypeDBOptions Options()
+        public TypeDBOptions Options
         {
-            return _options;
+            get { return _options; }
         }
 
         public ITypeDBTransaction Transaction(TransactionType type)
@@ -138,7 +138,7 @@ namespace Vaticle.Typedb.Driver.Connection
 
         public void Dispose()
         {
-        }
+        } // TODO: Do we need anything here?
 
         private class SessionCallback : Pinvoke.SessionCallbackDirector
         {

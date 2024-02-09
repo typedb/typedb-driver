@@ -98,18 +98,17 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             ThreadPool.GetAvailableThreads(out workerThreads, out ioThreads);
             Assert.True(workerThreads > collectedNames.Count);
 
-            Task[] taskArray = new Task[collectedNames.Count];
-            for (int i = 0; i < taskArray.Length; i++)
+            Assert.False(ConnectionStepsBase.ParallelSessions.Any());
+
+            for (int i = 0; i < collectedNames.Count; i++)
             {
                 var name = collectedNames[i];
-                taskArray[i] = Task.Factory.StartNew(() =>
+                ConnectionStepsBase.ParallelSessions.Add(Task.Factory.StartNew<ITypeDBSession?>(() =>
                     {
-                        ConnectionStepsBase.Driver.Session(
+                        return ConnectionStepsBase.Driver.Session(
                             name, SessionType.DATA, ConnectionStepsBase.SessionOptions);
-                    });
+                    }));
             }
-
-            Task.WaitAll(taskArray);
         }
 
         [When(@"connection close all sessions")]
@@ -135,10 +134,9 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"sessions in parallel are null: {}")]
         public void SessionsInParallelAreNull(bool expectedNull)
         {
-            throw new NotImplementedException("Not yet for parallel null!"); // TODO
-            foreach (var session in ConnectionStepsBase.Sessions)
+            foreach (var session in ConnectionStepsBase.ParallelSessions)
             {
-//                Assert.Equal(expectedNull, session == null);
+                session.ContinueWith(antecedent => Assert.Equal(expectedNull, antecedent.Result == null));
             }
         }
 
@@ -147,51 +145,64 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             foreach (var session in ConnectionStepsBase.Sessions)
             {
-                Assert.Equal(expectedOpen, session.IsOpen());
+                Assert.Equal(expectedOpen, session.IsOpen);
             }
         }
 
         [Then(@"sessions in parallel are open: {}")]
         public void SessionsInParallelAreOpen(bool expectedOpen)
         {
-            throw new NotImplementedException("Not yet for parallel open!"); // TODO
-            foreach (var session in ConnectionStepsBase.Sessions)
+            foreach (var session in ConnectionStepsBase.ParallelSessions)
             {
-//                Assert.Equal(expectedOpen, session.IsOpen());
+                session.ContinueWith(antecedent => Assert.Equal(expectedOpen, antecedent.Result.IsOpen));
+            }
+        }
+
+        private void SessionsHaveDatabases(List<string> names)
+        {
+            Assert.Equal(names.Count, ConnectionStepsBase.Sessions.Count);
+            IEnumerator<ITypeDBSession?> sessionsEnumerator = ConnectionStepsBase.Sessions.GetEnumerator();
+            IEnumerator<string> namesEnumerator = names.GetEnumerator();
+
+            while (sessionsEnumerator.MoveNext() && namesEnumerator.MoveNext())
+            {
+                Assert.Equal(namesEnumerator.Current, sessionsEnumerator.Current.DatabaseName);
             }
         }
 
         [Then(@"session[s]? has database: {word}")]
         public void SessionsHaveDatabase(string name)
         {
-            throw new NotImplementedException("Not yet for ITERATOR!"); // TODO
+            SessionsHaveDatabases(new List<string>(){name});
         }
 
         [Then(@"session[s]? [have|has]+ database[s]?:")]
         public void SessionsHaveDatabases(DataTable names)
         {
-            List<string> expectedNames = new List<string>();
+            List<string> collectedNames = new List<string>();
             foreach (var row in names.Rows)
             {
                 foreach (var name in row.Cells)
                 {
-                    expectedNames.Add(name.Value);
+                    collectedNames.Add(name.Value);
                 }
             }
 
-            Assert.Equal(expectedNames.Count, ConnectionStepsBase.Sessions.Count);
-            throw new NotImplementedException("Not yet for ITERATOR!"); // TODO
+            SessionsHaveDatabases(collectedNames);
         }
 
         [Then(@"sessions in parallel have databases:")]
         public void SessionsInParallelHaveDatabases(DataTable names)
         {
-            throw new NotImplementedException("Not yet for parallel and ITERATOR!"); // TODO
             foreach (var row in names.Rows)
             {
                 foreach (var name in row.Cells)
                 {
-
+                    foreach (var session in ConnectionStepsBase.ParallelSessions)
+                    {
+                        session.ContinueWith(
+                            antecedent => Assert.Equal(name.Value, antecedent.Result.DatabaseName));
+                    }
                 }
             }
         }
