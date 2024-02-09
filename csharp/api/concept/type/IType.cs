@@ -85,7 +85,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transaction The current transaction
          * @param label The new <code>Label</code> to be given to the type.
          */
-        Promise<void> SetLabel(ITypeDBTransaction transaction, string label);
+        VoidPromise SetLabel(ITypeDBTransaction transaction, string label);
 
         /**
          * Retrieves the most immediate supertype of the type.
@@ -144,7 +144,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          *
          * @param transaction The current transaction
          */
-        Promise<void> Delete(ITypeDBTransaction transaction);
+        VoidPromise Delete(ITypeDBTransaction transaction);
 
         /**
          * Check if the concept has been deleted

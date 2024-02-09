@@ -117,6 +117,6 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transaction The current transaction
          * @param superEntityType The <code>IEntityType</code> to set as the supertype of this <code>IEntityType</code>
          */
-        Promise<void> SetSupertype(ITypeDBTransaction transaction, IEntityType superEntityType);
+        VoidPromise SetSupertype(ITypeDBTransaction transaction, IEntityType superEntityType);
     }
 }

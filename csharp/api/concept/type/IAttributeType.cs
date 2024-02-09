@@ -22,7 +22,7 @@
 using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api.Concept.Type;
+using Vaticle.Typedb.Driver.Api.Concept.Value;
 using Vaticle.Typedb.Driver.Api.Concept;
 using Vaticle.Typedb.Driver.Common;
 
@@ -40,7 +40,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
     public interface IAttributeType : IThingType
     {
         /**
-         * Retrieves the <code>IValue.Type</code> of this <code>IAttributeType</code>.
+         * The <code>IValue.Type</code> of this <code>IAttributeType</code>.
          *
          * <h3>Examples</h3>
          * <pre>
@@ -257,7 +257,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transaction The current transaction
          * @param regex Regular expression
          */
-        Promise<void> SetRegex(ITypeDBTransaction transaction, string regex);
+        VoidPromise SetRegex(ITypeDBTransaction transaction, string regex);
 
         /**
          * Removes the regular expression that is defined for this <code>IAttributeType</code>.
@@ -269,7 +269,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          *
          * @param transaction The current transaction
          */
-        Promise<void> UnsetRegex(ITypeDBTransaction transaction);
+        VoidPromise UnsetRegex(ITypeDBTransaction transaction);
 
         /**
          * Returns <code>True</code> if the value for attributes of this type is of type <code>bool</code>.
@@ -352,7 +352,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transaction The current transaction
          * @param attributeType The <code>IAttributeType</code> to set as the supertype of this <code>IAttributeType</code>
          */
-        Promise<void> ICollectionSupertype(ITypeDBTransaction transaction, IAttributeType attributeType);
+        VoidPromise ICollectionSupertype(ITypeDBTransaction transaction, IAttributeType attributeType);
 
         /**
          * Retrieves all direct and indirect subtypes of this <code>IAttributeType</code>.

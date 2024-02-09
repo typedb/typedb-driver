@@ -100,7 +100,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transaction The current transaction
          * @return
          */
-        Promise<void> SetAbstract(ITypeDBTransaction transaction);
+        VoidPromise SetAbstract(ITypeDBTransaction transaction);
 
         /**
          * Set a <code>IThingType</code> to be non-abstract, meaning it can have instances.
@@ -112,14 +112,14 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          *
          * @param transaction The current transaction
          */
-        Promise<void> UnsetAbstract(ITypeDBTransaction transaction);
+        VoidPromise UnsetAbstract(ITypeDBTransaction transaction);
 
         /**
          * Allows the instances of this <code>IThingType</code> to play the given role.
          *
          * @see ThingType#SetPlays(ITypeDBTransaction, IRoleType, IRoleType)
          */
-        Promise<void> SetPlays(ITypeDBTransaction transaction, IRoleType roleType);
+        VoidPromise SetPlays(ITypeDBTransaction transaction, IRoleType roleType);
 
         /**
          * Allows the instances of this <code>IThingType</code> to play the given role.
@@ -134,7 +134,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param roleType The role to be played by the instances of this type
          * @param overriddenType The role type that this role overrides, if applicable
          */
-        Promise<void> SetPlays(ITypeDBTransaction transaction, IRoleType roleType, IRoleType overriddenType);
+        VoidPromise SetPlays(ITypeDBTransaction transaction, IRoleType roleType, IRoleType overriddenType);
 
         /**
          * Allows the instances of this <code>IThingType</code> to own the given <code>IAttributeType</code>.
@@ -144,7 +144,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * <h3>Examples</h3>
          * <pre>
          * thingType.SetOwns(transaction, attributeType).Resolve();
-         * thingType.SetOwns(transaction, attributeType, overriddenType, Collections.singleton(Annotation.key())).Resolve();
+         * thingType.SetOwns(transaction, attributeType, overriddenType, new HashSet<Annotation>(){Annotation.NewKey()}).Resolve();
          * </pre>
          *
          * @param transaction The current transaction
@@ -152,7 +152,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param overriddenType The <code>IAttributeType</code> that this attribute ownership overrides, if applicable.
          * @param annotations Adds annotations to the ownership.
          */
-        Promise<void> SetOwns(
+        VoidPromise SetOwns(
             ITypeDBTransaction transaction, 
             IAttributeType attributeType, 
             IAttributeType overriddenType, 
@@ -163,7 +163,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          *
          * @see ThingType#SetOwns(ITypeDBTransaction, IAttributeType, IAttributeType, Set)
          */
-        Promise<void> SetOwns(
+        VoidPromise SetOwns(
             ITypeDBTransaction transaction, IAttributeType attributeType, IAttributeType overriddenType);
 
         /**
@@ -171,14 +171,14 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          *
          * @see ThingType#SetOwns(ITypeDBTransaction, IAttributeType, IAttributeType, Set)
          */
-        Promise<void> SetOwns(ITypeDBTransaction transaction, IAttributeType attributeType, ICollection<Annotation> annotations);
+        VoidPromise SetOwns(ITypeDBTransaction transaction, IAttributeType attributeType, ICollection<Annotation> annotations);
 
         /**
          * Allows the instances of this <code>IThingType</code> to own the given <code>IAttributeType</code>.
          *
          * @see ThingType#SetOwns(ITypeDBTransaction, IAttributeType, IAttributeType, Set)
          */
-        Promise<void> SetOwns(ITypeDBTransaction transaction, IAttributeType attributeType);
+        VoidPromise SetOwns(ITypeDBTransaction transaction, IAttributeType attributeType);
 
         /**
          * Retrieves all direct and inherited roles that are allowed
@@ -284,7 +284,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * <h3>Examples</h3>
          * <pre>
          * thingType.GetOwns(transaction);
-         * thingType.GetOwns(transaction, valueType, Transitivity.EXPLICIT, Annotation.key());
+         * thingType.GetOwns(transaction, valueType, Transitivity.EXPLICIT, new HashSet<Annotation>(){Annotation.NewKey()}));
          * </pre>
          *
          * @param transaction The current transaction
@@ -324,7 +324,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transaction The current transaction
          * @param roleType The role to not be played by the instances of this type.
          */
-        Promise<void> UnsetPlays(ITypeDBTransaction transaction, IRoleType roleType);
+        VoidPromise UnsetPlays(ITypeDBTransaction transaction, IRoleType roleType);
 
         /**
          * Disallows the instances of this <code>IThingType</code> from owning the given <code>IAttributeType</code>.
@@ -337,7 +337,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transaction The current transaction
          * @param attributeType The <code>IAttributeType</code> to not be owned by the type.
          */
-        Promise<void> UnsetOwns(ITypeDBTransaction transaction, IAttributeType attributeType);
+        VoidPromise UnsetOwns(ITypeDBTransaction transaction, IAttributeType attributeType);
 
         /**
          * Produces a pattern for creating this <code>IThingType</code> in a <code>define</code> query.

@@ -56,7 +56,7 @@ namespace Vaticle.Typedb.Driver.Api.Logic
          * @param transaction The current <code>Transaction</code>
          * @param label The new label to be given to the rule
          */
-        Promise<void> SetLabel(ITypeDBTransaction transaction, string label);
+        VoidPromise SetLabel(ITypeDBTransaction transaction, string label);
 
         /**
          * Deletes this rule.
@@ -68,7 +68,7 @@ namespace Vaticle.Typedb.Driver.Api.Logic
          *
          * @param transaction The current <code>Transaction</code>
          */
-        Promise<void> Delete(ITypeDBTransaction transaction);
+        VoidPromise Delete(ITypeDBTransaction transaction);
 
         /**
          * Check if this rule has been deleted.
