@@ -179,7 +179,7 @@ public interface RoleType extends Type {
     /**
      * Retrieves the <code>Thing</code> instances that play this role.
      *
-     * @see RoleType#getPlayerTypes(TypeDBTransaction, Transitivity)
+     * @see RoleType#getPlayerInstances(TypeDBTransaction, Transitivity)
      */
     @CheckReturnValue
     Stream<? extends Thing> getPlayerInstances(TypeDBTransaction transaction);
