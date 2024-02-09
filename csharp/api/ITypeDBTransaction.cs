@@ -35,35 +35,60 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * transaction.IsOpen();
+         * transaction.IsOpen
          * </pre>
          */
-        bool IsOpen();
+        bool IsOpen { get; }
 
         /**
          * The transaction’s type (READ or WRITE).
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * transaction.Type
+         * </pre>
          */
-        TransactionType Type();
+        TransactionType Type { get; }
 
         /**
          * The options for the transaction.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * transaction.Options
+         * </pre>
          */
-        public TypeDBOptions Options();
+        public TypeDBOptions Options { get; }
 
         /**
          * The <code>ConceptManager</code> for this transaction, providing access to all Concept API methods.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * transaction.Concepts
+         * </pre>
          */
-//        IConceptManager Concepts(); // TODO
+//        IConceptManager Concepts { get; } // TODO
 
         /**
          * The <code>LogicManager</code> for this Transaction, providing access to all Concept API - Logic methods.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * transaction.Logic
+         * </pre>
          */
-//        ILogicManager Logic(); // TODO
+//        ILogicManager Logic { get; } // TODO
 
         /**
          * The<code></code>QueryManager<code></code> for this Transaction, from which any TypeQL query can be executed.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * transaction.Query
+         * </pre>
          */
-//        IQueryManager Query(); // TODO
+//        IQueryManager Query { get; } // TODO
 
         /**
          * Registers a callback function which will be executed when this transaction is closed.

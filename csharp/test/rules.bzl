@@ -44,6 +44,7 @@ def csharp_behaviour_test(
         target_frameworks = target_frameworks,
         targeting_packs = targeting_packs,
         runtime_identifier = "any",
+        nullable = "enable",
         visibility = ["//visibility:public"],
         **kwargs,
     )
@@ -57,6 +58,7 @@ def csharp_integration_test(name, srcs, deps, target_frameworks, targeting_packs
         target_frameworks = target_frameworks,
         targeting_packs = targeting_packs,
         runtime_identifier = "any",
+        nullable = "enable",
         visibility = ["//visibility:public"],
         **kwargs,
     )

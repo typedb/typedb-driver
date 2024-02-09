@@ -19,10 +19,9 @@
  * under the License.
  */
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
@@ -42,25 +41,26 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         public virtual void Dispose() // "After"
         {
-            if (Driver == null)
-            {
-                return;
-            }
-
-            foreach (var db in Driver.Databases().GetAll())
-            {
-                db.Delete();
-            }
-
             foreach (var session in Sessions)
             {
                 session.Close();
             }
-            Sessions.Clear();
 
-            if (Driver.IsOpen())
+            Sessions.Clear();
+            Task.WaitAll(ParallelSessions.ToArray());
+            ParallelSessions.Clear();
+
+            if (Driver != null)
             {
-                Driver.Close();
+                foreach (var db in Driver.Databases.GetAll())
+                {
+                    db.Delete();
+                }
+
+                if (Driver.IsOpen)
+                {
+                    Driver.Close();
+                }
             }
         }
 
@@ -79,7 +79,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public virtual void ConnectionHasBeenOpened()
         {
             Assert.NotNull(Driver);
-            Assert.True(Driver.IsOpen());
+            Assert.True(Driver.IsOpen);
         }
 
         [When(@"connection closes")]
@@ -101,9 +101,12 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         public static ITypeDBDriver Driver;
         public static List<ITypeDBSession?> Sessions = new List<ITypeDBSession?>();
+        public static List<Task<ITypeDBSession?>> ParallelSessions = new List<Task<ITypeDBSession?>>();
         public static TypeDBOptions SessionOptions;
         public static TypeDBOptions TransactionOptions;
         public static Dictionary<ITypeDBSession, List<ITypeDBTransaction?>> SessionsToTransactions =
             new Dictionary<ITypeDBSession, List<ITypeDBTransaction?>>();
+        public static Dictionary<Task<ITypeDBSession?>, List<ITypeDBTransaction?>> ParallelSessionsToTransactions =
+            new Dictionary<Task<ITypeDBSession?>, List<ITypeDBTransaction?>>();
     }
 }

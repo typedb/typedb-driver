@@ -36,7 +36,7 @@ namespace Vaticle.Typedb.Driver.Test.Integration
         {
             ITypeDBDriver driver = TypeDB.CoreDriver(TypeDB.DEFAULT_ADDRESS);
             Assert.IsNotNull(driver);
-            Assert.True(driver.IsOpen());
+            Assert.True(driver.IsOpen);
 
             return driver;
         }
@@ -44,7 +44,7 @@ namespace Vaticle.Typedb.Driver.Test.Integration
         public static void CloseConnection(ITypeDBDriver driver)
         {
             driver.Close();
-            Assert.False(driver.IsOpen());
+            Assert.False(driver.IsOpen);
         }
 
         public static void CreateDatabaseNoChecks(IDatabaseManager dbManager, string expectedDbName)
@@ -107,7 +107,7 @@ namespace Vaticle.Typedb.Driver.Test.Integration
             string expectedDbName = "hello_from_csharp";
 
             ITypeDBDriver driver = Utils.OpenConnection();
-            IDatabaseManager dbManager = driver.Databases();
+            IDatabaseManager dbManager = driver.Databases;
 
             Assert.False(dbManager.Contains(""));
             Utils.CheckAllDatabases(dbManager, new HashSet<string>());
@@ -135,7 +135,7 @@ namespace Vaticle.Typedb.Driver.Test.Integration
             string expectedDbName = "hello_from_csharp";
 
             ITypeDBDriver driver = Utils.OpenConnection();
-            IDatabaseManager dbManager = driver.Databases();
+            IDatabaseManager dbManager = driver.Databases;
 
             IDatabase db1 = Utils.CreateAndGetDatabase(dbManager, expectedDbName);
 
