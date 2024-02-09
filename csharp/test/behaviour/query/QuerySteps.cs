@@ -48,7 +48,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             throw new Exception("Not implemented yet =)");
         // TODO: Implement!
 //            TypeQLDefine typeQLQuery = TypeQL.parseQuery(String.join("\n", defineQueryStatements));
-//            tx().query().define(String.join("\n", defineQueryStatements)).resolve();
+//            tx().query().define(String.join("\n", defineQueryStatements)).Resolve();
         }
 
         public void TypeqlDefineThrowsException(DocString defineQueryStatements)
@@ -98,7 +98,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 //        private static List<JSON> _fetchAnswers;
 //        private static Value? _valueAnswer;
 //        private static List<ConceptMapGroup> _answerGroups;
-//        private static List<ValueGroup> _valueAnswerGroups;
+//        private static List<IValueGroup> _valueAnswerGroups;
 //        private Dictionary<string, Map<string, string>> _rules;
     }
 }

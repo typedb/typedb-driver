@@ -121,13 +121,13 @@ namespace Vaticle.Typedb.Driver.Api.Database
             /**
              * Checks whether this is the primary replica of the raft cluster.
              */
-            public bool IsPrimary { get; }
+            public bool IsPrimary()
 
             /**
              * Checks whether this is the preferred replica of the raft cluster.
              * If true, Operations which can be run on any replica will prefer to use this replica.
              */
-            public bool IsPreferred { get; }
+            public bool IsPreferred()
 
             /**
              * The raft protocol ‘term’ of this replica.

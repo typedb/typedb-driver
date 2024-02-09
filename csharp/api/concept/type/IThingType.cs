@@ -1,0 +1,465 @@
+/*
+ * Copyright (C) 2022 Vaticle
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+using System.Collections.Generic;
+
+using Vaticle.Typedb.Driver;
+using Vaticle.Typedb.Driver.Api.Concept.Type;
+using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Common;
+
+namespace Vaticle.Typedb.Driver.Api.Concept.Type
+{
+    public interface IThingType : IType
+    {
+        /**
+         * {@inheritDoc}
+         */
+        override bool IsThingType()
+        {
+            return true;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        override IThingType AsThingType()
+        {
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        override Promise<IThingType> GetSupertype(ITypeDBTransaction transaction);
+
+        /**
+         * {@inheritDoc}
+         */
+        override ICollection<IThingType> GetSupertypes(ITypeDBTransaction transaction);
+
+        /**
+         * {@inheritDoc}
+         */
+        override ICollection<IThingType> GetSubtypes(ITypeDBTransaction transaction);
+
+        /**
+         * {@inheritDoc}
+         */
+        override ICollection<IThingType> GetSubtypes(ITypeDBTransaction transaction, Transitivity transitivity);
+
+        /**
+         * Retrieves all <code>IThing</code> objects that are instances of this <code>IThingType</code> or its subtypes.
+         * Equivalent to <code>GetInstances(transaction, Transitivity.TRANSITIVE)</code>
+         *
+         * @see ThingType#GetInstances(ITypeDBTransaction, Transitivity)
+         */
+        ICollection<IThing> GetInstances(ITypeDBTransaction transaction);
+
+        /**
+         * Retrieves <code>IThing</code> objects that are instances of this exact <code>IThingType</code>, OR
+         * this <code>IThingType</code> and any of its subtypes
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * thingType.GetInstances(transaction);
+         * thingType.GetInstances(transaction, Transitivity.EXPLICIT);
+         * </pre>
+         *
+         * @param transaction The current transaction
+         * @param transitivity <code>Transitivity.EXPLICIT</code> for direct instances only, <code>Transitivity.TRANSITIVE</code> to include instances of subtypes
+         */
+        ICollection<IThing> GetInstances(ITypeDBTransaction transaction, Transitivity transitivity);
+
+        /**
+         * Set a <code>IThingType</code> to be abstract, meaning it cannot have instances.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * thingType.SetAbstract(transaction).Resolve();
+         * </pre>
+         *
+         * @param transaction The current transaction
+         * @return
+         */
+        Promise<void> SetAbstract(ITypeDBTransaction transaction);
+
+        /**
+         * Set a <code>IThingType</code> to be non-abstract, meaning it can have instances.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * thingType.UnsetAbstract(transaction).Resolve();
+         * </pre>
+         *
+         * @param transaction The current transaction
+         */
+        Promise<void> UnsetAbstract(ITypeDBTransaction transaction);
+
+        /**
+         * Allows the instances of this <code>IThingType</code> to play the given role.
+         *
+         * @see ThingType#SetPlays(ITypeDBTransaction, IRoleType, IRoleType)
+         */
+        Promise<void> SetPlays(ITypeDBTransaction transaction, IRoleType roleType);
+
+        /**
+         * Allows the instances of this <code>IThingType</code> to play the given role.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * thingType.SetPlays(transaction, roleType).Resolve();
+         * thingType.SetPlays(transaction, roleType, overriddenType).Resolve();
+         * </pre>
+         *
+         * @param transaction The current transaction
+         * @param roleType The role to be played by the instances of this type
+         * @param overriddenType The role type that this role overrides, if applicable
+         */
+        Promise<void> SetPlays(ITypeDBTransaction transaction, IRoleType roleType, IRoleType overriddenType);
+
+        /**
+         * Allows the instances of this <code>IThingType</code> to own the given <code>IAttributeType</code>.
+         * Optionally, overriding a previously declared ownership.
+         * Optionally, adds annotations to the ownership.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * thingType.SetOwns(transaction, attributeType).Resolve();
+         * thingType.SetOwns(transaction, attributeType, overriddenType, Collections.singleton(Annotation.key())).Resolve();
+         * </pre>
+         *
+         * @param transaction The current transaction
+         * @param attributeType The <code>IAttributeType</code> to be owned by the instances of this type.
+         * @param overriddenType The <code>IAttributeType</code> that this attribute ownership overrides, if applicable.
+         * @param annotations Adds annotations to the ownership.
+         */
+        Promise<void> SetOwns(
+            ITypeDBTransaction transaction, 
+            IAttributeType attributeType, 
+            IAttributeType overriddenType, 
+            ICollection<Annotation> annotations);
+
+        /**
+         * Allows the instances of this <code>IThingType</code> to own the given <code>IAttributeType</code>,
+         *
+         * @see ThingType#SetOwns(ITypeDBTransaction, IAttributeType, IAttributeType, Set)
+         */
+        Promise<void> SetOwns(
+            ITypeDBTransaction transaction, IAttributeType attributeType, IAttributeType overriddenType);
+
+        /**
+         * Allows the instances of this <code>IThingType</code> to own the given <code>IAttributeType</code>.
+         *
+         * @see ThingType#SetOwns(ITypeDBTransaction, IAttributeType, IAttributeType, Set)
+         */
+        Promise<void> SetOwns(ITypeDBTransaction transaction, IAttributeType attributeType, ICollection<Annotation> annotations);
+
+        /**
+         * Allows the instances of this <code>IThingType</code> to own the given <code>IAttributeType</code>.
+         *
+         * @see ThingType#SetOwns(ITypeDBTransaction, IAttributeType, IAttributeType, Set)
+         */
+        Promise<void> SetOwns(ITypeDBTransaction transaction, IAttributeType attributeType);
+
+        /**
+         * Retrieves all direct and inherited roles that are allowed
+         * to be played by the instances of this <code>IThingType</code>.
+         *
+         * @see ThingType#GetPlays(ITypeDBTransaction, Transitivity)
+         */
+        ICollection<IIRoleType> GetPlays(ITypeDBTransaction transaction);
+
+        /**
+         * Retrieves all direct and inherited (or direct only) roles that are allowed
+         * to be played by the instances of this <code>IThingType</code>.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * thingType.GetPlays(transaction).Resolve();
+         * thingType.GetPlays(transaction, Transitivity.EXPLICIT).Resolve();
+         * </pre>
+         *
+         * @param transaction The current transaction
+         * @param transitivity transitivity: <code>Transitivity.TRANSITIVE</code> for direct and indirect playing,
+         *                                   <code>Transitivity.EXPLICIT</code> for direct playing only
+         */
+        ICollection<IIRoleType> GetPlays(ITypeDBTransaction transaction, Transitivity transitivity);
+
+        /**
+         * Retrieves a <code>IRoleType</code> that is overridden by the given
+         * <code>role_type</code> for this <code>IThingType</code>.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * thingType.GetPlaysOverridden(transaction, roleType).Resolve();
+         * </pre>
+         *
+         * @param transaction The current transaction
+         * @param roleType The <code>IRoleType</code> that overrides an inherited role
+         */
+        Promise<IIRoleType> GetPlaysOverridden(ITypeDBTransaction transaction, IRoleType roleType);
+
+        /**
+         * Retrieves <code>IAttributeType</code> that the instances of this
+         * <code>IThingType</code> are allowed to own directly or via inheritance.
+         *
+         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.Type, ICollection, Transitivity)
+         */
+        ICollection<IAttributeType> GetOwns(ITypeDBTransaction transaction);
+
+        /**
+         * Retrieves <code>IAttributeType</code> that the instances of this
+         * <code>IThingType</code> are allowed to own directly or via inheritance.
+         *
+         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.Type, ICollection, Transitivity)
+         */
+        ICollection<IAttributeType> GetOwns(ITypeDBTransaction transaction, IValue.Type valueType);
+
+        /**
+         * Retrieves <code>IAttributeType</code> that the instances of this
+         * <code>IThingType</code> are allowed to own directly or via inheritance.
+         *
+         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.Type, ICollection, Transitivity)
+         */
+        ICollection<IAttributeType> GetOwns(ITypeDBTransaction transaction, ICollection<Annotation> annotations);
+
+        /**
+         * Retrieves <code>IAttributeType</code> that the instances of this
+         * <code>IThingType</code> are allowed to own directly or via inheritance.
+         *
+         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.Type, ICollection, Transitivity)
+         */
+        ICollection<IAttributeType> GetOwns(
+            ITypeDBTransaction transaction, IValue.Type valueType, ICollection<Annotation> annotations);
+
+        /**
+         * Retrieves <code>IAttributeType</code> that the instances of this
+         * <code>IThingType</code> are allowed to own directly or via inheritance.
+         *
+         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.Type, ICollection, Transitivity)
+         */
+        ICollection<IAttributeType> GetOwns(ITypeDBTransaction transaction, Transitivity transitivity);
+
+        /**
+         * Retrieves <code>IAttributeType</code> that the instances of this
+         * <code>IThingType</code> are allowed to own directly or via inheritance.
+         *
+         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.Type, ICollection, Transitivity)
+         */
+        ICollection<IAttributeType> GetOwns(
+            ITypeDBTransaction transaction, IValue.Type valueType, Transitivity transitivity);
+
+        /**
+         * Retrieves <code>IAttributeType</code> that the instances of this
+         * <code>IThingType</code> are allowed to own directly or via inheritance.
+         *
+         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.Type, ICollection, Transitivity)
+         */
+        ICollection<IAttributeType> GetOwns(
+            ITypeDBTransaction transaction, ICollection<Annotation> annotations, Transitivity transitivity);
+
+        /**
+         * Retrieves <code>IAttributeType</code> that the instances of this
+         * <code>IThingType</code> are allowed to own directly or via inheritance.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * thingType.GetOwns(transaction);
+         * thingType.GetOwns(transaction, valueType, Transitivity.EXPLICIT, Annotation.key());
+         * </pre>
+         *
+         * @param transaction The current transaction
+         * @param valueType If specified, only attribute types of this <code>ValueType</code> will be retrieved.
+         * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and inherited ownership,
+         *                     <code>Transitivity.EXPLICIT</code> for direct ownership only
+         * @param annotations Only retrieve attribute types owned with annotations.
+         */
+        ICollection<IAttributeType> GetOwns(
+            ITypeDBTransaction transaction,
+            IValue.Type valueType,
+            ICollection<Annotation> annotations,
+            Transitivity transitivity);
+
+        /**
+         * Retrieves an <code>IAttributeType</code>, ownership of which is overridden
+         * for this <code>IThingType</code> by a given <code>IAttributeType</code>.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * thingType.GetOwnsOverridden(transaction, attributeType).Resolve();
+         * </pre>
+         *
+         * @param transaction The current transaction
+         * @param attributeType The <code>IAttributeType</code> that overrides requested <code>IAttributeType</code>
+         */
+        Promise<IAttributeType> GetOwnsOverridden(ITypeDBTransaction transaction, IAttributeType attributeType);
+
+        /**
+         * Disallows the instances of this <code>IThingType</code> from playing the given role.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * thingType.UnsetPlays(transaction, roleType).Resolve();
+         * </pre>
+         *
+         * @param transaction The current transaction
+         * @param roleType The role to not be played by the instances of this type.
+         */
+        Promise<void> UnsetPlays(ITypeDBTransaction transaction, IRoleType roleType);
+
+        /**
+         * Disallows the instances of this <code>IThingType</code> from owning the given <code>IAttributeType</code>.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * thingType.UnsetOwns(transaction, attributeType).Resolve();
+         * </pre>
+         *
+         * @param transaction The current transaction
+         * @param attributeType The <code>IAttributeType</code> to not be owned by the type.
+         */
+        Promise<void> UnsetOwns(ITypeDBTransaction transaction, IAttributeType attributeType);
+
+        /**
+         * Produces a pattern for creating this <code>IThingType</code> in a <code>define</code> query.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * thingType.GetSyntax(transaction).Resolve();
+         * </pre>
+         *
+         * @param transaction The current transaction
+         */
+        Promise<string> GetSyntax(ITypeDBTransaction transaction);
+
+        /**
+         * Annotation
+         */
+        class Annotation : NativeObjectWrapper<Pinvoke.Annotation>
+        {
+            private int _hash { get; }
+
+            private Annotation(Pinvoke.Annotation annotation)
+                : base(annotation)
+            {
+//                _hash = Objects.hash(IsKey(), IsUnique()); // TODO
+            }
+
+            /**
+             * Produces a <code>@key</code> annotation.
+             *
+             * <h3>Examples</h3>
+             * <pre>
+             * Annotation.NewKey();
+             * </pre>
+             */
+            public static Annotation NewKey()
+            {
+                return new Annotation(Pinvoke.typedb_driver.annotation_new_key());
+            }
+
+            /**
+             * Produces a <code>@unique</code> annotation.
+             *
+             * <h3>Examples</h3>
+             * <pre>
+             * Annotation.NewUnique();
+             * </pre>
+             */
+            public static Annotation NewUnique()
+            {
+                return new Annotation(Pinvoke.typedb_driver.annotation_new_unique());
+            }
+
+            /**
+             * Checks if this <code>Annotation</code> is a <code>@key</code> annotation.
+             *
+             * <h3>Examples</h3>
+             * <pre>
+             * annotation.IsKey();
+             * </pre>
+             */
+            public bool IsKey()
+            {
+                return Pinvoke.typedb_driver.annotation_is_key(NativeObject);
+            }
+
+            /**
+             * Checks if this <code>Annotation</code> is a <code>@unique</code> annotation.
+             *
+             * <h3>Examples</h3>
+             * <pre>
+             * annotation.IsUnique();
+             * </pre>
+             */
+            public bool IsUnique()
+            {
+                return Pinvoke.typedb_driver.annotation_is_unique(nativeObject);
+            }
+
+            /**
+             * Retrieves a string representation of this <code>Annotation</code>.
+             *
+             * <h3>Examples</h3>
+             * <pre>
+             * annotation.toString();
+             * </pre>
+             */
+            public override string ToString()
+            {
+                return Pinvoke.typedb_driver.annotation_to_string(nativeObject);
+            }
+
+            /**
+             * Checks if this <code>Annotation</code> is equal to another object.
+             *
+             * <h3>Examples</h3>
+             * <pre>
+             * annotation.Equals(obj);
+             * </pre>
+             *
+             * @param obj Object to compare with
+             */
+            public override bool Equals(object obj)
+            {
+                if (obj == this)
+                {
+                    return true;
+                }
+
+                if (obj == null || this.GetType() != obj.GetType())
+                {
+                    return false;
+                }
+
+                Annotation that = (Annotation)obj;
+
+                return Pinvoke.typedb_driver.annotation_equals(this.NativeObject, that.NativeObject);
+            }
+
+//            public override int GetHashCode()
+//            {
+//                return _hash; // TODO
+//            }
+        }
+    }
+}

@@ -41,7 +41,7 @@ namespace Vaticle.Typedb.Driver.Common
                 throw new TypeDBDriverException(InternalError.NULL_NATIVE_VALUE);
             }
 
-            this.NativeObject = nativeObject;
+            NativeObject = nativeObject;
         }
     }
 }

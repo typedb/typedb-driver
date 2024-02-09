@@ -36,7 +36,7 @@ namespace Vaticle.Typedb.Driver.Test.Integration
         {
             ITypeDBDriver driver = TypeDB.CoreDriver(TypeDB.DEFAULT_ADDRESS);
             Assert.IsNotNull(driver);
-            Assert.True(driver.IsOpen);
+            Assert.True(driver.IsOpen());
 
             return driver;
         }
@@ -44,7 +44,7 @@ namespace Vaticle.Typedb.Driver.Test.Integration
         public static void CloseConnection(ITypeDBDriver driver)
         {
             driver.Close();
-            Assert.False(driver.IsOpen);
+            Assert.False(driver.IsOpen());
         }
 
         public static void CreateDatabaseNoChecks(IDatabaseManager dbManager, string expectedDbName)
