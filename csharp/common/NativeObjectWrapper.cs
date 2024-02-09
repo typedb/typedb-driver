@@ -19,8 +19,6 @@
  * under the License.
  */
 
-#nullable enable
-
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Common.Exception;
 using InternalError = Vaticle.Typedb.Driver.Common.Exception.Error.Internal;

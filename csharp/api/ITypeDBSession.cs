@@ -36,30 +36,40 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * session.IsOpen();
+         * session.IsOpen
          * </pre>
          */
-        bool IsOpen();
+        bool IsOpen { get; }
 
         /**
          * The current session’s type (SCHEMA or DATA).
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * session.Type
+         * </pre>
          */
-        SessionType Type();
+        SessionType Type { get; }
 
         /**
          * Returns the name of the database of the session.
          *
          * <h3>Examples</h3>
          * <pre>
-         * session.DatabaseName();
+         * session.DatabaseName
          * </pre>
          */
-        string DatabaseName();
+        string DatabaseName { get; }
 
         /**
          * Gets the options for the session.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * session.Options
+         * </pre>
          */
-        TypeDBOptions Options();
+        TypeDBOptions Options { get; }
 
         /**
          * Opens a transaction on the database connected to the session with default options.

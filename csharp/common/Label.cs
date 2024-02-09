@@ -19,8 +19,6 @@
  * under the License.
  */
 
-#nullable enable
-
 namespace Vaticle.Typedb.Driver.Common
 {
     /**

@@ -19,8 +19,6 @@
  * under the License.
  */
 
-#nullable enable
-
 using System;
 using System.Diagnostics;
 
@@ -67,14 +65,14 @@ namespace Vaticle.Typedb.Driver.Common.Exception
             _errorMessage = null;
         }
 
-        public string GetName()
+        public string Name
         {
-            return this.GetType().Name;
+            get { return this.GetType().Name; }
         }
 
-        public ErrorMessage? GetErrorMessage()
+        public ErrorMessage? ErrorMessage
         {
-            return _errorMessage;
+            get { return _errorMessage; }
         }
 
         private readonly ErrorMessage? _errorMessage; // TODO: Looks like it is used in Java only for a test...

@@ -19,8 +19,6 @@
  * under the License.
  */
 
-#nullable enable
-
 using DataTable = Gherkin.Ast.DataTable;
 using System;
 using System.Collections.Generic;
@@ -120,7 +118,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             {
                 foreach (ITypeDBTransaction transaction in ConnectionStepsBase.SessionsToTransactions[session])
                 {
-                    Assert.Equal(expectedOpen, transaction.IsOpen());
+                    Assert.Equal(expectedOpen, transaction.IsOpen);
                 }
             }
         }
@@ -199,7 +197,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                     Assert.True(transactionsEnumerator.MoveNext());
                     Assert.Equal(
                         StringToTransactionType(typesEnumerator.Current),
-                        transactionsEnumerator.Current.Type());
+                        transactionsEnumerator.Current.Type);
                 }
             }
         }

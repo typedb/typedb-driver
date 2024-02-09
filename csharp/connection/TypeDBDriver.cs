@@ -75,10 +75,16 @@ namespace Vaticle.Typedb.Driver.Connection
             }
         }
 
-        public bool IsOpen()
+        public bool IsOpen
         {
-            return Pinvoke.typedb_driver.connection_is_open(NativeObject);
+            get { return Pinvoke.typedb_driver.connection_is_open(NativeObject); }
         }
+
+        public IDatabaseManager Databases
+        {
+            get { return databaseMgr; }
+        }
+
         // TODO:
 //
 //        public override User User()
@@ -91,11 +97,6 @@ namespace Vaticle.Typedb.Driver.Connection
 //            return userMgr;
 //        }
 
-        public IDatabaseManager Databases()
-        {
-            return databaseMgr;
-        }
-
         public ITypeDBSession Session(string database, SessionType type)
         {
             return Session(database, type, new TypeDBOptions());
@@ -104,12 +105,12 @@ namespace Vaticle.Typedb.Driver.Connection
         public ITypeDBSession Session(
             string database, SessionType type, TypeDBOptions options)
         {
-            return new TypeDBSession(Databases(), database, type, options);
+            return new TypeDBSession(Databases, database, type, options);
         }
 
         public void Close()
         {
-            if (!IsOpen())
+            if (!IsOpen)
             {
                 return;
             }
@@ -126,6 +127,6 @@ namespace Vaticle.Typedb.Driver.Connection
 
         public void Dispose()
         {
-        }
+        } // TODO: Do we need anything here?
     }
 }

@@ -33,15 +33,41 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * driver.IsOpen();
+         * driver.IsOpen
          * </pre>
          */
-        bool IsOpen();
+        bool IsOpen { get; }
 
         /**
          * The <code>IDatabaseManager</code> for this connection, providing access to database management methods.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * driver.Databases
+         * </pre>
          */
-        IDatabaseManager Databases();
+        IDatabaseManager Databases { get; }
+
+        /**
+         * The <code>UserManager</code> instance for this connection, providing access to user management methods.
+         * Only for TypeDB Cloud.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * driver.User
+         * </pre>
+         */
+//        IUser User { get; } // TODO
+
+        /**
+         * Returns the logged-in user for the connection. Only for TypeDB Cloud.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * driver.Users
+         * </pre>
+         */
+//        IUserManager Users { get; } // TODO
 
         /**
          * Opens a session to the given database with default options.
@@ -74,21 +100,5 @@ namespace Vaticle.Typedb.Driver.Api
          * </pre>
          */
         void Close();
-
-        /**
-         * The <code>UserManager</code> instance for this connection, providing access to user management methods.
-         * Only for TypeDB Cloud.
-         */
-//        IUser User(); // TODO
-
-        /**
-         * Returns the logged-in user for the connection. Only for TypeDB Cloud.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * driver.Users();
-         * </pre>
-         */
-//        IUserManager Users(); // TODO
     }
 }

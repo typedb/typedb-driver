@@ -19,8 +19,6 @@
  * under the License.
  */
 
-#nullable enable
-
 using System.Diagnostics;
 using System.IO;
 
