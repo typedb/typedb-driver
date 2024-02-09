@@ -75,9 +75,9 @@ namespace Vaticle.Typedb.Driver.Connection
             }
         }
 
-        public bool IsOpen
+        public bool IsOpen()
         {
-            get { return Pinvoke.typedb_driver.connection_is_open(NativeObject); }
+            return Pinvoke.typedb_driver.connection_is_open(NativeObject);
         }
 
         public IDatabaseManager Databases
@@ -110,7 +110,7 @@ namespace Vaticle.Typedb.Driver.Connection
 
         public void Close()
         {
-            if (!IsOpen)
+            if (!IsOpen())
             {
                 return;
             }

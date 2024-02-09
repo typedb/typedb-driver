@@ -36,10 +36,10 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * session.IsOpen
+         * session.IsOpen()
          * </pre>
          */
-        bool IsOpen { get; }
+        bool IsOpen()
 
         /**
          * The current session’s type (SCHEMA or DATA).
