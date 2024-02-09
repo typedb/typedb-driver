@@ -21,59 +21,51 @@
 
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver.Api.Database;
+using Vaticle.Typedb.Driver.Api.Concept.Type;
 
-namespace Vaticle.Typedb.Driver.Api.Database
+namespace Vaticle.Typedb.Driver.Api.Concept.Thing
 {
     /**
-     * Provides access to all database management methods.
+     * Instance of data of an entity type, representing a standalone object that exists in the data model independently.
+     * Entity does not have a value. It is usually addressed by its ownership over attribute instances and/or roles
+     * played in relation instances.
      */
-    public interface IDatabaseManager
+    public interface IEntity : IThing
     {
         /**
-         * Retrieve the database with the given name.
+         * Checks if the concept is an <code>IEntity</code>.
          *
          * <h3>Examples</h3>
          * <pre>
-         * driver.Databases.Get(name)
+         * entity.IsEntity();
          * </pre>
-         *
-         * @param name The name of the database to retrieve
          */
-        IDatabase Get(string name);
+        override bool IsEntity()
+        {
+            return true;
+        }
 
         /**
-         * Checks if a database with the given name exists
+         * Casts the concept to <code>IEntity</code>.
          *
          * <h3>Examples</h3>
          * <pre>
-         * driver.Databases.Contains(name)
+         * entity.AsEntity();
          * </pre>
-         *
-         * @param name The database name to be checked
          */
-        bool Contains(string name);
+        override IEntity AsEntity()
+        {
+            return this;
+        }
 
         /**
-         * Create a database with the given name
+         * The type which this <code>IEntity</code> belongs to.
          *
          * <h3>Examples</h3>
          * <pre>
-         * driver.Databases.Create(name)
-         * </pre>
-         *
-         * @param name The name of the database to be created
-         */
-        void Create(string name);
-
-        /**
-         * Retrieves all databases present on the TypeDB server.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * driver.Databases.All;
+         * entity.Type;
          * </pre>
          */
-        ICollection<IDatabase> All { get; }
+        override IEntityType Type { get; }
     }
 }

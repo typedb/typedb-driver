@@ -162,7 +162,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
 
             // TODO: Could there be just == ? The description is more like >=!
-            Assert.True(expectedDatabasesSize >= ConnectionStepsBase.Driver.Databases.GetAll().Count);
+            Assert.True(expectedDatabasesSize >= ConnectionStepsBase.Driver.Databases.All.Count);
         }
 
         [Then(@"connection does not have database: {word}")]
@@ -189,7 +189,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             Assert.NotNull(ConnectionStepsBase.Driver);
             Assert.True(ConnectionStepsBase.Driver.IsOpen());
-            Assert.Equal(0, ConnectionStepsBase.Driver.Databases.GetAll().Count);
+            Assert.Equal(0, ConnectionStepsBase.Driver.Databases.All.Count);
         }
     }
 }

@@ -42,8 +42,8 @@ namespace Vaticle.Typedb.Driver.Common
          */
         public Label(string? scope, string name)
         {
-            _scope = scope;
-            _name = name;
+            Scope = scope;
+            Name = name;
             _hash = 0; // TODO: Objects.hash(name, scope);
         }
 
@@ -67,13 +67,10 @@ namespace Vaticle.Typedb.Driver.Common
          *
          * <h3>Examples</h3>
          * <pre>
-         * label.Scope();
+         * label.Scope;
          * </pre>
          */
-        public string? Scope
-        {
-            get => _scope;
-        }
+        public string? Scope { get; }
 
         /**
          * Returns the name of this Label.
@@ -83,10 +80,7 @@ namespace Vaticle.Typedb.Driver.Common
          * label.Name;
          * </pre>
          */
-        public string Name
-        {
-            get => _name;
-        }
+        public string Name { get; }
 
         /**
          * Returns the string representation of the scoped name.
@@ -123,23 +117,23 @@ namespace Vaticle.Typedb.Driver.Common
          * </pre>
          *
          * @param obj Object to compare with
-         */ // TODO: Implement for C#
-//        public override bool Equals(object obj)
-//        {
-//            if (this == obj)
-//            {
-//                return true;
-//            }
-//
-//            if (obj == null || getClass() != obj.getClass())
-//            {
-//                return false;
-//            }
-//
-//            Label that = (Label)obj;
-//
-//            return this.name.equals(that.name) && Objects.equals(this.scope, that.scope);
-//        }
+         */
+        public override bool Equals(object obj)
+        {
+            if (this == obj)
+            {
+                return true;
+            }
+
+            if (obj == null || this.GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            Label that = (Label)obj;
+
+            return this.Name.Equals(that.name) && this.Scope.Equals(that.Scope);
+        }
 
         /**
          * @hidden
@@ -149,8 +143,6 @@ namespace Vaticle.Typedb.Driver.Common
 //            return _hash;
 //        }
 
-        private readonly string? _scope;
-        private readonly string _name;
         private readonly int _hash;
     }
 }
