@@ -145,7 +145,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             foreach (var session in ConnectionStepsBase.Sessions)
             {
-                Assert.Equal(expectedOpen, session.IsOpen);
+                Assert.Equal(expectedOpen, session.IsOpen());
             }
         }
 
@@ -154,7 +154,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             foreach (var session in ConnectionStepsBase.ParallelSessions)
             {
-                session.ContinueWith(antecedent => Assert.Equal(expectedOpen, antecedent.Result.IsOpen));
+                session.ContinueWith(antecedent => Assert.Equal(expectedOpen, antecedent.Result.IsOpen()));
             }
         }
 

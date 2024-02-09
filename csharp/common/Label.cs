@@ -124,7 +124,7 @@ namespace Vaticle.Typedb.Driver.Common
          *
          * @param obj Object to compare with
          */ // TODO: Implement for C#
-//        public override bool Equals(Object obj)
+//        public override bool Equals(object obj)
 //        {
 //            if (this == obj)
 //            {
@@ -144,7 +144,7 @@ namespace Vaticle.Typedb.Driver.Common
         /**
          * @hidden
          */ //TODO:
-//        public override int HashCode()
+//        public override int GetHashCode()
 //        {
 //            return _hash;
 //        }

@@ -118,7 +118,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             {
                 foreach (ITypeDBTransaction transaction in ConnectionStepsBase.SessionsToTransactions[session])
                 {
-                    Assert.Equal(expectedOpen, transaction.IsOpen);
+                    Assert.Equal(expectedOpen, transaction.IsOpen());
                 }
             }
         }
@@ -287,7 +287,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                     throw new Exception("Not ready for this test as well!"); // TODO
 //                    try
 //                    {
-//                        transaction.Query().Define(TypeQL.parseQuery(defineQueryStatements).asDefine()).resolve();
+//                        transaction.Query().Define(TypeQL.parseQuery(defineQueryStatements).asDefine()).Resolve();
 //                        fail();
 //                    }
 //                    catch (System.Exception e)

@@ -80,30 +80,27 @@ namespace Vaticle.Typedb.Driver.Connection
             get { return _options; }
         }
 
-        public bool IsOpen
+        public bool IsOpen()
         {
-            get
-            {
-                return NativeObject.IsOwned()
-                    ? Pinvoke.typedb_driver.transaction_is_open(NativeObject)
-                    : false;
-            }
+            return NativeObject.IsOwned()
+                ? Pinvoke.typedb_driver.transaction_is_open(NativeObject)
+                : false;
         }
-// TODO:
-//        public IConceptManager Concepts
-//        {
-//            get { return _conceptManager; }
-//        }
-//
-//        public ILogicManager Logic
-//        {
-//            get { return _logicManager; }
-//        }
-//
-//        public IQueryManager Query
-//        {
-//            get { return _queryManager; }
-//        }
+
+        public IConceptManager Concepts
+        {
+            get { return _conceptManager; }
+        }
+
+        public ILogicManager Logic
+        {
+            get { return _logicManager; }
+        }
+
+        public IQueryManager Query
+        {
+            get { return _queryManager; }
+        }
 
         public void OnClose(Action<Exception> function)
         {

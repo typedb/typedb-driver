@@ -62,9 +62,9 @@ namespace Vaticle.Typedb.Driver.Connection
             }
         }
 
-        public bool IsOpen
+        public bool IsOpen()
         {
-            get { return Pinvoke.typedb_driver.session_is_open(NativeObject); }
+            return Pinvoke.typedb_driver.session_is_open(NativeObject);
         }
 
         public SessionType Type

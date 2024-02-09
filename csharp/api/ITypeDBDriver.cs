@@ -33,10 +33,10 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * driver.IsOpen
+         * driver.IsOpen()
          * </pre>
          */
-        bool IsOpen { get; }
+        bool IsOpen()
 
         /**
          * The <code>IDatabaseManager</code> for this connection, providing access to database management methods.

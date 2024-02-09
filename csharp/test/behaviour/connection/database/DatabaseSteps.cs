@@ -188,7 +188,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ConnectionDoesNotHaveAnyDatabase()
         {
             Assert.NotNull(ConnectionStepsBase.Driver);
-            Assert.True(ConnectionStepsBase.Driver.IsOpen);
+            Assert.True(ConnectionStepsBase.Driver.IsOpen());
             Assert.Equal(0, ConnectionStepsBase.Driver.Databases.GetAll().Count);
         }
     }

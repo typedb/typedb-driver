@@ -72,7 +72,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                     db.Delete();
                 }
 
-                if (Driver.IsOpen)
+                if (Driver.IsOpen())
                 {
                     Driver.Close();
                 }
@@ -99,7 +99,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public virtual void ConnectionHasBeenOpened()
         {
             Assert.NotNull(Driver);
-            Assert.True(Driver.IsOpen);
+            Assert.True(Driver.IsOpen());
         }
 
         [When(@"connection closes")]
