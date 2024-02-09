@@ -84,9 +84,6 @@ public class QuerySteps {
 
     @Given("the integrity is validated")
     public void integrity_is_validated() {
-
-        // TODO
-
     }
 
     @Given("typeql define")

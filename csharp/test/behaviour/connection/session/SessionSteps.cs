@@ -210,13 +210,12 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Given(@"set session option {word} to: {word}")]
         public void SetSessionOptionTo(string option, string value)
         {
-            throw new NotImplementedException("Not yet for SetSessionOption"); // TODO
+            if (!OptionSetters.ContainsKey(option))
+            {
+                throw new Exception("Unrecognised option: " + option);
+            }
 
-//            if (!optionSetters.containsKey(option))
-//            {
-//                throw new Exception("Unrecognised option: " + option);
-//            }
-//            optionSetters.get(option).accept(sessionOptions, value);
+            OptionSetters[option](SessionOptions, value);
         }
     }
 }
