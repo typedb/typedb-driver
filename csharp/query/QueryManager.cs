@@ -19,6 +19,7 @@
  * under the License.
  */
 
+using System.Collections.Generic;
 using System.Linq;
 
 using Vaticle.Typedb.Driver;
@@ -32,6 +33,7 @@ using Vaticle.Typedb.Driver.Common.Exception;
 using Vaticle.Typedb.Driver.Concept.Answer;
 using Vaticle.Typedb.Driver.Concept.Value;
 using Vaticle.Typedb.Driver.Logic;
+using Vaticle.Typedb.Driver.Util;
 
 using DriverError = Vaticle.Typedb.Driver.Common.Exception.Error.Driver;
 using QueryError = Vaticle.Typedb.Driver.Common.Exception.Error.Query;
@@ -279,11 +281,7 @@ namespace Vaticle.Typedb.Driver.Query
         private void CheckQueryAndTransaction(string query)
         {
             CheckTransaction();
-
-            if (string.IsNullOrEmpty(query))
-            {
-                throw new TypeDBDriverException(QueryError.MISSING_QUERY);
-            }
+            InputChecker.NonEmptyString<TypeDBDriverException>(name, QueryError.MISSING_QUERY);
         }
     }
 }

@@ -37,6 +37,7 @@ csharp_library(
     deps = [
         "//csharp/api",
         "//csharp/common",
+        "//csharp/util",
 #        "//csharp/concept",
 #        "//csharp/logic",
 #        "//csharp/query",

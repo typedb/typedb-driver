@@ -19,35 +19,20 @@
  * under the License.
  */
 
-using System.Collections.Generic;
+using System;
 
-using Vaticle.Typedb.Driver.Api.Concept;
-
-namespace Vaticle.Typedb.Driver.Api.Answer
+namespace Vaticle.Typedb.Driver.Util
 {
-    /**
-     * Contains an element of the group query result.
-     */
-    public interface IConceptMapGroup
+    public static class InputChecker
     {
-        /**
-         * Retrieves the concept that is the group owner.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * conceptMapGroup.Owner;
-         * </pre>
-         */
-        IConcept Owner { get; }
-
-        /**
-         * Retrieves the <code>ConceptMap</code>s of the group.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * conceptMapGroup.ConceptMaps;
-         * </pre>
-         */
-        ICollection<IConceptMap> ConceptMaps { get; }
+        public static void NonEmptyString<TException>(
+            string input,
+            params object[] exceptionArgs) where TException : new()
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                throw new TException(exceptionArgs);
+            }
+        }
     }
 }
