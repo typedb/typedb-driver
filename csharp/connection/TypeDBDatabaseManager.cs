@@ -27,6 +27,8 @@ using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api.Database;
 using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Common.Exception;
+using Vaticle.Typedb.Driver.Util;
+
 using DriverError = Vaticle.Typedb.Driver.Common.Exception.Error.Driver;
 
 namespace Vaticle.Typedb.Driver.Connection
@@ -51,10 +53,7 @@ namespace Vaticle.Typedb.Driver.Connection
 
         public IDatabase Get(string name)
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new TypeDBDriverException(DriverError.MISSING_DB_NAME);
-            }
+            InputChecker.NonEmptyString<TypeDBDriverException>(name, ConceptError.MISSING_DB_NAME);
 
             try
             {
@@ -68,10 +67,7 @@ namespace Vaticle.Typedb.Driver.Connection
 
         public bool Contains(string name)
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new TypeDBDriverException(DriverError.MISSING_DB_NAME);
-            }
+            InputChecker.NonEmptyString<TypeDBDriverException>(name, ConceptError.MISSING_DB_NAME);
 
             try
             {
@@ -85,10 +81,7 @@ namespace Vaticle.Typedb.Driver.Connection
 
         public void Create(string name)
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new TypeDBDriverException(DriverError.MISSING_DB_NAME);
-            }
+            InputChecker.NonEmptyString<TypeDBDriverException>(name, ConceptError.MISSING_DB_NAME);
 
             try
             {
