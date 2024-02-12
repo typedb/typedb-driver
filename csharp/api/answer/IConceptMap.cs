@@ -51,14 +51,14 @@ namespace Vaticle.Typedb.Driver.Api.Answer
         ICollection<IConcept> AllConcepts { get; }
     
         /**
-         * Returns the inner <code>Dictionary</code> where keys are query variables, and values are concepts.
+         * Returns the inner <code>Map</code> where keys are query variables, and values are concepts.
          *
          * <h3>Examples</h3>
          * <pre>
-         * conceptMap.Dictionary;
+         * conceptMap.Map;
          * </pre>
          */
-        Dictionary<string, IConcept> Dictionary { get; }
+        Dictionary<string, IConcept> Map { get; }
     
         /**
          * Retrieves a concept for a given variable name.
