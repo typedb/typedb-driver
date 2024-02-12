@@ -20,6 +20,7 @@
  */
 
 using Vaticle.Typedb.Driver.Api;
+using Vaticle.Typedb.Driver.Common;
 
 namespace Vaticle.Typedb.Driver.Api.Logic
 {
@@ -80,6 +81,6 @@ namespace Vaticle.Typedb.Driver.Api.Logic
          *
          * @param transaction The current <code>Transaction</code>
          */
-        Promise<Boolean> IsDeleted(ITypeDBTransaction transaction);
+        Promise<bool> IsDeleted(ITypeDBTransaction transaction);
     }
 }

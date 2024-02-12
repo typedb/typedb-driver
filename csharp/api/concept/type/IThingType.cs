@@ -19,11 +19,14 @@
  * under the License.
  */
 
+using System;
 using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api.Concept.Type;
 using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Api.Concept.Thing;
+using Vaticle.Typedb.Driver.Api.Concept.Type;
+using Vaticle.Typedb.Driver.Api.Concept.Value;
 using Vaticle.Typedb.Driver.Common;
 
 namespace Vaticle.Typedb.Driver.Api.Concept.Type
@@ -33,7 +36,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
         /**
          * {@inheritDoc}
          */
-        override bool IsThingType()
+        new bool IsThingType()
         {
             return true;
         }
@@ -41,7 +44,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
         /**
          * {@inheritDoc}
          */
-        override IThingType AsThingType()
+        new IThingType AsThingType()
         {
             return this;
         }
@@ -49,28 +52,28 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
         /**
          * {@inheritDoc}
          */
-        override Promise<IThingType> GetSupertype(ITypeDBTransaction transaction);
+        new Promise<IThingType> GetSupertype(ITypeDBTransaction transaction);
 
         /**
          * {@inheritDoc}
          */
-        override ICollection<IThingType> GetSupertypes(ITypeDBTransaction transaction);
+        new ICollection<IThingType> GetSupertypes(ITypeDBTransaction transaction);
 
         /**
          * {@inheritDoc}
          */
-        override ICollection<IThingType> GetSubtypes(ITypeDBTransaction transaction);
+        new ICollection<IThingType> GetSubtypes(ITypeDBTransaction transaction);
 
         /**
          * {@inheritDoc}
          */
-        override ICollection<IThingType> GetSubtypes(ITypeDBTransaction transaction, Transitivity transitivity);
+        new ICollection<IThingType> GetSubtypes(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
         /**
          * Retrieves all <code>IThing</code> objects that are instances of this <code>IThingType</code> or its subtypes.
          * Equivalent to <code>GetInstances(transaction, Transitivity.TRANSITIVE)</code>
          *
-         * @see ThingType#GetInstances(ITypeDBTransaction, Transitivity)
+         * @see ThingType#GetInstances(ITypeDBTransaction, IConcept.Transitivity)
          */
         ICollection<IThing> GetInstances(ITypeDBTransaction transaction);
 
@@ -87,7 +90,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transaction The current transaction
          * @param transitivity <code>Transitivity.EXPLICIT</code> for direct instances only, <code>Transitivity.TRANSITIVE</code> to include instances of subtypes
          */
-        ICollection<IThing> GetInstances(ITypeDBTransaction transaction, Transitivity transitivity);
+        ICollection<IThing> GetInstances(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
         /**
          * Set a <code>IThingType</code> to be abstract, meaning it cannot have instances.
@@ -184,9 +187,9 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * Retrieves all direct and inherited roles that are allowed
          * to be played by the instances of this <code>IThingType</code>.
          *
-         * @see ThingType#GetPlays(ITypeDBTransaction, Transitivity)
+         * @see ThingType#GetPlays(ITypeDBTransaction, IConcept.Transitivity)
          */
-        ICollection<IIRoleType> GetPlays(ITypeDBTransaction transaction);
+        ICollection<IRoleType> GetPlays(ITypeDBTransaction transaction);
 
         /**
          * Retrieves all direct and inherited (or direct only) roles that are allowed
@@ -202,7 +205,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transitivity transitivity: <code>Transitivity.TRANSITIVE</code> for direct and indirect playing,
          *                                   <code>Transitivity.EXPLICIT</code> for direct playing only
          */
-        ICollection<IIRoleType> GetPlays(ITypeDBTransaction transaction, Transitivity transitivity);
+        ICollection<IRoleType> GetPlays(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
         /**
          * Retrieves a <code>IRoleType</code> that is overridden by the given
@@ -216,13 +219,13 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transaction The current transaction
          * @param roleType The <code>IRoleType</code> that overrides an inherited role
          */
-        Promise<IIRoleType> GetPlaysOverridden(ITypeDBTransaction transaction, IRoleType roleType);
+        Promise<IRoleType> GetPlaysOverridden(ITypeDBTransaction transaction, IRoleType roleType);
 
         /**
          * Retrieves <code>IAttributeType</code> that the instances of this
          * <code>IThingType</code> are allowed to own directly or via inheritance.
          *
-         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.Type, ICollection, Transitivity)
+         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection, IConcept.Transitivity)
          */
         ICollection<IAttributeType> GetOwns(ITypeDBTransaction transaction);
 
@@ -230,15 +233,15 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * Retrieves <code>IAttributeType</code> that the instances of this
          * <code>IThingType</code> are allowed to own directly or via inheritance.
          *
-         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.Type, ICollection, Transitivity)
+         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection, IConcept.Transitivity)
          */
-        ICollection<IAttributeType> GetOwns(ITypeDBTransaction transaction, IValue.Type valueType);
+        ICollection<IAttributeType> GetOwns(ITypeDBTransaction transaction, IValue.ValueType valueType);
 
         /**
          * Retrieves <code>IAttributeType</code> that the instances of this
          * <code>IThingType</code> are allowed to own directly or via inheritance.
          *
-         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.Type, ICollection, Transitivity)
+         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection, IConcept.Transitivity)
          */
         ICollection<IAttributeType> GetOwns(ITypeDBTransaction transaction, ICollection<Annotation> annotations);
 
@@ -246,36 +249,36 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * Retrieves <code>IAttributeType</code> that the instances of this
          * <code>IThingType</code> are allowed to own directly or via inheritance.
          *
-         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.Type, ICollection, Transitivity)
+         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection, IConcept.Transitivity)
          */
         ICollection<IAttributeType> GetOwns(
-            ITypeDBTransaction transaction, IValue.Type valueType, ICollection<Annotation> annotations);
+            ITypeDBTransaction transaction, IValue.ValueType valueType, ICollection<Annotation> annotations);
 
         /**
          * Retrieves <code>IAttributeType</code> that the instances of this
          * <code>IThingType</code> are allowed to own directly or via inheritance.
          *
-         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.Type, ICollection, Transitivity)
+         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection, IConcept.Transitivity)
          */
-        ICollection<IAttributeType> GetOwns(ITypeDBTransaction transaction, Transitivity transitivity);
+        ICollection<IAttributeType> GetOwns(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
         /**
          * Retrieves <code>IAttributeType</code> that the instances of this
          * <code>IThingType</code> are allowed to own directly or via inheritance.
          *
-         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.Type, ICollection, Transitivity)
+         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection, IConcept.Transitivity)
          */
         ICollection<IAttributeType> GetOwns(
-            ITypeDBTransaction transaction, IValue.Type valueType, Transitivity transitivity);
+            ITypeDBTransaction transaction, IValue.ValueType valueType, IConcept.Transitivity transitivity);
 
         /**
          * Retrieves <code>IAttributeType</code> that the instances of this
          * <code>IThingType</code> are allowed to own directly or via inheritance.
          *
-         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.Type, ICollection, Transitivity)
+         * @see ThingType#GetOwns(ITypeDBTransaction, IValue.ValueType, ICollection, IConcept.Transitivity)
          */
         ICollection<IAttributeType> GetOwns(
-            ITypeDBTransaction transaction, ICollection<Annotation> annotations, Transitivity transitivity);
+            ITypeDBTransaction transaction, ICollection<Annotation> annotations, IConcept.Transitivity transitivity);
 
         /**
          * Retrieves <code>IAttributeType</code> that the instances of this
@@ -295,9 +298,9 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          */
         ICollection<IAttributeType> GetOwns(
             ITypeDBTransaction transaction,
-            IValue.Type valueType,
+            IValue.ValueType valueType,
             ICollection<Annotation> annotations,
-            Transitivity transitivity);
+            IConcept.Transitivity transitivity);
 
         /**
          * Retrieves an <code>IAttributeType</code>, ownership of which is overridden
@@ -354,14 +357,12 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
         /**
          * Annotation
          */
-        class Annotation : NativeObjectWrapper<Pinvoke.Annotation>
+        public class Annotation : NativeObjectWrapper<Pinvoke.Annotation>
         {
-            private int _hash { get; }
-
             private Annotation(Pinvoke.Annotation annotation)
                 : base(annotation)
             {
-//                _hash = Objects.hash(IsKey(), IsUnique()); // TODO
+                _hash = (IsKey(), IsUnique()).GetHashCode();
             }
 
             /**
@@ -413,7 +414,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
              */
             public bool IsUnique()
             {
-                return Pinvoke.typedb_driver.annotation_is_unique(nativeObject);
+                return Pinvoke.typedb_driver.annotation_is_unique(NativeObject);
             }
 
             /**
@@ -424,9 +425,9 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
              * annotation.toString();
              * </pre>
              */
-            public override string ToString()
+            public new string ToString()
             {
-                return Pinvoke.typedb_driver.annotation_to_string(nativeObject);
+                return Pinvoke.typedb_driver.annotation_to_string(NativeObject);
             }
 
             /**
@@ -439,9 +440,9 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
              *
              * @param obj Object to compare with
              */
-            public override bool Equals(object obj)
+            public new bool Equals(object obj)
             {
-                if (obj == this)
+                if (Object.ReferenceEquals(this, obj))
                 {
                     return true;
                 }
@@ -456,10 +457,12 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
                 return Pinvoke.typedb_driver.annotation_equals(this.NativeObject, that.NativeObject);
             }
 
-//            public override int GetHashCode()
-//            {
-//                return _hash; // TODO
-//            }
+            public new int GetHashCode()
+            {
+                return _hash;
+            }
+
+            private int _hash { get; }
         }
     }
 }

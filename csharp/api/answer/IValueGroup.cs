@@ -22,6 +22,7 @@
 using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Api.Concept.Value;
 
 namespace Vaticle.Typedb.Driver.Api.Answer
 {
@@ -48,6 +49,6 @@ namespace Vaticle.Typedb.Driver.Api.Answer
          * valueGroup.Value;
          * </pre>
          */
-        Concept.Value? Value { get; }
+        IValue? Value { get; }
     }
 }

@@ -19,14 +19,19 @@
  * under the License.
  */
 
-
+using Vaticle.Typedb.Driver;
+using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Api.Concept.Type;
+using Vaticle.Typedb.Driver.Api.Concept.Thing;
+using Vaticle.Typedb.Driver.Api.Concept.Value;
 using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Concept;
+using Vaticle.Typedb.Driver.Common.Exception;
+
 using ConceptError = Vaticle.Typedb.Driver.Common.Exception.Error.Concept;
 
-namespace Vaticle.TypeDb.Driver.Api.Concept
+namespace Vaticle.Typedb.Driver.Api.Concept
 {
-    public interface Concept
+    public interface IConcept
     {
         /**
          * Checks if the concept is a <code>IType</code>.
@@ -182,7 +187,7 @@ namespace Vaticle.TypeDb.Driver.Api.Concept
         IType AsType()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, IType.GetType().Name);
+                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IType).Name);
         }
 
         /**
@@ -196,7 +201,7 @@ namespace Vaticle.TypeDb.Driver.Api.Concept
         IThingType AsThingType()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, IThingType.GetType().Name);
+                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IThingType).Name);
         }
 
         /**
@@ -210,7 +215,7 @@ namespace Vaticle.TypeDb.Driver.Api.Concept
         IEntityType AsEntityType()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, IEntityType.GetType().Name);
+                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IEntityType).Name);
         }
 
         /**
@@ -224,7 +229,7 @@ namespace Vaticle.TypeDb.Driver.Api.Concept
         IRelationType AsRelationType()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, IRelationType.GetType().Name);
+                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IRelationType).Name);
         }
 
         /**
@@ -238,7 +243,7 @@ namespace Vaticle.TypeDb.Driver.Api.Concept
         IAttributeType AsAttributeType()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, IAttributeType.GetType().Name);
+                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IAttributeType).Name);
         }
 
         /**
@@ -252,7 +257,7 @@ namespace Vaticle.TypeDb.Driver.Api.Concept
         IRoleType AsRoleType()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, IRoleType.GetType().Name);
+                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IRoleType).Name);
         }
 
         /**
@@ -266,7 +271,7 @@ namespace Vaticle.TypeDb.Driver.Api.Concept
         IThing AsThing()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, IThing.GetType().Name);
+                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IThing).Name);
         }
 
         /**
@@ -280,7 +285,7 @@ namespace Vaticle.TypeDb.Driver.Api.Concept
         IEntity AsEntity()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, IEntity.GetType().Name);
+                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IEntity).Name);
         }
 
         /**
@@ -294,7 +299,7 @@ namespace Vaticle.TypeDb.Driver.Api.Concept
         IRelation AsRelation()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, IRelation.GetType().Name);
+                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IRelation).Name);
         }
 
         /**
@@ -308,7 +313,7 @@ namespace Vaticle.TypeDb.Driver.Api.Concept
         IAttribute AsAttribute()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, IAttribute.GetType().Name);
+                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IAttribute).Name);
         }
 
         /**
@@ -322,7 +327,7 @@ namespace Vaticle.TypeDb.Driver.Api.Concept
         IValue AsValue()
         {
             throw new TypeDBDriverException(
-                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, IValue.GetType().Name);
+                ConceptError.INVALID_CONCEPT_CASTING, this.GetType().Name, typeof(IValue).Name);
         }
 
         /**

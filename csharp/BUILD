@@ -19,7 +19,7 @@
 # under the License.
 
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_binary", "csharp_library")
-load(":build_opts.bzl", "target_frameworks", "targeting_packs")
+load(":build_opts.bzl", "target_frameworks", "targeting_packs", "nullable_context")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 load(":rules.bzl", "swig_native_csharp_library")
 
@@ -31,6 +31,7 @@ swig_native_csharp_library(
     interface = "//c:typedb_driver.i",
     includes = ["//c:swig/typedb_driver_csharp.swg"],
     enable_cxx = True,
+    nullable_context = nullable_context,
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
     visibility = ["//visibility:public"],

@@ -19,6 +19,8 @@
  * under the License.
  */
 
+using System;
+
 namespace Vaticle.Typedb.Driver.Common
 {
     /**
@@ -44,7 +46,7 @@ namespace Vaticle.Typedb.Driver.Common
         {
             Scope = scope;
             Name = name;
-            _hash = 0; // TODO: Objects.hash(name, scope);
+            _hash = (Name, Scope).GetHashCode();
         }
 
         /**
@@ -120,7 +122,7 @@ namespace Vaticle.Typedb.Driver.Common
          */
         public override bool Equals(object obj)
         {
-            if (this == obj)
+            if (Object.ReferenceEquals(this, obj))
             {
                 return true;
             }
@@ -132,17 +134,17 @@ namespace Vaticle.Typedb.Driver.Common
 
             Label that = (Label)obj;
 
-            return this.Name.Equals(that.name) && this.Scope.Equals(that.Scope);
+            return this.Name == that.Name && this.Scope == that.Scope;
         }
 
         /**
          * @hidden
-         */ //TODO:
-//        public override int GetHashCode()
-//        {
-//            return _hash;
-//        }
+         */
+        public override int GetHashCode()
+        {
+            return _hash;
+        }
 
-        private readonly int _hash;
+        private int _hash { get; }
     }
 }

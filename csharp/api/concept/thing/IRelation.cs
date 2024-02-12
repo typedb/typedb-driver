@@ -22,6 +22,7 @@
 using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver;
+using Vaticle.Typedb.Driver.Api.Concept.Thing;
 using Vaticle.Typedb.Driver.Common;
 
 namespace Vaticle.Typedb.Driver.Api.Concept.Type
@@ -40,7 +41,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * relation.IsRelation();
          * </pre>
          */
-        override bool IsRelation()
+        new bool IsRelation()
         {
             return true;
         }
@@ -53,7 +54,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * relation.AsRelation();
          * </pre>
          */
-        override IRelation AsRelation()
+        new IRelation AsRelation()
         {
             return this;
         }
@@ -66,7 +67,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * relation.Type;
          * </pre>
          */
-        IRelationType Type { get; }
+        new IRelationType Type { get; }
 
         /**
          * Adds a new role player to play the given role in this <code>IRelation</code>.

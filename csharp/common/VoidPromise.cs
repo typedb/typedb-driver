@@ -32,8 +32,7 @@ namespace Vaticle.Typedb.Driver.Common
      */
     public class VoidPromise
     {
-        private readonly Action _inner;
-
+        private readonly Action _resolver;
         /**
          * Promise constructor
          *
@@ -44,9 +43,9 @@ namespace Vaticle.Typedb.Driver.Common
          *
          * @param promise The function to wrap into the promise
          */
-        public Promise(Action inner)
+        public VoidPromise(Action resolver)
         {
-            _inner = inner;
+            _resolver = resolver;
         }
 
         /**
@@ -57,11 +56,11 @@ namespace Vaticle.Typedb.Driver.Common
          * promise.Resolve()
          * </pre>
          */
-        public void Resolve() // TODO: Maybe return a value here if it's more comfortable within the code!
+        private void Resolve()
         {
             try
             {
-                _inner();
+                _resolver();
             }
             catch (Pinvoke.Error e)
             {
@@ -79,17 +78,10 @@ namespace Vaticle.Typedb.Driver.Common
          *
          * @param promise The function to wrap into the promise
          * @param fn The mapping function
-         */ // TODO:
-//        static public<T, U> VoidPromise Map(Action promise, Func<T, U> fn)
-//        {
-//            return new VoidPromise(() ->
-//                {
-//                    T res = promise();
-//                    if (res != null)
-//                    {
-//                        fn(res);
-//                    }
-//                });
-//        }
+         */
+        static public VoidPromise Map<T, U>(Action action)
+        {
+            return new VoidPromise(action);
+        }
     }
 }

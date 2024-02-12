@@ -19,6 +19,7 @@
  * under the License.
  */
 
+using System;
 using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver.Api.Concept;
@@ -61,7 +62,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
         /**
          * {@inheritDoc}
          */
-        override bool IsType() 
+        new bool IsType() 
         {
             return true;
         }
@@ -69,7 +70,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
         /**
          * {@inheritDoc}
          */
-        override IType AsType()
+        new IType AsType()
         {
             return this;
         }
@@ -115,7 +116,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * Retrieves all direct and indirect subtypes of the type.
          * Equivalent to <code>GetSubtypes(transaction, Transitivity.TRANSITIVE)</code>
          *
-         * @see Type#GetSubtypes(ITypeDBTransaction, Transitivity)
+         * @see Type#GetSubtypes(ITypeDBTransaction, IConcept.Transitivity)
          */
         ICollection<IType> GetSubtypes(ITypeDBTransaction transaction);
 
@@ -132,7 +133,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes,
          *                     <code>Transitivity.EXPLICIT</code> for direct subtypes only
          */
-        ICollection<IType> GetSubtypes(ITypeDBTransaction transaction, Transitivity transitivity);
+        ICollection<IType> GetSubtypes(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
         /**
          * Deletes this type from the database.

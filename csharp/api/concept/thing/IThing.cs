@@ -21,11 +21,14 @@
 
 using System.Collections.Generic;
 
+using Vaticle.Typedb.Driver.Api.Concept;
 using Vaticle.Typedb.Driver.Api.Concept.Type;
+using Vaticle.Typedb.Driver.Api.Concept.Value;
+using Vaticle.Typedb.Driver.Common;
 
 namespace Vaticle.Typedb.Driver.Api.Concept.Thing
 {
-    public interface IThing : IConcept
+    public interface IThing : Vaticle.Typedb.Driver.Api.Concept.IConcept
     {
         /**
          * The unique id of the <code>IThing</code>.
@@ -65,7 +68,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Thing
          * thing.IsThing();
          * </pre>
          */
-        override bool IsThing() 
+        new bool IsThing() 
         {
             return true;
         }
@@ -78,7 +81,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Thing
          * thing.AsThing();
          * </pre>
          */
-        override Thing AsThing() 
+        new IThing AsThing()
         {
             return this;
         }
@@ -131,13 +134,13 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Thing
          * <h3>Examples</h3>
          * <pre>
          * thing.GetHas(transaction);
-         * thing.GetHas(transaction, new HashSet<Annotation>(){Annotation.NewKey()});
+         * thing.GetHas(transaction, new HashSet<IThingType.Annotation>(){IThingType.Annotation.NewKey()});
          * </pre>
          *
          * @param transaction The current transaction
          * @param annotations Only retrieve attributes with all given <code>Annotation</code>s
          */
-        ICollection<IAttribute> GetHas(ITypeDBTransaction transaction, ICollection<IAnnotation> annotations);
+        ICollection<IAttribute> GetHas(ITypeDBTransaction transaction, ICollection<IThingType.Annotation> annotations);
     
         /**
          * Retrieves all the <code>Relations</code> which this <code>IThing</code> plays a role in,
@@ -151,7 +154,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Thing
          * @param transaction The current transaction
          * @param roleTypes The array of roles to filter the relations by.
          */
-        ICollection<IRelation> GetRelations(ITypeDBTransaction transaction, ICollection<RoleType> roleTypes);
+        ICollection<IRelation> GetRelations(ITypeDBTransaction transaction, ICollection<IRoleType> roleTypes);
     
         /**
          * Retrieves the roles that this <code>IThing</code> is currently playing.
@@ -187,6 +190,6 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Thing
          *
          * @param transaction The current transaction
          */
-        Promise<Boolean> IsDeleted(ITypeDBTransaction transaction);
+        Promise<bool> IsDeleted(ITypeDBTransaction transaction);
     }
 }

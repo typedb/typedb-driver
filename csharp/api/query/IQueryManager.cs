@@ -19,7 +19,12 @@
  * under the License.
  */
 
+using System.Collections.Generic;
+
 using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Api.Answer;
+using Vaticle.Typedb.Driver.Api.Concept.Value;
+using Vaticle.Typedb.Driver.Api.Logic;
 using Vaticle.Typedb.Driver.Common;
 
 namespace Vaticle.Typedb.Driver.Api.Query 
@@ -232,9 +237,9 @@ namespace Vaticle.Typedb.Driver.Api.Query
         /**
          * Performs a TypeQL Explain query with default options.
          *
-         * @see IQueryManager#Explain(IConceptDictionary.Explainable, TypeDBOptions)
+         * @see IQueryManager#Explain(IConceptDictionary.IExplainable, TypeDBOptions)
          */
-        ICollection<Explanation> Explain(IConceptDictionary.Explainable explainable);
+        ICollection<IExplanation> Explain(IConceptDictionary.IExplainable explainable);
     
         /**
          * Performs a TypeQL Explain query in the transaction.
@@ -244,9 +249,9 @@ namespace Vaticle.Typedb.Driver.Api.Query
          * transaction.Query.Explain(explainable, options)
          * </pre>
          *
-         * @param explainable The Explainable to be explained
+         * @param explainable The IExplainable to be explained
          * @param options Specify query options
          */
-        ICollection<Explanation> Explain(IConceptDictionary.Explainable explainable, TypeDBOptions options);
+        ICollection<IExplanation> Explain(IConceptDictionary.IExplainable explainable, TypeDBOptions options);
     }
 }

@@ -22,6 +22,7 @@
 using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver;
+using Vaticle.Typedb.Driver.Api.Concept.Thing;
 using Vaticle.Typedb.Driver.Api.Concept.Type;
 using Vaticle.Typedb.Driver.Api.Concept;
 using Vaticle.Typedb.Driver.Common;
@@ -36,7 +37,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
         /**
          * {@inheritDoc}
          */
-        override bool isEntityType()
+        new bool isEntityType()
         {
             return true;
         }
@@ -44,7 +45,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
         /**
          * {@inheritDoc}
          */
-        override IEntityType AsEntityType()
+        new IEntityType AsEntityType()
         {
             return this;
         }
@@ -65,9 +66,9 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * Retrieves all <code>Entity</code> objects that are instances of this <code>IEntityType</code> or its subtypes.
          * Equivalent to <code>GetInstances(transaction, Transitivity.TRANSITIVE)</code>
          *
-         * @see IEntityType#GetInstances(ITypeDBTransaction, Transitivity)
+         * @see IEntityType#GetInstances(ITypeDBTransaction, IConcept.Transitivity)
          */
-        override ICollection<IEntity> GetInstances(ITypeDBTransaction transaction);
+        new ICollection<IEntity> GetInstances(ITypeDBTransaction transaction);
     
         /**
          * Retrieves <code>Entity</code> objects that are instances of this exact <code>IEntityType</code> OR
@@ -82,7 +83,8 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transitivity <code>Transitivity.EXPLICIT</code> for direct instances only,
          *                     <code>Transitivity.TRANSITIVE</code> to include subtypes
          */
-        override ICollection<IEntity> GetInstances(ITypeDBTransaction transaction, Transitivity transitivity);
+        new ICollection<IEntity> GetInstances(
+            ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
     
         /**
          * Retrieves all (direct and indirect) subtypes of the <code>IEntityType</code>.
@@ -90,7 +92,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          *
          * @see IEntityType#GetSubtypes(ITypeDBTransaction, Transitivity)
          */
-        override ICollection<IEntityType> GetSubtypes(ITypeDBTransaction transaction);
+        new ICollection<IEntityType> GetSubtypes(ITypeDBTransaction transaction);
     
         /**
          * Retrieves all direct and indirect (or direct only) subtypes of the <code>IEntityType</code>.
@@ -104,7 +106,8 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes,
          *                     <code>Transitivity.EXPLICIT</code> for direct subtypes only
          */
-        override ICollection<IEntityType> GetSubtypes(ITypeDBTransaction transaction, Transitivity transitivity);
+        new ICollection<IEntityType> GetSubtypes(
+            ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
     
         /**
          * Sets the supplied <code>IEntityType</code> as the supertype of the current <code>IEntityType</code>.
