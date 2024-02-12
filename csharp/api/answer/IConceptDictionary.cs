@@ -48,7 +48,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
          * conceptMap.AllConcepts;
          * </pre>
          */
-        ICollection<Concept> AllConcepts { get; }
+        ICollection<IConcept> AllConcepts { get; }
     
         /**
          * Returns the inner <code>Dictionary</code> where keys are query variables, and values are concepts.
@@ -153,7 +153,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
              * conceptMap.Explainables.AllOwnerships;
              * </pre>
              */
-            ICollection<KeyValuePair<KeyValuePair<string, string>, IExplainable>> AllOwnerships { get; };
+            ICollection<KeyValuePair<KeyValuePair<string, string>, IExplainable>> AllOwnerships { get; }
         }
     
         /**

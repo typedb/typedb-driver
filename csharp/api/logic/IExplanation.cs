@@ -23,6 +23,7 @@ using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver.Api.Concept;
 using Vaticle.Typedb.Driver.Api.Logic;
+using Vaticle.Typedb.Driver.Api.Answer;
 
 namespace Vaticle.Typedb.Driver.Api.Logic
 {
@@ -51,7 +52,7 @@ namespace Vaticle.Typedb.Driver.Api.Logic
          * explanation.Conclusion
          * </pre>
          */
-        ConceptDictionary Conclusion { get; }
+        IConceptDictionary Conclusion { get; }
 
         /**
          * Retrieves the Condition for this Explanation.
@@ -61,7 +62,7 @@ namespace Vaticle.Typedb.Driver.Api.Logic
          * explanation.Condition
          * </pre>
          */
-        ConceptDictionary Condition { get; }
+        IConceptDictionary Condition { get; }
 
         /**
          * Retrieves the query variables for this <code>Explanation</code>.

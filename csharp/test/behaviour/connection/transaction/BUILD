@@ -21,7 +21,7 @@
 
 package(default_visibility = ["//csharp/test/behaviour:__subpackages__"])
 
-load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
+load("//csharp:build_opts.bzl", "nullable_context", "target_frameworks", "targeting_packs")
 load("//csharp/test:rules.bzl", "csharp_behaviour_test")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 

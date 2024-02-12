@@ -23,6 +23,9 @@ using System;
 using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver.Api;
+using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Api.Logic;
+using Vaticle.Typedb.Driver.Api.Query;
 using Vaticle.Typedb.Driver.Common.Exception;
 using InternalError = Vaticle.Typedb.Driver.Common.Exception.Error.Internal;
 
@@ -38,7 +41,7 @@ namespace Vaticle.Typedb.Driver.Api
          * transaction.IsOpen()
          * </pre>
          */
-        bool IsOpen()
+        bool IsOpen();
 
         /**
          * The transaction’s type (READ or WRITE).

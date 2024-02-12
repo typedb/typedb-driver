@@ -423,16 +423,17 @@
 %noexception transaction_commit;
 %noexception transaction_rollback;
 
-
-%define %promise(Type, function_prefix)
-%typemap(csbody) Type ## Promise %{
+%define %promise(Prefix, Type, function_prefix)
+%typemap(csbody) Prefix ## Promise %{
     private global::System.Runtime.InteropServices.HandleRef swigCPtr;
     protected bool swigCMemOwn;
+    public readonly global::System.Func<Type> Resolver;
 
     internal $csclassname(global::System.IntPtr cPtr, bool cMemoryOwn)
     {
         swigCMemOwn = cMemoryOwn;
         swigCPtr = new global::System.Runtime.InteropServices.HandleRef(this, cPtr);
+        Resolver = Resolve;
     }
 
     internal static global::System.Runtime.InteropServices.HandleRef getCPtr($csclassname obj)
@@ -448,58 +449,69 @@
         return typedb_driver.function_prefix ## _promise_resolve(this); // TODO: This should throw errors seen in the C# Code!
     }
 %}
+
+%typemap(csdisposing, methodname="Dispose", methodmodifiers="protected", parameters="bool disposing") Prefix ## Promise %{{
+    lock(this)
+    {
+        if (swigCPtr.Handle != global::System.IntPtr.Zero)
+        {
+            if (swigCMemOwn)
+            {
+                swigCMemOwn = false;
+                Resolver(); // An equivalent for the standard "delete_xxxPromise".
+            }
+            swigCPtr = new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);
+        }
+    }
+}%}
 %enddef
 
-%promise(Concept, concept)
-%promise(Rule, rule)
-%promise(String, string)
+%promise(Concept, Concept, concept)
+%promise(Rule, Rule, rule)
+%promise(String, string, string)
+%promise(Bool, bool, bool)
 
-// TODO: Reimplement for C# -- ask Dmitrii why do we need dispose in java version here.
-///* void promises require special handling */
-//%typemap(csinterfaces) VoidPromise "java.util.function.Supplier<Void>";
-//%typemap(cscode) VoidPromise %{
-//    public override void get() {
-//        swigCMemOwn = false;
-//        try {
-//            typedb_driver.void_promise_resolve(this);
-//        } catch (Error e) {
-//            throw new Error.Unchecked(e);
-//        }
-//        return null;
-//    }
-//%}
-//%typemap(csdispose, methodname="delete", methodmodifiers="public [MethodImpl(MethodImplOptions.Synchronized)]") VoidPromise %{{
-//    if (swigCPtr != 0) {
-//        if (swigCMemOwn) {
-//            swigCMemOwn = false;
-//            get();
-//        }
-//        swigCPtr = 0;
-//    }
-//}%}
+/* void promises require special handling */
+%typemap(csbody) VoidPromise %{
+    private global::System.Runtime.InteropServices.HandleRef swigCPtr;
+    protected bool swigCMemOwn;
+    public readonly global::System.Action Resolver;
 
-// TODO: Reimplement for C#
-///* bool promises require special handling */
-//%typemap(csinterfaces) BoolPromise "java.util.function.Supplier<Boolean>";
-//%typemap(cscode) BoolPromise %{
-//    public override bool get() {
-//        swigCMemOwn = false;
-//        try {
-//            return typedb_driver.bool_promise_resolve(this);
-//        } catch (Error e) {
-//            throw new Error.Unchecked(e);
-//        }
-//    }
-//%}
-//%typemap(csdispose, methodname="delete", methodmodifiers="public [MethodImpl(MethodImplOptions.Synchronized)]") BoolPromise %{{
-//    if (swigCPtr != 0) {
-//        if (swigCMemOwn) {
-//            swigCMemOwn = false;
-//            get();
-//        }
-//        swigCPtr = 0;
-//    }
-//}%}
+    internal $csclassname(global::System.IntPtr cPtr, bool cMemoryOwn)
+    {
+        swigCMemOwn = cMemoryOwn;
+        swigCPtr = new global::System.Runtime.InteropServices.HandleRef(this, cPtr);
+        Resolver = Resolve;
+    }
+
+    internal static global::System.Runtime.InteropServices.HandleRef getCPtr($csclassname obj)
+    {
+        return (obj == null)
+            ? new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero)
+            : obj.swigCPtr;
+    }
+
+    public void Resolve()
+    {
+        swigCMemOwn = false;
+        typedb_driver.void_promise_resolve(this); // TODO: This should throw errors seen in the C# Code!
+    }
+%}
+
+%typemap(csdisposing, methodname="Dispose", methodmodifiers="protected", parameters="bool disposing") VoidPromise %{{
+    lock(this)
+    {
+        if (swigCPtr.Handle != global::System.IntPtr.Zero)
+        {
+            if (swigCMemOwn)
+            {
+                swigCMemOwn = false;
+                Resolver(); // An equivalent for the standard "delete_VoidPromise".
+            }
+            swigCPtr = new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);
+        }
+    }
+}%}
 
 %define %iterator(Type, CapitalizedType, FunctionPrefix)
 %typemap(csinterfaces) CapitalizedType ## Iterator "System.Collections.Generic.IEnumerator<Type>";

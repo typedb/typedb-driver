@@ -21,9 +21,10 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
+load("//csharp:build_opts.bzl", "nullable_context", "target_frameworks", "targeting_packs")
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+
 
 csharp_library(
     name = "common",
@@ -33,9 +34,11 @@ csharp_library(
     ]),
     deps = ["//csharp:typedb_driver_Pinvoke"],
     runtime_identifier = "any",
+    nullable = nullable_context,
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
 )
+
 
 checkstyle_test(
     name = "checkstyle",

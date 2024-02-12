@@ -21,6 +21,7 @@
 
 using System;
 
+using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Common.Exception;
 
 namespace Vaticle.Typedb.Driver.Common
@@ -32,7 +33,7 @@ namespace Vaticle.Typedb.Driver.Common
      */
     public class Promise<T>
     {
-        private readonly Func<T> _inner;
+        private readonly Func<T?> _resolver;
 
         /**
          * Promise constructor
@@ -44,9 +45,9 @@ namespace Vaticle.Typedb.Driver.Common
          *
          * @param promise The function to wrap into the promise
          */
-        public Promise(Func<T> inner)
+        private Promise(Func<T?> resolver)
         {
-            _inner = inner;
+            _resolver = resolver;
         }
 
         /**
@@ -57,11 +58,11 @@ namespace Vaticle.Typedb.Driver.Common
          * promise.Resolve()
          * </pre>
          */
-        public T Resolve()
+        public T? Resolve()
         {
             try
             {
-                return _inner();
+                return _resolver();
             }
             catch (Pinvoke.Error e)
             {
@@ -79,19 +80,19 @@ namespace Vaticle.Typedb.Driver.Common
          *
          * @param promise The function to wrap into the promise
          * @param fn The mapping function
-         */ // TODO:
-//        static public<T, U> Promise<U> Map(Func<T> promise, Func<T, U> fn)
-//        {
-//            return new Promise<>(() ->
-//                {
-//                    T res = promise();
-//                    if (res != null)
-//                    {
-//                        return fn(res);
-//                    }
-//
-//                    return null;
-//                });
-//        }
+         */
+        static public Promise<T> Map<U>(Func<U?> resolver, Func<U, T> creator)
+        {
+            return new Promise<T>(() =>
+                {
+                    U res = resolver();
+                    if (res != null)
+                    {
+                        return creator(res);
+                    }
+
+                    return default;
+                });
+        }
     }
 }

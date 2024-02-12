@@ -37,8 +37,8 @@ namespace Vaticle.Typedb.Driver.Api.Answer
 //                return new JSON.String(value.asString());
 //            } else if (value.isNumber()) {
 //                return new JSON.Number(value.asFloat());
-//            } else if (value.isBoolean()) {
-//                return new JSON.Boolean(value.asBoolean());
+//            } else if (value.isbool()) {
+//                return new JSON.bool(value.asbool());
 //            } else if (value.isNull()) {
 //                return new JSON.Null();
 //            } else {
@@ -46,23 +46,23 @@ namespace Vaticle.Typedb.Driver.Api.Answer
 //            }
 //        }
 //
-//        public boolean isObject() {
+//        public bool isObject() {
 //            return false;
 //        }
 //
-//        public boolean isArray() {
+//        public bool isArray() {
 //            return false;
 //        }
 //
-//        public boolean isNumber() {
+//        public bool isNumber() {
 //            return false;
 //        }
 //
-//        public boolean isString() {
+//        public bool isString() {
 //            return false;
 //        }
 //
-//        public boolean isBoolean() {
+//        public bool isbool() {
 //            return false;
 //        }
 //
@@ -82,8 +82,8 @@ namespace Vaticle.Typedb.Driver.Api.Answer
 //            throw new TypeDBDriverException(ILLEGAL_CAST, className(java.lang.String.class));
 //        }
 //
-//        public boolean asBoolean() {
-//            throw new TypeDBDriverException(ILLEGAL_CAST, className(boolean.class));
+//        public bool asbool() {
+//            throw new TypeDBDriverException(ILLEGAL_CAST, className(bool.class));
 //        }
 //
 //        private static java.lang.String indent(java.lang.String string) {
@@ -97,7 +97,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
 //                this.object = object;
 //            }
 //
-//            public boolean isObject() {
+//            public bool isObject() {
 //                return true;
 //            }
 //
@@ -107,7 +107,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
 //            }
 //
 //            @Override
-//            public boolean equals(java.lang.Object obj) {
+//            public bool equals(java.lang.Object obj) {
 //                if (obj == this) return true;
 //                if (obj == null || getClass() != obj.getClass()) return false;
 //                JSON.Object that = (JSON.Object) obj;
@@ -122,7 +122,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
 //            @Override
 //            public java.lang.String toString() {
 //                Map<java.lang.String, JSON> jsonObject = asObject();
-//                boolean singleLine = jsonObject.containsKey("root") // this is a type
+//                bool singleLine = jsonObject.containsKey("root") // this is a type
 //                        || jsonObject.containsKey("value");  // this is a value or an attribute
 //
 //                List<java.lang.String> orderedKeys = jsonObject.keySet().stream().sorted((s1, s2) -> {
@@ -154,7 +154,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
 //                this.array = array;
 //            }
 //
-//            public boolean isArray() {
+//            public bool isArray() {
 //                return true;
 //            }
 //
@@ -163,7 +163,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
 //            }
 //
 //            @Override
-//            public boolean equals(java.lang.Object obj) {
+//            public bool equals(java.lang.Object obj) {
 //                if (obj == this) return true;
 //                if (obj == null || getClass() != obj.getClass()) return false;
 //                JSON.Array that = (JSON.Array) obj;
@@ -195,7 +195,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
 //                this.number = number;
 //            }
 //
-//            public boolean isNumber() {
+//            public bool isNumber() {
 //                return true;
 //            }
 //
@@ -204,7 +204,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
 //            }
 //
 //            @Override
-//            public boolean equals(java.lang.Object obj) {
+//            public bool equals(java.lang.Object obj) {
 //                if (obj == this) return true;
 //                if (obj == null || getClass() != obj.getClass()) return false;
 //                JSON.Number that = (JSON.Number) obj;
@@ -234,7 +234,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
 //                this.string = string;
 //            }
 //
-//            public boolean isString() {
+//            public bool isString() {
 //                return true;
 //            }
 //
@@ -243,7 +243,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
 //            }
 //
 //            @Override
-//            public boolean equals(java.lang.Object obj) {
+//            public bool equals(java.lang.Object obj) {
 //                if (obj == this) return true;
 //                if (obj == null || getClass() != obj.getClass()) return false;
 //                JSON.String that = (JSON.String) obj;
@@ -261,44 +261,44 @@ namespace Vaticle.Typedb.Driver.Api.Answer
 //            }
 //        }
 //
-//        private static class Boolean extends JSON {
-//            private final boolean aBoolean;
+//        private static class bool extends JSON {
+//            private final bool abool;
 //
-//            Boolean(boolean aBoolean) {
-//                this.aBoolean = aBoolean;
+//            bool(bool abool) {
+//                this.abool = abool;
 //            }
 //
-//            public boolean isBoolean() {
+//            public bool isbool() {
 //                return true;
 //            }
 //
-//            public boolean asBoolean() {
-//                return aBoolean;
+//            public bool asbool() {
+//                return abool;
 //            }
 //
 //            @Override
-//            public boolean equals(java.lang.Object obj) {
+//            public bool equals(java.lang.Object obj) {
 //                if (obj == this) return true;
 //                if (obj == null || getClass() != obj.getClass()) return false;
-//                JSON.Boolean that = (JSON.Boolean) obj;
-//                return this.aBoolean == that.aBoolean;
+//                JSON.bool that = (JSON.bool) obj;
+//                return this.abool == that.abool;
 //            }
 //
 //            @Override
 //            public int hashCode() {
-//                return java.lang.Boolean.hashCode(aBoolean);
+//                return java.lang.bool.hashCode(abool);
 //            }
 //
 //            @Override
 //            public java.lang.String toString() {
-//                return java.lang.Boolean.toString(aBoolean);
+//                return java.lang.bool.toString(abool);
 //            }
 //        }
 //
 //        private static class Null extends JSON {
 //
 //            @Override
-//            public boolean equals(java.lang.Object obj) {
+//            public bool equals(java.lang.Object obj) {
 //                if (obj == this) return true;
 //                return obj != null && getClass() == obj.getClass();
 //            }

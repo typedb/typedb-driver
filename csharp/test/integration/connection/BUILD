@@ -19,7 +19,6 @@
 # under the License.
 #
 
-load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs")
 load("//csharp/test:rules.bzl", "csharp_integration_test")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
