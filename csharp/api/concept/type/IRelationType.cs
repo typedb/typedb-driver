@@ -38,7 +38,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
         /**
          * {@inheritDoc}
          */
-        override bool IsRelationType()
+        new bool IsRelationType()
         {
             return true;
         }
@@ -46,7 +46,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
         /**
          * {@inheritDoc}
          */
-        override IRelationType AsRelationType()
+        new IRelationType AsRelationType()
         {
             return this;
         }
@@ -67,9 +67,9 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * Retrieves all <code>Relation</code> objects that are instances of this <code>IRelationType</code> or its subtypes.
          * Equivalent to <code>GetInstances(transaction, Transitivity.TRANSITIVE)</code>
          *
-         * @see IRelationType#GetInstances(ITypeDBTransaction, Transitivity)
+         * @see IRelationType#GetInstances(ITypeDBTransaction, IConcept.Transitivity)
          */
-        override ICollection<IRelation> GetInstances(ITypeDBTransaction transaction);
+        new ICollection<IRelation> GetInstances(ITypeDBTransaction transaction);
     
     
         /**
@@ -85,12 +85,13 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect instances,
          *                     <code>Transitivity.EXPLICIT</code> for direct relates only
          */
-        override ICollection<IRelation> GetInstances(ITypeDBTransaction transaction, Transitivity transitivity);
+        new ICollection<IRelation> GetInstances(
+            ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
     
         /**
          * Retrieves roles that this <code>IRelationType</code> relates to directly or via inheritance.
          *
-         * @see IRelationType#getRelates(ITypeDBTransaction, Transitivity)
+         * @see IRelationType#getRelates(ITypeDBTransaction, IConcept.Transitivity)
          */
         ICollection<IRoleType> GetRelates(ITypeDBTransaction transaction);
     
@@ -103,13 +104,14 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * </pre>
          *
          * @param transaction The current transaction
-         * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and inherited relates, <code>Transitivity.EXPLICIT</code> for direct relates only
+         * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and inherited relates,
+         *                     <code>Transitivity.EXPLICIT</code> for direct relates only
          */
-        ICollection<IRoleType> GetRelates(ITypeDBTransaction transaction, Transitivity transitivity);
+        ICollection<IRoleType> GetRelates(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
     
         /**
          * Retrieves roles that this <code>IRelationType</code> relates to directly or via inheritance.
-         * If <code>role_label</code> is given, returns a corresponding <code>RoleType</code> or <code>null</code>.
+         * If <code>role_label</code> is given, returns a corresponding <code>IRoleType</code> or <code>null</code>.
          *
          * <h3>Examples</h3>
          * <pre>
@@ -122,14 +124,14 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
         Promise<IRoleType> GetRelates(ITypeDBTransaction transaction, string roleLabel);
 
         /**
-         * Retrieves a <code>RoleType</code> that is overridden by the role with the <code>role_label</code>.
+         * Retrieves a <code>IRoleType</code> that is overridden by the role with the <code>role_label</code>.
          *
          * @see IRelationType#GetRelatesOverridden(ITypeDBTransaction, string)
          */
         Promise<IRoleType> GetRelatesOverridden(ITypeDBTransaction transaction, IRoleType roleType);
     
         /**
-         * Retrieves a <code>RoleType</code> that is overridden by the role with the <code>role_label</code>.
+         * Retrieves a <code>IRoleType</code> that is overridden by the role with the <code>role_label</code>.
          *
          * <h3>Examples</h3>
          * <pre>
@@ -176,7 +178,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          *
          * @see IRelationType#UnsetRelates(ITypeDBTransaction, string)
          */
-        VoidPromise UnsetRelates(ITypeDBTransaction transaction, RoleType roleType);
+        VoidPromise UnsetRelates(ITypeDBTransaction transaction, IRoleType roleType);
     
         /**
          * Disallows this <code>IRelationType</code> from relating to the given role.
@@ -195,9 +197,9 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * Retrieves all direct and indirect subtypes of the <code>IRelationType</code>.
          * Equivalent to <code>GetSubtypes(transaction, Transitivity.TRANSITIVE)</code>
          * 
-         * @see IRelationType#GetSubtypes(ITypeDBTransaction, Transitivity)
+         * @see IRelationType#GetSubtypes(ITypeDBTransaction, IConcept.Transitivity)
          */
-        override ICollection<IRelationType> GetSubtypes(ITypeDBTransaction transaction);
+        new ICollection<IRelationType> GetSubtypes(ITypeDBTransaction transaction);
     
         /**
          * Retrieves all direct and indirect (or direct only) subtypes of the <code>IRelationType</code>.
@@ -208,9 +210,11 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * </pre>
          *
          * @param transaction The current transaction
-         * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes, <code>Transitivity.EXPLICIT</code> for direct subtypes only
+         * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes,
+         *                     <code>Transitivity.EXPLICIT</code> for direct subtypes only
          */
-        override ICollection<IRelationType> GetSubtypes(ITypeDBTransaction transaction, Transitivity transitivity);
+        new ICollection<IRelationType> GetSubtypes(
+            ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
     
         /**
          * Sets the supplied <code>IRelationType</code> as the supertype of the current <code>IRelationType</code>.

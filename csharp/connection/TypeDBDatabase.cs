@@ -191,19 +191,19 @@ namespace Vaticle.Typedb.Driver.Connection
                 : base(replicaInfo)
             {}
 
+            public bool IsPrimary()
+            {
+                return Pinvoke.typedb_driver.replica_info_is_primary(NativeObject);
+            }
+
+            public bool IsPreferred()
+            {
+                return Pinvoke.typedb_driver.replica_info_is_preferred(NativeObject);
+            }
+
             public string Address
             {
                 get { return Pinvoke.typedb_driver.replica_info_get_address(NativeObject); }
-            }
-
-            public bool IsPrimary
-            {
-                get { return Pinvoke.typedb_driver.replica_info_is_primary(NativeObject); }
-            }
-
-            public bool IsPreferred
-            {
-                get { return Pinvoke.typedb_driver.replica_info_is_preferred(NativeObject); }
             }
 
             public long Term

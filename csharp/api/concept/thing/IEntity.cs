@@ -40,7 +40,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Thing
          * entity.IsEntity();
          * </pre>
          */
-        override bool IsEntity()
+        new bool IsEntity()
         {
             return true;
         }
@@ -53,7 +53,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Thing
          * entity.AsEntity();
          * </pre>
          */
-        override IEntity AsEntity()
+        new IEntity AsEntity()
         {
             return this;
         }
@@ -66,6 +66,6 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Thing
          * entity.Type;
          * </pre>
          */
-        override IEntityType Type { get; }
+        new IEntityType Type { get; }
     }
 }

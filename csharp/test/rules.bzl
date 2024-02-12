@@ -21,6 +21,7 @@
 
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_library", "csharp_test")
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_nunit_test")
+load("//csharp:build_opts.bzl", "nullable_context")
 load("//csharp/test:build_opts.bzl", "behaviour_tests_deps")
 
 
@@ -44,7 +45,7 @@ def csharp_behaviour_test(
         target_frameworks = target_frameworks,
         targeting_packs = targeting_packs,
         runtime_identifier = "any",
-        nullable = "enable",
+        nullable = nullable_context,
         visibility = ["//visibility:public"],
         **kwargs,
     )
@@ -58,7 +59,7 @@ def csharp_integration_test(name, srcs, deps, target_frameworks, targeting_packs
         target_frameworks = target_frameworks,
         targeting_packs = targeting_packs,
         runtime_identifier = "any",
-        nullable = "enable",
+        nullable = nullable_context,
         visibility = ["//visibility:public"],
         **kwargs,
     )

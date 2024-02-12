@@ -119,20 +119,20 @@ namespace Vaticle.Typedb.Driver.Api.Database
             public string Address { get; }
 
             /**
+             * The raft protocol ‘term’ of this replica.
+             */
+            public long Term { get; }
+
+            /**
              * Checks whether this is the primary replica of the raft cluster.
              */
-            public bool IsPrimary()
+            public bool IsPrimary();
 
             /**
              * Checks whether this is the preferred replica of the raft cluster.
              * If true, Operations which can be run on any replica will prefer to use this replica.
              */
-            public bool IsPreferred()
-
-            /**
-             * The raft protocol ‘term’ of this replica.
-             */
-            public long Term { get; }
+            public bool IsPreferred();
         }
     }
 }

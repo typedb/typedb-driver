@@ -22,8 +22,9 @@
 using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api.Concept.Type;
 using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Api.Concept.Type;
+using Vaticle.Typedb.Driver.Api.Concept.Thing;
 using Vaticle.Typedb.Driver.Common;
 
 namespace Vaticle.Typedb.Driver.Api.Concept.Type
@@ -37,7 +38,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
         /**
          * {@inheritDoc}
          */
-        override bool IsRoleType()
+        new bool IsRoleType()
         {
             return true;
         }
@@ -45,7 +46,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
         /**
          * {@inheritDoc}
          */
-        override IRoleType AsRoleType()
+        new IRoleType AsRoleType()
         {
             return this;
         }
@@ -60,7 +61,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          *
          * @param transaction The current transaction
          */
-        override Promise<IRoleType> GetSupertype(ITypeDBTransaction transaction);
+        new Promise<IRoleType> GetSupertype(ITypeDBTransaction transaction);
     
         /**
          * Retrieves all supertypes of the <code>IRoleType</code>.
@@ -72,14 +73,14 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          *
          * @param transaction The current transaction
          */
-        override ICollection<IRoleType> GetSupertypes(ITypeDBTransaction transaction);
+        new ICollection<IRoleType> GetSupertypes(ITypeDBTransaction transaction);
         /**
          * Retrieves all direct and indirect subtypes of the <code>IRoleType</code>.
          * Equivalent to <code>GetSubtypes(transaction, Transitivity.TRANSITIVE)</code>
          *
-         * @see IRoleType#GetSubtypes(ITypeDBTransaction, Transitivity)
+         * @see IRoleType#GetSubtypes(ITypeDBTransaction, IConcept.Transitivity)
          */
-        override ICollection<IRoleType> GetSubtypes(ITypeDBTransaction transaction);
+        new ICollection<IRoleType> GetSubtypes(ITypeDBTransaction transaction);
     
         /**
          * Retrieves all direct and indirect (or direct only) subtypes of the <code>IRoleType</code>.
@@ -93,7 +94,8 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes,
          *                     <code>Transitivity.EXPLICIT</code> for direct subtypes only
          */
-        override ICollection<IRoleType> GetSubtypes(ITypeDBTransaction transaction, Transitivity transitivity);
+        new ICollection<IRoleType> GetSubtypes(
+            ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
     
         /**
          * Retrieves the <code>RelationType</code> that this role is directly related to.
@@ -105,7 +107,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          *
          * @param transaction The current transaction
          */
-        override Promise<IRelationType> GetRelationType(ITypeDBTransaction transaction);
+        new Promise<IRelationType> GetRelationType(ITypeDBTransaction transaction);
     
         /**
          * Retrieves <code>RelationType</code>s that this role is related to (directly or indirectly).
@@ -123,7 +125,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * Retrieves the <code>ThingType</code>s whose instances play this role.
          * Equivalent to <code>GetPlayerTypes(transaction, Transitivity.TRANSITIVE)</code>.
          *
-         * @see IRoleType#GetPlayerTypes(ITypeDBTransaction, Transitivity)
+         * @see IRoleType#GetPlayerTypes(ITypeDBTransaction, IConcept.Transitivity)
          */
         ICollection<IThingType> GetPlayerTypes(ITypeDBTransaction transaction);
     
@@ -139,13 +141,13 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect playing,
          *                     <code>Transitivity.EXPLICIT</code> for direct playing only
          */
-        ICollection<IThingType> GetPlayerTypes(ITypeDBTransaction transaction, Transitivity transitivity);
+        ICollection<IThingType> GetPlayerTypes(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
     
         /**
          * Retrieves the <code>Relation</code> instances that this role is related to.
-         * Equivalent to <code></code>GetRelationInstances(transaction, Transitivity.TRANSITIVE)</code>
+         * Equivalent to <code>GetRelationInstances(transaction, Transitivity.TRANSITIVE)</code>
          *
-         * @see IRoleType#GetRelationInstances(ITypeDBTransaction, Transitivity)
+         * @see IRoleType#GetRelationInstances(ITypeDBTransaction, IConcept.Transitivity)
          */
         ICollection<IRelation> GetRelationInstances(ITypeDBTransaction transaction);
     
@@ -160,12 +162,13 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transaction The current transaction
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect relation, <code>Transitivity.EXPLICIT</code> for direct relation only
          */
-        ICollection<IRelation> GetRelationInstances(ITypeDBTransaction transaction, Transitivity transitivity);
+        ICollection<IRelation> GetRelationInstances(
+            ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
     
         /**
          * Retrieves the <code>Thing</code> instances that play this role.
          *
-         * @see IRoleType#GetPlayerInstances(ITypeDBTransaction, Transitivity)
+         * @see IRoleType#GetPlayerInstances(ITypeDBTransaction, IConcept.Transitivity)
          */
         ICollection<IThing> GetPlayerInstances(ITypeDBTransaction transaction);
     
@@ -181,6 +184,6 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect playing,
          *                     <code>Transitivity.EXPLICIT</code> for direct playing only
          */
-        ICollection<IThing> GetPlayerInstances(ITypeDBTransaction transaction, Transitivity transitivity);
+        ICollection<IThing> GetPlayerInstances(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
     }
 }

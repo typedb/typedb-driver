@@ -24,7 +24,10 @@ using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
+using Vaticle.Typedb.Driver.Api.Concept;
 using Vaticle.Typedb.Driver.Api.Database;
+using Vaticle.Typedb.Driver.Api.Logic;
+using Vaticle.Typedb.Driver.Api.Query;
 using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Common.Exception;
 using DriverError = Vaticle.Typedb.Driver.Common.Exception.Error.Driver;
@@ -36,10 +39,9 @@ namespace Vaticle.Typedb.Driver.Connection
         private readonly TransactionType _type;
         private readonly TypeDBOptions _options;
 
-// TODO:
-//        private readonly IConceptManager _conceptManager;
-//        private readonly ILogicManager _logicManager;
-//        private readonly IQueryManager _queryManager;
+        private readonly IConceptManager _conceptManager;
+        private readonly ILogicManager _logicManager;
+        private readonly IQueryManager _queryManager;
 
         private readonly List<TransactionOnClose> _callbacks;
 
@@ -48,7 +50,7 @@ namespace Vaticle.Typedb.Driver.Connection
         {
             _type = type;
             _options = options;
-
+// TODO:
 //            _conceptManager = new ConceptManager(NativeObject);
 //            _logicManager = new LogicManager(NativeObject);
 //            _queryManager = new QueryManager(NativeObject);

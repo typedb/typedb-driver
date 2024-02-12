@@ -21,10 +21,13 @@
 
 using System.Collections.Generic;
 
+using Vaticle.Typedb.Driver.Api.Concept.Thing;
+using Vaticle.Typedb.Driver.Api.Concept.Type;
+using Vaticle.Typedb.Driver.Api.Concept.Value;
 using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Common.Exception;
 
-namespace Vaticle.TypeDb.Driver.Api.Concept
+namespace Vaticle.Typedb.Driver.Api.Concept
 {
     /**
      * Provides access for all Concept API methods.
@@ -135,7 +138,7 @@ namespace Vaticle.TypeDb.Driver.Api.Concept
          * @param label The label of the <code>IAttributeType</code> to create or retrieve
          * @param valueType The value type of the <code>IAttributeType</code> to create
          */
-        Promise<IAttributeType> PutAttributeType(string label, IValue.Type valueType);
+        Promise<IAttributeType> PutAttributeType(string label, IValue.ValueType valueType);
 
         /**
          * Retrieves an <code>IEntity</code> by its iid.

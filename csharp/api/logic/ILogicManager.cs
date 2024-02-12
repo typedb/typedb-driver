@@ -39,7 +39,7 @@ namespace Vaticle.Typedb.Driver.Api.Logic
          * transaction.Logic.Rules
          * </pre>
          */
-        ICollection<IRule> Rules { get; };
+        ICollection<IRule> Rules { get; }
 
         /**
          * Retrieves the Rule that has the given label.
@@ -61,10 +61,10 @@ namespace Vaticle.Typedb.Driver.Api.Logic
          * transaction.Logic.PutRule(label, when, then).Resolve()
          * </pre>
          *
-         * @param label The label of the Rule to create or replace
+         * @param label The label of the IRule to create or replace
          * @param when  The when body of the rule to create
          * @param then  The then body of the rule to create
          */
-        Promise<Rule> PutRule(string label, string when, string then);
+        Promise<IRule> PutRule(string label, string when, string then);
     }
 }

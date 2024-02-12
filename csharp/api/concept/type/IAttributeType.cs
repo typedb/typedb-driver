@@ -22,6 +22,7 @@
 using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver;
+using Vaticle.Typedb.Driver.Api.Concept.Thing;
 using Vaticle.Typedb.Driver.Api.Concept.Value;
 using Vaticle.Typedb.Driver.Api.Concept;
 using Vaticle.Typedb.Driver.Common;
@@ -40,19 +41,19 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
     public interface IAttributeType : IThingType
     {
         /**
-         * The <code>IValue.Type</code> of this <code>IAttributeType</code>.
+         * The <code>IValue.ValueType</code> of this <code>IAttributeType</code>.
          *
          * <h3>Examples</h3>
          * <pre>
          * attributeType.ValueType;
          * </pre>
          */
-        IValue.Type ValueType { get; }
+        IValue.ValueType ValueType { get; }
 
         /**
          * {@inheritDoc}
          */
-        override bool IsAttributeType()
+        new bool IsAttributeType()
         {
             return true;
         }
@@ -60,7 +61,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
         /**
          * {@inheritDoc}
          */
-        override IAttributeType AsAttributeType()
+        new IAttributeType AsAttributeType()
         {
             return this;
         }
@@ -76,7 +77,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transaction The current transaction
          * @param value New <code>IAttribute</code>’s value
          */
-        Promise<IAttribute> Put(ITypeDBTransaction transaction, Value value);
+        Promise<IAttribute> Put(ITypeDBTransaction transaction, IValue value);
 
         /**
          * Adds and returns an <code>IAttribute</code> of this <code>IAttributeType</code>
@@ -280,9 +281,9 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * attributeType.IsBoolean();
          * </pre>
          */
-        default bool IsBoolean() 
+        bool IsBoolean()
         {
-            return ValueType == IValue.Type.BOOLEAN;
+            return ValueType == IValue.ValueType.BOOLEAN;
         }
 
         /**
@@ -294,9 +295,9 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * attributeType.IsLong();
          * </pre>
          */
-        default bool IsLong() 
+        bool IsLong()
         {
-            return ValueType == IValue.Type.LONG;
+            return ValueType == IValue.ValueType.LONG;
         }
 
         /**
@@ -310,7 +311,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          */
         bool IsDouble() 
         {
-            return ValueType == IValue.Type.DOUBLE;
+            return ValueType == IValue.ValueType.DOUBLE;
         }
 
         /**
@@ -324,7 +325,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          */
         bool Isstring() 
         {
-            return ValueType == IValue.Type.STRING;
+            return ValueType == IValue.ValueType.STRING;
         }
 
         /**
@@ -338,7 +339,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          */
         bool IsDateTime()
         {
-            return ValueType == IValue.Type.DATETIME;
+            return ValueType == IValue.ValueType.DATETIME;
         }
 
         /**
@@ -364,11 +365,11 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          *
          * @param transaction The current transaction
          */
-        override ICollection<IAttributeType> GetSubtypes(ITypeDBTransaction transaction);
+        new ICollection<IAttributeType> GetSubtypes(ITypeDBTransaction transaction);
 
         /**
          * Retrieves all direct and indirect subtypes of this <code>IAttributeType</code>
-         * with given <code>IValue.Type</code>.
+         * with given <code>IValue.ValueType</code>.
          *
          * <h3>Examples</h3>
          * <pre>
@@ -376,13 +377,13 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * </pre>
          *
          * @param transaction The current transaction
-         * @param valueType <code>IValue.Type</code> for retrieving subtypes
+         * @param valueType <code>IValue.ValueType</code> for retrieving subtypes
          */
-        ICollection<IAttributeType> GetSubtypes(ITypeDBTransaction transaction, IValue.Type valueType);
+        ICollection<IAttributeType> GetSubtypes(ITypeDBTransaction transaction, IValue.ValueType valueType);
 
         /**
          * Retrieves all direct and indirect (or direct only) subtypes of this <code>IAttributeType</code>
-         * with given <code>IValue.Type</code>.
+         * with given <code>IValue.ValueType</code>.
          *
          * <h3>Examples</h3>
          * <pre>
@@ -390,14 +391,14 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * </pre>
          *
          * @param transaction The current transaction
-         * @param valueType <code>IValue.Type</code> for retrieving subtypes
+         * @param valueType <code>IValue.ValueType</code> for retrieving subtypes
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes,
          *                     <code>Transitivity.EXPLICIT</code> for direct subtypes only
          */
         ICollection<IAttributeType> GetSubtypes(
             ITypeDBTransaction transaction, 
-            IValue.Type valueType,
-            Transitivity transitivity);
+            IValue.ValueType valueType,
+            IConcept.Transitivity transitivity);
 
         /**
          * Retrieves all direct and indirect (or direct only) subtypes of this <code>IAttributeType</code>.
@@ -411,7 +412,8 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes,
          *                     <code>Transitivity.EXPLICIT</code> for direct subtypes only
          */
-        override ICollection<IAttributeType> GetSubtypes(ITypeDBTransaction transaction, Transitivity transitivity);
+        new ICollection<IAttributeType> GetSubtypes(
+            ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
         /**
          * Retrieves all direct and indirect <code>IAttributes</code>
@@ -424,7 +426,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          *
          * @param transaction The current transaction
          */
-        override ICollection<IAttribute> GetInstances(ITypeDBTransaction transaction);
+        new ICollection<IAttribute> GetInstances(ITypeDBTransaction transaction);
 
         /**
          * Retrieves all direct and indirect (or direct only) <code>IAttributes</code>
@@ -439,7 +441,8 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes,
          *                     <code>Transitivity.EXPLICIT</code> for direct subtypes only
          */
-        override ICollection<IAttribute> GetInstances(ITypeDBTransaction transaction, Transitivity transitivity);
+        new ICollection<IAttribute> GetInstances(
+            ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
         /**
          * Retrieve all <code>Things</code> that own an attribute of this <code>IAttributeType</code>
@@ -481,7 +484,8 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and inherited ownership,
          *                     <code>Transitivity.EXPLICIT</code> for direct ownership only
          */
-        ICollection<IThingType> GetOwners(ITypeDBTransaction transaction, Transitivity transitivity);
+        ICollection<IThingType> GetOwners(
+            ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
         /**
          * Retrieve all <code>Things</code> that own an attribute of this <code>IAttributeType</code>,
@@ -501,6 +505,6 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
         ICollection<IThingType> GetOwners(
             ITypeDBTransaction transaction, 
             ICollection<Annotation> annotations,
-            Transitivity transitivity);
+            IConcept.Transitivity transitivity);
     }
 }

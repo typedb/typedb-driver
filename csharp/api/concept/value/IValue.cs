@@ -19,7 +19,13 @@
  * under the License.
  */
 
+using System;
+
+using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Api.Concept.Thing;
+using Vaticle.Typedb.Driver.Api.Concept.Type;
+using Vaticle.Typedb.Driver.Api.Concept.Value;
 using Vaticle.Typedb.Driver.Common.Exception;
 using InternalError = Vaticle.Typedb.Driver.Common.Exception.Error.Internal;
 
@@ -30,7 +36,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Value
         /**
          * {@inheritDoc}
          */
-        override bool IsValue
+        new bool IsValue()
         {
             return true;
         }
@@ -38,13 +44,13 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Value
         /**
          * {@inheritDoc}
          */
-        override IValue AsValue()
+        new IValue AsValue()
         {
-            return true;
+            return this;
         }
 
         /**
-         * Retrieves the <code>IValue.Type</code> of this value concept.
+         * Retrieves the <code>IValue.ValueType</code> of this value concept.
          *
          * <h3>Examples</h3>
          * <pre>
@@ -103,10 +109,10 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Value
          *
          * <h3>Examples</h3>
          * <pre>
-         * value.IsSystem.DateTime();
+         * value.IsDateTime();
          * </pre>
          */
-        bool IsSystem.DateTime();
+        bool IsDateTime();
 
         /**
          * Returns an untyped <code>object</code> value of this value concept.
@@ -167,26 +173,26 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Value
          *
          * <h3>Examples</h3>
          * <pre>
-         * value.AsSystem.DateTime();
+         * value.AsDateTime();
          * </pre>
          */
-        System.DateTime AsSystem.DateTime();
+        System.DateTime AsDateTime();
 
-        public class Type
+        public class ValueType
         {
-            public static Type OBJECT = new Type(object.GetType(), false, false, Pinvoke.ValueType.Object);
-            public static Type BOOLEAN = new Type(bool.GetType(), true, false, Pinvoke.ValueType.Boolean);
-            public static Type LONG = new Type(long.GetType(), true, true, Pinvoke.ValueType.Long);
-            public static Type DOUBLE = new Type(double.GetType(), true, false, Pinvoke.ValueType.Double);
-            public static Type STRING = new Type(string.GetType(), true, true, Pinvoke.ValueType.String);
-            public static Type DATETIME = new Type(System.DateTime.GetType(), true, true, Pinvoke.ValueType.DateTime);
+            public static ValueType OBJECT = new ValueType(typeof(object), false, false, Pinvoke.ValueType.Object);
+            public static ValueType BOOLEAN = new ValueType(typeof(bool), true, false, Pinvoke.ValueType.Boolean);
+            public static ValueType LONG = new ValueType(typeof(long), true, true, Pinvoke.ValueType.Long);
+            public static ValueType DOUBLE = new ValueType(typeof(double), true, false, Pinvoke.ValueType.Double);
+            public static ValueType STRING = new ValueType(typeof(string), true, true, Pinvoke.ValueType.String);
+            public static ValueType DATETIME = new ValueType(typeof(System.DateTime), true, true, Pinvoke.ValueType.DateTime);
 
             public System.Type ValueClass { get; }
             public bool IsWritable { get; }
             public bool IsKeyable { get; }
             public Pinvoke.ValueType NativeObject { get; }
 
-            private Type(
+            private ValueType(
                 System.Type valueClass,
                 bool isWritable,
                 bool isKeyable,

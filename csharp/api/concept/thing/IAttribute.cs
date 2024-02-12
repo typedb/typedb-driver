@@ -22,6 +22,7 @@
 using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver.Api.Concept.Type;
+using Vaticle.Typedb.Driver.Api.Concept.Value;
 
 namespace Vaticle.Typedb.Driver.Api.Concept.Thing
 {
@@ -40,7 +41,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Thing
          * attribute.Type;
          * </pre>
          */
-        override IAttributeType Type { get; }
+        new IAttributeType Type { get; }
 
         /**
          * Checks if the concept is an <code>IAttribute</code>.
@@ -50,7 +51,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Thing
          * attribute.IsAttribute();
          * </pre>
          */
-        override bool IsAttribute() 
+        new bool IsAttribute() 
         {
             return true;
         }
@@ -63,7 +64,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Thing
          * attribute.AsAttribute();
          * </pre>
          */
-        override IAttribute AsAttribute() 
+        new IAttribute AsAttribute() 
         {
             return this;
         }
