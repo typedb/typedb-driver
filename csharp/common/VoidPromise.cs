@@ -38,7 +38,7 @@ namespace Vaticle.Typedb.Driver.Common
          *
          * <h3>Examples</h3>
          * <pre>
-         * new Promise(supplier)
+         * new Promise(action);
          * </pre>
          *
          * @param promise The function to wrap into the promise
@@ -53,7 +53,7 @@ namespace Vaticle.Typedb.Driver.Common
          *
          * <h3>Examples</h3>
          * <pre>
-         * promise.Resolve()
+         * promise.Resolve();
          * </pre>
          */
         private void Resolve()
@@ -73,7 +73,7 @@ namespace Vaticle.Typedb.Driver.Common
          *
          * <h3>Examples</h3>
          * <pre>
-         * Promise.map(supplier, mapper);
+         * Promise.Map(action);
          * </pre>
          *
          * @param promise The function to wrap into the promise

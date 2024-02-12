@@ -89,15 +89,15 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.Equal(expectedMessage, exception.Message);
         }
 
-//        public static List<IConceptDictionary> Answers()
+//        public static List<IConceptMap> Answers()
 //        {
 //            return answers;
 //        }
 //
-//        private static List<IConceptDictionary> _answers;
+//        private static List<IConceptMap> _answers;
 //        private static List<JSON> _fetchAnswers;
 //        private static Value? _valueAnswer;
-//        private static List<IConceptDictionaryGroup> _answerGroups;
+//        private static List<IConceptMapGroup> _answerGroups;
 //        private static List<IValueGroup> _valueAnswerGroups;
 //        private Dictionary<string, Dictionary<string, string>> _rules;
     }
