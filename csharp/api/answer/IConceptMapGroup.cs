@@ -28,7 +28,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
     /**
      * Contains an element of the group query result.
      */
-    public interface IConceptDictionaryGroup
+    public interface IConceptMapGroup
     {
         /**
          * Retrieves the concept that is the group owner.
@@ -41,13 +41,13 @@ namespace Vaticle.Typedb.Driver.Api.Answer
         IConcept Owner { get; }
 
         /**
-         * Retrieves the <code>ConceptDictionary</code>s of the group.
+         * Retrieves the <code>ConceptMap</code>s of the group.
          *
          * <h3>Examples</h3>
          * <pre>
          * conceptMapGroup.ConceptDictionaries;
          * </pre>
          */
-        ICollection<IConceptDictionary> ConceptDictionaries { get; }
+        ICollection<IConceptMap> ConceptDictionaries { get; }
     }
 }

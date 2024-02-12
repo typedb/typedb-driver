@@ -28,10 +28,10 @@ namespace Vaticle.Typedb.Driver.Api.Answer
     /**
      * Contains a mapping of variables to concepts.
      */
-    public interface IConceptDictionary
+    public interface IConceptMap
     {
         /**
-         * Returns a collection of all variables in this <code>IConceptDictionary</code>.
+         * Returns a collection of all variables in this <code>IConceptMap</code>.
          *
          * <h3>Examples</h3>
          * <pre>
@@ -41,7 +41,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
         ICollection<string> AllVariables { get; }
     
         /**
-         * Returns a collection of all concepts in this <code>IConceptDictionary</code>.
+         * Returns a collection of all concepts in this <code>IConceptMap</code>.
          *
          * <h3>Examples</h3>
          * <pre>
@@ -73,8 +73,8 @@ namespace Vaticle.Typedb.Driver.Api.Answer
         IConcept Get(string variable);
     
         /**
-         * Gets the <code>IExplainables</code> object for this <code>IConceptDictionary</code>, exposing
-         * which of the concepts in this <code>IConceptDictionary</code> are explainable.
+         * Gets the <code>IExplainables</code> object for this <code>IConceptMap</code>, exposing
+         * which of the concepts in this <code>IConceptMap</code> are explainable.
          *
          * <h3>Examples</h3>
          * <pre>
@@ -126,7 +126,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
             IExplainable Ownership(string owner, string attribute);
     
             /**
-             * Retrieves all of this <code>IConceptDictionary</code>’s explainable relations.
+             * Retrieves all of this <code>IConceptMap</code>’s explainable relations.
              *
              * <h3>Examples</h3>
              * <pre>
@@ -136,7 +136,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
             ICollection<KeyValuePair<string, IExplainable>> AllRelations { get; }
     
             /**
-             * Retrieves all of this <code>IConceptDictionary</code>’s explainable attributes.
+             * Retrieves all of this <code>IConceptMap</code>’s explainable attributes.
              *
              * <h3>Examples</h3>
              * <pre>
@@ -146,7 +146,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
             ICollection<KeyValuePair<string, IExplainable>> AllAttributes { get; }
     
             /**
-             * Retrieves all of this <code>IConceptDictionary</code>’s explainable ownerships.
+             * Retrieves all of this <code>IConceptMap</code>’s explainable ownerships.
              *
              * <h3>Examples</h3>
              * <pre>
