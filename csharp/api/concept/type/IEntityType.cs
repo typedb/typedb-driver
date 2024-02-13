@@ -37,7 +37,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
         /**
          * {@inheritDoc}
          */
-        new bool isEntityType()
+        new bool IsEntityType()
         {
             return true;
         }

@@ -36,24 +36,17 @@ namespace Vaticle.Typedb.Driver.Connection
 {
     public class TypeDBTransaction : NativeObjectWrapper<Pinvoke.Transaction>, ITypeDBTransaction
     {
-        private readonly TransactionType _type;
-        private readonly TypeDBOptions _options;
-
-        private readonly IConceptManager _conceptManager;
-        private readonly ILogicManager _logicManager;
-        private readonly IQueryManager _queryManager;
-
         private readonly List<TransactionOnClose> _callbacks;
 
         public TypeDBTransaction(TypeDBSession session, TransactionType type, TypeDBOptions options)
             : base(NewNative(session, type, options))
         {
-            _type = type;
-            _options = options;
-// TODO:
-//            _conceptManager = new ConceptManager(NativeObject);
-//            _logicManager = new LogicManager(NativeObject);
-//            _queryManager = new QueryManager(NativeObject);
+            Type = type;
+            Options = options;
+
+            Concepts = new ConceptManager(NativeObject);
+            Logic = new LogicManager(NativeObject);
+            Query = new QueryManager(NativeObject);
 
             _callbacks = new List<TransactionOnClose>();
         }
@@ -72,36 +65,21 @@ namespace Vaticle.Typedb.Driver.Connection
             }
         }
 
-        public TransactionType Type
-        {
-            get { return _type; }
-        }
+        public TransactionType Type { get; }
 
-        public TypeDBOptions Options
-        {
-            get { return _options; }
-        }
+        public TypeDBOptions Options { get; }
+
+        public IConceptManager Concepts { get; }
+
+        public ILogicManager Logic { get; }
+
+        public IQueryManager Query { get; }
 
         public bool IsOpen()
         {
             return NativeObject.IsOwned()
                 ? Pinvoke.typedb_driver.transaction_is_open(NativeObject)
                 : false;
-        }
-
-        public IConceptManager Concepts
-        {
-            get { return _conceptManager; }
-        }
-
-        public ILogicManager Logic
-        {
-            get { return _logicManager; }
-        }
-
-        public IQueryManager Query
-        {
-            get { return _queryManager; }
         }
 
         public void OnClose(Action<Exception> function)

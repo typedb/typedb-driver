@@ -19,31 +19,26 @@
  * under the License.
  */
 
-using System;
+using Vaticle.Typedb.Driver.Api.Concept.Thing;
+using Vaticle.Typedb.Driver.Concept.Type;
 
-using Vaticle.Typedb.Driver.Common.Exception;
-
-namespace Vaticle.Typedb.Driver.Util
+namespace Vaticle.Typedb.Driver.Concept.Thing
 {
-    public static class InputChecker
+    public class Entity : Thing, IEntity
     {
-        public static void ThrowIfFalse(
-            Func<bool> checker,
-            ErrorMessage errorMessage,
-            params object?[] exceptionArgs)
+        public Entity(Pinvoke.Concept nativeConcept)
+            : base(nativeConcept)
         {
-            if (!checker)
-            {
-                throw new TypeDBDriverException(errorMessage, exceptionArgs);
-            }
         }
 
-        public static void NonEmptyString(
-            string input,
-            ErrorMessage errorMessage,
-            params object?[] exceptionArgs)
+        public IEntityType Type
         {
-            ThrowIfFalse(() => string.IsNullOrEmpty(input), errorMessage, exceptionArgs);
+            get { return new EntityType(Pinvoke.typedb_driver.entity_get_type(NativeObject)); }
+        }
+
+        public sealed IEntity AsEntity()
+        {
+            return this;
         }
     }
 }

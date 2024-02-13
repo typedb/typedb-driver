@@ -59,7 +59,7 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
             return Pinvoke.typedb_driver.concept_map_group_to_string(NativeObject);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (Object.ReferenceEquals(this, obj))
             {

@@ -40,7 +40,7 @@ using QueryError = Vaticle.Typedb.Driver.Common.Exception.Error.Query;
 
 namespace Vaticle.Typedb.Driver.Query
 {
-    public class QueryManager : IQueryManager 
+    public sealed class QueryManager : IQueryManager
     {
         private Pinvoke.Transaction _nativeTransaction { get; }
 
@@ -272,7 +272,7 @@ namespace Vaticle.Typedb.Driver.Query
 
         private void CheckTransaction()
         {
-            if (!_nativeTransaction.isOwned())
+            if (!_nativeTransaction.IsOwned())
             {
                 throw new TypeDBDriverException(DriverError.TRANSACTION_CLOSED);
             }

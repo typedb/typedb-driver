@@ -184,6 +184,6 @@ namespace Vaticle.Typedb.Driver.Api.Concept
          * transaction.Concepts.SchemaExceptions
          * </pre>
          */
-        List<TypeDBException> SchemaExceptions { get; }
+        ICollection<TypeDBException> SchemaExceptions { get; }
     }
 }
