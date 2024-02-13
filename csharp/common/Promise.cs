@@ -75,20 +75,20 @@ namespace Vaticle.Typedb.Driver.Common
          *
          * <h3>Examples</h3>
          * <pre>
-         * Promise.Map(supplier, selector);
+         * Promise.Map<T, U>(supplier, selector);
          * </pre>
          *
          * @param promise The function to wrap into the promise
          * @param fn The mapping function
          */
-        static public Promise<T> Map<U>(Func<U?> resolver, Func<U, T> selector)
+        public static Promise<T> Map<T, U>(Func<U?> resolver, Func<U, T> selector)
         {
             return new Promise<T>(() =>
                 {
-                    U res = resolver();
+                    U? res = resolver();
                     if (res != null)
                     {
-                        return selector(res);
+                        return selector(res!);
                     }
 
                     return default;

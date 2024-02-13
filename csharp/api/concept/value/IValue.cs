@@ -181,7 +181,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Value
         public class ValueType
         {
             public static ValueType OBJECT = new ValueType(typeof(object), false, false, Pinvoke.ValueType.Object);
-            public static ValueType BOOLEAN = new ValueType(typeof(bool), true, false, Pinvoke.ValueType.Boolean);
+            public static ValueType BOOL = new ValueType(typeof(bool), true, false, Pinvoke.ValueType.Bool);
             public static ValueType LONG = new ValueType(typeof(long), true, true, Pinvoke.ValueType.Long);
             public static ValueType DOUBLE = new ValueType(typeof(double), true, false, Pinvoke.ValueType.Double);
             public static ValueType STRING = new ValueType(typeof(string), true, true, Pinvoke.ValueType.String);

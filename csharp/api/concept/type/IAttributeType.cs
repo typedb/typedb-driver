@@ -248,7 +248,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
         /**
          * ICollections a regular expression as a constraint for this <code>IAttributeType</code>. <code>Values</code>
          * of all <code>IAttribute</code>s of this type (inserted earlier or later) should match this regex.
-         * <p>Can only be applied for <code>IAttributeType</code>s with a <code>string</code> value type.
+         * <p>Can only be applied for <code>IAttributeType</code>s with a <code>string</code> value type.</p>
          *
          * <h3>Examples</h3>
          * <pre>
@@ -278,12 +278,12 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          *
          * <h3>Examples</h3>
          * <pre>
-         * attributeType.IsBoolean();
+         * attributeType.IsBool();
          * </pre>
          */
-        bool IsBoolean()
+        bool IsBool()
         {
-            return ValueType == IValue.ValueType.BOOLEAN;
+            return ValueType == IValue.ValueType.BOOL;
         }
 
         /**

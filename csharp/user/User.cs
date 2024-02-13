@@ -19,48 +19,50 @@
  * under the License.
  */
 
-using System;
+using System.Collections.Generic;
 
+using Vaticle.Typedb.Driver;
+using Vaticle.Typedb.Driver.Api.User;
+using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Common.Exception;
 
-namespace Vaticle.Typedb.Driver.Common
+namespace Vaticle.Typedb.Driver.User
 {
-    /**
-     * A <code>VoidPromise</code> represents an asynchronous network operation without a return type.
-     * <p>The request it represents is performed immediately. The response is only retrieved
-     * once the <code>Promise</code> is <code>Resolve</code>d, but it is always null.</p> // TODO Change this description!
-     */
-    public class VoidPromise
+    public class User : NativeObjectWrapper<Pinvoke.User>, IUser 
     {
-        private readonly Action _resolver;
-        /**
-         * Promise constructor
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * new Promise(action);
-         * </pre>
-         *
-         * @param promise The function to wrap into the promise
-         */
-        public VoidPromise(Action resolver)
+        private readonly UserManager _users;
+
+        User(Pinvoke.User nativeUser, UserManager users)
+            : base(nativeUser) 
         {
-            _resolver = resolver;
+            _users = users;
         }
 
-        /**
-         * Retrieves the result of the Promise.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * promise.Resolve();
-         * </pre>
-         */
-        private void Resolve()
+        public string Username 
+        {
+            get { return Pinvoke.typedb_driver.user_get_username(NativeObject); }
+        }
+
+        public long? PasswordExpirySeconds
+        {
+            get
+            {
+                long res = Pinvoke.typedb_driver.user_get_password_expiry_seconds(NativeObject);
+                if (res >= 0)
+                {
+                    return res;
+                }
+
+                return null;
+            }
+        }
+
+        public void UpdatePassword(string passwordOld, string passwordNew)
         {
             try
             {
-                _resolver();
+                Pinvoke.typedb_driver.user_password_update(
+                    NativeObject, _users.NativeObject, passwordOld, passwordNew);
             }
             catch (Pinvoke.Error e)
             {

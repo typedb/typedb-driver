@@ -91,7 +91,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
 //        }
 //
 //        private static class Object extends JSON {
-//            private final Map<java.lang.String, JSON> object;
+//            private sealed Map<java.lang.String, JSON> object;
 //
 //            Object(Map<java.lang.String, JSON> object) {
 //                this.object = object;
@@ -148,7 +148,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
 //        }
 //
 //        private static class Array extends JSON {
-//            private final List<JSON> array;
+//            private sealed List<JSON> array;
 //
 //            Array(List<JSON> array) {
 //                this.array = array;
@@ -189,7 +189,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
 //        }
 //
 //        private static class Number extends JSON {
-//            private final double number;
+//            private sealed double number;
 //
 //            Number(double number) {
 //                this.number = number;
@@ -228,7 +228,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
 //        }
 //
 //        private static class String extends JSON {
-//            private final java.lang.String string;
+//            private sealed java.lang.String string;
 //
 //            String(java.lang.String string) {
 //                this.string = string;
@@ -262,7 +262,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
 //        }
 //
 //        private static class bool extends JSON {
-//            private final bool abool;
+//            private sealed bool abool;
 //
 //            bool(bool abool) {
 //                this.abool = abool;

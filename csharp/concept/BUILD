@@ -30,6 +30,7 @@ java_library(
     deps = [
         "//csharp/api:api",
         "//csharp/common:common",
+        "//csharp/util:util",
     ],
 )
 

@@ -68,7 +68,7 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
             return Pinvoke.typedb_driver.value_group_to_string(NativeObject);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (Object.ReferenceEquals(this, obj))
             {
@@ -82,8 +82,7 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
 
             ValueGroup that = (ValueGroup)obj;
 
-            return Pinvoke.typedb_driver.value_group_equals(
-                this.NativeObject, that.NativeObject);
+            return Pinvoke.typedb_driver.value_group_equals(this.NativeObject, that.NativeObject);
         }
 
         public override int GetHashCode()
