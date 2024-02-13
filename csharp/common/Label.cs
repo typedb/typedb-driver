@@ -120,7 +120,7 @@ namespace Vaticle.Typedb.Driver.Common
          *
          * @param obj Object to compare with
          */
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (Object.ReferenceEquals(this, obj))
             {

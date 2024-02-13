@@ -136,18 +136,17 @@ namespace Vaticle.Typedb.Driver.Api
      * driver.Session(database, SessionType.SCHEMA);
      * </pre>
      */
-    public class SessionType
+    public class SessionType : NativeObjectWrapper<Pinvoke.SessionType>
     {
         public int Id { get; }
-        public Pinvoke.SessionType NativeObject { get; }
 
         public static readonly SessionType DATA = new SessionType(1, Pinvoke.SessionType.Data);
         public static readonly SessionType SCHEMA = new SessionType(2, Pinvoke.SessionType.Schema);
 
         private SessionType(int id, Pinvoke.SessionType nativeObject)
+            : base(nativeObject)
         {
             Id = id;
-            NativeObject = nativeObject;
         }
     }
 }

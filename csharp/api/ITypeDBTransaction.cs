@@ -26,6 +26,7 @@ using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Api.Concept;
 using Vaticle.Typedb.Driver.Api.Logic;
 using Vaticle.Typedb.Driver.Api.Query;
+using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Common.Exception;
 using InternalError = Vaticle.Typedb.Driver.Common.Exception.Error.Internal;
 
@@ -33,16 +34,6 @@ namespace Vaticle.Typedb.Driver.Api
 {
     public interface ITypeDBTransaction : IDisposable
     {
-        /**
-         * Checks whether this transaction is open.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * transaction.IsOpen()
-         * </pre>
-         */
-        bool IsOpen();
-
         /**
          * The transaction’s type (READ or WRITE).
          *
@@ -61,7 +52,7 @@ namespace Vaticle.Typedb.Driver.Api
          * transaction.Options
          * </pre>
          */
-        public TypeDBOptions Options { get; }
+        TypeDBOptions Options { get; }
 
         /**
          * The <code>ConceptManager</code> for this transaction, providing access to all Concept API methods.
@@ -92,6 +83,16 @@ namespace Vaticle.Typedb.Driver.Api
          * </pre>
          */
         IQueryManager Query { get; }
+
+        /**
+         * Checks whether this transaction is open.
+         *
+         * <h3>Examples</h3>
+         * <pre>
+         * transaction.IsOpen()
+         * </pre>
+         */
+        bool IsOpen();
 
         /**
          * Registers a callback function which will be executed when this transaction is closed.
@@ -145,18 +146,17 @@ namespace Vaticle.Typedb.Driver.Api
      * session.Transaction(TransactionType.READ);
      * </pre>
      */
-    public class TransactionType
+    public class TransactionType : NativeObjectWrapper<Pinvoke.TransactionType>
     {
         public int Id { get; }
-        public Pinvoke.TransactionType NativeObject { get; }
 
         public static readonly TransactionType READ = new TransactionType(1, Pinvoke.TransactionType.Read);
         public static readonly TransactionType WRITE = new TransactionType(2, Pinvoke.TransactionType.Write);
 
         private TransactionType(int id, Pinvoke.TransactionType nativeObject)
+            : base(nativeObject)
         {
             Id = id;
-            NativeObject = nativeObject;
         }
     }
 }

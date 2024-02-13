@@ -32,6 +32,7 @@ csharp_library(
         "//csharp/api:api",
         "//csharp/common:common",
         "//csharp/concept:concept",
+        "//csharp/util:util",
     ],
 )
 

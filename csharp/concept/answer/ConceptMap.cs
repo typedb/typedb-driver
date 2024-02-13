@@ -102,7 +102,7 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
             return Pinvoke.typedb_driver.concept_map_to_string(NativeObject);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (Object.ReferenceEquals(this, obj))
             {
@@ -232,7 +232,7 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
                 return Pinvoke.typedb_driver.explainables_to_string(NativeObject);
             }
 
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (Object.ReferenceEquals(this, obj))
                 {
@@ -291,7 +291,7 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
                 return "Explainable { id: " + Id + ", conjunction: " + Conjunction + " }";
             }
 
-            public override bool Equals(object obj) 
+            public override bool Equals(object? obj)
             {
                 if (Object.ReferenceEquals(this, obj))
                 {
@@ -310,7 +310,7 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
     
             public override int GetHashCode() 
             {
-                return (int)id();
+                return (int)Id;
             }
         }
     }

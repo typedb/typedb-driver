@@ -422,10 +422,10 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
              *
              * <h3>Examples</h3>
              * <pre>
-             * annotation.toString();
+             * annotation.ToString();
              * </pre>
              */
-            public new string ToString()
+            public override string ToString()
             {
                 return Pinvoke.typedb_driver.annotation_to_string(NativeObject);
             }
@@ -440,7 +440,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
              *
              * @param obj Object to compare with
              */
-            public new bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (Object.ReferenceEquals(this, obj))
                 {
@@ -457,7 +457,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
                 return Pinvoke.typedb_driver.annotation_equals(this.NativeObject, that.NativeObject);
             }
 
-            public new int GetHashCode()
+            public override int GetHashCode()
             {
                 return _hash;
             }
