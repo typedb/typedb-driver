@@ -31,6 +31,7 @@ thread_local! {
     static LAST_ERROR: RefCell<Option<Error>> = RefCell::new(None);
 }
 
+/// Enables logging in the TypeDB driver.
 #[no_mangle]
 pub extern "C" fn init_logging() {
     const ENV_VAR: &str = "TYPEDB_DRIVER_LOG_LEVEL";
@@ -82,26 +83,32 @@ fn record_error(err: Error) {
     LAST_ERROR.with(|prev| *prev.borrow_mut() = Some(err));
 }
 
+/// Checks if the error flag was set by the last operation.
+/// If true, the error can be retrieved using \ref get_last_error(void)
 #[no_mangle]
 pub extern "C" fn check_error() -> bool {
     LAST_ERROR.with(|prev| prev.borrow().is_some())
 }
 
+/// Returns the error which set the error flag.
 #[no_mangle]
 pub extern "C" fn get_last_error() -> *mut Error {
     LAST_ERROR.with(|prev| release_optional(prev.borrow_mut().take()))
 }
 
+/// Frees the native rust <code>Error</code> object
 #[no_mangle]
 pub extern "C" fn error_drop(error: *mut Error) {
     free(error);
 }
 
+/// Returns the error code of the <code>Error</code> object
 #[no_mangle]
 pub extern "C" fn error_code(error: *const Error) -> *mut c_char {
     unsafe { release_string((*error).code()) }
 }
 
+/// Returns the error message of the <code>Error</code> object
 #[no_mangle]
 pub extern "C" fn error_message(error: *const Error) -> *mut c_char {
     unsafe { release_string((*error).message()) }
