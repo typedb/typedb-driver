@@ -28,11 +28,19 @@ use super::{
     memory::{borrow, free, release, string_array_view, string_view},
 };
 
+/// Open a TypeDB Driver to a TypeDB Core server available at the provided address.
+///
+/// @param address The address of the TypeDB server
 #[no_mangle]
 pub extern "C" fn connection_open_core(address: *const c_char) -> *mut Connection {
     try_release(Connection::new_core(string_view(address)))
 }
 
+/// Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using
+/// the provided credential.
+///
+/// @param addresses The address(es) of the TypeDB server(s)
+/// @param credential The Credential to connect with
 #[no_mangle]
 pub extern "C" fn connection_open_cloud(
     addresses: *const *const c_char,
@@ -42,21 +50,30 @@ pub extern "C" fn connection_open_cloud(
     try_release(Connection::new_cloud(&addresses, borrow(credential).clone()))
 }
 
+/// Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
 #[no_mangle]
 pub extern "C" fn connection_close(connection: *mut Connection) {
     free(connection);
 }
 
+/// Checks whether this connection is presently open.
 #[no_mangle]
 pub extern "C" fn connection_is_open(connection: *const Connection) -> bool {
     borrow(connection).is_open()
 }
 
+/// Forcibly closes the driver. To be used in exceptional cases.
 #[no_mangle]
 pub extern "C" fn connection_force_close(connection: *mut Connection) {
     unwrap_void(borrow(connection).force_close());
 }
 
+/// Creates a new <code>Credential</code> for connecting to TypeDB Cloud.
+///
+/// @param username The name of the user to connect as
+/// @param password The password for the user
+/// @param tls_root_ca Path to the CA certificate to use for authenticating server certificates.
+/// @param with_tls Specify whether the connection to TypeDB Cloud must be done over TLS
 #[no_mangle]
 pub extern "C" fn credential_new(
     username: *const c_char,
@@ -74,6 +91,7 @@ pub extern "C" fn credential_new(
     }
 }
 
+/// Frees the native rust <code>Credential</code> object
 #[no_mangle]
 pub extern "C" fn credential_drop(credential: *mut Credential) {
     free(credential);
