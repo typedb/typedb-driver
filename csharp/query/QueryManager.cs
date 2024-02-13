@@ -281,7 +281,7 @@ namespace Vaticle.Typedb.Driver.Query
         private void CheckQueryAndTransaction(string query)
         {
             CheckTransaction();
-            InputChecker.NonEmptyString<TypeDBDriverException>(name, QueryError.MISSING_QUERY);
+            InputChecker.NonEmptyString(name, QueryError.MISSING_QUERY);
         }
     }
 }

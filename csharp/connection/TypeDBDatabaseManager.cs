@@ -53,7 +53,7 @@ namespace Vaticle.Typedb.Driver.Connection
 
         public IDatabase Get(string name)
         {
-            InputChecker.NonEmptyString<TypeDBDriverException>(name, ConceptError.MISSING_DB_NAME);
+            InputChecker.NonEmptyString(name, DriverError.MISSING_DB_NAME);
 
             try
             {
@@ -67,7 +67,7 @@ namespace Vaticle.Typedb.Driver.Connection
 
         public bool Contains(string name)
         {
-            InputChecker.NonEmptyString<TypeDBDriverException>(name, ConceptError.MISSING_DB_NAME);
+            InputChecker.NonEmptyString(name, DriverError.MISSING_DB_NAME);
 
             try
             {
@@ -81,7 +81,7 @@ namespace Vaticle.Typedb.Driver.Connection
 
         public void Create(string name)
         {
-            InputChecker.NonEmptyString<TypeDBDriverException>(name, ConceptError.MISSING_DB_NAME);
+            InputChecker.NonEmptyString(name, DriverError.MISSING_DB_NAME);
 
             try
             {
