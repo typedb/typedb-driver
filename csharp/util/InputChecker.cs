@@ -21,17 +21,20 @@
 
 using System;
 
+using Vaticle.Typedb.Driver.Common.Exception;
+
 namespace Vaticle.Typedb.Driver.Util
 {
     public static class InputChecker
     {
-        public static void NonEmptyString<TException>(
+        public static void NonEmptyString(
             string input,
-            params object[] exceptionArgs) where TException : new()
+            ErrorMessage errorMessage,
+            params object?[] exceptionArgs)
         {
             if (string.IsNullOrEmpty(input))
             {
-                throw new TException(exceptionArgs);
+                throw new TypeDBDriverException(errorMessage, exceptionArgs);
             }
         }
     }
