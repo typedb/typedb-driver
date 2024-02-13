@@ -461,7 +461,7 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    test-cpp-behaviour-connection-core:
+    test-cpp-behaviour-core:
       image: vaticle-ubuntu-22.04
       dependencies:
         - build
@@ -493,7 +493,7 @@ build:
         tool/test/stop-core-server.sh
         exit $TEST_SUCCESS
 
-    test-cpp-behaviour-connection-cloud:
+    test-cpp-behaviour-cloud:
       image: vaticle-ubuntu-22.04
       dependencies:
         - build
@@ -534,7 +534,9 @@ build:
         - build-dependency
         - build-docs
         - test-rust-unit-integration
-        - test-rust-behaviour
+        - test-rust-behaviour-minimal
+        - test-rust-behaviour-query-read
+        - test-rust-behaviour-query-write
         - test-c-integration
         - test-java-integration
         - test-java-behaviour-core
