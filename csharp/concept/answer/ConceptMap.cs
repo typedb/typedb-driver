@@ -81,7 +81,7 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
     
         public override IConcept Get(string variable)
         {
-            InputChecker.NonEmptyString<TypeDBDriverException>(variable, ConceptError.MISSING_VARIABLE);
+            InputChecker.NonEmptyString(variable, ConceptError.MISSING_VARIABLE);
 
             Pinvoke.Concept concept = Pinvoke.typedb_driver.concept_map_get(NativeObject, variable);
             if (concept == null)
@@ -146,7 +146,7 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
     
             public override IExplainable Relation(string variable)
             {
-                InputChecker.NonEmptyString<TypeDBDriverException>(variable, ConceptError.MISSING_VARIABLE);
+                InputChecker.NonEmptyString(variable, ConceptError.MISSING_VARIABLE);
 
                 Pinvoke.Explainable explainable =
                     Pinvoke.typedb_driver.explainables_get_relation(NativeObject, variable);
@@ -160,7 +160,7 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
     
             public override IExplainable Attribute(string variable)
             {
-                InputChecker.NonEmptyString<TypeDBDriverException>(variable, ConceptError.MISSING_VARIABLE);
+                InputChecker.NonEmptyString(variable, ConceptError.MISSING_VARIABLE);
 
                 Pinvoke.Explainable explainable =
                     Pinvoke.typedb_driver.explainables_get_attribute(NativeObject, variable);
@@ -174,8 +174,8 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
     
             public override IExplainable Ownership(string , string attribute)
             {
-                InputChecker.NonEmptyString<TypeDBDriverException>(owner, ConceptError.MISSING_VARIABLE);
-                InputChecker.NonEmptyString<TypeDBDriverException>(attribute, ConceptError.MISSING_VARIABLE);
+                InputChecker.NonEmptyString(owner, ConceptError.MISSING_VARIABLE);
+                InputChecker.NonEmptyString(attribute, ConceptError.MISSING_VARIABLE);
 
                 Pinvoke.Explainable explainable =
                     Pinvoke.typedb_driver.explainables_get_ownership(NativeObject, owner, attribute);
