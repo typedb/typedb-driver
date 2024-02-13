@@ -83,6 +83,8 @@ pub(super) fn string_view(str: *const c_char) -> &'static str {
     unsafe { CStr::from_ptr(str).to_str().unwrap() }
 }
 
+/// Frees the native rust string.
+/// _Using the standard C free function will create a dangling reference on the rust side_
 #[no_mangle]
 pub extern "C" fn string_free(str: *mut c_char) {
     trace!("Freeing <CString> @ {:?}", str);
