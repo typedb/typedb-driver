@@ -94,6 +94,10 @@ commands:
           sudo mv "bazelisk-darwin-<<parameters.bazel-arch>>" /usr/local/bin/bazel
           chmod a+x /usr/local/bin/bazel
 
+  install-brew-rosetta:
+    steps:
+      - run: arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
   ###########################
   # Python deployment steps #
   ###########################
@@ -129,6 +133,23 @@ commands:
           tool/test/stop-core-server.sh
           exit $TEST_SUCCESS
 
+  test-pip-snapshot-mac-rosetta:
+    steps:
+      - install-brew-rosetta
+      - run: |
+          /usr/local/bin/brew install python@3.8
+          tool/test/start-core-server.sh
+          /usr/local/bin/python3.8 -m pip install wheel 
+          /usr/local/bin/python3.8 -m pip install pip==21.3.1
+          /usr/local/bin/python3.8 -m pip install -r python/requirements_dev.txt
+          /usr/local/bin/python3.8 -m pip install --extra-index-url https://repo.typedb.com/public/public-snapshot/python/simple typedb-driver==0.0.0+$(git rev-parse HEAD)
+          sleep 3
+          pushd python/tests/deployment/
+            /usr/local/bin/python3.8 -m unittest test && export TEST_SUCCESS=0 || export TEST_SUCCESS=1
+          popd
+          tool/test/stop-core-server.sh
+          exit $TEST_SUCCESS
+
   deploy-pip-release-unix:
     steps:
       - install-pip-requirements
@@ -148,6 +169,11 @@ commands:
   install-maven-mac:
     steps:
       - run: brew install maven
+
+  install-maven-mac-rosetta:
+    steps:
+      - install-brew-rosetta
+      - run: /usr/local/bin/brew install maven
 
   install-maven-linux:
     steps:
@@ -174,6 +200,15 @@ commands:
           sed -i -e "s/DRIVER_JAVA_VERSION_MARKER/0.0.0-$CIRCLE_SHA1/g" java/test/deployment/pom.xml
           cat java/test/deployment/pom.xml
           (cd java/test/deployment && mvn test)
+          tool/test/stop-core-server.sh
+
+  test-maven-snapshot-mac-rosetta:
+    steps:
+      - run: |
+          tool/test/start-core-server.sh
+          sed -i -e "s/DRIVER_JAVA_VERSION_MARKER/0.0.0-$CIRCLE_SHA1/g" java/test/deployment/pom.xml
+          cat java/test/deployment/pom.xml
+          (cd java/test/deployment && /usr/local/bin/mvn test)
           tool/test/stop-core-server.sh
 
   deploy-maven-jni-release-unix:
@@ -529,9 +564,9 @@ jobs:
       - checkout
       - install-bazel-brew:
           bazel-arch: amd64
-      - test-pip-snapshot-unix
-      - install-maven-mac
-      - test-maven-snapshot-unix
+      - test-pip-snapshot-mac-rosetta
+      - install-maven-mac-rosetta
+      - test-maven-snapshot-mac-rosetta
 
   test-snapshot-windows-x86_64:
     executor:
