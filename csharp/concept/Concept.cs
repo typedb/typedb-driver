@@ -19,8 +19,6 @@
  * under the License.
  */
 
-package com.vaticle.typedb.driver.concept;
-
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Api.Concept;
 using Vaticle.Typedb.Driver.Common;

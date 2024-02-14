@@ -21,17 +21,23 @@
 
 package(default_visibility = ["//visibility:public"])
 
+load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
+load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs", "nullable_context")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 
-java_library(
+csharp_library(
     name = "concept",
-    srcs = glob(["*.cs", "*/*.cs"], exclude=["test/**"]),
+    srcs = glob(["*.cs", "*/*.cs"]),
     deps = [
         "//csharp/api:api",
         "//csharp/common:common",
         "//csharp/util:util",
+        "//csharp:typedb_driver_Pinvoke",
     ],
+    nullable = nullable_context,
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
 )
 
 

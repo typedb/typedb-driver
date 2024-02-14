@@ -21,7 +21,8 @@
 
 package(default_visibility = ["//visibility:public"])
 
-
+load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
+load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs", "nullable_context")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 
@@ -29,10 +30,13 @@ csharp_library(
     name = "user",
     srcs = glob(["*.cs"], exclude=["test/**"]),
     deps = [
-        # Internal dependencies
         "//csharp/api:api",
         "//csharp/common:common",
+        "//csharp:typedb_driver_Pinvoke",
     ],
+    nullable = nullable_context,
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
 )
 
 

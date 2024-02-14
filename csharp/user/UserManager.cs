@@ -84,12 +84,20 @@ namespace Vaticle.Typedb.Driver.User
             }
         }
 
-        public User Get(string username) {
-            try {
+        public IUser Get(string username)
+        {
+            try
+            {
                 Pinvoke.User user = Pinvoke.typedb_driver.users_get(NativeObject, username);
-                if (user != null) return new UserImpl(user, this);
-                else return null;
-            } catch (Pinvoke.Error e) {
+                if (user != null)
+                {
+                    return new User(user, this);
+                }
+
+                return null;
+            }
+            catch (Pinvoke.Error e)
+            {
                 throw new TypeDBDriverException(e);
             }
         }
@@ -102,8 +110,8 @@ namespace Vaticle.Typedb.Driver.User
                 {
                     return new NativeEnumerable<Pinvoke.User>(
                         Pinvoke.typedb_driver.users_all(NativeObject))
-                    .Select(obj -> new User(obj, this))
-                    .ToHashSet<IUser>();
+                        .Select(obj => new User(obj, this))
+                        .ToHashSet<IUser>();
                 }
                 catch (Pinvoke.Error e)
                 {

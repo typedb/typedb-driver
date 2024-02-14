@@ -32,7 +32,7 @@ namespace Vaticle.Typedb.Driver.Util
             ErrorMessage errorMessage,
             params object?[] exceptionArgs)
         {
-            if (!checker)
+            if (!checker())
             {
                 throw new TypeDBDriverException(errorMessage, exceptionArgs);
             }

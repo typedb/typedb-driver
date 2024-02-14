@@ -28,21 +28,16 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 csharp_library(
     name = "connection",
-    srcs = glob(
-        [
-            "*.cs",
-            "*/*.cs",
-        ],
+    srcs = glob(["*.cs", "*/*.cs"],
     ),
     deps = [
         "//csharp/api",
         "//csharp/common",
         "//csharp/util",
-#        "//csharp/concept",
-#        "//csharp/logic",
-#        "//csharp/query",
-#        "//csharp/user",
-
+        "//csharp/concept",
+        "//csharp/logic",
+        "//csharp/query",
+        "//csharp/user",
         "//csharp:typedb_driver_Pinvoke",
     ],
     nullable = nullable_context,
