@@ -1989,7 +1989,7 @@ attributeType.setRegex(transaction, regex)
 setSupertype(transaction, type): Promise<void>
 ----
 
-
+Sets the supplied ``AttributeType`` as the supertype of the current ``AttributeType``.
 
 [caption=""]
 .Input parameters
@@ -1997,13 +1997,20 @@ setSupertype(transaction, type): Promise<void>
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a|  a| `TypeDBTransaction`
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 a| `type` a|  a| `AttributeType`
 |===
 
 [caption=""]
 .Returns
 `Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+attributeType.setSupertype(transaction, superAttributeType).resolve();
+----
 
 [#_AttributeType_unsetAbstract__transaction_TypeDBTransaction]
 ==== unsetAbstract

@@ -1573,7 +1573,7 @@ relationType.setRelates(transaction, roleLabel) relationType.setRelates(transact
 setSupertype(transaction, type): Promise<void>
 ----
 
-
+Sets the supplied ``RelationType`` as the supertype of the current ``RelationType``.
 
 [caption=""]
 .Input parameters
@@ -1581,13 +1581,20 @@ setSupertype(transaction, type): Promise<void>
 [options="header"]
 |===
 |Name |Description |Type
-a| `transaction` a|  a| `TypeDBTransaction`
+a| `transaction` a| The current transaction a| `TypeDBTransaction`
 a| `type` a|  a| `RelationType`
 |===
 
 [caption=""]
 .Returns
 `Promise<void>`
+
+[caption=""]
+.Code examples
+[source,nodejs]
+----
+relationType.setSupertype(transaction, superRelationType).resolve();
+----
 
 [#_RelationType_unsetAbstract__transaction_TypeDBTransaction]
 ==== unsetAbstract
