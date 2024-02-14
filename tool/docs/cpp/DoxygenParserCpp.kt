@@ -38,10 +38,10 @@ import java.util.concurrent.Callable
 import kotlin.system.exitProcess
 
 
-fun main(args: Array<String>): Unit = exitProcess(CommandLine(DoxygenParser()).execute(*args))
+fun main(args: Array<String>): Unit = exitProcess(CommandLine(DoxygenParserCpp()).execute(*args))
 
-@CommandLine.Command(name = "DoxygenParser", mixinStandardHelpOptions = true)
-class DoxygenParser : Callable<Unit> {
+@CommandLine.Command(name = "DoxygenParserCpp", mixinStandardHelpOptions = true)
+class DoxygenParserCpp : Callable<Unit> {
     @Parameters(paramLabel = "<input>", description = ["Input directory"])
     private lateinit var inputDirectoryNames: List<String>
 
