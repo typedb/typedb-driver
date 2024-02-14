@@ -36,7 +36,7 @@ namespace Vaticle.Typedb.Driver.Concept.Thing
     public class Attribute : Thing, IAttribute
     {
         public Attribute(Pinvoke.Concept nativeConcept)
-            base(nativeConcept)
+            : base(nativeConcept)
         {
         }
 

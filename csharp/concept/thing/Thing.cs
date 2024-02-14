@@ -77,7 +77,7 @@ namespace Vaticle.Typedb.Driver.Concept.Thing
             ITypeDBTransaction transaction, params IAttributeType[] attributeTypes)
         {
             Pinvoke.Concept[] attributeTypesArray = attributeTypes
-                .Select(obj -> ((AttributeType)obj).NativeObject)
+                .Select(obj => ((AttributeType)obj).NativeObject)
                 .toArray<Pinvoke.Concept>();
 
             try

@@ -96,7 +96,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Console.WriteLine("CLOUD: ConnectionOpensWithAuthenticationThrowsException");
             throw new Exception("This test method is not ready");
             // TODO:
-//            assertThrows(() -> createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address(), username, password, false));
+//            assertThrows(() => createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address(), username, password, false));
         }
 
         private static readonly string[] DEFAULT_ADDRESSES =
