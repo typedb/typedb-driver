@@ -1,4 +1,4 @@
-[#_◆_init_logging_]
+[#_init_logging]
 ==== init_logging
 
 [source,cpp]
@@ -14,7 +14,7 @@ Enables logging in the TypeDB driver.
 .Returns
 `void`
 
-[#_◆_connection_close_]
+[#_connection_close]
 ==== connection_close
 
 [source,cpp]
@@ -30,7 +30,7 @@ Closes the driver. Before instantiating a new driver, the driver that’s curren
 .Returns
 `void`
 
-[#_◆_connection_force_close_]
+[#_connection_force_close]
 ==== connection_force_close
 
 [source,cpp]
@@ -46,7 +46,7 @@ Forcibly closes the driver. To be used in exceptional cases.
 .Returns
 `void`
 
-[#_◆_connection_is_open_]
+[#_connection_is_open]
 ==== connection_is_open
 
 [source,cpp]
@@ -62,7 +62,7 @@ Checks whether this connection is presently open.
 .Returns
 `bool`
 
-[#_◆_connection_open_cloud_]
+[#_connection_open_cloud]
 ==== connection_open_cloud
 
 [source,cpp]
@@ -107,7 +107,7 @@ a| `credential` a| The ``Credential`` to connect with a|
 .Returns
 `struct Connection*`
 
-[#_◆_connection_open_core_]
+[#_connection_open_core]
 ==== connection_open_core
 
 [source,cpp]

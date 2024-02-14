@@ -9,8 +9,6 @@ This enum is used to specify the type of transaction.
 [#_TransactionType]
 === TransactionType
 
-*Package*: `TransactionType`
-
 
 
 This enum is used to specify the type of transaction.

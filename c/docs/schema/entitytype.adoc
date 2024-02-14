@@ -1,4 +1,4 @@
-[#_◆_entity_type_create_]
+[#_entity_type_create]
 ==== entity_type_create
 
 [source,cpp]
@@ -14,7 +14,7 @@ Creates and returns a new instance of this ``EntityType``.
 .Returns
 `struct ConceptPromise*`
 
-[#_◆_entity_type_get_instances_]
+[#_entity_type_get_instances]
 ==== entity_type_get_instances
 
 [source,cpp]
@@ -30,7 +30,7 @@ Retrieves all ``Entity`` objects that are instances of this ``EntityType`` or it
 .Returns
 `struct ConceptIterator*`
 
-[#_◆_entity_type_get_subtypes_]
+[#_entity_type_get_subtypes]
 ==== entity_type_get_subtypes
 
 [source,cpp]
@@ -46,7 +46,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the given EntityT
 .Returns
 `struct ConceptIterator*`
 
-[#_◆_entity_type_get_supertype_]
+[#_entity_type_get_supertype]
 ==== entity_type_get_supertype
 
 [source,cpp]
@@ -62,7 +62,7 @@ Retrieves the most immediate supertype of the given ``EntityType``.
 .Returns
 `struct ConceptPromise*`
 
-[#_◆_entity_type_get_supertypes_]
+[#_entity_type_get_supertypes]
 ==== entity_type_get_supertypes
 
 [source,cpp]
@@ -78,7 +78,7 @@ Retrieves all supertypes of the given EntityType.
 .Returns
 `struct ConceptIterator*`
 
-[#_◆_entity_type_set_supertype_]
+[#_entity_type_set_supertype]
 ==== entity_type_set_supertype
 
 [source,cpp]

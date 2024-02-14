@@ -1,4 +1,4 @@
-[#_◆_session_close_]
+[#_session_close]
 ==== session_close
 
 [source,cpp]
@@ -14,7 +14,7 @@ Closes the session. Before opening a new session, the session currently open sho
 .Returns
 `void`
 
-[#_◆_session_force_close_]
+[#_session_force_close]
 ==== session_force_close
 
 [source,cpp]
@@ -30,7 +30,7 @@ Forcibly closes the session. To be used in exceptional cases.
 .Returns
 `void`
 
-[#_◆_session_get_database_name_]
+[#_session_get_database_name]
 ==== session_get_database_name
 
 [source,cpp]
@@ -46,7 +46,7 @@ Returns the name of the database of the session.
 .Returns
 `char*`
 
-[#_◆_session_is_open_]
+[#_session_is_open]
 ==== session_is_open
 
 [source,cpp]
@@ -62,7 +62,7 @@ Checks whether this session is open.
 .Returns
 `bool`
 
-[#_◆_session_new_]
+[#_session_new]
 ==== session_new
 
 [source,cpp]
@@ -117,7 +117,7 @@ a| `options` a| ``Options`` for this session a|
 .Returns
 `struct Session*`
 
-[#_◆_session_on_close_]
+[#_session_on_close]
 ==== session_on_close
 
 [source,cpp]
@@ -172,7 +172,7 @@ a| `finished` a| A function which will be executed when the session is destroyed
 .Returns
 `void`
 
-[#_◆_session_on_reopen_]
+[#_session_on_reopen]
 ==== session_on_reopen
 
 [source,cpp]

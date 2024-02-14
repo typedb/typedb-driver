@@ -1,4 +1,4 @@
-[#_◆_role_player_drop_]
+[#_role_player_drop]
 ==== role_player_drop
 
 [source,cpp]
@@ -14,7 +14,7 @@ Frees the native rust ``RolePlayer`` object
 .Returns
 `void`
 
-[#_◆_role_player_get_player_]
+[#_role_player_get_player]
 ==== role_player_get_player
 
 [source,cpp]
@@ -30,7 +30,7 @@ Returns the ``Concept`` which plays the role in the ``RolePlayer``
 .Returns
 `struct Concept*`
 
-[#_◆_role_player_get_role_type_]
+[#_role_player_get_role_type]
 ==== role_player_get_role_type
 
 [source,cpp]
@@ -46,7 +46,7 @@ Returns the role-type played by the ``RolePlayer``
 .Returns
 `struct Concept*`
 
-[#_◆_role_player_iterator_drop_]
+[#_role_player_iterator_drop]
 ==== role_player_iterator_drop
 
 [source,cpp]
@@ -62,7 +62,7 @@ Frees the native rust ``RolePlayerIterator`` object
 .Returns
 `void`
 
-[#_◆_role_player_iterator_next_]
+[#_role_player_iterator_next]
 ==== role_player_iterator_next
 
 [source,cpp]

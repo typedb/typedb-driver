@@ -1,4 +1,4 @@
-[#_◆_transaction_close_]
+[#_transaction_close]
 ==== transaction_close
 
 [source,cpp]
@@ -14,7 +14,7 @@ Closes the transaction.
 .Returns
 `void`
 
-[#_◆_transaction_commit_]
+[#_transaction_commit]
 ==== transaction_commit
 
 [source,cpp]
@@ -30,7 +30,7 @@ Commits the changes made via this transaction to the TypeDB database. Whether or
 .Returns
 `struct VoidPromise*`
 
-[#_◆_transaction_force_close_]
+[#_transaction_force_close]
 ==== transaction_force_close
 
 [source,cpp]
@@ -46,7 +46,7 @@ Forcibly closes this transaction. To be used in exceptional cases.
 .Returns
 `void`
 
-[#_◆_transaction_is_open_]
+[#_transaction_is_open]
 ==== transaction_is_open
 
 [source,cpp]
@@ -62,7 +62,7 @@ Checks whether this transaction is open.
 .Returns
 `bool`
 
-[#_◆_transaction_new_]
+[#_transaction_new]
 ==== transaction_new
 
 [source,cpp]
@@ -107,7 +107,7 @@ a| `options` a| Options for the transaction a|
 .Returns
 `struct Transaction*`
 
-[#_◆_transaction_on_close_]
+[#_transaction_on_close]
 ==== transaction_on_close
 
 [source,cpp]
@@ -157,7 +157,7 @@ a| `callback` a| The function to be called a|
 .Returns
 `void`
 
-[#_◆_transaction_rollback_]
+[#_transaction_rollback]
 ==== transaction_rollback
 
 [source,cpp]

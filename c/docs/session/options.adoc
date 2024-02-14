@@ -1,4 +1,4 @@
-[#_◆_options_drop_]
+[#_options_drop]
 ==== options_drop
 
 [source,cpp]
@@ -14,7 +14,7 @@ Frees the native rust ``Options`` object.
 .Returns
 `void`
 
-[#_◆_options_get_explain_]
+[#_options_get_explain]
 ==== options_get_explain
 
 [source,cpp]
@@ -30,7 +30,7 @@ Returns the value set for the explanation in this ``TypeDBOptions`` object. If s
 .Returns
 `bool`
 
-[#_◆_options_get_infer_]
+[#_options_get_infer]
 ==== options_get_infer
 
 [source,cpp]
@@ -46,7 +46,7 @@ Returns the value set for the inference in this ``TypeDBOptions`` object.
 .Returns
 `bool`
 
-[#_◆_options_get_parallel_]
+[#_options_get_parallel]
 ==== options_get_parallel
 
 [source,cpp]
@@ -62,7 +62,7 @@ Returns the value set for the parallel execution in this ``TypeDBOptions`` objec
 .Returns
 `bool`
 
-[#_◆_options_get_prefetch_]
+[#_options_get_prefetch]
 ==== options_get_prefetch
 
 [source,cpp]
@@ -78,7 +78,7 @@ Returns the value set for the prefetching in this ``TypeDBOptions`` object. If s
 .Returns
 `bool`
 
-[#_◆_options_get_prefetch_size_]
+[#_options_get_prefetch_size]
 ==== options_get_prefetch_size
 
 [source,cpp]
@@ -94,7 +94,7 @@ Returns the value set for the prefetch size in this ``TypeDBOptions`` object. If
 .Returns
 `int32_t`
 
-[#_◆_options_get_read_any_replica_]
+[#_options_get_read_any_replica]
 ==== options_get_read_any_replica
 
 [source,cpp]
@@ -110,7 +110,7 @@ Returns the value set for reading data from any replica in this ``TypeDBOptions`
 .Returns
 `bool`
 
-[#_◆_options_get_schema_lock_acquire_timeout_millis_]
+[#_options_get_schema_lock_acquire_timeout_millis]
 ==== options_get_schema_lock_acquire_timeout_millis
 
 [source,cpp]
@@ -126,7 +126,7 @@ Returns the value set for the schema lock acquire timeout in this ``TypeDBOption
 .Returns
 `int64_t`
 
-[#_◆_options_get_session_idle_timeout_millis_]
+[#_options_get_session_idle_timeout_millis]
 ==== options_get_session_idle_timeout_millis
 
 [source,cpp]
@@ -142,7 +142,7 @@ Returns the value set for the session idle timeout in this ``TypeDBOptions`` obj
 .Returns
 `int64_t`
 
-[#_◆_options_get_trace_inference_]
+[#_options_get_trace_inference]
 ==== options_get_trace_inference
 
 [source,cpp]
@@ -158,7 +158,7 @@ Returns the value set for reasoning tracing in this ``TypeDBOptions`` object. If
 .Returns
 `bool`
 
-[#_◆_options_get_transaction_timeout_millis_]
+[#_options_get_transaction_timeout_millis]
 ==== options_get_transaction_timeout_millis
 
 [source,cpp]
@@ -174,7 +174,7 @@ Returns the value set for the transaction timeout in this ``TypeDBOptions`` obje
 .Returns
 `int64_t`
 
-[#_◆_options_has_explain_]
+[#_options_has_explain]
 ==== options_has_explain
 
 [source,cpp]
@@ -190,7 +190,7 @@ Checks whether the option for explanation was explicitly set for this ``TypeDBOp
 .Returns
 `bool`
 
-[#_◆_options_has_infer_]
+[#_options_has_infer]
 ==== options_has_infer
 
 [source,cpp]
@@ -206,7 +206,7 @@ Checks whether the option for inference was explicitly set for this ``TypeDBOpti
 .Returns
 `bool`
 
-[#_◆_options_has_parallel_]
+[#_options_has_parallel]
 ==== options_has_parallel
 
 [source,cpp]
@@ -222,7 +222,7 @@ Checks whether the option for parallel execution was explicitly set for this ``T
 .Returns
 `bool`
 
-[#_◆_options_has_prefetch_]
+[#_options_has_prefetch]
 ==== options_has_prefetch
 
 [source,cpp]
@@ -238,7 +238,7 @@ Checks whether the option for prefetching was explicitly set for this ``TypeDBOp
 .Returns
 `bool`
 
-[#_◆_options_has_prefetch_size_]
+[#_options_has_prefetch_size]
 ==== options_has_prefetch_size
 
 [source,cpp]
@@ -254,7 +254,7 @@ Checks whether the option for prefetch size was explicitly set for this ``TypeDB
 .Returns
 `bool`
 
-[#_◆_options_has_read_any_replica_]
+[#_options_has_read_any_replica]
 ==== options_has_read_any_replica
 
 [source,cpp]
@@ -270,7 +270,7 @@ Checks whether the option for reading data from any replica was explicitly set f
 .Returns
 `bool`
 
-[#_◆_options_has_schema_lock_acquire_timeout_millis_]
+[#_options_has_schema_lock_acquire_timeout_millis]
 ==== options_has_schema_lock_acquire_timeout_millis
 
 [source,cpp]
@@ -286,7 +286,7 @@ Checks whether the option for schema lock acquire timeout was explicitly set for
 .Returns
 `bool`
 
-[#_◆_options_has_session_idle_timeout_millis_]
+[#_options_has_session_idle_timeout_millis]
 ==== options_has_session_idle_timeout_millis
 
 [source,cpp]
@@ -302,7 +302,7 @@ Checks whether the option for the session idle timeout was explicitly set for th
 .Returns
 `bool`
 
-[#_◆_options_has_trace_inference_]
+[#_options_has_trace_inference]
 ==== options_has_trace_inference
 
 [source,cpp]
@@ -318,7 +318,7 @@ Checks whether the option for reasoning tracing was explicitly set for this ``Ty
 .Returns
 `bool`
 
-[#_◆_options_has_transaction_timeout_millis_]
+[#_options_has_transaction_timeout_millis]
 ==== options_has_transaction_timeout_millis
 
 [source,cpp]
@@ -334,7 +334,7 @@ Checks whether the option for transaction timeout was explicitly set for this ``
 .Returns
 `bool`
 
-[#_◆_options_new_]
+[#_options_new]
 ==== options_new
 
 [source,cpp]
@@ -350,7 +350,7 @@ Produces a new ``TypeDBOptions`` object.
 .Returns
 `struct Options*`
 
-[#_◆_options_set_explain_]
+[#_options_set_explain]
 ==== options_set_explain
 
 [source,cpp]
@@ -366,7 +366,7 @@ Explicitly enables or disables explanations. If set to ``true``, enables explana
 .Returns
 `void`
 
-[#_◆_options_set_infer_]
+[#_options_set_infer]
 ==== options_set_infer
 
 [source,cpp]
@@ -382,7 +382,7 @@ Explicitly enables or disables inference. Only settable at transaction level and
 .Returns
 `void`
 
-[#_◆_options_set_parallel_]
+[#_options_set_parallel]
 ==== options_set_parallel
 
 [source,cpp]
@@ -398,7 +398,7 @@ Explicitly enables or disables parallel execution. If set to ``true``, the serve
 .Returns
 `void`
 
-[#_◆_options_set_prefetch_]
+[#_options_set_prefetch]
 ==== options_set_prefetch
 
 [source,cpp]
@@ -414,7 +414,7 @@ Explicitly enables or disables prefetching. If set to ``true``, the first batch 
 .Returns
 `void`
 
-[#_◆_options_set_prefetch_size_]
+[#_options_set_prefetch_size]
 ==== options_set_prefetch_size
 
 [source,cpp]
@@ -454,7 +454,7 @@ a| `prefetchSize` a| Number of answers that the server should send before the dr
 .Returns
 `void`
 
-[#_◆_options_set_read_any_replica_]
+[#_options_set_read_any_replica]
 ==== options_set_read_any_replica
 
 [source,cpp]
@@ -470,7 +470,7 @@ Explicitly enables or disables reading data from any replica. If set to ``True``
 .Returns
 `void`
 
-[#_◆_options_set_schema_lock_acquire_timeout_millis_]
+[#_options_set_schema_lock_acquire_timeout_millis]
 ==== options_set_schema_lock_acquire_timeout_millis
 
 [source,cpp]
@@ -486,7 +486,7 @@ Explicitly sets schema lock acquire timeout. If set, specifies how long the driv
 .Returns
 `void`
 
-[#_◆_options_set_session_idle_timeout_millis_]
+[#_options_set_session_idle_timeout_millis]
 ==== options_set_session_idle_timeout_millis
 
 [source,cpp]
@@ -502,7 +502,7 @@ Explicitly sets a session idle timeout. If set, specifies a timeout that allows 
 .Returns
 `void`
 
-[#_◆_options_set_trace_inference_]
+[#_options_set_trace_inference]
 ==== options_set_trace_inference
 
 [source,cpp]
@@ -518,7 +518,7 @@ Explicitly enables or disables reasoning tracing. If set to ``true``, reasoning 
 .Returns
 `void`
 
-[#_◆_options_set_transaction_timeout_millis_]
+[#_options_set_transaction_timeout_millis]
 ==== options_set_transaction_timeout_millis
 
 [source,cpp]

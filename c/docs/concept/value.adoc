@@ -1,4 +1,4 @@
-[#_◆_value_get_boolean_]
+[#_value_get_boolean]
 ==== value_get_boolean
 
 [source,cpp]
@@ -14,7 +14,7 @@ Returns a ``boolean`` value of this value concept. If the value has another type
 .Returns
 `bool`
 
-[#_◆_value_get_date_time_as_millis_]
+[#_value_get_date_time_as_millis]
 ==== value_get_date_time_as_millis
 
 [source,cpp]
@@ -30,7 +30,7 @@ Returns the value of this datetime value concept as milliseconds since the start
 .Returns
 `int64_t`
 
-[#_◆_value_get_double_]
+[#_value_get_double]
 ==== value_get_double
 
 [source,cpp]
@@ -46,7 +46,7 @@ Returns the ``double`` value of this value concept. If the value has another typ
 .Returns
 `double`
 
-[#_◆_value_get_long_]
+[#_value_get_long]
 ==== value_get_long
 
 [source,cpp]
@@ -62,7 +62,7 @@ Returns the ``long`` value of this value concept. If the value has another type,
 .Returns
 `int64_t`
 
-[#_◆_value_get_string_]
+[#_value_get_string]
 ==== value_get_string
 
 [source,cpp]
@@ -78,7 +78,7 @@ Returns the ``string`` value of this value concept. If the value has another typ
 .Returns
 `char*`
 
-[#_◆_value_is_boolean_]
+[#_value_is_boolean]
 ==== value_is_boolean
 
 [source,cpp]
@@ -94,7 +94,7 @@ Returns ``true`` if the value which this ``Value`` concept holds is of type ``bo
 .Returns
 `bool`
 
-[#_◆_value_is_date_time_]
+[#_value_is_date_time]
 ==== value_is_date_time
 
 [source,cpp]
@@ -110,7 +110,7 @@ Returns ``true`` if the value which this ``Value`` concept holds is of type ``da
 .Returns
 `bool`
 
-[#_◆_value_is_double_]
+[#_value_is_double]
 ==== value_is_double
 
 [source,cpp]
@@ -126,7 +126,7 @@ Returns ``true`` if the value which this ``Value`` concept holds is of type ``do
 .Returns
 `bool`
 
-[#_◆_value_is_long_]
+[#_value_is_long]
 ==== value_is_long
 
 [source,cpp]
@@ -142,7 +142,7 @@ Returns ``true`` if the value which this ``Value`` concept holds is of type ``lo
 .Returns
 `bool`
 
-[#_◆_value_is_string_]
+[#_value_is_string]
 ==== value_is_string
 
 [source,cpp]
@@ -158,7 +158,7 @@ Returns ``true`` if the value which this ``Value`` concept holds is of type ``st
 .Returns
 `bool`
 
-[#_◆_value_new_boolean_]
+[#_value_new_boolean]
 ==== value_new_boolean
 
 [source,cpp]
@@ -174,7 +174,7 @@ Creates a new ``Value`` object of the specified boolean value.
 .Returns
 `struct Concept*`
 
-[#_◆_value_new_date_time_from_millis_]
+[#_value_new_date_time_from_millis]
 ==== value_new_date_time_from_millis
 
 [source,cpp]
@@ -190,7 +190,7 @@ Creates a new ``Value`` object of the specified datetime value.
 .Returns
 `struct Concept*`
 
-[#_◆_value_new_double_]
+[#_value_new_double]
 ==== value_new_double
 
 [source,cpp]
@@ -206,7 +206,7 @@ Creates a new ``Value`` object of the specified double value.
 .Returns
 `struct Concept*`
 
-[#_◆_value_new_long_]
+[#_value_new_long]
 ==== value_new_long
 
 [source,cpp]
@@ -222,7 +222,7 @@ Creates a new ``Value`` object of the specified long value.
 .Returns
 `struct Concept*`
 
-[#_◆_value_new_string_]
+[#_value_new_string]
 ==== value_new_string
 
 [source,cpp]

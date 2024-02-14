@@ -1,4 +1,4 @@
-[#_◆_attribute_get_owners_]
+[#_attribute_get_owners]
 ==== attribute_get_owners
 
 [source,cpp]
@@ -14,7 +14,7 @@ Retrieves the instances that own this ``Attribute``.
 .Returns
 `struct ConceptIterator*`
 
-[#_◆_attribute_get_type_]
+[#_attribute_get_type]
 ==== attribute_get_type
 
 [source,cpp]
@@ -30,7 +30,7 @@ Retrieves the type which this ``Attribute`` belongs to.
 .Returns
 `struct Concept*`
 
-[#_◆_attribute_get_value_]
+[#_attribute_get_value]
 ==== attribute_get_value
 
 [source,cpp]

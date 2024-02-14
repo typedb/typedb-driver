@@ -9,8 +9,6 @@ Used for specifying whether we need explicit or transitive subtyping, instances,
 [#_Transitivity]
 === Transitivity
 
-*Package*: `Transitivity`
-
 
 
 Used for specifying whether we need explicit or transitive subtyping, instances, etc.

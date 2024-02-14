@@ -1,4 +1,4 @@
-[#_◆_schema_exception_code_]
+[#_schema_exception_code]
 ==== schema_exception_code
 
 [source,cpp]
@@ -14,7 +14,7 @@ Returns the error code of the ``SchemaException`` object
 .Returns
 `char*`
 
-[#_◆_schema_exception_drop_]
+[#_schema_exception_drop]
 ==== schema_exception_drop
 
 [source,cpp]
@@ -30,7 +30,7 @@ Frees the native rust ``SchemaException`` object
 .Returns
 `void`
 
-[#_◆_schema_exception_iterator_drop_]
+[#_schema_exception_iterator_drop]
 ==== schema_exception_iterator_drop
 
 [source,cpp]
@@ -46,7 +46,7 @@ Frees the native rust ``SchemaExceptionIterator`` object
 .Returns
 `void`
 
-[#_◆_schema_exception_iterator_next_]
+[#_schema_exception_iterator_next]
 ==== schema_exception_iterator_next
 
 [source,cpp]
@@ -62,7 +62,7 @@ Forwards the ``SchemaExceptionIterator`` and returns the next ``SchemaException`
 .Returns
 `struct SchemaException*`
 
-[#_◆_schema_exception_message_]
+[#_schema_exception_message]
 ==== schema_exception_message
 
 [source,cpp]

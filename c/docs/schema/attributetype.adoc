@@ -1,4 +1,4 @@
-[#_◆_attribute_type_get_]
+[#_attribute_type_get]
 ==== attribute_type_get
 
 [source,cpp]
@@ -14,7 +14,7 @@ Retrieves an ``Attribute`` of this ``AttributeType`` with the given ``Value`` if
 .Returns
 `struct ConceptPromise*`
 
-[#_◆_attribute_type_get_instances_]
+[#_attribute_type_get_instances]
 ==== attribute_type_get_instances
 
 [source,cpp]
@@ -30,7 +30,7 @@ Retrieves all ``Attribute`` objects that are instances of this ``AttributeType``
 .Returns
 `struct ConceptIterator*`
 
-[#_◆_attribute_type_get_owners_]
+[#_attribute_type_get_owners]
 ==== attribute_type_get_owners
 
 [source,cpp]
@@ -70,7 +70,7 @@ a| `annotations` a| a null-terminated array of ``Annotation``s - If non-empty, O
 .Returns
 `struct ConceptIterator*`
 
-[#_◆_attribute_type_get_regex_]
+[#_attribute_type_get_regex]
 ==== attribute_type_get_regex
 
 [source,cpp]
@@ -86,7 +86,7 @@ Retrieves the regular expression that is defined for this ``AttributeType``.
 .Returns
 `struct StringPromise*`
 
-[#_◆_attribute_type_get_subtypes_]
+[#_attribute_type_get_subtypes]
 ==== attribute_type_get_subtypes
 
 [source,cpp]
@@ -102,7 +102,7 @@ Retrieves all direct and indirect (or direct only) subtypes of the given ``Attri
 .Returns
 `struct ConceptIterator*`
 
-[#_◆_attribute_type_get_subtypes_with_value_type_]
+[#_attribute_type_get_subtypes_with_value_type]
 ==== attribute_type_get_subtypes_with_value_type
 
 [source,cpp]
@@ -118,7 +118,7 @@ Retrieves subtypes of this ``AttributeType`` with given ``ValueType``. Specify `
 .Returns
 `struct ConceptIterator*`
 
-[#_◆_attribute_type_get_supertype_]
+[#_attribute_type_get_supertype]
 ==== attribute_type_get_supertype
 
 [source,cpp]
@@ -134,7 +134,7 @@ Retrieves the most immediate supertype of the given ``AttributeType``.
 .Returns
 `struct ConceptPromise*`
 
-[#_◆_attribute_type_get_supertypes_]
+[#_attribute_type_get_supertypes]
 ==== attribute_type_get_supertypes
 
 [source,cpp]
@@ -150,7 +150,7 @@ Retrieves all supertypes of the given ``AttributeType``.
 .Returns
 `struct ConceptIterator*`
 
-[#_◆_attribute_type_get_value_type_]
+[#_attribute_type_get_value_type]
 ==== attribute_type_get_value_type
 
 [source,cpp]
@@ -166,7 +166,7 @@ Retrieves the ``ValueType`` of this ``AttributeType``.
 .Returns
 `enum ValueType`
 
-[#_◆_attribute_type_put_]
+[#_attribute_type_put]
 ==== attribute_type_put
 
 [source,cpp]
@@ -182,7 +182,7 @@ Creates and returns a new instance of this ``AttributeType``, with the specified
 .Returns
 `struct ConceptPromise*`
 
-[#_◆_attribute_type_set_regex_]
+[#_attribute_type_set_regex]
 ==== attribute_type_set_regex
 
 [source,cpp]
@@ -200,7 +200,7 @@ Can only be applied for ``AttributeType``s with a ``string`` value type.
 .Returns
 `struct VoidPromise*`
 
-[#_◆_attribute_type_set_supertype_]
+[#_attribute_type_set_supertype]
 ==== attribute_type_set_supertype
 
 [source,cpp]
@@ -216,7 +216,7 @@ Sets the supplied ``AttributeType`` as the supertype of the current ``AttributeT
 .Returns
 `struct VoidPromise*`
 
-[#_◆_attribute_type_unset_regex_]
+[#_attribute_type_unset_regex]
 ==== attribute_type_unset_regex
 
 [source,cpp]

@@ -1,4 +1,4 @@
-[#_◆_concept_drop_]
+[#_concept_drop]
 ==== concept_drop
 
 [source,cpp]
@@ -14,7 +14,7 @@ Frees the native rust ``Concept`` object
 .Returns
 `void`
 
-[#_◆_concept_equals_]
+[#_concept_equals]
 ==== concept_equals
 
 [source,cpp]
@@ -30,7 +30,7 @@ Checks whether the provided ``Concept`` objects are equal
 .Returns
 `bool`
 
-[#_◆_concept_is_attribute_]
+[#_concept_is_attribute]
 ==== concept_is_attribute
 
 [source,cpp]
@@ -46,7 +46,7 @@ Checks if the concept is an ``Attribute``.
 .Returns
 `bool`
 
-[#_◆_concept_is_attribute_type_]
+[#_concept_is_attribute_type]
 ==== concept_is_attribute_type
 
 [source,cpp]
@@ -62,7 +62,7 @@ Checks if the concept is an ``AttributeType``.
 .Returns
 `bool`
 
-[#_◆_concept_is_entity_]
+[#_concept_is_entity]
 ==== concept_is_entity
 
 [source,cpp]
@@ -78,7 +78,7 @@ Checks if the concept is an ``Entity``.
 .Returns
 `bool`
 
-[#_◆_concept_is_entity_type_]
+[#_concept_is_entity_type]
 ==== concept_is_entity_type
 
 [source,cpp]
@@ -94,7 +94,7 @@ Checks if the concept is an ``EntityType``.
 .Returns
 `bool`
 
-[#_◆_concept_is_relation_]
+[#_concept_is_relation]
 ==== concept_is_relation
 
 [source,cpp]
@@ -110,7 +110,7 @@ Checks if the concept is a ``Relation``.
 .Returns
 `bool`
 
-[#_◆_concept_is_relation_type_]
+[#_concept_is_relation_type]
 ==== concept_is_relation_type
 
 [source,cpp]
@@ -126,7 +126,7 @@ Checks if the concept is a ``RelationType``.
 .Returns
 `bool`
 
-[#_◆_concept_is_role_type_]
+[#_concept_is_role_type]
 ==== concept_is_role_type
 
 [source,cpp]
@@ -142,7 +142,7 @@ Checks if the concept is a ``RoleType``.
 .Returns
 `bool`
 
-[#_◆_concept_is_root_thing_type_]
+[#_concept_is_root_thing_type]
 ==== concept_is_root_thing_type
 
 [source,cpp]
@@ -158,7 +158,7 @@ Checks if the concept is the root ``thing`` type.
 .Returns
 `bool`
 
-[#_◆_concept_is_value_]
+[#_concept_is_value]
 ==== concept_is_value
 
 [source,cpp]
@@ -174,7 +174,7 @@ Checks if the concept is a ``Value``.
 .Returns
 `bool`
 
-[#_◆_concept_iterator_drop_]
+[#_concept_iterator_drop]
 ==== concept_iterator_drop
 
 [source,cpp]
@@ -190,7 +190,7 @@ Frees the native rust ``ConceptIterator`` object
 .Returns
 `void`
 
-[#_◆_concept_iterator_next_]
+[#_concept_iterator_next]
 ==== concept_iterator_next
 
 [source,cpp]
@@ -206,7 +206,7 @@ Forwards the ``ConceptIterator`` and returns the next ``Concept`` if it exists, 
 .Returns
 `struct Concept*`
 
-[#_◆_concept_promise_resolve_]
+[#_concept_promise_resolve]
 ==== concept_promise_resolve
 
 [source,cpp]
@@ -222,7 +222,7 @@ Waits for and returns the result of the operation represented by the ``ConceptPr
 .Returns
 `struct Concept*`
 
-[#_◆_concept_to_string_]
+[#_concept_to_string]
 ==== concept_to_string
 
 [source,cpp]
@@ -238,7 +238,7 @@ A string representation of this ``Concept`` object
 .Returns
 `char*`
 
-[#_◆_concepts_get_attribute_]
+[#_concepts_get_attribute]
 ==== concepts_get_attribute
 
 [source,cpp]
@@ -254,7 +254,7 @@ Retrieves an ``Attribute`` instance by its iid.
 .Returns
 `struct ConceptPromise*`
 
-[#_◆_concepts_get_attribute_type_]
+[#_concepts_get_attribute_type]
 ==== concepts_get_attribute_type
 
 [source,cpp]
@@ -270,7 +270,7 @@ Retrieves an ``AttributeType`` by its label.
 .Returns
 `struct ConceptPromise*`
 
-[#_◆_concepts_get_entity_]
+[#_concepts_get_entity]
 ==== concepts_get_entity
 
 [source,cpp]
@@ -286,7 +286,7 @@ Retrieves an ``Entity`` instance by its iid.
 .Returns
 `struct ConceptPromise*`
 
-[#_◆_concepts_get_entity_type_]
+[#_concepts_get_entity_type]
 ==== concepts_get_entity_type
 
 [source,cpp]
@@ -302,7 +302,7 @@ Retrieves an ``EntityType`` by its label.
 .Returns
 `struct ConceptPromise*`
 
-[#_◆_concepts_get_relation_]
+[#_concepts_get_relation]
 ==== concepts_get_relation
 
 [source,cpp]
@@ -318,7 +318,7 @@ Retrieves a ``relation`` instance by its iid.
 .Returns
 `struct ConceptPromise*`
 
-[#_◆_concepts_get_relation_type_]
+[#_concepts_get_relation_type]
 ==== concepts_get_relation_type
 
 [source,cpp]
@@ -334,7 +334,7 @@ Retrieves a ``RelationType`` by its label.
 .Returns
 `struct ConceptPromise*`
 
-[#_◆_concepts_get_root_attribute_type_]
+[#_concepts_get_root_attribute_type]
 ==== concepts_get_root_attribute_type
 
 [source,cpp]
@@ -350,7 +350,7 @@ Retrieves the root ``AttributeType``, “attribute”.
 .Returns
 `struct Concept*`
 
-[#_◆_concepts_get_root_entity_type_]
+[#_concepts_get_root_entity_type]
 ==== concepts_get_root_entity_type
 
 [source,cpp]
@@ -366,7 +366,7 @@ Retrieves the root ``EntityType``, “entity”.
 .Returns
 `struct Concept*`
 
-[#_◆_concepts_get_root_relation_type_]
+[#_concepts_get_root_relation_type]
 ==== concepts_get_root_relation_type
 
 [source,cpp]
@@ -382,7 +382,7 @@ Retrieves the root ``RelationType``, “relation”.
 .Returns
 `struct Concept*`
 
-[#_◆_concepts_get_schema_exceptions_]
+[#_concepts_get_schema_exceptions]
 ==== concepts_get_schema_exceptions
 
 [source,cpp]
@@ -398,7 +398,7 @@ Retrieves a list of all schema exceptions for the current transaction.
 .Returns
 `struct SchemaExceptionIterator*`
 
-[#_◆_concepts_put_attribute_type_]
+[#_concepts_put_attribute_type]
 ==== concepts_put_attribute_type
 
 [source,cpp]
@@ -414,7 +414,7 @@ Creates a new ``AttributeType`` if none exists with the given label, otherwise r
 .Returns
 `struct ConceptPromise*`
 
-[#_◆_concepts_put_entity_type_]
+[#_concepts_put_entity_type]
 ==== concepts_put_entity_type
 
 [source,cpp]
@@ -430,7 +430,7 @@ Creates a new ``EntityType`` if none exists with the given label, otherwise retr
 .Returns
 `struct ConceptPromise*`
 
-[#_◆_concepts_put_relation_type_]
+[#_concepts_put_relation_type]
 ==== concepts_put_relation_type
 
 [source,cpp]

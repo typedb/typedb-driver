@@ -1,4 +1,4 @@
-[#_◆_concept_map_drop_]
+[#_concept_map_drop]
 ==== concept_map_drop
 
 [source,cpp]
@@ -14,7 +14,7 @@ Frees the native rust ``ConceptMap`` object
 .Returns
 `void`
 
-[#_◆_concept_map_equals_]
+[#_concept_map_equals]
 ==== concept_map_equals
 
 [source,cpp]
@@ -30,7 +30,7 @@ Checks whether the provided ``ConceptMap`` objects are equal
 .Returns
 `bool`
 
-[#_◆_concept_map_get_]
+[#_concept_map_get]
 ==== concept_map_get
 
 [source,cpp]
@@ -46,7 +46,7 @@ Retrieves a concept for a given variable name.
 .Returns
 `struct Concept*`
 
-[#_◆_concept_map_get_explainables_]
+[#_concept_map_get_explainables]
 ==== concept_map_get_explainables
 
 [source,cpp]
@@ -62,7 +62,7 @@ Gets the ``Explainables`` object for this ``ConceptMap``, exposing which of the 
 .Returns
 `struct Explainables*`
 
-[#_◆_concept_map_get_values_]
+[#_concept_map_get_values]
 ==== concept_map_get_values
 
 [source,cpp]
@@ -78,7 +78,7 @@ Produces an ``Iterator`` over all ``Concepts`` in this ``ConceptMap``.
 .Returns
 `struct ConceptIterator*`
 
-[#_◆_concept_map_get_variables_]
+[#_concept_map_get_variables]
 ==== concept_map_get_variables
 
 [source,cpp]
@@ -94,7 +94,7 @@ Produces an ``Iterator`` over all variables in this ``ConceptMap``.
 .Returns
 `struct StringIterator*`
 
-[#_◆_concept_map_group_drop_]
+[#_concept_map_group_drop]
 ==== concept_map_group_drop
 
 [source,cpp]
@@ -110,7 +110,7 @@ Frees the native rust ``ConceptMapGroup`` object
 .Returns
 `void`
 
-[#_◆_concept_map_group_equals_]
+[#_concept_map_group_equals]
 ==== concept_map_group_equals
 
 [source,cpp]
@@ -126,7 +126,7 @@ Checks whether the provided ``ConceptMapGroup`` objects are equal
 .Returns
 `bool`
 
-[#_◆_concept_map_group_get_concept_maps_]
+[#_concept_map_group_get_concept_maps]
 ==== concept_map_group_get_concept_maps
 
 [source,cpp]
@@ -142,7 +142,7 @@ Retrieves the ``ConceptMap``s of the group.
 .Returns
 `struct ConceptMapIterator*`
 
-[#_◆_concept_map_group_get_owner_]
+[#_concept_map_group_get_owner]
 ==== concept_map_group_get_owner
 
 [source,cpp]
@@ -158,7 +158,7 @@ Retrieves the concept that is the group owner.
 .Returns
 `struct Concept*`
 
-[#_◆_concept_map_group_iterator_drop_]
+[#_concept_map_group_iterator_drop]
 ==== concept_map_group_iterator_drop
 
 [source,cpp]
@@ -174,7 +174,7 @@ Frees the native rust ``ConceptMapGroupIterator`` object
 .Returns
 `void`
 
-[#_◆_concept_map_group_iterator_next_]
+[#_concept_map_group_iterator_next]
 ==== concept_map_group_iterator_next
 
 [source,cpp]
@@ -190,7 +190,7 @@ Forwards the ``ConceptMapGroupIterator`` and returns the next ``ConceptMapGroup`
 .Returns
 `struct ConceptMapGroup*`
 
-[#_◆_concept_map_group_to_string_]
+[#_concept_map_group_to_string]
 ==== concept_map_group_to_string
 
 [source,cpp]
@@ -206,7 +206,7 @@ A string representation of this ``ConceptMapGroup`` object
 .Returns
 `char*`
 
-[#_◆_concept_map_iterator_drop_]
+[#_concept_map_iterator_drop]
 ==== concept_map_iterator_drop
 
 [source,cpp]
@@ -222,7 +222,7 @@ Frees the native rust ``ConceptMapIterator`` object
 .Returns
 `void`
 
-[#_◆_concept_map_iterator_next_]
+[#_concept_map_iterator_next]
 ==== concept_map_iterator_next
 
 [source,cpp]
@@ -238,7 +238,7 @@ Forwards the ``ConceptMapIterator`` and returns the next ``ConceptMap`` if it ex
 .Returns
 `struct ConceptMap*`
 
-[#_◆_concept_map_to_string_]
+[#_concept_map_to_string]
 ==== concept_map_to_string
 
 [source,cpp]

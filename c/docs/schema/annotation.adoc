@@ -1,4 +1,4 @@
-[#_◆_annotation_drop_]
+[#_annotation_drop]
 ==== annotation_drop
 
 [source,cpp]
@@ -14,7 +14,7 @@ Frees the native rust ``Annotation`` object
 .Returns
 `void`
 
-[#_◆_annotation_equals_]
+[#_annotation_equals]
 ==== annotation_equals
 
 [source,cpp]
@@ -30,7 +30,7 @@ Checks whether the provided ``Annotation`` objects are equal
 .Returns
 `bool`
 
-[#_◆_annotation_is_key_]
+[#_annotation_is_key]
 ==== annotation_is_key
 
 [source,cpp]
@@ -46,7 +46,7 @@ Checks whether the provided ``Annotation`` is ``@key``
 .Returns
 `bool`
 
-[#_◆_annotation_is_unique_]
+[#_annotation_is_unique]
 ==== annotation_is_unique
 
 [source,cpp]
@@ -62,7 +62,7 @@ Checks whether the provided ``Annotation`` is ``@unique``
 .Returns
 `bool`
 
-[#_◆_annotation_new_key_]
+[#_annotation_new_key]
 ==== annotation_new_key
 
 [source,cpp]
@@ -78,7 +78,7 @@ Produces a ``@key`` annotation.
 .Returns
 `struct Annotation*`
 
-[#_◆_annotation_new_unique_]
+[#_annotation_new_unique]
 ==== annotation_new_unique
 
 [source,cpp]
@@ -94,7 +94,7 @@ Produces a ``@unique`` annotation.
 .Returns
 `struct Annotation*`
 
-[#_◆_annotation_to_string_]
+[#_annotation_to_string]
 ==== annotation_to_string
 
 [source,cpp]

@@ -17,8 +17,6 @@ This enum is used to specify the type of the session.
 [#_SessionType]
 === SessionType
 
-*Package*: `SessionType`
-
 
 
 This enum is used to specify the type of the session.

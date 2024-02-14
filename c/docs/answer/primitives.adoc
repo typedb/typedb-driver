@@ -1,4 +1,4 @@
-[#_◆_string_free_]
+[#_string_free]
 ==== string_free
 
 [source,cpp]
@@ -14,7 +14,7 @@ Frees a native rust string. _WARNING: Always use this function to free strings r
 .Returns
 `void`
 
-[#_◆_string_iterator_drop_]
+[#_string_iterator_drop]
 ==== string_iterator_drop
 
 [source,cpp]
@@ -30,7 +30,7 @@ Frees the native rust ``StringIterator`` object
 .Returns
 `void`
 
-[#_◆_string_iterator_next_]
+[#_string_iterator_next]
 ==== string_iterator_next
 
 [source,cpp]
@@ -46,7 +46,7 @@ Forwards the ``StringIterator`` and returns the next string if it exists, or nul
 .Returns
 `char*`
 
-[#_◆_string_pair_drop_]
+[#_string_pair_drop]
 ==== string_pair_drop
 
 [source,cpp]
@@ -62,7 +62,7 @@ Frees the native rust ``StringPair`` object
 .Returns
 `void`
 
-[#_◆_string_pair_iterator_drop_]
+[#_string_pair_iterator_drop]
 ==== string_pair_iterator_drop
 
 [source,cpp]
@@ -78,7 +78,7 @@ Frees the native rust ``StringPairIterator`` object
 .Returns
 `void`
 
-[#_◆_string_pair_iterator_next_]
+[#_string_pair_iterator_next]
 ==== string_pair_iterator_next
 
 [source,cpp]
@@ -94,7 +94,7 @@ Forwards the ``StringIterator`` and returns the next ``StringPair`` if it exists
 .Returns
 `struct StringPair*`
 
-[#_◆_string_promise_resolve_]
+[#_string_promise_resolve]
 ==== string_promise_resolve
 
 [source,cpp]
@@ -110,7 +110,7 @@ Waits for and returns the result of the operation represented by the ``BoolPromi
 .Returns
 `char*`
 
-[#_◆_bool_promise_resolve_]
+[#_bool_promise_resolve]
 ==== bool_promise_resolve
 
 [source,cpp]
@@ -126,7 +126,7 @@ Waits for and returns the result of the operation represented by the ``BoolPromi
 .Returns
 `bool`
 
-[#_◆_void_promise_resolve_]
+[#_void_promise_resolve]
 ==== void_promise_resolve
 
 [source,cpp]

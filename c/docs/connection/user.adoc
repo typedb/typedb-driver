@@ -1,4 +1,4 @@
-[#_◆_user_drop_]
+[#_user_drop]
 ==== user_drop
 
 [source,cpp]
@@ -14,7 +14,7 @@ Frees the native rust ``User`` object.
 .Returns
 `void`
 
-[#_◆_user_get_password_expiry_seconds_]
+[#_user_get_password_expiry_seconds]
 ==== user_get_password_expiry_seconds
 
 [source,cpp]
@@ -30,7 +30,7 @@ Returns the number of seconds remaining till this user’s current password expi
 .Returns
 `int64_t`
 
-[#_◆_user_get_username_]
+[#_user_get_username]
 ==== user_get_username
 
 [source,cpp]
@@ -46,7 +46,7 @@ Returns the name of this user.
 .Returns
 `char*`
 
-[#_◆_user_iterator_drop_]
+[#_user_iterator_drop]
 ==== user_iterator_drop
 
 [source,cpp]
@@ -62,7 +62,7 @@ Frees the native rust ``UserIterator`` object
 .Returns
 `void`
 
-[#_◆_user_iterator_next_]
+[#_user_iterator_next]
 ==== user_iterator_next
 
 [source,cpp]
@@ -78,7 +78,7 @@ Forwards the ``UserIterator`` and returns the next ``User`` if it exists, or nul
 .Returns
 `struct User*`
 
-[#_◆_user_manager_drop_]
+[#_user_manager_drop]
 ==== user_manager_drop
 
 [source,cpp]
@@ -94,7 +94,7 @@ Frees the native rust ``UserManager`` object
 .Returns
 `void`
 
-[#_◆_user_manager_new_]
+[#_user_manager_new]
 ==== user_manager_new
 
 [source,cpp]
@@ -110,7 +110,7 @@ Creates a ``UserManager`` on the specified connection
 .Returns
 `struct UserManager*`
 
-[#_◆_user_password_update_]
+[#_user_password_update]
 ==== user_password_update
 
 [source,cpp]
@@ -165,7 +165,7 @@ a| `password_new` a| The new password a|
 .Returns
 `void`
 
-[#_◆_users_all_]
+[#_users_all]
 ==== users_all
 
 [source,cpp]
@@ -181,7 +181,7 @@ Retrieves all users which exist on the TypeDB server.
 .Returns
 `struct UserIterator*`
 
-[#_◆_users_contains_]
+[#_users_contains]
 ==== users_contains
 
 [source,cpp]
@@ -197,7 +197,7 @@ Checks if a user with the given name exists.
 .Returns
 `bool`
 
-[#_◆_users_create_]
+[#_users_create]
 ==== users_create
 
 [source,cpp]
@@ -213,7 +213,7 @@ Creates a user with the given name &amp; password.
 .Returns
 `void`
 
-[#_◆_users_current_user_]
+[#_users_current_user]
 ==== users_current_user
 
 [source,cpp]
@@ -229,7 +229,7 @@ Retrieves the user who opened this connection
 .Returns
 `struct User*`
 
-[#_◆_users_delete_]
+[#_users_delete]
 ==== users_delete
 
 [source,cpp]
@@ -245,7 +245,7 @@ Deletes the user with the given username.
 .Returns
 `void`
 
-[#_◆_users_get_]
+[#_users_get]
 ==== users_get
 
 [source,cpp]
@@ -261,7 +261,7 @@ Retrieves a user with the given name.
 .Returns
 `struct User*`
 
-[#_◆_users_set_password_]
+[#_users_set_password]
 ==== users_set_password
 
 [source,cpp]

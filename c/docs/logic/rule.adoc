@@ -1,4 +1,4 @@
-[#_◆_rule_delete_]
+[#_rule_delete]
 ==== rule_delete
 
 [source,cpp]
@@ -14,7 +14,7 @@ Deletes this rule.
 .Returns
 `struct VoidPromise*`
 
-[#_◆_rule_drop_]
+[#_rule_drop]
 ==== rule_drop
 
 [source,cpp]
@@ -30,7 +30,7 @@ Frees the native rust ``ReplicaInfoIterator`` object.
 .Returns
 `void`
 
-[#_◆_rule_get_label_]
+[#_rule_get_label]
 ==== rule_get_label
 
 [source,cpp]
@@ -46,7 +46,7 @@ Retrieves the unique label of the rule.
 .Returns
 `char*`
 
-[#_◆_rule_get_then_]
+[#_rule_get_then]
 ==== rule_get_then
 
 [source,cpp]
@@ -62,7 +62,7 @@ The single statement that constitutes the ‘then’ of the rule.
 .Returns
 `char*`
 
-[#_◆_rule_get_when_]
+[#_rule_get_when]
 ==== rule_get_when
 
 [source,cpp]
@@ -78,7 +78,7 @@ The statements that constitute the ‘when’ of the rule.
 .Returns
 `char*`
 
-[#_◆_rule_is_deleted_]
+[#_rule_is_deleted]
 ==== rule_is_deleted
 
 [source,cpp]
@@ -94,7 +94,7 @@ Check if this rule has been deleted.
 .Returns
 `struct BoolPromise*`
 
-[#_◆_rule_iterator_drop_]
+[#_rule_iterator_drop]
 ==== rule_iterator_drop
 
 [source,cpp]
@@ -110,7 +110,7 @@ Frees the native rust ``RuleIterator`` object.
 .Returns
 `void`
 
-[#_◆_rule_iterator_next_]
+[#_rule_iterator_next]
 ==== rule_iterator_next
 
 [source,cpp]
@@ -126,7 +126,7 @@ Forwards the ``RuleIterator`` and returns the next ``Rule`` if it exists, or nul
 .Returns
 `struct Rule*`
 
-[#_◆_rule_promise_resolve_]
+[#_rule_promise_resolve]
 ==== rule_promise_resolve
 
 [source,cpp]
@@ -142,7 +142,7 @@ Waits for and returns the result of the operation represented by the ``RulePromi
 .Returns
 `struct Rule*`
 
-[#_◆_rule_set_label_]
+[#_rule_set_label]
 ==== rule_set_label
 
 [source,cpp]
@@ -158,7 +158,7 @@ Renames the label of the rule. The new label must remain unique.
 .Returns
 `struct VoidPromise*`
 
-[#_◆_rule_to_string_]
+[#_rule_to_string]
 ==== rule_to_string
 
 [source,cpp]

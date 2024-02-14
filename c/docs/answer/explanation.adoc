@@ -1,4 +1,4 @@
-[#_◆_explainable_drop_]
+[#_explainable_drop]
 ==== explainable_drop
 
 [source,cpp]
@@ -14,7 +14,7 @@ Frees the native rust ``Explainable`` object
 .Returns
 `void`
 
-[#_◆_explainable_get_conjunction_]
+[#_explainable_get_conjunction]
 ==== explainable_get_conjunction
 
 [source,cpp]
@@ -30,7 +30,7 @@ Retrieves the subquery of the original query that is actually being explained.
 .Returns
 `char*`
 
-[#_◆_explainable_get_id_]
+[#_explainable_get_id]
 ==== explainable_get_id
 
 [source,cpp]
@@ -46,7 +46,7 @@ Retrieves the unique ID that identifies this ``Explainable``.
 .Returns
 `int64_t`
 
-[#_◆_explainables_drop_]
+[#_explainables_drop]
 ==== explainables_drop
 
 [source,cpp]
@@ -62,7 +62,7 @@ Frees the native rust ``Explainables`` object
 .Returns
 `void`
 
-[#_◆_explainables_equals_]
+[#_explainables_equals]
 ==== explainables_equals
 
 [source,cpp]
@@ -78,7 +78,7 @@ Checks whether the provided ``Explainables`` objects are equal
 .Returns
 `bool`
 
-[#_◆_explainables_get_attribute_]
+[#_explainables_get_attribute]
 ==== explainables_get_attribute
 
 [source,cpp]
@@ -94,7 +94,7 @@ Retrieves the explainable attribute with the given variable name.
 .Returns
 `struct Explainable*`
 
-[#_◆_explainables_get_attributes_keys_]
+[#_explainables_get_attributes_keys]
 ==== explainables_get_attributes_keys
 
 [source,cpp]
@@ -110,7 +110,7 @@ Retrieves all variables corresponding to this ``ConceptMap``’s explainable att
 .Returns
 `struct StringIterator*`
 
-[#_◆_explainables_get_ownership_]
+[#_explainables_get_ownership]
 ==== explainables_get_ownership
 
 [source,cpp]
@@ -126,7 +126,7 @@ Retrieves the explainable attribute ownership with the pair of (owner, attribute
 .Returns
 `struct Explainable*`
 
-[#_◆_explainables_get_ownerships_keys_]
+[#_explainables_get_ownerships_keys]
 ==== explainables_get_ownerships_keys
 
 [source,cpp]
@@ -142,7 +142,7 @@ Retrieves all variables corresponding to this ``ConceptMap``’s explainable own
 .Returns
 `struct StringPairIterator*`
 
-[#_◆_explainables_get_relation_]
+[#_explainables_get_relation]
 ==== explainables_get_relation
 
 [source,cpp]
@@ -158,7 +158,7 @@ Retrieves the explainable relation with the given variable name.
 .Returns
 `struct Explainable*`
 
-[#_◆_explainables_get_relations_keys_]
+[#_explainables_get_relations_keys]
 ==== explainables_get_relations_keys
 
 [source,cpp]
@@ -174,7 +174,7 @@ Retrieves all variables corresponding to this ``ConceptMap``’s explainable rel
 .Returns
 `struct StringIterator*`
 
-[#_◆_explainables_to_string_]
+[#_explainables_to_string]
 ==== explainables_to_string
 
 [source,cpp]
@@ -190,7 +190,7 @@ A string representation of this ``Explainables`` object
 .Returns
 `char*`
 
-[#_◆_explanation_drop_]
+[#_explanation_drop]
 ==== explanation_drop
 
 [source,cpp]
@@ -206,7 +206,7 @@ Frees the native rust ``Explanation`` object
 .Returns
 `void`
 
-[#_◆_explanation_equals_]
+[#_explanation_equals]
 ==== explanation_equals
 
 [source,cpp]
@@ -222,7 +222,7 @@ Checks whether the provided ``Explanation`` objects are equal
 .Returns
 `bool`
 
-[#_◆_explanation_get_conclusion_]
+[#_explanation_get_conclusion]
 ==== explanation_get_conclusion
 
 [source,cpp]
@@ -238,7 +238,7 @@ Retrieves the Conclusion for this Explanation.
 .Returns
 `struct ConceptMap*`
 
-[#_◆_explanation_get_condition_]
+[#_explanation_get_condition]
 ==== explanation_get_condition
 
 [source,cpp]
@@ -254,7 +254,7 @@ Retrieves the Condition for this Explanation.
 .Returns
 `struct ConceptMap*`
 
-[#_◆_explanation_get_mapped_variables_]
+[#_explanation_get_mapped_variables]
 ==== explanation_get_mapped_variables
 
 [source,cpp]
@@ -270,7 +270,7 @@ Retrieves the query variables for this ``Explanation``.
 .Returns
 `struct StringIterator*`
 
-[#_◆_explanation_get_mapping_]
+[#_explanation_get_mapping]
 ==== explanation_get_mapping
 
 [source,cpp]
@@ -286,7 +286,7 @@ Retrieves the rule variables corresponding to the query variable var for this ``
 .Returns
 `struct StringIterator*`
 
-[#_◆_explanation_get_rule_]
+[#_explanation_get_rule]
 ==== explanation_get_rule
 
 [source,cpp]
@@ -302,7 +302,7 @@ Retrieves the Rule for this Explanation.
 .Returns
 `struct Rule*`
 
-[#_◆_explanation_iterator_drop_]
+[#_explanation_iterator_drop]
 ==== explanation_iterator_drop
 
 [source,cpp]
@@ -318,7 +318,7 @@ Frees the native rust ``ExplanationIterator`` object
 .Returns
 `void`
 
-[#_◆_explanation_iterator_next_]
+[#_explanation_iterator_next]
 ==== explanation_iterator_next
 
 [source,cpp]
@@ -334,7 +334,7 @@ Forwards the ``Explanation`` and returns the next ``Explanation`` if it exists, 
 .Returns
 `struct Explanation*`
 
-[#_◆_explanation_to_string_]
+[#_explanation_to_string]
 ==== explanation_to_string
 
 [source,cpp]

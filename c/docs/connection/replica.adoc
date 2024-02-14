@@ -1,4 +1,4 @@
-[#_◆_replica_info_drop_]
+[#_replica_info_drop]
 ==== replica_info_drop
 
 [source,cpp]
@@ -14,7 +14,7 @@ Frees the native rust ``ReplicaInfo`` object
 .Returns
 `void`
 
-[#_◆_replica_info_get_address_]
+[#_replica_info_get_address]
 ==== replica_info_get_address
 
 [source,cpp]
@@ -30,7 +30,7 @@ Retrieves the address of the server hosting this replica
 .Returns
 `char*`
 
-[#_◆_replica_info_get_term_]
+[#_replica_info_get_term]
 ==== replica_info_get_term
 
 [source,cpp]
@@ -46,7 +46,7 @@ The raft protocol ‘term’ of this replica.
 .Returns
 `int64_t`
 
-[#_◆_replica_info_is_preferred_]
+[#_replica_info_is_preferred]
 ==== replica_info_is_preferred
 
 [source,cpp]
@@ -62,7 +62,7 @@ Checks whether this is the preferred replica of the raft cluster. If true, Opera
 .Returns
 `bool`
 
-[#_◆_replica_info_is_primary_]
+[#_replica_info_is_primary]
 ==== replica_info_is_primary
 
 [source,cpp]
@@ -78,7 +78,7 @@ Checks whether this is the primary replica of the raft cluster.
 .Returns
 `bool`
 
-[#_◆_replica_info_iterator_drop_]
+[#_replica_info_iterator_drop]
 ==== replica_info_iterator_drop
 
 [source,cpp]
@@ -94,7 +94,7 @@ Frees the native rust ``ReplicaInfoIterator`` object
 .Returns
 `void`
 
-[#_◆_replica_info_iterator_next_]
+[#_replica_info_iterator_next]
 ==== replica_info_iterator_next
 
 [source,cpp]

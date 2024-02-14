@@ -1,4 +1,4 @@
-[#_◆_query_define_]
+[#_query_define]
 ==== query_define
 
 [source,cpp]
@@ -14,7 +14,7 @@ Performs a TypeQL Define query in the transaction.
 .Returns
 `struct VoidPromise*`
 
-[#_◆_query_delete_]
+[#_query_delete]
 ==== query_delete
 
 [source,cpp]
@@ -30,7 +30,7 @@ Performs a TypeQL Delete query in the transaction.
 .Returns
 `struct VoidPromise*`
 
-[#_◆_query_explain_]
+[#_query_explain]
 ==== query_explain
 
 [source,cpp]
@@ -75,7 +75,7 @@ a| `options` a| Specify query options a|
 .Returns
 `struct ExplanationIterator*`
 
-[#_◆_query_fetch_]
+[#_query_fetch]
 ==== query_fetch
 
 [source,cpp]
@@ -91,7 +91,7 @@ Performs a TypeQL Fetch query in the transaction.
 .Returns
 `struct StringIterator*`
 
-[#_◆_query_get_]
+[#_query_get]
 ==== query_get
 
 [source,cpp]
@@ -107,7 +107,7 @@ Performs a TypeQL Get (Get) query in the transaction.
 .Returns
 `struct ConceptMapIterator*`
 
-[#_◆_query_get_aggregate_]
+[#_query_get_aggregate]
 ==== query_get_aggregate
 
 [source,cpp]
@@ -123,7 +123,7 @@ Performs a TypeQL Get Aggregate query in the transaction.
 .Returns
 `struct ConceptPromise*`
 
-[#_◆_query_get_group_]
+[#_query_get_group]
 ==== query_get_group
 
 [source,cpp]
@@ -139,7 +139,7 @@ Performs a TypeQL Get Group query in the transaction.
 .Returns
 `struct ConceptMapGroupIterator*`
 
-[#_◆_query_get_group_aggregate_]
+[#_query_get_group_aggregate]
 ==== query_get_group_aggregate
 
 [source,cpp]
@@ -155,7 +155,7 @@ Performs a TypeQL Get Group Aggregate query in the transaction.
 .Returns
 `struct ValueGroupIterator*`
 
-[#_◆_query_insert_]
+[#_query_insert]
 ==== query_insert
 
 [source,cpp]
@@ -171,7 +171,7 @@ Performs a TypeQL Insert query in the transaction.
 .Returns
 `struct ConceptMapIterator*`
 
-[#_◆_query_undefine_]
+[#_query_undefine]
 ==== query_undefine
 
 [source,cpp]
@@ -187,7 +187,7 @@ Performs a TypeQL Undefine query in the transaction.
 .Returns
 `struct VoidPromise*`
 
-[#_◆_query_update_]
+[#_query_update]
 ==== query_update
 
 [source,cpp]

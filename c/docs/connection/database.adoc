@@ -1,4 +1,4 @@
-[#_◆_database_close_]
+[#_database_close]
 ==== database_close
 
 [source,cpp]
@@ -14,7 +14,7 @@ Frees the native rust ``Database`` object
 .Returns
 `void`
 
-[#_◆_database_delete_]
+[#_database_delete]
 ==== database_delete
 
 [source,cpp]
@@ -30,7 +30,7 @@ Deletes this database.
 .Returns
 `void`
 
-[#_◆_database_get_name_]
+[#_database_get_name]
 ==== database_get_name
 
 [source,cpp]
@@ -46,7 +46,7 @@ The database name as a string.
 .Returns
 `char*`
 
-[#_◆_database_get_preferred_replica_info_]
+[#_database_get_preferred_replica_info]
 ==== database_get_preferred_replica_info
 
 [source,cpp]
@@ -62,7 +62,7 @@ Returns the preferred replica for this database. Operations which can be run on 
 .Returns
 `struct ReplicaInfo*`
 
-[#_◆_database_get_primary_replica_info_]
+[#_database_get_primary_replica_info]
 ==== database_get_primary_replica_info
 
 [source,cpp]
@@ -78,7 +78,7 @@ Returns the primary replica for this database. _Only works in TypeDB Cloud_
 .Returns
 `struct ReplicaInfo*`
 
-[#_◆_database_get_replicas_info_]
+[#_database_get_replicas_info]
 ==== database_get_replicas_info
 
 [source,cpp]
@@ -94,7 +94,7 @@ Set of ``Replica`` instances for this database. Only works in TypeDB Cloud
 .Returns
 `struct ReplicaInfoIterator*`
 
-[#_◆_database_iterator_drop_]
+[#_database_iterator_drop]
 ==== database_iterator_drop
 
 [source,cpp]
@@ -110,7 +110,7 @@ Frees the native rust ``DatabaseIterator`` object
 .Returns
 `void`
 
-[#_◆_database_iterator_next_]
+[#_database_iterator_next]
 ==== database_iterator_next
 
 [source,cpp]
@@ -126,7 +126,7 @@ Forwards the ``DatabaseIterator`` and returns the next ``Database`` if it exists
 .Returns
 `struct Database*`
 
-[#_◆_database_manager_drop_]
+[#_database_manager_drop]
 ==== database_manager_drop
 
 [source,cpp]
@@ -142,7 +142,7 @@ Frees the native rust ``DatabaseManager`` object
 .Returns
 `void`
 
-[#_◆_database_manager_new_]
+[#_database_manager_new]
 ==== database_manager_new
 
 [source,cpp]
@@ -158,7 +158,7 @@ Creates and returns a native ``DatabaseManager`` for the connection
 .Returns
 `struct DatabaseManager*`
 
-[#_◆_database_rule_schema_]
+[#_database_rule_schema]
 ==== database_rule_schema
 
 [source,cpp]
@@ -174,7 +174,7 @@ The rules in the schema as a valid TypeQL define query string.
 .Returns
 `char*`
 
-[#_◆_database_schema_]
+[#_database_schema]
 ==== database_schema
 
 [source,cpp]
@@ -190,7 +190,7 @@ A full schema text as a valid TypeQL define query string.
 .Returns
 `char*`
 
-[#_◆_database_type_schema_]
+[#_database_type_schema]
 ==== database_type_schema
 
 [source,cpp]
@@ -206,7 +206,7 @@ The types in the schema as a valid TypeQL define query string.
 .Returns
 `char*`
 
-[#_◆_databases_all_]
+[#_databases_all]
 ==== databases_all
 
 [source,cpp]
@@ -222,7 +222,7 @@ Returns a ``DatabaseIterator`` over all databases present on the TypeDB server
 .Returns
 `struct DatabaseIterator*`
 
-[#_◆_databases_contains_]
+[#_databases_contains]
 ==== databases_contains
 
 [source,cpp]
@@ -238,7 +238,7 @@ Checks if a database with the given name exists
 .Returns
 `bool`
 
-[#_◆_databases_create_]
+[#_databases_create]
 ==== databases_create
 
 [source,cpp]
@@ -254,7 +254,7 @@ Create a database with the given name
 .Returns
 `void`
 
-[#_◆_databases_get_]
+[#_databases_get]
 ==== databases_get
 
 [source,cpp]

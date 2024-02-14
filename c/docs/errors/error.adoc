@@ -1,4 +1,4 @@
-[#_◆_error_code_]
+[#_error_code]
 ==== error_code
 
 [source,cpp]
@@ -14,7 +14,7 @@ Returns the error code of the ``Error`` object
 .Returns
 `char*`
 
-[#_◆_error_drop_]
+[#_error_drop]
 ==== error_drop
 
 [source,cpp]
@@ -30,7 +30,7 @@ Frees the native rust ``Error`` object
 .Returns
 `void`
 
-[#_◆_error_message_]
+[#_error_message]
 ==== error_message
 
 [source,cpp]
@@ -46,7 +46,7 @@ Returns the error message of the ``Error`` object
 .Returns
 `char*`
 
-[#_◆_get_last_error_]
+[#_get_last_error]
 ==== get_last_error
 
 [source,cpp]
@@ -62,7 +62,7 @@ Returns the error which set the error flag.
 .Returns
 `struct Error*`
 
-[#_◆_check_error_]
+[#_check_error]
 ==== check_error
 
 [source,cpp]

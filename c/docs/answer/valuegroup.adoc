@@ -1,4 +1,4 @@
-[#_◆_value_group_drop_]
+[#_value_group_drop]
 ==== value_group_drop
 
 [source,cpp]
@@ -14,7 +14,7 @@ Frees the native rust ``ValueGroup`` object
 .Returns
 `void`
 
-[#_◆_value_group_equals_]
+[#_value_group_equals]
 ==== value_group_equals
 
 [source,cpp]
@@ -30,7 +30,7 @@ Checks whether the provided ``ValueGroup`` objects are equal
 .Returns
 `bool`
 
-[#_◆_value_group_get_owner_]
+[#_value_group_get_owner]
 ==== value_group_get_owner
 
 [source,cpp]
@@ -46,7 +46,7 @@ Retrieves the concept that is the group owner.
 .Returns
 `struct Concept*`
 
-[#_◆_value_group_get_value_]
+[#_value_group_get_value]
 ==== value_group_get_value
 
 [source,cpp]
@@ -62,7 +62,7 @@ Retrieves the ``Value`` answer of the group.
 .Returns
 `struct Concept*`
 
-[#_◆_value_group_iterator_drop_]
+[#_value_group_iterator_drop]
 ==== value_group_iterator_drop
 
 [source,cpp]
@@ -78,7 +78,7 @@ Frees the native rust ``ValueGroupIterator`` object
 .Returns
 `void`
 
-[#_◆_value_group_iterator_next_]
+[#_value_group_iterator_next]
 ==== value_group_iterator_next
 
 [source,cpp]
@@ -94,7 +94,7 @@ Forwards the ``ValueGroupIterator`` and returns the next ``ValueGroup`` if it ex
 .Returns
 `struct ValueGroup*`
 
-[#_◆_value_group_to_string_]
+[#_value_group_to_string]
 ==== value_group_to_string
 
 [source,cpp]

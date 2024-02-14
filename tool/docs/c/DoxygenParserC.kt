@@ -113,13 +113,10 @@ class DoxygenParserC : Callable<Unit> {
             // Write to lists
             val typeFileContents: MutableMap<String, MutableList<String>> = HashMap()
             dirs.values.forEach { typeFileContents.put(it, ArrayList()) }
-            println(dirs.values.distinct().reduce { x, y -> x + ", " + y })
             typedefs.map {
-                System.out.println(resolveKey(it.name) + " : " + dirs.containsKey(resolveKey(it.name)))
                 typeFileContents.get(dirs.get(resolveKey(it.name)))!!.add(it.toAsciiDoc("cpp"))
             }
             enums.forEach {
-                System.out.println(resolveKey(it.name) + " : " + dirs.containsKey(resolveKey(it.name)))
                 typeFileContents.get(dirs.get(resolveKey(it.name)))!!.add(it.toAsciiDoc("cpp"))
             }
             val fileContents: MutableMap<String, MutableList<String>> = HashMap()
@@ -173,8 +170,7 @@ class DoxygenParserC : Callable<Unit> {
 
     private fun parseEnum(element: Element): Class {
         val id = element.previousElementSibling()?.previousElementSibling()?.id()!!
-        val fullyQualifiedName = element.select("td.memname > a").text()
-        val className = fullyQualifiedName.substringAfterLast("::")
+        val className = element.select("td.memname > a").text()
         val classAnchor = replaceSymbolsForAnchor(className)
         val classDescr: List<String> = element.selectFirst("div.memdoc")
             ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
@@ -187,20 +183,19 @@ class DoxygenParserC : Callable<Unit> {
                 .map {
                     EnumConstant(it.trim())
                 }
-        val packagePath = fullyQualifiedName.substringBeforeLast("::")
         return Class(
             name = className,
             anchor = classAnchor,
             description = classDescr,
             enumConstants = enumConstants,
             examples = classExamples,
-            packagePath = packagePath,
         )
     }
 
     private fun parseMethod(element: Element): Method {
-        val methodAnchor = replaceSymbolsForAnchor(element.previousElementSibling()!!.text())
         val methodName = element.previousElementSibling()!!.text().substringBefore("()").substringAfter(" ")
+        val methodAnchor = replaceSymbolsForAnchor(methodName)
+        println(methodAnchor)
         val methodSignature = enhanceSignature(element.selectFirst("table.memname")!!.text())
         val argsList = getArgsFromSignature(methodSignature)
         val argsMap = argsList.toMap()
