@@ -59,11 +59,7 @@ dir_mapping = {
     "ConceptMap": "answer",
     "BoolPromise" : "answer",
     "VoidPromise" : "answer",
-    "StringPair" : "answer",
-    "StringPairIterator" : "answer",
-    "StringIterator" : "answer",
-    "StringPromise" : "answer",
-    "string_" : "answer",
+    "string" : "answer",
     "bool_promise" : "answer",
     "void_promise" : "answer",
 
@@ -82,9 +78,18 @@ dir_mapping = {
     "RolePlayer" : "concept",
     "thing" : "concept",
     "value" : "concept",
+
+    # Extra files
+    "primitives" : "answer",
 }
 
 force_file = {
     "check_error" : "error",
+    "get_last_error" : "error",
+    "init_logging" : "connection",
 
+    "boolpromise" : "primitives",
+    "voidpromise" : "primitives",
+    "string" : "primitives",
+    "explain" : "explanation",
 }

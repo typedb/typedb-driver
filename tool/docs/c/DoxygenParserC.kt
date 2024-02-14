@@ -57,19 +57,28 @@ class DoxygenParserC : Callable<Unit> {
      * If no directory is specified for at least one file, an exception will be thrown.
      */
     @CommandLine.Option(names = ["--dir", "-d"], required = true)
-    private lateinit var rawDirs: MutableMap<String, String>
+    private lateinit var unnormalisedDirs: MutableMap<String, String>
 
-    private lateinit var sortedDirsLongest : List<Pair<String, String>>
+    private lateinit var sortedDirsLongest: List<Pair<String, String>>
 
     @CommandLine.Option(names = ["--forcefile", "-f"], required = true)
-    private lateinit var filenameOverrides: MutableMap<String, String>
+    private lateinit var unnormalisedFilenameOverrides: MutableMap<String, String>
 
     @Override
     override fun call() {
         val inputDirectoryName = inputDirectoryNames[0]
-        val dirs : MutableMap<String, String> = HashMap()
-        rawDirs.entries.forEach { entry -> dirs.put(normaliseKey(entry.key), entry.value) }
-        sortedDirsLongest = dirs.entries.map { entry -> Pair(entry.key, entry.value) }.sortedByDescending { it.first.length }.toList()
+        val dirs: MutableMap<String, String> = HashMap()
+        unnormalisedDirs.entries.forEach { entry -> dirs.put(normaliseKey(entry.key), entry.value) }
+        val filenameOverrides: MutableMap<String, String> = HashMap()
+        unnormalisedFilenameOverrides.entries.forEach { entry ->
+            filenameOverrides.put(
+                normaliseKey(entry.key),
+                normaliseKey(entry.value)
+            )
+        }
+
+        sortedDirsLongest =
+            dirs.entries.map { entry -> Pair(entry.key, entry.value) }.sortedByDescending { it.first.length }.toList()
 
         val docsDir = System.getenv("BUILD_WORKSPACE_DIRECTORY")?.let { Paths.get(it).resolve(outputDirectoryName) }
             ?: Paths.get(outputDirectoryName)
@@ -83,30 +92,28 @@ class DoxygenParserC : Callable<Unit> {
             val parsed = Jsoup.parse(html)
 
             // Typedef
-            val typeDefTBody =
-                parsed.select("tr.heading").filter { element -> element.text().equals("Typedefs") }.first().parent()!!
-            val typedefs = typeDefTBody.select("tr").filter { tr ->
-                tr.className().startsWith("memitem")
-            }.map {
-                parseTypeDef(it!!)
-            }.toList()
+            val typedefs = parsed.select("td.memname").filter { element -> element.text().startsWith("typedef") }
+                .map { element -> element.parents().select(".memitem").first() }
+                .map {
+                    parseTypeDef(it!!)
+                }.toList()
 
             // Enums
-            val enums = parsed.select("td.memname").filter { element ->
-                element.text().startsWith("enum")
-            }.map { element -> element.parents().select(".memitem").first() }.map {
-                parseEnum(it!!)
-            }.filter {
-                it.name.isNotEmpty()
-            }.toList()
+            val enums = parsed.select("td.memname").filter { element -> element.text().startsWith("enum") }
+                .map { element -> element.parents().select(".memitem").first() }.map {
+                    parseEnum(it!!)
+                }.filter {
+                    it.name.isNotEmpty()
+                }.toList()
             val functions = parsed.select("h2").filter { element -> element.text().endsWith("()") }
-                .map { element -> element.nextElementSibling()!!  }.filter { element -> element.className().equals("memitem") }
-                .map{memItemElement -> parseMethod(memItemElement) }
+                .map { element -> element.nextElementSibling()!! }
+                .filter { element -> element.className().equals("memitem") }
+                .map { memItemElement -> parseMethod(memItemElement) }
 
             // Write to lists
-            val typeFileContents : MutableMap<String, MutableList<String>> = HashMap()
-            dirs.values.forEach{ typeFileContents.put(it, ArrayList()) }
-            println(dirs.values.distinct().reduce{ x,y -> x + ", " + y })
+            val typeFileContents: MutableMap<String, MutableList<String>> = HashMap()
+            dirs.values.forEach { typeFileContents.put(it, ArrayList()) }
+            println(dirs.values.distinct().reduce { x, y -> x + ", " + y })
             typedefs.map {
                 System.out.println(resolveKey(it.name) + " : " + dirs.containsKey(resolveKey(it.name)))
                 typeFileContents.get(dirs.get(resolveKey(it.name)))!!.add(it.toAsciiDoc("cpp"))
@@ -115,8 +122,8 @@ class DoxygenParserC : Callable<Unit> {
                 System.out.println(resolveKey(it.name) + " : " + dirs.containsKey(resolveKey(it.name)))
                 typeFileContents.get(dirs.get(resolveKey(it.name)))!!.add(it.toAsciiDoc("cpp"))
             }
-            val fileContents : MutableMap<String, MutableList<String>> = HashMap()
-            dirs.keys.forEach{ fileContents.put(resolveKey(it), ArrayList()) }
+            val fileContents: MutableMap<String, MutableList<String>> = HashMap()
+            dirs.keys.forEach { fileContents.put(resolveKey(it), ArrayList()) }
             functions.forEach {
                 fileContents.get(resolveKey(it.name))!!.add(it.toAsciiDoc("cpp"))
             }
@@ -126,7 +133,7 @@ class DoxygenParserC : Callable<Unit> {
                 val outputFile = createFile(docsDir.resolve(entry.key), "types.adoc")
                 entry.value.forEach { outputFile.appendText(it) }
             }
-            fileContents.entries.filter { it.value.isNotEmpty() }.forEach{entry ->
+            fileContents.entries.filter { it.value.isNotEmpty() }.forEach { entry ->
                 val resolvedKey = resolveKey(entry.key)
                 val filename = filenameOverrides.getOrDefault(resolvedKey, resolvedKey)
                 val outputFile = createFile(docsDir.resolve(dirs.get(filename)), filename + ".adoc")
@@ -136,16 +143,16 @@ class DoxygenParserC : Callable<Unit> {
         }
     }
 
-    private fun createFile(fileDir: Path, filename: String) : File {
+    private fun createFile(fileDir: Path, filename: String): File {
         if (!fileDir.toFile().exists()) {
             Files.createDirectory(fileDir)
         }
-        val outputFile = fileDir.resolve(filename + ".adoc").toFile()
+        val outputFile = fileDir.resolve(filename).toFile()
         outputFile.createNewFile()
         return outputFile
     }
 
-    private fun normaliseKey(key: String) : String {
+    private fun normaliseKey(key: String): String {
         return key.replace("_", "").lowercase(Locale.getDefault())
     }
 
@@ -154,28 +161,14 @@ class DoxygenParserC : Callable<Unit> {
     }
 
     private fun parseTypeDef(element: Element): Class {
-        val memItemLeft = element.selectFirst("td.memItemLeft")
-        if (memItemLeft != null) {
-            if (memItemLeft.text().startsWith("typedef")) {
-                val actual = element.selectFirst("td.memItemLeft")!!.text().substringAfter("typedef ")
-                val alias = element.selectFirst("td.memItemRight")!!.text()
-                return Class(
-                    name = alias,
-                    anchor = replaceSymbolsForAnchor(alias),
-                    description = listOf("Alias for ${replaceLocalLinks(HashMap(), actual)}"),
-                )
-            } else if (memItemLeft!!.text().startsWith("using")) {
-                val usingEquality = element.selectFirst("td.memItemRight")!!
-                val actual = usingEquality.text().substringAfter("=").trim()
-                val alias = usingEquality.text().substringBefore("=").trim()
-                return Class(
-                    name = alias,
-                    anchor = replaceSymbolsForAnchor(alias),
-                    description = listOf("Alias for ${actual}")
-                )
-            }
-        }
-        return Class("")
+        val name = element.select("td.memname > a").text()
+        val desc: List<String> = element.selectFirst("div.memdoc")
+            ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
+        return Class(
+            name = name,
+            anchor = replaceSymbolsForAnchor(name),
+            description = desc,
+        )
     }
 
     private fun parseEnum(element: Element): Class {
@@ -278,9 +271,9 @@ class DoxygenParserC : Callable<Unit> {
     private fun replaceLocalLinks(idToAnchor: Map<String, String>, html: String): String {
         // The Intellij preview messes up nested templates & The '>>' used for cross links.
         return Regex("<a class=\"el\" href=\"[^\"^#]*#([^\"]*)\">([^<]*)</a>")
-            .replace(html,{
+            .replace(html, {
                 if (idToAnchor.containsKey(it.groupValues[1]))
-                "<<#_%s,%s>>".format(idToAnchor.get(it.groupValues[1]), it.groupValues[2])
+                    "<<#_%s,%s>>".format(idToAnchor.get(it.groupValues[1]), it.groupValues[2])
                 else "%s".format(it.groupValues[2])
             })
     }

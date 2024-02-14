@@ -1,0 +1,7 @@
+[#_SchemaExceptionIterator_SchemaExceptionIterator]
+=== SchemaExceptionIterator SchemaExceptionIterator
+
+
+
+Iterator over the ``SchemaException``s in the result of concepts_get_schema_exceptions(Transaction*).
+

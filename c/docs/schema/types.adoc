@@ -1,0 +1,30 @@
+[#_Transitivity_Transitivity]
+=== Transitivity Transitivity
+
+
+
+Used for specifying whether we need explicit or transitive subtyping, instances, etc.
+
+
+[#_Transitivity]
+=== Transitivity
+
+*Package*: `Transitivity`
+
+
+
+Used for specifying whether we need explicit or transitive subtyping, instances, etc.
+
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols="~"]
+[options="header"]
+|===
+|Name
+a| `Explicit`
+a| `Transitive`
+|===
+// end::enum_constants[]
+

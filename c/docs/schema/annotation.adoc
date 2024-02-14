@@ -1,0 +1,112 @@
+[#_◆_annotation_drop_]
+==== annotation_drop
+
+[source,cpp]
+----
+void annotation_drop(struct Annotation* annotation)
+----
+
+
+
+Frees the native rust ``Annotation`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_◆_annotation_equals_]
+==== annotation_equals
+
+[source,cpp]
+----
+bool annotation_equals(const struct Annotation* lhs, const struct Annotation* rhs)
+----
+
+
+
+Checks whether the provided ``Annotation`` objects are equal
+
+[caption=""]
+.Returns
+`bool`
+
+[#_◆_annotation_is_key_]
+==== annotation_is_key
+
+[source,cpp]
+----
+bool annotation_is_key(const struct Annotation* annotation)
+----
+
+
+
+Checks whether the provided ``Annotation`` is ``@key``
+
+[caption=""]
+.Returns
+`bool`
+
+[#_◆_annotation_is_unique_]
+==== annotation_is_unique
+
+[source,cpp]
+----
+bool annotation_is_unique(const struct Annotation* annotation)
+----
+
+
+
+Checks whether the provided ``Annotation`` is ``@unique``
+
+[caption=""]
+.Returns
+`bool`
+
+[#_◆_annotation_new_key_]
+==== annotation_new_key
+
+[source,cpp]
+----
+struct Annotation* annotation_new_key(void)
+----
+
+
+
+Produces a ``@key`` annotation.
+
+[caption=""]
+.Returns
+`struct Annotation*`
+
+[#_◆_annotation_new_unique_]
+==== annotation_new_unique
+
+[source,cpp]
+----
+struct Annotation* annotation_new_unique(void)
+----
+
+
+
+Produces a ``@unique`` annotation.
+
+[caption=""]
+.Returns
+`struct Annotation*`
+
+[#_◆_annotation_to_string_]
+==== annotation_to_string
+
+[source,cpp]
+----
+char* annotation_to_string(const struct Annotation* annotation)
+----
+
+
+
+A string representation of this ``Annotation`` object
+
+[caption=""]
+.Returns
+`char*`
+
