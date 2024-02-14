@@ -27,6 +27,10 @@ use super::{
 };
 use crate::promise::VoidPromise;
 
+/// Opens a transaction to perform read or write queries on the database connected to the session.
+///
+/// @param type_ The type of transaction to be created (Write or Read).
+/// @param options Options for the transaction
 #[no_mangle]
 pub extern "C" fn transaction_new(
     session: *const Session,
@@ -36,31 +40,42 @@ pub extern "C" fn transaction_new(
     try_release(borrow(session).transaction_with_options(type_, *borrow(options)))
 }
 
+/// Closes the transaction.
 #[no_mangle]
 pub extern "C" fn transaction_close(txn: *mut Transaction<'static>) {
     free(txn);
 }
 
+/// Forcibly closes this transaction. To be used in exceptional cases.
 #[no_mangle]
 pub extern "C" fn transaction_force_close(txn: *mut Transaction<'static>) {
     borrow_mut(txn).force_close();
 }
 
+/// Commits the changes made via this transaction to the TypeDB database.
+/// Whether or not the transaction is commited successfully, the transaction is closed after the commit call.
 #[no_mangle]
 pub extern "C" fn transaction_commit(txn: *mut Transaction<'static>) -> *mut VoidPromise {
     release(VoidPromise(Box::new(take_ownership(txn).commit())))
 }
 
+/// Rolls back the uncommitted changes made via this transaction.
 #[no_mangle]
 pub extern "C" fn transaction_rollback(txn: *const Transaction<'static>) -> *mut VoidPromise {
     release(VoidPromise(Box::new(borrow(txn).rollback())))
 }
 
+/// Checks whether this transaction is open.
 #[no_mangle]
 pub extern "C" fn transaction_is_open(txn: *const Transaction<'static>) -> bool {
     borrow(txn).is_open()
 }
 
+/// Registers a callback function which will be executed when this transaction is closed.
+///
+/// @param txn The transaction on which to register the callback
+/// @param callback_id The argument to be passed to the callback function when it is executed.
+/// @param callback The function to be called
 #[no_mangle]
 pub extern "C" fn transaction_on_close(
     txn: *const Transaction<'static>,

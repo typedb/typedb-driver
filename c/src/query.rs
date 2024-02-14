@@ -36,6 +36,7 @@ use super::{
 };
 use crate::{common::StringIterator, concept::ConceptPromise, memory::release, promise::VoidPromise};
 
+/// Performs a TypeQL Define query in the transaction.
 #[no_mangle]
 pub extern "C" fn query_define(
     transaction: *mut Transaction<'static>,
@@ -47,6 +48,7 @@ pub extern "C" fn query_define(
     )))
 }
 
+/// Performs a TypeQL Undefine query in the transaction.
 #[no_mangle]
 pub extern "C" fn query_undefine(
     transaction: *mut Transaction<'static>,
@@ -58,6 +60,7 @@ pub extern "C" fn query_undefine(
     )))
 }
 
+/// Performs a TypeQL Delete query in the transaction.
 #[no_mangle]
 pub extern "C" fn query_delete(
     transaction: *mut Transaction<'static>,
@@ -69,18 +72,23 @@ pub extern "C" fn query_delete(
     )))
 }
 
+/// Iterator over the <code>ConceptMap</code>s in the result of a TypeQL Get query.
 pub struct ConceptMapIterator(pub CIterator<Result<ConceptMap>>);
 
+/// Forwards the <code>ConceptMapIterator</code> and returns the next <code>ConceptMap</code> if it exists,
+/// or null if there are no more elements.
 #[no_mangle]
 pub extern "C" fn concept_map_iterator_next(it: *mut ConceptMapIterator) -> *mut ConceptMap {
     unsafe { iterator_try_next(addr_of_mut!((*it).0)) }
 }
 
+/// Frees the native rust <code>ConceptMapIterator</code> object
 #[no_mangle]
 pub extern "C" fn concept_map_iterator_drop(it: *mut ConceptMapIterator) {
     free(it);
 }
 
+/// Performs a TypeQL Get (Get) query in the transaction.
 #[no_mangle]
 pub extern "C" fn query_get(
     transaction: *mut Transaction<'static>,
@@ -95,6 +103,7 @@ pub extern "C" fn query_get(
     )
 }
 
+/// Performs a TypeQL Fetch query in the transaction.
 #[no_mangle]
 pub extern "C" fn query_fetch(
     transaction: *mut Transaction<'static>,
@@ -109,6 +118,7 @@ pub extern "C" fn query_fetch(
     )
 }
 
+/// Performs a TypeQL Insert query in the transaction.
 #[no_mangle]
 pub extern "C" fn query_insert(
     transaction: *mut Transaction<'static>,
@@ -123,6 +133,7 @@ pub extern "C" fn query_insert(
     )
 }
 
+/// Performs a TypeQL Update query in the transaction.
 #[no_mangle]
 pub extern "C" fn query_update(
     transaction: *mut Transaction<'static>,
@@ -137,6 +148,7 @@ pub extern "C" fn query_update(
     )
 }
 
+/// Performs a TypeQL Get Aggregate query in the transaction.
 #[no_mangle]
 pub extern "C" fn query_get_aggregate(
     transaction: *mut Transaction<'static>,
@@ -148,18 +160,23 @@ pub extern "C" fn query_get_aggregate(
     ))
 }
 
+/// Iterator over the <code>ConceptMapGroup</code>s in the result of the TypeQL Get Group query.
 pub struct ConceptMapGroupIterator(CIterator<Result<ConceptMapGroup>>);
 
+/// Forwards the <code>ConceptMapGroupIterator</code> and returns the next <code>ConceptMapGroup</code> if it exists,
+/// or null if there are no more elements.
 #[no_mangle]
 pub extern "C" fn concept_map_group_iterator_next(it: *mut ConceptMapGroupIterator) -> *mut ConceptMapGroup {
     unsafe { iterator_try_next(addr_of_mut!((*it).0)) }
 }
 
+/// Frees the native rust <code>ConceptMapGroupIterator</code> object
 #[no_mangle]
 pub extern "C" fn concept_map_group_iterator_drop(it: *mut ConceptMapGroupIterator) {
     free(it);
 }
 
+/// Performs a TypeQL Get Group query in the transaction.
 #[no_mangle]
 pub extern "C" fn query_get_group(
     transaction: *mut Transaction<'static>,
@@ -174,18 +191,23 @@ pub extern "C" fn query_get_group(
     )
 }
 
+/// Iterator over the <code>ValueGroup</code>s in the result of the Get Group Aggregate query.
 pub struct ValueGroupIterator(CIterator<Result<ValueGroup>>);
 
+/// Forwards the <code>ValueGroupIterator</code> and returns the next <code>ValueGroup</code> if it exists,
+/// or null if there are no more elements.
 #[no_mangle]
 pub extern "C" fn value_group_iterator_next(it: *mut ValueGroupIterator) -> *mut ValueGroup {
     unsafe { iterator_try_next(addr_of_mut!((*it).0)) }
 }
 
+/// Frees the native rust <code>ValueGroupIterator</code> object
 #[no_mangle]
 pub extern "C" fn value_group_iterator_drop(it: *mut ValueGroupIterator) {
     free(it);
 }
 
+/// Performs a TypeQL Get Group Aggregate query in the transaction.
 #[no_mangle]
 pub extern "C" fn query_get_group_aggregate(
     transaction: *mut Transaction<'static>,
@@ -200,18 +222,25 @@ pub extern "C" fn query_get_group_aggregate(
     )
 }
 
+/// Iterator over the <code>Explanation</code>s in the result of the explain query.
 pub struct ExplanationIterator(CIterator<Result<Explanation>>);
 
+/// Forwards the <code>Explanation</code> and returns the next <code>Explanation</code> if it exists,
+/// or null if there are no more elements.
 #[no_mangle]
 pub extern "C" fn explanation_iterator_next(it: *mut ExplanationIterator) -> *mut Explanation {
     unsafe { iterator_try_next(addr_of_mut!((*it).0)) }
 }
 
+/// Frees the native rust <code>ExplanationIterator</code> object
 #[no_mangle]
 pub extern "C" fn explanation_iterator_drop(it: *mut ExplanationIterator) {
     free(it);
 }
 
+/// Performs a TypeQL Explain query in the transaction.
+/// @param explainable The Explainable to be explained
+//  @param options Specify query options
 #[no_mangle]
 pub extern "C" fn query_explain(
     transaction: *mut Transaction<'static>,

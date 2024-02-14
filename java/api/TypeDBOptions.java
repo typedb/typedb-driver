@@ -346,9 +346,6 @@ public class TypeDBOptions extends NativeObject<com.vaticle.typedb.driver.jni.Op
     }
 
     /**
-     * Returns the value set for the schema lock acquire timeout in this <code>TypeDBOptions</code> object.
-     * If set, specifies how long the driver should wait if opening a session or transaction is blocked
-     * by a schema write lock.
      *
      * <h3>Examples</h3>
      * <pre>
