@@ -240,7 +240,7 @@ pub extern "C" fn explanation_iterator_drop(it: *mut ExplanationIterator) {
 
 /// Performs a TypeQL Explain query in the transaction.
 /// @param explainable The Explainable to be explained
-//  @param options Specify query options
+///  @param options Specify query options
 #[no_mangle]
 pub extern "C" fn query_explain(
     transaction: *mut Transaction<'static>,

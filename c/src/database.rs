@@ -41,25 +41,25 @@ pub extern "C" fn database_get_name(database: *const Database) -> *mut c_char {
     release_string(borrow(database).name().to_owned())
 }
 
-// Deletes this database.
+/// Deletes this database.
 #[no_mangle]
 pub extern "C" fn database_delete(database: *mut Database) {
     unwrap_void(take_ownership(database).delete());
 }
 
-// A full schema text as a valid TypeQL define query string.
+/// A full schema text as a valid TypeQL define query string.
 #[no_mangle]
 pub extern "C" fn database_schema(database: *mut Database) -> *mut c_char {
     try_release_string(borrow_mut(database).schema())
 }
 
-// The types in the schema as a valid TypeQL define query string.
+/// The types in the schema as a valid TypeQL define query string.
 #[no_mangle]
 pub extern "C" fn database_type_schema(database: *mut Database) -> *mut c_char {
     try_release_string(borrow_mut(database).type_schema())
 }
 
-// The rules in the schema as a valid TypeQL define query string.
+/// The rules in the schema as a valid TypeQL define query string.
 #[no_mangle]
 pub extern "C" fn database_rule_schema(database: *mut Database) -> *mut c_char {
     try_release_string(borrow_mut(database).rule_schema())
@@ -81,8 +81,8 @@ pub extern "C" fn replica_info_iterator_drop(it: *mut ReplicaInfoIterator) {
     free(it);
 }
 
-// Set of <code>Replica</code> instances for this database.
-// <b>Only works in TypeDB Cloud</b>
+/// Set of <code>Replica</code> instances for this database.
+/// <b>Only works in TypeDB Cloud</b>
 #[no_mangle]
 pub extern "C" fn database_get_replicas_info(database: *const Database) -> *mut ReplicaInfoIterator {
     release(ReplicaInfoIterator(CIterator(box_stream(borrow(database).replicas_info().into_iter()))))

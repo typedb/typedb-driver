@@ -130,7 +130,7 @@ pub extern "C" fn options_get_trace_inference(options: *const Options) -> bool {
 }
 
 ///Returns the value set for the explanation in this <code>TypeDBOptions</code> object.
-// If set to <code>true</code>, explanations for queries are enabled.
+/// If set to <code>true</code>, explanations for queries are enabled.
 #[no_mangle]
 pub extern "C" fn options_get_explain(options: *const Options) -> bool {
     borrow(options).explain.unwrap()

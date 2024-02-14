@@ -46,7 +46,7 @@ pub extern "C" fn thing_get_iid(thing: *mut Concept) -> *mut c_char {
     release_string(borrow_as_thing(thing).iid().to_string())
 }
 
-// Checks if this ``Thing`` is inferred by a [Reasoning Rule].
+/// Checks if this ``Thing`` is inferred by a [Reasoning Rule].
 #[no_mangle]
 pub extern "C" fn thing_get_is_inferred(thing: *mut Concept) -> bool {
     borrow_as_thing(thing).is_inferred()

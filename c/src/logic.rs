@@ -103,8 +103,8 @@ pub extern "C" fn rule_promise_resolve(promise: *mut RulePromise) -> *mut Rule {
 /// Creates a new Rule if none exists with the given label, or replaces the existing one.
 ///
 /// @param label The label of the Rule to create or replace
-//  @param when The when body of the rule to create
-//  @param then The then body of the rule to create
+///  @param when The when body of the rule to create
+///  @param then The then body of the rule to create
 #[no_mangle]
 pub extern "C" fn logic_manager_put_rule(
     transaction: *mut Transaction<'static>,
