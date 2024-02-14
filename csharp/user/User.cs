@@ -32,7 +32,7 @@ namespace Vaticle.Typedb.Driver.User
     {
         private readonly UserManager _users;
 
-        User(Pinvoke.User nativeUser, UserManager users)
+        public User(Pinvoke.User nativeUser, UserManager users)
             : base(nativeUser) 
         {
             _users = users;

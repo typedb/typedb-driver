@@ -172,7 +172,7 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
                 return new Explainable(explainable);
             }
     
-            public override IExplainable Ownership(string , string attribute)
+            public override IExplainable Ownership(string owner, string attribute)
             {
                 InputChecker.NonEmptyString(owner, ConceptError.MISSING_VARIABLE);
                 InputChecker.NonEmptyString(attribute, ConceptError.MISSING_VARIABLE);
@@ -265,7 +265,6 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
                 return (AllRelations.ToList(),
                         AllAttributes.ToList(),
                         AllOwnerships.ToList()).GetHashCode();
-                );
             }
         }
     
