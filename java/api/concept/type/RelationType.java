@@ -116,8 +116,8 @@ public interface RelationType extends ThingType {
     Stream<? extends RoleType> getRelates(TypeDBTransaction transaction, Transitivity transitivity);
 
     /**
-     * Retrieves roles that this <code>RelationType</code> relates to directly or via inheritance.
-     * If <code>role_label</code> is given, returns a corresponding <code>RoleType</code> or <code>null</code>.
+     * Retrieves the role with the specified label that this <code>RelationType</code> relates to, directly or via inheritance.
+     * Returns the corresponding <code>RoleType</code> or <code>null</code>.
      *
      * <h3>Examples</h3>
      * <pre>
