@@ -89,6 +89,11 @@ pub extern "C" fn thing_is_deleted(transaction: *mut Transaction<'static>, thing
 }
 
 /// Retrieves the ``Attribute``s that this ``Thing`` owns, optionally filtered by ``AttributeType``s.
+///
+/// @param transaction The current transaction
+/// @param thing The thing to get owned attributes of
+/// @param attribute_types a null-terminated array holding the attribute-types to include
+/// @param annotations a null-terminated array of annotations - If non-empty, Only retrieves attributes with all given <code>Annotation</code>s
 #[no_mangle]
 pub extern "C" fn thing_get_has(
     transaction: *mut Transaction<'static>,
@@ -127,8 +132,10 @@ pub extern "C" fn thing_unset_has(
     release(VoidPromise(Box::new(borrow_as_thing(thing).unset_has(transaction, attribute))))
 }
 
-// Retrieves all the ``Relations`` which this ``Thing`` plays a role in,
-// optionally filtered by one or more given roles.
+/// Retrieves all the ``Relations`` which this ``Thing`` plays a role in,
+/// optionally filtered by one or more given roles.
+///
+/// @param role_types: a null-terminated array of ``RoleType``s to include.
 #[no_mangle]
 pub extern "C" fn thing_get_relations(
     transaction: *mut Transaction<'static>,
@@ -179,6 +186,8 @@ pub extern "C" fn relation_remove_role_player(
 }
 
 /// Retrieves all role players of this ``Relation``, optionally filtered by given role types.
+///
+/// @param role_types: a null-terminated array of ``RoleType``s to include.
 #[no_mangle]
 pub extern "C" fn relation_get_players_by_role_type(
     transaction: *mut Transaction<'static>,

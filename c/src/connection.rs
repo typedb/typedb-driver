@@ -39,8 +39,8 @@ pub extern "C" fn connection_open_core(address: *const c_char) -> *mut Connectio
 /// Open a TypeDB Driver to TypeDB Cloud server(s) available at the provided addresses, using
 /// the provided credential.
 ///
-/// @param addresses The address(es) of the TypeDB server(s)
-/// @param credential The Credential to connect with
+/// @param addresses a null-terminated array holding the address(es) of the TypeDB server(s)
+/// @param credential The <code>Credential</code> to connect with
 #[no_mangle]
 pub extern "C" fn connection_open_cloud(
     addresses: *const *const c_char,

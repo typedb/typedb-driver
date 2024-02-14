@@ -110,6 +110,11 @@ pub extern "C" fn thing_type_unset_abstract(
 
 /// Retrieves <code>AttributeType</code> that the instances of this
 /// <code>ThingType</code> are allowed to own directly or via inheritance.
+/// Specify <code>Explicit</code> to only include directly owned types,
+/// or <code>Transitive</code> to include inherited
+///
+/// @param annotations a null-terminated array of <code>Annotation</code>s -
+///                    If non-empty, Only retrieves attribute types owned with all specified annotations.
 #[no_mangle]
 pub extern "C" fn thing_type_get_owns(
     transaction: *const Transaction<'static>,
@@ -617,6 +622,8 @@ pub extern "C" fn attribute_type_unset_regex(
 ///  directly or through inheritance.
 /// Specify <code>Transitive</code> for direct and inherited ownership,
 /// or <code>Explicit</code> for direct ownership only
+/// @param annotations a null-terminated array of <code>Annotation</code>s -
+///                    If non-empty, Only retrieves thing types of ownerships with all specified annotations.
 #[no_mangle]
 pub extern "C" fn attribute_type_get_owners(
     transaction: *mut Transaction<'static>,
