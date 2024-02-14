@@ -29,8 +29,8 @@ use crate::{
 };
 
 /// Promise object representing the result of an asynchronous operation.
-/// A VoidPromise does not return a value, but must be resolved to ensure the operation has completed,
-/// or for a failed operation to set the error.
+/// A VoidPromise does not return a value, but must be resolved using \ref void_promise_resolve(VoidPromise*)
+/// to ensure the operation has completed, or for a failed operation to set the error.
 pub struct VoidPromise(pub BoxPromise<'static, Result<()>>);
 
 /// Waits for the operation represented by the <code>VoidPromise</code> to complete.

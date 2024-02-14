@@ -40,46 +40,55 @@ use crate::{
     promise::{BoolPromise, VoidPromise},
 };
 
+/// Retrieves the unique id of the ``Thing``.
 #[no_mangle]
 pub extern "C" fn thing_get_iid(thing: *mut Concept) -> *mut c_char {
     release_string(borrow_as_thing(thing).iid().to_string())
 }
 
+// Checks if this ``Thing`` is inferred by a [Reasoning Rule].
 #[no_mangle]
 pub extern "C" fn thing_get_is_inferred(thing: *mut Concept) -> bool {
     borrow_as_thing(thing).is_inferred()
 }
 
+/// Retrieves the type which this ``Entity`` belongs to.
 #[no_mangle]
 pub extern "C" fn entity_get_type(entity: *const Concept) -> *mut Concept {
     release(Concept::EntityType(borrow_as_entity(entity).type_.clone()))
 }
 
+/// Retrieves the type which this ``Relation`` belongs to.
 #[no_mangle]
 pub extern "C" fn relation_get_type(relation: *const Concept) -> *mut Concept {
     release(Concept::RelationType(borrow_as_relation(relation).type_.clone()))
 }
 
+/// Retrieves the type which this ``Attribute`` belongs to.
 #[no_mangle]
 pub extern "C" fn attribute_get_type(attribute: *const Concept) -> *mut Concept {
     release(Concept::AttributeType(borrow_as_attribute(attribute).type_.clone()))
 }
 
+/// Retrieves the type which this ``Relation`` belongs to.
 #[no_mangle]
 pub extern "C" fn attribute_get_value(attribute: *const Concept) -> *mut Concept {
     release(Concept::Value(borrow_as_attribute(attribute).value.clone()))
 }
 
+/// Deletes this ``Thing``.
 #[no_mangle]
 pub extern "C" fn thing_delete(transaction: *mut Transaction<'static>, thing: *mut Concept) -> *mut VoidPromise {
     release(VoidPromise(Box::new(borrow_as_thing(thing).delete(borrow(transaction)))))
 }
 
+/// Checks if this ``Thing`` is deleted.
 #[no_mangle]
 pub extern "C" fn thing_is_deleted(transaction: *mut Transaction<'static>, thing: *const Concept) -> *mut BoolPromise {
     release(BoolPromise(Box::new(borrow_as_thing(thing).is_deleted(borrow(transaction)))))
 }
 
+/// Retrieves the ``Attribute``s that this ``Thing`` owns, optionally filtered by ``AttributeType``s.
 #[no_mangle]
 pub extern "C" fn thing_get_has(
     transaction: *mut Transaction<'static>,
@@ -94,6 +103,7 @@ pub extern "C" fn thing_get_has(
     try_release(thing.get_has(transaction, attribute_types, annotations).map(ConceptIterator::attributes))
 }
 
+/// Assigns an ``Attribute`` to be owned by this ``Thing``.
 #[no_mangle]
 pub extern "C" fn thing_set_has(
     transaction: *mut Transaction<'static>,
@@ -105,6 +115,7 @@ pub extern "C" fn thing_set_has(
     release(VoidPromise(Box::new(borrow_as_thing(thing).set_has(transaction, attribute))))
 }
 
+/// Unassigns an ``Attribute`` from this ``Thing``.
 #[no_mangle]
 pub extern "C" fn thing_unset_has(
     transaction: *mut Transaction<'static>,
@@ -116,6 +127,8 @@ pub extern "C" fn thing_unset_has(
     release(VoidPromise(Box::new(borrow_as_thing(thing).unset_has(transaction, attribute))))
 }
 
+// Retrieves all the ``Relations`` which this ``Thing`` plays a role in,
+// optionally filtered by one or more given roles.
 #[no_mangle]
 pub extern "C" fn thing_get_relations(
     transaction: *mut Transaction<'static>,
@@ -127,6 +140,7 @@ pub extern "C" fn thing_get_relations(
     try_release(borrow_as_thing(thing).get_relations(transaction, role_types).map(ConceptIterator::relations))
 }
 
+/// Retrieves the roles that this ``Thing`` is currently playing.
 #[no_mangle]
 pub extern "C" fn thing_get_playing(
     transaction: *mut Transaction<'static>,
@@ -136,6 +150,7 @@ pub extern "C" fn thing_get_playing(
     try_release(borrow_as_thing(thing).get_playing(transaction).map(ConceptIterator::role_types))
 }
 
+/// Adds a new role player to play the given role in this ``Relation``.
 #[no_mangle]
 pub extern "C" fn relation_add_role_player(
     transaction: *mut Transaction<'static>,
@@ -149,6 +164,7 @@ pub extern "C" fn relation_add_role_player(
     release(VoidPromise(Box::new(borrow_as_relation(relation).add_role_player(transaction, role_type, player))))
 }
 
+/// Removes the association of the given instance that plays the given role in this ``Relation``.
 #[no_mangle]
 pub extern "C" fn relation_remove_role_player(
     transaction: *mut Transaction<'static>,
@@ -162,6 +178,7 @@ pub extern "C" fn relation_remove_role_player(
     release(VoidPromise(Box::new(borrow_as_relation(relation).remove_role_player(transaction, role_type, player))))
 }
 
+/// Retrieves all role players of this ``Relation``, optionally filtered by given role types.
 #[no_mangle]
 pub extern "C" fn relation_get_players_by_role_type(
     transaction: *mut Transaction<'static>,
@@ -175,6 +192,7 @@ pub extern "C" fn relation_get_players_by_role_type(
     )
 }
 
+/// Retrieves all instance involved in the ``Relation``, each paired with the role it plays.
 #[no_mangle]
 pub extern "C" fn relation_get_role_players(
     transaction: *mut Transaction<'static>,
@@ -184,6 +202,7 @@ pub extern "C" fn relation_get_role_players(
     try_release(borrow_as_relation(relation).get_role_players(transaction).map(RolePlayerIterator::new))
 }
 
+/// Retrieves all role types currently played in this ``Relation``.
 #[no_mangle]
 pub extern "C" fn relation_get_relating(
     transaction: *mut Transaction<'static>,
@@ -193,6 +212,7 @@ pub extern "C" fn relation_get_relating(
     try_release(borrow_as_relation(relation).get_relating(transaction).map(ConceptIterator::role_types))
 }
 
+/// Retrieves the instances that own this ``Attribute``.
 #[no_mangle]
 pub extern "C" fn attribute_get_owners(
     transaction: *mut Transaction<'static>,
