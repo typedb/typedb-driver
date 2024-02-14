@@ -82,6 +82,7 @@ impl ConceptPromise {
 
 /// Waits for and returns the result of the operation represented by the <code>ConceptPromise</code> object.
 /// In case the operation failed, the error flag will only be set when the promise is resolved.
+/// The native promise object is freed when it is resolved.
 #[no_mangle]
 pub extern "C" fn concept_promise_resolve(promise: *mut ConceptPromise) -> *mut Concept {
     try_release_optional(take_ownership(promise).0.resolve().transpose())

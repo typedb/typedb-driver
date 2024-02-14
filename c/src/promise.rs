@@ -35,6 +35,7 @@ pub struct VoidPromise(pub BoxPromise<'static, Result<()>>);
 
 /// Waits for the operation represented by the <code>VoidPromise</code> to complete.
 /// In case the operation failed, the error flag will only be set when the promise is resolved.
+/// The native promise object is freed when it is resolved.
 #[no_mangle]
 pub extern "C" fn void_promise_resolve(promise: *mut VoidPromise) {
     unwrap_void(take_ownership(promise).0.resolve());
@@ -46,6 +47,7 @@ pub struct BoolPromise(pub BoxPromise<'static, Result<bool>>);
 
 /// Waits for and returns the result of the operation represented by the <code>BoolPromise</code> object.
 /// In case the operation failed, the error flag will only be set when the promise is resolved.
+/// The native promise object is freed when it is resolved.
 #[no_mangle]
 pub extern "C" fn bool_promise_resolve(promise: *mut BoolPromise) -> bool {
     unwrap_or_default(take_ownership(promise).0.resolve())
@@ -57,6 +59,7 @@ pub struct StringPromise(pub BoxPromise<'static, Result<Option<String>>>);
 
 /// Waits for and returns the result of the operation represented by the <code>BoolPromise</code> object.
 /// In case the operation failed, the error flag will only be set when the promise is resolved.
+/// The native promise object is freed when it is resolved.
 #[no_mangle]
 pub extern "C" fn string_promise_resolve(promise: *mut StringPromise) -> *mut c_char {
     try_release_optional_string(take_ownership(promise).0.resolve().transpose())

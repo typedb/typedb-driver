@@ -94,6 +94,7 @@ pub struct RulePromise(BoxPromise<'static, Result<Option<Rule>>>);
 
 /// Waits for and returns the result of the operation represented by the <code>RulePromise</code> object.
 /// In case the operation failed, the error flag will only be set when the promise is resolved.
+/// The native promise object is freed when it is resolved.
 #[no_mangle]
 pub extern "C" fn rule_promise_resolve(promise: *mut RulePromise) -> *mut Rule {
     try_release_optional(take_ownership(promise).0.resolve().transpose())
