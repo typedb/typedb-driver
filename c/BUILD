@@ -33,6 +33,8 @@ load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@rules_pkg//pkg:mappings.bzl", "pkg_files", "strip_prefix")
 load("@vaticle_bazel_distribution//platform:constraints.bzl", "constraint_linux_arm64", "constraint_linux_x86_64",
      "constraint_mac_arm64", "constraint_mac_x86_64", "constraint_win_x86_64")
+load("//c:docs_structure.bzl", "dir_mapping", "force_file")
+load("//tool/docs:c/rules.bzl", "doxygen_c_to_adoc")
 
 clib_srcs = glob(["src/**/*.rs"])
 
@@ -231,6 +233,15 @@ doxygen_docs(
     main_page_md = ":README.md",
     tags = ["manual"],
 
+)
+
+doxygen_c_to_adoc(
+    name = "docs_adoc",
+    data = [":docs_html"],
+    docs_dirs = dir_mapping,
+    force_file = force_file,
+    output_dir = "c/docs",
+    tags = ["manual"]
 )
 
 checkstyle_test(
