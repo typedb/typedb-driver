@@ -37,16 +37,16 @@ pub extern "C" fn options_drop(options: *mut Options) {
     free(options);
 }
 
-// Explicitly enables or disables inference.
-// Only settable at transaction level and above. Only affects read transactions.
+/// Explicitly enables or disables inference.
+/// Only settable at transaction level and above. Only affects read transactions.
 #[no_mangle]
 pub extern "C" fn options_set_infer(options: *mut Options, infer: bool) {
     borrow_mut(options).infer = Some(infer)
 }
 
-///  * Explicitly enables or disables reasoning tracing.
-///  If set to <code>true</code>, reasoning tracing graphs are output in the logging directory.
-///  Should be used with <code>parallel = False</code>.
+/// Explicitly enables or disables reasoning tracing.
+/// If set to <code>true</code>, reasoning tracing graphs are output in the logging directory.
+/// Should be used with <code>parallel = False</code>.
 #[no_mangle]
 pub extern "C" fn options_set_trace_inference(options: *mut Options, trace_inference: bool) {
     borrow_mut(options).trace_inference = Some(trace_inference);

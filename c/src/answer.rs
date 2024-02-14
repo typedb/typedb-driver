@@ -249,8 +249,6 @@ pub extern "C" fn concept_map_group_equals(lhs: *const ConceptMapGroup, rhs: *co
 }
 
 /// Frees the native rust <code>ValueGroup</code> object
-///
-/// * `value_group -- The pointer to the native `ValueGroup`
 #[no_mangle]
 pub extern "C" fn value_group_drop(value_group: *mut ValueGroup) {
     free(value_group);
