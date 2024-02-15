@@ -227,7 +227,7 @@ Promise<? extends Attribute> get​(TypeDBTransaction transaction,
                                  Value value)
 ----
 
-Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``None``. 
+Retrieves an ``Attribute`` of this ``AttributeType`` with the given value if such ``Attribute`` exists. Otherwise, returns ``null``. 
 
 
 [caption=""]

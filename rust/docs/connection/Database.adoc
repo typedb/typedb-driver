@@ -5,6 +5,8 @@
 
 * `Debug`
 
+A TypeDB database
+
 // tag::methods[]
 [#_struct_Database_delete__]
 ==== delete

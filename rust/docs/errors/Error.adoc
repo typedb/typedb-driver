@@ -1,6 +1,8 @@
 [#_enum_Error]
 === Error
 
+Represents errors encountered during operation.
+
 [caption=""]
 .Enum variants
 // tag::enum_constants[]

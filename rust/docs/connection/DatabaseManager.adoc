@@ -6,6 +6,8 @@
 * `Clone`
 * `Debug`
 
+Provides access to all database management methods.
+
 // tag::methods[]
 [#_struct_DatabaseManager_all__]
 ==== all

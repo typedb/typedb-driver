@@ -47,3 +47,73 @@ Iterator over a set of ``User``s
 
 Provides access to all user management methods.
 
+[#_Connection_Connection]
+=== Connection Connection
+
+
+
+A connection to a TypeDB server which serves as the starting point for all interaction.
+
+[#_Credential_Credential]
+=== Credential Credential
+
+
+
+User credentials and TLS encryption settings for connecting to TypeDB Cloud.
+
+[#_Database_Database]
+=== Database Database
+
+
+
+A TypeDB database
+
+[#_DatabaseIterator_DatabaseIterator]
+=== DatabaseIterator DatabaseIterator
+
+
+
+An ``Iterator`` over databases present on the TypeDB server
+
+[#_DatabaseManager_DatabaseManager]
+=== DatabaseManager DatabaseManager
+
+
+
+Provides access to all database management methods.
+
+[#_ReplicaInfo_ReplicaInfo]
+=== ReplicaInfo ReplicaInfo
+
+
+
+The metadata and state of an individual raft replica of a database.
+
+[#_ReplicaInfoIterator_ReplicaInfoIterator]
+=== ReplicaInfoIterator ReplicaInfoIterator
+
+
+
+Iterator over the ``ReplicaInfo`` corresponding to each replica of a TypeDB cloud database.
+
+[#_User_User]
+=== User User
+
+
+
+User information
+
+[#_UserIterator_UserIterator]
+=== UserIterator UserIterator
+
+
+
+Iterator over a set of ``User``s
+
+[#_UserManager_UserManager]
+=== UserManager UserManager
+
+
+
+Provides access to all user management methods.
+

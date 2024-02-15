@@ -174,7 +174,6 @@ class DoxygenParserC : Callable<Unit> {
         val classAnchor = replaceSymbolsForAnchor(className)
         val classDescr: List<String> = element.selectFirst("div.memdoc")
             ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
-        val classExamples = element.select("div.memdoc > pre").map { replaceSpaces(it.text()) }
         val enumConstants =
             element.parents().select("div.contents").first()!!
                 .select("table.memberdecls > tbody > tr[class=memitem:$id] > td.memItemRight ").first()!!
@@ -188,14 +187,12 @@ class DoxygenParserC : Callable<Unit> {
             anchor = classAnchor,
             description = classDescr,
             enumConstants = enumConstants,
-            examples = classExamples,
         )
     }
 
     private fun parseMethod(element: Element): Method {
         val methodName = element.previousElementSibling()!!.text().substringBefore("()").substringAfter(" ")
         val methodAnchor = replaceSymbolsForAnchor(methodName)
-        println(methodAnchor)
         val methodSignature = enhanceSignature(element.selectFirst("table.memname")!!.text())
         val argsList = getArgsFromSignature(methodSignature)
         val argsMap = argsList.toMap()
@@ -203,7 +200,6 @@ class DoxygenParserC : Callable<Unit> {
         val methodDescr: List<String> = element.selectFirst("div.memdoc")
             ?.let { splitToParagraphs(it.html()) }
             ?.map { replaceSpaces(reformatTextWithCode(it.substringBefore("<h"))) } ?: listOf()
-        val methodExamples = element.select("td.memdoc > pre + div pre").map { replaceSpaces(it.text()) }
 
         val methodArgs = element.select("table.params > tbody > tr")
             .map {
@@ -222,7 +218,6 @@ class DoxygenParserC : Callable<Unit> {
             anchor = methodAnchor,
             args = methodArgs,
             description = methodDescr,
-            examples = methodExamples,
             returnType = methodReturnType,
         )
 
