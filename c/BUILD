@@ -252,7 +252,7 @@ checkstyle_test(
         "src/**/*",
         "swig/*",
     ]),
-    exclude = [".clang-format", "README.md",  "docs/**/*.adoc"],
+    exclude = [".clang-format", "README.md"] + glob(["docs/**/*.adoc"]),
     license_type = "apache-header",
 )
 
