@@ -158,7 +158,7 @@ class DoxygenParserC : Callable<Unit> {
     }
 
     private fun parseTypeDef(element: Element): Class {
-        val name = element.selectFirst("td.memname > a")!!.text()
+        val name = element.previousElementSibling()!!.text().substringAfter(" ")
         val desc: List<String> = element.selectFirst("div.memdoc")
             ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h")) } ?: listOf()
         return Class(
