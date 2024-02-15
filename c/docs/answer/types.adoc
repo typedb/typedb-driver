@@ -194,3 +194,115 @@ Iterator over the ``ValueGroup``s in the result of the Get Group Aggregate query
 
 Promise object representing the result of an asynchronous operation. A VoidPromise does not return a value, but must be resolved using void_promise_resolve(VoidPromise*) to ensure the operation has completed, or for a failed operation to set the error.
 
+[#_BoolPromise_BoolPromise]
+=== BoolPromise BoolPromise
+
+
+
+Promise object representing the result of an asynchronous operation. Use bool_promise_resolve(BoolPromise*) to wait for and retrieve the resulting boolean value.
+
+[#_ConceptMap_ConceptMap]
+=== ConceptMap ConceptMap
+
+
+
+Contains a mapping of variables to concepts.
+
+[#_ConceptMapGroup_ConceptMapGroup]
+=== ConceptMapGroup ConceptMapGroup
+
+
+
+Contains an element of the TypeQL Get Group query result.
+
+[#_ConceptMapGroupIterator_ConceptMapGroupIterator]
+=== ConceptMapGroupIterator ConceptMapGroupIterator
+
+
+
+Iterator over the ``ConceptMapGroup``s in the result of the TypeQL Get Group query.
+
+[#_ConceptMapIterator_ConceptMapIterator]
+=== ConceptMapIterator ConceptMapIterator
+
+
+
+Iterator over the ``ConceptMap``s in the result of a TypeQL Get query.
+
+[#_Explainable_Explainable]
+=== Explainable Explainable
+
+
+
+Contains an explainable object.
+
+[#_Explainables_Explainables]
+=== Explainables Explainables
+
+
+
+Contains explainable objects.
+
+[#_Explanation_Explanation]
+=== Explanation Explanation
+
+
+
+An explanation of which rule was used for inferring the explained concept, the condition of the rule, the conclusion of the rule, and the mapping of variables between the query and the rule’s conclusion.
+
+[#_ExplanationIterator_ExplanationIterator]
+=== ExplanationIterator ExplanationIterator
+
+
+
+Iterator over the ``Explanation``s in the result of the explain query.
+
+[#_StringIterator_StringIterator]
+=== StringIterator StringIterator
+
+
+
+Iterator over the strings in the result of a request or a TypeQL Fetch query.
+
+[#_StringPair_StringPair]
+=== StringPair StringPair
+
+
+
+A ``StringPair`` used to represent the pair of variables involved in an ownership. ``_0`` and ``_1`` are the owner and attribute variables respectively.
+
+[#_StringPairIterator_StringPairIterator]
+=== StringPairIterator StringPairIterator
+
+
+
+Iterator over the ``StringPair``s representing explainable owner-attribute variable pairs
+
+[#_StringPromise_StringPromise]
+=== StringPromise StringPromise
+
+
+
+Promise object representing the result of an asynchronous operation. Use string_promise_resolve(StringPromise*) to wait for and retrieve the resulting string.
+
+[#_ValueGroup_ValueGroup]
+=== ValueGroup ValueGroup
+
+
+
+Contains an element of a TypeQL Get Group Aggregate query result.
+
+[#_ValueGroupIterator_ValueGroupIterator]
+=== ValueGroupIterator ValueGroupIterator
+
+
+
+Iterator over the ``ValueGroup``s in the result of the Get Group Aggregate query.
+
+[#_VoidPromise_VoidPromise]
+=== VoidPromise VoidPromise
+
+
+
+Promise object representing the result of an asynchronous operation. A VoidPromise does not return a value, but must be resolved using void_promise_resolve(VoidPromise*) to ensure the operation has completed, or for a failed operation to set the error.
+
