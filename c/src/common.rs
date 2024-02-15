@@ -29,6 +29,7 @@ use super::{
 };
 use crate::error::try_release_string;
 
+/// Iterator over the strings in the result of a request or a TypeQL Fetch query.
 pub struct StringIterator(pub CIterator<Result<String>>);
 
 /// Forwards the <code>StringIterator</code> and returns the next string if it exists,
@@ -68,6 +69,7 @@ pub extern "C" fn string_pair_drop(string_pair: *mut StringPair) {
     free(string_pair);
 }
 
+/// Iterator over the <code>StringPair</code>s representing explainable owner-attribute variable pairs
 pub struct StringPairIterator(pub CIterator<(String, String)>);
 
 /// Forwards the <code>StringIterator</code> and returns the next <code>StringPair</code> if it exists,

@@ -111,7 +111,7 @@ enum class ConceptType {
 };
 
 /**
- * What type of primitive value is held by a Value or Attribute.
+ * Represents the type of primitive value is held by a Value or Attribute.
  */
 enum class ValueType {
     OBJECT,

@@ -29,6 +29,8 @@ pub use self::{
     value::{Value, ValueType},
 };
 
+/// The fundamental TypeQL object. A Concept is either a Type, Thing, or Value.
+/// To use subtype specific methods, the Concept must be of the expected subtype.
 #[derive(Clone, Debug, PartialEq)]
 pub enum Concept {
     RootThingType(RootThingType),
@@ -60,6 +62,7 @@ pub enum Transitivity {
     Transitive,
 }
 
+/// Represents invalid schema constructs discovered during schema validation.
 #[derive(Clone, Debug)]
 pub struct SchemaException {
     pub code: String,

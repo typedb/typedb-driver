@@ -21,6 +21,7 @@
 
 use crate::concept::{Concept, Value};
 
+/// Contains an element of a TypeQL Get Group Aggregate query result.
 #[derive(Clone, Debug, PartialEq)]
 pub struct ValueGroup {
     /// The concept that is the group owner.

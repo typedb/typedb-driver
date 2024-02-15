@@ -37,6 +37,7 @@ use crate::{
     Connection,
 };
 
+/// A TypeDB database
 pub struct Database {
     name: String,
     replicas: RwLock<Vec<Replica>>,

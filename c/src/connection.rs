@@ -51,6 +51,7 @@ pub extern "C" fn connection_open_cloud(
 }
 
 /// Closes the driver. Before instantiating a new driver, the driver that’s currently open should first be closed.
+/// Closing a connction frees the underlying rust object.
 #[no_mangle]
 pub extern "C" fn connection_close(connection: *mut Connection) {
     free(connection);

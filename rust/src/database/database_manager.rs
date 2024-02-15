@@ -29,6 +29,7 @@ use crate::{
     Connection, Error,
 };
 
+/// Provides access to all database management methods.
 #[derive(Clone, Debug)]
 pub struct DatabaseManager {
     connection: Connection,

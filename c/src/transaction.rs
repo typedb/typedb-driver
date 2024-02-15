@@ -40,7 +40,7 @@ pub extern "C" fn transaction_new(
     try_release(borrow(session).transaction_with_options(type_, *borrow(options)))
 }
 
-/// Closes the transaction.
+/// Closes the transaction and frees the native rust object.
 #[no_mangle]
 pub extern "C" fn transaction_close(txn: *mut Transaction<'static>) {
     free(txn);
@@ -53,7 +53,8 @@ pub extern "C" fn transaction_force_close(txn: *mut Transaction<'static>) {
 }
 
 /// Commits the changes made via this transaction to the TypeDB database.
-/// Whether or not the transaction is commited successfully, the transaction is closed after the commit call.
+/// Whether or not the transaction is commited successfully, the transaction is closed after
+/// the commit call and the native rust object is freed.
 #[no_mangle]
 pub extern "C" fn transaction_commit(txn: *mut Transaction<'static>) -> *mut VoidPromise {
     release(VoidPromise(Box::new(take_ownership(txn).commit())))

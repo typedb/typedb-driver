@@ -49,6 +49,7 @@ pub extern "C" fn session_new(
 }
 
 /// Closes the session. Before opening a new session, the session currently open should first be closed.
+/// The native rust object is freed on close.
 #[no_mangle]
 pub extern "C" fn session_close(session: *mut Session) {
     free(session);

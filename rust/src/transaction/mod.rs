@@ -33,6 +33,7 @@ use crate::{
     Options,
 };
 
+/// A transaction with a TypeDB database.
 pub struct Transaction<'a> {
     /// The transaction’s type (READ or WRITE)
     type_: TransactionType,
