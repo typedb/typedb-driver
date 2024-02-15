@@ -1,12 +1,12 @@
-[#_Transaction_Transaction]
-=== Transaction Transaction
+[#_Transaction]
+=== Transaction
 
 
 
 A transaction with a TypeDB database.
 
-[#_TransactionType_TransactionType]
-=== TransactionType TransactionType
+[#_TransactionType]
+=== TransactionType
 
 
 

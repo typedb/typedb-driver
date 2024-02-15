@@ -1,33 +1,33 @@
-[#_Concept_Concept]
-=== Concept Concept
+[#_Concept]
+=== Concept
 
 
 
 The fundamental TypeQL object. A Concept is either a Type, Thing, or Value. To use subtype specific methods, the Concept must be of the expected subtype.
 
-[#_ConceptIterator_ConceptIterator]
-=== ConceptIterator ConceptIterator
+[#_ConceptIterator]
+=== ConceptIterator
 
 
 
 Iterator over the ``Concepts``s returned by an API method or query.
 
-[#_ConceptPromise_ConceptPromise]
-=== ConceptPromise ConceptPromise
+[#_ConceptPromise]
+=== ConceptPromise
 
 
 
 Promise object representing the result of an asynchronous operation. Use concept_promise_resolve(ConceptPromise*) to wait for and retrieve the resulting boolean value.
 
-[#_RolePlayer_RolePlayer]
-=== RolePlayer RolePlayer
+[#_RolePlayer]
+=== RolePlayer
 
 
 
 A pair representing the concept and the role it plays in a relation. The result of relation_get_role_players(Transaction*, Concept*)
 
-[#_RolePlayerIterator_RolePlayerIterator]
-=== RolePlayerIterator RolePlayerIterator
+[#_RolePlayerIterator]
+=== RolePlayerIterator
 
 
 

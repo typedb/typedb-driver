@@ -1,20 +1,20 @@
-[#_Options_Options]
-=== Options Options
+[#_Options]
+=== Options
 
 
 
 TypeDB session and transaction options. ``TypeDBOptions`` object can be used to override the default server behaviour. Options are specified using properties assignment.
 
 
-[#_Session_Session]
-=== Session Session
+[#_Session]
+=== Session
 
 
 
 A session with a TypeDB database.
 
-[#_SessionType_SessionType]
-=== SessionType SessionType
+[#_SessionType]
+=== SessionType
 
 
 

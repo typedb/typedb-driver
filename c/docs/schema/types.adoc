@@ -1,20 +1,20 @@
-[#_Annotation_Annotation]
-=== Annotation Annotation
+[#_Annotation]
+=== Annotation
 
 
 
 Annotations are used to specify extra schema constraints.
 
-[#_Transitivity_Transitivity]
-=== Transitivity Transitivity
+[#_Transitivity]
+=== Transitivity
 
 
 
 Used for specifying whether we need explicit or transitive subtyping, instances, etc.
 
 
-[#_ValueType_ValueType]
-=== ValueType ValueType
+[#_ValueType]
+=== ValueType
 
 
 

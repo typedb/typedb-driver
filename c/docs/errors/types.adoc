@@ -1,19 +1,19 @@
-[#_Error_Error]
-=== Error Error
+[#_Error]
+=== Error
 
 
 
 Represents errors encountered during operation.
 
-[#_SchemaException_SchemaException]
-=== SchemaException SchemaException
+[#_SchemaException]
+=== SchemaException
 
 
 
 Represents invalid schema constructs discovered during schema validation.
 
-[#_SchemaExceptionIterator_SchemaExceptionIterator]
-=== SchemaExceptionIterator SchemaExceptionIterator
+[#_SchemaExceptionIterator]
+=== SchemaExceptionIterator
 
 
 
