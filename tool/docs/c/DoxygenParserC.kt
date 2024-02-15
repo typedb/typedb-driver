@@ -154,6 +154,7 @@ class DoxygenParserC : Callable<Unit> {
     }
 
     private fun resolveKey(key: String): String {
+        println(key)
         return sortedDirsLongest.first { normaliseKey(key).startsWith(it.first) }.first
     }
 
@@ -256,15 +257,5 @@ class DoxygenParserC : Callable<Unit> {
 
     private fun splitToParagraphs(html: String): List<String> {
         return html.replace("</p>", "").split("\\s*<p>\\s*".toRegex()).map { it.trim() }
-    }
-
-    private fun replaceLocalLinks(idToAnchor: Map<String, String>, html: String): String {
-        // The Intellij preview messes up nested templates & The '>>' used for cross links.
-        return Regex("<a class=\"el\" href=\"[^\"^#]*#([^\"]*)\">([^<]*)</a>")
-            .replace(html, {
-                if (idToAnchor.containsKey(it.groupValues[1]))
-                    "<<#_%s,%s>>".format(idToAnchor.get(it.groupValues[1]), it.groupValues[2])
-                else "%s".format(it.groupValues[2])
-            })
     }
 }
