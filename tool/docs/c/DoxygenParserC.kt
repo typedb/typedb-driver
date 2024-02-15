@@ -154,7 +154,6 @@ class DoxygenParserC : Callable<Unit> {
     }
 
     private fun resolveKey(key: String): String {
-        println(key)
         return sortedDirsLongest.first { normaliseKey(key).startsWith(it.first) }.first
     }
 
