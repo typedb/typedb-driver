@@ -19,10 +19,12 @@
 # under the License.
 #
 
-# Keys are a prefix of the type name or function name. A type/function is resolved to the longest matching key.
-# Unless overridden in `force_file`, These are stripped of underscores, made lowercase and used as the filename.
+# Used to map types/functions in the code to a directory & file.
+# Keys of dir_mapping are a prefix of the normalised type or function name.
+# A name is stripped of underscores, made lowercase  resolved to the longest matching key.
+# This key is used as the filename of the file their documentation will be appended to (unless `force_file` overrides it)
 # The value is the corresponding directory in which the file must sit.
-# The exception is that all types are automatically put in 'types.adoc' in the specified directory.
+# The exception is that types follow this process to determine the directory, but they will always be documeted in 'types.adoc'.
 dir_mapping = {
 
     "connection": "connection",
@@ -83,6 +85,7 @@ dir_mapping = {
     "primitives" : "answer",
 }
 
+# If a function name 'matches', the value here is used as the filename instead.
 force_file = {
     "check_error" : "error",
     "get_last_error" : "error",
