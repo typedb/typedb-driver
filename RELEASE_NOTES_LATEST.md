@@ -9,7 +9,7 @@ Documentation: https://typedb.com/docs/drivers/rust/overview
 
 
 ```sh
-cargo add typedb-driver@2.26.6-rc1
+cargo add typedb-driver@2.26.6
 ```
 
 
@@ -29,7 +29,7 @@ Documentation: https://typedb.com/docs/drivers/java/overview
     <dependency>
         <groupid>com.vaticle.typedb</groupid>
         <artifactid>typedb-driver</artifactid>
-        <version>2.26.6-rc1</version>
+        <version>2.26.6</version>
     </dependency>
 </dependencies>
 ```
@@ -42,7 +42,7 @@ Documentation: https://typedb.com/docs/drivers/python/overview
 Available through https://pypi.org
 
 ```
-pip install typedb-driver==2.26.6rc1
+pip install typedb-driver==2.26.6
 ```
 
 ### NodeJS driver
@@ -51,16 +51,16 @@ NPM package: https://www.npmjs.com/package/typedb-driver
 Documentation: https://typedb.com/docs/drivers/nodejs/overview
 
 ```
-npm install typedb-driver@2.26.6-rc1
+npm install typedb-driver@2.26.6
 ```
 
 ### C++ driver
 
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-cpp+version:2.26.6-rc1
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-cpp+version:2.26.6
 
 ### C driver
 
-Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:2.26.6-rc1
+Compiled distributions comprising headers and shared libraries available at: https://cloudsmith.io/~typedb/repos/public-release/packages/?q=name:^typedb-driver-clib+version:2.26.6
 Documentation: https://typedb.com/docs/drivers/cpp/overview
 
 
@@ -72,9 +72,23 @@ Documentation: https://typedb.com/docs/drivers/cpp/overview
   
 
 ## Bugs Fixed
-
+- **Fix Factory CI job names**
+  
+  We fix prerequisites of the sync-dependencies job and bring the C++ behaviour test job names in concordance with the rest.
+  
+- **Fix native calls in python driver rules api**
+  Fixes a bug which caused the delete, is_deleted and set_label methods on a Rule to fail.
+  
+  
 
 ## Code Refactors
+- **Consolidate Factory CI behaviour test jobs per driver language**
+  
+  We merge individual `test-{lang}-behaviour-{domain}` jobs in FactoryCI into a single `test-{lang}-behaviour` job in order to reduce CI bootup and shutdown overhead per test.
+  
+  We also fix mac-x86_64 Python and maven deployment tests by explicitly enforcing the use of Rosetta.
+  
+  
 - **Transition from standalone typedb-common to typeql/common**
   
   We update Bazel dependencies and target paths following the merging of typedb-common into [vaticle/typeql](https://github.com/vaticle/typeql/) (see https://github.com/vaticle/typeql/pull/313).
@@ -94,6 +108,18 @@ Documentation: https://typedb.com/docs/drivers/cpp/overview
   
 
 ## Other Improvements
+- **Add README to Node.js NPM package distribution**
+
+- **Fix CircleCI sync-dependencies apt installation steps**
+
+- **Only run CircleCI snapshot builds and tests in master**
+
+- **Switch to ghr v0.16.2 (support release w/o artifacts)**
+
+- **Fix maven snapshot deployment test pom version**
+
+- **Update unpropagated dependencies**
+
 - **Only deploy releases to cloudsmith**
   
   We implement the following changes to the release process:
@@ -101,6 +127,14 @@ Documentation: https://typedb.com/docs/drivers/cpp/overview
   - stop uploading build artifacts to the github releases page;
   - update the release notes documentation links;
   - add C and C++ artifact download link templates to the release notes template.
+  
+- **Fix Factory merge artifact**
+  
+  We remove stray line in automation.yml that appeared due to an ill-resolved merge.
+  
+- **Fix CircleCI sync dependencies configuration mismatch**
+  
+  The sync-dependencies step in CircleCI used an obsolete setup step which no longer exists. This PR fixes that issue.
   
 - **Sync dependencies in CI**
   
@@ -114,6 +148,8 @@ Documentation: https://typedb.com/docs/drivers/cpp/overview
   
   Note: this PR does _not_ update the `dependencies` repo dependency. It will be updated automatically by the bot during its first pass.
   
+- **Remove use of 'sudo' in CI**
+
 - **Refactor npm installation and job limitation to prevent CircleCI OOM**
 
 - **Fix npm installation and Java bootup configurations**
