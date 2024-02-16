@@ -125,7 +125,7 @@ class DoxygenParserCpp : Callable<Unit> {
         return outputFile
     }
 
-    private fun parseMemberDecls(document: Element): Pair<Map<String, List<Element>>, Map<String,String>> {
+    private fun parseMemberDecls(document: Element): Pair<Map<String, List<Element>>, Map<String, String>> {
         val missingDeclarations: MutableList<String> = ArrayList()
         val map: MutableMap<String, List<Element>> = HashMap()
         val idToAnchor: MutableMap<String, String> = HashMap()
@@ -192,7 +192,8 @@ class DoxygenParserCpp : Callable<Unit> {
 
         val (memberDecls, idToAnchor) = parseMemberDecls(document)
         val classDescr: List<String> = document.selectFirst("div.textblock")
-            ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h"), idToAnchor) } ?: listOf()
+            ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h"), idToAnchor) }
+            ?: listOf()
 
         val fields = memberDecls.getOrDefault("pub-attribs", listOf()).map { parseField(it, idToAnchor) }
         val methods: List<Method> = (
@@ -220,7 +221,8 @@ class DoxygenParserCpp : Callable<Unit> {
         val className = fullyQualifiedName.substringAfterLast("::")
         val classAnchor = replaceSymbolsForAnchor(className)
         val classDescr: List<String> = element.selectFirst("div.memdoc")
-            ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h"), HashMap()) } ?: listOf()
+            ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h"), HashMap()) }
+            ?: listOf()
         val classExamples = element.select("div.memdoc > pre").map { replaceSpaces(it.text()) }
         val enumConstants =
             element.parents().select("div.contents").first()!!
