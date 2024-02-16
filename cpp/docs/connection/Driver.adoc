@@ -124,12 +124,12 @@ Checks whether this connection is presently open.
 .Returns
 `bool`
 
-[#_Session_TypeDBDriversession___const_stdstring__database__SessionType_sessionType__const_Options__options_]
+[#_Session_TypeDBDriversession___const_stdstring__database__SessionType_sessionType__const_Options__options__Options___]
 ==== session
 
 [source,cpp]
 ----
-Session TypeDB::Driver::session(const std::string& database, SessionType sessionType, const Options& options)
+Session TypeDB::Driver::session(const std::string& database, SessionType sessionType, const Options& options = Options())
 ----
 
 

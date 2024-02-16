@@ -57,7 +57,7 @@ class _Rule(Rule, NativeWrapper[NativeRule]):
     def set_label(self, transaction: _Transaction, new_label: str) -> Promise[None]:
         if not new_label:
             raise TypeDBDriverException(MISSING_LABEL)
-        promise = rule_set_label(transaction.logic, self.native_object, new_label)
+        promise = rule_set_label(transaction.native_object, self.native_object, new_label)
         return Promise(lambda: void_promise_resolve(promise))
 
     @property
@@ -69,11 +69,11 @@ class _Rule(Rule, NativeWrapper[NativeRule]):
         return self._then
 
     def delete(self, transaction: _Transaction) -> Promise[None]:
-        promise = rule_delete(transaction.logic, self.native_object)
+        promise = rule_delete(transaction.native_object, self.native_object)
         return Promise(lambda: void_promise_resolve(promise))
 
     def is_deleted(self, transaction: _Transaction) -> Promise[bool]:
-        promise = rule_is_deleted(transaction.logic, self.native_object)
+        promise = rule_is_deleted(transaction.native_object, self.native_object)
         return Promise(lambda: bool_promise_resolve(promise))
 
     def __repr__(self):

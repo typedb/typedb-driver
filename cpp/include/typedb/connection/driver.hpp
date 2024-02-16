@@ -130,7 +130,7 @@ public:
      * @param type The type of session to be created (DATA or SCHEMA)
      * @param options <code>TypeDBOptions</code> for the session
      */
-    Session session(const std::string& database, SessionType sessionType, const Options& options);
+    Session session(const std::string& database, SessionType sessionType, const Options& options = Options());
 
     /**
      * Returns the logged-in user for the connection. Only for TypeDB Cloud.

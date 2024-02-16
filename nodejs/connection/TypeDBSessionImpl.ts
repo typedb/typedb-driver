@@ -95,18 +95,22 @@ export class TypeDBSessionImpl implements TypeDBSession {
 
     async close(): Promise<void> {
         if (this._isOpen) {
-            this._isOpen = false;
-            for (const tx of this._transactions) {
-                await tx.close();
-            }
-            for (const callback of this._onClose) {
-                await callback();
-            }
-            this._driver.closeSession(this);
-            clearTimeout(this._pulse);
+            await this.closeResources();
             const req = RequestBuilder.Session.closeReq(this._id);
             await this._serverDriver.stub.sessionClose(req);
         }
+    }
+
+    private async closeResources(): Promise<void> {
+        this._isOpen = false;
+        for (const tx of this._transactions) {
+            await tx.close();
+        }
+        for (const callback of this._onClose) {
+            await callback();
+        }
+        this._driver.closeSession(this);
+        clearTimeout(this._pulse);
     }
 
     closed(transaction: TypeDBTransaction.Extended): void {
@@ -172,7 +176,7 @@ export class TypeDBSessionImpl implements TypeDBSession {
         const pulse = RequestBuilder.Session.pulseReq(this._id);
         try {
             const isAlive = await this._serverDriver.stub.sessionPulse(pulse);
-            if (!isAlive) await this.close();
+            if (!isAlive) await this.closeResources();
             else this._pulse = setTimeout(() => this.pulse(), 5000);
         } catch (e) {
             this._isOpen = false;

@@ -287,7 +287,7 @@ JSON JSONBuilder::build(const nlohmann::json& from) {
         case nlohmann::json::value_t::number_unsigned:
             return JSON((JSONLong)from.get<unsigned>());
         case nlohmann::json::value_t::number_float:
-            return JSON((JSONDouble)from.get<unsigned>());
+            return JSON((JSONDouble)from.get<double>());
         case nlohmann::json::value_t::string:
             return JSON(from.get<std::string>());
 
