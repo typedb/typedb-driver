@@ -65,7 +65,6 @@ pub extern "C" fn rule_get_then(rule: *const Rule) -> *mut c_char {
     release_string(borrow(rule).then.to_string())
 }
 
-
 /// Renames the label of the rule. The new label must remain unique.
 #[no_mangle]
 pub extern "C" fn rule_set_label(
