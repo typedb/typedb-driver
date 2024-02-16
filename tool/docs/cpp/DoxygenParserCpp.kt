@@ -76,7 +76,7 @@ class DoxygenParserCpp : Callable<Unit> {
             val typeDefFile = getFile(docsDir, "typedefs.adoc")
             typeDefFile.writeText("")
             val typeDefTBody =
-                parsed.select("tr.heading").filter { element -> element.text().equals("Typedefs") }.first().parent()!!
+                parsed.select("tr.heading").first { element -> element.text().equals("Typedefs") }.parent()!!
             typeDefTBody.select("tr").filter { tr ->
                 tr.className().startsWith("memitem")
             }.map {
@@ -164,14 +164,14 @@ class DoxygenParserCpp : Callable<Unit> {
                     anchor = replaceSymbolsForAnchor(alias),
                     description = listOf("Alias for ${replaceLocalLinks(HashMap(), actual)}"),
                 )
-            } else if (memItemLeft!!.text().startsWith("using")) {
+            } else if (memItemLeft.text().startsWith("using")) {
                 val usingEquality = element.selectFirst("td.memItemRight")!!
                 val actual = usingEquality.text().substringAfter("=").trim()
                 val alias = usingEquality.text().substringBefore("=").trim()
                 return Class(
                     name = alias,
                     anchor = replaceSymbolsForAnchor(alias),
-                    description = listOf("Alias for ${actual}")
+                    description = listOf("Alias for $actual")
                 )
             }
         }
@@ -327,11 +327,11 @@ class DoxygenParserCpp : Callable<Unit> {
     private fun replaceLocalLinks(idToAnchor: Map<String, String>, html: String): String {
         // The Intellij preview messes up nested templates & The '>>' used for cross links.
         return Regex("<a class=\"el\" href=\"[^\"^#]*#([^\"]*)\">([^<]*)</a>")
-            .replace(html,{
+            .replace(html) {
                 if (idToAnchor.containsKey(it.groupValues[1]))
-                "<<#_%s,%s>>".format(idToAnchor.get(it.groupValues[1]), it.groupValues[2])
+                    "<<#_%s,%s>>".format(idToAnchor[it.groupValues[1]], it.groupValues[2])
                 else "%s".format(it.groupValues[2])
-            })
+            }
     }
 
     private fun generateFilename(className: String): String {

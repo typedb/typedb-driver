@@ -68,13 +68,10 @@ class DoxygenParserC : Callable<Unit> {
     override fun call() {
         val inputDirectoryName = inputDirectoryNames[0]
         val dirs: MutableMap<String, String> = HashMap()
-        unnormalisedDirs.entries.forEach { entry -> dirs.put(normaliseKey(entry.key), entry.value) }
+        unnormalisedDirs.entries.forEach { entry -> dirs[normaliseKey(entry.key)] = entry.value }
         val filenameOverrides: MutableMap<String, String> = HashMap()
         unnormalisedFilenameOverrides.entries.forEach { entry ->
-            filenameOverrides.put(
-                normaliseKey(entry.key),
-                normaliseKey(entry.value)
-            )
+            filenameOverrides[normaliseKey(entry.key)] = normaliseKey(entry.value)
         }
 
         sortedDirsLongest =
@@ -87,8 +84,8 @@ class DoxygenParserC : Callable<Unit> {
         }
 
         run {
-            val typedb_driver_file = File(inputDirectoryName).resolve("html/typedb__driver_8h.html")
-            val html = File(typedb_driver_file.path).readText(Charsets.UTF_8)
+            val typedbDriverFile = File(inputDirectoryName).resolve("html/typedb__driver_8h.html")
+            val html = File(typedbDriverFile.path).readText(Charsets.UTF_8)
             val parsed = Jsoup.parse(html)
 
             // Typedef
@@ -112,17 +109,17 @@ class DoxygenParserC : Callable<Unit> {
 
             // Write to lists
             val typeFileContents: MutableMap<String, MutableList<String>> = HashMap()
-            dirs.values.forEach { typeFileContents.put(it, ArrayList()) }
+            dirs.values.forEach { typeFileContents[it] = ArrayList() }
             typedefs.map {
-                typeFileContents.get(dirs.get(resolveKey(it.name)))!!.add(it.toAsciiDoc("cpp"))
+                typeFileContents[dirs[resolveKey(it.name)]]!!.add(it.toAsciiDoc("cpp"))
             }
             enums.forEach {
-                typeFileContents.get(dirs.get(resolveKey(it.name)))!!.add(it.toAsciiDoc("cpp"))
+                typeFileContents[dirs[resolveKey(it.name)]]!!.add(it.toAsciiDoc("cpp"))
             }
             val fileContents: MutableMap<String, MutableList<String>> = HashMap()
-            dirs.keys.forEach { fileContents.put(resolveKey(it), ArrayList()) }
+            dirs.keys.forEach { fileContents[resolveKey(it)] = ArrayList() }
             functions.forEach {
-                fileContents.get(resolveKey(it.name))!!.add(it.toAsciiDoc("cpp"))
+                fileContents[resolveKey(it.name)]!!.add(it.toAsciiDoc("cpp"))
             }
 
             // Write to files
@@ -133,7 +130,7 @@ class DoxygenParserC : Callable<Unit> {
             fileContents.entries.filter { it.value.isNotEmpty() }.forEach { entry ->
                 val resolvedKey = resolveKey(entry.key)
                 val filename = filenameOverrides.getOrDefault(resolvedKey, resolvedKey)
-                val outputFile = createFile(docsDir.resolve(dirs.get(filename)), filename + ".adoc")
+                val outputFile = createFile(docsDir.resolve(dirs[filename]!!), "$filename.adoc")
                 val fileContent = entry.value
                 fileContent.forEach { outputFile.appendText(it) }
             }
