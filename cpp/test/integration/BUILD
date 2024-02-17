@@ -31,7 +31,8 @@ cc_test(
     copts = cxxopts,
     includes = ["include"],
     env = {"RUST_BACKTRACE": "full"},
-    linkstatic = True
+    linkstatic = True,
+    linkopts = ["-framework CoreFoundation"]
 )
 
 cc_test(
