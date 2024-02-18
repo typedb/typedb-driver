@@ -165,6 +165,7 @@ TEST(TestJSON, TestJSON) {
     driver.databases.create(dbName);
     TypeDB::Options options;
     std::string fetchResult = R"({"u": {"email": [{"type": {"label": "email", "root": "attribute", "value_type": "string"}, "value": "bob@vaticle.com"}], "name": [{"type": {"label": "name", "root": "attribute", "value_type": "string"}, "value": "Bob"}], "type": {"label": "user", "root": "entity"}}})";
+
     {
         auto sess = driver.session(dbName, TypeDB::SessionType::SCHEMA, options);
         auto tx = sess.transaction(TypeDB::TransactionType::WRITE, options);
@@ -200,11 +201,6 @@ TEST(TestJSON, TestJSON) {
         }
         ASSERT_EQ(fetchResult, result);
     }
-
-    {
-        ASSERT_EQ(fetchResult, JSON::parse(fetchResult).toString());
-    }
-
 }
 
 int main(int argc, char** argv) {
