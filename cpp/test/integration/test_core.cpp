@@ -158,6 +158,51 @@ TEST(TestConnection, TestMissingPort) {
     }
 }
 
+TEST(TestJSON, TestJSON) {
+    std::string dbName = "test_json";
+    TypeDB::Driver driver = TypeDB::Driver::coreDriver("127.0.0.1:1729");
+    delete_if_exists(driver, dbName);
+    driver.databases.create(dbName);
+    TypeDB::Options options;
+    std::string fetchResult = R"({"u": {"email": [{"type": {"label": "email", "root": "attribute", "value_type": "string"}, "value": "bob@vaticle.com"}], "name": [{"type": {"label": "name", "root": "attribute", "value_type": "string"}, "value": "Bob"}], "type": {"label": "user", "root": "entity"}}})";
+
+    {
+        auto sess = driver.session(dbName, TypeDB::SessionType::SCHEMA, options);
+        auto tx = sess.transaction(TypeDB::TransactionType::WRITE, options);
+        std::string schema = R"(
+                            define
+                            email sub attribute, value string;
+                            name sub attribute, value string;
+                            user sub entity,
+                                owns email @key,
+                                owns name;)";
+        tx.query.define(schema, options).wait();
+        tx.commit();
+    }
+
+    {
+        auto sess = driver.session(dbName, TypeDB::SessionType::DATA, options);
+        auto tx = sess.transaction(TypeDB::TransactionType::WRITE, options);
+        std::string insertQuery = "insert $user isa user, has name 'Bob', has email 'bob@vaticle.com';";
+        auto res = tx.query.insert(insertQuery, options);
+        for (auto& it : res)
+            ;
+        tx.commit();
+    }
+
+    {
+        auto sess = driver.session(dbName, TypeDB::SessionType::DATA, options);
+        auto tx = sess.transaction(TypeDB::TransactionType::READ, options);
+        std::string fetchQuery = "match $u isa user, has name 'Bob'; fetch $u: name, email;";
+        TypeDB::JSONIterable response = tx.query.fetch(fetchQuery, options);
+        std::string result;
+        for (TypeDB::JSON json : response) {
+            result.append(json.toString());
+        }
+        ASSERT_EQ(fetchResult, result);
+    }
+}
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
