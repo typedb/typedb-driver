@@ -164,7 +164,7 @@ TEST(TestJSON, TestJSON) {
     delete_if_exists(driver, dbName);
     driver.databases.create(dbName);
     TypeDB::Options options;
-    std::string fetchResult = R"({"u": {"email": [{"type": {"label": "email", "root": "attribute", "value_type": "string"}, "value": "bob@vaticle.com"}], "name": [{"type": {"label": "name", "root": "attribute", "value_type": "string"}, "value": "Bob"}], "type": {"label": "user", "root": "entity"}}})";
+
     {
         auto sess = driver.session(dbName, TypeDB::SessionType::SCHEMA, options);
         auto tx = sess.transaction(TypeDB::TransactionType::WRITE, options);
@@ -190,6 +190,10 @@ TEST(TestJSON, TestJSON) {
     }
 
     {
+        std::string expectedJSON = R"({"u": {)";
+        expectedJSON.append(R"("email": [{"type": {"label": "email", "root": "attribute", "value_type": "string"}, "value": "bob@vaticle.com"}], )");
+        expectedJSON.append(R"("name": [{"type": {"label": "name", "root": "attribute", "value_type": "string"}, "value": "Bob"}], )");
+        expectedJSON.append(R"("type": {"label": "user", "root": "entity"}}})");
         auto sess = driver.session(dbName, TypeDB::SessionType::DATA, options);
         auto tx = sess.transaction(TypeDB::TransactionType::READ, options);
         std::string fetchQuery = "match $u isa user, has name 'Bob'; fetch $u: name, email;";
@@ -198,39 +202,36 @@ TEST(TestJSON, TestJSON) {
         for (TypeDB::JSON json : response) {
             result.append(json.toString());
         }
-        ASSERT_EQ(fetchResult, result);
-    }
-
-    {
-        ASSERT_EQ(fetchResult, JSON::parse(fetchResult).toString());
+        ASSERT_EQ(expectedJSON, result);
+        ASSERT_EQ(expectedJSON, JSON::parse(expectedJSON).toString());
     }
 
     {
         auto sess = driver.session(dbName, TypeDB::SessionType::DATA, options);
         auto tx = sess.transaction(TypeDB::TransactionType::READ, options);
-        std::string longResult = R"({"l": {"value": 22, "value_type": "long"}})";
+        std::string expectedLong = R"({"l": {"value": 22, "value_type": "long"}})";
         TypeDB::JSONIterable result = tx.query.fetch("match ?l = 22; fetch ?l;", options);
         std::string resLong;
         for (TypeDB::JSON json : result) {
             resLong.append(json.toString());
         }
-        ASSERT_EQ(resLong, longResult);
+        ASSERT_EQ(resLong, expectedLong);
 
-        std::string doubleResult = R"({"d": {"value": 2.22, "value_type": "double"}})";
+        std::string expectedDouble = R"({"d": {"value": 2.22, "value_type": "double"}})";
         result = tx.query.fetch("match ?d = 2.22; fetch ?d;", options);
         std::string resDouble;
         for (TypeDB::JSON json : result) {
             resDouble.append(json.toString());
         }
-        ASSERT_EQ(resDouble, doubleResult);
+        ASSERT_EQ(resDouble, expectedDouble);
 
-        std::string boolResult = R"({"b": {"value": true, "value_type": "boolean"}})";
+        std::string expectedBool = R"({"b": {"value": true, "value_type": "boolean"}})";
         result = tx.query.fetch("match ?b = true; fetch ?b;", options);
         std::string resBool;
         for (TypeDB::JSON json : result) {
             resBool.append(json.toString());
         }
-        ASSERT_EQ(resBool, boolResult);
+        ASSERT_EQ(resBool, expectedBool);
 
         tx.close();
     }
