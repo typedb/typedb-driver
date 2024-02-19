@@ -25,7 +25,6 @@
 #include "../common/macros.hpp"
 #include "../common/native.hpp"
 #include "../common/utils.hpp"
-#include <sstream>
 
 namespace TypeDB {
 
