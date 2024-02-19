@@ -32,7 +32,10 @@ cc_test(
     includes = ["include"],
     env = {"RUST_BACKTRACE": "full"},
     linkstatic = True,
-    linkopts = ["-framework CoreFoundation"]
+    linkopts = select({
+        "@vaticle_bazel_distribution//platform:is_mac": ["-framework CoreFoundation"],
+        "//conditions:default": [],
+    }),
 )
 
 clang_format_test(
