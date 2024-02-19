@@ -17,16 +17,14 @@
  * under the License.
  */
 
+#include <sstream>
 #include "nlohmann/json.hpp"
-
 #include "typedb/answer/json.hpp"
-
 #include "typedb/common/error_message.hpp"
 
 #include "../common/macros.hpp"
 #include "../common/native.hpp"
 #include "../common/utils.hpp"
-#include <sstream>
 
 namespace TypeDB {
 
