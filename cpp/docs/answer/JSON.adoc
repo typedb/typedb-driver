@@ -250,3 +250,4 @@ The JSONType of this JSON object
 `JSONType`
 
 // end::methods[]
+
