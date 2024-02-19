@@ -209,10 +209,8 @@ static JSON TypeDB::JSON::parse(const std::string& string)
 ----
 
 
-
 Parses a JSON string into a ``JSON`` object.
 
-[caption=""]
 .Returns
 `static JSON`
 
@@ -250,4 +248,3 @@ The JSONType of this JSON object
 `JSONType`
 
 // end::methods[]
-
