@@ -359,7 +359,7 @@ Promise<? extends RoleType> getRelates​(TypeDBTransaction transaction,
                                        java.lang.String roleLabel)
 ----
 
-Retrieves roles that this ``RelationType`` relates to directly or via inheritance. If ``role_label`` is given, returns a corresponding ``RoleType`` or ``null``. 
+Retrieves the role with the specified label that this ``RelationType`` relates to, directly or via inheritance. Returns the corresponding ``RoleType`` or ``null``. 
 
 
 [caption=""]

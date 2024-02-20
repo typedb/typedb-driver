@@ -5,6 +5,8 @@
 
 * `Debug`
 
+A transaction with a TypeDB database.
+
 // tag::methods[]
 [#_struct_Transaction_commit__]
 ==== commit

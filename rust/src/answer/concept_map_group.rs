@@ -21,6 +21,7 @@
 
 use crate::{answer::ConceptMap, concept::Concept};
 
+/// Contains an element of the TypeQL Get Group query result.
 #[derive(Clone, Debug, PartialEq)]
 pub struct ConceptMapGroup {
     /// Retrieves the concept that is the group owner.

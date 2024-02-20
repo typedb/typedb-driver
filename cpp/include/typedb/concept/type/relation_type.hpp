@@ -72,15 +72,18 @@ public:
     [[nodiscard]] VoidFuture setRelates(Transaction& transaction, const std::string& roleLabel, RoleType* overriddenType);
 
     /**
-     * Sets the supplied <code>RelationType</code> as the supertype of the current <code>RelationType</code>.
+     * Sets the new role that this <code>RelationType</code> relates to.
+     * If we are setting an overriding type this way, we have to also pass the overridden type as a second argument.
      *
      * <h3>Examples</h3>
      * <pre>
-     * relationType.setSupertype(transaction, superRelationType).get();
+     * relationType.setRelates(transaction, roleLabel).get();
+     * relationType.setRelates(transaction, roleLabel, overriddenLabel).get();
      * </pre>
      *
      * @param transaction The current transaction
-     * @param superRelationType The <code>RelationType</code> to set as the supertype of this <code>RelationType</code>
+     * @param roleLabel The new role for the <code>RelationType</code> to relate to
+     * @param overriddenLabel The label being overridden, if applicable
      */
     [[nodiscard]] VoidFuture setRelates(Transaction& transaction, const std::string& roleLabel, const std::string& overriddenLabel);
 
@@ -148,8 +151,8 @@ public:
     ConceptIterable<RoleType> getRelates(Transaction& transaction, Transitivity transitivity = Transitivity::TRANSITIVE);
 
     /**
-     * Retrieves roles that this <code>RelationType</code> relates to directly or via inheritance.
-     * If <code>role_label</code> is given, returns a corresponding <code>RoleType</code> or <code>nullptr</code>.
+     * Retrieves the role with the specified label that this <code>RelationType</code> relates to, directly or via inheritance.
+     * Returns the corresponding <code>RoleType</code> or <code>nullptr</code>.
      *
      * <h3>Examples</h3>
      * <pre>

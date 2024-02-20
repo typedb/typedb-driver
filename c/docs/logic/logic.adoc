@@ -1,0 +1,82 @@
+[#_logic_manager_get_rule]
+==== logic_manager_get_rule
+
+[source,cpp]
+----
+struct RulePromise* logic_manager_get_rule(struct Transaction* transaction, const char* label)
+----
+
+
+
+Retrieves the Rule that has the given label.
+
+[caption=""]
+.Returns
+`struct RulePromise*`
+
+[#_logic_manager_get_rules]
+==== logic_manager_get_rules
+
+[source,cpp]
+----
+struct RuleIterator* logic_manager_get_rules(struct Transaction* transaction)
+----
+
+
+
+Returns a ``RuleIterator`` over all rules in the database for the transaction.
+
+[caption=""]
+.Returns
+`struct RuleIterator*`
+
+[#_logic_manager_put_rule]
+==== logic_manager_put_rule
+
+[source,cpp]
+----
+struct RulePromise* logic_manager_put_rule(struct Transaction* transaction, const char* label, const char* when, const char* then)
+----
+
+
+
+Creates a new Rule if none exists with the given label, or replaces the existing one.
+
+ 
+  Parameters
+ 
+ 
+  
+   
+    
+     label
+     The label of the Rule to create or replace
+    
+    
+     when
+     The when body of the rule to create
+    
+    
+     then
+     The then body of the rule to create
+    
+   
+  
+ 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `label` a| The label of the Rule to create or replace a| 
+a| `when` a| The when body of the rule to create a| 
+a| `then` a| The then body of the rule to create a| 
+|===
+
+[caption=""]
+.Returns
+`struct RulePromise*`
+

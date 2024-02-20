@@ -1,0 +1,70 @@
+[#_Connection]
+=== Connection
+
+
+
+A connection to a TypeDB server which serves as the starting point for all interaction.
+
+[#_Credential]
+=== Credential
+
+
+
+User credentials and TLS encryption settings for connecting to TypeDB Cloud.
+
+[#_Database]
+=== Database
+
+
+
+A TypeDB database
+
+[#_DatabaseIterator]
+=== DatabaseIterator
+
+
+
+An ``Iterator`` over databases present on the TypeDB server
+
+[#_DatabaseManager]
+=== DatabaseManager
+
+
+
+Provides access to all database management methods.
+
+[#_ReplicaInfo]
+=== ReplicaInfo
+
+
+
+The metadata and state of an individual raft replica of a database.
+
+[#_ReplicaInfoIterator]
+=== ReplicaInfoIterator
+
+
+
+Iterator over the ``ReplicaInfo`` corresponding to each replica of a TypeDB cloud database.
+
+[#_User]
+=== User
+
+
+
+User information
+
+[#_UserIterator]
+=== UserIterator
+
+
+
+Iterator over a set of ``User``s
+
+[#_UserManager]
+=== UserManager
+
+
+
+Provides access to all user management methods.
+

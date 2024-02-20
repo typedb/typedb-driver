@@ -106,7 +106,7 @@ ConceptPtrFuture< RoleType > TypeDB::RelationType::getRelates(Transaction& trans
 
 
 
-Retrieves roles that this ``RelationType`` relates to directly or via inheritance. If ``role_label`` is given, returns a corresponding ``RoleType`` or ``nullptr``.
+Retrieves the role with the specified label that this ``RelationType`` relates to, directly or via inheritance. Returns the corresponding ``RoleType`` or ``nullptr``.
 
 
 [caption=""]
@@ -246,7 +246,7 @@ VoidFuture TypeDB::RelationType::setRelates(Transaction& transaction, const std:
 
 
 
-Sets the supplied ``RelationType`` as the supertype of the current ``RelationType``.
+Sets the new role that this ``RelationType`` relates to. If we are setting an overriding type this way, we have to also pass the overridden type as a second argument.
 
 
 [caption=""]
@@ -256,7 +256,8 @@ Sets the supplied ``RelationType`` as the supertype of the current ``RelationTyp
 |===
 |Name |Description |Type
 a| `transaction` a| The current transaction a| 
-a| `superRelationType` a| The ``RelationType`` to set as the supertype of this ``RelationType`` a| 
+a| `roleLabel` a| The new role for the ``RelationType`` to relate to a| 
+a| `overriddenLabel` a| The label being overridden, if applicable a| 
 |===
 
 [caption=""]

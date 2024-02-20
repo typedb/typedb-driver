@@ -30,7 +30,7 @@ load("@vaticle_bazel_distribution//platform:constraints.bzl", "constraint_linux_
      "constraint_mac_arm64", "constraint_mac_x86_64", "constraint_win_x86_64")
 load(":build_opts.bzl", "cxxopts")
 load("//cpp:docs_structure.bzl", "dir_mapping")
-load("//tool/docs:cpp/rules.bzl", "doxygen_to_adoc")
+load("//tool/docs:cpp/rules.bzl", "doxygen_cpp_to_adoc")
 
 pkg_files(
     name = "typedb-driver-cpp-headers",
@@ -212,10 +212,11 @@ doxygen_docs(
     tags = ["manual"]
 )
 
-doxygen_to_adoc(
+doxygen_cpp_to_adoc(
     name = "docs_adoc",
     data = [":docs_html"],
     docs_dirs = dir_mapping,
+    output_dir = 'cpp/docs',
     tags = ["manual"]
 )
 

@@ -42,6 +42,8 @@ use super::{
 };
 use crate::{error::try_release_optional, iterator::CIterator, memory::take_ownership};
 
+/// Promise object representing the result of an asynchronous operation.
+/// Use \ref concept_promise_resolve(ConceptPromise*) to wait for and retrieve the resulting boolean value.
 pub struct ConceptPromise(BoxPromise<'static, Result<Option<Concept>>>);
 
 impl ConceptPromise {
@@ -78,11 +80,15 @@ impl ConceptPromise {
     }
 }
 
+/// Waits for and returns the result of the operation represented by the <code>ConceptPromise</code> object.
+/// In case the operation failed, the error flag will only be set when the promise is resolved.
+/// The native promise object is freed when it is resolved.
 #[no_mangle]
 pub extern "C" fn concept_promise_resolve(promise: *mut ConceptPromise) -> *mut Concept {
     try_release_optional(take_ownership(promise).0.resolve().transpose())
 }
 
+/// Iterator over the <code>Concepts</code>s returned by an API method or query.
 pub struct ConceptIterator(pub CIterator<Result<Concept>>);
 
 impl ConceptIterator {
@@ -132,11 +138,14 @@ impl ConceptIterator {
     }
 }
 
+/// Forwards the <code>ConceptIterator</code> and returns the next <code>Concept</code> if it exists,
+/// or null if there are no more elements.
 #[no_mangle]
 pub extern "C" fn concept_iterator_next(it: *mut ConceptIterator) -> *mut Concept {
     unsafe { iterator_try_next(addr_of_mut!((*it).0)) }
 }
 
+/// Frees the native rust <code>ConceptIterator</code> object
 #[no_mangle]
 pub extern "C" fn concept_iterator_drop(it: *mut ConceptIterator) {
     free(it);
@@ -144,6 +153,7 @@ pub extern "C" fn concept_iterator_drop(it: *mut ConceptIterator) {
 
 type RolePlayerIteratorInner = CIterator<Result<RolePlayer>>;
 
+/// An iterator over <code>RolePlayer</code> pairs returned by \ref relation_get_role_players(Transaction*, Concept*)
 pub struct RolePlayerIterator(RolePlayerIteratorInner);
 
 impl RolePlayerIterator {
@@ -159,31 +169,39 @@ impl RolePlayerIterator {
     }
 }
 
+/// Forwards the <code>RolePlayerIterator</code> and returns the next <code>RolePlayer</code> if it exists,
+/// or null if there are no more elements.
 #[no_mangle]
 pub extern "C" fn role_player_iterator_next(it: *mut RolePlayerIterator) -> *mut RolePlayer {
     unsafe { iterator_try_next(addr_of_mut!((*it).0)) }
 }
 
+/// Frees the native rust <code>RolePlayerIterator</code> object
 #[no_mangle]
 pub extern "C" fn role_player_iterator_drop(it: *mut RolePlayerIterator) {
     free(it);
 }
 
+/// A pair representing the concept and the role it plays in a relation.
+/// The result of \ref relation_get_role_players(Transaction*, Concept*)
 pub struct RolePlayer {
     role_type: Concept,
     player: Concept,
 }
 
+/// Frees the native rust <code>RolePlayer</code> object
 #[no_mangle]
 pub extern "C" fn role_player_drop(role_player: *mut RolePlayer) {
     free(role_player);
 }
 
+/// Returns the role-type played by the <code>RolePlayer</code>
 #[no_mangle]
 pub extern "C" fn role_player_get_role_type(role_player: *const RolePlayer) -> *mut Concept {
     release(borrow(role_player).role_type.clone())
 }
 
+/// Returns the <code>Concept</code> which plays the role in the <code>RolePlayer</code>
 #[no_mangle]
 pub extern "C" fn role_player_get_player(role_player: *const RolePlayer) -> *mut Concept {
     release(borrow(role_player).player.clone())

@@ -1,6 +1,8 @@
 [#_enum_Concept]
 === Concept
 
+The fundamental TypeQL object. A Concept is either a Type, Thing, or Value. To use subtype specific methods, the Concept must be of the expected subtype.
+
 [caption=""]
 .Enum variants
 // tag::enum_constants[]

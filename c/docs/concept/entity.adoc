@@ -1,0 +1,16 @@
+[#_entity_get_type]
+==== entity_get_type
+
+[source,cpp]
+----
+struct Concept* entity_get_type(const struct Concept* entity)
+----
+
+
+
+Retrieves the type which this ``Entity`` belongs to.
+
+[caption=""]
+.Returns
+`struct Concept*`
+

@@ -1,0 +1,21 @@
+[#_Error]
+=== Error
+
+
+
+Represents errors encountered during operation.
+
+[#_SchemaException]
+=== SchemaException
+
+
+
+Represents invalid schema constructs discovered during schema validation.
+
+[#_SchemaExceptionIterator]
+=== SchemaExceptionIterator
+
+
+
+Iterator over the ``SchemaException``s in the result of concepts_get_schema_exceptions(Transaction*).
+

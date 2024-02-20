@@ -1,0 +1,21 @@
+[#_Rule]
+=== Rule
+
+
+
+Rules are a part of schema and define embedded logic. The reasoning engine uses rules as a set of logic to infer new data. A rule consists of a condition and a conclusion, and is uniquely identified by a label.
+
+[#_RuleIterator]
+=== RuleIterator
+
+
+
+An iterator over ``Rule``s in the database
+
+[#_RulePromise]
+=== RulePromise
+
+
+
+Promise object representing the result of an asynchronous operation. Use rule_promise_resolve(RulePromise*) to wait for and retrieve the resulting ``Rule``.
+

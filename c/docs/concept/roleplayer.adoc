@@ -1,0 +1,80 @@
+[#_role_player_drop]
+==== role_player_drop
+
+[source,cpp]
+----
+void role_player_drop(struct RolePlayer* role_player)
+----
+
+
+
+Frees the native rust ``RolePlayer`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_role_player_get_player]
+==== role_player_get_player
+
+[source,cpp]
+----
+struct Concept* role_player_get_player(const struct RolePlayer* role_player)
+----
+
+
+
+Returns the ``Concept`` which plays the role in the ``RolePlayer``
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_role_player_get_role_type]
+==== role_player_get_role_type
+
+[source,cpp]
+----
+struct Concept* role_player_get_role_type(const struct RolePlayer* role_player)
+----
+
+
+
+Returns the role-type played by the ``RolePlayer``
+
+[caption=""]
+.Returns
+`struct Concept*`
+
+[#_role_player_iterator_drop]
+==== role_player_iterator_drop
+
+[source,cpp]
+----
+void role_player_iterator_drop(struct RolePlayerIterator* it)
+----
+
+
+
+Frees the native rust ``RolePlayerIterator`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_role_player_iterator_next]
+==== role_player_iterator_next
+
+[source,cpp]
+----
+struct RolePlayer* role_player_iterator_next(struct RolePlayerIterator* it)
+----
+
+
+
+Forwards the ``RolePlayerIterator`` and returns the next ``RolePlayer`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct RolePlayer*`
+

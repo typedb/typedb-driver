@@ -1,0 +1,536 @@
+[#_options_drop]
+==== options_drop
+
+[source,cpp]
+----
+void options_drop(struct Options* options)
+----
+
+
+
+Frees the native rust ``Options`` object.
+
+[caption=""]
+.Returns
+`void`
+
+[#_options_get_explain]
+==== options_get_explain
+
+[source,cpp]
+----
+bool options_get_explain(const struct Options* options)
+----
+
+
+
+Returns the value set for the explanation in this ``TypeDBOptions`` object. If set to ``true``, explanations for queries are enabled.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_options_get_infer]
+==== options_get_infer
+
+[source,cpp]
+----
+bool options_get_infer(const struct Options* options)
+----
+
+
+
+Returns the value set for the inference in this ``TypeDBOptions`` object.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_options_get_parallel]
+==== options_get_parallel
+
+[source,cpp]
+----
+bool options_get_parallel(const struct Options* options)
+----
+
+
+
+Returns the value set for the parallel execution in this ``TypeDBOptions`` object. If set to ``true``, the server uses parallel instead of single-threaded execution.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_options_get_prefetch]
+==== options_get_prefetch
+
+[source,cpp]
+----
+bool options_get_prefetch(const struct Options* options)
+----
+
+
+
+Returns the value set for the prefetching in this ``TypeDBOptions`` object. If set to ``true``, the first batch of answers is streamed to the driver even without an explicit request for it.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_options_get_prefetch_size]
+==== options_get_prefetch_size
+
+[source,cpp]
+----
+int32_t options_get_prefetch_size(const struct Options* options)
+----
+
+
+
+Returns the value set for the prefetch size in this ``TypeDBOptions`` object. If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
+
+[caption=""]
+.Returns
+`int32_t`
+
+[#_options_get_read_any_replica]
+==== options_get_read_any_replica
+
+[source,cpp]
+----
+bool options_get_read_any_replica(const struct Options* options)
+----
+
+
+
+Returns the value set for reading data from any replica in this ``TypeDBOptions`` object. If set to ``True``, enables reading data from any replica, potentially boosting read throughput.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_options_get_schema_lock_acquire_timeout_millis]
+==== options_get_schema_lock_acquire_timeout_millis
+
+[source,cpp]
+----
+int64_t options_get_schema_lock_acquire_timeout_millis(const struct Options* options)
+----
+
+
+
+Returns the value set for the schema lock acquire timeout in this ``TypeDBOptions`` object. If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock.
+
+[caption=""]
+.Returns
+`int64_t`
+
+[#_options_get_session_idle_timeout_millis]
+==== options_get_session_idle_timeout_millis
+
+[source,cpp]
+----
+int64_t options_get_session_idle_timeout_millis(const struct Options* options)
+----
+
+
+
+Returns the value set for the session idle timeout in this ``TypeDBOptions`` object. If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive.
+
+[caption=""]
+.Returns
+`int64_t`
+
+[#_options_get_trace_inference]
+==== options_get_trace_inference
+
+[source,cpp]
+----
+bool options_get_trace_inference(const struct Options* options)
+----
+
+
+
+Returns the value set for reasoning tracing in this ``TypeDBOptions`` object. If set to ``true``, reasoning tracing graphs are output in the logging directory.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_options_get_transaction_timeout_millis]
+==== options_get_transaction_timeout_millis
+
+[source,cpp]
+----
+int64_t options_get_transaction_timeout_millis(const struct Options* options)
+----
+
+
+
+Returns the value set for the transaction timeout in this ``TypeDBOptions`` object. If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
+
+[caption=""]
+.Returns
+`int64_t`
+
+[#_options_has_explain]
+==== options_has_explain
+
+[source,cpp]
+----
+bool options_has_explain(const struct Options* options)
+----
+
+
+
+Checks whether the option for explanation was explicitly set for this ``TypeDBOptions`` object.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_options_has_infer]
+==== options_has_infer
+
+[source,cpp]
+----
+bool options_has_infer(const struct Options* options)
+----
+
+
+
+Checks whether the option for inference was explicitly set for this ``TypeDBOptions`` object.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_options_has_parallel]
+==== options_has_parallel
+
+[source,cpp]
+----
+bool options_has_parallel(const struct Options* options)
+----
+
+
+
+Checks whether the option for parallel execution was explicitly set for this ``TypeDBOptions`` object.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_options_has_prefetch]
+==== options_has_prefetch
+
+[source,cpp]
+----
+bool options_has_prefetch(const struct Options* options)
+----
+
+
+
+Checks whether the option for prefetching was explicitly set for this ``TypeDBOptions`` object.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_options_has_prefetch_size]
+==== options_has_prefetch_size
+
+[source,cpp]
+----
+bool options_has_prefetch_size(const struct Options* options)
+----
+
+
+
+Checks whether the option for prefetch size was explicitly set for this ``TypeDBOptions`` object.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_options_has_read_any_replica]
+==== options_has_read_any_replica
+
+[source,cpp]
+----
+bool options_has_read_any_replica(const struct Options* options)
+----
+
+
+
+Checks whether the option for reading data from any replica was explicitly set for this ``TypeDBOptions`` object.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_options_has_schema_lock_acquire_timeout_millis]
+==== options_has_schema_lock_acquire_timeout_millis
+
+[source,cpp]
+----
+bool options_has_schema_lock_acquire_timeout_millis(const struct Options* options)
+----
+
+
+
+Checks whether the option for schema lock acquire timeout was explicitly set for this ``TypeDBOptions`` object.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_options_has_session_idle_timeout_millis]
+==== options_has_session_idle_timeout_millis
+
+[source,cpp]
+----
+bool options_has_session_idle_timeout_millis(const struct Options* options)
+----
+
+
+
+Checks whether the option for the session idle timeout was explicitly set for this ``TypeDBOptions`` object.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_options_has_trace_inference]
+==== options_has_trace_inference
+
+[source,cpp]
+----
+bool options_has_trace_inference(const struct Options* options)
+----
+
+
+
+Checks whether the option for reasoning tracing was explicitly set for this ``TypeDBOptions`` object.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_options_has_transaction_timeout_millis]
+==== options_has_transaction_timeout_millis
+
+[source,cpp]
+----
+bool options_has_transaction_timeout_millis(const struct Options* options)
+----
+
+
+
+Checks whether the option for transaction timeout was explicitly set for this ``TypeDBOptions`` object.
+
+[caption=""]
+.Returns
+`bool`
+
+[#_options_new]
+==== options_new
+
+[source,cpp]
+----
+struct Options* options_new(void)
+----
+
+
+
+Produces a new ``TypeDBOptions`` object.
+
+[caption=""]
+.Returns
+`struct Options*`
+
+[#_options_set_explain]
+==== options_set_explain
+
+[source,cpp]
+----
+void options_set_explain(struct Options* options, bool explain)
+----
+
+
+
+Explicitly enables or disables explanations. If set to ``true``, enables explanations for queries. Only affects read transactions.
+
+[caption=""]
+.Returns
+`void`
+
+[#_options_set_infer]
+==== options_set_infer
+
+[source,cpp]
+----
+void options_set_infer(struct Options* options, bool infer)
+----
+
+
+
+Explicitly enables or disables inference. Only settable at transaction level and above. Only affects read transactions.
+
+[caption=""]
+.Returns
+`void`
+
+[#_options_set_parallel]
+==== options_set_parallel
+
+[source,cpp]
+----
+void options_set_parallel(struct Options* options, bool parallel)
+----
+
+
+
+Explicitly enables or disables parallel execution. If set to ``true``, the server uses parallel instead of single-threaded execution.
+
+[caption=""]
+.Returns
+`void`
+
+[#_options_set_prefetch]
+==== options_set_prefetch
+
+[source,cpp]
+----
+void options_set_prefetch(struct Options* options, bool prefetch)
+----
+
+
+
+Explicitly enables or disables prefetching. If set to ``true``, the first batch of answers is streamed to the driver even without an explicit request for it.
+
+[caption=""]
+.Returns
+`void`
+
+[#_options_set_prefetch_size]
+==== options_set_prefetch_size
+
+[source,cpp]
+----
+void options_set_prefetch_size(struct Options* options, int32_t prefetch_size)
+----
+
+
+
+Explicitly sets a prefetch size. If set, specifies a guideline number of answers that the server should send before the driver issues a fresh request.
+
+ 
+  Parameters
+ 
+ 
+  
+   
+    
+     prefetchSize
+     Number of answers that the server should send before the driver issues a fresh request
+    
+   
+  
+ 
+
+
+[caption=""]
+.Input parameters
+[cols="~,~,~"]
+[options="header"]
+|===
+|Name |Description |Type
+a| `prefetchSize` a| Number of answers that the server should send before the driver issues a fresh request a| 
+|===
+
+[caption=""]
+.Returns
+`void`
+
+[#_options_set_read_any_replica]
+==== options_set_read_any_replica
+
+[source,cpp]
+----
+void options_set_read_any_replica(struct Options* options, bool read_any_replica)
+----
+
+
+
+Explicitly enables or disables reading data from any replica. If set to ``True``, enables reading data from any replica, potentially boosting read throughput. Only settable in TypeDB Cloud.
+
+[caption=""]
+.Returns
+`void`
+
+[#_options_set_schema_lock_acquire_timeout_millis]
+==== options_set_schema_lock_acquire_timeout_millis
+
+[source,cpp]
+----
+void options_set_schema_lock_acquire_timeout_millis(struct Options* options, int64_t timeout_millis)
+----
+
+
+
+Explicitly sets schema lock acquire timeout. If set, specifies how long the driver should wait if opening a session or transaction is blocked by a schema write lock.
+
+[caption=""]
+.Returns
+`void`
+
+[#_options_set_session_idle_timeout_millis]
+==== options_set_session_idle_timeout_millis
+
+[source,cpp]
+----
+void options_set_session_idle_timeout_millis(struct Options* options, int64_t timeout_millis)
+----
+
+
+
+Explicitly sets a session idle timeout. If set, specifies a timeout that allows the server to close sessions if the driver terminates or becomes unresponsive.
+
+[caption=""]
+.Returns
+`void`
+
+[#_options_set_trace_inference]
+==== options_set_trace_inference
+
+[source,cpp]
+----
+void options_set_trace_inference(struct Options* options, bool trace_inference)
+----
+
+
+
+Explicitly enables or disables reasoning tracing. If set to ``true``, reasoning tracing graphs are output in the logging directory. Should be used with ``parallel = False``.
+
+[caption=""]
+.Returns
+`void`
+
+[#_options_set_transaction_timeout_millis]
+==== options_set_transaction_timeout_millis
+
+[source,cpp]
+----
+void options_set_transaction_timeout_millis(struct Options* options, int64_t timeout_millis)
+----
+
+
+
+Explicitly set a transaction timeout. If set, specifies a timeout for killing transactions automatically, preventing memory leaks in unclosed transactions.
+
+[caption=""]
+.Returns
+`void`
+

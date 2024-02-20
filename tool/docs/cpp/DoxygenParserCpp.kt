@@ -38,10 +38,10 @@ import java.util.concurrent.Callable
 import kotlin.system.exitProcess
 
 
-fun main(args: Array<String>): Unit = exitProcess(CommandLine(DoxygenParser()).execute(*args))
+fun main(args: Array<String>): Unit = exitProcess(CommandLine(DoxygenParserCpp()).execute(*args))
 
-@CommandLine.Command(name = "DoxygenParser", mixinStandardHelpOptions = true)
-class DoxygenParser : Callable<Unit> {
+@CommandLine.Command(name = "DoxygenParserCpp", mixinStandardHelpOptions = true)
+class DoxygenParserCpp : Callable<Unit> {
     @Parameters(paramLabel = "<input>", description = ["Input directory"])
     private lateinit var inputDirectoryNames: List<String>
 
@@ -76,7 +76,7 @@ class DoxygenParser : Callable<Unit> {
             val typeDefFile = getFile(docsDir, "typedefs.adoc")
             typeDefFile.writeText("")
             val typeDefTBody =
-                parsed.select("tr.heading").filter { element -> element.text().equals("Typedefs") }.first().parent()!!
+                parsed.select("tr.heading").first { element -> element.text().equals("Typedefs") }.parent()!!
             typeDefTBody.select("tr").filter { tr ->
                 tr.className().startsWith("memitem")
             }.map {
@@ -125,7 +125,7 @@ class DoxygenParser : Callable<Unit> {
         return outputFile
     }
 
-    private fun parseMemberDecls(document: Element): Pair<Map<String, List<Element>>, Map<String,String>> {
+    private fun parseMemberDecls(document: Element): Pair<Map<String, List<Element>>, Map<String, String>> {
         val missingDeclarations: MutableList<String> = ArrayList()
         val map: MutableMap<String, List<Element>> = HashMap()
         val idToAnchor: MutableMap<String, String> = HashMap()
@@ -164,14 +164,14 @@ class DoxygenParser : Callable<Unit> {
                     anchor = replaceSymbolsForAnchor(alias),
                     description = listOf("Alias for ${replaceLocalLinks(HashMap(), actual)}"),
                 )
-            } else if (memItemLeft!!.text().startsWith("using")) {
+            } else if (memItemLeft.text().startsWith("using")) {
                 val usingEquality = element.selectFirst("td.memItemRight")!!
                 val actual = usingEquality.text().substringAfter("=").trim()
                 val alias = usingEquality.text().substringBefore("=").trim()
                 return Class(
                     name = alias,
                     anchor = replaceSymbolsForAnchor(alias),
-                    description = listOf("Alias for ${actual}")
+                    description = listOf("Alias for $actual")
                 )
             }
         }
@@ -192,7 +192,8 @@ class DoxygenParser : Callable<Unit> {
 
         val (memberDecls, idToAnchor) = parseMemberDecls(document)
         val classDescr: List<String> = document.selectFirst("div.textblock")
-            ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h"), idToAnchor) } ?: listOf()
+            ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h"), idToAnchor) }
+            ?: listOf()
 
         val fields = memberDecls.getOrDefault("pub-attribs", listOf()).map { parseField(it, idToAnchor) }
         val methods: List<Method> = (
@@ -220,7 +221,8 @@ class DoxygenParser : Callable<Unit> {
         val className = fullyQualifiedName.substringAfterLast("::")
         val classAnchor = replaceSymbolsForAnchor(className)
         val classDescr: List<String> = element.selectFirst("div.memdoc")
-            ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h"), HashMap()) } ?: listOf()
+            ?.let { splitToParagraphs(it.html()) }?.map { reformatTextWithCode(it.substringBefore("<h"), HashMap()) }
+            ?: listOf()
         val classExamples = element.select("div.memdoc > pre").map { replaceSpaces(it.text()) }
         val enumConstants =
             element.parents().select("div.contents").first()!!
@@ -327,11 +329,11 @@ class DoxygenParser : Callable<Unit> {
     private fun replaceLocalLinks(idToAnchor: Map<String, String>, html: String): String {
         // The Intellij preview messes up nested templates & The '>>' used for cross links.
         return Regex("<a class=\"el\" href=\"[^\"^#]*#([^\"]*)\">([^<]*)</a>")
-            .replace(html,{
+            .replace(html) {
                 if (idToAnchor.containsKey(it.groupValues[1]))
-                "<<#_%s,%s>>".format(idToAnchor.get(it.groupValues[1]), it.groupValues[2])
+                    "<<#_%s,%s>>".format(idToAnchor[it.groupValues[1]], it.groupValues[2])
                 else "%s".format(it.groupValues[2])
-            })
+            }
     }
 
     private fun generateFilename(className: String): String {

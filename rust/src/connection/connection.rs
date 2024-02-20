@@ -56,6 +56,7 @@ use crate::{
     Credential, Options,
 };
 
+/// A connection to a TypeDB server which serves as the starting point for all interaction.
 #[derive(Clone)]
 pub struct Connection {
     server_connections: HashMap<Address, ServerConnection>,

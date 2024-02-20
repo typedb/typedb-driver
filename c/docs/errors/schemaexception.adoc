@@ -1,0 +1,80 @@
+[#_schema_exception_code]
+==== schema_exception_code
+
+[source,cpp]
+----
+char* schema_exception_code(const struct SchemaException* schema_exception)
+----
+
+
+
+Returns the error code of the ``SchemaException`` object
+
+[caption=""]
+.Returns
+`char*`
+
+[#_schema_exception_drop]
+==== schema_exception_drop
+
+[source,cpp]
+----
+void schema_exception_drop(struct SchemaException* schema_exception)
+----
+
+
+
+Frees the native rust ``SchemaException`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_schema_exception_iterator_drop]
+==== schema_exception_iterator_drop
+
+[source,cpp]
+----
+void schema_exception_iterator_drop(struct SchemaExceptionIterator* it)
+----
+
+
+
+Frees the native rust ``SchemaExceptionIterator`` object
+
+[caption=""]
+.Returns
+`void`
+
+[#_schema_exception_iterator_next]
+==== schema_exception_iterator_next
+
+[source,cpp]
+----
+struct SchemaException* schema_exception_iterator_next(struct SchemaExceptionIterator* it)
+----
+
+
+
+Forwards the ``SchemaExceptionIterator`` and returns the next ``SchemaException`` if it exists, or null if there are no more elements.
+
+[caption=""]
+.Returns
+`struct SchemaException*`
+
+[#_schema_exception_message]
+==== schema_exception_message
+
+[source,cpp]
+----
+char* schema_exception_message(const struct SchemaException* schema_exception)
+----
+
+
+
+Returns the error message of the ``SchemaException`` object
+
+[caption=""]
+.Returns
+`char*`
+

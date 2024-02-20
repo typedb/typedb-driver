@@ -1,0 +1,83 @@
+[#_Annotation]
+=== Annotation
+
+
+
+Annotations are used to specify extra schema constraints.
+
+[#_Transitivity]
+=== Transitivity
+
+
+
+Used for specifying whether we need explicit or transitive subtyping, instances, etc.
+
+
+[#_ValueType]
+=== ValueType
+
+
+
+Represents the type of primitive value is held by a Value or Attribute.
+
+[#_Transitivity]
+=== Transitivity
+
+
+
+Used for specifying whether we need explicit or transitive subtyping, instances, etc.
+
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols="~"]
+[options="header"]
+|===
+|Name
+a| `Explicit`
+a| `Transitive`
+|===
+// end::enum_constants[]
+
+[#_ValueType]
+=== ValueType
+
+
+
+Represents the type of primitive value is held by a Value or Attribute.
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols="~"]
+[options="header"]
+|===
+|Name
+a| `Boolean`
+a| `DateTime`
+a| `Double`
+a| `Long`
+a| `Object`
+a| `String`
+|===
+// end::enum_constants[]
+
+[#_ValueType]
+=== ValueType
+
+
+
+Retrieves the ``ValueType`` of this ``AttributeType``.
+
+[caption=""]
+.Enum constants
+// tag::enum_constants[]
+[cols="~"]
+[options="header"]
+|===
+|Name
+a| `attribute_type_get_value_type (const struct Concept *attribute_type)`
+|===
+// end::enum_constants[]
+

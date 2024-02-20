@@ -25,6 +25,7 @@ use tonic::transport::{Certificate, ClientTlsConfig};
 
 use crate::Result;
 
+/// User credentials and TLS encryption settings for connecting to TypeDB Cloud.
 #[derive(Clone)]
 pub struct Credential {
     username: String,
