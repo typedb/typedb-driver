@@ -31,7 +31,7 @@ using ConceptError = Vaticle.Typedb.Driver.Common.Exception.Error.Concept;
 
 namespace Vaticle.Typedb.Driver.Logic
 {
-    public sealed class LogicManager : ILogicManager
+    public class LogicManager : ILogicManager
     {
         private Pinvoke.Transaction _nativeTransaction { get; }
 

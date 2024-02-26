@@ -24,8 +24,10 @@ using System.Linq;
 
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Api.Concept.Type;
+using Vaticle.Typedb.Driver.Api.Concept;
 using Vaticle.Typedb.Driver.Api.Concept.Value;
+using Vaticle.Typedb.Driver.Api.Concept.Type;
+using Vaticle.Typedb.Driver.Api.Concept.Thing;
 using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Common.Exception;
 using Vaticle.Typedb.Driver.Concept.Thing;
@@ -55,7 +57,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             throw new TypeDBDriverException(InternalError.UNEXPECTED_NATIVE_VALUE);
         }
 
-        public sealed bool IsRoot()
+        public bool IsRoot()
         {
             try
             {
@@ -67,7 +69,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             }
         }
 
-        public sealed bool IsAbstract()
+        public bool IsAbstract()
         {
             try
             {
@@ -103,7 +105,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
                 NativeTransaction(transaction), NativeObject).Resolve);
         }
 
-        public sealed VoidPromise SetLabel(ITypeDBTransaction transaction, string label)
+        public VoidPromise SetLabel(ITypeDBTransaction transaction, string label)
         {
             return new VoidPromise(Pinvoke.typedb_driver.thing_type_set_label(
                 NativeTransaction(transaction), NativeObject, label));
@@ -123,25 +125,25 @@ namespace Vaticle.Typedb.Driver.Concept.Type
         public abstract ICollection<IThing> GetInstances(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
-        public sealed VoidPromise SetAbstract(ITypeDBTransaction transaction)
+        public VoidPromise SetAbstract(ITypeDBTransaction transaction)
         {
             return new VoidPromise(Pinvoke.typedb_driver.thing_type_set_abstract(
                 NativeTransaction(transaction), NativeObject).Resolve);
         }
 
-        public sealed VoidPromise UnsetAbstract(ITypeDBTransaction transaction)
+        public VoidPromise UnsetAbstract(ITypeDBTransaction transaction)
         {
             return new VoidPromise(Pinvoke.typedb_driver.thing_type_unset_abstract(
                 NativeTransaction(transaction), NativeObject).Resolve);
         }
 
-        public sealed VoidPromise SetPlays(ITypeDBTransaction transaction, IRoleType roleType)
+        public VoidPromise SetPlays(ITypeDBTransaction transaction, IRoleType roleType)
         {
             return new VoidPromise(Pinvoke.typedb_driver.thing_type_set_plays(
                 NativeTransaction(transaction), NativeObject, ((RoleType)roleType).NativeObject, null).Resolve);
         }
 
-        public sealed VoidPromise SetPlays(
+        public VoidPromise SetPlays(
             ITypeDBTransaction transaction, IRoleType roleType, IRoleType overriddenRoleType)
         {
             return new VoidPromise(Pinvoke.typedb_driver.thing_type_set_plays(
@@ -157,7 +159,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
         }
 
         public VoidPromise SetOwns(
-            ITypeDBTransaction transaction, IAttributeType attributeType, ICollection<Annotation> annotations)
+            ITypeDBTransaction transaction, IAttributeType attributeType, ICollection<IThingType.Annotation> annotations)
         {
             return SetOwns(transaction, attributeType, null, annotations);
         }
@@ -168,11 +170,11 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             return SetOwns(transaction, attributeType, overriddenType, new HashSet(){});
         }
 
-        public sealed VoidPromise SetOwns(
+        public VoidPromise SetOwns(
             ITypeDBTransaction transaction, 
             IAttributeType attributeType, 
             IAttributeType overriddenType, 
-            ICollection<Annotation> annotations)
+            ICollection<IThingType.Annotation> annotations)
         {
             Pinvoke.Concept overriddenTypeNative = overriddenType != null 
                 ? ((IAttributeType)overriddenType).NativeObject 
@@ -189,12 +191,12 @@ namespace Vaticle.Typedb.Driver.Concept.Type
                 annotationsArray));
         }
 
-        public sealed ICollection<IRoleType> GetPlays(ITypeDBTransaction transaction)
+        public ICollection<IRoleType> GetPlays(ITypeDBTransaction transaction)
         {
             return GetPlays(transaction, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public sealed ICollection<IRoleType> GetPlays(
+        public ICollection<IRoleType> GetPlays(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
         {
             try
@@ -228,13 +230,13 @@ namespace Vaticle.Typedb.Driver.Concept.Type
         }
 
         public ICollection<IAttributeType> GetOwns(
-            ITypeDBTransaction transaction, ICollection<Annotation> annotations)
+            ITypeDBTransaction transaction, ICollection<IThingType.Annotation> annotations)
         {
             return GetOwns(transaction, IConcept.Transitivity.TRANSITIVE, annotations);
         }
 
-        public sealed ICollection<IAttributeType> GetOwns(
-            ITypeDBTransaction transaction, IValue.ValueType valueType, ICollection<Annotation> annotations)
+        public ICollection<IAttributeType> GetOwns(
+            ITypeDBTransaction transaction, IValue.ValueType valueType, ICollection<IThingType.Annotation> annotations)
         {
             return GetOwns(transaction, valueType, IConcept.Transitivity.TRANSITIVE, annotations);
         }
@@ -252,7 +254,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
         }
 
         public ICollection<IIAttributeType> GetOwns(
-            ITypeDBTransaction transaction, ICollection<Annotation> annotations, IConcept.Transitivity transitivity)
+            ITypeDBTransaction transaction, ICollection<IThingType.Annotation> annotations, IConcept.Transitivity transitivity)
         {
             return GetOwns(transaction, transitivity, annotations);
         }
@@ -260,7 +262,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
         public ICollection<IIAttributeType> GetOwns(
             ITypeDBTransaction transaction,
             IValue.ValueType valueType,
-            ICollection<Annotation> annotations,
+            ICollection<IThingType.Annotation> annotations,
             Transitivity transitivity)
         {
             return GetOwns(transaction, valueType, transitivity, annotations);
@@ -269,7 +271,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
         private ICollection<IAttributeType> GetOwns(
             ITypeDBTransaction transaction,
             Transitivity transitivity,
-            ICollection<Annotation> annotations)
+            ICollection<IThingType.Annotation> annotations)
         {
             return GetOwns(transaction, null, transitivity, annotations);
         }
@@ -278,7 +280,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             ITypeDBTransaction transaction, 
             IValue.ValueType valueType, 
             IConcept.Transitivity transitivity, 
-            ICollection<Annotation> annotations) 
+            ICollection<IThingType.Annotation> annotations) 
         {
             try
             {
@@ -288,7 +290,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
                         NativeObject,
                         valueType == null ? null : valueType.NativeObject,
                         transitivity.NativeObject,
-                        Annotations.Select(obj => obj.NativeObject).toArray<Pinvoke.Annotation>()))
+                        IThingType.Annotations.Select(obj => obj.NativeObject).toArray<Pinvoke.Annotation>()))
                     .Select(obj => new AttributeType(obj));
             }
             catch (Pinvoke.Error e)
@@ -308,25 +310,25 @@ namespace Vaticle.Typedb.Driver.Concept.Type
                 obj => new AttributeType(obj));
         }
 
-        public sealed VoidPromise UnSetOwns(ITypeDBTransaction transaction, IAttributeType attributeType)
+        public VoidPromise UnSetOwns(ITypeDBTransaction transaction, IAttributeType attributeType)
         {
             return new VoidPromise(Pinvoke.typedb_driver.thing_type_unset_owns(
                 NativeTransaction(transaction), NativeObject, ((AttributeType)attributeType).NativeObject).Resolve);
         }
 
-        public sealed VoidPromise UnsetPlays(ITypeDBTransaction transaction, IRoleType roleType)
+        public VoidPromise UnsetPlays(ITypeDBTransaction transaction, IRoleType roleType)
         {
             return new VoidPromise(Pinvoke.typedb_driver.thing_type_unset_plays(
                 NativeTransaction(transaction), NativeObject, ((RoleType)roleType).NativeObject).Resolve);
         }
 
-        public sealed Promise<string> GetSyntax(ITypeDBTransaction transaction)
+        public Promise<string> GetSyntax(ITypeDBTransaction transaction)
         {
             return new Promise<string>(Pinvoke.typedb_driver.thing_type_get_syntax(
                 NativeTransaction(transaction), NativeObject).Resolve);
         }
 
-        public class Root : ThingType
+        public static class Root : ThingType
         {
             public Root(Pinvoke.Concept nativeConcept)
                 : base(nativeConcept)

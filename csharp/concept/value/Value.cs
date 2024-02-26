@@ -19,6 +19,7 @@
  * under the License.
  */
 
+using Vaticle.Typedb.Driver.Api.Concept.Type;
 using Vaticle.Typedb.Driver.Api.Concept.Value;
 using Vaticle.Typedb.Driver.Common.Exception;
 using Vaticle.Typedb.Driver.Concept;

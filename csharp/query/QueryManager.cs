@@ -40,7 +40,7 @@ using QueryError = Vaticle.Typedb.Driver.Common.Exception.Error.Query;
 
 namespace Vaticle.Typedb.Driver.Query
 {
-    public sealed class QueryManager : IQueryManager
+    public class QueryManager : IQueryManager
     {
         private Pinvoke.Transaction _nativeTransaction { get; }
 
@@ -259,7 +259,7 @@ namespace Vaticle.Typedb.Driver.Query
                 return new NativeEnumerable<Pinvoke.ConceptMap>(
                     Pinvoke.typedb_driver.query_explain(
                         _nativeTransaction, 
-                        ((IConceptMapImpl.IExplainableImpl)explainable).NativeObject, 
+                        ((ConceptMap.Explainable)explainable).NativeObject,
                         options.NativeObject))
                     .Select(obj => new Explanation(obj))
                     .ToList<IExplanation>();

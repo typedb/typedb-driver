@@ -24,12 +24,14 @@ using System.Linq;
 
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Api.Concept.Thing;
+using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Api.Concept.Value;
 using Vaticle.Typedb.Driver.Api.Concept.Type;
+using Vaticle.Typedb.Driver.Api.Concept.Thing;
 using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Common.Exception;
 using Vaticle.Typedb.Driver.Concept;
-using Vaticle.Typedb.Driver.Concept.Type.AttributeTypeImpl;
+using Vaticle.Typedb.Driver.Concept.Type;
 
 using InternalError = Vaticle.Typedb.Driver.Common.Exception.Error.Internal;
 
@@ -39,12 +41,12 @@ namespace Vaticle.Typedb.Driver.Concept.Thing
     {
         private int hash = 0;
 
-        ThingImpl(Pinvoke.Concept nativeConcept)
+        Thing(Pinvoke.Concept nativeConcept)
             : base(nativeConcept)
         {
         }
 
-        public static IThing Of(Pinvoke.Concept nativeConcept) 
+        public static new IThing Of(Pinvoke.Concept nativeConcept)
         {
             if (Pinvoke.typedb_driver.concept_is_entity(nativeConcept))
                 return new Entity(nativeConcept);
@@ -56,7 +58,7 @@ namespace Vaticle.Typedb.Driver.Concept.Thing
             throw new TypeDBDriverException(InternalError.UNEXPECTED_NATIVE_VALUE);
         }
 
-        public sealed string IID 
+        public string IID
         {
             get { return Pinvoke.typedb_driver.thing_get_iid(NativeObject); }
         }
@@ -73,7 +75,7 @@ namespace Vaticle.Typedb.Driver.Concept.Thing
             return this;
         }
 
-        public sealed ICollection<IAttribute> GetHas(
+        public ICollection<IAttribute> GetHas(
             ITypeDBTransaction transaction, params IAttributeType[] attributeTypes)
         {
             Pinvoke.Concept[] attributeTypesArray = attributeTypes
@@ -96,8 +98,8 @@ namespace Vaticle.Typedb.Driver.Concept.Thing
             }
         }
 
-        public sealed ICollection<IAttribute> GetHas(
-            ITypeDBTransaction transaction, ICollection<Annotation> annotations)
+        public ICollection<IAttribute> GetHas(
+            ITypeDBTransaction transaction, ICollection<IThingType.Annotation> annotations)
         {
             Pinvoke.Annotation[] annotationsArray =
                 annotations.Select(obj => obj.NativeObject).toArray<Pinvoke.Annotation>();
@@ -118,7 +120,7 @@ namespace Vaticle.Typedb.Driver.Concept.Thing
             }
         }
 
-        public sealed ICollection<IRelation> GetRelations(
+        public ICollection<IRelation> GetRelations(
             ITypeDBTransaction transaction, params IRoleType[] roleTypes)
         {
             Pinvoke.Concept[] roleTypesArray =
@@ -136,7 +138,7 @@ namespace Vaticle.Typedb.Driver.Concept.Thing
             }
         }
 
-        public sealed ICollection<IRoleType> GetPlaying(ITypeDBTransaction transaction)
+        public ICollection<IRoleType> GetPlaying(ITypeDBTransaction transaction)
         {
             try
             {
@@ -151,7 +153,7 @@ namespace Vaticle.Typedb.Driver.Concept.Thing
             }
         }
 
-        public sealed VoidPromise SetHas(ITypeDBTransaction transaction, IAttribute attribute)
+        public VoidPromise SetHas(ITypeDBTransaction transaction, IAttribute attribute)
         {
             return new VoidPromise(Pinvoke.typedb_driver.thing_set_has(
                 NativeTransaction(transaction),
@@ -159,7 +161,7 @@ namespace Vaticle.Typedb.Driver.Concept.Thing
                 ((Attribute)attribute).NativeObject).Resolve);
         }
 
-        public sealed VoidPromise UnsetHas(ITypeDBTransaction transaction, IAttribute attribute)
+        public VoidPromise UnsetHas(ITypeDBTransaction transaction, IAttribute attribute)
         {
             return new VoidPromise(Pinvoke.typedb_driver.thing_unset_has(
                 NativeTransaction(transaction),
@@ -167,13 +169,13 @@ namespace Vaticle.Typedb.Driver.Concept.Thing
                 ((Attribute)attribute).NativeObject).Resolve);
         }
 
-        public sealed VoidPromise Delete(ITypeDBTransaction transaction)
+        public VoidPromise Delete(ITypeDBTransaction transaction)
         {
             return new VoidPromise(Pinvoke.typedb_driver.thing_delete(
                 NativeTransaction(transaction), NativeObject).Resolve);
         }
 
-        public sealed Promise<bool> IsDeleted(ITypeDBTransaction transaction)
+        public Promise<bool> IsDeleted(ITypeDBTransaction transaction)
         {
             return new Promise<bool>(Pinvoke.typedb_driver.thing_is_deleted(
                 NativeTransaction(transaction), NativeObject).Resolve);

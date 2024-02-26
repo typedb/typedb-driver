@@ -19,6 +19,9 @@
  * under the License.
  */
 
+using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Api.Concept.Value;
+using Vaticle.Typedb.Driver.Api.Concept.Type;
 using Vaticle.Typedb.Driver.Api.Concept.Thing;
 using Vaticle.Typedb.Driver.Concept.Type;
 
@@ -31,12 +34,12 @@ namespace Vaticle.Typedb.Driver.Concept.Thing
         {
         }
 
-        public IEntityType Type
+        public override IEntityType Type
         {
             get { return new EntityType(Pinvoke.typedb_driver.entity_get_type(NativeObject)); }
         }
 
-        public sealed IEntity AsEntity()
+        public IEntity AsEntity()
         {
             return this;
         }

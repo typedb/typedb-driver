@@ -24,8 +24,10 @@ using System.Linq;
 
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
+using Vaticle.Typedb.Driver.Api.Concept;
 using Vaticle.Typedb.Driver.Api.Concept.Value;
 using Vaticle.Typedb.Driver.Api.Concept.Type;
+using Vaticle.Typedb.Driver.Api.Concept.Thing;
 using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Common.Exception;
 using Vaticle.Typedb.Driver.Concept.Value;
@@ -46,7 +48,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
                 Pinvoke.typedb_driver.attribute_type_get_value_type(NativeObject));
         }
 
-        public sealed VoidPromise SetSupertype(ITypeDBTransaction transaction, IAttributeType attributeType) 
+        public VoidPromise SetSupertype(ITypeDBTransaction transaction, IAttributeType attributeType)
         {
             return new VoidPromise(Pinvoke.typedb_driver.attribute_type_set_supertype(
                 NativeTransaction(transaction),
@@ -62,7 +64,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
                 obj => new AttributeType(obj));
         }
 
-        public sealed ICollection<IAttributeType> GetSupertypes(ITypeDBTransaction transaction) 
+        public ICollection<IAttributeType> GetSupertypes(ITypeDBTransaction transaction)
         {
             try
             {
@@ -77,18 +79,18 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             }
         }
 
-        public sealed ICollection<IAttributeType> GetSubtypes(ITypeDBTransaction transaction) 
+        public ICollection<IAttributeType> GetSubtypes(ITypeDBTransaction transaction)
         {
             return GetSubtypes(transaction, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public sealed ICollection<IAttributeType> GetSubtypes(
+        public ICollection<IAttributeType> GetSubtypes(
             ITypeDBTransaction transaction, IValue.ValueType valueType) 
         {
             return GetSubtypes(transaction, valueType, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public sealed ICollection<IAttributeType> GetSubtypes(
+        public ICollection<IAttributeType> GetSubtypes(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity) 
         {
             try 
@@ -106,7 +108,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             }
         }
 
-        public sealed ICollection<IAttributeType> GetSubtypes(
+        public ICollection<IAttributeType> GetSubtypes(
             ITypeDBTransaction transaction, 
             IValue.ValueType valueType, 
             IConcept.Transitivity transitivity) 
@@ -127,12 +129,12 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             }
         }
 
-        public sealed ICollection<IAttribute> GetInstances(ITypeDBTransaction transaction) 
+        public ICollection<IAttribute> GetInstances(ITypeDBTransaction transaction)
         {
             return GetInstances(transaction, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public sealed ICollection<IAttribute> GetInstances(
+        public ICollection<IAttribute> GetInstances(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity) 
         {
             try 
@@ -152,11 +154,11 @@ namespace Vaticle.Typedb.Driver.Concept.Type
 
         public ICollection<IThingType> GetOwners(ITypeDBTransaction transaction) 
         {
-            return GetOwners(transaction, new HashSet<Annotation>(){});
+            return GetOwners(transaction, new HashSet<IThingType.Annotation>(){});
         }
 
         public ICollection<IThingType> GetOwners(
-            ITypeDBTransaction transaction, ICollection<Annotation> annotations) 
+            ITypeDBTransaction transaction, ICollection<IThingType.Annotation> annotations) 
         {
             return GetOwners(transaction, annotations, IConcept.Transitivity.TRANSITIVE);
         }
@@ -164,12 +166,12 @@ namespace Vaticle.Typedb.Driver.Concept.Type
         public ICollection<IThingType> GetOwners(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity) 
         {
-            return GetOwners(transaction, new HashSet<Annotation>(){}, transitivity);
+            return GetOwners(transaction, new HashSet<IThingType.Annotation>(){}, transitivity);
         }
 
         public ICollection<IThingType> GetOwners(
             ITypeDBTransaction transaction, 
-            ICollection<Annotation> annotations, 
+            ICollection<IThingType.Annotation> annotations, 
             IConcept.Transitivity transitivity) 
         {
             Pinvoke.Annotation[] annotationsArray = 
@@ -216,7 +218,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             return Put(transaction, new Value(value));
         }
 
-        public sealed Promise<IAttribute> Put(ITypeDBTransaction transaction, IValue value) 
+        public Promise<IAttribute> Put(ITypeDBTransaction transaction, IValue value)
         {
             return Promise.Map<IAttribute, Pinvoke.Concept>(
                 Pinvoke.typedb_driver.attribute_type_put(
@@ -251,7 +253,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             return Get(transaction, new Value(value));
         }
 
-        public sealed Promise<IAttribute> Get(ITypeDBTransaction transaction, Value value)
+        public Promise<IAttribute> Get(ITypeDBTransaction transaction, IValue value)
         {
             return Promise.Map<IAttribute, Pinvoke.Concept>(
                 Pinvoke.typedb_driver.attribute_type_get(
