@@ -36,7 +36,7 @@ namespace Vaticle.Typedb.Driver.Logic
     {
         private int _hash = 0;
 
-        public ExplanationImpl(Pinvoke.Explanation nativeExplanation)
+        public Explanation(Pinvoke.Explanation nativeExplanation)
             : base(nativeExplanation)
         {
         }

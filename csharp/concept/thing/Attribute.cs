@@ -23,9 +23,10 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Vaticle.Typedb.Driver.Api;
+using Vaticle.Typedb.Driver.Api.Concept;
 using Vaticle.Typedb.Driver.Api.Concept.Value;
-using Vaticle.Typedb.Driver.Api.Concept.Thing;
 using Vaticle.Typedb.Driver.Api.Concept.Type;
+using Vaticle.Typedb.Driver.Api.Concept.Thing;
 using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Common.Exception;
 using Vaticle.Typedb.Driver.Concept.Value;
@@ -40,7 +41,7 @@ namespace Vaticle.Typedb.Driver.Concept.Thing
         {
         }
 
-        public IAttributeType Type
+        public override IAttributeType Type
         {
             get { return new AttributeType(Pinvoke.typedb_driver.attribute_get_type(NativeObject)); }
         }
@@ -50,7 +51,7 @@ namespace Vaticle.Typedb.Driver.Concept.Thing
             get { return new Value(Pinvoke.typedb_driver.attribute_get_value(NativeObject)); }
         }
 
-        public sealed ICollection<IThing> GetOwners(ITypeDBTransaction transaction)
+        public ICollection<IThing> GetOwners(ITypeDBTransaction transaction)
         {
             try
             {

@@ -24,7 +24,10 @@ using System.Linq;
 
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
+using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Api.Concept.Thing;
 using Vaticle.Typedb.Driver.Api.Concept.Type;
+using Vaticle.Typedb.Driver.Api.Concept.Value;
 using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Common.Exception;
 using Vaticle.Typedb.Driver.Concept.Thing;
@@ -38,12 +41,12 @@ namespace Vaticle.Typedb.Driver.Concept.Type
         {
         }
 
-        public sealed bool IsRoot()
+        public bool IsRoot()
         {
             return Pinvoke.typedb_driver.role_type_is_root(NativeObject);
         }
 
-        public sealed bool IsAbstract() 
+        public bool IsAbstract()
         {
             return Pinvoke.typedb_driver.role_type_is_abstract(NativeObject);
         }
@@ -55,19 +58,19 @@ namespace Vaticle.Typedb.Driver.Concept.Type
                 Pinvoke.typedb_driver.role_type_get_name(NativeObject));
         }
 
-        public sealed VoidPromise Delete(ITypeDBTransaction transaction) 
+        public VoidPromise Delete(ITypeDBTransaction transaction)
         {
             return new VoidPromise(Pinvoke.typedb_driver.role_type_delete(
                 NativeTransaction(transaction), NativeObject).Resolve);
         }
 
-        public sealed Promise<bool> IsDeleted(ITypeDBTransaction transaction) 
+        public Promise<bool> IsDeleted(ITypeDBTransaction transaction)
         {
             return new Promise<bool>(Pinvoke.typedb_driver.role_type_is_deleted(
                 NativeTransaction(transaction), NativeObject).Resolve);
         }
 
-        public sealed VoidPromise SetLabel(ITypeDBTransaction transaction, string label) 
+        public VoidPromise SetLabel(ITypeDBTransaction transaction, string label)
         {
             return new VoidPromise(Pinvoke.typedb_driver.role_type_set_label(
                 NativeTransaction(transaction), NativeObject, label).Resolve);
@@ -81,7 +84,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
                 obj => new RoleType(obj));
         }
 
-        public sealed ICollection<IRoleType> GetSupertypes(ITypeDBTransaction transaction) 
+        public ICollection<IRoleType> GetSupertypes(ITypeDBTransaction transaction)
         {
             try 
             {
@@ -96,12 +99,12 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             }
         }
 
-        public sealed ICollection<IRoleType> GetSubtypes(ITypeDBTransaction transaction)
+        public ICollection<IRoleType> GetSubtypes(ITypeDBTransaction transaction)
         {
             return GetSubtypes(transaction, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public sealed ICollection<IRoleType> GetSubtypes(
+        public ICollection<IRoleType> GetSubtypes(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity) 
         {
             try 
@@ -117,7 +120,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             }
         }
 
-        public sealed Promise<IRelationType> GetRelationType(ITypeDBTransaction transaction) 
+        public Promise<IRelationType> GetRelationType(ITypeDBTransaction transaction)
         {
             return Promise.Map<IRelationType, Pinvoke.Concept>(
                 Pinvoke.typedb_driver.role_type_get_relation_type(
@@ -125,7 +128,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
                 obj => new RelationType(obj));
         }
 
-        public sealed ICollection<IRelationType> GetRelationTypes(ITypeDBTransaction transaction) 
+        public ICollection<IRelationType> GetRelationTypes(ITypeDBTransaction transaction)
         {
             try 
             {
@@ -140,12 +143,12 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             }
         }
 
-        public sealed ICollection<IThingType> GetPlayerTypes(ITypeDBTransaction transaction)
+        public ICollection<IThingType> GetPlayerTypes(ITypeDBTransaction transaction)
         {
             return GetPlayerTypes(transaction, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public sealed ICollection<IThingType> GetPlayerTypes(
+        public ICollection<IThingType> GetPlayerTypes(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
         {
             try
@@ -161,12 +164,12 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             }
         }
 
-        public sealed ICollection<IRelation> GetRelationInstances(ITypeDBTransaction transaction)
+        public ICollection<IRelation> GetRelationInstances(ITypeDBTransaction transaction)
         {
             return GetRelationInstances(transaction, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public sealed ICollection<IRelation> GetRelationInstances(
+        public ICollection<IRelation> GetRelationInstances(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
         {
             try
@@ -182,12 +185,12 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             }
         }
 
-        public sealed ICollection<IThing> GetPlayerInstances(ITypeDBTransaction transaction)
+        public ICollection<IThing> GetPlayerInstances(ITypeDBTransaction transaction)
         {
             return GetPlayerInstances(transaction, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public sealed ICollection<IThing> GetPlayerInstances(
+        public ICollection<IThing> GetPlayerInstances(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
         {
             try

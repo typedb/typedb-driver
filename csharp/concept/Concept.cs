@@ -94,7 +94,5 @@ namespace Vaticle.Typedb.Driver.Concept
             Concept that = (Concept)obj;
             return Pinvoke.typedb_driver.concept_equals(this.NativeObject, that.NativeObject);
         }
-
-        public abstract int GetHashCode();
     }
 }

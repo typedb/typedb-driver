@@ -40,12 +40,12 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
         private int _hash = 0;
         private Dictionary<string, IConcept>? _cachedMap = null;
         
-        public ConceptMapImpl(Pinvoke.ConceptMap nativeConceptMap) 
+        public ConceptMap(Pinvoke.ConceptMap nativeConceptMap)
             : base(nativeConceptMap)
         {
         }
     
-        public override ICollection<string> AllVariables
+        public ICollection<string> AllVariables
         {
             get
             {
@@ -55,7 +55,7 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
             }
         }
     
-        public override ICollection<IConcept> AllConcepts
+        public ICollection<IConcept> AllConcepts
         {
             get
             {
@@ -79,7 +79,7 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
             }
         }
     
-        public override IConcept Get(string variable)
+        public IConcept Get(string variable)
         {
             InputChecker.NonEmptyString(variable, ConceptError.MISSING_VARIABLE);
 
@@ -92,7 +92,7 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
             return new Concept(concept);
         }
     
-        public override IExplainables AllExplainables
+        public IConceptMap.IExplainables AllExplainables
         {
             get { return new Explainables(Pinvoke.typedb_driver.concept_map_get_explainables(NativeObject)); }
         }
@@ -135,7 +135,7 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
             return Map.GetHashCode();
         }
     
-        public static class Explainables : NativeObjectWrapper<Pinvoke.Explainables>, IExplainables 
+        public class Explainables : NativeObjectWrapper<Pinvoke.Explainables>, IConceptMap.IExplainables
         {
             private int _hash = 0;
     
@@ -144,7 +144,7 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
             {
             }
     
-            public override IExplainable Relation(string variable)
+            public override IConceptMap.IExplainable Relation(string variable)
             {
                 InputChecker.NonEmptyString(variable, ConceptError.MISSING_VARIABLE);
 
@@ -158,7 +158,7 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
                 return new Explainable(explainable);
             }
     
-            public override IExplainable Attribute(string variable)
+            public override IConceptMap.IExplainable Attribute(string variable)
             {
                 InputChecker.NonEmptyString(variable, ConceptError.MISSING_VARIABLE);
 
@@ -172,7 +172,7 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
                 return new Explainable(explainable);
             }
     
-            public override IExplainable Ownership(string owner, string attribute)
+            public override IConceptMap.IExplainable Ownership(string owner, string attribute)
             {
                 InputChecker.NonEmptyString(owner, ConceptError.MISSING_VARIABLE);
                 InputChecker.NonEmptyString(attribute, ConceptError.MISSING_VARIABLE);
@@ -187,29 +187,29 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
                 return new Explainable(explainable);
             }
     
-            public ICollection<KeyValuePair<string, IExplainable>> AllRelations
+            public static ICollection<KeyValuePair<string, IConceptMap.IExplainable>> AllRelations
             {
                 get
                 {
                     return new NativeEnumerable<string>(
                         Pinvoke.typedb_driver.explainables_get_relations_keys(NativeObject))
-                        .Select(key => new KeyValuePair<string, IExplainable>(key, Relation(key)))
+                        .Select(key => new KeyValuePair<string, IConceptMap.IExplainable>(key, Relation(key)))
                         .ToList();
                 }
             }
 
-            public override ICollection<KeyValuePair<string, IExplainable>> AllAttributes
+            public static ICollection<KeyValuePair<string, IConceptMap.IExplainable>> AllAttributes
             {
                 get
                 {
                     return new NativeEnumerable<string>(
                         Pinvoke.typedb_driver.explainables_get_attributes_keys(NativeObject))
-                        .Select(key => new KeyValuePair<string, IExplainable>(key, Attribute(key)))
+                        .Select(key => new KeyValuePair<string, IConceptMap.IExplainable>(key, Attribute(key)))
                         .ToList();
                 }
             }
     
-            public override ICollection<KeyValuePair<KeyValuePair<string, string>, IExplainable>> AllOwnerships
+            public static ICollection<KeyValuePair<KeyValuePair<string, string>, IConceptMap.IExplainable>> AllOwnerships
             {
                 get
                 {
@@ -268,19 +268,19 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
             }
         }
     
-        public static class Explainable : NativeObjectWrapper<Pinvoke.Explainable>, IExplainable 
+        public class Explainable : NativeObjectWrapper<Pinvoke.Explainable>, IConceptMap.IExplainable
         {
             public ExplainableImpl(Pinvoke.Explainable nativeExplainable)
                 : base(nativeExplainable)
             {
             }
     
-            public override string Conjunction 
+            public static string Conjunction
             {
                 get { return Pinvoke.typedb_driver.explainable_get_conjunction(NativeObject); }
             }
     
-            public override long Id
+            public static long Id
             {
                 get { return Pinvoke.typedb_driver.explainable_get_id(NativeObject); }
             }

@@ -38,12 +38,12 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
         {
         }
     
-        public override IConcept Owner
+        public IConcept Owner
         {
             get { return new Concept(Pinvoke.typedb_driver.concept_map_group_get_owner(NativeObject)); }
         }
     
-        public override ICollection<IConceptMap> ConceptMaps
+        public ICollection<IConceptMap> ConceptMaps
         {
             get
             {

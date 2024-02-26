@@ -25,6 +25,7 @@ using System.Linq;
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api.Answer;
 using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Api.Concept.Value;
 using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Common.Exception;
 using Vaticle.Typedb.Driver.Concept;
@@ -44,12 +45,12 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
         {
         }
 
-        public override IConcept Owner
+        public IConcept Owner
         {
             get { return new Concept(Pinvoke.typedb_driver.value_group_get_owner(NativeObject)); }
         }
 
-        public override IValue? Value
+        public IValue? Value
         {
             get
             {

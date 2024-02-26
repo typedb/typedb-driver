@@ -23,8 +23,10 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Api.Concept.Thing;
+using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Api.Concept.Value;
 using Vaticle.Typedb.Driver.Api.Concept.Type;
+using Vaticle.Typedb.Driver.Api.Concept.Thing;
 using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Common.Exception;
 using Vaticle.Typedb.Driver.Concept.Type;
@@ -38,7 +40,7 @@ namespace Vaticle.Typedb.Driver.Concept.Thing
         {
         }
 
-        public IRelationType Type
+        public override IRelationType Type
         {
             get { return new RelationType(Pinvoke.typedb_driver.relation_get_type(NativeObject)); }
         }
@@ -72,7 +74,7 @@ namespace Vaticle.Typedb.Driver.Concept.Thing
                     Pinvoke.typedb_driver.relation_get_players_by_role_type(
                         NativeTransaction(transaction),
                         NativeObject,
-                        roleTypes.Select(obj => ((RoleTypeImpl)obj).NativeObject).toArray<Pinvoke.Concept>()))
+                        roleTypes.Select(obj => ((RoleType)obj).NativeObject).toArray<Pinvoke.Concept>()))
                     .Select(obj => new Thing(obj));
 
             }
