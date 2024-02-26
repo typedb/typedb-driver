@@ -24,7 +24,10 @@ using System.Linq;
 
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
+using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Api.Concept.Value;
 using Vaticle.Typedb.Driver.Api.Concept.Type;
+using Vaticle.Typedb.Driver.Api.Concept.Thing;
 using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Common.Exception;
 using Vaticle.Typedb.Driver.Concept.Thing;
@@ -38,7 +41,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
         {
         }
 
-        public sealed Promise<IEntity> Create(ITypeDBTransaction transaction) 
+        public Promise<IEntity> Create(ITypeDBTransaction transaction)
         {
             return Promise.Map<IEntity, Pinvoke.Concept>(
                 Pinvoke.typedb_driver.entity_type_create(
@@ -46,7 +49,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
                 obj => new Entity(obj));
         }
 
-        public sealed VoidPromise SetSupertype(ITypeDBTransaction transaction, IEntityType entityType)
+        public VoidPromise SetSupertype(ITypeDBTransaction transaction, IEntityType entityType)
         {
             return new VoidPromise(Pinvoke.typedb_driver.entity_type_set_supertype(
                 NativeTransaction(transaction), NativeObject, ((EntityType)entityType).NativeObject));
@@ -60,7 +63,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
                 obj => new EntityType(obj));
         }
 
-        public sealed ICollection<IEntityType> GetSupertypes(ITypeDBTransaction transaction) 
+        public ICollection<IEntityType> GetSupertypes(ITypeDBTransaction transaction)
         {
             try 
             {
@@ -75,12 +78,12 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             }
         }
 
-        public sealed ICollection<IEntityType> GetSubtypes(ITypeDBTransaction transaction) 
+        public ICollection<IEntityType> GetSubtypes(ITypeDBTransaction transaction)
         {
             return GetSubtypes(transaction, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public sealed ICollection<IEntityType> GetSubtypes(
+        public ICollection<IEntityType> GetSubtypes(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity) 
         {
             try 
@@ -96,12 +99,12 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             }
         }
 
-        public sealed ICollection<IEntity> GetInstances(ITypeDBTransaction transaction)
+        public ICollection<IEntity> GetInstances(ITypeDBTransaction transaction)
         {
             return GetInstances(transaction, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public sealed ICollection<IEntity> GetInstances(
+        public ICollection<IEntity> GetInstances(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
         {
             try 

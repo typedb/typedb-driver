@@ -23,6 +23,8 @@ using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver.Api.Concept;
 using Vaticle.Typedb.Driver.Api.Concept.Value;
+using Vaticle.Typedb.Driver.Api.Concept.Type;
+using Vaticle.Typedb.Driver.Api.Concept.Thing;
 using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Common.Exception;
 using Vaticle.Typedb.Driver.Concept.Thing;
@@ -34,7 +36,7 @@ using ConceptError = Vaticle.Typedb.Driver.Common.Exception.Error.Concept;
 
 namespace Vaticle.Typedb.Driver.Concept
 {
-    public sealed class ConceptManager : IConceptManager
+    public class ConceptManager : IConceptManager
     {
         public Pinvoke.Transaction NativeTransaction { get; }
 
@@ -108,7 +110,7 @@ namespace Vaticle.Typedb.Driver.Concept
                 obj => new RelationType(obj));
         }
 
-        public Promise<IAttributeType> PutAttributeType(string label, IValue.Type valueType) 
+        public Promise<IAttributeType> PutAttributeType(string label, IValue.ValueType valueType)
         {
             InputChecker.NonEmptyString(label, ConceptError.MISSING_LABEL);
             InputChecker.ThrowIfFalse(NativeTransaction.IsOwned, DriverError.TRANSACTION_CLOSED);
