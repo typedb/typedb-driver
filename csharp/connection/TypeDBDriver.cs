@@ -24,9 +24,7 @@ using System.Linq;
 
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Api.Database;
 using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Exception;
 using Vaticle.Typedb.Driver.Connection;
 
 namespace Vaticle.Typedb.Driver.Connection
@@ -34,7 +32,7 @@ namespace Vaticle.Typedb.Driver.Connection
     public class TypeDBDriver : NativeObjectWrapper<Pinvoke.Connection>, ITypeDBDriver
     {
         private readonly IDatabaseManager databaseMgr;
-//        private readonly IUserManager userMgr; // TODO
+        private readonly IUserManager userMgr;
 
         public TypeDBDriver(string address)
             : this(OpenCore(address))
@@ -48,7 +46,7 @@ namespace Vaticle.Typedb.Driver.Connection
             : base(connection)
         {
             databaseMgr = new TypeDBDatabaseManager(this.NativeObject);
-//            userMgr = new UserManager(this.NativeObject);
+            userMgr = new UserManager(this.NativeObject);
         }
 
         private static Pinvoke.Connection OpenCore(string address)
@@ -85,17 +83,16 @@ namespace Vaticle.Typedb.Driver.Connection
             get { return databaseMgr; }
         }
 
-        // TODO:
-//
-//        public override User User()
-//        {
-//            return userMgr.GetCurrentUser();
-//        }
-//
-//        public override IUserManager Users()
-//        {
-//            return userMgr;
-//        }
+
+        public User User
+        {
+            get { return userMgr.CurrentUser; }
+        }
+
+        public IUserManager Users
+        {
+            get { return userMgr; }
+        }
 
         public ITypeDBSession Session(string database, SessionType type)
         {

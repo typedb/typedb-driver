@@ -24,16 +24,10 @@ using System.Linq;
 
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Api.Concept;
-using Vaticle.Typedb.Driver.Api.Concept.Value;
-using Vaticle.Typedb.Driver.Api.Concept.Type;
-using Vaticle.Typedb.Driver.Api.Concept.Thing;
 using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Exception;
-using Vaticle.Typedb.Driver.Concept.Value;
-using Vaticle.Typedb.Driver.Concept.Thing;
+using Vaticle.Typedb.Driver.Concept;
 
-namespace Vaticle.Typedb.Driver.Concept.Type
+namespace Vaticle.Typedb.Driver.Concept
 {
     public class AttributeType : ThingType, IAttributeType 
     {
@@ -42,10 +36,13 @@ namespace Vaticle.Typedb.Driver.Concept.Type
         {
         }
 
-        public IValue.ValueType GetValueType() 
+        public IValue.ValueType ValueType
         {
-            return new IValue.ValueType(
-                Pinvoke.typedb_driver.attribute_type_get_value_type(NativeObject));
+            get
+            {
+                return new IValue.ValueType(
+                    Pinvoke.typedb_driver.attribute_type_get_value_type(NativeObject));
+            }
         }
 
         public VoidPromise SetSupertype(ITypeDBTransaction transaction, IAttributeType attributeType)
@@ -56,15 +53,15 @@ namespace Vaticle.Typedb.Driver.Concept.Type
                 ((AttributeType)attributeType).NativeObject).Resolve);
         }
 
-        public Promise<IAttributeType> GetSupertype(ITypeDBTransaction transaction) 
+        public override Promise<IType> GetSupertype(ITypeDBTransaction transaction)
         {
-            return Promise.Map<IAttributeType, Pinvoke.Concept>(
+            return Promise<IType>.Map<IType, Pinvoke.Concept>(
                 Pinvoke.typedb_driver.attribute_type_get_supertype(
-                    NativeTransaction(transaction), NativeObject),
+                    NativeTransaction(transaction), NativeObject).Resolve,
                 obj => new AttributeType(obj));
         }
 
-        public ICollection<IAttributeType> GetSupertypes(ITypeDBTransaction transaction)
+        public override ICollection<IType> GetSupertypes(ITypeDBTransaction transaction)
         {
             try
             {
@@ -79,18 +76,18 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             }
         }
 
-        public ICollection<IAttributeType> GetSubtypes(ITypeDBTransaction transaction)
+        public override ICollection<IType> GetSubtypes(ITypeDBTransaction transaction)
         {
             return GetSubtypes(transaction, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public ICollection<IAttributeType> GetSubtypes(
+        public ICollection<IType> GetSubtypes(
             ITypeDBTransaction transaction, IValue.ValueType valueType) 
         {
             return GetSubtypes(transaction, valueType, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public ICollection<IAttributeType> GetSubtypes(
+        public override ICollection<IType> GetSubtypes(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity) 
         {
             try 
@@ -108,7 +105,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             }
         }
 
-        public ICollection<IAttributeType> GetSubtypes(
+        public ICollection<IType> GetSubtypes(
             ITypeDBTransaction transaction, 
             IValue.ValueType valueType, 
             IConcept.Transitivity transitivity) 
@@ -129,12 +126,12 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             }
         }
 
-        public ICollection<IAttribute> GetInstances(ITypeDBTransaction transaction)
+        public override ICollection<IThing> GetInstances(ITypeDBTransaction transaction)
         {
             return GetInstances(transaction, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public ICollection<IAttribute> GetInstances(
+        public override ICollection<IThing> GetInstances(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity) 
         {
             try 
@@ -220,11 +217,11 @@ namespace Vaticle.Typedb.Driver.Concept.Type
 
         public Promise<IAttribute> Put(ITypeDBTransaction transaction, IValue value)
         {
-            return Promise.Map<IAttribute, Pinvoke.Concept>(
+            return Promise<IAttribute>.Map<IAttribute, Pinvoke.Concept>(
                 Pinvoke.typedb_driver.attribute_type_put(
                     NativeTransaction(transaction), 
                     NativeObject, 
-                    ((Value)value).NativeObject), 
+                    ((Value)value).NativeObject).Resolve,
                 obj => new Attribute(obj));
         }
 
@@ -255,11 +252,11 @@ namespace Vaticle.Typedb.Driver.Concept.Type
 
         public Promise<IAttribute> Get(ITypeDBTransaction transaction, IValue value)
         {
-            return Promise.Map<IAttribute, Pinvoke.Concept>(
+            return Promise<IAttribute>.Map<IAttribute, Pinvoke.Concept>(
                 Pinvoke.typedb_driver.attribute_type_get(
                     NativeTransaction(transaction),
                     NativeObject,
-                    ((Value)value).NativeObject),
+                    ((Value)value).NativeObject).Resolve,
                 obj => new Attribute(obj));
         }
 

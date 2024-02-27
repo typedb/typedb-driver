@@ -21,7 +21,7 @@
 
 using System;
 
-namespace Vaticle.Typedb.Driver.Common.Exception
+namespace Vaticle.Typedb.Driver.Common
 {
     public abstract class ErrorMessage
     {

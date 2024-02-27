@@ -19,35 +19,35 @@
  * under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api.Answer;
-using Vaticle.Typedb.Driver.Api.Concept;
-using Vaticle.Typedb.Driver.Api.Concept.Value;
+using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Exception;
 using Vaticle.Typedb.Driver.Concept;
 using Vaticle.Typedb.Driver.Util;
 
-using ConceptError = Vaticle.Typedb.Driver.Common.Exception.Error.Concept;
-using QueryError = Vaticle.Typedb.Driver.Common.Exception.Error.Query;
+using ConceptError = Vaticle.Typedb.Driver.Common.Error.Concept;
+using QueryError = Vaticle.Typedb.Driver.Common.Error.Query;
 
-namespace Vaticle.Typedb.Driver.Concept.Answer
+using static Vaticle.Typedb.Driver.Concept.Concept;
+
+namespace Vaticle.Typedb.Driver.Concept
 {
-    public class ValueGroupImpl : NativeObjectWrapper<Pinvoke.ValueGroup>, IValueGroup
+    public class ValueGroup : NativeObjectWrapper<Pinvoke.ValueGroup>, IValueGroup
     {
         private int _hash = 0;
 
-        public ValueGroupImpl(Pinvoke.ValueGroup nativeValueGroup)
+        public ValueGroup(Pinvoke.ValueGroup nativeValueGroup)
             : base(nativeValueGroup)
         {
         }
 
         public IConcept Owner
         {
-            get { return new Concept(Pinvoke.typedb_driver.value_group_get_owner(NativeObject)); }
+            get { return ConceptOf(Pinvoke.typedb_driver.value_group_get_owner(NativeObject)); }
         }
 
         public IValue? Value
@@ -55,7 +55,7 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
             get
             {
                 Pinvoke.Concept concept = Pinvoke.typedb_driver.value_group_get_value(NativeObject);
-                if (nativeValue == null)
+                if (concept == null)
                 {
                     return null;
                 }

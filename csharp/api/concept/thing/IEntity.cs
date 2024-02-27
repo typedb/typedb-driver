@@ -21,9 +21,9 @@
 
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver.Api.Concept.Type;
+using Vaticle.Typedb.Driver.Api;
 
-namespace Vaticle.Typedb.Driver.Api.Concept.Thing
+namespace Vaticle.Typedb.Driver.Api
 {
     /**
      * Instance of data of an entity type, representing a standalone object that exists in the data model independently.

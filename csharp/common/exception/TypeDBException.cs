@@ -19,9 +19,11 @@
  * under the License.
  */
 
-namespace Vaticle.Typedb.Driver.Common.Exception
+using System;
+
+namespace Vaticle.Typedb.Driver.Common
 {
-    public class TypeDBException : System.Exception
+    public class TypeDBException : Exception
     {
         public TypeDBException(string code, string message)
             : base(message)

@@ -21,13 +21,12 @@
 
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver.Api.Logic;
+using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Exception;
 using Vaticle.Typedb.Driver.Util;
 
-using DriverError = Vaticle.Typedb.Driver.Common.Exception.Error.Driver;
-using ConceptError = Vaticle.Typedb.Driver.Common.Exception.Error.Concept;
+using DriverError = Vaticle.Typedb.Driver.Common.Error.Driver;
+using ConceptError = Vaticle.Typedb.Driver.Common.Error.Concept;
 
 namespace Vaticle.Typedb.Driver.Logic
 {
@@ -71,9 +70,10 @@ namespace Vaticle.Typedb.Driver.Logic
                 throw new TypeDBDriverException(DriverError.TRANSACTION_CLOSED);
             }
 
-            Pinvoke.RulePromise promise =
-                Pinvoke.typedb_driver.logic_manager_get_rule(_nativeTransaction, label);
-            return Promise.Map<IRule, Pinvoke.Rule>(promise.Resolve, obj => new Rule(obj));
+            return Promise<IRule>.Map<IRule, Pinvoke.Rule>(
+                Pinvoke.typedb_driver.logic_manager_get_rule(
+                    _nativeTransaction, label).Resolve,
+                obj => new Rule(obj));
         }
 
         public Promise<IRule> PutRule(string label, string when, string then)

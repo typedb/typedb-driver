@@ -21,7 +21,7 @@
 
 using System.Collections.Generic;
 
-namespace Vaticle.Typedb.Driver.Api.Database
+namespace Vaticle.Typedb.Driver.Api
 {
     public interface IDatabase
     {

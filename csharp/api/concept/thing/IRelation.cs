@@ -22,10 +22,10 @@
 using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api.Concept.Thing;
+using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Api.Concept.Type
+namespace Vaticle.Typedb.Driver.Api
 {
     /**
      * Relation is an instance of a relation type and can be uniquely addressed
@@ -108,7 +108,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transaction The current transaction
          * @param roleTypes 0 or more role types
          */
-        ICollection<IThing> GetPlayersByRoleType(ITypeDBTransaction transaction, ICollection<IRoleType> roleTypes);
+        ICollection<IThing> GetPlayersByRoleType(ITypeDBTransaction transaction, params IRoleType[] roleTypes);
 
         /**
          * Retrieves a mapping of all instances involved in the <code>IRelation</code> and the role each play.

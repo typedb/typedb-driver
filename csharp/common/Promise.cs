@@ -22,7 +22,7 @@
 using System;
 
 using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Common.Exception;
+using Vaticle.Typedb.Driver.Common;
 
 namespace Vaticle.Typedb.Driver.Common
 {
@@ -45,7 +45,7 @@ namespace Vaticle.Typedb.Driver.Common
          *
          * @param promise The function to wrap into the promise
          */
-        private Promise(Func<T?> resolver)
+        public Promise(Func<T?> resolver)
         {
             _resolver = resolver;
         }
@@ -75,7 +75,7 @@ namespace Vaticle.Typedb.Driver.Common
          *
          * <h3>Examples</h3>
          * <pre>
-         * Promise.Map<T, U>(supplier, selector);
+         * Promise<T>.Map<T, U>(supplier, selector);
          * </pre>
          *
          * @param promise The function to wrap into the promise

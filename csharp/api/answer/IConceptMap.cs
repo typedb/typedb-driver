@@ -21,9 +21,9 @@
 
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Api;
 
-namespace Vaticle.Typedb.Driver.Api.Answer
+namespace Vaticle.Typedb.Driver.Api
 {
     /**
      * Contains a mapping of variables to concepts.
@@ -35,20 +35,20 @@ namespace Vaticle.Typedb.Driver.Api.Answer
          *
          * <h3>Examples</h3>
          * <pre>
-         * conceptMap.AllVariables;
+         * conceptMap.Variables;
          * </pre>
          */
-        ICollection<string> AllVariables { get; }
+        ICollection<string> Variables { get; }
     
         /**
          * Returns a collection of all concepts in this <code>IConceptMap</code>.
          *
          * <h3>Examples</h3>
          * <pre>
-         * conceptMap.AllConcepts;
+         * conceptMap.Concepts;
          * </pre>
          */
-        ICollection<IConcept> AllConcepts { get; }
+        ICollection<IConcept> Concepts { get; }
     
         /**
          * Returns the inner <code>Map</code> where keys are query variables, and values are concepts.
@@ -81,7 +81,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
          * conceptMap.AllExplainables;
          * </pre>
          */
-        IExplainables AllExplainables { get; }
+        IExplainables AllExplainables { get; } // TODO: Think about renaming
     
         /**
          * Contains explainable objects.
@@ -93,7 +93,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
              *
              * <h3>Examples</h3>
              * <pre>
-             * conceptMap.Explainables.Relation(variable);
+             * conceptMap.AllExplainables.Relation(variable);
              * </pre>
              *
              * @param variable The string representation of a variable
@@ -105,7 +105,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
              *
              * <h3>Examples</h3>
              * <pre>
-             * conceptMap.Explainables.Attribute(variable);
+             * conceptMap.AllExplainables.Attribute(variable);
              * </pre>
              *
              * @param variable The string representation of a variable
@@ -117,7 +117,7 @@ namespace Vaticle.Typedb.Driver.Api.Answer
              *
              * <h3>Examples</h3>
              * <pre>
-             * conceptMap.Explainables.Ownership(owner, attribute);
+             * conceptMap.AllExplainables.Ownership(owner, attribute);
              * </pre>
              *
              * @param owner The string representation of the owner variable
@@ -130,30 +130,30 @@ namespace Vaticle.Typedb.Driver.Api.Answer
              *
              * <h3>Examples</h3>
              * <pre>
-             * conceptMap.Explainables.AllRelations;
+             * conceptMap.AllExplainables.Relations;
              * </pre>
              */
-            ICollection<KeyValuePair<string, IExplainable>> AllRelations { get; }
+            ICollection<KeyValuePair<string, IExplainable>> Relations { get; }
     
             /**
              * Retrieves all of this <code>IConceptMap</code>’s explainable attributes.
              *
              * <h3>Examples</h3>
              * <pre>
-             * conceptMap.Explainables.AllAttributes;
+             * conceptMap.AllExplainables.Attributes;
              * </pre>
              */
-            ICollection<KeyValuePair<string, IExplainable>> AllAttributes { get; }
+            ICollection<KeyValuePair<string, IExplainable>> Attributes { get; }
     
             /**
              * Retrieves all of this <code>IConceptMap</code>’s explainable ownerships.
              *
              * <h3>Examples</h3>
              * <pre>
-             * conceptMap.Explainables.AllOwnerships;
+             * conceptMap.AllExplainables.Ownerships;
              * </pre>
              */
-            ICollection<KeyValuePair<KeyValuePair<string, string>, IExplainable>> AllOwnerships { get; }
+            ICollection<KeyValuePair<KeyValuePair<string, string>, IExplainable>> Ownerships { get; }
         }
     
         /**

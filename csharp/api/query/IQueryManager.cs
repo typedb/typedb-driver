@@ -21,13 +21,10 @@
 
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver.Api.Concept;
-using Vaticle.Typedb.Driver.Api.Answer;
-using Vaticle.Typedb.Driver.Api.Concept.Value;
-using Vaticle.Typedb.Driver.Api.Logic;
+using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Api.Query 
+namespace Vaticle.Typedb.Driver.Api
 {
     /**
      * Provides methods for executing TypeQL queries in the transaction.

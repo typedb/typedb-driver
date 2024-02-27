@@ -22,10 +22,10 @@
 using System;
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Api.Concept.Type
+namespace Vaticle.Typedb.Driver.Api
 {
     public interface IType : IConcept
     {
@@ -34,10 +34,10 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          *
          * <h3>Examples</h3>
          * <pre>
-         * type.Label;
+         * type.GetLabel();
          * </pre>
          */
-        Label GetLabel(); // TODO: Could change to a property with a getter, but don't like the existence of "SetLabel()"....
+        Label GetLabel();
 
         /**
          * Checks if the type is a root type.

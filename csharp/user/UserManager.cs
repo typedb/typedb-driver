@@ -23,9 +23,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api.User;
+using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Exception;
 
 namespace Vaticle.Typedb.Driver.User
 {

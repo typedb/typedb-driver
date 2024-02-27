@@ -19,15 +19,17 @@
  * under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api.Answer;
-using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Concept.Answer
+using static Vaticle.Typedb.Driver.Concept.Concept;
+
+namespace Vaticle.Typedb.Driver.Concept
 {
     public class ConceptMapGroup : NativeObjectWrapper<Pinvoke.ConceptMapGroup>, IConceptMapGroup
     {
@@ -40,14 +42,14 @@ namespace Vaticle.Typedb.Driver.Concept.Answer
     
         public IConcept Owner
         {
-            get { return new Concept(Pinvoke.typedb_driver.concept_map_group_get_owner(NativeObject)); }
+            get { return ConceptOf(Pinvoke.typedb_driver.concept_map_group_get_owner(NativeObject)); }
         }
     
         public ICollection<IConceptMap> ConceptMaps
         {
             get
             {
-                return new NativeEnumerable<IConceptMap>(
+                return new NativeEnumerable<Pinvoke.ConceptMap>(
                     Pinvoke.typedb_driver.concept_map_group_get_concept_maps(NativeObject))
                     .Select(obj => new ConceptMap(obj))
                     .ToList();

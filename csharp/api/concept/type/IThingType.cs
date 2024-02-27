@@ -23,13 +23,10 @@ using System;
 using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api.Concept;
-using Vaticle.Typedb.Driver.Api.Concept.Thing;
-using Vaticle.Typedb.Driver.Api.Concept.Type;
-using Vaticle.Typedb.Driver.Api.Concept.Value;
+using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Api.Concept.Type
+namespace Vaticle.Typedb.Driver.Api
 {
     public interface IThingType : IType
     {
@@ -48,26 +45,6 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
         {
             return this;
         }
-
-        /**
-         * {@inheritDoc}
-         */
-        new Promise<IThingType> GetSupertype(ITypeDBTransaction transaction);
-
-        /**
-         * {@inheritDoc}
-         */
-        new ICollection<IThingType> GetSupertypes(ITypeDBTransaction transaction);
-
-        /**
-         * {@inheritDoc}
-         */
-        new ICollection<IThingType> GetSubtypes(ITypeDBTransaction transaction);
-
-        /**
-         * {@inheritDoc}
-         */
-        new ICollection<IThingType> GetSubtypes(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
         /**
          * Retrieves all <code>IThing</code> objects that are instances of this <code>IThingType</code> or its subtypes.

@@ -22,12 +22,10 @@
 using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api.Concept.Thing;
-using Vaticle.Typedb.Driver.Api.Concept.Type;
-using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Api.Concept.Type
+namespace Vaticle.Typedb.Driver.Api
 {
     /**
      * Entity types represent the classification of independent objects in the data model of the business domain.
@@ -68,7 +66,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          *
          * @see IEntityType#GetInstances(ITypeDBTransaction, IConcept.Transitivity)
          */
-        new ICollection<IEntity> GetInstances(ITypeDBTransaction transaction);
+        new ICollection<IThing> GetInstances(ITypeDBTransaction transaction);
     
         /**
          * Retrieves <code>Entity</code> objects that are instances of this exact <code>IEntityType</code> OR
@@ -83,32 +81,9 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transitivity <code>Transitivity.EXPLICIT</code> for direct instances only,
          *                     <code>Transitivity.TRANSITIVE</code> to include subtypes
          */
-        new ICollection<IEntity> GetInstances(
+        new ICollection<IThing> GetInstances(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
-    
-        /**
-         * Retrieves all (direct and indirect) subtypes of the <code>IEntityType</code>.
-         * Equivalent to <code>GetSubtypes(transaction, Transitivity.TRANSITIVE)</code>
-         *
-         * @see IEntityType#GetSubtypes(ITypeDBTransaction, Transitivity)
-         */
-        new ICollection<IEntityType> GetSubtypes(ITypeDBTransaction transaction);
-    
-        /**
-         * Retrieves all direct and indirect (or direct only) subtypes of the <code>IEntityType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * entityType.GetSubtypes(transaction, transitivity);
-         * </pre>
-         *
-         * @param transaction The current transaction
-         * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes,
-         *                     <code>Transitivity.EXPLICIT</code> for direct subtypes only
-         */
-        new ICollection<IEntityType> GetSubtypes(
-            ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
-    
+
         /**
          * Sets the supplied <code>IEntityType</code> as the supertype of the current <code>IEntityType</code>.
          *

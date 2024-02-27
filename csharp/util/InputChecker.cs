@@ -18,10 +18,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
+// TODO: Move to common!
 using System;
 
-using Vaticle.Typedb.Driver.Common.Exception;
+using Vaticle.Typedb.Driver.Common;
 
 namespace Vaticle.Typedb.Driver.Util
 {

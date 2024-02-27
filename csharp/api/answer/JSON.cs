@@ -20,7 +20,7 @@
  */
 
 // TODO: Implement!
-namespace Vaticle.Typedb.Driver.Api.Answer
+namespace Vaticle.Typedb.Driver.Api
 {
 //    public abstract class JSON {
 //        public static JSON parse(java.lang.String string) {
