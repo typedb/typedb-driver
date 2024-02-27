@@ -135,7 +135,7 @@ namespace Vaticle.Typedb.Driver.Api
         VoidPromise SetOwns(
             ITypeDBTransaction transaction, 
             IAttributeType attributeType, 
-            IAttributeType overriddenType, 
+            IAttributeType? overriddenType,
             ICollection<Annotation> annotations);
 
         /**

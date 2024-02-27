@@ -109,7 +109,7 @@ namespace Vaticle.Typedb.Driver.Concept
         public override VoidPromise SetLabel(ITypeDBTransaction transaction, string label)
         {
             return new VoidPromise(Pinvoke.typedb_driver.thing_type_set_label(
-                NativeTransaction(transaction), NativeObject, label));
+                NativeTransaction(transaction), NativeObject, label).Resolve);
         }
 
         public VoidPromise SetAbstract(ITypeDBTransaction transaction)
@@ -142,11 +142,13 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public VoidPromise SetOwns(ITypeDBTransaction transaction, IAttributeType attributeType)
         {
-            return SetOwns(transaction, attributeType, null, emptySet());
+            return SetOwns(transaction, attributeType, null, new HashSet<IThingType.Annotation>());
         }
 
         public VoidPromise SetOwns(
-            ITypeDBTransaction transaction, IAttributeType attributeType, ICollection<IThingType.Annotation> annotations)
+            ITypeDBTransaction transaction,
+            IAttributeType attributeType,
+            ICollection<IThingType.Annotation> annotations)
         {
             return SetOwns(transaction, attributeType, null, annotations);
         }
@@ -154,13 +156,13 @@ namespace Vaticle.Typedb.Driver.Concept
         public VoidPromise SetOwns(
             ITypeDBTransaction transaction, IAttributeType attributeType, IAttributeType overriddenType)
         {
-            return SetOwns(transaction, attributeType, overriddenType, new HashSet(){});
+            return SetOwns(transaction, attributeType, overriddenType, new HashSet<IThingType.Annotation>());
         }
 
         public VoidPromise SetOwns(
             ITypeDBTransaction transaction, 
             IAttributeType attributeType, 
-            IAttributeType overriddenType, 
+            IAttributeType? overriddenType,
             ICollection<IThingType.Annotation> annotations)
         {
             Pinvoke.Concept overriddenTypeNative = overriddenType != null 
@@ -175,7 +177,7 @@ namespace Vaticle.Typedb.Driver.Concept
                 NativeObject, 
                 ((IAttributeType)attributeType).NativeObject, 
                 overriddenTypeNative, 
-                annotationsArray));
+                annotationsArray).Resolve);
         }
 
         public ICollection<IRoleType> GetPlays(ITypeDBTransaction transaction)
@@ -300,7 +302,9 @@ namespace Vaticle.Typedb.Driver.Concept
         public VoidPromise UnsetOwns(ITypeDBTransaction transaction, IAttributeType attributeType)
         {
             return new VoidPromise(Pinvoke.typedb_driver.thing_type_unset_owns(
-                NativeTransaction(transaction), NativeObject, ((AttributeType)attributeType).NativeObject).Resolve);
+                NativeTransaction(transaction),
+                NativeObject,
+                ((AttributeType)attributeType).NativeObject).Resolve);
         }
 
         public VoidPromise UnsetPlays(ITypeDBTransaction transaction, IRoleType roleType)
