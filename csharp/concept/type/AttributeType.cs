@@ -269,13 +269,13 @@ namespace Vaticle.Typedb.Driver.Concept
         public VoidPromise SetRegex(ITypeDBTransaction transaction, string regex)
         {
             return new VoidPromise(Pinvoke.typedb_driver.attribute_type_set_regex(
-                NativeTransaction(transaction), NativeObject, regex));
+                NativeTransaction(transaction), NativeObject, regex).Resolve);
         }
 
         public VoidPromise UnsetRegex(ITypeDBTransaction transaction)
         {
             return new VoidPromise(Pinvoke.typedb_driver.attribute_type_unset_regex(
-                NativeTransaction(transaction), NativeObject));
+                NativeTransaction(transaction), NativeObject).Resolve);
         }
     }
 }

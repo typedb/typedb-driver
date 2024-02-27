@@ -70,7 +70,7 @@ namespace Vaticle.Typedb.Driver.Logic
                 throw new TypeDBDriverException(DriverError.TRANSACTION_CLOSED);
             }
 
-            return Promise<IRule>.Map<IRule, Pinvoke.Rule>(
+            return Promise<IRule>.Map<IRule, Pinvoke.Concept>(
                 Pinvoke.typedb_driver.logic_manager_get_rule(
                     _nativeTransaction, label).Resolve,
                 obj => new Rule(obj));
