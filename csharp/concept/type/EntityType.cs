@@ -47,7 +47,7 @@ namespace Vaticle.Typedb.Driver.Concept
         public VoidPromise SetSupertype(ITypeDBTransaction transaction, IEntityType entityType)
         {
             return new VoidPromise(Pinvoke.typedb_driver.entity_type_set_supertype(
-                NativeTransaction(transaction), NativeObject, ((EntityType)entityType).NativeObject));
+                NativeTransaction(transaction), NativeObject, ((EntityType)entityType).NativeObject).Resolve);
         }
 
         public override Promise<IType> GetSupertype(ITypeDBTransaction transaction)
