@@ -24,24 +24,18 @@ using System.Linq;
 
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Api.Concept;
-using Vaticle.Typedb.Driver.Api.Concept.Value;
-using Vaticle.Typedb.Driver.Api.Concept.Type;
-using Vaticle.Typedb.Driver.Api.Concept.Thing;
 using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Exception;
 using Vaticle.Typedb.Driver.Concept;
-using Vaticle.Typedb.Driver.Concept.Type;
 
-using InternalError = Vaticle.Typedb.Driver.Common.Exception.Error.Internal;
+using InternalError = Vaticle.Typedb.Driver.Common.Error.Internal;
 
-namespace Vaticle.Typedb.Driver.Concept.Thing
+namespace Vaticle.Typedb.Driver.Concept
 {
     public abstract class Thing : Concept, IThing
     {
-        private int hash = 0;
+        private int _hash = 0;
 
-        Thing(Pinvoke.Concept nativeConcept)
+        public Thing(Pinvoke.Concept nativeConcept)
             : base(nativeConcept)
         {
         }

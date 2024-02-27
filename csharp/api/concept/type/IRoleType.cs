@@ -22,12 +22,10 @@
 using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api.Concept;
-using Vaticle.Typedb.Driver.Api.Concept.Type;
-using Vaticle.Typedb.Driver.Api.Concept.Thing;
+using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Api.Concept.Type
+namespace Vaticle.Typedb.Driver.Api
 {
     /**
      * Roles are special internal types used by relations. We can not create an instance of a role in a database. But we can set an instance of another type (role player) to play a role in a particular instance of a relation type.
@@ -50,53 +48,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
         {
             return this;
         }
-    
-        /**
-         * Retrieves the most immediate supertype of the <code>IRoleType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * roleType.GetSupertype(transaction).Resolve();
-         * </pre>
-         *
-         * @param transaction The current transaction
-         */
-        new Promise<IRoleType> GetSupertype(ITypeDBTransaction transaction);
-    
-        /**
-         * Retrieves all supertypes of the <code>IRoleType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * roleType.GetSupertypes(transaction);
-         * </pre>
-         *
-         * @param transaction The current transaction
-         */
-        new ICollection<IRoleType> GetSupertypes(ITypeDBTransaction transaction);
-        /**
-         * Retrieves all direct and indirect subtypes of the <code>IRoleType</code>.
-         * Equivalent to <code>GetSubtypes(transaction, Transitivity.TRANSITIVE)</code>
-         *
-         * @see IRoleType#GetSubtypes(ITypeDBTransaction, IConcept.Transitivity)
-         */
-        new ICollection<IRoleType> GetSubtypes(ITypeDBTransaction transaction);
-    
-        /**
-         * Retrieves all direct and indirect (or direct only) subtypes of the <code>IRoleType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * roleType.GetSubtypes(transaction, transitivity);
-         * </pre>
-         *
-         * @param transaction The current transaction
-         * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes,
-         *                     <code>Transitivity.EXPLICIT</code> for direct subtypes only
-         */
-        new ICollection<IRoleType> GetSubtypes(
-            ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
-    
+
         /**
          * Retrieves the <code>RelationType</code> that this role is directly related to.
          *

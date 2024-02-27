@@ -24,40 +24,41 @@ using System.Linq;
 
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Api.Concept;
-using Vaticle.Typedb.Driver.Api.Concept.Value;
-using Vaticle.Typedb.Driver.Api.Concept.Type;
-using Vaticle.Typedb.Driver.Api.Concept.Thing;
 using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Exception;
-using Vaticle.Typedb.Driver.Concept.Thing;
+using Vaticle.Typedb.Driver.Concept;
 
-using InternalError = Vaticle.Typedb.Driver.Common.Exception.Error.Internal;
+using InternalError = Vaticle.Typedb.Driver.Common.Error.Internal;
 
-namespace Vaticle.Typedb.Driver.Concept.Type
+namespace Vaticle.Typedb.Driver.Concept
 {
     public abstract class ThingType : Type, IThingType
     {
-        ThingType(Pinvoke.Concept nativeConcept)
+        public ThingType(Pinvoke.Concept nativeConcept)
             : base(nativeConcept)
         {
         }
 
-        public ThingType(Pinvoke.Concept nativeConcept)
+        public new static ThingType Of(Pinvoke.Concept nativeConcept) // TODO: Think about use cases and refactor!
         {
             if (Pinvoke.typedb_driver.concept_is_entity_type(nativeConcept))
                 return new EntityType(nativeConcept);
             if (Pinvoke.typedb_driver.concept_is_relation_type(nativeConcept))
                 return new RelationType(nativeConcept);
             if (Pinvoke.typedb_driver.concept_is_attribute_type(nativeConcept))
-                return new IAttributeType(nativeConcept);
+                return new AttributeType(nativeConcept);
             if (Pinvoke.typedb_driver.concept_is_root_thing_type(nativeConcept))
                 return new Root(nativeConcept);
 
             throw new TypeDBDriverException(InternalError.UNEXPECTED_NATIVE_VALUE);
         }
 
-        public bool IsRoot()
+        public abstract ICollection<IThing> GetInstances(ITypeDBTransaction transaction);
+
+        public abstract ICollection<IThing> GetInstances(
+            ITypeDBTransaction transaction,
+            IConcept.Transitivity transitivity);
+
+        public override bool IsRoot()
         {
             try
             {
@@ -69,7 +70,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             }
         }
 
-        public bool IsAbstract()
+        public override bool IsAbstract()
         {
             try
             {
@@ -81,7 +82,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             }
         }
 
-        public Label GetLabel()
+        public override Label GetLabel()
         {
             try
             {
@@ -93,37 +94,23 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             }
         }
 
-        public VoidPromise Delete(ITypeDBTransaction transaction)
+        public override VoidPromise Delete(ITypeDBTransaction transaction)
         {
             return new VoidPromise(Pinvoke.typedb_driver.thing_type_delete(
                 NativeTransaction(transaction), NativeObject).Resolve);
         }
 
-        public Promise<bool> IsDeleted(ITypeDBTransaction transaction)
+        public override Promise<bool> IsDeleted(ITypeDBTransaction transaction)
         {
             return new Promise<bool>(Pinvoke.typedb_driver.thing_type_is_deleted(
                 NativeTransaction(transaction), NativeObject).Resolve);
         }
 
-        public VoidPromise SetLabel(ITypeDBTransaction transaction, string label)
+        public override VoidPromise SetLabel(ITypeDBTransaction transaction, string label)
         {
             return new VoidPromise(Pinvoke.typedb_driver.thing_type_set_label(
                 NativeTransaction(transaction), NativeObject, label));
         }
-
-        public abstract Promise<ThingType> GetSupertype(ITypeDBTransaction transaction);
-
-        public abstract ICollection<IThingType> GetSupertypes(ITypeDBTransaction transaction);
-
-        public abstract ICollection<IThingType> GetSubtypes(ITypeDBTransaction transaction);
-
-        public abstract ICollection<IThingType> GetSubtypes(
-            ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
-
-        public abstract ICollection<IThing> GetInstances(ITypeDBTransaction transaction);
-
-        public abstract ICollection<IThing> GetInstances(
-            ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
         public VoidPromise SetAbstract(ITypeDBTransaction transaction)
         {
@@ -213,7 +200,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
 
         public Promise<IRoleType> GetPlaysOverridden(ITypeDBTransaction transaction, IRoleType roleType)
         {
-            return Promise.Map<IRoleType, Pinvoke.Concept>(
+            return Promise<IRoleType>.Map<IRoleType, Pinvoke.Concept>(
                 Pinvoke.typedb_driver.thing_type_get_plays_overridden(
                     NativeTransaction(transaction), NativeObject, ((RoleType)roleType).NativeObject).Resolve,
                 obj => new RoleType(obj));
@@ -241,36 +228,36 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             return GetOwns(transaction, valueType, IConcept.Transitivity.TRANSITIVE, annotations);
         }
 
-        public ICollection<IIAttributeType> GetOwns(
+        public ICollection<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
         {
             return GetOwns(transaction, transitivity, emptySet());
         }
 
-        public ICollection<IIAttributeType> GetOwns(
+        public ICollection<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, IValue.ValueType valueType, IConcept.Transitivity transitivity)
         {
             return GetOwns(transaction, valueType, transitivity, emptySet());
         }
 
-        public ICollection<IIAttributeType> GetOwns(
+        public ICollection<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, ICollection<IThingType.Annotation> annotations, IConcept.Transitivity transitivity)
         {
             return GetOwns(transaction, transitivity, annotations);
         }
 
-        public ICollection<IIAttributeType> GetOwns(
+        public ICollection<IAttributeType> GetOwns(
             ITypeDBTransaction transaction,
             IValue.ValueType valueType,
             ICollection<IThingType.Annotation> annotations,
-            Transitivity transitivity)
+            IConcept.Transitivity transitivity)
         {
             return GetOwns(transaction, valueType, transitivity, annotations);
         }
 
         private ICollection<IAttributeType> GetOwns(
             ITypeDBTransaction transaction,
-            Transitivity transitivity,
+            IConcept.Transitivity transitivity,
             ICollection<IThingType.Annotation> annotations)
         {
             return GetOwns(transaction, null, transitivity, annotations);
@@ -302,7 +289,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
         public Promise<IAttributeType> GetOwnsOverridden(
             ITypeDBTransaction transaction, IAttributeType attributeType)
         {
-            return Promise.Map<IAttributeType, Pinvoke.Concept>(
+            return Promise<IAttributeType>.Map<IAttributeType, Pinvoke.Concept>(
                 Pinvoke.typedb_driver.thing_type_get_owns_overridden(
                     NativeTransaction(transaction),
                     NativeObject,
@@ -310,7 +297,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
                 obj => new AttributeType(obj));
         }
 
-        public VoidPromise UnSetOwns(ITypeDBTransaction transaction, IAttributeType attributeType)
+        public VoidPromise UnsetOwns(ITypeDBTransaction transaction, IAttributeType attributeType)
         {
             return new VoidPromise(Pinvoke.typedb_driver.thing_type_unset_owns(
                 NativeTransaction(transaction), NativeObject, ((AttributeType)attributeType).NativeObject).Resolve);
@@ -328,7 +315,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
                 NativeTransaction(transaction), NativeObject).Resolve);
         }
 
-        public static class Root : ThingType
+        public class Root : ThingType
         {
             public Root(Pinvoke.Concept nativeConcept)
                 : base(nativeConcept)
@@ -337,48 +324,48 @@ namespace Vaticle.Typedb.Driver.Concept.Type
 
             // TODO: Is GetLabel() the same for Root?
 
-            public Promise<IThingType> GetSupertype(ITypeDBTransaction transaction)
+            public override Promise<IType> GetSupertype(ITypeDBTransaction transaction)
             {
                 return new Promise<IThingType>(() => null);
             }
 
-            public ICollection<IThingType> GetSupertypes(ITypeDBTransaction transaction)
+            public override ICollection<IType> GetSupertypes(ITypeDBTransaction transaction)
             {
                 return new List<IThingType>{this};
             }
 
-            public ICollection<IThingType> GetSubtypes(ITypeDBTransaction transaction)
+            public override ICollection<IType> GetSubtypes(ITypeDBTransaction transaction)
             {
-                return new List<IThingType>(){this}
-                    .Concat(transaction.AllConcepts.RootEntityType.GetSubtypes(transaction))
-                    .Concat(transaction.AllConcepts.RootRelationType.GetSubtypes(transaction))
-                    .Concat(transaction.AllConcepts.RootIAttributeType.GetSubtypes(transaction))
+                return new List<IType>(){this}
+                    .Concat(transaction.Concepts.RootEntityType.GetSubtypes(transaction))
+                    .Concat(transaction.Concepts.RootRelationType.GetSubtypes(transaction))
+                    .Concat(transaction.Concepts.RootIAttributeType.GetSubtypes(transaction))
                     .Select(obj => (ThingType)obj)
-                    .ToList<IThingType>();
+                    .ToList<IType>();
             }
 
-            public ICollection<IThingType> GetSubtypes(
+            public override ICollection<IType> GetSubtypes(
                 ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
             {
-                return new List<IThingType>()
+                return new List<IType>()
                     {
-                        transaction.AllConcepts.RootEntityType,
-                        transaction.AllConcepts.RootRelationType,
-                        transaction.AllConcepts.RootIAttributeType
-                    }.Select(obj => (ThingType)obj);
+                        transaction.Concepts.RootEntityType,
+                        transaction.Concepts.RootRelationType,
+                        transaction.Concepts.RootIAttributeType
+                    }.Select(obj => (ThingType)obj).ToList<IType>();
             }
 
-            public ICollection<IThing> GetInstances(ITypeDBTransaction transaction)
+            public override ICollection<IThing> GetInstances(ITypeDBTransaction transaction)
             {
-                return new List<IThingType>()
-                    {transaction.AllConcepts.RootEntityType.GetInstances(transaction)}
-                    .Concat(transaction.AllConcepts.RootRelationType.GetInstances(transaction))
-                    .Concat(transaction.AllConcepts.RootIAttributeType.GetInstances(transaction))
+                return new List<IThing>()
+                    {transaction.Concepts.RootEntityType.GetInstances(transaction)}
+                    .Concat(transaction.Concepts.RootRelationType.GetInstances(transaction))
+                    .Concat(transaction.Concepts.RootIAttributeType.GetInstances(transaction))
                     .Select(obj => (ThingType)obj)
-                    .ToList<IThingType>();
+                    .ToList<IThing>();
             }
 
-            public ICollection<IThing> GetInstances(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
+            public override ICollection<IThing> GetInstances(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
             {
                 return new List<IThing>(){};
             }

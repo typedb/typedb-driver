@@ -24,15 +24,10 @@ using System.Linq;
 
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Api.Concept;
-using Vaticle.Typedb.Driver.Api.Concept.Thing;
-using Vaticle.Typedb.Driver.Api.Concept.Type;
-using Vaticle.Typedb.Driver.Api.Concept.Value;
 using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Exception;
-using Vaticle.Typedb.Driver.Concept.Thing;
+using Vaticle.Typedb.Driver.Concept;
 
-namespace Vaticle.Typedb.Driver.Concept.Type
+namespace Vaticle.Typedb.Driver.Concept
 {
     public class RoleType : Type, IRoleType
     {
@@ -41,50 +36,50 @@ namespace Vaticle.Typedb.Driver.Concept.Type
         {
         }
 
-        public bool IsRoot()
+        public override bool IsRoot()
         {
             return Pinvoke.typedb_driver.role_type_is_root(NativeObject);
         }
 
-        public bool IsAbstract()
+        public override bool IsAbstract()
         {
             return Pinvoke.typedb_driver.role_type_is_abstract(NativeObject);
         }
 
-        public Label GetLabel() 
+        public override Label GetLabel()
         {
             return new Label(
                 Pinvoke.typedb_driver.role_type_get_scope(NativeObject), 
                 Pinvoke.typedb_driver.role_type_get_name(NativeObject));
         }
 
-        public VoidPromise Delete(ITypeDBTransaction transaction)
+        public override VoidPromise Delete(ITypeDBTransaction transaction)
         {
             return new VoidPromise(Pinvoke.typedb_driver.role_type_delete(
                 NativeTransaction(transaction), NativeObject).Resolve);
         }
 
-        public Promise<bool> IsDeleted(ITypeDBTransaction transaction)
+        public override Promise<bool> IsDeleted(ITypeDBTransaction transaction)
         {
             return new Promise<bool>(Pinvoke.typedb_driver.role_type_is_deleted(
                 NativeTransaction(transaction), NativeObject).Resolve);
         }
 
-        public VoidPromise SetLabel(ITypeDBTransaction transaction, string label)
+        public override VoidPromise SetLabel(ITypeDBTransaction transaction, string label)
         {
             return new VoidPromise(Pinvoke.typedb_driver.role_type_set_label(
                 NativeTransaction(transaction), NativeObject, label).Resolve);
         }
 
-        public Promise<IRoleType> GetSupertype(ITypeDBTransaction transaction) 
+        public override Promise<IType> GetSupertype(ITypeDBTransaction transaction)
         {
-            return Promise.Map<IRoleType, Pinvoke.Concept>(
+            return Promise<IType>.Map<IType, Pinvoke.Concept>(
                 Pinvoke.typedb_driver.role_type_get_supertype(
-                    NativeTransaction(transaction), NativeObject), 
+                    NativeTransaction(transaction), NativeObject).Resolve,
                 obj => new RoleType(obj));
         }
 
-        public ICollection<IRoleType> GetSupertypes(ITypeDBTransaction transaction)
+        public override ICollection<IType> GetSupertypes(ITypeDBTransaction transaction)
         {
             try 
             {
@@ -99,12 +94,12 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             }
         }
 
-        public ICollection<IRoleType> GetSubtypes(ITypeDBTransaction transaction)
+        public override ICollection<IType> GetSubtypes(ITypeDBTransaction transaction)
         {
             return GetSubtypes(transaction, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public ICollection<IRoleType> GetSubtypes(
+        public override ICollection<IType> GetSubtypes(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity) 
         {
             try 
@@ -122,9 +117,9 @@ namespace Vaticle.Typedb.Driver.Concept.Type
 
         public Promise<IRelationType> GetRelationType(ITypeDBTransaction transaction)
         {
-            return Promise.Map<IRelationType, Pinvoke.Concept>(
+            return Promise<IRelationType>.Map<IRelationType, Pinvoke.Concept>(
                 Pinvoke.typedb_driver.role_type_get_relation_type(
-                    NativeTransaction(transaction), NativeObject),
+                    NativeTransaction(transaction), NativeObject).Resolve,
                 obj => new RelationType(obj));
         }
 

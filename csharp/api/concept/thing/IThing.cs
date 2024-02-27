@@ -21,14 +21,12 @@
 
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver.Api.Concept;
-using Vaticle.Typedb.Driver.Api.Concept.Type;
-using Vaticle.Typedb.Driver.Api.Concept.Value;
+using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Api.Concept.Thing
+namespace Vaticle.Typedb.Driver.Api
 {
-    public interface IThing : Vaticle.Typedb.Driver.Api.Concept.IConcept
+    public interface IThing : IConcept
     {
         /**
          * The unique id of the <code>IThing</code>.
@@ -125,7 +123,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Thing
          * @param transaction The current transaction
          * @param attributeTypes The <code>IAttributeType</code>s to filter the attributes by
          */
-        ICollection<IAttribute> GetHas(ITypeDBTransaction transaction, ICollection<IAttributeType> attributeTypes);
+        ICollection<IAttribute> GetHas(ITypeDBTransaction transaction, params IAttributeType[] attributeTypes);
     
         /**
          * Retrieves the <code>IAttribute</code>s that this <code>IThing</code> owns,
@@ -154,7 +152,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Thing
          * @param transaction The current transaction
          * @param roleTypes The array of roles to filter the relations by.
          */
-        ICollection<IRelation> GetRelations(ITypeDBTransaction transaction, ICollection<IRoleType> roleTypes);
+        ICollection<IRelation> GetRelations(ITypeDBTransaction transaction, params IRoleType[] roleTypes);
     
         /**
          * Retrieves the roles that this <code>IThing</code> is currently playing.

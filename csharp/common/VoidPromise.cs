@@ -21,7 +21,7 @@
 
 using System;
 
-using Vaticle.Typedb.Driver.Common.Exception;
+using Vaticle.Typedb.Driver.Common;
 
 namespace Vaticle.Typedb.Driver.Common
 {

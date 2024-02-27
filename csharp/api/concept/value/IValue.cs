@@ -22,14 +22,11 @@
 using System;
 
 using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api.Concept;
-using Vaticle.Typedb.Driver.Api.Concept.Thing;
-using Vaticle.Typedb.Driver.Api.Concept.Type;
-using Vaticle.Typedb.Driver.Api.Concept.Value;
-using Vaticle.Typedb.Driver.Common.Exception;
-using InternalError = Vaticle.Typedb.Driver.Common.Exception.Error.Internal;
+using Vaticle.Typedb.Driver.Api;
+using Vaticle.Typedb.Driver.Common;
+using InternalError = Vaticle.Typedb.Driver.Common.Error.Internal;
 
-namespace Vaticle.Typedb.Driver.Api.Concept.Value
+namespace Vaticle.Typedb.Driver.Api
 {
     public interface IValue : IConcept
     {
@@ -178,33 +175,58 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Value
          */
         System.DateTime AsDateTime();
 
-        public class ValueType
+        public class ValueType : NativeObjectWrapper<Pinvoke.ValueType>
         {
-            public static ValueType OBJECT = new ValueType(typeof(object), false, false, Pinvoke.ValueType.Object);
-            public static ValueType BOOL = new ValueType(typeof(bool), true, false, Pinvoke.ValueType.Boolean);
-            public static ValueType LONG = new ValueType(typeof(long), true, true, Pinvoke.ValueType.Long);
-            public static ValueType DOUBLE = new ValueType(typeof(double), true, false, Pinvoke.ValueType.Double);
-            public static ValueType STRING = new ValueType(typeof(string), true, true, Pinvoke.ValueType.String);
-            public static ValueType DATETIME = new ValueType(typeof(System.DateTime), true, true, Pinvoke.ValueType.DateTime);
+            public static readonly ValueType OBJECT = new ValueType(typeof(object), false, false, Pinvoke.ValueType.Object);
+            public static readonly ValueType BOOL = new ValueType(typeof(bool), true, false, Pinvoke.ValueType.Boolean);
+            public static readonly ValueType LONG = new ValueType(typeof(long), true, true, Pinvoke.ValueType.Long);
+            public static readonly ValueType DOUBLE = new ValueType(typeof(double), true, false, Pinvoke.ValueType.Double);
+            public static readonly ValueType STRING = new ValueType(typeof(string), true, true, Pinvoke.ValueType.String);
+            public static readonly ValueType DATETIME = new ValueType(typeof(System.DateTime), true, true, Pinvoke.ValueType.DateTime);
 
             public System.Type ValueClass { get; }
             public bool IsWritable { get; }
             public bool IsKeyable { get; }
-            public Pinvoke.ValueType NativeObject { get; }
+
+            public ValueType(Pinvoke.ValueType nativeObject)
+                : base(nativeObject)
+            {
+                foreach (var type in ALL_VALUE_TYPES)
+                {
+                    if (type.NativeObject == nativeObject)
+                    {
+                        ValueClass = type.ValueClass;
+                        IsWritable = type.IsWritable;
+                        IsKeyable = type.IsKeyable;
+
+                        return;
+                    }
+                }
+
+                throw new TypeDBDriverException(InternalError.UNEXPECTED_NATIVE_VALUE);
+            }
 
             private ValueType(
                 System.Type valueClass,
                 bool isWritable,
                 bool isKeyable,
                 Pinvoke.ValueType nativeObject)
+                : base(nativeObject)
             {
                 ValueClass = valueClass;
                 IsWritable = isWritable;
                 IsKeyable = isKeyable;
-                NativeObject = nativeObject;
             }
 
-            // TODO: "of" method?
+            private static readonly ValueType[] ALL_VALUE_TYPES =
+            {
+                OBJECT,
+                BOOL,
+                LONG,
+                DOUBLE,
+                STRING,
+                DATETIME,
+            };
         }
     }
 }

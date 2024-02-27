@@ -21,14 +21,12 @@
 
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver.Api.Answer;
-using Vaticle.Typedb.Driver.Api.Logic;
+using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Exception;
-using Vaticle.Typedb.Driver.Concept.Answer;
+using Vaticle.Typedb.Driver.Concept;
 using Vaticle.Typedb.Driver.Util;
 
-using ConceptError = Vaticle.Typedb.Driver.Common.Exception.Error.Concept;
+using ConceptError = Vaticle.Typedb.Driver.Common.Error.Concept;
 
 namespace Vaticle.Typedb.Driver.Logic
 {

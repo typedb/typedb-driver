@@ -21,9 +21,9 @@
 
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver.Api.User;
+using Vaticle.Typedb.Driver.Api;
 
-namespace Vaticle.Typedb.Driver.Api.User
+namespace Vaticle.Typedb.Driver.Api
 {
     /**
      * Provides access to all user management methods.

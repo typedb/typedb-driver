@@ -22,7 +22,7 @@
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Api.Logic
+namespace Vaticle.Typedb.Driver.Api
 {
     /**
      * Rules are a part of schema and define embedded logic.

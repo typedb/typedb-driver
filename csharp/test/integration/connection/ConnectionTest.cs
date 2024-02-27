@@ -25,7 +25,6 @@ using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Api.Database;
 using Vaticle.Typedb.Driver.Common;
 
 namespace Vaticle.Typedb.Driver.Test.Integration

@@ -23,9 +23,9 @@ using System;
 using System.Diagnostics;
 
 using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Common.Exception;
+using Vaticle.Typedb.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Common.Exception
+namespace Vaticle.Typedb.Driver.Common
 {
     public class TypeDBDriverException : System.Exception
     {

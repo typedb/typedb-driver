@@ -23,15 +23,10 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Api.Concept;
-using Vaticle.Typedb.Driver.Api.Concept.Value;
-using Vaticle.Typedb.Driver.Api.Concept.Type;
-using Vaticle.Typedb.Driver.Api.Concept.Thing;
 using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Exception;
-using Vaticle.Typedb.Driver.Concept.Type;
+using Vaticle.Typedb.Driver.Concept;
 
-namespace Vaticle.Typedb.Driver.Concept.Thing
+namespace Vaticle.Typedb.Driver.Concept
 {
     public class Relation : Thing, IRelation
     {

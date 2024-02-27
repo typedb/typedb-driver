@@ -21,9 +21,9 @@
 
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver.Api.Database;
+using Vaticle.Typedb.Driver.Api;
 
-namespace Vaticle.Typedb.Driver.Api.Database
+namespace Vaticle.Typedb.Driver.Api
 {
     /**
      * Provides access to all database management methods.

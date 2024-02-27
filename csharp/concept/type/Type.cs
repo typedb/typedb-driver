@@ -22,14 +22,10 @@
 using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Api.Concept;
-using Vaticle.Typedb.Driver.Api.Concept.Value;
-using Vaticle.Typedb.Driver.Api.Concept.Type;
-using Vaticle.Typedb.Driver.Api.Concept.Thing;
 using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Concept;
 
-namespace Vaticle.Typedb.Driver.Concept.Type
+namespace Vaticle.Typedb.Driver.Concept
 {
     public abstract class Type : Concept, IType
     {
@@ -39,6 +35,18 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             : base(nativeConcept)
         {
         }
+
+        public abstract Label GetLabel();
+
+        public abstract bool IsRoot();
+
+        public abstract bool IsAbstract();
+
+        public abstract VoidPromise SetLabel(ITypeDBTransaction transaction, string label);
+
+        public abstract VoidPromise Delete(ITypeDBTransaction transaction);
+
+        public abstract Promise<bool> IsDeleted(ITypeDBTransaction transaction);
 
         public abstract Promise<IType> GetSupertype(ITypeDBTransaction transaction);
 

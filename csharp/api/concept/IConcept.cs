@@ -20,16 +20,12 @@
  */
 
 using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api.Concept;
-using Vaticle.Typedb.Driver.Api.Concept.Type;
-using Vaticle.Typedb.Driver.Api.Concept.Thing;
-using Vaticle.Typedb.Driver.Api.Concept.Value;
+using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Exception;
 
-using ConceptError = Vaticle.Typedb.Driver.Common.Exception.Error.Concept;
+using ConceptError = Vaticle.Typedb.Driver.Common.Error.Concept;
 
-namespace Vaticle.Typedb.Driver.Api.Concept
+namespace Vaticle.Typedb.Driver.Api
 {
     public interface IConcept
     {
