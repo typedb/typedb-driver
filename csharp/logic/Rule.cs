@@ -21,13 +21,11 @@
 
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Api.Logic;
 using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Exception;
 using Vaticle.Typedb.Driver.Util;
 
-using DriverError = Vaticle.Typedb.Driver.Common.Exception.Error.Driver;
-using ConceptError = Vaticle.Typedb.Driver.Common.Exception.Error.Concept;
+using DriverError = Vaticle.Typedb.Driver.Common.Error.Driver;
+using ConceptError = Vaticle.Typedb.Driver.Common.Error.Concept;
 
 namespace Vaticle.Typedb.Driver.Logic
 {
@@ -116,9 +114,9 @@ namespace Vaticle.Typedb.Driver.Logic
         public override int GetHashCode()
         {
             if (_hash == 0)
-             {
-                _hash = Label.GetHashCode();
-             }
+            {
+            _hash = Label.GetHashCode();
+            }
 
             return _hash;
         }

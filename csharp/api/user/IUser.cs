@@ -19,7 +19,7 @@
  * under the License.
  */
 
-namespace Vaticle.Typedb.Driver.Api.User
+namespace Vaticle.Typedb.Driver.Api
 {
     /**
      *  TypeDB user information

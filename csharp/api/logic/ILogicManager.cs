@@ -21,10 +21,10 @@
 
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver.Api.Logic;
+using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Api.Logic
+namespace Vaticle.Typedb.Driver.Api
 {
     /**
      * Provides methods for manipulating rules in the database.

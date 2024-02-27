@@ -19,16 +19,14 @@
  * under the License.
  */
 
-using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Api.Concept;
-using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Exception;
-using Vaticle.Typedb.Driver.Concept.Thing;
-using Vaticle.Typedb.Driver.Concept.Type;
-using Vaticle.Typedb.Driver.Concept.Value;
+using System;
 
-using DriverError = Vaticle.Typedb.Driver.Common.Exception.Error.Driver;
-using InternalError = Vaticle.Typedb.Driver.Common.Exception.Error.Internal;
+using Vaticle.Typedb.Driver.Api;
+using Vaticle.Typedb.Driver.Common;
+using Vaticle.Typedb.Driver.Concept;
+
+using DriverError = Vaticle.Typedb.Driver.Common.Error.Driver;
+using InternalError = Vaticle.Typedb.Driver.Common.Error.Internal;
 
 namespace Vaticle.Typedb.Driver.Concept
 {
@@ -39,7 +37,7 @@ namespace Vaticle.Typedb.Driver.Concept
         {
         }
 
-        public static Concept Of(Pinvoke.Concept nativeConcept)
+        public static Concept ConceptOf(Pinvoke.Concept nativeConcept) // TODO: Refactor somehow?
         {
             if (Pinvoke.typedb_driver.concept_is_entity_type(nativeConcept))
                 return new EntityType(nativeConcept);
@@ -94,5 +92,7 @@ namespace Vaticle.Typedb.Driver.Concept
             Concept that = (Concept)obj;
             return Pinvoke.typedb_driver.concept_equals(this.NativeObject, that.NativeObject);
         }
+
+        public abstract override int GetHashCode();
     }
 }

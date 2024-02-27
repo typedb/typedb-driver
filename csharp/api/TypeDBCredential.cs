@@ -24,7 +24,6 @@ using System.IO;
 
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Exception;
 
 namespace Vaticle.Typedb.Driver.Api
 {

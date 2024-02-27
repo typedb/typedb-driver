@@ -24,15 +24,10 @@ using System.Linq;
 
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Api.Concept;
-using Vaticle.Typedb.Driver.Api.Concept.Value;
-using Vaticle.Typedb.Driver.Api.Concept.Type;
-using Vaticle.Typedb.Driver.Api.Concept.Thing;
 using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Exception;
-using Vaticle.Typedb.Driver.Concept.Thing;
+using Vaticle.Typedb.Driver.Concept;
 
-namespace Vaticle.Typedb.Driver.Concept.Type
+namespace Vaticle.Typedb.Driver.Concept
 {
     public class RelationType : ThingType, IRelationType
     {
@@ -43,7 +38,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
 
         public Promise<IRelation> Create(ITypeDBTransaction transaction)
         {
-            return Promise.Map<IRelation, Pinvoke.Concept>(
+            return Promise<IRelation>.Map<IRelation, Pinvoke.Concept>(
                 Pinvoke.typedb_driver.relation_type_create(
                     NativeTransaction(transaction), NativeObject).Resolve, 
                 obj => new Relation(obj));
@@ -79,8 +74,9 @@ namespace Vaticle.Typedb.Driver.Concept.Type
 
         public Promise<IRoleType> GetRelates(ITypeDBTransaction transaction, string roleLabel)
         {
-            return Promise.Map<IRoleType, Pinvoke.Concept>(Pinvoke.typedb_driver.relation_type_get_relates_for_role_label(
-                NativeTransaction(transaction), NativeObject, roleLabel).Resolve,
+            return Promise<IRoleType>.Map<IRoleType, Pinvoke.Concept>(
+                Pinvoke.typedb_driver.relation_type_get_relates_for_role_label(
+                    NativeTransaction(transaction), NativeObject, roleLabel).Resolve,
                 obj => new RoleType(obj));
         }
 
@@ -91,7 +87,7 @@ namespace Vaticle.Typedb.Driver.Concept.Type
 
         public Promise<IRoleType> GetRelatesOverridden(ITypeDBTransaction transaction, string roleLabel)
         {
-            return Promise.Map<IRoleType, Pinvoke.Concept>(
+            return Promise<IRoleType>.Map<IRoleType, Pinvoke.Concept>(
                 Pinvoke.typedb_driver.relation_type_get_relates_overridden(
                     NativeTransaction(transaction), NativeObject, roleLabel).Resolve, 
                 obj => new RoleType(obj));
@@ -127,15 +123,15 @@ namespace Vaticle.Typedb.Driver.Concept.Type
                 NativeTransaction(transaction), NativeObject, roleLabel).Resolve);
         }
 
-        public Promise<IRelationType> GetSupertype(ITypeDBTransaction transaction) 
+        public override Promise<IType> GetSupertype(ITypeDBTransaction transaction)
         {
-            return Promise.Map<IRelationType, Pinvoke.Concept>(
+            return Promise<IType>.Map<IType, Pinvoke.Concept>(
                 Pinvoke.typedb_driver.relation_type_get_supertype(
                     NativeTransaction(transaction), NativeObject).Resolve, 
                 obj => new RelationType(obj));
         }
 
-        public ICollection<IRelationType> GetSupertypes(ITypeDBTransaction transaction)
+        public override ICollection<IType> GetSupertypes(ITypeDBTransaction transaction)
         {
             try 
             {
@@ -150,12 +146,12 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             }
         }
 
-        public ICollection<IRelationType> GetSubtypes(ITypeDBTransaction transaction)
+        public override ICollection<IType> GetSubtypes(ITypeDBTransaction transaction)
         {
             return GetSubtypes(transaction, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public ICollection<IRelationType> GetSubtypes(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
+        public override ICollection<IType> GetSubtypes(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
         {
             try 
             {
@@ -170,12 +166,12 @@ namespace Vaticle.Typedb.Driver.Concept.Type
             }
         }
 
-        public ICollection<IRelation> GetInstances(ITypeDBTransaction transaction)
+        public override ICollection<IThing> GetInstances(ITypeDBTransaction transaction)
         {
             return GetInstances(transaction, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public ICollection<IRelation> GetInstances(
+        public override ICollection<IThing> GetInstances(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
         {
             try 

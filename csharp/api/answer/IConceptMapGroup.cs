@@ -21,9 +21,9 @@
 
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Api;
 
-namespace Vaticle.Typedb.Driver.Api.Answer
+namespace Vaticle.Typedb.Driver.Api
 {
     /**
      * Contains an element of the group query result.

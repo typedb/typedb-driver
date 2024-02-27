@@ -22,7 +22,6 @@
 using System;
 
 using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Api.Database;
 
 namespace Vaticle.Typedb.Driver.Api
 {

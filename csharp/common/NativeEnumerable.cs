@@ -22,8 +22,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-using Vaticle.Typedb.Driver.Common.Exception;
-using InternalError = Vaticle.Typedb.Driver.Common.Exception.Error.Internal;
+using Vaticle.Typedb.Driver.Common;
+
+using InternalError = Vaticle.Typedb.Driver.Common.Error.Internal;
 
 namespace Vaticle.Typedb.Driver.Common
 {

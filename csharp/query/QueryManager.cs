@@ -24,19 +24,13 @@ using System.Linq;
 
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
-using Vaticle.Typedb.Driver.Api.Answer;
-using Vaticle.Typedb.Driver.Api.Concept.Value;
-using Vaticle.Typedb.Driver.Api.Logic;
-using Vaticle.Typedb.Driver.Api.Query;
 using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Exception;
-using Vaticle.Typedb.Driver.Concept.Answer;
-using Vaticle.Typedb.Driver.Concept.Value;
+using Vaticle.Typedb.Driver.Concept;
 using Vaticle.Typedb.Driver.Logic;
 using Vaticle.Typedb.Driver.Util;
 
-using DriverError = Vaticle.Typedb.Driver.Common.Exception.Error.Driver;
-using QueryError = Vaticle.Typedb.Driver.Common.Exception.Error.Query;
+using DriverError = Vaticle.Typedb.Driver.Common.Error.Driver;
+using QueryError = Vaticle.Typedb.Driver.Common.Error.Query;
 
 namespace Vaticle.Typedb.Driver.Query
 {

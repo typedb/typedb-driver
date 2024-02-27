@@ -26,10 +26,10 @@ using System.Linq;
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api.Database;
 using Vaticle.Typedb.Driver.Common;
-using Vaticle.Typedb.Driver.Common.Exception;
+using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Util;
 
-using DriverError = Vaticle.Typedb.Driver.Common.Exception.Error.Driver;
+using DriverError = Vaticle.Typedb.Driver.Common.Error.Driver;
 
 namespace Vaticle.Typedb.Driver.Connection
 {

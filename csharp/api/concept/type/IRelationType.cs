@@ -22,11 +22,10 @@
 using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api.Concept.Type;
-using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Api.Concept.Type
+namespace Vaticle.Typedb.Driver.Api
 {
     /**
      * Relation types (or subtypes of the relation root type) represent relationships between types. Relation types have roles.
@@ -69,7 +68,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          *
          * @see IRelationType#GetInstances(ITypeDBTransaction, IConcept.Transitivity)
          */
-        new ICollection<IRelation> GetInstances(ITypeDBTransaction transaction);
+        new ICollection<IThing> GetInstances(ITypeDBTransaction transaction);
     
     
         /**
@@ -85,7 +84,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect instances,
          *                     <code>Transitivity.EXPLICIT</code> for direct relates only
          */
-        new ICollection<IRelation> GetInstances(
+        new ICollection<IThing> GetInstances(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
     
         /**
@@ -192,30 +191,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param roleLabel The role to not relate to the relation type.
          */
         VoidPromise UnsetRelates(ITypeDBTransaction transaction, string roleLabel);
-    
-        /**
-         * Retrieves all direct and indirect subtypes of the <code>IRelationType</code>.
-         * Equivalent to <code>GetSubtypes(transaction, Transitivity.TRANSITIVE)</code>
-         * 
-         * @see IRelationType#GetSubtypes(ITypeDBTransaction, IConcept.Transitivity)
-         */
-        new ICollection<IRelationType> GetSubtypes(ITypeDBTransaction transaction);
-    
-        /**
-         * Retrieves all direct and indirect (or direct only) subtypes of the <code>IRelationType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * relationType.GetSubtypes(transaction, transitivity);
-         * </pre>
-         *
-         * @param transaction The current transaction
-         * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes,
-         *                     <code>Transitivity.EXPLICIT</code> for direct subtypes only
-         */
-        new ICollection<IRelationType> GetSubtypes(
-            ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
-    
+
         /**
          * Sets the supplied <code>IRelationType</code> as the supertype of the current <code>IRelationType</code>.
          *

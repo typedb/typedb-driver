@@ -19,17 +19,18 @@
  * under the License.
  */
 
-using Vaticle.Typedb.Driver.Api.Concept.Type;
-using Vaticle.Typedb.Driver.Api.Concept.Value;
-using Vaticle.Typedb.Driver.Common.Exception;
+using System;
+
+using Vaticle.Typedb.Driver.Api;
+using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Concept;
 
-using ConceptError = Vaticle.Typedb.Driver.Common.Exception.Error.Concept;
-using InternalError = Vaticle.Typedb.Driver.Common.Exception.Error.Internal;
+using ConceptError = Vaticle.Typedb.Driver.Common.Error.Concept;
+using InternalError = Vaticle.Typedb.Driver.Common.Error.Internal;
 
-namespace Vaticle.Typedb.Driver.Concept.Value
+namespace Vaticle.Typedb.Driver.Concept
 {
-    public class Value : Concept, IValue 
+    public class Value : Concept, IValue
     {
         private int _hash = 0;
 
@@ -38,53 +39,38 @@ namespace Vaticle.Typedb.Driver.Concept.Value
         {
         }
 
-        public Value(bool value) 
+        public Value(bool value)
+            : this(Pinvoke.typedb_driver.value_new_boolean(value))
         {
-            return Value(Pinvoke.typedb_driver.value_new_boolean(value));
         }
 
         public Value(long value) 
+            : this(Pinvoke.typedb_driver.value_new_long(value))
         {
-            return Value(Pinvoke.typedb_driver.value_new_long(value));
         }
 
         public Value(double value) 
+            : this(Pinvoke.typedb_driver.value_new_double(value))
         {
-            return Value(Pinvoke.typedb_driver.value_new_double(value));
         }
 
-        public Value(string? value)
+        public Value(System.DateTime value)
+            : this(Pinvoke.typedb_driver.value_new_date_time_from_millis(
+                new System.DateTimeOffset(value!.ToUniversalTime()).ToUnixTimeMilliseconds()))
         {
-            if (value == null) 
-            {
-                throw new TypeDBDriverException(ConceptError.MISSING_VALUE);
-            }
-            
-            return Value(Pinvoke.typedb_driver.value_new_string(value!));
-        }
-
-        public Value(System.DateTime? value)
-        {
-            if (value == null)
-            {
-                throw new TypeDBDriverException(ConceptError.MISSING_VALUE);
-            }
-
-            return Value(Pinvoke.typedb_driver.value_new_date_time_from_millis(
-                new System.DateTimeOffset(value!.ToUniversalTime()).ToUnixTimeMilliseconds()));
         }
 
         public IType Type
         {
             get
             {
-                if (IsBool()) return IValue.ValueType.BOOL;
-                if (IsLong()) return IValue.ValueType.LONG;
-                if (IsDouble()) return IValue.ValueType.DOUBLE;
-                if (IsString()) return IValue.ValueType.STRING;
-                if (IsDateTime()) return IValue.ValueType.DATETIME;
+                if (IsBool()) return (IType)IValue.ValueType.BOOL;
+                if (IsLong()) return (IType)IValue.ValueType.LONG;
+                if (IsDouble()) return (IType)IValue.ValueType.DOUBLE;
+                if (IsString()) return (IType)IValue.ValueType.STRING;
+                if (IsDateTime()) return (IType)IValue.ValueType.DATETIME;
                 
-                throw new TypeDBDriverException(ILLEGAL_STATE);
+                throw new TypeDBDriverException(InternalError.ILLEGAL_STATE);
             }
         }
 
@@ -115,7 +101,7 @@ namespace Vaticle.Typedb.Driver.Concept.Value
 
         public object AsUntyped() 
         {
-            if (IsBool()) return AsBoolean();
+            if (IsBool()) return AsBool();
             if (IsLong()) return AsLong();
             if (IsDouble()) return AsDouble();
             if (IsString()) return AsString();
@@ -177,9 +163,9 @@ namespace Vaticle.Typedb.Driver.Concept.Value
 
         public override string ToString()
         {
-            if (IsBool()) return bool.ToString(AsBoolean());
-            if (IsLong()) return long.ToString(AsLong());
-            if (IsDouble()) return double.ToString(AsDouble());
+            if (IsBool()) return AsBool().ToString();
+            if (IsLong()) return AsLong().ToString();
+            if (IsDouble()) return AsDouble().ToString();
             if (IsString()) return AsString();
             if (IsDateTime()) return AsDateTime().ToString();
 

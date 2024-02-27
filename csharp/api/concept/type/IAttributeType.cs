@@ -22,12 +22,10 @@
 using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver;
-using Vaticle.Typedb.Driver.Api.Concept.Thing;
-using Vaticle.Typedb.Driver.Api.Concept.Value;
-using Vaticle.Typedb.Driver.Api.Concept;
+using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
 
-namespace Vaticle.Typedb.Driver.Api.Concept.Type
+namespace Vaticle.Typedb.Driver.Api
 {
     /**
      * Attribute types represent properties that other types can own.
@@ -347,25 +345,13 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          *
          * <h3>Examples</h3>
          * <pre>
-         * attributeType.ICollectionSupertype(transaction, superType).Resolve();
+         * attributeType.SetSupertype(transaction, superType).Resolve();
          * </pre>
          *
          * @param transaction The current transaction
          * @param attributeType The <code>IAttributeType</code> to set as the supertype of this <code>IAttributeType</code>
          */
-        VoidPromise ICollectionSupertype(ITypeDBTransaction transaction, IAttributeType attributeType);
-
-        /**
-         * Retrieves all direct and indirect subtypes of this <code>IAttributeType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * attributeType.GetSubtypes(transaction);
-         * </pre>
-         *
-         * @param transaction The current transaction
-         */
-        new ICollection<IAttributeType> GetSubtypes(ITypeDBTransaction transaction);
+        VoidPromise SetSupertype(ITypeDBTransaction transaction, IAttributeType attributeType);
 
         /**
          * Retrieves all direct and indirect subtypes of this <code>IAttributeType</code>
@@ -379,7 +365,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transaction The current transaction
          * @param valueType <code>IValue.ValueType</code> for retrieving subtypes
          */
-        ICollection<IAttributeType> GetSubtypes(ITypeDBTransaction transaction, IValue.ValueType valueType);
+        ICollection<IType> GetSubtypes(ITypeDBTransaction transaction, IValue.ValueType valueType);
 
         /**
          * Retrieves all direct and indirect (or direct only) subtypes of this <code>IAttributeType</code>
@@ -395,25 +381,10 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes,
          *                     <code>Transitivity.EXPLICIT</code> for direct subtypes only
          */
-        ICollection<IAttributeType> GetSubtypes(
+        ICollection<IType> GetSubtypes(
             ITypeDBTransaction transaction, 
             IValue.ValueType valueType,
             IConcept.Transitivity transitivity);
-
-        /**
-         * Retrieves all direct and indirect (or direct only) subtypes of this <code>IAttributeType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * attributeType.GetSubtypes(transaction, transitivity);
-         * </pre>
-         *
-         * @param transaction The current transaction
-         * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes,
-         *                     <code>Transitivity.EXPLICIT</code> for direct subtypes only
-         */
-        new ICollection<IAttributeType> GetSubtypes(
-            ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
         /**
          * Retrieves all direct and indirect <code>IAttributes</code>
@@ -426,7 +397,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          *
          * @param transaction The current transaction
          */
-        new ICollection<IAttribute> GetInstances(ITypeDBTransaction transaction);
+        new ICollection<IThing> GetInstances(ITypeDBTransaction transaction);
 
         /**
          * Retrieves all direct and indirect (or direct only) <code>IAttributes</code>
@@ -441,7 +412,7 @@ namespace Vaticle.Typedb.Driver.Api.Concept.Type
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes,
          *                     <code>Transitivity.EXPLICIT</code> for direct subtypes only
          */
-        new ICollection<IAttribute> GetInstances(
+        new ICollection<IThing> GetInstances(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
         /**
