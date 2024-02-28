@@ -43,12 +43,12 @@ namespace Vaticle.Typedb.Driver.Query
             _nativeTransaction = nativeTransaction;
         }
     
-        public override ICollection<IConceptMap> Get(string query)
+        public override IEnumerable<IConceptMap> Get(string query)
         {
             return Get(query, new TypeDBOptions());
         }
     
-        public override ICollection<IConceptMap> Get(string query, TypeDBOptions options)
+        public override IEnumerable<IConceptMap> Get(string query, TypeDBOptions options)
         {
             CheckQueryAndTransaction(query);
             
@@ -56,8 +56,7 @@ namespace Vaticle.Typedb.Driver.Query
             {
                 return new NativeEnumerable<Pinvoke.ConceptMap>(
                     Pinvoke.typedb_driver.query_get(_nativeTransaction, query, options.NativeObject))
-                    .Select(obj => new ConceptMap(obj))
-                    .ToList<IConceptMap>();
+                    .Select(obj => new ConceptMap(obj));
             }
             catch (Pinvoke.Error e) 
             {
@@ -89,12 +88,12 @@ namespace Vaticle.Typedb.Driver.Query
                 });
         }
     
-        public override ICollection<IConceptMapGroup> GetGroup(string query)
+        public override IEnumerable<IConceptMapGroup> GetGroup(string query)
         {
             return GetGroup(query, new TypeDBOptions());
         }
     
-        public override ICollection<IConceptMapGroup> GetGroup(string query, TypeDBOptions options)
+        public override IEnumerable<IConceptMapGroup> GetGroup(string query, TypeDBOptions options)
         {
             CheckQueryAndTransaction(query);
 
@@ -102,8 +101,7 @@ namespace Vaticle.Typedb.Driver.Query
             {
                 return new NativeEnumerable<Pinvoke.ConceptMapGroup>(
                     Pinvoke.typedb_driver.query_get_group(_nativeTransaction, query, options.NativeObject))
-                    .Select(obj => new ConceptMapGroup(obj))
-                    .ToList<IConceptMapGroup>();
+                    .Select(obj => new ConceptMapGroup(obj));
             }
             catch (Pinvoke.Error e)
             {
@@ -111,12 +109,12 @@ namespace Vaticle.Typedb.Driver.Query
             }
         }
     
-        public override ICollection<ValueGroup> GetGroupAggregate(string query) 
+        public override IEnumerable<ValueGroup> GetGroupAggregate(string query) 
         {
             return GetGroupAggregate(query, new TypeDBOptions());
         }
     
-        public override ICollection<ValueGroup> GetGroupAggregate(string query, TypeDBOptions options) 
+        public override IEnumerable<ValueGroup> GetGroupAggregate(string query, TypeDBOptions options) 
         {
             CheckQueryAndTransaction(query);
 
@@ -124,8 +122,7 @@ namespace Vaticle.Typedb.Driver.Query
             {
                 return new NativeEnumerable<Pinvoke.ValueGroup>(
                     Pinvoke.typedb_driver.query_get_group_aggregate(_nativeTransaction, query, options.NativeObject))
-                    .Select(obj => new ValueGroup(obj))
-                    .ToList<IValueGroup>();
+                    .Select(obj => new ValueGroup(obj));
             }
             catch (Pinvoke.Error e)
             {
@@ -133,12 +130,12 @@ namespace Vaticle.Typedb.Driver.Query
             }
         }
     
-        public override ICollection<JSON> Fetch(string query) 
+        public override IEnumerable<JSON> Fetch(string query) 
         {
             return Fetch(query, new TypeDBOptions());
         }
     
-        public override ICollection<JSON> Fetch(string query, TypeDBOptions options) 
+        public override IEnumerable<JSON> Fetch(string query, TypeDBOptions options) 
         {
             CheckQueryAndTransaction(query);
 
@@ -146,8 +143,7 @@ namespace Vaticle.Typedb.Driver.Query
             {
                 return new NativeEnumerable<Pinvoke.ValueGroup>(
                     Pinvoke.typedb_driver.query_fetch(_nativeTransaction, query, options.NativeObject))
-                    .Select(obj => JSON.Parse) // TODO: Implement
-                    .ToList<IValueGroup>();
+                    .Select(obj => JSON.Parse); // TODO: Implement
             }
             catch (Pinvoke.Error e)
             {
@@ -155,12 +151,12 @@ namespace Vaticle.Typedb.Driver.Query
             }
         }
     
-        public override ICollection<IConceptMap> Insert(string query)
+        public override IEnumerable<IConceptMap> Insert(string query)
         {
             return Insert(query, new TypeDBOptions());
         }
     
-        public override ICollection<IConceptMap> Insert(string query, TypeDBOptions options)
+        public override IEnumerable<IConceptMap> Insert(string query, TypeDBOptions options)
         {
             CheckQueryAndTransaction(query);
 
@@ -168,8 +164,7 @@ namespace Vaticle.Typedb.Driver.Query
             {
                 return new NativeEnumerable<Pinvoke.ConceptMap>(
                     Pinvoke.typedb_driver.query_insert(_nativeTransaction, query, options.NativeObject))
-                    .Select(obj => new ConceptMap(obj))
-                    .ToList<IConceptMap>();
+                    .Select(obj => new ConceptMap(obj));
             }
             catch (Pinvoke.Error e)
             {
@@ -190,12 +185,12 @@ namespace Vaticle.Typedb.Driver.Query
                 _nativeTransaction, query, options.NativeObject).Resolve);
         }
     
-        public override ICollection<IConceptMap> Update(string query)
+        public override IEnumerable<IConceptMap> Update(string query)
         {
             return Update(query, new TypeDBOptions());
         }
     
-        public override ICollection<IConceptMap> Update(string query, TypeDBOptions options)
+        public override IEnumerable<IConceptMap> Update(string query, TypeDBOptions options)
         {
             CheckQueryAndTransaction(query);
 
@@ -203,8 +198,7 @@ namespace Vaticle.Typedb.Driver.Query
             {
                 return new NativeEnumerable<Pinvoke.ConceptMap>(
                     Pinvoke.typedb_driver.query_update(_nativeTransaction, query, options.NativeObject))
-                    .Select(obj => new ConceptMap(obj))
-                    .ToList<IConceptMap>();
+                    .Select(obj => new ConceptMap(obj));
             }
             catch (Pinvoke.Error e)
             {
@@ -238,12 +232,12 @@ namespace Vaticle.Typedb.Driver.Query
                 _nativeTransaction, query, options.NativeObject).Resolve);
         }
     
-        public override ICollection<Explanation> Explain(IConceptMap.IExplainable explainable)
+        public override IEnumerable<Explanation> Explain(IConceptMap.IExplainable explainable)
         {
             return Explain(explainable, new TypeDBOptions());
         }
     
-        public override ICollection<IExplanation> Explain(
+        public override IEnumerable<IExplanation> Explain(
             IConceptMap.IExplainable explainable, TypeDBOptions options)
         {
             CheckTransaction();
@@ -255,8 +249,7 @@ namespace Vaticle.Typedb.Driver.Query
                         _nativeTransaction, 
                         ((ConceptMap.Explainable)explainable).NativeObject,
                         options.NativeObject))
-                    .Select(obj => new Explanation(obj))
-                    .ToList<IExplanation>();
+                    .Select(obj => new Explanation(obj));
             }
             catch (Pinvoke.Error e)
             {

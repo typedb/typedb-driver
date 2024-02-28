@@ -54,7 +54,7 @@ namespace Vaticle.Typedb.Driver.Logic
             get { return new ConceptMap(Pinvoke.typedb_driver.explanation_get_condition(NativeObject)); }
         }
 
-        public ICollection<string> QueryVariables
+        public ISet<string> QueryVariables
         {
             get
             {
@@ -64,7 +64,7 @@ namespace Vaticle.Typedb.Driver.Logic
             }
         }
 
-        public ICollcetion<string> QueryVariableMapping(string )
+        public ISet<string> QueryVariableMapping(string )
         {
             InputChecker.NonEmptyString(variable, ConceptError.MISSING_VARIABLE);
 

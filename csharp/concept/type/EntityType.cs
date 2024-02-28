@@ -58,7 +58,7 @@ namespace Vaticle.Typedb.Driver.Concept
                 obj => new EntityType(obj));
         }
 
-        public override ICollection<IType> GetSupertypes(ITypeDBTransaction transaction)
+        public override IEnumerable<IType> GetSupertypes(ITypeDBTransaction transaction)
         {
             try 
             {
@@ -73,12 +73,12 @@ namespace Vaticle.Typedb.Driver.Concept
             }
         }
 
-        public override ICollection<IType> GetSubtypes(ITypeDBTransaction transaction)
+        public override IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction)
         {
             return GetSubtypes(transaction, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public override ICollection<IType> GetSubtypes(
+        public override IEnumerable<IType> GetSubtypes(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity) 
         {
             try 
@@ -94,12 +94,12 @@ namespace Vaticle.Typedb.Driver.Concept
             }
         }
 
-        public override ICollection<IThing> GetInstances(ITypeDBTransaction transaction)
+        public override IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction)
         {
             return GetInstances(transaction, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public override ICollection<IThing> GetInstances(
+        public override IEnumerable<IThing> GetInstances(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
         {
             try 

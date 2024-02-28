@@ -109,7 +109,7 @@ namespace Vaticle.Typedb.Driver.Connection
             }
         }
 
-        public ICollection<IDatabase.IReplica> Replicas
+        public ISet<IDatabase.IReplica> Replicas
         {
             get
             {

@@ -79,9 +79,9 @@ namespace Vaticle.Typedb.Driver.Concept
                 obj => new RoleType(obj));
         }
 
-        public override ICollection<IType> GetSupertypes(ITypeDBTransaction transaction)
+        public override IEnumerable<IType> GetSupertypes(ITypeDBTransaction transaction)
         {
-            try 
+            try
             {
                 return new NativeEnumerable<Pinvoke.Concept>(
                     Pinvoke.typedb_driver.role_type_get_supertypes(
@@ -94,12 +94,12 @@ namespace Vaticle.Typedb.Driver.Concept
             }
         }
 
-        public override ICollection<IType> GetSubtypes(ITypeDBTransaction transaction)
+        public override IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction)
         {
             return GetSubtypes(transaction, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public override ICollection<IType> GetSubtypes(
+        public override IEnumerable<IType> GetSubtypes(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity) 
         {
             try 
@@ -123,7 +123,7 @@ namespace Vaticle.Typedb.Driver.Concept
                 obj => new RelationType(obj));
         }
 
-        public ICollection<IRelationType> GetRelationTypes(ITypeDBTransaction transaction)
+        public IEnumerable<IRelationType> GetRelationTypes(ITypeDBTransaction transaction)
         {
             try 
             {
@@ -138,12 +138,12 @@ namespace Vaticle.Typedb.Driver.Concept
             }
         }
 
-        public ICollection<IThingType> GetPlayerTypes(ITypeDBTransaction transaction)
+        public IEnumerable<IThingType> GetPlayerTypes(ITypeDBTransaction transaction)
         {
             return GetPlayerTypes(transaction, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public ICollection<IThingType> GetPlayerTypes(
+        public IEnumerable<IThingType> GetPlayerTypes(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
         {
             try
@@ -159,12 +159,12 @@ namespace Vaticle.Typedb.Driver.Concept
             }
         }
 
-        public ICollection<IRelation> GetRelationInstances(ITypeDBTransaction transaction)
+        public IEnumerable<IRelation> GetRelationInstances(ITypeDBTransaction transaction)
         {
             return GetRelationInstances(transaction, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public ICollection<IRelation> GetRelationInstances(
+        public IEnumerable<IRelation> GetRelationInstances(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
         {
             try
@@ -180,12 +180,12 @@ namespace Vaticle.Typedb.Driver.Concept
             }
         }
 
-        public ICollection<IThing> GetPlayerInstances(ITypeDBTransaction transaction)
+        public IEnumerable<IThing> GetPlayerInstances(ITypeDBTransaction transaction)
         {
             return GetPlayerInstances(transaction, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public ICollection<IThing> GetPlayerInstances(
+        public IEnumerable<IThing> GetPlayerInstances(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
         {
             try

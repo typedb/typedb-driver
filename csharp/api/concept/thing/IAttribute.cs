@@ -88,7 +88,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * @param transaction The current transaction
          */
-        ICollection<IThing> GetOwners(ITypeDBTransaction transaction);
+        IEnumerable<IThing> GetOwners(ITypeDBTransaction transaction);
 
         /**
          * Retrieves the instances that own this <code>IAttribute</code>.
@@ -101,6 +101,6 @@ namespace Vaticle.Typedb.Driver.Api
          * @param transaction The current transaction
          * @param ownerType Filter results for only owners of the given type
          */
-        ICollection<IThing> GetOwners(ITypeDBTransaction transaction, IThingType ownerType);
+        IEnumerable<IThing> GetOwners(ITypeDBTransaction transaction, IThingType ownerType);
     }
 }

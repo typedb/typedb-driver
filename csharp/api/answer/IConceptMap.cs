@@ -38,7 +38,7 @@ namespace Vaticle.Typedb.Driver.Api
          * conceptMap.Variables;
          * </pre>
          */
-        ICollection<string> Variables { get; }
+        IEnumerable<string> Variables { get; }
     
         /**
          * Returns a collection of all concepts in this <code>IConceptMap</code>.
@@ -48,7 +48,7 @@ namespace Vaticle.Typedb.Driver.Api
          * conceptMap.Concepts;
          * </pre>
          */
-        ICollection<IConcept> Concepts { get; }
+        IEnumerable<IConcept> Concepts { get; }
     
         /**
          * Returns the inner <code>Map</code> where keys are query variables, and values are concepts.
@@ -133,7 +133,7 @@ namespace Vaticle.Typedb.Driver.Api
              * conceptMap.AllExplainables.Relations;
              * </pre>
              */
-            ICollection<KeyValuePair<string, IExplainable>> Relations { get; }
+            IEnumerable<KeyValuePair<string, IExplainable>> Relations { get; }
     
             /**
              * Retrieves all of this <code>IConceptMap</code>’s explainable attributes.
@@ -143,7 +143,7 @@ namespace Vaticle.Typedb.Driver.Api
              * conceptMap.AllExplainables.Attributes;
              * </pre>
              */
-            ICollection<KeyValuePair<string, IExplainable>> Attributes { get; }
+            IEnumerable<KeyValuePair<string, IExplainable>> Attributes { get; }
     
             /**
              * Retrieves all of this <code>IConceptMap</code>’s explainable ownerships.
@@ -153,7 +153,7 @@ namespace Vaticle.Typedb.Driver.Api
              * conceptMap.AllExplainables.Ownerships;
              * </pre>
              */
-            ICollection<KeyValuePair<KeyValuePair<string, string>, IExplainable>> Ownerships { get; }
+            IEnumerable<KeyValuePair<KeyValuePair<string, string>, IExplainable>> Ownerships { get; }
         }
     
         /**

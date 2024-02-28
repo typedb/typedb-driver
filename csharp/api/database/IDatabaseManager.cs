@@ -74,6 +74,6 @@ namespace Vaticle.Typedb.Driver.Api
          * driver.Databases.All;
          * </pre>
          */
-        ICollection<IDatabase> All { get; }
+        IList<IDatabase> All { get; }
     }
 }

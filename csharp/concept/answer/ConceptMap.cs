@@ -43,24 +43,22 @@ namespace Vaticle.Typedb.Driver.Concept
         {
         }
     
-        public ICollection<string> Variables
+        public IEnumerable<string> Variables
         {
             get
             {
                 return new NativeEnumerable<string>(
-                    Pinvoke.typedb_driver.concept_map_get_variables(NativeObject))
-                    .ToList();
+                    Pinvoke.typedb_driver.concept_map_get_variables(NativeObject));
             }
         }
     
-        public ICollection<IConcept> Concepts
+        public IEnumerable<IConcept> Concepts
         {
             get
             {
                 return new NativeEnumerable<Pinvoke.Concept>(
                     Pinvoke.typedb_driver.concept_map_get_values(NativeObject))
-                    .Select(obj => new Concept(obj))
-                    .ToList();
+                    .Select(obj => new Concept(obj));
             }
         }
     
@@ -185,29 +183,27 @@ namespace Vaticle.Typedb.Driver.Concept
                 return new Explainable(explainable);
             }
     
-            public ICollection<KeyValuePair<string, IConceptMap.IExplainable>> Relations
+            public IEnumerable<KeyValuePair<string, IConceptMap.IExplainable>> Relations
             {
                 get
                 {
                     return new NativeEnumerable<string>(
                         Pinvoke.typedb_driver.explainables_get_relations_keys(NativeObject))
-                        .Select(key => new KeyValuePair<string, IConceptMap.IExplainable>(key, Relation(key)))
-                        .ToList();
+                        .Select(key => new KeyValuePair<string, IConceptMap.IExplainable>(key, Relation(key)));
                 }
             }
 
-            public ICollection<KeyValuePair<string, IConceptMap.IExplainable>> Attributes
+            public IEnumerable<KeyValuePair<string, IConceptMap.IExplainable>> Attributes
             {
                 get
                 {
                     return new NativeEnumerable<string>(
                         Pinvoke.typedb_driver.explainables_get_attributes_keys(NativeObject))
-                        .Select(key => new KeyValuePair<string, IConceptMap.IExplainable>(key, Attribute(key)))
-                        .ToList();
+                        .Select(key => new KeyValuePair<string, IConceptMap.IExplainable>(key, Attribute(key)));
                 }
             }
     
-            public ICollection<KeyValuePair<KeyValuePair<string, string>, IConceptMap.IExplainable>> Ownerships
+            public IEnumerable<KeyValuePair<KeyValuePair<string, string>, IConceptMap.IExplainable>> Ownerships
             {
                 get
                 {
@@ -220,8 +216,7 @@ namespace Vaticle.Typedb.Driver.Concept
                             return new KeyValuePair<string, string>(
                                 new KeyValuePair<string, string>(owner, attribute),
                                 Ownership(owner, attribute));
-                        })
-                        .ToList();
+                        });
                 }
             }
     

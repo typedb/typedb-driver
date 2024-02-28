@@ -123,7 +123,7 @@ namespace Vaticle.Typedb.Driver.Api
          * @param transaction The current transaction
          * @param attributeTypes The <code>IAttributeType</code>s to filter the attributes by
          */
-        ICollection<IAttribute> GetHas(ITypeDBTransaction transaction, params IAttributeType[] attributeTypes);
+        IEnumerable<IAttribute> GetHas(ITypeDBTransaction transaction, params IAttributeType[] attributeTypes);
     
         /**
          * Retrieves the <code>IAttribute</code>s that this <code>IThing</code> owns,
@@ -138,7 +138,7 @@ namespace Vaticle.Typedb.Driver.Api
          * @param transaction The current transaction
          * @param annotations Only retrieve attributes with all given <code>Annotation</code>s
          */
-        ICollection<IAttribute> GetHas(ITypeDBTransaction transaction, ICollection<IThingType.Annotation> annotations);
+        IEnumerable<IAttribute> GetHas(ITypeDBTransaction transaction, ICollection<IThingType.Annotation> annotations);
     
         /**
          * Retrieves all the <code>Relations</code> which this <code>IThing</code> plays a role in,
@@ -152,7 +152,7 @@ namespace Vaticle.Typedb.Driver.Api
          * @param transaction The current transaction
          * @param roleTypes The array of roles to filter the relations by.
          */
-        ICollection<IRelation> GetRelations(ITypeDBTransaction transaction, params IRoleType[] roleTypes);
+        IEnumerable<IRelation> GetRelations(ITypeDBTransaction transaction, params IRoleType[] roleTypes);
     
         /**
          * Retrieves the roles that this <code>IThing</code> is currently playing.
@@ -164,7 +164,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * @param transaction The current transaction
          */
-        ICollection<IRoleType> GetPlaying(ITypeDBTransaction transaction);
+        IEnumerable<IRoleType> GetPlaying(ITypeDBTransaction transaction);
     
         /**
          * Deletes this <code>IThing</code>.

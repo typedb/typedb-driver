@@ -70,7 +70,7 @@ namespace Vaticle.Typedb.Driver.Api
          * explanation.QueryVariables
          * </pre>
          */
-        ICollection<string> QueryVariables { get; }
+        ISet<string> QueryVariables { get; }
 
         /**
          * Retrieves the rule variables corresponding to the query variable var for this <code>Explanation</code>.
@@ -82,6 +82,6 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * @param variable The query variable to map to rule variables.
          */
-        ICollection<string> QueryVariableMapping(string variable);
+        ISet<string> QueryVariableMapping(string variable);
     }
 }
