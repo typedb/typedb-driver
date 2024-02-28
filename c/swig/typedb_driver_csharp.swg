@@ -578,34 +578,32 @@
 %iterator(ReplicaInfo, ReplicaInfo, replica_info)
 %iterator(SchemaException, SchemaException, schema_exception)
 
-//%define %array(Type)
-//%typemap(in) Type ** (jint size) {
-//    int i = 0;
-//    size = jenv->GetArrayLength($input);
-//    $1 = (Type **) malloc((size+1) * sizeof(Type *));
-//    jlong* array = (jlong*)jenv->GetLongArrayElements($input, JNI_FALSE);
-//    /* make a copy of each ptr */
-//    for (i = 0; i < size; i++) {
-//        $1[i] = (Type*)array[i];
-//    }
-//    $1[i] = 0;
-//}
-//
-//%typemap(freearg) Type ** { free($1); }
-//
-//%typemap(ctype) Type ** "jlongArray"
-//%typemap(imtype) Type ** "long[]"
-//%typemap(cstype) Type ** "Type[]"
-//
-//%typemap(csin) Type ** "java.util.Arrays.stream($csinput).mapToLong(Type::getCPtr).toArray()"
-//%typemap(csout) Type ** {
-//    return $imcall;
-//}
-//%enddef
-//
-//%array(Annotation)
-//%array(Concept)
-//%array(ValueType)
+%define %array(Type)
+%typemap(ctype) Type ** "void*" // "void*" ?
+%typemap(cstype) Type ** "Type[]" // "global::System.IntPtr" ?
+%typemap(
+    imtype,
+    inattributes = "[
+        global::System.Runtime.InteropServices.In,
+        global::System.Runtime.InteropServices.Out,
+        global::System.Runtime.InteropServices.MarshalAs(
+            global::System.Runtime.InteropServices.UnmanagedType.LPArray,
+            ArraySubType=global::System.Runtime.InteropServices.UnmanagedType.LPArray)]"
+    ) Type ** "Type[]"
+
+%typemap(csin) Type ** "$csinput"
+%typemap(csout) Type **
+{
+    return $imcall;
+}
+
+//%typemap(in)      Type ** "$1 = $input;" // TODO: No memory work for sure?
+%typemap(freearg) Type ** "" // TODO: No memory work for sure?
+%enddef
+
+%array(Annotation)
+%array(Concept)
+%array(ValueType)
 
 %typemap(ctype) char ** "char**" // "void*" ?
 %typemap(cstype) char ** "string[]" // "global::System.IntPtr" ?
@@ -617,7 +615,7 @@
         global::System.Runtime.InteropServices.MarshalAs(
             global::System.Runtime.InteropServices.UnmanagedType.LPArray,
             ArraySubType=global::System.Runtime.InteropServices.UnmanagedType.LPStr)]"
-    ) char** "string[]"
+    ) char ** "string[]"
 
 %typemap(csin) char ** "$csinput"
 %typemap(csout) char **

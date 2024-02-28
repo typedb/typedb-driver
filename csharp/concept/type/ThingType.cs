@@ -170,7 +170,7 @@ namespace Vaticle.Typedb.Driver.Concept
                 : null;
             
             Pinvoke.Annotation[] annotationsArray = 
-                annotations.Select(obj => obj.NativeObject).toArray<Pinvoke.Annotation>();
+                annotations.Select(obj => obj.NativeObject).ToArray<Pinvoke.Annotation>();
             
             return new VoidPromise(Pinvoke.typedb_driver.thing_type_set_owns(
                 NativeTransaction(transaction), 
@@ -279,7 +279,7 @@ namespace Vaticle.Typedb.Driver.Concept
                         NativeObject,
                         valueType == null ? null : valueType.NativeObject,
                         transitivity.NativeObject,
-                        IThingType.Annotations.Select(obj => obj.NativeObject).toArray<Pinvoke.Annotation>()))
+                        IThingType.Annotations.Select(obj => obj.NativeObject).ToArray<Pinvoke.Annotation>()))
                     .Select(obj => new AttributeType(obj));
             }
             catch (Pinvoke.Error e)

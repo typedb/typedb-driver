@@ -69,7 +69,7 @@ namespace Vaticle.Typedb.Driver.Concept
                     Pinvoke.typedb_driver.relation_get_players_by_role_type(
                         NativeTransaction(transaction),
                         NativeObject,
-                        roleTypes.Select(obj => ((RoleType)obj).NativeObject).toArray<Pinvoke.Concept>()))
+                        roleTypes.Select(obj => ((RoleType)obj).NativeObject).ToArray<Pinvoke.Concept>()))
                     .Select(obj => new Thing(obj));
 
             }
