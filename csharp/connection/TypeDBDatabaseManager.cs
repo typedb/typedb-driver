@@ -93,7 +93,7 @@ namespace Vaticle.Typedb.Driver.Connection
             }
         }
 
-        public ICollection<IDatabase> All
+        public IList<IDatabase> All
         {
             get
             {

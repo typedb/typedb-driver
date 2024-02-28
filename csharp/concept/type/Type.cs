@@ -50,11 +50,11 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public abstract Promise<IType> GetSupertype(ITypeDBTransaction transaction);
 
-        public abstract ICollection<IType> GetSupertypes(ITypeDBTransaction transaction);
+        public abstract IEnumerable<IType> GetSupertypes(ITypeDBTransaction transaction);
 
-        public abstract ICollection<IType> GetSubtypes(ITypeDBTransaction transaction);
+        public abstract IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction);
 
-        public abstract ICollection<IType> GetSubtypes(
+        public abstract IEnumerable<IType> GetSubtypes(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
         public override int GetHashCode()

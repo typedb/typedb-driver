@@ -45,7 +45,7 @@ namespace Vaticle.Typedb.Driver.Concept
             get { return new Value(Pinvoke.typedb_driver.attribute_get_value(NativeObject)); }
         }
 
-        public ICollection<IThing> GetOwners(ITypeDBTransaction transaction)
+        public IEnumerable<IThing> GetOwners(ITypeDBTransaction transaction)
         {
             try
             {
@@ -60,7 +60,7 @@ namespace Vaticle.Typedb.Driver.Concept
             }
         }
 
-        public ICollection<IThing> GetOwners(ITypeDBTransaction transaction, IThingType ownerType)
+        public IEnumerable<IThing> GetOwners(ITypeDBTransaction transaction, IThingType ownerType)
         {
             try
             {

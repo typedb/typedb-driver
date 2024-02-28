@@ -87,7 +87,7 @@ namespace Vaticle.Typedb.Driver.Api
          * driver.Users.All;
          * </pre>
          */
-        ICollection<IUser> All { get; }
+        ISet<IUser> All { get; }
 
         /**
          * Sets a new password for a user. This operation can only be performed by administrators.

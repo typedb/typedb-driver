@@ -45,14 +45,13 @@ namespace Vaticle.Typedb.Driver.Concept
             get { return ConceptOf(Pinvoke.typedb_driver.concept_map_group_get_owner(NativeObject)); }
         }
     
-        public ICollection<IConceptMap> ConceptMaps
+        public IEnumerable<IConceptMap> ConceptMaps
         {
             get
             {
                 return new NativeEnumerable<Pinvoke.ConceptMap>(
                     Pinvoke.typedb_driver.concept_map_group_get_concept_maps(NativeObject))
-                    .Select(obj => new ConceptMap(obj))
-                    .ToList();
+                    .Select(obj => new ConceptMap(obj));
             }
         }
     

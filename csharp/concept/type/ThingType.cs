@@ -52,9 +52,9 @@ namespace Vaticle.Typedb.Driver.Concept
             throw new TypeDBDriverException(InternalError.UNEXPECTED_NATIVE_VALUE);
         }
 
-        public abstract ICollection<IThing> GetInstances(ITypeDBTransaction transaction);
+        public abstract IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction);
 
-        public abstract ICollection<IThing> GetInstances(
+        public abstract IEnumerable<IThing> GetInstances(
             ITypeDBTransaction transaction,
             IConcept.Transitivity transitivity);
 
@@ -180,12 +180,12 @@ namespace Vaticle.Typedb.Driver.Concept
                 annotationsArray).Resolve);
         }
 
-        public ICollection<IRoleType> GetPlays(ITypeDBTransaction transaction)
+        public IEnumerable<IRoleType> GetPlays(ITypeDBTransaction transaction)
         {
             return GetPlays(transaction, IConcept.Transitivity.TRANSITIVE);
         }
 
-        public ICollection<IRoleType> GetPlays(
+        public IEnumerable<IRoleType> GetPlays(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
         {
             try
@@ -208,47 +208,47 @@ namespace Vaticle.Typedb.Driver.Concept
                 obj => new RoleType(obj));
         }
 
-        public ICollection<IAttributeType> GetOwns(ITypeDBTransaction transaction)
+        public IEnumerable<IAttributeType> GetOwns(ITypeDBTransaction transaction)
         {
             return GetOwns(transaction, IConcept.Transitivity.TRANSITIVE, emptySet());
         }
 
-        public ICollection<IAttributeType> GetOwns(ITypeDBTransaction transaction, IValue.ValueType valueType)
+        public IEnumerable<IAttributeType> GetOwns(ITypeDBTransaction transaction, IValue.ValueType valueType)
         {
             return GetOwns(transaction, valueType, IConcept.Transitivity.TRANSITIVE, emptySet());
         }
 
-        public ICollection<IAttributeType> GetOwns(
+        public IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, ICollection<IThingType.Annotation> annotations)
         {
             return GetOwns(transaction, IConcept.Transitivity.TRANSITIVE, annotations);
         }
 
-        public ICollection<IAttributeType> GetOwns(
+        public IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, IValue.ValueType valueType, ICollection<IThingType.Annotation> annotations)
         {
             return GetOwns(transaction, valueType, IConcept.Transitivity.TRANSITIVE, annotations);
         }
 
-        public ICollection<IAttributeType> GetOwns(
+        public IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
         {
             return GetOwns(transaction, transitivity, emptySet());
         }
 
-        public ICollection<IAttributeType> GetOwns(
+        public IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, IValue.ValueType valueType, IConcept.Transitivity transitivity)
         {
             return GetOwns(transaction, valueType, transitivity, emptySet());
         }
 
-        public ICollection<IAttributeType> GetOwns(
+        public IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, ICollection<IThingType.Annotation> annotations, IConcept.Transitivity transitivity)
         {
             return GetOwns(transaction, transitivity, annotations);
         }
 
-        public ICollection<IAttributeType> GetOwns(
+        public IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction,
             IValue.ValueType valueType,
             ICollection<IThingType.Annotation> annotations,
@@ -257,7 +257,7 @@ namespace Vaticle.Typedb.Driver.Concept
             return GetOwns(transaction, valueType, transitivity, annotations);
         }
 
-        private ICollection<IAttributeType> GetOwns(
+        private IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction,
             IConcept.Transitivity transitivity,
             ICollection<IThingType.Annotation> annotations)
@@ -265,7 +265,7 @@ namespace Vaticle.Typedb.Driver.Concept
             return GetOwns(transaction, null, transitivity, annotations);
         }
 
-        private ICollection<IAttributeType> GetOwns(
+        private IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, 
             IValue.ValueType valueType, 
             IConcept.Transitivity transitivity, 
@@ -333,22 +333,21 @@ namespace Vaticle.Typedb.Driver.Concept
                 return new Promise<IThingType>(() => null);
             }
 
-            public override ICollection<IType> GetSupertypes(ITypeDBTransaction transaction)
+            public override IEnumerable<IType> GetSupertypes(ITypeDBTransaction transaction)
             {
                 return new List<IThingType>{this};
             }
 
-            public override ICollection<IType> GetSubtypes(ITypeDBTransaction transaction)
+            public override IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction)
             {
                 return new List<IType>(){this}
                     .Concat(transaction.Concepts.RootEntityType.GetSubtypes(transaction))
                     .Concat(transaction.Concepts.RootRelationType.GetSubtypes(transaction))
                     .Concat(transaction.Concepts.RootIAttributeType.GetSubtypes(transaction))
-                    .Select(obj => (ThingType)obj)
-                    .ToList<IType>();
+                    .Select(obj => (ThingType)obj);
             }
 
-            public override ICollection<IType> GetSubtypes(
+            public override IEnumerable<IType> GetSubtypes(
                 ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
             {
                 return new List<IType>()
@@ -356,20 +355,19 @@ namespace Vaticle.Typedb.Driver.Concept
                         transaction.Concepts.RootEntityType,
                         transaction.Concepts.RootRelationType,
                         transaction.Concepts.RootIAttributeType
-                    }.Select(obj => (ThingType)obj).ToList<IType>();
+                    }.Select(obj => (ThingType)obj);
             }
 
-            public override ICollection<IThing> GetInstances(ITypeDBTransaction transaction)
+            public override IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction)
             {
                 return new List<IThing>()
                     {transaction.Concepts.RootEntityType.GetInstances(transaction)}
                     .Concat(transaction.Concepts.RootRelationType.GetInstances(transaction))
                     .Concat(transaction.Concepts.RootIAttributeType.GetInstances(transaction))
-                    .Select(obj => (ThingType)obj)
-                    .ToList<IThing>();
+                    .Select(obj => (ThingType)obj);
             }
 
-            public override ICollection<IThing> GetInstances(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
+            public override IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
             {
                 return new List<IThing>(){};
             }

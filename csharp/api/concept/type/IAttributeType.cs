@@ -244,7 +244,7 @@ namespace Vaticle.Typedb.Driver.Api
         Promise<string> GetRegex(ITypeDBTransaction transaction);
 
         /**
-         * ICollections a regular expression as a constraint for this <code>IAttributeType</code>. <code>Values</code>
+         * Sets a regular expression as a constraint for this <code>IAttributeType</code>. <code>Values</code>
          * of all <code>IAttribute</code>s of this type (inserted earlier or later) should match this regex.
          * <p>Can only be applied for <code>IAttributeType</code>s with a <code>string</code> value type.</p>
          *
@@ -341,7 +341,7 @@ namespace Vaticle.Typedb.Driver.Api
         }
 
         /**
-         * ICollections the supplied <code>IAttributeType</code> as the supertype of the current <code>IAttributeType</code>.
+         * Sets the supplied <code>IAttributeType</code> as the supertype of the current <code>IAttributeType</code>.
          *
          * <h3>Examples</h3>
          * <pre>
@@ -365,7 +365,7 @@ namespace Vaticle.Typedb.Driver.Api
          * @param transaction The current transaction
          * @param valueType <code>IValue.ValueType</code> for retrieving subtypes
          */
-        ICollection<IType> GetSubtypes(ITypeDBTransaction transaction, IValue.ValueType valueType);
+        IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction, IValue.ValueType valueType);
 
         /**
          * Retrieves all direct and indirect (or direct only) subtypes of this <code>IAttributeType</code>
@@ -381,7 +381,7 @@ namespace Vaticle.Typedb.Driver.Api
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes,
          *                     <code>Transitivity.EXPLICIT</code> for direct subtypes only
          */
-        ICollection<IType> GetSubtypes(
+        IEnumerable<IType> GetSubtypes(
             ITypeDBTransaction transaction, 
             IValue.ValueType valueType,
             IConcept.Transitivity transitivity);
@@ -397,7 +397,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * @param transaction The current transaction
          */
-        new ICollection<IThing> GetInstances(ITypeDBTransaction transaction);
+        new IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction);
 
         /**
          * Retrieves all direct and indirect (or direct only) <code>IAttributes</code>
@@ -412,7 +412,7 @@ namespace Vaticle.Typedb.Driver.Api
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes,
          *                     <code>Transitivity.EXPLICIT</code> for direct subtypes only
          */
-        new ICollection<IThing> GetInstances(
+        new IEnumerable<IThing> GetInstances(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
         /**
@@ -426,7 +426,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * @param transaction The current transaction
          */
-        ICollection<IThingType> GetOwners(ITypeDBTransaction transaction);
+        IEnumerable<IThingType> GetOwners(ITypeDBTransaction transaction);
 
         /**
          * Retrieve all <code>Things</code> that own an attribute of this <code>IAttributeType</code>,
@@ -441,7 +441,7 @@ namespace Vaticle.Typedb.Driver.Api
          * @param annotations Only retrieve <code>ThingTypes</code> that have an attribute of this
          *                    <code>IAttributeType</code> with all given <code>Annotation</code>s
          */
-        ICollection<IThingType> GetOwners(ITypeDBTransaction transaction, ICollection<Annotation> annotations);
+        IEnumerable<IThingType> GetOwners(ITypeDBTransaction transaction, ICollection<Annotation> annotations);
 
         /**
          * Retrieve all <code>Things</code> that own an attribute of this <code>IAttributeType</code>.
@@ -455,7 +455,7 @@ namespace Vaticle.Typedb.Driver.Api
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and inherited ownership,
          *                     <code>Transitivity.EXPLICIT</code> for direct ownership only
          */
-        ICollection<IThingType> GetOwners(
+        IEnumerable<IThingType> GetOwners(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
         /**
@@ -473,7 +473,7 @@ namespace Vaticle.Typedb.Driver.Api
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and inherited ownership,
          *                     <code>Transitivity.EXPLICIT</code> for direct ownership only
          */
-        ICollection<IThingType> GetOwners(
+        IEnumerable<IThingType> GetOwners(
             ITypeDBTransaction transaction, 
             ICollection<Annotation> annotations,
             IConcept.Transitivity transitivity);

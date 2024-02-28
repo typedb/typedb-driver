@@ -39,7 +39,7 @@ namespace Vaticle.Typedb.Driver.Logic
             _nativeTransaction = nativeTransaction;
         }
 
-        public ICollection<IRule> Rules
+        public IEnumerable<IRule> Rules
         {
             get
             {
@@ -52,8 +52,7 @@ namespace Vaticle.Typedb.Driver.Logic
                 {
                     return new NativeEnumerable<Pinvoke.Rule>(
                         Pinvoke.typedb_driver.logic_manager_get_rules(_nativeTransaction))
-                        .Select(obj => new Rule(obj))
-                        .ToList<IRule>();
+                        .Select(obj => new Rule(obj));
                 }
                 catch (Pinvoke.Error e)
                 {

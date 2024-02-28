@@ -69,7 +69,7 @@ namespace Vaticle.Typedb.Driver.Concept
             return this;
         }
 
-        public ICollection<IAttribute> GetHas(
+        public IEnumerable<IAttribute> GetHas(
             ITypeDBTransaction transaction, params IAttributeType[] attributeTypes)
         {
             Pinvoke.Concept[] attributeTypesArray = attributeTypes
@@ -92,7 +92,7 @@ namespace Vaticle.Typedb.Driver.Concept
             }
         }
 
-        public ICollection<IAttribute> GetHas(
+        public IEnumerable<IAttribute> GetHas(
             ITypeDBTransaction transaction, ICollection<IThingType.Annotation> annotations)
         {
             Pinvoke.Annotation[] annotationsArray =
@@ -114,7 +114,7 @@ namespace Vaticle.Typedb.Driver.Concept
             }
         }
 
-        public ICollection<IRelation> GetRelations(
+        public IEnumerable<IRelation> GetRelations(
             ITypeDBTransaction transaction, params IRoleType[] roleTypes)
         {
             Pinvoke.Concept[] roleTypesArray =
@@ -132,7 +132,7 @@ namespace Vaticle.Typedb.Driver.Concept
             }
         }
 
-        public ICollection<IRoleType> GetPlaying(ITypeDBTransaction transaction)
+        public IEnumerable<IRoleType> GetPlaying(ITypeDBTransaction transaction)
         {
             try
             {

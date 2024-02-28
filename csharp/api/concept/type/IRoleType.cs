@@ -71,7 +71,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * @param transaction The current transaction
          */
-        ICollection<IRelationType> GetRelationTypes(ITypeDBTransaction transaction);
+        IEnumerable<IRelationType> GetRelationTypes(ITypeDBTransaction transaction);
     
         /**
          * Retrieves the <code>ThingType</code>s whose instances play this role.
@@ -79,7 +79,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * @see IRoleType#GetPlayerTypes(ITypeDBTransaction, IConcept.Transitivity)
          */
-        ICollection<IThingType> GetPlayerTypes(ITypeDBTransaction transaction);
+        IEnumerable<IThingType> GetPlayerTypes(ITypeDBTransaction transaction);
     
         /**
          * Retrieves the <code>ThingType</code>s whose instances play this role.
@@ -93,7 +93,7 @@ namespace Vaticle.Typedb.Driver.Api
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect playing,
          *                     <code>Transitivity.EXPLICIT</code> for direct playing only
          */
-        ICollection<IThingType> GetPlayerTypes(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
+        IEnumerable<IThingType> GetPlayerTypes(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
     
         /**
          * Retrieves the <code>Relation</code> instances that this role is related to.
@@ -101,7 +101,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * @see IRoleType#GetRelationInstances(ITypeDBTransaction, IConcept.Transitivity)
          */
-        ICollection<IRelation> GetRelationInstances(ITypeDBTransaction transaction);
+        IEnumerable<IRelation> GetRelationInstances(ITypeDBTransaction transaction);
     
         /**
          * Retrieves the <code>Relation</code> instances that this role is related to.
@@ -114,7 +114,7 @@ namespace Vaticle.Typedb.Driver.Api
          * @param transaction The current transaction
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect relation, <code>Transitivity.EXPLICIT</code> for direct relation only
          */
-        ICollection<IRelation> GetRelationInstances(
+        IEnumerable<IRelation> GetRelationInstances(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
     
         /**
@@ -122,7 +122,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * @see IRoleType#GetPlayerInstances(ITypeDBTransaction, IConcept.Transitivity)
          */
-        ICollection<IThing> GetPlayerInstances(ITypeDBTransaction transaction);
+        IEnumerable<IThing> GetPlayerInstances(ITypeDBTransaction transaction);
     
         /**
          * Retrieves the <code>Thing</code> instances that play this role.
@@ -136,6 +136,6 @@ namespace Vaticle.Typedb.Driver.Api
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect playing,
          *                     <code>Transitivity.EXPLICIT</code> for direct playing only
          */
-        ICollection<IThing> GetPlayerInstances(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
+        IEnumerable<IThing> GetPlayerInstances(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
     }
 }

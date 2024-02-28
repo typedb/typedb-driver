@@ -74,7 +74,7 @@ namespace Vaticle.Typedb.Driver.Api
          * database.Replicas
          * </pre>
          */
-        public ICollection<IReplica> Replicas { get; }
+        public ISet<IReplica> Replicas { get; }
 
         /**
          * Returns the primary replica for this database.

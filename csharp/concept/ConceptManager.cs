@@ -147,7 +147,7 @@ namespace Vaticle.Typedb.Driver.Concept
                 obj => new Attribute(obj));
         }
 
-        public ICollection<TypeDBException> SchemaExceptions
+        public IList<TypeDBException> SchemaExceptions
         {
             get 
             {
