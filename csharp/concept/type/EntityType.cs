@@ -52,7 +52,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public override Promise<IType> GetSupertype(ITypeDBTransaction transaction)
         {
-            return Promise<IEntity>.Map<IEntity, Pinvoke.Concept>(
+            return Promise<IType>.Map<IType, Pinvoke.Concept>(
                 Pinvoke.typedb_driver.entity_type_get_supertype(
                     NativeTransaction(transaction), NativeObject).Resolve,
                 obj => new EntityType(obj));

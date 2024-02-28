@@ -74,7 +74,7 @@ namespace Vaticle.Typedb.Driver.Concept
         {
             Pinvoke.Concept[] attributeTypesArray = attributeTypes
                 .Select(obj => ((AttributeType)obj).NativeObject)
-                .toArray<Pinvoke.Concept>();
+                .ToArray<Pinvoke.Concept>();
 
             try
             {
@@ -96,7 +96,7 @@ namespace Vaticle.Typedb.Driver.Concept
             ITypeDBTransaction transaction, ICollection<IThingType.Annotation> annotations)
         {
             Pinvoke.Annotation[] annotationsArray =
-                annotations.Select(obj => obj.NativeObject).toArray<Pinvoke.Annotation>();
+                annotations.Select(obj => obj.NativeObject).ToArray<Pinvoke.Annotation>();
 
             try
             {
@@ -118,7 +118,7 @@ namespace Vaticle.Typedb.Driver.Concept
             ITypeDBTransaction transaction, params IRoleType[] roleTypes)
         {
             Pinvoke.Concept[] roleTypesArray =
-                roleTypes.Select(obj => ((RoleType)obj).NativeObject).toArray<Pinvoke.Concept>();
+                roleTypes.Select(obj => ((RoleType)obj).NativeObject).ToArray<Pinvoke.Concept>();
             try
             {
                 return new NativeEnumerable<Pinvoke.Concept>(
