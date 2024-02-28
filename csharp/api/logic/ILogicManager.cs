@@ -39,7 +39,7 @@ namespace Vaticle.Typedb.Driver.Api
          * transaction.Logic.Rules
          * </pre>
          */
-        ICollection<IRule> Rules { get; }
+        IEnumerable<IRule> Rules { get; }
 
         /**
          * Retrieves the Rule that has the given label.

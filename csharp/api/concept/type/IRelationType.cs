@@ -68,7 +68,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * @see IRelationType#GetInstances(ITypeDBTransaction, IConcept.Transitivity)
          */
-        new ICollection<IThing> GetInstances(ITypeDBTransaction transaction);
+        new IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction); // TODO: Should be new???
     
     
         /**
@@ -84,7 +84,7 @@ namespace Vaticle.Typedb.Driver.Api
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect instances,
          *                     <code>Transitivity.EXPLICIT</code> for direct relates only
          */
-        new ICollection<IThing> GetInstances(
+        new IEnumerable<IThing> GetInstances(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
     
         /**
@@ -92,7 +92,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * @see IRelationType#getRelates(ITypeDBTransaction, IConcept.Transitivity)
          */
-        ICollection<IRoleType> GetRelates(ITypeDBTransaction transaction);
+        IEnumerable<IRoleType> GetRelates(ITypeDBTransaction transaction);
     
         /**
          * Retrieves roles that this <code>IRelationType</code> relates to directly or via inheritance.
@@ -106,7 +106,7 @@ namespace Vaticle.Typedb.Driver.Api
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and inherited relates,
          *                     <code>Transitivity.EXPLICIT</code> for direct relates only
          */
-        ICollection<IRoleType> GetRelates(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
+        IEnumerable<IRoleType> GetRelates(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
     
         /**
          * Retrieves roles that this <code>IRelationType</code> relates to directly or via inheritance.

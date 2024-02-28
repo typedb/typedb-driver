@@ -60,7 +60,7 @@ namespace Vaticle.Typedb.Driver.Concept
                 ((Thing)player).NativeObject).Resolve);
         }
 
-        public ICollection<IThing> GetPlayersByRoleType(
+        public IEnumerable<IThing> GetPlayersByRoleType(
             ITypeDBTransaction transaction, params IRoleType[] roleTypes)
         {
             try
@@ -112,7 +112,7 @@ namespace Vaticle.Typedb.Driver.Concept
             return rolePlayers;
         }
 
-        public ICollection<IRoleType> GetRelating(ITypeDBTransaction transaction)
+        public IEnumerable<IRoleType> GetRelating(ITypeDBTransaction transaction)
         {
             try
             {

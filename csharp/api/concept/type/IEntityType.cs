@@ -66,7 +66,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * @see IEntityType#GetInstances(ITypeDBTransaction, IConcept.Transitivity)
          */
-        new ICollection<IThing> GetInstances(ITypeDBTransaction transaction);
+        new IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction);
     
         /**
          * Retrieves <code>Entity</code> objects that are instances of this exact <code>IEntityType</code> OR
@@ -81,7 +81,7 @@ namespace Vaticle.Typedb.Driver.Api
          * @param transitivity <code>Transitivity.EXPLICIT</code> for direct instances only,
          *                     <code>Transitivity.TRANSITIVE</code> to include subtypes
          */
-        new ICollection<IThing> GetInstances(
+        new IEnumerable<IThing> GetInstances(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
         /**

@@ -101,7 +101,7 @@ namespace Vaticle.Typedb.Driver.User
             }
         }
 
-        public ICollection<IUser> All
+        public ISet<IUser> All
         {
             get
             {

@@ -110,7 +110,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * @param transaction The current transaction
          */
-        ICollection<IType> GetSupertypes(ITypeDBTransaction transaction);
+        IEnumerable<IType> GetSupertypes(ITypeDBTransaction transaction);
 
         /**
          * Retrieves all direct and indirect subtypes of the type.
@@ -118,7 +118,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * @see Type#GetSubtypes(ITypeDBTransaction, IConcept.Transitivity)
          */
-        ICollection<IType> GetSubtypes(ITypeDBTransaction transaction);
+        IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction);
 
         /**
          * Retrieves all direct and indirect (or direct only) subtypes of the type.
@@ -133,7 +133,7 @@ namespace Vaticle.Typedb.Driver.Api
          * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes,
          *                     <code>Transitivity.EXPLICIT</code> for direct subtypes only
          */
-        ICollection<IType> GetSubtypes(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
+        IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
         /**
          * Deletes this type from the database.

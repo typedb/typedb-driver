@@ -108,7 +108,7 @@ namespace Vaticle.Typedb.Driver.Api
          * @param transaction The current transaction
          * @param roleTypes 0 or more role types
          */
-        ICollection<IThing> GetPlayersByRoleType(ITypeDBTransaction transaction, params IRoleType[] roleTypes);
+        IEnumerable<IThing> GetPlayersByRoleType(ITypeDBTransaction transaction, params IRoleType[] roleTypes);
 
         /**
          * Retrieves a mapping of all instances involved in the <code>IRelation</code> and the role each play.
@@ -132,6 +132,6 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * @param transaction The current transaction
          */
-        ICollection<IRoleType> GetRelating(ITypeDBTransaction transaction);
+        IEnumerable<IRoleType> GetRelating(ITypeDBTransaction transaction);
     }
 }

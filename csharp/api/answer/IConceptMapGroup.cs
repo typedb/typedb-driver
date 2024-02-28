@@ -48,6 +48,6 @@ namespace Vaticle.Typedb.Driver.Api
          * conceptMapGroup.ConceptMaps;
          * </pre>
          */
-        ICollection<IConceptMap> ConceptMaps { get; }
+        IEnumerable<IConceptMap> ConceptMaps { get; }
     }
 }
