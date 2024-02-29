@@ -32,8 +32,8 @@ namespace Vaticle.Typedb.Driver.Connection
 {
     public class TypeDBDriver : NativeObjectWrapper<Pinvoke.Connection>, ITypeDBDriver
     {
-        private readonly IDatabaseManager databaseMgr;
-        private readonly UserManager userMgr;
+        private readonly IDatabaseManager _databaseManager;
+        private readonly UserManager _userManager;
 
         public TypeDBDriver(string address)
             : this(OpenCore(address))
@@ -46,8 +46,8 @@ namespace Vaticle.Typedb.Driver.Connection
         private TypeDBDriver(Pinvoke.Connection connection)
             : base(connection)
         {
-            databaseMgr = new TypeDBDatabaseManager(this.NativeObject);
-            userMgr = new UserManager(this.NativeObject);
+            _databaseManager = new TypeDBDatabaseManager(this.NativeObject);
+            _userManager = new UserManager(this.NativeObject);
         }
 
         private static Pinvoke.Connection OpenCore(string address)
@@ -81,18 +81,18 @@ namespace Vaticle.Typedb.Driver.Connection
 
         public IDatabaseManager Databases
         {
-            get { return databaseMgr; }
+            get { return _databaseManager; }
         }
 
 
         public IUser User
         {
-            get { return userMgr.CurrentUser; }
+            get { return _userManager.CurrentUser; }
         }
 
         public IUserManager Users
         {
-            get { return userMgr; }
+            get { return _userManager; }
         }
 
         public ITypeDBSession Session(string database, SessionType type)
@@ -106,7 +106,7 @@ namespace Vaticle.Typedb.Driver.Connection
             return new TypeDBSession(Databases, database, type, options);
         }
 
-        public void Close()
+        public void Close() // TODO: Maybe just use Dispose() ?
         {
             if (!IsOpen())
             {
@@ -125,6 +125,7 @@ namespace Vaticle.Typedb.Driver.Connection
 
         public void Dispose()
         {
-        } // TODO: Do we need anything here?
+            Close();
+        }
     }
 }

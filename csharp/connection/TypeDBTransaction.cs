@@ -134,7 +134,7 @@ namespace Vaticle.Typedb.Driver.Connection
             }
         }
 
-        public void Close()
+        public void Close() // TODO: Maybe just use Dispose() ?
         {
             if (!NativeObject.IsOwned())
             {
@@ -157,6 +157,7 @@ namespace Vaticle.Typedb.Driver.Connection
 
         public void Dispose()
         {
+            Close();
         }
 
         private class TransactionOnClose : Pinvoke.TransactionCallbackDirector

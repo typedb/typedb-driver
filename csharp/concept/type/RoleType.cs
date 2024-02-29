@@ -73,7 +73,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public override Promise<IType> GetSupertype(ITypeDBTransaction transaction)
         {
-            return Promise<IType>.Map<IType, Pinvoke.Concept>(
+            return Promise<IType>.Map<Pinvoke.Concept, IType>(
                 Pinvoke.typedb_driver.role_type_get_supertype(
                     NativeTransaction(transaction), NativeObject).Resolve,
                 obj => new RoleType(obj));
@@ -117,7 +117,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public Promise<IRelationType> GetRelationType(ITypeDBTransaction transaction)
         {
-            return Promise<IRelationType>.Map<IRelationType, Pinvoke.Concept>(
+            return Promise<IRelationType>.Map<Pinvoke.Concept, IRelationType>(
                 Pinvoke.typedb_driver.role_type_get_relation_type(
                     NativeTransaction(transaction), NativeObject).Resolve,
                 obj => new RelationType(obj));

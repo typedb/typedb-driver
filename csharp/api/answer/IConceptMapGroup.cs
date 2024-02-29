@@ -41,7 +41,7 @@ namespace Vaticle.Typedb.Driver.Api
         IConcept Owner { get; }
 
         /**
-         * Retrieves the <code>ConceptMap</code>s of the group.
+         * Retrieves the <code>IConceptMap</code>s of the group.
          *
          * <h3>Examples</h3>
          * <pre>
