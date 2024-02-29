@@ -26,6 +26,7 @@ using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Concept;
 using Vaticle.Typedb.Driver.Common;
+using Vaticle.Typedb.Driver.Common.Validation;
 using Vaticle.Typedb.Driver.Logic;
 using Vaticle.Typedb.Driver.Query;
 
@@ -83,10 +84,7 @@ namespace Vaticle.Typedb.Driver.Connection
 
         public void OnClose(Action<Exception> function)
         {
-            if (!NativeObject.IsOwned())
-            {
-                throw new TypeDBDriverException(DriverError.TRANSACTION_CLOSED);
-            }
+            Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.TRANSACTION_CLOSED);
 
             try
             {
@@ -102,10 +100,7 @@ namespace Vaticle.Typedb.Driver.Connection
 
         public void Commit()
         {
-            if (!NativeObject.IsOwned())
-            {
-                throw new TypeDBDriverException(DriverError.TRANSACTION_CLOSED);
-            }
+            Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.TRANSACTION_CLOSED);
 
             try
             {
@@ -119,10 +114,7 @@ namespace Vaticle.Typedb.Driver.Connection
 
         public void Rollback()
         {
-            if (!NativeObject.IsOwned())
-            {
-                throw new TypeDBDriverException(DriverError.TRANSACTION_CLOSED);
-            }
+            Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.TRANSACTION_CLOSED);
 
             try
             {

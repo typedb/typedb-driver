@@ -39,7 +39,7 @@ namespace Vaticle.Typedb.Driver.Common.Validation
 
         public static void NonEmptyString(string input, ErrorMessage errorMessage, params object?[] exceptionArgs)
         {
-            ThrowIfFalse(() => string.IsNullOrEmpty(input), errorMessage, exceptionArgs);
+            ThrowIfTrue(() => string.IsNullOrEmpty(input), errorMessage, exceptionArgs);
         }
 
         private static void ThrowIf(
