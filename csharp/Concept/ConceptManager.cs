@@ -152,10 +152,7 @@ namespace Vaticle.Typedb.Driver.Concept
         {
             get 
             {
-                if (!NativeTransaction.IsOwned()) // TODO: Change this line to ThrowIfFalse if works! And everywhere else.
-                {
-                    throw new TypeDBDriverException(DriverError.TRANSACTION_CLOSED);
-                }
+                Validator.ThrowIfFalse(NativeTransaction.IsOwned, DriverError.TRANSACTION_CLOSED);
 
                 try
                 {

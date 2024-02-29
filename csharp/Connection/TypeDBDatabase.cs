@@ -25,6 +25,7 @@ using System.Linq;
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
+using Vaticle.Typedb.Driver.Common.Validation;
 
 using DriverError = Vaticle.Typedb.Driver.Common.Error.Driver;
 
@@ -40,11 +41,7 @@ namespace Vaticle.Typedb.Driver.Connection
         {
             get
             {
-                if (!NativeObject.IsOwned()) // TODO: Wrap in a method (and other similar places), consider providing an exception to it.
-                {
-                    throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
-                }
-
+                Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
                 return Pinvoke.typedb_driver.database_get_name(NativeObject);
             }
         }
@@ -53,10 +50,7 @@ namespace Vaticle.Typedb.Driver.Connection
         {
             get
             {
-                if (!NativeObject.IsOwned())
-                {
-                    throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
-                }
+                Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
 
                 try
                 {
@@ -73,10 +67,7 @@ namespace Vaticle.Typedb.Driver.Connection
         {
             get
             {
-                if (!NativeObject.IsOwned())
-                {
-                    throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
-                }
+                Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
 
                 try
                 {
@@ -93,10 +84,7 @@ namespace Vaticle.Typedb.Driver.Connection
         {
             get
             {
-                if (!NativeObject.IsOwned())
-                {
-                    throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
-                }
+                Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
 
                 try
                 {
@@ -113,10 +101,7 @@ namespace Vaticle.Typedb.Driver.Connection
         {
             get
             {
-                if (!NativeObject.IsOwned())
-                {
-                    throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
-                }
+                Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
 
                 return new NativeEnumerable<Pinvoke.ReplicaInfo>(
                     Pinvoke.typedb_driver.database_get_replicas_info(NativeObject))
@@ -129,10 +114,7 @@ namespace Vaticle.Typedb.Driver.Connection
         {
             get
             {
-                if (!NativeObject.IsOwned())
-                {
-                    throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
-                }
+                Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
 
                 Pinvoke.ReplicaInfo replicaInfo = Pinvoke.typedb_driver.database_get_primary_replica_info(NativeObject);
                 if (replicaInfo == null)
@@ -148,10 +130,7 @@ namespace Vaticle.Typedb.Driver.Connection
         {
             get
             {
-                if (!NativeObject.IsOwned())
-                {
-                    throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
-                }
+                Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
 
                 Pinvoke.ReplicaInfo replicaInfo = Pinvoke.typedb_driver.database_get_preferred_replica_info(NativeObject);
                 if (replicaInfo == null)
@@ -165,10 +144,7 @@ namespace Vaticle.Typedb.Driver.Connection
 
         public void Delete()
         {
-            if (!NativeObject.IsOwned())
-            {
-                throw new TypeDBDriverException(DriverError.DATABASE_DELETED);
-            }
+            Validator.ThrowIfFalse(NativeObject.IsOwned, DriverError.DATABASE_DELETED);
 
             try
             {

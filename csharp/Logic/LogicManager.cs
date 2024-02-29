@@ -44,10 +44,7 @@ namespace Vaticle.Typedb.Driver.Logic
         {
             get
             {
-                if (!NativeTransaction.IsOwned())
-                {
-                    throw new TypeDBDriverException(DriverError.TRANSACTION_CLOSED);
-                }
+                Validator.ThrowIfFalse(NativeTransaction.IsOwned, DriverError.TRANSACTION_CLOSED);
 
                 try
                 {
@@ -65,10 +62,7 @@ namespace Vaticle.Typedb.Driver.Logic
         public Promise<IRule> GetRule(string label)
         {
             Validator.NonEmptyString(label, ConceptError.MISSING_LABEL);
-            if (!NativeTransaction.IsOwned())
-            {
-                throw new TypeDBDriverException(DriverError.TRANSACTION_CLOSED);
-            }
+            Validator.ThrowIfFalse(NativeTransaction.IsOwned, DriverError.TRANSACTION_CLOSED);
 
             return Promise<IRule>.Map<Pinvoke.Rule, IRule>(
                 Pinvoke.typedb_driver.logic_manager_get_rule(NativeTransaction, label).Resolve,
@@ -78,10 +72,7 @@ namespace Vaticle.Typedb.Driver.Logic
         public Promise<IRule> PutRule(string label, string when, string then)
         {
             Validator.NonEmptyString(label, ConceptError.MISSING_LABEL);
-            if (!NativeTransaction.IsOwned())
-            {
-                throw new TypeDBDriverException(DriverError.TRANSACTION_CLOSED);
-            }
+            Validator.ThrowIfFalse(NativeTransaction.IsOwned, DriverError.TRANSACTION_CLOSED);
 
             Pinvoke.RulePromise promise =
                 Pinvoke.typedb_driver.logic_manager_put_rule(NativeTransaction, label, when, then);

@@ -50,6 +50,9 @@ namespace Vaticle.Typedb.Driver.Common
     {
         public class Driver : ErrorMessage
         {
+            private static readonly string CODE_PREFIX = "CSCL";
+            private static readonly string MESSAGE_PREFIX = "Driver Error";
+
             public Driver(int codeNumber, string message)
                 : base(CODE_PREFIX, codeNumber, MESSAGE_PREFIX, message)
             {
@@ -69,13 +72,13 @@ namespace Vaticle.Typedb.Driver.Common
                 new Driver(6, "Value cannot be less than 1, was: {}.");
             public static readonly Driver MISSING_DB_NAME =
                 new Driver(7, "Database name cannot be null.");
-
-            private static readonly string CODE_PREFIX = "CSCL";
-            private static readonly string MESSAGE_PREFIX = "Driver Error";
         }
 
         public class Concept : ErrorMessage
         {
+            private static readonly string CODE_PREFIX = "CSCO";
+            private static readonly string MESSAGE_PREFIX = "Concept Error";
+
             public Concept(int codeNumber, string message)
                 : base(CODE_PREFIX, codeNumber, MESSAGE_PREFIX, message)
             {
@@ -99,13 +102,13 @@ namespace Vaticle.Typedb.Driver.Common
                 new Concept(8, "The ownership by owner {} of attribute {} is not explainable.");
             public static readonly Concept UNRECOGNISED_ANNOTATION =
                 new Concept(9, "The annotation {} is not recognised.");
-
-            private static readonly string CODE_PREFIX = "CSCO";
-            private static readonly string MESSAGE_PREFIX = "Concept Error";
         }
 
         public class Query : ErrorMessage
         {
+            private static readonly string CODE_PREFIX = "CSQY";
+            private static readonly string MESSAGE_PREFIX = "Query Error";
+
             public Query(int codeNumber, string message)
                 : base(CODE_PREFIX, codeNumber, MESSAGE_PREFIX, message)
             {
@@ -115,13 +118,13 @@ namespace Vaticle.Typedb.Driver.Common
                 new Query(1, "The variable {} does not exist.");
             public static readonly Query MISSING_QUERY =
                 new Query(2, "Query cannot be null or empty.");
-
-            private static readonly string CODE_PREFIX = "CSQY";
-            private static readonly string MESSAGE_PREFIX = "Query Error";
         }
 
         public class Internal : ErrorMessage
         {
+            private static readonly string CODE_PREFIX = "CSIN";
+            private static readonly string MESSAGE_PREFIX = "C# Internal Error";
+
             public Internal(int codeNumber, string message)
                 : base(CODE_PREFIX, codeNumber, MESSAGE_PREFIX, message)
             {
@@ -141,9 +144,6 @@ namespace Vaticle.Typedb.Driver.Common
                 new Internal(6, "Such Enumerables support Enumerator's getting only once.");
             public static readonly Internal UNEXPECTED_INTERNAL_VALUE =
                 new Internal(7, "Unexpected internal value encountered!");
-
-            private static readonly string CODE_PREFIX = "CSIN";
-            private static readonly string MESSAGE_PREFIX = "C# Internal Error";
         }
     }
 }

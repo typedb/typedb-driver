@@ -23,6 +23,7 @@ using System;
 
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
+using Vaticle.Typedb.Driver.Common.Validation;
 using Vaticle.Typedb.Driver.Concept;
 
 using ConceptError = Vaticle.Typedb.Driver.Common.Error.Concept;
@@ -117,50 +118,35 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public bool AsBool() 
         {
-            if (!IsBool()) // TODO: Maybe change to the Util function later
-            {
-                throw new TypeDBDriverException(InternalError.ILLEGAL_CAST, "bool");
-            }
+            Validator.ThrowIfFalse(IsBool, InternalError.ILLEGAL_CAST, "bool");
 
             return Pinvoke.typedb_driver.value_get_boolean(NativeObject);
         }
 
         public long AsLong() 
         {
-            if (!IsLong())
-            {
-                throw new TypeDBDriverException(InternalError.ILLEGAL_CAST, "long");
-            }
-            
+            Validator.ThrowIfFalse(IsLong, InternalError.ILLEGAL_CAST, "long");
+
             return Pinvoke.typedb_driver.value_get_long(NativeObject);
         }
 
         public double AsDouble() 
         {
-            if (!IsDouble())
-            {
-                throw new TypeDBDriverException(InternalError.ILLEGAL_CAST, "double");
-            }
+            Validator.ThrowIfFalse(IsDouble, InternalError.ILLEGAL_CAST, "double");
 
             return Pinvoke.typedb_driver.value_get_double(NativeObject);
         }
 
         public string AsString() 
         {
-            if (!IsString())
-            {
-                throw new TypeDBDriverException(InternalError.ILLEGAL_CAST, "string");
-            }
+            Validator.ThrowIfFalse(IsString, InternalError.ILLEGAL_CAST, "string");
 
             return Pinvoke.typedb_driver.value_get_string(NativeObject);
         }
 
         public System.DateTime AsDateTime()
         {
-            if (!IsDateTime())
-            {
-                throw new TypeDBDriverException(InternalError.ILLEGAL_CAST, "DateTime");
-            }
+            Validator.ThrowIfFalse(IsDateTime, InternalError.ILLEGAL_CAST, "DateTime");
 
             return System.DateTimeOffset.FromUnixTimeMilliseconds(
                 Pinvoke.typedb_driver.value_get_date_time_as_millis(NativeObject)).LocalDateTime;

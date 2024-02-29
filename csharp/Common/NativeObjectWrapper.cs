@@ -19,6 +19,8 @@
  * under the License.
  */
 
+using System;
+
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Common;
 
@@ -37,12 +39,7 @@ namespace Vaticle.Typedb.Driver.Common
 
         protected NativeObjectWrapper(T? nativeObject)
         {
-            if (nativeObject == null)
-            {
-                throw new TypeDBDriverException(InternalError.NULL_NATIVE_VALUE);
-            }
-
-            NativeObject = nativeObject;
+            NativeObject = nativeObject ?? throw new TypeDBDriverException(InternalError.NULL_NATIVE_VALUE);
         }
     }
 }

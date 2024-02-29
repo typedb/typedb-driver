@@ -23,6 +23,7 @@ using System;
 
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
+using Vaticle.Typedb.Driver.Common.Validation;
 using Vaticle.Typedb.Driver.Concept;
 
 using DriverError = Vaticle.Typedb.Driver.Common.Error.Driver;
@@ -64,10 +65,7 @@ namespace Vaticle.Typedb.Driver.Concept
         protected static Pinvoke.Transaction NativeTransaction(ITypeDBTransaction transaction) 
         {
             Pinvoke.Transaction nativeTransaction = ((ConceptManager)transaction.Concepts).NativeTransaction;
-            if (!nativeTransaction.IsOwned()) 
-            {
-                throw new TypeDBDriverException(DriverError.TRANSACTION_CLOSED);
-            }
+            Validator.ThrowIfFalse(nativeTransaction.IsOwned, DriverError.TRANSACTION_CLOSED);
             
             return nativeTransaction;
         }
