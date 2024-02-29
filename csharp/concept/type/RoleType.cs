@@ -151,7 +151,7 @@ namespace Vaticle.Typedb.Driver.Concept
                 return new NativeEnumerable<Pinvoke.Concept>(
                     Pinvoke.typedb_driver.role_type_get_player_types(
                         NativeTransaction(transaction), NativeObject, transitivity.NativeObject))
-                    .Select(obj => new ThingType(obj));
+                    .Select(obj => ThingType.ThingTypeOf(obj));
             }
             catch (Pinvoke.Error e)
             {
@@ -193,7 +193,7 @@ namespace Vaticle.Typedb.Driver.Concept
                 return new NativeEnumerable<Pinvoke.Concept>(
                     Pinvoke.typedb_driver.role_type_get_player_instances(
                         NativeTransaction(transaction), NativeObject, transitivity.NativeObject))
-                    .Select(obj => new Thing(obj));
+                    .Select(obj => Thing.ThingOf(obj));
             }
             catch (Pinvoke.Error e)
             {

@@ -30,6 +30,19 @@ namespace Vaticle.Typedb.Driver.Common
     {
         public T? NativeObject { get; }
 
+        public T NativeObjectValue
+        {
+            get
+            {
+                if (NativeObject == null)
+                {
+                    throw new TypeDBDriverException(InternalError.NULL_NATIVE_VALUE);
+                }
+
+                return NativeObject;
+            }
+        }
+
         static NativeObjectWrapper()
         {
             Pinvoke.typedb_driver.init_logging();

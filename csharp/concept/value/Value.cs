@@ -44,13 +44,18 @@ namespace Vaticle.Typedb.Driver.Concept
         {
         }
 
-        public Value(long value) 
+        public Value(long value)
             : this(Pinvoke.typedb_driver.value_new_long(value))
         {
         }
 
         public Value(double value) 
             : this(Pinvoke.typedb_driver.value_new_double(value))
+        {
+        }
+
+        public Value(string value)
+            : this(Pinvoke.typedb_driver.value_new_string(value))
         {
         }
 

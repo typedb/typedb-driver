@@ -172,7 +172,7 @@ namespace Vaticle.Typedb.Driver.Concept
             IConcept.Transitivity transitivity) 
         {
             Pinvoke.Annotation[] annotationsArray = 
-                annotations.Select(obj => obj.NativeObject).ToArray<Pinvoke.Annotation>();
+                annotations.Select(obj => obj.NativeObjectValue).ToArray<Pinvoke.Annotation>();
             
             try 
             {
@@ -182,7 +182,7 @@ namespace Vaticle.Typedb.Driver.Concept
                         NativeObject,
                         transitivity.NativeObject,
                         annotationsArray))
-                    .Select(obj => new ThingType(obj));
+                    .Select(obj => ThingType.ThingTypeOf(obj));
             } 
             catch (Pinvoke.Error e) 
             {

@@ -38,7 +38,7 @@ namespace Vaticle.Typedb.Driver.Concept
         {
         }
 
-        public new static ThingType Of(Pinvoke.Concept nativeConcept) // TODO: Think about use cases and refactor!
+        public static ThingType ThingTypeOf(Pinvoke.Concept nativeConcept) // TODO: Think about use cases and refactor!
         {
             if (Pinvoke.typedb_driver.concept_is_entity_type(nativeConcept))
                 return new EntityType(nativeConcept);
@@ -165,17 +165,18 @@ namespace Vaticle.Typedb.Driver.Concept
             IAttributeType? overriddenType,
             ICollection<IThingType.Annotation> annotations)
         {
-            Pinvoke.Concept overriddenTypeNative = overriddenType != null 
-                ? ((IAttributeType)overriddenType).NativeObject 
+            Pinvoke.Concept? overriddenTypeNative = overriddenType != null
+                ? ((AttributeType)overriddenType).NativeObject
                 : null;
             
-            Pinvoke.Annotation[] annotationsArray = 
-                annotations.Select(obj => obj.NativeObject).ToArray<Pinvoke.Annotation>();
+            Pinvoke.Annotation[] annotationsArray = annotations
+                .Select(obj => obj.NativeObjectValue)
+                .ToArray<Pinvoke.Annotation>();
             
             return new VoidPromise(Pinvoke.typedb_driver.thing_type_set_owns(
                 NativeTransaction(transaction), 
                 NativeObject, 
-                ((IAttributeType)attributeType).NativeObject, 
+                ((AttributeType)attributeType).NativeObject,
                 overriddenTypeNative, 
                 annotationsArray).Resolve);
         }
@@ -210,12 +211,13 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public IEnumerable<IAttributeType> GetOwns(ITypeDBTransaction transaction)
         {
-            return GetOwns(transaction, IConcept.Transitivity.TRANSITIVE, emptySet());
+            return GetOwns(transaction, IConcept.Transitivity.TRANSITIVE, new HashSet<IThingType.Annotation>());
         }
 
         public IEnumerable<IAttributeType> GetOwns(ITypeDBTransaction transaction, IValue.ValueType valueType)
         {
-            return GetOwns(transaction, valueType, IConcept.Transitivity.TRANSITIVE, emptySet());
+            return GetOwns(
+                transaction, valueType, IConcept.Transitivity.TRANSITIVE, new HashSet<IThingType.Annotation>());
         }
 
         public IEnumerable<IAttributeType> GetOwns(
@@ -225,7 +227,7 @@ namespace Vaticle.Typedb.Driver.Concept
         }
 
         public IEnumerable<IAttributeType> GetOwns(
-            ITypeDBTransaction transaction, IValue.ValueType valueType, ICollection<IThingType.Annotation> annotations)
+            ITypeDBTransaction transaction, IValue.ValueType? valueType, ICollection<IThingType.Annotation> annotations)
         {
             return GetOwns(transaction, valueType, IConcept.Transitivity.TRANSITIVE, annotations);
         }
@@ -233,24 +235,26 @@ namespace Vaticle.Typedb.Driver.Concept
         public IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
         {
-            return GetOwns(transaction, transitivity, emptySet());
+            return GetOwns(transaction, transitivity, new HashSet<IThingType.Annotation>());
         }
 
         public IEnumerable<IAttributeType> GetOwns(
-            ITypeDBTransaction transaction, IValue.ValueType valueType, IConcept.Transitivity transitivity)
+            ITypeDBTransaction transaction, IValue.ValueType? valueType, IConcept.Transitivity transitivity)
         {
-            return GetOwns(transaction, valueType, transitivity, emptySet());
+            return GetOwns(transaction, valueType, transitivity, new HashSet<IThingType.Annotation>());
         }
 
         public IEnumerable<IAttributeType> GetOwns(
-            ITypeDBTransaction transaction, ICollection<IThingType.Annotation> annotations, IConcept.Transitivity transitivity)
+            ITypeDBTransaction transaction,
+            ICollection<IThingType.Annotation> annotations,
+            IConcept.Transitivity transitivity)
         {
             return GetOwns(transaction, transitivity, annotations);
         }
 
         public IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction,
-            IValue.ValueType valueType,
+            IValue.ValueType? valueType,
             ICollection<IThingType.Annotation> annotations,
             IConcept.Transitivity transitivity)
         {
@@ -267,7 +271,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         private IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, 
-            IValue.ValueType valueType, 
+            IValue.ValueType? valueType,
             IConcept.Transitivity transitivity, 
             ICollection<IThingType.Annotation> annotations) 
         {
@@ -277,9 +281,9 @@ namespace Vaticle.Typedb.Driver.Concept
                     Pinvoke.typedb_driver.thing_type_get_owns(
                         NativeTransaction(transaction),
                         NativeObject,
-                        valueType == null ? null : valueType.NativeObject,
+                        valueType.NativeObjectValue, // TODO: valueType != null ? valueType.NativeObject : (Pinvoke.ValueType?)null,
                         transitivity.NativeObject,
-                        IThingType.Annotations.Select(obj => obj.NativeObject).ToArray<Pinvoke.Annotation>()))
+                        annotations.Select(obj => obj.NativeObjectValue).ToArray<Pinvoke.Annotation>()))
                     .Select(obj => new AttributeType(obj));
             }
             catch (Pinvoke.Error e)
@@ -330,12 +334,12 @@ namespace Vaticle.Typedb.Driver.Concept
 
             public override Promise<IType> GetSupertype(ITypeDBTransaction transaction)
             {
-                return new Promise<IThingType>(() => null);
+                return new Promise<IType>(() => null);
             }
 
             public override IEnumerable<IType> GetSupertypes(ITypeDBTransaction transaction)
             {
-                return new List<IThingType>{this};
+                return new List<IType>{this};
             }
 
             public override IEnumerable<IType> GetSubtypes(ITypeDBTransaction transaction)
@@ -343,7 +347,7 @@ namespace Vaticle.Typedb.Driver.Concept
                 return new List<IType>(){this}
                     .Concat(transaction.Concepts.RootEntityType.GetSubtypes(transaction))
                     .Concat(transaction.Concepts.RootRelationType.GetSubtypes(transaction))
-                    .Concat(transaction.Concepts.RootIAttributeType.GetSubtypes(transaction))
+                    .Concat(transaction.Concepts.RootAttributeType.GetSubtypes(transaction))
                     .Select(obj => (ThingType)obj);
             }
 
@@ -354,17 +358,17 @@ namespace Vaticle.Typedb.Driver.Concept
                     {
                         transaction.Concepts.RootEntityType,
                         transaction.Concepts.RootRelationType,
-                        transaction.Concepts.RootIAttributeType
+                        transaction.Concepts.RootAttributeType
                     }.Select(obj => (ThingType)obj);
             }
 
             public override IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction)
             {
-                return new List<IThing>()
-                    {transaction.Concepts.RootEntityType.GetInstances(transaction)}
+                return transaction.Concepts.RootEntityType.GetInstances(transaction)
                     .Concat(transaction.Concepts.RootRelationType.GetInstances(transaction))
-                    .Concat(transaction.Concepts.RootIAttributeType.GetInstances(transaction))
-                    .Select(obj => (ThingType)obj);
+                    .Concat(transaction.Concepts.RootAttributeType.GetInstances(transaction))
+                    .Select(obj => (ThingType)obj)
+                    .Cast<IThing>();
             }
 
             public override IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction, IConcept.Transitivity transitivity)

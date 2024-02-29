@@ -52,7 +52,7 @@ namespace Vaticle.Typedb.Driver.Concept
                 return new NativeEnumerable<Pinvoke.Concept>(
                     Pinvoke.typedb_driver.attribute_get_owners(
                         NativeTransaction(transaction), NativeObject, null))
-                    .Select(obj => new Thing(obj));
+                    .Select(obj => Thing.ThingOf(obj));
             }
             catch (Pinvoke.Error e)
             {
@@ -69,7 +69,7 @@ namespace Vaticle.Typedb.Driver.Concept
                         NativeTransaction(transaction),
                         NativeObject,
                         ((ThingType)ownerType).NativeObject))
-                    .Select(obj => new Thing(obj));
+                    .Select(obj => Thing.ThingOf(obj));
             }
             catch (Pinvoke.Error e)
             {
