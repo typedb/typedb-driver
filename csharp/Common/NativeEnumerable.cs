@@ -23,6 +23,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver.Common;
+using Vaticle.Typedb.Driver.Common.Validation;
 
 using InternalError = Vaticle.Typedb.Driver.Common.Error.Internal;
 
@@ -41,11 +42,8 @@ namespace Vaticle.Typedb.Driver.Common
 
         public IEnumerator<T> GetEnumerator()
         {
-            if (_enumeratorUsed)
-            {
-                // TODO: Maybe need to allow it (+ swig)!
-                throw new TypeDBDriverException(InternalError.ENUMERATOR_EXCESSIVE_ACCESS);
-            }
+            // TODO: Maybe need to allow it (+ swig)!
+            Validator.ThrowIfTrue(() => _enumeratorUsed, InternalError.ENUMERATOR_EXCESSIVE_ACCESS);
 
             _enumeratorUsed = true;
             return _enumerator;

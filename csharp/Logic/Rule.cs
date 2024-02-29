@@ -83,10 +83,7 @@ namespace Vaticle.Typedb.Driver.Logic
         private static Pinvoke.Transaction NativeTransaction(ITypeDBTransaction transaction)
         {
             Pinvoke.Transaction nativeTransaction = ((LogicManager)transaction.Logic).NativeTransaction;
-            if (!nativeTransaction.IsOwned())
-            {
-                throw new TypeDBDriverException(DriverError.TRANSACTION_CLOSED);
-            }
+            Validator.ThrowIfFalse(nativeTransaction.IsOwned, DriverError.TRANSACTION_CLOSED);
 
             return nativeTransaction;
         }

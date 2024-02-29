@@ -21,6 +21,8 @@
 
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Common;
+using Vaticle.Typedb.Driver.Common.Validation;
+
 using DriverError = Vaticle.Typedb.Driver.Common.Error.Driver;
 
 namespace Vaticle.Typedb.Driver.Api
@@ -253,10 +255,7 @@ namespace Vaticle.Typedb.Driver.Api
          */
         public TypeDBOptions PrefetchSize(int prefetchSize)
         {
-            if (prefetchSize < 1)
-            {
-                throw new TypeDBDriverException(DriverError.POSITIVE_VALUE_REQUIRED, prefetchSize);
-            }
+            Validator.ThrowIfTrue(() => prefetchSize < 1, DriverError.POSITIVE_VALUE_REQUIRED, prefetchSize);
 
             Pinvoke.typedb_driver.options_set_prefetch_size(NativeObject, prefetchSize);
             return this;
@@ -296,10 +295,10 @@ namespace Vaticle.Typedb.Driver.Api
          */
         public TypeDBOptions SessionIdleTimeoutMillis(int sessionIdleTimeoutMillis)
         {
-            if (sessionIdleTimeoutMillis < 1)
-            {
-                throw new TypeDBDriverException(DriverError.POSITIVE_VALUE_REQUIRED, sessionIdleTimeoutMillis);
-            }
+            Validator.ThrowIfTrue(
+                () => sessionIdleTimeoutMillis < 1,
+                DriverError.POSITIVE_VALUE_REQUIRED,
+                sessionIdleTimeoutMillis);
 
             Pinvoke.typedb_driver.options_set_session_idle_timeout_millis(NativeObject, sessionIdleTimeoutMillis);
             return this;
@@ -338,10 +337,10 @@ namespace Vaticle.Typedb.Driver.Api
          */
         public TypeDBOptions TransactionTimeoutMillis(int transactionTimeoutMillis)
         {
-            if (transactionTimeoutMillis < 1)
-            {
-                throw new TypeDBDriverException(DriverError.POSITIVE_VALUE_REQUIRED, transactionTimeoutMillis);
-            }
+            Validator.ThrowIfTrue(
+                () => transactionTimeoutMillis < 1,
+                DriverError.POSITIVE_VALUE_REQUIRED,
+                transactionTimeoutMillis);
 
             Pinvoke.typedb_driver.options_set_transaction_timeout_millis(NativeObject, transactionTimeoutMillis);
             return this;
@@ -381,10 +380,10 @@ namespace Vaticle.Typedb.Driver.Api
          */
         public TypeDBOptions SchemaLockAcquireTimeoutMillis(int schemaLockAcquireTimeoutMillis)
         {
-            if (schemaLockAcquireTimeoutMillis < 1)
-            {
-                throw new TypeDBDriverException(DriverError.POSITIVE_VALUE_REQUIRED, schemaLockAcquireTimeoutMillis);
-            }
+            Validator.ThrowIfTrue(
+                () => schemaLockAcquireTimeoutMillis < 1,
+                DriverError.POSITIVE_VALUE_REQUIRED,
+                schemaLockAcquireTimeoutMillis);
 
             Pinvoke.typedb_driver.options_set_schema_lock_acquire_timeout_millis(NativeObject, schemaLockAcquireTimeoutMillis);
             return this;
