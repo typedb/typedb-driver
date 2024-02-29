@@ -33,6 +33,7 @@ csharp_library(
     deps = [
         "//csharp/Common:common",
         "//csharp:typedb_driver_Pinvoke",
+        "@paket.csharp_deps//newtonsoft.json",
     ],
     runtime_identifier = "any",
     nullable = nullable_context,

@@ -21,7 +21,7 @@
 
 # To update the required dependencies, follow these steps:
 # 1. Add the desired nuget packages into the 'paket.dependencies' file.
-# 2. Run this shell script.
+# 2. Run this shell script !from this directory!: ./update.sh.
 # 3. Check the fetched packages in the regenerated 'paket.csharp_deps.bzl' file.
 # 4. Reference this packages in your BUILD files via '@paket.csharp_deps//{package.name.in.lowercase}'.
 
