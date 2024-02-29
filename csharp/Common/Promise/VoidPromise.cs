@@ -56,7 +56,7 @@ namespace Vaticle.Typedb.Driver.Common
          * promise.Resolve();
          * </pre>
          */
-        private void Resolve()
+        public void Resolve()
         {
             try
             {

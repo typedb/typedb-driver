@@ -48,6 +48,7 @@ csharp_behaviour_test(
         "//csharp/Api:api",
         "//csharp/Common:common",
         "//csharp:driver-csharp",
+        "@paket.csharp_deps//newtonsoft.json",
     ],
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
@@ -69,6 +70,7 @@ csharp_behaviour_test(
         "//csharp/Api:api",
         "//csharp/Common:common",
         "//csharp:driver-csharp",
+        "@paket.csharp_deps//newtonsoft.json", # TODO: Create a list to import from QuerySteps
     ],
     add_certificates = True,
     target_frameworks = target_frameworks,
