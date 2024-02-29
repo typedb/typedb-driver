@@ -62,7 +62,7 @@ namespace Vaticle.Typedb.Driver.Concept
             InputChecker.NonEmptyString(label, ConceptError.MISSING_LABEL);
             InputChecker.ThrowIfFalse(NativeTransaction.IsOwned, DriverError.TRANSACTION_CLOSED);
 
-            return Promise<IEntityType>.Map<IEntityType, Pinvoke.Concept>(
+            return Promise<IEntityType>.Map<Pinvoke.Concept, IEntityType>(
                 Pinvoke.typedb_driver.concepts_get_entity_type(NativeTransaction, label).Resolve,
                 obj => new EntityType(obj));
         }
@@ -72,7 +72,7 @@ namespace Vaticle.Typedb.Driver.Concept
             InputChecker.NonEmptyString(label, ConceptError.MISSING_LABEL);
             InputChecker.ThrowIfFalse(NativeTransaction.IsOwned, DriverError.TRANSACTION_CLOSED);
 
-            return Promise<IRelationType>.Map<IRelationType, Pinvoke.Concept>(
+            return Promise<IRelationType>.Map<Pinvoke.Concept, IRelationType>(
                 Pinvoke.typedb_driver.concepts_get_relation_type(NativeTransaction, label).Resolve,
                 obj => new RelationType(obj));
         }
@@ -82,7 +82,7 @@ namespace Vaticle.Typedb.Driver.Concept
             InputChecker.NonEmptyString(label, ConceptError.MISSING_LABEL);
             InputChecker.ThrowIfFalse(NativeTransaction.IsOwned, DriverError.TRANSACTION_CLOSED);
 
-            return Promise<IAttributeType>.Map<IAttributeType, Pinvoke.Concept>(
+            return Promise<IAttributeType>.Map<Pinvoke.Concept, IAttributeType>(
                 Pinvoke.typedb_driver.concepts_get_attribute_type(NativeTransaction, label).Resolve,
                 obj => new AttributeType(obj));
         }
@@ -92,7 +92,7 @@ namespace Vaticle.Typedb.Driver.Concept
             InputChecker.NonEmptyString(label, ConceptError.MISSING_LABEL);
             InputChecker.ThrowIfFalse(NativeTransaction.IsOwned, DriverError.TRANSACTION_CLOSED);
 
-            return Promise<IEntityType>.Map<IEntityType, Pinvoke.Concept>(
+            return Promise<IEntityType>.Map<Pinvoke.Concept, IEntityType>(
                 Pinvoke.typedb_driver.concepts_put_entity_type(NativeTransaction, label).Resolve,
                 obj => new EntityType(obj));
         }
@@ -102,7 +102,7 @@ namespace Vaticle.Typedb.Driver.Concept
             InputChecker.NonEmptyString(label, ConceptError.MISSING_LABEL);
             InputChecker.ThrowIfFalse(NativeTransaction.IsOwned, DriverError.TRANSACTION_CLOSED);
 
-            return Promise<IRelationType>.Map<IRelationType, Pinvoke.Concept>(
+            return Promise<IRelationType>.Map<Pinvoke.Concept, IRelationType>(
                 Pinvoke.typedb_driver.concepts_put_relation_type(NativeTransaction, label).Resolve,
                 obj => new RelationType(obj));
         }
@@ -112,7 +112,7 @@ namespace Vaticle.Typedb.Driver.Concept
             InputChecker.NonEmptyString(label, ConceptError.MISSING_LABEL);
             InputChecker.ThrowIfFalse(NativeTransaction.IsOwned, DriverError.TRANSACTION_CLOSED);
 
-            return Promise<IAttributeType>.Map<IAttributeType, Pinvoke.Concept>(
+            return Promise<IAttributeType>.Map<Pinvoke.Concept, IAttributeType>(
                 Pinvoke.typedb_driver.concepts_put_attribute_type(
                     NativeTransaction, label, valueType.NativeObject).Resolve,
                 obj => new AttributeType(obj));
@@ -123,7 +123,7 @@ namespace Vaticle.Typedb.Driver.Concept
             InputChecker.NonEmptyString(iid, ConceptError.MISSING_IID);
             InputChecker.ThrowIfFalse(NativeTransaction.IsOwned, DriverError.TRANSACTION_CLOSED);
 
-            return Promise<IEntity>.Map<IEntity, Pinvoke.Concept>(
+            return Promise<IEntity>.Map<Pinvoke.Concept, IEntity>(
                 Pinvoke.typedb_driver.concepts_get_entity(NativeTransaction, iid).Resolve,
                 obj => new Entity(obj));
         }
@@ -133,7 +133,7 @@ namespace Vaticle.Typedb.Driver.Concept
             InputChecker.NonEmptyString(iid, ConceptError.MISSING_IID);
             InputChecker.ThrowIfFalse(NativeTransaction.IsOwned, DriverError.TRANSACTION_CLOSED);
 
-            return Promise<IRelation>.Map<IRelation, Pinvoke.Concept>(
+            return Promise<IRelation>.Map<Pinvoke.Concept, IRelation>(
                 Pinvoke.typedb_driver.concepts_get_relation(NativeTransaction, iid).Resolve,
                 obj => new Relation(obj));
         }
@@ -143,7 +143,7 @@ namespace Vaticle.Typedb.Driver.Concept
             InputChecker.NonEmptyString(iid, ConceptError.MISSING_IID);
             InputChecker.ThrowIfFalse(NativeTransaction.IsOwned, DriverError.TRANSACTION_CLOSED);
 
-            return Promise<IAttribute>.Map<IAttribute, Pinvoke.Concept>(
+            return Promise<IAttribute>.Map<Pinvoke.Concept, IAttribute>(
                 Pinvoke.typedb_driver.concepts_get_attribute(NativeTransaction, iid).Resolve,
                 obj => new Attribute(obj));
         }

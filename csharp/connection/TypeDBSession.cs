@@ -118,7 +118,7 @@ namespace Vaticle.Typedb.Driver.Connection
             }
         }
 
-        public void Close()
+        public void Close() // TODO: Maybe just use Dispose() ?
         {
             try
             {
@@ -136,7 +136,8 @@ namespace Vaticle.Typedb.Driver.Connection
 
         public void Dispose()
         {
-        } // TODO: Do we need anything here?
+            Close();
+        }
 
         private class SessionCallback : Pinvoke.SessionCallbackDirector
         {

@@ -38,7 +38,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public Promise<IEntity> Create(ITypeDBTransaction transaction)
         {
-            return Promise<IEntity>.Map<IEntity, Pinvoke.Concept>(
+            return Promise<IEntity>.Map<Pinvoke.Concept, IEntity>(
                 Pinvoke.typedb_driver.entity_type_create(
                     NativeTransaction(transaction), NativeObject).Resolve, 
                 obj => new Entity(obj));
@@ -52,7 +52,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public override Promise<IType> GetSupertype(ITypeDBTransaction transaction)
         {
-            return Promise<IType>.Map<IType, Pinvoke.Concept>(
+            return Promise<IType>.Map<Pinvoke.Concept, IType>(
                 Pinvoke.typedb_driver.entity_type_get_supertype(
                     NativeTransaction(transaction), NativeObject).Resolve,
                 obj => new EntityType(obj));
