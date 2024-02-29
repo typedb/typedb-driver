@@ -203,7 +203,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public Promise<IRoleType> GetPlaysOverridden(ITypeDBTransaction transaction, IRoleType roleType)
         {
-            return Promise<IRoleType>.Map<IRoleType, Pinvoke.Concept>(
+            return Promise<IRoleType>.Map<Pinvoke.Concept, IRoleType>(
                 Pinvoke.typedb_driver.thing_type_get_plays_overridden(
                     NativeTransaction(transaction), NativeObject, ((RoleType)roleType).NativeObject).Resolve,
                 obj => new RoleType(obj));
@@ -295,7 +295,7 @@ namespace Vaticle.Typedb.Driver.Concept
         public Promise<IAttributeType> GetOwnsOverridden(
             ITypeDBTransaction transaction, IAttributeType attributeType)
         {
-            return Promise<IAttributeType>.Map<IAttributeType, Pinvoke.Concept>(
+            return Promise<IAttributeType>.Map<Pinvoke.Concept, IAttributeType>(
                 Pinvoke.typedb_driver.thing_type_get_owns_overridden(
                     NativeTransaction(transaction),
                     NativeObject,

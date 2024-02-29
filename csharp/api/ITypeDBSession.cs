@@ -126,7 +126,7 @@ namespace Vaticle.Typedb.Driver.Api
          * session.Close();
          * </pre>
          */
-        void Close();
+        void Close(); // TODO: Maybe just use Dispose() ?
         }
 
     /**

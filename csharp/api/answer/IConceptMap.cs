@@ -51,7 +51,8 @@ namespace Vaticle.Typedb.Driver.Api
         IEnumerable<IConcept> Concepts { get; }
     
         /**
-         * Returns the inner <code>Map</code> where keys are query variables, and values are concepts.
+         * Returns the inner <code>Dictionary</code> (<code>Map</code> as a common TypeDB term)
+         * where keys are query variables, and values are concepts.
          *
          * <h3>Examples</h3>
          * <pre>

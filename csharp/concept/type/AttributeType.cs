@@ -55,7 +55,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public override Promise<IType> GetSupertype(ITypeDBTransaction transaction)
         {
-            return Promise<IType>.Map<IType, Pinvoke.Concept>(
+            return Promise<IType>.Map<Pinvoke.Concept, IType>(
                 Pinvoke.typedb_driver.attribute_type_get_supertype(
                     NativeTransaction(transaction), NativeObject).Resolve,
                 obj => new AttributeType(obj));
@@ -217,7 +217,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public Promise<IAttribute> Put(ITypeDBTransaction transaction, IValue value)
         {
-            return Promise<IAttribute>.Map<IAttribute, Pinvoke.Concept>(
+            return Promise<IAttribute>.Map<Pinvoke.Concept, IAttribute>(
                 Pinvoke.typedb_driver.attribute_type_put(
                     NativeTransaction(transaction), 
                     NativeObject, 
@@ -252,7 +252,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public Promise<IAttribute> Get(ITypeDBTransaction transaction, IValue value)
         {
-            return Promise<IAttribute>.Map<IAttribute, Pinvoke.Concept>(
+            return Promise<IAttribute>.Map<Pinvoke.Concept, IAttribute>(
                 Pinvoke.typedb_driver.attribute_type_get(
                     NativeTransaction(transaction),
                     NativeObject,

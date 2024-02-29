@@ -98,6 +98,6 @@ namespace Vaticle.Typedb.Driver.Api
          * driver.Close()
          * </pre>
          */
-        void Close();
+        void Close(); // TODO: Maybe just use Dispose() ?
     }
 }

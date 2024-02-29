@@ -38,7 +38,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public Promise<IRelation> Create(ITypeDBTransaction transaction)
         {
-            return Promise<IRelation>.Map<IRelation, Pinvoke.Concept>(
+            return Promise<IRelation>.Map<Pinvoke.Concept, IRelation>(
                 Pinvoke.typedb_driver.relation_type_create(
                     NativeTransaction(transaction), NativeObject).Resolve, 
                 obj => new Relation(obj));
@@ -74,7 +74,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public Promise<IRoleType> GetRelates(ITypeDBTransaction transaction, string roleLabel)
         {
-            return Promise<IRoleType>.Map<IRoleType, Pinvoke.Concept>(
+            return Promise<IRoleType>.Map<Pinvoke.Concept, IRoleType>(
                 Pinvoke.typedb_driver.relation_type_get_relates_for_role_label(
                     NativeTransaction(transaction), NativeObject, roleLabel).Resolve,
                 obj => new RoleType(obj));
@@ -87,7 +87,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public Promise<IRoleType> GetRelatesOverridden(ITypeDBTransaction transaction, string roleLabel)
         {
-            return Promise<IRoleType>.Map<IRoleType, Pinvoke.Concept>(
+            return Promise<IRoleType>.Map<Pinvoke.Concept, IRoleType>(
                 Pinvoke.typedb_driver.relation_type_get_relates_overridden(
                     NativeTransaction(transaction), NativeObject, roleLabel).Resolve, 
                 obj => new RoleType(obj));
@@ -125,7 +125,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public override Promise<IType> GetSupertype(ITypeDBTransaction transaction)
         {
-            return Promise<IType>.Map<IType, Pinvoke.Concept>(
+            return Promise<IType>.Map<Pinvoke.Concept, IType>(
                 Pinvoke.typedb_driver.relation_type_get_supertype(
                     NativeTransaction(transaction), NativeObject).Resolve, 
                 obj => new RelationType(obj));
