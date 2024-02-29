@@ -50,9 +50,9 @@ csharp_library(
     srcs = glob(["*.cs"]),
     resources = ["//:LICENSE"],
     deps = [
-        "//csharp/api",
-        "//csharp/common",
-        "//csharp/connection",
+        "//csharp/Api:api",
+        "//csharp/Common:common",
+        "//csharp/Connection:connection",
         "//csharp:typedb_driver_Pinvoke",
     ],
     visibility = ["//visibility:public"],

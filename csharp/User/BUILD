@@ -19,31 +19,29 @@
 # under the License.
 #
 
+package(default_visibility = ["//visibility:public"])
+
+load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
+load("//csharp:build_opts.bzl", "target_frameworks", "targeting_packs", "nullable_context")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-filegroup(
-    name = "certificates",
-    srcs = [
-        ":encryption/ext-grpc-root-ca.pem",
-        ":encryption/ext-grpc-private-key.pem",
-        ":encryption/ext-grpc-certificate.pem",
-        ":encryption/int-grpc-root-ca.pem",
-        ":encryption/int-grpc-private-key.pem",
-        ":encryption/int-grpc-certificate.pem",
-        ":encryption/int-zmq-private-key",
-        ":encryption/int-zmq-public-key",
-        ":encryption/keystore.pkcs12"
+
+csharp_library(
+    name = "user",
+    srcs = glob(["*.cs"], exclude=["test/**"]),
+    deps = [
+        "//csharp/Api:api",
+        "//csharp/Common:common",
+        "//csharp:typedb_driver_Pinvoke",
     ],
-    visibility = [
-        "//cpp/test:__subpackages__",
-        "//csharp/Test:__subpackages__",
-        "//common/test/encryption:__subpackages__"
-    ],
+    nullable = nullable_context,
+    target_frameworks = target_frameworks,
+    targeting_packs = targeting_packs,
 )
+
 
 checkstyle_test(
     name = "checkstyle",
-    include = glob(["*"]),
-    exclude = glob(["encryption/*"]),
+    include = glob(["*", "*/*"]),
     license_type = "apache-header",
 )

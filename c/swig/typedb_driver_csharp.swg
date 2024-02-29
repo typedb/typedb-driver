@@ -641,7 +641,7 @@
 /* These 3 typemaps tell SWIG what intermediate (pinvoke) and C# types to use */
 %typemap(ctype) enum ValueType * "int"
 %typemap(imtype) enum ValueType * "int"
-%typemap(cstype) enum ValueType * "ValueType"
+%typemap(cstype) enum ValueType * "ValueType?"
 
 /* These 2 typemaps handle the conversion of the imtype to cstype typemap type
       and vice versa */
