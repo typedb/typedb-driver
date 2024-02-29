@@ -132,7 +132,7 @@ namespace Vaticle.Typedb.Driver.Api
          * <h3>Examples</h3>
          * <pre>
          * thing.GetHas(transaction);
-         * thing.GetHas(transaction, new HashSet<IThingType.Annotation>(){IThingType.Annotation.NewKey()});
+         * thing.GetHas(transaction, new HashSet&lt;IThingType.Annotation&gt;(){IThingType.Annotation.NewKey()});
          * </pre>
          *
          * @param transaction The current transaction

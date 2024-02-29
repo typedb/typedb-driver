@@ -83,7 +83,7 @@ namespace Vaticle.Typedb.Driver.User
             }
         }
 
-        public IUser Get(string username)
+        public IUser? Get(string username)
         {
             try
             {

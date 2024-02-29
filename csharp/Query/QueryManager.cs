@@ -19,6 +19,7 @@
  * under the License.
  */
 
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -130,26 +131,26 @@ namespace Vaticle.Typedb.Driver.Query
             }
         }
     
-//        public IEnumerable<JSON> Fetch(string query)
-//        {
-//            return Fetch(query, new TypeDBOptions());
-//        }
-//
-//        public IEnumerable<JSON> Fetch(string query, TypeDBOptions options)
-//        {
-//            CheckQueryAndTransaction(query);
-//
-//            try
-//            {
-//                return new NativeEnumerable<Pinvoke.ValueGroup>(
-//                    Pinvoke.typedb_driver.query_fetch(_nativeTransaction, query, options.NativeObject))
-//                    .Select(obj => JSON.Parse); // TODO: Implement
-//            }
-//            catch (Pinvoke.Error e)
-//            {
-//                throw new TypeDBDriverException(e);
-//            }
-//        }
+        public IEnumerable<JObject> Fetch(string query)
+        {
+            return Fetch(query, new TypeDBOptions());
+        }
+
+        public IEnumerable<JObject> Fetch(string query, TypeDBOptions options)
+        {
+            CheckQueryAndTransaction(query);
+
+            try
+            {
+                return new NativeEnumerable<string>(
+                    Pinvoke.typedb_driver.query_fetch(_nativeTransaction, query, options.NativeObject))
+                    .Select(obj => JObject.Parse(obj));
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
+            }
+        }
     
         public IEnumerable<IConceptMap> Insert(string query)
         {
