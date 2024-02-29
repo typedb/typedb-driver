@@ -34,6 +34,7 @@ csharp_library(
         "//csharp/common:common",
         "//csharp/concept:concept",
         "//csharp/logic:logic",
+        "//csharp/util:util",
         "//csharp:typedb_driver_Pinvoke",
     ],
     nullable = nullable_context,

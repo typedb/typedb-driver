@@ -56,7 +56,7 @@ namespace Vaticle.Typedb.Driver.Api
          * driver.User
          * </pre>
          */
-//        IUser User { get; } // TODO
+        IUser User { get; }
 
         /**
          * Returns the logged-in user for the connection. Only for TypeDB Cloud.
@@ -66,7 +66,7 @@ namespace Vaticle.Typedb.Driver.Api
          * driver.Users
          * </pre>
          */
-//        IUserManager Users { get; } // TODO
+        IUserManager Users { get; }
 
         /**
          * Opens a session to the given database with default options.
