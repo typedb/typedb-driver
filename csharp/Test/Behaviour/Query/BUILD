@@ -19,31 +19,21 @@
 # under the License.
 #
 
+package(default_visibility = ["//csharp/Test/Behaviour:__subpackages__"])
+
+load("//csharp/Test:rules.bzl", "csharp_behaviour_test")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
+
 filegroup(
-    name = "certificates",
-    srcs = [
-        ":encryption/ext-grpc-root-ca.pem",
-        ":encryption/ext-grpc-private-key.pem",
-        ":encryption/ext-grpc-certificate.pem",
-        ":encryption/int-grpc-root-ca.pem",
-        ":encryption/int-grpc-private-key.pem",
-        ":encryption/int-grpc-certificate.pem",
-        ":encryption/int-zmq-private-key",
-        ":encryption/int-zmq-public-key",
-        ":encryption/keystore.pkcs12"
-    ],
-    visibility = [
-        "//cpp/test:__subpackages__",
-        "//csharp/Test:__subpackages__",
-        "//common/test/encryption:__subpackages__"
-    ],
+    name = "steps-query",
+    srcs = ["QuerySteps.cs"],
+    visibility = ["//csharp/Test/Behaviour:__subpackages__"],
 )
+
 
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
-    exclude = glob(["encryption/*"]),
     license_type = "apache-header",
 )
