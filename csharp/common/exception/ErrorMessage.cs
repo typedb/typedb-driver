@@ -111,7 +111,7 @@ namespace Vaticle.Typedb.Driver.Common
             {
             }
 
-            public static readonly Query VARIABLE_DOESNT_EXIST =
+            public static readonly Query VARIABLE_DOES_NOT_EXIST =
                 new Query(1, "The variable {} does not exist.");
             public static readonly Query MISSING_QUERY =
                 new Query(2, "Query cannot be null or empty.");

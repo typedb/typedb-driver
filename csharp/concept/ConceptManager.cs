@@ -20,6 +20,7 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;

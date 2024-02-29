@@ -40,7 +40,7 @@ namespace Vaticle.Typedb.Driver.Concept
         {
         }
 
-        public static new IThing Of(Pinvoke.Concept nativeConcept)
+        public static IThing ThingOf(Pinvoke.Concept nativeConcept)
         {
             if (Pinvoke.typedb_driver.concept_is_entity(nativeConcept))
                 return new Entity(nativeConcept);
@@ -69,11 +69,10 @@ namespace Vaticle.Typedb.Driver.Concept
             return this;
         }
 
-        public IEnumerable<IAttribute> GetHas(
-            ITypeDBTransaction transaction, params IAttributeType[] attributeTypes)
+        public IEnumerable<IAttribute> GetHas(ITypeDBTransaction transaction, params IAttributeType[] attributeTypes)
         {
             Pinvoke.Concept[] attributeTypesArray = attributeTypes
-                .Select(obj => ((AttributeType)obj).NativeObject)
+                .Select(obj => ((AttributeType)obj).NativeObjectValue)
                 .ToArray<Pinvoke.Concept>();
 
             try
@@ -95,8 +94,9 @@ namespace Vaticle.Typedb.Driver.Concept
         public IEnumerable<IAttribute> GetHas(
             ITypeDBTransaction transaction, ICollection<IThingType.Annotation> annotations)
         {
-            Pinvoke.Annotation[] annotationsArray =
-                annotations.Select(obj => obj.NativeObject).ToArray<Pinvoke.Annotation>();
+            Pinvoke.Annotation[] annotationsArray = annotations
+                .Select(obj => obj.NativeObjectValue)
+                .ToArray<Pinvoke.Annotation>();
 
             try
             {
@@ -117,8 +117,9 @@ namespace Vaticle.Typedb.Driver.Concept
         public IEnumerable<IRelation> GetRelations(
             ITypeDBTransaction transaction, params IRoleType[] roleTypes)
         {
-            Pinvoke.Concept[] roleTypesArray =
-                roleTypes.Select(obj => ((RoleType)obj).NativeObject).ToArray<Pinvoke.Concept>();
+            Pinvoke.Concept[] roleTypesArray = roleTypes
+                .Select(obj => ((RoleType)obj).NativeObjectValue)
+                .ToArray<Pinvoke.Concept>();
             try
             {
                 return new NativeEnumerable<Pinvoke.Concept>(
