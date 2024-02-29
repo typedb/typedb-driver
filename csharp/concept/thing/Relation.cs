@@ -69,8 +69,8 @@ namespace Vaticle.Typedb.Driver.Concept
                     Pinvoke.typedb_driver.relation_get_players_by_role_type(
                         NativeTransaction(transaction),
                         NativeObject,
-                        roleTypes.Select(obj => ((RoleType)obj).NativeObject).ToArray<Pinvoke.Concept>()))
-                    .Select(obj => new Thing(obj));
+                        roleTypes.Select(obj => (Pinvoke.Concept)((RoleType)obj).NativeObjectValue).ToArray<Pinvoke.Concept>()))
+                    .Select(obj => Thing.ThingOf(obj));
 
             }
             catch (Pinvoke.Error e)
@@ -85,24 +85,17 @@ namespace Vaticle.Typedb.Driver.Concept
 
             try
             {
-                new NativeEnumerable<Pinvoke.Concept>(
+                var nativeRolePlayers = new NativeEnumerable<Pinvoke.RolePlayer>(
                     Pinvoke.typedb_driver.relation_get_role_players(
-                        NativeTransaction(transaction), NativeObject))
-                    .ForEach(rolePlayer =>
-                        {
-                            RoleType role =
-                                new RoleType(Pinvoke.typedb_driver.role_player_get_role_type(rolePlayer));
-                            Thing player =
-                                new Thing(Pinvoke.typedb_driver.role_player_get_player(rolePlayer));
-                            if (rolePlayers.ContainsKey(role))
-                            {
-                                rolePlayers[role].Add(player);
-                            }
-                            else
-                            {
-                                rolePlayers.Put(role, new List<IThing>(){player});
-                            }
-                        });
+                        NativeTransaction(transaction), NativeObject));
+
+                foreach (var rolePlayer in nativeRolePlayers)
+                {
+                    RoleType role = new RoleType(Pinvoke.typedb_driver.role_player_get_role_type(rolePlayer));
+                    IThing player = Thing.ThingOf(Pinvoke.typedb_driver.role_player_get_player(rolePlayer));
+
+                    rolePlayers[role].Add(player);
+                }
             }
             catch (Pinvoke.Error e)
             {

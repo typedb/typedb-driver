@@ -37,7 +37,7 @@ namespace Vaticle.Typedb.Driver.Api
          * type.GetLabel();
          * </pre>
          */
-        Label GetLabel();
+        Label GetLabel(); // TODO: Rename to Label property?
 
         /**
          * Checks if the type is a root type.

@@ -19,6 +19,7 @@
  * under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -58,7 +59,7 @@ namespace Vaticle.Typedb.Driver.Concept
             {
                 return new NativeEnumerable<Pinvoke.Concept>(
                     Pinvoke.typedb_driver.concept_map_get_values(NativeObject))
-                    .Select(obj => new Concept(obj));
+                    .Select(obj => Concept.ConceptOf(obj));
             }
         }
     
@@ -85,7 +86,7 @@ namespace Vaticle.Typedb.Driver.Concept
                 throw new TypeDBDriverException(QueryError.VARIABLE_DOES_NOT_EXIST, variable);
             }
 
-            return new Concept(concept);
+            return Concept.ConceptOf(concept);
         }
     
         public IConceptMap.IExplainables AllExplainables
@@ -123,7 +124,7 @@ namespace Vaticle.Typedb.Driver.Concept
                 _hash = ComputeHash();
             }
              
-            return hash;
+            return _hash;
         }
     
         private int ComputeHash()
@@ -135,7 +136,7 @@ namespace Vaticle.Typedb.Driver.Concept
         {
             private int _hash = 0;
     
-            Explainables(Pinvoke.Explainables nativeExplainables)
+            public Explainables(Pinvoke.Explainables nativeExplainables)
                 : base(nativeExplainables)
             {
             }
@@ -213,7 +214,7 @@ namespace Vaticle.Typedb.Driver.Concept
                         {
                             string owner = pair._0;
                             string attribute = pair._1;
-                            return new KeyValuePair<string, string>(
+                            return new KeyValuePair<KeyValuePair<string, string>, IConceptMap.IExplainable>(
                                 new KeyValuePair<string, string>(owner, attribute),
                                 Ownership(owner, attribute));
                         });
