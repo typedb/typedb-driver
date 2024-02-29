@@ -27,3 +27,4 @@ group csharp_deps
     nuget XUnit.Gherkin.Quick 4.3.0
     nuget xunit.runner.utility 2.6.4
     nuget Gherkin 5.0.0
+    nuget Newtonsoft.Json 13.0.3

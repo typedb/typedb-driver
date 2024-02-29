@@ -35,6 +35,7 @@ csharp_library(
         "//csharp/Concept:concept",
         "//csharp/Logic:logic",
         "//csharp:typedb_driver_Pinvoke",
+        "@paket.csharp_deps//newtonsoft.json",
     ],
     nullable = nullable_context,
     target_frameworks = target_frameworks,

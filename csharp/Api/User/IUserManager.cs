@@ -77,7 +77,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * @param username The name of the user to retrieve
          */
-        IUser Get(string username);
+        IUser? Get(string username);
 
         /**
          * Retrieves all users which exist on the TypeDB server.

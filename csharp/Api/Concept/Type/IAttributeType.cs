@@ -30,11 +30,11 @@ namespace Vaticle.Typedb.Driver.Api
     /**
      * Attribute types represent properties that other types can own.
      * <p>IAttribute types have a value type. This value type is fixed and unique for every given instance
-     * of the attribute type.
+     * of the attribute type.</p>
      * <p>Other types can own an attribute type. That means that instances of these other types can own an instance
-     * of this attribute type. This usually means that an object in our domain has a property with the matching value.
+     * of this attribute type. This usually means that an object in our domain has a property with the matching value.</p>
      * <p>Multiple types can own the same attribute type, and different instances of the same type or different types
-     * can share ownership of the same attribute instance.
+     * can share ownership of the same attribute instance.</p>
      */
     public interface IAttributeType : IThingType
     {

@@ -19,6 +19,7 @@
  * under the License.
  */
 
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
 using Vaticle.Typedb.Driver.Api;
@@ -116,7 +117,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * @see IQueryManager#Fetch(string, TypeDBOptions)
          */
-//        IEnumerable<JSON> Fetch(string query); // TODO: Return after implementing JSON
+        IEnumerable<JObject> Fetch(string query);
 
         /**
          * Performs a TypeQL Fetch (Fetch) query in the transaction.
@@ -129,7 +130,7 @@ namespace Vaticle.Typedb.Driver.Api
          * @param query The TypeQL Fetch (Fetch) query to be executed
          * @param options Specify query options
          */
-//        IEnumerable<JSON> Fetch(string query, TypeDBOptions options); // TODO: Return after implementing JSON
+        IEnumerable<JObject> Fetch(string query, TypeDBOptions options);
 
         /**
          * Performs a TypeQL Insert query with default options.
