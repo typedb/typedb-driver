@@ -19,6 +19,8 @@
  * under the License.
  */
 
+using System;
+
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
@@ -36,7 +38,7 @@ namespace Vaticle.Typedb.Driver.Logic
         private string _when { get; }
         private string _then { get; }
 
-        Rule(Pinvoke.Rule nativeRule)
+        public Rule(Pinvoke.Rule nativeRule)
             : base(nativeRule)
         {
             _when = Pinvoke.typedb_driver.rule_get_when(NativeObject);

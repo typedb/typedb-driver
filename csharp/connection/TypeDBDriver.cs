@@ -26,13 +26,14 @@ using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Connection;
+using Vaticle.Typedb.Driver.User;
 
 namespace Vaticle.Typedb.Driver.Connection
 {
     public class TypeDBDriver : NativeObjectWrapper<Pinvoke.Connection>, ITypeDBDriver
     {
         private readonly IDatabaseManager databaseMgr;
-        private readonly IUserManager userMgr;
+        private readonly UserManager userMgr;
 
         public TypeDBDriver(string address)
             : this(OpenCore(address))
@@ -84,7 +85,7 @@ namespace Vaticle.Typedb.Driver.Connection
         }
 
 
-        public User User
+        public IUser User
         {
             get { return userMgr.CurrentUser; }
         }

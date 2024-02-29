@@ -19,7 +19,9 @@
  * under the License.
  */
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
@@ -64,7 +66,7 @@ namespace Vaticle.Typedb.Driver.Logic
             }
         }
 
-        public ISet<string> QueryVariableMapping(string )
+        public ISet<string> QueryVariableMapping(string variable)
         {
             InputChecker.NonEmptyString(variable, ConceptError.MISSING_VARIABLE);
 

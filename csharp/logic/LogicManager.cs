@@ -20,6 +20,7 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
@@ -32,18 +33,18 @@ namespace Vaticle.Typedb.Driver.Logic
 {
     public class LogicManager : ILogicManager
     {
-        private Pinvoke.Transaction _nativeTransaction { get; }
+        public Pinvoke.Transaction NativeTransaction { get; }
 
         public LogicManager(Pinvoke.Transaction nativeTransaction)
         {
-            _nativeTransaction = nativeTransaction;
+            NativeTransaction = nativeTransaction;
         }
 
         public IEnumerable<IRule> Rules
         {
             get
             {
-                if (!nativeTransaction.IsOwned())
+                if (!NativeTransaction.IsOwned())
                 {
                     throw new TypeDBDriverException(DriverError.TRANSACTION_CLOSED);
                 }
@@ -51,7 +52,7 @@ namespace Vaticle.Typedb.Driver.Logic
                 try
                 {
                     return new NativeEnumerable<Pinvoke.Rule>(
-                        Pinvoke.typedb_driver.logic_manager_get_rules(_nativeTransaction))
+                        Pinvoke.typedb_driver.logic_manager_get_rules(NativeTransaction))
                         .Select(obj => new Rule(obj));
                 }
                 catch (Pinvoke.Error e)
@@ -64,27 +65,26 @@ namespace Vaticle.Typedb.Driver.Logic
         public Promise<IRule> GetRule(string label)
         {
             InputChecker.NonEmptyString(label, ConceptError.MISSING_LABEL);
-            if (!_nativeTransaction.IsOwned())
+            if (!NativeTransaction.IsOwned())
             {
                 throw new TypeDBDriverException(DriverError.TRANSACTION_CLOSED);
             }
 
-            return Promise<IRule>.Map<IRule, Pinvoke.Concept>(
-                Pinvoke.typedb_driver.logic_manager_get_rule(
-                    _nativeTransaction, label).Resolve,
+            return Promise<IRule>.Map<IRule, Pinvoke.Rule>( // TODO: Reverse T, U for Map!
+                Pinvoke.typedb_driver.logic_manager_get_rule(NativeTransaction, label).Resolve,
                 obj => new Rule(obj));
         }
 
         public Promise<IRule> PutRule(string label, string when, string then)
         {
             InputChecker.NonEmptyString(label, ConceptError.MISSING_LABEL);
-            if (!_nativeTransaction.IsOwned())
+            if (!NativeTransaction.IsOwned())
             {
                 throw new TypeDBDriverException(DriverError.TRANSACTION_CLOSED);
             }
 
             Pinvoke.RulePromise promise =
-                Pinvoke.typedb_driver.logic_manager_put_rule(_nativeTransaction, label, when, then);
+                Pinvoke.typedb_driver.logic_manager_put_rule(NativeTransaction, label, when, then);
             return new Promise<IRule>(() => new Rule(promise.Resolve()));
         }
     }

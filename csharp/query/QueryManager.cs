@@ -43,12 +43,12 @@ namespace Vaticle.Typedb.Driver.Query
             _nativeTransaction = nativeTransaction;
         }
     
-        public override IEnumerable<IConceptMap> Get(string query)
+        public IEnumerable<IConceptMap> Get(string query)
         {
             return Get(query, new TypeDBOptions());
         }
     
-        public override IEnumerable<IConceptMap> Get(string query, TypeDBOptions options)
+        public IEnumerable<IConceptMap> Get(string query, TypeDBOptions options)
         {
             CheckQueryAndTransaction(query);
             
@@ -64,12 +64,12 @@ namespace Vaticle.Typedb.Driver.Query
             }
         }
     
-        public override Promise<IValue> GetAggregate(string query)
+        public Promise<IValue> GetAggregate(string query)
         {
             return GetAggregate(query, new TypeDBOptions());
         }
     
-        public override Promise<IValue> GetAggregate(string query, TypeDBOptions options)
+        public Promise<IValue> GetAggregate(string query, TypeDBOptions options)
         {
             CheckQueryAndTransaction(query);
 
@@ -88,12 +88,12 @@ namespace Vaticle.Typedb.Driver.Query
                 });
         }
     
-        public override IEnumerable<IConceptMapGroup> GetGroup(string query)
+        public IEnumerable<IConceptMapGroup> GetGroup(string query)
         {
             return GetGroup(query, new TypeDBOptions());
         }
     
-        public override IEnumerable<IConceptMapGroup> GetGroup(string query, TypeDBOptions options)
+        public IEnumerable<IConceptMapGroup> GetGroup(string query, TypeDBOptions options)
         {
             CheckQueryAndTransaction(query);
 
@@ -109,12 +109,12 @@ namespace Vaticle.Typedb.Driver.Query
             }
         }
     
-        public override IEnumerable<ValueGroup> GetGroupAggregate(string query) 
+        public IEnumerable<IValueGroup> GetGroupAggregate(string query)
         {
             return GetGroupAggregate(query, new TypeDBOptions());
         }
     
-        public override IEnumerable<ValueGroup> GetGroupAggregate(string query, TypeDBOptions options) 
+        public IEnumerable<IValueGroup> GetGroupAggregate(string query, TypeDBOptions options)
         {
             CheckQueryAndTransaction(query);
 
@@ -130,33 +130,33 @@ namespace Vaticle.Typedb.Driver.Query
             }
         }
     
-        public override IEnumerable<JSON> Fetch(string query) 
-        {
-            return Fetch(query, new TypeDBOptions());
-        }
+//        public IEnumerable<JSON> Fetch(string query)
+//        {
+//            return Fetch(query, new TypeDBOptions());
+//        }
+//
+//        public IEnumerable<JSON> Fetch(string query, TypeDBOptions options)
+//        {
+//            CheckQueryAndTransaction(query);
+//
+//            try
+//            {
+//                return new NativeEnumerable<Pinvoke.ValueGroup>(
+//                    Pinvoke.typedb_driver.query_fetch(_nativeTransaction, query, options.NativeObject))
+//                    .Select(obj => JSON.Parse); // TODO: Implement
+//            }
+//            catch (Pinvoke.Error e)
+//            {
+//                throw new TypeDBDriverException(e);
+//            }
+//        }
     
-        public override IEnumerable<JSON> Fetch(string query, TypeDBOptions options) 
-        {
-            CheckQueryAndTransaction(query);
-
-            try
-            {
-                return new NativeEnumerable<Pinvoke.ValueGroup>(
-                    Pinvoke.typedb_driver.query_fetch(_nativeTransaction, query, options.NativeObject))
-                    .Select(obj => JSON.Parse); // TODO: Implement
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
-            }
-        }
-    
-        public override IEnumerable<IConceptMap> Insert(string query)
+        public IEnumerable<IConceptMap> Insert(string query)
         {
             return Insert(query, new TypeDBOptions());
         }
     
-        public override IEnumerable<IConceptMap> Insert(string query, TypeDBOptions options)
+        public IEnumerable<IConceptMap> Insert(string query, TypeDBOptions options)
         {
             CheckQueryAndTransaction(query);
 
@@ -172,12 +172,12 @@ namespace Vaticle.Typedb.Driver.Query
             }
         }
     
-        public override VoidPromise Delete(string query) 
+        public VoidPromise Delete(string query)
         {
             return Delete(query, new TypeDBOptions());
         }
     
-        public override VoidPromise Delete(string query, TypeDBOptions options)
+        public VoidPromise Delete(string query, TypeDBOptions options)
         {
             CheckQueryAndTransaction(query);
 
@@ -185,12 +185,12 @@ namespace Vaticle.Typedb.Driver.Query
                 _nativeTransaction, query, options.NativeObject).Resolve);
         }
     
-        public override IEnumerable<IConceptMap> Update(string query)
+        public IEnumerable<IConceptMap> Update(string query)
         {
             return Update(query, new TypeDBOptions());
         }
     
-        public override IEnumerable<IConceptMap> Update(string query, TypeDBOptions options)
+        public IEnumerable<IConceptMap> Update(string query, TypeDBOptions options)
         {
             CheckQueryAndTransaction(query);
 
@@ -206,12 +206,12 @@ namespace Vaticle.Typedb.Driver.Query
             }
         }
     
-        public override VoidPromise Define(string query) 
+        public VoidPromise Define(string query)
         {
             return Define(query, new TypeDBOptions());
         }
     
-        public override VoidPromise Define(string query, TypeDBOptions options) 
+        public VoidPromise Define(string query, TypeDBOptions options)
         {
             CheckQueryAndTransaction(query);
 
@@ -219,12 +219,12 @@ namespace Vaticle.Typedb.Driver.Query
                 _nativeTransaction, query, options.NativeObject).Resolve);
         }
     
-        public override VoidPromise Undefine(string query) 
+        public VoidPromise Undefine(string query)
         {
             return Undefine(query, new TypeDBOptions());
         }
     
-        public override VoidPromise Undefine(string query, TypeDBOptions options) 
+        public VoidPromise Undefine(string query, TypeDBOptions options)
         {
             CheckQueryAndTransaction(query);
 
@@ -232,19 +232,19 @@ namespace Vaticle.Typedb.Driver.Query
                 _nativeTransaction, query, options.NativeObject).Resolve);
         }
     
-        public override IEnumerable<Explanation> Explain(IConceptMap.IExplainable explainable)
+        public IEnumerable<IExplanation> Explain(IConceptMap.IExplainable explainable)
         {
             return Explain(explainable, new TypeDBOptions());
         }
     
-        public override IEnumerable<IExplanation> Explain(
+        public IEnumerable<IExplanation> Explain(
             IConceptMap.IExplainable explainable, TypeDBOptions options)
         {
             CheckTransaction();
 
             try
             {
-                return new NativeEnumerable<Pinvoke.ConceptMap>(
+                return new NativeEnumerable<Pinvoke.Explanation>(
                     Pinvoke.typedb_driver.query_explain(
                         _nativeTransaction, 
                         ((ConceptMap.Explainable)explainable).NativeObject,
@@ -268,7 +268,7 @@ namespace Vaticle.Typedb.Driver.Query
         private void CheckQueryAndTransaction(string query)
         {
             CheckTransaction();
-            InputChecker.NonEmptyString(name, QueryError.MISSING_QUERY);
+            InputChecker.NonEmptyString(query, QueryError.MISSING_QUERY);
         }
     }
 }
