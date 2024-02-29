@@ -70,7 +70,6 @@ namespace Vaticle.Typedb.Driver.Api
          */
         new IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction); // TODO: Should be new???
     
-    
         /**
          * Retrieves <code>Relation</code>s that are instances of this exact <code>IRelationType</code>, OR
          * this <code>IRelationType</code> and any of its subtypes.

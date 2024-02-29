@@ -21,6 +21,7 @@
 
 using DataTable = Gherkin.Ast.DataTable;
 using DocString = Gherkin.Ast.DocString;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,18 +45,13 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"typeql define")]
         public void TypeqlDefine(DocString defineQueryStatements)
         {
-            string query = defineQueryStatements.Content;
-            Console.WriteLine("Define CONTENT: " + query);
-            throw new Exception("Not implemented yet =)");
-        // TODO: Implement!
-//            TypeQLDefine typeQLQuery = TypeQL.parseQuery(String.join("\n", defineQueryStatements));
-//            tx().query().define(String.join("\n", defineQueryStatements)).Resolve();
+            Console.WriteLine("Define CONTENT: " + defineQueryStatements.Content); // TODO Remove
+            ConnectionStepsBase.SingleTransaction.Query.Define(defineQueryStatements.Content).Resolve();
         }
 
         public void TypeqlDefineThrowsException(DocString defineQueryStatements)
         {
-            Assert.Throws<TypeDBDriverException>(
-                () => TypeqlDefine(defineQueryStatements));
+            Assert.Throws<TypeDBDriverException>(() => TypeqlDefine(defineQueryStatements));
         }
 
         [Then(@"typeql define; throws exception containing {string}")]
@@ -63,22 +59,19 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             var exception = Assert.Throws<TypeDBDriverException>(
                 () => TypeqlDefine(defineQueryStatements));
-
+Console.WriteLine($"expected: {expectedMessage}, actual: {exception.Message}"); // TODO: It's correct, just need to search in the string!
             Assert.Equal(expectedMessage, exception.Message);
         }
 
-        public void TypeqlInsert(DocString insertQueryStatements)
+        public IEnumerable<IConceptMap> TypeqlInsert(DocString insertQueryStatements)
         {
-            string query = insertQueryStatements.Content;
-            Console.WriteLine("Insert CONTENT: " + query);
-            throw new Exception("Not implemented yet =)");
-        // TODO: Implement!
+            Console.WriteLine("Insert CONTENT: " + insertQueryStatements.Content); // TODO Remove
+            return ConnectionStepsBase.SingleTransaction.Query.Insert(insertQueryStatements.Content);
         }
 
         public void TypeqlInsertThrowsException(DocString insertQueryStatements)
         {
-            Assert.Throws<TypeDBDriverException>(
-                () => TypeqlInsert(insertQueryStatements));
+            Assert.Throws<TypeDBDriverException>(() => TypeqlInsert(insertQueryStatements));
         }
 
         [Then(@"typeql insert; throws exception containing {string}")]
@@ -86,20 +79,20 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             var exception = Assert.Throws<TypeDBDriverException>(
                 () => TypeqlInsert(insertQueryStatements));
-
+            Console.WriteLine($"expected: {expectedMessage}, actual: {exception.Message}");
             Assert.Equal(expectedMessage, exception.Message);
         }
 
-//        public static List<IConceptMap> Answers()
-//        {
-//            return answers;
-//        }
-//
-//        private static List<IConceptMap> _answers;
-//        private static List<JSON> _fetchAnswers;
-//        private static Value? _valueAnswer;
-//        private static List<IConceptMapGroup> _answerGroups;
-//        private static List<IValueGroup> _valueAnswerGroups;
-//        private Dictionary<string, Dictionary<string, string>> _rules;
+        public static List<IConceptMap> Answers
+        {
+            get { return _answers; }
+        }
+
+        private static List<IConceptMap> _answers;
+        private static List<JObject> _fetchAnswers;
+        private static IValue? _valueAnswer;
+        private static List<IConceptMapGroup> _answerGroups;
+        private static List<IValueGroup> _valueAnswerGroups;
+        private Dictionary<string, Dictionary<string, string>> _rules;
     }
 }
