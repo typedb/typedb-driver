@@ -45,7 +45,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"typeql define")]
         public void TypeqlDefine(DocString defineQueryStatements)
         {
-            ConnectionStepsBase.SingleTransaction.Query.Define(defineQueryStatements.Content).Resolve();
+            SingleTransaction.Query.Define(defineQueryStatements.Content).Resolve();
         }
 
         public void TypeqlDefineThrowsException(DocString defineQueryStatements)
@@ -64,7 +64,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         public IEnumerable<IConceptMap> TypeqlInsert(DocString insertQueryStatements)
         {
-            return ConnectionStepsBase.SingleTransaction.Query.Insert(insertQueryStatements.Content);
+            return SingleTransaction.Query.Insert(insertQueryStatements.Content);
         }
 
         public void TypeqlInsertThrowsException(DocString insertQueryStatements)

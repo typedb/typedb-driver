@@ -40,7 +40,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"connection create database: {word}")]
         public void ConnectionCreateDatabase(string name)
         {
-            ConnectionStepsBase.Driver.Databases.Create(name);
+            Driver.Databases.Create(name);
         }
 
         [Given(@"connection create databases:")]
@@ -90,7 +90,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"connection delete database: {word}")]
         public void ConnectionDeleteDatabase(string name)
         {
-            ConnectionStepsBase.Driver.Databases.Get(name).Delete();
+            Driver.Databases.Get(name).Delete();
         }
 
         [When(@"connection delete databases:")]
@@ -109,7 +109,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ConnectionDeleteDatabaseThrowsException(string databaseName)
         {
             Assert.Throws<TypeDBDriverException>(
-                () => ConnectionStepsBase.Driver.Databases.Get(databaseName).Delete());
+                () => Driver.Databases.Get(databaseName).Delete());
         }
 
         [When(@"connection delete databases in parallel:")]
@@ -145,7 +145,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"connection has database: {word}")]
         public void ConnectionHasDatabase(string name)
         {
-            Assert.True(ConnectionStepsBase.Driver.Databases.Contains(name));
+            Assert.True(Driver.Databases.Contains(name));
         }
 
         [Then(@"connection has databases:")]
@@ -163,13 +163,13 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
 
             // TODO: Could there be just == ? The description is more like >=!
-            Assert.True(expectedDatabasesSize >= ConnectionStepsBase.Driver.Databases.All.Count);
+            Assert.True(expectedDatabasesSize >= Driver.Databases.All.Count);
         }
 
         [Then(@"connection does not have database: {word}")]
         public void ConnectionDoesNotHaveDatabase(string name)
         {
-            Assert.False(ConnectionStepsBase.Driver.Databases.Contains(name));
+            Assert.False(Driver.Databases.Contains(name));
         }
 
         [Then(@"connection does not have databases:")]
@@ -188,9 +188,9 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"connection does not have any database")]
         public void ConnectionDoesNotHaveAnyDatabase()
         {
-            Assert.NotNull(ConnectionStepsBase.Driver);
-            Assert.True(ConnectionStepsBase.Driver.IsOpen());
-            Assert.Equal(0, ConnectionStepsBase.Driver.Databases.All.Count);
+            Assert.NotNull(Driver);
+            Assert.True(Driver.IsOpen());
+            Assert.Equal(0, Driver.Databases.All.Count);
         }
     }
 }

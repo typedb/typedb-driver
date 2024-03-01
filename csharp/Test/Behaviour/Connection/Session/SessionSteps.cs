@@ -38,9 +38,9 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
     {
         private void ConnectionOpenSessionForDatabase(string name, SessionType sessionType)
         {
-            ConnectionStepsBase.Sessions.Add(
-                ConnectionStepsBase.Driver.Session(
-                    name, sessionType, ConnectionStepsBase.SessionOptions));
+            Sessions.Add(
+                Driver.Session(
+                    name, sessionType, SessionOptions));
         }
 
         [Given(@"connection open schema session for database: {word}")]
@@ -99,15 +99,15 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             ThreadPool.GetAvailableThreads(out workerThreads, out ioThreads);
             Assert.True(workerThreads > collectedNames.Count);
 
-            Assert.False(ConnectionStepsBase.ParallelSessions.Any());
+            Assert.False(ParallelSessions.Any());
 
             for (int i = 0; i < collectedNames.Count; i++)
             {
                 var name = collectedNames[i];
-                ConnectionStepsBase.ParallelSessions.Add(Task.Factory.StartNew<ITypeDBSession?>(() =>
+                ParallelSessions.Add(Task.Factory.StartNew<ITypeDBSession?>(() =>
                     {
-                        return ConnectionStepsBase.Driver.Session(
-                            name, SessionType.DATA, ConnectionStepsBase.SessionOptions);
+                        return Driver.Session(
+                            name, SessionType.DATA, SessionOptions);
                     }));
             }
         }
@@ -115,18 +115,18 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"connection close all sessions")]
         public void ConnectionCloseAllSessions()
         {
-            foreach (var session in ConnectionStepsBase.Sessions)
+            foreach (var session in Sessions)
             {
                 session.Close();
             }
 
-            ConnectionStepsBase.Sessions.Clear();
+            Sessions.Clear();
         }
 
         [Then(@"session[s]? [is|are]+ null: {}")]
         public void SessionsAreNull(bool expectedNull)
         {
-            foreach (var session in ConnectionStepsBase.Sessions)
+            foreach (var session in Sessions)
             {
                 Assert.Equal(expectedNull, session == null);
             }
@@ -135,16 +135,20 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"sessions in parallel are null: {}")]
         public void SessionsInParallelAreNull(bool expectedNull)
         {
-            foreach (var session in ConnectionStepsBase.ParallelSessions)
+            List<Task> assertions = new List<Task>();
+
+            foreach (var session in ParallelSessions)
             {
-                session.ContinueWith(antecedent => Assert.Equal(expectedNull, antecedent.Result == null));
+                assertions.Add(session.ContinueWith(antecedent => Assert.Equal(expectedNull, antecedent.Result == null)));
             }
+
+            Task.WaitAll(assertions.ToArray());
         }
 
         [Then(@"session[s]? [is|are]+ open: {}")]
         public void SessionsAreOpen(bool expectedOpen)
         {
-            foreach (var session in ConnectionStepsBase.Sessions)
+            foreach (var session in Sessions)
             {
                 Assert.Equal(expectedOpen, session.IsOpen());
             }
@@ -153,16 +157,21 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"sessions in parallel are open: {}")]
         public void SessionsInParallelAreOpen(bool expectedOpen)
         {
-            foreach (var session in ConnectionStepsBase.ParallelSessions)
+            List<Task> assertions = new List<Task>();
+
+            foreach (var session in ParallelSessions)
             {
-                session.ContinueWith(antecedent => Assert.Equal(expectedOpen, antecedent.Result.IsOpen()));
+                assertions.Add(session.ContinueWith(
+                    antecedent => Assert.Equal(expectedOpen, antecedent.Result.IsOpen())));
             }
+
+            Task.WaitAll(assertions.ToArray());
         }
 
         private void SessionsHaveDatabases(List<string> names)
         {
-            Assert.Equal(names.Count, ConnectionStepsBase.Sessions.Count);
-            IEnumerator<ITypeDBSession?> sessionsEnumerator = ConnectionStepsBase.Sessions.GetEnumerator();
+            Assert.Equal(names.Count, Sessions.Count);
+            IEnumerator<ITypeDBSession?> sessionsEnumerator = Sessions.GetEnumerator();
             IEnumerator<string> namesEnumerator = names.GetEnumerator();
 
             while (sessionsEnumerator.MoveNext() && namesEnumerator.MoveNext())
@@ -181,6 +190,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void SessionsHaveDatabases(DataTable names)
         {
             List<string> collectedNames = new List<string>();
+
             foreach (var row in names.Rows)
             {
                 foreach (var name in row.Cells)
@@ -195,17 +205,24 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"sessions in parallel have databases:")]
         public void SessionsInParallelHaveDatabases(DataTable names)
         {
+            List<Task> assertions = new List<Task>();
+
+            IEnumerator<Task<ITypeDBSession?>> sessionsEnumerator = ParallelSessions.GetEnumerator();
+
+            Assert.Equal(ParallelSessions.Count, names.Rows.Count());
             foreach (var row in names.Rows)
             {
+                Assert.Equal(row.Cells.Count(), 1);
+
                 foreach (var name in row.Cells)
                 {
-                    foreach (var session in ConnectionStepsBase.ParallelSessions)
-                    {
-                        session.ContinueWith(
-                            antecedent => Assert.Equal(name.Value, antecedent.Result.DatabaseName));
-                    }
+                    Assert.True(sessionsEnumerator.MoveNext());
+                    assertions.Add(sessionsEnumerator.Current.ContinueWith(
+                        antecedent => Assert.Equal(antecedent.Result.DatabaseName, name.Value)));
                 }
             }
+
+            Task.WaitAll(assertions.ToArray());
         }
 
         [Then(@"set session option {} to: {word}")]
