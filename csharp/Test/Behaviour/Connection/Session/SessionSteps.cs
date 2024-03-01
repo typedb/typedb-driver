@@ -62,14 +62,15 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
         }
 
-        [Given(@"connection open data session for database: {word}")]
-        [When(@"connection open [data ]?session for database: {word}")]
+        [Given(@"connection open[ data | ]+session[s]? for database[s]?: {word}")]
+        [When(@"connection open[ data | ]+session[s]? for database[s]?: {word}")]
         public void ConnectionOpenDataSessionForDatabase(string name)
         {
             ConnectionOpenSessionForDatabase(name, SessionType.DATA);
         }
 
-        [When(@"connection open [data ]?sessions for databases:")]
+        [Given(@"connection open[ data | ]+session[s]? for database[s]?:")]
+        [When(@"connection open[ data | ]+session[s]? for database[s]?:")]
         public void ConnectionOpenDataSessionForDatabases(DataTable names)
         {
             foreach (var row in names.Rows)
@@ -207,7 +208,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
         }
 
-        [Given(@"set session option {word} to: {word}")]
+        [Then(@"set session option {} to: {word}")]
         public void SetSessionOptionTo(string option, string value)
         {
             if (!OptionSetters.ContainsKey(option))
@@ -215,7 +216,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 throw new Exception("Unrecognised option: " + option);
             }
 
-            OptionSetters[option](SessionOptions, value);
+            OptionSetters[option](SessionOptions, value.ToString());
         }
     }
 }

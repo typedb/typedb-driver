@@ -23,12 +23,7 @@
 
 %include "enums.swg"
 %include "arrays_csharp.i"
-
-
-//%pragma(csharp) modulecode=%{ // TODO: Using this generates even more warnings, because SWIG doesn't use explicit "?"
-//   #nullable enable
-//%}
-
+#include "stdio.h"
 
 %typemap(cscode) SWIGTYPE %{
     public $csclassname Released()
@@ -138,11 +133,10 @@
 
 %exception %{
     $action
+
     if (check_error())
     {
         SWIG_CSharpSetPendingExceptionNative((int*)get_last_error());
-        // return $null; // TODO: This line is probably needed for potential memory cleanup, but there could be
-                         // TODO: dangerous calls after the error check. Delete later.
     }
 %}
 
@@ -446,7 +440,7 @@
     public Type Resolve()
     {
         swigCMemOwn = false;
-        return typedb_driver.function_prefix ## _promise_resolve(this); // TODO: This should throw errors seen in the C# Code!
+        return typedb_driver.function_prefix ## _promise_resolve(this);
     }
 %}
 
@@ -494,7 +488,7 @@
     public void Resolve()
     {
         swigCMemOwn = false;
-        typedb_driver.void_promise_resolve(this); // TODO: This should throw errors seen in the C# Code!
+        typedb_driver.void_promise_resolve(this);
     }
 %}
 

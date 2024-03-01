@@ -27,7 +27,7 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 
 filegroup(
-    name = "steps-transaction",
+    name = "steps",
     srcs = ["TransactionSteps.cs"],
     visibility = ["//csharp/Test/Behaviour:__subpackages__"],
 )
@@ -37,16 +37,19 @@ csharp_behaviour_test(
     name = "test-core",
     test_files = ["TransactionTest.cs"],
     steps_files = [
-        ":steps-transaction",
-        "//csharp/Test/Behaviour/Connection/Session:steps-session",
-        "//csharp/Test/Behaviour/Connection/Database:steps-database",
-        "//csharp/Test/Behaviour/Connection:steps-connection-core",
+        ":steps",
+        "//csharp/Test/Behaviour/Util:steps",
+        "//csharp/Test/Behaviour/Query:steps",
+        "//csharp/Test/Behaviour/Connection/Session:steps",
+        "//csharp/Test/Behaviour/Connection/Database:steps",
+        "//csharp/Test/Behaviour/Connection:steps-core",
     ],
     features = ["@vaticle_typedb_behaviour//connection:transaction.feature"],
     deps = [
         "//csharp/Api:api",
         "//csharp/Common:common",
         "//csharp:driver-csharp",
+        "@paket.csharp_deps//newtonsoft.json",
     ],
     target_frameworks = target_frameworks,
     targeting_packs = targeting_packs,
@@ -57,16 +60,19 @@ csharp_behaviour_test(
     name = "test-cloud",
     test_files = ["TransactionTest.cs"],
     steps_files = [
-        ":steps-transaction",
-        "//csharp/Test/Behaviour/Connection/Session:steps-session",
-        "//csharp/Test/Behaviour/Connection/Database:steps-database",
-        "//csharp/Test/Behaviour/Connection:steps-connection-cloud",
+        ":steps",
+        "//csharp/Test/Behaviour/Util:steps-util",
+        "//csharp/Test/Behaviour/Query:steps",
+        "//csharp/Test/Behaviour/Connection/Session:steps",
+        "//csharp/Test/Behaviour/Connection/Database:steps",
+        "//csharp/Test/Behaviour/Connection:steps-cloud",
     ],
     features = ["@vaticle_typedb_behaviour//connection:transaction.feature"],
     deps = [
         "//csharp/Api:api",
         "//csharp/Common:common",
         "//csharp:driver-csharp",
+        "@paket.csharp_deps//newtonsoft.json",
     ],
     add_certificates = True,
     target_frameworks = target_frameworks,

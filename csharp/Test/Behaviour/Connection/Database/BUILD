@@ -28,7 +28,7 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 
 filegroup(
-    name = "steps-database",
+    name = "steps",
     srcs = ["DatabaseSteps.cs"],
     visibility = ["//csharp/Test/Behaviour:__subpackages__"],
 )
@@ -38,8 +38,8 @@ csharp_behaviour_test(
     name = "test-core",
     test_files = ["DatabaseTest.cs"],
     steps_files = [
-        ":steps-database",
-        "//csharp/Test/Behaviour/Connection:steps-connection-core",
+        ":steps",
+        "//csharp/Test/Behaviour/Connection:steps-core",
     ],
     features = ["@vaticle_typedb_behaviour//connection:database.feature"],
     deps = [
@@ -56,8 +56,8 @@ csharp_behaviour_test(
     name = "test-cloud",
     test_files = ["DatabaseTest.cs"],
     steps_files = [
-        ":steps-database",
-        "//csharp/Test/Behaviour/Connection:steps-connection-cloud",
+        ":steps",
+        "//csharp/Test/Behaviour/Connection:steps-cloud",
     ],
     features = ["@vaticle_typedb_behaviour//connection:database.feature"],
     deps = [
