@@ -43,6 +43,13 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         public virtual void Dispose() // "After"
         {
+
+            foreach (var (session, transactions) in SessionsToParallelTransactions)
+            {
+                Task.WaitAll(transactions.ToArray());
+            }
+            SessionsToParallelTransactions.Clear();
+
             foreach (var session in Sessions)
             {
                 session.Close();
@@ -53,12 +60,6 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
             Task.WaitAll(ParallelSessions.ToArray());
             ParallelSessions.Clear();
-
-            foreach (var (session, transactions) in SessionsToParallelTransactions)
-            {
-                Task.WaitAll(transactions.ToArray());
-            }
-            SessionsToParallelTransactions.Clear();
 
             foreach (var (session, transactions) in ParallelSessionsToParallelTransactions)
             {

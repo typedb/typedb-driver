@@ -55,12 +55,12 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             TransactionType transactionType = StringToTransactionType(type);
             
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            foreach (ITypeDBSession session in Sessions)
             {
                 ITypeDBTransaction transaction =
-                    session.Transaction(transactionType, ConnectionStepsBase.TransactionOptions);
+                    session.Transaction(transactionType, TransactionOptions);
 
-                ConnectionStepsBase.SaveTransaction(transaction, session);
+                SaveTransaction(transaction, session);
             }
         }
 
@@ -81,7 +81,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             TransactionType transactionType = StringToTransactionType(type);
 
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            foreach (ITypeDBSession session in Sessions)
             {
                 Assert.Throws<TypeDBDriverException>(
                     () => session.Transaction(transactionType));
@@ -103,9 +103,9 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"[for each ]*session[,]? transaction[s]? [is|are]+ null: {}")]
         public void ForEachSessionTransactionsAreNull(bool expectedNull)
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            foreach (ITypeDBSession session in Sessions)
             {
-                foreach (ITypeDBTransaction transaction in ConnectionStepsBase.SessionsToTransactions[session])
+                foreach (ITypeDBTransaction transaction in SessionsToTransactions[session])
                 {
                     Assert.Equal(expectedNull, transaction == null);
                 }
@@ -115,9 +115,9 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"[for each ]*session[,]? transaction[s]? [is|are]+ open: {}")]
         public void ForEachSessionTransactionsAreOpen(bool expectedOpen)
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            foreach (ITypeDBSession session in Sessions)
             {
-                foreach (ITypeDBTransaction transaction in ConnectionStepsBase.SessionsToTransactions[session])
+                foreach (ITypeDBTransaction transaction in SessionsToTransactions[session])
                 {
                     Assert.Equal(expectedOpen, transaction.IsOpen());
                 }
@@ -127,14 +127,13 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"transaction commits")]
         public void TransactionCommits()
         {
-            ConnectionStepsBase.SessionsToTransactions[ConnectionStepsBase.Sessions[0]][0].Commit();
+            SessionsToTransactions[Sessions[0]][0].Commit();
         }
 
         [Then(@"transaction commits; throws exception")]
         public void TransactionCommitsThrowsException()
         {
-            Assert.Throws<TypeDBDriverException>(
-                () => TransactionCommits());
+            Assert.Throws<TypeDBDriverException>(() => TransactionCommits());
         }
 
         [Then(@"transaction commits; throws exception containing {string}")]
@@ -149,9 +148,9 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"[for each ]*session[,]? transaction[s]? commit[s]?")]
         public void ForEachSessionTransactionsCommit()
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            foreach (ITypeDBSession session in Sessions)
             {
-                foreach (ITypeDBTransaction transaction in ConnectionStepsBase.SessionsToTransactions[session])
+                foreach (ITypeDBTransaction transaction in SessionsToTransactions[session])
                 {
                     transaction.Commit();
                 }
@@ -161,12 +160,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"[for each ]*session[,]? transaction[s]? commit[s]?; throws exception")]
         public void ForEachSessionTransactionsCommitThrowsException()
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            foreach (ITypeDBSession session in Sessions)
             {
-                foreach (ITypeDBTransaction transaction in ConnectionStepsBase.SessionsToTransactions[session])
+                foreach (ITypeDBTransaction transaction in SessionsToTransactions[session])
                 {
-                    Assert.Throws<TypeDBDriverException>(
-                        () => transaction.Commit());
+                    Assert.Throws<TypeDBDriverException>(() => transaction.Commit());
                 }
             }
         }
@@ -174,9 +172,9 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"[for each ]*session[,]? transaction close[s]?")]
         public void ForEachSessionTransactionCloses()
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            foreach (ITypeDBSession session in Sessions)
             {
-                foreach (ITypeDBTransaction transaction in ConnectionStepsBase.SessionsToTransactions[session])
+                foreach (ITypeDBTransaction transaction in SessionsToTransactions[session])
                 {
                     transaction.Close();
                 }
@@ -185,13 +183,14 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         private void ForEachSessionTransactionsHaveType(List<string> types)
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            foreach (ITypeDBSession session in Sessions)
             {
-                List<ITypeDBTransaction?> transactions = ConnectionStepsBase.SessionsToTransactions[session];
+                List<ITypeDBTransaction?> transactions = SessionsToTransactions[session];
                 Assert.Equal(types.Count, transactions.Count);
 
                 IEnumerator<string> typesEnumerator = types.GetEnumerator();
                 IEnumerator<ITypeDBTransaction?> transactionsEnumerator = transactions.GetEnumerator();
+
 
                 while (typesEnumerator.MoveNext())
                 {
@@ -212,52 +211,99 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"[for each ]*session[,]? transaction[s]? [has|have]+ type:")]
         public void ForEachSessionTransactionsHaveType(DataTable types)
         {
-            List<string> collectedTypes = new List<string>();
-            foreach (var row in types.Rows)
-            {
-                foreach (var type in row.Cells)
-                {
-                    collectedTypes.Add(type.Value);
-                }
-            }
-
+            List<string> collectedTypes = ParseDataTableToTypeList(types, val => val.ToString());
             ForEachSessionTransactionsHaveType(collectedTypes);
         }
 
         [When(@"[for each ]*session, open transaction[s]? in parallel of type:")]
         public void ForEachSessionOpenTransactionsInParallelOfType(DataTable types)
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            List<TransactionType> collectedTypes =
+                ParseDataTableToTypeList<TransactionType>(types, StringToTransactionType);
+
+            int workerThreads;
+            int ioThreads;
+            ThreadPool.GetAvailableThreads(out workerThreads, out ioThreads);
+            Assert.True(workerThreads > collectedTypes.Count);
+
+            foreach (ITypeDBSession session in Sessions)
             {
-                throw new System.Exception("Parallel test is not ready yet!"); // TODO
+                List<Task<ITypeDBTransaction?>> parallelTransactions = new List<Task<ITypeDBTransaction?>>();
+                for (int i = 0; i < collectedTypes.Count; i++)
+                {
+                    TransactionType type = collectedTypes[i];
+
+                    parallelTransactions.Add(Task.Factory.StartNew<ITypeDBTransaction?>(() =>
+                        {
+                            return session.Transaction(type);
+                        }));
+                }
+
+                SessionsToParallelTransactions[session] = parallelTransactions;
             }
         }
 
         [Then(@"[for each ]*session, transactions in parallel are null: {}")]
         public void ForEachSessionTransactionsInParallelAreNull(bool expectedNull)
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            List<Task> assertions = new List<Task>();
+
+            foreach (ITypeDBSession session in Sessions)
             {
-                throw new System.Exception("Parallel Null test is not ready yet!"); // TODO
+                foreach (var transaction in SessionsToParallelTransactions[session])
+                {
+                    assertions.Add(transaction.ContinueWith(
+                        antecedent => Assert.Equal(expectedNull, antecedent.Result == null)));
+                }
             }
+
+            Task.WaitAll(assertions.ToArray());
         }
 
         [Then(@"[for each ]*session, transactions in parallel are open: {}")]
         public void ForEachSessionTransactionsInParallelAreOpen(bool expectedOpen)
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            List<Task> assertions = new List<Task>();
+
+            foreach (ITypeDBSession session in Sessions)
             {
-                throw new System.Exception("Parallel Open test is not ready yet!"); // TODO
+                foreach (var transaction in SessionsToParallelTransactions[session])
+                {
+                    assertions.Add(transaction.ContinueWith(
+                        antecedent => Assert.Equal(expectedOpen, antecedent.Result.IsOpen())));
+                }
             }
+
+            Task.WaitAll(assertions.ToArray());
         }
 
         [Then(@"[for each ]*session, transactions in parallel have type:")]
         public void ForEachSessionTransactionsInParallelHaveType(DataTable types)
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            List<TransactionType> collectedTypes =
+                ParseDataTableToTypeList<TransactionType>(types, StringToTransactionType);
+
+            List<Task> assertions = new List<Task>();
+
+            foreach (ITypeDBSession session in Sessions)
             {
-                throw new System.Exception("Parallel HaveType test is not ready yet!"); // TODO
+                var transactions = SessionsToParallelTransactions[session];
+
+                Assert.Equal(transactions.Count, collectedTypes.Count);
+
+                IEnumerator<TransactionType> typesEnumerator = collectedTypes.GetEnumerator();
+                IEnumerator<Task<ITypeDBTransaction?>> transactionsEnumerator = transactions.GetEnumerator();
+
+                while (typesEnumerator.MoveNext())
+                {
+                    Assert.True(transactionsEnumerator.MoveNext());
+                    var expectedType = typesEnumerator.Current;
+                    assertions.Add(transactionsEnumerator.Current.ContinueWith(
+                        antecedent => Assert.Equal(antecedent.Result.Type, expectedType)));
+                }
             }
+
+            Task.WaitAll(assertions.ToArray());
         }
 
         [Then(@"[for each ]*session in parallel, transactions in parallel are null: {}")]
@@ -275,28 +321,26 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Given(@"set transaction option {} to: {word}")]
         public void SetTransactionOptionTo(string option, string value)
         {
-            throw new System.Exception($"Options Setters are not ready yet! {option} {value}"); // TODO
+            if (!OptionSetters.ContainsKey(option))
+            {
+                throw new Exception("Unrecognised option: " + option);
+            }
+
+            OptionSetters[option](TransactionOptions, value.ToString());
         }
 
-        [Then(@"[for each ]*transaction, define query; throws exception containing {string}")]
-        public void ForEachTransactionExecuteDefineThrowsException(string expectedMessage, string defineQueryStatements)
+        private List<T> ParseDataTableToTypeList<T>(DataTable dataTable, Func<string, T> converter)
         {
-            foreach (ITypeDBSession session in ConnectionStepsBase.Sessions)
+            List<T> collectedTypes = new List<T>();
+            foreach (var dataRow in dataTable.Rows)
             {
-                foreach (ITypeDBTransaction transaction in ConnectionStepsBase.SessionsToTransactions[session])
+                foreach (var data in dataRow.Cells)
                 {
-                    throw new Exception("Not ready for this test as well!"); // TODO
-//                    try
-//                    {
-//                        transaction.Query().Define(TypeQL.parseQuery(defineQueryStatements).asDefine()).Resolve();
-//                        fail();
-//                    }
-//                    catch (System.Exception e)
-//                    {
-//                        assertThat(e.getMessage(), Matchers.containsString(expectedException));
-//                    }
+                    collectedTypes.Add(converter(data.Value));
                 }
             }
+
+            return collectedTypes;
         }
     }
 }
