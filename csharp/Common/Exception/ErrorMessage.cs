@@ -37,7 +37,7 @@ namespace Vaticle.Typedb.Driver.Common
         public string ToString(params object?[] errorParams)
         {
             var formattedBody = String.Format(_messageBody, errorParams);
-            return $"[{_codePrefix}{_codeNumber}]{_messagePrefix}: {formattedBody}";
+            return $"[{_codePrefix}{_codeNumber}] {_messagePrefix}: {formattedBody}";
         }
 
         private readonly string _codePrefix;
