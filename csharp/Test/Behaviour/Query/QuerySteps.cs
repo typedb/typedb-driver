@@ -45,7 +45,6 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"typeql define")]
         public void TypeqlDefine(DocString defineQueryStatements)
         {
-            Console.WriteLine("Define CONTENT: " + defineQueryStatements.Content); // TODO Remove
             ConnectionStepsBase.SingleTransaction.Query.Define(defineQueryStatements.Content).Resolve();
         }
 
@@ -59,13 +58,12 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             var exception = Assert.Throws<TypeDBDriverException>(
                 () => TypeqlDefine(defineQueryStatements));
-Console.WriteLine($"expected: {expectedMessage}, actual: {exception.Message}"); // TODO: It's correct, just need to search in the string!
-            Assert.Equal(expectedMessage, exception.Message);
+
+            Assert.Contains(expectedMessage, exception.Message);
         }
 
         public IEnumerable<IConceptMap> TypeqlInsert(DocString insertQueryStatements)
         {
-            Console.WriteLine("Insert CONTENT: " + insertQueryStatements.Content); // TODO Remove
             return ConnectionStepsBase.SingleTransaction.Query.Insert(insertQueryStatements.Content);
         }
 
@@ -78,9 +76,9 @@ Console.WriteLine($"expected: {expectedMessage}, actual: {exception.Message}"); 
         public void TypeqlInsertThrowsExceptionContaining(string expectedMessage, DocString insertQueryStatements)
         {
             var exception = Assert.Throws<TypeDBDriverException>(
-                () => TypeqlInsert(insertQueryStatements));
-            Console.WriteLine($"expected: {expectedMessage}, actual: {exception.Message}");
-            Assert.Equal(expectedMessage, exception.Message);
+                () => TypeqlInsert(insertQueryStatements).ToArray<IConceptMap>());
+
+            Assert.Contains(expectedMessage, exception.Message);
         }
 
         public static List<IConceptMap> Answers

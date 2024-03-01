@@ -27,7 +27,7 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 
 filegroup(
-    name = "steps-session",
+    name = "steps",
     srcs = ["SessionSteps.cs"],
     visibility = ["//csharp/Test/Behaviour:__subpackages__"],
 )
@@ -37,11 +37,11 @@ csharp_behaviour_test(
     name = "test-core",
     test_files = ["SessionTest.cs"],
     steps_files = [
-        ":steps-session",
-        "//csharp/Test/Behaviour/Query:steps-query",
-        "//csharp/Test/Behaviour/Connection/Transaction:steps-transaction",
-        "//csharp/Test/Behaviour/Connection/Database:steps-database",
-        "//csharp/Test/Behaviour/Connection:steps-connection-core",
+        ":steps",
+        "//csharp/Test/Behaviour/Query:steps",
+        "//csharp/Test/Behaviour/Connection/Transaction:steps",
+        "//csharp/Test/Behaviour/Connection/Database:steps",
+        "//csharp/Test/Behaviour/Connection:steps-core",
     ],
     features = ["@vaticle_typedb_behaviour//connection:session.feature"],
     deps = [
@@ -59,18 +59,18 @@ csharp_behaviour_test(
     name = "test-cloud",
     test_files = ["SessionTest.cs"],
     steps_files = [
-        ":steps-session",
-        "//csharp/Test/Behaviour/Query:steps-query",
-        "//csharp/Test/Behaviour/Connection/Transaction:steps-transaction",
-        "//csharp/Test/Behaviour/Connection/Database:steps-database",
-        "//csharp/Test/Behaviour/Connection:steps-connection-cloud",
+        ":steps",
+        "//csharp/Test/Behaviour/Query:steps",
+        "//csharp/Test/Behaviour/Connection/Transaction:steps",
+        "//csharp/Test/Behaviour/Connection/Database:steps",
+        "//csharp/Test/Behaviour/Connection:steps-cloud",
     ],
     features = ["@vaticle_typedb_behaviour//connection:session.feature"],
     deps = [
         "//csharp/Api:api",
         "//csharp/Common:common",
         "//csharp:driver-csharp",
-        "@paket.csharp_deps//newtonsoft.json", # TODO: Create a list to import from QuerySteps
+        "@paket.csharp_deps//newtonsoft.json",
     ],
     add_certificates = True,
     target_frameworks = target_frameworks,

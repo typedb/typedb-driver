@@ -26,7 +26,7 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 
 filegroup(
-    name = "steps-query",
+    name = "steps",
     srcs = ["QuerySteps.cs"],
     visibility = ["//csharp/Test/Behaviour:__subpackages__"],
 )

@@ -35,6 +35,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
     {
         protected ConnectionStepsBase() // "Before"
         {
+            CleanInCaseOfPreviousFail();
+
             SessionOptions = CreateOptions().Infer(true);
             TransactionOptions = CreateOptions().Infer(true);
         }
@@ -117,6 +119,15 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
 
             SessionsToTransactions[session].Add(transaction);
+        }
+
+        private void CleanInCaseOfPreviousFail() // Fails are exceptions which do not clean resources
+        {
+            TypeDBStarts();
+            ConnectionOpensWithDefaultAuthentication();
+            ConnectionHasBeenOpened();
+            Dispose();
+            ConnectionCloses();
         }
 
         public static ITypeDBDriver Driver;

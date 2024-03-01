@@ -31,18 +31,17 @@ namespace Vaticle.Typedb.Driver.Common
 {
     public class NativeEnumerable<T> : IEnumerable<T>
     {
-        private readonly IEnumerator<T> _enumerator;
+        private readonly NativeEnumerator<T> _enumerator;
         private bool _enumeratorUsed;
 
         public NativeEnumerable(IEnumerator<T> enumerator)
         {
-            _enumerator = enumerator;
+            _enumerator = new NativeEnumerator<T>(enumerator);
             _enumeratorUsed = false;
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            // TODO: Maybe need to allow it (+ swig)!
             Validator.ThrowIfTrue(() => _enumeratorUsed, InternalError.ENUMERATOR_EXCESSIVE_ACCESS);
 
             _enumeratorUsed = true;
@@ -52,6 +51,47 @@ namespace Vaticle.Typedb.Driver.Common
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+    }
+
+    internal class NativeEnumerator<T> : IEnumerator<T>
+    {
+        private IEnumerator<T> _innerEnumerator;
+
+        public NativeEnumerator(IEnumerator<T> enumerator)
+        {
+            _innerEnumerator = enumerator;
+        }
+
+        object IEnumerator.Current
+        {
+            get { return Current; }
+        }
+
+        public T Current
+        {
+            get { return _innerEnumerator.Current; }
+        }
+
+        public bool MoveNext()
+        {
+            try
+            {
+                return _innerEnumerator.MoveNext();
+            }
+            catch (Pinvoke.Error e)
+            {
+                throw new TypeDBDriverException(e);
+            }
+        }
+
+        public void Reset()
+        {
+            _innerEnumerator.Reset();
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

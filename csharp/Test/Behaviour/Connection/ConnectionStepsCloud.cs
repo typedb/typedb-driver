@@ -68,7 +68,6 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"typedb starts")]
         public override void TypeDBStarts()
         {
-            Console.WriteLine("CLOUD: TypeDB Starts, nothing here for now..."); // TODO
         }
 
         [Given(@"connection opens with default authentication")]
