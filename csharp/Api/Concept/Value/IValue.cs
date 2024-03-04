@@ -54,7 +54,7 @@ namespace Vaticle.Typedb.Driver.Api
          * value.Type
          * </pre>
          */
-        IType Type { get; }
+        ValueType Type { get; }
 
         /**
          * Returns <code>True</code> if the value which this value concept holds is of type <code>bool</code>.
@@ -227,6 +227,21 @@ namespace Vaticle.Typedb.Driver.Api
                 STRING,
                 DATETIME,
             };
+
+            public override bool Equals(object? obj)
+            {
+                if (Object.ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+
+                if (obj == null || this.GetType() != obj.GetType())
+                {
+                    return false;
+                }
+                ValueType typeObj = (ValueType)obj;
+                return this.ValueClass == typeObj.ValueClass;
+            }
         }
     }
 }

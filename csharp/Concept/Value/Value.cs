@@ -66,21 +66,21 @@ namespace Vaticle.Typedb.Driver.Concept
         {
         }
 
-        public IType Type
+        public IValue.ValueType Type
         {
             get
             {
-                if (IsBool()) return (IType)IValue.ValueType.BOOL;
-                if (IsLong()) return (IType)IValue.ValueType.LONG;
-                if (IsDouble()) return (IType)IValue.ValueType.DOUBLE;
-                if (IsString()) return (IType)IValue.ValueType.STRING;
-                if (IsDateTime()) return (IType)IValue.ValueType.DATETIME;
+                if (IsBool()) return IValue.ValueType.BOOL;
+                if (IsLong()) return IValue.ValueType.LONG;
+                if (IsDouble()) return IValue.ValueType.DOUBLE;
+                if (IsString()) return IValue.ValueType.STRING;
+                if (IsDateTime()) return IValue.ValueType.DATETIME;
                 
                 throw new TypeDBDriverException(InternalError.ILLEGAL_STATE);
             }
         }
 
-        public bool IsBool() 
+        public bool IsBool()
         {
             return Pinvoke.typedb_driver.value_is_boolean(NativeObject);
         }

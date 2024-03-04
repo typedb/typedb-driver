@@ -19,36 +19,9 @@
 # under the License.
 #
 
-package(default_visibility = ["//csharp/Test/Behaviour:__subpackages__"])
+package(default_visibility = ["//csharp/Test/Behaviour/Driver:__subpackages__"])
 
-load("//csharp:build_opts.bzl", "nullable_context", "target_frameworks", "targeting_packs")
-load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
 load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-load("//csharp/Test:build_opts.bzl", "behaviour_tests_deps")
-
-
-csharp_library(
-    name = "util",
-    srcs = glob(["Util.cs"]),
-    deps = behaviour_tests_deps,
-    runtime_identifier = "any",
-    nullable = nullable_context,
-    target_frameworks = target_frameworks,
-    targeting_packs = targeting_packs,
-)
-
-
-exports_files(
-    ["TestRunner.cs"],
-    visibility = ["//csharp/Test/Behaviour:__subpackages__"],
-)
-
-
-filegroup(
-    name = "steps",
-    srcs = ["UtilSteps.cs"],
-    visibility = ["//csharp/Test/Behaviour:__subpackages__"],
-)
 
 
 checkstyle_test(

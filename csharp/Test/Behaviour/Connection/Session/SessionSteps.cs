@@ -112,6 +112,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
         }
 
+        [Given(@"connection close all sessions")]
         [When(@"connection close all sessions")]
         public void ConnectionCloseAllSessions()
         {
