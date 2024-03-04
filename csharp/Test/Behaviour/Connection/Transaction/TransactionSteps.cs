@@ -50,6 +50,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
         }
 
+        [Given(@"[for each ]*session[,]? open[s]? transaction[s]? of type: {word}")]
         [When(@"[for each ]*session[,]? open[s]? transaction[s]? of type: {word}")]
         public void ForEachSessionOpenTransactionsOfType(string type)
         {
@@ -124,6 +125,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
         }
 
+        [Given(@"transaction commits")]
         [Then(@"transaction commits")]
         public void TransactionCommits()
         {
@@ -169,6 +171,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
         }
 
+        [Given(@"[for each ]*session[,]? transaction close[s]?")]
         [Then(@"[for each ]*session[,]? transaction close[s]?")]
         public void ForEachSessionTransactionCloses()
         {
@@ -211,7 +214,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"[for each ]*session[,]? transaction[s]? [has|have]+ type:")]
         public void ForEachSessionTransactionsHaveType(DataTable types)
         {
-            List<string> collectedTypes = ParseDataTableToTypeList(types, val => val.ToString());
+            List<string> collectedTypes = Util.ParseDataTableToTypeList(types, val => val.ToString());
             ForEachSessionTransactionsHaveType(collectedTypes);
         }
 
@@ -219,7 +222,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ForEachSessionOpenTransactionsInParallelOfType(DataTable types)
         {
             List<TransactionType> collectedTypes =
-                ParseDataTableToTypeList<TransactionType>(types, StringToTransactionType);
+                Util.ParseDataTableToTypeList<TransactionType>(types, StringToTransactionType);
 
             int workerThreads;
             int ioThreads;
@@ -281,7 +284,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void ForEachSessionTransactionsInParallelHaveType(DataTable types)
         {
             List<TransactionType> collectedTypes =
-                ParseDataTableToTypeList<TransactionType>(types, StringToTransactionType);
+                Util.ParseDataTableToTypeList<TransactionType>(types, StringToTransactionType);
 
             List<Task> assertions = new List<Task>();
 
@@ -327,20 +330,6 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
 
             OptionSetters[option](TransactionOptions, value.ToString());
-        }
-
-        private List<T> ParseDataTableToTypeList<T>(DataTable dataTable, Func<string, T> converter)
-        {
-            List<T> collectedTypes = new List<T>();
-            foreach (var dataRow in dataTable.Rows)
-            {
-                foreach (var data in dataRow.Cells)
-                {
-                    collectedTypes.Add(converter(data.Value));
-                }
-            }
-
-            return collectedTypes;
         }
     }
 }

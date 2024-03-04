@@ -46,11 +46,14 @@ namespace Vaticle.Typedb.Driver.Concept
             return Pinvoke.typedb_driver.role_type_is_abstract(NativeObject);
         }
 
-        public override Label GetLabel()
+        public override Label Label
         {
-            return new Label(
-                Pinvoke.typedb_driver.role_type_get_scope(NativeObject), 
-                Pinvoke.typedb_driver.role_type_get_name(NativeObject));
+            get
+            {
+                return new Label(
+                    Pinvoke.typedb_driver.role_type_get_scope(NativeObject),
+                    Pinvoke.typedb_driver.role_type_get_name(NativeObject));
+            }
         }
 
         public override VoidPromise Delete(ITypeDBTransaction transaction)

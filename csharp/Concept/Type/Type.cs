@@ -36,7 +36,7 @@ namespace Vaticle.Typedb.Driver.Concept
         {
         }
 
-        public abstract Label GetLabel();
+        public abstract Label Label { get; }
 
         public abstract bool IsRoot();
 
@@ -69,7 +69,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         private int ComputeHash()
         {
-            return GetLabel().GetHashCode();
+            return Label.GetHashCode();
         }
     }
 }

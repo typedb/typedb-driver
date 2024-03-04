@@ -135,7 +135,7 @@ namespace Vaticle.Typedb.Driver.Api
 
         /**
          * Adds and returns an <code>IAttribute</code> of this <code>IAttributeType</code>
-         * with the given <code>LocalDateTime</code> value.
+         * with the given <code>DateTime</code> value.
          *
          * <h3>Examples</h3>
          * <pre>

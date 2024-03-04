@@ -82,7 +82,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public Promise<IRoleType> GetRelatesOverridden(ITypeDBTransaction transaction, IRoleType roleType) 
         {
-            return GetRelatesOverridden(transaction, roleType.GetLabel().Name);
+            return GetRelatesOverridden(transaction, roleType.Label.Name);
         }
 
         public Promise<IRoleType> GetRelatesOverridden(ITypeDBTransaction transaction, string roleLabel)
@@ -101,7 +101,7 @@ namespace Vaticle.Typedb.Driver.Concept
         public VoidPromise SetRelates(
             ITypeDBTransaction transaction, string roleLabel, IRoleType overriddenType)
         {
-            return SetRelates(transaction, roleLabel, overriddenType.GetLabel().Name);
+            return SetRelates(transaction, roleLabel, overriddenType.Label.Name);
         }
 
         public VoidPromise SetRelates(
@@ -114,7 +114,7 @@ namespace Vaticle.Typedb.Driver.Concept
         public VoidPromise UnsetRelates(ITypeDBTransaction transaction, IRoleType roleType) 
         {
             return new VoidPromise(Pinvoke.typedb_driver.relation_type_unset_relates(
-                NativeTransaction(transaction), NativeObject, roleType.GetLabel().Name).Resolve);
+                NativeTransaction(transaction), NativeObject, roleType.Label.Name).Resolve);
         }
 
         public VoidPromise UnsetRelates(ITypeDBTransaction transaction, string roleLabel)
