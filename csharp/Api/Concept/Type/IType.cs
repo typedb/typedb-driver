@@ -34,10 +34,10 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * type.GetLabel();
+         * type.Label;
          * </pre>
          */
-        Label GetLabel(); // TODO: Rename to Label property?
+        Label Label { get; }
 
         /**
          * Checks if the type is a root type.

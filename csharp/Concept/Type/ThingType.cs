@@ -82,15 +82,18 @@ namespace Vaticle.Typedb.Driver.Concept
             }
         }
 
-        public override Label GetLabel()
+        public override Label Label
         {
-            try
+            get
             {
-                return new Label(Pinvoke.typedb_driver.thing_type_get_label(NativeObject));
-            }
-            catch (Pinvoke.Error e)
-            {
-                throw new TypeDBDriverException(e);
+                try
+                {
+                    return new Label(Pinvoke.typedb_driver.thing_type_get_label(NativeObject));
+                }
+                catch (Pinvoke.Error e)
+                {
+                    throw new TypeDBDriverException(e);
+                }
             }
         }
 
@@ -330,7 +333,7 @@ namespace Vaticle.Typedb.Driver.Concept
             {
             }
 
-            // TODO: Is GetLabel() the same for Root?
+            // TODO: Is Label the same for Root?
 
             public override Promise<IType> GetSupertype(ITypeDBTransaction transaction)
             {

@@ -75,7 +75,7 @@ namespace Vaticle.Typedb.Driver.Test.TestRunner
             lock (consoleLock)
             {
                 Console.WriteLine(
-                    $"Finished: {info.TotalTests} tests in {Math.Round(info.ExecutionTime, 3)}s "
+                    $"Finished: {info.TotalTests} total tests in {Math.Round(info.ExecutionTime, 3)}s "
                         + $"({info.TestsFailed} failed, {info.TestsSkipped} skipped)");
             }
 
