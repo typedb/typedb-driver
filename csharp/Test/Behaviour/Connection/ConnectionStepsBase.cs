@@ -106,6 +106,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         }
 
         [When(@"connection closes")]
+        [Then(@"connection closes")]
         public virtual void ConnectionCloses()
         {
             Driver.Close();
