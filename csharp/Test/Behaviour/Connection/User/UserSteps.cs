@@ -48,7 +48,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             var retrievedUser = Driver.User;
         }
     
-        [Then(@"users get user: {word}")]
+        [Then(@"users get user: {}")]
         public void UsersGetUser(string username)
         {
             var retrievedUser = Driver.Users.Get(username);
@@ -59,32 +59,35 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             var allRetrievedUsers = Driver.Users.All;
         }
-    
-        [Then(@"users contains: {word}")]
+
+        [When(@"users contains: {}")]
+        [Then(@"users contains: {}")]
         public void UsersContains(string username) 
         {
             Assert.True(IsUserInUsers(username));
         }
     
-        [Then(@"users not contains: {word}")]
+        [Then(@"users not contains: {}")]
         public void UsersNotContains(string username) 
         {
             Assert.False(IsUserInUsers(username));
         }
     
-        [When(@"users create: {word}, {word}")]
+        [When(@"users create: {}, {}")]
+        [Then(@"users create: {}, {}")]
         public void UsersCreate(string username, string password) 
         {
             Driver.Users.Create(username, password);
         }
-    
-        [When(@"users delete: {word}")]
+
+        [Given(@"users delete: {}")]
+        [When(@"users delete: {}")]
         public void UsersDelete(string username) 
         {
             Driver.Users.Delete(username);
         }
     
-        [When(@"user password update: {word}, {word}")]
+        [When(@"user password update: {}, {}")]
         public void UserPasswordUpdate(string oldPassword, string newPassword)
         {
             Driver.Users.Get(Driver.User.Username).UpdatePassword(oldPassword, newPassword);
@@ -96,13 +99,13 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             var retrievedSeconds = Driver.User.PasswordExpirySeconds;
         }
     
-        [When(@"users password set: {word}, {word}")]
+        [When(@"users password set: {}, {}")]
         public void UsersPasswordSet(string username, string newPassword)
         {
             Driver.Users.SetPassword(username, newPassword);
         }
     
-        [Then(@"users get user: {word}; throws exception")]
+        [Then(@"users get user: {}; throws exception")]
         public void UsersGetUserThrowsException(string username) 
         {
             Assert.Throws<TypeDBDriverException>(() => UsersGetUser(username));
@@ -114,38 +117,38 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.Throws<TypeDBDriverException>(() => UsersGetAll());
         }
     
-        [Then(@"users contains: {word}; throws exception")]
+        [Then(@"users contains: {}; throws exception")]
         public void UsersContainsThrowsException(string username) 
         {
             Assert.Throws<TypeDBDriverException>(() => UsersContains(username));
         }
     
-        [Then(@"users not contains: {word}; throws exception")]
+        [Then(@"users not contains: {}; throws exception")]
         public void UsersNotContainsThrowsException(string username) 
         {
             Assert.Throws<TypeDBDriverException>(() => UsersNotContains(username));
         }
     
-        [When(@"users create: {word}, {word}; throws exception")]
+        [When(@"users create: {}, {}; throws exception")]
         public void UsersCreateThrowsException(string username, string password) 
         {
             Assert.Throws<TypeDBDriverException>(() => UsersCreate(username, password));
         }
     
-        [When(@"users delete: {word}; throws exception")]
+        [When(@"users delete: {}; throws exception")]
         public void UsersDeleteThrowsException(string username) 
         {
             Assert.Throws<TypeDBDriverException>(() => UsersDelete(username));
         }
     
-        [When(@"user password update: {word}, {word}; throws exception")]
+        [When(@"user password update: {}, {}; throws exception")]
         public void UserPasswordUpdateThrowsException(string oldPassword, string newPassword)
         {
             Assert.Throws<TypeDBDriverException>(
                 () => UserPasswordUpdate(oldPassword, newPassword));
         }
     
-        [When(@"users password set: {word}, {word}; throws exception")]
+        [When(@"users password set: {}, {}; throws exception")]
         public void UsersPasswordSetThrowsException(string username, string passwordNew) 
         {
             Assert.Throws<TypeDBDriverException>(() => UsersPasswordSet(username, passwordNew));
