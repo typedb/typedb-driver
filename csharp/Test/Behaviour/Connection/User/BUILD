@@ -68,7 +68,7 @@ csharp_behaviour_test(
         "//csharp/Test/Behaviour/Connection/Session:steps",
         "//csharp/Test/Behaviour/Connection:steps-cloud",
     ],
-    features = ["@vaticle_typedb_behaviour//connection:database.feature"],
+    features = ["@vaticle_typedb_behaviour//connection:user.feature"],
     deps = [
         "//csharp/Api:api",
         "//csharp/Common:common",

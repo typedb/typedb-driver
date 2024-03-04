@@ -19,12 +19,15 @@
  * under the License.
  */
 
+using DataTable = Gherkin.Ast.DataTable;
 using System;
 using System.Collections.Generic;
+using Xunit;
 using Xunit.Gherkin.Quick;
 
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
+using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Test.Behaviour;
 
 namespace Vaticle.Typedb.Driver.Test.Behaviour
@@ -77,12 +80,13 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Driver = CreateTypeDBDriver();
         }
 
-        [When(@"connection opens with authentication: {word}, {word}")]
+        [Given(@"connection opens with authentication: {}, {}")]
+        [When(@"connection opens with authentication: {}, {}")]
         public void ConnectionOpensWithAuthentication(string username, string password)
         {
             if (Driver != null)
             {
-                Console.WriteLine("Driver was created!!!!!!"); // TODO (needed for debug RN)
+                throw new Exception("Expected the Driver to be closed"); // TODO (needed for debug RN)
                 Driver.Close();
                 Driver = null;
             }
@@ -90,12 +94,17 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Driver = CreateTypeDBDriver(TypeDB.DEFAULT_ADDRESS, username, password);
         }
 
+        [When(@"connection opens with authentication: {}, {}; throws exception")]
         public void ConnectionOpensWithAuthenticationThrowsException(string username, string password)
         {
-            Console.WriteLine("CLOUD: ConnectionOpensWithAuthenticationThrowsException");
-            throw new Exception("This test method is not ready");
-            // TODO:
-//            assertThrows(() => createTypeDBDriver(TypeDBSingleton.getTypeDBRunner().address(), username, password, false));
+            Assert.Throws<TypeDBDriverException>(
+                () => ConnectionOpensWithAuthentication(username, password));
+        }
+
+        [Given(@"typedb has configuration")]
+        public void TypeDBHasConfiguration(DataTable data)
+        {
+            // no-op: configuration tests are only run on the backend themselves
         }
 
         private static readonly string[] DEFAULT_ADDRESSES =

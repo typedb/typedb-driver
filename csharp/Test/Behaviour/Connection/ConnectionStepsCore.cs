@@ -19,6 +19,7 @@
  * under the License.
  */
 
+using DataTable = Gherkin.Ast.DataTable;
 using System;
 using Xunit.Gherkin.Quick;
 
@@ -57,10 +58,17 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Driver = CreateTypeDBDriver(TypeDB.DEFAULT_ADDRESS);
         }
 
-        [When(@"connection opens with authentication: {word}, {word}")]
+        [Given(@"connection opens with authentication: {}, {}")]
+        [When(@"connection opens with authentication: {}, {}")]
         public void ConnectionOpensWithAuthentication(string username, string password)
         {
-            throw new NotImplementedException("Do not use this method for Core tests");
+            throw new NotImplementedException("Core tests are not expected to use this method");
+        }
+
+        [Given(@"typedb has configuration")]
+        public void TypeDBHasConfiguration(DataTable data)
+        {
+            throw new NotImplementedException("Core tests are not expected to use this method");
         }
     }
 }
