@@ -58,6 +58,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             
             foreach (ITypeDBSession session in Sessions)
             {
+                ClearTransactions(session);
                 ITypeDBTransaction transaction =
                     session.Transaction(transactionType, TransactionOptions);
 

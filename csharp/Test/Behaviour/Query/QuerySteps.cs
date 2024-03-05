@@ -241,11 +241,6 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
                 foreach (Dictionary<string, string> answerIdentifier in parsedConcepts)
                 {
-                    foreach (var (key, value) in answerIdentifier)
-                    {
-                        Console.WriteLine($"HERE: {key}:{value}, ");
-                    }
-                    Console.WriteLine($"VS {answer}");
                     if (MatchAnswerConcept(answerIdentifier, answer))
                     {
                         matchingIdentifiers.Add(answerIdentifier);
@@ -554,7 +549,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 //                try
 //                {
 //                    Concept concept = templateFiller.get(requiredVariable);
-//                    if (!concept.isThing())
+//                    if (!concept.IsThing())
 //                    {
 //                        throw new BehaviourTestException("Cannot apply IID templating to Type concepts")];
 //                    }
@@ -652,7 +647,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 }
 
                 IAttribute attribute = concept.AsAttribute();
-                IAttributeType attributeType = attribute.Type;
+                IAttributeType attributeType = (IAttributeType)attribute.Type; // TODO: Is it ok?
 
                 if (attribute.Value.IsDateTime())
                 {
@@ -684,24 +679,23 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
             public bool Check(IConcept concept)
             {
-                Console.WriteLine($"Checking Key {concept}!");
                 if (!concept.IsThing())
                 {
                     return false;
                 }
-                Console.WriteLine("Thing!");
+
                 HashSet<IAttribute> keys = concept
                     .AsThing()
                     .GetHas(SingleTransaction, new HashSet<IThingType.Annotation>(){IThingType.Annotation.NewKey()})
                     .ToHashSet();
-                Console.WriteLine($"Keys collected: {keys}!");
+                foreach (var k in keys) {Console.WriteLine($"GOT THIS {k}");}
                 Dictionary<Label, string> keyMap = new Dictionary<Label, string>();
 
                 foreach (IAttribute key in keys)
                 {
                     keyMap[key.Type.Label] = key.Value.ToString();
                 }
-                Console.WriteLine($"Keymap! {keyMap}! While value: {_value}!");
+
                 return _value.Equals(keyMap[_type]);
             }
         }
@@ -760,8 +754,6 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             foreach (var (key, value) in answerIdentifiers)
             {
                 string[] identifier = value.Split(":", 2);
-
-                Console.WriteLine($"CHECKING {identifier[0]}! {answerIdentifiers.Count}");
 
                 switch (identifier[0])
                 {
