@@ -35,7 +35,7 @@ namespace Vaticle.Typedb.Driver.Api
         /**
          * {@inheritDoc}
          */
-        new bool IsEntityType()
+        bool IConcept.IsEntityType()
         {
             return true;
         }
@@ -43,7 +43,7 @@ namespace Vaticle.Typedb.Driver.Api
         /**
          * {@inheritDoc}
          */
-        new IEntityType AsEntityType()
+        IEntityType IConcept.AsEntityType()
         {
             return this;
         }
@@ -60,30 +60,6 @@ namespace Vaticle.Typedb.Driver.Api
          */
         Promise<IEntity> Create(ITypeDBTransaction transaction);
     
-        /**
-         * Retrieves all <code>Entity</code> objects that are instances of this <code>IEntityType</code> or its subtypes.
-         * Equivalent to <code>GetInstances(transaction, Transitivity.TRANSITIVE)</code>
-         *
-         * @see IEntityType#GetInstances(ITypeDBTransaction, IConcept.Transitivity)
-         */
-        new IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction);
-    
-        /**
-         * Retrieves <code>Entity</code> objects that are instances of this exact <code>IEntityType</code> OR
-         * this <code>IEntityType</code> and any of its subtypes.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * entityType.GetInstances(transaction, transitivity);
-         * </pre>
-         *
-         * @param transaction The current transaction
-         * @param transitivity <code>Transitivity.EXPLICIT</code> for direct instances only,
-         *                     <code>Transitivity.TRANSITIVE</code> to include subtypes
-         */
-        new IEnumerable<IThing> GetInstances(
-            ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
-
         /**
          * Sets the supplied <code>IEntityType</code> as the supertype of the current <code>IEntityType</code>.
          *

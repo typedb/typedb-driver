@@ -33,16 +33,6 @@ namespace Vaticle.Typedb.Driver.Api
     public interface IAttribute : IThing
     {
         /**
-         * The type which this <code>IAttribute</code> belongs to.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * attribute.Type;
-         * </pre>
-         */
-        new IAttributeType Type { get; }
-
-        /**
          * Checks if the concept is an <code>IAttribute</code>.
          *
          * <h3>Examples</h3>
@@ -50,7 +40,7 @@ namespace Vaticle.Typedb.Driver.Api
          * attribute.IsAttribute();
          * </pre>
          */
-        new bool IsAttribute() 
+        bool IConcept.IsAttribute()
         {
             return true;
         }
@@ -63,7 +53,7 @@ namespace Vaticle.Typedb.Driver.Api
          * attribute.AsAttribute();
          * </pre>
          */
-        new IAttribute AsAttribute() 
+        IAttribute IConcept.AsAttribute()
         {
             return this;
         }

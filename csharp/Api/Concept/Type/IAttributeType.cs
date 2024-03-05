@@ -51,7 +51,7 @@ namespace Vaticle.Typedb.Driver.Api
         /**
          * {@inheritDoc}
          */
-        new bool IsAttributeType()
+        bool IConcept.IsAttributeType()
         {
             return true;
         }
@@ -59,7 +59,7 @@ namespace Vaticle.Typedb.Driver.Api
         /**
          * {@inheritDoc}
          */
-        new IAttributeType AsAttributeType()
+        IAttributeType IConcept.AsAttributeType()
         {
             return this;
         }
@@ -385,35 +385,6 @@ namespace Vaticle.Typedb.Driver.Api
             ITypeDBTransaction transaction, 
             IValue.ValueType valueType,
             IConcept.Transitivity transitivity);
-
-        /**
-         * Retrieves all direct and indirect <code>IAttributes</code>
-         * that are instances of this <code>IAttributeType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * attributeType.GetInstances(transaction);
-         * </pre>
-         *
-         * @param transaction The current transaction
-         */
-        new IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction);
-
-        /**
-         * Retrieves all direct and indirect (or direct only) <code>IAttributes</code>
-         * that are instances of this <code>IAttributeType</code>.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * attributeType.GetInstances(transaction, transitivity);
-         * </pre>
-         *
-         * @param transaction The current transaction
-         * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect subtypes,
-         *                     <code>Transitivity.EXPLICIT</code> for direct subtypes only
-         */
-        new IEnumerable<IThing> GetInstances(
-            ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
 
         /**
          * Retrieve all <code>Things</code> that own an attribute of this <code>IAttributeType</code>

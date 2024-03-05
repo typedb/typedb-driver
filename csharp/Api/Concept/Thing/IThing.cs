@@ -66,7 +66,7 @@ namespace Vaticle.Typedb.Driver.Api
          * thing.IsThing();
          * </pre>
          */
-        new bool IsThing() 
+        bool IConcept.IsThing()
         {
             return true;
         }
@@ -79,7 +79,7 @@ namespace Vaticle.Typedb.Driver.Api
          * thing.AsThing();
          * </pre>
          */
-        new IThing AsThing()
+        IThing IConcept.AsThing()
         {
             return this;
         }
