@@ -36,7 +36,7 @@ namespace Vaticle.Typedb.Driver.Api
         /**
          * {@inheritDoc}
          */
-        new bool IsRoleType()
+        bool IConcept.IsRoleType()
         {
             return true;
         }
@@ -44,23 +44,11 @@ namespace Vaticle.Typedb.Driver.Api
         /**
          * {@inheritDoc}
          */
-        new IRoleType AsRoleType()
+        IRoleType IConcept.AsRoleType()
         {
             return this;
         }
 
-        /**
-         * Retrieves the <code>RelationType</code> that this role is directly related to.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * roleType.GetRelationType(transaction).Resolve();
-         * </pre>
-         *
-         * @param transaction The current transaction
-         */
-        new Promise<IRelationType> GetRelationType(ITypeDBTransaction transaction);
-    
         /**
          * Retrieves <code>RelationType</code>s that this role is related to (directly or indirectly).
          *

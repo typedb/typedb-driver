@@ -41,7 +41,7 @@ namespace Vaticle.Typedb.Driver.Api
          * relation.IsRelation();
          * </pre>
          */
-        new bool IsRelation()
+        bool IConcept.IsRelation()
         {
             return true;
         }
@@ -54,20 +54,10 @@ namespace Vaticle.Typedb.Driver.Api
          * relation.AsRelation();
          * </pre>
          */
-        new IRelation AsRelation()
+        IRelation IConcept.AsRelation()
         {
             return this;
         }
-
-        /**
-         * Retrieves the type which this <code>IRelation</code> belongs to.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * relation.Type;
-         * </pre>
-         */
-        new IRelationType Type { get; }
 
         /**
          * Adds a new role player to play the given role in this <code>IRelation</code>.

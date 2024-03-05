@@ -37,7 +37,7 @@ namespace Vaticle.Typedb.Driver.Api
         /**
          * {@inheritDoc}
          */
-        new bool IsRelationType()
+        bool IConcept.IsRelationType()
         {
             return true;
         }
@@ -45,7 +45,7 @@ namespace Vaticle.Typedb.Driver.Api
         /**
          * {@inheritDoc}
          */
-        new IRelationType AsRelationType()
+        IRelationType IConcept.AsRelationType()
         {
             return this;
         }
@@ -61,30 +61,6 @@ namespace Vaticle.Typedb.Driver.Api
          * @param transaction The current transaction
          */
         Promise<IRelation> Create(ITypeDBTransaction transaction);
-    
-        /**
-         * Retrieves all <code>Relation</code> objects that are instances of this <code>IRelationType</code> or its subtypes.
-         * Equivalent to <code>GetInstances(transaction, Transitivity.TRANSITIVE)</code>
-         *
-         * @see IRelationType#GetInstances(ITypeDBTransaction, IConcept.Transitivity)
-         */
-        new IEnumerable<IThing> GetInstances(ITypeDBTransaction transaction); // TODO: Should be new???
-    
-        /**
-         * Retrieves <code>Relation</code>s that are instances of this exact <code>IRelationType</code>, OR
-         * this <code>IRelationType</code> and any of its subtypes.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * relationType.GetInstances(transaction, transitivity)
-         * </pre>
-         *
-         * @param transaction The current transaction
-         * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and indirect instances,
-         *                     <code>Transitivity.EXPLICIT</code> for direct relates only
-         */
-        new IEnumerable<IThing> GetInstances(
-            ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
     
         /**
          * Retrieves roles that this <code>IRelationType</code> relates to directly or via inheritance.

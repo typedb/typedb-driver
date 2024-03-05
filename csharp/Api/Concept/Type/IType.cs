@@ -62,7 +62,7 @@ namespace Vaticle.Typedb.Driver.Api
         /**
          * {@inheritDoc}
          */
-        new bool IsType() 
+        bool IConcept.IsType()
         {
             return true;
         }
@@ -70,7 +70,7 @@ namespace Vaticle.Typedb.Driver.Api
         /**
          * {@inheritDoc}
          */
-        new IType AsType()
+        IType IConcept.AsType()
         {
             return this;
         }

@@ -33,7 +33,7 @@ namespace Vaticle.Typedb.Driver.Api
         /**
          * {@inheritDoc}
          */
-        new bool IsValue()
+        bool IConcept.IsValue()
         {
             return true;
         }
@@ -41,7 +41,7 @@ namespace Vaticle.Typedb.Driver.Api
         /**
          * {@inheritDoc}
          */
-        new IValue AsValue()
+        IValue IConcept.AsValue()
         {
             return this;
         }
@@ -239,6 +239,7 @@ namespace Vaticle.Typedb.Driver.Api
                 {
                     return false;
                 }
+
                 ValueType typeObj = (ValueType)obj;
                 return this.ValueClass == typeObj.ValueClass;
             }
