@@ -318,10 +318,10 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * attributeType.Isstring();
+         * attributeType.IsString();
          * </pre>
          */
-        bool Isstring() 
+        bool IsString()
         {
             return ValueType == IValue.ValueType.STRING;
         }

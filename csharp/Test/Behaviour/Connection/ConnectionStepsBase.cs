@@ -113,6 +113,14 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Driver = null;
         }
 
+        public static void ClearTransactions(ITypeDBSession? session)
+        {
+            if (SessionsToTransactions.ContainsKey(session))
+            {
+                SessionsToTransactions[session].Clear();
+            }
+        }
+
         public static void SaveTransaction(ITypeDBTransaction? transaction, ITypeDBSession? session)
         {
             if (!SessionsToTransactions.ContainsKey(session))
