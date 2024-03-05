@@ -40,7 +40,7 @@ namespace Vaticle.Typedb.Driver.Api
          * entity.IsEntity();
          * </pre>
          */
-        new bool IsEntity()
+        bool IConcept.IsEntity()
         {
             return true;
         }
@@ -53,19 +53,9 @@ namespace Vaticle.Typedb.Driver.Api
          * entity.AsEntity();
          * </pre>
          */
-        new IEntity AsEntity()
+        IEntity IConcept.AsEntity()
         {
             return this;
         }
-
-        /**
-         * The type which this <code>IEntity</code> belongs to.
-         *
-         * <h3>Examples</h3>
-         * <pre>
-         * entity.Type;
-         * </pre>
-         */
-        new IEntityType Type { get; }
     }
 }

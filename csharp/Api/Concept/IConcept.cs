@@ -116,7 +116,8 @@ namespace Vaticle.Typedb.Driver.Api
          * </pre>
          */
         bool IsThing()
-        { 
+        {
+            System.Console.WriteLine("I AM NOT!!! A THING!");
             return false; 
         }
 
