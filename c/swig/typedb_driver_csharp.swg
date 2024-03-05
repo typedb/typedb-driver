@@ -576,28 +576,42 @@
 %typemap(ctype) Type ** "void*" // "void*" ?
 %typemap(cstype) Type ** "Type[]" // "global::System.IntPtr" ?
 %typemap(
-    imtype,
-    inattributes = "[
-        global::System.Runtime.InteropServices.In,
-        global::System.Runtime.InteropServices.Out,
-        global::System.Runtime.InteropServices.MarshalAs(
-            global::System.Runtime.InteropServices.UnmanagedType.LPArray,
-            ArraySubType=global::System.Runtime.InteropServices.UnmanagedType.LPArray)]"
-    ) Type ** "Type[]"
+    imtype) Type ** "global::System.IntPtr"
 
-%typemap(csin) Type ** "$csinput"
+%typemap(csin) Type ** "Type.CopyArray($csinput)"
+
 %typemap(csout) Type **
 {
     return $imcall;
 }
 
-//%typemap(in)      Type ** "$1 = $input;" // TODO: No memory work for sure?
-%typemap(freearg) Type ** "" // TODO: No memory work for sure?
+//%typemap(in)      Type ** "$1 = $input;"
+//%typemap(freearg) Type ** "global::System.Runtime.InteropServices.Marshal.FreeHGlobal($1);"
+
+
+%typemap(cscode) Type %{
+    public static global::System.IntPtr CopyArray($csclassname[] array)
+    {
+        int array_size = array.Length;
+        global::System.IntPtr arr = System.Runtime.InteropServices.Marshal.AllocHGlobal(array_size * System.Runtime.InteropServices.Marshal.SizeOf<double>());
+
+        unsafe
+        {
+            global::System.IntPtr *dest = (global::System.IntPtr *)arr.ToPointer();
+            for (int i = 0; i < array_size; i++)
+            {
+                //dest[i] = Type.getCPtr(array[i]).Handle;
+            }
+        }
+
+        return arr;
+    }
+%}
 %enddef
 
 %array(Annotation)
 %array(Concept)
-%array(ValueType)
+//%array(ValueType)
 
 %typemap(ctype) char ** "char**" // "void*" ?
 %typemap(cstype) char ** "string[]" // "global::System.IntPtr" ?
