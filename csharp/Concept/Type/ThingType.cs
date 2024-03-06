@@ -145,7 +145,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public VoidPromise SetOwns(ITypeDBTransaction transaction, IAttributeType attributeType)
         {
-            return SetOwns(transaction, attributeType, null, new HashSet<IThingType.Annotation>());
+            return SetOwns(transaction, attributeType, null, new IThingType.Annotation[0]);
         }
 
         public VoidPromise SetOwns(
@@ -159,7 +159,7 @@ namespace Vaticle.Typedb.Driver.Concept
         public VoidPromise SetOwns(
             ITypeDBTransaction transaction, IAttributeType attributeType, IAttributeType overriddenType)
         {
-            return SetOwns(transaction, attributeType, overriddenType, new HashSet<IThingType.Annotation>());
+            return SetOwns(transaction, attributeType, overriddenType, new IThingType.Annotation[0]);
         }
 
         public VoidPromise SetOwns(
@@ -214,13 +214,13 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public IEnumerable<IAttributeType> GetOwns(ITypeDBTransaction transaction)
         {
-            return GetOwns(transaction, IConcept.Transitivity.TRANSITIVE, new HashSet<IThingType.Annotation>());
+            return GetOwns(transaction, IConcept.Transitivity.TRANSITIVE, new IThingType.Annotation[0]);
         }
 
         public IEnumerable<IAttributeType> GetOwns(ITypeDBTransaction transaction, IValue.ValueType valueType)
         {
             return GetOwns(
-                transaction, valueType, IConcept.Transitivity.TRANSITIVE, new HashSet<IThingType.Annotation>());
+                transaction, valueType, IConcept.Transitivity.TRANSITIVE, new IThingType.Annotation[0]);
         }
 
         public IEnumerable<IAttributeType> GetOwns(
@@ -238,13 +238,13 @@ namespace Vaticle.Typedb.Driver.Concept
         public IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity)
         {
-            return GetOwns(transaction, transitivity, new HashSet<IThingType.Annotation>());
+            return GetOwns(transaction, transitivity, new IThingType.Annotation[0]);
         }
 
         public IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, IValue.ValueType? valueType, IConcept.Transitivity transitivity)
         {
-            return GetOwns(transaction, valueType, transitivity, new HashSet<IThingType.Annotation>());
+            return GetOwns(transaction, valueType, transitivity, new IThingType.Annotation[0]);
         }
 
         public IEnumerable<IAttributeType> GetOwns(

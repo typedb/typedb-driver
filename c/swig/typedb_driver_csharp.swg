@@ -588,20 +588,27 @@
     return $imcall;
 }
 
+%typemap(in)      char ** "$1 = $input;"
+%typemap(freearg) char ** ""
+
 %typemap(cscode) Type %{
     public static global::System.IntPtr ArrayUnmanaged($csclassname[] input)
     {
         int arraySize = input.Length;
         global::System.IntPtr unmanagedArray = System.Runtime.InteropServices.Marshal.AllocHGlobal(
-            arraySize * System.Runtime.InteropServices.Marshal.SizeOf<int>());
+            (arraySize + 1) * System.Runtime.InteropServices.Marshal.SizeOf<global::System.IntPtr>());
 
         unsafe
         {
             global::System.IntPtr* arrayPtr = (global::System.IntPtr*)unmanagedArray.ToPointer();
-            for (int i = 0; i < arraySize; i++)
+
+            int i = 0;
+            for (; i < arraySize; i++)
             {
                 arrayPtr[i] = Type.getCPtr(input[i]).Handle;
             }
+
+            arrayPtr[i] = global::System.IntPtr.Zero;
         }
 
         return unmanagedArray;
@@ -643,7 +650,7 @@
 }
 
 /* This cleans up the memory we malloc'd before the function call */
-%typemap(freearg) enum ValueType * { free($1); } // TODO: Check that it works correctly!
+%typemap(freearg) enum ValueType * { free($1); }
 
 /* These 3 typemaps tell SWIG what intermediate (pinvoke) and C# types to use */
 %typemap(ctype) enum ValueType * "int"
@@ -652,7 +659,7 @@
 
 /* These 2 typemaps handle the conversion of the imtype to cstype typemap type
       and vice versa */
-%typemap(csin) enum ValueType * "(int)$csinput"
+%typemap(csin) enum ValueType * "$csinput == null ? -1 : (int)$csinput"
 %typemap(csout) enum ValueType *
 {
     return $imcall;
