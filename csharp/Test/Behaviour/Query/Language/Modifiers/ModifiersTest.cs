@@ -19,27 +19,12 @@
  * under the License.
  */
 
-using System;
-using System.Threading;
-using Xunit;
 using Xunit.Gherkin.Quick;
 
 namespace Vaticle.Typedb.Driver.Test.Behaviour
 {
+    [FeatureFile("external/vaticle_typedb_behaviour/query/language/modifiers.feature")]
     public partial class BehaviourSteps
     {
-        [Then(@"wait {} seconds")]
-        public void WaitSeconds(int seconds)
-        {
-            Thread.Sleep(seconds * 1000);
-        }
-
-        [Given(@"set time-zone is: {}")]
-        [When(@"set time-zone is: {}")]
-        public void SetTimeZoneIs(string type)
-        {
-            // TODO:
-//            throw new NotImplementedException("TimeZone step is not ready yet.");
-        }
     }
 }
