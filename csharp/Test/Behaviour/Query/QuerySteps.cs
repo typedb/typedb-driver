@@ -688,7 +688,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                     .AsThing()
                     .GetHas(SingleTransaction, new HashSet<IThingType.Annotation>(){IThingType.Annotation.NewKey()})
                     .ToHashSet();
-                foreach (var k in keys) {Console.WriteLine($"GOT THIS {k}");}
+
                 Dictionary<Label, string> keyMap = new Dictionary<Label, string>();
 
                 foreach (IAttribute key in keys)

@@ -612,8 +612,8 @@
 %array(Annotation)
 %array(Concept)
 
-%typemap(ctype) char ** "char**" // "void*" ?
-%typemap(cstype) char ** "string[]" // "global::System.IntPtr" ?
+%typemap(ctype) char ** "char**"
+%typemap(cstype) char ** "string[]"
 %typemap(
     imtype,
     inattributes = "[
@@ -630,8 +630,8 @@
     return $imcall;
 }
 
-%typemap(in)      char ** "$1 = $input;" // TODO: No memory work for sure?
-%typemap(freearg) char ** "" // TODO: No memory work for sure?
+%typemap(in)      char ** "$1 = $input;"
+%typemap(freearg) char ** ""
 
 /* ValueType* needs special handling */
 %typemap(in) enum ValueType * {
@@ -643,7 +643,7 @@
 }
 
 /* This cleans up the memory we malloc'd before the function call */
-%typemap(freearg) enum ValueType * { free($1); }
+%typemap(freearg) enum ValueType * { free($1); } // TODO: Check that it works correctly!
 
 /* These 3 typemaps tell SWIG what intermediate (pinvoke) and C# types to use */
 %typemap(ctype) enum ValueType * "int"
@@ -653,6 +653,7 @@
 /* These 2 typemaps handle the conversion of the imtype to cstype typemap type
       and vice versa */
 %typemap(csin) enum ValueType * "(int)$csinput"
-%typemap(csout) enum ValueType * {
+%typemap(csout) enum ValueType *
+{
     return $imcall;
 }
