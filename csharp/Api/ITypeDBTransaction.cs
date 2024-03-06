@@ -104,7 +104,7 @@ namespace Vaticle.Typedb.Driver.Api
 
         /**
          * Commits the changes made via this transaction to the TypeDB database.
-         * Whether or not the transaction is commited successfully, it gets closed after the commit call.
+         * Whether or not the transaction is committed successfully, it gets closed after the commit call.
          *
          * <h3>Examples</h3>
          * <pre>
