@@ -527,7 +527,6 @@
 
 %array(Annotation)
 %array(Concept)
-%array(ValueType)
 
 /* char** needs special handling */
 %typemap(in) char ** (jint size) {
