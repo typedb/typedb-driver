@@ -573,45 +573,44 @@
 %iterator(SchemaException, SchemaException, schema_exception)
 
 %define %array(Type)
-%typemap(ctype) Type ** "void*" // "void*" ?
-%typemap(cstype) Type ** "Type[]" // "global::System.IntPtr" ?
-%typemap(
-    imtype) Type ** "global::System.IntPtr"
+%typemap(ctype) Type ** "Type**"
+%typemap(cstype) Type ** "Type[]"
+%typemap(imtype) Type ** "global::System.IntPtr"
 
-%typemap(csin) Type ** "Type.CopyArray($csinput)"
+%typemap(
+    csin,
+    pre="var unmanaged$csinput = Type.ArrayUnmanaged($csinput);",
+    post="global::System.Runtime.InteropServices.Marshal.FreeHGlobal(unmanaged$csinput);"
+) Type ** "unmanaged$csinput"
 
 %typemap(csout) Type **
 {
     return $imcall;
 }
 
-//%typemap(in)      Type ** "$1 = $input;"
-//%typemap(freearg) Type ** "global::System.Runtime.InteropServices.Marshal.FreeHGlobal($1);"
-
-
 %typemap(cscode) Type %{
-    public static global::System.IntPtr CopyArray($csclassname[] array)
+    public static global::System.IntPtr ArrayUnmanaged($csclassname[] input)
     {
-        int array_size = array.Length;
-        global::System.IntPtr arr = System.Runtime.InteropServices.Marshal.AllocHGlobal(array_size * System.Runtime.InteropServices.Marshal.SizeOf<double>());
+        int arraySize = input.Length;
+        global::System.IntPtr unmanagedArray = System.Runtime.InteropServices.Marshal.AllocHGlobal(
+            arraySize * System.Runtime.InteropServices.Marshal.SizeOf<int>());
 
         unsafe
         {
-            global::System.IntPtr *dest = (global::System.IntPtr *)arr.ToPointer();
-            for (int i = 0; i < array_size; i++)
+            global::System.IntPtr* arrayPtr = (global::System.IntPtr*)unmanagedArray.ToPointer();
+            for (int i = 0; i < arraySize; i++)
             {
-                //dest[i] = Type.getCPtr(array[i]).Handle;
+                arrayPtr[i] = Type.getCPtr(input[i]).Handle;
             }
         }
 
-        return arr;
+        return unmanagedArray;
     }
 %}
 %enddef
 
 %array(Annotation)
 %array(Concept)
-//%array(ValueType)
 
 %typemap(ctype) char ** "char**" // "void*" ?
 %typemap(cstype) char ** "string[]" // "global::System.IntPtr" ?
