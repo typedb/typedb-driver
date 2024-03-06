@@ -93,6 +93,8 @@ namespace Vaticle.Typedb.Driver.Test.Integration
     [TestFixture]
     public class ConnectionTestFixture
     {
+        // TODO: Add cleanup in case of errors.
+
         [Test]
         public void OpenAndCloseConnection()
         {
@@ -108,7 +110,7 @@ namespace Vaticle.Typedb.Driver.Test.Integration
             ITypeDBDriver driver = Utils.OpenConnection();
             IDatabaseManager dbManager = driver.Databases;
 
-            Assert.False(dbManager.Contains(""));
+            Assert.Throws<TypeDBDriverException>(() => dbManager.Contains(""));
             Utils.CheckAllDatabases(dbManager, new HashSet<string>());
 
             IDatabase db1 = Utils.CreateAndGetDatabase(dbManager, expectedDbName);
@@ -117,7 +119,7 @@ namespace Vaticle.Typedb.Driver.Test.Integration
             Assert.False(dbManager.Contains(expectedDbName + "1"));
             Assert.False(dbManager.Contains(expectedDbName.Substring(1)));
             Assert.False(dbManager.Contains(expectedDbName.Remove(expectedDbName.Length - 1)));
-            Assert.False(dbManager.Contains(""));
+            Assert.Throws<TypeDBDriverException>(() => dbManager.Contains(""));
 
             Utils.DeleteDatabase(dbManager, db1);
 
@@ -139,7 +141,9 @@ namespace Vaticle.Typedb.Driver.Test.Integration
             IDatabase db1 = Utils.CreateAndGetDatabase(dbManager, expectedDbName);
 
             // TODO: This has to start failing after we implement exceptions!
-            Utils.CreateDatabaseNoChecks(dbManager, expectedDbName);
+            var exception = Assert.Throws<TypeDBDriverException>(
+                () => Utils.CreateDatabaseNoChecks(dbManager, expectedDbName));
+            Assert.That(exception.Message, Does.Contain("already exists"));
 
             Utils.DeleteDatabase(dbManager, db1);
             Utils.CloseConnection(driver);
