@@ -106,8 +106,8 @@ namespace Vaticle.Typedb.Driver.Concept
         }
 
         public IEnumerable<IType> GetSubtypes(
-            ITypeDBTransaction transaction, 
-            IValue.ValueType valueType, 
+            ITypeDBTransaction transaction,
+            IValue.ValueType valueType,
             IConcept.Transitivity transitivity) 
         {
             try 
@@ -151,7 +151,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public IEnumerable<IThingType> GetOwners(ITypeDBTransaction transaction)
         {
-            return GetOwners(transaction, new HashSet<IThingType.Annotation>(){});
+            return GetOwners(transaction, new IThingType.Annotation[0]);
         }
 
         public IEnumerable<IThingType> GetOwners(
@@ -163,7 +163,7 @@ namespace Vaticle.Typedb.Driver.Concept
         public IEnumerable<IThingType> GetOwners(
             ITypeDBTransaction transaction, IConcept.Transitivity transitivity) 
         {
-            return GetOwners(transaction, new HashSet<IThingType.Annotation>(){}, transitivity);
+            return GetOwners(transaction, new IThingType.Annotation[0], transitivity);
         }
 
         public IEnumerable<IThingType> GetOwners(

@@ -124,7 +124,7 @@ namespace Vaticle.Typedb.Driver.Api
          * <h3>Examples</h3>
          * <pre>
          * thingType.SetOwns(transaction, attributeType).Resolve();
-         * thingType.SetOwns(transaction, attributeType, overriddenType, new HashSet&lt;Annotation&gt;(){Annotation.NewKey()}).Resolve(); // TODO: Make comment with []?
+         * thingType.SetOwns(transaction, attributeType, overriddenType, new []{Annotation.NewKey()}).Resolve();
          * </pre>
          *
          * @param transaction The current transaction
@@ -264,7 +264,7 @@ namespace Vaticle.Typedb.Driver.Api
          * <h3>Examples</h3>
          * <pre>
          * thingType.GetOwns(transaction);
-         * thingType.GetOwns(transaction, valueType, Transitivity.EXPLICIT, new HashSet&lt;Annotation&gt;(){Annotation.NewKey()}));
+         * thingType.GetOwns(transaction, valueType, Transitivity.EXPLICIT, new []{Annotation.NewKey()}));
          * </pre>
          *
          * @param transaction The current transaction
