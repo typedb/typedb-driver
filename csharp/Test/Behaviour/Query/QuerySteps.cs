@@ -88,9 +88,9 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
     
         [Given(@"typeql insert")]
         [When(@"typeql insert")]
-        public IEnumerable<IConceptMap> TypeqlInsert(DocString insertQueryStatements)
+        public IConceptMap[] TypeqlInsert(DocString insertQueryStatements)
         {
-            return SingleTransaction.Query.Insert(insertQueryStatements.Content);
+            return SingleTransaction.Query.Insert(insertQueryStatements.Content).ToArray();
         }
 
         [Then(@"typeql insert; throws exception")]
@@ -102,8 +102,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"typeql insert; throws exception containing {string}")]
         public void TypeqlInsertThrowsExceptionContaining(string expectedMessage, DocString insertQueryStatements)
         {
-            var exception = Assert.Throws<TypeDBDriverException>(
-                () => TypeqlInsert(insertQueryStatements).ToArray<IConceptMap>());
+            var exception = Assert.Throws<TypeDBDriverException>(() => TypeqlInsert(insertQueryStatements));
 
             Assert.Contains(expectedMessage, exception.Message);
         }
@@ -132,22 +131,21 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
     
         [Given(@"typeql update")]
         [When(@"typeql update")]
-        public IEnumerable<IConceptMap> TypeqlUpdate(DocString updateQueryStatements)
+        public IConceptMap[] TypeqlUpdate(DocString updateQueryStatements)
         {
-            return SingleTransaction.Query.Update(updateQueryStatements.Content);
+            return SingleTransaction.Query.Update(updateQueryStatements.Content).ToArray();
         }
     
         [Then(@"typeql update; throws exception")]
         public void TypeqlUpdateThrowsException(DocString updateQueryStatements)
         {
-            Assert.Throws<TypeDBDriverException>(() => TypeqlUpdate(updateQueryStatements)); // [0] ?
+            Assert.Throws<TypeDBDriverException>(() => TypeqlUpdate(updateQueryStatements));
         }
     
         [Then(@"typeql update; throws exception containing {string}")]
         public void TypeqlUpdateThrowsExceptionContaining(string expectedMessage, DocString updateQueryStatements) 
         {
-            var exception = Assert.Throws<TypeDBDriverException>(
-                () => TypeqlUpdate(updateQueryStatements));
+            var exception = Assert.Throws<TypeDBDriverException>(() => TypeqlUpdate(updateQueryStatements));
 
             Assert.Contains(expectedMessage, exception.Message);
         }
