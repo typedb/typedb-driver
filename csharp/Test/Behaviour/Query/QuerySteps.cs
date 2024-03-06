@@ -25,6 +25,8 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -293,71 +295,57 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void AnswerGroupsAre(DataTable answerIdentifiers)
         {
             var parsedAnswerIdentifiers = Util.ParseDataTableToMultiDictionary(answerIdentifiers);
-            throw new Exception("This test is not ready yet.");
-            /*
-            TODO:
-            Input: [{owner=value:long:1000, x=key:ref:1250}, {owner=value:long:1000, x=key:ref:1750}, {owner=value:long:2000, x=key:ref:2050}, {owner=value:long:3000, x=key:ref:3000}]
-            answerIdentifierGroups:
-            [ownerIdentifier: value:long:2000, answersIdentifiers: [{x=key:ref:2050}], ownerIdentifier: value:long:1000, answersIdentifiers: [{x=key:ref:1250}, {x=key:ref:1750}], ownerIdentifier: value:long:3000, answersIdentifiers: [{x=key:ref:3000}]]
 
-            */
+            HashSet<AnswerIdentifierGroup> answerIdentifierGroups = parsedAnswerIdentifiers
+                .GroupBy(x => x[AnswerIdentifierGroup.GROUP_COLUMN_NAME])
+                .Select(group => new AnswerIdentifierGroup(group.ToList()))
+                .ToHashSet();
 
-//            HashSet<AnswerIdentifierGroup> answerIdentifierGroups = parsedAnswerIdentifiers
-//                .collect(Collectors.groupingBy(x => x[AnswerIdentifierGroup.GROUP_COLUMN_NAME]))
-//                .Values
-//                .Select(obj => new AnswerIdentifierGroup(obj))
-//                .ToHashSet();
-//
-//            Assert.Equal(answerIdentifierGroups.Count, answerGroups.Count);
-//            //"Expected [%d] answer groups, but found [%d].", answerIdentifierGroups.Count, answerGroups.Count
-//
-//            foreach (AnswerIdentifierGroup answerIdentifierGroup in answerIdentifierGroups)
-//            {
-//                string[] identifier = answerIdentifierGroup.OwnerIdentifier.Split(":", 2);
-//                UniquenessCheck checker;
-//
-//                switch (identifier[0]) {
-//                    case "label":
-//                        checker = new LabelUniquenessCheck(identifier[1]);
-//                        break;
-//                    case "key":
-//                        checker = new KeyUniquenessCheck(identifier[1]);
-//                        break;
-//                    case "attr":
-//                        checker = new AttributeValueUniquenessCheck(identifier[1]);
-//                        break;
-//                    case "value":
-//                        checker = new ValueUniquenessCheck(identifier[1]);
-//                        break;
-//                    default:
-//                        throw new IllegalStateException("Unexpected value: " + identifier[0]);
-//                }
-//
-//                ConceptMapGroup answerGroup = answerGroups.stream()
-//                    .filter(ag -> checker.Check(ag.Owner))
-//                    .findAny()
-//                    .orElse(null);
-//                Assert.NotNull(answerGroup);
-//                    // $"The group identifier {answerIdentifierGroup.ownerIdentifier} does not "
-//                    // "match any of the answer group owners."
-//
-//                List<Dictionary<string, string>> answersIdentifiers = answerIdentifierGroup.answersIdentifiers;
-//                answerGroup.ConceptMaps.forEach(answer -> {
-//                    List<Dictionary<string, string>> matchingIdentifiers = new List<>();
-//
-//                    foreach (Dictionary<string, string> answerIdentifiers in answersIdentifiers)
-//                    {
-//
-//                        if (MatchAnswerConcept(answerIdentifiers, answer))
-//                        {
-//                            matchingIdentifiers.add(answerIdentifiers);
-//                        }
-//                    }
-//
-//                    Assert.Equal(1, matchingIdentifiers.Count);
-//                    // $"An identifier entry (row) should match 1-to-1 to an answer, but there were [%d] matching identifier entries for answer with variables %s.", matchingIdentifiers.Count, answer.variables().ToHashSet()
-//                });
-//            }
+            Assert.Equal(answerIdentifierGroups.Count, _answerGroups.Count);
+
+            foreach (AnswerIdentifierGroup answerIdentifierGroup in answerIdentifierGroups)
+            {
+                string[] identifier = answerIdentifierGroup.OwnerIdentifier.Split(":", 2);
+                UniquenessCheck checker;
+
+                switch (identifier[0]) {
+                    case "label":
+                        checker = new LabelUniquenessCheck(identifier[1]);
+                        break;
+                    case "key":
+                        checker = new KeyUniquenessCheck(identifier[1]);
+                        break;
+                    case "attr":
+                        checker = new AttributeValueUniquenessCheck(identifier[1]);
+                        break;
+                    case "value":
+                        checker = new ValueUniquenessCheck(identifier[1]);
+                        break;
+                    default:
+                        throw new BehaviourTestException("Unexpected value: " + identifier[0]);
+                }
+
+                IConceptMapGroup answerGroup = _answerGroups
+                    .Where(ag => checker.Check(ag.Owner))
+                    .First();
+
+                List<Dictionary<string, string>> answersIdentifiers = answerIdentifierGroup.AnswersIdentifiers;
+
+                foreach (var answer in answerGroup.ConceptMaps)
+                {
+                    List<Dictionary<string, string>> matchingIdentifiers = new List<Dictionary<string, string>>();
+
+                    foreach (Dictionary<string, string> answerIds in answersIdentifiers)
+                    {
+                        if (MatchAnswerConcept(answerIds, answer))
+                        {
+                            matchingIdentifiers.Add(answerIds);
+                        }
+                    }
+
+                    Assert.Equal(1, matchingIdentifiers.Count);
+                }
+            }
         }
 
         [Then(@"group aggregate values are")]
@@ -365,54 +353,50 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             var parsedAnswerIdentifiers = Util.ParseDataTableToMultiDictionary(answerIdentifiers);
             Dictionary<string, double> expectations = new Dictionary<string, double>();
-            throw new Exception("This test is not ready yet.");
-//            foreach (Dictionary<string, string> answerIdentifierRow in parsedAnswerIdentifiers)
-//            {
-//                string groupOwnerIdentifier = answerIdentifierRow.get(AnswerIdentifierGroup.GROUP_COLUMN_NAME);
-//                double expectedAnswer = Double.parseDouble(answerIdentifierRow.get("value")]);
-//                expectations.put(groupOwnerIdentifier, expectedAnswer);
-//            }
-//
-//            Assert.Equal(expectations.Count, _valueAnswerGroups.Count); // $"Expected {expectations.Count} answer groups, but found {valueAnswerGroups.Count}."
-//
-//            for (Map.Entry<string, Double> expectation : expectations.entrySet())
-//            {
-//                string[] identifier = expectation.getKey().Split(":", 2);
-//                UniquenessCheck checker;
-//
-//                switch (identifier[0])
-//                {
-//                    case "label":
-//                        checker = new LabelUniquenessCheck(identifier[1]);
-//                        break;
-//                    case "key":
-//                        checker = new KeyUniquenessCheck(identifier[1]);
-//                        break;
-//                    case "attr":
-//                        checker = new AttributeValueUniquenessCheck(identifier[1]);
-//                        break;
-//                    case "value":
-//                        checker = new ValueUniquenessCheck(identifier[1]);
-//                        break;
-//                    default:
-//                        throw new IllegalStateException("Unexpected value: " + identifier[0]);
-//                }
-//
-//                double expectedAnswer = expectation.getValue();
-//                ValueGroup answerGroup = _valueAnswerGroups.stream()
-//                    .filter(ag -> checker.Check(ag.Owner))
-//                    .findAny()
-//                    .orElse(null);
-//
-//                Assert.NotNull(answerGroup);
-//                    // "The group identifier {expectation.Key} does not match any of the answer group owners.");
-//
-//                Value value = answerGroup.value().get();
-//                double actualAnswer = value.isDouble() ? value.AsDouble() : value.AsLong();
-//
-//                Assert.Equal(expectedAnswer, actualAnswer, 0.001);
-//                // $"Expected answer {expectedAnswer} for group {expectation.Key}, but got {actualAnswer}.",
-//            }
+
+            foreach (Dictionary<string, string> answerIdentifierRow in parsedAnswerIdentifiers)
+            {
+                string groupOwnerIdentifier = answerIdentifierRow[AnswerIdentifierGroup.GROUP_COLUMN_NAME];
+                double expectedAnswer = Double.Parse(answerIdentifierRow["value"]);
+                expectations[groupOwnerIdentifier] = expectedAnswer;
+            }
+
+            Assert.Equal(expectations.Count, _valueAnswerGroups.Count);
+
+            foreach (var (expectationKey, expectedAnswer) in expectations)
+            {
+                string[] identifier = expectationKey.Split(":", 2);
+                UniquenessCheck checker;
+
+                switch (identifier[0])
+                {
+                    case "label":
+                        checker = new LabelUniquenessCheck(identifier[1]);
+                        break;
+                    case "key":
+                        checker = new KeyUniquenessCheck(identifier[1]);
+                        break;
+                    case "attr":
+                        checker = new AttributeValueUniquenessCheck(identifier[1]);
+                        break;
+                    case "value":
+                        checker = new ValueUniquenessCheck(identifier[1]);
+                        break;
+                    default:
+                        throw new BehaviourTestException("Unexpected value: " + identifier[0]);
+                }
+
+                IValueGroup answerGroup = _valueAnswerGroups
+                    .Where(ag => checker.Check(ag.Owner))
+                    .First();
+
+                IValue? value = answerGroup.Value;
+                Assert.NotNull(value);
+
+                double actualAnswer = value.IsDouble() ? value.AsDouble() : value.AsLong();
+
+                Assert.Equal(expectedAnswer, actualAnswer, 3);
+            }
         }
 
         [Then(@"number of groups is: {int}")]
@@ -423,26 +407,21 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         public class AnswerIdentifierGroup
         {
-            private string _ownerIdentifier { get; }
-            private List<Dictionary<string, string>> _answersIdentifiers { get; }
+            public string OwnerIdentifier { get; }
+            public List<Dictionary<string, string>> AnswersIdentifiers { get; }
 
             public static readonly string GROUP_COLUMN_NAME = "owner";
 
             public AnswerIdentifierGroup(List<Dictionary<string, string>> answerIdentifiers)
             {
-                _ownerIdentifier = answerIdentifiers[0][GROUP_COLUMN_NAME];
-                _answersIdentifiers = new List<Dictionary<string, string>>();
+                OwnerIdentifier = answerIdentifiers[0][GROUP_COLUMN_NAME];
+                AnswersIdentifiers = new List<Dictionary<string, string>>();
 
                 foreach (Dictionary<string, string> rawAnswerIdentifiers in answerIdentifiers)
                 {
-                    var filteredIdentifiers = rawAnswerIdentifiers
+                    AnswersIdentifiers.Add(rawAnswerIdentifiers
                         .Where(entry => !entry.Key.Equals(GROUP_COLUMN_NAME))
-                        .ToDictionary(entry => entry.Key, entry => entry.Value);
-
-//                    foreach (var filteredIdentifier in filteredIdentifiers)
-//                    {
-                        _answersIdentifiers.Add(filteredIdentifiers);
-//                    }
+                        .ToDictionary(entry => entry.Key, entry => entry.Value));
                 }
             }
         }
@@ -450,7 +429,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"group aggregate answer value is empty")]
         public void GroupAggregateAnswerValueIsEmpty()
         {
-            Assert.Equal(1, _valueAnswerGroups.Count); // "Step requires exactly 1 grouped answer"
+            Assert.Equal(1, _valueAnswerGroups.Count);
             Assert.True(_valueAnswerGroups[0].Value == null);
         }
 
@@ -470,20 +449,18 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"fetch answers are")]
         public void FetchAnswersAre(DocString expectedJSON)
         {
-            throw new Exception("This method is not ready");
-//            JObject expected = JObject.parse(expectedJSON);
-//            Assert.True(
-//                expected.IsArray(),
-//                "Fetch response is a list of JSON objects, but the behaviour test expects something else");
-//
-//            Assert.True(JSONListMatches(fetchAnswers, expected.AsArray()));
+            JArray expected = JArray.Parse(expectedJSON.Content);
+            JArray answers = new JArray(_fetchAnswers);
+
+            Assert.True(JToken.DeepEquals(expected, answers));
         }
 
-//        [Then(@"rules are")]
-//        public void RulesAre(DataTable rules)
-//        {
-//            _rules = rules; // TODO
-//        }
+        [Then(@"rules are")]
+        public void RulesAre(DataTable rules)
+        {
+            throw new Exception("Rules Are is not ready! Just need to recheck its logic"); // TODO
+            //_rules = Util.ParseDataTableToMultiDictionary(rules);
+        }
 
         private bool CurrentRulesContain(string ruleLabel)
         {
@@ -529,17 +506,17 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         private string ApplyQueryTemplate(string template, IConceptMap templateFiller)
         {
-
-            throw new Exception("This method is not ready yet");
             // find shortest matching strings between <>
-//            Pattern pattern = Pattern.compile("<.+?>")];
-//            Matcher matcher = pattern.matcher(template);
-//
-//            StringBuilder builder = new StringBuilder();
-//            int i = 0;
-//
-//            while (matcher.find())
-//            {
+            Regex pattern = new Regex(@"<.+?>");
+            MatchCollection matches = pattern.Matches(template);
+
+            StringBuilder builder = new StringBuilder();
+            int i = 0;
+
+            foreach (Match match in matches)
+            {
+                GroupCollection groups = match.Groups;
+                System.Console.WriteLine(groups);
 //                string matched = matcher.group(0);
 //                string requiredVariable = variableFromTemplatePlaceholder(matched.substring(1, matched.length() - 1));
 //
@@ -568,10 +545,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 //                }
 //
 //                i = matcher.end();
-//            }
-//
+            }
+
 //            builder.append(template.substring(i));
-//            return builder.ToString();
+            throw new Exception("This method is not ready yet, needed for MATCH BDD tests");
+            return builder.ToString();
         }
 
         private string VariableFromTemplatePlaceholder(string placeholder)
@@ -623,7 +601,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             public AttributeUniquenessCheck(string typeAndValue)
             {
                 string[] splittedTypeAndValue = typeAndValue.Split(":", 2);
-                Assert.Equal(2, splittedTypeAndValue.Length); // $"A check for attribute uniqueness should be given in the format \"type:value\", but received {typeAndValue}."
+                Assert.Equal(2, splittedTypeAndValue.Length);
 
                 _type = new Label(splittedTypeAndValue[0]);
                 _value = splittedTypeAndValue[1];
@@ -650,7 +628,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 if (attribute.Value.IsDateTime())
                 {
                     DateTime dateTime;
-//                    try
+//                    try // TODO?
 //                    {
                         dateTime = DateTime.Parse(_value);
 //                    }
@@ -724,13 +702,13 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 if (type == IValue.ValueType.LONG)
                     return long.Parse(_value).Equals(concept.AsValue().AsLong());
                 if (type == IValue.ValueType.DOUBLE)
-                    return double.Parse(_value).Equals(concept.AsValue().AsDouble()); // TODO: Approx equals?
+                    return double.Parse(_value).Equals(concept.AsValue().AsDouble());
                 if (type == IValue.ValueType.STRING)
                     return _value.Equals(concept.AsValue().AsString());
                 if (type == IValue.ValueType.DATETIME)
                 {
                     DateTime dateTime;
-//                        try
+//                        try // TODO?
 //                        {
                             dateTime = DateTime.Parse(_value);
 //                        }
