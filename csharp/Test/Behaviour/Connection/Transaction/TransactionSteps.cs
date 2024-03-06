@@ -52,6 +52,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         [Given(@"[for each ]*session[,]? open[s]? transaction[s]? of type: {word}")]
         [When(@"[for each ]*session[,]? open[s]? transaction[s]? of type: {word}")]
+        [Then(@"[for each ]*session[,]? open[s]? transaction[s]? of type: {word}")]
         public void ForEachSessionOpenTransactionsOfType(string type)
         {
             TransactionType transactionType = StringToTransactionType(type);

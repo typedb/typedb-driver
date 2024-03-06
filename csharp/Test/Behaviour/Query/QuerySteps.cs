@@ -43,12 +43,15 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
     public partial class BehaviourSteps
     {
         [Given(@"typeql define")]
+        [When(@"typeql define")]
         [Then(@"typeql define")]
         public void TypeqlDefine(DocString defineQueryStatements)
         {
             SingleTransaction.Query.Define(defineQueryStatements.Content).Resolve();
         }
 
+        [Given(@"typeql define; throws exception")]
+        [When(@"typeql define; throws exception")]
         [Then(@"typeql define; throws exception")]
         public void TypeqlDefineThrowsException(DocString defineQueryStatements)
         {
@@ -66,6 +69,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         [Given(@"typeql undefine")]
         [When(@"typeql undefine")]
+        [Then(@"typeql undefine")]
         public void TypeqlUndefine(DocString undefineQueryStatements) 
         {
             SingleTransaction.Query.Undefine(undefineQueryStatements.Content).Resolve();
@@ -90,11 +94,14 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
     
         [Given(@"typeql insert")]
         [When(@"typeql insert")]
+        [Then(@"typeql insert")]
         public IConceptMap[] TypeqlInsert(DocString insertQueryStatements)
         {
             return SingleTransaction.Query.Insert(insertQueryStatements.Content).ToArray();
         }
 
+        [Given(@"typeql insert; throws exception")]
+        [When(@"typeql insert; throws exception")]
         [Then(@"typeql insert; throws exception")]
         public void TypeqlInsertThrowsException(DocString insertQueryStatements)
         {
@@ -111,11 +118,14 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         [Given(@"typeql delete")]
         [When(@"typeql delete")]
+        [Then(@"typeql delete")]
         public void TypeqlDelete(DocString deleteQueryStatements) 
         {
             SingleTransaction.Query.Delete(deleteQueryStatements.Content).Resolve();
         }
-    
+
+        [Given(@"typeql delete; throws exception")]
+        [When(@"typeql delete; throws exception")]
         [Then(@"typeql delete; throws exception")]
         public void TypeqlDeleteThrowsException(DocString deleteQueryStatements) 
         {
@@ -123,6 +133,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         }
     
         [Given(@"typeql delete; throws exception containing {string}")]
+        [When(@"typeql delete; throws exception containing {string}")]
         public void TypeqlDeleteThrowsExceptionContaining(string expectedMessage, DocString deleteQueryStatements)
         {
             var exception = Assert.Throws<TypeDBDriverException>(
@@ -133,11 +144,14 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
     
         [Given(@"typeql update")]
         [When(@"typeql update")]
+        [Then(@"typeql update")]
         public IConceptMap[] TypeqlUpdate(DocString updateQueryStatements)
         {
             return SingleTransaction.Query.Update(updateQueryStatements.Content).ToArray();
         }
-    
+
+        [Given(@"typeql update; throws exception")]
+        [When(@"typeql update; throws exception")]
         [Then(@"typeql update; throws exception")]
         public void TypeqlUpdateThrowsException(DocString updateQueryStatements)
         {
@@ -154,6 +168,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         [Given(@"get answers of typeql insert")]
         [When(@"get answers of typeql insert")]
+        [Then(@"get answers of typeql insert")]
         public void GetAnswersOfTypeqlInsert(DocString insertQueryStatements) 
         {
             ClearAnswers();
@@ -162,6 +177,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         [Given(@"get answers of typeql get")]
         [When(@"get answers of typeql get")]
+        [Then(@"get answers of typeql get")]
         public void TypeqlGet(DocString getQueryStatements) 
         {
             ClearAnswers();
@@ -186,7 +202,9 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         }
 
         [When(@"typeql get aggregate")]
+        [Then(@"typeql get aggregate")]
         [When(@"get answer of typeql get aggregate")]
+        [Then(@"get answer of typeql get aggregate")]
         public void TypeqlGetAggregate(DocString getQueryStatements)
         {
             ClearAnswers();
@@ -194,13 +212,16 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         }
     
         [When(@"typeql get aggregate; throws exception")]
+        [Then(@"typeql get aggregate; throws exception")]
         public void TypeqlGetAggregateThrowsException(DocString getQueryStatements)
         {
             Assert.Throws<TypeDBDriverException>(() => TypeqlGetAggregate(getQueryStatements));
         }
 
         [When(@"typeql get group")]
+        [Then(@"typeql get group")]
         [When(@"get answers of typeql get group")]
+        [Then(@"get answers of typeql get group")]
         public void TypeqlGetGroup(DocString getQueryStatements)
         {
             ClearAnswers();
@@ -208,19 +229,23 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         }
     
         [When(@"typeql get group; throws exception")]
+        [Then(@"typeql get group; throws exception")]
         public void TypeqlGetGroupThrowsException(DocString getQueryStatements)
         {
             Assert.Throws<TypeDBDriverException>(() => TypeqlGetGroup(getQueryStatements));
         }
 
         [When(@"typeql get group aggregate")]
+        [Then(@"typeql get group aggregate")]
         [When(@"get answers of typeql get group aggregate")]
+        [Then(@"get answers of typeql get group aggregate")]
         public void TypeqlGetGroupAggregate(DocString getQueryStatements)
         {
             ClearAnswers();
             _valueAnswerGroups = SingleTransaction.Query.GetGroupAggregate(getQueryStatements.Content).ToList();
         }
     
+        [Given(@"answer size is: {}")]
         [Then(@"answer size is: {}")]
         public void AnswerSizeIs(int expectedAnswers)
         {
@@ -232,8 +257,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void UniquelyIdentifyAnswerConcepts(DataTable answerConcepts)
         {
             var parsedConcepts = Util.ParseDataTableToMultiDictionary(answerConcepts);
-            Assert.Equal(parsedConcepts.Count, _answers.Count); // string.format("The number of identifier entries (rows) should match the number of answers, but found %d identifier entries and %d answers.",
-                                                                //  answerConcepts.Count, _answers.Count),
+            Assert.Equal(parsedConcepts.Count, _answers.Count);
 
             foreach (IConceptMap answer in _answers)
             {
@@ -247,7 +271,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                     }
                 }
 
-                Assert.Equal(1, matchingIdentifiers.Count); // "An identifier entry (row) should match 1-to-1 to an answer, but there were %d matching identifier entries for answer with variables %s.", MatchingIdentifiers.Count, answer.Variables.ToHashSet()),
+                Assert.Equal(1, matchingIdentifiers.Count);
             }
         }
 
