@@ -157,30 +157,50 @@ namespace Vaticle.Typedb.Driver.Test.Integration
                 {
                     string insertQuery = @"
                         insert
-                         $x isa person, has ref 0, has email ""my@dog.com"";
+                         $x isa person, has ref 0, has email ""georgii@typedb.com"";
                          $y isa person, has ref 1;
                         ";
 
                     IConceptMap conceptMap = writeTransaction.Query.Insert(insertQuery).ToArray()[0];
 
-                    var xConcept = conceptMap.Get("x");
-                    System.Console.WriteLine(conceptMap);
-                    System.Console.WriteLine(xConcept);
+                    var x = conceptMap.Get("x").AsThing();
+                    Assert.NotNull(x);
 
-                    var annotation = new HashSet<IThingType.Annotation>(){IThingType.Annotation.NewKey()};
-                    IAttribute[] annotationAttributes = xConcept.AsThing().GetHas(writeTransaction, annotation).ToArray();
-                    System.Console.WriteLine("GetHas:");
-                    foreach (var attr in annotationAttributes) System.Console.WriteLine(attr);
+                    var emptyAnnotations = new IThingType.Annotation[0];
+                    IAttribute[] xAttributesWithEmptyAnnotations =
+                        x.GetHas(writeTransaction, emptyAnnotations).ToArray();
+
+                    // The content of such results is checked in behaviour tests.
+                    Assert.AreEqual(xAttributesWithEmptyAnnotations.Length, 2);
+
+                    var annotations = new []{IThingType.Annotation.NewKey()};
+                    IAttribute[] xAttributesWithAnnotations = x.GetHas(writeTransaction, annotations).ToArray();
+
+                    Assert.AreEqual(xAttributesWithAnnotations.Length, 1);
+                    Assert.That(xAttributesWithAnnotations[0].IsAttribute());
+                    Assert.That(xAttributesWithAnnotations[0].Value.IsLong());
 
                     var refType = writeTransaction.Concepts.GetAttributeType("ref").Resolve();
                     var emailType = writeTransaction.Concepts.GetAttributeType("email").Resolve();
-                    IAttribute[] annotationAttributes2 = xConcept.AsThing().GetHas(
-                        writeTransaction,
-//                        refType,
-                        emailType).ToArray();
 
-                    System.Console.WriteLine("GetHas:");
-                    foreach (var attr in annotationAttributes2) System.Console.WriteLine(attr);
+                    IAttribute[] xAttributesWithAttributeTypes = x.GetHas(
+                        writeTransaction, refType, emailType).ToArray();
+
+                    Assert.AreEqual(xAttributesWithAttributeTypes.Length, 2);
+
+                    IAttribute[] xAttributesWithAttributeTypes2 = x.GetHas(
+                        writeTransaction, refType).ToArray();
+
+                    Assert.AreEqual(xAttributesWithAttributeTypes2.Length, 1);
+                    Assert.That(xAttributesWithAttributeTypes2[0].IsAttribute());
+                    Assert.That(xAttributesWithAttributeTypes2[0].Value.IsLong());
+
+                    IAttribute[] xAttributesWithAttributeTypes3 = x.GetHas(
+                        writeTransaction, emailType).ToArray();
+
+                    Assert.AreEqual(xAttributesWithAttributeTypes3.Length, 1);
+                    Assert.That(xAttributesWithAttributeTypes3[0].IsAttribute());
+                    Assert.That(xAttributesWithAttributeTypes3[0].Value.IsString());
                 }
             }
 
@@ -188,5 +208,101 @@ namespace Vaticle.Typedb.Driver.Test.Integration
             Utils.CloseConnection(driver);
         }
 
+        [Test]
+        public void SendOptionalEnumToNativeSide()
+        {
+            string dbName = "mydb";
+            ITypeDBDriver driver = Utils.OpenConnection();
+            IDatabaseManager dbManager = driver.Databases;
+            IDatabase db1 = Utils.CreateAndGetDatabase(dbManager, dbName);
+
+            using (ITypeDBSession schemaSession = driver.Session(dbName, SessionType.SCHEMA))
+            {
+                using (ITypeDBTransaction writeTransaction = schemaSession.Transaction(TransactionType.WRITE))
+                {
+                    string defineQuery = @"
+                        define
+
+                        person sub entity,
+                         plays employment:employee,
+                         plays friendship:friend,
+                         owns name,
+                         owns age,
+                         owns ref @key,
+                         owns email @unique;
+
+                        company sub entity,
+                         plays employment:employer,
+                         owns name,
+                         owns ref @key;
+
+                        employment sub relation,
+                         relates employee,
+                         relates employer,
+                         owns ref @key;
+
+                        friendship sub relation,
+                         relates friend,
+                         owns ref @key;
+
+                        name sub attribute,
+                         value string;
+
+                        age sub attribute,
+                         value long;
+
+                        ref sub attribute,
+                         value long;
+
+                        email sub attribute,
+                         value string;
+                        ";
+
+                    writeTransaction.Query.Define(defineQuery).Resolve();
+                    writeTransaction.Commit();
+                }
+            }
+
+            using (ITypeDBSession dataSession = driver.Session(dbName, SessionType.DATA))
+            {
+                using (ITypeDBTransaction writeTransaction = dataSession.Transaction(TransactionType.WRITE))
+                {
+                    string insertQuery = @"
+                        insert
+                         $x isa person, has ref 0;
+                         $y isa person, has ref 1;
+                        ";
+
+                    IConceptMap conceptMap = writeTransaction.Query.Insert(insertQuery).ToArray()[0];
+
+                    var x = conceptMap.Get("x").AsThing();
+                    Assert.NotNull(x);
+
+                    var emptyAnnotations = new IThingType.Annotation[0];
+                    IAttributeType[] xAttributeTypesLong =
+                        x.Type.GetOwns(writeTransaction, IValue.ValueType.LONG, emptyAnnotations).ToArray();
+
+                    Assert.AreEqual(xAttributeTypesLong.Length, 2);
+
+                    IAttributeType[] xAttributeTypesString =
+                        x.Type.GetOwns(writeTransaction, IValue.ValueType.STRING, emptyAnnotations).ToArray();
+
+                    Assert.AreEqual(xAttributeTypesString.Length, 2);
+
+                    IAttributeType[] xAttributeTypesNull =
+                        x.Type.GetOwns(writeTransaction, null, emptyAnnotations).ToArray();
+
+                    Assert.AreEqual(xAttributeTypesNull.Length, 4);
+
+                    IAttributeType[] xAttributeTypesDatetime =
+                        x.Type.GetOwns(writeTransaction, IValue.ValueType.DATETIME, emptyAnnotations).ToArray();
+
+                    Assert.AreEqual(xAttributeTypesDatetime.Length, 0);
+                }
+            }
+
+            Utils.DeleteDatabase(dbManager, db1);
+            Utils.CloseConnection(driver);
+        }
     }
 }
