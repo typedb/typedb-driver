@@ -36,7 +36,7 @@ using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
 
-using QueryError = Vaticle.Typedb.Driver.Common.Error.Query;
+using QueryError = Vaticle.Typedb.Driver.Common.Error.Query; // TODO: Change to TypeDB.Driver.Common..... everywhere.
 
 namespace Vaticle.Typedb.Driver.Test.Behaviour
 {
