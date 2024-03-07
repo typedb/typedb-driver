@@ -308,7 +308,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             // $"Expected answer to equal %f, but it was %f.", expectedAnswer, value
         }
 
-        [Then(@"aggregate answer is empty")]
+        [Then(@"aggregate answer is empty")] // TODO: Fix
         public void AggregateAnswerIsEmpty()
         {
             Assert.NotNull(_valueAnswer); // , "The last executed query was not an aggregate query"
@@ -601,6 +601,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
 
 //            builder.append(template.substring(i));
+            // Match tests // TODO
             throw new Exception("This method is not ready yet, needed for MATCH BDD tests");
             return builder.ToString();
         }
@@ -725,7 +726,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                     keyMap[key.Type.Label] = key.Value.ToString();
                 }
 
-                return _value.Equals(keyMap[_type]);
+                return _value.Equals(keyMap.ContainsKey(_type) ? keyMap[_type] : null);
             }
         }
 
@@ -780,32 +781,32 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         private bool MatchAnswerConcept(Dictionary<string, string> answerIdentifiers, IConceptMap answer)
         {
-            foreach (var (key, value) in answerIdentifiers)
+            foreach (var (variable, value) in answerIdentifiers)
             {
                 string[] identifier = value.Split(":", 2);
 
                 switch (identifier[0])
                 {
                     case "label":
-                        if (!new LabelUniquenessCheck(identifier[1]).Check(answer.Get(key)))
+                        if (!new LabelUniquenessCheck(identifier[1]).Check(answer.Get(variable)))
                         {
                             return false;
                         }
                         break;
                     case "key":
-                        if (!new KeyUniquenessCheck(identifier[1]).Check(answer.Get(key)))
+                        if (!new KeyUniquenessCheck(identifier[1]).Check(answer.Get(variable)))
                         {
                             return false;
                         }
                         break;
                     case "attr":
-                        if (!new AttributeValueUniquenessCheck(identifier[1]).Check(answer.Get(key)))
+                        if (!new AttributeValueUniquenessCheck(identifier[1]).Check(answer.Get(variable)))
                         {
                             return false;
                         }
                         break;
                     case "value":
-                        if (!new ValueUniquenessCheck(identifier[1]).Check(answer.Get(key)))
+                        if (!new ValueUniquenessCheck(identifier[1]).Check(answer.Get(variable)))
                         {
                             return false;
                         }
