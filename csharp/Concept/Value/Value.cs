@@ -154,11 +154,31 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public override string ToString()
         {
-            if (IsBool()) return AsBool().ToString();
-            if (IsLong()) return AsLong().ToString();
-            if (IsDouble()) return AsDouble().ToString();
-            if (IsString()) return AsString();
-            if (IsDateTime()) return AsDateTime().ToString();
+            if (IsBool())
+            {
+                var str = AsBool().ToString();
+                return str[0].ToString().ToLower() + str.Substring(1);
+            }
+
+            if (IsLong())
+            {
+                return AsLong().ToString();
+            }
+
+            if (IsDouble())
+            {
+                return AsDouble().ToString("0.0###############");
+            }
+
+            if (IsString())
+            {
+                return AsString();
+            }
+
+            if (IsDateTime())
+            {
+                return AsDateTime().ToString();
+            }
 
             throw new TypeDBDriverException(InternalError.UNEXPECTED_NATIVE_VALUE);
         }
