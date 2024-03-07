@@ -70,11 +70,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Given(@"typeql undefine")]
         [When(@"typeql undefine")]
         [Then(@"typeql undefine")]
-        public void TypeqlUndefine(DocString undefineQueryStatements) 
+        public void TypeqlUndefine(DocString undefineQueryStatements)
         {
             SingleTransaction.Query.Undefine(undefineQueryStatements.Content).Resolve();
         }
-    
+
         [Given(@"typeql undefine; throws exception")]
         [When(@"typeql undefine; throws exception")]
         [Then(@"typeql undefine; throws exception")]
@@ -82,16 +82,16 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             Assert.Throws<TypeDBDriverException>(() => TypeqlUndefine(undefineQueryStatements));
         }
-    
+
         [Then(@"typeql undefine; throws exception containing {string}")]
-        public void TypeqlUndefineThrowsExceptionContaining(string expectedMessage, DocString undefineQueryStatements) 
+        public void TypeqlUndefineThrowsExceptionContaining(string expectedMessage, DocString undefineQueryStatements)
         {
             var exception = Assert.Throws<TypeDBDriverException>(
                 () => TypeqlUndefine(undefineQueryStatements));
 
             Assert.Contains(expectedMessage, exception.Message);
         }
-    
+
         [Given(@"typeql insert")]
         [When(@"typeql insert")]
         [Then(@"typeql insert")]
@@ -119,7 +119,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Given(@"typeql delete")]
         [When(@"typeql delete")]
         [Then(@"typeql delete")]
-        public void TypeqlDelete(DocString deleteQueryStatements) 
+        public void TypeqlDelete(DocString deleteQueryStatements)
         {
             SingleTransaction.Query.Delete(deleteQueryStatements.Content).Resolve();
         }
@@ -127,11 +127,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Given(@"typeql delete; throws exception")]
         [When(@"typeql delete; throws exception")]
         [Then(@"typeql delete; throws exception")]
-        public void TypeqlDeleteThrowsException(DocString deleteQueryStatements) 
+        public void TypeqlDeleteThrowsException(DocString deleteQueryStatements)
         {
             Assert.Throws<TypeDBDriverException>(() => TypeqlDelete(deleteQueryStatements));
         }
-    
+
         [Given(@"typeql delete; throws exception containing {string}")]
         [When(@"typeql delete; throws exception containing {string}")]
         public void TypeqlDeleteThrowsExceptionContaining(string expectedMessage, DocString deleteQueryStatements)
@@ -141,7 +141,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
             Assert.Contains(expectedMessage, exception.Message);
         }
-    
+
         [Given(@"typeql update")]
         [When(@"typeql update")]
         [Then(@"typeql update")]
@@ -157,9 +157,9 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             Assert.Throws<TypeDBDriverException>(() => TypeqlUpdate(updateQueryStatements));
         }
-    
+
         [Then(@"typeql update; throws exception containing {string}")]
-        public void TypeqlUpdateThrowsExceptionContaining(string expectedMessage, DocString updateQueryStatements) 
+        public void TypeqlUpdateThrowsExceptionContaining(string expectedMessage, DocString updateQueryStatements)
         {
             var exception = Assert.Throws<TypeDBDriverException>(() => TypeqlUpdate(updateQueryStatements));
 
@@ -169,7 +169,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Given(@"get answers of typeql insert")]
         [When(@"get answers of typeql insert")]
         [Then(@"get answers of typeql insert")]
-        public void GetAnswersOfTypeqlInsert(DocString insertQueryStatements) 
+        public void GetAnswersOfTypeqlInsert(DocString insertQueryStatements)
         {
             ClearAnswers();
             _answers = SingleTransaction.Query.Insert(insertQueryStatements.Content).ToList();
@@ -178,19 +178,19 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Given(@"get answers of typeql get")]
         [When(@"get answers of typeql get")]
         [Then(@"get answers of typeql get")]
-        public void TypeqlGet(DocString getQueryStatements) 
+        public void TypeqlGet(DocString getQueryStatements)
         {
             ClearAnswers();
             _answers = SingleTransaction.Query.Get(getQueryStatements.Content).ToList();
         }
-    
+
         [When(@"typeql get; throws exception")]
         [Then(@"typeql get; throws exception")]
         public void TypeqlGetThrowsException(DocString getQueryStatements)
         {
             Assert.Throws<TypeDBDriverException>(() => TypeqlGet(getQueryStatements));
         }
-    
+
         [When(@"typeql get; throws exception containing {string}")]
         [Then(@"typeql get; throws exception containing {string}")]
         public void TypeqlGetThrowsExceptionContaining(string expectedMessage, DocString getQueryStatements)
@@ -210,7 +210,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             ClearAnswers();
             _valueAnswer = SingleTransaction.Query.GetAggregate(getQueryStatements.Content).Resolve();
         }
-    
+
         [When(@"typeql get aggregate; throws exception")]
         [Then(@"typeql get aggregate; throws exception")]
         public void TypeqlGetAggregateThrowsException(DocString getQueryStatements)
@@ -227,7 +227,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             ClearAnswers();
             _answerGroups = SingleTransaction.Query.GetGroup(getQueryStatements.Content).ToList();
         }
-    
+
         [When(@"typeql get group; throws exception")]
         [Then(@"typeql get group; throws exception")]
         public void TypeqlGetGroupThrowsException(DocString getQueryStatements)
@@ -244,7 +244,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             ClearAnswers();
             _valueAnswerGroups = SingleTransaction.Query.GetGroupAggregate(getQueryStatements.Content).ToList();
         }
-    
+
         [Given(@"answer size is: {}")]
         [Then(@"answer size is: {}")]
         public void AnswerSizeIs(int expectedAnswers)
@@ -470,13 +470,42 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             Assert.Throws<TypeDBDriverException>(() => TypeqlFetch(fetchQueryStatements));
         }
 
+        public class JObjectHelper
+        {
+            private JObject _object;
+
+            public JObjectHelper(JObject obj)
+            {
+                _object = obj;
+            }
+
+            public override bool Equals(object? obj)
+            {
+                if (Object.ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+
+                if (obj == null || this.GetType() != obj.GetType())
+                {
+                    return false;
+                }
+
+                return JToken.DeepEquals((((JObjectHelper)obj)._object), _object);
+            }
+
+            public override int GetHashCode() { return _object.GetHashCode(); }
+
+            public override string ToString() { return _object.ToString();}
+        }
+
         [Then(@"fetch answers are")]
         public void FetchAnswersAre(DocString expectedJSON)
         {
-            JArray expected = JArray.Parse(expectedJSON.Content);
-            JArray answers = new JArray(_fetchAnswers);
+            var expected = new JArray(JArray.Parse(expectedJSON.Content).ToObject<List<JObject>>());
+            var answers = new JArray(_fetchAnswers);
 
-            Assert.True(JToken.DeepEquals(expected, answers));
+            Assert.True(Util.JsonDeepEqualsUnordered(expected, answers));
         }
 
         [Then(@"rules are")]
@@ -758,13 +787,29 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 switch (identifier[0])
                 {
                     case "label":
-                        return new LabelUniquenessCheck(identifier[1]).Check(answer.Get(key));
+                        if (!new LabelUniquenessCheck(identifier[1]).Check(answer.Get(key)))
+                        {
+                            return false;
+                        }
+                        break;
                     case "key":
-                        return new KeyUniquenessCheck(identifier[1]).Check(answer.Get(key));
+                        if (!new KeyUniquenessCheck(identifier[1]).Check(answer.Get(key)))
+                        {
+                            return false;
+                        }
+                        break;
                     case "attr":
-                        return new AttributeValueUniquenessCheck(identifier[1]).Check(answer.Get(key));
+                        if (!new AttributeValueUniquenessCheck(identifier[1]).Check(answer.Get(key)))
+                        {
+                            return false;
+                        }
+                        break;
                     case "value":
-                        return new ValueUniquenessCheck(identifier[1]).Check(answer.Get(key));
+                        if (!new ValueUniquenessCheck(identifier[1]).Check(answer.Get(key)))
+                        {
+                            return false;
+                        }
+                        break;
                 }
             }
 

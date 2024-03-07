@@ -20,6 +20,7 @@
  */
 
 using DataTable = Gherkin.Ast.DataTable;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,6 +78,61 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
 
             return parsedData;
+        }
+
+        public static bool JsonDeepEqualsUnordered(JToken expectedToken, JToken checkedToken)
+        {
+            return JToken.DeepEquals(GetSortedJson(expectedToken), GetSortedJson(checkedToken));
+        }
+
+        private static JToken GetSortedJson(JToken token)
+        {
+            if (token == null)
+            {
+                return token;
+            }
+
+            var result = token;
+
+            switch (token.Type)
+            {
+                case JTokenType.Object:
+                    var jObject = (JObject)token;
+
+                    if (jObject != null && jObject.HasValues)
+                    {
+                        var newObject = new JObject();
+
+                        foreach (var property in jObject.Properties().OrderBy(x => x.Name).ToList())
+                        {
+                            var sortedValue = GetSortedJson(property.Value as JToken);
+                            newObject.Add(property.Name, sortedValue);
+                        }
+
+                        return newObject;
+                    }
+
+                    break;
+
+                case JTokenType.Array:
+                    var jArray = (JArray)token;
+
+                    if (jArray != null && jArray.Count > 0)
+                    {
+                        var normalizedArrayItems = jArray
+                            .Select(x => GetSortedJson(x))
+                            .OrderBy(x => x.ToString(), StringComparer.Ordinal);
+
+                        result = new JArray(normalizedArrayItems);
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
+
+            return result;
         }
     }
 }
