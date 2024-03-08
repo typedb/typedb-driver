@@ -280,8 +280,6 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             var parsedIdentifiers = Util.ParseDataTableToMultiDictionary(answersIdentifiers);
             Assert.Equal(parsedIdentifiers.Count, _answers.Count);
-            // $"The number of identifier entries (rows) should match the number of answers, "
-            // $"but found {answersIdentifiers.Count} identifier entries and {_answers.Count} answers."
 
             for (int i = 0; i < _answers.Count; i++)
             {
@@ -290,7 +288,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
                 Assert.True(
                     MatchAnswerConcept(answerIdentifiers, answer),
-                    $"The answer at index {i} does not match the identifier entry (row) at index {i}.");
+                    $"The answer at index {i} does not match the identifier entry (row) at index {i}");
             }
         }
 
@@ -305,13 +303,12 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 : _valueAnswer.AsLong();
 
             Assert.Equal(expectedAnswer, value, 0.001);
-            // $"Expected answer to equal %f, but it was %f.", expectedAnswer, value
         }
 
         [Then(@"aggregate answer is empty")] // TODO: Fix
         public void AggregateAnswerIsEmpty()
         {
-            Assert.NotNull(_valueAnswer); // , "The last executed query was not an aggregate query"
+            Assert.NotNull(_valueAnswer);
             Assert.True(_valueAnswer == null);
         }
 
@@ -550,7 +547,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             {
                 string query = ApplyQueryTemplate(templatedQuery.Content, answer);
 
-                Assert.Throws<TypeDBDriverException>(() =>
+                var exception = Assert.Throws<TypeDBDriverException>(() =>
                     {
                         long ignored = SingleTransaction.Query.Get(query).ToArray().Length;
                     });
@@ -568,41 +565,42 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
             foreach (Match match in matches)
             {
-                GroupCollection groups = match.Groups;
-                System.Console.WriteLine(groups);
-//                string matched = matcher.group(0);
-//                string requiredVariable = variableFromTemplatePlaceholder(matched.substring(1, matched.length() - 1));
-//
-//                builder.append(template, i, matcher.start());
-//                try
-//                {
-//                    Concept concept = templateFiller.get(requiredVariable);
-//                    if (!concept.IsThing())
-//                    {
-//                        throw new BehaviourTestException("Cannot apply IID templating to Type concepts")];
-//                    }
-//
-//                    string conceptId = concept.AsThing().IID;
-//                    builder.append(conceptId);
-//                }
-//                catch (TypeDBDriverException e)
-//                {
-//                    if (e.GetErrorMessage().Equals(QueryError.VARIABLE_DOES_NOT_EXIST))
-//                    {
-//                        throw new BehaviourTestException($"No IID available for template placeholder: {matched}."));
-//                    }
-//                    else
-//                    {
-//                        throw e;
-//                    }
-//                }
-//
-//                i = matcher.end();
+                var matchedGroup = match.Groups[0];
+
+                int valStartIndex = 1;
+                string requiredVariable = VariableFromTemplatePlaceholder(
+                    matchedGroup.Value.Substring(valStartIndex, matchedGroup.Length - valStartIndex - 1));
+
+                builder.Append(template, i, matchedGroup.Index - i);
+
+                try
+                {
+                    IConcept concept = templateFiller.Get(requiredVariable);
+                    if (!concept.IsThing())
+                    {
+                        throw new BehaviourTestException("Cannot apply IID templating to Type concepts");
+                    }
+
+                    string conceptId = concept.AsThing().IID;
+                    builder.Append(conceptId);
+                }
+                catch (TypeDBDriverException e)
+                {
+                    if (e.ErrorMessage.Equals(QueryError.VARIABLE_DOES_NOT_EXIST))
+                    {
+                        throw new BehaviourTestException($"No IID available for template placeholder: {matchedGroup}");
+                    }
+                    else
+                    {
+                        throw e;
+                    }
+                }
+
+                i = matchedGroup.Index + matchedGroup.Length;
             }
 
-//            builder.append(template.substring(i));
-            // Match tests // TODO
-            throw new Exception("This method is not ready yet, needed for MATCH BDD tests");
+            builder.Append(template, i, template.Length - i);
+
             return builder.ToString();
         }
 
@@ -616,7 +614,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             }
             else
             {
-                throw new BehaviourTestException("Cannot replace template not based on ID.");
+                throw new BehaviourTestException("Cannot replace template not based on ID");
             }
         }
 
@@ -643,7 +641,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 }
 
                 throw new BehaviourTestException(
-                    "Concept was checked for label uniqueness, but it is not a Type.");
+                    "Concept was checked for label uniqueness, but it is not a Type");
             }
         }
 
