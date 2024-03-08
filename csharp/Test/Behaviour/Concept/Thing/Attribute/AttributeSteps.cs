@@ -41,8 +41,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"attribute\\( ?{type_label} ?) get instances contain: {var}")]
         public void AttributeTypeGetInstancesContain(string typeLabel, string var)
         {
-            var instances = Tx
-                .Concepts
+            var instances = Tx.Concepts
                 .GetAttributeType(typeLabel).Resolve()
                 .GetInstances(Tx);
 
@@ -71,8 +70,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?boolean ?) put: {bool}")]
         public void AttributeTypeAsBooleanPut(string var, string typeLabel, bool value)
         {
-            var attributeType = Tx
-                .Concepts
+            var attributeType = Tx.Concepts
                 .GetAttributeType(typeLabel).Resolve()
                 .Put(Tx, value).Resolve();
 
@@ -82,8 +80,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?boolean ?) put: {bool}; throws exception")]
         public void AttributeTypeAsBooleanPutThrowsException(string typeLabel, bool value)
         {
-            Assert.Throws<TypeDBDriverException>(() => Tx
-                .Concepts
+            Assert.Throws<TypeDBDriverException>(() => Tx.Concepts
                 .GetAttributeType(typeLabel).Resolve()
                 .Put(Tx, value).Resolve());
         }
@@ -91,8 +88,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?long ?) put: {int}")]
         public void AttributeTypeAsLongPut(string var, string typeLabel, long value)
         {
-            var attributeType = Tx
-                .Concepts
+            var attributeType = Tx.Concepts
                 .GetAttributeType(typeLabel).Resolve()
                 .Put(Tx, value).Resolve();
 
@@ -102,8 +98,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?long ?) put: {int}; throws exception")]
         public void AttributeTypeAsLongPutThrowsException(string typeLabel, long value)
         {
-            Assert.Throws<TypeDBDriverException>(() => Tx
-                .Concepts
+            Assert.Throws<TypeDBDriverException>(() => Tx.Concepts
                 .GetAttributeType(typeLabel).Resolve()
                 .Put(Tx, value).Resolve());
         }
@@ -111,8 +106,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?double ?) put: {double}")]
         public void AttributeTypeAsDoublePut(string var, string typeLabel, double value)
         {
-            var attributeType = Tx
-                .Concepts
+            var attributeType = Tx.Concepts
                 .GetAttributeType(typeLabel).Resolve()
                 .Put(Tx, value).Resolve();
 
@@ -122,8 +116,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?double ?) put: {double}; throws exception")]
         public void AttributeTypeAsDoublePutThrowsException(string typeLabel, double value)
         {
-            Assert.Throws<TypeDBDriverException>(() => Tx
-                .Concepts
+            Assert.Throws<TypeDBDriverException>(() => Tx.Concepts
                 .GetAttributeType(typeLabel).Resolve()
                 .Put(Tx, value).Resolve());
         }
@@ -131,8 +124,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?string ?) put: {word}")]
         public void AttributeTypeAsStringPut(string var, string typeLabel, string value)
         {
-            var attributeType = Tx
-                .Concepts
+            var attributeType = Tx.Concepts
                 .GetAttributeType(typeLabel).Resolve()
                 .Put(Tx, value).Resolve();
 
@@ -142,8 +134,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?string ?) put: {word}; throws exception")]
         public void AttributeTypeAsStringPutThrowsException(string typeLabel, string value)
         {
-            Assert.Throws<TypeDBDriverException>(() => Tx
-                .Concepts
+            Assert.Throws<TypeDBDriverException>(() => Tx.Concepts
                 .GetAttributeType(typeLabel).Resolve()
                 .Put(Tx, value).Resolve());
         }
@@ -151,8 +142,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?datetime ?) put: {datetime}")]
         public void AttributeTypeAsDatetimePut(string var, string typeLabel, DateTime value)
         {
-            var attributeType = Tx
-                .Concepts
+            var attributeType = Tx.Concepts
                 .GetAttributeType(typeLabel).Resolve()
                 .Put(Tx, value).Resolve();
 
@@ -162,8 +152,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?datetime ?) put: {datetime}; throws exception")]
         public void AttributeTypeAsDatetimePutThrowsException(string typeLabel, DateTime value)
         {
-            var exception = Assert.Throws<TypeDBDriverException>(() => Tx
-                .Concepts.GetAttributeType(typeLabel).Resolve()
+            var exception = Assert.Throws<TypeDBDriverException>(() => Tx.Concepts.GetAttributeType(typeLabel).Resolve()
                 .Put(Tx, value));
 
             Console.WriteLine(exception.Message); // TODO: Just for debug, remove later.
@@ -172,8 +161,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?boolean ?) get: {bool}")]
         public void AttributeTypeAsBooleanGet(string var, string typeLabel, bool value)
         {
-            var attributeType = Tx
-                .Concepts
+            var attributeType = Tx.Concepts
                 .GetAttributeType(typeLabel).Resolve()
                 .Get(Tx, value).Resolve();
 
@@ -183,8 +171,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?long ?) get: {int}")]
         public void AttributeTypeAsLongGet(string var, string typeLabel, long value)
         {
-            var attributeType = Tx
-                .Concepts
+            var attributeType = Tx.Concepts
                 .GetAttributeType(typeLabel).Resolve()
                 .Get(Tx, value).Resolve();
 
@@ -194,8 +181,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?double ?) get: {double}")]
         public void AttributeTypeAsDoubleGet(string var, string typeLabel, double value)
         {
-            var attributeType = Tx
-                .Concepts
+            var attributeType = Tx.Concepts
                 .GetAttributeType(typeLabel).Resolve()
                 .Get(Tx, value).Resolve();
 
@@ -205,8 +191,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?string ?) get: {word}")]
         public void AttributeTypeAsStringGet(string var, string typeLabel, string value)
         {
-            var attributeType = Tx
-                .Concepts
+            var attributeType = Tx.Concepts
                 .GetAttributeType(typeLabel).Resolve()
                 .Get(Tx, value).Resolve();
 
@@ -216,8 +201,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?datetime ?) get: {datetime}")]
         public void AttributeTypeAsDatetimeGet(string var, string typeLabel, DateTime value)
         {
-            var attributeType = Tx
-                .Concepts
+            var attributeType = Tx.Concepts
                 .GetAttributeType(typeLabel).Resolve()
                 .Get(Tx, value).Resolve();
 

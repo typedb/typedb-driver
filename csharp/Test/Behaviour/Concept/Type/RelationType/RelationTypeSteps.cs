@@ -42,8 +42,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"relation\\( ?{type_label} ?) set relates role: {type_label}")]
         public void RelationTypeSetRelatesRoleType(string relationLabel, string roleLabel)
         {
-            Tx
-                .Concepts
+            Tx.Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .SetRelates(Tx, roleLabel).Resolve();
         }
@@ -57,8 +56,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"relation\\( ?{type_label} ?) unset related role: {type_label}")]
         public void RelationTypeUnsetRelatedRoleType(string relationLabel, string roleLabel)
         {
-            Tx
-                .Concepts
+            Tx.Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .unsetRelates(Tx, roleLabel).Resolve();
         }
@@ -72,8 +70,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"relation\\( ?{type_label} ?) set relates role: {type_label} as {type_label}")]
         public void RelationTypeSetRelatesRoleTypeAs(string relationLabel, string roleLabel, string superRole)
         {
-            Tx
-                .Concepts
+            Tx.Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .SetRelates(Tx, roleLabel, superRole).Resolve();
         }
@@ -89,8 +86,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"relation\\( ?{type_label} ?) remove related role: {type_label}")]
         public void RelationTypeRemoveRelatedRole(string relationLabel, string roleLabel)
         {
-            Tx
-                .Concepts
+            Tx.Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .GetRelates(Tx, roleLabel).Resolve()
                 .Delete(Tx).Resolve();
@@ -99,8 +95,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) is null: {bool}")]
         public void RelationTypeGetRoleTypeIsNull(string relationLabel, string roleLabel, bool isNull)
         {
-            var roleType = Tx
-                .Concepts
+            var roleType = Tx.Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .GetRelates(Tx, roleLabel).Resolve();
 
@@ -111,8 +106,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void RelationTypeGetOverriddenRoleTypeIsNull(
             string relationLabel, string roleLabel, bool isNull)
         {
-            var overridenType = Tx
-                .Concepts
+            var overridenType = Tx.Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .GetRelatesOverridden(Tx, roleLabel).Resolve();
 
@@ -122,8 +116,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) set label: {type_label}")]
         public void RelationTypeGetRoleTypeSetLabel(string relationLabel, string roleLabel, string newLabel)
         {
-            Tx
-                .Concepts
+            Tx.Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .GetRelates(Tx, roleLabel).Resolve()
                 .SetLabel(Tx, newLabel).Resolve();
@@ -132,8 +125,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get label: {type_label}")]
         public void RelationTypeGetRoleTypeGetLabel(string relationLabel, string roleLabel, string getLabel)
         {
-            var relates = Tx
-                .Concepts
+            var relates = Tx.Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .GetRelates(Tx, roleLabel).Resolve();
 
@@ -144,8 +136,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void RelationTypeGetOverriddenRoleTypeGetLabel(
             string relationLabel, string roleLabel, string getLabel)
         {
-            var relates = Tx
-                .Concepts
+            var relates = Tx.Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .GetRelatesOverridden(Tx, roleLabel).Resolve();
 
@@ -155,8 +146,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) is abstract: {bool}")]
         public void RelationTypeGetRoleTypeIsAbstract(string relationLabel, string roleLabel, bool isAbstract)
         {
-            var isRelatesAbstract = Tx
-                .Concepts
+            var isRelatesAbstract = Tx.Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .GetRelates(Tx, roleLabel).Resolve()
                 .IsAbstract();
@@ -166,8 +156,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         private HashSet<Label> RelationTypeGetRelatedRoleTypes(string relationLabel)
         {
-            return Tx
-                .Concepts
+            return Tx.Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .GetRelates(Tx)
                 .Select(obj => obj.Label)
@@ -187,7 +176,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             HashSet<Label> actuals = RelationTypeGetRelatedRoleTypes(relationLabel);
             
-            for (Label label : roleLabels) 
+            foreach (Label label in roleLabels)
             {
                 Assert.False(actuals.Contains(label));
             }
@@ -195,8 +184,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         private HashSet<Label> RelationTypeGetRelatedExplicitRoleTypes(string relationLabel)
         {
-            return Tx
-                .Concepts
+            return Tx.Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .GetRelates(Tx, EXPLICIT)
                 .Select(obj => obj.Label)
@@ -218,7 +206,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             HashSet<Label> actuals = RelationTypeGetRelatedExplicitRoleTypes(relationLabel);
 
-            for (Label label : roleLabels)
+            foreach (Label label in roleLabels)
             {
                 Assert.False(actuals.Contains(label));
             }
@@ -227,13 +215,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"relation\\( ?{type_label} ?) get role\\( ?{type_label} ?) get supertype: {scoped_label}")]
         public void RelationTypeGetRoleTypeGetSupertype(string relationLabel, string roleLabel, Label superLabel)
         {
-            RoleType superLabelType = Tx
-                .Concepts
+            RoleType superLabelType = Tx.Concepts
                 .GetRelationType(superLabel.Scope.Get()).Resolve()
                 .GetRelates(Tx, superLabel.Name).Resolve();
 
-            RoleType labelSupertype = Tx
-                .Concepts
+            RoleType labelSupertype = Tx.Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .GetRelates(Tx, roleLabel).Resolve()
                 .GetSupertype(Tx).Resolve();
@@ -243,8 +229,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         private HashSet<Label> RelationTypeGetRoleTypeGetSupertypes(string relationLabel, string roleLabel) 
         {
-            return Tx
-                .Concepts
+            return Tx.Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .GetRelates(Tx, roleLabel).Resolve()
                 .GetSupertypes(Tx).Select(obj => obj.Label).ToHashSet();
@@ -265,7 +250,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             HashSet<Label> actuals = RelationTypeGetRoleTypeGetSupertypes(relationLabel, roleLabel);
             
-            for (Label superLabel : superLabels) 
+            foreach (Label superLabel in superLabels)
             {
                 Assert.False(actuals.Contains(superLabel));
             }
@@ -273,8 +258,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         private HashSet<string> RelationTypeGetRoleTypeGetPlayers(string relationLabel, string roleLabel) 
         {
-            return Tx
-                .Concepts
+            return Tx.Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .GetRelates(Tx, roleLabel).Resolve()
                 .GetPlayerTypes(Tx).Select(t => t.Label.Name)
@@ -296,7 +280,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             HashSet<string> actuals = RelationTypeGetRoleTypeGetPlayers(relationLabel, roleLabel);
 
-            for (string superLabel : playerLabels)
+            foreach (string superLabel in playerLabels)
             {
                 Assert.False(actuals.Contains(superLabel));
             }
@@ -304,8 +288,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
 
         private HashSet<Label> RelationTypeGetRoleTypeGetSubtypes(string relationLabel, string roleLabel) 
         {
-            return Tx
-                .Concepts
+            return Tx.Concepts
                 .GetRelationType(relationLabel).Resolve()
                 .GetRelates(Tx, roleLabel).Resolve()
                 .GetSubtypes(Tx)
@@ -328,7 +311,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             HashSet<Label> actuals = RelationTypeGetRoleTypeGetSubtypes(relationLabel, roleLabel);
 
-            for (Label subLabel : subLabels)
+            foreach (Label subLabel in subLabels)
             {
                 Assert.False(actuals.Contains(subLabel));
             }
