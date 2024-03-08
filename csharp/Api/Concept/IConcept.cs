@@ -331,7 +331,7 @@ namespace Vaticle.Typedb.Driver.Api
          *
          * <h3>Examples</h3>
          * <pre>
-         * attributeType.GetOwners(transaction, annotation, Concept.Transitivity.EXPLICIT);
+         * attributeType.GetOwners(transaction, annotation, EXPLICIT);
          * </pre>
          */
          public class Transitivity

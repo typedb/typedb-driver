@@ -26,6 +26,7 @@ using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
 using Vaticle.Typedb.Driver.Concept;
+using static Vaticle.Typedb.Driver.Api.IConcept.Transitivity;
 
 using InternalError = Vaticle.Typedb.Driver.Common.Error.Internal;
 
@@ -186,7 +187,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public IEnumerable<IRoleType> GetPlays(ITypeDBTransaction transaction)
         {
-            return GetPlays(transaction, IConcept.Transitivity.TRANSITIVE);
+            return GetPlays(transaction, TRANSITIVE);
         }
 
         public IEnumerable<IRoleType> GetPlays(
@@ -214,25 +215,25 @@ namespace Vaticle.Typedb.Driver.Concept
 
         public IEnumerable<IAttributeType> GetOwns(ITypeDBTransaction transaction)
         {
-            return GetOwns(transaction, IConcept.Transitivity.TRANSITIVE, new IThingType.Annotation[0]);
+            return GetOwns(transaction, TRANSITIVE, new IThingType.Annotation[0]);
         }
 
         public IEnumerable<IAttributeType> GetOwns(ITypeDBTransaction transaction, IValue.ValueType valueType)
         {
             return GetOwns(
-                transaction, valueType, IConcept.Transitivity.TRANSITIVE, new IThingType.Annotation[0]);
+                transaction, valueType, TRANSITIVE, new IThingType.Annotation[0]);
         }
 
         public IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, ICollection<IThingType.Annotation> annotations)
         {
-            return GetOwns(transaction, IConcept.Transitivity.TRANSITIVE, annotations);
+            return GetOwns(transaction, TRANSITIVE, annotations);
         }
 
         public IEnumerable<IAttributeType> GetOwns(
             ITypeDBTransaction transaction, IValue.ValueType? valueType, ICollection<IThingType.Annotation> annotations)
         {
-            return GetOwns(transaction, valueType, IConcept.Transitivity.TRANSITIVE, annotations);
+            return GetOwns(transaction, valueType, TRANSITIVE, annotations);
         }
 
         public IEnumerable<IAttributeType> GetOwns(

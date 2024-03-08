@@ -29,6 +29,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Gherkin.Quick;
+using static Vaticle.Typedb.Driver.Api.IConcept.Transitivity;
 
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
@@ -132,7 +133,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) does not have any regex")]
         public void AttributeTypeAsValueTypeDoesNotHaveAnyRegex(string typeLabel, Value.Type valueType)
         {
-            AttributeTypeAsValueType_Getregex(typeLabel, valueType, null);
+            AttributeTypeAsValueTypeGetRegex(typeLabel, valueType, null);
         }
 
         [Then(@"attribute\\( ?{type_label} ?) get owners, with annotations: {annotations}; contain:")]
@@ -141,8 +142,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             AttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
             HashSet<string> actuals = attributeType
-                .GetOwners(Tx, set(annotations))
-                .Selectt => t.Label.Name)
+                .GetOwners(Tx, new []{annotations})
+                .Select(t => t.Label.Name)
                 .ToHashSet();
 
             Assert.False(actuals.Except(ownerLabels).Any());
@@ -154,8 +155,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             AttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
             HashSet<string> actuals = attributeType
-                .GetOwners(Tx, set(annotations))
-                .Selectt => t.Label.Name)
+                .GetOwners(Tx, new []{annotations})
+                .Select(t => t.Label.Name)
                 .ToHashSet();
 
             for (string ownerLabel : ownerLabels)
@@ -170,8 +171,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             AttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
             HashSet<string> actuals = attributeType
-                .GetOwners(Tx, set(annotations), EXPLICIT)
-                .Selectt => t.Label.Name)
+                .GetOwners(Tx, new []{annotations}, EXPLICIT)
+                .Select(t => t.Label.Name)
                 .ToHashSet();
 
             Assert.False(actuals.Except(ownerLabels).Any());
@@ -183,8 +184,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             AttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
             HashSet<string> actuals = attributeType
-                .GetOwners(Tx, set(annotations), EXPLICIT)
-                .Selectt => t.Label.Name)
+                .GetOwners(Tx, new []{annotations}, EXPLICIT)
+                .Select(t => t.Label.Name)
                 .ToHashSet();
 
             for (string ownerLabel : ownerLabels)
@@ -198,8 +199,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             AttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
             HashSet<string> actuals = attributeType
-                .GetOwners(Tx, emptySet())
-                .Selectt => t.Label.Name)
+                .GetOwners(Tx, new Annotation[0])
+                .Select(t => t.Label.Name)
                 .ToHashSet();
 
             Assert.False(actuals.Except(ownerLabels).Any());
@@ -210,8 +211,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             AttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
             HashSet<string> actuals = attributeType
-                .GetOwners(Tx, emptySet())
-                .Selectt => t.Label.Name)
+                .GetOwners(Tx, new Annotation[0])
+                .Select(t => t.Label.Name)
                 .ToHashSet();
 
             for (string ownerLabel : ownerLabels)
@@ -225,8 +226,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             AttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
             HashSet<string> actuals = attributeType
-                .GetOwners(Tx, emptySet(), EXPLICIT)
-                .Selectt => t.Label.Name)
+                .GetOwners(Tx, new Annotation[0], EXPLICIT)
+                .Select(t => t.Label.Name)
                 .ToHashSet();
 
             Assert.False(actuals.Except(ownerLabels).Any());
@@ -237,8 +238,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             AttributeType attributeType = Tx.Concepts.GetAttributeType(typeLabel).Resolve();
             HashSet<string> actuals = attributeType
-                .GetOwners(Tx, emptySet(), EXPLICIT)
-                .Selectt => t.Label.Name)
+                .GetOwners(Tx, new Annotation[0], EXPLICIT)
+                .Select(t => t.Label.Name)
                 .ToHashSet();
 
             for (string ownerLabel : ownerLabels)

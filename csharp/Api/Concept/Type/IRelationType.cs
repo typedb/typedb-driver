@@ -78,8 +78,8 @@ namespace Vaticle.Typedb.Driver.Api
          * </pre>
          *
          * @param transaction The current transaction
-         * @param transitivity <code>Transitivity.TRANSITIVE</code> for direct and inherited relates,
-         *                     <code>Transitivity.EXPLICIT</code> for direct relates only
+         * @param transitivity <code>TRANSITIVE</code> for direct and inherited relates,
+         *                     <code>EXPLICIT</code> for direct relates only
          */
         IEnumerable<IRoleType> GetRelates(ITypeDBTransaction transaction, IConcept.Transitivity transitivity);
     

@@ -33,6 +33,7 @@ using Xunit.Gherkin.Quick;
 using Vaticle.Typedb.Driver;
 using Vaticle.Typedb.Driver.Api;
 using Vaticle.Typedb.Driver.Common;
+using static Vaticle.Typedb.Driver.Api.IConcept.Transitivity;
 
 namespace Vaticle.Typedb.Driver.Test.Behaviour
 {
@@ -244,7 +245,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             RootLabel rootLabel, string typeLabel, string attTypeLabel, List<Annotation> annotations)
         {
             AttributeType attributeType = Tx.Concepts.GetAttributeType(attTypeLabel).Resolve();
-            GetThingType(rootLabel, typeLabel).SetOwns(Tx, attributeType, set(annotations)).Resolve();
+            GetThingType(rootLabel, typeLabel).SetOwns(Tx, attributeType, new []{annotations}).Resolve();
         }
 
         [When(@"{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label} as {type_label}, with annotations: {annotations}")]
@@ -259,7 +260,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             AttributeType overriddenType = Tx.Concepts.GetAttributeType(overriddenLabel).Resolve();
 
             GetThingType(rootLabel, typeLabel)
-                .SetOwns(Tx, attributeType, overriddenType, set(annotations)).Resolve();
+                .SetOwns(Tx, attributeType, overriddenType, new []{annotations}).Resolve();
         }
 
         [Then(@"{root_label}\\( ?{type_label} ?) set owns attribute type: {type_label}, with annotations: {annotations}; throws exception")]
@@ -287,7 +288,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             RootLabel rootLabel, string typeLabel, List<Annotation> annotations, List<string> attributeLabels)
         {
             HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
-                .GetOwns(Tx, set(annotations))
+                .GetOwns(Tx, new []{annotations})
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
@@ -299,7 +300,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             RootLabel rootLabel, string typeLabel, List<Annotation> annotations, List<string> attributeLabels)
         {
             HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
-                .GetOwns(Tx, set(annotations))
+                .GetOwns(Tx, new []{annotations})
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
@@ -314,7 +315,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             RootLabel rootLabel, string typeLabel, List<Annotation> annotations, List<string> attributeLabels)
         {
             HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
-                .GetOwns(Tx, set(annotations), EXPLICIT)
+                .GetOwns(Tx, new []{annotations}, EXPLICIT)
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
@@ -326,7 +327,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             RootLabel rootLabel, string typeLabel, List<Annotation> annotations, List<string> attributeLabels)
         {
             HashSet<string> actuals = GetThingType(rootLabel, typeLabel)
-                .GetOwns(Tx, set(annotations), EXPLICIT)
+                .GetOwns(Tx, new []{annotations}, EXPLICIT)
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
