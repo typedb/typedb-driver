@@ -41,8 +41,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = entity\\( ?{type_label} ?) create new instance")]
         public void EntityTypeCreateNewInstance(string var, string typeLabel)
         {
-            var entityType = Tx
-                .Concepts
+            var entityType = Tx.Concepts
                 .GetEntityType(typeLabel).Resolve()
                 .create(Tx).Resolve();
 
@@ -52,8 +51,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"entity\\( ?{type_label} ?) create new instance; throws exception")]
         public void EntityTypeCreateNewInstanceThrowsException(string typeLabel)
         {
-            Assert.Throws<TypeDBDriverException>(() => Tx
-                .Concepts
+            Assert.Throws<TypeDBDriverException>(() => Tx.Concepts
                 .GetEntityType(typeLabel).Resolve()
                 .create(Tx).Resolve());
         }
@@ -61,13 +59,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {int}")]
         public void EntityTypeCreateNewInstanceWithKey(string var, string type, string keyType, int keyValue)
         {
-            Attribute key = Tx
-                .Concepts
+            Attribute key = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()
                 .Put(Tx, keyValue).Resolve();
 
-            Entity entity = Tx
-                .Concepts
+            Entity entity = Tx.Concepts
                 .GetEntityType(type).Resolve()
                 .create(Tx).Resolve();
 
@@ -79,13 +75,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {word}")]
         public void EntityTypeCreateNewInstanceWithKey(string var, string type, string keyType, string keyValue)
         {
-            Attribute key = Tx
-                .Concepts
+            Attribute key = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()
                 .Put(Tx, keyValue).Resolve();
 
-            Entity entity = Tx
-                .Concepts
+            Entity entity = Tx.Concepts
                 .GetEntityType(type).Resolve()
                 .create(Tx).Resolve();
 
@@ -98,13 +92,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void EntityTypeCreateNewInstanceWithKey(
             string var, string type, string keyType, DateTime keyValue)
         {
-            Attribute key = Tx
-                .Concepts
+            Attribute key = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()
                 .Put(Tx, keyValue).Resolve();
 
-            Entity entity = Tx
-                .Concepts
+            Entity entity = Tx.Concepts
                 .GetEntityType(type).Resolve()
                 .create(Tx).Resolve();
 
@@ -116,8 +108,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {long}")]
         public void EntityTypeGetInstanceWithKey(string var1, string type, string keyType, long keyValue)
         {
-            var entityType = Tx
-                .Concepts
+            var entityType = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()
                 .Get(Tx, keyValue).Resolve()
                 .GetOwners(Tx)
@@ -130,8 +121,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {word}")]
         public void EntityTypeGetInstanceWithKey(string var1, string type, string keyType, string keyValue)
         {
-            var entityType = Tx
-                .Concepts
+            var entityType = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()
                 .Get(Tx, keyValue).Resolve()
                 .GetOwners(Tx)
@@ -145,8 +135,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void EntityTypeGetInstanceWithKey(
             string var1, string type, string keyType, DateTime keyValue)
         {
-            var entityType = Tx
-                .Concepts
+            var entityType = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()
                 .Get(Tx, keyValue).Resolve()
                 .GetOwners(Tx)
@@ -159,8 +148,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"entity\\( ?{type_label} ?) get instances contain: {var}")]
         public void EntityTypeGetInstancesContain(string typeLabel, string var)
         {
-            Assert.True(Tx
-                .Concepts
+            Assert.True(Tx.Concepts
                 .GetEntityType(typeLabel).Resolve()
                 .GetInstances(Tx)
                 .Where(i => i.Equals(Get(var)))
@@ -170,8 +158,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"entity\\( ?{type_label} ?) get instances is empty")]
         public void EntityTypeGetInstancesIsEmpty(string typeLabel)
         {
-            var instances = Tx
-                .Concepts
+            var instances = Tx.Concepts
                 .GetEntityType(typeLabel).Resolve()
                 .GetInstances(Tx);
 

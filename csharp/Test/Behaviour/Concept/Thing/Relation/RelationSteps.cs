@@ -56,13 +56,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = relation\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {int}")]
         public void RelationTypeCreateNewInstanceWithKey(string var, string type, string keyType, int keyValue)
         {
-            Attribute key = Tx
-                .Concepts
+            Attribute key = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()
                 .Put(Tx, keyValue).Resolve();
 
-            Relation relation = Tx
-                .Concepts
+            Relation relation = Tx.Concepts
                 .GetRelationType(type).Resolve()
                 .create(Tx).Resolve();
 
@@ -74,13 +72,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void RelationTypeCreateNewInstanceWithKey(
             string var, string type, string keyType, string keyValue)
         {
-            Attribute key = Tx
-                .Concepts
+            Attribute key = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()
                 .Put(Tx, keyValue).Resolve();
 
-            Relation relation = Tx
-                .Concepts
+            Relation relation = Tx.Concepts
                 .GetRelationType(type).Resolve()
                 .create(Tx).Resolve();
 
@@ -92,13 +88,11 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void RelationTypeCreateNewInstanceWithKey(
             string var, string type, string keyType, DateTime keyValue)
         {
-            Attribute key = Tx
-                .Concepts
+            Attribute key = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()
                 .Put(Tx, keyValue).Resolve();
 
-            Relation relation = Tx
-                .Concepts
+            Relation relation = Tx.Concepts
                 .GetRelationType(type).Resolve()
                 .create(Tx).Resolve();
 
@@ -109,8 +103,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = relation\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {long}")]
         public void RelationTypeGetInstanceWithKey(string var1, string type, string keyType, long keyValue)
         {
-            var owner = Tx
-                .Concepts
+            var owner = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()
                 .Get(Tx, keyValue).Resolve()
                 .GetOwners(Tx)
@@ -123,8 +116,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"{var} = relation\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {word}")]
         public void RelationTypeGetInstanceWithKey(string var1, string type, string keyType, string keyValue)
         {
-            var owner = Tx
-                .Concepts
+            var owner = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()
                 .Get(Tx, keyValue).Resolve()
                 .GetOwners(Tx)
@@ -138,8 +130,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void RelationTypeGetInstanceWithKey(
             string var1, string type, string keyType, DateTime keyValue)
         {
-            var owner = Tx
-                .Concepts
+            var owner = Tx.Concepts
                 .GetAttributeType(keyType).Resolve()
                 .Get(Tx, keyValue).Resolve()
                 .GetOwners(Tx)
@@ -152,8 +143,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"relation\\( ?{type_label} ?) get instances contain: {var}")]
         public void RelationTypeGetInstancesContain(string typeLabel, string var)
         {
-            var instances = Tx
-                .Concepts
+            var instances = Tx.Concepts
                 .GetRelationType(typeLabel).Resolve()
                 .GetInstances(Tx);
 
@@ -163,8 +153,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"relation\\( ?{type_label} ?) get instances do not contain: {var}")]
         public void RelationTypeGetInstancesDoNotContain(string typeLabel, string var)
         {
-            var instances = Tx
-                .Concepts
+            var instances = Tx.Concepts
                 .GetRelationType(typeLabel).Resolve()
                 .GetInstances(Tx);
 
@@ -174,8 +163,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"relation\\( ?{type_label} ?) get instances is empty")]
         public void RelationTypeGetInstancesIsEmpty(string typeLabel)
         {
-            var instances = Tx
-                .Concepts
+            var instances = Tx.Concepts
                 .GetRelationType(typeLabel).Resolve()
                 .GetInstances(Tx);
 
