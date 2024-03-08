@@ -39,211 +39,211 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
     public partial class BehaviourSteps
     {
         [When(@"put attribute type: {type_label}, with value type: {value_type}")]
-        public void put_attribute_type_with_value_type(string typeLabel, Value.Type valueType)
+        public void PutAttributeTypeWithValueType(string typeLabel, Value.Type valueType)
         {
             SingleTransaction.Concepts.putAttributeType(typeLabel, valueType).Resolve();
         }
 
         [Then(@"attribute\\( ?{type_label} ?) get value type: {value_type}")]
-        public void attribute_type_get_value_type(string typeLabel, Value.Type valueType)
+        public void AttributeTypeGetValueType(string typeLabel, Value.Type valueType)
         {
-            assertEquals(
+            Assert.Equals(
                 valueType,
-                SingleTransaction.Concepts.getAttributeType(typeLabel).Resolve().getValueType());
+                SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve().GetValueType());
         }
 
         [Then(@"attribute\\( ?{type_label} ?) get supertype value type: {value_type}")]
-        public void attribute_type_get_supertype_value_type(string typeLabel, Value.Type valueType)
+        public void AttributeTypeGetSupertypeValueType(string typeLabel, Value.Type valueType)
         {
             AttributeType supertype = SingleTransaction
                 .Concepts
-                .getAttributeType(typeLabel).Resolve()
-                .getSupertype(SingleTransaction).Resolve()
+                .GetAttributeType(typeLabel).Resolve()
+                .GetSupertype(SingleTransaction).Resolve()
                 .asAttributeType();
 
-            assertEquals(valueType, supertype.getValueType());
+            Assert.Equals(valueType, supertype.GetValueType());
         }
 
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get subtypes contain:")]
-        public void attribute_type_as_value_type_get_subtypes_contain(
+        public void AttributeTypeAsValueTypeGetSubtypesContain(
             string typeLabel, Value.Type valueType, List<string> subLabels)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.getAttributeType(typeLabel).Resolve();
+            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
             Set<string> actuals = attributeType
-                .getSubtypes(SingleTransaction, valueType)
-                .Select(t => t.getLabel().name())
+                .GetSubtypes(SingleTransaction, valueType)
+                .Select(t => t.Label.Name)
                 .ToHashSet();
 
-            assertTrue(actuals.containsAll(subLabels));
+            Assert.True(actuals.containsAll(subLabels));
         }
 
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get subtypes do not contain:")]
-        public void attribute_type_as_value_type_get_subtypes_do_not_contain(
+        public void AttributeTypeAsValueTypeGetSubtypesDoNotContain(
         string typeLabel, Value.Type valueType, List<string> subLabels)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.getAttributeType(typeLabel).Resolve();
+            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
             Set<string> actuals = attributeType
-                .getSubtypes(SingleTransaction, valueType)
-                .Select(t => t.getLabel().name())
+                .GetSubtypes(SingleTransaction, valueType)
+                .Select(t => t.Label.Name)
                 .collect(toSet());
 
             for (string subLabel : subLabels)
             {
-                assertFalse(actuals.contains(subLabel));
+                Assert.False(actuals.contains(subLabel));
             }
         }
 
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) set regex: {}")]
-        public void attribute_type_as_value_type_set_regex(string typeLabel, Value.Type valueType, string regex)
+        public void AttributeTypeAsValueTypeSetRegex(string typeLabel, Value.Type valueType, string regex)
         {
             if (!valueType.equals(Value.Type.STRING))
             {
                 fail();
             }
 
-            AttributeType attributeType = SingleTransaction.Concepts.getAttributeType(typeLabel).Resolve();
-            attributeType.setRegex(SingleTransaction, regex).Resolve();
+            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
+            attributeType.SetRegex(SingleTransaction, regex).Resolve();
         }
 
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) unset regex")]
-        public void attribute_type_as_value_type_unset_regex(string typeLabel, Value.Type valueType)
+        public void AttributeTypeAsValueTypeUnsetRegex(string typeLabel, Value.Type valueType)
         {
             if (!valueType.equals(Value.Type.STRING))
             {
                 fail();
             }
 
-            AttributeType attributeType = SingleTransaction.Concepts.getAttributeType(typeLabel).Resolve();
+            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
             attributeType.unsetRegex(SingleTransaction).Resolve();
         }
 
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get regex: {}")]
-        public void attribute_type_as_value_type_get_regex(string typeLabel, Value.Type valueType, string regex)
+        public void AttributeTypeAsValueTypeGetRegex(string typeLabel, Value.Type valueType, string regex)
         {
             if (!valueType.equals(Value.Type.STRING))
             {
                 fail();
             }
 
-            AttributeType attributeType = SingleTransaction.Concepts.getAttributeType(typeLabel).Resolve();
-            assertEquals(regex, attributeType.getRegex(SingleTransaction).Resolve());
+            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
+            Assert.Equals(regex, attributeType.GetRegex(SingleTransaction).Resolve());
         }
 
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) does not have any regex")]
-        public void attribute_type_as_value_type_does_not_have_any_regex(string typeLabel, Value.Type valueType)
+        public void AttributeTypeAsValueTypeDoesNotHaveAnyRegex(string typeLabel, Value.Type valueType)
         {
-            attribute_type_as_value_type_get_regex(typeLabel, valueType, null);
+            AttributeTypeAsValueType_Getregex(typeLabel, valueType, null);
         }
 
         [Then(@"attribute\\( ?{type_label} ?) get owners, with annotations: {annotations}; contain:")]
-        public void attribute_type_get_owners_with_annotations_contain(
+        public void AttributeTypeGetOwnersWithAnnotationsContain(
             string typeLabel, List<Annotation> annotations, List<string> ownerLabels)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.getAttributeType(typeLabel).Resolve();
+            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
             Set<string> actuals = attributeType
-                .getOwners(SingleTransaction, set(annotations))
-                .map(t => t.getLabel().name())
+                .GetOwners(SingleTransaction, set(annotations))
+                .map(t => t.Label.Name)
                 .collect(toSet());
 
-            assertTrue(actuals.containsAll(ownerLabels));
+            Assert.True(actuals.containsAll(ownerLabels));
         }
 
         [Then(@"attribute\\( ?{type_label} ?) get owners, with annotations: {annotations}; do not contain:")]
-        public void attribute_type_get_owners_with_annotations_do_not_contain(
+        public void AttributeTypeGetOwnersWithAnnotationsDoNotContain(
             string typeLabel, List<Annotation> annotations, List<string> ownerLabels)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.getAttributeType(typeLabel).Resolve();
+            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
             Set<string> actuals = attributeType
-                .getOwners(SingleTransaction, set(annotations))
-                .map(t => t.getLabel().name())
+                .GetOwners(SingleTransaction, set(annotations))
+                .map(t => t.Label.Name)
                 .collect(toSet());
 
             for (string ownerLabel : ownerLabels)
             {
-                assertFalse(actuals.contains(ownerLabel));
+                Assert.False(actuals.contains(ownerLabel));
             }
         }
 
         [Then(@"attribute\\( ?{type_label} ?) get owners explicit, with annotations: {annotations}; contain:")]
-        public void attribute_type_get_owners_explicit_with_annotations_contain(
+        public void AttributeTypeGetOwnersExplicitWithAnnotationsContain(
             string typeLabel, List<Annotation> annotations, List<string> ownerLabels)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.getAttributeType(typeLabel).Resolve();
+            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
             Set<string> actuals = attributeType
-                .getOwners(SingleTransaction, set(annotations), EXPLICIT)
-                .map(t => t.getLabel().name())
+                .GetOwners(SingleTransaction, set(annotations), EXPLICIT)
+                .map(t => t.Label.Name)
                 .collect(toSet());
 
-            assertTrue(actuals.containsAll(ownerLabels));
+            Assert.True(actuals.containsAll(ownerLabels));
         }
 
         [Then(@"attribute\\( ?{type_label} ?) get owners explicit, with annotations: {annotations}; do not contain:")]
-        public void attribute_type_get_owners_explicit_with_annotations_do_not_contain(
+        public void AttributeTypeGetOwnersExplicitWithAnnotationsDoNotContain(
             string typeLabel, List<Annotation> annotations, List<string> ownerLabels)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.getAttributeType(typeLabel).Resolve();
+            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
             Set<string> actuals = attributeType
-                .getOwners(SingleTransaction, set(annotations), EXPLICIT)
-                .map(t => t.getLabel().name())
+                .GetOwners(SingleTransaction, set(annotations), EXPLICIT)
+                .map(t => t.Label.Name)
                 .collect(toSet());
 
             for (string ownerLabel : ownerLabels)
             {
-                assertFalse(actuals.contains(ownerLabel));
+                Assert.False(actuals.contains(ownerLabel));
             }
         }
 
         [Then(@"attribute\\( ?{type_label} ?) get owners contain:")]
-        public void attribute_type_get_owners_contain(string typeLabel, List<string> ownerLabels)
+        public void AttributeTypeGetOwnersContain(string typeLabel, List<string> ownerLabels)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.getAttributeType(typeLabel).Resolve();
+            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
             Set<string> actuals = attributeType
-                .getOwners(SingleTransaction, emptySet())
-                .map(t => t.getLabel().name())
+                .GetOwners(SingleTransaction, emptySet())
+                .map(t => t.Label.Name)
                 .collect(toSet());
 
-            assertTrue(actuals.containsAll(ownerLabels));
+            Assert.True(actuals.containsAll(ownerLabels));
         }
 
         [Then(@"attribute\\( ?{type_label} ?) get owners do not contain:")]
-        public void attribute_type_get_owners_do_not_contain(string typeLabel, List<string> ownerLabels)
+        public void AttributeTypeGetOwnersDoNotContain(string typeLabel, List<string> ownerLabels)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.getAttributeType(typeLabel).Resolve();
+            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
             Set<string> actuals = attributeType
-                .getOwners(SingleTransaction, emptySet())
-                .map(t => t.getLabel().name())
+                .GetOwners(SingleTransaction, emptySet())
+                .map(t => t.Label.Name)
                 .collect(toSet());
 
             for (string ownerLabel : ownerLabels)
             {
-                assertFalse(actuals.contains(ownerLabel));
+                Assert.False(actuals.contains(ownerLabel));
             }
         }
 
         [Then(@"attribute\\( ?{type_label} ?) get owners explicit contain:")]
-        public void attribute_type_get_owners_explicit_contain(string typeLabel, List<string> ownerLabels)
+        public void AttributeTypeGetOwnersExplicitContain(string typeLabel, List<string> ownerLabels)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.getAttributeType(typeLabel).Resolve();
+            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
             Set<string> actuals = attributeType
-                .getOwners(SingleTransaction, emptySet(), EXPLICIT)
-                .map(t => t.getLabel().name())
+                .GetOwners(SingleTransaction, emptySet(), EXPLICIT)
+                .map(t => t.Label.Name)
                 .collect(toSet());
 
-            assertTrue(actuals.containsAll(ownerLabels));
+            Assert.True(actuals.containsAll(ownerLabels));
         }
 
         [Then(@"attribute\\( ?{type_label} ?) get owners explicit do not contain:")]
-        public void attribute_type_get_owners_explicit_do_not_contain(string typeLabel, List<string> ownerLabels)
+        public void AttributeTypeGetOwnersExplicitDoNotContain(string typeLabel, List<string> ownerLabels)
         {
-            AttributeType attributeType = SingleTransaction.Concepts.getAttributeType(typeLabel).Resolve();
+            AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
             Set<string> actuals = attributeType
-                .getOwners(SingleTransaction, emptySet(), EXPLICIT)
-                .map(t => t.getLabel().name())
+                .GetOwners(SingleTransaction, emptySet(), EXPLICIT)
+                .map(t => t.Label.Name)
                 .collect(toSet());
 
             for (string ownerLabel : ownerLabels)
             {
-                assertFalse(actuals.contains(ownerLabel));
+                Assert.False(actuals.contains(ownerLabel));
             }
         }
     }

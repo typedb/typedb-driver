@@ -39,218 +39,218 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
     public partial class BehaviourSteps
     {
         [When(@"attribute\\( ?{type_label} ?) get instances contain: {var}")]
-        public void attribute_type_get_instances_contain(string typeLabel, string var)
+        public void AttributeTypeGetInstancesContain(string typeLabel, string var)
         {
             var instances = SingleTransaction
                 .Concepts
-                .getAttributeType(typeLabel).Resolve()
-                .getInstances(SingleTransaction);
+                .GetAttributeType(typeLabel).Resolve()
+                .GetInstances(SingleTransaction);
 
-            assertTrue(instances.anyMatch(i => i.equals(get(var))));
+            Assert.True(instances.anyMatch(i => i.equals(Get(var))));
         }
 
         [Then(@"attribute {var} get owners contain: {var}")]
-        public void attribute_get_owners_contain(string var1, string var2)
+        public void AttributeGetOwnersContain(string var1, string var2)
         {
-            assertTrue(get(var1).asAttribute().getOwners(SingleTransaction).anyMatch(o => o.equals(get(var2))));
+            Assert.True(Get(var1).asAttribute().GetOwners(SingleTransaction).anyMatch(o => o.equals(Get(var2))));
         }
 
         [Then(@"attribute {var} get owners do not contain: {var}")]
-        public void attribute_get_owners_do_not_contain(string var1, string var2)
+        public void AttributeGetOwnersDoNotContain(string var1, string var2)
         {
-            assertTrue(get(var1).asAttribute().getOwners(SingleTransaction).noneMatch(o => o.equals(get(var2))));
+            Assert.True(Get(var1).asAttribute().GetOwners(SingleTransaction).noneMatch(o => o.equals(Get(var2))));
         }
 
-        [Then(@"attribute {var} has value type: {value_type}")]
-        public void attribute_has_value_type(string var, Value.Type valueType)
+        [Then(@"attribute {var} has value type: {valueType}")]
+        public void AttributeHasValueType(string var, Value.Type valueType)
         {
-            assertEquals(valueType, get(var).asAttribute().getType().getValueType());
+            Assert.Equals(valueType, Get(var).asAttribute().GetType().GetValueType());
         }
 
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?boolean ?) put: {bool}")]
-        public void attribute_type_as_boolean_put(string var, string typeLabel, boolean value)
+        public void AttributeTypeAsBooleanPut(string var, string typeLabel, bool value)
         {
             var attributeType = SingleTransaction
                 .Concepts
-                .getAttributeType(typeLabel).Resolve()
-                .put(SingleTransaction, value).Resolve();
+                .GetAttributeType(typeLabel).Resolve()
+                .Put(SingleTransaction, value).Resolve();
 
-            put(var, attributeType);
+            Put(var, attributeType);
         }
 
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?boolean ?) put: {bool}; throws exception")]
-        public void attribute_type_as_boolean_put_throws_exception(string typeLabel, boolean value)
+        public void AttributeTypeAsBooleanPutThrowsException(string typeLabel, bool value)
         {
-            assertThrows(() => SingleTransaction
+            Assert.Throws<TypeDBDriverException>(() => SingleTransaction
                 .Concepts
-                .getAttributeType(typeLabel).Resolve()
-                .put(SingleTransaction, value).Resolve());
+                .GetAttributeType(typeLabel).Resolve()
+                .Put(SingleTransaction, value).Resolve());
         }
 
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?long ?) put: {int}")]
-        public void attribute_type_as_long_put(string var, string typeLabel, long value)
+        public void AttributeTypeAsLongPut(string var, string typeLabel, long value)
         {
             var attributeType = SingleTransaction
                 .Concepts
-                .getAttributeType(typeLabel).Resolve()
-                .put(SingleTransaction, value).Resolve();
+                .GetAttributeType(typeLabel).Resolve()
+                .Put(SingleTransaction, value).Resolve();
 
-            put(var, attributeType);
+            Put(var, attributeType);
         }
 
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?long ?) put: {int}; throws exception")]
-        public void attribute_type_as_long_put_throws_exception(string typeLabel, long value)
+        public void AttributeTypeAsLongPutThrowsException(string typeLabel, long value)
         {
-            assertThrows(() => SingleTransaction
+            Assert.Throws<TypeDBDriverException>(() => SingleTransaction
                 .Concepts
-                .getAttributeType(typeLabel).Resolve()
-                .put(SingleTransaction, value).Resolve());
+                .GetAttributeType(typeLabel).Resolve()
+                .Put(SingleTransaction, value).Resolve());
         }
 
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?double ?) put: {double}")]
-        public void attribute_type_as_double_put(string var, string typeLabel, double value)
+        public void AttributeTypeAsDoublePut(string var, string typeLabel, double value)
         {
             var attributeType = SingleTransaction
                 .Concepts
-                .getAttributeType(typeLabel).Resolve()
-                .put(SingleTransaction, value).Resolve();
+                .GetAttributeType(typeLabel).Resolve()
+                .Put(SingleTransaction, value).Resolve();
 
-            put(var, attributeType);
+            Put(var, attributeType);
         }
 
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?double ?) put: {double}; throws exception")]
-        public void attribute_type_as_double_put_throws_exception(string typeLabel, double value)
+        public void AttributeTypeAsDoublePutThrowsException(string typeLabel, double value)
         {
-            assertThrows(() => SingleTransaction
+            Assert.Throws<TypeDBDriverException>(() => SingleTransaction
                 .Concepts
-                .getAttributeType(typeLabel).Resolve()
-                .put(SingleTransaction, value).Resolve());
+                .GetAttributeType(typeLabel).Resolve()
+                .Put(SingleTransaction, value).Resolve());
         }
 
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?string ?) put: {word}")]
-        public void attribute_type_as_string_put(string var, string typeLabel, string value)
+        public void AttributeTypeAsStringPut(string var, string typeLabel, string value)
         {
             var attributeType = SingleTransaction
                 .Concepts
-                .getAttributeType(typeLabel).Resolve()
-                .put(SingleTransaction, value).Resolve();
+                .GetAttributeType(typeLabel).Resolve()
+                .Put(SingleTransaction, value).Resolve();
 
-            put(var, attributeType);
+            Put(var, attributeType);
         }
 
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?string ?) put: {word}; throws exception")]
-        public void attribute_type_as_string_put_throws_exception(string typeLabel, string value)
+        public void AttributeTypeAsStringPutThrowsException(string typeLabel, string value)
         {
-            assertThrows(() => SingleTransaction
+            Assert.Throws<TypeDBDriverException>(() => SingleTransaction
                 .Concepts
-                .getAttributeType(typeLabel).Resolve()
-                .put(SingleTransaction, value).Resolve());
+                .GetAttributeType(typeLabel).Resolve()
+                .Put(SingleTransaction, value).Resolve());
         }
 
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?datetime ?) put: {datetime}")]
-        public void attribute_type_as_datetime_put(string var, string typeLabel, LocalDateTime value)
+        public void AttributeTypeAsDatetimePut(string var, string typeLabel, DateTime value)
         {
             var attributeType = SingleTransaction
                 .Concepts
-                .getAttributeType(typeLabel).Resolve()
-                .put(SingleTransaction, value).Resolve();
+                .GetAttributeType(typeLabel).Resolve()
+                .Put(SingleTransaction, value).Resolve();
 
-            put(var, attributeType);
+            Put(var, attributeType);
         }
 
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?datetime ?) put: {datetime}; throws exception")]
-        public void attribute_type_as_datetime_put_throws_exception(string typeLabel, LocalDateTime value)
+        public void AttributeTypeAsDatetimePutThrowsException(string typeLabel, DateTime value)
         {
-            var exception = assertThrows(() => SingleTransaction
-                .Concepts.getAttributeType(typeLabel).Resolve()
-                .put(SingleTransaction, value));
+            var exception = Assert.Throws<TypeDBDriverException>(() => SingleTransaction
+                .Concepts.GetAttributeType(typeLabel).Resolve()
+                .Put(SingleTransaction, value));
 
-                Console.WriteLine(exception.Message); // TODO: Just for debug, remove later.
+            Console.WriteLine(exception.Message); // TODO: Just for debug, remove later.
         }
 
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?boolean ?) get: {bool}")]
-        public void attribute_type_as_boolean_get(string var, string typeLabel, boolean value)
+        public void AttributeTypeAsBooleanGet(string var, string typeLabel, bool value)
         {
             var attributeType = SingleTransaction
                 .Concepts
-                .getAttributeType(typeLabel).Resolve()
-                .get(SingleTransaction, value).Resolve();
+                .GetAttributeType(typeLabel).Resolve()
+                .Get(SingleTransaction, value).Resolve();
 
-            put(var, attributeType);
+            Put(var, attributeType);
         }
 
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?long ?) get: {int}")]
-        public void attribute_type_as_long_get(string var, string typeLabel, long value)
+        public void AttributeTypeAsLongGet(string var, string typeLabel, long value)
         {
             var attributeType = SingleTransaction
                 .Concepts
-                .getAttributeType(typeLabel).Resolve()
-                .get(SingleTransaction, value).Resolve();
+                .GetAttributeType(typeLabel).Resolve()
+                .Get(SingleTransaction, value).Resolve();
 
-            put(var, attributeType);
+            Put(var, attributeType);
         }
 
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?double ?) get: {double}")]
-        public void attribute_type_as_double_get(string var, string typeLabel, double value)
+        public void AttributeTypeAsDoubleGet(string var, string typeLabel, double value)
         {
             var attributeType = SingleTransaction
                 .Concepts
-                .getAttributeType(typeLabel).Resolve()
-                .get(SingleTransaction, value).Resolve();
+                .GetAttributeType(typeLabel).Resolve()
+                .Get(SingleTransaction, value).Resolve();
 
-            put(var, attributeType);
+            Put(var, attributeType);
         }
 
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?string ?) get: {word}")]
-        public void attribute_type_as_string_get(string var, string typeLabel, string value)
+        public void AttributeTypeAsStringGet(string var, string typeLabel, string value)
         {
             var attributeType = SingleTransaction
                 .Concepts
-                .getAttributeType(typeLabel).Resolve()
-                .get(SingleTransaction, value).Resolve();
+                .GetAttributeType(typeLabel).Resolve()
+                .Get(SingleTransaction, value).Resolve();
 
-            put(var, attributeType);
+            Put(var, attributeType);
         }
 
         [When(@"{var} = attribute\\( ?{type_label} ?) as\\( ?datetime ?) get: {datetime}")]
-        public void attribute_type_as_datetime_get(string var, string typeLabel, LocalDateTime value)
+        public void AttributeTypeAsDatetimeGet(string var, string typeLabel, DateTime value)
         {
             var attributeType = SingleTransaction
                 .Concepts
-                .getAttributeType(typeLabel).Resolve()
-                .get(SingleTransaction, value).Resolve();
+                .GetAttributeType(typeLabel).Resolve()
+                .Get(SingleTransaction, value).Resolve();
 
-            put(var, attributeType);
+            Put(var, attributeType);
         }
 
-        [Then(@"attribute {var} has boolean value: {bool}")]
-        public void attribute_has_boolean_value(string var, boolean value)
+        [Then(@"attribute {var} has bool value: {bool}")]
+        public void AttributeHasBooleanValue(string var, bool value)
         {
-            assertEquals(value, get(var).asAttribute().getValue().asBoolean());
+            Assert.Equals(value, Get(var).asAttribute().GetValue().asBoolean());
         }
 
         [Then(@"attribute {var} has long value: {long}")]
-        public void attribute_has_long_value(string var, long value)
+        public void AttributeHasLongValue(string var, long value)
         {
-            assertEquals(value, get(var).asAttribute().getValue().asLong());
+            Assert.Equals(value, Get(var).asAttribute().GetValue().asLong());
         }
 
         [Then(@"attribute {var} has double value: {double}")]
-        public void attribute_has_double_value(string var, double value)
+        public void AttributeHasDoubleValue(string var, double value)
         {
-            assertEquals(value, get(var).asAttribute().getValue().asDouble(), 0.0001);
+            Assert.Equals(value, Get(var).asAttribute().GetValue().asDouble(), 0.0001);
         }
 
         [Then(@"attribute {var} has string value: {word}")]
-        public void attribute_has_string_value(string var, string value)
+        public void AttributeHasStringValue(string var, string value)
         {
-            assertEquals(value, get(var).asAttribute().getValue().asString());
+            Assert.Equals(value, Get(var).asAttribute().GetValue().asString());
         }
 
         [Then(@"attribute {var} has datetime value: {datetime}")]
-        public void attribute_has_datetime_value(string var, LocalDateTime value)
+        public void AttributeHasDatetimeValue(string var, DateTime value)
         {
-            assertEquals(value, get(var).asAttribute().getValue().asDateTime());
+            Assert.Equals(value, Get(var).asAttribute().GetValue().asDateTime());
         }
     }
 }

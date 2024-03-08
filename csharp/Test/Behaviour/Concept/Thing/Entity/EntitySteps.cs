@@ -39,142 +39,142 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
     public partial class BehaviourSteps
     {
         [When(@"{var} = entity\\( ?{type_label} ?) create new instance")]
-        public void entity_type_create_new_instance(string var, string typeLabel)
+        public void EntityTypeCreateNewInstance(string var, string typeLabel)
         {
             var entityType = SingleTransaction
                 .Concepts
-                .getEntityType(typeLabel).Resolve()
+                .GetEntityType(typeLabel).Resolve()
                 .create(SingleTransaction).Resolve();
 
-            put(var, entityType);
+            Put(var, entityType);
         }
 
         [When(@"entity\\( ?{type_label} ?) create new instance; throws exception")]
-        public void entity_type_create_new_instance_throws_exception(string typeLabel)
+        public void EntityTypeCreateNewInstanceThrowsException(string typeLabel)
         {
-            assertThrows(() => SingleTransaction
+            Assert.Throws<TypeDBDriverException>(() => SingleTransaction
                 .Concepts
-                .getEntityType(typeLabel).Resolve()
+                .GetEntityType(typeLabel).Resolve()
                 .create(SingleTransaction).Resolve());
         }
 
         [When(@"{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {int}")]
-        public void entity_type_create_new_instance_with_key(string var, string type, string keyType, int keyValue)
+        public void EntityTypeCreateNewInstanceWithKey(string var, string type, string keyType, int keyValue)
         {
             Attribute key = SingleTransaction
                 .Concepts
-                .getAttributeType(keyType).Resolve()
-                .put(SingleTransaction, keyValue).Resolve();
+                .GetAttributeType(keyType).Resolve()
+                .Put(SingleTransaction, keyValue).Resolve();
 
             Entity entity = SingleTransaction
                 .Concepts
-                .getEntityType(type).Resolve()
+                .GetEntityType(type).Resolve()
                 .create(SingleTransaction).Resolve();
 
-            entity.setHas(SingleTransaction, key).Resolve();
+            entity.SetHas(SingleTransaction, key).Resolve();
 
-            put(var, entity);
+            Put(var, entity);
         }
 
         [When(@"{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {word}")]
-        public void entity_type_create_new_instance_with_key(string var, string type, string keyType, string keyValue)
+        public void EntityTypeCreateNewInstanceWithKey(string var, string type, string keyType, string keyValue)
         {
             Attribute key = SingleTransaction
                 .Concepts
-                .getAttributeType(keyType).Resolve()
-                .put(SingleTransaction, keyValue).Resolve();
+                .GetAttributeType(keyType).Resolve()
+                .Put(SingleTransaction, keyValue).Resolve();
 
             Entity entity = SingleTransaction
                 .Concepts
-                .getEntityType(type).Resolve()
+                .GetEntityType(type).Resolve()
                 .create(SingleTransaction).Resolve();
 
-            entity.setHas(SingleTransaction, key).Resolve();
+            entity.SetHas(SingleTransaction, key).Resolve();
 
-            put(var, entity);
+            Put(var, entity);
         }
 
         [When(@"{var} = entity\\( ?{type_label} ?) create new instance with key\\( ?{type_label} ?): {datetime}")]
-        public void entity_type_create_new_instance_with_key(
-            string var, string type, string keyType, LocalDateTime keyValue)
+        public void EntityTypeCreateNewInstanceWithKey(
+            string var, string type, string keyType, DateTime keyValue)
         {
             Attribute key = SingleTransaction
                 .Concepts
-                .getAttributeType(keyType).Resolve()
-                .put(SingleTransaction, keyValue).Resolve();
+                .GetAttributeType(keyType).Resolve()
+                .Put(SingleTransaction, keyValue).Resolve();
 
             Entity entity = SingleTransaction
                 .Concepts
-                .getEntityType(type).Resolve()
+                .GetEntityType(type).Resolve()
                 .create(SingleTransaction).Resolve();
 
-            entity.setHas(SingleTransaction, key).Resolve();
+            entity.SetHas(SingleTransaction, key).Resolve();
 
-            put(var, entity);
+            Put(var, entity);
         }
 
         [When(@"{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {long}")]
-        public void entity_type_get_instance_with_key(string var1, string type, string keyType, long keyValue)
+        public void EntityTypeGetInstanceWithKey(string var1, string type, string keyType, long keyValue)
         {
             var entityType = SingleTransaction
                 .Concepts
-                .getAttributeType(keyType).Resolve()
-                .get(SingleTransaction, keyValue).Resolve()
-                .getOwners(SingleTransaction)
-                .filter(owner => owner.getType().getLabel().equals(Label.of(type)))
+                .GetAttributeType(keyType).Resolve()
+                .Get(SingleTransaction, keyValue).Resolve()
+                .GetOwners(SingleTransaction)
+                .filter(owner => owner.GetType().Label.equals(Label.of(type)))
                 .findFirst().orElse(null);
 
-            put(var, entityType);
+            Put(var, entityType);
         }
 
         [When(@"{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {word}")]
-        public void entity_type_get_instance_with_key(string var1, string type, string keyType, string keyValue)
+        public void EntityTypeGetInstanceWithKey(string var1, string type, string keyType, string keyValue)
         {
             var entityType = SingleTransaction
                 .Concepts
-                .getAttributeType(keyType).Resolve()
-                .get(SingleTransaction, keyValue).Resolve()
-                .getOwners(SingleTransaction)
-                .filter(owner => owner.getType().getLabel().equals(Label.of(type)))
+                .GetAttributeType(keyType).Resolve()
+                .Get(SingleTransaction, keyValue).Resolve()
+                .GetOwners(SingleTransaction)
+                .filter(owner => owner.GetType().Label.equals(Label.of(type)))
                 .findFirst().orElse(null);
 
-            put(var, entityType);
+            Put(var, entityType);
         }
 
         [When(@"{var} = entity\\( ?{type_label} ?) get instance with key\\( ?{type_label} ?): {datetime}")]
-        public void entity_type_get_instance_with_key(
-            string var1, string type, string keyType, LocalDateTime keyValue)
+        public void EntityTypeGetInstanceWithKey(
+            string var1, string type, string keyType, DateTime keyValue)
         {
             var entityType = SingleTransaction
                 .Concepts
-                .getAttributeType(keyType).Resolve()
-                .get(SingleTransaction, keyValue).Resolve()
-                .getOwners(SingleTransaction)
-                .filter(owner => owner.getType().getLabel().equals(Label.of(type)))
+                .GetAttributeType(keyType).Resolve()
+                .Get(SingleTransaction, keyValue).Resolve()
+                .GetOwners(SingleTransaction)
+                .filter(owner => owner.GetType().Label.equals(Label.of(type)))
                 .findFirst().orElse(null);
 
-            put(var, entityType);
+            Put(var, entityType);
         }
 
         [Then(@"entity\\( ?{type_label} ?) get instances contain: {var}")]
-        public void entity_type_get_instances_contain(string typeLabel, string var)
+        public void EntityTypeGetInstancesContain(string typeLabel, string var)
         {
-            assertTrue(SingleTransaction
+            Assert.True(SingleTransaction
                 .Concepts
-                .getEntityType(typeLabel).Resolve()
-                .getInstances(SingleTransaction)
-                .anyMatch(i => i.equals(get(var))));
+                .GetEntityType(typeLabel).Resolve()
+                .GetInstances(SingleTransaction)
+                .anyMatch(i => i.equals(Get(var))));
         }
 
         [Then(@"entity\\( ?{type_label} ?) get instances is empty")]
-        public void entity_type_get_instances_is_empty(string typeLabel)
+        public void EntityTypeGetInstancesIsEmpty(string typeLabel)
         {
             var instances = SingleTransaction
                 .Concepts
-                .getEntityType(typeLabel).Resolve()
-                .getInstances(SingleTransaction);
+                .GetEntityType(typeLabel).Resolve()
+                .GetInstances(SingleTransaction);
 
-            assertEquals(0, instances.Count);
+            Assert.Equals(0, instances.Count);
         }
     }
 }
