@@ -167,7 +167,7 @@ namespace Vaticle.Typedb.Driver.Concept
 
             if (IsDouble())
             {
-                return AsDouble().ToString("0.0###############");
+                return AsDouble().ToString("0.0#####");
             }
 
             if (IsString())
