@@ -86,37 +86,48 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [When(@"entity/attribute/relation {var} set has: {var}")]
         public void ThingSetHas(string var1, string var2)
         {
-            Get(var1).SetHas(SingleTransaction, Get(var2).asAttribute()).Resolve();
+            Get(var1).SetHas(SingleTransaction, Get(var2).AsAttribute()).Resolve();
         }
 
         [Then(@"entity/attribute/relation {var} set has: {var}; throws exception")]
         public void ThingSetHasThrowsException(string var1, string var2)
         {
-            Assert.Throws<TypeDBDriverException>(() => Get(var1).SetHas(SingleTransaction, Get(var2).asAttribute()).Resolve());
+            Assert.Throws<TypeDBDriverException>(
+                () => Get(var1).SetHas(SingleTransaction, Get(var2).AsAttribute()).Resolve());
         }
 
         [When(@"entity/attribute/relation {var} unset has: {var}")]
         public void ThingUnsetHas(string var1, string var2)
         {
-            Get(var1).UnsetHas(SingleTransaction, Get(var2).asAttribute()).Resolve();
+            Get(var1).UnsetHas(SingleTransaction, Get(var2).AsAttribute()).Resolve();
         }
 
         [Then(@"entity/attribute/relation {var} get keys contain: {var}")]
         public void ThingGetKeysContain(string var1, string var2)
         {
-            Assert.True(Get(var1).GetHas(SingleTransaction, set(key())).anyMatch(k => k.equals(Get(var2))));
+            Assert.True(Get(var1)
+                .GetHas(
+                    SingleTransaction,
+                    new []{IThingType.Annotation.NewKey()})
+                .Where(k => k.Equals(Get(var2)))
+                .Any());
         }
 
         [Then(@"entity/attribute/relation {var} get keys do not contain: {var}")]
         public void ThingGetKeysDoNotContain(string var1, string var2)
         {
-            Assert.True(Get(var1).GetHas(SingleTransaction, set(key())).noneMatch(k => k.equals(Get(var2))));
+            Assert.False(Get(var1)
+                .GetHas(
+                    SingleTransaction,
+                    new []{IThingType.Annotation.NewKey()})
+                .Where(k => k.Equals(Get(var2)))
+                .Any());
         }
 
         [Then(@"entity/attribute/relation {var} get attributes contain: {var}")]
         public void ThingGetAttributesContain(string var1, string var2)
         {
-            Assert.True(Get(var1).GetHas(SingleTransaction).anyMatch(k => k.equals(Get(var2))));
+            Assert.True(Get(var1).GetHas(SingleTransaction).Where(k => k.Equals(Get(var2))).Any());
         }
 
         [Then(@"entity/attribute/relation {var} get attributes\\( ?{type_label} ?) contain: {var}")]
@@ -124,7 +135,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             Assert.True(Get(var1)
                 .GetHas(SingleTransaction, SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve())
-                .anyMatch(k => k.equals(Get(var2))));
+                .Where(k => k.Equals(Get(var2)))
+                .Any());
         }
 
         [Then(@"entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?boolean ?) contain: {var}")]
@@ -132,7 +144,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             Assert.True(Get(var1)
                 .GetHas(SingleTransaction, SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve())
-                .anyMatch(k => k.equals(Get(var2))));
+                .Where(k => k.Equals(Get(var2)))
+                .Any());
         }
 
         [Then(@"entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?long ?) contain: {var}")]
@@ -140,7 +153,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             Assert.True(Get(var1)
                 .GetHas(SingleTransaction, SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve())
-                .anyMatch(k => k.equals(Get(var2))));
+                .Where(k => k.Equals(Get(var2)))
+                .Any());
         }
 
         [Then(@"entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?double ?) contain: {var}")]
@@ -148,7 +162,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             Assert.True(Get(var1)
                 .GetHas(SingleTransaction, SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve())
-                .anyMatch(k => k.equals(Get(var2))));
+                .Where(k => k.Equals(Get(var2)))
+                .Any());
         }
 
         [Then(@"entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?string ?) contain: {var}")]
@@ -156,7 +171,8 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             Assert.True(Get(var1)
                 .GetHas(SingleTransaction, SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve())
-                .anyMatch(k => k.equals(Get(var2))));
+                .Where(k => k.Equals(Get(var2)))
+                .Any());
         }
 
         [Then(@"entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?datetime ?) contain: {var}")]
@@ -164,61 +180,68 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             Assert.True(Get(var1)
                 .GetHas(SingleTransaction, SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve())
-                .anyMatch(k => k.equals(Get(var2))));
+                .Where(k => k.Equals(Get(var2)))
+                .Any());
         }
 
         [Then(@"entity/attribute/relation {var} get attributes do not contain: {var}")]
         public void ThingGetAttributesDoNotContain(string var1, string var2)
         {
-            Assert.True(Get(var1).GetHas(SingleTransaction).noneMatch(k => k.equals(Get(var2))));
+            Assert.False(Get(var1).GetHas(SingleTransaction).Where(k => k.Equals(Get(var2))).Any());
         }
 
         [Then(@"entity/attribute/relation {var} get attributes\\( ?{type_label} ?) do not contain: {var}")]
         public void ThingGetAttributesDoNotContain(string var1, string typeLabel, string var2)
         {
-            Assert.True(Get(var1)
+            Assert.False(Get(var1)
                 .GetHas(SingleTransaction, SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve())
-                .noneMatch(k => k.equals(Get(var2))));
+                .Where(k => k.Equals(Get(var2)))
+                .Any());
         }
 
         [Then(@"entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?boolean ?) do not contain: {var}")]
         public void ThingGetAttributesAsBooleanDoNotContain(string var1, string typeLabel, string var2)
         {
-            Assert.True(Get(var1)
+            Assert.False(Get(var1)
                 .GetHas(SingleTransaction, SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve())
-                .noneMatch(k => k.equals(Get(var2))));
+                .Where(k => k.Equals(Get(var2)))
+                .Any());
         }
 
         [Then(@"entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?long ?) do not contain: {var}")]
         public void ThingGetAttributesAsLongDoNotContain(string var1, string typeLabel, string var2)
         {
-            Assert.True(Get(var1)
+            Assert.False(Get(var1)
                 .GetHas(SingleTransaction, SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve())
-                .noneMatch(k => k.equals(Get(var2))));
+                .Where(k => k.Equals(Get(var2)))
+                .Any());
         }
 
         [Then(@"entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?double ?) do not contain: {var}")]
         public void ThingGetAttributesAsDoubleDoNotContain(string var1, string typeLabel, string var2)
         {
-            Assert.True(Get(var1)
+            Assert.False(Get(var1)
                 .GetHas(SingleTransaction, SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve())
-                .noneMatch(k => k.equals(Get(var2))));
+                .Where(k => k.Equals(Get(var2)))
+                .Any());
         }
 
         [Then(@"entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?string ?) do not contain: {var}")]
         public void ThingGetAttributesAsStringDoNotContain(string var1, string typeLabel, string var2)
         {
-            Assert.True(Get(var1)
+            Assert.False(Get(var1)
                 .GetHas(SingleTransaction, SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve())
-                .noneMatch(k => k.equals(Get(var2))));
+                .Where(k => k.Equals(Get(var2)))
+                .Any());
         }
 
         [Then(@"entity/attribute/relation {var} get attributes\\( ?{type_label} ?) as\\( ?datetime ?) do not contain: {var}")]
         public void ThingGetAttributesAsDatetimeDoNotContain(string var1, string typeLabel, string var2)
         {
-            Assert.True(Get(var1)
+            Assert.False(Get(var1)
                 .GetHas(SingleTransaction, SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve())
-                .noneMatch(k => k.equals(Get(var2))));
+                .Where(k => k.Equals(Get(var2)))
+                .Any());
         }
 
         [Then(@"entity/attribute/relation {var} get relations\\( ?{scoped_label} ?) contain: {var}")]
@@ -226,15 +249,16 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             var relates = SingleTransaction
                 .Concepts
-                .GetRelationType(scopedLabel.scope().Get()).Resolve()
+                .GetRelationType(scopedLabel.Scope.Get()).Resolve()
                 .GetRelates(SingleTransaction, scopedLabel.Name).Resolve();
-            Assert.True(Get(var1).GetRelations(SingleTransaction, relates).anyMatch(k => k.equals(Get(var2))));
+
+            Assert.True(Get(var1).GetRelations(SingleTransaction, relates).Where(k => k.Equals(Get(var2))).Any());
         }
 
         [Then(@"entity/attribute/relation {var} get relations contain: {var}")]
         public void ThingGetRelationsContain(string var1, string var2)
         {
-            Assert.True(Get(var1).GetRelations(SingleTransaction).anyMatch(k => k.equals(Get(var2))));
+            Assert.True(Get(var1).GetRelations(SingleTransaction).Where(k => k.Equals(Get(var2))).Any());
         }
 
         [Then(@"entity/attribute/relation {var} get relations\\( ?{scoped_label} ?) do not contain: {var}")]
@@ -242,21 +266,21 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         {
             var relates = SingleTransaction
                 .Concepts
-                .GetRelationType(scopedLabel.scope().Get()).Resolve()
+                .GetRelationType(scopedLabel.Scope.Get()).Resolve()
                 .GetRelates(SingleTransaction, scopedLabel.Name).Resolve();
 
-            Assert.True(Get(var1).GetRelations(SingleTransaction, relates).noneMatch(k => k.equals(Get(var2))));
+            Assert.False(Get(var1).GetRelations(SingleTransaction, relates).Where(k => k.Equals(Get(var2))).Any());
         }
 
         [Then(@"entity/attribute/relation {var} get relations do not contain: {var}")]
         public void ThingGetRelationsDoNotContain(string var1, string var2)
         {
-            Assert.True(Get(var1).GetRelations(SingleTransaction).noneMatch(k => k.equals(Get(var2))));
+            Assert.False(Get(var1).GetRelations(SingleTransaction).Where(k => k.Equals(Get(var2))).Any());
         }
 
         public void override Dispose()
         {
-            _things.clear();
+            _things.Clear();
             base.Dispose();
         }
     }

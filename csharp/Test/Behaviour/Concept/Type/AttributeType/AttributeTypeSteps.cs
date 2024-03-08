@@ -59,7 +59,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
                 .Concepts
                 .GetAttributeType(typeLabel).Resolve()
                 .GetSupertype(SingleTransaction).Resolve()
-                .asAttributeType();
+                .AsAttributeType();
 
             Assert.Equals(valueType, supertype.GetValueType());
         }
@@ -69,12 +69,12 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             string typeLabel, Value.Type valueType, List<string> subLabels)
         {
             AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
-            Set<string> actuals = attributeType
+            HashSet<string> actuals = attributeType
                 .GetSubtypes(SingleTransaction, valueType)
                 .Select(t => t.Label.Name)
                 .ToHashSet();
 
-            Assert.True(actuals.containsAll(subLabels));
+            Assert.False(actuals.Except(subLabels).Any());
         }
 
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get subtypes do not contain:")]
@@ -82,21 +82,21 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         string typeLabel, Value.Type valueType, List<string> subLabels)
         {
             AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
-            Set<string> actuals = attributeType
+            HashSet<string> actuals = attributeType
                 .GetSubtypes(SingleTransaction, valueType)
                 .Select(t => t.Label.Name)
-                .collect(toSet());
+                .ToHashSet();
 
             for (string subLabel : subLabels)
             {
-                Assert.False(actuals.contains(subLabel));
+                Assert.False(actuals.Contains(subLabel));
             }
         }
 
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) set regex: {}")]
         public void AttributeTypeAsValueTypeSetRegex(string typeLabel, Value.Type valueType, string regex)
         {
-            if (!valueType.equals(Value.Type.STRING))
+            if (!valueType.Equals(Value.Type.STRING))
             {
                 fail();
             }
@@ -108,7 +108,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) unset regex")]
         public void AttributeTypeAsValueTypeUnsetRegex(string typeLabel, Value.Type valueType)
         {
-            if (!valueType.equals(Value.Type.STRING))
+            if (!valueType.Equals(Value.Type.STRING))
             {
                 fail();
             }
@@ -120,7 +120,7 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         [Then(@"attribute\\( ?{type_label} ?) as\\( ?{value_type} ?) get regex: {}")]
         public void AttributeTypeAsValueTypeGetRegex(string typeLabel, Value.Type valueType, string regex)
         {
-            if (!valueType.equals(Value.Type.STRING))
+            if (!valueType.Equals(Value.Type.STRING))
             {
                 fail();
             }
@@ -140,12 +140,12 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             string typeLabel, List<Annotation> annotations, List<string> ownerLabels)
         {
             AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
-            Set<string> actuals = attributeType
+            HashSet<string> actuals = attributeType
                 .GetOwners(SingleTransaction, set(annotations))
-                .map(t => t.Label.Name)
-                .collect(toSet());
+                .Selectt => t.Label.Name)
+                .ToHashSet();
 
-            Assert.True(actuals.containsAll(ownerLabels));
+            Assert.False(actuals.Except(ownerLabels).Any());
         }
 
         [Then(@"attribute\\( ?{type_label} ?) get owners, with annotations: {annotations}; do not contain:")]
@@ -153,14 +153,14 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             string typeLabel, List<Annotation> annotations, List<string> ownerLabels)
         {
             AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
-            Set<string> actuals = attributeType
+            HashSet<string> actuals = attributeType
                 .GetOwners(SingleTransaction, set(annotations))
-                .map(t => t.Label.Name)
-                .collect(toSet());
+                .Selectt => t.Label.Name)
+                .ToHashSet();
 
             for (string ownerLabel : ownerLabels)
             {
-                Assert.False(actuals.contains(ownerLabel));
+                Assert.False(actuals.Contains(ownerLabel));
             }
         }
 
@@ -169,12 +169,12 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             string typeLabel, List<Annotation> annotations, List<string> ownerLabels)
         {
             AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
-            Set<string> actuals = attributeType
+            HashSet<string> actuals = attributeType
                 .GetOwners(SingleTransaction, set(annotations), EXPLICIT)
-                .map(t => t.Label.Name)
-                .collect(toSet());
+                .Selectt => t.Label.Name)
+                .ToHashSet();
 
-            Assert.True(actuals.containsAll(ownerLabels));
+            Assert.False(actuals.Except(ownerLabels).Any());
         }
 
         [Then(@"attribute\\( ?{type_label} ?) get owners explicit, with annotations: {annotations}; do not contain:")]
@@ -182,14 +182,14 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
             string typeLabel, List<Annotation> annotations, List<string> ownerLabels)
         {
             AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
-            Set<string> actuals = attributeType
+            HashSet<string> actuals = attributeType
                 .GetOwners(SingleTransaction, set(annotations), EXPLICIT)
-                .map(t => t.Label.Name)
-                .collect(toSet());
+                .Selectt => t.Label.Name)
+                .ToHashSet();
 
             for (string ownerLabel : ownerLabels)
             {
-                Assert.False(actuals.contains(ownerLabel));
+                Assert.False(actuals.Contains(ownerLabel));
             }
         }
 
@@ -197,26 +197,26 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void AttributeTypeGetOwnersContain(string typeLabel, List<string> ownerLabels)
         {
             AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
-            Set<string> actuals = attributeType
+            HashSet<string> actuals = attributeType
                 .GetOwners(SingleTransaction, emptySet())
-                .map(t => t.Label.Name)
-                .collect(toSet());
+                .Selectt => t.Label.Name)
+                .ToHashSet();
 
-            Assert.True(actuals.containsAll(ownerLabels));
+            Assert.False(actuals.Except(ownerLabels).Any());
         }
 
         [Then(@"attribute\\( ?{type_label} ?) get owners do not contain:")]
         public void AttributeTypeGetOwnersDoNotContain(string typeLabel, List<string> ownerLabels)
         {
             AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
-            Set<string> actuals = attributeType
+            HashSet<string> actuals = attributeType
                 .GetOwners(SingleTransaction, emptySet())
-                .map(t => t.Label.Name)
-                .collect(toSet());
+                .Selectt => t.Label.Name)
+                .ToHashSet();
 
             for (string ownerLabel : ownerLabels)
             {
-                Assert.False(actuals.contains(ownerLabel));
+                Assert.False(actuals.Contains(ownerLabel));
             }
         }
 
@@ -224,26 +224,26 @@ namespace Vaticle.Typedb.Driver.Test.Behaviour
         public void AttributeTypeGetOwnersExplicitContain(string typeLabel, List<string> ownerLabels)
         {
             AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
-            Set<string> actuals = attributeType
+            HashSet<string> actuals = attributeType
                 .GetOwners(SingleTransaction, emptySet(), EXPLICIT)
-                .map(t => t.Label.Name)
-                .collect(toSet());
+                .Selectt => t.Label.Name)
+                .ToHashSet();
 
-            Assert.True(actuals.containsAll(ownerLabels));
+            Assert.False(actuals.Except(ownerLabels).Any());
         }
 
         [Then(@"attribute\\( ?{type_label} ?) get owners explicit do not contain:")]
         public void AttributeTypeGetOwnersExplicitDoNotContain(string typeLabel, List<string> ownerLabels)
         {
             AttributeType attributeType = SingleTransaction.Concepts.GetAttributeType(typeLabel).Resolve();
-            Set<string> actuals = attributeType
+            HashSet<string> actuals = attributeType
                 .GetOwners(SingleTransaction, emptySet(), EXPLICIT)
-                .map(t => t.Label.Name)
-                .collect(toSet());
+                .Selectt => t.Label.Name)
+                .ToHashSet();
 
             for (string ownerLabel : ownerLabels)
             {
-                Assert.False(actuals.contains(ownerLabel));
+                Assert.False(actuals.Contains(ownerLabel));
             }
         }
     }
